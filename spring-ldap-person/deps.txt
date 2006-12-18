@@ -1,0 +1,677 @@
+Apache Ant version 1.6.5 compiled on June 2 2005
+Buildfile: build.xml
+Detected Java version: 1.5 in: c:\dev\jdk1.5.0\jre
+Detected OS: Windows XP
+parsing buildfile D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person\build.xml with URI = file:///D:/src/open/spring-colin/spring-projects/spring-ldap/spring-ldap-person/build.xml
+Project base dir set to: D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person
+ [property] Loading D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person\build.properties
+ [property] Unable to find property file: D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person\build.properties
+ [property] Loading D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person\project.properties
+ [property] Loading D:\src\open\spring-colin\spring-projects\common-build\build.properties
+ [property] Unable to find property file: D:\src\open\spring-colin\spring-projects\common-build\build.properties
+ [property] Loading D:\src\open\spring-colin\spring-projects\common-build\project.properties
+ [property] Loading C:\Documents and Settings\colin\build.properties
+ [property] Unable to find property file: C:\Documents and Settings\colin\build.properties
+Importing file D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person/../../common-build/common-targets.xml from D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person\build.xml
+parsing buildfile D:\src\open\spring-colin\spring-projects\common-build\common-targets.xml with URI = file:///D:/src/open/spring-colin/spring-projects/common-build/common-targets.xml
+parsing buildfile jar:file:/D:/src/open/spring-colin/spring-projects/common-build/lib/ivy-1.3.1.jar!/fr/jayasoft/ivy/ant/antlib.xml with URI = jar:file:/D:/src/open/spring-colin/spring-projects/common-build/lib/ivy-1.3.1.jar!/fr/jayasoft/ivy/ant/antlib.xml
+Importing file D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person/../../common-build/tomcat-targets.xml from D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person\build.xml
+parsing buildfile D:\src\open\spring-colin\spring-projects\common-build\tomcat-targets.xml with URI = file:///D:/src/open/spring-colin/spring-projects/common-build/tomcat-targets.xml
+Importing file common-targets.xml from D:\src\open\spring-colin\spring-projects\common-build\tomcat-targets.xml
+Skipped already imported file:
+   D:\src\open\spring-colin\spring-projects\common-build\common-targets.xml
+
+Build sequence for target(s) `retrieve' is [force.env.load, init.cl.external.props, init.env.external.props, init.pre, eclipse.configure, init.post, init.post2, init, check.for.optional.packages, build.prepare, ivy.configure, resolve.pre, resolve.main, resolve.post, resolve, retrieve.pre, retrieve.main, retrieve.post, retrieve]
+Complete build sequence is [force.env.load, init.cl.external.props, init.env.external.props, init.pre, eclipse.configure, init.post, init.post2, init, check.for.optional.packages, build.prepare, ivy.configure, resolve.pre, resolve.main, resolve.post, resolve, retrieve.pre, retrieve.main, retrieve.post, retrieve, guard.tomcatdir, tomcat.init, tomcat-clean-war, statics.pre, statics.main, statics.test, statics.web, statics.post, statics, gen.pre, gen.main, gen.post, gen, compile.pre, compile.main, compile.source, compile.tests, compile.post, compile, jar.pre, jar.main, jar.post, jar, source-zip, web.pre, web.main, web.post, web, war.pre, war.main, war.post, war, tomcat-copy-war, tomcat-refresh-war, tomcat-launch, targets, ear.stage.post, ear.stage.pre, ear.stage.main, ear-stage, ear.pre, ear.main, ear.post, ear, publish.setup, publish.do.publish, publish, dist.pre, dist.main, dist.post, dist, guard.testclass, resolve.conf, tests.prepare, tests-local, tests, tests-dist, build.prepare.make.config.dirs, resources, guard.runclass, retrieve-to-repo, clean, clean-all, tomcat-context-error, tomcat-reload, copy.test.resources, tomcat-list, resolve.all, retrieve.all, tomcat-start, copy.resources, tomcat-undeploy, tomcat-content, test-resources, run-with-arguments, test, tomcat-deploy, tomcat-redeploy, classicvm, web.copy.classes, clear.lib.dir.before.retrieve, javadoc, tomcat-stop, web.copy.libs, run, tomcat-context, ]
+
+force.env.load:
+ [property] Loading Environment myenv.
+
+init.cl.external.props:
+Skipped because property 'build.prop.file' not set.
+
+init.env.external.props:
+Skipped because property 'myenv.STUB.BUILD.PROP.FILE' not set.
+
+init.pre:
+Override ignored for property DSTAMP
+Override ignored for property TSTAMP
+Override ignored for property TODAY
+Override ignored for property project.webapp.name
+ [property] Loading Environment myenv.
+Override ignored for property myenv.ANT_CMD_LINE_ARGS
+Override ignored for property myenv.ANT_HOME
+Override ignored for property myenv.JDK_HOME
+Override ignored for property myenv.COMPUTERNAME
+Override ignored for property myenv.PROCESSOR_ARCHITECTURE
+Override ignored for property myenv.SystemDrive
+Override ignored for property myenv.PATHEXT
+Override ignored for property myenv.PROMPT
+Override ignored for property myenv.ALLUSERSPROFILE
+Override ignored for property myenv.ComSpec
+Override ignored for property myenv.PROCESSOR_IDENTIFIER
+Override ignored for property myenv.LOGONSERVER
+Override ignored for property myenv.TEMP
+Override ignored for property myenv.NUMBER_OF_PROCESSORS
+Override ignored for property myenv.PERL5LIB
+Override ignored for property myenv.APPDATA
+Override ignored for property myenv.CLIENTNAME
+Override ignored for property myenv.ProgramFiles
+Override ignored for property myenv.OS
+Override ignored for property myenv.Path
+Override ignored for property myenv.HummPATH
+Override ignored for property myenv.SESSIONNAME
+Override ignored for property myenv.BitRock
+Override ignored for property myenv.WF_RESOURCES
+Override ignored for property myenv.USERPROFILE
+Override ignored for property myenv.windir
+Override ignored for property myenv.USERNAME
+Override ignored for property myenv._USE_CLASSPATH
+Override ignored for property myenv.HOMEDRIVE
+Override ignored for property myenv.PROCESSOR_REVISION
+Override ignored for property myenv._JAVACMD
+Override ignored for property myenv.CommonProgramFiles
+Override ignored for property myenv.MAVEN_HOME
+Override ignored for property myenv.HOMEPATH
+Override ignored for property myenv.USERDOMAIN
+Override ignored for property myenv.RUBYOPT
+Override ignored for property myenv.TMP
+Override ignored for property myenv.PROCESSOR_LEVEL
+Override ignored for property myenv.SystemRoot
+Override ignored for property myenv.APR_ICONV_PATH
+Override ignored for property myenv.FP_NO_HOST_CHECK
+Override ignored for property myenv.JAVA_HOME
+Override ignored for property javac.source
+Override ignored for property javac.target
+     [echo] org.name = "springframework.org"
+     [echo] org.package.prefix = "org.springframework"
+     [echo] project.name = "spring-ldap-person-sample"
+     [echo] project.webapp.name = "ldap-person"
+     [echo] project.title = "spring-ldap-person-sample"
+     [echo] project.base.version = "1.0-dev"
+     [echo] project.version = "1.0-dev-20060702095831"
+     [echo] ant.file = "D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person\build.xml"
+     [echo] basedir = "D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person"
+     [echo] user.dir = "D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person"
+     [echo] ant.java.version = "1.5"
+     [echo] debug = "true"
+     [echo] optimize = "false"
+     [echo] javac.source = "1.3"
+     [echo] javac.target = "1.3"
+Property ${target.appserver} has not been set
+     [echo] target.appserver = "${target.appserver}"
+     [echo] unit test vm: vm arg="-DzzzDummyVal"
+
+eclipse.configure:
+Skipped because property 'eclipse.running' not set.
+
+init.post:
+Overriding previous definition of reference to image.files
+Overriding previous definition of reference to html.files
+Overriding previous definition of reference to scriptlet.files
+Overriding previous definition of reference to web.config.files
+Override ignored for property target.lib.dir
+   [delete] Deleting: D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person\properties.tmp
+
+init.post2:
+
+init:
+Skipped because property 'init.done' set.
+
+check.for.optional.packages:
+[available] Unable to load class org.apache.xalan.xslt.XSLTProcessorFactory to set property xalan.present
+
+build.prepare:
+Override ignored for property DSTAMP
+Override ignored for property TSTAMP
+Override ignored for property TODAY
+Project base dir set to: D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person
+  [antcall] calling target(s) [build.prepare.make.config.dirs] in build file D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person\build.xml
+parsing buildfile D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person\build.xml with URI = file:///D:/src/open/spring-colin/spring-projects/spring-ldap/spring-ldap-person/build.xml
+Project base dir set to: D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person
+ [property] Loading D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person\build.properties
+ [property] Unable to find property file: D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person\build.properties
+ [property] Loading D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person\project.properties
+Override ignored for property common.build.dir
+Override ignored for property javac.source
+Override ignored for property javac.target
+ [property] Loading D:\src\open\spring-colin\spring-projects\common-build\build.properties
+ [property] Unable to find property file: D:\src\open\spring-colin\spring-projects\common-build\build.properties
+ [property] Loading D:\src\open\spring-colin\spring-projects\common-build\project.properties
+Override ignored for property target.testclasses.dir
+Override ignored for property src.web.dir
+Override ignored for property target.artifacts.dir
+Override ignored for property bin.dir
+Override ignored for property src.tld.dir
+Override ignored for property static.lib.dir
+Override ignored for property data.dir
+Override ignored for property src.test.resources.dir
+Override ignored for property docs.ref.src.dir
+Override ignored for property src.dtd.dir
+Override ignored for property target.classes.dir
+Override ignored for property target.gen.java.test.dir
+Override ignored for property src.resources.dir
+Override ignored for property target.ear.expanded.dir
+Override ignored for property target.lib.dir
+Override ignored for property ivy.retrieve.pattern
+Override ignored for property lib.dir
+Override ignored for property release.repo.ivy.retrieve.pattern
+Override ignored for property src.etc.dir
+Override ignored for property packages
+Override ignored for property dist.dir
+Override ignored for property docs.dir
+Override ignored for property release.repo.ivy.retrieve.ivy.pattern
+Override ignored for property test.excludes
+Override ignored for property target.gen.java.dir
+Override ignored for property ivy.srcivypattern
+Override ignored for property target.testresults.dir
+Override ignored for property target.war.expanded.dir
+Override ignored for property target.javadocs.dir
+Override ignored for property docs.ref.target.dir
+Override ignored for property target.dir
+Override ignored for property target.artifacts.ear.dir
+Override ignored for property docs.ref.dir
+Override ignored for property src.java.main.dir
+Override ignored for property target.artifacts.war.dir
+Override ignored for property docs.ref.lib.dir
+Override ignored for property src.dir
+Override ignored for property src.java.test.dir
+Override ignored for property ivy.distrib.dir
+Override ignored for property test.includes
+Override ignored for property target.filter.file
+Override ignored for property src.doc.dir
+ [property] Loading C:\Documents and Settings\colin\build.properties
+ [property] Unable to find property file: C:\Documents and Settings\colin\build.properties
+Override ignored for property build.web
+Override ignored for property project.webapp.name
+Importing file D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person/../../common-build/common-targets.xml from D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person\build.xml
+parsing buildfile D:\src\open\spring-colin\spring-projects\common-build\common-targets.xml with URI = file:///D:/src/open/spring-colin/spring-projects/common-build/common-targets.xml
+parsing buildfile jar:file:/D:/src/open/spring-colin/spring-projects/common-build/lib/ivy-1.3.1.jar!/fr/jayasoft/ivy/ant/antlib.xml with URI = jar:file:/D:/src/open/spring-colin/spring-projects/common-build/lib/ivy-1.3.1.jar!/fr/jayasoft/ivy/ant/antlib.xml
+Trying to override old definition of task antlib:fr.jayasoft.ivy.ant:configure
+Trying to override old definition of task antlib:fr.jayasoft.ivy.ant:resolve
+Trying to override old definition of task antlib:fr.jayasoft.ivy.ant:retrieve
+Trying to override old definition of task antlib:fr.jayasoft.ivy.ant:deliver
+Trying to override old definition of task antlib:fr.jayasoft.ivy.ant:publish
+Trying to override old definition of task antlib:fr.jayasoft.ivy.ant:extract
+Trying to override old definition of task antlib:fr.jayasoft.ivy.ant:cachepath
+Trying to override old definition of task antlib:fr.jayasoft.ivy.ant:cachefileset
+Trying to override old definition of task antlib:fr.jayasoft.ivy.ant:report
+Trying to override old definition of task antlib:fr.jayasoft.ivy.ant:var
+Trying to override old definition of task antlib:fr.jayasoft.ivy.ant:check
+Trying to override old definition of task antlib:fr.jayasoft.ivy.ant:artifactproperty
+Trying to override old definition of task antlib:fr.jayasoft.ivy.ant:buildlist
+Trying to override old definition of task antlib:fr.jayasoft.ivy.ant:install
+Trying to override old definition of task antlib:fr.jayasoft.ivy.ant:convertpom
+Trying to override old definition of task resolve.conf
+Trying to override old definition of task resolve.all
+Trying to override old definition of task retrieve.conf
+Trying to override old definition of task retrieve.all
+Override ignored for property test.arguments
+Importing file D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person/../../common-build/tomcat-targets.xml from D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person\build.xml
+parsing buildfile D:\src\open\spring-colin\spring-projects\common-build\tomcat-targets.xml with URI = file:///D:/src/open/spring-colin/spring-projects/common-build/tomcat-targets.xml
+Importing file common-targets.xml from D:\src\open\spring-colin\spring-projects\common-build\tomcat-targets.xml
+Skipped already imported file:
+   D:\src\open\spring-colin\spring-projects\common-build\common-targets.xml
+
+Build sequence for target(s) `build.prepare.make.config.dirs' is [build.prepare.make.config.dirs]
+Complete build sequence is [build.prepare.make.config.dirs, force.env.load, init.cl.external.props, init.env.external.props, init.pre, eclipse.configure, init.post, init.post2, init, guard.tomcatdir, tomcat.init, tomcat-clean-war, check.for.optional.packages, build.prepare, ivy.configure, resolve.pre, resolve.main, resolve.post, resolve, retrieve.pre, retrieve.main, retrieve.post, retrieve, statics.pre, statics.main, statics.test, statics.web, statics.post, statics, gen.pre, gen.main, gen.post, gen, compile.pre, compile.main, compile.source, compile.tests, compile.post, compile, jar.pre, jar.main, jar.post, jar, source-zip, web.pre, web.main, web.post, web, war.pre, war.main, war.post, war, tomcat-copy-war, tomcat-refresh-war, tomcat-launch, targets, ear.stage.post, ear.stage.pre, ear.stage.main, ear-stage, ear.pre, ear.main, ear.post, ear, publish.setup, publish.do.publish, publish, dist.pre, dist.main, dist.post, dist, guard.testclass, resolve.conf, tests.prepare, tests-local, tests, tests-dist, resources, guard.runclass, retrieve-to-repo, clean, clean-all, tomcat-context-error, tomcat-reload, copy.test.resources, tomcat-list, resolve.all, retrieve.all, tomcat-start, copy.resources, tomcat-undeploy, tomcat-content, test-resources, run-with-arguments, test, tomcat-deploy, tomcat-redeploy, classicvm, web.copy.classes, clear.lib.dir.before.retrieve, javadoc, tomcat-stop, web.copy.libs, run, tomcat-context, ]
+  [antcall] Entering D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person\build.xml...
+Build sequence for target(s) `build.prepare.make.config.dirs' is [build.prepare.make.config.dirs]
+Complete build sequence is [build.prepare.make.config.dirs, force.env.load, init.cl.external.props, init.env.external.props, init.pre, eclipse.configure, init.post, init.post2, init, guard.tomcatdir, tomcat.init, tomcat-clean-war, check.for.optional.packages, build.prepare, ivy.configure, resolve.pre, resolve.main, resolve.post, resolve, retrieve.pre, retrieve.main, retrieve.post, retrieve, statics.pre, statics.main, statics.test, statics.web, statics.post, statics, gen.pre, gen.main, gen.post, gen, compile.pre, compile.main, compile.source, compile.tests, compile.post, compile, jar.pre, jar.main, jar.post, jar, source-zip, web.pre, web.main, web.post, web, war.pre, war.main, war.post, war, tomcat-copy-war, tomcat-refresh-war, tomcat-launch, targets, ear.stage.post, ear.stage.pre, ear.stage.main, ear-stage, ear.pre, ear.main, ear.post, ear, publish.setup, publish.do.publish, publish, dist.pre, dist.main, dist.post, dist, guard.testclass, resolve.conf, tests.prepare, tests-local, tests, tests-dist, resources, guard.runclass, retrieve-to-repo, clean, clean-all, tomcat-context-error, tomcat-reload, copy.test.resources, tomcat-list, resolve.all, retrieve.all, tomcat-start, copy.resources, tomcat-undeploy, tomcat-content, test-resources, run-with-arguments, test, tomcat-deploy, tomcat-redeploy, classicvm, web.copy.classes, clear.lib.dir.before.retrieve, javadoc, tomcat-stop, web.copy.libs, run, tomcat-context, ]
+
+build.prepare.make.config.dirs:
+  [antcall] Exiting D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person\build.xml.
+     [copy] Warning: Could not find file D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person\src\etc\filter.properties to copy.
+[pathconvert] Set property target.testresults.dir.unix = D:/src/open/spring-colin/spring-projects/spring-ldap/spring-ldap-person/target/test-reports
+Property ${database.driver} has not been set
+Property ${database.url} has not been set
+Property ${database.schema} has not been set
+Property ${database.username} has not been set
+Property ${database.password} has not been set
+[propertyfile] Updating property file: D:\src\open\spring-colin\spring-projects\spring-ldap\spring-ldap-person\target\filter.properties
+
+ivy.configure:
+     [echo] reading ivy config
+     [null] Loading jar:file:/D:/src/open/spring-colin/spring-projects/common-build/lib/ivy-1.3.1.jar!/fr/jayasoft/ivy/ant/ivy.properties
+Override ignored for property ivy.distrib.dir
+Override ignored for property ivy.retrieve.pattern
+:: Ivy 1.3.1 - 20060330160721 :: http://ivy.jayasoft.org/ ::
+jakarta commons httpclient not found: no authentication will be done
+:: configuring :: file = D:\src\open\spring-colin\spring-projects\common-build\ivyconf.xml
+no default ivy user dir defined: set to C:\Documents and Settings\colin\.ivy
+no default cache defined: set to C:\Documents and Settings\colin\.ivy\cache
+loading properties: D:\src\open\spring-colin\spring-projects\common-build/ivyconf.properties
+configuration done (109ms)
+	default cache: C:\Documents and Settings\colin\.ivy\cache
+	default resolver: third-party
+	-- 9 resolvers:
+	third-party [chain] [filesystem-repo, spring-repo-ext, dotsrc-maven2-repo, ivyrep]
+	spring-repo [url]
+	integration-repo [file]
+	ivyrep [ivyrep]
+	spring-repo-snapshots [url]
+	filesystem-repo [file]
+	spring-repo-ext [url]
+	spring-projects [chain] [integration-repo, filesystem-repo, spring-repo, spring-repo-snapshots]
+	dotsrc-maven2-repo [ibiblio]
+
+resolve.pre:
+
+resolve.main:
+using ivy parser to parse file:/D:/src/open/spring-colin/spring-projects/spring-ldap/spring-ldap-person/ivy.xml
+:: resolving dependencies :: [ org.springframework | spring-ldap-sample | working@oak ]
+	confs: [global, buildtime, test]
+	validate = true
+	filesystem-repo: revision in cache: [ apache | commons-logging | 1.0.4 ]
+	found [ apache | commons-logging | 1.0.4 ] in third-party
+	filesystem-repo: revision in cache: [ apache | log4j | 1.2.9 ]
+	found [ apache | log4j | 1.2.9 ] in third-party
+	filesystem-repo: revision in cache: [ apache | oro | 2.0.8 ]
+	found [ apache | oro | 2.0.8 ] in third-party
+	filesystem-repo: revision in cache: [ apache | taglibs | 1.1.2 ]
+	found [ apache | taglibs | 1.1.2 ] in third-party
+	filesystem-repo: revision in cache: [ java | jstl | 1.1.2 ]
+	found [ java | jstl | 1.1.2 ] in third-party
+	integration-repo: found md file for [ org.springframework | spring-ldap | latest.integration ]
+		=> D:\src\open\spring-colin\spring-projects\common-build\..\integration-repo\artifacts\org.springframework\spring-ldap\ivy-1.0.3-dev.xml (1.0.3-dev)
+	integration-repo: revision in cache: [ org.springframework | spring-ldap | latest.integration ]
+	found [ org.springframework | spring-ldap | 1.0.3-dev ] in spring-projects
+	[1.0.3-dev] [ org.springframework | spring-ldap | latest.integration ]
+	filesystem-repo: revision in cache: [ apache | commons-lang | 2.1 ]
+	found [ apache | commons-lang | 2.1 ] in third-party
+	filesystem-repo: revision in cache: [ apache | commons-collections | 3.1 ]
+	found [ apache | commons-collections | 3.1 ] in third-party
+	integration-repo: revision in cache: [ org.springframework | spring-beans | 2.0-m5 ]
+	found [ org.springframework | spring-beans | 2.0-m5 ] in spring-projects
+	integration-repo: revision in cache: [ org.springframework | spring-core | 2.0-m5 ]
+	found [ org.springframework | spring-core | 2.0-m5 ] in spring-projects
+	integration-repo: revision in cache: [ org.springframework | spring-context | 2.0-m5 ]
+	found [ org.springframework | spring-context | 2.0-m5 ] in spring-projects
+	integration-repo: revision in cache: [ org.springframework | spring-dao | 2.0-m5 ]
+	found [ org.springframework | spring-dao | 2.0-m5 ] in spring-projects
+	integration-repo: revision in cache: [ org.springframework | spring-web | 2.0-m5 ]
+	found [ org.springframework | spring-web | 2.0-m5 ] in spring-projects
+	integration-repo: revision in cache: [ org.springframework | spring-webmvc | 2.0-m5 ]
+	found [ org.springframework | spring-webmvc | 2.0-m5 ] in spring-projects
+	filesystem-repo: revision in cache: [ org.acegisecurity | acegi-security | 1.0.1 ]
+	found [ org.acegisecurity | acegi-security | 1.0.1 ] in third-party
+	integration-repo: no ivy file nor artifact found for [ org.springframework | spring-remoting | 1.2.7 ]
+		tried D:\src\open\spring-colin\spring-projects\common-build/../integration-repo/artifacts/org.springframework/spring-remoting/ivy-1.2.7.xml
+		tried D:\src\open\spring-colin\spring-projects\common-build/../integration-repo/artifacts/org.springframework/spring-remoting/1.2.7/spring-remoting-1.2.7.jar
+	filesystem-repo: no ivy file nor artifact found for [ org.springframework | spring-remoting | 1.2.7 ]
+		tried D:\src\open\spring-colin\spring-projects\common-build/../repository/org.springframework/spring-remoting/ivy-1.2.7.xml
+		tried D:\src\open\spring-colin\spring-projects\common-build/../repository/org.springframework/spring-remoting/1.2.7/spring-remoting-1.2.7.jar
+CLIENT ERROR: Not Found url=https://svn.sourceforge.net/svnroot/springframework/repos/repo/org/springframework/spring-remoting/ivy-1.2.7.xml
+CLIENT ERROR: Not Found url=https://svn.sourceforge.net/svnroot/springframework/repos/repo/org/springframework/spring-remoting/1.2.7/spring-remoting-1.2.7.jar
+	spring-repo: no ivy file nor artifact found for [ org.springframework | spring-remoting | 1.2.7 ]
+		tried https://svn.sourceforge.net/svnroot/springframework/repos/repo/org.springframework/spring-remoting/ivy-1.2.7.xml
+		tried https://svn.sourceforge.net/svnroot/springframework/repos/repo/org.springframework/spring-remoting/1.2.7/spring-remoting-1.2.7.jar
+CLIENT ERROR: Not Found url=https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org/springframework/spring-remoting/ivy-1.2.7.xml
+CLIENT ERROR: Not Found url=https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org/springframework/spring-remoting/1.2.7/spring-remoting-1.2.7.jar
+	spring-repo-snapshots: no ivy file nor artifact found for [ org.springframework | spring-remoting | 1.2.7 ]
+		tried https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org.springframework/spring-remoting/ivy-1.2.7.xml
+		tried https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org.springframework/spring-remoting/1.2.7/spring-remoting-1.2.7.jar
+WARN: 	module not found: [ org.springframework | spring-remoting | 1.2.7 ]
+WARN: 		integration-repo: tried D:\src\open\spring-colin\spring-projects\common-build/../integration-repo/artifacts/org.springframework/spring-remoting/ivy-1.2.7.xml
+WARN: 		integration-repo: tried artifact [ org.springframework | spring-remoting | 1.2.7 ]/spring-remoting.jar[jar]:
+WARN: 			D:\src\open\spring-colin\spring-projects\common-build/../integration-repo/artifacts/org.springframework/spring-remoting/1.2.7/spring-remoting-1.2.7.jar
+WARN: 		filesystem-repo: tried D:\src\open\spring-colin\spring-projects\common-build/../repository/org.springframework/spring-remoting/ivy-1.2.7.xml
+WARN: 		filesystem-repo: tried artifact [ org.springframework | spring-remoting | 1.2.7 ]/spring-remoting.jar[jar]:
+WARN: 			D:\src\open\spring-colin\spring-projects\common-build/../repository/org.springframework/spring-remoting/1.2.7/spring-remoting-1.2.7.jar
+WARN: 		spring-repo: tried https://svn.sourceforge.net/svnroot/springframework/repos/repo/org.springframework/spring-remoting/ivy-1.2.7.xml
+WARN: 		spring-repo: tried artifact [ org.springframework | spring-remoting | 1.2.7 ]/spring-remoting.jar[jar]:
+WARN: 			https://svn.sourceforge.net/svnroot/springframework/repos/repo/org.springframework/spring-remoting/1.2.7/spring-remoting-1.2.7.jar
+WARN: 		spring-repo-snapshots: tried https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org.springframework/spring-remoting/ivy-1.2.7.xml
+WARN: 		spring-repo-snapshots: tried artifact [ org.springframework | spring-remoting | 1.2.7 ]/spring-remoting.jar[jar]:
+WARN: 			https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org.springframework/spring-remoting/1.2.7/spring-remoting-1.2.7.jar
+	integration-repo: no ivy file nor artifact found for [ org.springframework | spring-jdbc | 1.2.7 ]
+		tried D:\src\open\spring-colin\spring-projects\common-build/../integration-repo/artifacts/org.springframework/spring-jdbc/ivy-1.2.7.xml
+		tried D:\src\open\spring-colin\spring-projects\common-build/../integration-repo/artifacts/org.springframework/spring-jdbc/1.2.7/spring-jdbc-1.2.7.jar
+	filesystem-repo: no ivy file nor artifact found for [ org.springframework | spring-jdbc | 1.2.7 ]
+		tried D:\src\open\spring-colin\spring-projects\common-build/../repository/org.springframework/spring-jdbc/ivy-1.2.7.xml
+		tried D:\src\open\spring-colin\spring-projects\common-build/../repository/org.springframework/spring-jdbc/1.2.7/spring-jdbc-1.2.7.jar
+CLIENT ERROR: Not Found url=https://svn.sourceforge.net/svnroot/springframework/repos/repo/org/springframework/spring-jdbc/ivy-1.2.7.xml
+CLIENT ERROR: Not Found url=https://svn.sourceforge.net/svnroot/springframework/repos/repo/org/springframework/spring-jdbc/1.2.7/spring-jdbc-1.2.7.jar
+	spring-repo: no ivy file nor artifact found for [ org.springframework | spring-jdbc | 1.2.7 ]
+		tried https://svn.sourceforge.net/svnroot/springframework/repos/repo/org.springframework/spring-jdbc/ivy-1.2.7.xml
+		tried https://svn.sourceforge.net/svnroot/springframework/repos/repo/org.springframework/spring-jdbc/1.2.7/spring-jdbc-1.2.7.jar
+CLIENT ERROR: Not Found url=https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org/springframework/spring-jdbc/ivy-1.2.7.xml
+CLIENT ERROR: Not Found url=https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org/springframework/spring-jdbc/1.2.7/spring-jdbc-1.2.7.jar
+	spring-repo-snapshots: no ivy file nor artifact found for [ org.springframework | spring-jdbc | 1.2.7 ]
+		tried https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org.springframework/spring-jdbc/ivy-1.2.7.xml
+		tried https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org.springframework/spring-jdbc/1.2.7/spring-jdbc-1.2.7.jar
+WARN: 	module not found: [ org.springframework | spring-jdbc | 1.2.7 ]
+WARN: 		integration-repo: tried D:\src\open\spring-colin\spring-projects\common-build/../integration-repo/artifacts/org.springframework/spring-jdbc/ivy-1.2.7.xml
+WARN: 		integration-repo: tried artifact [ org.springframework | spring-jdbc | 1.2.7 ]/spring-jdbc.jar[jar]:
+WARN: 			D:\src\open\spring-colin\spring-projects\common-build/../integration-repo/artifacts/org.springframework/spring-jdbc/1.2.7/spring-jdbc-1.2.7.jar
+WARN: 		filesystem-repo: tried D:\src\open\spring-colin\spring-projects\common-build/../repository/org.springframework/spring-jdbc/ivy-1.2.7.xml
+WARN: 		filesystem-repo: tried artifact [ org.springframework | spring-jdbc | 1.2.7 ]/spring-jdbc.jar[jar]:
+WARN: 			D:\src\open\spring-colin\spring-projects\common-build/../repository/org.springframework/spring-jdbc/1.2.7/spring-jdbc-1.2.7.jar
+WARN: 		spring-repo: tried https://svn.sourceforge.net/svnroot/springframework/repos/repo/org.springframework/spring-jdbc/ivy-1.2.7.xml
+WARN: 		spring-repo: tried artifact [ org.springframework | spring-jdbc | 1.2.7 ]/spring-jdbc.jar[jar]:
+WARN: 			https://svn.sourceforge.net/svnroot/springframework/repos/repo/org.springframework/spring-jdbc/1.2.7/spring-jdbc-1.2.7.jar
+WARN: 		spring-repo-snapshots: tried https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org.springframework/spring-jdbc/ivy-1.2.7.xml
+WARN: 		spring-repo-snapshots: tried artifact [ org.springframework | spring-jdbc | 1.2.7 ]/spring-jdbc.jar[jar]:
+WARN: 			https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org.springframework/spring-jdbc/1.2.7/spring-jdbc-1.2.7.jar
+	filesystem-repo: revision in cache: [ commons-lang | commons-lang | 2.1 ]
+	found [ commons-lang | commons-lang | 2.1 ] in third-party
+	filesystem-repo: revision in cache: [ commons-logging | commons-logging | 1.0.4 ]
+	found [ commons-logging | commons-logging | 1.0.4 ] in third-party
+	filesystem-repo: revision in cache: [ commons-lang | commons-lang | 2.0 ]
+	found [ commons-lang | commons-lang | 2.0 ] in third-party
+	filesystem-repo: revision in cache: [ commons-codec | commons-codec | 1.3 ]
+	found [ commons-codec | commons-codec | 1.3 ] in third-party
+	filesystem-repo: revision in cache: [ oro | oro | 2.0.8 ]
+	found [ oro | oro | 2.0.8 ] in third-party
+	filesystem-repo: revision in cache: [ commons-collections | commons-collections | 3.1 ]
+	found [ commons-collections | commons-collections | 3.1 ] in third-party
+	integration-repo: no ivy file nor artifact found for [ org.springframework | spring-support | 1.2.7 ]
+		tried D:\src\open\spring-colin\spring-projects\common-build/../integration-repo/artifacts/org.springframework/spring-support/ivy-1.2.7.xml
+		tried D:\src\open\spring-colin\spring-projects\common-build/../integration-repo/artifacts/org.springframework/spring-support/1.2.7/spring-support-1.2.7.jar
+	filesystem-repo: no ivy file nor artifact found for [ org.springframework | spring-support | 1.2.7 ]
+		tried D:\src\open\spring-colin\spring-projects\common-build/../repository/org.springframework/spring-support/ivy-1.2.7.xml
+		tried D:\src\open\spring-colin\spring-projects\common-build/../repository/org.springframework/spring-support/1.2.7/spring-support-1.2.7.jar
+CLIENT ERROR: Not Found url=https://svn.sourceforge.net/svnroot/springframework/repos/repo/org/springframework/spring-support/ivy-1.2.7.xml
+CLIENT ERROR: Not Found url=https://svn.sourceforge.net/svnroot/springframework/repos/repo/org/springframework/spring-support/1.2.7/spring-support-1.2.7.jar
+	spring-repo: no ivy file nor artifact found for [ org.springframework | spring-support | 1.2.7 ]
+		tried https://svn.sourceforge.net/svnroot/springframework/repos/repo/org.springframework/spring-support/ivy-1.2.7.xml
+		tried https://svn.sourceforge.net/svnroot/springframework/repos/repo/org.springframework/spring-support/1.2.7/spring-support-1.2.7.jar
+CLIENT ERROR: Not Found url=https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org/springframework/spring-support/ivy-1.2.7.xml
+CLIENT ERROR: Not Found url=https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org/springframework/spring-support/1.2.7/spring-support-1.2.7.jar
+	spring-repo-snapshots: no ivy file nor artifact found for [ org.springframework | spring-support | 1.2.7 ]
+		tried https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org.springframework/spring-support/ivy-1.2.7.xml
+		tried https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org.springframework/spring-support/1.2.7/spring-support-1.2.7.jar
+WARN: 	module not found: [ org.springframework | spring-support | 1.2.7 ]
+WARN: 		integration-repo: tried D:\src\open\spring-colin\spring-projects\common-build/../integration-repo/artifacts/org.springframework/spring-support/ivy-1.2.7.xml
+WARN: 		integration-repo: tried artifact [ org.springframework | spring-support | 1.2.7 ]/spring-support.jar[jar]:
+WARN: 			D:\src\open\spring-colin\spring-projects\common-build/../integration-repo/artifacts/org.springframework/spring-support/1.2.7/spring-support-1.2.7.jar
+WARN: 		filesystem-repo: tried D:\src\open\spring-colin\spring-projects\common-build/../repository/org.springframework/spring-support/ivy-1.2.7.xml
+WARN: 		filesystem-repo: tried artifact [ org.springframework | spring-support | 1.2.7 ]/spring-support.jar[jar]:
+WARN: 			D:\src\open\spring-colin\spring-projects\common-build/../repository/org.springframework/spring-support/1.2.7/spring-support-1.2.7.jar
+WARN: 		spring-repo: tried https://svn.sourceforge.net/svnroot/springframework/repos/repo/org.springframework/spring-support/ivy-1.2.7.xml
+WARN: 		spring-repo: tried artifact [ org.springframework | spring-support | 1.2.7 ]/spring-support.jar[jar]:
+WARN: 			https://svn.sourceforge.net/svnroot/springframework/repos/repo/org.springframework/spring-support/1.2.7/spring-support-1.2.7.jar
+WARN: 		spring-repo-snapshots: tried https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org.springframework/spring-support/ivy-1.2.7.xml
+WARN: 		spring-repo-snapshots: tried artifact [ org.springframework | spring-support | 1.2.7 ]/spring-support.jar[jar]:
+WARN: 			https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org.springframework/spring-support/1.2.7/spring-support-1.2.7.jar
+	filesystem-repo: revision in cache: [ org.apache.directory.server | apacheds-core | 1.0-RC3 ]
+	found [ org.apache.directory.server | apacheds-core | 1.0-RC3 ] in third-party
+	filesystem-repo: revision in cache: [ org.apache.directory.server | apacheds-core-shared | 1.0-RC3 ]
+	found [ org.apache.directory.server | apacheds-core-shared | 1.0-RC3 ] in third-party
+	filesystem-repo: revision in cache: [ org.apache.directory.server | apacheds-server-jndi | 1.0-RC3 ]
+	found [ org.apache.directory.server | apacheds-server-jndi | 1.0-RC3 ] in third-party
+	filesystem-repo: revision in cache: [ org.apache.directory.server | apacheds-server-main | 1.0-RC3 ]
+	found [ org.apache.directory.server | apacheds-server-main | 1.0-RC3 ] in third-party
+	filesystem-repo: revision in cache: [ org.apache.directory.server | apacheds-protocol-shared | 1.0-RC3 ]
+	found [ org.apache.directory.server | apacheds-protocol-shared | 1.0-RC3 ] in third-party
+	filesystem-repo: revision in cache: [ org.apache.directory.server | apacheds-protocol-changepw | 1.0-RC3 ]
+	found [ org.apache.directory.server | apacheds-protocol-changepw | 1.0-RC3 ] in third-party
+	filesystem-repo: revision in cache: [ org.apache.directory.server | apacheds-protocol-kerberos | 1.0-RC3 ]
+	found [ org.apache.directory.server | apacheds-protocol-kerberos | 1.0-RC3 ] in third-party
+	filesystem-repo: revision in cache: [ org.apache.directory.server | apacheds-kerberos-shared | 1.0-RC3 ]
+	found [ org.apache.directory.server | apacheds-kerberos-shared | 1.0-RC3 ] in third-party
+	filesystem-repo: revision in cache: [ org.apache.directory.server | apacheds-protocol-ldap | 1.0-RC3 ]
+	found [ org.apache.directory.server | apacheds-protocol-ldap | 1.0-RC3 ] in third-party
+	filesystem-repo: no ivy file nor artifact found for [ apache | directory | 0.9.5 ]
+		tried D:\src\open\spring-colin\spring-projects\common-build/../repository/apache/directory/ivy-0.9.5.xml
+		tried D:\src\open\spring-colin\spring-projects\common-build/../repository/apache/directory/0.9.5/shared-ldap-0.9.5.jar
+		tried D:\src\open\spring-colin\spring-projects\common-build/../repository/apache/directory/0.9.5/shared-asn1-0.9.5.jar
+CLIENT ERROR: Not Found url=https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/apache/directory/ivy-0.9.5.xml
+CLIENT ERROR: Not Found url=https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/apache/directory/0.9.5/shared-ldap-0.9.5.jar
+CLIENT ERROR: Not Found url=https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/apache/directory/0.9.5/shared-asn1-0.9.5.jar
+	spring-repo-ext: no ivy file nor artifact found for [ apache | directory | 0.9.5 ]
+		tried https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/apache/directory/ivy-0.9.5.xml
+		tried https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/apache/directory/0.9.5/shared-ldap-0.9.5.jar
+		tried https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/apache/directory/0.9.5/shared-asn1-0.9.5.jar
+CLIENT ERROR: Not Found url=http://mirrors.dotsrc.org/maven2/apache/directory/0.9.5/directory-0.9.5.pom
+CLIENT ERROR: Not Found url=http://mirrors.dotsrc.org/maven2/apache/directory/0.9.5/shared-ldap-0.9.5.jar
+CLIENT ERROR: Not Found url=http://mirrors.dotsrc.org/maven2/apache/directory/0.9.5/shared-asn1-0.9.5.jar
+	dotsrc-maven2-repo: no ivy file nor artifact found for [ apache | directory | 0.9.5 ]
+		tried http://mirrors.dotsrc.org/maven2/apache/directory/0.9.5/ivy-0.9.5.xml
+		tried http://mirrors.dotsrc.org/maven2/apache/directory/0.9.5/shared-ldap-0.9.5.jar
+		tried http://mirrors.dotsrc.org/maven2/apache/directory/0.9.5/shared-asn1-0.9.5.jar
+CLIENT ERROR: Not Found url=http://ivyrep.jayasoft.org/apache/directory/ivy-0.9.5.xml
+CLIENT ERROR: Not Found url=http://www.ibiblio.org/maven/directory/jars/shared-ldap-0.9.5.jar
+CLIENT ERROR: Not Found url=http://www.ibiblio.org/maven/directory/jars/shared-asn1-0.9.5.jar
+	ivyrep: no ivy file nor artifact found for [ apache | directory | 0.9.5 ]
+		tried http://ivyrep.jayasoft.org/apache/directory/ivy-0.9.5.xml
+		tried http://www.ibiblio.org/maven/directory/jars/shared-ldap-0.9.5.jar
+		tried http://www.ibiblio.org/maven/directory/jars/shared-asn1-0.9.5.jar
+WARN: 	module not found: [ apache | directory | 0.9.5 ]
+WARN: 		filesystem-repo: tried D:\src\open\spring-colin\spring-projects\common-build/../repository/apache/directory/ivy-0.9.5.xml
+WARN: 		filesystem-repo: tried artifact [ apache | directory | 0.9.5 ]/shared-ldap.jar[jar]:
+WARN: 			D:\src\open\spring-colin\spring-projects\common-build/../repository/apache/directory/0.9.5/shared-ldap-0.9.5.jar
+WARN: 		filesystem-repo: tried artifact [ apache | directory | 0.9.5 ]/shared-asn1.jar[jar]:
+WARN: 			D:\src\open\spring-colin\spring-projects\common-build/../repository/apache/directory/0.9.5/shared-asn1-0.9.5.jar
+WARN: 		spring-repo-ext: tried https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/apache/directory/ivy-0.9.5.xml
+WARN: 		spring-repo-ext: tried artifact [ apache | directory | 0.9.5 ]/shared-asn1.jar[jar]:
+WARN: 			https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/apache/directory/0.9.5/shared-asn1-0.9.5.jar
+WARN: 		spring-repo-ext: tried artifact [ apache | directory | 0.9.5 ]/shared-ldap.jar[jar]:
+WARN: 			https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/apache/directory/0.9.5/shared-ldap-0.9.5.jar
+WARN: 		dotsrc-maven2-repo: tried http://mirrors.dotsrc.org/maven2/apache/directory/0.9.5/ivy-0.9.5.xml
+WARN: 		dotsrc-maven2-repo: tried artifact [ apache | directory | 0.9.5 ]/shared-asn1.jar[jar]:
+WARN: 			http://mirrors.dotsrc.org/maven2/apache/directory/0.9.5/shared-asn1-0.9.5.jar
+WARN: 		dotsrc-maven2-repo: tried artifact [ apache | directory | 0.9.5 ]/shared-ldap.jar[jar]:
+WARN: 			http://mirrors.dotsrc.org/maven2/apache/directory/0.9.5/shared-ldap-0.9.5.jar
+WARN: 		ivyrep: tried http://ivyrep.jayasoft.org/apache/directory/ivy-0.9.5.xml
+WARN: 		ivyrep: tried artifact [ apache | directory | 0.9.5 ]/shared-ldap.jar[jar]:
+WARN: 			http://www.ibiblio.org/maven/directory/jars/shared-ldap-0.9.5.jar
+WARN: 		ivyrep: tried artifact [ apache | directory | 0.9.5 ]/shared-asn1.jar[jar]:
+WARN: 			http://www.ibiblio.org/maven/directory/jars/shared-asn1-0.9.5.jar
+	filesystem-repo: revision in cache: [ antlr | antlr | 2.7.2 ]
+	found [ antlr | antlr | 2.7.2 ] in third-party
+	filesystem-repo: revision in cache: [ jdbm | jdbm | 1.0 ]
+	found [ jdbm | jdbm | 1.0 ] in third-party
+	filesystem-repo: revision in cache: [ org.slf4j | slf4j-log4j12 | 1.0 ]
+	found [ org.slf4j | slf4j-log4j12 | 1.0 ] in third-party
+	filesystem-repo: revision in cache: [ org.apache.directory.mina | mina-core | 0.9.2 ]
+	found [ org.apache.directory.mina | mina-core | 0.9.2 ] in third-party
+	filesystem-repo: revision in cache: [ org.apache.directory.mina | mina-filter-codec-asn1 | 0.9.2 ]
+	found [ org.apache.directory.mina | mina-filter-codec-asn1 | 0.9.2 ] in third-party
+	filesystem-repo: revision in cache: [ org.apache.directory.shared | shared-asn1 | 0.9.5 ]
+	found [ org.apache.directory.shared | shared-asn1 | 0.9.5 ] in third-party
+	filesystem-repo: revision in cache: [ org.apache.directory.mina | mina-filter-ssl | 0.9.2 ]
+	found [ org.apache.directory.mina | mina-filter-ssl | 0.9.2 ] in third-party
+	integration-repo: revision in cache: [ org.springframework | spring-jdbc | 2.0-m5 ]
+	found [ org.springframework | spring-jdbc | 2.0-m5 ] in spring-projects
+	integration-repo: revision in cache: [ org.springframework | spring-remoting | 2.0-m5 ]
+	found [ org.springframework | spring-remoting | 2.0-m5 ] in spring-projects
+	integration-repo: revision in cache: [ org.springframework | spring-support | 2.0-m5 ]
+	found [ org.springframework | spring-support | 2.0-m5 ] in spring-projects
+	filesystem-repo: revision in cache: [ javax.servlet | servlet-api | 2.4 ]
+	found [ javax.servlet | servlet-api | 2.4 ] in third-party
+	filesystem-repo: revision in cache: [ cenqua | clover | 1.3.8 ]
+	found [ cenqua | clover | 1.3.8 ] in third-party
+	filesystem-repo: no ivy file nor artifact found for [ springframework | spring-mock | 2.0-m5 ]
+		tried D:\src\open\spring-colin\spring-projects\common-build/../repository/springframework/spring-mock/ivy-2.0-m5.xml
+		tried D:\src\open\spring-colin\spring-projects\common-build/../repository/springframework/spring-mock/2.0-m5/spring-mock-2.0-m5.jar
+CLIENT ERROR: Not Found url=https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/springframework/spring-mock/ivy-2.0-m5.xml
+CLIENT ERROR: Not Found url=https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/springframework/spring-mock/2.0-m5/spring-mock-2.0-m5.jar
+	spring-repo-ext: no ivy file nor artifact found for [ springframework | spring-mock | 2.0-m5 ]
+		tried https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/springframework/spring-mock/ivy-2.0-m5.xml
+		tried https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/springframework/spring-mock/2.0-m5/spring-mock-2.0-m5.jar
+CLIENT ERROR: Not Found url=http://mirrors.dotsrc.org/maven2/springframework/spring-mock/2.0-m5/spring-mock-2.0-m5.pom
+CLIENT ERROR: Not Found url=http://mirrors.dotsrc.org/maven2/springframework/spring-mock/2.0-m5/spring-mock-2.0-m5.jar
+	dotsrc-maven2-repo: no ivy file nor artifact found for [ springframework | spring-mock | 2.0-m5 ]
+		tried http://mirrors.dotsrc.org/maven2/springframework/spring-mock/2.0-m5/ivy-2.0-m5.xml
+		tried http://mirrors.dotsrc.org/maven2/springframework/spring-mock/2.0-m5/spring-mock-2.0-m5.jar
+CLIENT ERROR: Not Found url=http://ivyrep.jayasoft.org/springframework/spring-mock/ivy-2.0-m5.xml
+CLIENT ERROR: Not Found url=http://www.ibiblio.org/maven/spring-mock/jars/spring-mock-2.0-m5.jar
+	ivyrep: no ivy file nor artifact found for [ springframework | spring-mock | 2.0-m5 ]
+		tried http://ivyrep.jayasoft.org/springframework/spring-mock/ivy-2.0-m5.xml
+		tried http://www.ibiblio.org/maven/spring-mock/jars/spring-mock-2.0-m5.jar
+WARN: 	module not found: [ springframework | spring-mock | 2.0-m5 ]
+WARN: 		filesystem-repo: tried D:\src\open\spring-colin\spring-projects\common-build/../repository/springframework/spring-mock/ivy-2.0-m5.xml
+WARN: 		filesystem-repo: tried artifact [ springframework | spring-mock | 2.0-m5 ]/spring-mock.jar[jar]:
+WARN: 			D:\src\open\spring-colin\spring-projects\common-build/../repository/springframework/spring-mock/2.0-m5/spring-mock-2.0-m5.jar
+WARN: 		spring-repo-ext: tried https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/springframework/spring-mock/ivy-2.0-m5.xml
+WARN: 		spring-repo-ext: tried artifact [ springframework | spring-mock | 2.0-m5 ]/spring-mock.jar[jar]:
+WARN: 			https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/springframework/spring-mock/2.0-m5/spring-mock-2.0-m5.jar
+WARN: 		dotsrc-maven2-repo: tried http://mirrors.dotsrc.org/maven2/springframework/spring-mock/2.0-m5/ivy-2.0-m5.xml
+WARN: 		dotsrc-maven2-repo: tried artifact [ springframework | spring-mock | 2.0-m5 ]/spring-mock.jar[jar]:
+WARN: 			http://mirrors.dotsrc.org/maven2/springframework/spring-mock/2.0-m5/spring-mock-2.0-m5.jar
+WARN: 		ivyrep: tried http://ivyrep.jayasoft.org/springframework/spring-mock/ivy-2.0-m5.xml
+WARN: 		ivyrep: tried artifact [ springframework | spring-mock | 2.0-m5 ]/spring-mock.jar[jar]:
+WARN: 			http://www.ibiblio.org/maven/spring-mock/jars/spring-mock-2.0-m5.jar
+	filesystem-repo: revision in cache: [ junit | junit | 3.8.1 ]
+	found [ junit | junit | 3.8.1 ] in third-party
+	filesystem-repo: revision in cache: [ easymock | easymock | 1.1 ]
+	found [ easymock | easymock | 1.1 ] in third-party
+:: downloading artifacts ::
+	[NOT REQUIRED] [ apache | taglibs | 1.1.2 ]/standard.jar[jar]
+	[NOT REQUIRED] [ org.springframework | spring-web | 2.0-m5 ]/spring-web.jar[jar]
+	[NOT REQUIRED] [ easymock | easymock | 1.1 ]/easymock.jar[jar]
+	[NOT REQUIRED] [ org.springframework | spring-ldap | 1.0.3-dev ]/spring-ldap.jar[jar]
+	[NOT REQUIRED] [ org.slf4j | slf4j-log4j12 | 1.0 ]/slf4j-log4j12.jar[jar]
+	[NOT REQUIRED] [ org.apache.directory.server | apacheds-protocol-ldap | 1.0-RC3 ]/apacheds-protocol-ldap.jar[jar]
+	[NOT REQUIRED] [ org.apache.directory.server | apacheds-protocol-kerberos | 1.0-RC3 ]/apacheds-protocol-kerberos.jar[jar]
+	[NOT REQUIRED] [ org.apache.directory.server | apacheds-protocol-changepw | 1.0-RC3 ]/apacheds-protocol-changepw.jar[jar]
+	[NOT REQUIRED] [ org.apache.directory.server | apacheds-protocol-shared | 1.0-RC3 ]/apacheds-protocol-shared.jar[jar]
+	[NOT REQUIRED] [ apache | commons-collections | 3.1 ]/commons-collections.jar[jar]
+	[NOT REQUIRED] [ apache | commons-lang | 2.1 ]/commons-lang.jar[jar]
+	[NOT REQUIRED] [ apache | commons-logging | 1.0.4 ]/commons-logging.jar[jar]
+	[NOT REQUIRED] [ java | jstl | 1.1.2 ]/jstl.jar[jar]
+	[NOT REQUIRED] [ org.apache.directory.server | apacheds-core | 1.0-RC3 ]/apacheds-core.jar[jar]
+	[NOT REQUIRED] [ org.springframework | spring-core | 2.0-m5 ]/spring-core.jar[jar]
+	[NOT REQUIRED] [ cenqua | clover | 1.3.8 ]/clover.jar[jar]
+	[NOT REQUIRED] [ org.springframework | spring-support | 2.0-m5 ]/spring-support.jar[jar]
+	[NOT REQUIRED] [ org.springframework | spring-dao | 2.0-m5 ]/spring-dao.jar[jar]
+	[NOT REQUIRED] [ antlr | antlr | 2.7.2 ]/antlr.jar[jar]
+	[NOT REQUIRED] [ apache | log4j | 1.2.9 ]/log4j.jar[jar]
+	[NOT REQUIRED] [ org.springframework | spring-remoting | 2.0-m5 ]/spring-remoting.jar[jar]
+	[NOT REQUIRED] [ org.springframework | spring-jdbc | 2.0-m5 ]/spring-jdbc.jar[jar]
+	[NOT REQUIRED] [ org.apache.directory.server | apacheds-server-jndi | 1.0-RC3 ]/apacheds-server-jndi.jar[jar]
+	[NOT REQUIRED] [ org.apache.directory.server | apacheds-server-main | 1.0-RC3 ]/apacheds-server-main.jar[jar]
+	[NOT REQUIRED] [ jdbm | jdbm | 1.0 ]/jdbm.jar[jar]
+	[NOT REQUIRED] [ org.springframework | spring-context | 2.0-m5 ]/spring-context.jar[jar]
+	[NOT REQUIRED] [ org.acegisecurity | acegi-security | 1.0.1 ]/acegi-security.jar[jar]
+	[NOT REQUIRED] [ commons-collections | commons-collections | 3.1 ]/commons-collections.jar[jar]
+	[NOT REQUIRED] [ oro | oro | 2.0.8 ]/oro.jar[jar]
+	[NOT REQUIRED] [ commons-codec | commons-codec | 1.3 ]/commons-codec.jar[jar]
+	[NOT REQUIRED] [ junit | junit | 3.8.1 ]/junit.jar[jar]
+	[NOT REQUIRED] [ commons-logging | commons-logging | 1.0.4 ]/commons-logging.jar[jar]
+	[NOT REQUIRED] [ javax.servlet | servlet-api | 2.4 ]/servlet-api.jar[jar]
+	[NOT REQUIRED] [ org.springframework | spring-beans | 2.0-m5 ]/spring-beans.jar[jar]
+	[NOT REQUIRED] [ org.apache.directory.server | apacheds-core-shared | 1.0-RC3 ]/apacheds-core-shared.jar[jar]
+	[NOT REQUIRED] [ org.apache.directory.server | apacheds-kerberos-shared | 1.0-RC3 ]/apacheds-kerberos-shared.jar[jar]
+	[NOT REQUIRED] [ org.apache.directory.mina | mina-filter-codec-asn1 | 0.9.2 ]/mina-filter-codec-asn1.jar[jar]
+	[NOT REQUIRED] [ org.apache.directory.shared | shared-asn1 | 0.9.5 ]/shared-asn1.jar[jar]
+	[NOT REQUIRED] [ commons-lang | commons-lang | 2.0 ]/commons-lang.jar[jar]
+	[NOT REQUIRED] [ org.apache.directory.mina | mina-filter-ssl | 0.9.2 ]/mina-filter-ssl.jar[jar]
+	[NOT REQUIRED] [ org.apache.directory.mina | mina-core | 0.9.2 ]/mina-core.jar[jar]
+	[NOT REQUIRED] [ org.springframework | spring-webmvc | 2.0-m5 ]/spring-webmvc.jar[jar]
+	[NOT REQUIRED] [ apache | oro | 2.0.8 ]/oro.jar[jar]
+	resolved ivy file produced in C:\Documents and Settings\colin\.ivy\cache\resolved-org.springframework-spring-ldap-sample-working@oak.xml
+:: resolution report ::
+	:: evicted modules:
+	[ commons-lang | commons-lang | 2.1 ] by [[ commons-lang | commons-lang | 2.0 ]] in [global]
+	  in [ org.acegisecurity | acegi-security | 1.0.1 ] with latest-revision
+	---------------------------------------------------------------------
+	|                  |            modules            ||   artifacts   |
+	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+	---------------------------------------------------------------------
+	|      global      |   41  |   1   |   0   |   1   ||   36  |   0   |
+	|     buildtime    |   4   |   0   |   0   |   0   ||   4   |   0   |
+	|       test       |   4   |   0   |   0   |   0   ||   3   |   0   |
+	---------------------------------------------------------------------
+WARN: 	::::::::::::::::::::::::::::::::::::::::::::::
+WARN: 	::          UNRESOLVED DEPENDENCIES         ::
+WARN: 	::::::::::::::::::::::::::::::::::::::::::::::
+WARN: 	:: [ org.springframework | spring-support | 1.2.7 ]: not found
+WARN: 	:: [ org.springframework | spring-jdbc | 1.2.7 ]: not found
+WARN: 	:: [ springframework | spring-mock | 2.0-m5 ]: not found
+WARN: 	:: [ apache | directory | 0.9.5 ]: not found
+WARN: 	:: [ org.springframework | spring-remoting | 1.2.7 ]: not found
+WARN: 	::::::::::::::::::::::::::::::::::::::::::::::
+
+	report for [ org.springframework | spring-ldap-sample | null ] global produced in C:\Documents and Settings\colin\.ivy\cache\org.springframework-spring-ldap-sample-global.xml
+	report for [ org.springframework | spring-ldap-sample | null ] buildtime produced in C:\Documents and Settings\colin\.ivy\cache\org.springframework-spring-ldap-sample-buildtime.xml
+	report for [ org.springframework | spring-ldap-sample | null ] test produced in C:\Documents and Settings\colin\.ivy\cache\org.springframework-spring-ldap-sample-test.xml
+	resolve done (12156ms)
+
+:: problems summary ::
+	WARN:  	module not found: [ org.springframework | spring-remoting | 1.2.7 ]
+	WARN:  		integration-repo: tried D:\src\open\spring-colin\spring-projects\common-build/../integration-repo/artifacts/org.springframework/spring-remoting/ivy-1.2.7.xml
+	WARN:  		integration-repo: tried artifact [ org.springframework | spring-remoting | 1.2.7 ]/spring-remoting.jar[jar]:
+	WARN:  			D:\src\open\spring-colin\spring-projects\common-build/../integration-repo/artifacts/org.springframework/spring-remoting/1.2.7/spring-remoting-1.2.7.jar
+	WARN:  		filesystem-repo: tried D:\src\open\spring-colin\spring-projects\common-build/../repository/org.springframework/spring-remoting/ivy-1.2.7.xml
+	WARN:  		filesystem-repo: tried artifact [ org.springframework | spring-remoting | 1.2.7 ]/spring-remoting.jar[jar]:
+	WARN:  			D:\src\open\spring-colin\spring-projects\common-build/../repository/org.springframework/spring-remoting/1.2.7/spring-remoting-1.2.7.jar
+	WARN:  		spring-repo: tried https://svn.sourceforge.net/svnroot/springframework/repos/repo/org.springframework/spring-remoting/ivy-1.2.7.xml
+	WARN:  		spring-repo: tried artifact [ org.springframework | spring-remoting | 1.2.7 ]/spring-remoting.jar[jar]:
+	WARN:  			https://svn.sourceforge.net/svnroot/springframework/repos/repo/org.springframework/spring-remoting/1.2.7/spring-remoting-1.2.7.jar
+	WARN:  		spring-repo-snapshots: tried https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org.springframework/spring-remoting/ivy-1.2.7.xml
+	WARN:  		spring-repo-snapshots: tried artifact [ org.springframework | spring-remoting | 1.2.7 ]/spring-remoting.jar[jar]:
+	WARN:  			https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org.springframework/spring-remoting/1.2.7/spring-remoting-1.2.7.jar
+	WARN:  	module not found: [ org.springframework | spring-jdbc | 1.2.7 ]
+	WARN:  		integration-repo: tried D:\src\open\spring-colin\spring-projects\common-build/../integration-repo/artifacts/org.springframework/spring-jdbc/ivy-1.2.7.xml
+	WARN:  		integration-repo: tried artifact [ org.springframework | spring-jdbc | 1.2.7 ]/spring-jdbc.jar[jar]:
+	WARN:  			D:\src\open\spring-colin\spring-projects\common-build/../integration-repo/artifacts/org.springframework/spring-jdbc/1.2.7/spring-jdbc-1.2.7.jar
+	WARN:  		filesystem-repo: tried D:\src\open\spring-colin\spring-projects\common-build/../repository/org.springframework/spring-jdbc/ivy-1.2.7.xml
+	WARN:  		filesystem-repo: tried artifact [ org.springframework | spring-jdbc | 1.2.7 ]/spring-jdbc.jar[jar]:
+	WARN:  			D:\src\open\spring-colin\spring-projects\common-build/../repository/org.springframework/spring-jdbc/1.2.7/spring-jdbc-1.2.7.jar
+	WARN:  		spring-repo: tried https://svn.sourceforge.net/svnroot/springframework/repos/repo/org.springframework/spring-jdbc/ivy-1.2.7.xml
+	WARN:  		spring-repo: tried artifact [ org.springframework | spring-jdbc | 1.2.7 ]/spring-jdbc.jar[jar]:
+	WARN:  			https://svn.sourceforge.net/svnroot/springframework/repos/repo/org.springframework/spring-jdbc/1.2.7/spring-jdbc-1.2.7.jar
+	WARN:  		spring-repo-snapshots: tried https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org.springframework/spring-jdbc/ivy-1.2.7.xml
+	WARN:  		spring-repo-snapshots: tried artifact [ org.springframework | spring-jdbc | 1.2.7 ]/spring-jdbc.jar[jar]:
+	WARN:  			https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org.springframework/spring-jdbc/1.2.7/spring-jdbc-1.2.7.jar
+	WARN:  	module not found: [ org.springframework | spring-support | 1.2.7 ]
+	WARN:  		integration-repo: tried D:\src\open\spring-colin\spring-projects\common-build/../integration-repo/artifacts/org.springframework/spring-support/ivy-1.2.7.xml
+	WARN:  		integration-repo: tried artifact [ org.springframework | spring-support | 1.2.7 ]/spring-support.jar[jar]:
+	WARN:  			D:\src\open\spring-colin\spring-projects\common-build/../integration-repo/artifacts/org.springframework/spring-support/1.2.7/spring-support-1.2.7.jar
+	WARN:  		filesystem-repo: tried D:\src\open\spring-colin\spring-projects\common-build/../repository/org.springframework/spring-support/ivy-1.2.7.xml
+	WARN:  		filesystem-repo: tried artifact [ org.springframework | spring-support | 1.2.7 ]/spring-support.jar[jar]:
+	WARN:  			D:\src\open\spring-colin\spring-projects\common-build/../repository/org.springframework/spring-support/1.2.7/spring-support-1.2.7.jar
+	WARN:  		spring-repo: tried https://svn.sourceforge.net/svnroot/springframework/repos/repo/org.springframework/spring-support/ivy-1.2.7.xml
+	WARN:  		spring-repo: tried artifact [ org.springframework | spring-support | 1.2.7 ]/spring-support.jar[jar]:
+	WARN:  			https://svn.sourceforge.net/svnroot/springframework/repos/repo/org.springframework/spring-support/1.2.7/spring-support-1.2.7.jar
+	WARN:  		spring-repo-snapshots: tried https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org.springframework/spring-support/ivy-1.2.7.xml
+	WARN:  		spring-repo-snapshots: tried artifact [ org.springframework | spring-support | 1.2.7 ]/spring-support.jar[jar]:
+	WARN:  			https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/org.springframework/spring-support/1.2.7/spring-support-1.2.7.jar
+	WARN:  	module not found: [ apache | directory | 0.9.5 ]
+	WARN:  		filesystem-repo: tried D:\src\open\spring-colin\spring-projects\common-build/../repository/apache/directory/ivy-0.9.5.xml
+	WARN:  		filesystem-repo: tried artifact [ apache | directory | 0.9.5 ]/shared-ldap.jar[jar]:
+	WARN:  			D:\src\open\spring-colin\spring-projects\common-build/../repository/apache/directory/0.9.5/shared-ldap-0.9.5.jar
+	WARN:  		filesystem-repo: tried artifact [ apache | directory | 0.9.5 ]/shared-asn1.jar[jar]:
+	WARN:  			D:\src\open\spring-colin\spring-projects\common-build/../repository/apache/directory/0.9.5/shared-asn1-0.9.5.jar
+	WARN:  		spring-repo-ext: tried https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/apache/directory/ivy-0.9.5.xml
+	WARN:  		spring-repo-ext: tried artifact [ apache | directory | 0.9.5 ]/shared-asn1.jar[jar]:
+	WARN:  			https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/apache/directory/0.9.5/shared-asn1-0.9.5.jar
+	WARN:  		spring-repo-ext: tried artifact [ apache | directory | 0.9.5 ]/shared-ldap.jar[jar]:
+	WARN:  			https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/apache/directory/0.9.5/shared-ldap-0.9.5.jar
+	WARN:  		dotsrc-maven2-repo: tried http://mirrors.dotsrc.org/maven2/apache/directory/0.9.5/ivy-0.9.5.xml
+	WARN:  		dotsrc-maven2-repo: tried artifact [ apache | directory | 0.9.5 ]/shared-asn1.jar[jar]:
+	WARN:  			http://mirrors.dotsrc.org/maven2/apache/directory/0.9.5/shared-asn1-0.9.5.jar
+	WARN:  		dotsrc-maven2-repo: tried artifact [ apache | directory | 0.9.5 ]/shared-ldap.jar[jar]:
+	WARN:  			http://mirrors.dotsrc.org/maven2/apache/directory/0.9.5/shared-ldap-0.9.5.jar
+	WARN:  		ivyrep: tried http://ivyrep.jayasoft.org/apache/directory/ivy-0.9.5.xml
+	WARN:  		ivyrep: tried artifact [ apache | directory | 0.9.5 ]/shared-ldap.jar[jar]:
+	WARN:  			http://www.ibiblio.org/maven/directory/jars/shared-ldap-0.9.5.jar
+	WARN:  		ivyrep: tried artifact [ apache | directory | 0.9.5 ]/shared-asn1.jar[jar]:
+	WARN:  			http://www.ibiblio.org/maven/directory/jars/shared-asn1-0.9.5.jar
+	WARN:  	module not found: [ springframework | spring-mock | 2.0-m5 ]
+	WARN:  		filesystem-repo: tried D:\src\open\spring-colin\spring-projects\common-build/../repository/springframework/spring-mock/ivy-2.0-m5.xml
+	WARN:  		filesystem-repo: tried artifact [ springframework | spring-mock | 2.0-m5 ]/spring-mock.jar[jar]:
+	WARN:  			D:\src\open\spring-colin\spring-projects\common-build/../repository/springframework/spring-mock/2.0-m5/spring-mock-2.0-m5.jar
+	WARN:  		spring-repo-ext: tried https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/springframework/spring-mock/ivy-2.0-m5.xml
+	WARN:  		spring-repo-ext: tried artifact [ springframework | spring-mock | 2.0-m5 ]/spring-mock.jar[jar]:
+	WARN:  			https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/springframework/spring-mock/2.0-m5/spring-mock-2.0-m5.jar
+	WARN:  		dotsrc-maven2-repo: tried http://mirrors.dotsrc.org/maven2/springframework/spring-mock/2.0-m5/ivy-2.0-m5.xml
+	WARN:  		dotsrc-maven2-repo: tried artifact [ springframework | spring-mock | 2.0-m5 ]/spring-mock.jar[jar]:
+	WARN:  			http://mirrors.dotsrc.org/maven2/springframework/spring-mock/2.0-m5/spring-mock-2.0-m5.jar
+	WARN:  		ivyrep: tried http://ivyrep.jayasoft.org/springframework/spring-mock/ivy-2.0-m5.xml
+	WARN:  		ivyrep: tried artifact [ springframework | spring-mock | 2.0-m5 ]/spring-mock.jar[jar]:
+	WARN:  			http://www.ibiblio.org/maven/spring-mock/jars/spring-mock-2.0-m5.jar
+	WARN:  	::::::::::::::::::::::::::::::::::::::::::::::
+	WARN:  	::          UNRESOLVED DEPENDENCIES         ::
+	WARN:  	::::::::::::::::::::::::::::::::::::::::::::::
+	WARN:  	:: [ org.springframework | spring-support | 1.2.7 ]: not found
+	WARN:  	:: [ org.springframework | spring-jdbc | 1.2.7 ]: not found
+	WARN:  	:: [ springframework | spring-mock | 2.0-m5 ]: not found
+	WARN:  	:: [ apache | directory | 0.9.5 ]: not found
+	WARN:  	:: [ org.springframework | spring-remoting | 1.2.7 ]: not found
+	WARN:  	::::::::::::::::::::::::::::::::::::::::::::::
+
+
+	--- USE VERBOSE OR DEBUG MESSAGE LEVEL FOR MORE DETAILS ---

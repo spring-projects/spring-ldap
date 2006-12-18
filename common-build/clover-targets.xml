@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+
+<!--
+ Copyright 2002-2005 the original author or authors.
+  
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+      http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+ - - -
+ Author: Colin Sampaleanu
+ Author: Keith Donald
+ 
+ Ant XML fragment that contains useful targets for working with clover.  These 
+ include targets to instrument (cloverize) project code, execute tests with clover,
+ and produce test coverage reports.
+ 
+ This ant XML fragment is meant to be imported into a project build file, along with
+ common-targets.xml. This is an optional module, and due to the way the ant import works,
+ there is no way to automatically hook this up into the build. The importing project
+ must override appropropriate 'hook' targets from common-targets.xml, and then have
+ the override targets depend on both the targets from common-targets and those from here.
+ 
+ Note, for clover to work:
+ - Make sure clover.jar and cenquatasks.jar is in your ant lib directory.
+ - Make sure clover.jar is expressed as a test dependency for your project.
+-->
+
+<project name="clover-targets" xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+
+	<import file="common-targets.xml" />
+
+	<target name="clover.tasks" depends="retrieve">
+		<taskdef resource="com/cenqua/ant/antlib.xml" classpath="${test.classpath}" />
+		<taskdef resource="clovertasks" classpath="${test.classpath}" />
+	</target>
+
+	<target name="-check.clover" depends="clover.tasks">
+		<available property="clover.installed" classname="com.cenqua.clover.CloverInstr" />
+	</target>
+
+	<target name="guard.noclover" depends="-check.clover" unless="clover.installed">
+		<fail message="The target you are attempting to run requires Clover, which doesn't appear" />
+	</target>
+
+	<target name="clover.init" depends="guard.noclover">
+		<property name="target.clover.dir" value="${target.dir}/clover" />
+		<mkdir dir="${target.clover.dir}" />
+		<clover-setup initstring="${target.clover.dir}/coverage.db" tmpdir="${target.clover.dir}" preserve="true">
+			<fileset dir="${src.java.main.dir}">
+				<include name="**/*.java" />
+			</fileset>
+		</clover-setup>
+	</target>
+
+	<target name="clover.instrument" depends="clover.init, compile" />
+
+	<target name="clover-report" depends="clover.instrument, tests-local" description="Produce a test coverage report">
+		<clover-report>
+			<current outfile="${target.clover.dir}/html">
+				<format type="html" />
+			</current>
+		</clover-report>
+	</target>
+
+	<target name="clover-summary" depends="clover.instrument, tests-local" description="Produce a test coverage summary">
+		<clover-report>
+			<current summary="yes" outfile="${target.clover.dir}/coverage.pdf">
+				<format type="pdf" />
+			</current>
+		</clover-report>
+	</target>
+
+</project>

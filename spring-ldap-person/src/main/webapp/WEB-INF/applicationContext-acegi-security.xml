@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<!-- ======================== FILTER CHAIN ======================= -->
+
+	<bean id="filterChainProxy" class="org.acegisecurity.util.FilterChainProxy">
+		<property name="filterInvocationDefinitionSource">
+			<value>
+				CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+				PATTERN_TYPE_APACHE_ANT
+				/**=httpSessionContextIntegrationFilter,authenticationProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor
+			</value>
+		</property>
+	</bean>
+
+	<!-- ======================== AUTHENTICATION ======================= -->
+
+	<bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
+		<property name="providers">
+			<list>
+				<ref local="ldapAuthenticationProvider" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="ldapAuthenticationProvider" class="org.acegisecurity.providers.ldap.LdapAuthenticationProvider">
+		<constructor-arg ref="ldapAuthenticator" />
+		<constructor-arg ref="ldapAuthoritiesPopulator" />
+	</bean>
+
+	<bean id="ldapAuthenticator" class="org.acegisecurity.providers.ldap.authenticator.BindAuthenticator">
+		<constructor-arg ref="contextFactory" />
+		<property name="userSearch" ref="ldapUserSearch" />
+		<property name="userDetailsMapper" ref="userDetailsMapper" />
+	</bean>
+	
+	<bean id="ldapAuthoritiesPopulator" class="org.acegisecurity.providers.ldap.populator.DefaultLdapAuthoritiesPopulator">
+		<constructor-arg ref="contextFactory" />
+		<constructor-arg value="ou=groups" />
+		<property name="groupSearchFilter" value="(uniqueMember={0})" />
+	</bean>
+
+	<bean id="userDetailsMapper" class="org.acegisecurity.userdetails.ldap.LdapUserDetailsMapper" />
+
+	<!-- =================================================================================== -->
+	<!--
+		Replace the above ldapAuthenticator, ldapAuthoritiesPopulator, and userDetailsMapper
+		with the following in order to use the 'description' attribute as a role attribute
+		instead of adding/removing DNs from groups.
+	-->
+	<!--
+	<bean id="ldapAuthenticator" class="org.acegisecurity.providers.ldap.authenticator.BindAuthenticator">
+		<constructor-arg ref="contextFactory" />
+		<property name="userAttributes" value="description" />
+		<property name="userSearch" ref="ldapUserSearch" />
+		<property name="userDetailsMapper" ref="userDetailsMapper" />
+	</bean>
+
+	<bean id="ldapAuthoritiesPopulator" class="org.acegisecurity.providers.ldap.populator.DefaultLdapAuthoritiesPopulator">
+		<constructor-arg ref="contextFactory" />
+		<constructor-arg value="" />
+		<constructor-arg value="ou=groups" />
+	</bean>
+
+	<bean id="userDetailsMapper" class="org.acegisecurity.userdetails.ldap.LdapUserDetailsMapper">
+		<property name="roleAttributes" value="description" />
+	</bean>
+	-->
+	<!-- =================================================================================== -->
+	
+	<bean id="contextFactory" class="org.acegisecurity.ldap.DefaultInitialDirContextFactory">
+		<constructor-arg value="ldap://localhost:389/dc=jayway,dc=se" />
+	</bean>
+	
+	<bean id="ldapUserSearch" class="org.acegisecurity.ldap.search.FilterBasedLdapUserSearch">
+		<constructor-arg index="0" value="" />
+		<constructor-arg index="1" value="(&amp;(uid={0})(objectclass=person))" />
+		<constructor-arg index="2" ref="contextFactory" />
+		<property name="searchSubtree" value="true" />
+	</bean>
+	
+	<!-- Automatically receives AuthenticationEvent messages -->
+	<bean id="loggerListener" class="org.acegisecurity.event.authentication.LoggerListener" />
+
+	<bean id="httpSessionContextIntegrationFilter" class="org.acegisecurity.context.HttpSessionContextIntegrationFilter" />
+
+	<!-- ===================== HTTP REQUEST SECURITY ==================== -->
+
+	<bean id="exceptionTranslationFilter" class="org.acegisecurity.ui.ExceptionTranslationFilter">
+		<property name="authenticationEntryPoint" ref="authenticationProcessingFilterEntryPoint" />
+	</bean>
+
+	<bean id="authenticationProcessingFilter" class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilter">
+		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="authenticationFailureUrl" value="/acegilogin.jsp?login_error=1" />
+		<property name="defaultTargetUrl" value="/" />
+		<property name="filterProcessesUrl" value="/j_acegi_security_check" />
+	</bean>
+
+	<bean id="authenticationProcessingFilterEntryPoint"
+		class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint">
+		<property name="loginFormUrl" value="/acegilogin.jsp" />
+		<property name="forceHttps" value="false" />
+	</bean>
+
+	<bean id="httpRequestAccessDecisionManager" class="org.acegisecurity.vote.AffirmativeBased">
+		<property name="allowIfAllAbstainDecisions" value="false" />
+		<property name="decisionVoters">
+			<list>
+				<ref bean="roleVoter" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- An access decision voter that reads ROLE_* configuration settings -->
+	<bean id="roleVoter" class="org.acegisecurity.vote.RoleVoter" />
+
+	<!-- Note the order that entries are placed against the objectDefinitionSource is critical.
+		The FilterSecurityInterceptor will work from the top of the list down to the FIRST pattern that matches the request URL.
+		Accordingly, you should place MOST SPECIFIC (ie a/b/c/d.*) expressions first, with LEAST SPECIFIC (ie a/.*) expressions last -->
+	<bean id="filterSecurityInterceptor" class="org.acegisecurity.intercept.web.FilterSecurityInterceptor">
+		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="accessDecisionManager" ref="httpRequestAccessDecisionManager" />
+		<property name="objectDefinitionSource">
+			<value>
+				CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+				PATTERN_TYPE_APACHE_ANT
+				/ldaptemplate.htm*=ROLE_USER
+			</value>
+		</property>
+	</bean>
+
+</beans>

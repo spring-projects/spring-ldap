@@ -1,0 +1,25 @@
+#
+# LDAP Defaults
+#
+
+# See ldap.conf(5) for details
+# This file should be world readable but not world writable.
+
+#BASE	dc=example, dc=com
+#URI	ldap://ldap.example.com ldap://ldap-master.example.com:666
+
+#SIZELIMIT	12
+#TIMELIMIT	15
+#DEREF		never
+
+include	"C:/Program Files/OpenLDAP/schema/core.schema"
+include	"C:/Program Files/OpenLDAP/schema/cosine.schema"
+include	"C:/Program Files/OpenLDAP/schema/inetorgperson.schema"
+database bdb
+suffix	"dc=jayway,dc=se"
+rootdn	"cn=Manager,dc=jayway,dc=se"
+rootpw 	secret
+directory "C:/Program Files/OpenLDAP/data"
+access to *
+    by users write
+    by * read

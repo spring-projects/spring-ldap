@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+    
+	<bean id="placeholderConfig"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:/conf/ldap-openldap.properties" />
+	</bean>
+	
+	<bean id="contextSource" class="org.springframework.ldap.support.LdapContextSource" >
+		<property name="urls" value="${urls}" />
+		<property name="userName" value="${userName}" />
+		<property name="password" value="${password}" />
+		<property name="dirObjectFactory" value="org.springframework.ldap.support.DefaultDirObjectFactory" />
+	</bean>
+	
+	<bean id="ldapTemplate" class="org.springframework.ldap.LdapTemplate">
+		<constructor-arg ref="contextSource" />
+	</bean>
+
+</beans>

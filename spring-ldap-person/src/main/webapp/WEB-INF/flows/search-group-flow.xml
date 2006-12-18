@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+
+	<start-state idref="enterCriteria" />
+
+	<view-state id="enterCriteria" view="searchGroupForm">
+		<render-actions>
+			<action bean="searchGroupFormAction" method="setupForm" />
+		</render-actions>
+		<transition on="search" to="performSearch">
+			<action bean="searchGroupFormAction" method="bindAndValidate" />
+		</transition>
+		<transition on="cancel" to="cancel"/>
+	</view-state>
+
+	<action-state id="performSearch">
+		<bean-action bean="groupService" method="find">
+			<method-arguments>
+				<argument expression="flowScope.searchCriteria" />
+			</method-arguments>
+			<method-result name="groups" scope="flow" />
+		</bean-action>
+		<transition to="finish" />
+	</action-state>
+
+	<end-state id="finish">
+		<output-mapper>
+			<output-attribute name="groups" />
+		</output-mapper>
+	</end-state>
+
+	<end-state id="cancel" />
+
+	<import resource="search-group-flow-beans.xml" />
+
+</flow>

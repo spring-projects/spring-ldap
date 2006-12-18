@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?><fileset-config file-format-version="1.1.0" simple-config="true">
+<fileset name="all" enabled="true" check-config-name="Sun Checks" type="builtin" location="sun_checks.xml" description="Checkstyle configuration that checks the sun coding conventions."><file-match-pattern match-pattern="." include-pattern="true"/>
+</fileset>
+</fileset-config>

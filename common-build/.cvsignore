@@ -1,0 +1,11 @@
+build.properties
+*.jpx.local*
+*.log
+*.iws
+*.tws
+target
+dist
+gen-src
+bak
+mimedata
+ivy-cache

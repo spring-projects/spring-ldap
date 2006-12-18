@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<!--
+ Copyright 2002-2005 the original author or authors.
+  
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+      http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+ - - -
+ Author: Keith Donald
+-->
+
+<project name="spring-targets" xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+
+	<import file="common-targets.xml"/>
+
+	<target name="spring-beandoc" depends="init" description="Generate Spring bean documentation">
+
+		<property name="spring.beandoc.input.files" value="${src.web.dir}/WEB-INF/applicationContext.xml"/>
+		<property name="spring.beandoc.output.dir" value="${target.artifacts.dir}/beandoc/"/>
+		<property name="spring.beandoc.properties" value="${common.build.dir}/beandoc.properties"/>
+
+		<mkdir dir="${spring.beandoc.output.dir}"/>
+
+		<path id="beandoc.classpath">
+			<path refid="test.classpath"/>
+		</path>
+
+		<taskdef name="beandoc" classname="org.springframework.beandoc.client.AntTask">
+			<classpath refid="beandoc.classpath"/>
+		</taskdef>
+
+		<beandoc 
+			inputFiles="${spring.beandoc.input.files}" 
+			outputDir="${spring.beandoc.output.dir}"
+	   		beandocProps="${spring.beandoc.properties}"
+		/>
+	</target>
+
+</project>

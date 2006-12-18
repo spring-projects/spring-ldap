@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+
+<jar name="ldap-person.war">
+  <dir path="WEB-INF/classes" from="target/classes"/>
+  <dir path="WEB-INF/lib" from="lib/global" />
+  <dir path="" from="src/main/webapp" />
+</jar>

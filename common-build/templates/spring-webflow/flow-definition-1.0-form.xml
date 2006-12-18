@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+
+	<start-state idref="displayForm"/>
+
+	<view-state id="displayForm" view="form">
+		<render-actions>
+			<action bean="formAction" method="setupForm"/>
+		</render-actions>
+		<transition on="submit" to="finish">
+			<action bean="formAction" method="bindAndValidate"/>
+		</transition>
+	</view-state>
+
+	<end-state id="finish"/>
+	
+	<import resource="my-flow-beans.xml"/>
+	
+</flow>

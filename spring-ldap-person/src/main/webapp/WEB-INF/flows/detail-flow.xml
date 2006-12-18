@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+
+	<input-mapper>
+		<input-attribute name="name"/>
+		<input-attribute name="company"/>
+		<input-attribute name="country"/>
+	</input-mapper>
+
+	<start-state idref="displayDetails" />
+
+	<view-state id="displayDetails" view="showDetails">
+		<render-actions>
+			<!-- get a person to work with -->
+			<bean-action bean="personService" method="findByPrimaryKey">
+				<method-arguments>
+					<argument expression="flowScope.country" />
+					<argument expression="flowScope.company" />
+					<argument expression="flowScope.name" />
+				</method-arguments>
+				<method-result name="person" />
+			</bean-action>
+		</render-actions>
+
+		<transition on="back" to="finish" />
+		<transition on="edit" to="editDetails" />
+	</view-state>
+
+	<view-state id="editDetails" view="editDetails">
+		<render-actions>
+			<!-- get a person to work with -->
+			<bean-action bean="personService" method="findByPrimaryKey">
+				<method-arguments>
+					<argument expression="flowScope.country" />
+					<argument expression="flowScope.company" />
+					<argument expression="flowScope.name" />
+				</method-arguments>
+				<method-result name="person" scope="flow" />
+			</bean-action>
+
+			<!-- setup form with person -->
+			<action bean="editPersonFormAction" method="setupForm"/>
+		</render-actions>
+
+		<transition on="cancel" to="displayDetails" />
+		<transition on="submit" to="displayDetails">
+			<!-- get updated form data back into person object -->
+			<action bean="editPersonFormAction" method="bindAndValidate"/>
+
+			<!-- update database with person in flowScope-->
+			<bean-action bean="personService" method="update">
+				<method-arguments>
+					<argument expression="flowScope.person" />
+				</method-arguments>
+			</bean-action>
+		</transition>
+	</view-state>
+
+	<end-state id="finish" />
+
+	<import resource="detail-flow-beans.xml"/>
+
+</flow>

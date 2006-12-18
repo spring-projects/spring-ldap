@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beansProjectDescription>
+	<configs>
+		<config>src/iutest/config/testContext.xml</config>
+	</configs>
+	<configSets>
+		<configSet>
+			<name>default</name>
+			<allowBeanDefinitionOverriding>false</allowBeanDefinitionOverriding>
+			<incomplete>false</incomplete>
+			<configs>
+				<config>src/iutest/config/testContext.xml</config>
+			</configs>
+		</configSet>
+	</configSets>
+</beansProjectDescription>

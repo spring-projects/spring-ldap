@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<pomVersion>3</pomVersion>
+	<logo></logo>
+	<id>ldaptemplate</id>
+	<name>LdapTemplate</name>
+	<groupId>ldaptemplate</groupId>
+	<artifactId>ldaptemplate</artifactId>
+	<currentVersion>1.0.2</currentVersion>
+	<issueTrackingUrl>http://jira.ddsteps.org/browse/LDT</issueTrackingUrl>
+	<inceptionYear>2006</inceptionYear>
+	<package>org.springframework.ldap</package>
+	<description>
+	    &lt;p&gt;
+		LdapTemplate is a framework to simplify LDAP programming in
+		Java, built on the same principles as Spring Jdbc.
+	    &lt;/p&gt;
+        &lt;p&gt;
+		The LdapTemplate class encapsulates all the plumbing work
+		involved in traditional LDAP programming, such as creating,
+		looping through NamingEnumerations, handling Exceptions and
+		cleaning up resources. This leaves the programmer to handle the
+		important stuff - where to find data (DNs and Filters) and what
+		to do with it (map to and from domain objects, bind, modify,
+		unbind, etc.), in the same way that JdbcTemplate relieves the
+		programmer of all but the actual SQL and how the data maps to
+		the domain model.
+	    &lt;/p&gt;
+        &lt;p&gt;
+		In addition to this, LdapTemplate provides Exception translation
+		from NamingExceptions to DataAccessExceptions, as well as
+		several utilities for working with filters, LDAP paths and
+		Attributes.
+	    &lt;/p&gt;
+	</description>
+	<shortDescription>
+		Java framework for easier LDAP programming
+	</shortDescription>
+	<url>http://sourceforge.net/projects/ldaptemplate</url>
+	<repository />
+	<mailingLists>
+		<mailingList>
+			<name>ldaptemplate-user</name>
+			<subscribe>http://lists.sourceforge.net/mailman/listinfo/ldaptemplate-user</subscribe>
+			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/ldaptemplate-user</unsubscribe>
+			<post>mailto:ldaptemplate-user@lists.sourceforge.net</post>
+			<archive>http://sourceforge.net/mailarchive/forum.php?forum_id=47521</archive>
+		</mailingList>
+	</mailingLists>
+	<developers>
+		<developer>
+			<name>Mattias Arthursson</name>
+			<id>marthursson</id>
+			<email>mattias-DOT-arthursson-AT-jayway-dot-se</email>
+			<organization>Jayway AB</organization>
+			<organizationUrl>http://www.jayway.se</organizationUrl>
+			<timezone>1</timezone>
+			<roles>
+				<role>Project Lead</role>
+				<role>SourceForge Admin</role>
+				<role>Committer</role>
+			</roles>
+		</developer>
+		<developer>
+			<name>Ulrik Sandberg</name>
+			<id>ulsa</id>
+			<email>ulrik_DOT_sandberg-AT-jayway_DOT_se</email>
+			<organization>Jayway AB</organization>
+			<organizationUrl>http://www.jayway.se</organizationUrl>
+			<timezone>1</timezone>
+			<roles>
+				<role>Project Lead</role>
+				<role>SourceForge Admin</role>
+				<role>Committer</role>
+			</roles>
+		</developer>
+	</developers>
+	<contributors>
+		<contributor>
+			<name>Gregor Middell</name>
+		</contributor>
+	</contributors>
+	<organization>
+		<name>Jayway AB</name>
+		<url>http://www.jayway.se</url>
+	</organization>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+			<distribution>manual</distribution>
+		</license>
+	</licenses>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.0.4</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.1</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>3.1</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>easymock</groupId>
+			<artifactId>easymock</artifactId>
+			<version>1.1</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>easymock</groupId>
+			<artifactId>easymockclassextension</artifactId>
+			<version>1.1</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>1.2.6</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>1.2.6</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>1.2.6</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>springframework</groupId>
+			<artifactId>spring-dao</artifactId>
+			<version>1.2.6</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib-full</artifactId>
+			<version>2.0.1</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>gsbase</groupId>
+			<artifactId>gsbase</artifactId>
+			<version>2.0</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>acegisecurity</groupId>
+			<artifactId>acegi-security</artifactId>
+			<version>1.0.0-RC2</version>
+			<type>jar</type>
+		</dependency>
+	</dependencies>
+	<build>
+		<nagEmailAddress>mattias.arthursson@jayway.se</nagEmailAddress>
+		<sourceDirectory>src/java</sourceDirectory>
+		<unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+		<unitTest>
+			<includes>
+				<include>**/*Test.java</include>
+			</includes>
+			<resources>
+				<resource>
+					<directory>src/test</directory>
+					<includes>
+						<include>**/*.dtd</include>
+						<include>**/*.xls</include>
+						<include>**/*.xml</include>
+						<include>**/*.properties</include>
+					</includes>
+					<filtering>false</filtering>
+				</resource>
+			</resources>
+		</unitTest>
+		<resources>
+			<resource>
+				<directory>src/java</directory>
+				<includes>
+					<include>**/*.dtd</include>
+					<include>**/*.xml</include>
+					<include>**/*.properties</include>
+					<include>**/*.xls</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
+			<resource>
+				<directory>src/test</directory>
+				<includes>
+					<include>**/*.dtd</include>
+					<include>**/*.xml</include>
+					<include>**/*.properties</include>
+					<include>**/*.xls</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
+	</build>
+	<reports>
+		<!--<report>maven-changelog-plugin</report>-->
+		<report>maven-changes-plugin</report>
+		<!-- <report>maven-checkstyle-plugin</report>-->
+		<!-- <report>maven-developer-activity-plugin</report> -->
+		<report>maven-faq-plugin</report>
+		<!--<report>maven-file-activity-plugin</report>-->
+		<report>maven-javadoc-plugin</report>
+		<report>maven-jdepend-plugin</report>
+		<report>maven-jcoverage-plugin</report>
+		<report>maven-junit-report-plugin</report>
+		<report>maven-jxr-plugin</report>
+		<report>maven-license-plugin</report>
+		<!--<report>maven-linkcheck-plugin</report>-->
+		<!--<report>maven-pmd-plugin</report>-->
+		<!--<report>maven-simian-plugin</report>-->
+		<!--<report>maven-statcvs-plugin</report>-->
+		<!--<report>maven-tasklist-plugin</report>-->
+	</reports>
+</project>

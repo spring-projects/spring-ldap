@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="target/classes" path="src/main/java"/>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/test/easymock.jar" sourcepath="lib/source/easymock-src.zip"/>
+	<classpathentry kind="lib" path="lib/test/junit.jar" sourcepath="lib/source/junit-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/commons-logging.jar" sourcepath="lib/source/commons-logging-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/log4j.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-core.jar" sourcepath="lib/source/spring-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/spring-beans.jar" sourcepath="lib/source/spring-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/spring-context.jar" sourcepath="lib/source/spring-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/spring-dao.jar" sourcepath="lib/source/spring-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/spring-webflow.jar" sourcepath="lib/source/spring-webflow-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/spring-binding.jar" sourcepath="lib/source/spring-binding-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/ognl.jar"/>
+	<classpathentry kind="lib" path="lib/test/gsbase.jar"/>
+	<classpathentry kind="src" output="target/itest-classes" path="src/itest/java"/>
+	<classpathentry kind="lib" path="lib/test/spring-mock.jar" sourcepath="lib/source/spring-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/commons-lang.jar" sourcepath="lib/source/commons-lang-src.zip"/>
+	<classpathentry kind="lib" path="lib/test/clover.jar"/>
+	<classpathentry kind="lib" path="lib/global/commons-collections.jar" sourcepath="lib/source/commons-collections-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/spring-web.jar" sourcepath="lib/source/spring-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/spring-webmvc.jar" sourcepath="lib/source/spring-src.zip"/>
+	<classpathentry kind="lib" path="lib/buildtime/servlet-api.jar"/>
+	<classpathentry kind="lib" path="lib/global/jstl.jar"/>
+	<classpathentry kind="lib" path="lib/global/standard.jar"/>
+	<classpathentry kind="lib" path="lib/global/acegi-security.jar" sourcepath="lib/source/acegi-security-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/antlr.jar"/>
+	<classpathentry kind="lib" path="lib/global/apacheds-core.jar"/>
+	<classpathentry kind="lib" path="lib/global/apacheds-core-shared.jar"/>
+	<classpathentry kind="lib" path="lib/global/apacheds-kerberos-shared.jar"/>
+	<classpathentry kind="lib" path="lib/global/apacheds-protocol-changepw.jar"/>
+	<classpathentry kind="lib" path="lib/global/apacheds-protocol-kerberos.jar"/>
+	<classpathentry kind="lib" path="lib/global/apacheds-protocol-ldap.jar"/>
+	<classpathentry kind="lib" path="lib/global/apacheds-protocol-shared.jar"/>
+	<classpathentry kind="lib" path="lib/global/apacheds-server-jndi.jar"/>
+	<classpathentry kind="lib" path="lib/global/apacheds-server-main.jar"/>
+	<classpathentry kind="lib" path="lib/global/jdbm.jar"/>
+	<classpathentry kind="lib" path="lib/global/mina-core.jar"/>
+	<classpathentry kind="lib" path="lib/global/mina-filter-codec-asn1.jar"/>
+	<classpathentry kind="lib" path="lib/global/mina-filter-ssl.jar"/>
+	<classpathentry kind="lib" path="lib/global/oro.jar"/>
+	<classpathentry kind="lib" path="lib/global/shared-asn1.jar"/>
+	<classpathentry kind="lib" path="lib/global/shared-ldap.jar"/>
+	<classpathentry kind="lib" path="lib/global/slf4j-log4j12.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-ldap.jar" sourcepath="lib/source/spring-ldap-src.zip"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

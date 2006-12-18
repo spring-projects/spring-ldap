@@ -1,0 +1,11 @@
+Spring-LDAP
+
+Release archive table of contents
+---------------------------------------------------
+* common-build - contains the ant 1.6 "common build system" used by all spring-ldap projects to compile/build/test
+* spring-ldap/build-spring-ldap - contains master build files to produce this release archive
+* spring-ldap/spring-ldap - contains project sources
+* spring-ldap/spring-ldap-person - contains a sample web project.
+* spring-ldap/spring-ldap-article - contains source code for an article published on java.net.
+
+See the readme.txt within the above directories for additional information.

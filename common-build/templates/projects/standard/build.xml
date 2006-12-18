@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<project name="@PROJECT_NAME@" default="dist">
+
+  <!-- you may override default properties for the build by using entries
+       in a build.properties file, or by just adding 'property' elements
+	   here, before the following properties files are loaded -->
+  <property file="build.properties"/>
+  <property file="project.properties"/>
+  <property file="${common.build.dir}/build.properties"/>
+  <property file="${common.build.dir}/project.properties"/>
+  <property file="${user.home}/build.properties"/>
+
+  <import file="${common.build.dir}/common-targets.xml"/>
+
+  <!-- import clover support -->
+  <import file="${common.build.dir}/clover-targets.xml"/>
+
+</project>

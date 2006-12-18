@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+	"http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<import resource="apacheDsContext.xml"/>
+
+	<bean id="placeholderConfig"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="WEB-INF/ldap.properties" />
+	</bean>
+
+	<!-- Authenticate using a fixed user -->
+	<!--
+	<bean id="contextSource" class="org.springframework.ldap.support.LdapContextSource" >
+		<property name="urls" value="${urls}" />
+		<property name="base" value="${base}" />
+		<property name="userName" value="${userName}" />
+		<property name="password" value="${password}" />
+		<property name="dirObjectFactory" value="org.springframework.ldap.support.DefaultDirObjectFactory" />
+	</bean>
+	 -->	
+
+	<!-- Authenticate using the currently logged in user, retrieved by Acegi Security -->
+	<bean id="contextSource" class="org.springframework.ldap.support.LdapContextSource" >
+		<property name="urls" value="${urls}" />
+		<property name="base" value="${base}" />
+		<property name="authenticationSource" ref="acegiAuthenticationSource" />
+		<property name="dirObjectFactory" value="org.springframework.ldap.support.DefaultDirObjectFactory" />
+		<!--
+		Disable pooling if you want to test changing the password after a user has logged in,
+		perhaps in order to verify that AcegiAuthenticationSource works correctly.
+
+		<property name="pooled" value="false" />
+		-->
+	</bean>
+	
+	<bean id="acegiAuthenticationSource" class="org.springframework.ldap.support.authentication.AcegiAuthenticationSource" />
+	
+	<bean id="ldapOperations" class="org.springframework.ldap.LdapTemplate">
+		<constructor-arg ref="contextSource" />
+	</bean>
+
+	<!-- ========================= SERVICE DEFINITIONS ========================= -->
+
+	<bean id="personDao"
+		class="org.springframework.ldap.samples.person.dao.PersonDaoImpl">
+		<property name="ldapOperations" ref="ldapOperations" />
+	</bean>
+
+	<bean id="traditionalPersonDao"
+		class="org.springframework.ldap.samples.person.dao.TraditionalPersonDaoImpl">
+		<property name="url" value="ldap://localhost:389" />
+		<property name="base" value="dc=jayway,dc=se" />
+	</bean>
+
+	<bean id="dummyPersonDao"
+		class="org.springframework.ldap.samples.person.dao.DummyPersonDao">
+	</bean>
+
+	<bean id="dummyGroupDao"
+		class="org.springframework.ldap.samples.person.dao.DummyGroupDao">
+	</bean>
+
+	<bean id="groupDao"
+		class="org.springframework.ldap.samples.person.dao.GroupDaoImpl">
+		<property name="ldapOperations" ref="ldapOperations" />
+	</bean>
+
+	<bean id="personService"
+		class="org.springframework.ldap.samples.person.service.PersonServiceImpl">
+		<property name="personDao" ref="personDao" />
+		<!-- Replace with this to use the dummy or the traditional implementation -->
+		<!--
+		<property name="personDao" ref="dummyPersonDao" />
+		<property name="personDao" ref="traditionalPersonDao" />
+		-->
+	</bean>
+
+	<bean id="groupService"
+		class="org.springframework.ldap.samples.person.service.GroupServiceImpl">
+		<property name="groupDao" ref="groupDao" />
+		<!-- Replace with this to use the dummy implementation -->
+		<!--
+		<property name="groupDao" ref="dummyGroupDao" />
+		-->
+	</bean>
+</beans>

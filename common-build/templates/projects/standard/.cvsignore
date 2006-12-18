@@ -1,0 +1,8 @@
+target
+lib
+bak
+build.properties
+*.log
+*.jpx.local*
+*.iws
+*.tws

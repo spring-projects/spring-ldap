@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="target/classes" path="src/main/java"/>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/test/easymock.jar" sourcepath="lib/source/easymock-src.zip"/>
+	<classpathentry kind="lib" path="lib/test/junit.jar" sourcepath="lib/source/junit-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/commons-logging.jar" sourcepath="lib/source/commons-logging-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/log4j.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-core.jar" sourcepath="lib/source/spring-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/spring-beans.jar" sourcepath="lib/source/spring-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/spring-context.jar" sourcepath="lib/source/spring-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/spring-dao.jar" sourcepath="lib/source/spring-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/ldapbp.jar"/>
+	<classpathentry kind="src" output="target/itest-classes" path="src/itest/java"/>
+	<classpathentry kind="lib" path="lib/test/spring-mock.jar" sourcepath="lib/source/spring-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/commons-lang.jar" sourcepath="lib/source/commons-lang-src.zip"/>
+	<classpathentry kind="lib" path="lib/test/clover.jar"/>
+	<classpathentry kind="lib" path="lib/global/commons-collections.jar" sourcepath="lib/source/commons-collections-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/spring-ldap.jar" sourcepath="lib/source/spring-ldap-src.zip"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

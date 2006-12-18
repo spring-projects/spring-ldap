@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+
+<!--
+ Copyright 2002-2005 the original author or authors.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+ - - -
+ Author: Alef Arendsen
+
+ Targets for generating reference documentation.
+-->
+
+<project name="doc-targets" xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+
+	<import file="common-targets.xml" />
+
+	<target name="doc-targets">
+		<echo>
+Targets for generating reference documentation.
+
+Please execute
+	ant -p
+
+to see a list of all relevant targets.
+		</echo>
+	</target>
+
+	<target name="doc-clean" description="Delete temporary directories for reference docs">
+		<delete quiet="true" dir="${docs.ref.target.dir}" />
+	</target>
+
+	<target name="doc-prepare">
+		<fail message="Supporting libraries needed to generate documentation not found in: ${docs.ref.lib.dir}, please see docs/reference/readme.txt for instructions.">
+			<condition>
+				<not>
+					<available file="${docs.ref.lib.dir}" />
+				</not>
+			</condition>
+		</fail>
+		<copy todir="${docs.ref.target.dir}/images">
+			<fileset dir="${docs.ref.dir}/images">
+				<include name="*.gif" />
+				<include name="*.png" />
+				<include name="*.svg" />
+				<include name="*.jpg" />
+			</fileset>
+			<fileset dir="${docs.ref.dir}/images">
+				<include name="**/*.gif" />
+				<include name="**/*.png" />
+				<include name="**/*.svg" />
+				<include name="**/*.jpg" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="doc-pdf" depends="doc-prepare" description="Generate PDF reference documentation">
+		<mkdir dir="${docs.ref.target.dir}/pdf/images" />
+		<copy todir="${docs.ref.target.dir}/pdf/images">
+			<fileset dir="${docs.ref.src.dir}/images">
+				<include name="*.gif" />
+				<include name="*.png" />
+				<include name="*.svg" />
+				<include name="*.jpg" />
+			</fileset>
+		</copy>
+		
+		<java classname="com.icl.saxon.StyleSheet" fork="true" dir="${docs.ref.dir}">
+			<classpath>
+				<fileset dir="${docs.ref.lib.dir}">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+			<arg value="-o" />
+			<arg value="${docs.ref.target.dir}/pdf/docbook_fop.tmp" />
+			<arg value="${docs.ref.src.dir}/index.xml" />
+			<arg value="${docs.ref.dir}/styles/fopdf.xsl" />
+		</java>
+
+		<java classname="org.apache.fop.apps.Fop" fork="true" maxmemory="256m" dir="${docs.ref.dir}">
+			<classpath>
+				<fileset dir="${docs.ref.lib.dir}">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+			<arg value="-d"/>
+			<arg value="${docs.ref.target.dir}/pdf/docbook_fop.tmp" />
+			<arg value="${docs.ref.target.dir}/pdf/${ant.project.name}-reference.pdf" />
+		</java>
+		<delete file="${docs.ref.target.dir}/pdf/docbook_fop.tmp" />
+	</target>
+
+	<target name="doc-html" depends="doc-prepare" description="Generate multi-page HTML reference documentation">
+		<mkdir dir="${docs.ref.target.dir}/html/images" />
+		<mkdir dir="${docs.ref.target.dir}/html_single/styles" />
+		<copy todir="${docs.ref.target.dir}/html/images">
+			<fileset dir="${docs.ref.src.dir}/images">
+				<include name="*.gif" />
+				<include name="*.png" />
+				<include name="*.svg" />
+				<include name="*.jpg" />
+			</fileset>
+		</copy>
+		<copy todir="${docs.ref.target.dir}/html/styles" file="${docs.ref.dir}/styles/html.css"/>
+
+		<java classname="com.icl.saxon.StyleSheet" fork="true" dir="${docs.ref.target.dir}/html">
+			<classpath>
+				<fileset dir="${docs.ref.lib.dir}">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+			<arg value="${docs.ref.src.dir}/index.xml" />
+			<arg value="${docs.ref.dir}/styles/html_chunk.xsl" />
+		</java>
+		<delete file="${docs.ref.target.dir}/html/docbook_fop.tmp" />
+	</target>
+
+	<target name="doc-htmlsingle" depends="doc-prepare" description="Generate single-page HTML reference documentation">
+		<mkdir dir="${docs.ref.target.dir}/html_single/images" />
+		<mkdir dir="${docs.ref.target.dir}/html_single/styles" />
+		<copy todir="${docs.ref.target.dir}/html_single/images">
+			<fileset dir="${docs.ref.src.dir}/images">
+				<include name="*.gif" />
+				<include name="*.png" />
+				<include name="*.svg" />
+				<include name="*.jpg" />
+			</fileset>
+		</copy>
+		<copy todir="${docs.ref.target.dir}/html_single/styles" file="${docs.ref.dir}/styles/html.css"/>
+
+		<java classname="com.icl.saxon.StyleSheet" fork="true" dir="${docs.ref.target.dir}/html_single">
+			<classpath>
+				<fileset dir="${docs.ref.lib.dir}">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+			<arg value="-o" />
+			<arg value="${docs.ref.target.dir}/html_single/index.html" />
+			<arg value="${docs.ref.src.dir}/index.xml" />
+			<arg value="${docs.ref.dir}/styles/html.xsl" />
+		</java>
+		<delete file="${docs.ref.target.dir}/htmlsingle/docbook_fop.tmp" />
+	</target>
+
+	<target name="doc-all" depends="doc-html,doc-htmlsingle,doc-pdf" description="Generate reference documentation in all formats" />
+
+</project>

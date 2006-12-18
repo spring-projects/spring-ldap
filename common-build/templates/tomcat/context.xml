@@ -1,0 +1,4 @@
+<Context path="/@PROJECT_NAME@" docBase="@DOC_BASE@"
+        debug="0" privileged="true">
+
+</Context>

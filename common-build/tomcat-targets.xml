@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+
+<!--
+
+ Copyright 2002-2005 the original author or authors.
+  
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+      http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+ - - -
+
+ Author: Keith Donald
+ Author: Colin Sampaleanu
+
+ Ant XML fragment that contains useful targets for working with tomcat.  These 
+ include targets to spawn a tomcat process deplyoing the project, as well as update
+ the deployed application and static web content.
+ 
+ This ant XML fragment is meant to be imported into a project build file, along with
+ common-targets.xml. This is an optional module, and due to the way the ant import works,
+ there is no way to automatically hook this up into the build. The importing project
+ must override appropropriate 'hook' targets from common-targets.xml, and then have
+ the override targets depend on both the targets from common-targets and those from here.
+
+-->
+
+<!--
+
+  For these tasks to work, the specified user (tomcat.username property below,
+  which defaults to 'manager' but may be specified in build.properties) must be
+  a user defined in the TomCat server, and that user must have the role
+  'manager'. For the default in-memory realm in TomCat, this is done by modifying
+  conf/tomcat-users.xml in the TomCat install. See
+      http://jakarta.apache.org/tomcat/tomcat-5.5-doc/manager-howto.html
+  for more information.
+-->
+
+<project name="tomcat-targets" xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+
+	<import file="common-targets.xml" />
+
+	<target name="tomcat.init" depends="init,guard.tomcatdir">
+		<property name="tomcat.deploy.dir" value="${tomcat.dir}/webapps" />
+		<property name="tomcat.manager.url" value="http://localhost:8080/manager" />
+		<property name="tomcat.username" value="manager" />
+		<property name="tomcat.password" value="manager" />
+
+		<taskdef resource="org/apache/catalina/ant/catalina.tasks" onerror="ignore">
+			<classpath>
+				<filelist dir="${tomcat.dir}/server/lib">
+					<file name="catalina.jar" />
+					<file name="catalina-ant.jar" />
+				</filelist>
+			</classpath>
+		</taskdef>
+	</target>
+
+	<target name="guard.tomcatdir" unless="tomcat.dir">
+		<fail message="The target you are attempting to run requires the ${tomcat.dir} property to be set, which doesn't appear to be" />
+	</target>
+
+	<target name="tomcat-deploy" depends="tomcat.init, war" description="Install this web application to tomcat">
+		<deploy url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${project.webapp.name}" war="${project.war}" />
+	</target>
+
+	<target name="tomcat-undeploy" depends="tomcat.init" description="Remove this application from tomcat">
+		<undeploy url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${project.webapp.name}" failonerror="false" />
+	</target>
+
+	<target name="tomcat-redeploy" depends="tomcat-undeploy, tomcat-deploy" description="Redeploy the web application" />
+
+	<target name="tomcat-reload" depends="tomcat.init" description="Reload this application in tomcat">
+		<reload url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${project.name}" />
+	</target>
+
+	<target name="tomcat-copy-war" depends="tomcat.init, war" description="Copy this application .war to tomcat">
+		<copy file="${project.war}" todir="${tomcat.deploy.dir}" />
+	</target>
+
+	<target name="tomcat-clean-war" depends="tomcat.init" description="Clean this application expanded war directory from tomcat">
+		<delete failonerror="false" dir="${tomcat.deploy.dir}/${project.webapp.name}" />
+	</target>
+
+	<target name="tomcat-refresh-war" depends="tomcat-clean-war, tomcat-copy-war" description="Clean and copy this application .war to tomcat">
+	</target>
+
+	<target name="tomcat-launch" depends="tomcat.init,tomcat-refresh-war" description="Launch the tomcat server process and have it deploy this web application">
+		<exec dir="${tomcat.dir}/bin" executable="startup.bat" spawn="true" vmlauncher="false">
+			<env key="JAVA_OPTS" value="${tomcat.javaopts}" />
+		</exec>
+	</target>
+
+	<target name="tomcat-start" depends="tomcat.init" description="Start this web application in tomcat">
+		<start url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${project.webapp.name}" />
+	</target>
+
+	<target name="tomcat-stop" depends="tomcat.init" description="Stop this web application in tomcat">
+		<stop url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="/${project.webapp.name}" />
+	</target>
+
+	<target name="tomcat-list" depends="tomcat.init" description="List installed tomcat applications">
+		<list url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" />
+	</target>
+
+	<target name="tomcat-content" depends="statics, tomcat.init" description="Copy web content to tomcat without redeploy">
+		<copy todir="${tomcat.deploy.dir}/${project.webapp.name}">
+			<fileset dir="${target.war.expanded.dir}">
+				<patternset refid="web.public.content.files" />
+			</fileset>
+			<fileset dir="${target.war.expanded.dir}">
+				<patternset refid="web.protected.content.files" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="tomcat-context" depends="init.post,tomcat-context-error">
+		<delete quiet="true" file="${tomcat.dir}/conf/Catalina/localhost/${ant.project.name}.xml" />
+		<!-- create tomcat context file -->
+		<copy file="${common.build.dir}/templates/tomcat/context.xml" tofile="${tomcat.dir}/conf/Catalina/${ant.project.name}.xml" />
+		<replace file="${tomcat.dir}/conf/Catalina/${ant.project.name}.xml" token="@PROJECT_NAME@" value="${ant.project.name}" />
+		<replace file="${tomcat.dir}/conf/Catalina/${ant.project.name}.xml" token="@DOC_BASE@" value="${target.war.expanded.dir}" />
+		<copy file="${tomcat.dir}/conf/Catalina/${ant.project.name}.xml" todir="${tomcat.dir}/conf/Catalina/localhost" />
+		<delete quiet="true" file="${tomcat.dir}/conf/Catalina/${ant.project.name}.xml" />
+	</target>
+
+	<target name="tomcat-context-error" unless="tomcat.dir">
+		<fail>Set tomcat.dir in your USER_HOME/build.properties file (create if it doesn't exist)</fail>
+	</target>
+
+</project>

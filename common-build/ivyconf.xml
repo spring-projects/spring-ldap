@@ -1,0 +1,89 @@
+<ivyconf>
+	<properties file="${ivy.conf.dir}/ivyconf.properties"/>
+	<conf defaultResolver="maven2"/>
+	<resolvers>
+		<chain name="spring-projects" returnFirst="true">
+			<!-- try developer's local integration repository first -->
+			<filesystem name="integration-repo">
+				<ivy pattern="${integration.repo.dir}/artifacts/[organisation]/[module]/ivy-[revision].xml"/>
+				<artifact pattern="${integration.repo.dir}/artifacts/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+			</filesystem>
+
+			<!-- try shared local filesystem repository second -->
+ 			<filesystem name="filesystem-repo">
+  				<ivy pattern="${repository.dir}/[organisation]/[module]/ivy-[revision].xml" /> 
+				<artifact pattern="${repository.dir}/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" /> 
+			</filesystem>
+
+			<!-- pull from the main release repository third -->
+			<url name="spring-repo" m2compatible="true">
+				<ivy pattern="https://svn.sourceforge.net/svnroot/springframework/repos/repo/[organisation]/[module]/ivy-[revision].xml" />
+				<artifact pattern="https://svn.sourceforge.net/svnroot/springframework/repos/repo/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+			</url>
+
+			<!-- if still not resolved, try snapshots -->
+			<url name="spring-repo-snapshots" m2compatible="true">
+				<ivy pattern="https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/[organisation]/[module]/ivy-[revision].xml" />
+				<artifact pattern="https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+			</url>
+		</chain>
+
+		<chain name="maven2" returnFirst="true">
+			<!-- try shared local filesystem repository first -->
+			<filesystem name="filesystem-repo">
+  				<ivy pattern="${repository.dir}/[organisation]/[module]/ivy-[revision].xml" /> 
+				<artifact pattern="${repository.dir}/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" /> 
+			</filesystem>
+           	
+			<!-- if still not resolved, try external repo -->
+			<url name="spring-repo-ext" m2compatible="true">
+				<ivy pattern="https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/[organisation]/[module]/ivy-[revision].xml" />
+				<artifact pattern="https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+			</url>
+
+			<!-- try popular maven2 ibiblio mirror second -->
+           	<ibiblio name="dotsrc-maven2-repo" checkconsistency="false" m2compatible="true" root="http://mirrors.dotsrc.org/maven2/"/>           	
+           	
+			<!-- try ibiblio itself third -->
+           	<ibiblio name="ibiblio-maven2-repo" checkconsistency="false" m2compatible="true" root="http://www.ibiblio.org/maven2/"/>           	
+
+		</chain>
+
+	</resolvers>
+
+	<modules>
+		<!-- Pointing modules at local resolvers speeds resolution performance -->
+		<module organisation="org.springframework" name="spring-aop" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-beans" resolver="spring-projects"/>
+       	<module organisation="org.springframework" name="spring-binding" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-context" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-core" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-dao" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-hibernate2" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-hibernate3" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-ibatis" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-jca" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-jdbc" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-jdo" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-jms" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-jmx" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-jpa" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-mock" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-obj" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-orm" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-oxm" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-portlet" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-remoting" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-struts" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-support" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-toplink" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-web" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-webflow" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-webmvc" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-ws-core" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-ws-security" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-xml" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="spring-ldap" resolver="spring-projects"/>
+		<module organisation="org.springframework" name="various" resolver="spring-projects"/>
+	</modules>
+</ivyconf>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+
+	<input-mapper>
+		<input-attribute name="name"/>
+	</input-mapper>
+
+	<start-state idref="displayDetails" />
+
+	<view-state id="displayDetails" view="showGroupDetails">
+		<entry-actions>
+			<bean-action bean="groupService" method="findByPrimaryKey">
+				<method-arguments>
+					<argument expression="flowScope.name" />
+				</method-arguments>
+				<method-result name="group" scope="flash" />
+			</bean-action>
+		</entry-actions>
+
+		<transition on="back" to="finish" />
+		<transition on="edit" to="editDetails" />
+	</view-state>
+
+	<view-state id="editDetails" view="editGroupDetails">
+		<render-actions>
+			<action bean="editGroupFormAction" method="setupForm"/>
+		</render-actions>
+
+		<transition on="cancel" to="displayDetails">
+			<action bean="editGroupFormAction" method="resetForm"/>
+		</transition>
+
+		<transition on="add" to="findMember" />
+
+		<transition on="remove" to="editDetails">
+			<action bean="editGroupFormAction" method="bind"/>
+			<action bean="editGroupFormAction" method="remove"/>
+		</transition>
+
+		<transition on="submit" to="displayDetails">
+			<action bean="editGroupFormAction" method="bindAndValidate"/>
+			<bean-action bean="groupService" method="update">
+				<method-arguments>
+					<argument expression="flowScope.group" />
+				</method-arguments>
+			</bean-action>
+		</transition>
+	</view-state>
+
+	<subflow-state id="findMember" flow="search-flow">
+		<attribute-mapper>
+			<output-mapper>
+				<output-attribute name="results" scope="flash"/>
+			</output-mapper>
+		</attribute-mapper>
+		<transition on="cancel" to="displayAddCandidates"/>
+		<transition on="finish" to="displayAddCandidates"/>
+	</subflow-state>
+
+	<view-state id="displayAddCandidates" view="showAddCandidates">
+		<transition on="select" to="editDetails">
+			<action bean="editGroupFormAction" method="add" />
+		</transition>
+		<transition on="newSearch" to="findMember" />
+	</view-state>
+
+	<end-state id="finish" />
+
+	<import resource="detail-group-flow-beans.xml"/>
+
+</flow>

@@ -1,0 +1,58 @@
+body {
+	width: 720px;
+	margin: 0px;
+	padding: 0px;
+}
+ 
+div#logo {
+	width: 720px;
+	height: 73px;
+	background: #86AEA5;
+}
+
+div#navigation {
+	width: 720px;
+	height: 15px;
+	background: #E2F3B8;
+	text-align: right;
+}
+
+div#content {
+	width: 720px;
+	padding: 5px;
+}
+
+div#insert {
+	width: 120;
+	float: right;
+	text-align: right;
+}
+
+.buttonBar {
+	height: 1.5em;
+	text-align: right;
+}
+
+div#copyright {
+	width: 720px;
+}
+
+div#copyright p {
+	text-align: center;
+	font-family: Tahoma, sans-serif;  
+	font-size: 75%; 
+	color: div#336633; 
+	margin-left: 5px;
+	font-weight: bold;
+	clear: both;
+}
+
+.readOnly {
+	color: rgb(192, 192, 192);
+}
+
+.error {
+	color: red;
+	font-weight: bold;
+	font-family: Arial, sans-serif;
+}

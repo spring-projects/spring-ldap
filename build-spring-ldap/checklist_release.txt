@@ -1,0 +1,64 @@
+build-spring-ldap
+=================
+
+* Update release number in project.properties
+
+  release.version=1.1
+
+spring-ldap
+===========
+
+* Update release number in project.properties
+
+  project.base.version=1.1
+  project.version=${project.base.version}
+  ivy.status=release
+  
+* Update release number in reference manual (docs/reference/src/index.xml)
+
+  	<bookinfo>
+		<title>Spring LDAP</title>
+		<subtitle>Reference Documentation</subtitle>
+		<releaseinfo>Version 1.1</releaseinfo>
+
+* Update release number in readme.txt
+
+  Spring-LDAP 1.1 (Aug 2006)
+
+General
+=======
+
+* Update changelog with changes, including upgraded libraries
+
+* Synchronize and commit changes, including .* files
+
+* Run clean-all from build-spring-ldap
+
+* Clean integration-repo
+
+* Clean Ivy cache
+
+* Run all tests, including integration tests
+
+* Run the sample spring-ldap-person in a web container
+
+* Run the sample spring-ldap-article integration tests
+
+* Run doc-all from spring-ldap
+
+* Run release from build-spring-ldap
+
+* Run jdiff from spring-ldap
+
+* Add Maven pom file for the new release to top directory.
+
+After release
+=============
+
+* Store source for new release in build-spring-ldap/spring-ldap-<rel>
+  (used in future jdiff runs)
+
+* Tag release like this:
+  1. Open a svn repo browser, eg Eclipse
+  2. Create a new directory: spring-projects/tags/spring-ldap-<rel>
+  3. Copy repository, common-build and spring-ldap to that directory

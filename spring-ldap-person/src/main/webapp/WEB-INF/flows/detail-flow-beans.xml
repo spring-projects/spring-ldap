@@ -1,0 +1,14 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Detail form action that setups the form and processes form submissions -->
+	<bean id="editPersonFormAction" class="org.springframework.ldap.samples.person.web.EditPersonFormAction">
+		<property name="formObjectClass" value="org.springframework.ldap.samples.person.domain.Person"/>
+		<property name="validator">
+			<bean class="org.springframework.ldap.samples.person.domain.PersonValidator"/>
+		</property>
+	</bean>
+	
+</beans>

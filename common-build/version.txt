@@ -1,0 +1,13 @@
+version 20060409-1
+
+Changelog:
+2006-08-25: Keith: updated project and file templates inside "templates"
+2006-04-09: Colin: upgrade Ivy to 1.3.1
+2006-03-26: Colin: upgrade Ivy to snapshot 20060322, for transitive dep fix.
+2006-03-08: Colin: upgrade Ivy to 1.3RC3
+2006-02-17: Colin: Add retrieve-to-repo to common-targets.xml, user for release procoess
+2006-02-13: Arjen: Standard docbook images are now also copied in doc-targets.xml
+2006-02-08: Colin: add dir="${basedir} to junit task so it runs ok from other dirs
+2006-01-04: Colin: add description element to "retrieve" since it's not an internal target
+2005-11-27: Update Spring version in templates
+2005-11-20: Arjen: add gen java source dir functionality for test sources too

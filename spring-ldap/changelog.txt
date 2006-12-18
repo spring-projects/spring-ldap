@@ -1,0 +1,212 @@
+Spring LDAP CHANGELOG
+=====================
+http://www.springframework.org/ldap
+
+http://www.ietf.org/rfc/rfc2251.txt
+http://www.ietf.org/rfc/rfc2252.txt
+http://www.ietf.org/rfc/rfc2253.txt
+http://www.ietf.org/rfc/rfc2254.txt
+http://www.ietf.org/rfc/rfc2255.txt
+http://www.ietf.org/rfc/rfc2256.txt
+http://www.ietf.org/rfc/rfc2696.txt
+
+Changes in version 1.1.2 (1.12.2006)
+-------------------------------------------
+* Fixed problem with DirContextAdapter.getNameInNameSpace. Now it really
+  returns the full DN.
+
+* There is now a wrapper class called PagedResult, which can be used to
+  wrap the resulting list and the PagedResultsCookie after using
+  PagedResultsRequestControl.
+
+* The actual cookie in PagedResultsCookie is now immutable.
+
+* The person sample is now a Spring WebFlow application, where the user
+  can manage persons and standard LDAP access groups.
+
+* Improved javadoc for DefaultDirObjectFactory and DistinguishedName.
+
+* Upgraded Spring to 2.0.1 internally. Spring 1.2.8 is still supported.
+
+Changes in version 1.1.1 (18.11.2006)
+-------------------------------------------
+* Added capability to use server-side controls in search by leveraging
+  DirContextProcessor.
+
+* Added generic DirContextProcessor that is run before and after a search.
+
+* Added paged search result functionality in PagedResultsRequestControl,
+  which is an implementation of DirContextProcessor.
+
+* Fixed problem with DirContextAdapter, where the wrong change was applied
+  when a change was followed by a reset to the original values.
+
+* DirContextAdapter.getNameInNamespace() now returns the full DN, as per the
+  documentation for javax.naming.Context.
+
+* The parsing of DistinguishedName has been changed from using regexp to
+  a JavaCC parser, which means improved performance (5-6 times faster) and
+  better error messages.
+
+* DistinguishedName now supports multi-valued RDNs separated by a '+' sign,
+  like "cn=Rod+sn=Johnson", for example. All according to spec 2253.
+
+* LdapRdn is now Serializable.
+
+* Added lookup methods that take an array of return attribute names.
+
+* Made DistinguishedName.EMPTY_NAME an immutable DistinguishedName instance.
+
+* Separated integration tests that require OpenLDAP from the other integration
+  tests that run the in-JVM Apache DS server.
+
+* Changed the spring-ldap-person sample application to authenticate and
+  authorize against groups rather than role attributes.
+
+* Upgraded Spring to 2.0 internally. Spring 1.2.8 is still supported.
+
+Changes in version 1.1 (28.8.2006)
+-------------------------------------------
+* Changed base package from net.sf.ldaptemplate to org.springframework.ldap
+
+* Changed package ...support.acegi to ...support.authentication
+
+* Replaced SearchResultCallbackHandler with NameClassCallbackHandler
+  to enable its use in all search operations (search, list, listBindings).
+  Changed all references and implementing classes accordingly, 
+  including name changes where applicable:
+  ** CollectingSearchResultCallbackHandler was replaced by CollectingNameClassPairCallbackHandler.
+  ** CountSearchResultCallbackHandler was replaced by CountNameClassPairCallbackHandler
+
+* Added NameClassPairMapper for use with list operations
+
+* Added DefaultNameClassPairCallbackHandler.
+
+* Added DefaultValuesAuthenticationSourceDecorator to enable default authentication
+  information when AuthenticationSource returns empty values.
+
+* ContextSource implementations now creates authenticated Contexts by default,
+  since the previous behaviour has proven to be confusing.
+  The authenticatedReadOnly flag was replaced by an anonymousReadOnly flag.
+  
+* AbstractContextSource now defaults the dirObjectFactory property to DefaultDirObjectFactory.
+
+* Added search methods to LdapTemplate for specifying return attributes.
+
+* Added list and listBindings methods to LdapTemplate.
+
+* Fixed bug in AbstractContextSource regarding java version number and base path.
+
+* Improved javadocs.
+
+* Upgraded Spring to 2.0-rc3.
+
+* Added full reference documentation.
+
+Changes in version 1.0.2 (LdapTemplate) (26.6.2006)
+------------------------------------
+* Added methods in LdapTemplate to unbind recursively.
+
+* Added rename() method to LdapTemplate.
+
+* Fixed bug in getPrefix() of DistinguishedName.
+
+* Fixed bug in getModificationItems() of DirContextAdapter.
+  The method now correctly handles changes of individual vales in
+  multi-value attributes.
+  
+* Introduced AbstractContextSource, moved the code from LdapContextSource there
+  and made LdapContextSource and DirContextSource inherit from this.
+  
+* Upgraded to Acegi 1.0.0. Removed classes no longer needed:
+  LdapTemplateLdapAuthenticationProvider
+  LdapTemplateUserDetails
+  *NOTE*:
+     This means that configuration needs to be changed if using Acegi,
+     since the API and package structure has changed in Acegi between
+     versions 1.0.0-RC2 and 1.0.0 final.
+  
+
+Changes in version 1.0.1 (LdapTemplate) (5.5.2006)
+-----------------------------------
+* Now checking whether the first argument to getObjectInstance in
+  DefaultDirObjectFactory is a Context, and if so, closing it properly.
+
+* Fixed reference to non-existent ContextSourceImpl in ldaptemplate-person.
+
+* Upgraded Spring to 2.0-m4.
+
+* Upgraded DDSteps to 1.1-rc1 and EasyMock to 1.2.
+
+Changes in version 1.0 (LdapTemplate) (24.4.2006)
+----------------------------------
+* Introduced the AuthenticationSource interface to enable other strategies for
+  retrieving principal and credentials than a hard-coded username/password.
+
+* Added the AcegiAuthenticationSource implementation for retrieving a previously
+  authenticated principal and credentials using Acegi.
+
+* Added a 'cacheEnvironmentProperties' property that enables the user to choose
+  whether to cache the environment HashMap or to re-create it each time a new
+  Context is created.
+
+* Added an ignorePartialResultException to LdapTemplate which causes all
+  PartialResultExceptions to be ignored during searches, for use when working
+  against Active Directory, which cannot handle referrals correctly.
+
+* Added search methods in LdapOperations (and LdapTemplate) that take a
+  parameter for SearchControls.
+
+* The methods getNamesOfModifiedAttributes, update, and getAttributeSortedStringSet
+  in DirContextOperations (and DirContextAdapter) no longer throw NamingException.
+  Instead, they throw unchecked DataAccessExceptions.
+
+* The method getModificationItems in AttributeModificationsAware no longer throws
+  NamingException. Instead, it throws unchecked DataAccessExceptions.
+
+* Removed the (unused) 'task' parameter to NamingExceptionTranslator.translate.
+
+* Removed the deprecated ContextSourceImpl class.
+
+* Integration tests now run using an in-memory version of Apache Directory Server,
+  rather than requiring a working installation of a directory server.
+
+* Integration tests now run together with pure unit tests under the 'tests' Ant target.
+
+* The ldaptemplate-person sample web application now uses an in-memory version of Apache
+  Directory Server, rather than requiring a working installation of a directory server.
+
+* Upgraded Spring to 2.0-m3.
+
+* The build now uses Ivy 1.3.1.
+
+Changes in version 1.0-RC2 (LdapTemplate) (22.2.2006)
+--------------------------------------
+* LdapV2 is now supported. 
+  ContextSourceImpl has been deprecated. In stead the new 
+  LdapContextSource should be used for LdapV3 and a DirContextSource 
+  has been added for LdapV2 compatibility.
+  
+* Ability has been added in LdapContextSource and DirContextSource 
+  to specify that an authenticated context should be used for 
+  read-only operations as well. Use property 'authenticatedReadOnly'
+  in LdapContextSource/DirContextSource.
+  
+* The Filter classes have been cleaned up.
+
+* DirContextAdapter has been cleaned up. Most important to note is that
+  in this operation the 'setStringAttribute/setStringAttributes' methods 
+  have been removed and replaced by 'setAttributeValue/setAttributeValues'.
+  
+* Base DNs are now correctly URL encoded when building the connection String.
+  This means that spaces and other 'unsafe' characters in base DNs should no
+  longer be manually URL encoded.
+
+* An AttributesIntegrityViolationException has been added and is thrown when
+  an InvalidAttributesException is encountered.
+  
+* More unit tests have been added.
+
+Changes in version 1.0-RC1 (LdapTemplate) (27.1.2006)
+--------------------------------------
+* First public release candidate.

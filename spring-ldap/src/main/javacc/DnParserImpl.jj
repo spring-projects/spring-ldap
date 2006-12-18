@@ -1,0 +1,165 @@
+/*
+ * Copyright © 2002 Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
+ * California 95054, U.S.A. All rights reserved.  Sun Microsystems, Inc. has
+ * intellectual property rights relating to technology embodied in the product
+ * that is described in this document. In particular, and without limitation,
+ * these intellectual property rights may include one or more of the U.S.
+ * patents listed at http://www.sun.com/patents and one or more additional
+ * patents or pending patent applications in the U.S. and in other countries.
+ * U.S. Government Rights - Commercial software. Government users are subject
+ * to the Sun Microsystems, Inc. standard license agreement and applicable
+ * provisions of the FAR and its supplements.  Use is subject to license terms.
+ * Sun,  Sun Microsystems,  the Sun logo and  Java are trademarks or registered
+ * trademarks of Sun Microsystems, Inc. in the U.S. and other countries.  This
+ * product is covered and controlled by U.S. Export Control laws and may be
+ * subject to the export or import laws in other countries.  Nuclear, missile,
+ * chemical biological weapons or nuclear maritime end uses or end users,
+ * whether direct or indirect, are strictly prohibited.  Export or reexport
+ * to countries subject to U.S. embargo or to entities identified on U.S.
+ * export exclusion lists, including, but not limited to, the denied persons
+ * and specially designated nationals lists is strictly prohibited.
+ */
+
+
+options {
+  LOOKAHEAD = 1;
+  CHOICE_AMBIGUITY_CHECK = 3;
+  OTHER_AMBIGUITY_CHECK = 3;
+  STATIC = false;
+  DEBUG_PARSER = false;
+  DEBUG_LOOKAHEAD = false;
+  DEBUG_TOKEN_MANAGER = false;
+  ERROR_REPORTING = true;
+  JAVA_UNICODE_ESCAPE = false;
+  UNICODE_INPUT = true;
+  IGNORE_CASE = false;
+  USER_TOKEN_MANAGER = false;
+  USER_CHAR_STREAM = false;
+  BUILD_PARSER = true;
+  BUILD_TOKEN_MANAGER = true;
+  SANITY_CHECK = true;
+  FORCE_LA_CHECK = true;
+}
+
+PARSER_BEGIN(DnParserImpl)
+
+package org.springframework.ldap.support;
+
+import org.springframework.ldap.support.LdapRdn;
+import org.springframework.ldap.support.LdapRdnComponent;
+import org.springframework.ldap.support.DistinguishedName;
+
+public class DnParserImpl implements DnParser{
+
+}
+
+PARSER_END(DnParserImpl)
+
+TOKEN: { <#ALPHA: ["a"-"z", "A"-"Z"] > }
+TOKEN: { <#DIGIT: ["0"-"9"]> }
+TOKEN: { <#STRINGCHAR: ~[",","=","\r","+","<",">","#",";","\\","\""]> }
+TOKEN: { <#STRINGENDCHAR: ~[",","=","\r","+","<",">","#",";","\\","\""," "]> }
+TOKEN: { <#SPECIAL: [",","=","\r","+","<",">","#",";"]> }
+TOKEN: { <#HEXCHAR: ["0"-"9","a"-"f","A"-"F"]> }
+TOKEN: { <#HEXPAIR: <HEXCHAR> <HEXCHAR>> }
+TOKEN: { <#BACKSLASHCHAR: "\\"> }
+TOKEN: { <#PAIR: <BACKSLASHCHAR> (<SPECIAL> | <BACKSLASHCHAR> | <QUOTECHAR> | <HEXPAIR> )> }
+TOKEN: { <#ESCAPEDSPACE: <BACKSLASHCHAR> <SPACE>>}
+TOKEN: { <#ESCAPEDSTART: <BACKSLASHCHAR> (<HASHCHAR> | <SPACE>)> }
+TOKEN: { <#STRINGEND: (<STRINGENDCHAR> | <PAIR> | <ESCAPEDSPACE>)> }
+
+<DEFAULT> TOKEN:
+{
+	<QUOTECHAR: "\"">
+	|
+	<HASHCHAR: "#"> 
+	|
+	<ATTRIBUTE_TYPE_STRING: <ALPHA> (<ALPHA> | <DIGIT> | "-")*>
+	|
+	<LDAP_OID: (<DIGIT>)+ ("." (<DIGIT>)+ )* >
+	|
+	<SPACE: " ">
+}
+
+<ATTRVALUE_S> TOKEN:
+{
+	<ATTRVALUE: 
+		(<QUOTECHAR> (<STRINGCHAR> | <SPECIAL> | <PAIR>)+ <QUOTECHAR>
+		|
+		<HASHCHAR> (<HEXPAIR>)+
+		|
+		(<ESCAPEDSTART>)? ( <STRINGCHAR> | <PAIR> )* <STRINGEND>
+		)>
+}
+
+<SPACED_EQUALS_S> TOKEN:
+{
+	<SPACED_EQUALS: (<SPACE>)* "=" (<SPACE>)*>
+}
+
+/**
+ * input -> dn
+ * dn -> rdn ( ( "," | ";" ) rdn )*
+ * rdn -> attributeTypeAndValue ( "+" attributeTypeAndValue )*
+ * attributeTypeAndValue ->
+ *    ( <SPACE> )* AttributeType SpacedEquals AttributeValue ( <SPACE> )*
+ * SpacedEquals -> <SPACED_EQUALS>
+ * AttributeType -> <LDAP_OID> | <ATTRIBUTE_TYPE_STRING>
+ * AttributeValue -> <ATTRVALUE>
+ */
+void input() :
+{
+}
+{
+	dn()
+}
+
+DistinguishedName dn(): 
+{
+DistinguishedName dn = new DistinguishedName();
+LdapRdn rdn;
+}
+{
+	( rdn = rdn() {dn.add(0, rdn);} (("," | ";") rdn = rdn() {dn.add(0, rdn);})* )
+	{return dn;}
+}
+
+LdapRdn rdn(): 
+{
+LdapRdnComponent rdnComponent;
+LdapRdn rdn = new LdapRdn();
+}
+{
+	(rdnComponent = attributeTypeAndValue() {rdn.addComponent(rdnComponent);} ("+" rdnComponent = attributeTypeAndValue() {rdn.addComponent(rdnComponent);})*)
+	{return rdn;}
+}
+
+LdapRdnComponent attributeTypeAndValue(): 
+{
+String attributeType;
+String value;
+}
+{
+	( (<SPACE>)* attributeType = AttributeType() SpacedEquals() value = AttributeValue() (<SPACE>)*)
+	{return new LdapRdnComponent(attributeType, value, true);}
+}
+
+void SpacedEquals():
+{}
+{
+	{token_source.SwitchTo(SPACED_EQUALS_S);} <SPACED_EQUALS>
+}
+
+String AttributeType(): 
+{Token t;}
+{
+	( t = <LDAP_OID> | t = <ATTRIBUTE_TYPE_STRING>) 
+	{return t.image.toString();}
+}
+
+String AttributeValue(): 
+{Token t;}
+{
+	{token_source.SwitchTo(ATTRVALUE_S);} t = <ATTRVALUE> {token_source.SwitchTo(DEFAULT);} 
+	{return t.image.toString();}
+}

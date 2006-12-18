@@ -1,0 +1,71 @@
+dn: c=Sweden,dc=jayway,dc=se
+objectclass: top
+objectclass: country
+c: Sweden
+description: The country of Sweden
+
+dn: c=Norway,dc=jayway,dc=se
+objectclass: top
+objectclass: country
+c: Norway
+description: The country of Norway
+
+dn: ou=company1,c=Sweden,dc=jayway,dc=se
+objectclass: top
+objectclass: organizationalUnit
+ou: company1
+description: First company in Sweden
+
+dn: ou=company2,c=Sweden,dc=jayway,dc=se
+objectclass: top
+objectclass: organizationalUnit
+ou: company2
+description: Second company in Sweden
+
+dn: ou=company1,c=Norway,dc=jayway,dc=se
+objectclass: top
+objectclass: organizationalUnit
+ou: company1
+description: First company in Norway
+
+dn: cn=Some Person,ou=company1,c=Sweden,dc=jayway,dc=se
+objectclass: top
+objectclass: person
+cn: Some Person
+sn: Person
+description: Sweden, Company1, Some Person
+telephoneNumber: Some Person Phone
+
+dn: cn=Some Person2,ou=company1,c=Sweden,dc=jayway,dc=se
+objectclass: top
+objectclass: person
+cn: Some Person2
+sn: Person2
+description: Sweden, Company1, Some Person2
+telephoneNumber: Some Person2 Phone
+
+dn: cn=Some Person3,ou=company1,c=Sweden,dc=jayway,dc=se
+objectclass: top
+objectclass: person
+cn: Some Person3
+sn: Person3
+description: Sweden, Company1, Some Person3
+telephoneNumber: Some Person3 Phone
+userPassword: secretpassword
+
+dn: cn=Some Person,ou=company2,c=Sweden,dc=jayway,dc=se
+objectclass: top
+objectclass: person
+cn: Some Person
+sn: Person
+description: Sweden, Company2, Some Person
+telephoneNumber: Some Person Phone
+
+dn: cn=Some Person,ou=company1,c=Norway,dc=jayway,dc=se
+objectclass: top
+objectclass: person
+cn: Some Person
+sn: Person
+description: Norway, Company1, Some Person
+telephoneNumber: Some Person Phone
+

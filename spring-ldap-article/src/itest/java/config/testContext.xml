@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="placeholderConfig"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:/config/ldap.properties" />
+	</bean>
+	
+	<bean id="contextSource" class="org.springframework.ldap.support.LdapContextSource" >
+		<property name="urls" value="${urls}" />
+		<property name="userName" value="${userName}" />
+		<property name="password" value="${password}" />
+		<property name="base" value="${base}" />
+		<property name="dirObjectFactory" value="org.springframework.ldap.support.DefaultDirObjectFactory" />
+	</bean>
+	
+	<bean id="ldapTemplate" class="org.springframework.ldap.LdapTemplate">
+		<constructor-arg ref="contextSource" />
+	</bean>
+
+	<bean id="personDao"
+		class="org.springframework.ldap.samples.article.dao.PersonDaoImpl">
+		<property name="ldapTemplate" ref="ldapTemplate" />
+	</bean>
+
+	<bean id="traditionalPersonDao"
+		class="org.springframework.ldap.samples.article.dao.TraditionalPersonDaoImpl">
+		<property name="url" value="ldap://localhost:389" />
+		<property name="base" value="dc=jayway,dc=se" />
+		<property name="userName" value="${userName}" />
+		<property name="password" value="${password}" />
+	</bean>
+</beans>
