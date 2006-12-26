@@ -33,4 +33,13 @@ public class RebindRecordingOperation implements
             return new NullRollbackOperation();
         }
     }
+
+    /**
+     * Get the LdapOperations. For testing purposes.
+     * 
+     * @return the LdapOperations.
+     */
+    LdapOperations getLdapOperations() {
+        return ldapOperations;
+    }
 }

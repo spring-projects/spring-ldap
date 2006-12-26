@@ -4,6 +4,9 @@ import java.util.Stack;
 
 import javax.naming.directory.DirContext;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.ldap.ContextSource;
 import org.springframework.ldap.LdapOperations;
@@ -11,6 +14,8 @@ import org.springframework.ldap.LdapTemplate;
 
 public class LdapCompensatingTransactionDataManager implements
         CompensatingTransactionDataManager {
+    private static Log log = LogFactory
+            .getLog(LdapCompensatingTransactionDataManager.class);
 
     private Stack rollbackOperations = new Stack();
 
@@ -66,7 +71,16 @@ public class LdapCompensatingTransactionDataManager implements
 
     protected CompensatingTransactionRecordingOperation getRecordingOperation(
             String operation) {
-        return null;
+        if (StringUtils.equals(operation, LdapUtils.BIND_METHOD_NAME)) {
+            return new BindRecordingOperation(ldapOperations);
+        } else if (StringUtils.equals(operation, LdapUtils.REBIND_METHOD_NAME)) {
+            return new RebindRecordingOperation(ldapOperations);
+        }
+
+        log
+                .warn("No suitable CompensatingTransactionRecordingOperation found for method "
+                        + operation + ". Operation will not be transacted.");
+        return new NullRecordingOperation();
     }
 
     static class SingleContextSource implements ContextSource {
@@ -84,6 +98,16 @@ public class LdapCompensatingTransactionDataManager implements
             return ctx;
         }
 
+    }
+
+    /**
+     * Set the LdapOperations to use. For testing purposes only.
+     * 
+     * @param ldapOperations
+     *            the LdapOperations to use.
+     */
+    void setLdapOperations(LdapOperations ldapOperations) {
+        this.ldapOperations = ldapOperations;
     }
 
 }

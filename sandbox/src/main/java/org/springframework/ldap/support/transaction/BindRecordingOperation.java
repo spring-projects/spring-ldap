@@ -19,4 +19,13 @@ public class BindRecordingOperation implements
         return new UnbindRollbackOperation(ldapOperations, dn);
     }
 
+    /**
+     * Get the LdapOperations. For testing purposes.s
+     * 
+     * @return the LdapOperations.
+     */
+    LdapOperations getLdapOperations() {
+        return ldapOperations;
+    }
+
 }

@@ -23,7 +23,8 @@ public class ContextSourceTransactionManager extends
     private ContextSource contextSource;
 
     /**
-     * Set the ContextSource to work on. The supplied ContextSource must be of the type abstract
+     * Set the ContextSource to work on. The supplied ContextSource must be of
+     * the type abstract
      * 
      * @param contextSource
      *            the ContextSource to work on.
@@ -86,8 +87,9 @@ public class ContextSourceTransactionManager extends
      */
     protected void doRollback(DefaultTransactionStatus status)
             throws TransactionException {
-        // Perform compensating transaction cleanup using information stored in
-        // ContextHolder.
+        ContextSourceTransactionObject txObject = (ContextSourceTransactionObject) status
+                .getTransaction();
+        txObject.getContextHolder().getTransactionDataManager().rollback();
     }
 
     /*
@@ -107,27 +109,6 @@ public class ContextSourceTransactionManager extends
         }
 
         txObject.getContextHolder().clear();
-    }
-
-    /**
-     * Transaction object for ContextSourceTransactionManager.
-     * 
-     * @author Mattias Arthursson
-     */
-    static class ContextSourceTransactionObject {
-        private DirContextHolder contextHolder;
-
-        public ContextSourceTransactionObject(DirContextHolder contextHolder) {
-            this.contextHolder = contextHolder;
-        }
-
-        public DirContextHolder getContextHolder() {
-            return contextHolder;
-        }
-
-        public void setContextHolder(DirContextHolder contextHolder) {
-            this.contextHolder = contextHolder;
-        }
     }
 
 }

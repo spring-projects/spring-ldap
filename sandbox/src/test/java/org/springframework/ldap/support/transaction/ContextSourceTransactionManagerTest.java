@@ -8,8 +8,8 @@ import org.easymock.MockControl;
 import org.springframework.ldap.ContextSource;
 import org.springframework.ldap.support.transaction.ContextSourceTransactionManager;
 import org.springframework.ldap.support.transaction.DirContextHolder;
-import org.springframework.ldap.support.transaction.ContextSourceTransactionManager.ContextSourceTransactionObject;
 import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.support.DefaultTransactionStatus;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 public class ContextSourceTransactionManagerTest extends TestCase {
@@ -25,6 +25,10 @@ public class ContextSourceTransactionManagerTest extends TestCase {
     private ContextSourceTransactionManager tested;
 
     private MockControl transactionDefinitionControl;
+
+    private MockControl transactionDataManagerControl;
+
+    private CompensatingTransactionDataManager transactionDataManagerMock;
 
     private TransactionDefinition transactionDefinitionMock;
 
@@ -45,6 +49,11 @@ public class ContextSourceTransactionManagerTest extends TestCase {
         transactionDefinitionMock = (TransactionDefinition) transactionDefinitionControl
                 .getMock();
 
+        transactionDataManagerControl = MockControl
+                .createControl(CompensatingTransactionDataManager.class);
+        transactionDataManagerMock = (CompensatingTransactionDataManager) transactionDataManagerControl
+                .getMock();
+
         tested = new ContextSourceTransactionManager();
         tested.setContextSource(contextSourceMock);
     }
@@ -60,6 +69,9 @@ public class ContextSourceTransactionManagerTest extends TestCase {
 
         transactionDefinitionControl = null;
         transactionDefinitionMock = null;
+
+        transactionDataManagerControl = null;
+        transactionDataManagerMock = null;
 
         if (TransactionSynchronizationManager.isSynchronizationActive()) {
             TransactionSynchronizationManager.clearSynchronization();
@@ -106,7 +118,22 @@ public class ContextSourceTransactionManagerTest extends TestCase {
     }
 
     public void testDoRollback() {
-        fail("Not yet implemented");
+
+        DirContextHolder expectedContextHolder = new DirContextHolder(
+                contextMock);
+        expectedContextHolder
+                .setTransactionDataManager(transactionDataManagerMock);
+        TransactionSynchronizationManager.bindResource(contextSourceMock,
+                expectedContextHolder);
+
+        transactionDataManagerMock.rollback();
+        transactionDataManagerControl.replay();
+        ContextSourceTransactionObject transactionObject = new ContextSourceTransactionObject(
+                null);
+        transactionObject.setContextHolder(expectedContextHolder);
+        tested.doRollback(new DefaultTransactionStatus(transactionObject,
+                false, false, false, false, null));
+        transactionDataManagerControl.verify();
     }
 
     public void testDoCleanupAfterCompletion() throws Exception {
@@ -117,13 +144,13 @@ public class ContextSourceTransactionManagerTest extends TestCase {
 
         contextMock.close();
         contextControl.replay();
-        
+
         tested.doCleanupAfterCompletion(new ContextSourceTransactionObject(
                 expectedContextHolder));
 
         contextControl.verify();
         assertNull(TransactionSynchronizationManager
                 .getResource(contextSourceMock));
-
+        assertNull(expectedContextHolder.getTransactionDataManager());
     }
 }
