@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beansProjectDescription>
+	<configExtensions>
+		<configExtension>xml</configExtension>
+	</configExtensions>
 	<configs>
 		<config>src/iutest/conf/ldapTemplateBaseSuffixTestContext.xml</config>
+		<config>src/itest/java/conf/ldapTemplateTransactionTestContext.xml</config>
 		<config>src/iutest/conf/ldapTemplateTestContext.xml</config>
 	</configs>
 	<configSets>
@@ -19,6 +23,14 @@
 			<incomplete>false</incomplete>
 			<configs>
 				<config>src/iutest/conf/ldapTemplateTestContext.xml</config>
+			</configs>
+		</configSet>
+		<configSet>
+			<name>iutesttransactions</name>
+			<allowBeanDefinitionOverriding>false</allowBeanDefinitionOverriding>
+			<incomplete>false</incomplete>
+			<configs>
+				<config>src/itest/java/conf/ldapTemplateTransactionTestContext.xml</config>
 			</configs>
 		</configSet>
 	</configSets>

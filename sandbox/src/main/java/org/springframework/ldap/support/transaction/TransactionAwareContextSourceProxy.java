@@ -17,21 +17,7 @@ public class TransactionAwareContextSourceProxy implements ContextSource {
     }
 
     public DirContext getReadOnlyContext() throws DataAccessException {
-        DirContextHolder contextHolder = (DirContextHolder) TransactionSynchronizationManager
-                .getResource(target);
-        DirContext ctx = null;
-
-        if (contextHolder != null) {
-            ctx = contextHolder.getCtx();
-        }
-
-        if (ctx == null) {
-            ctx = target.getReadOnlyContext();
-            if (contextHolder != null) {
-                contextHolder.setCtx(ctx);
-            }
-        }
-        return getTransactionAwareDirContextProxy(ctx, target);
+        return getReadWriteContext();
     }
 
     private DirContext getTransactionAwareDirContextProxy(DirContext context,
@@ -45,6 +31,20 @@ public class TransactionAwareContextSourceProxy implements ContextSource {
     }
 
     public DirContext getReadWriteContext() throws DataAccessException {
-        throw new UnsupportedOperationException("Not implemented yet");
+        DirContextHolder contextHolder = (DirContextHolder) TransactionSynchronizationManager
+                .getResource(target);
+        DirContext ctx = null;
+
+        if (contextHolder != null) {
+            ctx = contextHolder.getCtx();
+        }
+
+        if (ctx == null) {
+            ctx = target.getReadWriteContext();
+            if (contextHolder != null) {
+                contextHolder.setCtx(ctx);
+            }
+        }
+        return getTransactionAwareDirContextProxy(ctx, target);
     }
 }

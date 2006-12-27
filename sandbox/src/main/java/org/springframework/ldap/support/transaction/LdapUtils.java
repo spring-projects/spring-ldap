@@ -5,6 +5,8 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.ContextSource;
 import org.springframework.ldap.support.DistinguishedName;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -16,6 +18,8 @@ import org.springframework.util.Assert;
  * @author Mattias Arthursson
  */
 public class LdapUtils {
+    private static Log log = LogFactory.getLog(LdapUtils.class);
+
     public static final String REBIND_METHOD_NAME = "rebind";
 
     public static final String BIND_METHOD_NAME = "bind";
@@ -63,9 +67,12 @@ public class LdapUtils {
                 .getResource(contextSource);
         if (transactionContextHolder == null
                 || transactionContextHolder.getCtx() != context) {
+            log.debug("Closing context");
             // This is not the transactional context or the transaction is
             // no longer active - we should close it.
             context.close();
+        } else {
+            log.debug("Leaving transactional context open");
         }
     }
 

@@ -1,5 +1,9 @@
 package org.springframework.ldap.support.transaction;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Stack;
 
 import javax.naming.directory.DirContext;
@@ -42,6 +46,7 @@ public class LdapCompensatingTransactionDataManager implements
      * @see org.springframework.ldap.support.CompensatingTransactionDataManager#rollback()
      */
     public void rollback() {
+        log.debug("Performing rollback");
         while (!rollbackOperations.isEmpty()) {
             CompensatingTransactionRollbackOperation rollbackOperation = (CompensatingTransactionRollbackOperation) rollbackOperations
                     .pop();
@@ -83,23 +88,6 @@ public class LdapCompensatingTransactionDataManager implements
         return new NullRecordingOperation();
     }
 
-    static class SingleContextSource implements ContextSource {
-        private DirContext ctx;
-
-        public SingleContextSource(DirContext ctx) {
-            this.ctx = ctx;
-        }
-
-        public DirContext getReadOnlyContext() throws DataAccessException {
-            return ctx;
-        }
-
-        public DirContext getReadWriteContext() throws DataAccessException {
-            return ctx;
-        }
-
-    }
-
     /**
      * Set the LdapOperations to use. For testing purposes only.
      * 
@@ -110,4 +98,61 @@ public class LdapCompensatingTransactionDataManager implements
         this.ldapOperations = ldapOperations;
     }
 
+    static class SingleContextSource implements ContextSource {
+        private DirContext ctx;
+
+        public SingleContextSource(DirContext ctx) {
+            this.ctx = ctx;
+        }
+
+        public DirContext getReadOnlyContext() throws DataAccessException {
+            return getNonClosingDirContextProxy(ctx);
+        }
+
+        public DirContext getReadWriteContext() throws DataAccessException {
+            return getNonClosingDirContextProxy(ctx);
+        }
+
+        private DirContext getNonClosingDirContextProxy(DirContext context) {
+            return (DirContext) Proxy.newProxyInstance(DirContextProxy.class
+                    .getClassLoader(), new Class[] { DirContextProxy.class },
+                    new NonClosingDirContextInvocationHandler(context));
+
+        }
+    }
+
+    public static class NonClosingDirContextInvocationHandler implements
+            InvocationHandler {
+
+        private DirContext target;
+
+        public NonClosingDirContextInvocationHandler(DirContext target) {
+            this.target = target;
+        }
+
+        public Object invoke(Object proxy, Method method, Object[] args)
+                throws Throwable {
+
+            String methodName = method.getName();
+            if (methodName.equals("getTargetContext")) {
+                return target;
+            } else if (methodName.equals("equals")) {
+                // Only consider equal when proxies are identical.
+                return (proxy == args[0] ? Boolean.TRUE : Boolean.FALSE);
+            } else if (methodName.equals("hashCode")) {
+                // Use hashCode of Connection proxy.
+                return new Integer(proxy.hashCode());
+            } else if (methodName.equals("close")) {
+                // Never close the target context, as this class will only be
+                // used for operations concerning the compensating transactions.
+                return null;
+            }
+
+            try {
+                return method.invoke(target, args);
+            } catch (InvocationTargetException e) {
+                throw e.getTargetException();
+            }
+        }
+    }
 }

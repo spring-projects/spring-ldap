@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+	<import resource="classpath:/conf/apacheDsContext.xml" />
+
+	<bean id="placeholderConfig"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location"
+			value="classpath:/conf/ldap.properties" />
+	</bean>
+
+	<bean id="contextSourceTarget"
+		class="org.springframework.ldap.support.LdapContextSource">
+		<property name="urls" value="${urls}" />
+		<property name="userName" value="${userName}" />
+		<property name="password" value="${password}" />
+		<property name="base" value="${base}" />
+		<property name="pooled" value="false" />
+		<property name="dirObjectFactory"
+			value="org.springframework.ldap.support.DefaultDirObjectFactory" />
+	</bean>
+
+	<bean id="contextSource"
+		class="org.springframework.ldap.support.transaction.TransactionAwareContextSourceProxy">
+		<constructor-arg ref="contextSourceTarget" />
+	</bean>
+
+	<bean id="ldapTemplate"
+		class="org.springframework.ldap.LdapTemplate">
+		<constructor-arg ref="contextSource" />
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.ldap.support.transaction.ContextSourceTransactionManager">
+		<property name="contextSource" ref="contextSourceTarget" />
+	</bean>
+
+	<bean name="dummyDaoTarget"
+		class="org.springframework.ldap.support.transaction.DummyDaoImpl">
+		<property name="ldapTemplate" ref="ldapTemplate" />
+	</bean>
+
+	<bean name="dummyDao"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="target" ref="dummyDaoTarget" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+</beans>

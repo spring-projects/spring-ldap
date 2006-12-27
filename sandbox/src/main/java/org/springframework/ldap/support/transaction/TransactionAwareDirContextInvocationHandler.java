@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.springframework.ldap.support.transaction;
 
 import java.lang.reflect.InvocationHandler;
@@ -45,7 +42,8 @@ public class TransactionAwareDirContextInvocationHandler implements
             return null;
         } else if (LdapUtils.isSupportedWriteTransactionOperation(methodName)) {
             // Store transaction data and allow operation to proceed.
-            LdapUtils.storeCompensatingTransactionData(contextSource, methodName, args);
+            LdapUtils.storeCompensatingTransactionData(contextSource,
+                    methodName, args);
         }
 
         try {
@@ -54,5 +52,4 @@ public class TransactionAwareDirContextInvocationHandler implements
             throw e.getTargetException();
         }
     }
-
 }

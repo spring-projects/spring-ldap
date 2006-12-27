@@ -3,6 +3,8 @@ package org.springframework.ldap.support.transaction;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.ContextSource;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
@@ -19,6 +21,9 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  */
 public class ContextSourceTransactionManager extends
         AbstractPlatformTransactionManager {
+
+    private static Log log = LogFactory
+            .getLog(ContextSourceTransactionManager.class);
 
     private ContextSource contextSource;
 
@@ -98,11 +103,14 @@ public class ContextSourceTransactionManager extends
      * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#doCleanupAfterCompletion(java.lang.Object)
      */
     protected void doCleanupAfterCompletion(Object transaction) {
-        ContextSourceTransactionObject txObject = (ContextSourceTransactionObject) transaction;
+        log.debug("Cleaning stored ContextHolder");
         TransactionSynchronizationManager.unbindResource(contextSource);
+
+        ContextSourceTransactionObject txObject = (ContextSourceTransactionObject) transaction;
         DirContext ctx = txObject.getContextHolder().getCtx();
 
         try {
+            log.debug("Closing target context");
             ctx.close();
         } catch (NamingException e) {
             e.printStackTrace();
@@ -110,5 +118,4 @@ public class ContextSourceTransactionManager extends
 
         txObject.getContextHolder().clear();
     }
-
 }
