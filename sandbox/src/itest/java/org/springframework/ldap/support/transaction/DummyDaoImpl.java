@@ -14,7 +14,7 @@ public class DummyDaoImpl {
     public void createWithException(String country, String company,
             String fullname, String lastname, String description) {
         create(country, company, fullname, lastname, description);
-        throw new RuntimeException("This method failed");
+        throw new DummyException("This method failed");
     }
 
     public void create(String country, String company, String fullname,
@@ -37,13 +37,29 @@ public class DummyDaoImpl {
         ctx.setAttributeValue("sn", lastname);
         ctx.setAttributeValue("description", description);
         ctx.update();
-        
+
         ldapTemplate.rebind(dn, ctx, null);
     }
 
     public void updateWithException(String dn, String lastname,
             String description) {
         update(dn, lastname, description);
-        throw new RuntimeException("This method failed.");
+        throw new DummyException("This method failed.");
+    }
+
+    public void updateAndRename(String dn, String newDn, String description) {
+        DirContextAdapter ctx = (DirContextAdapter) ldapTemplate.lookup(dn);
+        ctx.setAttributeValue("description", description);
+        ctx.update();
+
+        ldapTemplate.rebind(dn, ctx, null);
+
+        ldapTemplate.rename(dn, newDn);
+    }
+
+    public void updateAndRenameWithException(String dn, String newDn,
+            String description) {
+        updateAndRename(dn, newDn, description);
+        throw new DummyException("This method failed.");
     }
 }

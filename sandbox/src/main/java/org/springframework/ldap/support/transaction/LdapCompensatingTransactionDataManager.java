@@ -77,9 +77,14 @@ public class LdapCompensatingTransactionDataManager implements
     protected CompensatingTransactionRecordingOperation getRecordingOperation(
             String operation) {
         if (StringUtils.equals(operation, LdapUtils.BIND_METHOD_NAME)) {
+            log.debug("Bind operation recorded");
             return new BindRecordingOperation(ldapOperations);
         } else if (StringUtils.equals(operation, LdapUtils.REBIND_METHOD_NAME)) {
+            log.debug("Rebind operation recorded");
             return new RebindRecordingOperation(ldapOperations);
+        } else if (StringUtils.equals(operation, LdapUtils.RENAME_METHOD_NAME)) {
+            log.debug("Rename operation recorded");
+            return new RenameRecordingOperation(ldapOperations);
         }
 
         log

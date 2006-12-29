@@ -51,8 +51,8 @@ public class ContextSourceTransactionManagerIntegrationTest extends
         try {
             dummyDao.createWithException("Sweden", "company1",
                     "some testperson", "testperson", "some description");
-            fail("RuntimeException expected");
-        } catch (RuntimeException expected) {
+            fail("DummyException expected");
+        } catch (DummyException expected) {
             assertTrue(true);
         }
 
@@ -66,7 +66,7 @@ public class ContextSourceTransactionManagerIntegrationTest extends
         }
     }
 
-    public void testCreateWithNoException() {
+    public void testCreate() {
         dummyDao.create("Sweden", "company1", "some testperson", "testperson",
                 "some description");
 
@@ -79,13 +79,13 @@ public class ContextSourceTransactionManagerIntegrationTest extends
         try {
             dummyDao.updateWithException(dn, "Updated Person",
                     "Updated description");
-            fail("RuntimeException expected");
-        } catch (RuntimeException expected) {
+            fail("DummyException expected");
+        } catch (DummyException expected) {
             assertTrue(true);
         }
 
         log.debug("Verifying result");
-        
+
         Object result = ldapTemplate.lookup(dn, new AttributesMapper() {
             public Object mapFromAttributes(Attributes attributes)
                     throws NamingException {
@@ -115,5 +115,56 @@ public class ContextSourceTransactionManagerIntegrationTest extends
         });
 
         assertNotNull(result);
+    }
+
+    public void testUpdateAndRenameWithException() {
+        String dn = "cn=Some Person2,ou=company1,c=Sweden";
+        String newDn = "cn=Some Person2,ou=company2,c=Sweden";
+        try {
+            // Perform test
+            dummyDao.updateAndRenameWithException(dn, newDn,
+                    "Updated description");
+            fail("DummyException expected");
+        } catch (DummyException expected) {
+            assertTrue(true);
+        }
+
+        // Verify that entry was not moved.
+        try {
+            ldapTemplate.lookup(newDn);
+            fail("EntryNotFoundException expected");
+        } catch (EntryNotFoundException expected) {
+            assertTrue(true);
+        }
+
+        // Verify that original entry was not updated.
+        Object object = ldapTemplate.lookup(dn, new AttributesMapper() {
+            public Object mapFromAttributes(Attributes attributes)
+                    throws NamingException {
+                assertEquals("Sweden, Company1, Some Person2", attributes.get(
+                        "description").get());
+                return new Object();
+            }
+        });
+        assertNotNull(object);
+    }
+
+    public void testUpdateAndRename() {
+        String dn = "cn=Some Person2,ou=company1,c=Sweden";
+        String newDn = "cn=Some Person2,ou=company2,c=Sweden";
+        // Perform test
+        dummyDao.updateAndRename(dn, newDn, "Updated description");
+
+        // Verify that entry was moved and updated.
+        Object object = ldapTemplate.lookup(newDn, new AttributesMapper() {
+            public Object mapFromAttributes(Attributes attributes)
+                    throws NamingException {
+                assertEquals("Updated description", attributes.get(
+                        "description").get());
+                return new Object();
+            }
+        });
+
+        assertNotNull(object);
     }
 }

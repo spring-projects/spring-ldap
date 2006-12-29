@@ -103,21 +103,37 @@ public class LdapCompensatingTransactionDataManagerTest extends TestCase {
         LdapCompensatingTransactionDataManager tested = new LdapCompensatingTransactionDataManager(
                 null);
         tested.setLdapOperations(ldapOperationsMock);
-        
-        CompensatingTransactionRecordingOperation result = tested.getRecordingOperation("bind");
+
+        CompensatingTransactionRecordingOperation result = tested
+                .getRecordingOperation("bind");
         assertTrue(result instanceof BindRecordingOperation);
-        BindRecordingOperation bindRecordingOperation = (BindRecordingOperation)result;
-        assertSame(ldapOperationsMock, bindRecordingOperation.getLdapOperations());
+        BindRecordingOperation bindRecordingOperation = (BindRecordingOperation) result;
+        assertSame(ldapOperationsMock, bindRecordingOperation
+                .getLdapOperations());
     }
 
     public void testGetRecordingOperation_Rebind() throws Exception {
         LdapCompensatingTransactionDataManager tested = new LdapCompensatingTransactionDataManager(
                 null);
         tested.setLdapOperations(ldapOperationsMock);
-        
-        CompensatingTransactionRecordingOperation result = tested.getRecordingOperation("rebind");
+
+        CompensatingTransactionRecordingOperation result = tested
+                .getRecordingOperation("rebind");
         assertTrue(result instanceof RebindRecordingOperation);
-        RebindRecordingOperation rebindRecordingOperation = (RebindRecordingOperation)result;
-        assertSame(ldapOperationsMock, rebindRecordingOperation.getLdapOperations());
+        RebindRecordingOperation rebindRecordingOperation = (RebindRecordingOperation) result;
+        assertSame(ldapOperationsMock, rebindRecordingOperation
+                .getLdapOperations());
+    }
+
+    public void testGetRecordingOperation_Rename() throws Exception {
+        LdapCompensatingTransactionDataManager tested = new LdapCompensatingTransactionDataManager(
+                null);
+        tested.setLdapOperations(ldapOperationsMock);
+
+        CompensatingTransactionRecordingOperation result = tested
+                .getRecordingOperation("rename");
+        assertTrue(result instanceof RenameRecordingOperation);
+        RenameRecordingOperation recordingOperation = (RenameRecordingOperation) result;
+        assertSame(ldapOperationsMock, recordingOperation.getLdapOperations());
     }
 }

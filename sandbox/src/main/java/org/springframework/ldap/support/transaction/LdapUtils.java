@@ -24,6 +24,8 @@ public class LdapUtils {
 
     public static final String BIND_METHOD_NAME = "bind";
 
+    public static final String RENAME_METHOD_NAME = "rename";
+
     /**
      * Not to be instantiated.
      */
@@ -41,10 +43,23 @@ public class LdapUtils {
     public static Name getFirstArgumentAsName(Object[] args) {
         Assert.notEmpty(args);
 
-        if (args[0] instanceof String) {
-            return new DistinguishedName((String) args[0]);
-        } else if (args[0] instanceof Name) {
-            return (Name) args[0];
+        Object firstArg = args[0];
+        return getArgumentAsName(firstArg);
+    }
+
+    /**
+     * Get the argument as a Name.
+     * 
+     * @param arg
+     *            an argument supplied to an Ldap operation.
+     * @return a Name representation of the argument, or the Name itself if it
+     *         is a Name.
+     */
+    public static Name getArgumentAsName(Object arg) {
+        if (arg instanceof String) {
+            return new DistinguishedName((String) arg);
+        } else if (arg instanceof Name) {
+            return (Name) arg;
         } else {
             throw new IllegalArgumentException(
                     "First argument needs to be a Name or a String representation thereof");
@@ -86,8 +101,9 @@ public class LdapUtils {
      *         <code>false</code> otherwise.
      */
     public static boolean isSupportedWriteTransactionOperation(String methodName) {
-        return (StringUtils.equals(methodName, BIND_METHOD_NAME) || StringUtils
-                .equals(methodName, REBIND_METHOD_NAME));
+        return (StringUtils.equals(methodName, BIND_METHOD_NAME)
+                || StringUtils.equals(methodName, REBIND_METHOD_NAME) || StringUtils
+                .equals(methodName, RENAME_METHOD_NAME));
 
     }
 
