@@ -1,10 +1,24 @@
+/*
+ * Copyright 2002-2007 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.springframework.ldap.support.transaction;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.Stack;
 
 import javax.naming.directory.DirContext;
 
@@ -16,15 +30,33 @@ import org.springframework.ldap.ContextSource;
 import org.springframework.ldap.LdapOperations;
 import org.springframework.ldap.LdapTemplate;
 
-public class LdapCompensatingTransactionDataManager implements
-        CompensatingTransactionDataManager {
+/**
+ * A {@link CompensatingTransactionDataManager} for LDAP operations. Called by
+ * {@link TransactionAwareDirContextInvocationHandler} to record LDAP operations
+ * and keep track of rollback operations. Manages <code>bind</code>,
+ * <code>rebind</code>, <code>unbind</code>, <code>rename</code> and
+ * <code>modifyAttributes</code> operations. All created
+ * {@link CompensatingTransactionRecordingOperation} objects (and consequently,
+ * all {@link CompensatingTransactionRollbackOperation} objects created by
+ * these) will use the transactional DirContext instance to perform all their
+ * necessary operations, via an internal {@link LdapTemplate} instance referring
+ * a special ContextSource implementation..
+ * 
+ * @author Mattias Arthursson
+ */
+public class LdapCompensatingTransactionDataManager extends
+        AbstractCompensatingTransactionDataManager {
     private static Log log = LogFactory
             .getLog(LdapCompensatingTransactionDataManager.class);
 
-    private Stack rollbackOperations = new Stack();
-
     private LdapOperations ldapOperations;
 
+    /**
+     * Constructor.
+     * 
+     * @param ctx
+     *            The transactional DirContext.
+     */
     public LdapCompensatingTransactionDataManager(DirContext ctx) {
         this.ldapOperations = new LdapTemplate(new SingleContextSource(ctx));
     }
@@ -32,48 +64,8 @@ public class LdapCompensatingTransactionDataManager implements
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.CompensatingTransactionDataManager#operationPerformed(java.lang.String,
-     *      java.lang.Object[])
+     * @see org.springframework.ldap.support.transaction.AbstractCompensatingTransactionDataManager#getRecordingOperation(java.lang.String)
      */
-    public void operationPerformed(String operation, Object[] params) {
-        CompensatingTransactionRecordingOperation recordingOperation = getRecordingOperation(operation);
-        rollbackOperations.push(recordingOperation.performOperation(params));
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.ldap.support.CompensatingTransactionDataManager#rollback()
-     */
-    public void rollback() {
-        log.debug("Performing rollback");
-        while (!rollbackOperations.isEmpty()) {
-            CompensatingTransactionRollbackOperation rollbackOperation = (CompensatingTransactionRollbackOperation) rollbackOperations
-                    .pop();
-            rollbackOperation.rollback();
-        }
-    }
-
-    /**
-     * Get the rollback operations. Package protected for testing purposes.
-     * 
-     * @return the rollback operations.
-     */
-    Stack getRollbackOperations() {
-        return rollbackOperations;
-    }
-
-    /**
-     * Set the rollback operations. Package protected - for testing purposes
-     * only.
-     * 
-     * @param rollbackOperations
-     *            the rollback operations.
-     */
-    void setRollbackOperations(Stack rollbackOperations) {
-        this.rollbackOperations = rollbackOperations;
-    }
-
     protected CompensatingTransactionRecordingOperation getRecordingOperation(
             String operation) {
         if (StringUtils.equals(operation, LdapUtils.BIND_METHOD_NAME)) {
@@ -108,17 +100,40 @@ public class LdapCompensatingTransactionDataManager implements
         this.ldapOperations = ldapOperations;
     }
 
+    /**
+     * A {@link ContextSource} implementation using returning
+     * {@link NonClosingDirContextInvocationHandler} proxies on the same
+     * DirContext instance for each call.
+     * 
+     * @author Mattias Arthursson
+     */
     static class SingleContextSource implements ContextSource {
         private DirContext ctx;
 
+        /**
+         * Constructor.
+         * 
+         * @param ctx
+         *            the target DirContext.
+         */
         public SingleContextSource(DirContext ctx) {
             this.ctx = ctx;
         }
 
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.springframework.ldap.ContextSource#getReadOnlyContext()
+         */
         public DirContext getReadOnlyContext() throws DataAccessException {
             return getNonClosingDirContextProxy(ctx);
         }
 
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.springframework.ldap.ContextSource#getReadWriteContext()
+         */
         public DirContext getReadWriteContext() throws DataAccessException {
             return getNonClosingDirContextProxy(ctx);
         }
@@ -131,6 +146,13 @@ public class LdapCompensatingTransactionDataManager implements
         }
     }
 
+    /**
+     * A proxy for DirContext forwarding all operation to the target DirContext,
+     * but making sure that no <code>close</code> operations will be
+     * performed.
+     * 
+     * @author Mattias Arthursson
+     */
     public static class NonClosingDirContextInvocationHandler implements
             InvocationHandler {
 
@@ -140,6 +162,12 @@ public class LdapCompensatingTransactionDataManager implements
             this.target = target;
         }
 
+        /*
+         * (non-Javadoc)
+         * 
+         * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
+         *      java.lang.reflect.Method, java.lang.Object[])
+         */
         public Object invoke(Object proxy, Method method, Object[] args)
                 throws Throwable {
 

@@ -1,3 +1,18 @@
+/*
+ * Copyright 2002-2007 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.springframework.ldap.support.transaction;
 
 import java.util.HashSet;
@@ -15,6 +30,13 @@ import org.springframework.ldap.AttributesMapper;
 import org.springframework.ldap.LdapOperations;
 import org.springframework.util.Assert;
 
+/**
+ * A {@link CompensatingTransactionRecordingOperation} keeping track of
+ * modifyAttributes operations, creating corresponding
+ * {@link ModifyAttributesRollbackOperation} instances for rollback.
+ * 
+ * @author Mattias Arthursson
+ */
 public class ModifyAttributesRecordingOperation implements
         CompensatingTransactionRecordingOperation {
 
@@ -24,6 +46,11 @@ public class ModifyAttributesRecordingOperation implements
         this.ldapOperations = ldapOperations;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRecordingOperation#performOperation(java.lang.Object[])
+     */
     public CompensatingTransactionRollbackOperation performOperation(
             Object[] args) {
         Assert.notNull(args);
@@ -58,6 +85,13 @@ public class ModifyAttributesRecordingOperation implements
                 rollbackItems);
     }
 
+    /**
+     * Get an {@link AttributesMapper} that just returns the supplied
+     * Attributes.
+     * 
+     * @return the {@link AttributesMapper} to use for getting the current
+     *         Attributes of the target DN.
+     */
     AttributesMapper getAttributesMapper() {
         return new AttributesMapper() {
             public Object mapFromAttributes(Attributes attributes)
@@ -67,6 +101,17 @@ public class ModifyAttributesRecordingOperation implements
         };
     }
 
+    /**
+     * Get a ModificationItem to use for rollback of the supplied modification.
+     * 
+     * @param originalAttributes
+     *            All Attributes of the target DN that are affected of any of
+     *            the ModificationItems.
+     * @param modificationItem
+     *            the ModificationItem to create a rollback item for.
+     * @return A ModificationItem to use for rollback of the supplied
+     *         ModificationItem.
+     */
     protected ModificationItem getCompensatingModificationItem(
             Attributes originalAttributes, ModificationItem modificationItem) {
         Attribute modificationAttribute = modificationItem.getAttribute();

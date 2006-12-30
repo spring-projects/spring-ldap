@@ -1,3 +1,18 @@
+/*
+ * Copyright 2002-2007 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.springframework.ldap.support.transaction;
 
 import javax.naming.NamingException;
@@ -14,13 +29,32 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 /**
  * TransactionManager for managing LDAP transactions. Since transactions are not
- * supported in the LDAP protocol, this class and its collaborators aims to
- * provide compensating transactions instead. TODO: improve javadoc.
+ * supported in the LDAP protocol this class and its collaborators aims to
+ * provide compensating transactions instead.
+ * <p>
+ * A transaction is tied to a {@link ContextSource}, to be supplied to the
+ * {@link #setContextSource(ContextSource)} method. While the actual
+ * ContextSource used by the target LdapTemplate instance needs to be of the
+ * type {@link TransactionAwareContextSourceProxy}, the ContextSource supplied
+ * to this class should be the actual target ContextSource.
+ * </p>
+ * <p>
+ * This class creates a {@link ContextSourceTransactionObject} as the
+ * implementation specific Transaction object. The actual transaction data is
+ * managed by a {@link DirContextHolder} and its collaborating
+ * {@link LdapCompensatingTransactionDataManager}. Using a
+ * {@link TransactionAwareContextSourceProxy} all modify operations (bind,
+ * rebind, modifyAttributes, unbind) will result in corresponding rollback
+ * operations to be recorded and these operations will be invoked should the
+ * transaction be rolled back.
+ * </p>
  * 
  * @author Mattias Arthursson
  */
 public class ContextSourceTransactionManager extends
         AbstractPlatformTransactionManager {
+
+    private static final long serialVersionUID = -4308820955185446535L;
 
     private static Log log = LogFactory
             .getLog(ContextSourceTransactionManager.class);

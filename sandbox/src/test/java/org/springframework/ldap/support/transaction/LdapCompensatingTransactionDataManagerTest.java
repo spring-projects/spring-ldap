@@ -65,7 +65,7 @@ public class LdapCompensatingTransactionDataManagerTest extends TestCase {
     }
 
     public void testOperationPerformed() {
-        LdapCompensatingTransactionDataManager tested = new LdapCompensatingTransactionDataManager(
+        AbstractCompensatingTransactionDataManager tested = new LdapCompensatingTransactionDataManager(
                 null) {
             protected CompensatingTransactionRecordingOperation getRecordingOperation(
                     String operation) {
@@ -88,7 +88,7 @@ public class LdapCompensatingTransactionDataManagerTest extends TestCase {
     }
 
     public void testRollback() {
-        LdapCompensatingTransactionDataManager tested = new LdapCompensatingTransactionDataManager(
+        AbstractCompensatingTransactionDataManager tested = new LdapCompensatingTransactionDataManager(
                 null);
         tested.getRollbackOperations().push(rollbackOperationMock);
 
