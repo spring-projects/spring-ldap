@@ -26,6 +26,10 @@ public class LdapUtils {
 
     public static final String RENAME_METHOD_NAME = "rename";
 
+    public static final String UNBIND_METHOD_NAME = "unbind";
+
+    public static final String MODIFY_ATTRIBUTES_METHOD_NAME = "modifyAttributes";
+
     /**
      * Not to be instantiated.
      */
@@ -102,8 +106,11 @@ public class LdapUtils {
      */
     public static boolean isSupportedWriteTransactionOperation(String methodName) {
         return (StringUtils.equals(methodName, BIND_METHOD_NAME)
-                || StringUtils.equals(methodName, REBIND_METHOD_NAME) || StringUtils
-                .equals(methodName, RENAME_METHOD_NAME));
+                || StringUtils.equals(methodName, REBIND_METHOD_NAME)
+                || StringUtils.equals(methodName, RENAME_METHOD_NAME)
+                || StringUtils
+                        .equals(methodName, MODIFY_ATTRIBUTES_METHOD_NAME) || StringUtils
+                .equals(methodName, UNBIND_METHOD_NAME));
 
     }
 

@@ -136,4 +136,28 @@ public class LdapCompensatingTransactionDataManagerTest extends TestCase {
         RenameRecordingOperation recordingOperation = (RenameRecordingOperation) result;
         assertSame(ldapOperationsMock, recordingOperation.getLdapOperations());
     }
+
+    public void testGetRecordingOperation_ModifyAttributes() throws Exception {
+        LdapCompensatingTransactionDataManager tested = new LdapCompensatingTransactionDataManager(
+                null);
+        tested.setLdapOperations(ldapOperationsMock);
+
+        CompensatingTransactionRecordingOperation result = tested
+                .getRecordingOperation("modifyAttributes");
+        assertTrue(result instanceof ModifyAttributesRecordingOperation);
+        ModifyAttributesRecordingOperation recordingOperation = (ModifyAttributesRecordingOperation) result;
+        assertSame(ldapOperationsMock, recordingOperation.getLdapOperations());
+    }
+
+    public void testGetRecordingOperation_Unbind() throws Exception {
+        LdapCompensatingTransactionDataManager tested = new LdapCompensatingTransactionDataManager(
+                null);
+        tested.setLdapOperations(ldapOperationsMock);
+
+        CompensatingTransactionRecordingOperation result = tested
+                .getRecordingOperation("unbind");
+        assertTrue(result instanceof UnbindRecordingOperation);
+        UnbindRecordingOperation recordingOperation = (UnbindRecordingOperation) result;
+        assertSame(ldapOperationsMock, recordingOperation.getLdapOperations());
+    }
 }

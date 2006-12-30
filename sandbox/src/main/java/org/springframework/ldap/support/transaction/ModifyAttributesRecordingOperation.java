@@ -1,7 +1,9 @@
 package org.springframework.ldap.support.transaction;
 
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
@@ -9,7 +11,9 @@ import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 
+import org.springframework.ldap.AttributesMapper;
 import org.springframework.ldap.LdapOperations;
+import org.springframework.util.Assert;
 
 public class ModifyAttributesRecordingOperation implements
         CompensatingTransactionRecordingOperation {
@@ -22,12 +26,49 @@ public class ModifyAttributesRecordingOperation implements
 
     public CompensatingTransactionRollbackOperation performOperation(
             Object[] args) {
-        throw new UnsupportedOperationException("Not implemented");
+        Assert.notNull(args);
+        Name dn = LdapUtils.getFirstArgumentAsName(args);
+        if (args.length != 2 || !(args[1] instanceof ModificationItem[])) {
+            throw new IllegalArgumentException(
+                    "Unexpected arguments to ModifyAttributes operation");
+        }
+
+        ModificationItem[] incomingModifications = (ModificationItem[]) args[1];
+
+        Set set = new HashSet();
+        for (int i = 0; i < incomingModifications.length; i++) {
+            set.add(incomingModifications[i].getAttribute().getID());
+        }
+
+        // Get the current values of all referred Attributes.
+        String[] attributeNameArray = (String[]) set.toArray(new String[set
+                .size()]);
+        Attributes currentAttributes = (Attributes) ldapOperations.lookup(dn,
+                attributeNameArray, getAttributesMapper());
+
+        // Get a compensating ModificationItem for each of the incoming
+        // modification.
+        ModificationItem[] rollbackItems = new ModificationItem[incomingModifications.length];
+        for (int i = 0; i < incomingModifications.length; i++) {
+            rollbackItems[i] = getCompensatingModificationItem(
+                    currentAttributes, incomingModifications[i]);
+        }
+
+        return new ModifyAttributesRollbackOperation(ldapOperations, dn,
+                rollbackItems);
+    }
+
+    AttributesMapper getAttributesMapper() {
+        return new AttributesMapper() {
+            public Object mapFromAttributes(Attributes attributes)
+                    throws NamingException {
+                return attributes;
+            }
+        };
     }
 
     protected ModificationItem getCompensatingModificationItem(
-            Attributes originalAttributes, ModificationItem modificationItem)
-            throws NamingException {
+            Attributes originalAttributes, ModificationItem modificationItem) {
         Attribute modificationAttribute = modificationItem.getAttribute();
         Attribute originalAttribute = originalAttributes
                 .get(modificationAttribute.getID());
@@ -62,9 +103,17 @@ public class ModifyAttributesRecordingOperation implements
                 // operation will be to remove the attribute.
                 return new ModificationItem(DirContext.REMOVE_ATTRIBUTE,
                         new BasicAttribute(modificationAttribute.getID()));
+            } else {
+                // The attribute does exist before - we should store the
+                // previous value and it should be used for replacing in
+                // rollback.
+                return new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
+                        (Attribute) originalAttribute.clone());
             }
         }
+    }
 
-        return null;
+    LdapOperations getLdapOperations() {
+        return ldapOperations;
     }
 }

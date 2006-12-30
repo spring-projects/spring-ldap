@@ -85,6 +85,11 @@ public class LdapCompensatingTransactionDataManager implements
         } else if (StringUtils.equals(operation, LdapUtils.RENAME_METHOD_NAME)) {
             log.debug("Rename operation recorded");
             return new RenameRecordingOperation(ldapOperations);
+        } else if (StringUtils.equals(operation,
+                LdapUtils.MODIFY_ATTRIBUTES_METHOD_NAME)) {
+            return new ModifyAttributesRecordingOperation(ldapOperations);
+        } else if (StringUtils.equals(operation, LdapUtils.UNBIND_METHOD_NAME)) {
+            return new UnbindRecordingOperation(ldapOperations);
         }
 
         log
