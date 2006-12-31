@@ -1,0 +1,20 @@
+RollbackOperations are stored before the actual operation has succeeded.
+------------------------------------------------------------------------
+The recording of operations take place before the actual operation is carried out.
+While this is needed (as we need the state as it was before the operation), this may cause
+problems if the operation in question fails, causing a rollback to be performed.
+The LdapCompensatingTransactionDataManager will then have a RollbackOperation to rollback
+the failing operation. Example:
+A rebind operation is recorded and the actual operation fails because the fromDn does not exist.
+If toDn is already bound, the rollback will rename toDn to fromDn, messing things up.
+
+We need to make sure that the RollbackOperation is not registered until the actual operation has
+succeeded.
+
+Invisible Attributes and rollback
+---------------------------------
+When recording an unbind operation the attributes of the unbound DN is retrieved. It is however
+possible that some Attributes are not returned by that lookup, e.g. if they are operational
+attributes (in which case they will need to be asked for explicitly.
+This means that we might end up with inconsistent data after the rollback
+(i.e. the Attributes after the rollback won't contain the invisible Attributes).
