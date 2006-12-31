@@ -4,12 +4,12 @@
 		<configExtension>xml</configExtension>
 	</configExtensions>
 	<configs>
-		<config>src/main/webapp/WEB-INF/flows/search-group-flow-beans.xml</config>
 		<config>src/main/webapp/WEB-INF/flows/detail-group-flow-beans.xml</config>
-		<config>src/main/webapp/WEB-INF/flows/search-flow-beans.xml</config>
+		<config>src/main/webapp/WEB-INF/flows/search-group-flow-beans.xml</config>
 		<config>src/webapp/WEB-INF/apacheDsContext.xml</config>
-		<config>src/webapp/WEB-INF/applicationContext-acegi-security.xml</config>
+		<config>src/main/webapp/WEB-INF/flows/search-flow-beans.xml</config>
 		<config>src/webapp/WEB-INF/applicationContext.xml</config>
+		<config>src/webapp/WEB-INF/applicationContext-acegi-security.xml</config>
 		<config>src/webapp/WEB-INF/ldaptemplate-servlet.xml</config>
 		<config>src/main/webapp/WEB-INF/flows/detail-flow-beans.xml</config>
 		<config>src/main/webapp/WEB-INF/ldaptemplate-webflow-config.xml</config>
