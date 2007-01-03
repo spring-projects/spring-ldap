@@ -19,6 +19,7 @@
 	<import file="${basedir}/itest-openldap-targets.xml" />
 	<import file="${common.build.dir}/doc-targets.xml" />
 	<import file="${common.build.dir}/clover-targets.xml" />
+	<import file="${common.build.dir}/jdiff-targets.xml" />
 
 	<!-- extend common-build with source capability -->
 	<target name="build.prepare.make.config.dirs" depends="common-targets.build.prepare.make.config.dirs">
@@ -86,134 +87,6 @@ The HTML report is ${target.testresults.html.dir}/index.html
 
 		<javacc javacchome="${javacc.home.dir}" target="${src.javacc.dir}/DnParserImpl.jj" outputdirectory="${target.gen.java.dir}/org/springframework/ldap/support" />
 
-	</target>
-
-	<target name="jdiff-simple">
-		<property name="build.home" location="${basedir}/../build-spring-ldap" />
-		<property name="JDIFF_HOME" location="${build.home}/jdiff" />
-
-		<taskdef name="jdiff" classname="jdiff.JDiffAntTask" classpath="${JDIFF_HOME}/lib/antjdiff.jar" />
-
-		<jdiff destdir="${target.dir}/jdiff_report">
-			<old name="Spring LDAP 1.1.1">
-				<dirset dir="${build.home}/spring-ldap-1.1.1/src/main/java" includes="org/**" />
-			</old>
-			<new name="Spring LDAP 1.2">
-				<dirset dir="${src.java.main.dir}" includes="org/**" />
-			</new>
-		</jdiff>
-
-	</target>
-
-	<!-- ======================================================= -->
-	<!-- Run all the steps used to produce Javadoc and JDiff HTML reports -->
-	<!-- ======================================================= -->
-	<target name="jdiff" depends="compile,init-jdiff,javadoc_old,javadoc,jdiff_old_api,jdiff_new_api,jdiff_compare_apis" />
-
-	<target name="init-jdiff">
-		<property name="build.home" location="${basedir}/../build-spring-ldap" />
-		<property name="JDIFF_HOME" location="${build.home}/jdiff" />
-		<property name="target.jdiff.reports.dir" location="${target.dir}/jdiff"/>
-
-		<property name="old.dir" location="${build.home}/spring-ldap-1.1.1" />
-		<property name="old.src.dir" location="${old.dir}/src/main/java" />
-		<property name="old.packages" value="org.springframework.ldap.*" />
-		<property name="project.old.title" value="Spring LDAP" />
-		<property name="project.old.version" value="1.1.1" />
-		<property name="target.javadocs.old.dir" location="${target.dir}/javadocs.old" />
-
-		<property name="new.src.dir" location="${src.java.main.dir}" />
-		<property name="new.packages" value="org.springframework.ldap.*" />
-		<property name="new.javadocs.dir" location="${target.dir}/javadocs" />
-
-		<property name="base.uri" value="http://www.w3.org" />
-	</target>
-
-	<!-- ======================================================= -->
-	<!-- Create the directories for the Javadoc output          -->
-	<!-- ======================================================= -->
-	<target name="create_javadoc_dirs" depends="init">
-		<mkdir dir="${target.javadocs.old.dir}" />
-		<mkdir dir="${target.jdiff.reports.dir}" />
-	</target>
-
-	<!-- ======================================================= -->
-	<!-- Produce Javadoc HTML for the old API                    -->
-	<!-- ======================================================= -->
-	<target name="javadoc_old" depends="create_javadoc_dirs">
-		<javadoc private="yes" sourcepath="${old.src.dir}" destdir="${target.javadocs.old.dir}" verbose="no" packagenames="${old.packages}" doctitle="${project.old.title} ${project.old.version}" windowtitle="${project.old.title} ${project.old.version} API" bottom="${project.copyright}">
-			<classpath>
-				<path refid="compile.classpath" />
-				<path location="${target.classes.dir}" />
-			</classpath>
-		</javadoc>
-	</target>
-
-	<!-- ======================================================= -->
-	<!-- Use Javadoc with the JDiff doclet to generate an XML file -->
-	<!-- representing the old API                                  -->
-	<!-- ======================================================= -->
-	<target name="jdiff_old_api" depends="create_javadoc_dirs">
-		<javadoc sourcepath="${old.src.dir}" packagenames="${old.packages}">
-			<doclet name="jdiff.JDiff" path="${JDIFF_HOME}/lib/jdiff.jar:${JDIFF_HOME}/lib/xerces.jar">
-				<param name="-apiname" value="${project.old.title} ${project.old.version}" />
-				<param name="-apidir" value="${target.jdiff.reports.dir}" />
-				<param name="-baseURI" value="${base.uri}" />
-			</doclet>
-			<classpath>
-				<path refid="compile.classpath" />
-				<path location="${target.classes.dir}" />
-			</classpath>
-		</javadoc>
-	</target>
-
-	<!-- ======================================================= -->
-	<!-- Use Javadoc with the JDiff doclet to generate an XML file -->
-	<!-- representing the new API                                  -->
-	<!-- ======================================================= -->
-	<target name="jdiff_new_api" depends="create_javadoc_dirs">
-		<javadoc sourcepath="${new.src.dir}" packagenames="${new.packages}">
-			<doclet name="jdiff.JDiff" path="${JDIFF_HOME}/lib/jdiff.jar:${JDIFF_HOME}/lib/xerces.jar">
-				<param name="-apiname" value="${project.title} ${project.version}" />
-				<param name="-apidir" value="${target.jdiff.reports.dir}" />
-				<param name="-baseURI" value="${base.uri}" />
-			</doclet>
-			<classpath>
-				<path refid="compile.classpath" />
-				<path location="${target.classes.dir}" />
-			</classpath>
-		</javadoc>
-	</target>
-
-	<!-- ======================================================= -->
-	<!-- Use Javadoc with the JDiff doclet to compare the two XML files -->
-	<!-- representing the old and new APIs, and generate an HTML report -->
-	<!-- describing the differences between the two APIs                -->
-	<!-- ======================================================= -->
-	<target name="jdiff_compare_apis" depends="create_javadoc_dirs">
-		<!-- To use this task with JDK 1.4, use ANT 1.5 and change -->
-		<!-- packagenames to sourcefiles.                          -->
-		<javadoc private="yes" sourcepath="${JDIFF_HOME}" destdir="${new.javadocs.dir}" sourcefiles="${JDIFF_HOME}/lib/Null.java">
-			<doclet name="jdiff.JDiff" path="${JDIFF_HOME}/lib/jdiff.jar:${JDIFF_HOME}/lib/xerces.jar">
-				<param name="-stats" />
-				<param name="-oldapidir" value="${target.jdiff.reports.dir}" />
-				<param name="-oldapi" value="${project.old.title} ${project.old.version}" />
-				<param name="-newapidir" value="${target.jdiff.reports.dir}" />
-				<param name="-newapi" value="${project.title} ${project.version}" />
-				<!-- We could use a file:/// prefix to refer to Javadoc files, or -->
-				<!-- we could make them relative to the changes directory.        -->
-				<!-- Remember to add a trailing forward slash.                    -->
-				<param name="-javadocold" value="../../javadocs.old/" />
-				<param name="-javadocnew" value="../" />
-			</doclet>
-			<classpath>
-				<path refid="compile.classpath" />
-			</classpath>
-		</javadoc>
-		<!-- Copy two image files. black.gif is only needed because -stats was -->
-		<!-- used -->
-		<copy file="${JDIFF_HOME}/lib/background.gif" todir="${new.javadocs.dir}" />
-		<copy file="${JDIFF_HOME}/lib/black.gif" todir="${new.javadocs.dir}" />
 	</target>
 
 </project>

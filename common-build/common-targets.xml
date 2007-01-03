@@ -23,6 +23,9 @@
 
 <project name="common-targets" xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
 
+	<!-- defined to get rid of warnings -->
+	<property name="common.build.dir" location="."/>
+
   <!-- try to load ivy here from local lib dir, in case the user has not already dropped
        it into ant's lib dir (note that the latter copy will always take precedence).
        We will not fail as long as local lib dir exists (it may be empty) and
