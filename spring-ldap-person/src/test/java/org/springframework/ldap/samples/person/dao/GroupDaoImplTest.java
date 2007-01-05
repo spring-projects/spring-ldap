@@ -23,8 +23,8 @@ import javax.naming.directory.ModificationItem;
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
-import org.springframework.ldap.ContextMapper;
-import org.springframework.ldap.LdapOperations;
+import org.springframework.ldap.core.ContextMapper;
+import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.samples.person.domain.Group;
 import org.springframework.ldap.samples.person.domain.SearchCriteria;
 import org.springframework.ldap.support.DirContextOperations;

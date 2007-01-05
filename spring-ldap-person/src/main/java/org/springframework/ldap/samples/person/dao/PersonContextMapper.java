@@ -17,9 +17,9 @@ package org.springframework.ldap.samples.person.dao;
 
 import javax.naming.NamingException;
 
-import org.springframework.ldap.ContextMapper;
 import org.springframework.ldap.DefaultNamingExceptionTranslator;
 import org.springframework.ldap.NamingExceptionTranslator;
+import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.samples.person.domain.Person;
 import org.springframework.ldap.support.DirContextOperations;
 import org.springframework.ldap.support.DistinguishedName;

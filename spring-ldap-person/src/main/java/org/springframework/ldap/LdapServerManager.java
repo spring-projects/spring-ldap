@@ -29,7 +29,7 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
-import org.springframework.ldap.ContextSource;
+import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.support.DefaultDirObjectFactory;
 import org.springframework.ldap.support.DistinguishedName;
 

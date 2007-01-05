@@ -44,6 +44,6 @@
 	<classpathentry kind="lib" path="lib/global/shared-asn1.jar"/>
 	<classpathentry kind="lib" path="lib/global/shared-ldap.jar"/>
 	<classpathentry kind="lib" path="lib/global/slf4j-log4j12.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-ldap.jar" sourcepath="lib/source/spring-ldap-src.zip"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/spring-ldap"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

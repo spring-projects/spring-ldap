@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
 
-import org.springframework.ldap.ContextMapper;
+import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.samples.person.domain.Group;
 import org.springframework.ldap.support.DirContextOperations;
 
@@ -32,7 +32,7 @@ import org.springframework.ldap.support.DirContextOperations;
 public class GroupContextMapper implements ContextMapper {
 
     /*
-     * @see org.springframework.ldap.ContextMapper#mapFromContext(java.lang.Object)
+     * @see org.springframework.ldap.core.ContextMapper#mapFromContext(java.lang.Object)
      */
     public Object mapFromContext(Object ctx) {
         DirContextOperations dirContext = (DirContextOperations) ctx;
