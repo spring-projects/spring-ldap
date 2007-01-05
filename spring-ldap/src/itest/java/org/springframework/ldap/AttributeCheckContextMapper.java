@@ -17,6 +17,7 @@ package org.springframework.ldap;
 
 import junit.framework.Assert;
 
+import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.support.DirContextAdapter;
 
 /**

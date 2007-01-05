@@ -17,7 +17,7 @@ package org.springframework.ldap;
 
 
 import org.ddsteps.spring.DDStepsSpringTestCase;
-import org.springframework.ldap.LdapTemplate;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.support.CountNameClassPairCallbackHandler;
 import org.springframework.ldap.support.DistinguishedName;
 

@@ -20,7 +20,7 @@ import javax.naming.Name;
 
 
 import org.springframework.ldap.EntryNotFoundException;
-import org.springframework.ldap.LdapTemplate;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.support.DirContextAdapter;
 import org.springframework.ldap.support.DistinguishedName;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;

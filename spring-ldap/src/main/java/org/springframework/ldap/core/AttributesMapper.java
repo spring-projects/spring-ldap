@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap;
+package org.springframework.ldap.core;
 
 import javax.naming.Name;
 import javax.naming.NamingException;
@@ -32,7 +32,7 @@ import javax.naming.directory.Attributes;
  * <p>
  * Alternatively, consider using a {@link ContextMapper} in stead.
  * 
- * @see org.springframework.ldap.LdapTemplate#search(Name, String,
+ * @see org.springframework.ldap.core.LdapTemplate#search(Name, String,
  *      AttributesMapper)
  * @see ContextMapper
  * 

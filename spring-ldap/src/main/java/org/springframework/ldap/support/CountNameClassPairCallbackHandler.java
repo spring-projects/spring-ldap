@@ -17,7 +17,7 @@ package org.springframework.ldap.support;
 
 import javax.naming.NameClassPair;
 
-import org.springframework.ldap.NameClassPairCallbackHandler;
+import org.springframework.ldap.core.NameClassPairCallbackHandler;
 
 /**
  * A NameClassPairCallbackHandler for counting all returned entries.

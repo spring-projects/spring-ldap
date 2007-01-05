@@ -109,7 +109,7 @@ public class PagedResultsRequestControl extends
     }
 
     /*
-     * @see org.springframework.ldap.DirContextProcessor#postProcess(javax.naming.directory.DirContext)
+     * @see org.springframework.ldap.core.DirContextProcessor#postProcess(javax.naming.directory.DirContext)
      */
     public void postProcess(DirContext ctx) throws NamingException {
         // initialize from property

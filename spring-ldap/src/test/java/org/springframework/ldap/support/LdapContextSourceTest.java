@@ -24,7 +24,7 @@ import javax.naming.ldap.ControlFactory;
 
 import junit.framework.TestCase;
 
-import org.springframework.ldap.AuthenticationSource;
+import org.springframework.ldap.core.AuthenticationSource;
 
 import com.sun.jndi.ldap.ctl.ResponseControlFactory;
 

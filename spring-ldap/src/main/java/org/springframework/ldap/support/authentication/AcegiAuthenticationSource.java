@@ -21,7 +21,7 @@ import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.userdetails.ldap.LdapUserDetails;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.AuthenticationSource;
+import org.springframework.ldap.core.AuthenticationSource;
 
 
 /**
@@ -63,7 +63,7 @@ public class AcegiAuthenticationSource implements AuthenticationSource {
     }
 
     /*
-     * @see org.springframework.ldap.AuthenticationSource#getCredentials()
+     * @see org.springframework.ldap.core.AuthenticationSource#getCredentials()
      */
     public String getCredentials() {
         Authentication authentication = SecurityContextHolder.getContext()

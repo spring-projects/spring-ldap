@@ -20,7 +20,7 @@ import javax.naming.NamingException;
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
-import org.springframework.ldap.DirContextProcessor;
+import org.springframework.ldap.core.DirContextProcessor;
 
 public class AggregateDirContextProcessorTest extends TestCase {
 

@@ -26,8 +26,8 @@ import org.acegisecurity.Authentication;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
 import org.acegisecurity.providers.ldap.LdapAuthenticationProvider;
-import org.springframework.ldap.AttributesMapper;
-import org.springframework.ldap.LdapTemplate;
+import org.springframework.ldap.core.AttributesMapper;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.support.authentication.AcegiAuthenticationSource;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 

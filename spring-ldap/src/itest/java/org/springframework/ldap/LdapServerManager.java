@@ -33,7 +33,7 @@ import org.apache.directory.server.jndi.ServerContextFactory;
 import org.apache.directory.server.protocol.shared.store.LdifFileLoader;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.ldap.ContextSource;
+import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.support.DefaultDirObjectFactory;
 import org.springframework.ldap.support.DistinguishedName;
 

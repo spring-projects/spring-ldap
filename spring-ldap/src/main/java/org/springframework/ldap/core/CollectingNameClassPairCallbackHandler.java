@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap;
+package org.springframework.ldap.core;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,7 +23,7 @@ import javax.naming.NameClassPair;
 /**
  * A NameClassPairCallbackHandler to collect all results in an internal List.
  * 
- * @see org.springframework.ldap.LdapTemplate
+ * @see org.springframework.ldap.core.LdapTemplate
  * 
  * @author Mattias Arthursson
  */

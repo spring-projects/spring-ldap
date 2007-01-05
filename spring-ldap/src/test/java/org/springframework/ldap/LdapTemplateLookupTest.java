@@ -26,6 +26,10 @@ import javax.naming.ldap.LdapContext;
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
+import org.springframework.ldap.core.AttributesMapper;
+import org.springframework.ldap.core.ContextMapper;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.support.DirContextAdapter;
 import org.springframework.ldap.support.DistinguishedName;
 

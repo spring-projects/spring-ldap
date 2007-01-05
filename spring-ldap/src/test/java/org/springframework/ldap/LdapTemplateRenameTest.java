@@ -27,10 +27,10 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.ldap.ContextSource;
-import org.springframework.ldap.LdapTemplate;
 import org.springframework.ldap.NamingExceptionTranslator;
 import org.springframework.ldap.UncategorizedLdapException;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.LdapTemplate;
 
 /**
  * Unit tests for the rename operations in the LdapTemplate class.

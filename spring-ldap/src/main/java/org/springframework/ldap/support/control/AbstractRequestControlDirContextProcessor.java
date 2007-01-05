@@ -23,7 +23,7 @@ import javax.naming.ldap.LdapContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.DirContextProcessor;
+import org.springframework.ldap.core.DirContextProcessor;
 
 /**
  * Abstract superclass with responsibility to apply a single RequestControl on

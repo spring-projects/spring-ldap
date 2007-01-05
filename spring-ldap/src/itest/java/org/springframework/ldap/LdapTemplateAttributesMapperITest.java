@@ -19,8 +19,8 @@ package org.springframework.ldap;
 import java.util.List;
 
 
-import org.springframework.ldap.AttributesMapper;
-import org.springframework.ldap.LdapTemplate;
+import org.springframework.ldap.core.AttributesMapper;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**

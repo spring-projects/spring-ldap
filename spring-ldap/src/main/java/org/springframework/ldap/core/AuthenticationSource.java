@@ -14,23 +14,27 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap;
+package org.springframework.ldap.core;
 
 /**
- * Helper interface to be used by Dao implementations for assembling to and from
- * context. Useful if we have assembler classes responsible for mapping to and
- * from a specific entry.
+ * An AuthenticationSource is responsible for providing the principal and
+ * credentials to be used when creating a new context.
  * 
  * @author Mattias Arthursson
+ * 
  */
-public interface ContextAssembler extends ContextMapper {
+public interface AuthenticationSource {
     /**
-     * Map the supplied object to the specified context.
+     * Get the principal to use when creating an authenticated context.
      * 
-     * @param obj
-     *            the object to read data from.
-     * @param ctx
-     *            the context to map to.
+     * @return the principal (userName).
      */
-    public void mapToContext(Object obj, Object ctx);
+    public String getPrincipal();
+
+    /**
+     * Get the credentials to use when creating an authenticated context.
+     * 
+     * @return the credentials (userName).
+     */
+    public String getCredentials();
 }

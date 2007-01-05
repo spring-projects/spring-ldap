@@ -14,33 +14,26 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap;
+package org.springframework.ldap.core;
 
 import javax.naming.NameClassPair;
-import javax.naming.NamingException;
 
 /**
- * The default NameClassPairMapper implementation. This implementation simply
- * takes the Name string from the supplied NameClassPair and returns it as
- * result.
+ * Callback interface used by LdapTemplate's search, list and listBindings
+ * methods. Implementations of this interface perform the actual work of
+ * extracting results from a single NameClassPair (a NameClassPair,
+ * Binding or SearchResult depending on the search operation) returned by an
+ * LDAP seach operation, such as search(), list(), and listBindings().
  * 
  * @author Mattias Arthursson
- * 
  */
-public class DefaultNameClassPairMapper implements NameClassPairMapper {
-
+public interface NameClassPairCallbackHandler {
     /**
-     * Gets the Name from the supplied NameClassPair and returns it as the
-     * result.
+     * Handle one entry. This method will be called once for each entry returned
+     * by a search or list.
      * 
      * @param nameClassPair
-     *            the NameClassPair to transform.
-     * @return the Name string from the NameClassPair.
+     *            the NameClassPair returned from the NamingEnumeration.
      */
-    public Object mapFromNameClassPair(NameClassPair nameClassPair)
-            throws NamingException {
-
-        return nameClassPair.getName();
-    }
-
+    public void handleNameClassPair(NameClassPair nameClassPair);
 }

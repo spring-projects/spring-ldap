@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap;
+package org.springframework.ldap.core;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -31,7 +31,7 @@ import javax.naming.directory.DirContext;
  * }
  * </pre>
  * 
- * @see org.springframework.ldap.LdapTemplate#search(SearchExecutor,
+ * @see org.springframework.ldap.core.LdapTemplate#search(SearchExecutor,
  *      NameClassPairCallbackHandler)
  * 
  * @author Mattias Arthursson

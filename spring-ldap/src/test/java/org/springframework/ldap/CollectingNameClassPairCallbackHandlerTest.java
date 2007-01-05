@@ -20,6 +20,8 @@ import java.util.List;
 
 import javax.naming.NameClassPair;
 
+import org.springframework.ldap.core.CollectingNameClassPairCallbackHandler;
+
 import junit.framework.TestCase;
 
 public class CollectingNameClassPairCallbackHandlerTest extends TestCase {

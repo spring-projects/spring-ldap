@@ -16,7 +16,7 @@
 
 package org.springframework.ldap;
 
-import org.springframework.ldap.ContextMapper;
+import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.support.DirContextAdapter;
 
 /**
@@ -28,7 +28,7 @@ import org.springframework.ldap.support.DirContextAdapter;
 public class PersonContextMapper implements ContextMapper {
 
     /* (non-Javadoc)
-     * @see org.springframework.ldap.ContextMapper#mapFromContext(java.lang.Object)
+     * @see org.springframework.ldap.core.ContextMapper#mapFromContext(java.lang.Object)
      */
     public Object mapFromContext(Object ctx) {
         DirContextAdapter adapter = (DirContextAdapter) ctx;

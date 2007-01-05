@@ -188,7 +188,7 @@ public class PersonDaoImpl implements PersonDao {
       &lt;property name="password" value="secret" /&gt;
    &lt;/bean&gt;
 
-   &lt;bean id="ldapTemplate" class="org.springframework.ldap.LdapTemplate"&gt;
+   &lt;bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate"&gt;
       &lt;constructor-arg ref="contextSource" /&gt;
    &lt;/bean&gt;
 

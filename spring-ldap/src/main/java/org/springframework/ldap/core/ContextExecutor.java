@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap;
+package org.springframework.ldap.core;
 
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
 /**
  * Interface for delegating an actual operation to be performed on an
- * DirContext. For searches, use {@link org.springframework.ldap.SearchExecutor} in
+ * DirContext. For searches, use {@link org.springframework.ldap.core.SearchExecutor} in
  * stead. A typical usage of this interface could be e.g.:
  * 
  * <pre>
@@ -31,8 +31,8 @@ import javax.naming.directory.DirContext;
  * };
  * </pre>
  * 
- * @see org.springframework.ldap.LdapTemplate#executeReadOnly(ContextExecutor)
- * @see org.springframework.ldap.LdapTemplate#executeReadWrite(ContextExecutor)
+ * @see org.springframework.ldap.core.LdapTemplate#executeReadOnly(ContextExecutor)
+ * @see org.springframework.ldap.core.LdapTemplate#executeReadWrite(ContextExecutor)
  * 
  * @author Mattias Arthursson
  */

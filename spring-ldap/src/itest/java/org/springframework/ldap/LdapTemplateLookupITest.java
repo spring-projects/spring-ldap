@@ -19,6 +19,9 @@ package org.springframework.ldap;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 
+import org.springframework.ldap.core.AttributesMapper;
+import org.springframework.ldap.core.ContextMapper;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.support.DirContextAdapter;
 import org.springframework.ldap.support.DistinguishedName;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
@@ -85,7 +88,7 @@ public class LdapTemplateLookupITest extends
          * Maps the <code>cn</code> attribute into a {@link Person} object.
          * Also verifies that the other attributes haven't been set.
          * 
-         * @see org.springframework.ldap.AttributesMapper#mapFromAttributes(javax.naming.directory.Attributes)
+         * @see org.springframework.ldap.core.AttributesMapper#mapFromAttributes(javax.naming.directory.Attributes)
          */
         public Object mapFromAttributes(Attributes attributes)
                 throws NamingException {

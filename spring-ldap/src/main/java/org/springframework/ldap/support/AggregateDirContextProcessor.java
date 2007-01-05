@@ -7,7 +7,7 @@ import java.util.List;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
-import org.springframework.ldap.DirContextProcessor;
+import org.springframework.ldap.core.DirContextProcessor;
 
 /**
  * Manages a sequence of DirContextProcessor instances. Applies
@@ -51,7 +51,7 @@ public class AggregateDirContextProcessor implements DirContextProcessor {
     }
 
     /*
-     * @see org.springframework.ldap.DirContextProcessor#preProcess(javax.naming.directory.DirContext)
+     * @see org.springframework.ldap.core.DirContextProcessor#preProcess(javax.naming.directory.DirContext)
      */
     public void preProcess(DirContext ctx) throws NamingException {
         for (Iterator iter = dirContextProcessors.iterator(); iter.hasNext();) {
@@ -61,7 +61,7 @@ public class AggregateDirContextProcessor implements DirContextProcessor {
     }
 
     /*
-     * @see org.springframework.ldap.DirContextProcessor#postProcess(javax.naming.directory.DirContext)
+     * @see org.springframework.ldap.core.DirContextProcessor#postProcess(javax.naming.directory.DirContext)
      */
     public void postProcess(DirContext ctx) throws NamingException {
         for (Iterator iter = dirContextProcessors.iterator(); iter.hasNext();) {

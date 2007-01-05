@@ -18,6 +18,8 @@ package org.springframework.ldap;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
+import org.springframework.ldap.core.ContextExecutor;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.support.DirContextAdapter;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 

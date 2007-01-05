@@ -19,6 +19,8 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 
+import org.springframework.ldap.core.AttributesMapper;
+
 import junit.framework.Assert;
 
 /**

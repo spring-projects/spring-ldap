@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap;
+package org.springframework.ldap.core;
 
 import javax.naming.directory.DirContext;
 
@@ -23,7 +23,7 @@ import org.springframework.dao.DataAccessException;
 /**
  * Interface used to retrieve and authenticate LDAP contexts.
  * 
- * @see org.springframework.ldap.LdapTemplate
+ * @see org.springframework.ldap.core.LdapTemplate
  * 
  * @author Adam Skogman
  * @author Mattias Arthursson
