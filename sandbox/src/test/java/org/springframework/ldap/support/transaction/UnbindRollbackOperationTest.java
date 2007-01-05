@@ -3,7 +3,7 @@ package org.springframework.ldap.support.transaction;
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
-import org.springframework.ldap.LdapOperations;
+import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.support.DistinguishedName;
 
 public class UnbindRollbackOperationTest extends TestCase {

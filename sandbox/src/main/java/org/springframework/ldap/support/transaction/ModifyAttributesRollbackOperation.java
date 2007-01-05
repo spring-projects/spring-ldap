@@ -20,7 +20,7 @@ import javax.naming.directory.ModificationItem;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.LdapOperations;
+import org.springframework.ldap.core.LdapOperations;
 
 /**
  * A {@link CompensatingTransactionRollbackOperation} to rollback a

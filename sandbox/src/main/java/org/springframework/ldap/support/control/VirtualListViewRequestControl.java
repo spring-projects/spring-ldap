@@ -24,8 +24,8 @@ import javax.naming.directory.DirContext;
 import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
 
-import org.springframework.ldap.DirContextProcessor;
 import org.springframework.ldap.UncategorizedLdapException;
+import org.springframework.ldap.core.DirContextProcessor;
 import org.springframework.util.ReflectionUtils;
 
 import com.sun.jndi.ldap.ctl.SortControl;
@@ -167,7 +167,7 @@ public class VirtualListViewRequestControl implements DirContextProcessor {
     }
 
     /*
-     * @see org.springframework.ldap.DirContextProcessor#postProcess(javax.naming.directory.DirContext)
+     * @see org.springframework.ldap.core.DirContextProcessor#postProcess(javax.naming.directory.DirContext)
      */
     public void postProcess(DirContext ctx) throws NamingException {
         LdapContext ldapContext = (LdapContext) ctx;

@@ -21,6 +21,9 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchControls;
 
+import org.springframework.ldap.core.AttributesMapper;
+import org.springframework.ldap.core.CollectingNameClassPairCallbackHandler;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.support.control.VirtualListViewRequestControl;
 import org.springframework.ldap.support.control.VirtualListViewResultsCookie;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
@@ -126,7 +129,7 @@ public class LdapTemplateVirtualListViewSearchITest extends
         /**
          * Maps the given attributes into a {@link Person} object.
          * 
-         * @see org.springframework.ldap.AttributesMapper#mapFromAttributes(javax.naming.directory.Attributes)
+         * @see org.springframework.ldap.core.AttributesMapper#mapFromAttributes(javax.naming.directory.Attributes)
          */
         public Object mapFromAttributes(Attributes attributes)
                 throws NamingException {

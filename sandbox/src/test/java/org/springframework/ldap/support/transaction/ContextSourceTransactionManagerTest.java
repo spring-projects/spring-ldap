@@ -5,7 +5,7 @@ import javax.naming.directory.DirContext;
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
-import org.springframework.ldap.ContextSource;
+import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.support.transaction.ContextSourceTransactionManager;
 import org.springframework.ldap.support.transaction.DirContextHolder;
 import org.springframework.transaction.TransactionDefinition;

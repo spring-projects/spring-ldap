@@ -1,7 +1,7 @@
 package org.springframework.ldap.support.transaction;
 
-import org.springframework.ldap.LdapOperations;
-import org.springframework.ldap.LdapTemplate;
+import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.support.DirContextAdapter;
 import org.springframework.ldap.support.DistinguishedName;
 

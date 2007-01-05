@@ -26,8 +26,8 @@ import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 
-import org.springframework.ldap.AttributesMapper;
-import org.springframework.ldap.LdapOperations;
+import org.springframework.ldap.core.AttributesMapper;
+import org.springframework.ldap.core.LdapOperations;
 import org.springframework.util.Assert;
 
 /**

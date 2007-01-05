@@ -23,7 +23,7 @@
 			value="org.springframework.ldap.support.DefaultDirObjectFactory" />
 	</bean>
 
-	<bean id="ldapTemplate" class="org.springframework.ldap.LdapTemplate">
+	<bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">
 		<constructor-arg ref="contextSource" />
 	</bean>
 

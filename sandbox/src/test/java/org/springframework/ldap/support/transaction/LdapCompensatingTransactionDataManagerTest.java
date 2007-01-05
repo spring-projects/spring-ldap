@@ -5,7 +5,7 @@ import java.util.Stack;
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
-import org.springframework.ldap.LdapOperations;
+import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.support.transaction.CompensatingTransactionRecordingOperation;
 import org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation;
 import org.springframework.ldap.support.transaction.LdapCompensatingTransactionDataManager;

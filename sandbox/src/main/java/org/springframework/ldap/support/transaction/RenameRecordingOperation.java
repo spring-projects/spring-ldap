@@ -19,7 +19,7 @@ import javax.naming.Name;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.LdapOperations;
+import org.springframework.ldap.core.LdapOperations;
 import org.springframework.util.Assert;
 
 /**

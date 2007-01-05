@@ -20,7 +20,7 @@ import javax.naming.directory.DirContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.ContextSource;
+import org.springframework.ldap.core.ContextSource;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
