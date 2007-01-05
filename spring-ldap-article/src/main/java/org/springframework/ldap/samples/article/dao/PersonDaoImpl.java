@@ -21,11 +21,11 @@ import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 
+import org.springframework.ldap.core.AttributesMapper;
+import org.springframework.ldap.core.ContextMapper;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.samples.article.domain.Person;
 
-import org.springframework.ldap.AttributesMapper;
-import org.springframework.ldap.ContextMapper;
-import org.springframework.ldap.LdapTemplate;
 import org.springframework.ldap.support.DirContextAdapter;
 import org.springframework.ldap.support.DistinguishedName;
 import org.springframework.ldap.support.filter.EqualsFilter;

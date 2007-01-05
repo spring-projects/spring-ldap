@@ -17,6 +17,6 @@
 	<classpathentry kind="lib" path="lib/global/commons-lang.jar" sourcepath="lib/source/commons-lang-src.zip"/>
 	<classpathentry kind="lib" path="lib/test/clover.jar"/>
 	<classpathentry kind="lib" path="lib/global/commons-collections.jar" sourcepath="lib/source/commons-collections-src.zip"/>
-	<classpathentry kind="lib" path="lib/global/spring-ldap.jar" sourcepath="lib/source/spring-ldap-src.zip"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/spring-ldap"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
