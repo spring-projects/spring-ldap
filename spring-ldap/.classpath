@@ -38,7 +38,6 @@
 	<classpathentry kind="lib" path="lib/test/apacheds-protocol-kerberos.jar"/>
 	<classpathentry kind="lib" path="lib/test/apacheds-kerberos-shared.jar"/>
 	<classpathentry kind="lib" path="lib/test/mina-core.jar"/>
-	<classpathentry kind="lib" path="lib/test/mina-filter-codec-asn1.jar"/>
 	<classpathentry kind="lib" path="lib/test/mina-filter-ssl.jar"/>
 	<classpathentry kind="lib" path="lib/test/apacheds-server-main.jar"/>
 	<classpathentry kind="lib" path="lib/test/apacheds-protocol-ldap.jar"/>
@@ -46,5 +45,8 @@
 	<classpathentry kind="lib" path="lib/test/DDSteps.jar"/>
 	<classpathentry kind="lib" path="lib/global/ldapbp.jar"/>
 	<classpathentry kind="lib" path="lib/test/junitperf.jar"/>
+	<classpathentry kind="lib" path="lib/test/backport-util-concurrent.jar"/>
+	<classpathentry kind="lib" path="lib/test/mina-filter-codec-asn1.jar"/>
+	<classpathentry kind="lib" path="lib/test/shared-asn1-codec.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

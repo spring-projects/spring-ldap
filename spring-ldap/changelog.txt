@@ -10,6 +10,12 @@ http://www.ietf.org/rfc/rfc2255.txt
 http://www.ietf.org/rfc/rfc2256.txt
 http://www.ietf.org/rfc/rfc2696.txt
 
+Changes in version 1.2 (xx.yy.2007)
+-------------------------------------------
+* Moved the core classes into the package ldap.core.
+
+* Upgraded ApacheDS to 1.0.0.
+
 Changes in version 1.1.2 (1.12.2006)
 -------------------------------------------
 * Fixed problem with DirContextAdapter.getNameInNameSpace. Now it really
