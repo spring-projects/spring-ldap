@@ -30,7 +30,7 @@ public class UnbindRecordingOperationTest extends TestCase {
         ldapOperationsControl.verify();
     }
 
-    public void testPerformOperation() {
+    public void testRecordOperation() {
         UnbindRecordingOperation tested = new UnbindRecordingOperation(
                 ldapOperationsMock);
         DistinguishedName expectedDn = new DistinguishedName("cn=john doe");
@@ -41,7 +41,7 @@ public class UnbindRecordingOperationTest extends TestCase {
         replay();
         // Perform test
         CompensatingTransactionRollbackOperation operation = tested
-                .performOperation(new Object[] { expectedDn });
+                .recordOperation(new Object[] { expectedDn });
         verify();
 
         // Verify result

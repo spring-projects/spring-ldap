@@ -1,10 +1,5 @@
 package org.springframework.ldap.support.transaction;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
@@ -13,12 +8,12 @@ import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 
+import junit.framework.TestCase;
+
 import org.easymock.MockControl;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.support.DistinguishedName;
-
-import junit.framework.TestCase;
 
 public class ModifyAttributesRecordingOperationTest extends TestCase {
     private MockControl ldapOperationsControl;
@@ -63,7 +58,7 @@ public class ModifyAttributesRecordingOperationTest extends TestCase {
         attributesMapperControl.verify();
     }
 
-    public void testPerformOperation() {
+    public void testRecordOperation() {
         final ModificationItem incomingItem = new ModificationItem(
                 DirContext.ADD_ATTRIBUTE, new BasicAttribute("attribute1"));
         ModificationItem[] incomingMods = new ModificationItem[] { incomingItem };
@@ -95,7 +90,7 @@ public class ModifyAttributesRecordingOperationTest extends TestCase {
         replay();
         // Perform test
         CompensatingTransactionRollbackOperation operation = tested
-                .performOperation(new Object[] { expectedName, incomingMods });
+                .recordOperation(new Object[] { expectedName, incomingMods });
         verify();
 
         // Verify outcome

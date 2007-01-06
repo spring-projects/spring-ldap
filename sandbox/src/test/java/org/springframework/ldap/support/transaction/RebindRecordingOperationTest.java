@@ -30,7 +30,7 @@ public class RebindRecordingOperationTest extends TestCase {
         ldapOperationsControl.verify();
     }
 
-    public void testPerformOperation() {
+    public void testRecordOperation() {
         RebindRecordingOperation tested = new RebindRecordingOperation(
                 ldapOperationsMock);
         DistinguishedName expectedDn = new DistinguishedName("cn=john doe");
@@ -42,7 +42,7 @@ public class RebindRecordingOperationTest extends TestCase {
         replay();
         // perform test
         CompensatingTransactionRollbackOperation result = tested
-                .performOperation(new Object[] { expectedDn });
+                .recordOperation(new Object[] { expectedDn });
         verify();
 
         assertTrue(result instanceof RebindRollbackOperation);

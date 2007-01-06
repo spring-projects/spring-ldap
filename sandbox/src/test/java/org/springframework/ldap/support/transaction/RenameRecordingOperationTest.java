@@ -29,14 +29,14 @@ public class RenameRecordingOperationTest extends TestCase {
         ldapOperationsControl.verify();
     }
 
-    public void testPerformOperation() {
+    public void testRecordOperation() {
         RenameRecordingOperation tested = new RenameRecordingOperation(
                 ldapOperationsMock);
 
         replay();
         // Perform test
         CompensatingTransactionRollbackOperation operation = tested
-                .performOperation(new Object[] { "ou=someou", "ou=newou" });
+                .recordOperation(new Object[] { "ou=someou", "ou=newou" });
         verify();
 
         assertTrue(operation instanceof RenameRollbackOperation);

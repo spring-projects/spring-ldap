@@ -22,14 +22,14 @@ public class BindRecordingOperationTest extends TestCase {
         ldapOperationsMock = null;
     }
 
-    public void testPerformOperation_DistinguishedName() {
+    public void testRecordOperation_DistinguishedName() {
         BindRecordingOperation tested = new BindRecordingOperation(
                 ldapOperationsMock);
         DistinguishedName expectedDn = new DistinguishedName("cn=John Doe");
 
         // Perform test.
         CompensatingTransactionRollbackOperation operation = tested
-                .performOperation(new Object[] { expectedDn });
+                .recordOperation(new Object[] { expectedDn });
 
         assertTrue(operation instanceof UnbindRollbackOperation);
         UnbindRollbackOperation rollbackOperation = (UnbindRollbackOperation) operation;
@@ -44,7 +44,7 @@ public class BindRecordingOperationTest extends TestCase {
 
         // Perform test.
         CompensatingTransactionRollbackOperation operation = tested
-                .performOperation(new Object[] { expectedDn });
+                .recordOperation(new Object[] { expectedDn });
 
         assertTrue(operation instanceof UnbindRollbackOperation);
         UnbindRollbackOperation rollbackOperation = (UnbindRollbackOperation) operation;
@@ -59,7 +59,7 @@ public class BindRecordingOperationTest extends TestCase {
 
         try {
             // Perform test.
-            tested.performOperation(new Object[] { expectedDn });
+            tested.recordOperation(new Object[] { expectedDn });
             fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException expected) {
             assertTrue(true);
