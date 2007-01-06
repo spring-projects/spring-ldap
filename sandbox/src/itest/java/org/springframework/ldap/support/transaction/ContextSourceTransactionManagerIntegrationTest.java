@@ -8,7 +8,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.EntryNotFoundException;
 import org.springframework.ldap.LdapServerManager;
 import org.springframework.ldap.core.AttributesMapper;
-import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
