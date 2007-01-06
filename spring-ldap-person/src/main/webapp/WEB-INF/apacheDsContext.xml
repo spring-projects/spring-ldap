@@ -36,7 +36,7 @@
 	</bean>
 
 	<bean id="jaywayPartitionConfiguration"
-		class="org.apache.directory.server.core.configuration.MutableDirectoryPartitionConfiguration">
+		class="org.apache.directory.server.core.partition.impl.btree.MutableBTreePartitionConfiguration">
 		<property name="name" value="jayway" />
 		<property name="suffix" value="dc=jayway,dc=se" />
 		<property name="contextEntry">

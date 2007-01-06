@@ -42,39 +42,39 @@
 		<dependency	org="org.springframework" name="spring-support" rev="2.0.1" />
 
 		<!-- dependencies for Apache Directory Server -->
-		<dependency org="org.apache.directory.server" name="apacheds-core" rev="1.0-RC3"
+		<dependency org="org.apache.directory.server" name="apacheds-core" rev="1.0.0"
 		            conf="global->default"/>
-		<dependency org="org.apache.directory.server" name="apacheds-core-shared" rev="1.0-RC3"
+		<dependency org="org.apache.directory.server" name="apacheds-core-shared" rev="1.0.0"
 		            conf="global->default"/>
-		<dependency org="org.apache.directory.server" name="apacheds-server-jndi" rev="1.0-RC3"
+		<dependency org="org.apache.directory.server" name="apacheds-server-jndi" rev="1.0.0"
 		            conf="global->default"/>
-		<dependency org="org.apache.directory.server" name="apacheds-server-main" rev="1.0-RC3"
+		<dependency org="org.apache.directory.server" name="apacheds-server-main" rev="1.0.0"
 		            conf="global->default"/>
-		<dependency org="org.apache.directory.server" name="apacheds-protocol-shared" rev="1.0-RC3"
+		<dependency org="org.apache.directory.server" name="apacheds-protocol-shared" rev="1.0.0"
 		            conf="global->default"/>
-		<dependency org="org.apache.directory.server" name="apacheds-protocol-changepw" rev="1.0-RC3"
+		<dependency org="org.apache.directory.server" name="apacheds-protocol-changepw" rev="1.0.0"
 		            conf="global->default"/>
-		<dependency org="org.apache.directory.server" name="apacheds-protocol-kerberos" rev="1.0-RC3"
+		<dependency org="org.apache.directory.server" name="apacheds-protocol-kerberos" rev="1.0.0"
 			        conf="global->default"/>
-		<dependency org="org.apache.directory.server" name="apacheds-kerberos-shared" rev="1.0-RC3"
+		<dependency org="org.apache.directory.server" name="apacheds-kerberos-shared" rev="1.0.0"
 		            conf="global->default"/>
-		<dependency org="org.apache.directory.server" name="apacheds-protocol-ldap" rev="1.0-RC3"
+		<dependency org="org.apache.directory.server" name="apacheds-protocol-ldap" rev="1.0.0"
 		            conf="global->default"/>
 
-		<dependency org="org.apache.directory.shared" name="shared-asn1" rev="0.9.5.1"
+		<dependency org="org.apache.directory.shared" name="shared-asn1" rev="0.9.5.3"
 		            conf="global->default"/>
-		<dependency org="org.apache.directory.shared" name="shared-ldap" rev="0.9.5.1"
+		<dependency org="org.apache.directory.shared" name="shared-asn1-codec" rev="0.9.5.3"
+		            conf="global->default"/>
+		<dependency org="org.apache.directory.shared" name="shared-ldap" rev="0.9.5.3"
 		            conf="global->default"/>
 
 		<dependency org="antlr" name="antlr" rev="2.7.2" conf="global->default" />
 		<dependency org="jdbm" name="jdbm" rev="1.0" conf="global->default" />
 		<dependency org="org.slf4j" name="slf4j-log4j12" rev="1.0"
 		            conf="global->default" />
-		<dependency org="org.apache.directory.mina" name="mina-core" rev="0.9.2"
+		<dependency org="org.apache.mina" name="mina-core" rev="1.0.0"
 		            conf="global->default"/>
-		<dependency org="org.apache.directory.mina" name="mina-filter-codec-asn1" rev="0.9.2"
-			        conf="global->default"/>
-		<dependency org="org.apache.directory.mina" name="mina-filter-ssl" rev="0.9.2"
+		<dependency org="org.apache.mina" name="mina-filter-ssl" rev="1.0.0"
 		            conf="global->default"/>
 
 		<!-- End dependencies for Apache Directory Server -->
