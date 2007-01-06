@@ -52,6 +52,12 @@ public class TransactionAwareDirContextInvocationHandler implements
         this.contextSource = contextSource;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
+     *      java.lang.reflect.Method, java.lang.Object[])
+     */
     public Object invoke(Object proxy, Method method, Object[] args)
             throws Throwable {
 
@@ -69,14 +75,13 @@ public class TransactionAwareDirContextInvocationHandler implements
             return null;
         } else if (LdapUtils.isSupportedWriteTransactionOperation(methodName)) {
             // Store transaction data and allow operation to proceed.
-            LdapUtils.storeCompensatingTransactionData(contextSource,
-                    methodName, args);
-        }
-
-        try {
-            return method.invoke(target, args);
-        } catch (InvocationTargetException e) {
-            throw e.getTargetException();
+            return LdapUtils.operationPerformed(contextSource, method, args);
+        } else {
+            try {
+                return method.invoke(target, args);
+            } catch (InvocationTargetException e) {
+                throw e.getTargetException();
+            }
         }
     }
 }

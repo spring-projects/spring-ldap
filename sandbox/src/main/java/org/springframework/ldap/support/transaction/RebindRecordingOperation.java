@@ -25,7 +25,7 @@ import org.springframework.ldap.support.DirContextAdapter;
 /**
  * A {@link CompensatingTransactionRecordingOperation} keeping track of a rebind
  * operation. Creates {@link RebindRollbackOperation} objects in
- * {@link #performOperation(Object[])}.
+ * {@link #recordOperation(Object[])}.
  * 
  * @author Mattias Arthursson
  */
@@ -50,9 +50,9 @@ public class RebindRecordingOperation implements
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRecordingOperation#performOperation(java.lang.Object[])
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRecordingOperation#recordOperation(java.lang.Object[])
      */
-    public CompensatingTransactionRollbackOperation performOperation(
+    public CompensatingTransactionRollbackOperation recordOperation(
             Object[] args) {
         Name dn = LdapUtils.getFirstArgumentAsName(args);
 

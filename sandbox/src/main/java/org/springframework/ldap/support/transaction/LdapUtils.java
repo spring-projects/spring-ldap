@@ -15,6 +15,9 @@
  */
 package org.springframework.ldap.support.transaction;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
@@ -131,23 +134,51 @@ public class LdapUtils {
 
     /**
      * Store compensating transaction data for the supplied operation and
-     * arguments.
+     * arguments. TODO: Clean up this mess.
      * 
      * @param contextSource
      *            the ContextSource we are operating on.
-     * @param methodName
+     * @param method
      *            name of the method to be invoked.
      * @param args
      *            arguments with which the operation is invoked.
      */
-    public static void storeCompensatingTransactionData(
-            ContextSource contextSource, String methodName, Object[] args) {
+    public static Object operationPerformed(ContextSource contextSource,
+            Method method, Object[] args) throws Throwable {
         DirContextHolder transactionContextHolder = (DirContextHolder) TransactionSynchronizationManager
                 .getResource(contextSource);
         if (transactionContextHolder != null) {
             CompensatingTransactionDataManager transactionDataManager = transactionContextHolder
                     .getTransactionDataManager();
-            transactionDataManager.operationPerformed(methodName, args);
+            CompensatingTransactionOperationFactory operationFactory = transactionContextHolder
+                    .getOperationFactory();
+
+            // Record the operation
+            CompensatingTransactionRecordingOperation operation = operationFactory
+                    .createRecordingOperation(method.getName());
+            CompensatingTransactionRollbackOperation rollbackOperation = operation
+                    .recordOperation(args);
+
+            Object result = null;
+            // Perform the target operation
+            try {
+                result = method.invoke(transactionContextHolder.getCtx(), args);
+            } catch (InvocationTargetException e) {
+                throw e.getTargetException();
+            }
+            transactionDataManager.operationPerformed(rollbackOperation);
+
+            return result;
+        } else {
+            Object result = null;
+            // Perform the target operation
+            try {
+                result = method.invoke(transactionContextHolder.getCtx(), args);
+            } catch (InvocationTargetException e) {
+                throw e.getTargetException();
+            }
+
+            return result;
         }
     }
 }

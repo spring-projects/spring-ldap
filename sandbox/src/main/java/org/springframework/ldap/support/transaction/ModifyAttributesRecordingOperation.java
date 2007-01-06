@@ -49,9 +49,9 @@ public class ModifyAttributesRecordingOperation implements
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRecordingOperation#performOperation(java.lang.Object[])
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRecordingOperation#recordOperation(java.lang.Object[])
      */
-    public CompensatingTransactionRollbackOperation performOperation(
+    public CompensatingTransactionRollbackOperation recordOperation(
             Object[] args) {
         Assert.notNull(args);
         Name dn = LdapUtils.getFirstArgumentAsName(args);

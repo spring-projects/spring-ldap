@@ -25,16 +25,16 @@ package org.springframework.ldap.support.transaction;
  */
 public interface CompensatingTransactionDataManager {
     /**
-     * Indicates that the supplied operation (method name) has been invoked with
-     * the specified parameters. This method is called just prior the the actual
-     * invocation of the target method.
+     * Indicates that the supplied operation (method name) has been performed
+     * and that the supplied {@link CompensatingTransactionRollbackOperation}
+     * should be stored for possible rollback. This method is called after the
+     * the actual invocation of the target method.
      * 
      * @param operation
      *            the method to be invoked.
-     * @param params
-     *            arguments supplied to the operation.
      */
-    public void operationPerformed(String operation, Object[] params);
+    public void operationPerformed(
+            CompensatingTransactionRollbackOperation operation);
 
     /**
      * Rollback all recorded operations, by performing each of the recorded

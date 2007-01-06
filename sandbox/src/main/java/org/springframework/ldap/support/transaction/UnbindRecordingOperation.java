@@ -47,9 +47,9 @@ public class UnbindRecordingOperation implements
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRecordingOperation#performOperation(java.lang.Object[])
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRecordingOperation#recordOperation(java.lang.Object[])
      */
-    public CompensatingTransactionRollbackOperation performOperation(
+    public CompensatingTransactionRollbackOperation recordOperation(
             Object[] args) {
         Name dn = LdapUtils.getFirstArgumentAsName(args);
         DirContextAdapter ctx = (DirContextAdapter) ldapOperations.lookup(dn);

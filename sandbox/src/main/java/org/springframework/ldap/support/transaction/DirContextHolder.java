@@ -34,6 +34,8 @@ public class DirContextHolder extends ResourceHolderSupport {
 
     private CompensatingTransactionDataManager transactionDataManager;
 
+    private CompensatingTransactionOperationFactory operationFactory;
+
     /**
      * Constructor.
      * 
@@ -42,7 +44,8 @@ public class DirContextHolder extends ResourceHolderSupport {
      */
     public DirContextHolder(DirContext ctx) {
         this.ctx = ctx;
-        this.transactionDataManager = new LdapCompensatingTransactionDataManager(
+        this.transactionDataManager = new DefaultCompensatingTransactionDataManager();
+        this.operationFactory = new LdapCompensatingTransactionOperationFactory(
                 ctx);
     }
 
@@ -54,7 +57,8 @@ public class DirContextHolder extends ResourceHolderSupport {
      */
     public void setCtx(DirContext ctx) {
         this.ctx = ctx;
-        this.transactionDataManager = new LdapCompensatingTransactionDataManager(
+        this.transactionDataManager = new DefaultCompensatingTransactionDataManager();
+        this.operationFactory = new LdapCompensatingTransactionOperationFactory(
                 ctx);
     }
 
@@ -70,6 +74,7 @@ public class DirContextHolder extends ResourceHolderSupport {
     public void clear() {
         super.clear();
         transactionDataManager = null;
+        operationFactory = null;
     }
 
     /**
@@ -91,5 +96,9 @@ public class DirContextHolder extends ResourceHolderSupport {
     void setTransactionDataManager(
             CompensatingTransactionDataManager transactionDataManager) {
         this.transactionDataManager = transactionDataManager;
+    }
+
+    public CompensatingTransactionOperationFactory getOperationFactory() {
+        return operationFactory;
     }
 }
