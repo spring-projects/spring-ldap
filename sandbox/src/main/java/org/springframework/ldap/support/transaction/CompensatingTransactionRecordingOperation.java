@@ -19,6 +19,6 @@ public interface CompensatingTransactionRecordingOperation {
      * @return A {@link CompensatingTransactionRollbackOperation} to be used if
      *         the recorded operation should need to be rolled back.
      */
-    public CompensatingTransactionRollbackOperation performOperation(
+    public CompensatingTransactionRollbackOperation recordOperation(
             Object[] args);
 }
