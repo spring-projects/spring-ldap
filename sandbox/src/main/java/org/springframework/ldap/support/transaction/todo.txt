@@ -1,4 +1,4 @@
-RollbackOperations are stored before the actual operation has succeeded.
+RollbackOperations are stored before the actual operation has succeeded - Fixed.
 ------------------------------------------------------------------------
 The recording of operations take place before the actual operation is carried out.
 While this is needed (as we need the state as it was before the operation), this may cause
