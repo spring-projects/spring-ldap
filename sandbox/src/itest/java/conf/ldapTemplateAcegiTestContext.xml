@@ -30,7 +30,7 @@
 	<bean id="initialDirContextFactory"
 		class="org.acegisecurity.ldap.DefaultInitialDirContextFactory">
 		<constructor-arg value="${urls}/${base}" />
-		<property name="managerDn" value="${userName}" />
+		<property name="managerDn" value="${userDn}" />
 		<property name="managerPassword" value="${password}" />
 	</bean>
 

@@ -14,7 +14,7 @@
 	<bean id="contextSourceTarget"
 		class="org.springframework.ldap.support.LdapContextSource">
 		<property name="urls" value="${urls}" />
-		<property name="userName" value="${userName}" />
+		<property name="userDn" value="${userDn}" />
 		<property name="password" value="${password}" />
 		<property name="base" value="${base}" />
 		<property name="pooled" value="false" />
