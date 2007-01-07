@@ -10,7 +10,7 @@
 	
 	<bean id="contextSource" class="org.springframework.ldap.support.LdapContextSource" >
 		<property name="urls" value="${urls}" />
-		<property name="userName" value="${userName}" />
+		<property name="userDn" value="${userDn}" />
 		<property name="password" value="${password}" />
 		<property name="base" value="${base}" />
 		<property name="dirObjectFactory" value="org.springframework.ldap.support.DefaultDirObjectFactory" />
@@ -29,7 +29,7 @@
 		class="org.springframework.ldap.samples.article.dao.TraditionalPersonDaoImpl">
 		<property name="url" value="ldap://localhost:389" />
 		<property name="base" value="dc=jayway,dc=se" />
-		<property name="userName" value="${userName}" />
+		<property name="userDn" value="${userDn}" />
 		<property name="password" value="${password}" />
 	</bean>
 </beans>
