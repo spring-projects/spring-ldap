@@ -45,7 +45,7 @@ import org.springframework.ldap.core.ContextSource;
  * <p>
  * If an AuthenticationSource is set, this will be used for getting user name
  * and password for each new connection, otherwise a default one will be created
- * using the specified userName and password.
+ * using the specified userDn and password.
  * <p>
  * <b>Note:</b> When using implementations of this class outside of a Spring
  * Context it is necessary to call {@link #afterPropertiesSet()} when all
@@ -73,7 +73,7 @@ public abstract class AbstractContextSource implements ContextSource,
 
     private DistinguishedName base;
 
-    protected String userName = "";
+    protected String userDn = "";
 
     protected String password = "";
 
@@ -123,7 +123,7 @@ public abstract class AbstractContextSource implements ContextSource,
         env
                 .put(Context.SECURITY_PRINCIPAL, authenticationSource
                         .getPrincipal());
-        log.debug("Principal: '" + userName + "'");
+        log.debug("Principal: '" + userDn + "'");
         env.put(Context.SECURITY_CREDENTIALS, authenticationSource
                 .getCredentials());
     }
@@ -250,9 +250,9 @@ public abstract class AbstractContextSource implements ContextSource,
         if (authenticationSource == null) {
             log.debug("AuthenticationSource not set - "
                     + "using default implementation");
-            if (StringUtils.isBlank(userName)) {
+            if (StringUtils.isBlank(userDn)) {
                 log
-                        .warn("Property 'userName' not set - "
+                        .warn("Property 'userDn' not set - "
                                 + "anonymous context will be used for read-write operations");
             } else if (StringUtils.isBlank(password)) {
                 log.warn("Property 'password' not set - "
@@ -304,13 +304,24 @@ public abstract class AbstractContextSource implements ContextSource,
     }
 
     /**
-     * Set the user name (principal) to use for getting authenticated contexts.
+     * Set the user distinguished name (principal) to use for getting authenticated contexts.
+     * 
+     * @param userDn
+     *            the user distinguished name.
+     */
+    public void setUserDn(String userDn) {
+        this.userDn = userDn;
+    }
+
+    /**
+     * Set the user distinguished name (principal) to use for getting authenticated contexts.
      * 
      * @param userName
-     *            the user name.
+     *            the user distinguished name.
+     * @deprecated Use {@link #setUserDn(String)} instead.
      */
     public void setUserName(String userName) {
-        this.userName = userName;
+        setUserDn(userName);
     }
 
     /**
@@ -444,7 +455,7 @@ public abstract class AbstractContextSource implements ContextSource,
     class SimpleAuthenticationSource implements AuthenticationSource {
 
         public String getPrincipal() {
-            return userName;
+            return userDn;
         }
 
         public String getCredentials() {

@@ -76,7 +76,7 @@ public class LdapContextSourceTest extends TestCase {
         tested.setBase("dc=example,dc=se");
         tested.setUrl("ldap://ldap.example.com:389");
         tested.setPooled(true);
-        tested.setUserName("cn=Some User");
+        tested.setUserDn("cn=Some User");
         tested.setPassword("secret");
         tested.afterPropertiesSet();
         Hashtable env = tested.getAnonymousEnv();
@@ -103,7 +103,7 @@ public class LdapContextSourceTest extends TestCase {
         tested.setBase("dc=example,dc=se");
         tested.setUrl("ldap://ldap.example.com:389");
         tested.setPooled(true);
-        tested.setUserName("cn=Some User");
+        tested.setUserDn("cn=Some User");
         tested.setPassword("secret");
         tested.afterPropertiesSet();
 
@@ -158,7 +158,7 @@ public class LdapContextSourceTest extends TestCase {
         tested.setBase("dc=example,dc=se");
         tested.setUrl("ldap://ldap.example.com:389");
         tested.setPooled(true);
-        tested.setUserName("cn=Some User");
+        tested.setUserDn("cn=Some User");
         tested.setPassword("secret");
         tested.setCacheEnvironmentProperties(false);
         tested.afterPropertiesSet();

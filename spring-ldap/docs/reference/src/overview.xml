@@ -184,7 +184,7 @@ public class PersonDaoImpl implements PersonDao {
    &lt;bean id="contextSource" class="org.springframework.ldap.support.LdapContextSource"&gt;
       &lt;property name="url" value="ldap://localhost:389" /&gt;
       &lt;property name="base" value="dc=example,dc=com" /&gt;
-      &lt;property name="userName" value="cn=Manager" /&gt;
+      &lt;property name="userDn" value="cn=Manager" /&gt;
       &lt;property name="password" value="secret" /&gt;
    &lt;/bean&gt;
 

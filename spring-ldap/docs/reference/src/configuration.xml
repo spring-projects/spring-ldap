@@ -26,12 +26,12 @@
 
       <para>Authenticated contexts are created for both read-only and
       read-write operations by default. You specify
-      <literal>userName</literal> and <literal>password</literal> of the LDAP
+      <literal>userDn</literal> and <literal>password</literal> of the LDAP
       user to be used for authentication on the
       <literal>ContextSource</literal>.</para>
 
       <para><note>
-          <para>The <literal>userName</literal> needs to be the full
+          <para>The <literal>userDn</literal> needs to be the full
           Distinguished Name (DN) of the user.</para>
         </note></para>
 
@@ -53,7 +53,7 @@
         executing LDAP operations for that user. The default behaviour can be
         modified by supplying a custom <literal>AuthenticationSource</literal>
         implementation to the <literal>ContextSource</literal> on startup,
-        instead of explicitly specifying the <literal>userName</literal> and
+        instead of explicitly specifying the <literal>userDn</literal> and
         <literal>password</literal>. The
         <literal>AuthenticationSource</literal> will be queried by the
         <literal>ContextSource</literal> for principal and credentials each
@@ -84,7 +84,7 @@
         </example>
 
         <note>
-          <para>We don't specify any <literal>userName</literal> or
+          <para>We don't specify any <literal>userDn</literal> or
           <literal>password</literal> to our <literal>ContextSource</literal>
           when using an <literal>AuthenticationSource</literal> - these
           properties are needed only when the default behaviour is

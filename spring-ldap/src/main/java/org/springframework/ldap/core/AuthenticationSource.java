@@ -27,14 +27,14 @@ public interface AuthenticationSource {
     /**
      * Get the principal to use when creating an authenticated context.
      * 
-     * @return the principal (userName).
+     * @return the principal (userDn).
      */
     public String getPrincipal();
 
     /**
      * Get the credentials to use when creating an authenticated context.
      * 
-     * @return the credentials (userName).
+     * @return the credentials (password).
      */
     public String getCredentials();
 }
