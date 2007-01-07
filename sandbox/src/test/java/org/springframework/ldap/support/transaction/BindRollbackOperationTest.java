@@ -1,14 +1,11 @@
 package org.springframework.ldap.support.transaction;
 
+import junit.framework.TestCase;
+
 import org.easymock.MockControl;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.support.DirContextAdapter;
 import org.springframework.ldap.support.DirContextOperations;
 import org.springframework.ldap.support.DistinguishedName;
-
-import com.sun.org.apache.bcel.internal.generic.DNEG;
-
-import junit.framework.TestCase;
 
 public class BindRollbackOperationTest extends TestCase {
     private MockControl ldapOperationsControl;
