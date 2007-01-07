@@ -17,7 +17,7 @@
 					simple
 				</prop>
 				<prop key="java.naming.security.principal">
-					${userName}
+					${userDn}
 				</prop>
 				<prop key="java.naming.security.credentials">
 					${password}
