@@ -46,7 +46,6 @@
 	<classpathentry kind="lib" path="lib/global/ldapbp.jar"/>
 	<classpathentry kind="lib" path="lib/test/junitperf.jar"/>
 	<classpathentry kind="lib" path="lib/test/backport-util-concurrent.jar"/>
-	<classpathentry kind="lib" path="lib/test/mina-filter-codec-asn1.jar"/>
 	<classpathentry kind="lib" path="lib/test/shared-asn1-codec.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
