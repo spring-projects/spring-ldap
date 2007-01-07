@@ -16,8 +16,12 @@
 
 package org.springframework.ldap;
 
+import java.util.LinkedList;
 import java.util.List;
 
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.Attributes;
 
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
@@ -46,6 +50,32 @@ public class LdapTemplateAttributesMapperITest extends
         assertEquals("Some Person2", person.getFullname());
         assertEquals("Person2", person.getLastname());
         assertEquals("Sweden, Company1, Some Person2", person.getDescription());
+    }
+
+    /**
+     * Demonstrates how to retrieve all values of a multi-value attribute.
+     * 
+     * @see LdapTemplateContextMapperITest#testSearch_ContextMapper_MultiValue()
+     */
+    public void testSearch_AttributesMapper_MultiValue() throws Exception {
+        AttributesMapper mapper = new AttributesMapper() {
+            public Object mapFromAttributes(Attributes attributes) throws NamingException {
+                LinkedList list = new LinkedList();
+                NamingEnumeration enumeration = attributes.get("uniqueMember").getAll();
+                while (enumeration.hasMoreElements()) {
+                    String value = (String) enumeration.nextElement();
+                    list.add(value);
+                }
+                String[] members = (String[]) list.toArray(new String[0]);
+                return members;
+            }
+        };
+        List result = tested.search("ou=groups",
+                "(objectclass=groupOfUniqueNames)", mapper);
+
+        assertEquals(2, result.size());
+        assertEquals(1, ((String[]) result.get(0)).length);
+        assertEquals(5, ((String[]) result.get(1)).length);
     }
 
     public void setTested(LdapTemplate tested) {

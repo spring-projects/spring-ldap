@@ -18,9 +18,9 @@ package org.springframework.ldap;
 
 import java.util.List;
 
-
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.support.DirContextAdapter;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**
@@ -51,6 +51,27 @@ public class LdapTemplateContextMapperITest extends
         assertEquals("Some Person2", person.getFullname());
         assertEquals("Person2", person.getLastname());
         assertEquals("Sweden, Company1, Some Person2", person.getDescription());
+    }
+
+    /**
+     * Demonstrates how to retrieve all values of a multi-value attribute.
+     * 
+     * @see LdapTemplateAttributesMapperITest#testSearch_AttributesMapper_MultiValue()
+     */
+    public void testSearch_ContextMapper_MultiValue() throws Exception {
+        ContextMapper mapper = new ContextMapper() {
+            public Object mapFromContext(Object ctx) {
+                DirContextAdapter adapter = (DirContextAdapter) ctx;
+                String[] members = adapter.getStringAttributes("uniqueMember");
+                return members;
+            }
+        };
+        List result = tested.search("ou=groups",
+                "(objectclass=groupOfUniqueNames)", mapper);
+
+        assertEquals(2, result.size());
+        assertEquals(1, ((String[]) result.get(0)).length);
+        assertEquals(5, ((String[]) result.get(1)).length);
     }
 
     public void setTested(LdapTemplate tested) {
