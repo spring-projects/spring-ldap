@@ -8,9 +8,9 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.EntryNotFoundException;
 import org.springframework.ldap.samples.person.domain.Group;
 import org.springframework.ldap.samples.person.domain.SearchCriteria;
+import org.springframework.ldap.support.EntryNotFoundException;
 
 public class DummyGroupDao implements GroupDao {
     private static Map GROUPS;
