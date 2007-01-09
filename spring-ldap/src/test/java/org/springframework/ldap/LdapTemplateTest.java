@@ -44,6 +44,8 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.NameClassPairCallbackHandler;
 import org.springframework.ldap.core.SearchExecutor;
 import org.springframework.ldap.support.DistinguishedName;
+import org.springframework.ldap.support.EntryNotFoundException;
+import org.springframework.ldap.support.NamingExceptionTranslator;
 
 public class LdapTemplateTest extends TestCase {
 

@@ -16,10 +16,10 @@
 
 package org.springframework.ldap;
 
-import org.springframework.ldap.EntryNotFoundException;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.support.CountNameClassPairCallbackHandler;
 import org.springframework.ldap.support.DirContextAdapter;
+import org.springframework.ldap.support.EntryNotFoundException;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**

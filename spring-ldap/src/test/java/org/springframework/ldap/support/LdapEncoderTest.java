@@ -16,7 +16,6 @@
 
 package org.springframework.ldap.support;
 
-import org.springframework.ldap.BadLdapGrammarException;
 import org.springframework.ldap.support.LdapEncoder;
 
 import junit.framework.TestCase;

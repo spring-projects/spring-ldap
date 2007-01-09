@@ -34,6 +34,8 @@ import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.NameClassPairCallbackHandler;
+import org.springframework.ldap.support.EntryNotFoundException;
+import org.springframework.ldap.support.NamingExceptionTranslator;
 
 /**
  * Unit tests for the <code>list</code> operations in {@link LdapTemplate}.

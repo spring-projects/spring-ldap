@@ -18,7 +18,6 @@ package org.springframework.ldap.support;
 
 import junit.framework.TestCase;
 
-import org.springframework.ldap.BadLdapGrammarException;
 
 import com.gargoylesoftware.base.testing.EqualsTester;
 

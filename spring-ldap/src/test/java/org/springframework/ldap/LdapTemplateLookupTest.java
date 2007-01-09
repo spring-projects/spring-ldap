@@ -32,6 +32,8 @@ import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.support.DirContextAdapter;
 import org.springframework.ldap.support.DistinguishedName;
+import org.springframework.ldap.support.EntryNotFoundException;
+import org.springframework.ldap.support.NamingExceptionTranslator;
 
 public class LdapTemplateLookupTest extends TestCase {
 
