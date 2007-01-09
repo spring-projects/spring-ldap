@@ -63,9 +63,7 @@ public class DirContextHolder extends ResourceHolderSupport {
     }
 
     /**
-     * Get the DirContext associated with the current transaction.
-     * 
-     * @return
+     * Return the DirContext associated with the current transaction.
      */
     public DirContext getCtx() {
         return ctx;

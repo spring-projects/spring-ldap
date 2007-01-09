@@ -24,8 +24,8 @@ import javax.naming.directory.DirContext;
 import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
 
-import org.springframework.ldap.UncategorizedLdapException;
 import org.springframework.ldap.core.DirContextProcessor;
+import org.springframework.ldap.support.UncategorizedLdapException;
 import org.springframework.util.ReflectionUtils;
 
 import com.sun.jndi.ldap.ctl.SortControl;

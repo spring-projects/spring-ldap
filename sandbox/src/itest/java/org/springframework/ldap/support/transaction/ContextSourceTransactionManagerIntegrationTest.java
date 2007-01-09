@@ -5,10 +5,10 @@ import javax.naming.directory.Attributes;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.EntryNotFoundException;
 import org.springframework.ldap.LdapServerManager;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.support.EntryNotFoundException;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 public class ContextSourceTransactionManagerIntegrationTest extends
