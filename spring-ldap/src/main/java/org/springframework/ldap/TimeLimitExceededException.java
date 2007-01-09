@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2005 the original author or authors.
+ * Copyright 2002-2006 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,17 @@
 
 package org.springframework.ldap;
 
-import org.springframework.dao.DataRetrievalFailureException;
-
 /**
- * Indicates that the search limit was exceeded in a search.
+ * Runtime exception mirroring the TimeLimitExceededException.
  * 
- * @author Mattias Arthursson
- * 
+ * @author Ulrik Sandberg
+ * @since 1.2
+ * @see javax.naming.TimeLimitExceededException
  */
-public class SearchLimitExceededException extends DataRetrievalFailureException {
-    private static final long serialVersionUID = 6899885947075235580L;
+public class TimeLimitExceededException extends LimitExceededException {
 
-    public SearchLimitExceededException(String msg) {
-        super(msg);
-    }
-
-    public SearchLimitExceededException(String msg, Throwable cause) {
-        super(msg, cause);
+    public TimeLimitExceededException(
+            javax.naming.TimeLimitExceededException cause) {
+        super(cause);
     }
 }

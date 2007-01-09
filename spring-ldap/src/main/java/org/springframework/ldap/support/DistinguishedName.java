@@ -28,7 +28,6 @@ import javax.naming.InvalidNameException;
 import javax.naming.Name;
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.ldap.BadLdapGrammarException;
 import org.springframework.ldap.util.ListComparator;
 
 /**

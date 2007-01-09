@@ -28,8 +28,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.JdkVersion;
-import org.springframework.ldap.DefaultNamingExceptionTranslator;
-import org.springframework.ldap.NamingExceptionTranslator;
 import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.ContextSource;
 

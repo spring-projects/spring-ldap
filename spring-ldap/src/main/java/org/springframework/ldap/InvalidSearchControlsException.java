@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2005 the original author or authors.
+ * Copyright 2002-2006 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,17 @@
 
 package org.springframework.ldap;
 
-import org.springframework.dao.DataRetrievalFailureException;
-
 /**
- * Represents that an entry could not be found.
+ * Runtime exception mirroring the InvalidSearchControlsException.
  * 
- * @author Mattias Arthursson
+ * @author Ulrik Sandberg
+ * @since 1.2
+ * @see javax.naming.directory.InvalidSearchControlsException
  */
-public class EntryNotFoundException extends DataRetrievalFailureException {
+public class InvalidSearchControlsException extends NamingException {
 
-    private static final long serialVersionUID = -1268390922996332424L;
-
-    public EntryNotFoundException(String msg) {
-        super(msg);
-    }
-
-    public EntryNotFoundException(String msg, Throwable cause) {
-        super(msg, cause);
+    public InvalidSearchControlsException(
+            javax.naming.directory.InvalidSearchControlsException cause) {
+        super(cause);
     }
 }

@@ -46,8 +46,6 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.DefaultNamingExceptionTranslator;
-import org.springframework.ldap.NamingExceptionTranslator;
 
 /**
  * Implements the interesting methods of the DirContext interface. In particular

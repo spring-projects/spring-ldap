@@ -21,7 +21,6 @@ import java.util.regex.Pattern;
 
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.ldap.BadLdapGrammarException;
 
 /**
  * Helper class to encode and decode ldap names and values.
