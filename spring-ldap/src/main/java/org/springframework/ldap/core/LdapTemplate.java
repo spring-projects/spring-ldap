@@ -266,6 +266,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         DirContext ctx = contextSource.getReadOnlyContext();
 
         NamingEnumeration results = null;
+        RuntimeException ex = null;
         try {
             processor.preProcess(ctx);
             results = se.executeSearch(ctx);
@@ -274,22 +275,42 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
                 NameClassPair result = (NameClassPair) results.next();
                 handler.handleNameClassPair(result);
             }
-            processor.postProcess(ctx);
         } catch (NameNotFoundException e) {
             // The base context was not found, which basically means
             // that the search did not return any results. Just clean up and
             // exit.
+            // Note that this may present problems if a DirContextProcessor was
+            // supplied - there's no guarantee that the postProcess() operation
+            // will go well after a NamingException has been thrown. It is
+            // however quite possible that information will be available for
+            // retrieval either way.
         } catch (PartialResultException e) {
             // Workaround for AD servers not handling referrals correctly.
             if (ignorePartialResultException) {
                 log.debug("PartialResultException encountered and ignored", e);
             } else {
-                throw getExceptionTranslator().translate(e);
+                ex = getExceptionTranslator().translate(e);
             }
         } catch (NamingException e) {
-            throw getExceptionTranslator().translate(e);
+            ex = getExceptionTranslator().translate(e);
         } finally {
+            try {
+                processor.postProcess(ctx);
+            } catch (NamingException e) {
+                if (ex == null) {
+                    ex = getExceptionTranslator().translate(e);
+                } else {
+                    // We already had an exception from above and should ignore
+                    // this one.
+                    log.debug("Ignoring Exception from postProcess, "
+                            + "main exception thrown instead", e);
+                }
+            }
             closeContextAndNamingEnumeration(ctx, results);
+            // If we got an exception it should be thrown.
+            if (ex != null) {
+                throw ex;
+            }
         }
     }
 
@@ -365,7 +386,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
     /*
      * @see org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
-     *      java.lang.String, int, org.springframework.ldap.core.AttributesMapper)
+     *      java.lang.String, int,
+     *      org.springframework.ldap.core.AttributesMapper)
      */
     public List search(Name base, String filter, int searchScope,
             AttributesMapper mapper) {
@@ -375,7 +397,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
     /*
      * @see org.springframework.ldap.core.LdapOperations#search(java.lang.String,
-     *      java.lang.String, int, org.springframework.ldap.core.AttributesMapper)
+     *      java.lang.String, int,
+     *      org.springframework.ldap.core.AttributesMapper)
      */
     public List search(String base, String filter, int searchScope,
             AttributesMapper mapper) throws DataAccessException {

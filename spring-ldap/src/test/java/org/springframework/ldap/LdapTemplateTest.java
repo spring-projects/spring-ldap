@@ -588,8 +588,8 @@ public class LdapTemplateTest extends TestCase {
 
         replay();
 
-        List list = tested.search(nameMock, "(ou=somevalue)",
-                controls, contextMapperMock, dirContextProcessorMock);
+        List list = tested.search(nameMock, "(ou=somevalue)", controls,
+                contextMapperMock, dirContextProcessorMock);
 
         verify();
 
@@ -1540,6 +1540,7 @@ public class LdapTemplateTest extends TestCase {
         searchExecutorControl.expectAndThrow(searchExecutorMock
                 .executeSearch(dirContextMock), ne);
 
+        dirContextProcessorMock.postProcess(dirContextMock);
         dirContextMock.close();
 
         exceptionTranslatorControl.expectAndReturn(exceptionTranslatorMock
@@ -1655,9 +1656,12 @@ public class LdapTemplateTest extends TestCase {
     public void testSearch_PartialResult_IgnoreNotSet() throws NamingException {
         expectGetReadOnlyContext();
 
+        dirContextProcessorMock.preProcess(dirContextMock);
+
         PartialResultException ex = new PartialResultException();
         searchExecutorControl.expectAndThrow(searchExecutorMock
                 .executeSearch(dirContextMock), ex);
+        dirContextProcessorMock.postProcess(dirContextMock);
         dirContextMock.close();
 
         exceptionTranslatorControl.expectAndReturn(exceptionTranslatorMock
@@ -1666,7 +1670,8 @@ public class LdapTemplateTest extends TestCase {
         replay();
 
         try {
-            tested.search(searchExecutorMock, handlerMock);
+            tested.search(searchExecutorMock, handlerMock,
+                    dirContextProcessorMock);
             fail("EntryNotFoundException expected");
         } catch (EntryNotFoundException expected) {
             assertTrue(true);
@@ -1680,13 +1685,17 @@ public class LdapTemplateTest extends TestCase {
 
         expectGetReadOnlyContext();
 
+        dirContextProcessorMock.preProcess(dirContextMock);
+
         searchExecutorControl.expectAndThrow(searchExecutorMock
                 .executeSearch(dirContextMock), new PartialResultException());
+
+        dirContextProcessorMock.postProcess(dirContextMock);
         dirContextMock.close();
 
         replay();
 
-        tested.search(searchExecutorMock, handlerMock);
+        tested.search(searchExecutorMock, handlerMock, dirContextProcessorMock);
 
         verify();
     }
