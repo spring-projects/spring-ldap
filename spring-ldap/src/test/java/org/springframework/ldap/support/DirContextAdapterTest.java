@@ -17,6 +17,7 @@
 package org.springframework.ldap.support;
 
 import javax.naming.Name;
+import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
@@ -651,6 +652,34 @@ public class DirContextAdapterTest extends TestCase {
         attr = attrs.get("abc");
         assertEquals("234", (String) attr.get());
         assertEquals("new", classUnderTest.getStringAttribute("zzz"));
+    }
+
+    /**
+     * Test for LDAP-15: DirContextAdapter.setAttribute(). Verifies that setting
+     * an Attribute should modify updatedAttrs if in update mode.
+     * 
+     * @throws NamingException
+     */
+    public void testSetAttribute_UpdateMode() throws NamingException {
+        // Set original attribute value
+        Attribute attribute = new BasicAttribute("cn", "john doe");
+        classUnderTest.setAttribute(attribute);
+
+        // Set to update mode
+        classUnderTest.setUpdateMode(true);
+
+        // Perform test - update the attribute
+        Attribute updatedAttribute = new BasicAttribute("cn", "nisse hult");
+        classUnderTest.setAttribute(updatedAttribute);
+
+        // Verify result
+        ModificationItem[] mods = classUnderTest.getModificationItems();
+        assertEquals(1, mods.length);
+        assertEquals(DirContext.REPLACE_ATTRIBUTE, mods[0].getModificationOp());
+
+        Attribute modificationAttribute = mods[0].getAttribute();
+        assertEquals("cn", modificationAttribute.getID());
+        assertEquals("nisse hult", modificationAttribute.get());
     }
 
     private ModificationItem getModificationItem(ModificationItem[] mods,

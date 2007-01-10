@@ -710,7 +710,11 @@ public class DirContextAdapter implements DirContextOperations {
      *            the attribute to set.
      */
     public void setAttribute(Attribute attribute) {
-        attrs.put(attribute);
+        if (!updateMode) {
+            attrs.put(attribute);
+        } else {
+            updatedAttrs.put(attribute);
+        }
     }
 
     /**
