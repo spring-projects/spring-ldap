@@ -22,7 +22,6 @@ import javax.naming.Name;
 import javax.naming.NameClassPair;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
 import javax.naming.PartialResultException;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
@@ -34,10 +33,8 @@ import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.dao.DataAccessException;
-import org.springframework.ldap.support.DefaultNamingExceptionTranslator;
-import org.springframework.ldap.support.EntryNotFoundException;
-import org.springframework.ldap.support.NamingExceptionTranslator;
+import org.springframework.ldap.NamingException;
+import org.springframework.ldap.support.LdapUtils;
 
 /**
  * Executes core LDAP functionality and helps to avoid common errors, relieving
@@ -74,8 +71,6 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     private static final String[] ALL_ATTRIBUTES = null;
 
     private ContextSource contextSource;
-
-    private NamingExceptionTranslator exceptionTranslator = new DefaultNamingExceptionTranslator();
 
     private boolean ignorePartialResultException = false;
 
@@ -145,8 +140,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      *      org.springframework.ldap.core.NameClassPairCallbackHandler)
      */
     public void search(String base, String filter, int searchScope,
-            boolean returningObjFlag, NameClassPairCallbackHandler handler)
-            throws DataAccessException {
+            boolean returningObjFlag, NameClassPairCallbackHandler handler) {
 
         search(base, filter, getDefaultSearchControls(searchScope,
                 returningObjFlag, ALL_ATTRIBUTES), handler);
@@ -163,7 +157,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         // Create a SearchExecutor to perform the search.
         SearchExecutor se = new SearchExecutor() {
             public NamingEnumeration executeSearch(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 return ctx.search(base, filter, controls);
             }
         };
@@ -182,7 +176,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         // Create a SearchExecutor to perform the search.
         SearchExecutor se = new SearchExecutor() {
             public NamingEnumeration executeSearch(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 return ctx.search(base, filter, controls);
             }
         };
@@ -203,7 +197,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         // Create a SearchExecutor to perform the search.
         SearchExecutor se = new SearchExecutor() {
             public NamingEnumeration executeSearch(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 return ctx.search(base, filter, controls);
             }
         };
@@ -224,7 +218,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         // Create a SearchExecutor to perform the search.
         SearchExecutor se = new SearchExecutor() {
             public NamingEnumeration executeSearch(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 return ctx.search(base, filter, controls);
             }
         };
@@ -254,7 +248,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      *            DirContextProcessor for custom pre- and post-processing. May
      *            be <code>null</code> if no custom processing should take
      *            place.
-     * @throws DataAccessException
+     * @throws NamingException
      *             if any error occurs. Note that a NameNotFoundException will
      *             be ignored. Instead this is interpreted that no entries were
      *             found.
@@ -287,16 +281,16 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
             if (ignorePartialResultException) {
                 log.debug("PartialResultException encountered and ignored", e);
             } else {
-                ex = getExceptionTranslator().translate(e);
+                ex = LdapUtils.convertLdapException(e);
             }
-        } catch (NamingException e) {
-            ex = getExceptionTranslator().translate(e);
+        } catch (javax.naming.NamingException e) {
+            ex = LdapUtils.convertLdapException(e);
         } finally {
             try {
                 processor.postProcess(ctx);
-            } catch (NamingException e) {
+            } catch (javax.naming.NamingException e) {
                 if (ex == null) {
-                    ex = getExceptionTranslator().translate(e);
+                    ex = LdapUtils.convertLdapException(e);
                 } else {
                     // We already had an exception from above and should ignore
                     // this one.
@@ -327,7 +321,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      * @param handler
      *            the NameClassPairCallbackHandler to which each found entry
      *            will be passed.
-     * @throws DataAccessException
+     * @throws NamingException
      *             if any error occurs. Note that a NameNotFoundException will
      *             be ignored. Instead this is interpreted that no entries were
      *             found.
@@ -342,7 +336,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      *      org.springframework.ldap.core.NameClassPairCallbackHandler)
      */
     public void search(Name base, String filter,
-            NameClassPairCallbackHandler handler) throws DataAccessException {
+            NameClassPairCallbackHandler handler) {
 
         search(base, filter, getDefaultSearchControls(DEFAULT_SEARCH_SCOPE,
                 DONT_RETURN_OBJ_FLAG, ALL_ATTRIBUTES), handler);
@@ -354,7 +348,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      *      org.springframework.ldap.core.NameClassPairCallbackHandler)
      */
     public void search(String base, String filter,
-            NameClassPairCallbackHandler handler) throws DataAccessException {
+            NameClassPairCallbackHandler handler) {
 
         search(base, filter, getDefaultSearchControls(DEFAULT_SEARCH_SCOPE,
                 DONT_RETURN_OBJ_FLAG, ALL_ATTRIBUTES), handler);
@@ -366,7 +360,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      *      org.springframework.ldap.core.AttributesMapper)
      */
     public List search(Name base, String filter, int searchScope,
-            String[] attrs, AttributesMapper mapper) throws DataAccessException {
+            String[] attrs, AttributesMapper mapper) {
         return search(base, filter, getDefaultSearchControls(searchScope,
                 DONT_RETURN_OBJ_FLAG, attrs), mapper);
     }
@@ -377,7 +371,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      *      org.springframework.ldap.core.AttributesMapper)
      */
     public List search(String base, String filter, int searchScope,
-            String[] attrs, AttributesMapper mapper) throws DataAccessException {
+            String[] attrs, AttributesMapper mapper) {
         return search(base, filter, getDefaultSearchControls(searchScope,
                 DONT_RETURN_OBJ_FLAG, attrs), mapper);
     }
@@ -399,7 +393,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      *      org.springframework.ldap.core.AttributesMapper)
      */
     public List search(String base, String filter, int searchScope,
-            AttributesMapper mapper) throws DataAccessException {
+            AttributesMapper mapper) {
 
         return search(base, filter, searchScope, ALL_ATTRIBUTES, mapper);
     }
@@ -408,8 +402,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      * @see org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
      *      java.lang.String, org.springframework.ldap.core.AttributesMapper)
      */
-    public List search(Name base, String filter, AttributesMapper mapper)
-            throws DataAccessException {
+    public List search(Name base, String filter, AttributesMapper mapper) {
 
         return search(base, filter, DEFAULT_SEARCH_SCOPE, mapper);
     }
@@ -418,8 +411,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      * @see org.springframework.ldap.core.LdapOperations#search(java.lang.String,
      *      java.lang.String, org.springframework.ldap.core.AttributesMapper)
      */
-    public List search(String base, String filter, AttributesMapper mapper)
-            throws DataAccessException {
+    public List search(String base, String filter, AttributesMapper mapper) {
 
         return search(base, filter, DEFAULT_SEARCH_SCOPE, mapper);
     }
@@ -430,7 +422,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      *      org.springframework.ldap.core.ContextMapper)
      */
     public List search(Name base, String filter, int searchScope,
-            String[] attrs, ContextMapper mapper) throws DataAccessException {
+            String[] attrs, ContextMapper mapper) {
 
         return search(base, filter, getDefaultSearchControls(searchScope,
                 RETURN_OBJ_FLAG, attrs), mapper);
@@ -442,7 +434,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      *      org.springframework.ldap.core.ContextMapper)
      */
     public List search(String base, String filter, int searchScope,
-            String[] attrs, ContextMapper mapper) throws DataAccessException {
+            String[] attrs, ContextMapper mapper) {
 
         return search(base, filter, getDefaultSearchControls(searchScope,
                 RETURN_OBJ_FLAG, attrs), mapper);
@@ -463,7 +455,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      *      java.lang.String, int, org.springframework.ldap.core.ContextMapper)
      */
     public List search(String base, String filter, int searchScope,
-            ContextMapper mapper) throws DataAccessException {
+            ContextMapper mapper) {
 
         return search(base, filter, searchScope, ALL_ATTRIBUTES, mapper);
     }
@@ -472,8 +464,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      * @see org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
      *      java.lang.String, org.springframework.ldap.core.ContextMapper)
      */
-    public List search(Name base, String filter, ContextMapper mapper)
-            throws DataAccessException {
+    public List search(Name base, String filter, ContextMapper mapper) {
 
         return search(base, filter, DEFAULT_SEARCH_SCOPE, mapper);
     }
@@ -482,8 +473,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      * @see org.springframework.ldap.core.LdapOperations#search(java.lang.String,
      *      java.lang.String, org.springframework.ldap.core.ContextMapper)
      */
-    public List search(String base, String filter, ContextMapper mapper)
-            throws DataAccessException {
+    public List search(String base, String filter, ContextMapper mapper) {
 
         return search(base, filter, DEFAULT_SEARCH_SCOPE, mapper);
     }
@@ -612,7 +602,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     public void list(final String base, NameClassPairCallbackHandler handler) {
         SearchExecutor searchExecutor = new SearchExecutor() {
             public NamingEnumeration executeSearch(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 return ctx.list(base);
             }
         };
@@ -627,7 +617,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     public void list(final Name base, NameClassPairCallbackHandler handler) {
         SearchExecutor searchExecutor = new SearchExecutor() {
             public NamingEnumeration executeSearch(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 return ctx.list(base);
             }
         };
@@ -679,7 +669,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
             NameClassPairCallbackHandler handler) {
         SearchExecutor searchExecutor = new SearchExecutor() {
             public NamingEnumeration executeSearch(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 return ctx.listBindings(base);
             }
         };
@@ -695,7 +685,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
             NameClassPairCallbackHandler handler) {
         SearchExecutor searchExecutor = new SearchExecutor() {
             public NamingEnumeration executeSearch(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 return ctx.listBindings(base);
             }
         };
@@ -784,8 +774,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     private Object executeWithContext(ContextExecutor ce, DirContext ctx) {
         try {
             return ce.executeWithContext(ctx);
-        } catch (NamingException e) {
-            throw getExceptionTranslator().translate(e);
+        } catch (javax.naming.NamingException e) {
+            throw LdapUtils.convertLdapException(e);
         } finally {
             closeContext(ctx);
         }
@@ -797,7 +787,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     public Object lookup(final Name dn) {
         return executeReadOnly(new ContextExecutor() {
             public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 return ctx.lookup(dn);
             }
         });
@@ -806,10 +796,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     /*
      * @see org.springframework.ldap.core.LdapOperations#lookup(java.lang.String)
      */
-    public Object lookup(final String dn) throws DataAccessException {
+    public Object lookup(final String dn) {
         return executeReadOnly(new ContextExecutor() {
             public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 return ctx.lookup(dn);
             }
         });
@@ -822,7 +812,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     public Object lookup(final Name dn, final AttributesMapper mapper) {
         return executeReadOnly(new ContextExecutor() {
             public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 Attributes attributes = ctx.getAttributes(dn);
                 return mapper.mapFromAttributes(attributes);
             }
@@ -833,12 +823,11 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      * @see org.springframework.ldap.core.LdapOperations#lookup(java.lang.String,
      *      org.springframework.ldap.core.AttributesMapper)
      */
-    public Object lookup(final String dn, final AttributesMapper mapper)
-            throws DataAccessException {
+    public Object lookup(final String dn, final AttributesMapper mapper) {
 
         return executeReadOnly(new ContextExecutor() {
             public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 Attributes attributes = ctx.getAttributes(dn);
                 return mapper.mapFromAttributes(attributes);
             }
@@ -852,7 +841,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     public Object lookup(final Name dn, final ContextMapper mapper) {
         return executeReadOnly(new ContextExecutor() {
             public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 Object object = ctx.lookup(dn);
                 return mapper.mapFromContext(object);
             }
@@ -863,12 +852,11 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      * @see org.springframework.ldap.core.LdapOperations#lookup(java.lang.String,
      *      org.springframework.ldap.core.ContextMapper)
      */
-    public Object lookup(final String dn, final ContextMapper mapper)
-            throws DataAccessException {
+    public Object lookup(final String dn, final ContextMapper mapper) {
 
         return executeReadOnly(new ContextExecutor() {
             public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 Object object = ctx.lookup(dn);
                 return mapper.mapFromContext(object);
             }
@@ -880,11 +868,11 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      *      java.lang.String[], org.springframework.ldap.core.AttributesMapper)
      */
     public Object lookup(final Name dn, final String[] attributes,
-            final AttributesMapper mapper) throws DataAccessException {
+            final AttributesMapper mapper) {
 
         return executeReadOnly(new ContextExecutor() {
             public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 Attributes filteredAttributes = ctx.getAttributes(dn,
                         attributes);
                 return mapper.mapFromAttributes(filteredAttributes);
@@ -897,10 +885,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      *      java.lang.String[], org.springframework.ldap.core.AttributesMapper)
      */
     public Object lookup(final String dn, final String[] attributes,
-            final AttributesMapper mapper) throws DataAccessException {
+            final AttributesMapper mapper) {
         return executeReadOnly(new ContextExecutor() {
             public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 Attributes filteredAttributes = ctx.getAttributes(dn,
                         attributes);
                 return mapper.mapFromAttributes(filteredAttributes);
@@ -913,11 +901,11 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      *      java.lang.String[], org.springframework.ldap.core.ContextMapper)
      */
     public Object lookup(final Name dn, final String[] attributes,
-            final ContextMapper mapper) throws DataAccessException {
+            final ContextMapper mapper) {
 
         return executeReadOnly(new ContextExecutor() {
             public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 Attributes filteredAttributes = ctx.getAttributes(dn,
                         attributes);
                 DirContextAdapter contextAdapter = new DirContextAdapter(
@@ -932,11 +920,11 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      *      java.lang.String[], org.springframework.ldap.core.ContextMapper)
      */
     public Object lookup(final String dn, final String[] attributes,
-            final ContextMapper mapper) throws DataAccessException {
+            final ContextMapper mapper) {
 
         return executeReadOnly(new ContextExecutor() {
             public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 Attributes filteredAttributes = ctx.getAttributes(dn,
                         attributes);
                 DistinguishedName name = new DistinguishedName(dn);
@@ -954,7 +942,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     public void modifyAttributes(final Name dn, final ModificationItem[] mods) {
         executeReadWrite(new ContextExecutor() {
             public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 ctx.modifyAttributes(dn, mods);
                 return null;
             }
@@ -965,12 +953,11 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      * @see org.springframework.ldap.core.LdapOperations#modifyAttributes(java.lang.String,
      *      javax.naming.directory.ModificationItem[])
      */
-    public void modifyAttributes(final String dn, final ModificationItem[] mods)
-            throws DataAccessException {
+    public void modifyAttributes(final String dn, final ModificationItem[] mods) {
 
         executeReadWrite(new ContextExecutor() {
             public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 ctx.modifyAttributes(dn, mods);
                 return null;
             }
@@ -986,7 +973,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
         executeReadWrite(new ContextExecutor() {
             public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 ctx.bind(dn, obj, attributes);
                 return null;
             }
@@ -998,11 +985,11 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      *      java.lang.Object, javax.naming.directory.Attributes)
      */
     public void bind(final String dn, final Object obj,
-            final Attributes attributes) throws DataAccessException {
+            final Attributes attributes) {
 
         executeReadWrite(new ContextExecutor() {
             public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 ctx.bind(dn, obj, attributes);
                 return null;
             }
@@ -1019,7 +1006,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     /*
      * @see org.springframework.ldap.core.LdapOperations#unbind(java.lang.String)
      */
-    public void unbind(final String dn) throws DataAccessException {
+    public void unbind(final String dn) {
         doUnbind(dn);
     }
 
@@ -1027,8 +1014,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      * @see org.springframework.ldap.core.LdapOperations#unbind(javax.naming.Name,
      *      boolean)
      */
-    public void unbind(final Name dn, boolean recursive)
-            throws DataAccessException {
+    public void unbind(final Name dn, boolean recursive) {
         if (!recursive) {
             doUnbind(dn);
         } else {
@@ -1040,8 +1026,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      * @see org.springframework.ldap.core.LdapOperations#unbind(java.lang.String,
      *      boolean)
      */
-    public void unbind(final String dn, boolean recursive)
-            throws DataAccessException {
+    public void unbind(final String dn, boolean recursive) {
         if (!recursive) {
             doUnbind(dn);
         } else {
@@ -1049,41 +1034,39 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         }
     }
 
-    private void doUnbind(final Name dn) throws DataAccessException {
+    private void doUnbind(final Name dn) {
         executeReadWrite(new ContextExecutor() {
             public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 ctx.unbind(dn);
                 return null;
             }
         });
     }
 
-    private void doUnbind(final String dn) throws DataAccessException {
+    private void doUnbind(final String dn) {
         executeReadWrite(new ContextExecutor() {
             public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 ctx.unbind(dn);
                 return null;
             }
         });
     }
 
-    private void doUnbindRecursively(final Name dn) throws DataAccessException {
+    private void doUnbindRecursively(final Name dn) {
         executeReadWrite(new ContextExecutor() {
-            public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
+            public Object executeWithContext(DirContext ctx) {
                 deleteRecursively(ctx, new DistinguishedName(dn));
                 return null;
             }
         });
     }
 
-    private void doUnbindRecursively(final String dn)
-            throws DataAccessException {
+    private void doUnbindRecursively(final String dn) {
         executeReadWrite(new ContextExecutor() {
             public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 deleteRecursively(ctx, new DistinguishedName(dn));
                 return null;
             }
@@ -1097,11 +1080,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      *            The context to use for deleting.
      * @param name
      *            The starting point to delete recursively.
-     * @throws DataAccessException
+     * @throws NamingException
      *             if any error occurs
      */
-    protected void deleteRecursively(DirContext ctx, DistinguishedName name)
-            throws DataAccessException {
+    protected void deleteRecursively(DirContext ctx, DistinguishedName name) {
 
         NamingEnumeration enumeration = null;
         try {
@@ -1117,8 +1099,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
             if (log.isDebugEnabled()) {
                 log.debug("Entry " + name + " deleted");
             }
-        } catch (NamingException e) {
-            throw getExceptionTranslator().translate(e);
+        } catch (javax.naming.NamingException e) {
+            throw LdapUtils.convertLdapException(e);
         } finally {
             try {
                 enumeration.close();
@@ -1133,11 +1115,11 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      *      java.lang.Object, javax.naming.directory.Attributes)
      */
     public void rebind(final Name dn, final Object obj,
-            final Attributes attributes) throws DataAccessException {
+            final Attributes attributes) {
 
         executeReadWrite(new ContextExecutor() {
             public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 ctx.rebind(dn, obj, attributes);
                 return null;
             }
@@ -1149,11 +1131,11 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      *      java.lang.Object, javax.naming.directory.Attributes)
      */
     public void rebind(final String dn, final Object obj,
-            final Attributes attributes) throws DataAccessException {
+            final Attributes attributes) {
 
         executeReadWrite(new ContextExecutor() {
             public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 ctx.rebind(dn, obj, attributes);
                 return null;
             }
@@ -1164,12 +1146,11 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      * @see org.springframework.ldap.core.LdapOperations#rename(javax.naming.Name,
      *      javax.naming.Name)
      */
-    public void rename(final Name oldDn, final Name newDn)
-            throws DataAccessException {
+    public void rename(final Name oldDn, final Name newDn) {
 
         executeReadWrite(new ContextExecutor() {
             public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 ctx.rename(oldDn, newDn);
                 return null;
             }
@@ -1180,12 +1161,11 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      * @see org.springframework.ldap.core.LdapOperations#rename(java.lang.String,
      *      java.lang.String)
      */
-    public void rename(final String oldDn, final String newDn)
-            throws DataAccessException {
+    public void rename(final String oldDn, final String newDn) {
 
         executeReadWrite(new ContextExecutor() {
             public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
+                    throws javax.naming.NamingException {
                 ctx.rename(oldDn, newDn);
                 return null;
             }
@@ -1241,28 +1221,6 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
                 // Never mind this.
             }
         }
-    }
-
-    /**
-     * Get the NamingExceptionTranslator that will be used by this instance. If
-     * no exceptionTranslator has been set, a default instance will be created.
-     * 
-     * @return the NamingExceptionTranslator to be used by this instance.
-     */
-    public NamingExceptionTranslator getExceptionTranslator() {
-        return exceptionTranslator;
-    }
-
-    /**
-     * Set the NamingExceptionTranslator to be used by this instance.
-     * 
-     * @param exceptionTranslator
-     *            the NamingExceptionTranslator to use.
-     */
-    public void setExceptionTranslator(
-            NamingExceptionTranslator exceptionTranslator) {
-
-        this.exceptionTranslator = exceptionTranslator;
     }
 
     private SearchControls getDefaultSearchControls(int searchScope,
@@ -1323,8 +1281,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         public Object getObjectFromNameClassPair(NameClassPair nameClassPair) {
             try {
                 return mapper.mapFromNameClassPair(nameClassPair);
-            } catch (NamingException e) {
-                throw getExceptionTranslator().translate(e);
+            } catch (javax.naming.NamingException e) {
+                throw LdapUtils.convertLdapException(e);
             }
         }
     }
@@ -1360,8 +1318,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
             Attributes attributes = searchResult.getAttributes();
             try {
                 return mapper.mapFromAttributes(attributes);
-            } catch (NamingException e) {
-                throw getExceptionTranslator().translate(e);
+            } catch (javax.naming.NamingException e) {
+                throw LdapUtils.convertLdapException(e);
             }
         }
     }
@@ -1394,7 +1352,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
             Binding binding = (Binding) nameClassPair;
             Object object = binding.getObject();
             if (object == null) {
-                throw new EntryNotFoundException(
+                throw new ObjectRetrievalException(
                         "SearchResult did not contain any object.");
             }
             return mapper.mapFromContext(object);

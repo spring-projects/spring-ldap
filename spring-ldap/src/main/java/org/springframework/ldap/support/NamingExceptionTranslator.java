@@ -25,11 +25,13 @@ import org.springframework.dao.DataAccessException;
  * NamingExceptions and DataAccessExceptions.
  * 
  * @author Mattias Arthursson
- * 
+ * @deprecated Use {@link LdapUtils#convertLdapException(NamingException)}
+ *             instead.
  */
 public interface NamingExceptionTranslator {
     /**
      * Translate the given NamingException into a generic data access exception.
+     * 
      * @param namingException
      *            the offending NamingException.
      * 

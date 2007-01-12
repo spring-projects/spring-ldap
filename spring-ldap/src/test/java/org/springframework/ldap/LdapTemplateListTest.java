@@ -23,7 +23,6 @@ import javax.naming.Name;
 import javax.naming.NameClassPair;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.PartialResultException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 
@@ -34,8 +33,6 @@ import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.NameClassPairCallbackHandler;
-import org.springframework.ldap.support.EntryNotFoundException;
-import org.springframework.ldap.support.NamingExceptionTranslator;
 
 /**
  * Unit tests for the <code>list</code> operations in {@link LdapTemplate}.
@@ -72,10 +69,6 @@ public class LdapTemplateListTest extends TestCase {
 
     private ContextMapper contextMapperMock;
 
-    private MockControl exceptionTranslatorControl;
-
-    private NamingExceptionTranslator exceptionTranslatorMock;
-
     private LdapTemplate tested;
 
     protected void setUp() throws Exception {
@@ -107,13 +100,7 @@ public class LdapTemplateListTest extends TestCase {
         contextMapperControl = MockControl.createControl(ContextMapper.class);
         contextMapperMock = (ContextMapper) contextMapperControl.getMock();
 
-        exceptionTranslatorControl = MockControl
-                .createControl(NamingExceptionTranslator.class);
-        exceptionTranslatorMock = (NamingExceptionTranslator) exceptionTranslatorControl
-                .getMock();
-
         tested = new LdapTemplate(contextSourceMock);
-        tested.setExceptionTranslator(exceptionTranslatorMock);
     }
 
     protected void tearDown() throws Exception {
@@ -136,9 +123,6 @@ public class LdapTemplateListTest extends TestCase {
 
         contextMapperControl = null;
         contextMapperMock = null;
-
-        exceptionTranslatorControl = null;
-        exceptionTranslatorMock = null;
     }
 
     protected void replay() {
@@ -148,7 +132,6 @@ public class LdapTemplateListTest extends TestCase {
         nameControl.replay();
         handlerControl.replay();
         contextMapperControl.replay();
-        exceptionTranslatorControl.replay();
     }
 
     protected void verify() {
@@ -158,7 +141,6 @@ public class LdapTemplateListTest extends TestCase {
         nameControl.verify();
         handlerControl.verify();
         contextMapperControl.verify();
-        exceptionTranslatorControl.verify();
     }
 
     private void expectGetReadOnlyContext() {
@@ -182,8 +164,8 @@ public class LdapTemplateListTest extends TestCase {
         setupNamingEnumeration(listResult);
     }
 
-    private void setupStringListBindingsAndNamingEnumeration(NameClassPair listResult)
-            throws NamingException {
+    private void setupStringListBindingsAndNamingEnumeration(
+            NameClassPair listResult) throws NamingException {
         dirContextControl.expectAndReturn(dirContextMock.listBindings(NAME),
                 namingEnumerationMock);
 
@@ -192,8 +174,8 @@ public class LdapTemplateListTest extends TestCase {
 
     private void setupListBindingsAndNamingEnumeration(NameClassPair listResult)
             throws NamingException {
-        dirContextControl.expectAndReturn(dirContextMock.listBindings(nameMock),
-                namingEnumerationMock);
+        dirContextControl.expectAndReturn(
+                dirContextMock.listBindings(nameMock), namingEnumerationMock);
 
         setupNamingEnumeration(listResult);
     }
@@ -288,20 +270,17 @@ public class LdapTemplateListTest extends TestCase {
     public void testList_PartialResultException() throws NamingException {
         expectGetReadOnlyContext();
 
-        PartialResultException pre = new PartialResultException();
+        javax.naming.PartialResultException pre = new javax.naming.PartialResultException();
         dirContextControl.expectAndThrow(dirContextMock.list(NAME), pre);
 
         dirContextMock.close();
-
-        exceptionTranslatorControl.expectAndReturn(exceptionTranslatorMock
-                .translate(pre), new EntryNotFoundException("dummy"));
 
         replay();
 
         try {
             tested.list(NAME);
-            fail("EntryNotFoundException expected");
-        } catch (EntryNotFoundException expected) {
+            fail("PartialResultException expected");
+        } catch (PartialResultException expected) {
             assertTrue(true);
         }
 
@@ -311,7 +290,7 @@ public class LdapTemplateListTest extends TestCase {
     public void testList_PartialResultException_Ignore() throws NamingException {
         expectGetReadOnlyContext();
 
-        PartialResultException pre = new PartialResultException();
+        javax.naming.PartialResultException pre = new javax.naming.PartialResultException();
         dirContextControl.expectAndThrow(dirContextMock.list(NAME), pre);
 
         dirContextMock.close();
@@ -331,20 +310,17 @@ public class LdapTemplateListTest extends TestCase {
     public void testList_NamingException() throws NamingException {
         expectGetReadOnlyContext();
 
-        NamingException ne = new NamingException();
+        javax.naming.LimitExceededException ne = new javax.naming.LimitExceededException();
         dirContextControl.expectAndThrow(dirContextMock.list(NAME), ne);
 
         dirContextMock.close();
-
-        exceptionTranslatorControl.expectAndReturn(exceptionTranslatorMock
-                .translate(ne), new EntryNotFoundException("dummy"));
 
         replay();
 
         try {
             tested.list(NAME);
-            fail("EntryNotFoundException expected");
-        } catch (EntryNotFoundException expected) {
+            fail("LimitExceededException expected");
+        } catch (LimitExceededException expected) {
             assertTrue(true);
         }
 

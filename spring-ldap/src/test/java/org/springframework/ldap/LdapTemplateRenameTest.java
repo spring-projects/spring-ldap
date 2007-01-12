@@ -17,20 +17,14 @@
 package org.springframework.ldap;
 
 import javax.naming.Name;
-import javax.naming.NameAlreadyBoundException;
-import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 
 import junit.framework.TestCase;
 
-
 import org.easymock.MockControl;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.support.NamingExceptionTranslator;
-import org.springframework.ldap.support.UncategorizedLdapException;
 
 /**
  * Unit tests for the rename operations in the LdapTemplate class.
@@ -55,10 +49,6 @@ public class LdapTemplateRenameTest extends TestCase {
 
     private Name newNameMock;
 
-    private MockControl exceptionTranslatorControl;
-
-    private NamingExceptionTranslator exceptionTranslatorMock;
-
     private LdapTemplate tested;
 
     protected void setUp() throws Exception {
@@ -80,13 +70,7 @@ public class LdapTemplateRenameTest extends TestCase {
         newNameControl = MockControl.createControl(Name.class);
         newNameMock = (Name) newNameControl.getMock();
 
-        exceptionTranslatorControl = MockControl
-                .createControl(NamingExceptionTranslator.class);
-        exceptionTranslatorMock = (NamingExceptionTranslator) exceptionTranslatorControl
-                .getMock();
-
         tested = new LdapTemplate(contextSourceMock);
-        tested.setExceptionTranslator(exceptionTranslatorMock);
     }
 
     protected void tearDown() throws Exception {
@@ -100,23 +84,18 @@ public class LdapTemplateRenameTest extends TestCase {
 
         oldNameControl = null;
         newNameMock = null;
-
-        exceptionTranslatorControl = null;
-        exceptionTranslatorMock = null;
     }
 
     protected void replay() {
         contextSourceControl.replay();
         dirContextControl.replay();
         oldNameControl.replay();
-        exceptionTranslatorControl.replay();
     }
 
     protected void verify() {
         contextSourceControl.verify();
         dirContextControl.verify();
         oldNameControl.verify();
-        exceptionTranslatorControl.verify();
     }
 
     private void expectGetReadWriteContext() {
@@ -124,7 +103,7 @@ public class LdapTemplateRenameTest extends TestCase {
                 .getReadWriteContext(), dirContextMock);
     }
 
-    public void testRename() throws NamingException {
+    public void testRename() throws Exception {
         expectGetReadWriteContext();
 
         dirContextMock.rename(oldNameMock, newNameMock);
@@ -141,19 +120,16 @@ public class LdapTemplateRenameTest extends TestCase {
         expectGetReadWriteContext();
 
         dirContextMock.rename(oldNameMock, newNameMock);
-        NameAlreadyBoundException ne = new NameAlreadyBoundException();
+        javax.naming.NameAlreadyBoundException ne = new javax.naming.NameAlreadyBoundException();
         dirContextControl.setThrowable(ne);
         dirContextMock.close();
-
-        exceptionTranslatorControl.expectAndReturn(exceptionTranslatorMock
-                .translate(ne), new DataIntegrityViolationException("dummy"));
 
         replay();
 
         try {
             tested.rename(oldNameMock, newNameMock);
-            fail("DataIntegrityViolationException expected");
-        } catch (DataIntegrityViolationException expected) {
+            fail("NameAlreadyBoundException expected");
+        } catch (NameAlreadyBoundException expected) {
             assertTrue(true);
         }
 
@@ -164,12 +140,9 @@ public class LdapTemplateRenameTest extends TestCase {
         expectGetReadWriteContext();
 
         dirContextMock.rename(oldNameMock, newNameMock);
-        NamingException ne = new NamingException();
+        javax.naming.NamingException ne = new javax.naming.NamingException();
         dirContextControl.setThrowable(ne);
         dirContextMock.close();
-
-        exceptionTranslatorControl.expectAndReturn(exceptionTranslatorMock
-                .translate(ne), new UncategorizedLdapException("dummy", ne));
 
         replay();
 
@@ -183,7 +156,7 @@ public class LdapTemplateRenameTest extends TestCase {
         verify();
     }
 
-    public void testRename_String() throws NamingException {
+    public void testRename_String() throws Exception {
         expectGetReadWriteContext();
 
         dirContextMock.rename("o=example.com", "o=somethingelse.com");

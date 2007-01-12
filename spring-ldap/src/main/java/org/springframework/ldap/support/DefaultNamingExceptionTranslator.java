@@ -30,6 +30,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.dao.UncategorizedDataAccessException;
 import org.springframework.ldap.BadLdapGrammarException;
 
 /**
@@ -53,11 +54,6 @@ public class DefaultNamingExceptionTranslator implements
                     namingException);
         }
 
-        if (namingException instanceof InvalidSearchFilterException) {
-            return new BadLdapGrammarException("Invalid search filter",
-                    namingException);
-        }
-
         if (namingException instanceof InvalidSearchControlsException) {
             return new InvalidDataAccessApiUsageException(
                     "Invalid search controls supplied by internal API",
@@ -75,23 +71,13 @@ public class DefaultNamingExceptionTranslator implements
                     namingException);
         }
 
-        if (namingException instanceof InvalidAttributesException) {
-            return new AttributesIntegrityViolationException(
-                    "Invalid attributes", namingException);
-        }
-
-        if (namingException instanceof LimitExceededException) {
-            return new SearchLimitExceededException("Too many objects found",
-                    namingException);
-        }
-
         if (namingException instanceof CommunicationException) {
             throw new DataRetrievalFailureException(
                     "Unable to communicate with LDAP server", namingException);
         }
 
         // Fallback - other type of NamingException encountered.
-        return new UncategorizedLdapException("Operation failed",
-                namingException);
+        return new UncategorizedDataAccessException("Operation failed",
+                namingException) {};
     }
 }

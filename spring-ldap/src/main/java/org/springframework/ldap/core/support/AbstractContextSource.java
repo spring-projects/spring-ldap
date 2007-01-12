@@ -32,8 +32,7 @@ import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DefaultDirObjectFactory;
 import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.support.DefaultNamingExceptionTranslator;
-import org.springframework.ldap.support.NamingExceptionTranslator;
+import org.springframework.ldap.support.LdapUtils;
 
 /**
  * Abstract implementation of the ContextSource interface. By default, returns
@@ -92,8 +91,6 @@ public abstract class AbstractContextSource implements ContextSource,
     private boolean cacheEnvironmentProperties = true;
 
     private boolean anonymousReadOnly = false;
-
-    private NamingExceptionTranslator exceptionTranslator = new DefaultNamingExceptionTranslator();
 
     private static final Log log = LogFactory.getLog(LdapContextSource.class);
 
@@ -203,7 +200,7 @@ public abstract class AbstractContextSource implements ContextSource,
             return ctx;
         } catch (NamingException e) {
             closeContext(ctx);
-            throw getExceptionTranslator().translate(e);
+            throw LdapUtils.convertLdapException(e);
         }
     }
 
@@ -418,27 +415,6 @@ public abstract class AbstractContextSource implements ContextSource,
      */
     public void setAnonymousReadOnly(boolean anonymousReadOnly) {
         this.anonymousReadOnly = anonymousReadOnly;
-    }
-
-    /**
-     * Set the NamingExceptionTranslator to be used by this instance. By
-     * default, a {@link DefaultNamingExceptionTranslator} will be used.
-     * 
-     * @param exceptionTranslator
-     *            the NamingExceptionTranslator to use.
-     */
-    public void setExceptionTranslator(
-            NamingExceptionTranslator exceptionTranslator) {
-        this.exceptionTranslator = exceptionTranslator;
-    }
-
-    /**
-     * Get the NamingExceptionTranslator used by this instance.
-     * 
-     * @return the NamingExceptionTranslator.
-     */
-    public NamingExceptionTranslator getExceptionTranslator() {
-        return exceptionTranslator;
     }
 
     /**

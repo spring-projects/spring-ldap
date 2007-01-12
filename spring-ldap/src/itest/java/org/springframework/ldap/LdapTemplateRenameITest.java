@@ -18,11 +18,9 @@ package org.springframework.ldap;
 
 import javax.naming.Name;
 
-
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.support.EntryNotFoundException;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**
@@ -82,7 +80,7 @@ public class LdapTemplateRenameITest extends
         try {
             tested.lookup(dn);
             fail("Expected entry '" + dn + "' to be non-existent");
-        } catch (EntryNotFoundException expected) {
+        } catch (NameNotFoundException expected) {
             // expected
         }
     }

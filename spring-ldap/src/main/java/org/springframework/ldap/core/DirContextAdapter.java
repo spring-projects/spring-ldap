@@ -46,8 +46,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.support.DefaultNamingExceptionTranslator;
-import org.springframework.ldap.support.NamingExceptionTranslator;
+import org.springframework.ldap.support.LdapUtils;
 
 /**
  * Implements the interesting methods of the DirContext interface. In particular
@@ -79,8 +78,6 @@ public class DirContextAdapter implements DirContextOperations {
     private boolean updateMode = false;
 
     private Attributes updatedAttrs;
-
-    private NamingExceptionTranslator exceptionTranslator;
 
     /**
      * Default constructor.
@@ -195,7 +192,7 @@ public class DirContextAdapter implements DirContextOperations {
                 tmpList.add(oneAttribute.getID());
             }
         } catch (NamingException e) {
-            throw getExceptionTranslator().translate(e);
+            throw LdapUtils.convertLdapException(e);
         } finally {
             closeNamingEnumeration(attributesEnumeration);
         }
@@ -233,7 +230,7 @@ public class DirContextAdapter implements DirContextOperations {
                 collectModifications(oneAttr, tmpList);
             }
         } catch (NamingException e) {
-            throw getExceptionTranslator().translate(e);
+            throw LdapUtils.convertLdapException(e);
         } finally {
             closeNamingEnumeration(attributesEnumeration);
         }
@@ -573,7 +570,7 @@ public class DirContextAdapter implements DirContextOperations {
         try {
             return oneAttr.get();
         } catch (NamingException e) {
-            throw getExceptionTranslator().translate(e);
+            throw LdapUtils.convertLdapException(e);
         }
     }
 
@@ -651,7 +648,7 @@ public class DirContextAdapter implements DirContextOperations {
                 }
             }
         } catch (NamingException e) {
-            throw getExceptionTranslator().translate(e);
+            throw LdapUtils.convertLdapException(e);
         } finally {
             closeNamingEnumeration(attributesEnumeration);
         }
@@ -673,7 +670,7 @@ public class DirContextAdapter implements DirContextOperations {
                 try {
                     attributes[i] = (String) attribute.get(i);
                 } catch (NamingException e) {
-                    throw getExceptionTranslator().translate(e);
+                    throw LdapUtils.convertLdapException(e);
                 }
             }
         } else {
@@ -695,7 +692,7 @@ public class DirContextAdapter implements DirContextOperations {
                 try {
                     attrSet.add(attribute.get(i));
                 } catch (NamingException e) {
-                    throw getExceptionTranslator().translate(e);
+                    throw LdapUtils.convertLdapException(e);
                 }
             }
         } else {
@@ -1246,30 +1243,6 @@ public class DirContextAdapter implements DirContextOperations {
         buf.append('}');
 
         return buf.toString();
-    }
-
-    /**
-     * Get the NamingExceptionTranslator.
-     * 
-     * @return the NamingExceptionTranslator to use; if none is specified,
-     *         {@link DefaultNamingExceptionTranslator} is used.
-     */
-    public NamingExceptionTranslator getExceptionTranslator() {
-        if (exceptionTranslator == null) {
-            exceptionTranslator = new DefaultNamingExceptionTranslator();
-        }
-        return exceptionTranslator;
-    }
-
-    /**
-     * Set the NamingExceptionTranslator to use.
-     * 
-     * @param exceptionTranslator
-     *            the NamingExceptionTranslator to use.
-     */
-    public void setExceptionTranslator(
-            NamingExceptionTranslator exceptionTranslator) {
-        this.exceptionTranslator = exceptionTranslator;
     }
 
 }

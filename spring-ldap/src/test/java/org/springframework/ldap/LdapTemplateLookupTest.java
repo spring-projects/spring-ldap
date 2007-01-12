@@ -17,8 +17,6 @@
 package org.springframework.ldap;
 
 import javax.naming.Name;
-import javax.naming.NameNotFoundException;
-import javax.naming.NamingException;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
@@ -32,8 +30,6 @@ import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.support.EntryNotFoundException;
-import org.springframework.ldap.support.NamingExceptionTranslator;
 
 public class LdapTemplateLookupTest extends TestCase {
 
@@ -58,10 +54,6 @@ public class LdapTemplateLookupTest extends TestCase {
     private MockControl contextMapperControl;
 
     private ContextMapper contextMapperMock;
-
-    private MockControl exceptionTranslatorControl;
-
-    private NamingExceptionTranslator exceptionTranslatorMock;
 
     private LdapTemplate tested;
 
@@ -88,13 +80,7 @@ public class LdapTemplateLookupTest extends TestCase {
         attributesMapperMock = (AttributesMapper) attributesMapperControl
                 .getMock();
 
-        exceptionTranslatorControl = MockControl
-                .createControl(NamingExceptionTranslator.class);
-        exceptionTranslatorMock = (NamingExceptionTranslator) exceptionTranslatorControl
-                .getMock();
-
         tested = new LdapTemplate(contextSourceMock);
-        tested.setExceptionTranslator(exceptionTranslatorMock);
     }
 
     protected void tearDown() throws Exception {
@@ -114,9 +100,6 @@ public class LdapTemplateLookupTest extends TestCase {
 
         attributesMapperControl = null;
         attributesMapperMock = null;
-
-        exceptionTranslatorControl = null;
-        exceptionTranslatorMock = null;
     }
 
     protected void replay() {
@@ -125,7 +108,6 @@ public class LdapTemplateLookupTest extends TestCase {
         nameControl.replay();
         contextMapperControl.replay();
         attributesMapperControl.replay();
-        exceptionTranslatorControl.replay();
     }
 
     protected void verify() {
@@ -134,7 +116,6 @@ public class LdapTemplateLookupTest extends TestCase {
         nameControl.verify();
         contextMapperControl.verify();
         attributesMapperControl.verify();
-        exceptionTranslatorControl.verify();
     }
 
     private void expectGetReadOnlyContext() {
@@ -144,7 +125,7 @@ public class LdapTemplateLookupTest extends TestCase {
 
     // Tests for lookup(name)
 
-    public void testLookup() throws NamingException {
+    public void testLookup() throws Exception {
         expectGetReadOnlyContext();
 
         Object expected = new Object();
@@ -162,7 +143,7 @@ public class LdapTemplateLookupTest extends TestCase {
         assertSame(expected, actual);
     }
 
-    public void testLookup_String() throws NamingException {
+    public void testLookup_String() throws Exception {
         expectGetReadOnlyContext();
 
         Object expected = new Object();
@@ -180,23 +161,20 @@ public class LdapTemplateLookupTest extends TestCase {
         assertSame(expected, actual);
     }
 
-    public void testLookup_NamingException() throws NamingException {
+    public void testLookup_NamingException() throws Exception {
         expectGetReadOnlyContext();
 
-        NamingException ne = new NamingException();
+        javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
         dirContextControl.expectAndThrow(dirContextMock.lookup(nameMock), ne);
 
         dirContextMock.close();
-
-        exceptionTranslatorControl.expectAndReturn(exceptionTranslatorMock
-                .translate(ne), new EntryNotFoundException("dummy"));
 
         replay();
 
         try {
             tested.lookup(nameMock);
-            fail("EntryNotFoundException expected");
-        } catch (EntryNotFoundException expected) {
+            fail("NameNotFoundException expected");
+        } catch (NameNotFoundException expected) {
             assertTrue(true);
         }
 
@@ -251,20 +229,17 @@ public class LdapTemplateLookupTest extends TestCase {
     public void testLookup_AttributesMapper_NamingException() throws Exception {
         expectGetReadOnlyContext();
 
-        NamingException ne = new NamingException();
+        javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
         dirContextControl.expectAndThrow(
                 dirContextMock.getAttributes(nameMock), ne);
         dirContextMock.close();
-
-        exceptionTranslatorControl.expectAndReturn(exceptionTranslatorMock
-                .translate(ne), new EntryNotFoundException("dummy"));
 
         replay();
 
         try {
             tested.lookup(nameMock, attributesMapperMock);
-            fail("EntryNotFoundException expected");
-        } catch (EntryNotFoundException expected) {
+            fail("NameNotFoundException expected");
+        } catch (NameNotFoundException expected) {
             assertTrue(true);
         }
 
@@ -320,20 +295,17 @@ public class LdapTemplateLookupTest extends TestCase {
     public void testLookup_ContextMapper_NamingException() throws Exception {
         expectGetReadOnlyContext();
 
-        NameNotFoundException ne = new NameNotFoundException();
+        javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
         dirContextControl.expectAndThrow(dirContextMock.lookup(nameMock), ne);
 
         dirContextMock.close();
-
-        exceptionTranslatorControl.expectAndReturn(exceptionTranslatorMock
-                .translate(ne), new EntryNotFoundException("dummy"));
 
         replay();
 
         try {
             tested.lookup(nameMock, contextMapperMock);
-            fail("EntryNotFoundException expected");
-        } catch (EntryNotFoundException expected) {
+            fail("NameNotFoundException expected");
+        } catch (NameNotFoundException expected) {
             assertTrue(true);
         }
 

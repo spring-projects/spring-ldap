@@ -21,7 +21,6 @@ import javax.naming.Name;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.support.EntryNotFoundException;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**
@@ -93,7 +92,7 @@ public class LdapTemplateRecursiveDeleteITest extends
     protected void onTearDown() throws Exception {
         try {
             tested.unbind(DN, true);
-        } catch (EntryNotFoundException ignore) {
+        } catch (NameNotFoundException ignore) {
             // ignore
         }
     }
@@ -116,7 +115,7 @@ public class LdapTemplateRecursiveDeleteITest extends
         try {
             tested.lookup(dn);
             fail("Expected entry '" + dn + "' to be non-existent");
-        } catch (EntryNotFoundException expected) {
+        } catch (NameNotFoundException expected) {
             // expected
         }
     }

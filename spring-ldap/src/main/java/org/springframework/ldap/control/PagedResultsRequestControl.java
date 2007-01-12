@@ -25,7 +25,6 @@ import javax.naming.directory.DirContext;
 import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
 
-import org.springframework.ldap.support.UncategorizedLdapException;
 import org.springframework.util.ReflectionUtils;
 
 import com.sun.jndi.ldap.ctl.PagedResultsControl;
@@ -103,7 +102,7 @@ public class PagedResultsRequestControl extends
                 return new PagedResultsControl(pageSize);
             }
         } catch (IOException e) {
-            throw new UncategorizedLdapException(
+            throw new CreateControlFailedException(
                     "Error creating PagedResultsControl", e);
         }
     }

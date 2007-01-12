@@ -20,11 +20,9 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 
-
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.support.EntryNotFoundException;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**
@@ -110,8 +108,8 @@ public class LdapTemplateBindUnbindITest extends
     private void verifyCleanup() {
         try {
             tested.lookup(DN);
-            fail("EntryNotFoundException expected");
-        } catch (EntryNotFoundException expected) {
+            fail("NameNotFoundException expected");
+        } catch (NameNotFoundException expected) {
             assertTrue(true);
         }
     }

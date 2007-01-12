@@ -20,10 +20,7 @@ import java.util.List;
 
 import javax.naming.Binding;
 import javax.naming.Name;
-import javax.naming.NameNotFoundException;
 import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.PartialResultException;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
@@ -44,8 +41,6 @@ import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.NameClassPairCallbackHandler;
 import org.springframework.ldap.core.SearchExecutor;
-import org.springframework.ldap.support.EntryNotFoundException;
-import org.springframework.ldap.support.NamingExceptionTranslator;
 
 public class LdapTemplateTest extends TestCase {
 
@@ -78,10 +73,6 @@ public class LdapTemplateTest extends TestCase {
     private MockControl contextMapperControl;
 
     private ContextMapper contextMapperMock;
-
-    private MockControl exceptionTranslatorControl;
-
-    private NamingExceptionTranslator exceptionTranslatorMock;
 
     private MockControl contextExecutorControl;
 
@@ -131,11 +122,6 @@ public class LdapTemplateTest extends TestCase {
         attributesMapperMock = (AttributesMapper) attributesMapperControl
                 .getMock();
 
-        exceptionTranslatorControl = MockControl
-                .createControl(NamingExceptionTranslator.class);
-        exceptionTranslatorMock = (NamingExceptionTranslator) exceptionTranslatorControl
-                .getMock();
-
         contextExecutorControl = MockControl
                 .createControl(ContextExecutor.class);
         contextExecutorMock = (ContextExecutor) contextExecutorControl
@@ -150,7 +136,6 @@ public class LdapTemplateTest extends TestCase {
                 .getMock();
 
         tested = new LdapTemplate(contextSourceMock);
-        tested.setExceptionTranslator(exceptionTranslatorMock);
     }
 
     protected void tearDown() throws Exception {
@@ -177,9 +162,6 @@ public class LdapTemplateTest extends TestCase {
         attributesMapperControl = null;
         attributesMapperMock = null;
 
-        exceptionTranslatorControl = null;
-        exceptionTranslatorMock = null;
-
         contextExecutorControl = null;
         contextExecutorMock = null;
 
@@ -198,7 +180,6 @@ public class LdapTemplateTest extends TestCase {
         handlerControl.replay();
         contextMapperControl.replay();
         attributesMapperControl.replay();
-        exceptionTranslatorControl.replay();
         contextExecutorControl.replay();
         searchExecutorControl.replay();
         dirContextProcessorControl.replay();
@@ -212,7 +193,6 @@ public class LdapTemplateTest extends TestCase {
         handlerControl.verify();
         contextMapperControl.verify();
         attributesMapperControl.verify();
-        exceptionTranslatorControl.verify();
         contextExecutorControl.verify();
         searchExecutorControl.verify();
         dirContextProcessorControl.verify();
@@ -228,7 +208,7 @@ public class LdapTemplateTest extends TestCase {
                 .getReadOnlyContext(), dirContextMock);
     }
 
-    public void testSearch_CallbackHandler() throws NamingException {
+    public void testSearch_CallbackHandler() throws Exception {
         expectGetReadOnlyContext();
 
         SearchControls controls = new SearchControls();
@@ -251,7 +231,7 @@ public class LdapTemplateTest extends TestCase {
         verify();
     }
 
-    public void testSearch_StringBase_CallbackHandler() throws NamingException {
+    public void testSearch_StringBase_CallbackHandler() throws Exception {
         expectGetReadOnlyContext();
 
         SearchControls controls = new SearchControls();
@@ -276,7 +256,7 @@ public class LdapTemplateTest extends TestCase {
     }
 
     private void setupStringSearchAndNamingEnumeration(SearchControls controls,
-            SearchResult searchResult) throws NamingException {
+            SearchResult searchResult) throws Exception {
         dirContextControl.setDefaultMatcher(new SearchControlsMatcher());
         dirContextControl.expectAndReturn(dirContextMock.search(
                 DEFAULT_BASE_STRING, "(ou=somevalue)", controls),
@@ -291,7 +271,7 @@ public class LdapTemplateTest extends TestCase {
         namingEnumerationMock.close();
     }
 
-    public void testSearch_CallbackHandler_Defaults() throws NamingException {
+    public void testSearch_CallbackHandler_Defaults() throws Exception {
         expectGetReadOnlyContext();
 
         SearchControls controls = new SearchControls();
@@ -314,8 +294,7 @@ public class LdapTemplateTest extends TestCase {
         verify();
     }
 
-    public void testSearch_String_CallbackHandler_Defaults()
-            throws NamingException {
+    public void testSearch_String_CallbackHandler_Defaults() throws Exception {
         expectGetReadOnlyContext();
 
         SearchControls controls = new SearchControls();
@@ -339,7 +318,7 @@ public class LdapTemplateTest extends TestCase {
     }
 
     private void setupSearchAndNamingEnumeration(SearchControls controls,
-            SearchResult searchResult) throws NamingException {
+            SearchResult searchResult) throws Exception {
         dirContextControl.setDefaultMatcher(new SearchControlsMatcher());
         dirContextControl.expectAndReturn(dirContextMock.search(nameMock,
                 "(ou=somevalue)", controls), namingEnumerationMock);
@@ -353,7 +332,7 @@ public class LdapTemplateTest extends TestCase {
         namingEnumerationMock.close();
     }
 
-    public void testSearch_NameNotFoundException() throws NamingException {
+    public void testSearch_NameNotFoundException() throws Exception {
         expectGetReadOnlyContext();
 
         SearchControls controls = new SearchControls();
@@ -361,8 +340,9 @@ public class LdapTemplateTest extends TestCase {
         controls.setReturningObjFlag(false);
 
         dirContextControl.setDefaultMatcher(new SearchControlsMatcher());
+        javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
         dirContextControl.expectAndThrow(dirContextMock.search(nameMock,
-                "(ou=somevalue)", controls), new NameNotFoundException());
+                "(ou=somevalue)", controls), ne);
 
         dirContextMock.close();
 
@@ -373,7 +353,7 @@ public class LdapTemplateTest extends TestCase {
         verify();
     }
 
-    public void testSearch_NamingException() throws NamingException {
+    public void testSearch_NamingException() throws Exception {
         expectGetReadOnlyContext();
 
         SearchControls controls = new SearchControls();
@@ -381,31 +361,26 @@ public class LdapTemplateTest extends TestCase {
         controls.setReturningObjFlag(false);
 
         dirContextControl.setDefaultMatcher(new SearchControlsMatcher());
-        NamingException ne = new NamingException();
+        javax.naming.LimitExceededException ne = new javax.naming.LimitExceededException();
         dirContextControl.expectAndThrow(dirContextMock.search(nameMock,
                 "(ou=somevalue)", controls), ne);
 
         dirContextMock.close();
 
-        EntryNotFoundException expectedException = new EntryNotFoundException(
-                "dummy");
-        exceptionTranslatorControl.expectAndReturn(exceptionTranslatorMock
-                .translate(ne), expectedException);
-
         replay();
 
         try {
             tested.search(nameMock, "(ou=somevalue)", handlerMock);
-            fail("EntryNotFoundException expected");
-        } catch (EntryNotFoundException expected) {
-            assertSame(expectedException, expected);
+            fail("LimitExceededException expected");
+        } catch (LimitExceededException expected) {
+            // expected
         }
 
         verify();
     }
 
     public void testSearch_CallbackHandler_DirContextProcessor()
-            throws NamingException {
+            throws Exception {
         expectGetReadOnlyContext();
 
         SearchControls controls = new SearchControls();
@@ -434,7 +409,7 @@ public class LdapTemplateTest extends TestCase {
     }
 
     public void testSearch_String_CallbackHandler_DirContextProcessor()
-            throws NamingException {
+            throws Exception {
         expectGetReadOnlyContext();
 
         SearchControls controls = new SearchControls();
@@ -463,7 +438,7 @@ public class LdapTemplateTest extends TestCase {
     }
 
     public void testSearch_String_AttributesMapper_DirContextProcessor()
-            throws NamingException {
+            throws Exception {
         expectGetReadOnlyContext();
 
         SearchControls controls = new SearchControls();
@@ -497,7 +472,7 @@ public class LdapTemplateTest extends TestCase {
     }
 
     public void testSearch_Name_AttributesMapper_DirContextProcessor()
-            throws NamingException {
+            throws Exception {
         expectGetReadOnlyContext();
 
         SearchControls controls = new SearchControls();
@@ -598,8 +573,7 @@ public class LdapTemplateTest extends TestCase {
         assertSame(expectedResult, list.get(0));
     }
 
-    public void testSearch_AttributesMapper_ReturningAttrs()
-            throws NamingException {
+    public void testSearch_AttributesMapper_ReturningAttrs() throws Exception {
         expectGetReadOnlyContext();
 
         String[] attrs = new String[0];
@@ -633,7 +607,7 @@ public class LdapTemplateTest extends TestCase {
     }
 
     public void testSearch_String_AttributesMapper_ReturningAttrs()
-            throws NamingException {
+            throws Exception {
         expectGetReadOnlyContext();
 
         String[] attrs = new String[0];
@@ -666,7 +640,7 @@ public class LdapTemplateTest extends TestCase {
         assertSame(expectedResult, list.get(0));
     }
 
-    public void testSearch_AttributesMapper() throws NamingException {
+    public void testSearch_AttributesMapper() throws Exception {
         expectGetReadOnlyContext();
 
         SearchControls controls = new SearchControls();
@@ -697,7 +671,7 @@ public class LdapTemplateTest extends TestCase {
         assertSame(expectedResult, list.get(0));
     }
 
-    public void testSearch_String_AttributesMapper() throws NamingException {
+    public void testSearch_String_AttributesMapper() throws Exception {
         expectGetReadOnlyContext();
 
         SearchControls controls = new SearchControls();
@@ -728,7 +702,7 @@ public class LdapTemplateTest extends TestCase {
         assertSame(expectedResult, list.get(0));
     }
 
-    public void testSearch_AttributesMapper_Default() throws NamingException {
+    public void testSearch_AttributesMapper_Default() throws Exception {
         expectGetReadOnlyContext();
 
         SearchControls controls = new SearchControls();
@@ -759,8 +733,7 @@ public class LdapTemplateTest extends TestCase {
         assertSame(expectedResult, list.get(0));
     }
 
-    public void testSearch_String_AttributesMapper_Default()
-            throws NamingException {
+    public void testSearch_String_AttributesMapper_Default() throws Exception {
         expectGetReadOnlyContext();
 
         SearchControls controls = new SearchControls();
@@ -791,7 +764,7 @@ public class LdapTemplateTest extends TestCase {
         assertSame(expectedResult, list.get(0));
     }
 
-    public void testSearch_ContextMapper() throws NamingException {
+    public void testSearch_ContextMapper() throws Exception {
         expectGetReadOnlyContext();
 
         SearchControls controls = new SearchControls();
@@ -822,8 +795,7 @@ public class LdapTemplateTest extends TestCase {
         assertSame(expectedResult, list.get(0));
     }
 
-    public void testSearch_ContextMapper_ReturningAttrs()
-            throws NamingException {
+    public void testSearch_ContextMapper_ReturningAttrs() throws Exception {
         expectGetReadOnlyContext();
 
         String[] attrs = new String[0];
@@ -858,7 +830,7 @@ public class LdapTemplateTest extends TestCase {
     }
 
     public void testSearch_String_ContextMapper_ReturningAttrs()
-            throws NamingException {
+            throws Exception {
         expectGetReadOnlyContext();
 
         String[] attrs = new String[0];
@@ -892,7 +864,7 @@ public class LdapTemplateTest extends TestCase {
         assertSame(expectedResult, list.get(0));
     }
 
-    public void testSearch_String_ContextMapper() throws NamingException {
+    public void testSearch_String_ContextMapper() throws Exception {
         expectGetReadOnlyContext();
 
         SearchControls controls = new SearchControls();
@@ -923,7 +895,7 @@ public class LdapTemplateTest extends TestCase {
         assertSame(expectedResult, list.get(0));
     }
 
-    public void testSearch_ContextMapper_Default() throws NamingException {
+    public void testSearch_ContextMapper_Default() throws Exception {
         expectGetReadOnlyContext();
 
         SearchControls controls = new SearchControls();
@@ -954,8 +926,7 @@ public class LdapTemplateTest extends TestCase {
         assertSame(expectedResult, list.get(0));
     }
 
-    public void testSearch_String_ContextMapper_Default()
-            throws NamingException {
+    public void testSearch_String_ContextMapper_Default() throws Exception {
         expectGetReadOnlyContext();
 
         SearchControls controls = new SearchControls();
@@ -1085,7 +1056,7 @@ public class LdapTemplateTest extends TestCase {
     }
 
     public void testSearch_String_SearchControls_AttributesMapper()
-            throws NamingException {
+            throws Exception {
         expectGetReadOnlyContext();
 
         SearchControls controls = new SearchControls();
@@ -1117,7 +1088,7 @@ public class LdapTemplateTest extends TestCase {
     }
 
     public void testSearch_Name_SearchControls_AttributesMapper()
-            throws NamingException {
+            throws Exception {
         expectGetReadOnlyContext();
 
         SearchControls controls = new SearchControls();
@@ -1183,11 +1154,8 @@ public class LdapTemplateTest extends TestCase {
 
         ModificationItem[] mods = new ModificationItem[0];
         dirContextMock.modifyAttributes(nameMock, mods);
-        NamingException ne = new NamingException();
+        javax.naming.LimitExceededException ne = new javax.naming.LimitExceededException();
         dirContextControl.setThrowable(ne);
-
-        exceptionTranslatorControl.expectAndReturn(exceptionTranslatorMock
-                .translate(ne), new EntryNotFoundException("dummy"));
 
         dirContextMock.close();
 
@@ -1195,8 +1163,8 @@ public class LdapTemplateTest extends TestCase {
 
         try {
             tested.modifyAttributes(nameMock, mods);
-            fail("EntryNotFoundException expected");
-        } catch (EntryNotFoundException expected) {
+            fail("LimitExceededException expected");
+        } catch (LimitExceededException expected) {
             assertTrue(true);
         }
 
@@ -1242,19 +1210,16 @@ public class LdapTemplateTest extends TestCase {
         Object expectedObject = new Object();
         BasicAttributes expectedAttributes = new BasicAttributes();
         dirContextMock.bind(nameMock, expectedObject, expectedAttributes);
-        NamingException ne = new NamingException();
+        javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
         dirContextControl.setThrowable(ne);
         dirContextMock.close();
-
-        exceptionTranslatorControl.expectAndReturn(exceptionTranslatorMock
-                .translate(ne), new EntryNotFoundException("dummy"));
 
         replay();
 
         try {
             tested.bind(nameMock, expectedObject, expectedAttributes);
-            fail("EntryNotFoundException expected");
-        } catch (EntryNotFoundException expected) {
+            fail("NameNotFoundException expected");
+        } catch (NameNotFoundException expected) {
             assertTrue(true);
         }
 
@@ -1359,7 +1324,7 @@ public class LdapTemplateTest extends TestCase {
         verify();
     }
 
-    public void testRebind() throws NamingException {
+    public void testRebind() throws Exception {
         expectGetReadWriteContext();
 
         Object expectedObject = new Object();
@@ -1375,7 +1340,7 @@ public class LdapTemplateTest extends TestCase {
         verify();
     }
 
-    public void testRebind_String() throws NamingException {
+    public void testRebind_String() throws Exception {
         expectGetReadWriteContext();
 
         Object expectedObject = new Object();
@@ -1396,19 +1361,16 @@ public class LdapTemplateTest extends TestCase {
         expectGetReadWriteContext();
 
         dirContextMock.unbind(nameMock);
-        NamingException ne = new NamingException();
+        javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
         dirContextControl.setThrowable(ne);
         dirContextMock.close();
-
-        exceptionTranslatorControl.expectAndReturn(exceptionTranslatorMock
-                .translate(ne), new EntryNotFoundException("dummy"));
 
         replay();
 
         try {
             tested.unbind(nameMock);
-            fail("EntryNotFoundException expected");
-        } catch (EntryNotFoundException expected) {
+            fail("NameNotFoundException expected");
+        } catch (NameNotFoundException expected) {
             assertTrue(true);
         }
 
@@ -1436,21 +1398,18 @@ public class LdapTemplateTest extends TestCase {
     public void testExecuteReadOnly_NamingException() throws Exception {
         expectGetReadOnlyContext();
 
-        NamingException ne = new NamingException();
+        javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
         contextExecutorControl.expectAndThrow(contextExecutorMock
                 .executeWithContext(dirContextMock), ne);
 
         dirContextMock.close();
 
-        exceptionTranslatorControl.expectAndReturn(exceptionTranslatorMock
-                .translate(ne), new EntryNotFoundException("dummy"));
-
         replay();
 
         try {
             tested.executeReadOnly(contextExecutorMock);
-            fail("EntryNotFoundException expected");
-        } catch (EntryNotFoundException expected) {
+            fail("NameNotFoundException expected");
+        } catch (NameNotFoundException expected) {
             assertTrue(true);
         }
 
@@ -1478,21 +1437,18 @@ public class LdapTemplateTest extends TestCase {
     public void testExecuteReadWrite_NamingException() throws Exception {
         expectGetReadWriteContext();
 
-        NamingException ne = new NamingException();
+        javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
         contextExecutorControl.expectAndThrow(contextExecutorMock
                 .executeWithContext(dirContextMock), ne);
 
         dirContextMock.close();
 
-        exceptionTranslatorControl.expectAndReturn(exceptionTranslatorMock
-                .translate(ne), new EntryNotFoundException("dummy"));
-
         replay();
 
         try {
             tested.executeReadWrite(contextExecutorMock);
-            fail("EntryNotFoundException expected");
-        } catch (EntryNotFoundException expected) {
+            fail("NameNotFoundException expected");
+        } catch (NameNotFoundException expected) {
             assertTrue(true);
         }
 
@@ -1536,23 +1492,20 @@ public class LdapTemplateTest extends TestCase {
 
         dirContextProcessorMock.preProcess(dirContextMock);
 
-        NamingException ne = new NamingException();
+        javax.naming.LimitExceededException ne = new javax.naming.LimitExceededException();
         searchExecutorControl.expectAndThrow(searchExecutorMock
                 .executeSearch(dirContextMock), ne);
 
         dirContextProcessorMock.postProcess(dirContextMock);
         dirContextMock.close();
 
-        exceptionTranslatorControl.expectAndReturn(exceptionTranslatorMock
-                .translate(ne), new EntryNotFoundException("dummy"));
-
         replay();
 
         try {
             tested.search(searchExecutorMock, handlerMock,
                     dirContextProcessorMock);
-            fail("EntryNotFoundException expected");
-        } catch (EntryNotFoundException expected) {
+            fail("LimitExceededException expected");
+        } catch (LimitExceededException expected) {
             assertTrue(true);
         }
 
@@ -1589,21 +1542,18 @@ public class LdapTemplateTest extends TestCase {
     public void testDoSearch_NamingException() throws Exception {
         expectGetReadOnlyContext();
 
-        NamingException ne = new NamingException();
+        javax.naming.LimitExceededException ne = new javax.naming.LimitExceededException();
         searchExecutorControl.expectAndThrow(searchExecutorMock
                 .executeSearch(dirContextMock), ne);
 
         dirContextMock.close();
 
-        exceptionTranslatorControl.expectAndReturn(exceptionTranslatorMock
-                .translate(ne), new EntryNotFoundException("dummy"));
-
         replay();
 
         try {
             tested.search(searchExecutorMock, handlerMock);
-            fail("EntryNotFoundException expected");
-        } catch (EntryNotFoundException expected) {
+            fail("LimitExceededException expected");
+        } catch (LimitExceededException expected) {
             assertTrue(true);
         }
 
@@ -1617,22 +1567,19 @@ public class LdapTemplateTest extends TestCase {
         searchExecutorControl.expectAndReturn(searchExecutorMock
                 .executeSearch(dirContextMock), namingEnumerationMock);
 
-        NamingException ne = new NamingException();
+        javax.naming.LimitExceededException ne = new javax.naming.LimitExceededException();
         namingEnumerationControl.expectAndThrow(
                 namingEnumerationMock.hasMore(), ne);
         namingEnumerationMock.close();
 
         dirContextMock.close();
 
-        exceptionTranslatorControl.expectAndReturn(exceptionTranslatorMock
-                .translate(ne), new EntryNotFoundException("dummy"));
-
         replay();
 
         try {
             tested.search(searchExecutorMock, handlerMock);
-            fail("EntryNotFoundException expected");
-        } catch (EntryNotFoundException expected) {
+            fail("LimitExceededException expected");
+        } catch (LimitExceededException expected) {
             assertTrue(true);
         }
 
@@ -1643,7 +1590,7 @@ public class LdapTemplateTest extends TestCase {
         expectGetReadOnlyContext();
 
         searchExecutorControl.expectAndThrow(searchExecutorMock
-                .executeSearch(dirContextMock), new NameNotFoundException());
+                .executeSearch(dirContextMock), new javax.naming.NameNotFoundException());
         dirContextMock.close();
 
         replay();
@@ -1653,34 +1600,31 @@ public class LdapTemplateTest extends TestCase {
         verify();
     }
 
-    public void testSearch_PartialResult_IgnoreNotSet() throws NamingException {
+    public void testSearch_PartialResult_IgnoreNotSet() throws Exception {
         expectGetReadOnlyContext();
 
         dirContextProcessorMock.preProcess(dirContextMock);
 
-        PartialResultException ex = new PartialResultException();
+        javax.naming.PartialResultException ex = new javax.naming.PartialResultException();
         searchExecutorControl.expectAndThrow(searchExecutorMock
                 .executeSearch(dirContextMock), ex);
         dirContextProcessorMock.postProcess(dirContextMock);
         dirContextMock.close();
-
-        exceptionTranslatorControl.expectAndReturn(exceptionTranslatorMock
-                .translate(ex), new EntryNotFoundException("dummy"));
 
         replay();
 
         try {
             tested.search(searchExecutorMock, handlerMock,
                     dirContextProcessorMock);
-            fail("EntryNotFoundException expected");
-        } catch (EntryNotFoundException expected) {
+            fail("PartialResultException expected");
+        } catch (PartialResultException expected) {
             assertTrue(true);
         }
 
         verify();
     }
 
-    public void testSearch_PartialResult_IgnoreSet() throws NamingException {
+    public void testSearch_PartialResult_IgnoreSet() throws Exception {
         tested.setIgnorePartialResultException(true);
 
         expectGetReadOnlyContext();
@@ -1688,7 +1632,8 @@ public class LdapTemplateTest extends TestCase {
         dirContextProcessorMock.preProcess(dirContextMock);
 
         searchExecutorControl.expectAndThrow(searchExecutorMock
-                .executeSearch(dirContextMock), new PartialResultException());
+                .executeSearch(dirContextMock),
+                new javax.naming.PartialResultException());
 
         dirContextProcessorMock.postProcess(dirContextMock);
         dirContextMock.close();

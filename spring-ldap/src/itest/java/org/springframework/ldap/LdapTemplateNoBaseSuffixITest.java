@@ -19,7 +19,6 @@ package org.springframework.ldap;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.CountNameClassPairCallbackHandler;
-import org.springframework.ldap.support.EntryNotFoundException;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**
@@ -88,8 +87,8 @@ public class LdapTemplateNoBaseSuffixITest extends
         try {
             tested
                     .lookup("cn=Some Person4, ou=company1, c=Sweden, dc=jayway, dc=se");
-            fail("EntryNotFoundException expected");
-        } catch (EntryNotFoundException expected) {
+            fail("NameNotFoundException expected");
+        } catch (NameNotFoundException expected) {
             assertTrue(true);
         }
     }

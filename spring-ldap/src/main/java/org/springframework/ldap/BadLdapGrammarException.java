@@ -16,16 +16,13 @@
 
 package org.springframework.ldap;
 
-import org.springframework.dao.InvalidDataAccessResourceUsageException;
-
 /**
  * Thrown to indicate that an invalid value has been supplied to an LDAP
  * operation. This could be an invalid filter or dn.
  * 
  * @author Mattias Arthursson
  */
-public class BadLdapGrammarException extends
-        InvalidDataAccessResourceUsageException {
+public class BadLdapGrammarException extends NamingException {
 
     private static final long serialVersionUID = 961612585331409470L;
 
