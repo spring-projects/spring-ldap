@@ -154,6 +154,10 @@ public class PersonDaoImpl implements PersonDao {
         <para>commons-collections (tools for working with collections, used
         internally)</para>
       </listitem>
+
+      <listitem>
+        <para>ldapbp (Sun LDAP Boosetr Pack, for required controls)</para>
+      </listitem>
     </itemizedlist>
 
     <para>If your application is wired up using the Spring ApplicationContext,
@@ -181,7 +185,7 @@ public class PersonDaoImpl implements PersonDao {
     <informalexample>
       <programlisting>&lt;beans&gt;
    ...
-   &lt;bean id="contextSource" class="org.springframework.ldap.support.LdapContextSource"&gt;
+   &lt;bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource"&gt;
       &lt;property name="url" value="ldap://localhost:389" /&gt;
       &lt;property name="base" value="dc=example,dc=com" /&gt;
       &lt;property name="userDn" value="cn=Manager" /&gt;
@@ -209,14 +213,35 @@ public class PersonDaoImpl implements PersonDao {
     that the dependency is needed to compile the package but is optionally
     needed at runtime (depending on your use of the package). For example, use
     of Spring LDAP together with Acegi Security entails use of the
-    <literal>org.acegisecurity</literal> package. Cyclic package dependencies
-    are noted with <emphasis>(cycle)</emphasis>. These are candidates for
-    removal in future releases.</para>
+    <literal>org.acegisecurity</literal> package.</para>
+
+    <figure>
+      <title>Spring LDAP package structure</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="../images/org.springframework.ldap.png" format="png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
 
     <sect2 id="ldap">
       <title>org.springframework.ldap</title>
 
-      <para>The <emphasis>ldap</emphasis> package contains the central
+      <para>The <emphasis>ldap</emphasis> package contains the exceptions of
+      the library. These exceptions form an unchecked hierarchy that mirrors
+      the NamingException hierarchy.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Dependencies: spring-core, spring-dao</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2 id="ldap.core">
+      <title>org.springframework.ldap.core</title>
+
+      <para>The <emphasis>ldap.core</emphasis> package contains the central
       abstractions of the library. These abstractions include
       AuthenticationSource, ContextSource, DirContextProcessor, and
       NameClassPairCallbackHandler. This package also contains the central
@@ -224,8 +249,23 @@ public class PersonDaoImpl implements PersonDao {
 
       <itemizedlist spacing="compact">
         <listitem>
-          <para>Dependencies: ldap.support (cycle), spring-beans, spring-dao,
-          commons-lang, commons-logging</para>
+          <para>Dependencies: ldap, ldap.support, spring-beans, spring-dao,
+          commons-collections, commons-lang, commons-logging</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2 id="ldap.core.support">
+      <title>org.springframework.ldap.core.support</title>
+
+      <para>The <emphasis>ldap.core.support</emphasis> package contains
+      supporting implementations of the central interfaces as well as the
+      DirContextAdapter abstraction.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Dependencies: ldap.core, ldap.support, spring-core,
+          spring-beans, commons-lang, commons-logging</para>
         </listitem>
       </itemizedlist>
     </sect2>
@@ -233,75 +273,61 @@ public class PersonDaoImpl implements PersonDao {
     <sect2 id="ldap.support">
       <title>org.springframework.ldap.support</title>
 
-      <para>The <emphasis>support</emphasis> package contains supporting
+      <para>The <emphasis>ldap.support</emphasis> package contains supporting
       implementations of the central interfaces as well as the
       DirContextAdapter abstraction.</para>
 
       <itemizedlist spacing="compact">
         <listitem>
-          <para>Dependencies: ldap,
-          ldap.util, spring-core, spring-beans, commons-lang,
-          commons-collections, commons-logging</para>
-        </listitem>
-      </itemizedlist>
-    </sect2>
-
-    <sect2 id="ldap.support.authentication">
-      <title>org.springframework.ldap.support.authentication</title>
-
-      <para>The <emphasis>support.authentication</emphasis> package contains
-      an implementation of the AuthenticationSource interface that can be used
-      with <ulink url="http://www.acegisecurity.org/">Acegi
-      Security</ulink>.</para>
-
-      <itemizedlist spacing="compact">
-        <listitem>
-          <para>Dependencies: ldap, acegi-security (optional), spring-beans,
-          commons-lang, commons-logging</para>
-        </listitem>
-      </itemizedlist>
-    </sect2>
-
-    <sect2 id="ldap.support.control">
-      <title>org.springframework.ldap.support.control</title>
-
-      <para>The <emphasis>support.control</emphasis> package contains an
-      abstract implementation of the DirContextProcessor interface that can be
-      used as a basis for processing RequestControls and ResponseControls.
-      There is also a concrete implementation that handles paged search
-      results. The <ulink url="http://java.sun.com/products/jndi/">LDAP
-      Booster Pack</ulink> is used to get support for controls.</para>
-
-      <itemizedlist spacing="compact">
-        <listitem>
-          <para>Dependencies: ldap, LDAP booster pack, spring-core,
+          <para>Dependencies: ldap, spring-core, spring-dao,
           commons-logging</para>
         </listitem>
       </itemizedlist>
     </sect2>
 
-    <sect2 id="ldap.support.filter">
-      <title>org.springframework.ldap.support.filter</title>
+    <sect2 id="ldap.authentication">
+      <title>org.springframework.ldap.authentication</title>
 
-      <para>The <emphasis>support.filter</emphasis> package contains the
-      Filter abstraction and several implementations of it.</para>
+      <para>The <emphasis>ldap.authentication</emphasis> package contains an
+      implementation of the AuthenticationSource interface that can be used
+      with <ulink url="http://www.acegisecurity.org/">Acegi Security</ulink>,
+      as well as related helper classes.</para>
 
       <itemizedlist spacing="compact">
         <listitem>
-          <para>Dependencies: ldap.support, commons-lang</para>
+          <para>Dependencies: ldap.core, acegi-security (optional),
+          spring-beans, commons-lang, commons-logging</para>
         </listitem>
       </itemizedlist>
     </sect2>
 
-    <sect2 id="ldap.util">
-      <title>org.springframework.ldap.util</title>
+    <sect2 id="ldap.control">
+      <title>org.springframework.ldap.control</title>
 
-      <para>The <emphasis>util</emphasis> package contains utility
-      classes that are used internally.</para>
+      <para>The <emphasis>ldap.control</emphasis> package contains an abstract
+      implementation of the DirContextProcessor interface that can be used as
+      a basis for processing RequestControls and ResponseControls. There is
+      also a concrete implementation that handles paged search results. The
+      <ulink url="http://java.sun.com/products/jndi/">LDAP Booster
+      Pack</ulink> is used to get support for controls.</para>
 
       <itemizedlist spacing="compact">
         <listitem>
-          <para>Dependencies: none</para>
+          <para>Dependencies: ldap.core, ldap.support, LDAP booster pack,
+          spring-core, commons-lang, commons-logging</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2 id="ldap.filter">
+      <title>org.springframework.ldap.filter</title>
+
+      <para>The <emphasis>ldap.filter</emphasis> package contains the Filter
+      abstraction and several implementations of it.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Dependencies: ldap.core, commons-lang</para>
         </listitem>
       </itemizedlist>
     </sect2>

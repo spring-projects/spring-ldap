@@ -17,8 +17,8 @@
 	<bookinfo>
 		<title>Spring LDAP</title>
 		<subtitle>Reference Documentation</subtitle>
-		<releaseinfo>Version 1.1.2</releaseinfo>
-		<pubdate>December 2006</pubdate>
+		<releaseinfo>Version 1.2-dev</releaseinfo>
+		<pubdate>Sometime 2007</pubdate>
 		<authorgroup>
 			<author>
 				<firstname>Mattias</firstname>

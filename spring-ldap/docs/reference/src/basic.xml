@@ -99,7 +99,7 @@ public class PersonDaoImpl implements PersonDao {
     <title>Building Dynamic Filters</title>
 
     <para>We can build dynamic filters to use in searches, using the classes
-    from the <literal>org.springframework.ldap.support.filter</literal>
+    from the <literal>org.springframework.ldap.filter</literal>
     package. Let's say that we want the following filter:
     <literal>(&amp;(objectclass=person)(sn=?))</literal>, where we want the
     <literal>?</literal> to be replaced with the value of the parameter
@@ -177,7 +177,7 @@ filter.and(new WhitespaceWildcardsFilter("cn", cn));</programlisting>
 
       <programlisting>package com.example.dao;
 
-import org.springframework.ldap.support.DistinguishedName;
+import org.springframework.ldap.core.support.DistinguishedName;
 import javax.naming.Name;
 
 public class PersonDaoImpl implements PersonDao {

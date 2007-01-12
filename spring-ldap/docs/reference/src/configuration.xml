@@ -71,14 +71,14 @@
 
           <programlisting>&lt;beans&gt;
    ...
-   &lt;bean id="contextSource" class="org.springframework.ldap.support.LdapContextSource"&gt;
+   &lt;bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource"&gt;
       &lt;property name="url" value="ldap://localhost:389" /&gt;
       &lt;property name="base" value="dc=example,dc=com" /&gt;
       &lt;property name="acegiAuthenticationSource" ref="authenticationSource" /&gt;
    &lt;/bean&gt;
 
    &lt;bean id="acegiAuthenticationSource"
-      class="org.springframework.ldap.support.authentication.AcegiAuthenticationSource" /&gt;
+      class="org.springframework.ldap.authentication.AcegiAuthenticationSource" /&gt;
    ...
 &lt;/beans&gt;</programlisting>
         </example>
@@ -114,21 +114,21 @@
 
           <programlisting>&lt;beans&gt;
    ...
-   &lt;bean id="contextSource" class="org.springframework.ldap.support.LdapContextSource"&gt;
+   &lt;bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource"&gt;
       &lt;property name="url" value="ldap://localhost:389" /&gt;
       &lt;property name="base" value="dc=example,dc=com" /&gt;
       &lt;property name="authenticationSource" ref="authenticationSource" /&gt;
    &lt;/bean&gt;
 
    &lt;bean id="authenticationSource"
-      class="org.springframework.ldap.support.DefaultValuesAuthenticationSourceDecorator"&gt;
+      class="org.springframework.ldap.authentication.DefaultValuesAuthenticationSourceDecorator"&gt;
       &lt;property name="target" ref="acegiAuthenticationSource" /&gt;
       &lt;property name="defaultUser" value="cn=myDefaultUser" /&gt;
       &lt;property name="defaultPassword" value="pass" /&gt;
    &lt;/bean&gt;
 
    &lt;bean id="acegiAuthenticationSource"
-      class="org.springframework.ldap.support.authentication.AcegiAuthenticationSource" /&gt;
+      class="org.springframework.ldap.authentication.AcegiAuthenticationSource" /&gt;
    ...
 &lt;/beans&gt;</programlisting>
         </example>
