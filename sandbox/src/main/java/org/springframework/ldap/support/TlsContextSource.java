@@ -12,7 +12,7 @@ import javax.naming.ldap.StartTlsResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.support.LdapContextSource;
+import org.springframework.ldap.core.support.LdapContextSource;
 
 /**
  * ContextSource implementation which overrides setupAuthenticatedEnvironment to

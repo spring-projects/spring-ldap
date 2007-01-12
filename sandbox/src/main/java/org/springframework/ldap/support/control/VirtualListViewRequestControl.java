@@ -143,7 +143,7 @@ public class VirtualListViewRequestControl implements DirContextProcessor {
     }
 
     /*
-     * @see org.springframework.ldap.support.control.AbstractRequestControlDirContextProcessor#createRequestControl()
+     * @see org.springframework.ldap.control.AbstractRequestControlDirContextProcessor#createRequestControl()
      */
     public Control createRequestControl() {
         try {

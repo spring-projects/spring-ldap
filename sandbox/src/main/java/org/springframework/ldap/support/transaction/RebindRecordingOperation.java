@@ -19,8 +19,8 @@ import javax.naming.Name;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.support.DirContextAdapter;
 
 /**
  * A {@link CompensatingTransactionRecordingOperation} keeping track of a rebind

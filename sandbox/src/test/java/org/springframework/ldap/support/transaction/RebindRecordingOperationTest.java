@@ -3,9 +3,9 @@ package org.springframework.ldap.support.transaction;
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
+import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.support.DirContextAdapter;
-import org.springframework.ldap.support.DistinguishedName;
 
 public class RebindRecordingOperationTest extends TestCase {
     private MockControl ldapOperationsControl;

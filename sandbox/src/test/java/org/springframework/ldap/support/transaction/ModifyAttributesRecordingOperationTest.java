@@ -12,8 +12,8 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 import org.springframework.ldap.core.AttributesMapper;
+import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.support.DistinguishedName;
 
 public class ModifyAttributesRecordingOperationTest extends TestCase {
     private MockControl ldapOperationsControl;

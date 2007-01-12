@@ -19,8 +19,8 @@ import javax.naming.Name;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.support.DirContextOperations;
 
 /**
  * A {@link CompensatingTransactionRollbackOperation} to rollback a rebind

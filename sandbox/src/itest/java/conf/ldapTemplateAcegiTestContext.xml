@@ -12,15 +12,15 @@
 	</bean>
 
 	<bean id="contextSource"
-		class="org.springframework.ldap.support.LdapContextSource">
+		class="org.springframework.ldap.core.support.LdapContextSource">
 		<property name="urls" value="${urls}" />
 
 		<property name="authenticationSource">
 			<bean
-				class="org.springframework.ldap.support.authentication.AcegiAuthenticationSource" />
+				class="org.springframework.ldap.authentication.AcegiAuthenticationSource" />
 		</property>
 		<property name="dirObjectFactory"
-			value="org.springframework.ldap.support.DefaultDirObjectFactory" />
+			value="org.springframework.ldap.core.DefaultDirObjectFactory" />
 	</bean>
 
 	<bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">

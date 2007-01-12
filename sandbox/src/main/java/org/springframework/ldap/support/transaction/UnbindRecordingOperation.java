@@ -17,8 +17,8 @@ package org.springframework.ldap.support.transaction;
 
 import javax.naming.Name;
 
+import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.support.DirContextAdapter;
 
 /**
  * {@link CompensatingTransactionRecordingOperation} to keep track of unbind

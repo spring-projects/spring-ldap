@@ -1,8 +1,8 @@
 package org.springframework.ldap.support.transaction;
 
+import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.support.DirContextAdapter;
-import org.springframework.ldap.support.DistinguishedName;
 
 public class DummyDaoImpl {
     private LdapTemplate ldapTemplate;
