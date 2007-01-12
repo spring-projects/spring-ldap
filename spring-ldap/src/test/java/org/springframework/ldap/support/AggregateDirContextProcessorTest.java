@@ -21,6 +21,7 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 import org.springframework.ldap.core.DirContextProcessor;
+import org.springframework.ldap.core.support.AggregateDirContextProcessor;
 
 public class AggregateDirContextProcessorTest extends TestCase {
 

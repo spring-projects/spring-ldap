@@ -17,7 +17,7 @@ package org.springframework.ldap.support;
 
 import javax.naming.directory.SearchResult;
 
-import org.springframework.ldap.support.CountNameClassPairCallbackHandler;
+import org.springframework.ldap.core.support.CountNameClassPairCallbackHandler;
 
 
 import junit.framework.TestCase;
