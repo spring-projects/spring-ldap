@@ -219,7 +219,7 @@ public class PersonDaoImpl implements PersonDao {
       <title>Spring LDAP package structure</title>
       <mediaobject>
         <imageobject>
-          <imagedata fileref="../images/org.springframework.ldap.png" format="png" />
+          <imagedata fileref="images/package-dependencies.png" format="png" />
         </imageobject>
       </mediaobject>
     </figure>
