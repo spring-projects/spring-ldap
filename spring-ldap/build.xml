@@ -83,10 +83,9 @@ The HTML report is ${target.testresults.html.dir}/index.html
 	</target>
 
 	<target name="gen.main">
-		<mkdir dir="${target.gen.java.dir}/org/springframework/ldap/support" />
-
-		<javacc javacchome="${javacc.home.dir}" target="${src.javacc.dir}/DnParserImpl.jj" outputdirectory="${target.gen.java.dir}/org/springframework/ldap/support" />
-
+		<property name="javacc.out.dir" location="${target.gen.java.dir}/org/springframework/ldap/core" />
+		<mkdir dir="${javacc.out.dir}" />
+		<javacc javacchome="${javacc.home.dir}" target="${src.javacc.dir}/DnParserImpl.jj" outputdirectory="${javacc.out.dir}" />
 	</target>
 
 </project>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" output="target/classes" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="target/gen-java-src"/>
-	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
-	<classpathentry kind="src" output="target/itest-classes" path="src/itest/java"/>
-	<classpathentry kind="src" output="target/itest-openldap-classes" path="src/itest-openldap/java"/>
-	<classpathentry kind="src" output="target/test-classes" path="src/test/resources"/>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="src" path="src/itest/java"/>
+	<classpathentry kind="src" path="src/itest-openldap/java"/>
+	<classpathentry kind="src" path="src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/global/commons-logging.jar" sourcepath="lib/source/commons-logging-src.zip"/>
 	<classpathentry kind="lib" path="lib/global/spring-beans.jar" sourcepath="lib/source/spring-src.zip"/>
@@ -47,5 +47,5 @@
 	<classpathentry kind="lib" path="lib/test/junitperf.jar"/>
 	<classpathentry kind="lib" path="lib/test/backport-util-concurrent.jar"/>
 	<classpathentry kind="lib" path="lib/test/shared-asn1-codec.jar"/>
-	<classpathentry kind="output" path="target/classes"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

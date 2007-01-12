@@ -18,7 +18,7 @@ package org.springframework.ldap.util;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.ldap.util.ListComparator;
+import org.springframework.ldap.support.ListComparator;
 
 import junit.framework.TestCase;
 
