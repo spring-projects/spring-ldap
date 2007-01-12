@@ -23,12 +23,12 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchControls;
 
+import org.springframework.ldap.control.PagedResultsCookie;
+import org.springframework.ldap.control.PagedResultsRequestControl;
 import org.springframework.ldap.core.CollectingNameClassPairCallbackHandler;
+import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.SearchExecutor;
-import org.springframework.ldap.support.DistinguishedName;
-import org.springframework.ldap.support.control.PagedResultsCookie;
-import org.springframework.ldap.support.control.PagedResultsRequestControl;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**
