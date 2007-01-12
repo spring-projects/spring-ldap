@@ -24,8 +24,8 @@ import javax.naming.directory.DirContext;
 import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
 
+import org.springframework.ldap.control.CreateControlFailedException;
 import org.springframework.ldap.core.DirContextProcessor;
-import org.springframework.ldap.support.UncategorizedLdapException;
 import org.springframework.util.ReflectionUtils;
 
 import com.sun.jndi.ldap.ctl.SortControl;
@@ -132,8 +132,8 @@ public class VirtualListViewRequestControl implements DirContextProcessor {
         try {
             sortControl = new SortControl(new String[] { "cn" }, true);
         } catch (IOException e) {
-            throw new UncategorizedLdapException("Couldn't create SortControl",
-                    e);
+            throw new CreateControlFailedException(
+                    "Couldn't create SortControl", e);
         }
         // Add the new Controls at the end of the array.
         newControls[newControls.length - 2] = sortControl;
@@ -161,7 +161,7 @@ public class VirtualListViewRequestControl implements DirContextProcessor {
             }
             return virtualListViewControl;
         } catch (IOException e) {
-            throw new UncategorizedLdapException(
+            throw new CreateControlFailedException(
                     "Error creating VirtualListViewControl", e);
         }
     }

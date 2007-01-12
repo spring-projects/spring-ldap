@@ -6,9 +6,9 @@ import javax.naming.directory.Attributes;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.LdapServerManager;
+import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.support.EntryNotFoundException;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 public class ContextSourceTransactionManagerIntegrationTest extends
@@ -60,8 +60,8 @@ public class ContextSourceTransactionManagerIntegrationTest extends
 
         try {
             ldapTemplate.lookup("cn=some testperson, ou=company1, c=Sweden");
-            fail("EntryNotFoundException expected");
-        } catch (EntryNotFoundException expected) {
+            fail("NameNotFoundException expected");
+        } catch (NameNotFoundException expected) {
             assertTrue(true);
         }
     }
@@ -132,8 +132,8 @@ public class ContextSourceTransactionManagerIntegrationTest extends
         // Verify that entry was not moved.
         try {
             ldapTemplate.lookup(newDn);
-            fail("EntryNotFoundException expected");
-        } catch (EntryNotFoundException expected) {
+            fail("NameNotFoundException expected");
+        } catch (NameNotFoundException expected) {
             assertTrue(true);
         }
 
@@ -246,8 +246,8 @@ public class ContextSourceTransactionManagerIntegrationTest extends
         try {
             // Verify result - check that the operation was not rolled back
             ldapTemplate.lookup(dn);
-            fail("EntryNotFoundException expected");
-        } catch (EntryNotFoundException expected) {
+            fail("NameNotFoundException expected");
+        } catch (NameNotFoundException expected) {
             assertTrue(true);
         }
 
