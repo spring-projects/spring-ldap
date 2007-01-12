@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.support.control;
+package org.springframework.ldap.control;
 
 import java.io.IOException;
 
@@ -23,6 +23,8 @@ import javax.naming.ldap.LdapContext;
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
+import org.springframework.ldap.control.PagedResultsCookie;
+import org.springframework.ldap.control.PagedResultsRequestControl;
 
 import com.sun.jndi.ldap.Ber;
 import com.sun.jndi.ldap.BerDecoder;

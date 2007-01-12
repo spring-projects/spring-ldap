@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.support.control;
+package org.springframework.ldap.control;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import org.springframework.ldap.control.PagedResult;
+import org.springframework.ldap.control.PagedResultsCookie;
 
 import com.gargoylesoftware.base.testing.EqualsTester;
 

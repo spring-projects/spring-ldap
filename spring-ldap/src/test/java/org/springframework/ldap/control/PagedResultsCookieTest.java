@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.support.control;
+package org.springframework.ldap.control;
+
+import org.springframework.ldap.control.PagedResultsCookie;
 
 import com.gargoylesoftware.base.testing.EqualsTester;
 

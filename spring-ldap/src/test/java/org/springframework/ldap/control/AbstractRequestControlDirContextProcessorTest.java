@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.support.control;
+package org.springframework.ldap.control;
 
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
@@ -23,6 +23,7 @@ import javax.naming.ldap.LdapContext;
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
+import org.springframework.ldap.control.AbstractRequestControlDirContextProcessor;
 
 public class AbstractRequestControlDirContextProcessorTest extends TestCase {
 
