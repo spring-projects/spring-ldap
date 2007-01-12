@@ -29,9 +29,9 @@ import org.easymock.MockControl;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.support.DirContextAdapter;
-import org.springframework.ldap.support.DistinguishedName;
 import org.springframework.ldap.support.EntryNotFoundException;
 import org.springframework.ldap.support.NamingExceptionTranslator;
 
