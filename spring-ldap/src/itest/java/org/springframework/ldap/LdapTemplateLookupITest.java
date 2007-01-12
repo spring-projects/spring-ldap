@@ -21,9 +21,9 @@ import javax.naming.directory.Attributes;
 
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.ContextMapper;
+import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.support.DirContextAdapter;
-import org.springframework.ldap.support.DistinguishedName;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**
@@ -42,7 +42,7 @@ public class LdapTemplateLookupITest extends
     }
 
     /**
-     * This method depends on a DirObjectFactory ({@link org.springframework.ldap.support.DefaultDirObjectFactory})
+     * This method depends on a DirObjectFactory ({@link org.springframework.ldap.core.DefaultDirObjectFactory})
      * being set in the ContextSource.
      */
     public void testLookup_Plain() {
@@ -134,7 +134,7 @@ public class LdapTemplateLookupITest extends
     }
 
     /**
-     * This method depends on a DirObjectFactory ({@link org.springframework.ldap.support.DefaultDirObjectFactory})
+     * This method depends on a DirObjectFactory ({@link org.springframework.ldap.core.DefaultDirObjectFactory})
      * being set in the ContextSource.
      */
     public void testLookup_ContextMapper() {

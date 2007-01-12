@@ -19,8 +19,8 @@ package org.springframework.ldap;
 import java.util.List;
 
 import org.springframework.ldap.core.ContextMapper;
+import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.support.DirContextAdapter;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**
@@ -38,7 +38,7 @@ public class LdapTemplateContextMapperITest extends
     }
 
     /**
-     * This method depends on a DirObjectFactory ({@link org.springframework.ldap.support.DefaultDirObjectFactory})
+     * This method depends on a DirObjectFactory ({@link org.springframework.ldap.core.DefaultDirObjectFactory})
      * being set in the ContextSource.
      */
     public void testSearch_ContextMapper() {

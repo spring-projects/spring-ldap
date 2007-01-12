@@ -17,9 +17,9 @@ package org.springframework.ldap;
 
 import java.util.List;
 
+import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.support.CountNameClassPairCallbackHandler;
-import org.springframework.ldap.support.DistinguishedName;
+import org.springframework.ldap.core.support.CountNameClassPairCallbackHandler;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**

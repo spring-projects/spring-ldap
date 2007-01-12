@@ -20,8 +20,8 @@ import java.util.List;
 import javax.naming.Name;
 import javax.naming.directory.SearchControls;
 
+import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.support.DistinguishedName;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**

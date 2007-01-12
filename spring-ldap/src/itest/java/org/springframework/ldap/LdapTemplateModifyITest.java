@@ -25,9 +25,9 @@ import javax.naming.directory.ModificationItem;
 
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.support.DirContextAdapter;
-import org.springframework.ldap.support.DistinguishedName;
 import org.springframework.ldap.support.UncategorizedLdapException;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 

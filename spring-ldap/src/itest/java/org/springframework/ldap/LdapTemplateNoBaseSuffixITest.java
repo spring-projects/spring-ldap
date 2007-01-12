@@ -16,9 +16,9 @@
 
 package org.springframework.ldap;
 
+import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.support.CountNameClassPairCallbackHandler;
-import org.springframework.ldap.support.DirContextAdapter;
+import org.springframework.ldap.core.support.CountNameClassPairCallbackHandler;
 import org.springframework.ldap.support.EntryNotFoundException;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
@@ -39,7 +39,7 @@ public class LdapTemplateNoBaseSuffixITest extends
     }
 
     /**
-     * This method depends on a DirObjectFactory ({@link org.springframework.ldap.support.DefaultDirObjectFactory})
+     * This method depends on a DirObjectFactory ({@link org.springframework.ldap.core.DefaultDirObjectFactory})
      * being set in the ContextSource.
      */
     public void testLookup_Plain() {

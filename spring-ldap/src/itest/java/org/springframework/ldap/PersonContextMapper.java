@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 import org.springframework.ldap.core.ContextMapper;
-import org.springframework.ldap.support.DirContextAdapter;
+import org.springframework.ldap.core.DirContextAdapter;
 
 /**
  * Dummy implemention of ContextMapper for use in the integration tests and for
