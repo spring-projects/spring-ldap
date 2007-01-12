@@ -36,8 +36,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataAccessException;
 import org.springframework.ldap.support.DefaultNamingExceptionTranslator;
-import org.springframework.ldap.support.DirContextAdapter;
-import org.springframework.ldap.support.DistinguishedName;
 import org.springframework.ldap.support.EntryNotFoundException;
 import org.springframework.ldap.support.NamingExceptionTranslator;
 
