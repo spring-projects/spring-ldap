@@ -24,11 +24,11 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 import org.springframework.ldap.core.ContextMapper;
+import org.springframework.ldap.core.DirContextOperations;
+import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.samples.person.domain.Person;
 import org.springframework.ldap.samples.person.domain.SearchCriteria;
-import org.springframework.ldap.support.DirContextOperations;
-import org.springframework.ldap.support.DistinguishedName;
 
 /**
  * Unit tests for the PersonDaoImpl class.

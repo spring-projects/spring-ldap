@@ -12,21 +12,21 @@
 
 	<!-- Authenticate using a fixed user -->
 	<!--
-	<bean id="contextSource" class="org.springframework.ldap.support.LdapContextSource" >
+	<bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource" >
 		<property name="urls" value="${urls}" />
 		<property name="base" value="${base}" />
 		<property name="userDn" value="${userDn}" />
 		<property name="password" value="${password}" />
-		<property name="dirObjectFactory" value="org.springframework.ldap.support.DefaultDirObjectFactory" />
+		<property name="dirObjectFactory" value="org.springframework.ldap.core.DefaultDirObjectFactory" />
 	</bean>
 	 -->	
 
 	<!-- Authenticate using the currently logged in user, retrieved by Acegi Security -->
-	<bean id="contextSource" class="org.springframework.ldap.support.LdapContextSource" >
+	<bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource" >
 		<property name="urls" value="${urls}" />
 		<property name="base" value="${base}" />
 		<property name="authenticationSource" ref="acegiAuthenticationSource" />
-		<property name="dirObjectFactory" value="org.springframework.ldap.support.DefaultDirObjectFactory" />
+		<property name="dirObjectFactory" value="org.springframework.ldap.core.DefaultDirObjectFactory" />
 		<!--
 		Disable pooling if you want to test changing the password after a user has logged in,
 		perhaps in order to verify that AcegiAuthenticationSource works correctly.
@@ -35,7 +35,7 @@
 		-->
 	</bean>
 	
-	<bean id="acegiAuthenticationSource" class="org.springframework.ldap.support.authentication.AcegiAuthenticationSource" />
+	<bean id="acegiAuthenticationSource" class="org.springframework.ldap.authentication.AcegiAuthenticationSource" />
 	
 	<bean id="ldapOperations" class="org.springframework.ldap.core.LdapTemplate">
 		<constructor-arg ref="contextSource" />

@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.TreeSet;
 
 import org.springframework.ldap.core.ContextMapper;
+import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.samples.person.domain.Group;
-import org.springframework.ldap.support.DirContextOperations;
 
 /**
  * Maps from DirContextOperations (DirContextAdapters, really) to Group objects.
