@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap.support.filter;
+package org.springframework.ldap.filter;
 
-import org.springframework.ldap.support.filter.WhitespaceWildcardsFilter;
+import org.springframework.ldap.filter.WhitespaceWildcardsFilter;
 
 import junit.framework.TestCase;
 

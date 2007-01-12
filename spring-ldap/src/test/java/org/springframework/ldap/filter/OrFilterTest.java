@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap.support.filter;
+package org.springframework.ldap.filter;
 
-import org.springframework.ldap.support.filter.EqualsFilter;
-import org.springframework.ldap.support.filter.OrFilter;
+import org.springframework.ldap.filter.EqualsFilter;
+import org.springframework.ldap.filter.OrFilter;
 
 import junit.framework.TestCase;
 
