@@ -21,9 +21,7 @@ import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.samples.person.domain.Person;
-import org.springframework.ldap.support.DefaultNamingExceptionTranslator;
-import org.springframework.ldap.support.NamingExceptionTranslator;
-import org.springframework.util.Assert;
+import org.springframework.ldap.support.LdapUtils;
 
 /**
  * Maps from DirContextOperations (DirContextAdapters, really) to Person
@@ -37,17 +35,14 @@ import org.springframework.util.Assert;
  */
 public class PersonContextMapper implements ContextMapper {
 
-    private NamingExceptionTranslator exceptionTranslator = new DefaultNamingExceptionTranslator();
-
     public Object mapFromContext(Object ctx) {
-        Assert.notNull(exceptionTranslator, "exceptionTranslator must be set");
         DirContextOperations dirContext = (DirContextOperations) ctx;
         DistinguishedName dn = new DistinguishedName(dirContext.getDn());
         String fullDn;
         try {
             fullDn = dirContext.getNameInNamespace();
         } catch (NamingException e) {
-            throw exceptionTranslator.translate(e);
+            throw LdapUtils.convertLdapException(e);
         }
         Person person = new Person();
         person.setDn(fullDn);
@@ -59,10 +54,5 @@ public class PersonContextMapper implements ContextMapper {
         person.setPhone(dirContext.getStringAttribute("telephoneNumber"));
 
         return person;
-    }
-
-    public void setExceptionTranslator(
-            NamingExceptionTranslator exceptionTranslator) {
-        this.exceptionTranslator = exceptionTranslator;
     }
 }
