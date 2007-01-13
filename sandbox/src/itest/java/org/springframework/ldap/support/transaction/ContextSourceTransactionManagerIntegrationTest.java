@@ -21,7 +21,7 @@ public class ContextSourceTransactionManagerIntegrationTest extends
         setAutowireMode(AbstractDependencyInjectionSpringContextTests.AUTOWIRE_BY_NAME);
     }
 
-    private DummyDaoImpl dummyDao;
+    private DummyDao dummyDao;
 
     private LdapTemplate ldapTemplate;
 
@@ -35,7 +35,7 @@ public class ContextSourceTransactionManagerIntegrationTest extends
         this.ldapTemplate = ldapTemplate;
     }
 
-    public void setDummyDao(DummyDaoImpl dummyDaoImpl) {
+    public void setDummyDao(DummyDao dummyDaoImpl) {
         this.dummyDao = dummyDaoImpl;
     }
 

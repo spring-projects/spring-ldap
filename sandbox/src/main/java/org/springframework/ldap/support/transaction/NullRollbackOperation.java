@@ -37,4 +37,12 @@ public class NullRollbackOperation implements
         log.info("Rolling back null operation");
     }
 
+    public void commit() {
+        log.info("Committing back null operation");
+    }
+
+    public void performOperation() {
+        log.info("Performing null operation");
+    }
+
 }

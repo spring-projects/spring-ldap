@@ -36,7 +36,9 @@ public class BindRollbackOperation implements
 
     private LdapOperations ldapOperations;
 
-    private DirContextOperations dirContextOperations;
+    private Name originalDn;
+
+    private Name temporaryDn;
 
     /**
      * Constructor.
@@ -44,15 +46,17 @@ public class BindRollbackOperation implements
      * @param ldapOperations
      *            The {@link LdapOperations} to use for performing the rollback
      *            operation.
-     * @param dirContextOperations
-     *            a {@link DirContextOperations} instance to be used for
-     *            obtaining the DN of the affected entry and to be used when
-     *            performing the rollback, binding it to the DN.
+     * @param originalDn
+     *            The original DN of the entry to be removed.
+     * @param temporaryDn
+     *            Temporary DN of the entry to be removed; this is where the
+     *            entry is temporarily stored during the transaction.
      */
     public BindRollbackOperation(LdapOperations ldapOperations,
-            DirContextOperations dirContextOperations) {
+            Name originalDn, Name temporaryDn) {
         this.ldapOperations = ldapOperations;
-        this.dirContextOperations = dirContextOperations;
+        this.originalDn = originalDn;
+        this.temporaryDn = temporaryDn;
     }
 
     /*
@@ -61,20 +65,48 @@ public class BindRollbackOperation implements
      * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#rollback()
      */
     public void rollback() {
-        Name dn = dirContextOperations.getDn();
         try {
-            ldapOperations.bind(dn, dirContextOperations, null);
+            ldapOperations.rename(temporaryDn, originalDn);
         } catch (Exception e) {
-            log.warn("Filed to rollback unbind operation, dn: " + dn);
+            log.warn("Filed to rollback unbind operation, temporaryDn: "
+                    + temporaryDn + "; originalDn: " + originalDn);
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#commit()
+     */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#commit()
+     */
+    public void commit() {
+        log.debug("Committing unbind operation - unbinding temporary entry");
+        ldapOperations.unbind(temporaryDn);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#performOperation()
+     */
+    public void performOperation() {
+        log.debug("Nothing to do in performOperation for unbind");
     }
 
     LdapOperations getLdapOperations() {
         return ldapOperations;
     }
 
-    DirContextOperations getDirContextOperations() {
-        return dirContextOperations;
+    Name getOriginalDn() {
+        return originalDn;
+    }
+
+    Name getTemporaryDn() {
+        return temporaryDn;
     }
 
 }

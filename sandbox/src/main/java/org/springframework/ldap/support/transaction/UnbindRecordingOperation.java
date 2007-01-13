@@ -15,10 +15,14 @@
  */
 package org.springframework.ldap.support.transaction;
 
+import java.util.List;
+
 import javax.naming.Name;
 
-import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.core.LdapRdn;
+import org.springframework.ldap.core.LdapRdnComponent;
 
 /**
  * {@link CompensatingTransactionRecordingOperation} to keep track of unbind
@@ -52,8 +56,22 @@ public class UnbindRecordingOperation implements
     public CompensatingTransactionRollbackOperation recordOperation(
             Object[] args) {
         Name dn = LdapUtils.getFirstArgumentAsName(args);
-        DirContextAdapter ctx = (DirContextAdapter) ldapOperations.lookup(dn);
-        return new BindRollbackOperation(ldapOperations, ctx);
+        Name temporaryDn = getTemporaryName(dn);
+
+        ldapOperations.rename(dn, temporaryDn);
+
+        return new BindRollbackOperation(ldapOperations, dn, temporaryDn);
+    }
+
+    Name getTemporaryName(Name originalName) {
+        DistinguishedName temporaryName = new DistinguishedName(originalName);
+        List names = temporaryName.getNames();
+        LdapRdn rdn = (LdapRdn) names.get(names.size() - 1);
+        LdapRdnComponent rdnComponent = rdn.getComponent();
+        String value = rdnComponent.getValue();
+        rdnComponent.setValue(value + "_temp");
+
+        return temporaryName;
     }
 
     LdapOperations getLdapOperations() {

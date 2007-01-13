@@ -16,6 +16,7 @@
 package org.springframework.ldap.support.transaction;
 
 import javax.naming.Name;
+import javax.naming.directory.Attributes;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,6 +36,10 @@ public class UnbindRollbackOperation implements
 
     private Name dn;
 
+    private Object originalObject;
+
+    private Attributes originalAttributes;
+
     /**
      * Constructor.
      * 
@@ -43,10 +48,19 @@ public class UnbindRollbackOperation implements
      *            operation.
      * @param dn
      *            DN of the entry to be unbound.
+     * @param originalObject
+     *            original value sent to the 'object' parameter of the bind
+     *            operation.
+     * @param originalAttributes
+     *            original value sent to the 'attributes' parameter of the bind
+     *            operation.
      */
-    public UnbindRollbackOperation(LdapOperations ldapOperations, Name dn) {
+    public UnbindRollbackOperation(LdapOperations ldapOperations, Name dn,
+            Object originalObject, Attributes originalAttributes) {
         this.ldapOperations = ldapOperations;
         this.dn = dn;
+        this.originalObject = originalObject;
+        this.originalAttributes = originalAttributes;
     }
 
     /*
@@ -60,6 +74,25 @@ public class UnbindRollbackOperation implements
         } catch (Exception e) {
             log.warn("Failed to rollback, dn:" + dn.toString(), e);
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#commit()
+     */
+    public void commit() {
+        log.debug("Nothing to do in commit for bind operation");
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#performOperation()
+     */
+    public void performOperation() {
+        log.debug("Performing bind operation");
+        ldapOperations.bind(dn, originalObject, originalAttributes);
     }
 
     /**
@@ -78,6 +111,14 @@ public class UnbindRollbackOperation implements
      */
     LdapOperations getLdapOperations() {
         return ldapOperations;
+    }
+
+    Attributes getOriginalAttributes() {
+        return originalAttributes;
+    }
+
+    Object getOriginalObject() {
+        return originalObject;
     }
 
 }

@@ -32,4 +32,8 @@ public interface CompensatingTransactionRollbackOperation {
      * {@link CompensatingTransactionRecordingOperation}).
      */
     public void rollback();
+    
+    public void commit();
+    
+    public void performOperation();
 }

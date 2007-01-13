@@ -23,8 +23,7 @@ import org.springframework.ldap.core.LdapOperations;
 
 /**
  * A {@link CompensatingTransactionRollbackOperation} to roll back a previous
- * rename operation. Has a fromDn and a toDn, representing from and to in the
- * rename operation to be rolled back.
+ * rename operation.
  * 
  * @author Mattias Arthursson
  * 
@@ -36,9 +35,9 @@ public class RenameRollbackOperation implements
 
     private LdapOperations ldapOperations;
 
-    private Name fromDn;
+    private Name newDn;
 
-    private Name toDn;
+    private Name originalDn;
 
     /**
      * Constructor.
@@ -46,38 +45,62 @@ public class RenameRollbackOperation implements
      * @param ldapOperations
      *            The {@link LdapOperations} to use for performing the rollback
      *            operation.
-     * @param fromDn
-     *            DN that the entry has been moved to in the recorded operation.
-     * @param toDn
+     * @param originalDn
      *            DN that the entry was moved from in the recorded operation.
+     * @param newDn
+     *            DN that the entry has been moved to in the recorded operation.
      */
-    public RenameRollbackOperation(LdapOperations ldapOperations, Name fromDn,
-            Name toDn) {
+    public RenameRollbackOperation(LdapOperations ldapOperations,
+            Name originalDn, Name newDn) {
         this.ldapOperations = ldapOperations;
-        this.fromDn = fromDn;
-        this.toDn = toDn;
+        this.originalDn = originalDn;
+        this.newDn = newDn;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#rollback()
+     */
     public void rollback() {
         log.debug("Rolling back rename operation");
         try {
-            ldapOperations.rename(fromDn, toDn);
+            ldapOperations.rename(newDn, originalDn);
         } catch (Exception e) {
-            log.warn("Unable to rollback rename operation. " + "fromDn: "
-                    + fromDn + "; toDn: " + toDn);
+            log.warn("Unable to rollback rename operation. " + "originalDn: "
+                    + newDn + "; newDn: " + originalDn);
         }
     }
 
-    Name getFromDn() {
-        return fromDn;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#commit()
+     */
+    public void commit() {
+        log.debug("Nothing to do in commit for rename operation");
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#performOperation()
+     */
+    public void performOperation() {
+        log.debug("Performing rename operation");
+        ldapOperations.rename(originalDn, newDn);
+    }
+
+    Name getNewDn() {
+        return newDn;
     }
 
     LdapOperations getLdapOperations() {
         return ldapOperations;
     }
 
-    Name getToDn() {
-        return toDn;
+    Name getOriginalDn() {
+        return originalDn;
     }
 
 }

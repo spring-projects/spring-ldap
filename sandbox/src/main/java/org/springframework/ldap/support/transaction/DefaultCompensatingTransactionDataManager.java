@@ -79,4 +79,13 @@ public class DefaultCompensatingTransactionDataManager implements
         this.rollbackOperations = rollbackOperations;
     }
 
+    public void commit() {
+        log.debug("Performing rollback");
+        while (!rollbackOperations.isEmpty()) {
+            CompensatingTransactionRollbackOperation rollbackOperation = (CompensatingTransactionRollbackOperation) rollbackOperations
+                    .pop();
+            rollbackOperation.commit();
+        }
+    }
+
 }

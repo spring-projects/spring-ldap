@@ -32,14 +32,56 @@ public class ModifyAttributesRollbackOperationTest extends TestCase {
         ldapOperationsControl.verify();
     }
 
-    public void testRollback() {
-        ModificationItem[] expectedItems = new ModificationItem[0];
+    public void testPerformOperation() {
+        ModificationItem[] expectedCompensatingItems = new ModificationItem[0];
+        ModificationItem[] expectedActualItems = new ModificationItem[0];
+
         Name expectedDn = new DistinguishedName("cn=john doe");
 
         ModifyAttributesRollbackOperation tested = new ModifyAttributesRollbackOperation(
-                ldapOperationsMock, expectedDn, expectedItems);
+                ldapOperationsMock, expectedDn, expectedActualItems,
+                expectedCompensatingItems);
 
-        ldapOperationsMock.modifyAttributes(expectedDn, expectedItems);
+        ldapOperationsMock.modifyAttributes(expectedDn, expectedActualItems);
+
+        replay();
+        // Perform test
+        tested.performOperation();
+
+        verify();
+    }
+
+    public void testCommit() {
+        ModificationItem[] expectedCompensatingItems = new ModificationItem[0];
+        ModificationItem[] expectedActualItems = new ModificationItem[0];
+
+        Name expectedDn = new DistinguishedName("cn=john doe");
+
+        ModifyAttributesRollbackOperation tested = new ModifyAttributesRollbackOperation(
+                ldapOperationsMock, expectedDn, expectedActualItems,
+                expectedCompensatingItems);
+
+        // No operation here
+        
+        replay();
+        // Perform test
+        tested.commit();
+
+        verify();
+    }
+
+    public void testRollback() {
+        ModificationItem[] expectedCompensatingItems = new ModificationItem[0];
+        ModificationItem[] expectedActualItems = new ModificationItem[0];
+
+        Name expectedDn = new DistinguishedName("cn=john doe");
+
+        ModifyAttributesRollbackOperation tested = new ModifyAttributesRollbackOperation(
+                ldapOperationsMock, expectedDn, expectedActualItems,
+                expectedCompensatingItems);
+
+        ldapOperationsMock.modifyAttributes(expectedDn,
+                expectedCompensatingItems);
 
         replay();
         // Perform test

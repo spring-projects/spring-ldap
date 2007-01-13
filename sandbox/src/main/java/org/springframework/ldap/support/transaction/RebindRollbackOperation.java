@@ -16,6 +16,7 @@
 package org.springframework.ldap.support.transaction;
 
 import javax.naming.Name;
+import javax.naming.directory.Attributes;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,31 +37,36 @@ public class RebindRollbackOperation implements
 
     private LdapOperations ldapOperations;
 
-    private DirContextOperations dirContextOperations;
+    private Name originalDn;
+
+    private Name temporaryDn;
+
+    private Object originalObject;
+
+    private Attributes originalAttributes;
 
     /**
      * Constructor.
      * 
      * @param ldapOperations
      *            the {@link LdapOperations} to use to perform the rollback.
-     * @param dirContextOperations
-     *            the {@link DirContextOperations} to use as input to the rebind
-     *            operation performing the rollback.
+     * @param originalDn
+     *            The original DN of the entry to bind.
+     * @param temporaryDn
+     *            The temporary DN of the entry.
+     * @param originalObject
+     *            Original 'object' parameter sent to the rebind operation.
+     * @param originalAttributes
+     *            Original 'attributes' parameter sent to the rebind operation
      */
     public RebindRollbackOperation(LdapOperations ldapOperations,
-            DirContextOperations dirContextOperations) {
+            Name originalDn, Name temporaryDn, Object originalObject,
+            Attributes originalAttributes) {
         this.ldapOperations = ldapOperations;
-        this.dirContextOperations = dirContextOperations;
-    }
-
-    /**
-     * Get the targegt DirContextOperations. Package private for testing
-     * purposes.
-     * 
-     * @return the DirContextOperations.
-     */
-    DirContextOperations getDirContextOperations() {
-        return dirContextOperations;
+        this.originalDn = originalDn;
+        this.temporaryDn = temporaryDn;
+        this.originalObject = originalObject;
+        this.originalAttributes = originalAttributes;
     }
 
     /**
@@ -78,12 +84,51 @@ public class RebindRollbackOperation implements
      * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#rollback()
      */
     public void rollback() {
-        Name dn = dirContextOperations.getDn();
+        log.debug("Rolling back rebind operation");
         try {
-            ldapOperations.rebind(dn, dirContextOperations, null);
+            ldapOperations.unbind(originalDn);
+            ldapOperations.rename(temporaryDn, originalDn);
         } catch (Exception e) {
-            log.warn("Failed to rollback operation, dn: " + dn, e);
+            log.warn("Failed to rollback operation, dn: " + originalDn
+                    + "; temporary DN: " + temporaryDn, e);
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#commit()
+     */
+    public void commit() {
+        log.debug("Committing rebind operation");
+        ldapOperations.unbind(temporaryDn);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#performOperation()
+     */
+    public void performOperation() {
+        log.debug("Performing rebind operation - "
+                + "binding new contents to entry.");
+        ldapOperations.bind(originalDn, originalObject, originalAttributes);
+    }
+
+    Attributes getOriginalAttributes() {
+        return originalAttributes;
+    }
+
+    Name getOriginalDn() {
+        return originalDn;
+    }
+
+    Object getOriginalObject() {
+        return originalObject;
+    }
+
+    Name getTemporaryDn() {
+        return temporaryDn;
     }
 
 }

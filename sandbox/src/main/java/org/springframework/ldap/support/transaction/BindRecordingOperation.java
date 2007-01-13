@@ -16,6 +16,7 @@
 package org.springframework.ldap.support.transaction;
 
 import javax.naming.Name;
+import javax.naming.directory.Attributes;
 
 import org.springframework.ldap.core.LdapOperations;
 
@@ -50,8 +51,22 @@ public class BindRecordingOperation implements
      */
     public CompensatingTransactionRollbackOperation recordOperation(
             Object[] args) {
+        if (args == null || args.length != 3) {
+            throw new IllegalArgumentException(
+                    "Invalid arguments for bind operation");
+        }
         Name dn = LdapUtils.getFirstArgumentAsName(args);
-        return new UnbindRollbackOperation(ldapOperations, dn);
+        Object object = args[1];
+        Attributes attributes = null;
+        if (args[2] != null && !(args[2] instanceof Attributes)) {
+            throw new IllegalArgumentException(
+                    "Invalid third argument to bind operation");
+        } else if (args[2] != null) {
+            attributes = (Attributes) args[2];
+        }
+
+        return new UnbindRollbackOperation(ldapOperations, dn, object,
+                attributes);
     }
 
     /**

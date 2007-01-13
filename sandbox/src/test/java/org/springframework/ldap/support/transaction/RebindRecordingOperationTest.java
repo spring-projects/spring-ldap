@@ -1,9 +1,11 @@
 package org.springframework.ldap.support.transaction;
 
+import javax.naming.Name;
+import javax.naming.directory.BasicAttributes;
+
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
-import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
 
@@ -31,24 +33,36 @@ public class RebindRecordingOperationTest extends TestCase {
     }
 
     public void testRecordOperation() {
+        final DistinguishedName expectedDn = new DistinguishedName(
+                "cn=john doe");
+        final DistinguishedName expectedTempDn = new DistinguishedName(
+                "cn=john doe");
         RebindRecordingOperation tested = new RebindRecordingOperation(
-                ldapOperationsMock);
-        DistinguishedName expectedDn = new DistinguishedName("cn=john doe");
+                ldapOperationsMock) {
+            Name getTemporaryName(Name originalName) {
+                assertSame(expectedDn, originalName);
+                return expectedTempDn;
+            }
+        };
 
-        DirContextAdapter expectedValue = new DirContextAdapter();
-        ldapOperationsControl.expectAndReturn(ldapOperationsMock
-                .lookup(expectedDn), expectedValue);
+        ldapOperationsMock.rename(expectedDn, expectedTempDn);
 
         replay();
+        Object expectedObject = new Object();
+        BasicAttributes expectedAttributes = new BasicAttributes();
         // perform test
         CompensatingTransactionRollbackOperation result = tested
-                .recordOperation(new Object[] { expectedDn });
+                .recordOperation(new Object[] { expectedDn, expectedObject,
+                        expectedAttributes });
         verify();
 
         assertTrue(result instanceof RebindRollbackOperation);
         RebindRollbackOperation rollbackOperation = (RebindRollbackOperation) result;
         assertSame(ldapOperationsMock, rollbackOperation.getLdapOperations());
-        assertSame(expectedValue, rollbackOperation.getDirContextOperations());
+        assertSame(expectedDn, rollbackOperation.getOriginalDn());
+        assertSame(expectedTempDn, rollbackOperation.getTemporaryDn());
+        assertSame(expectedObject, rollbackOperation.getOriginalObject());
+        assertSame(expectedAttributes, rollbackOperation
+                .getOriginalAttributes());
     }
-
 }

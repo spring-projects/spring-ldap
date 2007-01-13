@@ -116,7 +116,10 @@ public class ContextSourceTransactionManager extends
      */
     protected void doCommit(DefaultTransactionStatus status)
             throws TransactionException {
-        // Nothing much to do here.
+        ContextSourceTransactionObject txObject = (ContextSourceTransactionObject) status
+                .getTransaction();
+        txObject.getContextHolder().getTransactionDataManager().commit();
+
     }
 
     /*

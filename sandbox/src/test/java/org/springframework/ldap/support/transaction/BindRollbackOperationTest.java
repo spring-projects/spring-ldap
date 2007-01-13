@@ -12,18 +12,9 @@ public class BindRollbackOperationTest extends TestCase {
 
     private LdapOperations ldapOperationsMock;
 
-    private MockControl dirContextOperationsControl;
-
-    private DirContextOperations dirContextOperationsMock;
-
     protected void setUp() throws Exception {
         ldapOperationsControl = MockControl.createControl(LdapOperations.class);
         ldapOperationsMock = (LdapOperations) ldapOperationsControl.getMock();
-
-        dirContextOperationsControl = MockControl
-                .createControl(DirContextOperations.class);
-        dirContextOperationsMock = (DirContextOperations) dirContextOperationsControl
-                .getMock();
 
     }
 
@@ -31,34 +22,55 @@ public class BindRollbackOperationTest extends TestCase {
         ldapOperationsControl = null;
         ldapOperationsMock = null;
 
-        dirContextOperationsControl = null;
-        dirContextOperationsMock = null;
-
     }
 
     protected void replay() {
         ldapOperationsControl.replay();
-        dirContextOperationsControl.replay();
     }
 
     protected void verify() {
         ldapOperationsControl.verify();
-        dirContextOperationsControl.verify();
+    }
+
+    public void testPerformOperation() {
+        DistinguishedName expectedOldName = new DistinguishedName("cn=oldDn");
+        DistinguishedName expectedTempName = new DistinguishedName("cn=newDn");
+        BindRollbackOperation tested = new BindRollbackOperation(
+                ldapOperationsMock, expectedOldName, expectedTempName);
+
+        // Nothing to do in performOperation for unbind.
+
+        replay();
+        // Perform test
+        tested.performOperation();
+        verify();
+    }
+
+    public void testCommit() {
+        DistinguishedName expectedOldName = new DistinguishedName("cn=oldDn");
+        DistinguishedName expectedTempName = new DistinguishedName("cn=newDn");
+        BindRollbackOperation tested = new BindRollbackOperation(
+                ldapOperationsMock, expectedOldName, expectedTempName);
+
+        ldapOperationsMock.unbind(expectedTempName);
+
+        replay();
+        // Perform test
+        tested.commit();
+        verify();
     }
 
     public void testRollback() {
+        DistinguishedName expectedOldName = new DistinguishedName("cn=oldDn");
+        DistinguishedName expectedTempName = new DistinguishedName("cn=newDn");
         BindRollbackOperation tested = new BindRollbackOperation(
-                ldapOperationsMock, dirContextOperationsMock);
+                ldapOperationsMock, expectedOldName, expectedTempName);
 
-        DistinguishedName expectedDn = new DistinguishedName("cn=john doe");
-        dirContextOperationsControl.expectAndReturn(dirContextOperationsMock
-                .getDn(), expectedDn);
-        ldapOperationsMock.bind(expectedDn, dirContextOperationsMock, null);
+        ldapOperationsMock.rename(expectedTempName, expectedOldName);
 
         replay();
         // Perform test
         tested.rollback();
         verify();
     }
-
 }

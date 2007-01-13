@@ -29,11 +29,39 @@ public class RenameRollbackOperationTest extends TestCase {
         ldapOperationsControl.verify();
     }
 
+    public void testPerformOperation() {
+        DistinguishedName expectedNewName = new DistinguishedName("ou=newOu");
+        DistinguishedName expectedOldName = new DistinguishedName("ou=someou");
+        RenameRollbackOperation tested = new RenameRollbackOperation(
+                ldapOperationsMock, expectedOldName, expectedNewName);
+
+        ldapOperationsMock.rename(expectedOldName, expectedNewName);
+
+        replay();
+        // Perform test.
+        tested.performOperation();
+        verify();
+    }
+
+    public void testCommit() {
+        DistinguishedName expectedNewName = new DistinguishedName("ou=newOu");
+        DistinguishedName expectedOldName = new DistinguishedName("ou=someou");
+        RenameRollbackOperation tested = new RenameRollbackOperation(
+                ldapOperationsMock, expectedOldName, expectedNewName);
+
+        // Nothing to do for this operation.
+
+        replay();
+        // Perform test.
+        tested.commit();
+        verify();
+    }
+
     public void testRollback() {
         DistinguishedName expectedNewName = new DistinguishedName("ou=newOu");
         DistinguishedName expectedOldName = new DistinguishedName("ou=someou");
         RenameRollbackOperation tested = new RenameRollbackOperation(
-                ldapOperationsMock, expectedNewName, expectedOldName);
+                ldapOperationsMock, expectedOldName, expectedNewName);
 
         ldapOperationsMock.rename(expectedNewName, expectedOldName);
 

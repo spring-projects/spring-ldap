@@ -47,6 +47,7 @@
 	<classpathentry kind="lib" path="lib/test/spring-aop.jar" sourcepath="lib/source/spring-src.zip"/>
 	<classpathentry kind="lib" path="lib/test/aopalliance.jar"/>
 	<classpathentry kind="lib" path="lib/test/backport-util-concurrent.jar"/>
+	<classpathentry kind="lib" path="lib/test/hsqldb.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/spring-ldap"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

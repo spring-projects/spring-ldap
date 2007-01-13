@@ -82,7 +82,7 @@ public class ModifyAttributesRecordingOperation implements
         }
 
         return new ModifyAttributesRollbackOperation(ldapOperations, dn,
-                rollbackItems);
+                incomingModifications, rollbackItems);
     }
 
     /**

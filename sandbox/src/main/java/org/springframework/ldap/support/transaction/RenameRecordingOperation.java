@@ -63,7 +63,7 @@ public class RenameRecordingOperation implements
         }
         Name oldDn = LdapUtils.getArgumentAsName(args[0]);
         Name newDn = LdapUtils.getArgumentAsName(args[1]);
-        return new RenameRollbackOperation(ldapOperations, newDn, oldDn);
+        return new RenameRollbackOperation(ldapOperations, oldDn, newDn);
     }
 
     LdapOperations getLdapOperations() {

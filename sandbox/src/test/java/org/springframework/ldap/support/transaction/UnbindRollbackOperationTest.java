@@ -1,5 +1,7 @@
 package org.springframework.ldap.support.transaction;
 
+import javax.naming.directory.BasicAttributes;
+
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
@@ -29,14 +31,47 @@ public class UnbindRollbackOperationTest extends TestCase {
         ldapOperationsControl.verify();
     }
 
+    public void testPerformOperation() {
+        DistinguishedName expectedDn = new DistinguishedName("cn=john doe");
+        Object expectedObject = new Object();
+        BasicAttributes expectedAttributes = new BasicAttributes();
+        UnbindRollbackOperation tested = new UnbindRollbackOperation(
+                ldapOperationsMock, expectedDn, expectedObject,
+                expectedAttributes);
+
+        ldapOperationsMock.bind(expectedDn, expectedObject, expectedAttributes);
+
+        replay();
+        // perform teste
+        tested.performOperation();
+        verify();
+    }
+
+    public void testCommit() {
+        DistinguishedName expectedDn = new DistinguishedName("cn=john doe");
+        Object expectedObject = new Object();
+        BasicAttributes expectedAttributes = new BasicAttributes();
+        UnbindRollbackOperation tested = new UnbindRollbackOperation(
+                ldapOperationsMock, expectedDn, expectedObject,
+                expectedAttributes);
+
+        // Nothing to do here.
+
+        replay();
+        // perform teste
+        tested.commit();
+        verify();
+    }
+
     public void testRollback() {
         DistinguishedName expectedDn = new DistinguishedName("cn=john doe");
-        UnbindRollbackOperation tested = new UnbindRollbackOperation(ldapOperationsMock, expectedDn);
-        
+        UnbindRollbackOperation tested = new UnbindRollbackOperation(
+                ldapOperationsMock, expectedDn, null, null);
+
         ldapOperationsMock.unbind(expectedDn);
-        
+
         replay();
-        //perform teste
+        // perform teste
         tested.rollback();
         verify();
     }

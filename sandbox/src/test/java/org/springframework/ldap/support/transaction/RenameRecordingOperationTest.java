@@ -42,8 +42,8 @@ public class RenameRecordingOperationTest extends TestCase {
         assertTrue(operation instanceof RenameRollbackOperation);
         RenameRollbackOperation rollbackOperation = (RenameRollbackOperation) operation;
         assertSame(ldapOperationsMock, rollbackOperation.getLdapOperations());
-        assertEquals("ou=newou", rollbackOperation.getFromDn().toString());
-        assertEquals("ou=someou", rollbackOperation.getToDn().toString());
+        assertEquals("ou=newou", rollbackOperation.getNewDn().toString());
+        assertEquals("ou=someou", rollbackOperation.getOriginalDn().toString());
     }
 
 }

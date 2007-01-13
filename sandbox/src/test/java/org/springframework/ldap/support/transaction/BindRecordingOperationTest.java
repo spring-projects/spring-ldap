@@ -1,5 +1,7 @@
 package org.springframework.ldap.support.transaction;
 
+import javax.naming.directory.BasicAttributes;
+
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
@@ -27,14 +29,20 @@ public class BindRecordingOperationTest extends TestCase {
                 ldapOperationsMock);
         DistinguishedName expectedDn = new DistinguishedName("cn=John Doe");
 
+        Object expectedObject = new Object();
+        BasicAttributes expectedAttributes = new BasicAttributes();
         // Perform test.
         CompensatingTransactionRollbackOperation operation = tested
-                .recordOperation(new Object[] { expectedDn });
+                .recordOperation(new Object[] { expectedDn, expectedObject,
+                        expectedAttributes });
 
         assertTrue(operation instanceof UnbindRollbackOperation);
         UnbindRollbackOperation rollbackOperation = (UnbindRollbackOperation) operation;
         assertSame(expectedDn, rollbackOperation.getDn());
         assertSame(ldapOperationsMock, rollbackOperation.getLdapOperations());
+        assertSame(expectedObject, rollbackOperation.getOriginalObject());
+        assertSame(expectedAttributes, rollbackOperation
+                .getOriginalAttributes());
     }
 
     public void testPerformOperation_String() {
@@ -42,9 +50,12 @@ public class BindRecordingOperationTest extends TestCase {
                 ldapOperationsMock);
         String expectedDn = "cn=John Doe";
 
+        Object expectedObject = new Object();
+        BasicAttributes expectedAttributes = new BasicAttributes();
         // Perform test.
         CompensatingTransactionRollbackOperation operation = tested
-                .recordOperation(new Object[] { expectedDn });
+                .recordOperation(new Object[] { expectedDn, expectedObject,
+                        expectedAttributes });
 
         assertTrue(operation instanceof UnbindRollbackOperation);
         UnbindRollbackOperation rollbackOperation = (UnbindRollbackOperation) operation;

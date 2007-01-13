@@ -161,11 +161,9 @@ public class LdapUtils {
 
             Object result = null;
             // Perform the target operation
-            try {
-                result = method.invoke(transactionContextHolder.getCtx(), args);
-            } catch (InvocationTargetException e) {
-                throw e.getTargetException();
-            }
+            rollbackOperation.performOperation();
+            // result = method.invoke(transactionContextHolder.getCtx(),
+            // args);
             transactionDataManager.operationPerformed(rollbackOperation);
 
             return result;

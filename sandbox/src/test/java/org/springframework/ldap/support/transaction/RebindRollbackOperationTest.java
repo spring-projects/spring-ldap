@@ -1,9 +1,10 @@
 package org.springframework.ldap.support.transaction;
 
+import javax.naming.directory.BasicAttributes;
+
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
-import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
 
@@ -13,46 +14,76 @@ public class RebindRollbackOperationTest extends TestCase {
 
     private LdapOperations ldapOperationsMock;
 
-    private MockControl dirContextOperationsControl;
-
-    private DirContextOperations dirContextOperationsMock;
-
     protected void setUp() throws Exception {
         ldapOperationsControl = MockControl.createControl(LdapOperations.class);
         ldapOperationsMock = (LdapOperations) ldapOperationsControl.getMock();
-
-        dirContextOperationsControl = MockControl
-                .createControl(DirContextOperations.class);
-        dirContextOperationsMock = (DirContextOperations) dirContextOperationsControl
-                .getMock();
     }
 
     protected void tearDown() throws Exception {
         ldapOperationsControl = null;
         ldapOperationsMock = null;
-
-        dirContextOperationsControl = null;
-        dirContextOperationsMock = null;
     }
 
     protected void replay() {
         ldapOperationsControl.replay();
-        dirContextOperationsControl.replay();
     }
 
     protected void verify() {
         ldapOperationsControl.verify();
-        dirContextOperationsControl.verify();
+    }
+
+    public void testPerformOperation() {
+        DistinguishedName expectedOriginalDn = new DistinguishedName(
+                "cn=john doe");
+        DistinguishedName expectedTempDn = new DistinguishedName(
+                "cn=john doe_temp");
+        Object expectedObject = new Object();
+        BasicAttributes expectedAttributes = new BasicAttributes();
+        RebindRollbackOperation tested = new RebindRollbackOperation(
+                ldapOperationsMock, expectedOriginalDn, expectedTempDn,
+                expectedObject, expectedAttributes);
+
+        ldapOperationsMock.bind(expectedOriginalDn, expectedObject,
+                expectedAttributes);
+
+        replay();
+        // perform test
+        tested.performOperation();
+        verify();
+    }
+
+    public void testCommit() {
+        DistinguishedName expectedOriginalDn = new DistinguishedName(
+                "cn=john doe");
+        DistinguishedName expectedTempDn = new DistinguishedName(
+                "cn=john doe_temp");
+        Object expectedObject = new Object();
+        BasicAttributes expectedAttributes = new BasicAttributes();
+        RebindRollbackOperation tested = new RebindRollbackOperation(
+                ldapOperationsMock, expectedOriginalDn, expectedTempDn,
+                expectedObject, expectedAttributes);
+
+        ldapOperationsMock.unbind(expectedTempDn);
+
+        replay();
+        // perform test
+        tested.commit();
+        verify();
     }
 
     public void testRollback() {
+        DistinguishedName expectedOriginalDn = new DistinguishedName(
+                "cn=john doe");
+        DistinguishedName expectedTempDn = new DistinguishedName(
+                "cn=john doe_temp");
+        Object expectedObject = new Object();
+        BasicAttributes expectedAttributes = new BasicAttributes();
         RebindRollbackOperation tested = new RebindRollbackOperation(
-                ldapOperationsMock, dirContextOperationsMock);
+                ldapOperationsMock, expectedOriginalDn, expectedTempDn,
+                expectedObject, expectedAttributes);
 
-        DistinguishedName expectedName = new DistinguishedName("cn=john doe");
-        dirContextOperationsControl.expectAndReturn(dirContextOperationsMock
-                .getDn(), expectedName);
-        ldapOperationsMock.rebind(expectedName, dirContextOperationsMock, null);
+        ldapOperationsMock.unbind(expectedOriginalDn);
+        ldapOperationsMock.rename(expectedTempDn, expectedOriginalDn);
 
         replay();
         // perform test

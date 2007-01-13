@@ -41,4 +41,10 @@ public interface CompensatingTransactionDataManager {
      * rollback operations.
      */
     public void rollback();
+
+    /**
+     * Commit all recorded operations. In many cases this means doing nothing,
+     * but in some cases some temporary data will need to be removed.
+     */
+    public void commit();
 }

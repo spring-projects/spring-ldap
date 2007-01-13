@@ -98,9 +98,10 @@ public class ModifyAttributesRecordingOperationTest extends TestCase {
         ModifyAttributesRollbackOperation rollbackOperation = (ModifyAttributesRollbackOperation) operation;
         assertSame(expectedName, rollbackOperation.getDn());
         assertSame(ldapOperationsMock, rollbackOperation.getLdapOperations());
-        assertEquals(1, rollbackOperation.getModificationItems().length);
-        assertSame(compensatingItem,
-                rollbackOperation.getModificationItems()[0]);
+        assertSame(incomingMods, rollbackOperation.getActualModifications());
+        assertEquals(1, rollbackOperation.getCompensatingModifications().length);
+        assertSame(compensatingItem, rollbackOperation
+                .getCompensatingModifications()[0]);
     }
 
     public void testGetCompensatingModificationItem_RemoveFullExistingAttribute()
