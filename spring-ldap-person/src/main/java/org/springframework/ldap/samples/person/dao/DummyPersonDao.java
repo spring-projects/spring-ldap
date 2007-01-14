@@ -8,9 +8,9 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.samples.person.domain.Person;
 import org.springframework.ldap.samples.person.domain.SearchCriteria;
-import org.springframework.ldap.support.EntryNotFoundException;
 
 public class DummyPersonDao implements PersonDao {
     private static Map PERSONS;
@@ -67,7 +67,7 @@ public class DummyPersonDao implements PersonDao {
         if (PERSONS.get(fullname) != null) {
             return (Person) PERSONS.get(fullname);
         } else {
-            throw new EntryNotFoundException(
+            throw new NameNotFoundException(
                     "Could not find person with name '" + fullname + "'");
         }
     }

@@ -8,9 +8,9 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.samples.person.domain.Group;
 import org.springframework.ldap.samples.person.domain.SearchCriteria;
-import org.springframework.ldap.support.EntryNotFoundException;
 
 public class DummyGroupDao implements GroupDao {
     private static Map GROUPS;
@@ -54,7 +54,7 @@ public class DummyGroupDao implements GroupDao {
         if (GROUPS.get(name) != null) {
             return (Group) GROUPS.get(name);
         } else {
-            throw new EntryNotFoundException("Could not find group with name '"
+            throw new NameNotFoundException("Could not find group with name '"
                     + name + "'");
         }
     }
