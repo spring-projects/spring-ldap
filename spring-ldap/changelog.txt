@@ -12,7 +12,14 @@ http://www.ietf.org/rfc/rfc2696.txt
 
 Changes in version 1.2 (xx.yy.2007)
 -------------------------------------------
-* Moved the core classes into the package ldap.core.
+* Restructured packages:
+  - Moved the core classes into the package ldap.core.
+  - Moved subpackages of ldap.support to top level.
+  - Moved most classes in ldap.support to ldap.core or ldap.core.support.
+  - Moved classes in ldap.utils to ldap.support and removed ldap.utils.
+
+* Changed the exception hierarchy to be an unchecked mirror of the JNDI
+  NamingException hierarchy.
 
 * Deprecated the userName property in AbstractContextSource and changed
   it to the more correct userDn.
