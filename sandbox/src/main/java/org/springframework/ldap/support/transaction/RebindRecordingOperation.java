@@ -32,7 +32,7 @@ public class RebindRecordingOperation implements
 
     private LdapOperations ldapOperations;
 
-    private TempEntryRenamingStrategy renamingStrategy;
+    private TempEntryRenamingStrategy renamingStrategy = new DefaultTempEntryRenamingStrategy();
 
     /**
      * Constructor.
