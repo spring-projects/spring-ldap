@@ -15,6 +15,7 @@
 	<classpathentry kind="lib" path="lib/global/spring-binding.jar" sourcepath="lib/source/spring-binding-src.zip"/>
 	<classpathentry kind="lib" path="lib/global/ognl.jar"/>
 	<classpathentry kind="lib" path="lib/test/gsbase.jar"/>
+	<classpathentry kind="lib" path="lib/global/shared-asn1-codec.jar"/>
 	<classpathentry kind="src" output="target/itest-classes" path="src/itest/java"/>
 	<classpathentry kind="lib" path="lib/test/spring-mock.jar" sourcepath="lib/source/spring-src.zip"/>
 	<classpathentry kind="lib" path="lib/global/commons-lang.jar" sourcepath="lib/source/commons-lang-src.zip"/>
@@ -38,7 +39,6 @@
 	<classpathentry kind="lib" path="lib/global/apacheds-server-main.jar"/>
 	<classpathentry kind="lib" path="lib/global/jdbm.jar"/>
 	<classpathentry kind="lib" path="lib/global/mina-core.jar"/>
-	<classpathentry kind="lib" path="lib/global/mina-filter-codec-asn1.jar"/>
 	<classpathentry kind="lib" path="lib/global/mina-filter-ssl.jar"/>
 	<classpathentry kind="lib" path="lib/global/oro.jar"/>
 	<classpathentry kind="lib" path="lib/global/shared-asn1.jar"/>
