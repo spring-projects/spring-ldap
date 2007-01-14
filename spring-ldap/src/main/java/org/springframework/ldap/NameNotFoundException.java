@@ -24,6 +24,10 @@ package org.springframework.ldap;
  * @see javax.naming.NameNotFoundException
  */
 public class NameNotFoundException extends NamingException {
+    
+    public NameNotFoundException(String msg) {
+        super(msg);
+    }
 
     public NameNotFoundException(javax.naming.NameNotFoundException cause) {
         super(cause);
