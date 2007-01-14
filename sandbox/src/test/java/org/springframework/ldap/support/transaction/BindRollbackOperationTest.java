@@ -3,7 +3,6 @@ package org.springframework.ldap.support.transaction;
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
-import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
 
