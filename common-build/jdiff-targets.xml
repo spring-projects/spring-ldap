@@ -81,7 +81,8 @@
 		<property name="project.old.title" value="Spring LDAP" />
 		<property name="project.old.version" value="1.1.2" />
 		<property name="old.src.dir" location="${target.jdiff.dir}/spring-ldap-${project.old.version}" />
-		<property name="old.url" value="https://svn.sourceforge.net/svnroot/springframework/spring-ldap/tags/spring-ldap-${project.old.version}/spring-ldap/spring-ldap" />
+		<property name="svnserver" value="springframework.svn.sourceforge.net" />
+		<property name="old.url" value="https://${svnserver}/svnroot/springframework/spring-ldap/tags/spring-ldap-${project.old.version}/spring-ldap/spring-ldap" />
 		<property name="old.src.url" value="${old.url}/src/main/java" />
 		<property name="old.packages" value="org.springframework.ldap.*" />
 		<property name="target.javadocs.old.dir" location="${target.jdiff.dir}/javadocs.old" />
@@ -100,7 +101,7 @@
 
     <target name="checkout.old.src" unless="old.src.already.available" depends="guard.nosvn,-check.old.src">
 		<svn>
-			<checkout url="${old.src.url}" destPath="${old.src.dir}" />
+			<export srcUrl="${old.src.url}" destPath="${old.src.dir}" />
 	    </svn>
     </target>
 
