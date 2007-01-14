@@ -61,14 +61,14 @@
 	<property name="target.itestresults.dir" location="${target.dir}/itest-reports" />
 
 	<!-- itest resources get copied into target itest classes dir with filtering -->
-	<property name="src.itest.resources.dir" location="${src.etc.dir}/itest-resources" />
+	<property name="src.itest.resources.dir" location="${src.dir}/itest/resources" />
 
 	<!-- default wildcard for finding JUnit tests
 		the convention is that our JUnit test classes have XXXTests-style names -->
-	<property name="itest.includes" value="**/*ITest.class,**/*ITests.class" />
+	<property name="itest.includes" value="**/*ITest.class,**/*ITests.class,**/*IntegrationTest.class,**/*IntegrationTests.class" />
 
 	<!-- wildcards to exclude among JUnit tests -->
-	<property name="itest.includes" value="itest.excludes=**/Abstract*" />
+	<property name="itest.excludes" value="**/Abstract*" />
 
 	<!-- jvm arguments we want tacked on to all integration tests -->
 	<!-- set fake default value, will not override existing setting -->
