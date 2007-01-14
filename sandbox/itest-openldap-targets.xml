@@ -62,7 +62,7 @@
 	<property name="target.itest.openldap.results.dir" location="${target.dir}/itest-openldap-reports" />
 
 	<!-- itest-openldap resources get copied into target itest-openldap classes dir with filtering -->
-	<property name="src.itest.openldap.resources.dir" location="${src.etc.dir}/itest-openldap-resources" />
+	<property name="src.itest.openldap.resources.dir" location="${src.dir}/itest-openldap-resources" />
 
 	<!-- default wildcard for finding JUnit tests
 		the convention is that our JUnit test classes have XXXTests-style names -->
