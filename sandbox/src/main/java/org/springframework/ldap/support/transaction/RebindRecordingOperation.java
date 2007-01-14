@@ -15,17 +15,10 @@
  */
 package org.springframework.ldap.support.transaction;
 
-import java.util.List;
-
 import javax.naming.Name;
 import javax.naming.directory.Attributes;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.core.LdapRdn;
-import org.springframework.ldap.core.LdapRdnComponent;
 
 /**
  * A {@link CompensatingTransactionRecordingOperation} keeping track of a rebind
@@ -37,9 +30,9 @@ import org.springframework.ldap.core.LdapRdnComponent;
 public class RebindRecordingOperation implements
         CompensatingTransactionRecordingOperation {
 
-    private static Log log = LogFactory.getLog(RebindRecordingOperation.class);
-
     private LdapOperations ldapOperations;
+
+    private TempEntryRenamingStrategy renamingStrategy;
 
     /**
      * Constructor.
@@ -73,22 +66,11 @@ public class RebindRecordingOperation implements
             attributes = (Attributes) args[2];
         }
 
-        Name temporaryName = getTemporaryName(dn);
+        Name temporaryName = renamingStrategy.getTemporaryName(dn);
 
         ldapOperations.rename(dn, temporaryName);
         return new RebindRollbackOperation(ldapOperations, dn, temporaryName,
                 object, attributes);
-    }
-
-    Name getTemporaryName(Name originalName) {
-        DistinguishedName temporaryName = new DistinguishedName(originalName);
-        List names = temporaryName.getNames();
-        LdapRdn rdn = (LdapRdn) names.get(names.size() - 1);
-        LdapRdnComponent rdnComponent = rdn.getComponent();
-        String value = rdnComponent.getValue();
-        rdnComponent.setValue(value + "_temp");
-
-        return temporaryName;
     }
 
     /**
@@ -98,5 +80,13 @@ public class RebindRecordingOperation implements
      */
     LdapOperations getLdapOperations() {
         return ldapOperations;
+    }
+
+    public TempEntryRenamingStrategy getRenamingStrategy() {
+        return renamingStrategy;
+    }
+
+    public void setRenamingStrategy(TempEntryRenamingStrategy renamingStrategy) {
+        this.renamingStrategy = renamingStrategy;
     }
 }

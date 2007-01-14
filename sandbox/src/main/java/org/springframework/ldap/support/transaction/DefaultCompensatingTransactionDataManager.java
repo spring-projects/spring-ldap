@@ -79,8 +79,12 @@ public class DefaultCompensatingTransactionDataManager implements
         this.rollbackOperations = rollbackOperations;
     }
 
+    /* (non-Javadoc)
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionDataManager#commit()
+     */
     public void commit() {
         log.debug("Performing rollback");
+        // TODO: Should this really be done in reverse order?
         while (!rollbackOperations.isEmpty()) {
             CompensatingTransactionRollbackOperation rollbackOperation = (CompensatingTransactionRollbackOperation) rollbackOperations
                     .pop();

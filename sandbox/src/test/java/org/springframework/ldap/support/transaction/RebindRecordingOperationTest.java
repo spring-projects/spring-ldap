@@ -1,6 +1,5 @@
 package org.springframework.ldap.support.transaction;
 
-import javax.naming.Name;
 import javax.naming.directory.BasicAttributes;
 
 import junit.framework.TestCase;
@@ -14,22 +13,38 @@ public class RebindRecordingOperationTest extends TestCase {
 
     private LdapOperations ldapOperationsMock;
 
+    private MockControl renamingStrategyControl;
+
+    private TempEntryRenamingStrategy renamingStrategyMock;
+
     protected void setUp() throws Exception {
         ldapOperationsControl = MockControl.createControl(LdapOperations.class);
         ldapOperationsMock = (LdapOperations) ldapOperationsControl.getMock();
+
+        renamingStrategyControl = MockControl
+                .createControl(TempEntryRenamingStrategy.class);
+        renamingStrategyMock = (TempEntryRenamingStrategy) renamingStrategyControl
+                .getMock();
+
     }
 
     protected void tearDown() throws Exception {
         ldapOperationsControl = null;
         ldapOperationsMock = null;
+
+        renamingStrategyControl = null;
+        renamingStrategyMock = null;
+
     }
 
     protected void replay() {
         ldapOperationsControl.replay();
+        renamingStrategyControl.replay();
     }
 
     protected void verify() {
         ldapOperationsControl.verify();
+        renamingStrategyControl.verify();
     }
 
     public void testRecordOperation() {
@@ -38,18 +53,18 @@ public class RebindRecordingOperationTest extends TestCase {
         final DistinguishedName expectedTempDn = new DistinguishedName(
                 "cn=john doe");
         RebindRecordingOperation tested = new RebindRecordingOperation(
-                ldapOperationsMock) {
-            Name getTemporaryName(Name originalName) {
-                assertSame(expectedDn, originalName);
-                return expectedTempDn;
-            }
-        };
+                ldapOperationsMock);
+        tested.setRenamingStrategy(renamingStrategyMock);
+
+        renamingStrategyControl.expectAndReturn(renamingStrategyMock
+                .getTemporaryName(expectedDn), expectedTempDn);
 
         ldapOperationsMock.rename(expectedDn, expectedTempDn);
 
         replay();
         Object expectedObject = new Object();
         BasicAttributes expectedAttributes = new BasicAttributes();
+        
         // perform test
         CompensatingTransactionRollbackOperation result = tested
                 .recordOperation(new Object[] { expectedDn, expectedObject,
