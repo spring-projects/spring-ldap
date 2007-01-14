@@ -48,5 +48,6 @@
 	<classpathentry kind="lib" path="lib/test/aopalliance.jar"/>
 	<classpathentry kind="lib" path="lib/test/backport-util-concurrent.jar"/>
 	<classpathentry kind="lib" path="lib/global/spring-ldap.jar"/>
+	<classpathentry kind="lib" path="lib/test/shared-asn1-codec.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
