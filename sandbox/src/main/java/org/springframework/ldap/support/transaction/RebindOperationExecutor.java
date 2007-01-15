@@ -20,20 +20,24 @@ import javax.naming.directory.Attributes;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapOperations;
 
 /**
- * A {@link CompensatingTransactionRollbackOperation} to rollback a rebind
- * operation, performing a rebind operation using the supplied
- * {@link DirContextOperations} object.
+ * A {@link CompensatingTransactionOperationExecutor} to manage a rebind
+ * operation. The methods in this class do not behave as expected, since it
+ * might be impossible to retrieve all the original attributes from the entry.
+ * Instead this class performs a <b>rename</b> in {@link #performOperation()},
+ * a negating rename in {@link #rollback()}, and the {@link #commit()}
+ * operation unbinds the original entry from its temporary location and binds a
+ * new entry to the original location using the attributes supplied to the
+ * original rebind opertaion.
  * 
  * @author Mattias Arthursson
  */
-public class RebindRollbackOperation implements
-        CompensatingTransactionRollbackOperation {
+public class RebindOperationExecutor implements
+        CompensatingTransactionOperationExecutor {
 
-    private static Log log = LogFactory.getLog(RebindRollbackOperation.class);
+    private static Log log = LogFactory.getLog(RebindOperationExecutor.class);
 
     private LdapOperations ldapOperations;
 
@@ -59,7 +63,7 @@ public class RebindRollbackOperation implements
      * @param originalAttributes
      *            Original 'attributes' parameter sent to the rebind operation
      */
-    public RebindRollbackOperation(LdapOperations ldapOperations,
+    public RebindOperationExecutor(LdapOperations ldapOperations,
             Name originalDn, Name temporaryDn, Object originalObject,
             Attributes originalAttributes) {
         this.ldapOperations = ldapOperations;
@@ -81,7 +85,7 @@ public class RebindRollbackOperation implements
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#rollback()
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#rollback()
      */
     public void rollback() {
         log.debug("Rolling back rebind operation");
@@ -97,7 +101,7 @@ public class RebindRollbackOperation implements
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#commit()
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#commit()
      */
     public void commit() {
         log.debug("Committing rebind operation");
@@ -107,7 +111,7 @@ public class RebindRollbackOperation implements
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#performOperation()
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#performOperation()
      */
     public void performOperation() {
         log.debug("Performing rebind operation - "

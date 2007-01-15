@@ -22,16 +22,17 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.LdapOperations;
 
 /**
- * A {@link CompensatingTransactionRollbackOperation} to roll back a previous
- * rename operation.
+ * A {@link CompensatingTransactionOperationExecutor} to manage a rename
+ * operation. Performs a rename operation in {@link #performOperation()}, a
+ * negating rename in {@link #rollback()}, and nothing in {@link #commit()}.
  * 
  * @author Mattias Arthursson
  * 
  */
-public class RenameRollbackOperation implements
-        CompensatingTransactionRollbackOperation {
+public class RenameOperationExecutor implements
+        CompensatingTransactionOperationExecutor {
 
-    private static Log log = LogFactory.getLog(RenameRollbackOperation.class);
+    private static Log log = LogFactory.getLog(RenameOperationExecutor.class);
 
     private LdapOperations ldapOperations;
 
@@ -50,7 +51,7 @@ public class RenameRollbackOperation implements
      * @param newDn
      *            DN that the entry has been moved to in the recorded operation.
      */
-    public RenameRollbackOperation(LdapOperations ldapOperations,
+    public RenameOperationExecutor(LdapOperations ldapOperations,
             Name originalDn, Name newDn) {
         this.ldapOperations = ldapOperations;
         this.originalDn = originalDn;
@@ -60,7 +61,7 @@ public class RenameRollbackOperation implements
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#rollback()
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#rollback()
      */
     public void rollback() {
         log.debug("Rolling back rename operation");
@@ -75,7 +76,7 @@ public class RenameRollbackOperation implements
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#commit()
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#commit()
      */
     public void commit() {
         log.debug("Nothing to do in commit for rename operation");
@@ -84,7 +85,7 @@ public class RenameRollbackOperation implements
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#performOperation()
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#performOperation()
      */
     public void performOperation() {
         log.debug("Performing rename operation");

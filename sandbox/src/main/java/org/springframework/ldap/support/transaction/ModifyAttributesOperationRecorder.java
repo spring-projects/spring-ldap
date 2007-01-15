@@ -31,27 +31,27 @@ import org.springframework.ldap.core.LdapOperations;
 import org.springframework.util.Assert;
 
 /**
- * A {@link CompensatingTransactionRecordingOperation} keeping track of
+ * A {@link CompensatingTransactionOperationRecorder} keeping track of
  * modifyAttributes operations, creating corresponding
- * {@link ModifyAttributesRollbackOperation} instances for rollback.
+ * {@link ModifyAttributesOperationExecutor} instances for rollback.
  * 
  * @author Mattias Arthursson
  */
-public class ModifyAttributesRecordingOperation implements
-        CompensatingTransactionRecordingOperation {
+public class ModifyAttributesOperationRecorder implements
+        CompensatingTransactionOperationRecorder {
 
     private LdapOperations ldapOperations;
 
-    public ModifyAttributesRecordingOperation(LdapOperations ldapOperations) {
+    public ModifyAttributesOperationRecorder(LdapOperations ldapOperations) {
         this.ldapOperations = ldapOperations;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRecordingOperation#recordOperation(java.lang.Object[])
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
      */
-    public CompensatingTransactionRollbackOperation recordOperation(
+    public CompensatingTransactionOperationExecutor recordOperation(
             Object[] args) {
         Assert.notNull(args);
         Name dn = LdapUtils.getFirstArgumentAsName(args);
@@ -81,7 +81,7 @@ public class ModifyAttributesRecordingOperation implements
                     currentAttributes, incomingModifications[i]);
         }
 
-        return new ModifyAttributesRollbackOperation(ldapOperations, dn,
+        return new ModifyAttributesOperationExecutor(ldapOperations, dn,
                 incomingModifications, rollbackItems);
     }
 

@@ -33,11 +33,11 @@ public class LdapCompensatingTransactionOperationFactoryTest extends TestCase {
                 null);
         tested.setLdapOperations(ldapOperationsMock);
 
-        CompensatingTransactionRecordingOperation result = tested
+        CompensatingTransactionOperationRecorder result = tested
                 .createRecordingOperation("bind");
-        assertTrue(result instanceof BindRecordingOperation);
-        BindRecordingOperation bindRecordingOperation = (BindRecordingOperation) result;
-        assertSame(ldapOperationsMock, bindRecordingOperation
+        assertTrue(result instanceof BindOperationRecorder);
+        BindOperationRecorder bindOperationRecorder = (BindOperationRecorder) result;
+        assertSame(ldapOperationsMock, bindOperationRecorder
                 .getLdapOperations());
     }
 
@@ -46,11 +46,11 @@ public class LdapCompensatingTransactionOperationFactoryTest extends TestCase {
                 null);
         tested.setLdapOperations(ldapOperationsMock);
 
-        CompensatingTransactionRecordingOperation result = tested
+        CompensatingTransactionOperationRecorder result = tested
                 .createRecordingOperation("rebind");
-        assertTrue(result instanceof RebindRecordingOperation);
-        RebindRecordingOperation rebindRecordingOperation = (RebindRecordingOperation) result;
-        assertSame(ldapOperationsMock, rebindRecordingOperation
+        assertTrue(result instanceof RebindOperationRecorder);
+        RebindOperationRecorder rebindOperationRecorder = (RebindOperationRecorder) result;
+        assertSame(ldapOperationsMock, rebindOperationRecorder
                 .getLdapOperations());
     }
 
@@ -59,10 +59,10 @@ public class LdapCompensatingTransactionOperationFactoryTest extends TestCase {
                 null);
         tested.setLdapOperations(ldapOperationsMock);
 
-        CompensatingTransactionRecordingOperation result = tested
+        CompensatingTransactionOperationRecorder result = tested
                 .createRecordingOperation("rename");
-        assertTrue(result instanceof RenameRecordingOperation);
-        RenameRecordingOperation recordingOperation = (RenameRecordingOperation) result;
+        assertTrue(result instanceof RenameOperationRecorder);
+        RenameOperationRecorder recordingOperation = (RenameOperationRecorder) result;
         assertSame(ldapOperationsMock, recordingOperation.getLdapOperations());
     }
 
@@ -71,10 +71,10 @@ public class LdapCompensatingTransactionOperationFactoryTest extends TestCase {
                 null);
         tested.setLdapOperations(ldapOperationsMock);
 
-        CompensatingTransactionRecordingOperation result = tested
+        CompensatingTransactionOperationRecorder result = tested
                 .createRecordingOperation("modifyAttributes");
-        assertTrue(result instanceof ModifyAttributesRecordingOperation);
-        ModifyAttributesRecordingOperation recordingOperation = (ModifyAttributesRecordingOperation) result;
+        assertTrue(result instanceof ModifyAttributesOperationRecorder);
+        ModifyAttributesOperationRecorder recordingOperation = (ModifyAttributesOperationRecorder) result;
         assertSame(ldapOperationsMock, recordingOperation.getLdapOperations());
     }
 
@@ -83,10 +83,10 @@ public class LdapCompensatingTransactionOperationFactoryTest extends TestCase {
                 null);
         tested.setLdapOperations(ldapOperationsMock);
 
-        CompensatingTransactionRecordingOperation result = tested
+        CompensatingTransactionOperationRecorder result = tested
                 .createRecordingOperation("unbind");
-        assertTrue(result instanceof UnbindRecordingOperation);
-        UnbindRecordingOperation recordingOperation = (UnbindRecordingOperation) result;
+        assertTrue(result instanceof UnbindOperationRecorder);
+        UnbindOperationRecorder recordingOperation = (UnbindOperationRecorder) result;
         assertSame(ldapOperationsMock, recordingOperation.getLdapOperations());
     }
 

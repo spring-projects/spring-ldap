@@ -6,7 +6,7 @@ import org.easymock.MockControl;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
 
-public class BindRollbackOperationTest extends TestCase {
+public class UnbindOperationExecutorTest extends TestCase {
     private MockControl ldapOperationsControl;
 
     private LdapOperations ldapOperationsMock;
@@ -34,7 +34,7 @@ public class BindRollbackOperationTest extends TestCase {
     public void testPerformOperation() {
         DistinguishedName expectedOldName = new DistinguishedName("cn=oldDn");
         DistinguishedName expectedTempName = new DistinguishedName("cn=newDn");
-        BindRollbackOperation tested = new BindRollbackOperation(
+        UnbindOperationExecutor tested = new UnbindOperationExecutor(
                 ldapOperationsMock, expectedOldName, expectedTempName);
 
         // Nothing to do in performOperation for unbind.
@@ -48,7 +48,7 @@ public class BindRollbackOperationTest extends TestCase {
     public void testCommit() {
         DistinguishedName expectedOldName = new DistinguishedName("cn=oldDn");
         DistinguishedName expectedTempName = new DistinguishedName("cn=newDn");
-        BindRollbackOperation tested = new BindRollbackOperation(
+        UnbindOperationExecutor tested = new UnbindOperationExecutor(
                 ldapOperationsMock, expectedOldName, expectedTempName);
 
         ldapOperationsMock.unbind(expectedTempName);
@@ -62,7 +62,7 @@ public class BindRollbackOperationTest extends TestCase {
     public void testRollback() {
         DistinguishedName expectedOldName = new DistinguishedName("cn=oldDn");
         DistinguishedName expectedTempName = new DistinguishedName("cn=newDn");
-        BindRollbackOperation tested = new BindRollbackOperation(
+        UnbindOperationExecutor tested = new UnbindOperationExecutor(
                 ldapOperationsMock, expectedOldName, expectedTempName);
 
         ldapOperationsMock.rename(expectedTempName, expectedOldName);

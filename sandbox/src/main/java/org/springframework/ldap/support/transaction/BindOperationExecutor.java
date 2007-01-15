@@ -23,14 +23,15 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.LdapOperations;
 
 /**
- * A {@link CompensatingTransactionRollbackOperation} to rollback a bind
- * operation. Unbinds the entry using the supplied DN.
+ * A {@link CompensatingTransactionOperationExecutor} to manage a bind
+ * operation. Performs a bind in {@link #performOperation()}, a corresponding
+ * unbind in {@link #rollback()}, and nothing in {@link #commit()}.
  * 
  * @author Mattias Arthursson
  */
-public class UnbindRollbackOperation implements
-        CompensatingTransactionRollbackOperation {
-    private static Log log = LogFactory.getLog(UnbindRollbackOperation.class);
+public class BindOperationExecutor implements
+        CompensatingTransactionOperationExecutor {
+    private static Log log = LogFactory.getLog(BindOperationExecutor.class);
 
     private LdapOperations ldapOperations;
 
@@ -55,7 +56,7 @@ public class UnbindRollbackOperation implements
      *            original value sent to the 'attributes' parameter of the bind
      *            operation.
      */
-    public UnbindRollbackOperation(LdapOperations ldapOperations, Name dn,
+    public BindOperationExecutor(LdapOperations ldapOperations, Name dn,
             Object originalObject, Attributes originalAttributes) {
         this.ldapOperations = ldapOperations;
         this.dn = dn;
@@ -66,7 +67,7 @@ public class UnbindRollbackOperation implements
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#rollback()
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#rollback()
      */
     public void rollback() {
         try {
@@ -79,7 +80,7 @@ public class UnbindRollbackOperation implements
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#commit()
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#commit()
      */
     public void commit() {
         log.debug("Nothing to do in commit for bind operation");
@@ -88,7 +89,7 @@ public class UnbindRollbackOperation implements
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#performOperation()
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#performOperation()
      */
     public void performOperation() {
         log.debug("Performing bind operation");

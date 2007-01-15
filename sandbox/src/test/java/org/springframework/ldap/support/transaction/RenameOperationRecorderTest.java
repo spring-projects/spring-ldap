@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 import org.easymock.MockControl;
 import org.springframework.ldap.core.LdapOperations;
 
-public class RenameRecordingOperationTest extends TestCase {
+public class RenameOperationRecorderTest extends TestCase {
 
     private MockControl ldapOperationsControl;
 
@@ -30,17 +30,17 @@ public class RenameRecordingOperationTest extends TestCase {
     }
 
     public void testRecordOperation() {
-        RenameRecordingOperation tested = new RenameRecordingOperation(
+        RenameOperationRecorder tested = new RenameOperationRecorder(
                 ldapOperationsMock);
 
         replay();
         // Perform test
-        CompensatingTransactionRollbackOperation operation = tested
+        CompensatingTransactionOperationExecutor operation = tested
                 .recordOperation(new Object[] { "ou=someou", "ou=newou" });
         verify();
 
-        assertTrue(operation instanceof RenameRollbackOperation);
-        RenameRollbackOperation rollbackOperation = (RenameRollbackOperation) operation;
+        assertTrue(operation instanceof RenameOperationExecutor);
+        RenameOperationExecutor rollbackOperation = (RenameOperationExecutor) operation;
         assertSame(ldapOperationsMock, rollbackOperation.getLdapOperations());
         assertEquals("ou=newou", rollbackOperation.getNewDn().toString());
         assertEquals("ou=someou", rollbackOperation.getOriginalDn().toString());

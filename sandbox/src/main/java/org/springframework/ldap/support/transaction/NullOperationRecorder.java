@@ -15,34 +15,27 @@
  */
 package org.springframework.ldap.support.transaction;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
- * A {@link CompensatingTransactionRollbackOperation} that performs nothing.
+ * A {@link CompensatingTransactionOperationRecorder} performing nothing,
+ * returning a {@link NullOperationExecutor} regardless of the input. Instances
+ * of this class will be created if the
+ * {@link CompensatingTransactionDataManager} cannot determine any appropriate
+ * {@link CompensatingTransactionOperationRecorder} for the current operation.
  * 
  * @author Mattias Arthursson
+ * 
  */
-public class NullRollbackOperation implements
-        CompensatingTransactionRollbackOperation {
-
-    private static Log log = LogFactory.getLog(NullRollbackOperation.class);
+public class NullOperationRecorder implements
+        CompensatingTransactionOperationRecorder {
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#rollback()
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
      */
-    public void rollback() {
-        log.info("Rolling back null operation");
-    }
-
-    public void commit() {
-        log.info("Committing back null operation");
-    }
-
-    public void performOperation() {
-        log.info("Performing null operation");
+    public CompensatingTransactionOperationExecutor recordOperation(
+            Object[] args) {
+        return new NullOperationExecutor();
     }
 
 }

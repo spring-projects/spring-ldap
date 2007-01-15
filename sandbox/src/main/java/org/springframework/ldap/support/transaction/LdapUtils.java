@@ -154,9 +154,9 @@ public class LdapUtils {
                     .getOperationFactory();
 
             // Record the operation
-            CompensatingTransactionRecordingOperation operation = operationFactory
+            CompensatingTransactionOperationRecorder operation = operationFactory
                     .createRecordingOperation(method.getName());
-            CompensatingTransactionRollbackOperation rollbackOperation = operation
+            CompensatingTransactionOperationExecutor rollbackOperation = operation
                     .recordOperation(args);
 
             Object result = null;

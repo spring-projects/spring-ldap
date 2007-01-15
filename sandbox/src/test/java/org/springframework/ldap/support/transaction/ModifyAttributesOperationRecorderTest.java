@@ -15,7 +15,7 @@ import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
 
-public class ModifyAttributesRecordingOperationTest extends TestCase {
+public class ModifyAttributesOperationRecorderTest extends TestCase {
     private MockControl ldapOperationsControl;
 
     private LdapOperations ldapOperationsMock;
@@ -24,7 +24,7 @@ public class ModifyAttributesRecordingOperationTest extends TestCase {
 
     private AttributesMapper attributesMapperMock;
 
-    private ModifyAttributesRecordingOperation tested;
+    private ModifyAttributesOperationRecorder tested;
 
     protected void setUp() throws Exception {
         ldapOperationsControl = MockControl.createControl(LdapOperations.class);
@@ -35,7 +35,7 @@ public class ModifyAttributesRecordingOperationTest extends TestCase {
         attributesMapperMock = (AttributesMapper) attributesMapperControl
                 .getMock();
 
-        tested = new ModifyAttributesRecordingOperation(ldapOperationsMock);
+        tested = new ModifyAttributesOperationRecorder(ldapOperationsMock);
     }
 
     protected void tearDown() throws Exception {
@@ -67,7 +67,7 @@ public class ModifyAttributesRecordingOperationTest extends TestCase {
 
         final Attributes expectedAttributes = new BasicAttributes();
 
-        tested = new ModifyAttributesRecordingOperation(ldapOperationsMock) {
+        tested = new ModifyAttributesOperationRecorder(ldapOperationsMock) {
             AttributesMapper getAttributesMapper() {
                 return attributesMapperMock;
             }
@@ -89,13 +89,13 @@ public class ModifyAttributesRecordingOperationTest extends TestCase {
 
         replay();
         // Perform test
-        CompensatingTransactionRollbackOperation operation = tested
+        CompensatingTransactionOperationExecutor operation = tested
                 .recordOperation(new Object[] { expectedName, incomingMods });
         verify();
 
         // Verify outcome
-        assertTrue(operation instanceof ModifyAttributesRollbackOperation);
-        ModifyAttributesRollbackOperation rollbackOperation = (ModifyAttributesRollbackOperation) operation;
+        assertTrue(operation instanceof ModifyAttributesOperationExecutor);
+        ModifyAttributesOperationExecutor rollbackOperation = (ModifyAttributesOperationExecutor) operation;
         assertSame(expectedName, rollbackOperation.getDn());
         assertSame(ldapOperationsMock, rollbackOperation.getLdapOperations());
         assertSame(incomingMods, rollbackOperation.getActualModifications());

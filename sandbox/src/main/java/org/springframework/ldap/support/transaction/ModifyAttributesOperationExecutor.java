@@ -23,18 +23,18 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.LdapOperations;
 
 /**
- * A {@link CompensatingTransactionRollbackOperation} to rollback a
+ * A {@link CompensatingTransactionOperationExecutor} to manage a
  * <code>modifyAttributes</code> operation. Performs a
- * <code>modifyAttributes</code> operation using the DN of the target entry
- * and ModificationItems undoing the modifications of the recorded operation.
+ * <code>modifyAttributes</code> in {@link #performOperation()}, a negating
+ * modifyAttributes in {@link #rollback()}, and nothing in {@link #commit()}.
  * 
  * @author Mattias Arthursson
  */
-public class ModifyAttributesRollbackOperation implements
-        CompensatingTransactionRollbackOperation {
+public class ModifyAttributesOperationExecutor implements
+        CompensatingTransactionOperationExecutor {
 
     private static Log log = LogFactory
-            .getLog(ModifyAttributesRollbackOperation.class);
+            .getLog(ModifyAttributesOperationExecutor.class);
 
     private LdapOperations ldapOperations;
 
@@ -58,7 +58,7 @@ public class ModifyAttributesRollbackOperation implements
      * @param compensatingModifications
      *            the ModificationItems to undo the recorded operation.
      */
-    public ModifyAttributesRollbackOperation(LdapOperations ldapOperations,
+    public ModifyAttributesOperationExecutor(LdapOperations ldapOperations,
             Name dn, ModificationItem[] actualModifications,
             ModificationItem[] compensatingModifications) {
         this.ldapOperations = ldapOperations;
@@ -70,7 +70,7 @@ public class ModifyAttributesRollbackOperation implements
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#rollback()
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#rollback()
      */
     public void rollback() {
         try {
@@ -86,7 +86,7 @@ public class ModifyAttributesRollbackOperation implements
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#commit()
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#commit()
      */
     public void commit() {
         log.debug("Nothing to do in commit for modifyAttributes");
@@ -95,7 +95,7 @@ public class ModifyAttributesRollbackOperation implements
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation#performOperation()
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#performOperation()
      */
     public void performOperation() {
         log.debug("Performing modifyAttributes operation");

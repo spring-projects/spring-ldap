@@ -20,14 +20,14 @@ import javax.naming.Name;
 import org.springframework.ldap.core.LdapOperations;
 
 /**
- * {@link CompensatingTransactionRecordingOperation} to keep track of unbind
- * operations. This class creates {@link BindRollbackOperation} objects for
+ * {@link CompensatingTransactionOperationRecorder} to keep track of unbind
+ * operations. This class creates {@link UnbindOperationExecutor} objects for
  * rollback.
  * 
  * @author Mattias Arthursson
  */
-public class UnbindRecordingOperation implements
-        CompensatingTransactionRecordingOperation {
+public class UnbindOperationRecorder implements
+        CompensatingTransactionOperationRecorder {
 
     private LdapOperations ldapOperations;
 
@@ -39,25 +39,25 @@ public class UnbindRecordingOperation implements
      * @param ldapOperations
      *            {@link LdapOperations} to use for getting the data prior to
      *            unbinding the entry and to supply to the
-     *            {@link BindRollbackOperation} for rollback.
+     *            {@link UnbindOperationExecutor} for rollback.
      */
-    public UnbindRecordingOperation(LdapOperations ldapOperations) {
+    public UnbindOperationRecorder(LdapOperations ldapOperations) {
         this.ldapOperations = ldapOperations;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRecordingOperation#recordOperation(java.lang.Object[])
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
      */
-    public CompensatingTransactionRollbackOperation recordOperation(
+    public CompensatingTransactionOperationExecutor recordOperation(
             Object[] args) {
         Name dn = LdapUtils.getFirstArgumentAsName(args);
         Name temporaryDn = renamingStrategy.getTemporaryName(dn);
 
         ldapOperations.rename(dn, temporaryDn);
 
-        return new BindRollbackOperation(ldapOperations, dn, temporaryDn);
+        return new UnbindOperationExecutor(ldapOperations, dn, temporaryDn);
     }
 
     LdapOperations getLdapOperations() {

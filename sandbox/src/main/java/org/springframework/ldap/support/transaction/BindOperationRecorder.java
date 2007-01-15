@@ -21,15 +21,15 @@ import javax.naming.directory.Attributes;
 import org.springframework.ldap.core.LdapOperations;
 
 /**
- * A {@link CompensatingTransactionRecordingOperation} to manage LDAP bind
+ * A {@link CompensatingTransactionOperationRecorder} to manage LDAP bind
  * operations. The corresponding
- * {@link CompensatingTransactionRollbackOperation} is
- * {@link UnbindRollbackOperation}.
+ * {@link CompensatingTransactionOperationExecutor} is
+ * {@link BindOperationExecutor}.
  * 
  * @author Mattias Arthursson
  */
-public class BindRecordingOperation implements
-        CompensatingTransactionRecordingOperation {
+public class BindOperationRecorder implements
+        CompensatingTransactionOperationRecorder {
 
     private LdapOperations ldapOperations;
 
@@ -40,16 +40,16 @@ public class BindRecordingOperation implements
      *            {@link LdapOperations} to use for supplying to the
      *            corresponding rollback operation.
      */
-    public BindRecordingOperation(LdapOperations ldapOperations) {
+    public BindOperationRecorder(LdapOperations ldapOperations) {
         this.ldapOperations = ldapOperations;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRecordingOperation#recordOperation(java.lang.Object[])
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
      */
-    public CompensatingTransactionRollbackOperation recordOperation(
+    public CompensatingTransactionOperationExecutor recordOperation(
             Object[] args) {
         if (args == null || args.length != 3) {
             throw new IllegalArgumentException(
@@ -65,7 +65,7 @@ public class BindRecordingOperation implements
             attributes = (Attributes) args[2];
         }
 
-        return new UnbindRollbackOperation(ldapOperations, dn, object,
+        return new BindOperationExecutor(ldapOperations, dn, object,
                 attributes);
     }
 

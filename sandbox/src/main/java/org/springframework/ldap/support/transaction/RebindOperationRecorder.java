@@ -21,14 +21,14 @@ import javax.naming.directory.Attributes;
 import org.springframework.ldap.core.LdapOperations;
 
 /**
- * A {@link CompensatingTransactionRecordingOperation} keeping track of a rebind
- * operation. Creates {@link RebindRollbackOperation} objects in
+ * A {@link CompensatingTransactionOperationRecorder} keeping track of a rebind
+ * operation. Creates {@link RebindOperationExecutor} objects in
  * {@link #recordOperation(Object[])}.
  * 
  * @author Mattias Arthursson
  */
-public class RebindRecordingOperation implements
-        CompensatingTransactionRecordingOperation {
+public class RebindOperationRecorder implements
+        CompensatingTransactionOperationRecorder {
 
     private LdapOperations ldapOperations;
 
@@ -39,18 +39,18 @@ public class RebindRecordingOperation implements
      * 
      * @param ldapOperations
      *            {@link LdapOperations} to use for getting the rollback
-     *            information and supply to the {@link RebindRollbackOperation}.
+     *            information and supply to the {@link RebindOperationExecutor}.
      */
-    public RebindRecordingOperation(LdapOperations ldapOperations) {
+    public RebindOperationRecorder(LdapOperations ldapOperations) {
         this.ldapOperations = ldapOperations;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRecordingOperation#recordOperation(java.lang.Object[])
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
      */
-    public CompensatingTransactionRollbackOperation recordOperation(
+    public CompensatingTransactionOperationExecutor recordOperation(
             Object[] args) {
         if (args == null || args.length != 3) {
             throw new IllegalArgumentException(
@@ -69,7 +69,7 @@ public class RebindRecordingOperation implements
         Name temporaryName = renamingStrategy.getTemporaryName(dn);
 
         ldapOperations.rename(dn, temporaryName);
-        return new RebindRollbackOperation(ldapOperations, dn, temporaryName,
+        return new RebindOperationExecutor(ldapOperations, dn, temporaryName,
                 object, attributes);
     }
 

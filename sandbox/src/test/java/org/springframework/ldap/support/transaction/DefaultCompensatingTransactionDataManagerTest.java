@@ -10,13 +10,13 @@ public class DefaultCompensatingTransactionDataManagerTest extends TestCase {
 
     private MockControl rollbackOperationControl;
 
-    private CompensatingTransactionRollbackOperation rollbackOperationMock;
+    private CompensatingTransactionOperationExecutor rollbackOperationMock;
 
     protected void setUp() throws Exception {
         super.setUp();
         rollbackOperationControl = MockControl
-                .createControl(CompensatingTransactionRollbackOperation.class);
-        rollbackOperationMock = (CompensatingTransactionRollbackOperation) rollbackOperationControl
+                .createControl(CompensatingTransactionOperationExecutor.class);
+        rollbackOperationMock = (CompensatingTransactionOperationExecutor) rollbackOperationControl
                 .getMock();
     }
 

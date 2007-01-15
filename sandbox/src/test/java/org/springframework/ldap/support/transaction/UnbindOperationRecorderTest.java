@@ -6,7 +6,7 @@ import org.easymock.MockControl;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
 
-public class UnbindRecordingOperationTest extends TestCase {
+public class UnbindOperationRecorderTest extends TestCase {
     private MockControl ldapOperationsControl;
 
     private LdapOperations ldapOperationsMock;
@@ -50,7 +50,7 @@ public class UnbindRecordingOperationTest extends TestCase {
                 "cn=john doe_temp");
         final DistinguishedName expectedDn = new DistinguishedName(
                 "cn=john doe");
-        UnbindRecordingOperation tested = new UnbindRecordingOperation(
+        UnbindOperationRecorder tested = new UnbindOperationRecorder(
                 ldapOperationsMock);
         tested.setRenamingStrategy(renamingStrategyMock);
 
@@ -61,13 +61,13 @@ public class UnbindRecordingOperationTest extends TestCase {
 
         replay();
         // Perform test
-        CompensatingTransactionRollbackOperation operation = tested
+        CompensatingTransactionOperationExecutor operation = tested
                 .recordOperation(new Object[] { expectedDn });
         verify();
 
         // Verify result
-        assertTrue(operation instanceof BindRollbackOperation);
-        BindRollbackOperation rollbackOperation = (BindRollbackOperation) operation;
+        assertTrue(operation instanceof UnbindOperationExecutor);
+        UnbindOperationExecutor rollbackOperation = (UnbindOperationExecutor) operation;
         assertSame(ldapOperationsMock, rollbackOperation.getLdapOperations());
         assertSame(expectedDn, rollbackOperation.getOriginalDn());
         assertSame(expectedTempName, rollbackOperation.getTemporaryDn());

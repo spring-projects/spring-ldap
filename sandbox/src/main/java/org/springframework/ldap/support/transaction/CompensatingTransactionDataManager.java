@@ -26,7 +26,7 @@ package org.springframework.ldap.support.transaction;
 public interface CompensatingTransactionDataManager {
     /**
      * Indicates that the supplied operation (method name) has been performed
-     * and that the supplied {@link CompensatingTransactionRollbackOperation}
+     * and that the supplied {@link CompensatingTransactionOperationExecutor}
      * should be stored for possible rollback. This method is called after the
      * the actual invocation of the target method.
      * 
@@ -34,7 +34,7 @@ public interface CompensatingTransactionDataManager {
      *            the method to be invoked.
      */
     public void operationPerformed(
-            CompensatingTransactionRollbackOperation operation);
+            CompensatingTransactionOperationExecutor operation);
 
     /**
      * Rollback all recorded operations, by performing each of the recorded

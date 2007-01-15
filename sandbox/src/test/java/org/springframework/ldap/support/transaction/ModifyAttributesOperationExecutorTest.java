@@ -9,7 +9,7 @@ import org.springframework.ldap.core.LdapOperations;
 
 import junit.framework.TestCase;
 
-public class ModifyAttributesRollbackOperationTest extends TestCase {
+public class ModifyAttributesOperationExecutorTest extends TestCase {
     private MockControl ldapOperationsControl;
 
     private LdapOperations ldapOperationsMock;
@@ -38,7 +38,7 @@ public class ModifyAttributesRollbackOperationTest extends TestCase {
 
         Name expectedDn = new DistinguishedName("cn=john doe");
 
-        ModifyAttributesRollbackOperation tested = new ModifyAttributesRollbackOperation(
+        ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(
                 ldapOperationsMock, expectedDn, expectedActualItems,
                 expectedCompensatingItems);
 
@@ -57,7 +57,7 @@ public class ModifyAttributesRollbackOperationTest extends TestCase {
 
         Name expectedDn = new DistinguishedName("cn=john doe");
 
-        ModifyAttributesRollbackOperation tested = new ModifyAttributesRollbackOperation(
+        ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(
                 ldapOperationsMock, expectedDn, expectedActualItems,
                 expectedCompensatingItems);
 
@@ -76,7 +76,7 @@ public class ModifyAttributesRollbackOperationTest extends TestCase {
 
         Name expectedDn = new DistinguishedName("cn=john doe");
 
-        ModifyAttributesRollbackOperation tested = new ModifyAttributesRollbackOperation(
+        ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(
                 ldapOperationsMock, expectedDn, expectedActualItems,
                 expectedCompensatingItems);
 

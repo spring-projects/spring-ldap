@@ -6,7 +6,7 @@ import org.springframework.ldap.core.LdapOperations;
 
 import junit.framework.TestCase;
 
-public class RenameRollbackOperationTest extends TestCase {
+public class RenameOperationExecutorTest extends TestCase {
     private MockControl ldapOperationsControl;
 
     private LdapOperations ldapOperationsMock;
@@ -32,7 +32,7 @@ public class RenameRollbackOperationTest extends TestCase {
     public void testPerformOperation() {
         DistinguishedName expectedNewName = new DistinguishedName("ou=newOu");
         DistinguishedName expectedOldName = new DistinguishedName("ou=someou");
-        RenameRollbackOperation tested = new RenameRollbackOperation(
+        RenameOperationExecutor tested = new RenameOperationExecutor(
                 ldapOperationsMock, expectedOldName, expectedNewName);
 
         ldapOperationsMock.rename(expectedOldName, expectedNewName);
@@ -46,7 +46,7 @@ public class RenameRollbackOperationTest extends TestCase {
     public void testCommit() {
         DistinguishedName expectedNewName = new DistinguishedName("ou=newOu");
         DistinguishedName expectedOldName = new DistinguishedName("ou=someou");
-        RenameRollbackOperation tested = new RenameRollbackOperation(
+        RenameOperationExecutor tested = new RenameOperationExecutor(
                 ldapOperationsMock, expectedOldName, expectedNewName);
 
         // Nothing to do for this operation.
@@ -60,7 +60,7 @@ public class RenameRollbackOperationTest extends TestCase {
     public void testRollback() {
         DistinguishedName expectedNewName = new DistinguishedName("ou=newOu");
         DistinguishedName expectedOldName = new DistinguishedName("ou=someou");
-        RenameRollbackOperation tested = new RenameRollbackOperation(
+        RenameOperationExecutor tested = new RenameOperationExecutor(
                 ldapOperationsMock, expectedOldName, expectedNewName);
 
         ldapOperationsMock.rename(expectedNewName, expectedOldName);

@@ -8,7 +8,7 @@ import org.easymock.MockControl;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
 
-public class RebindRollbackOperationTest extends TestCase {
+public class RebindOperationExecutorTest extends TestCase {
 
     private MockControl ldapOperationsControl;
 
@@ -39,7 +39,7 @@ public class RebindRollbackOperationTest extends TestCase {
                 "cn=john doe_temp");
         Object expectedObject = new Object();
         BasicAttributes expectedAttributes = new BasicAttributes();
-        RebindRollbackOperation tested = new RebindRollbackOperation(
+        RebindOperationExecutor tested = new RebindOperationExecutor(
                 ldapOperationsMock, expectedOriginalDn, expectedTempDn,
                 expectedObject, expectedAttributes);
 
@@ -59,7 +59,7 @@ public class RebindRollbackOperationTest extends TestCase {
                 "cn=john doe_temp");
         Object expectedObject = new Object();
         BasicAttributes expectedAttributes = new BasicAttributes();
-        RebindRollbackOperation tested = new RebindRollbackOperation(
+        RebindOperationExecutor tested = new RebindOperationExecutor(
                 ldapOperationsMock, expectedOriginalDn, expectedTempDn,
                 expectedObject, expectedAttributes);
 
@@ -78,7 +78,7 @@ public class RebindRollbackOperationTest extends TestCase {
                 "cn=john doe_temp");
         Object expectedObject = new Object();
         BasicAttributes expectedAttributes = new BasicAttributes();
-        RebindRollbackOperation tested = new RebindRollbackOperation(
+        RebindOperationExecutor tested = new RebindOperationExecutor(
                 ldapOperationsMock, expectedOriginalDn, expectedTempDn,
                 expectedObject, expectedAttributes);
 

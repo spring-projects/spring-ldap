@@ -23,17 +23,17 @@ import org.springframework.ldap.core.LdapOperations;
 import org.springframework.util.Assert;
 
 /**
- * A {@link CompensatingTransactionRecordingOperation} for keeping track of
- * rename operations. Creates {@link RebindRollbackOperation} objects for
+ * A {@link CompensatingTransactionOperationRecorder} for keeping track of
+ * rename operations. Creates {@link RebindOperationExecutor} objects for
  * rolling back.
  * 
  * @author Mattias Arthursson
  * 
  */
-public class RenameRecordingOperation implements
-        CompensatingTransactionRecordingOperation {
+public class RenameOperationRecorder implements
+        CompensatingTransactionOperationRecorder {
 
-    private static Log log = LogFactory.getLog(RenameRecordingOperation.class);
+    private static Log log = LogFactory.getLog(RenameOperationRecorder.class);
 
     private LdapOperations ldapOperations;
 
@@ -42,18 +42,18 @@ public class RenameRecordingOperation implements
      * 
      * @param ldapOperations
      *            The {@link LdapOperations} to supply to the created
-     *            {@link RebindRollbackOperation} objects.
+     *            {@link RebindOperationExecutor} objects.
      */
-    public RenameRecordingOperation(LdapOperations ldapOperations) {
+    public RenameOperationRecorder(LdapOperations ldapOperations) {
         this.ldapOperations = ldapOperations;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionRecordingOperation#recordOperation(java.lang.Object[])
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
      */
-    public CompensatingTransactionRollbackOperation recordOperation(
+    public CompensatingTransactionOperationExecutor recordOperation(
             Object[] args) {
         log.debug("Storing rollback information for rename operation");
         Assert.notEmpty(args);
@@ -63,7 +63,7 @@ public class RenameRecordingOperation implements
         }
         Name oldDn = LdapUtils.getArgumentAsName(args[0]);
         Name newDn = LdapUtils.getArgumentAsName(args[1]);
-        return new RenameRollbackOperation(ldapOperations, oldDn, newDn);
+        return new RenameOperationExecutor(ldapOperations, oldDn, newDn);
     }
 
     LdapOperations getLdapOperations() {

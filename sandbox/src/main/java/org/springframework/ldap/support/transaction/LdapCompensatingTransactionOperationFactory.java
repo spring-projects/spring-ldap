@@ -32,28 +32,28 @@ public class LdapCompensatingTransactionOperationFactory implements
         this.ldapOperations = new LdapTemplate(new SingleContextSource(ctx));
     }
 
-    public CompensatingTransactionRecordingOperation createRecordingOperation(
+    public CompensatingTransactionOperationRecorder createRecordingOperation(
             String operation) {
         if (StringUtils.equals(operation, LdapUtils.BIND_METHOD_NAME)) {
             log.debug("Bind operation recorded");
-            return new BindRecordingOperation(ldapOperations);
+            return new BindOperationRecorder(ldapOperations);
         } else if (StringUtils.equals(operation, LdapUtils.REBIND_METHOD_NAME)) {
             log.debug("Rebind operation recorded");
-            return new RebindRecordingOperation(ldapOperations);
+            return new RebindOperationRecorder(ldapOperations);
         } else if (StringUtils.equals(operation, LdapUtils.RENAME_METHOD_NAME)) {
             log.debug("Rename operation recorded");
-            return new RenameRecordingOperation(ldapOperations);
+            return new RenameOperationRecorder(ldapOperations);
         } else if (StringUtils.equals(operation,
                 LdapUtils.MODIFY_ATTRIBUTES_METHOD_NAME)) {
-            return new ModifyAttributesRecordingOperation(ldapOperations);
+            return new ModifyAttributesOperationRecorder(ldapOperations);
         } else if (StringUtils.equals(operation, LdapUtils.UNBIND_METHOD_NAME)) {
-            return new UnbindRecordingOperation(ldapOperations);
+            return new UnbindOperationRecorder(ldapOperations);
         }
 
         log
-                .warn("No suitable CompensatingTransactionRecordingOperation found for method "
+                .warn("No suitable CompensatingTransactionOperationRecorder found for method "
                         + operation + ". Operation will not be transacted.");
-        return new NullRecordingOperation();
+        return new NullOperationRecorder();
     }
 
     /**

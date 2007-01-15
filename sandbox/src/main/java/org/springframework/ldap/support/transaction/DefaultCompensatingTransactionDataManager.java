@@ -22,7 +22,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Default implementation of {@link CompensatingTransactionDataManager}.
- * Manages a stack of {@link CompensatingTransactionRollbackOperation} objects
+ * Manages a stack of {@link CompensatingTransactionOperationExecutor} objects
  * and manages rollback of these in the reverse order.
  * 
  * @author Mattias Arthursson
@@ -38,10 +38,10 @@ public class DefaultCompensatingTransactionDataManager implements
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionDataManager#operationPerformed(org.springframework.ldap.support.transaction.CompensatingTransactionRollbackOperation)
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionDataManager#operationPerformed(org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor)
      */
     public void operationPerformed(
-            CompensatingTransactionRollbackOperation operation) {
+            CompensatingTransactionOperationExecutor operation) {
         rollbackOperations.push(operation);
     }
 
@@ -53,7 +53,7 @@ public class DefaultCompensatingTransactionDataManager implements
     public void rollback() {
         log.debug("Performing rollback");
         while (!rollbackOperations.isEmpty()) {
-            CompensatingTransactionRollbackOperation rollbackOperation = (CompensatingTransactionRollbackOperation) rollbackOperations
+            CompensatingTransactionOperationExecutor rollbackOperation = (CompensatingTransactionOperationExecutor) rollbackOperations
                     .pop();
             rollbackOperation.rollback();
         }
@@ -86,7 +86,7 @@ public class DefaultCompensatingTransactionDataManager implements
         log.debug("Performing rollback");
         // TODO: Should this really be done in reverse order?
         while (!rollbackOperations.isEmpty()) {
-            CompensatingTransactionRollbackOperation rollbackOperation = (CompensatingTransactionRollbackOperation) rollbackOperations
+            CompensatingTransactionOperationExecutor rollbackOperation = (CompensatingTransactionOperationExecutor) rollbackOperations
                     .pop();
             rollbackOperation.commit();
         }

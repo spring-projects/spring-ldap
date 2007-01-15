@@ -8,7 +8,7 @@ import org.easymock.MockControl;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
 
-public class RebindRecordingOperationTest extends TestCase {
+public class RebindOperationRecorderTest extends TestCase {
     private MockControl ldapOperationsControl;
 
     private LdapOperations ldapOperationsMock;
@@ -52,7 +52,7 @@ public class RebindRecordingOperationTest extends TestCase {
                 "cn=john doe");
         final DistinguishedName expectedTempDn = new DistinguishedName(
                 "cn=john doe");
-        RebindRecordingOperation tested = new RebindRecordingOperation(
+        RebindOperationRecorder tested = new RebindOperationRecorder(
                 ldapOperationsMock);
         tested.setRenamingStrategy(renamingStrategyMock);
 
@@ -66,13 +66,13 @@ public class RebindRecordingOperationTest extends TestCase {
         BasicAttributes expectedAttributes = new BasicAttributes();
         
         // perform test
-        CompensatingTransactionRollbackOperation result = tested
+        CompensatingTransactionOperationExecutor result = tested
                 .recordOperation(new Object[] { expectedDn, expectedObject,
                         expectedAttributes });
         verify();
 
-        assertTrue(result instanceof RebindRollbackOperation);
-        RebindRollbackOperation rollbackOperation = (RebindRollbackOperation) result;
+        assertTrue(result instanceof RebindOperationExecutor);
+        RebindOperationExecutor rollbackOperation = (RebindOperationExecutor) result;
         assertSame(ldapOperationsMock, rollbackOperation.getLdapOperations());
         assertSame(expectedDn, rollbackOperation.getOriginalDn());
         assertSame(expectedTempDn, rollbackOperation.getTemporaryDn());
