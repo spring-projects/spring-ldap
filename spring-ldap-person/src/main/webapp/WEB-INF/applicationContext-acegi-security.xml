@@ -72,7 +72,7 @@
 	<!-- =================================================================================== -->
 	
 	<bean id="contextFactory" class="org.acegisecurity.ldap.DefaultInitialDirContextFactory">
-		<constructor-arg value="ldap://localhost:389/dc=jayway,dc=se" />
+		<constructor-arg value="${url}/${base}" />
 	</bean>
 	
 	<bean id="ldapUserSearch" class="org.acegisecurity.ldap.search.FilterBasedLdapUserSearch">

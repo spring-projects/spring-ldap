@@ -13,7 +13,7 @@
 	<!-- Authenticate using a fixed user -->
 	<!--
 	<bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource" >
-		<property name="urls" value="${urls}" />
+		<property name="url" value="${url}" />
 		<property name="base" value="${base}" />
 		<property name="userDn" value="${userDn}" />
 		<property name="password" value="${password}" />
@@ -23,7 +23,7 @@
 
 	<!-- Authenticate using the currently logged in user, retrieved by Acegi Security -->
 	<bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource" >
-		<property name="urls" value="${urls}" />
+		<property name="url" value="${url}" />
 		<property name="base" value="${base}" />
 		<property name="authenticationSource" ref="acegiAuthenticationSource" />
 		<property name="dirObjectFactory" value="org.springframework.ldap.core.DefaultDirObjectFactory" />
@@ -50,8 +50,8 @@
 
 	<bean id="traditionalPersonDao"
 		class="org.springframework.ldap.samples.person.dao.TraditionalPersonDaoImpl">
-		<property name="url" value="ldap://localhost:389" />
-		<property name="base" value="dc=jayway,dc=se" />
+		<property name="url" value="${url}" />
+		<property name="base" value="${base}" />
 	</bean>
 
 	<bean id="dummyPersonDao"
