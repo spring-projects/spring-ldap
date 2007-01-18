@@ -62,14 +62,22 @@ public class ContextSourceTransactionManager extends
     private ContextSource contextSource;
 
     /**
-     * Set the ContextSource to work on. The supplied ContextSource must be of
-     * the type abstract
+     * Set the ContextSource to work on. Even though the actual ContextSource
+     * sent to the LdapTemplate instance should be a
+     * {@link TransactionAwareContextSourceProxy}, the one sent to this method
+     * should be the target of that proxy. If it is not, the target will be
+     * extracted and used instead.
      * 
      * @param contextSource
      *            the ContextSource to work on.
      */
     public void setContextSource(ContextSource contextSource) {
-        this.contextSource = contextSource;
+        if (contextSource instanceof TransactionAwareContextSourceProxy) {
+            TransactionAwareContextSourceProxy proxy = (TransactionAwareContextSourceProxy) contextSource;
+            this.contextSource = proxy.getTarget();
+        } else {
+            this.contextSource = contextSource;
+        }
     }
 
     public ContextSource getContextSource() {

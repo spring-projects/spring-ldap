@@ -153,4 +153,16 @@ public class ContextSourceTransactionManagerTest extends TestCase {
                 .getResource(contextSourceMock));
         assertNull(expectedContextHolder.getTransactionDataManager());
     }
+
+    public void testSetContextSource_Proxy() {
+        TransactionAwareContextSourceProxy proxy = new TransactionAwareContextSourceProxy(
+                contextSourceMock);
+
+        // Perform test
+        tested.setContextSource(proxy);
+        ContextSource result = tested.getContextSource();
+
+        // Verify result
+        assertSame(contextSourceMock, result);
+    }
 }

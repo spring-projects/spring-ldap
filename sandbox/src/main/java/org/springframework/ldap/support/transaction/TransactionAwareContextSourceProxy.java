@@ -47,6 +47,15 @@ public class TransactionAwareContextSourceProxy implements ContextSource {
         this.target = target;
     }
 
+    /**
+     * Get the target ContextSource.
+     * 
+     * @return the target ContextSource.
+     */
+    public ContextSource getTarget() {
+        return target;
+    }
+
     /*
      * (non-Javadoc)
      * 
