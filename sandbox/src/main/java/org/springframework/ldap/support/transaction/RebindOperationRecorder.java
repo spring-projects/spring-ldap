@@ -68,7 +68,6 @@ public class RebindOperationRecorder implements
 
         Name temporaryName = renamingStrategy.getTemporaryName(dn);
 
-        ldapOperations.rename(dn, temporaryName);
         return new RebindOperationExecutor(ldapOperations, dn, temporaryName,
                 object, attributes);
     }

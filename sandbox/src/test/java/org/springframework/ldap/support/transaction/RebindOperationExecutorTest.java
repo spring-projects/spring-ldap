@@ -43,6 +43,7 @@ public class RebindOperationExecutorTest extends TestCase {
                 ldapOperationsMock, expectedOriginalDn, expectedTempDn,
                 expectedObject, expectedAttributes);
 
+        ldapOperationsMock.rename(expectedOriginalDn, expectedTempDn);
         ldapOperationsMock.bind(expectedOriginalDn, expectedObject,
                 expectedAttributes);
 

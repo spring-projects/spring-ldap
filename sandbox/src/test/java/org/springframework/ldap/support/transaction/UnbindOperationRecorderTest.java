@@ -57,8 +57,6 @@ public class UnbindOperationRecorderTest extends TestCase {
         renamingStrategyControl.expectAndReturn(renamingStrategyMock
                 .getTemporaryName(expectedDn), expectedTempName);
 
-        ldapOperationsMock.rename(expectedDn, expectedTempName);
-
         replay();
         // Perform test
         CompensatingTransactionOperationExecutor operation = tested

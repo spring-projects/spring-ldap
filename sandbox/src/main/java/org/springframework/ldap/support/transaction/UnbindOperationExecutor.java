@@ -97,7 +97,9 @@ public class UnbindOperationExecutor implements
      * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#performOperation()
      */
     public void performOperation() {
-        log.debug("Nothing to do in performOperation for unbind");
+        log.debug("Performing operation for unbind -"
+                + " renaming to temporary entry.");
+        ldapOperations.rename(originalDn, temporaryDn);
     }
 
     LdapOperations getLdapOperations() {

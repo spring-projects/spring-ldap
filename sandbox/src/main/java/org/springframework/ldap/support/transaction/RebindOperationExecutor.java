@@ -115,7 +115,9 @@ public class RebindOperationExecutor implements
      */
     public void performOperation() {
         log.debug("Performing rebind operation - "
+                + "renaming original entry and "
                 + "binding new contents to entry.");
+        ldapOperations.rename(originalDn, temporaryDn);
         ldapOperations.bind(originalDn, originalObject, originalAttributes);
     }
 

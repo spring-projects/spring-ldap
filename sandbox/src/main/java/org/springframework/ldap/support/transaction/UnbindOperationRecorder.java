@@ -55,8 +55,6 @@ public class UnbindOperationRecorder implements
         Name dn = LdapUtils.getFirstArgumentAsName(args);
         Name temporaryDn = renamingStrategy.getTemporaryName(dn);
 
-        ldapOperations.rename(dn, temporaryDn);
-
         return new UnbindOperationExecutor(ldapOperations, dn, temporaryDn);
     }
 

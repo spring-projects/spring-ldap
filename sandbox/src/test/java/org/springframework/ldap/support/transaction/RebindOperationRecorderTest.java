@@ -59,8 +59,6 @@ public class RebindOperationRecorderTest extends TestCase {
         renamingStrategyControl.expectAndReturn(renamingStrategyMock
                 .getTemporaryName(expectedDn), expectedTempDn);
 
-        ldapOperationsMock.rename(expectedDn, expectedTempDn);
-
         replay();
         Object expectedObject = new Object();
         BasicAttributes expectedAttributes = new BasicAttributes();

@@ -37,8 +37,8 @@ public class UnbindOperationExecutorTest extends TestCase {
         UnbindOperationExecutor tested = new UnbindOperationExecutor(
                 ldapOperationsMock, expectedOldName, expectedTempName);
 
-        // Nothing to do in performOperation for unbind.
-
+        ldapOperationsMock.rename(expectedOldName, expectedTempName);
+        
         replay();
         // Perform test
         tested.performOperation();
