@@ -40,7 +40,7 @@
 	<property file="${common.build.dir}/project.properties" />
 	<property file="${user.home}/build.properties" />
 
-	<import file="${basedir}/itest-targets.xml" />
+	<import file="${common.build.dir}/itest-targets.xml" />
 	<import file="${common.build.dir}/common-targets.xml" />
 
 	<!--

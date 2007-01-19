@@ -34,13 +34,7 @@
 -->
 <project name="itest-targets">
 
-	<property file="build.properties" />
-	<property file="project.properties" />
-	<property file="${common.build.dir}/build.properties" />
-	<property file="${common.build.dir}/project.properties" />
-	<property file="${user.home}/build.properties" />
-
-	<import file="${common.build.dir}/common-targets.xml" />
+	<import file="common-targets.xml" />
 
 	<!--
 		Custom properties for itest.
