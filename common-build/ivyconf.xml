@@ -17,14 +17,14 @@
 
 			<!-- pull from the main release repository third -->
 			<url name="spring-repo" m2compatible="true">
-				<ivy pattern="https://svn.sourceforge.net/svnroot/springframework/repos/repo/[organisation]/[module]/ivy-[revision].xml" />
-				<artifact pattern="https://svn.sourceforge.net/svnroot/springframework/repos/repo/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+				<ivy pattern="https://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo/[organisation]/[module]/ivy-[revision].xml" />
+				<artifact pattern="https://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 			</url>
 
 			<!-- if still not resolved, try snapshots -->
 			<url name="spring-repo-snapshots" m2compatible="true">
-				<ivy pattern="https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/[organisation]/[module]/ivy-[revision].xml" />
-				<artifact pattern="https://svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+				<ivy pattern="https://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/[organisation]/[module]/ivy-[revision].xml" />
+				<artifact pattern="https://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 			</url>
 		</chain>
 
@@ -37,8 +37,8 @@
            	
 			<!-- if still not resolved, try external repo -->
 			<url name="spring-repo-ext" m2compatible="true">
-				<ivy pattern="https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/[organisation]/[module]/ivy-[revision].xml" />
-				<artifact pattern="https://svn.sourceforge.net/svnroot/springframework/repos/repo-ext/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+				<ivy pattern="https://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo-ext/[organisation]/[module]/ivy-[revision].xml" />
+				<artifact pattern="https://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo-ext/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 			</url>
 
 			<!-- try popular maven2 ibiblio mirror second -->
