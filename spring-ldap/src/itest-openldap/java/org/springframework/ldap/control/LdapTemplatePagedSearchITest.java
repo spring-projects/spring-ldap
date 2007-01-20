@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap;
+package org.springframework.ldap.control;
 
 import java.util.List;
 
@@ -23,8 +23,8 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchControls;
 
-import org.springframework.ldap.control.PagedResultsCookie;
-import org.springframework.ldap.control.PagedResultsRequestControl;
+import org.springframework.ldap.Person;
+import org.springframework.ldap.PersonAttributesMapper;
 import org.springframework.ldap.core.CollectingNameClassPairCallbackHandler;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
