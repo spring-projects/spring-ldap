@@ -173,6 +173,10 @@ public class VirtualListViewRequestControl implements DirContextProcessor {
         LdapContext ldapContext = (LdapContext) ctx;
         Control[] responseControls = ldapContext.getResponseControls();
 
+        if (responseControls == null) {
+            return;
+        }
+
         // Go through response controls and get info, regardless of class
         for (int i = 0; i < responseControls.length; i++) {
             Control responseControl = responseControls[i];

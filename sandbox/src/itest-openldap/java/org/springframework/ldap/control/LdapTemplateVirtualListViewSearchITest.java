@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap;
+package org.springframework.ldap.control;
 
 import java.util.List;
 
@@ -21,6 +21,7 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchControls;
 
+import org.springframework.ldap.Person;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.CollectingNameClassPairCallbackHandler;
 import org.springframework.ldap.core.LdapTemplate;
@@ -37,7 +38,7 @@ import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 public class LdapTemplateVirtualListViewSearchITest extends
         AbstractDependencyInjectionSpringContextTests {
 
-    private static final String BASE_STRING = "o=ikea.com";
+    private static final String BASE_STRING = "";
 
     private static final String FILTER_STRING = "(&(objectclass=ikeaperson))";
 
