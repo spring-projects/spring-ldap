@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+    <bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource">
+        <property name="url" value="ldap://localhost:10389"/>
+        <property name="base" value="dc=example,dc=com"/>
+        <property name="userName" value="cn=Directory Manager"/>
+        <property name="password" value="password"/>
+    </bean>
+
+    <bean id="ldapTemplate" singleton="true" class="org.springframework.ldap.core.LdapTemplate">
+        <constructor-arg ref="contextSource"/>
+    </bean>
+
+    <bean id="typeConverter" singleton="true" class="org.springframework.ldap.odm.attributetypes.LdapTypeConverter"/>
+
+    <bean id="referencedEntryEditorFactory" singleton="true"
+          class="org.springframework.ldap.odm.attributetypes.ReferencedEntryEditorFactory">
+        <constructor-arg ref="ldapTemplate"/>
+    </bean>
+
+    <bean id="ctxMapperFactory" singleton="true"
+          class="org.springframework.ldap.odm.contextmapping.ContextMapperFactory">
+        <constructor-arg ref="typeConverter"/>
+        <constructor-arg ref="referencedEntryEditorFactory"/>
+    </bean>
+
+    <bean id="ldapDao" singleton="true" class="org.springframework.ldap.odm.dao.LdapDaoImpl">
+        <constructor-arg ref="ldapTemplate"/>
+        <constructor-arg ref="ctxMapperFactory"/>
+    </bean>
+
+</beans>
