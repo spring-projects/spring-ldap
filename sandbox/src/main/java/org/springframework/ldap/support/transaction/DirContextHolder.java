@@ -22,9 +22,9 @@ import org.springframework.transaction.support.ResourceHolderSupport;
 /**
  * Keeps track of the transaction DirContext. The same DirContext instance will
  * be reused throughout a transaction. Also keeps a
- * {@link CompensatingTransactionDataManager}, responsible for keeping track of
- * all changes and storing compensating rollback operations, should the
- * transaction need to be rolled back.
+ * {@link CompensatingTransactionOperationManager}, responsible for performing
+ * operations and keeping track of all changes and storing information necessary
+ * for commit or rollback.
  * 
  * @author Mattias Arthursson
  * 
@@ -32,9 +32,11 @@ import org.springframework.transaction.support.ResourceHolderSupport;
 public class DirContextHolder extends ResourceHolderSupport {
     private DirContext ctx;
 
-    private CompensatingTransactionDataManager transactionDataManager;
+    private CompensatingTransactionOperationManager transactionDataManager;
 
     private CompensatingTransactionOperationFactory operationFactory;
+
+    private TempEntryRenamingStrategy renamingStrategy;
 
     /**
      * Constructor.
@@ -42,24 +44,37 @@ public class DirContextHolder extends ResourceHolderSupport {
      * @param ctx
      *            The DirContext associated with the current transaction.
      */
-    public DirContextHolder(DirContext ctx) {
+    public DirContextHolder(DirContext ctx,
+            TempEntryRenamingStrategy renamingStrategy) {
         this.ctx = ctx;
-        this.transactionDataManager = new DefaultCompensatingTransactionDataManager();
-        this.operationFactory = new LdapCompensatingTransactionOperationFactory(
-                ctx);
+        this.renamingStrategy = renamingStrategy;
+        this.transactionDataManager = new DefaultCompensatingTransactionOperationManager(
+                createOperationFactory());
     }
 
     /**
      * Set the DirContext associated with the current transaction.
      * 
      * @param ctx
-     *            the DirContext associated with the current transaction.
+     *            The DirContext associated with the current transaction.
      */
     public void setCtx(DirContext ctx) {
         this.ctx = ctx;
-        this.transactionDataManager = new DefaultCompensatingTransactionDataManager();
-        this.operationFactory = new LdapCompensatingTransactionOperationFactory(
-                ctx);
+        this.transactionDataManager = new DefaultCompensatingTransactionOperationManager(
+                createOperationFactory());
+    }
+
+    /**
+     * Factory method to create a
+     * {@link CompensatingTransactionOperationFactory} using the settings and
+     * current state of this object.
+     * 
+     * @return a new {@link LdapCompensatingTransactionOperationFactory}
+     *         referncing the current transaction context.
+     */
+    private CompensatingTransactionOperationFactory createOperationFactory() {
+        return new LdapCompensatingTransactionOperationFactory(ctx,
+                renamingStrategy);
     }
 
     /**
@@ -76,27 +91,32 @@ public class DirContextHolder extends ResourceHolderSupport {
     }
 
     /**
-     * Get the CompensatingTransactionDataManager to handle the data for the
-     * current transaction.
+     * Get the CompensatingTransactionOperationManager to handle the data for
+     * the current transaction.
      * 
-     * @return the CompensatingTransactionDataManager.
+     * @return the CompensatingTransactionOperationManager.
      */
-    public CompensatingTransactionDataManager getTransactionDataManager() {
+    public CompensatingTransactionOperationManager getTransactionDataManager() {
         return transactionDataManager;
     }
 
     /**
-     * Set the CompensatingTransactionDataManager. For testing purposes only.
+     * Set the CompensatingTransactionOperationManager. For testing purposes
+     * only.
      * 
      * @param transactionDataManager
-     *            the CompensatingTransactionDataManager to use.
+     *            the CompensatingTransactionOperationManager to use.
      */
     void setTransactionDataManager(
-            CompensatingTransactionDataManager transactionDataManager) {
+            CompensatingTransactionOperationManager transactionDataManager) {
         this.transactionDataManager = transactionDataManager;
     }
 
     public CompensatingTransactionOperationFactory getOperationFactory() {
         return operationFactory;
+    }
+
+    public TempEntryRenamingStrategy getRenamingStrategy() {
+        return renamingStrategy;
     }
 }

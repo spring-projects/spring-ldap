@@ -34,7 +34,6 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  * @author Mattias Arthursson
  */
 public class TransactionAwareContextSourceProxy implements ContextSource {
-
     private ContextSource target;
 
     /**

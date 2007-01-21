@@ -19,7 +19,7 @@ package org.springframework.ldap.support.transaction;
  * A {@link CompensatingTransactionOperationRecorder} performing nothing,
  * returning a {@link NullOperationExecutor} regardless of the input. Instances
  * of this class will be created if the
- * {@link CompensatingTransactionDataManager} cannot determine any appropriate
+ * {@link CompensatingTransactionOperationManager} cannot determine any appropriate
  * {@link CompensatingTransactionOperationRecorder} for the current operation.
  * 
  * @author Mattias Arthursson

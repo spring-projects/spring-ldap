@@ -51,8 +51,7 @@ public class UnbindOperationRecorderTest extends TestCase {
         final DistinguishedName expectedDn = new DistinguishedName(
                 "cn=john doe");
         UnbindOperationRecorder tested = new UnbindOperationRecorder(
-                ldapOperationsMock);
-        tested.setRenamingStrategy(renamingStrategyMock);
+                ldapOperationsMock, renamingStrategyMock);
 
         renamingStrategyControl.expectAndReturn(renamingStrategyMock
                 .getTemporaryName(expectedDn), expectedTempName);

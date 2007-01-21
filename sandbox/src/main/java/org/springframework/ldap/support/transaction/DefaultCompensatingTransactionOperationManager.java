@@ -21,34 +21,49 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Default implementation of {@link CompensatingTransactionDataManager}.
+ * Default implementation of {@link CompensatingTransactionOperationManager}.
  * Manages a stack of {@link CompensatingTransactionOperationExecutor} objects
  * and manages rollback of these in the reverse order.
  * 
  * @author Mattias Arthursson
  */
-public class DefaultCompensatingTransactionDataManager implements
-        CompensatingTransactionDataManager {
+public class DefaultCompensatingTransactionOperationManager implements
+        CompensatingTransactionOperationManager {
 
     private static Log log = LogFactory
-            .getLog(DefaultCompensatingTransactionDataManager.class);
+            .getLog(DefaultCompensatingTransactionOperationManager.class);
 
     private Stack rollbackOperations = new Stack();
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionDataManager#operationPerformed(org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor)
-     */
-    public void operationPerformed(
-            CompensatingTransactionOperationExecutor operation) {
-        rollbackOperations.push(operation);
+    private CompensatingTransactionOperationFactory operationFactory;
+
+    public DefaultCompensatingTransactionOperationManager(
+            CompensatingTransactionOperationFactory operationFactory) {
+        this.operationFactory = operationFactory;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionDataManager#rollback()
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationManager#operationPerformed(java.lang.String,
+     *      java.lang.Object[])
+     */
+    public void performOperation(String operation, Object[] args) {
+        CompensatingTransactionOperationRecorder recorder = operationFactory
+                .createRecordingOperation(operation);
+        CompensatingTransactionOperationExecutor executor = recorder
+                .recordOperation(args);
+
+        executor.performOperation();
+
+        // Don't push the executor until the actual operation passed.
+        rollbackOperations.push(executor);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationManager#rollback()
      */
     public void rollback() {
         log.debug("Performing rollback");
@@ -79,8 +94,10 @@ public class DefaultCompensatingTransactionDataManager implements
         this.rollbackOperations = rollbackOperations;
     }
 
-    /* (non-Javadoc)
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionDataManager#commit()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationManager#commit()
      */
     public void commit() {
         log.debug("Performing rollback");

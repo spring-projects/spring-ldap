@@ -32,7 +32,7 @@ public class RebindOperationRecorder implements
 
     private LdapOperations ldapOperations;
 
-    private TempEntryRenamingStrategy renamingStrategy = new DefaultTempEntryRenamingStrategy();
+    private TempEntryRenamingStrategy renamingStrategy;
 
     /**
      * Constructor.
@@ -40,9 +40,14 @@ public class RebindOperationRecorder implements
      * @param ldapOperations
      *            {@link LdapOperations} to use for getting the rollback
      *            information and supply to the {@link RebindOperationExecutor}.
+     * @param the
+     *            {@link TempEntryRenamingStrategy} to use for generating temp
+     *            DNs.
      */
-    public RebindOperationRecorder(LdapOperations ldapOperations) {
+    public RebindOperationRecorder(LdapOperations ldapOperations,
+            TempEntryRenamingStrategy renamingStrategy) {
         this.ldapOperations = ldapOperations;
+        this.renamingStrategy = renamingStrategy;
     }
 
     /*
@@ -83,9 +88,5 @@ public class RebindOperationRecorder implements
 
     public TempEntryRenamingStrategy getRenamingStrategy() {
         return renamingStrategy;
-    }
-
-    public void setRenamingStrategy(TempEntryRenamingStrategy renamingStrategy) {
-        this.renamingStrategy = renamingStrategy;
     }
 }

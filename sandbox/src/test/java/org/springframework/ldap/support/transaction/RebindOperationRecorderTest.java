@@ -53,8 +53,7 @@ public class RebindOperationRecorderTest extends TestCase {
         final DistinguishedName expectedTempDn = new DistinguishedName(
                 "cn=john doe");
         RebindOperationRecorder tested = new RebindOperationRecorder(
-                ldapOperationsMock);
-        tested.setRenamingStrategy(renamingStrategyMock);
+                ldapOperationsMock, renamingStrategyMock);
 
         renamingStrategyControl.expectAndReturn(renamingStrategyMock
                 .getTemporaryName(expectedDn), expectedTempDn);
@@ -62,7 +61,7 @@ public class RebindOperationRecorderTest extends TestCase {
         replay();
         Object expectedObject = new Object();
         BasicAttributes expectedAttributes = new BasicAttributes();
-        
+
         // perform test
         CompensatingTransactionOperationExecutor result = tested
                 .recordOperation(new Object[] { expectedDn, expectedObject,

@@ -22,14 +22,18 @@ public class LdapCompensatingTransactionOperationFactory implements
 
     private LdapOperations ldapOperations;
 
+    private TempEntryRenamingStrategy renamingStrategy;
+
     /**
      * Constructor.
      * 
      * @param ctx
      *            The transactional DirContext.
      */
-    public LdapCompensatingTransactionOperationFactory(DirContext ctx) {
+    public LdapCompensatingTransactionOperationFactory(DirContext ctx,
+            TempEntryRenamingStrategy renamingStrategy) {
         this.ldapOperations = new LdapTemplate(new SingleContextSource(ctx));
+        this.renamingStrategy = renamingStrategy;
     }
 
     public CompensatingTransactionOperationRecorder createRecordingOperation(
@@ -39,7 +43,7 @@ public class LdapCompensatingTransactionOperationFactory implements
             return new BindOperationRecorder(ldapOperations);
         } else if (StringUtils.equals(operation, LdapUtils.REBIND_METHOD_NAME)) {
             log.debug("Rebind operation recorded");
-            return new RebindOperationRecorder(ldapOperations);
+            return new RebindOperationRecorder(ldapOperations, renamingStrategy);
         } else if (StringUtils.equals(operation, LdapUtils.RENAME_METHOD_NAME)) {
             log.debug("Rename operation recorded");
             return new RenameOperationRecorder(ldapOperations);
@@ -47,7 +51,7 @@ public class LdapCompensatingTransactionOperationFactory implements
                 LdapUtils.MODIFY_ATTRIBUTES_METHOD_NAME)) {
             return new ModifyAttributesOperationRecorder(ldapOperations);
         } else if (StringUtils.equals(operation, LdapUtils.UNBIND_METHOD_NAME)) {
-            return new UnbindOperationRecorder(ldapOperations);
+            return new UnbindOperationRecorder(ldapOperations, renamingStrategy);
         }
 
         log

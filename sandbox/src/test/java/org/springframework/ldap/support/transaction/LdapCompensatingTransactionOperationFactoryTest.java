@@ -10,27 +10,42 @@ public class LdapCompensatingTransactionOperationFactoryTest extends TestCase {
 
     private LdapOperations ldapOperationsMock;
 
+    private MockControl renamingStrategyControl;
+
+    private TempEntryRenamingStrategy renamingStrategyMock;
+
     protected void setUp() throws Exception {
         ldapOperationsControl = MockControl.createControl(LdapOperations.class);
         ldapOperationsMock = (LdapOperations) ldapOperationsControl.getMock();
+
+        renamingStrategyControl = MockControl
+                .createControl(TempEntryRenamingStrategy.class);
+        renamingStrategyMock = (TempEntryRenamingStrategy) renamingStrategyControl
+                .getMock();
+
     }
 
     protected void tearDown() throws Exception {
         ldapOperationsControl = null;
         ldapOperationsMock = null;
+
+        renamingStrategyControl = null;
+        renamingStrategyMock = null;
     }
 
     protected void replay() {
         ldapOperationsControl.replay();
+        renamingStrategyControl.replay();
     }
 
     protected void verify() {
         ldapOperationsControl.verify();
+        renamingStrategyControl.verify();
     }
 
     public void testGetRecordingOperation_Bind() throws Exception {
         LdapCompensatingTransactionOperationFactory tested = new LdapCompensatingTransactionOperationFactory(
-                null);
+                null, renamingStrategyMock);
         tested.setLdapOperations(ldapOperationsMock);
 
         CompensatingTransactionOperationRecorder result = tested
@@ -43,7 +58,7 @@ public class LdapCompensatingTransactionOperationFactoryTest extends TestCase {
 
     public void testGetRecordingOperation_Rebind() throws Exception {
         LdapCompensatingTransactionOperationFactory tested = new LdapCompensatingTransactionOperationFactory(
-                null);
+                null, renamingStrategyMock);
         tested.setLdapOperations(ldapOperationsMock);
 
         CompensatingTransactionOperationRecorder result = tested
@@ -52,11 +67,13 @@ public class LdapCompensatingTransactionOperationFactoryTest extends TestCase {
         RebindOperationRecorder rebindOperationRecorder = (RebindOperationRecorder) result;
         assertSame(ldapOperationsMock, rebindOperationRecorder
                 .getLdapOperations());
+        assertSame(renamingStrategyMock, rebindOperationRecorder
+                .getRenamingStrategy());
     }
 
     public void testGetRecordingOperation_Rename() throws Exception {
         LdapCompensatingTransactionOperationFactory tested = new LdapCompensatingTransactionOperationFactory(
-                null);
+                null, renamingStrategyMock);
         tested.setLdapOperations(ldapOperationsMock);
 
         CompensatingTransactionOperationRecorder result = tested
@@ -68,7 +85,7 @@ public class LdapCompensatingTransactionOperationFactoryTest extends TestCase {
 
     public void testGetRecordingOperation_ModifyAttributes() throws Exception {
         LdapCompensatingTransactionOperationFactory tested = new LdapCompensatingTransactionOperationFactory(
-                null);
+                null, renamingStrategyMock);
         tested.setLdapOperations(ldapOperationsMock);
 
         CompensatingTransactionOperationRecorder result = tested
@@ -80,7 +97,7 @@ public class LdapCompensatingTransactionOperationFactoryTest extends TestCase {
 
     public void testGetRecordingOperation_Unbind() throws Exception {
         LdapCompensatingTransactionOperationFactory tested = new LdapCompensatingTransactionOperationFactory(
-                null);
+                null, renamingStrategyMock);
         tested.setLdapOperations(ldapOperationsMock);
 
         CompensatingTransactionOperationRecorder result = tested
@@ -88,6 +105,8 @@ public class LdapCompensatingTransactionOperationFactoryTest extends TestCase {
         assertTrue(result instanceof UnbindOperationRecorder);
         UnbindOperationRecorder recordingOperation = (UnbindOperationRecorder) result;
         assertSame(ldapOperationsMock, recordingOperation.getLdapOperations());
+        assertSame(renamingStrategyMock, recordingOperation
+                .getRenamingStrategy());
     }
 
 }

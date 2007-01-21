@@ -75,7 +75,8 @@ public class TransactionAwareDirContextInvocationHandler implements
             return null;
         } else if (LdapUtils.isSupportedWriteTransactionOperation(methodName)) {
             // Store transaction data and allow operation to proceed.
-            return LdapUtils.operationPerformed(contextSource, method, args);
+            LdapUtils.performOperation(contextSource, method, args);
+            return null;
         } else {
             try {
                 return method.invoke(target, args);

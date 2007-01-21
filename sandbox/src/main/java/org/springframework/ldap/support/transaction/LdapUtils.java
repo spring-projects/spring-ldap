@@ -133,8 +133,8 @@ public class LdapUtils {
     }
 
     /**
-     * Store compensating transaction data for the supplied operation and
-     * arguments. TODO: Clean up this mess.
+     * Perform the specified operation, storing the state prior to the
+     * operation, to enable commit/rollback later.
      * 
      * @param contextSource
      *            the ContextSource we are operating on.
@@ -143,40 +143,22 @@ public class LdapUtils {
      * @param args
      *            arguments with which the operation is invoked.
      */
-    public static Object operationPerformed(ContextSource contextSource,
+    public static void performOperation(ContextSource contextSource,
             Method method, Object[] args) throws Throwable {
         DirContextHolder transactionContextHolder = (DirContextHolder) TransactionSynchronizationManager
                 .getResource(contextSource);
         if (transactionContextHolder != null) {
-            CompensatingTransactionDataManager transactionDataManager = transactionContextHolder
+
+            CompensatingTransactionOperationManager transactionDataManager = transactionContextHolder
                     .getTransactionDataManager();
-            CompensatingTransactionOperationFactory operationFactory = transactionContextHolder
-                    .getOperationFactory();
-
-            // Record the operation
-            CompensatingTransactionOperationRecorder operation = operationFactory
-                    .createRecordingOperation(method.getName());
-            CompensatingTransactionOperationExecutor rollbackOperation = operation
-                    .recordOperation(args);
-
-            Object result = null;
-            // Perform the target operation
-            rollbackOperation.performOperation();
-            // result = method.invoke(transactionContextHolder.getCtx(),
-            // args);
-            transactionDataManager.operationPerformed(rollbackOperation);
-
-            return result;
+            transactionDataManager.performOperation(method.getName(), args);
         } else {
-            Object result = null;
             // Perform the target operation
             try {
-                result = method.invoke(transactionContextHolder.getCtx(), args);
+                method.invoke(transactionContextHolder.getCtx(), args);
             } catch (InvocationTargetException e) {
                 throw e.getTargetException();
             }
-
-            return result;
         }
     }
 }

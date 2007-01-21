@@ -31,7 +31,7 @@ public class UnbindOperationRecorder implements
 
     private LdapOperations ldapOperations;
 
-    private TempEntryRenamingStrategy renamingStrategy = new DefaultTempEntryRenamingStrategy();
+    private TempEntryRenamingStrategy renamingStrategy;
 
     /**
      * Constructor.
@@ -40,9 +40,14 @@ public class UnbindOperationRecorder implements
      *            {@link LdapOperations} to use for getting the data prior to
      *            unbinding the entry and to supply to the
      *            {@link UnbindOperationExecutor} for rollback.
+     * @param renamingStrategy
+     *            the {@link TempEntryRenamingStrategy} to use when generating
+     *            DNs for temporary entries.
      */
-    public UnbindOperationRecorder(LdapOperations ldapOperations) {
+    public UnbindOperationRecorder(LdapOperations ldapOperations,
+            TempEntryRenamingStrategy renamingStrategy) {
         this.ldapOperations = ldapOperations;
+        this.renamingStrategy = renamingStrategy;
     }
 
     /*
@@ -65,9 +70,4 @@ public class UnbindOperationRecorder implements
     public TempEntryRenamingStrategy getRenamingStrategy() {
         return renamingStrategy;
     }
-
-    public void setRenamingStrategy(TempEntryRenamingStrategy renamingStrategy) {
-        this.renamingStrategy = renamingStrategy;
-    }
-
 }

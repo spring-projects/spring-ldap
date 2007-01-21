@@ -16,25 +16,27 @@
 package org.springframework.ldap.support.transaction;
 
 /**
- * A CompensatingTransactionDataManager implementation records operations that
- * are performed in a transaction and keeps track of compensating actions
- * necessary for rolling back each individual operation.
+ * A CompensatingTransactionOperationManager implementation records and performs
+ * operations that are to be performed within a compensating transaction and
+ * keeps track of compensating actions necessary for rolling back each
+ * individual operation.
  * 
  * @author Mattias Arthursson
  * 
  */
-public interface CompensatingTransactionDataManager {
+public interface CompensatingTransactionOperationManager {
     /**
-     * Indicates that the supplied operation (method name) has been performed
-     * and that the supplied {@link CompensatingTransactionOperationExecutor}
-     * should be stored for possible rollback. This method is called after the
-     * the actual invocation of the target method.
+     * Indicates that the supplied operation (method name) is to be performed.
+     * This method is responsible for recording the current state (prior to the
+     * operation), performing the operation, and storing the necessary
+     * information to roll back or commit the performed operation.
      * 
      * @param operation
-     *            the method to be invoked.
+     *            The method to be invoked.
+     * @param args
+     *            Arguments supplied to the method.
      */
-    public void operationPerformed(
-            CompensatingTransactionOperationExecutor operation);
+    public void performOperation(String operation, Object[] args);
 
     /**
      * Rollback all recorded operations, by performing each of the recorded

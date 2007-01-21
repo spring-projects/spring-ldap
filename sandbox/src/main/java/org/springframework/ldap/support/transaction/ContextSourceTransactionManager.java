@@ -61,6 +61,8 @@ public class ContextSourceTransactionManager extends
 
     private ContextSource contextSource;
 
+    private TempEntryRenamingStrategy renamingStrategy = new DefaultTempEntryRenamingStrategy();
+
     /**
      * Set the ContextSource to work on. Even though the actual ContextSource
      * sent to the LdapTemplate instance should be a
@@ -109,7 +111,8 @@ public class ContextSourceTransactionManager extends
 
         if (txObject.getContextHolder() == null) {
             DirContext newCtx = getContextSource().getReadOnlyContext();
-            DirContextHolder contextHolder = new DirContextHolder(newCtx);
+            DirContextHolder contextHolder = new DirContextHolder(newCtx,
+                    renamingStrategy);
 
             txObject.setContextHolder(contextHolder);
             TransactionSynchronizationManager.bindResource(getContextSource(),
@@ -162,5 +165,17 @@ public class ContextSourceTransactionManager extends
         }
 
         txObject.getContextHolder().clear();
+    }
+
+    /**
+     * Set the {@link TempEntryRenamingStrategy} to be used when renaming
+     * temporary entries in unbind and rebind operations. Default value is a
+     * {@link DefaultTempEntryRenamingStrategy}.
+     * 
+     * @param renamingStrategy
+     *            the {@link TempEntryRenamingStrategy} to use.
+     */
+    public void setRenamingStrategy(TempEntryRenamingStrategy renamingStrategy) {
+        this.renamingStrategy = renamingStrategy;
     }
 }

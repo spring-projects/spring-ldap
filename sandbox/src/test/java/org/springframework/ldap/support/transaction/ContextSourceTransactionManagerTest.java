@@ -28,9 +28,13 @@ public class ContextSourceTransactionManagerTest extends TestCase {
 
     private MockControl transactionDataManagerControl;
 
-    private CompensatingTransactionDataManager transactionDataManagerMock;
+    private CompensatingTransactionOperationManager transactionDataManagerMock;
 
     private TransactionDefinition transactionDefinitionMock;
+
+    private MockControl renamingStrategyControl;
+
+    private TempEntryRenamingStrategy renamingStrategyMock;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -50,12 +54,18 @@ public class ContextSourceTransactionManagerTest extends TestCase {
                 .getMock();
 
         transactionDataManagerControl = MockControl
-                .createControl(CompensatingTransactionDataManager.class);
-        transactionDataManagerMock = (CompensatingTransactionDataManager) transactionDataManagerControl
+                .createControl(CompensatingTransactionOperationManager.class);
+        transactionDataManagerMock = (CompensatingTransactionOperationManager) transactionDataManagerControl
+                .getMock();
+
+        renamingStrategyControl = MockControl
+                .createControl(TempEntryRenamingStrategy.class);
+        renamingStrategyMock = (TempEntryRenamingStrategy) renamingStrategyControl
                 .getMock();
 
         tested = new ContextSourceTransactionManager();
         tested.setContextSource(contextSourceMock);
+        tested.setRenamingStrategy(renamingStrategyMock);
     }
 
     protected void tearDown() throws Exception {
@@ -73,6 +83,9 @@ public class ContextSourceTransactionManagerTest extends TestCase {
         transactionDataManagerControl = null;
         transactionDataManagerMock = null;
 
+        renamingStrategyControl = null;
+        renamingStrategyMock = null;
+
         if (TransactionSynchronizationManager.isSynchronizationActive()) {
             TransactionSynchronizationManager.clearSynchronization();
         }
@@ -88,11 +101,11 @@ public class ContextSourceTransactionManagerTest extends TestCase {
     }
 
     public void testDoGetTransactionTransactionActive() {
-        DirContextHolder expectedContextHolder = new DirContextHolder(null);
+        DirContextHolder expectedContextHolder = new DirContextHolder(null,
+                null);
         TransactionSynchronizationManager.bindResource(contextSourceMock,
                 expectedContextHolder);
         Object result = tested.doGetTransaction();
-
         assertSame(expectedContextHolder,
                 ((ContextSourceTransactionObject) result).getContextHolder());
     }
@@ -112,6 +125,8 @@ public class ContextSourceTransactionManagerTest extends TestCase {
         DirContextHolder foundContextHolder = (DirContextHolder) TransactionSynchronizationManager
                 .getResource(contextSourceMock);
         assertSame(contextMock, foundContextHolder.getCtx());
+        assertSame(renamingStrategyMock, foundContextHolder
+                .getRenamingStrategy());
     }
 
     public void testDoCommit() {
@@ -120,7 +135,7 @@ public class ContextSourceTransactionManagerTest extends TestCase {
     public void testDoRollback() {
 
         DirContextHolder expectedContextHolder = new DirContextHolder(
-                contextMock);
+                contextMock, renamingStrategyMock);
         expectedContextHolder
                 .setTransactionDataManager(transactionDataManagerMock);
         TransactionSynchronizationManager.bindResource(contextSourceMock,
@@ -138,7 +153,7 @@ public class ContextSourceTransactionManagerTest extends TestCase {
 
     public void testDoCleanupAfterCompletion() throws Exception {
         DirContextHolder expectedContextHolder = new DirContextHolder(
-                contextMock);
+                contextMock, renamingStrategyMock);
         TransactionSynchronizationManager.bindResource(contextSourceMock,
                 expectedContextHolder);
 
