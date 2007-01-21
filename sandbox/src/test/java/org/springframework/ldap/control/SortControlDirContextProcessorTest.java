@@ -24,7 +24,6 @@ import javax.naming.ldap.PagedResultsControl;
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
-import org.springframework.ldap.support.control.SortControlDirContextProcessor;
 
 import com.sun.jndi.ldap.Ber;
 import com.sun.jndi.ldap.BerDecoder;

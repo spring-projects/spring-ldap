@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap.support.control;
+package org.springframework.ldap.control;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

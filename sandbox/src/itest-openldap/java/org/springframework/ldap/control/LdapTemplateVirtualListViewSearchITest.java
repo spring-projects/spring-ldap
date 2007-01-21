@@ -25,8 +25,6 @@ import org.springframework.ldap.Person;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.CollectingNameClassPairCallbackHandler;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.support.control.VirtualListViewRequestControl;
-import org.springframework.ldap.support.control.VirtualListViewResultsCookie;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**

@@ -30,7 +30,6 @@ import org.springframework.ldap.core.CollectingNameClassPairCallbackHandler;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.SearchExecutor;
-import org.springframework.ldap.support.control.SortControlDirContextProcessor;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**
