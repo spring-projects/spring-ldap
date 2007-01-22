@@ -21,6 +21,8 @@ import javax.naming.directory.DirContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.transaction.CompensatingTransactionOperationExecutor;
+import org.springframework.ldap.transaction.CompensatingTransactionOperationRecorder;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
@@ -30,23 +32,65 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 /**
  * TransactionManager for managing LDAP transactions. Since transactions are not
  * supported in the LDAP protocol this class and its collaborators aims to
- * provide compensating transactions instead.
+ * provide compensating transactions instead, i.e. should a transaction need to
+ * be rolled back this TransactionManager will try to restore the original state
+ * prior to the operations using information recorded prior to each operation.
  * <p>
- * A transaction is tied to a {@link ContextSource}, to be supplied to the
- * {@link #setContextSource(ContextSource)} method. While the actual
+ * <b>NOTE:</b> The transactions provided by this TransactionManager are all
+ * <i>client side</i> and are by no means 'real' transactions, in the sense
+ * that we know them in the ordinary database world, e.g.:
+ * <ul>
+ * <li>Should the transaction failure be caused by a network failure there is
+ * no way whatsoever that this TransactionManager can restore the database
+ * state. In this case all possibilities for rollback will be utterly lost.</li>
+ * <li>Transaction isolation is not provided, i.e. entries participating in a
+ * transaction for one client may very well participate in another transaction
+ * for another client at the same time. Should one of these transaction be
+ * rolled back, the outcome of this is undetermined, and may in the worst case
+ * result in total failure.</li>
+ * </ul>
+ * </p>
+ * <p>
+ * While the points above should be noted and considered, the compensating
+ * transaction approach will be perfectly sufficient for all but the most
+ * unfortunate of circumstances, particularly considering the total absence of
+ * transaction support which is normally the case working against LDAP servers.
+ * </p>
+ * <p>
+ * An LDAP transaction is tied to a {@link ContextSource}, to be supplied to
+ * the {@link #setContextSource(ContextSource)} method. While the actual
  * ContextSource used by the target LdapTemplate instance needs to be of the
  * type {@link TransactionAwareContextSourceProxy}, the ContextSource supplied
  * to this class should be the actual target ContextSource.
  * </p>
  * <p>
- * This class creates a {@link ContextSourceTransactionObject} as the
- * implementation specific Transaction object. The actual transaction data is
- * managed by a {@link DirContextHolder} and its collaborating
- * {@link LdapCompensatingTransactionDataManager}. Using a
- * {@link TransactionAwareContextSourceProxy} all modify operations (bind,
- * rebind, modifyAttributes, unbind) will result in corresponding rollback
- * operations to be recorded and these operations will be invoked should the
- * transaction be rolled back.
+ * Using this TransactionManager along with
+ * {@link TransactionAwareContextSourceProxy} all modifying operations (bind,
+ * unbind, rebind, rename, modifyAttributes) in a transaction will be
+ * intercepted. Each modification has its corresponding
+ * {@link CompensatingTransactionOperationRecorder}, which collects the
+ * information necessary to perform a rollback and produces a
+ * {@link CompensatingTransactionOperationExecutor} which is then used to
+ * execute the actual operation and is later called for performing the commit or
+ * rollback.
+ * </p>
+ * <p>
+ * For several of the operations, performing a rollback is pretty
+ * straightforward. E.g. in order to roll back a rename operation it will only
+ * be required to rename the entry back to its original position. For other
+ * operations however, it's a bit more complicated. E.g. an unbind operation is
+ * not possible to roll back by simply binding the entry back with the
+ * attributes retrieved from the original entry. This is because it might not be
+ * possible to get all the information from the original entry. Consequently,
+ * the {@link UnbindOperationExecutor} will move the original entry to a
+ * temporary location in its performOperation() method. In the commit() method
+ * we already know that everything went well, so we're free to unbind the entry,
+ * but the rollback operation will be to rename the entry back to its original
+ * location. The same behaviour is used for rebind() operations. The operation
+ * of calculating a temporary location for an entry is delegated to a
+ * {@link TempEntryRenamingStrategy} (default
+ * {@link DefaultTempEntryRenamingStrategy}), specified in
+ * {@link #setRenamingStrategy(TempEntryRenamingStrategy)}.
  * </p>
  * 
  * @author Mattias Arthursson
