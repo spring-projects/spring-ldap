@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!--
+  =======================================================================
+  Build file containing targets for continuously integrating build
+  Targets are put in a separate build file to prevent users from
+  having to put in an SSH library in ANT_HOME/lib
+  
+  This build requires an SSH client to be put in ANT_HOME/lib. Refer
+  to Ant's SCP documentation for more information.
+  
+  @author Alef Arendsen
+  @author Arjen Poutsma
+  =======================================================================
+-->
+<project name="build-spring-ldap-continuous" default="snapshot" xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+
+	<import file="${basedir}/build.xml"/>
+
+	<!-- targets for uploading binaries, creating snapshots, et cetera -->
+    <!--
+            properties needed (some are set in CruiseControl configuration)
+            - release.zip         release zip (set by build.xml)
+            - release.version     release version (set by build.xml)
+            - target.release.dir  release directory (set by build.xml)
+            - upload.tmp.dir      temporary directory to use when uploading
+            - upload.username     username to use when SCP'ing to server
+            - upload.password     password to use when SCP'ing to server
+            - upload.url          url to use when SCP'ing to server
+            - upload.log.dir      directory to upload logs to
+            - upload.binaries.dir directory to upload binaries to
+	-->
+	<target name="snapshot" depends="init, guard.upload.tmp.dir">
+        <delete quiet="true" dir="${upload.tmp.dir}"/>
+        <mkdir dir="${upload.tmp.dir}"/>
+        <tstamp>
+            <format property="tstamp" pattern="yyyyMMdd-HHmm"/>
+        </tstamp>
+        <move file="${target.release.dir}/${release.zip}"
+            tofile="${upload.tmp.dir}/spring-ldap-${release.version}-${tstamp}.zip"/>
+    </target>
+    
+    <target name="upload" depends="upload-binaries"/>
+
+    <!-- SCP needs an SSH library on the classpath (see Ant documentation for more info) -->
+    <target name="upload-binaries" depends="init, guard.upload.tmp.dir, guard.upload.binaries.dir, guard.upload.url, guard.upload.password, guard.upload.username">
+        <scp todir="${upload.username}@${upload.url}:${upload.binaries.dir}" password="${upload.password}">
+            <fileset dir="${upload.tmp.dir}">
+                <include name="spring-*.zip"/>
+            </fileset>
+        </scp>
+        <delete quiet="true" dir="${upload.tmp.dir}"/>
+    </target>
+    
+    <target name="guard.upload.tmp.dir" unless="upload.tmp.dir">
+    	<fail message="This target requires the upload.tmp.dir property to be set"/>
+    </target>
+    
+    <target name="guard.upload.log.dir" unless="upload.log.dir">
+    	<fail message="This target requires the upload.log.dir property to be set"/>
+    </target>
+    
+    <target name="guard.upload.binaries.dir" unless="upload.binaries.dir">
+    	<fail message="This target requires the upload.binaries.dir property to be set"/>
+    </target>
+    
+    <target name="guard.upload.username" unless="upload.username">
+    	<fail message="This target requires the upload.username property to be set"/>
+    </target>
+    
+    <target name="guard.upload.url" unless="upload.url">
+    	<fail message="This target requires the upload.url.property to be set"/>
+    </target>
+        
+    <target name="guard.upload.password" unless="upload.password">
+    	<fail message="This target requires the upload.password property to be set"/>
+    </target>
+    
+</project>
