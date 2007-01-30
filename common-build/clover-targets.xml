@@ -65,6 +65,7 @@
 
 	<target name="clover-report" depends="clover.instrument, tests-local" description="Produce a test coverage report">
 		<clover-report>
+			<current outfile="${target.clover.dir}/coverage.xml" />
 			<current outfile="${target.clover.dir}/html">
 				<format type="html" />
 			</current>
