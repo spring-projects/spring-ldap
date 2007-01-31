@@ -53,7 +53,7 @@ public class PersonDaoImpl implements PersonDao {
 public class PersonDaoImpl implements PersonDao {
    private LdapTemplate ldapTemplate;
    ...
-<emphasis role="bold">   private class PersonAttributesMapper implements AttributesMapper() {
+<emphasis role="bold">   private class PersonAttributesMapper implements AttributesMapper {
       public Object mapFromAttributes(Attributes attrs) throws NamingException {
          Person person = new Person();
          person.setFullName((String)attrs.get("cn").get());
@@ -65,7 +65,7 @@ public class PersonDaoImpl implements PersonDao {
 </emphasis>
    public List getAllPersons() {
       return ldapTemplate.search("", "(objectclass=person)", <emphasis
-          role="bold">new PersonAttributesMapper()</emphasis>;
+          role="bold">new PersonAttributesMapper()</emphasis>);
    }
 }</programlisting>
     </example>
