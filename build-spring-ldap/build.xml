@@ -174,8 +174,15 @@
   </target>
 
   <target name="release"
-          depends="dist, javadoc, gen-release-bins, gen-release-bins-with-deps, gen-buildable-zip"
+          depends="dist, javadoc, doc, gen-release-bins, gen-release-bins-with-deps, gen-buildable-zip"
           description="Generate release zips">
+  </target>
+
+  <target name="doc" depends="init" description="Calls doc targets on applicable projects">
+    <echo>projects=${projects}</echo>
+    <subant target="doc-all" inheritall="false" failonerror="false">
+      <buildpathelement location="../spring-ldap" />
+    </subant>
   </target>
 
   <target name="gen-release-bins" depends="init"
