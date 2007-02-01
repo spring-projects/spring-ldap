@@ -35,8 +35,12 @@
         <tstamp>
             <format property="tstamp" pattern="yyyyMMdd-HHmm"/>
         </tstamp>
-        <move file="${target.release.dir}/${release.zip}"
-            tofile="${upload.tmp.dir}/spring-ldap-${release.version}-${tstamp}.zip"/>
+        <move file="${target.release.dir}/${release.bin.zip}"
+            tofile="${upload.tmp.dir}/spring-ldap-bin-${release.version}-${tstamp}.zip"/>
+        <move file="${target.release.dir}/${release.bin.deps.zip}"
+            tofile="${upload.tmp.dir}/spring-ldap-bin-with-dependencies-${release.version}-${tstamp}.zip"/>
+        <move file="${target.release.dir}/${release.buildable.zip}"
+            tofile="${upload.tmp.dir}/spring-ldap-buildable-${release.version}-${tstamp}.zip"/>
     </target>
     
     <target name="upload" depends="upload-binaries"/>
