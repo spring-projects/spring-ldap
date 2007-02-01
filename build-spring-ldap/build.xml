@@ -232,8 +232,8 @@
       </zipfileset>
   	  <zipfileset file="../spring-ldap/readme.txt"/>
       <zipfileset file="../spring-ldap/license.txt"/>
-      <zipfileset dir="../../common-build" prefix="common-build"/>
-      <zipfileset dir="../../repository" prefix="repository"/>
+      <zipfileset dir="../common-build" prefix="common-build"/>
+      <zipfileset dir="../repository" prefix="repository"/>
     </zip>
   </target>
   
