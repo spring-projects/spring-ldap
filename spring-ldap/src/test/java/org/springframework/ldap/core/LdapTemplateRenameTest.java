@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap;
+package org.springframework.ldap.core;
 
 import javax.naming.Name;
 import javax.naming.directory.DirContext;
@@ -23,8 +23,8 @@ import javax.naming.ldap.LdapContext;
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.NameAlreadyBoundException;
+import org.springframework.ldap.UncategorizedLdapException;
 
 /**
  * Unit tests for the rename operations in the LdapTemplate class.

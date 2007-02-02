@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap;
+package org.springframework.ldap.core;
 
 import java.util.List;
 
@@ -32,15 +32,9 @@ import junit.framework.TestCase;
 
 import org.easymock.AbstractMatcher;
 import org.easymock.MockControl;
-import org.springframework.ldap.core.AttributesMapper;
-import org.springframework.ldap.core.ContextExecutor;
-import org.springframework.ldap.core.ContextMapper;
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.DirContextProcessor;
-import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.NameClassPairCallbackHandler;
-import org.springframework.ldap.core.SearchExecutor;
+import org.springframework.ldap.LimitExceededException;
+import org.springframework.ldap.NameNotFoundException;
+import org.springframework.ldap.PartialResultException;
 
 public class LdapTemplateTest extends TestCase {
 

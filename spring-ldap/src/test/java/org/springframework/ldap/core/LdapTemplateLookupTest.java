@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap;
+package org.springframework.ldap.core;
 
 import javax.naming.Name;
 import javax.naming.directory.BasicAttributes;
@@ -24,12 +24,7 @@ import javax.naming.ldap.LdapContext;
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
-import org.springframework.ldap.core.AttributesMapper;
-import org.springframework.ldap.core.ContextMapper;
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.DirContextAdapter;
-import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.NameNotFoundException;
 
 public class LdapTemplateLookupTest extends TestCase {
 
