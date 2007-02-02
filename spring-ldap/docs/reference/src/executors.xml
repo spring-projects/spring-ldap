@@ -40,7 +40,7 @@ public class PersonDaoImpl implements PersonDao {
       }</emphasis>;
 
       NameClassPairCallbackHandler handler =
-         ldapTemplate.new AttributesMapperCallbackHandler(new PersonAttributesMapper());
+         new AttributesMapperCallbackHandler(new PersonAttributesMapper());
 
       return ldapTemplate.search(<emphasis role="bold">executor</emphasis>, handler);
    }
@@ -68,7 +68,7 @@ public class PersonDaoImpl implements PersonDao {
       };
 
       NameClassPairCallbackHandler handler =
-         ldapTemplate.<emphasis role="bold">new ContextMapperCallbackHandler(new PersonContextMapper())</emphasis>;
+         <emphasis role="bold">new ContextMapperCallbackHandler(new PersonContextMapper())</emphasis>;
 
       return ldapTemplate.search(executor, handler);
    }
