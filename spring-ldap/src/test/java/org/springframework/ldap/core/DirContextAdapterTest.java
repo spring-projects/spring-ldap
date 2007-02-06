@@ -27,7 +27,6 @@ import javax.naming.directory.ModificationItem;
 
 import junit.framework.TestCase;
 
-
 /**
  * Tests the DirContextAdapter class.
  * 
@@ -679,6 +678,18 @@ public class DirContextAdapterTest extends TestCase {
         Attribute modificationAttribute = mods[0].getAttribute();
         assertEquals("cn", modificationAttribute.getID());
         assertEquals("nisse hult", modificationAttribute.get());
+    }
+
+    public void testGetStringAttributes_NullValue() {
+        String result = classUnderTest
+                .getStringAttribute("someAbsentAttribute");
+        assertNull(result);
+    }
+
+    public void testGetStringAttributes_AttributeExists_NullValue() {
+        classUnderTest.setAttribute(new BasicAttribute("someAttribute", null));
+        String result = classUnderTest.getStringAttribute("someAttribute");
+        assertNull(result);
     }
 
     private ModificationItem getModificationItem(ModificationItem[] mods,
