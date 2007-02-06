@@ -134,6 +134,20 @@ public class AbstractRequestControlDirContextProcessorTest extends TestCase {
         verify();
     }
 
+    public void testPreProcess_NullControls() throws NamingException {
+        ldapContextControl.setDefaultMatcher(MockControl.ARRAY_MATCHER);
+        ldapContextControl.expectAndDefaultReturn(ldapContextMock
+                .getRequestControls(), null);
+        ldapContextMock
+                .setRequestControls(new Control[] { requestControlMock });
+
+        replay();
+
+        tested.preProcess(ldapContextMock);
+
+        verify();
+    }
+
     public void testPreProcess_NotLdapContext() throws Exception {
         try {
             tested.preProcess(dirContextMock);

@@ -67,6 +67,9 @@ public abstract class AbstractRequestControlDirContextProcessor implements
         }
 
         Control[] requestControls = ldapContext.getRequestControls();
+        if (requestControls == null) {
+            requestControls = new Control[0];
+        }
         Control newControl = createRequestControl();
 
         Control[] newControls = new Control[requestControls.length + 1];
