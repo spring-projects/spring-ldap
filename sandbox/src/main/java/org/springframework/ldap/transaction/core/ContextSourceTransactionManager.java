@@ -33,8 +33,8 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  * TransactionManager for managing LDAP transactions. Since transactions are not
  * supported in the LDAP protocol this class and its collaborators aims to
  * provide compensating transactions instead, i.e. should a transaction need to
- * be rolled back this TransactionManager will try to restore the original state
- * prior to the operations using information recorded prior to each operation.
+ * be rolled back this TransactionManager will try to restore the original
+ * original state using information recorded prior to each operation.
  * <p>
  * <b>NOTE:</b> The transactions provided by this TransactionManager are all
  * <i>client side</i> and are by no means 'real' transactions, in the sense
