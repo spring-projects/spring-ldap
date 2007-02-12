@@ -1,29 +1,43 @@
 package org.springframework.ldap.transaction.core;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.ldap.LdapServerManager;
 import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-public class ContextSourceTransactionManagerIntegrationTest extends
+/**
+ * Integration tests for {@link ContextSourceAndDataSourceTransactionManager}.
+ * 
+ * @author Mattias Arthursson
+ */
+public class ContextSourceAndDataSourceTransactionManagerIntegrationTest extends
         AbstractDependencyInjectionSpringContextTests {
 
     private static Log log = LogFactory
-            .getLog(ContextSourceTransactionManagerIntegrationTest.class);
+            .getLog(ContextSourceAndDataSourceTransactionManagerIntegrationTest.class);
 
-    public ContextSourceTransactionManagerIntegrationTest() {
+    public ContextSourceAndDataSourceTransactionManagerIntegrationTest() {
         setAutowireMode(AbstractDependencyInjectionSpringContextTests.AUTOWIRE_BY_NAME);
     }
 
     private DummyDao dummyDao;
 
     private LdapTemplate ldapTemplate;
+
+    private JdbcTemplate jdbcTemplate;
 
     private LdapServerManager ldapServerManager;
 
@@ -44,7 +58,19 @@ public class ContextSourceTransactionManagerIntegrationTest extends
     }
 
     protected void onSetUp() throws Exception {
+        if (TransactionSynchronizationManager.isSynchronizationActive()) {
+            TransactionSynchronizationManager.clearSynchronization();
+        }
+
         ldapServerManager.cleanAndSetup("setup_data.ldif");
+        jdbcTemplate
+                .execute("create table PERSON(fullname VARCHAR, lastname VARCHAR, description VARCHAR)");
+        jdbcTemplate.update("insert into PERSON values(?, ?, ?)", new Object[] {
+                "Some Person", "Person", "Sweden, Company1, Some Person" });
+    }
+
+    protected void onTearDown() throws Exception {
+        jdbcTemplate.execute("drop table PERSON");
     }
 
     public void testCreateWithException() {
@@ -58,10 +84,25 @@ public class ContextSourceTransactionManagerIntegrationTest extends
 
         log.debug("Verifying result");
 
+        // Verify that no entry was created
         try {
             ldapTemplate.lookup("cn=some testperson, ou=company1, c=Sweden");
             fail("NameNotFoundException expected");
         } catch (NameNotFoundException expected) {
+            assertTrue(true);
+        }
+
+        try {
+            jdbcTemplate.queryForObject(
+                    "select * from PERSON where fullname='some testperson'",
+                    new RowMapper() {
+                        public Object mapRow(ResultSet rs, int rowNum)
+                                throws SQLException {
+                            return null;
+                        }
+                    });
+            fail("EmptyResultDataAccessException expected");
+        } catch (EmptyResultDataAccessException expected) {
             assertTrue(true);
         }
     }
@@ -71,13 +112,24 @@ public class ContextSourceTransactionManagerIntegrationTest extends
                 "some description");
 
         log.debug("Verifying result");
-        ldapTemplate.lookup("cn=some testperson, ou=company1, c=Sweden");
+        Object ldapResult = ldapTemplate
+                .lookup("cn=some testperson, ou=company1, c=Sweden");
+        Object dbResult = jdbcTemplate.queryForObject(
+                "select * from PERSON where fullname='some testperson'",
+                new RowMapper() {
+                    public Object mapRow(ResultSet rs, int rowNum)
+                            throws SQLException {
+                        return new Object();
+                    }
+                });
+        assertNotNull(ldapResult);
+        assertNotNull(dbResult);
     }
 
     public void testUpdateWithException() {
         String dn = "cn=Some Person,ou=company1,c=Sweden";
         try {
-            dummyDao.updateWithException(dn, "Updated Person",
+            dummyDao.updateWithException(dn, "Some Person", "Updated Person",
                     "Updated description");
             fail("DummyException expected");
         } catch (DummyException expected) {
@@ -86,7 +138,7 @@ public class ContextSourceTransactionManagerIntegrationTest extends
 
         log.debug("Verifying result");
 
-        Object result = ldapTemplate.lookup(dn, new AttributesMapper() {
+        Object ldapResult = ldapTemplate.lookup(dn, new AttributesMapper() {
             public Object mapFromAttributes(Attributes attributes)
                     throws NamingException {
                 assertEquals("Person", attributes.get("sn").get());
@@ -96,15 +148,29 @@ public class ContextSourceTransactionManagerIntegrationTest extends
             }
         });
 
-        assertNotNull(result);
+        Object jdbcResult = jdbcTemplate.queryForObject(
+                "select * from PERSON where fullname=?",
+                new Object[] { "Some Person" }, new RowMapper() {
+                    public Object mapRow(ResultSet rs, int rowNum)
+                            throws SQLException {
+                        assertEquals("Person", rs.getString("lastname"));
+                        assertEquals("Sweden, Company1, Some Person", rs
+                                .getString("description"));
+                        return new Object();
+                    }
+                });
+
+        assertNotNull(ldapResult);
+        assertNotNull(jdbcResult);
     }
 
     public void testUpdate() {
         String dn = "cn=Some Person,ou=company1,c=Sweden";
-        dummyDao.update(dn, "Updated Person", "Updated description");
+        dummyDao.update(dn, "Some Person", "Updated Person",
+                "Updated description");
 
         log.debug("Verifying result");
-        Object result = ldapTemplate.lookup(dn, new AttributesMapper() {
+        Object ldapResult = ldapTemplate.lookup(dn, new AttributesMapper() {
             public Object mapFromAttributes(Attributes attributes)
                     throws NamingException {
                 assertEquals("Updated Person", attributes.get("sn").get());
@@ -114,7 +180,20 @@ public class ContextSourceTransactionManagerIntegrationTest extends
             }
         });
 
-        assertNotNull(result);
+        Object jdbcResult = jdbcTemplate.queryForObject(
+                "select * from PERSON where fullname=?",
+                new Object[] { "Some Person" }, new RowMapper() {
+                    public Object mapRow(ResultSet rs, int rowNum)
+                            throws SQLException {
+                        assertEquals("Updated Person", rs.getString("lastname"));
+                        assertEquals("Updated description", rs
+                                .getString("description"));
+                        return new Object();
+                    }
+                });
+
+        assertNotNull(ldapResult);
+        assertNotNull(jdbcResult);
     }
 
     public void testUpdateAndRenameWithException() {
@@ -217,31 +296,39 @@ public class ContextSourceTransactionManagerIntegrationTest extends
         String dn = "cn=Some Person,ou=company1,c=Sweden";
         try {
             // Perform test
-            dummyDao.unbindWithException(dn);
+            dummyDao.unbindWithException(dn, "Some Person");
             fail("DummyException expected");
         } catch (DummyException expected) {
             assertTrue(true);
         }
 
         // Verify result - check that the operation was properly rolled back
-        Object result = ldapTemplate.lookup(dn, new AttributesMapper() {
+        Object ldapResult = ldapTemplate.lookup(dn, new AttributesMapper() {
             public Object mapFromAttributes(Attributes attributes)
                     throws NamingException {
-                assertEquals("Some Person", attributes.get("cn").get());
-                assertEquals("Person", attributes.get("sn").get());
-                assertEquals("Sweden, Company1, Some Person", attributes.get(
-                        "description").get());
+                // Just verify that the entry still exists.
                 return new Object();
             }
         });
 
-        assertNotNull(result);
+        Object jdbcResult = jdbcTemplate.queryForObject(
+                "select * from PERSON where fullname=?",
+                new Object[] { "Some Person" }, new RowMapper() {
+                    public Object mapRow(ResultSet rs, int rowNum)
+                            throws SQLException {
+                        // Just verify that the entry still exists.
+                        return new Object();
+                    }
+                });
+
+        assertNotNull(ldapResult);
+        assertNotNull(jdbcResult);
     }
 
     public void testUnbind() {
         String dn = "cn=Some Person,ou=company1,c=Sweden";
         // Perform test
-        dummyDao.unbind(dn);
+        dummyDao.unbind(dn, "Some Person");
 
         try {
             // Verify result - check that the operation was not rolled back
@@ -251,5 +338,22 @@ public class ContextSourceTransactionManagerIntegrationTest extends
             assertTrue(true);
         }
 
+        try {
+            jdbcTemplate.queryForObject(
+                    "select * from PERSON where fullname=?",
+                    new Object[] { "Some Person" }, new RowMapper() {
+                        public Object mapRow(ResultSet rs, int rowNum)
+                                throws SQLException {
+                            return null;
+                        }
+                    });
+            fail("EmptyResultDataAccessException expected");
+        } catch (EmptyResultDataAccessException expected) {
+            assertTrue(true);
+        }
+    }
+
+    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 }

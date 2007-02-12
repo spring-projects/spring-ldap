@@ -15,19 +15,14 @@
  */
 package org.springframework.ldap.transaction.core;
 
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationExecutor;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationRecorder;
+import org.springframework.ldap.transaction.DefaultCompensatingTransactionOperationManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 import org.springframework.transaction.support.DefaultTransactionStatus;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 /**
  * TransactionManager for managing LDAP transactions. Since transactions are not
@@ -92,56 +87,27 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  * {@link DefaultTempEntryRenamingStrategy}), specified in
  * {@link #setRenamingStrategy(TempEntryRenamingStrategy)}.
  * </p>
+ * <p>
+ * The actual work of this Transaction Manager is delegated to a
+ * {@link ContextSourceTransactionManagerDelegate}. This is because the exact
+ * same logic needs to be used if we want to wrap a JDBC and LDAP transaction in
+ * the same logical transaction.
+ * </p>
  * 
  * @author Mattias Arthursson
+ * 
+ * @see ContextSourceAndDataSourceTransactionManager
+ * @see ContextSourceTransactionManagerDelegate
+ * @see DefaultCompensatingTransactionOperationManager
+ * @see TempEntryRenamingStrategy
+ * @see TransactionAwareContextSourceProxy
  */
 public class ContextSourceTransactionManager extends
         AbstractPlatformTransactionManager {
 
-    private static final long serialVersionUID = -4308820955185446535L;
+    private static final long serialVersionUID = 7138208218687237856L;
 
-    private static Log log = LogFactory
-            .getLog(ContextSourceTransactionManager.class);
-
-    private ContextSource contextSource;
-
-    private TempEntryRenamingStrategy renamingStrategy = new DefaultTempEntryRenamingStrategy();
-
-    /**
-     * Set the ContextSource to work on. Even though the actual ContextSource
-     * sent to the LdapTemplate instance should be a
-     * {@link TransactionAwareContextSourceProxy}, the one sent to this method
-     * should be the target of that proxy. If it is not, the target will be
-     * extracted and used instead.
-     * 
-     * @param contextSource
-     *            the ContextSource to work on.
-     */
-    public void setContextSource(ContextSource contextSource) {
-        if (contextSource instanceof TransactionAwareContextSourceProxy) {
-            TransactionAwareContextSourceProxy proxy = (TransactionAwareContextSourceProxy) contextSource;
-            this.contextSource = proxy.getTarget();
-        } else {
-            this.contextSource = contextSource;
-        }
-    }
-
-    public ContextSource getContextSource() {
-        return contextSource;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#doGetTransaction()
-     */
-    protected Object doGetTransaction() throws TransactionException {
-        DirContextHolder contextHolder = (DirContextHolder) TransactionSynchronizationManager
-                .getResource(this.contextSource);
-        ContextSourceTransactionObject txObject = new ContextSourceTransactionObject(
-                contextHolder);
-        return txObject;
-    }
+    private ContextSourceTransactionManagerDelegate delegate = new ContextSourceTransactionManagerDelegate();
 
     /*
      * (non-Javadoc)
@@ -151,17 +117,16 @@ public class ContextSourceTransactionManager extends
      */
     protected void doBegin(Object transaction, TransactionDefinition definition)
             throws TransactionException {
-        ContextSourceTransactionObject txObject = (ContextSourceTransactionObject) transaction;
+        delegate.doBegin(transaction, definition);
+    }
 
-        if (txObject.getContextHolder() == null) {
-            DirContext newCtx = getContextSource().getReadOnlyContext();
-            DirContextHolder contextHolder = new DirContextHolder(newCtx,
-                    renamingStrategy);
-
-            txObject.setContextHolder(contextHolder);
-            TransactionSynchronizationManager.bindResource(getContextSource(),
-                    contextHolder);
-        }
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#doCleanupAfterCompletion(java.lang.Object)
+     */
+    protected void doCleanupAfterCompletion(Object transaction) {
+        delegate.doCleanupAfterCompletion(transaction);
     }
 
     /*
@@ -171,10 +136,16 @@ public class ContextSourceTransactionManager extends
      */
     protected void doCommit(DefaultTransactionStatus status)
             throws TransactionException {
-        ContextSourceTransactionObject txObject = (ContextSourceTransactionObject) status
-                .getTransaction();
-        txObject.getContextHolder().getTransactionDataManager().commit();
+        delegate.doCommit(status);
+    }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#doGetTransaction()
+     */
+    protected Object doGetTransaction() throws TransactionException {
+        return delegate.doGetTransaction();
     }
 
     /*
@@ -184,42 +155,38 @@ public class ContextSourceTransactionManager extends
      */
     protected void doRollback(DefaultTransactionStatus status)
             throws TransactionException {
-        ContextSourceTransactionObject txObject = (ContextSourceTransactionObject) status
-                .getTransaction();
-        txObject.getContextHolder().getTransactionDataManager().rollback();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#doCleanupAfterCompletion(java.lang.Object)
-     */
-    protected void doCleanupAfterCompletion(Object transaction) {
-        log.debug("Cleaning stored ContextHolder");
-        TransactionSynchronizationManager.unbindResource(contextSource);
-
-        ContextSourceTransactionObject txObject = (ContextSourceTransactionObject) transaction;
-        DirContext ctx = txObject.getContextHolder().getCtx();
-
-        try {
-            log.debug("Closing target context");
-            ctx.close();
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }
-
-        txObject.getContextHolder().clear();
+        delegate.doRollback(status);
     }
 
     /**
-     * Set the {@link TempEntryRenamingStrategy} to be used when renaming
-     * temporary entries in unbind and rebind operations. Default value is a
-     * {@link DefaultTempEntryRenamingStrategy}.
+     * Get the ContextSource.
+     * 
+     * @return the contextSource.
+     * @see ContextSourceTransactionManagerDelegate#getContextSource()
+     */
+    public ContextSource getContextSource() {
+        return delegate.getContextSource();
+    }
+
+    /**
+     * Set the ContextSource.
+     * 
+     * @param contextSource
+     *            the ContextSource.
+     * @see ContextSourceTransactionManagerDelegate#setContextSource(ContextSource)
+     */
+    public void setContextSource(ContextSource contextSource) {
+        delegate.setContextSource(contextSource);
+    }
+
+    /**
+     * Set the {@link TempEntryRenamingStrategy}.
      * 
      * @param renamingStrategy
-     *            the {@link TempEntryRenamingStrategy} to use.
+     *            the Renaming Strategy.
+     * @see ContextSourceTransactionManagerDelegate#setRenamingStrategy(TempEntryRenamingStrategy)
      */
     public void setRenamingStrategy(TempEntryRenamingStrategy renamingStrategy) {
-        this.renamingStrategy = renamingStrategy;
+        delegate.setRenamingStrategy(renamingStrategy);
     }
 }

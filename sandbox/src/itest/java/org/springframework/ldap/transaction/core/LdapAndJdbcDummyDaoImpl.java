@@ -5,7 +5,7 @@ import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 
-public class DummyDaoImpl implements DummyDao{
+public class LdapAndJdbcDummyDaoImpl implements DummyDao {
     private LdapTemplate ldapTemplate;
 
     private JdbcTemplate jdbcTemplate;
@@ -21,12 +21,9 @@ public class DummyDaoImpl implements DummyDao{
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.DummyDao#createWithException(java.lang.String,
+     * @see org.springframework.ldap.transaction.core.DummyDao#createWithException(java.lang.String,
      *      java.lang.String, java.lang.String, java.lang.String,
      *      java.lang.String)
-     */
-    /* (non-Javadoc)
-     * @see org.springframework.ldap.support.transaction.TempDummyDao#createWithException(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
     public void createWithException(String country, String company,
             String fullname, String lastname, String description) {
@@ -37,12 +34,9 @@ public class DummyDaoImpl implements DummyDao{
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.DummyDao#create(java.lang.String,
+     * @see org.springframework.ldap.transaction.core.DummyDao#create(java.lang.String,
      *      java.lang.String, java.lang.String, java.lang.String,
      *      java.lang.String)
-     */
-    /* (non-Javadoc)
-     * @see org.springframework.ldap.support.transaction.TempDummyDao#create(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
     public void create(String country, String company, String fullname,
             String lastname, String description) {
@@ -57,50 +51,47 @@ public class DummyDaoImpl implements DummyDao{
         ctx.setAttributeValue("sn", lastname);
         ctx.setAttributeValue("description", description);
         ldapTemplate.bind(dn, ctx, null);
-//        jdbcTemplate.execute("insert into test values(1, 'kalle', 'pettersson', 123)");
+        jdbcTemplate.update("insert into PERSON values(?, ?, ?)", new Object[] {
+                fullname, lastname, description });
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.DummyDao#update(java.lang.String,
+     * @see org.springframework.ldap.transaction.core.DummyDao#update(java.lang.String,
      *      java.lang.String, java.lang.String)
      */
-    /* (non-Javadoc)
-     * @see org.springframework.ldap.support.transaction.TempDummyDao#update(java.lang.String, java.lang.String, java.lang.String)
-     */
-    public void update(String dn, String lastname, String description) {
+    public void update(String dn, String fullname, String lastname,
+            String description) {
         DirContextAdapter ctx = (DirContextAdapter) ldapTemplate.lookup(dn);
         ctx.setAttributeValue("sn", lastname);
         ctx.setAttributeValue("description", description);
         ctx.update();
 
         ldapTemplate.rebind(dn, ctx, null);
+        jdbcTemplate
+                .update(
+                        "update PERSON set lastname=?, description = ? where fullname = ?",
+                        new Object[] { lastname, description, fullname });
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.DummyDao#updateWithException(java.lang.String,
+     * @see org.springframework.ldap.transaction.core.DummyDao#updateWithException(java.lang.String,
      *      java.lang.String, java.lang.String)
      */
-    /* (non-Javadoc)
-     * @see org.springframework.ldap.support.transaction.TempDummyDao#updateWithException(java.lang.String, java.lang.String, java.lang.String)
-     */
-    public void updateWithException(String dn, String lastname,
-            String description) {
-        update(dn, lastname, description);
+    public void updateWithException(String dn, String fullname,
+            String lastname, String description) {
+        update(dn, fullname, lastname, description);
         throw new DummyException("This method failed.");
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.DummyDao#updateAndRename(java.lang.String,
+     * @see org.springframework.ldap.transaction.core.DummyDao#updateAndRename(java.lang.String,
      *      java.lang.String, java.lang.String)
-     */
-    /* (non-Javadoc)
-     * @see org.springframework.ldap.support.transaction.TempDummyDao#updateAndRename(java.lang.String, java.lang.String, java.lang.String)
      */
     public void updateAndRename(String dn, String newDn, String description) {
         DirContextAdapter ctx = (DirContextAdapter) ldapTemplate.lookup(dn);
@@ -108,18 +99,14 @@ public class DummyDaoImpl implements DummyDao{
         ctx.update();
 
         ldapTemplate.rebind(dn, ctx, null);
-
         ldapTemplate.rename(dn, newDn);
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.DummyDao#updateAndRenameWithException(java.lang.String,
+     * @see org.springframework.ldap.transaction.core.DummyDao#updateAndRenameWithException(java.lang.String,
      *      java.lang.String, java.lang.String)
-     */
-    /* (non-Javadoc)
-     * @see org.springframework.ldap.support.transaction.TempDummyDao#updateAndRenameWithException(java.lang.String, java.lang.String, java.lang.String)
      */
     public void updateAndRenameWithException(String dn, String newDn,
             String description) {
@@ -130,11 +117,8 @@ public class DummyDaoImpl implements DummyDao{
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.DummyDao#modifyAttributes(java.lang.String,
+     * @see org.springframework.ldap.transaction.core.DummyDao#modifyAttributes(java.lang.String,
      *      java.lang.String, java.lang.String)
-     */
-    /* (non-Javadoc)
-     * @see org.springframework.ldap.support.transaction.TempDummyDao#modifyAttributes(java.lang.String, java.lang.String, java.lang.String)
      */
     public void modifyAttributes(String dn, String lastName, String description) {
         DirContextAdapter ctx = (DirContextAdapter) ldapTemplate.lookup(dn);
@@ -147,11 +131,8 @@ public class DummyDaoImpl implements DummyDao{
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.DummyDao#modifyAttributesWithException(java.lang.String,
+     * @see org.springframework.ldap.transaction.core.DummyDao#modifyAttributesWithException(java.lang.String,
      *      java.lang.String, java.lang.String)
-     */
-    /* (non-Javadoc)
-     * @see org.springframework.ldap.support.transaction.TempDummyDao#modifyAttributesWithException(java.lang.String, java.lang.String, java.lang.String)
      */
     public void modifyAttributesWithException(String dn, String lastName,
             String description) {
@@ -162,25 +143,21 @@ public class DummyDaoImpl implements DummyDao{
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.DummyDao#unbind(java.lang.String)
+     * @see org.springframework.ldap.transaction.core.DummyDao#unbind(java.lang.String)
      */
-    /* (non-Javadoc)
-     * @see org.springframework.ldap.support.transaction.TempDummyDao#unbind(java.lang.String)
-     */
-    public void unbind(String dn) {
+    public void unbind(String dn, String fullname) {
         ldapTemplate.unbind(dn);
+        jdbcTemplate.update("delete from PERSON where fullname=?",
+                new Object[] { fullname });
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.DummyDao#unbindWithException(java.lang.String)
+     * @see org.springframework.ldap.transaction.core.DummyDao#unbindWithException(java.lang.String)
      */
-    /* (non-Javadoc)
-     * @see org.springframework.ldap.support.transaction.TempDummyDao#unbindWithException(java.lang.String)
-     */
-    public void unbindWithException(String dn) {
-        unbind(dn);
+    public void unbindWithException(String dn, String fullname) {
+        unbind(dn, fullname);
         throw new DummyException("This operation failed.");
     }
 }

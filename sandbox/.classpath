@@ -49,5 +49,7 @@
 	<classpathentry kind="lib" path="lib/test/backport-util-concurrent.jar"/>
 	<classpathentry kind="lib" path="lib/global/spring-ldap.jar" sourcepath="lib/source/spring-ldap-src.zip"/>
 	<classpathentry kind="lib" path="lib/test/shared-asn1-codec.jar"/>
+	<classpathentry kind="lib" path="lib/test/hsqldb.jar"/>
+	<classpathentry kind="lib" path="lib/test/dbunit.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
