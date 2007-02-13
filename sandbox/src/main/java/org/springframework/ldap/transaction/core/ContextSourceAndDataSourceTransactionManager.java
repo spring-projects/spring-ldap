@@ -92,21 +92,33 @@ public class ContextSourceAndDataSourceTransactionManager extends
     protected void doCommit(DefaultTransactionStatus status)
             throws TransactionException {
 
+        ContextSourceAndDataSourceTransactionObject actualTransactionObject = (ContextSourceAndDataSourceTransactionObject) status
+                .getTransaction();
+
         try {
-            super.doCommit(new DataSourceTransactionStatus(status
-                    .getTransaction(), status.isNewTransaction(), status
-                    .isNewSynchronization(), status.isReadOnly(), status
-                    .isDebug(), status.getSuspendedResources()));
+            super.doCommit(new DefaultTransactionStatus(actualTransactionObject
+                    .getDataSourceTransactionObject(), status
+                    .isNewTransaction(), status.isNewSynchronization(), status
+                    .isReadOnly(), status.isDebug(), status
+                    .getSuspendedResources()));
         } catch (TransactionException ex) {
-            if(isRollbackOnCommitFailure()){
-                // If we are to rollback on commit failure, just rethrow the 
+            if (isRollbackOnCommitFailure()) {
+                logger.debug("Failed to commit db resource, rethrowing", ex);
+                // If we are to rollback on commit failure, just rethrow the
+                // exception - this will cause a rollback to be performed on
+                // both resources.
                 throw ex;
+            } else {
+                logger
+                        .warn("Failed to commit and resource is rollbackOnCommit not set -"
+                                + " proceeding to commit ldap resource.");
             }
-        }        
-        ldapManagerDelegate.doCommit(new ContextSourceTransactionStatus(status
-                .getTransaction(), status.isNewTransaction(), status
-                .isNewSynchronization(), status.isReadOnly(), status.isDebug(),
-                status.getSuspendedResources()));
+        }
+        ldapManagerDelegate.doCommit(new DefaultTransactionStatus(
+                actualTransactionObject.getLdapTransactionObject(), status
+                        .isNewTransaction(), status.isNewSynchronization(),
+                status.isReadOnly(), status.isDebug(), status
+                        .getSuspendedResources()));
     }
 
     /*
@@ -116,15 +128,18 @@ public class ContextSourceAndDataSourceTransactionManager extends
      */
     protected void doRollback(DefaultTransactionStatus status)
             throws TransactionException {
+        ContextSourceAndDataSourceTransactionObject actualTransactionObject = (ContextSourceAndDataSourceTransactionObject) status
+                .getTransaction();
 
-        super.doRollback(new DataSourceTransactionStatus(status
-                .getTransaction(), status.isNewTransaction(), status
-                .isNewSynchronization(), status.isReadOnly(), status.isDebug(),
-                status.getSuspendedResources()));
-        ldapManagerDelegate.doRollback(new ContextSourceTransactionStatus(
-                status.getTransaction(), status.isNewTransaction(), status
-                        .isNewSynchronization(), status.isReadOnly(), status
+        super.doRollback(new DefaultTransactionStatus(actualTransactionObject
+                .getDataSourceTransactionObject(), status.isNewTransaction(),
+                status.isNewSynchronization(), status.isReadOnly(), status
                         .isDebug(), status.getSuspendedResources()));
+        ldapManagerDelegate.doRollback(new DefaultTransactionStatus(
+                actualTransactionObject.getLdapTransactionObject(), status
+                        .isNewTransaction(), status.isNewSynchronization(),
+                status.isReadOnly(), status.isDebug(), status
+                        .getSuspendedResources()));
     }
 
     public ContextSource getContextSource() {
