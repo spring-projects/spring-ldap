@@ -37,6 +37,12 @@ public class DefaultCompensatingTransactionOperationManager implements
 
     private CompensatingTransactionOperationFactory operationFactory;
 
+    /**
+     * Set the {@link CompensatingTransactionOperationFactory} to use.
+     * 
+     * @param operationFactory
+     *            the {@link CompensatingTransactionOperationFactory}.
+     */
     public DefaultCompensatingTransactionOperationManager(
             CompensatingTransactionOperationFactory operationFactory) {
         this.operationFactory = operationFactory;

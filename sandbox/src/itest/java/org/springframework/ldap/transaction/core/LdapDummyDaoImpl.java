@@ -15,19 +15,12 @@
  */
 package org.springframework.ldap.transaction.core;
 
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 
-public class LdapAndJdbcDummyDaoImpl implements DummyDao {
+public class LdapDummyDaoImpl implements DummyDao {
     private LdapTemplate ldapTemplate;
-
-    private JdbcTemplate jdbcTemplate;
-
-    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     public void setLdapTemplate(LdapTemplate ldapTemplate) {
         this.ldapTemplate = ldapTemplate;
@@ -66,8 +59,6 @@ public class LdapAndJdbcDummyDaoImpl implements DummyDao {
         ctx.setAttributeValue("sn", lastname);
         ctx.setAttributeValue("description", description);
         ldapTemplate.bind(dn, ctx, null);
-        jdbcTemplate.update("insert into PERSON values(?, ?, ?)", new Object[] {
-                fullname, lastname, description });
     }
 
     /*
@@ -84,10 +75,6 @@ public class LdapAndJdbcDummyDaoImpl implements DummyDao {
         ctx.update();
 
         ldapTemplate.rebind(dn, ctx, null);
-        jdbcTemplate
-                .update(
-                        "update PERSON set lastname=?, description = ? where fullname = ?",
-                        new Object[] { lastname, description, fullname });
     }
 
     /*
@@ -162,8 +149,6 @@ public class LdapAndJdbcDummyDaoImpl implements DummyDao {
      */
     public void unbind(String dn, String fullname) {
         ldapTemplate.unbind(dn);
-        jdbcTemplate.update("delete from PERSON where fullname=?",
-                new Object[] { fullname });
     }
 
     /*
