@@ -47,5 +47,9 @@
 	<classpathentry kind="lib" path="lib/test/junitperf.jar"/>
 	<classpathentry kind="lib" path="lib/test/backport-util-concurrent.jar"/>
 	<classpathentry kind="lib" path="lib/test/shared-asn1-codec.jar"/>
+	<classpathentry kind="lib" path="lib/buildtime/spring-jdbc.jar"/>
+	<classpathentry kind="lib" path="lib/test/aopalliance.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-aop.jar"/>
+	<classpathentry kind="lib" path="lib/test/hsqldb.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

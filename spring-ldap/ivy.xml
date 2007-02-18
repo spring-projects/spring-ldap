@@ -62,6 +62,9 @@
 	<dependency org="jexcelapi" name="jxl" rev="2.5.9" conf="test->default" />
 	<dependency org="org.ddsteps" name="DDSteps" rev="1.1" conf="test->default" />
 	<dependency org="cglib" name="cglib-nodep" rev="2.1_3" conf="test->default"/>
+	<dependency org="org.springframework" name="spring-aop" rev="2.0.2" conf="test->default" />
+	<dependency org="aopalliance" name="aopalliance" rev="1.0" conf="test->default" />
+	<dependency org="hsqldb" name="hsqldb" rev="1.8.0.7" conf="test->default" />
 	
 	<!-- Test dependencies for Apache Directory Server -->
 	<dependency org="org.apache.directory.server" name="apacheds-core" rev="1.0.0"

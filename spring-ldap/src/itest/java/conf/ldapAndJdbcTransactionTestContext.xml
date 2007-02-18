@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	<import resource="classpath:/conf/apacheDsContext.xml" />
+
+	<bean id="placeholderConfig"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location"
+			value="classpath:/conf/ldap.properties" />
+	</bean>
+
+	<bean id="contextSourceTarget"
+		class="org.springframework.ldap.core.support.LdapContextSource">
+		<property name="urls" value="${urls}" />
+		<property name="userDn" value="${userDn}" />
+		<property name="password" value="${password}" />
+		<property name="base" value="${base}" />
+		<property name="pooled" value="false" />
+		<property name="dirObjectFactory"
+			value="org.springframework.ldap.core.DefaultDirObjectFactory" />
+	</bean>
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
+		<property name="url" value="jdbc:hsqldb:mem:aname" />
+		<property name="username" value="sa" />
+		<property name="password" value="" />
+	</bean>
+
+	<bean id="contextSource"
+		class="org.springframework.ldap.transaction.core.TransactionAwareContextSourceProxy">
+		<constructor-arg ref="contextSourceTarget" />
+	</bean>
+
+	<bean id="ldapTemplate"
+		class="org.springframework.ldap.core.LdapTemplate">
+		<constructor-arg ref="contextSource" />
+	</bean>
+
+	<bean id="jdbcTemplate"
+		class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+<!-- 
+	<bean id="ldapTransactionManager"
+		class="org.springframework.ldap.transaction.core.ContextSourceTransactionManager">
+		<property name="contextSource" ref="contextSourceTarget" />
+	</bean>
+
+ -->
+
+	<bean id="transactionManager"
+		class="org.springframework.ldap.transaction.core.ContextSourceAndDataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+		<property name="contextSource" ref="contextSource" />
+	</bean>
+
+
+	<bean name="dummyDaoTarget"
+		class="org.springframework.ldap.transaction.core.LdapAndJdbcDummyDaoImpl">
+		<property name="ldapTemplate" ref="ldapTemplate" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+	<bean name="dummyDao"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager"
+			ref="transactionManager" />
+		<property name="target" ref="dummyDaoTarget" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRES_NEW</prop>
+			</props>
+		</property>
+	</bean>
+	<!-- 
+		<bean name="dummyDao"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="dataSourceTransactionManager" />
+		<property name="target" ref="ldapDummyDao" />
+		<property name="transactionAttributes">
+		<props>
+		<prop key="*">PROPAGATION_REQUIRED</prop>
+		</props>
+		</property>
+		</bean>
+	-->
+</beans>
