@@ -15,7 +15,6 @@
  */
 package org.springframework.ldap;
 
-
 import org.ddsteps.spring.DDStepsSpringTestCase;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
@@ -49,6 +48,16 @@ public class LdapTemplateSearchCountITest extends DDStepsSpringTestCase {
     private int searchScope;
 
     private LdapTemplate tested;
+
+    private LdapServerManager manager;
+
+    public void setManager(LdapServerManager manager) {
+        this.manager = manager;
+    }
+
+    public void setUpMethod() throws Exception {
+        manager.cleanAndSetup("setup_data.ldif");
+    }
 
     protected String[] getConfigLocations() {
         return new String[] { "/conf/ldapTemplateNoBaseSuffixTestContext.xml" };

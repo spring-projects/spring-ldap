@@ -19,7 +19,6 @@ package org.springframework.ldap;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.CountNameClassPairCallbackHandler;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**
  * Tests to verify that not setting a base suffix on the ContextSource (as
@@ -30,7 +29,7 @@ import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
  * @author Mattias Arthursson
  */
 public class LdapTemplateNoBaseSuffixITest extends
-        AbstractDependencyInjectionSpringContextTests {
+        AbstractLdapTemplateIntegrationTest {
     private LdapTemplate tested;
 
     protected String[] getConfigLocations() {

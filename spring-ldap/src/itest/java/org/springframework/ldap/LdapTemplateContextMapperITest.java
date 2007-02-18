@@ -21,7 +21,6 @@ import java.util.List;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**
  * Tests the ContextMapper search method. In its way this method also
@@ -30,7 +29,7 @@ import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
  * @author Mattias Arthursson
  */
 public class LdapTemplateContextMapperITest extends
-        AbstractDependencyInjectionSpringContextTests {
+        AbstractLdapTemplateIntegrationTest {
     private LdapTemplate tested;
 
     protected String[] getConfigLocations() {

@@ -22,7 +22,6 @@ import javax.naming.directory.SearchControls;
 
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**
  * Tests for LdapTemplate's search methods. This test class tests all the
@@ -32,7 +31,7 @@ import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
  * @author Mattias Arthursson
  */
 public class LdapTemplateSearchResultITest extends
-        AbstractDependencyInjectionSpringContextTests {
+        AbstractLdapTemplateIntegrationTest {
 
     private LdapTemplate tested;
 

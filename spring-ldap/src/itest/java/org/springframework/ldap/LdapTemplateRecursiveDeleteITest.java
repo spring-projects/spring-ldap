@@ -21,7 +21,6 @@ import javax.naming.Name;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**
  * Tests the recursive modification methods (unbind and the protected delete
@@ -31,7 +30,7 @@ import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
  * @author Ulrik Sandberg
  */
 public class LdapTemplateRecursiveDeleteITest extends
-        AbstractDependencyInjectionSpringContextTests {
+        AbstractLdapTemplateIntegrationTest {
     private LdapTemplate tested;
 
     private static DistinguishedName DN = new DistinguishedName(
@@ -48,6 +47,8 @@ public class LdapTemplateRecursiveDeleteITest extends
     }
 
     protected void onSetUp() throws Exception {
+        super.onSetUp();
+        
         DirContextAdapter adapter = new DirContextAdapter();
         adapter.setAttributeValues("objectclass", new String[] { "top",
                 "person" });

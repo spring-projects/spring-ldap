@@ -23,7 +23,6 @@ import javax.naming.directory.BasicAttributes;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**
  * Tests the bind and unbind methods of LdapTemplate. The test methods in this
@@ -37,7 +36,7 @@ import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
  * @author Mattias Arthursson
  */
 public class LdapTemplateBindUnbindITest extends
-        AbstractDependencyInjectionSpringContextTests {
+        AbstractLdapTemplateIntegrationTest {
     private LdapTemplate tested;
 
     private static String DN = "cn=Some Person4,ou=company1,c=Sweden";

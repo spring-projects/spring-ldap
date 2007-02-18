@@ -27,12 +27,12 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.directory.server.core.configuration.ShutdownConfiguration;
 import org.apache.directory.server.jndi.ServerContextFactory;
 import org.apache.directory.server.protocol.shared.store.LdifFileLoader;
 import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DefaultDirObjectFactory;
 import org.springframework.ldap.core.DistinguishedName;
@@ -44,7 +44,8 @@ import org.springframework.ldap.core.DistinguishedName;
  * @author Mattias Arthursson
  * 
  */
-public class LdapServerManager implements InitializingBean, DisposableBean {
+public class LdapServerManager implements DisposableBean {
+    private static Log log = LogFactory.getLog(LdapServerManager.class);
 
     private ContextSource contextSource;
 
@@ -66,7 +67,7 @@ public class LdapServerManager implements InitializingBean, DisposableBean {
         new InitialContext(env);
     }
 
-    public void afterPropertiesSet() throws Exception {
+    public void cleanAndSetup(String ldifFile) throws Exception {
         DirContext ctx = contextSource.getReadWriteContext();
 
         // First of all, make sure the database is empty.
@@ -82,9 +83,11 @@ public class LdapServerManager implements InitializingBean, DisposableBean {
         }
 
         try {
+            log.info("Cleaning all present data.");
             clearSubContexts(ctx, startingPoint);
             // Load the ldif to the recently started server
-            LdifFileLoader loader = new LdifFileLoader(ctx, "setup_data.ldif");
+            log.info("Loading setup data");
+            LdifFileLoader loader = new LdifFileLoader(ctx, ldifFile);
             loader.execute();
         } finally {
             ctx.close();

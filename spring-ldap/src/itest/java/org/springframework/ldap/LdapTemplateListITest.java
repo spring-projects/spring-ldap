@@ -20,7 +20,6 @@ import java.util.List;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.CountNameClassPairCallbackHandler;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**
  * Tests for LdapTemplate's list methods.
@@ -28,7 +27,7 @@ import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
  * @author Ulrik Sandberg
  */
 public class LdapTemplateListITest extends
-        AbstractDependencyInjectionSpringContextTests {
+        AbstractLdapTemplateIntegrationTest {
 
     private LdapTemplate tested;
 

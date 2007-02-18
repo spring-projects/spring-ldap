@@ -21,7 +21,6 @@ import javax.naming.directory.DirContext;
 import org.springframework.ldap.core.ContextExecutor;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**
  * Tests for LdapTemplate's context executor methods.
@@ -29,7 +28,7 @@ import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
  * @author Mattias Arthursson
  */
 public class LdapTemplateContextExecutorTest extends
-        AbstractDependencyInjectionSpringContextTests {
+        AbstractLdapTemplateIntegrationTest {
 
     private LdapTemplate tested;
 

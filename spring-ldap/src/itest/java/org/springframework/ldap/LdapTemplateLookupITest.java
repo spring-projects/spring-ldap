@@ -24,7 +24,6 @@ import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**
  * Tests the lookup methods of LdapTemplate.
@@ -33,7 +32,7 @@ import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
  * @author Ulrik Sandberg
  */
 public class LdapTemplateLookupITest extends
-        AbstractDependencyInjectionSpringContextTests {
+        AbstractLdapTemplateIntegrationTest {
 
     private LdapTemplate tested;
 

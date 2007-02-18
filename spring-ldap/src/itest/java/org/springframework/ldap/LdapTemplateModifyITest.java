@@ -25,7 +25,6 @@ import javax.naming.directory.ModificationItem;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 /**
  * Tests the modification methods (rebind and modifyAttributes) of LdapTemplate.
@@ -41,7 +40,7 @@ import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
  * @author Ulrik Sandberg
  */
 public class LdapTemplateModifyITest extends
-        AbstractDependencyInjectionSpringContextTests {
+        AbstractLdapTemplateIntegrationTest {
     private LdapTemplate tested;
 
     private static String PERSON4_DN = "cn=Some Person4,ou=company1,c=Sweden";
@@ -53,6 +52,8 @@ public class LdapTemplateModifyITest extends
     }
 
     protected void onSetUp() throws Exception {
+        super.onSetUp();
+        
         DirContextAdapter adapter = new DirContextAdapter();
         adapter.setAttributeValues("objectclass", new String[] { "top",
                 "person" });
