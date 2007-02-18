@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 import javax.naming.directory.DirContext;
 
 import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.support.LdapUtils;
 
 /**
  * Proxy implementation for DirContext, making sure that the instance is not

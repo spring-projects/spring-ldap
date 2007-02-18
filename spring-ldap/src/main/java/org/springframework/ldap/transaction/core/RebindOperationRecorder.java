@@ -19,6 +19,7 @@ import javax.naming.Name;
 import javax.naming.directory.Attributes;
 
 import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationExecutor;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationRecorder;
 

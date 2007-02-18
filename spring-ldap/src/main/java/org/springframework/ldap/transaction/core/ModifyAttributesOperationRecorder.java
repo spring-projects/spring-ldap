@@ -28,6 +28,7 @@ import javax.naming.directory.ModificationItem;
 
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationExecutor;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationRecorder;
 import org.springframework.util.Assert;
