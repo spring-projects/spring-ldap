@@ -16,6 +16,10 @@
 
 package org.springframework.ldap;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 import javax.naming.Name;
 
 import org.springframework.core.NestedRuntimeException;
@@ -27,7 +31,22 @@ import org.springframework.core.NestedRuntimeException;
  * @author Ulrik Sandberg
  * @since 1.2
  */
-public abstract class NamingException extends NestedRuntimeException {
+public abstract class NamingException extends NestedRuntimeException implements
+        Serializable {
+
+    private Throwable cause;
+
+    /**
+     * Overrides {@link Throwable#getCause()} since serialization always tries
+     * to serialize the base class before the subclass. Our <tt>cause</tt> may
+     * have a <tt>resolvedObj</tt> that is not serializable. By storing the
+     * cause in this class, we get a chance at temporarily nulling the cause
+     * before serialization, thus in effect making the current instance
+     * serializable.
+     */
+    public Throwable getCause() {
+        return cause;
+    }
 
     /**
      * Constructor that takes a message.
@@ -50,7 +69,8 @@ public abstract class NamingException extends NestedRuntimeException {
      *            {@link javax.naming.NamingException}.
      */
     public NamingException(String msg, Throwable cause) {
-        super(msg, cause);
+        super(msg);
+        this.cause = cause;
     }
 
     /**
@@ -63,7 +83,7 @@ public abstract class NamingException extends NestedRuntimeException {
      *            {@link javax.naming.NamingException}.
      */
     public NamingException(Throwable cause) {
-        super(cause != null ? cause.getMessage() : null, cause);
+        this(cause != null ? cause.getMessage() : null, cause);
     }
 
     /**
@@ -132,5 +152,30 @@ public abstract class NamingException extends NestedRuntimeException {
             return ((javax.naming.NamingException) getCause()).getResolvedObj();
         }
         return null;
+    }
+
+    /**
+     * Checks if the <tt>resolvedObj</tt> of the causing exception is suspected to
+     * be non-serializable, and if so temporarily nulls it before calling the default
+     * serialization mechanism.
+     * 
+     * @param stream the stream onto which this object is serialized
+     * @throws IOException if there is an error writing this object to the stream
+     */
+    private void writeObject(ObjectOutputStream stream) throws IOException {
+        Object resolvedObj = getResolvedObj();
+        boolean serializable = resolvedObj instanceof Serializable;
+        if (resolvedObj != null && !serializable) {
+            // the cause is of this type, since resolvedObj is not null
+            javax.naming.NamingException namingException = (javax.naming.NamingException) getCause();
+            namingException.setResolvedObj(null);
+            try {
+                stream.defaultWriteObject();
+            } finally {
+                namingException.setResolvedObj(resolvedObj);
+            }
+        } else {
+            stream.defaultWriteObject();
+        }
     }
 }
