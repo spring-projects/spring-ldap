@@ -51,5 +51,6 @@
 	<classpathentry kind="lib" path="lib/test/shared-asn1-codec.jar"/>
 	<classpathentry kind="lib" path="lib/test/hsqldb.jar"/>
 	<classpathentry kind="lib" path="lib/test/dbunit.jar"/>
+	<classpathentry kind="lib" path="lib/global/commons-pool.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
