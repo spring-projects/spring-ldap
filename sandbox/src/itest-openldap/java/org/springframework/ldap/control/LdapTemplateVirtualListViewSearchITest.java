@@ -23,6 +23,7 @@ import javax.naming.directory.SearchControls;
 
 import org.springframework.ldap.Person;
 import org.springframework.ldap.core.AttributesMapper;
+import org.springframework.ldap.core.AttributesMapperCallbackHandler;
 import org.springframework.ldap.core.CollectingNameClassPairCallbackHandler;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
@@ -53,7 +54,7 @@ public class LdapTemplateVirtualListViewSearchITest extends
     protected void onSetUp() throws Exception {
         super.onSetUp();
         PersonAttributesMapper mapper = new PersonAttributesMapper();
-        callbackHandler = tested.new AttributesMapperCallbackHandler(mapper);
+        callbackHandler = new AttributesMapperCallbackHandler(mapper);
         searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
     }
