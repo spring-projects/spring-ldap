@@ -1,7 +1,18 @@
-/* Copyright 2007 The JA-SIG Collaborative.  All rights reserved.
-*  See license distributed with this file and
-*  available online at http://www.uportal.org/license.html
-*/
+/*
+ * Copyright 2002-2005 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package org.springframework.ldap.pool;
 
@@ -129,7 +140,6 @@ import org.springframework.ldap.validation.DirContextValidator;
  * 
  * 
  * @author Eric Dalquist <a href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
- * @version $Revision: 1.3 $
  */
 public class PoolingContextSource implements ContextSource {
     protected final Log logger = LogFactory.getLog(this.getClass());
@@ -138,6 +148,10 @@ public class PoolingContextSource implements ContextSource {
     private final DirContextPoolableObjectFactory dirContextPoolableObjectFactory;
     
     public static final class WhenExhaustedAction {
+        
+        static {
+            values = new HashMap();
+        }
         
         /**
          * A "when exhausted action" type indicating that when the pool is
@@ -164,11 +178,11 @@ public class PoolingContextSource implements ContextSource {
          */
         public static final WhenExhaustedAction GROW = new WhenExhaustedAction("GROW", GenericKeyedObjectPool.WHEN_EXHAUSTED_GROW);
 
+        private static Map values;
+
         private final byte commonsPoolId;
 
         private final String name;
-
-        private static Map values = new HashMap();
 
         private WhenExhaustedAction(String name, byte id) {
             this.name = name;
