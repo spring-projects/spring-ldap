@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 
 import javax.naming.Name;
 import javax.naming.directory.DirContext;
+import javax.naming.ldap.LdapContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -335,4 +336,22 @@ public abstract class LdapUtils {
             }
         }
     }
+
+    /**
+     * Get the actual class of the supplied DirContext instance; LdapContext or
+     * DirContext.
+     * 
+     * @param context
+     *            the DirContext instance to check.
+     * @return LdapContext.class if context is an LdapContext, DirContext.class
+     *         otherwise.
+     */
+    public static Class getActualTargetClass(DirContext context) {
+        if (context instanceof LdapContext) {
+            return LdapContext.class;
+        }
+
+        return DirContext.class;
+    }
+
 }

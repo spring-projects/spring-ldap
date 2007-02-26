@@ -21,6 +21,7 @@ import javax.naming.directory.DirContext;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 /**
@@ -68,7 +69,8 @@ public class TransactionAwareContextSourceProxy implements ContextSource {
             ContextSource target) {
         return (DirContext) Proxy
                 .newProxyInstance(DirContextProxy.class.getClassLoader(),
-                        new Class[] { DirContextProxy.class },
+                        new Class[] { LdapUtils.getActualTargetClass(context),
+                                DirContextProxy.class },
                         new TransactionAwareDirContextInvocationHandler(
                                 context, target));
 

@@ -5,10 +5,7 @@ import java.util.Stack;
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
-import org.springframework.ldap.transaction.CompensatingTransactionOperationExecutor;
-import org.springframework.ldap.transaction.CompensatingTransactionOperationFactory;
-import org.springframework.ldap.transaction.CompensatingTransactionOperationRecorder;
-import org.springframework.ldap.transaction.DefaultCompensatingTransactionOperationManager;
+import org.springframework.transaction.TransactionSystemException;
 
 public class DefaultCompensatingTransactionOperationManagerTest extends
         TestCase {
@@ -85,7 +82,7 @@ public class DefaultCompensatingTransactionOperationManagerTest extends
         tested.performOperation("some method", expectedArgs);
         verify();
 
-        Stack result = tested.getRollbackOperations();
+        Stack result = tested.getOperationExecutors();
         assertFalse(result.isEmpty());
         assertSame(operationExecutorMock, result.peek());
     }
@@ -93,7 +90,7 @@ public class DefaultCompensatingTransactionOperationManagerTest extends
     public void testRollback() {
         DefaultCompensatingTransactionOperationManager tested = new DefaultCompensatingTransactionOperationManager(
                 operationFactoryMock);
-        tested.getRollbackOperations().push(operationExecutorMock);
+        tested.getOperationExecutors().push(operationExecutorMock);
 
         operationExecutorMock.rollback();
 
@@ -102,15 +99,51 @@ public class DefaultCompensatingTransactionOperationManagerTest extends
         verify();
     }
 
+    public void testRollback_Exception() {
+        DefaultCompensatingTransactionOperationManager tested = new DefaultCompensatingTransactionOperationManager(
+                operationFactoryMock);
+        tested.getOperationExecutors().push(operationExecutorMock);
+
+        operationExecutorMock.rollback();
+        operationExecutorControl.setThrowable(new RuntimeException());
+
+        replay();
+        try {
+            tested.rollback();
+            fail("TransactionSystemException expected");
+        } catch (TransactionSystemException expected) {
+            assertTrue(true);
+        }
+        verify();
+    }
+
     public void testCommit() {
         DefaultCompensatingTransactionOperationManager tested = new DefaultCompensatingTransactionOperationManager(
                 operationFactoryMock);
-        tested.getRollbackOperations().push(operationExecutorMock);
+        tested.getOperationExecutors().push(operationExecutorMock);
 
         operationExecutorMock.commit();
 
         replay();
         tested.commit();
+        verify();
+    }
+
+    public void testCommit_Exception() {
+        DefaultCompensatingTransactionOperationManager tested = new DefaultCompensatingTransactionOperationManager(
+                operationFactoryMock);
+        tested.getOperationExecutors().push(operationExecutorMock);
+
+        operationExecutorMock.commit();
+        operationExecutorControl.setThrowable(new RuntimeException());
+
+        replay();
+        try {
+            tested.commit();
+            fail("TransactionSystemException expected");
+        } catch (TransactionSystemException expected) {
+            assertTrue(true);
+        }
         verify();
     }
 }

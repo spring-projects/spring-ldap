@@ -447,4 +447,10 @@ public class DistinguishedNameTest extends TestCase {
         assertTrue(result < 0);
     }
 
+    public void test_longDN() throws InvalidNameException {
+        DistinguishedName name = new DistinguishedName(
+                "");
+        assertNotNull(name);
+    }
+
 }

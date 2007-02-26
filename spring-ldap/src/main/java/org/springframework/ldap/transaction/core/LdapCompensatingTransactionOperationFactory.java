@@ -124,7 +124,9 @@ public class LdapCompensatingTransactionOperationFactory implements
 
         private DirContext getNonClosingDirContextProxy(DirContext context) {
             return (DirContext) Proxy.newProxyInstance(DirContextProxy.class
-                    .getClassLoader(), new Class[] { DirContextProxy.class },
+                    .getClassLoader(), new Class[] {
+                    LdapUtils.getActualTargetClass(context),
+                    DirContextProxy.class },
                     new NonClosingDirContextInvocationHandler(context));
 
         }

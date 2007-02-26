@@ -15,10 +15,12 @@
  */
 package org.springframework.ldap.transaction;
 
+import java.util.Iterator;
 import java.util.Stack;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.transaction.TransactionSystemException;
 
 /**
  * Default implementation of {@link CompensatingTransactionOperationManager}.
@@ -33,7 +35,7 @@ public class DefaultCompensatingTransactionOperationManager implements
     private static Log log = LogFactory
             .getLog(DefaultCompensatingTransactionOperationManager.class);
 
-    private Stack rollbackOperations = new Stack();
+    private Stack operationExecutors = new Stack();
 
     private CompensatingTransactionOperationFactory operationFactory;
 
@@ -63,7 +65,7 @@ public class DefaultCompensatingTransactionOperationManager implements
         executor.performOperation();
 
         // Don't push the executor until the actual operation passed.
-        rollbackOperations.push(executor);
+        operationExecutors.push(executor);
     }
 
     /*
@@ -73,10 +75,15 @@ public class DefaultCompensatingTransactionOperationManager implements
      */
     public void rollback() {
         log.debug("Performing rollback");
-        while (!rollbackOperations.isEmpty()) {
-            CompensatingTransactionOperationExecutor rollbackOperation = (CompensatingTransactionOperationExecutor) rollbackOperations
+        while (!operationExecutors.isEmpty()) {
+            CompensatingTransactionOperationExecutor rollbackOperation = (CompensatingTransactionOperationExecutor) operationExecutors
                     .pop();
-            rollbackOperation.rollback();
+            try {
+                rollbackOperation.rollback();
+            } catch (Exception e) {
+                throw new TransactionSystemException(
+                        "Error occurred during rollback", e);
+            }
         }
     }
 
@@ -85,19 +92,19 @@ public class DefaultCompensatingTransactionOperationManager implements
      * 
      * @return the rollback operations.
      */
-    protected Stack getRollbackOperations() {
-        return rollbackOperations;
+    protected Stack getOperationExecutors() {
+        return operationExecutors;
     }
 
     /**
      * Set the rollback operations. Package protected - for testing purposes
      * only.
      * 
-     * @param rollbackOperations
+     * @param operationExecutors
      *            the rollback operations.
      */
-    void setRollbackOperations(Stack rollbackOperations) {
-        this.rollbackOperations = rollbackOperations;
+    void setOperationExecutors(Stack operationExecutors) {
+        this.operationExecutors = operationExecutors;
     }
 
     /*
@@ -107,11 +114,15 @@ public class DefaultCompensatingTransactionOperationManager implements
      */
     public void commit() {
         log.debug("Performing rollback");
-        // TODO: Should this really be done in reverse order?
-        while (!rollbackOperations.isEmpty()) {
-            CompensatingTransactionOperationExecutor rollbackOperation = (CompensatingTransactionOperationExecutor) rollbackOperations
-                    .pop();
-            rollbackOperation.commit();
+        for (Iterator iter = operationExecutors.iterator(); iter.hasNext();) {
+            CompensatingTransactionOperationExecutor operationExecutor = (CompensatingTransactionOperationExecutor) iter
+                    .next();
+            try {
+                operationExecutor.commit();
+            } catch (Exception e) {
+                throw new TransactionSystemException(
+                        "Error occurred during commit", e);
+            }
         }
     }
 

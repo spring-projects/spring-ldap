@@ -23,7 +23,7 @@ import javax.naming.directory.DirContext;
  * 
  * @author Mattias Arthursson
  */
-public interface DirContextProxy extends DirContext {
+public interface DirContextProxy {
     /**
      * Get the target DirContext of the proxy.
      * 
