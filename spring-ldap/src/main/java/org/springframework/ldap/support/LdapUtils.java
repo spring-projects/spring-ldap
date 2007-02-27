@@ -41,7 +41,7 @@ import org.springframework.util.Assert;
  * @author Ulrik Sandberg
  * @since 1.2
  */
-public abstract class LdapUtils {
+public final class LdapUtils {
 
     private static final Log logger = LogFactory.getLog(LdapUtils.class);
 
@@ -54,6 +54,13 @@ public abstract class LdapUtils {
     public static final String UNBIND_METHOD_NAME = "unbind";
 
     public static final String MODIFY_ATTRIBUTES_METHOD_NAME = "modifyAttributes";
+
+    /**
+     * Not to be instantiated.
+     */
+    private LdapUtils() {
+
+    }
 
     /**
      * Close the given JNDI Context and ignore any thrown exception. This is
@@ -313,24 +320,25 @@ public abstract class LdapUtils {
      * 
      * @param contextSource
      *            the ContextSource we are operating on.
+     * @param targetContext TODO
      * @param method
      *            name of the method to be invoked.
      * @param args
      *            arguments with which the operation is invoked.
      */
     public static void performOperation(ContextSource contextSource,
-            Method method, Object[] args) throws Throwable {
+            DirContext targetContext, Method method, Object[] args) throws Throwable {
         DirContextHolder transactionContextHolder = (DirContextHolder) TransactionSynchronizationManager
                 .getResource(contextSource);
         if (transactionContextHolder != null) {
 
             CompensatingTransactionOperationManager transactionDataManager = transactionContextHolder
-                    .getTransactionDataManager();
+                    .getTransactionOperationManager();
             transactionDataManager.performOperation(method.getName(), args);
         } else {
             // Perform the target operation
             try {
-                method.invoke(transactionContextHolder.getCtx(), args);
+                method.invoke(targetContext, args);
             } catch (InvocationTargetException e) {
                 throw e.getTargetException();
             }

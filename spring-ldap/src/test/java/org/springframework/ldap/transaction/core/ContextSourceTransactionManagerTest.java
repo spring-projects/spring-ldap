@@ -141,7 +141,7 @@ public class ContextSourceTransactionManagerTest extends TestCase {
         DirContextHolder expectedContextHolder = new DirContextHolder(
                 contextMock, renamingStrategyMock);
         expectedContextHolder
-                .setTransactionDataManager(transactionDataManagerMock);
+                .setTransactionOperationManager(transactionDataManagerMock);
         TransactionSynchronizationManager.bindResource(contextSourceMock,
                 expectedContextHolder);
 
@@ -170,7 +170,7 @@ public class ContextSourceTransactionManagerTest extends TestCase {
         contextControl.verify();
         assertNull(TransactionSynchronizationManager
                 .getResource(contextSourceMock));
-        assertNull(expectedContextHolder.getTransactionDataManager());
+        assertNull(expectedContextHolder.getTransactionOperationManager());
     }
 
     public void testSetContextSource_Proxy() {

@@ -35,7 +35,7 @@ import org.springframework.transaction.support.ResourceHolderSupport;
 public class DirContextHolder extends ResourceHolderSupport {
     private DirContext ctx;
 
-    private CompensatingTransactionOperationManager transactionDataManager;
+    private CompensatingTransactionOperationManager transactionOperationManager;
 
     private CompensatingTransactionOperationFactory operationFactory;
 
@@ -51,7 +51,7 @@ public class DirContextHolder extends ResourceHolderSupport {
             TempEntryRenamingStrategy renamingStrategy) {
         this.ctx = ctx;
         this.renamingStrategy = renamingStrategy;
-        this.transactionDataManager = new DefaultCompensatingTransactionOperationManager(
+        this.transactionOperationManager = new DefaultCompensatingTransactionOperationManager(
                 createOperationFactory());
     }
 
@@ -63,7 +63,7 @@ public class DirContextHolder extends ResourceHolderSupport {
      */
     public void setCtx(DirContext ctx) {
         this.ctx = ctx;
-        this.transactionDataManager = new DefaultCompensatingTransactionOperationManager(
+        this.transactionOperationManager = new DefaultCompensatingTransactionOperationManager(
                 createOperationFactory());
     }
 
@@ -89,7 +89,7 @@ public class DirContextHolder extends ResourceHolderSupport {
 
     public void clear() {
         super.clear();
-        transactionDataManager = null;
+        transactionOperationManager = null;
         operationFactory = null;
     }
 
@@ -99,20 +99,20 @@ public class DirContextHolder extends ResourceHolderSupport {
      * 
      * @return the CompensatingTransactionOperationManager.
      */
-    public CompensatingTransactionOperationManager getTransactionDataManager() {
-        return transactionDataManager;
+    public CompensatingTransactionOperationManager getTransactionOperationManager() {
+        return transactionOperationManager;
     }
 
     /**
      * Set the CompensatingTransactionOperationManager. For testing purposes
      * only.
      * 
-     * @param transactionDataManager
+     * @param transactionOperationManager
      *            the CompensatingTransactionOperationManager to use.
      */
-    void setTransactionDataManager(
-            CompensatingTransactionOperationManager transactionDataManager) {
-        this.transactionDataManager = transactionDataManager;
+    public void setTransactionOperationManager(
+            CompensatingTransactionOperationManager transactionOperationManager) {
+        this.transactionOperationManager = transactionOperationManager;
     }
 
     public CompensatingTransactionOperationFactory getOperationFactory() {

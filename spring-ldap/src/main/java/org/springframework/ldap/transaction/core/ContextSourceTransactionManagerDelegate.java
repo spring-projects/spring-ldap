@@ -110,7 +110,7 @@ public class ContextSourceTransactionManagerDelegate {
             throws TransactionException {
         ContextSourceTransactionObject txObject = (ContextSourceTransactionObject) status
                 .getTransaction();
-        txObject.getContextHolder().getTransactionDataManager().commit();
+        txObject.getContextHolder().getTransactionOperationManager().commit();
 
     }
 
@@ -123,7 +123,7 @@ public class ContextSourceTransactionManagerDelegate {
             throws TransactionException {
         ContextSourceTransactionObject txObject = (ContextSourceTransactionObject) status
                 .getTransaction();
-        txObject.getContextHolder().getTransactionDataManager().rollback();
+        txObject.getContextHolder().getTransactionOperationManager().rollback();
     }
 
     /*
