@@ -85,14 +85,14 @@
     </ivy:buildlist>
 
     <tstamp>
-    	<format property="build.timestamp" pattern="yyyyMMddHHmmss"/>
+    	<format property="internal.build.timestamp" pattern="yyyyMMddHHmmss"/>
     </tstamp>
     <tstamp>
       <format property="TSTAMPCOL" pattern="hh:mm"/>
     </tstamp>
 
   	<!-- default the release version (used in release archive zips) to the current timestamp -->
-    <property name="release.version" value="${build.timestamp}"/>
+    <property name="release.version" value="${internal.build.timestamp}"/>
 
     <!-- root of build hierarchy -->
     <property name="target.dir" value="${basedir}/target"/>
