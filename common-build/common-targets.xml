@@ -63,14 +63,14 @@
 
   <target name="init.pre">
 
-    <!-- we default project.version to be ${project.base.version}-${internal.build.timestamp}
+    <!-- we default project.version to be ${project.base.version}-${internal.internal.build.timestamp}
        where project.base.version defaults to 1.0-dev.
        
        An importing project or master build should override project.base.version.
        For a release build which doesn't need the build timestamp, should override
        project.version itself to just be equal to ${project.base.version} -->
     <tstamp>
-      <format property="internal.build.timestamp" pattern="yyyyMMddHHmmss" />
+      <format property="internal.internal.build.timestamp" pattern="yyyyMMddHHmmss" />
     </tstamp>
     <tstamp>
       <format property="TSTAMPCOL" pattern="hh:mm" />
@@ -84,7 +84,7 @@
     <property name="project.webapp.name" value="${ant.project.name}" />
   	<property name="project.title" value="${project.name}" />
    	<property name="project.base.version" value="1.0-dev" />
-    <property name="project.version" value="${project.base.version}-${internal.build.timestamp}" />
+    <property name="project.version" value="${project.base.version}-${internal.internal.build.timestamp}" />
 	<property name="project.copyright" value="Copyright &#169; 2002-2006. All Rights Reserved."/>
   	
     <property environment="myenv" />
