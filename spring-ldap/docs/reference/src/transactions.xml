@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
                
 <chapter id="transactions">
-  <title>LDAP Transaction Support</title>
+  <title>Spring LDAP Transaction Support</title>
 
   <sect1 id="transactions-intro">
     <title>Introduction</title>
@@ -26,6 +26,10 @@
 	that the alternative will be to operate without any transaction support whatsoever; this is pretty much
 	as good as it gets.</note>
     </para>
+    <para>In addition to the actual transaction management, Spring LDAP transaction support also
+    makes sure that the same <literal>DirContext</literal> instance will be used throughout the same transaction,
+    i.e. the <literal>DirContext</literal> will not actually be closed until the transaction is finished,
+    allowing for more efficient usage of resources.</para>
   </sect1>
   
   <sect1 id="transactions-configuration">
@@ -82,20 +86,80 @@
     around the targets; <literal>contextSource</literal> and <literal>myDataAccessObject</literal></note>
     </para>
   </sect1>
-  <sect1>
-  	<title>The Inner Workings</title>
-    <para>In order to properly benefit from the Spring LDAP transaction support it will be useful to know
-    something about the inner workings. At the heart of the LDAP transaction support, of course, there
-    is the <literal>ContextSourceTransactionManager</literal>. This works in close collaboration with
-    a <literal>CompensatingTransactionOperationManager</literal> instance, which is tied to the transaction
-    by the TransactionManager. Using the <literal>TransactionAwareContextSourceProxy</literal> causes
-    all modifying operations to be forwarded to the <literal>CompensatingTransactionOperationManager</literal>,
-    which &quot;records&quot; the state before the operation and gets a <literal>CompensatingTransactionOperationExecutor</literal>
-    for the specific operation. One OperationExecutor is responsible for executing and committing or rolling back
-    one single operation, and OperationManager manages a sequence of OperationExecutors representing all operations
-    within a transaction.</para>
-    <para>Now, the <literal>CompensatingTransactionOperationExecutor</literal> knows the relevant state before the operation
-    was performed.
-    </para>
+  <sect1 id="compensating-transactions">
+  	<title>LDAP Compensating Transactions</title>
+  	<para>Spring LDAP manages compensating transactions by making record of the state in the LDAP tree
+  	before each modifying operation (<literal>bind</literal>, <literal>unbind</literal>, <literal>rebind</literal>, 
+  	<literal>modifyAttributes</literal>, and <literal>rename</literal>).</para>
+  	<para>This enables the system
+  	to perform compensating operations should the transaction need to be rolled back. In many cases the
+  	compensating operation is pretty straightforward. E.g. the compensating rollback operation for a 
+  	<literal>bind</literal> operation will quite obviously be to unbind the entry. Other operations however require
+  	a different, more complicated approach because of some particular characteristics of LDAP databases. Specifically,
+  	it is not always possible to get the values of all <literal>Attributes</literal> of an entry, making the above
+  	strategy insufficient for e.g. an <literal>unbind</literal> operation.</para>
+  	<para>This is why each modifying operation performed within a Spring LDAP managed transaction is internally
+  	split up in four distinct operations - a recording operation, a preparation operation, a commit operation, 
+  	and a rollback operation. The specifics for each LDAP operation is described in the table below:</para>
+	<table frame="all">
+	  <tgroup cols='5' align='left' colsep='1' rowsep='1'>
+	  <colspec colname="c1" />
+	  <colspec colname="c2" />
+	  <colspec colname="c3" />
+	  <colspec colname="c4" />
+	  <colspec colname="c5" />
+	  <thead>
+	    <row>
+	      <entry>LDAP Operation</entry>
+	      <entry>Recording</entry>
+	      <entry>Preparation</entry>
+	      <entry>Commit</entry>
+	      <entry>Rollback</entry>
+	    </row>
+	  </thead>
+	  <tbody>
+	    <row>
+	      <entry>Bind</entry>
+	      <entry>Make record of the DN of the entry to bind.</entry>
+	      <entry>Bind the entry.</entry>
+	      <entry>No operation.</entry>
+	      <entry>Unbind the entry using the recorded DN.</entry>
+	    </row>
+	    <row>
+	      <entry>Rename</entry>
+	      <entry>Make record of the original and target DN.</entry>
+	      <entry>Rename the entry.</entry>
+	      <entry>No operation.</entry>
+	      <entry>Rename the entry back to its original DN.</entry>
+	    </row>
+	   	<row>
+	      <entry>Unbind</entry>
+	      <entry>Make record of the original DN and calculate a temporary DN.</entry>
+	      <entry>Rename the entry to the temporary location.</entry>
+	      <entry>Unbind the temporary entry.</entry>
+	      <entry>Rename the entry from the temporary location back to its original DN.</entry>
+	    </row>
+	    <row>
+	      <entry>Rebind</entry>
+	      <entry>Make record of the original DN and the new <literal>Attributes</literal>, and calculate a temporary DN.</entry>
+	      <entry>Rename the entry to a temporary location.</entry>
+	      <entry>Bind the new <literal>Attributes</literal> at the original DN, and unbind the original entry
+	      from its temporary location.</entry>
+	      <entry>Rename the entry from the temporary location back to its original DN.</entry>
+	    </row>
+	    <row>
+	      <entry>ModifyAttributes</entry>
+	      <entry>Make record of the DN of the entry to modify and calculate compensating <literal>ModificationItem</literal>s
+	      for the modifications to be done.</entry>
+	      <entry>Perform the <literal>modifyAttributes</literal> operation.</entry>
+	      <entry>No operation.</entry>
+	      <entry>Perform a <literal>modifyAttributes</literal> operation using the calculated compensating
+	      <literal>ModificationItem</literal>s.</entry>
+	    </row>
+	  </tbody>
+	  </tgroup>
+	</table>
+	<para>A more detailed description of the internal workings of the Spring LDAP transaction support is available in the
+	javadocs.</para>
   </sect1>
 </chapter>
