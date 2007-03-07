@@ -206,26 +206,22 @@ public class LdapEncoder {
                     if (nextChar == ',' | nextChar == '=' | nextChar == '+'
                             | nextChar == '<' | nextChar == '>'
                             | nextChar == '#' | nextChar == ';'
-                            | nextChar == '\\' | nextChar == '\"') {
+                            | nextChar == '\\' | nextChar == '\"'
+                            | nextChar == ' ') {
                         decoded.append(nextChar);
                         i += 2;
                     } else {
                         if (value.length() <= i + 2) {
-                            // This is the last char, so it should be a space
-                            if (nextChar == ' ') {
-                                decoded.append(nextChar);
-                                i += 2;
-                            } else {
-                                throw new BadLdapGrammarException(
-                                        "Unexpected end of value "
-                                                + "expected special or hex, found '"
-                                                + nextChar + "'");
-                            }
+                            throw new BadLdapGrammarException(
+                                    "Unexpected end of value "
+                                            + "expected special or hex, found '"
+                                            + nextChar + "'");
                         } else {
                             // This should be a hex value
                             String hexString = "" + nextChar
                                     + value.charAt(i + 2);
-                            decoded.append(Integer.parseInt(hexString, 16));
+                            decoded.append((char) Integer.parseInt(hexString,
+                                    16));
                             i += 3;
                         }
                     }
