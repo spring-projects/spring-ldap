@@ -19,7 +19,6 @@ package org.springframework.ldap.core;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 import org.apache.commons.lang.StringUtils;
 import org.springframework.ldap.BadLdapGrammarException;
 
@@ -27,6 +26,7 @@ import org.springframework.ldap.BadLdapGrammarException;
  * Helper class to encode and decode ldap names and values.
  * 
  * @author Adam Skogman
+ * @author Mattias Arthursson
  */
 public class LdapEncoder {
 
@@ -194,42 +194,49 @@ public class LdapEncoder {
         // make buffer same size
         StringBuffer decoded = new StringBuffer(value.length());
 
-        Matcher matcher = VALUE_DECODE_PATTERN.matcher(value);
-
-        int end = 0;
-
-        while (matcher.find()) {
-            end = matcher.end();
-            // group 1
-            if (matcher.group(1) != null) {
-                // parse as hex = base 16
-                try {
-                    char c = (char) Integer.parseInt(matcher.group(1), 16);
-                    decoded.append(c);
-                } catch (NumberFormatException e) {
+        int i = 0;
+        while (i < value.length()) {
+            char currentChar = value.charAt(i);
+            if (currentChar == '\\') {
+                if (value.length() <= i + 1) {
                     throw new BadLdapGrammarException(
-                            "Escaped hex value Could not be parsed. Found '\\"
-                                    + matcher.group(1) + "'");
+                            "Unexpected end of value " + "unterminated '\\'");
+                } else {
+                    char nextChar = value.charAt(i + 1);
+                    if (nextChar == ',' | nextChar == '=' | nextChar == '+'
+                            | nextChar == '<' | nextChar == '>'
+                            | nextChar == '#' | nextChar == ';'
+                            | nextChar == '\\' | nextChar == '\"') {
+                        decoded.append(nextChar);
+                        i += 2;
+                    } else {
+                        if (value.length() <= i + 2) {
+                            // This is the last char, so it should be a space
+                            if (nextChar == ' ') {
+                                decoded.append(nextChar);
+                                i += 2;
+                            } else {
+                                throw new BadLdapGrammarException(
+                                        "Unexpected end of value "
+                                                + "expected special or hex, found '"
+                                                + nextChar + "'");
+                            }
+                        } else {
+                            // This should be a hex value
+                            String hexString = "" + nextChar
+                                    + value.charAt(i + 2);
+                            decoded.append(Integer.parseInt(hexString, 16));
+                            i += 3;
+                        }
+                    }
                 }
-            } else if (matcher.group(2) != null) {
-                // just add, we stripped away the \
-                decoded.append(matcher.group(2));
-            } else if (matcher.group(3) != null) {
-                // just add
-                decoded.append(matcher.group(3));
+            } else {
+                decoded.append(currentChar);
+                i++;
             }
-
-        }
-        // end is match + +1 so it should be same as length, i.e.
-        // last + 1
-        if (end < value.length()) {
-            throw new BadLdapGrammarException(
-                    "RDN could not be parsed fully, remaining '"
-                            + StringUtils.substring(value, end) + "'");
         }
 
         return decoded.toString();
 
     }
-
 }

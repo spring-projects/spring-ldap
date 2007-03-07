@@ -52,14 +52,6 @@ public class DnParsePerformanceITest extends TestCase {
                 "cn=john.doe, OU=Users,OU=SE,ou=G,OU=L,OU=M, ou=foo");
         DistinguishedName pathE2 = new DistinguishedName(
                 "cn=john.doe, OU=Users,OU=SE");
-
-        assertTrue("Contains MIG", path1.contains(migpath));
-        assertTrue("Contains MIG", path2.contains(migpath));
-        assertTrue("Contains MIG", path3.contains(migpath));
-        assertTrue("Contains MIG", path4.contains(migpath));
-
-        assertFalse("Does not contain MIG", pathE1.contains(migpath));
-        assertFalse("Does not contain MIG", pathE2.contains(migpath));
     }
 
     public static Test suite() {
