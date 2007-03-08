@@ -33,7 +33,7 @@
         <delete quiet="true" dir="${upload.tmp.dir}"/>
         <mkdir dir="${upload.tmp.dir}"/>
         <tstamp>
-            <format property="tstamp" pattern="yyyy-MM-dd"/>
+            <format property="tstamp" pattern="yyyyMMdd"/>
         </tstamp>
         <move file="${target.release.dir}/${release.bin.zip}"
             tofile="${upload.tmp.dir}/spring-ldap-bin-${release.version}-${tstamp}-${build.number}.zip"/>
