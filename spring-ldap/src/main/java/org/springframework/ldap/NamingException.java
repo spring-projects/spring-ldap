@@ -37,15 +37,19 @@ public abstract class NamingException extends NestedRuntimeException implements
     private Throwable cause;
 
     /**
-     * Overrides {@link Throwable#getCause()} since serialization always tries
-     * to serialize the base class before the subclass. Our <tt>cause</tt> may
-     * have a <tt>resolvedObj</tt> that is not serializable. By storing the
-     * cause in this class, we get a chance at temporarily nulling the cause
-     * before serialization, thus in effect making the current instance
-     * serializable.
+     * Overrides {@link NestedRuntimeException#getCause()} since serialization
+     * always tries to serialize the base class before the subclass. Our
+     * <tt>cause</tt> may have a <tt>resolvedObj</tt> that is not
+     * serializable. By storing the cause in this class, we get a chance at
+     * temporarily nulling the cause before serialization, thus in effect making
+     * the current instance serializable.
      */
     public Throwable getCause() {
-        return cause;
+        // Even if you cannot set the cause of this exception other than through
+        // the constructor, we check for the cause being "this" here, as the cause
+        // could still be set to "this" via reflection: for example, by a remoting
+        // deserializer like Hessian's.
+        return (this.cause == this ? null : this.cause);
     }
 
     /**
@@ -155,12 +159,14 @@ public abstract class NamingException extends NestedRuntimeException implements
     }
 
     /**
-     * Checks if the <tt>resolvedObj</tt> of the causing exception is suspected to
-     * be non-serializable, and if so temporarily nulls it before calling the default
-     * serialization mechanism.
+     * Checks if the <tt>resolvedObj</tt> of the causing exception is
+     * suspected to be non-serializable, and if so temporarily nulls it before
+     * calling the default serialization mechanism.
      * 
-     * @param stream the stream onto which this object is serialized
-     * @throws IOException if there is an error writing this object to the stream
+     * @param stream
+     *            the stream onto which this object is serialized
+     * @throws IOException
+     *             if there is an error writing this object to the stream
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
         Object resolvedObj = getResolvedObj();
