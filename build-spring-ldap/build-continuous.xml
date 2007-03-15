@@ -93,7 +93,7 @@
 			        toFile="LDAP/spring-ldap-bin-with-dependencies-${release.version}-${tstamp}-${build.number}.zip" />
 			<upload bucket="static.springframework.org"
 			        file="${target.release.dir}/${release.buildable.zip}"
-			        toFile="SWF/spring-ldap-buildable-${release.version}-${tstamp}-${build.number}.zip" />
+			        toFile="LDAP/spring-ldap-buildable-${release.version}-${tstamp}-${build.number}.zip" />
 		</aws:s3>
 	</target>
 	
