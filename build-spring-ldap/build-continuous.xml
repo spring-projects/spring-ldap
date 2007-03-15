@@ -12,9 +12,13 @@
   @author Arjen Poutsma
   =======================================================================
 -->
-<project name="build-spring-ldap-continuous" default="snapshot" xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+<project name="build-spring-ldap-continuous" default="snapshot" xmlns:ivy="antlib:fr.jayasoft.ivy.ant" xmlns:aws="antlib:org.springframework.aws">
 
 	<import file="${basedir}/build.xml"/>
+	
+	<taskdef resource="org/springframework/aws/antlib.xml"
+	         uri="antlib:org.springframework.aws"
+	         classpathref="ivy.lib.path" />
 
 	<!-- targets for uploading binaries, creating snapshots, et cetera -->
     <!--
@@ -43,7 +47,7 @@
             tofile="${upload.tmp.dir}/spring-ldap-buildable-${release.version}-${tstamp}-${build.number}.zip"/>
     </target>
     
-    <target name="upload" depends="upload-binaries"/>
+    <target name="upload" depends="upload-binaries,upload-s3"/>
 
     <!-- SCP needs an SSH library on the classpath (see Ant documentation for more info) -->
     <target name="upload-binaries" depends="init, guard.upload.tmp.dir, guard.upload.binaries.dir, guard.upload.url, guard.upload.password, guard.upload.username">
@@ -78,5 +82,26 @@
     <target name="guard.upload.password" unless="upload.password">
     	<fail message="This target requires the upload.password property to be set"/>
     </target>
-    
+
+	<target name="upload-s3" depends="guard.s3.accessKey, guard.s3.secretKey">
+		<aws:s3 accessKey="${s3.accessKey}" secretKey="${s3.secretKey}">
+			<upload bucket="static.springframework.org"
+			        file="${target.release.dir}/${release.bin.zip}"
+			        toFile="LDAP/spring-ldap-bin-${release.version}-${tstamp}-${build.number}.zip" />
+			<upload bucket="static.springframework.org"
+			        file="${target.release.dir}/${release.bin.deps.zip}"
+			        toFile="LDAP/spring-ldap-bin-with-dependencies-${release.version}-${tstamp}-${build.number}.zip" />
+			<upload bucket="static.springframework.org"
+			        file="${target.release.dir}/${release.buildable.zip}"
+			        toFile="SWF/spring-ldap-buildable-${release.version}-${tstamp}-${build.number}.zip" />
+		</aws:s3>
+	</target>
+	
+	<target name="guard.s3.accessKey" unless ="s3.accessKey">
+		<fail message="This target requires the s3.accesskey property to be set"/>
+	</target>
+
+	<target name="guard.s3.secretKey" unless ="s3.secretKey">
+		<fail message="This target requires the s3.secretKey property to be set"/>
+	</target>
 </project>
