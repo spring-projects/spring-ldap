@@ -39,11 +39,11 @@
         <tstamp>
             <format property="tstamp" pattern="yyyyMMdd"/>
         </tstamp>
-        <move file="${target.release.dir}/${release.bin.zip}"
+        <copy file="${target.release.dir}/${release.bin.zip}"
             tofile="${upload.tmp.dir}/spring-ldap-bin-${release.version}-${tstamp}-${build.number}.zip"/>
-        <move file="${target.release.dir}/${release.bin.deps.zip}"
+        <copy file="${target.release.dir}/${release.bin.deps.zip}"
             tofile="${upload.tmp.dir}/spring-ldap-bin-with-dependencies-${release.version}-${tstamp}-${build.number}.zip"/>
-        <move file="${target.release.dir}/${release.buildable.zip}"
+        <copy file="${target.release.dir}/${release.buildable.zip}"
             tofile="${upload.tmp.dir}/spring-ldap-buildable-${release.version}-${tstamp}-${build.number}.zip"/>
     </target>
     
