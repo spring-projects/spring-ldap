@@ -14,11 +14,18 @@
 -->
 <project name="build-spring-ldap-continuous" default="snapshot" xmlns:ivy="antlib:fr.jayasoft.ivy.ant" xmlns:aws="antlib:org.springframework.aws">
 
+	<property file="build.properties" />
+	<property file="project.properties" />
+	<property file="${common.build.dir}/build.properties" />
+	<property file="${common.build.dir}/project.properties" />
+	<property file="${user.home}/build.properties" />
+
 	<import file="${basedir}/build.xml"/>
+	<import file="${common.build.dir}/common-targets.xml" />
 	
-	<taskdef resource="org/springframework/aws/antlib.xml"
-	         uri="antlib:org.springframework.aws"
-	         classpathref="ivy.lib.path" />
+	<path id="aws.lib.path">
+		<fileset dir="${basedir}/lib" includes="*.jar"/>
+	</path>
 
 	<!-- targets for uploading binaries, creating snapshots, et cetera -->
     <!--
@@ -83,7 +90,7 @@
     	<fail message="This target requires the upload.password property to be set"/>
     </target>
 
-	<target name="upload-s3" depends="guard.s3.accessKey, guard.s3.secretKey">
+	<target name="upload-s3" depends="s3.tasks, guard.s3.accessKey, guard.s3.secretKey">
 		<aws:s3 accessKey="${s3.accessKey}" secretKey="${s3.secretKey}">
 			<upload bucketName="static.springframework.org"
 			        file="${target.release.dir}/${release.bin.zip}"
@@ -106,5 +113,10 @@
 
 	<target name="guard.s3.secretKey" unless ="s3.secretKey">
 		<fail message="This target requires the s3.secretKey property to be set"/>
+	</target>
+	
+	<target name="s3.tasks" depends="retrieve">
+		<taskdef resource="org/springframework/aws/antlib.xml" uri="antlib:org.springframework.aws"
+			classpathref="aws.lib.path" />
 	</target>
 </project>
