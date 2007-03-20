@@ -5,7 +5,8 @@
 	<info organisation="org.springframework" module="build-spring-ldap" />
 
 	<configurations>
-		<conf name="default" />
+		<conf name="default" extends="global" />
+		<conf name="global" visibility="private" />
 	</configurations>
 	
 	<dependencies defaultconf="global">
