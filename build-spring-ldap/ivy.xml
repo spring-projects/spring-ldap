@@ -7,9 +7,11 @@
 	<configurations>
 		<conf name="default" extends="global" />
 		<conf name="global" visibility="private" />
+		<conf name="buildtime" visibility="private" />
+		<conf name="test" visibility="private" />
 	</configurations>
 	
-	<dependencies defaultconf="global">
+	<dependencies defaultconf="global->default">
 		<dependency org="org.springframework.aws" name="spring-aws-ant" rev="1.0"/>
 	</dependencies>
 </ivy-module>
