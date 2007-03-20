@@ -12,6 +12,6 @@
 	</configurations>
 	
 	<dependencies defaultconf="global->default">
-		<dependency org="org.springframework.aws" name="spring-aws-ant" rev="1.0"/>
+		<dependency org="org.springframework.aws" name="spring-aws-ant" rev="1.0.1"/>
 	</dependencies>
 </ivy-module>

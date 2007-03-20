@@ -113,7 +113,7 @@
 	
 	<target name="s3.tasks" depends="retrieve">
 		<path id="aws.lib.path">
-				<fileset dir="${basedir}/lib" includes="*.jar"/>
+				<fileset dir="${basedir}/lib/global" includes="*.jar"/>
 		</path>
 		<taskdef resource="org/springframework/aws/antlib.xml" uri="antlib:org.springframework.aws"
 			classpathref="aws.lib.path" />
