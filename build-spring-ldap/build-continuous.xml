@@ -24,69 +24,12 @@
 	<import file="${common.build.dir}/common-targets.xml" />
 
 	<!-- targets for uploading binaries, creating snapshots, et cetera -->
-    <!--
-            properties needed (some are set in CruiseControl configuration)
-            - release.zip         release zip (set by build.xml)
-            - release.version     release version (set by build.xml)
-            - target.release.dir  release directory (set by build.xml)
-            - upload.tmp.dir      temporary directory to use when uploading
-            - upload.username     username to use when SCP'ing to server
-            - upload.password     password to use when SCP'ing to server
-            - upload.url          url to use when SCP'ing to server
-            - upload.log.dir      directory to upload logs to
-            - upload.binaries.dir directory to upload binaries to
-	-->
-	<target name="snapshot" depends="init, guard.upload.tmp.dir">
-        <delete quiet="true" dir="${upload.tmp.dir}"/>
-        <mkdir dir="${upload.tmp.dir}"/>
+    <target name="upload" depends="upload-s3"/>
+
+	<target name="upload-s3" depends="s3.tasks, guard.s3.accessKey, guard.s3.secretKey">
         <tstamp>
             <format property="tstamp" pattern="yyyyMMdd"/>
         </tstamp>
-        <copy file="${target.release.dir}/${release.bin.zip}"
-            tofile="${upload.tmp.dir}/spring-ldap-bin-${release.version}-${tstamp}-${build.number}.zip"/>
-        <copy file="${target.release.dir}/${release.bin.deps.zip}"
-            tofile="${upload.tmp.dir}/spring-ldap-bin-with-dependencies-${release.version}-${tstamp}-${build.number}.zip"/>
-        <copy file="${target.release.dir}/${release.buildable.zip}"
-            tofile="${upload.tmp.dir}/spring-ldap-buildable-${release.version}-${tstamp}-${build.number}.zip"/>
-    </target>
-    
-    <target name="upload" depends="upload-binaries,upload-s3"/>
-
-    <!-- SCP needs an SSH library on the classpath (see Ant documentation for more info) -->
-    <target name="upload-binaries" depends="init, guard.upload.tmp.dir, guard.upload.binaries.dir, guard.upload.url, guard.upload.password, guard.upload.username">
-        <scp todir="${upload.username}@${upload.url}:${upload.binaries.dir}" password="${upload.password}">
-            <fileset dir="${upload.tmp.dir}">
-                <include name="spring-*.zip"/>
-            </fileset>
-        </scp>
-        <delete quiet="true" dir="${upload.tmp.dir}"/>
-    </target>
-    
-    <target name="guard.upload.tmp.dir" unless="upload.tmp.dir">
-    	<fail message="This target requires the upload.tmp.dir property to be set"/>
-    </target>
-    
-    <target name="guard.upload.log.dir" unless="upload.log.dir">
-    	<fail message="This target requires the upload.log.dir property to be set"/>
-    </target>
-    
-    <target name="guard.upload.binaries.dir" unless="upload.binaries.dir">
-    	<fail message="This target requires the upload.binaries.dir property to be set"/>
-    </target>
-    
-    <target name="guard.upload.username" unless="upload.username">
-    	<fail message="This target requires the upload.username property to be set"/>
-    </target>
-    
-    <target name="guard.upload.url" unless="upload.url">
-    	<fail message="This target requires the upload.url.property to be set"/>
-    </target>
-        
-    <target name="guard.upload.password" unless="upload.password">
-    	<fail message="This target requires the upload.password property to be set"/>
-    </target>
-
-	<target name="upload-s3" depends="s3.tasks, guard.s3.accessKey, guard.s3.secretKey">
 		<aws:s3 accessKey="${s3.accessKey}" secretKey="${s3.secretKey}">
 			<upload bucketName="static.springframework.org"
 			        file="${target.release.dir}/${release.bin.zip}"
