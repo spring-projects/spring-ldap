@@ -40,11 +40,11 @@ public class DirContextAdapterTest extends TestCase {
     private static final DistinguishedName DUMMY_NAME = new DistinguishedName(
             "c=SE, dc=jayway, dc=se");
 
-    private DirContextAdapter classUnderTest;
+    private DirContextAdapter tested;
 
     protected void setUp() throws Exception {
         super.setUp();
-        classUnderTest = new DirContextAdapter();
+        tested = new DirContextAdapter();
     }
 
     protected void tearDown() throws Exception {
@@ -52,29 +52,29 @@ public class DirContextAdapterTest extends TestCase {
     }
 
     public void testSetUpdateMode() throws Exception {
-        assertFalse(classUnderTest.isUpdateMode());
-        classUnderTest.setUpdateMode(true);
-        assertTrue(classUnderTest.isUpdateMode());
-        classUnderTest.setUpdateMode(false);
-        assertFalse(classUnderTest.isUpdateMode());
+        assertFalse(tested.isUpdateMode());
+        tested.setUpdateMode(true);
+        assertTrue(tested.isUpdateMode());
+        tested.setUpdateMode(false);
+        assertFalse(tested.isUpdateMode());
     }
 
     public void testGetModificationItems() throws Exception {
-        ModificationItem[] items = classUnderTest.getModificationItems();
+        ModificationItem[] items = tested.getModificationItems();
         assertEquals(0, items.length);
-        classUnderTest.setUpdateMode(true);
+        tested.setUpdateMode(true);
         assertEquals(0, items.length);
     }
 
     public void testAlwaysReplace() throws Exception {
-        ModificationItem[] items = classUnderTest.getModificationItems();
+        ModificationItem[] items = tested.getModificationItems();
         assertEquals(0, items.length);
-        classUnderTest.setUpdateMode(true);
+        tested.setUpdateMode(true);
         assertEquals(0, items.length);
     }
 
     public void testGetStringAttributeNotExists() throws Exception {
-        String s = classUnderTest.getStringAttribute("does not exist");
+        String s = tested.getStringAttribute("does not exist");
         assertNull(s);
     }
 
@@ -86,8 +86,8 @@ public class DirContextAdapterTest extends TestCase {
                 super(attrs, null);
             }
         }
-        classUnderTest = new TestableDirContextAdapter();
-        String s = classUnderTest.getStringAttribute("abc");
+        tested = new TestableDirContextAdapter();
+        String s = tested.getStringAttribute("abc");
         assertEquals("def", s);
     }
 
@@ -102,58 +102,329 @@ public class DirContextAdapterTest extends TestCase {
                 super(attrs, null);
             }
         }
-        classUnderTest = new TestableDirContextAdapter();
-        String s[] = classUnderTest.getStringAttributes("abc");
+        tested = new TestableDirContextAdapter();
+        String s[] = tested.getStringAttributes("abc");
         assertEquals("123", s[0]);
         assertEquals("234", s[1]);
         assertEquals(2, s.length);
     }
 
     public void testGetStringAttributesNotExists() throws Exception {
-        String s[] = classUnderTest.getStringAttributes("abc");
+        String s[] = tested.getStringAttributes("abc");
         assertNull(s);
     }
 
+    public void testAddAttributeValue() throws NamingException {
+        // Perform test
+        tested.addAttributeValue("abc", "123");
+
+        Attributes attrs = tested.getAttributes();
+        Attribute attr = attrs.get("abc");
+        assertEquals("123", (String) attr.get());
+    }
+
+    public void testAddAttributeValueAttributeWithOtherValueExists()
+            throws NamingException {
+        tested.setAttribute(new BasicAttribute("abc", "321"));
+
+        // Perform test
+        tested.addAttributeValue("abc", "123");
+
+        Attributes attrs = tested.getAttributes();
+        Attribute attr = attrs.get("abc");
+        assertEquals("321", (String) attr.get(0));
+        assertEquals("123", (String) attr.get(1));
+    }
+
+    public void testAddAttributeValueAttributeWithSameValueExists()
+            throws NamingException {
+        tested.setAttribute(new BasicAttribute("abc", "123"));
+
+        // Perform test
+        tested.addAttributeValue("abc", "123");
+
+        Attributes attrs = tested.getAttributes();
+        Attribute attr = attrs.get("abc");
+        assertEquals(1, attr.size());
+        assertEquals("123", (String) attr.get(0));
+    }
+
+    public void testAddAttributeValueInUpdateMode() throws NamingException {
+        tested.setUpdateMode(true);
+        tested.addAttributeValue("abc", "123");
+
+        // Perform test
+        Attributes attrs = tested.getAttributes();
+        assertNull(attrs.get("abc"));
+
+        ModificationItem[] modificationItems = tested.getModificationItems();
+        assertEquals(1, modificationItems.length);
+        Attribute attribute = modificationItems[0].getAttribute();
+        assertEquals("abc", attribute.getID());
+        assertEquals("123", attribute.get());
+    }
+
+    public void testAddAttributeValueInUpdateModeAttributeWithOtherValueExistsInOrigAttrs()
+            throws NamingException {
+
+        tested.setAttribute(new BasicAttribute("abc", "321"));
+        tested.setUpdateMode(true);
+
+        // Perform test
+        tested.addAttributeValue("abc", "123");
+
+        Attributes attrs = tested.getAttributes();
+        assertNotNull(attrs.get("abc"));
+
+        ModificationItem[] modificationItems = tested.getModificationItems();
+        assertEquals(1, modificationItems.length);
+        Attribute attribute = modificationItems[0].getAttribute();
+        assertEquals(1, attribute.size());
+        assertEquals("abc", attribute.getID());
+        assertEquals("123", attribute.get());
+    }
+
+    public void testAddAttributeValueInUpdateModeAttributeWithSameValueExistsInOrigAttrs()
+            throws NamingException {
+
+        tested.setAttribute(new BasicAttribute("abc", "123"));
+        tested.setUpdateMode(true);
+
+        // Perform test
+        tested.addAttributeValue("abc", "123");
+
+        Attributes attrs = tested.getAttributes();
+        assertNotNull(attrs.get("abc"));
+
+        ModificationItem[] modificationItems = tested.getModificationItems();
+        assertEquals(0, modificationItems.length);
+    }
+
+    public void testAddAttributeValueInUpdateModeAttributeWithOtherValueExistsInUpdAttrs()
+            throws NamingException {
+        tested.setUpdateMode(true);
+        tested.setAttributeValue("abc", "321");
+
+        // Perform test
+        tested.addAttributeValue("abc", "123");
+
+        Attributes attrs = tested.getAttributes();
+        assertNull(attrs.get("abc"));
+
+        ModificationItem[] modificationItems = tested.getModificationItems();
+        assertEquals(1, modificationItems.length);
+        Attribute attribute = modificationItems[0].getAttribute();
+        assertEquals("abc", attribute.getID());
+        assertEquals("321", attribute.get(0));
+        assertEquals("123", attribute.get(1));
+    }
+
+    public void testAddAttributeValueInUpdateModeAttributeWithSameValueExistsInUpdAttrs()
+            throws NamingException {
+        tested.setUpdateMode(true);
+        tested.setAttributeValue("abc", "123");
+
+        // Perform test
+        tested.addAttributeValue("abc", "123");
+
+        Attributes attrs = tested.getAttributes();
+        assertNull(attrs.get("abc"));
+
+        ModificationItem[] modificationItems = tested.getModificationItems();
+        assertEquals(1, modificationItems.length);
+        Attribute attribute = modificationItems[0].getAttribute();
+        assertEquals(1, attribute.size());
+        assertEquals("abc", attribute.getID());
+        assertEquals("123", attribute.get());
+    }
+
+    public void testRemoveAttributeValueAttributeDoesntExist() {
+        // Perform test
+        tested.removeAttributeValue("abc", "123");
+
+        Attributes attributes = tested.getAttributes();
+        assertNull(attributes.get("abc"));
+    }
+
+    public void testRemoveAttributeValueAttributeWithOtherValueExists()
+            throws NamingException {
+        tested.setAttribute(new BasicAttribute("abc", "321"));
+
+        // Perform test
+        tested.removeAttributeValue("abc", "123");
+
+        Attributes attributes = tested.getAttributes();
+        Attribute attr = attributes.get("abc");
+        assertNotNull(attr);
+        assertEquals(1, attr.size());
+        assertEquals("321", attr.get());
+    }
+
+    public void testRemoveAttributeValueAttributeWithSameValueExists() {
+        tested.setAttribute(new BasicAttribute("abc", "123"));
+
+        // Perform test
+        tested.removeAttributeValue("abc", "123");
+
+        Attributes attributes = tested.getAttributes();
+        Attribute attr = attributes.get("abc");
+        assertNull(attr);
+    }
+
+    public void testRemoveAttributeValueAttributeWithOtherAndSameValueExists()
+            throws NamingException {
+        BasicAttribute basicAttribute = new BasicAttribute("abc");
+        basicAttribute.add("123");
+        basicAttribute.add("321");
+        tested.setAttribute(basicAttribute);
+
+        // Perform test
+        tested.removeAttributeValue("abc", "123");
+
+        Attributes attributes = tested.getAttributes();
+        Attribute attr = attributes.get("abc");
+        assertNotNull(attr);
+        assertEquals(1, attr.size());
+        assertEquals("321", attr.get());
+    }
+
+    public void testRemoveAttributeValueInUpdateMode() {
+        tested.setUpdateMode(true);
+
+        // Perform test
+        tested.removeAttributeValue("abc", "123");
+
+        assertNull(tested.getAttributes().get("abc"));
+
+        ModificationItem[] modificationItems = tested.getModificationItems();
+        assertEquals(0, modificationItems.length);
+    }
+
+    public void testRemoveAttributeValueInUpdateModeSameValueExistsInUpdatedAttrs() {
+        tested.setUpdateMode(true);
+        tested.setAttributeValue("abc", "123");
+
+        // Perform test
+        tested.removeAttributeValue("abc", "123");
+
+        assertNull(tested.getAttributes().get("abc"));
+
+        ModificationItem[] modificationItems = tested.getModificationItems();
+        assertEquals(0, modificationItems.length);
+    }
+
+    public void testRemoveAttributeValueInUpdateModeOtherValueExistsInUpdatedAttrs()
+            throws NamingException {
+        tested.setUpdateMode(true);
+        tested.setAttributeValue("abc", "321");
+
+        // Perform test
+        tested.removeAttributeValue("abc", "123");
+
+        assertNull(tested.getAttributes().get("abc"));
+
+        ModificationItem[] modificationItems = tested.getModificationItems();
+        assertEquals(1, modificationItems.length);
+        Attribute modificationAttribute = modificationItems[0].getAttribute();
+        assertEquals("abc", modificationAttribute.getID());
+        assertEquals(1, modificationAttribute.size());
+        assertEquals("321", modificationAttribute.get());
+    }
+
+    public void testRemoveAttributeValueInUpdateModeOtherAndSameValueExistsInUpdatedAttrs()
+            throws NamingException {
+        tested.setUpdateMode(true);
+        tested.setAttributeValues("abc", new String[] { "321", "123" });
+
+        // Perform test
+        tested.removeAttributeValue("abc", "123");
+
+        assertNull(tested.getAttributes().get("abc"));
+
+        ModificationItem[] modificationItems = tested.getModificationItems();
+        assertEquals(1, modificationItems.length);
+        Attribute modificationAttribute = modificationItems[0].getAttribute();
+        assertEquals("abc", modificationAttribute.getID());
+        assertEquals(1, modificationAttribute.size());
+    }
+
+    public void testRemoveAttributeValueInUpdateModeSameValueExistsInOrigAttrs() {
+        tested.setAttribute(new BasicAttribute("abc", "123"));
+        tested.setUpdateMode(true);
+
+        // Perform test
+        tested.removeAttributeValue("abc", "123");
+
+        ModificationItem[] modificationItems = tested.getModificationItems();
+        assertEquals(1, modificationItems.length);
+        Attribute modificationAttribute = modificationItems[0].getAttribute();
+        assertEquals("abc", modificationAttribute.getID());
+        assertEquals(0, modificationAttribute.size());
+        assertEquals(DirContext.REMOVE_ATTRIBUTE, modificationItems[0]
+                .getModificationOp());
+    }
+
+    public void testRemoveAttributeValueInUpdateModeSameAndOtherValueExistsInOrigAttrs()
+            throws NamingException {
+        BasicAttribute basicAttribute = new BasicAttribute("abc");
+        basicAttribute.add("123");
+        basicAttribute.add("321");
+        tested.setAttribute(basicAttribute);
+        tested.setUpdateMode(true);
+
+        // Perform test
+        tested.removeAttributeValue("abc", "123");
+
+        ModificationItem[] modificationItems = tested.getModificationItems();
+        assertEquals(1, modificationItems.length);
+        Attribute modificationAttribute = modificationItems[0].getAttribute();
+        assertEquals("abc", modificationAttribute.getID());
+        assertEquals(1, modificationAttribute.size());
+        assertEquals("123", modificationAttribute.get());
+        assertEquals(DirContext.REMOVE_ATTRIBUTE, modificationItems[0]
+                .getModificationOp());
+    }
+
     public void testSetStringAttribute() throws Exception {
-        assertFalse(classUnderTest.isUpdateMode());
-        classUnderTest.setAttributeValue("abc", "123");
-        Attributes attrs = classUnderTest.getAttributes();
+        assertFalse(tested.isUpdateMode());
+        tested.setAttributeValue("abc", "123");
+        Attributes attrs = tested.getAttributes();
         Attribute attr = attrs.get("abc");
         assertEquals("123", (String) attr.get());
     }
 
     public void testSetStringAttributeNull() throws Exception {
-        assertFalse(classUnderTest.isUpdateMode());
-        classUnderTest.setAttributeValue("abc", null);
-        Attributes attrs = classUnderTest.getAttributes();
+        assertFalse(tested.isUpdateMode());
+        tested.setAttributeValue("abc", null);
+        Attributes attrs = tested.getAttributes();
         Attribute attr = attrs.get("abc");
         assertNull(attr);
     }
 
     public void testAddAttribute() throws Exception {
-        classUnderTest.setUpdateMode(true);
-        assertTrue(classUnderTest.isUpdateMode());
-        classUnderTest.setAttributeValue("abc", "123");
-        Attributes attrs = classUnderTest.getAttributes();
+        tested.setUpdateMode(true);
+        assertTrue(tested.isUpdateMode());
+        tested.setAttributeValue("abc", "123");
+        Attributes attrs = tested.getAttributes();
         Attribute attr = attrs.get("abc");
         assertNull(attr);
 
-        ModificationItem[] mods = classUnderTest.getModificationItems();
+        ModificationItem[] mods = tested.getModificationItems();
         assertEquals(1, mods.length);
         assertEquals(DirContext.ADD_ATTRIBUTE, mods[0].getModificationOp());
         attr = mods[0].getAttribute();
         assertEquals("123", (String) attr.get());
 
-        String[] modNames = classUnderTest.getNamesOfModifiedAttributes();
+        String[] modNames = tested.getNamesOfModifiedAttributes();
         assertEquals(1, modNames.length);
         assertEquals("abc", modNames[0]);
 
-        classUnderTest.update();
-        mods = classUnderTest.getModificationItems();
+        tested.update();
+        mods = tested.getModificationItems();
         assertEquals(0, mods.length);
-        modNames = classUnderTest.getNamesOfModifiedAttributes();
+        modNames = tested.getNamesOfModifiedAttributes();
         assertEquals(0, modNames.length);
-        attrs = classUnderTest.getAttributes();
+        attrs = tested.getAttributes();
         attr = attrs.get("abc");
         assertEquals("123", (String) attr.get());
     }
@@ -185,13 +456,13 @@ public class DirContextAdapterTest extends TestCase {
     }
 
     public void testAddMultiAttributes() throws Exception {
-        classUnderTest.setUpdateMode(true);
-        assertTrue(classUnderTest.isUpdateMode());
-        classUnderTest.setAttributeValues("abc", new String[] { "123", "456" });
-        Attributes attrs = classUnderTest.getAttributes();
+        tested.setUpdateMode(true);
+        assertTrue(tested.isUpdateMode());
+        tested.setAttributeValues("abc", new String[] { "123", "456" });
+        Attributes attrs = tested.getAttributes();
         Attribute attr = attrs.get("abc");
         assertNull(attr);
-        ModificationItem[] mods = classUnderTest.getModificationItems();
+        ModificationItem[] mods = tested.getModificationItems();
         assertEquals(1, mods.length);
         assertEquals(DirContext.ADD_ATTRIBUTE, mods[0].getModificationOp());
         attr = mods[0].getAttribute();
@@ -199,16 +470,16 @@ public class DirContextAdapterTest extends TestCase {
         assertEquals("123", (String) attr.get(0));
         assertEquals("456", (String) attr.get(1));
 
-        String[] modNames = classUnderTest.getNamesOfModifiedAttributes();
+        String[] modNames = tested.getNamesOfModifiedAttributes();
         assertEquals(1, modNames.length);
         assertEquals("abc", modNames[0]);
 
-        classUnderTest.update();
-        mods = classUnderTest.getModificationItems();
+        tested.update();
+        mods = tested.getModificationItems();
         assertEquals(0, mods.length);
-        modNames = classUnderTest.getNamesOfModifiedAttributes();
+        modNames = tested.getNamesOfModifiedAttributes();
         assertEquals(0, modNames.length);
-        attrs = classUnderTest.getAttributes();
+        attrs = tested.getAttributes();
         attr = attrs.get("abc");
         assertEquals("123", (String) attr.get(0));
         assertEquals("456", (String) attr.get(1));
@@ -223,30 +494,30 @@ public class DirContextAdapterTest extends TestCase {
                 setUpdateMode(true);
             }
         }
-        classUnderTest = new TestableDirContextAdapter();
+        tested = new TestableDirContextAdapter();
 
-        classUnderTest.setUpdateMode(true);
-        assertTrue(classUnderTest.isUpdateMode());
-        classUnderTest.setAttributeValue("abc", null);
-        Attributes attrs = classUnderTest.getAttributes();
+        tested.setUpdateMode(true);
+        assertTrue(tested.isUpdateMode());
+        tested.setAttributeValue("abc", null);
+        Attributes attrs = tested.getAttributes();
         Attribute attr = attrs.get("abc");
         assertEquals("123", (String) attr.get());
 
-        ModificationItem[] mods = classUnderTest.getModificationItems();
+        ModificationItem[] mods = tested.getModificationItems();
         assertEquals(1, mods.length);
         assertEquals(DirContext.REMOVE_ATTRIBUTE, mods[0].getModificationOp());
         attr = mods[0].getAttribute();
         assertEquals("abc", (String) attr.getID());
-        String[] modNames = classUnderTest.getNamesOfModifiedAttributes();
+        String[] modNames = tested.getNamesOfModifiedAttributes();
         assertEquals(1, modNames.length);
         assertEquals("abc", modNames[0]);
 
-        classUnderTest.update();
-        mods = classUnderTest.getModificationItems();
+        tested.update();
+        mods = tested.getModificationItems();
         assertEquals(0, mods.length);
-        modNames = classUnderTest.getNamesOfModifiedAttributes();
+        modNames = tested.getNamesOfModifiedAttributes();
         assertEquals(0, modNames.length);
-        attrs = classUnderTest.getAttributes();
+        attrs = tested.getAttributes();
         attr = attrs.get("abc");
         assertNull(attr);
     }
@@ -263,12 +534,12 @@ public class DirContextAdapterTest extends TestCase {
                 setUpdateMode(true);
             }
         }
-        classUnderTest = new TestableDirContextAdapter();
+        tested = new TestableDirContextAdapter();
 
-        classUnderTest.setUpdateMode(true);
-        classUnderTest.setAttributeValues("abc", new String[] {});
+        tested.setUpdateMode(true);
+        tested.setAttributeValues("abc", new String[] {});
 
-        ModificationItem[] mods = classUnderTest.getModificationItems();
+        ModificationItem[] mods = tested.getModificationItems();
         assertEquals(1, mods.length);
         assertEquals(DirContext.REMOVE_ATTRIBUTE, mods[0].getModificationOp());
         Attribute attr = mods[0].getAttribute();
@@ -285,10 +556,10 @@ public class DirContextAdapterTest extends TestCase {
                 setUpdateMode(true);
             }
         }
-        classUnderTest = new TestableDirContextAdapter();
-        classUnderTest.setAttributeValue("abc", "234"); // change
+        tested = new TestableDirContextAdapter();
+        tested.setAttributeValue("abc", "234"); // change
 
-        ModificationItem[] mods = classUnderTest.getModificationItems();
+        ModificationItem[] mods = tested.getModificationItems();
         assertEquals(1, mods.length);
         assertEquals(DirContext.REPLACE_ATTRIBUTE, mods[0].getModificationOp());
         Attribute attr = mods[0].getAttribute();
@@ -305,11 +576,11 @@ public class DirContextAdapterTest extends TestCase {
                 setUpdateMode(true);
             }
         }
-        classUnderTest = new TestableDirContextAdapter();
-        assertTrue(classUnderTest.isUpdateMode());
-        classUnderTest.setAttributeValue("abc", "123"); // change
+        tested = new TestableDirContextAdapter();
+        assertTrue(tested.isUpdateMode());
+        tested.setAttributeValue("abc", "123"); // change
 
-        ModificationItem[] mods = classUnderTest.getModificationItems();
+        ModificationItem[] mods = tested.getModificationItems();
         assertEquals(0, mods.length);
     }
 
@@ -325,13 +596,13 @@ public class DirContextAdapterTest extends TestCase {
                 setUpdateMode(true);
             }
         }
-        classUnderTest = new TestableDirContextAdapter();
-        assertTrue(classUnderTest.isUpdateMode());
-        classUnderTest.setAttributeValues("abc", new String[] { "123", "qwe" });
+        tested = new TestableDirContextAdapter();
+        assertTrue(tested.isUpdateMode());
+        tested.setAttributeValues("abc", new String[] { "123", "qwe" });
 
-        ModificationItem[] mods = classUnderTest.getModificationItems();
+        ModificationItem[] mods = tested.getModificationItems();
         assertEquals(0, mods.length);
-        String[] modNames = classUnderTest.getNamesOfModifiedAttributes();
+        String[] modNames = tested.getNamesOfModifiedAttributes();
         assertEquals(0, modNames.length);
     }
 
@@ -347,12 +618,12 @@ public class DirContextAdapterTest extends TestCase {
                 setUpdateMode(true);
             }
         }
-        classUnderTest = new TestableDirContextAdapter();
-        classUnderTest.setAttributeValues("abc", new String[] { "qwe", "123" });
+        tested = new TestableDirContextAdapter();
+        tested.setAttributeValues("abc", new String[] { "qwe", "123" });
 
-        ModificationItem[] mods = classUnderTest.getModificationItems();
+        ModificationItem[] mods = tested.getModificationItems();
         assertEquals(0, mods.length);
-        String[] modNames = classUnderTest.getNamesOfModifiedAttributes();
+        String[] modNames = tested.getNamesOfModifiedAttributes();
         assertEquals(0, modNames.length);
     }
 
@@ -368,13 +639,12 @@ public class DirContextAdapterTest extends TestCase {
                 setUpdateMode(true);
             }
         }
-        classUnderTest = new TestableDirContextAdapter();
-        assertTrue(classUnderTest.isUpdateMode());
-        classUnderTest.setAttributeValues("abc", new String[] { "qwe", "123" },
-                true);
+        tested = new TestableDirContextAdapter();
+        assertTrue(tested.isUpdateMode());
+        tested.setAttributeValues("abc", new String[] { "qwe", "123" }, true);
 
         // change
-        ModificationItem[] mods = classUnderTest.getModificationItems();
+        ModificationItem[] mods = tested.getModificationItems();
         assertEquals(1, mods.length);
         assertEquals(DirContext.REPLACE_ATTRIBUTE, mods[0].getModificationOp());
         Attribute attr = mods[0].getAttribute();
@@ -394,13 +664,13 @@ public class DirContextAdapterTest extends TestCase {
                 setUpdateMode(true);
             }
         }
-        classUnderTest = new TestableDirContextAdapter();
-        assertTrue(classUnderTest.isUpdateMode());
-        classUnderTest.setAttributeValues("abc", new String[] { "123", "qwe",
-                "klytt" });
+        tested = new TestableDirContextAdapter();
+        assertTrue(tested.isUpdateMode());
+        tested
+                .setAttributeValues("abc",
+                        new String[] { "123", "qwe", "klytt" });
 
-        ModificationItem[] modificationItems = classUnderTest
-                .getModificationItems();
+        ModificationItem[] modificationItems = tested.getModificationItems();
         assertEquals(1, modificationItems.length);
         assertEquals(DirContext.ADD_ATTRIBUTE, modificationItems[0]
                 .getModificationOp());
@@ -419,12 +689,11 @@ public class DirContextAdapterTest extends TestCase {
                 setUpdateMode(true);
             }
         }
-        classUnderTest = new TestableDirContextAdapter();
-        assertTrue(classUnderTest.isUpdateMode());
-        classUnderTest.setAttributeValues("abc", new String[] { "123" });
+        tested = new TestableDirContextAdapter();
+        assertTrue(tested.isUpdateMode());
+        tested.setAttributeValues("abc", new String[] { "123" });
 
-        ModificationItem[] modificationItems = classUnderTest
-                .getModificationItems();
+        ModificationItem[] modificationItems = tested.getModificationItems();
         assertEquals(1, modificationItems.length);
         assertEquals(DirContext.REMOVE_ATTRIBUTE, modificationItems[0]
                 .getModificationOp());
@@ -444,12 +713,11 @@ public class DirContextAdapterTest extends TestCase {
                 setUpdateMode(true);
             }
         }
-        classUnderTest = new TestableDirContextAdapter();
-        assertTrue(classUnderTest.isUpdateMode());
-        classUnderTest.setAttributeValues("abc", new String[] { "123" });
+        tested = new TestableDirContextAdapter();
+        assertTrue(tested.isUpdateMode());
+        tested.setAttributeValues("abc", new String[] { "123" });
 
-        ModificationItem[] modificationItems = classUnderTest
-                .getModificationItems();
+        ModificationItem[] modificationItems = tested.getModificationItems();
         assertEquals(1, modificationItems.length);
         assertEquals(DirContext.REMOVE_ATTRIBUTE, modificationItems[0]
                 .getModificationOp());
@@ -469,12 +737,11 @@ public class DirContextAdapterTest extends TestCase {
                 setUpdateMode(true);
             }
         }
-        classUnderTest = new TestableDirContextAdapter();
-        assertTrue(classUnderTest.isUpdateMode());
-        classUnderTest.setAttributeValues("abc", null);
+        tested = new TestableDirContextAdapter();
+        assertTrue(tested.isUpdateMode());
+        tested.setAttributeValues("abc", null);
 
-        ModificationItem[] modificationItems = classUnderTest
-                .getModificationItems();
+        ModificationItem[] modificationItems = tested.getModificationItems();
         assertEquals(1, modificationItems.length);
         assertEquals(DirContext.REMOVE_ATTRIBUTE, modificationItems[0]
                 .getModificationOp());
@@ -492,12 +759,11 @@ public class DirContextAdapterTest extends TestCase {
                 setUpdateMode(true);
             }
         }
-        classUnderTest = new TestableDirContextAdapter();
-        assertTrue(classUnderTest.isUpdateMode());
-        classUnderTest.setAttributeValues("abc", new String[] { "123", "qwe" });
+        tested = new TestableDirContextAdapter();
+        assertTrue(tested.isUpdateMode());
+        tested.setAttributeValues("abc", new String[] { "123", "qwe" });
 
-        ModificationItem[] modificationItems = classUnderTest
-                .getModificationItems();
+        ModificationItem[] modificationItems = tested.getModificationItems();
         assertEquals(0, modificationItems.length);
     }
 
@@ -515,13 +781,12 @@ public class DirContextAdapterTest extends TestCase {
                 setUpdateMode(true);
             }
         }
-        classUnderTest = new TestableDirContextAdapter();
-        assertTrue(classUnderTest.isUpdateMode());
-        classUnderTest.setAttributeValues("abc", new String[] { "123", "qwe",
-                "klytt", "kalle" });
+        tested = new TestableDirContextAdapter();
+        assertTrue(tested.isUpdateMode());
+        tested.setAttributeValues("abc", new String[] { "123", "qwe", "klytt",
+                "kalle" });
 
-        ModificationItem[] modificationItems = classUnderTest
-                .getModificationItems();
+        ModificationItem[] modificationItems = tested.getModificationItems();
         assertEquals(2, modificationItems.length);
 
         assertEquals(DirContext.ADD_ATTRIBUTE, modificationItems[0]
@@ -553,13 +818,11 @@ public class DirContextAdapterTest extends TestCase {
                 setUpdateMode(true);
             }
         }
-        classUnderTest = new TestableDirContextAdapter();
-        assertTrue(classUnderTest.isUpdateMode());
-        classUnderTest.setAttributeValues("def", new String[] { "kalle",
-                "klytt" });
+        tested = new TestableDirContextAdapter();
+        assertTrue(tested.isUpdateMode());
+        tested.setAttributeValues("def", new String[] { "kalle", "klytt" });
 
-        ModificationItem[] modificationItems = classUnderTest
-                .getModificationItems();
+        ModificationItem[] modificationItems = tested.getModificationItems();
         assertEquals(1, modificationItems.length);
         assertEquals("def", modificationItems[0].getAttribute().getID());
     }
@@ -573,27 +836,27 @@ public class DirContextAdapterTest extends TestCase {
                 setUpdateMode(true);
             }
         }
-        classUnderTest = new TestableDirContextAdapter();
-        assertTrue(classUnderTest.isUpdateMode());
-        classUnderTest.setAttributeValue("abc", "234"); // change
-        classUnderTest.setAttributeValue("abc", "987");
+        tested = new TestableDirContextAdapter();
+        assertTrue(tested.isUpdateMode());
+        tested.setAttributeValue("abc", "234"); // change
+        tested.setAttributeValue("abc", "987");
         // change a second time
-        ModificationItem[] mods = classUnderTest.getModificationItems();
+        ModificationItem[] mods = tested.getModificationItems();
         assertEquals(1, mods.length);
         assertEquals(DirContext.REPLACE_ATTRIBUTE, mods[0].getModificationOp());
         Attribute attr = mods[0].getAttribute();
         assertEquals("abc", (String) attr.getID());
         assertEquals("987", (String) attr.get());
 
-        classUnderTest.update();
-        mods = classUnderTest.getModificationItems();
+        tested.update();
+        mods = tested.getModificationItems();
         assertEquals(0, mods.length);
-        String[] modNames = classUnderTest.getNamesOfModifiedAttributes();
+        String[] modNames = tested.getNamesOfModifiedAttributes();
         assertEquals(0, modNames.length);
-        Attributes attrs = classUnderTest.getAttributes();
+        Attributes attrs = tested.getAttributes();
         attr = attrs.get("abc");
         assertEquals("987", (String) attr.get());
-        assertEquals("987", classUnderTest.getStringAttribute("abc"));
+        assertEquals("987", tested.getStringAttribute("abc"));
     }
 
     public void testAddReplaceAndChangeAttribute() throws Exception {
@@ -606,19 +869,19 @@ public class DirContextAdapterTest extends TestCase {
                 setUpdateMode(true);
             }
         }
-        classUnderTest = new TestableDirContextAdapter();
-        assertTrue(classUnderTest.isUpdateMode());
-        classUnderTest.setAttributeValue("abc", "234"); // change
-        classUnderTest.setAttributeValue("qwe", null); // remove
-        classUnderTest.setAttributeValue("zzz", "new"); // new
-        Attributes attrs = classUnderTest.getAttributes();
+        tested = new TestableDirContextAdapter();
+        assertTrue(tested.isUpdateMode());
+        tested.setAttributeValue("abc", "234"); // change
+        tested.setAttributeValue("qwe", null); // remove
+        tested.setAttributeValue("zzz", "new"); // new
+        Attributes attrs = tested.getAttributes();
         Attribute attr = attrs.get("abc");
         assertEquals("123", (String) attr.get());
         assertEquals(2, attrs.size());
 
-        ModificationItem[] mods = classUnderTest.getModificationItems();
+        ModificationItem[] mods = tested.getModificationItems();
         assertEquals(3, mods.length);
-        String[] modNames = classUnderTest.getNamesOfModifiedAttributes();
+        String[] modNames = tested.getNamesOfModifiedAttributes();
         assertEquals(3, modNames.length);
 
         ModificationItem mod = getModificationItem(mods,
@@ -639,17 +902,17 @@ public class DirContextAdapterTest extends TestCase {
         assertEquals("zzz", (String) attr.getID());
         assertEquals("new", (String) attr.get());
 
-        classUnderTest.update();
-        mods = classUnderTest.getModificationItems();
+        tested.update();
+        mods = tested.getModificationItems();
         assertEquals(0, mods.length);
-        modNames = classUnderTest.getNamesOfModifiedAttributes();
+        modNames = tested.getNamesOfModifiedAttributes();
         assertEquals(0, modNames.length);
 
-        attrs = classUnderTest.getAttributes();
+        attrs = tested.getAttributes();
         assertEquals(2, attrs.size());
         attr = attrs.get("abc");
         assertEquals("234", (String) attr.get());
-        assertEquals("new", classUnderTest.getStringAttribute("zzz"));
+        assertEquals("new", tested.getStringAttribute("zzz"));
     }
 
     /**
@@ -661,17 +924,17 @@ public class DirContextAdapterTest extends TestCase {
     public void testSetAttribute_UpdateMode() throws NamingException {
         // Set original attribute value
         Attribute attribute = new BasicAttribute("cn", "john doe");
-        classUnderTest.setAttribute(attribute);
+        tested.setAttribute(attribute);
 
         // Set to update mode
-        classUnderTest.setUpdateMode(true);
+        tested.setUpdateMode(true);
 
         // Perform test - update the attribute
         Attribute updatedAttribute = new BasicAttribute("cn", "nisse hult");
-        classUnderTest.setAttribute(updatedAttribute);
+        tested.setAttribute(updatedAttribute);
 
         // Verify result
-        ModificationItem[] mods = classUnderTest.getModificationItems();
+        ModificationItem[] mods = tested.getModificationItems();
         assertEquals(1, mods.length);
         assertEquals(DirContext.REPLACE_ATTRIBUTE, mods[0].getModificationOp());
 
@@ -681,14 +944,13 @@ public class DirContextAdapterTest extends TestCase {
     }
 
     public void testGetStringAttributes_NullValue() {
-        String result = classUnderTest
-                .getStringAttribute("someAbsentAttribute");
+        String result = tested.getStringAttribute("someAbsentAttribute");
         assertNull(result);
     }
 
     public void testGetStringAttributes_AttributeExists_NullValue() {
-        classUnderTest.setAttribute(new BasicAttribute("someAttribute", null));
-        String result = classUnderTest.getStringAttribute("someAttribute");
+        tested.setAttribute(new BasicAttribute("someAttribute", null));
+        String result = tested.getStringAttribute("someAttribute");
         assertNull(result);
     }
 

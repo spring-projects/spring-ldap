@@ -54,8 +54,7 @@ import org.springframework.ldap.support.LdapUtils;
  * {@link org.springframework.ldap.core.DefaultDirObjectFactory} in your
  * ContextSource you may receive instances of this class from searches and
  * lookups. This can be particularly useful when updating data, since this class
- * implements
- * {@link org.springframework.ldap.core.AttributeModificationsAware},
+ * implements {@link org.springframework.ldap.core.AttributeModificationsAware},
  * providing a {@link #getModificationItems()} method.
  * 
  * @author Magnus Robertsson
@@ -69,7 +68,7 @@ public class DirContextAdapter implements DirContextOperations {
 
     private static Log log = LogFactory.getLog(DirContextAdapter.class);
 
-    private final Attributes attrs;
+    private final Attributes originalAttrs;
 
     private DistinguishedName dn;
 
@@ -99,7 +98,7 @@ public class DirContextAdapter implements DirContextOperations {
     /**
      * Create a new adapter from the supplied attributes and dn.
      * 
-     * @param attrs
+     * @param originalAttrs
      *            the attributes.
      * @param dn
      *            the dn.
@@ -111,7 +110,7 @@ public class DirContextAdapter implements DirContextOperations {
     /**
      * Create a new adapter from the supplied attributes, dn, and base.
      * 
-     * @param attrs
+     * @param originalAttrs
      *            the attributes.
      * @param dn
      *            the dn.
@@ -120,9 +119,9 @@ public class DirContextAdapter implements DirContextOperations {
      */
     public DirContextAdapter(Attributes attrs, Name dn, Name base) {
         if (attrs != null) {
-            this.attrs = attrs;
+            this.originalAttrs = attrs;
         } else {
-            this.attrs = new BasicAttributes(true);
+            this.originalAttrs = new BasicAttributes(true);
         }
         if (dn != null) {
             this.dn = new DistinguishedName(dn.toString());
@@ -143,7 +142,7 @@ public class DirContextAdapter implements DirContextOperations {
      *            The adapter to be copied.
      */
     protected DirContextAdapter(DirContextAdapter master) {
-        this.attrs = (Attributes) master.attrs.clone();
+        this.originalAttrs = (Attributes) master.originalAttrs.clone();
         this.dn = master.dn;
         this.updatedAttrs = (Attributes) master.updatedAttrs.clone();
         this.updateMode = master.updateMode;
@@ -182,7 +181,7 @@ public class DirContextAdapter implements DirContextOperations {
         if (isUpdateMode()) {
             attributesEnumeration = updatedAttrs.getAll();
         } else {
-            attributesEnumeration = attrs.getAll();
+            attributesEnumeration = originalAttrs.getAll();
         }
 
         try {
@@ -261,7 +260,7 @@ public class DirContextAdapter implements DirContextOperations {
      */
     private void collectModifications(Attribute changedAttr,
             List modificationList) throws NamingException {
-        Attribute currentAttribute = attrs.get(changedAttr.getID());
+        Attribute currentAttribute = originalAttrs.get(changedAttr.getID());
 
         if (changedAttr.equals(currentAttribute)) {
             // No changes
@@ -271,11 +270,11 @@ public class DirContextAdapter implements DirContextOperations {
             // Replace single-vale attribute.
             modificationList.add(new ModificationItem(
                     DirContext.REPLACE_ATTRIBUTE, changedAttr));
-        } else if (changedAttr.size() == 0) {
+        } else if (changedAttr.size() == 0 && currentAttribute != null) {
             // Attribute has been removed.
             modificationList.add(new ModificationItem(
                     DirContext.REMOVE_ATTRIBUTE, changedAttr));
-        } else {
+        } else if (changedAttr.size() != 0) {
             // Collect all modifications to attribute individually (this also
             // covers additions to a previously non-existant attribute).
             Collection oldValues = new LinkedList();
@@ -354,7 +353,7 @@ public class DirContextAdapter implements DirContextOperations {
      *         or a previous update
      */
     private boolean isChanged(String name, Object value) {
-        Attribute orig = attrs.get(name);
+        Attribute orig = originalAttrs.get(name);
         Attribute prev = updatedAttrs.get(name);
 
         // FALSE if both are null it is not changed
@@ -431,7 +430,7 @@ public class DirContextAdapter implements DirContextOperations {
      */
     private boolean isChanged(String name, Object[] values, boolean orderMatters) {
 
-        Attribute orig = attrs.get(name);
+        Attribute orig = originalAttrs.get(name);
         Attribute prev = updatedAttrs.get(name);
 
         // values == null and values.length == 0 is treated the same way
@@ -549,7 +548,7 @@ public class DirContextAdapter implements DirContextOperations {
      * @return true if the attribute exists in the entry.
      */
     protected final boolean exists(String attrId) {
-        return attrs.get(attrId) != null;
+        return originalAttrs.get(attrId) != null;
     }
 
     /*
@@ -563,7 +562,7 @@ public class DirContextAdapter implements DirContextOperations {
      * @see org.springframework.ldap.support.DirContextOperations#getObjectAttribute(java.lang.String)
      */
     public Object getObjectAttribute(String name) {
-        Attribute oneAttr = attrs.get(name);
+        Attribute oneAttr = originalAttrs.get(name);
         if (oneAttr == null) {
             return null;
         }
@@ -581,7 +580,7 @@ public class DirContextAdapter implements DirContextOperations {
     public void setAttributeValue(String name, Object value) {
         // new entry
         if (!updateMode && value != null) {
-            attrs.put(name, value);
+            originalAttrs.put(name, value);
         }
 
         // updating entry
@@ -591,6 +590,71 @@ public class DirContextAdapter implements DirContextOperations {
                 attribute.add(value);
             }
             updatedAttrs.put(attribute);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.ldap.core.DirContextOperations#addAttributeValue(java.lang.String,
+     *      java.lang.Object)
+     */
+    public void addAttributeValue(String name, Object value) {
+        if (!updateMode && value != null) {
+            Attribute attr = originalAttrs.get(name);
+            if (attr == null) {
+                originalAttrs.put(name, value);
+            } else {
+                attr.add(value);
+            }
+        } else if (updateMode) {
+            Attribute attr = updatedAttrs.get(name);
+            if (attr == null) {
+                if (originalAttrs.get(name) == null) {
+                    // No match in the original attributes -
+                    // add a new Attribute to updatedAttrs
+                    updatedAttrs.put(name, value);
+                } else {
+                    // The attribute exists in the original attributes - clone
+                    // that and add the new entry to it
+                    attr = (Attribute) originalAttrs.get(name).clone();
+                    attr.add(value);
+                    updatedAttrs.put(attr);
+                }
+            } else {
+                attr.add(value);
+            }
+        }
+
+        // Null values will not be added
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.ldap.core.DirContextOperations#removeAttributeValue(java.lang.String,
+     *      java.lang.Object)
+     */
+    public void removeAttributeValue(String name, Object value) {
+        if (!updateMode && value != null) {
+            Attribute attr = originalAttrs.get(name);
+            if (attr != null) {
+                attr.remove(value);
+                if (attr.size() == 0) {
+                    originalAttrs.remove(name);
+                }
+            }
+        } else if (updateMode) {
+            Attribute attr = updatedAttrs.get(name);
+            if (attr == null) {
+                if (originalAttrs.get(name) != null) {
+                    attr = (Attribute) originalAttrs.get(name).clone();
+                    attr.remove(value);
+                    updatedAttrs.put(attr);
+                }
+            } else {
+                attr.remove(value);
+            }
         }
     }
 
@@ -617,7 +681,7 @@ public class DirContextAdapter implements DirContextOperations {
         // only change the original attribute if not in update mode
         if (!updateMode && values != null && values.length > 0) {
             // don't save empty arrays
-            attrs.put(a);
+            originalAttrs.put(a);
         }
 
         // possible to set an already existing attribute to an empty array
@@ -641,10 +705,10 @@ public class DirContextAdapter implements DirContextOperations {
 
                 // if it does not exist it should be added
                 if (isEmptyAttribute(a)) {
-                    attrs.remove(a.getID());
+                    originalAttrs.remove(a.getID());
                 } else {
                     // Otherwise it should be set.
-                    attrs.put(a);
+                    originalAttrs.put(a);
                 }
             }
         } catch (NamingException e) {
@@ -663,7 +727,7 @@ public class DirContextAdapter implements DirContextOperations {
     public String[] getStringAttributes(String name) {
         String[] attributes;
 
-        Attribute attribute = attrs.get(name);
+        Attribute attribute = originalAttrs.get(name);
         if (attribute != null && attribute.size() > 0) {
             attributes = new String[attribute.size()];
             for (int i = 0; i < attribute.size(); i++) {
@@ -686,7 +750,7 @@ public class DirContextAdapter implements DirContextOperations {
     public SortedSet getAttributeSortedStringSet(String name) {
         TreeSet attrSet = new TreeSet();
 
-        Attribute attribute = attrs.get(name);
+        Attribute attribute = originalAttrs.get(name);
         if (attribute != null) {
             for (int i = 0; i < attribute.size(); i++) {
                 try {
@@ -710,7 +774,7 @@ public class DirContextAdapter implements DirContextOperations {
      */
     public void setAttribute(Attribute attribute) {
         if (!updateMode) {
-            attrs.put(attribute);
+            originalAttrs.put(attribute);
         } else {
             updatedAttrs.put(attribute);
         }
@@ -722,7 +786,7 @@ public class DirContextAdapter implements DirContextOperations {
      * @return all attributes.
      */
     public Attributes getAttributes() {
-        return attrs;
+        return originalAttrs;
     }
 
     /**
@@ -739,7 +803,7 @@ public class DirContextAdapter implements DirContextOperations {
         if (!StringUtils.isEmpty(name)) {
             throw new NameNotFoundException();
         }
-        return (Attributes) attrs.clone();
+        return (Attributes) originalAttrs.clone();
     }
 
     /**
@@ -762,7 +826,7 @@ public class DirContextAdapter implements DirContextOperations {
         Attributes a = new BasicAttributes(true);
         Attribute target;
         for (int i = 0; i < attrIds.length; i++) {
-            target = attrs.get(attrIds[i]);
+            target = originalAttrs.get(attrIds[i]);
             if (target != null) {
                 a.put(target);
             }
@@ -1214,7 +1278,7 @@ public class DirContextAdapter implements DirContextOperations {
         buf.append(" {");
 
         try {
-            for (NamingEnumeration i = attrs.getAll(); i.hasMore();) {
+            for (NamingEnumeration i = originalAttrs.getAll(); i.hasMore();) {
                 Attribute attribute = (Attribute) i.next();
                 if (attribute.size() == 1) {
                     buf.append(attribute.getID());

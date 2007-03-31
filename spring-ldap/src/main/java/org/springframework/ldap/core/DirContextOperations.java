@@ -21,7 +21,6 @@ import java.util.SortedSet;
 import javax.naming.Name;
 import javax.naming.directory.DirContext;
 
-
 /**
  * Interface for DirContextAdapter to simplify mock testing.
  * 
@@ -116,6 +115,30 @@ public interface DirContextOperations extends DirContext,
      */
     public void setAttributeValues(String name, Object[] values,
             boolean orderMatters);
+
+    /**
+     * Add a value to the Attribute with the specified name. If the Attribute
+     * doesn't exist it will be created.
+     * 
+     * @param name
+     *            the name of the Attribute to which the specified value should
+     *            be added.
+     * @param value
+     *            the Attribute value to add.
+     */
+    public void addAttributeValue(String name, Object value);
+
+    /**
+     * Remove a value from the Attribute with the specified name. If the
+     * Attribute doesn't exist, do nothing.
+     * 
+     * @param name
+     *            the name of the Attribute from which the specified value
+     *            should be removed.
+     * @param value
+     *            the value to remove.
+     */
+    public void removeAttributeValue(String name, Object value);
 
     /**
      * Update the attributes. This will mean that the getters
