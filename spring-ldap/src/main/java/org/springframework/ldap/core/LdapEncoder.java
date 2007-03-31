@@ -30,22 +30,9 @@ import org.springframework.ldap.BadLdapGrammarException;
  */
 public class LdapEncoder {
 
-    static private String[] nameEscapeTable = new String[96];
+    private static String[] nameEscapeTable = new String[96];
 
-    static private String[] filterEscapeTable = new String['\\' + 1];
-
-    /**
-     * Pattern for matching escaped ldap name values.
-     * 
-     * Double escaping: \ -> \\ (in pattern) -> \\\\ (in java string literal)
-     * 
-     * Group 1: Hex escapes = \XX -> \p{XDigit}{2} Group 2: Ordinary escapes =
-     * \x -> \. Group 3: Anything but \ [^\\]
-     * 
-     * Note that the \ is not part of the match.
-     */
-    static private final Pattern VALUE_DECODE_PATTERN = Pattern
-            .compile("(?:\\\\(\\p{XDigit}{2}))|(?:\\\\(.))|([^\\\\])");
+    private static String[] filterEscapeTable = new String['\\' + 1];
 
     static {
 
@@ -63,9 +50,7 @@ public class LdapEncoder {
         nameEscapeTable['+'] = "\\+";
         nameEscapeTable['<'] = "\\<";
         nameEscapeTable['>'] = "\\>";
-        // nameEscapeTable['\''] = "\\";
         nameEscapeTable['\"'] = "\\\"";
-        // nameEscapeTable['/'] = "\\" + toTwoCharHex('/');
         nameEscapeTable['\\'] = "\\\\";
 
         // Filter encoding table -------------------------------------
@@ -199,15 +184,17 @@ public class LdapEncoder {
             char currentChar = value.charAt(i);
             if (currentChar == '\\') {
                 if (value.length() <= i + 1) {
+                    // Ending with a single backslash is not allowed
                     throw new BadLdapGrammarException(
                             "Unexpected end of value " + "unterminated '\\'");
                 } else {
                     char nextChar = value.charAt(i + 1);
-                    if (nextChar == ',' | nextChar == '=' | nextChar == '+'
-                            | nextChar == '<' | nextChar == '>'
-                            | nextChar == '#' | nextChar == ';'
-                            | nextChar == '\\' | nextChar == '\"'
-                            | nextChar == ' ') {
+                    if (nextChar == ',' || nextChar == '=' || nextChar == '+'
+                            || nextChar == '<' || nextChar == '>'
+                            || nextChar == '#' || nextChar == ';'
+                            || nextChar == '\\' || nextChar == '\"'
+                            || nextChar == ' ') {
+                        // Normal backslash escape
                         decoded.append(nextChar);
                         i += 2;
                     } else {
@@ -227,6 +214,7 @@ public class LdapEncoder {
                     }
                 }
             } else {
+                // This character wasn't escaped - just append it
                 decoded.append(currentChar);
                 i++;
             }
