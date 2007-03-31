@@ -15,6 +15,7 @@
  */
 package org.springframework.ldap.core;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -29,7 +30,9 @@ import org.apache.commons.lang.Validate;
  * @author Mattias Arthursson
  * 
  */
-public class LdapRdnComponent implements Comparable {
+public class LdapRdnComponent implements Comparable, Serializable {
+    private static final long serialVersionUID = -3296747972616243038L;
+
     public static final boolean DONT_DECODE_VALUE = false;
 
     private String key;
