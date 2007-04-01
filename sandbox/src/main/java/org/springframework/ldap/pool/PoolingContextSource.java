@@ -27,8 +27,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataAccessResourceFailureException;
+import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.validation.DirContextValidator;
 
@@ -428,18 +428,18 @@ public class PoolingContextSource implements ContextSource {
     /**
      * @see org.springframework.ldap.ContextSource#getReadOnlyContext()
      */
-    public DirContext getReadOnlyContext() throws DataAccessException {
+    public DirContext getReadOnlyContext() throws NamingException {
         return this.getContext(DirContextType.READ_ONLY);
     }
 
     /**
      * @see org.springframework.ldap.ContextSource#getReadWriteContext()
      */
-    public DirContext getReadWriteContext() throws DataAccessException {
+    public DirContext getReadWriteContext() throws NamingException {
         return this.getContext(DirContextType.READ_WRITE);
     }
 
-    protected DirContext getContext(DirContextType dirContextType) throws DataAccessException {
+    protected DirContext getContext(DirContextType dirContextType) throws NamingException {
         final DirContext dirContext;
         try {
             dirContext = (DirContext)this.keyedObjectPool.borrowObject(dirContextType);

@@ -25,7 +25,7 @@ import javax.naming.directory.DirContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.dao.DataAccessException;
+import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.core.LdapTemplate;
@@ -109,7 +109,7 @@ public class LdapCompensatingTransactionOperationFactory implements
          * 
          * @see org.springframework.ldap.ContextSource#getReadOnlyContext()
          */
-        public DirContext getReadOnlyContext() throws DataAccessException {
+        public DirContext getReadOnlyContext() throws NamingException {
             return getNonClosingDirContextProxy(ctx);
         }
 
@@ -118,7 +118,7 @@ public class LdapCompensatingTransactionOperationFactory implements
          * 
          * @see org.springframework.ldap.ContextSource#getReadWriteContext()
          */
-        public DirContext getReadWriteContext() throws DataAccessException {
+        public DirContext getReadWriteContext() throws NamingException {
             return getNonClosingDirContextProxy(ctx);
         }
 

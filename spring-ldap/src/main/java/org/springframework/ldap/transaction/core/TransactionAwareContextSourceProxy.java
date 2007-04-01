@@ -19,7 +19,7 @@ import java.lang.reflect.Proxy;
 
 import javax.naming.directory.DirContext;
 
-import org.springframework.dao.DataAccessException;
+import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -61,7 +61,7 @@ public class TransactionAwareContextSourceProxy implements ContextSource {
      * 
      * @see org.springframework.ldap.core.ContextSource#getReadOnlyContext()
      */
-    public DirContext getReadOnlyContext() throws DataAccessException {
+    public DirContext getReadOnlyContext() throws NamingException {
         return getReadWriteContext();
     }
 
@@ -81,7 +81,7 @@ public class TransactionAwareContextSourceProxy implements ContextSource {
      * 
      * @see org.springframework.ldap.core.ContextSource#getReadWriteContext()
      */
-    public DirContext getReadWriteContext() throws DataAccessException {
+    public DirContext getReadWriteContext() throws NamingException {
         DirContextHolder contextHolder = (DirContextHolder) TransactionSynchronizationManager
                 .getResource(target);
         DirContext ctx = null;

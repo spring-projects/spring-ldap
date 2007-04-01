@@ -18,7 +18,7 @@ package org.springframework.ldap.core;
 
 import javax.naming.directory.DirContext;
 
-import org.springframework.dao.DataAccessException;
+import org.springframework.ldap.NamingException;
 
 /**
  * Interface used to retrieve and authenticate LDAP contexts.
@@ -35,17 +35,17 @@ public interface ContextSource {
      * perform read-only operations on.
      * 
      * @return A DirContext instance, never null.
-     * @throws DataAccessException
+     * @throws NamingException
      *             if some error occurs creating an DirContext.
      */
-    public DirContext getReadOnlyContext() throws DataAccessException;
+    public DirContext getReadOnlyContext() throws NamingException;
 
     /**
      * Gets a read-write DirContext.
      * 
      * @return A DirContext instance, never null.
-     * @throws DataAccessException
+     * @throws NamingException
      *             if some error occurs creating an DirContext.
      */
-    public DirContext getReadWriteContext() throws DataAccessException;
+    public DirContext getReadWriteContext() throws NamingException;
 }
