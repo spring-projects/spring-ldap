@@ -12,19 +12,54 @@ http://www.ietf.org/rfc/rfc2696.txt
 
 Changes in version 1.2-RC1 (xx.yy.2007)
 -------------------------------------------
-* Restructured packages:
+A number of API-breaking changes have been made in this release,
+mainly package restructuring stuff (LDAP-33). Consequently this is
+NOT a drop-in replacement for Spring LDAP 1.1.2, though upgrading
+should not present all that much work. Please see the supplied
+upgrade guide for details.
+
+* Restructured packages (LDAP-33):
   - Moved the core classes into the package ldap.core.
   - Moved subpackages of ldap.support to top level.
   - Moved most classes in ldap.support to ldap.core or ldap.core.support.
   - Moved classes in ldap.utils to ldap.support and removed ldap.utils.
 
 * Changed the exception hierarchy to be an unchecked mirror of the JNDI
-  NamingException hierarchy.
+  NamingException hierarchy (LDAP-4).
 
 * Deprecated the userName property in AbstractContextSource and changed
-  it to the more correct userDn.
+  it to the more correct userDn (LDAP-18).
 
-* Upgraded ApacheDS to 1.0.0.
+* Upgraded ApacheDS to 1.0.0 (LDAP-32).
+
+* Fixed bug causing PagedResultsRequestControl processing to fail against AD 
+  in the case of a PartialResultsException (LDAP-32).
+
+* Fixed bug causing NullPointerException in some environments when performing
+  PagedResultsRequestControl search (LDAP-37).
+
+* Implemented client-side transaction support for Spring LDAP. See reference
+  documentation for further information (LDAP-29).
+
+* DirContextAdapter.setAttribute() now properly updates updatedAttrs in update mode
+  (resulting in ModificationItems if applicable) (LDAP-15).
+  
+* Exceptions thrown by Spring LDAP are now always Serializable, regardless of whether
+  the wrapped NamingException is (which is not always the case) (LDAP-14).
+  
+* LdapRdnComponent now implements Serializable (LDAP-45).
+
+* Rewrote LdapEncoder.nameDecode() to solve problem with national characters and
+  remove regular expression used in parsing, drastically improving Distinguished Name
+  parsing performance as a bonus (LDAP-30).
+  
+* Upgraded to Spring 2.0.2 internally. Spring 1.2.x is still supported (LDAP-35).
+
+* Fixed a number of documentation errors and typos (LDAP-41, LDAP-40, LDAP-47, LDAP-48).
+  
+* Extracted useful inner classes from LdapTemplate to top-level classes (LDAP-42).
+
+* Implemented addAttributeValue and removeAttributeValue in DirContextAdapter (LDAP-5).
 
 Changes in version 1.1.2 (1.12.2006)
 -------------------------------------------
