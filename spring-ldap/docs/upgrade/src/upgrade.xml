@@ -4,379 +4,411 @@
 <article>
   <title>Upgrade Guide</title>
 
-  <section>
-    <title>Upgrading from 1.1.x to 1.2</title>
+  <sect1>
+    <title>Upgrading from 1.1.x to 1.2-RC1</title>
 
-    <para><emphasis role="bold">Moved the core classes into the package
-    ldap.core</emphasis></para>
+    <para>The base package for Spring LDAP is
+    <literal>org.springframework.ldap</literal>. In this document, we will
+    refer to this package as <literal>ldap</literal>.</para>
 
-    <informaltable>
-      <tgroup cols="3">
-        <colspec align="left" />
+    <sect2>
+      <title>Moved core classes from ldap to ldap.core</title>
 
-        <thead>
-          <row>
-            <entry align="center">Class</entry>
+      <para>The core classes listed below were moved to a subpackage called
+      <literal>ldap.core</literal>.</para>
 
-            <entry align="center">Before</entry>
+      <para><informaltable>
+          <tgroup cols="3">
+            <colspec align="left" />
 
-            <entry align="center">After</entry>
-          </row>
-        </thead>
+            <thead>
+              <row>
+                <entry align="center">Class</entry>
 
-        <tbody>
-          <row>
-            <entry>AttributesMapper</entry>
+                <entry align="center">Before</entry>
 
-            <entry>ldap</entry>
+                <entry align="center">After</entry>
+              </row>
+            </thead>
 
-            <entry>ldap.core</entry>
-          </row>
+            <tbody>
+              <row>
+                <entry>AttributesMapper</entry>
 
-          <row>
-            <entry>AuthenticationSource</entry>
+                <entry>ldap</entry>
 
-            <entry>ldap</entry>
+                <entry>ldap.core</entry>
+              </row>
 
-            <entry>ldap.core</entry>
-          </row>
+              <row>
+                <entry>AuthenticationSource</entry>
 
-          <row>
-            <entry>CollectingNameClassPair CallbackHandler</entry>
+                <entry>ldap</entry>
 
-            <entry>ldap</entry>
+                <entry>ldap.core</entry>
+              </row>
 
-            <entry>ldap.core</entry>
-          </row>
+              <row>
+                <entry>CollectingNameClassPair- CallbackHandler</entry>
 
-          <row>
-            <entry>ContextAssembler</entry>
+                <entry>ldap</entry>
 
-            <entry>ldap</entry>
+                <entry>ldap.core</entry>
+              </row>
 
-            <entry>ldap.core</entry>
-          </row>
+              <row>
+                <entry>ContextAssembler</entry>
 
-          <row>
-            <entry>ContextExecutor</entry>
+                <entry>ldap</entry>
 
-            <entry>ldap</entry>
+                <entry>ldap.core</entry>
+              </row>
 
-            <entry>ldap.core</entry>
-          </row>
+              <row>
+                <entry>ContextExecutor</entry>
 
-          <row>
-            <entry>ContextMapper</entry>
+                <entry>ldap</entry>
 
-            <entry>ldap</entry>
+                <entry>ldap.core</entry>
+              </row>
 
-            <entry>ldap.core</entry>
-          </row>
+              <row>
+                <entry>ContextMapper</entry>
 
-          <row>
-            <entry>ContextSource</entry>
+                <entry>ldap</entry>
 
-            <entry>ldap</entry>
+                <entry>ldap.core</entry>
+              </row>
 
-            <entry>ldap.core</entry>
-          </row>
+              <row>
+                <entry>ContextSource</entry>
 
-          <row>
-            <entry>DefaultNameClassPairMapper</entry>
+                <entry>ldap</entry>
 
-            <entry>ldap</entry>
+                <entry>ldap.core</entry>
+              </row>
 
-            <entry>ldap.core</entry>
-          </row>
+              <row>
+                <entry>DefaultNameClassPairMapper</entry>
 
-          <row>
-            <entry>DirContextProcessor</entry>
+                <entry>ldap</entry>
 
-            <entry>ldap</entry>
+                <entry>ldap.core</entry>
+              </row>
 
-            <entry>ldap.core</entry>
-          </row>
+              <row>
+                <entry>DirContextProcessor</entry>
 
-          <row>
-            <entry>LdapOperations</entry>
+                <entry>ldap</entry>
 
-            <entry>ldap</entry>
+                <entry>ldap.core</entry>
+              </row>
 
-            <entry>ldap.core</entry>
-          </row>
+              <row>
+                <entry>LdapOperations</entry>
 
-          <row>
-            <entry>LdapTemplate</entry>
+                <entry>ldap</entry>
 
-            <entry>ldap</entry>
+                <entry>ldap.core</entry>
+              </row>
 
-            <entry>ldap.core</entry>
-          </row>
+              <row>
+                <entry>LdapTemplate</entry>
 
-          <row>
-            <entry>NameClassPairCallbackHandler</entry>
+                <entry>ldap</entry>
 
-            <entry>ldap</entry>
+                <entry>ldap.core</entry>
+              </row>
 
-            <entry>ldap.core</entry>
-          </row>
+              <row>
+                <entry>NameClassPairCallbackHandler</entry>
 
-          <row>
-            <entry>NameClassPairMapper</entry>
+                <entry>ldap</entry>
 
-            <entry>ldap</entry>
+                <entry>ldap.core</entry>
+              </row>
 
-            <entry>ldap.core</entry>
-          </row>
+              <row>
+                <entry>NameClassPairMapper</entry>
 
-          <row>
-            <entry>SearchExecutor</entry>
+                <entry>ldap</entry>
 
-            <entry>ldap</entry>
+                <entry>ldap.core</entry>
+              </row>
 
-            <entry>ldap.core</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </informaltable>
+              <row>
+                <entry>SearchExecutor</entry>
 
-    <para><emphasis role="bold">Moved subpackages of ldap.support to top
-    level</emphasis></para>
+                <entry>ldap</entry>
 
-    <informaltable>
-      <tgroup cols="3">
-        <colspec align="center" />
+                <entry>ldap.core</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable></para>
+    </sect2>
 
-        <thead>
-          <row>
-            <entry align="center">Class</entry>
+    <sect2>
+      <title>Moved subpackages of ldap.support to ldap</title>
 
-            <entry align="center">Before</entry>
+      <para>The various packages for authentication, controls and filters were
+      moved to the top level <literal>ldap</literal> package.</para>
 
-            <entry align="center">After</entry>
-          </row>
-        </thead>
+      <para><informaltable>
+          <tgroup cols="3">
+            <colspec align="center" />
 
-        <tbody>
-          <row>
-            <entry>*</entry>
+            <thead>
+              <row>
+                <entry align="center">Class</entry>
 
-            <entry>ldap.support.authentication</entry>
+                <entry align="center">Before</entry>
 
-            <entry>ldap.authentication</entry>
-          </row>
+                <entry align="center">After</entry>
+              </row>
+            </thead>
 
-          <row>
-            <entry>*</entry>
+            <tbody>
+              <row>
+                <entry>*</entry>
 
-            <entry>ldap.support.control</entry>
+                <entry>ldap.support.authentication</entry>
 
-            <entry>ldap.control</entry>
-          </row>
+                <entry>ldap.authentication</entry>
+              </row>
 
-          <row>
-            <entry>*</entry>
+              <row>
+                <entry>*</entry>
 
-            <entry>ldap.support.filter</entry>
+                <entry>ldap.support.control</entry>
 
-            <entry>ldap.filter</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </informaltable>
+                <entry>ldap.control</entry>
+              </row>
 
-    <para><emphasis role="bold">Moved most classes in ldap.support to
-    ldap.core or ldap.core.support</emphasis></para>
+              <row>
+                <entry>*</entry>
 
-    <informaltable>
-      <tgroup cols="3">
-        <colspec align="left" />
+                <entry>ldap.support.filter</entry>
 
-        <thead>
-          <row>
-            <entry align="center">Class</entry>
+                <entry>ldap.filter</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable></para>
+    </sect2>
 
-            <entry align="center">Before</entry>
+    <sect2>
+      <title>Moved most classes in ldap.support to ldap.core or
+      ldap.core.support</title>
 
-            <entry align="center">After</entry>
-          </row>
-        </thead>
+      <para>The classes in <literal>ldap.support</literal> that are directly
+      referenced from the core classes were moved to
+      <literal>ldap.core</literal>, while various support classes not directly
+      referenced were moved to <literal>ldap.core.support</literal>.</para>
 
-        <tbody>
-          <row>
-            <entry>AbstractContextSource</entry>
+      <para><informaltable>
+          <tgroup cols="3">
+            <colspec align="left" />
 
-            <entry>ldap.support</entry>
+            <thead>
+              <row>
+                <entry align="center">Class</entry>
 
-            <entry>ldap.core.support</entry>
-          </row>
+                <entry align="center">Before</entry>
 
-          <row>
-            <entry>AggregateDirContextProcessor</entry>
+                <entry align="center">After</entry>
+              </row>
+            </thead>
 
-            <entry>ldap.support</entry>
+            <tbody>
+              <row>
+                <entry>AbstractContextSource</entry>
 
-            <entry>ldap.core.support</entry>
-          </row>
+                <entry>ldap.support</entry>
 
-          <row>
-            <entry>AttributeModificationsAware</entry>
+                <entry>ldap.core.support</entry>
+              </row>
 
-            <entry>ldap.support</entry>
+              <row>
+                <entry>AggregateDirContextProcessor</entry>
 
-            <entry>ldap.core</entry>
-          </row>
+                <entry>ldap.support</entry>
 
-          <row>
-            <entry>CountNameClassPair CallbackHandler</entry>
+                <entry>ldap.core.support</entry>
+              </row>
 
-            <entry>ldap.support</entry>
+              <row>
+                <entry>AttributeModificationsAware</entry>
 
-            <entry>ldap.core.support</entry>
-          </row>
+                <entry>ldap.support</entry>
 
-          <row>
-            <entry>DefaultDirObjectFactory</entry>
+                <entry>ldap.core</entry>
+              </row>
 
-            <entry>ldap.support</entry>
+              <row>
+                <entry>CountNameClassPair- CallbackHandler</entry>
 
-            <entry>ldap.core</entry>
-          </row>
+                <entry>ldap.support</entry>
 
-          <row>
-            <entry>DefaultDnParserFactory</entry>
+                <entry>ldap.core.support</entry>
+              </row>
 
-            <entry>ldap.support</entry>
+              <row>
+                <entry>DefaultDirObjectFactory</entry>
 
-            <entry>ldap.core</entry>
-          </row>
+                <entry>ldap.support</entry>
 
-          <row>
-            <entry>DirContextAdapter</entry>
+                <entry>ldap.core</entry>
+              </row>
 
-            <entry>ldap.support</entry>
+              <row>
+                <entry>DefaultDnParserFactory</entry>
 
-            <entry>ldap.core</entry>
-          </row>
+                <entry>ldap.support</entry>
 
-          <row>
-            <entry>DirContextOperations</entry>
+                <entry>ldap.core</entry>
+              </row>
 
-            <entry>ldap.support</entry>
+              <row>
+                <entry>DirContextAdapter</entry>
 
-            <entry>ldap.core</entry>
-          </row>
+                <entry>ldap.support</entry>
 
-          <row>
-            <entry>DirContextSource</entry>
+                <entry>ldap.core</entry>
+              </row>
 
-            <entry>ldap.support</entry>
+              <row>
+                <entry>DirContextOperations</entry>
 
-            <entry>ldap.core.support</entry>
-          </row>
+                <entry>ldap.support</entry>
 
-          <row>
-            <entry>DistinguishedName</entry>
+                <entry>ldap.core</entry>
+              </row>
 
-            <entry>ldap.support</entry>
+              <row>
+                <entry>DirContextSource</entry>
 
-            <entry>ldap.core</entry>
-          </row>
+                <entry>ldap.support</entry>
 
-          <row>
-            <entry>DnParser</entry>
+                <entry>ldap.core.support</entry>
+              </row>
 
-            <entry>ldap.support</entry>
+              <row>
+                <entry>DistinguishedName</entry>
 
-            <entry>ldap.core</entry>
-          </row>
+                <entry>ldap.support</entry>
 
-          <row>
-            <entry>LdapContextSource</entry>
+                <entry>ldap.core</entry>
+              </row>
 
-            <entry>ldap.support</entry>
+              <row>
+                <entry>DnParser</entry>
 
-            <entry>ldap.core.support</entry>
-          </row>
+                <entry>ldap.support</entry>
 
-          <row>
-            <entry>LdapEncoder</entry>
+                <entry>ldap.core</entry>
+              </row>
 
-            <entry>ldap.support</entry>
+              <row>
+                <entry>LdapContextSource</entry>
 
-            <entry>ldap.core</entry>
-          </row>
+                <entry>ldap.support</entry>
 
-          <row>
-            <entry>LdapRdn</entry>
+                <entry>ldap.core.support</entry>
+              </row>
 
-            <entry>ldap.support</entry>
+              <row>
+                <entry>LdapEncoder</entry>
 
-            <entry>ldap.core</entry>
-          </row>
+                <entry>ldap.support</entry>
 
-          <row>
-            <entry>LdapRdnComponent</entry>
+                <entry>ldap.core</entry>
+              </row>
 
-            <entry>ldap.support</entry>
+              <row>
+                <entry>LdapRdn</entry>
 
-            <entry>ldap.core</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </informaltable>
+                <entry>ldap.support</entry>
 
-    <para><emphasis role="bold">Moved classes in ldap and ldap.util to
-    ldap.support and removed ldap.util</emphasis></para>
+                <entry>ldap.core</entry>
+              </row>
 
-    <informaltable>
-      <tgroup cols="3">
-        <colspec align="left" />
+              <row>
+                <entry>LdapRdnComponent</entry>
 
-        <thead>
-          <row>
-            <entry align="center">Class</entry>
+                <entry>ldap.support</entry>
 
-            <entry align="center">Before</entry>
+                <entry>ldap.core</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable></para>
+    </sect2>
 
-            <entry align="center">After</entry>
-          </row>
-        </thead>
+    <sect2>
+      <title>Moved classes in ldap and ldap.util to ldap.support</title>
 
-        <tbody>
-          <row>
-            <entry><emphasis><emphasis>DefaultNamingExceptionTranslator</emphasis></emphasis></entry>
+      <para>The <literal>ldap.util</literal> package has been removed. The
+      classes in <literal>ldap.util</literal> were moved to
+      <literal>ldap.support</literal>. Also, the classes in
+      <literal>ldap</literal> related to exception translation were moved to
+      <literal>ldap.support</literal>. </para>
 
-            <entry>ldap</entry>
+      <note>
+        <para>The translation classes are deprecated. Instead, the static
+        method <literal>LdapUtils.convertLdapException </literal>should be
+        used.</para>
+      </note>
 
-            <entry>ldap.support</entry>
-          </row>
+      <para><informaltable>
+          <tgroup cols="3">
+            <colspec align="left" />
 
-          <row>
-            <entry>LdapUtils</entry>
+            <thead>
+              <row>
+                <entry align="center">Class</entry>
 
-            <entry>-</entry>
+                <entry align="center">Before</entry>
 
-            <entry>ldap.support</entry>
-          </row>
+                <entry align="center">After</entry>
+              </row>
+            </thead>
 
-          <row>
-            <entry>ListComparator</entry>
+            <tbody>
+              <row>
+                <entry><emphasis><emphasis>DefaultNamingExceptionTranslator</emphasis></emphasis></entry>
 
-            <entry>ldap.utils</entry>
+                <entry>ldap</entry>
 
-            <entry>ldap.support</entry>
-          </row>
+                <entry>ldap.support</entry>
+              </row>
 
-          <row>
-            <entry><emphasis><emphasis>NamingExceptionTranslator</emphasis></emphasis></entry>
+              <row>
+                <entry>LdapUtils</entry>
 
-            <entry>ldap</entry>
+                <entry>-</entry>
 
-            <entry>ldap.support</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </informaltable>
-  </section>
+                <entry>ldap.support</entry>
+              </row>
+
+              <row>
+                <entry>ListComparator</entry>
+
+                <entry>ldap.util</entry>
+
+                <entry>ldap.support</entry>
+              </row>
+
+              <row>
+                <entry><emphasis><emphasis>NamingExceptionTranslator</emphasis></emphasis></entry>
+
+                <entry>ldap</entry>
+
+                <entry>ldap.support</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable></para>
+    </sect2>
+  </sect1>
 </article>
