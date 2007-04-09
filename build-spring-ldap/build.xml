@@ -85,7 +85,7 @@
     </ivy:buildlist>
 
     <tstamp>
-    	<format property="internal.internal.build.timestamp" pattern="yyyyMMddHHmmss"/>
+      <format property="internal.internal.build.timestamp" pattern="yyyyMMddHHmmss"/>
     </tstamp>
     <tstamp>
       <format property="TSTAMPCOL" pattern="hh:mm"/>
@@ -128,48 +128,48 @@
           description="Cleans all build output files from all projects">
     <echo>projects=${projects}</echo>
     <echo>projects.names=${projects.names}</echo>
-	<subant target="clean" inheritall="false">
-	  <buildpath refid="${projects}"/>
+    <subant target="clean" inheritall="false">
+      <buildpath refid="${projects}"/>
     </subant>
   </target>
 
   <target name="clean-all" depends="init"
           description="Cleans all build output files from all projects, and also retrieved libs">
     <echo>projects=${projects}</echo>
-	<subant target="clean-all" inheritall="false">
-	  <buildpath refid="${projects}"/>
+    <subant target="clean-all" inheritall="false">
+      <buildpath refid="${projects}"/>
     </subant>
   </target>
   
   <target name="publish" depends="init"
           description="Calls publish targets on each project">
     <echo>projects=${projects}</echo>
-	<subant target="publish" inheritall="false">
-	  <buildpath refid="${projects}"/>
+    <subant target="publish" inheritall="false">
+      <buildpath refid="${projects}"/>
     </subant>
   </target>
 
   <target name="dist" depends="init"
           description="Calls dist targets on each project">
     <echo>projects=${projects}</echo>
-	<subant target="dist" inheritall="false">
-	  <buildpath refid="${projects}"/>
+    <subant target="dist" inheritall="false">
+      <buildpath refid="${projects}"/>
     </subant>
   </target>
   
   <target name="tests" depends="init"
           description="Calls test targets on each project">
     <echo>projects=${projects}</echo>
-	<subant target="tests" inheritall="false">
-	  <buildpath refid="${projects}"/>
+    <subant target="tests" inheritall="false">
+      <buildpath refid="${projects}"/>
     </subant>
   </target>
 
   <target name="javadoc" depends="init"
           description="Calls javadoc targets on each project">
     <echo>projects=${projects}</echo>
-	<subant target="javadoc" inheritall="false">
-	  <buildpath refid="${projects}"/>
+    <subant target="javadoc" inheritall="false">
+      <buildpath refid="${projects}"/>
     </subant>
   </target>
 
@@ -183,6 +183,9 @@
     <subant target="doc-all" inheritall="false" failonerror="false">
       <buildpathelement location="../spring-ldap" />
     </subant>
+    <subant target="upgrade-all" inheritall="false" failonerror="false">
+      <buildpathelement location="../spring-ldap" />
+    </subant>
   </target>
 
   <target name="gen-release-bins" depends="init"
@@ -192,13 +195,15 @@
     <delete file="${target.release.dir}/${release.bin.zip}"/>
 
     <zip zipfile="${target.release.dir}/${release.bin.zip}">
-  	  <zipfileset file="../spring-ldap/readme.txt" prefix="${zip.toplevel.dir}"/>
+      <zipfileset file="../spring-ldap/readme.txt" prefix="${zip.toplevel.dir}"/>
       <zipfileset file="../spring-ldap/license.txt" prefix="${zip.toplevel.dir}"/>
-	  <zipfileset dir="../spring-ldap/target/dist/jars" prefix="${zip.toplevel.dir}/dist"/>
-	  <zipfileset dir="../spring-ldap/target/dist/ivys" prefix="${zip.toplevel.dir}/dist/ivys"/>
-   	  <zipfileset dir="../spring-ldap/docs/reference/target/html_single" prefix="${zip.toplevel.dir}/doc/reference/html_single"/>
+      <zipfileset dir="../spring-ldap/target/dist/jars" prefix="${zip.toplevel.dir}/dist"/>
+      <zipfileset dir="../spring-ldap/target/dist/ivys" prefix="${zip.toplevel.dir}/dist/ivys"/>
+      <zipfileset dir="../spring-ldap/docs/reference/target/html_single" prefix="${zip.toplevel.dir}/doc/reference/html_single"/>
+      <zipfileset dir="../spring-ldap/docs/upgrade/target/html_single" prefix="${zip.toplevel.dir}/doc/upgrade/html_single"/>
       <zipfileset file="../spring-ldap/docs/reference/target/pdf/spring-ldap-reference.pdf" prefix="${zip.toplevel.dir}/doc/reference/pdf"/>
-	  <zipfileset dir="../spring-ldap/target/javadocs" prefix="${zip.toplevel.dir}/doc/api"/>
+      <zipfileset file="../spring-ldap/docs/upgrade/target/pdf/spring-ldap-upgrade.pdf" prefix="${zip.toplevel.dir}/doc/upgrade/pdf"/>
+      <zipfileset dir="../spring-ldap/target/javadocs" prefix="${zip.toplevel.dir}/doc/api"/>
     </zip>
   </target>
 
@@ -209,14 +214,16 @@
     <delete file="${target.release.dir}/${release.bin.deps.zip}"/>
 
     <zip zipfile="${target.release.dir}/${release.bin.deps.zip}">
-   	  <zipfileset file="../spring-ldap/readme.txt" prefix="${zip.toplevel.dir}"/>
+      <zipfileset file="../spring-ldap/readme.txt" prefix="${zip.toplevel.dir}"/>
       <zipfileset file="../spring-ldap/license.txt" prefix="${zip.toplevel.dir}"/>
-	  <zipfileset dir="../spring-ldap/target/dist/jars" prefix="${zip.toplevel.dir}/dist"/>
-	  <zipfileset dir="../spring-ldap/target/dist/ivys" prefix="${zip.toplevel.dir}/dist/ivys"/>
+      <zipfileset dir="../spring-ldap/target/dist/jars" prefix="${zip.toplevel.dir}/dist"/>
+      <zipfileset dir="../spring-ldap/target/dist/ivys" prefix="${zip.toplevel.dir}/dist/ivys"/>
       <zipfileset dir="../spring-ldap/docs/reference/target/html_single" prefix="${zip.toplevel.dir}/doc/reference/html_single"/>
+      <zipfileset dir="../spring-ldap/docs/upgrade/target/html_single" prefix="${zip.toplevel.dir}/doc/upgrade/html_single"/>
       <zipfileset file="../spring-ldap/docs/reference/target/pdf/spring-ldap-reference.pdf" prefix="${zip.toplevel.dir}/doc/reference/pdf"/>
-	  <zipfileset dir="../spring-ldap/target/javadocs" prefix="${zip.toplevel.dir}/doc/api"/>
-	  <zipfileset dir="../spring-ldap/lib/global" prefix="${zip.toplevel.dir}/lib"/>
+      <zipfileset file="../spring-ldap/docs/upgrade/target/pdf/spring-ldap-upgrade.pdf" prefix="${zip.toplevel.dir}/doc/upgrade/pdf"/>
+      <zipfileset dir="../spring-ldap/target/javadocs" prefix="${zip.toplevel.dir}/doc/api"/>
+      <zipfileset dir="../spring-ldap/lib/global" prefix="${zip.toplevel.dir}/lib"/>
     </zip>
   </target>
   
@@ -230,7 +237,7 @@
       <zipfileset dir=".." prefix="spring-ldap">
         <selector refid="project.source.zip.includes"/>
       </zipfileset>
-  	  <zipfileset file="../spring-ldap/readme.txt"/>
+      <zipfileset file="../spring-ldap/readme.txt"/>
       <zipfileset file="../spring-ldap/license.txt"/>
       <zipfileset dir="../common-build" prefix="common-build"/>
       <zipfileset dir="../repository" prefix="repository"/>
