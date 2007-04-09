@@ -14,7 +14,7 @@ import org.springframework.ldap.transaction.TransactionUtils;
 import org.springframework.ldap.transaction.core.DirContextHolder;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-public class LdapUtilsTest extends TestCase {
+public class TransactionUtilsTest extends TestCase {
 
     private MockControl dirContextControl;
 
