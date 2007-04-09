@@ -31,7 +31,8 @@
     want, adding it to a list.</para>
 
     <para>The traditional way of implementing this person name search method
-    in Java LDAP looks like this:</para>
+    in Java LDAP looks like this, where the code marked as bold actually
+    performs tasks related to the business purpose of the method:</para>
 
     <informalexample>
       <programlisting>package com.example.dao;
@@ -54,14 +55,14 @@ public class TraditionalPersonDaoImpl implements PersonDao {
       try {
          SearchControls controls = new SearchControls();
          controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-         results = ctx.search("", "(objectclass=person)", controls);
+         results = ctx.<emphasis role="bold">search("", "(objectclass=person)"</emphasis>, controls);
 
          while (results.hasMore()) {
             SearchResult searchResult = (SearchResult) results.next();
             Attributes attributes = searchResult.getAttributes();
-            Attribute attr = attributes.get("cn");
+            <emphasis role="bold">Attribute attr = attributes.get("cn");
             String cn = (String) attr.get();
-            list.add(cn);
+            list.add(cn);</emphasis>
          }
       } catch (NameNotFoundException e) {
          // The base context was not found.
@@ -84,13 +85,14 @@ public class TraditionalPersonDaoImpl implements PersonDao {
             }
          }
       }
-      return list;
+      <emphasis role="bold">return list;</emphasis>
    }
 }</programlisting>
     </informalexample>
 
-    <para>By using the Spring LDAP <literal>AttributesMapper</literal>, we get
-    the exact same functionality with the following code:</para>
+    <para>By using the Spring LDAP classes <literal>AttributesMapper</literal>
+    and <literal>LdapTemplate</literal>, we get the exact same functionality
+    with the following code:</para>
 
     <informalexample>
       <programlisting>package com.example.dao;
@@ -103,16 +105,54 @@ public class PersonDaoImpl implements PersonDao {
    }
 
    public List getAllPersonNames() {
-      return ldapTemplate.search(
-         "", "(objectclass=person)",
+      return ldapTemplate.<emphasis role="bold">search(
+         "", "(objectclass=person)"</emphasis>,
          new AttributesMapper() {
             public Object mapFromAttributes(Attributes attrs)
                throws NamingException {
-               return attrs.get("cn").get();
+               <emphasis role="bold">return attrs.get("cn").get();</emphasis>
             }
          });
    }
 }</programlisting>
+    </informalexample>
+
+    <para>The amount of boiler-plate code is significantly less than in the
+    traditional example. The <literal>LdapTemplate</literal> version of the
+    search method performs the search, maps the attributes to a string using
+    the given <literal>AttributesMapper</literal>, collects the strings in an
+    internal list, and finally returns the list.</para>
+
+    <para>Note that the <literal>PersonDaoImpl</literal> code simply assumes
+    that it has an <literal>LdapTemplate</literal> instance, rather than
+    looking one up somewhere. It provides a set method for this purpose. There
+    is nothing Spring-specific about this "Inversion of Control". Anyone that
+    can create an instance of <literal>PersonDaoImpl</literal> can also set
+    the <literal>LdapTemplate</literal> on it. However, Spring provides a very
+    flexible and easy way of achieving this (see <ulink
+    url="http://static.springframework.org/spring/docs/current/reference/beans.html">http://static.springframework.org/spring/docs/current/reference/beans.html</ulink>).
+    The Spring container can be told to wire up an instance of
+    <literal>LdapTemplate</literal> with its required dependencies and inject
+    it into the <literal>PersonDao</literal> instance. This wiring can be
+    defined in various ways, but the most common is through XML:</para>
+
+    <informalexample>
+      <programlisting>&lt;beans&gt;
+   &lt;bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource"&gt;
+      &lt;property name="url" value="ldap://localhost:389" /&gt;
+      &lt;property name="base" value="dc=example,dc=com" /&gt;
+      &lt;property name="userDn" value="cn=Manager" /&gt;
+      &lt;property name="password" value="secret" /&gt;
+   &lt;/bean&gt;
+
+   &lt;bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate"&gt;
+      &lt;constructor-arg ref="contextSource" /&gt;
+   &lt;/bean&gt;
+
+   &lt;bean id="personDao" class="com.example.dao.PersonDaoImpl"&gt;
+      &lt;property name="ldapTemplate" ref="ldapTemplate" /&gt;
+   &lt;/bean&gt;
+&lt;/beans&gt;</programlisting>
     </informalexample>
   </sect1>
 
@@ -137,8 +177,7 @@ public class PersonDaoImpl implements PersonDao {
       </listitem>
 
       <listitem>
-        <para>spring-dao (exception hierarchy enabling sophisticated error
-        handling independent of the data access approach in use)</para>
+        <para>spring-dao (basic transaction support)</para>
       </listitem>
 
       <listitem>
@@ -156,7 +195,8 @@ public class PersonDaoImpl implements PersonDao {
       </listitem>
 
       <listitem>
-        <para>ldapbp (Sun LDAP Boosetr Pack, for required controls)</para>
+        <para>ldapbp (Sun LDAP Booster Pack, for required LDAP
+        controls)</para>
       </listitem>
     </itemizedlist>
 
@@ -178,30 +218,6 @@ public class PersonDaoImpl implements PersonDao {
         <para>acegi-security</para>
       </listitem>
     </itemizedlist>
-
-    <para>Set up the required beans in your Spring context file and inject the
-    <literal>LdapTemplate</literal> into your data access object:</para>
-
-    <informalexample>
-      <programlisting>&lt;beans&gt;
-   ...
-   &lt;bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource"&gt;
-      &lt;property name="url" value="ldap://localhost:389" /&gt;
-      &lt;property name="base" value="dc=example,dc=com" /&gt;
-      &lt;property name="userDn" value="cn=Manager" /&gt;
-      &lt;property name="password" value="secret" /&gt;
-   &lt;/bean&gt;
-
-   &lt;bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate"&gt;
-      &lt;constructor-arg ref="contextSource" /&gt;
-   &lt;/bean&gt;
-
-   &lt;bean id="myDataAccessObject" class="com.example.MyDataAccessObject"&gt;
-      &lt;property name="ldapTemplate" ref="ldapTemplate" /&gt;
-   &lt;/bean&gt;
-   ...
-&lt;/beans&gt;</programlisting>
-    </informalexample>
   </sect1>
 
   <sect1 id="introduction-package-structure">
@@ -217,6 +233,7 @@ public class PersonDaoImpl implements PersonDao {
 
     <figure>
       <title>Spring LDAP package structure</title>
+
       <mediaobject>
         <imageobject>
           <imagedata fileref="images/package-dependencies.png" format="png" />
