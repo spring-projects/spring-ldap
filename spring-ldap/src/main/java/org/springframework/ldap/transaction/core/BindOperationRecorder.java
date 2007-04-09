@@ -19,9 +19,9 @@ import javax.naming.Name;
 import javax.naming.directory.Attributes;
 
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationExecutor;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationRecorder;
+import org.springframework.ldap.transaction.TransactionUtils;
 
 /**
  * A {@link CompensatingTransactionOperationRecorder} to manage LDAP bind
@@ -58,7 +58,7 @@ public class BindOperationRecorder implements
             throw new IllegalArgumentException(
                     "Invalid arguments for bind operation");
         }
-        Name dn = LdapUtils.getFirstArgumentAsName(args);
+        Name dn = TransactionUtils.getFirstArgumentAsName(args);
         Object object = args[1];
         Attributes attributes = null;
         if (args[2] != null && !(args[2] instanceof Attributes)) {
@@ -68,8 +68,7 @@ public class BindOperationRecorder implements
             attributes = (Attributes) args[2];
         }
 
-        return new BindOperationExecutor(ldapOperations, dn, object,
-                attributes);
+        return new BindOperationExecutor(ldapOperations, dn, object, attributes);
     }
 
     /**

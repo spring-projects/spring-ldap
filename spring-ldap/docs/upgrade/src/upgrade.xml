@@ -4,12 +4,52 @@
 <article>
   <title>Upgrade Guide</title>
 
+  <para>The base package for Spring LDAP is
+  <literal>org.springframework.ldap</literal>. In this document, we will refer
+  to this package as <literal>ldap</literal>.</para>
+
   <sect1>
     <title>Upgrading from 1.1.x to 1.2-RC1</title>
 
-    <para>The base package for Spring LDAP is
-    <literal>org.springframework.ldap</literal>. In this document, we will
-    refer to this package as <literal>ldap</literal>.</para>
+    <para>In 1.2-RC1, there are a couple of major changes:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Transaction support added</para>
+      </listitem>
+
+      <listitem>
+        <para>Exception hierarchy changed</para>
+      </listitem>
+
+      <listitem>
+        <para>Package structure changed</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>The transaction support is entirely new should not affect users of
+    previous releases.</para>
+
+    <para>The exception hierarchy was previously based on the Spring
+    <literal>DataAccessException</literal> hierarchy, but is now an unchecked
+    mirror of the JNDI <literal>NamingException</literal> hierarchy. The fact
+    that it is unchecked like <literal>DataAccessException</literal> makes
+    migration less troublesome. However, note that
+    <literal>ContextSource</literal> and its implementations now throw
+    <literal>org.springframework.ldap.NamingException</literal>, not
+    <literal>DataAccessException</literal>.</para>
+
+    <para>In release 1.1.x, there were two cyclic dependencies. The first one
+    was between <literal>ldap.support</literal> and
+    <literal>ldap.support.parser</literal>, while the other one was between
+    <literal>ldap</literal> and <literal>ldap.support</literal>. </para>
+
+    <para>The first cycle was easily solved by changing the generation of the
+    parser to generate code into <literal>ldap.support</literal> rather than
+    into a separate package.</para>
+
+    <para>The second cycle was slightly more complicated. To sort it out, the
+    following restructuring was performed.</para>
 
     <sect2>
       <title>Moved core classes from ldap to ldap.core</title>
@@ -352,7 +392,7 @@
       classes in <literal>ldap.util</literal> were moved to
       <literal>ldap.support</literal>. Also, the classes in
       <literal>ldap</literal> related to exception translation were moved to
-      <literal>ldap.support</literal>. </para>
+      <literal>ldap.support</literal>.</para>
 
       <note>
         <para>The translation classes are deprecated. Instead, the static

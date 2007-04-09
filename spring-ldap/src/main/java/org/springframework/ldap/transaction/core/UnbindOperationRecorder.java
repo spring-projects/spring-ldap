@@ -18,9 +18,9 @@ package org.springframework.ldap.transaction.core;
 import javax.naming.Name;
 
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationExecutor;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationRecorder;
+import org.springframework.ldap.transaction.TransactionUtils;
 
 /**
  * {@link CompensatingTransactionOperationRecorder} to keep track of unbind
@@ -60,7 +60,7 @@ public class UnbindOperationRecorder implements
      */
     public CompensatingTransactionOperationExecutor recordOperation(
             Object[] args) {
-        Name dn = LdapUtils.getFirstArgumentAsName(args);
+        Name dn = TransactionUtils.getFirstArgumentAsName(args);
         Name temporaryDn = renamingStrategy.getTemporaryName(dn);
 
         return new UnbindOperationExecutor(ldapOperations, dn, temporaryDn);

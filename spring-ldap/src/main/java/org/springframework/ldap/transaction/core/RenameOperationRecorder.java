@@ -20,9 +20,9 @@ import javax.naming.Name;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationExecutor;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationRecorder;
+import org.springframework.ldap.transaction.TransactionUtils;
 import org.springframework.util.Assert;
 
 /**
@@ -64,8 +64,8 @@ public class RenameOperationRecorder implements
             // This really shouldn't happen.
             throw new IllegalArgumentException("Illegal argument length");
         }
-        Name oldDn = LdapUtils.getArgumentAsName(args[0]);
-        Name newDn = LdapUtils.getArgumentAsName(args[1]);
+        Name oldDn = TransactionUtils.getArgumentAsName(args[0]);
+        Name newDn = TransactionUtils.getArgumentAsName(args[1]);
         return new RenameOperationExecutor(ldapOperations, oldDn, newDn);
     }
 

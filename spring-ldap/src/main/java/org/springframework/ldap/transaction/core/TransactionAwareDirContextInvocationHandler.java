@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
 import javax.naming.directory.DirContext;
 
 import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.support.LdapUtils;
+import org.springframework.ldap.transaction.TransactionUtils;
 
 /**
  * Proxy implementation for DirContext, making sure that the instance is not
@@ -72,11 +72,11 @@ public class TransactionAwareDirContextInvocationHandler implements
             // Use hashCode of Connection proxy.
             return new Integer(proxy.hashCode());
         } else if (methodName.equals("close")) {
-            LdapUtils.doCloseConnection(target, contextSource);
+            TransactionUtils.doCloseConnection(target, contextSource);
             return null;
-        } else if (LdapUtils.isSupportedWriteTransactionOperation(methodName)) {
+        } else if (TransactionUtils.isSupportedWriteTransactionOperation(methodName)) {
             // Store transaction data and allow operation to proceed.
-            LdapUtils.performOperation(contextSource, target, method, args);
+            TransactionUtils.performOperation(contextSource, target, method, args);
             return null;
         } else {
             try {

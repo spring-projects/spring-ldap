@@ -28,9 +28,9 @@ import javax.naming.directory.ModificationItem;
 
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationExecutor;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationRecorder;
+import org.springframework.ldap.transaction.TransactionUtils;
 import org.springframework.util.Assert;
 
 /**
@@ -57,7 +57,7 @@ public class ModifyAttributesOperationRecorder implements
     public CompensatingTransactionOperationExecutor recordOperation(
             Object[] args) {
         Assert.notNull(args);
-        Name dn = LdapUtils.getFirstArgumentAsName(args);
+        Name dn = TransactionUtils.getFirstArgumentAsName(args);
         if (args.length != 2 || !(args[1] instanceof ModificationItem[])) {
             throw new IllegalArgumentException(
                     "Unexpected arguments to ModifyAttributes operation");

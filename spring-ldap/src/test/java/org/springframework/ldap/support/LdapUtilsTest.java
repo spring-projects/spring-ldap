@@ -10,6 +10,7 @@ import junit.framework.TestCase;
 import org.easymock.MockControl;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationManager;
+import org.springframework.ldap.transaction.TransactionUtils;
 import org.springframework.ldap.transaction.core.DirContextHolder;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -85,7 +86,7 @@ public class LdapUtilsTest extends TestCase {
         dirContextMock.close();
 
         replay();
-        LdapUtils.doCloseConnection(dirContextMock, contextSourceMock);
+        TransactionUtils.doCloseConnection(dirContextMock, contextSourceMock);
         verify();
     }
 
@@ -98,7 +99,7 @@ public class LdapUtilsTest extends TestCase {
         // Context should not be closed.
 
         replay();
-        LdapUtils.doCloseConnection(dirContextMock, contextSourceMock);
+        TransactionUtils.doCloseConnection(dirContextMock, contextSourceMock);
         verify();
     }
 
@@ -116,20 +117,20 @@ public class LdapUtilsTest extends TestCase {
 
         dirContextControl2.replay();
         replay();
-        LdapUtils.doCloseConnection(dirContextMock2, contextSourceMock);
+        TransactionUtils.doCloseConnection(dirContextMock2, contextSourceMock);
         verify();
         dirContextControl2.verify();
     }
 
     public void testIsSupportedWriteTransactionOperation() {
-        assertTrue(LdapUtils.isSupportedWriteTransactionOperation("bind"));
-        assertTrue(LdapUtils.isSupportedWriteTransactionOperation("rebind"));
-        assertTrue(LdapUtils.isSupportedWriteTransactionOperation("unbind"));
-        assertTrue(LdapUtils
+        assertTrue(TransactionUtils.isSupportedWriteTransactionOperation("bind"));
+        assertTrue(TransactionUtils.isSupportedWriteTransactionOperation("rebind"));
+        assertTrue(TransactionUtils.isSupportedWriteTransactionOperation("unbind"));
+        assertTrue(TransactionUtils
                 .isSupportedWriteTransactionOperation("modifyAttributes"));
-        assertTrue(LdapUtils.isSupportedWriteTransactionOperation("rename"));
-        assertFalse(LdapUtils.isSupportedWriteTransactionOperation("lookup"));
-        assertFalse(LdapUtils.isSupportedWriteTransactionOperation("search"));
+        assertTrue(TransactionUtils.isSupportedWriteTransactionOperation("rename"));
+        assertFalse(TransactionUtils.isSupportedWriteTransactionOperation("lookup"));
+        assertFalse(TransactionUtils.isSupportedWriteTransactionOperation("search"));
     }
 
     public void testPerformOperation() throws Throwable {
@@ -143,7 +144,7 @@ public class LdapUtilsTest extends TestCase {
         operationManagerMock.performOperation("unbind", expectedArgs);
 
         replay();
-        LdapUtils.performOperation(contextSourceMock, dirContextMock,
+        TransactionUtils.performOperation(contextSourceMock, dirContextMock,
                 getUnbindMethod(), expectedArgs);
         verify();
     }
@@ -153,7 +154,7 @@ public class LdapUtilsTest extends TestCase {
         dirContextMock.unbind("someDn");
 
         replay();
-        LdapUtils.performOperation(contextSourceMock, dirContextMock,
+        TransactionUtils.performOperation(contextSourceMock, dirContextMock,
                 getUnbindMethod(), expectedArgs);
         verify();
     }

@@ -29,9 +29,9 @@ import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationFactory;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationRecorder;
+import org.springframework.ldap.transaction.TransactionUtils;
 
 /**
  * {@link CompensatingTransactionOperationRecorder} implementation for LDAP
@@ -62,19 +62,19 @@ public class LdapCompensatingTransactionOperationFactory implements
 
     public CompensatingTransactionOperationRecorder createRecordingOperation(
             String operation) {
-        if (StringUtils.equals(operation, LdapUtils.BIND_METHOD_NAME)) {
+        if (StringUtils.equals(operation, TransactionUtils.BIND_METHOD_NAME)) {
             log.debug("Bind operation recorded");
             return new BindOperationRecorder(ldapOperations);
-        } else if (StringUtils.equals(operation, LdapUtils.REBIND_METHOD_NAME)) {
+        } else if (StringUtils.equals(operation, TransactionUtils.REBIND_METHOD_NAME)) {
             log.debug("Rebind operation recorded");
             return new RebindOperationRecorder(ldapOperations, renamingStrategy);
-        } else if (StringUtils.equals(operation, LdapUtils.RENAME_METHOD_NAME)) {
+        } else if (StringUtils.equals(operation, TransactionUtils.RENAME_METHOD_NAME)) {
             log.debug("Rename operation recorded");
             return new RenameOperationRecorder(ldapOperations);
         } else if (StringUtils.equals(operation,
-                LdapUtils.MODIFY_ATTRIBUTES_METHOD_NAME)) {
+                TransactionUtils.MODIFY_ATTRIBUTES_METHOD_NAME)) {
             return new ModifyAttributesOperationRecorder(ldapOperations);
-        } else if (StringUtils.equals(operation, LdapUtils.UNBIND_METHOD_NAME)) {
+        } else if (StringUtils.equals(operation, TransactionUtils.UNBIND_METHOD_NAME)) {
             return new UnbindOperationRecorder(ldapOperations, renamingStrategy);
         }
 
@@ -125,7 +125,7 @@ public class LdapCompensatingTransactionOperationFactory implements
         private DirContext getNonClosingDirContextProxy(DirContext context) {
             return (DirContext) Proxy.newProxyInstance(DirContextProxy.class
                     .getClassLoader(), new Class[] {
-                    LdapUtils.getActualTargetClass(context),
+                    TransactionUtils.getActualTargetClass(context),
                     DirContextProxy.class },
                     new NonClosingDirContextInvocationHandler(context));
 
