@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap.transaction;
+package org.springframework.ldap.transaction.core;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -30,7 +30,6 @@ import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationManager;
-import org.springframework.ldap.transaction.core.DirContextHolder;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.Assert;
 

@@ -22,7 +22,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationExecutor;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationRecorder;
-import org.springframework.ldap.transaction.TransactionUtils;
 import org.springframework.util.Assert;
 
 /**

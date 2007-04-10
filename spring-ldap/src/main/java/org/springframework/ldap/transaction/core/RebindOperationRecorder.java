@@ -21,7 +21,6 @@ import javax.naming.directory.Attributes;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationExecutor;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationRecorder;
-import org.springframework.ldap.transaction.TransactionUtils;
 
 /**
  * A {@link CompensatingTransactionOperationRecorder} keeping track of a rebind

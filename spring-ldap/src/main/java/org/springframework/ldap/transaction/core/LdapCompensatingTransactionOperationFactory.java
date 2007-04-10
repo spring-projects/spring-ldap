@@ -31,7 +31,6 @@ import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationFactory;
 import org.springframework.ldap.transaction.CompensatingTransactionOperationRecorder;
-import org.springframework.ldap.transaction.TransactionUtils;
 
 /**
  * {@link CompensatingTransactionOperationRecorder} implementation for LDAP
