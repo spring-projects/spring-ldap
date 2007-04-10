@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.transaction.core;
+package org.springframework.ldap.transaction.support;
 
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 import org.easymock.MockControl;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.transaction.DirContextProxy;
+import org.springframework.ldap.transaction.support.TransactionAwareContextSourceProxy;
 
 /**
  * Tests for {@link TransactionAwareContextSourceProxy}.

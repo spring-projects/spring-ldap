@@ -129,9 +129,9 @@ public class PersonDaoImpl implements PersonDao {
     is nothing Spring-specific about this "Inversion of Control". Anyone that
     can create an instance of <literal>PersonDaoImpl</literal> can also set
     the <literal>LdapTemplate</literal> on it. However, Spring provides a very
-    flexible and easy way of achieving this (see <ulink
-    url="http://static.springframework.org/spring/docs/current/reference/beans.html">http://static.springframework.org/spring/docs/current/reference/beans.html</ulink>).
-    The Spring container can be told to wire up an instance of
+    flexible and easy way of <ulink
+    url="http://static.springframework.org/spring/docs/current/reference/beans.html">achieving
+    this</ulink>. The Spring container can be told to wire up an instance of
     <literal>LdapTemplate</literal> with its required dependencies and inject
     it into the <literal>PersonDao</literal> instance. This wiring can be
     defined in various ways, but the most common is through XML:</para>
@@ -241,6 +241,20 @@ public class PersonDaoImpl implements PersonDao {
       </mediaobject>
     </figure>
 
+    <sect2 id="ldap.filter">
+      <title>org.springframework.transaction.compensating</title>
+
+      <para>The <emphasis>transaction.compensating</emphasis> package contains
+      the generic compensating transaction support. This is not LDAP-specific
+      or JNDI-specific in any way.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Dependencies: spring-dao, commons-logging</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
     <sect2 id="ldap">
       <title>org.springframework.ldap</title>
 
@@ -250,7 +264,7 @@ public class PersonDaoImpl implements PersonDao {
 
       <itemizedlist spacing="compact">
         <listitem>
-          <para>Dependencies: spring-core, spring-dao</para>
+          <para>Dependencies: spring-core</para>
         </listitem>
       </itemizedlist>
     </sect2>
@@ -266,7 +280,7 @@ public class PersonDaoImpl implements PersonDao {
 
       <itemizedlist spacing="compact">
         <listitem>
-          <para>Dependencies: ldap, ldap.support, spring-beans, spring-dao,
+          <para>Dependencies: ldap, ldap.support, spring-beans,
           commons-collections, commons-lang, commons-logging</para>
         </listitem>
       </itemizedlist>
@@ -276,8 +290,7 @@ public class PersonDaoImpl implements PersonDao {
       <title>org.springframework.ldap.core.support</title>
 
       <para>The <emphasis>ldap.core.support</emphasis> package contains
-      supporting implementations of the central interfaces as well as the
-      DirContextAdapter abstraction.</para>
+      supporting implementations of some of the core interfaces.</para>
 
       <itemizedlist spacing="compact">
         <listitem>
@@ -291,13 +304,11 @@ public class PersonDaoImpl implements PersonDao {
       <title>org.springframework.ldap.support</title>
 
       <para>The <emphasis>ldap.support</emphasis> package contains supporting
-      implementations of the central interfaces as well as the
-      DirContextAdapter abstraction.</para>
+      utilities, like the exception translation mechanism.</para>
 
       <itemizedlist spacing="compact">
         <listitem>
-          <para>Dependencies: ldap, spring-core, spring-dao,
-          commons-logging</para>
+          <para>Dependencies: ldap, spring-core, commons-logging</para>
         </listitem>
       </itemizedlist>
     </sect2>
@@ -330,8 +341,8 @@ public class PersonDaoImpl implements PersonDao {
 
       <itemizedlist spacing="compact">
         <listitem>
-          <para>Dependencies: ldap.core, ldap.support, LDAP booster pack,
-          spring-core, commons-lang, commons-logging</para>
+          <para>Dependencies: ldap, ldap.core, LDAP booster pack, spring-core,
+          commons-lang, commons-logging</para>
         </listitem>
       </itemizedlist>
     </sect2>
@@ -349,6 +360,35 @@ public class PersonDaoImpl implements PersonDao {
       </itemizedlist>
     </sect2>
 
+    <sect2 id="ldap.filter">
+      <title>org.springframework.ldap.transaction</title>
+
+      <para>The <emphasis>ldap.transaction</emphasis> package contains the
+      core LDAP-specific implementation of compensating transactions.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Dependencies: ldap, ldap.core, transaction.compensating,
+          spring-core, spring-dao, commons-lang, commons-logging</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2 id="ldap.filter">
+      <title>org.springframework.ldap.transaction.support</title>
+
+      <para>The <emphasis>ldap.transaction.support</emphasis> package contains
+      supporting transaction classes, like
+      ContextSourceTransactionManager.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Dependencies: ldap.core, ldap.transaction,
+          transaction.compensating, spring-dao, commons-logging</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
     <para>For the exact list of jar dependencies, see the Spring LDAP <ulink
     url="http://jayasoft.org/ivy">Ivy</ulink> dependency manager descriptor
     located within the Spring LDAP distribution at
@@ -358,7 +398,8 @@ public class PersonDaoImpl implements PersonDao {
   <sect1 id="introduction-support">
     <title>Support</title>
 
-    <para>Spring LDAP 1.2 is supported on Spring 1.2.8 or later.</para>
+    <para>Spring LDAP 1.2 is supported on Spring 1.2.8 or later, including
+    2.0.x.</para>
 
     <para>The community support forum is located at <ulink
     url="http://forum.springframework.org">http://forum.springframework.org</ulink>,

@@ -17,7 +17,7 @@ package org.springframework.ldap.transaction;
 
 import javax.naming.directory.DirContext;
 
-import org.springframework.ldap.transaction.core.TransactionAwareContextSourceProxy;
+import org.springframework.ldap.transaction.support.TransactionAwareContextSourceProxy;
 
 /**
  * Helper interface to be able to get hold of the target DirContext from proxies

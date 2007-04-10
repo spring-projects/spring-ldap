@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.transaction.core;
+package org.springframework.ldap.transaction.support;
 
-public class DummyServiceImpl {
-    private DummyDao dummyDaoImpl;
-
-    public void setDummyDaoImpl(DummyDao dummyDaoImpl) {
-        this.dummyDaoImpl = dummyDaoImpl;
+public class DummyException extends RuntimeException {
+    public DummyException(String message) {
+        super(message);
     }
 }

@@ -1,9 +1,9 @@
-package org.springframework.ldap.transaction.core;
+package org.springframework.ldap.transaction.support;
 
 import javax.naming.Name;
 
 import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.transaction.core.DifferentSubtreeTempEntryRenamingStrategy;
+import org.springframework.ldap.transaction.support.DifferentSubtreeTempEntryRenamingStrategy;
 
 import junit.framework.TestCase;
 

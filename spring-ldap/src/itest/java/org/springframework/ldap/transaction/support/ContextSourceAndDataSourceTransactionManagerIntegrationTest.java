@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.transaction.core;
+package org.springframework.ldap.transaction.support;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,6 +30,7 @@ import org.springframework.ldap.LdapServerManager;
 import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.transaction.support.ContextSourceAndDataSourceTransactionManager;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 

@@ -1,4 +1,4 @@
-package org.springframework.ldap.transaction.core;
+package org.springframework.ldap.transaction.support;
 
 import javax.naming.directory.DirContext;
 
@@ -8,9 +8,9 @@ import org.easymock.MockControl;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.transaction.DirContextHolder;
 import org.springframework.ldap.transaction.TempEntryRenamingStrategy;
-import org.springframework.ldap.transaction.core.ContextSourceTransactionManager;
-import org.springframework.ldap.transaction.core.ContextSourceTransactionObject;
-import org.springframework.ldap.transaction.core.TransactionAwareContextSourceProxy;
+import org.springframework.ldap.transaction.support.ContextSourceTransactionManager;
+import org.springframework.ldap.transaction.support.ContextSourceTransactionObject;
+import org.springframework.ldap.transaction.support.TransactionAwareContextSourceProxy;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationManager;
 import org.springframework.transaction.support.DefaultTransactionStatus;

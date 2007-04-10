@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.transaction.core;
+package org.springframework.ldap.transaction.support;
 
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.ldap.core.ContextSource;
