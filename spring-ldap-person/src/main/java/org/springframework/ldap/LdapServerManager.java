@@ -30,8 +30,8 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
 import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.DefaultDirObjectFactory;
 import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.core.support.DefaultDirObjectFactory;
 
 import org.apache.directory.server.core.configuration.ShutdownConfiguration;
 import org.apache.directory.server.jndi.ServerContextFactory;
