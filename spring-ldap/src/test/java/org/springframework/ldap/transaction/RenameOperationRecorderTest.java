@@ -1,11 +1,11 @@
-package org.springframework.ldap.transaction.core;
+package org.springframework.ldap.transaction;
 
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.transaction.core.RenameOperationExecutor;
-import org.springframework.ldap.transaction.core.RenameOperationRecorder;
+import org.springframework.ldap.transaction.RenameOperationExecutor;
+import org.springframework.ldap.transaction.RenameOperationRecorder;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
 public class RenameOperationRecorderTest extends TestCase {

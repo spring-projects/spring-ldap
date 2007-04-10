@@ -1,16 +1,18 @@
-package org.springframework.ldap.transaction.core;
+package org.springframework.ldap.transaction;
+
+import javax.naming.directory.BasicAttributes;
 
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.transaction.core.TempEntryRenamingStrategy;
-import org.springframework.ldap.transaction.core.UnbindOperationExecutor;
-import org.springframework.ldap.transaction.core.UnbindOperationRecorder;
+import org.springframework.ldap.transaction.RebindOperationExecutor;
+import org.springframework.ldap.transaction.RebindOperationRecorder;
+import org.springframework.ldap.transaction.TempEntryRenamingStrategy;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
-public class UnbindOperationRecorderTest extends TestCase {
+public class RebindOperationRecorderTest extends TestCase {
     private MockControl ldapOperationsControl;
 
     private LdapOperations ldapOperationsMock;
@@ -50,28 +52,33 @@ public class UnbindOperationRecorderTest extends TestCase {
     }
 
     public void testRecordOperation() {
-        final DistinguishedName expectedTempName = new DistinguishedName(
-                "cn=john doe_temp");
         final DistinguishedName expectedDn = new DistinguishedName(
                 "cn=john doe");
-        UnbindOperationRecorder tested = new UnbindOperationRecorder(
+        final DistinguishedName expectedTempDn = new DistinguishedName(
+                "cn=john doe");
+        RebindOperationRecorder tested = new RebindOperationRecorder(
                 ldapOperationsMock, renamingStrategyMock);
 
         renamingStrategyControl.expectAndReturn(renamingStrategyMock
-                .getTemporaryName(expectedDn), expectedTempName);
+                .getTemporaryName(expectedDn), expectedTempDn);
 
         replay();
-        // Perform test
-        CompensatingTransactionOperationExecutor operation = tested
-                .recordOperation(new Object[] { expectedDn });
+        Object expectedObject = new Object();
+        BasicAttributes expectedAttributes = new BasicAttributes();
+
+        // perform test
+        CompensatingTransactionOperationExecutor result = tested
+                .recordOperation(new Object[] { expectedDn, expectedObject,
+                        expectedAttributes });
         verify();
 
-        // Verify result
-        assertTrue(operation instanceof UnbindOperationExecutor);
-        UnbindOperationExecutor rollbackOperation = (UnbindOperationExecutor) operation;
+        assertTrue(result instanceof RebindOperationExecutor);
+        RebindOperationExecutor rollbackOperation = (RebindOperationExecutor) result;
         assertSame(ldapOperationsMock, rollbackOperation.getLdapOperations());
         assertSame(expectedDn, rollbackOperation.getOriginalDn());
-        assertSame(expectedTempName, rollbackOperation.getTemporaryDn());
+        assertSame(expectedTempDn, rollbackOperation.getTemporaryDn());
+        assertSame(expectedObject, rollbackOperation.getOriginalObject());
+        assertSame(expectedAttributes, rollbackOperation
+                .getOriginalAttributes());
     }
-
 }

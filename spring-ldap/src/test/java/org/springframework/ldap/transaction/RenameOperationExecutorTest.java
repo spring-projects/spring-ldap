@@ -1,9 +1,9 @@
-package org.springframework.ldap.transaction.core;
+package org.springframework.ldap.transaction;
 
 import org.easymock.MockControl;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.transaction.core.RenameOperationExecutor;
+import org.springframework.ldap.transaction.RenameOperationExecutor;
 
 import junit.framework.TestCase;
 

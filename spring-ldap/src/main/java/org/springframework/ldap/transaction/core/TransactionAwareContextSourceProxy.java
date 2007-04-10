@@ -21,6 +21,9 @@ import javax.naming.directory.DirContext;
 
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.transaction.DirContextHolder;
+import org.springframework.ldap.transaction.DirContextProxy;
+import org.springframework.ldap.transaction.TransactionUtils;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 /**

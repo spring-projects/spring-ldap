@@ -9,8 +9,8 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.transaction.core.DirContextHolder;
-import org.springframework.ldap.transaction.core.TransactionUtils;
+import org.springframework.ldap.transaction.DirContextHolder;
+import org.springframework.ldap.transaction.TransactionUtils;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationManager;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 

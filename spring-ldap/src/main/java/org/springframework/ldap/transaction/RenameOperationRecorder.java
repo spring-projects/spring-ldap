@@ -13,25 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.transaction.core;
+package org.springframework.ldap.transaction;
 
 import javax.naming.Name;
-import javax.naming.directory.Attributes;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
+import org.springframework.util.Assert;
 
 /**
- * A {@link CompensatingTransactionOperationRecorder} to manage LDAP bind
- * operations. The corresponding
- * {@link CompensatingTransactionOperationExecutor} is
- * {@link BindOperationExecutor}.
+ * A {@link CompensatingTransactionOperationRecorder} for keeping track of
+ * rename operations. Creates {@link RebindOperationExecutor} objects for
+ * rolling back.
  * 
  * @author Mattias Arthursson
+ * 
  */
-public class BindOperationRecorder implements
+public class RenameOperationRecorder implements
         CompensatingTransactionOperationRecorder {
+
+    private static Log log = LogFactory.getLog(RenameOperationRecorder.class);
 
     private LdapOperations ldapOperations;
 
@@ -39,10 +43,10 @@ public class BindOperationRecorder implements
      * Constructor.
      * 
      * @param ldapOperations
-     *            {@link LdapOperations} to use for supplying to the
-     *            corresponding rollback operation.
+     *            The {@link LdapOperations} to supply to the created
+     *            {@link RebindOperationExecutor} objects.
      */
-    public BindOperationRecorder(LdapOperations ldapOperations) {
+    public RenameOperationRecorder(LdapOperations ldapOperations) {
         this.ldapOperations = ldapOperations;
     }
 
@@ -53,28 +57,17 @@ public class BindOperationRecorder implements
      */
     public CompensatingTransactionOperationExecutor recordOperation(
             Object[] args) {
-        if (args == null || args.length != 3) {
-            throw new IllegalArgumentException(
-                    "Invalid arguments for bind operation");
+        log.debug("Storing rollback information for rename operation");
+        Assert.notEmpty(args);
+        if (args.length != 2) {
+            // This really shouldn't happen.
+            throw new IllegalArgumentException("Illegal argument length");
         }
-        Name dn = TransactionUtils.getFirstArgumentAsName(args);
-        Object object = args[1];
-        Attributes attributes = null;
-        if (args[2] != null && !(args[2] instanceof Attributes)) {
-            throw new IllegalArgumentException(
-                    "Invalid third argument to bind operation");
-        } else if (args[2] != null) {
-            attributes = (Attributes) args[2];
-        }
-
-        return new BindOperationExecutor(ldapOperations, dn, object, attributes);
+        Name oldDn = TransactionUtils.getArgumentAsName(args[0]);
+        Name newDn = TransactionUtils.getArgumentAsName(args[1]);
+        return new RenameOperationExecutor(ldapOperations, oldDn, newDn);
     }
 
-    /**
-     * Get the LdapOperations. For testing purposes.s
-     * 
-     * @return the LdapOperations.
-     */
     LdapOperations getLdapOperations() {
         return ldapOperations;
     }

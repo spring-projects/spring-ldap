@@ -17,6 +17,7 @@ package org.springframework.ldap.transaction.core;
 
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.transaction.TempEntryRenamingStrategy;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.TransactionSuspensionNotSupportedException;

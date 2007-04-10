@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap.transaction.core;
+package org.springframework.ldap.transaction;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

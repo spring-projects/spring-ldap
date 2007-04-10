@@ -1,18 +1,16 @@
-package org.springframework.ldap.transaction.core;
-
-import javax.naming.directory.BasicAttributes;
+package org.springframework.ldap.transaction;
 
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.transaction.core.RebindOperationExecutor;
-import org.springframework.ldap.transaction.core.RebindOperationRecorder;
-import org.springframework.ldap.transaction.core.TempEntryRenamingStrategy;
+import org.springframework.ldap.transaction.TempEntryRenamingStrategy;
+import org.springframework.ldap.transaction.UnbindOperationExecutor;
+import org.springframework.ldap.transaction.UnbindOperationRecorder;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
-public class RebindOperationRecorderTest extends TestCase {
+public class UnbindOperationRecorderTest extends TestCase {
     private MockControl ldapOperationsControl;
 
     private LdapOperations ldapOperationsMock;
@@ -52,33 +50,28 @@ public class RebindOperationRecorderTest extends TestCase {
     }
 
     public void testRecordOperation() {
+        final DistinguishedName expectedTempName = new DistinguishedName(
+                "cn=john doe_temp");
         final DistinguishedName expectedDn = new DistinguishedName(
                 "cn=john doe");
-        final DistinguishedName expectedTempDn = new DistinguishedName(
-                "cn=john doe");
-        RebindOperationRecorder tested = new RebindOperationRecorder(
+        UnbindOperationRecorder tested = new UnbindOperationRecorder(
                 ldapOperationsMock, renamingStrategyMock);
 
         renamingStrategyControl.expectAndReturn(renamingStrategyMock
-                .getTemporaryName(expectedDn), expectedTempDn);
+                .getTemporaryName(expectedDn), expectedTempName);
 
         replay();
-        Object expectedObject = new Object();
-        BasicAttributes expectedAttributes = new BasicAttributes();
-
-        // perform test
-        CompensatingTransactionOperationExecutor result = tested
-                .recordOperation(new Object[] { expectedDn, expectedObject,
-                        expectedAttributes });
+        // Perform test
+        CompensatingTransactionOperationExecutor operation = tested
+                .recordOperation(new Object[] { expectedDn });
         verify();
 
-        assertTrue(result instanceof RebindOperationExecutor);
-        RebindOperationExecutor rollbackOperation = (RebindOperationExecutor) result;
+        // Verify result
+        assertTrue(operation instanceof UnbindOperationExecutor);
+        UnbindOperationExecutor rollbackOperation = (UnbindOperationExecutor) operation;
         assertSame(ldapOperationsMock, rollbackOperation.getLdapOperations());
         assertSame(expectedDn, rollbackOperation.getOriginalDn());
-        assertSame(expectedTempDn, rollbackOperation.getTemporaryDn());
-        assertSame(expectedObject, rollbackOperation.getOriginalObject());
-        assertSame(expectedAttributes, rollbackOperation
-                .getOriginalAttributes());
+        assertSame(expectedTempName, rollbackOperation.getTemporaryDn());
     }
+
 }

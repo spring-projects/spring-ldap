@@ -6,10 +6,10 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.transaction.DirContextHolder;
+import org.springframework.ldap.transaction.TempEntryRenamingStrategy;
 import org.springframework.ldap.transaction.core.ContextSourceTransactionManager;
 import org.springframework.ldap.transaction.core.ContextSourceTransactionObject;
-import org.springframework.ldap.transaction.core.DirContextHolder;
-import org.springframework.ldap.transaction.core.TempEntryRenamingStrategy;
 import org.springframework.ldap.transaction.core.TransactionAwareContextSourceProxy;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationManager;

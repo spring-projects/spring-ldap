@@ -1,11 +1,11 @@
-package org.springframework.ldap.transaction.core;
+package org.springframework.ldap.transaction;
 
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.transaction.core.UnbindOperationExecutor;
+import org.springframework.ldap.transaction.UnbindOperationExecutor;
 
 public class UnbindOperationExecutorTest extends TestCase {
     private MockControl ldapOperationsControl;

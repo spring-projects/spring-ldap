@@ -1,4 +1,4 @@
-package org.springframework.ldap.transaction.core;
+package org.springframework.ldap.transaction;
 
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
@@ -14,8 +14,8 @@ import org.easymock.MockControl;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.transaction.core.ModifyAttributesOperationExecutor;
-import org.springframework.ldap.transaction.core.ModifyAttributesOperationRecorder;
+import org.springframework.ldap.transaction.ModifyAttributesOperationExecutor;
+import org.springframework.ldap.transaction.ModifyAttributesOperationRecorder;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
 public class ModifyAttributesOperationRecorderTest extends TestCase {

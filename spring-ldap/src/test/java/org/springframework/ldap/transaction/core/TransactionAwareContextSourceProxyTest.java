@@ -22,6 +22,7 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.transaction.DirContextProxy;
 
 /**
  * Tests for {@link TransactionAwareContextSourceProxy}.

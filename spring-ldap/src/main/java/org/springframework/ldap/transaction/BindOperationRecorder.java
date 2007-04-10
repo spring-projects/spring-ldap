@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.transaction.core;
+package org.springframework.ldap.transaction;
 
 import javax.naming.Name;
 import javax.naming.directory.Attributes;
@@ -23,33 +23,27 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
 import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
 
 /**
- * A {@link CompensatingTransactionOperationRecorder} keeping track of a rebind
- * operation. Creates {@link RebindOperationExecutor} objects in
- * {@link #recordOperation(Object[])}.
+ * A {@link CompensatingTransactionOperationRecorder} to manage LDAP bind
+ * operations. The corresponding
+ * {@link CompensatingTransactionOperationExecutor} is
+ * {@link BindOperationExecutor}.
  * 
  * @author Mattias Arthursson
  */
-public class RebindOperationRecorder implements
+public class BindOperationRecorder implements
         CompensatingTransactionOperationRecorder {
 
     private LdapOperations ldapOperations;
-
-    private TempEntryRenamingStrategy renamingStrategy;
 
     /**
      * Constructor.
      * 
      * @param ldapOperations
-     *            {@link LdapOperations} to use for getting the rollback
-     *            information and supply to the {@link RebindOperationExecutor}.
-     * @param the
-     *            {@link TempEntryRenamingStrategy} to use for generating temp
-     *            DNs.
+     *            {@link LdapOperations} to use for supplying to the
+     *            corresponding rollback operation.
      */
-    public RebindOperationRecorder(LdapOperations ldapOperations,
-            TempEntryRenamingStrategy renamingStrategy) {
+    public BindOperationRecorder(LdapOperations ldapOperations) {
         this.ldapOperations = ldapOperations;
-        this.renamingStrategy = renamingStrategy;
     }
 
     /*
@@ -73,14 +67,11 @@ public class RebindOperationRecorder implements
             attributes = (Attributes) args[2];
         }
 
-        Name temporaryName = renamingStrategy.getTemporaryName(dn);
-
-        return new RebindOperationExecutor(ldapOperations, dn, temporaryName,
-                object, attributes);
+        return new BindOperationExecutor(ldapOperations, dn, object, attributes);
     }
 
     /**
-     * Get the LdapOperations. For testing purposes.
+     * Get the LdapOperations. For testing purposes.s
      * 
      * @return the LdapOperations.
      */
@@ -88,7 +79,4 @@ public class RebindOperationRecorder implements
         return ldapOperations;
     }
 
-    public TempEntryRenamingStrategy getRenamingStrategy() {
-        return renamingStrategy;
-    }
 }

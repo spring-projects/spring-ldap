@@ -22,6 +22,7 @@ import javax.naming.Name;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapRdn;
 import org.springframework.ldap.core.LdapRdnComponent;
+import org.springframework.ldap.transaction.TempEntryRenamingStrategy;
 
 /**
  * Default implementation of {@link TempEntryRenamingStrategy}. This

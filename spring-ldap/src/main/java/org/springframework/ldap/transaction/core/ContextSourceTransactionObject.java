@@ -15,6 +15,8 @@
  */
 package org.springframework.ldap.transaction.core;
 
+import org.springframework.ldap.transaction.DirContextHolder;
+
 /**
  * Transaction object for ContextSourceTransactionManager. Keeps a reference to
  * the {@link DirContextHolder} associated with the current transaction.

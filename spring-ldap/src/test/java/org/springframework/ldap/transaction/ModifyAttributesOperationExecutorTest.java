@@ -1,4 +1,4 @@
-package org.springframework.ldap.transaction.core;
+package org.springframework.ldap.transaction;
 
 import javax.naming.Name;
 import javax.naming.directory.ModificationItem;
@@ -6,7 +6,7 @@ import javax.naming.directory.ModificationItem;
 import org.easymock.MockControl;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.transaction.core.ModifyAttributesOperationExecutor;
+import org.springframework.ldap.transaction.ModifyAttributesOperationExecutor;
 
 import junit.framework.TestCase;
 

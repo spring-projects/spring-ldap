@@ -13,25 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.transaction.core;
+package org.springframework.ldap.transaction;
 
-import javax.naming.Name;
+import javax.naming.directory.DirContext;
+
+import org.springframework.ldap.transaction.core.TransactionAwareContextSourceProxy;
 
 /**
- * Interface for different strategies to rename temporary entries for unbind and
- * rebind operations.
+ * Helper interface to be able to get hold of the target DirContext from proxies
+ * created by {@link TransactionAwareContextSourceProxy}.
  * 
  * @author Mattias Arthursson
  */
-public interface TempEntryRenamingStrategy {
-
+public interface DirContextProxy {
     /**
-     * Get a temporary name for the current entry to be renamed to.
+     * Get the target DirContext of the proxy.
      * 
-     * @param originalName
-     *            The original name of the entry.
-     * @return The name to which the entry should be temporarily renamed
-     *         according to this strategy.
+     * @return the target DirContext.
      */
-    public Name getTemporaryName(Name originalName);
+    DirContext getTargetContext();
 }
