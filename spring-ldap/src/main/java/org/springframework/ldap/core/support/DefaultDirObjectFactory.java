@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap.core;
+package org.springframework.ldap.core.support;
 
 import java.util.Hashtable;
 
@@ -22,6 +22,9 @@ import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.directory.Attributes;
 import javax.naming.spi.DirObjectFactory;
+
+import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.DistinguishedName;
 
 
 /**

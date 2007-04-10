@@ -51,7 +51,7 @@ import org.springframework.ldap.support.LdapUtils;
 /**
  * Implements the interesting methods of the DirContext interface. In particular
  * it contains utility methods for getting and setting Attributes. Using the
- * {@link org.springframework.ldap.core.DefaultDirObjectFactory} in your
+ * {@link org.springframework.ldap.core.support.DefaultDirObjectFactory} in your
  * ContextSource you may receive instances of this class from searches and
  * lookups. This can be particularly useful when updating data, since this class
  * implements {@link org.springframework.ldap.core.AttributeModificationsAware},

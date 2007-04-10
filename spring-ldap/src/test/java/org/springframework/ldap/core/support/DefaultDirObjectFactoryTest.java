@@ -24,7 +24,6 @@ import javax.naming.directory.BasicAttributes;
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
-import org.springframework.ldap.core.DefaultDirObjectFactory;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 

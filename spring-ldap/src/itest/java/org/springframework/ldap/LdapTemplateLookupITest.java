@@ -41,7 +41,7 @@ public class LdapTemplateLookupITest extends
     }
 
     /**
-     * This method depends on a DirObjectFactory ({@link org.springframework.ldap.core.DefaultDirObjectFactory})
+     * This method depends on a DirObjectFactory ({@link org.springframework.ldap.core.support.DefaultDirObjectFactory})
      * being set in the ContextSource.
      */
     public void testLookup_Plain() {
@@ -133,7 +133,7 @@ public class LdapTemplateLookupITest extends
     }
 
     /**
-     * This method depends on a DirObjectFactory ({@link org.springframework.ldap.core.DefaultDirObjectFactory})
+     * This method depends on a DirObjectFactory ({@link org.springframework.ldap.core.support.DefaultDirObjectFactory})
      * being set in the ContextSource.
      */
     public void testLookup_ContextMapper() {

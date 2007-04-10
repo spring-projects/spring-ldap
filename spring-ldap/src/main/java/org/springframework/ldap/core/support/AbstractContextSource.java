@@ -30,7 +30,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.JdkVersion;
 import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.DefaultDirObjectFactory;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.support.LdapUtils;
 
@@ -53,7 +52,7 @@ import org.springframework.ldap.support.LdapUtils;
  * properties are set, in order to finish up initialization.
  * 
  * @see org.springframework.ldap.core.LdapTemplate
- * @see org.springframework.ldap.core.DefaultDirObjectFactory
+ * @see org.springframework.ldap.core.support.DefaultDirObjectFactory
  * @see org.springframework.ldap.core.support.LdapContextSource
  * @see org.springframework.ldap.core.support.DirContextSource
  * 

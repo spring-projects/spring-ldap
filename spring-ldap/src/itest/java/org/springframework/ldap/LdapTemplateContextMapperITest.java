@@ -37,7 +37,7 @@ public class LdapTemplateContextMapperITest extends
     }
 
     /**
-     * This method depends on a DirObjectFactory ({@link org.springframework.ldap.core.DefaultDirObjectFactory})
+     * This method depends on a DirObjectFactory ({@link org.springframework.ldap.core.support.DefaultDirObjectFactory})
      * being set in the ContextSource.
      */
     public void testSearch_ContextMapper() {

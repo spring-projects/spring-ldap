@@ -20,6 +20,8 @@ import javax.naming.Binding;
 import javax.naming.Name;
 import javax.naming.directory.SearchResult;
 
+import org.springframework.ldap.core.support.DefaultDirObjectFactory;
+
 
 /**
  * An interface used by LdapTemplate to map LDAP Contexts to beans. Responsible

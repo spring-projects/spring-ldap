@@ -19,7 +19,7 @@
 		<property name="base" value="${base}" />
 		<property name="pooled" value="false" />
 		<property name="dirObjectFactory"
-			value="org.springframework.ldap.core.DefaultDirObjectFactory" />
+			value="org.springframework.ldap.core.support.DefaultDirObjectFactory" />
 	</bean>
 
 	<bean id="dataSource"
