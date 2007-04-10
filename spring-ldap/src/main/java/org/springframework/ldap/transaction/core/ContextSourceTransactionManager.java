@@ -16,11 +16,11 @@
 package org.springframework.ldap.transaction.core;
 
 import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.transaction.CompensatingTransactionOperationExecutor;
-import org.springframework.ldap.transaction.CompensatingTransactionOperationRecorder;
-import org.springframework.ldap.transaction.DefaultCompensatingTransactionOperationManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
+import org.springframework.transaction.compensating.DefaultCompensatingTransactionOperationManager;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 import org.springframework.transaction.support.DefaultTransactionStatus;
 

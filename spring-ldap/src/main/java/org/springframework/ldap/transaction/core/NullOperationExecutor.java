@@ -17,7 +17,7 @@ package org.springframework.ldap.transaction.core;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.transaction.CompensatingTransactionOperationExecutor;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
 /**
  * A {@link CompensatingTransactionOperationExecutor} that performs nothing.

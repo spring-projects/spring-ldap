@@ -18,8 +18,8 @@ package org.springframework.ldap.transaction.core;
 import javax.naming.Name;
 
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.transaction.CompensatingTransactionOperationExecutor;
-import org.springframework.ldap.transaction.CompensatingTransactionOperationRecorder;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
 
 /**
  * {@link CompensatingTransactionOperationRecorder} to keep track of unbind

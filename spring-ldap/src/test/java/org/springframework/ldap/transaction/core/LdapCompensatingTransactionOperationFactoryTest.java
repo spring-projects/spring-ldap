@@ -4,7 +4,6 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.transaction.CompensatingTransactionOperationRecorder;
 import org.springframework.ldap.transaction.core.BindOperationRecorder;
 import org.springframework.ldap.transaction.core.LdapCompensatingTransactionOperationFactory;
 import org.springframework.ldap.transaction.core.ModifyAttributesOperationRecorder;
@@ -12,6 +11,7 @@ import org.springframework.ldap.transaction.core.RebindOperationRecorder;
 import org.springframework.ldap.transaction.core.RenameOperationRecorder;
 import org.springframework.ldap.transaction.core.TempEntryRenamingStrategy;
 import org.springframework.ldap.transaction.core.UnbindOperationRecorder;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
 
 public class LdapCompensatingTransactionOperationFactoryTest extends TestCase {
     private MockControl ldapOperationsControl;

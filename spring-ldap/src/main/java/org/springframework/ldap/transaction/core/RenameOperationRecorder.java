@@ -20,8 +20,8 @@ import javax.naming.Name;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.transaction.CompensatingTransactionOperationExecutor;
-import org.springframework.ldap.transaction.CompensatingTransactionOperationRecorder;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
 import org.springframework.util.Assert;
 
 /**

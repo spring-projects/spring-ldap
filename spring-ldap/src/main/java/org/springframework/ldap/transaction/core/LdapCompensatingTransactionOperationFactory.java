@@ -29,8 +29,8 @@ import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.transaction.CompensatingTransactionOperationFactory;
-import org.springframework.ldap.transaction.CompensatingTransactionOperationRecorder;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationFactory;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
 
 /**
  * {@link CompensatingTransactionOperationRecorder} implementation for LDAP

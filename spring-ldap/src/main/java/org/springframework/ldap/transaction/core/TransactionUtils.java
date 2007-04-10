@@ -29,7 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.transaction.CompensatingTransactionOperationManager;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationManager;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.Assert;
 

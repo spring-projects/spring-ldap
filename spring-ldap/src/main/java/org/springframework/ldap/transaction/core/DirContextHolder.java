@@ -17,9 +17,9 @@ package org.springframework.ldap.transaction.core;
 
 import javax.naming.directory.DirContext;
 
-import org.springframework.ldap.transaction.CompensatingTransactionOperationFactory;
-import org.springframework.ldap.transaction.CompensatingTransactionOperationManager;
-import org.springframework.ldap.transaction.DefaultCompensatingTransactionOperationManager;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationFactory;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationManager;
+import org.springframework.transaction.compensating.DefaultCompensatingTransactionOperationManager;
 import org.springframework.transaction.support.ResourceHolderSupport;
 
 /**

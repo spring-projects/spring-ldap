@@ -7,9 +7,9 @@ import junit.framework.TestCase;
 import org.easymock.MockControl;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.transaction.CompensatingTransactionOperationExecutor;
 import org.springframework.ldap.transaction.core.BindOperationExecutor;
 import org.springframework.ldap.transaction.core.BindOperationRecorder;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
 public class BindOperationRecorderTest extends TestCase {
     private MockControl ldapOperationsControl;

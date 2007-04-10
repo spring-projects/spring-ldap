@@ -1,4 +1,4 @@
-package org.springframework.ldap.transaction;
+package org.springframework.transaction.compensating;
 
 import java.util.Stack;
 
@@ -6,6 +6,10 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 import org.springframework.transaction.TransactionSystemException;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationFactory;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
+import org.springframework.transaction.compensating.DefaultCompensatingTransactionOperationManager;
 
 public class DefaultCompensatingTransactionOperationManagerTest extends
         TestCase {

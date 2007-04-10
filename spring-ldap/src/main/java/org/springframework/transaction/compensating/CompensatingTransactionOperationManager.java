@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.transaction;
+package org.springframework.transaction.compensating;
 
 /**
  * A CompensatingTransactionOperationManager implementation records and performs

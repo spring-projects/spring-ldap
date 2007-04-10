@@ -15,9 +15,9 @@
  */
 package org.springframework.ldap.transaction.core;
 
-import org.springframework.ldap.transaction.CompensatingTransactionOperationExecutor;
-import org.springframework.ldap.transaction.CompensatingTransactionOperationManager;
-import org.springframework.ldap.transaction.CompensatingTransactionOperationRecorder;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationManager;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
 
 /**
  * A {@link CompensatingTransactionOperationRecorder} performing nothing,

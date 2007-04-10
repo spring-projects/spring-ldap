@@ -14,9 +14,9 @@ import org.easymock.MockControl;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.transaction.CompensatingTransactionOperationExecutor;
 import org.springframework.ldap.transaction.core.ModifyAttributesOperationExecutor;
 import org.springframework.ldap.transaction.core.ModifyAttributesOperationRecorder;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
 public class ModifyAttributesOperationRecorderTest extends TestCase {
     private MockControl ldapOperationsControl;

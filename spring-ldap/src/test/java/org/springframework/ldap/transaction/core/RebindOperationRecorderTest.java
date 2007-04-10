@@ -7,10 +7,10 @@ import junit.framework.TestCase;
 import org.easymock.MockControl;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.transaction.CompensatingTransactionOperationExecutor;
 import org.springframework.ldap.transaction.core.RebindOperationExecutor;
 import org.springframework.ldap.transaction.core.RebindOperationRecorder;
 import org.springframework.ldap.transaction.core.TempEntryRenamingStrategy;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
 public class RebindOperationRecorderTest extends TestCase {
     private MockControl ldapOperationsControl;
