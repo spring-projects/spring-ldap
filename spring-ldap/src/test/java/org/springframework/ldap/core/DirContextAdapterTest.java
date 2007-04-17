@@ -789,21 +789,21 @@ public class DirContextAdapterTest extends TestCase {
         ModificationItem[] modificationItems = tested.getModificationItems();
         assertEquals(2, modificationItems.length);
 
-        assertEquals(DirContext.ADD_ATTRIBUTE, modificationItems[0]
-                .getModificationOp());
         Attribute modifiedAttribute = modificationItems[0].getAttribute();
-        assertEquals("abc", modifiedAttribute.getID());
-        assertEquals(2, modifiedAttribute.size());
-        assertEquals("klytt", modifiedAttribute.get(0));
-        assertEquals("kalle", modifiedAttribute.get(1));
-
-        modifiedAttribute = modificationItems[1].getAttribute();
-        assertEquals(DirContext.REMOVE_ATTRIBUTE, modificationItems[1]
+        assertEquals(DirContext.REMOVE_ATTRIBUTE, modificationItems[0]
                 .getModificationOp());
         assertEquals("abc", modifiedAttribute.getID());
         assertEquals(2, modifiedAttribute.size());
         assertEquals("rty", modifiedAttribute.get(0));
         assertEquals("uio", modifiedAttribute.get(1));
+
+        assertEquals(DirContext.ADD_ATTRIBUTE, modificationItems[1]
+                .getModificationOp());
+        modifiedAttribute = modificationItems[1].getAttribute();
+        assertEquals("abc", modifiedAttribute.getID());
+        assertEquals(2, modifiedAttribute.size());
+        assertEquals("klytt", modifiedAttribute.get(0));
+        assertEquals("kalle", modifiedAttribute.get(1));
     }
 
     public void testAddAttribute_Multivalue() throws Exception {
@@ -961,5 +961,30 @@ public class DirContextAdapterTest extends TestCase {
                 return mods[i];
         }
         return null;
+    }
+
+    public void testModifyMultiValueAttributeModificationOrder()
+            throws NamingException {
+        BasicAttribute attribute = new BasicAttribute("abc");
+        attribute.add("Some Person");
+        attribute.add("Some Other Person");
+
+        tested.setAttribute(attribute);
+        tested.setUpdateMode(true);
+
+        tested.setAttributeValues("abc", new String[] { "some person",
+                "Some Other Person" });
+
+        // Perform test
+        ModificationItem[] modificationItems = tested.getModificationItems();
+        assertEquals(2, modificationItems.length);
+        ModificationItem modificationItem = modificationItems[0];
+        assertEquals(DirContext.REMOVE_ATTRIBUTE, modificationItem
+                .getModificationOp());
+        assertEquals("Some Person", modificationItem.getAttribute().get());
+        modificationItem = modificationItems[1];
+        assertEquals(DirContext.ADD_ATTRIBUTE, modificationItem
+                .getModificationOp());
+        assertEquals("some person", modificationItem.getAttribute().get());
     }
 }

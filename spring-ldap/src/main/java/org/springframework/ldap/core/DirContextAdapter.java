@@ -289,10 +289,10 @@ public class DirContextAdapter implements DirContextOperations {
             Collection removedValues = CollectionUtils.subtract(oldValues,
                     newValues);
 
-            collectModifications(DirContext.ADD_ATTRIBUTE, changedAttr,
-                    addedValues, myModifications);
             collectModifications(DirContext.REMOVE_ATTRIBUTE, changedAttr,
                     removedValues, myModifications);
+            collectModifications(DirContext.ADD_ATTRIBUTE, changedAttr,
+                    addedValues, myModifications);
 
             if (myModifications.isEmpty()) {
                 // This means that the attributes are not equal, but the
