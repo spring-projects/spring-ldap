@@ -16,10 +16,6 @@
 
 package org.springframework.ldap.core;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang.StringUtils;
 import org.springframework.ldap.BadLdapGrammarException;
 
 /**
