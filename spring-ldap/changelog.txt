@@ -53,7 +53,7 @@ upgrade guide for details.
   remove regular expression used in parsing, drastically improving Distinguished Name
   parsing performance as a bonus (LDAP-30).
   
-* Upgraded to Spring 2.0.2 internally. Spring 1.2.x is still supported (LDAP-35).
+* Upgraded to Spring 2.0.4 internally. Spring 1.2.x is still supported (LDAP-35, LDAP-51).
 
 * Fixed a number of documentation errors and typos (LDAP-41, LDAP-40, LDAP-47, LDAP-48).
   
