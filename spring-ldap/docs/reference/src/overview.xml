@@ -241,7 +241,7 @@ public class PersonDaoImpl implements PersonDao {
       </mediaobject>
     </figure>
 
-    <sect2 id="ldap.filter">
+    <sect2 id="transaction.compensating">
       <title>org.springframework.transaction.compensating</title>
 
       <para>The <emphasis>transaction.compensating</emphasis> package contains
@@ -360,7 +360,7 @@ public class PersonDaoImpl implements PersonDao {
       </itemizedlist>
     </sect2>
 
-    <sect2 id="ldap.filter">
+    <sect2 id="ldap.transaction">
       <title>org.springframework.ldap.transaction</title>
 
       <para>The <emphasis>ldap.transaction</emphasis> package contains the
@@ -374,7 +374,7 @@ public class PersonDaoImpl implements PersonDao {
       </itemizedlist>
     </sect2>
 
-    <sect2 id="ldap.filter">
+    <sect2 id="ldap.transaction.support">
       <title>org.springframework.ldap.transaction.support</title>
 
       <para>The <emphasis>ldap.transaction.support</emphasis> package contains
