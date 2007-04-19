@@ -5,7 +5,6 @@
 	<classpathentry kind="src" path="src/itest/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/global/xstream.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-ldap.jar"/>
 	<classpathentry kind="lib" path="lib/global/spring-dao.jar"/>
 	<classpathentry kind="lib" path="lib/global/spring-core.jar"/>
 	<classpathentry kind="lib" path="lib/global/spring-context.jar"/>
@@ -17,5 +16,6 @@
 	<classpathentry kind="lib" path="lib/test/testng.jar"/>
 	<classpathentry kind="lib" path="lib/test/junit.jar"/>
 	<classpathentry kind="lib" path="lib/test/spring-mock.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/spring-ldap"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
