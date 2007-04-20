@@ -21,7 +21,6 @@
 	<!--  global (core) dependencies -->
 	<dependency org="commons-logging" name="commons-logging" rev="1.0.4" />
 	<dependency org="commons-lang" name="commons-lang" rev="2.1" />
-	<dependency org="commons-collections" name="commons-collections" rev="3.1" />
 	<dependency org="org.springframework" name="spring-beans" rev="2.0.4"/>
 	<dependency org="org.springframework" name="spring-core" rev="2.0.4"/>
 	<dependency org="org.springframework" name="spring-context" rev="2.0.4"/>

@@ -15,7 +15,6 @@
 	<classpathentry kind="lib" path="lib/test/spring-mock.jar" sourcepath="lib/source/spring-src.zip"/>
 	<classpathentry kind="lib" path="lib/test/gsbase.jar"/>
 	<classpathentry kind="lib" path="lib/global/commons-lang.jar" sourcepath="lib/source/commons-lang-src.zip"/>
-	<classpathentry kind="lib" path="lib/global/commons-collections.jar" sourcepath="lib/source/commons-collections-src.zip"/>
 	<classpathentry kind="lib" path="lib/test/junit.jar" sourcepath="lib/source/junit-src.zip"/>
 	<classpathentry kind="lib" path="lib/test/easymock.jar" sourcepath="lib/source/easymock-src.zip"/>
 	<classpathentry kind="lib" path="lib/test/clover.jar"/>

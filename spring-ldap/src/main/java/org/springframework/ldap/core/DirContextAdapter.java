@@ -17,9 +17,7 @@
 package org.springframework.ldap.core;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedSet;
@@ -39,7 +37,6 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -274,25 +271,16 @@ public class DirContextAdapter implements DirContextOperations {
             // Attribute has been removed.
             modificationList.add(new ModificationItem(
                     DirContext.REMOVE_ATTRIBUTE, changedAttr));
-        } else if (changedAttr.size() != 0) {
-            // Collect all modifications to attribute individually (this also
-            // covers additions to a previously non-existant attribute).
-            Collection oldValues = new LinkedList();
-            Collection newValues = new LinkedList();
-
-            collectAttributeValues(oldValues, currentAttribute);
-            collectAttributeValues(newValues, changedAttr);
-            Collection myModifications = new LinkedList();
-
-            Collection addedValues = CollectionUtils.subtract(newValues,
-                    oldValues);
-            Collection removedValues = CollectionUtils.subtract(oldValues,
-                    newValues);
-
-            collectModifications(DirContext.REMOVE_ATTRIBUTE, changedAttr,
-                    removedValues, myModifications);
-            collectModifications(DirContext.ADD_ATTRIBUTE, changedAttr,
-                    addedValues, myModifications);
+        } else if ((currentAttribute == null || currentAttribute.size() == 0)
+                && changedAttr.size() > 0) {
+            // Attribute has been added.
+            modificationList.add(new ModificationItem(DirContext.ADD_ATTRIBUTE,
+                    changedAttr));
+        } else if (changedAttr.size() > 0) {
+            // Change of multivalue Attribute. Collect additions and removals
+            // individually.
+            List myModifications = new LinkedList();
+            collectModifications(currentAttribute, changedAttr, myModifications);
 
             if (myModifications.isEmpty()) {
                 // This means that the attributes are not equal, but the
@@ -306,31 +294,32 @@ public class DirContextAdapter implements DirContextOperations {
         }
     }
 
-    private void collectModifications(int modificationType, Attribute attr,
-            Collection values, Collection c) {
-        if (values.size() > 0) {
-            BasicAttribute modificationAttribute = new BasicAttribute(attr
-                    .getID());
-            for (Iterator iter = values.iterator(); iter.hasNext();) {
-                modificationAttribute.add(iter.next());
+    private void collectModifications(Attribute originalAttr,
+            Attribute changedAttr, List modificationList)
+            throws NamingException {
+
+        Attribute originalClone = (Attribute) originalAttr.clone();
+        Attribute addedValuesAttribute = new BasicAttribute(originalAttr
+                .getID());
+
+        for (int i = 0; i < changedAttr.size(); i++) {
+            Object attributeValue = changedAttr.get(i);
+            if (!originalClone.remove(attributeValue)) {
+                addedValuesAttribute.add(attributeValue);
             }
-            c
-                    .add(new ModificationItem(modificationType,
-                            modificationAttribute));
-        }
-    }
-
-    private void collectAttributeValues(Collection valueCollection,
-            Attribute attribute) throws NamingException {
-
-        if (attribute == null) {
-            return;
         }
 
-        NamingEnumeration attributeValues = attribute.getAll();
-        while (attributeValues.hasMoreElements()) {
-            Object value = (Object) attributeValues.nextElement();
-            valueCollection.add(value);
+        // We have now traversed and removed all values from the original that
+        // were also present in the new values. The remaining values in the
+        // original must be the ones that were removed.
+        if (originalClone.size() > 0) {
+            modificationList.add(new ModificationItem(
+                    DirContext.REMOVE_ATTRIBUTE, originalClone));
+        }
+
+        if (addedValuesAttribute.size() > 0) {
+            modificationList.add(new ModificationItem(DirContext.ADD_ATTRIBUTE,
+                    addedValuesAttribute));
         }
     }
 
