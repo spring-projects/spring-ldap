@@ -32,8 +32,8 @@
 			<artifact name="spring-binding-src" type="zip" ext="zip" />
 		</dependency>
 		<dependency org="ognl" name="ognl" rev="2.6.9" />
-		<dependency org="org.acegisecurity" name="acegi-security" rev="1.0.1" />
-		<dependency org="org.acegisecurity" name="acegi-security-src" rev="1.0.1" conf="source->source">
+		<dependency org="org.acegisecurity" name="acegi-security" rev="1.0.3" />
+		<dependency org="org.acegisecurity" name="acegi-security-src" rev="1.0.3" conf="source->source">
 			<artifact name="acegi-security-src" type="zip"/>
 		</dependency>
 	    <!-- kind of nasty, acegi needs some 1.2.7 stuff, so we override with newer! -->

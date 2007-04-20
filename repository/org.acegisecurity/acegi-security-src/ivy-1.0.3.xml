@@ -1,0 +1,16 @@
+<ivy-module version="1.0">
+	<info organisation="org.acegisecurity"
+		module="acegi-security-src"
+		revision="1.0.3"
+		status="release"
+		publication="20061116203300"
+		default="true"
+	/>
+	<configurations>
+		<conf name="default" visibility="public" extends="source"/>
+		<conf name="source" visibility="public"/>
+	</configurations>
+	<publications>
+		<artifact name="acegi-security-src" type="zip" ext="zip" conf="source"/>
+	</publications>
+</ivy-module>
