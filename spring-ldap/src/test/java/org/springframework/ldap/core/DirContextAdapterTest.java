@@ -987,4 +987,19 @@ public class DirContextAdapterTest extends TestCase {
                 .getModificationOp());
         assertEquals("some person", modificationItem.getAttribute().get());
     }
+
+    /**
+     * Test for LDAP-13.
+     */
+    public void testModifyAttributeByteArray() {
+        tested.setAttribute(new BasicAttribute("abc", new byte[] { 1, 2, 3 }));
+
+        tested.setUpdateMode(true);
+
+        // Perform test
+        tested.setAttributeValue("abc", new byte[] { 1, 2, 3 });
+
+        ModificationItem[] modificationItems = tested.getModificationItems();
+        assertEquals(0, modificationItems.length);
+    }
 }

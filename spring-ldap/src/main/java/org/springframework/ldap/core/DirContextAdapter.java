@@ -335,68 +335,6 @@ public class DirContextAdapter implements DirContextOperations {
     }
 
     /**
-     * Compare the existing attribute <code>name</code> with the value in
-     * <code>value</code>.
-     * <p>
-     * Also handles the case where the value has been reset to the original
-     * value after a previous change. For example, changing <code>a</code> to
-     * <code>b</code> and then back to <code>a</code> again must result in
-     * this method returning <code>true</code> so the first change can be
-     * overwritten with the latest change. TODO Do the null checks on the value
-     * instead
-     * 
-     * @param name
-     *            Name of the original attribute.
-     * @param value
-     *            Value to check if it has been changed.
-     * @return true if there has been a change compared to original attribute,
-     *         or a previous update
-     */
-    private boolean isChanged(String name, Object value) {
-        Attribute orig = originalAttrs.get(name);
-        Attribute prev = updatedAttrs.get(name);
-
-        // FALSE if both are null it is not changed
-        // TODO Also include prev in null check
-        if (orig == null && value == null) {
-            return false;
-        }
-
-        // TRUE if existing value is null or does not contain one value
-        if (orig == null || orig.size() != 1) {
-            return true;
-        }
-
-        // TRUE if existing value is not null and the new one is null
-        if (orig != null && value == null) {
-            return true;
-        }
-
-        // TRUE if we can't access the value
-        Object obj = null;
-        try {
-            obj = orig.get(0);
-        } catch (NamingException e) {
-            return true;
-        }
-
-        if (prev == null) {
-            // TRUE if the value is not equal
-            return !value.equals(obj);
-        } else {
-            // TRUE if we can't access the value
-            Object prevObj = null;
-            try {
-                prevObj = prev.get(0);
-            } catch (NamingException e) {
-                return true;
-            }
-            // TRUE if the value is not equal
-            return !value.equals(obj) || !value.equals(prevObj);
-        }
-    }
-
-    /**
      * returns true if the attribute is empty. It is empty if a == null, size ==
      * 0 or get() == null or an exception if thrown when accessing the get
      * method
@@ -584,7 +522,7 @@ public class DirContextAdapter implements DirContextOperations {
         }
 
         // updating entry
-        if (updateMode && isChanged(name, value)) {
+        if (updateMode) {
             BasicAttribute attribute = new BasicAttribute(name);
             if (value != null) {
                 attribute.add(value);
