@@ -15,6 +15,8 @@
  */
 package org.springframework.transaction.compensating;
 
+import org.springframework.transaction.compensating.support.DefaultCompensatingTransactionOperationManager;
+
 /**
  * Factory interface for creating
  * {@link CompensatingTransactionOperationRecorder} objects based on operation

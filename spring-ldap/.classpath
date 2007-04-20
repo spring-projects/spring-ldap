@@ -50,5 +50,6 @@
 	<classpathentry kind="lib" path="lib/test/aopalliance.jar"/>
 	<classpathentry kind="lib" path="lib/test/spring-aop.jar" sourcepath="lib/source/spring-src.zip"/>
 	<classpathentry kind="lib" path="lib/test/hsqldb.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-collections.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

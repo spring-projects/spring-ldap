@@ -23,7 +23,7 @@
 	</bean>
 
 	<bean id="contextSource"
-		class="org.springframework.ldap.transaction.support.TransactionAwareContextSourceProxy">
+		class="org.springframework.ldap.transaction.core.TransactionAwareContextSourceProxy">
 		<constructor-arg ref="contextSourceTarget" />
 	</bean>
 
@@ -33,13 +33,13 @@
 	</bean>
 
 	<bean id="transactionManager"
-		class="org.springframework.ldap.transaction.support.ContextSourceTransactionManager">
+		class="org.springframework.ldap.transaction.core.ContextSourceTransactionManager">
 		<property name="contextSource" ref="contextSource" />
 	</bean>
 
 
 	<bean name="dummyDaoTarget"
-		class="org.springframework.ldap.transaction.support.LdapDummyDaoImpl">
+		class="org.springframework.ldap.transaction.core.LdapDummyDaoImpl">
 		<property name="ldapTemplate" ref="ldapTemplate" />
 	</bean>
 
