@@ -48,8 +48,14 @@
     parser to generate code into <literal>ldap.support</literal> rather than
     into a separate package.</para>
 
-    <para>The second cycle was slightly more complicated. To sort it out, the
-    following restructuring was performed.</para>
+    <para>The second cycle was slightly more complicated. To sort it out, some major
+    restructuring was needed, as described in the following sections.</para>
+
+    <para>While the package restructuring is rather extensive, no classes have
+    changed names - this means that for the most cases a simple import resolve operation
+    (such as &quot;Ctr+Shift-O&quot; in Eclipse) should sort things out. 
+    You will still need to change the package names manually in your configuration files -
+    this should be a simple find/replace operation based on the information below.</para>
 
     <sect2>
       <title>Moved core classes from ldap to ldap.core</title>
