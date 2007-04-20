@@ -30,8 +30,6 @@ upgrade guide for details.
 * Deprecated the userName property in AbstractContextSource and changed
   it to the more correct userDn (LDAP-18).
 
-* Upgraded ApacheDS to 1.0.0 (LDAP-32).
-
 * Fixed bug causing PagedResultsRequestControl processing to fail against AD 
   in the case of a PartialResultsException (LDAP-32).
 
@@ -52,6 +50,10 @@ upgrade guide for details.
 * Rewrote LdapEncoder.nameDecode() to solve problem with national characters and
   remove regular expression used in parsing, drastically improving Distinguished Name
   parsing performance as a bonus (LDAP-30).
+
+* Upgraded ApacheDS to 1.0.0 (LDAP-32).
+
+* Upgraded to Acegi Security 1.0.3 (LDAP-61).
   
 * Upgraded to Spring 2.0.4 internally. Spring 1.2.x is still supported (LDAP-35, LDAP-51).
 
