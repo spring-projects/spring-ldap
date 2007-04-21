@@ -60,7 +60,7 @@ public class PersonDaoImpl implements PersonDao {
     DirContextOperations setAttributes(DirContextOperations adapter,
             Person person) {
         adapter.setAttributeValues("objectclass", new String[] { "top",
-                "person" });
+                "person", "organizationalPerson", "inetOrgPerson" });
         adapter.setAttributeValue("cn", person.getFullName());
         adapter.setAttributeValue("sn", person.getLastName());
         adapter.setAttributeValues("description", person.getDescription());

@@ -55,11 +55,11 @@ public class TraditionalPersonDaoImpl implements PersonDao {
     // TODO Rewrite using traditional tools
     DirContextOperations getContextToBind(Person person) {
         DirContextAdapter adapter = new DirContextAdapter();
-        adapter.setAttributeValue("objectclass",
-                new String[] { "top", "person" });
+        adapter.setAttributeValues("objectclass", new String[] { "top",
+                "person", "organizationalPerson", "inetOrgPerson" });
         adapter.setAttributeValue("cn", person.getFullName());
         adapter.setAttributeValue("sn", person.getLastName());
-        adapter.setAttributeValue("description", person.getDescription());
+        adapter.setAttributeValues("description", person.getDescription());
         return adapter;
     }
 
