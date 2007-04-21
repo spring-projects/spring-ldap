@@ -36,7 +36,7 @@ public class LdapAndJdbcDummyDaoImpl implements DummyDao {
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.transaction.support.DummyDao#createWithException(java.lang.String,
+     * @see org.springframework.ldap.transaction.core.DummyDao#createWithException(java.lang.String,
      *      java.lang.String, java.lang.String, java.lang.String,
      *      java.lang.String)
      */
@@ -49,7 +49,7 @@ public class LdapAndJdbcDummyDaoImpl implements DummyDao {
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.transaction.support.DummyDao#create(java.lang.String,
+     * @see org.springframework.ldap.transaction.core.DummyDao#create(java.lang.String,
      *      java.lang.String, java.lang.String, java.lang.String,
      *      java.lang.String)
      */
@@ -73,7 +73,7 @@ public class LdapAndJdbcDummyDaoImpl implements DummyDao {
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.transaction.support.DummyDao#update(java.lang.String,
+     * @see org.springframework.ldap.transaction.core.DummyDao#update(java.lang.String,
      *      java.lang.String, java.lang.String)
      */
     public void update(String dn, String fullname, String lastname,
@@ -93,7 +93,7 @@ public class LdapAndJdbcDummyDaoImpl implements DummyDao {
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.transaction.support.DummyDao#updateWithException(java.lang.String,
+     * @see org.springframework.ldap.transaction.core.DummyDao#updateWithException(java.lang.String,
      *      java.lang.String, java.lang.String)
      */
     public void updateWithException(String dn, String fullname,
@@ -105,7 +105,7 @@ public class LdapAndJdbcDummyDaoImpl implements DummyDao {
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.transaction.support.DummyDao#updateAndRename(java.lang.String,
+     * @see org.springframework.ldap.transaction.core.DummyDao#updateAndRename(java.lang.String,
      *      java.lang.String, java.lang.String)
      */
     public void updateAndRename(String dn, String newDn, String description) {
@@ -120,7 +120,7 @@ public class LdapAndJdbcDummyDaoImpl implements DummyDao {
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.transaction.support.DummyDao#updateAndRenameWithException(java.lang.String,
+     * @see org.springframework.ldap.transaction.core.DummyDao#updateAndRenameWithException(java.lang.String,
      *      java.lang.String, java.lang.String)
      */
     public void updateAndRenameWithException(String dn, String newDn,
@@ -132,7 +132,7 @@ public class LdapAndJdbcDummyDaoImpl implements DummyDao {
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.transaction.support.DummyDao#modifyAttributes(java.lang.String,
+     * @see org.springframework.ldap.transaction.core.DummyDao#modifyAttributes(java.lang.String,
      *      java.lang.String, java.lang.String)
      */
     public void modifyAttributes(String dn, String lastName, String description) {
@@ -146,7 +146,7 @@ public class LdapAndJdbcDummyDaoImpl implements DummyDao {
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.transaction.support.DummyDao#modifyAttributesWithException(java.lang.String,
+     * @see org.springframework.ldap.transaction.core.DummyDao#modifyAttributesWithException(java.lang.String,
      *      java.lang.String, java.lang.String)
      */
     public void modifyAttributesWithException(String dn, String lastName,
@@ -158,7 +158,7 @@ public class LdapAndJdbcDummyDaoImpl implements DummyDao {
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.transaction.support.DummyDao#unbind(java.lang.String)
+     * @see org.springframework.ldap.transaction.core.DummyDao#unbind(java.lang.String)
      */
     public void unbind(String dn, String fullname) {
         ldapTemplate.unbind(dn);
@@ -169,7 +169,7 @@ public class LdapAndJdbcDummyDaoImpl implements DummyDao {
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.transaction.support.DummyDao#unbindWithException(java.lang.String)
+     * @see org.springframework.ldap.transaction.core.DummyDao#unbindWithException(java.lang.String)
      */
     public void unbindWithException(String dn, String fullname) {
         unbind(dn, fullname);
