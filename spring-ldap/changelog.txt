@@ -51,6 +51,13 @@ upgrade guide for details.
   remove regular expression used in parsing, drastically improving Distinguished Name
   parsing performance as a bonus (LDAP-30).
 
+* The DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY has been deprecated. If the base
+  property needs to be accessed from a subclass to AbstractContextSource, use the new
+  protected method getBase (LDAP-55).
+  
+* LdapContextSource.getAnonymousEnv no longer sets a broken ResponseControlFactory in
+  the environment (LDAP-64).
+  
 * Upgraded ApacheDS to 1.0.0 (LDAP-32).
 
 * Upgraded to Acegi Security 1.0.3 (LDAP-61).
