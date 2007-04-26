@@ -48,7 +48,7 @@ public class LdapContextSource extends AbstractContextSource {
         Hashtable env = super.getAnonymousEnv();
         env
                 .put(LdapContext.CONTROL_FACTORIES, responseControlFactory
-                        .getName() + ".trasig");
+                        .getName());
         return env;
     }
 
