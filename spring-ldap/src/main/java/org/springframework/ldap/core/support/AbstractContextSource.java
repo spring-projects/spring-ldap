@@ -71,7 +71,7 @@ public abstract class AbstractContextSource implements ContextSource,
 
     private Class contextFactory = DEFAULT_CONTEXT_FACTORY;
 
-    private DistinguishedName base;
+    private DistinguishedName base = DistinguishedName.EMPTY_PATH;
 
     protected String userDn = "";
 
@@ -153,12 +153,12 @@ public abstract class AbstractContextSource implements ContextSource,
         StringBuffer providerUrlBuffer = new StringBuffer(1024);
         for (int i = 0; i < ldapUrls.length; i++) {
             providerUrlBuffer.append(ldapUrls[i]);
-            if (base != null) {
+            if (base != DistinguishedName.EMPTY_PATH) {
                 if (!ldapUrls[i].endsWith("/")) {
                     providerUrlBuffer.append("/");
                 }
-                providerUrlBuffer.append(base.toUrl());
             }
+            providerUrlBuffer.append(base.toUrl());
             providerUrlBuffer.append(' ');
         }
         return providerUrlBuffer.toString().trim();
@@ -174,6 +174,17 @@ public abstract class AbstractContextSource implements ContextSource,
      */
     public void setBase(String base) {
         this.base = new DistinguishedName(base);
+    }
+
+    /**
+     * Get the base suffix from which all operations should originate. If a base
+     * suffix is set, you will not have to (and, indeed, should not) specify the
+     * full distinguished names in the operations performed.
+     * 
+     * @return the base suffix
+     */
+    protected DistinguishedName getBase() {
+        return base;
     }
 
     /**
@@ -240,7 +251,8 @@ public abstract class AbstractContextSource implements ContextSource,
                     "At least one server url must be set");
         }
 
-        if (base != null && getJdkVersion().compareTo(JDK_142) < 0) {
+        if (base != DistinguishedName.EMPTY_PATH
+                && getJdkVersion().compareTo(JDK_142) < 0) {
             throw new IllegalArgumentException(
                     "Base path is not supported for JDK versions < 1.4.2");
         }
@@ -281,7 +293,7 @@ public abstract class AbstractContextSource implements ContextSource,
             env.put(Context.OBJECT_FACTORIES, dirObjectFactory.getName());
         }
 
-        if (base != null) {
+        if (base != DistinguishedName.EMPTY_PATH) {
             // Save the base path for use in the DefaultDirObjectFactory.
             env.put(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY, base);
         }
@@ -302,7 +314,8 @@ public abstract class AbstractContextSource implements ContextSource,
     }
 
     /**
-     * Set the user distinguished name (principal) to use for getting authenticated contexts.
+     * Set the user distinguished name (principal) to use for getting
+     * authenticated contexts.
      * 
      * @param userDn
      *            the user distinguished name.
@@ -312,7 +325,8 @@ public abstract class AbstractContextSource implements ContextSource,
     }
 
     /**
-     * Set the user distinguished name (principal) to use for getting authenticated contexts.
+     * Set the user distinguished name (principal) to use for getting
+     * authenticated contexts.
      * 
      * @param userName
      *            the user distinguished name.

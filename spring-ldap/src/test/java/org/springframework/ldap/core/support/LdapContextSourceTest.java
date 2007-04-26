@@ -100,6 +100,56 @@ public class LdapContextSourceTest extends TestCase {
         assertNull(env.get(Context.SECURITY_CREDENTIALS));
     }
 
+    public void testGetAnonymousEnvWithNoBaseSet() throws Exception {
+        tested.setUrl("ldap://ldap.example.com:389");
+        tested.afterPropertiesSet();
+        Hashtable env = tested.getAnonymousEnv();
+        assertEquals("ldap://ldap.example.com:389", env
+                .get(Context.PROVIDER_URL));
+    }
+
+    public void testOldJdkWithNoBaseSetShouldWork() throws Exception {
+        tested = new LdapContextSource() {
+            String getJdkVersion() {
+                return "1.3";
+            }
+        };
+        tested.setUrl("ldap://ldap.example.com:389");
+        tested.afterPropertiesSet();
+    }
+
+    public void testOldJdkWithBaseSetShouldNotWork() throws Exception {
+        tested = new LdapContextSource() {
+            String getJdkVersion() {
+                return "1.3";
+            }
+        };
+        tested.setUrl("ldap://ldap.example.com:389");
+        tested.setBase("dc=example,dc=com");
+        try {
+            tested.afterPropertiesSet();
+            fail("IllegalArgumentException expected");
+        } catch (IllegalArgumentException expected) {
+            assertTrue(true);
+        }
+    }
+
+    public void testOldJdkWithBaseSetToEmptyPathShouldNotWork() throws Exception {
+        tested = new LdapContextSource() {
+            String getJdkVersion() {
+                return "1.3";
+            }
+        };
+        tested.setUrl("ldap://ldap.example.com:389");
+        tested.setBase(null);
+        try {
+            tested.afterPropertiesSet();
+            fail("IllegalArgumentException expected");
+        } catch (IllegalArgumentException expected) {
+            assertTrue(true);
+        }
+    }
+
     public void testGetAuthenticatedEnv() throws Exception {
         tested.setBase("dc=example,dc=se");
         tested.setUrl("ldap://ldap.example.com:389");

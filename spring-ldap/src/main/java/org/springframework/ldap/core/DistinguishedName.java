@@ -36,22 +36,31 @@ import org.springframework.ldap.support.ListComparator;
  * DistinguishedName implementation is included in JDK1.5 (LdapName), but not in
  * prior releases.
  * 
- * An DistinguishedName is particularly useful when building or modifying an
- * Ldap path dynamically, as escaping will be taken care of.
+ * A DistinguishedName is particularly useful when building or modifying an LDAP
+ * path dynamically, as escaping will be taken care of.
  * 
- * A path is split into several names. The Name interface specifies that the
- * most significant part be in position 0, i.e.
- * 
- * The path: uid=adam.skogman, ou=People, ou=EU Name[0]: ou=EU Name[1]:
- * ou=People Name[2]: uid=adam.skogman
+ * A path is split into several names. The {@link Name} interface specifies that
+ * the most significant part be in position 0.
  * <p>
- * Useful for parsing and building LDAP paths.
+ * Example:
+ *
+ * <dl>
+ * <dt>The path</dt>
+ * <dd>uid=adam.skogman, ou=People, ou=EU</dd>
+ * <dt>Name[0]</dt>
+ * <dd>ou=EU</dd>
+ * <dt>Name[1]</dt>
+ * <dd>ou=People</dd>
+ * <dt>Name[2]</dt>
+ * <dd>uid=adam.skogman</dd>
+ * </dl>
  * 
+ * Example:
  * <pre>
  * DistinguishedName path = new DistinguishedName();
- * path.addLast(&quot;cn&quot;, entry.getUid());
- * path.addLast(&quot;ou&quot;, &quot;users&quot;);
- * path.append(new DistinguishedName(helpdesk.getSomeSuffix()));
+ * path.addLast(&quot;uid&quot;, person.getUid());
+ * path.addLast(&quot;ou&quot;, &quot;People&quot;);
+ * path.append(new DistinguishedName(&quot;dc=jayway,dc=se&quot;));
  * String dn = path.toString();
  * </pre>
  * 
