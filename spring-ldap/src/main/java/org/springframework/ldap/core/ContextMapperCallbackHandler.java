@@ -26,6 +26,7 @@ import javax.naming.NameClassPair;
  * 
  * @author Mattias Arthursson
  * @author Ulrik Sandberg
+ * @since 1.2
  */
 public class ContextMapperCallbackHandler extends
         CollectingNameClassPairCallbackHandler {

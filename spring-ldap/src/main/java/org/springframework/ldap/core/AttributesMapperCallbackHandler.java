@@ -30,6 +30,7 @@ import org.springframework.ldap.support.LdapUtils;
  * 
  * @author Mattias Arthursson
  * @author Ulrik Sandberg
+ * @since 1.2
  */
 public class AttributesMapperCallbackHandler extends
         CollectingNameClassPairCallbackHandler {
