@@ -153,7 +153,7 @@ public abstract class AbstractContextSource implements ContextSource,
         StringBuffer providerUrlBuffer = new StringBuffer(1024);
         for (int i = 0; i < ldapUrls.length; i++) {
             providerUrlBuffer.append(ldapUrls[i]);
-            if (base != DistinguishedName.EMPTY_PATH) {
+            if (!DistinguishedName.EMPTY_PATH.equals(base)) {
                 if (!ldapUrls[i].endsWith("/")) {
                     providerUrlBuffer.append("/");
                 }
@@ -251,7 +251,7 @@ public abstract class AbstractContextSource implements ContextSource,
                     "At least one server url must be set");
         }
 
-        if (base != DistinguishedName.EMPTY_PATH
+        if (!DistinguishedName.EMPTY_PATH.equals(base)
                 && getJdkVersion().compareTo(JDK_142) < 0) {
             throw new IllegalArgumentException(
                     "Base path is not supported for JDK versions < 1.4.2");
@@ -293,7 +293,7 @@ public abstract class AbstractContextSource implements ContextSource,
             env.put(Context.OBJECT_FACTORIES, dirObjectFactory.getName());
         }
 
-        if (base != DistinguishedName.EMPTY_PATH) {
+        if (!DistinguishedName.EMPTY_PATH.equals(base)) {
             // Save the base path for use in the DefaultDirObjectFactory.
             env.put(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY, base);
         }

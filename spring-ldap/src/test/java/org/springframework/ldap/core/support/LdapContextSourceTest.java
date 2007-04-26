@@ -25,7 +25,7 @@ import javax.naming.ldap.ControlFactory;
 import junit.framework.TestCase;
 
 import org.springframework.ldap.core.AuthenticationSource;
-import org.springframework.ldap.core.support.LdapContextSource;
+import org.springframework.ldap.core.DistinguishedName;
 
 import com.sun.jndi.ldap.ctl.ResponseControlFactory;
 
@@ -87,6 +87,10 @@ public class LdapContextSourceTest extends TestCase {
         assertNull(env.get(Context.SECURITY_PRINCIPAL));
         assertNull(env.get(Context.SECURITY_CREDENTIALS));
 
+        // check that base was added to environment
+        assertEquals(new DistinguishedName("dc=example,dc=se"), env
+                .get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
+
         // Verify that changing values does not change the environment values.
         tested.setBase("dc=other,dc=se");
         tested.setUrl("ldap://ldap2.example.com:389");
@@ -98,6 +102,9 @@ public class LdapContextSourceTest extends TestCase {
         assertEquals("true", env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
         assertNull(env.get(Context.SECURITY_PRINCIPAL));
         assertNull(env.get(Context.SECURITY_CREDENTIALS));
+
+        assertEquals(new DistinguishedName("dc=example,dc=se"), env
+                .get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
     }
 
     public void testGetAnonymousEnvWithNoBaseSet() throws Exception {
@@ -106,6 +113,21 @@ public class LdapContextSourceTest extends TestCase {
         Hashtable env = tested.getAnonymousEnv();
         assertEquals("ldap://ldap.example.com:389", env
                 .get(Context.PROVIDER_URL));
+
+        // check that base was not added to environment
+        assertNull(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
+    }
+
+    public void testGetAnonymousEnvWithEmptyBaseSet() throws Exception {
+        tested.setUrl("ldap://ldap.example.com:389");
+        tested.setBase(null);
+        tested.afterPropertiesSet();
+        Hashtable env = tested.getAnonymousEnv();
+        assertEquals("ldap://ldap.example.com:389", env
+                .get(Context.PROVIDER_URL));
+
+        // check that base was not added to environment
+        assertNull(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
     }
 
     public void testOldJdkWithNoBaseSetShouldWork() throws Exception {
@@ -116,6 +138,10 @@ public class LdapContextSourceTest extends TestCase {
         };
         tested.setUrl("ldap://ldap.example.com:389");
         tested.afterPropertiesSet();
+
+        // check that base was not added to environment
+        Hashtable env = tested.getAnonymousEnv();
+        assertNull(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
     }
 
     public void testOldJdkWithBaseSetShouldNotWork() throws Exception {
@@ -134,7 +160,7 @@ public class LdapContextSourceTest extends TestCase {
         }
     }
 
-    public void testOldJdkWithBaseSetToEmptyPathShouldNotWork() throws Exception {
+    public void testOldJdkWithBaseSetToEmptyPathShouldWork() throws Exception {
         tested = new LdapContextSource() {
             String getJdkVersion() {
                 return "1.3";
@@ -142,12 +168,11 @@ public class LdapContextSourceTest extends TestCase {
         };
         tested.setUrl("ldap://ldap.example.com:389");
         tested.setBase(null);
-        try {
-            tested.afterPropertiesSet();
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertTrue(true);
-        }
+        tested.afterPropertiesSet();
+        
+        // check that base was not added to environment
+        Hashtable env = tested.getAnonymousEnv();
+        assertNull(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
     }
 
     public void testGetAuthenticatedEnv() throws Exception {
@@ -164,6 +189,10 @@ public class LdapContextSourceTest extends TestCase {
         assertEquals("true", env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
         assertEquals("cn=Some User", env.get(Context.SECURITY_PRINCIPAL));
         assertEquals("secret", env.get(Context.SECURITY_CREDENTIALS));
+
+        // check that base was added to environment
+        assertEquals(new DistinguishedName("dc=example,dc=se"), env
+                .get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
     }
 
     public void testGetAuthenticatedEnv_DummyAuthenticationProvider()
@@ -202,10 +231,9 @@ public class LdapContextSourceTest extends TestCase {
         Hashtable env = tested.getAuthenticatedEnv();
         assertEquals("cn=Some Other User", env.get(Context.SECURITY_PRINCIPAL));
         assertEquals("other secret", env.get(Context.SECURITY_CREDENTIALS));
-
     }
 
-    public void testGetAnonymousEnv_DontCacheEnv() throws Exception {
+    public void testGetAnonymousEnvWhenCacheIsOff() throws Exception {
         tested.setBase("dc=example,dc=se");
         tested.setUrl("ldap://ldap.example.com:389");
         tested.setPooled(true);
@@ -226,21 +254,23 @@ public class LdapContextSourceTest extends TestCase {
                 .get(Context.PROVIDER_URL));
     }
 
-    public void testsetResponseControlFactory_Null() throws Exception {
+    public void testSetResponseControlFactoryToNull() throws Exception {
         tested.setResponseControlFactory(null);
         assertNotNull(tested.getResponseControlFactory());
         assertEquals(ResponseControlFactory.class, tested
                 .getResponseControlFactory());
     }
 
-    public void testsetResponseControlFactory_Valid() throws Exception {
-        tested.setResponseControlFactory(ControlFactory.class);
-        assertEquals(ControlFactory.class, tested.getResponseControlFactory());
+    public void testSetValidResponseControlFactory() throws Exception {
+        Class validClass = ControlFactory.class;
+        tested.setResponseControlFactory(validClass);
+        assertEquals(validClass, tested.getResponseControlFactory());
     }
 
-    public void testsetResponseControlFactory_Invalid() throws Exception {
+    public void testSetInvalidResponseControlFactory() throws Exception {
         try {
-            tested.setResponseControlFactory(Control.class);
+            Class invalidClass = Control.class;
+            tested.setResponseControlFactory(invalidClass);
             fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException expected) {
             assertTrue(true);
