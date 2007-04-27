@@ -22,6 +22,7 @@ import javax.naming.directory.DirContext;
  * created by ContextSource proxies.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public interface DirContextProxy {
     /**
