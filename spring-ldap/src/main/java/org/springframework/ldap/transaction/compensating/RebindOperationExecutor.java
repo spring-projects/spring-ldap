@@ -34,6 +34,7 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
  * original rebind opertaion.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public class RebindOperationExecutor implements
         CompensatingTransactionOperationExecutor {

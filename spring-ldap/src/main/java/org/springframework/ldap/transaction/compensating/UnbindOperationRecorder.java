@@ -27,6 +27,7 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
  * rollback.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public class UnbindOperationRecorder implements
         CompensatingTransactionOperationRecorder {

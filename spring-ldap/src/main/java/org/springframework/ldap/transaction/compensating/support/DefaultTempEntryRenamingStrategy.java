@@ -45,6 +45,7 @@ import org.springframework.ldap.transaction.compensating.TempEntryRenamingStrate
  * though it should have been removed or rebound.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public class DefaultTempEntryRenamingStrategy implements
         TempEntryRenamingStrategy {

@@ -30,7 +30,7 @@ import org.springframework.util.Assert;
  * rolling back.
  * 
  * @author Mattias Arthursson
- * 
+ * @since 1.2
  */
 public class RenameOperationRecorder implements
         CompensatingTransactionOperationRecorder {

@@ -35,6 +35,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  * {@link TransactionAwareDirContextInvocationHandler}.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public class TransactionAwareContextSourceProxy implements ContextSource {
     private ContextSource target;

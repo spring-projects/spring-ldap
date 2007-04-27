@@ -24,6 +24,7 @@ import org.springframework.transaction.support.ResourceHolderSupport;
  * Base class for compensating transaction resource holders.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public abstract class CompensatingTransactionHolderSupport extends
         ResourceHolderSupport {

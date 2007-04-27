@@ -30,6 +30,7 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
  * modifyAttributes in {@link #rollback()}, and nothing in {@link #commit()}.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public class ModifyAttributesOperationExecutor implements
         CompensatingTransactionOperationExecutor {

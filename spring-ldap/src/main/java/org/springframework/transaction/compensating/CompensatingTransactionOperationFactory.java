@@ -24,6 +24,7 @@ import org.springframework.transaction.compensating.support.DefaultCompensatingT
  * 
  * @author Mattias Arthursson
  * @see DefaultCompensatingTransactionOperationManager
+ * @since 1.2
  */
 public interface CompensatingTransactionOperationFactory {
     /**

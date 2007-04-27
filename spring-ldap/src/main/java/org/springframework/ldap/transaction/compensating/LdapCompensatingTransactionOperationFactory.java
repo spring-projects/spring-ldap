@@ -38,6 +38,7 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
  * operations.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public class LdapCompensatingTransactionOperationFactory implements
         CompensatingTransactionOperationFactory {

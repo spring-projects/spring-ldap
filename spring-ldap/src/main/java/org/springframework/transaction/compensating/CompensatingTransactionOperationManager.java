@@ -22,7 +22,7 @@ package org.springframework.transaction.compensating;
  * individual operation.
  * 
  * @author Mattias Arthursson
- * 
+ * @since 1.2
  */
 public interface CompensatingTransactionOperationManager {
     /**

@@ -23,6 +23,7 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
  * A {@link CompensatingTransactionOperationExecutor} that performs nothing.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public class NullOperationExecutor implements
         CompensatingTransactionOperationExecutor {

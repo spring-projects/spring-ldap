@@ -31,6 +31,7 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
  * entry from its temporary location.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public class UnbindOperationExecutor implements
         CompensatingTransactionOperationExecutor {

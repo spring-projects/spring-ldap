@@ -32,6 +32,7 @@ import org.springframework.transaction.compensating.support.CompensatingTransact
  * storing compensating rollback operations for them.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public class TransactionAwareDirContextInvocationHandler implements
         InvocationHandler {

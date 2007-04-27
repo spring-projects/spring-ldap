@@ -29,6 +29,7 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
  * {@link BindOperationExecutor}.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public class BindOperationRecorder implements
         CompensatingTransactionOperationRecorder {

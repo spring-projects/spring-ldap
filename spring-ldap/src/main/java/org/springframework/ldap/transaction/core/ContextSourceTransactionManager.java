@@ -104,6 +104,7 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * @see DefaultCompensatingTransactionOperationManager
  * @see TempEntryRenamingStrategy
  * @see TransactionAwareContextSourceProxy
+ * @since 1.2
  */
 public class ContextSourceTransactionManager extends
         AbstractPlatformTransactionManager {

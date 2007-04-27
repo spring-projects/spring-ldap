@@ -10,6 +10,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  * Common methods for use with compensating transactions.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public class CompensatingTransactionUtils {
 

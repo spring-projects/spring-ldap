@@ -32,6 +32,7 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
  * and manages rollback of these in the reverse order.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public class DefaultCompensatingTransactionOperationManager implements
         CompensatingTransactionOperationManager {

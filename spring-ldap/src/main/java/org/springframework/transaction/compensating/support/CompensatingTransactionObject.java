@@ -22,6 +22,7 @@ import org.springframework.ldap.transaction.compensating.DirContextHolder;
  * the {@link DirContextHolder} associated with the current transaction.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public class CompensatingTransactionObject {
     private CompensatingTransactionHolderSupport holder;

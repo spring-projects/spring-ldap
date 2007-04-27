@@ -34,6 +34,7 @@ package org.springframework.transaction.compensating;
  * {@link #commit()} method to actually remove the entry.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public interface CompensatingTransactionOperationExecutor {
     /**

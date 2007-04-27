@@ -29,6 +29,7 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
  * unbind in {@link #rollback()}, and nothing in {@link #commit()}.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public class BindOperationExecutor implements
         CompensatingTransactionOperationExecutor {

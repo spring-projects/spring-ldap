@@ -28,7 +28,7 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
  * negating rename in {@link #rollback()}, and nothing in {@link #commit()}.
  * 
  * @author Mattias Arthursson
- * 
+ * @since 1.2
  */
 public class RenameOperationExecutor implements
         CompensatingTransactionOperationExecutor {

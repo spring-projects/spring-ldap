@@ -29,7 +29,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  * Managers.
  * 
  * @author Mattias Arthursson
- * 
+ * @since 1.2
  */
 public abstract class AbstractCompensatingTransactionManagerDelegate {
 

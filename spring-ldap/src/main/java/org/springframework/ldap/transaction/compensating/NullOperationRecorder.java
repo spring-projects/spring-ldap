@@ -27,7 +27,7 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
  * {@link CompensatingTransactionOperationRecorder} for the current operation.
  * 
  * @author Mattias Arthursson
- * 
+ * @since 1.2
  */
 public class NullOperationRecorder implements
         CompensatingTransactionOperationRecorder {

@@ -23,6 +23,7 @@ package org.springframework.transaction.compensating;
  * log the result.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public interface CompensatingTransactionOperationRecorder {
     /**

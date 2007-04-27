@@ -28,6 +28,7 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
  * {@link #recordOperation(Object[])}.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public class RebindOperationRecorder implements
         CompensatingTransactionOperationRecorder {

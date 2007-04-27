@@ -22,6 +22,7 @@ import javax.naming.Name;
  * rebind operations.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public interface TempEntryRenamingStrategy {
 

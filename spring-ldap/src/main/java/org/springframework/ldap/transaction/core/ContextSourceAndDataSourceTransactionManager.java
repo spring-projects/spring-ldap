@@ -30,6 +30,7 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * and thus commit and rollback may result in unexpected results.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public class ContextSourceAndDataSourceTransactionManager extends
         DataSourceTransactionManager {

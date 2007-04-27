@@ -38,6 +38,7 @@ import org.springframework.util.Assert;
  * {@link ModifyAttributesOperationExecutor} instances for rollback.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public class ModifyAttributesOperationRecorder implements
         CompensatingTransactionOperationRecorder {

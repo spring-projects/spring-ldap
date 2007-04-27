@@ -36,6 +36,7 @@ import org.springframework.transaction.compensating.support.CompensatingTransact
  * @author Mattias Arthursson
  * @see ContextSourceTransactionManager
  * @see ContextSourceAndDataSourceTransactionManager
+ * @since 1.2
  */
 public class ContextSourceTransactionManagerDelegate extends
         AbstractCompensatingTransactionManagerDelegate {

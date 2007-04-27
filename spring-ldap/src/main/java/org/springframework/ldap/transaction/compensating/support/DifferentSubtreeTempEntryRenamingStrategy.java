@@ -42,7 +42,7 @@ import org.springframework.ldap.transaction.compensating.TempEntryRenamingStrate
  * storage.
  * 
  * @author Mattias Arthursson
- * 
+ * @since 1.2
  */
 public class DifferentSubtreeTempEntryRenamingStrategy implements
         TempEntryRenamingStrategy {
