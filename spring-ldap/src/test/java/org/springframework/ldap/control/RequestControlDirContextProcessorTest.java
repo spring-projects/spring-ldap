@@ -25,7 +25,7 @@ import junit.framework.TestCase;
 import org.easymock.MockControl;
 import org.springframework.ldap.control.AbstractRequestControlDirContextProcessor;
 
-public class AbstractRequestControlDirContextProcessorTest extends TestCase {
+public class RequestControlDirContextProcessorTest extends TestCase {
 
     private AbstractRequestControlDirContextProcessor tested;
 
