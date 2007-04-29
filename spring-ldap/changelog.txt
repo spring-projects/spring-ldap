@@ -64,6 +64,8 @@ upgrade guide for details.
   
 * Upgraded to Spring 2.0.4 internally. Spring 1.2.x is still supported (LDAP-35, LDAP-51).
 
+* Upgraded to Spring WebFlow 1.0.2 in the Person sample (LDAP-60).
+
 * Fixed a number of documentation errors and typos (LDAP-41, LDAP-40, LDAP-47, LDAP-48).
   
 * Extracted useful inner classes from LdapTemplate to top-level classes (LDAP-42).
