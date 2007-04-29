@@ -55,7 +55,7 @@
    &lt;/bean&gt;
 
    &lt;bean id="contextSource" 
-            class="org.springframework.ldap.transaction.support.TransactionAwareContextSourceProxy"&gt;
+            class="org.springframework.ldap.transaction.compensating.manager.TransactionAwareContextSourceProxy"&gt;
       &lt;constructor-arg ref="contextSourceTarget" /&gt;
    &lt;/bean&gt;
    
@@ -64,7 +64,7 @@
    &lt;/bean&gt;
    
    &lt;bean id="transactionManager" 
-            class="org.springframework.ldap.transaction.support.ContextSourceTransactionManager"&gt;
+            class="org.springframework.ldap.transaction.compensating.manager.ContextSourceTransactionManager"&gt;
       &lt;constructor-arg ref="contextSource" /&gt;
    &lt;/bean&gt;
 
