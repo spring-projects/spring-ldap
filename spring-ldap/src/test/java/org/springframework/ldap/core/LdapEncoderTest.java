@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap.support;
+package org.springframework.ldap.core;
 
 import org.springframework.ldap.BadLdapGrammarException;
 import org.springframework.ldap.core.LdapEncoder;

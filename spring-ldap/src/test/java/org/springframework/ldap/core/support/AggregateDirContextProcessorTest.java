@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.support;
+package org.springframework.ldap.core.support;
 
 import javax.naming.NamingException;
 
