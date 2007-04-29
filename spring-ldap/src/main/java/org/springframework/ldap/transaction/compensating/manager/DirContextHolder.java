@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2007 the original author or authors.
+ * Copyright 2002-2007 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.transaction.compensating;
+package org.springframework.ldap.transaction.compensating.manager;
 
 import javax.naming.directory.DirContext;
 
-import org.springframework.transaction.compensating.CompensatingTransactionOperationFactory;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationManager;
 import org.springframework.transaction.compensating.support.CompensatingTransactionHolderSupport;
 
@@ -29,24 +28,23 @@ import org.springframework.transaction.compensating.support.CompensatingTransact
  * for commit or rollback.
  * 
  * @author Mattias Arthursson
- * @since 1.2
+ * 
  */
 public class DirContextHolder extends CompensatingTransactionHolderSupport {
     private DirContext ctx;
 
-    private TempEntryRenamingStrategy renamingStrategy;
-
     /**
      * Constructor.
      * 
+     * @param manager
+     *            The {@link CompensatingTransactionOperationManager}.
      * @param ctx
      *            The DirContext associated with the current transaction.
      */
-    public DirContextHolder(DirContext ctx,
-            TempEntryRenamingStrategy renamingStrategy) {
+    public DirContextHolder(CompensatingTransactionOperationManager manager,
+            DirContext ctx) {
+        super(manager);
         this.ctx = ctx;
-        this.renamingStrategy = renamingStrategy;
-        refreshTransactionOperationManager();
     }
 
     /**
@@ -57,12 +55,6 @@ public class DirContextHolder extends CompensatingTransactionHolderSupport {
      */
     public void setCtx(DirContext ctx) {
         this.ctx = ctx;
-        refreshTransactionOperationManager();
-    }
-
-    protected CompensatingTransactionOperationFactory createOperationFactory() {
-        return new LdapCompensatingTransactionOperationFactory(ctx,
-                renamingStrategy);
     }
 
     /**
@@ -72,7 +64,12 @@ public class DirContextHolder extends CompensatingTransactionHolderSupport {
         return ctx;
     }
 
-    public TempEntryRenamingStrategy getRenamingStrategy() {
-        return renamingStrategy;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.transaction.compensating.support.CompensatingTransactionHolderSupport#getTransactedResource()
+     */
+    protected Object getTransactedResource() {
+        return ctx;
     }
 }

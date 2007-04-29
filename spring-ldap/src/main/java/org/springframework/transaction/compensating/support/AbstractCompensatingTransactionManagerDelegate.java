@@ -17,7 +17,6 @@ package org.springframework.transaction.compensating.support;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.transaction.core.ContextSourceTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.support.DefaultTransactionStatus;
@@ -34,7 +33,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 public abstract class AbstractCompensatingTransactionManagerDelegate {
 
     private static Log log = LogFactory
-            .getLog(ContextSourceTransactionManager.class);
+            .getLog(AbstractCompensatingTransactionManagerDelegate.class);
 
     /**
      * Close the target resource - the implementation specific resource held in

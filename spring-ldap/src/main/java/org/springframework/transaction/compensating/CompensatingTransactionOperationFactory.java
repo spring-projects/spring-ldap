@@ -31,11 +31,14 @@ public interface CompensatingTransactionOperationFactory {
      * Create an appropriate {@link CompensatingTransactionOperationRecorder}
      * instance corresponding to the supplied method name.
      * 
+     * @param resource
+     *            The target transaction resource.
      * @param method
      *            the method name to create a
      *            {@link CompensatingTransactionOperationRecorder} for.
+     * 
      * @return a new {@link CompensatingTransactionOperationRecorder} instance.
      */
     public CompensatingTransactionOperationRecorder createRecordingOperation(
-            String method);
+            Object resource, String method);
 }

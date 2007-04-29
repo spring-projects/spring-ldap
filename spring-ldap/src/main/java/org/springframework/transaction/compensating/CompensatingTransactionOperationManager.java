@@ -31,12 +31,15 @@ public interface CompensatingTransactionOperationManager {
      * operation), performing the operation, and storing the necessary
      * information to roll back or commit the performed operation.
      * 
+     * @param resource
+     *            the target resource to perform the operation on.
      * @param operation
      *            The method to be invoked.
      * @param args
      *            Arguments supplied to the method.
      */
-    public void performOperation(String operation, Object[] args);
+    public void performOperation(Object resource, String operation,
+            Object[] args);
 
     /**
      * Rollback all recorded operations, by performing each of the recorded

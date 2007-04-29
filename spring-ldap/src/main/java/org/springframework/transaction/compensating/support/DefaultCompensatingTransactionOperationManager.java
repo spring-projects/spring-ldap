@@ -58,12 +58,13 @@ public class DefaultCompensatingTransactionOperationManager implements
     /*
      * (non-Javadoc)
      * 
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationManager#operationPerformed(java.lang.String,
-     *      java.lang.Object[])
+     * @see org.springframework.transaction.compensating.CompensatingTransactionOperationManager#performOperation(java.lang.Object,
+     *      java.lang.String, java.lang.Object[])
      */
-    public void performOperation(String operation, Object[] args) {
+    public void performOperation(Object resource, String operation,
+            Object[] args) {
         CompensatingTransactionOperationRecorder recorder = operationFactory
-                .createRecordingOperation(operation);
+                .createRecordingOperation(resource, operation);
         CompensatingTransactionOperationExecutor executor = recorder
                 .recordOperation(args);
 

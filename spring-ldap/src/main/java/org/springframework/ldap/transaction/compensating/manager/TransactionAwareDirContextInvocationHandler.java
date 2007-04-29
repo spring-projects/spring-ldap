@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2007 the original author or authors.
+ * Copyright 2002-2007 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.transaction.core;
+package org.springframework.ldap.transaction.compensating.manager;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -21,10 +21,13 @@ import java.lang.reflect.Method;
 
 import javax.naming.directory.DirContext;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.transaction.compensating.DirContextHolder;
 import org.springframework.ldap.transaction.compensating.LdapTransactionUtils;
 import org.springframework.transaction.compensating.support.CompensatingTransactionUtils;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 /**
  * Proxy implementation for DirContext, making sure that the instance is not
@@ -32,10 +35,12 @@ import org.springframework.transaction.compensating.support.CompensatingTransact
  * storing compensating rollback operations for them.
  * 
  * @author Mattias Arthursson
- * @since 1.2
  */
 public class TransactionAwareDirContextInvocationHandler implements
         InvocationHandler {
+
+    private static Log log = LogFactory
+            .getLog(TransactionAwareDirContextInvocationHandler.class);
 
     private DirContext target;
 
@@ -75,7 +80,7 @@ public class TransactionAwareDirContextInvocationHandler implements
             // Use hashCode of Connection proxy.
             return new Integer(proxy.hashCode());
         } else if (methodName.equals("close")) {
-            LdapTransactionUtils.doCloseConnection(target, contextSource);
+            doCloseConnection(target, contextSource);
             return null;
         } else if (LdapTransactionUtils
                 .isSupportedWriteTransactionOperation(methodName)) {
@@ -91,4 +96,30 @@ public class TransactionAwareDirContextInvocationHandler implements
             }
         }
     }
+
+    /**
+     * Close the supplied context, but only if it is not associated with the
+     * current transaction.
+     * 
+     * @param context
+     *            the DirContext to close.
+     * @param contextSource
+     *            the ContextSource bound to the transaction.
+     * @throws NamingException
+     */
+    void doCloseConnection(DirContext context, ContextSource contextSource)
+            throws javax.naming.NamingException {
+        DirContextHolder transactionContextHolder = (DirContextHolder) TransactionSynchronizationManager
+                .getResource(contextSource);
+        if (transactionContextHolder == null
+                || transactionContextHolder.getCtx() != context) {
+            log.debug("Closing context");
+            // This is not the transactional context or the transaction is
+            // no longer active - we should close it.
+            context.close();
+        } else {
+            log.debug("Leaving transactional context open");
+        }
+    }
+
 }

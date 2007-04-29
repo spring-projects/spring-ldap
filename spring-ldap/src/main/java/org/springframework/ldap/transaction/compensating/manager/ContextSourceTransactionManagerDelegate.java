@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2007 the original author or authors.
+ * Copyright 2002-2007 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.transaction.core;
+package org.springframework.ldap.transaction.compensating.manager;
 
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
@@ -21,11 +21,12 @@ import javax.naming.directory.DirContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.transaction.compensating.DirContextHolder;
+import org.springframework.ldap.transaction.compensating.LdapCompensatingTransactionOperationFactory;
 import org.springframework.ldap.transaction.compensating.TempEntryRenamingStrategy;
 import org.springframework.ldap.transaction.compensating.support.DefaultTempEntryRenamingStrategy;
 import org.springframework.transaction.compensating.support.AbstractCompensatingTransactionManagerDelegate;
 import org.springframework.transaction.compensating.support.CompensatingTransactionHolderSupport;
+import org.springframework.transaction.compensating.support.DefaultCompensatingTransactionOperationManager;
 
 /**
  * This delegate performs all the work for the
@@ -36,7 +37,6 @@ import org.springframework.transaction.compensating.support.CompensatingTransact
  * @author Mattias Arthursson
  * @see ContextSourceTransactionManager
  * @see ContextSourceAndDataSourceTransactionManager
- * @since 1.2
  */
 public class ContextSourceTransactionManagerDelegate extends
         AbstractCompensatingTransactionManagerDelegate {
@@ -77,8 +77,10 @@ public class ContextSourceTransactionManagerDelegate extends
 
     protected CompensatingTransactionHolderSupport getNewHolder() {
         DirContext newCtx = getContextSource().getReadOnlyContext();
-        DirContextHolder contextHolder = new DirContextHolder(newCtx,
-                renamingStrategy);
+        DirContextHolder contextHolder = new DirContextHolder(
+                new DefaultCompensatingTransactionOperationManager(
+                        new LdapCompensatingTransactionOperationFactory(
+                                renamingStrategy)), newCtx);
         return contextHolder;
     }
 

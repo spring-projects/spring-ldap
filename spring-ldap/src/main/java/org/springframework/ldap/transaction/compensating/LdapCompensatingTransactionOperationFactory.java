@@ -45,44 +45,63 @@ public class LdapCompensatingTransactionOperationFactory implements
     private static Log log = LogFactory
             .getLog(LdapCompensatingTransactionOperationFactory.class);
 
-    private LdapOperations ldapOperations;
-
     private TempEntryRenamingStrategy renamingStrategy;
 
     /**
      * Constructor.
      * 
-     * @param ctx
-     *            The transactional DirContext.
+     * @param renamingStrategy
+     *            the {@link TempEntryRenamingStrategy} to supply to relevant
+     *            operations.
      */
-    public LdapCompensatingTransactionOperationFactory(DirContext ctx,
+    public LdapCompensatingTransactionOperationFactory(
             TempEntryRenamingStrategy renamingStrategy) {
-        this.ldapOperations = new LdapTemplate(new SingleContextSource(ctx));
         this.renamingStrategy = renamingStrategy;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.transaction.compensating.CompensatingTransactionOperationFactory#createRecordingOperation(java.lang.Object,
+     *      java.lang.String)
+     */
     public CompensatingTransactionOperationRecorder createRecordingOperation(
-            String operation) {
-        if (StringUtils.equals(operation, LdapTransactionUtils.BIND_METHOD_NAME)) {
+            Object resource, String operation) {
+        if (StringUtils
+                .equals(operation, LdapTransactionUtils.BIND_METHOD_NAME)) {
             log.debug("Bind operation recorded");
-            return new BindOperationRecorder(ldapOperations);
-        } else if (StringUtils.equals(operation, LdapTransactionUtils.REBIND_METHOD_NAME)) {
+            return new BindOperationRecorder(
+                    createLdapOperationsInstance((DirContext) resource));
+        } else if (StringUtils.equals(operation,
+                LdapTransactionUtils.REBIND_METHOD_NAME)) {
             log.debug("Rebind operation recorded");
-            return new RebindOperationRecorder(ldapOperations, renamingStrategy);
-        } else if (StringUtils.equals(operation, LdapTransactionUtils.RENAME_METHOD_NAME)) {
+            return new RebindOperationRecorder(
+                    createLdapOperationsInstance((DirContext) resource),
+                    renamingStrategy);
+        } else if (StringUtils.equals(operation,
+                LdapTransactionUtils.RENAME_METHOD_NAME)) {
             log.debug("Rename operation recorded");
-            return new RenameOperationRecorder(ldapOperations);
+            return new RenameOperationRecorder(
+                    createLdapOperationsInstance((DirContext) resource));
         } else if (StringUtils.equals(operation,
                 LdapTransactionUtils.MODIFY_ATTRIBUTES_METHOD_NAME)) {
-            return new ModifyAttributesOperationRecorder(ldapOperations);
-        } else if (StringUtils.equals(operation, LdapTransactionUtils.UNBIND_METHOD_NAME)) {
-            return new UnbindOperationRecorder(ldapOperations, renamingStrategy);
+            return new ModifyAttributesOperationRecorder(
+                    createLdapOperationsInstance((DirContext) resource));
+        } else if (StringUtils.equals(operation,
+                LdapTransactionUtils.UNBIND_METHOD_NAME)) {
+            return new UnbindOperationRecorder(
+                    createLdapOperationsInstance((DirContext) resource),
+                    renamingStrategy);
         }
 
         log
                 .warn("No suitable CompensatingTransactionOperationRecorder found for method "
                         + operation + ". Operation will not be transacted.");
         return new NullOperationRecorder();
+    }
+
+    LdapOperations createLdapOperationsInstance(DirContext ctx) {
+        return new LdapTemplate(new SingleContextSource(ctx));
     }
 
     /**
@@ -179,9 +198,5 @@ public class LdapCompensatingTransactionOperationFactory implements
                 throw e.getTargetException();
             }
         }
-    }
-
-    void setLdapOperations(LdapOperations ldapOperations) {
-        this.ldapOperations = ldapOperations;
     }
 }

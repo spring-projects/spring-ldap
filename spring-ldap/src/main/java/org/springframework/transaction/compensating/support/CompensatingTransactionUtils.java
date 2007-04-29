@@ -38,13 +38,15 @@ public class CompensatingTransactionUtils {
      */
     public static void performOperation(Object synchronizationKey,
             Object target, Method method, Object[] args) throws Throwable {
-        CompensatingTransactionHolderSupport transactionContextHolder = (CompensatingTransactionHolderSupport) TransactionSynchronizationManager
+        CompensatingTransactionHolderSupport transactionResourceHolder = (CompensatingTransactionHolderSupport) TransactionSynchronizationManager
                 .getResource(synchronizationKey);
-        if (transactionContextHolder != null) {
+        if (transactionResourceHolder != null) {
 
-            CompensatingTransactionOperationManager transactionDataManager = transactionContextHolder
+            CompensatingTransactionOperationManager transactionOperationManager = transactionResourceHolder
                     .getTransactionOperationManager();
-            transactionDataManager.performOperation(method.getName(), args);
+            transactionOperationManager.performOperation(
+                    transactionResourceHolder.getTransactedResource(), method
+                            .getName(), args);
         } else {
             // Perform the target operation
             try {

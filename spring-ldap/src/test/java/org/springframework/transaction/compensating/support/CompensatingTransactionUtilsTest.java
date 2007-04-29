@@ -23,7 +23,7 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.transaction.compensating.DirContextHolder;
+import org.springframework.ldap.transaction.compensating.manager.DirContextHolder;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationManager;
 import org.springframework.transaction.compensating.support.CompensatingTransactionHolderSupport;
 import org.springframework.transaction.compensating.support.CompensatingTransactionUtils;
@@ -83,20 +83,21 @@ public class CompensatingTransactionUtilsTest extends TestCase {
         operationManagerControl.verify();
     }
 
-
     public void testPerformOperation() throws Throwable {
-        CompensatingTransactionHolderSupport holder = new DirContextHolder(dirContextMock, null);
+        CompensatingTransactionHolderSupport holder = new DirContextHolder(
+                null, dirContextMock);
         holder.setTransactionOperationManager(operationManagerMock);
 
         TransactionSynchronizationManager.bindResource(contextSourceMock,
                 holder);
 
         Object[] expectedArgs = new Object[] { "someDn" };
-        operationManagerMock.performOperation("unbind", expectedArgs);
+        operationManagerMock.performOperation(dirContextMock, "unbind",
+                expectedArgs);
 
         replay();
-        CompensatingTransactionUtils.performOperation(contextSourceMock, dirContextMock,
-                getUnbindMethod(), expectedArgs);
+        CompensatingTransactionUtils.performOperation(contextSourceMock,
+                dirContextMock, getUnbindMethod(), expectedArgs);
         verify();
     }
 
@@ -105,8 +106,8 @@ public class CompensatingTransactionUtilsTest extends TestCase {
         dirContextMock.unbind("someDn");
 
         replay();
-        CompensatingTransactionUtils.performOperation(contextSourceMock, dirContextMock,
-                getUnbindMethod(), expectedArgs);
+        CompensatingTransactionUtils.performOperation(contextSourceMock,
+                dirContextMock, getUnbindMethod(), expectedArgs);
         verify();
     }
 

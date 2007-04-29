@@ -1,19 +1,4 @@
-/*
- * Copyright 2005-2007 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package org.springframework.ldap.transaction.core;
+package org.springframework.ldap.transaction.compensating.manager;
 
 import javax.naming.directory.DirContext;
 
@@ -21,10 +6,9 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.transaction.compensating.DirContextHolder;
 import org.springframework.ldap.transaction.compensating.TempEntryRenamingStrategy;
-import org.springframework.ldap.transaction.core.ContextSourceTransactionManager;
-import org.springframework.ldap.transaction.core.TransactionAwareContextSourceProxy;
+import org.springframework.ldap.transaction.compensating.manager.ContextSourceTransactionManager;
+import org.springframework.ldap.transaction.compensating.manager.TransactionAwareContextSourceProxy;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationManager;
 import org.springframework.transaction.compensating.support.CompensatingTransactionHolderSupport;
@@ -121,8 +105,8 @@ public class ContextSourceTransactionManagerTest extends TestCase {
     }
 
     public void testDoGetTransactionTransactionActive() {
-        CompensatingTransactionHolderSupport expectedContextHolder = new DirContextHolder(null,
-                null);
+        CompensatingTransactionHolderSupport expectedContextHolder = new DirContextHolder(
+                null, null);
         TransactionSynchronizationManager.bindResource(contextSourceMock,
                 expectedContextHolder);
         Object result = tested.doGetTransaction();
@@ -145,8 +129,6 @@ public class ContextSourceTransactionManagerTest extends TestCase {
         DirContextHolder foundContextHolder = (DirContextHolder) TransactionSynchronizationManager
                 .getResource(contextSourceMock);
         assertSame(contextMock, foundContextHolder.getCtx());
-        assertSame(renamingStrategyMock, foundContextHolder
-                .getRenamingStrategy());
     }
 
     public void testDoCommit() {
@@ -154,8 +136,8 @@ public class ContextSourceTransactionManagerTest extends TestCase {
 
     public void testDoRollback() {
 
-        DirContextHolder expectedContextHolder = new DirContextHolder(
-                contextMock, renamingStrategyMock);
+        DirContextHolder expectedContextHolder = new DirContextHolder(null,
+                contextMock);
         expectedContextHolder
                 .setTransactionOperationManager(transactionDataManagerMock);
         TransactionSynchronizationManager.bindResource(contextSourceMock,
@@ -172,8 +154,8 @@ public class ContextSourceTransactionManagerTest extends TestCase {
     }
 
     public void testDoCleanupAfterCompletion() throws Exception {
-        DirContextHolder expectedContextHolder = new DirContextHolder(
-                contextMock, renamingStrategyMock);
+        DirContextHolder expectedContextHolder = new DirContextHolder(null,
+                contextMock);
         TransactionSynchronizationManager.bindResource(contextSourceMock,
                 expectedContextHolder);
 

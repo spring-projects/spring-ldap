@@ -18,8 +18,6 @@
 		<property name="password" value="${password}" />
 		<property name="base" value="${base}" />
 		<property name="pooled" value="false" />
-		<property name="dirObjectFactory"
-			value="org.springframework.ldap.core.support.DefaultDirObjectFactory" />
 	</bean>
 
 	<bean id="dataSource"
@@ -31,7 +29,7 @@
 	</bean>
 
 	<bean id="contextSource"
-		class="org.springframework.ldap.transaction.core.TransactionAwareContextSourceProxy">
+		class="org.springframework.ldap.transaction.compensating.manager.TransactionAwareContextSourceProxy">
 		<constructor-arg ref="contextSourceTarget" />
 	</bean>
 
@@ -45,23 +43,15 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
-<!-- 
-	<bean id="ldapTransactionManager"
-		class="org.springframework.ldap.transaction.core.ContextSourceTransactionManager">
-		<property name="contextSource" ref="contextSourceTarget" />
-	</bean>
-
- -->
-
 	<bean id="transactionManager"
-		class="org.springframework.ldap.transaction.core.ContextSourceAndDataSourceTransactionManager">
+		class="org.springframework.ldap.transaction.compensating.manager.ContextSourceAndDataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 		<property name="contextSource" ref="contextSource" />
 	</bean>
 
 
 	<bean name="dummyDaoTarget"
-		class="org.springframework.ldap.transaction.core.LdapAndJdbcDummyDaoImpl">
+		class="org.springframework.ldap.transaction.compensating.manager.LdapAndJdbcDummyDaoImpl">
 		<property name="ldapTemplate" ref="ldapTemplate" />
 		<property name="jdbcTemplate" ref="jdbcTemplate" />
 	</bean>
@@ -77,16 +67,4 @@
 			</props>
 		</property>
 	</bean>
-	<!-- 
-		<bean name="dummyDao"
-		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-		<property name="transactionManager" ref="dataSourceTransactionManager" />
-		<property name="target" ref="ldapDummyDao" />
-		<property name="transactionAttributes">
-		<props>
-		<prop key="*">PROPAGATION_REQUIRED</prop>
-		</props>
-		</property>
-		</bean>
-	-->
 </beans>

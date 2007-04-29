@@ -15,8 +15,6 @@
  */
 package org.springframework.transaction.compensating.support;
 
-import org.springframework.ldap.transaction.compensating.LdapCompensatingTransactionOperationFactory;
-import org.springframework.transaction.compensating.CompensatingTransactionOperationFactory;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationManager;
 import org.springframework.transaction.support.ResourceHolderSupport;
 
@@ -32,23 +30,23 @@ public abstract class CompensatingTransactionHolderSupport extends
     private CompensatingTransactionOperationManager transactionOperationManager;
 
     /**
-     * This method creates a new TransactionOperationManager instance. To be
-     * called by subclass in case the target object has changed.
+     * Constructor.
+     * 
+     * @param manager
+     *            The {@link CompensatingTransactionOperationManager} to use for
+     *            creating Compensating operations.
      */
-    protected void refreshTransactionOperationManager() {
-        setTransactionOperationManager(new DefaultCompensatingTransactionOperationManager(
-                createOperationFactory()));
+    public CompensatingTransactionHolderSupport(
+            CompensatingTransactionOperationManager manager) {
+        this.transactionOperationManager = manager;
     }
 
     /**
-     * Factory method to create a
-     * {@link CompensatingTransactionOperationFactory} using the settings and
-     * current state of this object.
+     * Get the actual transacted resource.
      * 
-     * @return a new {@link LdapCompensatingTransactionOperationFactory}
-     *         referncing the current transaction context.
+     * @return the transaction's target resource
      */
-    protected abstract CompensatingTransactionOperationFactory createOperationFactory();
+    protected abstract Object getTransactedResource();
 
     public void clear() {
         super.clear();

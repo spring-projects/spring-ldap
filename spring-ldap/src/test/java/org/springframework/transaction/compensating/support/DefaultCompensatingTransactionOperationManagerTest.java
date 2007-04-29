@@ -86,11 +86,11 @@ public class DefaultCompensatingTransactionOperationManagerTest extends
 
     public void testPerformOperation() {
         Object[] expectedArgs = new Object[0];
+        Object expectedResource = new Object();
 
-        operationFactoryControl
-                .expectAndReturn(operationFactoryMock
-                        .createRecordingOperation("some method"),
-                        operationRecorderMock);
+        operationFactoryControl.expectAndReturn(operationFactoryMock
+                .createRecordingOperation(expectedResource, "some method"),
+                operationRecorderMock);
         operationRecorderControl.expectAndReturn(operationRecorderMock
                 .recordOperation(expectedArgs), operationExecutorMock);
         operationExecutorMock.performOperation();
@@ -98,7 +98,7 @@ public class DefaultCompensatingTransactionOperationManagerTest extends
         DefaultCompensatingTransactionOperationManager tested = new DefaultCompensatingTransactionOperationManager(
                 operationFactoryMock);
         replay();
-        tested.performOperation("some method", expectedArgs);
+        tested.performOperation(expectedResource, "some method", expectedArgs);
         verify();
 
         Stack result = tested.getOperationExecutors();

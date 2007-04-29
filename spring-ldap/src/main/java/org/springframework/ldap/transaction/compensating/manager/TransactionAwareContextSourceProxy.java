@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2007 the original author or authors.
+ * Copyright 2002-2007 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.transaction.core;
+package org.springframework.ldap.transaction.compensating.manager;
 
 import java.lang.reflect.Proxy;
 
@@ -22,7 +22,6 @@ import javax.naming.directory.DirContext;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextProxy;
-import org.springframework.ldap.transaction.compensating.DirContextHolder;
 import org.springframework.ldap.transaction.compensating.LdapTransactionUtils;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -35,7 +34,6 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  * {@link TransactionAwareDirContextInvocationHandler}.
  * 
  * @author Mattias Arthursson
- * @since 1.2
  */
 public class TransactionAwareContextSourceProxy implements ContextSource {
     private ContextSource target;

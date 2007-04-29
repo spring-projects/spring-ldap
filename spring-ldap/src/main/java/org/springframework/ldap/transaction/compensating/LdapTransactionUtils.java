@@ -21,12 +21,7 @@ import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.NamingException;
-import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.Assert;
 
 /**
@@ -36,9 +31,6 @@ import org.springframework.util.Assert;
  * @since 1.2
  */
 public final class LdapTransactionUtils {
-
-    private static final Log logger = LogFactory
-            .getLog(LdapTransactionUtils.class);
 
     public static final String REBIND_METHOD_NAME = "rebind";
 
@@ -55,28 +47,6 @@ public final class LdapTransactionUtils {
      */
     private LdapTransactionUtils() {
 
-    }
-
-    /**
-     * Close the given JNDI Context and ignore any thrown exception. This is
-     * useful for typical <code>finally</code> blocks in JNDI code.
-     * 
-     * @param context
-     *            the JNDI Context to close (may be <code>null</code>)
-     */
-    public static void closeContext(DirContext context) {
-        if (context != null) {
-            try {
-                context.close();
-            } catch (NamingException ex) {
-                logger.debug("Could not close JNDI DirContext", ex);
-            } catch (Throwable ex) {
-                // We don't trust the JNDI provider: It might throw
-                // RuntimeException or Error.
-                logger.debug("Unexpected exception on closing JNDI DirContext",
-                        ex);
-            }
-        }
     }
 
     /**
@@ -110,31 +80,6 @@ public final class LdapTransactionUtils {
         } else {
             throw new IllegalArgumentException(
                     "First argument needs to be a Name or a String representation thereof");
-        }
-    }
-
-    /**
-     * Close the supplied context, but only if it is not associated with the
-     * current transaction.
-     * 
-     * @param context
-     *            the DirContext to close.
-     * @param contextSource
-     *            the ContextSource bound to the transaction.
-     * @throws NamingException
-     */
-    public static void doCloseConnection(DirContext context,
-            ContextSource contextSource) throws javax.naming.NamingException {
-        DirContextHolder transactionContextHolder = (DirContextHolder) TransactionSynchronizationManager
-                .getResource(contextSource);
-        if (transactionContextHolder == null
-                || transactionContextHolder.getCtx() != context) {
-            logger.debug("Closing context");
-            // This is not the transactional context or the transaction is
-            // no longer active - we should close it.
-            context.close();
-        } else {
-            logger.debug("Leaving transactional context open");
         }
     }
 
@@ -173,5 +118,4 @@ public final class LdapTransactionUtils {
 
         return DirContext.class;
     }
-
 }
