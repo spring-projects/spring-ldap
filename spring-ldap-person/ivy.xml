@@ -23,12 +23,12 @@
 		<dependency org="org.springframework" name="spring-ldap" rev="latest.integration" conf="global->default;source->@" />
 		<dependency org="org.springframework" name="spring-web" rev="2.0.4" />
 		<dependency org="org.springframework" name="spring-webmvc" rev="2.0.4" />
-		<dependency org="org.springframework" name="spring-webflow" rev="1.0" />
-		<dependency org="org.springframework" name="spring-webflow-src" rev="1.0" conf="source->source">
+		<dependency org="org.springframework" name="spring-webflow" rev="1.0.2" />
+		<dependency org="org.springframework" name="spring-webflow-src" rev="1.0.2" conf="source->source">
 			<artifact name="spring-webflow-src" type="zip" ext="zip" />
 		</dependency>
-		<dependency org="org.springframework" name="spring-binding" rev="1.0" />
-		<dependency org="org.springframework" name="spring-binding-src" rev="1.0" conf="source->source">
+		<dependency org="org.springframework" name="spring-binding" rev="1.0.2" />
+		<dependency org="org.springframework" name="spring-binding-src" rev="1.0.2" conf="source->source">
 			<artifact name="spring-binding-src" type="zip" ext="zip" />
 		</dependency>
 		<dependency org="ognl" name="ognl" rev="2.6.9" />

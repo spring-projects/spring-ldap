@@ -1,0 +1,16 @@
+<ivy-module version="1.3">
+	<info organisation="org.springframework"
+		module="spring-binding-src"
+		revision="1.0.2"
+		status="release"
+		publication="20070410150735"
+		default="true"
+	/>
+	<configurations>
+		<conf name="default" extends="source" />
+		<conf name="source" visibility="public"/>
+	</configurations>
+	<publications>
+		<artifact name="spring-binding-src" type="zip" ext="zip" conf="source"/>
+	</publications>
+</ivy-module>
