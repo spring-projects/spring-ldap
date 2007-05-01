@@ -116,6 +116,9 @@ public class PagedResultsRequestControl extends
 
         LdapContext ldapContext = (LdapContext) ctx;
         Control[] responseControls = ldapContext.getResponseControls();
+        if (responseControls == null) {
+            responseControls = new Control[0];
+        }
 
         // Go through response controls and get info, regardless of class
         for (int i = 0; i < responseControls.length; i++) {

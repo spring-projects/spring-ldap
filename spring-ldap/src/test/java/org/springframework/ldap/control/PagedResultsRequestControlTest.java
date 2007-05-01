@@ -137,6 +137,23 @@ public class PagedResultsRequestControlTest extends TestCase {
         assertEquals(0, tested.getResultSize());
     }
 
+    public void testPostProcess_NoResponseControls() throws Exception {
+        ldapContextControl.expectAndDefaultReturn(ldapContextMock
+                .getResponseControls(), null);
+
+        PagedResultsRequestControl tested = new PagedResultsRequestControl(20);
+
+        replay();
+
+        tested.postProcess(ldapContextMock);
+
+        verify();
+
+        assertNull(tested.getCookie());
+        assertEquals(20, tested.getPageSize());
+        assertEquals(0, tested.getResultSize());
+    }
+
     public void testBerDecoding() throws Exception {
         byte[] value = new byte[1];
         value[0] = 8;
