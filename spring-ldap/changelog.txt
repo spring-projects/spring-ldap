@@ -10,7 +10,7 @@ http://www.ietf.org/rfc/rfc2255.txt
 http://www.ietf.org/rfc/rfc2256.txt
 http://www.ietf.org/rfc/rfc2696.txt
 
-Changes in version 1.2-RC1 (xx.yy.2007)
+Changes in version 1.2-RC1 (5.12.2007)
 -------------------------------------------
 A number of API-breaking changes have been made in this release,
 mainly package restructuring stuff (LDAP-33). Consequently this is
@@ -61,6 +61,8 @@ upgrade guide for details.
 * Upgraded ApacheDS to 1.0.0 (LDAP-32).
 
 * Upgraded to Acegi Security 1.0.3 (LDAP-61).
+
+* Upgraded to ApacheDS 1.0.0 (LDAP-32).
   
 * Upgraded to Spring 2.0.4 internally. Spring 1.2.x is still supported (LDAP-35, LDAP-51).
 
@@ -71,6 +73,22 @@ upgrade guide for details.
 * Extracted useful inner classes from LdapTemplate to top-level classes (LDAP-42).
 
 * Implemented addAttributeValue and removeAttributeValue in DirContextAdapter (LDAP-5).
+
+* Modified DirContextOperations interface so that getNameInNamespace doesn't throw NamingException.
+
+* Fixed NullPointerException when getting PagedResultsRequestControl response (LDAP-66).
+
+* Rewrote logic i DirContextAdapter.getModificationItems(). The JNDI provider's Attribute
+  comparison logic is now used internally. Also, REMOVE_ATTRIBUTE items are placed
+  first in the ModificationItem array, in order to prevent ATTRIBUTE_ALREADY_EXIST errors
+  (LDAP-13, LDAP-46).
+  
+* In internal integration tests, each test now runs on a clean LDAP database (LDAP-43).
+
+* DirContextProcessor#postProcess() is now called in searches regardless of whether an 
+  exception is thrown (LDAP-26).
+  
+
 
 Changes in version 1.1.2 (1.12.2006)
 -------------------------------------------
