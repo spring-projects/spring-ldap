@@ -182,4 +182,11 @@ public interface DirContextOperations extends DirContext,
      *            the dn.
      */
     public void setDn(Name dn);
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.naming.Context#getNameInNamespace()
+     */
+    public String getNameInNamespace();
 }
