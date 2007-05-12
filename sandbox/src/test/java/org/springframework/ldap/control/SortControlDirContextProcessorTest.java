@@ -73,8 +73,10 @@ public class SortControlDirContextProcessorTest extends TestCase {
         SortControlDirContextProcessor tested = new SortControlDirContextProcessor(
                 "key");
 
-        SortControl control = (SortControl) tested.createRequestControl();
-        assertNotNull(control);
+        SortControl result = (SortControl) tested.createRequestControl();
+        assertNotNull(result);
+        assertEquals("1.2.840.113556.1.4.473", result.getID());
+        assertEquals(9, result.getEncodedValue().length);
     }
 
     public void testPostProcess() throws Exception {
