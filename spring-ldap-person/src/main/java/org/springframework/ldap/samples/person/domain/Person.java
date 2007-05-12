@@ -31,10 +31,16 @@ public class Person implements Serializable {
     private static final long serialVersionUID = -8953862790009843528L;
 
     /**
-     * Needed when adding persons to groups, since groups require
-     * full distinguished names of their members.
+     * Needed when adding persons to groups, since groups require full
+     * distinguished names of their members.
      */
     private String dn;
+
+    /**
+     * The primary key - that is the distinguished name of the person in the
+     * current namespace.
+     */
+    private String primaryKey;
 
     private String fullName;
 
@@ -114,8 +120,16 @@ public class Person implements Serializable {
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
-    
+
     public String toString() {
         return new ToStringCreator(this).toString();
+    }
+
+    public String getPrimaryKey() {
+        return primaryKey;
+    }
+
+    public void setPrimaryKey(String primaryKey) {
+        this.primaryKey = primaryKey;
     }
 }

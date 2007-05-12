@@ -15,7 +15,12 @@
  */
 package org.springframework.ldap.samples.person.dao;
 
+import java.util.Iterator;
 import java.util.List;
+
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.ModificationItem;
 
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
@@ -126,5 +131,35 @@ public class GroupDaoImpl implements GroupDao {
 
     public void setLdapOperations(LdapOperations ldapOperations) {
         this.ldapOperations = ldapOperations;
+    }
+
+    public void updateMemberDn(String originalDn, String newDn) {
+        BasicAttribute removeAttribute = new BasicAttribute("uniqueMember",
+                originalDn);
+        BasicAttribute addAttribute = new BasicAttribute("uniqueMember",
+                newDn);
+
+        ModificationItem[] modificationItems = new ModificationItem[2];
+        modificationItems[0] = new ModificationItem(
+                DirContext.REMOVE_ATTRIBUTE, removeAttribute);
+        modificationItems[0] = new ModificationItem(DirContext.ADD_ATTRIBUTE,
+                addAttribute);
+
+        AndFilter filter = new AndFilter();
+        filter.and(new EqualsFilter("objectclass", "groupOfUniqueNames"));
+        filter.and(new EqualsFilter("uniqueMember", originalDn));
+
+        List list = ldapOperations.search(DistinguishedName.EMPTY_PATH, filter
+                .encode(), new ContextMapper() {
+            public Object mapFromContext(Object ctx) {
+                DirContextAdapter adapter = (DirContextAdapter) ctx;
+                return adapter.getNameInNamespace();
+            }
+        });
+
+        for (Iterator iter = list.iterator(); iter.hasNext();) {
+            String dn = (String) iter.next();
+            ldapOperations.modifyAttributes(dn, modificationItems);
+        }
     }
 }

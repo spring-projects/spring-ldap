@@ -76,19 +76,29 @@ public class DummyPersonDao implements PersonDao {
         return new LinkedList(PERSONS.entrySet());
     }
 
-    public Person findByPrimaryKey(String country, String company,
+    public Person findByPrimaryKey(String dn) {
+        log.info("findByPrimaryKey");
+        if (PERSONS.get(dn) != null) {
+            return (Person) PERSONS.get(dn);
+        } else {
+            throw new NameNotFoundException("Could not find person with dn '"
+                    + dn + "'");
+        }
+    }
+
+    public Person findByPrimaryKeyData(String country, String company,
             String fullname) {
         log.info("findByPrimaryKey");
         if (PERSONS.get(fullname) != null) {
             return (Person) PERSONS.get(fullname);
         } else {
-            throw new NameNotFoundException(
-                    "Could not find person with name '" + fullname + "'");
+            throw new NameNotFoundException("Could not find person with name '"
+                    + fullname + "'");
         }
     }
 
     public void update(Person person) {
-        Person actualPerson = findByPrimaryKey(null, null, person.getFullName());
+        Person actualPerson = findByPrimaryKey(person.getFullName());
         actualPerson.setCompany(person.getCompany());
         actualPerson.setCountry(person.getCountry());
         actualPerson.setDescription(person.getDescription());

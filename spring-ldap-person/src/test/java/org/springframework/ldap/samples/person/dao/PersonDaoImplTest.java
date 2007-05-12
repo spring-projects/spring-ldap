@@ -18,6 +18,7 @@ package org.springframework.ldap.samples.person.dao;
 import java.util.Collections;
 import java.util.List;
 
+import javax.naming.NamingException;
 import javax.naming.directory.ModificationItem;
 
 import junit.framework.TestCase;
@@ -37,6 +38,16 @@ import org.springframework.ldap.samples.person.domain.SearchCriteria;
  * @author Ulrik Sandberg
  */
 public class PersonDaoImplTest extends TestCase {
+
+    private static final String DEFAULT_DN = "cn=some person, ou=Some Company, c=SE";
+
+    private static final DistinguishedName DEFAULT_DNAME = new DistinguishedName(
+            DEFAULT_DN);
+
+    private static final String MODIFIED_DN = "cn=some person, ou=Some Other Company, c=SE";
+
+    private static final DistinguishedName MODIFIED_DNAME = new DistinguishedName(
+            MODIFIED_DN);
 
     private MockControl ldapOperationsControl;
 
@@ -68,17 +79,16 @@ public class PersonDaoImplTest extends TestCase {
         contextMapperMock = (ContextMapper) contextMapperControl.getMock();
 
         person = new Person();
+        person.setFullName("some person");
+        person.setCompany("Some company");
+        person.setCountry("SE");
+        person.setPrimaryKey(DEFAULT_DN);
 
         tested = new PersonDaoImpl() {
             DirContextOperations setAttributes(DirContextOperations adapter,
                     Person p) {
                 assertSame(person, p);
                 return dirContextOperationsMock;
-            }
-
-            DistinguishedName buildDn(Person p) {
-                assertSame(person, p);
-                return DistinguishedName.EMPTY_PATH;
             }
 
             ContextMapper getContextMapper() {
@@ -129,8 +139,7 @@ public class PersonDaoImplTest extends TestCase {
     }
 
     public void testCreate() {
-        ldapOperationsMock.bind(DistinguishedName.EMPTY_PATH,
-                dirContextOperationsMock, null);
+        ldapOperationsMock.bind(DEFAULT_DNAME, dirContextOperationsMock, null);
 
         replay();
 
@@ -140,26 +149,49 @@ public class PersonDaoImplTest extends TestCase {
     }
 
     public void testUpdate() {
-        ldapOperationsControl
-                .expectAndReturn(ldapOperationsMock
-                        .lookup(DistinguishedName.EMPTY_PATH),
-                        dirContextOperationsMock);
+        ldapOperationsControl.expectAndReturn(ldapOperationsMock
+                .lookup(DEFAULT_DNAME), dirContextOperationsMock);
         ModificationItem[] modificationItems = new ModificationItem[0];
         dirContextOperationsControl.expectAndReturn(dirContextOperationsMock
                 .getModificationItems(), modificationItems);
-        ldapOperationsMock.modifyAttributes(DistinguishedName.EMPTY_PATH,
-                modificationItems);
+        ldapOperationsMock.modifyAttributes(DEFAULT_DNAME, modificationItems);
 
         replay();
 
         tested.update(person);
 
         verify();
+    }
 
+    public void testUpdateWithChangedCompany() throws NamingException {
+        person.setCompany("Some Other Company");
+
+        ldapOperationsMock.rename(DEFAULT_DNAME, MODIFIED_DNAME);
+
+        ldapOperationsControl.expectAndReturn(ldapOperationsMock
+                .lookup(MODIFIED_DNAME), dirContextOperationsMock);
+
+        ModificationItem[] modificationItems = new ModificationItem[0];
+        dirContextOperationsControl.expectAndReturn(dirContextOperationsMock
+                .getModificationItems(), modificationItems);
+        ldapOperationsMock.modifyAttributes(MODIFIED_DNAME, modificationItems);
+
+        dirContextOperationsControl.expectAndReturn(dirContextOperationsMock
+                .getNameInNamespace(), "cn=new dn, dc=jayway, dc=se");
+        dirContextOperationsControl.expectAndReturn(dirContextOperationsMock
+                .getDn(), new DistinguishedName("cn=new dn"));
+
+        replay();
+
+        tested.update(person);
+
+        verify();
+        assertEquals("cn=new dn", person.getPrimaryKey());
+        assertEquals("cn=new dn, dc=jayway, dc=se", person.getDn());
     }
 
     public void testDelete() {
-        ldapOperationsMock.unbind(DistinguishedName.EMPTY_PATH);
+        ldapOperationsMock.unbind(DEFAULT_DN);
 
         replay();
 
@@ -184,16 +216,14 @@ public class PersonDaoImplTest extends TestCase {
     }
 
     public void testFindByPrimaryKey() {
-        DistinguishedName dn = new DistinguishedName(
-                "cn=Some Person, ou=Some company, c=Sweden");
+        String dn = "cn=Some Person, ou=Some company, c=Sweden";
 
         ldapOperationsControl.expectAndReturn(ldapOperationsMock.lookup(dn,
                 contextMapperMock), person);
 
         replay();
 
-        Person result = tested.findByPrimaryKey("Sweden", "Some company",
-                "Some Person");
+        Person result = tested.findByPrimaryKey(dn);
 
         verify();
 

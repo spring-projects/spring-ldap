@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
-	<import resource="apacheDsContext.xml"/>
+	<import resource="apacheDsContext.xml" />
 
 	<bean id="placeholderConfig"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -12,32 +12,42 @@
 
 	<!-- Authenticate using a fixed user -->
 	<!--
-	<bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource" >
+		<bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource" >
 		<property name="url" value="${url}" />
 		<property name="base" value="${base}" />
 		<property name="userDn" value="${userDn}" />
 		<property name="password" value="${password}" />
 		<property name="dirObjectFactory" value="org.springframework.ldap.core.support.DefaultDirObjectFactory" />
-	</bean>
-	 -->	
+		</bean>
+	-->
 
 	<!-- Authenticate using the currently logged in user, retrieved by Acegi Security -->
-	<bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource" >
+	<bean id="contextSourceTarget"
+		class="org.springframework.ldap.core.support.LdapContextSource">
 		<property name="url" value="${url}" />
 		<property name="base" value="${base}" />
-		<property name="authenticationSource" ref="acegiAuthenticationSource" />
-		<property name="dirObjectFactory" value="org.springframework.ldap.core.support.DefaultDirObjectFactory" />
-		<!--
-		Disable pooling if you want to test changing the password after a user has logged in,
-		perhaps in order to verify that AcegiAuthenticationSource works correctly.
-
+		<property name="authenticationSource"
+			ref="acegiAuthenticationSource" />
+		<property name="dirObjectFactory"
+			value="org.springframework.ldap.core.support.DefaultDirObjectFactory" />
 		<property name="pooled" value="false" />
-		-->
 	</bean>
-	
-	<bean id="acegiAuthenticationSource" class="org.springframework.ldap.authentication.AcegiAuthenticationSource" />
-	
-	<bean id="ldapOperations" class="org.springframework.ldap.core.LdapTemplate">
+
+	<bean id="contextSource"
+		class="org.springframework.ldap.transaction.compensating.manager.TransactionAwareContextSourceProxy">
+		<constructor-arg ref="contextSourceTarget" />
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.ldap.transaction.compensating.manager.ContextSourceTransactionManager">
+		<property name="contextSource" ref="contextSource" />
+	</bean>
+
+	<bean id="acegiAuthenticationSource"
+		class="org.springframework.ldap.authentication.AcegiAuthenticationSource" />
+
+	<bean id="ldapOperations"
+		class="org.springframework.ldap.core.LdapTemplate">
 		<constructor-arg ref="contextSource" />
 	</bean>
 
@@ -54,9 +64,11 @@
 		<property name="base" value="${base}" />
 	</bean>
 
-	<bean id="dummyPersonDao"
+	<!-- 
+		<bean id="dummyPersonDao"
 		class="org.springframework.ldap.samples.person.dao.DummyPersonDao">
-	</bean>
+		</bean>
+	-->
 
 	<bean id="dummyGroupDao"
 		class="org.springframework.ldap.samples.person.dao.DummyGroupDao">
@@ -67,14 +79,26 @@
 		<property name="ldapOperations" ref="ldapOperations" />
 	</bean>
 
-	<bean id="personService"
+	<bean id="personServiceTarget"
 		class="org.springframework.ldap.samples.person.service.PersonServiceImpl">
 		<property name="personDao" ref="personDao" />
+		<property name="groupDao" ref="groupDao" />
 		<!-- Replace with this to use the dummy or the traditional implementation -->
 		<!--
-		<property name="personDao" ref="dummyPersonDao" />
-		<property name="personDao" ref="traditionalPersonDao" />
+			<property name="personDao" ref="dummyPersonDao" />
+			<property name="personDao" ref="traditionalPersonDao" />
 		-->
+	</bean>
+
+	<bean name="personService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="target" ref="personServiceTarget" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRES_NEW</prop>
+			</props>
+		</property>
 	</bean>
 
 	<bean id="groupService"
@@ -82,7 +106,7 @@
 		<property name="groupDao" ref="groupDao" />
 		<!-- Replace with this to use the dummy implementation -->
 		<!--
-		<property name="groupDao" ref="dummyGroupDao" />
+			<property name="groupDao" ref="dummyGroupDao" />
 		-->
 	</bean>
 </beans>

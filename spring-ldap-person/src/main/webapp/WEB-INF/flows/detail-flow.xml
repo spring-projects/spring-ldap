@@ -10,37 +10,29 @@
 		<input-attribute name="country"/>
 	</input-mapper>
 
-	<start-state idref="displayDetails" />
+	<start-state idref="init" />
+
+	<action-state id="init">
+		<!-- get a person to work with -->
+		<bean-action bean="personService" method="findByPrimaryKey">
+			<method-arguments>
+				<argument expression="flowScope.country" />
+				<argument expression="flowScope.company" />
+				<argument expression="flowScope.name" />
+			</method-arguments>
+			<method-result name="person" scope="flow"/>
+		</bean-action>
+		
+		<transition to="displayDetails" />
+	</action-state>
 
 	<view-state id="displayDetails" view="showDetails">
-		<render-actions>
-			<!-- get a person to work with -->
-			<bean-action bean="personService" method="findByPrimaryKey">
-				<method-arguments>
-					<argument expression="flowScope.country" />
-					<argument expression="flowScope.company" />
-					<argument expression="flowScope.name" />
-				</method-arguments>
-				<method-result name="person" />
-			</bean-action>
-		</render-actions>
-
 		<transition on="back" to="finish" />
 		<transition on="edit" to="editDetails" />
 	</view-state>
 
 	<view-state id="editDetails" view="editDetails">
 		<render-actions>
-			<!-- get a person to work with -->
-			<bean-action bean="personService" method="findByPrimaryKey">
-				<method-arguments>
-					<argument expression="flowScope.country" />
-					<argument expression="flowScope.company" />
-					<argument expression="flowScope.name" />
-				</method-arguments>
-				<method-result name="person" scope="flow" />
-			</bean-action>
-
 			<!-- setup form with person -->
 			<action bean="editPersonFormAction" method="setupForm"/>
 		</render-actions>

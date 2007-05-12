@@ -127,9 +127,27 @@ public class TraditionalPersonDaoImpl implements PersonDao {
      * @see org.springframework.ldap.samples.person.dao.PersonDao#findByPrimaryKey(java.lang.String,
      *      java.lang.String, java.lang.String)
      */
-    public Person findByPrimaryKey(String country, String company,
-            String fullname) {
+    public Person findByPrimaryKey(String dn) {
 
+        DirContext ctx = createContext();
+        try {
+            Attributes attributes = ctx.getAttributes(dn);
+            return mapToPerson(dn, attributes);
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (ctx != null) {
+                try {
+                    ctx.close();
+                } catch (Exception e) {
+                    // Never mind this.
+                }
+            }
+        }
+    }
+
+    public Person findByPrimaryKeyData(String country, String company,
+            String fullname) {
         DirContext ctx = createContext();
         String dn = buildDn(country, company, fullname);
         try {
@@ -225,4 +243,5 @@ public class TraditionalPersonDaoImpl implements PersonDao {
     public void setBase(String base) {
         this.base = base;
     }
+
 }

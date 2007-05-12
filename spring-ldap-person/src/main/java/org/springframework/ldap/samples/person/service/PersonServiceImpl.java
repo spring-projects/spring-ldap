@@ -17,6 +17,8 @@ package org.springframework.ldap.samples.person.service;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.springframework.ldap.samples.person.dao.GroupDao;
 import org.springframework.ldap.samples.person.dao.PersonDao;
 import org.springframework.ldap.samples.person.domain.Person;
 import org.springframework.ldap.samples.person.domain.SearchCriteria;
@@ -30,6 +32,8 @@ import org.springframework.ldap.samples.person.domain.SearchCriteria;
 public class PersonServiceImpl implements PersonService {
 
     private PersonDao personDao;
+
+    private GroupDao groupDao;
 
     /*
      * @see org.springframework.ldap.samples.person.service.PersonService#create(java.lang.String,
@@ -53,7 +57,18 @@ public class PersonServiceImpl implements PersonService {
      * @see org.springframework.ldap.samples.person.service.PersonService#update(org.springframework.ldap.samples.person.domain.Person)
      */
     public void update(Person person) {
+        String originalDn = person.getDn();
         personDao.update(person);
+        String newDn = person.getDn();
+
+        // If the DN has changed (i.e. if the user has been moved in the tree,
+        // also modify all referring groups.
+        // Unfortunately this doesn't work with the current version of ApacheDS,
+        // as the format of the DN produced by DistinguishedName is different
+        // from the one present in the DB (and recognized by acegi).
+        if (!StringUtils.equals(originalDn, newDn)) {
+            groupDao.updateMemberDn(originalDn, newDn);
+        }
     }
 
     public void delete(Person person) {
@@ -65,7 +80,7 @@ public class PersonServiceImpl implements PersonService {
      *      java.lang.String, java.lang.String)
      */
     public Person findByPrimaryKey(String country, String company, String name) {
-        return personDao.findByPrimaryKey(country, company, name);
+        return personDao.findByPrimaryKeyData(country, company, name);
     }
 
     /*
@@ -84,5 +99,9 @@ public class PersonServiceImpl implements PersonService {
 
     public void setPersonDao(PersonDao personDao) {
         this.personDao = personDao;
+    }
+
+    public void setGroupDao(GroupDao groupDao) {
+        this.groupDao = groupDao;
     }
 }

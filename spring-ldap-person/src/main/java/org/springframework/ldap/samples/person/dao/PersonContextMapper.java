@@ -15,13 +15,10 @@
  */
 package org.springframework.ldap.samples.person.dao;
 
-import javax.naming.NamingException;
-
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.samples.person.domain.Person;
-import org.springframework.ldap.support.LdapUtils;
 
 /**
  * Maps from DirContextOperations (DirContextAdapters, really) to Person
@@ -39,13 +36,11 @@ public class PersonContextMapper implements ContextMapper {
         DirContextOperations dirContext = (DirContextOperations) ctx;
         DistinguishedName dn = new DistinguishedName(dirContext.getDn());
         String fullDn;
-        try {
-            fullDn = dirContext.getNameInNamespace();
-        } catch (NamingException e) {
-            throw LdapUtils.convertLdapException(e);
-        }
+        fullDn = dirContext.getNameInNamespace();
+
         Person person = new Person();
         person.setDn(fullDn);
+        person.setPrimaryKey(dirContext.getDn().toString());
         person.setCountry(dn.getLdapRdn(0).getComponent().getValue());
         person.setCompany(dn.getLdapRdn(1).getComponent().getValue());
         person.setFullName(dirContext.getStringAttribute("cn"));

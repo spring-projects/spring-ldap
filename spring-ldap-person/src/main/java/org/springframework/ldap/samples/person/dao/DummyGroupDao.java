@@ -79,4 +79,8 @@ public class DummyGroupDao implements GroupDao {
         Group actualGroup = findByPrimaryKey(group.getName());
         actualGroup.setMembers(group.getMembers());
     }
+
+    public void updateMemberDn(String originalDn, String newDn) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 }

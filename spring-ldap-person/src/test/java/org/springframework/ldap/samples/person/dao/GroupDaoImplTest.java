@@ -168,8 +168,9 @@ public class GroupDaoImplTest extends TestCase {
     public void testFindAll() {
         List expectedList = Collections.singletonList(null);
         ldapOperationsControl.expectAndReturn(ldapOperationsMock.search(
-                DistinguishedName.EMPTY_PATH, "(objectclass=groupOfUniqueNames)",
-                contextMapperMock), expectedList);
+                DistinguishedName.EMPTY_PATH,
+                "(objectclass=groupOfUniqueNames)", contextMapperMock),
+                expectedList);
 
         replay();
 
@@ -181,8 +182,7 @@ public class GroupDaoImplTest extends TestCase {
     }
 
     public void testFindByPrimaryKey() {
-        DistinguishedName dn = new DistinguishedName(
-                "cn=Some Group, ou=groups");
+        DistinguishedName dn = new DistinguishedName("cn=Some Group, ou=groups");
 
         ldapOperationsControl.expectAndReturn(ldapOperationsMock.lookup(dn,
                 contextMapperMock), group);
@@ -200,8 +200,8 @@ public class GroupDaoImplTest extends TestCase {
         List expectedList = Collections.singletonList(null);
         ldapOperationsControl.expectAndReturn(ldapOperationsMock.search(
                 DistinguishedName.EMPTY_PATH,
-                "(&(objectclass=groupOfUniqueNames)(cn=*some*))", contextMapperMock),
-                expectedList);
+                "(&(objectclass=groupOfUniqueNames)(cn=*some*))",
+                contextMapperMock), expectedList);
 
         replay();
 

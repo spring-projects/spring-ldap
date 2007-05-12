@@ -17,6 +17,8 @@ package org.springframework.ldap.samples.person.dao;
 
 import java.util.List;
 
+import javax.naming.Name;
+
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
@@ -79,14 +81,27 @@ public class PersonDaoImpl implements PersonDao {
     }
 
     public void update(Person person) {
+        DistinguishedName originalDn = new DistinguishedName(person
+                .getPrimaryKey());
+        DistinguishedName newDn = buildDn(person);
+
+        if (!originalDn.equals(newDn)) {
+            ldapOperations.rename(originalDn, newDn);
+        }
+
         DirContextOperations ctx = (DirContextOperations) ldapOperations
-                .lookup(buildDn(person));
-        ldapOperations.modifyAttributes(buildDn(person), setAttributes(ctx,
-                person).getModificationItems());
+                .lookup(newDn);
+        ldapOperations.modifyAttributes(newDn, setAttributes(ctx, person)
+                .getModificationItems());
+
+        if (!originalDn.equals(newDn)) {
+            person.setDn(ctx.getNameInNamespace());
+            person.setPrimaryKey(ctx.getDn().toString());
+        }
     }
 
     public void delete(Person person) {
-        ldapOperations.unbind(buildDn(person));
+        ldapOperations.unbind(person.getPrimaryKey());
     }
 
     public List findAll() {
@@ -95,14 +110,17 @@ public class PersonDaoImpl implements PersonDao {
                 .encode(), getContextMapper());
     }
 
-    public Person findByPrimaryKey(String country, String company,
+    public Person findByPrimaryKeyData(String country, String company,
             String fullname) {
-
         DistinguishedName dn = new DistinguishedName();
         dn.add("c", country);
         dn.add("ou", company);
         dn.add("cn", fullname);
 
+        return (Person) ldapOperations.lookup(dn, getContextMapper());
+    }
+
+    public Person findByPrimaryKey(String dn) {
         return (Person) ldapOperations.lookup(dn, getContextMapper());
     }
 
@@ -117,4 +135,5 @@ public class PersonDaoImpl implements PersonDao {
     public void setLdapOperations(LdapOperations ldapOperations) {
         this.ldapOperations = ldapOperations;
     }
+
 }

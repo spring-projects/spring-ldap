@@ -20,7 +20,6 @@ import java.util.List;
 import org.springframework.ldap.samples.person.domain.Person;
 import org.springframework.ldap.samples.person.domain.SearchCriteria;
 
-
 /**
  * Data Access Object interface for the Person entity.
  * 
@@ -33,10 +32,13 @@ public interface PersonDao {
     public void update(Person person);
 
     public void delete(Person person);
-    
-    public Person findByPrimaryKey(String country, String company, String fullname);
-    
+
+    public Person findByPrimaryKey(String dn);
+
+    public Person findByPrimaryKeyData(String country, String company,
+            String fullname);
+
     public List findAll();
-    
+
     public List find(SearchCriteria criteria);
 }

@@ -37,4 +37,14 @@ public interface GroupDao {
     public List findAll();
 
     public List find(SearchCriteria criteria);
+
+    /**
+     * Update all groups referring to the original DN with the new DN value.
+     * 
+     * @param originalDn
+     *            the original DN.
+     * @param newDn
+     *            the new DN.
+     */
+    public void updateMemberDn(String originalDn, String newDn);
 }

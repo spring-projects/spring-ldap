@@ -83,7 +83,7 @@ public class DetailFlowExecutionTest extends AbstractXmlFlowExecutionTests {
     }
 
     public void testEdit() {
-        expectFindByPrimaryKey(2);
+        expectFindByPrimaryKey();
         replay();
 
         startFlow(attributeMap);
@@ -96,7 +96,7 @@ public class DetailFlowExecutionTest extends AbstractXmlFlowExecutionTests {
     }
 
     public void testCancel() {
-        expectFindByPrimaryKey(3);
+        expectFindByPrimaryKey();
         replay();
 
         startFlow(attributeMap);
@@ -110,7 +110,7 @@ public class DetailFlowExecutionTest extends AbstractXmlFlowExecutionTests {
     }
 
     public void testSubmit() {
-        expectFindByPrimaryKey(3);
+        expectFindByPrimaryKey();
         expectUpdate();
         replay();
 
