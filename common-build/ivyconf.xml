@@ -41,11 +41,8 @@
 				<artifact pattern="https://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo-ext/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 			</url>
 
-			<!-- try popular maven2 ibiblio mirror second -->
-           	<ibiblio name="dotsrc-maven2-repo" checkconsistency="false" m2compatible="true" root="http://mirrors.dotsrc.org/maven2/"/>           	
-           	
-			<!-- try ibiblio itself third -->
-           	<ibiblio name="ibiblio-maven2-repo" checkconsistency="false" m2compatible="true" root="http://www.ibiblio.org/maven2/"/>           	
+			<!-- try maven repo -->
+           	<ibiblio name="maven2-repo" checkconsistency="false" m2compatible="true" root="http://repo1.maven.org/maven2/"/>
 
 		</chain>
 
