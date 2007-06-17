@@ -22,6 +22,7 @@ import javax.naming.CompositeName;
 import javax.naming.InvalidNameException;
 import javax.naming.Name;
 
+import org.springframework.ldap.BadLdapGrammarException;
 import org.springframework.ldap.core.DistinguishedName;
 
 import junit.framework.TestCase;
@@ -448,9 +449,37 @@ public class DistinguishedNameTest extends TestCase {
     }
 
     public void test_longDN() throws InvalidNameException {
-        DistinguishedName name = new DistinguishedName(
-                "");
+        DistinguishedName name = new DistinguishedName("");
         assertNotNull(name);
     }
 
+    /**
+     * Test case to verify correct parsing for issue on forums.
+     */
+    public void testParseAtSign() {
+        DistinguishedName name = new DistinguishedName(
+                "cn=testname@example.com");
+        assertNotNull(name);
+    }
+
+    /**
+     * Test case to verify correct parsing for issue on forums.
+     */
+    public void testParseAtSign2() {
+        DistinguishedName name = new DistinguishedName(
+                "cn=te\\+stname@example.com");
+        assertNotNull(name);
+    }
+
+    /**
+     * Test case to verify correct parsing for issue on forums.
+     */
+    public void testParseInvalidPlus() {
+        try {
+            new DistinguishedName("cn=te+stname@example.com");
+            fail("BadLdapGrammarException expected");
+        } catch (BadLdapGrammarException expected) {
+            assertTrue(true);
+        }
+    }
 }
