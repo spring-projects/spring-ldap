@@ -43,7 +43,7 @@ import org.springframework.ldap.support.ListComparator;
  * the most significant part be in position 0.
  * <p>
  * Example:
- *
+ * 
  * <dl>
  * <dt>The path</dt>
  * <dd>uid=adam.skogman, ou=People, ou=EU</dd>
@@ -56,6 +56,7 @@ import org.springframework.ldap.support.ListComparator;
  * </dl>
  * 
  * Example:
+ * 
  * <pre>
  * DistinguishedName path = new DistinguishedName();
  * path.addLast(&quot;uid&quot;, person.getUid());
@@ -174,6 +175,44 @@ public class DistinguishedName implements Name {
      */
     public LdapRdn getLdapRdn(int index) {
         return (LdapRdn) names.get(index);
+    }
+
+    /**
+     * Get the LdapRdn with the specified key. If there are several Rdns with
+     * the same key, the first one found (in order of significance) will be
+     * returned.
+     * 
+     * @param key
+     *            Attribute name of the LdapRdn to retrieve.
+     * @return the LdapRdn with the requested key.
+     * @throws IllegalArgumentException
+     *             if no Rdn matches the given key.
+     */
+    public LdapRdn getLdapRdn(String key) {
+        for (Iterator iter = names.iterator(); iter.hasNext();) {
+            LdapRdn rdn = (LdapRdn) iter.next();
+            if (StringUtils.equals(rdn.getKey(), key)) {
+                return rdn;
+            }
+        }
+
+        throw new IllegalArgumentException("No Rdn with the requested key: '"
+                + key + "'");
+    }
+
+    /**
+     * Get the value of the RdnComponent with the specified key (Attribute
+     * value). If there are several Rdns with the same key, the value of the
+     * first one found (in order of significance) will be returned.
+     * 
+     * @param key
+     *            Attribute name of the LdapRdn to retrieve.
+     * @return the value.
+     * @throws IllegalArgumentException
+     *             if no Rdn matches the given key.
+     */
+    public String getValue(String key) {
+        return getLdapRdn(key).getValue();
     }
 
     /**

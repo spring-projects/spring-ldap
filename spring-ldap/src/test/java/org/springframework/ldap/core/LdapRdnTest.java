@@ -19,7 +19,6 @@ package org.springframework.ldap.core;
 import junit.framework.TestCase;
 
 import org.springframework.ldap.BadLdapGrammarException;
-import org.springframework.ldap.core.LdapRdn;
 
 import com.gargoylesoftware.base.testing.EqualsTester;
 
@@ -37,6 +36,8 @@ public class LdapRdnTest extends TestCase {
         assertEquals("foo", rdn.getComponent().getKey());
         assertEquals("bar", rdn.getComponent().getValue());
         assertEquals("foo=bar", rdn.getComponent().getLdapEncoded());
+        assertEquals("foo", rdn.getKey());
+        assertEquals("bar", rdn.getValue());
     }
 
     public void testLdapRdn_parse_spaces() {
@@ -144,6 +145,30 @@ public class LdapRdnTest extends TestCase {
         assertEquals("cn=John Doe", rdn.getComponent(0).encodeLdap());
         assertEquals("sn=Doe", rdn.getComponent(1).encodeLdap());
         assertEquals("cn=John Doe+sn=Doe", rdn.getLdapEncoded());
+        assertEquals("cn", rdn.getKey());
+        assertEquals("John Doe", rdn.getValue());
+        assertEquals("John Doe", rdn.getValue("cn"));
+        assertEquals("Doe", rdn.getValue("sn"));
+    }
+
+    public void testGetValueNoKeyWithCorrectValue() {
+        LdapRdn tested = new LdapRdn("cn=john doe");
+        try {
+            tested.getValue("sn");
+            fail("IllegalArgumentException expected");
+        } catch (IllegalArgumentException expected) {
+            assertTrue(true);
+        }
+    }
+
+    public void testGetValueNoComponents() {
+        LdapRdn tested = new LdapRdn();
+        try {
+            tested.getValue("sn");
+            fail("IllegalArgumentException expected");
+        } catch (IllegalArgumentException expected) {
+            assertTrue(true);
+        }
     }
 
     public void testEquals() throws Exception {

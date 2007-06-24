@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.ldap.BadLdapGrammarException;
 import org.springframework.ldap.support.ListComparator;
 
@@ -194,5 +195,55 @@ public class LdapRdn implements Serializable, Comparable {
      */
     public String toString() {
         return getLdapEncoded();
+    }
+
+    /**
+     * Get the value of this LdapRdn. Note that if this Rdn is multi-value the
+     * first value will be returned. E.g. for the Rdn
+     * <code>cn=john doe+sn=doe</code>, the return value would be
+     * <code>john doe</code>.
+     * 
+     * @return the (first) value of this LdapRdn.
+     * @throws IndexOutOfBoundsException
+     *             if there is no components in this Rdn.
+     */
+    public String getValue() {
+        return getComponent().getValue();
+    }
+
+    /**
+     * Get the key of this LdapRdn. Note that if this Rdn is multi-value the
+     * first key will be returned. E.g. for the Rdn
+     * <code>cn=john doe+sn=doe</code>, the return value would be
+     * <code>cn</code>.
+     * 
+     * @return the (first) key of this LdapRdn.
+     * @throws IndexOutOfBoundsException
+     *             if there is no components in this Rdn.
+     */
+    public String getKey() {
+        return getComponent().getKey();
+    }
+
+    /**
+     * Get the value of the LdapComponent with the specified key (Attribute
+     * name).
+     * 
+     * @param key
+     *            the key
+     * @return the value.
+     * @throws IllegalArgumentException
+     *             if there is no component with the specified key.
+     */
+    public String getValue(String key) {
+        for (Iterator iter = components.iterator(); iter.hasNext();) {
+            LdapRdnComponent component = (LdapRdnComponent) iter.next();
+            if (StringUtils.equals(component.getKey(), key)) {
+                return component.getValue();
+            }
+        }
+
+        throw new IllegalArgumentException("No RdnComponent with the key "
+                + key);
     }
 }

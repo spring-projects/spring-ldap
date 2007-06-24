@@ -448,6 +448,43 @@ public class DistinguishedNameTest extends TestCase {
         assertTrue(result < 0);
     }
 
+    public void testGetLdapRdnForKey() throws Exception {
+        DistinguishedName dn = new DistinguishedName(
+                "cn=john doe, ou=Some company, c=SE");
+        LdapRdn ldapRdn = dn.getLdapRdn("ou");
+        assertEquals(new LdapRdn("ou=Some company"), ldapRdn);
+    }
+
+    public void testGetLdapRdnForKeyNoMatchingKeyThrowsException()
+            throws Exception {
+        DistinguishedName dn = new DistinguishedName(
+                "cn=john doe, ou=Some company, c=SE");
+        try {
+            dn.getLdapRdn("nosuchkey");
+            fail("IllegalArgumentException expected");
+        } catch (IllegalArgumentException expected) {
+            assertTrue(true);
+        }
+    }
+
+    public void testGetValue() throws Exception {
+        DistinguishedName dn = new DistinguishedName(
+                "cn=john doe, ou=Some company, c=SE");
+        String value = dn.getValue("ou");
+        assertEquals("Some company", value);
+    }
+
+    public void testGetValueNoMatchingKeyThrowsException() throws Exception {
+        DistinguishedName dn = new DistinguishedName(
+                "cn=john doe, ou=Some company, c=SE");
+        try {
+            dn.getValue("nosuchkey");
+            fail("IllegalArgumentException expected");
+        } catch (IllegalArgumentException expected) {
+            assertTrue(true);
+        }
+    }
+
     public void test_longDN() throws InvalidNameException {
         DistinguishedName name = new DistinguishedName("");
         assertNotNull(name);

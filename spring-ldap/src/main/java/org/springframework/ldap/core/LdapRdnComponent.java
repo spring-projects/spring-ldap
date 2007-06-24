@@ -75,18 +75,40 @@ public class LdapRdnComponent implements Comparable, Serializable {
         }
     }
 
+    /**
+     * Get the key (Attribute name) of this component.
+     * 
+     * @return the key.
+     */
     public String getKey() {
         return key;
     }
 
+    /**
+     * Set the key (Attribute name) of this component.
+     * 
+     * @param key
+     *            the key.
+     */
     public void setKey(String key) {
         this.key = key;
     }
 
+    /**
+     * Get the (Attribute) value of this component.
+     * 
+     * @return the value.
+     */
     public String getValue() {
         return value;
     }
 
+    /**
+     * Set the (Attribute) value of this component.
+     * 
+     * @param value
+     *            the value.
+     */
     public void setValue(String value) {
         this.value = value;
     }
