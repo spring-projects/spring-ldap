@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+
+<project name="spring-ldap-tiger" default="dist">
+
+	<property file="build.properties" />
+	<property file="project.properties" />
+	<property file="${common.build.dir}/build.properties" />
+	<property file="${common.build.dir}/project.properties" />
+	<property file="${user.home}/build.properties" />
+
+	<property name="project.title" value="Spring LDAP Tiger" />
+	<property name="project.package" value="org.springframework.ldap" />
+
+	<property name="ldap.server" value="127.0.0.1" />
+	<property name="ldap.user" value="&quot;cn=Manager,dc=jayway,dc=se&quot;" />
+	<property name="ldap.password" value="secret" />
+
+	<!-- Cannot import common-targets since itest-targets already does -->
+	<import file="${common.build.dir}/itest-targets.xml" />
+	<import file="${common.build.dir}/common-targets.xml" />
+	<import file="${common.build.dir}/clover-targets.xml" />
+	<import file="${common.build.dir}/jdiff-targets.xml" />
+
+	<!-- extend common-build with source capability -->
+	<target name="build.prepare.make.config.dirs" depends="common-targets.build.prepare.make.config.dirs">
+		<mkdir dir="${lib.dir}/source" />
+	</target>
+
+	<!--
+		Overridden to create test report and run integration tests as well.
+	-->
+	<target name="tests" depends="tests-local,test-report,itests,itest-report" description="Runs all tests, first local then server (if any)" />
+
+	<!--
+		Overridden only to have the errorproperty and failureproperty attributes
+		added to the junit task.
+	-->
+	<!-- Runs the local unit tests. -->
+	<target name="tests-local" depends="tests.prepare" description="Run all local tests">
+		<!-- for the time being we just halt on failure, since these are
+	         local tests and there is no server to shut down, etc. But if
+	         we want to optionally run all tests and report on the whole
+	         batch, then we need to set a failure property as in the server
+	         tests. -->
+		<junit forkmode="perBatch" printsummary="yes" haltonfailure="no" haltonerror="no" dir="${basedir}" errorproperty="tests.failed" failureproperty="tests.failed">
+			<jvmarg value="${unitvm}" />
+			<jvmarg value="-Djava.security.auth.login.config=${target.testclasses.dir}/auth.conf" />
+			<jvmarg value="${test.arguments}" />
+			<classpath>
+				<pathelement location="${target.classes.dir}" />
+				<pathelement location="${target.testclasses.dir}" />
+				<pathelement location="${target.genclasses.dir}" />
+				<path refid="test.classpath" />
+			</classpath>
+
+			<formatter type="plain" />
+			<formatter type="xml" />
+
+			<batchtest fork="yes" todir="${target.testresults.dir}">
+				<fileset dir="${target.testclasses.dir}" includes="${test.includes}" excludes="${test.excludes}" />
+			</batchtest>
+		</junit>
+
+	</target>
+
+	<property name="target.testresults.html.dir" location="${target.testresults.dir}/html" />
+
+	<!-- Generate the unit test report -->
+	<target name="test-report" depends="build.prepare" description="Generate HTML report of unit test results">
+		<delete dir="${target.testresults.html.dir}" />
+		<mkdir dir="${target.testresults.html.dir}" />
+		<junitreport todir="${target.testresults.html.dir}">
+			<fileset dir="${target.testresults.dir}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="${target.testresults.html.dir}" />
+		</junitreport>
+		<echo>
+Unit test report has been generated.
+The HTML report is ${target.testresults.html.dir}/index.html
+		</echo>
+		<fail if="tests.failed" message="Unit tests failed" />
+	</target>
+
+</project>
