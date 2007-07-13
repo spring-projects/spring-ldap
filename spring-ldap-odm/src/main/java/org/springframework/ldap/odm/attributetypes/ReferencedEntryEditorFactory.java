@@ -10,11 +10,12 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.core.LdapTemplate;
+
 import org.springframework.ldap.odm.attributetypes.exception.ReferencedEntryEditorCreationException;
-import org.springframework.ldap.odm.contextmapping.AnnotatedClassContextMapper;
 import org.springframework.ldap.odm.contextmapping.ContextMapperFactory;
+import org.springframework.ldap.odm.contextmapping.ObjectDirectoryMapper;
 import org.springframework.ldap.odm.contextmapping.exception.ContextMapperException;
+import org.springframework.ldap.core.LdapTemplate;
 
 public class ReferencedEntryEditorFactory
 {
@@ -42,7 +43,7 @@ public class ReferencedEntryEditorFactory
         {
             LOGGER.debug("Attempting to create a referenced entry editor for class: "
                     + clazz.getSimpleName());
-            AnnotatedClassContextMapper contextMapper = null;
+            ObjectDirectoryMapper contextMapper = null;
             try
             {
                 contextMapper = contextMapperFactory.contextMapperForClass(clazz);

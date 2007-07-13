@@ -31,7 +31,8 @@
 	-->
 	<target name="tests" depends="tests-local,test-report,itests,itest-report" description="Runs all tests, first local then server (if any)" />
 
-	<!--
+    
+    <!--
 		Overridden only to have the errorproperty and failureproperty attributes
 		added to the junit task.
 	-->
@@ -42,7 +43,7 @@
 	         we want to optionally run all tests and report on the whole
 	         batch, then we need to set a failure property as in the server
 	         tests. -->
-		<junit forkmode="perBatch" printsummary="yes" haltonfailure="no" haltonerror="no" dir="${basedir}" errorproperty="tests.failed" failureproperty="tests.failed">
+		<junit forkmode="perBatch" printsummary="yes" haltonfailure="no" haltonerror="no" dir="${basedir}" errorproperty="tests.failed" failureproperty="tests.failed" fork="true">
 			<jvmarg value="${unitvm}" />
 			<jvmarg value="-Djava.security.auth.login.config=${target.testclasses.dir}/auth.conf" />
 			<jvmarg value="${test.arguments}" />
@@ -80,6 +81,15 @@ Unit test report has been generated.
 The HTML report is ${target.testresults.html.dir}/index.html
 		</echo>
 		<fail if="tests.failed" message="Unit tests failed" />
+	</target>
+
+    <target name="clover-report" depends="clover.instrument, tests-local" description="Produce a test coverage report">
+		<clover-report>
+			<current outfile="${target.clover.dir}/coverage.xml" />
+			<current outfile="${target.clover.dir}/html">
+				<format type="html" />
+			</current>
+		</clover-report>
 	</target>
 
 </project>

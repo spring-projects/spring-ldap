@@ -5,42 +5,44 @@
  */
 package org.springframework.ldap.odm.dao;
 
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.apache.commons.lang.ArrayUtils;
+import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
+import org.springframework.ldap.NameAlreadyBoundException;
+import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.odm.dao.exception.DataIntegrityViolationException;
-import org.springframework.ldap.odm.dao.exception.EntryNotFoundException;
 import org.springframework.ldap.odm.entity.TestPerson;
 import org.springframework.ldap.odm.entity.TestRole;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+
+import java.util.List;
 
 
-public class LdapDaoTest
+public class LdapDaoTest extends AbstractLdapTemplateIntegrationTest
 {
-
     protected static final Log LOGGER = LogFactory.getLog(LdapDaoTest.class);
     protected LdapDao ldapDao;
-    private ClassPathXmlApplicationContext applicationContext;
     private TestPerson testPerson;
-    private TestRole validRole;
 
 
-    @BeforeClass(alwaysRun = true)
-    public void initTestClass()
+    protected String[] getConfigLocations()
     {
         LOGGER.debug("********************INIT TEST CLASS**************************");
-
-        applicationContext = new ClassPathXmlApplicationContext("beans.xml");
-        ldapDao = (LdapDao) applicationContext.getBean("ldapDao");
+        return new String[]{"beans.xml"};
     }
 
-    @BeforeMethod(alwaysRun = true)
+    protected void onSetUp() throws Exception
+    {
+        super.onSetUp();
+        createPerMethodConsumer();
+    }
+
+    public void setLdapDao(LdapDao ldapDao)
+    {
+        this.ldapDao = ldapDao;
+    }
+
     public void createPerMethodConsumer()
     {
         LOGGER.debug("********************CREATE PER METHOD CONSUMER**************************");
@@ -53,18 +55,7 @@ public class LdapDaoTest
         testPerson.setPassword("test1234".getBytes());
     }
 
-    @BeforeClass(alwaysRun = true)
-    public void createValidRole()
-    {
-        LOGGER.debug("********************CREATE VALID ROLE**************************");
-        validRole = new TestRole();
-        validRole.setRoleName("webUser");
-        validRole.setDescription("A valid role");
-    }
-
-
-    @Test(groups = "LdapDao")
-    public void createEntity()
+    public void testCreateEntity()
     {
         try
         {
@@ -76,8 +67,8 @@ public class LdapDaoTest
         }
     }
 
-    @Test(groups = "LdapDao")
-    public void createOrUpdateEntity()
+
+    public void testCreateOrUpdateEntity()
     {
         try
         {
@@ -91,8 +82,7 @@ public class LdapDaoTest
     }
 
 
-    @Test(groups = "LdapDao")
-    public void findByNamingAttribute()
+    public void testFindByNamingAttribute()
     {
         ldapDao.create(testPerson);
         TestPerson retrieved = (TestPerson) ldapDao.findByNamingAttribute(testPerson.getIdentifier(), TestPerson.class);
@@ -100,18 +90,20 @@ public class LdapDaoTest
         Assert.assertNotNull(retrieved, "Should've found the created entity.");
     }
 
-    @Test(groups = "LdapDao")
-    public void findRoles()
+
+    public void testLoadsReferencedEntities()
     {
+        TestRole webUser = (TestRole) ldapDao.findByNamingAttribute("webUser", TestRole.class);
         ldapDao.create(testPerson);
-        validRole.setMembers(new TestPerson[]{testPerson});
-        ldapDao.createOrUpdate(validRole);
-        TestRole role = (TestRole) ldapDao.findByNamingAttribute("webUser", TestRole.class);
-        LOGGER.debug(role);
+        webUser.setMembers(new TestPerson[]{testPerson});
+        ldapDao.update(webUser);
+        TestRole updated = (TestRole) ldapDao.findByNamingAttribute("webUser", TestRole.class);
+        LOGGER.debug(updated);
+        Assert.assertTrue(ArrayUtils.contains(updated.getMembers(), testPerson));
     }
 
-    @Test(groups = "LdapDao")
-    public void findByDn()
+
+    public void testFindByDn()
     {
         ldapDao.create(testPerson);
         DistinguishedName dn = new DistinguishedName("uid=" + testPerson.getIdentifier() + ",ou=people");
@@ -121,8 +113,7 @@ public class LdapDaoTest
     }
 
 
-    @Test(groups = "LdapDao")
-    public void createEntityThrowsExceptionWhenNameAlreadyBound()
+    public void testCreateEntityThrowsExceptionWhenNameAlreadyBound()
     {
         try
         {
@@ -132,23 +123,20 @@ public class LdapDaoTest
         }
         catch (Exception expected)
         {
-            Assert.assertTrue(expected instanceof DataIntegrityViolationException, "Exception type doesn't match expected. ( got: "
-                    + expected.getMessage());
-            Assert.assertTrue(expected.getMessage().contains("Name already bound"),
-                    "Exception message doesn't match expected.");
+            Assert.assertTrue(expected instanceof NameAlreadyBoundException,
+                    "Exception type doesn't match expected. ( got: "
+                            + expected.getMessage());
         }
     }
 
-
-    @Test(groups = "LdapDao")
-    public void findAll()
+    public void testFindAll()
     {
+        ldapDao.create(testPerson);
         List results = ldapDao.findAll(TestPerson.class);
         Assert.assertTrue(results.size() > 0);
     }
 
-    @Test(groups = "LdapDao")
-    public void filterByBeanProperty()
+    public void testFilterByBeanProperty()
     {
         ldapDao.create(testPerson);
         List results = ldapDao.filterByBeanProperty(testPerson.getEmailAddress(), "EmailAddress", TestPerson.class);
@@ -156,9 +144,7 @@ public class LdapDaoTest
         Assert.assertTrue(results.size() > 0, "Filter should return collection containing more than one result. ");
     }
 
-
-    @Test(groups = "LdapDao")
-    public void updateEntity()
+    public void testUpdateEntity()
     {
         try
         {
@@ -176,9 +162,7 @@ public class LdapDaoTest
         }
     }
 
-
-    @Test(groups = "LdapDao")
-    public void updateEntityThrowsExceptionWhenNameNotBound()
+    public void testUpdateEntityThrowsExceptionWhenNameNotBound()
     {
         try
         {
@@ -187,15 +171,13 @@ public class LdapDaoTest
             ldapDao.update(testPerson);
             Assert.fail("Should've failed since the entry doesn't exist");
         }
-        catch (EntryNotFoundException e)
+        catch (Exception e)
         {
-            Assert.assertTrue(e instanceof EntryNotFoundException);
-            Assert.assertTrue(e.getMessage().contains("Entry not found"), "Error message not as expected.");
+            Assert.assertTrue(e instanceof NameNotFoundException);
         }
     }
 
-    @Test(groups = "LdapDao")
-    public void deleteEntity()
+    public void testDeleteEntity()
     {
         ldapDao.create(testPerson);
         LOGGER.debug(testPerson);

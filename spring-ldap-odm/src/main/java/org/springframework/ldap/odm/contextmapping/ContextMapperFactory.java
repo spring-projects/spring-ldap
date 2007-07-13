@@ -17,20 +17,20 @@ import java.util.Map;
 public class ContextMapperFactory
 {
     private static final Log LOGGER = LogFactory.getLog(ContextMapperFactory.class);
-    private Map<Class, AnnotatedClassContextMapper> contextMappers;
+    private Map<Class, AnnotationObjectDirectoryMapper> contextMappers;
     private LdapTypeConverter typeConverter;
     private ReferencedEntryEditorFactory referencedEntryEditorFactory;
 
     public ContextMapperFactory(LdapTypeConverter typeConverter,
                                 ReferencedEntryEditorFactory referencedEntryEditorFactory)
     {
-        contextMappers = new HashMap<Class, AnnotatedClassContextMapper>();
+        contextMappers = new HashMap<Class, AnnotationObjectDirectoryMapper>();
         this.typeConverter = typeConverter;
         this.referencedEntryEditorFactory = referencedEntryEditorFactory;
         this.referencedEntryEditorFactory.setContextMapperFactory(this);
     }
 
-    public AnnotatedClassContextMapper contextMapperForClass(Class clazz)
+    public ObjectDirectoryMapper contextMapperForClass(Class clazz)
             throws ContextMapperException
     {
         if (contextMappers.containsKey(clazz))
@@ -41,8 +41,8 @@ public class ContextMapperFactory
         else
         {
             LOGGER.debug("Attempting to create a context mapper for class: " + clazz.getSimpleName());
-            AnnotatedClassContextMapper contextMapper =
-                    new AnnotatedClassContextMapper(clazz, typeConverter, referencedEntryEditorFactory);
+            AnnotationObjectDirectoryMapper contextMapper =
+                    new AnnotationObjectDirectoryMapper(clazz, typeConverter, referencedEntryEditorFactory);
             contextMappers.put(clazz, contextMapper);
             return contextMapper;
         }

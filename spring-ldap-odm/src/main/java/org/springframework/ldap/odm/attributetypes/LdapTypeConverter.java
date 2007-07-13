@@ -5,28 +5,39 @@
  */
 package org.springframework.ldap.odm.attributetypes;
 
-import java.beans.PropertyEditor;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.naming.ldap.LdapName;
-
 import org.springframework.beans.SimpleTypeConverter;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.ldap.core.DistinguishedName;
 
+import javax.naming.ldap.LdapName;
+import java.beans.PropertyEditor;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+import java.util.Date;
+
+/**
+ * LdapTypeConverter is responsible for the conversion of LDAP attributes returned in String form
+ * to native java types and vice versa. Mostly it leverages Spring's property editors, however
+ * it registers some custom editors to:
+ * <li>
+ * <ul>convert from Generalized Time strings to java.util.Date</ul>
+ * <ul>convert dn strings to <code>javax.naming.ldap.LdapName</code> or
+ * <code>org.springframework.ldap.core.DistinguishedName</code>.
+ * </li>
+ */
 public class LdapTypeConverter extends SimpleTypeConverter
 {
+    private static final DateFormat GENERALIZED_TIME = new SimpleDateFormat("yyyyMMddHHmmss.S");
 
     public LdapTypeConverter()
     {
         super();
-        registerCustomEditor(Date.class,
-                new CustomDateEditor(new SimpleDateFormat("yyyyMMddHHmmss.S"), true));
+        registerCustomEditor(Date.class, new CustomDateEditor(GENERALIZED_TIME, true));
         registerCustomEditor(LdapName.class, new NameEditor(LdapName.class));
         registerCustomEditor(DistinguishedName.class, new NameEditor(DistinguishedName.class));
     }
 
+    /** Convert Object to String */
     public String getAsText(Object value)
     {
         if (value instanceof String)
@@ -45,6 +56,7 @@ public class LdapTypeConverter extends SimpleTypeConverter
         }
     }
 
+    /** Convert Object array to String array */
     public String[] getAllAsText(Object[] values)
     {
         String[] textValues = new String[values.length];
