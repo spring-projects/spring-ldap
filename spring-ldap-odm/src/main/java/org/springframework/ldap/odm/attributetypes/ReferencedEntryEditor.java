@@ -5,17 +5,16 @@
  */
 package org.springframework.ldap.odm.attributetypes;
 
-import java.beans.PropertyEditorSupport;
-
-import javax.naming.InvalidNameException;
-import javax.naming.ldap.LdapName;
-
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.odm.contextmapping.AnnotatedClassContextMapper;
 import org.springframework.ldap.odm.contextmapping.exception.ContextMapperException;
 
+import javax.naming.InvalidNameException;
+import javax.naming.ldap.LdapName;
+import java.beans.PropertyEditorSupport;
+
 public class ReferencedEntryEditor extends PropertyEditorSupport
-{    
+{
     private LdapTemplate ldapTemplate;
     private AnnotatedClassContextMapper contextMapper;
 

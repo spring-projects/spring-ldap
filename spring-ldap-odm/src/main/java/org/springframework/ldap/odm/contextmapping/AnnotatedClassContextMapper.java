@@ -5,14 +5,6 @@
  */
 package org.springframework.ldap.odm.contextmapping;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.naming.Name;
-import javax.naming.directory.Attribute;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.TypeMismatchException;
@@ -30,6 +22,13 @@ import org.springframework.ldap.odm.attributetypes.ValidConversionType;
 import org.springframework.ldap.odm.attributetypes.exception.ReferencedEntryEditorCreationException;
 import org.springframework.ldap.odm.contextmapping.exception.ContextMapperException;
 import org.springframework.util.StringUtils;
+
+import javax.naming.Name;
+import javax.naming.directory.Attribute;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AnnotatedClassContextMapper implements ContextMapper, ContextAssembler
 {

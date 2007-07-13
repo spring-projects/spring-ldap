@@ -1,0 +1,9 @@
+dn: ou=people,dc=example,dc=com
+objectclass: top
+objectclass: organizationalUnit
+ou: people
+
+dn: ou=roles,dc=example,dc=com
+objectclass: top
+objectclass: organizationalUnit
+ou: roles

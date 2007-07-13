@@ -5,21 +5,19 @@
  */
 package org.springframework.ldap.odm.dao;
 
-import java.util.List;
-
-import javax.naming.Name;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.DirContextAdapter;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.odm.contextmapping.AnnotatedClassContextMapper;
 import org.springframework.ldap.odm.contextmapping.ContextMapperFactory;
 import org.springframework.ldap.odm.contextmapping.exception.ContextMapperException;
 import org.springframework.ldap.odm.dao.exception.DaoException;
 import org.springframework.ldap.odm.dao.exception.DataIntegrityViolationException;
-import org.springframework.ldap.odm.dao.exception.EntryNotFoundException;
+
+import javax.naming.Name;
+import java.util.List;
 
 public class LdapDaoImpl implements LdapDao
 {
@@ -61,12 +59,6 @@ public class LdapDaoImpl implements LdapDao
             DirContextAdapter contextAdapter = (DirContextAdapter) ldapTemplate.lookup(dn);
             ctxMapper.mapToContext(dirObject, contextAdapter);
             ldapTemplate.modifyAttributes(dn, contextAdapter.getModificationItems());
-        }
-        catch (org.springframework.ldap.NameNotFoundException e)
-        {
-            //We need to rethrow a serializable exception if we are going to invoke
-            //this as a remote service.
-            throw new EntryNotFoundException(e.getMessage());
         }
         catch (ContextMapperException e)
         {

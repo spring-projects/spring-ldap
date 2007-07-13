@@ -5,11 +5,10 @@
  */
 package org.springframework.ldap.odm.attributetypes;
 
-import java.beans.PropertyEditorSupport;
-
-import javax.naming.ldap.LdapName;
-
 import org.springframework.ldap.core.DistinguishedName;
+
+import java.beans.PropertyEditorSupport;
+import javax.naming.ldap.LdapName;
 
 public class NameEditor extends PropertyEditorSupport
 {

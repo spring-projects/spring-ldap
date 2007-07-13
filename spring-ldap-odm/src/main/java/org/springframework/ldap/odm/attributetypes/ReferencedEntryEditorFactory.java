@@ -10,11 +10,12 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.core.LdapTemplate;
+
 import org.springframework.ldap.odm.attributetypes.exception.ReferencedEntryEditorCreationException;
 import org.springframework.ldap.odm.contextmapping.AnnotatedClassContextMapper;
 import org.springframework.ldap.odm.contextmapping.ContextMapperFactory;
 import org.springframework.ldap.odm.contextmapping.exception.ContextMapperException;
+import org.springframework.ldap.core.LdapTemplate;
 
 public class ReferencedEntryEditorFactory
 {
