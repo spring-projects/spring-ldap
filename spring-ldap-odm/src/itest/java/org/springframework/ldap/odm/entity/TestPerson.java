@@ -9,14 +9,13 @@ import org.springframework.ldap.odm.annotations.DirAttribute;
 import org.springframework.ldap.odm.annotations.NamingAttribute;
 import org.springframework.ldap.odm.annotations.NamingSuffix;
 import org.springframework.ldap.odm.annotations.ObjectClasses;
-import org.apache.commons.lang.builder.EqualsBuilder;
 
 import com.thoughtworks.xstream.XStream;
 
 
 @NamingAttribute("uid")
 @NamingSuffix({"ou=people"})
-@ObjectClasses({"person", "organizationalPerson", "inetorgperson"})
+@ObjectClasses({"top", "person", "organizationalPerson", "inetorgperson"})
 public class TestPerson
 {
     /*********************************** Directory mapped fields ************************************/
@@ -105,11 +104,6 @@ public class TestPerson
         XStream xStream = new XStream();
         xStream.alias("TestPerson", TestPerson.class);
         return "\n" + xStream.toXML(this);
-    }
-
-    public boolean equals(Object o)
-    {
-        return EqualsBuilder.reflectionEquals(this, o);
     }
 
 

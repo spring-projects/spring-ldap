@@ -5,13 +5,13 @@
  */
 package org.springframework.ldap.odm.entity;
 
+import java.util.Date;
+
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.odm.annotations.DirAttribute;
 import org.springframework.ldap.odm.annotations.NamingAttribute;
 import org.springframework.ldap.odm.annotations.NamingSuffix;
 import org.springframework.ldap.odm.annotations.ObjectClasses;
-
-import java.util.Date;
 
 @NamingAttribute("cn")
 @NamingSuffix({"ou = people", "dc = example", "dc=com"})

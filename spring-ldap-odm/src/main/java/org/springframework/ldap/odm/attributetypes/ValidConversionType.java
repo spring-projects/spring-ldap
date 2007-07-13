@@ -5,11 +5,11 @@
  */
 package org.springframework.ldap.odm.attributetypes;
 
-import org.springframework.ldap.core.DistinguishedName;
-
-import javax.naming.ldap.LdapName;
 import java.util.Date;
 
+import javax.naming.ldap.LdapName;
+
+import org.springframework.ldap.core.DistinguishedName;
 
 /* Should be able to support any of Spring's conversion types. Add a test case if you add one */
 public enum ValidConversionType

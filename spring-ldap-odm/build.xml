@@ -29,10 +29,9 @@
 	<!--
 		Overridden to create test report and run integration tests as well.
 	-->
-	<target name="tests" depends="clover.init, tests-local,test-report,clover-report, itests,itest-report" description="Runs all tests, first local then server (if any)" />
+	<target name="tests" depends="tests-local,test-report,itests,itest-report" description="Runs all tests, first local then server (if any)" />
 
-    
-    <!--
+	<!--
 		Overridden only to have the errorproperty and failureproperty attributes
 		added to the junit task.
 	-->
@@ -43,7 +42,7 @@
 	         we want to optionally run all tests and report on the whole
 	         batch, then we need to set a failure property as in the server
 	         tests. -->
-		<junit forkmode="perBatch" printsummary="yes" haltonfailure="no" haltonerror="no" dir="${basedir}" errorproperty="tests.failed" failureproperty="tests.failed" fork="true">
+		<junit forkmode="perBatch" printsummary="yes" haltonfailure="no" haltonerror="no" dir="${basedir}" errorproperty="tests.failed" failureproperty="tests.failed">
 			<jvmarg value="${unitvm}" />
 			<jvmarg value="-Djava.security.auth.login.config=${target.testclasses.dir}/auth.conf" />
 			<jvmarg value="${test.arguments}" />

@@ -2,20 +2,12 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
 
-    <import resource="classpath:/conf/apacheDsContext.xml"/>
-
-	<bean id="placeholderConfig"
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location" value="classpath:/conf/ldap.properties" />
-	</bean>
-
-    <bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource" >
-		<property name="urls" value="${urls}" />
-		<property name="userDn" value="${userDn}" />
-		<property name="password" value="${password}" />
-		<property name="base" value="${base}" />
-		<property name="dirObjectFactory" value="org.springframework.ldap.core.support.DefaultDirObjectFactory" />
-	</bean>
+    <bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource">
+        <property name="url" value="ldap://localhost:10389"/>
+        <property name="base" value="dc=example,dc=com"/>
+        <property name="userName" value="cn=Directory Manager"/>
+        <property name="password" value="password"/>
+    </bean>
 
     <bean id="ldapTemplate" singleton="true" class="org.springframework.ldap.core.LdapTemplate">
         <constructor-arg ref="contextSource"/>

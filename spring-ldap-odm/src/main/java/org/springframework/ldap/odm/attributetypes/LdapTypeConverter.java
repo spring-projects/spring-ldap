@@ -5,15 +5,15 @@
  */
 package org.springframework.ldap.odm.attributetypes;
 
-import org.springframework.beans.SimpleTypeConverter;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.ldap.core.DistinguishedName;
-
-import javax.naming.ldap.LdapName;
 import java.beans.PropertyEditor;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.naming.ldap.LdapName;
+
+import org.springframework.beans.SimpleTypeConverter;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.ldap.core.DistinguishedName;
 
 public class LdapTypeConverter extends SimpleTypeConverter
 {
