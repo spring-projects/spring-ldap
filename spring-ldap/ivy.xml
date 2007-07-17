@@ -40,6 +40,10 @@
 		<!-- build time only dependencies -->
 		<dependency org="org.acegisecurity" name="acegi-security"
 			rev="1.0.3" conf="buildtime->default" />
+		<dependency org="org.acegisecurity" name="acegi-security-src"
+			rev="1.0.3" conf="source->default">
+			<artifact name="acegi-security-src" type="zip" />
+		</dependency>
 		<!-- kind of nasty, acegi needs some 1.2.7 stuff, so we override with newer! -->
 		<dependency org="org.springframework" name="spring-jdbc"
 			rev="2.0.4" conf="buildtime->default" />
