@@ -17,8 +17,6 @@ package org.springframework.ldap.samples.person.dao;
 
 import java.util.List;
 
-import javax.naming.Name;
-
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
