@@ -1,0 +1,5 @@
+#Tue Jul 17 23:38:33 CEST 2007
+eclipse.preferences.version=1
+org.springframework.ide.eclipse.core.builders.enable.aopreferencemodelbuilder=true
+org.springframework.ide.eclipse.core.builders.enable.beansvalidator=true
+org.springframework.ide.eclipse.core.builders.enable.webflowvalidator=true

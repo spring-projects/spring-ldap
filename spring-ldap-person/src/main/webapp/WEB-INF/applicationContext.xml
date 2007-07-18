@@ -79,6 +79,16 @@
 		<property name="ldapOperations" ref="ldapOperations" />
 	</bean>
 
+	<bean id="countryDao"
+		class="org.springframework.ldap.samples.person.dao.CountryDaoImpl">
+		<property name="ldapOperations" ref="ldapOperations" />
+	</bean>
+
+	<bean id="companyDao"
+		class="org.springframework.ldap.samples.person.dao.CompanyDaoImpl">
+		<property name="ldapOperations" ref="ldapOperations" />
+	</bean>
+
 	<bean id="personServiceTarget"
 		class="org.springframework.ldap.samples.person.service.PersonServiceImpl">
 		<property name="personDao" ref="personDao" />

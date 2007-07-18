@@ -24,26 +24,23 @@
 			<td><form:input path="fullName" disabled="true" /></td>
 		</tr>
 		<tr>
-			<td><b>Company</b></td>
-			<td><form:input path="company" /></td>
+			<td><b>Country</B></td>
+			<td><form:select path="country" onchange="this.form._eventId.value='formChange';this.form.submit()"><form:options items="${countries}" itemLabel="label" itemValue="value"/></form:select></td>
 		</tr>
 		<tr>
-			<td><b>Country</B></td>
-			<td><form:input path="country" /></td>
+			<td><b>Company</b></td>
+			<td><form:select path="company"><form:options items="${companies}" itemLabel="label" itemValue="value"/></form:select></td>
 		</tr>
 		<tr>
 			<td><b>Phone</b></td>
 			<td><form:input path="phone" /></td>
 		</tr>
 		<tr>
-			<td><b>Description</b></td>
-			<td><form:input path="description" /></td>
-		</tr>
-		<tr>
 			<td colspan="2" class="buttonBar">
 				<input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}">
-				<input type="submit" class="button" name="_eventId_submit" value="Update">
-				<input type="submit" class="button" name="_eventId_cancel" value="Cancel">
+				<input type="hidden" name="_eventId" value="">
+				<input type="button" class="button" name="update" value="Update" onclick="this.form._eventId.value='submit';this.form.submit()">
+				<input type="button" class="button" name="cancel" value="Cancel" onclick="this.form._eventId.value='cancel';this.form.submit()">
 			</td>
 		</tr>
 	</table>

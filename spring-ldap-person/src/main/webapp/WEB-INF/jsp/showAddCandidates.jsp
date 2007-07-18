@@ -37,8 +37,8 @@
 									${person.fullName}
 								</a>
 							</td>
-							<td>${person.company}</td>
 							<td>${person.country}</td>
+							<td>${person.company}</td>
 							<td>${person.phone}</td>
 						</tr>
 					</c:forEach>

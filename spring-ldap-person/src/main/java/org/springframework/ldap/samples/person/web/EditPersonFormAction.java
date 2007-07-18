@@ -16,23 +16,28 @@
 
 package org.springframework.ldap.samples.person.web;
 
+import net.sf.chainedoptions.ChainedOptionManager;
+
 import org.springframework.beans.PropertyEditorRegistry;
 import org.springframework.beans.propertyeditors.StringArrayPropertyEditor;
+import org.springframework.util.Assert;
 import org.springframework.webflow.action.FormAction;
+import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
  * Action implementation that handles edit of a person. Registers appropriate
- * property editors.
+ * property editors, and provides an action method for setting up reference
+ * data.
  * 
  * @author Mattias Arthursson
- * 
+ * @author Ulrik Sandberg
  */
 public class EditPersonFormAction extends FormAction {
 
+    private ChainedOptionManager chainedOptionManager;
+
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.webflow.action.FormAction#registerPropertyEditors(org.springframework.webflow.execution.RequestContext,
      *      org.springframework.beans.PropertyEditorRegistry)
      */
@@ -40,5 +45,26 @@ public class EditPersonFormAction extends FormAction {
             PropertyEditorRegistry registry) {
         registry.registerCustomEditor(String[].class,
                 new StringArrayPropertyEditor());
+    }
+
+    public Event referenceData(RequestContext context) throws Exception {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Executing referenceData");
+        }
+
+        Object formObject = getFormObject(context);
+        chainedOptionManager.referenceData(context.getRequestScope().asMap(),
+                formObject, null);
+        return success();
+    }
+
+    protected void initAction() {
+        Assert.notNull(chainedOptionManager,
+                "The property 'chainedOptionManager' must not be null");
+    }
+
+    public void setChainedOptionManager(
+            ChainedOptionManager chainedOptionManager) {
+        this.chainedOptionManager = chainedOptionManager;
     }
 }

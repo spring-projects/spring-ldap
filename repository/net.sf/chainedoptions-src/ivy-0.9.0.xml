@@ -1,0 +1,16 @@
+<ivy-module version="1.0">
+	<info organisation="net.sf"
+		module="chainedoptions-src"
+		revision="0.9.0"
+		status="release"
+		publication="20050831153500"
+		default="true"
+	/>
+	<configurations>
+		<conf name="default" visibility="public" extends="source"/>
+		<conf name="source" visibility="public"/>
+	</configurations>
+	<publications>
+		<artifact name="chainedoptions-src" type="zip" ext="zip" conf="source"/>
+	</publications>
+</ivy-module>

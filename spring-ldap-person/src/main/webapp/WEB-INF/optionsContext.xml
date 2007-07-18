@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="editPersonChainedOptionManager"
+		class="net.sf.chainedoptions.ChainedOptionManagerImpl">
+		<property name="chainedOptions">
+			<list>
+				<ref bean="countryChainedOption" />
+				<ref bean="companyChainedOption" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="countryChainedOption"
+		class="org.springframework.ldap.samples.person.options.CountryOption">
+		<property name="countryDao">
+			<ref bean="countryDao" />
+		</property>
+		<property name="commandProperty">
+			<value>country</value>
+		</property>
+		<property name="optionsKey">
+			<value>countries</value>
+		</property>
+		<property name="defaultStrategy">
+			<bean
+				class="net.sf.chainedoptions.support.FirstItemStrategy" />
+		</property>
+		<property name="converter">
+			<bean
+				class="org.springframework.ldap.samples.person.options.CountryConverter" />
+		</property>
+	</bean>
+
+	<bean id="companyChainedOption"
+		class="org.springframework.ldap.samples.person.options.CompanyOption">
+		<property name="companyDao">
+			<ref bean="companyDao" />
+		</property>
+		<property name="commandProperty">
+			<value>company</value>
+		</property>
+		<property name="optionsKey">
+			<value>companies</value>
+		</property>
+		<property name="countryProperty">
+			<value>country</value>
+		</property>
+		<property name="defaultStrategy">
+			<bean
+				class="net.sf.chainedoptions.support.FirstItemStrategy" />
+		</property>
+		<property name="converter">
+			<bean
+				class="org.springframework.ldap.samples.person.options.CompanyConverter" />
+		</property>
+	</bean>
+</beans>

@@ -10,31 +10,23 @@
 			<td>Person Details</td>
 		</tr>
 		<tr>
-			<td colpan="2"><hr></td>
+			<td colspan="2"><hr></td>
 		</tr>
 		<tr>
 			<td><b>Name</b></td>
 			<td>${person.fullName}</td>
 		</tr>
 		<tr>
-			<td><b>Company</b></td>
-			<td>${person.company}</td>
-		</tr>
-		<tr>
 			<td><b>Country</B></td>
 			<td>${person.country}</td>
 		</tr>
 		<tr>
-			<td><b>Phone</b></td>
-			<td>${person.phone}</td>
+			<td><b>Company</b></td>
+			<td>${person.company}</td>
 		</tr>
 		<tr>
-			<td><b>Description</b></td>
-			<td align="top">
-				<c:forEach var="description" items="${person.description}">
-					${description} <br />
-				</c:forEach>
-			</td>
+			<td><b>Phone</b></td>
+			<td>${person.phone}</td>
 		</tr>
 		<tr>
 			<td colspan="2" class="buttonBar">

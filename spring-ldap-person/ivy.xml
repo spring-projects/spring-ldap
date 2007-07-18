@@ -22,6 +22,11 @@
 		<dependency org="oro" name="oro" rev="2.0.8" />
 		<dependency org="taglibs" name="standard" rev="1.1.2" />
 		<dependency org="jstl" name="jstl" rev="1.1.2" />
+		<dependency org="net.sf" name="chainedoptions" rev="0.9.0" />
+		<dependency org="net.sf" name="chainedoptions-src" rev="0.9.0"
+			conf="source->@">
+			<artifact name="chainedoptions-src" type="zip" ext="zip" />
+		</dependency>
 
 		<dependency org="org.springframework" name="spring-ldap"
 			rev="latest.integration" conf="global->default;source->@" />

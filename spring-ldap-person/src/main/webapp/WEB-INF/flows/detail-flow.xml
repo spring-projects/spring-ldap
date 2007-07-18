@@ -28,16 +28,24 @@
 
 	<view-state id="displayDetails" view="showDetails">
 		<transition on="back" to="finish" />
-		<transition on="edit" to="editDetails" />
+		<transition on="edit" to="setupEditDetails" />
 	</view-state>
+
+	<action-state id="setupEditDetails">
+		<!-- setup form with person -->
+		<action bean="editPersonFormAction" method="setupForm"/>
+		<transition to="editDetails" />
+	</action-state>
 
 	<view-state id="editDetails" view="editDetails">
 		<render-actions>
-			<!-- setup form with person -->
-			<action bean="editPersonFormAction" method="setupForm"/>
+			<action bean="editPersonFormAction" method="referenceData"/>
 		</render-actions>
 
 		<transition on="cancel" to="displayDetails" />
+		<transition on="formChange" to="editDetails">
+			<action bean="editPersonFormAction" method="bind"/>
+		</transition>
 		<transition on="submit" to="displayDetails">
 			<!-- get updated form data back into person object -->
 			<action bean="editPersonFormAction" method="bindAndValidate"/>

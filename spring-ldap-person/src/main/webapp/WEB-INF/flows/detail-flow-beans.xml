@@ -10,6 +10,7 @@
 		<property name="validator">
 			<bean class="org.springframework.ldap.samples.person.domain.PersonValidator"/>
 		</property>
+		<property name="chainedOptionManager" ref="editPersonChainedOptionManager" />
 	</bean>
 	
 </beans>

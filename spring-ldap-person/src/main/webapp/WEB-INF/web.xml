@@ -8,7 +8,7 @@ version="2.4">
 	<display-name>LdapTemplate Example</display-name>
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/applicationContext.xml /WEB-INF/applicationContext-acegi-security.xml</param-value>
+		<param-value>/WEB-INF/applicationContext.xml /WEB-INF/applicationContext-acegi-security.xml /WEB-INF/optionsContext.xml</param-value>
 	</context-param>
 
 	<filter>

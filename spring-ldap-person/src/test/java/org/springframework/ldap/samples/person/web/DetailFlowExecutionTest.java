@@ -15,6 +15,10 @@
  */
 package org.springframework.ldap.samples.person.web;
 
+import java.util.HashMap;
+
+import net.sf.chainedoptions.ChainedOptionManager;
+
 import org.easymock.MockControl;
 import org.springframework.ldap.samples.person.domain.Person;
 import org.springframework.ldap.samples.person.service.PersonService;
@@ -31,6 +35,10 @@ public class DetailFlowExecutionTest extends AbstractXmlFlowExecutionTests {
 
     private PersonService personServiceMock;
 
+    private MockControl chainedOptionManagerControl;
+
+    private ChainedOptionManager chainedOptionManagerMock;
+
     private MutableAttributeMap attributeMap;
 
     protected void setUp() throws Exception {
@@ -38,6 +46,9 @@ public class DetailFlowExecutionTest extends AbstractXmlFlowExecutionTests {
 
         personServiceControl = MockControl.createControl(PersonService.class);
         personServiceMock = (PersonService) personServiceControl.getMock();
+
+        chainedOptionManagerControl = MockControl.createControl(ChainedOptionManager.class);
+        chainedOptionManagerMock = (ChainedOptionManager) chainedOptionManagerControl.getMock();
 
         attributeMap = new LocalAttributeMap();
         attributeMap.put("country", "Sweden");
@@ -49,14 +60,18 @@ public class DetailFlowExecutionTest extends AbstractXmlFlowExecutionTests {
         super.tearDown();
         personServiceControl = null;
         personServiceMock = null;
+        chainedOptionManagerControl = null;
+        chainedOptionManagerMock = null;
     }
 
     protected void replay() {
         personServiceControl.replay();
+        chainedOptionManagerControl.replay();
     }
 
     protected void verify() {
         personServiceControl.verify();
+        chainedOptionManagerControl.verify();
     }
 
     public void testStartFlow() {
@@ -84,6 +99,7 @@ public class DetailFlowExecutionTest extends AbstractXmlFlowExecutionTests {
 
     public void testEdit() {
         expectFindByPrimaryKey();
+        expectReferenceData();
         replay();
 
         startFlow(attributeMap);
@@ -97,6 +113,7 @@ public class DetailFlowExecutionTest extends AbstractXmlFlowExecutionTests {
 
     public void testCancel() {
         expectFindByPrimaryKey();
+        expectReferenceData();
         replay();
 
         startFlow(attributeMap);
@@ -111,6 +128,7 @@ public class DetailFlowExecutionTest extends AbstractXmlFlowExecutionTests {
 
     public void testSubmit() {
         expectFindByPrimaryKey();
+        expectReferenceData();
         expectUpdate();
         replay();
 
@@ -122,6 +140,12 @@ public class DetailFlowExecutionTest extends AbstractXmlFlowExecutionTests {
         assertCurrentStateEquals("displayDetails");
         assertViewNameEquals("showDetails", view);
         assertModelAttributeNotNull("person", view);
+    }
+
+    private void expectReferenceData() {
+        Person person = setupPerson();
+        HashMap map = new HashMap();
+        chainedOptionManagerMock.referenceData(map, person, null);
     }
 
     private void expectFindByPrimaryKey() {
@@ -163,5 +187,6 @@ public class DetailFlowExecutionTest extends AbstractXmlFlowExecutionTests {
      */
     protected void registerMockServices(MockFlowServiceLocator serviceRegistry) {
         serviceRegistry.registerBean("personService", personServiceMock);
+        serviceRegistry.registerBean("editPersonChainedOptionManager", chainedOptionManagerMock);
     }
 }
