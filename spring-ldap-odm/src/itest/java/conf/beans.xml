@@ -29,7 +29,7 @@
     </bean>
 
     <bean id="ctxMapperFactory" singleton="true"
-          class="org.springframework.ldap.odm.contextmapping.ContextMapperFactory">
+          class="org.springframework.ldap.odm.mapping.ObjectDirectoryMapperFactory">
         <constructor-arg ref="typeConverter"/>
         <constructor-arg ref="referencedEntryEditorFactory"/>
     </bean>

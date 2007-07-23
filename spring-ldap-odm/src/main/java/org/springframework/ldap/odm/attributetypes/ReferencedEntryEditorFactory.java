@@ -5,27 +5,24 @@
  */
 package org.springframework.ldap.odm.attributetypes;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.springframework.ldap.odm.attributetypes.exception.ReferencedEntryEditorCreationException;
-import org.springframework.ldap.odm.contextmapping.ContextMapperFactory;
-import org.springframework.ldap.odm.contextmapping.ObjectDirectoryMapper;
-import org.springframework.ldap.odm.contextmapping.exception.ContextMapperException;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.odm.mapping.MappingException;
+import org.springframework.ldap.odm.mapping.ObjectDirectoryMapper;
+import org.springframework.ldap.odm.mapping.ObjectDirectoryMapperFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReferencedEntryEditorFactory
 {
     private static final Log LOGGER = LogFactory.getLog(ReferencedEntryEditorFactory.class);
-    private ContextMapperFactory contextMapperFactory;
+    private ObjectDirectoryMapperFactory odmFactory;
     private LdapTemplate ldapTemplate;
     private Map<Class, ReferencedEntryEditor> referencedEntryEditors;
 
-    public ReferencedEntryEditorFactory(
-            LdapTemplate ldapTemplate)
+    public ReferencedEntryEditorFactory(LdapTemplate ldapTemplate)
     {
         this.ldapTemplate = ldapTemplate;
         this.referencedEntryEditors = new HashMap();
@@ -43,24 +40,25 @@ public class ReferencedEntryEditorFactory
         {
             LOGGER.debug("Attempting to create a referenced entry editor for class: "
                     + clazz.getSimpleName());
-            ObjectDirectoryMapper contextMapper = null;
+
             try
             {
-                contextMapper = contextMapperFactory.contextMapperForClass(clazz);
+                ObjectDirectoryMapper odm = odmFactory.objectDirectoryMapperForClass(clazz);
                 ReferencedEntryEditor referencedEntryEditor =
-                        new ReferencedEntryEditor(ldapTemplate, contextMapper);
+                        new ReferencedEntryEditor(ldapTemplate, odm);
                 referencedEntryEditors.put(clazz, referencedEntryEditor);
                 return referencedEntryEditor;
             }
-            catch (ContextMapperException e)
+            catch (MappingException e)
             {
                 throw new ReferencedEntryEditorCreationException(e.getMessage(), e);
             }
         }
     }
 
-    public void setContextMapperFactory(ContextMapperFactory contextMapperFactory)
+    public void setObjectDirectoryMapperFactory(ObjectDirectoryMapperFactory
+            mapperFactory)
     {
-        this.contextMapperFactory = contextMapperFactory;
+        this.odmFactory = mapperFactory;
     }
 }

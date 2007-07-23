@@ -48,8 +48,8 @@
 	<dependency org="junit" name="junit" rev="3.8.1" conf="test->default"/>
 	<dependency org="junit-addons" name="junit-addons" rev="1.4" conf="test->default"/>
 	<dependency org="junitperf" name="junitperf" rev="1.8" conf="test->default"/>
-	<dependency org="easymock" name="easymock" rev="2.0" conf="test->default"/>
-    <dependency org="easymock" name="easymockclassextension" rev="1.2" conf="test->default"/>
+	<dependency org="org.easymock" name="easymock" rev="2.2" conf="test->default"/>
+	<dependency org="org.easymock" name="easymockclassextension" rev="2.2.2" conf="test->default"/>
       
     <dependency org="cglib" name="cglib-nodep" rev="2.1_3" conf="test->default"/>
 	<dependency org="org.testng" name="testng" rev="5.0" conf="test->default" />

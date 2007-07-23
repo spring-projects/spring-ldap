@@ -16,17 +16,6 @@
 
 package org.springframework.ldap;
 
-import java.util.Properties;
-
-import javax.naming.Binding;
-import javax.naming.Context;
-import javax.naming.ContextNotEmptyException;
-import javax.naming.InitialContext;
-import javax.naming.Name;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.directory.server.core.configuration.ShutdownConfiguration;
@@ -37,23 +26,31 @@ import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.support.DefaultDirObjectFactory;
 
+import javax.naming.*;
+import javax.naming.ContextNotEmptyException;
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
+import java.util.Properties;
+
 /**
  * Utility class to initialize the apache directory server for use in the
  * integration tests.
  *
  * @author Mattias Arthursson
- *
  */
-public class LdapServerManager implements DisposableBean {
+public class LdapServerManager implements DisposableBean
+{
     private static Log log = LogFactory.getLog(LdapServerManager.class);
 
     private ContextSource contextSource;
 
-    public void setContextSource(ContextSource contextSource) {
+    public void setContextSource(ContextSource contextSource)
+    {
         this.contextSource = contextSource;
     }
 
-    public void destroy() throws Exception {
+    public void destroy() throws Exception
+    {
         Properties env = new Properties();
         env.setProperty(Context.INITIAL_CONTEXT_FACTORY,
                 ServerContextFactory.class.getName());
@@ -67,7 +64,8 @@ public class LdapServerManager implements DisposableBean {
         new InitialContext(env);
     }
 
-    public void cleanAndSetup(String ldifFile) throws Exception {
+    public void cleanAndSetup(String ldifFile) throws Exception
+    {
         DirContext ctx = contextSource.getReadWriteContext();
 
         // First of all, make sure the database is empty.
@@ -76,49 +74,68 @@ public class LdapServerManager implements DisposableBean {
         // Different test cases have different base paths. This means that the
         // starting point will be different.
         if (ctx.getEnvironment().get(
-                DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY) != null) {
+                DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY) != null)
+        {
             startingPoint = DistinguishedName.EMPTY_PATH;
-        } else {
+        }
+        else
+        {
             startingPoint = new DistinguishedName("dc=jayway,dc=se");
         }
 
-        try {
+        try
+        {
             log.info("Cleaning all present data.");
             clearSubContexts(ctx, startingPoint);
             // Load the ldif to the recently started server
             log.info("Loading setup data");
             LdifFileLoader loader = new LdifFileLoader(ctx, ldifFile);
             loader.execute();
-        } finally {
+        }
+        finally
+        {
             ctx.close();
         }
     }
 
     private void clearSubContexts(DirContext ctx, Name name)
-            throws NamingException {
+            throws NamingException
+    {
 
         NamingEnumeration enumeration = null;
-        try {
+        try
+        {
             enumeration = ctx.listBindings(name);
-            while (enumeration.hasMore()) {
+            while (enumeration.hasMore())
+            {
                 Binding element = (Binding) enumeration.next();
                 DistinguishedName childName = new DistinguishedName(element
                         .getName());
                 childName.prepend((DistinguishedName) name);
 
-                try {
+                try
+                {
                     ctx.destroySubcontext(childName);
-                } catch (ContextNotEmptyException e) {
+                }
+                catch (ContextNotEmptyException e)
+                {
                     clearSubContexts(ctx, childName);
                     ctx.destroySubcontext(childName);
                 }
             }
-        } catch (NamingException e) {
+        }
+        catch (NamingException e)
+        {
             e.printStackTrace();
-        } finally {
-            try {
+        }
+        finally
+        {
+            try
+            {
                 enumeration.close();
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 // Never mind this
             }
         }

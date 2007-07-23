@@ -9,12 +9,12 @@ package org.springframework.ldap.odm.attributetypes;
 import junit.framework.TestCase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.testng.Assert;
 import org.springframework.ldap.core.DistinguishedName;
+import org.testng.Assert;
 
 import javax.naming.ldap.LdapName;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 public class ValidConversionTypeTest extends TestCase
 {

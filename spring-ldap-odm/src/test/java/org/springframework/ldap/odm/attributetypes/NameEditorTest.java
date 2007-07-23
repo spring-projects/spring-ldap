@@ -27,7 +27,7 @@ public class NameEditorTest extends TestCase
         }
     }
 
-    public void testGetAsText() 
+    public void testGetAsText()
     {
         NameEditor editor = new NameEditor(DistinguishedName.class);
         DistinguishedName name = new DistinguishedName("uid=zzz, ou=people");

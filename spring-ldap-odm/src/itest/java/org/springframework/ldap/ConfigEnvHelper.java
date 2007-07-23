@@ -16,21 +16,21 @@
 
 package org.springframework.ldap;
 
-import java.io.File;
-import java.util.Hashtable;
-
-import javax.naming.Context;
-
 import org.apache.directory.server.configuration.MutableServerStartupConfiguration;
 import org.apache.directory.server.jndi.ServerContextFactory;
 import org.springframework.beans.factory.InitializingBean;
+
+import javax.naming.Context;
+import java.io.File;
+import java.util.Hashtable;
 
 /**
  * Helper class to simplify Spring configuration of ApacheDS.
  *
  * @author Mattias Arthursson
  */
-public class ConfigEnvHelper implements InitializingBean {
+public class ConfigEnvHelper implements InitializingBean
+{
     private final MutableServerStartupConfiguration configuration;
 
     private final Hashtable initialEnv;
@@ -40,17 +40,20 @@ public class ConfigEnvHelper implements InitializingBean {
             + File.separator + "ldaptemplate_apacheds");
 
     public ConfigEnvHelper(Hashtable initialEnv,
-            MutableServerStartupConfiguration configuration) {
+                           MutableServerStartupConfiguration configuration)
+    {
 
         this.initialEnv = initialEnv;
         this.configuration = configuration;
     }
 
-    public Hashtable getEnv() {
+    public Hashtable getEnv()
+    {
         return initialEnv;
     }
 
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() throws Exception
+    {
         initialEnv.put(Context.INITIAL_CONTEXT_FACTORY, ServerContextFactory.class.getName());
         configuration.setWorkingDirectory(workingDir);
         initialEnv.putAll(configuration.toJndiEnvironment());

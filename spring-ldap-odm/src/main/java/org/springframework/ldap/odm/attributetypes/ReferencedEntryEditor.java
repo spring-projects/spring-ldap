@@ -6,8 +6,8 @@
 package org.springframework.ldap.odm.attributetypes;
 
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.odm.contextmapping.ObjectDirectoryMapper;
-import org.springframework.ldap.odm.contextmapping.exception.ContextMapperException;
+import org.springframework.ldap.odm.mapping.MappingException;
+import org.springframework.ldap.odm.mapping.ObjectDirectoryMapper;
 
 import javax.naming.InvalidNameException;
 import javax.naming.ldap.LdapName;
@@ -16,23 +16,25 @@ import java.beans.PropertyEditorSupport;
 public class ReferencedEntryEditor extends PropertyEditorSupport
 {
     private LdapTemplate ldapTemplate;
-    private ObjectDirectoryMapper contextMapper;
+    private ObjectDirectoryMapper objectDirectoryMapper;
 
-    public ReferencedEntryEditor(LdapTemplate ldapTemplate, ObjectDirectoryMapper contextMapper)
+    public ReferencedEntryEditor(LdapTemplate ldapTemplate,
+                                 ObjectDirectoryMapper objectDirectoryMapper)
     {
         this.ldapTemplate = ldapTemplate;
-        this.contextMapper = contextMapper;
+        this.objectDirectoryMapper = objectDirectoryMapper;
     }
 
     public String getAsText()
     {
         try
         {
-            return contextMapper.buildDn(getValue()).toString();
+            return objectDirectoryMapper.buildDn(getValue()).toString();
         }
-        catch (ContextMapperException e)
+        catch (MappingException e)
         {
-            throw new RuntimeException("No context mapper for class: " + getValue().getClass().getSimpleName());
+            throw new RuntimeException(
+                    "Mapping exception: " + getValue().getClass().getSimpleName());
         }
     }
 
@@ -40,7 +42,7 @@ public class ReferencedEntryEditor extends PropertyEditorSupport
     {
         try
         {
-            setValue(ldapTemplate.lookup(new LdapName(text), contextMapper));
+            setValue(ldapTemplate.lookup(new LdapName(text), objectDirectoryMapper));
         }
         catch (InvalidNameException e)
         {

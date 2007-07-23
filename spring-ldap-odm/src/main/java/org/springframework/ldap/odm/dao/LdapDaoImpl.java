@@ -8,13 +8,11 @@ package org.springframework.ldap.odm.dao;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.DirContextAdapter;
-import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.odm.contextmapping.ContextMapperFactory;
-import org.springframework.ldap.odm.contextmapping.ObjectDirectoryMapper;
-import org.springframework.ldap.odm.contextmapping.exception.ContextMapperException;
-import org.springframework.ldap.odm.dao.exception.DaoException;
-import org.springframework.ldap.odm.dao.exception.DataIntegrityViolationException;
+import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.odm.mapping.MappingException;
+import org.springframework.ldap.odm.mapping.ObjectDirectoryMapper;
+import org.springframework.ldap.odm.mapping.ObjectDirectoryMapperFactory;
 
 import javax.naming.Name;
 import java.util.List;
@@ -23,12 +21,12 @@ public class LdapDaoImpl implements LdapDao
 {
     static final Log LOGGER = LogFactory.getLog(LdapDaoImpl.class);
     LdapTemplate ldapTemplate;
-    ContextMapperFactory ctxMapperFactory;
+    ObjectDirectoryMapperFactory odmFactory;
 
-    public LdapDaoImpl(LdapTemplate ldapTemplate, ContextMapperFactory ctxMapperFactory)
+    public LdapDaoImpl(LdapTemplate ldapTemplate, ObjectDirectoryMapperFactory odmFactory)
     {
         this.ldapTemplate = ldapTemplate;
-        this.ctxMapperFactory = ctxMapperFactory;
+        this.odmFactory = odmFactory;
     }
 
     public void create(Object dirObject)
@@ -36,15 +34,12 @@ public class LdapDaoImpl implements LdapDao
         DirContextAdapter context = new DirContextAdapter();
         try
         {
-            ObjectDirectoryMapper ctxMapper = ctxMapperFactory.contextMapperForClass(dirObject.getClass());
-            ctxMapper.mapToContext(dirObject, context);
-            ldapTemplate.bind(ctxMapper.buildDn(dirObject), context, null);
+            ObjectDirectoryMapper mapper =
+                    odmFactory.objectDirectoryMapperForClass(dirObject.getClass());
+            mapper.mapToContext(dirObject, context);
+            ldapTemplate.bind(mapper.buildDn(dirObject), context, null);
         }
-        catch (org.springframework.dao.DataIntegrityViolationException dive)
-        {
-            throw new DataIntegrityViolationException(dive.getMessage());
-        }
-        catch (ContextMapperException e)
+        catch (MappingException e)
         {
             throw new DaoException(e.getMessage(), e);
         }
@@ -54,13 +49,14 @@ public class LdapDaoImpl implements LdapDao
     {
         try
         {
-            ObjectDirectoryMapper ctxMapper = ctxMapperFactory.contextMapperForClass(dirObject.getClass());
-            Name dn = ctxMapper.buildDn(dirObject);
+            ObjectDirectoryMapper mapper =
+                    odmFactory.objectDirectoryMapperForClass(dirObject.getClass());
+            Name dn = mapper.buildDn(dirObject);
             DirContextAdapter contextAdapter = (DirContextAdapter) ldapTemplate.lookup(dn);
-            ctxMapper.mapToContext(dirObject, contextAdapter);
+            mapper.mapToContext(dirObject, contextAdapter);
             ldapTemplate.modifyAttributes(dn, contextAdapter.getModificationItems());
         }
-        catch (ContextMapperException e)
+        catch (MappingException e)
         {
             throw new DaoException(e.getMessage(), e);
         }
@@ -70,8 +66,9 @@ public class LdapDaoImpl implements LdapDao
     {
         try
         {
-            ObjectDirectoryMapper ctxMapper = ctxMapperFactory.contextMapperForClass(dirObject.getClass());
-            if (findByDn(ctxMapper.buildDn(dirObject), dirObject.getClass()) == null)
+            ObjectDirectoryMapper mapper =
+                    odmFactory.objectDirectoryMapperForClass(dirObject.getClass());
+            if (findByDn(mapper.buildDn(dirObject), dirObject.getClass()) == null)
             {
                 create(dirObject);
             }
@@ -80,7 +77,7 @@ public class LdapDaoImpl implements LdapDao
                 update(dirObject);
             }
         }
-        catch (ContextMapperException e)
+        catch (MappingException e)
         {
             throw new DaoException(e.getMessage(), e);
         }
@@ -91,10 +88,11 @@ public class LdapDaoImpl implements LdapDao
     {
         try
         {
-            ObjectDirectoryMapper ctxMapper = ctxMapperFactory.contextMapperForClass(dirObject.getClass());
-            ldapTemplate.unbind(ctxMapper.buildDn(dirObject));
+            ObjectDirectoryMapper mapper =
+                    odmFactory.objectDirectoryMapperForClass(dirObject.getClass());
+            ldapTemplate.unbind(mapper.buildDn(dirObject));
         }
-        catch (ContextMapperException e)
+        catch (MappingException e)
         {
             e.printStackTrace();
             throw new DaoException(e.getMessage(), e);
@@ -105,11 +103,12 @@ public class LdapDaoImpl implements LdapDao
     {
         try
         {
-            ObjectDirectoryMapper ctxMapper = ctxMapperFactory.contextMapperForClass(returnType);
-            Name dn = ctxMapper.buildDn(namingAttributeValue);
+            ObjectDirectoryMapper mapper =
+                    odmFactory.objectDirectoryMapperForClass(returnType);
+            Name dn = mapper.buildDn(namingAttributeValue);
             return findByDn(dn, returnType);
         }
-        catch (ContextMapperException e)
+        catch (MappingException e)
         {
             throw new DaoException(e.getMessage(), e);
         }
@@ -119,10 +118,11 @@ public class LdapDaoImpl implements LdapDao
     {
         try
         {
-            ObjectDirectoryMapper ctxMapper = ctxMapperFactory.contextMapperForClass(returnType);
-            return ldapTemplate.lookup(dn, ctxMapper);
+            ObjectDirectoryMapper mapper =
+                    odmFactory.objectDirectoryMapperForClass(returnType);
+            return ldapTemplate.lookup(dn, mapper);
         }
-        catch (ContextMapperException e)
+        catch (MappingException e)
         {
             throw new DaoException(e.getMessage(), e);
         }
@@ -138,24 +138,13 @@ public class LdapDaoImpl implements LdapDao
         try
         {
             LOGGER.debug("Filtering on property: " + beanPropertyName + ", for value: " + value);
-            ObjectDirectoryMapper ctxMapper =
-                    ctxMapperFactory.contextMapperForClass(returnType);
-
-            try
-            {
-                String attributeName = ctxMapper.getContextMap().attributeNameFor(beanPropertyName);
-                String filter = attributeName + "=" + value;
-                List results = ldapTemplate.search(ctxMapper.getNamingSuffix().toString(), filter,
-                        ctxMapperFactory.contextMapperForClass(returnType));
-                LOGGER.debug(results.size() + " results found for filter: " + filter);
-                return results;
-            }
-            catch (ContextMapperException e)
-            {
-                throw new DaoException(e.getMessage(), e);
-            }
+            ObjectDirectoryMapper mapper = odmFactory.objectDirectoryMapperForClass(returnType);
+            String filter = mapper.getObjectDirectoryMap().attributeNameFor(beanPropertyName) + "=" + value;
+            List results = ldapTemplate.search(mapper.getObjectDirectoryMap().getNamingSuffix().toString(), filter, mapper);
+            LOGGER.debug(results.size() + " results found for filter: " + filter);
+            return results;
         }
-        catch (ContextMapperException e)
+        catch (MappingException e)
         {
             throw new DaoException(e.getMessage(), e);
         }
@@ -165,21 +154,22 @@ public class LdapDaoImpl implements LdapDao
     {
         try
         {
-            ObjectDirectoryMapper ctxMapper = ctxMapperFactory.contextMapperForClass(ofType);
+            ObjectDirectoryMapper mapper = odmFactory.objectDirectoryMapperForClass(ofType);
             StringBuilder filterBuilder = new StringBuilder();
             filterBuilder.append("(&");
-            for (String objectClass : ctxMapper.getObjectClasses())
+            for (String objectClass : mapper.getObjectDirectoryMap().getObjectClasses())
             {
                 filterBuilder.append("(objectClass=");
                 filterBuilder.append(objectClass);
                 filterBuilder.append(")");
             }
             filterBuilder.append(")");
-            List results = ldapTemplate.search(DistinguishedName.EMPTY_PATH, filterBuilder.toString(), ctxMapper);
+            List results = ldapTemplate.search(
+                    DistinguishedName.EMPTY_PATH, filterBuilder.toString(), mapper);
             LOGGER.debug("Found " + results.size() + " entries of type " + ofType.getSimpleName());
             return results;
         }
-        catch (ContextMapperException e)
+        catch (MappingException e)
         {
             throw new DaoException(e.getMessage(), e);
         }

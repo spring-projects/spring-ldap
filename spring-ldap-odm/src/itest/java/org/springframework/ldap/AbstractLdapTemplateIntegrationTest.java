@@ -18,17 +18,20 @@ package org.springframework.ldap;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 
 public abstract class AbstractLdapTemplateIntegrationTest extends
-        AbstractDependencyInjectionSpringContextTests {
+        AbstractDependencyInjectionSpringContextTests
+{
 
     private LdapServerManager ldapServerManager;
 
-    protected void onSetUp() throws Exception {
+    protected void onSetUp() throws Exception
+    {
         super.onSetUp();
 
         ldapServerManager.cleanAndSetup("setup_data.ldif");
     }
 
-    public void setLdapServerManager(LdapServerManager ldapServerManager) {
+    public void setLdapServerManager(LdapServerManager ldapServerManager)
+    {
         this.ldapServerManager = ldapServerManager;
     }
 }

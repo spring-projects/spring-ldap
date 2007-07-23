@@ -11,8 +11,8 @@ import org.springframework.ldap.core.DistinguishedName;
 
 import javax.naming.ldap.LdapName;
 import java.beans.PropertyEditor;
-import java.text.SimpleDateFormat;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -37,7 +37,9 @@ public class LdapTypeConverter extends SimpleTypeConverter
         registerCustomEditor(DistinguishedName.class, new NameEditor(DistinguishedName.class));
     }
 
-    /** Convert Object to String */
+    /**
+     * Convert Object to String
+     */
     public String getAsText(Object value)
     {
         if (value instanceof String)
@@ -56,7 +58,9 @@ public class LdapTypeConverter extends SimpleTypeConverter
         }
     }
 
-    /** Convert Object array to String array */
+    /**
+     * Convert Object array to String array
+     */
     public String[] getAllAsText(Object[] values)
     {
         String[] textValues = new String[values.length];

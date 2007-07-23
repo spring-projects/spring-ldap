@@ -5,9 +5,8 @@
  */
 package org.springframework.ldap.odm.dao;
 
-import java.util.List;
-
 import javax.naming.Name;
+import java.util.List;
 
 public interface LdapDao
 {
@@ -23,7 +22,7 @@ public interface LdapDao
 
     public Object findByDn(Name dn, Class returnType);
 
-    List findAll(Class ofType);   
+    List findAll(Class ofType);
 
     List filterByBeanProperty(String value, String beanPropertyName, Class returnType);
 }

@@ -7,10 +7,11 @@ package org.springframework.ldap.odm.attributetypes;
 
 import org.springframework.ldap.core.DistinguishedName;
 
-import java.beans.PropertyEditorSupport;
 import javax.naming.ldap.LdapName;
+import java.beans.PropertyEditorSupport;
 
-/** NameEditor is responsible for converting Strings to the type LdapName or DistinguishedName.
+/**
+ * NameEditor is responsible for converting Strings to the type LdapName or DistinguishedName.
  * And, conversely LdapNames and DistinguishedNames to the type String.
  */
 public class NameEditor extends PropertyEditorSupport
@@ -19,7 +20,7 @@ public class NameEditor extends PropertyEditorSupport
 
     /**
      * @param conversionClass <code>LdapName.class</code> for String <--> LdapName and
-     * <code>DistinguishedName.class</code> for String <--> DistinguishedName 
+     *                        <code>DistinguishedName.class</code> for String <--> DistinguishedName
      */
     public NameEditor(Class conversionClass)
     {
@@ -31,14 +32,18 @@ public class NameEditor extends PropertyEditorSupport
         }
     }
 
-    /** Invokes toString() on the LdapName or DistinguishedName */
+    /**
+     * Invokes toString() on the LdapName or DistinguishedName
+     */
     public String getAsText()
     {
         Object value = conversionClass.cast(getValue());
         return value != null ? value.toString() : "";
     }
 
-    /** Attempts to parse and String and return an LdapName or DistinguishedName */
+    /**
+     * Attempts to parse and String and return an LdapName or DistinguishedName
+     */
     public void setAsText(String text) throws IllegalArgumentException
     {
         try
