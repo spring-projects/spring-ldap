@@ -5,17 +5,17 @@
 	<classpathentry kind="src" path="src/itest/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/global/xstream.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-dao.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-core.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-context.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-beans.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-dao.jar" sourcepath="lib/source/spring-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/spring-core.jar" sourcepath="lib/source/spring-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/spring-context.jar" sourcepath="lib/source/spring-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/spring-beans.jar" sourcepath="lib/source/spring-src.zip"/>
 	<classpathentry kind="lib" path="lib/global/ldapbp.jar"/>
 	<classpathentry kind="lib" path="lib/global/commons-logging.jar"/>
 	<classpathentry kind="lib" path="lib/global/commons-lang.jar"/>
 	<classpathentry kind="lib" path="lib/global/commons-collections.jar"/>
 	<classpathentry kind="lib" path="lib/test/testng.jar"/>
 	<classpathentry kind="lib" path="lib/test/junit.jar"/>
-	<classpathentry kind="lib" path="lib/test/spring-mock.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-mock.jar" sourcepath="lib/source/spring-src.zip"/>
 	<classpathentry kind="lib" path="lib/test/easymockclassextension.jar"/>
 	<classpathentry kind="lib" path="lib/test/easymock.jar"/>
 	<classpathentry kind="lib" path="lib/test/shared-ldap.jar"/>
