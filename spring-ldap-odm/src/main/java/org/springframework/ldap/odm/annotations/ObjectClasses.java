@@ -11,6 +11,11 @@ import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
 
+/**
+ * The <code>ObjectClasses</code> annotation describes which Object Classes an LDAP entry contains
+ * attributes for.
+ * Example: <pre>@ObjectClasses({"person", "organizationalPerson", "inetorgperson"})</pre> 
+ */
 @Documented
 @Target({TYPE})
 @Retention(RUNTIME)

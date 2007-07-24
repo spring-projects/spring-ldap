@@ -27,7 +27,8 @@ public class ReferencedEntryEditorTest extends TestCase
         super.setUp();
         ldapTemplate = EasyMock.createStrictMock(LdapTemplate.class);
         objectDirectoryMapper = EasyMock.createStrictMock(ObjectDirectoryMapper.class);
-        editor = new ReferencedEntryEditor(ldapTemplate, objectDirectoryMapper);
+        editor = new ReferencedEntryEditor(new DistinguishedName("dc=example, dc=com"),
+                ldapTemplate, objectDirectoryMapper);
     }
 
     public void testGetAsText() throws MappingException
@@ -68,15 +69,8 @@ public class ReferencedEntryEditorTest extends TestCase
 
     public void testSetAsText()
     {
-        LdapName referenceName = null;
-        try
-        {
-            referenceName = new LdapName("uid = referencedEntry, ou=foobars");
-        }
-        catch (InvalidNameException e)
-        {
-        }
-
+        DistinguishedName referenceName =
+                new DistinguishedName("uid = referencedEntry, ou=foobars");
         TestReferencedEntry referencedEntry = new TestReferencedEntry();
 
         EasyMock.expect(ldapTemplate.lookup(referenceName, objectDirectoryMapper))
@@ -85,6 +79,21 @@ public class ReferencedEntryEditorTest extends TestCase
         replayMocks();
         editor.setAsText("uid = referencedEntry, ou=foobars");
 
+        verifyMocks();
+    }
+
+    public void testSetAsTextRemovingBaseDn()
+    {
+        DistinguishedName referenceName =
+                new DistinguishedName("uid = referencedEntry, ou=foobars");
+        TestReferencedEntry referencedEntry = new TestReferencedEntry();
+
+
+        EasyMock.expect(ldapTemplate.lookup(referenceName, objectDirectoryMapper))
+                .andReturn(referencedEntry);
+
+        replayMocks();
+        editor.setAsText("uid = referencedEntry, ou=foobars, dc=example, dc=com");
         verifyMocks();
     }
 

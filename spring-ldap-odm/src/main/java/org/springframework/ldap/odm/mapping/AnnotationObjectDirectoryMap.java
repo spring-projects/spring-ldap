@@ -14,6 +14,20 @@ import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
 
+/** An implementation of an <code>ObjectDirectoryMap</code> based on Annotations. A class that is
+ * to be serialized to and from and LDAP repository must include the following annotations:
+ * <ul>
+ * <li>NamingAttribute</li>
+ * <li>ObjectClasses</li>
+ * <li>NamingSuffix</li>
+ * <li>DirAttribute</li>
+ * </ul>
+ *
+ * @see org.springframework.ldap.odm.annotations.NamingAttribute
+ * @see org.springframework.ldap.odm.annotations.ObjectClasses
+ * @see org.springframework.ldap.odm.annotations.NamingSuffix
+ * @see org.springframework.ldap.odm.annotations.DirAttribute
+ */
 public class AnnotationObjectDirectoryMap extends AbstractObjectDirectoryMap
 {
 
@@ -22,10 +36,10 @@ public class AnnotationObjectDirectoryMap extends AbstractObjectDirectoryMap
         super(clazz);
     }
 
-    protected void parseNamingAttribute() throws MappingException
+    protected String parseNamingAttribute() throws MappingException
     {
         NamingAttribute attnNamingAttr = (NamingAttribute) clazz.getAnnotation(NamingAttribute.class);
-        namingAttribute = attnNamingAttr != null ? attnNamingAttr.value() : null;
+        String namingAttribute = attnNamingAttr != null ? attnNamingAttr.value() : null;
 
         if (namingAttribute == null)
         {
@@ -33,12 +47,13 @@ public class AnnotationObjectDirectoryMap extends AbstractObjectDirectoryMap
                     + clazz.getSimpleName()
                     + ". The @NamingAttribute annotation is required.");
         }
+        return namingAttribute;
     }
 
-    protected void parseObjectClasses() throws MappingException
+    protected String[] parseObjectClasses() throws MappingException
     {
         ObjectClasses attnObjectClasses = (ObjectClasses) clazz.getAnnotation(ObjectClasses.class);
-        objectClasses = attnObjectClasses != null ? attnObjectClasses.value() : null;
+        String[] objectClasses = attnObjectClasses != null ? attnObjectClasses.value() : null;
 
         if (objectClasses == null)
         {
@@ -54,9 +69,10 @@ public class AnnotationObjectDirectoryMap extends AbstractObjectDirectoryMap
                     + "for example: @ObjectClasses({\"top\", \"inetorgperson\"}), and not: "
                     + "@ObjectClasses({\"top,inetorgperson\"})");
         }
+        return objectClasses;
     }
 
-    protected void parseNamingSuffix() throws MappingException
+    protected DistinguishedName parseNamingSuffix() throws MappingException
     {
         NamingSuffix attnNamingSuffix = (NamingSuffix) clazz.getAnnotation(NamingSuffix.class);
         String[] namingSuffixElements = attnNamingSuffix != null ? attnNamingSuffix.value() : null;
@@ -77,7 +93,7 @@ public class AnnotationObjectDirectoryMap extends AbstractObjectDirectoryMap
                     + "@NamingSuffix({\"ou=people,dc=example,dc=com\"})");
         }
 
-        namingSuffix = new DistinguishedName();
+        DistinguishedName namingSuffix = new DistinguishedName();
         for (int i = namingSuffixElements.length - 1; i >= 0; i--)
         {
             String[] nameValue = namingSuffixElements[i].split("=");
@@ -88,6 +104,7 @@ public class AnnotationObjectDirectoryMap extends AbstractObjectDirectoryMap
             }
             namingSuffix.add(nameValue[0].trim(), nameValue[1].trim());
         }
+        return namingSuffix;
     }
 
     protected void mapAttributesToBeanProperties()

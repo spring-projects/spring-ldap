@@ -25,14 +25,14 @@ public class ObjectDirectoryMapperImplTest extends TestCase
     private static final Log LOGGER = LogFactory.getLog(ObjectDirectoryMapperImplTest.class);
     private LdapTypeConverter typeConverter;
     private ReferencedEntryEditorFactory refEditorFactory;
-    private AnnotationObjectDirectoryMap objectDirectoryMap;
+    private AnnotationObjectDirectoryMap personOdm;
 
     protected void setUp() throws Exception
     {
         super.setUp();
         this.typeConverter = new LdapTypeConverter();
         this.refEditorFactory = EasyMock.createMock(ReferencedEntryEditorFactory.class);
-        this.objectDirectoryMap = new AnnotationObjectDirectoryMap(UnitTestPerson.class);
+        this.personOdm = new AnnotationObjectDirectoryMap(UnitTestPerson.class);
     }
 
 
@@ -51,7 +51,7 @@ public class ObjectDirectoryMapperImplTest extends TestCase
         try
         {
             ObjectDirectoryMapperImpl mapper =
-                    new ObjectDirectoryMapperImpl(objectDirectoryMap, null, refEditorFactory);
+                    new ObjectDirectoryMapperImpl(personOdm, null, refEditorFactory);
             fail("Should've thrown exception.");
         }
         catch (IllegalArgumentException e)
@@ -61,7 +61,7 @@ public class ObjectDirectoryMapperImplTest extends TestCase
         try
         {
             ObjectDirectoryMapperImpl mapper =
-                    new ObjectDirectoryMapperImpl(objectDirectoryMap, typeConverter, null);
+                    new ObjectDirectoryMapperImpl(personOdm, typeConverter, null);
             fail("Should've thrown exception.");
         }
         catch (IllegalArgumentException e)
@@ -75,7 +75,7 @@ public class ObjectDirectoryMapperImplTest extends TestCase
         try
         {
             ObjectDirectoryMapperImpl mapper =
-                    new ObjectDirectoryMapperImpl(objectDirectoryMap, typeConverter, refEditorFactory);
+                    new ObjectDirectoryMapperImpl(personOdm, typeConverter, refEditorFactory);
             UnitTestPerson person = new UnitTestPerson();
             person.setIdentifier("x332");
             person.setFullName("Mr Bean");
@@ -98,7 +98,7 @@ public class ObjectDirectoryMapperImplTest extends TestCase
         try
         {
             ObjectDirectoryMapperImpl mapper =
-                    new ObjectDirectoryMapperImpl(objectDirectoryMap, typeConverter, refEditorFactory);
+                    new ObjectDirectoryMapperImpl(personOdm, typeConverter, refEditorFactory);
             UnitTestPerson person = null;
             mapper.buildDn(person);
             fail("Should've thrown mapping exception - argument is null");
@@ -110,7 +110,7 @@ public class ObjectDirectoryMapperImplTest extends TestCase
         try
         {
             ObjectDirectoryMapperImpl mapper =
-                    new ObjectDirectoryMapperImpl(objectDirectoryMap, typeConverter, refEditorFactory);
+                    new ObjectDirectoryMapperImpl(personOdm, typeConverter, refEditorFactory);
             String namingAttributeValue = null;
             mapper.buildDn(namingAttributeValue);
             fail("Should've thrown mapping exception - argument is null");
@@ -121,28 +121,29 @@ public class ObjectDirectoryMapperImplTest extends TestCase
         }
     }
 
-    public void testMapToContext()
+    public void testMapToContext() 
     {
         try
         {
             ObjectDirectoryMapperImpl mapper =
-                    new ObjectDirectoryMapperImpl(objectDirectoryMap, typeConverter, refEditorFactory);
+                    new ObjectDirectoryMapperImpl(personOdm, typeConverter, refEditorFactory);
 
-            UnitTestPerson entity = new UnitTestPerson();
-            entity.setIdentifier("x232");
-            entity.setFullName("Mr Bean");
-            entity.setEmailAddress("bean@bean.com");
-            entity.setPassword("fred".getBytes());
-            entity.setAcceptEmails(false);
-            entity.setResetLogin(new Date(1L));
-            entity.setCreator(new DistinguishedName(
+            UnitTestPerson person = new UnitTestPerson();
+            person.setIdentifier("x232");
+            person.setFullName("Mr Bean");
+            person.setEmailAddress("bean@bean.com");
+            person.setPassword("fred".getBytes());
+            person.setAcceptEmails(false);
+            person.setResetLogin(new Date(1L));
+            person.setCreator(new DistinguishedName(
                     "uid=amAdmin,ou=people,dc=myretsu,dc=com"));
-            entity.setFailedLogins(3);
+            person.setFailedLogins(3);
+            person.setDescription(new String[]{"the quick", "brown fox"});
 
-            replayMocks();
+            EasyMock.replay(refEditorFactory);
 
             DirContextAdapter ctxAdapter = new DirContextAdapter();
-            mapper.mapToContext(entity, ctxAdapter);
+            mapper.mapToContext(person, ctxAdapter);
 
             Assert.assertEquals("x232", ctxAdapter.getStringAttribute("uid"));
             Assert.assertEquals("Mr Bean", ctxAdapter.getStringAttribute("cn"));
@@ -153,8 +154,10 @@ public class ObjectDirectoryMapperImplTest extends TestCase
             Assert.assertEquals("3", ctxAdapter.getStringAttribute("failedlogins"));
             Assert.assertEquals("uid=amAdmin, ou=people, dc=myretsu, dc=com",
                     ctxAdapter.getStringAttribute("creatorname"));
+            Assert.assertEquals("the quick", ctxAdapter.getStringAttributes("description")[0]);
 
-            verifyMocks();
+            EasyMock.verify(refEditorFactory);
+
         }
         catch (MappingException e)
         {
@@ -166,20 +169,20 @@ public class ObjectDirectoryMapperImplTest extends TestCase
     public void testMapFromContext() throws MappingException
     {
         ObjectDirectoryMapperImpl mapper =
-                new ObjectDirectoryMapperImpl(objectDirectoryMap, typeConverter, refEditorFactory);
+                new ObjectDirectoryMapperImpl(personOdm, typeConverter, refEditorFactory);
         DirContextAdapter ctxAdapter = new DirContextAdapter();
         ctxAdapter.setAttributeValue("acceptemails", "false");
         ctxAdapter.setAttributeValue("creatorname", "uid=admin, ou=people");
         ctxAdapter.setAttributeValue("mail", "person@person.com");
 
-        replayMocks();
+        EasyMock.replay(refEditorFactory);
 
         UnitTestPerson person = (UnitTestPerson) mapper.mapFromContext(ctxAdapter);
         Assert.assertEquals(person.getAcceptEmails(), Boolean.FALSE);
         Assert.assertEquals(person.getCreator(), new DistinguishedName("uid=admin, ou=people"));
         Assert.assertEquals(person.getEmailAddress(), "person@person.com");
 
-        verifyMocks();
+        EasyMock.verify(refEditorFactory);
 
 
     }
@@ -187,18 +190,8 @@ public class ObjectDirectoryMapperImplTest extends TestCase
     public void testGetObjectDirectoryMap() throws MappingException
     {
         ObjectDirectoryMapperImpl mapper =
-                new ObjectDirectoryMapperImpl(objectDirectoryMap, typeConverter, refEditorFactory);
+                new ObjectDirectoryMapperImpl(personOdm, typeConverter, refEditorFactory);
         Assert.assertNotNull(mapper.getObjectDirectoryMap());
-    }
-
-    private void verifyMocks()
-    {
-        EasyMock.verify(refEditorFactory);
-    }
-
-    private void replayMocks()
-    {
-        EasyMock.replay(refEditorFactory);
     }
 
 

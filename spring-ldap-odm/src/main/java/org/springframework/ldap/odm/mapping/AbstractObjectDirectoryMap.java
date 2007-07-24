@@ -14,6 +14,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * An abstract base class implementing an <code>ObjectDirectoryMap</code>. Actual parsing of
+ * mapping information needs to be implemented in a concrete sub class.
+ */
 public abstract class AbstractObjectDirectoryMap implements ObjectDirectoryMap
 {
     protected static final Log LOGGER = LogFactory.getLog(AnnotationObjectDirectoryMap.class);
@@ -34,26 +38,24 @@ public abstract class AbstractObjectDirectoryMap implements ObjectDirectoryMap
         beanPropertyNameKeys = new HashMap();
         attributeNameKeys = new HashMap();
 
-        parseNamingAttribute();
-        parseObjectClasses();
-        parseNamingSuffix();
+        this.namingAttribute = parseNamingAttribute();
+        this.objectClasses = parseObjectClasses();
+        this.namingSuffix = parseNamingSuffix();
         mapAttributesToBeanProperties();
     }
 
 
-    /**
-     * ********************************Template *****************************************
+    /* ********************************Template *****************************************
      */
-    protected abstract void parseNamingAttribute() throws MappingException;
+    protected abstract String parseNamingAttribute() throws MappingException;
 
-    protected abstract void parseObjectClasses() throws MappingException;
+    protected abstract String[] parseObjectClasses() throws MappingException;
 
-    protected abstract void parseNamingSuffix() throws MappingException;
+    protected abstract DistinguishedName parseNamingSuffix() throws MappingException;
 
     protected abstract void mapAttributesToBeanProperties() throws MappingException;
 
-    /**
-     * **********************************************************************************
+    /* **********************************************************************************
      */
 
     protected void map(String beanPropertyName, String toAttributeName)

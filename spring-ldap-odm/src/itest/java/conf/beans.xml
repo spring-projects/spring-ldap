@@ -25,6 +25,7 @@
 
     <bean id="referencedEntryEditorFactory" singleton="true"
           class="org.springframework.ldap.odm.attributetypes.ReferencedEntryEditorFactory">
+        <constructor-arg value="${base}" />
         <constructor-arg ref="ldapTemplate"/>
     </bean>
 

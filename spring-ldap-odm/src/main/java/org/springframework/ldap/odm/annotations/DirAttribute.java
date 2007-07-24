@@ -11,6 +11,12 @@ import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
 
+/**
+ * The <code>DirAttribute</code> describes the mapping between a bean property and an LDAP attribute.
+ * For example <pre>@DirAttribute("uid")</pre> maps a bean property to the directory attribute
+ * 'uid'. A <code>DirAttribute</code> without a value designates that the attribute has the same name
+ * as the bean property.  
+ */
 @Documented
 @Target({FIELD})
 @Retention(RUNTIME)

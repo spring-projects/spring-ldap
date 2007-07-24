@@ -5,6 +5,11 @@
  */
 package org.springframework.ldap.odm.dao;
 
+/**
+ * Thrown by <code>LdapDao</code> under exceptional circumstances.
+ *
+ * @see LdapDao
+ */
 public class DaoException extends RuntimeException
 {
     public DaoException(String message)

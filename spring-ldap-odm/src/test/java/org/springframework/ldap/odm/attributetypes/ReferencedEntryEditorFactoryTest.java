@@ -27,7 +27,7 @@ public class ReferencedEntryEditorFactoryTest extends TestCase
         ldapTemplate = EasyMock.createStrictMock(LdapTemplate.class);
         odmFactory = EasyMock.createStrictMock(ObjectDirectoryMapperFactory.class);
         odm = EasyMock.createStrictMock(ObjectDirectoryMapper.class);
-        editorFactory = new ReferencedEntryEditorFactory(ldapTemplate);
+        editorFactory = new ReferencedEntryEditorFactory(null, ldapTemplate);
         editorFactory.setObjectDirectoryMapperFactory(odmFactory);
     }
 
@@ -36,7 +36,6 @@ public class ReferencedEntryEditorFactoryTest extends TestCase
      * the referenced entity.
      *
      * @throws MappingException
-     * @throws ReferencedEntryEditorCreationException
      *
      */
     public void testReferencedEditorForClass_successfulMapping()
@@ -52,7 +51,7 @@ public class ReferencedEntryEditorFactoryTest extends TestCase
             //is only called once.
             editorFactory.referencedEntryEditorForClass(TestReferencedEntry.class);
         }
-        catch (ReferencedEntryEditorCreationException e)
+        catch (MappingException e)
         {
             fail();
         }
@@ -65,13 +64,13 @@ public class ReferencedEntryEditorFactoryTest extends TestCase
      *
      * @throws org.springframework.ldap.odm.mapping.MappingException
      *
-     * @throws ReferencedEntryEditorCreationException
      *
      */
     public void testReferencedEditorForClass_unsuccessfulMapping()
             throws MappingException
     {
-        ReferencedEntryEditorFactory editorFactory = new ReferencedEntryEditorFactory(ldapTemplate);
+        ReferencedEntryEditorFactory editorFactory =
+                new ReferencedEntryEditorFactory(null, ldapTemplate);
         editorFactory.setObjectDirectoryMapperFactory(odmFactory);
 
         EasyMock.expect(odmFactory.objectDirectoryMapperForClass(TestReferencedEntry.class))
@@ -84,7 +83,7 @@ public class ReferencedEntryEditorFactoryTest extends TestCase
             editorFactory.referencedEntryEditorForClass(TestReferencedEntry.class);
             fail("Should've thrown exception");
         }
-        catch (ReferencedEntryEditorCreationException e)
+        catch (MappingException e)
         {
             //expected behaviour
         }

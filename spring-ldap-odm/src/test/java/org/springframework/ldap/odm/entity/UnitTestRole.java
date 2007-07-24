@@ -25,6 +25,13 @@ public class UnitTestRole
     @DirAttribute("roleOccupant")
     private UnitTestPerson[] members;
 
+    public UnitTestRole(String roleName, String description, UnitTestPerson[] members)
+    {
+        this.roleName = roleName;
+        this.description = description;
+        this.members = members;
+    }
+
     public String getRoleName()
     {
         return roleName;

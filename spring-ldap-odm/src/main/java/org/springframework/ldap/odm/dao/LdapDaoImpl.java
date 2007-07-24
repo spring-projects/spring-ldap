@@ -17,6 +17,9 @@ import org.springframework.ldap.odm.mapping.ObjectDirectoryMapperFactory;
 import javax.naming.Name;
 import java.util.List;
 
+/**
+ * An implementation of the <code>LdapDao</code> interface. 
+ */
 public class LdapDaoImpl implements LdapDao
 {
     static final Log LOGGER = LogFactory.getLog(LdapDaoImpl.class);

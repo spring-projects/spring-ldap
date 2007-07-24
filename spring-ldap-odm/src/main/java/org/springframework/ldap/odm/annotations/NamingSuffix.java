@@ -10,12 +10,15 @@ import static java.lang.annotation.ElementType.TYPE;
 import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
-/*
- * Copyright 2006 by Sensis. All Rights Reserved.
- *
- * This software is the proprietary information of Majitek. Use is subject to license terms.
- */
 
+/**
+ * The <code>NamingSuffix</code> annotation describes where in an LDAP repository an entry resides.
+ * For example an object annotated with:
+ * <pre>@NamingSuffix({"ou=people", "dc=example", "dc=com"})</pre>
+ * will be persisted under the branch 'com/example/people' in the LDAP repository.
+ *
+ * @see NamingAttribute
+ */
 @Documented
 @Target({TYPE})
 @Retention(RUNTIME)

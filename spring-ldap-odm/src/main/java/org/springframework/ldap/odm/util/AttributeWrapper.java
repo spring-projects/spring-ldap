@@ -8,6 +8,7 @@ package org.springframework.ldap.odm.util;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 
+/** Adds the ability to <code>Attribute</code> to return all values as Object */
 public class AttributeWrapper
 {
     private Attribute attribute;
@@ -17,6 +18,11 @@ public class AttributeWrapper
         this.attribute = attribute;
     }
 
+    /** Returns all of an Attribute's values as an object. If the attribute contains a
+     * single value the return type is Object, otherwise the return type is Object[].
+     * @return All of an Attribute's values.
+     * @throws NamingException
+     */
     public Object getAllAsObject() throws NamingException
     {
         if (attribute.size() == 1)

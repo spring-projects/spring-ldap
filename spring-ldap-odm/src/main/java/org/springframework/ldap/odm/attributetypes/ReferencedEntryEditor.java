@@ -6,47 +6,60 @@
 package org.springframework.ldap.odm.attributetypes;
 
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.odm.mapping.MappingException;
 import org.springframework.ldap.odm.mapping.ObjectDirectoryMapper;
 
-import javax.naming.InvalidNameException;
-import javax.naming.ldap.LdapName;
 import java.beans.PropertyEditorSupport;
 
+/** ReferencedEntryEditor is responsible for converting references in an object
+ * directory map from distinguished name strings to the target type and vice versa.  
+ */
 public class ReferencedEntryEditor extends PropertyEditorSupport
 {
+    private DistinguishedName base;
     private LdapTemplate ldapTemplate;
     private ObjectDirectoryMapper objectDirectoryMapper;
 
-    public ReferencedEntryEditor(LdapTemplate ldapTemplate,
+    public ReferencedEntryEditor(DistinguishedName baseDn,
+                                 LdapTemplate ldapTemplate,
                                  ObjectDirectoryMapper objectDirectoryMapper)
     {
+        this.base = baseDn;
         this.ldapTemplate = ldapTemplate;
         this.objectDirectoryMapper = objectDirectoryMapper;
     }
 
+    /** Builds a distinguished name from the instance value */
     public String getAsText()
     {
         try
         {
-            return objectDirectoryMapper.buildDn(getValue()).toString();
+            DistinguishedName value = (DistinguishedName) base.clone();
+            value.append((DistinguishedName) objectDirectoryMapper.buildDn(getValue()));
+            return value.toString();
         }
         catch (MappingException e)
         {
-            throw new RuntimeException(
-                    "Mapping exception: " + getValue().getClass().getSimpleName());
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
+    /** Sets the value of the editor by performing a lookup and mapping the result
+     * to the target type using an object directory mapper.
+     * @param text The distinguished name of an ldap entry.  
+     * @throws IllegalArgumentException
+     */
     public void setAsText(String text) throws IllegalArgumentException
     {
-        try
+        DistinguishedName dn = new DistinguishedName(text);
+        if (dn.startsWith(base))
         {
-            setValue(ldapTemplate.lookup(new LdapName(text), objectDirectoryMapper));
+            for (int i = 0; i < base.size(); i++)
+            {
+                dn.removeFirst();
+            }
         }
-        catch (InvalidNameException e)
-        {
-            throw new IllegalArgumentException(e.getMessage(), e);
-        }
+        setValue(ldapTemplate.lookup(dn, objectDirectoryMapper));
     }
 }

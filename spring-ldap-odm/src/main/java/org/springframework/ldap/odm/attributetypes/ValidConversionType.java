@@ -11,7 +11,7 @@ import javax.naming.ldap.LdapName;
 import java.util.Date;
 
 
-/* Should be able to support any of Spring's conversion types. Add a test case if you add one */
+/** This list of types supported for mapping between ldap attributes and bean properties. */
 public enum ValidConversionType
 {
     BYTE_ARRAY(byte[].class),
@@ -38,11 +38,7 @@ public enum ValidConversionType
 
     }
 
-    public Class getClazz()
-    {
-        return clazz;
-    }
-
+    /** Returns the enumeration of types as a human-friendly string. */
     public static String listTypes()
     {
         StringBuilder sb = new StringBuilder();
@@ -50,7 +46,7 @@ public enum ValidConversionType
         {
             ValidConversionType validType = ValidConversionType.values()[i];
             sb.append("\n");
-            sb.append(validType.getClazz().getSimpleName());
+            sb.append(validType.clazz.getSimpleName());
             if (i != ValidConversionType.values().length - 1)
             {
                 sb.append(",");
@@ -59,17 +55,20 @@ public enum ValidConversionType
         return sb.toString();
     }
 
+    /** Returns true if the argument is a member of this enumeration. */
     public static boolean isValidConversionType(Class returnType)
     {
         for (ValidConversionType type : ValidConversionType.values())
         {
-            if (returnType.equals(type.getClazz()))
+            if (returnType.equals(type.clazz))
             {
                 return true;
             }
         }
         return false;
     }
+
+    
 
 }
 

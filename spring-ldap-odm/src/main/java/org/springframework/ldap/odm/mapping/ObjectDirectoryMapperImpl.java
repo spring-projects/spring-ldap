@@ -12,7 +12,6 @@ import org.springframework.beans.TypeMismatchException;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.odm.attributetypes.LdapTypeConverter;
-import org.springframework.ldap.odm.attributetypes.ReferencedEntryEditorCreationException;
 import org.springframework.ldap.odm.attributetypes.ReferencedEntryEditorFactory;
 import org.springframework.ldap.odm.attributetypes.ValidConversionType;
 import org.springframework.ldap.odm.util.AttributeWrapper;
@@ -23,6 +22,9 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * An implemtation of the <code>ObjectDirectoryMapper</code> interface.
+ */
 public class ObjectDirectoryMapperImpl implements ObjectDirectoryMapper
 {
     private static final Log LOGGER = LogFactory.getLog(ObjectDirectoryMapperImpl.class);
@@ -89,8 +91,8 @@ public class ObjectDirectoryMapperImpl implements ObjectDirectoryMapper
         {
             try
             {
-                String beanPropertyName = odm.beanPropertyNameFor(attributeName);
-                Object beanPropertyValue = propertyGetters.get(beanPropertyName).invoke(beanInstance);
+                Method propertyGetter = propertyGetters.get(odm.beanPropertyNameFor(attributeName));
+                Object beanPropertyValue = propertyGetter.invoke(beanInstance);
                 LOGGER.trace("mapToContext() attribute:" + attributeName + ", value: " + beanPropertyValue);
 
                 if (beanPropertyValue != null)
@@ -153,7 +155,7 @@ public class ObjectDirectoryMapperImpl implements ObjectDirectoryMapper
         if (odm == null)
         {
             throw new IllegalArgumentException("Error creating mapper."
-                    + ". AbstractObjectDirectoryMap argugment is null");
+                    + ". ObjectDirectoryMap argugment is null");
         }
 
         if (this.typeConverter == null)
@@ -206,11 +208,12 @@ public class ObjectDirectoryMapperImpl implements ObjectDirectoryMapper
             {
                 try
                 {
-                    Class componentType = returnType.isArray() ? returnType.getComponentType() : returnType;
+                    Class componentType =
+                            returnType.isArray() ? returnType.getComponentType() : returnType;
                     typeConverter.registerCustomEditor(componentType,
                             refEditorFactory.referencedEntryEditorForClass(componentType));
                 }
-                catch (ReferencedEntryEditorCreationException e)
+                catch (MappingException e)
                 {
                     throw new MappingException(odm.getClazz().getSimpleName() + "."
                             + getter.getName()
