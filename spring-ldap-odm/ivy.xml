@@ -52,7 +52,6 @@
 	<dependency org="org.easymock" name="easymockclassextension" rev="2.2.2" conf="test->default"/>
       
     <dependency org="cglib" name="cglib-nodep" rev="2.1_3" conf="test->default"/>
-	<dependency org="org.testng" name="testng" rev="5.0" conf="test->default" />
 	
 	<!-- Test dependencies for Apache Directory Server -->
 	<dependency org="org.apache.directory.server" name="apacheds-core" rev="1.0.0"

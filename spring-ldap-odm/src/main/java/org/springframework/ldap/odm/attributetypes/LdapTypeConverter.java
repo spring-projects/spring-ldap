@@ -16,9 +16,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * <p>
+ * <p/>
  * LdapTypeConverter is responsible for the conversion of LDAP attributes returned in String form
- * to native java types and vice versa. It it leverages Spring's property editors, with 
+ * to native java types and vice versa. It it leverages Spring's property editors, with
  * some custom editors to:
  * <li>
  * <ul>convert generalized time strings to <code>java.util.Date.</code></ul>
@@ -26,17 +26,18 @@ import java.util.Date;
  * <code>org.springframework.ldap.core.DistinguishedName</code>.</ul>
  * </li>
  * </p>
- * <p>
+ * <p/>
  * Additional custom editors may be created at runtime to if an Object Directory Map
  * contains references to other mapped objects (eg. A role of type Role.class containing
  * references to members of type Person.class)
- *
+ * <p/>
  * </p>
- *
  */
 public class LdapTypeConverter extends SimpleTypeConverter
 {
-    private static final DateFormat GENERALIZED_TIME = new SimpleDateFormat("yyyyMMddHHmmss.S");
+
+    private static final DateFormat GENERALIZED_TIME
+            = new SimpleDateFormat("yyyyMMddHHmmss.SSSZ");
 
     public LdapTypeConverter()
     {

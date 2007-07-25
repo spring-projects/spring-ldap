@@ -5,6 +5,7 @@
  */
 package org.springframework.ldap.odm.dao;
 
+import junit.framework.Assert;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,14 +15,13 @@ import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.odm.entity.ITestPerson;
 import org.springframework.ldap.odm.entity.ITestRole;
-import org.testng.Assert;
 
 import java.util.List;
 
 
-public class LdapDaoTest extends AbstractLdapTemplateIntegrationTest
+public class LdapDaoITest extends AbstractLdapTemplateIntegrationTest
 {
-    protected static final Log LOGGER = LogFactory.getLog(LdapDaoTest.class);
+    protected static final Log LOGGER = LogFactory.getLog(LdapDaoITest.class);
     protected LdapDao ldapDao;
     private ITestPerson testPerson;
 
@@ -87,7 +87,7 @@ public class LdapDaoTest extends AbstractLdapTemplateIntegrationTest
         ldapDao.create(testPerson);
         ITestPerson retrieved = (ITestPerson) ldapDao.findByNamingAttribute(testPerson.getIdentifier(), ITestPerson.class);
         LOGGER.debug(retrieved);
-        Assert.assertNotNull(retrieved, "Should've found the created entity.");
+        Assert.assertNotNull("Should've found the created entity.", retrieved);
     }
 
 
@@ -109,7 +109,7 @@ public class LdapDaoTest extends AbstractLdapTemplateIntegrationTest
         DistinguishedName dn = new DistinguishedName("uid=" + testPerson.getIdentifier() + ",ou=people");
         ITestPerson retrieved = (ITestPerson) ldapDao.findByDn(dn, ITestPerson.class);
         LOGGER.debug(retrieved);
-        Assert.assertNotNull(retrieved, "Should've found the created entity.");
+        Assert.assertNotNull("Should've found the created entity.", retrieved);
     }
 
 
@@ -123,9 +123,9 @@ public class LdapDaoTest extends AbstractLdapTemplateIntegrationTest
         }
         catch (Exception expected)
         {
-            Assert.assertTrue(expected instanceof NameAlreadyBoundException,
-                    "Exception type doesn't match expected. ( got: "
-                            + expected.getMessage());
+            Assert.assertTrue("Exception type doesn't match expected. ( got: "
+                    + expected.getMessage(),
+                    expected instanceof NameAlreadyBoundException);
         }
     }
 
@@ -141,7 +141,8 @@ public class LdapDaoTest extends AbstractLdapTemplateIntegrationTest
         ldapDao.create(testPerson);
         List results = ldapDao.filterByBeanProperty(testPerson.getEmailAddress(), "EmailAddress", ITestPerson.class);
         LOGGER.debug("filterByBeanProperty returned: " + results.size() + " results.");
-        Assert.assertTrue(results.size() > 0, "Filter should return collection containing more than one result. ");
+        Assert.assertTrue("Filter should return collection containing more than one result. ",
+                results.size() > 0);
     }
 
     public void testUpdateEntity()
@@ -154,7 +155,7 @@ public class LdapDaoTest extends AbstractLdapTemplateIntegrationTest
             ldapDao.update(testPerson);
             ITestPerson retrieved = (ITestPerson) ldapDao.findByNamingAttribute(testPerson.getIdentifier(),
                     ITestPerson.class);
-            Assert.assertEquals(retrieved.getEmailAddress(), newEmail, "Email name not updated.");
+            Assert.assertEquals("Email name not updated.", retrieved.getEmailAddress(), newEmail);
         }
         catch (Exception unexpected)
         {
@@ -183,7 +184,7 @@ public class LdapDaoTest extends AbstractLdapTemplateIntegrationTest
         LOGGER.debug(testPerson);
         ldapDao.delete(testPerson);
         ITestPerson retrieved = (ITestPerson) ldapDao.findByNamingAttribute(testPerson.getIdentifier(), ITestPerson.class);
-        Assert.assertNull(retrieved, "Entity should've been deleted.");
+        Assert.assertNull("Entity should've been deleted.", retrieved);
     }
 
 

@@ -30,7 +30,9 @@ public interface ObjectDirectoryMap
     /** The set of bean property names in the Object Directory Map. */
     Set<String> beanPropertyNames();
 
-    /** The <code>Class</code> that the Object Directory Map corresponds to. */
+    /** The <code>Class</code> that the Object Directory Map represents. That is,
+     * LDAP entries will be serialized to and from this class.
+     */
     Class getClazz();
 
     /** The name of the attribute corresponding to the first element in a distinguished

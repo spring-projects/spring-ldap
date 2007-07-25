@@ -29,7 +29,7 @@
 	<!--
 		Overridden to create test report and run integration tests as well.
 	-->
-	<target name="tests" depends="tests-local,test-report,itests,itest-report" description="Runs all tests, first local then server (if any)" />
+	<target name="tests" depends="tests-local,test-report,copy.itest.resources,itests,itest-report" description="Runs all tests, first local then server (if any)" />
 
     
     <!--

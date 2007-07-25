@@ -150,7 +150,8 @@ public class ObjectDirectoryMapperImplTest extends TestCase
             Assert.assertEquals("bean@bean.com", ctxAdapter.getStringAttribute("mail"));
             Assert.assertEquals("fred", new String((byte[]) ctxAdapter.getObjectAttribute("userpassword")));
             Assert.assertEquals("false", ctxAdapter.getStringAttribute("acceptemails"));
-            Assert.assertEquals("19700101100000.1", ctxAdapter.getStringAttribute("loginresettime"));
+            Assert.assertTrue(ctxAdapter.getStringAttribute("loginresettime")
+                    .matches("19700101\\d\\d\\d\\d00.001\\+\\d\\d\\d\\d"));
             Assert.assertEquals("3", ctxAdapter.getStringAttribute("failedlogins"));
             Assert.assertEquals("uid=amAdmin, ou=people, dc=myretsu, dc=com",
                     ctxAdapter.getStringAttribute("creatorname"));

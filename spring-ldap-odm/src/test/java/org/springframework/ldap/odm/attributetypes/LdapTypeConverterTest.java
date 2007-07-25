@@ -19,8 +19,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Calendar;
 
-//TODO: There's probably a lot of redundant tests in here
 public class LdapTypeConverterTest extends TestCase
 {
     private static final Log LOGGER = LogFactory.getLog(LdapTypeConverterTest.class);
@@ -120,17 +120,15 @@ public class LdapTypeConverterTest extends TestCase
         }
     }
 
-    public void testConvertToGeneralizedTime() throws ParseException
+    public void testConvertToDate() throws ParseException
     {
-        String object1 = "20061005093637.44";
-        DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss.S");
-        Date expected = df.parse("20061005093637.44");
+        String object1 = "19700101100000.000+1000";
 
         try
         {
             Object translated = typeConverter.convertIfNecessary(object1,
                     Date.class);
-            Assert.assertEquals(translated, expected,
+            Assert.assertEquals(translated, new Date(0L),
                     "Unexpected translated value");
         }
         catch (TypeMismatchException e)
@@ -141,41 +139,44 @@ public class LdapTypeConverterTest extends TestCase
 
     public void testConvertFromDate()
     {
-        Date source = new Date(1184283822285L); //Friday July 13, 2007 9:43:42 AM
-        Assert.assertEquals(typeConverter.getAsText(source), "20070713094342.285");
+        Date source = new Date(1184283822285L); //Friday July 13, 2007 9:43:42 AM GMT+1000
+        LOGGER.debug(typeConverter.getAsText(source));
+
+        Assert.assertTrue(typeConverter.getAsText(source)
+                .matches("20070713\\d\\d\\d\\d42.285\\+\\d\\d\\d\\d"));
     }
 
-    public void testConvertToGeneralizedTimeArray() throws ParseException
+    public void testConvertToDateArray() throws ParseException
     {
-        String object1 = "20071105093655.44";
-        String object2 = "20061005093637.44";
+        String object1 = "20071105093655.0+1000";
+        String object2 = "19700101100000.0+1000";
         Object objectToTranslate = new String[]{object1, object2};
-
-        DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss.S");
-        Date expected = df.parse("20061005093637.44");
 
         try
         {
             Object[] translated = (Object[]) typeConverter.convertIfNecessary(
                     objectToTranslate, Date[].class);
-            Assert.assertEquals(translated[1], expected,
+            Assert.assertEquals(translated[1], new Date(0L),
                     "Unexpected translated value");
         }
         catch (TypeMismatchException e)
         {
+            e.printStackTrace();
             Assert.fail("Unexpected exception during translation");
+
         }
     }
 
+
     public void testConvertFromDateArray()
     {
-        Date date1 = new Date(1184283822285L); //Friday July 13, 2007 9:43:42 AM
-        Date date2 = new Date(0); //epoch
+        Date date1 = new Date(1184283822285L); //Friday July 13, 2007 9:43:42 AM + GMT+1000
+        Date date2 = new Date(0); //epoch + GMT + 1000
 
         Date[] dates = new Date[]{date1, date2};
         String[] converted = typeConverter.getAllAsText(dates);
-        Assert.assertEquals(converted[0], "20070713094342.285");
-        Assert.assertEquals(converted[1], "19700101100000.0");
+        Assert.assertTrue(converted[0].matches("20070713\\d\\d\\d\\d42.285\\+\\d\\d\\d\\d"));
+        Assert.assertTrue(converted[1].matches("19700101\\d\\d\\d\\d00.000\\+\\d\\d\\d\\d"));
     }
 
     public void testConvertToLdapName()
