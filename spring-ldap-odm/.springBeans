@@ -4,7 +4,6 @@
 		<configExtension>xml</configExtension>
 	</configExtensions>
 	<configs>
-		<config>src/itest/java/conf/beans.xml</config>
 	</configs>
 	<configSets>
 		<configSet>
@@ -12,7 +11,6 @@
 			<allowBeanDefinitionOverriding>true</allowBeanDefinitionOverriding>
 			<incomplete>false</incomplete>
 			<configs>
-				<config>src/itest/java/conf/beans.xml</config>
 			</configs>
 		</configSet>
 	</configSets>
