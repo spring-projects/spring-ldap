@@ -7,14 +7,12 @@
 package org.springframework.ldap.odm.typeconversion;
 
 import junit.framework.TestCase;
+
 import org.easymock.classextension.EasyMock;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.odm.mapping.MappingException;
 import org.springframework.ldap.odm.mapping.ObjectDirectoryMapper;
-
-import javax.naming.InvalidNameException;
-import javax.naming.ldap.LdapName;
 
 public class ReferencedEntryEditorTest extends TestCase
 {

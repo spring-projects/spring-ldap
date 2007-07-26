@@ -5,6 +5,10 @@
  */
 package org.springframework.ldap.odm.dao;
 
+import java.util.List;
+
+import javax.naming.Name;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.DirContextAdapter;
@@ -13,10 +17,6 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.odm.mapping.MappingException;
 import org.springframework.ldap.odm.mapping.ObjectDirectoryMapper;
 import org.springframework.ldap.odm.mapping.ObjectDirectoryMapperFactory;
-import org.springframework.util.StringUtils;
-
-import javax.naming.Name;
-import java.util.List;
 
 /**
  * An implementation of the <code>LdapDao</code> interface. 
