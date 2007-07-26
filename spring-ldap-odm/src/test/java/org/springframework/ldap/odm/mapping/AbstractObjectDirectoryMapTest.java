@@ -20,7 +20,7 @@ public abstract class AbstractObjectDirectoryMapTest extends TestCase
 
     public void testAttributeNameFor()
     {
-        Assert.assertEquals(odm.attributeNameFor("Identifier"), "uid");
+        Assert.assertEquals(odm.attributeNameFor("identifier"), "uid");
     }
 
     public void testThrowsExceptionWhenClassArgumentIsNull() throws MappingException
@@ -45,7 +45,7 @@ public abstract class AbstractObjectDirectoryMapTest extends TestCase
 
     public void testbeanPropertyNameFor()
     {
-        Assert.assertEquals(odm.beanPropertyNameFor("uid"), "Identifier");
+        Assert.assertEquals(odm.beanPropertyNameFor("uid"), "identifier");
     }
 
     public void testBeanPropertyNames()

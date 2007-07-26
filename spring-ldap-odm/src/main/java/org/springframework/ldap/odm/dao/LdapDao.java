@@ -8,7 +8,11 @@ package org.springframework.ldap.odm.dao;
 import javax.naming.Name;
 import java.util.List;
 
-/** A realization of the Data Access Object (DAO) pattern using object directory mapping. */
+/** A realization of the Data Access Object (DAO) pattern using object directory mapping.
+ *
+ * @see org.springframework.ldap.odm.mapping.ObjectDirectoryMap 
+ * @see org.springframework.ldap.odm.mapping.ObjectDirectoryMapper
+ */
 public interface LdapDao
 {
     /** Persists the mapped object dirObject in the LDAP repository. */
@@ -39,5 +43,5 @@ public interface LdapDao
     List findAll(Class ofType);
 
     /** Search for entries in the repository and map results to class returnType. */
-    List filterByBeanProperty(String value, String beanPropertyName, Class returnType);
+    List filterByBeanProperty(String beanPropertyName, String value, Class returnType);
 }

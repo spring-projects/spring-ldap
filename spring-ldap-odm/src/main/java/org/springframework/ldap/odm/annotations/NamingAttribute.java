@@ -12,12 +12,13 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
 
 /**
- * The <code>NamingAttribute</code> annotation identifies the name of the attribute that forms
+ * <p>The <code>NamingAttribute</code> annotation identifies the name of the attribute that forms
  * the first part of a Distinguished Name. For example, in the Distinguished Name
- * 'uid=x232, ou=people' the naming attribute is 'uid'. The <code>NamingAttribute</code> together
- * with a <code>NamingSuffix</code> tell the Object Directory Mapper how to serialize a java object
- * to and from an LDAP repository.
- * Example: <pre>@NamingAttribute("uid")</pre>
+ * 'uid=x232, ou=people' the naming attribute is 'uid'.</p>
+ * <p> The <code>NamingAttribute</code> together with a {@link NamingSuffix} tell the
+ * {@link org.springframework.ldap.odm.mapping.ObjectDirectoryMapper} how to assemble a
+ * Distinguished Name for an object.</p>
+ * <p>Example: <pre>@NamingAttribute("uid")</pre></p>
  *
  * @see NamingSuffix
  */

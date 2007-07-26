@@ -5,7 +5,10 @@
  */
 package org.springframework.ldap.odm.mapping;
 
-/** Thrown when an attempt to create an Object Directory Map for a given class is unsuccessful. */
+/** Thrown when an attempt to create an {@link ObjectDirectoryMap} for a given class is unsuccessful.
+ * May indicate semantic or syntax errors in the mapping information, or some other exceptional
+ * condition related to the creation of an {@link ObjectDirectoryMap}.
+ */
 public class MappingException extends Exception
 {
 

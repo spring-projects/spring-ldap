@@ -7,20 +7,20 @@ package org.springframework.ldap.odm.mapping;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.odm.attributetypes.LdapTypeConverter;
-import org.springframework.ldap.odm.attributetypes.ReferencedEntryEditorFactory;
+import org.springframework.ldap.odm.typeconversion.LdapTypeConverter;
+import org.springframework.ldap.odm.typeconversion.ReferencedEntryEditorFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * <code>ObjectDirectoryMapperFactory</code> is a factory for assembling
- * <code>ObjectDirectoryMappers</code>. It builds a registry of ObjectDirectoryMappers, such
- * that the first request for a mapper of a given type results in the attempt to build one.
- * Subsequent requests result in the return of a cached instance.
+ * A factory for assembling {@link ObjectDirectoryMapper ObjectDirectoryMappers}.
+ * It builds a registry such that the first request for an {@link ObjectDirectoryMapper} 
+ * of a given type results in the attempt to build one. Subsequent requests return  a
+ * cached instance.
  *
  * @see ObjectDirectoryMapper 
- * @see org.springframework.ldap.odm.attributetypes.ReferencedEntryEditorFactory
+ * @see org.springframework.ldap.odm.typeconversion.ReferencedEntryEditorFactory
  */
 public class ObjectDirectoryMapperFactory
 {
@@ -38,11 +38,11 @@ public class ObjectDirectoryMapperFactory
         this.referencedEntryEditorFactory.setObjectDirectoryMapperFactory(this);
     }
 
-    /** Attempts to return an ObjectDirectoryMapper for the given class. Upon the first encounter
-     * of the given class, mapping is attempted. If mapping is successful the mapper is returned.
-     * Subsequent requests for the given class return a cached mapper.
+    /** Attempts to return an {@link ObjectDirectoryMapper} for the given class. Upon the
+     * first encounter of the given class, mapping is attempted. If mapping is successful
+     * the mapper is returned. Subsequent requests for same class return a cached mapper.
      * @param clazz
-     * @return ObjectDirectoryMapper
+     * @return An {@link ObjectDirectoryMapper} for the Class <code>clazz</code>
      * @throws MappingException when the mapping information for the given class contains errors.  
      */
     public ObjectDirectoryMapper objectDirectoryMapperForClass(Class clazz)

@@ -13,8 +13,8 @@ import org.apache.commons.logging.LogFactory;
 import org.easymock.classextension.EasyMock;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.odm.attributetypes.LdapTypeConverter;
-import org.springframework.ldap.odm.attributetypes.ReferencedEntryEditorFactory;
+import org.springframework.ldap.odm.typeconversion.LdapTypeConverter;
+import org.springframework.ldap.odm.typeconversion.ReferencedEntryEditorFactory;
 import org.springframework.ldap.odm.entity.UnitTestPerson;
 
 import javax.naming.Name;

@@ -11,10 +11,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.odm.attributetypes.LdapTypeConverter;
-import org.springframework.ldap.odm.attributetypes.ReferencedEntryEditorFactory;
-import org.springframework.ldap.odm.attributetypes.ValidConversionType;
+import org.springframework.ldap.odm.typeconversion.LdapTypeConverter;
+import org.springframework.ldap.odm.typeconversion.ReferencedEntryEditorFactory;
+import org.springframework.ldap.odm.typeconversion.ValidConversionType;
 import org.springframework.ldap.odm.util.AttributeWrapper;
+import org.springframework.util.StringUtils;
 
 import javax.naming.Name;
 import javax.naming.directory.Attribute;
@@ -23,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * An implemtation of the <code>ObjectDirectoryMapper</code> interface.
+ * An implemtation of the {@link ObjectDirectoryMapper} interface.
  */
 public class ObjectDirectoryMapperImpl implements ObjectDirectoryMapper
 {
@@ -184,9 +185,10 @@ public class ObjectDirectoryMapperImpl implements ObjectDirectoryMapper
         {
             try
             {
-                Method getter = clazz.getMethod("get" + beanPropertyName);
+                String methodSuffix = StringUtils.capitalize(beanPropertyName);
+                Method getter = clazz.getMethod("get" + methodSuffix);
                 propertyGetters.put(beanPropertyName, getter);
-                Method setter = clazz.getMethod("set" + beanPropertyName, getter.getReturnType());
+                Method setter = clazz.getMethod("set" + methodSuffix, getter.getReturnType());
                 propertySetters.put(beanPropertyName, setter);
             }
             catch (NoSuchMethodException e)

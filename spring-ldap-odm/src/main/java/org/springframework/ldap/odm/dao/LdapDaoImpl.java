@@ -13,6 +13,7 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.odm.mapping.MappingException;
 import org.springframework.ldap.odm.mapping.ObjectDirectoryMapper;
 import org.springframework.ldap.odm.mapping.ObjectDirectoryMapperFactory;
+import org.springframework.util.StringUtils;
 
 import javax.naming.Name;
 import java.util.List;
@@ -136,14 +137,16 @@ public class LdapDaoImpl implements LdapDao
     }
 
 
-    public List filterByBeanProperty(String value, String beanPropertyName, Class returnType)
+    public List filterByBeanProperty(String beanPropertyName, String value, Class returnType)
     {
         try
         {
             LOGGER.debug("Filtering on property: " + beanPropertyName + ", for value: " + value);
             ObjectDirectoryMapper mapper = odmFactory.objectDirectoryMapperForClass(returnType);
-            String filter = mapper.getObjectDirectoryMap().attributeNameFor(beanPropertyName) + "=" + value;
-            List results = ldapTemplate.search(mapper.getObjectDirectoryMap().getNamingSuffix().toString(), filter, mapper);
+            String filter = mapper.getObjectDirectoryMap().attributeNameFor(beanPropertyName)
+                    + "=" + value;
+            List results = ldapTemplate.search(mapper.getObjectDirectoryMap().getNamingSuffix().toString(),
+                    filter, mapper);
             LOGGER.debug(results.size() + " results found for filter: " + filter);
             return results;
         }

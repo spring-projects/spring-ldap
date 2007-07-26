@@ -10,9 +10,8 @@ import org.springframework.ldap.core.DistinguishedName;
 import java.util.Set;
 
 /**
- * <code>ObjectDirectoryMap</code> encapsulates the information required to serialize a java bean
- * to and from an LDAP repository. An <code>ObjectDirectoryMapper</code> performs the
- * serialization using this information.
+ * Encapsulates the information required to serialize a java object to and from an LDAP repository.
+ * An {@link ObjectDirectoryMapper} performs the serialization using this information.
  *
  * @see ObjectDirectoryMapper
  */

@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * An abstract base class implementing an <code>ObjectDirectoryMap</code>. Actual parsing of
+ * An abstract base class implementing an {@link ObjectDirectoryMap}. Actual parsing of
  * mapping information needs to be implemented in a concrete sub class.
  */
 public abstract class AbstractObjectDirectoryMap implements ObjectDirectoryMap

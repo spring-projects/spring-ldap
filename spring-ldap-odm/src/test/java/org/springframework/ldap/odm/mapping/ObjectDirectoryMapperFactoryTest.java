@@ -8,8 +8,8 @@ package org.springframework.ldap.odm.mapping;
 
 import junit.framework.TestCase;
 import org.easymock.classextension.EasyMock;
-import org.springframework.ldap.odm.attributetypes.LdapTypeConverter;
-import org.springframework.ldap.odm.attributetypes.ReferencedEntryEditorFactory;
+import org.springframework.ldap.odm.typeconversion.LdapTypeConverter;
+import org.springframework.ldap.odm.typeconversion.ReferencedEntryEditorFactory;
 import org.springframework.ldap.odm.entity.UnitTestPerson;
 
 public class ObjectDirectoryMapperFactoryTest extends TestCase

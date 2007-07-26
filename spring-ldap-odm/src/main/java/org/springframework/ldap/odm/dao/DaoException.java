@@ -6,7 +6,7 @@
 package org.springframework.ldap.odm.dao;
 
 /**
- * Thrown by <code>LdapDao</code> under exceptional circumstances.
+ * Thrown by {@link LdapDao} under exceptional circumstances.
  *
  * @see LdapDao
  */

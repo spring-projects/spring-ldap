@@ -21,10 +21,10 @@
         <constructor-arg ref="contextSource"/>
     </bean>
 
-    <bean id="typeConverter" singleton="true" class="org.springframework.ldap.odm.attributetypes.LdapTypeConverter"/>
+    <bean id="typeConverter" singleton="true" class="org.springframework.ldap.odm.typeconversion.LdapTypeConverter"/>
 
     <bean id="referencedEntryEditorFactory" singleton="true"
-          class="org.springframework.ldap.odm.attributetypes.ReferencedEntryEditorFactory">
+          class="org.springframework.ldap.odm.typeconversion.ReferencedEntryEditorFactory">
         <constructor-arg value="${base}" />
         <constructor-arg ref="ldapTemplate"/>
     </bean>

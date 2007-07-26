@@ -10,17 +10,17 @@ import org.springframework.ldap.odm.annotations.DirAttribute;
 import org.springframework.ldap.odm.annotations.NamingAttribute;
 import org.springframework.ldap.odm.annotations.NamingSuffix;
 import org.springframework.ldap.odm.annotations.ObjectClasses;
-import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
 
-/** An implementation of an <code>ObjectDirectoryMap</code> based on Annotations. A class that is
+/**
+ * An implementation of an {@link ObjectDirectoryMap} based on Annotations. A class that is
  * to be serialized to and from and LDAP repository must include the following annotations:
  * <ul>
- * <li>NamingAttribute</li>
- * <li>ObjectClasses</li>
- * <li>NamingSuffix</li>
- * <li>DirAttribute</li>
+ * <li>One {@link NamingAttribute}.</li>
+ * <li>One {@link ObjectClasses}.</li>
+ * <li>One {@link NamingSuffix}.</li>
+ * <li>At least one {@link DirAttribute}.</li>
  * </ul>
  *
  * @see org.springframework.ldap.odm.annotations.NamingAttribute
@@ -114,7 +114,7 @@ public class AnnotationObjectDirectoryMap extends AbstractObjectDirectoryMap
             DirAttribute dirAttribute = field.getAnnotation(DirAttribute.class);
             if (dirAttribute != null)
             {
-                String beanPropertyName = StringUtils.capitalize(field.getName());
+                String beanPropertyName = field.getName();
                 String attributeName = dirAttribute.value().equals("") ? field.getName() : dirAttribute.value();
                 map(beanPropertyName, attributeName);
             }

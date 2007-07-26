@@ -139,7 +139,10 @@ public class LdapDaoITest extends AbstractLdapTemplateIntegrationTest
     public void testFilterByBeanProperty()
     {
         ldapDao.create(testPerson);
-        List results = ldapDao.filterByBeanProperty(testPerson.getEmailAddress(), "EmailAddress", ITestPerson.class);
+
+        List results = ldapDao.filterByBeanProperty(
+                "emailAddress", testPerson.getEmailAddress(), ITestPerson.class);
+
         LOGGER.debug("filterByBeanProperty returned: " + results.size() + " results.");
         Assert.assertTrue("Filter should return collection containing more than one result. ",
                 results.size() > 0);
