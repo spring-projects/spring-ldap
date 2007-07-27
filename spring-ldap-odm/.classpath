@@ -13,7 +13,6 @@
 	<classpathentry kind="lib" path="lib/global/commons-logging.jar"/>
 	<classpathentry kind="lib" path="lib/global/commons-lang.jar"/>
 	<classpathentry kind="lib" path="lib/global/commons-collections.jar"/>
-	<classpathentry kind="lib" path="lib/test/testng.jar"/>
 	<classpathentry kind="lib" path="lib/test/junit.jar"/>
 	<classpathentry kind="lib" path="lib/test/spring-mock.jar" sourcepath="lib/source/spring-src.zip"/>
 	<classpathentry kind="lib" path="lib/test/easymockclassextension.jar"/>
