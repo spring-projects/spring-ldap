@@ -16,7 +16,6 @@
 	<classpathentry kind="lib" path="lib/test/spring-mock.jar" sourcepath="lib/source/spring-src.zip"/>
 	<classpathentry kind="lib" path="lib/global/commons-lang.jar" sourcepath="lib/source/commons-lang-src.zip"/>
 	<classpathentry kind="lib" path="lib/test/clover.jar"/>
-	<classpathentry kind="lib" path="lib/global/commons-collections.jar" sourcepath="lib/source/commons-collections-src.zip"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/spring-ldap"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

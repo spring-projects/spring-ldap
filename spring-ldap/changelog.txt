@@ -12,6 +12,15 @@ http://www.ietf.org/rfc/rfc2696.txt
 
 Changes in version 1.2-RC1 (5.12.2007)
 -------------------------------------------
+A number of API-breaking changes have been made in this release.
+Consequently this is NOT a drop-in replacement for Spring LDAP 1.1.2,
+though upgrading should not present all that much work. Please see
+the supplied upgrade guide for details.
+
+* Upgraded to Spring 2.0.6 internally. Spring 1.2.x is still supported.
+
+Changes in version 1.2-RC1 (5.12.2007)
+-------------------------------------------
 A number of API-breaking changes have been made in this release,
 mainly package restructuring stuff (LDAP-33). Consequently this is
 NOT a drop-in replacement for Spring LDAP 1.1.2, though upgrading
@@ -63,7 +72,7 @@ upgrade guide for details.
 * Upgraded to Acegi Security 1.0.3 (LDAP-61).
 
 * Upgraded to ApacheDS 1.0.0 (LDAP-32).
-  
+
 * Upgraded to Spring 2.0.4 internally. Spring 1.2.x is still supported (LDAP-35, LDAP-51).
 
 * Upgraded to Spring WebFlow 1.0.2 in the Person sample (LDAP-60).

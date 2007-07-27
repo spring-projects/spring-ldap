@@ -1,0 +1,16 @@
+<ivy-module version="1.0">
+	<info organisation="org.springframework"
+		module="spring-src"
+		revision="2.0.6"
+		status="release"
+		publication="20070618040600"
+		default="true"
+	/>
+	<configurations>
+		<conf name="default" visibility="public" extends="source"/>
+		<conf name="source" visibility="public"/>
+	</configurations>
+	<publications>
+		<artifact name="spring-src" type="zip" ext="zip" conf="source"/>
+	</publications>
+</ivy-module>
