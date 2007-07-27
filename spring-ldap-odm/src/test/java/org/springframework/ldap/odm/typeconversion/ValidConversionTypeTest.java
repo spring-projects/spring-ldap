@@ -7,11 +7,10 @@
 package org.springframework.ldap.odm.typeconversion;
 
 import junit.framework.TestCase;
+import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.DistinguishedName;
-import org.testng.Assert;
-
 import javax.naming.ldap.LdapName;
 import java.util.Date;
 import java.util.List;

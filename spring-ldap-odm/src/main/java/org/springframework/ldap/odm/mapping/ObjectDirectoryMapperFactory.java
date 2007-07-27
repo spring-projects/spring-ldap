@@ -41,7 +41,7 @@ public class ObjectDirectoryMapperFactory
     /** Attempts to return an {@link ObjectDirectoryMapper} for the given class. Upon the
      * first encounter of the given class, mapping is attempted. If mapping is successful
      * the mapper is returned. Subsequent requests for same class return a cached mapper.
-     * @param clazz
+     * @param clazz The Class to return an object directory mapper for. 
      * @return An {@link ObjectDirectoryMapper} for the Class <code>clazz</code>
      * @throws MappingException when the mapping information for the given class contains errors.  
      */
