@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
-<beans>
+<beans
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:grid="http://schema.majitek.com/spring"
+        xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+http://schema.majitek.com/spring
+http://schema.majitek.com/grid-spring-v1.0.xsd">
 
     <import resource="classpath:/apacheDsContext.xml"/>
 
@@ -17,25 +24,25 @@
 		<property name="dirObjectFactory" value="org.springframework.ldap.core.support.DefaultDirObjectFactory" />
 	</bean>
 
-    <bean id="ldapTemplate" singleton="true" class="org.springframework.ldap.core.LdapTemplate">
+    <bean id="ldapTemplate" scope="singleton" class="org.springframework.ldap.core.LdapTemplate">
         <constructor-arg ref="contextSource"/>
     </bean>
 
-    <bean id="typeConverter" singleton="true" class="org.springframework.ldap.odm.typeconversion.LdapTypeConverter"/>
+    <bean id="typeConverter" scope="singleton" class="org.springframework.ldap.odm.typeconversion.LdapTypeConverter"/>
 
-    <bean id="referencedEntryEditorFactory" singleton="true"
+    <bean id="referencedEntryEditorFactory" scope="singleton"
           class="org.springframework.ldap.odm.typeconversion.ReferencedEntryEditorFactory">
         <constructor-arg value="${base}" />
         <constructor-arg ref="ldapTemplate"/>
     </bean>
 
-    <bean id="ctxMapperFactory" singleton="true"
+    <bean id="ctxMapperFactory" scope="singleton"
           class="org.springframework.ldap.odm.mapping.ObjectDirectoryMapperFactory">
         <constructor-arg ref="typeConverter"/>
         <constructor-arg ref="referencedEntryEditorFactory"/>
     </bean>
 
-    <bean id="ldapDao" singleton="true" class="org.springframework.ldap.odm.dao.LdapDaoImpl">
+    <bean id="ldapDao" scope="singleton" class="org.springframework.ldap.odm.dao.LdapDaoImpl">
         <constructor-arg ref="ldapTemplate"/>
         <constructor-arg ref="ctxMapperFactory"/>
     </bean>

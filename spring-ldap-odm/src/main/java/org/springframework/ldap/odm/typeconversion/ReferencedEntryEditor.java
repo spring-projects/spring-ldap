@@ -9,11 +9,13 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.odm.mapping.MappingException;
 import org.springframework.ldap.odm.mapping.ObjectDirectoryMapper;
+import org.springframework.ldap.NameNotFoundException;
 
 import java.beans.PropertyEditorSupport;
 
-/** ReferencedEntryEditor is responsible for converting references in an object
- * directory map from distinguished name strings to the target type and vice versa.  
+/**
+ * ReferencedEntryEditor is responsible for converting references in an object
+ * directory map from distinguished name strings to the target type and vice versa.
  */
 public class ReferencedEntryEditor extends PropertyEditorSupport
 {
@@ -30,7 +32,9 @@ public class ReferencedEntryEditor extends PropertyEditorSupport
         this.objectDirectoryMapper = objectDirectoryMapper;
     }
 
-    /** Builds a distinguished name from the instance value */
+    /**
+     * Builds a distinguished name from the instance value
+     */
     public String getAsText()
     {
         try
@@ -45,9 +49,11 @@ public class ReferencedEntryEditor extends PropertyEditorSupport
         }
     }
 
-    /** Sets the value of the editor by performing a lookup and mapping the result
+    /**
+     * Sets the value of the editor by performing a lookup and mapping the result
      * to the target type using an object directory mapper.
-     * @param text The distinguished name of an ldap entry.  
+     *
+     * @param text The distinguished name of an ldap entry.
      * @throws IllegalArgumentException
      */
     public void setAsText(String text) throws IllegalArgumentException
@@ -60,6 +66,15 @@ public class ReferencedEntryEditor extends PropertyEditorSupport
                 dn.removeFirst();
             }
         }
-        setValue(ldapTemplate.lookup(dn, objectDirectoryMapper));
+        try
+        {
+            setValue(ldapTemplate.lookup(dn, objectDirectoryMapper));
+        }
+        catch (NameNotFoundException e)
+        {
+            setValue(null);
+
+        }
+
     }
 }

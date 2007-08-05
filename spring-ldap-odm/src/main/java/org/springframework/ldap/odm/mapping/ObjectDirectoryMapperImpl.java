@@ -68,6 +68,7 @@ public class ObjectDirectoryMapperImpl implements ObjectDirectoryMapper
                         Object beanPropertyValue = typeConverter.convertIfNecessary(
                                 new AttributeWrapper(attribute).getAllAsObject(), attributeType);
                         propertySetters.get(beanPropertyName).invoke(instance, beanPropertyValue);
+
                     }
                     catch (TypeMismatchException e)
                     {

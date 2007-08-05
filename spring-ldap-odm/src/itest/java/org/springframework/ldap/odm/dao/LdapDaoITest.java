@@ -91,15 +91,25 @@ public class LdapDaoITest extends AbstractLdapTemplateIntegrationTest
     }
 
 
-    public void testLoadsReferencedEntities()
+    public void testLoadsReferences()
     {
         ITestRole webUser = (ITestRole) ldapDao.findByNamingAttribute("webUser", ITestRole.class);
         ldapDao.create(testPerson);
         webUser.setMembers(new ITestPerson[]{testPerson});
         ldapDao.update(webUser);
         ITestRole updated = (ITestRole) ldapDao.findByNamingAttribute("webUser", ITestRole.class);
-        LOGGER.debug(updated);
+        LOGGER.debug("Updated:" + updated);
         Assert.assertTrue(ArrayUtils.contains(updated.getMembers(), testPerson));
+    }
+
+    public void testLoadsReferences_brokenReferenceReturnedAsNull()
+    {
+        ITestRole webUser = (ITestRole) ldapDao.findByNamingAttribute("webUser", ITestRole.class);
+        webUser.setMembers(new ITestPerson[]{testPerson});
+        ldapDao.update(webUser);
+        ITestRole updated = (ITestRole) ldapDao.findByNamingAttribute("webUser", ITestRole.class);
+        Assert.assertNotNull(updated);
+        LOGGER.debug(updated);
     }
 
 
