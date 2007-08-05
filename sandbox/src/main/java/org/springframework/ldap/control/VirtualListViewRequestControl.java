@@ -34,8 +34,43 @@ import com.sun.jndi.ldap.ctl.VirtualListViewResponseControl;
 
 /**
  * DirContextProcessor implementation for managing a virtual list view.
+ * <p>
+ * This is the request control syntax:
+ * <pre>
+ * VirtualListViewRequest ::= SEQUENCE { 
+ *        beforeCount    INTEGER (0..maxInt), 
+ *        afterCount     INTEGER (0..maxInt), 
+ *        target       CHOICE { 
+ *                       byOffset        [0] SEQUENCE {                           
+ *                            offset          INTEGER (1 .. maxInt), 
+ *                            contentCount    INTEGER (0 .. maxInt) }, 
+ *                       greaterThanOrEqual [1] AssertionValue }, 
+ *        contextID     OCTET STRING OPTIONAL }
+ * </pre>
+ * <p>
+ * This is the response control syntax:
+ * <pre>
+ * VirtualListViewResponse ::= SEQUENCE { 
+ *        targetPosition    INTEGER (0 .. maxInt), 
+ *        contentCount     INTEGER (0 .. maxInt), 
+ *        virtualListViewResult ENUMERATED { 
+ *             success (0), 
+ *             operationsError (1), 
+ *             protocolError (3), 
+ *             unwillingToPerform (53), 
+ *             insufficientAccessRights (50), 
+ *             timeLimitExceeded (3), 
+ *             adminLimitExceeded (11), 
+ *             innapropriateMatching (18), 
+ *             sortControlMissing (60), 
+ *             offsetRangeError (61), 
+ *             other(80), 
+ *             ... }, 
+ *        contextID     OCTET STRING OPTIONAL }
+ * </pre>
  * 
  * @author Ulrik Sandberg
+ * @see http://www3.ietf.org/proceedings/02nov/I-D/draft-ietf-ldapext-ldapv3-vlv-09.txt
  */
 public class VirtualListViewRequestControl implements DirContextProcessor {
 
