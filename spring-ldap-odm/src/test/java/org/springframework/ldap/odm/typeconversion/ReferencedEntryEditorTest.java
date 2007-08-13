@@ -25,8 +25,9 @@ public class ReferencedEntryEditorTest extends TestCase
         super.setUp();
         ldapTemplate = EasyMock.createStrictMock(LdapTemplate.class);
         objectDirectoryMapper = EasyMock.createStrictMock(ObjectDirectoryMapper.class);
-        editor = new ReferencedEntryEditor(new DistinguishedName("dc=example, dc=com"),
-                ldapTemplate, objectDirectoryMapper);
+        editor = new ReferencedEntryEditor(SavePolicy.SUPPRESS_REFERENTIAL_INTEGRITY_EXCEPTIONS,
+                LoadPolicy.SUPPRESS_REFERENTIAL_INTEGRITY_EXCEPTIONS,
+                new DistinguishedName("dc=example, dc=com"), ldapTemplate, objectDirectoryMapper);
     }
 
     public void testGetAsText() throws MappingException

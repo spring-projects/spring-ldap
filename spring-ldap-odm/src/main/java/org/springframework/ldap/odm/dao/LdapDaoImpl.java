@@ -17,6 +17,7 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.odm.mapping.MappingException;
 import org.springframework.ldap.odm.mapping.ObjectDirectoryMapper;
 import org.springframework.ldap.odm.mapping.ObjectDirectoryMapperFactory;
+import org.springframework.ldap.NameNotFoundException;
 
 /**
  * An implementation of the <code>LdapDao</code> interface. 
@@ -130,7 +131,7 @@ public class LdapDaoImpl implements LdapDao
         {
             throw new DaoException(e.getMessage(), e);
         }
-        catch (RuntimeException e)
+        catch (NameNotFoundException e)
         {
             return null;
         }

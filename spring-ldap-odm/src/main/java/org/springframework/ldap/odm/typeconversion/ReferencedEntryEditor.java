@@ -7,10 +7,12 @@ package org.springframework.ldap.odm.typeconversion;
 
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.odm.mapping.MappingException;
 import org.springframework.ldap.odm.mapping.ObjectDirectoryMapper;
 import org.springframework.ldap.NameNotFoundException;
 
+import javax.naming.Name;
 import java.beans.PropertyEditorSupport;
 
 /**
@@ -19,14 +21,20 @@ import java.beans.PropertyEditorSupport;
  */
 public class ReferencedEntryEditor extends PropertyEditorSupport
 {
+    private SavePolicy savePolicy;
+    private LoadPolicy loadPolicy;
     private DistinguishedName base;
     private LdapTemplate ldapTemplate;
     private ObjectDirectoryMapper objectDirectoryMapper;
 
-    public ReferencedEntryEditor(DistinguishedName baseDn,
+    public ReferencedEntryEditor(SavePolicy savePolicy,
+                                 LoadPolicy loadPolicy,
+                                 DistinguishedName baseDn,
                                  LdapTemplate ldapTemplate,
                                  ObjectDirectoryMapper objectDirectoryMapper)
     {
+        this.savePolicy = savePolicy;
+        this.loadPolicy = loadPolicy;
         this.base = baseDn;
         this.ldapTemplate = ldapTemplate;
         this.objectDirectoryMapper = objectDirectoryMapper;
@@ -39,13 +47,40 @@ public class ReferencedEntryEditor extends PropertyEditorSupport
     {
         try
         {
-            DistinguishedName value = (DistinguishedName) base.clone();
-            value.append((DistinguishedName) objectDirectoryMapper.buildDn(getValue()));
-            return value.toString();
+            DistinguishedName refDn = (DistinguishedName) objectDirectoryMapper.buildDn(getValue());
+            doCreateAndUpdatePolicies(refDn);
+            DistinguishedName fullDn = (DistinguishedName) base.clone();
+            fullDn.append(refDn);
+            return fullDn.toString();
         }
         catch (MappingException e)
         {
             throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+
+    //TODO: This looks inefficient
+    private void doCreateAndUpdatePolicies(Name referenceDn)
+    {
+        if (savePolicy == SavePolicy.CREATE || savePolicy == SavePolicy.CREATE_OR_UPDATE)
+        {
+            try
+            {
+                ldapTemplate.lookup(referenceDn, objectDirectoryMapper);
+            }
+            catch (NameNotFoundException e)
+            {
+                DirContextAdapter contextAdapter = new DirContextAdapter();
+                objectDirectoryMapper.mapToContext(getValue(), contextAdapter);
+                ldapTemplate.bind(referenceDn, contextAdapter, null);
+            }
+        }
+        if (savePolicy == SavePolicy.CREATE_OR_UPDATE)
+        {
+            DirContextAdapter contextAdapter = (DirContextAdapter) ldapTemplate.lookup(referenceDn);
+            objectDirectoryMapper.mapToContext(getValue(), contextAdapter);
+            ldapTemplate.modifyAttributes(referenceDn, contextAdapter.getModificationItems());
         }
     }
 
@@ -72,9 +107,15 @@ public class ReferencedEntryEditor extends PropertyEditorSupport
         }
         catch (NameNotFoundException e)
         {
-            setValue(null);
-
+            if (loadPolicy == LoadPolicy.SUPPRESS_REFERENTIAL_INTEGRITY_EXCEPTIONS)
+            {
+                setValue(null);
+            }
+            else
+            {
+                throw new ReferentialIntegrityException("The referenced entry: "
+                        + text + " does not exist", e);
+            }
         }
-
     }
 }

@@ -55,7 +55,7 @@ public class LdapDaoITest extends AbstractLdapTemplateIntegrationTest
         testPerson.setPassword("test1234".getBytes());
     }
 
-    public void testCreateEntity()
+    public void testCreate()
     {
         try
         {
@@ -63,12 +63,12 @@ public class LdapDaoITest extends AbstractLdapTemplateIntegrationTest
         }
         catch (Exception unexpected)
         {
-            Assert.fail("Creating a new user failed: " + unexpected.getMessage());
+            Assert.fail(unexpected.getMessage());
         }
     }
 
 
-    public void testCreateOrUpdateEntity()
+    public void testCreateOrUpdate()
     {
         try
         {
@@ -77,7 +77,7 @@ public class LdapDaoITest extends AbstractLdapTemplateIntegrationTest
         }
         catch (Exception unexpected)
         {
-            Assert.fail("Creating a new user failed: " + unexpected.getMessage());
+            Assert.fail(unexpected.getMessage());
         }
     }
 
@@ -93,25 +93,14 @@ public class LdapDaoITest extends AbstractLdapTemplateIntegrationTest
 
     public void testLoadsReferences()
     {
-        ITestRole webUser = (ITestRole) ldapDao.findByNamingAttribute("webUser", ITestRole.class);
-        ldapDao.create(testPerson);
+        ITestRole webUser = (ITestRole) ldapDao.findByNamingAttribute("webUser", ITestRole.class);     
         webUser.setMembers(new ITestPerson[]{testPerson});
         ldapDao.update(webUser);
+
         ITestRole updated = (ITestRole) ldapDao.findByNamingAttribute("webUser", ITestRole.class);
         LOGGER.debug("Updated:" + updated);
         Assert.assertTrue(ArrayUtils.contains(updated.getMembers(), testPerson));
     }
-
-    public void testLoadsReferences_brokenReferenceReturnedAsNull()
-    {
-        ITestRole webUser = (ITestRole) ldapDao.findByNamingAttribute("webUser", ITestRole.class);
-        webUser.setMembers(new ITestPerson[]{testPerson});
-        ldapDao.update(webUser);
-        ITestRole updated = (ITestRole) ldapDao.findByNamingAttribute("webUser", ITestRole.class);
-        Assert.assertNotNull(updated);
-        LOGGER.debug(updated);
-    }
-
 
     public void testFindByDn()
     {
@@ -122,8 +111,16 @@ public class LdapDaoITest extends AbstractLdapTemplateIntegrationTest
         Assert.assertNotNull("Should've found the created entity.", retrieved);
     }
 
+    public void testFindByDnReturnsNullWhenNameNotFound()
+    {
+        DistinguishedName dn = new DistinguishedName("uid=" + testPerson.getIdentifier() + ",ou=people");
+        ITestPerson retrieved = (ITestPerson) ldapDao.findByDn(dn, ITestPerson.class);
+        LOGGER.debug(retrieved);
+        Assert.assertNull(retrieved);
+    }
 
-    public void testCreateEntityThrowsExceptionWhenNameAlreadyBound()
+
+    public void testCreateThrowsExceptionWhenNameAlreadyBound()
     {
         try
         {
@@ -158,7 +155,7 @@ public class LdapDaoITest extends AbstractLdapTemplateIntegrationTest
                 results.size() > 0);
     }
 
-    public void testUpdateEntity()
+    public void testUpdate()
     {
         try
         {
@@ -176,7 +173,7 @@ public class LdapDaoITest extends AbstractLdapTemplateIntegrationTest
         }
     }
 
-    public void testUpdateEntityThrowsExceptionWhenNameNotBound()
+    public void testUpdateThrowsExceptionWhenNameNotBound()
     {
         try
         {
@@ -191,7 +188,7 @@ public class LdapDaoITest extends AbstractLdapTemplateIntegrationTest
         }
     }
 
-    public void testDeleteEntity()
+    public void testDelete()
     {
         ldapDao.create(testPerson);
         LOGGER.debug(testPerson);
@@ -199,6 +196,5 @@ public class LdapDaoITest extends AbstractLdapTemplateIntegrationTest
         ITestPerson retrieved = (ITestPerson) ldapDao.findByNamingAttribute(testPerson.getIdentifier(), ITestPerson.class);
         Assert.assertNull("Entity should've been deleted.", retrieved);
     }
-
 
 }

@@ -39,11 +39,10 @@ public class ReferencedEntryEditorFactory
     /**
      * Attempts to build a ReferencedEntryEditor for the given type. If Object Directory
      * Mapping for the given type is successful an editor is returned, otherwise a
-     * <code>MappingException</code> is thrown. 
+     * <code>MappingException</code> is thrown.
      *
-     * @param clazz the type to build a ReferencedEntryEditor for. 
-     * @return A ReferencedEntryEditor for the given type.     
-     *
+     * @param clazz the type to build a ReferencedEntryEditor for.
+     * @return A ReferencedEntryEditor for the given type.
      */
     public ReferencedEntryEditor referencedEntryEditorForClass(Class clazz)
             throws MappingException
@@ -59,8 +58,9 @@ public class ReferencedEntryEditorFactory
                     + clazz.getSimpleName());
 
             ObjectDirectoryMapper odm = odmFactory.objectDirectoryMapperForClass(clazz);
-            ReferencedEntryEditor referencedEntryEditor =
-                    new ReferencedEntryEditor(new DistinguishedName(base), ldapTemplate, odm);
+            ReferencedEntryEditor referencedEntryEditor = new ReferencedEntryEditor(
+                    SavePolicy.CREATE_OR_UPDATE, LoadPolicy.SUPPRESS_REFERENTIAL_INTEGRITY_EXCEPTIONS,
+                    new DistinguishedName(base), ldapTemplate, odm);
             referencedEntryEditors.put(clazz, referencedEntryEditor);
             return referencedEntryEditor;
         }
@@ -68,7 +68,7 @@ public class ReferencedEntryEditorFactory
 
     /**
      * @param mapperFactory the <code>ObjectDirectoryMapperFactory</code> to use when attempting
-     * to build a <code>ReferencedEntryEditor</code>.
+     *                      to build a <code>ReferencedEntryEditor</code>.
      */
     public void setObjectDirectoryMapperFactory(ObjectDirectoryMapperFactory
             mapperFactory)

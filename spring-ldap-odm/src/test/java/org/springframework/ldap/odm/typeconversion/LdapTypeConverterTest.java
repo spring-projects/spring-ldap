@@ -8,6 +8,9 @@ package org.springframework.ldap.odm.typeconversion;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.lang.reflect.Method;
 
 import javax.naming.InvalidNameException;
 import javax.naming.ldap.LdapName;
@@ -19,6 +22,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.odm.entity.SomeEntityWithGenericCollection;
+import org.springframework.core.MethodParameter;
 
 public class LdapTypeConverterTest extends TestCase
 {
@@ -115,6 +120,48 @@ public class LdapTypeConverterTest extends TestCase
         }
     }
 
+    public void testConvertToListOfStrings()
+    {
+        String object1 = "onetwothree";
+        String object2 = "fourfivesix";
+        String object3 = "seveneightnine";
+        Object objectToTranslate = new String[]{object1, object2, object3};
+
+        try
+        {
+            List<String> translated = (List<String>) typeConverter.convertIfNecessary(
+                    objectToTranslate, List.class);
+            Assert.assertEquals("fourfivesix", translated.get(1));
+        }
+        catch (TypeMismatchException e)
+        {
+            Assert.fail("Unexpected exception during translation");
+        }
+    }
+
+
+    public void testConvertToSetOfStrings()
+    {
+        String object1 = "onetwothree";
+        String object2 = "fourfivesix";
+        String object3 = "seveneightnine";
+        Object objectToTranslate = new String[]{object1, object2, object3};
+
+        try
+        {
+            Set<String> translated = (Set<String>) typeConverter.convertIfNecessary(
+                    objectToTranslate, Set.class);
+            Assert.assertTrue(translated.contains("fourfivesix"));
+        }
+        catch (TypeMismatchException e)
+        {
+            Assert.fail("Unexpected exception during translation");
+        }
+    } 
+
+
+
+
     public void testConvertToDate() throws ParseException
     {
         String object1 = "19700101100000.000+1000";
@@ -152,6 +199,29 @@ public class LdapTypeConverterTest extends TestCase
             Object[] translated = (Object[]) typeConverter.convertIfNecessary(
                     objectToTranslate, Date[].class);
             Assert.assertEquals(translated[1], new Date(0L));
+        }
+        catch (TypeMismatchException e)
+        {
+            e.printStackTrace();
+            Assert.fail("Unexpected exception during translation");
+
+        }
+    }
+
+    public void testGeneralizedTimeToListOfDates() throws ParseException, NoSuchMethodException
+    {
+        String object1 = "20071105093655.0+1000";
+        String object2 = "19700101100000.0+1000";
+        Object objectToTranslate = new String[]{object1, object2};
+
+        try
+        {
+            Method setter = SomeEntityWithGenericCollection.class.getMethod("setActiveDates", List.class);
+            MethodParameter methodParameter = MethodParameter.forMethodOrConstructor(setter,0);
+            List<Date> translated = (List<Date>) typeConverter.convertIfNecessary(
+                    objectToTranslate, List.class, methodParameter);
+            LOGGER.debug(translated);
+            Assert.assertTrue(translated.contains(new Date(0L)));
         }
         catch (TypeMismatchException e)
         {
