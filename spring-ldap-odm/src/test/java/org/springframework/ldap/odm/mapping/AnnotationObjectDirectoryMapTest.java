@@ -7,7 +7,13 @@
 package org.springframework.ldap.odm.mapping;
 
 import junit.framework.Assert;
-import org.springframework.ldap.odm.entity.*;
+import org.springframework.ldap.odm.entity.UnitTestPerson;
+import org.springframework.ldap.odm.entity.UnitTestPersonMissingNamingAttributeAnnotation;
+import org.springframework.ldap.odm.entity.UnitTestPersonMissingNamingSuffixAnnotation;
+import org.springframework.ldap.odm.entity.UnitTestPersonMissingObjectClassesAnnotation;
+import org.springframework.ldap.odm.entity.UnitTestPersonSyntaxError1InNamingSuffix;
+import org.springframework.ldap.odm.entity.UnitTestPersonSyntaxError2InNamingSuffix;
+import org.springframework.ldap.odm.entity.UnitTestPersonSyntaxErrorInObjectClasses;
 
 public class AnnotationObjectDirectoryMapTest extends AbstractObjectDirectoryMapTest
 {

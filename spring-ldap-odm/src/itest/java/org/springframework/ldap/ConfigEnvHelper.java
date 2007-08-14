@@ -23,6 +23,7 @@ import org.springframework.beans.factory.InitializingBean;
 import javax.naming.Context;
 import java.io.File;
 import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * Helper class to simplify Spring configuration of ApacheDS.
@@ -33,7 +34,7 @@ public class ConfigEnvHelper implements InitializingBean
 {
     private final MutableServerStartupConfiguration configuration;
 
-    private final Hashtable initialEnv;
+    private final Map initialEnv;
 
     private final File workingDir = new File(System
             .getProperty("java.io.tmpdir")
@@ -47,7 +48,7 @@ public class ConfigEnvHelper implements InitializingBean
         this.configuration = configuration;
     }
 
-    public Hashtable getEnv()
+    public Map getEnv()
     {
         return initialEnv;
     }

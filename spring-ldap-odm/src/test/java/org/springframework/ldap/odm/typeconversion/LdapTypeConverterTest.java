@@ -1,3 +1,5 @@
+//CHECKSTYLE:OFF FileLength
+
 /*
  * Copyright 2006 by Majitek. All Rights Reserved.
  *
@@ -217,7 +219,7 @@ public class LdapTypeConverterTest extends TestCase
         try
         {
             Method setter = SomeEntityWithGenericCollection.class.getMethod("setActiveDates", List.class);
-            MethodParameter methodParameter = MethodParameter.forMethodOrConstructor(setter,0);
+            MethodParameter methodParameter = MethodParameter.forMethodOrConstructor(setter, 0);
             List<Date> translated = (List<Date>) typeConverter.convertIfNecessary(
                     objectToTranslate, List.class, methodParameter);
             LOGGER.debug(translated);
@@ -425,3 +427,4 @@ public class LdapTypeConverterTest extends TestCase
     }
 
 }
+//CHECKSTYLE:ON FileLength

@@ -9,17 +9,22 @@ package org.springframework.ldap.odm.mapping;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.core.MethodParameter;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.odm.typeconversion.LdapTypeConverter;
 import org.springframework.ldap.odm.typeconversion.ReferencedEntryEditorFactory;
 import org.springframework.ldap.odm.typeconversion.ValidConversionType;
+import org.springframework.ldap.odm.typeconversion.ValidContainerType;
 import org.springframework.ldap.odm.util.AttributeWrapper;
 import org.springframework.util.StringUtils;
 
 import javax.naming.Name;
 import javax.naming.directory.Attribute;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,9 +69,11 @@ public class ObjectDirectoryMapperImpl implements ObjectDirectoryMapper
                 {
                     try
                     {
-                        Class attributeType = propertyGetters.get(beanPropertyName).getReturnType();
+                        Class targetType = propertyGetters.get(beanPropertyName).getReturnType();
+                        MethodParameter methodParameter =
+                                MethodParameter.forMethodOrConstructor(propertySetters.get(beanPropertyName), 0);
                         Object beanPropertyValue = typeConverter.convertIfNecessary(
-                                new AttributeWrapper(attribute).getAllAsObject(), attributeType);
+                                new AttributeWrapper(attribute).getAllAsObject(), targetType, methodParameter);
                         propertySetters.get(beanPropertyName).invoke(instance, beanPropertyValue);
 
                     }
@@ -95,18 +102,16 @@ public class ObjectDirectoryMapperImpl implements ObjectDirectoryMapper
             {
                 Method propertyGetter = propertyGetters.get(odm.beanPropertyNameFor(attributeName));
                 Object beanPropertyValue = propertyGetter.invoke(beanInstance);
-                LOGGER.trace("mapToContext() attribute:" + attributeName + ", value: " + beanPropertyValue);
-
                 if (beanPropertyValue != null)
                 {
                     if (beanPropertyValue instanceof byte[])
                     {
                         ctxAdapter.setAttributeValue(attributeName, beanPropertyValue);
                     }
-                    else if (beanPropertyValue instanceof Object[])
+                    else if (ValidContainerType.isImplementedBy(beanPropertyValue.getClass()))
                     {
                         ctxAdapter.setAttributeValues(attributeName,
-                                typeConverter.getAllAsText((Object[]) beanPropertyValue));
+                                typeConverter.getAllAsText(beanPropertyValue));
                     }
                     else
                     {
@@ -206,13 +211,11 @@ public class ObjectDirectoryMapperImpl implements ObjectDirectoryMapper
     {
         for (Method getter : propertyGetters.values())
         {
-            Class<?> returnType = getter.getReturnType();
-            if (!ValidConversionType.isValidConversionType(returnType))
+            if (!ValidConversionType.isValidConversionType(getter.getReturnType()))
             {
                 try
                 {
-                    Class componentType =
-                            returnType.isArray() ? returnType.getComponentType() : returnType;
+                    Class componentType = componentTypeFor(getter);
                     typeConverter.registerCustomEditor(componentType,
                             refEditorFactory.referencedEntryEditorForClass(componentType));
                 }
@@ -220,11 +223,39 @@ public class ObjectDirectoryMapperImpl implements ObjectDirectoryMapper
                 {
                     throw new MappingException(odm.getClazz().getSimpleName() + "."
                             + getter.getName()
-                            + "() has invalid return type. Return type must be another mapped "
-                            + "directory object, or one of the following: "
-                            + ValidConversionType.listTypes(), e);
+                            + "() has invalid return type. Return type must be a directory " +
+                            "mapped object, or one of the following: \n\n"
+                            + ValidConversionType.listTypes() + "\n\n"
+                            + ValidContainerType.listTypes(), e);
                 }
             }
+        }
+    }
+
+    private Class componentTypeFor(Method getter) throws MappingException
+    {
+        Class returnType = getter.getReturnType();
+        if (Collection.class.isAssignableFrom(returnType))
+        {
+            ParameterizedType parameterizedType = (ParameterizedType) getter.getGenericReturnType();
+            Type[] typeArgs = parameterizedType.getActualTypeArguments();
+            if (typeArgs[0] != null)
+            {
+                return (Class) typeArgs[0];
+            }
+            else
+            {
+                throw new MappingException("Must declare a generic type. "
+                        + "Example: List<Integer> getScores()");
+            }
+        }
+        else if (getter.getReturnType().isArray())
+        {
+            return getter.getReturnType().getComponentType();
+        }
+        else
+        {
+            return getter.getReturnType();
         }
     }
 

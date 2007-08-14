@@ -121,6 +121,7 @@ public class ObjectDirectoryMapperImplTest extends TestCase
         }
     }
 
+    //CHECKSTYLE:OFF ExecutableStatementCount
     public void testMapToContext() 
     {
         try
@@ -166,6 +167,7 @@ public class ObjectDirectoryMapperImplTest extends TestCase
             Assert.fail(e.getMessage());
         }
     }
+    //CHECKSTYLE:ON ExecutableStatementCount
 
     public void testMapFromContext() throws MappingException
     {

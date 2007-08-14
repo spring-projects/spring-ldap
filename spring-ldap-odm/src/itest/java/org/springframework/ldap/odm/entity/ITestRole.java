@@ -11,6 +11,15 @@ import org.springframework.ldap.odm.annotations.NamingAttribute;
 import org.springframework.ldap.odm.annotations.NamingSuffix;
 import org.springframework.ldap.odm.annotations.ObjectClasses;
 
+import java.util.Set;
+import java.util.Queue;
+import java.util.TreeSet;
+import java.util.Vector;
+import java.util.Map;
+import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
+
 @NamingAttribute("cn")
 @NamingSuffix({"ou=roles"})
 @ObjectClasses({"top", "organizationalRole"})
@@ -26,11 +35,7 @@ public class ITestRole
     private String description;
 
     @DirAttribute("roleOccupant")
-    private ITestPerson[] members;
-
-    /**
-     * ********************************************************************************************
-     */
+    private Collection<ITestPerson> members;
 
     public String getRoleName()
     {
@@ -52,15 +57,28 @@ public class ITestRole
         this.description = description;
     }
 
-    public ITestPerson[] getMembers()
+    public Collection<ITestPerson> getMembers()
     {
         return members;
     }
 
-    public void setMembers(ITestPerson[] members)
+    public void setMembers(Collection<ITestPerson> members)
     {
         this.members = members;
     }
+
+    public void addMember(ITestPerson member)
+    {
+        this.members.add(member);
+    }
+
+
+
+    /**
+     * ********************************************************************************************
+     */
+
+
 
     public String toString()
     {

@@ -42,6 +42,7 @@ public enum ValidConversionType
     public static String listTypes()
     {
         StringBuilder sb = new StringBuilder();
+        sb.append("VALID CONVERSION TYPES: ");
         for (int i = 0; i < ValidConversionType.values().length; i++)
         {
             ValidConversionType validType = ValidConversionType.values()[i];

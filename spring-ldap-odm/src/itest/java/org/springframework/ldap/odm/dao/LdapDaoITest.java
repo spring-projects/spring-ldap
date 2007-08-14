@@ -6,7 +6,6 @@
 package org.springframework.ldap.odm.dao;
 
 import junit.framework.Assert;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
@@ -94,12 +93,12 @@ public class LdapDaoITest extends AbstractLdapTemplateIntegrationTest
     public void testLoadsReferences()
     {
         ITestRole webUser = (ITestRole) ldapDao.findByNamingAttribute("webUser", ITestRole.class);     
-        webUser.setMembers(new ITestPerson[]{testPerson});
+        webUser.addMember(testPerson);
         ldapDao.update(webUser);
 
         ITestRole updated = (ITestRole) ldapDao.findByNamingAttribute("webUser", ITestRole.class);
-        LOGGER.debug("Updated:" + updated);
-        Assert.assertTrue(ArrayUtils.contains(updated.getMembers(), testPerson));
+        LOGGER.debug(updated);
+        Assert.assertTrue(updated.getMembers().contains(testPerson));        
     }
 
     public void testFindByDn()

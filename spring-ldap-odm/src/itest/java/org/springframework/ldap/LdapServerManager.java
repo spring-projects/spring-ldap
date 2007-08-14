@@ -26,8 +26,12 @@ import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.support.DefaultDirObjectFactory;
 
-import javax.naming.*;
+import javax.naming.Binding;
+import javax.naming.Context;
 import javax.naming.ContextNotEmptyException;
+import javax.naming.InitialContext;
+import javax.naming.Name;
+import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import java.util.Properties;

@@ -7,6 +7,7 @@ package org.springframework.ldap.odm.entity;
 
 import com.thoughtworks.xstream.XStream;
 import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.springframework.ldap.odm.annotations.DirAttribute;
 import org.springframework.ldap.odm.annotations.NamingAttribute;
 import org.springframework.ldap.odm.annotations.NamingSuffix;
@@ -115,5 +116,8 @@ public class ITestPerson
         return EqualsBuilder.reflectionEquals(this, o);
     }
 
-
+    public int hashCode()
+    {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
 }

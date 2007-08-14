@@ -13,6 +13,7 @@ import javax.naming.ldap.LdapName;
 import java.beans.PropertyEditor;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -68,10 +69,22 @@ public class LdapTypeConverter extends SimpleTypeConverter
         }
     }
 
+    public String[] getAllAsText(Object values)
+    {
+        if (values instanceof Collection)
+        {
+            return getAllAsText(((Collection) values).toArray());
+        }
+        else
+        {
+            return getAllAsText((Object[]) values);
+        }
+    }
+
     /**
      * Convert Object array to String array
      */
-    public String[] getAllAsText(Object[] values)
+    private String[] getAllAsText(Object[] values)
     {
         String[] textValues = new String[values.length];
         for (int i = 0; i < values.length; i++)

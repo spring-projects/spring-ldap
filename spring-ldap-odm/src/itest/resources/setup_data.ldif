@@ -13,6 +13,17 @@ objectclass: top
 objectclass: organizationalRole
 cn: webUser
 description: Everyday site visitor
+roleOccupant: uid=SomePerson,ou=people,dc=example,dc=com
+
+dn: uid=SomePerson,ou=people,dc=example,dc=com
+objectclass: person
+objectclass: organizationalperson
+objectclass: inetorgperson
+sn: Ericson
+givenName: Eric
+cn: Eric Ericson
+
+
 
 
 
