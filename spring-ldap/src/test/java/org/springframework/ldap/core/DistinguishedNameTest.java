@@ -519,4 +519,11 @@ public class DistinguishedNameTest extends TestCase {
             assertTrue(true);
         }
     }
+
+    public void testAppendChained() {
+        DistinguishedName tested = new DistinguishedName("dc=mycompany,dc=com");
+        tested.append("ou", "company1").append("cn", "john doe");
+        
+        assertEquals("cn=john doe, ou=company1, dc=mycompany, dc=com", tested.toString());
+    }
 }

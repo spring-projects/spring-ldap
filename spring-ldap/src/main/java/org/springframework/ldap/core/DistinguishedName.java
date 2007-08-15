@@ -347,9 +347,25 @@ public class DistinguishedName implements Name {
      * 
      * @param path
      *            the path to append.
+     * @return this instance.
      */
-    public void append(DistinguishedName path) {
+    public DistinguishedName append(DistinguishedName path) {
         getNames().addAll(path.getNames());
+        return this;
+    }
+    
+    /**
+     * Append a new LdapRdn using the supplied key and value.
+     * 
+     * @param key
+     *            the key of the LdapRdn.
+     * @param value
+     *            the value of the LdapRdn.
+     * @return this instance.
+     */
+    public DistinguishedName append(String key, String value){
+        add(key, value);
+        return this;
     }
 
     /**
