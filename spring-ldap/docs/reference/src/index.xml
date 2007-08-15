@@ -9,6 +9,7 @@
 <!ENTITY executors SYSTEM "executors.xml">
 <!ENTITY contextprocessor SYSTEM "contextprocessor.xml">
 <!ENTITY transactions SYSTEM "transactions.xml">
+<!ENTITY simple SYSTEM "simple.xml">
 <!ENTITY configuration SYSTEM "configuration.xml">
 ]>
 
@@ -49,6 +50,7 @@
 	&transactions;
 	&executors;
 	&contextprocessor;
+	&simple;
 	&configuration;
 	
 </book>
