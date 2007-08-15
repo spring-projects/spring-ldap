@@ -18,10 +18,10 @@ package org.springframework.ldap.authentication;
 
 import junit.framework.TestCase;
 
-
 import org.acegisecurity.Authentication;
 import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.context.SecurityContextHolder;
+import org.acegisecurity.providers.anonymous.AnonymousAuthenticationToken;
 import org.acegisecurity.userdetails.User;
 import org.acegisecurity.userdetails.ldap.LdapUserDetails;
 import org.easymock.MockControl;
@@ -83,7 +83,7 @@ public class AcegiAuthenticationSourceTest extends TestCase {
 
         ldapUserDetailsControl.expectAndDefaultReturn(ldapUserDetailsMock
                 .getDn(), "cn=Manager");
-        
+
         SecurityContextHolder.getContext()
                 .setAuthentication(authenticationMock);
 
@@ -125,5 +125,20 @@ public class AcegiAuthenticationSourceTest extends TestCase {
             assertTrue(true);
         }
         verify();
+    }
+
+    public void testGetPrincipalWithAnonymousAuthenticationToken() {
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new AnonymousAuthenticationToken("dummy", "dummy",
+                        new GrantedAuthority[] { new DummyAuthoroty() }));
+
+        assertEquals("", tested.getPrincipal());
+    }
+
+    private static class DummyAuthoroty implements GrantedAuthority {
+        public String getAuthority() {
+            return null;
+        }
     }
 }

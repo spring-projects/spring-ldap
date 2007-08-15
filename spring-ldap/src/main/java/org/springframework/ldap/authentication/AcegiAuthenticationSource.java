@@ -18,11 +18,11 @@ package org.springframework.ldap.authentication;
 
 import org.acegisecurity.Authentication;
 import org.acegisecurity.context.SecurityContextHolder;
+import org.acegisecurity.providers.anonymous.AnonymousAuthenticationToken;
 import org.acegisecurity.userdetails.ldap.LdapUserDetails;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.AuthenticationSource;
-
 
 /**
  * An AuthenticationSource to retrieve authentication information stored in
@@ -47,13 +47,19 @@ public class AcegiAuthenticationSource implements AuthenticationSource {
                 .getAuthentication();
         if (authentication != null) {
             Object principal = authentication.getPrincipal();
-            if (!(principal instanceof LdapUserDetails)) {
+            if (principal instanceof LdapUserDetails) {
+                LdapUserDetails details = (LdapUserDetails) principal;
+                return details.getDn();
+            } else if (authentication instanceof AnonymousAuthenticationToken) {
+                if (log.isDebugEnabled()) {
+                    log
+                            .debug("Anonymous Authentication, returning empty String as Principal");
+                }
+                return "";
+            } else {
                 throw new IllegalArgumentException(
                         "The principal property of the authentication object -"
                                 + "needs to be a LdapUserDetails.");
-            } else {
-                LdapUserDetails details = (LdapUserDetails) principal;
-                return details.getDn();
             }
         } else {
             log.warn("No Authentication object set in SecurityContext - "
