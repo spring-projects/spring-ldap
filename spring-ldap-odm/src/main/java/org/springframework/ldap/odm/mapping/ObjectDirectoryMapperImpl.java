@@ -12,10 +12,10 @@ import org.springframework.beans.TypeMismatchException;
 import org.springframework.core.MethodParameter;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.odm.typeconversion.ConversionType;
 import org.springframework.ldap.odm.typeconversion.LdapTypeConverter;
+import org.springframework.ldap.odm.typeconversion.MultiValueType;
 import org.springframework.ldap.odm.typeconversion.ReferencedEntryEditorFactory;
-import org.springframework.ldap.odm.typeconversion.ValidConversionType;
-import org.springframework.ldap.odm.typeconversion.ValidContainerType;
 import org.springframework.ldap.odm.util.AttributeWrapper;
 import org.springframework.util.StringUtils;
 
@@ -108,7 +108,7 @@ public class ObjectDirectoryMapperImpl implements ObjectDirectoryMapper
                     {
                         ctxAdapter.setAttributeValue(attributeName, beanPropertyValue);
                     }
-                    else if (ValidContainerType.isImplementedBy(beanPropertyValue.getClass()))
+                    else if (MultiValueType.isAssignableTo(beanPropertyValue.getClass()))
                     {
                         ctxAdapter.setAttributeValues(attributeName,
                                 typeConverter.getAllAsText(beanPropertyValue));
@@ -211,7 +211,7 @@ public class ObjectDirectoryMapperImpl implements ObjectDirectoryMapper
     {
         for (Method getter : propertyGetters.values())
         {
-            if (!ValidConversionType.isValidConversionType(getter.getReturnType()))
+            if (!ConversionType.isConversionType(getter.getReturnType()))
             {
                 try
                 {
@@ -225,8 +225,8 @@ public class ObjectDirectoryMapperImpl implements ObjectDirectoryMapper
                             + getter.getName()
                             + "() has invalid return type. Return type must be a directory " +
                             "mapped object, or one of the following: \n\n"
-                            + ValidConversionType.listTypes() + "\n\n"
-                            + ValidContainerType.listTypes(), e);
+                            + ConversionType.listTypes() + "\n\n"
+                            + MultiValueType.listTypes(), e);
                 }
             }
         }

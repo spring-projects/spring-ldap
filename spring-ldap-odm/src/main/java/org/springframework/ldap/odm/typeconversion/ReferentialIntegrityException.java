@@ -18,3 +18,10 @@ public class ReferentialIntegrityException extends RuntimeException
         super(message, cause);
     }
 }
+/*
+ * Copyright 2005 by Majitek. All Rights Reserved.
+ *
+ * This software is the proprietary information of Majitek. Use is subject to license terms.
+ */
+
+

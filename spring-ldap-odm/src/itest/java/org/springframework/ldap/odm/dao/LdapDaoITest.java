@@ -30,7 +30,7 @@ public class LdapDaoITest extends AbstractLdapTemplateIntegrationTest
         LOGGER.debug("********************INIT TEST CLASS**************************");
         return new String[]{"beans.xml"};
     }
-
+                     
     protected void onSetUp() throws Exception
     {
         super.onSetUp();

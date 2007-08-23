@@ -69,6 +69,7 @@ public class LdapTypeConverter extends SimpleTypeConverter
         }
     }
 
+    /** Convert a collection or Array of objects to their string representation */
     public String[] getAllAsText(Object values)
     {
         if (values instanceof Collection)
@@ -80,10 +81,7 @@ public class LdapTypeConverter extends SimpleTypeConverter
             return getAllAsText((Object[]) values);
         }
     }
-
-    /**
-     * Convert Object array to String array
-     */
+   
     private String[] getAllAsText(Object[] values)
     {
         String[] textValues = new String[values.length];

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Collection;
 
-public enum ValidContainerType
+public enum MultiValueType
 {
     ARRAY(Object[].class),
     COLLECTION(Collection.class),
@@ -19,7 +19,7 @@ public enum ValidContainerType
 
     private final Class clazz;
 
-    ValidContainerType(Class clazz)
+    MultiValueType(Class clazz)
     {
         this.clazz = clazz;
     }
@@ -30,10 +30,10 @@ public enum ValidContainerType
     public static String listTypes()
     {
         StringBuilder sb = new StringBuilder();
-        sb.append("VALID MULTI-VALUE CONTAINER TYPES:");
+        sb.append("MULTI-VALUE TYPES:");
         for (int i = 0; i < values().length; i++)
         {
-            ValidContainerType validType = values()[i];
+            MultiValueType validType = values()[i];
             sb.append("\n");
             sb.append(validType.clazz.getSimpleName());
             if (i != values().length - 1)
@@ -47,9 +47,9 @@ public enum ValidContainerType
     /**
      * Returns true if the argument is a member of this enumeration.
      */
-    public static boolean isValidContainerType(Class returnType)
+    public static boolean isMultiValueType(Class returnType)
     {
-        for (ValidContainerType type : values())
+        for (MultiValueType type : values())
         {
             if (returnType.equals(type.clazz))
             {
@@ -59,9 +59,9 @@ public enum ValidContainerType
         return false;
     }
 
-    public static boolean isImplementedBy(Class returnType)
+    public static boolean isAssignableTo(Class returnType)
     {
-        for (ValidContainerType type : values())
+        for (MultiValueType type : values())
         {
             if (type.clazz.isAssignableFrom(returnType))
             {

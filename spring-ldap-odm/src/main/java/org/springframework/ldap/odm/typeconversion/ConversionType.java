@@ -12,7 +12,7 @@ import java.util.Date;
 
 
 /** This list of types supported for mapping between ldap attributes and bean properties. */
-public enum ValidConversionType
+public enum ConversionType
 {
     BYTE_ARRAY(byte[].class),
     BOOLEAN(Boolean.class),
@@ -32,9 +32,9 @@ public enum ValidConversionType
     private final Class clazz;
 
 
-    ValidConversionType(Class validType)
+    ConversionType(Class type)
     {
-        this.clazz = validType;
+        this.clazz = type;
 
     }
 
@@ -42,13 +42,13 @@ public enum ValidConversionType
     public static String listTypes()
     {
         StringBuilder sb = new StringBuilder();
-        sb.append("VALID CONVERSION TYPES: ");
-        for (int i = 0; i < ValidConversionType.values().length; i++)
+        sb.append("CONVERSION TYPES: ");
+        for (int i = 0; i < values().length; i++)
         {
-            ValidConversionType validType = ValidConversionType.values()[i];
+            ConversionType type = values()[i];
             sb.append("\n");
-            sb.append(validType.clazz.getSimpleName());
-            if (i != ValidConversionType.values().length - 1)
+            sb.append(type.clazz.getSimpleName());
+            if (i != values().length - 1)
             {
                 sb.append(",");
             }
@@ -57,11 +57,11 @@ public enum ValidConversionType
     }
 
     /** Returns true if the argument is a member of this enumeration. */
-    public static boolean isValidConversionType(Class returnType)
+    public static boolean isConversionType(Class candidate)
     {
-        for (ValidConversionType type : ValidConversionType.values())
+        for (ConversionType type : values())
         {
-            if (returnType.equals(type.clazz))
+            if (candidate.equals(type.clazz))
             {
                 return true;
             }

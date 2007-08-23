@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.HashSet;
 import java.lang.reflect.Method;
 
 import javax.naming.InvalidNameException;
@@ -40,7 +41,7 @@ public class LdapTypeConverterTest extends TestCase
         typeConverter = new LdapTypeConverter();
     }
 
-    public void testConvertToByteArray()
+    public void testPassthroughOfByteArray()
     {
         byte[] objectToTranslate = "fred".getBytes();
 
@@ -57,7 +58,7 @@ public class LdapTypeConverterTest extends TestCase
         }
     }
 
-    public void testConvertToBoolean()
+    public void testConvertStringToBoolean()
     {
         String objectToTranslate = "true";
         try
@@ -73,7 +74,7 @@ public class LdapTypeConverterTest extends TestCase
         }
     }
 
-    public void testConvertFromBoolean()
+    public void testConvertBooleanToString()
     {
         boolean objectToTranslate = false;
         try
@@ -88,7 +89,7 @@ public class LdapTypeConverterTest extends TestCase
         }
     }
 
-    public void testConvertToString()
+    public void testPassthroughOfString()
     {
         String objectToTranslate = "onetwothree";
         try
@@ -103,7 +104,7 @@ public class LdapTypeConverterTest extends TestCase
         }
     }
 
-    public void testConvertToStringArray()
+    public void testPassthroughOfStringArray()
     {
         String object1 = "onetwothree";
         String object2 = "fourfivesix";
@@ -122,7 +123,7 @@ public class LdapTypeConverterTest extends TestCase
         }
     }
 
-    public void testConvertToListOfStrings()
+    public void testConvertStringArrayToListOfStrings()
     {
         String object1 = "onetwothree";
         String object2 = "fourfivesix";
@@ -142,7 +143,7 @@ public class LdapTypeConverterTest extends TestCase
     }
 
 
-    public void testConvertToSetOfStrings()
+    public void testConvertStringArrayToSetOfStrings()
     {
         String object1 = "onetwothree";
         String object2 = "fourfivesix";
@@ -164,7 +165,7 @@ public class LdapTypeConverterTest extends TestCase
 
 
 
-    public void testConvertToDate() throws ParseException
+    public void testConvertStringToDate() throws ParseException
     {
         String object1 = "19700101100000.000+1000";
 
@@ -181,7 +182,7 @@ public class LdapTypeConverterTest extends TestCase
         }
     }
 
-    public void testConvertFromDate()
+    public void testConvertDateToString()
     {
         Date source = new Date(1184283822285L); //Friday July 13, 2007 9:43:42 AM GMT+1000
         LOGGER.debug(typeConverter.getAsText(source));
@@ -190,7 +191,7 @@ public class LdapTypeConverterTest extends TestCase
                 .matches("20070713\\d\\d\\d\\d42.285\\+\\d\\d\\d\\d"));
     }
 
-    public void testConvertToDateArray() throws ParseException
+    public void testConvertStringArrayToDateArray() throws ParseException
     {
         String object1 = "20071105093655.0+1000";
         String object2 = "19700101100000.0+1000";
@@ -210,7 +211,7 @@ public class LdapTypeConverterTest extends TestCase
         }
     }
 
-    public void testGeneralizedTimeToListOfDates() throws ParseException, NoSuchMethodException
+    public void testConvertGeneralizedTimeArrayToListOfDates() throws ParseException, NoSuchMethodException
     {
         String object1 = "20071105093655.0+1000";
         String object2 = "19700101100000.0+1000";
@@ -234,7 +235,7 @@ public class LdapTypeConverterTest extends TestCase
     }
 
 
-    public void testConvertFromDateArray()
+    public void testConvertDateArrayToStringArray()
     {
         Date date1 = new Date(1184283822285L); //Friday July 13, 2007 9:43:42 AM + GMT+1000
         Date date2 = new Date(0); //epoch + GMT + 1000
@@ -245,7 +246,21 @@ public class LdapTypeConverterTest extends TestCase
         Assert.assertTrue(converted[1].matches("19700101\\d\\d\\d\\d00.000\\+\\d\\d\\d\\d"));
     }
 
-    public void testConvertToLdapName()
+    public void testConvertDateCollectionToStringArray()
+    {
+        Date date1 = new Date(1184283822285L); //Friday July 13, 2007 9:43:42 AM + GMT+1000
+        Date date2 = new Date(0); //epoch + GMT + 1000
+
+        Set<Date> dates = new HashSet<Date>();
+        dates.add(date1);
+        dates.add(date2);
+        String[] converted = typeConverter.getAllAsText(dates);
+        Assert.assertTrue(converted[0].matches("20070713\\d\\d\\d\\d42.285\\+\\d\\d\\d\\d"));
+        Assert.assertTrue(converted[1].matches("19700101\\d\\d\\d\\d00.000\\+\\d\\d\\d\\d"));
+    }
+
+
+    public void testConvertStringToLdapName()
     {
         String object1 = "uid=amAdmin, ou = people, dc = myretsu,dc=com";
         try
@@ -264,7 +279,7 @@ public class LdapTypeConverterTest extends TestCase
         }
     }
 
-    public void testConvertToLdapNameArray()
+    public void testConvertStringArrayToLdapNameArray()
     {
         String object1 = "uid=amAdmin, ou = people, dc = myretsu,dc=com";
         String object2 = "uid=fred, ou = people, dc = myretsu,dc=com";
@@ -286,7 +301,7 @@ public class LdapTypeConverterTest extends TestCase
         }
     }
 
-    public void testConvertToDistinguishedName()
+    public void testConvertStringToDistinguishedName()
     {
         String object1 = "uid=amAdmin, ou = people, dc = myretsu,dc=com";
         try
@@ -301,7 +316,7 @@ public class LdapTypeConverterTest extends TestCase
         }
     }
 
-    public void testConvertToDistinguishedNameArray()
+    public void testConvertStringArrayToDistinguishedNameArray()
     {
         String object1 = "uid=amAdmin, ou = people, dc = myretsu,dc=com";
         String object2 = "uid=fred, ou = people, dc = myretsu,dc=com";
@@ -319,7 +334,7 @@ public class LdapTypeConverterTest extends TestCase
         }
     }
 
-    public void testConvertToLong()
+    public void testConvertStringToLong()
     {
         String object1 = "9887342";
         try
@@ -334,7 +349,7 @@ public class LdapTypeConverterTest extends TestCase
         }
     }
 
-    public void testConvertToLongArray()
+    public void testConvertStringArrayToLongArray()
     {
         String object1 = "878787";
         String object2 = "23948787";
@@ -353,7 +368,7 @@ public class LdapTypeConverterTest extends TestCase
         }
     }
 
-    public void testConvertToInteger()
+    public void testConvertStringToInteger()
     {
         String object1 = "9887342";
 
@@ -369,7 +384,7 @@ public class LdapTypeConverterTest extends TestCase
         }
     }
 
-    public void testConvertToIntegerArray()
+    public void testConvertStringArrayToIntegerArray()
     {
         String object1 = "878787";
         String object2 = "23948787";
