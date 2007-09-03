@@ -22,11 +22,9 @@ import java.util.LinkedList;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
-import javax.naming.directory.DirContext;
 
 import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.core.AttributesMapper;
-import org.springframework.ldap.core.ContextExecutor;
 import org.springframework.ldap.core.LdapTemplate;
 
 /**
@@ -35,45 +33,30 @@ import org.springframework.ldap.core.LdapTemplate;
  * @author Ulrik Sandberg
  */
 public class SupportedControlsITest extends AbstractLdapTemplateIntegrationTest {
+    /** must use a context source that has no base set */
     private LdapTemplate tested;
 
-    private static String SUPPORTED_CONTROL = "supportedcontrol";
+    private static final String SUPPORTED_CONTROL = "supportedcontrol";
 
     protected String[] getConfigLocations() {
-        return new String[] { "/conf/ldapTemplateTestContext.xml" };
+        return new String[] { "/conf/rootContextSourceTestContext.xml" };
     }
 
     public void testExpectedControlsSupported() throws Exception {
-        final String name = "ldap://localhost:3900";
         /**
          * Maps the 'supportedcontrol' attribute to a string array.
          */
         final AttributesMapper mapper = new AttributesMapper() {
             public Object mapFromAttributes(Attributes attributes)
                     throws NamingException {
-                LinkedList list = new LinkedList();
                 NamingEnumeration enumeration = attributes.get(
                         SUPPORTED_CONTROL).getAll();
-                while (enumeration.hasMoreElements()) {
-                    list.add((String) enumeration.nextElement());
-                }
-                return list.toArray(new String[0]);
-            }
-        };
-        /**
-         * Performs a 'getAttributes' operation and maps the result to a string
-         * array.
-         */
-        ContextExecutor executor = new ContextExecutor() {
-            public Object executeWithContext(DirContext ctx)
-                    throws NamingException {
-                Attributes attributes = ctx.getAttributes(name,
-                        new String[] { SUPPORTED_CONTROL });
-                return mapper.mapFromAttributes(attributes);
+                return toStringArray(enumeration);
             }
         };
 
-        String[] controls = (String[]) tested.executeReadOnly(executor);
+        String[] controls = (String[]) tested.lookup("",
+                new String[] { SUPPORTED_CONTROL }, mapper);
         System.out.println(Arrays.toString(controls));
         assertEquals("Persistent Search LDAPv3 control,",
                 "2.16.840.1.113730.3.4.3", controls[0]);
@@ -87,5 +70,13 @@ public class SupportedControlsITest extends AbstractLdapTemplateIntegrationTest 
 
     public void setTested(LdapTemplate tested) {
         this.tested = tested;
+    }
+
+    private String[] toStringArray(NamingEnumeration enumeration) {
+        LinkedList list = new LinkedList();
+        while (enumeration.hasMoreElements()) {
+            list.add((String) enumeration.nextElement());
+        }
+        return (String[]) list.toArray(new String[0]);
     }
 }
