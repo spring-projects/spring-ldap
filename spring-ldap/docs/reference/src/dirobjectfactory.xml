@@ -60,10 +60,30 @@ public class PersonDaoImpl implements PersonDao {
     directly by name, without having to go through the
     <literal>Attributes</literal> and <literal>BasicAttribute</literal>
     classes.</para>
+    <para>Spring LDAP provides an abstract base implementation of <literal>ContextMapper</literal>, 
+    <literal>AbstractContextMapper</literal>. This automatically takes care of the casting of the supplied
+    <literal>Object</literal> parameter to <literal>DirContexOperations</literal>. 
+    The <literal>PersonContextMapper</literal> above can thus be re-written as follows:
+    </para>
+        <example>
+      <title>Using an AbstractContextMapper</title>
+
+      <programlisting>
+  private static class PersonContextMapper <emphasis role="bold">extends AbstractContextMapper</emphasis> {
+      public Object <emphasis role="bold">doMapFromContext</emphasis>(DirContextOperations ctx) {
+         Person p = new Person();
+         p.setFullName(context.getStringAttribute("cn"));
+         p.setLastName(context.getStringAttribute("sn"));
+         p.setDescription(context.getStringAttribute("description"));
+         return p;
+      }
+  }
+</programlisting>
+    </example>
   </sect1>
 
   <sect1>
-    <title>Binding and Modifying Using ContextMapper</title>
+    <title>Binding and Modifying Using DirContextAdapter</title>
 
     <para>The DirContextAdapter can also be used to hide the Attributes when
     binding and modifying data.</para>

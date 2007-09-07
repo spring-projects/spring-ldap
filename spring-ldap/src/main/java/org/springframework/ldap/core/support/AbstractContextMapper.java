@@ -50,6 +50,6 @@ public abstract class AbstractContextMapper implements ContextMapper {
      *            the context to map to an object.
      * @return an object built from the data in the context.
      */
-    protected abstract Object doMapFromContext(DirContextOperations operations);
+    protected abstract Object doMapFromContext(DirContextOperations ctx);
 
 }
