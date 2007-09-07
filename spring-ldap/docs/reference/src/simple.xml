@@ -19,7 +19,7 @@
     <informalexample>
     <programlisting>public List&lt;Person&gt; getAllPersons(){
     return simpleLdapTemplate.search("", "(objectclass=person)",
-               new ParametrizedContextMapper&lt;Person&gt;() {
+               new ParameterizedContextMapper&lt;Person&gt;() {
                    public Person mapFromContext(Object ctx) {
                        DirContextAdapter adapter = (DirContextAdapter) ctx;
                        Person person = new Person();
@@ -38,7 +38,7 @@
     instance:
     <informalexample>
     <programlisting>public void update(Person person){
-    DirContextOperations ctx = simpleLdapTemplate.lookup(person.getDn());
+    DirContextOperations ctx = simpleLdapTemplate.lookupContext(person.getDn());
   
     //Update the DirContextOperation instance with data from the domain object
     ctx.setAttributeValue("description", person.getDescription());

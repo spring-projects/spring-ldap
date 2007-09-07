@@ -73,7 +73,7 @@ public class SimpleLdapTemplate implements SimpleLdapOperations {
 	 * org.springframework.ldap.core.simple.ParametrizedContextMapper)
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T lookup(String dn, ParametrizedContextMapper<T> mapper) {
+	public <T> T lookup(String dn, ParameterizedContextMapper<T> mapper) {
 		return (T) ldapOperations.lookup(dn, mapper);
 	}
 
@@ -84,7 +84,7 @@ public class SimpleLdapTemplate implements SimpleLdapOperations {
 	 * org.springframework.ldap.core.simple.ParametrizedContextMapper)
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> List<T> search(String base, String filter, ParametrizedContextMapper<T> mapper) {
+	public <T> List<T> search(String base, String filter, ParameterizedContextMapper<T> mapper) {
 		return ldapOperations.search(base, filter, mapper);
 	}
 
@@ -96,7 +96,7 @@ public class SimpleLdapTemplate implements SimpleLdapOperations {
 	 * org.springframework.ldap.core.DirContextProcessor)
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> List<T> search(String base, String filter, SearchControls controls, ParametrizedContextMapper<T> mapper,
+	public <T> List<T> search(String base, String filter, SearchControls controls, ParameterizedContextMapper<T> mapper,
 			DirContextProcessor processor) {
 		return ldapOperations.search(base, filter, controls, mapper);
 	}

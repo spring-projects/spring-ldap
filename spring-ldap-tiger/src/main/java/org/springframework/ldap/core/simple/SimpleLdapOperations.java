@@ -54,7 +54,7 @@ public interface SimpleLdapOperations {
 	 * mapped by the ParametrizedContextMapper.
 	 * @throws NamingException if any error occurs.
 	 */
-	<T> List<T> search(String base, String filter, ParametrizedContextMapper<T> mapper);
+	<T> List<T> search(String base, String filter, ParameterizedContextMapper<T> mapper);
 
 	/**
 	 * Search for a List of type T using the supplied filter, SearchControls,
@@ -72,7 +72,7 @@ public interface SimpleLdapOperations {
 	 * mapped by the ParametrizedContextMapper.
 	 * @throws NamingException if any error occurs.
 	 */
-	<T> List<T> search(String base, String filter, SearchControls controls, ParametrizedContextMapper<T> mapper,
+	<T> List<T> search(String base, String filter, SearchControls controls, ParameterizedContextMapper<T> mapper,
 			DirContextProcessor processor);
 
 	/**
@@ -83,7 +83,7 @@ public interface SimpleLdapOperations {
 	 * @return the mapped object, as received by the ParametrizedContextMapper.
 	 * @throws NamingException if any error occurs.
 	 */
-	<T> T lookup(String dn, ParametrizedContextMapper<T> mapper);
+	<T> T lookup(String dn, ParameterizedContextMapper<T> mapper);
 
 	/**
 	 * Look up the specified DN, and automatically cast it to a

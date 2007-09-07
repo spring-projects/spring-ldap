@@ -19,7 +19,7 @@ import org.springframework.ldap.core.DirContextOperations;
 
 /**
  * Abstract superclass that may be used instead of implementing
- * {@link ParametrizedContextMapper} directly. Subclassing from this superclass,
+ * {@link ParameterizedContextMapper} directly. Subclassing from this superclass,
  * the supplied context will be automatically cast to
  * <code>DirContextOperations</code>. Note that if you use your own
  * <code>DirObjectFactory</code>, this implementation will fail with a
@@ -28,7 +28,7 @@ import org.springframework.ldap.core.DirContextOperations;
  * @author Mattias Arthursson
  * 
  */
-public abstract class AbstractParametrizedContextMapper<T> implements ParametrizedContextMapper<T> {
+public abstract class AbstractParameterizedContextMapper<T> implements ParameterizedContextMapper<T> {
 
 	/*
 	 * (non-Javadoc)

@@ -12,7 +12,7 @@ import org.springframework.ldap.core.ContextMapper;
  * 
  * @param <T>
  */
-public interface ParametrizedContextMapper<T> extends ContextMapper {
+public interface ParameterizedContextMapper<T> extends ContextMapper {
 
 	/**
 	 * Map a single LDAP Context to an object. The supplied Object

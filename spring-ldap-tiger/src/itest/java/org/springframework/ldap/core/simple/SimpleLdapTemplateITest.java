@@ -54,7 +54,7 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 		ldapTemplate.modifyAttributes(ctx);
 
 		// verify that the data was properly updated.
-		ldapTemplate.lookup("cn=Some Person,ou=company1,c=Sweden", new ParametrizedContextMapper<Object>() {
+		ldapTemplate.lookup("cn=Some Person,ou=company1,c=Sweden", new ParameterizedContextMapper<Object>() {
 			public Object mapFromContext(Object ctx) {
 				DirContextAdapter adapter = (DirContextAdapter) ctx;
 				assertEquals("updated description", adapter.getStringAttribute("description"));
@@ -64,7 +64,7 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 		});
 	}
 
-	private static class CnContextMapper implements ParametrizedContextMapper<String> {
+	private static class CnContextMapper implements ParameterizedContextMapper<String> {
 
 		public String mapFromContext(Object ctx) {
 			DirContextAdapter adapter = (DirContextAdapter) ctx;
