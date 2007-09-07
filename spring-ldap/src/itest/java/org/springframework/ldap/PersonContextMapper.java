@@ -16,8 +16,8 @@
 
 package org.springframework.ldap;
 
-import org.springframework.ldap.core.ContextMapper;
-import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.DirContextOperations;
+import org.springframework.ldap.core.support.AbstractContextMapper;
 
 /**
  * Dummy implemention of ContextMapper for use in the integration tests and for
@@ -25,18 +25,15 @@ import org.springframework.ldap.core.DirContextAdapter;
  * 
  * @author Mattias Arthursson
  */
-public class PersonContextMapper implements ContextMapper {
+public class PersonContextMapper extends AbstractContextMapper {
 
-    /* (non-Javadoc)
-     * @see org.springframework.ldap.core.ContextMapper#mapFromContext(java.lang.Object)
-     */
-    public Object mapFromContext(Object ctx) {
-        DirContextAdapter adapter = (DirContextAdapter) ctx;
+    protected Object doMapFromContext(DirContextOperations operations) {
         Person person = new Person();
-        person.setFullname(adapter.getStringAttribute("cn"));
-        person.setLastname(adapter.getStringAttribute("sn"));
-        person.setPhone(adapter.getStringAttribute("telephoneNumber"));
-        person.setDescription(adapter.getStringAttribute("description"));
+        person.setFullname(operations.getStringAttribute("cn"));
+        person.setLastname(operations.getStringAttribute("sn"));
+        person.setPhone(operations.getStringAttribute("telephoneNumber"));
+        person.setDescription(operations.getStringAttribute("description"));
+
         return person;
     }
 }
