@@ -17,6 +17,16 @@ Consequently this is NOT a drop-in replacement for Spring LDAP 1.1.2,
 though upgrading should not present all that much work. Please see
 the supplied upgrade guide for details.
 
+* Added getContextSource on LdapTemplate.
+
+* The following getters on AbstractContextSource have been added:
+    getContextFactory
+    getDirObjectFactory
+    getAuthenticationSource
+    getUrls (was protected)
+    isPooled
+    isAnonymousReadOnly
+
 * Upgraded to Spring 2.0.6 internally. Spring 1.2.x is still supported.
 
 Changes in version 1.2-RC1 (5.12.2007)

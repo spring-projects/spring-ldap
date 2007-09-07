@@ -101,6 +101,15 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     }
 
     /**
+     * Get the ContextSource.
+     * 
+     * @return the ContextSource.
+     */
+    public ContextSource getContextSource() {
+        return contextSource;
+    }
+
+    /**
      * Specify whether <code>PartialResultException</code> should be ignored
      * in searches. AD servers typically have a problem with referrals. Normally
      * a referral should be followed automatically, but this does not seem to

@@ -225,6 +225,15 @@ public abstract class AbstractContextSource implements ContextSource,
     }
 
     /**
+     * Get the context factory.
+     * 
+     * @return the context factory used when creating Contexts.
+     */
+    public Class getContextFactory() {
+        return contextFactory;
+    }
+
+    /**
      * Set the DirObjectFactory to use. Default is
      * {@link DefaultDirObjectFactory}. The specified class needs to be an
      * implementation of javax.naming.spi.DirObjectFactory. <b>Note: </b>Setting
@@ -237,6 +246,16 @@ public abstract class AbstractContextSource implements ContextSource,
      */
     public void setDirObjectFactory(Class dirObjectFactory) {
         this.dirObjectFactory = dirObjectFactory;
+    }
+
+    /**
+     * Get the DirObjectFactory to use.
+     * 
+     * @return the DirObjectFactory to be used. <code>null</code> means that
+     *         no DirObjectFactory will be used.
+     */
+    public Class getDirObjectFactory() {
+        return dirObjectFactory;
     }
 
     /**
@@ -348,6 +367,15 @@ public abstract class AbstractContextSource implements ContextSource,
     }
 
     /**
+     * Get the urls of the LDAP servers.
+     * 
+     * @return the urls of all servers.
+     */
+    public String[] getUrls() {
+        return urls;
+    }
+
+    /**
      * Set the url of the LDAP server. Utility method if only one server is
      * used.
      * 
@@ -366,6 +394,15 @@ public abstract class AbstractContextSource implements ContextSource,
      */
     public void setPooled(boolean pooled) {
         this.pooled = pooled;
+    }
+
+    /**
+     * Get whether the pooling flag should be set.
+     * 
+     * @return whether Contexts should be pooled.
+     */
+    public boolean isPooled() {
+        return pooled;
     }
 
     /**
@@ -397,9 +434,25 @@ public abstract class AbstractContextSource implements ContextSource,
         return env;
     }
 
+    /**
+     * Set the authentication source to use when retrieving user principal and
+     * credentials.
+     * 
+     * @param authenticationSource
+     *            the AuthenticationSource that will provide user info.
+     */
     public void setAuthenticationSource(
-            AuthenticationSource authenticationProvider) {
-        this.authenticationSource = authenticationProvider;
+            AuthenticationSource authenticationSource) {
+        this.authenticationSource = authenticationSource;
+    }
+
+    /**
+     * Get the authentication source.
+     * 
+     * @return the AuthenticationSource that will provide user info.
+     */
+    public AuthenticationSource getAuthenticationSource() {
+        return authenticationSource;
     }
 
     /**
@@ -423,11 +476,22 @@ public abstract class AbstractContextSource implements ContextSource,
      * operations. Default is <code>false</code>.
      * 
      * @param anonymousReadOnly
-     *            <code>true</code> if and anonymous environment should be
-     *            used for read-only operations, <code>false</code> otherwise.
+     *            <code>true</code> if an anonymous environment should be used
+     *            for read-only operations, <code>false</code> otherwise.
      */
     public void setAnonymousReadOnly(boolean anonymousReadOnly) {
         this.anonymousReadOnly = anonymousReadOnly;
+    }
+
+    /**
+     * Get whether an anonymous environment should be used for read-only
+     * operations.
+     * 
+     * @return <code>true</code> if an anonymous environment should be used
+     *         for read-only operations, <code>false</code> otherwise.
+     */
+    public boolean isAnonymousReadOnly() {
+        return anonymousReadOnly;
     }
 
     /**
@@ -453,9 +517,5 @@ public abstract class AbstractContextSource implements ContextSource,
             return password;
         }
 
-    }
-
-    protected String[] getUrls() {
-        return urls;
     }
 }
