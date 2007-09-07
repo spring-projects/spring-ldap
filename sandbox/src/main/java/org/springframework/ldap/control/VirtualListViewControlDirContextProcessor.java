@@ -26,6 +26,7 @@ import javax.naming.ldap.LdapContext;
 
 import org.springframework.ldap.control.CreateControlFailedException;
 import org.springframework.ldap.core.DirContextProcessor;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.ReflectionUtils;
 
 import com.sun.jndi.ldap.ctl.SortControl;
@@ -36,6 +37,7 @@ import com.sun.jndi.ldap.ctl.VirtualListViewResponseControl;
  * DirContextProcessor implementation for managing a virtual list view.
  * <p>
  * This is the request control syntax:
+ * 
  * <pre>
  * VirtualListViewRequest ::= SEQUENCE { 
  *        beforeCount    INTEGER (0..maxInt), 
@@ -47,8 +49,10 @@ import com.sun.jndi.ldap.ctl.VirtualListViewResponseControl;
  *                       greaterThanOrEqual [1] AssertionValue }, 
  *        contextID     OCTET STRING OPTIONAL }
  * </pre>
+ * 
  * <p>
  * This is the response control syntax:
+ * 
  * <pre>
  * VirtualListViewResponse ::= SEQUENCE { 
  *        targetPosition    INTEGER (0 .. maxInt), 
@@ -72,7 +76,8 @@ import com.sun.jndi.ldap.ctl.VirtualListViewResponseControl;
  * @author Ulrik Sandberg
  * @see http://www3.ietf.org/proceedings/02nov/I-D/draft-ietf-ldapext-ldapv3-vlv-09.txt
  */
-public class VirtualListViewRequestControl implements DirContextProcessor {
+public class VirtualListViewControlDirContextProcessor implements
+        DirContextProcessor {
 
     private static final Class DEFAULT_RESPONSE_CONTROL = VirtualListViewResponseControl.class;
 
@@ -94,12 +99,12 @@ public class VirtualListViewRequestControl implements DirContextProcessor {
 
     private boolean offsetPercentage;
 
-    public VirtualListViewRequestControl(int pageSize) {
+    public VirtualListViewControlDirContextProcessor(int pageSize) {
         this(pageSize, 0, 0, null);
     }
 
-    public VirtualListViewRequestControl(int pageSize, int targetOffset,
-            int listSize, VirtualListViewResultsCookie cookie) {
+    public VirtualListViewControlDirContextProcessor(int pageSize,
+            int targetOffset, int listSize, VirtualListViewResultsCookie cookie) {
         this.pageSize = pageSize;
         this.targetOffset = targetOffset;
         this.listSize = listSize;
@@ -221,18 +226,19 @@ public class VirtualListViewRequestControl implements DirContextProcessor {
                 Object control = responseControl;
                 byte[] result = (byte[]) invokeMethod("getContextID",
                         responseControlClass, control);
-                this.cookie = new VirtualListViewResultsCookie(result);
-                Integer wrapper = (Integer) invokeMethod("getListSize",
+                Integer listSize = (Integer) invokeMethod("getListSize",
                         responseControlClass, control);
-                this.listSize = wrapper.intValue();
-                wrapper = (Integer) invokeMethod("getTargetOffset",
-                        responseControlClass, control);
-                this.targetOffset = wrapper.intValue();
-                wrapper = (Integer) invokeMethod("getResultCode",
-                        responseControlClass, control);
-                this.resultCode = wrapper.intValue();
+                Integer targetOffset = (Integer) invokeMethod(
+                        "getTargetOffset", responseControlClass, control);
                 this.exception = (NamingException) invokeMethod("getException",
                         responseControlClass, control);
+
+                this.cookie = new VirtualListViewResultsCookie(result,
+                        targetOffset.intValue(), listSize.intValue());
+
+                if (exception != null) {
+                    throw LdapUtils.convertLdapException(exception);
+                }
             }
         }
     }
