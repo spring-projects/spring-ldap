@@ -17,14 +17,10 @@
 package org.springframework.ldap.control;
 
 import java.util.Arrays;
-import java.util.LinkedList;
-
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.Attributes;
 
 import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
-import org.springframework.ldap.core.AttributesMapper;
+import org.springframework.ldap.core.ContextMapper;
+import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
 
 /**
@@ -46,13 +42,13 @@ public class SupportedControlsITest extends AbstractLdapTemplateIntegrationTest 
         /**
          * Maps the 'supportedcontrol' attribute to a string array.
          */
-        final AttributesMapper mapper = new AttributesMapper() {
-            public Object mapFromAttributes(Attributes attributes)
-                    throws NamingException {
-                NamingEnumeration enumeration = attributes.get(
-                        SUPPORTED_CONTROL).getAll();
-                return toStringArray(enumeration);
+        ContextMapper mapper = new ContextMapper() {
+
+            public Object mapFromContext(Object ctx) {
+                DirContextAdapter adapter = (DirContextAdapter) ctx;
+                return adapter.getStringAttributes(SUPPORTED_CONTROL);
             }
+
         };
 
         String[] controls = (String[]) tested.lookup("",
@@ -70,13 +66,5 @@ public class SupportedControlsITest extends AbstractLdapTemplateIntegrationTest 
 
     public void setTested(LdapTemplate tested) {
         this.tested = tested;
-    }
-
-    private String[] toStringArray(NamingEnumeration enumeration) {
-        LinkedList list = new LinkedList();
-        while (enumeration.hasMoreElements()) {
-            list.add((String) enumeration.nextElement());
-        }
-        return (String[]) list.toArray(new String[0]);
     }
 }
