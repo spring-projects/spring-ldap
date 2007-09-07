@@ -70,10 +70,10 @@ public class LdapTemplateVirtualListViewSearchITest extends
         Person person;
         List list;
         VirtualListViewResultsCookie cookie;
-        VirtualListViewRequestControl requestControl;
+        VirtualListViewControlDirContextProcessor requestControl;
 
         // Prepare for first search
-        requestControl = new VirtualListViewRequestControl(3);
+        requestControl = new VirtualListViewControlDirContextProcessor(3);
         tested.search(BASE_STRING, FILTER_STRING, searchControls,
                 callbackHandler, requestControl);
         cookie = requestControl.getCookie();
@@ -89,7 +89,7 @@ public class LdapTemplateVirtualListViewSearchITest extends
         assertEquals("aaab aaab", person.getFullname());
 
         // Prepare for position 6000
-        requestControl = new VirtualListViewRequestControl(3, 6000, listSize,
+        requestControl = new VirtualListViewControlDirContextProcessor(3, 6000, listSize,
                 cookie);
         tested.search(BASE_STRING, FILTER_STRING, searchControls,
                 callbackHandler, requestControl);
@@ -104,7 +104,7 @@ public class LdapTemplateVirtualListViewSearchITest extends
         assertEquals("Jessica Svensson", person.getFullname());
 
         // Prepare for position 93%
-        requestControl = new VirtualListViewRequestControl(3, 93, listSize,
+        requestControl = new VirtualListViewControlDirContextProcessor(3, 93, listSize,
                 cookie);
         requestControl.setOffsetPercentage(true);
         tested.search(BASE_STRING, FILTER_STRING, searchControls,
