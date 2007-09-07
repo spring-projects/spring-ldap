@@ -1294,4 +1294,23 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
             }
         }
     }
+
+    public DirContextOperations lookupContext(Name dn) {
+        return (DirContextOperations) lookup(dn);
+    }
+
+    public DirContextOperations lookupContext(String dn) {
+        return (DirContextOperations) lookup(dn);
+    }
+
+    public void modifyAttributes(DirContextOperations ctx) {
+        Name dn = ctx.getDn();
+        if (dn != null && ctx.isUpdateMode()) {
+            modifyAttributes(dn, ctx.getModificationItems());
+        } else {
+            throw new IllegalStateException(
+                    "The DirContextOperations instance needs to be properly initialized.");
+        }
+
+    }
 }

@@ -24,6 +24,7 @@ import javax.naming.NameClassPair;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
+import javax.naming.spi.DirObjectFactory;
 
 import org.springframework.ldap.ContextNotEmptyException;
 import org.springframework.ldap.NamingException;
@@ -1017,34 +1018,30 @@ public interface LdapOperations {
             throws NamingException;
 
     /**
-     * Lookup the supplied DN and return the found object. <b>WARNING</b>: This
-     * method should only be used if a DirObjectFactory has been specified on
-     * the ContextFactory. If this is not the case, you will get a new instance
-     * of the actual DirContext, which is probably not what you want. If,
-     * however this <b>is</b> what you want, be careful to close the context
-     * after you finished working with it.
+     * Lookup the supplied DN and return the found object. This will typically
+     * be a {@link DirContextAdapter}, unless the DirObjectFactory has been
+     * modified in the ContextSource.
      * 
      * @param dn
      *            The distinguished name of the object to find.
-     * @return the found object.
+     * @return the found object, typically a {@link DirContextAdapter} instance.
      * @throws NamingException
      *             if any error occurs.
+     * @see #lookupContext(Name)
      */
     public Object lookup(Name dn) throws NamingException;
 
     /**
-     * Lookup the supplied DN and return the found object. <b>WARNING</b>: This
-     * method should only be used if a DirObjectFactory has been specified on
-     * the ContextFactory. If this is not the case, you will get a new instance
-     * of the actual DirContext, which is probably not what you want. If,
-     * however this <b>is</b> what you want, be careful to close the context
-     * after you finished working with it.
+     * Lookup the supplied DN and return the found object. This will typically
+     * be a {@link DirContextAdapter}, unless the DirObjectFactory has been
+     * modified in the ContextSource.
      * 
      * @param dn
      *            The distinguished name of the object to find.
-     * @return the found object.
+     * @return the found object, typically a {@link DirContextAdapter} instance.
      * @throws NamingException
      *             if any error occurs.
+     * @see #lookupContext(Name)
      */
     public Object lookup(String dn) throws NamingException;
 
@@ -1366,4 +1363,77 @@ public interface LdapOperations {
      */
     public void rename(final String oldDn, final String newDn)
             throws NamingException;
+
+    /**
+     * Convenience method to lookup the supplied DN and automatically cast it to
+     * {@link DirContextOperations}.
+     * 
+     * @param dn
+     *            The distinguished name of the object to find.
+     * @return The found object, cast to {@link DirContextOperations}.
+     * @throws ClassCastException
+     *             if an alternative DirObjectFactory has been registered woth
+     *             the ContextSource, causing the actual class of the returned
+     *             object to be something else than {@link DirContextOperations}.
+     * @throws NamingException
+     *             if any other error occurs.
+     * @see #lookup(Name)
+     */
+    public DirContextOperations lookupContext(Name dn) throws NamingException,
+            ClassCastException;
+
+    /**
+     * Convenience method to lookup the supplied DN and automatically cast it to
+     * {@link DirContextOperations}.
+     * 
+     * @param dn
+     *            The distinguished name of the object to find.
+     * @return The found object, cast to {@link DirContextOperations}.
+     * @throws ClassCastException
+     *             if an alternative DirObjectFactory has been registered woth
+     *             the ContextSource, causing the actual class of the returned
+     *             object to be something else than {@link DirContextOperations}.
+     * @throws NamingException
+     *             if any other error occurs.
+     * @see #lookup(String)
+     */
+    public DirContextOperations lookupContext(String dn)
+            throws NamingException, ClassCastException;
+
+    /**
+     * Modify the attributes of the entry referenced by the supplied
+     * {@link DirContextOperations} instance. The DN to update will be the DN of
+     * the <code>DirContextOperations</code>instance, and the
+     * <code>ModificationItem</code> array is retrieved from the
+     * <code>DirContextOperations</code> instance using a call to
+     * {@link AttributeModificationsAware#getModificationItems()}. <b>NB:</b>
+     * The supplied instance needs to have been properly initialized; this means
+     * that if it hasn't been received from a <code>lookup</code> operation,
+     * its DN needs to be initialized and it must have been put in update mode ({@link DirContextAdapter#setUpdateMode(boolean)}).
+     * <p>
+     * Typical use of this method would be as follows:
+     * 
+     * <pre>
+     * public void update(Person person) {
+     *     DirContextOperations ctx = ldapOperations.lookupContext(person.getDn());
+     * 
+     *     ctx.setAttributeValue(&quot;description&quot;, person.getDescription());
+     *     ctx.setAttributeValue(&quot;telephoneNumber&quot;, person.getPhone());
+     *     // More modifications here
+     * 
+     *     ldapOperations.modifyAttributes(ctx);
+     * }
+     * </pre>
+     * 
+     * @param ctx
+     *            the DirContextOperations instance to use in the update.
+     * @throws IllegalStateException
+     *             if the supplied instance is not in update mode or has not
+     *             been properly initialized.
+     * @throws NamingException
+     *             if any other error occurs.
+     * 
+     */
+    public void modifyAttributes(DirContextOperations ctx)
+            throws IllegalStateException, NamingException;
 }

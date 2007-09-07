@@ -82,6 +82,10 @@ public class LdapTemplateTest extends TestCase {
 
     private DirContextProcessor dirContextProcessorMock;
 
+    private MockControl dirContextOperationsConrol;
+
+    private DirContextOperations dirContextOperationsMock;
+
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -129,6 +133,11 @@ public class LdapTemplateTest extends TestCase {
         dirContextProcessorMock = (DirContextProcessor) dirContextProcessorControl
                 .getMock();
 
+        dirContextOperationsConrol = MockControl
+                .createControl(DirContextOperations.class);
+        dirContextOperationsMock = (DirContextOperations) dirContextOperationsConrol
+                .getMock();
+
         tested = new LdapTemplate(contextSourceMock);
     }
 
@@ -164,6 +173,10 @@ public class LdapTemplateTest extends TestCase {
 
         dirContextProcessorControl = null;
         dirContextProcessorMock = null;
+
+        dirContextOperationsConrol = null;
+        dirContextOperationsMock = null;
+
     }
 
     protected void replay() {
@@ -177,6 +190,7 @@ public class LdapTemplateTest extends TestCase {
         contextExecutorControl.replay();
         searchExecutorControl.replay();
         dirContextProcessorControl.replay();
+        dirContextOperationsConrol.replay();
     }
 
     protected void verify() {
@@ -190,6 +204,7 @@ public class LdapTemplateTest extends TestCase {
         contextExecutorControl.verify();
         searchExecutorControl.verify();
         dirContextProcessorControl.verify();
+        dirContextOperationsConrol.verify();
     }
 
     private void expectGetReadWriteContext() {
@@ -1584,7 +1599,8 @@ public class LdapTemplateTest extends TestCase {
         expectGetReadOnlyContext();
 
         searchExecutorControl.expectAndThrow(searchExecutorMock
-                .executeSearch(dirContextMock), new javax.naming.NameNotFoundException());
+                .executeSearch(dirContextMock),
+                new javax.naming.NameNotFoundException());
         dirContextMock.close();
 
         replay();
@@ -1636,6 +1652,111 @@ public class LdapTemplateTest extends TestCase {
 
         tested.search(searchExecutorMock, handlerMock, dirContextProcessorMock);
 
+        verify();
+    }
+
+    public void testLookupContextWithName() {
+        final DirContextAdapter expectedResult = new DirContextAdapter();
+
+        LdapTemplate tested = new LdapTemplate() {
+            public Object lookup(Name dn) {
+                assertSame(DistinguishedName.EMPTY_PATH, dn);
+                return expectedResult;
+            }
+        };
+
+        DirContextOperations result = tested
+                .lookupContext(DistinguishedName.EMPTY_PATH);
+        assertSame(expectedResult, result);
+
+    }
+
+    public void testLookupContextWithString() {
+        final DirContextAdapter expectedResult = new DirContextAdapter();
+        final String expectedName = "cn=John Doe";
+
+        LdapTemplate tested = new LdapTemplate() {
+            public Object lookup(String dn) {
+                assertSame(expectedName, dn);
+                return expectedResult;
+            }
+        };
+
+        DirContextOperations result = tested.lookupContext(expectedName);
+        assertSame(expectedResult, result);
+    }
+
+    public void testModifyAttributesWithDirContextOperations() throws Exception {
+        final ModificationItem[] expectedModifications = new ModificationItem[0];
+
+        dirContextOperationsConrol.expectAndReturn(dirContextOperationsMock
+                .getDn(), DistinguishedName.EMPTY_PATH);
+        dirContextOperationsConrol.expectAndReturn(dirContextOperationsMock
+                .isUpdateMode(), true);
+        dirContextOperationsConrol.expectAndReturn(dirContextOperationsMock
+                .getModificationItems(), expectedModifications);
+
+        LdapTemplate tested = new LdapTemplate() {
+            public void modifyAttributes(Name dn, ModificationItem[] mods) {
+                assertSame(DistinguishedName.EMPTY_PATH, dn);
+                assertSame(expectedModifications, mods);
+            }
+        };
+
+        replay();
+
+        tested.modifyAttributes(dirContextOperationsMock);
+
+        verify();
+    }
+
+    public void testModifyAttributesWithDirContextOperationsNotInitializedDn()
+            throws Exception {
+        final ModificationItem[] expectedModifications = new ModificationItem[0];
+
+        dirContextOperationsConrol.expectAndReturn(dirContextOperationsMock
+                .getDn(), DistinguishedName.EMPTY_PATH);
+        dirContextOperationsConrol.expectAndReturn(dirContextOperationsMock
+                .isUpdateMode(), false);
+
+        LdapTemplate tested = new LdapTemplate() {
+            public void modifyAttributes(Name dn, ModificationItem[] mods) {
+                fail("The call to the base modifyAttributes should not have occured.");
+            }
+        };
+
+        replay();
+
+        try {
+            tested.modifyAttributes(dirContextOperationsMock);
+            fail("IllegalStateException expected");
+        } catch (IllegalStateException expected) {
+            assertTrue(true);
+        }
+        verify();
+    }
+
+    public void testModifyAttributesWithDirContextOperationsNotInitializedInUpdateMode()
+            throws Exception {
+        final ModificationItem[] expectedModifications = new ModificationItem[0];
+
+        dirContextOperationsConrol.expectAndReturn(dirContextOperationsMock
+                .getDn(), null);
+
+        LdapTemplate tested = new LdapTemplate() {
+            public void modifyAttributes(Name dn, ModificationItem[] mods) {
+                fail("The call to the base modifyAttributes should not have occured.");
+            }
+        };
+
+        replay();
+
+        try {
+            tested.modifyAttributes(dirContextOperationsMock);
+            fail("IllegalStateException expected");
+        } catch (IllegalStateException expected) {
+            assertTrue(true);
+        }
         verify();
     }
 
