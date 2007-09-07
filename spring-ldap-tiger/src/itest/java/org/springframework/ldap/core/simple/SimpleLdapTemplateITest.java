@@ -46,7 +46,7 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 	}
 
 	public void testModifyAttributes() {
-		DirContextOperations ctx = ldapTemplate.lookup("cn=Some Person,ou=company1,c=Sweden");
+		DirContextOperations ctx = ldapTemplate.lookupContext("cn=Some Person,ou=company1,c=Sweden");
 
 		ctx.setAttributeValue("description", "updated description");
 		ctx.setAttributeValue("telephoneNumber", "0000001");

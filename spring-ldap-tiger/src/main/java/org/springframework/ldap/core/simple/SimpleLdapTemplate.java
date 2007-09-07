@@ -105,8 +105,8 @@ public class SimpleLdapTemplate implements SimpleLdapOperations {
 	 * (non-Javadoc)
 	 * @see org.springframework.ldap.core.simple.SimpleLdapOperations#lookup(java.lang.String)
 	 */
-	public DirContextOperations lookup(String dn) {
-		return (DirContextOperations) ldapOperations.lookup(dn);
+	public DirContextOperations lookupContext(String dn) {
+		return ldapOperations.lookupContext(dn);
 	}
 
 	/*
@@ -114,7 +114,7 @@ public class SimpleLdapTemplate implements SimpleLdapOperations {
 	 * @see org.springframework.ldap.core.simple.SimpleLdapOperations#modifyAttributes(org.springframework.ldap.core.DirContextOperations)
 	 */
 	public void modifyAttributes(DirContextOperations ctx) {
-		ldapOperations.modifyAttributes(ctx.getDn(), ctx.getModificationItems());
+		ldapOperations.modifyAttributes(ctx);
 	}
 
 	/*

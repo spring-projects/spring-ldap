@@ -94,7 +94,7 @@ public interface SimpleLdapOperations {
 	 * found entry.
 	 * @throws NamingException if any error occurs.
 	 */
-	DirContextOperations lookup(String dn);
+	DirContextOperations lookupContext(String dn);
 
 	/**
 	 * Create an entry in the LDAP tree. The attributes used to create the entry
@@ -123,7 +123,7 @@ public interface SimpleLdapOperations {
 	/**
 	 * Modify the Attributes of the entry corresponsing to the supplied
 	 * {@link DirContextOperations} instance. The instance should have been
-	 * received from the {@link #lookup(String)} operation, and then modified to
+	 * received from the {@link #lookupContext(String)} operation, and then modified to
 	 * match the current state of the matching domain object, e.g.:
 	 * 
 	 * <pre>
