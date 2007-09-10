@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the TimeLimitExceededException.
+ * Runtime exception mirroring the JNDI TimeLimitExceededException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

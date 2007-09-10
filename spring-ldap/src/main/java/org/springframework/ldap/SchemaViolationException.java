@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the SchemaViolationException.
+ * Runtime exception mirroring the JNDI SchemaViolationException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

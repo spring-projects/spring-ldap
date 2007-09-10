@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the SizeLimitExceededException.
+ * Runtime exception mirroring the JNDI SizeLimitExceededException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

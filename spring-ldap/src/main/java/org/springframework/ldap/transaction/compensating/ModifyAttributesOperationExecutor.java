@@ -70,8 +70,6 @@ public class ModifyAttributesOperationExecutor implements
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#rollback()
      */
     public void rollback() {
@@ -86,8 +84,6 @@ public class ModifyAttributesOperationExecutor implements
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#commit()
      */
     public void commit() {
@@ -95,8 +91,6 @@ public class ModifyAttributesOperationExecutor implements
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#performOperation()
      */
     public void performOperation() {
@@ -119,5 +113,4 @@ public class ModifyAttributesOperationExecutor implements
     ModificationItem[] getCompensatingModifications() {
         return compensatingModifications;
     }
-
 }

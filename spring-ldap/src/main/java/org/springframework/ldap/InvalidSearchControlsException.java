@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the InvalidSearchControlsException.
+ * Runtime exception mirroring the JNDI InvalidSearchControlsException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

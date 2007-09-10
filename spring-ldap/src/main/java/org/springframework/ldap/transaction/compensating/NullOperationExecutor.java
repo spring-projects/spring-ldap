@@ -31,8 +31,6 @@ public class NullOperationExecutor implements
     private static Log log = LogFactory.getLog(NullOperationExecutor.class);
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#rollback()
      */
     public void rollback() {
@@ -46,5 +44,4 @@ public class NullOperationExecutor implements
     public void performOperation() {
         log.info("Performing null operation");
     }
-
 }

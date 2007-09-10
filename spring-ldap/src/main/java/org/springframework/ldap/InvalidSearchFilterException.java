@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the InvalidSearchFilterException.
+ * Runtime exception mirroring the JNDI InvalidSearchFilterException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

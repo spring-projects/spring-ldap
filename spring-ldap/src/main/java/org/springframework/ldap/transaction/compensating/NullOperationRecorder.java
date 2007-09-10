@@ -23,8 +23,9 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
  * A {@link CompensatingTransactionOperationRecorder} performing nothing,
  * returning a {@link NullOperationExecutor} regardless of the input. Instances
  * of this class will be created if the
- * {@link CompensatingTransactionOperationManager} cannot determine any appropriate
- * {@link CompensatingTransactionOperationRecorder} for the current operation.
+ * {@link CompensatingTransactionOperationManager} cannot determine any
+ * appropriate {@link CompensatingTransactionOperationRecorder} for the current
+ * operation.
  * 
  * @author Mattias Arthursson
  * @since 1.2
@@ -33,13 +34,10 @@ public class NullOperationRecorder implements
         CompensatingTransactionOperationRecorder {
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
      */
     public CompensatingTransactionOperationExecutor recordOperation(
             Object[] args) {
         return new NullOperationExecutor();
     }
-
 }

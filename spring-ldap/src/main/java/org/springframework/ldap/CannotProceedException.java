@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the CannotProceedException.
+ * Runtime exception mirroring the JNDI CannotProceedException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

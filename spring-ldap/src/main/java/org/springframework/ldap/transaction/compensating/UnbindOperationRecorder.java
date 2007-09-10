@@ -54,8 +54,6 @@ public class UnbindOperationRecorder implements
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
      */
     public CompensatingTransactionOperationExecutor recordOperation(

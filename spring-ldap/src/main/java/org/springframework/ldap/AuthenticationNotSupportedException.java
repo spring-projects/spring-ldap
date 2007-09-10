@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the AuthenticationNotSupportedException.
+ * Runtime exception mirroring the JNDI AuthenticationNotSupportedException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

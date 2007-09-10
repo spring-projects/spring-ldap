@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the NotContextException.
+ * Runtime exception mirroring the JNDI NotContextException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

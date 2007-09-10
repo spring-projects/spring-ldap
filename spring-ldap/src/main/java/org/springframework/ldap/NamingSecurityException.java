@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the NamingSecurityException.
+ * Runtime exception mirroring the JNDI NamingSecurityException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

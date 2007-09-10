@@ -31,8 +31,7 @@ import org.springframework.core.NestedRuntimeException;
  * @author Ulrik Sandberg
  * @since 1.2
  */
-public abstract class NamingException extends NestedRuntimeException implements
-        Serializable {
+public abstract class NamingException extends NestedRuntimeException {
 
     private Throwable cause;
 

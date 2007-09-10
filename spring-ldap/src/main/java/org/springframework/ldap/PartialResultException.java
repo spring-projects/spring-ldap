@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the PartialResultException.
+ * Runtime exception mirroring the JNDI PartialResultException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

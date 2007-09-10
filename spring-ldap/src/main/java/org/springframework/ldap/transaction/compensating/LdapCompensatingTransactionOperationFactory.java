@@ -60,8 +60,6 @@ public class LdapCompensatingTransactionOperationFactory implements
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.transaction.compensating.CompensatingTransactionOperationFactory#createRecordingOperation(java.lang.Object,
      *      java.lang.String)
      */
@@ -125,8 +123,6 @@ public class LdapCompensatingTransactionOperationFactory implements
         }
 
         /*
-         * (non-Javadoc)
-         * 
          * @see org.springframework.ldap.ContextSource#getReadOnlyContext()
          */
         public DirContext getReadOnlyContext() throws NamingException {
@@ -134,8 +130,6 @@ public class LdapCompensatingTransactionOperationFactory implements
         }
 
         /*
-         * (non-Javadoc)
-         * 
          * @see org.springframework.ldap.ContextSource#getReadWriteContext()
          */
         public DirContext getReadWriteContext() throws NamingException {
@@ -169,8 +163,6 @@ public class LdapCompensatingTransactionOperationFactory implements
         }
 
         /*
-         * (non-Javadoc)
-         * 
          * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
          *      java.lang.reflect.Method, java.lang.Object[])
          */

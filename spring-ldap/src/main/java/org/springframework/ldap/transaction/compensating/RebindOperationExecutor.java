@@ -85,8 +85,6 @@ public class RebindOperationExecutor implements
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#rollback()
      */
     public void rollback() {
@@ -101,8 +99,6 @@ public class RebindOperationExecutor implements
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#commit()
      */
     public void commit() {
@@ -111,8 +107,6 @@ public class RebindOperationExecutor implements
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#performOperation()
      */
     public void performOperation() {
@@ -138,5 +132,4 @@ public class RebindOperationExecutor implements
     Name getTemporaryDn() {
         return temporaryDn;
     }
-
 }

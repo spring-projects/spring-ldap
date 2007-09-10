@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the CommunicationException.
+ * Runtime exception mirroring the JNDI CommunicationException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the LinkLoopException.
+ * Runtime exception mirroring the JNDI LinkLoopException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

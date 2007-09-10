@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the AuthenticationException.
+ * Runtime exception mirroring the JNDI AuthenticationException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

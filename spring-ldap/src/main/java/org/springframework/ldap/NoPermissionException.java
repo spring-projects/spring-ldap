@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the NoPermissionException.
+ * Runtime exception mirroring the JNDI NoPermissionException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

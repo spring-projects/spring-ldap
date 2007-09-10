@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the LinkException.
+ * Runtime exception mirroring the JNDI LinkException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

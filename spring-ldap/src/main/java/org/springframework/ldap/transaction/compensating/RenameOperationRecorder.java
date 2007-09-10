@@ -26,7 +26,7 @@ import org.springframework.util.Assert;
 
 /**
  * A {@link CompensatingTransactionOperationRecorder} for keeping track of
- * rename operations. Creates {@link RebindOperationExecutor} objects for
+ * rename operations. Creates {@link RenameOperationExecutor} objects for
  * rolling back.
  * 
  * @author Mattias Arthursson
@@ -51,8 +51,6 @@ public class RenameOperationRecorder implements
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
      */
     public CompensatingTransactionOperationExecutor recordOperation(
@@ -71,5 +69,4 @@ public class RenameOperationRecorder implements
     LdapOperations getLdapOperations() {
         return ldapOperations;
     }
-
 }

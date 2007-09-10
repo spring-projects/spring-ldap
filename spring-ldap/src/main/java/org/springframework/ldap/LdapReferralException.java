@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the LdapReferralException.
+ * Runtime exception mirroring the JNDI LdapReferralException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

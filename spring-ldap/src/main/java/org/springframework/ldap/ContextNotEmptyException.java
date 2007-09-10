@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the ContextNotEmptyException.
+ * Runtime exception mirroring the JNDI ContextNotEmptyException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the NameNotFoundException.
+ * Runtime exception mirroring the JNDI NameNotFoundException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

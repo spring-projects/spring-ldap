@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the InterruptedNamingException.
+ * Runtime exception mirroring the JNDI InterruptedNamingException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

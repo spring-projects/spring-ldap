@@ -23,10 +23,9 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
 import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
 
 /**
- * A {@link CompensatingTransactionOperationRecorder} to manage LDAP bind
- * operations. The corresponding
- * {@link CompensatingTransactionOperationExecutor} is
- * {@link BindOperationExecutor}.
+ * A {@link CompensatingTransactionOperationRecorder} keeping track of bind
+ * operations. Creates {@link BindOperationExecutor} objects in
+ * {@link #recordOperation(Object[])}.
  * 
  * @author Mattias Arthursson
  * @since 1.2
@@ -48,8 +47,6 @@ public class BindOperationRecorder implements
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
      */
     public CompensatingTransactionOperationExecutor recordOperation(
@@ -79,5 +76,4 @@ public class BindOperationRecorder implements
     LdapOperations getLdapOperations() {
         return ldapOperations;
     }
-
 }

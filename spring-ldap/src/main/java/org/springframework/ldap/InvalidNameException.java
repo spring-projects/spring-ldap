@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the InvalidNameException.
+ * Runtime exception mirroring the JNDI InvalidNameException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

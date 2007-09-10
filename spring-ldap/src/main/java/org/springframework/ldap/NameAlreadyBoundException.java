@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the NameAlreadyBoundException.
+ * Runtime exception mirroring the JNDI NameAlreadyBoundException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

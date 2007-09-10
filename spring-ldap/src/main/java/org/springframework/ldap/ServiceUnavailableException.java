@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the ServiceUnavailableException.
+ * Runtime exception mirroring the JNDI ServiceUnavailableException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the NoSuchAttributeException.
+ * Runtime exception mirroring the JNDI NoSuchAttributeException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

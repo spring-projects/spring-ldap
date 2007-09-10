@@ -60,8 +60,6 @@ public class RenameOperationExecutor implements
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#rollback()
      */
     public void rollback() {
@@ -75,8 +73,6 @@ public class RenameOperationExecutor implements
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#commit()
      */
     public void commit() {
@@ -84,8 +80,6 @@ public class RenameOperationExecutor implements
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#performOperation()
      */
     public void performOperation() {
@@ -104,5 +98,4 @@ public class RenameOperationExecutor implements
     Name getOriginalDn() {
         return originalDn;
     }
-
 }

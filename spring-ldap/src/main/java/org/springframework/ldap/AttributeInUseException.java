@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the AttributeInUseException.
+ * Runtime exception mirroring the JNDI AttributeInUseException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

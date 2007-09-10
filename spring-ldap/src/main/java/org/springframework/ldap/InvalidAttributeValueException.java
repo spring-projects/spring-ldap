@@ -17,7 +17,7 @@
 package org.springframework.ldap;
 
 /**
- * Runtime exception mirroring the InvalidAttributeValueException.
+ * Runtime exception mirroring the JNDI InvalidAttributeValueException.
  * 
  * @author Ulrik Sandberg
  * @since 1.2
