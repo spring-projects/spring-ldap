@@ -87,10 +87,10 @@ public class DefaultValuesAuthenticationSourceDecorator implements
 
     /**
      * Checks if the target's principal is not empty; if not, this is returned -
-     * otherwise return the <code>defaultUser</code>.
+     * otherwise return the <code>defaultPassword</code>.
      * 
      * @return the target's principal if it is not empty, the
-     *         <code>defaultUser</code> otherwise.
+     *         <code>defaultPassword</code> otherwise.
      */
     public String getPrincipal() {
         String principal = target.getPrincipal();

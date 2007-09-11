@@ -23,10 +23,10 @@ import javax.naming.directory.SearchResult;
 import org.springframework.ldap.support.LdapUtils;
 
 /**
- * A CollectingNameClassPairCallbackHandler to wrap an AttributesMapper.
- * That is, the found object is extracted from the {@link Attributes} of
- * each {@link SearchResult}, and then passed to the specified
- * AttributesMapper for translation.
+ * A CollectingNameClassPairCallbackHandler to wrap an {@link AttributesMapper}.
+ * That is, the found object is extracted from the {@link Attributes} of each
+ * {@link SearchResult}, and then passed to the specified
+ * {@link AttributesMapper} for translation.
  * 
  * @author Mattias Arthursson
  * @author Ulrik Sandberg
@@ -36,17 +36,23 @@ public class AttributesMapperCallbackHandler extends
         CollectingNameClassPairCallbackHandler {
     private AttributesMapper mapper;
 
+    /**
+     * Constructs a new instance around the specified {@link AttributesMapper}.
+     * 
+     * @param mapper
+     *            the target mapper.
+     */
     public AttributesMapperCallbackHandler(AttributesMapper mapper) {
         this.mapper = mapper;
     }
 
     /**
-     * Cast the NameClassPair to a SearchResult and pass its attributes to
-     * the AttributesMapper.
+     * Cast the NameClassPair to a SearchResult and pass its attributes to the
+     * {@link AttributesMapper}.
      * 
      * @param nameClassPair
-     *            a SearchResult instance.
-     * @return the Object returned from the Mapper.
+     *            a <code> SearchResult</code> instance.
+     * @return the Object returned from the mapper.
      */
     public Object getObjectFromNameClassPair(NameClassPair nameClassPair) {
         SearchResult searchResult = (SearchResult) nameClassPair;

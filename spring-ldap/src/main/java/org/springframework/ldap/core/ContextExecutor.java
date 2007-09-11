@@ -19,20 +19,20 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
 /**
- * Interface for delegating an actual operation to be performed on an
- * DirContext. For searches, use {@link org.springframework.ldap.core.SearchExecutor} in
+ * Interface for delegating an actual operation to be performed on a
+ * <code>DirContext</code>. For searches, use {@link SearchExecutor} in
  * stead. A typical usage of this interface could be e.g.:
  * 
  * <pre>
- * ContextExecutor executor = new ContextExecutor(){
- *   public Object executeWithContext(DirContext ctx) throws NamingException{
- *     return ctx.lookup(dn);
- *   }
+ * ContextExecutor executor = new ContextExecutor() {
+ *     public Object executeWithContext(DirContext ctx) throws NamingException {
+ *         return ctx.lookup(dn);
+ *     }
  * };
  * </pre>
  * 
- * @see org.springframework.ldap.core.LdapTemplate#executeReadOnly(ContextExecutor)
- * @see org.springframework.ldap.core.LdapTemplate#executeReadWrite(ContextExecutor)
+ * @see LdapTemplate#executeReadOnly(ContextExecutor)
+ * @see LdapTemplate#executeReadWrite(ContextExecutor)
  * 
  * @author Mattias Arthursson
  */

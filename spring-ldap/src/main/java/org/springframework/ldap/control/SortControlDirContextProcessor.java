@@ -34,6 +34,8 @@ import com.sun.jndi.ldap.ctl.SortResponseControl;
 
 /**
  * DirContextProcessor implementation for managing the {@link SortControl}.
+ * Note that this class is stateful, so a new instance needs to be instantiated
+ * for each new search.
  * 
  * @author Ulrik Sandberg
  */
@@ -67,6 +69,12 @@ public class SortControlDirContextProcessor extends
 
     private Class currentResponseControlClass;
 
+    /**
+     * Constructs a new instance using the supplied sort key.
+     * 
+     * @param sortKey
+     *            the sort key, i.e. the attribute name to sort on.
+     */
     public SortControlDirContextProcessor(String sortKey) {
         this.sortKey = sortKey;
         fallbackResponseControlClass = loadFallbackResponseControlClass();
@@ -85,14 +93,25 @@ public class SortControlDirContextProcessor extends
         this.responseControlClass = responseControlClass;
     }
 
+    /**
+     * Check whether the returned values were actually sorted by the server.
+     * 
+     * @return <code>true</code> if the result was sorted, <code>false</code>
+     *         otherwise.
+     */
     public boolean isSorted() {
         return sorted;
     }
 
     private void setSorted(boolean sorted) {
         this.sorted = sorted;
-    }    
+    }
 
+    /**
+     * Get the result code returned by the control.
+     * 
+     * @return result code.
+     */
     public int getResultCode() {
         return resultCode;
     }
@@ -101,10 +120,21 @@ public class SortControlDirContextProcessor extends
         this.resultCode = sortResult;
     }
 
+    /**
+     * Get the sort key.
+     * 
+     * @return the sort key.
+     */
     public String getSortKey() {
         return sortKey;
     }
 
+    /**
+     * Set the sort key, i.e. the attribute on which to sort on.
+     * 
+     * @param sortKey
+     *            the sort key.
+     */
     public void setSortKey(String sortKey) {
         this.sortKey = sortKey;
     }

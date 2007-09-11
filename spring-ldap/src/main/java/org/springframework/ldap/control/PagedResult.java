@@ -23,6 +23,9 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 /**
  * Bean to encapsulate a result List and a {@link PagedResultsCookie} to use for
  * returning the results when using {@link PagedResultsRequestControl}.
+ * 
+ * @author Mattias Arthursson
+ * @author Ulrik Sandberg
  */
 public class PagedResult {
 

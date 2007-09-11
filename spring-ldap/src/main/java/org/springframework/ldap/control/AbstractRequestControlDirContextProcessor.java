@@ -48,7 +48,7 @@ public abstract class AbstractRequestControlDirContextProcessor implements
      * to {@link LdapContext}. However, the generic DirContextProcessor
      * mechanism used for calling <code>preProcess</code> and
      * <code>postProcess</code> uses DirContext, since it also works for LDAP
-     * v2. This is the reason that DirContext has to be cast into LdapContext.
+     * v2. This is the reason that DirContext has to be cast to a LdapContext.
      * 
      * @param ctx
      *            an LdapContext instance.

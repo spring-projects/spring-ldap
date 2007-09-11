@@ -23,7 +23,7 @@ import javax.naming.NameClassPair;
 /**
  * A NameClassPairCallbackHandler to collect all results in an internal List.
  * 
- * @see org.springframework.ldap.core.LdapTemplate
+ * @see LdapTemplate
  * 
  * @author Mattias Arthursson
  */

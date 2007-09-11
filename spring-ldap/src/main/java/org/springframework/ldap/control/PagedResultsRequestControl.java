@@ -31,7 +31,7 @@ import com.sun.jndi.ldap.ctl.PagedResultsControl;
 import com.sun.jndi.ldap.ctl.PagedResultsResponseControl;
 
 /**
- * DirContextProcessor implementation for managing the paged results.
+ * DirContextProcessor implementation for managing the paged results control.
  * 
  * @author Mattias Arthursson
  * @author Ulrik Sandberg
@@ -57,24 +57,60 @@ public class PagedResultsRequestControl extends
 
     private Class currentResponseControlClass;
 
+    /**
+     * Constructs a new instance. This constructor should be used when
+     * performing the first paged search operation, when no other results have
+     * been retrieved.
+     * 
+     * @param pageSize
+     *            the page size.
+     */
     public PagedResultsRequestControl(int pageSize) {
         this(pageSize, null);
     }
 
+    /**
+     * Constructs a new instance with the supplied page size and cookie. The
+     * cookie must be the exact same instance as received from a previous paged
+     * resullts search, or <code>null</code> if it is the first in an
+     * operation sequence.
+     * 
+     * @param pageSize
+     *            the page size.
+     * @param cookie
+     *            the cookie, as received from a previous search.
+     */
     public PagedResultsRequestControl(int pageSize, PagedResultsCookie cookie) {
         this.pageSize = pageSize;
         this.cookie = cookie;
         fallbackResponseControlClass = loadFallbackResponseControlClass();
     }
 
+    /**
+     * Get the cookie.
+     * 
+     * @return the cookie.
+     */
     public PagedResultsCookie getCookie() {
         return cookie;
     }
 
+    /**
+     * Get the page size.
+     * 
+     * @return the page size.
+     */
     public int getPageSize() {
         return pageSize;
     }
 
+    /**
+     * Get the total estimated number of entries that matches the issued search.
+     * Note that this value is optional for the LDAP server to return, so it
+     * does not always contain any valid data.
+     * 
+     * @return the estimated result size, if returned from the server.
+     */
     public int getResultSize() {
         return resultSize;
     }
