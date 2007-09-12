@@ -31,17 +31,17 @@
             <format property="tstamp" pattern="yyyyMMdd"/>
         </tstamp>
 		<aws:s3 accessKey="${s3.accessKey}" secretKey="${s3.secretKey}">
-			<upload bucketName="static.springframework.org"
+			<upload bucketName="dist.springframework.org"
 			        file="${target.release.dir}/${release.bin.zip}"
-			        toFile="LDAP/spring-ldap-bin-${release.version}-${tstamp}-${build.number}.zip"
+			        toFile="snapshot/LDAP/spring-ldap-bin-${release.version}-${tstamp}-${build.number}.zip"
 					publicRead="true"/>
-			<upload bucketName="static.springframework.org"
+			<upload bucketName="dist.springframework.org"
 			        file="${target.release.dir}/${release.bin.deps.zip}"
-			        toFile="LDAP/spring-ldap-bin-with-dependencies-${release.version}-${tstamp}-${build.number}.zip"
+			        toFile="snapshot/LDAP/spring-ldap-bin-with-dependencies-${release.version}-${tstamp}-${build.number}.zip"
 					publicRead="true"/>
-			<upload bucketName="static.springframework.org"
+			<upload bucketName="dist.springframework.org"
 			        file="${target.release.dir}/${release.buildable.zip}"
-			        toFile="LDAP/spring-ldap-buildable-${release.version}-${tstamp}-${build.number}.zip"
+			        toFile="snapshot/LDAP/spring-ldap-buildable-${release.version}-${tstamp}-${build.number}.zip"
 					publicRead="true"/>
 		</aws:s3>
 	</target>
