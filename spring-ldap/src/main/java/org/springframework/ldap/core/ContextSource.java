@@ -21,7 +21,7 @@ import javax.naming.directory.DirContext;
 import org.springframework.ldap.NamingException;
 
 /**
- * Interface used to retrieve and authenticate LDAP contexts.
+ * Interface used by {@link LdapTemplate} to create LDAP contexts.
  * 
  * @see org.springframework.ldap.core.LdapTemplate
  * 

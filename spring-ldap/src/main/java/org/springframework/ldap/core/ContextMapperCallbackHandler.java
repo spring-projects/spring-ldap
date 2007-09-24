@@ -19,10 +19,12 @@ package org.springframework.ldap.core;
 import javax.naming.Binding;
 import javax.naming.NameClassPair;
 
+import org.apache.commons.lang.Validate;
+
 /**
- * A CollectingNameClassPairCallbackHandler to wrap a ContextMapper. That
- * is, the found object is extracted from each {@link Binding}, and then
- * passed to the specified ContextMapper for translation.
+ * A CollectingNameClassPairCallbackHandler to wrap a ContextMapper. That is,
+ * the found object is extracted from each {@link Binding}, and then passed to
+ * the specified ContextMapper for translation.
  * 
  * @author Mattias Arthursson
  * @author Ulrik Sandberg
@@ -32,13 +34,20 @@ public class ContextMapperCallbackHandler extends
         CollectingNameClassPairCallbackHandler {
     private ContextMapper mapper;
 
+    /**
+     * Constructs a new instance wrapping the supplied {@link ContextMapper}.
+     * 
+     * @param mapper
+     *            the mapper to be called for each entry.
+     */
     public ContextMapperCallbackHandler(ContextMapper mapper) {
+        Validate.notNull(mapper, "Mapper must not be empty");
         this.mapper = mapper;
     }
 
     /**
-     * Cast the NameClassPair to a {@link Binding} and pass its attributes
-     * to the ContextMapper.
+     * Cast the NameClassPair to a {@link Binding} and pass its attributes to
+     * the ContextMapper.
      * 
      * @param nameClassPair
      *            a SearchResult instance.

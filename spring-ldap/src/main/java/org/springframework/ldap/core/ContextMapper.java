@@ -20,16 +20,17 @@ import javax.naming.Binding;
 import javax.naming.Name;
 import javax.naming.directory.SearchResult;
 
+import org.springframework.ldap.core.support.AbstractContextMapper;
 import org.springframework.ldap.core.support.DefaultDirObjectFactory;
 
-
 /**
- * An interface used by LdapTemplate to map LDAP Contexts to beans. Responsible
- * for mapping from LDAP Contexts to beans. When a DirObjectFactory is set on
- * the ContextSource, the objects returned from <code>search</code> and
- * <code>listBindings</code> operations are automatically transformed to
- * DirContext objects (when using the {@link DefaultDirObjectFactory}, you get
- * a {@link DirContextAdapter} object). This object will then be passed to the
+ * An interface used by LdapTemplate to map LDAP Contexts to beans. When a
+ * DirObjectFactory is set on the ContextSource, the objects returned from
+ * <code>search</code> and <code>listBindings</code> operations are
+ * automatically transformed to DirContext objects (when using the
+ * {@link DefaultDirObjectFactory} - which is typically the case, unless
+ * something else has been explicitly specified - you get a
+ * {@link DirContextAdapter} object). This object will then be passed to the
  * ContextMapper implementation for transformation to the desired bean.
  * <p>
  * ContextMapper implementations are typically stateless and thus reusable; they
@@ -37,13 +38,13 @@ import org.springframework.ldap.core.support.DefaultDirObjectFactory;
  * <p>
  * Alternatively, consider using an {@link AttributesMapper} in stead.
  * 
- * @see LdapTemplate#search(Name, String,
- *      ContextMapper)
+ * @see LdapTemplate#search(Name, String, ContextMapper)
  * @see LdapTemplate#listBindings(Name, ContextMapper)
  * @see LdapTemplate#lookup(Name, ContextMapper)
  * @see AttributesMapper
  * @see DefaultDirObjectFactory
  * @see DirContextAdapter
+ * @see AbstractContextMapper
  * 
  * @author Mattias Arthursson
  */
@@ -54,7 +55,10 @@ public interface ContextMapper {
      * {@link Binding}, or a lookup operation.
      * 
      * @param ctx
-     *            the context to map to an object.
+     *            the context to map to an object. Typically this will be a
+     *            {@link DirContextAdapter} instance, unless a project specific
+     *            <code>DirObjectFactory</code> has been specified on the
+     *            <code>ContextSource</code>.
      * @return an object built from the data in the context.
      */
     public Object mapFromContext(Object ctx);

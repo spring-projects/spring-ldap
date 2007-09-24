@@ -46,13 +46,26 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.support.LdapUtils;
 
 /**
- * Implements the interesting methods of the DirContext interface. In particular
- * it contains utility methods for getting and setting Attributes. Using the
+ * Adapter that implements the interesting methods of the DirContext interface.
+ * In particular it contains utility methods for getting and setting attributes.
+ * Using the
  * {@link org.springframework.ldap.core.support.DefaultDirObjectFactory} in your
- * ContextSource you may receive instances of this class from searches and
- * lookups. This can be particularly useful when updating data, since this class
- * implements {@link org.springframework.ldap.core.AttributeModificationsAware},
- * providing a {@link #getModificationItems()} method.
+ * <code>ContextSource</code> (which is the default) you will receive
+ * instances of this class from searches and lookups. This can be particularly
+ * useful when updating data, since this class implements
+ * {@link AttributeModificationsAware}, providing a
+ * {@link #getModificationItems()} method. When in update mode, an object of
+ * this class keeps track of the changes made to its attributes, making them
+ * available as an array of <code>ModificationItem</code> objects, suitable as
+ * input to {@link LdapTemplate#modifyAttributes(DirContextOperations)}.
+ * 
+ * @see #setAttributeValue(String, Object)
+ * @see #setAttributeValues(String, Object[])
+ * @see #getStringAttribute(String)
+ * @see #getStringAttributes(String)
+ * @see #getObjectAttribute(String)
+ * @see #setUpdateMode(boolean)
+ * @see #isUpdateMode()
  * 
  * @author Magnus Robertsson
  * @author Andreas Ronge

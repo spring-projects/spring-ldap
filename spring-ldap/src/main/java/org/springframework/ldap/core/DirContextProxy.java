@@ -18,17 +18,17 @@ package org.springframework.ldap.core;
 import javax.naming.directory.DirContext;
 
 /**
- * Helper interface to be able to get hold of the target DirContext from proxies
- * created by ContextSource proxies.
+ * Helper interface to be able to get hold of the target <code>DirContext</code>
+ * from proxies created by <code>ContextSource</code> proxies.
  * 
  * @author Mattias Arthursson
  * @since 1.2
  */
 public interface DirContextProxy {
     /**
-     * Get the target DirContext of the proxy.
+     * Get the target <code>DirContext</code> of the proxy.
      * 
-     * @return the target DirContext.
+     * @return the target <code>DirContext</code>.
      */
     DirContext getTargetContext();
 }

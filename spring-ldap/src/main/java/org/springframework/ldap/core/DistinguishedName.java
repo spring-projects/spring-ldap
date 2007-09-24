@@ -26,18 +26,19 @@ import java.util.ListIterator;
 import javax.naming.CompositeName;
 import javax.naming.InvalidNameException;
 import javax.naming.Name;
+import javax.naming.ldap.Rdn;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.ldap.BadLdapGrammarException;
 import org.springframework.ldap.support.ListComparator;
 
 /**
- * Default implementation of a Name corresponding to an LDAP path. A
- * DistinguishedName implementation is included in JDK1.5 (LdapName), but not in
- * prior releases.
+ * Default implementation of a {@link Name} corresponding to an LDAP path. A
+ * Distinguished Name manipulation implementation is included in JDK1.5
+ * (LdapName), but not in prior releases.
  * 
- * A DistinguishedName is particularly useful when building or modifying an LDAP
- * path dynamically, as escaping will be taken care of.
+ * A <code>DistinguishedName</code> is particularly useful when building or
+ * modifying an LDAP path dynamically, as escaping will be taken care of.
  * 
  * A path is split into several names. The {@link Name} interface specifies that
  * the most significant part be in position 0.
@@ -58,12 +59,13 @@ import org.springframework.ldap.support.ListComparator;
  * Example:
  * 
  * <pre>
- * DistinguishedName path = new DistinguishedName();
- * path.addLast(&quot;uid&quot;, person.getUid());
- * path.addLast(&quot;ou&quot;, &quot;People&quot;);
- * path.append(new DistinguishedName(&quot;dc=jayway,dc=se&quot;));
+ * DistinguishedName path = new DistinguishedName(&quot;dc=jayway,dc=se&quot;);
+ * path.add(&quot;ou&quot;, &quot;People&quot;);
+ * path.add(&quot;uid&quot;, &quot;adam.skogman&quot;);
  * String dn = path.toString();
  * </pre>
+ * 
+ * will render <code>uid=adam.skogman, ou=People, dc=jayway, dc=se</code>
  * 
  * @author Adam Skogman
  * @author Mattias Arthursson
@@ -87,7 +89,7 @@ public class DistinguishedName implements Name {
     }
 
     /**
-     * Construct a new DistinguishedName from a String.
+     * Construct a new <code>DistinguishedName</code> from a String.
      * 
      * @param path
      *            a String corresponding to a (syntactically) valid LDAP path.
@@ -101,8 +103,8 @@ public class DistinguishedName implements Name {
     }
 
     /**
-     * Construct a new DistinguishedName from the supplied List of LdapRdn
-     * objects.
+     * Construct a new <code>DistinguishedName</code> from the supplied
+     * <code>List</code> of {@link LdapRdn} objects.
      * 
      * @param list
      *            the components that this instance will consist of.
@@ -112,11 +114,13 @@ public class DistinguishedName implements Name {
     }
 
     /**
-     * Construct a new DistinguishedName from the supplied Name. The parts of
-     * the supplied Name must be syntactically correct LdapRdns.
+     * Construct a new <code>DistinguishedName</code> from the supplied
+     * {@link Name}. The parts of the supplied {@link Name} must be
+     * syntactically correct {@link LdapRdn}s.
      * 
      * @param name
-     *            the Name to construct a new DistinguishedName from.
+     *            the {@link Name} to construct a new
+     *            <code>DistinguishedName</code> from.
      */
     public DistinguishedName(Name name) {
         names = new LinkedList();
@@ -149,7 +153,8 @@ public class DistinguishedName implements Name {
     /**
      * If path is surrounded by quotes, strip them. JNDI considers forward slash
      * ('/') special, but LDAP doesn't. {@link CompositeName#toString()} tends
-     * to mangle a Name with a slash by surrounding it with quotes ('"').
+     * to mangle a {@link Name} with a slash by surrounding it with quotes
+     * ('"').
      * 
      * @param path
      *            Path to check and possibly strip.
@@ -167,24 +172,24 @@ public class DistinguishedName implements Name {
     }
 
     /**
-     * Get the LdapRdn at a specified position.
+     * Get the {@link LdapRdn} at a specified position.
      * 
      * @param index
-     *            the LdapRdn to retrieve.
-     * @return the LdapRdn at the requested position.
+     *            the {@link LdapRdn} to retrieve.
+     * @return the {@link LdapRdn} at the requested position.
      */
     public LdapRdn getLdapRdn(int index) {
         return (LdapRdn) names.get(index);
     }
 
     /**
-     * Get the LdapRdn with the specified key. If there are several Rdns with
-     * the same key, the first one found (in order of significance) will be
-     * returned.
+     * Get the {@link LdapRdn} with the specified key. If there are several
+     * {@link Rdn}s with the same key, the first one found (in order of
+     * significance) will be returned.
      * 
      * @param key
-     *            Attribute name of the LdapRdn to retrieve.
-     * @return the LdapRdn with the requested key.
+     *            Attribute name of the {@link LdapRdn} to retrieve.
+     * @return the {@link LdapRdn} with the requested key.
      * @throws IllegalArgumentException
      *             if no Rdn matches the given key.
      */
@@ -201,12 +206,12 @@ public class DistinguishedName implements Name {
     }
 
     /**
-     * Get the value of the RdnComponent with the specified key (Attribute
-     * value). If there are several Rdns with the same key, the value of the
-     * first one found (in order of significance) will be returned.
+     * Get the value of the {@link LdapRdnComponent} with the specified key
+     * (Attribute value). If there are several Rdns with the same key, the value
+     * of the first one found (in order of significance) will be returned.
      * 
      * @param key
-     *            Attribute name of the LdapRdn to retrieve.
+     *            Attribute name of the {@link LdapRdn} to retrieve.
      * @return the value.
      * @throws IllegalArgumentException
      *             if no Rdn matches the given key.
@@ -216,19 +221,20 @@ public class DistinguishedName implements Name {
     }
 
     /**
-     * Get the name list.
+     * Get the name <code>List</code>.
      * 
-     * @return the list of LdapRdns that this DistinguishedName consists of.
+     * @return the list of {@link LdapRdn}s that this
+     *         <code>DistinguishedName</code> consists of.
      */
     public List getNames() {
         return names;
     }
 
     /**
-     * Get the String representation of this DistinguishedName.
+     * Get the String representation of this <code>DistinguishedName</code>.
      * 
-     * @return a syntactically correct, escaped String representation of the
-     *         DistinguishedName.
+     * @return a syntactically correct, properly escaped String representation
+     *         of the <code>DistinguishedName</code>.
      */
     public String toString() {
         return encode();
@@ -283,12 +289,13 @@ public class DistinguishedName implements Name {
     }
 
     /**
-     * Determines if a ldap path contains another path.
+     * Determines if this <code>DistinguishedName</code> path contains another
+     * path.
      * 
      * @param path
      *            the path to check.
-     * @return true if the supplied path is conained in this instance, false
-     *         otherwise.
+     * @return <code>true</code> if the supplied path is conained in this
+     *         instance, <code>false</code> otherwise.
      */
     public boolean contains(DistinguishedName path) {
 
@@ -353,17 +360,17 @@ public class DistinguishedName implements Name {
         getNames().addAll(path.getNames());
         return this;
     }
-    
+
     /**
-     * Append a new LdapRdn using the supplied key and value.
+     * Append a new {@link LdapRdn} using the supplied key and value.
      * 
      * @param key
-     *            the key of the LdapRdn.
+     *            the key of the {@link LdapRdn}.
      * @param value
-     *            the value of the LdapRdn.
+     *            the value of the {@link LdapRdn}.
      * @return this instance.
      */
-    public DistinguishedName append(String key, String value){
+    public DistinguishedName append(String key, String value) {
         add(key, value);
         return this;
     }
@@ -390,7 +397,7 @@ public class DistinguishedName implements Name {
     }
 
     /**
-     * Remove the first part of this DistinguishedName.
+     * Remove the first part of this <code>DistinguishedName</code>.
      * 
      * @return the removed entry.
      */
@@ -399,9 +406,10 @@ public class DistinguishedName implements Name {
     }
 
     /**
-     * Remove the supplied path from the beginning of this DistinguishedName if
-     * this instance starts with <path>. Useful for stripping base path suffix
-     * from a DistinguishedName.
+     * Remove the supplied path from the beginning of this
+     * <code>DistinguishedName</code> if this instance starts with
+     * <code>path</code>. Useful for stripping base path suffix from a
+     * <code>DistinguishedName</code>.
      * 
      * @param path
      *            the path to remove from the beginning of this instance.
@@ -563,13 +571,14 @@ public class DistinguishedName implements Name {
     }
 
     /**
-     * Determines if this ldap path ends with a certian path.
+     * Determines if this <code>DistinguishedName</code> ends with a certian
+     * path.
      * 
-     * If the argument path is empty (no names in path) this methid will return
-     * false.
+     * If the argument path is empty (no names in path) this method will return
+     * <code>false</code>.
      * 
      * @param name
-     *            The suffix to check for
+     *            The suffix to check for.
      * 
      */
     public boolean endsWith(Name name) {
@@ -667,38 +676,38 @@ public class DistinguishedName implements Name {
     }
 
     /**
-     * Remove the ldast part of this DistinguishedName.
+     * Remove the last part of this <code>DistinguishedName</code>.
      * 
-     * @return the removed LdapRdn.
+     * @return the removed {@link LdapRdn}.
      */
     public LdapRdn removeLast() {
         return (LdapRdn) names.remove(names.size() - 1);
     }
 
     /**
-     * Add a new LdapRdn using the supplied key and value.
+     * Add a new {@link LdapRdn} using the supplied key and value.
      * 
      * @param key
-     *            the key of the LdapRdn.
+     *            the key of the {@link LdapRdn}.
      * @param value
-     *            the value of the LdapRdn.
+     *            the value of the {@link LdapRdn}.
      */
     public void add(String key, String value) {
         names.add(new LdapRdn(key, value));
     }
 
     /**
-     * Add the supplied LdapRdn last in the list of Rdns.
+     * Add the supplied {@link LdapRdn} last in the list of Rdns.
      * 
      * @param rdn
-     *            the LdapRdn to add.
+     *            the {@link LdapRdn} to add.
      */
     public void add(LdapRdn rdn) {
         names.add(rdn);
     }
 
     /**
-     * Add the supplied LdapRdn att the specified index.
+     * Add the supplied {@link LdapRdn} att the specified index.
      * 
      * @param idx
      *            the index at which to add the LdapRdn.

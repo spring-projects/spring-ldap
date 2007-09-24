@@ -15,8 +15,6 @@
  */
 package org.springframework.ldap.core;
 
-
-
 /**
  * A parser for RFC2253-compliant Distinguished Names.
  * 
@@ -27,7 +25,8 @@ public interface DnParser {
     /**
      * Parse a full Distinguished Name.
      * 
-     * @return the DistinguishedName corresponding to the parsed stream.
+     * @return the <code>DistinguishedName</code> corresponding to the parsed
+     *         stream.
      */
     public DistinguishedName dn() throws ParseException;
 

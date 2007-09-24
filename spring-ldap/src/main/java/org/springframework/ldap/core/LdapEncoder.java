@@ -65,7 +65,13 @@ public class LdapEncoder {
 
     }
 
-    static protected String toTwoCharHex(char c) {
+    /**
+     * All static methods - not to be instantiated.
+     */
+    private LdapEncoder() {
+    }
+
+    protected static String toTwoCharHex(char c) {
 
         String raw = Integer.toHexString(c).toUpperCase();
 
@@ -76,12 +82,13 @@ public class LdapEncoder {
     }
 
     /**
-     * All static methods
+     * Escape a value for use in a filter.
+     * 
+     * @param value
+     *            the value to escape.
+     * @return a properly escaped representation of the supplied value.
      */
-    private LdapEncoder() {
-    }
-
-    static public String filterEncode(String value) {
+    public static String filterEncode(String value) {
 
         if (value == null)
             return null;
@@ -116,7 +123,8 @@ public class LdapEncoder {
      * "\"" <br/> '\' [backslash] - "\\" <br/>
      * 
      * @param value
-     * @return The escaped value
+     *            the value to escape.
+     * @return The escaped value.
      */
     static public String nameEncode(String value) {
 

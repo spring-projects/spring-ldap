@@ -22,19 +22,22 @@ import javax.naming.Name;
 import javax.naming.directory.DirContext;
 
 /**
- * Interface for DirContextAdapter to simplify mock testing.
+ * Interface for DirContextAdapter.
  * 
  * @author Mattias Arthursson
+ * @see DirContextAdapter
  */
 public interface DirContextOperations extends DirContext,
         AttributeModificationsAware {
 
     /**
-     * Gets the update mode. The update mode should be <code>true</code> for a
-     * new entry and <code>true</code> for an existing entry that is being
-     * updated.
+     * Gets the update mode. An entry in update mode will keep track of its
+     * modifications so that they can be retrieved using
+     * {@link AttributeModificationsAware#getModificationItems()}. The update
+     * mode should be <code>true</code> for a new entry and <code>true</code>
+     * for an existing entry that is being updated.
      * 
-     * @return update mode
+     * @return update mode.
      */
     public boolean isUpdateMode();
 
@@ -50,16 +53,20 @@ public interface DirContextOperations extends DirContext,
     public String[] getNamesOfModifiedAttributes();
 
     /**
-     * Get the value of a String attribute.
+     * Get the value of a String attribute. If more than one attribute value
+     * exists for the specified attribute, only the first one will be returned.
      * 
      * @param name
      *            name of the attribute.
      * @return the value of the attribute.
+     * @throws ClassCastException
+     *             if the value of the entry is not a String.
      */
     public String getStringAttribute(String name);
 
     /**
-     * Get the value of an Object attribute.
+     * Get the value of an Object attribute. If more than one attribute value
+     * exists for the specified attribute, only the first one will be returned.
      * 
      * @param name
      *            name of the attribute.
@@ -141,9 +148,11 @@ public interface DirContextOperations extends DirContext,
     public void removeAttributeValue(String name, Object value);
 
     /**
-     * Update the attributes. This will mean that the getters
-     * (getStringAttribute methods) will return the updated values. Remove the
-     * attributes to be updated.
+     * Update the attributes.This will mean that the getters (<code>getStringAttribute</code>
+     * methods) will return the updated values, and the modifications will be
+     * forgotten (i.e.
+     * {@link AttributeModificationsAware#getModificationItems()} will return an
+     * empty array.
      */
     public void update();
 
@@ -158,16 +167,17 @@ public interface DirContextOperations extends DirContext,
     public String[] getStringAttributes(String name);
 
     /**
-     * Get all String values of the attribute as a SortedSet.
+     * Get all String values of the attribute as a <code>SortedSet</code>.
      * 
      * @param name
      *            name of the attribute.
-     * @return a SortedSet containing all values of the attribute.
+     * @return a <code>SortedSet</code> containing all values of the
+     *         attribute.
      */
     public SortedSet getAttributeSortedStringSet(String name);
 
     /**
-     * Returns DN, without the base path.
+     * Returns the DN relative to the base path.
      * 
      * @return The distinguished name of the current context.
      * 

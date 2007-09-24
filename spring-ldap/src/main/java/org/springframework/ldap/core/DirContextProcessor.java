@@ -20,8 +20,10 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
 /**
- * Interface to be called in search by LdapTemplate before and after the actual
- * search and enumeration traversal.
+ * Interface to be called in search by {@link LdapTemplate} before and after the
+ * actual search and enumeration traversal. Implementations may be used to apply
+ * search controls on the <code>Context</code> and retrieve the results of
+ * such controls afterwards.
  * 
  * @author Mattias Arthursson
  * @author Ulrik Sandberg
@@ -31,17 +33,17 @@ public interface DirContextProcessor {
      * Perform pre-processing on the supplied DirContext.
      * 
      * @param ctx
-     *            the DirContext instance.
+     *            the <code>DirContext</code> instance.
      * @throws NamingException
      *             if thrown by the underlying operation.
      */
     public void preProcess(DirContext ctx) throws NamingException;
 
     /**
-     * Perform post-processing on the supplied DirContext.
+     * Perform post-processing on the supplied <code>DirContext</code>.
      * 
      * @param ctx
-     *            the DirContext instance.
+     *            the <code>DirContext</code> instance.
      * @throws NamingException
      *             if thrown by the underlying operation.
      */
