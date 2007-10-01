@@ -40,7 +40,7 @@ public class LdapRdn implements Serializable, Comparable {
     private List components = new LinkedList();
 
     /**
-     * Default constructor.
+     * Default constructor. Create an empty, uninitialized LdapRdn.
      */
     public LdapRdn() {
     }
@@ -68,7 +68,9 @@ public class LdapRdn implements Serializable, Comparable {
      * Construct an LdapRdn using the supplied key and value.
      * 
      * @param key
+     *            the attribute name.
      * @param value
+     *            the attribute value.
      */
     public LdapRdn(String key, String value) {
         components.add(new LdapRdnComponent(key, value));
@@ -98,7 +100,7 @@ public class LdapRdn implements Serializable, Comparable {
      * 
      * @return The first LdapRdnComponent of this LdapRdn.
      * @throws IndexOutOfBoundsException
-     *             if no components have been added.
+     *             if there are no components in this Rdn.
      */
     public LdapRdnComponent getComponent() {
         return (LdapRdnComponent) components.get(0);
@@ -109,18 +111,20 @@ public class LdapRdn implements Serializable, Comparable {
      * 
      * @param idx
      *            the 0-based index of the component to get.
-     * @return the LdapRdnComponent at indet <code>idx</code>.
+     * @return the LdapRdnComponent at index <code>idx</code>.
      * @throws IndexOutOfBoundsException
-     *             if no component exists at index <code>idx</code>.
+     *             if there are no components in this Rdn.
      */
     public LdapRdnComponent getComponent(int idx) {
         return (LdapRdnComponent) components.get(idx);
     }
 
     /**
-     * Get a properly rfc2253-encoded String representation to this LdapRdn.
+     * Get a properly rfc2253-encoded String representation of this LdapRdn.
      * 
-     * @return an encoded String corresponding to this LdapRdn.
+     * @return an escaped String corresponding to this LdapRdn.
+     * @throws IndexOutOfBoundsException
+     *             if there are no components in this Rdn.
      */
     public String getLdapEncoded() {
         if (components.size() == 0) {
@@ -170,6 +174,11 @@ public class LdapRdn implements Serializable, Comparable {
         return comparator.compare(this.components, that.components);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
     public boolean equals(Object obj) {
         if (obj == null || obj.getClass() != this.getClass()) {
             return false;
@@ -205,7 +214,7 @@ public class LdapRdn implements Serializable, Comparable {
      * 
      * @return the (first) value of this LdapRdn.
      * @throws IndexOutOfBoundsException
-     *             if there is no components in this Rdn.
+     *             if there are no components in this Rdn.
      */
     public String getValue() {
         return getComponent().getValue();
@@ -219,7 +228,7 @@ public class LdapRdn implements Serializable, Comparable {
      * 
      * @return the (first) key of this LdapRdn.
      * @throws IndexOutOfBoundsException
-     *             if there is no components in this Rdn.
+     *             if there are no components in this Rdn.
      */
     public String getKey() {
         return getComponent().getKey();

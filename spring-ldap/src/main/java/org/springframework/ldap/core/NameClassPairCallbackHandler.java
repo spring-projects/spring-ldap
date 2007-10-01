@@ -19,10 +19,11 @@ package org.springframework.ldap.core;
 import javax.naming.NameClassPair;
 
 /**
- * Callback interface used by LdapTemplate's search, list and listBindings
+ * Callback interface used by {@link LdapTemplate} search, list and listBindings
  * methods. Implementations of this interface perform the actual work of
- * extracting results from a single NameClassPair (a NameClassPair,
- * Binding or SearchResult depending on the search operation) returned by an
+ * extracting results from a single <code>NameClassPair</code> (a
+ * <code>NameClassPair</code>, <code>Binding</code> or
+ * <code>SearchResult</code> depending on the search operation) returned by an
  * LDAP seach operation, such as search(), list(), and listBindings().
  * 
  * @author Mattias Arthursson
@@ -33,7 +34,8 @@ public interface NameClassPairCallbackHandler {
      * by a search or list.
      * 
      * @param nameClassPair
-     *            the NameClassPair returned from the NamingEnumeration.
+     *            the NameClassPair returned from the
+     *            <code>NamingEnumeration</code>.
      */
     public void handleNameClassPair(NameClassPair nameClassPair);
 }

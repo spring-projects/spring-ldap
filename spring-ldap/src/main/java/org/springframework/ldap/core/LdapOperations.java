@@ -24,10 +24,11 @@ import javax.naming.NameClassPair;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
-import javax.naming.spi.DirObjectFactory;
 
 import org.springframework.ldap.ContextNotEmptyException;
 import org.springframework.ldap.NamingException;
+import org.springframework.ldap.core.support.AbstractContextSource;
+import org.springframework.ldap.support.LdapUtils;
 
 /**
  * Interface that specifies a basic set of LDAP operations. Implemented by
@@ -39,104 +40,126 @@ import org.springframework.ldap.NamingException;
  */
 public interface LdapOperations {
     /**
-     * Perform a search using a custom context processor. Use this method only
-     * if especially needed - for the most cases there is an overloaded
-     * convenience method which calls this one with suitable argments. This
-     * method handles all the plumbing; getting a readonly context; looping
-     * through the NamingEnumeration and closing the context and enumeration.
-     * The actual search is delegated to the SearchExecutor and each found
-     * SearchResult is passed to the CallbackHandler. Any encountered
-     * NamingException will be translated using the NamingExceptionTranslator.
+     * Perform a search using a particular {@link SearchExecutor} and context
+     * processor. Use this method only if especially needed - for the most cases
+     * there is an overloaded convenience method which calls this one with
+     * suitable argments. This method handles all the plumbing; getting a
+     * readonly context; looping through the <code>NamingEnumeration</code>
+     * and closing the context and enumeration. The actual search is delegated
+     * to the SearchExecutor and each found <code>NameClassPair</code> is
+     * passed to the <code>CallbackHandler</code>. Any encountered
+     * <code>NamingException</code> will be translated using
+     * {@link LdapUtils#convertLdapException(javax.naming.NamingException)}.
      * 
      * @param se
-     *            The SearchExecutor to use for performing the actual search.
+     *            The <code>SearchExecutor</code> to use for performing the
+     *            actual search.
      * @param handler
-     *            The NameClassPairCallbackHandler to which each found entry
-     *            will be passed.
+     *            The <code>NameClassPairCallbackHandler</code> to which each
+     *            found entry will be passed.
      * @param processor
-     *            DirContextProcessor for custom pre- and post-processing.
+     *            <code>DirContextProcessor</code> for custom pre- and
+     *            post-processing.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted as no entries being
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted as no entries being found.
      */
     public void search(SearchExecutor se, NameClassPairCallbackHandler handler,
             DirContextProcessor processor) throws NamingException;
 
     /**
-     * Perform a search. Use this method only if especially needed - for the
-     * most cases there is an overloaded convenience method which calls this one
-     * with suitable argments. This method handles all the plumbing; getting a
-     * readonly context; looping through the NamingEnumeration and closing the
-     * context and enumeration. The actual search is delegated to the
-     * SearchExecutor and each found SearchResult is passed to the
-     * CallbackHandler. Any encountered NamingException will be translated using
-     * the NamingExceptionTranslator.
+     * Perform a search using a particular {@link SearchExecutor}. Use this
+     * method only if especially needed - for the most cases there is an
+     * overloaded convenience method which calls this one with suitable
+     * argments. This method handles all the plumbing; getting a readonly
+     * context; looping through the <code>NamingEnumeration</code> and closing
+     * the context and enumeration. The actual search is delegated to the
+     * <code>SearchExecutor</code> and each found <code>NameClassPair</code>
+     * is passed to the <code>CallbackHandler</code>. Any encountered
+     * <code>NamingException</code> will be translated using the
+     * {@link LdapUtils#convertLdapException(javax.naming.NamingException)}.
      * 
      * @param se
-     *            The SearchExecutor to use for performing the actual search.
+     *            The <code>SearchExecutor</code> to use for performing the
+     *            actual search.
      * @param handler
-     *            The NameClassPairCallbackHandler to which each found entry
-     *            will be passed.
+     *            The <code>NameClassPairCallbackHandler</code> to which each
+     *            found entry will be passed.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted as no entries being
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted as no entries being found.
+     * @see #search(Name, String, AttributesMapper)
+     * @see #search(Name, String, ContextMapper)
      */
     public void search(SearchExecutor se, NameClassPairCallbackHandler handler)
             throws NamingException;
 
     /**
      * Perform an operation (or series of operations) on a read-only context.
-     * This method handles the plumbing - getting a DirContext, translating any
-     * Exceptions and closing the context afterwards. This method is not
-     * intended for searches; use
+     * This method handles the plumbing - getting a <code>DirContext</code>,
+     * translating any Exceptions and closing the context afterwards. This
+     * method is not intended for searches; use
      * {@link #search(SearchExecutor, NameClassPairCallbackHandler)} or any of
      * the overloaded search methods for this.
      * 
      * @param ce
-     *            The ContextExecutor to which the actual operation on the
-     *            DirContext will be delegated.
+     *            The <code>ContextExecutor</code> to which the actual
+     *            operation on the <code>DirContext</code> will be delegated.
      * @return the result from the ContextExecutor's operation.
      * @throws NamingException
-     *             if the operation resulted in a NamingException.
+     *             if the operation resulted in a <code>NamingException</code>.
+     * 
+     * @see #search(SearchExecutor, NameClassPairCallbackHandler)
+     * @see #search(Name, String, AttributesMapper)
+     * @see #search(Name, String, ContextMapper)
      */
     public Object executeReadOnly(ContextExecutor ce) throws NamingException;
 
     /**
      * Perform an operation (or series of operations) on a read-write context.
-     * This method handles the plumbing - getting a DirContext, translating any
-     * exceptions and closing the context afterwards.
+     * This method handles the plumbing - getting a <code>DirContext</code>,
+     * translating any exceptions and closing the context afterwards. This
+     * method is intended only for very particular cases, where there is no
+     * suitable method in this interface to use.
      * 
      * @param ce
-     *            The ContextExecutor to which the actual operation on the
-     *            DirContext will be delegated.
+     *            The <code>ContextExecutor</code> to which the actual
+     *            operation on the <code>DirContext</code> will be delegated.
      * @return the result from the ContextExecutor's operation.
      * @throws NamingException
-     *             if the operation resulted in a NamingException.
+     *             if the operation resulted in a <code>NamingException</code>.
+     * @see #bind(Name, Object, Attributes)
+     * @see #unbind(Name)
+     * @see #rebind(Name, Object, Attributes)
+     * @see #rename(Name, Name)
+     * @see #modifyAttributes(Name, ModificationItem[]))
      */
     public Object executeReadWrite(ContextExecutor ce) throws NamingException;
 
     /**
-     * Search for all objects matching the supplied filter. Each SearchResult is
-     * supplied to the specified NameClassPairCallbackHandler. The SearchScope
-     * specified in the supplied SearchControls will be used in the search. Note
-     * that if you are using a ContextMapper, the returningObjFlag needs to be
-     * set to true in the SearchControls.
+     * Search for all objects matching the supplied filter. Each
+     * <code>SearchResult</code> is supplied to the specified
+     * <code>NameClassPairCallbackHandler</code>. The
+     * <code>SearchScope</code> specified in the supplied
+     * <code>SearchControls</code> will be used in the search. Note that if
+     * you are using a <code>ContextMapper</code>, the returningObjFlag needs
+     * to be set to true in the <code>SearchControls</code>.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param controls
-     *            The SearchControls to use in the search.
+     *            The <code>SearchControls</code> to use in the search.
      * @param handler
-     *            The NameClassPairCallbackHandler to supply the SearchResults
-     *            to.
+     *            The <code>NameClassPairCallbackHandler</code> to supply the
+     *            <code>SearchResult</code> to.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public void search(Name base, String filter, SearchControls controls,
             NameClassPairCallbackHandler handler) throws NamingException;
@@ -151,41 +174,45 @@ public interface LdapOperations {
      * @param filter
      *            The filter to use in the search.
      * @param controls
-     *            The SearchControls to use in the search.
+     *            The <code>SearchControls</code> to use in the search.
      * @param handler
-     *            The NameClassPairCallbackHandler to supply the SearchResults
-     *            to.
+     *            The <code>NameClassPairCallbackHandler</code> to supply the
+     *            <code>SearchResult</code> to.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public void search(String base, String filter, SearchControls controls,
             NameClassPairCallbackHandler handler) throws NamingException;
 
     /**
-     * Search for all objects matching the supplied filter. Each SearchResult is
-     * supplied to the specified NameClassPairCallbackHandler. The SearchScope
-     * specified in the supplied SearchControls will be used in the search. Note
-     * that if you are using a ContextMapper, the returningObjFlag needs to be
-     * set to true in the SearchControls. The given DirContextProcessor will be
-     * called before and after the search.
+     * Search for all objects matching the supplied filter. Each
+     * <code>SearchResult</code> is supplied to the specified
+     * <code>NameClassPairCallbackHandler</code>. The
+     * <code>SearchScope</code> specified in the supplied
+     * <code>SearchControls</code> will be used in the search. Note that if
+     * you are using a <code>ContextMapper</code>, the returningObjFlag needs
+     * to be set to true in the <code>SearchControls</code>. The given
+     * <code>DirContextProcessor</code> will be called before and after the
+     * search.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param controls
-     *            The SearchControls to use in the search.
+     *            The <code>SearchControls</code> to use in the search.
      * @param handler
-     *            The NameClassPairCallbackHandler to supply the SearchResults
-     *            to.
+     *            The <code>NameClassPairCallbackHandler</code> to supply the
+     *            <code>SearchResult</code> to.
      * @param processor
-     *            The DirContextProcessor to use before and after the search.
+     *            The <code>DirContextProcessor</code> to use before and after
+     *            the search.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public void search(Name base, String filter, SearchControls controls,
             NameClassPairCallbackHandler handler, DirContextProcessor processor)
@@ -193,26 +220,30 @@ public interface LdapOperations {
 
     /**
      * Search for all objects matching the supplied filter. The Attributes in
-     * each SearchResult is supplied to the specified AttributesMapper. The
-     * SearchScope specified in the supplied SearchControls will be used in the
-     * search. The given DirContextProcessor will be called before and after the
-     * search.
+     * each <code>SearchResult</code> is supplied to the specified
+     * <code>AttributesMapper</code>. The <code>SearchScope</code>
+     * specified in the supplied <code>SearchControls</code> will be used in
+     * the search. The given <code>DirContextProcessor</code> will be called
+     * before and after the search.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param controls
-     *            The SearchControls to use in the search.
+     *            The <code>SearchControls</code> to use in the search.
      * @param mapper
-     *            The AttributesMapper to use for translating each entry.
+     *            The <code>AttributesMapper</code> to use for translating
+     *            each entry.
      * @param processor
-     *            The DirContextProcessor to use before and after the search.
-     * @return a List containing all entries received from the AttributesMapper.
+     *            The <code>DirContextProcessor</code> to use before and after
+     *            the search.
+     * @return a <code>List</code> containing all entries received from the
+     *         <code>AttributesMapper</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List search(String base, String filter, SearchControls controls,
             AttributesMapper mapper, DirContextProcessor processor)
@@ -220,26 +251,30 @@ public interface LdapOperations {
 
     /**
      * Search for all objects matching the supplied filter. The Attributes in
-     * each SearchResult is supplied to the specified AttributesMapper. The
-     * SearchScope specified in the supplied SearchControls will be used in the
-     * search. The given DirContextProcessor will be called before and after the
-     * search.
+     * each <code>SearchResult</code> is supplied to the specified
+     * <code>AttributesMapper</code>. The <code>SearchScope</code>
+     * specified in the supplied <code>SearchControls</code> will be used in
+     * the search. The given <code>DirContextProcessor</code> will be called
+     * before and after the search.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param controls
-     *            The SearchControls to use in the search.
+     *            The <code>SearchControls</code> to use in the search.
      * @param mapper
-     *            The AttributesMapper to use for translating each entry.
+     *            The <code>AttributesMapper</code> to use for translating
+     *            each entry.
      * @param processor
-     *            The DirContextProcessor to use before and after the search.
-     * @return a List containing all entries received from the AttributesMapper.
+     *            The <code>DirContextProcessor</code> to use before and after
+     *            the search.
+     * @return a <code>List</code> containing all entries received from the
+     *         <code>AttributesMapper</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List search(Name base, String filter, SearchControls controls,
             AttributesMapper mapper, DirContextProcessor processor)
@@ -247,29 +282,33 @@ public interface LdapOperations {
 
     /**
      * Search for all objects matching the supplied filter. The Object returned
-     * in each SearchResult is supplied to the specified ContextMapper. The
-     * SearchScope specified in the supplied SearchControls will be used in the
-     * search. The given DirContextProcessor will be called before and after the
-     * search.
+     * in each <code>SearchResult</code> is supplied to the specified
+     * <code>ContextMapper</code>. The <code>SearchScope</code> specified
+     * in the supplied <code>SearchControls</code> will be used in the search.
+     * The given <code>DirContextProcessor</code> will be called before and
+     * after the search.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param controls
-     *            The SearchControls to use in the search. If the returnObjFlag
-     *            is not set in the SearchControls, this method will set it
-     *            automatically, as this is required for the ContextMapper to
-     *            work.
+     *            The <code>SearchControls</code> to use in the search. If the
+     *            returnObjFlag is not set in the <code>SearchControls</code>,
+     *            this method will set it automatically, as this is required for
+     *            the <code>ContextMapper</code> to work.
      * @param mapper
-     *            The ContextMapper to use for translating each entry.
+     *            The <code>ContextMapper</code> to use for translating each
+     *            entry.
      * @param processor
-     *            The DirContextProcessor to use before and after the search.
-     * @return a List containing all entries received from the ContextMapper.
+     *            The <code>DirContextProcessor</code> to use before and after
+     *            the search.
+     * @return a <code>List</code> containing all entries received from the
+     *         <code>ContextMapper</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List search(String base, String filter, SearchControls controls,
             ContextMapper mapper, DirContextProcessor processor)
@@ -277,29 +316,33 @@ public interface LdapOperations {
 
     /**
      * Search for all objects matching the supplied filter. The Object returned
-     * in each SearchResult is supplied to the specified ContextMapper. The
-     * SearchScope specified in the supplied SearchControls will be used in the
-     * search. The given DirContextProcessor will be called before and after the
-     * search.
+     * in each <code>SearchResult</code> is supplied to the specified
+     * <code>ContextMapper</code>. The <code>SearchScope</code> specified
+     * in the supplied <code>SearchControls</code> will be used in the search.
+     * The given <code>DirContextProcessor</code> will be called before and
+     * after the search.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param controls
-     *            The SearchControls to use in the search. If the returnObjFlag
-     *            is not set in the SearchControls, this method will set it
-     *            automatically, as this is required for the ContextMapper to
-     *            work.
+     *            The <code>SearchControls</code> to use in the search. If the
+     *            returnObjFlag is not set in the <code>SearchControls</code>,
+     *            this method will set it automatically, as this is required for
+     *            the <code>ContextMapper</code> to work.
      * @param mapper
-     *            The ContextMapper to use for translating each entry.
+     *            The <code>ContextMapper</code> to use for translating each
+     *            entry.
      * @param processor
-     *            The DirContextProcessor to use before and after the search.
-     * @return a List containing all entries received from the ContextMapper.
+     *            The <code>DirContextProcessor</code> to use before and after
+     *            the search.
+     * @return a <code>List</code> containing all entries received from the
+     *         <code>ContextMapper</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List search(Name base, String filter, SearchControls controls,
             ContextMapper mapper, DirContextProcessor processor)
@@ -315,536 +358,593 @@ public interface LdapOperations {
      * @param filter
      *            The filter to use in the search.
      * @param controls
-     *            The SearchControls to use in the search.
+     *            The <code>SearchControls</code> to use in the search.
      * @param handler
-     *            The NameClassPairCallbackHandler to supply the SearchResults
-     *            to.
+     *            The <code>NameClassPairCallbackHandler</code> to supply the
+     *            <code>SearchResults</code> to.
      * @param processor
-     *            The DirContextProcessor to use before and after the search.
+     *            The <code>DirContextProcessor</code> to use before and after
+     *            the search.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public void search(String base, String filter, SearchControls controls,
             NameClassPairCallbackHandler handler, DirContextProcessor processor)
             throws NamingException;
 
     /**
-     * Search for all objects matching the supplied filter. Each SearchResult is
-     * supplied to the specified NameClassPairCallbackHandler. Use the specified
-     * values for search scope and return objects flag.
+     * Search for all objects matching the supplied filter. Each
+     * <code>SearchResult</code> is supplied to the specified
+     * <code>NameClassPairCallbackHandler</code>. Use the specified values
+     * for search scope and return objects flag.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param searchScope
-     *            The search scope to set in SearchControls.
+     *            The search scope to set in <code>SearchControls</code>.
      * @param returningObjFlag
      *            Whether the bound object should be returned in search results.
-     *            Must be set to <code>true</code> if a ContextMapper is used.
+     *            Must be set to <code>true</code> if a
+     *            <code>ContextMapper</code> is used.
      * @param handler
-     *            The NameClassPairCallbackHandler to supply the SearchResults
-     *            to.
+     *            The <code>NameClassPairCallbackHandler</code> to supply the
+     *            <code>SearchResults</code> to.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public void search(Name base, String filter, int searchScope,
             boolean returningObjFlag, NameClassPairCallbackHandler handler)
             throws NamingException;
 
     /**
-     * Search for all objects matching the supplied filter. Each SearchResult is
-     * supplied to the specified NameClassPairCallbackHandler. Use the specified
-     * search scope and return objects flag in search controls.
+     * Search for all objects matching the supplied filter. Each
+     * <code>SearchResult</code> is supplied to the specified
+     * <code>NameClassPairCallbackHandler</code>. Use the specified values
+     * for search scope and return objects flag.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param searchScope
-     *            The search scope to set in SearchControls.
+     *            The search scope to set in <code>SearchControls</code>.
      * @param returningObjFlag
-     *            whether the bound object should be returned in search results.
+     *            Whether the bound object should be returned in search results.
+     *            Must be set to <code>true</code> if a
+     *            <code>ContextMapper</code> is used.
      * @param handler
-     *            The NameClassPairCallbackHandler to supply the SearchResults
-     *            to.
+     *            The <code>NameClassPairCallbackHandler</code> to supply the
+     *            <code>SearchResults</code> to.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public void search(String base, String filter, int searchScope,
             boolean returningObjFlag, NameClassPairCallbackHandler handler)
             throws NamingException;
 
     /**
-     * Search for all objects matching the supplied filter. Each SearchResult is
-     * supplied to the specified NameClassPairCallbackHandler. The default
-     * Search scope (SearchControls.SUBTREE_SCOPE) will be used and the
-     * returnObjects flag will be set to false.
+     * Search for all objects matching the supplied filter. Each
+     * <code>SearchResult</code> is supplied to the specified
+     * <code>NameClassPairCallbackHandler</code>. The default Search scope (<code>SearchControls.SUBTREE_SCOPE</code>)
+     * will be used and the returnObjects flag will be set to <code>false</code>.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param handler
-     *            The NameClassPairCallbackHandler to supply the SearchResults
-     *            to.
+     *            The <code>NameClassPairCallbackHandler</code> to supply the
+     *            <code>SearchResults</code> to.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public void search(Name base, String filter,
             NameClassPairCallbackHandler handler) throws NamingException;
 
     /**
-     * Search for all objects matching the supplied filter. Each SearchResult is
-     * supplied to the specified NameClassPairCallbackHandler. The default
-     * Search scope (SearchControls.SUBTREE_SCOPE) will be used and no the
-     * returnObjects will be set to false.
+     * Search for all objects matching the supplied filter. Each
+     * <code>SearchResult</code> is supplied to the specified
+     * <code>NameClassPairCallbackHandler</code>. The default Search scope (<code>SearchControls.SUBTREE_SCOPE</code>)
+     * will be used and the returnObjects flag will be set to <code>false</code>.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param handler
-     *            The NameClassPairCallbackHandler to supply the SearchResults
-     *            to.
+     *            The <code>NameClassPairCallbackHandler</code> to supply the
+     *            <code>SearchResults</code> to.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public void search(String base, String filter,
             NameClassPairCallbackHandler handler) throws NamingException;
 
     /**
-     * Search for all objects matching the supplied filter. Only search for the
-     * specified attributes. The Attributes in each SearchResult is supplied to
-     * the specified AttributesMapper.
+     * Search for all objects matching the supplied filter. Only return any
+     * attributes mathing the specified attribute names. The Attributes in each
+     * <code>SearchResult</code> is supplied to the specified
+     * <code>AttributesMapper</code>.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param searchScope
-     *            The search scope to set in SearchControls.
+     *            The search scope to set in <code>SearchControls</code>.
      * @param attrs
-     *            The attributes to return, null means returning all attributes.
+     *            The attributes to return, <code>null</code> means returning
+     *            all attributes.
      * @param mapper
-     *            The AttributesMapper to use for translating each entry.
-     * @return a List containing all entries received from the AttributesMapper.
+     *            The <code>AttributesMapper</code> to use for translating
+     *            each entry.
+     * @return a <code>List</code> containing all entries received from the
+     *         <code>AttributesMapper</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List search(Name base, String filter, int searchScope,
             String[] attrs, AttributesMapper mapper) throws NamingException;
 
     /**
-     * Search for all objects matching the supplied filter. Only search for the
-     * specified attributes. The Attributes in each SearchResult is supplied to
-     * the specified AttributesMapper.
+     * Search for all objects matching the supplied filter. Only return any
+     * attributes mathing the specified attribute names. The Attributes in each
+     * <code>SearchResult</code> is supplied to the specified
+     * <code>AttributesMapper</code>.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param searchScope
-     *            The search scope to set in SearchControls.
+     *            The search scope to set in <code>SearchControls</code>.
      * @param attrs
-     *            The attributes to return, null means returning all attributes.
+     *            The attributes to return, <code>null</code> means returning
+     *            all attributes.
      * @param mapper
-     *            The AttributesMapper to use for translating each entry.
-     * @return a List containing all entries received from the AttributesMapper.
+     *            The <code>AttributesMapper</code> to use for translating
+     *            each entry.
+     * @return a <code>List</code> containing all entries received from the
+     *         <code>AttributesMapper</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List search(String base, String filter, int searchScope,
             String[] attrs, AttributesMapper mapper) throws NamingException;
 
     /**
      * Search for all objects matching the supplied filter. The Attributes in
-     * each SearchResult is supplied to the specified AttributesMapper.
+     * each <code>SearchResult</code> is supplied to the specified
+     * <code>AttributesMapper</code>.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param searchScope
-     *            The search scope to set in SearchControls.
+     *            The search scope to set in <code>SearchControls</code>.
      * @param mapper
-     *            The AttributesMapper to use for translating each entry.
-     * @return a List containing all entries received from the AttributesMapper.
+     *            The <code>AttributesMapper</code> to use for translating
+     *            each entry.
+     * @return a <code>List</code> containing all entries received from the
+     *         <code>AttributesMapper</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List search(Name base, String filter, int searchScope,
             AttributesMapper mapper) throws NamingException;
 
     /**
      * Search for all objects matching the supplied filter. The Attributes in
-     * each SearchResult is supplied to the specified AttributesMapper.
+     * each <code>SearchResult</code> is supplied to the specified
+     * <code>AttributesMapper</code>.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param searchScope
-     *            The search scope to set in SearchControls.
+     *            The search scope to set in <code>SearchControls</code>.
      * @param mapper
-     *            The AttributesMapper to use for translating each entry.
-     * @return a List containing all entries received from the AttributesMapper.
+     *            The <code>AttributesMapper</code> to use for translating
+     *            each entry.
+     * @return a <code>List</code> containing all entries received from the
+     *         <code>AttributesMapper</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List search(String base, String filter, int searchScope,
             AttributesMapper mapper) throws NamingException;
 
     /**
      * Search for all objects matching the supplied filter. The Attributes in
-     * each SearchResult is supplied to the specified AttributesMapper. The
-     * default seach scope will be used.
+     * each <code>SearchResult</code> is supplied to the specified
+     * <code>AttributesMapper</code>. The default search scope will be used.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param mapper
-     *            The AttributesMapper to use for translating each entry.
-     * @return a List containing all entries received from the AttributesMapper.
+     *            The <code>AttributesMapper</code> to use for translating
+     *            each entry.
+     * @return a <code>List</code> containing all entries received from the
+     *         <code>AttributesMapper</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List search(Name base, String filter, AttributesMapper mapper)
             throws NamingException;
 
     /**
      * Search for all objects matching the supplied filter. The Attributes in
-     * each SearchResult is supplied to the specified AttributesMapper. The
-     * default seach scope will be used.
+     * each <code>SearchResult</code> is supplied to the specified
+     * <code>AttributesMapper</code>. The default search scope will be used.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param mapper
-     *            The AttributesMapper to use for translating each entry.
-     * @return a List containing all entries received from the AttributesMapper.
+     *            The <code>AttributesMapper</code> to use for translating
+     *            each entry.
+     * @return a <code>List</code> containing all entries received from the
+     *         <code>AttributesMapper</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List search(String base, String filter, AttributesMapper mapper)
             throws NamingException;
 
     /**
-     * Search for all objects matching the supplied filter. The Object returned
-     * in each SearchResult is supplied to the specified ContextMapper. Only
-     * look for the supplied attributes.
+     * Search for all objects matching the supplied filter. The
+     * <code>Object</code> returned in each <code>SearchResult</code> is
+     * supplied to the specified <code>ContextMapper</code>. Only return the
+     * supplied attributes.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param searchScope
-     *            The search scope to set in SearchControls.
+     *            The search scope to set in <code>SearchControls</code>.
      * @param attrs
-     *            The attributes to return, null means all attributes.
+     *            The attributes to return, <code>null</code> means all
+     *            attributes.
      * @param mapper
-     *            The ContextMapper to use for translating each entry.
-     * @return a List containing all entries received from the ContextMapper.
+     *            The <code>ContextMapper</code> to use for translating each
+     *            entry.
+     * @return a <code>List</code> containing all entries received from the
+     *         <code>ContextMapper</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List search(Name base, String filter, int searchScope,
             String[] attrs, ContextMapper mapper) throws NamingException;
 
     /**
-     * Search for all objects matching the supplied filter. The Object returned
-     * in each SearchResult is supplied to the specified ContextMapper. Only
-     * look for the supplied attributes.
+     * Search for all objects matching the supplied filter. The
+     * <code>Object</code> returned in each <code>SearchResult</code> is
+     * supplied to the specified <code>ContextMapper</code>. Only return the
+     * supplied attributes.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param searchScope
-     *            The search scope to set in SearchControls.
+     *            The search scope to set in <code>SearchControls</code>.
      * @param attrs
-     *            The attributes to return, null means all attributes.
+     *            The attributes to return, <code>null</code> means all
+     *            attributes.
      * @param mapper
-     *            The ContextMapper to use for translating each entry.
-     * @return a List containing all entries received from the ContextMapper.
+     *            The <code>ContextMapper</code> to use for translating each
+     *            entry.
+     * @return a <code>List</code> containing all entries received from the
+     *         <code>ContextMapper</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List search(String base, String filter, int searchScope,
             String[] attrs, ContextMapper mapper) throws NamingException;
 
     /**
-     * Search for all objects matching the supplied filter. The Object returned
-     * in each SearchResult is supplied to the specified ContextMapper.
+     * Search for all objects matching the supplied filter. The
+     * <code>Object</code> returned in each <code>SearchResult</code> is
+     * supplied to the specified <code>ContextMapper</code>.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param searchScope
-     *            The search scope to set in SearchControls.
+     *            The search scope to set in <code>SearchControls</code>.
      * @param mapper
-     *            The ContextMapper to use for translating each entry.
-     * @return a List containing all entries received from the ContextMapper.
+     *            The <code>ContextMapper</code> to use for translating each
+     *            entry.
+     * @return a <code>List</code> containing all entries received from the
+     *         <code>ContextMapper</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List search(Name base, String filter, int searchScope,
             ContextMapper mapper) throws NamingException;
 
     /**
-     * Search for all objects matching the supplied filter. The Object returned
-     * in each SearchResult is supplied to the specified ContextMapper.
+     * Search for all objects matching the supplied filter. The
+     * <code>Object</code> returned in each <code>SearchResult</code> is
+     * supplied to the specified <code>ContextMapper</code>.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param searchScope
-     *            The search scope to set in SearchControls.
+     *            The search scope to set in <code>SearchControls</code>.
      * @param mapper
-     *            The ContextMapper to use for translating each entry.
-     * @return a List containing all entries received from the ContextMapper.
+     *            The <code>ContextMapper</code> to use for translating each
+     *            entry.
+     * @return a <code>List</code> containing all entries received from the
+     *         <code>ContextMapper</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List search(String base, String filter, int searchScope,
             ContextMapper mapper) throws NamingException;
 
     /**
-     * Search for all objects matching the supplied filter. The Object returned
-     * in each SearchResult is supplied to the specified ContextMapper. The
-     * default search scope (SearchControls.SUBTREE_SCOPE) will be used.
+     * Search for all objects matching the supplied filter. The
+     * <code>Object</code> returned in each <code>SearchResult</code> is
+     * supplied to the specified <code>ContextMapper</code>. The default
+     * search scope (<code>SearchControls.SUBTREE_SCOPE</code>) will be
+     * used.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param mapper
-     *            The ContextMapper to use for translating each entry.
-     * @return a List containing all entries received from the ContextMapper.
+     *            The <code>ContextMapper</code> to use for translating each
+     *            entry.
+     * @return a <code>List</code> containing all entries received from the
+     *         <code>ContextMapper</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List search(Name base, String filter, ContextMapper mapper)
             throws NamingException;
 
     /**
-     * Search for all objects matching the supplied filter. The Object returned
-     * in each SearchResult is supplied to the specified ContextMapper. The
-     * default search scope (SearchControls.SUBTREE_SCOPE) will be used.
+     * Search for all objects matching the supplied filter. The
+     * <code>Object</code> returned in each <code>SearchResult</code> is
+     * supplied to the specified <code>ContextMapper</code>. The default
+     * search scope (<code>SearchControls.SUBTREE_SCOPE</code>) will be
+     * used.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param mapper
-     *            The ContextMapper to use for translating each entry.
-     * @return a List containing all entries received from the ContextMapper.
+     *            The <code>ContextMapper</code> to use for translating each
+     *            entry.
+     * @return a <code>List</code> containing all entries received from the
+     *         <code>ContextMapper</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List search(String base, String filter, ContextMapper mapper)
             throws NamingException;
 
     /**
-     * Search for all objects matching the supplied filter. The Object returned
-     * in each SearchResult is supplied to the specified ContextMapper.
+     * Search for all objects matching the supplied filter. The
+     * <code>Object</code> returned in each <code>SearchResult</code> is
+     * supplied to the specified <code>ContextMapper</code>. The default
+     * search scope (<code>SearchControls.SUBTREE_SCOPE</code>) will be
+     * used.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
-     * @param controls
-     *            The SearchControls to use in the search. If the returnObjFlag
-     *            is not set in the SearchControls, this method will set it
-     *            automatically, as this is required for the ContextMapper to
-     *            work.
      * @param mapper
-     *            The ContextMapper to use for translating each entry.
-     * @return a List containing all entries received from the ContextMapper.
+     *            The <code>ContextMapper</code> to use for translating each
+     *            entry.
+     * @return a <code>List</code> containing all entries received from the
+     *         <code>ContextMapper</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List search(String base, String filter, SearchControls controls,
             ContextMapper mapper) throws NamingException;
 
     /**
      * Search for all objects matching the supplied filter. The Object returned
-     * in each SearchResult is supplied to the specified ContextMapper.
+     * in each <code>SearchResult</code> is supplied to the specified
+     * <code>ContextMapper</code>.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param controls
-     *            The SearchControls to use in the search. If the returnObjFlag
-     *            is not set in the SearchControls, this method will set it
-     *            automatically, as this is required for the ContextMapper to
-     *            work.
+     *            The <code>SearchControls</code> to use in the search. If the
+     *            returnObjFlag is not set in the <code>SearchControls</code>,
+     *            this method will set it automatically, as this is required for
+     *            the <code>ContextMapper</code> to work.
      * @param mapper
-     *            The ContextMapper to use for translating each entry.
-     * @return a List containing all entries received from the ContextMapper.
+     *            The <code>ContextMapper</code> to use for translating each
+     *            entry.
+     * @return a <code>List</code> containing all entries received from the
+     *         <code>ContextMapper</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List search(Name base, String filter, SearchControls controls,
             ContextMapper mapper) throws NamingException;
 
     /**
-     * Search for all objects matching the supplied filter. The Object returned
-     * in each SearchResult is supplied to the specified AttributesMapper.
+     * Search for all objects matching the supplied filter. The Attributes
+     * returned in each <code>SearchResult</code> is supplied to the specified
+     * <code>AttributesMapper</code>.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param controls
-     *            The SearchControls to use in the search.
+     *            The <code>SearchControls</code> to use in the search.
      * @param mapper
-     *            The AttributesMapper to use for translating each entry.
-     * @return a List containing all entries received from the ContextMapper.
+     *            The <code>AttributesMapper</code> to use for translating
+     *            each entry.
+     * @return a <code>List</code> containing all entries received from the
+     *         <code>ContextMapper</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List search(String base, String filter, SearchControls controls,
             AttributesMapper mapper) throws NamingException;
 
     /**
-     * Search for all objects matching the supplied filter. The Object returned
-     * in each SearchResult is supplied to the specified AttributesMapper.
+     * Search for all objects matching the supplied filter. The Attributes
+     * returned in each <code>SearchResult</code> is supplied to the specified
+     * <code>AttributesMapper</code>.
      * 
      * @param base
      *            The base DN where the search should begin.
      * @param filter
      *            The filter to use in the search.
      * @param controls
-     *            The SearchControls to use in the search.
+     *            The <code>SearchControls</code> to use in the search.
      * @param mapper
-     *            The AttributesMapper to use for translating each entry.
-     * @return a List containing all entries received from the ContextMapper.
+     *            The <code>AttributesMapper</code> to use for translating
+     *            each entry.
+     * @return a <code>List</code> containing all entries received from the
+     *         <code>ContextMapper</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List search(Name base, String filter, SearchControls controls,
             AttributesMapper mapper) throws NamingException;
 
     /**
      * Perform a non-recursive listing of the children of the given
-     * <code>base</code>. Each resulting NameClassPair is supplied to the
-     * specified NameClassPairCallbackHandler.
+     * <code>base</code>. Each resulting <code>NameClassPair</code> is
+     * supplied to the specified <code>NameClassPairCallbackHandler</code>.
      * 
      * @param base
      *            The base DN where the list should be performed.
      * @param handler
-     *            The NameClassPairCallbackHandler to supply each
+     *            The <code>NameClassPairCallbackHandler</code> to supply each
      *            {@link NameClassPair} to.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public void list(String base, NameClassPairCallbackHandler handler)
             throws NamingException;
 
     /**
      * Perform a non-recursive listing of the children of the given
-     * <code>base</code>. Each resulting NameClassPair is supplied to the
-     * specified NameClassPairCallbackHandler.
+     * <code>base</code>. Each resulting <code>NameClassPair</code> is
+     * supplied to the specified <code>NameClassPairCallbackHandler</code>.
      * 
      * @param base
      *            The base DN where the list should be performed.
      * @param handler
-     *            The NameClassPairCallbackHandler to supply each
+     *            The <code>NameClassPairCallbackHandler</code> to supply each
      *            {@link NameClassPair} to.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public void list(Name base, NameClassPairCallbackHandler handler)
             throws NamingException;
 
     /**
      * Perform a non-recursive listing of the children of the given
-     * <code>base</code>. Pass all the found NameClassPair objects to the
-     * supplied NameClassPairMapper and return all the returned values as a
-     * List.
+     * <code>base</code>. Pass all the found <code>NameClassPair</code>
+     * objects to the supplied <code>NameClassPairMapper</code> and return all
+     * the returned values as a <code>List</code>.
      * 
      * @param base
      *            The base DN where the list should be performed.
      * @param mapper
-     *            The NameClassPairMapper to supply each {@link NameClassPair}
-     *            to.
-     * @return a List containing the Objects returned from the Mapper.
+     *            The <code>NameClassPairMapper</code> to supply each
+     *            {@link NameClassPair} to.
+     * @return a <code>List</code> containing the Objects returned from the
+     *         Mapper.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List list(String base, NameClassPairMapper mapper)
             throws NamingException;
 
     /**
      * Perform a non-recursive listing of the children of the given
-     * <code>base</code>. Pass all the found NameClassPair objects to the
-     * supplied NameClassPairMapper and return all the returned values as a
-     * List.
+     * <code>base</code>. Pass all the found <code>NameClassPair</code>
+     * objects to the supplied <code>NameClassPairMapper</code> and return all
+     * the returned values as a <code>List</code>.
      * 
      * @param base
      *            The base DN where the list should be performed.
      * @param mapper
-     *            The NameClassPairMapper to supply each {@link NameClassPair}
-     *            to.
-     * @return a List containing the Objects returned from the Mapper.
+     *            The <code>NameClassPairMapper</code> to supply each
+     *            {@link NameClassPair} to.
+     * @return a <code>List</code> containing the Objects returned from the
+     *         Mapper.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List list(Name base, NameClassPairMapper mapper)
             throws NamingException;
@@ -858,14 +958,14 @@ public interface LdapOperations {
      * @return a List containing the names of all the contexts bound to
      *         <code>base</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List list(String base) throws NamingException;
 
     /**
-     * Perform a non-recursive listing of the contexts bound to the given
+     * Perform a non-recursive listing of the children of the given
      * <code>base</code>.
      * 
      * @param base
@@ -873,80 +973,86 @@ public interface LdapOperations {
      * @return a List containing the names of all the contexts bound to
      *         <code>base</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List list(Name base) throws NamingException;
 
     /**
      * Perform a non-recursive listing of the children of the given
-     * <code>base</code>. Each resulting Binding is supplied to the specified
-     * NameClassPairCallbackHandler.
+     * <code>base</code>. Each resulting <code>Binding</code> is supplied
+     * to the specified <code>NameClassPairCallbackHandler</code>.
      * 
      * @param base
      *            The base DN where the list should be performed.
      * @param handler
-     *            The NameClassPairCallbackHandler to supply each
+     *            The <code>NameClassPairCallbackHandler</code> to supply each
      *            {@link Binding} to.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public void listBindings(final String base,
             NameClassPairCallbackHandler handler) throws NamingException;
 
     /**
      * Perform a non-recursive listing of the children of the given
-     * <code>base</code>. Each resulting Binding is supplied to the specified
-     * NameClassPairCallbackHandler.
+     * <code>base</code>. Each resulting <code>Binding</code> is supplied
+     * to the specified <code>NameClassPairCallbackHandler</code>.
      * 
      * @param base
      *            The base DN where the list should be performed.
      * @param handler
-     *            The NameClassPairCallbackHandler to supply each
+     *            The <code>NameClassPairCallbackHandler</code> to supply each
      *            {@link Binding} to.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public void listBindings(final Name base,
             NameClassPairCallbackHandler handler) throws NamingException;
 
     /**
      * Perform a non-recursive listing of the children of the given
-     * <code>base</code>. Pass all the found Binding objects to the supplied
-     * NameClassPairMapper and return all the returned values as a List.
+     * <code>base</code>. Pass all the found <code>Binding</code> objects
+     * to the supplied <code>NameClassPairMapper</code> and return all the
+     * returned values as a <code>List</code>.
      * 
      * @param base
      *            The base DN where the list should be performed.
      * @param mapper
-     *            The NameClassPairMapper to supply each {@link Binding} to.
-     * @return a List containing the Objects returned from the Mapper.
+     *            The <code>NameClassPairMapper</code> to supply each
+     *            {@link Binding} to.
+     * @return a <code>List</code> containing the Objects returned from the
+     *         Mapper.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List listBindings(String base, NameClassPairMapper mapper)
             throws NamingException;
 
     /**
      * Perform a non-recursive listing of the children of the given
-     * <code>base</code>. Pass all the found Binding objects to the supplied
-     * NameClassPairMapper and return all the returned values as a List.
+     * <code>base</code>. Pass all the found <code>Binding</code> objects
+     * to the supplied <code>NameClassPairMapper</code> and return all the
+     * returned values as a <code>List</code>.
      * 
      * @param base
      *            The base DN where the list should be performed.
      * @param mapper
-     *            The NameClassPairMapper to supply each {@link Binding} to.
-     * @return a List containing the Objects returned from the Mapper.
+     *            The <code>NameClassPairMapper</code> to supply each
+     *            {@link Binding} to.
+     * @return a <code>List</code> containing the Objects returned from the
+     *         Mapper.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List listBindings(Name base, NameClassPairMapper mapper)
             throws NamingException;
@@ -957,44 +1063,46 @@ public interface LdapOperations {
      * 
      * @param base
      *            The base DN where the list should be performed.
-     * @return a List containing the names of all the contexts bound to
-     *         <code>base</code>.
+     * @return a <code>List</code> containing the names of all the contexts
+     *         bound to <code>base</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List listBindings(final String base) throws NamingException;
 
     /**
-     * Perform a non-recursive listing of the children of the given
+     * Perform a non-recursive listing of children of the given
      * <code>base</code>.
      * 
      * @param base
      *            The base DN where the list should be performed.
-     * @return a List containing the names of all the contexts bound to
-     *         <code>base</code>.
+     * @return a <code>List</code> containing the names of all the contexts
+     *         bound to <code>base</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List listBindings(final Name base) throws NamingException;
 
     /**
      * Perform a non-recursive listing of the children of the given
      * <code>base</code>. The Object returned in each {@link Binding} is
-     * supplied to the specified ContextMapper.
+     * supplied to the specified <code>ContextMapper</code>.
      * 
      * @param base
      *            The base DN where the list should be performed.
      * @param mapper
-     *            The ContextMapper to use for mapping the found object.
-     * @return a List containing all entries received from the ContextMapper.
+     *            The <code>ContextMapper</code> to use for mapping the found
+     *            object.
+     * @return a <code>List</code> containing all entries received from the
+     *         <code>ContextMapper</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List listBindings(String base, ContextMapper mapper)
             throws NamingException;
@@ -1002,25 +1110,27 @@ public interface LdapOperations {
     /**
      * Perform a non-recursive listing of the children of the given
      * <code>base</code>. The Object returned in each {@link Binding} is
-     * supplied to the specified ContextMapper.
+     * supplied to the specified <code>ContextMapper</code>.
      * 
      * @param base
      *            The base DN where the list should be performed.
      * @param mapper
-     *            The ContextMapper to use for mapping the found object.
-     * @return a List containing all entries received from the ContextMapper.
+     *            The <code>ContextMapper</code> to use for mapping the found
+     *            object.
+     * @return a <code>List</code> containing all entries received from the
+     *         <code>ContextMapper</code>.
      * @throws NamingException
-     *             if any error occurs. Note that a NameNotFoundException will
-     *             be ignored. Instead this is interpreted that no entries were
-     *             found.
+     *             if any error occurs. Note that a
+     *             <code>NameNotFoundException</code> will be ignored. Instead
+     *             this is interpreted that no entries were found.
      */
     public List listBindings(Name base, ContextMapper mapper)
             throws NamingException;
 
     /**
      * Lookup the supplied DN and return the found object. This will typically
-     * be a {@link DirContextAdapter}, unless the DirObjectFactory has been
-     * modified in the ContextSource.
+     * be a {@link DirContextAdapter}, unless the <code>DirObjectFactory</code>
+     * has been modified in the <code>ContextSource</code>.
      * 
      * @param dn
      *            The distinguished name of the object to find.
@@ -1028,31 +1138,34 @@ public interface LdapOperations {
      * @throws NamingException
      *             if any error occurs.
      * @see #lookupContext(Name)
+     * @see AbstractContextSource#setDirObjectFactory(Class)
      */
     public Object lookup(Name dn) throws NamingException;
 
     /**
      * Lookup the supplied DN and return the found object. This will typically
-     * be a {@link DirContextAdapter}, unless the DirObjectFactory has been
-     * modified in the ContextSource.
+     * be a {@link DirContextAdapter}, unless the <code>DirObjectFactory</code>
+     * has been modified in the <code>ContextSource</code>.
      * 
      * @param dn
      *            The distinguished name of the object to find.
      * @return the found object, typically a {@link DirContextAdapter} instance.
      * @throws NamingException
      *             if any error occurs.
-     * @see #lookupContext(Name)
+     * @see #lookupContext(String)
+     * @see AbstractContextSource#setDirObjectFactory(Class)
      */
     public Object lookup(String dn) throws NamingException;
 
     /**
      * Convenience method to get the attributes of a specified DN and
-     * automatically pass them to an AttributesMapper.
+     * automatically pass them to an <code>AttributesMapper</code>.
      * 
      * @param dn
      *            The distinguished name to find.
      * @param mapper
-     *            The AttributesMapper to use for mapping the found object.
+     *            The <code>AttributesMapper</code> to use for mapping the
+     *            found object.
      * @return the object returned from the mapper.
      * @throws NamingException
      *             if any error occurs.
@@ -1062,12 +1175,13 @@ public interface LdapOperations {
 
     /**
      * Convenience method to get the attributes of a specified DN and
-     * automatically pass them to an AttributesMapper.
+     * automatically pass them to an <code>AttributesMapper</code>.
      * 
      * @param dn
      *            The distinguished name to find.
      * @param mapper
-     *            The AttributesMapper to use for mapping the found object.
+     *            The <code>AttributesMapper</code> to use for mapping the
+     *            found object.
      * @return the object returned from the mapper.
      * @throws NamingException
      *             if any error occurs.
@@ -1077,12 +1191,13 @@ public interface LdapOperations {
 
     /**
      * Convenience method to lookup a specified DN and automatically pass the
-     * found object to a ContextMapper.
+     * found object to a <code>ContextMapper</code>.
      * 
      * @param dn
      *            The distinguished name to find.
      * @param mapper
-     *            The ContextMapper to use for mapping the found object.
+     *            The <code>ContextMapper</code> to use for mapping the found
+     *            object.
      * @return the object returned from the mapper.
      * @throws NamingException
      *             if any error occurs.
@@ -1091,12 +1206,13 @@ public interface LdapOperations {
 
     /**
      * Convenience method to lookup a specified DN and automatically pass the
-     * found object to a ContextMapper.
+     * found object to a <code>ContextMapper</code>.
      * 
      * @param dn
      *            The distinguished name to find.
      * @param mapper
-     *            The ContextMapper to use for mapping the found object.
+     *            The <code>ContextMapper</code> to use for mapping the found
+     *            object.
      * @return the object returned from the mapper.
      * @throws NamingException
      *             if any error occurs.
@@ -1106,14 +1222,15 @@ public interface LdapOperations {
 
     /**
      * Convenience method to get the specified attributes of a specified DN and
-     * automatically pass them to an AttributesMapper.
+     * automatically pass them to an <code>AttributesMapper</code>.
      * 
      * @param dn
      *            The distinguished name to find.
      * @param attributes
      *            The names of the attributes to pass to the mapper.
      * @param mapper
-     *            The AttributesMapper to use for mapping the found object.
+     *            The <code>AttributesMapper</code> to use for mapping the
+     *            found object.
      * @return the object returned from the mapper.
      * @throws NamingException
      *             if any error occurs.
@@ -1123,14 +1240,15 @@ public interface LdapOperations {
 
     /**
      * Convenience method to get the specified attributes of a specified DN and
-     * automatically pass them to an AttributesMapper.
+     * automatically pass them to an <code>AttributesMapper</code>.
      * 
      * @param dn
      *            The distinguished name to find.
      * @param attributes
      *            The names of the attributes to pass to the mapper.
      * @param mapper
-     *            The AttributesMapper to use for mapping the found object.
+     *            The <code>AttributesMapper</code> to use for mapping the
+     *            found object.
      * @return the object returned from the mapper.
      * @throws NamingException
      *             if any error occurs.
@@ -1140,14 +1258,15 @@ public interface LdapOperations {
 
     /**
      * Convenience method to get the specified attributes of a specified DN and
-     * automatically pass them to a ContextMapper.
+     * automatically pass them to a <code>ContextMapper</code>.
      * 
      * @param dn
      *            The distinguished name to find.
      * @param attributes
      *            The names of the attributes to pass to the mapper.
      * @param mapper
-     *            The ContextMapper to use for mapping the found object.
+     *            The <code>ContextMapper</code> to use for mapping the found
+     *            object.
      * @return the object returned from the mapper.
      * @throws NamingException
      *             if any error occurs.
@@ -1157,14 +1276,15 @@ public interface LdapOperations {
 
     /**
      * Convenience method to get the specified attributes of a specified DN and
-     * automatically pass them to a ContextMapper.
+     * automatically pass them to a <code>ContextMapper</code>.
      * 
      * @param dn
      *            The distinguished name to find.
      * @param attributes
      *            The names of the attributes to pass to the mapper.
      * @param mapper
-     *            The ContextMapper to use for mapping the found object.
+     *            The <code>ContextMapper</code> to use for mapping the found
+     *            object.
      * @return the object returned from the mapper.
      * @throws NamingException
      *             if any error occurs.
@@ -1173,7 +1293,8 @@ public interface LdapOperations {
             throws NamingException;
 
     /**
-     * Modify an entry in the LDAP tree using the supplied ModificationItems.
+     * Modify an entry in the LDAP tree using the supplied
+     * <code>ModificationItems</code>.
      * 
      * @param dn
      *            The distinguished name of the node to modify.
@@ -1181,12 +1302,14 @@ public interface LdapOperations {
      *            The modifications to perform.
      * @throws NamingException
      *             if any error occurs.
+     * @see #modifyAttributes(DirContextOperations)
      */
     public void modifyAttributes(Name dn, ModificationItem[] mods)
             throws NamingException;
 
     /**
-     * Modify an entry in the LDAP tree using the supplied ModificationItems.
+     * Modify an entry in the LDAP tree using the supplied
+     * <code>ModificationItems</code>.
      * 
      * @param dn
      *            The distinguished name of the node to modify.
@@ -1194,6 +1317,7 @@ public interface LdapOperations {
      *            The modifications to perform.
      * @throws NamingException
      *             if any error occurs.
+     * @see #modifyAttributes(DirContextOperations)
      */
     public void modifyAttributes(String dn, ModificationItem[] mods)
             throws NamingException;
@@ -1202,17 +1326,18 @@ public interface LdapOperations {
      * Create an entry in the LDAP tree. The attributes used to create the entry
      * are either retrieved from the <code>obj</code> parameter or the
      * <code>attributes</code> parameter (or both). One of these parameters
-     * may be null but not both.
+     * may be <code>null</code> but not both.
      * 
      * @param dn
      *            The distinguished name to bind the object and attributes to.
      * @param obj
-     *            The object to bind, may be null. Typically a DirContext
-     *            implementation.
+     *            The object to bind, may be <code>null</code>. Typically a
+     *            <code>DirContext</code> implementation.
      * @param attributes
-     *            The attributes to bind, may be null.
+     *            The attributes to bind, may be <code>null</code>.
      * @throws NamingException
      *             if any error occurs.
+     * @see DirContextAdapter
      */
     public void bind(Name dn, Object obj, Attributes attributes)
             throws NamingException;
@@ -1221,17 +1346,18 @@ public interface LdapOperations {
      * Create an entry in the LDAP tree. The attributes used to create the entry
      * are either retrieved from the <code>obj</code> parameter or the
      * <code>attributes</code> parameter (or both). One of these parameters
-     * may be null but not both.
+     * may be <code>null</code> but not both.
      * 
      * @param dn
      *            The distinguished name to bind the object and attributes to.
      * @param obj
-     *            The object to bind, may be null. Typically a DirContext
-     *            implementation.
+     *            The object to bind, may be <code>null</code>. Typically a
+     *            <code>DirContext</code> implementation.
      * @param attributes
-     *            The attributes to bind, may be null.
+     *            The attributes to bind, may be <code>null</code>.
      * @throws NamingException
      *             if any error occurs.
+     * @see DirContextAdapter
      */
     public void bind(String dn, Object obj, Attributes attributes)
             throws NamingException;
@@ -1294,18 +1420,19 @@ public interface LdapOperations {
      * Remove an entry and replace it with a new one. The attributes used to
      * create the entry are either retrieved from the <code>obj</code>
      * parameter or the <code>attributes</code> parameter (or both). One of
-     * these parameters may be null but not both. This method assumes that the
-     * specified context already exists - if not it will fail.
+     * these parameters may be <code>null</code> but not both. This method
+     * assumes that the specified context already exists - if not it will fail.
      * 
      * @param dn
      *            The distinguished name to rebind.
      * @param obj
-     *            The object to bind to the DN, may be null. Typically a
-     *            DirContext implementation.
+     *            The object to bind to the DN, may be <code>null</code>.
+     *            Typically a <code>DirContext</code> implementation.
      * @param attributes
-     *            The attributes to bind, may be null.
+     *            The attributes to bind, may be <code>null</code>.
      * @throws NamingException
      *             if any error occurs.
+     * @see DirContextAdapter
      */
     public void rebind(Name dn, Object obj, Attributes attributes)
             throws NamingException;
@@ -1314,18 +1441,19 @@ public interface LdapOperations {
      * Remove an entry and replace it with a new one. The attributes used to
      * create the entry are either retrieved from the <code>obj</code>
      * parameter or the <code>attributes</code> parameter (or both). One of
-     * these parameters may be null but not both. This method assumes that the
-     * specified context already exists - if not it will fail.
+     * these parameters may be <code>null</code> but not both. This method
+     * assumes that the specified context already exists - if not it will fail.
      * 
      * @param dn
      *            The distinguished name to rebind.
      * @param obj
-     *            The object to bind to the DN, may be null. Typically a
-     *            DirContext implementation.
+     *            The object to bind to the DN, may be <code>null</code>.
+     *            Typically a <code>DirContext</code> implementation.
      * @param attributes
-     *            The attributes to bind, may be null.
+     *            The attributes to bind, may be <code>null</code>.
      * @throws NamingException
      *             if any error occurs.
+     * @see DirContextAdapter
      */
     public void rebind(String dn, Object obj, Attributes attributes)
             throws NamingException;
@@ -1334,11 +1462,11 @@ public interface LdapOperations {
      * Move an entry in the LDAP tree to a new location.
      * 
      * @param oldDn
-     *            The distinguished name of the entry to move; may not be null
-     *            or empty.
+     *            The distinguished name of the entry to move; may not be
+     *            <code>null</code> or empty.
      * @param newDn
      *            The distinguished name where the entry should be moved; may
-     *            not be null or empty.
+     *            not be <code>null</code> or empty.
      * @throws ContextNotEmptyException
      *             if newDn is already bound
      * @throws NamingException
@@ -1351,11 +1479,11 @@ public interface LdapOperations {
      * Move an entry in the LDAP tree to a new location.
      * 
      * @param oldDn
-     *            The distinguished name of the entry to move; may not be null
-     *            or empty.
+     *            The distinguished name of the entry to move; may not be
+     *            <code>null</code> or empty.
      * @param newDn
      *            The distinguished name where the entry should be moved; may
-     *            not be null or empty.
+     *            not be <code>null</code> or empty.
      * @throws ContextNotEmptyException
      *             if newDn is already bound
      * @throws NamingException
@@ -1372,12 +1500,14 @@ public interface LdapOperations {
      *            The distinguished name of the object to find.
      * @return The found object, cast to {@link DirContextOperations}.
      * @throws ClassCastException
-     *             if an alternative DirObjectFactory has been registered woth
-     *             the ContextSource, causing the actual class of the returned
-     *             object to be something else than {@link DirContextOperations}.
+     *             if an alternative <code>DirObjectFactory</code> has been
+     *             registered with the <code>ContextSource</code>, causing
+     *             the actual class of the returned object to be something else
+     *             than {@link DirContextOperations}.
      * @throws NamingException
      *             if any other error occurs.
      * @see #lookup(Name)
+     * @since 1.2
      */
     public DirContextOperations lookupContext(Name dn) throws NamingException,
             ClassCastException;
@@ -1390,12 +1520,14 @@ public interface LdapOperations {
      *            The distinguished name of the object to find.
      * @return The found object, cast to {@link DirContextOperations}.
      * @throws ClassCastException
-     *             if an alternative DirObjectFactory has been registered woth
-     *             the ContextSource, causing the actual class of the returned
-     *             object to be something else than {@link DirContextOperations}.
+     *             if an alternative <code>DirObjectFactory</code> has been
+     *             registered with the <code>ContextSource</code>, causing
+     *             the actual class of the returned object to be something else
+     *             than {@link DirContextOperations}.
      * @throws NamingException
      *             if any other error occurs.
      * @see #lookup(String)
+     * @since 1.2
      */
     public DirContextOperations lookupContext(String dn)
             throws NamingException, ClassCastException;
@@ -1432,7 +1564,9 @@ public interface LdapOperations {
      *             been properly initialized.
      * @throws NamingException
      *             if any other error occurs.
-     * 
+     * @since 1.2
+     * @see #lookupContext(Name)
+     * @see DirContextAdapter
      */
     public void modifyAttributes(DirContextOperations ctx)
             throws IllegalStateException, NamingException;

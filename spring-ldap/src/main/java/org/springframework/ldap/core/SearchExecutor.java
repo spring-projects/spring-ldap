@@ -41,8 +41,9 @@ public interface SearchExecutor {
      * Execute the actual search.
      * 
      * @param ctx
-     *            the DirContext on which to work.
-     * @return the NamingEnumeration resulting from the search operation.
+     *            the <code>DirContext</code> on which to work.
+     * @return the <code>NamingEnumeration</code> resulting from the search
+     *         operation.
      * @throws NamingException
      *             if the search results in one.
      */

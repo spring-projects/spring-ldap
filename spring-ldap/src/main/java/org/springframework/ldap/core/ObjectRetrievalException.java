@@ -19,8 +19,8 @@ package org.springframework.ldap.core;
 import org.springframework.ldap.NamingException;
 
 /**
- * Thrown by a ContextMapperCallbackHandler when it cannot retrieve an object
- * from the given Binding.
+ * Thrown by a {@link ContextMapperCallbackHandler} when it cannot retrieve an
+ * object from the given <code>Binding</code>.
  * 
  * @author Ulrik Sandberg
  * @since 1.2

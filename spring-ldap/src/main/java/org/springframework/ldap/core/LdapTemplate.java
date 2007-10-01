@@ -1295,14 +1295,29 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.ldap.core.LdapOperations#lookupContext(javax.naming.Name)
+     */
     public DirContextOperations lookupContext(Name dn) {
         return (DirContextOperations) lookup(dn);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.ldap.core.LdapOperations#lookupContext(java.lang.String)
+     */
     public DirContextOperations lookupContext(String dn) {
         return (DirContextOperations) lookup(dn);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.ldap.core.LdapOperations#modifyAttributes(org.springframework.ldap.core.DirContextOperations)
+     */
     public void modifyAttributes(DirContextOperations ctx) {
         Name dn = ctx.getDn();
         if (dn != null && ctx.isUpdateMode()) {

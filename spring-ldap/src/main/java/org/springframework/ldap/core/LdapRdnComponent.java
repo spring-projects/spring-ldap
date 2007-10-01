@@ -114,9 +114,9 @@ public class LdapRdnComponent implements Comparable, Serializable {
     }
 
     /**
-     * Encode key and value to ldap
+     * Encode key and value to ldap.
      * 
-     * @return The ldap encoded rdn
+     * @return Properly ldap escaped rdn.
      */
     protected String encodeLdap() {
         StringBuffer buff = new StringBuffer(key.length() + value.length() * 2);
@@ -144,6 +144,11 @@ public class LdapRdnComponent implements Comparable, Serializable {
         return encodeLdap();
     }
 
+    /**
+     * Get a String representation of this instance for use in URLs.
+     * 
+     * @return a properly URL encoded representation of this instancs.
+     */
     public String encodeUrl() {
         // Use the URI class to properly URL encode the value.
         try {
@@ -155,13 +160,20 @@ public class LdapRdnComponent implements Comparable, Serializable {
         }
     }
 
-    /**
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     public int hashCode() {
         return key.hashCode() ^ value.hashCode();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
     public boolean equals(Object obj) {
         if (obj != null && obj.getClass() == LdapRdnComponent.class) {
             LdapRdnComponent that = (LdapRdnComponent) obj;
