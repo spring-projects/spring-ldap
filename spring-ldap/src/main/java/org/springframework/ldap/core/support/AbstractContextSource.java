@@ -281,10 +281,10 @@ public abstract class AbstractContextSource implements ContextSource,
                     + "using default implementation");
             if (StringUtils.isBlank(userDn)) {
                 log
-                        .warn("Property 'userDn' not set - "
+                        .info("Property 'userDn' not set - "
                                 + "anonymous context will be used for read-write operations");
             } else if (StringUtils.isBlank(password)) {
-                log.warn("Property 'password' not set - "
+                log.info("Property 'password' not set - "
                         + "blank password will be used");
             }
             authenticationSource = new SimpleAuthenticationSource();
