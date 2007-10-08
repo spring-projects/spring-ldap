@@ -15,11 +15,11 @@
  */
 package org.springframework.transaction.compensating.support;
 
-import org.springframework.ldap.transaction.compensating.manager.DirContextHolder;
-
 /**
- * Transaction object for ContextSourceTransactionManager. Keeps a reference to
- * the {@link DirContextHolder} associated with the current transaction.
+ * Transaction object used by
+ * {@link AbstractCompensatingTransactionManagerDelegate}. Keeps a reference to
+ * the {@link CompensatingTransactionHolderSupport} associated with the current
+ * transaction.
  * 
  * @author Mattias Arthursson
  * @since 1.2

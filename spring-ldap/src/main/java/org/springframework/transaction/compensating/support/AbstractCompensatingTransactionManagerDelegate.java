@@ -63,8 +63,6 @@ public abstract class AbstractCompensatingTransactionManagerDelegate {
     protected abstract Object getTransactionSynchronizationKey();
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doGetTransaction()
      */
     public Object doGetTransaction() throws TransactionException {
@@ -76,8 +74,6 @@ public abstract class AbstractCompensatingTransactionManagerDelegate {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doBegin(java.lang.Object,
      *      org.springframework.transaction.TransactionDefinition)
      */
@@ -95,8 +91,6 @@ public abstract class AbstractCompensatingTransactionManagerDelegate {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doCommit(org.springframework.transaction.support.DefaultTransactionStatus)
      */
     public void doCommit(DefaultTransactionStatus status)
@@ -108,8 +102,6 @@ public abstract class AbstractCompensatingTransactionManagerDelegate {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doRollback(org.springframework.transaction.support.DefaultTransactionStatus)
      */
     public void doRollback(DefaultTransactionStatus status)
@@ -120,8 +112,6 @@ public abstract class AbstractCompensatingTransactionManagerDelegate {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doCleanupAfterCompletion(java.lang.Object)
      */
     public void doCleanupAfterCompletion(Object transaction) {
@@ -137,5 +127,4 @@ public abstract class AbstractCompensatingTransactionManagerDelegate {
 
         txObject.getHolder().clear();
     }
-
 }

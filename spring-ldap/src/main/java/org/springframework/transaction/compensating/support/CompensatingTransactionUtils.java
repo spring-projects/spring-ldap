@@ -37,9 +37,9 @@ public class CompensatingTransactionUtils {
     }
 
     /**
-     * Perform the specified operation, storing the state prior to the
-     * operation, to enable commit/rollback later. If no transaction is
-     * currently active, proceed with the original call on the target.
+     * Perform the specified operation, storing the state prior to the operation
+     * in order to enable commit/rollback later. If no transaction is currently
+     * active, proceed with the original call on the target.
      * 
      * @param synchronizationKey
      *            the transaction synchronization key we are operating on

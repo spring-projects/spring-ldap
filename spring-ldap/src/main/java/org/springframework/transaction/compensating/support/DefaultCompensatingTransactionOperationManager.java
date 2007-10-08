@@ -29,7 +29,7 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
 /**
  * Default implementation of {@link CompensatingTransactionOperationManager}.
  * Manages a stack of {@link CompensatingTransactionOperationExecutor} objects
- * and manages rollback of these in the reverse order.
+ * and performs rollback of these in the reverse order.
  * 
  * @author Mattias Arthursson
  * @since 1.2
@@ -56,8 +56,6 @@ public class DefaultCompensatingTransactionOperationManager implements
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.transaction.compensating.CompensatingTransactionOperationManager#performOperation(java.lang.Object,
      *      java.lang.String, java.lang.Object[])
      */
@@ -75,8 +73,6 @@ public class DefaultCompensatingTransactionOperationManager implements
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationManager#rollback()
      */
     public void rollback() {
@@ -94,7 +90,7 @@ public class DefaultCompensatingTransactionOperationManager implements
     }
 
     /**
-     * Get the rollback operations. Package protected for testing purposes.
+     * Get the rollback operations. Used for testing purposes.
      * 
      * @return the rollback operations.
      */
@@ -114,8 +110,6 @@ public class DefaultCompensatingTransactionOperationManager implements
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationManager#commit()
      */
     public void commit() {
@@ -131,5 +125,4 @@ public class DefaultCompensatingTransactionOperationManager implements
             }
         }
     }
-
 }

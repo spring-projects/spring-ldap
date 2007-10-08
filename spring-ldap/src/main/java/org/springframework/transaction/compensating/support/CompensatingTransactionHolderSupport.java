@@ -48,6 +48,9 @@ public abstract class CompensatingTransactionHolderSupport extends
      */
     protected abstract Object getTransactedResource();
 
+    /*
+     * @see org.springframework.transaction.support.ResourceHolderSupport#clear()
+     */
     public void clear() {
         super.clear();
         transactionOperationManager = null;
