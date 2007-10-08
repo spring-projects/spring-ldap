@@ -34,26 +34,23 @@ package org.springframework.ldap.filter;
  */
 public class OrFilter extends BinaryLogicalFilter {
 
-    private static final String PIPE_SIGN = "|";
+	private static final String PIPE_SIGN = "|";
 
-    /**
-     * Add a query to the OR expression
-     * 
-     * @param query
-     *            The query to or with the rest of the or:ed queries.
-     * @return This LdapOrQuery
-     */
-    public OrFilter or(Filter query) {
-        queryList.add(query);
-        return this;
-    }
+	/**
+	 * Add a query to the OR expression
+	 * 
+	 * @param query The query to or with the rest of the or:ed queries.
+	 * @return This LdapOrQuery
+	 */
+	public OrFilter or(Filter query) {
+		queryList.add(query);
+		return this;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.ldap.filter.BinaryLogicalFilter#getLogicalOperator()
-     */
-    protected String getLogicalOperator() {
-        return PIPE_SIGN;
-    }
+	/*
+	 * @see org.springframework.ldap.filter.BinaryLogicalFilter#getLogicalOperator()
+	 */
+	protected String getLogicalOperator() {
+		return PIPE_SIGN;
+	}
 }

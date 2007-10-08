@@ -21,8 +21,7 @@ package org.springframework.ldap.filter;
  * code:
  * 
  * <pre>
- * GreaterThanOrEqualsFilter filter = new GreaterThanOrEqualsFilter(&quot;cn&quot;,
- *         &quot;Some CN&quot;);
+ * GreaterThanOrEqualsFilter filter = new GreaterThanOrEqualsFilter(&quot;cn&quot;, &quot;Some CN&quot;);
  * System.out.println(filter.ecode());
  * </pre>
  * 
@@ -36,17 +35,20 @@ package org.springframework.ldap.filter;
  */
 public class GreaterThanOrEqualsFilter extends CompareFilter {
 
-    private static final String GREATER_THAN_OR_EQUALS = ">=";
+	private static final String GREATER_THAN_OR_EQUALS = ">=";
 
-    public GreaterThanOrEqualsFilter(String attribute, String value) {
-        super(attribute, value);
-    }
+	public GreaterThanOrEqualsFilter(String attribute, String value) {
+		super(attribute, value);
+	}
 
-    public GreaterThanOrEqualsFilter(String attribute, int value) {
-        super(attribute, value);
-    }
+	public GreaterThanOrEqualsFilter(String attribute, int value) {
+		super(attribute, value);
+	}
 
-    protected String getCompareString() {
-        return GREATER_THAN_OR_EQUALS;
-    }
+	/*
+	 * @see org.springframework.ldap.filter.CompareFilter#getCompareString()
+	 */
+	protected String getCompareString() {
+		return GREATER_THAN_OR_EQUALS;
+	}
 }

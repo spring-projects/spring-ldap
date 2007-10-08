@@ -17,7 +17,7 @@
 package org.springframework.ldap.filter;
 
 /**
- * A filter for a logical AND. E.g.:
+ * A filter for a logical AND. Example:
  * 
  * <pre>
  *     AndFilter filter = new AndFilter();
@@ -34,26 +34,24 @@ package org.springframework.ldap.filter;
  */
 public class AndFilter extends BinaryLogicalFilter {
 
-    private static final String AMPERSAND = "&";
+	private static final String AMPERSAND = "&";
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.ldap.filter.BinaryLogicalFilter#getLogicalOperator()
-     */
-    protected String getLogicalOperator() {
-        return AMPERSAND;
-    }
+	/*
+	 * @see org.springframework.ldap.filter.BinaryLogicalFilter#getLogicalOperator()
+	 */
+	protected String getLogicalOperator() {
+		return AMPERSAND;
+	}
 
-    /**
-     * Add a query to the and expression
-     * 
-     * @param query
-     *            The query to and with the rest of the and:ed queries.
-     * @return This LdapAndQuery
-     */
-    public AndFilter and(Filter query) {
-        queryList.add(query);
-        return this;
-    }
+	/**
+	 * Add a query to the AND expression.
+	 * 
+	 * @param query The expression to AND with the rest of the AND:ed
+	 * expressions.
+	 * @return This LdapAndQuery
+	 */
+	public AndFilter and(Filter query) {
+		queryList.add(query);
+		return this;
+	}
 }

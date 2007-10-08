@@ -38,41 +38,38 @@ import org.springframework.ldap.core.LdapEncoder;
  */
 public class LikeFilter extends EqualsFilter {
 
-    public LikeFilter(String attribute, String value) {
-        super(attribute, value);
-    }
+	public LikeFilter(String attribute, String value) {
+		super(attribute, value);
+	}
 
-    /**
-     * Encodes a value according to the rules for this filter.
-     * 
-     * @param value
-     *            Value to encode.
-     * @return Encoded value.
-     */
-    protected String encodeValue(String value) {
-        // just return if blank string
-        if (value == null) {
-            return "";
-        }
+	/*
+	 * @see org.springframework.ldap.filter.CompareFilter#encodeValue(java.lang.String)
+	 */
+	protected String encodeValue(String value) {
+		// just return if blank string
+		if (value == null) {
+			return "";
+		}
 
-        String[] substrings = value.split("\\*", -2);
+		String[] substrings = value.split("\\*", -2);
 
-        if (substrings.length == 1) {
-            return LdapEncoder.filterEncode(substrings[0]);
-        }
+		if (substrings.length == 1) {
+			return LdapEncoder.filterEncode(substrings[0]);
+		}
 
-        StringBuffer buff = new StringBuffer();
-        for (int i = 0; i < substrings.length; i++) {
-            buff.append(LdapEncoder.filterEncode(substrings[i]));
-            if (i < substrings.length - 1) {
-                buff.append("*");
-            } else {
-                if (substrings[i].equals("")) {
-                    continue;
-                }
-            }
-        }
+		StringBuffer buff = new StringBuffer();
+		for (int i = 0; i < substrings.length; i++) {
+			buff.append(LdapEncoder.filterEncode(substrings[i]));
+			if (i < substrings.length - 1) {
+				buff.append("*");
+			}
+			else {
+				if (substrings[i].equals("")) {
+					continue;
+				}
+			}
+		}
 
-        return buff.toString();
-    }
+		return buff.toString();
+	}
 }

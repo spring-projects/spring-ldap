@@ -24,72 +24,74 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * Abstract superclass for binary logical operations, that is &quot;and&quot;
- * and &quot;or&quot; operations.
+ * Abstract superclass for binary logical operations, that is &quot;AND&quot;
+ * and &quot;OR&quot; operations.
  * 
  * @author Mattias Arthursson
  */
 public abstract class BinaryLogicalFilter extends AbstractFilter {
 
-    protected List queryList = new LinkedList();
+	protected List queryList = new LinkedList();
 
-    /**
-     * @see org.springframework.ldap.filter.Filter#encode(java.lang.StringBuffer)
-     */
-    public StringBuffer encode(StringBuffer buff) {
-        if (queryList.size() <= 0) {
+	/*
+	 * @see org.springframework.ldap.filter.AbstractFilter#encode(java.lang.StringBuffer)
+	 */
+	public StringBuffer encode(StringBuffer buff) {
+		if (queryList.size() <= 0) {
 
-            // only output query if contains anything
-            return buff;
+			// only output query if contains anything
+			return buff;
 
-        } else if (queryList.size() == 1) {
+		}
+		else if (queryList.size() == 1) {
 
-            // don't add the &
-            Filter query = (Filter) queryList.get(0);
-            return query.encode(buff);
+			// don't add the &
+			Filter query = (Filter) queryList.get(0);
+			return query.encode(buff);
 
-        } else {
-            buff.append("(" + getLogicalOperator());
+		}
+		else {
+			buff.append("(" + getLogicalOperator());
 
-            for (Iterator i = queryList.iterator(); i.hasNext();) {
-                Filter query = (Filter) i.next();
-                buff = query.encode(buff);
-            }
+			for (Iterator i = queryList.iterator(); i.hasNext();) {
+				Filter query = (Filter) i.next();
+				buff = query.encode(buff);
+			}
 
-            buff.append(")");
+			buff.append(")");
 
-            return buff;
-        }
-    }
+			return buff;
+		}
+	}
 
-    /**
-     * Implement this in subclass to return the logical operator, for example
-     * &qout;&amp;&qout;.
-     * 
-     * @return the logical operator.
-     */
-    protected abstract String getLogicalOperator();
+	/**
+	 * Implement this in subclass to return the logical operator, for example
+	 * &qout;&amp;&qout;.
+	 * 
+	 * @return the logical operator.
+	 */
+	protected abstract String getLogicalOperator();
 
-    /**
-     * Compares each filter in turn
-     * 
-     * @see org.springframework.ldap.filter.Filter#equals(java.lang.Object)
-     */
-    public boolean equals(Object obj) {
-        if (obj instanceof BinaryLogicalFilter
-                && this.getClass() == obj.getClass()) {
-            return EqualsBuilder.reflectionEquals(this, obj);
-        } else {
-            return false;
-        }
-    }
+	/**
+	 * Compares each filter in turn.
+	 * 
+	 * @see org.springframework.ldap.filter.Filter#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj) {
+		if (obj instanceof BinaryLogicalFilter && this.getClass() == obj.getClass()) {
+			return EqualsBuilder.reflectionEquals(this, obj);
+		}
+		else {
+			return false;
+		}
+	}
 
-    /**
-     * Hashes all contained data
-     * 
-     * @see org.springframework.ldap.filter.Filter#hashCode()
-     */
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
-    }
+	/**
+	 * Hashes all contained data.
+	 * 
+	 * @see org.springframework.ldap.filter.Filter#hashCode()
+	 */
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
 }

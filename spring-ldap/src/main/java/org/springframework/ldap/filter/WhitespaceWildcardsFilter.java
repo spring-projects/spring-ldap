@@ -27,8 +27,7 @@ import org.springframework.ldap.core.LdapEncoder;
  * following code:
  * 
  * <pre>
- * WhitespaceWildcardsFilter filter = new WhitespaceWildcardsFilter(&quot;cn&quot;,
- *         &quot;Some CN&quot;);
+ * WhitespaceWildcardsFilter filter = new WhitespaceWildcardsFilter(&quot;cn&quot;, &quot;Some CN&quot;);
  * System.out.println(filter.ecode());
  * </pre>
  * 
@@ -38,47 +37,43 @@ import org.springframework.ldap.core.LdapEncoder;
  * @author Mattias Arthursson
  */
 public class WhitespaceWildcardsFilter extends EqualsFilter {
-    private static Pattern starReplacePattern = Pattern.compile("\\s+");
+	private static Pattern starReplacePattern = Pattern.compile("\\s+");
 
-    public WhitespaceWildcardsFilter(String attribute, String value) {
-        super(attribute, value);
-    }
+	public WhitespaceWildcardsFilter(String attribute, String value) {
+		super(attribute, value);
+	}
 
-    /**
-     * Encodes a value according to the rules for this filter.
-     * 
-     * @param value
-     *            Value to encode.
-     * @return Encoded value.
-     */
-    protected String encodeValue(String value) {
+	/*
+	 * @see org.springframework.ldap.filter.CompareFilter#encodeValue(java.lang.String)
+	 */
+	protected String encodeValue(String value) {
 
-        // blank string means just ONE star
-        if (StringUtils.isBlank(value)) {
-            return "*";
-        }
+		// blank string means just ONE star
+		if (StringUtils.isBlank(value)) {
+			return "*";
+		}
 
-        // trim value, we will add in stars first and last anywhay
-        value = value.trim();
+		// trim value, we will add in stars first and last anywhay
+		value = value.trim();
 
-        // filter encode so that any stars etc. are preserved
-        String filterEncoded = LdapEncoder.filterEncode(value);
+		// filter encode so that any stars etc. are preserved
+		String filterEncoded = LdapEncoder.filterEncode(value);
 
-        // Now replace all whitespace with stars
-        Matcher m = starReplacePattern.matcher(filterEncoded);
+		// Now replace all whitespace with stars
+		Matcher m = starReplacePattern.matcher(filterEncoded);
 
-        // possibly 2 longer (stars at ends)
-        StringBuffer buff = new StringBuffer(value.length() + 2);
+		// possibly 2 longer (stars at ends)
+		StringBuffer buff = new StringBuffer(value.length() + 2);
 
-        buff.append('*');
+		buff.append('*');
 
-        while (m.find()) {
-            m.appendReplacement(buff, "*");
-        }
-        m.appendTail(buff);
+		while (m.find()) {
+			m.appendReplacement(buff, "*");
+		}
+		m.appendTail(buff);
 
-        buff.append('*');
+		buff.append('*');
 
-        return buff.toString();
-    }
+		return buff.toString();
+	}
 }

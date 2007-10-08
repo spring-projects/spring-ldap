@@ -16,7 +16,6 @@
 
 package org.springframework.ldap.filter;
 
-
 /**
  * A filter for 'equals'. The following code:
  * 
@@ -26,32 +25,35 @@ package org.springframework.ldap.filter;
  * </pre>
  * 
  * would result in:
- * <pre>(cn=Some CN)</pre>
+ * 
+ * <pre>
+ * (cn=Some CN)
+ * </pre>
  * 
  * @author Adam Skogman
  */
 public class EqualsFilter extends CompareFilter {
 
-    private static final String EQUALS_SIGN = "=";
+	private static final String EQUALS_SIGN = "=";
 
-    public EqualsFilter(String attribute, String value) {
-        super(attribute, value);
-    }
+	public EqualsFilter(String attribute, String value) {
+		super(attribute, value);
+	}
 
-    /**
-     * Convenience constructor for int values.
-     * 
-     * @param attribute Name of attribute in filter.
-     * @param value The value of the attribute in the filter.
-     */
-    public EqualsFilter(String attribute, int value) {
-        super(attribute, value);
-    }
+	/**
+	 * Convenience constructor for int values.
+	 * 
+	 * @param attribute Name of attribute in filter.
+	 * @param value The value of the attribute in the filter.
+	 */
+	public EqualsFilter(String attribute, int value) {
+		super(attribute, value);
+	}
 
-    /*
-     * @see org.springframework.ldap.filter.CompareFilter#getCompareString()
-     */
-    protected String getCompareString() {
-        return EQUALS_SIGN;
-    }
+	/*
+	 * @see org.springframework.ldap.filter.CompareFilter#getCompareString()
+	 */
+	protected String getCompareString() {
+		return EQUALS_SIGN;
+	}
 }

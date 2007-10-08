@@ -35,17 +35,20 @@ package org.springframework.ldap.filter;
  */
 public class LessThanOrEqualsFilter extends CompareFilter {
 
-    private static final String LESS_THAN_OR_EQUALS = "<=";
+	private static final String LESS_THAN_OR_EQUALS = "<=";
 
-    public LessThanOrEqualsFilter(String attribute, String value) {
-        super(attribute, value);
-    }
+	public LessThanOrEqualsFilter(String attribute, String value) {
+		super(attribute, value);
+	}
 
-    public LessThanOrEqualsFilter(String attribute, int value) {
-        super(attribute, value);
-    }
+	public LessThanOrEqualsFilter(String attribute, int value) {
+		super(attribute, value);
+	}
 
-    protected String getCompareString() {
-        return LESS_THAN_OR_EQUALS;
-    }
+	/*
+	 * @see org.springframework.ldap.filter.CompareFilter#getCompareString()
+	 */
+	protected String getCompareString() {
+		return LESS_THAN_OR_EQUALS;
+	}
 }

@@ -24,35 +24,28 @@ package org.springframework.ldap.filter;
  */
 public abstract class AbstractFilter implements Filter {
 
-    protected AbstractFilter() {
-        super();
-    }
+	protected AbstractFilter() {
+		super();
+	}
 
-    /**
-     * Prints the query with LDAP encoding to a stringbuffer
-     * 
-     * @param buff
-     *            The stringbuffer
-     * @return The very same stringbuffer
-     */
-    public abstract StringBuffer encode(StringBuffer buff);
+	/*
+	 * @see org.springframework.ldap.filter.Filter#encode(java.lang.StringBuffer)
+	 */
+	public abstract StringBuffer encode(StringBuffer buff);
 
-    /**
-     * Encodes the filter to a string using the (@link #encode(StringBuffer)
-     * method.
-     * 
-     * @return The encoded filter
-     */
-    public String encode() {
-        StringBuffer buff = new StringBuffer(256);
-        buff = encode(buff);
-        return buff.toString();
-    }
+	/*
+	 * @see org.springframework.ldap.filter.Filter#encode()
+	 */
+	public String encode() {
+		StringBuffer buf = new StringBuffer(256);
+		buf = encode(buf);
+		return buf.toString();
+	}
 
-    /**
-     * @see java.lang.Object#toString()
-     */
-    public String toString() {
-        return encode();
-    }
+	/*
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return encode();
+	}
 }
