@@ -2,6 +2,7 @@ Spring LDAP CHANGELOG
 =====================
 http://www.springframework.org/ldap
 
+http://www.ietf.org/rfc/rfc1960.txt
 http://www.ietf.org/rfc/rfc2251.txt
 http://www.ietf.org/rfc/rfc2252.txt
 http://www.ietf.org/rfc/rfc2253.txt
@@ -28,6 +29,8 @@ the supplied upgrade guide for details.
     isAnonymousReadOnly
 
 * Upgraded to Spring 2.0.6 internally. Spring 1.2.x is still supported.
+
+* Reviewed all javadoc.
 
 Changes in version 1.2-RC1 (5.12.2007)
 -------------------------------------------
