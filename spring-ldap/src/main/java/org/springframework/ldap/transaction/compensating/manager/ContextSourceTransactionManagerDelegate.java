@@ -37,6 +37,7 @@ import org.springframework.transaction.compensating.support.DefaultCompensatingT
  * @author Mattias Arthursson
  * @see ContextSourceTransactionManager
  * @see ContextSourceAndDataSourceTransactionManager
+ * @since 1.2
  */
 public class ContextSourceTransactionManagerDelegate extends
         AbstractCompensatingTransactionManagerDelegate {
@@ -71,10 +72,16 @@ public class ContextSourceTransactionManagerDelegate extends
         return contextSource;
     }
 
+    /*
+     * @see org.springframework.transaction.compensating.support.AbstractCompensatingTransactionManagerDelegate#getTransactionSynchronizationKey()
+     */
     protected Object getTransactionSynchronizationKey() {
         return getContextSource();
     }
 
+    /*
+     * @see org.springframework.transaction.compensating.support.AbstractCompensatingTransactionManagerDelegate#getNewHolder()
+     */
     protected CompensatingTransactionHolderSupport getNewHolder() {
         DirContext newCtx = getContextSource().getReadOnlyContext();
         DirContextHolder contextHolder = new DirContextHolder(
@@ -84,6 +91,9 @@ public class ContextSourceTransactionManagerDelegate extends
         return contextHolder;
     }
 
+    /*
+     * @see org.springframework.transaction.compensating.support.AbstractCompensatingTransactionManagerDelegate#closeTargetResource(org.springframework.transaction.compensating.support.CompensatingTransactionHolderSupport)
+     */
     protected void closeTargetResource(
             CompensatingTransactionHolderSupport transactionHolderSupport) {
         DirContextHolder contextHolder = (DirContextHolder) transactionHolderSupport;
@@ -108,5 +118,4 @@ public class ContextSourceTransactionManagerDelegate extends
     public void setRenamingStrategy(TempEntryRenamingStrategy renamingStrategy) {
         this.renamingStrategy = renamingStrategy;
     }
-
 }

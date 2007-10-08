@@ -27,9 +27,10 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * A Transaction Manager to manage LDAP and JDBC operations within the same
  * transaction. Note that even though the same logical transaction is used, this
  * is <b>not</b> a JTA XA transaction; no two-phase commit will be performed,
- * and thus commit and rollback may result in unexpected results.
+ * and thus commit and rollback may yield unexpected results.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public class ContextSourceAndDataSourceTransactionManager extends
         DataSourceTransactionManager {
@@ -45,8 +46,6 @@ public class ContextSourceAndDataSourceTransactionManager extends
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#isExistingTransaction(java.lang.Object)
      */
     protected boolean isExistingTransaction(Object transaction) {
@@ -57,8 +56,6 @@ public class ContextSourceAndDataSourceTransactionManager extends
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doGetTransaction()
      */
     protected Object doGetTransaction() throws TransactionException {
@@ -71,8 +68,6 @@ public class ContextSourceAndDataSourceTransactionManager extends
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doBegin(java.lang.Object,
      *      org.springframework.transaction.TransactionDefinition)
      */
@@ -87,8 +82,6 @@ public class ContextSourceAndDataSourceTransactionManager extends
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doCleanupAfterCompletion(java.lang.Object)
      */
     protected void doCleanupAfterCompletion(Object transaction) {
@@ -101,8 +94,6 @@ public class ContextSourceAndDataSourceTransactionManager extends
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doCommit(org.springframework.transaction.support.DefaultTransactionStatus)
      */
     protected void doCommit(DefaultTransactionStatus status)
@@ -138,8 +129,6 @@ public class ContextSourceAndDataSourceTransactionManager extends
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doRollback(org.springframework.transaction.support.DefaultTransactionStatus)
      */
     protected void doRollback(DefaultTransactionStatus status)
@@ -191,12 +180,19 @@ public class ContextSourceAndDataSourceTransactionManager extends
         }
     }
 
+    /*
+     * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doSuspend(java.lang.Object)
+     */
     protected Object doSuspend(Object transaction) throws TransactionException {
         throw new TransactionSuspensionNotSupportedException(
                 "Transaction manager [" + getClass().getName()
                         + "] does not support transaction suspension");
     }
 
+    /*
+     * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doResume(java.lang.Object,
+     *      java.lang.Object)
+     */
     protected void doResume(Object transaction, Object suspendedResources)
             throws TransactionException {
         throw new TransactionSuspensionNotSupportedException(

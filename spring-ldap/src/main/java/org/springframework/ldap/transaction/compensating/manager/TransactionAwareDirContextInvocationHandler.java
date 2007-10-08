@@ -35,6 +35,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  * storing compensating rollback operations for them.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public class TransactionAwareDirContextInvocationHandler implements
         InvocationHandler {
@@ -62,8 +63,6 @@ public class TransactionAwareDirContextInvocationHandler implements
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
      *      java.lang.reflect.Method, java.lang.Object[])
      */
@@ -121,5 +120,4 @@ public class TransactionAwareDirContextInvocationHandler implements
             log.debug("Leaving transactional context open");
         }
     }
-
 }

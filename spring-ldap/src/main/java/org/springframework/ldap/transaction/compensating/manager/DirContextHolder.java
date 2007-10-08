@@ -28,7 +28,7 @@ import org.springframework.transaction.compensating.support.CompensatingTransact
  * for commit or rollback.
  * 
  * @author Mattias Arthursson
- * 
+ * @since 1.2
  */
 public class DirContextHolder extends CompensatingTransactionHolderSupport {
     private DirContext ctx;
@@ -65,8 +65,6 @@ public class DirContextHolder extends CompensatingTransactionHolderSupport {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.transaction.compensating.support.CompensatingTransactionHolderSupport#getTransactedResource()
      */
     protected Object getTransactedResource() {

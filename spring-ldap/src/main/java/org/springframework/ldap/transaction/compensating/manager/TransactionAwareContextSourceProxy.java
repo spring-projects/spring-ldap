@@ -27,13 +27,14 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 /**
  * A proxy for ContextSource to make sure that the returned DirContext objects
- * are aware of the surrounding transactions, making sure that the DirContext is
- * not closed during the transaction and that all modifying operations are
- * recorded, keeping track of the corresponding rollback operations. All
- * returned DirContext instances will be of the type
+ * are aware of the surrounding transactions. This makes sure that the
+ * DirContext is not closed during the transaction and that all modifying
+ * operations are recorded, keeping track of the corresponding rollback
+ * operations. All returned DirContext instances will be of the type
  * {@link TransactionAwareDirContextInvocationHandler}.
  * 
  * @author Mattias Arthursson
+ * @since 1.2
  */
 public class TransactionAwareContextSourceProxy implements ContextSource {
     private ContextSource target;
@@ -58,8 +59,6 @@ public class TransactionAwareContextSourceProxy implements ContextSource {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.ldap.core.ContextSource#getReadOnlyContext()
      */
     public DirContext getReadOnlyContext() throws NamingException {
@@ -70,7 +69,9 @@ public class TransactionAwareContextSourceProxy implements ContextSource {
             ContextSource target) {
         return (DirContext) Proxy
                 .newProxyInstance(DirContextProxy.class.getClassLoader(),
-                        new Class[] { LdapTransactionUtils.getActualTargetClass(context),
+                        new Class[] {
+                                LdapTransactionUtils
+                                        .getActualTargetClass(context),
                                 DirContextProxy.class },
                         new TransactionAwareDirContextInvocationHandler(
                                 context, target));
@@ -78,8 +79,6 @@ public class TransactionAwareContextSourceProxy implements ContextSource {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.ldap.core.ContextSource#getReadWriteContext()
      */
     public DirContext getReadWriteContext() throws NamingException {
