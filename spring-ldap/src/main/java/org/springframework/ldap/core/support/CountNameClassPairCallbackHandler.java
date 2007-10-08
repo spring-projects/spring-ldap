@@ -20,7 +20,7 @@ import javax.naming.NameClassPair;
 import org.springframework.ldap.core.NameClassPairCallbackHandler;
 
 /**
- * A NameClassPairCallbackHandler for counting all returned entries.
+ * A {@link NameClassPairCallbackHandler} for counting all returned entries.
  * 
  * @author Mattias Arthursson
  * 

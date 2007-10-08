@@ -26,7 +26,7 @@ import javax.naming.directory.DirContext;
 import org.springframework.ldap.core.DirContextProcessor;
 
 /**
- * Manages a sequence of DirContextProcessor instances. Applies
+ * Manages a sequence of {@link DirContextProcessor} instances. Applies
  * {@link #preProcess(DirContext)} and {@link #postProcess(DirContext)}
  * respectively in sequence on the managed objects.
  * 
@@ -48,7 +48,7 @@ public class AggregateDirContextProcessor implements DirContextProcessor {
     }
 
     /**
-     * Get the list of managed DirContextProcessors.
+     * Get the list of managed {@link DirContextProcessor} instances.
      * 
      * @return the managed list of {@link DirContextProcessor} instances.
      */

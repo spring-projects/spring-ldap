@@ -34,18 +34,19 @@ import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.support.LdapUtils;
 
 /**
- * Abstract implementation of the ContextSource interface. By default, returns
- * an authenticated DirContext implementation for both read-only and read-write
- * operations. To have an anonymous environment created for read-only
- * operations, set the anonymousReadOnly property to <code>true</code>.
+ * Abstract implementation of the {@link ContextSource} interface. By default,
+ * returns an authenticated
+ * <code>DirContext<code> implementation for both read-only and
+ * read-write operations. To have an anonymous environment created for read-only
+ * operations, set the <code>anonymousReadOnly</code> property to <code>true</code>.
  * <p>
  * Implementing classes need to implement
- * {@link #getDirContextInstance(Hashtable)} to create a DirContext instance of
+ * {@link #getDirContextInstance(Hashtable)} to create a <code>DirContext</code> instance of
  * the desired type.
  * <p>
- * If an AuthenticationSource is set, this will be used for getting user name
+ * If an {@link AuthenticationSource} is set, this will be used for getting user principal
  * and password for each new connection, otherwise a default one will be created
- * using the specified userDn and password.
+ * using the specified <code>userDn<code> and <code>password</code>.
  * <p>
  * <b>Note:</b> When using implementations of this class outside of a Spring
  * Context it is necessary to call {@link #afterPropertiesSet()} when all
@@ -97,6 +98,11 @@ public abstract class AbstractContextSource implements ContextSource,
 
     private static final String JDK_142 = "1.4.2";
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.ldap.core.ContextSource#getReadOnlyContext()
+     */
     public DirContext getReadOnlyContext() {
         if (!anonymousReadOnly) {
             return createContext(getAuthenticatedEnv());
@@ -105,14 +111,18 @@ public abstract class AbstractContextSource implements ContextSource,
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.ldap.core.ContextSource#getReadWriteContext()
+     */
     public DirContext getReadWriteContext() {
         return createContext(getAuthenticatedEnv());
     }
 
     /**
      * Default implementation of setting the environment up to be authenticated.
-     * Override in subclass if necessary. This is needed for Active Directory
-     * connectivity, for example.
+     * Override in subclass if necessary.
      * 
      * @param env
      *            the environment to modify.
@@ -143,7 +153,7 @@ public abstract class AbstractContextSource implements ContextSource,
 
     /**
      * Assemble a valid url String from all registered urls to add as
-     * PROVIDER_URL to the environment.
+     * <code>PROVIDER_URL</code> to the environment.
      * 
      * @param ldapUrls
      *            all individual url Strings.
@@ -166,8 +176,8 @@ public abstract class AbstractContextSource implements ContextSource,
 
     /**
      * Set the base suffix from which all operations should origin. If a base
-     * suffix is set, you will not have to (and, indeed, should not) specify the
-     * full distinguished names in the operations performed.
+     * suffix is set, you will not have to (and, indeed, must not) specify the
+     * full distinguished names in any operations performed.
      * 
      * @param base
      *            the base suffix.
@@ -178,8 +188,8 @@ public abstract class AbstractContextSource implements ContextSource,
 
     /**
      * Get the base suffix from which all operations should originate. If a base
-     * suffix is set, you will not have to (and, indeed, should not) specify the
-     * full distinguished names in the operations performed.
+     * suffix is set, you will not have to (and, indeed, must not) specify the
+     * full distinguished names in any operations performed.
      * 
      * @return the base suffix
      */
@@ -191,7 +201,8 @@ public abstract class AbstractContextSource implements ContextSource,
      * Create a DirContext using the supplied environment.
      * 
      * @param environment
-     *            the Ldap environment to use when creating the DirContext.
+     *            the Ldap environment to use when creating the
+     *            <code>DirContext</code>.
      * @return a new DirContext implpementation initialized with the supplied
      *         environment.
      */
@@ -387,7 +398,13 @@ public abstract class AbstractContextSource implements ContextSource,
     }
 
     /**
-     * Set whether the pooling flag should be set. Default is true.
+     * Set whether the pooling flag should be set. Default is true. Note that
+     * since LDAP pooling is system wide, full configuration of this needs be
+     * done using system parameters as specified in the LDAP/JNDI documentation.
+     * Also note, that pooling is done on user dn basis, i.e. each individually
+     * authenticated connection will be pooled separately. This means that LDAP
+     * pooling will be most efficient using anonymous connections or connections
+     * authenticated using one single system user.
      * 
      * @param pooled
      *            whether Contexts should be pooled.
@@ -439,7 +456,7 @@ public abstract class AbstractContextSource implements ContextSource,
      * credentials.
      * 
      * @param authenticationSource
-     *            the AuthenticationSource that will provide user info.
+     *            the {@link AuthenticationSource} that will provide user info.
      */
     public void setAuthenticationSource(
             AuthenticationSource authenticationSource) {
@@ -449,7 +466,7 @@ public abstract class AbstractContextSource implements ContextSource,
     /**
      * Get the authentication source.
      * 
-     * @return the AuthenticationSource that will provide user info.
+     * @return the {@link AuthenticationSource} that will provide user info.
      */
     public AuthenticationSource getAuthenticationSource() {
         return authenticationSource;
@@ -457,15 +474,15 @@ public abstract class AbstractContextSource implements ContextSource,
 
     /**
      * Set whether environment properties should be cached between requsts for
-     * anonymous environment. Default is true; setting this property to false
-     * causes the environment Hashmap to be rebuilt from the current property
-     * settings of this instance between each request for an anonymous
-     * environment.
+     * anonymous environment. Default is <code>true</code>; setting this
+     * property to <code>false</code> causes the environment Hashmap to be
+     * rebuilt from the current property settings of this instance between each
+     * request for an anonymous environment.
      * 
      * @param cacheEnvironmentProperties
-     *            true causes that the anonymous environment properties should
-     *            be cached, false causes the Hashmap to be rebuilt for each
-     *            request.
+     *            <code>true</code> causes that the anonymous environment
+     *            properties should be cached, <code>false</code> causes the
+     *            Hashmap to be rebuilt for each request.
      */
     public void setCacheEnvironmentProperties(boolean cacheEnvironmentProperties) {
         this.cacheEnvironmentProperties = cacheEnvironmentProperties;

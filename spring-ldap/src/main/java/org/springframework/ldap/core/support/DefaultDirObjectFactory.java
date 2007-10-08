@@ -26,10 +26,9 @@ import javax.naming.spi.DirObjectFactory;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 
-
 /**
  * Default implementation of the DirObjectFactory interface. Creates a
- * DirContextAdapter from the supplied arguments.
+ * {@link DirContextAdapter} from the supplied arguments.
  * 
  * @author Mattias Arthursson
  */

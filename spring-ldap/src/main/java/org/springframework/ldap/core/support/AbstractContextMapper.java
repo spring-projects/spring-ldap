@@ -31,10 +31,13 @@ import org.springframework.ldap.core.DirContextOperations;
  */
 public abstract class AbstractContextMapper implements ContextMapper {
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      * 
-     * @see org.springframework.ldap.core.ContextMapper#mapFromContext(java.lang.Object)
+     * @throws ClassCastException
+     *             if a custom <code>DirObjectFactory</code> implementation is
+     *             used, causing the objects passed in be anything else than
+     *             {@link DirContextOperations} instances.
      */
     public final Object mapFromContext(Object ctx) {
         return doMapFromContext((DirContextOperations) ctx);
