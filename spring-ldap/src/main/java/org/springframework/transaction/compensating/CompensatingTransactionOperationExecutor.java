@@ -27,11 +27,12 @@ package org.springframework.transaction.compensating;
  * {@link #performOperation()} method of a
  * CompensatingTransactionOperationExecutor implementation would actually delete
  * the entry, leaving it for the {@link #rollback()} method to recreate it using
- * data from the original entry. In an LDAP system for instance this will not be
- * possible, because it might not be possible to retrieve all the stored data
- * from the original entry. In that case, the {@link #performOperation()} method
- * will instead move the entry to a temporary location and leave it for the
- * {@link #commit()} method to actually remove the entry.
+ * data from the original entry. However, this will not always be possible. In
+ * an LDAP system, for instance, it might not be possible to retrieve all the
+ * stored data from the original entry. In that case, the
+ * {@link #performOperation()} method will instead move the entry to a temporary
+ * location and leave it for the {@link #commit()} method to actually remove the
+ * entry.
  * 
  * @author Mattias Arthursson
  * @since 1.2
@@ -45,9 +46,9 @@ public interface CompensatingTransactionOperationExecutor {
     public void rollback();
 
     /**
-     * Commit the operation. In many cases this will not require any work at all
-     * to be performed. However in some cases there will be interesting stuff to
-     * do. See class description for elaboration on this.
+     * Commit the operation. In many cases, this will not require any work at
+     * all to be performed. However, in some cases there will be interesting
+     * stuff to do. See class description for elaboration on this.
      */
     public void commit();
 

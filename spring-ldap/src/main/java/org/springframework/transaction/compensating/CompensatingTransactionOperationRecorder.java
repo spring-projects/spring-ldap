@@ -19,8 +19,8 @@ package org.springframework.transaction.compensating;
  * An implementation of this interface is responsible for recording data and
  * supplying a {@link CompensatingTransactionOperationExecutor} to be invoked
  * for execution and compensating transaction management of the operation.
- * Recording of an operation should not fail (throwing an Exception), but rather
- * log the result.
+ * Recording of an operation should not fail (throwing an Exception), but
+ * instead log the result.
  * 
  * @author Mattias Arthursson
  * @since 1.2

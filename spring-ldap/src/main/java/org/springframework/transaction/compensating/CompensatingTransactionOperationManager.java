@@ -17,7 +17,7 @@ package org.springframework.transaction.compensating;
 
 /**
  * A CompensatingTransactionOperationManager implementation records and performs
- * operations that are to be performed within a compensating transaction and
+ * operations that are to be performed within a compensating transaction. It
  * keeps track of compensating actions necessary for rolling back each
  * individual operation.
  * 
@@ -42,7 +42,7 @@ public interface CompensatingTransactionOperationManager {
             Object[] args);
 
     /**
-     * Rollback all recorded operations, by performing each of the recorded
+     * Rollback all recorded operations by performing each of the recorded
      * rollback operations.
      */
     public void rollback();
