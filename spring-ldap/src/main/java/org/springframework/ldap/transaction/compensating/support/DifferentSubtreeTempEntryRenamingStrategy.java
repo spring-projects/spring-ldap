@@ -28,10 +28,10 @@ import org.springframework.ldap.transaction.compensating.TempEntryRenamingStrate
  * A {@link TempEntryRenamingStrategy} that moves the entry to a different
  * subtree than the original entry. The specified subtree needs to be present in
  * the LDAP tree; it will not be created and operations using this strategy will
- * fail if it is not in place. However, this strategy is preferrable to
- * {@link DefaultTempEntryRenamingStrategy}, as it makes it possible to have
- * searches have the expected result even though the temporary entry still exits
- * until the end of the transaction.
+ * fail if the destination is not in place. However, this strategy is preferable
+ * to {@link DefaultTempEntryRenamingStrategy}, as it makes searches have the
+ * expected result even though the temporary entry still exists during the
+ * transaction.
  * <p>
  * Example: If the specified <code>subtreeNode</code> is
  * <code>ou=tempEntries</code> and the <code>originalName</code> is
@@ -68,8 +68,6 @@ public class DifferentSubtreeTempEntryRenamingStrategy implements
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.ldap.support.transaction.TempEntryRenamingStrategy#getTemporaryName(javax.naming.Name)
      */
     public Name getTemporaryName(Name originalName) {

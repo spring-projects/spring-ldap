@@ -26,18 +26,18 @@ import org.springframework.ldap.transaction.compensating.TempEntryRenamingStrate
 
 /**
  * Default implementation of {@link TempEntryRenamingStrategy}. This
- * implementation simply adds "_temp" to the leftmost (least siginificant part)
- * of the name, e.g.:<br/>
+ * implementation simply adds "_temp" to the leftmost (least significant part)
+ * of the name. For example:
  * 
- * <code>
+ * <pre>
  * cn=john doe, ou=company1, c=SE
- * </code>
+ * </pre>
  * 
- * becomes
+ * becomes:
  * 
- * <code>
+ * <pre>
  * cn=john doe_temp, ou=company1, c=SE
- * </code>.
+ * </pre>
  * <p>
  * Note that using this strategy means that the entry remains in virtually the
  * same location as where it originally resided. This means that searches later
@@ -58,8 +58,6 @@ public class DefaultTempEntryRenamingStrategy implements
     private String tempSuffix = DEFAULT_TEMP_SUFFIX;
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.springframework.ldap.support.transaction.TempEntryRenamingStrategy#getTemporaryName(javax.naming.Name)
      */
     public Name getTemporaryName(Name originalName) {
