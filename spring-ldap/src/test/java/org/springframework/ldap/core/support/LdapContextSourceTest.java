@@ -16,6 +16,7 @@
 
 package org.springframework.ldap.core.support;
 
+import java.util.HashMap;
 import java.util.Hashtable;
 
 import javax.naming.Context;
@@ -37,265 +38,278 @@ import com.sun.jndi.ldap.ctl.ResponseControlFactory;
  */
 public class LdapContextSourceTest extends TestCase {
 
-    private LdapContextSource tested;
+	private LdapContextSource tested;
 
-    protected void setUp() throws Exception {
-        tested = new LdapContextSource();
-    }
+	protected void setUp() throws Exception {
+		tested = new LdapContextSource();
+	}
 
-    protected void tearDown() throws Exception {
-        tested = null;
-    }
+	protected void tearDown() throws Exception {
+		tested = null;
+	}
 
-    public void testAfterPropertiesSet_NoUrl() throws Exception {
-        try {
-            tested.afterPropertiesSet();
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertTrue(true);
-        }
-    }
+	public void testAfterPropertiesSet_NoUrl() throws Exception {
+		try {
+			tested.afterPropertiesSet();
+			fail("IllegalArgumentException expected");
+		}
+		catch (IllegalArgumentException expected) {
+			assertTrue(true);
+		}
+	}
 
-    public void testAfterPropertiesSet_BaseAndTooEarlyJdk() throws Exception {
-        tested = new LdapContextSource() {
-            String getJdkVersion() {
-                return "1.4.1_03";
-            }
-        };
+	public void testAfterPropertiesSet_BaseAndTooEarlyJdk() throws Exception {
+		tested = new LdapContextSource() {
+			String getJdkVersion() {
+				return "1.4.1_03";
+			}
+		};
 
-        tested.setUrl("http://ldap.example.com:389");
-        tested.setBase("dc=jayway,dc=se");
-        try {
-            tested.afterPropertiesSet();
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertTrue(true);
-        }
-    }
+		tested.setUrl("http://ldap.example.com:389");
+		tested.setBase("dc=jayway,dc=se");
+		try {
+			tested.afterPropertiesSet();
+			fail("IllegalArgumentException expected");
+		}
+		catch (IllegalArgumentException expected) {
+			assertTrue(true);
+		}
+	}
 
-    public void testGetAnonymousEnv() throws Exception {
-        tested.setBase("dc=example,dc=se");
-        tested.setUrl("ldap://ldap.example.com:389");
-        tested.setPooled(true);
-        tested.setUserDn("cn=Some User");
-        tested.setPassword("secret");
-        tested.afterPropertiesSet();
-        Hashtable env = tested.getAnonymousEnv();
-        assertEquals("ldap://ldap.example.com:389/dc=example,dc=se", env
-                .get(Context.PROVIDER_URL));
-        assertEquals("true", env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
-        assertNull(env.get(Context.SECURITY_PRINCIPAL));
-        assertNull(env.get(Context.SECURITY_CREDENTIALS));
+	public void testGetAnonymousEnv() throws Exception {
+		tested.setBase("dc=example,dc=se");
+		tested.setUrl("ldap://ldap.example.com:389");
+		tested.setPooled(true);
+		tested.setUserDn("cn=Some User");
+		tested.setPassword("secret");
+		tested.afterPropertiesSet();
+		Hashtable env = tested.getAnonymousEnv();
+		assertEquals("ldap://ldap.example.com:389/dc=example,dc=se", env.get(Context.PROVIDER_URL));
+		assertEquals("true", env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
+		assertNull(env.get(Context.SECURITY_PRINCIPAL));
+		assertNull(env.get(Context.SECURITY_CREDENTIALS));
 
-        // check that base was added to environment
-        assertEquals(new DistinguishedName("dc=example,dc=se"), env
-                .get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
+		// check that base was added to environment
+		assertEquals(new DistinguishedName("dc=example,dc=se"), env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
 
-        // Verify that changing values does not change the environment values.
-        tested.setBase("dc=other,dc=se");
-        tested.setUrl("ldap://ldap2.example.com:389");
-        tested.setPooled(false);
+		// Verify that changing values does not change the environment values.
+		tested.setBase("dc=other,dc=se");
+		tested.setUrl("ldap://ldap2.example.com:389");
+		tested.setPooled(false);
 
-        env = tested.getAnonymousEnv();
-        assertEquals("ldap://ldap.example.com:389/dc=example,dc=se", env
-                .get(Context.PROVIDER_URL));
-        assertEquals("true", env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
-        assertNull(env.get(Context.SECURITY_PRINCIPAL));
-        assertNull(env.get(Context.SECURITY_CREDENTIALS));
+		env = tested.getAnonymousEnv();
+		assertEquals("ldap://ldap.example.com:389/dc=example,dc=se", env.get(Context.PROVIDER_URL));
+		assertEquals("true", env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
+		assertNull(env.get(Context.SECURITY_PRINCIPAL));
+		assertNull(env.get(Context.SECURITY_CREDENTIALS));
 
-        assertEquals(new DistinguishedName("dc=example,dc=se"), env
-                .get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
-    }
+		assertEquals(new DistinguishedName("dc=example,dc=se"), env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
+	}
 
-    public void testGetAnonymousEnvWithNoBaseSet() throws Exception {
-        tested.setUrl("ldap://ldap.example.com:389");
-        tested.afterPropertiesSet();
-        Hashtable env = tested.getAnonymousEnv();
-        assertEquals("ldap://ldap.example.com:389", env
-                .get(Context.PROVIDER_URL));
+	public void testGetAnonymousEnvWithNoBaseSet() throws Exception {
+		tested.setUrl("ldap://ldap.example.com:389");
+		tested.afterPropertiesSet();
+		Hashtable env = tested.getAnonymousEnv();
+		assertEquals("ldap://ldap.example.com:389", env.get(Context.PROVIDER_URL));
 
-        // check that base was not added to environment
-        assertNull(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
-    }
+		// check that base was not added to environment
+		assertNull(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
+	}
 
-    public void testGetAnonymousEnvWithEmptyBaseSet() throws Exception {
-        tested.setUrl("ldap://ldap.example.com:389");
-        tested.setBase(null);
-        tested.afterPropertiesSet();
-        Hashtable env = tested.getAnonymousEnv();
-        assertEquals("ldap://ldap.example.com:389", env
-                .get(Context.PROVIDER_URL));
+	public void testGetAnonymousEnvWithBaseEnvironment() throws Exception {
+		tested.setUrl("ldap://ldap.example.com:389");
+		HashMap map = new HashMap();
+		map.put(LdapContextSource.SUN_LDAP_POOLING_FLAG, "true");
+		tested.setBaseEnvironmentProperties(map);
+		tested.afterPropertiesSet();
+		Hashtable env = tested.getAnonymousEnv();
+		assertEquals("ldap://ldap.example.com:389", env.get(Context.PROVIDER_URL));
+		assertEquals("true", env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
+	}
 
-        // check that base was not added to environment
-        assertNull(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
-    }
+	public void testGetAnonymousEnvWithPoolingInBaseEnvironmentAndPoolingOff() throws Exception {
+		tested.setUrl("ldap://ldap.example.com:389");
+		HashMap map = new HashMap();
+		map.put(LdapContextSource.SUN_LDAP_POOLING_FLAG, "true");
+		tested.setBaseEnvironmentProperties(map);
+		tested.setPooled(false);
+		tested.afterPropertiesSet();
+		Hashtable env = tested.getAnonymousEnv();
+		assertEquals("ldap://ldap.example.com:389", env.get(Context.PROVIDER_URL));
+		assertNull(env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
+	}
 
-    public void testOldJdkWithNoBaseSetShouldWork() throws Exception {
-        tested = new LdapContextSource() {
-            String getJdkVersion() {
-                return "1.3";
-            }
-        };
-        tested.setUrl("ldap://ldap.example.com:389");
-        tested.afterPropertiesSet();
+	public void testGetAnonymousEnvWithEmptyBaseSet() throws Exception {
+		tested.setUrl("ldap://ldap.example.com:389");
+		tested.setBase(null);
+		tested.afterPropertiesSet();
+		Hashtable env = tested.getAnonymousEnv();
+		assertEquals("ldap://ldap.example.com:389", env.get(Context.PROVIDER_URL));
 
-        // check that base was not added to environment
-        Hashtable env = tested.getAnonymousEnv();
-        assertNull(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
-    }
+		// check that base was not added to environment
+		assertNull(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
+	}
 
-    public void testOldJdkWithBaseSetShouldNotWork() throws Exception {
-        tested = new LdapContextSource() {
-            String getJdkVersion() {
-                return "1.3";
-            }
-        };
-        tested.setUrl("ldap://ldap.example.com:389");
-        tested.setBase("dc=example,dc=com");
-        try {
-            tested.afterPropertiesSet();
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertTrue(true);
-        }
-    }
+	public void testOldJdkWithNoBaseSetShouldWork() throws Exception {
+		tested = new LdapContextSource() {
+			String getJdkVersion() {
+				return "1.3";
+			}
+		};
+		tested.setUrl("ldap://ldap.example.com:389");
+		tested.afterPropertiesSet();
 
-    public void testOldJdkWithBaseSetToEmptyPathShouldWork() throws Exception {
-        tested = new LdapContextSource() {
-            String getJdkVersion() {
-                return "1.3";
-            }
-        };
-        tested.setUrl("ldap://ldap.example.com:389");
-        tested.setBase(null);
-        tested.afterPropertiesSet();
-        
-        // check that base was not added to environment
-        Hashtable env = tested.getAnonymousEnv();
-        assertNull(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
-    }
+		// check that base was not added to environment
+		Hashtable env = tested.getAnonymousEnv();
+		assertNull(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
+	}
 
-    public void testGetAuthenticatedEnv() throws Exception {
-        tested.setBase("dc=example,dc=se");
-        tested.setUrl("ldap://ldap.example.com:389");
-        tested.setPooled(true);
-        tested.setUserDn("cn=Some User");
-        tested.setPassword("secret");
-        tested.afterPropertiesSet();
+	public void testOldJdkWithBaseSetShouldNotWork() throws Exception {
+		tested = new LdapContextSource() {
+			String getJdkVersion() {
+				return "1.3";
+			}
+		};
+		tested.setUrl("ldap://ldap.example.com:389");
+		tested.setBase("dc=example,dc=com");
+		try {
+			tested.afterPropertiesSet();
+			fail("IllegalArgumentException expected");
+		}
+		catch (IllegalArgumentException expected) {
+			assertTrue(true);
+		}
+	}
 
-        Hashtable env = tested.getAuthenticatedEnv();
-        assertEquals("ldap://ldap.example.com:389/dc=example,dc=se", env
-                .get(Context.PROVIDER_URL));
-        assertEquals("true", env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
-        assertEquals("cn=Some User", env.get(Context.SECURITY_PRINCIPAL));
-        assertEquals("secret", env.get(Context.SECURITY_CREDENTIALS));
+	public void testOldJdkWithBaseSetToEmptyPathShouldWork() throws Exception {
+		tested = new LdapContextSource() {
+			String getJdkVersion() {
+				return "1.3";
+			}
+		};
+		tested.setUrl("ldap://ldap.example.com:389");
+		tested.setBase(null);
+		tested.afterPropertiesSet();
 
-        // check that base was added to environment
-        assertEquals(new DistinguishedName("dc=example,dc=se"), env
-                .get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
-    }
+		// check that base was not added to environment
+		Hashtable env = tested.getAnonymousEnv();
+		assertNull(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
+	}
 
-    public void testGetAuthenticatedEnv_DummyAuthenticationProvider()
-            throws Exception {
-        tested.setBase("dc=example,dc=se");
-        tested.setUrl("ldap://ldap.example.com:389");
-        tested.setPooled(true);
-        DummyAuthenticationProvider authenticationProvider = new DummyAuthenticationProvider();
-        tested.setAuthenticationSource(authenticationProvider);
-        authenticationProvider.setPrincipal("cn=Some User");
-        authenticationProvider.setCredentials("secret");
-        tested.afterPropertiesSet();
+	public void testGetAuthenticatedEnv() throws Exception {
+		tested.setBase("dc=example,dc=se");
+		tested.setUrl("ldap://ldap.example.com:389");
+		tested.setPooled(true);
+		tested.setUserDn("cn=Some User");
+		tested.setPassword("secret");
+		tested.afterPropertiesSet();
 
-        Hashtable env = tested.getAuthenticatedEnv();
-        assertEquals("ldap://ldap.example.com:389/dc=example,dc=se", env
-                .get(Context.PROVIDER_URL));
-        assertEquals("true", env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
-        assertEquals("cn=Some User", env.get(Context.SECURITY_PRINCIPAL));
-        assertEquals("secret", env.get(Context.SECURITY_CREDENTIALS));
-    }
+		Hashtable env = tested.getAuthenticatedEnv();
+		assertEquals("ldap://ldap.example.com:389/dc=example,dc=se", env.get(Context.PROVIDER_URL));
+		assertEquals("true", env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
+		assertEquals("cn=Some User", env.get(Context.SECURITY_PRINCIPAL));
+		assertEquals("secret", env.get(Context.SECURITY_CREDENTIALS));
 
-    public void testGetAuthenticatedEnv_DummyAuthenticationProvider_Changed()
-            throws Exception {
-        tested.setBase("dc=example,dc=se");
-        tested.setUrl("ldap://ldap.example.com:389");
-        tested.setPooled(true);
-        DummyAuthenticationProvider authenticationProvider = new DummyAuthenticationProvider();
-        tested.setAuthenticationSource(authenticationProvider);
-        authenticationProvider.setPrincipal("cn=Some User");
-        authenticationProvider.setCredentials("secret");
-        tested.afterPropertiesSet();
+		// check that base was added to environment
+		assertEquals(new DistinguishedName("dc=example,dc=se"), env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
+	}
 
-        authenticationProvider.setPrincipal("cn=Some Other User");
-        authenticationProvider.setCredentials("other secret");
+	public void testGetAuthenticatedEnv_DummyAuthenticationProvider() throws Exception {
+		tested.setBase("dc=example,dc=se");
+		tested.setUrl("ldap://ldap.example.com:389");
+		tested.setPooled(true);
+		DummyAuthenticationProvider authenticationProvider = new DummyAuthenticationProvider();
+		tested.setAuthenticationSource(authenticationProvider);
+		authenticationProvider.setPrincipal("cn=Some User");
+		authenticationProvider.setCredentials("secret");
+		tested.afterPropertiesSet();
 
-        Hashtable env = tested.getAuthenticatedEnv();
-        assertEquals("cn=Some Other User", env.get(Context.SECURITY_PRINCIPAL));
-        assertEquals("other secret", env.get(Context.SECURITY_CREDENTIALS));
-    }
+		Hashtable env = tested.getAuthenticatedEnv();
+		assertEquals("ldap://ldap.example.com:389/dc=example,dc=se", env.get(Context.PROVIDER_URL));
+		assertEquals("true", env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
+		assertEquals("cn=Some User", env.get(Context.SECURITY_PRINCIPAL));
+		assertEquals("secret", env.get(Context.SECURITY_CREDENTIALS));
+	}
 
-    public void testGetAnonymousEnvWhenCacheIsOff() throws Exception {
-        tested.setBase("dc=example,dc=se");
-        tested.setUrl("ldap://ldap.example.com:389");
-        tested.setPooled(true);
-        tested.setUserDn("cn=Some User");
-        tested.setPassword("secret");
-        tested.setCacheEnvironmentProperties(false);
-        tested.afterPropertiesSet();
-        Hashtable env = tested.getAnonymousEnv();
-        assertEquals("ldap://ldap.example.com:389/dc=example,dc=se", env
-                .get(Context.PROVIDER_URL));
-        assertEquals("true", env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
-        assertNull(env.get(Context.SECURITY_PRINCIPAL));
-        assertNull(env.get(Context.SECURITY_CREDENTIALS));
+	public void testGetAuthenticatedEnv_DummyAuthenticationProvider_Changed() throws Exception {
+		tested.setBase("dc=example,dc=se");
+		tested.setUrl("ldap://ldap.example.com:389");
+		tested.setPooled(true);
+		DummyAuthenticationProvider authenticationProvider = new DummyAuthenticationProvider();
+		tested.setAuthenticationSource(authenticationProvider);
+		authenticationProvider.setPrincipal("cn=Some User");
+		authenticationProvider.setCredentials("secret");
+		tested.afterPropertiesSet();
 
-        tested.setUrl("ldap://ldap2.example.com:389");
-        env = tested.getAnonymousEnv();
-        assertEquals("ldap://ldap2.example.com:389/dc=example,dc=se", env
-                .get(Context.PROVIDER_URL));
-    }
+		authenticationProvider.setPrincipal("cn=Some Other User");
+		authenticationProvider.setCredentials("other secret");
 
-    public void testSetResponseControlFactoryToNull() throws Exception {
-        tested.setResponseControlFactory(null);
-        assertNotNull(tested.getResponseControlFactory());
-        assertEquals(ResponseControlFactory.class, tested
-                .getResponseControlFactory());
-    }
+		Hashtable env = tested.getAuthenticatedEnv();
+		assertEquals("cn=Some Other User", env.get(Context.SECURITY_PRINCIPAL));
+		assertEquals("other secret", env.get(Context.SECURITY_CREDENTIALS));
+	}
 
-    public void testSetValidResponseControlFactory() throws Exception {
-        Class validClass = ControlFactory.class;
-        tested.setResponseControlFactory(validClass);
-        assertEquals(validClass, tested.getResponseControlFactory());
-    }
+	public void testGetAnonymousEnvWhenCacheIsOff() throws Exception {
+		tested.setBase("dc=example,dc=se");
+		tested.setUrl("ldap://ldap.example.com:389");
+		tested.setPooled(true);
+		tested.setUserDn("cn=Some User");
+		tested.setPassword("secret");
+		tested.setCacheEnvironmentProperties(false);
+		tested.afterPropertiesSet();
+		Hashtable env = tested.getAnonymousEnv();
+		assertEquals("ldap://ldap.example.com:389/dc=example,dc=se", env.get(Context.PROVIDER_URL));
+		assertEquals("true", env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
+		assertNull(env.get(Context.SECURITY_PRINCIPAL));
+		assertNull(env.get(Context.SECURITY_CREDENTIALS));
 
-    public void testSetInvalidResponseControlFactory() throws Exception {
-        try {
-            Class invalidClass = Control.class;
-            tested.setResponseControlFactory(invalidClass);
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertTrue(true);
-        }
-    }
+		tested.setUrl("ldap://ldap2.example.com:389");
+		env = tested.getAnonymousEnv();
+		assertEquals("ldap://ldap2.example.com:389/dc=example,dc=se", env.get(Context.PROVIDER_URL));
+	}
 
-    private class DummyAuthenticationProvider implements AuthenticationSource {
-        private String principal;
+	public void testSetResponseControlFactoryToNull() throws Exception {
+		tested.setResponseControlFactory(null);
+		assertNotNull(tested.getResponseControlFactory());
+		assertEquals(ResponseControlFactory.class, tested.getResponseControlFactory());
+	}
 
-        private String credentials;
+	public void testSetValidResponseControlFactory() throws Exception {
+		Class validClass = ControlFactory.class;
+		tested.setResponseControlFactory(validClass);
+		assertEquals(validClass, tested.getResponseControlFactory());
+	}
 
-        public void setCredentials(String credentials) {
-            this.credentials = credentials;
-        }
+	public void testSetInvalidResponseControlFactory() throws Exception {
+		try {
+			Class invalidClass = Control.class;
+			tested.setResponseControlFactory(invalidClass);
+			fail("IllegalArgumentException expected");
+		}
+		catch (IllegalArgumentException expected) {
+			assertTrue(true);
+		}
+	}
 
-        public void setPrincipal(String principal) {
-            this.principal = principal;
-        }
+	private class DummyAuthenticationProvider implements AuthenticationSource {
+		private String principal;
 
-        public String getPrincipal() {
-            return principal;
-        }
+		private String credentials;
 
-        public String getCredentials() {
-            return credentials;
-        }
-    }
+		public void setCredentials(String credentials) {
+			this.credentials = credentials;
+		}
+
+		public void setPrincipal(String principal) {
+			this.principal = principal;
+		}
+
+		public String getPrincipal() {
+			return principal;
+		}
+
+		public String getCredentials() {
+			return credentials;
+		}
+	}
 }
