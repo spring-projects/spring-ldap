@@ -10,17 +10,16 @@
     a thin layer of Java 5 functionality on top of Spring LDAP.</para>
     
     <para>The <literal>SimpleLdapTemplate</literal> class adds search and lookup methods that take a 
-    <literal>ParametrizedContextMapper</literal>, adding generics support to these methods.
-    The <literal>SimpleLdapTemplate</literal> also adds a couple of shortcuts that may be useful when
-    working with <literal>DirContextAdapter</literal>, particularly when it comes to updates.</para>
+    <literal>ParameterizedContextMapper</literal>, adding generics support to these methods.</para>
     
     <para><literal>ParametrizedContextMapper</literal> is a typed version of <literal>ContextMapper</literal>,
     which simplifies working with searches and lookups:
-    <informalexample>
+    <example>
+    <title>Using <literal>ParameterizedContextMapper</literal></title>
     <programlisting>public List&lt;Person&gt; getAllPersons(){
     return simpleLdapTemplate.search("", "(objectclass=person)",
-               new ParameterizedContextMapper&lt;Person&gt;() {
-                   public Person mapFromContext(Object ctx) {
+               new <emphasis role="bold">ParameterizedContextMapper&lt;Person&gt;</emphasis>() {
+                   public <emphasis role="bold">Person</emphasis> mapFromContext(Object ctx) {
                        DirContextAdapter adapter = (DirContextAdapter) ctx;
                        Person person = new Person();
                        // Fill the domain object with data from the DirContextAdapter
@@ -30,25 +29,7 @@
                };
 }
     </programlisting>
-    </informalexample>
-    </para>
-    <para>Updates are slightly simplified using the convenience wrapper methods in <literal>SimpleLdapTemplate</literal>.
-    The lookup method automatically casts to a <literal>DirContextOperations</literal>, and the <literal>modifyAttributes</literal>
-    method automatically gets the necessary information to do the update from the supplied <literal>DirContextOperations</literal>
-    instance:
-    <informalexample>
-    <programlisting>public void update(Person person){
-    DirContextOperations ctx = simpleLdapTemplate.lookupContext(person.getDn());
-  
-    //Update the DirContextOperation instance with data from the domain object
-    ctx.setAttributeValue("description", person.getDescription());
-    ctx.setAttributeValue("telephoneNumber", peraton.getPhone());
-    //... update more attributes here
-  
-    simpleLdapOperations.modifyAttributes(ctx);
-}
-    </programlisting>
-    </informalexample>
+    </example>
     </para>
   </sect1>
 </chapter>

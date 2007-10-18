@@ -329,7 +329,7 @@ public class PersonDaoImpl implements PersonDao {
       </example>
     </sect2>
 
-    <sect2>
+    <sect2 id="modify-modifyAttributes">
       <title>Modifying using <literal>modifyAttributes</literal></title>
 
       <para>If only the modified attributes should be replaced, there is a

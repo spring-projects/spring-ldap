@@ -1507,6 +1507,7 @@ public interface LdapOperations {
      * @throws NamingException
      *             if any other error occurs.
      * @see #lookup(Name)
+     * @see #modifyAttributes(DirContextOperations)
      * @since 1.2
      */
     public DirContextOperations lookupContext(Name dn) throws NamingException,
@@ -1527,6 +1528,7 @@ public interface LdapOperations {
      * @throws NamingException
      *             if any other error occurs.
      * @see #lookup(String)
+     * @see #modifyAttributes(DirContextOperations)
      * @since 1.2
      */
     public DirContextOperations lookupContext(String dn)

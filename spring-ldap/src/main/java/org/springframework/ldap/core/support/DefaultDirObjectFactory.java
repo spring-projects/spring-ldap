@@ -37,7 +37,7 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
      * Key to use in the ContextSource implementation to store the value of the
      * base path suffix, if any, in the Ldap Environment.
      * 
-     * @deprecated Use {@link AbstractContextSource#getBase()} instead
+     * @deprecated Use {@link BaseLdapPathAware} and {@link BaseLdapPathBeanPostProcessor} instead.
      */
     public static final String JNDI_ENV_BASE_PATH_KEY = "org.springframework.ldap.base.path";
 

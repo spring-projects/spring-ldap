@@ -21,6 +21,17 @@
       array to the <literal>urls</literal> property.</para>
     </sect2>
 
+    <sect2 id="dir-context-base">
+      <title>Base LDAP path</title>
+      
+      <para>It is possible to specify the root context for all LDAP operations using the 
+      <literal>base</literal> property of <literal>AbstractContextSource</literal>.
+      When a value has been specified to this property, all Distinguished Names supplied to and received from LDAP operations
+      will be relative to the LDAP path supplied. This can significantly simplify working against the LDAP
+      tree; however there are several occations when you will need to have access to the base path.
+      For more information on this, please refer to <xref linkend="base-context-configuration" /></para>
+    </sect2>
+
     <sect2 id="dir-context-authentication">
       <title>Authentication</title>
 
@@ -191,5 +202,58 @@
 	  a <literal>PartialResultException</literal> has been encountered.
 	  There is currently no way of manually following referrals using LdapTemplate.</note></para>
 	</sect2>
+  </sect1>
+  <sect1 id="base-context-configuration">
+  	<title>Obtaining a reference to the base LDAP path</title>
+  	<para>As described above, a base LDAP path may be supplied to the <literal>ContextSource</literal>, 
+  	specifying the root in the LDAP tree to which all operations will be relative. This means that
+  	you will only be working with relative distinguished names throughout your system, which is
+  	typically rather handy. There are however some cases in which you will need to have access 
+  	to the base path in order to be able to construct full DNs, relative to the actual root of the LDAP tree.
+  	One example would be when working with LDAP groups (e.g. <literal>groupOfNames</literal> objectclass), 
+  	in which case each group member attribute value will need to be the full DN of the referenced member.</para>
+  	<para>For that reason, Spring LDAP has a mechanism by which any Spring controlled bean may be supplied 
+  	the base path on startup. For beans to be notified of the base path, two things need to be in place:
+  	First of all, the bean that wants the base path reference needs to implement the 
+  	<literal>BaseLdapPathAware</literal> interface. Secondly, a <literal>BaseLdapPathBeanPostProcessor</literal>
+  	needs to be defined in the application context</para>
+  	<example>
+      <title>Implementing <literal>BaseLdapPathAware</literal></title>
+
+      <programlisting>package com.example.service;
+
+public class PersonService implements PersonService, <emphasis role="bold">BaseLdapPathAware</emphasis> {
+   ...
+   <emphasis role="bold">private DistinguishedName basePath;
+   
+   public void setBaseLdapPath(DistinguishedName basePath) {
+      this.basePath = basePath;
+   }</emphasis>
+   ...
+   private DistinguishedName getFullPersonDn(Person person) {
+      return new DistinguishedName(<emphasis role="bold">basePath</emphasis>).append(person.getDn());
+   }
+   ...
+}</programlisting>
+    </example>
+  	<example>
+      <title>Specifying a <literal>BaseLdapPathBeanPostProcessor</literal> in your <literal>ApplicationContext</literal></title>
+
+      <programlisting>&gt;beans&lt;
+   ...
+   &lt;bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource"&gt;
+      &lt;property name="url" value="ldap://localhost:389" /&gt;
+      &lt;property name="base" value="dc=example,dc=com" /&gt;
+      &lt;property name="acegiAuthenticationSource" ref="authenticationSource" /&gt;
+   &lt;/bean&gt;
+   ...
+   <emphasis role="bold">&lt;bean class="org.springframework.ldap.core.support.BaseLdapPathBeanPostProcessor" /&gt;</emphasis>
+&lt;/beans&gt;
+  	  </programlisting>
+  	</example>
+  	<para>The default behaviour of the <literal>BaseLdapPathBeanPostProcessor</literal> is to use the base path of the single
+  	defined <literal>ContextSource</literal> in the <literal>ApplicationContext</literal>. If more than one 
+  	<literal>ContextSource</literal> is defined, you will need to specify which one to use with the <literal>contextSourceName</literal>
+  	property.</para>
   </sect1>
 </chapter>

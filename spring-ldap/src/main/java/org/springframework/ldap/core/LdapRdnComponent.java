@@ -31,170 +31,165 @@ import org.apache.commons.lang.Validate;
  * 
  */
 public class LdapRdnComponent implements Comparable, Serializable {
-    private static final long serialVersionUID = -3296747972616243038L;
+	private static final long serialVersionUID = -3296747972616243038L;
 
-    public static final boolean DONT_DECODE_VALUE = false;
+	public static final boolean DONT_DECODE_VALUE = false;
 
-    private String key;
+	private String key;
 
-    private String value;
+	private String value;
 
-    /**
-     * Constructs an LdapRdnComponent without decoding the value.
-     * 
-     * @param key
-     *            the Atttribute name.
-     * @param value
-     *            the Attribute value.
-     */
-    public LdapRdnComponent(String key, String value) {
-        this(key, value, DONT_DECODE_VALUE);
-    }
+	/**
+	 * Constructs an LdapRdnComponent without decoding the value.
+	 * 
+	 * @param key the Atttribute name.
+	 * @param value the Attribute value.
+	 */
+	public LdapRdnComponent(String key, String value) {
+		this(key, value, DONT_DECODE_VALUE);
+	}
 
-    /**
-     * Constructs an LdapRdnComponent, optionally decoding the value.
-     * 
-     * @param key
-     *            the Atttribute name.
-     * @param value
-     *            the Attribute value.
-     * @param decodeValue
-     *            if <code>true</code> the value is decoded (typically used
-     *            when a DN is parsed from a String), otherwise the value is
-     *            used as specified.
-     */
-    public LdapRdnComponent(String key, String value, boolean decodeValue) {
-        Validate.notEmpty(key, "Key must not be empty");
-        Validate.notEmpty(value, "Value must not be empty");
+	/**
+	 * Constructs an LdapRdnComponent, optionally decoding the value.
+	 * 
+	 * @param key the Atttribute name.
+	 * @param value the Attribute value.
+	 * @param decodeValue if <code>true</code> the value is decoded (typically
+	 * used when a DN is parsed from a String), otherwise the value is used as
+	 * specified.
+	 */
+	public LdapRdnComponent(String key, String value, boolean decodeValue) {
+		Validate.notEmpty(key, "Key must not be empty");
+		Validate.notEmpty(value, "Value must not be empty");
 
-        this.key = StringUtils.lowerCase(key);
-        if (decodeValue) {
-            this.value = LdapEncoder.nameDecode(value);
-        } else {
-            this.value = value;
-        }
-    }
+		this.key = StringUtils.lowerCase(key);
+		if (decodeValue) {
+			this.value = LdapEncoder.nameDecode(value);
+		}
+		else {
+			this.value = value;
+		}
+	}
 
-    /**
-     * Get the key (Attribute name) of this component.
-     * 
-     * @return the key.
-     */
-    public String getKey() {
-        return key;
-    }
+	/**
+	 * Get the key (Attribute name) of this component.
+	 * 
+	 * @return the key.
+	 */
+	public String getKey() {
+		return key;
+	}
 
-    /**
-     * Set the key (Attribute name) of this component.
-     * 
-     * @param key
-     *            the key.
-     */
-    public void setKey(String key) {
-        this.key = key;
-    }
+	/**
+	 * Set the key (Attribute name) of this component.
+	 * 
+	 * @param key the key.
+	 */
+	public void setKey(String key) {
+		this.key = key;
+	}
 
-    /**
-     * Get the (Attribute) value of this component.
-     * 
-     * @return the value.
-     */
-    public String getValue() {
-        return value;
-    }
+	/**
+	 * Get the (Attribute) value of this component.
+	 * 
+	 * @return the value.
+	 */
+	public String getValue() {
+		return value;
+	}
 
-    /**
-     * Set the (Attribute) value of this component.
-     * 
-     * @param value
-     *            the value.
-     */
-    public void setValue(String value) {
-        this.value = value;
-    }
+	/**
+	 * Set the (Attribute) value of this component.
+	 * 
+	 * @param value the value.
+	 */
+	public void setValue(String value) {
+		this.value = value;
+	}
 
-    /**
-     * Encode key and value to ldap.
-     * 
-     * @return Properly ldap escaped rdn.
-     */
-    protected String encodeLdap() {
-        StringBuffer buff = new StringBuffer(key.length() + value.length() * 2);
+	/**
+	 * Encode key and value to ldap.
+	 * 
+	 * @return Properly ldap escaped rdn.
+	 */
+	protected String encodeLdap() {
+		StringBuffer buff = new StringBuffer(key.length() + value.length() * 2);
 
-        buff.append(key);
-        buff.append('=');
-        buff.append(LdapEncoder.nameEncode(value));
+		buff.append(key);
+		buff.append('=');
+		buff.append(LdapEncoder.nameEncode(value));
 
-        return buff.toString();
-    }
+		return buff.toString();
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
-    public String toString() {
-        return getLdapEncoded();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return getLdapEncoded();
+	}
 
-    /**
-     * @return The LdapRdn as a string where the value is LDAP-encoded.
-     */
-    public String getLdapEncoded() {
-        return encodeLdap();
-    }
+	/**
+	 * @return The LdapRdn as a string where the value is LDAP-encoded.
+	 */
+	public String getLdapEncoded() {
+		return encodeLdap();
+	}
 
-    /**
-     * Get a String representation of this instance for use in URLs.
-     * 
-     * @return a properly URL encoded representation of this instancs.
-     */
-    public String encodeUrl() {
-        // Use the URI class to properly URL encode the value.
-        try {
-            URI valueUri = new URI(null, null, value, null);
-            return key + "=" + valueUri.toString();
-        } catch (URISyntaxException e) {
-            // This should really never happen...
-            return key + "=" + "value";
-        }
-    }
+	/**
+	 * Get a String representation of this instance for use in URLs.
+	 * 
+	 * @return a properly URL encoded representation of this instancs.
+	 */
+	public String encodeUrl() {
+		// Use the URI class to properly URL encode the value.
+		try {
+			URI valueUri = new URI(null, null, value, null);
+			return key + "=" + valueUri.toString();
+		}
+		catch (URISyntaxException e) {
+			// This should really never happen...
+			return key + "=" + "value";
+		}
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
-    public int hashCode() {
-        return key.hashCode() ^ value.hashCode();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode() {
+		return key.hashCode() ^ value.hashCode();
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    public boolean equals(Object obj) {
-        if (obj != null && obj.getClass() == LdapRdnComponent.class) {
-            LdapRdnComponent that = (LdapRdnComponent) obj;
-            return StringUtils.equalsIgnoreCase(this.key, that.key)
-                    && StringUtils.equalsIgnoreCase(this.value, that.value);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj) {
+		if (obj != null && obj.getClass() == LdapRdnComponent.class) {
+			LdapRdnComponent that = (LdapRdnComponent) obj;
+			return StringUtils.equalsIgnoreCase(this.key, that.key)
+					&& StringUtils.equalsIgnoreCase(this.value, that.value);
 
-        } else {
-            return false;
-        }
-    }
+		}
+		else {
+			return false;
+		}
+	}
 
-    /**
-     * Compare this instance to the supplied object.
-     * 
-     * @param obj
-     *            the object to compare to.
-     * @throws ClassCastException
-     *             if the object is not possible to cast to an LdapRdnComponent.
-     */
-    public int compareTo(Object obj) {
-        LdapRdnComponent that = (LdapRdnComponent) obj;
-        return this.toString().compareTo(that.toString());
-    }
+	/**
+	 * Compare this instance to the supplied object.
+	 * 
+	 * @param obj the object to compare to.
+	 * @throws ClassCastException if the object is not possible to cast to an
+	 * LdapRdnComponent.
+	 */
+	public int compareTo(Object obj) {
+		LdapRdnComponent that = (LdapRdnComponent) obj;
+		return this.toString().compareTo(that.toString());
+	}
 }
