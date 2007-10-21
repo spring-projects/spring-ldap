@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
                
 <chapter id="simple">
-  <title>Spring LDAP Java 5 Support</title>
+  <title>Java 5 Support</title>
 
   <sect1 id="simple-ldap-template">
     <title>SimpleLdapTemplate</title>

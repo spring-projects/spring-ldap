@@ -86,8 +86,7 @@ public void search(String base, String filter,
    public abstract Control createRequestControl();
 }</programlisting>
 
-      <para>This is what it can look like when you implement your own request
-      control <literal>DirContextProcessor</literal>:</para>
+      <para>A typical <literal>DirContextProcessor</literal> will be similar to the following:</para>
     </informalexample>
 
     <example>
@@ -158,7 +157,7 @@ public class MyCoolRequestControl extends AbstractRequestControlDirContextProces
     called with a paged results request.</para>
 
     <para>Spring LDAP provides support for paged results by leveraging the
-    concept for pre- and postprocessing of an LdapContext that was discussed
+    concept for pre- and postprocessing of an <literal>LdapContext</literal> that was discussed
     in the previous sections. It does so by providing two classes:
     <literal>PagedResultsRequestControl</literal> and
     <literal>PagedResultsCookie</literal>. The
@@ -173,54 +172,29 @@ public class MyCoolRequestControl extends AbstractRequestControlDirContextProces
     this cookie between searches, Spring LDAP provides the wrapper class
     <literal>PagedResultsCookie</literal>.</para>
 
-    <para>This is an example of how the paged search results functionality can
+    <para>Below is an example of how the paged search results functionality may
     be used:</para>
 
     <example>
-      <title>Example of an integration test for paged search results</title>
+      <title>Paged results using <literal>PagedResultsRequestControl</literal></title>
 
-      <programlisting>public class LdapTemplatePagedSearchITest extends TestCase {
-   private LdapTemplate tested;
-   ...
-   // LDAP contains 5 persons matching the filter. Page size is 3.
-   // Expects two batches of 3 and 2 persons respectively.
-   public void testPagedResult() {
-      SearchControls searchControls = new SearchControls();
-      searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-      String base = "dc=example,dc=com";
-      String filter = "(&amp;(objectclass=person)(cn=Some Person*))";
-      PersonAttributesMapper mapper = new PersonAttributesMapper();
-      CollectingNameClassPairCallbackHandler handler =
-         tested.new AttributesMapperCallbackHandler(mapper);
-
-      <emphasis role="bold">PagedResultsRequestControl requestControl;
-      requestControl = new PagedResultsRequestControl(3);
-      tested.search(base, filter, searchControls, handler, requestControl);
-      PagedResultsCookie cookie = requestControl.getCookie();</emphasis>
-      assertNotNull("Cookie should not be null yet", cookie.getCookie());
-      assertEquals(3, callbackHandler.getList().size());
-
-      // Prepare for second and last search
-      <emphasis role="bold">requestControl = new PagedResultsRequestControl(3, cookie);
-      tested.search(base, filter, searchControls, handler, requestControl);
-      cookie = requestControl.getCookie();</emphasis>
-      assertNull("Cookie should be null now", cookie.getCookie());
-      assertEquals(5, callbackHandler.getList().size());
-   }</programlisting>
+      <programlisting>public PagedResult getAllPersons(PagedResultsCookie cookie) {
+   PagedResultsRequestControl control = new PagedResultsRequestControl(PAGE_SIZE, cookie);
+   SearchControls searchControls = new SearchControls();
+   searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+   
+   List persons = ldapTemplate.search("", "objectclass=person", searchControls, control);
+   
+   return new PagedResult(persons, control.getCookie());
+ }</programlisting>
     </example>
 
-    <para>
-    <note>Important to note here is that we use the same
-    <literal>CollectingNameClassPairCallbackHandler</literal> for both
-    searches. This means that the results are appended to the same list. The
-    second batch of two are added to the first three, giving a total of five
-    after the second search.
-    </note>
-    <note>When using the <literal>PagedResultsRequestControl</literal> it is imperative
-    that you keep track of the cookie returned from an operation and supply the same
-    instance to subsequent calls. This means that your Dao method will typically need to
-    wrap the result list together with the cookie in the value returned to the higher tiers. 
-    </note></para>
+    <para>In the first call to this method, <literal>null</literal> will be supplied as
+    the cookie parameter. On subsequent calls the client will need to supply the cookie from
+    the last search (returned wrapped in the <literal>PagedResult</literal>) each time the 
+    method is called. When the actual cookie is <literal>null</literal> (i.e. 
+    <literal>pagedResult.getCookie().getCookie()</literal> returns <literal>null</literal>),
+    the last batch has been returned from the search.</para>
     
   </sect1>
 </chapter>
