@@ -77,7 +77,7 @@ public class TransactionAwareDirContextInvocationHandler implements
             return (proxy == args[0] ? Boolean.TRUE : Boolean.FALSE);
         } else if (methodName.equals("hashCode")) {
             // Use hashCode of Connection proxy.
-            return new Integer(proxy.hashCode());
+            return new Integer(hashCode());
         } else if (methodName.equals("close")) {
             doCloseConnection(target, contextSource);
             return null;
