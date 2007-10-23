@@ -1,4 +1,4 @@
-Spring-LDAP 1.2-RC1 (May 2007)
+Spring-LDAP 1.2 (Oct 2007)
 -----------------------------
 http://www.springframework.org/ldap
 
