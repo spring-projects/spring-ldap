@@ -21,7 +21,7 @@ import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 
-public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest {
+public abstract class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest {
 
 	private SimpleLdapTemplate ldapTemplate;
 
