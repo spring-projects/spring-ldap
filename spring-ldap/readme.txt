@@ -15,17 +15,16 @@ objects, bind, modify, unbind, etc.), in the same way that JdbcTemplate relieves
 programmer of all but the actual SQL and how the data maps to the domain model.
 
 In addition to this, Spring-LDAP provides Exception translation from NamingExceptions
-to DataAccessExceptions, as well as several utilities for working with filters, LDAP
-paths and Attributes.
+to an unchecked exception hirearchy, as well as several utilities for working with filters,
+LDAP paths and Attributes.
 
-The DirContextProcessor interface provides the programmer with the possibility to
-get callbacks before and after a search, which enables things like processing of
-the LDAPv3 feature of RequestControls and ResponseControls. An abstract base class
-that simplifies this is provided, as is a full implementation of PagedSearchResult.
+As of version 1.2, support for client-side compensating transaction is provided, as well as 
+Java 5 generics support with the SimpleLdapTemplate.
 
 2. RELEASE INFO
 
-Spring-LDAP requires J2SE 1.4. J2SE 1.4, and javacc version 4.0 is required for building.
+Spring LDAP requires J2SE 1.4 for running. 
+J2SE 1.4, and javacc version 4.0 is required for building the Spring LDAP distributables from source code.
 J2EE 1.4 (Servlet 2.3, JSP 1.2) is required for running the example.
 
 The Spring-LDAP release comes in three different distributables:
@@ -47,17 +46,16 @@ The Spring-LDAP release comes in three different distributables:
   ** lib - all referenced libraries necessary to use spring-LDAP
   ** doc/api - api javadoc documentation
   ** doc/reference - full project reference documentation
-  
-* spring-ldap-buildable-x.x.zip
-  ** readme.txt - this readme file.
-  ** license.txt - terms and conditions for use, reproduction and distribution
-  ** common-build - the ant 1.6 "common build system" used by all spring-ldap projects to compile/build/test
-  ** repository - build artifacts that are not available from public repositories
-  ** spring-ldap/build-spring-ldap - master build files to produce this release archive
-  ** spring-ldap/spring-ldap - project sources
-  ** spring-ldap/spring-ldap-person - a sample web project.
-  ** spring-ldap/spring-ldap-article - source code for an article published on java.net.
 
+The sources included in the distributables are for reference use only, however buildable
+sources are available in svn on sourceforge on the following URLs:
+Sources for this release (1.2 tag):
+https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ldap/tags/1.2
+Latest sources (trunk): 
+https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ldap/trunk
+
+Nightly builds are available for download from:
+http://static.springframework.org/downloads/nightly/snapshot-download.php?project=LDAP
 
 Spring-LDAP is released under the terms of the Apache Software License (see license.txt).
 
@@ -68,8 +66,13 @@ specifies the respective contents and third-party dependencies.
 
 * spring-ldap-x.x.jar
 - Contents: The Spring-LDAP library
-- Dependencies: Commons Logging, Commons Lang, Commons Collections, spring-beans,
-                spring-core, spring-context, spring-dao
+- Dependencies: Commons Logging, Commons Lang, spring-beans,
+                spring-core, spring-context, spring-dao, ldapbp
+
+* spring-ldap-tiger-x.x.jar
+- Contents: The Spring-LDAP Java 5 support library
+- Dependencies: Commons Logging, Commons Lang, spring-beans,
+                spring-core, spring-context, spring-dao, ldapbp
 
 4. WHERE TO START
 

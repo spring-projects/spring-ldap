@@ -32,6 +32,7 @@
           <filename name="spring-ldap/**"/>
           <filename name="spring-ldap-person/**"/>
           <filename name="spring-ldap-article/**"/>
+          <filename name="spring-ldap-tiger/**"/>
         </or>
         <and>
           <filename name="*/target/**" negate="true"/>
@@ -81,6 +82,7 @@
         <include name="spring-ldap-article/build.xml"/>
         <include name="spring-ldap-person/build.xml"/>
         <include name="spring-ldap/build.xml"/>
+        <include name="spring-ldap-tiger/build.xml"/>
       </fileset>
     </ivy:buildlist>
 
@@ -173,8 +175,9 @@
     </subant>
   </target>
 
+  <!-- Disabled buildable zip -->
   <target name="release"
-          depends="dist, javadoc, doc, gen-release-bins, gen-release-bins-with-deps, gen-buildable-zip"
+          depends="dist, javadoc, doc, gen-release-bins, gen-release-bins-with-deps"
           description="Generate release zips">
   </target>
 
@@ -199,11 +202,14 @@
       <zipfileset file="../spring-ldap/license.txt" prefix="${zip.toplevel.dir}"/>
       <zipfileset dir="../spring-ldap/target/dist/jars" prefix="${zip.toplevel.dir}/dist"/>
       <zipfileset dir="../spring-ldap/target/dist/ivys" prefix="${zip.toplevel.dir}/dist/ivys"/>
+      <zipfileset dir="../spring-ldap-tiger/target/dist/jars" prefix="${zip.toplevel.dir}/dist"/>
+      <zipfileset dir="../spring-ldap-tiger/target/dist/ivys" prefix="${zip.toplevel.dir}/dist/ivys"/>
       <zipfileset dir="../spring-ldap/docs/reference/target/html_single" prefix="${zip.toplevel.dir}/doc/reference/html_single"/>
       <zipfileset dir="../spring-ldap/docs/upgrade/target/html_single" prefix="${zip.toplevel.dir}/doc/upgrade/html_single"/>
       <zipfileset file="../spring-ldap/docs/reference/target/pdf/spring-ldap-reference.pdf" prefix="${zip.toplevel.dir}/doc/reference/pdf"/>
       <zipfileset file="../spring-ldap/docs/upgrade/target/pdf/spring-ldap-upgrade.pdf" prefix="${zip.toplevel.dir}/doc/upgrade/pdf"/>
-      <zipfileset dir="../spring-ldap/target/javadocs" prefix="${zip.toplevel.dir}/doc/api"/>
+      <zipfileset dir="../spring-ldap/target/javadocs" prefix="${zip.toplevel.dir}/doc/api/spring-ldap"/>
+      <zipfileset dir="../spring-ldap-tiger/target/javadocs" prefix="${zip.toplevel.dir}/doc/api/spring-ldap-tiger"/>
     </zip>
   </target>
 
@@ -218,11 +224,14 @@
       <zipfileset file="../spring-ldap/license.txt" prefix="${zip.toplevel.dir}"/>
       <zipfileset dir="../spring-ldap/target/dist/jars" prefix="${zip.toplevel.dir}/dist"/>
       <zipfileset dir="../spring-ldap/target/dist/ivys" prefix="${zip.toplevel.dir}/dist/ivys"/>
+      <zipfileset dir="../spring-ldap-tiger/target/dist/jars" prefix="${zip.toplevel.dir}/dist"/>
+      <zipfileset dir="../spring-ldap-tiger/target/dist/ivys" prefix="${zip.toplevel.dir}/dist/ivys"/>
       <zipfileset dir="../spring-ldap/docs/reference/target/html_single" prefix="${zip.toplevel.dir}/doc/reference/html_single"/>
       <zipfileset dir="../spring-ldap/docs/upgrade/target/html_single" prefix="${zip.toplevel.dir}/doc/upgrade/html_single"/>
       <zipfileset file="../spring-ldap/docs/reference/target/pdf/spring-ldap-reference.pdf" prefix="${zip.toplevel.dir}/doc/reference/pdf"/>
       <zipfileset file="../spring-ldap/docs/upgrade/target/pdf/spring-ldap-upgrade.pdf" prefix="${zip.toplevel.dir}/doc/upgrade/pdf"/>
-      <zipfileset dir="../spring-ldap/target/javadocs" prefix="${zip.toplevel.dir}/doc/api"/>
+      <zipfileset dir="../spring-ldap/target/javadocs" prefix="${zip.toplevel.dir}/doc/api/spring-ldap"/>
+      <zipfileset dir="../spring-ldap-tiger/target/javadocs" prefix="${zip.toplevel.dir}/doc/api/spring-ldap-tiger"/>
       <zipfileset dir="../spring-ldap/lib/global" prefix="${zip.toplevel.dir}/lib"/>
     </zip>
   </target>

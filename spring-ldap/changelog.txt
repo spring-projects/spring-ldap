@@ -13,7 +13,7 @@ http://www.ietf.org/rfc/rfc2696.txt
 
 Changes in version 1.2 (X.YY.2007)
 -------------------------------------------
-A number of API-breaking changes have been made in this release.
+A number of API-breaking changes have been made in this release compared to version 1.1.2.
 Consequently this is NOT a drop-in replacement for Spring LDAP 1.1.2,
 though upgrading should not present all that much work. Please see
 the supplied upgrade guide for details.
@@ -31,6 +31,32 @@ the supplied upgrade guide for details.
 * Upgraded to Spring 2.0.6 internally. Spring 1.2.x is still supported.
 
 * Reviewed all javadoc.
+
+* Revised reference manual.
+
+* AbstractConnection source now actively removes pooling flag from context environment
+  if pooling is set to 'false'. (LDAP-83)
+
+* AcegiAuthenticationSource now supports anonymous authentication. (LDAP-67)
+
+* Added BaseLdapPathAware and BaseLdapNameBeanPostProcessor to be used if the ContextSource
+  base path is needed by beans. There is now also a DistinguishedNameEditor available for
+  directly injecting DistinguishedName instances to beans. (LDAP-86)
+
+* Added immutableDistinguishedName() method in DistinguishedName to get an immutable
+  copy of the instance. (LDAP-87)
+  
+* Added easier access methods for RDN attributes and values. (LDAP-71)
+
+* Added lookupContext() and alternate modifyAttributes() in LdapOperations/LdapTemplate
+  to simplify updates. (LDAP-78)
+  
+* Modified append() method in DistinguishedName. This method now returns the instance, to
+  enable more fluent building of DistinguishedNames. (LDAP-74)
+  
+* Added SimpleLdapTemplate providing Java 5 generics support. (LDAP-72)
+
+* Added AbstractContextMapper implementation. (LDAP-76)
 
 Changes in version 1.2-RC1 (5.12.2007)
 -------------------------------------------
