@@ -4,7 +4,7 @@
   <groupId>org.springframework.ldap</groupId>
   <artifactId>spring-ldap</artifactId>
   <packaging>pom</packaging>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2</version>
   <name>Spring LDAP</name>
   <url>http://www.springframework.org/ldap</url>
   <description>
@@ -117,6 +117,7 @@
   <!-- modules for Spring-LDAP -->
   <modules>
     <module>spring-ldap</module>
+    <module>spring-ldap-tiger</module>
     <module>spring-ldap-article</module>    
     <module>spring-ldap-person</module>
   </modules>
