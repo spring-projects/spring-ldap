@@ -127,8 +127,9 @@ public abstract class AbstractContextSource implements ContextSource, Initializi
 	 * @param env the environment to modify.
 	 */
 	protected void setupAuthenticatedEnvironment(Hashtable env) {
-		env.put(Context.SECURITY_PRINCIPAL, authenticationSource.getPrincipal());
-		log.debug("Principal: '" + userDn + "'");
+		String principal = authenticationSource.getPrincipal();
+		env.put(Context.SECURITY_PRINCIPAL, principal);
+		log.debug("Principal: '" + principal + "'");
 		env.put(Context.SECURITY_CREDENTIALS, authenticationSource.getCredentials());
 	}
 
