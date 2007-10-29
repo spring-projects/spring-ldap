@@ -39,9 +39,9 @@ the supplied upgrade guide for details.
 
 * AcegiAuthenticationSource now supports anonymous authentication. (LDAP-67)
 
-* Added BaseLdapPathAware and BaseLdapNameBeanPostProcessor to be used if the ContextSource
-  base path is needed by beans. There is now also a DistinguishedNameEditor available for
-  directly injecting DistinguishedName instances to beans. (LDAP-86)
+* Added BaseLdapPathSource, BaseLdapPathAware and BaseLdapNameBeanPostProcessor to be used 
+  if the ContextSource base path is needed by beans. There is now also a DistinguishedNameEditor 
+  available for directly injecting DistinguishedName instances to beans. (LDAP-86)
 
 * Added immutableDistinguishedName() method in DistinguishedName to get an immutable
   copy of the instance. (LDAP-87)

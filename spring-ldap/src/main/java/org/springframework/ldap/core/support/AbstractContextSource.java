@@ -61,7 +61,7 @@ import org.springframework.ldap.support.LdapUtils;
  * @author Adam Skogman
  * @author Ulrik Sandberg
  */
-public abstract class AbstractContextSource implements ContextSource, InitializingBean {
+public abstract class AbstractContextSource implements BaseLdapPathContextSource, InitializingBean {
 
 	private static final Class DEFAULT_CONTEXT_FACTORY = com.sun.jndi.ldap.LdapCtxFactory.class;
 
@@ -190,6 +190,22 @@ public abstract class AbstractContextSource implements ContextSource, Initializi
 	 */
 	protected DistinguishedName getBase() {
 		return base;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.ldap.core.support.BaseLdapPathSource#getBaseLdapPath()
+	 */
+	public DistinguishedName getBaseLdapPath() {
+		return getBase().immutableDistinguishedName();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.ldap.core.support.BaseLdapPathSource#getBaseLdapPathAsString()
+	 */
+	public String getBaseLdapPathAsString() {
+		return getBaseLdapPath().toString();
 	}
 
 	/**

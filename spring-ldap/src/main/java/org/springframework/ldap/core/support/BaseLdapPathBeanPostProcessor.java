@@ -34,13 +34,13 @@ import org.springframework.util.StringUtils;
  * <code>BeanPostProcessor</code> is set, that value will be used. Otherwise,
  * in order to determine which base LDAP path to supply to the instance the
  * <code>ApplicationContext</code> is searched for any beans that are
- * implementations of {@link AbstractContextSource}. If one single occurrance
+ * implementations of {@link BaseLdapPathSource}. If one single occurrance
  * is found, that instance is queried for its base path, and that is what will
- * be injected. If more than one {@link AbstractContextSource} instance is
+ * be injected. If more than one {@link BaseLdapPathSource} instance is
  * configured in the <code>ApplicationContext</code>, the name of the one to
- * use will need to be specified to the <code>contextSourceName</code>
+ * use will need to be specified to the <code>baseLdapPathSourceName</code>
  * property; otherwise the post processing will fail. If no
- * {@link AbstractContextSource} implementing bean is found in the context and
+ * {@link BaseLdapPathSource} implementing bean is found in the context and
  * the <code>basePath</code> property is not set, post processing will also
  * fail.
  * 
@@ -53,7 +53,7 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 
 	private DistinguishedName basePath;
 
-	private String contextSourceName;
+	private String baseLdapPathSourceName;
 
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 		if (bean instanceof BaseLdapPathAware) {
@@ -63,26 +63,26 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 				baseLdapPathAware.setBaseLdapPath(basePath);
 			}
 			else {
-				AbstractContextSource abstractContextSource = getAbstractContextSourceFromApplicationContext();
-				baseLdapPathAware.setBaseLdapPath(abstractContextSource.getBase());
+				BaseLdapPathSource ldapPathSource = getBaseLdapPathSourceFromApplicationContext();
+				baseLdapPathAware.setBaseLdapPath(ldapPathSource.getBaseLdapPath());
 			}
 		}
 		return bean;
 	}
 
-	AbstractContextSource getAbstractContextSourceFromApplicationContext() {
-		if (StringUtils.hasLength(contextSourceName)) {
-			return (AbstractContextSource) applicationContext.getBean(contextSourceName);
+	BaseLdapPathSource getBaseLdapPathSourceFromApplicationContext() {
+		if (StringUtils.hasLength(baseLdapPathSourceName)) {
+			return (BaseLdapPathSource) applicationContext.getBean(baseLdapPathSourceName);
 		}
-		String[] definedContextSources = applicationContext.getBeanNamesForType(AbstractContextSource.class);
+		String[] definedContextSources = applicationContext.getBeanNamesForType(BaseLdapPathSource.class);
 		if (definedContextSources.length < 1) {
-			throw new NoSuchBeanDefinitionException("No AbstractContextSource implementation definition found");
+			throw new NoSuchBeanDefinitionException("No BaseLdapPathSource implementation definition found");
 		}
 		else if (definedContextSources.length > 1) {
 			throw new NoSuchBeanDefinitionException(
-					"More than AbstractContextSource implementation definition found in current ApplicationContext");
+					"More than BaseLdapPathSource implementation definition found in current ApplicationContext");
 		}
-		return (AbstractContextSource) applicationContext.getBean(definedContextSources[0]);
+		return (BaseLdapPathSource) applicationContext.getBean(definedContextSources[0]);
 	}
 
 	/*
@@ -102,7 +102,7 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 	/**
 	 * Set the base path to be injected in all {@link BaseLdapPathAware} beans.
 	 * If this property is not set, the default base path will be determined
-	 * from any defined {@link AbstractContextSource} instances available in the
+	 * from any defined {@link BaseLdapPathSource} instances available in the
 	 * <code>ApplicationContext</code>.
 	 * 
 	 * @param basePath the base path.
@@ -119,8 +119,8 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 	 * @param contextSourceName the name of the <code>ContextSource</code>
 	 * bean to use for determining the base path.
 	 */
-	public void setContextSourceName(String contextSourceName) {
-		this.contextSourceName = contextSourceName;
+	public void setBaseLdapPathSourceName(String contextSourceName) {
+		this.baseLdapPathSourceName = contextSourceName;
 	}
 
 }

@@ -81,7 +81,7 @@ public class BaseLdapPathBeanPostProcessorTest extends TestCase {
 		expectedContextSource.setBase(expectedPath);
 
 		tested = new BaseLdapPathBeanPostProcessor() {
-			AbstractContextSource getAbstractContextSourceFromApplicationContext() {
+			BaseLdapPathSource getBaseLdapPathSourceFromApplicationContext() {
 				return expectedContextSource;
 			}
 		};
@@ -99,14 +99,14 @@ public class BaseLdapPathBeanPostProcessorTest extends TestCase {
 
 	public void testGetAbstractContextSourceFromApplicationContext() throws Exception {
 		applicationContextControl.expectAndReturn(applicationContextMock
-				.getBeanNamesForType(AbstractContextSource.class), new String[] { "contextSource" });
+				.getBeanNamesForType(BaseLdapPathSource.class), new String[] { "contextSource" });
 		LdapContextSource expectedContextSource = new LdapContextSource();
 		applicationContextControl.expectAndReturn(applicationContextMock.getBean("contextSource"),
 				expectedContextSource);
 
 		applicationContextControl.replay();
 
-		AbstractContextSource result = tested.getAbstractContextSourceFromApplicationContext();
+		BaseLdapPathSource result = tested.getBaseLdapPathSourceFromApplicationContext();
 
 		applicationContextControl.verify();
 		assertSame(expectedContextSource, result);
@@ -114,12 +114,12 @@ public class BaseLdapPathBeanPostProcessorTest extends TestCase {
 
 	public void testGetAbstractContextSourceFromApplicationContextNoContextSource() throws Exception {
 		applicationContextControl.expectAndReturn(applicationContextMock
-				.getBeanNamesForType(AbstractContextSource.class), new String[0]);
+				.getBeanNamesForType(BaseLdapPathSource.class), new String[0]);
 
 		applicationContextControl.replay();
 
 		try {
-			tested.getAbstractContextSourceFromApplicationContext();
+			tested.getBaseLdapPathSourceFromApplicationContext();
 			fail("NoSuchBeanDefinitionException expected");
 		}
 		catch (NoSuchBeanDefinitionException expected) {
@@ -130,12 +130,12 @@ public class BaseLdapPathBeanPostProcessorTest extends TestCase {
 
 	public void testGetAbstractContextSourceFromApplicationContextTwoContextSources() throws Exception {
 		applicationContextControl.expectAndReturn(applicationContextMock
-				.getBeanNamesForType(AbstractContextSource.class), new String[2]);
+				.getBeanNamesForType(BaseLdapPathSource.class), new String[2]);
 
 		applicationContextControl.replay();
 
 		try {
-			tested.getAbstractContextSourceFromApplicationContext();
+			tested.getBaseLdapPathSourceFromApplicationContext();
 			fail("NoSuchBeanDefinitionException expected");
 		}
 		catch (NoSuchBeanDefinitionException expected) {
@@ -147,13 +147,13 @@ public class BaseLdapPathBeanPostProcessorTest extends TestCase {
 	public void testGetAbstractContextSourceFromApplicationContextTwoContextSourcesAndSpecifiedName() throws Exception {
 		LdapContextSource expectedContextSource = new LdapContextSource();
 
-		tested.setContextSourceName("myContextSource");
+		tested.setBaseLdapPathSourceName("myContextSource");
 		applicationContextControl.expectAndReturn(applicationContextMock.getBean("myContextSource"),
 				expectedContextSource);
 
 		applicationContextControl.replay();
 
-		tested.getAbstractContextSourceFromApplicationContext();
+		tested.getBaseLdapPathSourceFromApplicationContext();
 		applicationContextControl.verify();
 	}
 }

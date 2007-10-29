@@ -252,8 +252,8 @@ public class PersonService implements PersonService, <emphasis role="bold">BaseL
   	  </programlisting>
   	</example>
   	<para>The default behaviour of the <literal>BaseLdapPathBeanPostProcessor</literal> is to use the base path of the single
-  	defined <literal>ContextSource</literal> in the <literal>ApplicationContext</literal>. If more than one 
-  	<literal>ContextSource</literal> is defined, you will need to specify which one to use with the <literal>contextSourceName</literal>
-  	property.</para>
+  	defined <literal>BaseLdapPathSource</literal> (<literal>AbstractContextSource</literal> )in the <literal>ApplicationContext</literal>. 
+  	If more than one <literal>BaseLdapPathSource</literal> is defined, you will need to specify which one to use with the
+  	<literal>baseLdapPathSourceName</literal> property.</para>
   </sect1>
 </chapter>

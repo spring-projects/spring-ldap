@@ -39,6 +39,6 @@
 
 	<bean
 		class="org.springframework.ldap.core.support.BaseLdapPathBeanPostProcessor">
-		<property name="contextSourceName" value="contextSource2" />
+		<property name="baseLdapPathSourceName" value="contextSource2" />
 	</bean>
 </beans>
