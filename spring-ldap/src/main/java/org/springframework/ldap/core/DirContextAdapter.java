@@ -64,6 +64,8 @@ import org.springframework.ldap.support.LdapUtils;
  * @see #getStringAttribute(String)
  * @see #getStringAttributes(String)
  * @see #getObjectAttribute(String)
+ * @see #addAttributeValue(String, Object)
+ * @see #removeAttributeValue(String, Object)
  * @see #setUpdateMode(boolean)
  * @see #isUpdateMode()
  * 
