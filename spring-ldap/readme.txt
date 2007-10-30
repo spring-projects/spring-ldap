@@ -36,6 +36,7 @@ The Spring-LDAP release comes in three different distributables:
   ** dist/ivys - ivy configuration
   ** doc/api - api javadoc documentation
   ** doc/reference - full project reference documentation
+  ** doc/upgrade - Upgrade guide from 1.1.2
   
 * spring-ldap-bin-with-dependencies-x.x.zip
   ** readme.txt - this readme file.
@@ -46,6 +47,7 @@ The Spring-LDAP release comes in three different distributables:
   ** lib - all referenced libraries necessary to use spring-LDAP
   ** doc/api - api javadoc documentation
   ** doc/reference - full project reference documentation
+  ** doc/upgrade - Upgrade guide from 1.1.2
 
 The sources included in the distributables are for reference use only, however buildable
 sources are available in svn on sourceforge on the following URLs:
