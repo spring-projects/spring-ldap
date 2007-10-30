@@ -163,56 +163,49 @@ public class PersonDaoImpl implements PersonDao {
 
     <itemizedlist spacing="compact">
       <listitem>
-        <para>spring-ldap (the Spring LDAP library)</para>
+        <para><emphasis>spring-ldap</emphasis> (the Spring LDAP library)</para>
       </listitem>
 
       <listitem>
-        <para>spring-core (miscellaneous utility classes used internally by
+        <para><emphasis>spring-core</emphasis> (miscellaneous utility classes used internally by
         the framework)</para>
       </listitem>
 
       <listitem>
-        <para>spring-beans (contains interfaces and classes for manipulating
+        <para><emphasis>spring-beans</emphasis> (contains interfaces and classes for manipulating
         Java beans)</para>
       </listitem>
 
       <listitem>
-        <para>spring-dao (basic transaction support)</para>
-      </listitem>
-
-      <listitem>
-        <para>commons-logging (a simple logging facade, used
+        <para><emphasis>commons-logging</emphasis> (a simple logging facade, used
         internally)</para>
       </listitem>
 
       <listitem>
-        <para>commons-lang (misc utilities, used internally)</para>
+        <para><emphasis>commons-lang</emphasis> (misc utilities, used internally)</para>
       </listitem>
 
-      <listitem>
-        <para>ldapbp (Sun LDAP Booster Pack, for required LDAP
-        controls)</para>
-      </listitem>
     </itemizedlist>
 
-    <para>If your application is wired up using the Spring ApplicationContext,
-    you also need:</para>
+    <para>In addition to the required dependencies the following optional dependencies
+    are required for certain functionality:</para>
 
     <itemizedlist>
       <listitem>
-        <para>spring-context (adds the ability for application objects to
-        obtain resources using a consistent API)</para>
+        <para><emphasis>spring-context</emphasis> (If your application is wired up using the Spring Application Context - 
+        adds the ability for application objects to obtain resources using a consistent API)</para>
       </listitem>
-    </itemizedlist>
-
-    <para>If you use the <literal>AcegiAuthenticationSource</literal>, you
-    also need:</para>
-
-    <itemizedlist>
       <listitem>
-        <para>acegi-security</para>
+        <para><emphasis>acegi-security</emphasis> (For Acegi security integration using <literal>AcegiAuthenticationSource</literal>)</para>
+      </listitem>
+      <listitem>
+        <para><emphasis>spring-dao</emphasis> (If you are planning to use the client side compensating transaction support)</para>
+      </listitem>
+      <listitem>
+        <para><emphasis>ldapbp</emphasis> (Sun LDAP Booster Pack - if you will use the LDAP v3 Server controls integration)</para>
       </listitem>
     </itemizedlist>
+
   </sect1>
 
   <sect1 id="introduction-package-structure">
