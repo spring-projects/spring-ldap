@@ -200,6 +200,9 @@ public class PersonDaoImpl implements PersonDao {
         planning on using the BaseLdapPathBeanPostProcessor.)</para>
       </listitem>
       <listitem>
+        <para><emphasis>spring-dao</emphasis> (If you are planning to use the client side compensating transaction support)</para>
+      </listitem>
+      <listitem>
         <para><emphasis>spring-jdbc</emphasis> (If you are planning to use the client side compensating transaction support)</para>
       </listitem>
       <listitem>
@@ -373,7 +376,7 @@ public class PersonDaoImpl implements PersonDao {
         <listitem>
           <para>Dependencies: ldap, ldap.core, ldap.transaction.compensating, 
           ldap.transaction.compensating.support, transaction.compensating,
-          spring-jdbc (optional), commons-logging</para>
+          spring-dao (optional), spring-jdbc (optional), commons-logging</para>
         </listitem>
       </itemizedlist>
     </sect2>
