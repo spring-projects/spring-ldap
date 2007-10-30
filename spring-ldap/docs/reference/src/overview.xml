@@ -192,14 +192,15 @@ public class PersonDaoImpl implements PersonDao {
 
     <itemizedlist>
       <listitem>
-        <para><emphasis>spring-context</emphasis> (If your application is wired up using the Spring Application Context - 
-        adds the ability for application objects to obtain resources using a consistent API)</para>
-      </listitem>
-      <listitem>
         <para><emphasis>acegi-security</emphasis> (For Acegi security integration using <literal>AcegiAuthenticationSource</literal>)</para>
       </listitem>
       <listitem>
-        <para><emphasis>spring-dao</emphasis> (If you are planning to use the client side compensating transaction support)</para>
+        <para><emphasis>spring-context</emphasis> (If your application is wired up using the Spring Application Context - 
+        adds the ability for application objects to obtain resources using a consistent API. Definitely needed if you are 
+        planning on using the BaseLdapPathBeanPostProcessor.)</para>
+      </listitem>
+      <listitem>
+        <para><emphasis>spring-jdbc</emphasis> (If you are planning to use the client side compensating transaction support)</para>
       </listitem>
       <listitem>
         <para><emphasis>ldapbp</emphasis> (Sun LDAP Booster Pack - if you will use the LDAP v3 Server controls integration)</para>
@@ -238,7 +239,7 @@ public class PersonDaoImpl implements PersonDao {
 
       <itemizedlist spacing="compact">
         <listitem>
-          <para>Dependencies: spring-dao, commons-logging</para>
+          <para>Dependencies: commons-logging</para>
         </listitem>
       </itemizedlist>
     </sect2>
@@ -269,7 +270,7 @@ public class PersonDaoImpl implements PersonDao {
       <itemizedlist spacing="compact">
         <listitem>
           <para>Dependencies: ldap, ldap.support, spring-beans,
-          commons-collections, commons-lang, commons-logging</para>
+          commons-lang, commons-logging</para>
         </listitem>
       </itemizedlist>
     </sect2>
@@ -283,7 +284,7 @@ public class PersonDaoImpl implements PersonDao {
       <itemizedlist spacing="compact">
         <listitem>
           <para>Dependencies: ldap.core, ldap.support, spring-core,
-          spring-beans, commons-lang, commons-logging</para>
+          spring-beans, spring-context (optional), commons-lang, commons-logging</para>
         </listitem>
       </itemizedlist>
     </sect2>
@@ -348,31 +349,44 @@ public class PersonDaoImpl implements PersonDao {
       </itemizedlist>
     </sect2>
 
-    <sect2 id="ldap.transaction">
-      <title>org.springframework.ldap.transaction</title>
+    <sect2 id="ldap.transaction.compensating">
+      <title>org.springframework.ldap.transaction.compensating</title>
 
-      <para>The <emphasis>ldap.transaction</emphasis> package contains the
+      <para>The <emphasis>ldap.transaction.compensating</emphasis> package contains the
       core LDAP-specific implementation of compensating transactions.</para>
 
       <itemizedlist spacing="compact">
         <listitem>
           <para>Dependencies: ldap, ldap.core, transaction.compensating,
-          spring-core, spring-dao, commons-lang, commons-logging</para>
+          spring-core, commons-lang, commons-logging</para>
         </listitem>
       </itemizedlist>
     </sect2>
 
-    <sect2 id="ldap.transaction.support">
-      <title>org.springframework.ldap.transaction.support</title>
+    <sect2 id="ldap.transaction.compensating.manager">
+      <title>org.springframework.ldap.transaction.compensating.manager</title>
 
-      <para>The <emphasis>ldap.transaction.support</emphasis> package contains
-      supporting transaction classes, like
-      ContextSourceTransactionManager.</para>
+      <para>The <emphasis>ldap.transaction.compensating.manager</emphasis> package contains the
+      core implementation classes for client-side compensating transactions.</para>
 
       <itemizedlist spacing="compact">
         <listitem>
-          <para>Dependencies: ldap.core, ldap.transaction,
-          transaction.compensating, spring-dao, commons-logging</para>
+          <para>Dependencies: ldap, ldap.core, ldap.transaction.compensating, 
+          ldap.transaction.compensating.support, transaction.compensating,
+          spring-jdbc (optional), commons-logging</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2 id="ldap.transaction.compensating.support">
+      <title>org.springframework.ldap.transaction.compensating.support</title>
+
+      <para>The <emphasis>ldap.transaction.compensating.support</emphasis> package contains
+      useful helper classes for client-side compensating transactions.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Dependencies: ldap.core, ldap.transaction.compensating</para>
         </listitem>
       </itemizedlist>
     </sect2>
