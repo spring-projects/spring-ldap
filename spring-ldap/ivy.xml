@@ -31,6 +31,8 @@
 			rev="2.0.6" />
 		<dependency org="org.springframework" name="spring-dao"
 			rev="2.0.6" />
+		<dependency org="org.springframework" name="spring-jdbc"
+			rev="2.0.6" />
 		<dependency org="org.springframework" name="spring-src"
 			rev="2.0.6" conf="source->source">
 			<artifact name="spring-src" type="zip" />
@@ -45,8 +47,6 @@
 			<artifact name="acegi-security-src" type="zip" />
 		</dependency>
 		<!-- kind of nasty, acegi needs some 1.2.7 stuff, so we override with newer! -->
-		<dependency org="org.springframework" name="spring-jdbc"
-			rev="2.0.6" conf="buildtime->default" />
 		<dependency org="org.springframework" name="spring-remoting"
 			rev="2.0.6" conf="buildtime->default" />
 		<dependency org="org.springframework" name="spring-support"
