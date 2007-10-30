@@ -43,7 +43,7 @@ public class RebindOperationRecorder implements
      * @param ldapOperations
      *            {@link LdapOperations} to use for getting the rollback
      *            information and supply to the {@link RebindOperationExecutor}.
-     * @param the
+     * @param renamingStrategy
      *            {@link TempEntryRenamingStrategy} to use for generating temp
      *            DNs.
      */
