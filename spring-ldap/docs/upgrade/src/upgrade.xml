@@ -9,9 +9,9 @@
   to this package as <literal>ldap</literal>.</para>
 
   <sect1>
-    <title>Upgrading from 1.1.x to 1.2-RC1</title>
+    <title>Upgrading from 1.1.x to 1.2</title>
 
-    <para>In 1.2-RC1, there are a couple of major changes:</para>
+    <para>In 1.2, there are a couple of major changes:</para>
 
     <itemizedlist>
       <listitem>
