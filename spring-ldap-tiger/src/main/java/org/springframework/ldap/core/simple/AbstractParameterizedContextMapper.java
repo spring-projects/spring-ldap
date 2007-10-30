@@ -48,6 +48,6 @@ public abstract class AbstractParameterizedContextMapper<T> implements Parameter
 	 * @param ctx the context to map to an object.
 	 * @return an object built from the data in the context.
 	 */
-	protected abstract T doMapFromContext(DirContextOperations operations);
+	protected abstract T doMapFromContext(DirContextOperations ctx);
 
 }

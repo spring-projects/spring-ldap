@@ -110,7 +110,7 @@ public class DirContextAdapter implements DirContextOperations {
     /**
      * Create a new adapter from the supplied attributes and dn.
      * 
-     * @param originalAttrs
+     * @param attrs
      *            the attributes.
      * @param dn
      *            the dn.
@@ -122,7 +122,7 @@ public class DirContextAdapter implements DirContextOperations {
     /**
      * Create a new adapter from the supplied attributes, dn, and base.
      * 
-     * @param originalAttrs
+     * @param attrs
      *            the attributes.
      * @param dn
      *            the dn.

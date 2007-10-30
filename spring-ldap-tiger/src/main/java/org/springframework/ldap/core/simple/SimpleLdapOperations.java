@@ -111,9 +111,7 @@ public interface SimpleLdapOperations {
 	void bind(String dn, Object obj, Attributes attributes);
 
 	/**
-	 * Remove an entry from the LDAP tree. The entry must not have any children -
-	 * if you suspect that the entry might have descendants, use
-	 * {@link #unbind(Name, boolean)} in stead.
+	 * Remove an entry from the LDAP tree. The entry must not have any children.
 	 * 
 	 * @param dn The distinguished name to unbind.
 	 * @throws NamingException if any error occurs.
@@ -121,7 +119,7 @@ public interface SimpleLdapOperations {
 	void unbind(String dn);
 
 	/**
-	 * Modify the Attributes of the entry corresponsing to the supplied
+	 * Modify the Attributes of the entry corresponding to the supplied
 	 * {@link DirContextOperations} instance. The instance should have been
 	 * received from the {@link #lookupContext(String)} operation, and then modified to
 	 * match the current state of the matching domain object, e.g.:
