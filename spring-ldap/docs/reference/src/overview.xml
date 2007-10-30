@@ -190,11 +190,6 @@ public class PersonDaoImpl implements PersonDao {
       </listitem>
 
       <listitem>
-        <para>commons-collections (tools for working with collections, used
-        internally)</para>
-      </listitem>
-
-      <listitem>
         <para>ldapbp (Sun LDAP Booster Pack, for required LDAP
         controls)</para>
       </listitem>
