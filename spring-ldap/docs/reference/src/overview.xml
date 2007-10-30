@@ -329,7 +329,7 @@ public class PersonDaoImpl implements PersonDao {
 
       <itemizedlist spacing="compact">
         <listitem>
-          <para>Dependencies: ldap, ldap.core, LDAP booster pack, spring-core,
+          <para>Dependencies: ldap, ldap.core, LDAP booster pack (optional), spring-core,
           commons-lang, commons-logging</para>
         </listitem>
       </itemizedlist>
