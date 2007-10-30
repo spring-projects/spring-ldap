@@ -239,7 +239,7 @@ public class PersonService implements PersonService, <emphasis role="bold">BaseL
   	<example>
       <title>Specifying a <literal>BaseLdapPathBeanPostProcessor</literal> in your <literal>ApplicationContext</literal></title>
 
-      <programlisting>&gt;beans&lt;
+      <programlisting>&lt;beans&gt;
    ...
    &lt;bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource"&gt;
       &lt;property name="url" value="ldap://localhost:389" /&gt;
