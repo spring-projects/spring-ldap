@@ -20,15 +20,11 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 import javax.naming.Context;
-import javax.naming.ldap.Control;
-import javax.naming.ldap.ControlFactory;
 
 import junit.framework.TestCase;
 
 import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.DistinguishedName;
-
-import com.sun.jndi.ldap.ctl.ResponseControlFactory;
 
 /**
  * Unit tests for the LdapContextSource class.
@@ -266,29 +262,6 @@ public class LdapContextSourceTest extends TestCase {
 		tested.setUrl("ldap://ldap2.example.com:389");
 		env = tested.getAnonymousEnv();
 		assertEquals("ldap://ldap2.example.com:389/dc=example,dc=se", env.get(Context.PROVIDER_URL));
-	}
-
-	public void testSetResponseControlFactoryToNull() throws Exception {
-		tested.setResponseControlFactory(null);
-		assertNotNull(tested.getResponseControlFactory());
-		assertEquals(ResponseControlFactory.class, tested.getResponseControlFactory());
-	}
-
-	public void testSetValidResponseControlFactory() throws Exception {
-		Class validClass = ControlFactory.class;
-		tested.setResponseControlFactory(validClass);
-		assertEquals(validClass, tested.getResponseControlFactory());
-	}
-
-	public void testSetInvalidResponseControlFactory() throws Exception {
-		try {
-			Class invalidClass = Control.class;
-			tested.setResponseControlFactory(invalidClass);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertTrue(true);
-		}
 	}
 
 	private class DummyAuthenticationProvider implements AuthenticationSource {
