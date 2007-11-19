@@ -91,7 +91,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	private boolean anonymousReadOnly = false;
 
-	private static final Log log = LogFactory.getLog(LdapContextSource.class);
+	private static final Log log = LogFactory.getLog(AbstractContextSource.class);
 
 	public static final String SUN_LDAP_POOLING_FLAG = "com.sun.jndi.ldap.connect.pool";
 
