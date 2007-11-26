@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.pool;
+package org.springframework.ldap.pool.factory;
 
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
@@ -21,7 +21,8 @@ import javax.naming.ldap.LdapContext;
 import org.easymock.MockControl;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.pool.PoolingContextSource.WhenExhaustedAction;
+import org.springframework.ldap.pool.AbstractPoolTestCase;
+import org.springframework.ldap.pool.factory.PoolingContextSource.WhenExhaustedAction;
 import org.springframework.ldap.pool.validation.DirContextValidator;
 
 /**

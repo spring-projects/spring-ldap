@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap.pool;
+package org.springframework.ldap.pool.factory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +30,9 @@ import org.apache.commons.pool.impl.GenericObjectPool;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.pool.DelegatingDirContext;
+import org.springframework.ldap.pool.DelegatingLdapContext;
+import org.springframework.ldap.pool.DirContextType;
 import org.springframework.ldap.pool.validation.DirContextValidator;
 
 /**

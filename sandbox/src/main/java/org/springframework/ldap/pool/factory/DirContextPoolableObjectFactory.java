@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap.pool;
+package org.springframework.ldap.pool.factory;
 
 import javax.naming.directory.DirContext;
 
@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.BaseKeyedPoolableObjectFactory;
 import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.pool.DirContextType;
 import org.springframework.ldap.pool.validation.DirContextValidator;
 
 /**

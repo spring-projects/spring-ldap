@@ -29,7 +29,7 @@ import org.apache.commons.pool.KeyedObjectPool;
 /**
  * @author Eric Dalquist <a href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
  */
-class DelegatingLdapContext extends DelegatingDirContext implements LdapContext {
+public class DelegatingLdapContext extends DelegatingDirContext implements LdapContext {
     private LdapContext delegateLdapContext;
 
     public DelegatingLdapContext(KeyedObjectPool keyedObjectPool, LdapContext delegateLdapContext, DirContextType dirContextType) {

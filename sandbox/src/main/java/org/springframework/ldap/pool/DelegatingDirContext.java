@@ -32,7 +32,7 @@ import org.apache.commons.pool.KeyedObjectPool;
 /**
  * @author Eric Dalquist <a href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
  */
-class DelegatingDirContext extends DelegatingContext implements DirContext {
+public class DelegatingDirContext extends DelegatingContext implements DirContext {
     private DirContext delegateDirContext;
 
     public DelegatingDirContext(KeyedObjectPool keyedObjectPool, DirContext delegateDirContext, DirContextType dirContextType) {
