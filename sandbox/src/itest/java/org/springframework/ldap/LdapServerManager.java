@@ -34,8 +34,8 @@ import org.apache.directory.server.jndi.ServerContextFactory;
 import org.apache.directory.server.protocol.shared.store.LdifFileLoader;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.DefaultDirObjectFactory;
 import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.core.support.DefaultDirObjectFactory;
 
 /**
  * Utility class to initialize the apache directory server for use in the
