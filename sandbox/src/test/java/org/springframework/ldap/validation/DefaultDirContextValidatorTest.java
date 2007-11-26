@@ -24,6 +24,7 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 import org.springframework.ldap.pool.DirContextType;
+import org.springframework.ldap.pool.validation.DefaultDirContextValidator;
 
 /**
  * @author Eric Dalquist <a

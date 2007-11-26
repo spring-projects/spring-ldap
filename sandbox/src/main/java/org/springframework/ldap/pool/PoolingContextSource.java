@@ -30,7 +30,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.validation.DirContextValidator;
+import org.springframework.ldap.pool.validation.DirContextValidator;
 
 /**
  * A {@link ContextSource} implementation that wraps an object pool and another {@link ContextSource}.

@@ -22,7 +22,7 @@ import javax.naming.ldap.LdapContext;
 import org.apache.commons.pool.KeyedObjectPool;
 import org.easymock.MockControl;
 import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.validation.DirContextValidator;
+import org.springframework.ldap.pool.validation.DirContextValidator;
 
 import junit.framework.TestCase;
 

@@ -22,7 +22,7 @@ import org.easymock.MockControl;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.pool.PoolingContextSource.WhenExhaustedAction;
-import org.springframework.ldap.validation.DirContextValidator;
+import org.springframework.ldap.pool.validation.DirContextValidator;
 
 /**
  * @author Eric Dalquist <a href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>

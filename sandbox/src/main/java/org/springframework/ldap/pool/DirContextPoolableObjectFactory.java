@@ -23,7 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.BaseKeyedPoolableObjectFactory;
 import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.validation.DirContextValidator;
+import org.springframework.ldap.pool.validation.DirContextValidator;
 
 /**
  * Factory that creates {@link DirContext} instances for pooling via a
