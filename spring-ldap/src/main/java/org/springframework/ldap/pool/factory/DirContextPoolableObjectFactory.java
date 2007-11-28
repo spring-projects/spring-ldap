@@ -171,6 +171,7 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
             return false;
         }
     }
+    
 
     /**
      * @see org.apache.commons.pool.BaseKeyedPoolableObjectFactory#destroyObject(java.lang.Object,

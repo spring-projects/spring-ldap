@@ -26,7 +26,7 @@ import org.springframework.ldap.pool.factory.PoolingContextSource.WhenExhaustedA
 import org.springframework.ldap.pool.validation.DirContextValidator;
 
 /**
- * @author Eric Dalquist <a href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
+ * @author Eric Dalquist
  */
 public class PoolingContextSourceTest extends AbstractPoolTestCase {
     

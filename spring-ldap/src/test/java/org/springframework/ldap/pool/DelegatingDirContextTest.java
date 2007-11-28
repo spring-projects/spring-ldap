@@ -190,18 +190,6 @@ public class DelegatingDirContextTest extends AbstractPoolTestCase {
                 keyedObjectPoolMock, dirContextMock, DirContextType.READ_ONLY);
 
         try {
-            delegatingDirContext.bind((Name) null, null, null);
-            fail("DelegatingDirContext.bind Should have thrown an UnsupportedOperationException");
-        } catch (UnsupportedOperationException uoe) {
-            // Expected
-        }
-        try {
-            delegatingDirContext.bind((String) null, null, null);
-            fail("DelegatingDirContext.bind Should have thrown an UnsupportedOperationException");
-        } catch (UnsupportedOperationException uoe) {
-            // Expected
-        }
-        try {
             delegatingDirContext.createSubcontext((Name) null, null);
             fail("DelegatingDirContext.createSubcontext Should have thrown an UnsupportedOperationException");
         } catch (UnsupportedOperationException uoe) {
@@ -237,18 +225,6 @@ public class DelegatingDirContextTest extends AbstractPoolTestCase {
         } catch (UnsupportedOperationException uoe) {
             // Expected
         }
-        try {
-            delegatingDirContext.rebind((Name) null, null, null);
-            fail("DelegatingDirContext.rebind Should have thrown an UnsupportedOperationException");
-        } catch (UnsupportedOperationException uoe) {
-            // Expected
-        }
-        try {
-            delegatingDirContext.rebind((String) null, null, null);
-            fail("DelegatingDirContext.rebind Should have thrown an UnsupportedOperationException");
-        } catch (UnsupportedOperationException uoe) {
-            // Expected
-        }
         
         verify();
     }
@@ -263,6 +239,8 @@ public class DelegatingDirContextTest extends AbstractPoolTestCase {
         final DelegatingDirContext delegatingDirContext = new DelegatingDirContext(
                 keyedObjectPoolMock, dirContextMock, DirContextType.READ_ONLY);
 
+        delegatingDirContext.bind((Name) null, null, null);
+        delegatingDirContext.bind((String) null, null, null);
         delegatingDirContext.getAttributes((Name) null, null);
         delegatingDirContext.getAttributes((Name) null);
         delegatingDirContext.getAttributes((String) null, null);
@@ -271,6 +249,8 @@ public class DelegatingDirContextTest extends AbstractPoolTestCase {
         delegatingDirContext.modifyAttributes((Name) null, null);
         delegatingDirContext.modifyAttributes((String) null, 0, null);
         delegatingDirContext.modifyAttributes((String) null, null);
+        delegatingDirContext.rebind((Name) null, null, null);
+        delegatingDirContext.rebind((String) null, null, null);
         delegatingDirContext.search((Name) null, (Attributes) null, null);
         delegatingDirContext.search((Name) null, null);
         delegatingDirContext.search((Name) null, null, null, null);
@@ -295,6 +275,18 @@ public class DelegatingDirContextTest extends AbstractPoolTestCase {
 
         delegatingDirContext.close();
 
+        try {
+            delegatingDirContext.bind((Name) null, null, null);
+            fail("DelegatingDirContext.bind should have thrown a NamingException");
+        } catch (NamingException ne) {
+            //  Expected
+        }
+        try {
+            delegatingDirContext.bind((String) null, null, null);
+            fail("DelegatingDirContext.bind should have thrown a NamingException");
+        } catch (NamingException ne) {
+            //  Expected
+        }
         try {
             delegatingDirContext.getAttributes((Name) null, null);
             fail("DelegatingDirContext.getAttributes should have thrown a NamingException");
@@ -340,6 +332,18 @@ public class DelegatingDirContextTest extends AbstractPoolTestCase {
         try {
             delegatingDirContext.modifyAttributes((String) null, null);
             fail("DelegatingDirContext.modifyAttributes should have thrown a NamingException");
+        } catch (NamingException ne) {
+            //  Expected
+        }
+        try {
+            delegatingDirContext.rebind((Name) null, null, null);
+            fail("DelegatingDirContext.rebind should have thrown a NamingException");
+        } catch (NamingException ne) {
+            //  Expected
+        }
+        try {
+            delegatingDirContext.rebind((String) null, null, null);
+            fail("DelegatingDirContext.rebind should have thrown a NamingException");
         } catch (NamingException ne) {
             //  Expected
         }

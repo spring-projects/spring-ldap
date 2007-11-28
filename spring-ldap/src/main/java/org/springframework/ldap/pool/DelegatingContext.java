@@ -28,7 +28,7 @@ import org.apache.commons.lang.Validate;
 import org.apache.commons.pool.KeyedObjectPool;
 
 /**
- * @author Eric Dalquist <a href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
+ * @author Eric Dalquist
  */
 public class DelegatingContext implements Context {
     private KeyedObjectPool keyedObjectPool;
@@ -123,14 +123,16 @@ public class DelegatingContext implements Context {
      * @see javax.naming.Context#bind(javax.naming.Name, java.lang.Object)
      */
     public void bind(Name name, Object obj) throws NamingException {
-        throw new UnsupportedOperationException("Cannot call bind on a pooled context");        
+        this.assertOpen();
+        this.getDelegateContext().bind(name, obj);
     }
 
     /**
      * @see javax.naming.Context#bind(java.lang.String, java.lang.Object)
      */
     public void bind(String name, Object obj) throws NamingException {
-        throw new UnsupportedOperationException("Cannot call bind on a pooled context");        
+        this.assertOpen();
+        this.getDelegateContext().bind(name, obj);
     }
 
     /**
@@ -303,14 +305,16 @@ public class DelegatingContext implements Context {
      * @see javax.naming.Context#rebind(javax.naming.Name, java.lang.Object)
      */
     public void rebind(Name name, Object obj) throws NamingException {
-        throw new UnsupportedOperationException("Cannot call rebind on a pooled context");
+        this.assertOpen();
+        this.getDelegateContext().rebind(name, obj);
     }
 
     /**
      * @see javax.naming.Context#rebind(java.lang.String, java.lang.Object)
      */
     public void rebind(String name, Object obj) throws NamingException {
-        throw new UnsupportedOperationException("Cannot call rebind on a pooled context");
+        this.assertOpen();
+        this.getDelegateContext().rebind(name, obj);
     }
 
     /**
@@ -340,13 +344,15 @@ public class DelegatingContext implements Context {
      * @see javax.naming.Context#unbind(javax.naming.Name)
      */
     public void unbind(Name name) throws NamingException {
-        throw new UnsupportedOperationException("Cannot call unbind on a pooled context");
+        this.assertOpen();
+        this.getDelegateContext().unbind(name);
     }
 
     /**
      * @see javax.naming.Context#unbind(java.lang.String)
      */
     public void unbind(String name) throws NamingException {
-        throw new UnsupportedOperationException("Cannot call unbind on a pooled context");
+        this.assertOpen();
+        this.getDelegateContext().unbind(name);
     }
 }

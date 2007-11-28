@@ -27,12 +27,13 @@ import javax.naming.directory.SearchControls;
 
 import org.apache.commons.lang.Validate;
 import org.apache.commons.pool.KeyedObjectPool;
+import org.springframework.ldap.core.DirContextProxy;
 
 
 /**
- * @author Eric Dalquist <a href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
+ * @author Eric Dalquist
  */
-public class DelegatingDirContext extends DelegatingContext implements DirContext {
+public class DelegatingDirContext extends DelegatingContext implements DirContext, DirContextProxy {
     private DirContext delegateDirContext;
 
     public DelegatingDirContext(KeyedObjectPool keyedObjectPool, DirContext delegateDirContext, DirContextType dirContextType) {
@@ -110,6 +111,16 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
         final DirContext context = this.getInnermostDelegateDirContext();
         return (context != null ? context.toString() : "DirContext is closed");
     }
+
+
+    //***** DirContextProxy Interface Methods *****//
+
+    /* (non-Javadoc)
+     * @see org.springframework.ldap.core.DirContextProxy#getTargetContext()
+     */
+    public DirContext getTargetContext() {
+        return this.delegateDirContext;
+    }
     
     
     //***** DirContext Interface Delegates *****//
@@ -118,14 +129,16 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
      * @see javax.naming.directory.DirContext#bind(javax.naming.Name, java.lang.Object, javax.naming.directory.Attributes)
      */
     public void bind(Name name, Object obj, Attributes attrs) throws NamingException {
-        throw new UnsupportedOperationException("Cannot call bind on a pooled context");
+        this.assertOpen();
+        this.getDelegateDirContext().bind(name, obj, attrs);
     }
 
     /**
      * @see javax.naming.directory.DirContext#bind(java.lang.String, java.lang.Object, javax.naming.directory.Attributes)
      */
     public void bind(String name, Object obj, Attributes attrs) throws NamingException {
-        throw new UnsupportedOperationException("Cannot call bind on a pooled context");
+        this.assertOpen();
+        this.getDelegateDirContext().bind(name, obj, attrs);
     }
 
     /**
@@ -238,14 +251,16 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
      * @see javax.naming.directory.DirContext#rebind(javax.naming.Name, java.lang.Object, javax.naming.directory.Attributes)
      */
     public void rebind(Name name, Object obj, Attributes attrs) throws NamingException {
-        throw new UnsupportedOperationException("Cannot call rebind on a pooled context");
+        this.assertOpen();
+        this.getDelegateDirContext().rebind(name, obj, attrs);
     }
 
     /**
      * @see javax.naming.directory.DirContext#rebind(java.lang.String, java.lang.Object, javax.naming.directory.Attributes)
      */
     public void rebind(String name, Object obj, Attributes attrs) throws NamingException {
-        throw new UnsupportedOperationException("Cannot call rebind on a pooled context");
+        this.assertOpen();
+        this.getDelegateDirContext().rebind(name, obj, attrs);
     }
 
     /**

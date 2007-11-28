@@ -27,7 +27,7 @@ import org.apache.commons.lang.Validate;
 import org.apache.commons.pool.KeyedObjectPool;
 
 /**
- * @author Eric Dalquist <a href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
+ * @author Eric Dalquist
  */
 public class DelegatingLdapContext extends DelegatingDirContext implements LdapContext {
     private LdapContext delegateLdapContext;

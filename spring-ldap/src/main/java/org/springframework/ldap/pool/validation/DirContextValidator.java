@@ -18,13 +18,12 @@ package org.springframework.ldap.pool.validation;
 
 import javax.naming.directory.DirContext;
 
-import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.pool.DirContextType;
 
 /**
  * A validator for {@link DirContext}s.
  * 
- * @author Eric Dalquist <a href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
+ * @author Eric Dalquist
  */
 public interface DirContextValidator {
     /**

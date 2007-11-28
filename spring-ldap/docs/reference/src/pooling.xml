@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<chapter id="pooling">
+	<title>Pooling Support</title>
+
+	<sect1 id="pooling-intro">
+		<title>Introduction</title>
+
+		<para>
+			Pooling LDAP connections helps mitigated the overhead of
+			creating a new LDAP connection for each LDAP interaction.
+			While
+			<ulink
+				url="http://java.sun.com/products/jndi/tutorial/ldap/connect/pool.html">
+				Java LDAP pooling support
+			</ulink>
+			exists it is limited in its configuration options and
+			features, such as connection validation and pool
+			maintenance. Spring LDAP provides support for detailed pool
+			configuration on a per-
+			<literal>ContextSource</literal>
+			basis.
+		</para>
+
+		<para>
+			Pooling support is provided by
+			<literal>PoolingContextSource</literal>
+			which can wrap any
+			<literal>ContextSource</literal>
+			and pool both read only and read write
+			<literal>DirContext</literal>
+			s.
+			<ulink url="http://commons.apache.org/pool/index.html">
+				Jakarta Commons-Pool
+			</ulink>
+			is used to provide the underlying pool implementation.
+		</para>
+	</sect1>
+
+	<sect1 id="pooling-validation">
+		<title>DirContext Validation</title>
+
+		<para>
+			Validation of pooled connections is the primary motivation
+			for using a custom pooling library versus the JDK provided
+			LDAP pooling functionality. Validation allows pooled
+			<literal>DirContext</literal>
+			connections to be checked to ensure they are still properly
+			connected and configured when checking them out of the pool,
+			in to the pool or while idle in the pool
+		</para>
+
+		<para>
+			The
+			<literal>DirContextValidator</literal>
+			interface is used by the
+			<literal>PoolingContextSource</literal>
+			for validation and
+			<literal>DefaultDirContextValidator</literal>
+			is provided as the default validation implementation.
+			<literal>DefaultDirContextValidator</literal>
+			does a
+			<literal>
+				DirContext.search(String, String, SearchControls)
+			</literal>
+			, with an empty name, a filter of
+			<literal>"objectclass=*"</literal>
+			and
+			<literal>SearchControls</literal>
+			set to limit a single result with the only the objectclass
+			attribute and a 500ms timeout. If the returned
+			<literal>NamingEnumeration</literal>
+			has results the
+			<literal>DirContext</literal>
+			passes validation, if no results are returned or an
+			exception is thrown the
+			<literal>DirContext</literal>
+			fails validation. The
+			<literal>DefaultDirContextValidator</literal>
+			should work with no configuration changes on most LDAP
+			servers and provide the fastest way to validate the
+			<literal>DirContext</literal>
+			.
+		</para>
+	</sect1>
+
+	<sect1 id="pooling-properties">
+		<title>Pool Properties</title>
+
+		<para>
+			The following properties are available on the
+			<literal>PoolingContextSource</literal>
+			for configuration of the DirContext pool. The
+			<literal>contextSource</literal>
+			property must be set and the
+			<literal>dirContextValidator</literal>
+			property must be set if validation is enabled, all other
+			properties are optional.
+		</para>
+
+		<table frame="all">
+			<title>Pooling Configuration Properties</title>
+			<tgroup align="left" cols="3" colsep="1" rowsep="1">
+				<colspec colname="c1" />
+
+				<colspec colname="c2" />
+
+				<colspec colname="c3" />
+
+				<thead>
+					<row>
+						<entry>Parameter</entry>
+
+						<entry>Default</entry>
+
+						<entry>Description</entry>
+					</row>
+				</thead>
+
+				<tbody>
+					<row>
+						<entry>
+							<literal>contextSource</literal>
+						</entry>
+
+						<entry>
+							<literal>null</literal>
+						</entry>
+
+						<entry>
+							The
+							<literal>ContextSource</literal>
+							implementation to get
+							<literal>DirContext</literal>
+							s from to populate the pool.
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<literal>dirContextValidator</literal>
+						</entry>
+
+						<entry>
+							<literal>null</literal>
+						</entry>
+
+						<entry>
+							The
+							<literal>DirContextValidator</literal>
+							implementation to use when validating
+							connections. This is required if
+							<literal>testOnBorrow</literal>
+							,
+							<literal>testOnReturn</literal>
+							, or
+							<literal>testWhileIdle</literal>
+							options are set to
+							<literal>true</literal>
+							.
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<literal>maxActive</literal>
+						</entry>
+
+						<entry>
+							<literal>8</literal>
+						</entry>
+
+						<entry>
+							The maximum number of active connections of
+							each type (read-only|read-write) that can be
+							allocated from this pool at the same time,
+							or non-positive for no limit.
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<literal>maxTotal</literal>
+						</entry>
+
+						<entry>
+							<literal>-1</literal>
+						</entry>
+
+						<entry>
+							The overall maximum number of active
+							connections (for all types) that can be
+							allocated from this pool at the same time,
+							or non-positive for no limit.
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<literal>maxIdle</literal>
+						</entry>
+
+						<entry>
+							<literal>8</literal>
+						</entry>
+
+						<entry>
+							The maximum number of active connections of
+							each type (read-only|read-write) that can
+							remain idle in the pool, without extra ones
+							being released, or non-positive for no
+							limit.
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<literal>minIdle</literal>
+						</entry>
+
+						<entry>
+							<literal>0</literal>
+						</entry>
+
+						<entry>
+							The minimum number of active connections of
+							each type (read-only|read-write) that can
+							remain idle in the pool, without extra ones
+							being created, or zero to create none.
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<literal>maxWait</literal>
+						</entry>
+
+						<entry>
+							<literal>-1</literal>
+						</entry>
+
+						<entry>
+							The maximum number of milliseconds that the
+							pool will wait (when there are no available
+							connections) for a connection to be returned
+							before throwing an exception, or
+							non-positive to wait indefinitely.
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<literal>whenExhaustedAction</literal>
+						</entry>
+
+						<entry>
+							<literal>BLOCK</literal>
+						</entry>
+
+						<entry>
+							Specifies the behaviour when the pool is
+							exhausted.
+							<itemizedlist>
+								<listitem>
+									<para>
+										The
+										<literal>FAIL</literal>
+										option will throw a
+										<literal>
+											NoSuchElementException
+										</literal>
+										when the pool is exhausted.
+									</para>
+								</listitem>
+
+								<listitem>
+									<para>
+										The
+										<literal>GROW</literal>
+										option will create and return a
+										new object (essentially making
+										<literal>maxActive</literal>
+										meaningless).
+									</para>
+								</listitem>
+
+								<listitem>
+									<para>
+										The
+										<literal>BLOCK</literal>
+										option will wait until a new
+										object is available. If
+										<literal>maxWait</literal>
+										is positive a
+										<literal>
+											NoSuchElementException
+										</literal>
+										is thrown if no new object is
+										available after the
+										<literal>maxWait</literal>
+										time expires.
+									</para>
+								</listitem>
+							</itemizedlist>
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<literal>testOnBorrow</literal>
+						</entry>
+
+						<entry>
+							<literal>false</literal>
+						</entry>
+
+						<entry>
+							The indication of whether objects will be
+							validated before being borrowed from the
+							pool. If the object fails to validate, it
+							will be dropped from the pool, and an
+							attempt to borrow another will be made.
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<literal>testOnReturn</literal>
+						</entry>
+
+						<entry>
+							<literal>false</literal>
+						</entry>
+
+						<entry>
+							The indication of whether objects will be
+							validated before being returned to the pool.
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<literal>testWhileIdle</literal>
+						</entry>
+
+						<entry>
+							<literal>false</literal>
+						</entry>
+
+						<entry>
+							The indication of whether objects will be
+							validated by the idle object evictor (if
+							any). If an object fails to validate, it
+							will be dropped from the pool.
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<literal>
+								timeBetweenEvictionRunsMillis
+							</literal>
+						</entry>
+
+						<entry>
+							<literal>-1</literal>
+						</entry>
+
+						<entry>
+							The number of milliseconds to sleep between
+							runs of the idle object evictor thread. When
+							non-positive, no idle object evictor thread
+							will be run.
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<literal>numTestsPerEvictionRun</literal>
+						</entry>
+
+						<entry>
+							<literal>3</literal>
+						</entry>
+
+						<entry>
+							The number of objects to examine during each
+							run of the idle object evictor thread (if
+							any).
+						</entry>
+					</row>
+
+					<row>
+						<entry>
+							<literal>
+								minEvictableIdleTimeMillis
+							</literal>
+						</entry>
+
+						<entry>
+							<literal>1000 * 60 * 30</literal>
+						</entry>
+
+						<entry>
+							The minimum amount of time an object may sit
+							idle in the pool before it is eligible for
+							eviction by the idle object evictor (if
+							any).
+						</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</table>
+	</sect1>
+
+	<sect1 id="pooling-configuration">
+		<title>Configuration</title>
+
+		<para>
+			Configuring pooling should look very familiar if you're used
+			to Jakarta Commons-Pool or Commons-DBCP. You will first
+			create a normal
+			<literal>ContextSource</literal>
+			then wrap it in a
+			<literal>PoolingContextSource</literal>
+			.
+			<informalexample>
+				<programlisting><![CDATA[
+<beans>
+   ...
+   <bean id="contextSource" class="org.springframework.ldap.pool.factory.PoolingContextSource">
+      <property name="contextSource" ref="contextSourceTarget" />
+   </bean>
+    
+   <bean id="contextSourceTarget" class="org.springframework.ldap.core.support.LdapContextSource">
+      <property name="url" value="ldap://localhost:389" />
+      <property name="base" value="dc=example,dc=com" />
+      <property name="userDn" value="cn=Manager" />
+      <property name="password" value="secret" />
+      <property name="pooled" value="false"/>
+   </bean>
+   ...
+</beans>
+]]></programlisting>
+			</informalexample>
+			In a real world example you would probably configure the
+			pool options and enable connection validation; the above
+			serves as an example to demonstrate the general idea.
+			<note>
+				<para>
+					Ensure that the
+					<literal>pooled</literal>
+					property is set to
+					<literal>false</literal>
+					on any
+					<literal>ContextSource</literal>
+					that will be wrapped in a
+					<literal>PoolingContextSource</literal>
+					. The
+					<literal>PoolingContextSource</literal>
+					must be able to create new connections when needed
+					and if
+					<literal>pooled</literal>
+					is set to
+					<literal>true</literal>
+					that may not be possible.
+				</para>
+			</note>
+			<note>
+				<para>
+					You'll notice that the actual
+					<literal>ContextSource</literal>
+					gets an id with a "Target" suffix. The bean you will
+					actually refer to is the
+					<literal>PoolingContextSource</literal>
+					that wraps the target
+					<literal>contextSource</literal>
+				</para>
+			</note>
+		</para>
+
+		<sect2 id="pooling-advanced-configuration">
+			<title>Validation Configuration</title>
+
+			<para>
+				Adding validation and a few pool configuration tweaks to
+				the above example is straight forward. Inject a
+				<literal>DirContextValidator</literal>
+				and set when validation should occur and the pool is
+				ready to go.
+				<informalexample>
+					<programlisting><![CDATA[
+<beans>
+   ...
+   <bean id="contextSource" class="org.springframework.ldap.pool.factory.PoolingContextSource">
+      <property name="contextSource" ref="contextSourceTarget" />
+      <property name="dirContextValidator" ref="dirContextValidator" />
+      <property name="testOnBorrow" value="true" />
+      <property name="testWhileIdle" value="true" />
+   </bean>
+
+   <bean id="dirContextValidator"
+         class="org.springframework.ldap.pool.validation.DefaultDirContextValidator" />
+    
+   <bean id="contextSourceTarget" class="org.springframework.ldap.core.support.LdapContextSource">
+      <property name="url" value="ldap://localhost:389" />
+      <property name="base" value="dc=example,dc=com" />
+      <property name="userDn" value="cn=Manager" />
+      <property name="password" value="secret" />
+      <property name="pooled" value="false"/>
+   </bean>
+   ...
+</beans>
+]]></programlisting>
+				</informalexample>
+				The above example will test each
+				<literal>DirContext</literal>
+				before it is passed to the client application and test
+				<literal>DirContext</literal>
+				s that have been sitting idle in the pool.
+			</para>
+		</sect2>
+	</sect1>
+</chapter>

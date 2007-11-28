@@ -18,7 +18,6 @@ package org.springframework.ldap.pool.factory;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
@@ -26,7 +25,7 @@ import javax.naming.ldap.LdapContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
-import org.apache.commons.pool.impl.GenericObjectPool;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
@@ -142,9 +141,9 @@ import org.springframework.ldap.pool.validation.DirContextValidator;
  * </table>
  * 
  * 
- * @author Eric Dalquist <a href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
+ * @author Eric Dalquist
  */
-public class PoolingContextSource implements ContextSource {
+public class PoolingContextSource implements ContextSource, DisposableBean {
     protected final Log logger = LogFactory.getLog(this.getClass());
     
     private final GenericKeyedObjectPool keyedObjectPool;
@@ -414,9 +413,12 @@ public class PoolingContextSource implements ContextSource {
     }
 
     
-    //***** Maintenance Methods *****//
-    
-    public void close() {
+    //***** DisposableBean interface methods *****//
+
+    /* (non-Javadoc)
+     * @see org.springframework.beans.factory.DisposableBean#destroy()
+     */
+    public void destroy() throws Exception {
         try {
             this.keyedObjectPool.close();
         }

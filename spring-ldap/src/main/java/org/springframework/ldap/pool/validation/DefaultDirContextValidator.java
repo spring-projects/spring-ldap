@@ -70,7 +70,7 @@ import org.springframework.ldap.pool.DirContextType;
  *     </tr>
  * </table>
  * 
- * @author Eric Dalquist <a href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
+ * @author Eric Dalquist
  */
 public class DefaultDirContextValidator implements DirContextValidator {
     protected final Log logger = LogFactory.getLog(this.getClass());

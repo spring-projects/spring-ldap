@@ -11,6 +11,7 @@
 <!ENTITY transactions SYSTEM "transactions.xml">
 <!ENTITY simple SYSTEM "simple.xml">
 <!ENTITY configuration SYSTEM "configuration.xml">
+<!ENTITY pooling SYSTEM "pooling.xml">
 ]>
 
 
@@ -19,8 +20,8 @@
 	<bookinfo>
 		<title>Spring LDAP</title>
 		<subtitle>Reference Documentation</subtitle>
-		<releaseinfo>Version 1.2</releaseinfo>
-		<pubdate>October 2007</pubdate>
+		<releaseinfo>Version 1.2.1</releaseinfo>
+		<pubdate>December 2007</pubdate>
 		<authorgroup>
 			<author>
 				<firstname>Mattias</firstname>
@@ -30,14 +31,20 @@
 				<firstname>Ulrik</firstname>
 				<surname>Sandberg</surname>
 			</author>
+			<author>
+				<firstname>Eric</firstname>
+				<surname>Dalquist</surname>
+			</author>
 		</authorgroup>
 
 		<legalnotice>
-			Copies of this document may be made for your own use and for
-			distribution to others, provided that you do not charge any
-			fee for such copies and further provided that each copy
-			contains this Copyright Notice, whether distributed in print
-			or electronically.
+			<para>
+				Copies of this document may be made for your own use and
+				for distribution to others, provided that you do not
+				charge any fee for such copies and further provided that
+				each copy contains this Copyright Notice, whether
+				distributed in print or electronically.
+			</para>
 		</legalnotice>
 	</bookinfo>
 
@@ -52,5 +59,6 @@
 	&contextprocessor;
 	&simple;
 	&configuration;
-	
+	&pooling;
+
 </book>

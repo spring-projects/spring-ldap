@@ -193,18 +193,6 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
             // Expected
         }
         try {
-            delegatingContext.bind((Name) null, null);
-            fail("DelegatingContext.addToEnvironment Should have thrown an UnsupportedOperationException");
-        } catch (UnsupportedOperationException uoe) {
-            // Expected
-        }
-        try {
-            delegatingContext.bind((String) null, null);
-            fail("DelegatingContext.bind Should have thrown an UnsupportedOperationException");
-        } catch (UnsupportedOperationException uoe) {
-            // Expected
-        }
-        try {
             delegatingContext.createSubcontext((Name) null);
             fail("DelegatingContext.createSubcontext Should have thrown an UnsupportedOperationException");
         } catch (UnsupportedOperationException uoe) {
@@ -229,32 +217,8 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
             // Expected
         }
         try {
-            delegatingContext.rebind((Name) null, null);
-            fail("DelegatingContext.rebind Should have thrown an UnsupportedOperationException");
-        } catch (UnsupportedOperationException uoe) {
-            // Expected
-        }
-        try {
-            delegatingContext.rebind((String) null, null);
-            fail("DelegatingContext.rebind Should have thrown an UnsupportedOperationException");
-        } catch (UnsupportedOperationException uoe) {
-            // Expected
-        }
-        try {
             delegatingContext.removeFromEnvironment(null);
             fail("DelegatingContext.removeFromEnvironment Should have thrown an UnsupportedOperationException");
-        } catch (UnsupportedOperationException uoe) {
-            // Expected
-        }
-        try {
-            delegatingContext.unbind((Name) null);
-            fail("DelegatingContext.unbind Should have thrown an UnsupportedOperationException");
-        } catch (UnsupportedOperationException uoe) {
-            // Expected
-        }
-        try {
-            delegatingContext.unbind((String) null);
-            fail("DelegatingContext.unbind Should have thrown an UnsupportedOperationException");
         } catch (UnsupportedOperationException uoe) {
             // Expected
         }
@@ -270,6 +234,8 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
         final DelegatingContext delegatingContext = new DelegatingContext(
                 keyedObjectPoolMock, contextMock, DirContextType.READ_ONLY);
 
+        delegatingContext.bind((Name) null, null);
+        delegatingContext.bind((String) null, null);
         delegatingContext.composeName((Name) null, (Name) null);
         delegatingContext.composeName((String) null, (String) null);
         delegatingContext.getEnvironment();
@@ -284,8 +250,12 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
         delegatingContext.lookup((String) null);
         delegatingContext.lookupLink((Name) null);
         delegatingContext.lookupLink((String) null);
+        delegatingContext.rebind((Name) null, null);
+        delegatingContext.rebind((String) null, null);
         delegatingContext.rename((Name) null, (Name) null);
         delegatingContext.rename((String) null, (String) null);
+        delegatingContext.unbind((Name) null);
+        delegatingContext.unbind((String) null);
         
         verify();
     }
@@ -301,6 +271,18 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
 
         delegatingContext.close();
 
+        try {
+            delegatingContext.bind((Name) null, null);
+            fail("DelegatingContext.bind should have thrown a NamingException");
+        } catch (NamingException ne) {
+            //  Expected
+        }
+        try {
+            delegatingContext.bind((String) null, null);
+            fail("DelegatingContext.bind should have thrown a NamingException");
+        } catch (NamingException ne) {
+            //  Expected
+        }
         try {
             delegatingContext.composeName((Name) null, (Name) null);
             fail("DelegatingContext.composeName should have thrown a NamingException");
@@ -386,6 +368,18 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
             //  Expected
         }
         try {
+            delegatingContext.rebind((Name) null, null);
+            fail("DelegatingContext.rebind should have thrown a NamingException");
+        } catch (NamingException ne) {
+            //  Expected
+        }
+        try {
+            delegatingContext.rebind((String) null, null);
+            fail("DelegatingContext.rebind should have thrown a NamingException");
+        } catch (NamingException ne) {
+            //  Expected
+        }
+        try {
             delegatingContext.rename((Name) null, (Name) null);
             fail("DelegatingContext.rename should have thrown a NamingException");
         } catch (NamingException ne) {
@@ -394,6 +388,18 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
         try {
             delegatingContext.rename((String) null, (String) null);
             fail("DelegatingContext.rename should have thrown a NamingException");
+        } catch (NamingException ne) {
+            //  Expected
+        }
+        try {
+            delegatingContext.unbind((Name) null);
+            fail("DelegatingContext.unbind should have thrown a NamingException");
+        } catch (NamingException ne) {
+            //  Expected
+        }
+        try {
+            delegatingContext.unbind((String) null);
+            fail("DelegatingContext.unbind should have thrown a NamingException");
         } catch (NamingException ne) {
             //  Expected
         }
