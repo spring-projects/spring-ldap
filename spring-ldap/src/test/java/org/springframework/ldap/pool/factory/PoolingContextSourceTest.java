@@ -18,11 +18,11 @@ package org.springframework.ldap.pool.factory;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 
+import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.easymock.MockControl;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.pool.AbstractPoolTestCase;
-import org.springframework.ldap.pool.factory.PoolingContextSource.WhenExhaustedAction;
 import org.springframework.ldap.pool.validation.DirContextValidator;
 
 /**
@@ -101,18 +101,9 @@ public class PoolingContextSourceTest extends AbstractPoolTestCase {
         final long timeBetweenEvictionRunsMillis = poolingContextSource.getTimeBetweenEvictionRunsMillis();
         assertEquals(120000L, timeBetweenEvictionRunsMillis);
         
-        try {
-            poolingContextSource.setWhenExhaustedAction(null);
-            fail("PoolingContextSource.setWhenExhaustedAction should have thrown an IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae) {
-            // Expected
-        }
-        poolingContextSource.setWhenExhaustedAction(PoolingContextSource.WhenExhaustedAction.BLOCK);
-        final WhenExhaustedAction whenExhaustedAction = poolingContextSource.getWhenExhaustedAction();
-        assertEquals(PoolingContextSource.WhenExhaustedAction.BLOCK, whenExhaustedAction);
-        
-        assertNull(PoolingContextSource.WhenExhaustedAction.getActionForId(Byte.MAX_VALUE));
+        poolingContextSource.setWhenExhaustedAction(GenericKeyedObjectPool.WHEN_EXHAUSTED_BLOCK);
+        final byte whenExhaustedAction = poolingContextSource.getWhenExhaustedAction();
+        assertEquals(GenericKeyedObjectPool.WHEN_EXHAUSTED_BLOCK, whenExhaustedAction);
         
         final int numActive = poolingContextSource.getNumActive();
         assertEquals(0, numActive);

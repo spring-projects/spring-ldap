@@ -18,6 +18,7 @@ package org.springframework.ldap.pool.validation;
 
 import javax.naming.directory.DirContext;
 
+import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.pool.DirContextType;
 
 /**

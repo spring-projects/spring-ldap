@@ -62,6 +62,9 @@ import org.springframework.ldap.pool.validation.DirContextValidator;
  *         href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
  */
 class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
+    /**
+     * Logger for this class and subclasses
+     */
     protected final Log logger = LogFactory.getLog(this.getClass());
 
     private ContextSource contextSource;

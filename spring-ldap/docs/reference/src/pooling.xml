@@ -254,7 +254,7 @@
 						</entry>
 
 						<entry>
-							<literal>BLOCK</literal>
+							<literal>1</literal> (BLOCK)
 						</entry>
 
 						<entry>
@@ -264,7 +264,7 @@
 								<listitem>
 									<para>
 										The
-										<literal>FAIL</literal>
+										FAIL (<literal>0</literal>)
 										option will throw a
 										<literal>
 											NoSuchElementException
@@ -273,32 +273,32 @@
 									</para>
 								</listitem>
 
-								<listitem>
-									<para>
-										The
-										<literal>GROW</literal>
-										option will create and return a
-										new object (essentially making
-										<literal>maxActive</literal>
-										meaningless).
-									</para>
-								</listitem>
+                                <listitem>
+                                    <para>
+                                        The
+                                        BLOCK (<literal>1</literal>)
+                                        option will wait until a new
+                                        object is available. If
+                                        <literal>maxWait</literal>
+                                        is positive a
+                                        <literal>
+                                            NoSuchElementException
+                                        </literal>
+                                        is thrown if no new object is
+                                        available after the
+                                        <literal>maxWait</literal>
+                                        time expires.
+                                    </para>
+                                </listitem>
 
 								<listitem>
 									<para>
 										The
-										<literal>BLOCK</literal>
-										option will wait until a new
-										object is available. If
-										<literal>maxWait</literal>
-										is positive a
-										<literal>
-											NoSuchElementException
-										</literal>
-										is thrown if no new object is
-										available after the
-										<literal>maxWait</literal>
-										time expires.
+										GROW (<literal>2</literal>)
+										option will create and return a
+										new object (essentially making
+										<literal>maxActive</literal>
+										meaningless).
 									</para>
 								</listitem>
 							</itemizedlist>

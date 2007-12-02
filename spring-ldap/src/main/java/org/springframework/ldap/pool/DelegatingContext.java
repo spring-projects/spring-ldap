@@ -26,8 +26,13 @@ import javax.naming.NamingException;
 
 import org.apache.commons.lang.Validate;
 import org.apache.commons.pool.KeyedObjectPool;
+import org.springframework.ldap.pool.factory.PoolingContextSource;
 
 /**
+ * Used by {@link PoolingContextSource} to wrap a {@link Context}, delegating most methods
+ * to the underlying context, retains a reference to the pool the context was checked out
+ * from and returns itself to the pool when {@link #close()} is called.
+ * 
  * @author Eric Dalquist
  */
 public class DelegatingContext implements Context {
@@ -36,6 +41,14 @@ public class DelegatingContext implements Context {
     private final DirContextType dirContextType;
     
 
+    /**
+     * Create a new delegating context for the specified pool, context and context type.
+     * 
+     * @param keyedObjectPool The pool the delegate context was checked out from.
+     * @param delegateContext The context to delegate operations to.
+     * @param dirContextType The type of context, used as a key for the pool.
+     * @throws IllegalArgumentException if any of the arguments are null
+     */
     public DelegatingContext(KeyedObjectPool keyedObjectPool, Context delegateContext, DirContextType dirContextType) {
         Validate.notNull(keyedObjectPool, "keyedObjectPool may not be null");
         Validate.notNull(delegateContext, "delegateContext may not be null");
@@ -49,21 +62,31 @@ public class DelegatingContext implements Context {
     
     //***** Helper Methods *****//
     
+    /**
+     * @return The direct delegate for this context proxy
+     */
     public Context getDelegateContext() {
         return this.delegateContext;
     }
     
+    /**
+     * Recursivley inspect delegates until a non-delegating context is found.
+     * 
+     * @return The innermost (real) Context that is being delegated to.
+     */
     public Context getInnermostDelegateContext() {
         final Context delegateContext = this.getDelegateContext();
         
         if (delegateContext instanceof DelegatingContext) {
             return ((DelegatingContext)delegateContext).getInnermostDelegateContext();
         }
-        else {
-            return delegateContext;
-        }
+
+        return delegateContext;
     }
     
+    /**
+     * @throws NamingException If the delegate is null, {@link #close()} has been called.
+     */
     protected void assertOpen() throws NamingException {
         if (this.delegateContext == null) {
             throw new NamingException("Context is closed.");

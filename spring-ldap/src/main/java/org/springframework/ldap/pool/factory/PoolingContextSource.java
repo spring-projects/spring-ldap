@@ -16,9 +16,6 @@
 
 package org.springframework.ldap.pool.factory;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 
@@ -100,7 +97,7 @@ import org.springframework.ldap.pool.validation.DirContextValidator;
  *         <td valign="top">whenExhaustedAction</td>
  *         <td valign="top">{@link GenericKeyedObjectPool#setWhenExhaustedAction(byte)}</td>
  *         <td valign="top">No</td>
- *         <td valign="top">{@link GenericObjectPool#WHEN_EXHAUSTED_BLOCK}</td>
+ *         <td valign="top">{@link GenericKeyedObjectPool#WHEN_EXHAUSTED_BLOCK}</td>
  *     </tr>
  *     <tr>
  *         <td valign="top">testOnBorrow</td>
@@ -144,73 +141,18 @@ import org.springframework.ldap.pool.validation.DirContextValidator;
  * @author Eric Dalquist
  */
 public class PoolingContextSource implements ContextSource, DisposableBean {
+    /**
+     * The logger for this class and sub-classes
+     */
     protected final Log logger = LogFactory.getLog(this.getClass());
     
     private final GenericKeyedObjectPool keyedObjectPool;
     private final DirContextPoolableObjectFactory dirContextPoolableObjectFactory;
     
-    public static final class WhenExhaustedAction {
-        
-        static {
-            values = new HashMap();
-        }
-        
-        /**
-         * A "when exhausted action" type indicating that when the pool is
-         * exhausted (i.e., the maximum number of active objects has
-         * been reached), the {@link #borrowObject}
-         * method should fail, throwing a {@link NoSuchElementException}.
-         */
-        public static final WhenExhaustedAction FAIL = new WhenExhaustedAction("FAIL", GenericKeyedObjectPool.WHEN_EXHAUSTED_FAIL);
-
-        /**
-         * A "when exhausted action" type indicating that when the pool
-         * is exhausted (i.e., the maximum number
-         * of active objects has been reached), the {@link #borrowObject}
-         * method should block until a new object is available, or the
-         * {@link #getMaxWait maximum wait time} has been reached.
-         */
-        public static final WhenExhaustedAction BLOCK = new WhenExhaustedAction("BLOCK", GenericKeyedObjectPool.WHEN_EXHAUSTED_BLOCK);
-
-        /**
-         * A "when exhausted action" type indicating that when the pool is
-         * exhausted (i.e., the maximum number
-         * of active objects has been reached), the {@link #borrowObject}
-         * method should simply create a new object anyway.
-         */
-        public static final WhenExhaustedAction GROW = new WhenExhaustedAction("GROW", GenericKeyedObjectPool.WHEN_EXHAUSTED_GROW);
-
-        private static Map values;
-
-        private final byte commonsPoolId;
-
-        private final String name;
-
-        private WhenExhaustedAction(String name, byte id) {
-            this.name = name;
-            this.commonsPoolId = id;
-            values.put(new Byte(id), this);
-        }
-
-        /*
-         * @see java.lang.Object#toString()
-         */
-        public String toString() {
-            return name;
-        }
-        
-        /**
-         * The appropriate {@link GenericKeyedObjectPool} constant for the {@link GenericKeyedObjectPool#setWhenExhaustedAction(byte)}
-         */
-        public byte getCommonsPoolId() {
-            return this.commonsPoolId;
-        }
-        
-        public static WhenExhaustedAction getActionForId(byte id) {
-            return (WhenExhaustedAction) values.get(new Byte(id));
-        }
-    }
-    
+    /**
+     * Creates a new pooling context source, setting up the DirContext object factory
+     * and generic keyed object pool.
+     */
     public PoolingContextSource() {
         this.dirContextPoolableObjectFactory = new DirContextPoolableObjectFactory();
         this.keyedObjectPool = new GenericKeyedObjectPool();
@@ -301,9 +243,8 @@ public class PoolingContextSource implements ContextSource, DisposableBean {
     /**
      * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#getWhenExhaustedAction()
      */
-    public WhenExhaustedAction getWhenExhaustedAction() {
-        final byte whenExhaustedAction = this.keyedObjectPool.getWhenExhaustedAction();
-        return WhenExhaustedAction.getActionForId(whenExhaustedAction);
+    public byte getWhenExhaustedAction() {
+        return this.keyedObjectPool.getWhenExhaustedAction();
     }
     /**
      * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#setMaxActive(int)
@@ -374,12 +315,8 @@ public class PoolingContextSource implements ContextSource, DisposableBean {
     /**
      * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#setWhenExhaustedAction(byte)
      */
-    public void setWhenExhaustedAction(WhenExhaustedAction whenExhaustedAction) {
-        if (whenExhaustedAction == null) {
-            throw new IllegalArgumentException("whenExhaustedAction may not be null");
-        }
-
-        this.keyedObjectPool.setWhenExhaustedAction(whenExhaustedAction.getCommonsPoolId());
+    public void setWhenExhaustedAction(byte whenExhaustedAction) {
+        this.keyedObjectPool.setWhenExhaustedAction(whenExhaustedAction);
     }
     
     
@@ -430,21 +367,28 @@ public class PoolingContextSource implements ContextSource, DisposableBean {
     
     //***** ContextSource interface methods *****//
     
-    /**
-     * @see org.springframework.ldap.ContextSource#getReadOnlyContext()
+    /*
+     * @see ContextSource#getReadOnlyContext()
      */
     public DirContext getReadOnlyContext() throws NamingException {
         return this.getContext(DirContextType.READ_ONLY);
     }
 
-    /**
-     * @see org.springframework.ldap.ContextSource#getReadWriteContext()
+    /*
+     * @see ContextSource#getReadWriteContext()
      */
     public DirContext getReadWriteContext() throws NamingException {
         return this.getContext(DirContextType.READ_WRITE);
     }
 
-    protected DirContext getContext(DirContextType dirContextType) throws NamingException {
+    /**
+     * Gets a DirContext of the specified type from the keyed object pool.
+     * 
+     * @param dirContextType The type of context to return.
+     * @return A wrapped DirContext of the specified type.
+     * @throws DataAccessResourceFailureException If retreiving the object from the pool throws an exception
+     */
+    protected DirContext getContext(DirContextType dirContextType) {
         final DirContext dirContext;
         try {
             dirContext = (DirContext)this.keyedObjectPool.borrowObject(dirContextType);
@@ -456,8 +400,7 @@ public class PoolingContextSource implements ContextSource, DisposableBean {
         if (dirContext instanceof LdapContext) {
             return new DelegatingLdapContext(this.keyedObjectPool, (LdapContext)dirContext, dirContextType);
         }
-        else {
-            return new DelegatingDirContext(this.keyedObjectPool, dirContext, dirContextType);
-        }
+
+        return new DelegatingDirContext(this.keyedObjectPool, dirContext, dirContextType);
     }
 }

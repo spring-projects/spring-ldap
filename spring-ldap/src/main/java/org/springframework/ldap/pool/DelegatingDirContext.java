@@ -28,14 +28,27 @@ import javax.naming.directory.SearchControls;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.pool.KeyedObjectPool;
 import org.springframework.ldap.core.DirContextProxy;
+import org.springframework.ldap.pool.factory.PoolingContextSource;
 
 
 /**
+ * Used by {@link PoolingContextSource} to wrap a {@link DirContext}, delegating most methods
+ * to the underlying context. This class extends {@link DelegatingContext} which handles returning
+ * the context to the pool on a call to {@link #close()}
+ * 
  * @author Eric Dalquist
  */
 public class DelegatingDirContext extends DelegatingContext implements DirContext, DirContextProxy {
     private DirContext delegateDirContext;
 
+    /**
+     * Create a new delegating dir context for the specified pool, context and context type.
+     * 
+     * @param keyedObjectPool The pool the delegate context was checked out from.
+     * @param delegateDirContext The dir context to delegate operations to.
+     * @param dirContextType The type of context, used as a key for the pool.
+     * @throws IllegalArgumentException if any of the arguments are null
+     */
     public DelegatingDirContext(KeyedObjectPool keyedObjectPool, DirContext delegateDirContext, DirContextType dirContextType) {
         super(keyedObjectPool, delegateDirContext, dirContextType);
         Validate.notNull(delegateDirContext, "delegateDirContext may not be null");
@@ -46,6 +59,9 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
     
     //***** Helper Methods *****//
     
+    /**
+     * @return The direct delegate for this dir context proxy
+     */
     public DirContext getDelegateDirContext() {
         return this.delegateDirContext;
     }
@@ -54,15 +70,19 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
         return this.getDelegateDirContext();
     }
 
+    /**
+     * Recursivley inspect delegates until a non-delegating dir context is found.
+     * 
+     * @return The innermost (real) DirContext that is being delegated to.
+     */
     public DirContext getInnermostDelegateDirContext() {
         final DirContext delegateDirContext = this.getDelegateDirContext();
 
         if (delegateDirContext instanceof DelegatingDirContext) {
             return ((DelegatingDirContext)delegateDirContext).getInnermostDelegateDirContext();
         }
-        else {
-            return delegateDirContext;
-        }
+
+        return delegateDirContext;
     }
 
     protected void assertOpen() throws NamingException {
@@ -119,7 +139,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
      * @see org.springframework.ldap.core.DirContextProxy#getTargetContext()
      */
     public DirContext getTargetContext() {
-        return this.delegateDirContext;
+        return this.getInnermostDelegateDirContext();
     }
     
     
@@ -328,7 +348,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
     }
 
     /**
-     * @see edu.wisc.commons.lcp.pool.DelegatingContext#close()
+     * @see DelegatingContext#close()
      */
     public void close() throws NamingException {
         if (this.delegateDirContext == null) {

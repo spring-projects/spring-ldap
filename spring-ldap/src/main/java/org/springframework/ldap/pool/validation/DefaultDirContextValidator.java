@@ -73,12 +73,19 @@ import org.springframework.ldap.pool.DirContextType;
  * @author Eric Dalquist
  */
 public class DefaultDirContextValidator implements DirContextValidator {
+    /**
+     * Logger for this class and sub-classes
+     */
     protected final Log logger = LogFactory.getLog(this.getClass());
     
     private String base;
     private String filter;
     private SearchControls searchControls;
     
+    /**
+     * Create the default validator, creates {@link SearchControls} with a countLimit of 1, returningAttributes of 
+     * objectclass and timeLimit of 500. The default base is an empty string and the default filter is objectclass=*
+     */
     public DefaultDirContextValidator() {
         this.searchControls = new SearchControls();
         this.searchControls.setCountLimit(1);
@@ -137,7 +144,7 @@ public class DefaultDirContextValidator implements DirContextValidator {
 
 
     /**
-     * @see edu.wisc.commons.lcp.validation.DirContextValidator#validateDirContext(edu.wisc.commons.lcp.pool.DirContextType, javax.naming.directory.DirContext)
+     * @see DirContextValidator#validateDirContext(DirContextType, javax.naming.directory.DirContext)
      */
     public boolean validateDirContext(DirContextType contextType, DirContext dirContext) {
         Validate.notNull(contextType, "contextType may not be null");
