@@ -26,17 +26,17 @@ import org.springframework.ldap.samples.person.domain.SearchCriteria;
  * @author Ulrik Sandberg
  */
 public interface GroupDao {
-    public void create(Group group);
+    void create(Group group);
 
-    public void update(Group group);
+    void update(Group group);
 
-    public void delete(Group group);
+    void delete(Group group);
 
-    public Group findByPrimaryKey(String name);
+    Group findByPrimaryKey(String name);
 
-    public List findAll();
+    List findAll();
 
-    public List find(SearchCriteria criteria);
+    List find(SearchCriteria criteria);
 
     /**
      * Update all groups referring to the original DN with the new DN value.
@@ -46,5 +46,5 @@ public interface GroupDao {
      * @param newDn
      *            the new DN.
      */
-    public void updateMemberDn(String originalDn, String newDn);
+    void updateMemberDn(String originalDn, String newDn);
 }

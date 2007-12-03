@@ -23,5 +23,5 @@ import java.util.List;
  * @author Ulrik Sandberg
  */
 public interface CompanyDao {
-    public List findByCountry(String country);
+    List findByCountry(String country);
 }

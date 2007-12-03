@@ -28,15 +28,15 @@ import org.springframework.ldap.samples.person.domain.SearchCriteria;
  */
 public interface GroupService {
 
-    public void create(String name, Set members);
+    void create(String name, Set members);
 
-    public void update(Group group);
+    void update(Group group);
 
-    public void delete(Group group);
+    void delete(Group group);
 
-    public Group findByPrimaryKey(String name);
+    Group findByPrimaryKey(String name);
 
-    public List find(SearchCriteria criteria);
+    List find(SearchCriteria criteria);
 
-    public List findAll();
+    List findAll();
 }

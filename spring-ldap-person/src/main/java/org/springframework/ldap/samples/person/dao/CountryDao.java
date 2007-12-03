@@ -23,5 +23,5 @@ import java.util.List;
  * @author Ulrik Sandberg
  */
 public interface CountryDao {
-    public List findAll();
+    List findAll();
 }

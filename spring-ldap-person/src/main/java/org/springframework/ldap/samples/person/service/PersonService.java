@@ -28,16 +28,16 @@ import org.springframework.ldap.samples.person.domain.SearchCriteria;
  */
 public interface PersonService {
 
-    public void create(String country, String company, String fullname,
+    void create(String country, String company, String fullname,
             String lastname, String[] description);
 
-    public void update(Person person);
+    void update(Person person);
 
-    public void delete(Person person);
+    void delete(Person person);
 
-    public Person findByPrimaryKey(String country, String company, String name);
+    Person findByPrimaryKey(String country, String company, String name);
 
-    public List find(SearchCriteria criteria);
+    List find(SearchCriteria criteria);
 
-    public List findAll();
+    List findAll();
 }

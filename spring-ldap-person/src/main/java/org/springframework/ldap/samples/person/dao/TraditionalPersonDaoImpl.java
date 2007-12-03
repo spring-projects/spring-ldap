@@ -25,13 +25,12 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
-
-import org.springframework.ldap.core.DirContextAdapter;
-import org.springframework.ldap.core.DirContextOperations;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.ldap.samples.person.domain.Person;
@@ -52,31 +51,81 @@ public class TraditionalPersonDaoImpl implements PersonDao {
 
     private String base;
 
-    // TODO Rewrite using traditional tools
-    DirContextOperations getContextToBind(Person person) {
-        DirContextAdapter adapter = new DirContextAdapter();
-        adapter.setAttributeValues("objectclass", new String[] { "top",
-                "person", "organizationalPerson", "inetOrgPerson" });
-        adapter.setAttributeValue("cn", person.getFullName());
-        adapter.setAttributeValue("sn", person.getLastName());
-        adapter.setAttributeValues("description", person.getDescription());
-        return adapter;
+    Attributes getAttributesToBind(Person person) {
+        BasicAttributes attributes = new BasicAttributes();
+        BasicAttribute oc = new BasicAttribute("objectclass");
+        oc.add("top");
+        oc.add("person");
+        oc.add("organizationalPerson");
+        oc.add("inetOrgPerson");
+        attributes.put(oc);
+        attributes.put("cn", person.getFullName());
+        attributes.put("sn", person.getLastName());
+        attributes.put("description", person.getDescription());
+        return attributes;
     }
 
-    // TODO Rewrite using traditional tools
+    /*
+     * @see org.springframework.ldap.samples.person.dao.PersonDao#create(org.springframework.ldap.samples.person.domain.Person)
+     */
     public void create(Person person) {
-        // ldapOperations.bind(buildDn(person), getContextToBind(person), null);
+        DirContext ctx = createContext();
+        try {
+            ctx.bind(buildDn(person.getCountry(), person.getCompany(), person
+                    .getFullName()), null, getAttributesToBind(person));
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (ctx != null) {
+                try {
+                    ctx.close();
+                } catch (Exception e) {
+                    // Never mind this.
+                }
+            }
+        }
     }
 
-    // TODO Rewrite using traditional tools
+    /*
+     * @see org.springframework.ldap.samples.person.dao.PersonDao#update(org.springframework.ldap.samples.person.domain.Person)
+     */
     public void update(Person person) {
-        // ldapOperations.rebind(buildDn(person), getContextToBind(person),
-        // null);
+        DirContext ctx = createContext();
+        try {
+            ctx.rebind(buildDn(person.getCountry(), person.getCompany(), person
+                    .getFullName()), null, getAttributesToBind(person));
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (ctx != null) {
+                try {
+                    ctx.close();
+                } catch (Exception e) {
+                    // Never mind this.
+                }
+            }
+        }
     }
 
-    // TODO Rewrite using traditional tools
+    /*
+     * @see org.springframework.ldap.samples.person.dao.PersonDao#delete(org.springframework.ldap.samples.person.domain.Person)
+     */
     public void delete(Person person) {
-        // ldapOperations.unbind(buildDn(person));
+        DirContext ctx = createContext();
+        try {
+            ctx.unbind(buildDn(person.getCountry(), person.getCompany(), person
+                    .getFullName()));
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (ctx != null) {
+                try {
+                    ctx.close();
+                } catch (Exception e) {
+                    // Never mind this.
+                }
+            }
+        }
     }
 
     /*
@@ -243,5 +292,4 @@ public class TraditionalPersonDaoImpl implements PersonDao {
     public void setBase(String base) {
         this.base = base;
     }
-
 }
