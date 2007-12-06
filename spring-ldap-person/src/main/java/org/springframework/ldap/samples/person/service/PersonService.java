@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package se.jayway.demo.spring.ldap.service;
+package org.springframework.ldap.samples.person.service;
 
 import java.util.List;
 
-import se.jayway.demo.spring.ldap.domain.Person;
+import org.springframework.ldap.samples.person.domain.Person;
+import org.springframework.ldap.samples.person.domain.SearchCriteria;
 
 /**
  * Example interface for a Person service.
@@ -27,9 +28,16 @@ import se.jayway.demo.spring.ldap.domain.Person;
  */
 public interface PersonService {
 
+    void create(String country, String company, String fullname,
+            String lastname, String[] description);
+
     void update(Person person);
+
+    void delete(Person person);
 
     Person findByPrimaryKey(String country, String company, String name);
 
-    public List<Person> findAll();
+    List find(SearchCriteria criteria);
+
+    List findAll();
 }
