@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.samples.person.service;
+package se.jayway.demo.spring.ldap.service;
 
 import java.util.List;
-import java.util.Set;
 
-import org.springframework.ldap.samples.person.domain.Group;
-import org.springframework.ldap.samples.person.domain.SearchCriteria;
+import se.jayway.demo.spring.ldap.domain.Group;
 
 /**
  * Example interface for a Group service.
@@ -28,15 +26,7 @@ import org.springframework.ldap.samples.person.domain.SearchCriteria;
  */
 public interface GroupService {
 
-    void create(String name, Set members);
+	Group findByPrimaryKey(String name);
 
-    void update(Group group);
-
-    void delete(Group group);
-
-    Group findByPrimaryKey(String name);
-
-    List find(SearchCriteria criteria);
-
-    List findAll();
+	public List<Group> findAll();
 }
