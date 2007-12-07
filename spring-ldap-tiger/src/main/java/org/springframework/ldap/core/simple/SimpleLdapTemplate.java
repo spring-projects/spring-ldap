@@ -98,7 +98,7 @@ public class SimpleLdapTemplate implements SimpleLdapOperations {
 	@SuppressWarnings("unchecked")
 	public <T> List<T> search(String base, String filter, SearchControls controls, ParameterizedContextMapper<T> mapper,
 			DirContextProcessor processor) {
-		return ldapOperations.search(base, filter, controls, mapper);
+		return ldapOperations.search(base, filter, controls, mapper, processor);
 	}
 
 	/*
