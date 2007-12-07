@@ -85,7 +85,7 @@
   	<property name="project.title" value="${project.name}" />
    	<property name="project.base.version" value="1.0-dev" />
     <property name="project.version" value="${project.base.version}-${internal.internal.build.timestamp}" />
-	<property name="project.copyright" value="Copyright &#169; 2002-2006. All Rights Reserved."/>
+	<property name="project.copyright" value="Copyright (c) 2005-2007. All Rights Reserved."/>
   	
     <property environment="myenv" />
 
