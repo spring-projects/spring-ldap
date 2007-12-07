@@ -14,10 +14,14 @@ http://www.ietf.org/rfc/rfc2696.txt
 Changes in version 1.2.1 (Dec 2007)
 -------------------------------------------
 * Added pooling library which features flexible connection validation
-  and better configuration than the built-in pooling.
+  and better configuration than the built-in pooling. (LDAP-85)
 
 * Fixed a problem in AbstractContextSource which led to an unnecessary
-  reference to the LDAP Booster Pack (ldapbp).
+  reference to the LDAP Booster Pack (ldapbp). (LDAP-88, LDAP-89)
+
+* Added missing package description and updated copyright. (LDAP-92)
+
+* Added build instructions. (LDAP-27)
 
 
 Changes in version 1.2 (Oct 2007)
