@@ -69,12 +69,12 @@ specifies the respective contents and third-party dependencies.
 * spring-ldap-x.x.jar
 - Contents: The Spring-LDAP library
 - Dependencies: Commons Logging, Commons Lang, spring-beans,
-                spring-core, spring-context, spring-dao, ldapbp
+                spring-core, spring-context, spring-dao, ldapbp, commons-pool
 
 * spring-ldap-tiger-x.x.jar
 - Contents: The Spring-LDAP Java 5 support library
 - Dependencies: Commons Logging, Commons Lang, spring-beans,
-                spring-core, spring-context, spring-dao, ldapbp
+                spring-core, spring-context, spring-dao, ldapbp, commons-pool
 
 4. WHERE TO START
 
