@@ -216,7 +216,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @return a new DirContext implpementation initialized with the supplied
 	 * environment.
 	 */
-	DirContext createContext(Hashtable environment) {
+	protected DirContext createContext(Hashtable environment) {
 		DirContext ctx = null;
 
 		try {
