@@ -23,6 +23,11 @@ Changes in version 1.2.1 (Dec 2007)
 
 * Added build instructions. (LDAP-27)
 
+* Fixed bug in SimpleLdapTemplate where the wrong target method was being
+  called. (LDAP-93)
+
+* Made createContext in AbstractContextSource protected rather than
+  package private. (LDAP-94)
 
 Changes in version 1.2 (Oct 2007)
 -------------------------------------------
