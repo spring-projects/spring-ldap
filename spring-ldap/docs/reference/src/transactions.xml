@@ -203,6 +203,14 @@
 	  <literal>cn=john doe, ou=users</literal>, the temporary DN will be <literal>cn=john doe, ou=tempEntries</literal>.
 	  Note that the configured subtree node needs to be present in the LDAP tree.</para></listitem>
 	</itemizedlist>
+	<note>
+	  There are some situations where the <literal>DefaultTempEntryRenamingStrategy</literal> will not work. E.g. if your are planning
+	  to do recursive deletes you'll need to use <literal>DifferentSubtreeTempEntryRenamingStrategy</literal>. This is because
+	  the recursive delete operation actually consists of a depth-first delete of each node in the sub tree individually.
+	  Since it is not allowed to rename an entry that has any children, and <literal>DefaultTempEntryRenamingStrategy</literal> would
+	  leave each node in the same subtree (with a different name) in stead of actually removing it, this operation would fail.
+	  When in doubt, use <literal>DifferentSubtreeTempEntryRenamingStrategy</literal>. 
+	</note>
 	</sect2>
   </sect1>
 </chapter>
