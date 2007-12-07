@@ -208,6 +208,9 @@ public class PersonDaoImpl implements PersonDao {
       <listitem>
         <para><emphasis>ldapbp</emphasis> (Sun LDAP Booster Pack - if you will use the LDAP v3 Server controls integration)</para>
       </listitem>
+      <listitem>
+        <para><emphasis>commons-pool</emphasis> (If you are planning to use the pooling functionality)</para>
+      </listitem>
     </itemizedlist>
 
   </sect1>
@@ -403,7 +406,7 @@ public class PersonDaoImpl implements PersonDao {
   <sect1 id="introduction-support">
     <title>Support</title>
 
-    <para>Spring LDAP 1.2 is supported on Spring 1.2.8 or later, including
+    <para>Spring LDAP 1.2.1 is supported on Spring 1.2.8 or later, including
     2.0.x.</para>
 
     <para>The community support forum is located at <ulink
