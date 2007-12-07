@@ -7,7 +7,7 @@
 		<title>Introduction</title>
 
 		<para>
-			Pooling LDAP connections helps mitigated the overhead of
+			Pooling LDAP connections helps mitigate the overhead of
 			creating a new LDAP connection for each LDAP interaction.
 			While
 			<ulink
@@ -27,9 +27,9 @@
 			<literal>PoolingContextSource</literal>
 			which can wrap any
 			<literal>ContextSource</literal>
-			and pool both read only and read write
+			and pool both read-only and read-write
 			<literal>DirContext</literal>
-			s.
+			objects.
 			<ulink url="http://commons.apache.org/pool/index.html">
 				Jakarta Commons-Pool
 			</ulink>
@@ -521,4 +521,30 @@
 			</para>
 		</sect2>
 	</sect1>
+    
+    <sect1 id="pooling-issues">
+        <title>Known Issues</title>
+        
+        <sect2 id="pooling-custom-auth-issue">
+            <title>Custom Authentication</title>
+        
+            <para>
+                The <literal>PoolingContextSource</literal> assumes that all
+                <literal>DirContext</literal> objects retrieved from
+                <literal>ContextSource.getReadOnlyContext()</literal> will have
+                the same environment and likewise that all
+                <literal>DirContext</literal> objects retrieved from
+                <literal>ContextSource.getReadWriteContext()</literal> will
+                have the same environment. This means that wrapping a
+                <literal>LdapContextSource</literal> configured with an
+                <literal>AuthenticationSource</literal> in a
+                <literal>PoolingContextSource</literal> will not function
+                as expected. The pool would be populated using the credentials
+                of the first user and unless new connections were needed
+                subsequent context requests would not be filled for the user
+                specified by the <literal>AuthenticationSource</literal> for
+                the requesting thread.
+            </para>
+        </sect2>
+    </sect1>
 </chapter>

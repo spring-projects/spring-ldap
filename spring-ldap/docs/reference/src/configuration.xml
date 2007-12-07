@@ -85,7 +85,7 @@
    &lt;bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource"&gt;
       &lt;property name="url" value="ldap://localhost:389" /&gt;
       &lt;property name="base" value="dc=example,dc=com" /&gt;
-      &lt;property name="acegiAuthenticationSource" ref="authenticationSource" /&gt;
+      &lt;property name="authenticationSource" ref="acegiAuthenticationSource" /&gt;
    &lt;/bean&gt;
 
    &lt;bean id="acegiAuthenticationSource"
