@@ -17,7 +17,6 @@ package org.springframework.ldap.core.simple;
 
 import java.util.List;
 
-import javax.naming.Name;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchControls;
 
