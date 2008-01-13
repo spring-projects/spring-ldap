@@ -16,15 +16,7 @@
 
 package org.springframework.ldap;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.directory.server.core.configuration.ShutdownConfiguration;
-import org.apache.directory.server.jndi.ServerContextFactory;
-import org.apache.directory.server.protocol.shared.store.LdifFileLoader;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.core.support.DefaultDirObjectFactory;
+import java.util.Properties;
 
 import javax.naming.Binding;
 import javax.naming.Context;
@@ -34,7 +26,16 @@ import javax.naming.Name;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
-import java.util.Properties;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.directory.server.core.configuration.ShutdownConfiguration;
+import org.apache.directory.server.jndi.ServerContextFactory;
+import org.apache.directory.server.protocol.shared.store.LdifFileLoader;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.core.support.BaseLdapPathAware;
 
 /**
  * Utility class to initialize the apache directory server for use in the
@@ -42,16 +43,22 @@ import java.util.Properties;
  *
  * @author Mattias Arthursson
  */
-public class LdapServerManager implements DisposableBean
+public class LdapServerManager implements DisposableBean, BaseLdapPathAware
 {
     private static Log log = LogFactory.getLog(LdapServerManager.class);
 
     private ContextSource contextSource;
 
+	private DistinguishedName baseLdapPath;
+
     public void setContextSource(ContextSource contextSource)
     {
         this.contextSource = contextSource;
     }
+
+	public void setBaseLdapPath(DistinguishedName baseLdapPath) {
+		this.baseLdapPath = baseLdapPath;
+	}
 
     public void destroy() throws Exception
     {
@@ -77,14 +84,13 @@ public class LdapServerManager implements DisposableBean
 
         // Different test cases have different base paths. This means that the
         // starting point will be different.
-        if (ctx.getEnvironment().get(
-                DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY) != null)
+        if (baseLdapPath.size() != 0)
         {
             startingPoint = DistinguishedName.EMPTY_PATH;
         }
         else
         {
-            startingPoint = new DistinguishedName("dc=jayway,dc=se");
+            startingPoint = new DistinguishedName(baseLdapPath);
         }
 
         try
