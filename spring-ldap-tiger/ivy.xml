@@ -20,8 +20,8 @@
 
 	<dependencies defaultconf="global->default">
 		<dependency org="org.springframework" name="spring-ldap"
-			rev="latest.integration" />
-
+			rev="latest.integration" conf="global->default;source->source" />
+		
 		<!-- test time only dependencies -->
 		<dependency org="commons-collections" name="commons-collections"
 			rev="3.1" conf="test->default" />

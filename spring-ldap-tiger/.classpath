@@ -7,11 +7,11 @@
 	<classpathentry kind="lib" path="lib/global/commons-lang.jar"/>
 	<classpathentry kind="lib" path="lib/global/commons-logging.jar"/>
 	<classpathentry kind="lib" path="lib/global/ldapbp.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-beans.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-context.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-core.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-dao.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-ldap.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-beans.jar" sourcepath="lib/source/spring-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/spring-context.jar" sourcepath="lib/source/spring-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/spring-core.jar" sourcepath="lib/source/spring-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/spring-dao.jar" sourcepath="lib/source/spring-src.zip"/>
+	<classpathentry kind="lib" path="lib/global/spring-ldap.jar" sourcepath="lib/source/spring-ldap-src.zip"/>
 	<classpathentry kind="lib" path="lib/test/antlr.jar"/>
 	<classpathentry kind="lib" path="lib/test/apacheds-core-shared.jar"/>
 	<classpathentry kind="lib" path="lib/test/apacheds-core.jar"/>
@@ -44,8 +44,8 @@
 	<classpathentry kind="lib" path="lib/test/shared-asn1.jar"/>
 	<classpathentry kind="lib" path="lib/test/shared-ldap.jar"/>
 	<classpathentry kind="lib" path="lib/test/slf4j-log4j12.jar"/>
-	<classpathentry kind="lib" path="lib/test/spring-mock.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-mock.jar" sourcepath="lib/source/spring-src.zip"/>
 	<classpathentry kind="lib" path="lib/test/xercesImpl.jar"/>
 	<classpathentry kind="lib" path="lib/test/xmlParserAPIs.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>
