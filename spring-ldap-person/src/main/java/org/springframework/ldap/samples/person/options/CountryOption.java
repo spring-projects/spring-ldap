@@ -50,8 +50,8 @@ public class CountryOption extends AbstractChainedOption {
      */
     protected void initChainedOption() {
         super.initChainedOption();
-        Assert.notNull(countryDao, "Property ’countryDao’ must be set");
-        Assert.notNull(getConverter(), "Property ’converter’ must be set");
+        Assert.notNull(countryDao, "Property 'countryDao' must be set");
+        Assert.notNull(getConverter(), "Property 'converter' must be set");
     }
 
     public void setCountryDao(CountryDao countryDao) {

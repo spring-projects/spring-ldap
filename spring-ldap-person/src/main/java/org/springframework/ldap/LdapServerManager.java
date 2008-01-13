@@ -29,15 +29,14 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.core.support.DefaultDirObjectFactory;
-
 import org.apache.directory.server.core.configuration.ShutdownConfiguration;
 import org.apache.directory.server.jndi.ServerContextFactory;
 import org.apache.directory.server.protocol.shared.store.LdifFileLoader;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.core.support.BaseLdapPathAware;
 
 /**
  * Utility class to initialize the apache directory server. This means clearing
@@ -45,11 +44,13 @@ import org.springframework.beans.factory.InitializingBean;
  * 
  * @author Mattias Arthursson
  */
-public class LdapServerManager implements InitializingBean, DisposableBean {
+public class LdapServerManager implements InitializingBean, DisposableBean, BaseLdapPathAware {
 
     private ContextSource contextSource;
 
     private String ldifFile;
+    
+    private DistinguishedName baseLdapPath;
 
     public void setContextSource(ContextSource contextSource) {
         this.contextSource = contextSource;
@@ -57,6 +58,10 @@ public class LdapServerManager implements InitializingBean, DisposableBean {
 
     public void setLdifFile(String ldifFile) {
         this.ldifFile = ldifFile;
+    }
+
+    public void setBaseLdapPath(DistinguishedName baseLdapPath) {
+        this.baseLdapPath = baseLdapPath;
     }
 
     public void destroy() throws Exception {
@@ -81,11 +86,10 @@ public class LdapServerManager implements InitializingBean, DisposableBean {
 
         // Different test cases have different base paths. This means that the
         // starting point will be different.
-        if (ctx.getEnvironment().get(
-                DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY) != null) {
+        if (baseLdapPath.size() != 0) {
             startingPoint = DistinguishedName.EMPTY_PATH;
         } else {
-            startingPoint = new DistinguishedName("dc=jayway,dc=se");
+            startingPoint = new DistinguishedName(baseLdapPath);
         }
 
         try {

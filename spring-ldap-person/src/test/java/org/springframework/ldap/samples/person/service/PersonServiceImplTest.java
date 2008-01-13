@@ -21,7 +21,6 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
-import org.springframework.ldap.samples.person.dao.GroupDao;
 import org.springframework.ldap.samples.person.dao.PersonDao;
 import org.springframework.ldap.samples.person.domain.Person;
 import org.springframework.ldap.samples.person.domain.SearchCriteria;

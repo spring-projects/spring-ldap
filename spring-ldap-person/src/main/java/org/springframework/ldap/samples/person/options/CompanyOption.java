@@ -53,9 +53,9 @@ public class CompanyOption extends AbstractChainedOption {
      */
     protected void initChainedOption() {
         super.initChainedOption();
-        Assert.notNull(companyDao, "Property ’companyDao’ must be set");
-        Assert.notNull(countryProperty, "Property ’countryProperty’ must be set");
-        Assert.notNull(getConverter(), "Property ’converter’ must be set");
+        Assert.notNull(companyDao, "Property 'companyDao' must be set");
+        Assert.notNull(countryProperty, "Property 'countryProperty' must be set");
+        Assert.notNull(getConverter(), "Property 'converter' must be set");
     }
 
     public void setCompanyDao(CompanyDao companyDao) {
