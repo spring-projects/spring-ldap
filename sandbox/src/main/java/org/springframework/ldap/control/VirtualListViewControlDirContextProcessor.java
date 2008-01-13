@@ -74,7 +74,7 @@ import com.sun.jndi.ldap.ctl.VirtualListViewResponseControl;
  * </pre>
  * 
  * @author Ulrik Sandberg
- * @see http://www3.ietf.org/proceedings/02nov/I-D/draft-ietf-ldapext-ldapv3-vlv-09.txt
+ * @see <a href="http://www3.ietf.org/proceedings/02nov/I-D/draft-ietf-ldapext-ldapv3-vlv-09.txt">LDAP Extensions for Scrolling View Browsing of Search Results</a>
  */
 public class VirtualListViewControlDirContextProcessor implements
         DirContextProcessor {

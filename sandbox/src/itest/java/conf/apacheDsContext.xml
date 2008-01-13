@@ -8,6 +8,11 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<!-- Used mainly to enable injecting base into LdapServerManager -->
+	<bean
+		class="org.springframework.ldap.core.support.BaseLdapPathBeanPostProcessor" />
+
 	<!-- JNDI environment variable -->
 	<bean id="environment"
 		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
