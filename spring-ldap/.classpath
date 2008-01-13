@@ -50,7 +50,7 @@
 	<classpathentry kind="lib" path="lib/test/spring-aop.jar" sourcepath="lib/source/spring-src.zip"/>
 	<classpathentry kind="lib" path="lib/test/hsqldb.jar"/>
 	<classpathentry kind="lib" path="lib/test/commons-collections.jar"/>
-	<classpathentry kind="lib" path="lib/global/spring-jdbc.jar"/>
+	<classpathentry kind="lib" path="lib/global/spring-jdbc.jar" sourcepath="lib/source/spring-src.zip"/>
 	<classpathentry kind="lib" path="lib/global/commons-pool.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
