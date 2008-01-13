@@ -4,11 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
     <import resource="classpath:/conf/apacheDsContext.xml"/>
-
-	<bean id="placeholderConfig"
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location" value="classpath:/conf/ldap.properties" />
-	</bean>
+    <import resource="classpath:/conf/commonTestContext.xml"/>
 	
 	<bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource" >
 		<property name="urls" value="${urls}" />
