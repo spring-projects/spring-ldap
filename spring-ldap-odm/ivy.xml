@@ -23,11 +23,11 @@
 	<dependency org="commons-lang" name="commons-lang" rev="2.1" />
 	<dependency org="commons-collections" name="commons-collections" rev="3.1" />
 	<dependency org="org.springframework" name="spring-ldap" rev="latest.integration"/>
-	<dependency org="org.springframework" name="spring-beans" rev="2.0.6"/>
-	<dependency org="org.springframework" name="spring-core" rev="2.0.6"/>
-	<dependency org="org.springframework" name="spring-context" rev="2.0.6"/>
-	<dependency org="org.springframework" name="spring-dao" rev="2.0.6"/>
-	<dependency org="org.springframework" name="spring-src" rev="2.0.6" conf="source->source">
+	<dependency org="org.springframework" name="spring-beans" rev="2.0.8"/>
+	<dependency org="org.springframework" name="spring-core" rev="2.0.8"/>
+	<dependency org="org.springframework" name="spring-context" rev="2.0.8"/>
+	<dependency org="org.springframework" name="spring-dao" rev="2.0.8"/>
+	<dependency org="org.springframework" name="spring-src" rev="2.0.8" conf="source->source">
 		<artifact name="spring-src" type="zip"/>
 	</dependency>
 	<dependency org="com.sun" name="ldapbp" rev="1.0" />
@@ -42,7 +42,7 @@
 
 	<!-- test time only dependencies -->
 	<dependency org="com.cenqua.clover" name="clover" rev="1.3.12" conf="test->default" />
-	<dependency org="org.springframework" name="spring-mock" rev="2.0.6" 
+	<dependency org="org.springframework" name="spring-mock" rev="2.0.8" 
 	            conf="test->default"/>
 	<dependency org="gsbase" name="gsbase" rev="2.0.1" conf="test->default"/>
 	<dependency org="junit" name="junit" rev="3.8.2" conf="test->default"/>
