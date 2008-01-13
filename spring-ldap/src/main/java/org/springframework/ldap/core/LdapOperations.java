@@ -134,7 +134,7 @@ public interface LdapOperations {
      * @see #unbind(Name)
      * @see #rebind(Name, Object, Attributes)
      * @see #rename(Name, Name)
-     * @see #modifyAttributes(Name, ModificationItem[]))
+     * @see #modifyAttributes(Name, ModificationItem[])
      */
     public Object executeReadWrite(ContextExecutor ce) throws NamingException;
 
