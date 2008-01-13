@@ -1712,7 +1712,6 @@ public class LdapTemplateTest extends TestCase {
 
     public void testModifyAttributesWithDirContextOperationsNotInitializedDn()
             throws Exception {
-        final ModificationItem[] expectedModifications = new ModificationItem[0];
 
         dirContextOperationsConrol.expectAndReturn(dirContextOperationsMock
                 .getDn(), DistinguishedName.EMPTY_PATH);
@@ -1738,7 +1737,6 @@ public class LdapTemplateTest extends TestCase {
 
     public void testModifyAttributesWithDirContextOperationsNotInitializedInUpdateMode()
             throws Exception {
-        final ModificationItem[] expectedModifications = new ModificationItem[0];
 
         dirContextOperationsConrol.expectAndReturn(dirContextOperationsMock
                 .getDn(), null);
