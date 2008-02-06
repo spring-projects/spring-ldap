@@ -11,6 +11,10 @@ http://www.ietf.org/rfc/rfc2255.txt
 http://www.ietf.org/rfc/rfc2256.txt
 http://www.ietf.org/rfc/rfc2696.txt
 
+Changes in version 1.2.2 (XXX 2008)
+-------------------------------------------
+Upgraded Acegi to 1.0.6.
+
 Changes in version 1.2.1 (Dec 2007)
 -------------------------------------------
 * Added pooling library which features flexible connection validation
