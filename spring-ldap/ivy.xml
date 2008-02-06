@@ -42,9 +42,9 @@
 
 		<!-- build time only dependencies -->
 		<dependency org="org.acegisecurity" name="acegi-security"
-			rev="1.0.3" conf="buildtime->default" />
+			rev="1.0.6" conf="buildtime->default" />
 		<dependency org="org.acegisecurity" name="acegi-security-src"
-			rev="1.0.3" conf="source->default">
+			rev="1.0.6" conf="source->default">
 			<artifact name="acegi-security-src" type="zip" />
 		</dependency>
 		<!-- kind of nasty, acegi needs some 1.2.7 stuff, so we override with newer! -->
@@ -69,7 +69,7 @@
 			rev="2.0.8" conf="test->default" />
 		<dependency org="gsbase" name="gsbase" rev="2.0.1"
 			conf="test->default" />
-		<dependency org="junit" name="junit" rev="3.8.1"
+		<dependency org="junit" name="junit" rev="3.8.2"
 			conf="test->default" />
 		<dependency org="junit-addons" name="junit-addons" rev="1.4"
 			conf="test->default" />

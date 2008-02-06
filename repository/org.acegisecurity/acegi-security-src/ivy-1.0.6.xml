@@ -1,9 +1,9 @@
 <ivy-module version="1.0">
 	<info organisation="org.acegisecurity"
 		module="acegi-security-src"
-		revision="1.0.3"
+		revision="1.0.6"
 		status="release"
-		publication="20061116203300"
+		publication="20071224154600"
 		default="true"
 	/>
 	<configurations>

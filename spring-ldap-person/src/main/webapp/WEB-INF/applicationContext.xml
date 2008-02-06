@@ -10,6 +10,10 @@
 		<property name="location" value="WEB-INF/ldap.properties" />
 	</bean>
 
+	<!-- Used mainly to enable injecting base into LdapServerManager -->
+	<bean
+		class="org.springframework.ldap.core.support.BaseLdapPathBeanPostProcessor" />
+
 	<!-- Authenticate using a fixed user -->
 	<!--
 		<bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource" >

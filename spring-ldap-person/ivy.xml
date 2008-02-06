@@ -48,9 +48,9 @@
 		</dependency>
 		<dependency org="ognl" name="ognl" rev="2.6.9" />
 		<dependency org="org.acegisecurity" name="acegi-security"
-			rev="1.0.3" />
+			rev="1.0.6" />
 		<dependency org="org.acegisecurity" name="acegi-security-src"
-			rev="1.0.3" conf="source->source">
+			rev="1.0.6" conf="source->source">
 			<artifact name="acegi-security-src" type="zip" />
 		</dependency>
 

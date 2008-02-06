@@ -315,6 +315,12 @@
     <echo>reading ivy config</echo>
     <ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
   </target>
+	
+  <target name="ivy.graph" description="generate jar dependency graph"
+          depends="retrieve">
+  	<mkdir dir="${target.dir}/ivy-reports"/>
+    <ivy:report todir="${target.dir}/ivy-reports" graph="true"/>
+  </target>
 
   <presetdef name="resolve.conf">
     <ivy:resolve file="${basedir}/ivy.xml" conf="${conf}" />
