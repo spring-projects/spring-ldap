@@ -470,6 +470,14 @@ public class DistinguishedNameTest extends TestCase {
 		}
 	}
 
+	/**
+	 * Test case to verify correct parsing for issue on forums.
+	 */
+	public void testParseValidQuotation() {
+		DistinguishedName name = new DistinguishedName("cn=jo\"hn doe");
+		assertNotNull(name);
+	}
+	
 	public void testAppendChained() {
 		DistinguishedName tested = new DistinguishedName("dc=mycompany,dc=com");
 		tested.append("ou", "company1").append("cn", "john doe");
