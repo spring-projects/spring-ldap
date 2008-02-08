@@ -62,7 +62,7 @@ public class AcegiAuthenticationSourceITest extends
         assertEquals("password", tested.getCredentials());
     }
 
-    public void testSearchIndiviualAuthentication() {
+    public void testSearchIndividualAuthentication() {
         Authentication authentication = ldapAuthProvider
                 .authenticate(new UsernamePasswordAuthenticationToken(
                         "Some Person3", "password"));

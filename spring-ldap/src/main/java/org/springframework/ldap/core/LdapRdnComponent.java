@@ -42,7 +42,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	/**
 	 * Constructs an LdapRdnComponent without decoding the value.
 	 * 
-	 * @param key the Atttribute name.
+	 * @param key the Attribute name.
 	 * @param value the Attribute value.
 	 */
 	public LdapRdnComponent(String key, String value) {
