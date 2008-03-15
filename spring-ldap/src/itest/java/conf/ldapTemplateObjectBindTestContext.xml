@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+    <import resource="classpath:/conf/apacheDsContext.xml"/>
+    <import resource="classpath:/conf/commonTestContext.xml"/>
+	
+	<bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource" >
+		<property name="urls" value="${urls}" />
+		<property name="userDn" value="${userDn}" />
+		<property name="password" value="${password}" />
+		<property name="base" value="${base}" />
+		<property name="dirObjectFactory"><null /></property>
+	</bean>
+	
+	<bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">
+		<constructor-arg ref="contextSource" />
+	</bean>
+	
+</beans>
