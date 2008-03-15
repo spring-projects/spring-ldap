@@ -45,18 +45,17 @@ public class LdapTemplateObjectBindIntegrationTest extends AbstractLdapTemplateI
 		assertEquals(54321, result.intValue());
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testBindLinkedList() {
-		LinkedList<Integer> list = new LinkedList<Integer>();
-		list.add(54321);
-		list.add(67890);
+		LinkedList list = new LinkedList();
+		list.add(new Integer(54321));
+		list.add(new Integer(67890));
 
 		tested.bind("cn=myRandomList", list, null);
 
-		LinkedList<Integer> result = (LinkedList<Integer>) tested.lookup("cn=myRandomList");
+		LinkedList result = (LinkedList) tested.lookup("cn=myRandomList");
 		assertEquals(2, result.size());
-		assertEquals(54321, result.get(0).intValue());
-		assertEquals(67890, result.get(1).intValue());
+		assertEquals(54321, ((Integer) result.get(0)).intValue());
+		assertEquals(67890, ((Integer) result.get(1)).intValue());
 	}
 
 	public void testBindNonSerializableJavaObjectShouldFail() throws Exception {

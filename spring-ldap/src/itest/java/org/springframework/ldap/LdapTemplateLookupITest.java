@@ -18,7 +18,6 @@ package org.springframework.ldap;
 
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
-import javax.naming.spi.DirObjectFactory;
 
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.ContextMapper;
@@ -199,15 +198,13 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 	 */
 	public void testBindJavaObject() throws Exception {
 		AbstractContextSource contextSource = (AbstractContextSource) tested.getContextSource();
-		Class<? extends DirObjectFactory> originalObjectFactory = contextSource.getDirObjectFactory();
+		Class originalObjectFactory = contextSource.getDirObjectFactory();
 		try {
 			contextSource.setDirObjectFactory(null);
 			contextSource.afterPropertiesSet();
-			Integer i = new Integer(54321);
-			tested.bind("cn=myRandomInt", i, null);
-			i = new Integer(12345);
-			i = (Integer) tested.lookup("cn=myRandomInt");
-			assertEquals(54321, i.intValue());
+			tested.bind("cn=myRandomInt", new Integer(54321), null);
+			Integer result = (Integer) tested.lookup("cn=myRandomInt");
+			assertEquals(54321, result.intValue());
 		}
 		finally {
 			// reset the DirObjectFactory so as not to disturb other tests
