@@ -13,7 +13,9 @@ http://www.ietf.org/rfc/rfc2696.txt
 
 Changes in version 1.2.2 (XXX 2008)
 -------------------------------------------
-Upgraded Acegi to 1.0.6.
+* Upgraded Acegi to 1.0.6.
+
+* Upgraded commons-lang to 2.3.
 
 Changes in version 1.2.1 (Dec 2007)
 -------------------------------------------
