@@ -25,7 +25,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * This <code>BeanPostProcessor</code> checks each bean if it implements
- * {@link BaseLdapPathAware}. If it does, the deafult context base LDAP path
+ * {@link BaseLdapPathAware}. If it does, the default context base LDAP path
  * will be determined, and that value will be injected to the
  * {@link BaseLdapPathAware#setBaseLdapPath(DistinguishedName)} method of the
  * processed bean.
@@ -34,7 +34,7 @@ import org.springframework.util.StringUtils;
  * <code>BeanPostProcessor</code> is set, that value will be used. Otherwise,
  * in order to determine which base LDAP path to supply to the instance the
  * <code>ApplicationContext</code> is searched for any beans that are
- * implementations of {@link BaseLdapPathSource}. If one single occurrance
+ * implementations of {@link BaseLdapPathSource}. If one single occurrence
  * is found, that instance is queried for its base path, and that is what will
  * be injected. If more than one {@link BaseLdapPathSource} instance is
  * configured in the <code>ApplicationContext</code>, the name of the one to
