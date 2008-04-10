@@ -9,7 +9,7 @@ objectclass: groupOfUniqueNames
 cn: ROLE_USER
 uniqueMember: cn=Some Person,ou=company1,c=Sweden,dc=jayway,dc=se
 uniqueMember: cn=Some Person2,ou=company1,c=Sweden,dc=jayway,dc=se
-uniqueMember: cn=Some Person,ou=company1,c=Norway,dc=jayway,dc=se
+uniqueMember: cn=Some Person+sn=Person,ou=company1,c=Norway,dc=jayway,dc=se
 uniqueMember: cn=Some Person,ou=company2,c=Sweden,dc=jayway,dc=se
 uniqueMember: cn=Some Person3,ou=company1,c=Sweden,dc=jayway,dc=se
 
