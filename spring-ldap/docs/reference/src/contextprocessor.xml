@@ -22,7 +22,7 @@
 
     <informalexample>
       <programlisting>public void search(SearchExecutor se, NameClassPairCallbackHandler handler,
-   DirContextProcessor processor) throws DataAccessException;</programlisting>
+   DirContextProcessor processor);</programlisting>
     </informalexample>
 
     <para>Before the search operation, the <literal>preProcess</literal>

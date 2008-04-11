@@ -5,16 +5,16 @@
   <sect1 id="introduction-overview">
     <title>Overview</title>
 
-    <para>Spring-LDAP (<ulink
+    <para>Spring LDAP (<ulink
     url="http://www.springframework.org/ldap">http://www.springframework.org/ldap</ulink>)
     is a library for simpler LDAP programming in Java, built on the same
     principles as the <ulink
     url="http://static.springframework.org/spring/docs/current/api/org/springframework/jdbc/core/JdbcTemplate.html">JdbcTemplate</ulink>
     in Spring JDBC. It completely eliminates the need to worry about creating
     and closing <literal>LdapContext</literal> and looping through
-    <literal>NamingEnumeration</literal>. It also provides a more
-    comprehensive unchecked Exception hierarchy, built on Spring's
-    <literal>DataAccessException</literal>. As a bonus, it also contains
+    <literal>NamingEnumeration</literal>. It also provides exception translation
+    from <literal>javax.naming.NamingException</literal> to a mirrored unchecked
+    Exception hierarchy, much like Spring JMS. As a bonus, Spring LDAP also contains
     classes for dynamically building LDAP filters and DNs (Distinguished
     Names), LDAP attribute management, and client-side LDAP transaction management.</para>
 
