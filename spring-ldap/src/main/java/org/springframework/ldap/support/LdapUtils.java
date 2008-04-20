@@ -76,117 +76,131 @@ public final class LdapUtils {
 	public static NamingException convertLdapException(javax.naming.NamingException ex) {
 		Assert.notNull(ex, "NamingException must not be null");
 
-		if (ex instanceof javax.naming.directory.AttributeInUseException) {
+		if (ex.getClass().equals(javax.naming.directory.AttributeInUseException.class)) {
 			return new org.springframework.ldap.AttributeInUseException(
 					(javax.naming.directory.AttributeInUseException) ex);
 		}
-		if (ex instanceof javax.naming.directory.AttributeModificationException) {
+		if (ex.getClass().equals(javax.naming.directory.AttributeModificationException.class)) {
 			return new org.springframework.ldap.AttributeModificationException(
 					(javax.naming.directory.AttributeModificationException) ex);
 		}
-		if (ex instanceof javax.naming.AuthenticationException) {
-			return new org.springframework.ldap.AuthenticationException((javax.naming.AuthenticationException) ex);
-		}
-		if (ex instanceof javax.naming.AuthenticationNotSupportedException) {
-			return new org.springframework.ldap.AuthenticationNotSupportedException(
-					(javax.naming.AuthenticationNotSupportedException) ex);
-		}
-		if (ex instanceof javax.naming.CannotProceedException) {
+		if (ex.getClass().equals(javax.naming.CannotProceedException.class)) {
 			return new org.springframework.ldap.CannotProceedException((javax.naming.CannotProceedException) ex);
 		}
-		if (ex instanceof javax.naming.CommunicationException) {
+		if (ex.getClass().equals(javax.naming.CommunicationException.class)) {
 			return new org.springframework.ldap.CommunicationException((javax.naming.CommunicationException) ex);
 		}
-		if (ex instanceof javax.naming.ConfigurationException) {
+		if (ex.getClass().equals(javax.naming.ConfigurationException.class)) {
 			return new org.springframework.ldap.ConfigurationException((javax.naming.ConfigurationException) ex);
 		}
-		if (ex instanceof javax.naming.ContextNotEmptyException) {
+		if (ex.getClass().equals(javax.naming.ContextNotEmptyException.class)) {
 			return new org.springframework.ldap.ContextNotEmptyException((javax.naming.ContextNotEmptyException) ex);
 		}
-		if (ex instanceof javax.naming.InsufficientResourcesException) {
+		if (ex.getClass().equals(javax.naming.InsufficientResourcesException.class)) {
 			return new org.springframework.ldap.InsufficientResourcesException(
 					(javax.naming.InsufficientResourcesException) ex);
 		}
-		if (ex instanceof javax.naming.InterruptedNamingException) {
+		if (ex.getClass().equals(javax.naming.InterruptedNamingException.class)) {
 			return new org.springframework.ldap.InterruptedNamingException((javax.naming.InterruptedNamingException) ex);
 		}
-		if (ex instanceof javax.naming.directory.InvalidAttributeIdentifierException) {
+		if (ex.getClass().equals(javax.naming.directory.InvalidAttributeIdentifierException.class)) {
 			return new org.springframework.ldap.InvalidAttributeIdentifierException(
 					(javax.naming.directory.InvalidAttributeIdentifierException) ex);
 		}
-		if (ex instanceof javax.naming.directory.InvalidAttributesException) {
+		if (ex.getClass().equals(javax.naming.directory.InvalidAttributesException.class)) {
 			return new org.springframework.ldap.InvalidAttributesException(
 					(javax.naming.directory.InvalidAttributesException) ex);
 		}
-		if (ex instanceof javax.naming.directory.InvalidAttributeValueException) {
+		if (ex.getClass().equals(javax.naming.directory.InvalidAttributeValueException.class)) {
 			return new org.springframework.ldap.InvalidAttributeValueException(
 					(javax.naming.directory.InvalidAttributeValueException) ex);
 		}
-		if (ex instanceof javax.naming.InvalidNameException) {
+		if (ex.getClass().equals(javax.naming.InvalidNameException.class)) {
 			return new org.springframework.ldap.InvalidNameException((javax.naming.InvalidNameException) ex);
 		}
-		if (ex instanceof javax.naming.directory.InvalidSearchControlsException) {
+		if (ex.getClass().equals(javax.naming.directory.InvalidSearchControlsException.class)) {
 			return new org.springframework.ldap.InvalidSearchControlsException(
 					(javax.naming.directory.InvalidSearchControlsException) ex);
 		}
-		if (ex instanceof javax.naming.directory.InvalidSearchFilterException) {
+		if (ex.getClass().equals(javax.naming.directory.InvalidSearchFilterException.class)) {
 			return new org.springframework.ldap.InvalidSearchFilterException(
 					(javax.naming.directory.InvalidSearchFilterException) ex);
 		}
+		
+		// this class is abstract, so it can never be of exactly this class; using instanceof
 		if (ex instanceof javax.naming.ldap.LdapReferralException) {
 			return new org.springframework.ldap.LdapReferralException((javax.naming.ldap.LdapReferralException) ex);
 		}
-		if (ex instanceof javax.naming.LimitExceededException) {
+		// Skipping the abstract superclass javax.naming.ReferralException
+
+		// LimitExceededException hierarchy
+		if (ex.getClass().equals(javax.naming.SizeLimitExceededException.class)) {
+			return new org.springframework.ldap.SizeLimitExceededException((javax.naming.SizeLimitExceededException) ex);
+		}
+		if (ex.getClass().equals(javax.naming.TimeLimitExceededException.class)) {
+			return new org.springframework.ldap.TimeLimitExceededException((javax.naming.TimeLimitExceededException) ex);
+		}
+		// this class is the superclass of the two above
+		if (ex.getClass().equals(javax.naming.LimitExceededException.class)) {
 			return new org.springframework.ldap.LimitExceededException((javax.naming.LimitExceededException) ex);
 		}
-		if (ex instanceof javax.naming.LinkException) {
-			return new org.springframework.ldap.LinkException((javax.naming.LinkException) ex);
-		}
-		if (ex instanceof javax.naming.LinkLoopException) {
+
+		// LinkException hierarchy
+		if (ex.getClass().equals(javax.naming.LinkLoopException.class)) {
 			return new org.springframework.ldap.LinkLoopException((javax.naming.LinkLoopException) ex);
 		}
-		if (ex instanceof javax.naming.MalformedLinkException) {
+		if (ex.getClass().equals(javax.naming.MalformedLinkException.class)) {
 			return new org.springframework.ldap.MalformedLinkException((javax.naming.MalformedLinkException) ex);
 		}
-		if (ex instanceof javax.naming.NameAlreadyBoundException) {
+		// this class is the superclass of the two above
+		if (ex.getClass().equals(javax.naming.LinkException.class)) {
+			return new org.springframework.ldap.LinkException((javax.naming.LinkException) ex);
+		}
+
+		if (ex.getClass().equals(javax.naming.NameAlreadyBoundException.class)) {
 			return new org.springframework.ldap.NameAlreadyBoundException((javax.naming.NameAlreadyBoundException) ex);
 		}
-		if (ex instanceof javax.naming.NameNotFoundException) {
+		if (ex.getClass().equals(javax.naming.NameNotFoundException.class)) {
 			return new org.springframework.ldap.NameNotFoundException((javax.naming.NameNotFoundException) ex);
 		}
-		if (ex instanceof javax.naming.NoInitialContextException) {
-			return new org.springframework.ldap.NoInitialContextException((javax.naming.NoInitialContextException) ex);
-		}
-		if (ex instanceof javax.naming.NoPermissionException) {
+
+		// NamingSecurityException hierarchy
+		if (ex.getClass().equals(javax.naming.NoPermissionException.class)) {
 			return new org.springframework.ldap.NoPermissionException((javax.naming.NoPermissionException) ex);
 		}
-		if (ex instanceof javax.naming.directory.NoSuchAttributeException) {
+		if (ex.getClass().equals(javax.naming.AuthenticationException.class)) {
+			return new org.springframework.ldap.AuthenticationException((javax.naming.AuthenticationException) ex);
+		}
+		if (ex.getClass().equals(javax.naming.AuthenticationNotSupportedException.class)) {
+			return new org.springframework.ldap.AuthenticationNotSupportedException(
+					(javax.naming.AuthenticationNotSupportedException) ex);
+		}
+		// Skipping the abstract superclass javax.naming.NamingSecurityException
+
+		if (ex.getClass().equals(javax.naming.NoInitialContextException.class)) {
+			return new org.springframework.ldap.NoInitialContextException((javax.naming.NoInitialContextException) ex);
+		}
+		if (ex.getClass().equals(javax.naming.directory.NoSuchAttributeException.class)) {
 			return new org.springframework.ldap.NoSuchAttributeException(
 					(javax.naming.directory.NoSuchAttributeException) ex);
 		}
-		if (ex instanceof javax.naming.NotContextException) {
+		if (ex.getClass().equals(javax.naming.NotContextException.class)) {
 			return new org.springframework.ldap.NotContextException((javax.naming.NotContextException) ex);
 		}
-		if (ex instanceof javax.naming.OperationNotSupportedException) {
+		if (ex.getClass().equals(javax.naming.OperationNotSupportedException.class)) {
 			return new org.springframework.ldap.OperationNotSupportedException(
 					(javax.naming.OperationNotSupportedException) ex);
 		}
-		if (ex instanceof javax.naming.PartialResultException) {
+		if (ex.getClass().equals(javax.naming.PartialResultException.class)) {
 			return new org.springframework.ldap.PartialResultException((javax.naming.PartialResultException) ex);
 		}
-		if (ex instanceof javax.naming.directory.SchemaViolationException) {
+		if (ex.getClass().equals(javax.naming.directory.SchemaViolationException.class)) {
 			return new org.springframework.ldap.SchemaViolationException(
 					(javax.naming.directory.SchemaViolationException) ex);
 		}
-		if (ex instanceof javax.naming.ServiceUnavailableException) {
+		if (ex.getClass().equals(javax.naming.ServiceUnavailableException.class)) {
 			return new org.springframework.ldap.ServiceUnavailableException(
 					(javax.naming.ServiceUnavailableException) ex);
-		}
-		if (ex instanceof javax.naming.SizeLimitExceededException) {
-			return new org.springframework.ldap.SizeLimitExceededException((javax.naming.SizeLimitExceededException) ex);
-		}
-		if (ex instanceof javax.naming.TimeLimitExceededException) {
-			return new org.springframework.ldap.TimeLimitExceededException((javax.naming.TimeLimitExceededException) ex);
 		}
 
 		// fallback
