@@ -46,19 +46,19 @@ public class ContextMapperCallbackHandler extends
     }
 
     /**
-     * Cast the NameClassPair to a {@link Binding} and pass its attributes to
+     * Cast the NameClassPair to a {@link Binding} and pass its object to
      * the ContextMapper.
      * 
      * @param nameClassPair
-     *            a SearchResult instance.
-     * @return the Object returned from the Mapper.
+     *            a Binding instance.
+     * @return the Object returned from the mapper.
      */
     public Object getObjectFromNameClassPair(NameClassPair nameClassPair) {
         Binding binding = (Binding) nameClassPair;
         Object object = binding.getObject();
         if (object == null) {
             throw new ObjectRetrievalException(
-                    "SearchResult did not contain any object.");
+                    "Binding did not contain any object.");
         }
         return mapper.mapFromContext(object);
     }
