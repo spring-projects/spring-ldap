@@ -13,6 +13,10 @@ http://www.ietf.org/rfc/rfc2696.txt
 
 Changes in version 1.2.2 (XXX 2008)
 -------------------------------------------
+* Improved search methods that take handlers so that they will work
+  with handlers that use ContextMappers, eg ContextMapperCallbackHandler.
+  (LDAP-107)
+
 * Fixed a problem where the narrowest possible exception subclass was
   not always found in the exception translation. (LDAP-100)
 
