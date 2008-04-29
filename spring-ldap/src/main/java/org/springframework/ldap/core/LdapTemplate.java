@@ -346,8 +346,12 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     public void search(Name base, String filter,
             NameClassPairCallbackHandler handler) {
 
-        search(base, filter, getDefaultSearchControls(DEFAULT_SEARCH_SCOPE,
-                DONT_RETURN_OBJ_FLAG, ALL_ATTRIBUTES), handler);
+        SearchControls controls = getDefaultSearchControls(DEFAULT_SEARCH_SCOPE,
+            DONT_RETURN_OBJ_FLAG, ALL_ATTRIBUTES);
+        if (handler instanceof ContextMapperCallbackHandler) {
+            assureReturnObjFlagSet(controls);
+        }
+        search(base, filter, controls, handler);
     }
 
     /*
@@ -358,8 +362,12 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     public void search(String base, String filter,
             NameClassPairCallbackHandler handler) {
 
-        search(base, filter, getDefaultSearchControls(DEFAULT_SEARCH_SCOPE,
-                DONT_RETURN_OBJ_FLAG, ALL_ATTRIBUTES), handler);
+        SearchControls controls = getDefaultSearchControls(DEFAULT_SEARCH_SCOPE,
+            DONT_RETURN_OBJ_FLAG, ALL_ATTRIBUTES);
+        if (handler instanceof ContextMapperCallbackHandler) {
+            assureReturnObjFlagSet(controls);
+        }
+        search(base, filter, controls, handler);
     }
 
     /*
