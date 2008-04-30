@@ -37,6 +37,16 @@ import com.gargoylesoftware.base.testing.EqualsTester;
  * @author Mattias Arthursson
  */
 public class DistinguishedNameTest extends TestCase {
+	
+	public void testToCompactString() throws Exception {
+		DistinguishedName path = new DistinguishedName("cn=foo,     ou=bar");
+		assertEquals("cn=foo,ou=bar", path.toCompactString());
+	}
+	
+	public void testEncode() throws Exception {
+		DistinguishedName path = new DistinguishedName("cn=foo,     ou=bar");
+		assertEquals("cn=foo, ou=bar", path.encode());
+	}
 
 	public void testDistinguishedName_CompositeWithSlash() throws Exception {
 		Name testPath = new CompositeName("cn=foo\\/bar");
@@ -92,6 +102,26 @@ public class DistinguishedNameTest extends TestCase {
 		path.remove(3);
 
 		assertEquals("cn=john.doe, ou=Some Company, ou=G, ou=M", path.toString());
+	}
+
+	public void testRemoveLast() {
+
+		String testPath = "cn=john.doe, OU=Users,OU=Some Company,OU=G,OU=I,OU=M";
+		DistinguishedName path = new DistinguishedName(testPath);
+
+		path.removeLast();
+
+		assertEquals("ou=Users, ou=Some Company, ou=G, ou=I, ou=M", path.toString());
+	}
+
+	public void testRemoveFirstWithName() {
+
+		String testPath = "cn=john.doe, OU=Users,OU=Some Company,OU=G,OU=I,OU=M";
+		DistinguishedName path = new DistinguishedName(testPath);
+
+		path.removeFirst(new DistinguishedName("OU=G,OU=I,OU=M"));
+
+		assertEquals("cn=john.doe, ou=Users, ou=Some Company", path.toString());
 	}
 
 	/**
@@ -185,8 +215,10 @@ public class DistinguishedNameTest extends TestCase {
 		DistinguishedName path2 = new DistinguishedName("uid=mtah.test, ou=people, ou=EU, o=example.com");
 		DistinguishedName ending2 = new DistinguishedName("ou=EU, o=example.com");
 
-		assertFalse(path1.endsWith(ending1));
-		assertFalse(path2.endsWith(ending2));
+		assertFalse("single rdn", path1.endsWith(ending1));
+		assertFalse("multiple rdns", path2.endsWith(ending2));
+		assertFalse("too long name", ending2.endsWith(path2));
+		assertFalse("empty name", path2.endsWith(DistinguishedName.EMPTY_PATH));
 	}
 
 	public void testGetAll() throws Exception {

@@ -71,6 +71,10 @@ import org.springframework.ldap.support.ListComparator;
  * @author Mattias Arthursson
  */
 public class DistinguishedName implements Name {
+	private static final boolean COMPACT = true;
+
+	private static final boolean NON_COMPACT = false;
+
 	private static final long serialVersionUID = 3514344371999042586L;
 
 	/**
@@ -223,12 +227,25 @@ public class DistinguishedName implements Name {
 
 	/**
 	 * Get the String representation of this <code>DistinguishedName</code>.
+	 * Add a space after each comma, to make it readable.
+	 * 
+	 * @return a syntactically correct, properly escaped, nicely formatted
+	 * String representation of the <code>DistinguishedName</code>.
+	 */
+	public String toString() {
+		return format(NON_COMPACT);
+	}
+
+	/**
+	 * Get the compact String representation of this
+	 * <code>DistinguishedName</code>. Add no space after each comma, to make
+	 * it compact.
 	 * 
 	 * @return a syntactically correct, properly escaped String representation
 	 * of the <code>DistinguishedName</code>.
 	 */
-	public String toString() {
-		return encode();
+	public String toCompactString() {
+		return format(COMPACT);
 	}
 
 	/**
@@ -239,7 +256,10 @@ public class DistinguishedName implements Name {
 	 * @return the LDAP path.
 	 */
 	public String encode() {
+		return format(NON_COMPACT);
+	}
 
+	private String format(boolean compact) {
 		// empty path
 		if (names.size() == 0)
 			return "";
@@ -252,12 +272,18 @@ public class DistinguishedName implements Name {
 			buffer.append(rdn.getLdapEncoded());
 
 			// add comma, except in last iteration
-			if (i.hasPrevious())
-				buffer.append(", ");
+			if (i.hasPrevious()) {
+				if (compact) {
+					buffer.append(",");
+				}
+				else {
+					buffer.append(", ");
+
+				}
+			}
 		}
 
 		return buffer.toString();
-
 	}
 
 	/**
