@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.springframework.ldap</groupId>
+	<artifactId>projects</artifactId>
+	<version>1.2.2-SNAPSHOT</version>
+
+	<packaging>pom</packaging>
+	<name>Spring LDAP Master Build Project</name>
+
+	<modules>
+		<module>core</module>
+		<module>tiger</module>
+		<module>test-support</module>
+		<module>integration-tests</module>
+	</modules>
+
+	<properties>
+		<docbook.source>${basedir}/src/docbkx</docbook.source>
+		<docbook.target>${basedir}/target/site/guide</docbook.target>
+		<spring.version>2.0.8</spring.version>
+	</properties>
+
+	<!--
+	<profiles>
+		<profile>
+		</profile>
+	</profiles>
+	-->
+
+	<build>
+	<!--
+		<plugins>
+				<groupId>com.agilejava.docbkx</groupId>
+				<artifactId>docbkx-maven-plugin</artifactId>
+				<version>2.0.6</version>
+				<executions>
+					<execution>
+						<id>build-singlehtml-doc</id>
+						<phase>pre-site</phase>
+						<goals>
+							<goal>generate-html</goal>
+						</goals>
+						<configuration>
+							<sourceDirectory>
+								${docbook.source}
+							</sourceDirectory>
+							<targetDirectory>
+								${docbook.target}
+							</targetDirectory>
+							<inputs>qbox.xml</inputs>
+							<chunkedOutput>false</chunkedOutput>
+								<copy
+									todir="${docbook.target}/images">
+									<fileset
+										dir="${docbook.source}/images">
+										<include name="*.png" />
+										<include name="*.gif" />
+										<include name="*.jpg" />
+									</fileset>
+								</copy>
+							</postProcess>
+						</configuration>
+					</execution>
+					<execution>
+						<id>build-pdf-doc</id>
+						<phase>pre-site</phase>
+						<goals>
+							<goal>generate-pdf</goal>
+						</goals>
+						<configuration>
+							<sourceDirectory>
+								${docbook.source}
+							</sourceDirectory>
+							<targetDirectory>
+								${docbook.target}
+							</targetDirectory>
+							<inputs>qbox.xml</inputs>
+							<imgSrcPath>${docbook.source}/</imgSrcPath>
+							<admonGraphicsPath>
+								${docbook.source}/resources/images/admons/
+							</admonGraphicsPath>
+							<foCustomization>
+								${docbook.source}/resources/xsl/spring-ldap-docbook-fopdf.xsl
+							</foCustomization>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.docbook</groupId>
+						<artifactId>docbook-xml</artifactId>
+						<version>4.4</version>
+						<scope>runtime</scope>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	-->
+	</build>
+</project>

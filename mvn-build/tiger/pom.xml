@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.springframework.ldap</groupId>
+	<artifactId>spring-ldap-tiger</artifactId>
+	<name>Spring LDAP Java 5 support</name>
+	<version>1.2.2-SNAPSHOT</version>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<!-- Spring Dependencies -->
+		<dependency>
+			<groupId>org.springframework.ldap</groupId>
+			<artifactId>spring-ldap</artifactId>
+			<version>1.2.2-SNAPSHOT</version>
+		</dependency>
+                <dependency>
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                        <version>3.8.2</version>
+                        <scope>test</scope>
+                </dependency>
+	</dependencies>
+</project>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+               
+<chapter id="simple">
+  <title>Java 5 Support</title>
+
+  <sect1 id="simple-ldap-template">
+    <title>SimpleLdapTemplate</title>
+
+    <para>As of version 1.2 Spring LDAP includes the spring-ldap-tiger.jar distributable, which adds
+    a thin layer of Java 5 functionality on top of Spring LDAP.</para>
+    
+    <para>The <literal>SimpleLdapTemplate</literal> class adds search and lookup methods that take a 
+    <literal>ParameterizedContextMapper</literal>, adding generics support to these methods.</para>
+    
+    <para><literal>ParametrizedContextMapper</literal> is a typed version of <literal>ContextMapper</literal>,
+    which simplifies working with searches and lookups:
+    <example>
+    <title>Using <literal>ParameterizedContextMapper</literal></title>
+    <programlisting>public List&lt;Person&gt; getAllPersons(){
+    return simpleLdapTemplate.search("", "(objectclass=person)",
+               new <emphasis role="bold">ParameterizedContextMapper&lt;Person&gt;</emphasis>() {
+                   public <emphasis role="bold">Person</emphasis> mapFromContext(Object ctx) {
+                       DirContextAdapter adapter = (DirContextAdapter) ctx;
+                       Person person = new Person();
+                       // Fill the domain object with data from the DirContextAdapter
+               
+                       return person;
+                   }
+               };
+}
+    </programlisting>
+    </example>
+    </para>
+  </sect1>
+</chapter>

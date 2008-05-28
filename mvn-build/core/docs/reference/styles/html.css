@@ -1,0 +1,270 @@
+BODY {
+   text-align: justify;
+   margin-right: 2em;
+   margin-left: 2em;
+}
+
+A[accesskey^="p"] {
+    font-family: Verdana, Arial, helvetica, sans-serif;
+    font-size: 12px;
+	color: #003399;
+}
+
+A[accesskey^="u"] {
+    font-family: Verdana, Arial, helvetica, sans-serif;
+    font-size: 12px;
+	color: #003399;
+}
+
+A[accesskey^="h"] {
+    font-family: Verdana, Arial, helvetica, sans-serif;
+    font-size: 12px;
+	color: #003399;
+}
+
+A[accesskey^="n"] {
+    font-family: Verdana, Arial, helvetica, sans-serif;
+    font-size: 12px;
+	color: #003399;
+}
+
+A {
+	color: #003399;
+	font-family: Verdana, Arial, helvetica, sans-serif;
+    font-size: 12px;
+}
+
+A:active {
+    color: #003399;
+}
+
+A:visited {
+    color: #888888;
+}
+
+P {
+	font-family: Verdana, Arial;
+}
+
+DT {
+	font-family: Verdana, Arial;
+	font-size: 12px;
+}
+
+P, DL, DT, DD, BLOCKQUOTE {
+    color: #000000;
+    margin-bottom: 3px;
+    margin-top: 3px;
+    padding-top: 0px;
+}
+
+OL, UL, P {
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+P, BLOCKQUOTE {
+    font-size: 90%;
+}
+
+P.releaseinfo {
+    font-size: 100%;
+    font-weight: bold;
+    font-family: Verdana, Arial, helvetica, sans-serif;
+    padding-top: 10px;
+}
+
+P.pubdate {
+    font-size: 120%; font-weight: bold; 
+    font-family: Verdana, Arial, helvetica, sans-serif;
+}
+
+td {
+    font-size: 80%;
+}
+
+TD, TH, SPAN {
+    color: #000000;
+}
+
+TD[width^="40%"] {
+    font-family: Verdana, Arial, helvetica, sans-serif;
+    font-size: 12px;
+	color: #003399;
+}
+
+TABLE[summary^="Navigation header"] tbody tr th[colspan^="3"] {
+    font-family: Verdana, Arial, helvetica, sans-serif;
+}
+
+BLOCKQUOTE {
+    margin-right: 0px;
+}
+
+H1, H2, H3, H4, H5, H6    {
+    color: #000000;
+    font-weight:500;
+    margin-top:0px;
+    padding-top:14px;
+    font-family: Verdana, Arial, helvetica, sans-serif;
+    margin-bottom: 0px;
+}
+
+H2.title {
+    font-weight:800;
+    margin-bottom: 8px;
+}
+
+H2.subtitle {
+    font-weight:800;
+    margin-bottom: 20px;
+}
+
+.firstname, .surname {
+	font-size: 12px;
+    font-family: Verdana, Arial, helvetica, sans-serif;
+}
+
+TABLE  {
+    border-collapse: collapse;
+    border-spacing:0;
+    border: 1px thin black;
+    empty-cells: hide;
+    margin: 10px 0px 30px 50px;
+    width: 90%;
+}
+
+div.table {
+	margin: 30px 0 30 0;
+	border: 1px dashed gray;
+	padding: 10px;
+}
+
+div.table > p.title {
+	padding-left: 10px;
+}
+
+table[summary^="Navigation footer"] {
+    border-collapse: collapse;
+    border-spacing:0;
+    border: 1px thin black;
+    empty-cells: hide;    
+    margin: 0px;
+    width: 100%;
+}
+
+table[summary^="Note"], table[summary^="Warning"], table[summary^="Tip"] {
+    border-collapse: collapse;
+    border-spacing:0;
+    border: 1px thin black;
+    empty-cells: hide;    
+    margin: 10px 0 10 -20;
+    width: 100%;
+}
+
+TD  {
+    padding: 4pt;
+    font-family: Verdana, Arial, helvetica, sans-serif;
+}
+
+div.warning TD {
+	text-align: justify;
+}
+
+H1 { 
+    font-size: 150%; 
+}
+H2 { 
+    font-size: 110%; 
+}
+H3 {
+    font-size: 100%; font-weight: bold; 
+}
+H4 { 
+    font-size: 90%; font-weight: bold;
+}
+H5 {
+    font-size: 90%; font-style: italic; 
+}
+H6 { 
+    font-size: 100%; font-style: italic; 
+}
+
+TT {
+    font-size: 110%;
+    font-family: "Courier New", Courier, monospace;
+    color: #000000;
+}
+
+.navheader, .navfooter {    
+    background-color: #e4eff3;
+}
+
+PRE {
+    font-size: 110%;
+    padding: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #CCCCCC;
+    background-color: #F4F4F4;
+}
+
+UL, OL, LI {
+    list-style: disc;
+}
+
+HR  {
+    width: 100%;
+    height: 1px;
+    background-color: #CCCCCC;
+    border-width: 0px;
+    padding: 0px;
+    color: #CCCCCC;
+}
+
+.variablelist { 
+    padding-top: 10; 
+    padding-bottom:10; 
+    margin:0;
+}
+
+.term { 
+    font-weight:bold;
+}
+
+.mediaobject {
+    padding-top: 30px; 
+    padding-bottom: 30px; 
+}
+
+.legalnotice {
+    font-family: Verdana, Arial, helvetica, sans-serif;
+    font-size: 12px;
+    font-style: italic;
+}
+
+.sidebar {
+    float: right;
+    margin: 10px 0px 10px 30px;
+    padding: 10px 20px 20px 20px;
+    width: 33%;
+    border: 1px solid black;
+    background-color: #F4F4F4;
+    font-size: 14px;
+}
+
+.programlisting * .classname {
+    font-size: 95%;
+}
+
+.programlisting * .interfacename {
+    font-size: 95%;
+}
+
+.programlisting * .literal {
+    font-size: 95%;
+}
+
+.property {
+	font-family: "Courier New", Courier, monospace;
+}

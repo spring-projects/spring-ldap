@@ -1,0 +1,20 @@
+<html>
+<body>
+
+Utility classes for dynamically building LDAP
+filters. Filters can be nested and wrapped around each other:
+<pre>
+AndFilter andFilter = new AndFilter();
+andFilter.and(new EqualsFilter(&quot;objectclass&quot;, &quot;person&quot;);
+andFilter.and(new EqualsFilter(&quot;cn&quot;, &quot;Some CN&quot;);
+OrFilter orFilter = new OrFilter();
+orFilter.or(andFilter);
+orFilter.or(new EqualsFilter(&quot;objectclass&quot;, &quot;organizationalUnit));
+System.out.println(orFilter.encode());
+</pre>
+would result in:
+
+<pre>(|(&(objectclass=person)(cn=Some CN))(objectclass=organizationalUnit))</pre>
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding="iso-8859-1"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+                      "../lib/docbook-dtd/docbookx.dtd"
+[
+<!ENTITY preface SYSTEM "preface.xml">
+<!ENTITY overview SYSTEM "overview.xml">
+<!ENTITY basic SYSTEM "basic.xml">
+<!ENTITY dirobjectfactory SYSTEM "dirobjectfactory.xml">
+<!ENTITY executors SYSTEM "executors.xml">
+<!ENTITY contextprocessor SYSTEM "contextprocessor.xml">
+<!ENTITY transactions SYSTEM "transactions.xml">
+<!ENTITY simple SYSTEM "simple.xml">
+<!ENTITY configuration SYSTEM "configuration.xml">
+<!ENTITY pooling SYSTEM "pooling.xml">
+]>
+
+
+<book>
+
+	<bookinfo>
+		<title>Spring LDAP</title>
+		<subtitle>Reference Documentation</subtitle>
+		<releaseinfo>Version 1.2.1</releaseinfo>
+		<pubdate>December 2007</pubdate>
+		<authorgroup>
+			<author>
+				<firstname>Mattias</firstname>
+				<surname>Arthursson</surname>
+			</author>
+			<author>
+				<firstname>Ulrik</firstname>
+				<surname>Sandberg</surname>
+			</author>
+			<author>
+				<firstname>Eric</firstname>
+				<surname>Dalquist</surname>
+			</author>
+		</authorgroup>
+
+		<legalnotice>
+			<para>
+				Copies of this document may be made for your own use and
+				for distribution to others, provided that you do not
+				charge any fee for such copies and further provided that
+				each copy contains this Copyright Notice, whether
+				distributed in print or electronically.
+			</para>
+		</legalnotice>
+	</bookinfo>
+
+	<toc />
+
+	&preface;
+	&overview;
+	&basic;
+	&dirobjectfactory;
+	&transactions;
+	&executors;
+	&contextprocessor;
+	&simple;
+	&configuration;
+	&pooling;
+
+</book>

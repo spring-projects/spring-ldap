@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="introduction">
+  <title>Introduction</title>
+
+  <sect1 id="introduction-overview">
+    <title>Overview</title>
+
+    <para>Spring-LDAP (<ulink
+    url="http://www.springframework.org/ldap">http://www.springframework.org/ldap</ulink>)
+    is a library for simpler LDAP programming in Java, built on the same
+    principles as the <ulink
+    url="http://static.springframework.org/spring/docs/current/api/org/springframework/jdbc/core/JdbcTemplate.html">JdbcTemplate</ulink>
+    in Spring JDBC. It completely eliminates the need to worry about creating
+    and closing <literal>LdapContext</literal> and looping through
+    <literal>NamingEnumeration</literal>. It also provides a more
+    comprehensive unchecked Exception hierarchy, built on Spring's
+    <literal>DataAccessException</literal>. As a bonus, it also contains
+    classes for dynamically building LDAP filters and DNs (Distinguished
+    Names), LDAP attribute management, and client-side LDAP transaction management.</para>
+
+    <para>Consider, for example, a method that should search some storage for
+    all persons and return their names in a list. Using JDBC, we would create
+    a <emphasis>connection</emphasis> and execute a <emphasis>query</emphasis>
+    using a <emphasis>statement</emphasis>. We would then loop over the
+    <emphasis>result set</emphasis> and retrieve the
+    <emphasis>column</emphasis> we want, adding it to a list. In contrast,
+    using Java LDAP, we would create a <emphasis>context</emphasis> and
+    perform a <emphasis>search</emphasis> using a <emphasis>search
+    filter</emphasis>. We would then loop over the resulting <emphasis>naming
+    enumeration</emphasis> and retrieve the <emphasis>attribute</emphasis> we
+    want, adding it to a list.</para>
+
+    <para>The traditional way of implementing this person name search method
+    in Java LDAP looks like this, where the code marked as bold actually
+    performs tasks related to the business purpose of the method:</para>
+
+    <informalexample>
+      <programlisting>package com.example.dao;
+
+public class TraditionalPersonDaoImpl implements PersonDao {
+   public List getAllPersonNames() {
+      Hashtable env = new Hashtable();
+      env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+      env.put(Context.PROVIDER_URL, "ldap://localhost:389/dc=example,dc=com");
+
+      DirContext ctx;
+      try {
+         ctx = new InitialDirContext(env);
+      } catch (NamingException e) {
+         throw new RuntimeException(e);
+      }
+
+      LinkedList list = new LinkedList();
+      NamingEnumeration results = null;
+      try {
+         SearchControls controls = new SearchControls();
+         controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+         results = ctx.<emphasis role="bold">search("", "(objectclass=person)"</emphasis>, controls);
+
+         while (results.hasMore()) {
+            SearchResult searchResult = (SearchResult) results.next();
+            Attributes attributes = searchResult.getAttributes();
+            <emphasis role="bold">Attribute attr = attributes.get("cn");
+            String cn = (String) attr.get();
+            list.add(cn);</emphasis>
+         }
+      } catch (NameNotFoundException e) {
+         // The base context was not found.
+         // Just clean up and exit.
+      } catch (NamingException e) {
+         throw new RuntimeException(e);
+      } finally {
+         if (results != null) {
+            try {
+               results.close();
+            } catch (Exception e) {
+               // Never mind this.
+            }
+         }
+         if (ctx != null) {
+            try {
+               ctx.close();
+            } catch (Exception e) {
+               // Never mind this.
+            }
+         }
+      }
+      <emphasis role="bold">return list;</emphasis>
+   }
+}</programlisting>
+    </informalexample>
+
+    <para>By using the Spring LDAP classes <literal>AttributesMapper</literal>
+    and <literal>LdapTemplate</literal>, we get the exact same functionality
+    with the following code:</para>
+
+    <informalexample>
+      <programlisting>package com.example.dao;
+
+public class PersonDaoImpl implements PersonDao {
+   private LdapTemplate ldapTemplate;
+
+   public void setLdapTemplate(LdapTemplate ldapTemplate) {
+      this.ldapTemplate = ldapTemplate;
+   }
+
+   public List getAllPersonNames() {
+      return ldapTemplate.<emphasis role="bold">search(
+         "", "(objectclass=person)"</emphasis>,
+         new AttributesMapper() {
+            public Object mapFromAttributes(Attributes attrs)
+               throws NamingException {
+               <emphasis role="bold">return attrs.get("cn").get();</emphasis>
+            }
+         });
+   }
+}</programlisting>
+    </informalexample>
+
+    <para>The amount of boiler-plate code is significantly less than in the
+    traditional example. The <literal>LdapTemplate</literal> version of the
+    search method performs the search, maps the attributes to a string using
+    the given <literal>AttributesMapper</literal>, collects the strings in an
+    internal list, and finally returns the list.</para>
+
+    <para>Note that the <literal>PersonDaoImpl</literal> code simply assumes
+    that it has an <literal>LdapTemplate</literal> instance, rather than
+    looking one up somewhere. It provides a set method for this purpose. There
+    is nothing Spring-specific about this "Inversion of Control". Anyone that
+    can create an instance of <literal>PersonDaoImpl</literal> can also set
+    the <literal>LdapTemplate</literal> on it. However, Spring provides a very
+    flexible and easy way of <ulink
+    url="http://static.springframework.org/spring/docs/current/reference/beans.html">achieving
+    this</ulink>. The Spring container can be told to wire up an instance of
+    <literal>LdapTemplate</literal> with its required dependencies and inject
+    it into the <literal>PersonDao</literal> instance. This wiring can be
+    defined in various ways, but the most common is through XML:</para>
+
+    <informalexample>
+      <programlisting>&lt;beans&gt;
+   &lt;bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource"&gt;
+      &lt;property name="url" value="ldap://localhost:389" /&gt;
+      &lt;property name="base" value="dc=example,dc=com" /&gt;
+      &lt;property name="userDn" value="cn=Manager" /&gt;
+      &lt;property name="password" value="secret" /&gt;
+   &lt;/bean&gt;
+
+   &lt;bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate"&gt;
+      &lt;constructor-arg ref="contextSource" /&gt;
+   &lt;/bean&gt;
+
+   &lt;bean id="personDao" class="com.example.dao.PersonDaoImpl"&gt;
+      &lt;property name="ldapTemplate" ref="ldapTemplate" /&gt;
+   &lt;/bean&gt;
+&lt;/beans&gt;</programlisting>
+    </informalexample>
+  </sect1>
+
+  <sect1 id="introduction-packaging">
+    <title>Packaging overview</title>
+
+    <para>At a minimum, to use Spring LDAP you need:</para>
+
+    <itemizedlist spacing="compact">
+      <listitem>
+        <para><emphasis>spring-ldap</emphasis> (the Spring LDAP library)</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis>spring-core</emphasis> (miscellaneous utility classes used internally by
+        the framework)</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis>spring-beans</emphasis> (contains interfaces and classes for manipulating
+        Java beans)</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis>commons-logging</emphasis> (a simple logging facade, used
+        internally)</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis>commons-lang</emphasis> (misc utilities, used internally)</para>
+      </listitem>
+
+    </itemizedlist>
+
+    <para>In addition to the required dependencies the following optional dependencies
+    are required for certain functionality:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para><emphasis>acegi-security</emphasis> (For Acegi security integration using <literal>AcegiAuthenticationSource</literal>)</para>
+      </listitem>
+      <listitem>
+        <para><emphasis>spring-context</emphasis> (If your application is wired up using the Spring Application Context - 
+        adds the ability for application objects to obtain resources using a consistent API. Definitely needed if you are 
+        planning on using the BaseLdapPathBeanPostProcessor.)</para>
+      </listitem>
+      <listitem>
+        <para><emphasis>spring-dao</emphasis> (If you are planning to use the client side compensating transaction support)</para>
+      </listitem>
+      <listitem>
+        <para><emphasis>spring-jdbc</emphasis> (If you are planning to use the client side compensating transaction support)</para>
+      </listitem>
+      <listitem>
+        <para><emphasis>ldapbp</emphasis> (Sun LDAP Booster Pack - if you will use the LDAP v3 Server controls integration)</para>
+      </listitem>
+      <listitem>
+        <para><emphasis>commons-pool</emphasis> (If you are planning to use the pooling functionality)</para>
+      </listitem>
+    </itemizedlist>
+
+  </sect1>
+
+  <sect1 id="introduction-package-structure">
+    <title>Package structure</title>
+
+    <para>This section provides an overview of the logical package structure
+    of the Spring LDAP codebase. The dependencies for each package are clearly
+    noted. A package dependency noted as <emphasis>(optional)</emphasis> means
+    that the dependency is needed to compile the package but is optionally
+    needed at runtime (depending on your use of the package). For example, use
+    of Spring LDAP together with Acegi Security entails use of the
+    <literal>org.acegisecurity</literal> package.</para>
+
+    <figure>
+      <title>Spring LDAP package structure</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/package-dependencies.png" format="png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <sect2 id="transaction.compensating">
+      <title>org.springframework.transaction.compensating</title>
+
+      <para>The <emphasis>transaction.compensating</emphasis> package contains
+      the generic compensating transaction support. This is not LDAP-specific
+      or JNDI-specific in any way.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Dependencies: commons-logging</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2 id="ldap">
+      <title>org.springframework.ldap</title>
+
+      <para>The <emphasis>ldap</emphasis> package contains the exceptions of
+      the library. These exceptions form an unchecked hierarchy that mirrors
+      the NamingException hierarchy.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Dependencies: spring-core</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2 id="ldap.core">
+      <title>org.springframework.ldap.core</title>
+
+      <para>The <emphasis>ldap.core</emphasis> package contains the central
+      abstractions of the library. These abstractions include
+      AuthenticationSource, ContextSource, DirContextProcessor, and
+      NameClassPairCallbackHandler. This package also contains the central
+      class LdapTemplate, plus various mappers and executors.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Dependencies: ldap, ldap.support, spring-beans,
+          commons-lang, commons-logging</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2 id="ldap.core.support">
+      <title>org.springframework.ldap.core.support</title>
+
+      <para>The <emphasis>ldap.core.support</emphasis> package contains
+      supporting implementations of some of the core interfaces.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Dependencies: ldap.core, ldap.support, spring-core,
+          spring-beans, spring-context (optional), commons-lang, commons-logging</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2 id="ldap.support">
+      <title>org.springframework.ldap.support</title>
+
+      <para>The <emphasis>ldap.support</emphasis> package contains supporting
+      utilities, like the exception translation mechanism.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Dependencies: ldap, spring-core, commons-logging</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2 id="ldap.authentication">
+      <title>org.springframework.ldap.authentication</title>
+
+      <para>The <emphasis>ldap.authentication</emphasis> package contains an
+      implementation of the AuthenticationSource interface that can be used
+      with <ulink url="http://www.acegisecurity.org/">Acegi Security</ulink>,
+      as well as related helper classes.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Dependencies: ldap.core, acegi-security (optional),
+          spring-beans, commons-lang, commons-logging</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2 id="ldap.control">
+      <title>org.springframework.ldap.control</title>
+
+      <para>The <emphasis>ldap.control</emphasis> package contains an abstract
+      implementation of the DirContextProcessor interface that can be used as
+      a basis for processing RequestControls and ResponseControls. There is
+      also a concrete implementation that handles paged search results. The
+      <ulink url="http://java.sun.com/products/jndi/">LDAP Booster
+      Pack</ulink> is used to get support for controls.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Dependencies: ldap, ldap.core, LDAP booster pack (optional), spring-core,
+          commons-lang, commons-logging</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2 id="ldap.filter">
+      <title>org.springframework.ldap.filter</title>
+
+      <para>The <emphasis>ldap.filter</emphasis> package contains the Filter
+      abstraction and several implementations of it.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Dependencies: ldap.core, commons-lang</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2 id="ldap.transaction.compensating">
+      <title>org.springframework.ldap.transaction.compensating</title>
+
+      <para>The <emphasis>ldap.transaction.compensating</emphasis> package contains the
+      core LDAP-specific implementation of compensating transactions.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Dependencies: ldap, ldap.core, transaction.compensating,
+          spring-core, commons-lang, commons-logging</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2 id="ldap.transaction.compensating.manager">
+      <title>org.springframework.ldap.transaction.compensating.manager</title>
+
+      <para>The <emphasis>ldap.transaction.compensating.manager</emphasis> package contains the
+      core implementation classes for client-side compensating transactions.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Dependencies: ldap, ldap.core, ldap.transaction.compensating, 
+          ldap.transaction.compensating.support, transaction.compensating,
+          spring-dao (optional), spring-jdbc (optional), commons-logging</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2 id="ldap.transaction.compensating.support">
+      <title>org.springframework.ldap.transaction.compensating.support</title>
+
+      <para>The <emphasis>ldap.transaction.compensating.support</emphasis> package contains
+      useful helper classes for client-side compensating transactions.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Dependencies: ldap.core, ldap.transaction.compensating</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
+    <para>For the exact list of jar dependencies, see the Spring LDAP <ulink
+    url="http://jayasoft.org/ivy">Ivy</ulink> dependency manager descriptor
+    located within the Spring LDAP distribution at
+    <literal>spring-ldap/ivy.xml</literal></para>
+  </sect1>
+
+  <sect1 id="introduction-support">
+    <title>Support</title>
+
+    <para>Spring LDAP 1.2.1 is supported on Spring 1.2.8 or later, including
+    2.0.x.</para>
+
+    <para>The community support forum is located at <ulink
+    url="http://forum.springframework.org">http://forum.springframework.org</ulink>,
+    and the project web page is <ulink
+    url="http://www.springframework.org/ldap">http://www.springframework.org/ldap</ulink>.</para>
+  </sect1>
+</chapter>

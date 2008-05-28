@@ -1,0 +1,234 @@
+<?xml version="1.0"?>
+
+<!--
+
+ Copyright 2005-2006 the original author or authors.
+  
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+      http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+ - - -
+ Author: Ulrik Sandberg
+ - - -
+-->
+
+<!--
+	Note that in your build file, you can no longer import common-targets
+	or itest-targets, since this file already imports those files. If you do,
+	the hook targets here will not execute.
+	
+	Your build file should look something like this:
+	
+	<import file="${basedir}/itest-openldap-targets.xml" />
+	<import file="${common.build.dir}/doc-targets.xml" />
+	<import file="${common.build.dir}/clover-targets.xml" />
+-->
+<project name="itest-openldap-targets">
+
+	<property file="build.properties" />
+	<property file="project.properties" />
+	<property file="${common.build.dir}/build.properties" />
+	<property file="${common.build.dir}/project.properties" />
+	<property file="${user.home}/build.properties" />
+
+	<import file="${common.build.dir}/itest-targets.xml" />
+	<import file="${common.build.dir}/common-targets.xml" />
+
+	<!--
+		Custom properties for itest-openldap.
+		Cannot use project.properties, because common-build properties
+		must be loaded before these ones are set.
+	 -->
+
+	<!-- itest-openldap sources -->
+	<property name="src.java.itest.openldap.dir" location="${src.dir}/itest-openldap/java" />
+
+	<!-- any generated java sources go here -->
+	<property name="target.gen.java.itest.openldap.dir" location="${target.dir}/gen-java-itest-openldap-src" />
+
+	<!-- where built itest-openldap class files and resources go -->
+	<property name="target.itest.openldap.classes.dir" location="${target.dir}/itest-openldap-classes" />
+
+	<!-- where itest-openldap results end up -->
+	<property name="target.itest.openldap.results.dir" location="${target.dir}/itest-openldap-reports" />
+
+	<!-- itest-openldap resources get copied into target itest-openldap classes dir with filtering -->
+	<property name="src.itest.openldap.resources.dir" location="${src.dir}/itest-openldap/resources" />
+
+	<!-- default wildcard for finding JUnit tests
+		the convention is that our JUnit test classes have XXXTests-style names -->
+	<property name="itest.openldap.includes" value="**/*ITest.class,**/*ITests.class" />
+
+	<!-- wildcards to exclude among JUnit tests -->
+	<property name="itest.openldap.includes" value="itest.openldap.excludes=**/Abstract*" />
+
+	<!-- jvm arguments we want tacked on to all integration tests -->
+	<!-- set fake default value, will not override existing setting -->
+	<property name="itest.openldap.arguments" value="-Dzzz456zzz" />
+
+	<!-- Hooking in an itest-openldap version of statics.test -->
+	<target name="statics.post" depends="itest-targets.statics.post">
+
+		<!-- copy everything from the source dir, except java files. Do not filter. Files
+       that need filtering should source from ${src.itest.openldap.resources.dir} -->
+		<copy todir="${target.itest.openldap.classes.dir}">
+			<fileset dir="${src.java.itest.openldap.dir}">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+
+		<!-- copy test resource files if neccessary, filtering for non-binary types -->
+		<available file="${src.itest.openldap.resources.dir}" property="itest.openldap.resources.exists" />
+		<antcall target="copy.itest.openldap.resources" />
+
+		<!-- write out a test.properties file with common properties -->
+		<propertyfile file="${target.testclasses.dir}/test.properties" comment="Common unit/integration test properties">
+			<entry key="lastupdate" type="date" value="now" />
+		</propertyfile>
+
+	</target>
+
+	<!-- The itest-openldap version of copy.test.resources -->
+	<target name="copy.itest.openldap.resources" if="itest.openldap.resources.exists">
+		<copy todir="${target.itest.openldap.classes.dir}" filtering="on">
+			<fileset dir="${src.itest.openldap.resources.dir}">
+				<patternset refid="std.files.to.filter" />
+			</fileset>
+			<filterset>
+				<filtersfile file="${target.filter.file}" />
+			</filterset>
+		</copy>
+
+		<copy todir="${target.itest.openldap.classes.dir}">
+			<fileset dir="${src.itest.openldap.resources.dir}">
+				<patternset refid="std.files.not.to.filter" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- Hooking in an itest-openldap version of compile.tests -->
+	<target name="compile.post" depends="itest-targets.compile.post,build.itest.openldap.prepare">
+		<echo>compiling itest-openldap sources</echo>
+		<javac destdir="${target.itest.openldap.classes.dir}" debug="${debug}" deprecation="${deprecation}" optimize="${optimize}" source="${javac.source}" target="${javac.target}">
+			<src path="${src.java.itest.openldap.dir}" />
+			<src path="${target.gen.java.itest.openldap.dir}" />
+			<classpath>
+				<pathelement location="${target.classes.dir}" />
+				<pathelement location="${target.itestclasses.dir}" />
+				<path refid="test.classpath" />
+			</classpath>
+		</javac>
+	</target>
+
+	<!-- build.itest.openldap.prepare:  Prepares the build directory for itests-openldap -->
+	<target name="build.itest.openldap.prepare" unless="build.itest.openldap.prepare.done">
+		<mkdir dir="${target.gen.java.itest.openldap.dir}" />
+		<mkdir dir="${target.itest.openldap.classes.dir}" />
+		<property name="build.itest.openldap.prepare.done" value="true" />
+	</target>
+
+	<!-- The itest-openldap version of tests.prepare -->
+	<target name="itests-openldap-prepare" depends="compile" unless="itests.openldap.prepare.done">
+		<mkdir dir="${target.itest.openldap.results.dir}" />
+		<delete>
+			<fileset dir="${target.itest.openldap.results.dir}" includes="**/*.txt,**/*.log" />
+		</delete>
+		<property name="itests.openldap.prepare.done" value="true" />
+	</target>
+
+	<!-- Runs the integration tests. -->
+	<target name="itests-openldap" depends="itests-openldap-prepare" description="Run all integration tests">
+		<!-- for the time being we just halt on failure, since these are
+	         local tests and there is no external server to shut down, etc.
+	         But if we want to optionally run all tests and report on the
+	         whole batch, then we need to set a failure property. -->
+		<junit forkmode="perBatch" printsummary="yes" haltonfailure="no" haltonerror="no" dir="${basedir}" errorproperty="itests.openldap.failed" failureproperty="itests.openldap.failed">
+			<jvmarg value="${unitvm}" />
+			<jvmarg value="-Djava.security.auth.login.config=${target.itest.openldap.classes.dir}/auth.conf" />
+			<jvmarg value="${itest.openldap.arguments}" />
+			<classpath>
+				<pathelement location="${target.classes.dir}" />
+				<pathelement location="${target.itestclasses.dir}" />
+				<pathelement location="${target.itest.openldap.classes.dir}" />
+				<pathelement location="${target.genclasses.dir}" />
+				<path refid="test.classpath" />
+			</classpath>
+
+			<formatter type="plain" />
+			<formatter type="xml" />
+
+			<batchtest fork="yes" todir="${target.itest.openldap.results.dir}">
+				<fileset dir="${target.itest.openldap.classes.dir}" includes="${itest.openldap.includes}" excludes="${itest.openldap.excludes}" />
+			</batchtest>
+		</junit>
+
+	</target>
+
+	<!-- runs one integration test -->
+	<target name="itest-openldap" depends="guard.itest-openldapclass,itests-openldap-prepare" description="Runs one integration test using the value of the itest.openldap.class property">
+		<junit forkmode="perBatch" printsummary="yes" haltonfailure="no" haltonerror="no">
+			<jvmarg value="${unitvm}" />
+			<jvmarg value="-Djava.security.auth.login.config=${target.itest.openldap.classes.dir}/auth.conf" />
+			<jvmarg value="${test.arguments}" />
+			<classpath>
+				<pathelement location="${target.classes.dir}" />
+				<pathelement location="${target.itestclasses.dir}" />
+				<pathelement location="${target.itest.openldap.classes.dir}" />
+				<pathelement location="${target.genclasses.dir}" />
+				<path refid="test.classpath" />
+			</classpath>
+			<formatter type="plain" />
+			<formatter type="xml" />
+			<!-- the test case -->
+			<test name="${itest.openldap.class}" todir="${target.itest.openldap.results.dir}" />
+		</junit>
+	</target>
+
+	<target name="guard.itest-openldapclass" unless="itest.openldap.class">
+		<fail message="The target you are attempting to run requires the ${itest.openldap.class} property to be set, which doesn't appear to be" />
+	</target>
+
+	<!--
+	        itest-openldap-example - a sample integration test
+	        shows how to make a target to run just one specific integration test instead
+	        of having to specify the class
+	        
+	    It can get a lot more elaborate than this, with various properties being
+	    set up, etc. Property files can be written out, etc.
+	    
+	    <target name="itest.openldap.example" depends="init">
+	        <antcall target="itest-openldap">
+	            <param name="itest.openldap.class" value="com.mycompany.myproject.MyIntegrationTest"/>
+	        </antcall>
+	      </target>
+	  -->
+
+	<property name="target.itest.openldap.results.html.dir" location="${target.itest.openldap.results.dir}/html" />
+
+	<!-- Generate the unit test report -->
+	<target name="itest-openldap-report" depends="build.prepare" description="Generate HTML report of integration test results">
+		<delete dir="${target.itest.openldap.results.html.dir}" />
+		<mkdir dir="${target.itest.openldap.results.html.dir}" />
+		<junitreport todir="${target.itest.openldap.results.html.dir}">
+			<fileset dir="${target.itest.openldap.results.dir}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="${target.itest.openldap.results.html.dir}" />
+		</junitreport>
+		<echo>
+Integration test report has been generated.
+The HTML report is ${target.itest.openldap.results.html.dir}/index.html
+		</echo>
+		<fail if="itests.openldap.failed" message="Integration tests towards OpenLDAP failed" />
+	</target>
+
+</project>

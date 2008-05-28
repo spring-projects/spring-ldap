@@ -1,0 +1,154 @@
+/*
+ * Copyright 2005-2007 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+options {
+  LOOKAHEAD = 1;
+  CHOICE_AMBIGUITY_CHECK = 3;
+  OTHER_AMBIGUITY_CHECK = 3;
+  STATIC = false;
+  DEBUG_PARSER = false;
+  DEBUG_LOOKAHEAD = false;
+  DEBUG_TOKEN_MANAGER = false;
+  ERROR_REPORTING = true;
+  JAVA_UNICODE_ESCAPE = false;
+  UNICODE_INPUT = true;
+  IGNORE_CASE = false;
+  USER_TOKEN_MANAGER = false;
+  USER_CHAR_STREAM = false;
+  BUILD_PARSER = true;
+  BUILD_TOKEN_MANAGER = true;
+  SANITY_CHECK = true;
+  FORCE_LA_CHECK = true;
+}
+
+PARSER_BEGIN(DnParserImpl)
+
+package org.springframework.ldap.core;
+
+public class DnParserImpl implements DnParser{
+
+}
+
+PARSER_END(DnParserImpl)
+
+TOKEN: { <#ALPHA: ["a"-"z", "A"-"Z"] > }
+TOKEN: { <#DIGIT: ["0"-"9"]> }
+TOKEN: { <#STRINGCHAR: ~[",","=","\r","+","<",">","#",";","\\","\""]> }
+TOKEN: { <#STRINGENDCHAR: ~[",","=","\r","+","<",">","#",";","\\","\""," "]> }
+TOKEN: { <#SPECIAL: [",","=","\r","+","<",">","#",";"]> }
+TOKEN: { <#HEXCHAR: ["0"-"9","a"-"f","A"-"F"]> }
+TOKEN: { <#HEXPAIR: <HEXCHAR> <HEXCHAR>> }
+TOKEN: { <#BACKSLASHCHAR: "\\"> }
+TOKEN: { <#PAIR: <BACKSLASHCHAR> (<SPECIAL> | <BACKSLASHCHAR> | <QUOTECHAR> | <HEXPAIR> )> }
+TOKEN: { <#ESCAPEDSPACE: <BACKSLASHCHAR> <SPACE>>}
+TOKEN: { <#ESCAPEDSTART: <BACKSLASHCHAR> (<HASHCHAR> | <SPACE>)> }
+TOKEN: { <#STRINGEND: (<STRINGENDCHAR> | <PAIR> | <ESCAPEDSPACE>)> }
+
+<DEFAULT> TOKEN:
+{
+	<QUOTECHAR: "\"">
+	|
+	<HASHCHAR: "#"> 
+	|
+	<ATTRIBUTE_TYPE_STRING: <ALPHA> (<ALPHA> | <DIGIT> | "-")*>
+	|
+	<LDAP_OID: (<DIGIT>)+ ("." (<DIGIT>)+ )* >
+	|
+	<SPACE: " ">
+}
+
+<ATTRVALUE_S> TOKEN:
+{
+	<ATTRVALUE: 
+		(<QUOTECHAR> (<STRINGCHAR> | <SPECIAL> | <PAIR>)+ <QUOTECHAR>
+		|
+		<HASHCHAR> (<HEXPAIR>)+
+		|
+		(<ESCAPEDSTART>)? ( <STRINGCHAR> | <PAIR> )* <STRINGEND>
+		)>
+}
+
+<SPACED_EQUALS_S> TOKEN:
+{
+	<SPACED_EQUALS: (<SPACE>)* "=" (<SPACE>)*>
+}
+
+/**
+ * input -> dn
+ * dn -> rdn ( ( "," | ";" ) rdn )*
+ * rdn -> attributeTypeAndValue ( "+" attributeTypeAndValue )*
+ * attributeTypeAndValue ->
+ *    ( <SPACE> )* AttributeType SpacedEquals AttributeValue ( <SPACE> )*
+ * SpacedEquals -> <SPACED_EQUALS>
+ * AttributeType -> <LDAP_OID> | <ATTRIBUTE_TYPE_STRING>
+ * AttributeValue -> <ATTRVALUE>
+ */
+void input() :
+{
+}
+{
+	dn()
+}
+
+DistinguishedName dn(): 
+{
+DistinguishedName dn = new DistinguishedName();
+LdapRdn rdn;
+}
+{
+	( rdn = rdn() {dn.add(0, rdn);} (("," | ";") rdn = rdn() {dn.add(0, rdn);})* )
+	{return dn;}
+}
+
+LdapRdn rdn(): 
+{
+LdapRdnComponent rdnComponent;
+LdapRdn rdn = new LdapRdn();
+}
+{
+	(rdnComponent = attributeTypeAndValue() {rdn.addComponent(rdnComponent);} ("+" rdnComponent = attributeTypeAndValue() {rdn.addComponent(rdnComponent);})*)
+	{return rdn;}
+}
+
+LdapRdnComponent attributeTypeAndValue(): 
+{
+String attributeType;
+String value;
+}
+{
+	( (<SPACE>)* attributeType = AttributeType() SpacedEquals() value = AttributeValue() (<SPACE>)*)
+	{return new LdapRdnComponent(attributeType, value, true);}
+}
+
+void SpacedEquals():
+{}
+{
+	{token_source.SwitchTo(SPACED_EQUALS_S);} <SPACED_EQUALS>
+}
+
+String AttributeType(): 
+{Token t;}
+{
+	( t = <LDAP_OID> | t = <ATTRIBUTE_TYPE_STRING>) 
+	{return t.image.toString();}
+}
+
+String AttributeValue(): 
+{Token t;}
+{
+	{token_source.SwitchTo(ATTRVALUE_S);} t = <ATTRVALUE> {token_source.SwitchTo(DEFAULT);} 
+	{return t.image.toString();}
+}

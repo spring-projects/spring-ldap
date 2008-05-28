@@ -1,0 +1,41 @@
+In order to build the spring-ldap-person sample, you need to build spring-ldap first.
+
+% cd spring-ldap
+% ant dist
+
+You will most likely get this error, if you haven't installed [url=https://javacc.dev.java.net/]JavaCC[/url] and pointed out to Ant where it is:
+
+[code]
+BUILD FAILED
+... JavaCC home must be a valid directory.
+[/code]
+
+You install JavaCC say in /javacc-4.0 and put this in a spring-ldap/build.properties:
+
+[code]
+javacc.home.dir=/javacc-4.0
+[/code]
+
+Try building spring-ldap again:
+
+% ant dist
+
+If that succeeds, you'll get a snapshot build installed in your integration repo:
+
+% ls ../integration-repo/artifacts/org.springframework/spring-ldap/
+1.2.1-SNAPSHOT-20071206091603
+ivy-1.2.1-SNAPSHOT-20071206091603.xml
+ivy-1.2.1-SNAPSHOT-20071206091603.xml.md5
+ivy-1.2.1-SNAPSHOT-20071206091603.xml.sha1
+
+Next, you can build spring-ldap-person:
+
+% cd ../spring-ldap-person
+% ant
+
+If that succeeds, you'll get a war in target/artifacts:
+
+% ls target/artifacts/war
+ldap-person.war
+
+Deploy that in Tomcat and see how it goes.
