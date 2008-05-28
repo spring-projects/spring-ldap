@@ -112,6 +112,15 @@ public class LdapContextSourceTest extends TestCase {
 		assertNull(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
 	}
 
+	public void testGetAnonymousEnvWithMultipleUrlsAndBaseSet() throws Exception {
+		tested.setUrls(new String[] { "ldap://ldap.example.com:389", "ldap://ldap2.example.com:389" });
+		tested.setBase("dc=example, dc=com");
+		tested.afterPropertiesSet();
+		Hashtable env = tested.getAnonymousEnv();
+		String providerUrl = (String) env.get(Context.PROVIDER_URL);
+		assertEquals("ldap://ldap.example.com:389/dc=example,dc=com ldap://ldap2.example.com:389/dc=example,dc=com", providerUrl);
+	}
+
 	public void testGetAnonymousEnvWithBaseEnvironment() throws Exception {
 		tested.setUrl("ldap://ldap.example.com:389");
 		HashMap map = new HashMap();
