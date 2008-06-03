@@ -55,7 +55,7 @@ public class DnParsePerformanceITest extends TestCase {
     }
 
     public static Test suite() {
-        int users = 2000;
+        int users = 1800;
         Test testCase = new DnParsePerformanceITest("testContains");
         Test loadTest = new LoadTest(testCase, users);
         return loadTest;
