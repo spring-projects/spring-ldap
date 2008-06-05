@@ -14,6 +14,7 @@
 	<modules>
 		<module>core</module>
 		<module>tiger</module>
+		<module>acegi-support</module>
 		<module>test-support</module>
 		<module>integration-tests</module>
 	</modules>
@@ -33,24 +34,15 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<aggregate>true</aggregate>
-					<header>Spring LDAP Integration</header>
-					<link>
-						http://java.sun.com/j2se/1.5.0/docs/api
-					</link>
-					<link>
-						http://static.springframework.org/spring/docs/2.5.x/api/
-					</link>
-					<link>
-						http://commons.apache.org/pool/apidocs/
-					</link>
-				</configuration>
-			</plugin>
+           <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.4.2</version>
+                <configuration>
+                    <forkMode>once</forkMode>
+                </configuration>
+            </plugin>
+
            <plugin>
                 <groupId>com.agilejava.docbkx</groupId>
                 <artifactId>docbkx-maven-plugin</artifactId>
@@ -105,4 +97,26 @@
             </plugin>
 	</plugins>
 	</build>
+	<reporting>
+		<plugins>
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-javadoc-plugin</artifactId>
+                                <version>2.4</version>
+                                <configuration>
+                                        <aggregate>true</aggregate>
+                                        <header>Spring LDAP Integration</header>
+                                        <link>
+                                                http://java.sun.com/j2se/1.5.0/docs/api
+                                        </link>
+                                        <link>
+                                                http://static.springframework.org/spring/docs/2.5.x/api/
+                                        </link>
+                                        <link>
+                                                http://commons.apache.org/pool/apidocs/
+                                        </link>
+                                </configuration>
+                        </plugin>
+		</plugins>
+	</reporting>
 </project>

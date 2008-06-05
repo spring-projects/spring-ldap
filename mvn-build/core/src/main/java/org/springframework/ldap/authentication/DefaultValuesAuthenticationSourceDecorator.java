@@ -23,7 +23,7 @@ import org.springframework.ldap.core.AuthenticationSource;
 /**
  * Decorator on AuthenticationSource to have default authentication information
  * be returned should the target return empty principal and credentials. Useful
- * in combination with {@link AcegiAuthenticationSource} if users are to be
+ * in combination with <code>AcegiAuthenticationSource</code> if users are to be
  * allowed to read some information even though they are not logged in.
  * <p>
  * <b>Note:</b> The <code>defaultUser</code> should be an non-privileged

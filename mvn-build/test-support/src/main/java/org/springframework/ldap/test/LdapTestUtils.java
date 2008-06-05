@@ -134,7 +134,12 @@ public class LdapTestUtils {
 			clearSubContexts(ctx, name);
 		}
 		finally {
-			ctx.close();
+			try {
+				ctx.close();
+			}
+			catch (Exception e) {
+				// Never mind this
+			}
 		}
 	}
 
