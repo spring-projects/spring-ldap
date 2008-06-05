@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="executors">
+  <title>Adding Missing Overloaded API Methods</title>
+
+  <sect1 id="executors-search">
+    <title>Implementing Custom Search Methods</title>
+
+    <para>While <literal>LdapTemplate</literal> contains several overloaded
+    versions of the most common operations in <literal>DirContext</literal>,
+    we have not provided an alternative for each and every method signature,
+    mostly because there are so many of them. We have, however, provided a
+    means to call whichever <literal>DirContext</literal> method you want
+    and still get the benefits that LdapTemplate provides.</para>
+    
+    <para>Let's say that you want to call the following <literal>DirContext</literal>
+    method:</para>
+
+    <programlisting>NamingEnumeration search(Name name, String filterExpr, Object[] filterArgs, SearchControls ctls)</programlisting>
+
+    <para>There is no corresponding overloaded method in LdapTemplate. The way to solve
+    this is to use a custom <literal>SearchExecutor</literal> implementation:</para>
+
+    <informalexample>
+      <programlisting>public interface SearchExecutor {
+   public NamingEnumeration executeSearch(DirContext ctx) throws NamingException;
+}</programlisting>
+    </informalexample>
+
+    <para>In your custom executor, you have access to a <literal>DirContext</literal>
+    object, which you use to call the method you want. You then provide a handler
+    that is responsible for mapping attributes and collecting the results. You can
+    for example use one of the available implementations of
+    <literal>CollectingNameClassPairCallbackHandler</literal>, which will collect
+    the mapped results in an internal list. In order to
+    actually execute the search, you call the <literal>search</literal> 
+    method in LdapTemplate that takes an executor and a handler as arguments. Finally,
+    you return whatever your handler has collected.</para>
+
+    <example>
+      <title>A custom search method using SearchExecutor and
+      AttributesMapper</title>
+
+      <programlisting>package com.example.dao;
+
+public class PersonDaoImpl implements PersonDao {
+   ...
+   public List search(final Name base, final String filter, final String[] params,
+         final SearchControls ctls) {
+      <emphasis role="bold">SearchExecutor executor = new SearchExecutor() {
+         public NamingEnumeration executeSearch(DirContext ctx) {
+            return ctx.search(base, filter, params, ctls);
+         }
+      }</emphasis>;
+
+      CollectingNameClassPairCallbackHandler handler =
+         new AttributesMapperCallbackHandler(new PersonAttributesMapper());
+
+      ldapTemplate.search(<emphasis role="bold">executor</emphasis>, handler);
+      return handler.getList();
+   }
+}</programlisting>
+    </example>
+
+    <para>If you prefer the <literal>ContextMapper</literal> to the
+    <literal>AttributesMapper</literal>, this is what it would look
+    like:</para>
+
+    <example>
+      <title>A custom search method using SearchExecutor and
+      ContextMapper</title>
+
+      <programlisting>package com.example.dao;
+
+public class PersonDaoImpl implements PersonDao {
+   ...
+   public List search(final Name base, final String filter, final String[] params,
+         final SearchControls ctls) {
+      SearchExecutor executor = new SearchExecutor() {
+         public NamingEnumeration executeSearch(DirContext ctx) {
+            return ctx.search(base, filter, params, ctls);
+         }
+      };
+
+      CollectingNameClassPairCallbackHandler handler =
+         <emphasis role="bold">new ContextMapperCallbackHandler(new PersonContextMapper())</emphasis>;
+
+      ldapTemplate.search(executor, handler);
+      return handler.getList();
+   }
+}</programlisting>
+    </example>
+
+    <note>
+      <para>When using the
+      <literal>ContextMapperCallbackHandler</literal> you must
+      make sure that you have called
+      <literal>setReturningObjFlag(true)</literal> on your
+      <literal>SearchControls</literal> instance.</para>
+    </note>
+  </sect1>
+
+  <sect1 id="executors-others">
+    <title>Implementing Other Custom Context Methods</title>
+
+    <para>In the same manner as for custom <literal>search</literal> methods,
+    you can actually execute any method in <literal>DirContext</literal> by
+    using a <literal>ContextExecutor</literal>.</para>
+
+    <informalexample>
+      <programlisting>public interface ContextExecutor {
+   public Object executeWithContext(DirContext ctx) throws NamingException;
+}</programlisting>
+
+      <para>When implementing a custom <literal>ContextExecutor</literal>, you
+      can choose between using the <literal>executeReadOnly()</literal> or the
+      <literal>executeReadWrite()</literal> method. Let's say that we want to
+      call this method:</para>
+    </informalexample>
+
+    <programlisting>Object lookupLink(Name name)</programlisting>
+
+    <para>It's available in <literal>DirContext</literal>, but there is no
+    matching method in <literal>LdapTemplate</literal>. It's a lookup method,
+    so it should be read-only. We can implement it like this:</para>
+
+    <example>
+      <title>A custom DirContext method using ContextExecutor</title>
+
+      <programlisting>package com.example.dao;
+
+public class PersonDaoImpl implements PersonDao {
+   ...
+   public Object lookupLink(final Name name) {
+      ContextExecutor executor = new ContextExecutor() {
+         public Object executeWithContext(DirContext ctx) {
+            return ctx.lookupLink(name);
+         }
+      };
+
+      return ldapTemplate.executeReadOnly(executor);
+   }
+}</programlisting>
+
+      <para>In the same manner you can execute a read-write operation using
+      the <literal>executeReadWrite()</literal> method.</para>
+    </example>
+  </sect1>
+</chapter>

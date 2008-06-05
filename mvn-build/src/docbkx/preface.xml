@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<preface id="preface">
+	<title>Preface</title>
+	<para>
+		The Java Naming and Directory Interface (JNDI) is for LDAP programming
+		what Java Database Connectivity (JDBC) is for SQL programming. There are
+		several similarities between JDBC and JNDI/LDAP (Java LDAP). Despite
+		being two completely different APIs with different pros and cons, they
+		share a number of less flattering characteristics:
+	</para>
+		<itemizedlist spacing="compact">
+        	<listitem>
+         		<para>They require extensive plumbing code, even to perform the simplest of tasks.</para>
+	        </listitem>
+        	<listitem>
+         		<para>All resources need to be correctly closed, no matter what happens.</para>
+	        </listitem>
+        	<listitem>
+         		<para>Exception handling is difficult.</para>
+	        </listitem>
+		</itemizedlist>
+	<para>
+		The above points often lead to massive code duplication in common usages
+		of the APIs. As we all know, code duplication is one of the worst code smells.
+		All in all, it boils down to this: JDBC and LDAP programming in Java are both
+		incredibly dull and repetitive.
+	</para>
+	<para>
+		Spring JDBC, a part of the Spring framework, provides excellent utilities for
+		simplifying SQL programming. We need a similar framework for Java LDAP programming.
+	</para>
+</preface>

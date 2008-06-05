@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="processor">
+  <title>Processing the DirContext</title>
+
+  <sect1 id="processor-overview">
+    <title>Custom DirContext Pre/Postprocessing</title>
+
+    <para>In some situations, one would like to perform operations on the
+    <literal>DirContext</literal> before and after the search operation. The
+    interface that is used for this is called
+    <literal>DirContextProcessor</literal>:</para>
+
+    <informalexample>
+      <programlisting>public interface DirContextProcessor {
+   public void preProcess(DirContext ctx) throws NamingException;
+   public void postProcess(DirContext ctx) throws NamingException;
+}</programlisting>
+    </informalexample>
+
+    <para>The <literal>LdapTemplate</literal> class has a search method that
+    takes a <literal>DirContextProcessor</literal>:</para>
+
+    <informalexample>
+      <programlisting>public void search(SearchExecutor se, NameClassPairCallbackHandler handler,
+   DirContextProcessor processor) throws DataAccessException;</programlisting>
+    </informalexample>
+
+    <para>Before the search operation, the <literal>preProcess</literal>
+    method is called on the given <literal>DirContextProcessor</literal>
+    instance. After the search has been executed and the resulting
+    <literal>NamingEnumeration</literal> has been processed, the
+    <literal>postProcess</literal> method is called. This enables a user to
+    perform operations on the <literal>DirContext</literal> to be used in the
+    search, and to check the <literal>DirContext</literal> when the search has
+    been performed. This can be very useful for example when handling request
+    and response controls.</para>
+
+    <para>There are also a few convenience methods for those that don't need a
+    custom <literal>SearchExecutor</literal>:</para>
+
+    <informalexample>
+      <programlisting>public void search(Name base, String filter,
+   SearchControls controls, NameClassPairCallbackHandler handler, DirContextProcessor processor)
+
+public void search(String base, String filter,
+   SearchControls controls, NameClassPairCallbackHandler handler, DirContextProcessor processor)
+   
+public void search(Name base, String filter,
+   SearchControls controls, AttributesMapper mapper, DirContextProcessor processor)
+   
+public void search(String base, String filter,
+   SearchControls controls, AttributesMapper mapper, DirContextProcessor processor)
+   
+public void search(Name base, String filter,
+   SearchControls controls, ContextMapper mapper, DirContextProcessor processor)
+
+public void search(String base, String filter,
+   SearchControls controls, ContextMapper mapper, DirContextProcessor processor)</programlisting>
+    </informalexample>
+  </sect1>
+
+  <sect1 id="processor-others">
+    <title>Implementing a Request Control DirContextProcessor</title>
+
+    <para>The LDAPv3 protocol uses Controls to send and receive additional
+    data to affect the behavior of predefined operations. In order to simplify
+    the implementation of a request control
+    <literal>DirContextProcessor</literal>, Spring LDAP provides the base
+    class <literal>AbstractRequestControlDirContextProcessor</literal>. This
+    class handles the retrieval of the current request controls from the
+    <literal>LdapContext</literal>, calls a template method for creating a
+    request control, and adds it to the <literal>LdapContext</literal>. All
+    you have to do in the subclass is to implement the template method
+    <literal>createRequestControl</literal>, and of course the
+    <literal>postProcess</literal> method for performing whatever you need to
+    do after the search.</para>
+
+    <informalexample>
+      <programlisting>public abstract class AbstractRequestControlDirContextProcessor implements
+      DirContextProcessor {
+
+   public void preProcess(DirContext ctx) throws NamingException {
+      ...
+   }
+
+   public abstract Control createRequestControl();
+}</programlisting>
+
+      <para>A typical <literal>DirContextProcessor</literal> will be similar to the following:</para>
+    </informalexample>
+
+    <example>
+      <title>A request control DirContextProcessor implementation</title>
+
+      <programlisting>package com.example.control;
+
+public class MyCoolRequestControl extends AbstractRequestControlDirContextProcessor {
+   private static final boolean CRITICAL_CONTROL = true;
+   private MyCoolCookie cookie;
+   ...
+   public MyCoolCookie getCookie() {
+      return cookie;
+   }
+
+   public Control createRequestControl() {
+      return new SomeCoolControl(cookie.getCookie(), CRITICAL_CONTROL);
+   }
+
+   public void postProcess(DirContext ctx) throws NamingException {
+      LdapContext ldapContext = (LdapContext) ctx;
+      Control[] responseControls = ldapContext.getResponseControls();
+
+      for (int i = 0; i &lt; responseControls.length; i++) {
+         if (responseControls[i] instanceof SomeCoolResponseControl) {
+            SomeCoolResponseControl control = (SomeCoolResponseControl) responseControls[i];
+            this.cookie = new MyCoolCookie(control.getCookie());
+         }
+      }
+   }
+}</programlisting>
+    </example>
+
+    <note>
+      <para>Make sure you use <literal>LdapContextSource</literal> when you
+      use Controls. The <literal><ulink
+      url="http://java.sun.com/j2se/1.5.0/docs/api/javax/naming/ldap/Control.html">Control</ulink></literal>
+      interface is specific for LDAPv3 and requires that
+      <literal>LdapContext</literal> is used instead of
+      <literal>DirContext</literal>. If an
+      <literal>AbstractRequestControlDirContextProcessor</literal> subclass is
+      called with an argument that is not an <literal>LdapContext</literal>,
+      it will throw an <literal>IllegalArgumentException</literal>.</para>
+    </note>
+  </sect1>
+
+  <sect1>
+    <title>Paged Search Results</title>
+
+    <para>Some searches may return large numbers of results. When there is no
+    easy way to filter out a smaller amount, it would be convenient to have
+    the server return only a certain number of results each time it is called.
+    This is known as <emphasis>paged search results</emphasis>. Each "page" of
+    the result could then be displayed at the time, with links to the next and
+    previous page. Without this functionality, the client must either manually
+    limit the search result into pages, or retrieve the whole result and then
+    chop it into pages of suitable size. The former would be rather
+    complicated, and the latter would be consuming unnecessary amounts of
+    memory.</para>
+
+    <para>Some LDAP servers have support for the
+    <literal>PagedResultsControl</literal>, which requests that the results of
+    a search operation are returned by the LDAP server in pages of a specified
+    size. The user controls the rate at which the pages are returned, simply
+    by the rate at which the searches are called. However, the user must keep
+    track of a <emphasis>cookie</emphasis> between the calls. The server uses
+    this cookie to keep track of where it left off the previous time it was
+    called with a paged results request.</para>
+
+    <para>Spring LDAP provides support for paged results by leveraging the
+    concept for pre- and postprocessing of an <literal>LdapContext</literal> that was discussed
+    in the previous sections. It does so by providing two classes:
+    <literal>PagedResultsRequestControl</literal> and
+    <literal>PagedResultsCookie</literal>. The
+    <literal>PagedResultsRequestControl</literal> class creates a
+    <literal>PagedResultsControl</literal> with the requested page size and
+    adds it to the <literal>LdapContext</literal>. After the search, it gets
+    the <literal>PagedResultsResponseControl</literal> and retrieves two
+    pieces of information from it: the estimated total result size and a
+    cookie. This cookie is a byte array containing information that the server
+    needs the next time it is called with a
+    <literal>PagedResultsControl</literal>. In order to make it easy to store
+    this cookie between searches, Spring LDAP provides the wrapper class
+    <literal>PagedResultsCookie</literal>.</para>
+
+    <para>Below is an example of how the paged search results functionality may
+    be used:</para>
+
+    <example>
+      <title>Paged results using <literal>PagedResultsRequestControl</literal></title>
+
+      <programlisting>public PagedResult getAllPersons(PagedResultsCookie cookie) {
+   PagedResultsRequestControl control = new PagedResultsRequestControl(PAGE_SIZE, cookie);
+   SearchControls searchControls = new SearchControls();
+   searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+   
+   List persons = ldapTemplate.search("", "objectclass=person", searchControls, control);
+   
+   return new PagedResult(persons, control.getCookie());
+ }</programlisting>
+    </example>
+
+    <para>In the first call to this method, <literal>null</literal> will be supplied as
+    the cookie parameter. On subsequent calls the client will need to supply the cookie from
+    the last search (returned wrapped in the <literal>PagedResult</literal>) each time the 
+    method is called. When the actual cookie is <literal>null</literal> (i.e. 
+    <literal>pagedResult.getCookie().getCookie()</literal> returns <literal>null</literal>),
+    the last batch has been returned from the search.</para>
+    
+  </sect1>
+</chapter>

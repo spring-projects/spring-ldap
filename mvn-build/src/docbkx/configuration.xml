@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="configuration">
+  <title>Configuration</title>
+
+  <sect1 id="context-source-configuration">
+    <title>ContextSource Configuration</title>
+
+    <para>There are several properties in <literal>AbstractContextSource</literal>
+    (superclass of <literal>DirContextSource</literal> and <literal>LdapContextSource</literal>)
+     that can be used to modify its behaviour.</para>
+
+    <sect2 id="dir-context-url">
+      <title>LDAP Server URLs</title>
+      
+      <para>The URL of the LDAP server is specified using the <literal>url</literal> property.
+      The URL should be in the format <literal>ldap://myserver.example.com:389</literal>.
+      For SSL access, use the <literal>ldaps</literal> protocol and the appropriate port, e.g.
+      <literal>ldaps://myserver.example.com:636</literal></para>
+      <para>It is possible to configure multiple alternate LDAP servers using the
+      <literal>urls</literal> property. In this case, supply all server urls in a String
+      array to the <literal>urls</literal> property.</para>
+    </sect2>
+
+    <sect2 id="dir-context-base">
+      <title>Base LDAP path</title>
+      
+      <para>It is possible to specify the root context for all LDAP operations using the 
+      <literal>base</literal> property of <literal>AbstractContextSource</literal>.
+      When a value has been specified to this property, all Distinguished Names supplied to and received from LDAP operations
+      will be relative to the LDAP path supplied. This can significantly simplify working against the LDAP
+      tree; however there are several occations when you will need to have access to the base path.
+      For more information on this, please refer to <xref linkend="base-context-configuration" /></para>
+    </sect2>
+
+    <sect2 id="dir-context-authentication">
+      <title>Authentication</title>
+
+      <para>Authenticated contexts are created for both read-only and
+      read-write operations by default. You specify
+      <literal>userDn</literal> and <literal>password</literal> of the LDAP
+      user to be used for authentication on the
+      <literal>ContextSource</literal>.</para>
+
+      <para><note>
+          <para>The <literal>userDn</literal> needs to be the full
+          Distinguished Name (DN) of the user.</para>
+        </note></para>
+
+      <para>Some LDAP server setups allow anonymous read-only access. If you
+      want to use anonymous Contexts for read-only operations, set the
+      <literal>anonymousReadOnly</literal> property to
+      <literal>true</literal>.<literal></literal></para>
+
+      <sect3>
+        <title>Custom Authentication Using Acegi</title>
+
+        <para>While the user name (i.e. user DN) and password used for
+        creating an authenticated <literal>Context</literal> are static by
+        default - the ones set on the <literal>ContextSource</literal> on
+        startup will be used throughout the lifetime of the
+        <literal>ContextSource</literal> - there are however several cases in
+        which this is not the desired behaviour. A common scenario is that the
+        principal and credentials of the current user should be used when
+        executing LDAP operations for that user. The default behaviour can be
+        modified by supplying a custom <literal>AuthenticationSource</literal>
+        implementation to the <literal>ContextSource</literal> on startup,
+        instead of explicitly specifying the <literal>userDn</literal> and
+        <literal>password</literal>. The
+        <literal>AuthenticationSource</literal> will be queried by the
+        <literal>ContextSource</literal> for principal and credentials each
+        time an authenticated <literal>Context</literal> is to be
+        created.</para>
+
+        <para>To use the authentication information of the currently logged in
+        user using <ulink url="http://acegisecurity.org/">Acegi
+        Security</ulink>, use the
+        <literal>AcegiAuthenticationSource</literal>:</para>
+
+        <example>
+          <title>The Spring bean definition for an
+          AcegiAuthenticationSource</title>
+
+          <programlisting>&lt;beans&gt;
+   ...
+   &lt;bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource"&gt;
+      &lt;property name="url" value="ldap://localhost:389" /&gt;
+      &lt;property name="base" value="dc=example,dc=com" /&gt;
+      &lt;property name="authenticationSource" ref="acegiAuthenticationSource" /&gt;
+   &lt;/bean&gt;
+
+   &lt;bean id="acegiAuthenticationSource"
+      class="org.springframework.ldap.authentication.AcegiAuthenticationSource" /&gt;
+   ...
+&lt;/beans&gt;</programlisting>
+        </example>
+
+        <note>
+          <para>We don't specify any <literal>userDn</literal> or
+          <literal>password</literal> to our <literal>ContextSource</literal>
+          when using an <literal>AuthenticationSource</literal> - these
+          properties are needed only when the default behaviour is
+          used.</para>
+        </note>
+
+        <note>
+          <para>When using the <literal>AcegiAuthenticationSource</literal>
+          you need to use Acegi's
+          <literal>LdapAuthenticationProvider</literal> to authenticate the
+          users against LDAP.</para>
+        </note>
+      </sect3>
+
+      <sect3>
+        <title>Default Authentication</title>
+
+        <para>When using <literal>AcegiAuthenticationSource</literal>,
+        authenticated contexts will only be possible to create once the user
+        is logged in using Acegi. To use default authentication information
+        when no user is logged in, use the
+        <literal>DefaultValuesAuthenticationSourceDecorator</literal>:</para>
+
+        <example>
+          <title>Configuring a
+          DefaultValuesAuthenticationSourceDecorator</title>
+
+          <programlisting>&lt;beans&gt;
+   ...
+   &lt;bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource"&gt;
+      &lt;property name="url" value="ldap://localhost:389" /&gt;
+      &lt;property name="base" value="dc=example,dc=com" /&gt;
+      &lt;property name="authenticationSource" ref="authenticationSource" /&gt;
+   &lt;/bean&gt;
+
+   &lt;bean id="authenticationSource"
+      class="org.springframework.ldap.authentication.DefaultValuesAuthenticationSourceDecorator"&gt;
+      &lt;property name="target" ref="acegiAuthenticationSource" /&gt;
+      &lt;property name="defaultUser" value="cn=myDefaultUser" /&gt;
+      &lt;property name="defaultPassword" value="pass" /&gt;
+   &lt;/bean&gt;
+
+   &lt;bean id="acegiAuthenticationSource"
+      class="org.springframework.ldap.authentication.AcegiAuthenticationSource" /&gt;
+   ...
+&lt;/beans&gt;</programlisting>
+        </example>
+      </sect3>
+    </sect2>
+
+    <sect2 id="context-source-pooling">
+      <title>Pooling</title>
+
+      <para>LDAP connection pooling can be turned on/off using the
+      <literal>pooled</literal> flag. Default is <literal>true</literal>. The
+      configuration of LDAP connection pooling is managed using
+      <literal>System</literal> properties, so this needs to be handled
+      manually. Details of pooling configuration can be found <ulink
+      url="http://java.sun.com/products/jndi/tutorial/ldap/connect/config.html">here</ulink>.</para>
+      
+    </sect2>
+    <sect2 id="context-source-advanced">
+      <title>Advanced ContextSource Configuration</title>
+      <sect3 id="context-source-context-factory">
+        <title>Alternate ContextFactory</title>
+
+        <para>It is possible to configure the <literal>ContextFactory</literal> that the
+        <literal>ContextSource</literal> is to use when creating Contexts using the
+        <literal>contextFactory</literal> property. The default value is
+        <literal>com.sun.jndi.ldap.LdapCtxFactory</literal>.</para>
+      </sect3>
+      <sect3 id="context-source-object-factory">
+        <title>Custom DirObjectFactory</title>
+
+        <para>As described in <xref linkend="dirobjectfactory" />, a <literal>DirObjectFactory</literal>
+        can be used to translate the <literal>Attributes</literal> of found Contexts
+        to a more useful <literal>DirContext</literal> implementation. This can be
+        configured using the <literal>dirObjectFactory</literal> property. You can use
+        this property if you have your own, custom <literal>DirObjectFactory</literal> implementation.</para>
+        <para>The default value is <literal>DefaultDirObjectFactory</literal>.</para>
+      </sect3>
+      <sect3 id="context-source-custom-env-properties">
+        <title>Custom DirContext Environment Properties</title>
+
+        <para>In some cases the user might want to specify additional environment setup properties
+        in addition to the ones directly configurable from <literal>AbstractContextSource</literal>.
+        Such properties should be set in a <literal>Map</literal> and supplied to 
+        the <literal>baseEnvironmentProperties</literal> property.</para>
+      </sect3>
+    </sect2>
+  </sect1>
+  <sect1 id="ldap-template-configuration">
+    <title>LdapTemplate Configuration</title>
+    
+	<sect2 id="ldap-template-ignore-partial-result">
+	  <title>Ignoring PartialResultExceptions</title>
+	  
+	  <para>Some Active Directory (AD) servers are unable to automatically following
+	  referrals, which often leads to a <literal>PartialResultException</literal> being
+	  thrown in searches. You can specify that <literal>PartialResultException</literal>
+	  is to be ignored by setting the <literal>ignorePartialResultException</literal>
+	  property to <literal>true</literal>.
+	  <note>This causes all referrals to be ignored, and no notice will be given that
+	  a <literal>PartialResultException</literal> has been encountered.
+	  There is currently no way of manually following referrals using LdapTemplate.</note></para>
+	</sect2>
+  </sect1>
+  <sect1 id="base-context-configuration">
+  	<title>Obtaining a reference to the base LDAP path</title>
+  	<para>As described above, a base LDAP path may be supplied to the <literal>ContextSource</literal>, 
+  	specifying the root in the LDAP tree to which all operations will be relative. This means that
+  	you will only be working with relative distinguished names throughout your system, which is
+  	typically rather handy. There are however some cases in which you will need to have access 
+  	to the base path in order to be able to construct full DNs, relative to the actual root of the LDAP tree.
+  	One example would be when working with LDAP groups (e.g. <literal>groupOfNames</literal> objectclass), 
+  	in which case each group member attribute value will need to be the full DN of the referenced member.</para>
+  	<para>For that reason, Spring LDAP has a mechanism by which any Spring controlled bean may be supplied 
+  	the base path on startup. For beans to be notified of the base path, two things need to be in place:
+  	First of all, the bean that wants the base path reference needs to implement the 
+  	<literal>BaseLdapPathAware</literal> interface. Secondly, a <literal>BaseLdapPathBeanPostProcessor</literal>
+  	needs to be defined in the application context</para>
+  	<example>
+      <title>Implementing <literal>BaseLdapPathAware</literal></title>
+
+      <programlisting>package com.example.service;
+
+public class PersonService implements PersonService, <emphasis role="bold">BaseLdapPathAware</emphasis> {
+   ...
+   <emphasis role="bold">private DistinguishedName basePath;
+   
+   public void setBaseLdapPath(DistinguishedName basePath) {
+      this.basePath = basePath;
+   }</emphasis>
+   ...
+   private DistinguishedName getFullPersonDn(Person person) {
+      return new DistinguishedName(<emphasis role="bold">basePath</emphasis>).append(person.getDn());
+   }
+   ...
+}</programlisting>
+    </example>
+  	<example>
+      <title>Specifying a <literal>BaseLdapPathBeanPostProcessor</literal> in your <literal>ApplicationContext</literal></title>
+
+      <programlisting>&lt;beans&gt;
+   ...
+   &lt;bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource"&gt;
+      &lt;property name="url" value="ldap://localhost:389" /&gt;
+      &lt;property name="base" value="dc=example,dc=com" /&gt;
+      &lt;property name="acegiAuthenticationSource" ref="authenticationSource" /&gt;
+   &lt;/bean&gt;
+   ...
+   <emphasis role="bold">&lt;bean class="org.springframework.ldap.core.support.BaseLdapPathBeanPostProcessor" /&gt;</emphasis>
+&lt;/beans&gt;
+  	  </programlisting>
+  	</example>
+  	<para>The default behaviour of the <literal>BaseLdapPathBeanPostProcessor</literal> is to use the base path of the single
+  	defined <literal>BaseLdapPathSource</literal> (<literal>AbstractContextSource</literal> )in the <literal>ApplicationContext</literal>. 
+  	If more than one <literal>BaseLdapPathSource</literal> is defined, you will need to specify which one to use with the
+  	<literal>baseLdapPathSourceName</literal> property.</para>
+  </sect1>
+</chapter>

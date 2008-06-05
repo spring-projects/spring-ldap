@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="basic">
+  <title>Basic Operations</title>
+
+  <sect1 id="basic-searches">
+    <title>Search and Lookup Using AttributesMapper</title>
+
+    <para>In this example we will use an <literal>AttributesMapper</literal>
+    to easily build a List of all common names of all person objects.</para>
+
+    <example>
+      <title>AttributesMapper that returns a single attribute</title>
+
+      <programlisting>package com.example.dao;
+
+public class PersonDaoImpl implements PersonDao {
+   private LdapTemplate ldapTemplate;
+
+   public void setLdapTemplate(LdapTemplate ldapTemplate) {
+      this.ldapTemplate = ldapTemplate;
+   }
+
+   public List getAllPersonNames() {
+      return ldapTemplate.search(
+         "", "(objectclass=person)",
+<emphasis role="bold">         new AttributesMapper() {
+            public Object mapFromAttributes(Attributes attrs)
+               throws NamingException {
+               return attrs.get("cn").get();
+            }
+         }</emphasis>);
+   }
+}</programlisting>
+    </example>
+
+    <para>The inline implementation of <literal>AttributesMapper</literal>
+    just gets the desired attribute value from the
+    <literal>Attributes</literal> and returns it. Internally,
+    <literal>LdapTemplate</literal> iterates over all entries found, calling
+    the given <literal>AttributesMapper</literal> for each entry, and collects
+    the results in a list. The list is then returned by the
+    <literal>search</literal> method.</para>
+
+    <para>Note that the <literal>AttributesMapper</literal> implementation
+    could easily be modified to return a full <literal>Person</literal>
+    object:</para>
+
+    <example>
+      <title>AttributesMapper that returns a Person object</title>
+
+      <programlisting>package com.example.dao;
+
+public class PersonDaoImpl implements PersonDao {
+   private LdapTemplate ldapTemplate;
+   ...
+<emphasis role="bold">   private class PersonAttributesMapper implements AttributesMapper {
+      public Object mapFromAttributes(Attributes attrs) throws NamingException {
+         Person person = new Person();
+         person.setFullName((String)attrs.get("cn").get());
+         person.setLastName((String)attrs.get("sn").get());
+         person.setDescription((String)attrs.get("description").get());
+         return person;
+      }
+   }
+</emphasis>
+   public List getAllPersons() {
+      return ldapTemplate.search("", "(objectclass=person)", <emphasis
+          role="bold">new PersonAttributesMapper()</emphasis>);
+   }
+}</programlisting>
+    </example>
+
+    <para>If you have the distinguished name (<literal>dn</literal>) that
+    identifies an entry, you can retrieve the entry directly, without
+    searching for it. This is called a <emphasis>lookup</emphasis> in Java
+    LDAP. The following example shows how a lookup results in a Person
+    object:</para>
+
+    <example>
+      <title>A lookup resulting in a Person object</title>
+
+      <programlisting>package com.example.dao;
+
+public class PersonDaoImpl implements PersonDao {
+   private LdapTemplate ldapTemplate;
+   ...
+   public Person findPerson(String dn) {
+      return (Person) ldapTemplate.lookup(dn, new PersonAttributesMapper());
+   }
+}</programlisting>
+    </example>
+
+    <para>This will look up the specified <literal>dn</literal> and pass the
+    found attributes to the supplied <literal>AttributesMapper</literal>, in
+    this case resulting in a <literal>Person</literal> object.</para>
+  </sect1>
+
+  <sect1 id="basic-filters">
+    <title>Building Dynamic Filters</title>
+
+    <para>We can build dynamic filters to use in searches, using the classes
+    from the <literal>org.springframework.ldap.filter</literal>
+    package. Let's say that we want the following filter:
+    <literal>(&amp;(objectclass=person)(sn=?))</literal>, where we want the
+    <literal>?</literal> to be replaced with the value of the parameter
+    <literal>lastName</literal>. This is how we do it using the filter support
+    classes:</para>
+
+    <example>
+      <title>Building a search filter dynamically</title>
+
+      <programlisting>package com.example.dao;
+
+public class PersonDaoImpl implements PersonDao {
+   private LdapTemplate ldapTemplate;
+   ...
+   public List getPersonNamesByLastName(String lastName) {
+<emphasis role="bold">      AndFilter filter = new AndFilter();
+      filter.and(new EqualsFilter("objectclass", "person"));
+      filter.and(new EqualsFilter("sn", lastName));
+</emphasis>      return ldapTemplate.search(
+         "", <emphasis role="bold">filter.encode()</emphasis>,
+         new AttributesMapper() {
+            public Object mapFromAttributes(Attributes attrs)
+               throws NamingException {
+               return attrs.get("cn").get();
+            }
+         });
+   }
+}</programlisting>
+    </example>
+
+    <para>To perform a wildcard search, it's possible to use the
+    <literal>WhitespaceWildcardsFilter</literal>:</para>
+
+    <example>
+      <title>Building a wildcard search filter</title>
+
+      <programlisting>AndFilter filter = new AndFilter();
+filter.and(new EqualsFilter("objectclass", "person"));
+filter.and(new WhitespaceWildcardsFilter("cn", cn));</programlisting>
+    </example>
+
+    <para>
+    	<note>
+    		In addition to simplifying building of complex search filters,
+    		the <literal>Filter</literal> classes also provide proper escaping
+    		of any unsafe characters. This prevents &quot;ldap injection&quot;,
+    		where a user might use such characters to inject unwanted operations
+    		into your LDAP operations.
+    	</note>
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Building Dynamic Distinguished Names</title>
+
+    <para>The standard <ulink
+    url="http://java.sun.com/j2se/1.5.0/docs/api/javax/naming/Name.html">Name</ulink>
+    interface represents a generic name, which is basically an ordered
+    sequence of components. The <literal>Name</literal> interface also
+    provides operations on that sequence; e.g., <literal>add</literal> or
+    <literal>remove</literal>. LdapTemplate provides an implementation of the
+    <literal>Name</literal> interface: <literal>DistinguishedName</literal>.
+    Using this class will greatly simplify building distinguished names,
+    especially considering the sometimes complex rules regarding escapings and
+    encodings. As with the <literal>Filter</literal> classes this helps preventing
+    potentially malicious data being injected into your LDAP operations.
+    </para>
+    <para>
+    The following example illustrates how
+    <literal>DistinguishedName</literal> can be used to dynamically construct
+    a distinguished name:</para>
+
+    <example>
+      <title>Building a distinguished name dynamically</title>
+
+      <programlisting>package com.example.dao;
+
+import org.springframework.ldap.core.support.DistinguishedName;
+import javax.naming.Name;
+
+public class PersonDaoImpl implements PersonDao {
+   public static final String BASE_DN = "dc=example,dc=com";
+   ...
+   protected Name buildDn(Person p) {
+<emphasis role="bold">      DistinguishedName dn = new DistinguishedName(BASE_DN);
+      dn.add("c", p.getCountry());
+      dn.add("ou", p.getCompany());
+      dn.add("cn", p.getFullname());
+</emphasis>      return dn;
+   }
+}</programlisting>
+    </example>
+
+    <para>Assuming that a Person has the following attributes:</para>
+
+    <informaltable>
+      <tgroup cols="2">
+        <tbody>
+          <row>
+            <entry><literal>country</literal></entry>
+
+            <entry>Sweden</entry>
+          </row>
+
+          <row>
+            <entry><literal>company</literal></entry>
+
+            <entry>Some Company</entry>
+          </row>
+
+          <row>
+            <entry><literal>fullname</literal></entry>
+
+            <entry>Some Person</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+
+    <para>The code above would then result in the following distinguished
+    name:</para>
+
+    <para><programlisting>cn=Some Person, ou=Some Company, c=Sweden, dc=example, dc=com</programlisting></para>
+
+    <para>In Java 5, there is an implementation of the Name interface: <ulink
+    url="http://java.sun.com/j2se/1.5.0/docs/api/javax/naming/ldap/LdapName.html">LdapName</ulink>.
+    If you are in the Java 5 world, you might as well use
+    <literal>LdapName</literal>. However, you may still use
+    <literal>DistinguishedName</literal> if you so wish.</para>
+  </sect1>
+
+  <sect1 id="basic-binding-unbinding">
+    <title>Binding and Unbinding</title>
+
+    <sect2 id="basic-binding-data">
+      <title>Binding Data</title>
+
+      <para>Inserting data in Java LDAP is called binding. In order to do
+      that, a distinguished name that uniquely identifies the new entry is
+      required. The following example shows how data is bound using
+      LdapTemplate:</para>
+
+      <example>
+        <title>Binding data using Attributes</title>
+
+        <programlisting>package com.example.dao;
+
+public class PersonDaoImpl implements PersonDao {
+   private LdapTemplate ldapTemplate;
+   ...
+   public void create(Person p) {
+      Name dn = buildDn(p);
+<emphasis role="bold">      ldapTemplate.bind(dn, null, buildAttributes(p));
+</emphasis>   }
+
+   private Attributes buildAttributes(Person p) {
+      Attributes attrs = new BasicAttributes();
+      BasicAttribute ocattr = new BasicAttribute("objectclass");
+      ocattr.add("top");
+      ocattr.add("person");
+      attrs.put(ocattr);
+      attrs.put("cn", "Some Person");
+      attrs.put("sn", "Person");
+      return attrs;
+   }
+}</programlisting>
+      </example>
+
+      <para>The Attributes building is--while dull and verbose--sufficient for
+      many purposes. It is, however, possible to simplify the binding
+      operation further, which will be described in <xref
+      linkend="dirobjectfactory" />.</para>
+    </sect2>
+
+    <sect2 id="basic-unbinding-data">
+      <title>Unbinding Data</title>
+
+      <para>Removing data in Java LDAP is called unbinding. A distinguished
+      name (dn) is required to identify the entry, just as in the binding
+      operation. The following example shows how data is unbound using
+      LdapTemplate:</para>
+
+      <example>
+        <title>Unbinding data</title>
+
+        <programlisting>package com.example.dao;
+
+public class PersonDaoImpl implements PersonDao {
+   private LdapTemplate ldapTemplate;
+   ...
+   public void delete(Person p) {
+      Name dn = buildDn(p);
+<emphasis role="bold">      ldapTemplate.unbind(dn);
+</emphasis>   }
+}</programlisting>
+      </example>
+    </sect2>
+  </sect1>
+
+  <sect1 id="basic-modifying">
+    <title>Modifying</title>
+
+    <para>In Java LDAP, data can be modified in two ways: either using
+    <emphasis>rebind</emphasis> or
+    <emphasis>modifyAttributes</emphasis>.</para>
+
+    <sect2>
+      <title>Modifying using <literal>rebind</literal></title>
+
+      <para>A <literal>rebind</literal> is a very crude way to modify data.
+      It's basically an <literal>unbind</literal> followed by a
+      <literal>bind</literal>. It looks like this:</para>
+
+      <example>
+        <title>Modifying using rebind</title>
+
+        <programlisting>package com.example.dao;
+
+public class PersonDaoImpl implements PersonDao {
+   private LdapTemplate ldapTemplate;
+   ...
+   public void update(Person p) {
+      Name dn = buildDn(p);
+<emphasis role="bold">      ldapTemplate.rebind(dn, null, buildAttributes(p));
+</emphasis>   }
+}</programlisting>
+      </example>
+    </sect2>
+
+    <sect2 id="modify-modifyAttributes">
+      <title>Modifying using <literal>modifyAttributes</literal></title>
+
+      <para>If only the modified attributes should be replaced, there is a
+      method called <literal>modifyAttributes</literal> that takes an array of
+      modifications:</para>
+
+      <example>
+        <title>Modifying using modifyAttributes</title>
+
+        <programlisting>package com.example.dao;
+
+public class PersonDaoImpl implements PersonDao {
+   private LdapTemplate ldapTemplate;
+   ...
+   public void updateDescription(Person p) {
+      Name dn = buildDn(p);
+      Attribute attr = new BasicAttribute("description", p.getDescription())
+      ModificationItem item = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, attr);
+<emphasis role="bold">      ldapTemplate.modifyAttributes(dn, new ModificationItem[] {item});
+</emphasis>   }
+}</programlisting>
+      </example>
+
+      <para>Building <literal>Attributes</literal> and
+      <literal>ModificationItem</literal> arrays is a lot of work, but as you
+      will see in <xref linkend="dirobjectfactory" />, the update operations
+      can be simplified.</para>
+    </sect2>
+  </sect1>
+
+  <sect1 id="samples">
+    <title>Sample applications</title>
+
+    <para>It is recommended that you review the Spring LDAP sample
+    applications included in the release distribution for best-practice
+    illustrations of the features of this library. A description of each
+    sample is provided below:</para>
+
+    <para><orderedlist>
+        <listitem>
+          <para>spring-ldap-person - the sample demonstrating most
+          features.</para>
+        </listitem>
+
+        <listitem>
+          <para>spring-ldap-article - the sample application that was written
+          to accompany a <ulink
+          url="http://today.java.net/pub/a/today/2006/04/18/ldaptemplate-java-ldap-made-simple.html">java.net
+          article</ulink> about Spring LDAP.</para>
+        </listitem>
+      </orderedlist></para>
+  </sect1>
+</chapter>
