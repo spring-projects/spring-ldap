@@ -65,9 +65,9 @@
                     <includes>index.xml</includes>
                     <chunkedOutput>true</chunkedOutput>
                     <xincludeSupported>true</xincludeSupported>
-                    <!--<htmlStylesheet>css/html.css</htmlStylesheet>
+                    <htmlStylesheet>css/html.css</htmlStylesheet>
                     <htmlCustomization>src/docbkx/resources/xsl/html_chunk.xsl</htmlCustomization>
-                    <foCustomization>src/docbkx/resources/xsl/fopdf.xsl</foCustomization>-->
+                    <foCustomization>src/docbkx/resources/xsl/fopdf.xsl</foCustomization>
                     <entities>
                         <entity>
                             <name>version</name>
