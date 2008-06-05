@@ -6,6 +6,12 @@
 	<name>Spring LDAP Java 5 support</name>
 	<version>1.2.2-SNAPSHOT</version>
 
+	<parent>
+		<groupId>org.springframework.ldap</groupId>
+		<artifactId>master</artifactId>
+		<version>1.2.2-SNAPSHOT</version>
+	</parent>
+
 	<build>
 		<plugins>
 			<plugin>

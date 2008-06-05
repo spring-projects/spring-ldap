@@ -5,9 +5,11 @@
 	<artifactId>spring-ldap</artifactId>
 	<name>Spring LDAP Core</name>
 	<version>1.2.2-SNAPSHOT</version>
-        <properties>
-                <spring.version>2.0.8</spring.version>
-        </properties>
+	<parent>
+		<groupId>org.springframework.ldap</groupId>
+		<artifactId>master</artifactId>
+		<version>1.2.2-SNAPSHOT</version>
+	</parent>
 
 	<build>
 		<plugins>
