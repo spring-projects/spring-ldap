@@ -15,47 +15,38 @@
  */
 package org.springframework.ldap;
 
+import static junit.framework.Assert.assertTrue;
+
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.ContextExecutor;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Tests for LdapTemplate's context executor methods.
  * 
  * @author Mattias Arthursson
  */
-public class LdapTemplateContextExecutorTest extends
-        AbstractLdapTemplateIntegrationTest {
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
+public class LdapTemplateContextExecutorTest extends AbstractLdapTemplateIntegrationTest {
 
-    private LdapTemplate tested;
+	@Autowired
+	private LdapTemplate tested;
 
-    protected String[] getConfigLocations() {
-        return new String[] { "/conf/ldapTemplateTestContext.xml" };
-    }
+	@Test
+	public void testLookupLink() {
+		ContextExecutor executor = new ContextExecutor() {
+			public Object executeWithContext(DirContext ctx) throws NamingException {
+				return ctx.lookupLink("cn=Some Person,ou=company1,c=Sweden");
+			}
+		};
 
-    protected void onSetUp() throws Exception {
-        super.onSetUp();
-    }
-
-    protected void onTearDown() throws Exception {
-        super.onTearDown();
-    }
-
-    public void testLookupLink() {
-        ContextExecutor executor = new ContextExecutor(){
-            public Object executeWithContext(DirContext ctx) throws NamingException {
-                return ctx.lookupLink("cn=Some Person,ou=company1,c=Sweden");
-            }
-        };
-        
-        Object object = tested.executeReadOnly(executor);
-        assertTrue("Should be a DirContextAdapter", object instanceof DirContextAdapter);
-    }
-
-    public void setTested(LdapTemplate tested) {
-        this.tested = tested;
-    }
+		Object object = tested.executeReadOnly(executor);
+		assertTrue("Should be a DirContextAdapter", object instanceof DirContextAdapter);
+	}
 }

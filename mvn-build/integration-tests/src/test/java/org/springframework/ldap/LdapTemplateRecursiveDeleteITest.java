@@ -16,11 +16,18 @@
 
 package org.springframework.ldap;
 
+import static junit.framework.Assert.fail;
+
 import javax.naming.Name;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Tests the recursive modification methods (unbind and the protected delete
@@ -29,99 +36,89 @@ import org.springframework.ldap.core.LdapTemplate;
  * @author Mattias Arthursson
  * @author Ulrik Sandberg
  */
-public class LdapTemplateRecursiveDeleteITest extends
-        AbstractLdapTemplateIntegrationTest {
-    private LdapTemplate tested;
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
+public class LdapTemplateRecursiveDeleteITest extends AbstractLdapTemplateIntegrationTest {
 
-    private static DistinguishedName DN = new DistinguishedName(
-            "cn=Some Person5,ou=company1,c=Sweden");
+	@Autowired
+	private LdapTemplate tested;
 
-    private DistinguishedName firstSubDn;
+	private static DistinguishedName DN = new DistinguishedName("cn=Some Person5,ou=company1,c=Sweden");
 
-    private DistinguishedName secondSubDn;
+	private DistinguishedName firstSubDn;
 
-    private DistinguishedName leafDn;
+	private DistinguishedName secondSubDn;
 
-    protected String[] getConfigLocations() {
-        return new String[] { "/conf/ldapTemplateTestContext.xml" };
-    }
+	private DistinguishedName leafDn;
 
-    protected void onSetUp() throws Exception {
-        super.onSetUp();
-        
-        DirContextAdapter adapter = new DirContextAdapter();
-        adapter.setAttributeValues("objectclass", new String[] { "top",
-                "person" });
-        adapter.setAttributeValue("cn", "Some Person5");
-        adapter.setAttributeValue("sn", "Person5");
-        adapter.setAttributeValue("description", "Some description");
-        tested.bind(DN, adapter, null);
+	@Before
+	public void prepareTestedInstance() throws Exception {
+		DirContextAdapter adapter = new DirContextAdapter();
+		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
+		adapter.setAttributeValue("cn", "Some Person5");
+		adapter.setAttributeValue("sn", "Person5");
+		adapter.setAttributeValue("description", "Some description");
+		tested.bind(DN, adapter, null);
 
-        firstSubDn = new DistinguishedName("cn=subPerson");
-        firstSubDn.prepend(DN);
-        adapter = new DirContextAdapter();
-        adapter.setAttributeValues("objectclass", new String[] { "top",
-                "person" });
-        adapter.setAttributeValue("cn", "subPerson");
-        adapter.setAttributeValue("sn", "subPerson");
-        adapter.setAttributeValue("description",
-                "Should be recursively deleted");
-        tested.bind(firstSubDn, adapter, null);
-        secondSubDn = new DistinguishedName("cn=subPerson2");
-        secondSubDn.prepend(DN);
-        adapter = new DirContextAdapter();
-        adapter.setAttributeValues("objectclass", new String[] { "top",
-                "person" });
-        adapter.setAttributeValue("cn", "subPerson2");
-        adapter.setAttributeValue("sn", "subPerson2");
-        adapter.setAttributeValue("description",
-                "Should be recursively deleted");
-        tested.bind(secondSubDn, adapter, null);
+		firstSubDn = new DistinguishedName("cn=subPerson");
+		firstSubDn.prepend(DN);
+		adapter = new DirContextAdapter();
+		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
+		adapter.setAttributeValue("cn", "subPerson");
+		adapter.setAttributeValue("sn", "subPerson");
+		adapter.setAttributeValue("description", "Should be recursively deleted");
+		tested.bind(firstSubDn, adapter, null);
+		secondSubDn = new DistinguishedName("cn=subPerson2");
+		secondSubDn.prepend(DN);
+		adapter = new DirContextAdapter();
+		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
+		adapter.setAttributeValue("cn", "subPerson2");
+		adapter.setAttributeValue("sn", "subPerson2");
+		adapter.setAttributeValue("description", "Should be recursively deleted");
+		tested.bind(secondSubDn, adapter, null);
 
-        leafDn = new DistinguishedName("cn=subSubPerson");
-        leafDn.prepend(firstSubDn);
-        adapter = new DirContextAdapter();
-        adapter.setAttributeValues("objectclass", new String[] { "top",
-                "person" });
-        adapter.setAttributeValue("cn", "subSubPerson");
-        adapter.setAttributeValue("sn", "subSubPerson");
-        adapter.setAttributeValue("description",
-                "Should be recursively deleted");
-        tested.bind(leafDn, adapter, null);
-    }
+		leafDn = new DistinguishedName("cn=subSubPerson");
+		leafDn.prepend(firstSubDn);
+		adapter = new DirContextAdapter();
+		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
+		adapter.setAttributeValue("cn", "subSubPerson");
+		adapter.setAttributeValue("sn", "subSubPerson");
+		adapter.setAttributeValue("description", "Should be recursively deleted");
+		tested.bind(leafDn, adapter, null);
+	}
 
-    protected void onTearDown() throws Exception {
-        try {
-            tested.unbind(DN, true);
-        } catch (NameNotFoundException ignore) {
-            // ignore
-        }
-    }
+	@After
+	public void cleanup() throws Exception {
+		try {
+			tested.unbind(DN, true);
+		}
+		catch (NameNotFoundException ignore) {
+			// ignore
+		}
+	}
 
-    public void testRecursiveUnbind() {
-        tested.unbind(DN, true);
+	@Test
+	public void testRecursiveUnbind() {
+		tested.unbind(DN, true);
 
-        verifyDeleted(DN);
-        verifyDeleted(firstSubDn);
-        verifyDeleted(secondSubDn);
-        verifyDeleted(leafDn);
-    }
+		verifyDeleted(DN);
+		verifyDeleted(firstSubDn);
+		verifyDeleted(secondSubDn);
+		verifyDeleted(leafDn);
+	}
 
-    public void testRecursiveUnbindOnLeaf() {
-        tested.unbind(leafDn, true);
-        verifyDeleted(leafDn);
-    }
+	@Test
+	public void testRecursiveUnbindOnLeaf() {
+		tested.unbind(leafDn, true);
+		verifyDeleted(leafDn);
+	}
 
-    private void verifyDeleted(Name dn) {
-        try {
-            tested.lookup(dn);
-            fail("Expected entry '" + dn + "' to be non-existent");
-        } catch (NameNotFoundException expected) {
-            // expected
-        }
-    }
-
-    public void setTested(LdapTemplate tested) {
-        this.tested = tested;
-    }
+	private void verifyDeleted(Name dn) {
+		try {
+			tested.lookup(dn);
+			fail("Expected entry '" + dn + "' to be non-existent");
+		}
+		catch (NameNotFoundException expected) {
+			// expected
+		}
+	}
 }

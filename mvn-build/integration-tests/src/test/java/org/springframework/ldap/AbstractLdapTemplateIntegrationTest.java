@@ -15,13 +15,28 @@
  */
 package org.springframework.ldap;
 
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.junit.AfterClass;
+import org.springframework.ldap.test.LdapTestUtils;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
-public abstract class AbstractLdapTemplateIntegrationTest extends
-        AbstractDependencyInjectionSpringContextTests {
+public abstract class AbstractLdapTemplateIntegrationTest extends AbstractJUnit4SpringContextTests {
+	private static final Log log = LogFactory.getLog(AbstractLdapTemplateIntegrationTest.class);
 
-
-    protected void onSetUp() throws Exception {
-        super.onSetUp();
-    }
+	@AfterClass
+	public static final void shutdownServer() {
+		try {
+			// This would be the ideal setup, to enable each test to run in
+			// isolation
+			// However, due to port timeout problems on linux it doesn't work -
+			// the port will not be released before the next test class will
+			// start.
+			// LdapTestUtils.destroyApacheDirectoryServer("uid=admin,ou=system",
+			// "credentials");
+		}
+		catch (Exception e) {
+			log.error("Failed to shut down directory server");
+		}
+	}
 }

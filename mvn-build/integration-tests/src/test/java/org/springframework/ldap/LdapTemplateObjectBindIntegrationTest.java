@@ -16,13 +16,19 @@
 
 package org.springframework.ldap;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
+
 import java.io.Serializable;
 import java.util.LinkedList;
 
 import javax.naming.directory.DirContext;
 
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.AbstractContextSource;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Tests bind and lookup with Java objects where the ContextSource has a
@@ -30,15 +36,13 @@ import org.springframework.ldap.core.support.AbstractContextSource;
  * 
  * @author Ulrik Sandberg
  */
-public class LdapTemplateObjectBindIntegrationTest extends
-		AbstractLdapTemplateIntegrationTest {
+@ContextConfiguration(locations = { "/conf/ldapTemplateObjectBindTestContext.xml" })
+public class LdapTemplateObjectBindIntegrationTest extends AbstractLdapTemplateIntegrationTest {
 
+	@Autowired
 	private LdapTemplate tested;
 
-	protected String[] getConfigLocations() {
-		return new String[] { "/conf/ldapTemplateObjectBindTestContext.xml" };
-	}
-
+	@Test
 	public void testBindJavaObject() throws Exception {
 		String dn = "cn=myRandomInt";
 		tested.bind(dn, new Integer(54321), null);
@@ -48,6 +52,7 @@ public class LdapTemplateObjectBindIntegrationTest extends
 		tested.unbind(dn);
 	}
 
+	@Test
 	public void testBindLinkedList() {
 		LinkedList list = new LinkedList();
 		list.add(new Integer(54321));
@@ -63,6 +68,7 @@ public class LdapTemplateObjectBindIntegrationTest extends
 		tested.unbind(dn);
 	}
 
+	@Test
 	public void testBindNonSerializableJavaObjectShouldFail() throws Exception {
 		NonSerializablePojo pojo = new NonSerializablePojo();
 		pojo.setName("A Name");
@@ -70,10 +76,9 @@ public class LdapTemplateObjectBindIntegrationTest extends
 		try {
 			tested.bind("cn=myRandomObject", pojo, null);
 			fail("IllegalArgumentException expected");
-		} catch (IllegalArgumentException expected) {
-			assertEquals(
-					"can only bind Referenceable, Serializable, DirContext",
-					expected.getMessage());
+		}
+		catch (IllegalArgumentException expected) {
+			assertEquals("can only bind Referenceable, Serializable, DirContext", expected.getMessage());
 		}
 	}
 
@@ -93,14 +98,14 @@ public class LdapTemplateObjectBindIntegrationTest extends
 		}
 	}
 
+	@Test
 	public void testBindSerializableJavaObjectShouldSucceed() throws Exception {
 		SerializablePojo pojo = new SerializablePojo();
 		pojo.setName("A Name");
 
 		tested.bind("cn=myRandomObject", pojo, null);
 
-		SerializablePojo result = (SerializablePojo) tested
-				.lookup("cn=myRandomObject");
+		SerializablePojo result = (SerializablePojo) tested.lookup("cn=myRandomObject");
 		assertEquals("A Name", result.getName());
 		tested.unbind("cn=myRandomObject");
 	}
@@ -127,9 +132,9 @@ public class LdapTemplateObjectBindIntegrationTest extends
 	 * This test demonstrates that it's fully possible to perform plain JNDI
 	 * operations from Spring LDAP.
 	 */
+	@Test
 	public void testPlainJndiBindJavaObject() throws Exception {
-		AbstractContextSource contextSource = (AbstractContextSource) tested
-				.getContextSource();
+		AbstractContextSource contextSource = (AbstractContextSource) tested.getContextSource();
 		DirContext ctx = contextSource.getReadWriteContext();
 
 		ctx.bind("cn=myRandomInt", new Integer(28420));
@@ -137,9 +142,5 @@ public class LdapTemplateObjectBindIntegrationTest extends
 		Integer result = (Integer) ctx.lookup("cn=myRandomInt");
 		assertEquals(28420, result.intValue());
 		tested.unbind("cn=myRandomInt");
-	}
-
-	public void setTested(LdapTemplate tested) {
-		this.tested = tested;
 	}
 }

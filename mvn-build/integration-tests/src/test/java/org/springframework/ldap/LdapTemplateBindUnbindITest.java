@@ -16,13 +16,20 @@
 
 package org.springframework.ldap;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
+
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Tests the bind and unbind methods of LdapTemplate. The test methods in this
@@ -35,85 +42,81 @@ import org.springframework.ldap.core.LdapTemplate;
  * 
  * @author Mattias Arthursson
  */
-public class LdapTemplateBindUnbindITest extends
-        AbstractLdapTemplateIntegrationTest {
-    private LdapTemplate tested;
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
+public class LdapTemplateBindUnbindITest extends AbstractLdapTemplateIntegrationTest {
+	@Autowired
+	private LdapTemplate tested;
 
-    private static String DN = "cn=Some Person4,ou=company1,c=Sweden";
+	private static String DN = "cn=Some Person4,ou=company1,c=Sweden";
 
-    protected String[] getConfigLocations() {
-        return new String[] { "/conf/ldapTemplateTestContext.xml" };
-    }
+	@Test
+	public void testBindAndUnbind_Attributes_Plain() {
+		Attributes attributes = setupAttributes();
+		tested.bind(DN, null, attributes);
+		verifyBoundCorrectData();
+		tested.unbind(DN);
+		verifyCleanup();
+	}
 
-    public void testBindAndUnbind_Attributes_Plain() {
-        Attributes attributes = setupAttributes();
-        tested.bind(DN, null, attributes);
-        verifyBoundCorrectData();
-        tested.unbind(DN);
-        verifyCleanup();
-    }
+	@Test
+	public void testBindAndUnbind_Attributes_DIstinguishedName() {
+		Attributes attributes = setupAttributes();
+		tested.bind(new DistinguishedName(DN), null, attributes);
+		verifyBoundCorrectData();
+		tested.unbind(new DistinguishedName(DN));
+		verifyCleanup();
+	}
 
-    public void testBindAndUnbind_Attributes_DIstinguishedName() {
-        Attributes attributes = setupAttributes();
-        tested.bind(new DistinguishedName(DN), null, attributes);
-        verifyBoundCorrectData();
-        tested.unbind(new DistinguishedName(DN));
-        verifyCleanup();
-    }
+	@Test
+	public void testBindAndUnbind_DirContextAdapter_Plain() {
+		DirContextAdapter adapter = new DirContextAdapter();
+		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
+		adapter.setAttributeValue("cn", "Some Person4");
+		adapter.setAttributeValue("sn", "Person4");
 
-    public void testBindAndUnbind_DirContextAdapter_Plain() {
-        DirContextAdapter adapter = new DirContextAdapter();
-        adapter.setAttributeValues("objectclass", new String[] { "top",
-                "person" });
-        adapter.setAttributeValue("cn", "Some Person4");
-        adapter.setAttributeValue("sn", "Person4");
+		tested.bind(DN, adapter, null);
+		verifyBoundCorrectData();
+		tested.unbind(DN);
+		verifyCleanup();
+	}
 
-        tested.bind(DN, adapter, null);
-        verifyBoundCorrectData();
-        tested.unbind(DN);
-        verifyCleanup();
-    }
+	@Test
+	public void testBindAndUnbind_DirContextAdapter_DIstinguishedName() {
+		DirContextAdapter adapter = new DirContextAdapter();
+		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
+		adapter.setAttributeValue("cn", "Some Person4");
+		adapter.setAttributeValue("sn", "Person4");
 
-    public void testBindAndUnbind_DirContextAdapter_DIstinguishedName() {
-        DirContextAdapter adapter = new DirContextAdapter();
-        adapter.setAttributeValues("objectclass", new String[] { "top",
-                "person" });
-        adapter.setAttributeValue("cn", "Some Person4");
-        adapter.setAttributeValue("sn", "Person4");
+		tested.bind(new DistinguishedName(DN), adapter, null);
+		verifyBoundCorrectData();
+		tested.unbind(new DistinguishedName(DN));
+		verifyCleanup();
+	}
 
-        tested.bind(new DistinguishedName(DN), adapter, null);
-        verifyBoundCorrectData();
-        tested.unbind(new DistinguishedName(DN));
-        verifyCleanup();
-    }
+	private Attributes setupAttributes() {
+		Attributes attributes = new BasicAttributes();
+		BasicAttribute ocattr = new BasicAttribute("objectclass");
+		ocattr.add("top");
+		ocattr.add("person");
+		attributes.put(ocattr);
+		attributes.put("cn", "Some Person4");
+		attributes.put("sn", "Person4");
+		return attributes;
+	}
 
-    private Attributes setupAttributes() {
-        Attributes attributes = new BasicAttributes();
-        BasicAttribute ocattr = new BasicAttribute("objectclass");
-        ocattr.add("top");
-        ocattr.add("person");
-        attributes.put(ocattr);
-        attributes.put("cn", "Some Person4");
-        attributes.put("sn", "Person4");
-        return attributes;
-    }
+	private void verifyBoundCorrectData() {
+		DirContextAdapter result = (DirContextAdapter) tested.lookup(DN);
+		assertEquals("Some Person4", result.getStringAttribute("cn"));
+		assertEquals("Person4", result.getStringAttribute("sn"));
+	}
 
-    private void verifyBoundCorrectData() {
-        DirContextAdapter result = (DirContextAdapter) tested.lookup(DN);
-        assertEquals("Some Person4", result.getStringAttribute("cn"));
-        assertEquals("Person4", result.getStringAttribute("sn"));
-    }
-
-    private void verifyCleanup() {
-        try {
-            tested.lookup(DN);
-            fail("NameNotFoundException expected");
-        } catch (NameNotFoundException expected) {
-            assertTrue(true);
-        }
-    }
-
-    public void setTested(LdapTemplate tested) {
-        this.tested = tested;
-    }
+	private void verifyCleanup() {
+		try {
+			tested.lookup(DN);
+			fail("NameNotFoundException expected");
+		}
+		catch (NameNotFoundException expected) {
+			assertTrue(true);
+		}
+	}
 }

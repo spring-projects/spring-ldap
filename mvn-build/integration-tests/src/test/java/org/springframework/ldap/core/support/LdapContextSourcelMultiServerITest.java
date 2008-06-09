@@ -15,32 +15,31 @@
  */
 package org.springframework.ldap.core.support;
 
+import static junit.framework.Assert.assertEquals;
+
 import javax.naming.NamingException;
 
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Integration tests for ContextSourceImpl.
  * 
  * @author Mattias Arthursson
  */
-public class LdapContextSourcelMultiServerITest extends
-        AbstractDependencyInjectionSpringContextTests {
+@ContextConfiguration(locations = { "/conf/ldapContextSourceTestContext.xml" })
+public class LdapContextSourcelMultiServerITest extends AbstractLdapTemplateIntegrationTest {
 
-    private LdapContextSource tested;
+	@Autowired
+	private LdapContextSource tested;
 
-    protected String[] getConfigLocations() {
-        return new String[] { "/conf/ldapContextSourceTestContext.xml" };
-    }
+	@Test
+	public void testUrls() throws NamingException {
+		String[] urls = tested.getUrls();
+		String string = tested.assembleProviderUrlString(urls);
 
-    public void testUrls() throws NamingException {
-        String[] urls = tested.getUrls();
-        String string = tested.assembleProviderUrlString(urls);
-
-        assertEquals("ldap://127.0.0.1:389 ldap://127.0.0.2:389", string);
-    }
-
-    public void setTested(LdapContextSource tested) {
-        this.tested = tested;
-    }
+		assertEquals("ldap://127.0.0.1:389 ldap://127.0.0.2:389", string);
+	}
 }

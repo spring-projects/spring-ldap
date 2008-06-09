@@ -15,29 +15,30 @@
  */
 package org.springframework.ldap.core.simple;
 
+import static junit.framework.Assert.assertEquals;
+
 import java.util.List;
 
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+import org.springframework.test.context.ContextConfiguration;
 
-public class SimpleLdapTemplateITest extends AbstractDependencyInjectionSpringContextTests {
+@ContextConfiguration(locations = { "/conf/simpleLdapTemplateTestContext.xml" })
+public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest {
 
+	@Autowired
 	private SimpleLdapTemplate ldapTemplate;
 
-	protected String[] getConfigLocations() {
-		return new String[] { "/conf/simpleLdapTemplateTestContext.xml" };
-	}
-
-	public void setSimpleLdapTemplate(SimpleLdapTemplate ldapTemplate) {
-		this.ldapTemplate = ldapTemplate;
-	}
-
+	@Test
 	public void testLookup() {
 		String result = ldapTemplate.lookup("cn=Some Person,ou=company1,c=Sweden", new CnContextMapper());
 		assertEquals("Some Person", result);
 	}
 
+	@Test
 	public void testSearch() {
 		List<String> cns = ldapTemplate.search("", "(&(objectclass=person)(sn=Person3))", new CnContextMapper());
 
@@ -45,6 +46,7 @@ public class SimpleLdapTemplateITest extends AbstractDependencyInjectionSpringCo
 		assertEquals("Some Person3", cns.get(0));
 	}
 
+	@Test
 	public void testModifyAttributes() {
 		DirContextOperations ctx = ldapTemplate.lookupContext("cn=Some Person,ou=company1,c=Sweden");
 

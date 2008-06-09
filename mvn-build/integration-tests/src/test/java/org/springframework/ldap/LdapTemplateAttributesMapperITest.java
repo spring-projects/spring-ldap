@@ -16,6 +16,8 @@
 
 package org.springframework.ldap;
 
+import static junit.framework.Assert.assertEquals;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,61 +25,61 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Tests the attributes mapper search method.
  * 
  * @author Mattias Arthursson
  */
-public class LdapTemplateAttributesMapperITest extends
-        AbstractLdapTemplateIntegrationTest {
-    private LdapTemplate tested;
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
+public class LdapTemplateAttributesMapperITest extends AbstractLdapTemplateIntegrationTest {
+	@Autowired
+	private LdapTemplate tested;
 
-    protected String[] getConfigLocations() {
-        return new String[] { "/conf/ldapTemplateTestContext.xml" };
-    }
+	protected String[] getConfigLocations() {
+		return new String[] { "/conf/ldapTemplateTestContext.xml" };
+	}
 
-    public void testSearch_AttributeMapper() throws Exception {
-        AttributesMapper mapper = new PersonAttributesMapper();
-        List result = tested.search("ou=company1,c=Sweden",
-                "(&(objectclass=person)(sn=Person2))", mapper);
+	@Test
+	public void testSearch_AttributeMapper() throws Exception {
+		AttributesMapper mapper = new PersonAttributesMapper();
+		List result = tested.search("ou=company1,c=Sweden", "(&(objectclass=person)(sn=Person2))", mapper);
 
-        assertEquals(1, result.size());
-        Person person = (Person) result.get(0);
-        assertEquals("Some Person2", person.getFullname());
-        assertEquals("Person2", person.getLastname());
-        assertEquals("Sweden, Company1, Some Person2", person.getDescription());
-    }
+		assertEquals(1, result.size());
+		Person person = (Person) result.get(0);
+		assertEquals("Some Person2", person.getFullname());
+		assertEquals("Person2", person.getLastname());
+		assertEquals("Sweden, Company1, Some Person2", person.getDescription());
+	}
 
-    /**
-     * Demonstrates how to retrieve all values of a multi-value attribute.
-     * 
-     * @see LdapTemplateContextMapperITest#testSearch_ContextMapper_MultiValue()
-     */
-    public void testSearch_AttributesMapper_MultiValue() throws Exception {
-        AttributesMapper mapper = new AttributesMapper() {
-            public Object mapFromAttributes(Attributes attributes) throws NamingException {
-                LinkedList list = new LinkedList();
-                NamingEnumeration enumeration = attributes.get("uniqueMember").getAll();
-                while (enumeration.hasMoreElements()) {
-                    String value = (String) enumeration.nextElement();
-                    list.add(value);
-                }
-                String[] members = (String[]) list.toArray(new String[0]);
-                return members;
-            }
-        };
-        List result = tested.search("ou=groups",
-                "(objectclass=groupOfUniqueNames)", mapper);
+	/**
+	 * Demonstrates how to retrieve all values of a multi-value attribute.
+	 * 
+	 * @see LdapTemplateContextMapperITest#testSearch_ContextMapper_MultiValue()
+	 */
+	@Test
+	public void testSearch_AttributesMapper_MultiValue() throws Exception {
+		AttributesMapper mapper = new AttributesMapper() {
+			public Object mapFromAttributes(Attributes attributes) throws NamingException {
+				LinkedList list = new LinkedList();
+				NamingEnumeration enumeration = attributes.get("uniqueMember").getAll();
+				while (enumeration.hasMoreElements()) {
+					String value = (String) enumeration.nextElement();
+					list.add(value);
+				}
+				String[] members = (String[]) list.toArray(new String[0]);
+				return members;
+			}
+		};
+		List result = tested.search("ou=groups", "(objectclass=groupOfUniqueNames)", mapper);
 
-        assertEquals(2, result.size());
-        assertEquals(1, ((String[]) result.get(0)).length);
-        assertEquals(5, ((String[]) result.get(1)).length);
-    }
-
-    public void setTested(LdapTemplate tested) {
-        this.tested = tested;
-    }
+		assertEquals(2, result.size());
+		assertEquals(1, ((String[]) result.get(0)).length);
+		assertEquals(5, ((String[]) result.get(1)).length);
+	}
 }

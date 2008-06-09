@@ -15,75 +15,79 @@
  */
 package org.springframework.ldap.core.support;
 
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+
 import java.util.Hashtable;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.core.ContextSource;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Integration tests for ContextSourceImpl.
  * 
  * @author Mattias Arthursson
  */
-public class LdapContextSourcelITest extends
-        AbstractDependencyInjectionSpringContextTests {
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
+public class LdapContextSourcelITest extends AbstractLdapTemplateIntegrationTest {
 
-    private ContextSource tested;
+	@Autowired
+	private ContextSource tested;
 
-    protected String[] getConfigLocations() {
-        return new String[] { "/conf/ldapTemplateTestContext.xml" };
-    }
+	@Test
+	public void testGetReadOnlyContext() throws NamingException {
+		DirContext ctx = null;
 
-    public void testGetReadOnlyContext() throws NamingException {
-        DirContext ctx = null;
+		try {
+			ctx = tested.getReadOnlyContext();
+			assertNotNull(ctx);
+			Hashtable environment = ctx.getEnvironment();
+			assertTrue(environment.containsKey(LdapContextSource.SUN_LDAP_POOLING_FLAG));
+			assertTrue(environment.containsKey(Context.SECURITY_PRINCIPAL));
+			assertTrue(environment.containsKey(Context.SECURITY_CREDENTIALS));
+		}
+		finally {
+			// Always clean up.
+			if (ctx != null) {
+				try {
+					ctx.close();
+				}
+				catch (Exception e) {
+					// Never mind this
+				}
+			}
+		}
+	}
 
-        try {
-            ctx = tested.getReadOnlyContext();
-            assertNotNull(ctx);
-            Hashtable environment = ctx.getEnvironment();
-            assertTrue(environment
-                    .containsKey(LdapContextSource.SUN_LDAP_POOLING_FLAG));
-            assertTrue(environment.containsKey(Context.SECURITY_PRINCIPAL));
-            assertTrue(environment.containsKey(Context.SECURITY_CREDENTIALS));
-        } finally {
-            // Always clean up.
-            if (ctx != null) {
-                try {
-                    ctx.close();
-                } catch (Exception e) {
-                    // Never mind this
-                }
-            }
-        }
-    }
+	@Test
+	public void testGetReadWriteContext() throws NamingException {
+		DirContext ctx = null;
 
-    public void testGetReadWriteContext() throws NamingException {
-        DirContext ctx = null;
-
-        try {
-            ctx = tested.getReadWriteContext();
-            assertNotNull(ctx);
-            // Double check to see that we are authenticated.
-            Hashtable environment = ctx.getEnvironment();
-            assertTrue(environment.containsKey(Context.SECURITY_PRINCIPAL));
-            assertTrue(environment.containsKey(Context.SECURITY_CREDENTIALS));
-        } finally {
-            // Always clean up.
-            if (ctx != null) {
-                try {
-                    ctx.close();
-                } catch (Exception e) {
-                    // Never mind this
-                }
-            }
-        }
-    }
-
-    public void setTested(ContextSource tested) {
-        this.tested = tested;
-    }
+		try {
+			ctx = tested.getReadWriteContext();
+			assertNotNull(ctx);
+			// Double check to see that we are authenticated.
+			Hashtable environment = ctx.getEnvironment();
+			assertTrue(environment.containsKey(Context.SECURITY_PRINCIPAL));
+			assertTrue(environment.containsKey(Context.SECURITY_CREDENTIALS));
+		}
+		finally {
+			// Always clean up.
+			if (ctx != null) {
+				try {
+					ctx.close();
+				}
+				catch (Exception e) {
+					// Never mind this
+				}
+			}
+		}
+	}
 }

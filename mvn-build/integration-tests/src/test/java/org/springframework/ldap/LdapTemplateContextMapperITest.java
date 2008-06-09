@@ -16,11 +16,16 @@
 
 package org.springframework.ldap;
 
+import static junit.framework.Assert.assertEquals;
+
 import java.util.List;
 
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Tests the ContextMapper search method. In its way this method also
@@ -28,52 +33,46 @@ import org.springframework.ldap.core.LdapTemplate;
  * 
  * @author Mattias Arthursson
  */
-public class LdapTemplateContextMapperITest extends
-        AbstractLdapTemplateIntegrationTest {
-    private LdapTemplate tested;
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
+public class LdapTemplateContextMapperITest extends AbstractLdapTemplateIntegrationTest {
+	
+	@Autowired
+	private LdapTemplate tested;
 
-    protected String[] getConfigLocations() {
-        return new String[] { "/conf/ldapTemplateTestContext.xml" };
-    }
+	/**
+	 * This method depends on a DirObjectFactory ({@link org.springframework.ldap.core.support.DefaultDirObjectFactory})
+	 * being set in the ContextSource.
+	 */
+	@Test
+	public void testSearch_ContextMapper() {
+		ContextMapper mapper = new PersonContextMapper();
+		List result = tested.search("ou=company1,c=Sweden", "(&(objectclass=person)(sn=Person2))", mapper);
 
-    /**
-     * This method depends on a DirObjectFactory ({@link org.springframework.ldap.core.support.DefaultDirObjectFactory})
-     * being set in the ContextSource.
-     */
-    public void testSearch_ContextMapper() {
-        ContextMapper mapper = new PersonContextMapper();
-        List result = tested.search("ou=company1,c=Sweden",
-                "(&(objectclass=person)(sn=Person2))", mapper);
+		assertEquals(1, result.size());
+		Person person = (Person) result.get(0);
+		assertEquals("Some Person2", person.getFullname());
+		assertEquals("Person2", person.getLastname());
+		assertEquals("Sweden, Company1, Some Person2", person.getDescription());
+	}
 
-        assertEquals(1, result.size());
-        Person person = (Person) result.get(0);
-        assertEquals("Some Person2", person.getFullname());
-        assertEquals("Person2", person.getLastname());
-        assertEquals("Sweden, Company1, Some Person2", person.getDescription());
-    }
+	/**
+	 * Demonstrates how to retrieve all values of a multi-value attribute.
+	 * 
+	 * @see LdapTemplateAttributesMapperITest#testSearch_AttributesMapper_MultiValue()
+	 */
+	@Test
+	public void testSearch_ContextMapper_MultiValue() throws Exception {
+		ContextMapper mapper = new ContextMapper() {
+			public Object mapFromContext(Object ctx) {
+				DirContextAdapter adapter = (DirContextAdapter) ctx;
+				String[] members = adapter.getStringAttributes("uniqueMember");
+				return members;
+			}
+		};
+		List result = tested.search("ou=groups", "(objectclass=groupOfUniqueNames)", mapper);
 
-    /**
-     * Demonstrates how to retrieve all values of a multi-value attribute.
-     * 
-     * @see LdapTemplateAttributesMapperITest#testSearch_AttributesMapper_MultiValue()
-     */
-    public void testSearch_ContextMapper_MultiValue() throws Exception {
-        ContextMapper mapper = new ContextMapper() {
-            public Object mapFromContext(Object ctx) {
-                DirContextAdapter adapter = (DirContextAdapter) ctx;
-                String[] members = adapter.getStringAttributes("uniqueMember");
-                return members;
-            }
-        };
-        List result = tested.search("ou=groups",
-                "(objectclass=groupOfUniqueNames)", mapper);
-
-        assertEquals(2, result.size());
-        assertEquals(1, ((String[]) result.get(0)).length);
-        assertEquals(5, ((String[]) result.get(1)).length);
-    }
-
-    public void setTested(LdapTemplate tested) {
-        this.tested = tested;
-    }
+		assertEquals(2, result.size());
+		assertEquals(1, ((String[]) result.get(0)).length);
+		assertEquals(5, ((String[]) result.get(1)).length);
+	}
 }

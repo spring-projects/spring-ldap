@@ -16,11 +16,19 @@
 
 package org.springframework.ldap;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
+
 import javax.naming.Name;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Tests the rename methods of LdapTemplate.
@@ -30,71 +38,65 @@ import org.springframework.ldap.core.LdapTemplate;
  * 
  * @author Ulrik Sandberg
  */
-public class LdapTemplateRenameITest extends
-        AbstractLdapTemplateIntegrationTest {
-    private LdapTemplate tested;
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
+public class LdapTemplateRenameITest extends AbstractLdapTemplateIntegrationTest {
 
-    private static String DN = "cn=Some Person6,ou=company1,c=Sweden";
+	@Autowired
+	private LdapTemplate tested;
 
-    private static String NEWDN = "cn=Some Person6,ou=company2,c=Sweden";
+	private static String DN = "cn=Some Person6,ou=company1,c=Sweden";
 
-    protected String[] getConfigLocations() {
-        return new String[] { "/conf/ldapTemplateTestContext.xml" };
-    }
+	private static String NEWDN = "cn=Some Person6,ou=company2,c=Sweden";
 
-    protected void onSetUp() throws Exception {
-        super.onSetUp();
-        
-        DirContextAdapter adapter = new DirContextAdapter();
-        adapter.setAttributeValues("objectclass", new String[] { "top",
-                "person" });
-        adapter.setAttributeValue("cn", "Some Person6");
-        adapter.setAttributeValue("sn", "Person6");
-        adapter.setAttributeValue("description", "Some description");
+	@Before
+	public void prepareTestedInstance() throws Exception {
+		DirContextAdapter adapter = new DirContextAdapter();
+		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
+		adapter.setAttributeValue("cn", "Some Person6");
+		adapter.setAttributeValue("sn", "Person6");
+		adapter.setAttributeValue("description", "Some description");
 
-        tested.bind(DN, adapter, null);
-    }
+		tested.bind(DN, adapter, null);
+	}
 
-    protected void onTearDown() throws Exception {
-        tested.unbind(NEWDN);
-        tested.unbind(DN);
-    }
+	@After
+	public void cleanup() throws Exception {
+		tested.unbind(NEWDN);
+		tested.unbind(DN);
+	}
 
-    public void testRename() {
-        tested.rename(DN, NEWDN);
+	@Test
+	public void testRename() {
+		tested.rename(DN, NEWDN);
 
-        verifyDeleted(new DistinguishedName(DN));
-        verifyBoundCorrectData();
-    }
+		verifyDeleted(new DistinguishedName(DN));
+		verifyBoundCorrectData();
+	}
 
-    public void testRename_DistinguishedName() throws Exception {
-        Name oldDn = new DistinguishedName(DN);
-        Name newDn = new DistinguishedName(NEWDN);
-        tested.rename(oldDn, newDn);
-        
+	@Test
+	public void testRename_DistinguishedName() throws Exception {
+		Name oldDn = new DistinguishedName(DN);
+		Name newDn = new DistinguishedName(NEWDN);
+		tested.rename(oldDn, newDn);
 
-        verifyDeleted(oldDn);
-        verifyBoundCorrectData();
-    }
+		verifyDeleted(oldDn);
+		verifyBoundCorrectData();
+	}
 
-    private void verifyDeleted(Name dn) {
-        try {
-            tested.lookup(dn);
-            fail("Expected entry '" + dn + "' to be non-existent");
-        } catch (NameNotFoundException expected) {
-            // expected
-        }
-    }
+	private void verifyDeleted(Name dn) {
+		try {
+			tested.lookup(dn);
+			fail("Expected entry '" + dn + "' to be non-existent");
+		}
+		catch (NameNotFoundException expected) {
+			// expected
+		}
+	}
 
-    private void verifyBoundCorrectData() {
-        DirContextAdapter result = (DirContextAdapter) tested.lookup(NEWDN);
-        assertEquals("Some Person6", result.getStringAttribute("cn"));
-        assertEquals("Person6", result.getStringAttribute("sn"));
-        assertEquals("Some description", result
-                .getStringAttribute("description"));
-    }
-
-    public void setTested(LdapTemplate tested) {
-        this.tested = tested;
-    }
+	private void verifyBoundCorrectData() {
+		DirContextAdapter result = (DirContextAdapter) tested.lookup(NEWDN);
+		assertEquals("Some Person6", result.getStringAttribute("cn"));
+		assertEquals("Person6", result.getStringAttribute("sn"));
+		assertEquals("Some description", result.getStringAttribute("description"));
+	}
 }

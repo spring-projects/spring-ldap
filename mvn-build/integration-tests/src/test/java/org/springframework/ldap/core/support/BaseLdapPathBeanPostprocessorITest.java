@@ -15,8 +15,12 @@
  */
 package org.springframework.ldap.core.support;
 
-import junit.framework.TestCase;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 
+import org.junit.Test;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -27,12 +31,9 @@ import org.springframework.ldap.core.DistinguishedName;
  * 
  * @author Mattias Arthursson
  */
-public class BaseLdapPathBeanPostprocessorITest extends TestCase {
+public class BaseLdapPathBeanPostprocessorITest {
 
-	protected String[] getConfigLocations() {
-		return new String[] { "/conf/baseLdapPathPostProcessorTestContext.xml" };
-	}
-
+	@Test
 	public void testPostProcessBeforeInitialization() throws Exception {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
 				"/conf/baseLdapPathPostProcessorTestContext.xml");
@@ -43,6 +44,7 @@ public class BaseLdapPathBeanPostprocessorITest extends TestCase {
 		assertEquals(new DistinguishedName("dc=jayway,dc=se"), base);
 	}
 
+	@Test
 	public void testPostProcessBeforeInitializationMultipleContextSources() throws Exception {
 		try {
 			new ClassPathXmlApplicationContext("/conf/baseLdapPathPostProcessorMultiContextSourceTestContext.xml");
@@ -54,6 +56,7 @@ public class BaseLdapPathBeanPostprocessorITest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testPostProcessBeforeInitializationMultipleContextSourcesOneSpecified() throws Exception {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
 				"/conf/baseLdapPathPostProcessorMultiContextSourceOneSpecTestContext.xml");
@@ -64,6 +67,7 @@ public class BaseLdapPathBeanPostprocessorITest extends TestCase {
 		assertEquals(new DistinguishedName("cn=john doe,dc=jayway,dc=se"), base);
 	}
 
+	@Test
 	public void testPostProcessBeforeInitializationNoContextSource() throws Exception {
 		try {
 			new ClassPathXmlApplicationContext("/conf/baseLdapPathPostProcessorNoContextSourceTestContext.xml");
@@ -75,6 +79,7 @@ public class BaseLdapPathBeanPostprocessorITest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testPostProcessBeforeInitializationBaseSetInProperty() throws Exception {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
 				"/conf/baseLdapPathPostProcessorPropertyOverrideTestContext.xml");
@@ -85,6 +90,7 @@ public class BaseLdapPathBeanPostprocessorITest extends TestCase {
 		assertEquals(new DistinguishedName("cn=john doe"), base);
 	}
 
+	@Test
 	public void testPostProcessBeforeInitializationTransactionProxy() throws Exception {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
 				"/conf/baseLdapPathPostProcessorTransactionTestContext.xml");

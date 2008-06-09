@@ -16,52 +16,36 @@
 
 package org.springframework.ldap.core;
 
-import org.springframework.ldap.core.DistinguishedName;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-
-import com.clarkware.junitperf.LoadTest;
+import org.junit.Test;
+import org.springframework.util.StopWatch;
 
 /**
  * Performance test for the {@link DistinguishedName} class.
  * 
  * @author Ulrik Sandberg
  */
-public class DnParsePerformanceITest extends TestCase {
+public class DnParsePerformanceITest {
 
-    public DnParsePerformanceITest(String name) {
-        super(name);
-    }
+	/**
+	 * Tests parsing and toString.
+	 */
+	@Test
+	public void testContains() {
+		StopWatch stopWatch = new StopWatch("Dn Parse Performance");
+		stopWatch.start();
 
-    /**
-     * Tests parsing and toString.
-     */
-    public void testContains() {
+		for (int i = 0; i < 2000; i++) {
+			DistinguishedName migpath = new DistinguishedName("OU=G,OU=I,OU=M");
+			DistinguishedName path1 = new DistinguishedName("cn=john.doe, OU=Users,OU=SE,OU=G,OU=I,OU=M");
+			DistinguishedName path2 = new DistinguishedName("cn=john.doe, OU=Users,OU=SE,ou=G,OU=i,OU=M, ou=foo");
+			DistinguishedName path3 = new DistinguishedName("ou=G,OU=i,OU=M, ou=foo");
+			DistinguishedName path4 = new DistinguishedName("ou=G,OU=i,ou=m");
 
-        DistinguishedName migpath = new DistinguishedName("OU=G,OU=I,OU=M");
-        DistinguishedName path1 = new DistinguishedName(
-                "cn=john.doe, OU=Users,OU=SE,OU=G,OU=I,OU=M");
-        DistinguishedName path2 = new DistinguishedName(
-                "cn=john.doe, OU=Users,OU=SE,ou=G,OU=i,OU=M, ou=foo");
-        DistinguishedName path3 = new DistinguishedName(
-                "ou=G,OU=i,OU=M, ou=foo");
-        DistinguishedName path4 = new DistinguishedName("ou=G,OU=i,ou=m");
+			DistinguishedName pathE1 = new DistinguishedName("cn=john.doe, OU=Users,OU=SE,ou=G,OU=L,OU=M, ou=foo");
+			DistinguishedName pathE2 = new DistinguishedName("cn=john.doe, OU=Users,OU=SE");
+		}
 
-        DistinguishedName pathE1 = new DistinguishedName(
-                "cn=john.doe, OU=Users,OU=SE,ou=G,OU=L,OU=M, ou=foo");
-        DistinguishedName pathE2 = new DistinguishedName(
-                "cn=john.doe, OU=Users,OU=SE");
-    }
-
-    public static Test suite() {
-        int users = 1800;
-        Test testCase = new DnParsePerformanceITest("testContains");
-        Test loadTest = new LoadTest(testCase, users);
-        return loadTest;
-    }
-    
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
+		stopWatch.stop();
+		System.out.println(stopWatch.prettyPrint());
+	}
 }

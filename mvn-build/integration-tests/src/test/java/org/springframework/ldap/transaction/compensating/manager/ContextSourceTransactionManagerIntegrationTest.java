@@ -15,15 +15,25 @@
  */
 package org.springframework.ldap.transaction.compensating.manager;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
+
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 /**
@@ -31,47 +41,32 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  * 
  * @author Mattias Arthursson
  */
-public class ContextSourceTransactionManagerIntegrationTest extends
-		AbstractDependencyInjectionSpringContextTests {
+@ContextConfiguration(locations = { "/conf/ldapTemplateTransactionTestContext.xml" })
+public class ContextSourceTransactionManagerIntegrationTest extends AbstractLdapTemplateIntegrationTest {
 
-	private static Log log = LogFactory
-			.getLog(ContextSourceTransactionManagerIntegrationTest.class);
+	private static Log log = LogFactory.getLog(ContextSourceTransactionManagerIntegrationTest.class);
 
-	public ContextSourceTransactionManagerIntegrationTest() {
-		setAutowireMode(AbstractDependencyInjectionSpringContextTests.AUTOWIRE_BY_NAME);
-	}
-
+	@Autowired
+	@Qualifier("dummyDao")
 	private DummyDao dummyDao;
 
+	@Autowired
 	private LdapTemplate ldapTemplate;
 
-	public void setLdapTemplate(LdapTemplate ldapTemplate) {
-		this.ldapTemplate = ldapTemplate;
-	}
-
-	public void setDummyDao(DummyDao dummyDaoImpl) {
-		this.dummyDao = dummyDaoImpl;
-	}
-
-	protected String[] getConfigLocations() {
-		return new String[] { "conf/ldapTemplateTransactionTestContext.xml" };
-	}
-
-	protected void onSetUp() throws Exception {
+	@Before
+	public void prepareTestedInstance() throws Exception {
 		if (TransactionSynchronizationManager.isSynchronizationActive()) {
 			TransactionSynchronizationManager.clearSynchronization();
 		}
 	}
 
-	protected void onTearDown() throws Exception {
-	}
-
+	@Test
 	public void testCreateWithException() {
 		try {
-			dummyDao.createWithException("Sweden", "company1",
-					"some testperson", "testperson", "some description");
+			dummyDao.createWithException("Sweden", "company1", "some testperson", "testperson", "some description");
 			fail("DummyException expected");
-		} catch (DummyException expected) {
+		}
+		catch (DummyException expected) {
 			assertTrue(true);
 		}
 
@@ -81,14 +76,15 @@ public class ContextSourceTransactionManagerIntegrationTest extends
 		try {
 			ldapTemplate.lookup("cn=some testperson, ou=company1, c=Sweden");
 			fail("NameNotFoundException expected");
-		} catch (NameNotFoundException expected) {
+		}
+		catch (NameNotFoundException expected) {
 			assertTrue(true);
 		}
 	}
 
+	@Test
 	public void testCreate() {
-		dummyDao.create("Sweden", "company1", "some testperson", "testperson",
-				"some description");
+		dummyDao.create("Sweden", "company1", "some testperson", "testperson", "some description");
 
 		log.debug("Verifying result");
 		String expectedDn = "cn=some testperson, ou=company1, c=Sweden";
@@ -98,24 +94,23 @@ public class ContextSourceTransactionManagerIntegrationTest extends
 		ldapTemplate.unbind(expectedDn);
 	}
 
+	@Test
 	public void testUpdateWithException() {
 		String dn = "cn=Some Person,ou=company1,c=Sweden";
 		try {
-			dummyDao.updateWithException(dn, "Some Person", "Updated Person",
-					"Updated description");
+			dummyDao.updateWithException(dn, "Some Person", "Updated Person", "Updated description");
 			fail("DummyException expected");
-		} catch (DummyException expected) {
+		}
+		catch (DummyException expected) {
 			assertTrue(true);
 		}
 
 		log.debug("Verifying result");
 
 		Object ldapResult = ldapTemplate.lookup(dn, new AttributesMapper() {
-			public Object mapFromAttributes(Attributes attributes)
-					throws NamingException {
+			public Object mapFromAttributes(Attributes attributes) throws NamingException {
 				assertEquals("Person", attributes.get("sn").get());
-				assertEquals("Sweden, Company1, Some Person", attributes.get(
-						"description").get());
+				assertEquals("Sweden, Company1, Some Person", attributes.get("description").get());
 				return new Object();
 			}
 		});
@@ -123,37 +118,35 @@ public class ContextSourceTransactionManagerIntegrationTest extends
 		assertNotNull(ldapResult);
 	}
 
+	@Test
 	public void testUpdate() {
 		String dn = "cn=Some Person,ou=company1,c=Sweden";
-		dummyDao.update(dn, "Some Person", "Updated Person",
-				"Updated description");
+		dummyDao.update(dn, "Some Person", "Updated Person", "Updated description");
 
 		log.debug("Verifying result");
 		Object ldapResult = ldapTemplate.lookup(dn, new AttributesMapper() {
-			public Object mapFromAttributes(Attributes attributes)
-					throws NamingException {
+			public Object mapFromAttributes(Attributes attributes) throws NamingException {
 				assertEquals("Updated Person", attributes.get("sn").get());
-				assertEquals("Updated description", attributes.get(
-						"description").get());
+				assertEquals("Updated description", attributes.get("description").get());
 				return new Object();
 			}
 		});
 
 		assertNotNull(ldapResult);
 
-		dummyDao.update(dn, "Some Person", "Person",
-				"Sweden, Company1, Some Person");
+		dummyDao.update(dn, "Some Person", "Person", "Sweden, Company1, Some Person");
 	}
 
+	@Test
 	public void testUpdateAndRenameWithException() {
 		String dn = "cn=Some Person2,ou=company1,c=Sweden";
 		String newDn = "cn=Some Person2,ou=company2,c=Sweden";
 		try {
 			// Perform test
-			dummyDao.updateAndRenameWithException(dn, newDn,
-					"Updated description");
+			dummyDao.updateAndRenameWithException(dn, newDn, "Updated description");
 			fail("DummyException expected");
-		} catch (DummyException expected) {
+		}
+		catch (DummyException expected) {
 			assertTrue(true);
 		}
 
@@ -161,22 +154,22 @@ public class ContextSourceTransactionManagerIntegrationTest extends
 		try {
 			ldapTemplate.lookup(newDn);
 			fail("NameNotFoundException expected");
-		} catch (NameNotFoundException expected) {
+		}
+		catch (NameNotFoundException expected) {
 			assertTrue(true);
 		}
 
 		// Verify that original entry was not updated.
 		Object object = ldapTemplate.lookup(dn, new AttributesMapper() {
-			public Object mapFromAttributes(Attributes attributes)
-					throws NamingException {
-				assertEquals("Sweden, Company1, Some Person2", attributes.get(
-						"description").get());
+			public Object mapFromAttributes(Attributes attributes) throws NamingException {
+				assertEquals("Sweden, Company1, Some Person2", attributes.get("description").get());
 				return new Object();
 			}
 		});
 		assertNotNull(object);
 	}
 
+	@Test
 	public void testUpdateAndRename() {
 		String dn = "cn=Some Person2,ou=company1,c=Sweden";
 		String newDn = "cn=Some Person2,ou=company2,c=Sweden";
@@ -185,10 +178,8 @@ public class ContextSourceTransactionManagerIntegrationTest extends
 
 		// Verify that entry was moved and updated.
 		Object object = ldapTemplate.lookup(newDn, new AttributesMapper() {
-			public Object mapFromAttributes(Attributes attributes)
-					throws NamingException {
-				assertEquals("Updated description", attributes.get(
-						"description").get());
+			public Object mapFromAttributes(Attributes attributes) throws NamingException {
+				assertEquals("Updated description", attributes.get("description").get());
 				return new Object();
 			}
 		});
@@ -197,24 +188,23 @@ public class ContextSourceTransactionManagerIntegrationTest extends
 		dummyDao.updateAndRename(newDn, dn, "Sweden, Company1, Some Person2");
 	}
 
+	@Test
 	public void testModifyAttributesWithException() {
 		String dn = "cn=Some Person,ou=company1,c=Sweden";
 		try {
 			// Perform test
-			dummyDao.modifyAttributesWithException(dn, "Updated lastname",
-					"Updated description");
+			dummyDao.modifyAttributesWithException(dn, "Updated lastname", "Updated description");
 			fail("DummyException expected");
-		} catch (DummyException expected) {
+		}
+		catch (DummyException expected) {
 			assertTrue(true);
 		}
 
 		// Verify result - check that the operation was properly rolled back
 		Object result = ldapTemplate.lookup(dn, new AttributesMapper() {
-			public Object mapFromAttributes(Attributes attributes)
-					throws NamingException {
+			public Object mapFromAttributes(Attributes attributes) throws NamingException {
 				assertEquals("Person", attributes.get("sn").get());
-				assertEquals("Sweden, Company1, Some Person", attributes.get(
-						"description").get());
+				assertEquals("Sweden, Company1, Some Person", attributes.get("description").get());
 				return new Object();
 			}
 		});
@@ -222,19 +212,17 @@ public class ContextSourceTransactionManagerIntegrationTest extends
 		assertNotNull(result);
 	}
 
+	@Test
 	public void testModifyAttributes() {
 		String dn = "cn=Some Person,ou=company1,c=Sweden";
 		// Perform test
-		dummyDao
-				.modifyAttributes(dn, "Updated lastname", "Updated description");
+		dummyDao.modifyAttributes(dn, "Updated lastname", "Updated description");
 
 		// Verify result - check that the operation was not rolled back
 		Object result = ldapTemplate.lookup(dn, new AttributesMapper() {
-			public Object mapFromAttributes(Attributes attributes)
-					throws NamingException {
+			public Object mapFromAttributes(Attributes attributes) throws NamingException {
 				assertEquals("Updated lastname", attributes.get("sn").get());
-				assertEquals("Updated description", attributes.get(
-						"description").get());
+				assertEquals("Updated description", attributes.get("description").get());
 				return new Object();
 			}
 		});
@@ -242,20 +230,21 @@ public class ContextSourceTransactionManagerIntegrationTest extends
 		assertNotNull(result);
 	}
 
+	@Test
 	public void testUnbindWithException() {
 		String dn = "cn=Some Person,ou=company1,c=Sweden";
 		try {
 			// Perform test
 			dummyDao.unbindWithException(dn, "Some Person");
 			fail("DummyException expected");
-		} catch (DummyException expected) {
+		}
+		catch (DummyException expected) {
 			assertTrue(true);
 		}
 
 		// Verify result - check that the operation was properly rolled back
 		Object ldapResult = ldapTemplate.lookup(dn, new AttributesMapper() {
-			public Object mapFromAttributes(Attributes attributes)
-					throws NamingException {
+			public Object mapFromAttributes(Attributes attributes) throws NamingException {
 				// Just verify that the entry still exists.
 				return new Object();
 			}
@@ -264,6 +253,7 @@ public class ContextSourceTransactionManagerIntegrationTest extends
 		assertNotNull(ldapResult);
 	}
 
+	@Test
 	public void testUnbind() {
 		String dn = "cn=Some Person,ou=company1,c=Sweden";
 		// Perform test
@@ -273,7 +263,8 @@ public class ContextSourceTransactionManagerIntegrationTest extends
 			// Verify result - check that the operation was not rolled back
 			ldapTemplate.lookup(dn);
 			fail("NameNotFoundException expected");
-		} catch (NameNotFoundException expected) {
+		}
+		catch (NameNotFoundException expected) {
 			assertTrue(true);
 		}
 

@@ -16,15 +16,22 @@
 
 package org.springframework.ldap;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
+
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 
+import org.junit.Ignore;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.AbstractContextSource;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Tests the lookup methods of LdapTemplate.
@@ -32,43 +39,39 @@ import org.springframework.ldap.core.support.AbstractContextSource;
  * @author Mattias Arthursson
  * @author Ulrik Sandberg
  */
-public class LdapTemplateLookupITest extends
-		AbstractLdapTemplateIntegrationTest {
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
+public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest {
 
+	@Autowired
 	private LdapTemplate tested;
-
-	protected String[] getConfigLocations() {
-		return new String[] { "/conf/ldapTemplateTestContext.xml" };
-	}
 
 	/**
 	 * This method depends on a DirObjectFactory ({@link org.springframework.ldap.core.support.DefaultDirObjectFactory})
 	 * being set in the ContextSource.
 	 */
+	@Test
 	public void testLookup_Plain() {
-		DirContextAdapter result = (DirContextAdapter) tested
-				.lookup("cn=Some Person2, ou=company1,c=Sweden");
+		DirContextAdapter result = (DirContextAdapter) tested.lookup("cn=Some Person2, ou=company1,c=Sweden");
 
 		assertEquals("Some Person2", result.getStringAttribute("cn"));
 		assertEquals("Person2", result.getStringAttribute("sn"));
-		assertEquals("Sweden, Company1, Some Person2", result
-				.getStringAttribute("description"));
+		assertEquals("Sweden, Company1, Some Person2", result.getStringAttribute("description"));
 	}
 
+	@Test
 	public void testLookup_AttributesMapper() {
 		AttributesMapper mapper = new PersonAttributesMapper();
-		Person person = (Person) tested.lookup(
-				"cn=Some Person2, ou=company1,c=Sweden", mapper);
+		Person person = (Person) tested.lookup("cn=Some Person2, ou=company1,c=Sweden", mapper);
 
 		assertEquals("Some Person2", person.getFullname());
 		assertEquals("Person2", person.getLastname());
 		assertEquals("Sweden, Company1, Some Person2", person.getDescription());
 	}
 
+	@Test
 	public void testLookup_AttributesMapper_DistinguishedName() {
 		AttributesMapper mapper = new PersonAttributesMapper();
-		Person person = (Person) tested.lookup(new DistinguishedName(
-				"cn=Some Person2, ou=company1,c=Sweden"), mapper);
+		Person person = (Person) tested.lookup(new DistinguishedName("cn=Some Person2, ou=company1,c=Sweden"), mapper);
 
 		assertEquals("Some Person2", person.getFullname());
 		assertEquals("Person2", person.getLastname());
@@ -82,21 +85,18 @@ public class LdapTemplateLookupITest extends
 	 * 
 	 * @author Ulrik Sandberg
 	 */
-	private final class SubsetPersonAttributesMapper implements
-			AttributesMapper {
+	private final class SubsetPersonAttributesMapper implements AttributesMapper {
 		/**
 		 * Maps the <code>cn</code> attribute into a {@link Person} object.
 		 * Also verifies that the other attributes haven't been set.
 		 * 
 		 * @see org.springframework.ldap.core.AttributesMapper#mapFromAttributes(javax.naming.directory.Attributes)
 		 */
-		public Object mapFromAttributes(Attributes attributes)
-				throws NamingException {
+		public Object mapFromAttributes(Attributes attributes) throws NamingException {
 			Person person = new Person();
 			person.setFullname((String) attributes.get("cn").get());
 			assertNull("sn should be null", attributes.get("sn"));
-			assertNull("description should be null", attributes
-					.get("description"));
+			assertNull("description should be null", attributes.get("description"));
 			return person;
 		}
 	}
@@ -105,12 +105,11 @@ public class LdapTemplateLookupITest extends
 	 * Verifies that only the subset is used when specifying a subset of the
 	 * available attributes as return attributes.
 	 */
+	@Test
 	public void testLookup_ReturnAttributes_AttributesMapper() {
 		AttributesMapper mapper = new SubsetPersonAttributesMapper();
 
-		Person person = (Person) tested.lookup(
-				"cn=Some Person2, ou=company1,c=Sweden", new String[] { "cn" },
-				mapper);
+		Person person = (Person) tested.lookup("cn=Some Person2, ou=company1,c=Sweden", new String[] { "cn" }, mapper);
 
 		assertEquals("Some Person2", person.getFullname());
 		assertNull("lastName should not be set", person.getLastname());
@@ -122,10 +121,10 @@ public class LdapTemplateLookupITest extends
 	 * available attributes as return attributes. Uses DistinguishedName instead
 	 * of plain string as name.
 	 */
+	@Test
 	public void testLookup_ReturnAttributes_AttributesMapper_DistinguishedName() {
 		AttributesMapper mapper = new SubsetPersonAttributesMapper();
-		Person person = (Person) tested.lookup(new DistinguishedName(
-				"cn=Some Person2, ou=company1,c=Sweden"),
+		Person person = (Person) tested.lookup(new DistinguishedName("cn=Some Person2, ou=company1,c=Sweden"),
 				new String[] { "cn" }, mapper);
 
 		assertEquals("Some Person2", person.getFullname());
@@ -137,10 +136,10 @@ public class LdapTemplateLookupITest extends
 	 * This method depends on a DirObjectFactory ({@link org.springframework.ldap.core.support.DefaultDirObjectFactory})
 	 * being set in the ContextSource.
 	 */
+	@Test
 	public void testLookup_ContextMapper() {
 		ContextMapper mapper = new PersonContextMapper();
-		Person person = (Person) tested.lookup(
-				"cn=Some Person2, ou=company1,c=Sweden", mapper);
+		Person person = (Person) tested.lookup("cn=Some Person2, ou=company1,c=Sweden", mapper);
 
 		assertEquals("Some Person2", person.getFullname());
 		assertEquals("Person2", person.getLastname());
@@ -151,12 +150,11 @@ public class LdapTemplateLookupITest extends
 	 * Verifies that only the subset is used when specifying a subset of the
 	 * available attributes as return attributes.
 	 */
+	@Test
 	public void testLookup_ReturnAttributes_ContextMapper() {
 		ContextMapper mapper = new PersonContextMapper();
 
-		Person person = (Person) tested.lookup(
-				"cn=Some Person2, ou=company1,c=Sweden", new String[] { "cn" },
-				mapper);
+		Person person = (Person) tested.lookup("cn=Some Person2, ou=company1,c=Sweden", new String[] { "cn" }, mapper);
 
 		assertEquals("Some Person2", person.getFullname());
 		assertNull("lastName should not be set", person.getLastname());
@@ -166,13 +164,12 @@ public class LdapTemplateLookupITest extends
 	/**
 	 * Verifies that we can lookup an entry that has a multi-valued rdn, which
 	 * means more than one attribute is part of the relative DN for the entry.
-	 * 
-	 * TODO Enable test when ApacheDS supports multi-valued rdns.
 	 */
+	@Test
+	@Ignore("Enable test when ApacheDS supports multi-valued rdns")
 	public void DISABLED_testLookup_MultiValuedRdn() {
 		AttributesMapper mapper = new PersonAttributesMapper();
-		Person person = (Person) tested.lookup(
-				"cn=Some Person+sn=Person, ou=company1,c=Norway", mapper);
+		Person person = (Person) tested.lookup("cn=Some Person+sn=Person, ou=company1,c=Norway", mapper);
 
 		assertEquals("Some Person", person.getFullname());
 		assertEquals("Person", person.getLastname());
@@ -183,47 +180,40 @@ public class LdapTemplateLookupITest extends
 	 * Verifies that we can lookup an entry that has a multi-valued rdn, which
 	 * means more than one attribute is part of the relative DN for the entry.
 	 * 
-	 * TODO Enable test when ApacheDS supports multi-valued rdns.
 	 */
+	@Test
+	@Ignore("Enable test when ApacheDS supports multi-valued rdns")
 	public void DISABLED_testLookup_MultiValuedRdn_DirContextAdapter() {
-		DirContextAdapter result = (DirContextAdapter) tested
-				.lookup("cn=Some Person+sn=Person, ou=company1,c=Norway");
+		DirContextAdapter result = (DirContextAdapter) tested.lookup("cn=Some Person+sn=Person, ou=company1,c=Norway");
 
 		assertEquals("Some Person", result.getStringAttribute("cn"));
 		assertEquals("Person", result.getStringAttribute("sn"));
-		assertEquals("Norway, Company1, Some Person", result
-				.getStringAttribute("description"));
+		assertEquals("Norway, Company1, Some Person", result.getStringAttribute("description"));
 	}
 
+	@Test
 	public void testLookup_GetNameInNamespace_Plain() {
-		DirContextAdapter result = (DirContextAdapter) tested
-				.lookup("cn=Some Person2, ou=company1,c=Sweden");
+		DirContextAdapter result = (DirContextAdapter) tested.lookup("cn=Some Person2, ou=company1,c=Sweden");
 
-		assertEquals("cn=Some Person2, ou=company1, c=Sweden", result.getDn()
-				.toString());
-		assertEquals(
-				"cn=Some Person2, ou=company1, c=Sweden, dc=jayway, dc=se",
-				result.getNameInNamespace());
+		assertEquals("cn=Some Person2, ou=company1, c=Sweden", result.getDn().toString());
+		assertEquals("cn=Some Person2, ou=company1, c=Sweden, dc=jayway, dc=se", result.getNameInNamespace());
 	}
 
+	@Test
 	public void testLookup_GetNameInNamespace_MultiRdn() {
-		DirContextAdapter result = (DirContextAdapter) tested
-				.lookup("cn=Some Person+sn=Person, ou=company1,c=Norway");
+		DirContextAdapter result = (DirContextAdapter) tested.lookup("cn=Some Person+sn=Person, ou=company1,c=Norway");
 
-		assertEquals("cn=Some Person+sn=Person, ou=company1, c=Norway", result
-				.getDn().toString());
-		assertEquals(
-				"cn=Some Person+sn=Person, ou=company1, c=Norway, dc=jayway, dc=se",
-				result.getNameInNamespace());
+		assertEquals("cn=Some Person+sn=Person, ou=company1, c=Norway", result.getDn().toString());
+		assertEquals("cn=Some Person+sn=Person, ou=company1, c=Norway, dc=jayway, dc=se", result.getNameInNamespace());
 	}
 
 	/**
 	 * Tests bind and lookup with Java objects where the ContextSource already
 	 * has a DirObjectFactory configured.
 	 */
+	@Test
 	public void testBindJavaObject() throws Exception {
-		AbstractContextSource contextSource = (AbstractContextSource) tested
-				.getContextSource();
+		AbstractContextSource contextSource = (AbstractContextSource) tested.getContextSource();
 		Class originalObjectFactory = contextSource.getDirObjectFactory();
 		try {
 			contextSource.setDirObjectFactory(null);
@@ -231,15 +221,12 @@ public class LdapTemplateLookupITest extends
 			tested.bind("cn=myRandomInt", new Integer(54321), null);
 			Integer result = (Integer) tested.lookup("cn=myRandomInt");
 			assertEquals(54321, result.intValue());
-		} finally {
+		}
+		finally {
 			// reset the DirObjectFactory so as not to disturb other tests
 			tested.unbind("cn=myRandomInt");
 			contextSource.setDirObjectFactory(originalObjectFactory);
 			contextSource.afterPropertiesSet();
 		}
-	}
-
-	public void setTested(LdapTemplate tested) {
-		this.tested = tested;
 	}
 }

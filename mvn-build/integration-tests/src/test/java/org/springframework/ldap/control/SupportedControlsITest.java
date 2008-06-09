@@ -16,55 +16,50 @@
 
 package org.springframework.ldap.control;
 
+import static junit.framework.Assert.assertEquals;
+
 import java.util.Arrays;
 
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Provides tests that verify that the server supports certain controls.
  * 
  * @author Ulrik Sandberg
  */
+@ContextConfiguration(locations = { "/conf/rootContextSourceTestContext.xml" })
 public class SupportedControlsITest extends AbstractLdapTemplateIntegrationTest {
-    /** must use a context source that has no base set */
-    private LdapTemplate tested;
+	/** must use a context source that has no base set */
+	@Autowired
+	private LdapTemplate tested;
 
-    private static final String SUPPORTED_CONTROL = "supportedcontrol";
+	private static final String SUPPORTED_CONTROL = "supportedcontrol";
 
-    protected String[] getConfigLocations() {
-        return new String[] { "/conf/rootContextSourceTestContext.xml" };
-    }
+	@Test
+	public void testExpectedControlsSupported() throws Exception {
+		/**
+		 * Maps the 'supportedcontrol' attribute to a string array.
+		 */
+		ContextMapper mapper = new ContextMapper() {
 
-    public void testExpectedControlsSupported() throws Exception {
-        /**
-         * Maps the 'supportedcontrol' attribute to a string array.
-         */
-        ContextMapper mapper = new ContextMapper() {
+			public Object mapFromContext(Object ctx) {
+				DirContextAdapter adapter = (DirContextAdapter) ctx;
+				return adapter.getStringAttributes(SUPPORTED_CONTROL);
+			}
 
-            public Object mapFromContext(Object ctx) {
-                DirContextAdapter adapter = (DirContextAdapter) ctx;
-                return adapter.getStringAttributes(SUPPORTED_CONTROL);
-            }
+		};
 
-        };
-
-        String[] controls = (String[]) tested.lookup("",
-                new String[] { SUPPORTED_CONTROL }, mapper);
-        System.out.println(Arrays.toString(controls));
-        assertEquals("Persistent Search LDAPv3 control,",
-                "2.16.840.1.113730.3.4.3", controls[0]);
-        assertEquals("Entry Change Notification LDAPv3 control,",
-                "2.16.840.1.113730.3.4.7", controls[1]);
-        assertEquals("Subentries Control,", "1.3.6.1.4.1.4203.1.10.1",
-                controls[2]);
-        assertEquals("Manage DSA IT LDAPv3 control,",
-                "2.16.840.1.113730.3.4.2", controls[3]);
-    }
-
-    public void setTested(LdapTemplate tested) {
-        this.tested = tested;
-    }
+		String[] controls = (String[]) tested.lookup("", new String[] { SUPPORTED_CONTROL }, mapper);
+		System.out.println(Arrays.toString(controls));
+		assertEquals("Persistent Search LDAPv3 control,", "2.16.840.1.113730.3.4.3", controls[0]);
+		assertEquals("Entry Change Notification LDAPv3 control,", "2.16.840.1.113730.3.4.7", controls[1]);
+		assertEquals("Subentries Control,", "1.3.6.1.4.1.4203.1.10.1", controls[2]);
+		assertEquals("Manage DSA IT LDAPv3 control,", "2.16.840.1.113730.3.4.2", controls[3]);
+	}
 }

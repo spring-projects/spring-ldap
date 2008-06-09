@@ -15,29 +15,29 @@
  */
 package org.springframework.ldap.core;
 
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Integration tests for {@link DistinguishedNameEditor}.
  * 
  * @author Mattias Arthursson
  */
-public class DistinguishedNameEditorITest extends AbstractDependencyInjectionSpringContextTests {
+@ContextConfiguration(locations = { "/conf/distinguishedNameEditorTestContext.xml" })
+public class DistinguishedNameEditorITest extends AbstractLdapTemplateIntegrationTest {
 
+	@Autowired
 	private DummyDistinguishedNameConsumer distinguishedNameConsumer;
 
-	protected String[] getConfigLocations() {
-		return new String[] { "classpath:conf/distinguishedNameEditorTestContext.xml" };
-	}
-
+	@Test
 	public void testDistinguishedNameEditor() throws Exception {
 		assertNotNull(distinguishedNameConsumer);
 		DistinguishedName name = distinguishedNameConsumer.getDistinguishedName();
 		assertEquals(new DistinguishedName("dc=jayway, dc=se"), name);
 	}
-
-	public void setDistinguishedNameConsumer(DummyDistinguishedNameConsumer distinguishedNameConsumer) {
-		this.distinguishedNameConsumer = distinguishedNameConsumer;
-	}
-
 }
