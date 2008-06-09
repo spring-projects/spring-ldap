@@ -54,6 +54,10 @@ import org.springframework.ldap.core.DistinguishedName;
  */
 public class LdapTestUtils {
 
+	public static final String DEFAULT_PRINCIPAL = "uid=admin,ou=system";
+
+	public static final String DEFAULT_PASSWORD = "secret";
+
 	/**
 	 * Not to be instantiated.
 	 */
