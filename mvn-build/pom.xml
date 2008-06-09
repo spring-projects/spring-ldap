@@ -22,92 +22,92 @@
 	<properties>
 		<docbook.source>${basedir}/src/docbkx</docbook.source>
 		<docbook.target>${basedir}/target/site/guide</docbook.target>
-		<spring.version>2.0.8</spring.version>
+		<spring.version>2.5.4</spring.version>
 	</properties>
 
-	<!--
-	<profiles>
-		<profile>
-		</profile>
-	</profiles>
-	-->
+<build>
+	<plugins>
+		<plugin>
+			<artifactId>maven-eclipse-plugin</artifactId>
+			<configuration>
+				<downloadSources>true</downloadSources>
+			</configuration>
+		</plugin>
 
-	<build>
-		<plugins>
-           <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.4.2</version>
-                <configuration>
-                    <forkMode>once</forkMode>
-                </configuration>
-            </plugin>
+   <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-surefire-plugin</artifactId>
+	<version>2.4.2</version>
+	<configuration>
+	    <forkMode>once</forkMode>
+	</configuration>
+    </plugin>
 
-           <plugin>
-                <groupId>com.agilejava.docbkx</groupId>
-                <artifactId>docbkx-maven-plugin</artifactId>
-                <version>2.0.7</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate-html</goal>
-                            <goal>generate-pdf</goal>
-                        </goals>
-                        <phase>pre-site</phase>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.docbook</groupId>
-                        <artifactId>docbook-xml</artifactId>
-                        <version>4.4</version>
-                        <scope>runtime</scope>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <includes>index.xml</includes>
-                    <chunkedOutput>true</chunkedOutput>
-                    <xincludeSupported>true</xincludeSupported>
-                    <htmlStylesheet>css/html.css</htmlStylesheet>
-                    <htmlCustomization>src/docbkx/resources/xsl/html_chunk.xsl</htmlCustomization>
-                    <foCustomization>src/docbkx/resources/xsl/fopdf.xsl</foCustomization>
-                    <entities>
-                        <entity>
-                            <name>version</name>
-                            <value>${pom.version}</value>
-                        </entity>
-                    </entities>
-                    <postProcess>
-                        <copy todir="target/site/reference">
-                            <fileset dir="target/docbkx">
-                                <include name="**/*.html" />
-                                <include name="**/*.pdf" />
-                            </fileset>
-                        </copy>
-                        <copy todir="target/site/reference/html/images">
-                            <fileset dir="src/docbkx/images">
-                                <include name="**/*.css" />
-                                <include name="**/*.png" />
-                                <include name="**/*.gif" />
-                                <include name="**/*.jpg" />
-                            </fileset>
-                        </copy>
-                    </postProcess>
-                </configuration>
-            </plugin>
-	</plugins>
-	</build>
-	<reporting>
-		<plugins>
-                        <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-javadoc-plugin</artifactId>
-                                <version>2.4</version>
-                                <configuration>
-                                        <aggregate>true</aggregate>
-                                        <header>Spring LDAP Integration</header>
-                                        <link>
-                                                http://java.sun.com/j2se/1.5.0/docs/api
+   <plugin>
+	<groupId>com.agilejava.docbkx</groupId>
+	<artifactId>docbkx-maven-plugin</artifactId>
+	<version>2.0.7</version>
+	<executions>
+	    <execution>
+		<goals>
+		    <goal>generate-html</goal>
+		    <goal>generate-pdf</goal>
+		</goals>
+		<phase>pre-site</phase>
+	    </execution>
+	</executions>
+	<dependencies>
+	    <dependency>
+		<groupId>org.docbook</groupId>
+		<artifactId>docbook-xml</artifactId>
+		<version>4.4</version>
+		<scope>runtime</scope>
+	    </dependency>
+	</dependencies>
+	<configuration>
+	    <includes>index.xml</includes>
+	    <chunkedOutput>true</chunkedOutput>
+	    <xincludeSupported>true</xincludeSupported>
+	    <htmlStylesheet>css/html.css</htmlStylesheet>
+	    <htmlCustomization>src/docbkx/resources/xsl/html_chunk.xsl</htmlCustomization>
+	    <foCustomization>src/docbkx/resources/xsl/fopdf.xsl</foCustomization>
+	    <entities>
+		<entity>
+		    <name>version</name>
+		    <value>${pom.version}</value>
+		</entity>
+	    </entities>
+	    <postProcess>
+		<copy todir="target/site/reference">
+		    <fileset dir="target/docbkx">
+			<include name="**/*.html" />
+			<include name="**/*.pdf" />
+		    </fileset>
+		</copy>
+		<copy todir="target/site/reference/html/images">
+		    <fileset dir="src/docbkx/images">
+			<include name="**/*.css" />
+			<include name="**/*.png" />
+			<include name="**/*.gif" />
+			<include name="**/*.jpg" />
+		    </fileset>
+		</copy>
+	    </postProcess>
+	</configuration>
+    </plugin>
+</plugins>
+</build>
+<reporting>
+	<plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-javadoc-plugin</artifactId>
+			<version>2.4</version>
+			<configuration>
+				<aggregate>true</aggregate>
+				<header>Spring LDAP Integration</header>
+				<link>
+					http://java.sun.com/j2se/1.5.0/docs/api
                                         </link>
                                         <link>
                                                 http://static.springframework.org/spring/docs/2.5.x/api/
