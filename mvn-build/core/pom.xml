@@ -45,7 +45,6 @@
 					</descriptors>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
 

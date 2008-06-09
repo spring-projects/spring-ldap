@@ -20,11 +20,4 @@
 			<outputDirectory>src</outputDirectory>
 		</fileSet>
 	</fileSets>
-	<dependencySets>
-		<dependencySet>
-			<outputDirectory>lib</outputDirectory>
-			<unpack>false</unpack>
-			<scope>provided</scope>
-		</dependencySet>
-	</dependencySets>
 </assembly>
