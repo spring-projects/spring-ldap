@@ -15,28 +15,32 @@
  */
 package org.springframework.ldap;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.junit.AfterClass;
+import java.io.IOException;
+
+import javax.naming.NamingException;
+
+import org.junit.Before;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.test.LdapTestUtils;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 public abstract class AbstractLdapTemplateIntegrationTest extends AbstractJUnit4SpringContextTests {
-	private static final Log log = LogFactory.getLog(AbstractLdapTemplateIntegrationTest.class);
+	private static final ClassPathResource LDIF_FILE_RESOURCE = new ClassPathResource("setup_data.ldif");
 
-	@AfterClass
-	public static final void shutdownServer() {
-		try {
-			// This would be the ideal setup, to enable each test to run in
-			// isolation
-			// However, due to port timeout problems on linux it doesn't work -
-			// the port will not be released before the next test class will
-			// start.
-			// LdapTestUtils.destroyApacheDirectoryServer("uid=admin,ou=system",
-			// "credentials");
-		}
-		catch (Exception e) {
-			log.error("Failed to shut down directory server");
-		}
+	@Autowired
+	@Qualifier("contextSource")
+	private ContextSource contextSource;
+
+	@Before
+	public void cleanAndSetup() throws NamingException, IOException {
+		LdapTestUtils.cleanAndSetup(contextSource, getRoot(), LDIF_FILE_RESOURCE);
+	}
+
+	protected DistinguishedName getRoot() {
+		return DistinguishedName.EMPTY_PATH;
 	}
 }

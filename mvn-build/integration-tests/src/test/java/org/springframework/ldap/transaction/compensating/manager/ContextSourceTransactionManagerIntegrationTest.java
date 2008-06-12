@@ -29,14 +29,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.AttributesMapper;
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.test.LdapTestUtils;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -57,18 +53,11 @@ public class ContextSourceTransactionManagerIntegrationTest extends AbstractLdap
 	@Autowired
 	private LdapTemplate ldapTemplate;
 
-	@Autowired
-	@Qualifier("contextSourceTarget")
-	ContextSource contextSource;
-
 	@Before
 	public void prepareTestedInstance() throws Exception {
 		if (TransactionSynchronizationManager.isSynchronizationActive()) {
 			TransactionSynchronizationManager.clearSynchronization();
 		}
-
-		LdapTestUtils.clearSubContexts(contextSource, DistinguishedName.EMPTY_PATH);
-		LdapTestUtils.loadLdif(contextSource, new ClassPathResource("setup_data.ldif"));
 	}
 
 	@Test

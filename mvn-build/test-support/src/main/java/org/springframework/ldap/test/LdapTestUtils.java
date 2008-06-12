@@ -45,6 +45,7 @@ import org.apache.directory.server.protocol.shared.store.LdifFileLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.core.support.AbstractContextSource;
 
 /**
  * Utilities for starting, stopping and populating an in-process Apache
@@ -210,13 +211,29 @@ public class LdapTestUtils {
 		}
 	}
 
+	public static void cleanAndSetup(ContextSource contextSource, DistinguishedName rootNode, Resource ldifFile)
+			throws NamingException, IOException {
+		
+		clearSubContexts(contextSource, rootNode);
+		loadLdif(contextSource, ldifFile);
+	}
+
 	private static void loadLdif(DirContext context, Resource ldifFile) throws IOException {
 		File tempFile = File.createTempFile("spring_ldap_test", ".ldif");
-		InputStream inputStream = ldifFile.getInputStream();
-
-		IOUtils.copy(inputStream, new FileOutputStream(tempFile));
-		LdifFileLoader fileLoader = new LdifFileLoader(context, tempFile.getAbsolutePath());
-		fileLoader.execute();
+		try {
+			InputStream inputStream = ldifFile.getInputStream();
+			IOUtils.copy(inputStream, new FileOutputStream(tempFile));
+			LdifFileLoader fileLoader = new LdifFileLoader(context, tempFile.getAbsolutePath());
+			fileLoader.execute();
+		}
+		finally {
+			try {
+				tempFile.delete();
+			}
+			catch (Exception e) {
+				// Ignore this
+			}
+		}
 	}
 
 	private static Hashtable createEnv(String principal, String credentials) {

@@ -21,8 +21,8 @@ import javax.naming.NamingException;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 /**
  * Integration tests for ContextSourceImpl.
@@ -30,7 +30,7 @@ import org.springframework.test.context.ContextConfiguration;
  * @author Mattias Arthursson
  */
 @ContextConfiguration(locations = { "/conf/ldapContextSourceTestContext.xml" })
-public class LdapContextSourcelMultiServerITest extends AbstractLdapTemplateIntegrationTest {
+public class LdapContextSourcelMultiServerITest extends AbstractJUnit4SpringContextTests {
 
 	@Autowired
 	private LdapContextSource tested;

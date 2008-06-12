@@ -20,8 +20,8 @@ import static junit.framework.Assert.assertNotNull;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 /**
  * Integration tests for {@link DistinguishedNameEditor}.
@@ -29,7 +29,7 @@ import org.springframework.test.context.ContextConfiguration;
  * @author Mattias Arthursson
  */
 @ContextConfiguration(locations = { "/conf/distinguishedNameEditorTestContext.xml" })
-public class DistinguishedNameEditorITest extends AbstractLdapTemplateIntegrationTest {
+public class DistinguishedNameEditorITest extends AbstractJUnit4SpringContextTests {
 
 	@Autowired
 	private DummyDistinguishedNameConsumer distinguishedNameConsumer;
