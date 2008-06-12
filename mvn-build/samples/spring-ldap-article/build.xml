@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<project name="spring-ldap-article-sample" default="dist">
+
+	<property file="build.properties" />
+	<property file="project.properties" />
+	<property file="${common.build.dir}/build.properties" />
+	<property file="${common.build.dir}/project.properties" />
+	<property file="${user.home}/build.properties" />
+
+	<import file="${common.build.dir}/common-targets.xml" />
+
+	<!-- extend common-build with source capability -->
+	<target name="build.prepare.make.config.dirs" depends="common-targets.build.prepare.make.config.dirs">
+		<mkdir dir="${lib.dir}/source" />
+	</target>
+
+</project>

@@ -45,7 +45,6 @@ import org.apache.directory.server.protocol.shared.store.LdifFileLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.core.support.AbstractContextSource;
 
 /**
  * Utilities for starting, stopping and populating an in-process Apache
@@ -96,7 +95,7 @@ public class LdapTestUtils {
 		partitionConfiguration.setContextEntry(getRootPartitionAttributes(defaultPartitionName));
 		partitionConfiguration.setName(defaultPartitionName);
 
-		cfg.setPartitionConfigurations(Collections.singleton(partitionConfiguration));
+		cfg.setContextPartitionConfigurations(Collections.singleton(partitionConfiguration));
 		// Start the Server
 
 		Hashtable env = createEnv(principal, credentials);
@@ -213,7 +212,7 @@ public class LdapTestUtils {
 
 	public static void cleanAndSetup(ContextSource contextSource, DistinguishedName rootNode, Resource ldifFile)
 			throws NamingException, IOException {
-		
+
 		clearSubContexts(contextSource, rootNode);
 		loadLdif(contextSource, ldifFile);
 	}
