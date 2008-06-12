@@ -45,6 +45,16 @@
 
 	<inceptionYear>2006</inceptionYear>
 
+	<repositories>
+		<repository>
+			<id>maven central repo</id>
+			<url>http://repo1.maven.org/maven2/</url>
+		</repository>
+		<repository>
+			<id>java.net repo</id>
+			<url>http://download.java.net/maven/2/</url>
+		</repository>
+	</repositories>
 	<build>
 		<plugins>
 			<plugin>

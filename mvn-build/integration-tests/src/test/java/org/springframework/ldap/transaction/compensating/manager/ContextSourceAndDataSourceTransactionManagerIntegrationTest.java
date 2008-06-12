@@ -33,13 +33,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.AttributesMapper;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.test.LdapTestUtils;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -63,9 +67,9 @@ public class ContextSourceAndDataSourceTransactionManagerIntegrationTest extends
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
-	public void setDummyDao(DummyDao dummyDaoImpl) {
-		this.dummyDao = dummyDaoImpl;
-	}
+	@Autowired
+	@Qualifier("contextSourceTarget")
+	ContextSource contextSource;
 
 	@Before
 	public void prepareTestedInstance() throws Exception {
@@ -76,6 +80,9 @@ public class ContextSourceAndDataSourceTransactionManagerIntegrationTest extends
 		jdbcTemplate.execute("create table PERSON(fullname VARCHAR, lastname VARCHAR, description VARCHAR)");
 		jdbcTemplate.update("insert into PERSON values(?, ?, ?)", new Object[] { "Some Person", "Person",
 				"Sweden, Company1, Some Person" });
+
+		LdapTestUtils.clearSubContexts(contextSource, DistinguishedName.EMPTY_PATH);
+		LdapTestUtils.loadLdif(contextSource, new ClassPathResource("setup_data.ldif"));
 	}
 
 	@After
@@ -288,6 +295,7 @@ public class ContextSourceAndDataSourceTransactionManagerIntegrationTest extends
 		});
 
 		assertNotNull(result);
+		dummyDao.update(dn, "Some Person", "Person", "Sweden, Company1, Some Person");
 	}
 
 	@Test
