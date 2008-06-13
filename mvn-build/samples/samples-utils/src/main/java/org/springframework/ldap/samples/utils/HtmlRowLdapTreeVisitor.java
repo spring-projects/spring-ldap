@@ -15,9 +15,14 @@ public class HtmlRowLdapTreeVisitor implements LdapTreeVisitor {
 			sb.append("&nbsp;&nbsp;&nbsp;&nbsp;");
 		}
 
-		sb.append(node.getDn()).append("<br>\n");
+		sb.append("<a href='").append(getLinkForNode(node)).append("'>").append(node.getDn()).append("</a>")
+				.append("<br>\n");
 
 		rows.add(sb.toString());
+	}
+
+	protected String getLinkForNode(DirContextOperations node) {
+		return "#";
 	}
 
 	public List<String> getRows() {
