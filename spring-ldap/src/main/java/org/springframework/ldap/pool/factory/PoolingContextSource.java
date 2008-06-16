@@ -146,7 +146,7 @@ public class PoolingContextSource implements ContextSource, DisposableBean {
      */
     protected final Log logger = LogFactory.getLog(this.getClass());
     
-    private final GenericKeyedObjectPool keyedObjectPool;
+    protected final GenericKeyedObjectPool keyedObjectPool;
     private final DirContextPoolableObjectFactory dirContextPoolableObjectFactory;
     
     /**
