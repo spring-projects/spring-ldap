@@ -34,10 +34,35 @@ import org.springframework.ldap.core.DirContextProcessor;
  * @author Mattias Arthursson
  * @author Ulrik Sandberg
  */
-public abstract class AbstractRequestControlDirContextProcessor implements
-        DirContextProcessor {
-    protected Log log = LogFactory
-            .getLog(AbstractRequestControlDirContextProcessor.class);
+public abstract class AbstractRequestControlDirContextProcessor implements DirContextProcessor {
+    protected Log log = LogFactory.getLog(AbstractRequestControlDirContextProcessor.class);
+
+    private boolean replaceSameControlEnabled = true;
+
+    /**
+     * If there already exists a request control of the same class as the one
+     * created by {@link #createRequestControl()} in the context, the new
+     * control can either replace the existing one (default behavior) or be
+     * added.
+     * 
+     * @return true if an already existing control will be replaced
+     */
+    public boolean isReplaceSameControlEnabled() {
+        return replaceSameControlEnabled;
+    }
+
+    /**
+     * If there already exists a request control of the same class as the one
+     * created by {@link #createRequestControl()} in the context, the new
+     * control can either replace the existing one (default behavior) or be
+     * added.
+     * 
+     * @param replaceSameControlEnabled <code>true</code> if an already
+     * existing control should be replaced
+     */
+    public void setReplaceSameControlEnabled(boolean replaceSameControlEnabled) {
+        this.replaceSameControlEnabled = replaceSameControlEnabled;
+    }
 
     /**
      * Get the existing RequestControls from the LdapContext, call
@@ -50,20 +75,19 @@ public abstract class AbstractRequestControlDirContextProcessor implements
      * <code>postProcess</code> uses DirContext, since it also works for LDAP
      * v2. This is the reason that DirContext has to be cast to a LdapContext.
      * 
-     * @param ctx
-     *            an LdapContext instance.
+     * @param ctx an LdapContext instance.
      * @throws NamingException
-     * @throws IllegalArgumentException
-     *             if the supplied DirContext is not an LdapContext.
+     * @throws IllegalArgumentException if the supplied DirContext is not an
+     * LdapContext.
      */
     public void preProcess(DirContext ctx) throws NamingException {
         LdapContext ldapContext;
         if (ctx instanceof LdapContext) {
             ldapContext = (LdapContext) ctx;
-        } else {
-            throw new IllegalArgumentException(
-                    "Request Control operations require LDAPv3 - "
-                            + "Context must be of type LdapContext");
+        }
+        else {
+            throw new IllegalArgumentException("Request Control operations require LDAPv3 - "
+                    + "Context must be of type LdapContext");
         }
 
         Control[] requestControls = ldapContext.getRequestControls();
@@ -74,6 +98,12 @@ public abstract class AbstractRequestControlDirContextProcessor implements
 
         Control[] newControls = new Control[requestControls.length + 1];
         for (int i = 0; i < requestControls.length; i++) {
+            if (replaceSameControlEnabled && requestControls[i].getClass() == newControl.getClass()) {
+                log.debug("Replacing already existing control in context: " + newControl);
+                requestControls[i] = newControl;
+                ldapContext.setRequestControls(requestControls);
+                return;
+            }
             newControls[i] = requestControls[i];
         }
 
@@ -89,5 +119,4 @@ public abstract class AbstractRequestControlDirContextProcessor implements
      * @return the new instance.
      */
     public abstract Control createRequestControl();
-
 }

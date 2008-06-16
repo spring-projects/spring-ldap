@@ -23,7 +23,8 @@ import javax.naming.ldap.LdapContext;
 import junit.framework.TestCase;
 
 import org.easymock.MockControl;
-import org.springframework.ldap.control.AbstractRequestControlDirContextProcessor;
+
+import com.sun.jndi.ldap.ctl.SortControl;
 
 public class RequestControlDirContextProcessorTest extends TestCase {
 
@@ -106,12 +107,12 @@ public class RequestControlDirContextProcessorTest extends TestCase {
         dirContextControl.verify();
     }
 
-    public void testPreProcess() throws NamingException {
+    public void testPreProcessWithExistingControlOfDifferentClassShouldAdd() throws Exception {
         ldapContextControl.setDefaultMatcher(MockControl.ARRAY_MATCHER);
-        ldapContextControl.expectAndDefaultReturn(ldapContextMock
-                .getRequestControls(), new Control[] { requestControl2Mock });
-        ldapContextMock.setRequestControls(new Control[] { requestControl2Mock,
-                requestControlMock });
+        SortControl existingControl = new SortControl(new String[] { "cn" }, true);
+        ldapContextControl.expectAndDefaultReturn(ldapContextMock.getRequestControls(),
+                new Control[] { existingControl });
+        ldapContextMock.setRequestControls(new Control[] { existingControl, requestControlMock });
 
         replay();
 
@@ -120,12 +121,11 @@ public class RequestControlDirContextProcessorTest extends TestCase {
         verify();
     }
 
-    public void testPreProcess_NoExistingControls() throws NamingException {
+    public void testPreProcessWithExistingControlOfSameClassShouldReplace() throws Exception {
         ldapContextControl.setDefaultMatcher(MockControl.ARRAY_MATCHER);
-        ldapContextControl.expectAndDefaultReturn(ldapContextMock
-                .getRequestControls(), new Control[0]);
-        ldapContextMock
-                .setRequestControls(new Control[] { requestControlMock });
+        ldapContextControl.expectAndDefaultReturn(ldapContextMock.getRequestControls(),
+                new Control[] { requestControl2Mock });
+        ldapContextMock.setRequestControls(new Control[] { requestControlMock });
 
         replay();
 
@@ -134,12 +134,24 @@ public class RequestControlDirContextProcessorTest extends TestCase {
         verify();
     }
 
-    public void testPreProcess_NullControls() throws NamingException {
+    public void testPreProcessWithExistingControlOfSameClassAndPropertyFalseShouldAdd() throws Exception {
         ldapContextControl.setDefaultMatcher(MockControl.ARRAY_MATCHER);
-        ldapContextControl.expectAndDefaultReturn(ldapContextMock
-                .getRequestControls(), null);
-        ldapContextMock
-                .setRequestControls(new Control[] { requestControlMock });
+        ldapContextControl.expectAndDefaultReturn(ldapContextMock.getRequestControls(),
+                new Control[] { requestControl2Mock });
+        ldapContextMock.setRequestControls(new Control[] { requestControl2Mock, requestControlMock });
+
+        replay();
+
+        tested.setReplaceSameControlEnabled(false);
+        tested.preProcess(ldapContextMock);
+
+        verify();
+    }
+
+    public void testPreProcessWithNoExistingControlsShouldAdd() throws NamingException {
+        ldapContextControl.setDefaultMatcher(MockControl.ARRAY_MATCHER);
+        ldapContextControl.expectAndDefaultReturn(ldapContextMock.getRequestControls(), new Control[0]);
+        ldapContextMock.setRequestControls(new Control[] { requestControlMock });
 
         replay();
 
@@ -148,11 +160,24 @@ public class RequestControlDirContextProcessorTest extends TestCase {
         verify();
     }
 
-    public void testPreProcess_NotLdapContext() throws Exception {
+    public void testPreProcessWithNullControlsShouldAdd() throws NamingException {
+        ldapContextControl.setDefaultMatcher(MockControl.ARRAY_MATCHER);
+        ldapContextControl.expectAndDefaultReturn(ldapContextMock.getRequestControls(), null);
+        ldapContextMock.setRequestControls(new Control[] { requestControlMock });
+
+        replay();
+
+        tested.preProcess(ldapContextMock);
+
+        verify();
+    }
+
+    public void testPreProcessWhenNotLdapContextShouldFail() throws Exception {
         try {
             tested.preProcess(dirContextMock);
             fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
+        }
+        catch (IllegalArgumentException expected) {
             assertTrue(true);
         }
     }
