@@ -108,6 +108,13 @@
     an XA transaction. No two-phase as such commit is performed, as the LDAP server will be unable to vote on its outcome.
     Once again, however, for the majority of cases the supplied support will be sufficient.</note></para>
   </sect1>
+  <sect1 id="jdbc-transaction-integration">
+    <title>Hibernate Transaction Integration</title>
+    <para>If Hibernate is used for relational database persistence, transansaction integration can be achieved using
+    <literal>ContextSourceAndHibernateTransactionManager</literal>. The general idea is exactly the same
+    as for JDBC integration, only integratino is made against an underlying <literal>HibernateTransactionManager</literal>
+    rather than a <literal>DataSourceTransactionManager</literal>.</para>
+  </sect1>
   <sect1 id="compensating-transactions-explained">
   	<title>LDAP Compensating Transactions Explained</title>
   	<para>Spring LDAP manages compensating transactions by making record of the state in the LDAP tree
