@@ -23,6 +23,7 @@ import static junit.framework.Assert.fail;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.CountNameClassPairCallbackHandler;
 import org.springframework.test.context.ContextConfiguration;
@@ -40,6 +41,11 @@ public class LdapTemplateNoBaseSuffixITest extends AbstractLdapTemplateIntegrati
 
 	@Autowired
 	private LdapTemplate tested;
+
+	@Override
+	protected DistinguishedName getRoot() {
+		return new DistinguishedName("dc=jayway,dc=se");
+	}
 
 	/**
 	 * This method depends on a DirObjectFactory ({@link org.springframework.ldap.core.support.DefaultDirObjectFactory})

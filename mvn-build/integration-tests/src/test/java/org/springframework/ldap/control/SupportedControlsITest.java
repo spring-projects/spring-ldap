@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -41,6 +42,11 @@ public class SupportedControlsITest extends AbstractLdapTemplateIntegrationTest 
 
 	private static final String SUPPORTED_CONTROL = "supportedcontrol";
 
+	@Override
+	protected DistinguishedName getRoot() {
+		return new DistinguishedName("dc=jayway,dc=se");
+	}
+	
 	@Test
 	public void testExpectedControlsSupported() throws Exception {
 		/**
