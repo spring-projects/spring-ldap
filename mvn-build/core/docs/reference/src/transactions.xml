@@ -100,8 +100,8 @@
     access within the same transaction using the <literal>ContextSourceAndDataSourceTransactionManager</literal>.
     A <literal>DataSource</literal> and a <literal>ContextSource</literal> is supplied to the 
     <literal>ContextSourceAndDataSourceTransactionManager</literal>, which will then manage the two transactions,
-    virtually as if they were one. When performing a commit, the LDAP part of the operation will always
-    be performed first, allowing both transactions to be rolled back should the LDAP commit fail. The JDBC
+    virtually as if they were one. When performing a commit, the JDBC part of the operation will always
+    be performed first, allowing both transactions to be rolled back should the JDBC commit fail. The JDBC
     part of the transaction is managed exactly as in <literal>DataSourceTransactionManager</literal>, except that
     nested transactions is not supported.
     <note>Once again it should be noted that the provided support is all client side. The wrapped transaction is not 
