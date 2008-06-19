@@ -1,9 +1,0 @@
-dn: dc=jayway,dc=se
-objectclass: dcObject
-objectclass: organization
-o: jayway
-dc: jayway
-
-dn: cn=Manager,dc=jayway,dc=se
-objectclass:organizationalRole
-cn: Manager
