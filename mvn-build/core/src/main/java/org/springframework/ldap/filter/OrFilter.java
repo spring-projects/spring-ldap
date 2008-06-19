@@ -23,7 +23,7 @@ package org.springframework.ldap.filter;
  *        AndFilter filter = new AndFilter();
  *        filter.or(new EqualsFilter(&quot;objectclass&quot;, &quot;person&quot;);
  *        filter.or(new EqualsFilter(&quot;objectclass&quot;, &quot;organizationalUnit&quot;);
- *        System.out.println(filter.ecode());    
+ *        System.out.println(filter.encode());    
  * </pre>
  * 
  * would result in:

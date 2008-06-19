@@ -21,7 +21,7 @@ package org.springframework.ldap.filter;
  * 
  * <pre>
  * EqualsFilter filter = new EqualsFilter(&quot;cn&quot;, &quot;Some CN&quot;);
- * System.out.println(filter.ecode());
+ * System.out.println(filter.encode());
  * </pre>
  * 
  * would result in:

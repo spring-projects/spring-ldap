@@ -104,7 +104,7 @@
 					</dependency>
 				</dependencies>
 				<configuration>
-					<includes>index.xml</includes>
+					<includes>spring-ldap-reference.xml</includes>
 					<chunkedOutput>true</chunkedOutput>
 					<xincludeSupported>true</xincludeSupported>
 					<htmlStylesheet>css/html.css</htmlStylesheet>
