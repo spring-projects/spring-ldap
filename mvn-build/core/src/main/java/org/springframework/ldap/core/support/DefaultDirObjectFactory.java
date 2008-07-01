@@ -18,6 +18,7 @@ package org.springframework.ldap.core.support;
 
 import java.util.Hashtable;
 
+import javax.naming.CompositeName;
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.directory.Attributes;
@@ -58,6 +59,15 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
             } else {
                 nameInNamespace = "";
             }
+
+            if(name instanceof CompositeName){
+            	// Which it most certainly will be, and therein lies the problem.
+            	// CompositeName.toString() completely screws up the formatting in some cases,
+            	// particularly when backslashes are involved.
+            	CompositeName compositeName = (CompositeName) name;
+            	name = new DistinguishedName(compositeName.get(0));
+            }
+            
             DirContextAdapter dirContextAdapter = new DirContextAdapter(attrs,
                     name, new DistinguishedName(nameInNamespace));
             dirContextAdapter.setUpdateMode(true);
@@ -82,7 +92,7 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
             }
         }
     }
-
+    
     /*
      * (non-Javadoc)
      * 
