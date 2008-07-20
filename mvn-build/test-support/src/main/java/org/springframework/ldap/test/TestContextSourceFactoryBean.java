@@ -15,6 +15,10 @@
  */
 package org.springframework.ldap.test;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.directory.server.core.schema.bootstrap.NisSchema;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 import org.springframework.core.io.Resource;
 import org.springframework.ldap.core.AuthenticationSource;
@@ -88,8 +92,10 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean {
 	}
 
 	protected Object createInstance() throws Exception {
-		LdapTestUtils.startApacheDirectoryServer(port, defaultPartitionSuffix, defaultPartitionName, principal,
-				password);
+		Set extraSchemas = new HashSet();
+		extraSchemas.add(new NisSchema());
+
+		LdapTestUtils.startApacheDirectoryServer(port, defaultPartitionSuffix, defaultPartitionName, principal, password, extraSchemas);
 
 		LdapContextSource targetContextSource = new LdapContextSource();
 		if (baseOnTarget) {

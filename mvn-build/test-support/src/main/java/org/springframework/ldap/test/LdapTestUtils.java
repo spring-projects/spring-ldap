@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.naming.Binding;
 import javax.naming.Context;
@@ -75,12 +76,14 @@ public class LdapTestUtils {
 	 * @param principal The principal to use when starting the directory server.
 	 * @param credentials The credentials to use when starting the directory
 	 * server.
+	 * @param extraSchemas Set of extra schemas to add to the bootstrap schemas
+	 * of ApacheDS. May be <code>null</code>.
 	 * @return A DirContext to be used for working against the started directory
 	 * server.
 	 * @throws NamingException If anything goes wrong when starting the server.
 	 */
 	public static DirContext startApacheDirectoryServer(int port, String defaultPartitionSuffix,
-			String defaultPartitionName, String principal, String credentials) throws NamingException {
+			String defaultPartitionName, String principal, String credentials, Set extraSchemas) throws NamingException {
 
 		MutableServerStartupConfiguration cfg = new MutableServerStartupConfiguration();
 
@@ -89,6 +92,12 @@ public class LdapTestUtils {
 		cfg.setWorkingDirectory(new File(tempDir));
 
 		cfg.setLdapPort(port);
+		
+		if (extraSchemas != null) {
+			Set schemas = cfg.getBootstrapSchemas();
+			schemas.addAll(extraSchemas);
+			cfg.setBootstrapSchemas(schemas);
+		}
 
 		MutableBTreePartitionConfiguration partitionConfiguration = new MutableBTreePartitionConfiguration();
 		partitionConfiguration.setSuffix(defaultPartitionSuffix);
@@ -101,6 +110,12 @@ public class LdapTestUtils {
 		Hashtable env = createEnv(principal, credentials);
 		env.putAll(cfg.toJndiEnvironment());
 		return new InitialDirContext(env);
+	}
+
+	public static DirContext startApacheDirectoryServer(int port, String defaultPartitionSuffix,
+			String defaultPartitionName, String principal, String credentials) throws NamingException {
+		return LdapTestUtils.startApacheDirectoryServer(port, defaultPartitionSuffix, defaultPartitionName, principal,
+				credentials, null);
 	}
 
 	/**
@@ -259,5 +274,4 @@ public class LdapTestUtils {
 
 		return attributes;
 	}
-
 }
