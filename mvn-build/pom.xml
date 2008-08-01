@@ -37,7 +37,7 @@
 	</issueManagement>
 	<ciManagement>
 		<system>bamboo</system>
-		<url>http://build.springframework.org:8085/bamboo/</url>
+		<url>http://build.springframework.org/</url>
 	</ciManagement>
 	<inceptionYear>2006</inceptionYear>
 	<developers>
