@@ -10,7 +10,104 @@
 
 	<packaging>pom</packaging>
 	<name>Spring LDAP</name>
+	<description>
+		Spring LDAP is a Java library for simplifying LDAP operations, based on the pattern of Spring's JdbcTemplate. The framework relieves
+		the user of common chores, such as looking up and closing contexts, looping through results, encoding/decoding values and filters,
+		and more.
 
+		The LdapTemplate class encapsulates all the plumbing work involved in traditional LDAP programming, such as creating a DirContext,
+		looping through NamingEnumerations, handling exceptions and cleaning up resources. This leaves the programmer to handle the important
+		stuff - where to find data (DNs and Filters) and what do do with it (map to and from domain objects, bind, modify, unbind, etc.), in
+		the same way that JdbcTemplate relieves the programmer of all but the actual SQL and how the data maps to the domain model.
+
+		In addition to this, Spring LDAP provides transaction support, a pooling library, exception translation from NamingExceptions to a
+		mirrored unchecked Exception hierarchy, as well as several utilities for working with filters, LDAP paths and Attributes.
+	</description>
+
+	<!--
+	 url should be the generated Maven site (when that works), like:
+
+	   http://static.springframework.org/spring-ldap/site/index.html
+	-->
+	<url>http://springframework.org/ldap</url>
+
+	<issueManagement>
+		<system>JIRA</system>
+		<url>http://opensource.atlassian.com/projects/spring/browse/LDAP</url>
+	</issueManagement>
+	<ciManagement>
+		<system>bamboo</system>
+		<url>http://build.springframework.org:8085/bamboo/</url>
+	</ciManagement>
+	<inceptionYear>2006</inceptionYear>
+	<developers>
+		<developer>
+			<id>rasky</id>
+			<name>Mattias Hellborg-Arthursson</name>
+			<email>mattias.arthursson@jayway.se</email>
+			<organization>Jayway</organization>
+			<organizationUrl>http://www.jayway.se</organizationUrl>
+			<roles>
+				<role>Project Admin</role>
+				<role>Developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>ulsa</id>
+			<name>Ulrik Sandberg</name>
+			<email>ulrik.sandberg@jayway.se</email>
+			<organization>Jayway</organization>
+			<organizationUrl>http://www.jayway.se</organizationUrl>
+			<roles>
+				<role>Project Admin</role>
+				<role>Developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
+	<contributors>
+		<contributor>
+			<name>Eric Dalquist</name>
+		</contributor>
+	</contributors>
+	<organization>
+		<name>The Spring LDAP Framework</name>
+		<url>http://www.springframework.org/ldap</url>
+	</organization>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<distributionManagement>
+		<downloadUrl>http://static.springframework.org/spring-ldap/site/downloads/releases.html</downloadUrl>
+		<snapshotRepository>
+			<id>spring-s3</id>
+			<name>Spring Snapshot Repository</name>
+			<url>s3://maven.springframework.org/snapshot</url>
+		</snapshotRepository>
+		<site>
+			<id>static.springframework.org</id>
+			<url>scp://static.springframework.org/var/www/domains/springframework.org/static/htdocs/spring-ldap/sites/1.5</url>
+		</site>
+	</distributionManagement>
+	<scm>
+		<connection>
+			scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ldap/trunk
+		</connection>
+		<developerConnection>
+			scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ldap/trunk
+		</developerConnection>
+		<url>http://fisheye3.cenqua.com/browse/springframework/spring-ldap/trunk</url>
+	</scm>
+	<properties>
+		<docbook.source>${basedir}/src/docbkx</docbook.source>
+		<docbook.target>${basedir}/target/site/guide</docbook.target>
+		<spring.version>2.5.4</spring.version>
+	</properties>
 	<modules>
 		<module>core</module>
 		<module>tiger</module>
@@ -18,33 +115,6 @@
 		<module>test-support</module>
 		<module>integration-tests</module>
 	</modules>
-
-	<properties>
-		<docbook.source>${basedir}/src/docbkx</docbook.source>
-		<docbook.target>${basedir}/target/site/guide</docbook.target>
-		<spring.version>2.5.4</spring.version>
-	</properties>
-	<issueManagement>
-		<system>JIRA</system>
-		<url>
-			http://opensource.atlassian.com/projects/spring/browse/LDAP
-		</url>
-	</issueManagement>
-
-	<scm>
-		<connection>
-			scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-projects/trunk/spring-ldap
-		</connection>
-		<developerConnection>
-			scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-projects/trunk/spring-ldap
-		</developerConnection>
-		<url>
-			http://springframework.svn.sourceforge.net/viewcvs.cgi/springframework/spring-projects/trunk/spring-ldap
-		</url>
-	</scm>
-
-	<inceptionYear>2006</inceptionYear>
-
 	<repositories>
 		<repository>
 			<id>maven central repo</id>
