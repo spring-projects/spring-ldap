@@ -124,6 +124,10 @@
 			<id>java.net repo</id>
 			<url>http://download.java.net/maven/2/</url>
 		</repository>
+		<repository>
+			<id>spring external</id>
+			<url>http://maven.springframework.org/external/</url>
+		</repository>
 	</repositories>
 	<build>
 		<extensions>
