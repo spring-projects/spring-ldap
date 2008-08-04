@@ -126,6 +126,13 @@
 		</repository>
 	</repositories>
 	<build>
+		<extensions>
+			<extension>
+				<groupId>org.springframework.aws</groupId>
+				<artifactId>spring-aws-maven</artifactId>
+				<version>1.2.2</version>
+			</extension>
+		</extensions>
 		<plugins>
 			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
