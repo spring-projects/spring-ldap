@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly>
+    <id>all</id>
+    <formats>
+        <format>jar</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <moduleSets>
+        <moduleSet>
+            <includes>
+                <include>org.springframework.ldap:spring-ldap-core</include>
+                <include>org.springframework.ldap:spring-ldap-core-tiger</include>
+                <include>org.springframework.ldap:spring-ldap-acegi-support</include>
+            </includes>
+            <binaries>
+                <outputDirectory/>
+                <includeDependencies>false</includeDependencies>
+                <unpack>true</unpack>
+                <unpackOptions>
+                    <excludes>
+                        <exclude>**/spring.handlers</exclude>
+                        <exclude>**/spring.schemas</exclude>
+                    </excludes>
+                </unpackOptions>
+            </binaries>
+        </moduleSet>
+    </moduleSets>
+    <fileSets>
+        <fileSet>
+            <directory>src/main/resources/META-INF</directory>
+            <outputDirectory>META-INF</outputDirectory>
+        </fileSet>
+    </fileSets>
+</assembly>

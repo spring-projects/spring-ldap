@@ -5,8 +5,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.springframework.ldap</groupId>
-	<artifactId>master</artifactId>
-	<version>1.2.2-SNAPSHOT</version>
+	<artifactId>spring-ldap</artifactId>
+	<version>1.3-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 	<name>Spring LDAP</name>
@@ -109,12 +109,128 @@
 		<spring.version>2.5.4</spring.version>
 	</properties>
 	<modules>
+		<module>parent</module>
 		<module>core</module>
-		<module>tiger</module>
+		<module>core-tiger</module>
 		<module>acegi-support</module>
 		<module>test-support</module>
 		<module>integration-tests</module>
 	</modules>
+    <profiles>
+        <profile>
+            <id>samples</id>
+            <modules>
+                <module>samples</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-dependencies</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <!--Spring-->
+                                        <artifactItem>
+                                            <groupId>org.springframework</groupId>
+                                            <artifactId>spring-core</artifactId>
+                                            <version>${spring.version}</version>
+                                            <outputDirectory>${project.build.directory}/dependency/spring/</outputDirectory>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.springframework</groupId>
+                                            <artifactId>spring-beans</artifactId>
+                                            <version>${spring.version}</version>
+                                            <outputDirectory>${project.build.directory}/dependency/spring/</outputDirectory>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.springframework</groupId>
+                                            <artifactId>spring-context</artifactId>
+                                            <version>${spring.version}</version>
+                                            <outputDirectory>${project.build.directory}/dependency/spring/</outputDirectory>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.springframework</groupId>
+                                            <artifactId>spring-jdbc</artifactId>
+                                            <version>${spring.version}</version>
+                                            <outputDirectory>${project.build.directory}/dependency/spring/</outputDirectory>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.springframework</groupId>
+                                            <artifactId>spring-tx</artifactId>
+                                            <version>${spring.version}</version>
+                                            <outputDirectory>${project.build.directory}/dependency/spring/</outputDirectory>
+                                        </artifactItem>
+                                        <!--Java EE-->
+                                        <artifactItem>
+                                            <groupId>com.sun</groupId>
+                                            <artifactId>ldapbp</artifactId>
+                                            <version>1.0</version>
+                                            <outputDirectory>${project.build.directory}/dependency/sun/</outputDirectory>
+                                        </artifactItem>
+                                        <!-- Commons dependendencies -->
+                                        <artifactItem>
+                                            <groupId>commons-lang</groupId>
+                                            <artifactId>commons-lang</artifactId>
+                                            <version>2.3</version>
+                                            <outputDirectory>${project.build.directory}/dependency/jakarta-commons/</outputDirectory>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>commons-pool</groupId>
+                                            <artifactId>commons-pool</artifactId>
+                                            <version>1.3</version>
+                                            <outputDirectory>${project.build.directory}/dependency/jakarta-commons/</outputDirectory>
+                                        </artifactItem>
+                                        <!-- Logging dependencies -->
+                                        <artifactItem>
+                                            <groupId>commons-logging</groupId>
+                                            <artifactId>commons-logging</artifactId>
+                                            <version>1.0.4</version>
+                                            <outputDirectory>${project.build.directory}/dependency/jakarta-commons/</outputDirectory>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>log4j</groupId>
+                                            <artifactId>log4j</artifactId>
+                                            <version>1.2.9</version>
+                                            <outputDirectory>${project.build.directory}/dependency/log4j/</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <version>2.2-beta-2</version>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <id>with-dependencies</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <configuration>
+                                    <descriptors>
+                                        <descriptor>src/assembly/with-dependencies.xml</descriptor>
+                                    </descriptors>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 	<repositories>
 		<repository>
 			<id>maven central repo</id>
@@ -138,29 +254,79 @@
 			</extension>
 		</extensions>
 		<plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2-beta-2</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>all-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <archive>
+                                <manifest>
+                                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                </manifest>
+                                <manifestEntries>
+                                    <Spring-LDAP-Version>${pom.version}</Spring-LDAP-Version>
+                                </manifestEntries>
+                            </archive>
+                            <descriptors>
+                                <descriptor>src/assembly/all.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>sources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                </manifest>
+                                <manifestEntries>
+                                    <Spring-LDAP-Version>${pom.version}</Spring-LDAP-Version>
+                                </manifestEntries>
+                            </archive>
+                            <descriptors>
+                                <descriptor>src/assembly/sources.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>minimal-zip</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <descriptor>src/assembly/minimal.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<configuration>
 					<downloadSources>true</downloadSources>
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.4.2</version>
 				<configuration>
 					<forkMode>once</forkMode>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptors>
-						<descriptor>
-							src/assemble/bin-with-dependencies.xml
-						</descriptor>
-					</descriptors>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -224,18 +390,34 @@
 	</build>
 	<reporting>
 		<plugins>
+            <plugin>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <configuration>
+                    <aggregate>true</aggregate>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <configuration>
+                    <aggregate>true</aggregate>
+                </configuration>
+            </plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.4</version>
 				<configuration>
 					<aggregate>true</aggregate>
+					<breakiterator>true</breakiterator>
 					<header>Spring LDAP Integration</header>
-					<link>http://java.sun.com/j2se/1.5.0/docs/api</link>
-					<link>
-						http://static.springframework.org/spring/docs/2.5.x/api/
-					</link>
-					<link>http://commons.apache.org/pool/apidocs/</link>
+					<quiet>true</quiet>
+					<stylesheetfile>${basedir}/src/main/javadoc/javadoc.css</stylesheetfile>
+					<overview>${basedir}/src/main/javadoc/overview.html</overview>
+					<javadocDirectory>${basedir}/src/main/javadoc</javadocDirectory>
+					<excludePackageNames>org.springframework.ldap.samples</excludePackageNames>
+					<links>
+						<link>http://java.sun.com/j2se/1.5.0/docs/api</link>
+						<link>http://static.springframework.org/spring/docs/2.5.x/api/</link>
+						<link>http://commons.apache.org/pool/apidocs/</link>
+					</links>
 				</configuration>
 				<reportSets>
 					<reportSet>
@@ -245,6 +427,9 @@
 					</reportSet>
 				</reportSets>
 			</plugin>
+            <plugin>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+            </plugin>
 		</plugins>
 	</reporting>
 </project>

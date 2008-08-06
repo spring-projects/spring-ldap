@@ -6,7 +6,7 @@
   <sect1 id="simple-ldap-template">
     <title>SimpleLdapTemplate</title>
 
-    <para>As of version 1.2 Spring LDAP includes the spring-ldap-tiger.jar distributable, which adds
+    <para>As of version 1.3 Spring LDAP includes the spring-ldap-core-tiger.jar distributable, which adds
     a thin layer of Java 5 functionality on top of Spring LDAP.</para>
     
     <para>The <literal>SimpleLdapTemplate</literal> class adds search and lookup methods that take a 
