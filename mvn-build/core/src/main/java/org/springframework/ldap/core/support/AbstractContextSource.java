@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2007 the original author or authors.
+ * Copyright 2005-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,6 +97,8 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	private static final String JDK_142 = "1.4.2";
 
+	private DirContextAuthenticationStrategy authenticationStrategy = new SimpleDirContextAuthenticationStrategy();
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -122,15 +124,22 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/**
 	 * Default implementation of setting the environment up to be authenticated.
-	 * Override in subclass if necessary.
+	 * This method should typically NOT be overridden; any customization to the
+	 * authentication mechanism should be managed by setting a different
+	 * {@link DirContextAuthenticationStrategy} on this instance.
 	 * 
 	 * @param env the environment to modify.
+	 * @see DirContextAuthenticationStrategy
+	 * @see #setAuthenticationStrategy(DirContextAuthenticationStrategy)
 	 */
 	protected void setupAuthenticatedEnvironment(Hashtable env) {
-		String principal = authenticationSource.getPrincipal();
-		env.put(Context.SECURITY_PRINCIPAL, principal);
-		log.debug("Principal: '" + principal + "'");
-		env.put(Context.SECURITY_CREDENTIALS, authenticationSource.getCredentials());
+		try {
+			authenticationStrategy.setupEnvironment(env, authenticationSource.getPrincipal(), authenticationSource
+					.getCredentials());
+		}
+		catch (NamingException e) {
+			throw LdapUtils.convertLdapException(e);
+		}
 	}
 
 	/**
@@ -211,9 +220,9 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	/**
 	 * Create a DirContext using the supplied environment.
 	 * 
-	 * @param environment the Ldap environment to use when creating the
+	 * @param environment the LDAP environment to use when creating the
 	 * <code>DirContext</code>.
-	 * @return a new DirContext implpementation initialized with the supplied
+	 * @return a new DirContext implementation initialized with the supplied
 	 * environment.
 	 */
 	protected DirContext createContext(Hashtable environment) {
@@ -221,6 +230,9 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 		try {
 			ctx = getDirContextInstance(environment);
+
+			authenticationStrategy.processContextAfterCreation(ctx, authenticationSource.getPrincipal(),
+					authenticationSource.getCredentials());
 
 			if (log.isInfoEnabled()) {
 				Hashtable ctxEnv = ctx.getEnvironment();
@@ -355,17 +367,6 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 */
 	public void setUserDn(String userDn) {
 		this.userDn = userDn;
-	}
-
-	/**
-	 * Set the user distinguished name (principal) to use for getting
-	 * authenticated contexts.
-	 * 
-	 * @param userName the user distinguished name.
-	 * @deprecated Use {@link #setUserDn(String)} instead.
-	 */
-	public void setUserName(String userName) {
-		setUserDn(userName);
 	}
 
 	/**
@@ -506,6 +507,19 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 */
 	public boolean isAnonymousReadOnly() {
 		return anonymousReadOnly;
+	}
+
+	/**
+	 * Set the {@link DirContextAuthenticationStrategy} to use for preparing the
+	 * environment and processing the created <code>DirContext</code>
+	 * instances.
+	 * 
+	 * @param authenticationStrategy the
+	 * {@link DirContextAuthenticationStrategy} to use; default is
+	 * {@link SimpleDirContextAuthenticationStrategy}.
+	 */
+	public void setAuthenticationStrategy(DirContextAuthenticationStrategy authenticationStrategy) {
+		this.authenticationStrategy = authenticationStrategy;
 	}
 
 	/**
