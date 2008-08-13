@@ -49,8 +49,8 @@ public class SimpleDirContextAuthenticationStrategy implements DirContextAuthent
 	 * @see org.springframework.ldap.core.support.DirContextAuthenticationStrategy#processContextAfterCreation(javax.naming.directory.DirContext,
 	 * java.lang.String, java.lang.String)
 	 */
-	public void processContextAfterCreation(DirContext ctx, String userDn, String password) {
-		// Nothing to do here
+	public DirContext processContextAfterCreation(DirContext ctx, String userDn, String password) {
+		return ctx;
 	}
 
 }

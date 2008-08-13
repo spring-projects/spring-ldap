@@ -62,7 +62,11 @@ public interface DirContextAuthenticationStrategy {
 	/**
 	 * This method is responsible for post-processing the
 	 * <code>DirContext</code> instance after it has been created. It will be
-	 * called immediately after the instance has been created.
+	 * called immediately after the instance has been created. Some
+	 * authentication mechanisms, e.g. TLS, require particular stuff to happen
+	 * before the actual target Context is closed. This method provides the
+	 * possibility to replace or wrap the actual DirContext with a proxy so that
+	 * any calls on it may be intercepted.
 	 * 
 	 * @param ctx the freshly created <code>DirContext</code> instance. The
 	 * actual implementation class (e.g. <code>InitialLdapContext</code>)
@@ -71,10 +75,12 @@ public interface DirContextAuthenticationStrategy {
 	 * {@link AuthenticationSource} of the {@link ContextSource}.
 	 * @param password the password to authenticate with, as received from the
 	 * {@link AuthenticationSource} of the {@link ContextSource}.
+	 * @return the DirContext, possibly modified, replaced or wrapped.
 	 * @throws NamingException if anything goes wrong. This will cause the
 	 * <code>DirContext</code> creation to be aborted and the exception to be
 	 * translated and rethrown.
 	 */
-	public void processContextAfterCreation(DirContext ctx, String userDn, String password) throws NamingException;
+	public DirContext processContextAfterCreation(DirContext ctx, String userDn, String password)
+			throws NamingException;
 
 }
