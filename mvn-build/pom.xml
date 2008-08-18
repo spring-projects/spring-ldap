@@ -114,7 +114,7 @@
 		<module>core-tiger</module>
 		<module>acegi-support</module>
 		<module>test-support</module>
-		<module>integration-tests</module>
+		<module>test</module>
 	</modules>
     <profiles>
         <profile>
