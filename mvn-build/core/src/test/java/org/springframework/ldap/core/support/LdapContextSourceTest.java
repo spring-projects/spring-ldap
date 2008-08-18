@@ -23,7 +23,6 @@ import javax.naming.Context;
 
 import junit.framework.TestCase;
 
-import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.DistinguishedName;
 
 /**
@@ -200,7 +199,7 @@ public class LdapContextSourceTest extends TestCase {
 		tested.setPassword("secret");
 		tested.afterPropertiesSet();
 
-		Hashtable env = tested.getAuthenticatedEnv();
+		Hashtable env = tested.getAuthenticatedEnv("cn=Some User", "secret");
 		assertEquals("ldap://ldap.example.com:389/dc=example,dc=se", env.get(Context.PROVIDER_URL));
 		assertEquals("true", env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
 		assertEquals("cn=Some User", env.get(Context.SECURITY_PRINCIPAL));
@@ -208,41 +207,6 @@ public class LdapContextSourceTest extends TestCase {
 
 		// check that base was added to environment
 		assertEquals(new DistinguishedName("dc=example,dc=se"), env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
-	}
-
-	public void testGetAuthenticatedEnv_DummyAuthenticationProvider() throws Exception {
-		tested.setBase("dc=example,dc=se");
-		tested.setUrl("ldap://ldap.example.com:389");
-		tested.setPooled(true);
-		DummyAuthenticationProvider authenticationProvider = new DummyAuthenticationProvider();
-		tested.setAuthenticationSource(authenticationProvider);
-		authenticationProvider.setPrincipal("cn=Some User");
-		authenticationProvider.setCredentials("secret");
-		tested.afterPropertiesSet();
-
-		Hashtable env = tested.getAuthenticatedEnv();
-		assertEquals("ldap://ldap.example.com:389/dc=example,dc=se", env.get(Context.PROVIDER_URL));
-		assertEquals("true", env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
-		assertEquals("cn=Some User", env.get(Context.SECURITY_PRINCIPAL));
-		assertEquals("secret", env.get(Context.SECURITY_CREDENTIALS));
-	}
-
-	public void testGetAuthenticatedEnv_DummyAuthenticationProvider_Changed() throws Exception {
-		tested.setBase("dc=example,dc=se");
-		tested.setUrl("ldap://ldap.example.com:389");
-		tested.setPooled(true);
-		DummyAuthenticationProvider authenticationProvider = new DummyAuthenticationProvider();
-		tested.setAuthenticationSource(authenticationProvider);
-		authenticationProvider.setPrincipal("cn=Some User");
-		authenticationProvider.setCredentials("secret");
-		tested.afterPropertiesSet();
-
-		authenticationProvider.setPrincipal("cn=Some Other User");
-		authenticationProvider.setCredentials("other secret");
-
-		Hashtable env = tested.getAuthenticatedEnv();
-		assertEquals("cn=Some Other User", env.get(Context.SECURITY_PRINCIPAL));
-		assertEquals("other secret", env.get(Context.SECURITY_CREDENTIALS));
 	}
 
 	public void testGetAnonymousEnvWhenCacheIsOff() throws Exception {
@@ -262,27 +226,5 @@ public class LdapContextSourceTest extends TestCase {
 		tested.setUrl("ldap://ldap2.example.com:389");
 		env = tested.getAnonymousEnv();
 		assertEquals("ldap://ldap2.example.com:389/dc=example,dc=se", env.get(Context.PROVIDER_URL));
-	}
-
-	private class DummyAuthenticationProvider implements AuthenticationSource {
-		private String principal;
-
-		private String credentials;
-
-		public void setCredentials(String credentials) {
-			this.credentials = credentials;
-		}
-
-		public void setPrincipal(String principal) {
-			this.principal = principal;
-		}
-
-		public String getPrincipal() {
-			return principal;
-		}
-
-		public String getCredentials() {
-			return credentials;
-		}
 	}
 }

@@ -98,4 +98,8 @@ public class TransactionAwareContextSourceProxy implements ContextSource {
         }
         return getTransactionAwareDirContextProxy(ctx, target);
     }
+
+	public DirContext getContext(String principal, String credentials) throws NamingException {
+		throw new UnsupportedOperationException("Not supported on a transacted ContextSource");
+	}
 }

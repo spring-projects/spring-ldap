@@ -38,15 +38,16 @@ import org.springframework.ldap.support.LdapUtils;
  * returns an authenticated
  * <code>DirContext<code> implementation for both read-only and
  * read-write operations. To have an anonymous environment created for read-only
- * operations, set the <code>anonymousReadOnly</code> property to <code>true</code>.
+ * operations, set the <code>anonymousReadOnly</code> property to
+ * <code>true</code>.
  * <p>
  * Implementing classes need to implement
- * {@link #getDirContextInstance(Hashtable)} to create a <code>DirContext</code> instance of
- * the desired type.
+ * {@link #getDirContextInstance(Hashtable)} to create a <code>DirContext</code>
+ * instance of the desired type.
  * <p>
- * If an {@link AuthenticationSource} is set, this will be used for getting user principal
- * and password for each new connection, otherwise a default one will be created
- * using the specified <code>userDn<code> and <code>password</code>.
+ * If an {@link AuthenticationSource} is set, this will be used for getting user
+ * principal and password for each new connection, otherwise a default one will
+ * be created using the specified <code>userDn<code> and <code>password</code>.
  * <p>
  * <b>Note:</b> When using implementations of this class outside of a Spring
  * Context it is necessary to call {@link #afterPropertiesSet()} when all
@@ -99,6 +100,19 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	private DirContextAuthenticationStrategy authenticationStrategy = new SimpleDirContextAuthenticationStrategy();
 
+	public DirContext getContext(String principal, String credentials) {
+		DirContext ctx = createContext(getAuthenticatedEnv(principal, credentials));
+
+		try {
+			authenticationStrategy.processContextAfterCreation(ctx, principal, credentials);
+			return ctx;
+		}
+		catch (NamingException e) {
+			closeContext(ctx);
+			throw LdapUtils.convertLdapException(e);
+		}
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -106,7 +120,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 */
 	public DirContext getReadOnlyContext() {
 		if (!anonymousReadOnly) {
-			return createContext(getAuthenticatedEnv());
+			return getContext(authenticationSource.getPrincipal(), authenticationSource.getCredentials());
 		}
 		else {
 			return createContext(getAnonymousEnv());
@@ -119,7 +133,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @see org.springframework.ldap.core.ContextSource#getReadWriteContext()
 	 */
 	public DirContext getReadWriteContext() {
-		return createContext(getAuthenticatedEnv());
+		return getContext(authenticationSource.getPrincipal(), authenticationSource.getCredentials());
 	}
 
 	/**
@@ -129,13 +143,14 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * {@link DirContextAuthenticationStrategy} on this instance.
 	 * 
 	 * @param env the environment to modify.
+	 * @param principal the principal to authenticate with.
+	 * @param credentials the credentials to authenticate with.
 	 * @see DirContextAuthenticationStrategy
 	 * @see #setAuthenticationStrategy(DirContextAuthenticationStrategy)
 	 */
-	protected void setupAuthenticatedEnvironment(Hashtable env) {
+	protected void setupAuthenticatedEnvironment(Hashtable env, String principal, String credentials) {
 		try {
-			authenticationStrategy.setupEnvironment(env, authenticationSource.getPrincipal(), authenticationSource
-					.getCredentials());
+			authenticationStrategy.setupEnvironment(env, principal, credentials);
 		}
 		catch (NamingException e) {
 			throw LdapUtils.convertLdapException(e);
@@ -203,7 +218,10 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.ldap.core.support.BaseLdapPathSource#getBaseLdapPath()
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.support.BaseLdapPathSource#getBaseLdapPath
+	 * ()
 	 */
 	public DistinguishedName getBaseLdapPath() {
 		return getBase().immutableDistinguishedName();
@@ -211,7 +229,9 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.ldap.core.support.BaseLdapPathSource#getBaseLdapPathAsString()
+	 * 
+	 * @seeorg.springframework.ldap.core.support.BaseLdapPathSource#
+	 * getBaseLdapPathAsString()
 	 */
 	public String getBaseLdapPathAsString() {
 		return getBaseLdapPath().toString();
@@ -230,9 +250,6 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 		try {
 			ctx = getDirContextInstance(environment);
-
-			authenticationStrategy.processContextAfterCreation(ctx, authenticationSource.getPrincipal(),
-					authenticationSource.getCredentials());
 
 			if (log.isInfoEnabled()) {
 				Hashtable ctxEnv = ctx.getEnvironment();
@@ -283,8 +300,8 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	/**
 	 * Get the DirObjectFactory to use.
 	 * 
-	 * @return the DirObjectFactory to be used. <code>null</code> means that
-	 * no DirObjectFactory will be used.
+	 * @return the DirObjectFactory to be used. <code>null</code> means that no
+	 * DirObjectFactory will be used.
 	 */
 	public Class getDirObjectFactory() {
 		return dirObjectFactory;
@@ -445,10 +462,10 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 		}
 	}
 
-	protected Hashtable getAuthenticatedEnv() {
+	protected Hashtable getAuthenticatedEnv(String principal, String credentials) {
 		// The authenticated environment should always be rebuilt.
 		Hashtable env = new Hashtable(getAnonymousEnv());
-		setupAuthenticatedEnvironment(env);
+		setupAuthenticatedEnvironment(env, principal, credentials);
 		return env;
 	}
 
@@ -502,8 +519,8 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * Get whether an anonymous environment should be used for read-only
 	 * operations.
 	 * 
-	 * @return <code>true</code> if an anonymous environment should be used
-	 * for read-only operations, <code>false</code> otherwise.
+	 * @return <code>true</code> if an anonymous environment should be used for
+	 * read-only operations, <code>false</code> otherwise.
 	 */
 	public boolean isAnonymousReadOnly() {
 		return anonymousReadOnly;
@@ -511,8 +528,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/**
 	 * Set the {@link DirContextAuthenticationStrategy} to use for preparing the
-	 * environment and processing the created <code>DirContext</code>
-	 * instances.
+	 * environment and processing the created <code>DirContext</code> instances.
 	 * 
 	 * @param authenticationStrategy the
 	 * {@link DirContextAuthenticationStrategy} to use; default is

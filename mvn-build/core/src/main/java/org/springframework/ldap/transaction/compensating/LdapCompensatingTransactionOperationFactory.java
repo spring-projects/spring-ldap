@@ -40,155 +40,144 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
  * @author Mattias Arthursson
  * @since 1.2
  */
-public class LdapCompensatingTransactionOperationFactory implements
-        CompensatingTransactionOperationFactory {
-    private static Log log = LogFactory
-            .getLog(LdapCompensatingTransactionOperationFactory.class);
+public class LdapCompensatingTransactionOperationFactory implements CompensatingTransactionOperationFactory {
+	private static Log log = LogFactory.getLog(LdapCompensatingTransactionOperationFactory.class);
 
-    private TempEntryRenamingStrategy renamingStrategy;
+	private TempEntryRenamingStrategy renamingStrategy;
 
-    /**
-     * Constructor.
-     * 
-     * @param renamingStrategy
-     *            the {@link TempEntryRenamingStrategy} to supply to relevant
-     *            operations.
-     */
-    public LdapCompensatingTransactionOperationFactory(
-            TempEntryRenamingStrategy renamingStrategy) {
-        this.renamingStrategy = renamingStrategy;
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param renamingStrategy the {@link TempEntryRenamingStrategy} to supply
+	 * to relevant operations.
+	 */
+	public LdapCompensatingTransactionOperationFactory(TempEntryRenamingStrategy renamingStrategy) {
+		this.renamingStrategy = renamingStrategy;
+	}
 
-    /*
-     * @see org.springframework.transaction.compensating.CompensatingTransactionOperationFactory#createRecordingOperation(java.lang.Object,
-     *      java.lang.String)
-     */
-    public CompensatingTransactionOperationRecorder createRecordingOperation(
-            Object resource, String operation) {
-        if (StringUtils
-                .equals(operation, LdapTransactionUtils.BIND_METHOD_NAME)) {
-            log.debug("Bind operation recorded");
-            return new BindOperationRecorder(
-                    createLdapOperationsInstance((DirContext) resource));
-        } else if (StringUtils.equals(operation,
-                LdapTransactionUtils.REBIND_METHOD_NAME)) {
-            log.debug("Rebind operation recorded");
-            return new RebindOperationRecorder(
-                    createLdapOperationsInstance((DirContext) resource),
-                    renamingStrategy);
-        } else if (StringUtils.equals(operation,
-                LdapTransactionUtils.RENAME_METHOD_NAME)) {
-            log.debug("Rename operation recorded");
-            return new RenameOperationRecorder(
-                    createLdapOperationsInstance((DirContext) resource));
-        } else if (StringUtils.equals(operation,
-                LdapTransactionUtils.MODIFY_ATTRIBUTES_METHOD_NAME)) {
-            return new ModifyAttributesOperationRecorder(
-                    createLdapOperationsInstance((DirContext) resource));
-        } else if (StringUtils.equals(operation,
-                LdapTransactionUtils.UNBIND_METHOD_NAME)) {
-            return new UnbindOperationRecorder(
-                    createLdapOperationsInstance((DirContext) resource),
-                    renamingStrategy);
-        }
+	/*
+	 * @seeorg.springframework.transaction.compensating.
+	 * CompensatingTransactionOperationFactory
+	 * #createRecordingOperation(java.lang.Object, java.lang.String)
+	 */
+	public CompensatingTransactionOperationRecorder createRecordingOperation(Object resource, String operation) {
+		if (StringUtils.equals(operation, LdapTransactionUtils.BIND_METHOD_NAME)) {
+			log.debug("Bind operation recorded");
+			return new BindOperationRecorder(createLdapOperationsInstance((DirContext) resource));
+		}
+		else if (StringUtils.equals(operation, LdapTransactionUtils.REBIND_METHOD_NAME)) {
+			log.debug("Rebind operation recorded");
+			return new RebindOperationRecorder(createLdapOperationsInstance((DirContext) resource), renamingStrategy);
+		}
+		else if (StringUtils.equals(operation, LdapTransactionUtils.RENAME_METHOD_NAME)) {
+			log.debug("Rename operation recorded");
+			return new RenameOperationRecorder(createLdapOperationsInstance((DirContext) resource));
+		}
+		else if (StringUtils.equals(operation, LdapTransactionUtils.MODIFY_ATTRIBUTES_METHOD_NAME)) {
+			return new ModifyAttributesOperationRecorder(createLdapOperationsInstance((DirContext) resource));
+		}
+		else if (StringUtils.equals(operation, LdapTransactionUtils.UNBIND_METHOD_NAME)) {
+			return new UnbindOperationRecorder(createLdapOperationsInstance((DirContext) resource), renamingStrategy);
+		}
 
-        log
-                .warn("No suitable CompensatingTransactionOperationRecorder found for method "
-                        + operation + ". Operation will not be transacted.");
-        return new NullOperationRecorder();
-    }
+		log.warn("No suitable CompensatingTransactionOperationRecorder found for method " + operation
+				+ ". Operation will not be transacted.");
+		return new NullOperationRecorder();
+	}
 
-    LdapOperations createLdapOperationsInstance(DirContext ctx) {
-        return new LdapTemplate(new SingleContextSource(ctx));
-    }
+	LdapOperations createLdapOperationsInstance(DirContext ctx) {
+		return new LdapTemplate(new SingleContextSource(ctx));
+	}
 
-    /**
-     * A {@link ContextSource} implementation using returning
-     * {@link NonClosingDirContextInvocationHandler} proxies on the same
-     * DirContext instance for each call.
-     * 
-     * @author Mattias Arthursson
-     */
-    static class SingleContextSource implements ContextSource {
-        private DirContext ctx;
+	/**
+	 * A {@link ContextSource} implementation using returning
+	 * {@link NonClosingDirContextInvocationHandler} proxies on the same
+	 * DirContext instance for each call.
+	 * 
+	 * @author Mattias Arthursson
+	 */
+	static class SingleContextSource implements ContextSource {
+		private DirContext ctx;
 
-        /**
-         * Constructor.
-         * 
-         * @param ctx
-         *            the target DirContext.
-         */
-        public SingleContextSource(DirContext ctx) {
-            this.ctx = ctx;
-        }
+		/**
+		 * Constructor.
+		 * 
+		 * @param ctx the target DirContext.
+		 */
+		public SingleContextSource(DirContext ctx) {
+			this.ctx = ctx;
+		}
 
-        /*
-         * @see org.springframework.ldap.ContextSource#getReadOnlyContext()
-         */
-        public DirContext getReadOnlyContext() throws NamingException {
-            return getNonClosingDirContextProxy(ctx);
-        }
+		/*
+		 * @see org.springframework.ldap.ContextSource#getReadOnlyContext()
+		 */
+		public DirContext getReadOnlyContext() throws NamingException {
+			return getNonClosingDirContextProxy(ctx);
+		}
 
-        /*
-         * @see org.springframework.ldap.ContextSource#getReadWriteContext()
-         */
-        public DirContext getReadWriteContext() throws NamingException {
-            return getNonClosingDirContextProxy(ctx);
-        }
+		/*
+		 * @see org.springframework.ldap.ContextSource#getReadWriteContext()
+		 */
+		public DirContext getReadWriteContext() throws NamingException {
+			return getNonClosingDirContextProxy(ctx);
+		}
 
-        private DirContext getNonClosingDirContextProxy(DirContext context) {
-            return (DirContext) Proxy.newProxyInstance(DirContextProxy.class
-                    .getClassLoader(), new Class[] {
-                    LdapTransactionUtils.getActualTargetClass(context),
-                    DirContextProxy.class },
-                    new NonClosingDirContextInvocationHandler(context));
+		private DirContext getNonClosingDirContextProxy(DirContext context) {
+			return (DirContext) Proxy.newProxyInstance(DirContextProxy.class.getClassLoader(), new Class[] {
+					LdapTransactionUtils.getActualTargetClass(context), DirContextProxy.class },
+					new NonClosingDirContextInvocationHandler(context));
 
-        }
-    }
+		}
 
-    /**
-     * A proxy for DirContext forwarding all operation to the target DirContext,
-     * but making sure that no <code>close</code> operations will be
-     * performed.
-     * 
-     * @author Mattias Arthursson
-     */
-    public static class NonClosingDirContextInvocationHandler implements
-            InvocationHandler {
+		public DirContext getContext(String principal, String credentials) throws NamingException {
+			throw new UnsupportedOperationException("Not a valid operation for this type of ContextSource");
+		}
+	}
 
-        private DirContext target;
+	/**
+	 * A proxy for DirContext forwarding all operation to the target DirContext,
+	 * but making sure that no <code>close</code> operations will be performed.
+	 * 
+	 * @author Mattias Arthursson
+	 */
+	public static class NonClosingDirContextInvocationHandler implements InvocationHandler {
 
-        public NonClosingDirContextInvocationHandler(DirContext target) {
-            this.target = target;
-        }
+		private DirContext target;
 
-        /*
-         * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
-         *      java.lang.reflect.Method, java.lang.Object[])
-         */
-        public Object invoke(Object proxy, Method method, Object[] args)
-                throws Throwable {
+		public NonClosingDirContextInvocationHandler(DirContext target) {
+			this.target = target;
+		}
 
-            String methodName = method.getName();
-            if (methodName.equals("getTargetContext")) {
-                return target;
-            } else if (methodName.equals("equals")) {
-                // Only consider equal when proxies are identical.
-                return (proxy == args[0] ? Boolean.TRUE : Boolean.FALSE);
-            } else if (methodName.equals("hashCode")) {
-                // Use hashCode of Connection proxy.
-                return new Integer(proxy.hashCode());
-            } else if (methodName.equals("close")) {
-                // Never close the target context, as this class will only be
-                // used for operations concerning the compensating transactions.
-                return null;
-            }
+		/*
+		 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
+		 * java.lang.reflect.Method, java.lang.Object[])
+		 */
+		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
-            try {
-                return method.invoke(target, args);
-            } catch (InvocationTargetException e) {
-                throw e.getTargetException();
-            }
-        }
-    }
+			String methodName = method.getName();
+			if (methodName.equals("getTargetContext")) {
+				return target;
+			}
+			else if (methodName.equals("equals")) {
+				// Only consider equal when proxies are identical.
+				return (proxy == args[0] ? Boolean.TRUE : Boolean.FALSE);
+			}
+			else if (methodName.equals("hashCode")) {
+				// Use hashCode of Connection proxy.
+				return new Integer(proxy.hashCode());
+			}
+			else if (methodName.equals("close")) {
+				// Never close the target context, as this class will only be
+				// used for operations concerning the compensating transactions.
+				return null;
+			}
+
+			try {
+				return method.invoke(target, args);
+			}
+			catch (InvocationTargetException e) {
+				throw e.getTargetException();
+			}
+		}
+	}
 }

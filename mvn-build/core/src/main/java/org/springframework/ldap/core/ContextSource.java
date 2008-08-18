@@ -21,7 +21,10 @@ import javax.naming.directory.DirContext;
 import org.springframework.ldap.NamingException;
 
 /**
- * Interface used by {@link LdapTemplate} to create LDAP contexts.
+ * A <code>ContextSource</code> is responsible for configuring and creating
+ * <code>DirContext</code> instances. It is typically used from
+ * {@link LdapTemplate} to acquiring contexts for LDAP operations, but may be
+ * used standalone to perform LDAP authentication.
  * 
  * @see org.springframework.ldap.core.LdapTemplate
  * 
@@ -30,22 +33,34 @@ import org.springframework.ldap.NamingException;
  */
 public interface ContextSource {
 
-    /**
-     * Gets a read-only DirContext. The returned DirContext must be possible to
-     * perform read-only operations on.
-     * 
-     * @return A DirContext instance, never null.
-     * @throws NamingException
-     *             if some error occurs creating an DirContext.
-     */
-    public DirContext getReadOnlyContext() throws NamingException;
+	/**
+	 * Gets a read-only <code>DirContext</code>. The returned
+	 * <code>DirContext</code> must be possible to perform read-only operations
+	 * on.
+	 * 
+	 * @return A DirContext instance, never null.
+	 * @throws NamingException if some error occurs creating an DirContext.
+	 */
+	public DirContext getReadOnlyContext() throws NamingException;
 
-    /**
-     * Gets a read-write DirContext.
-     * 
-     * @return A DirContext instance, never null.
-     * @throws NamingException
-     *             if some error occurs creating an DirContext.
-     */
-    public DirContext getReadWriteContext() throws NamingException;
+	/**
+	 * Gets a read-write <code>DirContext</code> instance.
+	 * 
+	 * @return A <code>DirContext</code> instance, never <code>null</code>.
+	 * @throws NamingException if some error occurs creating an
+	 * <code>DirContext</code>.
+	 */
+	public DirContext getReadWriteContext() throws NamingException;
+
+	/**
+	 * Gets a <code>DirContext</code> instance authenticated using the supplied
+	 * principal and credentials.
+	 * 
+	 * @param principal The principal (typically a distinguished name of a user
+	 * in the LDAP tree) to use for authentication.
+	 * @param credentials The credentials to use for authentication.
+	 * @return an authenticated <code>DirContext</code> instance, never
+	 * <code>null</code>.
+	 */
+	public DirContext getContext(String principal, String credentials) throws NamingException;
 }

@@ -15,6 +15,7 @@
  */
 package org.springframework.ldap.core.support;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
@@ -77,6 +78,32 @@ public class LdapContextSourcelITest extends AbstractLdapTemplateIntegrationTest
 			Hashtable environment = ctx.getEnvironment();
 			assertTrue(environment.containsKey(Context.SECURITY_PRINCIPAL));
 			assertTrue(environment.containsKey(Context.SECURITY_CREDENTIALS));
+		}
+		finally {
+			// Always clean up.
+			if (ctx != null) {
+				try {
+					ctx.close();
+				}
+				catch (Exception e) {
+					// Never mind this
+				}
+			}
+		}
+	}
+
+	@Test
+	public void testGetContext() throws NamingException {
+		DirContext ctx = null;
+		try {
+			String expectedPrincipal = "cn=Some Person,ou=company1,c=Sweden,dc=jayway,dc=se";
+			String expectedCredentials = "password";
+			ctx = tested.getContext(expectedPrincipal, expectedCredentials);
+			assertNotNull(ctx);
+			// Double check to see that we are authenticated.
+			Hashtable environment = ctx.getEnvironment();
+			assertEquals(expectedPrincipal, environment.get(Context.SECURITY_PRINCIPAL));
+			assertEquals(expectedCredentials, environment.get(Context.SECURITY_CREDENTIALS));
 		}
 		finally {
 			// Always clean up.
