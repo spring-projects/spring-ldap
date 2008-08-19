@@ -1,3 +1,18 @@
+/*
+ * Copyright 2005-2008 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.springframework.ldap.core.support;
 
 import java.io.IOException;
@@ -17,16 +32,54 @@ import org.springframework.ldap.UncategorizedLdapException;
 import org.springframework.ldap.core.DirContextProxy;
 import org.springframework.ldap.support.LdapUtils;
 
+/**
+ * Abstract superclass for {@link DirContextAuthenticationStrategy}
+ * implementations that apply TLS security to the connections. The supported TLS
+ * behavior differs between servers. E.g., some servers expect the TLS
+ * connection be shut down gracefully before the actual target context is
+ * closed, whereas other servers do not support that. The
+ * <code>shutdownTlsGracefully</code> property controls this behavior; the
+ * property defaults to <code>false</code>.
+ * <p>
+ * In some rare occasions there is a need to supply a
+ * <code>HostnameVerifier</code> to the TLS processing instructions in order to
+ * have the returned certificate properly validated. If a
+ * <code>HostnameVerifier</code> is supplied to
+ * {@link #setHostnameVerifier(HostnameVerifier)}, that will be applied to the
+ * processing.
+ * </p>
+ * <p>
+ * For further information regarding TLS, refer to <a
+ * href="http://java.sun.com/products/jndi/tutorial/ldap/ext/starttls.html">this
+ * page</a>.
+ * 
+ * @author Mattias Hellborg Arthursson
+ */
 public abstract class AbstractTlsDirContextAuthenticationStrategy implements DirContextAuthenticationStrategy {
 
 	private HostnameVerifier hostnameVerifier;
 
 	private boolean shutdownTlsGracefully = false;
 
+	/**
+	 * Specify whether the TLS should be shut down gracefully before the target
+	 * context is closed. Defaults to <code>false</code>.
+	 * 
+	 * @param shutdownTlsGracefully <code>true</code> to shut down the TLS
+	 * connection explicitly, <code>false</code> closes the target context
+	 * immediately.
+	 */
 	public void setShutdownTlsGracefully(boolean shutdownTlsGracefully) {
 		this.shutdownTlsGracefully = shutdownTlsGracefully;
 	}
 
+	/**
+	 * Set the optional
+	 * <code>HostnameVerifier<code> to use for verfying incoming certificates. Defaults to <code>null</code>
+	 * , meaning that the default hostname verification will take place.
+	 * 
+	 * @param hostnameVerifier The <code>HostnameVerifier</code> to use, if any.
+	 */
 	public void setHostnameVerifier(HostnameVerifier hostnameVerifier) {
 		this.hostnameVerifier = hostnameVerifier;
 	}
@@ -74,8 +127,8 @@ public abstract class AbstractTlsDirContextAuthenticationStrategy implements Dir
 	}
 
 	/**
-	 * Apply the actual authentication to the specified <code>LdapContext</code>.
-	 * Typically, this will involve adding stuff to the environment.
+	 * Apply the actual authentication to the specified <code>LdapContext</code>
+	 * . Typically, this will involve adding stuff to the environment.
 	 * 
 	 * @param ctx the <code>LdapContext</code> instance.
 	 * @param userDn the user dn of the user to authenticate.
