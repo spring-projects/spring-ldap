@@ -33,7 +33,18 @@
     </sect2>
 
     <sect2 id="dir-context-authentication">
-      <title>Authentication</title>
+      <title>DirContext Authentication</title>
+
+      <para>When <literal>DirContext</literal> instances are created to be used for performing 
+      operations on an LDAP server these contexts often need to be authenticated. There are
+      different options for configuring this using Spring LDAP, described in this chapter.</para>
+
+      <para><note><para>This section refers to authenticating contexts in the core functionality 
+      of the <literal>ContextSource</literal> - to construct <literal>DirContext</literal> instances
+      for use by <literal>LdapTemplate</literal>. LDAP is commonly used for the sole purpose
+      of user authentication, and the <literal>ContextSource</literal> may be used for that as
+      well. This process is discussed in <xref linkend="user-authentication" />.
+      </para></note></para>
 
       <para>Authenticated contexts are created for both read-only and
       read-write operations by default. You specify
@@ -43,7 +54,9 @@
 
       <para><note>
           <para>The <literal>userDn</literal> needs to be the full
-          Distinguished Name (DN) of the user.</para>
+          Distinguished Name (DN) of the user from the root of the LDAP tree,
+          regardless of whether a <literal>base</literal> LDAP path has been supplied to
+          the <literal>ContextSource</literal>.</para>
         </note></para>
 
       <para>Some LDAP server setups allow anonymous read-only access. If you
@@ -51,8 +64,49 @@
       <literal>anonymousReadOnly</literal> property to
       <literal>true</literal>.<literal></literal></para>
 
+      <sect3 id="custom-authentication-processing">
+        <title>Custom DirContext Authentication Processing</title>
+        
+        <para>The default authentication mechanism used in Spring LDAP is SIMPLE authentication.
+        This means that in the user DN (as specified to the <literal>userDn</literal> property) and
+        the credentials (as specified to the <literal>password</literal>) are set in 
+        the Hashtable sent to the <literal>DirContext</literal> implementation constructor.</para>
+        <para>There are many occasions when this processing is not sufficient. For instance,
+        LDAP Servers are commonly set up to only accept communication on a secure TLS channel;
+        there might be a need to use the particular LDAP Proxy Auth mechanism, etc.</para>
+        <para>It is possible to specify an alternative authentication mechanism by supplying a 
+        <literal>DirContextAuthenticationStrategy</literal> implementation to the <literal>ContextSource</literal>
+        in the configuration.</para>
+        <sect4 id="authentication-tls">
+        	<title>TLS</title>
+        	
+        	<para>Spring LDAP provides two different configuration options for LDAP servers requiring TLS secure
+        	channel communication: <literal>DefaultTlsDirContextAuthenticationStrategy</literal> and
+        	<literal>ExternalTlsDirContextAuthenticationStrategy</literal>. Both these
+        	implementations will negotiate a TLS channel on the target connection, but they differ in the actual authentication mechanism.
+        	Whereas the <literal>DefaultTlsDirContextAuthenticationStrategy</literal> will apply SIMPLE authentication
+        	on the secure channel (using the specified <literal>userDn</literal> and <literal>password</literal>),
+        	the <literal>ExternalDirContextAuthenticationStrategy</literal> will use EXTERNAL SASL authentication,
+        	applying a client certificate configured using system properties for authentication.</para>
+        	
+        	<para>Since different LDAP server implementations respond differently to explicit shutdown of the
+        	TLS channel (some servers require the connection be shutdown gracefully; others do not support it),
+        	the TLS <literal>DirContextAuthenticationStrategy</literal> implementations support specifying
+        	the shutdown behavior using the <literal>shutdownTlsGracefully</literal> parameter. If this
+        	property is set to <literal>false</literal> (the default), no explicit TLS shutdown will happen;
+        	if it is <literal>true</literal>, Spring LDAP will try to shutdown the TLS channel gracefully
+        	before closing the target context.</para>
+        	
+        	<para><note><para>When working with TLS connections you need to explicitly turn off
+        	the native LDAP Pooling functionality by setting the <literal>pooled</literal> property to <literal>false</literal>,
+        	particularly if <literal>shutdownTlsGracefully</literal> is set to <literal>false</literal>.
+        	However, since the TLS channel negotiation process is quite expensive, great performance benefits will
+        	be gained by using the Spring LDAP Pooling Support, described in <xref linkend="pooling" />.
+        	</para></note></para>
+        </sect4>
+	  </sect3>
       <sect3>
-        <title>Custom Authentication Using Acegi</title>
+        <title>Custom Principal and Credentials Management</title>
 
         <para>While the user name (i.e. user DN) and password used for
         creating an authenticated <literal>Context</literal> are static by
@@ -71,25 +125,26 @@
         time an authenticated <literal>Context</literal> is to be
         created.</para>
 
-        <para>To use the authentication information of the currently logged in
-        user using <ulink url="http://acegisecurity.org/">Acegi
-        Security</ulink>, use the
-        <literal>AcegiAuthenticationSource</literal>:</para>
+		<para>If you are using <ulink url="http://springsecurity.org">Spring Security</ulink> 
+		you can make sure the principal and credentials of the currently logged in user
+		is used at all times by configuring your <literal>ContextSource</literal> 
+		with an instance of the <literal>SpringSecurityAuthenticationSource</literal>
+		shipped with Spring Security.</para>
 
         <example>
-          <title>The Spring bean definition for an
-          AcegiAuthenticationSource</title>
+          <title>The Spring bean definition for a
+          SpringSecurityAuthenticationSource</title>
 
           <programlisting>&lt;beans&gt;
    ...
    &lt;bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource"&gt;
       &lt;property name="url" value="ldap://localhost:389" /&gt;
       &lt;property name="base" value="dc=example,dc=com" /&gt;
-      &lt;property name="authenticationSource" ref="acegiAuthenticationSource" /&gt;
+      &lt;property name="authenticationSource" ref="springSecurityAuthenticationSource" /&gt;
    &lt;/bean&gt;
 
-   &lt;bean id="acegiAuthenticationSource"
-      class="org.springframework.ldap.authentication.AcegiAuthenticationSource" /&gt;
+   &lt;bean id="springSecurityAuthenticationSource"
+      class="org.springframework.security.ldap.SpringSecurityAuthenticationSource" /&gt;
    ...
 &lt;/beans&gt;</programlisting>
         </example>
@@ -103,8 +158,8 @@
         </note>
 
         <note>
-          <para>When using the <literal>AcegiAuthenticationSource</literal>
-          you need to use Acegi's
+          <para>When using the <literal>SpringSecurityAuthenticationSource</literal>
+          you need to use Spring Security's
           <literal>LdapAuthenticationProvider</literal> to authenticate the
           users against LDAP.</para>
         </note>
@@ -113,7 +168,7 @@
       <sect3>
         <title>Default Authentication</title>
 
-        <para>When using <literal>AcegiAuthenticationSource</literal>,
+        <para>When using <literal>SpringSecurityAuthenticationSource</literal>,
         authenticated contexts will only be possible to create once the user
         is logged in using Acegi. To use default authentication information
         when no user is logged in, use the
@@ -133,13 +188,13 @@
 
    &lt;bean id="authenticationSource"
       class="org.springframework.ldap.authentication.DefaultValuesAuthenticationSourceDecorator"&gt;
-      &lt;property name="target" ref="acegiAuthenticationSource" /&gt;
+      &lt;property name="target" ref="springSecurityAuthenticationSource" /&gt;
       &lt;property name="defaultUser" value="cn=myDefaultUser" /&gt;
       &lt;property name="defaultPassword" value="pass" /&gt;
    &lt;/bean&gt;
 
-   &lt;bean id="acegiAuthenticationSource"
-      class="org.springframework.ldap.authentication.AcegiAuthenticationSource" /&gt;
+   &lt;bean id="springSecurityAuthenticationSource"
+      class="org.springframework.security.ldap.SpringSecurityAuthenticationSource" /&gt;
    ...
 &lt;/beans&gt;</programlisting>
         </example>
@@ -147,15 +202,21 @@
     </sect2>
 
     <sect2 id="context-source-pooling">
-      <title>Pooling</title>
-
-      <para>LDAP connection pooling can be turned on/off using the
-      <literal>pooled</literal> flag. Default is <literal>true</literal>. The
-      configuration of LDAP connection pooling is managed using
+      <title>Native Java LDAP Pooling</title>
+      <para>The internal Java LDAP provider provides some very basic pooling capabilities.
+      This  LDAP connection pooling can be turned on/off using the
+      <literal>pooled</literal> flag on <literal>AbstractContextSource</literal>. 
+      The default value is <literal>true</literal>, i.e. the native Java LDAP pooling will be turned on.
+      The configuration of LDAP connection pooling is managed using
       <literal>System</literal> properties, so this needs to be handled
-      manually. Details of pooling configuration can be found <ulink
-      url="http://java.sun.com/products/jndi/tutorial/ldap/connect/config.html">here</ulink>.</para>
-      
+      manually, outside of the Spring Context configuration. Details of the native pooling configuration
+      can be found <ulink url="http://java.sun.com/products/jndi/tutorial/ldap/connect/config.html">here</ulink>.
+      </para>
+      <para><note>
+      There are several serious deficiencies in the built-in LDAP connection pooling, 
+      which is why spring LDAP provides a more sophisticated approach to LDAP connection pooling, 
+      described in <xref linkend="pooling" />. If pooling functionality is required this is the
+      recommended approach.</note></para>
     </sect2>
     <sect2 id="context-source-advanced">
       <title>Advanced ContextSource Configuration</title>

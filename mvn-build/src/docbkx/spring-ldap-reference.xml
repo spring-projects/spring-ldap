@@ -6,8 +6,8 @@
 	<info>
 		<title>Spring LDAP</title>
 		<subtitle>Reference Documentation</subtitle>
-		<releaseinfo>Version 1.2.2</releaseinfo>
-		<pubdate>June 2008</pubdate>
+		<releaseinfo>Version 1.3-RC1</releaseinfo>
+		<pubdate>2008</pubdate>
 		<authorgroup>
 			<author>
 				<firstname>Mattias</firstname>
@@ -46,4 +46,5 @@
         <xi:include href="simple.xml" />
         <xi:include href="configuration.xml" />
         <xi:include href="pooling.xml" />
+        <xi:include href="user-authentication.xml" />
 </book>

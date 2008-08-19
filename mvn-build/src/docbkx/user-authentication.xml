@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+               
+<chapter id="user-authentication">
+  <title>User Authentication using Spring LDAP</title>
+
+  <para>While the core functionality of the <literal>ContextSource</literal> is to provide
+  <literal>DirContext</literal> instances for use by <literal>LdapTemplate</literal>,
+  it may also be used for authenticating users against an LDAP server. The
+  <literal>getContext(principal, credentials)</literal> method of <literal>ContextSource</literal>
+  will do exactly that; construct a <literal>DirContext</literal> instance according to the
+  <literal>ContextSource</literal> configuration, authenticating the context using the 
+  supplied principal and credentials. 
+  </para>
+          <example>
+          <title>Using <literal>ContextSource</literal> for user authentication</title>
+
+<programlisting>public boolean authenticate(String userDn, String credentials) {
+  DirContext ctx = null;
+  try {
+    ctx = contextSource.getContext(userDn, credentials);
+    
+    return true;
+  } catch (Exception e) {
+    // Context creation failed - authentication did not succeed
+	logger.error("Login failed", e);
+    return false;
+  } finally {
+    // It is imperative that the created DirContext instance is always closed
+    LdapUtils.closeContext(ctx);
+  }
+}
+</programlisting>
+</example>
+
+	<para><note><para>
+	The userDn supplied to the <literal>authenticate</literal> method needs to be the full
+	DN of the user to authenticate (regardless of the <literal>base</literal> setting on the
+	<literal>ContextSource</literal>). You will typically need to perform an LDAP search
+	based on e.g. the user name to get this DN:
+    </para></note></para>
+    
+          <example>
+          <title>Finding a user based on uid attribute.</title>
+<programlisting>private String getDnForUser(String uid) {
+  Filter f = new EqualsFilter("uid", uid);
+  List result = ldapTemplate.search(DistinguishedName.EMPTY_PATH, f.toString(), new AbstractContextMapper() {
+    protected Object doMapFromContext(DirContextOperations ctx) {
+      return ctx.getNameInNamespace();
+    }
+  });
+  	
+  if(result.size() != 1) {
+    throw new RuntimeException("User not found or not unique");
+  }
+  
+  return (String)result.get(0);
+}
+</programlisting>
+</example>
+    
+	<para><note><para>
+    Some authentication schemes and LDAP servers require some operation to be
+    performed on the created <literal>DirContext</literal> instance for the actual
+    authentication to occur. You should test and make sure how your server setup and
+    authentication schemes behave; failure to do so might result in that users
+    will be admitted into your system regardless of the DN/credentials supplied.
+    </para></note></para>
+    
+          <example>
+          <title>Performing LDAP operation on returned <literal>DirContext</literal> objects.</title>
+
+<programlisting>public boolean authenticate(String userDn, String credentials) {
+  DirContext ctx = null;
+  try {
+    ctx = contextSource.getContext(userDn, credentials);
+    // Take care here - if a base was specified on the ContextSource
+    // that needs to be removed from the user DN for the lookup to succeed.
+    ctx.lookup(userDn);
+    
+    return true;
+  } catch (Exception e) {
+    // Context creation failed - authentication did not succeed
+	logger.error("Login failed", e);
+    return false;
+  } finally {
+    // It is imperative that the created DirContext instance is always closed
+    LdapUtils.closeContext(ctx);
+  }
+}
+</programlisting>
+</example>
+
+	<para><note><para>
+	While the approach above may be sufficient for very simple authentication scenarios, requirements in this
+	area commonly expand rapidly. There is a multitude of aspects that apply to this area, including
+	authentication, authorization, web integration, user context management, etc. If you
+	suspect that the requirements might expand you should definitely consider using 
+	<ulink url="http://springsecurity.org">Spring Security</ulink> for your security purposes instead.
+	It is a full-blown, mature security framework addressing the above aspects as well as several others. 
+    </para></note></para>
+</chapter>
