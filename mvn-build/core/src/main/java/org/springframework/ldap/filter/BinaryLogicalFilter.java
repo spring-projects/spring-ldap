@@ -34,7 +34,9 @@ public abstract class BinaryLogicalFilter extends AbstractFilter {
 	protected List queryList = new LinkedList();
 
 	/*
-	 * @see org.springframework.ldap.filter.AbstractFilter#encode(java.lang.StringBuffer)
+	 * @see
+	 * org.springframework.ldap.filter.AbstractFilter#encode(java.lang.StringBuffer
+	 * )
 	 */
 	public StringBuffer encode(StringBuffer buff) {
 		if (queryList.size() <= 0) {
@@ -93,5 +95,16 @@ public abstract class BinaryLogicalFilter extends AbstractFilter {
 	 */
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	/**
+	 * Add a query to this logical operation.
+	 * 
+	 * @param query the query to add.
+	 * @return This instance.
+	 */
+	public final BinaryLogicalFilter append(Filter query) {
+		queryList.add(query);
+		return this;
 	}
 }

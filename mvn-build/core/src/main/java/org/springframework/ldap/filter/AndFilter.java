@@ -51,7 +51,7 @@ public class AndFilter extends BinaryLogicalFilter {
 	 * @return This LdapAndQuery
 	 */
 	public AndFilter and(Filter query) {
-		queryList.add(query);
+		append(query);
 		return this;
 	}
 }

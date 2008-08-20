@@ -43,7 +43,7 @@ public class OrFilter extends BinaryLogicalFilter {
 	 * @return This LdapOrQuery
 	 */
 	public OrFilter or(Filter query) {
-		queryList.add(query);
+		append(query);
 		return this;
 	}
 
