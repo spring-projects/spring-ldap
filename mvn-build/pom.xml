@@ -106,7 +106,7 @@
 	<properties>
 		<docbook.source>${basedir}/src/docbkx</docbook.source>
 		<docbook.target>${basedir}/target/site/guide</docbook.target>
-		<spring.version>2.5.4</spring.version>
+		<spring.version>2.5.5</spring.version>
 	</properties>
 	<modules>
 		<module>parent</module>

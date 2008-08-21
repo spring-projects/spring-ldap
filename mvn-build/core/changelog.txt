@@ -11,7 +11,7 @@ http://www.ietf.org/rfc/rfc2255.txt
 http://www.ietf.org/rfc/rfc2256.txt
 http://www.ietf.org/rfc/rfc2696.txt
 
-Changes in version 1.2.2 (XXX 2008)
+Changes in version 1.3 (XXX 2008)
 -------------------------------------------
 * Removed deprecated method setUserName() in AbstractContextSource.
 
@@ -31,6 +31,8 @@ Changes in version 1.2.2 (XXX 2008)
 * Upgraded Acegi to 1.0.6.
 
 * Upgraded commons-lang to 2.3.
+
+* Upgraded Spring to 2.5.5. (LDAP-125)
 
 Changes in version 1.2.1 (Dec 2007)
 -------------------------------------------
