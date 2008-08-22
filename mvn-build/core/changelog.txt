@@ -13,6 +13,10 @@ http://www.ietf.org/rfc/rfc2696.txt
 
 Changes in version 1.3 (XXX 2008)
 -------------------------------------------
+* Moved SingleContextSource from an obscure inner class to a top-level
+  class. This class doesn't close the DirContext, but reuses the same.
+  Useful for scenarios like Paged Results.
+
 * Removed deprecated method setUserName() in AbstractContextSource.
 
 * Added a method DistinguishedName.toCompactString that returns a more
