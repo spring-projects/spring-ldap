@@ -146,6 +146,11 @@ public class VirtualListViewControlDirContextProcessor implements
         this.responseControlClass = responseControlClass;
     }
 
+    /**
+     * Set whether the <code>targetOffset</code> should be interpreted as
+     * percentage of the list or an offset into the list.
+     * @param isPercentage <code>true</code> if targetOffset is a percentage
+     */
     public void setOffsetPercentage(boolean isPercentage) {
         this.offsetPercentage = isPercentage;
     }
@@ -189,9 +194,16 @@ public class VirtualListViewControlDirContextProcessor implements
         try {
             VirtualListViewControl virtualListViewControl;
             if (offsetPercentage) {
+            	// Request a view of a portion of the list centered around a
+				// given target entry. The position of the target entry is
+				// estimated as a percentage of the list.
                 virtualListViewControl = new VirtualListViewControl(
                         targetOffset, pageSize, CRITICAL_CONTROL);
             } else {
+            	// Request a view of a portion of the list with the specified
+				// number of entries before and after a given target entry. The
+				// target entry is identified by means of an offset into the
+				// list.
                 virtualListViewControl = new VirtualListViewControl(
                         targetOffset, listSize, 0, pageSize - 1,
                         CRITICAL_CONTROL);
@@ -244,11 +256,11 @@ public class VirtualListViewControlDirContextProcessor implements
     }
 
     /**
-     * Check if the given control matches a paged results response control.
+     * Check if the given control matches a virtual list view response control.
      * 
      * @param responseControl
      *            the control to check for a match
-     * @return whether the control is a paged results response control
+     * @return whether the control is a virtual list view response control
      */
     private boolean isVirtualListViewResponseControl(Control responseControl) {
         if (responseControl.getClass().isAssignableFrom(responseControlClass)) {

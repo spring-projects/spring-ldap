@@ -18,6 +18,8 @@ package org.springframework.ldap.control;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.naming.ldap.PagedResultsControl;
+
 import org.springframework.ldap.control.PagedResult;
 import org.springframework.ldap.control.PagedResultsCookie;
 
@@ -25,6 +27,13 @@ import com.gargoylesoftware.base.testing.EqualsTester;
 
 import junit.framework.TestCase;
 
+/**
+ * Unit tests for the PagedResult class.
+ * {@link PagedResultsControl}
+ * 
+ * @author Mattias Arthursson
+ * @author Ulrik Sandberg
+ */
 public class PagedResultTest extends TestCase {
     public void testEquals() throws Exception {
         List expectedList = new LinkedList();
