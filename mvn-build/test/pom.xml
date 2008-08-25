@@ -22,6 +22,12 @@
           <module>integration-tests-openldap</module>
         </modules>
       </profile>
+      <profile>
+        <id>sunone</id>
+        <modules>
+          <module>integration-tests-sunone</module>
+        </modules>
+      </profile>
     </profiles>
     <repositories>
         <repository>
