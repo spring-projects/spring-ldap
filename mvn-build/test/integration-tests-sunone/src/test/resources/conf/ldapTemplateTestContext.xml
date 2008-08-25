@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="/conf/ldap.properties" />
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+	</bean>
+
+	<bean id="contextSource"
+		class="org.springframework.ldap.core.support.LdapContextSource">
+		<property name="base" value="${base}" />
+		<property name="userDn" value="${userDn}" />
+		<property name="password" value="${password}" />
+		<property name="url" value="ldap://${itest.sunone.serverAddress}:389" />
+		<property name="authenticationStrategy">
+			<bean class="org.springframework.ldap.core.support.DefaultTlsDirContextAuthenticationStrategy" />
+		</property>
+		<property name="pooled" value="false" />
+	</bean>
+
+	<bean id="ldapTemplate"
+		class="org.springframework.ldap.core.LdapTemplate">
+		<constructor-arg ref="contextSource" />
+	</bean>
+</beans>
