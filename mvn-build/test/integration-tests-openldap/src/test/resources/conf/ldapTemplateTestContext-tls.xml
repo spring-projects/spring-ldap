@@ -9,16 +9,31 @@
 		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
 	</bean>
 
-	<bean id="contextSource" class="org.springframework.ldap.ContextSourceEc2InstanceLaunchingFactoryBean">
+
+	<bean id="contextSource" class="org.springframework.ldap.TlsContextSourceEc2InstanceLaunchingFactoryBean">
 		<property name="awsKey" value="${aws.key}" />
 		<property name="awsSecretKey" value="${aws.secret.key}" />
-		<property name="imageName" value="ami-56ec083f" />
-		<property name="groupName" value="spring-ldap" />
-		<property name="keyName" value="spring-ldap-keypair" />
+		<property name="imageName" value="${aws.ami}" />
+		<property name="groupName" value="${aws.security.group}" />
+		<property name="keyName" value="${aws.key}" />
 		<property name="base" value="dc=jayway,dc=se" />
 		<property name="userDn" value="${userDn}" />
 		<property name="password" value="${password}" />
 	</bean>
+
+<!-- 
+	<bean id="contextSource"
+		class="org.springframework.ldap.core.support.LdapContextSource">
+		<property name="base" value="dc=jayway,dc=se" />
+		<property name="userDn" value="${userDn}" />
+		<property name="password" value="${password}" />
+		<property name="url" value="ldap://${itest.openldap.serverAddress}:389" />
+		<property name="authenticationStrategy">
+			<bean class="org.springframework.ldap.core.support.DefaultTlsDirContextAuthenticationStrategy" />
+		</property>
+		<property name="pooled" value="false" />
+	</bean>
+ -->
 
 	<bean id="ldapTemplate"
 		class="org.springframework.ldap.core.LdapTemplate">

@@ -34,11 +34,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 /**
- * Verifies that LdapTemplate search methods work against OpenLDAP.
+ * Verifies that LdapTemplate search methods work against OpenLDAP with TLS.
  * 
  * @author Mattias Arthursson
  */
-@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext-tls.xml" })
 public class LdapTemplateSearchResultITest extends AbstractJUnit4SpringContextTests {
 
 	@Autowired
