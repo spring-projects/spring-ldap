@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beansProjectDescription>
+	<version>1</version>
+	<pluginVersion><![CDATA[2.0.6.v200806241357]]></pluginVersion>
+	<configSuffixes>
+		<configSuffix><![CDATA[xml]]></configSuffix>
+	</configSuffixes>
+	<enableImports><![CDATA[false]]></enableImports>
 	<configs>
-		<config>src/iutest/config/testContext.xml</config>
 	</configs>
 	<configSets>
 		<configSet>
-			<name>default</name>
+			<name><![CDATA[default]]></name>
 			<allowBeanDefinitionOverriding>false</allowBeanDefinitionOverriding>
 			<incomplete>false</incomplete>
 			<configs>
-				<config>src/iutest/config/testContext.xml</config>
 			</configs>
 		</configSet>
 	</configSets>
