@@ -670,7 +670,7 @@ public class DirContextAdapter implements DirContextOperations {
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.DirContextOperations#getStringAttributes(java.lang.String)
+	 * @see org.springframework.ldap.core.DirContextOperations#getStringAttributes(java.lang.String)
 	 */
 	public String[] getStringAttributes(String name) {
 		String[] attributes;
