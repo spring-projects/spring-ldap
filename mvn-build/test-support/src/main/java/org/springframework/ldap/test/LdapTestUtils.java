@@ -166,7 +166,7 @@ public class LdapTestUtils {
 	 * Clear the directory sub-tree starting with the node represented by the
 	 * supplied distinguished name.
 	 * 
-	 * @param contextSource The DirContext to use for cleaning the tree.
+	 * @param ctx The DirContext to use for cleaning the tree.
 	 * @param name the distinguished name of the root node.
 	 * @throws NamingException if anything goes wrong removing the sub-tree.
 	 */
