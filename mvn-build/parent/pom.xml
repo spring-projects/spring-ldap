@@ -50,7 +50,29 @@
 			<id>spring external</id>
 			<url>http://maven.springframework.org/external/</url>
 		</repository>
+        <repository>
+            <id>Codehaus</id>
+            <url>http://repository.codehaus.org/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
 	</repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>Codehaus</id>
+            <url>http://repository.codehaus.org/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
 	<build>
 		<extensions>
 			<extension>
@@ -106,7 +128,12 @@
 		</plugins>
 	</build>
 	<reporting>
-		<plugins>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>1.2</version>
+            </plugin>
             <plugin>
                 <artifactId>maven-jxr-plugin</artifactId>
                 <configuration>
