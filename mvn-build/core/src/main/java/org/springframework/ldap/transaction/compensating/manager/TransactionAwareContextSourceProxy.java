@@ -22,7 +22,7 @@ import javax.naming.directory.DirContext;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextProxy;
-import org.springframework.ldap.transaction.compensating.LdapTransactionUtils;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 /**
@@ -70,7 +70,7 @@ public class TransactionAwareContextSourceProxy implements ContextSource {
         return (DirContext) Proxy
                 .newProxyInstance(DirContextProxy.class.getClassLoader(),
                         new Class[] {
-                                LdapTransactionUtils
+                                LdapUtils
                                         .getActualTargetClass(context),
                                 DirContextProxy.class },
                         new TransactionAwareDirContextInvocationHandler(

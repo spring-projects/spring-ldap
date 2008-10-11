@@ -17,8 +17,6 @@
 package org.springframework.ldap.transaction.compensating;
 
 import javax.naming.Name;
-import javax.naming.directory.DirContext;
-import javax.naming.ldap.LdapContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.ldap.core.DistinguishedName;
@@ -100,22 +98,5 @@ public final class LdapTransactionUtils {
                         .equals(methodName, MODIFY_ATTRIBUTES_METHOD_NAME) || StringUtils
                 .equals(methodName, UNBIND_METHOD_NAME));
 
-    }
-
-    /**
-     * Get the actual class of the supplied DirContext instance; LdapContext or
-     * DirContext.
-     * 
-     * @param context
-     *            the DirContext instance to check.
-     * @return LdapContext.class if context is an LdapContext, DirContext.class
-     *         otherwise.
-     */
-    public static Class getActualTargetClass(DirContext context) {
-        if (context instanceof LdapContext) {
-            return LdapContext.class;
-        }
-
-        return DirContext.class;
     }
 }

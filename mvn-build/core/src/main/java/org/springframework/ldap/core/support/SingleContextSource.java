@@ -14,7 +14,6 @@ import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextProxy;
 import org.springframework.ldap.support.LdapUtils;
-import org.springframework.ldap.transaction.compensating.LdapTransactionUtils;
 
 /**
  * A {@link ContextSource} implementation using returning
@@ -104,7 +103,7 @@ public class SingleContextSource implements ContextSource {
 	private DirContext getNonClosingDirContextProxy(DirContext context) {
 		return (DirContext) Proxy.newProxyInstance(DirContextProxy.class
 				.getClassLoader(), new Class[] {
-				LdapTransactionUtils.getActualTargetClass(context),
+				LdapUtils.getActualTargetClass(context),
 				DirContextProxy.class },
 				new SingleContextSource.NonClosingDirContextInvocationHandler(
 						context));

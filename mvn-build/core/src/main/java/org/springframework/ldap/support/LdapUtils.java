@@ -17,6 +17,7 @@
 package org.springframework.ldap.support;
 
 import javax.naming.directory.DirContext;
+import javax.naming.ldap.LdapContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -205,5 +206,22 @@ public final class LdapUtils {
 
 		// fallback
 		return new org.springframework.ldap.UncategorizedLdapException(ex);
+	}
+
+	/**
+	 * Get the actual class of the supplied DirContext instance; LdapContext or
+	 * DirContext.
+	 * 
+	 * @param context
+	 *            the DirContext instance to check.
+	 * @return LdapContext.class if context is an LdapContext, DirContext.class
+	 *         otherwise.
+	 */
+	public static Class getActualTargetClass(DirContext context) {
+	    if (context instanceof LdapContext) {
+	        return LdapContext.class;
+	    }
+	
+	    return DirContext.class;
 	}
 }
