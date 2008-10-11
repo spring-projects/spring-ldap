@@ -16,6 +16,8 @@
 package org.springframework.ldap;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 
 import java.util.List;
 
@@ -178,5 +180,28 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
 		contextMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
 		List list = tested.search(BASE_NAME, FILTER_STRING, SearchControls.SUBTREE_SCOPE, CN_SN_ATTRS, contextMapper);
 		assertEquals(1, list.size());
+	}
+
+	@Test
+	public void testSearchWithInvalidSearchBaseShouldByDefaultThrowException() {
+		try {
+			tested.search(BASE_NAME + "ou=unknown", FILTER_STRING, SearchControls.SUBTREE_SCOPE, CN_SN_ATTRS,
+					contextMapper);
+			fail("NameNotFoundException expected");
+		}
+		catch (NameNotFoundException expected) {
+			assertTrue(true);
+		}
+	}
+
+	@Test
+	public void testSearchWithInvalidSearchBaseCanBeConfiguredToSwallowException() {
+		tested.setIgnoreNameNotFoundException(true);
+		contextMapper.setExpectedAttributes(CN_SN_ATTRS);
+		contextMapper.setExpectedValues(CN_SN_VALUES);
+		contextMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
+		List list = tested.search(BASE_NAME + "ou=unknown", FILTER_STRING, SearchControls.SUBTREE_SCOPE, CN_SN_ATTRS,
+				contextMapper);
+		assertEquals(0, list.size());
 	}
 }

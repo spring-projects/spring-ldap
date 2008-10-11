@@ -349,7 +349,7 @@ public class LdapTemplateTest extends TestCase {
         controls.setReturningObjFlag(false);
 
         dirContextControl.setDefaultMatcher(new SearchControlsMatcher());
-        javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
+        javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException("some text");
         dirContextControl.expectAndThrow(dirContextMock.search(nameMock,
                 "(ou=somevalue)", controls), ne);
 
@@ -357,7 +357,13 @@ public class LdapTemplateTest extends TestCase {
 
         replay();
 
-        tested.search(nameMock, "(ou=somevalue)", handlerMock);
+        try {
+			tested.search(nameMock, "(ou=somevalue)", handlerMock);
+			fail("NameNotFoundException expected");
+		}
+		catch (NameNotFoundException expected) {
+			assertTrue(true);
+		}
 
         verify();
     }
@@ -1605,7 +1611,13 @@ public class LdapTemplateTest extends TestCase {
 
         replay();
 
-        tested.search(searchExecutorMock, handlerMock);
+        try {
+        	tested.search(searchExecutorMock, handlerMock);
+			fail("NameNotFoundException expected");
+		}
+		catch (NameNotFoundException expected) {
+			assertTrue(true);
+		}
 
         verify();
     }

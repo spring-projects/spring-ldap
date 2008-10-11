@@ -73,6 +73,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
 	private boolean ignorePartialResultException = false;
 
+	private boolean ignoreNameNotFoundException = false;
+
 	/**
 	 * Constructor for bean usage.
 	 */
@@ -105,6 +107,25 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	public ContextSource getContextSource() {
 		return contextSource;
+	}
+
+	/**
+	 * Specify whether <code>NameNotFoundException</code> should be ignored in
+	 * searches. In previous version, <code>NameNotFoundException</code> caused
+	 * by the search base not being found was silently ignored. The default
+	 * behavior is now to treat this as an error (as it should), and to convert
+	 * and re-throw the exception. The ability to revert to the previous
+	 * behavior still exists. The only difference is that the incident is in
+	 * that case no longer silently ignored, but logged as a warning.
+	 * 
+	 * @param ignore <code>true</code> if <code>NameNotFoundException</code>
+	 * should be ignored in searches, <code>false</code> otherwise. Default is
+	 * <code>false</code>.
+	 * 
+	 * @since 1.3
+	 */
+	public void setIgnoreNameNotFoundException(boolean ignore) {
+		this.ignoreNameNotFoundException = ignore;
 	}
 
 	/**
@@ -262,14 +283,13 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			}
 		}
 		catch (NameNotFoundException e) {
-			// The base context was not found, which basically means
-			// that the search did not return any results. Just clean up and
-			// exit.
-			// Note that this may present problems if a DirContextProcessor was
-			// supplied - there's no guarantee that the postProcess() operation
-			// will go well after a NamingException has been thrown. It is
-			// however quite possible that information will be available for
-			// retrieval either way.
+			// It is possible to ignore errors caused by base not found
+			if (ignoreNameNotFoundException) {
+				log.warn("Base context not found, ignoring: " + e.getMessage());
+			}
+			else {
+				ex = LdapUtils.convertLdapException(e);
+			}
 		}
 		catch (PartialResultException e) {
 			// Workaround for AD servers not handling referrals correctly.
