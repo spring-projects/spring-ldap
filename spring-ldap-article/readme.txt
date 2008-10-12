@@ -1,1 +1,0 @@
-For setup instructions on how to run this sample project, see docs/readme.txt.
