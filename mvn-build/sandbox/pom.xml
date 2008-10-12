@@ -26,6 +26,13 @@
 	</build>
 
 	<dependencies>
+        <!-- External Dependencies -->
+        <dependency>
+            <groupId>com.sun</groupId>
+            <artifactId>ldapbp</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
+        </dependency>
 		<!-- Spring LDAP Dependencies -->
 		<dependency>
 			<groupId>org.springframework.ldap</groupId>
