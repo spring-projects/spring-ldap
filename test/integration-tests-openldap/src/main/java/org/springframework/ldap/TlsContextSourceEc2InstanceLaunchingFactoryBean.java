@@ -20,6 +20,7 @@ import javax.net.ssl.SSLSession;
 
 import org.springframework.ldap.core.support.DefaultTlsDirContextAuthenticationStrategy;
 import org.springframework.ldap.core.support.LdapContextSource;
+import org.springframework.ldap.test.ContextSourceEc2InstanceLaunchingFactoryBean;
 
 /**
  * FactoryBean for testing LDAP TLS connections on an Amazon EC2 image launched by superclass.

@@ -9,7 +9,7 @@
 		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
 	</bean>
 
-	<bean id="contextSource" class="org.springframework.ldap.ContextSourceEc2InstanceLaunchingFactoryBean">
+	<bean id="contextSource" class="org.springframework.ldap.test.ContextSourceEc2InstanceLaunchingFactoryBean">
 		<property name="awsKey" value="${aws.key}" />
 		<property name="awsSecretKey" value="${aws.secret.key}" />
 		<property name="imageName" value="${aws.ami}" />
