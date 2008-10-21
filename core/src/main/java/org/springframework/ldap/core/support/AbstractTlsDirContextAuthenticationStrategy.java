@@ -75,7 +75,7 @@ public abstract class AbstractTlsDirContextAuthenticationStrategy implements Dir
 
 	/**
 	 * Set the optional
-	 * <code>HostnameVerifier<code> to use for verfying incoming certificates. Defaults to <code>null</code>
+	 * <code>HostnameVerifier<code> to use for verifying incoming certificates. Defaults to <code>null</code>
 	 * , meaning that the default hostname verification will take place.
 	 * 
 	 * @param hostnameVerifier The <code>HostnameVerifier</code> to use, if any.
@@ -116,7 +116,7 @@ public abstract class AbstractTlsDirContextAuthenticationStrategy implements Dir
 			}
 			catch (IOException e) {
 				LdapUtils.closeContext(ctx);
-				throw new UncategorizedLdapException("Failed to negitiate tls session", e);
+				throw new UncategorizedLdapException("Failed to negotiate TLS session", e);
 			}
 		}
 		else {
