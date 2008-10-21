@@ -15,23 +15,18 @@
  */
 package org.springframework.ldap.control;
 
-import java.io.IOException;
-
-import javax.naming.ldap.Control;
-import javax.naming.ldap.LdapContext;
-
-import junit.framework.TestCase;
-
-import org.easymock.MockControl;
-import org.springframework.ldap.control.PagedResultsCookie;
-import org.springframework.ldap.control.PagedResultsRequestControl;
-
 import com.sun.jndi.ldap.Ber;
 import com.sun.jndi.ldap.BerDecoder;
 import com.sun.jndi.ldap.BerEncoder;
 import com.sun.jndi.ldap.ctl.DirSyncResponseControl;
-import com.sun.jndi.ldap.ctl.PagedResultsControl;
-import com.sun.jndi.ldap.ctl.PagedResultsResponseControl;
+import junit.framework.TestCase;
+import org.easymock.MockControl;
+
+import javax.naming.ldap.Control;
+import javax.naming.ldap.LdapContext;
+import javax.naming.ldap.PagedResultsControl;
+import javax.naming.ldap.PagedResultsResponseControl;
+import java.io.IOException;
 
 public class PagedResultsRequestControlTest extends TestCase {
 
