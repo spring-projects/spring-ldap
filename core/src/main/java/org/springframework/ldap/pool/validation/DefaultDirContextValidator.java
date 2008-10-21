@@ -83,10 +83,21 @@ public class DefaultDirContextValidator implements DirContextValidator {
     private SearchControls searchControls;
     
     /**
-     * Create the default validator, creates {@link SearchControls} with a countLimit of 1, returningAttributes of 
-     * objectclass and timeLimit of 500. The default base is an empty string and the default filter is objectclass=*
+     * Create the default validator, creates {@link SearchControls} with search scope <code>OBJECT_SCOPE</code>,
+     * a countLimit of 1, returningAttributes of objectclass and timeLimit of 500.
+     * The default base is an empty string and the default filter is objectclass=*
      */
     public DefaultDirContextValidator() {
+        this(SearchControls.OBJECT_SCOPE);        
+    }
+
+    /**
+     * Create a validator with all the defaults of the default constructor, but with the search scope set to the
+     * referred value.
+     *
+     * @param searchScope The searchScope to be set in the default <code>SearchControls</code>
+     */
+    public DefaultDirContextValidator(int searchScope) {
         this.searchControls = new SearchControls();
         this.searchControls.setCountLimit(1);
         this.searchControls.setReturningAttributes(new String[] { "objectclass" });
