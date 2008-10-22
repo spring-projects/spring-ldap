@@ -38,18 +38,18 @@ public interface CompensatingTransactionOperationManager {
      * @param args
      *            Arguments supplied to the method.
      */
-    public void performOperation(Object resource, String operation,
+    void performOperation(Object resource, String operation,
             Object[] args);
 
     /**
      * Rollback all recorded operations by performing each of the recorded
      * rollback operations.
      */
-    public void rollback();
+    void rollback();
 
     /**
      * Commit all recorded operations. In many cases this means doing nothing,
      * but in some cases some temporary data will need to be removed.
      */
-    public void commit();
+    void commit();
 }

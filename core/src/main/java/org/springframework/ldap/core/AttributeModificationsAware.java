@@ -33,5 +33,5 @@ public interface AttributeModificationsAware {
      * 
      * @return an array of modification items.
      */
-    public ModificationItem[] getModificationItems();
+    ModificationItem[] getModificationItems();
 }

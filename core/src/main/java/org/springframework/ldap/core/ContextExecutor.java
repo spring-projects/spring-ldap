@@ -46,5 +46,5 @@ public interface ContextExecutor {
      * @throws NamingException
      *             if the operation resulted in one.
      */
-    public Object executeWithContext(DirContext ctx) throws NamingException;
+    Object executeWithContext(DirContext ctx) throws NamingException;
 }

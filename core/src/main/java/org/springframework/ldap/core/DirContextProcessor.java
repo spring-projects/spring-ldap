@@ -37,7 +37,7 @@ public interface DirContextProcessor {
      * @throws NamingException
      *             if thrown by the underlying operation.
      */
-    public void preProcess(DirContext ctx) throws NamingException;
+    void preProcess(DirContext ctx) throws NamingException;
 
     /**
      * Perform post-processing on the supplied <code>DirContext</code>.
@@ -47,5 +47,5 @@ public interface DirContextProcessor {
      * @throws NamingException
      *             if thrown by the underlying operation.
      */
-    public void postProcess(DirContext ctx) throws NamingException;
+    void postProcess(DirContext ctx) throws NamingException;
 }

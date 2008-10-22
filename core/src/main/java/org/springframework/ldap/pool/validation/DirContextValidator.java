@@ -35,5 +35,5 @@ public interface DirContextValidator {
      * @param dirContext The {@link DirContext} to validate.
      * @return <code>true</code> if the {@link DirContext} operated correctly during validation.
      */
-    public boolean validateDirContext(DirContextType contextType, DirContext dirContext);
+    boolean validateDirContext(DirContextType contextType, DirContext dirContext);
 }

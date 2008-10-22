@@ -41,7 +41,7 @@ public interface ContextSource {
 	 * @return A DirContext instance, never null.
 	 * @throws NamingException if some error occurs creating an DirContext.
 	 */
-	public DirContext getReadOnlyContext() throws NamingException;
+	DirContext getReadOnlyContext() throws NamingException;
 
 	/**
 	 * Gets a read-write <code>DirContext</code> instance.
@@ -50,7 +50,7 @@ public interface ContextSource {
 	 * @throws NamingException if some error occurs creating an
 	 * <code>DirContext</code>.
 	 */
-	public DirContext getReadWriteContext() throws NamingException;
+	DirContext getReadWriteContext() throws NamingException;
 
 	/**
 	 * Gets a <code>DirContext</code> instance authenticated using the supplied
@@ -61,6 +61,7 @@ public interface ContextSource {
 	 * @param credentials The credentials to use for authentication.
 	 * @return an authenticated <code>DirContext</code> instance, never
 	 * <code>null</code>.
+	 * @since 1.3
 	 */
-	public DirContext getContext(String principal, String credentials) throws NamingException;
+	DirContext getContext(String principal, String credentials) throws NamingException;
 }

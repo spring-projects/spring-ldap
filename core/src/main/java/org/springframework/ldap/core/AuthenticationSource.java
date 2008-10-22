@@ -29,12 +29,12 @@ public interface AuthenticationSource {
      * 
      * @return the principal (userDn).
      */
-    public String getPrincipal();
+    String getPrincipal();
 
     /**
      * Get the credentials to use when creating an authenticated context.
      * 
      * @return the credentials (password).
      */
-    public String getCredentials();
+    String getCredentials();
 }

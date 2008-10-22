@@ -34,5 +34,5 @@ public interface TempEntryRenamingStrategy {
      * @return The name to which the entry should be temporarily renamed
      *         according to this strategy.
      */
-    public Name getTemporaryName(Name originalName);
+    Name getTemporaryName(Name originalName);
 }

@@ -50,6 +50,6 @@ public interface AttributesMapper {
      * @throws NamingException
      *             if any error occurs mapping the attributes
      */
-    public Object mapFromAttributes(Attributes attributes)
+    Object mapFromAttributes(Attributes attributes)
             throws NamingException;
 }

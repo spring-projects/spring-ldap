@@ -45,5 +45,5 @@ public interface BaseLdapPathAware {
 	 * <code>ApplicationContext</code>.
 	 * @param baseLdapPath the base path used in the <code>ContextSource</code>
 	 */
-	public void setBaseLdapPath(DistinguishedName baseLdapPath);
+	void setBaseLdapPath(DistinguishedName baseLdapPath);
 }

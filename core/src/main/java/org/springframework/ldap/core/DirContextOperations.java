@@ -187,6 +187,7 @@ public interface DirContextOperations extends DirContext, AttributeModifications
 	 * @return The url of the referred server, e.g.
 	 * <code>ldap://localhost:389</code>, or the empty string if this is not a
 	 * referral.
+	 * @since 1.3
 	 */
 	String getReferralUrl();
 
@@ -195,6 +196,7 @@ public interface DirContextOperations extends DirContext, AttributeModifications
 	 * 
 	 * @return <code>true</code> if this instance results from a referral,
 	 * <code>false</code> otherwise.
+	 * @since 1.3
 	 */
 	boolean isReferral();
 }

@@ -32,5 +32,5 @@ public interface ContextAssembler extends ContextMapper {
      * @param ctx
      *            the context to map to.
      */
-    public void mapToContext(Object obj, Object ctx);
+    void mapToContext(Object obj, Object ctx);
 }

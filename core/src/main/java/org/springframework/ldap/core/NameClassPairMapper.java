@@ -39,6 +39,6 @@ public interface NameClassPairMapper {
      * @throws NamingException
      *             if one is encountered in the operation.
      */
-    public Object mapFromNameClassPair(NameClassPair nameClassPair)
+    Object mapFromNameClassPair(NameClassPair nameClassPair)
             throws NamingException;
 }

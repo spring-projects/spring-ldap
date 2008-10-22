@@ -37,5 +37,5 @@ public interface NameClassPairCallbackHandler {
      *            the NameClassPair returned from the
      *            <code>NamingEnumeration</code>.
      */
-    public void handleNameClassPair(NameClassPair nameClassPair);
+    void handleNameClassPair(NameClassPair nameClassPair);
 }

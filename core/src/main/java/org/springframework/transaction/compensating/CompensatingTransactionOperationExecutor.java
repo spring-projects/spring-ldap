@@ -43,14 +43,14 @@ public interface CompensatingTransactionOperationExecutor {
      * the operation was performed using the information supplied on creation of
      * this instance.
      */
-    public void rollback();
+    void rollback();
 
     /**
      * Commit the operation. In many cases, this will not require any work at
      * all to be performed. However, in some cases there will be interesting
      * stuff to do. See class description for elaboration on this.
      */
-    public void commit();
+    void commit();
 
     /**
      * Perform the operation. This will most often require performing the
@@ -58,5 +58,5 @@ public interface CompensatingTransactionOperationExecutor {
      * this method might be something else. See class description for
      * elaboration on this.
      */
-    public void performOperation();
+    void performOperation();
 }

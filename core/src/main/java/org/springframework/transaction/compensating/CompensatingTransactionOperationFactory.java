@@ -39,6 +39,6 @@ public interface CompensatingTransactionOperationFactory {
      * 
      * @return a new {@link CompensatingTransactionOperationRecorder} instance.
      */
-    public CompensatingTransactionOperationRecorder createRecordingOperation(
+    CompensatingTransactionOperationRecorder createRecordingOperation(
             Object resource, String method);
 }

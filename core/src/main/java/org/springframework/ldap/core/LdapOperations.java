@@ -65,7 +65,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted as no entries being found.
      */
-    public void search(SearchExecutor se, NameClassPairCallbackHandler handler,
+    void search(SearchExecutor se, NameClassPairCallbackHandler handler,
             DirContextProcessor processor) throws NamingException;
 
     /**
@@ -93,7 +93,7 @@ public interface LdapOperations {
      * @see #search(Name, String, AttributesMapper)
      * @see #search(Name, String, ContextMapper)
      */
-    public void search(SearchExecutor se, NameClassPairCallbackHandler handler)
+    void search(SearchExecutor se, NameClassPairCallbackHandler handler)
             throws NamingException;
 
     /**
@@ -115,7 +115,7 @@ public interface LdapOperations {
      * @see #search(Name, String, AttributesMapper)
      * @see #search(Name, String, ContextMapper)
      */
-    public Object executeReadOnly(ContextExecutor ce) throws NamingException;
+    Object executeReadOnly(ContextExecutor ce) throws NamingException;
 
     /**
      * Perform an operation (or series of operations) on a read-write context.
@@ -136,7 +136,7 @@ public interface LdapOperations {
      * @see #rename(Name, Name)
      * @see #modifyAttributes(Name, ModificationItem[])
      */
-    public Object executeReadWrite(ContextExecutor ce) throws NamingException;
+    Object executeReadWrite(ContextExecutor ce) throws NamingException;
 
     /**
      * Search for all objects matching the supplied filter. Each
@@ -161,7 +161,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public void search(Name base, String filter, SearchControls controls,
+    void search(Name base, String filter, SearchControls controls,
             NameClassPairCallbackHandler handler) throws NamingException;
 
     /**
@@ -183,7 +183,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public void search(String base, String filter, SearchControls controls,
+    void search(String base, String filter, SearchControls controls,
             NameClassPairCallbackHandler handler) throws NamingException;
 
     /**
@@ -214,7 +214,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public void search(Name base, String filter, SearchControls controls,
+    void search(Name base, String filter, SearchControls controls,
             NameClassPairCallbackHandler handler, DirContextProcessor processor)
             throws NamingException;
 
@@ -245,7 +245,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List search(String base, String filter, SearchControls controls,
+    List search(String base, String filter, SearchControls controls,
             AttributesMapper mapper, DirContextProcessor processor)
             throws NamingException;
 
@@ -276,7 +276,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List search(Name base, String filter, SearchControls controls,
+    List search(Name base, String filter, SearchControls controls,
             AttributesMapper mapper, DirContextProcessor processor)
             throws NamingException;
 
@@ -310,7 +310,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List search(String base, String filter, SearchControls controls,
+    List search(String base, String filter, SearchControls controls,
             ContextMapper mapper, DirContextProcessor processor)
             throws NamingException;
 
@@ -344,7 +344,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List search(Name base, String filter, SearchControls controls,
+    List search(Name base, String filter, SearchControls controls,
             ContextMapper mapper, DirContextProcessor processor)
             throws NamingException;
 
@@ -370,7 +370,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public void search(String base, String filter, SearchControls controls,
+    void search(String base, String filter, SearchControls controls,
             NameClassPairCallbackHandler handler, DirContextProcessor processor)
             throws NamingException;
 
@@ -398,7 +398,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public void search(Name base, String filter, int searchScope,
+    void search(Name base, String filter, int searchScope,
             boolean returningObjFlag, NameClassPairCallbackHandler handler)
             throws NamingException;
 
@@ -426,7 +426,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public void search(String base, String filter, int searchScope,
+    void search(String base, String filter, int searchScope,
             boolean returningObjFlag, NameClassPairCallbackHandler handler)
             throws NamingException;
 
@@ -448,7 +448,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public void search(Name base, String filter,
+    void search(Name base, String filter,
             NameClassPairCallbackHandler handler) throws NamingException;
 
     /**
@@ -469,7 +469,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public void search(String base, String filter,
+    void search(String base, String filter,
             NameClassPairCallbackHandler handler) throws NamingException;
 
     /**
@@ -497,7 +497,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List search(Name base, String filter, int searchScope,
+    List search(Name base, String filter, int searchScope,
             String[] attrs, AttributesMapper mapper) throws NamingException;
 
     /**
@@ -525,7 +525,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List search(String base, String filter, int searchScope,
+    List search(String base, String filter, int searchScope,
             String[] attrs, AttributesMapper mapper) throws NamingException;
 
     /**
@@ -549,7 +549,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List search(Name base, String filter, int searchScope,
+    List search(Name base, String filter, int searchScope,
             AttributesMapper mapper) throws NamingException;
 
     /**
@@ -573,7 +573,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List search(String base, String filter, int searchScope,
+    List search(String base, String filter, int searchScope,
             AttributesMapper mapper) throws NamingException;
 
     /**
@@ -595,7 +595,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List search(Name base, String filter, AttributesMapper mapper)
+    List search(Name base, String filter, AttributesMapper mapper)
             throws NamingException;
 
     /**
@@ -617,7 +617,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List search(String base, String filter, AttributesMapper mapper)
+    List search(String base, String filter, AttributesMapper mapper)
             throws NamingException;
 
     /**
@@ -645,7 +645,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List search(Name base, String filter, int searchScope,
+    List search(Name base, String filter, int searchScope,
             String[] attrs, ContextMapper mapper) throws NamingException;
 
     /**
@@ -673,7 +673,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List search(String base, String filter, int searchScope,
+    List search(String base, String filter, int searchScope,
             String[] attrs, ContextMapper mapper) throws NamingException;
 
     /**
@@ -697,7 +697,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List search(Name base, String filter, int searchScope,
+    List search(Name base, String filter, int searchScope,
             ContextMapper mapper) throws NamingException;
 
     /**
@@ -721,7 +721,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List search(String base, String filter, int searchScope,
+    List search(String base, String filter, int searchScope,
             ContextMapper mapper) throws NamingException;
 
     /**
@@ -745,7 +745,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List search(Name base, String filter, ContextMapper mapper)
+    List search(Name base, String filter, ContextMapper mapper)
             throws NamingException;
 
     /**
@@ -769,7 +769,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List search(String base, String filter, ContextMapper mapper)
+    List search(String base, String filter, ContextMapper mapper)
             throws NamingException;
 
     /**
@@ -793,7 +793,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List search(String base, String filter, SearchControls controls,
+    List search(String base, String filter, SearchControls controls,
             ContextMapper mapper) throws NamingException;
 
     /**
@@ -820,7 +820,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List search(Name base, String filter, SearchControls controls,
+    List search(Name base, String filter, SearchControls controls,
             ContextMapper mapper) throws NamingException;
 
     /**
@@ -844,7 +844,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List search(String base, String filter, SearchControls controls,
+    List search(String base, String filter, SearchControls controls,
             AttributesMapper mapper) throws NamingException;
 
     /**
@@ -868,7 +868,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List search(Name base, String filter, SearchControls controls,
+    List search(Name base, String filter, SearchControls controls,
             AttributesMapper mapper) throws NamingException;
 
     /**
@@ -886,7 +886,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public void list(String base, NameClassPairCallbackHandler handler)
+    void list(String base, NameClassPairCallbackHandler handler)
             throws NamingException;
 
     /**
@@ -904,7 +904,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public void list(Name base, NameClassPairCallbackHandler handler)
+    void list(Name base, NameClassPairCallbackHandler handler)
             throws NamingException;
 
     /**
@@ -925,7 +925,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List list(String base, NameClassPairMapper mapper)
+    List list(String base, NameClassPairMapper mapper)
             throws NamingException;
 
     /**
@@ -946,7 +946,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List list(Name base, NameClassPairMapper mapper)
+    List list(Name base, NameClassPairMapper mapper)
             throws NamingException;
 
     /**
@@ -962,7 +962,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List list(String base) throws NamingException;
+    List list(String base) throws NamingException;
 
     /**
      * Perform a non-recursive listing of the children of the given
@@ -977,7 +977,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List list(Name base) throws NamingException;
+    List list(Name base) throws NamingException;
 
     /**
      * Perform a non-recursive listing of the children of the given
@@ -994,7 +994,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public void listBindings(final String base,
+    void listBindings(final String base,
             NameClassPairCallbackHandler handler) throws NamingException;
 
     /**
@@ -1012,7 +1012,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public void listBindings(final Name base,
+    void listBindings(final Name base,
             NameClassPairCallbackHandler handler) throws NamingException;
 
     /**
@@ -1033,7 +1033,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List listBindings(String base, NameClassPairMapper mapper)
+    List listBindings(String base, NameClassPairMapper mapper)
             throws NamingException;
 
     /**
@@ -1054,7 +1054,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List listBindings(Name base, NameClassPairMapper mapper)
+    List listBindings(Name base, NameClassPairMapper mapper)
             throws NamingException;
 
     /**
@@ -1070,7 +1070,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List listBindings(final String base) throws NamingException;
+    List listBindings(final String base) throws NamingException;
 
     /**
      * Perform a non-recursive listing of children of the given
@@ -1085,7 +1085,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List listBindings(final Name base) throws NamingException;
+    List listBindings(final Name base) throws NamingException;
 
     /**
      * Perform a non-recursive listing of the children of the given
@@ -1104,7 +1104,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List listBindings(String base, ContextMapper mapper)
+    List listBindings(String base, ContextMapper mapper)
             throws NamingException;
 
     /**
@@ -1124,7 +1124,7 @@ public interface LdapOperations {
      *             <code>NameNotFoundException</code> will be ignored. Instead
      *             this is interpreted that no entries were found.
      */
-    public List listBindings(Name base, ContextMapper mapper)
+    List listBindings(Name base, ContextMapper mapper)
             throws NamingException;
 
     /**
@@ -1140,7 +1140,7 @@ public interface LdapOperations {
      * @see #lookupContext(Name)
      * @see AbstractContextSource#setDirObjectFactory(Class)
      */
-    public Object lookup(Name dn) throws NamingException;
+    Object lookup(Name dn) throws NamingException;
 
     /**
      * Lookup the supplied DN and return the found object. This will typically
@@ -1155,7 +1155,7 @@ public interface LdapOperations {
      * @see #lookupContext(String)
      * @see AbstractContextSource#setDirObjectFactory(Class)
      */
-    public Object lookup(String dn) throws NamingException;
+    Object lookup(String dn) throws NamingException;
 
     /**
      * Convenience method to get the attributes of a specified DN and
@@ -1170,7 +1170,7 @@ public interface LdapOperations {
      * @throws NamingException
      *             if any error occurs.
      */
-    public Object lookup(Name dn, AttributesMapper mapper)
+    Object lookup(Name dn, AttributesMapper mapper)
             throws NamingException;
 
     /**
@@ -1186,7 +1186,7 @@ public interface LdapOperations {
      * @throws NamingException
      *             if any error occurs.
      */
-    public Object lookup(String dn, AttributesMapper mapper)
+    Object lookup(String dn, AttributesMapper mapper)
             throws NamingException;
 
     /**
@@ -1202,7 +1202,7 @@ public interface LdapOperations {
      * @throws NamingException
      *             if any error occurs.
      */
-    public Object lookup(Name dn, ContextMapper mapper) throws NamingException;
+    Object lookup(Name dn, ContextMapper mapper) throws NamingException;
 
     /**
      * Convenience method to lookup a specified DN and automatically pass the
@@ -1217,7 +1217,7 @@ public interface LdapOperations {
      * @throws NamingException
      *             if any error occurs.
      */
-    public Object lookup(String dn, ContextMapper mapper)
+    Object lookup(String dn, ContextMapper mapper)
             throws NamingException;
 
     /**
@@ -1235,7 +1235,7 @@ public interface LdapOperations {
      * @throws NamingException
      *             if any error occurs.
      */
-    public Object lookup(Name dn, String[] attributes, AttributesMapper mapper)
+    Object lookup(Name dn, String[] attributes, AttributesMapper mapper)
             throws NamingException;
 
     /**
@@ -1253,7 +1253,7 @@ public interface LdapOperations {
      * @throws NamingException
      *             if any error occurs.
      */
-    public Object lookup(String dn, String[] attributes, AttributesMapper mapper)
+    Object lookup(String dn, String[] attributes, AttributesMapper mapper)
             throws NamingException;
 
     /**
@@ -1271,7 +1271,7 @@ public interface LdapOperations {
      * @throws NamingException
      *             if any error occurs.
      */
-    public Object lookup(Name dn, String[] attributes, ContextMapper mapper)
+    Object lookup(Name dn, String[] attributes, ContextMapper mapper)
             throws NamingException;
 
     /**
@@ -1289,7 +1289,7 @@ public interface LdapOperations {
      * @throws NamingException
      *             if any error occurs.
      */
-    public Object lookup(String dn, String[] attributes, ContextMapper mapper)
+    Object lookup(String dn, String[] attributes, ContextMapper mapper)
             throws NamingException;
 
     /**
@@ -1304,7 +1304,7 @@ public interface LdapOperations {
      *             if any error occurs.
      * @see #modifyAttributes(DirContextOperations)
      */
-    public void modifyAttributes(Name dn, ModificationItem[] mods)
+    void modifyAttributes(Name dn, ModificationItem[] mods)
             throws NamingException;
 
     /**
@@ -1319,7 +1319,7 @@ public interface LdapOperations {
      *             if any error occurs.
      * @see #modifyAttributes(DirContextOperations)
      */
-    public void modifyAttributes(String dn, ModificationItem[] mods)
+    void modifyAttributes(String dn, ModificationItem[] mods)
             throws NamingException;
 
     /**
@@ -1339,7 +1339,7 @@ public interface LdapOperations {
      *             if any error occurs.
      * @see DirContextAdapter
      */
-    public void bind(Name dn, Object obj, Attributes attributes)
+    void bind(Name dn, Object obj, Attributes attributes)
             throws NamingException;
 
     /**
@@ -1359,7 +1359,7 @@ public interface LdapOperations {
      *             if any error occurs.
      * @see DirContextAdapter
      */
-    public void bind(String dn, Object obj, Attributes attributes)
+    void bind(String dn, Object obj, Attributes attributes)
             throws NamingException;
 
     /**
@@ -1372,7 +1372,7 @@ public interface LdapOperations {
      * @throws NamingException
      *             if any error occurs.
      */
-    public void unbind(Name dn) throws NamingException;
+    void unbind(Name dn) throws NamingException;
 
     /**
      * Remove an entry from the LDAP tree. The entry must not have any children -
@@ -1384,7 +1384,7 @@ public interface LdapOperations {
      * @throws NamingException
      *             if any error occurs.
      */
-    public void unbind(String dn) throws NamingException;
+    void unbind(String dn) throws NamingException;
 
     /**
      * Remove an entry from the LDAP tree, optionally removing all descendants
@@ -1399,7 +1399,7 @@ public interface LdapOperations {
      * @throws NamingException
      *             if any error occurs.
      */
-    public void unbind(Name dn, boolean recursive) throws NamingException;
+    void unbind(Name dn, boolean recursive) throws NamingException;
 
     /**
      * Remove an entry from the LDAP tree, optionally removing all descendants
@@ -1414,7 +1414,7 @@ public interface LdapOperations {
      * @throws NamingException
      *             if any error occurs.
      */
-    public void unbind(String dn, boolean recursive) throws NamingException;
+    void unbind(String dn, boolean recursive) throws NamingException;
 
     /**
      * Remove an entry and replace it with a new one. The attributes used to
@@ -1434,7 +1434,7 @@ public interface LdapOperations {
      *             if any error occurs.
      * @see DirContextAdapter
      */
-    public void rebind(Name dn, Object obj, Attributes attributes)
+    void rebind(Name dn, Object obj, Attributes attributes)
             throws NamingException;
 
     /**
@@ -1455,7 +1455,7 @@ public interface LdapOperations {
      *             if any error occurs.
      * @see DirContextAdapter
      */
-    public void rebind(String dn, Object obj, Attributes attributes)
+    void rebind(String dn, Object obj, Attributes attributes)
             throws NamingException;
 
     /**
@@ -1472,7 +1472,7 @@ public interface LdapOperations {
      * @throws NamingException
      *             if any other error occurs.
      */
-    public void rename(final Name oldDn, final Name newDn)
+    void rename(final Name oldDn, final Name newDn)
             throws NamingException;
 
     /**
@@ -1489,7 +1489,7 @@ public interface LdapOperations {
      * @throws NamingException
      *             if any other error occurs.
      */
-    public void rename(final String oldDn, final String newDn)
+    void rename(final String oldDn, final String newDn)
             throws NamingException;
 
     /**
@@ -1510,7 +1510,7 @@ public interface LdapOperations {
      * @see #modifyAttributes(DirContextOperations)
      * @since 1.2
      */
-    public DirContextOperations lookupContext(Name dn) throws NamingException,
+    DirContextOperations lookupContext(Name dn) throws NamingException,
             ClassCastException;
 
     /**
@@ -1531,7 +1531,7 @@ public interface LdapOperations {
      * @see #modifyAttributes(DirContextOperations)
      * @since 1.2
      */
-    public DirContextOperations lookupContext(String dn)
+    DirContextOperations lookupContext(String dn)
             throws NamingException, ClassCastException;
 
     /**
@@ -1570,6 +1570,6 @@ public interface LdapOperations {
      * @see #lookupContext(Name)
      * @see DirContextAdapter
      */
-    public void modifyAttributes(DirContextOperations ctx)
+    void modifyAttributes(DirContextOperations ctx)
             throws IllegalStateException, NamingException;
 }

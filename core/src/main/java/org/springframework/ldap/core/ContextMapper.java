@@ -61,5 +61,5 @@ public interface ContextMapper {
      *            <code>ContextSource</code>.
      * @return an object built from the data in the context.
      */
-    public Object mapFromContext(Object ctx);
+    Object mapFromContext(Object ctx);
 }

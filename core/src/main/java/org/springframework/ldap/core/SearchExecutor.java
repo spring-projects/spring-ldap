@@ -47,6 +47,6 @@ public interface SearchExecutor {
      * @throws NamingException
      *             if the search results in one.
      */
-    public NamingEnumeration executeSearch(DirContext ctx)
+    NamingEnumeration executeSearch(DirContext ctx)
             throws NamingException;
 }
