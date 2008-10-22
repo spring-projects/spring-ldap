@@ -46,8 +46,8 @@ PARSER_END(DnParserImpl)
 
 TOKEN: { <#ALPHA: ["a"-"z", "A"-"Z"] > }
 TOKEN: { <#DIGIT: ["0"-"9"]> }
-TOKEN: { <#STRINGCHAR: ~[",","=","\r","+","<",">","#",";","\\","\""]> }
-TOKEN: { <#STRINGENDCHAR: ~[",","=","\r","+","<",">","#",";","\\","\""," "]> }
+TOKEN: { <#STRINGCHAR: ~[",","=","+","<",">","#",";","\\","\""]> }
+TOKEN: { <#STRINGENDCHAR: ~[",","=","+","<",">","#",";","\\","\""," "]> }
 TOKEN: { <#SPECIAL: [",","=","\r","+","<",">","#",";"]> }
 TOKEN: { <#HEXCHAR: ["0"-"9","a"-"f","A"-"F"]> }
 TOKEN: { <#HEXPAIR: <HEXCHAR> <HEXCHAR>> }

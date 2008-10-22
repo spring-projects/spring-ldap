@@ -477,7 +477,7 @@ public class DistinguishedNameTest extends TestCase {
 		DistinguishedName name = new DistinguishedName("cn=jo\"hn doe");
 		assertNotNull(name);
 	}
-	
+
 	public void testAppendChained() {
 		DistinguishedName tested = new DistinguishedName("dc=mycompany,dc=com");
 		tested.append("ou", "company1").append("cn", "john doe");
@@ -497,5 +497,13 @@ public class DistinguishedNameTest extends TestCase {
 		catch (UnsupportedOperationException expected) {
 			assertTrue(true);
 		}
+	}
+
+	/**
+	 * Test for LDAP-97.
+	 */
+	public void testDistinguishedNameWithCRParsesProperly() {
+		DistinguishedName name = new DistinguishedName("cn=foo \r bar");
+		assertNotNull(name);
 	}
 }
