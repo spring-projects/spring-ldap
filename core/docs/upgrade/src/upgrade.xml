@@ -422,7 +422,7 @@
 
             <tbody>
               <row>
-                <entry><literal><emphasis><emphasis>DefaultNamingExceptionTranslator</emphasis></emphasis></literal></entry>
+                <entry><literal>DefaultNamingExceptionTranslator</literal></entry>
 
                 <entry><literal>ldap</literal></entry>
 
@@ -446,7 +446,7 @@
               </row>
 
               <row>
-                <entry><literal><emphasis><emphasis>NamingExceptionTranslator</emphasis></emphasis></literal></entry>
+                <entry><literal>NamingExceptionTranslator</literal></entry>
 
                 <entry><literal>ldap</literal></entry>
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2007 the original author or authors.
+ * Copyright 2005-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.core.support;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Hashtable;
 
 import javax.naming.CompositeName;
@@ -24,8 +26,11 @@ import javax.naming.Name;
 import javax.naming.directory.Attributes;
 import javax.naming.spi.DirObjectFactory;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.util.StringUtils;
 
 /**
  * Default implementation of the DirObjectFactory interface. Creates a
@@ -34,74 +39,140 @@ import org.springframework.ldap.core.DistinguishedName;
  * @author Mattias Arthursson
  */
 public class DefaultDirObjectFactory implements DirObjectFactory {
-    /**
-     * Key to use in the ContextSource implementation to store the value of the
-     * base path suffix, if any, in the Ldap Environment.
-     * 
-     * @deprecated Use {@link BaseLdapPathAware} and {@link BaseLdapPathBeanPostProcessor} instead.
-     */
-    public static final String JNDI_ENV_BASE_PATH_KEY = "org.springframework.ldap.base.path";
+	private static final Log log = LogFactory.getLog(AbstractContextSource.class);
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.naming.spi.DirObjectFactory#getObjectInstance(java.lang.Object,
-     *      javax.naming.Name, javax.naming.Context, java.util.Hashtable,
-     *      javax.naming.directory.Attributes)
-     */
-    public Object getObjectInstance(Object obj, Name name, Context nameCtx,
-            Hashtable environment, Attributes attrs) throws Exception {
+	/**
+	 * Key to use in the ContextSource implementation to store the value of the
+	 * base path suffix, if any, in the Ldap Environment.
+	 * 
+	 * @deprecated Use {@link BaseLdapPathAware} and
+	 * {@link BaseLdapPathBeanPostProcessor} instead.
+	 */
+	public static final String JNDI_ENV_BASE_PATH_KEY = "org.springframework.ldap.base.path";
 
-        try {
-            String nameInNamespace = null;
-            if (nameCtx != null) {
-                nameInNamespace = nameCtx.getNameInNamespace();
-            } else {
-                nameInNamespace = "";
-            }
+	private static final String LDAP_PROTOCOL_PREFIX = "ldap://";
 
-            if(name instanceof CompositeName){
-            	// Which it most certainly will be, and therein lies the problem.
-            	// CompositeName.toString() completely screws up the formatting in some cases,
-            	// particularly when backslashes are involved.
-            	CompositeName compositeName = (CompositeName) name;
-            	name = new DistinguishedName(compositeName.get(0));
-            }
-            
-            DirContextAdapter dirContextAdapter = new DirContextAdapter(attrs,
-                    name, new DistinguishedName(nameInNamespace));
-            dirContextAdapter.setUpdateMode(true);
+	private static final String LDAPS_PROTOCOL_PREFIX = "ldaps://";
 
-            return dirContextAdapter;
-        } finally {
-            // It seems that the object supplied to the obj parameter is a
-            // DirContext instance with reference to the same Ldap connection as
-            // the original context. Since it is not the same instance (that's
-            // the nameCtx parameter) this one really needs to be closed in
-            // order to correctly clean up and return the connection to the pool
-            // when we're finished with the surrounding operation.
-            if (obj instanceof Context) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * javax.naming.spi.DirObjectFactory#getObjectInstance(java.lang.Object,
+	 * javax.naming.Name, javax.naming.Context, java.util.Hashtable,
+	 * javax.naming.directory.Attributes)
+	 */
+	public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable environment, Attributes attrs)
+			throws Exception {
 
-                Context ctx = (Context) obj;
-                try {
-                    ctx.close();
-                } catch (Exception e) {
-                    // Never mind this
-                }
+		try {
+			String nameInNamespace = null;
+			if (nameCtx != null) {
+				nameInNamespace = nameCtx.getNameInNamespace();
+			}
+			else {
+				nameInNamespace = "";
+			}
 
-            }
-        }
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.naming.spi.ObjectFactory#getObjectInstance(java.lang.Object,
-     *      javax.naming.Name, javax.naming.Context, java.util.Hashtable)
-     */
-    public Object getObjectInstance(Object obj, Name name, Context nameCtx,
-            Hashtable environment) throws Exception {
-        return null;
-    }
+			return constructAdapterFromName(attrs, name, nameInNamespace);
+		}
+		finally {
+			// It seems that the object supplied to the obj parameter is a
+			// DirContext instance with reference to the same Ldap connection as
+			// the original context. Since it is not the same instance (that's
+			// the nameCtx parameter) this one really needs to be closed in
+			// order to correctly clean up and return the connection to the pool
+			// when we're finished with the surrounding operation.
+			if (obj instanceof Context) {
+
+				Context ctx = (Context) obj;
+				try {
+					ctx.close();
+				}
+				catch (Exception e) {
+					// Never mind this
+				}
+
+			}
+		}
+	}
+
+	/**
+	 * Construct a DirContextAdapter given the supplied paramters. The
+	 * <code>name</code> is normally a JNDI <code>CompositeName</code>, which
+	 * needs to be handled with particuclar care. Specifically the escaping of a
+	 * <code>CompositeName</code> destroys proper escaping of Distinguished
+	 * Names. Also, the name might contain referral information, in which case
+	 * we need to separate the server information from the actual Distinguished
+	 * Name so that we can create a representing DirContextAdapter.
+	 * 
+	 * @param attrs the attributes
+	 * @param name the Name, typically a <code>CompositeName</code>, possibly
+	 * including referral information.
+	 * @param nameInNamespace the Name in namespace.
+	 * @return a {@link DirContextAdapter} representing the specified
+	 * information.
+	 */
+	DirContextAdapter constructAdapterFromName(Attributes attrs, Name name, String nameInNamespace) {
+		String nameString = "";
+		String referralUrl = "";
+
+		if (name instanceof CompositeName) {
+			// Which it most certainly will be, and therein lies the
+			// problem. CompositeName.toString() completely screws up the
+			// formatting
+			// in some cases, particularly when backslashes are involved.
+			CompositeName compositeName = (CompositeName) name;
+			nameString = compositeName.get(0);
+		}
+		else {
+			log.warn("Expecting a CompositeName as input to getObjectInstance but received a '"
+					+ name.getClass().toString() + "' - using toString and proceeding with undefined results");
+			nameString = name.toString();
+		}
+
+		if (nameString.startsWith(LDAP_PROTOCOL_PREFIX) || nameString.startsWith(LDAPS_PROTOCOL_PREFIX)) {
+			if (log.isDebugEnabled()) {
+				log.debug("Received name '" + nameString + "' contains protocol delimiter; indicating a referral."
+						+ "Stripping protocol and address info to enable construction of a proper DistinguishedName");
+			}
+			try {
+				URI url = new URI(nameString);
+				String pathString = url.getPath();
+				referralUrl = nameString.substring(0, nameString.length() - pathString.length());
+
+				if (StringUtils.hasLength(pathString) && pathString.startsWith("/")) {
+					// We don't want any slash in the beginning of the
+					// Distinguished Name.
+					pathString = pathString.substring(1);
+				}
+
+				nameString = pathString;
+			}
+			catch (URISyntaxException e) {
+				throw new IllegalArgumentException("Supplied name starts with protocol prefix indicating a referral,"
+						+ " but is not possible to parse to an URI", e);
+			}
+			if (log.isDebugEnabled()) {
+				log.debug("Resulting name after removal of referral information: '" + nameString + "'");
+			}
+		}
+
+		DirContextAdapter dirContextAdapter = new DirContextAdapter(attrs, new DistinguishedName(nameString),
+				new DistinguishedName(nameInNamespace), referralUrl);
+		dirContextAdapter.setUpdateMode(true);
+
+		return dirContextAdapter;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.naming.spi.ObjectFactory#getObjectInstance(java.lang.Object,
+	 * javax.naming.Name, javax.naming.Context, java.util.Hashtable)
+	 */
+	public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable environment) throws Exception {
+		return null;
+	}
 
 }

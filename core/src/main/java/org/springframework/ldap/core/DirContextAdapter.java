@@ -38,21 +38,21 @@ import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.support.LdapUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * Adapter that implements the interesting methods of the DirContext interface.
  * In particular it contains utility methods for getting and setting attributes.
  * Using the
  * {@link org.springframework.ldap.core.support.DefaultDirObjectFactory} in your
- * <code>ContextSource</code> (which is the default) you will receive
- * instances of this class from searches and lookups. This can be particularly
- * useful when updating data, since this class implements
+ * <code>ContextSource</code> (which is the default) you will receive instances
+ * of this class from searches and lookups. This can be particularly useful when
+ * updating data, since this class implements
  * {@link AttributeModificationsAware}, providing a
  * {@link #getModificationItems()} method. When in update mode, an object of
  * this class keeps track of the changes made to its attributes, making them
@@ -76,6 +76,8 @@ import org.springframework.ldap.support.LdapUtils;
  */
 public class DirContextAdapter implements DirContextOperations {
 
+	private static final String EMPTY_STRING = "";
+
 	private static final boolean ORDER_DOESNT_MATTER = false;
 
 	private static Log log = LogFactory.getLog(DirContextAdapter.class);
@@ -89,6 +91,8 @@ public class DirContextAdapter implements DirContextOperations {
 	private boolean updateMode = false;
 
 	private Attributes updatedAttrs;
+
+	private String referralUrl;
 
 	/**
 	 * Default constructor.
@@ -124,6 +128,19 @@ public class DirContextAdapter implements DirContextOperations {
 	 * @param base the base name.
 	 */
 	public DirContextAdapter(Attributes attrs, Name dn, Name base) {
+		this(attrs, dn, base, null);
+	}
+
+	/**
+	 * Create a new adapter from the supplied attributes, dn, base, and referral
+	 * url.
+	 * @param attrs the attributes.
+	 * @param dn the dn.
+	 * @param base the base.
+	 * @param referralUrl the referral url (if this instance results from a
+	 * referral).
+	 */
+	public DirContextAdapter(Attributes attrs, Name dn, Name base, String referralUrl) {
 		if (attrs != null) {
 			this.originalAttrs = attrs;
 		}
@@ -142,6 +159,12 @@ public class DirContextAdapter implements DirContextOperations {
 		else {
 			this.base = new DistinguishedName();
 		}
+		if (referralUrl != null) {
+			this.referralUrl = referralUrl;
+		}
+		else {
+			this.referralUrl = EMPTY_STRING;
+		}
 	}
 
 	/**
@@ -157,8 +180,8 @@ public class DirContextAdapter implements DirContextOperations {
 	}
 
 	/**
-	 * Sets the update mode. The update mode should be <code>false</code> for
-	 * a new entry and <code>true</code> for an existing entry that is being
+	 * Sets the update mode. The update mode should be <code>false</code> for a
+	 * new entry and <code>true</code> for an existing entry that is being
 	 * updated.
 	 * 
 	 * @param mode Update mode.
@@ -178,7 +201,8 @@ public class DirContextAdapter implements DirContextOperations {
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.DirContextOperations#getNamesOfModifiedAttributes()
+	 * @seeorg.springframework.ldap.support.DirContextOperations#
+	 * getNamesOfModifiedAttributes()
 	 */
 	public String[] getNamesOfModifiedAttributes() {
 
@@ -220,7 +244,8 @@ public class DirContextAdapter implements DirContextOperations {
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.AttributeModificationsAware#getModificationItems()
+	 * @seeorg.springframework.ldap.support.AttributeModificationsAware#
+	 * getModificationItems()
 	 */
 	public ModificationItem[] getModificationItems() {
 		if (!updateMode) {
@@ -350,15 +375,15 @@ public class DirContextAdapter implements DirContextOperations {
 
 	/**
 	 * Compare the existing attribute <code>name</code> with the values on the
-	 * array <code>values</code>. The order of the array must be the same
-	 * order as the existing multivalued attribute.
+	 * array <code>values</code>. The order of the array must be the same order
+	 * as the existing multivalued attribute.
 	 * <p>
 	 * Also handles the case where the values have been reset to the original
 	 * values after a previous change. For example, changing
 	 * <code>[a,b,c]</code> to <code>[a,b]</code> and then back to
 	 * <code>[a,b,c]</code> again must result in this method returning
-	 * <code>true</code> so the first change can be overwritten with the
-	 * latest change.
+	 * <code>true</code> so the first change can be overwritten with the latest
+	 * change.
 	 * 
 	 * @param name Name of the original multi-valued attribute.
 	 * @param values Array of values to check if they have been changed.
@@ -491,14 +516,18 @@ public class DirContextAdapter implements DirContextOperations {
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.DirContextOperations#getStringAttribute(java.lang.String)
+	 * @see
+	 * org.springframework.ldap.support.DirContextOperations#getStringAttribute
+	 * (java.lang.String)
 	 */
 	public String getStringAttribute(String name) {
 		return (String) getObjectAttribute(name);
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.DirContextOperations#getObjectAttribute(java.lang.String)
+	 * @see
+	 * org.springframework.ldap.support.DirContextOperations#getObjectAttribute
+	 * (java.lang.String)
 	 */
 	public Object getObjectAttribute(String name) {
 		Attribute oneAttr = originalAttrs.get(name);
@@ -514,8 +543,9 @@ public class DirContextAdapter implements DirContextOperations {
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.DirContextOperations#setAttributeValue(java.lang.String,
-	 * java.lang.Object)
+	 * @see
+	 * org.springframework.ldap.support.DirContextOperations#setAttributeValue
+	 * (java.lang.String, java.lang.Object)
 	 */
 	public void setAttributeValue(String name, Object value) {
 		// new entry
@@ -536,8 +566,9 @@ public class DirContextAdapter implements DirContextOperations {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.springframework.ldap.core.DirContextOperations#addAttributeValue(java.lang.String,
-	 * java.lang.Object)
+	 * @see
+	 * org.springframework.ldap.core.DirContextOperations#addAttributeValue(
+	 * java.lang.String, java.lang.Object)
 	 */
 	public void addAttributeValue(String name, Object value) {
 		if (!updateMode && value != null) {
@@ -576,8 +607,9 @@ public class DirContextAdapter implements DirContextOperations {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.springframework.ldap.core.DirContextOperations#removeAttributeValue(java.lang.String,
-	 * java.lang.Object)
+	 * @see
+	 * org.springframework.ldap.core.DirContextOperations#removeAttributeValue
+	 * (java.lang.String, java.lang.Object)
 	 */
 	public void removeAttributeValue(String name, Object value) {
 		if (!updateMode && value != null) {
@@ -605,16 +637,18 @@ public class DirContextAdapter implements DirContextOperations {
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.DirContextOperations#setAttributeValues(java.lang.String,
-	 * java.lang.Object[])
+	 * @see
+	 * org.springframework.ldap.support.DirContextOperations#setAttributeValues
+	 * (java.lang.String, java.lang.Object[])
 	 */
 	public void setAttributeValues(String name, Object[] values) {
 		setAttributeValues(name, values, ORDER_DOESNT_MATTER);
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.DirContextOperations#setAttributeValues(java.lang.String,
-	 * java.lang.Object[], boolean)
+	 * @see
+	 * org.springframework.ldap.support.DirContextOperations#setAttributeValues
+	 * (java.lang.String, java.lang.Object[], boolean)
 	 */
 	public void setAttributeValues(String name, Object[] values, boolean orderMatters) {
 		Attribute a = new BasicAttribute(name, orderMatters);
@@ -670,7 +704,9 @@ public class DirContextAdapter implements DirContextOperations {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.DirContextOperations#getStringAttributes(java.lang.String)
+	 * @see
+	 * org.springframework.ldap.core.DirContextOperations#getStringAttributes
+	 * (java.lang.String)
 	 */
 	public String[] getStringAttributes(String name) {
 		String[] attributes;
@@ -695,7 +731,8 @@ public class DirContextAdapter implements DirContextOperations {
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.DirContextOperations#getAttributeSortedStringSet(java.lang.String)
+	 * @seeorg.springframework.ldap.support.DirContextOperations#
+	 * getAttributeSortedStringSet(java.lang.String)
 	 */
 	public SortedSet getAttributeSortedStringSet(String name) {
 		TreeSet attrSet = new TreeSet();
@@ -752,7 +789,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 * @see javax.naming.directory.DirContext#getAttributes(String)
 	 */
 	public Attributes getAttributes(String name) throws NamingException {
-		if (!StringUtils.isEmpty(name)) {
+		if (StringUtils.hasLength(name)) {
 			throw new NameNotFoundException();
 		}
 		return (Attributes) originalAttrs.clone();
@@ -769,7 +806,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 * @see javax.naming.directory.DirContext#getAttributes(String, String[])
 	 */
 	public Attributes getAttributes(String name, String[] attrIds) throws NamingException {
-		if (!StringUtils.isEmpty(name)) {
+		if (StringUtils.hasLength(name)) {
 			throw new NameNotFoundException();
 		}
 
@@ -1170,7 +1207,9 @@ public class DirContextAdapter implements DirContextOperations {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.springframework.ldap.support.DirContextOperations#setDn(javax.naming.Name)
+	 * @see
+	 * org.springframework.ldap.support.DirContextOperations#setDn(javax.naming
+	 * .Name)
 	 */
 	public final void setDn(Name dn) {
 		if (!updateMode) {
@@ -1243,4 +1282,21 @@ public class DirContextAdapter implements DirContextOperations {
 		return buf.toString();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.springframework.ldap.core.DirContextOperations#getReferralUrl()
+	 */
+	public String getReferralUrl() {
+		return referralUrl;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.springframework.ldap.core.DirContextOperations#isReferral()
+	 */
+	public boolean isReferral() {
+		return StringUtils.hasLength(referralUrl);
+	}
 }

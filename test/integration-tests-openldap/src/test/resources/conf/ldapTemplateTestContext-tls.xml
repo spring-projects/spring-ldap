@@ -11,8 +11,8 @@
 
 
 	<bean id="contextSource" class="org.springframework.ldap.TlsContextSourceEc2InstanceLaunchingFactoryBean">
-		<property name="awsKey" value="${aws.key}" />
-		<property name="awsSecretKey" value="${aws.secret.key}" />
+		<property name="awsKey" value="${AWS_KEY}" />
+		<property name="awsSecretKey" value="${AWS_SECRET_KEY}" />
 		<property name="imageName" value="${aws.ami}" />
 		<property name="groupName" value="${aws.security.group}" />
 		<property name="keypairName" value="${aws.keypair}" />
@@ -20,20 +20,6 @@
 		<property name="userDn" value="${userDn}" />
 		<property name="password" value="${password}" />
 	</bean>
-
-<!-- 
-	<bean id="contextSource"
-		class="org.springframework.ldap.core.support.LdapContextSource">
-		<property name="base" value="dc=jayway,dc=se" />
-		<property name="userDn" value="${userDn}" />
-		<property name="password" value="${password}" />
-		<property name="url" value="ldap://${itest.openldap.serverAddress}:389" />
-		<property name="authenticationStrategy">
-			<bean class="org.springframework.ldap.core.support.DefaultTlsDirContextAuthenticationStrategy" />
-		</property>
-		<property name="pooled" value="false" />
-	</bean>
- -->
 
 	<bean id="ldapTemplate"
 		class="org.springframework.ldap.core.LdapTemplate">

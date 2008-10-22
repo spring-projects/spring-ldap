@@ -10,8 +10,8 @@
 	</bean>
 
 	<bean id="contextSource" class="org.springframework.ldap.test.ContextSourceEc2InstanceLaunchingFactoryBean">
-		<property name="awsKey" value="${aws.key}" />
-		<property name="awsSecretKey" value="${aws.secret.key}" />
+		<property name="awsKey" value="${AWS_KEY}" />
+		<property name="awsSecretKey" value="${AWS_SECRET_KEY}" />
 		<property name="imageName" value="${aws.ami}" />
 		<property name="groupName" value="${aws.security.group}" />
 		<property name="keypairName" value="${aws.keypair}" />
