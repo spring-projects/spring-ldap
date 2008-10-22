@@ -17,6 +17,9 @@ package org.springframework.transaction.compensating.support;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.ldap.NamingException;
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.support.DefaultTransactionStatus;
@@ -32,99 +35,100 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  */
 public abstract class AbstractCompensatingTransactionManagerDelegate {
 
-    private static Log log = LogFactory
-            .getLog(AbstractCompensatingTransactionManagerDelegate.class);
+	private static Log log = LogFactory.getLog(AbstractCompensatingTransactionManagerDelegate.class);
 
-    /**
-     * Close the target resource - the implementation specific resource held in
-     * the specified {@link CompensatingTransactionHolderSupport}.
-     * 
-     * @param transactionHolderSupport
-     *            the {@link CompensatingTransactionHolderSupport} that holds
-     *            the transaction specific target resource.
-     */
-    protected abstract void closeTargetResource(
-            CompensatingTransactionHolderSupport transactionHolderSupport);
+	/**
+	 * Close the target resource - the implementation specific resource held in
+	 * the specified {@link CompensatingTransactionHolderSupport}.
+	 * 
+	 * @param transactionHolderSupport the
+	 * {@link CompensatingTransactionHolderSupport} that holds the transaction
+	 * specific target resource.
+	 */
+	protected abstract void closeTargetResource(CompensatingTransactionHolderSupport transactionHolderSupport);
 
-    /**
-     * Get a new implementation specific
-     * {@link CompensatingTransactionHolderSupport} instance.
-     * 
-     * @return a new {@link CompensatingTransactionHolderSupport} instance.
-     */
-    protected abstract CompensatingTransactionHolderSupport getNewHolder();
+	/**
+	 * Get a new implementation specific
+	 * {@link CompensatingTransactionHolderSupport} instance.
+	 * 
+	 * @return a new {@link CompensatingTransactionHolderSupport} instance.
+	 */
+	protected abstract CompensatingTransactionHolderSupport getNewHolder();
 
-    /**
-     * Get the key (normally, a DataSource or similar) that should be used for
-     * transaction synchronization.
-     * 
-     * @return the transaction synchronization key
-     */
-    protected abstract Object getTransactionSynchronizationKey();
+	/**
+	 * Get the key (normally, a DataSource or similar) that should be used for
+	 * transaction synchronization.
+	 * 
+	 * @return the transaction synchronization key
+	 */
+	protected abstract Object getTransactionSynchronizationKey();
 
-    /*
-     * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doGetTransaction()
-     */
-    public Object doGetTransaction() throws TransactionException {
-        CompensatingTransactionHolderSupport holder = (CompensatingTransactionHolderSupport) TransactionSynchronizationManager
-                .getResource(getTransactionSynchronizationKey());
-        CompensatingTransactionObject txObject = new CompensatingTransactionObject(
-                holder);
-        return txObject;
-    }
+	/*
+	 * @seeorg.springframework.jdbc.datasource.DataSourceTransactionManager#
+	 * doGetTransaction()
+	 */
+	public Object doGetTransaction() throws TransactionException {
+		CompensatingTransactionHolderSupport holder = (CompensatingTransactionHolderSupport) TransactionSynchronizationManager
+				.getResource(getTransactionSynchronizationKey());
+		CompensatingTransactionObject txObject = new CompensatingTransactionObject(holder);
+		return txObject;
+	}
 
-    /*
-     * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doBegin(java.lang.Object,
-     *      org.springframework.transaction.TransactionDefinition)
-     */
-    public void doBegin(Object transaction, TransactionDefinition definition)
-            throws TransactionException {
-        CompensatingTransactionObject txObject = (CompensatingTransactionObject) transaction;
+	/*
+	 * @see
+	 * org.springframework.jdbc.datasource.DataSourceTransactionManager#doBegin
+	 * (java.lang.Object, org.springframework.transaction.TransactionDefinition)
+	 */
+	public void doBegin(Object transaction, TransactionDefinition definition) throws TransactionException {
+		try {
+			CompensatingTransactionObject txObject = (CompensatingTransactionObject) transaction;
+			if (txObject.getHolder() == null) {
+				CompensatingTransactionHolderSupport contextHolder = getNewHolder();
+				txObject.setHolder(contextHolder);
 
-        if (txObject.getHolder() == null) {
-            CompensatingTransactionHolderSupport contextHolder = getNewHolder();
-            txObject.setHolder(contextHolder);
+				TransactionSynchronizationManager.bindResource(getTransactionSynchronizationKey(), contextHolder);
+			}
+		}
+		catch (NamingException e) {
+			throw new CannotCreateTransactionException("Could not create DirContext instance for transaction", e);
+		}
+	}
 
-            TransactionSynchronizationManager.bindResource(
-                    getTransactionSynchronizationKey(), contextHolder);
-        }
-    }
+	/*
+	 * @see
+	 * org.springframework.jdbc.datasource.DataSourceTransactionManager#doCommit
+	 * (org.springframework.transaction.support.DefaultTransactionStatus)
+	 */
+	public void doCommit(DefaultTransactionStatus status) throws TransactionException {
+		CompensatingTransactionObject txObject = (CompensatingTransactionObject) status.getTransaction();
+		txObject.getHolder().getTransactionOperationManager().commit();
 
-    /*
-     * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doCommit(org.springframework.transaction.support.DefaultTransactionStatus)
-     */
-    public void doCommit(DefaultTransactionStatus status)
-            throws TransactionException {
-        CompensatingTransactionObject txObject = (CompensatingTransactionObject) status
-                .getTransaction();
-        txObject.getHolder().getTransactionOperationManager().commit();
+	}
 
-    }
+	/*
+	 * @see
+	 * org.springframework.jdbc.datasource.DataSourceTransactionManager#doRollback
+	 * (org.springframework.transaction.support.DefaultTransactionStatus)
+	 */
+	public void doRollback(DefaultTransactionStatus status) throws TransactionException {
+		CompensatingTransactionObject txObject = (CompensatingTransactionObject) status.getTransaction();
+		txObject.getHolder().getTransactionOperationManager().rollback();
+	}
 
-    /*
-     * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doRollback(org.springframework.transaction.support.DefaultTransactionStatus)
-     */
-    public void doRollback(DefaultTransactionStatus status)
-            throws TransactionException {
-        CompensatingTransactionObject txObject = (CompensatingTransactionObject) status
-                .getTransaction();
-        txObject.getHolder().getTransactionOperationManager().rollback();
-    }
+	/*
+	 * @seeorg.springframework.jdbc.datasource.DataSourceTransactionManager#
+	 * doCleanupAfterCompletion(java.lang.Object)
+	 */
+	public void doCleanupAfterCompletion(Object transaction) {
+		log.debug("Cleaning stored transaction synchronization");
+		TransactionSynchronizationManager.unbindResource(getTransactionSynchronizationKey());
 
-    /*
-     * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doCleanupAfterCompletion(java.lang.Object)
-     */
-    public void doCleanupAfterCompletion(Object transaction) {
-        log.debug("Cleaning stored transaction synchronization");
-        TransactionSynchronizationManager
-                .unbindResource(getTransactionSynchronizationKey());
+		CompensatingTransactionObject txObject = (CompensatingTransactionObject) transaction;
+		CompensatingTransactionHolderSupport transactionHolderSupport = (CompensatingTransactionHolderSupport) txObject
+				.getHolder();
 
-        CompensatingTransactionObject txObject = (CompensatingTransactionObject) transaction;
-        CompensatingTransactionHolderSupport transactionHolderSupport = (CompensatingTransactionHolderSupport) txObject
-                .getHolder();
+		closeTargetResource(transactionHolderSupport);
 
-        closeTargetResource(transactionHolderSupport);
-
-        txObject.getHolder().clear();
-    }
+		txObject.getHolder().clear();
+	}
 }

@@ -83,7 +83,7 @@ public class ContextSourceTransactionManagerDelegate extends
      * @see org.springframework.transaction.compensating.support.AbstractCompensatingTransactionManagerDelegate#getNewHolder()
      */
     protected CompensatingTransactionHolderSupport getNewHolder() {
-        DirContext newCtx = getContextSource().getReadOnlyContext();
+        DirContext newCtx = getContextSource().getReadWriteContext();
         DirContextHolder contextHolder = new DirContextHolder(
                 new DefaultCompensatingTransactionOperationManager(
                         new LdapCompensatingTransactionOperationFactory(
