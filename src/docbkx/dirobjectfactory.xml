@@ -253,7 +253,9 @@ import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.support.DistinguishedName;
+import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
+import org.springframework.ldap.filter.WhitespaceWildcardsFilter;
 
 public class PersonDaoImpl implements PersonDao {
    private LdapTemplate ldapTemplate;
@@ -282,6 +284,12 @@ public class PersonDaoImpl implements PersonDao {
    public Person findByPrimaryKey(String name, String company, String country) {
       Name dn = buildDn(name, company, country);
       return (Person) ldapTemplate.lookup(dn, getContextMapper());
+   }
+
+   public List findByName(String name) {
+      AndFilter filter = new AndFilter();
+      filter.and(new EqualsFilter("objectclass", "person")).and(new WhitespaceWildcardsFilter("cn",name));
+      return ldapTemplate.search(DistinguishedName.EMPTY_PATH, filter.encode(), getContextMapper());
    }
 
    public List findAll() {
