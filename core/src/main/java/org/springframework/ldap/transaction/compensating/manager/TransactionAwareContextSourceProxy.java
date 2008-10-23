@@ -33,7 +33,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  * operations. All returned DirContext instances will be of the type
  * {@link TransactionAwareDirContextInvocationHandler}.
  * 
- * @author Mattias Arthursson
+ * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
 public class TransactionAwareContextSourceProxy implements ContextSource {

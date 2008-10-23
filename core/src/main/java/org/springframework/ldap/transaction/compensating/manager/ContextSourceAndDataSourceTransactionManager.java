@@ -29,7 +29,7 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * is <b>not</b> a JTA XA transaction; no two-phase commit will be performed,
  * and thus commit and rollback may yield unexpected results.
  * 
- * @author Mattias Arthursson
+ * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
 public class ContextSourceAndDataSourceTransactionManager extends

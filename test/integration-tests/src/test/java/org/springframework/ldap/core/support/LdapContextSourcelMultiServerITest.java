@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2007 the original author or authors.
+ * Copyright 2005-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 /**
  * Integration tests for ContextSourceImpl.
  * 
- * @author Mattias Arthursson
+ * @author Mattias Hellborg Arthursson
  */
 @ContextConfiguration(locations = { "/conf/ldapContextSourceTestContext.xml" })
 public class LdapContextSourcelMultiServerITest extends AbstractJUnit4SpringContextTests {

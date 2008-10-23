@@ -34,7 +34,7 @@ import org.springframework.transaction.compensating.support.DefaultCompensatingT
  * be able to perform the exact same work for the LDAP part in
  * {@link ContextSourceAndDataSourceTransactionManager}.
  * 
- * @author Mattias Arthursson
+ * @author Mattias Hellborg Arthursson
  * @see ContextSourceTransactionManager
  * @see ContextSourceAndDataSourceTransactionManager
  * @since 1.2

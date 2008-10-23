@@ -101,7 +101,7 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * the same logical transaction.
  * </p>
  * 
- * @author Mattias Arthursson
+ * @author Mattias Hellborg Arthursson
  * 
  * @see ContextSourceAndDataSourceTransactionManager
  * @see ContextSourceTransactionManagerDelegate

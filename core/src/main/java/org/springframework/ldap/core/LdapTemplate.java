@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2007 the original author or authors.
+ * Copyright 2005-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ import org.springframework.ldap.support.LdapUtils;
  * 
  * @see org.springframework.ldap.core.ContextSource
  * 
- * @author Mattias Arthursson
+ * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  */
 public class LdapTemplate implements LdapOperations, InitializingBean {
@@ -1269,7 +1269,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * A {@link NameClassPairCallbackHandler} that passes the NameClassPairs
 	 * found to a NameClassPairMapper and collects the results in a list.
 	 * 
-	 * @author Mattias Arthursson
+	 * @author Mattias Hellborg Arthursson
 	 */
 	public class MappingCollectingNameClassPairCallbackHandler extends CollectingNameClassPairCallbackHandler {
 

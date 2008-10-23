@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2007 the original author or authors.
+ * Copyright 2005-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1773,7 +1773,7 @@ public class LdapTemplateTest extends TestCase {
     /**
      * Needed to verify search control values.
      * 
-     * @author Mattias Arthursson
+     * @author Mattias Hellborg Arthursson
      */
     private static class SearchControlsMatcher extends AbstractMatcher {
         protected boolean argumentMatches(Object arg0, Object arg1) {

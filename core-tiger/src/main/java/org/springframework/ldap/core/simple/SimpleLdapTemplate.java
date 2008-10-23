@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2007 the original author or authors.
+ * Copyright 2005-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import org.springframework.ldap.core.LdapTemplate;
  * Use the {@link #getLdapOperations()} method if you need to invoke less
  * commonly used template methods.
  * 
- * @author Mattias Arthursson
+ * @author Mattias Hellborg Arthursson
  */
 public class SimpleLdapTemplate implements SimpleLdapOperations {
 

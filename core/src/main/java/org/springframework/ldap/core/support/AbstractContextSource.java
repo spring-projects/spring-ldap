@@ -58,7 +58,7 @@ import org.springframework.ldap.support.LdapUtils;
  * @see org.springframework.ldap.core.support.LdapContextSource
  * @see org.springframework.ldap.core.support.DirContextSource
  * 
- * @author Mattias Arthursson
+ * @author Mattias Hellborg Arthursson
  * @author Adam Skogman
  * @author Ulrik Sandberg
  */

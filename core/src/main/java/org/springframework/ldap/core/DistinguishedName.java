@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2007 the original author or authors.
+ * Copyright 2005-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ import org.springframework.ldap.support.ListComparator;
  * {@link #SPACED_DN_FORMAT_PROPERTY} ({@value #SPACED_DN_FORMAT_PROPERTY}) to
  * <code>true</code>.
  * @author Adam Skogman
- * @author Mattias Arthursson
+ * @author Mattias Hellborg Arthursson
  */
 public class DistinguishedName implements Name {
 	/**

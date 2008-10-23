@@ -36,7 +36,7 @@ import org.springframework.util.StringUtils;
  * Default implementation of the DirObjectFactory interface. Creates a
  * {@link DirContextAdapter} from the supplied arguments.
  * 
- * @author Mattias Arthursson
+ * @author Mattias Hellborg Arthursson
  */
 public class DefaultDirObjectFactory implements DirObjectFactory {
 	private static final Log log = LogFactory.getLog(AbstractContextSource.class);

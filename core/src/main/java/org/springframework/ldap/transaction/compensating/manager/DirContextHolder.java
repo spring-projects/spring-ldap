@@ -27,7 +27,7 @@ import org.springframework.transaction.compensating.support.CompensatingTransact
  * operations and keeping track of all changes and storing information necessary
  * for commit or rollback.
  * 
- * @author Mattias Arthursson
+ * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
 public class DirContextHolder extends CompensatingTransactionHolderSupport {

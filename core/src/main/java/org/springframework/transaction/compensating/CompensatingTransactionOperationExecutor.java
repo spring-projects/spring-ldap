@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2007 the original author or authors.
+ * Copyright 2005-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ package org.springframework.transaction.compensating;
  * location and leave it for the {@link #commit()} method to actually remove the
  * entry.
  * 
- * @author Mattias Arthursson
+ * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
 public interface CompensatingTransactionOperationExecutor {

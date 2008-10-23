@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2007 the original author or authors.
+ * Copyright 2005-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ import org.springframework.ldap.samples.article.domain.Person;
  * the distinguished name. However, we do use it in one method that only needs a
  * single attribute: {@link #getAllPersonNames()}.
  * 
- * @author Mattias Arthursson
+ * @author Mattias Hellborg Arthurssonrthursson
  * @author Ulrik Sandberg
  */
 public class PersonDaoImpl implements PersonDao {
@@ -137,7 +137,7 @@ public class PersonDaoImpl implements PersonDao {
 	 * the values of these attributes must be extracted from the DN. For this,
 	 * we use the DistinguishedName.
 	 * 
-	 * @author Mattias Arthursson
+	 *Mattias Hellborg Arthurssonellborg Arthursson
 	 * @author Ulrik Sandberg
 	 */
 	private static class PersonContextMapper implements ContextMapper {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2007 the original author or authors.
+ * Copyright 2005-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
  * Manages a stack of {@link CompensatingTransactionOperationExecutor} objects
  * and performs rollback of these in the reverse order.
  * 
- * @author Mattias Arthursson
+ * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
 public class DefaultCompensatingTransactionOperationManager implements

@@ -36,7 +36,7 @@ import org.springframework.beans.factory.DisposableBean;
  * to make sure the target is never actually closed. Useful when working with e.g. paged results,
  * as these require the same target to be used.
  *
- * @author Mattias Arthursson
+ * @author Mattias Hellborg Arthursson
  */
 public class SingleContextSource implements ContextSource, DisposableBean {
 
@@ -100,7 +100,7 @@ public class SingleContextSource implements ContextSource, DisposableBean {
      * A proxy for DirContext forwarding all operation to the target DirContext,
      * but making sure that no <code>close</code> operations will be performed.
      *
-     * @author Mattias Arthursson
+     * @author Mattias Hellborg Arthursson
      */
     public static class NonClosingDirContextInvocationHandler implements
             InvocationHandler {

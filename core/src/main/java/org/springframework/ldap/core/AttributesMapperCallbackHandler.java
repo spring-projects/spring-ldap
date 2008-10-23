@@ -28,7 +28,7 @@ import org.springframework.ldap.support.LdapUtils;
  * {@link SearchResult}, and then passed to the specified
  * {@link AttributesMapper} for translation.
  * 
- * @author Mattias Arthursson
+ * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  * @since 1.2
  */

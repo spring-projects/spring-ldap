@@ -34,7 +34,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  * closed during a transaction, and that all modifying operations are recorded,
  * storing compensating rollback operations for them.
  * 
- * @author Mattias Arthursson
+ * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
 public class TransactionAwareDirContextInvocationHandler implements

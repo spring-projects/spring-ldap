@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2007 the original author or authors.
+ * Copyright 2005-2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import com.sun.jndi.ldap.ctl.PagedResultsControl;
  * Wrapper class for the cookie returned when using the
  * {@link PagedResultsControl}.
  * 
- * @author Mattias Arthursson
+ * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  */
 public class PagedResultsCookie {

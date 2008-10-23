@@ -28,7 +28,7 @@ import org.springframework.ldap.transaction.compensating.manager.TransactionAwar
 /**
  * Tests for {@link TransactionAwareContextSourceProxy}.
  * 
- * @author Mattias Arthursson
+ * @author Mattias Hellborg Arthursson
  */
 public class TransactionAwareContextSourceProxyTest extends TestCase {
     private MockControl contextSourceControl;
