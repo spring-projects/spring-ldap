@@ -42,8 +42,8 @@
 	<inceptionYear>2006</inceptionYear>
 	<developers>
 		<developer>
-			<id>rasky</id>
-			<name>Mattias Hellborg-Arthursson</name>
+			<id>marthursson</id>
+			<name>Mattias Hellborg Arthursson</name>
 			<email>mattias.arthursson@jayway.se</email>
 			<organization>Jayway</organization>
 			<organizationUrl>http://www.jayway.se</organizationUrl>

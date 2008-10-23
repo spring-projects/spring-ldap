@@ -7,6 +7,7 @@
                 <include>readme.txt</include>
                 <include>license.txt</include>
                 <include>notice.txt</include>
+                <include>changelog.txt</include>
             </includes>
             <outputDirectory/>
             <lineEnding>dos</lineEnding>
