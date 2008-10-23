@@ -17,6 +17,7 @@ package org.springframework.ldap.core.simple;
 
 import java.util.List;
 
+import javax.naming.Name;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchControls;
 
@@ -61,7 +62,10 @@ public class SimpleLdapTemplate implements SimpleLdapOperations {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.ldap.core.simple.SimpleLdapOperations#getLdapOperations()
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.simple.SimpleLdapOperations#getLdapOperations
+	 * ()
 	 */
 	public LdapOperations getLdapOperations() {
 		return ldapOperations;
@@ -69,7 +73,10 @@ public class SimpleLdapTemplate implements SimpleLdapOperations {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.ldap.core.simple.SimpleLdapOperations#lookup(java.lang.String,
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.simple.SimpleLdapOperations#lookup(java
+	 * .lang.String,
 	 * org.springframework.ldap.core.simple.ParametrizedContextMapper)
 	 */
 	@SuppressWarnings("unchecked")
@@ -79,8 +86,10 @@ public class SimpleLdapTemplate implements SimpleLdapOperations {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.ldap.core.simple.SimpleLdapOperations#search(java.lang.String,
-	 * java.lang.String,
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.simple.SimpleLdapOperations#search(java
+	 * .lang.String, java.lang.String,
 	 * org.springframework.ldap.core.simple.ParametrizedContextMapper)
 	 */
 	@SuppressWarnings("unchecked")
@@ -90,20 +99,25 @@ public class SimpleLdapTemplate implements SimpleLdapOperations {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.ldap.core.simple.SimpleLdapOperations#search(java.lang.String,
-	 * java.lang.String, javax.naming.directory.SearchControls,
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.simple.SimpleLdapOperations#search(java
+	 * .lang.String, java.lang.String, javax.naming.directory.SearchControls,
 	 * org.springframework.ldap.core.simple.ParametrizedContextMapper,
 	 * org.springframework.ldap.core.DirContextProcessor)
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> List<T> search(String base, String filter, SearchControls controls, ParameterizedContextMapper<T> mapper,
-			DirContextProcessor processor) {
+	public <T> List<T> search(String base, String filter, SearchControls controls,
+			ParameterizedContextMapper<T> mapper, DirContextProcessor processor) {
 		return ldapOperations.search(base, filter, controls, mapper, processor);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.ldap.core.simple.SimpleLdapOperations#lookup(java.lang.String)
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.simple.SimpleLdapOperations#lookup(java
+	 * .lang.String)
 	 */
 	public DirContextOperations lookupContext(String dn) {
 		return ldapOperations.lookupContext(dn);
@@ -111,7 +125,10 @@ public class SimpleLdapTemplate implements SimpleLdapOperations {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.ldap.core.simple.SimpleLdapOperations#modifyAttributes(org.springframework.ldap.core.DirContextOperations)
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.simple.SimpleLdapOperations#modifyAttributes
+	 * (org.springframework.ldap.core.DirContextOperations)
 	 */
 	public void modifyAttributes(DirContextOperations ctx) {
 		ldapOperations.modifyAttributes(ctx);
@@ -119,8 +136,10 @@ public class SimpleLdapTemplate implements SimpleLdapOperations {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.ldap.core.simple.SimpleLdapOperations#bind(java.lang.String,
-	 * java.lang.Object, javax.naming.directory.Attributes)
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.simple.SimpleLdapOperations#bind(java.lang
+	 * .String, java.lang.Object, javax.naming.directory.Attributes)
 	 */
 	public void bind(String dn, Object obj, Attributes attributes) {
 		ldapOperations.bind(dn, obj, attributes);
@@ -128,10 +147,96 @@ public class SimpleLdapTemplate implements SimpleLdapOperations {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.ldap.core.simple.SimpleLdapOperations#unbind(java.lang.String)
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.simple.SimpleLdapOperations#unbind(java
+	 * .lang.String)
 	 */
 	public void unbind(String dn) {
 		ldapOperations.unbind(dn);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.simple.SimpleLdapOperations#bind(javax.
+	 * naming.Name, java.lang.Object, javax.naming.directory.Attributes)
+	 */
+	public void bind(Name dn, Object obj, Attributes attributes) {
+		ldapOperations.bind(dn, obj, attributes);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.simple.SimpleLdapOperations#lookup(javax
+	 * .naming.Name,
+	 * org.springframework.ldap.core.simple.ParameterizedContextMapper)
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> T lookup(Name dn, ParameterizedContextMapper<T> mapper) {
+		return (T) ldapOperations.lookup(dn, mapper);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.simple.SimpleLdapOperations#lookupContext
+	 * (javax.naming.Name)
+	 */
+	public DirContextOperations lookupContext(Name dn) {
+		return ldapOperations.lookupContext(dn);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.simple.SimpleLdapOperations#search(javax
+	 * .naming.Name, java.lang.String,
+	 * org.springframework.ldap.core.simple.ParameterizedContextMapper)
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> List<T> search(Name base, String filter, ParameterizedContextMapper<T> mapper) {
+		return ldapOperations.search(base, filter, mapper);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.simple.SimpleLdapOperations#search(javax
+	 * .naming.Name, java.lang.String, javax.naming.directory.SearchControls,
+	 * org.springframework.ldap.core.simple.ParameterizedContextMapper,
+	 * org.springframework.ldap.core.DirContextProcessor)
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> List<T> search(Name base, String filter, SearchControls controls, ParameterizedContextMapper<T> mapper,
+			DirContextProcessor processor) {
+		return ldapOperations.search(base, filter, controls, mapper, processor);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.simple.SimpleLdapOperations#unbind(javax
+	 * .naming.Name)
+	 */
+	public void unbind(Name dn) {
+		ldapOperations.unbind(dn);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.springframework.ldap.core.simple.SimpleLdapOperations#bind(org.
+	 * springframework.ldap.core.DirContextOperations)
+	 */
+	public void bind(DirContextOperations ctx) {
+		ldapOperations.bind(ctx);
+	}
 }

@@ -1572,4 +1572,23 @@ public interface LdapOperations {
      */
     void modifyAttributes(DirContextOperations ctx)
             throws IllegalStateException, NamingException;
+    
+	/**
+	 * Bind the data in the supplied context in the tree. All specified
+	 * Attributes in will be bound to the DN set on the instance.
+	 * <p>Example:<br>
+	 * <pre>
+	 * DirContextOperations ctx = new DirContextAdapter(dn);
+	 * ctx.setAttributeValue("cn", "john doe");
+	 * ctx.setAttributeValue("description", "some description");
+	 * //More initialization here.
+	 * 
+	 * ldapTemplate.bind(ctx);
+	 * </pre>
+	 * @param ctx the context to bind
+	 * @throws IllegalStateException if no DN is set or if the instance is in
+	 * update mode.
+	 * @since 1.3
+	 */
+	void bind(DirContextOperations ctx);
 }

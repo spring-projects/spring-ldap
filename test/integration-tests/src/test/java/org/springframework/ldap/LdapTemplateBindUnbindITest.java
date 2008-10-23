@@ -93,6 +93,19 @@ public class LdapTemplateBindUnbindITest extends AbstractLdapTemplateIntegration
 		verifyCleanup();
 	}
 
+	@Test
+	public void testBindAndUnbindPlainDirContextAdapter() {
+		DirContextAdapter adapter = new DirContextAdapter(new DistinguishedName(DN));
+		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
+		adapter.setAttributeValue("cn", "Some Person4");
+		adapter.setAttributeValue("sn", "Person4");
+
+		tested.bind(adapter);
+		verifyBoundCorrectData();
+		tested.unbind(DN);
+		verifyCleanup();
+	}
+
 	private Attributes setupAttributes() {
 		Attributes attributes = new BasicAttributes();
 		BasicAttribute ocattr = new BasicAttribute("objectclass");

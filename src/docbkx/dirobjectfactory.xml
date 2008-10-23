@@ -136,7 +136,7 @@ public class PersonDaoImpl implements PersonDao {
       context.setAttributeValue("sn", p.getLastname());
       context.setAttributeValue("description", p.getDescription());</emphasis>
 
-      ldapTemplate.bind(dn, context, null);
+      ldapTemplate.bind(context);
    }
 }</programlisting>
       </example>
@@ -210,7 +210,7 @@ public class PersonDaoImpl implements PersonDao {
       Name dn = buildDn(p);
       DirContextAdapter context = new DirContextAdapter(dn);
       mapToContext(p, context);
-      ldapTemplate.bind(dn, context, null);
+      ldapTemplate.bind(context);
    }
 
    public void update(Person p) {
@@ -265,9 +265,9 @@ public class PersonDaoImpl implements PersonDao {
    }
 
    public void create(Person person) {
-      DirContextAdapter context = new DirContextAdapter();
+      DirContextAdapter context = new DirContextAdapter(buildDn(person));
       mapToContext(person, context);
-      ldapTemplate.bind(buildDn(person), context, null);
+      ldapTemplate.bind(context);
    }
 
    public void update(Person person) {

@@ -19,6 +19,7 @@ package org.springframework.ldap.core;
 import java.util.SortedSet;
 
 import javax.naming.Name;
+import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 
 /**
@@ -213,4 +214,12 @@ public interface DirContextOperations extends DirContext, AttributeModifications
 	 * @since 1.3
 	 */
 	boolean isReferral();
+
+	/**
+	 * Get all the Attributes.
+	 * 
+	 * @return all the Attributes.
+	 * @since 1.3
+	 */
+	Attributes getAttributes();
 }

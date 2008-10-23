@@ -40,17 +40,16 @@ import org.springframework.ldap.support.LdapUtils;
  * the user of the burden of looking up contexts, looping through
  * NamingEnumerations and closing contexts.
  * <p>
- * <b>Note for Active Directory (AD) users:</b> AD servers are apparently
- * unable to handle referrals automatically, which causes a
+ * <b>Note for Active Directory (AD) users:</b> AD servers are apparently unable
+ * to handle referrals automatically, which causes a
  * <code>PartialResultException</code> to be thrown whenever a referral is
  * encountered in a search. To avoid this, set the
  * <code>ignorePartialResultException</code> property to <code>true</code>.
  * There is currently no way of manually handling these referrals in the form of
- * <code>ReferralException</code>, i.e. either you get the exception (and
- * your results are lost) or all referrals are ignored (if the server is unable
- * to handle them properly. Neither is there any simple way to get notified that
- * a <code>PartialResultException</code> has been ignored (other than in the
- * log).
+ * <code>ReferralException</code>, i.e. either you get the exception (and your
+ * results are lost) or all referrals are ignored (if the server is unable to
+ * handle them properly. Neither is there any simple way to get notified that a
+ * <code>PartialResultException</code> has been ignored (other than in the log).
  * 
  * @see org.springframework.ldap.core.ContextSource
  * 
@@ -129,10 +128,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/**
-	 * Specify whether <code>PartialResultException</code> should be ignored
-	 * in searches. AD servers typically have a problem with referrals. Normally
-	 * a referral should be followed automatically, but this does not seem to
-	 * work with AD servers. The problem manifests itself with a a
+	 * Specify whether <code>PartialResultException</code> should be ignored in
+	 * searches. AD servers typically have a problem with referrals. Normally a
+	 * referral should be followed automatically, but this does not seem to work
+	 * with AD servers. The problem manifests itself with a a
 	 * <code>PartialResultException</code> being thrown when a referral is
 	 * encountered by the server. Setting this property to <code>true</code>
 	 * presents a workaround to this problem by causing
@@ -149,7 +148,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
 	 * java.lang.String, int, boolean,
 	 * org.springframework.ldap.core.NameClassPairCallbackHandler)
 	 */
@@ -160,7 +160,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(java.lang.String,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(java.lang.String,
 	 * java.lang.String, int, boolean,
 	 * org.springframework.ldap.core.NameClassPairCallbackHandler)
 	 */
@@ -171,7 +172,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
 	 * java.lang.String, javax.naming.directory.SearchControls,
 	 * org.springframework.ldap.core.NameClassPairCallbackHandler)
 	 */
@@ -189,7 +191,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(java.lang.String,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(java.lang.String,
 	 * java.lang.String, javax.naming.directory.SearchControls,
 	 * org.springframework.ldap.core.NameClassPairCallbackHandler)
 	 */
@@ -207,7 +210,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
 	 * java.lang.String, javax.naming.directory.SearchControls,
 	 * org.springframework.ldap.core.NameClassPairCallbackHandler,
 	 * org.springframework.ldap.core.DirContextProcessor)
@@ -226,7 +230,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(java.lang.String,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(java.lang.String,
 	 * java.lang.String, javax.naming.directory.SearchControls,
 	 * org.springframework.ldap.core.NameClassPairCallbackHandler,
 	 * org.springframework.ldap.core.DirContextProcessor)
@@ -261,8 +266,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * @param handler the NameClassPairCallbackHandler to which each found entry
 	 * will be passed.
 	 * @param processor DirContextProcessor for custom pre- and post-processing.
-	 * Must not be <code>null</code>. If no custom processing should take
-	 * place, please use e.g.
+	 * Must not be <code>null</code>. If no custom processing should take place,
+	 * please use e.g.
 	 * {@link #search(SearchExecutor, NameClassPairCallbackHandler)}.
 	 * @throws NamingException if any error occurs. Note that a
 	 * NameNotFoundException will be ignored. Instead this is interpreted that
@@ -347,7 +352,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
 	 * java.lang.String,
 	 * org.springframework.ldap.core.NameClassPairCallbackHandler)
 	 */
@@ -361,7 +367,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(java.lang.String,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(java.lang.String,
 	 * java.lang.String,
 	 * org.springframework.ldap.core.NameClassPairCallbackHandler)
 	 */
@@ -375,7 +382,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
 	 * java.lang.String, int, java.lang.String[],
 	 * org.springframework.ldap.core.AttributesMapper)
 	 */
@@ -384,7 +392,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(java.lang.String,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(java.lang.String,
 	 * java.lang.String, int, java.lang.String[],
 	 * org.springframework.ldap.core.AttributesMapper)
 	 */
@@ -393,7 +402,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
 	 * java.lang.String, int, org.springframework.ldap.core.AttributesMapper)
 	 */
 	public List search(Name base, String filter, int searchScope, AttributesMapper mapper) {
@@ -402,7 +412,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(java.lang.String,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(java.lang.String,
 	 * java.lang.String, int, org.springframework.ldap.core.AttributesMapper)
 	 */
 	public List search(String base, String filter, int searchScope, AttributesMapper mapper) {
@@ -411,7 +422,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
 	 * java.lang.String, org.springframework.ldap.core.AttributesMapper)
 	 */
 	public List search(Name base, String filter, AttributesMapper mapper) {
@@ -420,7 +432,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(java.lang.String,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(java.lang.String,
 	 * java.lang.String, org.springframework.ldap.core.AttributesMapper)
 	 */
 	public List search(String base, String filter, AttributesMapper mapper) {
@@ -429,7 +442,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
 	 * java.lang.String, int, java.lang.String[],
 	 * org.springframework.ldap.core.ContextMapper)
 	 */
@@ -439,7 +453,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(java.lang.String,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(java.lang.String,
 	 * java.lang.String, int, java.lang.String[],
 	 * org.springframework.ldap.core.ContextMapper)
 	 */
@@ -449,7 +464,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
 	 * java.lang.String, int, org.springframework.ldap.core.ContextMapper)
 	 */
 	public List search(Name base, String filter, int searchScope, ContextMapper mapper) {
@@ -458,7 +474,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(java.lang.String,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(java.lang.String,
 	 * java.lang.String, int, org.springframework.ldap.core.ContextMapper)
 	 */
 	public List search(String base, String filter, int searchScope, ContextMapper mapper) {
@@ -467,7 +484,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
 	 * java.lang.String, org.springframework.ldap.core.ContextMapper)
 	 */
 	public List search(Name base, String filter, ContextMapper mapper) {
@@ -476,7 +494,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(java.lang.String,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(java.lang.String,
 	 * java.lang.String, org.springframework.ldap.core.ContextMapper)
 	 */
 	public List search(String base, String filter, ContextMapper mapper) {
@@ -485,7 +504,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(java.lang.String,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(java.lang.String,
 	 * java.lang.String, javax.naming.directory.SearchControls,
 	 * org.springframework.ldap.core.ContextMapper)
 	 */
@@ -495,7 +515,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
 	 * java.lang.String, javax.naming.directory.SearchControls,
 	 * org.springframework.ldap.core.ContextMapper)
 	 */
@@ -505,7 +526,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
 	 * java.lang.String, javax.naming.directory.SearchControls,
 	 * org.springframework.ldap.core.AttributesMapper)
 	 */
@@ -515,7 +537,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#search(java.lang.String,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(java.lang.String,
 	 * java.lang.String, javax.naming.directory.SearchControls,
 	 * org.springframework.ldap.core.AttributesMapper)
 	 */
@@ -526,7 +549,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.springframework.ldap.core.LdapOperations#search(java.lang.String,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(java.lang.String,
 	 * java.lang.String, javax.naming.directory.SearchControls,
 	 * org.springframework.ldap.core.AttributesMapper,
 	 * org.springframework.ldap.core.DirContextProcessor)
@@ -542,7 +566,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
 	 * java.lang.String, javax.naming.directory.SearchControls,
 	 * org.springframework.ldap.core.AttributesMapper,
 	 * org.springframework.ldap.core.DirContextProcessor)
@@ -558,7 +583,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.springframework.ldap.core.LdapOperations#search(java.lang.String,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(java.lang.String,
 	 * java.lang.String, javax.naming.directory.SearchControls,
 	 * org.springframework.ldap.core.ContextMapper,
 	 * org.springframework.ldap.core.DirContextProcessor)
@@ -575,7 +601,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
 	 * java.lang.String, javax.naming.directory.SearchControls,
 	 * org.springframework.ldap.core.ContextMapper,
 	 * org.springframework.ldap.core.DirContextProcessor)
@@ -652,8 +679,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#listBindings(java.lang.String,
-	 * org.springframework.ldap.core.NameClassPairCallbackHandler)
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#listBindings(java.lang.String
+	 * , org.springframework.ldap.core.NameClassPairCallbackHandler)
 	 */
 	public void listBindings(final String base, NameClassPairCallbackHandler handler) {
 		SearchExecutor searchExecutor = new SearchExecutor() {
@@ -666,8 +694,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#listBindings(javax.naming.Name,
-	 * org.springframework.ldap.core.NameClassPairCallbackHandler)
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#listBindings(javax.naming
+	 * .Name, org.springframework.ldap.core.NameClassPairCallbackHandler)
 	 */
 	public void listBindings(final Name base, NameClassPairCallbackHandler handler) {
 		SearchExecutor searchExecutor = new SearchExecutor() {
@@ -680,8 +709,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#listBindings(java.lang.String,
-	 * org.springframework.ldap.core.NameClassPairMapper)
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#listBindings(java.lang.String
+	 * , org.springframework.ldap.core.NameClassPairMapper)
 	 */
 	public List listBindings(String base, NameClassPairMapper mapper) {
 		CollectingNameClassPairCallbackHandler handler = new MappingCollectingNameClassPairCallbackHandler(mapper);
@@ -690,8 +720,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#listBindings(javax.naming.Name,
-	 * org.springframework.ldap.core.NameClassPairMapper)
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#listBindings(javax.naming
+	 * .Name, org.springframework.ldap.core.NameClassPairMapper)
 	 */
 	public List listBindings(Name base, NameClassPairMapper mapper) {
 		CollectingNameClassPairCallbackHandler handler = new MappingCollectingNameClassPairCallbackHandler(mapper);
@@ -700,22 +731,27 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#listBindings(java.lang.String)
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#listBindings(java.lang.String
+	 * )
 	 */
 	public List listBindings(final String base) {
 		return listBindings(base, new DefaultNameClassPairMapper());
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#listBindings(javax.naming.Name)
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#listBindings(javax.naming
+	 * .Name)
 	 */
 	public List listBindings(final Name base) {
 		return listBindings(base, new DefaultNameClassPairMapper());
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#listBindings(java.lang.String,
-	 * org.springframework.ldap.core.ContextMapper)
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#listBindings(java.lang.String
+	 * , org.springframework.ldap.core.ContextMapper)
 	 */
 	public List listBindings(String base, ContextMapper mapper) {
 
@@ -726,8 +762,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#listBindings(javax.naming.Name,
-	 * org.springframework.ldap.core.ContextMapper)
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#listBindings(javax.naming
+	 * .Name, org.springframework.ldap.core.ContextMapper)
 	 */
 	public List listBindings(Name base, ContextMapper mapper) {
 
@@ -738,7 +775,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#executeReadOnly(org.springframework.ldap.core.DirContextProcessor)
+	 * @seeorg.springframework.ldap.core.LdapOperations#executeReadOnly(org.
+	 * springframework.ldap.core.DirContextProcessor)
 	 */
 	public Object executeReadOnly(ContextExecutor ce) {
 		DirContext ctx = contextSource.getReadOnlyContext();
@@ -746,7 +784,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#executeReadWrite(org.springframework.ldap.core.DirContextProcessor)
+	 * @seeorg.springframework.ldap.core.LdapOperations#executeReadWrite(org.
+	 * springframework.ldap.core.DirContextProcessor)
 	 */
 	public Object executeReadWrite(ContextExecutor ce) {
 		DirContext ctx = contextSource.getReadWriteContext();
@@ -766,7 +805,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#lookup(javax.naming.Name)
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#lookup(javax.naming.Name)
 	 */
 	public Object lookup(final Name dn) {
 		return executeReadOnly(new ContextExecutor() {
@@ -777,7 +817,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#lookup(java.lang.String)
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#lookup(java.lang.String)
 	 */
 	public Object lookup(final String dn) {
 		return executeReadOnly(new ContextExecutor() {
@@ -788,7 +829,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#lookup(javax.naming.Name,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#lookup(javax.naming.Name,
 	 * org.springframework.ldap.core.AttributesMapper)
 	 */
 	public Object lookup(final Name dn, final AttributesMapper mapper) {
@@ -801,7 +843,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#lookup(java.lang.String,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#lookup(java.lang.String,
 	 * org.springframework.ldap.core.AttributesMapper)
 	 */
 	public Object lookup(final String dn, final AttributesMapper mapper) {
@@ -815,7 +858,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#lookup(javax.naming.Name,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#lookup(javax.naming.Name,
 	 * org.springframework.ldap.core.ContextMapper)
 	 */
 	public Object lookup(final Name dn, final ContextMapper mapper) {
@@ -828,7 +872,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#lookup(java.lang.String,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#lookup(java.lang.String,
 	 * org.springframework.ldap.core.ContextMapper)
 	 */
 	public Object lookup(final String dn, final ContextMapper mapper) {
@@ -842,7 +887,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#lookup(javax.naming.Name,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#lookup(javax.naming.Name,
 	 * java.lang.String[], org.springframework.ldap.core.AttributesMapper)
 	 */
 	public Object lookup(final Name dn, final String[] attributes, final AttributesMapper mapper) {
@@ -856,7 +902,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#lookup(java.lang.String,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#lookup(java.lang.String,
 	 * java.lang.String[], org.springframework.ldap.core.AttributesMapper)
 	 */
 	public Object lookup(final String dn, final String[] attributes, final AttributesMapper mapper) {
@@ -869,7 +916,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#lookup(javax.naming.Name,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#lookup(javax.naming.Name,
 	 * java.lang.String[], org.springframework.ldap.core.ContextMapper)
 	 */
 	public Object lookup(final Name dn, final String[] attributes, final ContextMapper mapper) {
@@ -884,7 +932,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#lookup(java.lang.String,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#lookup(java.lang.String,
 	 * java.lang.String[], org.springframework.ldap.core.ContextMapper)
 	 */
 	public Object lookup(final String dn, final String[] attributes, final ContextMapper mapper) {
@@ -900,8 +949,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#modifyAttributes(javax.naming.Name,
-	 * javax.naming.directory.ModificationItem[])
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#modifyAttributes(javax.naming
+	 * .Name, javax.naming.directory.ModificationItem[])
 	 */
 	public void modifyAttributes(final Name dn, final ModificationItem[] mods) {
 		executeReadWrite(new ContextExecutor() {
@@ -913,8 +963,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#modifyAttributes(java.lang.String,
-	 * javax.naming.directory.ModificationItem[])
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#modifyAttributes(java.lang
+	 * .String, javax.naming.directory.ModificationItem[])
 	 */
 	public void modifyAttributes(final String dn, final ModificationItem[] mods) {
 
@@ -955,21 +1006,24 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#unbind(javax.naming.Name)
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#unbind(javax.naming.Name)
 	 */
 	public void unbind(final Name dn) {
 		doUnbind(dn);
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#unbind(java.lang.String)
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#unbind(java.lang.String)
 	 */
 	public void unbind(final String dn) {
 		doUnbind(dn);
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#unbind(javax.naming.Name,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#unbind(javax.naming.Name,
 	 * boolean)
 	 */
 	public void unbind(final Name dn, boolean recursive) {
@@ -982,7 +1036,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#unbind(java.lang.String,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#unbind(java.lang.String,
 	 * boolean)
 	 */
 	public void unbind(final String dn, boolean recursive) {
@@ -1067,7 +1122,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#rebind(javax.naming.Name,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#rebind(javax.naming.Name,
 	 * java.lang.Object, javax.naming.directory.Attributes)
 	 */
 	public void rebind(final Name dn, final Object obj, final Attributes attributes) {
@@ -1081,7 +1137,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#rebind(java.lang.String,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#rebind(java.lang.String,
 	 * java.lang.Object, javax.naming.directory.Attributes)
 	 */
 	public void rebind(final String dn, final Object obj, final Attributes attributes) {
@@ -1095,7 +1152,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#rename(javax.naming.Name,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#rename(javax.naming.Name,
 	 * javax.naming.Name)
 	 */
 	public void rename(final Name oldDn, final Name newDn) {
@@ -1109,7 +1167,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.LdapOperations#rename(java.lang.String,
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#rename(java.lang.String,
 	 * java.lang.String)
 	 */
 	public void rename(final String oldDn, final String newDn) {
@@ -1123,7 +1182,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/*
-	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+	 * @see
+	 * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	public void afterPropertiesSet() throws Exception {
 		if (contextSource == null) {
@@ -1220,7 +1280,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		}
 
 		/*
-		 * @see org.springframework.ldap.CollectingNameClassPairCallbackHandler#getObjectFromNameClassPair(javax.naming.NameClassPair)
+		 * @seeorg.springframework.ldap.CollectingNameClassPairCallbackHandler#
+		 * getObjectFromNameClassPair(javax.naming.NameClassPair)
 		 */
 		public Object getObjectFromNameClassPair(NameClassPair nameClassPair) {
 			try {
@@ -1235,7 +1296,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.springframework.ldap.core.LdapOperations#lookupContext(javax.naming.Name)
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#lookupContext(javax.naming
+	 * .Name)
 	 */
 	public DirContextOperations lookupContext(Name dn) {
 		return (DirContextOperations) lookup(dn);
@@ -1244,7 +1307,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.springframework.ldap.core.LdapOperations#lookupContext(java.lang.String)
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#lookupContext(java.lang.
+	 * String)
 	 */
 	public DirContextOperations lookupContext(String dn) {
 		return (DirContextOperations) lookup(dn);
@@ -1253,7 +1318,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.springframework.ldap.core.LdapOperations#modifyAttributes(org.springframework.ldap.core.DirContextOperations)
+	 * @seeorg.springframework.ldap.core.LdapOperations#modifyAttributes(org.
+	 * springframework.ldap.core.DirContextOperations)
 	 */
 	public void modifyAttributes(DirContextOperations ctx) {
 		Name dn = ctx.getDn();
@@ -1263,6 +1329,21 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		else {
 			throw new IllegalStateException("The DirContextOperations instance needs to be properly initialized.");
 		}
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.springframework.ldap.core.simple.SimpleLdapOperations#bind(org.
+	 * springframework.ldap.core.DirContextOperations)
+	 */
+	public void bind(DirContextOperations ctx) {
+		Name dn = ctx.getDn();
+		if (dn != null && !ctx.isUpdateMode()) {
+			bind(dn, ctx, null);
+		}
+		else {
+			throw new IllegalStateException("The DirContextOperations instance needs to be properly initialized.");
+		}
 	}
 }
