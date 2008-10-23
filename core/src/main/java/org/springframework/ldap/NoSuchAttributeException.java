@@ -25,8 +25,11 @@ package org.springframework.ldap;
  */
 public class NoSuchAttributeException extends NamingException {
 
-    public NoSuchAttributeException(
-            javax.naming.directory.NoSuchAttributeException cause) {
-        super(cause);
-    }
+	public NoSuchAttributeException(String message) {
+		super(message);
+	}
+
+	public NoSuchAttributeException(javax.naming.directory.NoSuchAttributeException cause) {
+		super(cause);
+	}
 }

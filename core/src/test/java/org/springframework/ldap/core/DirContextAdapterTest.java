@@ -16,6 +16,9 @@
 
 package org.springframework.ldap.core;
 
+import java.util.Iterator;
+import java.util.SortedSet;
+
 import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
@@ -107,8 +110,75 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals(2, s.length);
 	}
 
+	public void testGetStringAttributesExistsWithInvalidType() throws Exception {
+		final Attributes attrs = new BasicAttributes();
+		Attribute multi = new BasicAttribute("abc");
+		multi.add(new Object());
+		attrs.put(multi);
+		class TestableDirContextAdapter extends DirContextAdapter {
+			public TestableDirContextAdapter() {
+				super(attrs, null);
+			}
+		}
+		tested = new TestableDirContextAdapter();
+		try {
+			tested.getStringAttributes("abc");
+			fail("ClassCastException expected");
+		}
+		catch (ArrayStoreException expected) {
+			assertTrue(true);
+		}
+	}
+
+	public void testGetStringAttributesExistsEmpty() throws Exception {
+		final Attributes attrs = new BasicAttributes();
+		Attribute multi = new BasicAttribute("abc");
+		attrs.put(multi);
+		class TestableDirContextAdapter extends DirContextAdapter {
+			public TestableDirContextAdapter() {
+				super(attrs, null);
+			}
+		}
+		tested = new TestableDirContextAdapter();
+		String s[] = tested.getStringAttributes("abc");
+		assertNotNull(s);
+		assertEquals(0, s.length);
+	}
+
 	public void testGetStringAttributesNotExists() throws Exception {
 		String s[] = tested.getStringAttributes("abc");
+		assertNull(s);
+	}
+
+	public void testGetAttributesSortedStringSetExists() throws Exception {
+		final Attributes attrs = new BasicAttributes();
+		Attribute multi = new BasicAttribute("abc");
+		multi.add("123");
+		multi.add("234");
+		attrs.put(multi);
+		class TestableDirContextAdapter extends DirContextAdapter {
+			public TestableDirContextAdapter() {
+				super(attrs, null);
+			}
+		}
+		tested = new TestableDirContextAdapter();
+		SortedSet s = tested.getAttributeSortedStringSet("abc");
+		assertNotNull(s);
+		assertEquals(2, s.size());
+		Iterator it = s.iterator();
+		assertEquals("123", it.next());
+		assertEquals("234", it.next());
+	}
+
+	public void testGetAttributesSortedStringSetNotExists() throws Exception {
+		final Attributes attrs = new BasicAttributes();
+		class TestableDirContextAdapter extends DirContextAdapter {
+			public TestableDirContextAdapter() {
+				super(attrs, null);
+			}
+		}
+		tested = new TestableDirContextAdapter();
+		SortedSet s = tested.getAttributeSortedStringSet("abc");
 		assertNull(s);
 	}
 
@@ -653,7 +723,7 @@ public class DirContextAdapterTest extends TestCase {
 		}
 		tested = new TestableDirContextAdapter();
 		assertTrue(tested.isUpdateMode());
-		tested.setAttributeValues("title", new String[] {"Jim", "George", "Juergen" }, true);
+		tested.setAttributeValues("title", new String[] { "Jim", "George", "Juergen" }, true);
 
 		// change
 		ModificationItem[] mods = tested.getModificationItems();

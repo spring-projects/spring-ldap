@@ -42,6 +42,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.ldap.NoSuchAttributeException;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.StringUtils;
 
@@ -709,25 +710,36 @@ public class DirContextAdapter implements DirContextOperations {
 	 * (java.lang.String)
 	 */
 	public String[] getStringAttributes(String name) {
-		String[] attributes;
-
-		Attribute attribute = originalAttrs.get(name);
-		if (attribute != null && attribute.size() > 0) {
-			attributes = new String[attribute.size()];
-			for (int i = 0; i < attribute.size(); i++) {
-				try {
-					attributes[i] = (String) attribute.get(i);
-				}
-				catch (NamingException e) {
-					throw LdapUtils.convertLdapException(e);
-				}
-			}
+		try {
+			return (String[]) collectAttributeValuesAsList(name).toArray(new String[0]);
 		}
-		else {
+		catch (NoSuchAttributeException e) {
+			// The attribute does not exist - contract says to return null.
 			return null;
 		}
+	}
 
-		return attributes;
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.DirContextOperations#getObjectAttributes
+	 * (java.lang.String)
+	 */
+	public Object[] getObjectAttributes(String name) {
+		try {
+			return collectAttributeValuesAsList(name).toArray(new Object[0]);
+		}
+		catch (NoSuchAttributeException e) {
+			// The attribute does not exist - contract says to return null.
+			return null;
+		}
+	}
+
+	private List collectAttributeValuesAsList(String name) {
+		List list = new LinkedList();
+		LdapUtils.collectAttributeValues(originalAttrs, name, list);
+		return list;
 	}
 
 	/*
@@ -735,24 +747,15 @@ public class DirContextAdapter implements DirContextOperations {
 	 * getAttributeSortedStringSet(java.lang.String)
 	 */
 	public SortedSet getAttributeSortedStringSet(String name) {
-		TreeSet attrSet = new TreeSet();
-
-		Attribute attribute = originalAttrs.get(name);
-		if (attribute != null) {
-			for (int i = 0; i < attribute.size(); i++) {
-				try {
-					attrSet.add(attribute.get(i));
-				}
-				catch (NamingException e) {
-					throw LdapUtils.convertLdapException(e);
-				}
-			}
+		try {
+			TreeSet attrSet = new TreeSet();
+			LdapUtils.collectAttributeValues(originalAttrs, name, attrSet);
+			return attrSet;
 		}
-		else {
+		catch (NoSuchAttributeException e) {
+			// The attribute does not exist - contract says to return null.
 			return null;
 		}
-
-		return attrSet;
 	}
 
 	/**
@@ -1299,4 +1302,5 @@ public class DirContextAdapter implements DirContextOperations {
 	public boolean isReferral() {
 		return StringUtils.hasLength(referralUrl);
 	}
+
 }

@@ -144,16 +144,30 @@ public interface DirContextOperations extends DirContext, AttributeModifications
 	 * Get all values of a String attribute.
 	 * 
 	 * @param name name of the attribute.
-	 * 
-	 * @return all registered values of the attribute.
+	 * @return a (possibly empty) array containing all registered values of the
+	 * attribute as Strings if the attribute is defined or <code>null</code>
+	 * otherwise.
+	 * @throws ArrayStoreException if any of the attribute values is not a
+	 * String.
 	 */
 	String[] getStringAttributes(String name);
+
+	/**
+	 * Get all values of an Object attribute.
+	 * 
+	 * @param name name of the attribute.
+	 * @return a (possibly empty) array containing all registered values of the
+	 * attribute if the attribute is defined or <code>null</code> otherwise.
+	 * @since 1.3
+	 */
+	Object[] getObjectAttributes(String name);
 
 	/**
 	 * Get all String values of the attribute as a <code>SortedSet</code>.
 	 * 
 	 * @param name name of the attribute.
-	 * @return a <code>SortedSet</code> containing all values of the attribute.
+	 * @return a <code>SortedSet</code> containing all values of the attribute,
+	 * or <code>null</code> if the attribute does not exist.
 	 */
 	SortedSet getAttributeSortedStringSet(String name);
 

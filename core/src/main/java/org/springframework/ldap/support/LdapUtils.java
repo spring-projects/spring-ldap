@@ -16,12 +16,17 @@
 
 package org.springframework.ldap.support;
 
+import java.util.Collection;
+
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.NamingException;
+import org.springframework.ldap.NoSuchAttributeException;
 import org.springframework.util.Assert;
 
 /**
@@ -65,9 +70,9 @@ public final class LdapUtils {
 	}
 
 	/**
-	 * Convert the specified checked
-	 * {@link javax.naming.NamingException NamingException} to a Spring LDAP
-	 * runtime {@link org.springframework.ldap.NamingException NamingException}
+	 * Convert the specified checked {@link javax.naming.NamingException
+	 * NamingException} to a Spring LDAP runtime
+	 * {@link org.springframework.ldap.NamingException NamingException}
 	 * equivalent.
 	 * 
 	 * @param ex the original checked NamingException to convert
@@ -127,8 +132,9 @@ public final class LdapUtils {
 			return new org.springframework.ldap.InvalidSearchFilterException(
 					(javax.naming.directory.InvalidSearchFilterException) ex);
 		}
-		
-		// this class is abstract, so it can never be of exactly this class; using instanceof
+
+		// this class is abstract, so it can never be of exactly this class;
+		// using instanceof
 		if (ex instanceof javax.naming.ldap.LdapReferralException) {
 			return new org.springframework.ldap.LdapReferralException((javax.naming.ldap.LdapReferralException) ex);
 		}
@@ -212,16 +218,74 @@ public final class LdapUtils {
 	 * Get the actual class of the supplied DirContext instance; LdapContext or
 	 * DirContext.
 	 * 
-	 * @param context
-	 *            the DirContext instance to check.
+	 * @param context the DirContext instance to check.
 	 * @return LdapContext.class if context is an LdapContext, DirContext.class
-	 *         otherwise.
+	 * otherwise.
 	 */
 	public static Class getActualTargetClass(DirContext context) {
-	    if (context instanceof LdapContext) {
-	        return LdapContext.class;
-	    }
-	
-	    return DirContext.class;
+		if (context instanceof LdapContext) {
+			return LdapContext.class;
+		}
+
+		return DirContext.class;
+	}
+
+	/**
+	 * Collect all the values of a the specified attribute from the supplied
+	 * Attributes.
+	 * 
+	 * @param attributes The Attributes; not <code>null</code>.
+	 * @param name The name of the Attribute to get values for.
+	 * @param collection the collection to collect the values in.
+	 * @throws NoSuchAttributeException if no attribute with the specified name
+	 * exists.
+	 */
+	public static void collectAttributeValues(Attributes attributes, String name, Collection collection) {
+		Assert.notNull(attributes, "Attributes must not be null");
+		Attribute attribute = attributes.get(name);
+		if (attribute == null) {
+			throw new NoSuchAttributeException("No attribute with name '" + name + "'");
+		}
+
+		iterateAttributeValues(attribute, new CollectingAttributeValueCallbackHandler(collection));
+	}
+
+	/**
+	 * Iterate through all the values of the specified Attribute calling back to
+	 * the specified callbackHandler.
+	 * @param attribute the Attribute to work with; not <code>null</code>.
+	 * @param callbackHandler the callbackHandler; not <code>null</code>.
+	 */
+	public static void iterateAttributeValues(Attribute attribute, AttributeValueCallbackHandler callbackHandler) {
+		Assert.notNull(attribute, "Attribute must not be null");
+		Assert.notNull(callbackHandler, "callbackHandler must not be null");
+
+		for (int i = 0; i < attribute.size(); i++) {
+			try {
+				callbackHandler.handleAttributeValue(attribute.getID(), attribute.get(i), i);
+			}
+			catch (javax.naming.NamingException e) {
+				throw LdapUtils.convertLdapException(e);
+			}
+		}
+	}
+
+	/**
+	 * An {@link AttributeValueCallbackHandler} to collect values in a supplied
+	 * collection.
+	 * 
+	 * @author Mattias Hellborg Arthursson
+	 */
+	private final static class CollectingAttributeValueCallbackHandler implements AttributeValueCallbackHandler {
+		private final Collection collection;
+
+		public CollectingAttributeValueCallbackHandler(Collection collection) {
+			Assert.notNull(collection, "Collection must not be null");
+			this.collection = collection;
+		}
+
+		public final void handleAttributeValue(String attributeName, Object attributeValue, int index) {
+			collection.add(attributeValue);
+		}
 	}
 }
