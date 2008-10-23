@@ -19,6 +19,7 @@ package org.springframework.ldap.support;
  * Callback interface for use when looping through Attribute values.
  * 
  * @author Mattias Hellborg Arthursson
+ * @since 1.3
  */
 public interface AttributeValueCallbackHandler {
 	/**

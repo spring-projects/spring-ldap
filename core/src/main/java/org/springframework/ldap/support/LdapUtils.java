@@ -239,6 +239,7 @@ public final class LdapUtils {
 	 * @param collection the collection to collect the values in.
 	 * @throws NoSuchAttributeException if no attribute with the specified name
 	 * exists.
+	 * @since 1.3
 	 */
 	public static void collectAttributeValues(Attributes attributes, String name, Collection collection) {
 		Assert.notNull(attributes, "Attributes must not be null");
@@ -255,6 +256,7 @@ public final class LdapUtils {
 	 * the specified callbackHandler.
 	 * @param attribute the Attribute to work with; not <code>null</code>.
 	 * @param callbackHandler the callbackHandler; not <code>null</code>.
+	 * @since 1.3
 	 */
 	public static void iterateAttributeValues(Attribute attribute, AttributeValueCallbackHandler callbackHandler) {
 		Assert.notNull(attribute, "Attribute must not be null");
