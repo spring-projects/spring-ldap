@@ -13,9 +13,93 @@ http://www.ietf.org/rfc/rfc2696.txt
 
 Changes in version 1.3 (XXX 2008)
 -------------------------------------------
+* TLS connections are now supported using the DefaultTlsDirContextAuthenticationStrategy
+  and ExternalTlsDirContextAuthenticationStrategy. (LDAP-8)
+
+* NameNotFound is no longer silently ignored in searches. It is possible
+  to use the old behavior by setting the ignoreNameNotFoundException property
+  to true in LdapTemplate. (LDAP-134)
+  
+* Referrals can now be handled by setting the property 'Context.REFERRAL' 
+  to 'follow' in the base context supplied to AbstractContextSource, provided
+  that name servers are set up properly. Any DirContextAdapter instances
+  resulting from referrals will provide the URL of the referred server in
+  getReferralUrl(). (LDAP-136, LDAP-9)
+  
+* The hard dependency on LDAP Booster Pack has now been completely removed,
+  preventing NoClassDefFoundErrors when using Paged Results without that
+  library on the classpath. (LDAP-110, LDAP-118)
+  
+* The dreaded problem with '\' in Distinguished Names is now resolved.
+  (LDAP-50, LDAP-109) 
+
+* Added bind method that takes a DirContextOperations instance as parameter,
+  performing the bind using the DN and Attributes from the DirContextOperations
+  instance. (LDAP-140)
+
+* DistinguishedName now returns compactly formatted String representations
+  from toString, e.g.:
+  cn=John Doe,ou=Company,c=Sweden
+  rather than
+  cn=John Doe, ou=Company, c=Sweden
+  To keep using the old formatting (for backward compatibility) set the
+  system property org.springframework.ldap.core.spacedDnFormat to true.
+  (LDAP-138, LDAP-112, LDAP-91) 
+
+* Now using Maven for building internally. (LDAP-80, LDAP-82, LDAP-95)
+  
+* Added HardcodedFilter class and corresponding PropertyEditor FilterEditor,
+  to allow for easily working with pre-encoded search filters 
+  e.g. in configuration files. (LDAP-28)
+  
+* Added ContextSourceAndHibernateTransactionManager to enable integration
+  of client-side LDAP Transactions in a Hibernate environment. (LDAP-115)
+
+* Added append method to BinaryLogicalFilter allowing client code to use
+  and/or filters from the same code. (LDAP-116)
+
+* Introduced DirContextAuthenticationStrategy to AbstractContextSource
+  to enable more flexible context authentication strategies, e.g.
+  TLS and Proxy Auth. (LDAP-124)
+  
+* Corrected reference doc claiming DataAccessException hierarchy. (LDAP-106)
+
+* Probably the most requested feature of all - a plain method for simple 
+  authentication is now provided in the ContextSource interface.
+  (LDAP-39, LDAP-103) 
+
+* The order of multi-valued attributes is now properly preserved by
+  DirContextAdapter#getModificationItems(). (LDAP-96)
+  
+* ContextSourceTransactionManager now properly throws a 
+  CannotCreateTransactionException if anything goes wrong in doBegin(). (LDAP-122)
+  
+* It is now possible to set the criticality on PagedResultsControl.
+  (LDAP-126)
+  
+* DirContextAdapter now has a getObjectAttributes method, as stated in
+  reference docs. (LDAP-137)
+
+* DirContextAdapter#getStringAttributes, getObjectAttributes, and
+  getAttributeSortedStringSet now all return null if the requested Attribute
+  is not present, and an empty result (array or set) if present but empty.
+  (LDAP-130)
+
+* SimpleLdapOperations/SimpleLdapTemplate now has mirrored methods that take
+  Name parameters. (LDAP-139)
+  
+* Fixed documentation glitch regarding ContextSourceAndDataSourceTransactionManager.
+  (LDAP-99)
+  
+* Added the possibility to configure the search scope on DefaultDirContextValidator.
+  Changed the default to OBJECT_SCOPE. (LDAP-121)
+
+* Fixed DistinguishedName parsing error; \r is now allowed in Distinguished Names,
+  complying with LDAP v3 DN RFC. (LDAP-97)
+
 * Moved SingleContextSource from an obscure inner class to a top-level
   class. This class doesn't close the DirContext, but reuses the same.
-  Useful for scenarios like Paged Results.
+  Useful for scenarios like Paged Results. (LDAP-114)
 
 * Removed deprecated method setUserName() in AbstractContextSource.
 
@@ -32,7 +116,8 @@ Changes in version 1.3 (XXX 2008)
 * Made changes required for paged results to work when using Spring LDAP
   connection pool with a single connection. (LDAP-114)
 
-* Upgraded Acegi to 1.0.6.
+* Removed AcegiAuthenticationSource - use SpringSecurityAuthenticationSource
+  (included with Spring Security) instead.
 
 * Upgraded commons-lang to 2.3.
 

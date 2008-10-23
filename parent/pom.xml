@@ -184,11 +184,6 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.ldap</groupId>
-                <artifactId>spring-ldap-acegi-support</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.ldap</groupId>
                 <artifactId>spring-ldap-samples-utils</artifactId>
                 <version>${project.version}</version>
             </dependency>

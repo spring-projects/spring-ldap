@@ -112,7 +112,6 @@
 		<module>parent</module>
 		<module>core</module>
 		<module>core-tiger</module>
-		<module>acegi-support</module>
 		<module>test-support</module>
 		<module>test</module>
 	</modules>
