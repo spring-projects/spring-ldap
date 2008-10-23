@@ -17,8 +17,6 @@ package org.springframework.transaction.compensating.support;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.NamingException;
-import org.springframework.ldap.support.LdapUtils;
 import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
@@ -89,7 +87,7 @@ public abstract class AbstractCompensatingTransactionManagerDelegate {
 				TransactionSynchronizationManager.bindResource(getTransactionSynchronizationKey(), contextHolder);
 			}
 		}
-		catch (NamingException e) {
+		catch (Exception e) {
 			throw new CannotCreateTransactionException("Could not create DirContext instance for transaction", e);
 		}
 	}

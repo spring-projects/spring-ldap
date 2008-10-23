@@ -1,4 +1,4 @@
-Spring-LDAP 1.2 (Oct 2007)
+Spring-LDAP 1.3-RC1 (Oct 2008)
 -----------------------------
 http://www.springframework.org/ldap
 
@@ -21,38 +21,18 @@ LDAP paths and Attributes.
 As of version 1.2, support for client-side compensating transaction is provided, as well as 
 Java 5 generics support with the SimpleLdapTemplate.
 
+See changelog for detailed information on the thanges included in the current release.
+
 2. RELEASE INFO
 
-Spring LDAP requires J2SE 1.4 for running. 
-J2SE 1.4, and javacc version 4.0 is required for building the Spring LDAP distributables from source code.
+Spring LDAP requires J2SE 1.4 and Spring 2.x for running.
+J2SE 1.5, and javacc version 4.0 is required for building the Spring LDAP distributables from source code.
 J2EE 1.4 (Servlet 2.3, JSP 1.2) is required for running the example.
-
-The Spring-LDAP release comes in three different distributables:
-* spring-ldap-bin-x.x.zip
-  ** readme.txt - this readme file.
-  ** license.txt - terms and conditions for use, reproduction and distribution
-  ** dist/spring-ldap-x.x.jar - the library
-  ** dist/spring-ldap-src-x.x.zip - the source code of the library
-  ** dist/ivys - ivy configuration
-  ** doc/api - api javadoc documentation
-  ** doc/reference - full project reference documentation
-  ** doc/upgrade - Upgrade guide from 1.1.2
-  
-* spring-ldap-bin-with-dependencies-x.x.zip
-  ** readme.txt - this readme file.
-  ** license.txt - terms and conditions for use, reproduction and distribution
-  ** dist/spring-ldap-x.x.jar - the library
-  ** dist/spring-ldap-src-x.x.zip - the source code of the library
-  ** dist/ivys - ivy configuration
-  ** lib - all referenced libraries necessary to use spring-LDAP
-  ** doc/api - api javadoc documentation
-  ** doc/reference - full project reference documentation
-  ** doc/upgrade - Upgrade guide from 1.1.2
 
 The sources included in the distributables are for reference use only, however buildable
 sources are available in svn on sourceforge on the following URLs:
-Sources for this release (1.2 tag):
-https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ldap/tags/1.2
+Sources for this release (1.3-rc1 tag):
+https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ldap/tags/1.3-rc1
 Latest sources (trunk): 
 https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ldap/trunk
 
@@ -66,17 +46,58 @@ Spring-LDAP is released under the terms of the Apache Software License (see lice
 The following distinct jar files are included in the distribution. This list
 specifies the respective contents and third-party dependencies.
 
-* spring-ldap-x.x.jar
+* spring-ldap-core-x.x.jar
 - Contents: The Spring-LDAP library
-- Dependencies: Commons Logging, Commons Lang, spring-beans,
-                spring-core, spring-context, spring-dao, ldapbp, commons-pool
+- Dependencies: Commons Logging, Commons Lang, Commons Pool, spring-beans,
+                spring-core, spring-context, spring-jdbc, spring-tx, ldapbp
 
-* spring-ldap-tiger-x.x.jar
+* spring-ldap-core-tiger-x.x.jar
 - Contents: The Spring-LDAP Java 5 support library
-- Dependencies: Commons Logging, Commons Lang, spring-beans,
-                spring-core, spring-context, spring-dao, ldapbp, commons-pool
+- Dependencies: Commons Logging, Commons Lang, Commons Pool, spring-beans,
+                spring-core, spring-context, spring-jdbc, spring-tx, ldapbp
 
-4. WHERE TO START
+* spring-ldap-test-x.x.jar
+- Contents: Support classes that helps LDAP withintegration testing.
+- Dependencies: Commons Logging, Commons Lang, Commons Pool, spring-beans,
+                spring-core, spring-context, spring-jdbc, spring-tx, ldapbp
+4. MAVEN USERS
+
+All major releases of this library are available in the central maven repository. Note that the artifacts
+have changed names between the 1.2.x and 1.3 releases:
+spring-ldap is now spring-ldap-core
+spring-ldap-tiger is now spring-ldap-core-tiger
+
+Milestone releases (such as release candidates) are available from the spring framework milestone repo:
+<repository>
+  <id>spring-milestone</id>
+  <name>Spring Portfolio Milestone Repository</name>
+  <url>http://s3.amazonaws.com/maven.springframework.org/milestone</url>
+</repository>
+  
+This means that in order to use the latest release (1.3-rc1), you need to specify the 
+repository above and include the following dependencies:
+<dependency>
+  <groupId>org.springframework.ldap</groupId>
+  <artifactId>spring-ldap-core</artifactId>
+  <version>1.3-rc1</version>
+</dependency>
+
+For java 1.5 support:
+<dependency>
+  <groupId>org.springframework.ldap</groupId>
+  <artifactId>spring-ldap-core-tiger</artifactId>
+  <version>1.3-rc1</version>
+</dependency>
+
+Nighly builds are published to the snapshot repository:
+
+<repository>
+  <id>spring-snapshot</id>
+  <name>Spring Portfolio Snapshot Repository</name>
+  <url>http://s3.amazonaws.com/maven.springframework.org/snapshot</url>
+</repository>
+
+5. WHERE TO START
 
 The distribution contains extensive JavaDoc documentation as well as full reference
 documentation and a sample application illustrating different ways to use Spring-LDAP.
