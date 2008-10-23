@@ -30,7 +30,7 @@ public class DefaultTempEntryRenamingStrategyTest extends TestCase {
         DefaultTempEntryRenamingStrategy tested = new DefaultTempEntryRenamingStrategy();
 
         Name result = tested.getTemporaryName(expectedOriginalName);
-        assertEquals("cn=john doe_temp, ou=somecompany, c=SE", result
+        assertEquals("cn=john doe_temp,ou=somecompany,c=SE", result
                 .toString());
         assertNotSame(expectedOriginalName, result);
     }
@@ -41,7 +41,7 @@ public class DefaultTempEntryRenamingStrategyTest extends TestCase {
         DefaultTempEntryRenamingStrategy tested = new DefaultTempEntryRenamingStrategy();
 
         Name result = tested.getTemporaryName(expectedOriginalName);
-        assertEquals("cn=john doe_temp+sn=doe, ou=somecompany, c=SE", result
+        assertEquals("cn=john doe_temp+sn=doe,ou=somecompany,c=SE", result
                 .toString());
     }
 

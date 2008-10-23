@@ -36,7 +36,7 @@ public class DifferentSubtreeTempEntryRenamingStrategyTest extends TestCase {
         Name result = tested.getTemporaryName(originalName);
 
         // Verify result
-        assertEquals("cn=john doe" + nextSequenceNo + ", ou=tempEntries",
+        assertEquals("cn=john doe" + nextSequenceNo + ",ou=tempEntries",
                 result.toString());
     }
 

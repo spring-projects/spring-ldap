@@ -65,12 +65,29 @@ import org.springframework.ldap.support.ListComparator;
  * String dn = path.toString();
  * </pre>
  * 
- * will render <code>uid=adam.skogman, ou=People, dc=jayway, dc=se</code>
+ * will render <code>uid=adam.skogman,ou=People,dc=jayway,dc=se</code>.
  * 
+ * <p>
+ * <b>NB:</b>As of version 1.3 the default toString representation of
+ * DistinguishedName now defaults to a compact one, without spaces between the
+ * respective RDNs. For backward compatibility, set the
+ * {@link #SPACED_DN_FORMAT_PROPERTY} ({@value #SPACED_DN_FORMAT_PROPERTY}) to
+ * <code>true</code>.
  * @author Adam Skogman
  * @author Mattias Arthursson
  */
 public class DistinguishedName implements Name {
+	/**
+	 * System property that will be inspected to determine whether toString will
+	 * format the DN with spaces after each comma or use a more compact
+	 * representation, i.e.:
+	 * <code>uid=adam.skogman, ou=People, dc=jayway, dc=se</code> rather than
+	 * <code>uid=adam.skogman,ou=People,dc=jayway,dc=se</code>. Default is
+	 * compact representation.
+	 * @since 1.3
+	 */
+	public static final String SPACED_DN_FORMAT_PROPERTY = "org.springframework.ldap.core.spacedDnFormat";
+
 	private static final boolean COMPACT = true;
 
 	private static final boolean NON_COMPACT = false;
@@ -227,19 +244,29 @@ public class DistinguishedName implements Name {
 
 	/**
 	 * Get the String representation of this <code>DistinguishedName</code>.
-	 * Add a space after each comma, to make it readable.
+	 * Depending on the setting of property
+	 * <code>org.springframework.ldap.core.spacedDnFormat</code> a space will be
+	 * added after each comma, to make the result more readable. Default is
+	 * compact representation, i.e. without any spaces.
 	 * 
-	 * @return a syntactically correct, properly escaped, nicely formatted
-	 * String representation of the <code>DistinguishedName</code>.
+	 * @return a syntactically correct, properly escaped String representation
+	 * of the <code>DistinguishedName</code>.
+	 * @see #SPACED_DN_FORMAT_PROPERTY
 	 */
 	public String toString() {
-		return format(NON_COMPACT);
+		String spacedFormatting = System.getProperty(SPACED_DN_FORMAT_PROPERTY);
+		if (StringUtils.isBlank(spacedFormatting)) {
+			return format(COMPACT);
+		}
+		else {
+			return format(NON_COMPACT);
+		}
 	}
 
 	/**
 	 * Get the compact String representation of this
-	 * <code>DistinguishedName</code>. Add no space after each comma, to make
-	 * it compact.
+	 * <code>DistinguishedName</code>. Add no space after each comma, to make it
+	 * compact.
 	 * 
 	 * @return a syntactically correct, properly escaped String representation
 	 * of the <code>DistinguishedName</code>.

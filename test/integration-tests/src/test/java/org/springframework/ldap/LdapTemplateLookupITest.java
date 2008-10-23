@@ -195,16 +195,16 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 	public void testLookup_GetNameInNamespace_Plain() {
 		DirContextAdapter result = (DirContextAdapter) tested.lookup("cn=Some Person2, ou=company1,c=Sweden");
 
-		assertEquals("cn=Some Person2, ou=company1, c=Sweden", result.getDn().toString());
-		assertEquals("cn=Some Person2, ou=company1, c=Sweden, dc=jayway, dc=se", result.getNameInNamespace());
+		assertEquals("cn=Some Person2,ou=company1,c=Sweden", result.getDn().toString());
+		assertEquals("cn=Some Person2,ou=company1,c=Sweden,dc=jayway,dc=se", result.getNameInNamespace());
 	}
 
 	@Test
 	public void testLookup_GetNameInNamespace_MultiRdn() {
 		DirContextAdapter result = (DirContextAdapter) tested.lookup("cn=Some Person+sn=Person, ou=company1,c=Norway");
 
-		assertEquals("cn=Some Person+sn=Person, ou=company1, c=Norway", result.getDn().toString());
-		assertEquals("cn=Some Person+sn=Person, ou=company1, c=Norway, dc=jayway, dc=se", result.getNameInNamespace());
+		assertEquals("cn=Some Person+sn=Person,ou=company1,c=Norway", result.getDn().toString());
+		assertEquals("cn=Some Person+sn=Person,ou=company1,c=Norway,dc=jayway,dc=se", result.getNameInNamespace());
 	}
 
 	/**

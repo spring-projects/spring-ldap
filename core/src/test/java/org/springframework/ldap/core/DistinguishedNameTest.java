@@ -91,7 +91,7 @@ public class DistinguishedNameTest extends TestCase {
 		path.remove(1);
 		path.remove(3);
 
-		assertEquals("cn=john.doe, ou=Some Company, ou=G, ou=M", path.toString());
+		assertEquals("cn=john.doe,ou=Some Company,ou=G,ou=M", path.toString());
 	}
 
 	/**
@@ -123,7 +123,7 @@ public class DistinguishedNameTest extends TestCase {
 
 		path1.append(path2);
 
-		assertEquals("Append failed", "ou=baz, ou=foo, ou=bar", path1.toString());
+		assertEquals("Append failed", "ou=baz,ou=foo,ou=bar", path1.toString());
 	}
 
 	public void testPrepend() {
@@ -132,7 +132,7 @@ public class DistinguishedNameTest extends TestCase {
 
 		path1.prepend(path2);
 
-		assertEquals("Append failed", "ou=foo, ou=bar, cn=fie, ou=baz", path1.toString());
+		assertEquals("Append failed", "ou=foo,ou=bar,cn=fie,ou=baz", path1.toString());
 	}
 
 	public void testEquals() throws Exception {
@@ -315,7 +315,7 @@ public class DistinguishedNameTest extends TestCase {
 
 		path1.addAll(path2);
 
-		assertEquals("AddAll failed", "ou=baz, ou=foo, ou=bar", path1.toString());
+		assertEquals("AddAll failed", "ou=baz,ou=foo,ou=bar", path1.toString());
 	}
 
 	public void testAddAll_Index() throws InvalidNameException {
@@ -324,21 +324,21 @@ public class DistinguishedNameTest extends TestCase {
 
 		path1.addAll(1, path2);
 
-		assertEquals("AddAll failed", "ou=foo, ou=baz, ou=bar", path1.toString());
+		assertEquals("AddAll failed", "ou=foo,ou=baz,ou=bar", path1.toString());
 	}
 
 	public void testAdd() throws InvalidNameException {
 		DistinguishedName path1 = new DistinguishedName("ou=foo, ou=bar");
 		path1.add("ou=baz");
 
-		assertEquals("Add failed", "ou=baz, ou=foo, ou=bar", path1.toString());
+		assertEquals("Add failed", "ou=baz,ou=foo,ou=bar", path1.toString());
 	}
 
 	public void testAdd_Index() throws InvalidNameException {
 		DistinguishedName path1 = new DistinguishedName("ou=foo, ou=bar");
 		path1.add(1, "ou=baz");
 
-		assertEquals("Add failed", "ou=foo, ou=baz, ou=bar", path1.toString());
+		assertEquals("Add failed", "ou=foo,ou=baz,ou=bar", path1.toString());
 	}
 
 	public void testToUrl() {
@@ -482,7 +482,7 @@ public class DistinguishedNameTest extends TestCase {
 		DistinguishedName tested = new DistinguishedName("dc=mycompany,dc=com");
 		tested.append("ou", "company1").append("cn", "john doe");
 
-		assertEquals("cn=john doe, ou=company1, dc=mycompany, dc=com", tested.toString());
+		assertEquals("cn=john doe,ou=company1,dc=mycompany,dc=com", tested.toString());
 	}
 
 	public void testUnmodifiableDistinguishedName() throws Exception {
@@ -505,5 +505,19 @@ public class DistinguishedNameTest extends TestCase {
 	public void testDistinguishedNameWithCRParsesProperly() {
 		DistinguishedName name = new DistinguishedName("cn=foo \r bar");
 		assertNotNull(name);
+	}
+
+	public void testToStringCompact() {
+		try {
+			DistinguishedName name = new DistinguishedName("cn=john doe, ou=company");
+			// First check the default
+			assertEquals("cn=john doe,ou=company", name.toString());
+			System.setProperty(DistinguishedName.SPACED_DN_FORMAT_PROPERTY, "true");
+			assertEquals("cn=john doe, ou=company", name.toString());
+		}
+		finally {
+			// Always restore the system setting
+			System.setProperty(DistinguishedName.SPACED_DN_FORMAT_PROPERTY, "");
+		}
 	}
 }

@@ -57,7 +57,7 @@ public class DistinguishedNameEditorTest extends TestCase {
 	}
 
 	public void testGetAsText() throws Exception {
-		String expectedDn = "dc=jayway, dc=se";
+		String expectedDn = "dc=jayway,dc=se";
 		tested.setValue(new DistinguishedName(expectedDn));
 		String text = tested.getAsText();
 		assertEquals(expectedDn, text);

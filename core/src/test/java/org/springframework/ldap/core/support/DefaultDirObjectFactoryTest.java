@@ -166,7 +166,7 @@ public class DefaultDirObjectFactoryTest extends TestCase {
 		verify();
 
 		assertEquals("ou=some unit", adapter.getDn().toString());
-		assertEquals("ou=some unit, dc=jayway, dc=se", adapter.getNameInNamespace());
+		assertEquals("ou=some unit,dc=jayway,dc=se", adapter.getNameInNamespace());
 		assertEquals(expectedAttributes, adapter.getAttributes());
 	}
 
@@ -176,7 +176,7 @@ public class DefaultDirObjectFactoryTest extends TestCase {
 		DefaultDirObjectFactory tested = new DefaultDirObjectFactory();
 		DirContextAdapter result = tested.constructAdapterFromName(new BasicAttributes(), name, "");
 
-		assertEquals("ou=People, o=JNDITutorial", result.getDn().toString());
+		assertEquals("ou=People,o=JNDITutorial", result.getDn().toString());
 		assertEquals("ldap://localhost:389", result.getReferralUrl().toString());
 	}
 
@@ -186,7 +186,7 @@ public class DefaultDirObjectFactoryTest extends TestCase {
 		DefaultDirObjectFactory tested = new DefaultDirObjectFactory();
 		DirContextAdapter result = tested.constructAdapterFromName(new BasicAttributes(), name, "");
 
-		assertEquals("ou=People, o=JNDITutorial", result.getDn().toString());
+		assertEquals("ou=People,o=JNDITutorial", result.getDn().toString());
 		assertEquals("ldaps://localhost:389", result.getReferralUrl().toString());
 	}
 

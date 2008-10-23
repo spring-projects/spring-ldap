@@ -101,7 +101,7 @@ public class InvalidBackslashITest extends AbstractLdapTemplateIntegrationTest {
 			@Override
 			protected Object doMapFromContext(DirContextOperations ctx) {
 				DistinguishedName dn = (DistinguishedName) ctx.getDn();
-				assertEquals("cn=Some\\\\Person6, ou=company1, c=Sweden", dn.toString());
+				assertEquals("cn=Some\\\\Person6,ou=company1,c=Sweden", dn.toString());
 				assertEquals("Some\\Person6", dn.getLdapRdn("cn").getValue());
 				return new Object();
 			}

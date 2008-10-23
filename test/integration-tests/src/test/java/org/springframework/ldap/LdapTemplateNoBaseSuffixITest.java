@@ -59,8 +59,8 @@ public class LdapTemplateNoBaseSuffixITest extends AbstractLdapTemplateIntegrati
 		assertEquals("Some Person2", result.getStringAttribute("cn"));
 		assertEquals("Person2", result.getStringAttribute("sn"));
 		assertEquals("Sweden, Company1, Some Person2", result.getStringAttribute("description"));
-		assertEquals("cn=Some Person2, ou=company1, c=Sweden, dc=jayway, dc=se", result.getDn().toString());
-		assertEquals("cn=Some Person2, ou=company1, c=Sweden, dc=jayway, dc=se", result.getNameInNamespace());
+		assertEquals("cn=Some Person2,ou=company1,c=Sweden,dc=jayway,dc=se", result.getDn().toString());
+		assertEquals("cn=Some Person2,ou=company1,c=Sweden,dc=jayway,dc=se", result.getNameInNamespace());
 	}
 
 	@Test
@@ -84,9 +84,9 @@ public class LdapTemplateNoBaseSuffixITest extends AbstractLdapTemplateIntegrati
 
 		assertEquals("Some Person4", result.getStringAttribute("cn"));
 		assertEquals("Person4", result.getStringAttribute("sn"));
-		assertEquals("cn=Some Person4, ou=company1, c=Sweden, dc=jayway, dc=se", result.getDn().toString());
+		assertEquals("cn=Some Person4,ou=company1,c=Sweden,dc=jayway,dc=se", result.getDn().toString());
 
-		tested.unbind("cn=Some Person4, ou=company1, c=Sweden, dc=jayway, dc=se");
+		tested.unbind("cn=Some Person4,ou=company1,c=Sweden,dc=jayway,dc=se");
 		try {
 			tested.lookup("cn=Some Person4, ou=company1, c=Sweden, dc=jayway, dc=se");
 			fail("NameNotFoundException expected");
