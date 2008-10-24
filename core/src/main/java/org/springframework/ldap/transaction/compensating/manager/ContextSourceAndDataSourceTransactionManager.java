@@ -160,7 +160,7 @@ public class ContextSourceAndDataSourceTransactionManager extends
         ldapManagerDelegate.setRenamingStrategy(renamingStrategy);
     }
 
-    private class ContextSourceAndDataSourceTransactionObject {
+    private final static class ContextSourceAndDataSourceTransactionObject {
         private Object ldapTransactionObject;
 
         private Object dataSourceTransactionObject;

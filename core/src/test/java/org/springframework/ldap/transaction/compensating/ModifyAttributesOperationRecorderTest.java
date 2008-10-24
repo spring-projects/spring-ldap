@@ -116,7 +116,9 @@ public class ModifyAttributesOperationRecorderTest extends TestCase {
         ModifyAttributesOperationExecutor rollbackOperation = (ModifyAttributesOperationExecutor) operation;
         assertSame(expectedName, rollbackOperation.getDn());
         assertSame(ldapOperationsMock, rollbackOperation.getLdapOperations());
-        assertSame(incomingMods, rollbackOperation.getActualModifications());
+        ModificationItem[] actualModifications = rollbackOperation.getActualModifications();
+        assertEquals(incomingMods.length, actualModifications.length);
+        assertEquals(incomingMods[0], actualModifications[0]);
         assertEquals(1, rollbackOperation.getCompensatingModifications().length);
         assertSame(compensatingItem, rollbackOperation
                 .getCompensatingModifications()[0]);

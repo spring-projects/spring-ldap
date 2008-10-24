@@ -65,8 +65,8 @@ public class ModifyAttributesOperationExecutor implements
             ModificationItem[] compensatingModifications) {
         this.ldapOperations = ldapOperations;
         this.dn = dn;
-        this.actualModifications = actualModifications;
-        this.compensatingModifications = compensatingModifications;
+        this.actualModifications = (ModificationItem[]) actualModifications.clone();
+        this.compensatingModifications = (ModificationItem[]) compensatingModifications.clone();
     }
 
     /*

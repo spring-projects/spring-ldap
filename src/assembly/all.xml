@@ -10,7 +10,7 @@
             <includes>
                 <include>org.springframework.ldap:spring-ldap-core</include>
                 <include>org.springframework.ldap:spring-ldap-core-tiger</include>
-                <include>org.springframework.ldap:spring-ldap-acegi-support</include>
+                <include>org.springframework.ldap:spring-ldap-test</include>
             </includes>
             <binaries>
                 <outputDirectory/>

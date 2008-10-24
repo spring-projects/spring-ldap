@@ -29,6 +29,8 @@ import javax.naming.Name;
 import javax.naming.ldap.Rdn;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.BadLdapGrammarException;
 import org.springframework.ldap.support.ListComparator;
 
@@ -87,6 +89,8 @@ public class DistinguishedName implements Name {
 	 * @since 1.3
 	 */
 	public static final String SPACED_DN_FORMAT_PROPERTY = "org.springframework.ldap.core.spacedDnFormat";
+
+	private static final Log log = LogFactory.getLog(DistinguishedName.class);
 
 	private static final boolean COMPACT = true;
 
@@ -462,11 +466,15 @@ public class DistinguishedName implements Name {
 	 * @see java.lang.Object#clone()
 	 */
 	public Object clone() {
-
-		// just duplicate the list, the rdns are immutable.
-		LinkedList list = new LinkedList(getNames());
-
-		return new DistinguishedName(list);
+		try {
+			DistinguishedName result = (DistinguishedName) super.clone();
+			result.names = new LinkedList(names);
+			return result;
+		}
+		catch (CloneNotSupportedException e) {
+			log.fatal("CloneNotSupported thrown from superclass - this should not happen");
+			throw new RuntimeException("Fatal error in clone", e);
+		}
 	}
 
 	/**

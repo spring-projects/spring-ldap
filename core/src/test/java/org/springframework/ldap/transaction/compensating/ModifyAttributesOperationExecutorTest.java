@@ -19,6 +19,7 @@ import javax.naming.Name;
 import javax.naming.directory.ModificationItem;
 
 import org.easymock.MockControl;
+import org.easymock.internal.ArrayMatcher;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.transaction.compensating.ModifyAttributesOperationExecutor;
@@ -26,84 +27,82 @@ import org.springframework.ldap.transaction.compensating.ModifyAttributesOperati
 import junit.framework.TestCase;
 
 public class ModifyAttributesOperationExecutorTest extends TestCase {
-    private MockControl ldapOperationsControl;
+	private MockControl ldapOperationsControl;
 
-    private LdapOperations ldapOperationsMock;
+	private LdapOperations ldapOperationsMock;
 
-    protected void setUp() throws Exception {
-        ldapOperationsControl = MockControl.createControl(LdapOperations.class);
-        ldapOperationsMock = (LdapOperations) ldapOperationsControl.getMock();
-    }
+	protected void setUp() throws Exception {
+		ldapOperationsControl = MockControl.createControl(LdapOperations.class);
+		ldapOperationsMock = (LdapOperations) ldapOperationsControl.getMock();
+	}
 
-    protected void tearDown() throws Exception {
-        ldapOperationsControl = null;
-        ldapOperationsMock = null;
-    }
+	protected void tearDown() throws Exception {
+		ldapOperationsControl = null;
+		ldapOperationsMock = null;
+	}
 
-    protected void replay() {
-        ldapOperationsControl.replay();
-    }
+	protected void replay() {
+		ldapOperationsControl.replay();
+	}
 
-    protected void verify() {
-        ldapOperationsControl.verify();
-    }
+	protected void verify() {
+		ldapOperationsControl.verify();
+	}
 
-    public void testPerformOperation() {
-        ModificationItem[] expectedCompensatingItems = new ModificationItem[0];
-        ModificationItem[] expectedActualItems = new ModificationItem[0];
+	public void testPerformOperation() {
+		ModificationItem[] expectedCompensatingItems = new ModificationItem[0];
+		ModificationItem[] expectedActualItems = new ModificationItem[0];
 
-        Name expectedDn = new DistinguishedName("cn=john doe");
+		Name expectedDn = new DistinguishedName("cn=john doe");
 
-        ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(
-                ldapOperationsMock, expectedDn, expectedActualItems,
-                expectedCompensatingItems);
+		ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(ldapOperationsMock,
+				expectedDn, expectedActualItems, expectedCompensatingItems);
 
-        ldapOperationsMock.modifyAttributes(expectedDn, expectedActualItems);
+		ldapOperationsMock.modifyAttributes(expectedDn, expectedActualItems);
+		ldapOperationsControl.setMatcher(new ArrayMatcher());
 
-        replay();
-        // Perform test
-        tested.performOperation();
+		replay();
+		// Perform test
+		tested.performOperation();
 
-        verify();
-    }
+		verify();
+	}
 
-    public void testCommit() {
-        ModificationItem[] expectedCompensatingItems = new ModificationItem[0];
-        ModificationItem[] expectedActualItems = new ModificationItem[0];
+	public void testCommit() {
+		ModificationItem[] expectedCompensatingItems = new ModificationItem[0];
+		ModificationItem[] expectedActualItems = new ModificationItem[0];
 
-        Name expectedDn = new DistinguishedName("cn=john doe");
+		Name expectedDn = new DistinguishedName("cn=john doe");
 
-        ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(
-                ldapOperationsMock, expectedDn, expectedActualItems,
-                expectedCompensatingItems);
+		ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(ldapOperationsMock,
+				expectedDn, expectedActualItems, expectedCompensatingItems);
 
-        // No operation here
-        
-        replay();
-        // Perform test
-        tested.commit();
+		// No operation here
 
-        verify();
-    }
+		replay();
+		// Perform test
+		tested.commit();
 
-    public void testRollback() {
-        ModificationItem[] expectedCompensatingItems = new ModificationItem[0];
-        ModificationItem[] expectedActualItems = new ModificationItem[0];
+		verify();
+	}
 
-        Name expectedDn = new DistinguishedName("cn=john doe");
+	public void testRollback() {
+		ModificationItem[] expectedCompensatingItems = new ModificationItem[0];
+		ModificationItem[] expectedActualItems = new ModificationItem[0];
 
-        ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(
-                ldapOperationsMock, expectedDn, expectedActualItems,
-                expectedCompensatingItems);
+		Name expectedDn = new DistinguishedName("cn=john doe");
 
-        ldapOperationsMock.modifyAttributes(expectedDn,
-                expectedCompensatingItems);
+		ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(ldapOperationsMock,
+				expectedDn, expectedActualItems, expectedCompensatingItems);
 
-        replay();
-        // Perform test
-        tested.rollback();
+		ldapOperationsMock.modifyAttributes(expectedDn, expectedCompensatingItems);
+		ldapOperationsControl.setMatcher(new ArrayMatcher());
 
-        verify();
-    }
+		replay();
+		// Perform test
+		tested.rollback();
+
+		verify();
+	}
 
 }

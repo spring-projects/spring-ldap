@@ -18,9 +18,5 @@
             <directory>test-support/src/main/java</directory>
             <outputDirectory/>
         </fileSet>
-        <fileSet>
-            <directory>acegi-support/src/main/java</directory>
-            <outputDirectory/>
-        </fileSet>
     </fileSets>
 </assembly>

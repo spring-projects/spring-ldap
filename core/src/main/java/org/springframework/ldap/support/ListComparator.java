@@ -15,6 +15,7 @@
  */
 package org.springframework.ldap.support;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 
@@ -23,7 +24,8 @@ import java.util.List;
  * 
  * @author Mattias Hellborg Arthursson
  */
-public class ListComparator implements Comparator {
+public class ListComparator implements Comparator, Serializable {
+	private static final long serialVersionUID = -3068381879731157178L;
 
 	/**
 	 * Compare two lists of Comparable objects.

@@ -29,176 +29,187 @@ import java.lang.reflect.Method;
 
 /**
  * DirContextProcessor implementation for managing the paged results control.
- *
+ * 
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  */
-public class PagedResultsRequestControl extends
-        AbstractRequestControlDirContextProcessor {
+public class PagedResultsRequestControl extends AbstractRequestControlDirContextProcessor {
 
-    private static final boolean CRITICAL_CONTROL = true;
+	private static final boolean CRITICAL_CONTROL = true;
 
-    private static final String DEFAULT_REQUEST_CONTROL = "javax.naming.ldap.PagedResultsControl";
-    private static final String LDAPBP_REQUEST_CONTROL = "com.sun.jndi.ldap.ctl.PagedResultsControl";
-    private static final String DEFAULT_RESPONSE_CONTROL = "javax.naming.ldap.PagedResultsResponseControl";
-    private static final String LDAPBP_RESPONSE_CONTROL = "com.sun.jndi.ldap.ctl.PagedResultsResponseControl";
+	private static final String DEFAULT_REQUEST_CONTROL = "javax.naming.ldap.PagedResultsControl";
 
-    private int pageSize;
+	private static final String LDAPBP_REQUEST_CONTROL = "com.sun.jndi.ldap.ctl.PagedResultsControl";
 
-    private PagedResultsCookie cookie;
+	private static final String DEFAULT_RESPONSE_CONTROL = "javax.naming.ldap.PagedResultsResponseControl";
 
-    private int resultSize;
+	private static final String LDAPBP_RESPONSE_CONTROL = "com.sun.jndi.ldap.ctl.PagedResultsResponseControl";
 
-    private boolean critical = CRITICAL_CONTROL;
+	private int pageSize;
 
-    private Class responseControlClass;
-    private Class requestControlClass;
+	private PagedResultsCookie cookie;
 
-    /**
-     * Constructs a new instance. This constructor should be used when
-     * performing the first paged search operation, when no other results have
-     * been retrieved.
-     *
-     * @param pageSize the page size.
-     */
-    public PagedResultsRequestControl(int pageSize) {
-        this(pageSize, null);
-    }
+	private int resultSize;
 
-    /**
-     * Constructs a new instance with the supplied page size and cookie. The
-     * cookie must be the exact same instance as received from a previous paged
-     * resullts search, or <code>null</code> if it is the first in an
-     * operation sequence.
-     *
-     * @param pageSize the page size.
-     * @param cookie   the cookie, as received from a previous search.
-     */
-    public PagedResultsRequestControl(int pageSize, PagedResultsCookie cookie) {
-        this.pageSize = pageSize;
-        this.cookie = cookie;
+	private boolean critical = CRITICAL_CONTROL;
 
-        loadControlClasses();
-    }
+	private Class responseControlClass;
 
-    private void loadControlClasses() {
-        try {
-            requestControlClass = Class.forName(DEFAULT_REQUEST_CONTROL);
-            responseControlClass = Class.forName(DEFAULT_RESPONSE_CONTROL);
-        } catch (ClassNotFoundException e) {
-            log.debug("Default control classes not found - falling back to LdapBP classes", e);
+	private Class requestControlClass;
 
-            try {
-                requestControlClass = Class.forName(LDAPBP_REQUEST_CONTROL);
-                responseControlClass = Class.forName(LDAPBP_RESPONSE_CONTROL);
-            } catch (ClassNotFoundException e1) {
-                throw new UncategorizedLdapException("Neither default nor fallback classes are available - unable to proceed", e);
-            }
+	/**
+	 * Constructs a new instance. This constructor should be used when
+	 * performing the first paged search operation, when no other results have
+	 * been retrieved.
+	 * 
+	 * @param pageSize the page size.
+	 */
+	public PagedResultsRequestControl(int pageSize) {
+		this(pageSize, null);
+	}
 
-        }
-    }
+	/**
+	 * Constructs a new instance with the supplied page size and cookie. The
+	 * cookie must be the exact same instance as received from a previous paged
+	 * resullts search, or <code>null</code> if it is the first in an operation
+	 * sequence.
+	 * 
+	 * @param pageSize the page size.
+	 * @param cookie the cookie, as received from a previous search.
+	 */
+	public PagedResultsRequestControl(int pageSize, PagedResultsCookie cookie) {
+		this.pageSize = pageSize;
+		this.cookie = cookie;
 
-    /**
-     * Get the cookie.
-     *
-     * @return the cookie.
-     */
-    public PagedResultsCookie getCookie() {
-        return cookie;
-    }
+		loadControlClasses();
+	}
 
-    /**
-     * Get the page size.
-     *
-     * @return the page size.
-     */
-    public int getPageSize() {
-        return pageSize;
-    }
+	private void loadControlClasses() {
+		try {
+			requestControlClass = Class.forName(DEFAULT_REQUEST_CONTROL);
+			responseControlClass = Class.forName(DEFAULT_RESPONSE_CONTROL);
+		}
+		catch (ClassNotFoundException e) {
+			log.debug("Default control classes not found - falling back to LdapBP classes", e);
 
-    /**
-     * Get the total estimated number of entries that matches the issued search.
-     * Note that this value is optional for the LDAP server to return, so it
-     * does not always contain any valid data.
-     *
-     * @return the estimated result size, if returned from the server.
-     */
-    public int getResultSize() {
-        return resultSize;
-    }
+			try {
+				requestControlClass = Class.forName(LDAPBP_REQUEST_CONTROL);
+				responseControlClass = Class.forName(LDAPBP_RESPONSE_CONTROL);
+			}
+			catch (ClassNotFoundException e1) {
+				throw new UncategorizedLdapException(
+						"Neither default nor fallback classes are available - unable to proceed", e);
+			}
 
-    /**
-     * Set the class of the expected ResponseControl for the paged results
-     * response.
-     *
-     * @param responseControlClass Class of the expected response control.
-     */
-    public void setResponseControlClass(Class responseControlClass) {
-        this.responseControlClass = responseControlClass;
-    }
+		}
+	}
 
-    public void setRequestControlClass(Class requestControlClass) {
-        this.requestControlClass = requestControlClass;
-    }
+	/**
+	 * Get the cookie.
+	 * 
+	 * @return the cookie.
+	 */
+	public PagedResultsCookie getCookie() {
+		return cookie;
+	}
 
-    /*
-     * @see org.springframework.ldap.control.AbstractRequestControlDirContextProcessor#createRequestControl()
-     */
+	/**
+	 * Get the page size.
+	 * 
+	 * @return the page size.
+	 */
+	public int getPageSize() {
+		return pageSize;
+	}
 
-    public Control createRequestControl() {
-        byte[] actualCookie = null;
-        if (cookie != null) {
-            actualCookie = cookie.getCookie();
-        }
-        Constructor constructor = ClassUtils.getConstructorIfAvailable(requestControlClass, new Class[]{int.class, byte[].class, boolean.class});
-        if (constructor == null) {
-            throw new IllegalArgumentException("Failed to find an appropriate RequestControl constructor");
-        }
+	/**
+	 * Get the total estimated number of entries that matches the issued search.
+	 * Note that this value is optional for the LDAP server to return, so it
+	 * does not always contain any valid data.
+	 * 
+	 * @return the estimated result size, if returned from the server.
+	 */
+	public int getResultSize() {
+		return resultSize;
+	}
 
-        Control result = null;
-        try {
-            result = (Control) constructor.newInstance(new Object[]{new Integer(pageSize), actualCookie, new Boolean(critical)});
-        } catch (Exception e) {
-            ReflectionUtils.handleReflectionException(e);
-        }
+	/**
+	 * Set the class of the expected ResponseControl for the paged results
+	 * response.
+	 * 
+	 * @param responseControlClass Class of the expected response control.
+	 */
+	public void setResponseControlClass(Class responseControlClass) {
+		this.responseControlClass = responseControlClass;
+	}
 
-        return result;
-    }
+	public void setRequestControlClass(Class requestControlClass) {
+		this.requestControlClass = requestControlClass;
+	}
 
-    /*
-    * @see org.springframework.ldap.core.DirContextProcessor#postProcess(javax.naming.directory.DirContext)
-    */
+	/*
+	 * @see
+	 * org.springframework.ldap.control.AbstractRequestControlDirContextProcessor
+	 * #createRequestControl()
+	 */
 
-    public void postProcess(DirContext ctx) throws NamingException {
+	public Control createRequestControl() {
+		byte[] actualCookie = null;
+		if (cookie != null) {
+			actualCookie = cookie.getCookie();
+		}
+		Constructor constructor = ClassUtils.getConstructorIfAvailable(requestControlClass, new Class[] { int.class,
+				byte[].class, boolean.class });
+		if (constructor == null) {
+			throw new IllegalArgumentException("Failed to find an appropriate RequestControl constructor");
+		}
 
-        LdapContext ldapContext = (LdapContext) ctx;
-        Control[] responseControls = ldapContext.getResponseControls();
-        if (responseControls == null) {
-            responseControls = new Control[0];
-        }
+		Control result = null;
+		try {
+			result = (Control) constructor.newInstance(new Object[] { new Integer(pageSize), actualCookie,
+					Boolean.valueOf(critical) });
+		}
+		catch (Exception e) {
+			ReflectionUtils.handleReflectionException(e);
+		}
 
-        // Go through response controls and get info, regardless of class
-        for (int i = 0; i < responseControls.length; i++) {
-            Control responseControl = responseControls[i];
+		return result;
+	}
 
-            // check for match, try fallback otherwise
-            if (responseControl.getClass().isAssignableFrom(responseControlClass)) {
-                Object control = responseControl;
-                byte[] result = (byte[]) invokeMethod("getCookie",
-                        responseControlClass, control);
-                this.cookie = new PagedResultsCookie(result);
-                Integer wrapper = (Integer) invokeMethod("getResultSize",
-                        responseControlClass, control);
-                this.resultSize = wrapper.intValue();
-                return;
-            }
-        }
+	/*
+	 * @see
+	 * org.springframework.ldap.core.DirContextProcessor#postProcess(javax.naming
+	 * .directory.DirContext)
+	 */
 
-        log.fatal("No matching response control found for paged results - looking for '" + responseControlClass);
-    }
+	public void postProcess(DirContext ctx) throws NamingException {
 
-    private Object invokeMethod(String method, Class clazz, Object control) {
-        Method actualMethod = ReflectionUtils.findMethod(clazz, method);
-        return ReflectionUtils.invokeMethod(actualMethod, control);
-    }
+		LdapContext ldapContext = (LdapContext) ctx;
+		Control[] responseControls = ldapContext.getResponseControls();
+		if (responseControls == null) {
+			responseControls = new Control[0];
+		}
+
+		// Go through response controls and get info, regardless of class
+		for (int i = 0; i < responseControls.length; i++) {
+			Control responseControl = responseControls[i];
+
+			// check for match, try fallback otherwise
+			if (responseControl.getClass().isAssignableFrom(responseControlClass)) {
+				Object control = responseControl;
+				byte[] result = (byte[]) invokeMethod("getCookie", responseControlClass, control);
+				this.cookie = new PagedResultsCookie(result);
+				Integer wrapper = (Integer) invokeMethod("getResultSize", responseControlClass, control);
+				this.resultSize = wrapper.intValue();
+				return;
+			}
+		}
+
+		log.fatal("No matching response control found for paged results - looking for '" + responseControlClass);
+	}
+
+	private Object invokeMethod(String method, Class clazz, Object control) {
+		Method actualMethod = ReflectionUtils.findMethod(clazz, method);
+		return ReflectionUtils.invokeMethod(actualMethod, control);
+	}
 }

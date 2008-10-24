@@ -393,7 +393,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @param urls the urls of all servers.
 	 */
 	public void setUrls(String[] urls) {
-		this.urls = urls;
+		this.urls = (String[]) urls.clone();
 	}
 
 	/**
@@ -402,7 +402,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @return the urls of all servers.
 	 */
 	public String[] getUrls() {
-		return urls;
+		return (String[]) urls.clone();
 	}
 
 	/**

@@ -54,7 +54,11 @@ public class ContextMapperCallbackHandler extends
      * @return the Object returned from the mapper.
      */
     public Object getObjectFromNameClassPair(NameClassPair nameClassPair) {
-        Binding binding = (Binding) nameClassPair;
+		if (!(nameClassPair instanceof Binding)) {
+			throw new IllegalArgumentException("Parameter must be an instance of Binding");
+		}
+
+		Binding binding = (Binding) nameClassPair;
         Object object = binding.getObject();
         if (object == null) {
             throw new ObjectRetrievalException(

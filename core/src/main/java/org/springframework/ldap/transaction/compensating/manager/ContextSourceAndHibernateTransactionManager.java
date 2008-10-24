@@ -160,7 +160,7 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
         ldapManagerDelegate.setRenamingStrategy(renamingStrategy);
     }
 
-    private class ContextSourceAndHibernateTransactionObject {
+    private final static class ContextSourceAndHibernateTransactionObject {
         private Object ldapTransactionObject;
 
         private Object hibernateTransactionObject;

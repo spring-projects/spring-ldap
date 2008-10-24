@@ -32,35 +32,37 @@ import org.springframework.ldap.support.LdapUtils;
  * @author Ulrik Sandberg
  * @since 1.2
  */
-public class AttributesMapperCallbackHandler extends
-        CollectingNameClassPairCallbackHandler {
-    private AttributesMapper mapper;
+public class AttributesMapperCallbackHandler extends CollectingNameClassPairCallbackHandler {
+	private AttributesMapper mapper;
 
-    /**
-     * Constructs a new instance around the specified {@link AttributesMapper}.
-     * 
-     * @param mapper
-     *            the target mapper.
-     */
-    public AttributesMapperCallbackHandler(AttributesMapper mapper) {
-        this.mapper = mapper;
-    }
+	/**
+	 * Constructs a new instance around the specified {@link AttributesMapper}.
+	 * 
+	 * @param mapper the target mapper.
+	 */
+	public AttributesMapperCallbackHandler(AttributesMapper mapper) {
+		this.mapper = mapper;
+	}
 
-    /**
-     * Cast the NameClassPair to a SearchResult and pass its attributes to the
-     * {@link AttributesMapper}.
-     * 
-     * @param nameClassPair
-     *            a <code> SearchResult</code> instance.
-     * @return the Object returned from the mapper.
-     */
-    public Object getObjectFromNameClassPair(NameClassPair nameClassPair) {
-        SearchResult searchResult = (SearchResult) nameClassPair;
-        Attributes attributes = searchResult.getAttributes();
-        try {
-            return mapper.mapFromAttributes(attributes);
-        } catch (javax.naming.NamingException e) {
-            throw LdapUtils.convertLdapException(e);
-        }
-    }
+	/**
+	 * Cast the NameClassPair to a SearchResult and pass its attributes to the
+	 * {@link AttributesMapper}.
+	 * 
+	 * @param nameClassPair a <code> SearchResult</code> instance.
+	 * @return the Object returned from the mapper.
+	 */
+	public Object getObjectFromNameClassPair(NameClassPair nameClassPair) {
+		if (!(nameClassPair instanceof SearchResult)) {
+			throw new IllegalArgumentException("Parameter must be an instance of SearchResult");
+		}
+
+		SearchResult searchResult = (SearchResult) nameClassPair;
+		Attributes attributes = searchResult.getAttributes();
+		try {
+			return mapper.mapFromAttributes(attributes);
+		}
+		catch (javax.naming.NamingException e) {
+			throw LdapUtils.convertLdapException(e);
+		}
+	}
 }

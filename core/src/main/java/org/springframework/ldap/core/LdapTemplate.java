@@ -1255,7 +1255,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		}
 	}
 
-	private final class NullDirContextProcessor implements DirContextProcessor {
+	private final static class NullDirContextProcessor implements DirContextProcessor {
 		public void postProcess(DirContext ctx) throws NamingException {
 			// Do nothing
 		}
@@ -1271,7 +1271,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * 
 	 * @author Mattias Hellborg Arthursson
 	 */
-	public class MappingCollectingNameClassPairCallbackHandler extends CollectingNameClassPairCallbackHandler {
+	public final static class MappingCollectingNameClassPairCallbackHandler extends
+			CollectingNameClassPairCallbackHandler {
 
 		private NameClassPairMapper mapper;
 
