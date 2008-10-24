@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
 	<parent>
 		<groupId>org.springframework.ldap</groupId>
 		<artifactId>spring-ldap-parent</artifactId>
@@ -12,11 +10,8 @@
 	<artifactId>spring-ldap-article</artifactId>
 	<name>Spring LDAP Article Sample</name>
 	<packaging>war</packaging>
-	<description>
-		Example code that matches the article published on java.net on
-		April 18, 2006.
-	</description>
-
+	<description> Example code that matches the article published on
+		java.net on April 18, 2006. </description>
 	<build>
 		<plugins>
 			<plugin>
@@ -32,12 +27,21 @@
 			</plugin>
 		</plugins>
 	</build>
-
 	<dependencies>
 		<!-- Spring Dependencies -->
 		<dependency>
 			<groupId>org.springframework.ldap</groupId>
 			<artifactId>spring-ldap-test</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.9</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.ldap</groupId>
@@ -67,16 +71,11 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
-	<!-- 
-		Requires an ldap server to be up and running. Uncomment to enable integration tests 
-		<build>
+	<!--
+		Requires an ldap server to be up and running. Uncomment to enable
+		integration tests <build>
 		<testSourceDirectory>src/itest/java</testSourceDirectory>
-		<testResources>
-		<testResource>
-		<directory>src/itest/java</directory>
-		</testResource>
-		</testResources>
-		</build>
+		<testResources> <testResource> <directory>src/itest/java</directory>
+		</testResource> </testResources> </build>
 	-->
 </project>

@@ -123,7 +123,14 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 			// formatting
 			// in some cases, particularly when backslashes are involved.
 			CompositeName compositeName = (CompositeName) name;
-			nameString = compositeName.get(0);
+			if (compositeName.size() > 0) {
+				// A lookup with an empty String seems to produce an empty
+				// compositeName here; need to take this into account.
+				nameString = compositeName.get(0);
+			}
+			else {
+				nameString = "";
+			}
 		}
 		else {
 			log.warn("Expecting a CompositeName as input to getObjectInstance but received a '"

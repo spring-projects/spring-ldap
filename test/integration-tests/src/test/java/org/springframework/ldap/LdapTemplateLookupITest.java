@@ -46,7 +46,8 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 	private LdapTemplate tested;
 
 	/**
-	 * This method depends on a DirObjectFactory ({@link org.springframework.ldap.core.support.DefaultDirObjectFactory})
+	 * This method depends on a DirObjectFactory (
+	 * {@link org.springframework.ldap.core.support.DefaultDirObjectFactory})
 	 * being set in the ContextSource.
 	 */
 	@Test
@@ -56,6 +57,19 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 		assertEquals("Some Person2", result.getStringAttribute("cn"));
 		assertEquals("Person2", result.getStringAttribute("sn"));
 		assertEquals("Sweden, Company1, Some Person2", result.getStringAttribute("description"));
+	}
+
+	/**
+	 * This method depends on a DirObjectFactory (
+	 * {@link org.springframework.ldap.core.support.DefaultDirObjectFactory})
+	 * being set in the ContextSource.
+	 */
+	@Test
+	public void testLookupContextRoot() {
+		DirContextAdapter result = (DirContextAdapter) tested.lookup("");
+
+		assertEquals("", result.getDn().toString());
+		assertEquals("dc=jayway,dc=se", result.getNameInNamespace());
 	}
 
 	@Test
@@ -87,8 +101,8 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 	 */
 	private final class SubsetPersonAttributesMapper implements AttributesMapper {
 		/**
-		 * Maps the <code>cn</code> attribute into a {@link Person} object.
-		 * Also verifies that the other attributes haven't been set.
+		 * Maps the <code>cn</code> attribute into a {@link Person} object. Also
+		 * verifies that the other attributes haven't been set.
 		 * 
 		 * @see org.springframework.ldap.core.AttributesMapper#mapFromAttributes(javax.naming.directory.Attributes)
 		 */
@@ -133,7 +147,8 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 	}
 
 	/**
-	 * This method depends on a DirObjectFactory ({@link org.springframework.ldap.core.support.DefaultDirObjectFactory})
+	 * This method depends on a DirObjectFactory (
+	 * {@link org.springframework.ldap.core.support.DefaultDirObjectFactory})
 	 * being set in the ContextSource.
 	 */
 	@Test
