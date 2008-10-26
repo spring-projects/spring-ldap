@@ -29,6 +29,13 @@ import java.lang.reflect.Method;
 
 /**
  * DirContextProcessor implementation for managing the paged results control.
+ * Note that due to the internal workings of <code>LdapTemplate</code>, the
+ * target connection is closed after each LDAP call. The PagedResults control
+ * require the same connection be used for each call, which means we need to
+ * make sure the target connection is never actually closed. There's basically
+ * two ways of making this happen: use the <code>SingleContextSource</code>
+ * implementation or make sure all calls happen within a single LDAP transaction
+ * (using <code>ContextSourceTransactionManager</code>).
  * 
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg

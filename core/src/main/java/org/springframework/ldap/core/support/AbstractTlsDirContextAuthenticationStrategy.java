@@ -52,6 +52,13 @@ import org.springframework.ldap.support.LdapUtils;
  * For further information regarding TLS, refer to <a
  * href="http://java.sun.com/products/jndi/tutorial/ldap/ext/starttls.html">this
  * page</a>.
+ * <p>
+ * <b>NB:</b> TLS negotiation is an expensive process, which is why you will
+ * most likely want to use connection pooling, to make sure new connections are
+ * not created for each individual request. It is imperative however, that the
+ * built-in LDAP connection pooling is not used in combination with the TLS
+ * AuthenticationStrategy implementations - this will not work. You should use
+ * the Spring LDAP PoolingContextSource instead.
  * 
  * @author Mattias Hellborg Arthursson
  */

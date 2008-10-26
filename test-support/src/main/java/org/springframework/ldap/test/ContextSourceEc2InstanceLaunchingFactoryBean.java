@@ -21,7 +21,8 @@ import org.springframework.ldap.test.AbstractEc2InstanceLaunchingFactoryBean;
 import org.springframework.util.Assert;
 
 /**
- * FactoryBean to create a ContextSource using the EC2 instance created by superclass.
+ * FactoryBean to create a ContextSource using the EC2 instance created by
+ * superclass.
  */
 public class ContextSourceEc2InstanceLaunchingFactoryBean extends AbstractEc2InstanceLaunchingFactoryBean {
 
@@ -31,6 +32,8 @@ public class ContextSourceEc2InstanceLaunchingFactoryBean extends AbstractEc2Ins
 
 	private String password;
 
+	private boolean pooled = false;
+
 	@Override
 	public final Class getObjectType() {
 		return ContextSource.class;
@@ -38,16 +41,21 @@ public class ContextSourceEc2InstanceLaunchingFactoryBean extends AbstractEc2Ins
 
 	@Override
 	protected final Object doCreateInstance(final String dnsName) throws Exception {
-        Assert.hasText(userDn);
+		Assert.hasText(userDn);
 		LdapContextSource instance = new LdapContextSource();
 		instance.setUrl("ldap://" + dnsName);
 		instance.setUserDn(userDn);
 		instance.setPassword(password);
 		instance.setBase(base);
+		instance.setPooled(pooled);
 		setAdditionalContextSourceProperties(instance, dnsName);
 
 		instance.afterPropertiesSet();
 		return instance;
+	}
+
+	public void setPooled(boolean pooled) {
+		this.pooled = pooled;
 	}
 
 	/**
@@ -57,7 +65,7 @@ public class ContextSourceEc2InstanceLaunchingFactoryBean extends AbstractEc2Ins
 	 * @param dnsName The dns name of the created Ec2 instance.
 	 */
 	protected void setAdditionalContextSourceProperties(LdapContextSource ctx, final String dnsName) {
-        //Nothing to do here
+		// Nothing to do here
 	}
 
 	public void setBase(String base) {

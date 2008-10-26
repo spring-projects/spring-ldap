@@ -80,7 +80,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	private String[] urls;
 
-	private boolean pooled = true;
+	private boolean pooled = false;
 
 	private Hashtable baseEnv = new Hashtable();
 
@@ -91,6 +91,8 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	private boolean cacheEnvironmentProperties = true;
 
 	private boolean anonymousReadOnly = false;
+
+	private String referral = null;
 
 	private static final Log log = LogFactory.getLog(AbstractContextSource.class);
 
@@ -357,6 +359,10 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 			env.put(Context.OBJECT_FACTORIES, dirObjectFactory.getName());
 		}
 
+		if (!StringUtils.isBlank(referral)) {
+			env.put(Context.REFERRAL, referral);
+		}
+
 		if (!DistinguishedName.EMPTY_PATH.equals(base)) {
 			// Save the base path for use in the DefaultDirObjectFactory.
 			env.put(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY, base);
@@ -416,13 +422,20 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	}
 
 	/**
-	 * Set whether the pooling flag should be set. Default is true. Note that
-	 * since LDAP pooling is system wide, full configuration of this needs be
-	 * done using system parameters as specified in the LDAP/JNDI documentation.
-	 * Also note, that pooling is done on user dn basis, i.e. each individually
-	 * authenticated connection will be pooled separately. This means that LDAP
-	 * pooling will be most efficient using anonymous connections or connections
-	 * authenticated using one single system user.
+	 * Set whether the pooling flag should be set, enabling the built-in LDAP
+	 * connection pooling. Default is <code>false</code>. The built-in LDAP
+	 * connection pooling suffers from a number of deficiencies, e.g. no
+	 * connection validation. Also, enabling this flag when using TLS
+	 * connections will explicitly not work. Consider using the Spring LDAP
+	 * <code>PoolingContextSource</code> as an alternative instead of enabling
+	 * this flag.
+	 * <p>
+	 * Note that since LDAP pooling is system wide, full configuration of this
+	 * needs be done using system parameters as specified in the LDAP/JNDI
+	 * documentation. Also note, that pooling is done on user dn basis, i.e.
+	 * each individually authenticated connection will be pooled separately.
+	 * This means that LDAP pooling will be most efficient using anonymous
+	 * connections or connections authenticated using one single system user.
 	 * 
 	 * @param pooled whether Contexts should be pooled.
 	 */
@@ -536,6 +549,20 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 */
 	public void setAuthenticationStrategy(DirContextAuthenticationStrategy authenticationStrategy) {
 		this.authenticationStrategy = authenticationStrategy;
+	}
+
+	/**
+	 * Set the method to handle referrals. Default is 'ignore'; setting this
+	 * flag to 'follow' will enable referrals to be automatically followed. Note
+	 * that this might require particular name server setup in order to work
+	 * (the referred URLs will need to be automatically found using standard DNS
+	 * resolution).
+	 * @param referral the value to set the system property
+	 * <code>Context.REFERRAL</code> to, customizing the way that referrals are
+	 * handled.
+	 */
+	public void setReferral(String referral) {
+		this.referral = referral;
 	}
 
 	/**

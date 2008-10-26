@@ -119,7 +119,7 @@ public class LdapContextSourceTest extends TestCase {
 		tested.afterPropertiesSet();
 		Hashtable env = tested.getAnonymousEnv();
 		assertEquals("ldap://ldap.example.com:389", env.get(Context.PROVIDER_URL));
-		assertEquals("true", env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
+		assertNull(env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
 	}
 
 	public void testGetAnonymousEnvWithPoolingInBaseEnvironmentAndPoolingOff() throws Exception {

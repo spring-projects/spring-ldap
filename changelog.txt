@@ -46,6 +46,15 @@ Changes in version 1.3 (XXX 2008)
   system property org.springframework.ldap.core.spacedDnFormat to true.
   (LDAP-138, LDAP-112, LDAP-91) 
 
+* Changed default of 'pooling' flag in AbstractContextSource.
+  This now defaults to false; consider the Spring LDAP PoolingContextSource
+  as the preferred alternative to using the built-in Java Connection Pooling.
+
+* Added configuration property to AbstractContextSource to specify referral
+  behavior. Setting this property to 'follow' will enable referrals to be
+  automatically followed, provieded that the name server environment is properly
+  set up.
+  
 * Now using Maven for building internally. (LDAP-80, LDAP-82, LDAP-95)
   
 * Added HardcodedFilter class and corresponding PropertyEditor FilterEditor,
