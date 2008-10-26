@@ -25,7 +25,7 @@ import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
 /**
  * Abstract base class for PersonDao integration tests.
  * 
- * @author Mattias Hellborg Arthurssonrthursson
+ * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  */
 public abstract class AbstractPersonDaoIntegrationTest

@@ -20,7 +20,7 @@ import org.springframework.ldap.samples.article.dao.PersonDaoImpl;
 /**
  * Integration tests for the PersonDaoImpl class.
  * 
- * @author Mattias Hellborg Arthurssonrthursson
+ * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  */
 public class PersonDaoImplIntegrationTest extends

@@ -20,7 +20,7 @@ import org.springframework.ldap.samples.article.dao.TraditionalPersonDaoImpl;
 /**
  * Integration tests for the TraditionalPersonDaoImpl class.
  * 
- * @author Mattias Hellborg Arthurssonrthursson
+ * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  */
 public class TraditionalPersonDaoImplIntegrationTest

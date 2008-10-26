@@ -1,7 +1,7 @@
 Sample application demonstrating how to do the most basic stuff in Spring LDAP
 A very simple dao implementation is provided in
 org.springframework.ldap.samples.article.dao.PersonDaoImpl
-It demonstrates some basic operations using Spring LDAP. For recerence purposes,
+It demonstrates some basic operations using Spring LDAP. For reference purposes,
 a corresponding implementation using ordinary Java LDAP/JNDI implementation is
 available in TraditionalPersonDaoImpl.
 
