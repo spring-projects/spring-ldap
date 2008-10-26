@@ -26,7 +26,7 @@
 
 	<bean id="traditionalPersonDao"
 		class="org.springframework.ldap.samples.article.dao.TraditionalPersonDaoImpl">
-		<property name="url" value="ldap://localhost:389" />
+		<property name="url" value="ldap://localhost:3900" />
 		<property name="base" value="dc=jayway,dc=se" />
 		<property name="userDn" value="${userDn}" />
 		<property name="password" value="${password}" />

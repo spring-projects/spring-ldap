@@ -33,7 +33,6 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.ldap.samples.article.domain.Person;
 
 /**
@@ -90,6 +89,7 @@ public class TraditionalPersonDaoImpl implements
                dn, null,
                getAttributesToBind(person));
       } catch (NamingException e) {
+    	  
          throw new RuntimeException(e);
       } finally {
          if (ctx != null) {
@@ -147,9 +147,6 @@ public class TraditionalPersonDaoImpl implements
             String cn = (String) attr.get();
             list.add(cn);
          }
-      } catch (NameNotFoundException e) {
-         // The base context was not found.
-         // Just clean up and exit.
       } catch (NamingException e) {
          throw new RuntimeException(e);
       } finally {
@@ -194,10 +191,6 @@ public class TraditionalPersonDaoImpl implements
                .getAttributes();
             list.add(mapToPerson(dn, attributes));
          }
-      } catch (NameNotFoundException e) {
-         // The base context was not found, which basically means
-         // that the search did not return any results. Just clean up and
-         // exit.
       } catch (NamingException e) {
          throw new RuntimeException(e);
       } finally {
@@ -234,7 +227,7 @@ public class TraditionalPersonDaoImpl implements
             .getAttributes(dn);
          return mapToPerson(dn, attributes);
       } catch (NameNotFoundException e) {
-         throw new DataRetrievalFailureException(
+         throw new RuntimeException(
             "Did not find entry with primary key '"
                + dn + "'", e);
       } catch (NamingException e) {

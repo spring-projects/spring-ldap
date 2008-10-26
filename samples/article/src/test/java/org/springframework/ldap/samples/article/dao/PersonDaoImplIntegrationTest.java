@@ -15,19 +15,19 @@
  */
 package org.springframework.ldap.samples.article.dao;
 
-import org.springframework.ldap.samples.article.dao.TraditionalPersonDaoImpl;
+import org.springframework.ldap.samples.article.dao.PersonDaoImpl;
 
 /**
- * Integration tests for the TraditionalPersonDaoImpl class.
+ * Integration tests for the PersonDaoImpl class.
  * 
- * @author Mattias Hellborg Arthursson
+ * @author Mattias Hellborg Arthurssonrthursson
  * @author Ulrik Sandberg
  */
-public class TraditionalPersonDaoImplIntegrationTest
-         extends AbstractPersonDaoIntegrationTest {
+public class PersonDaoImplIntegrationTest extends
+         AbstractPersonDaoIntegrationTest {
 
    public void setPersonDao(
-      TraditionalPersonDaoImpl personDao) {
+      PersonDaoImpl personDao) {
       this.personDao = personDao;
    }
 }

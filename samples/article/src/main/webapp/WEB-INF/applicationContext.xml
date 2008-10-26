@@ -8,7 +8,6 @@
 		<property name="location" value="/WEB-INF/ldap.properties" />
 	</bean>
 
-
 	<bean id="contextSource"
 		class="org.springframework.ldap.test.TestContextSourceFactoryBean">
 		<property name="defaultPartitionSuffix" value="dc=jayway,dc=se" />

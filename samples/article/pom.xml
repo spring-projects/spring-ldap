@@ -71,16 +71,4 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<!--
-		Requires an ldap server to be up and running. Uncomment to enable
-		integration tests
-    <build>
-        <testSourceDirectory>src/itest/java</testSourceDirectory>
-		<testResources>
-            <testResource>
-                <directory>src/itest/java</directory>
-            </testResource>
-        </testResources>
-    </build>
-	-->
 </project>

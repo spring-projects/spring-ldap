@@ -17,7 +17,7 @@ package org.springframework.ldap.samples.article.dao;
 
 import java.util.List;
 
-import org.springframework.dao.DataRetrievalFailureException;
+import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.samples.article.dao.PersonDao;
 import org.springframework.ldap.samples.article.domain.Person;
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
@@ -90,23 +90,25 @@ public abstract class AbstractPersonDaoIntegrationTest
             personDao.findByPrimaryKey(
                "Sweden", "company1",
                "Another Person");
-            fail("DataRetrievalFailureException expected");
-         } catch (DataRetrievalFailureException expected) {
-            // expected
+            fail("NameNotFoundException (when using Spring LDAP) or RuntimeException (when using traditional) expected");
+         } catch (NameNotFoundException expected) {
+             // expected
+         } catch (RuntimeException expected) {
+             // expected
          }
       }
    }
 
    public void testGetAllPersonNames() {
       List result = personDao.getAllPersonNames();
-      assertEquals(5, result.size());
+      assertEquals(2, result.size());
       String first = (String) result.get(0);
       assertEquals("Some Person", first);
    }
 
    public void testFindAll() {
       List result = personDao.findAll();
-      assertEquals(5, result.size());
+      assertEquals(2, result.size());
       Person first = (Person) result.get(0);
       assertEquals("Some Person", first
          .getFullName());
