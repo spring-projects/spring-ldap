@@ -23,7 +23,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
 /**
  * Simple class representing a single person.
  * 
- * @author Mattias Hellborg Arthurssonrthursson
+ * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  */
 public class Person {

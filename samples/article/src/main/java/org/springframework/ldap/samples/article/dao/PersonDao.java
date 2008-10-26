@@ -23,7 +23,7 @@ import org.springframework.ldap.samples.article.domain.Person;
 /**
  * Data Access Object interface for the Person entity.
  * 
- * @author Mattias Hellborg Arthurssonrthursson
+ * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  */
 public interface PersonDao {

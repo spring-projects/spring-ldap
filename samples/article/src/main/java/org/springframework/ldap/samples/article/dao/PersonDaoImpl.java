@@ -44,7 +44,7 @@ import org.springframework.ldap.samples.article.domain.Person;
  * the distinguished name. However, we do use it in one method that only needs a
  * single attribute: {@link #getAllPersonNames()}.
  * 
- * @author Mattias Hellborg Arthurssonrthursson
+ * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  */
 public class PersonDaoImpl implements PersonDao {

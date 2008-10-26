@@ -41,7 +41,7 @@ import org.springframework.ldap.samples.article.domain.Person;
  * {@link Attribute}, and {@link NamingEnumeration}. The purpose is to
  * contrast this implementation with that of {@link PersonDaoImpl}.
  * 
- * @author Mattias Hellborg Arthurssonrthursson
+ * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  */
 public class TraditionalPersonDaoImpl implements
