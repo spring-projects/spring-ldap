@@ -84,8 +84,13 @@
 	</licenses>
 	<distributionManagement>
 		<downloadUrl>http://static.springframework.org/spring-ldap/site/downloads/releases.html</downloadUrl>
+		<repository>
+			<id>spring-milestone</id>
+			<name>Spring Milestone Repository</name>
+			<url>s3://maven.springframework.org/milestone</url>
+		</repository>
 		<snapshotRepository>
-			<id>spring-s3</id>
+			<id>spring-snapshot</id>
 			<name>Spring Snapshot Repository</name>
 			<url>s3://maven.springframework.org/snapshot</url>
 		</snapshotRepository>
