@@ -1,10 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+		xmlns="http://maven.apache.org/POM/4.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.springframework.ldap</groupId>
 	<artifactId>spring-ldap</artifactId>
-	<version>1.3.0.RC1</version>
+	<version>1.3.0.CI-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 	<name>Spring LDAP</name>
@@ -98,9 +102,13 @@
 		</site>
 	</distributionManagement>
 	<scm>
-		<connection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ldap/tags/spring-ldap-1.3.0.RC1</connection>
-		<developerConnection>scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ldap/tags/spring-ldap-1.3.0.RC1</developerConnection>
-		<url>http://fisheye3.cenqua.com/browse/springframework/spring-ldap/tags/spring-ldap-1.3.0.RC1</url>
+		<connection>
+			scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ldap/trunk
+		</connection>
+		<developerConnection>
+			scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ldap/trunk
+		</developerConnection>
+		<url>http://fisheye3.cenqua.com/browse/springframework/spring-ldap/trunk</url>
 	</scm>
 	<properties>
 		<docbook.source>${basedir}/src/docbkx</docbook.source>
@@ -372,7 +380,8 @@
 								<include name="**/*.pdf" />
 							</fileset>
 						</copy>
-						<copy todir="target/site/reference/html/images">
+						<copy
+							todir="target/site/reference/html/images">
 							<fileset dir="src/docbkx/images">
 								<include name="**/*.css" />
 								<include name="**/*.png" />
