@@ -149,9 +149,6 @@ public class LdapContextSourcelITest extends AbstractLdapTemplateIntegrationTest
 		finally {
 			LdapUtils.closeContext(ctx);
 		}
-
-		BaseLdapPathSource ldapPathSource = (BaseLdapPathSource) tested;
-		System.out.println(ldapPathSource.getBaseLdapPathAsString());
 	}
 
 	private final static class DnContextMapper extends AbstractParameterizedContextMapper<String> {
