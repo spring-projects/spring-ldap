@@ -18,8 +18,10 @@ package org.springframework.ldap.core.support;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 
 import java.util.Hashtable;
+import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
@@ -27,8 +29,14 @@ import javax.naming.directory.DirContext;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.DirContextOperations;
+import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.core.simple.AbstractParameterizedContextMapper;
+import org.springframework.ldap.filter.EqualsFilter;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
 
 /**
@@ -41,6 +49,9 @@ public class LdapContextSourcelITest extends AbstractLdapTemplateIntegrationTest
 
 	@Autowired
 	private ContextSource tested;
+
+	@Autowired
+	private LdapTemplate ldapTemplate;
 
 	@Test
 	public void testGetReadOnlyContext() throws NamingException {
@@ -115,6 +126,38 @@ public class LdapContextSourcelITest extends AbstractLdapTemplateIntegrationTest
 					// Never mind this
 				}
 			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void verifyAuthenticate() {
+		EqualsFilter filter = new EqualsFilter("cn", "Some Person2");
+		List<String> results = ldapTemplate.search("", filter.toString(), new DnContextMapper());
+		if (results.size() != 1) {
+			throw new IncorrectResultSizeDataAccessException(1, results.size());
+		}
+
+		DirContext ctx = null;
+		try {
+			ctx = tested.getContext(results.get(0), "password");
+			assertTrue(true);
+		}
+		catch (Exception e) {
+			fail("Authentication failed");
+		}
+		finally {
+			LdapUtils.closeContext(ctx);
+		}
+
+		BaseLdapPathSource ldapPathSource = (BaseLdapPathSource) tested;
+		System.out.println(ldapPathSource.getBaseLdapPathAsString());
+	}
+
+	private final static class DnContextMapper extends AbstractParameterizedContextMapper<String> {
+		@Override
+		protected String doMapFromContext(DirContextOperations ctx) {
+			return ctx.getNameInNamespace();
 		}
 	}
 }
