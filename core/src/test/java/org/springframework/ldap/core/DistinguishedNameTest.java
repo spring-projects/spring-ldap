@@ -140,8 +140,8 @@ public class DistinguishedNameTest extends TestCase {
 		// original object
 		final Object originalObject = new DistinguishedName("cn=john.doe, OU=Users,OU=Some company,C=SE");
 
-		// another object that has the same values as the original
-		final Object identicalObject = new DistinguishedName("cn=john.doe, OU=Users,OU=Some company,C=SE");
+		// another object that has the same values as the original (case is ignored)
+		final Object identicalObject = new DistinguishedName("cn=john.doe, OU=Users,OU=SOME COMPANY,C=SE");
 
 		// another object with different values
 		final Object differentObject = new DistinguishedName("cn=john.doe, OU=Users,OU=Some other company,C=SE");

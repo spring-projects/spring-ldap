@@ -161,7 +161,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() {
-		return key.hashCode() ^ value.hashCode();
+		return key.toUpperCase().hashCode() ^ value.toUpperCase().hashCode();
 	}
 
 	/*
