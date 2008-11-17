@@ -1204,7 +1204,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 * @see org.springframework.ldap.support.DirContextOperations#getDn()
 	 */
 	public Name getDn() {
-		return dn;
+		return new DistinguishedName(dn);
 	}
 
 	/*

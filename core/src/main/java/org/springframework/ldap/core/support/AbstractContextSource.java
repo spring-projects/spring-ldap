@@ -215,7 +215,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @return the base suffix
 	 */
 	protected DistinguishedName getBase() {
-		return base;
+		return new DistinguishedName(base);
 	}
 
 	/*

@@ -31,18 +31,17 @@ import org.springframework.util.StringUtils;
  * processed bean.
  * <p>
  * If the <code>baseLdapPath</code> property of this
- * <code>BeanPostProcessor</code> is set, that value will be used. Otherwise,
- * in order to determine which base LDAP path to supply to the instance the
+ * <code>BeanPostProcessor</code> is set, that value will be used. Otherwise, in
+ * order to determine which base LDAP path to supply to the instance the
  * <code>ApplicationContext</code> is searched for any beans that are
- * implementations of {@link BaseLdapPathSource}. If one single occurrence
- * is found, that instance is queried for its base path, and that is what will
- * be injected. If more than one {@link BaseLdapPathSource} instance is
- * configured in the <code>ApplicationContext</code>, the name of the one to
- * use will need to be specified to the <code>baseLdapPathSourceName</code>
- * property; otherwise the post processing will fail. If no
- * {@link BaseLdapPathSource} implementing bean is found in the context and
- * the <code>basePath</code> property is not set, post processing will also
- * fail.
+ * implementations of {@link BaseLdapPathSource}. If one single occurrence is
+ * found, that instance is queried for its base path, and that is what will be
+ * injected. If more than one {@link BaseLdapPathSource} instance is configured
+ * in the <code>ApplicationContext</code>, the name of the one to use will need
+ * to be specified to the <code>baseLdapPathSourceName</code> property;
+ * otherwise the post processing will fail. If no {@link BaseLdapPathSource}
+ * implementing bean is found in the context and the <code>basePath</code>
+ * property is not set, post processing will also fail.
  * 
  * @author Mattias Hellborg Arthursson
  * @since 1.2
@@ -64,7 +63,7 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 			}
 			else {
 				BaseLdapPathSource ldapPathSource = getBaseLdapPathSourceFromApplicationContext();
-				baseLdapPathAware.setBaseLdapPath(ldapPathSource.getBaseLdapPath());
+				baseLdapPathAware.setBaseLdapPath(ldapPathSource.getBaseLdapPath().immutableDistinguishedName());
 			}
 		}
 		return bean;
@@ -87,8 +86,9 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object,
-	 * java.lang.String)
+	 * 
+	 * @seeorg.springframework.beans.factory.config.BeanPostProcessor#
+	 * postProcessAfterInitialization(java.lang.Object, java.lang.String)
 	 */
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 		// Do nothing for this implementation
@@ -108,7 +108,7 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 	 * @param basePath the base path.
 	 */
 	public void setBasePath(DistinguishedName basePath) {
-		this.basePath = basePath;
+		this.basePath = basePath.immutableDistinguishedName();
 	}
 
 	/**
@@ -116,8 +116,8 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 	 * the base path. This method is typically useful if several ContextSource
 	 * instances have been configured.
 	 * 
-	 * @param contextSourceName the name of the <code>ContextSource</code>
-	 * bean to use for determining the base path.
+	 * @param contextSourceName the name of the <code>ContextSource</code> bean
+	 * to use for determining the base path.
 	 */
 	public void setBaseLdapPathSourceName(String contextSourceName) {
 		this.baseLdapPathSourceName = contextSourceName;

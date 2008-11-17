@@ -170,7 +170,9 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object obj) {
-		if (obj != null && obj.getClass() == LdapRdnComponent.class) {
+		// Slightly more lenient equals comparison here to enable immutable
+		// instances to equal mutable ones.
+		if (obj != null && obj instanceof LdapRdnComponent) {
 			LdapRdnComponent that = (LdapRdnComponent) obj;
 			return StringUtils.equalsIgnoreCase(this.key, that.key)
 					&& StringUtils.equalsIgnoreCase(this.value, that.value);
@@ -191,5 +193,32 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	public int compareTo(Object obj) {
 		LdapRdnComponent that = (LdapRdnComponent) obj;
 		return this.toString().compareTo(that.toString());
+	}
+
+	/**
+	 * Create an immutable copy of this instance. It will not be possible to
+	 * modify the key or the value of the returned instance.
+	 * 
+	 * @return an immutable copy of this instance.
+	 * @since 1.3
+	 */
+	public LdapRdnComponent immutableLdapRdnComponent() {
+		return new ImmutableLdapRdnComponent(key, value);
+	}
+
+	private static class ImmutableLdapRdnComponent extends LdapRdnComponent {
+		private static final long serialVersionUID = -7099970046426346567L;
+
+		public ImmutableLdapRdnComponent(String key, String value) {
+			super(key, value);
+		}
+
+		public void setKey(String key) {
+			throw new UnsupportedOperationException("SetValue not supported for this immutable LdapRdnComponent");
+		}
+
+		public void setValue(String value) {
+			throw new UnsupportedOperationException("SetKey not supported for this immutable LdapRdnComponent");
+		}
 	}
 }

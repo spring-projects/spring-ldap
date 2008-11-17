@@ -17,16 +17,14 @@
 package org.springframework.ldap.core;
 
 import java.util.Enumeration;
-import java.util.List;
 
 import javax.naming.CompositeName;
 import javax.naming.InvalidNameException;
 import javax.naming.Name;
 
-import org.springframework.ldap.BadLdapGrammarException;
-import org.springframework.ldap.core.DistinguishedName;
-
 import junit.framework.TestCase;
+
+import org.springframework.ldap.BadLdapGrammarException;
 
 import com.gargoylesoftware.base.testing.EqualsTester;
 
@@ -140,7 +138,8 @@ public class DistinguishedNameTest extends TestCase {
 		// original object
 		final Object originalObject = new DistinguishedName("cn=john.doe, OU=Users,OU=Some company,C=SE");
 
-		// another object that has the same values as the original (case is ignored)
+		// another object that has the same values as the original (case is
+		// ignored)
 		final Object identicalObject = new DistinguishedName("cn=john.doe, OU=Users,OU=SOME COMPANY,C=SE");
 
 		// another object with different values
@@ -485,18 +484,60 @@ public class DistinguishedNameTest extends TestCase {
 		assertEquals("cn=john doe,ou=company1,dc=mycompany,dc=com", tested.toString());
 	}
 
-	public void testUnmodifiableDistinguishedName() throws Exception {
-		DistinguishedName name = new DistinguishedName("cn=john doe");
-
-		DistinguishedName result = name.immutableDistinguishedName();
-		List names = result.getNames();
+	public void testUnmodifiableDistinguishedNameFailsToAddRdn() throws Exception {
+		DistinguishedName result = DistinguishedName.immutableDistinguishedName("cn=john doe");
 		try {
-			names.add(new LdapRdnComponent("somekey", "somevalue"));
+			result.add(new LdapRdn("somekey", "somevalue"));
 			fail("UnsupportedOperationException expected");
 		}
 		catch (UnsupportedOperationException expected) {
 			assertTrue(true);
 		}
+	}
+
+	public void testUnmodifiableDistinguishedNameFailsToModifyRdn() throws Exception {
+		DistinguishedName result = DistinguishedName.immutableDistinguishedName("cn=john doe");
+		LdapRdn ldapRdn = result.getLdapRdn(0);
+
+		try {
+			ldapRdn.addComponent(new LdapRdnComponent("somekey", "somevalue"));
+			fail("UnsupportedOperationException expected");
+		}
+		catch (UnsupportedOperationException expected) {
+			assertTrue(true);
+		}
+	}
+
+	public void testUnmodifiableDistinguishedNameFailsToModifyRdnComponentKey() throws Exception {
+		DistinguishedName result = DistinguishedName.immutableDistinguishedName("cn=john doe");
+		LdapRdnComponent component = result.getLdapRdn(0).getComponent();
+
+		try {
+			component.setKey("somekey");
+			fail("UnsupportedOperationException expected");
+		}
+		catch (UnsupportedOperationException expected) {
+			assertTrue(true);
+		}
+	}
+
+	public void testUnmodifiableDistinguishedNameFailsToModifyRdnComponentValue() throws Exception {
+		DistinguishedName result = DistinguishedName.immutableDistinguishedName("cn=john doe");
+		LdapRdnComponent component = result.getLdapRdn(0).getComponent();
+
+		try {
+			component.setValue("somevalue");
+			fail("UnsupportedOperationException expected");
+		}
+		catch (UnsupportedOperationException expected) {
+			assertTrue(true);
+		}
+	}
+
+	public void testUnmodifiableDistinguishedNameEqualsIdenticalMutableOne() throws Exception {
+		DistinguishedName immutable = DistinguishedName.immutableDistinguishedName("cn=john doe");
+		DistinguishedName mutable = new DistinguishedName("cn=john doe");
+		assertTrue(immutable.equals(mutable));
 	}
 
 	/**

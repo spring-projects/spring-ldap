@@ -16,6 +16,7 @@
 
 package org.springframework.ldap.core;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -57,8 +58,11 @@ import org.springframework.ldap.support.ListComparator;
  * <dt>Name[2]</dt>
  * <dd>uid=adam.skogman</dd>
  * </dl>
- * 
- * Example:
+ * </p>
+ * <p>
+ * <code>Name</code> instances, and consequently <code>DistinguishedName</code>
+ * instances are naturally mutable, which is useful when constructing
+ * DistinguishedNames. Example:
  * 
  * <pre>
  * DistinguishedName path = new DistinguishedName(&quot;dc=jayway,dc=se&quot;);
@@ -68,7 +72,16 @@ import org.springframework.ldap.support.ListComparator;
  * </pre>
  * 
  * will render <code>uid=adam.skogman,ou=People,dc=jayway,dc=se</code>.
- * 
+ * </p>
+ * <p>
+ * <b>NOTE:</b> The fact that DistinguishedName instances are mutable needs to
+ * be taken into careful account, as this means that they may be modified
+ * involuntarily. This means that whenever a <code>DistinguishedName</code>
+ * instance is kept for reference (e.g. for identification of a domain entry) or
+ * as a constant, you should consider getting an immutable copy of the instance
+ * using {@link #immutableDistinguishedName()} or
+ * {@link #immutableDistinguishedName(String)}.
+ * </p>
  * <p>
  * <b>NB:</b>As of version 1.3 the default toString representation of
  * DistinguishedName now defaults to a compact one, without spaces between the
@@ -761,13 +774,32 @@ public class DistinguishedName implements Name {
 	}
 
 	/**
-	 * Return an unmodifialbe copy of this instance. Note that the individual
-	 * Rdns will still be possible to modify.
+	 * Return an immutable copy of this instance. It will not be possible to add
+	 * or remove any Rdns to or from the returned instance, and the respective
+	 * Rdns will also be immutable in turn.
 	 * 
 	 * @return a copy of this instance backed by an immutable list.
 	 * @since 1.2
 	 */
 	public DistinguishedName immutableDistinguishedName() {
-		return new DistinguishedName(Collections.unmodifiableList(getNames()));
+		List listWithImmutableRdns = new ArrayList(names.size());
+		for (Iterator iterator = names.iterator(); iterator.hasNext();) {
+			LdapRdn rdn = (LdapRdn) iterator.next();
+			listWithImmutableRdns.add(rdn.immutableLdapRdn());
+		}
+
+		return new DistinguishedName(Collections.unmodifiableList(listWithImmutableRdns));
+	}
+
+	/**
+	 * Create an immutable DistinguishedName instance, suitable as a constant.
+	 * 
+	 * @param dnString the DN string to parse.
+	 * @return an immutable DistinguishedName corresponding to the supplied DN
+	 * string.
+	 * @since 1.3
+	 */
+	public static final DistinguishedName immutableDistinguishedName(String dnString) {
+		return new DistinguishedName(dnString).immutableDistinguishedName();
 	}
 }
