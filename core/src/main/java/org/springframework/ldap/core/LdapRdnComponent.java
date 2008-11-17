@@ -84,6 +84,8 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	 * Set the key (Attribute name) of this component.
 	 * 
 	 * @param key the key.
+	 * @deprecated Using this method changes the internal state of surrounding
+	 * DistinguishedName instance. This should be avoided.
 	 */
 	public void setKey(String key) {
 		this.key = key;
@@ -102,6 +104,8 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	 * Set the (Attribute) value of this component.
 	 * 
 	 * @param value the value.
+	 * @deprecated Using this method changes the internal state of surrounding
+	 * DistinguishedName instance. This should be avoided.
 	 */
 	public void setValue(String value) {
 		this.value = value;
