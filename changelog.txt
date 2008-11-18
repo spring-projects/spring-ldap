@@ -11,7 +11,14 @@ http://www.ietf.org/rfc/rfc2255.txt
 http://www.ietf.org/rfc/rfc2256.txt
 http://www.ietf.org/rfc/rfc2696.txt
 
-Changes in version 1.3 (XXX 2008)
+Changes in version 1.3.0 (Nov 2008)
+-------------------------------------------
+* Added methods for simple LDAP 'bind' authentication in LdapOperations and SimpleLdapOperations.
+  The methods will perform a search given a supplied filter, call ContextSource#getContext(dn, password),
+  and optionally callback to a supplied instance to perform an LDAP operation on the 
+  context.
+ 
+Changes in version 1.3.0.RC1 (Oct 2008)
 -------------------------------------------
 * TLS connections are now supported using the DefaultTlsDirContextAuthenticationStrategy
   and ExternalTlsDirContextAuthenticationStrategy. (LDAP-8)
