@@ -33,6 +33,8 @@ import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.DirContextProcessor;
 import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.filter.AndFilter;
+import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.test.context.ContextConfiguration;
 
 @ContextConfiguration(locations = { "/conf/simpleLdapTemplateTestContext.xml" })
@@ -63,6 +65,12 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 
 		assertEquals(1, cns.size());
 		assertEquals("Some Person3", cns.get(0));
+	}
+
+	@Test
+	public void testSearchForObject() {
+		String cn = ldapTemplate.searchForObject("", "(&(objectclass=person)(sn=Person3))", new CnContextMapper());
+		assertEquals("Some Person3", cn);
 	}
 
 	@Test
@@ -184,6 +192,13 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 		verifyCleanup();
 	}
 
+	@Test
+	public void testAuthenticate() {
+		AndFilter filter = new AndFilter();
+		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
+		assertTrue(ldapTemplate.authenticate("", filter.toString(), "password"));
+	}
+	
 	private void verifyBoundCorrectData() {
 		DirContextOperations result = ldapTemplate.lookupContext(DN_STRING);
 		assertEquals("Some Person4", result.getStringAttribute("cn"));

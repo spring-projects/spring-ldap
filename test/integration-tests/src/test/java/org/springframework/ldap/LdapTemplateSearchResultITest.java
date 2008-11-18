@@ -16,6 +16,7 @@
 package org.springframework.ldap;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 
@@ -28,8 +29,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.core.support.AbstractContextMapper;
 import org.springframework.ldap.test.AttributeCheckAttributesMapper;
 import org.springframework.ldap.test.AttributeCheckContextMapper;
 import org.springframework.test.context.ContextConfiguration;
@@ -138,6 +144,35 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
 		contextMapper.setExpectedValues(ALL_VALUES);
 		List list = tested.search(BASE_STRING, FILTER_STRING, contextMapper);
 		assertEquals(1, list.size());
+	}
+
+	@Test
+	public void testSearchForObject() {
+		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		contextMapper.setExpectedValues(ALL_VALUES);
+		DirContextAdapter result = (DirContextAdapter) tested
+				.searchForObject(BASE_STRING, FILTER_STRING, contextMapper);
+		assertNotNull(result);
+	}
+
+	@Test(expected = IncorrectResultSizeDataAccessException.class)
+	public void testSearchForObjectWithMultipleHits() {
+		tested.searchForObject(BASE_STRING, "(&(objectclass=person)(sn=*))", new AbstractContextMapper() {
+			@Override
+			protected Object doMapFromContext(DirContextOperations ctx) {
+				return ctx;
+			}
+		});
+	}
+
+	@Test(expected = EmptyResultDataAccessException.class)
+	public void testSearchForObjectNoHits() {
+		tested.searchForObject(BASE_STRING, "(&(objectclass=person)(sn=Person does not exist))", new AbstractContextMapper() {
+			@Override
+			protected Object doMapFromContext(DirContextOperations ctx) {
+				return ctx;
+			}
+		});
 	}
 
 	@Test

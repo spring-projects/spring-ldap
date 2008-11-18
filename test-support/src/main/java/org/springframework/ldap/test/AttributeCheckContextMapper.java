@@ -49,7 +49,7 @@ public class AttributeCheckContextMapper implements ContextMapper {
             Assert.assertNull(adapter.getStringAttribute(absentAttributes[i]));
         }
 
-        return null;
+        return adapter;
     }
 
     public void setAbsentAttributes(String[] absentAttributes) {

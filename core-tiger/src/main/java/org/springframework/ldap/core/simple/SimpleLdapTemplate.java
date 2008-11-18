@@ -239,4 +239,52 @@ public class SimpleLdapTemplate implements SimpleLdapOperations {
 	public void bind(DirContextOperations ctx) {
 		ldapOperations.bind(ctx);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.simple.SimpleLdapOperations#searchForObject
+	 * (java.lang.String, java.lang.String,
+	 * org.springframework.ldap.core.simple.ParameterizedContextMapper)
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> T searchForObject(String base, String filter, ParameterizedContextMapper<T> mapper) {
+		return (T) ldapOperations.searchForObject(base, filter, mapper);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.simple.SimpleLdapOperations#searchForObject
+	 * (javax.naming.Name, java.lang.String,
+	 * org.springframework.ldap.core.simple.ParameterizedContextMapper)
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> T searchForObject(Name base, String filter, ParameterizedContextMapper<T> mapper) {
+		return (T) ldapOperations.searchForObject(base, filter, mapper);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.simple.SimpleLdapOperations#authenticate
+	 * (java.lang.String, java.lang.String, java.lang.String)
+	 */
+	public boolean authenticate(String base, String filter, String password) {
+		return ldapOperations.authenticate(base, filter, password);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.simple.SimpleLdapOperations#authenticate
+	 * (javax.naming.Name, java.lang.String, java.lang.String)
+	 */
+	public boolean authenticate(Name base, String filter, String password) {
+		return ldapOperations.authenticate(base, filter, password);
+	}
 }

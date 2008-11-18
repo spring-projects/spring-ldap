@@ -22,6 +22,7 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchControls;
 
 import org.springframework.ldap.NamingException;
+import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.DirContextProcessor;
 import org.springframework.ldap.core.LdapOperations;
@@ -132,6 +133,36 @@ public interface SimpleLdapOperations {
 	<T> T lookup(Name dn, ParameterizedContextMapper<T> mapper);
 
 	/**
+	 * Perform a search for a unique entry matching the specified search
+	 * criteria and return the found object. If no entry is found or if there
+	 * are more than one matching entry, an
+	 * {@link IncorrectResultSizeDataAccessException} is thrown.
+	 * @param base the DN to use as the base of the search.
+	 * @param filter the search filter.
+	 * @param mapper the mapper to use for the search.
+	 * @return the single object returned by the mapper that matches the search
+	 * criteria.
+	 * @throws IncorrectResultSizeDataAccessException if the result is not one unique entry
+	 * @since 1.3
+	 */
+	<T> T searchForObject(String base, String filter, ParameterizedContextMapper<T> mapper);
+	
+	/**
+	 * Perform a search for a unique entry matching the specified search
+	 * criteria and return the found object. If no entry is found or if there
+	 * are more than one matching entry, an
+	 * {@link IncorrectResultSizeDataAccessException} is thrown.
+	 * @param base the DN to use as the base of the search.
+	 * @param filter the search filter.
+	 * @param mapper the mapper to use for the search.
+	 * @return the single object returned by the mapper that matches the search
+	 * criteria.
+	 * @throws IncorrectResultSizeDataAccessException if the result is not one unique entry
+	 * @since 1.3
+	 */
+	<T> T searchForObject(Name base, String filter, ParameterizedContextMapper<T> mapper);
+
+	/**
 	 * Look up the specified DN, and automatically cast it to a
 	 * {@link DirContextOperations} instance.
 	 * 
@@ -232,4 +263,52 @@ public interface SimpleLdapOperations {
 	 * @throws NamingException if any error occurs.
 	 */
 	void modifyAttributes(DirContextOperations ctx);
+	
+	/**
+	 * Utility method to perform a simple LDAP 'bind' authentication. Search for
+	 * the LDAP entry to authenticate using the supplied base DN and filter; use
+	 * the DN of the found entry together with the password as input to
+	 * {@link ContextSource#getContext(String, String)}, thus authenticating the
+	 * entry.
+	 * <p>
+	 * Example:<br/>
+	 * 
+	 * <pre>
+	 * AndFilter filter = new AndFilter();
+	 * filter.and(&quot;objectclass&quot;, &quot;person&quot;).and(&quot;uid&quot;, userId);
+	 * boolean authenticated = ldapTemplate.authenticate(DistinguishedName.EMPTY_PATH, filter.toString(), password);
+	 * </pre>
+	 * 
+	 * @param base the DN to use as the base of the search.
+	 * @param filter the search filter - must result in a unique result.
+	 * @param password the password to use for authentication.
+	 * @return <code>true</code> if the authentication was successful,
+	 * <code>false</code> otherwise.
+	 * @since 1.3
+	 */
+	boolean authenticate(String base, String filter, String password);
+
+	/**
+	 * Utility method to perform a simple LDAP 'bind' authentication. Search for
+	 * the LDAP entry to authenticate using the supplied base DN and filter; use
+	 * the DN of the found entry together with the password as input to
+	 * {@link ContextSource#getContext(String, String)}, thus authenticating the
+	 * entry.
+	 * <p>
+	 * Example:<br/>
+	 * 
+	 * <pre>
+	 * AndFilter filter = new AndFilter();
+	 * filter.and(&quot;objectclass&quot;, &quot;person&quot;).and(&quot;uid&quot;, userId);
+	 * boolean authenticated = ldapTemplate.authenticate(DistinguishedName.EMPTY_PATH, filter.toString(), password);
+	 * </pre>
+	 * 
+	 * @param base the DN to use as the base of the search.
+	 * @param filter the search filter - must result in a unique result.
+	 * @param password the password to use for authentication.
+	 * @return <code>true</code> if the authentication was successful,
+	 * <code>false</code> otherwise.
+	 * @since 1.3
+	 */
+	boolean authenticate(Name base, String filter, String password);
 }
