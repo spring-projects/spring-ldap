@@ -35,7 +35,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.ldap.NamingException;
-import org.springframework.ldap.support.LdapEntryIdentificationContextMapper;
 import org.springframework.ldap.support.LdapUtils;
 
 /**
