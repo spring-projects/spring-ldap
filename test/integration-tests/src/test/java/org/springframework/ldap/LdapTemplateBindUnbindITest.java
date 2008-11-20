@@ -36,21 +36,20 @@ import org.springframework.test.context.ContextConfiguration;
  * class tests a little too much, but we need to clean up after binding, so the
  * most efficient way to test is to do it all in one test method. Also, the
  * methods in this class relies on that the lookup method works as it should -
- * that should be ok, since that is verified in a separate test class. NOTE: if
- * any of the tests in this class fails, it may be necessary to run the cleanup
- * script as described in README.txt under /src/iutest/.
+ * that should be ok, since that is verified in a separate test class.
  * 
  * @author Mattias Hellborg Arthursson
  */
 @ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
-public class LdapTemplateBindUnbindITest extends AbstractLdapTemplateIntegrationTest {
+public class LdapTemplateBindUnbindITest extends
+		AbstractLdapTemplateIntegrationTest {
 	@Autowired
 	private LdapTemplate tested;
 
 	private static String DN = "cn=Some Person4,ou=company1,c=Sweden";
 
 	@Test
-	public void testBindAndUnbind_Attributes_Plain() {
+	public void testBindAndUnbindWithAttributes() {
 		Attributes attributes = setupAttributes();
 		tested.bind(DN, null, attributes);
 		verifyBoundCorrectData();
@@ -59,7 +58,7 @@ public class LdapTemplateBindUnbindITest extends AbstractLdapTemplateIntegration
 	}
 
 	@Test
-	public void testBindAndUnbind_Attributes_DIstinguishedName() {
+	public void testBindAndUnbindWithAttributesUsingDistinguishedName() {
 		Attributes attributes = setupAttributes();
 		tested.bind(new DistinguishedName(DN), null, attributes);
 		verifyBoundCorrectData();
@@ -68,9 +67,10 @@ public class LdapTemplateBindUnbindITest extends AbstractLdapTemplateIntegration
 	}
 
 	@Test
-	public void testBindAndUnbind_DirContextAdapter_Plain() {
+	public void testBindAndUnbindWithDirContextAdapter() {
 		DirContextAdapter adapter = new DirContextAdapter();
-		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
+		adapter.setAttributeValues("objectclass", new String[] { "top",
+				"person" });
 		adapter.setAttributeValue("cn", "Some Person4");
 		adapter.setAttributeValue("sn", "Person4");
 
@@ -81,9 +81,10 @@ public class LdapTemplateBindUnbindITest extends AbstractLdapTemplateIntegration
 	}
 
 	@Test
-	public void testBindAndUnbind_DirContextAdapter_DIstinguishedName() {
+	public void testBindAndUnbindWithDirContextAdapterUsingDistinguishedName() {
 		DirContextAdapter adapter = new DirContextAdapter();
-		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
+		adapter.setAttributeValues("objectclass", new String[] { "top",
+				"person" });
 		adapter.setAttributeValue("cn", "Some Person4");
 		adapter.setAttributeValue("sn", "Person4");
 
@@ -94,14 +95,34 @@ public class LdapTemplateBindUnbindITest extends AbstractLdapTemplateIntegration
 	}
 
 	@Test
-	public void testBindAndUnbindPlainDirContextAdapter() {
-		DirContextAdapter adapter = new DirContextAdapter(new DistinguishedName(DN));
-		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
+	public void testBindAndUnbindWithDirContextAdapterOnly() {
+		DirContextAdapter adapter = new DirContextAdapter(
+				new DistinguishedName(DN));
+		adapter.setAttributeValues("objectclass", new String[] { "top",
+				"person" });
 		adapter.setAttributeValue("cn", "Some Person4");
 		adapter.setAttributeValue("sn", "Person4");
 
 		tested.bind(adapter);
 		verifyBoundCorrectData();
+		tested.unbind(DN);
+		verifyCleanup();
+	}
+
+	@Test
+	public void testBindAndRebindWithDirContextAdapterOnly() {
+		DirContextAdapter adapter = new DirContextAdapter(
+				new DistinguishedName(DN));
+		adapter.setAttributeValues("objectclass", new String[] { "top",
+				"person" });
+		adapter.setAttributeValue("cn", "Some Person4");
+		adapter.setAttributeValue("sn", "Person4");
+
+		tested.bind(adapter);
+		verifyBoundCorrectData();
+		adapter.setAttributeValue("sn", "Person4.Changed");
+		tested.rebind(adapter);
+		verifyReboundCorrectData();
 		tested.unbind(DN);
 		verifyCleanup();
 	}
@@ -121,6 +142,12 @@ public class LdapTemplateBindUnbindITest extends AbstractLdapTemplateIntegration
 		DirContextAdapter result = (DirContextAdapter) tested.lookup(DN);
 		assertEquals("Some Person4", result.getStringAttribute("cn"));
 		assertEquals("Person4", result.getStringAttribute("sn"));
+	}
+
+	private void verifyReboundCorrectData() {
+		DirContextAdapter result = (DirContextAdapter) tested.lookup(DN);
+		assertEquals("Some Person4", result.getStringAttribute("cn"));
+		assertEquals("Person4.Changed", result.getStringAttribute("sn"));
 	}
 
 	private void verifyCleanup() {

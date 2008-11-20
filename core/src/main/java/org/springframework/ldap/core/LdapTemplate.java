@@ -1337,7 +1337,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @seeorg.springframework.ldap.core.simple.SimpleLdapOperations#bind(org.
+	 * @seeorg.springframework.ldap.core.LdapOperations#bind(org.
 	 * springframework.ldap.core.DirContextOperations)
 	 */
 	public void bind(DirContextOperations ctx) {
@@ -1347,6 +1347,23 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		}
 		else {
 			throw new IllegalStateException("The DirContextOperations instance needs to be properly initialized.");
+		}
+	}
+
+
+	/*
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#rebind(org.springframework.
+	 * ldap.core.DirContextOperations)
+	 */
+	public void rebind(DirContextOperations ctx) {
+		Name dn = ctx.getDn();
+		if (dn != null && !ctx.isUpdateMode()) {
+			rebind(dn, ctx, null);
+		}
+		else {
+			throw new IllegalStateException(
+					"The DirContextOperations instance needs to be properly initialized.");
 		}
 	}
 

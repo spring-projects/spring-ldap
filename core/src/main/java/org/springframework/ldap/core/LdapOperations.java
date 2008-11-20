@@ -26,7 +26,6 @@ import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.ContextNotEmptyException;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.support.AbstractContextSource;
@@ -1261,7 +1260,7 @@ public interface LdapOperations {
 
 	/**
 	 * Bind the data in the supplied context in the tree. All specified
-	 * Attributes in will be bound to the DN set on the instance.
+	 * attributes <code>ctx</code>in will be bound to the DN set on <code>ctx</code>.
 	 * <p>
 	 * Example:<br>
 	 * 
@@ -1279,6 +1278,29 @@ public interface LdapOperations {
 	 * @since 1.3
 	 */
 	void bind(DirContextOperations ctx);
+
+	/**
+	 * Remove an entry and replace it with a new one. The attributes used to
+	 * create the entry are retrieved from the <code>ctx</code> parameter. This
+	 * method assumes that the specified context already exists - if not it will
+	 * fail. The entry will be bound to the DN set on <code>ctx</code>.
+	 * <p>
+	 * Example:<br>
+	 * 
+	 * <pre>
+	 * DirContextOperations ctx = new DirContextAdapter(dn);
+	 * ctx.setAttributeValue(&quot;cn&quot;, &quot;john doe&quot;);
+	 * ctx.setAttributeValue(&quot;description&quot;, &quot;some description&quot;);
+	 * //More initialization here.
+	 * 
+	 * ldapTemplate.rebind(ctx);
+	 * </pre>
+	 * @param ctx the context to rebind
+	 * @throws IllegalStateException if no DN is set or if the instance is in
+	 * update mode.
+	 * @since 1.3
+	 */
+	void rebind(DirContextOperations ctx);
 
 	/**
 	 * Utility method to perform a simple LDAP 'bind' authentication. Search for

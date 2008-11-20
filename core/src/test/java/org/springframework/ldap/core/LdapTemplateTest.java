@@ -39,6 +39,12 @@ import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.PartialResultException;
 import org.springframework.ldap.UncategorizedLdapException;
 
+/**
+ * Unit tests for the LdapTemplate class.
+ * 
+ * @author Mattias Hellborg Arthursson
+ * @author Ulrik Sandberg
+ */
 public class LdapTemplateTest extends TestCase {
 
 	private static final String DEFAULT_BASE_STRING = "o=example.com";
@@ -168,7 +174,6 @@ public class LdapTemplateTest extends TestCase {
 
 		dirContextOperationsConrol = null;
 		dirContextOperationsMock = null;
-
 	}
 
 	protected void replay() {
@@ -1118,7 +1123,6 @@ public class LdapTemplateTest extends TestCase {
 		tested.bind(nameMock, expectedObject, expectedAttributes);
 
 		verify();
-
 	}
 
 	public void testBind_String() throws Exception {
@@ -1134,7 +1138,6 @@ public class LdapTemplateTest extends TestCase {
 		tested.bind(DEFAULT_BASE_STRING, expectedObject, expectedAttributes);
 
 		verify();
-
 	}
 
 	public void testBind_NamingException() throws Exception {
@@ -1158,7 +1161,23 @@ public class LdapTemplateTest extends TestCase {
 		}
 
 		verify();
+    }
+	 
+    public void testBindWithContext() throws Exception {
+		expectGetReadWriteContext();
 
+		dirContextOperationsConrol.expectAndReturn(dirContextOperationsMock
+				.getDn(), nameMock);
+		dirContextOperationsConrol.expectAndReturn(dirContextOperationsMock
+				.isUpdateMode(), false);
+		dirContextMock.bind(nameMock, dirContextOperationsMock, null);
+		dirContextMock.close();
+
+		replay();
+
+		tested.bind(dirContextOperationsMock);
+
+		verify();
 	}
 
 	public void testUnbind() throws Exception {
@@ -1181,6 +1200,23 @@ public class LdapTemplateTest extends TestCase {
 		replay();
 
 		tested.unbind(DEFAULT_BASE_STRING);
+
+		verify();
+	}
+	 
+    public void testRebindWithContext() throws Exception {
+		expectGetReadWriteContext();
+
+		dirContextOperationsConrol.expectAndReturn(dirContextOperationsMock
+				.getDn(), nameMock);
+		dirContextOperationsConrol.expectAndReturn(dirContextOperationsMock
+				.isUpdateMode(), false);
+		dirContextMock.rebind(nameMock, dirContextOperationsMock, null);
+		dirContextMock.close();
+
+		replay();
+
+		tested.rebind(dirContextOperationsMock);
 
 		verify();
 	}
@@ -1864,16 +1900,17 @@ public class LdapTemplateTest extends TestCase {
 
 		assertFalse(result);
 	}
+
 	/**
 	 * Needed to verify search control values.
 	 * 
 	 * @author Mattias Hellborg Arthursson
 	 */
 	private static class SearchControlsMatcher extends AbstractMatcher {
-		protected boolean argumentMatches(Object arg0, Object arg1) {
-			if (arg0 instanceof SearchControls && arg1 instanceof SearchControls) {
-				SearchControls s0 = (SearchControls) arg0;
-				SearchControls s1 = (SearchControls) arg1;
+		protected boolean argumentMatches(Object expected, Object actual) {
+			if (expected instanceof SearchControls && actual instanceof SearchControls) {
+				SearchControls s0 = (SearchControls) expected;
+				SearchControls s1 = (SearchControls) actual;
 
 				return s0.getSearchScope() == s1.getSearchScope()
 						&& s0.getReturningObjFlag() == s1.getReturningObjFlag()
@@ -1882,7 +1919,7 @@ public class LdapTemplateTest extends TestCase {
 						&& s0.getReturningAttributes() == s1.getReturningAttributes();
 			}
 			else {
-				return super.argumentMatches(arg0, arg1);
+				return super.argumentMatches(expected, actual);
 			}
 		}
 	}
