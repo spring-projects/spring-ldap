@@ -18,6 +18,9 @@ Changes in version 1.3.0 (Nov 2008)
   and optionally callback to a supplied instance to perform an LDAP operation on the 
   context.
  
+* Re-used the same fix for LDAP-109 and LDAP-50 that was used in DefaultDirObjectFactory to secure
+  the DirContextAdapter constructors from invalid CompositeNames.
+
 Changes in version 1.3.0.RC1 (Oct 2008)
 -------------------------------------------
 * TLS connections are now supported using the DefaultTlsDirContextAuthenticationStrategy

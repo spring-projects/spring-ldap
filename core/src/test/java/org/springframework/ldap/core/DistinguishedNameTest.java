@@ -38,6 +38,12 @@ public class DistinguishedNameTest extends TestCase {
 
 	public void testDistinguishedName_CompositeWithSlash() throws Exception {
 		Name testPath = new CompositeName("cn=foo\\/bar");
+		DistinguishedName path = new DistinguishedName(testPath);
+		assertEquals("cn=foo/bar", path.toString());
+	}
+
+	public void testDistinguishedName_CompositeWithSlashAsString() throws Exception {
+		Name testPath = new CompositeName("cn=foo\\/bar");
 		DistinguishedName path = new DistinguishedName(testPath.toString());
 		assertEquals("cn=foo/bar", path.toString());
 	}

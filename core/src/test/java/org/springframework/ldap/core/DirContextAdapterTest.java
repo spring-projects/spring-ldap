@@ -19,6 +19,7 @@ package org.springframework.ldap.core;
 import java.util.Iterator;
 import java.util.SortedSet;
 
+import javax.naming.CompositeName;
 import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
@@ -35,6 +36,7 @@ import junit.framework.TestCase;
  * 
  * @author Andreas Ronge
  * @author Mattias Hellborg Arthursson
+ * @author Ulrik Sandberg
  */
 public class DirContextAdapterTest extends TestCase {
 	private static final DistinguishedName BASE_NAME = new DistinguishedName("dc=jayway, dc=se");
@@ -1069,5 +1071,18 @@ public class DirContextAdapterTest extends TestCase {
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
 		assertEquals(0, modificationItems.length);
+	}
+	
+	/**
+	 * Test for LDAP-109, since also DirContextAdapter may get an invalid
+	 * CompositeName sent to it.
+	 */
+	public void testConstructorUsingCompositeNameWithBackslashes()
+			throws Exception {
+		CompositeName compositeName = new CompositeName();
+		compositeName.add("cn=Some\\\\Person6,ou=company1,c=Sweden");
+		DirContextAdapter adapter = new DirContextAdapter(compositeName);
+		assertEquals("cn=Some\\\\Person6,ou=company1,c=Sweden", adapter.getDn()
+				.toString());
 	}
 }

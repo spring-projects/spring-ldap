@@ -18,6 +18,7 @@ package org.springframework.ldap.support;
 
 import java.util.Collection;
 
+import javax.naming.CompositeName;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
@@ -288,6 +289,25 @@ public final class LdapUtils {
 
 		public final void handleAttributeValue(String attributeName, Object attributeValue, int index) {
 			collection.add(attributeValue);
+		}
+	}
+
+	/**
+	 * Converts a CompositeName to a String in a way that avoids escaping
+	 * problems, such as the dreaded "triple backslash" problem.
+	 * 
+	 * @param compositeName The CompositeName to convert
+	 * @return String containing the String representation of <code>name</code>
+	 */
+	public static String convertCompositeNameToString(
+			CompositeName compositeName) {
+		if (compositeName.size() > 0) {
+			// A lookup with an empty String seems to produce an empty
+			// compositeName here; need to take this into account.
+			return compositeName.get(0);
+		}
+		else {
+			return "";
 		}
 	}
 }

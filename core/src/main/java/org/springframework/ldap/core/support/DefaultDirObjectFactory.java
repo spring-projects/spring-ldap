@@ -30,6 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -122,19 +123,14 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 			// problem. CompositeName.toString() completely screws up the
 			// formatting
 			// in some cases, particularly when backslashes are involved.
-			CompositeName compositeName = (CompositeName) name;
-			if (compositeName.size() > 0) {
-				// A lookup with an empty String seems to produce an empty
-				// compositeName here; need to take this into account.
-				nameString = compositeName.get(0);
-			}
-			else {
-				nameString = "";
-			}
+			nameString = LdapUtils
+					.convertCompositeNameToString((CompositeName) name);
 		}
 		else {
-			log.warn("Expecting a CompositeName as input to getObjectInstance but received a '"
-					+ name.getClass().toString() + "' - using toString and proceeding with undefined results");
+			log
+					.warn("Expecting a CompositeName as input to getObjectInstance but received a '"
+							+ name.getClass().toString()
+							+ "' - using toString and proceeding with undefined results");
 			nameString = name.toString();
 		}
 

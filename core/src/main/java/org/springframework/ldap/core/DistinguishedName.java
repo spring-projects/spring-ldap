@@ -33,7 +33,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.BadLdapGrammarException;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.support.ListComparator;
+import org.springframework.util.Assert;
 
 /**
  * Default implementation of a {@link Name} corresponding to an LDAP path. A
@@ -158,6 +160,11 @@ public class DistinguishedName implements Name {
 	 * <code>DistinguishedName</code> from.
 	 */
 	public DistinguishedName(Name name) {
+		Assert.notNull(name, "name cannot be null");
+		if (name instanceof CompositeName) {
+			parse(LdapUtils.convertCompositeNameToString((CompositeName) name));
+			return;
+		}
 		names = new LinkedList();
 		for (int i = 0; i < name.size(); i++) {
 			names.add(new LdapRdn(name.get(i)));

@@ -149,13 +149,13 @@ public class DirContextAdapter implements DirContextOperations {
 			this.originalAttrs = new BasicAttributes(true);
 		}
 		if (dn != null) {
-			this.dn = new DistinguishedName(dn.toString());
+			this.dn = new DistinguishedName(dn);
 		}
 		else {
 			this.dn = new DistinguishedName();
 		}
 		if (base != null) {
-			this.base = new DistinguishedName(base.toString());
+			this.base = new DistinguishedName(base);
 		}
 		else {
 			this.base = new DistinguishedName();
