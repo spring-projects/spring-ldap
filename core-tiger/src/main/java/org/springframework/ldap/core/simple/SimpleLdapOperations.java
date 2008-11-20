@@ -55,7 +55,8 @@ public interface SimpleLdapOperations {
 	 * mapped by the ParametrizedContextMapper.
 	 * @throws NamingException if any error occurs.
 	 */
-	<T> List<T> search(String base, String filter, ParameterizedContextMapper<T> mapper);
+	<T> List<T> search(String base, String filter,
+			ParameterizedContextMapper<T> mapper);
 
 	/**
 	 * Search for a List of type T using the supplied filter and link
@@ -70,7 +71,8 @@ public interface SimpleLdapOperations {
 	 * @throws NamingException if any error occurs.
 	 * @since 1.3
 	 */
-	<T> List<T> search(Name base, String filter, ParameterizedContextMapper<T> mapper);
+	<T> List<T> search(Name base, String filter,
+			ParameterizedContextMapper<T> mapper);
 
 	/**
 	 * Search for a List of type T using the supplied filter, SearchControls,
@@ -88,8 +90,8 @@ public interface SimpleLdapOperations {
 	 * mapped by the ParametrizedContextMapper.
 	 * @throws NamingException if any error occurs.
 	 */
-	<T> List<T> search(String base, String filter, SearchControls controls, ParameterizedContextMapper<T> mapper,
-			DirContextProcessor processor);
+	<T> List<T> search(String base, String filter, SearchControls controls,
+			ParameterizedContextMapper<T> mapper, DirContextProcessor processor);
 
 	/**
 	 * Search for a List of type T using the supplied filter, SearchControls,
@@ -108,8 +110,8 @@ public interface SimpleLdapOperations {
 	 * @throws NamingException if any error occurs.
 	 * @since 1.3
 	 */
-	<T> List<T> search(Name base, String filter, SearchControls controls, ParameterizedContextMapper<T> mapper,
-			DirContextProcessor processor);
+	<T> List<T> search(Name base, String filter, SearchControls controls,
+			ParameterizedContextMapper<T> mapper, DirContextProcessor processor);
 
 	/**
 	 * Perform a lookup of the specified DN and map the result using the mapper.
@@ -142,11 +144,13 @@ public interface SimpleLdapOperations {
 	 * @param mapper the mapper to use for the search.
 	 * @return the single object returned by the mapper that matches the search
 	 * criteria.
-	 * @throws IncorrectResultSizeDataAccessException if the result is not one unique entry
+	 * @throws IncorrectResultSizeDataAccessException if the result is not one
+	 * unique entry
 	 * @since 1.3
 	 */
-	<T> T searchForObject(String base, String filter, ParameterizedContextMapper<T> mapper);
-	
+	<T> T searchForObject(String base, String filter,
+			ParameterizedContextMapper<T> mapper);
+
 	/**
 	 * Perform a search for a unique entry matching the specified search
 	 * criteria and return the found object. If no entry is found or if there
@@ -157,10 +161,12 @@ public interface SimpleLdapOperations {
 	 * @param mapper the mapper to use for the search.
 	 * @return the single object returned by the mapper that matches the search
 	 * criteria.
-	 * @throws IncorrectResultSizeDataAccessException if the result is not one unique entry
+	 * @throws IncorrectResultSizeDataAccessException if the result is not one
+	 * unique entry
 	 * @since 1.3
 	 */
-	<T> T searchForObject(Name base, String filter, ParameterizedContextMapper<T> mapper);
+	<T> T searchForObject(Name base, String filter,
+			ParameterizedContextMapper<T> mapper);
 
 	/**
 	 * Look up the specified DN, and automatically cast it to a
@@ -221,6 +227,7 @@ public interface SimpleLdapOperations {
 	 * @param ctx the context to bind
 	 * @throws IllegalStateException if no DN is set or if the instance is in
 	 * update mode.
+	 * @since 1.3
 	 */
 	void bind(DirContextOperations ctx);
 
@@ -263,7 +270,7 @@ public interface SimpleLdapOperations {
 	 * @throws NamingException if any error occurs.
 	 */
 	void modifyAttributes(DirContextOperations ctx);
-	
+
 	/**
 	 * Utility method to perform a simple LDAP 'bind' authentication. Search for
 	 * the LDAP entry to authenticate using the supplied base DN and filter; use
@@ -276,7 +283,8 @@ public interface SimpleLdapOperations {
 	 * <pre>
 	 * AndFilter filter = new AndFilter();
 	 * filter.and(&quot;objectclass&quot;, &quot;person&quot;).and(&quot;uid&quot;, userId);
-	 * boolean authenticated = ldapTemplate.authenticate(DistinguishedName.EMPTY_PATH, filter.toString(), password);
+	 * boolean authenticated = ldapTemplate.authenticate(DistinguishedName.EMPTY_PATH,
+	 * 		filter.toString(), password);
 	 * </pre>
 	 * 
 	 * @param base the DN to use as the base of the search.
@@ -300,7 +308,8 @@ public interface SimpleLdapOperations {
 	 * <pre>
 	 * AndFilter filter = new AndFilter();
 	 * filter.and(&quot;objectclass&quot;, &quot;person&quot;).and(&quot;uid&quot;, userId);
-	 * boolean authenticated = ldapTemplate.authenticate(DistinguishedName.EMPTY_PATH, filter.toString(), password);
+	 * boolean authenticated = ldapTemplate.authenticate(DistinguishedName.EMPTY_PATH,
+	 * 		filter.toString(), password);
 	 * </pre>
 	 * 
 	 * @param base the DN to use as the base of the search.
