@@ -20,10 +20,7 @@ import static junit.framework.Assert.assertEquals;
 
 import java.util.List;
 
-import javax.naming.CompositeName;
 import javax.naming.InvalidNameException;
-import javax.naming.Name;
-import javax.naming.ldap.LdapName;
 
 import org.junit.After;
 import org.junit.Before;
@@ -37,10 +34,7 @@ import org.springframework.ldap.core.support.AbstractContextMapper;
 import org.springframework.test.context.ContextConfiguration;
 
 /**
- * Tests the rename methods of LdapTemplate.
- * 
- * We rely on that the bind, unbind and lookup methods work as they should -
- * that should be ok, since that is verified in a separate test class. *
+ * Integration tests for verifying that issues LDAP-50 and LDAP-109 are solved.
  * 
  * @author Ulrik Sandberg
  */
@@ -87,7 +81,7 @@ public class InvalidBackslashITest extends AbstractLdapTemplateIntegrationTest {
 	 * 
 	 * <pre>
 	 * LdapName ldapname = new LdapName(&quot;cn=Some\\\\Person6,ou=company1,c=Sweden&quot;);
-	 * compositeName compositeName = new CompositeName();
+	 * CompositeName compositeName = new CompositeName();
 	 * compositeName.add(ldapname.get(ldapname.size() - 1)); // for some odd reason
 	 * </pre>
 	 * <code>CompositeName#add()</code> cannot handle this and the result is
