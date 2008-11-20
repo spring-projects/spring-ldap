@@ -138,7 +138,6 @@ import org.springframework.ldap.pool.validation.DirContextValidator;
  * </tr>
  * </table>
  * 
- * 
  * @author Eric Dalquist
  */
 public class PoolingContextSource implements ContextSource, DisposableBean {
@@ -363,7 +362,7 @@ public class PoolingContextSource implements ContextSource, DisposableBean {
 
 	/**
 	 * @param contextSource the contextSource to set
-	 * @Required
+	 * Required
 	 */
 	public void setContextSource(ContextSource contextSource) {
 		this.dirContextPoolableObjectFactory.setContextSource(contextSource);
@@ -371,7 +370,7 @@ public class PoolingContextSource implements ContextSource, DisposableBean {
 
 	/**
 	 * @param dirContextValidator the dirContextValidator to set
-	 * @Required
+	 * Required
 	 */
 	public void setDirContextValidator(DirContextValidator dirContextValidator) {
 		this.dirContextPoolableObjectFactory.setDirContextValidator(dirContextValidator);
