@@ -207,7 +207,7 @@ public class DirContextAdapterTest extends TestCase {
 
 	public void testAddAttributeValueAttributeWithSameValueExists() throws NamingException {
 		tested.setAttribute(new BasicAttribute("abc", "123"));
-
+		
 		// Perform test
 		tested.addAttributeValue("abc", "123");
 
@@ -232,7 +232,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("123", attribute.get());
 	}
 
-	public void testAddAttributeValueInUpdateModeAttributeWithOtherValueExistsInOrigAttrs() throws NamingException {
+	public void testAddAttributeValueInUpdateModeAttributeWhenOtherValueExistsInOrigAttrs() throws NamingException {
 
 		tested.setAttribute(new BasicAttribute("abc", "321"));
 		tested.setUpdateMode(true);
@@ -251,7 +251,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("123", attribute.get());
 	}
 
-	public void testAddAttributeValueInUpdateModeAttributeWithSameValueExistsInOrigAttrs() throws NamingException {
+	public void testGetModificationItemsOnAddAttributeValueInUpdateModeAttributeWhenSameValueExistsInOrigAttrs() throws NamingException {
 
 		tested.setAttribute(new BasicAttribute("abc", "123"));
 		tested.setUpdateMode(true);

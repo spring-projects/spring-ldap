@@ -28,7 +28,8 @@ import javax.naming.directory.DirContext;
  * @author Mattias Hellborg Arthursson
  * @see DirContextAdapter
  */
-public interface DirContextOperations extends DirContext, AttributeModificationsAware {
+public interface DirContextOperations extends DirContext,
+		AttributeModificationsAware {
 
 	/**
 	 * Gets the update mode. An entry in update mode will keep track of its
@@ -114,13 +115,33 @@ public interface DirContextOperations extends DirContext, AttributeModifications
 
 	/**
 	 * Add a value to the Attribute with the specified name. If the Attribute
-	 * doesn't exist it will be created.
+	 * doesn't exist it will be created. This method makes sure that the there
+	 * will be no duplicates of an added value - it the value exists it will not
+	 * be added again.
 	 * 
 	 * @param name the name of the Attribute to which the specified value should
 	 * be added.
 	 * @param value the Attribute value to add.
 	 */
 	void addAttributeValue(String name, Object value);
+
+	/**
+	 * Add a value to the Attribute with the specified name. If the Attribute
+	 * doesn't exist it will be created. The <code>addIfDuplicateExists</code>
+	 * parameter controls the handling of duplicates. It <code>false</code>,
+	 * this method makes sure that the there will be no duplicates of an added
+	 * value - it the value exists it will not be added again.
+	 * 
+	 * @param name the name of the Attribute to which the specified value should
+	 * be added.
+	 * @param value the Attribute value to add.
+	 * @param addIfDuplicateExists <code>true</code> will add the value
+	 * regardless of whether there is an identical value already, allowing for
+	 * duplicate attribute values; <code>false</code> will not add the value if
+	 * it already exists.
+	 */
+	void addAttributeValue(String name, Object value,
+			boolean addIfDuplicateExists);
 
 	/**
 	 * Remove a value from the Attribute with the specified name. If the

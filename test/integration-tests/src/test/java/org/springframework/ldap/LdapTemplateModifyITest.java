@@ -17,6 +17,7 @@
 package org.springframework.ldap;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 
 import javax.naming.directory.Attributes;
@@ -30,6 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.test.context.ContextConfiguration;
@@ -132,6 +134,14 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 		assertEquals("Some description", attributes[0]);
 		assertEquals("Some other description", attributes[1]);
 		assertEquals("Another description", attributes[2]);
+	}
+
+	@Test
+	public void testModifyAttributes_AddAttributeValueWithExistingValue() {
+		DirContextOperations ctx = tested.lookupContext("cn=ROLE_USER,ou=groups");
+		ctx.addAttributeValue("uniqueMember", "cn=Some Person,ou=company1,c=Sweden,dc=jayway,dc=se");
+		tested.modifyAttributes(ctx);
+		assertTrue(true);
 	}
 
 	@Test

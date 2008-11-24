@@ -21,6 +21,10 @@ Changes in version 1.3.0 (Nov 2008)
 * Re-used the same fix for LDAP-109 and LDAP-50 that was used in DefaultDirObjectFactory to secure
   the DirContextAdapter constructors from invalid CompositeNames.
 
+* Made sure DirContextOperations#addAttributeValue(String, Object) does not add any duplicate
+  values per default; added alternate method: DirContextOperations#addAttributeValue(String, Object, boolean)
+  to enable behavior other than the default (i.e. allowing duplicates).
+  
 Changes in version 1.3.0.RC1 (Oct 2008)
 -------------------------------------------
 * TLS connections are now supported using the DefaultTlsDirContextAuthenticationStrategy
