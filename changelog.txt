@@ -24,6 +24,14 @@ Changes in version 1.3.0 (Nov 2008)
 * Made sure DirContextOperations#addAttributeValue(String, Object) does not add any duplicate
   values per default; added alternate method: DirContextOperations#addAttributeValue(String, Object, boolean)
   to enable behavior other than the default (i.e. allowing duplicates).
+
+* Made sure that DirContextAdapter#setDn() throws exception if in update mode
+  (The value is not set anyway, and this was previously silently ignored).
+  
+* Made sure article sample tests are possible to run without running web
+  application (i.e. tests automatically start internal LDAP server) (LDAP-143).
+  
+* Added spring-tx as required dependency (the DataAccessExceptions require this). 
   
 Changes in version 1.3.0.RC1 (Oct 2008)
 -------------------------------------------
@@ -42,7 +50,7 @@ Changes in version 1.3.0.RC1 (Oct 2008)
   
 * The hard dependency on LDAP Booster Pack has now been completely removed,
   preventing NoClassDefFoundErrors when using Paged Results without that
-  library on the classpath. (LDAP-110, LDAP-118)
+ library on the classpath. (LDAP-110, LDAP-118)
   
 * The dreaded problem with '\' in Distinguished Names is now resolved.
   (LDAP-50, LDAP-109) 

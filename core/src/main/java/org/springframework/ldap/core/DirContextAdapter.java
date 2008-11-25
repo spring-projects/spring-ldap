@@ -1262,6 +1262,11 @@ public class DirContextAdapter implements DirContextOperations {
 		if (!updateMode) {
 			this.dn = new DistinguishedName(dn.toString());
 		}
+		else {
+			throw new IllegalStateException(
+					"Not possible to call setDn() on a DirContextAdapter in update mode");
+		}
+
 	}
 
 	/**

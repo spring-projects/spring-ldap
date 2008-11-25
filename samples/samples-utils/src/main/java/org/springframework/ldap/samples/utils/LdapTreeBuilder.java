@@ -14,22 +14,24 @@ public class LdapTreeBuilder {
 	}
 
 	public LdapTree getLdapTree(DistinguishedName root) {
-		DirContextOperations context = ldapTemplate.lookupContext(root.toString());
+		DirContextOperations context = ldapTemplate.lookupContext(root
+				.toString());
 		return getLdapTree(context);
 	}
 
 	private LdapTree getLdapTree(final DirContextOperations rootContext) {
 		final LdapTree ldapTree = new LdapTree(rootContext);
-		ldapTemplate.listBindings(rootContext.getDn(), new AbstractContextMapper() {
-			@Override
-			protected Object doMapFromContext(DirContextOperations ctx) {
-				DistinguishedName dn = (DistinguishedName) ctx.getDn();
-				dn.prepend((DistinguishedName) rootContext.getDn());
-				
-				ldapTree.addSubTree(getLdapTree(ctx));
-				return null;
-			}
-		});
+		ldapTemplate.listBindings(rootContext.getDn(),
+				new AbstractContextMapper() {
+					@Override
+					protected Object doMapFromContext(DirContextOperations ctx) {
+						DistinguishedName dn = (DistinguishedName) ctx.getDn();
+						dn.prepend((DistinguishedName) rootContext.getDn());
+						ldapTree.addSubTree(getLdapTree(ldapTemplate
+								.lookupContext(dn)));
+						return null;
+					}
+				});
 
 		return ldapTree;
 	}
