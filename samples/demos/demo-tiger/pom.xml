@@ -13,16 +13,6 @@
 	<packaging>jar</packaging>
 	<description>Example code for demonstrating the process of
 		refactoring from plain JNDI to Spring LDAP (Java 5).</description>
-	<properties>
-		<spring.version>2.5.5</spring.version>
-	</properties>
-	<repositories>
-		<repository>
-			<id>spring-milestone</id>
-			<name>Spring Portfolio Milestone Repository</name>
-			<url>http://s3.amazonaws.com/maven.springframework.org/milestone</url>
-		</repository>
-	</repositories>
 	<build>
 		<plugins>
 			<plugin>
@@ -43,7 +33,6 @@
 						<buildcommand>org.springframework.ide.eclipse.core.springbuilder</buildcommand>
 					</additionalBuildcommands>
 					<downloadSources>true</downloadSources>
-					<downloadJavadocs>true</downloadJavadocs>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -53,33 +42,19 @@
 		<dependency>
 			<groupId>org.springframework.ldap</groupId>
 			<artifactId>spring-ldap-test</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.ldap</groupId>
 			<artifactId>spring-ldap-core-tiger</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.9</version>
 		</dependency>
 		<!-- Test Dependencies -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>${spring.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
