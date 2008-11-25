@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project
-		xmlns="http://maven.apache.org/POM/4.0.0"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.springframework.ldap</groupId>
@@ -12,11 +12,10 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>spring-ldap-samples</artifactId>
     <packaging>pom</packaging>
-    <name>Spring LDAP Samples</name>
+    <name>Spring LDAP Demos</name>
     <modules>
-        <module>samples-utils</module>
-        <module>article</module>
-        <module>demos</module>
+        <module>demo</module>
+        <module>demo-tiger</module>
     </modules>
     <repositories>
         <repository>
@@ -25,21 +24,6 @@
             <url>http://maven.springframework.org/milestone</url>
         </repository>        
     </repositories>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>maven-jetty-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <warName>${pom.artifactId}</warName>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
     <dependencies>
         <!-- Logging dependencies -->
         <dependency>
