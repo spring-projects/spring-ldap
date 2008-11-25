@@ -33,6 +33,8 @@ Changes in version 1.3.0 (Nov 2008)
   
 * Added spring-tx as required dependency (the DataAccessExceptions require this). 
   
+* Added demo projects to simplify refactoring demonstrations. (LDAP-154)
+
 Changes in version 1.3.0.RC1 (Oct 2008)
 -------------------------------------------
 * TLS connections are now supported using the DefaultTlsDirContextAuthenticationStrategy
