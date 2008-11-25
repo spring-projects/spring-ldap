@@ -16,30 +16,19 @@
 
 package org.springframework.ldap;
 
-import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 
-import javax.naming.NamingException;
-import javax.naming.directory.Attributes;
-
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ldap.core.AttributesMapper;
-import org.springframework.ldap.core.ContextMapper;
-import org.springframework.ldap.core.DirContextAdapter;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.support.AbstractContextSource;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.filter.WhitespaceWildcardsFilter;
 import org.springframework.test.context.ContextConfiguration;
 
 /**
- * Tests the lookup methods of LdapTemplate.
+ * Tests the authenticate methods of LdapTemplate.
  * 
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
