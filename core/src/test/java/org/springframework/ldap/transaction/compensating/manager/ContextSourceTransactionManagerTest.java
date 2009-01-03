@@ -17,7 +17,6 @@
 package org.springframework.ldap.transaction.compensating.manager;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 import javax.naming.directory.DirContext;
 import javax.sql.DataSource;

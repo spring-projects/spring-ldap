@@ -29,6 +29,8 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * is <b>not</b> a JTA XA transaction; no two-phase commit will be performed,
  * and thus commit and rollback may yield unexpected results.
  * 
+ * Note that nested transactions are not supported.
+ * 
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
@@ -49,10 +51,8 @@ public class ContextSourceAndDataSourceTransactionManager extends
      * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#isExistingTransaction(java.lang.Object)
      */
     protected boolean isExistingTransaction(Object transaction) {
-        ContextSourceAndDataSourceTransactionObject actualTransactionObject = (ContextSourceAndDataSourceTransactionObject) transaction;
-
-        return super.isExistingTransaction(actualTransactionObject
-                .getDataSourceTransactionObject());
+    	// We don't support nested transactions here
+    	return false;
     }
 
     /*
