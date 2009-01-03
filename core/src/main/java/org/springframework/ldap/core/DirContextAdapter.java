@@ -105,6 +105,15 @@ public class DirContextAdapter implements DirContextOperations {
 	}
 
 	/**
+	 * Create a new DirContextAdapter from the supplied DN String.
+	 * @param dnString the DN string. Must be syntactically correct, or an
+	 * exception will be thrown.
+	 */
+	public DirContextAdapter(String dnString) {
+		this(new DistinguishedName(dnString));
+	}
+
+	/**
 	 * Create a new adapter from the supplied dn.
 	 * 
 	 * @param dn the dn.
