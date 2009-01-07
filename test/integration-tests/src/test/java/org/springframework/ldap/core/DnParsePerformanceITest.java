@@ -26,12 +26,9 @@ import org.springframework.util.StopWatch;
  */
 public class DnParsePerformanceITest {
 
-	/**
-	 * Tests parsing and toString.
-	 */
 	@Test
-	public void testContains() {
-		StopWatch stopWatch = new StopWatch("Dn Parse Performance");
+	public void testCreateFromString() {
+		StopWatch stopWatch = new StopWatch("Create from String");
 		stopWatch.start();
 
 		for (int i = 0; i < 2000; i++) {
@@ -43,6 +40,35 @@ public class DnParsePerformanceITest {
 
 			DistinguishedName pathE1 = new DistinguishedName("cn=john.doe, OU=Users,OU=SE,ou=G,OU=L,OU=M, ou=foo");
 			DistinguishedName pathE2 = new DistinguishedName("cn=john.doe, OU=Users,OU=SE");
+		}
+
+		stopWatch.stop();
+		System.out.println(stopWatch.prettyPrint());
+	}
+
+	@Test
+	public void testCreateFromDistinguishedName() {
+		DistinguishedName migpath = new DistinguishedName("OU=G,OU=I,OU=M");
+		DistinguishedName path1 = new DistinguishedName("cn=john.doe, OU=Users,OU=SE,OU=G,OU=I,OU=M");
+		DistinguishedName path2 = new DistinguishedName("cn=john.doe, OU=Users,OU=SE,ou=G,OU=i,OU=M, ou=foo");
+		DistinguishedName path3 = new DistinguishedName("ou=G,OU=i,OU=M, ou=foo");
+		DistinguishedName path4 = new DistinguishedName("ou=G,OU=i,ou=m");
+
+		DistinguishedName pathE1 = new DistinguishedName("cn=john.doe, OU=Users,OU=SE,ou=G,OU=L,OU=M, ou=foo");
+		DistinguishedName pathE2 = new DistinguishedName("cn=john.doe, OU=Users,OU=SE");
+
+		StopWatch stopWatch = new StopWatch("Create from DistinguishedName");
+		stopWatch.start();
+		
+		for (int i = 0; i < 2000; i++) {
+			migpath = new DistinguishedName(migpath);
+			path1 = new DistinguishedName(path1);
+			path2 = new DistinguishedName(path2);
+			path3 = new DistinguishedName(path3);
+			path4 = new DistinguishedName(path4);
+
+			pathE1 = new DistinguishedName(pathE1);
+			pathE2 = new DistinguishedName(pathE2);
 		}
 
 		stopWatch.stop();
