@@ -171,7 +171,7 @@
 
         <para>When using <literal>SpringSecurityAuthenticationSource</literal>,
         authenticated contexts will only be possible to create once the user
-        is logged in using Acegi. To use default authentication information
+        is logged in using Spring Security. To use default authentication information
         when no user is logged in, use the
         <literal>DefaultValuesAuthenticationSourceDecorator</literal>:</para>
 
@@ -306,7 +306,7 @@ public class PersonService implements PersonService, <emphasis role="bold">BaseL
    &lt;bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource"&gt;
       &lt;property name="url" value="ldap://localhost:389" /&gt;
       &lt;property name="base" value="dc=example,dc=com" /&gt;
-      &lt;property name="acegiAuthenticationSource" ref="authenticationSource" /&gt;
+      &lt;property name="authenticationSource" ref="authenticationSource" /&gt;
    &lt;/bean&gt;
    ...
    <emphasis role="bold">&lt;bean class="org.springframework.ldap.core.support.BaseLdapPathBeanPostProcessor" /&gt;</emphasis>

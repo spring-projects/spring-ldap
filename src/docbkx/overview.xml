@@ -218,11 +218,7 @@ public class PersonDaoImpl implements PersonDao {
 
     <para>This section provides an overview of the logical package structure
     of the Spring LDAP codebase. The dependencies for each package are clearly
-    noted. A package dependency noted as <emphasis>(optional)</emphasis> means
-    that the dependency is needed to compile the package but is optionally
-    needed at runtime (depending on your use of the package). For example, use
-    of Spring LDAP together with Acegi Security entails use of the
-    <literal>org.acegisecurity</literal> package.</para>
+    noted.</para>
 
     <figure>
       <title>Spring LDAP package structure</title>
@@ -321,7 +317,34 @@ public class PersonDaoImpl implements PersonDao {
 
       <itemizedlist spacing="compact">
         <listitem>
-          <para>Dependencies: ldap, ldap.core, spring-tx</para>
+          <para>Dependencies: ldap.core, commons-lang, commons-pool</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2 id="ldap.pool.factory">
+      <title>org.springframework.ldap.pool.factory</title>
+
+      <para>The <emphasis>ldap.pool.factory</emphasis> package contains
+      the actual pooling context source and other classes for context creation.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Dependencies: ldap, ldap.core, ldap.pool, spring-beans, spring-tx
+          commons-lang, commons-logging, commons-pool</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2 id="ldap.pool.validation">
+      <title>org.springframework.ldap.pool.validation</title>
+
+      <para>The <emphasis>ldap.pool.validation</emphasis> package contains
+      the connection validation support.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Dependencies: ldap.pool, commons-lang, commons-logging</para>
         </listitem>
       </itemizedlist>
     </sect2>
