@@ -39,6 +39,7 @@ import java.lang.reflect.Method;
  * 
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
+ * @deprecated Use PagedResultsDirContextProcessor instead.
  */
 public class PagedResultsRequestControl extends AbstractRequestControlDirContextProcessor {
 

@@ -33,6 +33,12 @@ Changes in version 1.3.0 (Jan 2009)
   
 * SortControlDirContextProcessor no longer has hard dependencies to controls in LDAP Booster Pack (LDAP-159). 
   
+* Common code in DirContextProcessor implementations has been pulled up to a base class called
+  AbstractFallbackRequestAndResponseControlDirContextProcessor (LDAP-161).
+
+* PagedResultsRequestControl has been deprecated in favor of PagedResultsDirContextProcessor, which
+  takes advantage of the new AbstractFallbackRequestAndResponseControlDirContextProcessor (LDAP-160).
+
 * Added spring-tx as required dependency (the DataAccessExceptions require this). 
   
 * Added demo projects to simplify refactoring demonstrations. (LDAP-154)

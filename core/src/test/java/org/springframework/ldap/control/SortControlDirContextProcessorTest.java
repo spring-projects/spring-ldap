@@ -19,7 +19,6 @@ import java.io.IOException;
 
 import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
-import javax.naming.ldap.PagedResultsControl;
 import javax.naming.ldap.SortControl;
 import javax.naming.ldap.SortResponseControl;
 
@@ -34,9 +33,6 @@ import com.sun.jndi.ldap.ctl.DirSyncResponseControl;
 
 /**
  * Unit tests for the SortControlDirContextProcessor class.
- * {@link javax.naming.ldap.SortControl}
- * {@link javax.naming.ldap.SortResponseControl}
- * {@link PagedResultsControl}
  * 
  * @author Ulrik Sandberg
  */
@@ -46,8 +42,12 @@ public class SortControlDirContextProcessorTest extends TestCase {
 
     private LdapContext ldapContextMock;
 
+	private SortControlDirContextProcessor tested;
+
     protected void setUp() throws Exception {
         super.setUp();
+
+        tested = new SortControlDirContextProcessor("key");
 
         // Create ldapContext mock
         ldapContextControl = MockControl.createControl(LdapContext.class);
@@ -57,6 +57,7 @@ public class SortControlDirContextProcessorTest extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
 
+        tested = null;
         ldapContextControl = null;
         ldapContextMock = null;
     }
@@ -70,9 +71,6 @@ public class SortControlDirContextProcessorTest extends TestCase {
     }
 
     public void testCreateRequestControl() throws Exception {
-        SortControlDirContextProcessor tested = new SortControlDirContextProcessor(
-                "key");
-
         SortControl result = (SortControl) tested.createRequestControl();
         assertNotNull(result);
         assertEquals("1.2.840.113556.1.4.473", result.getID());
@@ -88,8 +86,6 @@ public class SortControlDirContextProcessorTest extends TestCase {
 
         ldapContextControl.expectAndDefaultReturn(ldapContextMock
                 .getResponseControls(), new Control[] { control });
-
-        SortControlDirContextProcessor tested = new SortControlDirContextProcessor("key");
 
         replay();
 
@@ -110,8 +106,6 @@ public class SortControlDirContextProcessorTest extends TestCase {
 
         ldapContextControl.expectAndDefaultReturn(ldapContextMock
                 .getResponseControls(), new Control[] { control });
-
-        SortControlDirContextProcessor tested = new SortControlDirContextProcessor("key");
 
         replay();
 
@@ -137,8 +131,6 @@ public class SortControlDirContextProcessorTest extends TestCase {
 
         ldapContextControl.expectAndDefaultReturn(ldapContextMock
                 .getResponseControls(), new Control[] { control });
-
-        SortControlDirContextProcessor tested = new SortControlDirContextProcessor("key");
 
         replay();
 

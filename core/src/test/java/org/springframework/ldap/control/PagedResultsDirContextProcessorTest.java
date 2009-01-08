@@ -28,27 +28,30 @@ import javax.naming.ldap.PagedResultsControl;
 import javax.naming.ldap.PagedResultsResponseControl;
 import java.io.IOException;
 
-public class PagedResultsRequestControlTest extends TestCase {
+public class PagedResultsDirContextProcessorTest extends TestCase {
 
     private MockControl ldapContextControl;
 
     private LdapContext ldapContextMock;
 
+	private PagedResultsDirContextProcessor tested;
+
     protected void setUp() throws Exception {
         super.setUp();
+
+        tested = new PagedResultsDirContextProcessor(20);
 
         // Create ldapContext mock
         ldapContextControl = MockControl.createControl(LdapContext.class);
         ldapContextMock = (LdapContext) ldapContextControl.getMock();
-
     }
 
     protected void tearDown() throws Exception {
         super.tearDown();
 
+        tested = null;
         ldapContextControl = null;
         ldapContextMock = null;
-
     }
 
     protected void replay() {
@@ -60,8 +63,6 @@ public class PagedResultsRequestControlTest extends TestCase {
     }
 
     public void testCreateRequestControl() throws Exception {
-        PagedResultsRequestControl tested = new PagedResultsRequestControl(20);
-
         PagedResultsControl control = (PagedResultsControl) tested
                 .createRequestControl();
         assertNotNull(control);
@@ -69,7 +70,7 @@ public class PagedResultsRequestControlTest extends TestCase {
 
     public void testCreateRequestControl_CookieSet() throws Exception {
         PagedResultsCookie cookie = new PagedResultsCookie(new byte[0]);
-        PagedResultsRequestControl tested = new PagedResultsRequestControl(20,
+        PagedResultsDirContextProcessor tested = new PagedResultsDirContextProcessor(20,
                 cookie);
 
         PagedResultsControl control = (PagedResultsControl) tested
@@ -89,8 +90,6 @@ public class PagedResultsRequestControlTest extends TestCase {
 
         ldapContextControl.expectAndDefaultReturn(ldapContextMock
                 .getResponseControls(), new Control[] { control });
-
-        PagedResultsRequestControl tested = new PagedResultsRequestControl(20);
 
         replay();
 
@@ -119,8 +118,6 @@ public class PagedResultsRequestControlTest extends TestCase {
         ldapContextControl.expectAndDefaultReturn(ldapContextMock
                 .getResponseControls(), new Control[] { control });
 
-        PagedResultsRequestControl tested = new PagedResultsRequestControl(20);
-
         replay();
 
         tested.postProcess(ldapContextMock);
@@ -135,8 +132,6 @@ public class PagedResultsRequestControlTest extends TestCase {
     public void testPostProcess_NoResponseControls() throws Exception {
         ldapContextControl.expectAndDefaultReturn(ldapContextMock
                 .getResponseControls(), null);
-
-        PagedResultsRequestControl tested = new PagedResultsRequestControl(20);
 
         replay();
 
