@@ -62,7 +62,7 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
         return this.delegateLdapContext;
     }
     
-    // cannot return subtype in overriden method unless Java5
+    // cannot return subtype in overridden method unless Java5
     public DirContext getDelegateDirContext() {
         return this.getDelegateLdapContext();
     }

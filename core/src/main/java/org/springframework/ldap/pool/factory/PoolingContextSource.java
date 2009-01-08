@@ -413,7 +413,7 @@ public class PoolingContextSource implements ContextSource, DisposableBean {
 	 * 
 	 * @param dirContextType The type of context to return.
 	 * @return A wrapped DirContext of the specified type.
-	 * @throws DataAccessResourceFailureException If retreiving the object from
+	 * @throws DataAccessResourceFailureException If retrieving the object from
 	 * the pool throws an exception
 	 */
 	protected DirContext getContext(DirContextType dirContextType) {
