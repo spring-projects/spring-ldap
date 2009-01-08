@@ -11,7 +11,7 @@ http://www.ietf.org/rfc/rfc2255.txt
 http://www.ietf.org/rfc/rfc2256.txt
 http://www.ietf.org/rfc/rfc2696.txt
 
-Changes in version 1.3.0 (Nov 2008)
+Changes in version 1.3.0 (Jan 2009)
 -------------------------------------------
 * Added methods for simple LDAP 'bind' authentication in LdapOperations and SimpleLdapOperations.
   The methods will perform a search given a supplied filter, call ContextSource#getContext(dn, password),
@@ -30,6 +30,8 @@ Changes in version 1.3.0 (Nov 2008)
   
 * Made sure article sample tests are possible to run without running web
   application (i.e. tests automatically start internal LDAP server) (LDAP-143).
+  
+* SortControlDirContextProcessor no longer has hard dependencies to controls in LDAP Booster Pack (LDAP-159). 
   
 * Added spring-tx as required dependency (the DataAccessExceptions require this). 
   

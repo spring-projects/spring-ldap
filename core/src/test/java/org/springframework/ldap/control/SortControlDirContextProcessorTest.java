@@ -20,6 +20,8 @@ import java.io.IOException;
 import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
 import javax.naming.ldap.PagedResultsControl;
+import javax.naming.ldap.SortControl;
+import javax.naming.ldap.SortResponseControl;
 
 import junit.framework.TestCase;
 
@@ -29,8 +31,6 @@ import com.sun.jndi.ldap.Ber;
 import com.sun.jndi.ldap.BerDecoder;
 import com.sun.jndi.ldap.BerEncoder;
 import com.sun.jndi.ldap.ctl.DirSyncResponseControl;
-import com.sun.jndi.ldap.ctl.SortControl;
-import com.sun.jndi.ldap.ctl.SortResponseControl;
 
 /**
  * Unit tests for the SortControlDirContextProcessor class.
