@@ -124,6 +124,7 @@ public class LdapTemplatePagedSearchITest extends AbstractJUnit4SpringContextTes
 		assertEquals("+45 555-654123", person.getPhone());
 	}
 
+	@Test
 	public void testSearch_PagedResult_ConvenienceMethod() {
 		Person person;
 		List list;
