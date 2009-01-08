@@ -97,9 +97,10 @@
         	if it is <literal>true</literal>, Spring LDAP will try to shutdown the TLS channel gracefully
         	before closing the target context.</para>
         	
-        	<para><note><para>When working with TLS connections you need to explicitly turn off
-        	the native LDAP Pooling functionality by setting the <literal>pooled</literal> property to <literal>false</literal>,
-        	particularly if <literal>shutdownTlsGracefully</literal> is set to <literal>false</literal>.
+        	<para><note><para>When working with TLS connections you need to make sure that the native LDAP
+                Pooling functionality is turned off. As of release 1.3, the default setting is off. For earlier
+                versions, simply set the <literal>pooled</literal> property to <literal>false</literal>. This is
+        	particularly important if <literal>shutdownTlsGracefully</literal> is set to <literal>false</literal>.
         	However, since the TLS channel negotiation process is quite expensive, great performance benefits will
         	be gained by using the Spring LDAP Pooling Support, described in <xref linkend="pooling" />.
         	</para></note></para>
@@ -206,16 +207,16 @@
       <para>The internal Java LDAP provider provides some very basic pooling capabilities.
       This  LDAP connection pooling can be turned on/off using the
       <literal>pooled</literal> flag on <literal>AbstractContextSource</literal>. 
-      The default value is <literal>true</literal>, i.e. the native Java LDAP pooling will be turned on.
-      The configuration of LDAP connection pooling is managed using
+      The default value is <literal>false</literal> (since release 1.3), i.e. the native
+      Java LDAP pooling will be turned on. The configuration of LDAP connection pooling is managed using
       <literal>System</literal> properties, so this needs to be handled
       manually, outside of the Spring Context configuration. Details of the native pooling configuration
       can be found <ulink url="http://java.sun.com/products/jndi/tutorial/ldap/connect/config.html">here</ulink>.
       </para>
       <para><note>
       There are several serious deficiencies in the built-in LDAP connection pooling, 
-      which is why spring LDAP provides a more sophisticated approach to LDAP connection pooling, 
-      described in <xref linkend="pooling" />. If pooling functionality is required this is the
+      which is why Spring LDAP provides a more sophisticated approach to LDAP connection pooling, 
+      described in <xref linkend="pooling" />. If pooling functionality is required, this is the
       recommended approach.</note></para>
     </sect2>
     <sect2 id="context-source-advanced">

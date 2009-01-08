@@ -163,7 +163,7 @@ public class PersonDaoImpl implements PersonDao {
 
     <itemizedlist spacing="compact">
       <listitem>
-        <para><emphasis>spring-ldap</emphasis> (the Spring LDAP library)</para>
+        <para><emphasis>spring-ldap-core</emphasis> (the Spring LDAP library)</para>
       </listitem>
 
       <listitem>
@@ -192,21 +192,19 @@ public class PersonDaoImpl implements PersonDao {
 
     <itemizedlist>
       <listitem>
-        <para><emphasis>acegi-security</emphasis> (For Acegi security integration using <literal>AcegiAuthenticationSource</literal>)</para>
-      </listitem>
-      <listitem>
         <para><emphasis>spring-context</emphasis> (If your application is wired up using the Spring Application Context - 
         adds the ability for application objects to obtain resources using a consistent API. Definitely needed if you are 
         planning on using the BaseLdapPathBeanPostProcessor.)</para>
       </listitem>
       <listitem>
-        <para><emphasis>spring-dao</emphasis> (If you are planning to use the client side compensating transaction support)</para>
+        <para><emphasis>spring-tx</emphasis> (If you are planning to use the client side compensating transaction support)</para>
       </listitem>
       <listitem>
         <para><emphasis>spring-jdbc</emphasis> (If you are planning to use the client side compensating transaction support)</para>
       </listitem>
       <listitem>
-        <para><emphasis>ldapbp</emphasis> (Sun LDAP Booster Pack - if you will use the LDAP v3 Server controls integration)</para>
+        <para><emphasis>ldapbp</emphasis> (Sun LDAP Booster Pack - if you will use the LDAP v3 Server controls integration
+        and you're not using Java5 or higher)</para>
       </listitem>
       <listitem>
         <para><emphasis>commons-pool</emphasis> (If you are planning to use the pooling functionality)</para>
@@ -276,7 +274,7 @@ public class PersonDaoImpl implements PersonDao {
       <itemizedlist spacing="compact">
         <listitem>
           <para>Dependencies: ldap, ldap.support, spring-beans,
-          commons-lang, commons-logging</para>
+          spring-core, spring-tx, commons-lang, commons-logging</para>
         </listitem>
       </itemizedlist>
     </sect2>
@@ -289,8 +287,41 @@ public class PersonDaoImpl implements PersonDao {
 
       <itemizedlist spacing="compact">
         <listitem>
-          <para>Dependencies: ldap.core, ldap.support, spring-core,
-          spring-beans, spring-context (optional), commons-lang, commons-logging</para>
+          <para>Dependencies: ldap, ldap.core, ldap.support, spring-core,
+          spring-beans, spring-context, commons-lang, commons-logging</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2 id="ldap.core.simple">
+      <title>org.springframework.ldap.core.simple</title>
+
+      <para>The <emphasis>ldap.core.simple</emphasis> package contains
+      Java5-specific parts of Spring LDAP. It's mainly a simplification
+      layer that takes advantage of the generics support in Java5, in
+      order to get typesafe context mappers as well as typesafe search
+      and lookup methods.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Dependencies: ldap.core</para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2 id="ldap.pool">
+      <title>org.springframework.ldap.pool</title>
+
+      <para>The <emphasis>ldap.pool</emphasis> package contains
+      support for detailed pool configuration on a per-ContextSource
+      basis. Pooling support is provided by PoolingContextSource which
+      can wrap any ContextSource and pool both read-only and read-write
+      DirContext objects. Jakarta Commons-Pool is used to provide the
+      underlying pool implementation.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Dependencies: ldap, ldap.core, spring-tx</para>
         </listitem>
       </itemizedlist>
     </sect2>
@@ -313,13 +344,12 @@ public class PersonDaoImpl implements PersonDao {
 
       <para>The <emphasis>ldap.authentication</emphasis> package contains an
       implementation of the AuthenticationSource interface that can be used
-      with <ulink url="http://www.acegisecurity.org/">Acegi Security</ulink>,
-      as well as related helper classes.</para>
+      if the user should be allowed to read some information even though not
+      logged in.</para>
 
       <itemizedlist spacing="compact">
         <listitem>
-          <para>Dependencies: ldap.core, acegi-security (optional),
-          spring-beans, commons-lang, commons-logging</para>
+          <para>Dependencies: ldap.core, spring-beans, commons-lang</para>
         </listitem>
       </itemizedlist>
     </sect2>
@@ -330,9 +360,10 @@ public class PersonDaoImpl implements PersonDao {
       <para>The <emphasis>ldap.control</emphasis> package contains an abstract
       implementation of the DirContextProcessor interface that can be used as
       a basis for processing RequestControls and ResponseControls. There is
-      also a concrete implementation that handles paged search results. The
+      also a concrete implementation that handles paged search results and one
+      that handles sorting. The
       <ulink url="http://java.sun.com/products/jndi/">LDAP Booster
-      Pack</ulink> is used to get support for controls.</para>
+      Pack</ulink> is used to get support for controls, unless Java5 is used.</para>
 
       <itemizedlist spacing="compact">
         <listitem>
@@ -350,7 +381,7 @@ public class PersonDaoImpl implements PersonDao {
 
       <itemizedlist spacing="compact">
         <listitem>
-          <para>Dependencies: ldap.core, commons-lang</para>
+          <para>Dependencies: ldap.core, spring-core, commons-lang</para>
         </listitem>
       </itemizedlist>
     </sect2>
@@ -363,7 +394,7 @@ public class PersonDaoImpl implements PersonDao {
 
       <itemizedlist spacing="compact">
         <listitem>
-          <para>Dependencies: ldap, ldap.core, transaction.compensating,
+          <para>Dependencies: ldap.core, transaction.compensating,
           spring-core, commons-lang, commons-logging</para>
         </listitem>
       </itemizedlist>
@@ -377,9 +408,8 @@ public class PersonDaoImpl implements PersonDao {
 
       <itemizedlist spacing="compact">
         <listitem>
-          <para>Dependencies: ldap, ldap.core, ldap.transaction.compensating, 
-          ldap.transaction.compensating.support, transaction.compensating,
-          spring-dao (optional), spring-jdbc (optional), commons-logging</para>
+          <para>Dependencies: ldap, ldap.core, ldap.support, ldap.transaction.compensating, 
+          transaction.compensating, spring-tx, spring-jdbc, spring-orm, commons-logging</para>
         </listitem>
       </itemizedlist>
     </sect2>
@@ -397,10 +427,8 @@ public class PersonDaoImpl implements PersonDao {
       </itemizedlist>
     </sect2>
 
-    <para>For the exact list of jar dependencies, see the Spring LDAP <ulink
-    url="http://jayasoft.org/ivy">Ivy</ulink> dependency manager descriptor
-    located within the Spring LDAP distribution at
-    <literal>spring-ldap/ivy.xml</literal></para>
+    <para>For the exact list of jar dependencies, see the Spring LDAP Maven2
+    Project Object Model (POM) files in the source tree.</para>
   </sect1>
 
   <sect1 id="introduction-support">
