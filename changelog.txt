@@ -13,33 +13,44 @@ http://www.ietf.org/rfc/rfc2696.txt
 
 Changes in version 1.3.0 (Jan 2009)
 -------------------------------------------
-* Added methods for simple LDAP 'bind' authentication in LdapOperations and SimpleLdapOperations.
-  The methods will perform a search given a supplied filter, call ContextSource#getContext(dn, password),
-  and optionally callback to a supplied instance to perform an LDAP operation on the 
-  context.
+* Added methods for simple LDAP 'bind' authentication in LdapOperations and
+  SimpleLdapOperations. The methods will perform a search given a supplied
+  filter, call ContextSource#getContext(dn, password), and optionally callback
+  to a supplied instance to perform an LDAP operation on the context.
  
-* Re-used the same fix for LDAP-109 and LDAP-50 that was used in DefaultDirObjectFactory to secure
-  the DirContextAdapter constructors from invalid CompositeNames.
+* Re-used the same fix for LDAP-109 and LDAP-50 that was used in
+  DefaultDirObjectFactory to secure the DirContextAdapter constructors from
+  invalid CompositeNames.
 
-* Made sure DirContextOperations#addAttributeValue(String, Object) does not add any duplicate
-  values per default; added alternate method: DirContextOperations#addAttributeValue(String, Object, boolean)
-  to enable behavior other than the default (i.e. allowing duplicates).
+* Made sure DirContextOperations#addAttributeValue(String, Object) does not add
+  any duplicate values per default; added alternate method:
+  DirContextOperations#addAttributeValue(String, Object, boolean) to enable
+  behavior other than the default (i.e. allowing duplicates).
 
 * Made sure that DirContextAdapter#setDn() throws exception if in update mode
   (The value is not set anyway, and this was previously silently ignored).
   
+* Improved more search methods that take handlers so that they will work
+  with handlers that use ContextMappers, eg ContextMapperCallbackHandler.
+  (LDAP-162)
+
 * Made sure article sample tests are possible to run without running web
-  application (i.e. tests automatically start internal LDAP server) (LDAP-143).
+  application (i.e. tests automatically start internal LDAP server). (LDAP-143)
   
-* SortControlDirContextProcessor no longer has hard dependencies to controls in LDAP Booster Pack (LDAP-159). 
+* SortControlDirContextProcessor no longer has hard dependencies to controls in
+  LDAP Booster Pack. (LDAP-159)
   
-* Common code in DirContextProcessor implementations has been pulled up to a base class called
-  AbstractFallbackRequestAndResponseControlDirContextProcessor (LDAP-161).
+* Common code in DirContextProcessor implementations has been pulled up to a
+  base class called
+AbstractFallbackRequestAndResponseControlDirContextProcessor.
+  (LDAP-161)
 
-* PagedResultsRequestControl has been deprecated in favor of PagedResultsDirContextProcessor, which
-  takes advantage of the new AbstractFallbackRequestAndResponseControlDirContextProcessor (LDAP-160).
+* PagedResultsRequestControl has been deprecated in favor of
+  PagedResultsDirContextProcessor, which takes advantage of the new
+  AbstractFallbackRequestAndResponseControlDirContextProcessor. (LDAP-160)
 
-* Added spring-tx as required dependency (the DataAccessExceptions require this). 
+* Added spring-tx as required dependency (the DataAccessExceptions require
+  this). 
   
 * Added demo projects to simplify refactoring demonstrations. (LDAP-154)
 

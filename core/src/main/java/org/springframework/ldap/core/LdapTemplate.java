@@ -188,7 +188,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 				return ctx.search(base, filter, controls);
 			}
 		};
-
+		if (handler instanceof ContextMapperCallbackHandler) {
+			assureReturnObjFlagSet(controls);
+		}
 		search(se, handler);
 	}
 
@@ -207,7 +209,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 				return ctx.search(base, filter, controls);
 			}
 		};
-
+		if (handler instanceof ContextMapperCallbackHandler) {
+			assureReturnObjFlagSet(controls);
+		}
 		search(se, handler);
 	}
 
@@ -227,7 +231,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 				return ctx.search(base, filter, controls);
 			}
 		};
-
+		if (handler instanceof ContextMapperCallbackHandler) {
+			assureReturnObjFlagSet(controls);
+		}
 		search(se, handler, processor);
 	}
 
@@ -247,7 +253,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 				return ctx.search(base, filter, controls);
 			}
 		};
-
+		if (handler instanceof ContextMapperCallbackHandler) {
+			assureReturnObjFlagSet(controls);
+		}
 		search(se, handler, processor);
 	}
 
