@@ -32,7 +32,7 @@
     </moduleSets>
     <files>
         <file>
-            <source>target/${artifactId}-${version}.jar</source>
+            <source>target/${artifactId}-${version}-all.jar</source>
             <outputDirectory>dist</outputDirectory>
         </file>
         <file>

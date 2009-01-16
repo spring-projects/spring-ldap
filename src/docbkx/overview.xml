@@ -5,7 +5,7 @@
   <sect1 id="introduction-overview">
     <title>Overview</title>
 
-    <para>Spring-LDAP (<ulink
+    <para>Spring LDAP (<ulink
     url="http://www.springframework.org/ldap">http://www.springframework.org/ldap</ulink>)
     is a library for simpler LDAP programming in Java, built on the same
     principles as the <ulink
@@ -224,8 +224,13 @@ public class PersonDaoImpl implements PersonDao {
       <title>Spring LDAP package structure</title>
 
       <mediaobject>
-        <imageobject>
-          <imagedata fileref="images/package-dependencies.png" format="png" />
+        <imageobject role="fo">
+          <imagedata fileref="src/docbkx/resources/images/package-dependencies.png"
+                     format="PNG" align="center" />
+        </imageobject>
+        <imageobject role="html">
+          <imagedata fileref="images/package-dependencies.png"
+                     format="PNG" align="center" />
         </imageobject>
       </mediaobject>
     </figure>

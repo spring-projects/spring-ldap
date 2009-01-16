@@ -194,7 +194,7 @@
 	</reporting>
 	<dependencyManagement>
 		<dependencies>
-            <!-- Spring-LDAP dependencies -->
+            <!-- Spring LDAP dependencies -->
 			<dependency>
 				<groupId>org.springframework.ldap</groupId>
 				<artifactId>spring-ldap-core</artifactId>

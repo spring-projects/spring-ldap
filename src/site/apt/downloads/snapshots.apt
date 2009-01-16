@@ -1,0 +1,32 @@
+                                                       ---------
+                                                       Snapshots
+                                                       ---------
+
+Snapshot Builds
+
+	These builds are provided for testing and development purposes only. They are built by a Bamboo process 
+	automatically using the latest snapshot from Subversion.
+	
+	The snapshots are deployed to a Maven2 snapshot repository. To use it, just add the following repository to the POM:
+
++---------------
+<repository>
+    <id>spring-s3</id>
+    <name>Springframework Maven SNAPSHOT Repository</name>
+    <url>http://s3.amazonaws.com/maven.springframework.org/snapshot</url>
+</repository>
++---------------
+
+	Individual dependencies can then be added like so:
+
++---------------
+<dependency>
+    <groupId>org.springframework.ldap</groupId>
+    <artifactId>spring-ldap-core</artifactId>
+    <version>1.3.0.CI-SNAPSHOT</version>
+</dependency>
++---------------
+
+	Additionally, there are
+    {{{http://static.springframework.org/spring-ldap/downloads/1.3-snapshot-download.php}zips}}
+    available which contain all jars.

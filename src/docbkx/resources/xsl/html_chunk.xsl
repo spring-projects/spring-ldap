@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 
-    This is the XSL HTML configuration file for the Spring Reference Documentation.
+    This is the XSL HTML configuration file for the Spring LDAP Reference Documentation.
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fo="http://www.w3.org/1999/XSL/Format"
@@ -73,19 +73,19 @@
     <!-- let's have a Spring and SpringSource banner across the top of each page -->
     <xsl:template name="user.header.navigation">
         <div style="background-color:white;border:none;height:73px;border:1px solid black;">
-            <a style="border:none;" href="http://static.springframework.org/spring-ws/site/"
-               title="The Spring Framework - Spring Web Services">
+            <a style="border:none;" href="http://static.springframework.org/spring-ldap/site/"
+               title="The Spring Framework - Spring LDAP">
                 <img style="border:none;" src="images/xdev-spring_logo.jpg"/>
             </a>
             <a style="border:none;" href="http://www.springsource.com/" title="SpringSource">
-                <img style="border:none;position:absolute;padding-top:5px;right:42px;" src="images/s2-banner-rhs.png"/>
+                <img style="border:none;position:absolute;padding-top:5px;right:42px;" src="images/s2_box_logo.png"/>
             </a>
         </div>
     </xsl:template>
     <!-- no other header navigation (prev, next, etc.) -->
     <xsl:template name="header.navigation"/>
     <xsl:param name="navig.showtitles">1</xsl:param>
-    <!-- let's have a 'Sponsored by SpringSource' strapline (or somesuch) across the bottom of each page -->
+    <!-- let's have a 'Sponsored by Jayway' strapline (or somesuch) across the bottom of each page -->
     <xsl:template name="footer.navigation">
         <xsl:param name="prev" select="/foo"/>
         <xsl:param name="next" select="/foo"/>
@@ -187,8 +187,8 @@
                                 </td>
                                 <td width="20%" align="center">
                                     <span style="color:white;font-size:90%;">
-                                        <a href="http://www.springsource.com/"
-                                           title="SpringSource">Sponsored by SpringSource
+                                        <a href="http://www.jayway.com/"
+                                           title="Jayway">Sponsored by Jayway
                                         </a>
                                     </span>
                                 </td>

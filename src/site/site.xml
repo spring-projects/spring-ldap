@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Spring Web Services">
+    <skin>
+        <groupId>org.springframework.maven.skins</groupId>
+        <artifactId>maven-spring-skin</artifactId>
+        <version>1.0.4</version>
+    </skin>
+    <publishDate position="left" format="d MMM yyyy"/>
+    <bannerLeft>
+        <name>Spring LDAP</name>
+        <src>images/spring-ldap.png</src>
+        <href>http://www.springframework.org/ldap</href>
+    </bannerLeft>
+    <body>
+        <links>
+            <item name="Spring Framework" href="http://www.springframework.org"/>
+            <item name="Spring LDAP 1.3" href="http://static.springframework.org/spring-ldap/sites/1.3/"/>
+        </links>
+        <head>
+            <script type="text/javascript" language="javascript">
+                i=11692
+            </script>
+            <script type="text/javascript" language="javascript" src="http://t4.trackalyzer.com/trackalyze.js"></script>
+        </head>
+        <menu name="Overview">
+            <item name="Home" href="index.html"/>
+            <item name="Downloads" href="downloads/releases.html"/>
+        </menu>
+        <menu name="Documentation">
+            <item name="API" href="apidocs/index.html"/>
+            <item name="Reference" href="reference.html"/>
+            <item name="FAQ" href="faq.html"/>
+            <item name="Upgrading" href="upgrading.html"/>
+            <item name="Resources &amp; Tools" href="resources.html"/>
+        </menu>
+        <menu name="Support">
+            <item name="Support Forums" href="http://forum.springframework.org/forumdisplay.php?f=40"/>
+            <item name="JIRA" href="http://jira.springframework.org/browse/LDAP"/>
+            <item name="Road Map"
+                  href="http://jira.springframework.org/browse/LDAP?report=com.atlassian.jira.plugin.system.project:roadmap-panel"/>
+        </menu>
+        <menu ref="reports" name="Reports"/>
+    </body>
+    <poweredBy>
+        <logo name="Powered by Spring" href="http://www.springframework.org" img="images/logos/spring.png"/>
+        <logo name="Powered by Structure 101" href="http://www.headwaysoftware.com/products/structure101/"
+              img="images/logos/s101d.png"/>
+        <logo name="Powered by JIRA" href="http://www.atlassian.com/software/jira/" img="images/logos/jira.png"/>
+        <logo name="Built by Bamboo" href="http://www.atlassian.com/software/bamboo/" img="images/logos/bamboo.png"/>
+        <logo name="Build with Maven 2" href="http://maven.apache.org" img="images/logos/maven-feather.png"/>
+        <logo name="Hosted by Contegix" href="http://www.contegix.com/" img="images/logos/contegix.png"/>
+    </poweredBy>
+</project>

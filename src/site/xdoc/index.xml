@@ -1,0 +1,39 @@
+<document>
+    <properties>
+        <title>Home</title>
+    </properties>
+    <body>
+        <h2>What is Spring LDAP?</h2>
+		<p> Spring LDAP is a result of applying the template approach found in
+			for example JdbcTemplate, in the JNDI world. Spring LDAP aims to
+			eliminate the need for writing raw JNDI/LDAP applications.
+		</p>
+        <h2>Key Features</h2>
+        <ul>
+			<li><b>Simplifies Coding:</b> The LdapTemplate class encapsulates all the
+				plumbing work involved in traditional LDAP programming, such as
+				creating a DirContext, looping through NamingEnumerations, handling
+				exceptions and cleaning up resources. This leaves the programmer to
+				handle the important stuff - where to find data (DNs and Filters) and
+				what do do with it (map to and from domain objects, bind, modify,
+				unbind, etc.), in the same way that JdbcTemplate relieves the
+				programmer of all but the actual SQL and how the data maps to the
+				domain model.</li>
+            <li><b>Pooling Library:</b> The built-in JNDI pooling support is very
+            	limited, and actually has a few deficiencies. Spring LDAP provides a
+            	much more flexible and powerful pooling library.</li>
+            <li><b>Reuses your Spring expertise:</b> Spring LDAP uses Spring application
+            	contexts for all configuration, which should help Spring developers get
+            	up-to-speed nice and quickly. Also, the architecture of Spring LDAP
+            	resembles that of Spring JDBC.</li>
+            <li><b>Supports Transactions:</b> The LDAP standard does not specify transaction support.
+            	Spring LDAP provides a client-side compensating transaction library to fill the void.</li>
+            <li><b>Integrates with Spring Security:</b> The authentication system of Spring LDAP provides
+                integration with <a href="http://www.springframework.org/spring-security/">Spring Security</a>.
+                In fact, Spring Security uses Spring LDAP for its LDAP integration.</li>
+            <li><b>Built by Maven:</b> This assists you in effectively reusing the Spring LDAP artifacts
+                in your own Maven-based projects.</li>
+            <li><b>Apache license.</b> You can confidently use Spring LDAP in your project.</li>
+        </ul>
+  </body>
+</document>

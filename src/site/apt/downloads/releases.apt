@@ -1,0 +1,15 @@
+                                                       ---------
+                                                       Downloads
+                                                       ---------
+
+Downloads
+
+* Get the latest Spring LDAP releases here
+
+	* <<Spring LDAP 1.2.1 is the current production release (JDK 1.4+)>>
+
+		* {{{http://sourceforge.net/project/showfiles.php?group_id=73357&package_id=202038&release_id=560004}Download}} | {{{http://sourceforge.net/project/shownotes.php?group_id=73357&release_id=560004}Changelog}} | {{{http://forum.springframework.org/showthread.php?t=47223}Announcement}}
+	
+	* <<Spring LDAP 1.3.0 is the upcoming production release>>
+
+		* {{{snapshots.html}Download nightly snapshots}}
