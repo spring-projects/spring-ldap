@@ -21,6 +21,7 @@ import javax.naming.Name;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchControls;
 
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextOperations;
@@ -45,14 +46,14 @@ public interface SimpleLdapOperations {
 
 	/**
 	 * Search for a List of type T using the supplied filter and link
-	 * ParametrizedContextMapper.
+	 * ParameterizedContextMapper.
 	 * 
 	 * @param base Base DN relative to the base of the ContextSource - where to
 	 * start the search.
 	 * @param filter Search filter.
 	 * @param mapper the Mapper to supply all results to.
 	 * @return a List of type T containing objects for all entries found, as
-	 * mapped by the ParametrizedContextMapper.
+	 * mapped by the ParameterizedContextMapper.
 	 * @throws NamingException if any error occurs.
 	 */
 	<T> List<T> search(String base, String filter,
@@ -60,14 +61,14 @@ public interface SimpleLdapOperations {
 
 	/**
 	 * Search for a List of type T using the supplied filter and link
-	 * ParametrizedContextMapper.
+	 * ParameterizedContextMapper.
 	 * 
 	 * @param base Base DN relative to the base of the ContextSource - where to
 	 * start the search.
 	 * @param filter Search filter.
 	 * @param mapper the Mapper to supply all results to.
 	 * @return a List of type T containing objects for all entries found, as
-	 * mapped by the ParametrizedContextMapper.
+	 * mapped by the ParameterizedContextMapper.
 	 * @throws NamingException if any error occurs.
 	 * @since 1.3
 	 */
@@ -76,7 +77,7 @@ public interface SimpleLdapOperations {
 
 	/**
 	 * Search for a List of type T using the supplied filter, SearchControls,
-	 * DirContextProcessor and ParametrizedContextMapper.
+	 * DirContextProcessor and ParameterizedContextMapper.
 	 * 
 	 * @param base Base DN relative to the base of the ContextSource - where to
 	 * start the search.
@@ -87,7 +88,7 @@ public interface SimpleLdapOperations {
 	 * @param processor the DirContextProcessor to be used for applying pre/post
 	 * processing on the DirContext instance.
 	 * @return a List of type T containing objects for all entries found, as
-	 * mapped by the ParametrizedContextMapper.
+	 * mapped by the ParameterizedContextMapper.
 	 * @throws NamingException if any error occurs.
 	 */
 	<T> List<T> search(String base, String filter, SearchControls controls,
@@ -95,7 +96,7 @@ public interface SimpleLdapOperations {
 
 	/**
 	 * Search for a List of type T using the supplied filter, SearchControls,
-	 * DirContextProcessor and ParametrizedContextMapper.
+	 * DirContextProcessor and ParameterizedContextMapper.
 	 * 
 	 * @param base Base DN relative to the base of the ContextSource - where to
 	 * start the search.
@@ -106,7 +107,7 @@ public interface SimpleLdapOperations {
 	 * @param processor the DirContextProcessor to be used for applying pre/post
 	 * processing on the DirContext instance.
 	 * @return a List of type T containing objects for all entries found, as
-	 * mapped by the ParametrizedContextMapper.
+	 * mapped by the ParameterizedContextMapper.
 	 * @throws NamingException if any error occurs.
 	 * @since 1.3
 	 */
@@ -118,7 +119,7 @@ public interface SimpleLdapOperations {
 	 * 
 	 * @param dn the Distinguished Name to look up.
 	 * @param mapper the mapper to use.
-	 * @return the mapped object, as received by the ParametrizedContextMapper.
+	 * @return the mapped object, as received by the ParameterizedContextMapper.
 	 * @throws NamingException if any error occurs.
 	 */
 	<T> T lookup(String dn, ParameterizedContextMapper<T> mapper);
@@ -128,7 +129,7 @@ public interface SimpleLdapOperations {
 	 * 
 	 * @param dn the Distinguished Name to look up.
 	 * @param mapper the mapper to use.
-	 * @return the mapped object, as received by the ParametrizedContextMapper.
+	 * @return the mapped object, as received by the ParameterizedContextMapper.
 	 * @throws NamingException if any error occurs.
 	 * @since 1.3
 	 */
