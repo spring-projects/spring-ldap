@@ -94,7 +94,7 @@
 		</snapshotRepository>
 		<site>
 			<id>static.springframework.org</id>
-			<url>scp://static.springframework.org/var/www/domains/springframework.org/static/htdocs/spring-ldap/sites/1.3</url>
+			<url>scp://spring02.managed.contegix.com/opt/www/domains/springframework.org/www/htdocs/spring-ldap/sites/1.3</url>
 		</site>
 	</distributionManagement>
 	<scm>
