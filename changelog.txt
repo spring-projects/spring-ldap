@@ -31,7 +31,7 @@ Changes in version 1.3.0 (Jan 2009)
   (The value is not set anyway, and this was previously silently ignored).
   
 * Improved more search methods that take handlers so that they will work
-  with handlers that use ContextMappers, eg ContextMapperCallbackHandler.
+  with handlers that use ContextMappers, e.g. ContextMapperCallbackHandler.
   (LDAP-162)
 
 * Made sure article sample tests are possible to run without running web
@@ -41,8 +41,7 @@ Changes in version 1.3.0 (Jan 2009)
   LDAP Booster Pack. (LDAP-159)
   
 * Common code in DirContextProcessor implementations has been pulled up to a
-  base class called
-AbstractFallbackRequestAndResponseControlDirContextProcessor.
+  base class called AbstractFallbackRequestAndResponseControlDirContextProcessor.
   (LDAP-161)
 
 * PagedResultsRequestControl has been deprecated in favor of
@@ -53,6 +52,33 @@ AbstractFallbackRequestAndResponseControlDirContextProcessor.
   this). 
   
 * Added demo projects to simplify refactoring demonstrations. (LDAP-154)
+
+* Added LdapEntryIdentification, a simple bean containing the DNs of an LDAP
+  entry, relative to the base context as well as absolute. Also added
+  special ContextMapper implementation producing these entries;
+  LdapEntryIdentificationContextMapper. (LDAP-149)
+  
+* Added LdapTemplate#searchForObject(base, filter, mapper) and 
+  SimpleLdapTemplate#searchForObject(base, filter, mapper); methods 
+  to search for a single object, analogous to JdbcTemplate#queryForObject().
+  (LDAP-150)
+  
+* DistinguishedName now correctly adheres to the equals/hashCode contract.
+  LDAP-151
+  
+* Various improvements to immutability of DistinguishedNames throughout the
+  framework. DistinguishedName#immutableDistinguishedName now produces a truly
+  immutable copy of the original. Also made sure that it is not possible to
+  accidentally alter the internal state of e.g. DirContextAdapter by modifying
+  its DistinguishedName - copies are now returned in DirContextAdapter#getDn() 
+  and DirContextAdapter#getBase(). (LDAP-146)
+  
+* Added LdapTemplate#rebind(DirContextOperations). (LDAP-144)
+  
+* Added PresentFilter and NotPresentFilter to simplify searching for presence 
+  or absence of an attribute. (LDAP-152)
+  
+* Added DirContextAdapter constructor that takes its DN as a String. (LDAP-145)
 
 Changes in version 1.3.0.RC1 (Oct 2008)
 -------------------------------------------
