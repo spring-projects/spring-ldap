@@ -462,8 +462,7 @@ public class PersonDaoImpl implements PersonDao {
   <sect1 id="introduction-support">
     <title>Support</title>
 
-    <para>Spring LDAP 1.2.1 is supported on Spring 1.2.8 or later, including
-    2.0.x.</para>
+    <para>Spring LDAP 1.3 is supported on Spring 2.0 and later.</para>
 
     <para>The community support forum is located at <ulink
     url="http://forum.springframework.org">http://forum.springframework.org</ulink>,
