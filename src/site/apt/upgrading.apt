@@ -12,7 +12,7 @@ Upgrading from version 1.3.0-RC1 to 1.3.0
 	* The default value of the <<<pooling>>> property of DirContextSource has been changed
 	  from <<<true>>> to <<<false>>>.
 	
-Upgrading from version 1.2.1 to 1.3.0
+Upgrading from version 1.2.1 to 1.3.0-RC1
 
 	Some minor changes were made since version 1.2.1. The following
 should help most users the project update their applications:
@@ -29,9 +29,6 @@ should help most users the project update their applications:
 	* DirContextAdapter#getStringAttributes, getObjectAttributes, and
 	  getAttributeSortedStringSet now all return null if the requested Attribute
 	  is not present, and an empty result (array or set) if present but empty.
-	
-	* Probably the most requested feature of all - a plain method for simple 
-	  authentication is now provided in the ContextSource interface.
 	
 	* DistinguishedName now returns compactly formatted String representations
 	  from toString, e.g.:
