@@ -30,7 +30,7 @@ import org.springframework.ldap.pool.MutableDelegatingLdapContext;
  * pooling to be used in scenarios that require request controls to be set, such
  * as paged results.
  */
-public class PoolingMutableContextSource extends PoolingContextSource {
+public class MutablePoolingContextSource extends PoolingContextSource {
 	protected DirContext getContext(DirContextType dirContextType) {
 		final DirContext dirContext;
 		try {

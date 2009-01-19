@@ -21,10 +21,10 @@ import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
 
 import org.apache.commons.pool.KeyedObjectPool;
-import org.springframework.ldap.pool.factory.PoolingMutableContextSource;
+import org.springframework.ldap.pool.factory.MutablePoolingContextSource;
 
 /**
- * Used by {@link PoolingMutableContextSource} to wrap a {@link LdapContext},
+ * Used by {@link MutablePoolingContextSource} to wrap a {@link LdapContext},
  * delegating most methods to the underlying context. This class extends
  * {@link DelegatingLdapContext}, allowing request controls to be set on the
  * wrapped ldap context. This enables the Spring LDAP pooling to be used for

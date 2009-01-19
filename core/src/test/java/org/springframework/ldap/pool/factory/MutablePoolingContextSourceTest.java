@@ -21,11 +21,11 @@ import org.springframework.ldap.pool.AbstractPoolTestCase;
 import org.springframework.ldap.pool.MutableDelegatingLdapContext;
 
 /**
- * Unit tests for the PoolingMutableContextSource class.
+ * Unit tests for the MutablePoolingContextSource class.
  * 
  * @author Ulrik Sandberg
  */
-public class PoolingMutableContextSourceTest extends AbstractPoolTestCase {
+public class MutablePoolingContextSourceTest extends AbstractPoolTestCase {
 
 	public void testGetReadOnlyLdapContext() throws Exception {
 
@@ -33,7 +33,7 @@ public class PoolingMutableContextSourceTest extends AbstractPoolTestCase {
 
 		replay();
 
-		final PoolingMutableContextSource poolingContextSource = new PoolingMutableContextSource();
+		final MutablePoolingContextSource poolingContextSource = new MutablePoolingContextSource();
 		poolingContextSource.setContextSource(contextSourceMock);
 
 		// Get a context
