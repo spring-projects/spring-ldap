@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <faqs title="Frequently Asked Questions" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="http://maven.apache.org/maven-1.x/plugins/faq/faq.xsd">
+    <part id="operational">
+        <title>Operational Attributes</title>
+        <faq id="remove-oper-attr">
+            <question>How do I remove an operational attribute using <tt>context.removeAttributeValue()</tt>?</question>
+            <answer>
+                <p>
+                    The DirContextAdapter will only read the visible attributes per default. This is because the
+                    operational attributes will only be returned by the server if explicitly asked for, and there
+                    is no way for Spring LDAP to know what attributes to ask for. This means that the DirContextAdapter
+                    will not be populated with the operational attributes, and hence the <tt>removeAttributeValue</tt>
+                    will not have any effect (since from the DirContextAdapter's point of view, it wasn't there in the
+                    first place).
+                </p>
+                <p>
+                    There are basically two ways to do this:
+                </p>
+                <ol>
+                    <li>Use a search or lookup method that takes the attribute names as argument, like
+                    <tt>LdapTemplate#lookup(Name, String[], ContextMapper)</tt>. Use a ContextMapper
+                    implementation that just returns the supplied DirContextAdapter in <tt>mapFromContext()</tt>.
+                    </li>
+                    <li>Use <tt>LdapTemplate#modifyAttributes(Name, ModificationItem[])</tt> directly, manually
+                    building the ModificationItem array.
+                    </li>
+                </ol>
+            </answer>
+        </faq>
+    </part>
 <!--
     <part id="general">
         <title>General</title>
