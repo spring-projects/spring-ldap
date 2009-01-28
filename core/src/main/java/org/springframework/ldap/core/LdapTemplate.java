@@ -1424,7 +1424,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		List result = search(base, filter, new LdapEntryIdentificationContextMapper());
 		if (result.size() != 1) {
 			log.error("Unable to find unique entry matching in authentication; base: '" + base + "'; filter: '"
-					+ filter + "'. Found " + result.size() + " mathching entries");
+					+ filter + "'. Found " + result.size() + " matching entries");
 			return false;
 		}
 
