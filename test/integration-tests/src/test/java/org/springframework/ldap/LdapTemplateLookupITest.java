@@ -31,6 +31,9 @@ import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.AbstractContextSource;
+import org.springframework.ldap.itest.Person;
+import org.springframework.ldap.itest.PersonAttributesMapper;
+import org.springframework.ldap.itest.PersonContextMapper;
 import org.springframework.test.context.ContextConfiguration;
 
 /**

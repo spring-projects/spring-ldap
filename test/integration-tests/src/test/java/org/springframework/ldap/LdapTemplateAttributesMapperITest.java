@@ -29,6 +29,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.itest.Person;
+import org.springframework.ldap.itest.PersonAttributesMapper;
 import org.springframework.test.context.ContextConfiguration;
 
 /**

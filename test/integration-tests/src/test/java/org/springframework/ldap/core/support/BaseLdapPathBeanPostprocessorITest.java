@@ -25,6 +25,7 @@ import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.itest.core.support.DummyBaseLdapPathAware;
 
 /**
  * Integration tests for {@link BaseLdapPathBeanPostProcessor}.

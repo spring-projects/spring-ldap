@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap;
+package org.springframework.ldap.itest;
 
 /**
  * Dummy bean to be used in the LdapTemplate integration tests.

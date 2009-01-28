@@ -13,25 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.core.support;
+package org.springframework.ldap.itest.core;
 
 import org.springframework.ldap.core.DistinguishedName;
 
 /**
- * Dummy implementation of {@link BaseLdapPathAware}.
+ * Dummy implementation of a class that has a {@link DistinguishedName} setter,
+ * used for testing purposes.
  * 
  * @author Mattias Hellborg Arthursson
  */
-public class DummyBaseLdapPathAware implements BaseLdapPathAware {
+public class DummyDistinguishedNameConsumer {
+	private DistinguishedName distinguishedName;
 
-	private DistinguishedName base;
-
-	public void setBaseLdapPath(DistinguishedName baseLdapPath) {
-		this.base = baseLdapPath;
+	public DistinguishedName getDistinguishedName() {
+		return distinguishedName;
 	}
 
-	public DistinguishedName getBase() {
-		return base;
+	public void setDistinguishedName(DistinguishedName distinguishedName) {
+		this.distinguishedName = distinguishedName;
 	}
-
 }

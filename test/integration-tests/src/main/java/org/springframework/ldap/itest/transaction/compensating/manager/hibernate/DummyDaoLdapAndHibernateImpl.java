@@ -1,9 +1,9 @@
-package org.springframework.ldap.transaction.compensating.manager.hibernate;
+package org.springframework.ldap.itest.transaction.compensating.manager.hibernate;
 
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.transaction.compensating.manager.DummyException;
+import org.springframework.ldap.itest.transaction.compensating.manager.DummyException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 /**
  * @author Hans Westerbeek

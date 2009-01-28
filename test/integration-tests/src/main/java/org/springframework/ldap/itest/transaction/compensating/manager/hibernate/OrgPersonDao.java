@@ -1,4 +1,4 @@
-package org.springframework.ldap.transaction.compensating.manager.hibernate;
+package org.springframework.ldap.itest.transaction.compensating.manager.hibernate;
 
 public interface OrgPersonDao {
 	void createWithException(OrgPerson person);

@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.CountNameClassPairCallbackHandler;
+import org.springframework.ldap.itest.PersonContextMapper;
 import org.springframework.ldap.test.AttributeCheckContextMapper;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -86,7 +87,7 @@ public class LdapTemplateListITest extends AbstractLdapTemplateIntegrationTest {
 		dn.append(BASE_NAME);
 		List list = tested.listBindings(dn, new PersonContextMapper());
 		assertEquals(3, list.size());
-		String personClass = "org.springframework.ldap.Person";
+		String personClass = "org.springframework.ldap.itest.Person";
 		assertEquals(personClass, list.get(0).getClass().getName());
 		assertEquals(personClass, list.get(1).getClass().getName());
 		assertEquals(personClass, list.get(2).getClass().getName());

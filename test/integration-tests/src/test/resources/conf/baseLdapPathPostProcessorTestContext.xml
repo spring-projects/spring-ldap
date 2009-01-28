@@ -21,7 +21,7 @@
 	</bean>
 
 	<bean id="dummyBaseContextAware"
-		class="org.springframework.ldap.core.support.DummyBaseLdapPathAware" />
+		class="org.springframework.ldap.itest.core.support.DummyBaseLdapPathAware" />
 
 	<bean
 		class="org.springframework.ldap.core.support.BaseLdapPathBeanPostProcessor" />

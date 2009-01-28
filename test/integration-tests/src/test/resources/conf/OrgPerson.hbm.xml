@@ -3,7 +3,7 @@
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping auto-import="true" default-lazy="false">
 
-	<class name="org.springframework.ldap.transaction.compensating.manager.hibernate.OrgPerson" table="PERSON">
+	<class name="org.springframework.ldap.itest.transaction.compensating.manager.hibernate.OrgPerson" table="PERSON">
 		<id name="id" column="id">
 			<generator class="assigned"/>
 		</id>

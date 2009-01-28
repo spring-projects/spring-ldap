@@ -33,6 +33,8 @@ import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.itest.transaction.compensating.manager.DummyDao;
+import org.springframework.ldap.itest.transaction.compensating.manager.DummyException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 

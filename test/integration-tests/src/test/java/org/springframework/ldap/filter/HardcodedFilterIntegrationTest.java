@@ -20,6 +20,7 @@ import static junit.framework.Assert.assertTrue;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ldap.itest.filter.DummyFilterConsumer;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 

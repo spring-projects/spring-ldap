@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-		xmlns="http://maven.apache.org/POM/4.0.0"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<groupId>org.springframework.ldap</groupId>
 		<artifactId>spring-ldap-parent</artifactId>
@@ -13,7 +10,6 @@
 	<artifactId>spring-ldap-integration-tests</artifactId>
 	<packaging>jar</packaging>
 	<name>Spring LDAP Integration Tests (Generic)</name>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -95,10 +91,10 @@
 			<version>4.4</version>
 			<scope>test</scope>
 		</dependency>
-      <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-test</artifactId>
-         <scope>test</scope>
-      </dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>

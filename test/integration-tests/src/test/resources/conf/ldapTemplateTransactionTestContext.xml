@@ -34,7 +34,7 @@
 
 
 	<bean name="dummyDaoTarget"
-		class="org.springframework.ldap.transaction.compensating.manager.LdapDummyDaoImpl">
+		class="org.springframework.ldap.itest.transaction.compensating.manager.LdapDummyDaoImpl">
 		<property name="ldapTemplate" ref="ldapTemplate" />
 	</bean>
 

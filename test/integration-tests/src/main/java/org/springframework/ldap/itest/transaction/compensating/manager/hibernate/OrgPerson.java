@@ -1,4 +1,4 @@
-package org.springframework.ldap.transaction.compensating.manager.hibernate;
+package org.springframework.ldap.itest.transaction.compensating.manager.hibernate;
 
 /**
  * Pojo for use with the ContextSourceAndHibernateTransactionManager integration tests

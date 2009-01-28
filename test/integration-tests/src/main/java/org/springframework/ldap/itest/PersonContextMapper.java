@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap;
+package org.springframework.ldap.itest;
 
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.support.AbstractContextMapper;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap;
+package org.springframework.ldap.itest;
 
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;

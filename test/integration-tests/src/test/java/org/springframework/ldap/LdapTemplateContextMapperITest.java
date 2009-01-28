@@ -25,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.itest.Person;
+import org.springframework.ldap.itest.PersonContextMapper;
 import org.springframework.test.context.ContextConfiguration;
 
 /**

@@ -61,7 +61,7 @@
 
 
 	<bean name="dummyDaoTarget"
-		class="org.springframework.ldap.transaction.compensating.manager.hibernate.DummyDaoLdapAndHibernateImpl">
+		class="org.springframework.ldap.itest.transaction.compensating.manager.hibernate.DummyDaoLdapAndHibernateImpl">
 		<property name="ldapTemplate" ref="ldapTemplate" />
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>

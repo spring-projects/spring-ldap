@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.filter;
+package org.springframework.ldap.itest.filter;
+
+import org.springframework.ldap.filter.Filter;
 
 /**
  * Dummy class to test Filter property editor.
