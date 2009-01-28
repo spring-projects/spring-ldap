@@ -16,6 +16,7 @@
     <modules>
         <module>samples-utils</module>
         <module>article</module>
+        <module>article-spring20</module>
         <module>demos</module>
     </modules>
     <repositories>
