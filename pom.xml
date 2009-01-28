@@ -24,10 +24,6 @@
 		NamingExceptions to a mirrored unchecked Exception hierarchy, as well
 		as several utilities for working with filters, LDAP paths and
 		Attributes. </description>
-	<!--
-		url should be the generated Maven site (when that works), like:
-		http://static.springframework.org/spring-ldap/site/index.html
-	-->
 	<url>http://springframework.org/ldap</url>
 	<issueManagement>
 		<system>JIRA</system>
