@@ -1,4 +1,4 @@
-Spring LDAP 1.3.0.RC1 (Oct 2008)
+Spring LDAP 1.3.0 (Jan 2009)
 --------------------------------
 http://www.springframework.org/ldap
 http://forum.springframework.org/forumdisplay.php?f=40
@@ -50,17 +50,17 @@ Spring LDAP is released under the terms of the Apache Software License (see lice
 The following distinct jar files are included in the distribution. This list
 specifies the respective contents and third-party dependencies.
 
-* spring-ldap-core-1.3.0.RC1.jar
+* spring-ldap-core-1.3.0.RELEASE.jar
 - Contents: The Spring LDAP library
 - Dependencies: Commons Logging, Commons Lang, Commons Pool, spring-beans,
                 spring-core, spring-context, spring-jdbc, spring-tx, ldapbp
 
-* spring-ldap-core-tiger-1.3.0.RC1.jar
+* spring-ldap-core-tiger-1.3.0.RELEASE.jar
 - Contents: The Spring LDAP Java 5 support library
 - Dependencies: Commons Logging, Commons Lang, Commons Pool, spring-beans,
                 spring-core, spring-context, spring-jdbc, spring-tx, ldapbp
 
-* spring-ldap-test-1.3.0.RC1.jar
+* spring-ldap-test-1.3.0.RELEASE.jar
 - Contents: Support classes that helps LDAP with integration testing.
 - Dependencies: Commons Logging, Commons Lang, Commons Pool, spring-beans,
                 spring-core, spring-context, spring-jdbc, spring-tx, ldapbp
@@ -72,6 +72,31 @@ Note that the artifacts have changed names between the 1.2.x and 1.3 releases:
 spring-ldap is now spring-ldap-core
 spring-ldap-tiger is now spring-ldap-core-tiger
 
+Production releases are available from the Spring framework milestone repo:
+
+<repository>
+  <id>spring-milestone</id>
+  <name>Spring Portfolio Milestone Repository</name>
+  <url>http://s3.amazonaws.com/maven.springframework.org/release</url>
+</repository>
+  
+This means that in order to use the latest release (1.3.0.RELEASE), you need to
+specify the repository above and include the following dependencies:
+
+<dependency>
+  <groupId>org.springframework.ldap</groupId>
+  <artifactId>spring-ldap-core</artifactId>
+  <version>1.3.0.RELEASE</version>
+</dependency>
+
+For Java 1.5 support:
+
+<dependency>
+  <groupId>org.springframework.ldap</groupId>
+  <artifactId>spring-ldap-core-tiger</artifactId>
+  <version>1.3.0.RELEASE</version>
+</dependency>
+
 Milestone releases (such as release candidates) are available from the Spring
 framework milestone repo:
 
@@ -81,7 +106,7 @@ framework milestone repo:
   <url>http://s3.amazonaws.com/maven.springframework.org/milestone</url>
 </repository>
   
-This means that in order to use the latest release (1.3.0.RC1), you need to
+This means that in order to use a milestone or release candidate, you need to
 specify the repository above and include the following dependencies:
 
 <dependency>
@@ -109,14 +134,14 @@ Nighly builds are published to the snapshot repository:
 <dependency>
   <groupId>org.springframework.ldap</groupId>
   <artifactId>spring-ldap-core</artifactId>
-  <version>1.3.0.CI-SNAPSHOT</version>
+  <version>1.3.1.CI-SNAPSHOT</version>
 </dependency>
 
 For Java 1.5 support:
 <dependency>
   <groupId>org.springframework.ldap</groupId>
   <artifactId>spring-ldap-core-tiger</artifactId>
-  <version>1.3.0.CI-SNAPSHOT</version>
+  <version>1.3.1.CI-SNAPSHOT</version>
 </dependency>
 
 5. WHERE TO START
