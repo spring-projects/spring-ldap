@@ -72,16 +72,8 @@ Note that the artifacts have changed names between the 1.2.x and 1.3 releases:
 spring-ldap is now spring-ldap-core
 spring-ldap-tiger is now spring-ldap-core-tiger
 
-Production releases are available from the Spring framework milestone repo:
-
-<repository>
-  <id>spring-milestone</id>
-  <name>Spring Portfolio Milestone Repository</name>
-  <url>http://s3.amazonaws.com/maven.springframework.org/release</url>
-</repository>
-  
 This means that in order to use the latest release (1.3.0.RELEASE), you need to
-specify the repository above and include the following dependencies:
+include the following dependencies:
 
 <dependency>
   <groupId>org.springframework.ldap</groupId>
@@ -112,7 +104,7 @@ specify the repository above and include the following dependencies:
 <dependency>
   <groupId>org.springframework.ldap</groupId>
   <artifactId>spring-ldap-core</artifactId>
-  <version>1.3.0.RC1</version>
+  <version>1.3.1.RC1</version>
 </dependency>
 
 For Java 1.5 support:
@@ -120,7 +112,7 @@ For Java 1.5 support:
 <dependency>
   <groupId>org.springframework.ldap</groupId>
   <artifactId>spring-ldap-core-tiger</artifactId>
-  <version>1.3.0.RC1</version>
+  <version>1.3.1.RC1</version>
 </dependency>
 
 Nighly builds are published to the snapshot repository:
