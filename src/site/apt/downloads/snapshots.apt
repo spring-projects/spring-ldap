@@ -12,7 +12,7 @@ Snapshot Builds
 +---------------
 <repository>
     <id>spring-s3</id>
-    <name>Springframework Maven SNAPSHOT Repository</name>
+    <name>Spring Portfolio Maven SNAPSHOT Repository</name>
     <url>http://s3.amazonaws.com/maven.springframework.org/snapshot</url>
 </repository>
 +---------------
@@ -25,18 +25,9 @@ Snapshot Builds
     <artifactId>spring-ldap-core</artifactId>
     <version>1.3.1.CI-SNAPSHOT</version>
 </dependency>
-
-+---------------
 <dependency>
     <groupId>org.springframework.ldap</groupId>
-    <artifactId>spring-ldap-tiger</artifactId>
-    <version>1.3.1.CI-SNAPSHOT</version>
-</dependency>
-
-+---------------
-<dependency>
-    <groupId>org.springframework.ldap</groupId>
-    <artifactId>spring-ldap-test</artifactId>
+    <artifactId>spring-ldap-core-tiger</artifactId>
     <version>1.3.1.CI-SNAPSHOT</version>
 </dependency>
 +---------------

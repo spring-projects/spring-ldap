@@ -29,12 +29,12 @@ Maven Users
 +--------------------------------------------------+
 <dependency>
 	<groupId>org.springframework.ldap</groupId>
-	<artifactId>spring-ldap</artifactId>
+	<artifactId>spring-ldap-core</artifactId>
 	<version>1.3.0.RELEASE</version>
 </dependency>
 <dependency>
 	<groupId>org.springframework.ldap</groupId>
-	<artifactId>spring-ldap-tiger</artifactId>
+	<artifactId>spring-ldap-core-tiger</artifactId>
 	<version>1.3.0.RELEASE</version>
 </dependency>
 +--------------------------------------------------+
@@ -52,31 +52,5 @@ Maven Users
 +--------------------------------------------------+
 
 
-	Nightly snapshots are available from the Spring Source snapshot repository:
-
-+--------------------------------------------------+
-<repositories>
-	<repository>
-		<id>spring-snapshot</id>
-		<name>Spring Portfolio Snapshot Repository</name>
-		<url>http://s3.amazonaws.com/maven.springframework.org/snapshot</url>
-	</repository>
-</repositories>
-+--------------------------------------------------+
-
-
-The dependencies for 1.3.1.CI-SNAPSHOT are:
-
-+--------------------------------------------------+
-<dependency>
-	<groupId>org.springframework.ldap</groupId>
-	<artifactId>spring-ldap-core</artifactId>
-	<version>1.3.1.CI-SNAPSHOT</version>
-</dependency>
-<dependency>
-	<groupId>org.springframework.ldap</groupId>
-	<artifactId>spring-ldap-core-tiger</artifactId>
-	<version>1.3.1.CI-SNAPSHOT</version>
-</dependency>
-+--------------------------------------------------+
+	At this point there are no milestones or release candidates.
 
