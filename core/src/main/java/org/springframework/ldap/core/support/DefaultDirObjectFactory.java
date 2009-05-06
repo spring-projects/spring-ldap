@@ -40,7 +40,7 @@ import org.springframework.util.StringUtils;
  * @author Mattias Hellborg Arthursson
  */
 public class DefaultDirObjectFactory implements DirObjectFactory {
-	private static final Log log = LogFactory.getLog(AbstractContextSource.class);
+	private static final Log log = LogFactory.getLog(DefaultDirObjectFactory.class);
 
 	/**
 	 * Key to use in the ContextSource implementation to store the value of the
