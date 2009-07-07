@@ -113,7 +113,7 @@ public class DefaultCompensatingTransactionOperationManager implements
      * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationManager#commit()
      */
     public void commit() {
-        log.debug("Performing rollback");
+        log.debug("Performing commit");
         for (Iterator iter = operationExecutors.iterator(); iter.hasNext();) {
             CompensatingTransactionOperationExecutor operationExecutor = (CompensatingTransactionOperationExecutor) iter
                     .next();
