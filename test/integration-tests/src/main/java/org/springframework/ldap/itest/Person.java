@@ -16,6 +16,9 @@
 
 package org.springframework.ldap.itest;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+
 /**
  * Dummy bean to be used in the LdapTemplate integration tests.
  * 
@@ -60,5 +63,10 @@ public class Person {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+    
+    @Override
+    public String toString() {
+    	return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 }
