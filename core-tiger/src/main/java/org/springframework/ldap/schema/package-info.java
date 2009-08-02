@@ -1,0 +1,7 @@
+/**
+ * This package is aimed at providing a mechanism to implement LDAP schemas.
+ * <p>
+ * Utilized by the LDIFParser to validate object composition post assembly, these
+ * classes may also be referenced by other utilities where seen fit.
+ */
+package org.springframework.ldap.schema;
