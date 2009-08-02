@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.springframework.ldap.ldif;
 
 import org.springframework.ldap.NamingException;
@@ -9,7 +6,6 @@ import org.springframework.ldap.NamingException;
  * Thrown whenever a parsed attribute does not conform to LDAP specifications.
  * 
  * @author Keith Barlow
- *
  */
 public class InvalidAttributeFormatException extends NamingException {
 

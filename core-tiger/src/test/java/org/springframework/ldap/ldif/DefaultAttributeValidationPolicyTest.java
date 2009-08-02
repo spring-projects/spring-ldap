@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
 import org.junit.runners.Parameterized;
-import org.springframework.ldap.ldif.LdapAttribute;
+import org.springframework.ldap.core.LdapAttribute;
 import org.springframework.ldap.ldif.support.DefaultAttributeValidationPolicy;
 
 import sun.misc.BASE64Decoder;
@@ -23,7 +23,6 @@ import sun.misc.BASE64Decoder;
  * the requirements for attribute values prescribed in RFC2849.
  * 
  * @author Keith Barlow
- *
  */
 @RunWith(Parameterized.class)
 public class DefaultAttributeValidationPolicyTest {

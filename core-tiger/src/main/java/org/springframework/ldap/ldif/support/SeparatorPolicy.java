@@ -1,6 +1,3 @@
-/**
- * Policy object for enforcing LDIF record separation rules. Designed explicitly for use in LDIFParser.
- */
 package org.springframework.ldap.ldif.support;
 
 import org.apache.commons.lang.StringUtils;
@@ -8,14 +5,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * This default separator policy should really not be required to be
- * replaced but it is modular just in case.
+ * Policy object for enforcing LDIF record separation rules. Designed explicitly
+ * for use in LdifParser. This default separator policy should really not be
+ * required to be replaced but it is modular just in case.
  * <p>
- * This class applies the separation policy prescribed in RFC2849 
- * for LDIF files and identifies the line type from the input.
+ * This class applies the separation policy prescribed in RFC2849 for LDIF files
+ * and identifies the line type from the input.
  * 
  * @author Keith Barlow
- *
  */
 public class SeparatorPolicy {
 

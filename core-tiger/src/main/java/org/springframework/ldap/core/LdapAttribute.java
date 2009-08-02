@@ -1,7 +1,4 @@
-/**
- * Extends BasicAttribute adding support for options.
- */
-package org.springframework.ldap.ldif;
+package org.springframework.ldap.core;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -18,7 +15,6 @@ import javax.naming.directory.BasicAttribute;
  * {@link java.lang.String}.
  * 
  * @author Keith Barlow
- *
  */
 public class LdapAttribute extends BasicAttribute {
 

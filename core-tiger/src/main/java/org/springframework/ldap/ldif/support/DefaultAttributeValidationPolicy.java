@@ -1,15 +1,3 @@
-/**
- * Attribute validation policy
- * 
- * Meets the standards imposed by RFC 2849 for the "LDAP Data Interchange Format (LDIF) 
- * - Technical Specification".  
- * 
- * Special attention is called to URL support: RFC 2849 requires that 
- * LDIFs support URLs as defined in 1738; however, RFC 1738 has been updated by several RFCs including
- * RFC 1808, RFC 2396, and RFC 3986 (which obsoleted the formers).  Unsupported features of this
- * implementation of URL identification include query strings and fragments in HTTP URLs.
- * 
- */
 package org.springframework.ldap.ldif.support;
 
 import java.io.IOException;
@@ -24,16 +12,23 @@ import javax.naming.directory.Attribute;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.ldap.core.LdapAttribute;
 import org.springframework.ldap.ldif.InvalidAttributeFormatException;
-import org.springframework.ldap.ldif.LdapAttribute;
 
 import sun.misc.BASE64Decoder;
 
 /**
  * Ensures the buffer represents a valid attribute as defined by RFC2849.
  * 
+ * Meets the standards imposed by RFC 2849 for the "LDAP Data Interchange Format (LDIF) 
+ * - Technical Specification".  
+ * 
+ * Special attention is called to URL support: RFC 2849 requires that 
+ * LDIFs support URLs as defined in 1738; however, RFC 1738 has been updated by several RFCs including
+ * RFC 1808, RFC 2396, and RFC 3986 (which obsoleted the formers).  Unsupported features of this
+ * implementation of URL identification include query strings and fragments in HTTP URLs.
+ * 
  * @author Keith Barlow
- *
  */
 @SuppressWarnings("unused")
 public class DefaultAttributeValidationPolicy implements AttributeValidationPolicy {

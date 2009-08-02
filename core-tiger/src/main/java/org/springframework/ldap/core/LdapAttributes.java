@@ -1,7 +1,4 @@
-/**
- * Extends BasicAttributes adding support for DNs.
- */
-package org.springframework.ldap.ldif;
+package org.springframework.ldap.core;
 
 import java.net.URI;
 

@@ -10,39 +10,40 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.ldap.ldif.LdapAttributes;
-import org.springframework.ldap.ldif.parser.LDIFParser;
+import org.springframework.ldap.core.LdapAttributes;
+import org.springframework.ldap.ldif.parser.LdifParser;
 
 /**
- * Unit test for LDIFParser.
+ * Unit test for LdifParser.
  * 
- * Test results in complete end to end test of all LDIFParser functionality:
- * 	1.) Open a file
- * 	2.) Read lines and compose an attribute.
- * 	3.) Parse the attribute and create a LdapAttribute object.
- * 	4.) Repeat until end of record (Identify end of record).
- * 	5.) Return a valid LdapAttributes object.
- * 	6.) Close file upon completion.
+ * Test results in complete end to end test of all LdifParser functionality:
+ * <ol>
+ * <li>Open a file
+ * <li>Read lines and compose an attribute.
+ * <li>Parse the attribute and create a LdapAttribute object.
+ * <li>Repeat until end of record (Identify end of record).
+ * <li>Return a valid LdapAttributes object.
+ * <li>Close file upon completion.
+ * </ol>
  * 
  * Provided test file is comprised of sample LDIFs from RFC2849 and exhausts the full range of
  * the functionality prescribed by RFC2849 for the LDAP Data Interchange Format (LDIF).
  * 
  * @author Keith Barlow
- * 
  */
-public class LDIFParserTest {
+public class LdifParserTest {
 
-	private static Log log = LogFactory.getLog(LDIFParserTest.class);
+	private static Log log = LogFactory.getLog(LdifParserTest.class);
 	
-	private LDIFParser parser;
+	private LdifParser parser;
 
 	/**
 	 * Default constructor: loads a preselected resource with sample LDIF entries.
 	 * Each entry is parsed and checked for a DN and objectclass.  Output is printed for visual verification
 	 * of LDIF correctness.
 	 */
-	public LDIFParserTest() {
-		parser = new LDIFParser(new ClassPathResource("test.ldif"));
+	public LdifParserTest() {
+		parser = new LdifParser(new ClassPathResource("test.ldif"));
 	}
 	
 	/**

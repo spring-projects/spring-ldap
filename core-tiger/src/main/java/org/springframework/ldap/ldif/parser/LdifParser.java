@@ -12,12 +12,13 @@ import javax.naming.directory.Attribute;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.core.LdapAttributes;
 import org.springframework.ldap.ldif.InvalidAttributeFormatException;
 import org.springframework.ldap.ldif.InvalidRecordFormatException;
-import org.springframework.ldap.ldif.LdapAttributes;
 import org.springframework.ldap.ldif.support.AttributeValidationPolicy;
 import org.springframework.ldap.ldif.support.DefaultAttributeValidationPolicy;
 import org.springframework.ldap.ldif.support.LineIdentifier;
@@ -27,13 +28,13 @@ import org.springframework.ldap.schema.Specification;
 import org.springframework.util.Assert;
 
 /**
- * The {@link LDIFParser LDIFParser} is the main class of the {@link org.springframework.ldap.ldif} package.  
+ * The {@link LdifParser LdifParser} is the main class of the {@link org.springframework.ldap.ldif} package.  
  * This class reads lines from a resource and assembles them into an {@link LdapAttributes LdapAttributes} object.
- * The {@link LDIFParser LDIFParser} does ignores <i>changetype</i> LDIF entries as their usefulness in the 
+ * The {@link LdifParser LdifParser} does ignores <i>changetype</i> LDIF entries as their usefulness in the 
  * context of an application has yet to be determined.
  * <p>
  * <b>Design</b><br/>
- * {@link LDIFPaser LDIFParser} provides the main interface for operation but requires three supporting classes to 
+ * {@link LdifParser LdifParser} provides the main interface for operation but requires three supporting classes to 
  * enable operation:
  * <ul>
  * 	<li>{@link SeparatorPolicy SeparatorPolicy} - establishes the mechanism by which lines are assembled into attributes.</li>
@@ -48,7 +49,7 @@ import org.springframework.util.Assert;
  * lines and appends them to the buffer until it encounters the start of a new attribute or an end of record
  * delimiter.  When the new attribute or end of record is encountered, the buffer is passed to the 
  * {@link AttributeValidationPolicy AttributeValidationPolicy} which ensures the buffer conforms to a valid 
- * attribute definition as defined in RFC2849 and returns an {@link org.springframework.ldap.ldif.LdapAttribute LdapAttribute} object 
+ * attribute definition as defined in RFC2849 and returns an {@link org.springframework.ldap.core.LdapAttribute LdapAttribute} object 
  * which is then added to the record, an {@link LdapAttributes LdapAttributes} object.  Upon encountering the 
  * end of record, the record is validated by the {@link Specification Specification} policy and, 
  * if valid, returned to the requester.  
@@ -60,9 +61,9 @@ import org.springframework.util.Assert;
  * @author Keith Barlow
  *
  */
-public class LDIFParser implements Parser {
+public class LdifParser implements Parser, InitializingBean {
 
-	private static final Log log = LogFactory.getLog(LDIFParser.class);
+	private static final Log log = LogFactory.getLog(LdifParser.class);
 	
 	/**
 	 * The resource to parse.
@@ -87,12 +88,12 @@ public class LDIFParser implements Parser {
 	/**
 	 * The RecordSpecification for validating records produced.
 	 */
-	private Specification<LdapAttributes> recordSpecification = new DefaultSchemaSpecification();
+	private Specification<LdapAttributes> specification = new DefaultSchemaSpecification();
 	
 	/**
 	 * Default constructor.
 	 */
-	public LDIFParser() {
+	public LdifParser() {
 		
 	}
 	
@@ -101,7 +102,7 @@ public class LDIFParser implements Parser {
 	 * 
 	 * @param resource The resource to parse.
 	 */
-	public LDIFParser(Resource resource) {
+	public LdifParser(Resource resource) {
 		this.resource = resource;
 	}
 	
@@ -110,7 +111,7 @@ public class LDIFParser implements Parser {
 	 * 
 	 * @param file The file to parse.
 	 */
-	public LDIFParser(File file) {
+	public LdifParser(File file) {
 		this.resource = new FileSystemResource(file);
 	}
 	
@@ -141,28 +142,19 @@ public class LDIFParser implements Parser {
 	 * @param specification
 	 */
 	public void setRecordSpecification(Specification<LdapAttributes> specification) {
-		this.recordSpecification = specification;
+		this.specification = specification;
 	}
 
 	public void setResource(Resource resource) {
 		this.resource = resource;		
 	}
 
-	public void afterPropertiesSet() throws Exception {
-				
-	}
-
 	public void open() throws IOException {
 		Assert.notNull(resource, "Resource must be set.");
-		Assert.isTrue(resource.exists(), resource.getDescription() + ": resource does not exist!");		
-		Assert.isTrue(resource.isReadable(), "Resource is not readable.");
-
-		reader = new BufferedReader(new InputStreamReader(resource.getInputStream()));
-		
+		reader = new BufferedReader(new InputStreamReader(resource.getInputStream()));		
 	}
 
-	public void close() throws IOException {
-	
+	public void close() throws IOException {	
 		if (resource.isOpen())
 			reader.close();
 	}
@@ -245,9 +237,9 @@ public class LDIFParser implements Parser {
 							//flush buffer.
 							addAttributeToRecord(builder.toString(), record);
 							
-							log.debug("satisfied: " + recordSpecification.isSatisfiedBy(record));
+							log.debug("satisfied: " + specification.isSatisfiedBy(record));
 							
-							if (recordSpecification.isSatisfiedBy(record)) {
+							if (specification.isSatisfiedBy(record)) {
 								log.trace("Returning record.");
 								return record;
 								
@@ -316,5 +308,10 @@ public class LDIFParser implements Parser {
 			record = null;
 		}
 	}
-		
+
+	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(resource, "A resource to parse is required.");
+		Assert.isTrue(resource.exists(), resource.getDescription() + ": resource does not exist!");		
+		Assert.isTrue(resource.isReadable(), "Resource is not readable.");		
+	}
 }

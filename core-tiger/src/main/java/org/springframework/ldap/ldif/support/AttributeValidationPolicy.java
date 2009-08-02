@@ -4,8 +4,8 @@ import javax.naming.directory.Attribute;
 
 /**
  * Interface defining the required methods for AttributeValidationPolicies.
- * @author Keith Barlow
  *
+ * @author Keith Barlow
  */
 public interface AttributeValidationPolicy {
 
@@ -15,6 +15,6 @@ public interface AttributeValidationPolicy {
 	 * @param buffer
 	 * @return LdapAttribute representing the attribute parsed.
 	 */
-	public Attribute parse(String buffer);
+	Attribute parse(String buffer);
 	
 }

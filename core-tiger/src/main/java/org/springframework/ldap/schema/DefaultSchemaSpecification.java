@@ -3,8 +3,8 @@ package org.springframework.ldap.schema;
 import javax.naming.NamingException;
 
 import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.core.LdapAttributes;
 import org.springframework.ldap.core.LdapRdn;
-import org.springframework.ldap.ldif.LdapAttributes;
 
 import sun.misc.BASE64Encoder;
 
@@ -20,7 +20,6 @@ import sun.misc.BASE64Encoder;
  * </ul> 
  * 
  * @author Keith Barlow
- *
  */
 public class DefaultSchemaSpecification implements Specification<LdapAttributes> {
 
