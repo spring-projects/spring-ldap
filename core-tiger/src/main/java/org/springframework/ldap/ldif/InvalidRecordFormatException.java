@@ -21,6 +21,7 @@ import org.springframework.ldap.NamingException;
  * Thrown whenever a parsed record does not conform to LDAP specifications.
  * 
  * @author Keith Barlow
+ *
  */
 public class InvalidRecordFormatException extends NamingException {
 

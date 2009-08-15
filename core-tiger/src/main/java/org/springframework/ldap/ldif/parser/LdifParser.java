@@ -67,11 +67,19 @@ import org.springframework.util.Assert;
  * attribute definition as defined in RFC2849 and returns an {@link org.springframework.ldap.core.LdapAttribute LdapAttribute} object 
  * which is then added to the record, an {@link LdapAttributes LdapAttributes} object.  Upon encountering the 
  * end of record, the record is validated by the {@link Specification Specification} policy and, 
- * if valid, returned to the requester.  
+ * if valid, returned to the requester.
  * <p>
- * The parser requires the resource to be {@link open() open()} prior to an invocation of {@link #getRecord() getRecord()}.  
+ * <i>NOTE: By default, objects are not validated. If validation is required,
+ * an appropriate specification object must be set.</i>
+ * <p>
+ * The parser requires the resource to be {@link #open() open()} prior to an invocation of {@link #getRecord() getRecord()}.  
  * {@link #hasMoreRecords() hasMoreRecords()} can be used to loop over the resource until all records have been 
  * retrieved.  Likewise, the {@link #reset() reset()} method will reset the resource.
+ * <p>
+ * Objects implementing the {@link javax.naming.directory.Attributes Attributes} interface are required to support a case sensitivity setting
+ * which controls whether or not the attribute IDs of the object are case sensitive.  The {@link #setCaseInsensitive() caseInsensitive}
+ * setting of the {@link LdifParser LdifParser} is passed to the constructor of any {@link javax.naming.directory.Attributes Attributes} created. The
+ * default value for this setting is true so that case insensitive objects are created.
  * 
  * @author Keith Barlow
  *
@@ -106,10 +114,35 @@ public class LdifParser implements Parser, InitializingBean {
 	private Specification<LdapAttributes> specification = new DefaultSchemaSpecification();
 	
 	/**
+	 * This setting is used to control the case sensitivity of LdapAttribute objects returned by the parser.
+	 */
+	private boolean caseInsensitive = true;
+	
+	/**
 	 * Default constructor.
 	 */
 	public LdifParser() {
 		
+	}
+
+	/**
+	 * Creates a LdifParser with the indicated case sensitivity setting.
+	 * 
+	 * @param caseInsensitive Case sensitivity setting for LdapAttributes objects returned by the parser.
+	 */
+	public LdifParser(boolean caseInsensitive) {
+		this.caseInsensitive = caseInsensitive;
+	}
+	
+	/**
+	 * Creates an LdifParser for the specified resource with the provided case sensitivity setting.
+	 * 
+	 * @param resource The resource to parse.
+	 * @param caseInsensitive Case sensitivity setting for LdapAttributes objects returned by the parser.
+	 */
+	public LdifParser(Resource resource, boolean caseInsensitive) {
+		this.resource = resource;
+		this.caseInsensitive = caseInsensitive;
 	}
 	
 	/**
@@ -164,6 +197,10 @@ public class LdifParser implements Parser, InitializingBean {
 		this.resource = resource;		
 	}
 
+	public void setCaseInsensitive(boolean caseInsensitive) {
+		this.caseInsensitive = caseInsensitive;
+	}
+	
 	public void open() throws IOException {
 		Assert.notNull(resource, "Resource must be set.");
 		reader = new BufferedReader(new InputStreamReader(resource.getInputStream()));		
@@ -188,7 +225,7 @@ public class LdifParser implements Parser, InitializingBean {
 		
 		if (!reader.ready()) return null;
 		
-		LdapAttributes record = new LdapAttributes();
+		LdapAttributes record = new LdapAttributes(caseInsensitive);
 		StringBuilder builder = new StringBuilder();
 		
 		String line = reader.readLine();
@@ -252,22 +289,12 @@ public class LdifParser implements Parser, InitializingBean {
 							//flush buffer.
 							addAttributeToRecord(builder.toString(), record);
 							
-							log.debug("satisfied: " + specification.isSatisfiedBy(record));
-							
 							if (specification.isSatisfiedBy(record)) {
 								log.trace("Returning record.");
 								return record;
 								
 							} else {
-								String dn;
-								
-								try {
-									dn = (String) record.get("dn").get();
-								} catch (NamingException e) {
-									dn = "";
-								}
-								
-								throw new InvalidRecordFormatException("Record [dn: " + dn + "] does not conform to specification.");
+								throw new InvalidRecordFormatException("Record [dn: " + record.getDN() + "] does not conform to specification.");
 							}
 						} catch(NamingException e) {
 							log.error(e);
@@ -329,4 +356,5 @@ public class LdifParser implements Parser, InitializingBean {
 		Assert.isTrue(resource.exists(), resource.getDescription() + ": resource does not exist!");		
 		Assert.isTrue(resource.isReadable(), "Resource is not readable.");		
 	}
+		
 }

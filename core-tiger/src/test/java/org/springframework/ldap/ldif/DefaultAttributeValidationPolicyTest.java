@@ -6,6 +6,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
@@ -23,6 +24,7 @@ import sun.misc.BASE64Decoder;
  * the requirements for attribute values prescribed in RFC2849.
  * 
  * @author Keith Barlow
+ *
  */
 @RunWith(Parameterized.class)
 public class DefaultAttributeValidationPolicyTest {
@@ -68,9 +70,9 @@ public class DefaultAttributeValidationPolicyTest {
 				{ "url:< http://www.oracle.com/", "url", "", "http://www.oracle.com/", AttributeType.URL},
 				{ "url:< http://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html", "url", "", "http://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html", AttributeType.URL},
 				{ "url:< ftp://kbarlow:test@ftp.is.co.za/rfc/rfc1808.txt", "url", "", "ftp://kbarlow:test@ftp.is.co.za/rfc/rfc1808.txt", AttributeType.URL},
-				{ "url:< ftp://ftp.is.co.za:2100/rfc/rfc1808.txt;type=a", "url", "", "ftp://ftp.is.co.za:2100/rfc/rfc1808.txt;type=a", AttributeType.URL},
+				{ "url;option:< ftp://ftp.is.co.za:2100/rfc/rfc1808.txt;type=a", "url", ";option", "ftp://ftp.is.co.za:2100/rfc/rfc1808.txt;type=a", AttributeType.URL},
 				{ "url:< telnet://kbarlow@melvyl.ucop.edu/", "url", "", "telnet://kbarlow@melvyl.ucop.edu/", AttributeType.URL},
-				{ "url:< telnet://kbarlow:test@melvyl.ucop.edu/", "url", "", "telnet://kbarlow:test@melvyl.ucop.edu/", AttributeType.URL},
+				{ "url;option1;option2:< telnet://kbarlow:test@melvyl.ucop.edu/", "url", ";option1;option2", "telnet://kbarlow:test@melvyl.ucop.edu/", AttributeType.URL},
 				{ "url:< gopher://spinaltap.micro.umn.edu/00/Weather/California/Los%20Angeles", "url", "", "gopher://spinaltap.micro.umn.edu/00/Weather/California/Los%20Angeles", AttributeType.URL},
 				{ "url:< file:///usr/local/directory/photos/fiona.jpg", "url", "", "file:///usr/local/directory/photos/fiona.jpg", AttributeType.URL},
 				{ "url:< mailto:java-net@java.sun.com", "url", "", "mailto:java-net@java.sun.com", AttributeType.URL},
@@ -108,7 +110,7 @@ public class DefaultAttributeValidationPolicyTest {
 			
 			assertTrue("IDs do not match: [expected: " + attribute.getID() + ", obtained: " + id + "]", id.equalsIgnoreCase(attribute.getID()));
 			
-			String[] expected = options.split(";");
+			String[] expected = StringUtils.isEmpty(options) ? new String[] {} : options.replaceFirst(";","").split(";");
 			Arrays.sort(expected);
 			String[] obtained = attribute.getOptions().toArray(new String[] {});
 			Arrays.sort(obtained);

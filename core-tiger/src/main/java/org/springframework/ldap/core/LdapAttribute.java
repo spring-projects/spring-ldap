@@ -30,6 +30,7 @@ import javax.naming.directory.BasicAttribute;
  * {@link java.lang.String}.
  * 
  * @author Keith Barlow
+ *
  */
 public class LdapAttribute extends BasicAttribute {
 

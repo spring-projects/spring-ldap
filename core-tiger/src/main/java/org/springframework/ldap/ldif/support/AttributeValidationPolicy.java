@@ -21,13 +21,14 @@ import javax.naming.directory.Attribute;
  * Interface defining the required methods for AttributeValidationPolicies.
  *
  * @author Keith Barlow
+ * 
  */
 public interface AttributeValidationPolicy {
 
 	/**
 	 * Validates attribute contained in the buffer and returns an LdapAttribute.
 	 * 
-	 * @param buffer
+	 * @param buffer Buffer containing the line parsed from the resource.
 	 * @return LdapAttribute representing the attribute parsed.
 	 */
 	Attribute parse(String buffer);

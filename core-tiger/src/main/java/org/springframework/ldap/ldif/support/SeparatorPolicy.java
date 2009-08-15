@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
  * and identifies the line type from the input.
  * 
  * @author Keith Barlow
+ *
  */
 public class SeparatorPolicy {
 

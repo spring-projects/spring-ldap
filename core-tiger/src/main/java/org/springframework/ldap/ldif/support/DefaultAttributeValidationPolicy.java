@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 
 import javax.naming.directory.Attribute;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.LdapAttribute;
@@ -44,6 +45,7 @@ import sun.misc.BASE64Decoder;
  * implementation of URL identification include query strings and fragments in HTTP URLs.
  * 
  * @author Keith Barlow
+ *
  */
 @SuppressWarnings("unused")
 public class DefaultAttributeValidationPolicy implements AttributeValidationPolicy {
@@ -320,7 +322,7 @@ public class DefaultAttributeValidationPolicy implements AttributeValidationPoli
 	private LdapAttribute parseStringAttribute(Matcher matcher) {
 		String id = matcher.group(1);
 		String value = matcher.group(3);
-		List<String> options = Arrays.asList(matcher.group(2).split(OPTION_SEPARATOR));
+		List<String> options = Arrays.asList((StringUtils.isEmpty(matcher.group(2)) ? new String[] {} : matcher.group(2).replaceFirst(";","").split(OPTION_SEPARATOR)));
 		
 		if (options.isEmpty()) {
 			return new LdapAttribute(id, value, ordered);
@@ -334,7 +336,7 @@ public class DefaultAttributeValidationPolicy implements AttributeValidationPoli
 		try {
 			String id = matcher.group(1);
 			String value = matcher.group(3);
-			List<String> options = Arrays.asList(matcher.group(2).split(OPTION_SEPARATOR));
+			List<String> options = Arrays.asList((StringUtils.isEmpty(matcher.group(2)) ? new String[] {} : matcher.group(2).replaceFirst(";","").split(OPTION_SEPARATOR)));
 			
 			if (options.isEmpty()) {
 				return new LdapAttribute(id, new BASE64Decoder().decodeBuffer(value), ordered);
@@ -351,7 +353,7 @@ public class DefaultAttributeValidationPolicy implements AttributeValidationPoli
 		try {
 			String id = matcher.group(1);
 			String value = matcher.group(3);
-			List<String> options = Arrays.asList(matcher.group(2).split(OPTION_SEPARATOR));
+			List<String> options = Arrays.asList((StringUtils.isEmpty(matcher.group(2)) ? new String[] {} : matcher.group(2).replaceFirst(";","").split(OPTION_SEPARATOR)));
 			
 			if (options.isEmpty()) {
 				return new LdapAttribute(id, new URI(value), ordered);

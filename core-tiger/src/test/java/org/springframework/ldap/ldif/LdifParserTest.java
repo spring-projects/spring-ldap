@@ -12,24 +12,24 @@ import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ldap.core.LdapAttributes;
 import org.springframework.ldap.ldif.parser.LdifParser;
+import org.springframework.ldap.schema.BasicSchemaSpecification;
 
 /**
  * Unit test for LdifParser.
  * 
  * Test results in complete end to end test of all LdifParser functionality:
- * <ol>
- * <li>Open a file
- * <li>Read lines and compose an attribute.
- * <li>Parse the attribute and create a LdapAttribute object.
- * <li>Repeat until end of record (Identify end of record).
- * <li>Return a valid LdapAttributes object.
- * <li>Close file upon completion.
- * </ol>
+ * 	1.) Open a file
+ * 	2.) Read lines and compose an attribute.
+ * 	3.) Parse the attribute and create a LdapAttribute object.
+ * 	4.) Repeat until end of record (Identify end of record).
+ * 	5.) Return a valid LdapAttributes object.
+ * 	6.) Close file upon completion.
  * 
  * Provided test file is comprised of sample LDIFs from RFC2849 and exhausts the full range of
  * the functionality prescribed by RFC2849 for the LDAP Data Interchange Format (LDIF).
  * 
  * @author Keith Barlow
+ * 
  */
 public class LdifParserTest {
 
@@ -44,6 +44,7 @@ public class LdifParserTest {
 	 */
 	public LdifParserTest() {
 		parser = new LdifParser(new ClassPathResource("test.ldif"));
+		parser.setRecordSpecification(new BasicSchemaSpecification());
 	}
 	
 	/**
