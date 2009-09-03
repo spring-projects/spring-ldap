@@ -128,7 +128,18 @@ title;lang-en: Sales, Director
 
 
 #
-# Example 5: A file containing a reference to an external file
+# Example 5: An LDIF file containing an invalid attribute
+#
+
+dn: cn=Harry Jacobs, ou=Product Development, dc=airius, dc=com
+objectClass: top
+objectClass: person
+cn: Harry Jacobs
+description: :A big sailing fan.
+
+
+#
+# Example 6: A file containing a reference to an external file
 #
 
 dn: cn=Horatio Jensen, ou=Product Testing, dc=airius, dc=com
@@ -136,7 +147,6 @@ objectclass: top
 objectclass: person
 objectclass: organizationalPerson
 cn: Horatio Jensen
-
 cn: Horatio N Jensen
 sn: Jensen
 uid: hjensen
@@ -145,7 +155,7 @@ jpegphoto:< file:///usr/local/directory/photos/hjensen.jpg
 
 
 #
-# Example 6: A file containing a series of change records and comments
+# Example 7: A file containing a series of change records and comments
 #
 
 # Add a new entry
@@ -213,7 +223,7 @@ delete: description
 
 
 #
-# Example 7: An LDIF file containing a change record with a control
+# Example 8: An LDIF file containing a change record with a control
 #
 
 # Delete an entry. The operation will attach the LDAPv3

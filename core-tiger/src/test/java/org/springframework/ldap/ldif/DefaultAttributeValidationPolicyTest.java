@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -41,6 +42,12 @@ public class DefaultAttributeValidationPolicyTest {
 	private String value;
 	private AttributeType type;
 	
+	private List<String> exceptions = Arrays.asList(new String[] {
+			"description: :A big sailing fan.",
+			"cn;lang-ja:: 5bCP56yg5Y6fIO.ODreODieODi+ODvA==",
+			"url:< http://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html#28"
+	});
+	
 	/**
 	 * The data set to parse.
 	 * @return
@@ -59,12 +66,14 @@ public class DefaultAttributeValidationPolicyTest {
 				{ "title;lang-en;phonetic: Sales, Director", "title", ";lang-en;phonetic", "Sales, Director", AttributeType.STRING}, 
 				{ "mail: rogasawara@airius.co.jp", "mail", "", "rogasawara@airius.co.jp", AttributeType.STRING}, 
 				{ "description: A big sailing fan.", "description", "", "A big sailing fan.", AttributeType.STRING}, 
+				{ "description: :A big sailing fan.", "description", "", ":A big sailing fan.", AttributeType.STRING}, 
 				
 				//Base64
 				{ "xml:: PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4=", "xml", "", "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4=", AttributeType.BASE64},
 				{ "ou;lang-ja;phonetic:: 44GI44GE44GO44KH44GG44G2", "ou", ";lang-ja;phonetic", "44GI44GE44GO44KH44GG44G2", AttributeType.BASE64 },
 				{ "dn:: dWlkPXJvZ2FzYXdhcmEsb3U95Za25qWt6YOoLG89QWlyaXVz", "dn", "", "dWlkPXJvZ2FzYXdhcmEsb3U95Za25qWt6YOoLG89QWlyaXVz", AttributeType.BASE64 },
 				{ "cn;lang-ja:: 5bCP56yg5Y6fIOODreODieODi+ODvA==", "cn", ";lang-ja", "5bCP56yg5Y6fIOODreODieODi+ODvA==", AttributeType.BASE64 },
+				{ "cn;lang-ja:: 5bCP56yg5Y6fIO.ODreODieODi+ODvA==", "cn", ";lang-ja", "5bCP56yg5Y6fIO.ODreODieODi+ODvA==", AttributeType.BASE64 },
 				
 				//Url
 				{ "url:< http://www.oracle.com/", "url", "", "http://www.oracle.com/", AttributeType.URL},
@@ -79,7 +88,8 @@ public class DefaultAttributeValidationPolicyTest {
 				{ "url:< news:comp.infosystems.www.servers.unix", "url", "", "news:comp.infosystems.www.servers.unix", AttributeType.URL},
 				{ "url:< prospero://host.dom:1525//pros/name;key=value", "url", "", "prospero://host.dom:1525//pros/name;key=value", AttributeType.URL},
 				{ "url:< nntp://news.cs.hut.fi/alt.html/239157", "url", "", "nntp://news.cs.hut.fi/alt.html/239157", AttributeType.URL},
-				{ "url:< wais://vega.lib.ncsu.edu/alawon.src?nren", "url", "", "wais://vega.lib.ncsu.edu/alawon.src?nren", AttributeType.URL}
+				{ "url:< wais://vega.lib.ncsu.edu/alawon.src?nren", "url", "", "wais://vega.lib.ncsu.edu/alawon.src?nren", AttributeType.URL},
+				{ "url:< http://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html#28", "url", "", "http://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html#28", AttributeType.URL}
 				
 		});
 	}
@@ -138,7 +148,8 @@ public class DefaultAttributeValidationPolicyTest {
 			log.info("Success!");
 			
 		} catch (Exception e) {
-			fail("Exception thrown: " + e.getClass().getSimpleName() + " (message: " + e.getMessage() + ")");
+			if (!exceptions.contains(line))
+				fail("Exception thrown: " + e.getClass().getSimpleName() + " (message: " + e.getMessage() + ")");
 		}
 	}
 }

@@ -22,6 +22,8 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.BasicAttributes;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.DistinguishedName;
 
 import sun.misc.BASE64Encoder;
@@ -44,6 +46,8 @@ import sun.misc.BASE64Encoder;
 public class LdapAttributes extends BasicAttributes {
 
 	private static final long serialVersionUID = 97903297123869138L;
+	
+	private static Log log = LogFactory.getLog(LdapAttributes.class);
 
 	private static final String SAFE_CHAR = "[\\p{ASCII}&&[^\\x00\\x0A\\x0D]]"; //Any ASCII except NUL, LF, and CR
 	
@@ -74,7 +78,7 @@ public class LdapAttributes extends BasicAttributes {
 	/**
 	 * Constructor for specifying whether or not the object is case sensitive.
 	 * 
-	 * @param ignoreCase {@link java.lang.boolean} indicator.
+	 * @param ignoreCase boolean indicator.
 	 */
 	public LdapAttributes(boolean ignoreCase) {
 		super(ignoreCase);
@@ -84,7 +88,7 @@ public class LdapAttributes extends BasicAttributes {
 	 * Creates an LdapAttributes object with the specified DN and case sensitivity setting.
 	 * 
 	 * @param dn The {@link org.springframework.ldap.core.DistinguishedName} to which this object is bound.
-	 * @param ignoreCase {@link java.lang.boolean} indicator.
+	 * @param ignoreCase boolean indicator.
 	 */
 	public LdapAttributes(DistinguishedName dn, boolean ignoreCase) {
 		super(ignoreCase);
@@ -118,7 +122,7 @@ public class LdapAttributes extends BasicAttributes {
 	 * 
 	 * @param attrID {@link java.lang.String} ID of the attribute.
 	 * @param val Value of the attribute.
-	 * @param ignoreCase {@link java.lang.boolean} indicator.
+	 * @param ignoreCase boolean indicator.
 	 */
 	public LdapAttributes(String attrID, Object val, boolean ignoreCase) {
 		put(new LdapAttribute(attrID, val, ignoreCase));
@@ -130,7 +134,7 @@ public class LdapAttributes extends BasicAttributes {
 	 * @param dn The {@link org.springframework.ldap.core.DistinguishedName} to which this object is bound.
 	 * @param attrID {@link java.lang.String} ID of the attribute.
 	 * @param val Value of the attribute.
-	 * @param ignoreCase {@link java.lang.boolean} indicator.
+	 * @param ignoreCase boolean indicator.
 	 */
 	public LdapAttributes(DistinguishedName dn, String attrID, Object val, boolean ignoreCase) {
 		this.dn = dn;
@@ -161,8 +165,9 @@ public class LdapAttributes extends BasicAttributes {
 	 * @return {@link java.lang.String} formated to RFC2849 LDIF specifications.
 	 */
 	public String toString() {
+		StringBuilder  sb = new StringBuilder();
+		
 		try {
-			StringBuilder  sb = new StringBuilder();
 			
 			DistinguishedName dn = getDN();
 			
@@ -196,11 +201,11 @@ public class LdapAttributes extends BasicAttributes {
 				}
 			}
 			
-			return sb.toString();
-			
 		} catch (NamingException e) {
-			e.printStackTrace();
-			return "";
+			log.error("Error formating attributes for output.", e);
+			sb = new StringBuilder();
 		}
+		
+		return sb.toString();
 	}
 }

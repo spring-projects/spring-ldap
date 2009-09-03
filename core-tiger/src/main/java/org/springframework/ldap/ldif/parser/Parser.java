@@ -80,4 +80,11 @@ public interface Parser {
 	 */
 	public Attributes getRecord() throws IOException;
 	
+	/**
+	 * Indicates whether or not the parser is ready to to return results.
+	 * 
+	 * @return boolean indicator
+	 * @throws IOException if there is a problem with the underlying resource.
+	 */
+	public boolean isReady() throws IOException;
 }

@@ -32,7 +32,6 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapAttributes;
-import org.springframework.ldap.ldif.InvalidAttributeFormatException;
 import org.springframework.ldap.ldif.InvalidRecordFormatException;
 import org.springframework.ldap.ldif.support.AttributeValidationPolicy;
 import org.springframework.ldap.ldif.support.DefaultAttributeValidationPolicy;
@@ -77,7 +76,7 @@ import org.springframework.util.Assert;
  * retrieved.  Likewise, the {@link #reset() reset()} method will reset the resource.
  * <p>
  * Objects implementing the {@link javax.naming.directory.Attributes Attributes} interface are required to support a case sensitivity setting
- * which controls whether or not the attribute IDs of the object are case sensitive.  The {@link #setCaseInsensitive() caseInsensitive}
+ * which controls whether or not the attribute IDs of the object are case sensitive.  The {@link #caseInsensitive caseInsensitive}
  * setting of the {@link LdifParser LdifParser} is passed to the constructor of any {@link javax.naming.directory.Attributes Attributes} created. The
  * default value for this setting is true so that case insensitive objects are created.
  * 
@@ -206,6 +205,10 @@ public class LdifParser implements Parser, InitializingBean {
 		reader = new BufferedReader(new InputStreamReader(resource.getInputStream()));		
 	}
 
+	public boolean isReady() throws IOException {
+		return reader.ready();
+	}
+	
 	public void close() throws IOException {	
 		if (resource.isOpen())
 			reader.close();
@@ -223,7 +226,10 @@ public class LdifParser implements Parser, InitializingBean {
 	public LdapAttributes getRecord() throws IOException {
 		Assert.notNull(reader, "A reader must be obtained: parser not open.");
 		
-		if (!reader.ready()) return null;
+		if (!reader.ready()) {
+			log.debug("Reader not ready!");
+			return null;
+		}
 		
 		LdapAttributes record = new LdapAttributes(caseInsensitive);
 		StringBuilder builder = new StringBuilder();
@@ -290,7 +296,7 @@ public class LdifParser implements Parser, InitializingBean {
 							addAttributeToRecord(builder.toString(), record);
 							
 							if (specification.isSatisfiedBy(record)) {
-								log.trace("Returning record.");
+								log.debug("record parsed:\n" + record);
 								return record;
 								
 							} else {
@@ -345,9 +351,6 @@ public class LdifParser implements Parser, InitializingBean {
 			log.error(e);
 		} catch (NoSuchElementException e) {
 			log.error(e);
-		} catch (InvalidAttributeFormatException e) {
-			log.error(e);
-			record = null;
 		}
 	}
 

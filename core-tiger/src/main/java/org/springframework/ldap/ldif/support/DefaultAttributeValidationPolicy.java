@@ -262,7 +262,7 @@ public class DefaultAttributeValidationPolicy implements AttributeValidationPoli
 	/**
 	 * Constructor for indicating whether or not attribute values should be ordered alphabetically.
 	 * 
-	 * @param ordered {@link java.lang.boolean} value.
+	 * @param ordered  value.
 	 */
 	public DefaultAttributeValidationPolicy(boolean ordered) {
 		this.ordered = ordered;
@@ -271,7 +271,7 @@ public class DefaultAttributeValidationPolicy implements AttributeValidationPoli
 	/**
 	 * Indicates whether or not the attribute values should be ordered alphabetically.
 	 * 
-	 * @param ordered {@link java.lang.boolean} value.
+	 * @param ordered  value.
 	 */
 	public void setOrdered(boolean ordered) {
 		this.ordered = ordered;
@@ -316,7 +316,7 @@ public class DefaultAttributeValidationPolicy implements AttributeValidationPoli
 		}
 		
 		//default: no match.
-		throw new InvalidAttributeFormatException("Not a valid attribute: " + buffer);		
+		throw new InvalidAttributeFormatException("Not a valid attribute: [" + buffer + "]");		
 	}
 	
 	private LdapAttribute parseStringAttribute(Matcher matcher) {

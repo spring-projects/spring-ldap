@@ -76,7 +76,7 @@ public class LdapAttribute extends BasicAttribute {
 	 * Creates an attribute with the specified ID whose values may be ordered.
 	 * 
 	 * @param id {@link java.lang.String}  ID of the attribute.
-	 * @param ordered {@link java.lang.boolean} indicating whether or not the attributes values are ordered.
+	 * @param ordered boolean indicating whether or not the attributes values are ordered.
 	 */
 	public LdapAttribute(String id, boolean ordered) {
 		super(id, ordered);
@@ -87,7 +87,7 @@ public class LdapAttribute extends BasicAttribute {
 	 * 
 	 * @param id {@link java.lang.String}  ID of the attribute.
 	 * @param options {@link java.util.Collection} of {@link java.lang.String} attribute options.
-	 * @param ordered {@link java.lang.boolean} indicating whether or not the attributes values are ordered.
+	 * @param ordered boolean indicating whether or not the attributes values are ordered.
 	 */
 	public LdapAttribute(String id, Collection<String> options, boolean ordered) {
 		super(id, ordered);
@@ -99,7 +99,7 @@ public class LdapAttribute extends BasicAttribute {
 	 * 
 	 * @param id {@link java.lang.String}  ID of the attribute.
 	 * @param value Attribute value.
-	 * @param ordered {@link java.lang.boolean} indicating whether or not the attributes values are ordered.
+	 * @param ordered boolean indicating whether or not the attributes values are ordered.
 	 */
 	public LdapAttribute(String id, Object value, boolean ordered) {
 		super(id, value, ordered);
@@ -111,7 +111,7 @@ public class LdapAttribute extends BasicAttribute {
 	 * @param id {@link java.lang.String} ID of the attribute.
 	 * @param value Attribute value.
 	 * @param options {@link java.util.Collection} of {@link java.lang.String} attribute options.
-	 * @param ordered {@link java.lang.boolean} indicating whether or not the attributes values are ordered.
+	 * @param ordered boolean indicating whether or not the attributes values are ordered.
 	 */
 	public LdapAttribute(String id, Object value, Collection<String> options, boolean ordered) {
 		super(id, value, ordered);
@@ -140,7 +140,7 @@ public class LdapAttribute extends BasicAttribute {
 	 * Add an option.
 	 * 
 	 * @param option {@link java.lang.String} option.
-	 * @return {@link java.lang.boolean} indication successful addition of option.
+	 * @return boolean indication successful addition of option.
 	 */
 	public boolean addOption(String option) {
 		return this.options.add(option);
@@ -150,7 +150,7 @@ public class LdapAttribute extends BasicAttribute {
 	 * Add all values in the collection to the options.
 	 * 
 	 * @param options {@link java.util.Collection} of {@link java.lang.String} values.
-	 * @return {@link java.lang.boolean} indication successful addition of options.
+	 * @return boolean indication successful addition of options.
 	 */
 	public boolean addAllOptions(Collection<String> options) {
 		return this.options.addAll(options);
@@ -167,7 +167,7 @@ public class LdapAttribute extends BasicAttribute {
 	 * Checks for existence of a particular option on the set.
 	 * 
 	 * @param option {@link java.lang.String} option.
-	 * @return {@link java.lang.boolean} indicating result.
+	 * @return boolean indicating result.
 	 */
 	public boolean contains(String option) {
 		return this.options.contains(option);
@@ -177,7 +177,7 @@ public class LdapAttribute extends BasicAttribute {
 	 * Checks for existence of a series of options on the set.
 	 * 
 	 * @param options {@link java.util.Collection} of {@link java.lang.String} options.
-	 * @return {@link java.lang.boolean} indicating result.
+	 * @return boolean indicating result.
 	 */
 	public boolean containsAll(Collection<String> options) {
 		return this.options.containsAll(options);
@@ -186,7 +186,7 @@ public class LdapAttribute extends BasicAttribute {
 	/**
 	 * Tests for the presence of options.
 	 * 
-	 * @return {@link java.lang.boolean} indicating result.
+	 * @return boolean indicating result.
 	 */
 	public boolean hasOptions() {
 		return !options.isEmpty();
@@ -196,7 +196,7 @@ public class LdapAttribute extends BasicAttribute {
 	 * Removes an option from the the set.
 	 * 
 	 * @param option {@link java.lang.String} option.
-	 * @return {@link java.lang.boolean} indicating successful removal of option.
+	 * @return boolean indicating successful removal of option.
 	 */
 	public boolean removeOption(String option) {
 		return this.options.remove(options);
@@ -205,8 +205,8 @@ public class LdapAttribute extends BasicAttribute {
 	/**
 	 * Removes all options listed in the supplied set.
 	 * 
-	 * @param options {@link java.util.Collection} of {@link java.util.String} options.
-	 * @return {@link java.lang.boolean} indicating successful removal of options.
+	 * @param options {@link java.util.Collection} of {@link java.lang.String} options.
+	 * @return boolean indicating successful removal of options.
 	 */
 	public boolean removeAllOptions(Collection<String> options) {
 		return this.options.removeAll(options);
@@ -215,10 +215,11 @@ public class LdapAttribute extends BasicAttribute {
 	/**
 	 * Removes any options not on the set of supplied options.
 	 * 
-	 * @param options {@link java.util.Collection} of {@link java.util.String} options.
-	 * @return {@link java.lang.boolean} indicating successful retention of options.
+	 * @param options {@link java.util.Collection} of {@link java.lang.String} options.
+	 * @return boolean indicating successful retention of options.
 	 */
 	public boolean retainAllOptions(Collection<String> options) {
 		return this.options.retainAll(options);
 	}
+	
 }
