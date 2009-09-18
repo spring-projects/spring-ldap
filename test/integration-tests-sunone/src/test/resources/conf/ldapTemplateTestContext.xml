@@ -15,13 +15,25 @@
 		<property name="userDn" value="${userDn}" />
 		<property name="password" value="${password}" />
 		<property name="url" value="ldap://${itest.sunone.serverAddress}:389" />
-		<property name="authenticationStrategy">
+<!--		<property name="authenticationStrategy">
 			<bean class="org.springframework.ldap.core.support.DefaultTlsDirContextAuthenticationStrategy" />
-		</property>
+		</property> -->
 		<property name="pooled" value="false" />
 	</bean>
 
-	<bean id="ldapTemplate"
+  <bean id="poolingContextSource" class="org.springframework.ldap.pool.factory.MutablePoolingContextSource">
+    <property name="contextSource" ref="contextSource"/>
+    <property name="maxTotal" value="1"/>
+    <property name="dirContextValidator">
+      <bean class="org.springframework.ldap.pool.validation.DefaultDirContextValidator"/>
+    </property>
+    <property name="testOnBorrow" value="true"/>
+    <property name="testWhileIdle" value="true"/>
+
+    <property name="maxActive" value="1"/>
+  </bean>
+
+  <bean id="ldapTemplate"
 		class="org.springframework.ldap.core.LdapTemplate">
 		<constructor-arg ref="contextSource" />
 	</bean>

@@ -25,8 +25,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ldap.Person;
-import org.springframework.ldap.PersonContextMapper;
+import org.springframework.ldap.itest.Person;
+import org.springframework.ldap.itest.PersonContextMapper;
 import org.springframework.ldap.control.VirtualListViewControlDirContextProcessor;
 import org.springframework.ldap.control.VirtualListViewResultsCookie;
 import org.springframework.test.context.ContextConfiguration;
@@ -38,7 +38,7 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
  * href=
  * "http://www3.tools.ietf.org/html/draft-ietf-ldapext-ldapv3-vlv-09">Virtual
  * List View RFC draft</a>.
- * 
+ *
  * <blockquote> Here we walk through the client-server interaction for a
  * specific virtual list view example: The task is to display a list of all
  * 78564 persons in the US company "Ace Industry". This will be done by creating
@@ -86,7 +86,7 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
  * preceding entries, the target entry, and the proceeding 10 entries. The
  * server returns a content count of 78564 and a targetPosition of 5234 and so
  * the client updates its scroll bar slider to 6.7% of full scale. </blockquote>
- * 
+ *
  * @author Ulrik Sandberg
  */
 @ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
@@ -98,7 +98,7 @@ public class LdapTemplateVirtualListViewSearchITest extends
 
 	private static final String BASE_STRING = "";
 
-	private static final String FILTER_STRING = "(objectclass=person)";
+	private static final String FILTER_STRING = "(objectClass=person)";
 
 	private SearchControls searchControls;
 
@@ -137,11 +137,11 @@ public class LdapTemplateVirtualListViewSearchITest extends
 		cookie = requestControl.getCookie();
 
 		// assert that total count is still 78564
-		listSize = requestControl.getListSize();
+		listSize = cookie.getContentCount();
 		assertEquals(78564, listSize);
 
 		// assert that we are now at 1
-		targetOffset = requestControl.getTargetOffset();
+		targetOffset = cookie.getTargetPosition();
 		assertEquals(1, targetOffset);
 
 		// assert that we got the right 20
@@ -245,7 +245,7 @@ public class LdapTemplateVirtualListViewSearchITest extends
 		// also beforeCount and afterCount
 		requestControl = new VirtualListViewControlDirContextProcessor(20,
 				5234, listSize, cookie);
-		
+
 		requestControl.setOffsetPercentage(true);
 		tested.search(BASE_STRING, FILTER_STRING, searchControls,
 				callbackHandler, requestControl);
