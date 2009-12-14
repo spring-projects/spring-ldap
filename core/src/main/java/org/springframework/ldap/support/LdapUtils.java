@@ -401,7 +401,7 @@ public final class LdapUtils {
 	 * href="http://blogs.msdn.com/oldnewthing/archive/2004/03/15/89753.aspx"
 	 * >here</a>. 
 	 * 
-	 * @param sid SID in readable format
+	 * @param string SID in readable format
 	 * @return Binary version of the given sid
 	 * @see LdapUtils#convertBinarySidToString(byte[])
 	 * @since 1.3.1

@@ -18,10 +18,14 @@ package org.springframework.ldap;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ldap.core.AuthenticatedLdapEntryContextCallback;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.core.LdapTemplate.CollectingErrorCallback;
+import org.springframework.ldap.core.LdapTemplate.NullAuthenticatedLdapEntryContextCallback;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.filter.WhitespaceWildcardsFilter;
@@ -51,6 +55,19 @@ public class LdapTemplateAuthenticationITest extends AbstractLdapTemplateIntegra
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
 		assertFalse(tested.authenticate("", filter.toString(), "invalidpassword"));
+	}
+
+	@Test
+	public void testAuthenticateWithInvalidPasswordAndCollectedException() {
+		AndFilter filter = new AndFilter();
+		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
+		final CollectingErrorCallback errorCallback = new CollectingErrorCallback();
+		final AuthenticatedLdapEntryContextCallback callback = new NullAuthenticatedLdapEntryContextCallback();
+		assertFalse(tested.authenticate("", filter.toString(), "invalidpassword", callback, errorCallback));
+		final Exception error = errorCallback.getError();
+		assertNotNull("collected error should not be null", error);
+		assertTrue("expected org.springframework.ldap.AuthenticationException", error instanceof AuthenticationException);
+		assertTrue("expected javax.naming.AuthenticationException", error.getCause() instanceof javax.naming.AuthenticationException);
 	}
 
 	@Test

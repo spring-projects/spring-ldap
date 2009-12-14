@@ -1393,6 +1393,60 @@ public interface LdapOperations {
 	boolean authenticate(String base, String filter, String password, AuthenticatedLdapEntryContextCallback callback);
 
 	/**
+	 * Utility method to perform a simple LDAP 'bind' authentication. Search for
+	 * the LDAP entry to authenticate using the supplied base DN and filter; use
+	 * the DN of the found entry together with the password as input to
+	 * {@link ContextSource#getContext(String, String)}, thus authenticating the
+	 * entry. The resulting DirContext instance is then used as input to the
+	 * supplied {@link AuthenticatedLdapEntryContextCallback} to perform any
+	 * additional LDAP operations against the authenticated DirContext. If an
+	 * exception is caught, the same exception is passed on to the given
+	 * {@link AuthenticationErrorCallback}. This enables the caller to provide a
+	 * callback that, for example, collects the exception for later processing.
+	 * 
+	 * @param base the DN to use as the base of the search.
+	 * @param filter the search filter - must result in a unique result.
+	 * @param password the password to use for authentication.
+	 * @param callback the callback that will be called to perform operations
+	 * on the DirContext authenticated with the found user.
+	 * @param errorCallback the callback that will be called if an exception is caught.
+	 * @return <code>true</code> if the authentication was successful,
+	 * <code>false</code> otherwise.
+	 * @see #authenticate(Name, String, String, AuthenticatedLdapEntryContextCallback)
+	 * @since 1.3.1
+	 */
+	boolean authenticate(Name base, String filter, String password,
+			AuthenticatedLdapEntryContextCallback callback,
+			AuthenticationErrorCallback errorCallback);
+
+	/**
+	 * Utility method to perform a simple LDAP 'bind' authentication. Search for
+	 * the LDAP entry to authenticate using the supplied base DN and filter; use
+	 * the DN of the found entry together with the password as input to
+	 * {@link ContextSource#getContext(String, String)}, thus authenticating the
+	 * entry. The resulting DirContext instance is then used as input to the
+	 * supplied {@link AuthenticatedLdapEntryContextCallback} to perform any
+	 * additional LDAP operations against the authenticated DirContext. If an
+	 * exception is caught, the same exception is passed on to the given
+	 * {@link AuthenticationErrorCallback}. This enables the caller to provide a
+	 * callback that, for example, collects the exception for later processing.
+	 * 
+	 * @param base the DN to use as the base of the search.
+	 * @param filter the search filter - must result in a unique result.
+	 * @param password the password to use for authentication.
+	 * @param callback the callback that will be called to perform operations
+	 * on the DirContext authenticated with the found user.
+	 * @param errorCallback the callback that will be called if an exception is caught.
+	 * @return <code>true</code> if the authentication was successful,
+	 * <code>false</code> otherwise.
+	 * @see #authenticate(String, String, String, AuthenticatedLdapEntryContextCallback)
+	 * @since 1.3.1
+	 */
+	boolean authenticate(String base, String filter, String password,
+			AuthenticatedLdapEntryContextCallback callback,
+			AuthenticationErrorCallback errorCallback);
+
+	/**
 	 * Perform a search for a unique entry matching the specified search
 	 * criteria and return the found object. If no entry is found or if there
 	 * are more than one matching entry, an

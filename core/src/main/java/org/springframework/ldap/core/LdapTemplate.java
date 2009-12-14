@@ -1383,7 +1383,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * .Name, java.lang.String, java.lang.String)
 	 */
 	public boolean authenticate(Name base, String filter, String password) {
-		return authenticate(base, filter, password, new NullAuthenticatedLdapEntryContextCallback());
+		return authenticate(base, filter, password,
+				new NullAuthenticatedLdapEntryContextCallback(),
+				new NullAuthenticationErrorCallback());
 	}
 
 	/*
@@ -1394,7 +1396,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * , java.lang.String, java.lang.String)
 	 */
 	public boolean authenticate(String base, String filter, String password) {
-		return authenticate(base, filter, password, new NullAuthenticatedLdapEntryContextCallback());
+		return authenticate(new DistinguishedName(base), filter, password,
+				new NullAuthenticatedLdapEntryContextCallback(),
+				new NullAuthenticationErrorCallback());
 	}
 
 	/*
@@ -1407,7 +1411,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	public boolean authenticate(String base, String filter, String password,
 			AuthenticatedLdapEntryContextCallback callback) {
-		return authenticate(new DistinguishedName(base), filter, password, callback);
+		return authenticate(new DistinguishedName(base), filter, password, callback, new NullAuthenticationErrorCallback());
 	}
 
 	/*
@@ -1420,6 +1424,34 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	public boolean authenticate(Name base, String filter, String password,
 			final AuthenticatedLdapEntryContextCallback callback) {
+		return authenticate(base, filter, password, callback, new NullAuthenticationErrorCallback());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#authenticate(java.lang.String
+	 * , java.lang.String, java.lang.String,
+	 * org.springframework.ldap.core.AuthenticatedLdapEntryContextCallback,
+	 * org.springframework.ldap.core.AuthenticationErrorCallback)
+	 */
+	public boolean authenticate(String base, String filter, String password,
+			final AuthenticatedLdapEntryContextCallback callback, final AuthenticationErrorCallback errorCallback) {
+		return authenticate(new DistinguishedName(base), filter, password, callback, errorCallback);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#authenticate(javax.naming
+	 * .Name, java.lang.String, java.lang.String,
+	 * org.springframework.ldap.core.AuthenticatedLdapEntryContextCallback,
+	 * org.springframework.ldap.core.AuthenticationErrorCallback)
+	 */
+	public boolean authenticate(Name base, String filter, String password,
+			final AuthenticatedLdapEntryContextCallback callback, final AuthenticationErrorCallback errorCallback) {
 
 		List result = search(base, filter, new LdapEntryIdentificationContextMapper());
 		if (result.size() != 1) {
@@ -1442,6 +1474,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		}
 		catch (Exception e) {
 			log.error("Authentication failed for entry with DN '" + entryIdentification.getAbsoluteDn() + "'", e);
+			errorCallback.execute(e);
 			return false;
 		}
 	}
@@ -1476,10 +1509,31 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		return searchForObject(new DistinguishedName(base), filter, mapper);
 	}
 
-	private static final class NullAuthenticatedLdapEntryContextCallback implements
-			AuthenticatedLdapEntryContextCallback {
-		public void executeWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
+	public static final class NullAuthenticatedLdapEntryContextCallback
+			implements AuthenticatedLdapEntryContextCallback {
+		public void executeWithContext(DirContext ctx,
+				LdapEntryIdentification ldapEntryIdentification) {
 			// Do nothing
+		}
+	}
+
+	public static final class NullAuthenticationErrorCallback
+			implements AuthenticationErrorCallback {
+		public void execute(Exception e) {
+			// Do nothing
+		}
+	}
+
+	public static final class CollectingErrorCallback implements
+			AuthenticationErrorCallback {
+		private Exception error;
+
+		public void execute(Exception e) {
+			this.error = e;
+		}
+
+		public Exception getError() {
+			return error;
 		}
 	}
 }
