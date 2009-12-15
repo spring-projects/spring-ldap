@@ -16,13 +16,19 @@
 
 package org.springframework.ldap;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
 
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.AuthenticatedLdapEntryContextCallback;
+import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.LdapEntryIdentification;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.LdapTemplate.CollectingErrorCallback;
 import org.springframework.ldap.core.LdapTemplate.NullAuthenticatedLdapEntryContextCallback;
@@ -55,6 +61,24 @@ public class LdapTemplateAuthenticationITest extends AbstractLdapTemplateIntegra
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
 		assertFalse(tested.authenticate("", filter.toString(), "invalidpassword"));
+	}
+
+	@Test
+	public void testAuthenticateWithLookupOperationPerformedOnAuthenticatedContext() {
+		AndFilter filter = new AndFilter();
+		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
+		AuthenticatedLdapEntryContextCallback contextCallback = new AuthenticatedLdapEntryContextCallback() {
+			public void executeWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
+				try {
+					DirContextAdapter adapter = (DirContextAdapter) ctx.lookup(ldapEntryIdentification.getRelativeDn());
+					assertEquals("Some Person3", adapter.getStringAttribute("cn"));
+				}
+				catch (NamingException e) {
+					throw new RuntimeException("Failed to lookup " + ldapEntryIdentification.getRelativeDn(), e);
+				}
+			}
+		};
+		assertTrue(tested.authenticate("", filter.toString(), "password", contextCallback));
 	}
 
 	@Test
