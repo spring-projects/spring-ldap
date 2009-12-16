@@ -138,13 +138,15 @@
 
     <itemizedlist>
       <listitem>
-        <literallayout>boolean authenticate(Name base, String filter, String password,
-  AuthenticatedLdapEntryContextCallback callback);</literallayout>
+        <para><literal>boolean authenticate(Name base, String filter, String
+        password, AuthenticatedLdapEntryContextCallback
+        callback);</literal></para>
       </listitem>
 
       <listitem>
-        <literallayout>boolean authenticate(String base, String filter, String password,
-  AuthenticatedLdapEntryContextCallback callback);</literallayout>
+        <para><literal>boolean authenticate(String base, String filter, String
+        password, AuthenticatedLdapEntryContextCallback
+        callback);</literal></para>
       </listitem>
     </itemizedlist>
 
@@ -176,25 +178,35 @@ ldapTemplate.authenticate("", "(uid=john.doe)", "secret", contextCallback));</pr
     <para>So far, the methods have only been able to tell the user whether or
     not the authentication succeeded. There has been no way of retrieving the
     actual exception. Spring LDAP 1.3.1 introduced the
-    <literal>AuthenticationErrorCallback</literal> and two more
+    <literal>AuthenticationErrorCallback</literal> and a few more
     <literal>authenticate</literal> methods:</para>
 
     <itemizedlist>
       <listitem>
-        <literallayout>boolean authenticate(Name base, String filter, String password,
-  AuthenticatedLdapEntryContextCallback callback, 
-  AuthenticationErrorCallback errorCallback);</literallayout>
+        <para><literal>boolean authenticate(Name base, String filter, String
+        password, AuthenticationErrorCallback errorCallback);</literal></para>
       </listitem>
 
       <listitem>
-        <literallayout>boolean authenticate(String base, String filter, String password,
-  AuthenticatedLdapEntryContextCallback callback,
-  AuthenticationErrorCallback errorCallback);</literallayout>
+        <para><literal>boolean authenticate(String base, String filter, String
+        password, AuthenticationErrorCallback errorCallback);</literal></para>
+      </listitem>
+
+      <listitem>
+        <para><literal>boolean authenticate(Name base, String filter, String
+        password, AuthenticatedLdapEntryContextCallback callback,
+        AuthenticationErrorCallback errorCallback);</literal></para>
+      </listitem>
+
+      <listitem>
+        <para><literal>boolean authenticate(String base, String filter, String
+        password, AuthenticatedLdapEntryContextCallback callback,
+        AuthenticationErrorCallback errorCallback);</literal></para>
       </listitem>
     </itemizedlist>
 
-    <para>A convenience implementation of the error callback interface is also
-    provided:</para>
+    <para>A convenient collecting implementation of the error callback
+    interface is also provided:</para>
 
     <para><example>
         <title>Convenience implementation of
@@ -211,20 +223,17 @@ ldapTemplate.authenticate("", "(uid=john.doe)", "secret", contextCallback));</pr
     return error;
   }
 }</programlisting>
-      </example>This means that the code needed for authenticating a user and
-    retrieving the authentication exception in case of an error boils down to
-    this:</para>
+      </example>The code needed for authenticating a user and retrieving the
+    authentication exception in case of an error boils down to this:</para>
 
     <para><example>
         <title>Authenticating a user and retrieving the authentication
         exception.</title>
 
         <programlisting>import org.springframework.ldap.core.LdapTemplate.CollectingErrorCallback;
-import org.springframework.ldap.core.LdapTemplate.NullAuthenticatedLdapEntryContextCallback;
 ...
 CollectingErrorCallback errorCallback = new CollectingErrorCallback();
-AuthenticatedLdapEntryContextCallback callback = new NullAuthenticatedLdapEntryContextCallback();
-boolean result = tested.authenticate("", filter.toString(), "invalidpassword", callback, errorCallback);
+boolean result = tested.authenticate("", filter.toString(), "invalidpassword", errorCallback);
 if (!result) {
   Exception error = errorCallback.getError();
   // error is likely of type org.springframework.ldap.AuthenticationException

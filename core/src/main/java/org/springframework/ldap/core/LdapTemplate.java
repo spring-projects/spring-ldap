@@ -1433,6 +1433,32 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * @see
 	 * org.springframework.ldap.core.LdapOperations#authenticate(java.lang.String
 	 * , java.lang.String, java.lang.String,
+	 * org.springframework.ldap.core.AuthenticationErrorCallback)
+	 */
+	public boolean authenticate(String base, String filter, String password,
+			AuthenticationErrorCallback errorCallback) {
+		return authenticate(new DistinguishedName(base), filter, password, new NullAuthenticatedLdapEntryContextCallback(), errorCallback);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#authenticate(javax.naming
+	 * .Name, java.lang.String, java.lang.String,
+	 * org.springframework.ldap.core.AuthenticationErrorCallback)
+	 */
+	public boolean authenticate(Name base, String filter, String password,
+			final AuthenticationErrorCallback errorCallback) {
+		return authenticate(base, filter, password, new NullAuthenticatedLdapEntryContextCallback(), errorCallback);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.springframework.ldap.core.LdapOperations#authenticate(java.lang.String
+	 * , java.lang.String, java.lang.String,
 	 * org.springframework.ldap.core.AuthenticatedLdapEntryContextCallback,
 	 * org.springframework.ldap.core.AuthenticationErrorCallback)
 	 */
@@ -1509,7 +1535,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		return searchForObject(new DistinguishedName(base), filter, mapper);
 	}
 
-	public static final class NullAuthenticatedLdapEntryContextCallback
+	private static final class NullAuthenticatedLdapEntryContextCallback
 			implements AuthenticatedLdapEntryContextCallback {
 		public void executeWithContext(DirContext ctx,
 				LdapEntryIdentification ldapEntryIdentification) {
@@ -1517,7 +1543,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		}
 	}
 
-	public static final class NullAuthenticationErrorCallback
+	private static final class NullAuthenticationErrorCallback
 			implements AuthenticationErrorCallback {
 		public void execute(Exception e) {
 			// Do nothing

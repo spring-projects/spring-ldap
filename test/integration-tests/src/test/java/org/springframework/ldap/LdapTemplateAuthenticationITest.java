@@ -31,7 +31,6 @@ import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapEntryIdentification;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.LdapTemplate.CollectingErrorCallback;
-import org.springframework.ldap.core.LdapTemplate.NullAuthenticatedLdapEntryContextCallback;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.filter.WhitespaceWildcardsFilter;
@@ -86,8 +85,7 @@ public class LdapTemplateAuthenticationITest extends AbstractLdapTemplateIntegra
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
 		final CollectingErrorCallback errorCallback = new CollectingErrorCallback();
-		final AuthenticatedLdapEntryContextCallback callback = new NullAuthenticatedLdapEntryContextCallback();
-		assertFalse(tested.authenticate("", filter.toString(), "invalidpassword", callback, errorCallback));
+		assertFalse(tested.authenticate("", filter.toString(), "invalidpassword", errorCallback));
 		final Exception error = errorCallback.getError();
 		assertNotNull("collected error should not be null", error);
 		assertTrue("expected org.springframework.ldap.AuthenticationException", error instanceof AuthenticationException);
