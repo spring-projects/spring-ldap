@@ -1549,17 +1549,4 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			// Do nothing
 		}
 	}
-
-	public static final class CollectingErrorCallback implements
-			AuthenticationErrorCallback {
-		private Exception error;
-
-		public void execute(Exception e) {
-			this.error = e;
-		}
-
-		public Exception getError() {
-			return error;
-		}
-	}
 }
