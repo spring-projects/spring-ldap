@@ -115,8 +115,7 @@
     ctx = contextSource.getContext(userDn, credentials);
     // Take care here - if a base was specified on the ContextSource
     // that needs to be removed from the user DN for the lookup to succeed.
-<emphasis role="bold">    ctx.lookup(userDn);
-</emphasis>    
+<emphasis role="bold">    ctx.lookup(userDn);</emphasis>    
     return true;
   } catch (Exception e) {
     // Context creation failed - authentication did not succeed
