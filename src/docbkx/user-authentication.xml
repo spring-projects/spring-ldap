@@ -233,7 +233,7 @@ ldapTemplate.authenticate("", "(uid=john.doe)", "secret", contextCallback));</pr
         <programlisting>import org.springframework.ldap.core.support.CollectingAuthenticationErrorCallback;
 ...
 CollectingAuthenticationErrorCallback errorCallback = new CollectingAuthenticationErrorCallback();
-boolean result = tested.authenticate("", filter.toString(), "invalidpassword", errorCallback);
+boolean result = ldapTemplate.authenticate("", filter.toString(), "invalidpassword", errorCallback);
 if (!result) {
   Exception error = errorCallback.getError();
   // error is likely of type org.springframework.ldap.AuthenticationException
