@@ -11,8 +11,13 @@ http://www.ietf.org/rfc/rfc2255.txt
 http://www.ietf.org/rfc/rfc2256.txt
 http://www.ietf.org/rfc/rfc2696.txt
 
-Changes in version 1.3.1 (Fall 2009)
+Changes in version 1.3.1 (Spring 2010)
 -------------------------------------------
+* Added an object-directory mapping framework (ODM). Contributed by Paul
+  Harvey.
+
+* Added an LDIF parsing framework. Contributed by Keith Barlow.
+
 * Added an extension to ContextMapperCallbackHandler that can provide the
   associated mapper with an indication that the response is different for
   each search result. (LDAP-185)

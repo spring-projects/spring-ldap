@@ -7,6 +7,9 @@
 	<packaging>pom</packaging>
 	<version>1.3.1.CI-SNAPSHOT</version>
 	<name>Spring LDAP - Parent</name>
+    <modules>
+        <module>tiger</module>
+    </modules>
 	<distributionManagement>
 		<downloadUrl>http://static.springframework.org/spring-ldap/site/downloads/releases.html</downloadUrl>
 		<repository>
