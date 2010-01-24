@@ -1,0 +1,142 @@
+dn: ou=Enemies,o=Whoniverse
+objectClass: organizationalUnit
+objectClass: top
+ou: Enemies
+street: Acacia Avenue
+description: The bad guys
+
+dn: ou=Assistants,o=Whoniverse
+objectClass: organizationalUnit
+objectClass: top
+ou: Assistants
+street: Somewhere in space
+description: The plucky helpers
+
+dn: ou=Doctors,o=Whoniverse
+objectClass: organizationalUnit
+objectClass: top
+ou: Doctors
+street: Somewhere in time
+description: Our hero
+
+dn: cn=William Hartnell,ou=Doctors,o=Whoniverse
+objectClass: person
+objectClass: inetorgperson
+objectclass: organizationalperson
+objectClass: top
+cn: William Hartnell
+description: First Doctor
+description: Grumpy
+sn: Hartnell
+telephonenumber: 1
+
+dn: cn=Patrick Troughton,ou=Doctors,o=Whoniverse
+objectClass: person
+objectClass: inetorgperson
+objectclass: organizationalperson
+objectClass: top
+cn: Patrick Troughton
+description: Second Doctor
+description:Clown
+sn: Troughton
+telephonenumber: 2
+
+dn: cn=Jon Pertwee,ou=Doctors,o=Whoniverse
+objectClass: person
+objectClass: inetorgperson
+objectclass: organizationalperson
+objectClass: top
+cn: Jon Pertwee
+description: Third Doctor
+description: Dandy
+sn: Pertwee
+telephonenumber: 3
+
+dn: cn=Tom Baker,ou=Doctors,o=Whoniverse
+objectClass: person
+objectClass: inetorgperson
+objectclass: organizationalperson
+objectClass: top
+cn: Tom Baker
+description: Fourth Doctor
+description: The one and only!
+sn: Baker
+telephonenumber: 4
+
+dn: cn=Peter Davison,ou=Doctors,o=Whoniverse
+objectClass: person
+objectClass: inetorgperson
+objectclass: organizationalperson
+objectClass: top
+cn: Peter Davison
+description: Fifth Doctor
+sn: Davison
+telephonenumber: 5
+
+dn: cn=Paul Harvey,ou=Doctors,o=Whoniverse
+objectClass: person
+objectClass: inetorgperson
+objectclass: organizationalperson
+objectClass: top
+objectClass: userSecurityInformation
+cn: Paul Harvey
+description: Not a Doctor
+sn: Harvey
+telephonenumber: 11
+
+dn: cn=Bramble Harvey,ou=Doctors,o=Whoniverse
+objectClass: person
+objectClass: top
+cn: Bramble
+description: Really not a Doctor
+sn: Harvey
+telephonenumber: 22
+
+dn: cn=Davros,ou=Enemies,o=Whoniverse
+objectClass: person
+objectClass: inetorgperson
+objectclass: organizationalperson
+objectClass: top
+cn: Davros
+description: Creator of the Daleks
+description: Kaled head scientist
+sn: Unknown
+
+dn: cn=Daleks,ou=Enemies,o=Whoniverse
+objectClass: person
+objectClass: inetorgperson
+objectclass: organizationalperson
+objectClass: top
+cn: Daleks
+description: The Doctor's greatest foe
+sn: NA
+
+dn: cn=Master,ou=Enemies,o=Whoniverse
+objectClass: person
+objectClass: inetorgperson
+objectclass: organizationalperson
+objectClass: top
+cn: Master
+description: An evil Time Lord
+sn: Unknown
+jpegphoto:: /9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkS
+ Ew8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRg
+ yIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wA
+ ARCAAnABoDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAA
+ gEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcY
+ GRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipK
+ TlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8v
+ P09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFB
+ AQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygp
+ KjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJm
+ aoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9
+ oADAMBAAIRAxEAPwDx2z0mK6gV/tSo2SCpUHGD9Qa2vDvgGfX7+eI3ot4EOEmEefMOOcZPQdOvW
+ s3VLGzsWiihUvM0ayONxATPIHXk4wfxFdd4L1aw0rw3eS3V3GHWRswkgugwCpVSckEk9OhB9azu
+ 2ro6lCKnyyZwmvaHcaBrV1plxKkkluw+dRkMCAQfbgjiqi27sob1GfuVc1q9n1XVL3UdqxJI/wD
+ q/MXIXGAMd+B2HWoUZ1jUbZeABwKqzMJWT0Ld3cfaJ5ZFYtnCg+oUBf6V2XhvwVpcvhxfFXibVF
+ tNK3lEgjJ3yMGK7SRzkkHhRnHORXJQ6exVXB2r1K9Cfx7V0UWpeD7S3WJ9N1TUPLYssV7cBYkZg
+ AxAU4zwOcZ4HoKtppWQ4tSk5SNPx14o8M3/AITXT/D2kRRxB1jE4RIyuOc7ME84PzcHr2PPmX2y
+ YcZX8q37fQxPpqzsH8xvuqAeeuO/0H3e9Zn2dxwbK5JHXCH/AOJqNOhdSM1ZzVjRNwRbjGRxxzn
+ FdRouijV9Pi1C6toEMqn7MsK7SqBiCxOSSSVI5J4x6miiliW1FMzpbszreUw3H2VcuscpGT3UE9
+ Rn0HStE+IrZSQbEuRxvU4De4yc0UVFKCnuerms2vZryP/Z
+

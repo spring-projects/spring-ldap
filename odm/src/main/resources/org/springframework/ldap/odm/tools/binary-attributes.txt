@@ -1,0 +1,16 @@
+# List of syntaxes that will be returned by the JNDI provider as byte[], taken from
+# http://java.sun.com/products/jndi/tutorial/ldap/misc/attrs.html
+# See all http://www.ietf.org/rfc/rfc2256.txt for attribute names with ;binary suffix
+
+# Syntax                       Used by Attributes
+# ------                       ------------------
+  
+1.3.6.1.4.1.1466.115.121.1.23  photo, personalSignature 
+1.3.6.1.4.1.1466.115.121.1.4   audio 
+1.3.6.1.4.1.1466.115.121.1.28  jpegPhoto
+1.3.6.1.4.1.1466.115.121.1.40  javaSerializedData
+1.3.6.1.4.1.1466.115.121.1.40  userPassword
+1.3.6.1.4.1.1466.115.121.1.8   userCertificate, cACertificate 
+1.3.6.1.4.1.1466.115.121.1.9   authorityRevocationList, certificateRevocationList 
+1.3.6.1.4.1.1466.115.121.1.10  crossCertificatePair
+1.3.6.1.4.1.1466.115.121.1.6   x500UniqueIdentifier

@@ -1,0 +1,116 @@
+dn: ou=Enemies,o=Whoniverse
+objectClass: organizationalUnit
+objectClass: top
+ou: Blizzard
+
+dn: ou=Assistants,o=Whoniverse
+objectClass: organizationalUnit
+objectClass: top
+ou: Blizzard
+
+dn: ou=Doctors,o=Whoniverse
+objectClass: organizationalUnit
+objectClass: top
+ou: NCSoft
+
+dn: cn=William Hartnell,ou=Doctors,o=Whoniverse
+objectClass: person
+objectClass: inetorgperson
+objectclass: organizationalperson
+objectClass: top
+cn: William Hartnell
+description: First Doctor
+description: Grumpy
+sn: Hartnell
+telephonenumber: 1
+
+dn: cn=Patrick Troughton,ou=Doctors,o=Whoniverse
+objectClass: person
+objectClass: inetorgperson
+objectclass: organizationalperson
+objectClass: top
+cn: Patrick Troughton
+description: Second Doctor
+description:Clown
+sn: Troughton
+telephonenumber: 2
+
+dn: cn=Jon Pertwee,ou=Doctors,o=Whoniverse
+objectClass: person
+objectClass: inetorgperson
+objectclass: organizationalperson
+objectClass: top
+cn: Jon Pertwee
+description: Third Doctor
+description: Dandy
+sn: Pertwee
+telephonenumber: 3
+
+dn: cn=Tom Baker,ou=Doctors,o=Whoniverse
+objectClass: person
+objectClass: inetorgperson
+objectclass: organizationalperson
+objectClass: top
+cn: Tom Baker
+description: Fourth Doctor
+description: The one and only!
+sn: Baker
+telephonenumber: 4
+
+dn: cn=Peter Davison,ou=Doctors,o=Whoniverse
+objectClass: person
+objectClass: inetorgperson
+objectclass: organizationalperson
+objectClass: top
+cn: Peter Davison
+description: Fifth Doctor
+sn: Davison
+telephonenumber: 5
+
+dn: cn=Paul Harvey,ou=Doctors,o=Whoniverse
+objectClass: person
+objectClass: inetorgperson
+objectclass: organizationalperson
+objectClass: top
+objectClass: userSecurityInformation
+cn: Paul Harvey
+description: Not a Doctor
+sn: Harvey
+telephonenumber: 11
+
+dn: cn=Bramble Harvey,ou=Doctors,o=Whoniverse
+objectClass: person
+objectClass: top
+cn: Bramble
+description: Really not a Doctor
+sn: Harvey
+telephonenumber: 22
+
+dn: cn=Davros,ou=Enemies,o=Whoniverse
+objectClass: person
+objectClass: inetorgperson
+objectclass: organizationalperson
+objectClass: top
+cn: Davros
+description: Creator of the Daleks
+description: Kaled head scientist
+sn: Unknown
+
+dn: cn=Daleks,ou=Enemies,o=Whoniverse
+objectClass: person
+objectClass: inetorgperson
+objectclass: organizationalperson
+objectClass: top
+cn: Daleks
+description: The Doctor's greatest foe
+sn: NA
+
+dn: cn=Master,ou=Enemies,o=Whoniverse
+objectClass: person
+objectClass: inetorgperson
+objectclass: organizationalperson
+objectClass: top
+cn: Master
+description: An evil Time Lord
+sn: Unknown
+

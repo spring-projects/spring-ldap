@@ -64,6 +64,12 @@
 		<contributor>
 			<name>Eric Dalquist</name>
 		</contributor>
+		<contributor>
+			<name>Keith Barlow</name>
+		</contributor>
+		<contributor>
+			<name>Paul Harvey</name>
+		</contributor>
 	</contributors>
 	<organization>
 		<name>The Spring LDAP Framework</name>
@@ -109,6 +115,7 @@
 		<module>parent</module>
 		<module>core</module>
 		<module>core-tiger</module>
+		<module>odm</module>
 		<module>test-support</module>
 		<module>test</module>
 	</modules>

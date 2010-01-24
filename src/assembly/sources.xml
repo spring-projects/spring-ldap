@@ -15,6 +15,10 @@
             <outputDirectory/>
         </fileSet>
         <fileSet>
+            <directory>odm/src/main/java</directory>
+            <outputDirectory/>
+        </fileSet>
+        <fileSet>
             <directory>test-support/src/main/java</directory>
             <outputDirectory/>
         </fileSet>
