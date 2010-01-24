@@ -19,6 +19,14 @@
             <outputDirectory/>
         </fileSet>
         <fileSet>
+            <directory>ldif/ldif-core/src/main/java</directory>
+            <outputDirectory/>
+        </fileSet>
+        <fileSet>
+            <directory>ldif/ldif-batch/src/main/java</directory>
+            <outputDirectory/>
+        </fileSet>
+        <fileSet>
             <directory>test-support/src/main/java</directory>
             <outputDirectory/>
         </fileSet>

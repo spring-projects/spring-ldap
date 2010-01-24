@@ -121,10 +121,10 @@
 		<module>parent</module>
 		<module>core</module>
 		<module>core-tiger</module>
-		<module>ldif</module>
-		<module>odm</module>
 		<module>test-support</module>
 		<module>test</module>
+		<module>ldif</module>
+		<module>odm</module>
 	</modules>
 	<profiles>
 		<profile>
