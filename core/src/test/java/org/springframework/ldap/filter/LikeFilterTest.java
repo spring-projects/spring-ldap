@@ -18,6 +18,8 @@ package org.springframework.ldap.filter;
 
 import org.springframework.ldap.filter.LikeFilter;
 
+import com.gargoylesoftware.base.testing.EqualsTester;
+
 import junit.framework.TestCase;
 
 /**
@@ -33,12 +35,12 @@ public class LikeFilterTest extends TestCase {
         super(name);
     }
 
-    final public void testEncodeValue_blank() {
+    public void testEncodeValue_blank() {
         assertEquals("", new LikeFilter("", null).getEncodedValue());
         assertEquals(" ", new LikeFilter("", " ").getEncodedValue());
     }
 
-    final public void testEncodeValue_normal() {
+    public void testEncodeValue_normal() {
         assertEquals("foo", new LikeFilter("", "foo").getEncodedValue());
         assertEquals("foo*bar", new LikeFilter("", "foo*bar").getEncodedValue());
         assertEquals("*foo*bar*", new LikeFilter("", "*foo*bar*")
@@ -47,10 +49,22 @@ public class LikeFilterTest extends TestCase {
                 .getEncodedValue());
     }
 
-    final public void testEncodeValue_escape() {
+    public void testEncodeValue_escape() {
         assertEquals("*\\28*\\29*", new LikeFilter("", "*(*)*")
                 .getEncodedValue());
         assertEquals("*\\5c2a*", new LikeFilter("", "*\\2a*").getEncodedValue());
     }
 
+    public void testEquals() {
+    	String attribute = "a";
+		String value = "b";
+		LikeFilter originalObject = new LikeFilter(attribute, value);
+		LikeFilter identicalObject = new LikeFilter(attribute, value);
+		LikeFilter differentObject = new LikeFilter(attribute, "c");
+		LikeFilter subclassObject = new LikeFilter(attribute, value) {
+		};
+
+        new EqualsTester(originalObject, identicalObject, differentObject,
+                subclassObject);
+    }
 }

@@ -22,6 +22,8 @@ import org.springframework.ldap.filter.OrFilter;
 import junit.framework.TestCase;
 
 /**
+ * Unit tests for the OrFilter class.
+ * 
  * @author Adam Skogman
  */
 public class OrFilterTest extends TestCase {

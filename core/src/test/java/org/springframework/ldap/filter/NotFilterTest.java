@@ -24,6 +24,8 @@ import com.gargoylesoftware.base.testing.EqualsTester;
 import junit.framework.TestCase;
 
 /**
+ * Unit tests for the NotFilter class.
+ * 
  * @author Mattias Hellborg Arthursson
  */
 public class NotFilterTest extends TestCase {

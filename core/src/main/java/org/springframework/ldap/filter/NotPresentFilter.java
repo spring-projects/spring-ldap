@@ -15,6 +15,8 @@
  */
 package org.springframework.ldap.filter;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.springframework.ldap.filter.AbstractFilter;
 
 /**
@@ -36,7 +38,7 @@ import org.springframework.ldap.filter.AbstractFilter;
  * @author Jordan Hein
  */
 public class NotPresentFilter extends AbstractFilter {
-
+	
 	private String attribute;
 
 	/**
@@ -55,5 +57,27 @@ public class NotPresentFilter extends AbstractFilter {
 		buff.append(attribute);
 		buff.append("=*))");
 		return buff;
+	}
+
+	/*
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object o) {
+
+		if (o instanceof NotPresentFilter && o.getClass() == this.getClass()) {
+			NotPresentFilter f = (NotPresentFilter) o;
+			EqualsBuilder builder = new EqualsBuilder().append(this.attribute, f.attribute);
+			return builder.isEquals();
+		}
+
+		return false;
+	}
+
+	/*
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode() {
+		HashCodeBuilder builder = new HashCodeBuilder().append(attribute);
+		return builder.toHashCode();
 	}
 }

@@ -23,36 +23,36 @@ import org.springframework.ldap.filter.NotFilter;
 import com.gargoylesoftware.base.testing.EqualsTester;
 
 /**
- * Unit tests for the NotPresentFilter class.
+ * Unit tests for the HardcodedFilter class.
  *
  * @author Ulrik Sandberg
  */
-public class NotPresentFilterTest extends TestCase {
+public class HardcodedFilterTest extends TestCase {
 
-	public void testNotPresentFilter() {
-		NotPresentFilter filter = new NotPresentFilter("foo");
-		assertEquals("(!(foo=*))", filter.encode());
+	public void testHardcodedFilter() {
+		HardcodedFilter filter = new HardcodedFilter("(foo=a*b)");
+		assertEquals("(foo=a*b)", filter.encode());
 
-		NotFilter notFilter = new NotFilter(new NotPresentFilter("foo"));
-		assertEquals("(!(!(foo=*)))", notFilter.encode());
+		NotFilter notFilter = new NotFilter(new HardcodedFilter("(foo=a*b)"));
+		assertEquals("(!(foo=a*b))", notFilter.encode());
 
 		AndFilter andFilter = new AndFilter();
-		andFilter.and(new NotPresentFilter("foo"));
-		andFilter.and(new NotPresentFilter("bar"));
-		assertEquals("(&(!(foo=*))(!(bar=*)))", andFilter.encode());
+		andFilter.and(new HardcodedFilter("(foo=a*b)"));
+		andFilter.and(new HardcodedFilter("(bar=a*b)"));
+		assertEquals("(&(foo=a*b)(bar=a*b))", andFilter.encode());
 
 		andFilter = new AndFilter();
-		andFilter.and(new NotPresentFilter("foo"));
-		andFilter.and(new NotFilter(new NotPresentFilter("bar")));
-		assertEquals("(&(!(foo=*))(!(!(bar=*))))", andFilter.encode());
+		andFilter.and(new HardcodedFilter("(foo=a*b)"));
+		andFilter.and(new NotFilter(new HardcodedFilter("(bar=a*b)")));
+		assertEquals("(&(foo=a*b)(!(bar=a*b)))", andFilter.encode());
 	}
 
     public void testEquals() {
-		String attribute = "foo";
-		NotPresentFilter originalObject = new NotPresentFilter(attribute);
-		NotPresentFilter identicalObject = new NotPresentFilter(attribute);
-		NotPresentFilter differentObject = new NotPresentFilter("bar");
-		NotPresentFilter subclassObject = new NotPresentFilter(attribute) {
+		String attribute = "(foo=a*b)";
+		HardcodedFilter originalObject = new HardcodedFilter(attribute);
+		HardcodedFilter identicalObject = new HardcodedFilter(attribute);
+		HardcodedFilter differentObject = new HardcodedFilter("(bar=a*b)");
+		HardcodedFilter subclassObject = new HardcodedFilter(attribute) {
         };
 
         new EqualsTester(originalObject, identicalObject, differentObject,

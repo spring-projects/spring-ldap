@@ -64,14 +64,12 @@ public class AndFilterTest extends TestCase {
     }
 
     public void testEquals() {
-        AndFilter originalObject = new AndFilter().and(new EqualsFilter("a",
-                "b"));
-        AndFilter identicalObject = new AndFilter().and(new EqualsFilter("a",
-                "b"));
-        AndFilter differentObject = new AndFilter().and(new EqualsFilter("b",
-                "b"));
+		EqualsFilter filter = new EqualsFilter("a", "b");
+		AndFilter originalObject = new AndFilter().and(filter);
+        AndFilter identicalObject = new AndFilter().and(filter);
+		AndFilter differentObject = new AndFilter().and(new EqualsFilter("b", "b"));
         AndFilter subclassObject = new AndFilter() {
-        }.and(new EqualsFilter("a", "b"));
+        }.and(filter);
 
         new EqualsTester(originalObject, identicalObject, differentObject,
                 subclassObject);

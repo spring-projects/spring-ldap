@@ -15,6 +15,9 @@
  */
 package org.springframework.ldap.filter;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * Filter that allows the user to check for the existence of a attribute. For an
  * attribute to be {@code 'present'} it must contain a value. Attributes that do
@@ -53,5 +56,27 @@ public class PresentFilter extends AbstractFilter {
 		buff.append(attribute);
 		buff.append("=*)");
 		return buff;
+	}
+
+	/*
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object o) {
+
+		if (o instanceof PresentFilter && o.getClass() == this.getClass()) {
+			PresentFilter f = (PresentFilter) o;
+			EqualsBuilder builder = new EqualsBuilder().append(this.attribute, f.attribute);
+			return builder.isEquals();
+		}
+
+		return false;
+	}
+
+	/*
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode() {
+		HashCodeBuilder builder = new HashCodeBuilder().append(attribute);
+		return builder.toHashCode();
 	}
 }

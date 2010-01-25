@@ -18,6 +18,8 @@ package org.springframework.ldap.filter;
 
 import org.springframework.ldap.filter.LessThanOrEqualsFilter;
 
+import com.gargoylesoftware.base.testing.EqualsTester;
+
 import junit.framework.TestCase;
 
 /**
@@ -57,4 +59,16 @@ public class LessThanOrEqualsFilterTest extends TestCase {
 
     }
 
+    public void testEquals() {
+    	String attribute = "a";
+		String value = "b";
+		LessThanOrEqualsFilter originalObject = new LessThanOrEqualsFilter(attribute, value);
+		LessThanOrEqualsFilter identicalObject = new LessThanOrEqualsFilter(attribute, value);
+		LessThanOrEqualsFilter differentObject = new LessThanOrEqualsFilter(attribute, "c");
+		LessThanOrEqualsFilter subclassObject = new LessThanOrEqualsFilter(attribute, value) {
+		};
+
+        new EqualsTester(originalObject, identicalObject, differentObject,
+                subclassObject);
+    }
 }

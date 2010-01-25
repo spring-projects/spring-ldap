@@ -21,20 +21,17 @@ import org.springframework.ldap.filter.WhitespaceWildcardsFilter;
 import junit.framework.TestCase;
 
 /**
+ * Unit tests for the WhitespaceWildcardsFilter class.
+ * 
  * @author Adam Skogman
  */
 public class WhitespaceWildcardsFilterTest extends TestCase {
 
-    /**
-     * Constructor for WhitespaceWildcardsFilterTest.
-     * 
-     * @param name
-     */
     public WhitespaceWildcardsFilterTest(String name) {
         super(name);
     }
 
-    final public void testEncodeValue_blank() {
+    public void testEncodeValue_blank() {
 
         // blank
         assertEquals("*", new WhitespaceWildcardsFilter("", null)
@@ -48,7 +45,7 @@ public class WhitespaceWildcardsFilterTest extends TestCase {
 
     }
 
-    final public void testEncodeValue_normal() {
+    public void testEncodeValue_normal() {
 
         assertEquals("*foo*", new WhitespaceWildcardsFilter("", "foo")
                 .getEncodedValue());
@@ -61,7 +58,7 @@ public class WhitespaceWildcardsFilterTest extends TestCase {
                 " \t foo \n bar \r ").getEncodedValue());
     }
 
-    final public void testEncodeValue_escape() {
+    public void testEncodeValue_escape() {
 
         assertEquals("*\\28\\2a\\29*", new WhitespaceWildcardsFilter("", "(*)")
                 .getEncodedValue());
@@ -71,5 +68,4 @@ public class WhitespaceWildcardsFilterTest extends TestCase {
                 .getEncodedValue());
 
     }
-
 }

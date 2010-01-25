@@ -18,6 +18,8 @@ package org.springframework.ldap.filter;
 
 import org.springframework.ldap.filter.GreaterThanOrEqualsFilter;
 
+import com.gargoylesoftware.base.testing.EqualsTester;
+
 import junit.framework.TestCase;
 
 /**
@@ -58,4 +60,16 @@ public class GreaterThanOrEqualsFilterTest extends TestCase {
 
     }
 
+    public void testEquals() {
+    	String attribute = "a";
+		String value = "b";
+		GreaterThanOrEqualsFilter originalObject = new GreaterThanOrEqualsFilter(attribute, value);
+		GreaterThanOrEqualsFilter identicalObject = new GreaterThanOrEqualsFilter(attribute, value);
+		GreaterThanOrEqualsFilter differentObject = new GreaterThanOrEqualsFilter(attribute, "c");
+		GreaterThanOrEqualsFilter subclassObject = new GreaterThanOrEqualsFilter(attribute, value) {
+		};
+
+        new EqualsTester(originalObject, identicalObject, differentObject,
+                subclassObject);
+    }
 }
