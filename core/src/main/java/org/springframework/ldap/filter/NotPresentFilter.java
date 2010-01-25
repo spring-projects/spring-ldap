@@ -63,14 +63,17 @@ public class NotPresentFilter extends AbstractFilter {
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object o) {
-
-		if (o instanceof NotPresentFilter && o.getClass() == this.getClass()) {
-			NotPresentFilter f = (NotPresentFilter) o;
-			EqualsBuilder builder = new EqualsBuilder().append(this.attribute, f.attribute);
-			return builder.isEquals();
+		if (o == null) {
+			return false;
 		}
-
-		return false;
+		if (o == this) {
+			return true;
+		}
+		if (o.getClass() != getClass()) {
+			return false;
+		}
+		NotPresentFilter f = (NotPresentFilter) o;
+		return new EqualsBuilder().append(this.attribute, f.attribute).isEquals();
 	}
 
 	/*

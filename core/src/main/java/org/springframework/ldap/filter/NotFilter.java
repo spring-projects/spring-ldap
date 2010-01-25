@@ -17,6 +17,8 @@
 package org.springframework.ldap.filter;
 
 import org.apache.commons.lang.Validate;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * A filter for 'not'. The following code:
@@ -66,13 +68,17 @@ public class NotFilter extends AbstractFilter {
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object o) {
-
-		if (o instanceof NotFilter && o.getClass() == this.getClass()) {
-			NotFilter f = (NotFilter) o;
-			return this.filter.equals(f.filter);
+		if (o == null) {
+			return false;
 		}
-
-		return false;
+		if (o == this) {
+			return true;
+		}
+		if (o.getClass() != getClass()) {
+			return false;
+		}
+		NotFilter f = (NotFilter) o;
+		return new EqualsBuilder().append(this.filter, f.filter).isEquals();
 	}
 
 	/*

@@ -77,14 +77,17 @@ public class HardcodedFilter extends AbstractFilter {
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object o) {
-
-		if (o instanceof HardcodedFilter && o.getClass() == this.getClass()) {
-			HardcodedFilter f = (HardcodedFilter) o;
-			EqualsBuilder builder = new EqualsBuilder().append(this.filter, f.filter);
-			return builder.isEquals();
+		if (o == null) {
+			return false;
 		}
-
-		return false;
+		if (o == this) {
+			return true;
+		}
+		if (o.getClass() != getClass()) {
+			return false;
+		}
+		HardcodedFilter f = (HardcodedFilter) o;
+		return new EqualsBuilder().append(this.filter, f.filter).isEquals();
 	}
 
 	/*

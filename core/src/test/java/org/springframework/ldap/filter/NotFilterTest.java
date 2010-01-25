@@ -48,5 +48,4 @@ public class NotFilterTest extends TestCase {
         new EqualsTester(originalObject, identicalObject, differentObject,
                 subclassObject);
     }
-
 }

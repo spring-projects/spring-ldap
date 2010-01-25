@@ -69,7 +69,6 @@ public class GreaterThanOrEqualsFilterTest extends TestCase {
 		GreaterThanOrEqualsFilter subclassObject = new GreaterThanOrEqualsFilter(attribute, value) {
 		};
 
-        new EqualsTester(originalObject, identicalObject, differentObject,
-                subclassObject);
+		new EqualsTester(originalObject, identicalObject, differentObject, subclassObject);
     }
 }

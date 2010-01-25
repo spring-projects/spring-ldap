@@ -62,14 +62,17 @@ public class PresentFilter extends AbstractFilter {
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object o) {
-
-		if (o instanceof PresentFilter && o.getClass() == this.getClass()) {
-			PresentFilter f = (PresentFilter) o;
-			EqualsBuilder builder = new EqualsBuilder().append(this.attribute, f.attribute);
-			return builder.isEquals();
+		if (o == null) {
+			return false;
 		}
-
-		return false;
+		if (o == this) {
+			return true;
+		}
+		if (o.getClass() != getClass()) {
+			return false;
+		}
+		PresentFilter f = (PresentFilter) o;
+		return new EqualsBuilder().append(this.attribute, f.attribute).isEquals();
 	}
 
 	/*
