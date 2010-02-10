@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	<bean id="placeholderConfig"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:/config/ldap.properties" />
+	</bean>
+	
+	<bean id="contextSource"
+		class="org.springframework.ldap.test.TestContextSourceFactoryBean">
+		<property name="defaultPartitionSuffix" value="dc=jayway,dc=se" />
+		<property name="defaultPartitionName" value="jayway" />
+		<property name="principal" value="${userDn}" />
+		<property name="password" value="${password}" />
+		<property name="ldifFile" value="/setup_data.ldif" />
+		<property name="port" value="3901" />
+	</bean>
+	
+	<bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">
+		<constructor-arg ref="contextSource" />
+	</bean>
+
+	<bean id="personDao"
+		class="org.springframework.ldap.samples.article.dao.PersonDaoImpl">
+		<property name="ldapTemplate" ref="ldapTemplate" />
+	</bean>
+
+	<bean id="traditionalPersonDao"
+		class="org.springframework.ldap.samples.article.dao.TraditionalPersonDaoImpl">
+		<property name="url" value="ldap://localhost:3901" />
+		<property name="base" value="dc=jayway,dc=se" />
+		<property name="userDn" value="${userDn}" />
+		<property name="password" value="${password}" />
+	</bean>
+</beans>
