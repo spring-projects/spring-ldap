@@ -134,6 +134,12 @@
 			</modules>
 		</profile>
 		<profile>
+			<id>sandbox</id>
+			<modules>
+				<module>sandbox</module>
+			</modules>
+		</profile>
+		<profile>
 			<id>release</id>
 			<build>
 				<plugins>

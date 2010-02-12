@@ -68,7 +68,7 @@ import org.springframework.util.ReflectionUtils;
  * @author Marius Scurtescu
  * @see <a href="http://www3.ietf.org/proceedings/02nov/I-D/draft-ietf-ldapext-ldapv3-vlv-09.txt">LDAP Extensions for Scrolling View Browsing of Search Results</a>
  */
-class VirtualListViewControlDirContextProcessor extends AbstractFallbackRequestAndResponseControlDirContextProcessor
+public class VirtualListViewControlDirContextProcessor extends AbstractFallbackRequestAndResponseControlDirContextProcessor
 {
     private static final String DEFAULT_REQUEST_CONTROL  = "com.sun.jndi.ldap.ctl.VirtualListViewControl";
     private static final String DEFAULT_RESPONSE_CONTROL = "com.sun.jndi.ldap.ctl.VirtualListViewResponseControl";
