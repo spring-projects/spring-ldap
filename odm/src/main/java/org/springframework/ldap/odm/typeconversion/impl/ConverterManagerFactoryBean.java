@@ -9,7 +9,7 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.FactoryBeanNotInitializedException;
 
 /**
- * A utility class to allow {@link ConverterManagerImpl} instances to be easily configured via <code>spring.xml</code>
+ * A utility class to allow {@link ConverterManagerImpl} instances to be easily configured via <code>spring.xml</code>.
  * <p>
  * The following shows a typical simple example which creates two {@link Converter} instances:
  * <ul>
