@@ -16,20 +16,20 @@
     <modules>
         <module>integration-tests</module>
     </modules>
-    <profiles>
-      <profile>
-        <id>openldap</id>
-        <modules>
-          <module>integration-tests-openldap</module>
-        </modules>
-      </profile>
-      <profile>
-        <id>sunone</id>
-        <modules>
-          <module>integration-tests-sunone</module>
-        </modules>
-      </profile>
-    </profiles>
+	<profiles>
+		<profile>
+			<id>openldap</id>
+			<modules>
+				<module>integration-tests-openldap</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>sunone</id>
+			<modules>
+				<module>integration-tests-sunone</module>
+			</modules>
+		</profile>
+	</profiles>
     <repositories>
         <repository>
             <id>spring-milestone</id>

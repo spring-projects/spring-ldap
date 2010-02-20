@@ -25,9 +25,6 @@
         </developer>
     </developers>
 
-    <properties>
-    </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -47,13 +44,6 @@
                 <configuration>
                     <source>1.5</source>
                     <target>1.5</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-                <configuration>
-                    <forkMode>always</forkMode>
                 </configuration>
             </plugin>
         </plugins>

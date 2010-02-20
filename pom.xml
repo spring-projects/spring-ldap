@@ -261,6 +261,89 @@
 		</repository>
 	</repositories>
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-jxr-plugin</artifactId>
+					<version>2.1</version>
+					<configuration>
+						<aggregate>true</aggregate>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-surefire-report-plugin</artifactId>
+					<version>2.4.3</version>
+					<configuration>
+						<aggregate>true</aggregate>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>2.1.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>2.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>2.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.0</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>2.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.2-beta-2</version>
+				</plugin>
+				<plugin>
+					<groupId>com.agilejava.docbkx</groupId>
+					<artifactId>docbkx-maven-plugin</artifactId>
+					<version>2.0.6</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.5</version>
+					<configuration>
+						<aggregate>true</aggregate>
+						<breakiterator>true</breakiterator>
+						<header>Spring LDAP Framework</header>
+						<quiet>true</quiet>
+						<stylesheetfile>${basedir}/src/main/javadoc/javadoc.css</stylesheetfile>
+						<overview>${basedir}/src/main/javadoc/overview.html</overview>
+						<javadocDirectory>${basedir}/src/main/javadoc</javadocDirectory>
+						<excludePackageNames>org.springframework.ldap.samples:org.springframework.ldap.itest</excludePackageNames>
+						<links>
+							<link>http://java.sun.com/j2se/1.4.2/docs/api</link>
+							<link>http://java.sun.com/j2se/1.5.0/docs/api</link>
+							<link>http://static.springframework.org/spring/docs/2.5.x/api/</link>
+							<link>http://logging.apache.org/log4j/1.2/apidocs/</link>
+							<link>http://commons.apache.org/logging/apidocs/</link>
+							<link>http://commons.apache.org/dbcp/apidocs/</link>
+							<link>http://commons.apache.org/pool/apidocs/</link>
+							<link>http://junit.sourceforge.net/javadoc/</link>
+						</links>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>versions-maven-plugin</artifactId>
+					<version>1.1</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -324,7 +407,6 @@
 			<plugin>
 				<groupId>com.agilejava.docbkx</groupId>
 				<artifactId>docbkx-maven-plugin</artifactId>
-				<version>2.0.6</version>
 				<executions>
 					<execution>
 						<goals>
@@ -378,35 +460,24 @@
 	</build>
 	<reporting>
 		<plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>dependency-updates-report</report>
+                            <report>plugin-updates-report</report>
+                            <report>property-updates-report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
 			<plugin>
 				<artifactId>maven-jxr-plugin</artifactId>
-				<configuration>
-					<aggregate>true</aggregate>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-surefire-report-plugin</artifactId>
-				<configuration>
-					<aggregate>true</aggregate>
-				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<configuration>
-					<aggregate>true</aggregate>
-					<breakiterator>true</breakiterator>
-					<header>Spring LDAP Framework</header>
-					<quiet>true</quiet>
-					<stylesheetfile>${basedir}/src/main/javadoc/javadoc.css</stylesheetfile>
-					<overview>${basedir}/src/main/javadoc/overview.html</overview>
-					<javadocDirectory>${basedir}/src/main/javadoc</javadocDirectory>
-					<excludePackageNames>org.springframework.ldap.samples:org.springframework.ldap.itest</excludePackageNames>
-					<links>
-						<link>http://java.sun.com/j2se/1.5.0/docs/api</link>
-						<link>http://static.springframework.org/spring/docs/2.5.x/api/</link>
-						<link>http://commons.apache.org/pool/apidocs/</link>
-					</links>
-				</configuration>
 				<reportSets>
 					<reportSet>
 						<reports>

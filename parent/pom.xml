@@ -76,6 +76,130 @@
 		</pluginRepository>
 	</pluginRepositories>
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-jxr-plugin</artifactId>
+					<version>2.1</version>
+					<configuration>
+						<aggregate>true</aggregate>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-surefire-report-plugin</artifactId>
+					<version>2.4.3</version>
+					<configuration>
+						<aggregate>true</aggregate>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.4.2</version>
+					<configuration>
+						<forkMode>once</forkMode>
+						<childDelegation>false</childDelegation>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.3</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>2.1.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>2.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>2.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.0</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>2.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.2-beta-2</version>
+				</plugin>
+				<plugin>
+					<groupId>com.agilejava.docbkx</groupId>
+					<artifactId>docbkx-maven-plugin</artifactId>
+					<version>2.0.6</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.5</version>
+					<configuration>
+						<aggregate>true</aggregate>
+						<breakiterator>true</breakiterator>
+						<header>Spring LDAP Framework</header>
+						<quiet>true</quiet>
+						<stylesheetfile>${basedir}/src/main/javadoc/javadoc.css</stylesheetfile>
+						<overview>${basedir}/src/main/javadoc/overview.html</overview>
+						<javadocDirectory>${basedir}/src/main/javadoc</javadocDirectory>
+						<excludePackageNames>org.springframework.ldap.samples:org.springframework.ldap.itest</excludePackageNames>
+						<links>
+							<link>http://java.sun.com/j2se/1.4.2/docs/api</link>
+							<link>http://java.sun.com/j2se/1.5.0/docs/api</link>
+							<link>http://static.springframework.org/spring/docs/2.5.x/api/</link>
+							<link>http://logging.apache.org/log4j/1.2/apidocs/</link>
+							<link>http://commons.apache.org/logging/apidocs/</link>
+							<link>http://commons.apache.org/dbcp/apidocs/</link>
+							<link>http://commons.apache.org/pool/apidocs/</link>
+							<link>http://junit.sourceforge.net/javadoc/</link>
+						</links>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-eclipse-plugin</artifactId>
+					<version>2.7</version>
+					<configuration>
+						<downloadSources>true</downloadSources>
+						<excludes>
+	                        <exclude>package.html</exclude>
+	                    </excludes>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-idea-plugin</artifactId>
+					<version>2.2</version>
+					<configuration>
+						<downloadSources>true</downloadSources>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>cobertura-maven-plugin</artifactId>
+					<version>2.3</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>findbugs-maven-plugin</artifactId>
+					<version>1.2</version>
+				</plugin>
+	            <plugin>
+	                <groupId>org.mortbay.jetty</groupId>
+	                <artifactId>maven-jetty-plugin</artifactId>
+	                <version>6.1.21</version>
+	            </plugin>
+	            <plugin>
+	                <groupId>org.apache.maven.plugins</groupId>
+	                <artifactId>maven-war-plugin</artifactId>
+	                <version>2.1-beta-1</version>
+	            </plugin>
+			</plugins>
+		</pluginManagement>
 		<extensions>
 			<extension>
 				<groupId>org.springframework.build.aws</groupId>
@@ -94,11 +218,6 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.4.2</version>
-				<configuration>
-					<forkMode>once</forkMode>
-					<childDelegation>false</childDelegation>
-				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -116,16 +235,9 @@
 			<!-- IDEs -->
 			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
-				<configuration>
-					<downloadSources>true</downloadSources>
-				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-idea-plugin</artifactId>
-				<configuration>
-					<downloadSources>true</downloadSources>
-					<downloadJavadocs>true</downloadJavadocs>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -159,28 +271,18 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>1.2</version>
 			</plugin>
 			<plugin>
 				<artifactId>maven-jxr-plugin</artifactId>
-				<configuration>
-					<aggregate>true</aggregate>
-				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-				<configuration>
-					<aggregate>true</aggregate>
-				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<configuration>
-					<quiet>true</quiet>
-				</configuration>
 				<reportSets>
 					<reportSet>
 						<reports>
