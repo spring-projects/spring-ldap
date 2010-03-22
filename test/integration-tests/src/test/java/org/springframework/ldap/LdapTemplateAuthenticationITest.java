@@ -31,6 +31,7 @@ import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapEntryIdentification;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.CollectingAuthenticationErrorCallback;
+import org.springframework.ldap.core.support.LookupAttemptingCallback;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.filter.WhitespaceWildcardsFilter;
@@ -105,5 +106,13 @@ public class LdapTemplateAuthenticationITest extends AbstractLdapTemplateIntegra
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(new WhitespaceWildcardsFilter("uid", "some.person"));
 		assertFalse(tested.authenticate("", filter.toString(), "password"));
+	}
+	
+	@Test
+	public void testLookupAttemptingCallback() {
+		AndFilter filter = new AndFilter();
+		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
+		LookupAttemptingCallback callback = new LookupAttemptingCallback();
+		assertTrue(tested.authenticate("", filter.encode(), "password", callback));
 	}
 }

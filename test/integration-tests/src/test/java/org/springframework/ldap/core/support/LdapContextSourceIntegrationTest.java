@@ -40,12 +40,12 @@ import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
 
 /**
- * Integration tests for ContextSourceImpl.
+ * Integration tests for LdapContextSource.
  * 
  * @author Mattias Hellborg Arthursson
  */
 @ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
-public class LdapContextSourcelITest extends AbstractLdapTemplateIntegrationTest {
+public class LdapContextSourceIntegrationTest extends AbstractLdapTemplateIntegrationTest {
 
 	@Autowired
 	private ContextSource tested;
