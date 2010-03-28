@@ -554,6 +554,20 @@ public class DistinguishedNameTest extends TestCase {
 		assertNotNull(name);
 	}
 
+	/**
+	 * Test for http://forum.springsource.org/showthread.php?t=86640.
+	 */
+	public void testDistinguishedNameWithDotParsesProperly() {
+		DistinguishedName name = new DistinguishedName("cn=first.last,OU=DevTest Users,DC=xyz,DC=com");
+		assertEquals("cn=first.last,ou=DevTest Users,dc=xyz,dc=com", name.toCompactString());
+		DistinguishedName dn = new DistinguishedName();
+		dn.parse("cn=first.last,OU=DevTest Users,DC=xyz,DC=com");
+		assertEquals("first.last", dn.getValue("cn"));
+		assertEquals("DevTest Users", dn.getValue("ou"));
+		assertEquals("xyz", dn.getLdapRdn(1).getValue());
+		assertEquals("com", dn.getLdapRdn(0).getValue());
+	}
+
 	public void testToStringCompact() {
 		try {
 			DistinguishedName name = new DistinguishedName("cn=john doe, ou=company");

@@ -20,6 +20,9 @@ import static junit.framework.Assert.assertTrue;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.core.support.CountNameClassPairCallbackHandler;
 import org.springframework.ldap.itest.filter.DummyFilterConsumer;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
@@ -27,11 +30,14 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 /**
  * @author Mattias Hellborg Arthursson
  */
-@ContextConfiguration(locations = { "/conf/hardcodedFilterTestContext.xml" })
+@ContextConfiguration(locations = { "/conf/hardcodedFilterTestContext.xml", "/conf/ldapTemplateTestContext.xml" })
 public class HardcodedFilterIntegrationTest extends AbstractJUnit4SpringContextTests {
 
 	@Autowired
 	private DummyFilterConsumer dummyFilterConsumer;
+
+	@Autowired
+	private LdapTemplate ldapTemplate;
 
 	@Test
 	public void verifyThatFilterEditorWorks() {
@@ -39,5 +45,13 @@ public class HardcodedFilterIntegrationTest extends AbstractJUnit4SpringContextT
 		assertTrue(filter instanceof HardcodedFilter);
 		assertEquals("(&(objectclass=person)(!(objectclass=computer))", filter.toString());
 	}
-
+	
+	@Test
+	public void verifyThatWildcardsAreUnescaped() {
+		HardcodedFilter filter = new HardcodedFilter("cn=Some*");
+		CountNameClassPairCallbackHandler handler = new CountNameClassPairCallbackHandler();
+		ldapTemplate.search(DistinguishedName.EMPTY_PATH, filter.encode(), handler);
+		int hits = handler.getNoOfRows();
+		assertTrue("expected more than one hit, got " + hits, hits > 1);
+	}
 }
