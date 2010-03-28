@@ -20,18 +20,18 @@ import static junit.framework.Assert.assertTrue;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.CountNameClassPairCallbackHandler;
 import org.springframework.ldap.itest.filter.DummyFilterConsumer;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 /**
  * @author Mattias Hellborg Arthursson
  */
 @ContextConfiguration(locations = { "/conf/hardcodedFilterTestContext.xml", "/conf/ldapTemplateTestContext.xml" })
-public class HardcodedFilterIntegrationTest extends AbstractJUnit4SpringContextTests {
+public class HardcodedFilterIntegrationTest extends AbstractLdapTemplateIntegrationTest {
 
 	@Autowired
 	private DummyFilterConsumer dummyFilterConsumer;
