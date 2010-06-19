@@ -33,7 +33,7 @@
 		<url>http://fisheye3.cenqua.com/browse/springframework/spring-ldap/trunk</url>
 	</scm>
 	<properties>
-		<spring.version>2.5.6.SEC01</spring.version>
+		<spring.version>2.5.6.SEC02</spring.version>
 	</properties>
 	<repositories>
 		<repository>
