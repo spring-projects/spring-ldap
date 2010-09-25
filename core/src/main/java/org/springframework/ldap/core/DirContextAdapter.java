@@ -558,7 +558,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	public Object getObjectAttribute(String name) {
 		Attribute oneAttr = originalAttrs.get(name);
-		if (oneAttr == null) {
+		if (oneAttr == null || oneAttr.size() == 0) { // LDAP-215
 			return null;
 		}
 		try {

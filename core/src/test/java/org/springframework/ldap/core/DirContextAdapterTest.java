@@ -83,6 +83,19 @@ public class DirContextAdapterTest extends TestCase {
 		assertNull(s);
 	}
 
+	public void testGetStringAttributeDoesExistButWithNoValue() throws Exception {
+		final Attributes attrs = new BasicAttributes();
+		attrs.put(new BasicAttribute("abc"));
+		class TestableDirContextAdapter extends DirContextAdapter {
+			public TestableDirContextAdapter() {
+				super(attrs, null);
+			}
+		}
+		tested = new TestableDirContextAdapter();
+		String s = tested.getStringAttribute("abc");
+		assertNull(s);
+	}
+
 	public void testGetStringAttributeExists() throws Exception {
 		final Attributes attrs = new BasicAttributes();
 		attrs.put(new BasicAttribute("abc", "def"));
