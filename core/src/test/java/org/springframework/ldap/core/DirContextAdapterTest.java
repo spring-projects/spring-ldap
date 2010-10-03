@@ -78,12 +78,12 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals(0, items.length);
 	}
 
-	public void testGetStringAttributeNotExists() throws Exception {
+	public void testGetStringAttributeWhenAttributeDoesNotExist() throws Exception {
 		String s = tested.getStringAttribute("does not exist");
 		assertNull(s);
 	}
 
-	public void testGetStringAttributeDoesExistButWithNoValue() throws Exception {
+	public void testGetStringAttributeWhenAttributeDoesExistButWithNoValue() throws Exception {
 		final Attributes attrs = new BasicAttributes();
 		attrs.put(new BasicAttribute("abc"));
 		class TestableDirContextAdapter extends DirContextAdapter {
@@ -96,7 +96,25 @@ public class DirContextAdapterTest extends TestCase {
 		assertNull(s);
 	}
 
-	public void testGetStringAttributeExists() throws Exception {
+	public void testAttributeExistsWhenAttributeDoesExistButWithNoValue() throws Exception {
+		final Attributes attrs = new BasicAttributes();
+		attrs.put(new BasicAttribute("abc"));
+		class TestableDirContextAdapter extends DirContextAdapter {
+			public TestableDirContextAdapter() {
+				super(attrs, null);
+			}
+		}
+		tested = new TestableDirContextAdapter();
+		boolean result = tested.attributeExists("abc");
+		assertEquals(true, result);
+	}
+
+	public void testAttributeExistsWhenAttributeDoesNotExist() throws Exception {
+		boolean result = tested.attributeExists("does not exist");
+		assertEquals(false, result);
+	}
+
+	public void testGetStringAttributeWhenAttributeExists() throws Exception {
 		final Attributes attrs = new BasicAttributes();
 		attrs.put(new BasicAttribute("abc", "def"));
 		class TestableDirContextAdapter extends DirContextAdapter {
@@ -109,7 +127,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("def", s);
 	}
 
-	public void testGetStringAttributesExists() throws Exception {
+	public void testGetStringAttributesWhenMultiValueAttributeExists() throws Exception {
 		final Attributes attrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
 		multi.add("123");

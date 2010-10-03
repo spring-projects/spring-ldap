@@ -552,8 +552,7 @@ public class DirContextAdapter implements DirContextOperations {
 	}
 
 	/*
-	 * @see
-	 * org.springframework.ldap.support.DirContextOperations#getObjectAttribute
+	 * @see org.springframework.ldap.support.DirContextOperations#getObjectAttribute
 	 * (java.lang.String)
 	 */
 	public Object getObjectAttribute(String name) {
@@ -569,6 +568,19 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
+	// LDAP-215
+	/* (non-Javadoc)
+	 * @see org.springframework.ldap.core.DirContextOperations#attributeExists(java.lang.String)
+	 */
+	public boolean attributeExists(String name) {
+		Attribute oneAttr = originalAttrs.get(name);
+		if (oneAttr == null) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
 	/*
 	 * @see
 	 * org.springframework.ldap.support.DirContextOperations#setAttributeValue

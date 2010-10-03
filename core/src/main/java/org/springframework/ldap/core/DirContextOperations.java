@@ -56,9 +56,11 @@ public interface DirContextOperations extends DirContext,
 	/**
 	 * Get the value of a String attribute. If more than one attribute value
 	 * exists for the specified attribute, only the first one will be returned.
+	 * If an attribute has no value, <code>null</code> will be returned.
 	 * 
 	 * @param name name of the attribute.
-	 * @return the value of the attribute.
+	 * @return the value of the attribute if it exists, or <code>null</code> if
+	 * the attribute doesn't exist or if it exists but with no value.
 	 * @throws ClassCastException if the value of the entry is not a String.
 	 */
 	String getStringAttribute(String name);
@@ -66,13 +68,25 @@ public interface DirContextOperations extends DirContext,
 	/**
 	 * Get the value of an Object attribute. If more than one attribute value
 	 * exists for the specified attribute, only the first one will be returned.
+	 * If an attribute has no value, <code>null</code> will be returned.
 	 * 
 	 * @param name name of the attribute.
 	 * @return the attribute value as an object if it exists, or
-	 * <code>null</code> otherwise.
+	 * <code>null</code> if the attribute doesn't exist or if it exists but with
+	 * no value.
 	 */
 	Object getObjectAttribute(String name);
 
+	/**
+	 * Check if an Object attribute exists, regardless of whether it has a value
+	 * or not.
+	 * 
+	 * @param name name of the attribute
+	 * @return <code>true</code> if the attribute exists, <code>false</code>
+	 * otherwise
+	 */
+	boolean attributeExists(String name);
+	
 	/**
 	 * Set the with the name <code>name</code> to the <code>value</code>.
 	 * 
