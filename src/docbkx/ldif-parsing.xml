@@ -7,10 +7,10 @@
   <section id="ldif-parsing-intro">
     <title>Introduction</title>
 
-    <para>LDIF files are the standard medium for serializing directoy data to
+    <para>LDIF files are the standard medium for serializing directory data to
     a flat file for archival, transferrence, or altercation. The
     <token>org.springframework.ldap.ldif</token> package provides classes
-    needed to read ldap objects from flat files and deserialize them into
+    needed to read LDAP objects from flat files and de-serialize them into
     tangible objects.</para>
 
     <para>The <token>LdifParser</token> is the main class of the
