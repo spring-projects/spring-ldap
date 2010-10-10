@@ -209,6 +209,9 @@ public class PersonDaoImpl implements PersonDao {
       <listitem>
         <para><emphasis>commons-pool</emphasis> (If you are planning to use the pooling functionality)</para>
       </listitem>
+      <listitem>
+        <para><emphasis>spring-batch</emphasis> (If you are planning to use the LDIF parsing functionality together with Spring Batch)</para>
+      </listitem>
     </itemizedlist>
 
   </sect1>
@@ -335,8 +338,8 @@ public class PersonDaoImpl implements PersonDao {
 
       <itemizedlist spacing="compact">
         <listitem>
-          <para>Dependencies: ldap, ldap.core, ldap.pool, spring-beans, spring-tx
-          commons-lang, commons-logging, commons-pool</para>
+          <para>Dependencies: ldap, ldap.core, ldap.pool, ldap.pool.validation, 
+          spring-beans, spring-tx, commons-lang, commons-logging, commons-pool</para>
         </listitem>
       </itemizedlist>
     </sect2>
@@ -362,7 +365,7 @@ public class PersonDaoImpl implements PersonDao {
 
       <itemizedlist spacing="compact">
         <listitem>
-          <para>Dependencies: ldap, spring-core, commons-logging</para>
+          <para>Dependencies: ldap, spring-core, commons-lang, commons-logging</para>
         </listitem>
       </itemizedlist>
     </sect2>
@@ -422,7 +425,7 @@ public class PersonDaoImpl implements PersonDao {
 
       <itemizedlist spacing="compact">
         <listitem>
-          <para>Dependencies: ldap.core, transaction.compensating,
+          <para>Dependencies: ldap.core, ldap.core.support, transaction.compensating,
           spring-core, commons-lang, commons-logging</para>
         </listitem>
       </itemizedlist>
@@ -437,7 +440,8 @@ public class PersonDaoImpl implements PersonDao {
       <itemizedlist spacing="compact">
         <listitem>
           <para>Dependencies: ldap, ldap.core, ldap.support, ldap.transaction.compensating, 
-          transaction.compensating, spring-tx, spring-jdbc, spring-orm, commons-logging</para>
+          ldap.transaction.compensating.support, transaction.compensating, 
+          spring-tx, spring-jdbc, spring-orm, commons-logging</para>
         </listitem>
       </itemizedlist>
     </sect2>
@@ -455,10 +459,64 @@ public class PersonDaoImpl implements PersonDao {
       </itemizedlist>
     </sect2>
 
+	<sect2 id="ldap.ldif">
+		<title>org.springframework.ldap.ldif</title>
+
+		<para>The ldap.ldif package provides support for parsing LDIF
+			files.</para>
+
+		<itemizedlist>
+			<listitem>
+				<para>Dependencies: ldap.core</para>
+			</listitem>
+		</itemizedlist>
+	</sect2>
+
+	<sect2 id="ldap.ldif.batch">
+		<title>org.springframework.ldap.ldif.batch</title>
+
+		<para>The ldap.ldif.batch package provides the classes necessary to
+			use the LDIF parser in the Spring Batch framework.</para>
+
+		<itemizedlist>
+			<listitem>
+				<para>Dependencies: ldap.core, ldap.ldif.parser, spring-batch, 
+				spring-core, spring-beans, commons-logging</para>
+			</listitem>
+		</itemizedlist>
+	</sect2>
+
+	<sect2 id="ldap.ldif.parser">
+		<title>org.springframework.ldap.ldif.parser</title>
+
+		<para>The ldap.ldif.parser package provides the parser classes
+			and interfaces.</para>
+
+		<itemizedlist>
+			<listitem>
+				<para>Dependencies: ldap.core, ldap.schema, ldap.ldif, ldap.ldif.support, 
+				spring-core, spring-beans, commons-lang, commons-logging</para>
+			</listitem>
+		</itemizedlist>
+	</sect2>
+
+	<sect2 id="ldap.ldif.support">
+		<title>org.springframework.ldap.ldif.support</title>
+
+		<para>The ldap.ldif.support package provides the necessary auxiliary
+			classes utilized by the LDIF Parser.</para>
+
+		<itemizedlist>
+			<listitem>
+				<para>Dependencies: ldap.core, ldap.ldif, commons-lang, commons-logging</para>
+			</listitem>
+		</itemizedlist>
+	</sect2>
+
     <para>For the exact list of jar dependencies, see the Spring LDAP Maven2
     Project Object Model (POM) files in the source tree.</para>
   </sect1>
-
+  
   <sect1 id="introduction-support">
     <title>Support</title>
 

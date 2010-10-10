@@ -19,6 +19,10 @@
 				<firstname>Eric</firstname>
 				<surname>Dalquist</surname>
 			</author>
+			<author>
+				<firstname>Keith</firstname>
+				<surname>Barlow</surname>
+			</author>
 		</authorgroup>
 
 		<legalnotice>
@@ -44,4 +48,5 @@
 	<xi:include href="configuration.xml" />
 	<xi:include href="pooling.xml" />
 	<xi:include href="user-authentication.xml" />
+	<xi:include href="ldif-parsing.xml" />
 </book>
