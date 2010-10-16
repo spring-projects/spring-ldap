@@ -20,7 +20,7 @@ package org.springframework.ldap.filter;
  * Filter for logical OR.
  * 
  * <pre>
- *        AndFilter filter = new AndFilter();
+ *        OrFilter filter = new OrFilter();
  *        filter.or(new EqualsFilter(&quot;objectclass&quot;, &quot;person&quot;);
  *        filter.or(new EqualsFilter(&quot;objectclass&quot;, &quot;organizationalUnit&quot;);
  *        System.out.println(filter.encode());    
