@@ -60,6 +60,10 @@ import org.springframework.util.StringUtils;
  * available as an array of <code>ModificationItem</code> objects, suitable as
  * input to {@link LdapTemplate#modifyAttributes(DirContextOperations)}.
  * 
+ * Note that this is not a complete implementation of DirContext. Several
+ * methods are not relevant for the intended usage of this class, so they
+ * throw UnsupportOperationException.
+ *
  * @see #setAttributeValue(String, Object)
  * @see #setAttributeValues(String, Object[])
  * @see #getStringAttribute(String)
