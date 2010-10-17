@@ -26,6 +26,7 @@ import javax.naming.directory.DirContext;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.ldap.core.AuthenticatedLdapEntryContextCallback;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapEntryIdentification;
@@ -101,13 +102,13 @@ public class LdapTemplateAuthenticationITest extends AbstractLdapTemplateIntegra
 		assertFalse(tested.authenticate("", filter.toString(), "password"));
 	}
 
-	@Test
+	@Test(expected=IncorrectResultSizeDataAccessException.class)
 	public void testAuthenticateWithFilterThatMatchesSeveralEntries() {
 		AndFilter filter = new AndFilter();
-		filter.and(new EqualsFilter("objectclass", "person")).and(new WhitespaceWildcardsFilter("uid", "some.person"));
-		assertFalse(tested.authenticate("", filter.toString(), "password"));
+		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("cn", "Some Person"));
+		tested.authenticate("", filter.toString(), "password");
 	}
-	
+
 	@Test
 	public void testLookupAttemptingCallback() {
 		AndFilter filter = new AndFilter();

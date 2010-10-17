@@ -34,6 +34,12 @@ Changes in version 1.3.1 (October 2010)
 * Added authentication methods that provide a possible authentication
   exception through an AuthenticationErrorCallback. (LDAP-192)
 
+* Authentication methods now treat a search result of more than one user as
+  an error and throw IncorrectResultSizeDataAccessException. (LDAP-170)
+  
+* Authentication methods now log problems at level INFO rather than ERROR.
+  (LDAP-170)
+  
 * DefaultDirObjectFactory calls a Java5 version of the IllegalArgumentException
   constructor. (LDAP 196).
 

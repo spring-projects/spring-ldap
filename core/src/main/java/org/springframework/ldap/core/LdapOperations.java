@@ -1482,6 +1482,7 @@ public interface LdapOperations {
 	 * @param errorCallback the callback that will be called if an exception is caught.
 	 * @return <code>true</code> if the authentication was successful,
 	 * <code>false</code> otherwise.
+	 * @throws IncorrectResultSizeDataAccessException if more than one users were found
 	 * @see #authenticate(String, String, String, AuthenticatedLdapEntryContextCallback, AuthenticationErrorCallback)
 	 * @since 1.3.1
 	 */

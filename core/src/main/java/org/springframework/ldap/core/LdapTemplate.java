@@ -1480,10 +1480,13 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			final AuthenticatedLdapEntryContextCallback callback, final AuthenticationErrorCallback errorCallback) {
 
 		List result = search(base, filter, new LdapEntryIdentificationContextMapper());
-		if (result.size() != 1) {
-			log.error("Unable to find unique entry matching in authentication; base: '" + base + "'; filter: '"
-					+ filter + "'. Found " + result.size() + " matching entries");
+		if (result.size() == 0) {
+			String msg = "No results found for search, base: '" + base + "'; filter: '" + filter + "'.";
+			log.info(msg);
 			return false;
+		} else if (result.size() > 1) {
+			String msg = "base: '" + base + "'; filter: '" + filter + "'.";
+			throw new IncorrectResultSizeDataAccessException(msg, 1, result.size());
 		}
 
 		final LdapEntryIdentification entryIdentification = (LdapEntryIdentification) result.get(0);
@@ -1499,7 +1502,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			return true;
 		}
 		catch (Exception e) {
-			log.error("Authentication failed for entry with DN '" + entryIdentification.getAbsoluteDn() + "'", e);
+			log.info("Authentication failed for entry with DN '" + entryIdentification.getAbsoluteDn() + "'", e);
 			errorCallback.execute(e);
 			return false;
 		}
