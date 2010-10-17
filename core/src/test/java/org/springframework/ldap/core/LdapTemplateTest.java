@@ -95,6 +95,14 @@ public class LdapTemplateTest extends TestCase {
 
 	private DirContextOperations dirContextOperationsMock;
 
+	private MockControl authenticatedContextControl;
+
+	private DirContext authenticatedContextMock;
+
+	private MockControl entryContextCallbackControl;
+
+	private AuthenticatedLdapEntryContextCallback entryContextCallbackMock;
+
 	protected void setUp() throws Exception {
 		super.setUp();
 
@@ -135,6 +143,12 @@ public class LdapTemplateTest extends TestCase {
 
 		dirContextOperationsConrol = MockControl.createControl(DirContextOperations.class);
 		dirContextOperationsMock = (DirContextOperations) dirContextOperationsConrol.getMock();
+
+		authenticatedContextControl = MockControl.createControl(DirContext.class);
+		authenticatedContextMock = (DirContext) authenticatedContextControl.getMock();
+
+		entryContextCallbackControl = MockControl.createControl(AuthenticatedLdapEntryContextCallback.class);
+		entryContextCallbackMock = (AuthenticatedLdapEntryContextCallback) entryContextCallbackControl.getMock();
 
 		tested = new LdapTemplate(contextSourceMock);
 	}
@@ -188,6 +202,8 @@ public class LdapTemplateTest extends TestCase {
 		searchExecutorControl.replay();
 		dirContextProcessorControl.replay();
 		dirContextOperationsConrol.replay();
+		authenticatedContextControl.replay();
+		entryContextCallbackControl.replay();
 	}
 
 	protected void verify() {
@@ -202,6 +218,8 @@ public class LdapTemplateTest extends TestCase {
 		searchExecutorControl.verify();
 		dirContextProcessorControl.verify();
 		dirContextOperationsConrol.verify();
+		authenticatedContextControl.verify();
+		entryContextCallbackControl.verify();
 	}
 
 	private void expectGetReadWriteContext() {
@@ -215,128 +233,79 @@ public class LdapTemplateTest extends TestCase {
 	public void testSearch_CallbackHandler() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(1);
-		controls.setReturningObjFlag(true);
-
 		SearchResult searchResult = new SearchResult("", new Object(), new BasicAttributes());
 
-		setupSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResult(searchControlsOneLevel(), searchResult);
 
 		handlerMock.handleNameClassPair(searchResult);
 
 		dirContextMock.close();
 
 		replay();
-
 		tested.search(nameMock, "(ou=somevalue)", 1, true, handlerMock);
-
 		verify();
 	}
 
 	public void testSearch_StringBase_CallbackHandler() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(1);
-		controls.setReturningObjFlag(true);
+		SearchControls controls = searchControlsOneLevel();
 
 		SearchResult searchResult = new SearchResult("", new Object(), new BasicAttributes());
 
-		setupStringSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResultWithStringBase(controls, searchResult);
 
 		handlerMock.handleNameClassPair(searchResult);
 
 		dirContextMock.close();
 
 		replay();
-
 		tested.search(DEFAULT_BASE_STRING, "(ou=somevalue)", 1, true, handlerMock);
-
 		verify();
-	}
-
-	private void setupStringSearchAndNamingEnumeration(SearchControls controls, SearchResult searchResult)
-			throws Exception {
-		dirContextControl.setDefaultMatcher(new SearchControlsMatcher());
-		dirContextControl.expectAndReturn(dirContextMock.search(DEFAULT_BASE_STRING, "(ou=somevalue)", controls),
-				namingEnumerationMock);
-
-		namingEnumerationControl.expectAndReturn(namingEnumerationMock.hasMore(), true);
-		namingEnumerationControl.expectAndReturn(namingEnumerationMock.next(), searchResult);
-		namingEnumerationControl.expectAndReturn(namingEnumerationMock.hasMore(), false);
-		namingEnumerationMock.close();
 	}
 
 	public void testSearch_CallbackHandler_Defaults() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+		SearchControls controls = searchControlsRecursive();
 		controls.setReturningObjFlag(false);
 
 		SearchResult searchResult = new SearchResult("", new Object(), new BasicAttributes());
 
-		setupSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResult(controls, searchResult);
 
 		handlerMock.handleNameClassPair(searchResult);
 
 		dirContextMock.close();
 
 		replay();
-
 		tested.search(nameMock, "(ou=somevalue)", handlerMock);
-
 		verify();
 	}
 
 	public void testSearch_String_CallbackHandler_Defaults() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+		SearchControls controls = searchControlsRecursive();
 		controls.setReturningObjFlag(false);
 
 		SearchResult searchResult = new SearchResult("", new Object(), new BasicAttributes());
 
-		setupStringSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResultWithStringBase(controls, searchResult);
 
 		handlerMock.handleNameClassPair(searchResult);
 
 		dirContextMock.close();
 
 		replay();
-
 		tested.search(DEFAULT_BASE_STRING, "(ou=somevalue)", handlerMock);
-
 		verify();
-	}
-
-	private void setupSearchAndNamingEnumeration(SearchControls controls, SearchResult searchResult) throws Exception {
-		dirContextControl.setDefaultMatcher(new SearchControlsMatcher());
-		dirContextControl.expectAndReturn(dirContextMock.search(nameMock, "(ou=somevalue)", controls),
-				namingEnumerationMock);
-
-		namingEnumerationControl.expectAndReturn(namingEnumerationMock.hasMore(), true);
-		namingEnumerationControl.expectAndReturn(namingEnumerationMock.next(), searchResult);
-		namingEnumerationControl.expectAndReturn(namingEnumerationMock.hasMore(), false);
-		namingEnumerationMock.close();
-	}
-
-	private void setupSearchAndNamingEnumerationForNoHits(SearchControls controls) throws Exception {
-		dirContextControl.setDefaultMatcher(new SearchControlsMatcher());
-		dirContextControl.expectAndReturn(dirContextMock.search(nameMock, "(ou=somevalue)", controls),
-				namingEnumerationMock);
-
-		namingEnumerationControl.expectAndReturn(namingEnumerationMock.hasMore(), false);
-		namingEnumerationMock.close();
 	}
 
 	public void testSearch_NameNotFoundException() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+		SearchControls controls = searchControlsRecursive();
 		controls.setReturningObjFlag(false);
 
 		dirContextControl.setDefaultMatcher(new SearchControlsMatcher());
@@ -346,7 +315,6 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		try {
 			tested.search(nameMock, "(ou=somevalue)", handlerMock);
 			fail("NameNotFoundException expected");
@@ -354,15 +322,13 @@ public class LdapTemplateTest extends TestCase {
 		catch (NameNotFoundException expected) {
 			assertTrue(true);
 		}
-
 		verify();
 	}
 
 	public void testSearch_NamingException() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+		SearchControls controls = searchControlsRecursive();
 		controls.setReturningObjFlag(false);
 
 		dirContextControl.setDefaultMatcher(new SearchControlsMatcher());
@@ -372,7 +338,6 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		try {
 			tested.search(nameMock, "(ou=somevalue)", handlerMock);
 			fail("LimitExceededException expected");
@@ -380,22 +345,20 @@ public class LdapTemplateTest extends TestCase {
 		catch (LimitExceededException expected) {
 			// expected
 		}
-
 		verify();
 	}
 
 	public void testSearch_CallbackHandler_DirContextProcessor() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+		SearchControls controls = searchControlsRecursive();
 		controls.setReturningObjFlag(false);
 
 		SearchResult searchResult = new SearchResult("", new Object(), new BasicAttributes());
 
 		dirContextProcessorMock.preProcess(dirContextMock);
 
-		setupSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResult(controls, searchResult);
 
 		handlerMock.handleNameClassPair(searchResult);
 
@@ -404,24 +367,21 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		tested.search(nameMock, "(ou=somevalue)", controls, handlerMock, dirContextProcessorMock);
-
 		verify();
 	}
 
 	public void testSearch_String_CallbackHandler_DirContextProcessor() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+		SearchControls controls = searchControlsRecursive();
 		controls.setReturningObjFlag(false);
 
 		SearchResult searchResult = new SearchResult("", new Object(), new BasicAttributes());
 
 		dirContextProcessorMock.preProcess(dirContextMock);
 
-		setupStringSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResultWithStringBase(controls, searchResult);
 
 		handlerMock.handleNameClassPair(searchResult);
 
@@ -430,24 +390,21 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		tested.search(DEFAULT_BASE_STRING, "(ou=somevalue)", controls, handlerMock, dirContextProcessorMock);
-
 		verify();
 	}
 
 	public void testSearch_String_AttributesMapper_DirContextProcessor() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(1);
+		SearchControls controls = searchControlsOneLevel();
 		controls.setReturningObjFlag(false);
 
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		SearchResult searchResult = new SearchResult("", null, expectedAttributes);
 
 		dirContextProcessorMock.preProcess(dirContextMock);
-		setupStringSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResultWithStringBase(controls, searchResult);
 
 		Object expectedResult = new Object();
 		attributesMapperControl.expectAndReturn(attributesMapperMock.mapFromAttributes(expectedAttributes),
@@ -457,10 +414,8 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		List list = tested.search(DEFAULT_BASE_STRING, "(ou=somevalue)", controls, attributesMapperMock,
 				dirContextProcessorMock);
-
 		verify();
 
 		assertNotNull(list);
@@ -471,15 +426,14 @@ public class LdapTemplateTest extends TestCase {
 	public void testSearch_Name_AttributesMapper_DirContextProcessor() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(1);
+		SearchControls controls = searchControlsOneLevel();
 		controls.setReturningObjFlag(false);
 
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		SearchResult searchResult = new SearchResult("", null, expectedAttributes);
 
 		dirContextProcessorMock.preProcess(dirContextMock);
-		setupSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResult(controls, searchResult);
 
 		Object expectedResult = new Object();
 		attributesMapperControl.expectAndReturn(attributesMapperMock.mapFromAttributes(expectedAttributes),
@@ -489,9 +443,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		List list = tested.search(nameMock, "(ou=somevalue)", controls, attributesMapperMock, dirContextProcessorMock);
-
 		verify();
 
 		assertNotNull(list);
@@ -502,15 +454,13 @@ public class LdapTemplateTest extends TestCase {
 	public void testSearch_String_SearchControls_ContextMapper_DirContextProcessor() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-		controls.setReturningObjFlag(true);
+		SearchControls controls = searchControlsRecursive();
 
 		Object expectedObject = new Object();
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
 
 		dirContextProcessorMock.preProcess(dirContextMock);
-		setupStringSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResultWithStringBase(controls, searchResult);
 
 		Object expectedResult = expectedObject;
 		contextMapperControl.expectAndReturn(contextMapperMock.mapFromContext(expectedObject), expectedResult);
@@ -519,10 +469,8 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		List list = tested.search(DEFAULT_BASE_STRING, "(ou=somevalue)", controls, contextMapperMock,
 				dirContextProcessorMock);
-
 		verify();
 
 		assertNotNull(list);
@@ -533,15 +481,13 @@ public class LdapTemplateTest extends TestCase {
 	public void testSearch_Name_SearchControls_ContextMapper_DirContextProcessor() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-		controls.setReturningObjFlag(true);
+		SearchControls controls = searchControlsRecursive();
 
 		Object expectedObject = new Object();
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
 
 		dirContextProcessorMock.preProcess(dirContextMock);
-		setupSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResult(controls, searchResult);
 
 		Object expectedResult = expectedObject;
 		contextMapperControl.expectAndReturn(contextMapperMock.mapFromContext(expectedObject), expectedResult);
@@ -550,9 +496,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		List list = tested.search(nameMock, "(ou=somevalue)", controls, contextMapperMock, dirContextProcessorMock);
-
 		verify();
 
 		assertNotNull(list);
@@ -565,14 +509,14 @@ public class LdapTemplateTest extends TestCase {
 
 		String[] attrs = new String[0];
 		SearchControls controls = new SearchControls();
-		controls.setSearchScope(1);
+		controls.setSearchScope(SearchControls.ONELEVEL_SCOPE);
 		controls.setReturningObjFlag(false);
 		controls.setReturningAttributes(attrs);
 
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		SearchResult searchResult = new SearchResult("", null, expectedAttributes);
 
-		setupSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResult(controls, searchResult);
 
 		Object expectedResult = new Object();
 		attributesMapperControl.expectAndReturn(attributesMapperMock.mapFromAttributes(expectedAttributes),
@@ -581,9 +525,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		List list = tested.search(nameMock, "(ou=somevalue)", 1, attrs, attributesMapperMock);
-
 		verify();
 
 		assertNotNull(list);
@@ -596,14 +538,14 @@ public class LdapTemplateTest extends TestCase {
 
 		String[] attrs = new String[0];
 		SearchControls controls = new SearchControls();
-		controls.setSearchScope(1);
+		controls.setSearchScope(SearchControls.ONELEVEL_SCOPE);
 		controls.setReturningObjFlag(false);
 		controls.setReturningAttributes(attrs);
 
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		SearchResult searchResult = new SearchResult("", null, expectedAttributes);
 
-		setupStringSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResultWithStringBase(controls, searchResult);
 
 		Object expectedResult = new Object();
 		attributesMapperControl.expectAndReturn(attributesMapperMock.mapFromAttributes(expectedAttributes),
@@ -612,9 +554,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		List list = tested.search(DEFAULT_BASE_STRING, "(ou=somevalue)", 1, attrs, attributesMapperMock);
-
 		verify();
 
 		assertNotNull(list);
@@ -625,14 +565,13 @@ public class LdapTemplateTest extends TestCase {
 	public void testSearch_AttributesMapper() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(1);
+		SearchControls controls = searchControlsOneLevel();
 		controls.setReturningObjFlag(false);
 
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		SearchResult searchResult = new SearchResult("", null, expectedAttributes);
 
-		setupSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResult(controls, searchResult);
 
 		Object expectedResult = new Object();
 		attributesMapperControl.expectAndReturn(attributesMapperMock.mapFromAttributes(expectedAttributes),
@@ -641,9 +580,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		List list = tested.search(nameMock, "(ou=somevalue)", 1, attributesMapperMock);
-
 		verify();
 
 		assertNotNull(list);
@@ -654,14 +591,13 @@ public class LdapTemplateTest extends TestCase {
 	public void testSearch_String_AttributesMapper() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(1);
+		SearchControls controls = searchControlsOneLevel();
 		controls.setReturningObjFlag(false);
 
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		SearchResult searchResult = new SearchResult("", null, expectedAttributes);
 
-		setupStringSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResultWithStringBase(controls, searchResult);
 
 		Object expectedResult = new Object();
 		attributesMapperControl.expectAndReturn(attributesMapperMock.mapFromAttributes(expectedAttributes),
@@ -670,9 +606,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		List list = tested.search(DEFAULT_BASE_STRING, "(ou=somevalue)", 1, attributesMapperMock);
-
 		verify();
 
 		assertNotNull(list);
@@ -683,14 +617,13 @@ public class LdapTemplateTest extends TestCase {
 	public void testSearch_AttributesMapper_Default() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+		SearchControls controls = searchControlsRecursive();
 		controls.setReturningObjFlag(false);
 
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		SearchResult searchResult = new SearchResult("", null, expectedAttributes);
 
-		setupSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResult(controls, searchResult);
 
 		Object expectedResult = new Object();
 		attributesMapperControl.expectAndReturn(attributesMapperMock.mapFromAttributes(expectedAttributes),
@@ -699,9 +632,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		List list = tested.search(nameMock, "(ou=somevalue)", attributesMapperMock);
-
 		verify();
 
 		assertNotNull(list);
@@ -712,14 +643,13 @@ public class LdapTemplateTest extends TestCase {
 	public void testSearch_String_AttributesMapper_Default() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+		SearchControls controls = searchControlsRecursive();
 		controls.setReturningObjFlag(false);
 
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		SearchResult searchResult = new SearchResult("", null, expectedAttributes);
 
-		setupStringSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResultWithStringBase(controls, searchResult);
 
 		Object expectedResult = new Object();
 		attributesMapperControl.expectAndReturn(attributesMapperMock.mapFromAttributes(expectedAttributes),
@@ -728,9 +658,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		List list = tested.search(DEFAULT_BASE_STRING, "(ou=somevalue)", attributesMapperMock);
-
 		verify();
 
 		assertNotNull(list);
@@ -741,14 +669,10 @@ public class LdapTemplateTest extends TestCase {
 	public void testSearch_ContextMapper() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(1);
-		controls.setReturningObjFlag(true);
-
 		Object expectedObject = new Object();
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
 
-		setupSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResult(searchControlsOneLevel(), searchResult);
 
 		Object expectedResult = expectedObject;
 		contextMapperControl.expectAndReturn(contextMapperMock.mapFromContext(expectedObject), expectedResult);
@@ -756,9 +680,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		List list = tested.search(nameMock, "(ou=somevalue)", 1, contextMapperMock);
-
 		verify();
 
 		assertNotNull(list);
@@ -771,15 +693,13 @@ public class LdapTemplateTest extends TestCase {
 
 		String[] attrs = new String[0];
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(1);
-		controls.setReturningObjFlag(true);
+		SearchControls controls = searchControlsOneLevel();
 		controls.setReturningAttributes(attrs);
 
 		Object expectedObject = new Object();
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
 
-		setupSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResult(controls, searchResult);
 
 		Object expectedResult = expectedObject;
 		contextMapperControl.expectAndReturn(contextMapperMock.mapFromContext(expectedObject), expectedResult);
@@ -787,9 +707,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		List list = tested.search(nameMock, "(ou=somevalue)", 1, attrs, contextMapperMock);
-
 		verify();
 
 		assertNotNull(list);
@@ -802,15 +720,13 @@ public class LdapTemplateTest extends TestCase {
 
 		String[] attrs = new String[0];
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(1);
-		controls.setReturningObjFlag(true);
+		SearchControls controls = searchControlsOneLevel();
 		controls.setReturningAttributes(attrs);
 
 		Object expectedObject = new Object();
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
 
-		setupStringSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResultWithStringBase(controls, searchResult);
 
 		Object expectedResult = expectedObject;
 		contextMapperControl.expectAndReturn(contextMapperMock.mapFromContext(expectedObject), expectedResult);
@@ -818,9 +734,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		List list = tested.search(DEFAULT_BASE_STRING, "(ou=somevalue)", 1, attrs, contextMapperMock);
-
 		verify();
 
 		assertNotNull(list);
@@ -831,14 +745,12 @@ public class LdapTemplateTest extends TestCase {
 	public void testSearch_String_ContextMapper() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(1);
-		controls.setReturningObjFlag(true);
+		SearchControls controls = searchControlsOneLevel();
 
 		Object expectedObject = new Object();
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
 
-		setupStringSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResultWithStringBase(controls, searchResult);
 
 		Object expectedResult = expectedObject;
 		contextMapperControl.expectAndReturn(contextMapperMock.mapFromContext(expectedObject), expectedResult);
@@ -846,9 +758,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		List list = tested.search(DEFAULT_BASE_STRING, "(ou=somevalue)", 1, contextMapperMock);
-
 		verify();
 
 		assertNotNull(list);
@@ -859,14 +769,10 @@ public class LdapTemplateTest extends TestCase {
 	public void testSearch_ContextMapper_Default() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-		controls.setReturningObjFlag(true);
-
 		Object expectedObject = new Object();
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
 
-		setupSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResult(searchControlsRecursive(), searchResult);
 
 		Object expectedResult = expectedObject;
 		contextMapperControl.expectAndReturn(contextMapperMock.mapFromContext(expectedObject), expectedResult);
@@ -874,9 +780,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		List list = tested.search(nameMock, "(ou=somevalue)", contextMapperMock);
-
 		verify();
 
 		assertNotNull(list);
@@ -887,14 +791,12 @@ public class LdapTemplateTest extends TestCase {
 	public void testSearch_String_ContextMapper_Default() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-		controls.setReturningObjFlag(true);
+		SearchControls controls = searchControlsRecursive();
 
 		Object expectedObject = new Object();
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
 
-		setupStringSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResultWithStringBase(controls, searchResult);
 
 		Object expectedResult = expectedObject;
 		contextMapperControl.expectAndReturn(contextMapperMock.mapFromContext(expectedObject), expectedResult);
@@ -902,9 +804,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		List list = tested.search(DEFAULT_BASE_STRING, "(ou=somevalue)", contextMapperMock);
-
 		verify();
 
 		assertNotNull(list);
@@ -915,14 +815,12 @@ public class LdapTemplateTest extends TestCase {
 	public void testSearch_String_SearchControls_ContextMapper() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-		controls.setReturningObjFlag(true);
+		SearchControls controls = searchControlsRecursive();
 
 		Object expectedObject = new Object();
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
 
-		setupStringSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResultWithStringBase(controls, searchResult);
 
 		Object expectedResult = expectedObject;
 		contextMapperControl.expectAndReturn(contextMapperMock.mapFromContext(expectedObject), expectedResult);
@@ -930,9 +828,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		List list = tested.search(DEFAULT_BASE_STRING, "(ou=somevalue)", controls, contextMapperMock);
-
 		verify();
 
 		assertNotNull(list);
@@ -953,7 +849,7 @@ public class LdapTemplateTest extends TestCase {
 		Object expectedObject = new Object();
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
 
-		setupStringSearchAndNamingEnumeration(expectedControls, searchResult);
+		singleSearchResultWithStringBase(expectedControls, searchResult);
 
 		Object expectedResult = expectedObject;
 		contextMapperControl.expectAndReturn(contextMapperMock.mapFromContext(expectedObject), expectedResult);
@@ -961,9 +857,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		List list = tested.search(DEFAULT_BASE_STRING, "(ou=somevalue)", controls, contextMapperMock);
-
 		verify();
 
 		assertNotNull(list);
@@ -974,14 +868,12 @@ public class LdapTemplateTest extends TestCase {
 	public void testSearch_Name_SearchControls_ContextMapper() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-		controls.setReturningObjFlag(true);
+		SearchControls controls = searchControlsRecursive();
 
 		Object expectedObject = new Object();
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
 
-		setupSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResult(controls, searchResult);
 
 		Object expectedResult = expectedObject;
 		contextMapperControl.expectAndReturn(contextMapperMock.mapFromContext(expectedObject), expectedResult);
@@ -989,9 +881,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		List list = tested.search(nameMock, "(ou=somevalue)", controls, contextMapperMock);
-
 		verify();
 
 		assertNotNull(list);
@@ -1002,14 +892,13 @@ public class LdapTemplateTest extends TestCase {
 	public void testSearch_String_SearchControls_AttributesMapper() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(1);
+		SearchControls controls = searchControlsOneLevel();
 		controls.setReturningObjFlag(false);
 
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		SearchResult searchResult = new SearchResult("", null, expectedAttributes);
 
-		setupStringSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResultWithStringBase(controls, searchResult);
 
 		Object expectedResult = new Object();
 		attributesMapperControl.expectAndReturn(attributesMapperMock.mapFromAttributes(expectedAttributes),
@@ -1018,9 +907,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		List list = tested.search(DEFAULT_BASE_STRING, "(ou=somevalue)", controls, attributesMapperMock);
-
 		verify();
 
 		assertNotNull(list);
@@ -1031,14 +918,13 @@ public class LdapTemplateTest extends TestCase {
 	public void testSearch_Name_SearchControls_AttributesMapper() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(1);
+		SearchControls controls = searchControlsOneLevel();
 		controls.setReturningObjFlag(false);
 
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		SearchResult searchResult = new SearchResult("", null, expectedAttributes);
 
-		setupSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResult(controls, searchResult);
 
 		Object expectedResult = new Object();
 		attributesMapperControl.expectAndReturn(attributesMapperMock.mapFromAttributes(expectedAttributes),
@@ -1047,9 +933,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		List list = tested.search(nameMock, "(ou=somevalue)", controls, attributesMapperMock);
-
 		verify();
 
 		assertNotNull(list);
@@ -1066,9 +950,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		tested.modifyAttributes(nameMock, mods);
-
 		verify();
 	}
 
@@ -1081,9 +963,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		tested.modifyAttributes(DEFAULT_BASE_STRING, mods);
-
 		verify();
 	}
 
@@ -1098,7 +978,6 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		try {
 			tested.modifyAttributes(nameMock, mods);
 			fail("LimitExceededException expected");
@@ -1106,7 +985,6 @@ public class LdapTemplateTest extends TestCase {
 		catch (LimitExceededException expected) {
 			assertTrue(true);
 		}
-
 		verify();
 	}
 
@@ -1119,9 +997,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		tested.bind(nameMock, expectedObject, expectedAttributes);
-
 		verify();
 	}
 
@@ -1134,9 +1010,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		tested.bind(DEFAULT_BASE_STRING, expectedObject, expectedAttributes);
-
 		verify();
 	}
 
@@ -1151,7 +1025,6 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		try {
 			tested.bind(nameMock, expectedObject, expectedAttributes);
 			fail("NameNotFoundException expected");
@@ -1159,7 +1032,6 @@ public class LdapTemplateTest extends TestCase {
 		catch (NameNotFoundException expected) {
 			assertTrue(true);
 		}
-
 		verify();
     }
 	 
@@ -1174,9 +1046,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		tested.bind(dirContextOperationsMock);
-
 		verify();
 	}
 
@@ -1186,9 +1056,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.unbind(nameMock);
 		dirContextMock.close();
 		replay();
-
 		tested.unbind(nameMock);
-
 		verify();
 	}
 
@@ -1198,9 +1066,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.unbind(DEFAULT_BASE_STRING);
 		dirContextMock.close();
 		replay();
-
 		tested.unbind(DEFAULT_BASE_STRING);
-
 		verify();
 	}
 	 
@@ -1215,9 +1081,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		tested.rebind(dirContextOperationsMock);
-
 		verify();
 	}
 
@@ -1249,9 +1113,7 @@ public class LdapTemplateTest extends TestCase {
 		nameControl.expectAndReturn(nameMock.get(0), "o=example.com");
 
 		replay();
-
 		tested.unbind(nameMock, true);
-
 		verify();
 	}
 
@@ -1278,9 +1140,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.unbind(listDn);
 		dirContextMock.close();
 		replay();
-
 		tested.unbind(DEFAULT_BASE_STRING, true);
-
 		verify();
 	}
 
@@ -1294,9 +1154,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		tested.rebind(nameMock, expectedObject, expectedAttributes);
-
 		verify();
 	}
 
@@ -1310,9 +1168,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		tested.rebind(DEFAULT_BASE_STRING, expectedObject, expectedAttributes);
-
 		verify();
 	}
 
@@ -1325,7 +1181,6 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		try {
 			tested.unbind(nameMock);
 			fail("NameNotFoundException expected");
@@ -1333,7 +1188,6 @@ public class LdapTemplateTest extends TestCase {
 		catch (NameNotFoundException expected) {
 			assertTrue(true);
 		}
-
 		verify();
 	}
 
@@ -1346,9 +1200,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		Object result = tested.executeReadOnly(contextExecutorMock);
-
 		verify();
 
 		assertSame(object, result);
@@ -1363,7 +1215,6 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		try {
 			tested.executeReadOnly(contextExecutorMock);
 			fail("NameNotFoundException expected");
@@ -1371,7 +1222,6 @@ public class LdapTemplateTest extends TestCase {
 		catch (NameNotFoundException expected) {
 			assertTrue(true);
 		}
-
 		verify();
 	}
 
@@ -1384,9 +1234,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		Object result = tested.executeReadWrite(contextExecutorMock);
-
 		verify();
 
 		assertSame(object, result);
@@ -1401,7 +1249,6 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		try {
 			tested.executeReadWrite(contextExecutorMock);
 			fail("NameNotFoundException expected");
@@ -1409,7 +1256,6 @@ public class LdapTemplateTest extends TestCase {
 		catch (NameNotFoundException expected) {
 			assertTrue(true);
 		}
-
 		verify();
 	}
 
@@ -1434,9 +1280,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		tested.search(searchExecutorMock, handlerMock, dirContextProcessorMock);
-
 		verify();
 	}
 
@@ -1452,7 +1296,6 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		try {
 			tested.search(searchExecutorMock, handlerMock, dirContextProcessorMock);
 			fail("LimitExceededException expected");
@@ -1460,7 +1303,6 @@ public class LdapTemplateTest extends TestCase {
 		catch (LimitExceededException expected) {
 			assertTrue(true);
 		}
-
 		verify();
 	}
 
@@ -1481,9 +1323,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		tested.search(searchExecutorMock, handlerMock);
-
 		verify();
 	}
 
@@ -1496,7 +1336,6 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		try {
 			tested.search(searchExecutorMock, handlerMock);
 			fail("LimitExceededException expected");
@@ -1504,7 +1343,6 @@ public class LdapTemplateTest extends TestCase {
 		catch (LimitExceededException expected) {
 			assertTrue(true);
 		}
-
 		verify();
 	}
 
@@ -1520,7 +1358,6 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		try {
 			tested.search(searchExecutorMock, handlerMock);
 			fail("LimitExceededException expected");
@@ -1528,7 +1365,6 @@ public class LdapTemplateTest extends TestCase {
 		catch (LimitExceededException expected) {
 			assertTrue(true);
 		}
-
 		verify();
 	}
 
@@ -1540,7 +1376,6 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		try {
 			tested.search(searchExecutorMock, handlerMock);
 			fail("NameNotFoundException expected");
@@ -1548,7 +1383,6 @@ public class LdapTemplateTest extends TestCase {
 		catch (NameNotFoundException expected) {
 			assertTrue(true);
 		}
-
 		verify();
 	}
 
@@ -1563,7 +1397,6 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		try {
 			tested.search(searchExecutorMock, handlerMock, dirContextProcessorMock);
 			fail("PartialResultException expected");
@@ -1571,7 +1404,6 @@ public class LdapTemplateTest extends TestCase {
 		catch (PartialResultException expected) {
 			assertTrue(true);
 		}
-
 		verify();
 	}
 
@@ -1589,9 +1421,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		tested.search(searchExecutorMock, handlerMock, dirContextProcessorMock);
-
 		verify();
 	}
 
@@ -1641,9 +1471,7 @@ public class LdapTemplateTest extends TestCase {
 		};
 
 		replay();
-
 		tested.modifyAttributes(dirContextOperationsMock);
-
 		verify();
 	}
 
@@ -1659,7 +1487,6 @@ public class LdapTemplateTest extends TestCase {
 		};
 
 		replay();
-
 		try {
 			tested.modifyAttributes(dirContextOperationsMock);
 			fail("IllegalStateException expected");
@@ -1681,7 +1508,6 @@ public class LdapTemplateTest extends TestCase {
 		};
 
 		replay();
-
 		try {
 			tested.modifyAttributes(dirContextOperationsMock);
 			fail("IllegalStateException expected");
@@ -1695,14 +1521,10 @@ public class LdapTemplateTest extends TestCase {
 	public void testSearchForObject() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(2);
-		controls.setReturningObjFlag(true);
-
 		Object expectedObject = new Object();
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
 
-		setupSearchAndNamingEnumeration(controls, searchResult);
+		singleSearchResult(searchControlsRecursive(), searchResult);
 
 		Object expectedResult = expectedObject;
 		contextMapperControl.expectAndReturn(contextMapperMock.mapFromContext(expectedObject), expectedResult);
@@ -1710,9 +1532,7 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		Object result = tested.searchForObject(nameMock, "(ou=somevalue)", contextMapperMock);
-
 		verify();
 
 		assertNotNull(result);
@@ -1722,9 +1542,7 @@ public class LdapTemplateTest extends TestCase {
 	public void testSearchForObjectWithMultipleResults() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(2);
-		controls.setReturningObjFlag(true);
+		SearchControls controls = searchControlsRecursive();
 
 		Object expectedObject = new Object();
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
@@ -1747,7 +1565,6 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-
 		try {
 			tested.searchForObject(nameMock, "(ou=somevalue)", contextMapperMock);
 			fail("IncorrectResultSizeDataAccessException expected");
@@ -1755,23 +1572,17 @@ public class LdapTemplateTest extends TestCase {
 		catch (IncorrectResultSizeDataAccessException expected) {
 			assertTrue(true);
 		}
-
 		verify();
 	}
 
 	public void testSearchForObjectWithNoResults() throws Exception {
 		expectGetReadOnlyContext();
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(2);
-		controls.setReturningObjFlag(true);
-
-		setupSearchAndNamingEnumerationForNoHits(controls);
+		noSearchResults(searchControlsRecursive());
 
 		dirContextMock.close();
 
 		replay();
-
 		try {
 			tested.searchForObject(nameMock, "(ou=somevalue)", contextMapperMock);
 			fail("EmptyResultDataAccessException expected");
@@ -1782,26 +1593,14 @@ public class LdapTemplateTest extends TestCase {
 		verify();
 	}
 
-	public void testAuthenticate() throws Exception {
+	public void testAuthenticateWithSingleUserFoundShouldBeSuccessful() throws Exception {
 		contextSourceControl.expectAndReturn(contextSourceMock.getReadOnlyContext(), dirContextMock);
-
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(2);
-		controls.setReturningObjFlag(true);
 
 		Object expectedObject = new DirContextAdapter(new BasicAttributes(), new DistinguishedName("cn=john doe"),
 				new DistinguishedName("dc=jayway, dc=se"));
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
 
-		setupSearchAndNamingEnumeration(controls, searchResult);
-
-		MockControl authenticatedContextControl = MockControl.createControl(DirContext.class);
-		DirContext authenticatedContextMock = (DirContext) authenticatedContextControl.getMock();
-
-		MockControl entryContextCallbackControl = MockControl
-				.createControl(AuthenticatedLdapEntryContextCallback.class);
-		AuthenticatedLdapEntryContextCallback entryContextCallbackMock = (AuthenticatedLdapEntryContextCallback) entryContextCallbackControl
-				.getMock();
+		singleSearchResult(searchControlsRecursive(), searchResult);
 
 		contextSourceControl.expectAndReturn(contextSourceMock.getContext("cn=john doe,dc=jayway,dc=se", "password"),
 				authenticatedContextMock);
@@ -1812,35 +1611,57 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-		authenticatedContextControl.replay();
-		entryContextCallbackControl.replay();
-
 		boolean result = tested.authenticate(nameMock, "(ou=somevalue)", "password", entryContextCallbackMock);
-
 		verify();
-		authenticatedContextControl.verify();
-		entryContextCallbackControl.verify();
 
 		assertTrue(result);
 	}
 
-	public void testAuthenticateWithFailedAuthentication() throws Exception {
+	public void testAuthenticateWithTwoUsersFoundShouldThrowException() throws Exception {
 		contextSourceControl.expectAndReturn(contextSourceMock.getReadOnlyContext(), dirContextMock);
 
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(2);
-		controls.setReturningObjFlag(true);
+		Object expectedObject = new DirContextAdapter(new BasicAttributes(), new DistinguishedName("cn=john doe"),
+				new DistinguishedName("dc=jayway, dc=se"));
+		SearchResult searchResult1 = new SearchResult("", expectedObject, new BasicAttributes());
+		SearchResult searchResult2 = new SearchResult("", expectedObject, new BasicAttributes());
+
+		setupSearchResults(searchControlsRecursive(), new SearchResult[] { searchResult1, searchResult2 });
+
+		dirContextMock.close();
+
+		replay();
+		try {
+			tested.authenticate(nameMock, "(ou=somevalue)", "password", entryContextCallbackMock);
+			fail("IncorrectResultSizeDataAccessException expected");
+		}
+		catch (IncorrectResultSizeDataAccessException expected) {
+			// expected
+		}
+		verify();
+	}
+
+	public void testAuthenticateWhenNoUserWasFoundShouldFail() throws Exception {
+		contextSourceControl.expectAndReturn(contextSourceMock.getReadOnlyContext(), dirContextMock);
+
+		noSearchResults(searchControlsRecursive());
+
+		dirContextMock.close();
+
+		replay();
+		boolean result = tested.authenticate(nameMock, "(ou=somevalue)", "password", entryContextCallbackMock);
+		verify();
+
+		assertFalse(result);
+	}
+
+	public void testAuthenticateWithFailedAuthenticationShouldFail() throws Exception {
+		contextSourceControl.expectAndReturn(contextSourceMock.getReadOnlyContext(), dirContextMock);
 
 		Object expectedObject = new DirContextAdapter(new BasicAttributes(), new DistinguishedName("cn=john doe"),
 				new DistinguishedName("dc=jayway, dc=se"));
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
 
-		setupSearchAndNamingEnumeration(controls, searchResult);
-
-		MockControl entryContextCallbackControl = MockControl
-				.createControl(AuthenticatedLdapEntryContextCallback.class);
-		AuthenticatedLdapEntryContextCallback entryContextCallbackMock = (AuthenticatedLdapEntryContextCallback) entryContextCallbackControl
-				.getMock();
+		singleSearchResult(searchControlsRecursive(), searchResult);
 
 		contextSourceControl.expectAndThrow(contextSourceMock.getContext("cn=john doe,dc=jayway,dc=se", "password"),
 				new UncategorizedLdapException("Authentication failed"));
@@ -1848,36 +1669,20 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-		entryContextCallbackControl.replay();
-
 		boolean result = tested.authenticate(nameMock, "(ou=somevalue)", "password", entryContextCallbackMock);
-
 		verify();
-		entryContextCallbackControl.verify();
 
 		assertFalse(result);
 	}
 	
-	public void testAuthenticateWithErrorInCallback() throws Exception {
+	public void testAuthenticateWithErrorInCallbackShouldFail() throws Exception {
 		contextSourceControl.expectAndReturn(contextSourceMock.getReadOnlyContext(), dirContextMock);
-
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(2);
-		controls.setReturningObjFlag(true);
 
 		Object expectedObject = new DirContextAdapter(new BasicAttributes(), new DistinguishedName("cn=john doe"),
 				new DistinguishedName("dc=jayway, dc=se"));
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
 
-		setupSearchAndNamingEnumeration(controls, searchResult);
-
-		MockControl authenticatedContextControl = MockControl.createControl(DirContext.class);
-		DirContext authenticatedContextMock = (DirContext) authenticatedContextControl.getMock();
-
-		MockControl entryContextCallbackControl = MockControl
-				.createControl(AuthenticatedLdapEntryContextCallback.class);
-		AuthenticatedLdapEntryContextCallback entryContextCallbackMock = (AuthenticatedLdapEntryContextCallback) entryContextCallbackControl
-				.getMock();
+		singleSearchResult(searchControlsRecursive(), searchResult);
 
 		contextSourceControl.expectAndReturn(contextSourceMock.getContext("cn=john doe,dc=jayway,dc=se", "password"),
 				authenticatedContextMock);
@@ -1889,16 +1694,57 @@ public class LdapTemplateTest extends TestCase {
 		dirContextMock.close();
 
 		replay();
-		authenticatedContextControl.replay();
-		entryContextCallbackControl.replay();
-
 		boolean result = tested.authenticate(nameMock, "(ou=somevalue)", "password", entryContextCallbackMock);
-
 		verify();
-		authenticatedContextControl.verify();
-		entryContextCallbackControl.verify();
 
 		assertFalse(result);
+	}
+
+	private void noSearchResults(SearchControls controls) throws Exception {
+		setupSearchResults(controls, new SearchResult[] {});
+	}
+
+	private void singleSearchResult(SearchControls controls, SearchResult searchResult) throws Exception {
+		setupSearchResults(controls, new SearchResult[] { searchResult });
+	}
+
+	private void setupSearchResults(SearchControls controls, SearchResult[] searchResults) throws Exception {
+		dirContextControl.setDefaultMatcher(new SearchControlsMatcher());
+		dirContextControl.expectAndReturn(dirContextMock.search(nameMock, "(ou=somevalue)", controls),
+				namingEnumerationMock);
+
+		for (int i = 0; i < searchResults.length; i++) {
+			namingEnumerationControl.expectAndReturn(namingEnumerationMock.hasMore(), true);
+			namingEnumerationControl.expectAndReturn(namingEnumerationMock.next(), searchResults[i]);
+		}
+		namingEnumerationControl.expectAndReturn(namingEnumerationMock.hasMore(), false);
+		namingEnumerationMock.close();
+	}
+
+	private void singleSearchResultWithStringBase(SearchControls controls, SearchResult searchResult)
+			throws Exception {
+		dirContextControl.setDefaultMatcher(new SearchControlsMatcher());
+		dirContextControl.expectAndReturn(dirContextMock.search(DEFAULT_BASE_STRING, "(ou=somevalue)", controls),
+				namingEnumerationMock);
+
+		namingEnumerationControl.expectAndReturn(namingEnumerationMock.hasMore(), true);
+		namingEnumerationControl.expectAndReturn(namingEnumerationMock.next(), searchResult);
+		namingEnumerationControl.expectAndReturn(namingEnumerationMock.hasMore(), false);
+		namingEnumerationMock.close();
+	}
+
+	private SearchControls searchControlsRecursive() {
+		SearchControls controls = new SearchControls();
+		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+		controls.setReturningObjFlag(true);
+		return controls;
+	}
+
+	private SearchControls searchControlsOneLevel() {
+		SearchControls controls = new SearchControls();
+		controls.setSearchScope(SearchControls.ONELEVEL_SCOPE);
+		controls.setReturningObjFlag(true);
+		return controls;
 	}
 
 	/**
