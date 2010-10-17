@@ -7,19 +7,23 @@
   <section id="ldif-parsing-intro">
     <title>Introduction</title>
 
-    <para>LDIF files are the standard medium for serializing directory data to
-    a flat file for archival, transferrence, or altercation. The
-    <token>org.springframework.ldap.ldif</token> package provides classes
-    needed to read LDAP objects from flat files and de-serialize them into
-    tangible objects.</para>
+    <para>LDAP Directory Interchange Format (LDIF) files are the standard
+    medium for describing directoy data in a flat file format. The most common
+    uses of this format include information transfer and archival. However,
+    the standard also defines a way to describe modifications to stored data
+    in a flat file format. LDIFs of this later type are typically referred to
+    as <emphasis>changetype</emphasis> or <emphasis>modify</emphasis> LDIFs.
+    </para>
 
-    <para>The <token>LdifParser</token> is the main class of the
+    <para>The <token>org.springframework.ldap.ldif</token> package provides
+    classes needed to parse LDIF files and deserialize them into tangible
+    objects. The <token>LdifParser</token> is the main class of the
     <token>org.springframework.ldap.ldif</token> package and is capable of
     parsing files that are RFC 2849 compliant. This class reads lines from a
     resource and assembles them into an <token>LdapAttributes</token> object.
     The <token>LdifParser</token> currently ignores
     <emphasis>changetype</emphasis> LDIF entries as their usefulness in the
-    context of an application has yet to be determined. </para>
+    context of an application has yet to be determined.</para>
   </section>
 
   <section id="ldif-parsing-obj-repr">
