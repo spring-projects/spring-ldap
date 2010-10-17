@@ -69,7 +69,25 @@ public class DefaultDirContextValidatorTest extends TestCase {
         namingEnumerationControl.verify();
         dirContextControl.verify();
     }
+    
+    // LDAP-189
+    public void testSearchScopeOneLevelScopeSetInConstructorIsUsed() throws Exception {
+        DefaultDirContextValidator tested = new DefaultDirContextValidator(SearchControls.ONELEVEL_SCOPE);
+        assertEquals("ONELEVEL_SCOPE, ", SearchControls.ONELEVEL_SCOPE, tested.getSearchControls().getSearchScope());
+	}
+    
+    // LDAP-189
+    public void testSearchScopeSubTreeScopeSetInConstructorIsUsed() throws Exception {
+    	DefaultDirContextValidator tested = new DefaultDirContextValidator(SearchControls.SUBTREE_SCOPE);
+    	assertEquals("SUBTREE_SCOPE, ", SearchControls.SUBTREE_SCOPE, tested.getSearchControls().getSearchScope());
+    }
 
+    // LDAP-189
+    public void testSearchScopeObjectScopeSetInConstructorIsUsed() throws Exception {
+        DefaultDirContextValidator tested = new DefaultDirContextValidator(SearchControls.OBJECT_SCOPE);
+        assertEquals("OBJECT_SCOPE, ", SearchControls.OBJECT_SCOPE, tested.getSearchControls().getSearchScope());
+	}
+    
     public void testProperties() throws Exception {
         final DefaultDirContextValidator dirContextValidator = new DefaultDirContextValidator();
 

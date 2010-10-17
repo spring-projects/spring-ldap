@@ -99,6 +99,7 @@ public class DefaultDirContextValidator implements DirContextValidator {
      */
     public DefaultDirContextValidator(int searchScope) {
         this.searchControls = new SearchControls();
+        this.searchControls.setSearchScope(searchScope);
         this.searchControls.setCountLimit(1);
         this.searchControls.setReturningAttributes(new String[] { "objectclass" });
         this.searchControls.setTimeLimit(500);
