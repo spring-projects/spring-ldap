@@ -26,7 +26,7 @@ import org.springframework.ldap.filter.AbstractFilter;
  * filter on attributes at are {@code present} use the {@link PresentFilter}.
  * 
  * <pre>
- * NotPresentFilter filter = new NotPresentFilter(&quot;foo*&quot;);
+ * NotPresentFilter filter = new NotPresentFilter(&quot;foo&quot;);
  * System.out.println(filter.encode());
  * </pre>
  * 

@@ -26,7 +26,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * in combination with a {@link NotFilter} .
  * 
  * <pre>
- * PresentFilter filter = new PresentFilter(&quot;foo*&quot;);
+ * PresentFilter filter = new PresentFilter(&quot;foo&quot;);
  * System.out.println(filter.encode());
  * </pre>
  * 

@@ -20,7 +20,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.springframework.util.StringUtils;
 
 /**
- * Allows hardcoded parts to be included in a search filter. Particularly useful
+ * Allows hard coded parts to be included in a search filter. Particularly useful
  * if some filters are specified in configuration files and these should be
  * combined with other ones.
  * 

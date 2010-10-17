@@ -20,10 +20,10 @@ package org.springframework.ldap.filter;
  * Filter for logical OR.
  * 
  * <pre>
- *        OrFilter filter = new OrFilter();
- *        filter.or(new EqualsFilter(&quot;objectclass&quot;, &quot;person&quot;);
- *        filter.or(new EqualsFilter(&quot;objectclass&quot;, &quot;organizationalUnit&quot;);
- *        System.out.println(filter.encode());    
+ * OrFilter filter = new OrFilter();
+ * filter.or(new EqualsFilter(&quot;objectclass&quot;, &quot;person&quot;);
+ * filter.or(new EqualsFilter(&quot;objectclass&quot;, &quot;organizationalUnit&quot;);
+ * System.out.println(filter.encode());    
  * </pre>
  * 
  * would result in:
