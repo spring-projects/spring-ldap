@@ -27,6 +27,7 @@ import javax.naming.ldap.LdapContext;
 import javax.naming.ldap.StartTlsRequest;
 import javax.naming.ldap.StartTlsResponse;
 import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSocketFactory;
 
 import org.springframework.ldap.UncategorizedLdapException;
 import org.springframework.ldap.core.DirContextProxy;
@@ -40,6 +41,13 @@ import org.springframework.ldap.support.LdapUtils;
  * closed, whereas other servers do not support that. The
  * <code>shutdownTlsGracefully</code> property controls this behavior; the
  * property defaults to <code>false</code>.
+ * <p>
+ * The <code>SSLSocketFactory</code> used for TLS negotiation can be customized
+ * using the <code>sslSocketFactory</code> property. This allows for example a
+ * socket factory that can load the keystore/truststore using the Spring
+ * Resource abstraction. This provides a much more Spring-like strategy for
+ * configuring PKI credentials for authentication, in addition to allowing
+ * application-specific keystores and truststores running in the same JVM.
  * <p>
  * In some rare occasions there is a need to supply a
  * <code>HostnameVerifier</code> to the TLS processing instructions in order to
@@ -64,10 +72,15 @@ import org.springframework.ldap.support.LdapUtils;
  */
 public abstract class AbstractTlsDirContextAuthenticationStrategy implements DirContextAuthenticationStrategy {
 
+	/** Hostname verifier to use for cert subject validation */
 	private HostnameVerifier hostnameVerifier;
 
+	/** Flag to cause graceful shutdown required by some LDAP DSAs */
 	private boolean shutdownTlsGracefully = false;
 
+	/** SSL socket factory to use for startTLS negotiation */
+    private SSLSocketFactory sslSocketFactory;
+    
 	/**
 	 * Specify whether the TLS should be shut down gracefully before the target
 	 * context is closed. Defaults to <code>false</code>.
@@ -91,22 +104,38 @@ public abstract class AbstractTlsDirContextAuthenticationStrategy implements Dir
 		this.hostnameVerifier = hostnameVerifier;
 	}
 
+    /**
+     * Sets the optional SSL socket factory used for startTLS negotiation.
+     * Defaults to <code>null</code> to indicate that the default socket factory
+     * provided by the underlying JSSE provider should be used.
+     * @param sslSocketFactory SSL socket factory to use, if any.
+     */
+    public void setSslSocketFactory(final SSLSocketFactory sslSocketFactory) {
+        this.sslSocketFactory = sslSocketFactory;
+    }
+    
+	/* (non-Javadoc)
+	 * @see org.springframework.ldap.core.support.DirContextAuthenticationStrategy#setupEnvironment(java.util.Hashtable, java.lang.String, java.lang.String)
+	 */
 	public final void setupEnvironment(Hashtable env, String userDn, String password) {
 		// Nothing to do in this implementation - authentication should take
 		// place after TLS has been negotiated.
 	}
 
+	/* (non-Javadoc)
+	 * @see org.springframework.ldap.core.support.DirContextAuthenticationStrategy#processContextAfterCreation(javax.naming.directory.DirContext, java.lang.String, java.lang.String)
+	 */
 	public final DirContext processContextAfterCreation(DirContext ctx, String userDn, String password)
 			throws NamingException {
 
 		if (ctx instanceof LdapContext) {
-			LdapContext ldapCtx = (LdapContext) ctx;
-			StartTlsResponse tlsResponse = (StartTlsResponse) ldapCtx.extendedOperation(new StartTlsRequest());
+			final LdapContext ldapCtx = (LdapContext) ctx;
+			final StartTlsResponse tlsResponse = (StartTlsResponse) ldapCtx.extendedOperation(new StartTlsRequest());
 			try {
 				if (hostnameVerifier != null) {
 					tlsResponse.setHostnameVerifier(hostnameVerifier);
 				}
-				tlsResponse.negotiate();
+				tlsResponse.negotiate(sslSocketFactory); // If null, the default SSL socket factory is used
 				applyAuthentication(ldapCtx, userDn, password);
 
 				if (shutdownTlsGracefully) {
