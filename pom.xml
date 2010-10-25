@@ -115,6 +115,7 @@
 		<url>http://fisheye3.cenqua.com/browse/springframework/spring-ldap/trunk</url>
 	</scm>
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>2.5.6.SEC02</spring.version>
 	</properties>
 	<modules>
@@ -314,6 +315,7 @@
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>2.5</version>
 					<configuration>
+						<encoding>${project.build.sourceEncoding}</encoding>
 						<aggregate>true</aggregate>
 						<breakiterator>true</breakiterator>
 						<header>Spring LDAP Framework</header>
