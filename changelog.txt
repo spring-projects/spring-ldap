@@ -29,6 +29,9 @@ Changes in version 1.3.1 (October 2010)
   exists but with no value. Added method attributeExists for cases where
   it has to be detected whether it was one or the other. (LDAP-215)
 
+* Added LookupAttemptingCallback for performing operation in authenticated
+  context. (LDAP-203)
+
 * Added utility methods for converting a Windows security identifier (SID)
   between a binary format and a slightly more readable string format.
   http://msdn.microsoft.com/en-us/library/aa379571%28VS.85%29.aspx
