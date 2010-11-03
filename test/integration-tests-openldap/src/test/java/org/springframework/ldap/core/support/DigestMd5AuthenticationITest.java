@@ -9,34 +9,30 @@ import javax.naming.directory.DirContext;
 
 import org.junit.Assert;
 import org.junit.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ldap.NamingException;
+import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 /**
  * Integration test to verify DIGEST-MD5 authentication support.
- *
+ * 
  * @author Marvin S. Addison
- * @version $Revision$
- *
  */
 @ContextConfiguration(locations = { "/conf/ldapTemplateDigestMd5TestContext.xml" })
 public class DigestMd5AuthenticationITest extends AbstractJUnit4SpringContextTests {
 	@Autowired
 	private LdapTemplate ldapTemplate;
-	
 
 	@Test
 	public void testAuthenticate() {
 		try {
-			DirContext ctxt = ldapTemplate.getContextSource().getContext("admin", "secret");
+			DirContext ctxt = ldapTemplate.getContextSource().getContext("some.person", "password");
 			Assert.assertNotNull(ctxt);
-		} catch (NamingException e) {
-			Assert.fail("DIGEST-MD5 authentication failed: " + e);
 		}
-		
+		catch (AuthenticationException e) {
+			Assert.fail(e.getMessage());
+		}
 	}
 }

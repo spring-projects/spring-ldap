@@ -24,12 +24,12 @@ import javax.naming.directory.DirContext;
  * Authentication strategy for LDAP DIGEST-MD5 SASL mechanism.
  *
  * @author Marvin S. Addison
+ * @since 1.3.1
  */
 public class DigestMd5DirContextAuthenticationStrategy implements DirContextAuthenticationStrategy {
 
 	/** Authentication type for DIGEST-MD5 auth */
 	private static final String DIGEST_MD5_AUTHENTICATION = "DIGEST-MD5";
-
 
 	/*
 	 * (non-Javadoc)
