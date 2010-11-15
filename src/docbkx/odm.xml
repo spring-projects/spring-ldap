@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="odm">
   <title>Object-Directory Mapping (ODM)</title>
 
@@ -17,13 +15,12 @@
   <sect1 id="odm-odmmanager">
     <title>OdmManager</title>
 
-    <para>The
-    <code>org.springframework.ldap.odm.OdmManager</code>
-    interface, and its implementation, is the central class in the ODM
-    package. The <code>OdmManager</code> orchestrates the
-    process of reading objects from the directory and mapping the data to
-    annotated Java object classes. This interface provides access to the
-    underlying directory instance through the following methods:</para>
+    <para>The <code>org.springframework.ldap.odm.OdmManager</code> interface,
+    and its implementation, is the central class in the ODM package. The
+    <code>OdmManager</code> orchestrates the process of reading objects from
+    the directory and mapping the data to annotated Java object classes. This
+    interface provides access to the underlying directory instance through the
+    following methods:</para>
 
     <itemizedlist>
       <listitem>
@@ -60,38 +57,36 @@
     A basic configuration of this factory would be as follows:</para>
 
     <example>
-        <title>Configuring the OdmManager Factory</title>
-	    <programlisting><![CDATA[
-<beans>
+      <title>Configuring the OdmManager Factory</title>
+      <programlisting>
+&lt;beans&gt;
    ...
-   <bean id="odmManager" class="org.springframework.ldap.odm.core.impl.OdmManagerImplFactoryBean">
-      <property name="converterManager" ref="converterManager" />
-      <property name="contextSource" ref="contextSource" />
-      <property name="managedClasses">
-         <set>
-            <value>com.example.dao.SimplePerson</value>
-         </set>
-      </property>
-   </bean>
+   &lt;bean id="odmManager" class="org.springframework.ldap.odm.core.impl.OdmManagerImplFactoryBean"&gt;
+      &lt;property name="converterManager" ref="converterManager" /&gt;
+      &lt;property name="contextSource" ref="contextSource" /&gt;
+      &lt;property name="managedClasses"&gt;
+         &lt;set&gt;
+            &lt;value&gt;com.example.dao.SimplePerson&lt;/value&gt;
+         &lt;/set&gt;
+      &lt;/property&gt;
+   &lt;/bean&gt;
    ...
-</beans>
-]]></programlisting>
+&lt;/beans&gt;
+</programlisting>
     </example>
 
     <para>The factory requires the list of entity classes to be managed by the
-    <code>OdmManager</code> to be explicitly declared. These
-    classes should be properly annotated as defined in the next section. The
-    <code>converterManager</code> referenced in the above definition
-    is described in <xref
-      linkend="odm-typeconversion" />.</para>
+    <code>OdmManager</code> to be explicitly declared. These classes should be
+    properly annotated as defined in the next section. The
+    <code>converterManager</code> referenced in the above definition is
+    described in <xref linkend="odm-typeconversion" />.</para>
   </sect1>
 
   <sect1 id="odm-annotations">
     <title>Annotations</title>
 
-    <para>Entity classes managed by the
-    <code>OdmManager</code> are required to be annotated
-    with the annotations in the
+    <para>Entity classes managed by the <code>OdmManager</code> are required
+    to be annotated with the annotations in the
     <code>org.springframework.ldap.odm.annotations</code> package. The
     available annotations are:</para>
 
@@ -116,8 +111,7 @@
 
       <listitem>
         <para><code>@Transient</code> - Indicates the field is not persistent
-        and should be ignored by the
-        <code>OdmManager</code>.</para>
+        and should be ignored by the <code>OdmManager</code>.</para>
       </listitem>
     </itemizedlist>
 
@@ -127,7 +121,7 @@
     which fields are mapped are required to be declared. Also, in order for a
     directory entry to be considered a match to the managed entity, all object
     classes declared by the directory entry must match be declared by in the
-    <code>@Entry</code> annotation. </simpara>
+    <code>@Entry</code> annotation.</simpara>
 
     <simpara>The <code>@Id</code> annotation is used to map the distinguished
     name of the entry to a field. The field must be an instance of
@@ -142,8 +136,8 @@
     based or string based by the LDAP JNDI provider.</simpara>
 
     <simpara>The <code>@Transient</code> annotation is used to indicate the
-    field should be ignored by the <code>OdmManager</code>
-    and not mapped to an underlying LDAP property.</simpara>
+    field should be ignored by the <code>OdmManager</code> and not mapped to
+    an underlying LDAP property.</simpara>
   </sect1>
 
   <sect1 id="odm-typeconversion">
@@ -154,14 +148,12 @@
     convert LDAP attributes to Java fields. The main interface in this class
     is the
     <code>org.springframework.ldap.odm.typeconversion.ConverterManager</code>.
-    The default <code>ConverterManager</code> implementation
-    uses the following algorithm when parsing objects to convert
-    fields:<orderedlist>
+    The default <code>ConverterManager</code> implementation uses the
+    following algorithm when parsing objects to convert fields:<orderedlist>
         <listitem>
-          <para>Try to find and use a <code>Converter</code>
-          registered for the <code>fromClass</code>,
-          <code>syntax</code> and <code>toClass</code> and use
-          it.</para>
+          <para>Try to find and use a <code>Converter</code> registered for
+          the <code>fromClass</code>, <code>syntax</code> and
+          <code>toClass</code> and use it.</para>
         </listitem>
 
         <listitem>
@@ -172,9 +164,9 @@
 
         <listitem>
           <para>If this fails try to find and use a
-          <code><code>Converter</code></code> registered for
-          the <code>fromClass</code> and the
-          <code>toClass</code> ignoring the syntax.</para>
+          <code><code>Converter</code></code> registered for the
+          <code>fromClass</code> and the <code>toClass</code> ignoring the
+          syntax.</para>
         </listitem>
 
         <listitem>
@@ -183,76 +175,77 @@
         </listitem>
       </orderedlist></para>
 
-    <para>Implementations of the <code>ConverterManager</code>
-    interface can be obtained from the
+    <para>Implementations of the <code>ConverterManager</code> interface can
+    be obtained from the
     <code>org.springframework.ldap.odm.typeconversion.impl.ConvertManagerFactoryBean</code>.
     The factory bean requires converter configurations to be declared in the
-    bean configuration. </para>
+    bean configuration.</para>
 
     <para>The converterConfig property accepts a set of
-    <code>ConverterConfig</code> classes, each one defining some
-    conversion logic. A converter config is an instance of
+    <code>ConverterConfig</code> classes, each one defining some conversion
+    logic. A converter config is an instance of
     <code>org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean.ConverterConfig</code>.
     The config defines a set of source classes, the set of target classes, and
     an implementation of the
     <code>com.springframework.ldap.odm.typeconversion.impl.Converter</code>
     interface which provides the logic to convert from the
-    <code>fromClass</code> to the <code>toClass</code>. A
-    sample configuration is provided in the following example:</para>
+    <code>fromClass</code> to the <code>toClass</code>. A sample configuration
+    is provided in the following example:</para>
 
     <example>
       <title>Configuring the Converter Manager Factory</title>
-      <programlisting><![CDATA[
-<bean id="fromStringConverter"
-   class="org.springframework.ldap.odm.typeconversion.impl.converters.FromStringConverter" />
-<bean id="toStringConverter"
-   class="org.springframework.ldap.odm.typeconversion.impl.converters.ToStringConverter" />
-<bean id="converterManager"
-   class="org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean">
-   <property name="converterConfig">
-      <set>
-         <bean class="org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean$ConverterConfig">
-            <property name="fromClasses">
-               <set>
-                  <value>java.lang.String</value>
-               </set>
-            </property>
-            <property name="toClasses">
-               <set>
-                  <value>java.lang.Byte</value>
-                  <value>java.lang.Short</value>
-                  <value>java.lang.Integer</value>
-                  <value>java.lang.Long</value>
-                  <value>java.lang.Float</value>
-                  <value>java.lang.Double</value>
-                  <value>java.lang.Boolean</value>
-               </set>
-            </property>
-            <property name="converter" ref="fromStringConverter" />
-         </bean>
-         <bean class="org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean$ConverterConfig">
-            <property name="fromClasses">
-               <set>
-                  <value>java.lang.Byte</value>
-                  <value>java.lang.Short</value>
-                  <value>java.lang.Integer</value>
-                  <value>java.lang.Long</value>
-                  <value>java.lang.Float</value>
-                  <value>java.lang.Double</value>
-                  <value>java.lang.Boolean</value>
-               </set>
-            </property>
-            <property name="toClasses">
-               <set>
-                  <value>java.lang.String</value>
-               </set>
-            </property>
-            <property name="converter" ref="toStringConverter" />
-         </bean>
-      </set>
-   </property>
-</bean>
-]]></programlisting>
+
+      <programlisting>
+&lt;bean id="fromStringConverter"
+   class="org.springframework.ldap.odm.typeconversion.impl.converters.FromStringConverter" /&gt;
+&lt;bean id="toStringConverter"
+   class="org.springframework.ldap.odm.typeconversion.impl.converters.ToStringConverter" /&gt;
+&lt;bean id="converterManager"
+   class="org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean"&gt;
+   &lt;property name="converterConfig"&gt;
+      &lt;set&gt;
+         &lt;bean class="org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean$ConverterConfig"&gt;
+            &lt;property name="fromClasses"&gt;
+               &lt;set&gt;
+                  &lt;value&gt;java.lang.String&lt;/value&gt;
+               &lt;/set&gt;
+            &lt;/property&gt;
+            &lt;property name="toClasses"&gt;
+               &lt;set&gt;
+                  &lt;value&gt;java.lang.Byte&lt;/value&gt;
+                  &lt;value&gt;java.lang.Short&lt;/value&gt;
+                  &lt;value&gt;java.lang.Integer&lt;/value&gt;
+                  &lt;value&gt;java.lang.Long&lt;/value&gt;
+                  &lt;value&gt;java.lang.Float&lt;/value&gt;
+                  &lt;value&gt;java.lang.Double&lt;/value&gt;
+                  &lt;value&gt;java.lang.Boolean&lt;/value&gt;
+               &lt;/set&gt;
+            &lt;/property&gt;
+            &lt;property name="converter" ref="fromStringConverter" /&gt;
+         &lt;/bean&gt;
+         &lt;bean class="org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean$ConverterConfig"&gt;
+            &lt;property name="fromClasses"&gt;
+               &lt;set&gt;
+                  &lt;value&gt;java.lang.Byte&lt;/value&gt;
+                  &lt;value&gt;java.lang.Short&lt;/value&gt;
+                  &lt;value&gt;java.lang.Integer&lt;/value&gt;
+                  &lt;value&gt;java.lang.Long&lt;/value&gt;
+                  &lt;value&gt;java.lang.Float&lt;/value&gt;
+                  &lt;value&gt;java.lang.Double&lt;/value&gt;
+                  &lt;value&gt;java.lang.Boolean&lt;/value&gt;
+               &lt;/set&gt;
+            &lt;/property&gt;
+            &lt;property name="toClasses"&gt;
+               &lt;set&gt;
+                  &lt;value&gt;java.lang.String&lt;/value&gt;
+               &lt;/set&gt;
+            &lt;/property&gt;
+            &lt;property name="converter" ref="toStringConverter" /&gt;
+         &lt;/bean&gt;
+      &lt;/set&gt;
+   &lt;/property&gt;
+&lt;/bean&gt;
+</programlisting>
     </example>
   </sect1>
 
@@ -260,12 +253,13 @@
     <title>Execution</title>
 
     <para>After all components are configured, directory interaction can be
-    acheived through a reference to the
-    <code>OdmManager</code> as shown in this example:</para>
+    achieved through a reference to the <code>OdmManager</code>, as shown in
+    this example:</para>
 
     <example>
       <title>Execution</title>
-      <programlisting><![CDATA[
+
+      <programlisting>
 public class App {
    private static Log log = LogFactory.getLog(App.class);
    private static final SearchControls searchControls = 
@@ -274,7 +268,7 @@ public class App {
       try {
          ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
          OdmManager manager = (OdmManager) context.getBean("odmManager");
-         List<SimplePerson> people = manager.search(
+         List&lt;SimplePerson&gt; people = manager.search(
             SimplePerson.class, new DistinguishedName("dc=example,dc=com"), "uid=*", searchControls);
          log.info("People found: " + people.size());
          for (SimplePerson person : people) {
@@ -285,7 +279,7 @@ public class App {
       }
    }
 }
-]]></programlisting>
+</programlisting>
     </example>
   </sect1>
 </chapter>

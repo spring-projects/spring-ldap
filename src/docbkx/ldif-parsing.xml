@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="ldif-parsing">
   <title>LDIF Parsing</title>
 
@@ -8,7 +6,7 @@
     <title>Introduction</title>
 
     <para>LDAP Directory Interchange Format (LDIF) files are the standard
-    medium for describing directoy data in a flat file format. The most common
+    medium for describing directory data in a flat file format. The most common
     uses of this format include information transfer and archival. However,
     the standard also defines a way to describe modifications to stored data
     in a flat file format. LDIFs of this later type are typically referred to
@@ -49,7 +47,7 @@
     <para><token>LdapAttribute</token> objects represent options as a
     <token>Set&lt;String&gt;</token>. The DN support added to the
     <token>LdapAttributes</token> object employs the
-    <token>org.springframework.ldap.core.DistuishedName</token> class. </para>
+    <token>org.springframework.ldap.core.DistinguishedName</token> class. </para>
   </section>
 
   <section id="ldif-parsing-parser">
