@@ -12,7 +12,7 @@ http://www.ietf.org/rfc/rfc2256.txt
 http://www.ietf.org/rfc/rfc2696.txt
 http://www.ietf.org/rfc/rfc2829.txt
 
-Changes in version 1.3.1 (October 2010)
+Changes in version 1.3.1 (November 2010)
 -------------------------------------------
 * Added an object-directory mapping framework (ODM). Contributed by Paul
   Harvey.
@@ -47,12 +47,17 @@ Changes in version 1.3.1 (October 2010)
 * Authentication methods now log problems at level INFO rather than ERROR.
   (LDAP-170)
   
+* It's now possible to control the case folding of attribute keys in
+  DistinguishedName by setting the system property
+  DistinguishedName.KEY_CASE_FOLD_PROPERTY to one of "lower", "upper", or
+  "none". (LDAP-188)
+
 * DIGEST-MD5 SASL authentication mechanism is now supported, as specified by
   RFC 2829 (see http://www.ietf.org/rfc/rfc2829.txt, section 4). (LDAP-173)
   Contributed by Marvin S. Addison.
 
 * DefaultDirObjectFactory calls a Java5 version of the IllegalArgumentException
-  constructor. (LDAP 196).
+  constructor. (LDAP 196)
 
 * DirContextAdapter JavaDoc now states clearly that several methods are not
   implemented on purpose. (LDAP-208)

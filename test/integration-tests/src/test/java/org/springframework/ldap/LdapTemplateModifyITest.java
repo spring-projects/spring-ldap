@@ -173,7 +173,7 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 			tested.modifyAttributes(ctx);
 
 			// without this, the member added above will not be removed and the test fails
-			System.setProperty(DistinguishedName.PRESERVE_KEY_CASE_PROPERTY, Boolean.TRUE.toString());
+			System.setProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY, DistinguishedName.KEY_CASE_FOLD_NONE);
 			
 			ctx = tested.lookupContext(dn);
 			ctx.removeAttributeValue("uniqueMember", new DistinguishedName(upperCasedName).toCompactString());
@@ -189,7 +189,7 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 			assertEquals("3", "cn=Some Person3,ou=company1,c=Sweden,dc=jayway,dc=se", attributes[3]);
 		}
 		finally {
-			System.setProperty(DistinguishedName.PRESERVE_KEY_CASE_PROPERTY, "");
+			System.clearProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY);
 		}
 	}
 

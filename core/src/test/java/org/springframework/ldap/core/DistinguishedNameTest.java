@@ -582,18 +582,79 @@ public class DistinguishedNameTest extends TestCase {
 		}
 	}
 
-	public void testPreserveKeyCasePropertyTrueShouldNotEqualLowerCasedKeys() throws Exception {
+	public void testKeyCaseFoldNoneShouldEqualOriginalCasedKeys() throws Exception {
 		try {
-			DistinguishedName name = new DistinguishedName("ou=foo,Ou=bar,oU=baz,OU=bim");
+			String dnString = "ou=foo,Ou=bar,oU=baz,OU=bim";
+			DistinguishedName name = new DistinguishedName(dnString);
+			
 			// First check the default
 			assertEquals("ou=foo,ou=bar,ou=baz,ou=bim", name.toString());
-			System.setProperty(DistinguishedName.PRESERVE_KEY_CASE_PROPERTY, "true");
-			name = new DistinguishedName("ou=foo,Ou=bar,oU=baz,OU=bim");
-			assertEquals("ou=foo,Ou=bar,oU=baz,OU=bim", name.toString());
+
+			System.setProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY, DistinguishedName.KEY_CASE_FOLD_NONE);
+			name = new DistinguishedName(dnString);
+			System.out.println(dnString + " folded as \"" + DistinguishedName.KEY_CASE_FOLD_NONE + "\": " + name);
+			assertEquals(dnString, name.toString());
 		}
 		finally {
 			// Always restore the system setting
-			System.setProperty(DistinguishedName.PRESERVE_KEY_CASE_PROPERTY, "");
+			System.clearProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY);
+		}
+	}
+
+	public void testKeyCaseFoldUpperShouldEqualUpperCasedKeys() throws Exception {
+		try {
+			String dnString = "ou=foo,Ou=bar,oU=baz,OU=bim";
+			DistinguishedName name = new DistinguishedName(dnString);
+
+			// First check the default
+			assertEquals("ou=foo,ou=bar,ou=baz,ou=bim", name.toString());
+			
+			System.setProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY, DistinguishedName.KEY_CASE_FOLD_UPPER);
+			name = new DistinguishedName(dnString);
+			System.out.println(dnString + " folded as \"" + DistinguishedName.KEY_CASE_FOLD_UPPER + "\": " + name);
+			assertEquals("OU=foo,OU=bar,OU=baz,OU=bim", name.toString());
+		}
+		finally {
+			// Always restore the system setting
+			System.clearProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY);
+		}
+	}
+
+	public void testKeyCaseFoldLowerShouldEqualLowerCasedKeys() throws Exception {
+		try {
+			String dnString = "ou=foo,Ou=bar,oU=baz,OU=bim";
+			DistinguishedName name = new DistinguishedName(dnString);
+
+			// First check the default
+			assertEquals("ou=foo,ou=bar,ou=baz,ou=bim", name.toString());
+			
+			System.setProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY, DistinguishedName.KEY_CASE_FOLD_LOWER);
+			name = new DistinguishedName(dnString);
+			System.out.println(dnString + " folded as \"" + DistinguishedName.KEY_CASE_FOLD_LOWER + "\": " + name);
+			assertEquals("ou=foo,ou=bar,ou=baz,ou=bim", name.toString());
+		}
+		finally {
+			// Always restore the system setting
+			System.clearProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY);
+		}
+	}
+
+	public void testKeyCaseFoldNonsenseShoulddefaultToLowerCasedKeysAndLogWarning() throws Exception {
+		try {
+			String dnString = "ou=foo,Ou=bar,oU=baz,OU=bim";
+			DistinguishedName name = new DistinguishedName(dnString);
+
+			// First check the default
+			assertEquals("ou=foo,ou=bar,ou=baz,ou=bim", name.toString());
+			
+			System.setProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY, "whatever");
+			name = new DistinguishedName(dnString);
+			System.out.println(dnString + " folded as \"whatever\": " + name);
+			assertEquals("ou=foo,ou=bar,ou=baz,ou=bim", name.toString());
+		}
+		finally {
+			// Always restore the system setting
+			System.clearProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY);
 		}
 	}
 }

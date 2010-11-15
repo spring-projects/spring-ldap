@@ -95,24 +95,49 @@ import org.springframework.util.Assert;
  */
 public class DistinguishedName implements Name {
 	/**
-	 * System property that will be inspected to determine whether toString will
-	 * format the DN with spaces after each comma or use a more compact
-	 * representation, i.e.:
+	 * System property that will be inspected to determine whether
+	 * {@link #toString()} will format the DN with spaces after each comma or
+	 * use a more compact representation, i.e.:
 	 * <code>uid=adam.skogman, ou=People, dc=jayway, dc=se</code> rather than
-	 * <code>uid=adam.skogman,ou=People,dc=jayway,dc=se</code>. Default is
-	 * compact representation.
+	 * <code>uid=adam.skogman,ou=People,dc=jayway,dc=se</code>. A value other
+	 * than null or blank will trigger the spaced format. Default is the compact
+	 * representation.
+	 * <p>
+	 * Valid values are:
+	 * <ul>
+	 * <li>blank or null (property not set)</li>
+	 * <li>any non-blank value</li>
+	 * </ul>
 	 * @since 1.3
+	 * @see #toCompactString()
 	 */
 	public static final String SPACED_DN_FORMAT_PROPERTY = "org.springframework.ldap.core.spacedDnFormat";
 
 	/**
 	 * System property that will be inspected to determine whether creating a
-	 * DistinguishedName will leave the keys as they were in the original String
-	 * or convert the keys to lowercase. Default is to convert the keys to
+	 * DistinguishedName will convert the keys to <em>lowercase</em>, convert
+	 * the keys to <em>uppercase</em>, or leave the keys as they were in the
+	 * original String, ie <em>none</em>. Default is to convert the keys to
 	 * lowercase.
+	 * <p>
+	 * Valid values are:
+	 * <ul>
+	 * <li>"lower" or blank or null (property not set)</li>
+	 * <li>"upper"</li>
+	 * <li>"none"</li>
+	 * </ul>
 	 * @since 1.3.1
+	 * @see #KEY_CASE_FOLD_LOWER
+	 * @see #KEY_CASE_FOLD_UPPER
+	 * @see #KEY_CASE_FOLD_NONE
 	 */
-	public static final String PRESERVE_KEY_CASE_PROPERTY = "org.springframework.ldap.core.preserveKeyCase";
+	public static final String KEY_CASE_FOLD_PROPERTY = "org.springframework.ldap.core.keyCaseFold";
+
+	public static final String KEY_CASE_FOLD_LOWER = "lower";
+
+	public static final String KEY_CASE_FOLD_UPPER = "upper";
+
+	public static final String KEY_CASE_FOLD_NONE = "none";
 
 	private static final Log log = LogFactory.getLog(DistinguishedName.class);
 
