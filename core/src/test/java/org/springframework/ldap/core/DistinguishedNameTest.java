@@ -138,7 +138,7 @@ public class DistinguishedNameTest extends TestCase {
 
 		assertEquals("Append failed", "ou=foo,ou=bar,cn=fie,ou=baz", path1.toString());
 	}
-
+	
 	public void testEquals() throws Exception {
 
 		// original object
@@ -579,6 +579,21 @@ public class DistinguishedNameTest extends TestCase {
 		finally {
 			// Always restore the system setting
 			System.setProperty(DistinguishedName.SPACED_DN_FORMAT_PROPERTY, "");
+		}
+	}
+
+	public void testPreserveKeyCasePropertyTrueShouldNotEqualLowerCasedKeys() throws Exception {
+		try {
+			DistinguishedName name = new DistinguishedName("ou=foo,Ou=bar,oU=baz,OU=bim");
+			// First check the default
+			assertEquals("ou=foo,ou=bar,ou=baz,ou=bim", name.toString());
+			System.setProperty(DistinguishedName.PRESERVE_KEY_CASE_PROPERTY, "true");
+			name = new DistinguishedName("ou=foo,Ou=bar,oU=baz,OU=bim");
+			assertEquals("ou=foo,Ou=bar,oU=baz,OU=bim", name.toString());
+		}
+		finally {
+			// Always restore the system setting
+			System.setProperty(DistinguishedName.PRESERVE_KEY_CASE_PROPERTY, "");
 		}
 	}
 }

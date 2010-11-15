@@ -159,6 +159,40 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 		}
 	}
 
+	// LDAP-188
+	@Test
+	public void testModifyAttributes_AddAttributeValueAsDistinguishedName() {
+		try {
+			// prepare test data
+			String dn = "cn=ROLE_USER,ou=groups";
+			String lowerCasedName = "cn=Some Person,ou=company1,c=Sweden,dc=jayway,dc=se";
+			String upperCasedName = "CN=Some Person,OU=company1,C=Sweden,DC=jayway,DC=se";
+			DirContextOperations ctx = tested.lookupContext(dn);
+			ctx.removeAttributeValue("uniqueMember", lowerCasedName);
+			ctx.addAttributeValue("uniqueMember", upperCasedName);
+			tested.modifyAttributes(ctx);
+
+			// without this, the member added above will not be removed and the test fails
+			System.setProperty(DistinguishedName.PRESERVE_KEY_CASE_PROPERTY, Boolean.TRUE.toString());
+			
+			ctx = tested.lookupContext(dn);
+			ctx.removeAttributeValue("uniqueMember", new DistinguishedName(upperCasedName).toCompactString());
+			tested.modifyAttributes(ctx);
+
+			// verify
+			DirContextAdapter result = (DirContextAdapter) tested.lookup(dn);
+			String[] attributes = result.getStringAttributes("uniqueMember");
+			assertEquals(4, attributes.length);
+			assertEquals("0", "cn=Some Person2,ou=company1,c=Sweden,dc=jayway,dc=se", attributes[0]);
+			assertEquals("1", "cn=Some Person,ou=company1,c=Norway,dc=jayway,dc=se", attributes[1]);
+			assertEquals("2", "cn=Some Person,ou=company2,c=Sweden,dc=jayway,dc=se", attributes[2]);
+			assertEquals("3", "cn=Some Person3,ou=company1,c=Sweden,dc=jayway,dc=se", attributes[3]);
+		}
+		finally {
+			System.setProperty(DistinguishedName.PRESERVE_KEY_CASE_PROPERTY, "");
+		}
+	}
+
 	/**
 	 * Test written originally to verify that duplicates are allowed on ordered
 	 * attributes, but had to be changed since Apache DS seems to disallow

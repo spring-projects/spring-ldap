@@ -51,18 +51,29 @@ public class LdapRdnComponent implements Comparable, Serializable {
 
 	/**
 	 * Constructs an LdapRdnComponent, optionally decoding the value.
+	 * <p>
+	 * If the System property
+	 * <code>org.springframework.ldap.core.preserveKeyCase</code> is set to
+	 * "true", the keys will preserve their original case. Default is to convert
+	 * them to lowercase.
 	 * 
-	 * @param key the Atttribute name.
+	 * @param key the Attribute name.
 	 * @param value the Attribute value.
 	 * @param decodeValue if <code>true</code> the value is decoded (typically
 	 * used when a DN is parsed from a String), otherwise the value is used as
 	 * specified.
+	 * @see DistinguishedName#PRESERVE_KEY_CASE_PROPERTY
 	 */
 	public LdapRdnComponent(String key, String value, boolean decodeValue) {
 		Validate.notEmpty(key, "Key must not be empty");
 		Validate.notEmpty(value, "Value must not be empty");
 
-		this.key = StringUtils.lowerCase(key);
+		String preserveKeyCase = System.getProperty(DistinguishedName.PRESERVE_KEY_CASE_PROPERTY);
+		if (StringUtils.isBlank(preserveKeyCase)) {
+			this.key = StringUtils.lowerCase(key);
+		} else {
+			this.key = key;
+		}
 		if (decodeValue) {
 			this.value = LdapEncoder.nameDecode(value);
 		}

@@ -105,6 +105,15 @@ public class DistinguishedName implements Name {
 	 */
 	public static final String SPACED_DN_FORMAT_PROPERTY = "org.springframework.ldap.core.spacedDnFormat";
 
+	/**
+	 * System property that will be inspected to determine whether creating a
+	 * DistinguishedName will leave the keys as they were in the original String
+	 * or convert the keys to lowercase. Default is to convert the keys to
+	 * lowercase.
+	 * @since 1.3.1
+	 */
+	public static final String PRESERVE_KEY_CASE_PROPERTY = "org.springframework.ldap.core.preserveKeyCase";
+
 	private static final Log log = LogFactory.getLog(DistinguishedName.class);
 
 	private static final boolean COMPACT = true;
