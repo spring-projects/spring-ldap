@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+  <title>Object-Directory Mapping (ODM)</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>Relational mapping frameworks like Hibernate and JPA have offered
+    developers the ability to use annotations to map database tables to Java
+    objects for some time. The Spring Framework LDAP project now offers the
+    same ability with respect to directories through the use of the
+    <package>org.springframework.ldap.odm</package> package.</para>
+  </section>
+
+  <section>
+    <title>OdmManager</title>
+
+    <para>The
+    <interfacename>org.springframework.ldap.odm.OdmManager</interfacename>
+    interface, and its implementation, is the central class in the ODM
+    package. The <interfacename>OdmManager</interfacename> orchestrates the
+    process of reading objects from the directory and mapping the data to
+    annotated Java object classes. This interface provides access to the
+    underlying directory instance through the following methods:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para><code>&lt;T&gt; T read(Class&lt;T&gt; clazz, Name
+        dn)</code></para>
+      </listitem>
+
+      <listitem>
+        <para><code>void create(Object entry)</code></para>
+      </listitem>
+
+      <listitem>
+        <para><code>void update(Object entry)</code></para>
+      </listitem>
+
+      <listitem>
+        <para><code>void delete(Object entry)</code></para>
+      </listitem>
+
+      <listitem>
+        <para><code>&lt;T&gt; List&lt;T&gt; findAll(Class&lt;T&gt; clazz, Name
+        base, SearchControls searchControls)</code></para>
+      </listitem>
+
+      <listitem>
+        <para><code>&lt;T&gt; List&lt;T&gt; search(Class&lt;T&gt; clazz, Name
+        base, String filter, SearchControls searchControls)</code></para>
+      </listitem>
+    </itemizedlist>
+
+    <para>A reference to an implementation of this interface can be obtained
+    through the
+    <classname>org.springframework.ldap.odm.core.impl.OdmManagerImplFactoryBean</classname>.
+    A basic configuration of this factory would be as follows:</para>
+
+    <example>
+      <title>Example 1.1 Configuring the OdmManager Factory</title>
+
+      <para><code>&lt;beans&gt; ... &lt;bean id="odmManager"
+      class="org.springframework.ldap.odm.core.impl.OdmManagerImplFactoryBean"&gt;
+      &lt;property name="converterManager" ref="converterManager" /&gt;
+      &lt;property name="contextSource" ref="contextSource" /&gt; &lt;property
+      name="managedClasses"&gt; &lt;set&gt;
+      &lt;value&gt;com.ldap.dao.SimplePerson&lt;/value&gt; &lt;/set&gt;
+      &lt;/property&gt; &lt;/bean&gt; ... &lt;/beans&gt;</code></para>
+    </example>
+
+    <para>The factory requires the list of entity classes to be managed by the
+    <interfacename>OdmManager</interfacename> to be explicitly declared. These
+    classes should be properly annotated as defined in the next setion. The
+    <property>converterManager</property> referenced in the above definition
+    is described in section 4: Type Conversion.</para>
+  </section>
+
+  <section>
+    <title>Annotations</title>
+
+    <para>Entity classes managed by the
+    <interfacename>OdmManager</interfacename> are required to be annotated
+    with the annotations in the
+    <package>org.springframework.ldap.odm.annotations</package> package. The
+    available annotations are:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para><code>@Entry</code> - Class level annotation indicating the
+        <property>objectClass</property> definitions to which the entity
+        maps.<emphasis> (required)</emphasis></para>
+      </listitem>
+
+      <listitem>
+        <para><code>@Id</code> - Indicates the entity DN; the field declaring
+        this attribute must be a derivative of the
+        <classname>javax.naming.Name</classname> class.
+        <emphasis>(required)</emphasis></para>
+      </listitem>
+
+      <listitem>
+        <para><code>@Attribute</code> - Indicates the mapping of a directory
+        attribute to the object class field.</para>
+      </listitem>
+
+      <listitem>
+        <para><code>@Transient</code> - Indicates the field is not persistent
+        and should be ignored by the
+        <interfacename>OdmManager</interfacename>.</para>
+      </listitem>
+    </itemizedlist>
+
+    <simpara>The <code>@Entry</code> and <code>@Id</code> attributes are
+    required to be declared on managed classes. <code>@Entry</code> is used to
+    specify which object classes the entity maps too. All object classes for
+    which fields are mapped are required to be declared. Also, in order for a
+    directory entry to be considered a match to the managed entity, all object
+    classes declared by the directory entry must match be declared by in the
+    <code>@Entry</code> annotation. </simpara>
+
+    <simpara>The <code>@Id</code> annotation is used to map the distinguished
+    name of the entry to a field. The field must be an instance of
+    <classname>javax.naming.Name</classname> or a subclass of it.</simpara>
+
+    <simpara>The <code>@Attribute</code> annotation is used to map object
+    class fields to entity fields. <code>@Attribute</code> is required to
+    declare the name of the object class property to which the field maps and
+    may optionally declare the syntax OID of the LDAP attribute, to guarantee
+    exact matching. <code>@Attribute</code> also provides the type declaration
+    which allows you to indicate whether the attribute is regarded as binary
+    based or string based by the LDAP JNDI provider.</simpara>
+
+    <simpara>The <code>@Transient</code> annotation is used to indicate the
+    field should be ignored by the <interfacename>OdmManager</interfacename>
+    and not mapped to an underlying LDAP property.</simpara>
+  </section>
+
+  <section>
+    <title>Type Conversion</title>
+
+    <para>The <interfacename>OdmManager</interfacename> relies on the
+    <package>org.springframework.ldap.odm.typeconversion</package> package to
+    convert LDAP attributes to Java fields. The main interface in this class
+    is the
+    <interfacename>org.springframework.ldap.odm.typeconversion.ConverterManager</interfacename>.
+    The default <interfacename>ConverterManager</interfacename> implementation
+    uses the following algorithm when parsing objects to convert
+    fields:<orderedlist>
+        <listitem>
+          <para>Try to find and use a <interfacename>Converter</interfacename>
+          registered for the <property>fromClass</property>,
+          <property>syntax</property> and <property>toClass</property> and use
+          it.</para>
+        </listitem>
+
+        <listitem>
+          <para>If this fails, then if the <property>toClass</property>
+          <code><methodname>isAssignableFrom</methodname></code> the
+          <property>fromClass</property> then just assign it.</para>
+        </listitem>
+
+        <listitem>
+          <para>If this fails try to find and use a
+          <code><interfacename>Converter</interfacename></code> registered for
+          the <property>fromClass</property> and the
+          <property>toClass</property> ignoring the syntax.</para>
+        </listitem>
+
+        <listitem>
+          <para>If this fails then throw a
+          <exceptionname>ConverterException</exceptionname>.</para>
+        </listitem>
+      </orderedlist></para>
+
+    <para>Implementations of the <classname>ConverterManager</classname>
+    interface can be obtained from the
+    <classname>org.springframework.ldap.odm.typeconversion.impl.ConvertManagerFactoryBean</classname>.
+    The factory bean requires converter configurations to be declared in the
+    bean configuration. </para>
+
+    <para>The converterConfig property accepts a set of
+    <classname>ConverterConfig</classname> classes, each one defining some
+    conversion logic. A converter config is an instance of
+    <classname>org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean.ConverterConfig</classname>.
+    The config defines a set of source classes, the set of target classes, and
+    an implementation of the
+    <interfacename>com.springframework.ldap.odm.typeconversion.impl.Converter</interfacename>
+    interface which provides the logic to convert from the
+    <property>fromClass</property> to the <property>toClass</property>. A
+    sample configuration is provided in Example 1.3. </para>
+
+    <example>
+      <title>Example 1.3 Configuring the Converter Manager Factory</title>
+
+      <para><code>&lt;bean id="fromStringConverter"
+      class="org.springframework.ldap.odm.typeconversion.impl.converters.FromStringConverter"
+      /&gt; &lt;bean id="toStringConverter"
+      class="org.springframework.ldap.odm.typeconversion.impl.converters.ToStringConverter"
+      /&gt; &lt;bean id="converterManager"
+      class="org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean"&gt;
+      &lt;property name="converterConfig"&gt; &lt;set&gt; &lt;bean
+      class="org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean$ConverterConfig"&gt;
+      &lt;property name="fromClasses"&gt; &lt;set&gt;
+      &lt;value&gt;java.lang.String&lt;/value&gt; &lt;/set&gt;
+      &lt;/property&gt; &lt;property name="toClasses"&gt; &lt;set&gt;
+      &lt;value&gt;java.lang.Byte&lt;/value&gt;
+      &lt;value&gt;java.lang.Short&lt;/value&gt;
+      &lt;value&gt;java.lang.Integer&lt;/value&gt;
+      &lt;value&gt;java.lang.Long&lt;/value&gt;
+      &lt;value&gt;java.lang.Float&lt;/value&gt;
+      &lt;value&gt;java.lang.Double&lt;/value&gt;
+      &lt;value&gt;java.lang.Boolean&lt;/value&gt; &lt;/set&gt;
+      &lt;/property&gt; &lt;property name="converter"
+      ref="fromStringConverter" /&gt; &lt;/bean&gt; &lt;bean
+      class="org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean$ConverterConfig"&gt;
+      &lt;property name="fromClasses"&gt; &lt;set&gt;
+      &lt;value&gt;java.lang.Byte&lt;/value&gt;
+      &lt;value&gt;java.lang.Short&lt;/value&gt;
+      &lt;value&gt;java.lang.Integer&lt;/value&gt;
+      &lt;value&gt;java.lang.Long&lt;/value&gt;
+      &lt;value&gt;java.lang.Float&lt;/value&gt;
+      &lt;value&gt;java.lang.Double&lt;/value&gt;
+      &lt;value&gt;java.lang.Boolean&lt;/value&gt; &lt;/set&gt;
+      &lt;/property&gt; &lt;property name="toClasses"&gt; &lt;set&gt;
+      &lt;value&gt;java.lang.String&lt;/value&gt; &lt;/set&gt;
+      &lt;/property&gt; &lt;property name="converter" ref="toStringConverter"
+      /&gt; &lt;/bean&gt; &lt;/set&gt; &lt;/property&gt; &lt;/bean&gt;
+      </code></para>
+    </example>
+  </section>
+
+  <section>
+    <title>Execution</title>
+
+    <para>After all components are configured, directory interaction can be
+    acheived through a reference to the
+    <interfacename>OdmManager</interfacename> as shown in Example 1.4:</para>
+
+    <example>
+      <title>Example 1.4 Execution</title>
+
+      <para><code>public class App { private static Log log =
+      LogFactory.getLog(App.class); private static final SearchControls
+      searchControls = new SearchControls(SearchControls.SUBTREE_SCOPE, 100,
+      10000, null, true, false); public static void main( String[] args ) {
+      try { ApplicationContext context = new
+      ClassPathXmlApplicationContext("applicationContext.xml"); OdmManager
+      manager = (OdmManager) context.getBean("odmManager");
+      List&lt;SimplePerson&gt; people = manager.search(SimplePerson.class, new
+      DistinguishedName("dc=example,dc=com"), "uid=*", searchControls);
+      log.info("People found: " + people.size()); for (SimplePerson person :
+      people) { log.info( person ); } } catch (Exception e) {
+      e.printStackTrace(); } } }</code></para>
+    </example>
+  </section>
+</chapter>

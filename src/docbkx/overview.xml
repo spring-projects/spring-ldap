@@ -513,6 +513,21 @@ public class PersonDaoImpl implements PersonDao {
 		</itemizedlist>
 	</sect2>
 
+	<sect2 id="ldap.odm">
+		<title>org.springframework.ldap.odm</title>
+
+		<para>The ldap.odm package provides the classes and interfaces
+			enabling
+			annotation based object-directory mapping.</para>
+
+		<itemizedlist>
+			<listitem>
+				<para>Dependencies: ldap, ldap.core, ldap.core.simple, ldap.filter, spring-beans,
+				commons-cli, commons-logging, freemarker</para>
+			</listitem>
+		</itemizedlist>
+	</sect2>
+
     <para>For the exact list of jar dependencies, see the Spring LDAP Maven2
     Project Object Model (POM) files in the source tree.</para>
   </sect1>
