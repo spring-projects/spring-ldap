@@ -340,9 +340,6 @@
 					</configuration>
 				</plugin>
 				<plugin>
-					<artifactId>maven-project-info-reports-plugin</artifactId>
-				</plugin>
-				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>versions-maven-plugin</artifactId>
 					<version>1.1</version>
@@ -367,7 +364,7 @@
 									<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 								</manifest>
 								<manifestEntries>
-									<Spring-LDAP-Version>${pom.version}</Spring-LDAP-Version>
+									<Spring-LDAP-Version>${project.version}</Spring-LDAP-Version>
 								</manifestEntries>
 							</archive>
 							<descriptors>
@@ -387,7 +384,7 @@
 									<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 								</manifest>
 								<manifestEntries>
-									<Spring-LDAP-Version>${pom.version}</Spring-LDAP-Version>
+									<Spring-LDAP-Version>${project.version}</Spring-LDAP-Version>
 								</manifestEntries>
 							</archive>
 							<descriptors>
@@ -439,7 +436,7 @@
 					<entities>
 						<entity>
 							<name>version</name>
-							<value>${pom.version}</value>
+							<value>${project.version}</value>
 						</entity>
 					</entities>
 					<postProcess>

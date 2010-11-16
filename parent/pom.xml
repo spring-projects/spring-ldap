@@ -239,7 +239,7 @@
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 						</manifest>
 						<manifestEntries>
-							<Spring-LDAP-Version>${pom.version}</Spring-LDAP-Version>
+							<Spring-LDAP-Version>${project.version}</Spring-LDAP-Version>
 						</manifestEntries>
 					</archive>
 				</configuration>
