@@ -6,7 +6,7 @@ Downloads
 
 * Get the latest Spring LDAP releases here
 
-	* <<Spring LDAP 1.3.0.RELEASE is the current production release>>
+	* <<Spring LDAP 1.3.1.RELEASE is the current production release>>
 
 		* {{{http://www.springsource.com/download/community?project=Spring%20LDAP}Download}} | {{{http://static.springframework.org/spring-ldap/docs/1.3.x/changelog.txt}Changelog}} | {{{http://static.springframework.org/spring-ldap/docs/1.3.x/reference/html/}Documentation (HTML)}} | {{{http://static.springframework.org/spring-ldap/docs/1.3.x/reference/pdf/spring-ldap-reference.pdf}Documentation (PDF)}} | {{{http://static.springframework.org/spring-ldap/docs/1.3.x/apidocs/}API}}
 	
@@ -20,22 +20,42 @@ Sources
 
 	* http://src.springframework.org/svn/spring-ldap/trunk (latest sources)
 
-	* http://src.springframework.org/svn/spring-ldap/tags/spring-ldap-1.3.0.RELEASE (1.3.0 release sources)
+	* http://src.springframework.org/svn/spring-ldap/tags/spring-ldap-1.3.1.RELEASE (1.3.1 release sources)
 
 Maven Users
 
-	Artifacts for all production releases are available from the central Maven repository. The dependencies in 1.3.0 are:
+	Artifacts for all production releases are available from the central Maven repository. The dependencies in 1.3.1 are:
 
 +--------------------------------------------------+
 <dependency>
 	<groupId>org.springframework.ldap</groupId>
 	<artifactId>spring-ldap-core</artifactId>
-	<version>1.3.0.RELEASE</version>
+	<version>1.3.1.RELEASE</version>
 </dependency>
 <dependency>
 	<groupId>org.springframework.ldap</groupId>
 	<artifactId>spring-ldap-core-tiger</artifactId>
-	<version>1.3.0.RELEASE</version>
+	<version>1.3.1.RELEASE</version>
+</dependency>
+<dependency>
+	<groupId>org.springframework.ldap</groupId>
+	<artifactId>spring-ldap-test</artifactId>
+	<version>1.3.1.RELEASE</version>
+</dependency>
+<dependency>
+	<groupId>org.springframework.ldap</groupId>
+	<artifactId>spring-ldap-ldif-core</artifactId>
+	<version>1.3.1.RELEASE</version>
+</dependency>
+<dependency>
+	<groupId>org.springframework.ldap</groupId>
+	<artifactId>spring-ldap-ldif-batch</artifactId>
+	<version>1.3.1.RELEASE</version>
+</dependency>
+<dependency>
+	<groupId>org.springframework.ldap</groupId>
+	<artifactId>spring-ldap-odm</artifactId>
+	<version>1.3.1.RELEASE</version>
 </dependency>
 +--------------------------------------------------+
 
