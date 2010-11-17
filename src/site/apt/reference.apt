@@ -6,6 +6,6 @@ Reference Manual
 
     The reference manual is available as HTML, and as PDF.
     
-    * View the {{{reference/html/index.html}HTML version}}
+    * View the {{{./reference/html/index.html}HTML version}}
     
-    * Download the {{{reference/pdf/spring-ldap-reference.pdf}PDF version}}
+    * Download the {{{./reference/pdf/spring-ldap-reference.pdf}PDF version}}

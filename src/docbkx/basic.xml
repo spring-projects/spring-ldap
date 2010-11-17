@@ -156,7 +156,7 @@ filter.and(new WhitespaceWildcardsFilter("cn", cn));</programlisting>
     <title>Building Dynamic Distinguished Names</title>
 
     <para>The standard <ulink
-    url="http://java.sun.com/j2se/1.5.0/docs/api/javax/naming/Name.html">Name</ulink>
+    url="http://download.oracle.com/javase/1.5.0/docs/api/javax/naming/Name.html">Name</ulink>
     interface represents a generic name, which is basically an ordered
     sequence of components. The <literal>Name</literal> interface also
     provides operations on that sequence; e.g., <literal>add</literal> or
@@ -225,7 +225,7 @@ public class PersonDaoImpl implements PersonDao {
     <para><programlisting>cn=Some Person, ou=Some Company, c=Sweden, dc=example, dc=com</programlisting></para>
 
     <para>In Java 5, there is an implementation of the Name interface: <ulink
-    url="http://java.sun.com/j2se/1.5.0/docs/api/javax/naming/ldap/LdapName.html">LdapName</ulink>.
+    url="http://download.oracle.com/javase/1.5.0/docs/api/javax/naming/ldap/LdapName.html">LdapName</ulink>.
     If you are in the Java 5 world, you might as well use
     <literal>LdapName</literal>. However, you may still use
     <literal>DistinguishedName</literal> if you so wish.</para>
