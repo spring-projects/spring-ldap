@@ -15,11 +15,7 @@
     context using the supplied principal and credentials. A custom
     authenticate method could look like this:</para>
 
-    <example>
-      <title>Using <literal>ContextSource</literal> for user
-      authentication</title>
-
-      <programlisting>public boolean authenticate(String userDn, String credentials) {
+    <para><programlisting>public boolean authenticate(String userDn, String credentials) {
   DirContext ctx = null;
   try {
     ctx = contextSource.getContext(userDn, credentials);
@@ -32,21 +28,16 @@
     // It is imperative that the created DirContext instance is always closed
     LdapUtils.closeContext(ctx);
   }
-}</programlisting>
-    </example>
+}</programlisting>The userDn supplied to the <literal>authenticate</literal>
+    method needs to be the full DN of the user to authenticate (regardless of
+    the <literal>base</literal> setting on the
+    <literal>ContextSource</literal>). You will typically need to perform an
+    LDAP search based on e.g. the user name to get this DN:</para>
 
-    <para>The userDn supplied to the <literal>authenticate</literal> method
-    needs to be the full DN of the user to authenticate (regardless of the
-    <literal>base</literal> setting on the <literal>ContextSource</literal>).
-    You will typically need to perform an LDAP search based on e.g. the user
-    name to get this DN:</para>
-
-    <example>
-      <title>Finding a user based on uid attribute.</title>
-
-      <programlisting>private String getDnForUser(String uid) {
+    <para><programlisting>private String getDnForUser(String uid) {
   Filter f = new EqualsFilter("uid", uid);
-  List result = ldapTemplate.search(DistinguishedName.EMPTY_PATH, f.toString(), new AbstractContextMapper() {
+  List result = ldapTemplate.search(DistinguishedName.EMPTY_PATH, f.toString(),
+      new AbstractContextMapper() {
     protected Object doMapFromContext(DirContextOperations ctx) {
       return ctx.getNameInNamespace();
     }
@@ -57,12 +48,9 @@
   }
   
   return (String)result.get(0);
-}</programlisting>
-    </example>
-
-    <para>There are some drawbacks to this approach. The user is forced to
-    concern herself with the DN of the user, she can only search for the
-    user's uid, and the search always starts at the root of the tree (the
+}</programlisting>There are some drawbacks to this approach. The user is
+    forced to concern herself with the DN of the user, she can only search for
+    the user's uid, and the search always starts at the root of the tree (the
     empty path). A more flexible method would let the user specify the search
     base, the search filter, and the credentials. Spring LDAP 1.3.0 introduced
     new authenticate methods in LdapTemplate that provide this
@@ -70,11 +58,13 @@
 
     <itemizedlist>
       <listitem>
-        <literallayout><literal>boolean authenticate(Name base, String filter, String password);</literal></literallayout>
+        <para><literal>boolean authenticate(Name base, String filter, String
+        password);</literal></para>
       </listitem>
 
       <listitem>
-        <literallayout>boolean authenticate(String base, String filter, String password);</literallayout>
+        <para><literal>boolean authenticate(String base, String filter, String
+        password);</literal></para>
       </listitem>
     </itemizedlist>
 
@@ -105,11 +95,7 @@
     method where a hard-coded <literal>lookup</literal> operation is performed
     on the authenticated context:</para>
 
-    <example>
-      <title>Performing an LDAP operation on returned
-      <literal>DirContext</literal> objects.</title>
-
-      <programlisting>public boolean authenticate(String userDn, String credentials) {
+    <para><programlisting>public boolean authenticate(String userDn, String credentials) {
   DirContext ctx = null;
   try {
     ctx = contextSource.getContext(userDn, credentials);
@@ -125,10 +111,7 @@
     // It is imperative that the created DirContext instance is always closed
     LdapUtils.closeContext(ctx);
   }
-}</programlisting>
-    </example>
-
-    <para>It would be better if the operation could be provided as an
+}</programlisting>It would be better if the operation could be provided as an
     implementation of a callback interface, thus not limiting the operation to
     always be a <literal>lookup</literal>. Spring LDAP 1.3.0 introduced the
     callback interface
@@ -207,11 +190,7 @@ ldapTemplate.authenticate("", "(uid=john.doe)", "secret", contextCallback));</pr
     <para>A convenient collecting implementation of the error callback
     interface is also provided:</para>
 
-    <para><example>
-        <title>Convenience implementation of
-        <literal>AuthenticationErrorCallback</literal>.</title>
-
-        <programlisting>public final class CollectingAuthenticationErrorCallback implements AuthenticationErrorCallback {
+    <para><programlisting>public final class CollectingAuthenticationErrorCallback implements AuthenticationErrorCallback {
   private Exception error;
 
   public void execute(Exception e) {
@@ -221,8 +200,7 @@ ldapTemplate.authenticate("", "(uid=john.doe)", "secret", contextCallback));</pr
   public Exception getError() {
     return error;
   }
-}</programlisting>
-      </example>The code needed for authenticating a user and retrieving the
+}</programlisting>The code needed for authenticating a user and retrieving the
     authentication exception in case of an error boils down to this:</para>
 
     <para><example>
