@@ -33,7 +33,7 @@
 		<system>bamboo</system>
 		<url>http://build.springframework.org/browse/LDAP</url>
 	</ciManagement>
-	<inceptionYear>2006</inceptionYear>
+	<inceptionYear>2005</inceptionYear>
 	<developers>
 		<developer>
 			<id>marthursson</id>
