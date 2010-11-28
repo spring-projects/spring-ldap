@@ -149,6 +149,14 @@
     <xsl:param name="callout.extensions">1</xsl:param>
     <!-- FOP provide only PDF Bookmarks at the moment -->
     <xsl:param name="fop.extensions">1</xsl:param>
+    <!--
+    Ulrik Sandberg, 2010-11-28
+    fop 0.95 (docbkx-maven-plugin 2.0.9+) requires fop1.extensions.
+    fop 0.25 (docbkx-maven-plugin up to 2.0.7) requires fop.extensions.
+    fop 0.94 (docbkx-maven-plugin 2.0.8) requires ?.
+
+    <xsl:param name="fop1.extensions">1</xsl:param>
+    -->
 
     <!--###################################################
                      Table Of Contents
