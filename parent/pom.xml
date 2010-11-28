@@ -82,21 +82,21 @@
 			<plugins>
 				<plugin>
 					<artifactId>maven-jxr-plugin</artifactId>
-					<version>2.1</version>
+					<version>2.2</version>
 					<configuration>
 						<aggregate>true</aggregate>
 					</configuration>
 				</plugin>
 				<plugin>
 					<artifactId>maven-surefire-report-plugin</artifactId>
-					<version>2.4.3</version>
+					<version>2.6</version>
 					<configuration>
 						<aggregate>true</aggregate>
 					</configuration>
 				</plugin>
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.4.2</version>
+					<version>2.6</version>
 					<configuration>
 						<forkMode>once</forkMode>
 						<childDelegation>false</childDelegation>
@@ -132,12 +132,12 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.2</version>
+					<version>2.2-beta-5</version>
 				</plugin>
 				<plugin>
 					<groupId>com.agilejava.docbkx</groupId>
 					<artifactId>docbkx-maven-plugin</artifactId>
-					<version>2.0.6</version>
+					<version>2.0.7</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-javadoc-plugin</artifactId>
@@ -190,12 +190,12 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>cobertura-maven-plugin</artifactId>
-					<version>2.3</version>
+					<version>2.4</version>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>findbugs-maven-plugin</artifactId>
-					<version>1.2</version>
+					<version>2.3.1</version>
 				</plugin>
 	            <plugin>
 	                <groupId>org.mortbay.jetty</groupId>
@@ -284,15 +284,15 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>1.2</version>
+				<version>2.3.1</version>
 			</plugin>
 			<plugin>
 				<artifactId>maven-jxr-plugin</artifactId>
-				<version>2.1</version>
+				<version>2.2</version>
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.4.3</version>
+				<version>2.6</version>
 			</plugin>
 			<plugin>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
@@ -312,7 +312,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.3</version>
+				<version>2.4</version>
 			</plugin>
 		</plugins>
 	</reporting>
