@@ -110,12 +110,12 @@
 	</distributionManagement>
 	<scm>
 		<connection>
-			scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ldap/trunk 
+			scm:svn:https://src.springframework.org/svn/spring-ldap/trunk
 		</connection>
 		<developerConnection>
-			scm:svn:https://springframework.svn.sourceforge.net/svnroot/springframework/spring-ldap/trunk 
+			scm:svn:https://src.springframework.org/svn/spring-ldap/trunk/
 		</developerConnection>
-		<url>http://fisheye3.cenqua.com/browse/springframework/spring-ldap/trunk</url>
+		<url>https://fisheye.springsource.org/changelog/~br=trunk/spring-ldap</url>
 	</scm>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
