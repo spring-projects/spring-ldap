@@ -9,7 +9,8 @@
     developers the ability to use annotations to map database tables to Java
     objects for some time. The Spring Framework LDAP project now offers the
     same ability with respect to directories through the use of the
-    <code>org.springframework.ldap.odm</code> package.</para>
+    <code>org.springframework.ldap.odm</code> package (sometimes abbreviated
+    as <code>o.s.l.odm</code>).</para>
   </sect1>
 
   <sect1 id="odm-odmmanager">
@@ -61,7 +62,8 @@
       <programlisting>
 &lt;beans&gt;
    ...
-   &lt;bean id="odmManager" class="org.springframework.ldap.odm.core.impl.OdmManagerImplFactoryBean"&gt;
+   &lt;bean id="odmManager"
+         class="org.springframework.ldap.odm.core.impl.OdmManagerImplFactoryBean"&gt;
       &lt;property name="converterManager" ref="converterManager" /&gt;
       &lt;property name="contextSource" ref="contextSource" /&gt;
       &lt;property name="managedClasses"&gt;
@@ -158,13 +160,13 @@
 
         <listitem>
           <para>If this fails, then if the <code>toClass</code>
-          <code><methodname>isAssignableFrom</methodname></code> the
+          <code>isAssignableFrom</code> the
           <code>fromClass</code> then just assign it.</para>
         </listitem>
 
         <listitem>
           <para>If this fails try to find and use a
-          <code><code>Converter</code></code> registered for the
+          <code>Converter</code> registered for the
           <code>fromClass</code> and the <code>toClass</code> ignoring the
           syntax.</para>
         </listitem>
@@ -177,17 +179,17 @@
 
     <para>Implementations of the <code>ConverterManager</code> interface can
     be obtained from the
-    <code>org.springframework.ldap.odm.typeconversion.impl.ConvertManagerFactoryBean</code>.
+    <code>o.s.l.odm.typeconversion.impl.ConvertManagerFactoryBean</code>.
     The factory bean requires converter configurations to be declared in the
     bean configuration.</para>
 
     <para>The converterConfig property accepts a set of
     <code>ConverterConfig</code> classes, each one defining some conversion
     logic. A converter config is an instance of
-    <code>org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean.ConverterConfig</code>.
+    <code>o.s.l.odm.typeconversion.impl.ConverterManagerFactoryBean.ConverterConfig</code>.
     The config defines a set of source classes, the set of target classes, and
     an implementation of the
-    <code>com.springframework.ldap.odm.typeconversion.impl.Converter</code>
+    <code>org.springframework.ldap.odm.typeconversion.impl.Converter</code>
     interface which provides the logic to convert from the
     <code>fromClass</code> to the <code>toClass</code>. A sample configuration
     is provided in the following example:</para>
@@ -204,7 +206,8 @@
    class="org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean"&gt;
    &lt;property name="converterConfig"&gt;
       &lt;set&gt;
-         &lt;bean class="org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean$ConverterConfig"&gt;
+      &lt;bean class="org.springframework.ldap.odm.\
+      typeconversion.impl.ConverterManagerFactoryBean$ConverterConfig"&gt;
             &lt;property name="fromClasses"&gt;
                &lt;set&gt;
                   &lt;value&gt;java.lang.String&lt;/value&gt;
@@ -223,7 +226,8 @@
             &lt;/property&gt;
             &lt;property name="converter" ref="fromStringConverter" /&gt;
          &lt;/bean&gt;
-         &lt;bean class="org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean$ConverterConfig"&gt;
+         &lt;bean class="org.springframework.ldap.odm.\
+	 typeconversion.impl.ConverterManagerFactoryBean$ConverterConfig"&gt;
             &lt;property name="fromClasses"&gt;
                &lt;set&gt;
                   &lt;value&gt;java.lang.Byte&lt;/value&gt;
@@ -268,8 +272,8 @@ public class App {
       try {
          ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
          OdmManager manager = (OdmManager) context.getBean("odmManager");
-         List&lt;SimplePerson&gt; people = manager.search(
-            SimplePerson.class, new DistinguishedName("dc=example,dc=com"), "uid=*", searchControls);
+	 List&lt;SimplePerson&gt; people = manager.search(SimplePerson.class,
+	    new DistinguishedName("dc=example,dc=com"), "uid=*", searchControls);
          log.info("People found: " + people.size());
          for (SimplePerson person : people) {
             log.info( person );
