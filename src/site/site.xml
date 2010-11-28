@@ -37,7 +37,7 @@
             <item name="Support Forums" href="http://forum.springframework.org/forumdisplay.php?f=40"/>
             <item name="JIRA" href="http://jira.springframework.org/browse/LDAP"/>
             <item name="Road Map"
-                  href="http://jira.springframework.org/browse/LDAP?report=com.atlassian.jira.plugin.system.project:roadmap-panel"/>
+		    href="https://jira.springframework.org/browse/LDAP?report=com.atlassian.jira.plugin.system.project:roadmap-panel#selectedTab=com.atlassian.jira.plugin.system.project%3Aroadmap-panel"/>
         </menu>
         <menu ref="reports" name="Reports"/>
     </body>
