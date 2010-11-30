@@ -19,9 +19,9 @@
     </modules>
     <repositories>
         <repository>
-            <id>spring-milestone</id>
-            <name>Spring Milestone Repository</name>
-            <url>http://maven.springframework.org/milestone</url>
+            <id>spring-release</id>
+            <name>Spring Release Repository</name>
+            <url>http://maven.springframework.org/release</url>
         </repository>        
     </repositories>
     <dependencies>
