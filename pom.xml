@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.springframework.ldap</groupId>
 	<artifactId>spring-ldap</artifactId>
-	<version>1.3.1.RELEASE</version>
+	<version>1.3.2.CI-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Spring LDAP</name>
 	<description> Spring LDAP is a Java library for simplifying LDAP
@@ -109,12 +109,12 @@
 	</distributionManagement>
 	<scm>
 		<connection>
-			scm:svn:https://src.springframework.org/svn/spring-ldap/tags/spring-ldap-1.3.1.RELEASE
+			scm:svn:https://src.springframework.org/svn/spring-ldap/trunk
 		</connection>
 		<developerConnection>
-			scm:svn:https://src.springframework.org/svn/spring-ldap/tags/spring-ldap-1.3.1.RELEASE
+			scm:svn:https://src.springframework.org/svn/spring-ldap/trunk/
 		</developerConnection>
-		<url>https://fisheye.springsource.org/changelog/~br=trunk/spring-ldap/tags/spring-ldap-1.3.1.RELEASE</url>
+		<url>https://fisheye.springsource.org/changelog/~br=trunk/spring-ldap</url>
 	</scm>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
