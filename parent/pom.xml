@@ -4,7 +4,7 @@
 	<groupId>org.springframework.ldap</groupId>
 	<artifactId>spring-ldap-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.3.1.RELEASE</version>
+	<version>1.3.2.CI-SNAPSHOT</version>
 	<name>Spring LDAP - Parent</name>
     <modules>
         <module>tiger</module>
@@ -27,9 +27,9 @@
 		</site>
 	</distributionManagement>
 	<scm>
-		<connection>scm:svn:https://src.springframework.org/svn/spring-ldap/tags/spring-ldap-1.3.1.RELEASE</connection>
-		<developerConnection>scm:svn:https://src.springframework.org/svn/spring-ldap/tags/spring-ldap-1.3.1.RELEASE</developerConnection>
-		<url>https://fisheye.springsource.org/changelog/~br=trunk/spring-ldap/tags/spring-ldap-1.3.1.RELEASE</url>
+		<connection>scm:svn:https://src.springframework.org/svn/spring-ldap/trunk</connection>
+		<developerConnection>scm:svn:https://src.springframework.org/svn/spring-ldap/trunk</developerConnection>
+		<url>https://fisheye.springsource.org/changelog/~br=trunk/spring-ldap</url>
 	</scm>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
