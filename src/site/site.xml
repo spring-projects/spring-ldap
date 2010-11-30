@@ -42,12 +42,17 @@
         <menu ref="reports" name="Reports"/>
     </body>
     <poweredBy>
-        <logo name="Powered by Spring" href="http://www.springframework.org" img="images/logos/spring.png"/>
-        <logo name="Powered by Structure 101" href="http://www.headwaysoftware.com/products/structure101/"
-              img="images/logos/s101d.png"/>
-        <logo name="Powered by JIRA" href="http://www.atlassian.com/software/jira/" img="images/logos/jira.png"/>
-        <logo name="Built by Bamboo" href="http://www.atlassian.com/software/bamboo/" img="images/logos/bamboo.png"/>
-        <logo name="Build with Maven 2" href="http://maven.apache.org" img="images/logos/maven-feather.png"/>
-        <logo name="Hosted by Contegix" href="http://www.contegix.com/" img="images/logos/contegix.png"/>
+	<logo name="Powered by Spring" href="http://www.springsource.org/about"
+		img="http://www.springframework.org/buttons/spring_80x15.png"/>
+        <logo name="Analyzed by Structure 101" href="http://www.headwaysoftware.com/products/structure101/"
+		img="http://www.structure101.com/java/images/logo-small.gif"/>
+	<logo name="Bugs and issues tracked by JIRA" href="http://www.atlassian.com/software/jira/"
+		img="http://www.atlassian.com/software/jira/images/badges/v2/bug_tracking_software_sm.png"/>
+	<logo name="Continuous integration by Bamboo" href="http://www.atlassian.com/software/bamboo/"
+		img="http://www.atlassian.com/software/bamboo/images/badges/v2/continuous_integration_tools_sm.png"/>
+	<logo name="Built with Maven" href="http://maven.apache.org"
+		img="http://maven.apache.org/images/logos/maven-feather.png"/>
+	<logo name="Hosted by Contegix" href="http://www.contegix.com/"
+		img="http://www.contegix.com/images/badges/contegix-hosted-90x30.png"/>
     </poweredBy>
 </project>
