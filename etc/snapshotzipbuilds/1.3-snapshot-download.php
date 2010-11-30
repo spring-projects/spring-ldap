@@ -1,5 +1,5 @@
 <?php
-$url = "http://s3.amazonaws.com/maven.springframework.org?prefix=snapshot/org/springframework/ldap/spring-ldap/1.3.1.CI-SNAPSHOT/";
+$url = "http://s3.amazonaws.com/maven.springframework.org?prefix=snapshot/org/springframework/ldap/spring-ldap/1.3.2.CI-SNAPSHOT/";
 $xml = file_get_contents($url);
 
 header('Content-Type: text/xml; charset=UTF-8');
