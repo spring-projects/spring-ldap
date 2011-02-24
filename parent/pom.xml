@@ -75,6 +75,10 @@
 				<enabled>true</enabled>
 			</releases>
 		</pluginRepository>
+		<pluginRepository>
+			<id>spring release</id>
+			<url>http://maven.springframework.org/release/</url>
+		</pluginRepository>
 	</pluginRepositories>
 	<build>
 		<pluginManagement>
@@ -220,7 +224,7 @@
 			<extension>
 				<groupId>org.springframework.build.aws</groupId>
 				<artifactId>org.springframework.build.aws.maven</artifactId>
-				<version>3.0.0.RELEASE</version>
+				<version>3.1.0.RELEASE</version>
 			</extension>
 		</extensions>
 		<plugins>
