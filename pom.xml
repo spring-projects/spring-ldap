@@ -157,7 +157,7 @@
 								</goals>
 								<configuration>
 									<artifactItems>
-                                        <!--Spring-->
+										<!--Spring-->
 										<artifactItem>
 											<groupId>org.springframework</groupId>
 											<artifactId>spring-core</artifactId>
@@ -188,14 +188,14 @@
 											<version>${spring.version}</version>
 											<outputDirectory>${project.build.directory}/dependency/spring/</outputDirectory>
 										</artifactItem>
-                                        <!--Java EE-->
+										<!--Java EE-->
 										<artifactItem>
 											<groupId>com.sun</groupId>
 											<artifactId>ldapbp</artifactId>
 											<version>1.0</version>
 											<outputDirectory>${project.build.directory}/dependency/sun/</outputDirectory>
 										</artifactItem>
-                                        <!-- Commons dependendencies -->
+										<!-- Commons dependendencies -->
 										<artifactItem>
 											<groupId>commons-lang</groupId>
 											<artifactId>commons-lang</artifactId>
@@ -208,7 +208,7 @@
 											<version>1.5.4</version>
 											<outputDirectory>${project.build.directory}/dependency/jakarta-commons/</outputDirectory>
 										</artifactItem>
-                                        <!-- Logging dependencies -->
+										<!-- Logging dependencies -->
 										<artifactItem>
 											<groupId>commons-logging</groupId>
 											<artifactId>commons-logging</artifactId>
@@ -263,6 +263,12 @@
 			<url>http://maven.springframework.org/external/</url>
 		</repository>
 	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring release</id>
+			<url>http://maven.springframework.org/release/</url>
+		</pluginRepository>
+	</pluginRepositories>
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -320,6 +326,13 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		<extensions>
+			<extension>
+				<groupId>org.springframework.build.aws</groupId>
+				<artifactId>org.springframework.build.aws.maven</artifactId>
+				<version>3.1.0.RELEASE</version>
+			</extension>
+		</extensions>
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -401,7 +414,7 @@
 					</dependency>
 				</dependencies>
 				<configuration>
-                    <includes>index.xml</includes>
+					<includes>index.xml</includes>
 					<chunkedOutput>true</chunkedOutput>
 					<htmlStylesheet>css/html.css</htmlStylesheet>
 					<xincludeSupported>true</xincludeSupported>
@@ -420,15 +433,15 @@
 								<include name="**/*.pdf" />
 							</fileset>
 						</copy>
-                        <copy todir="target/site/reference/html">
-                            <fileset dir="src/docbkx/resources">
+						<copy todir="target/site/reference/html">
+							<fileset dir="src/docbkx/resources">
 								<include name="**/*.css" />
 								<include name="**/*.png" />
 								<include name="**/*.gif" />
 								<include name="**/*.jpg" />
 							</fileset>
 						</copy>
-                        <move file="target/site/reference/pdf/index.pdf" tofile="target/site/reference/pdf/spring-ldap-reference.pdf" failonerror="false" />
+						<move file="target/site/reference/pdf/index.pdf" tofile="target/site/reference/pdf/spring-ldap-reference.pdf" failonerror="false" />
 					</postProcess>
 				</configuration>
 			</plugin>
@@ -436,20 +449,20 @@
 	</build>
 	<reporting>
 		<plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>versions-maven-plugin</artifactId>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
 				<version>1.2</version>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>dependency-updates-report</report>
-                            <report>plugin-updates-report</report>
-                            <report>property-updates-report</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>dependency-updates-report</report>
+							<report>plugin-updates-report</report>
+							<report>property-updates-report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
 			<plugin>
 				<artifactId>maven-jxr-plugin</artifactId>
 				<version>2.2</version>
@@ -492,11 +505,11 @@
 			</plugin>
 		</plugins>
 	</reporting>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-    </dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+	</dependencies>
 </project>
