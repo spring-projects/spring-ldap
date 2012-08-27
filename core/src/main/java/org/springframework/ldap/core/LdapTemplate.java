@@ -1259,7 +1259,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	private void assureReturnObjFlagSet(SearchControls controls) {
 		Validate.notNull(controls);
 		if (!controls.getReturningObjFlag()) {
-			log.info("The returnObjFlag of supplied SearchControls is not set"
+			log.debug("The returnObjFlag of supplied SearchControls is not set"
 					+ " but a ContextMapper is used - setting flag to true");
 			controls.setReturningObjFlag(true);
 		}
