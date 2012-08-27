@@ -12,6 +12,10 @@ http://www.ietf.org/rfc/rfc2256.txt
 http://www.ietf.org/rfc/rfc2696.txt
 http://www.ietf.org/rfc/rfc2829.txt
 
+Changes in version 1.3.2 (Not released yet)
+-------------------------------------------
+* Changed log level to debug for missing 'returnObjFlag'. (LDAP-181)
+
 Changes in version 1.3.1 (November 2010)
 -------------------------------------------
 * Added an object-directory mapping framework (ODM). Contributed by Paul
