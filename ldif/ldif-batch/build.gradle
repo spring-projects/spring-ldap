@@ -1,0 +1,10 @@
+
+dependencies {
+    compile project(':spring-ldap-ldif-core'),
+             "org.springframework.batch:spring-batch-core:$springBatchVersion",
+             "org.springframework.batch:spring-batch-infrastructure:$springBatchVersion"
+
+
+    testCompile "junit:junit:$junitVersion",
+             "org.springframework.batch:spring-batch-test:$springBatchVersion"
+}

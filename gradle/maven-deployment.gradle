@@ -1,0 +1,87 @@
+apply plugin: 'maven'
+
+install {
+    customizePom(repositories.mavenInstaller.pom, project)
+}
+
+def customizePom(pom, gradleProject) {
+    pom.project {
+        name = gradleProject.name
+        description = gradleProject.name
+        url = 'http://www.springframework.org/ldap'
+        organization {
+            name = 'SpringSource'
+            url = 'http://springsource.org/'
+        }
+        licenses {
+            license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution 'repo'
+            }
+        }
+        scm {
+            url = 'https://github.com/SpringSource/spring-ldap'
+            connection = 'scm:git:git://github.com/SpringSource/spring-ldap'
+            developerConnection = 'scm:git:git://github.com/SpringSource/spring-ldap'
+        }
+        developers {
+            developer {
+                id = 'rwinch'
+                name = 'Rob Winch'
+                email = 'rwinch@gopivotal.com'
+            }
+            developer {
+                id = "marthursson"
+                name = "Mattias Hellborg Arthursson"
+                email = "mattias.arthursson@jayway.com"
+                organization = "Jayway"
+                organizationUrl = "http://www.jayway.co"
+            }
+            developer {
+                id = "ulsa"
+                name = "Ulrik Sandberg"
+                email = "ulrik.sandberg@jayway.com"
+                organization = "Jayway"
+                organizationUrl = "http://www.jayway.co"
+            }
+        }
+        contributors {
+            contributor {
+                name = "Eric Dalquist"
+            }
+            contributor {
+                name = "Marius Scurtescu"
+            }
+            contributor {
+                name = "Tim Terry"
+            }
+            contributor {
+                name = "Keith Barlow"
+            }
+            contributor {
+                name = "Paul Harvey"
+            }
+            contributor {
+                name = "Marvin S. Addison"
+            }
+        }
+    }
+}
+
+task generatePom {
+    group = 'Build'
+    description = 'Generates the Maven pom.xml'
+
+    ext.generatedPomFileName = 'pom.xml'
+
+    inputs.files('**/*.gradle')
+    outputs.files(generatedPomFileName)
+
+    doLast() {
+        def p = pom {}
+        customizePom(p, project)
+        p.writeTo(generatedPomFileName)
+    }
+
+}

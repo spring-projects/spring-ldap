@@ -1,0 +1,21 @@
+repositories {
+    maven { url "http://download.java.net/maven/2/" }
+}
+apply from: JAVA_SCRIPT
+
+dependencies {
+    compile 	project(":spring-ldap-test"),
+                project(":spring-ldap-core-tiger")
+
+    provided	"commons-pool:commons-pool:$commonsPoolVersion",
+                "org.springframework:spring-jdbc:$springVersion",
+                "org.springframework:spring-orm:$springVersion"
+
+    testCompile "org.springframework:spring-test:$springVersion",
+                "org.springframework:spring-aop:$springVersion",
+                "org.hibernate:hibernate:3.2.6.ga",
+                "aspectj:aspectjrt:1.5.3",
+                "aspectj:aspectjweaver:1.5.3",
+                "hsqldb:hsqldb:1.8.0.7",
+                "junit:junit:$junitVersion"
+}

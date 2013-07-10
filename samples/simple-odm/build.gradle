@@ -1,0 +1,14 @@
+apply from: JAVA_SCRIPT
+
+dependencies {
+    compile project(":spring-ldap-core"),
+            project(":spring-ldap-odm"),
+            "org.springframework:spring-core:$springVersion",
+            "org.springframework:spring-context:$springVersion",
+            "commons-pool:commons-pool:$commonsPoolVersion"
+
+    runtime "log4j:log4j:$log4jVersion"
+
+    testCompile project(":spring-ldap-test"),
+                "junit:junit:$junitVersion"
+}

@@ -15,7 +15,7 @@ public class TestsWithJdepend {
     @Before
     public void setUp() throws IOException {
         jdepend = new JDepend();
-        jdepend.addDirectory("target/classes");
+        jdepend.addDirectory("build/classes/main");
     }
     
     @Test

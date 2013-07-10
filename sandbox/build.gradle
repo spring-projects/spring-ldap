@@ -1,0 +1,11 @@
+apply from: JAVA_SCRIPT
+
+dependencies {
+    compile project(":spring-ldap-core")
+
+    provided "com.sun:ldapbp:1.0"
+
+    testCompile "junit:junit:$junitVersion",
+                "easymock:easymock:$easyMockVersion",
+                "gsbase:gsbase:$gsbaseVersion"
+}

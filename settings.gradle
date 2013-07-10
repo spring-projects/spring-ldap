@@ -1,0 +1,31 @@
+rootProject.name = 'spring-ldap'
+
+include 'core'
+include 'core-tiger'
+include 'ldif/ldif-batch'
+include 'ldif/ldif-core'
+include 'odm'
+include 'sandbox'
+include 'samples/article'
+include 'samples/article-spring20'
+include 'samples/article-spring30'
+include 'samples/demos/demo'
+include 'samples/demos/demo-tiger'
+include 'samples/samples-utils'
+include 'samples/simple-odm'
+include 'test/integration-tests'
+include 'test/integration-tests-openldap'
+include 'test/integration-tests-sunone'
+include 'test-support'
+
+rootProject.children.each { p->
+    def name = p.name
+    def isSample = name.contains("sample")
+    name = name.replaceFirst(".*?/","")
+    if(isSample && !name.contains("sample")) {
+        name += "-sample"
+    }
+    p.name = "spring-ldap-" + name
+}
+
+findProject(":spring-ldap-test-support").name = "spring-ldap-test"

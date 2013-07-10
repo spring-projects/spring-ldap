@@ -1,0 +1,11 @@
+apply from: JAVA_SCRIPT
+
+dependencies {
+    compile project(':spring-ldap-core-tiger'),
+            project(':spring-ldap-test')
+
+    testCompile "org.springframework:spring-test:$springVersion",
+                "junit:junit:$junitVersion"
+}
+
+test.enabled = false // FIXME this needs to be enabled, but fails since no LDAP server is started

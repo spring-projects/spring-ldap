@@ -1,0 +1,20 @@
+apply from: 'javacc.gradle'
+
+dependencies {
+    compile "commons-logging:commons-logging:$commonsLoggingVersion",
+             "commons-lang:commons-lang:$commonsLangVersion",
+             "org.springframework:spring-core:$springVersion",
+             "org.springframework:spring-beans:$springVersion",
+             "org.springframework:spring-tx:$springVersion"
+
+    provided "commons-pool:commons-pool:$commonsPoolVersion",
+             "com.sun:ldapbp:1.0",
+             "org.springframework:spring-context:$springVersion",
+             "org.springframework:spring-jdbc:$springVersion",
+             "org.springframework:spring-orm:$springVersion"
+
+    testCompile "junit:junit:$junitVersion",
+                "easymock:easymock:$easyMockVersion",
+                "gsbase:gsbase:$gsbaseVersion"
+}
+

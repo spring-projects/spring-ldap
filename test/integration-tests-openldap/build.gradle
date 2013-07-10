@@ -1,0 +1,19 @@
+apply from: JAVA_SCRIPT
+
+dependencies {
+    compile     project(":spring-ldap-core-tiger"),
+                project(":spring-ldap-test"),
+                "commons-logging:commons-logging:$commonsLoggingVersion",
+                "commons-httpclient:commons-httpclient:3.1",
+                "commons-codec:commons-codec:1.3"
+
+    provided	"org.springframework:spring-jdbc:$springVersion"
+
+    testCompile "org.springframework:spring-aop:$springVersion",
+                "org.springframework:spring-test:$springVersion",
+                "gsbase:gsbase:$gsbaseVersion",
+                "junit:junit:$junitVersion",
+                "com.sun:ldapbp:1.0"
+}
+
+test.enabled = false // FIXME this needs to be enabled (error due to missing host)
