@@ -99,11 +99,11 @@ task docsZip(type: Zip) {
     }
 
     from (api) {
-        into "javadoc-api"
+        into "apidocs"
     }
 
     from (reference) {
-        into "spring-ldap-reference"
+        into "reference"
     }
 }
 
