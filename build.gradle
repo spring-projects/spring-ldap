@@ -44,7 +44,7 @@ configure(subprojects - coreModules) {
     sonarRunner {
         skipProject = true
     }
-    test.enabled = false
+//    test.enabled = false
 }
 
 description = "Spring LDAP"
