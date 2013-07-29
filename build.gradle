@@ -19,9 +19,10 @@ ext.JAVA_SCRIPT = "${GRADLE_SCRIPT_DIR}/java.gradle"
 ext.coreModules = subprojects.findAll { p-> (!p.name.contains("test") && !p.name.contains("sample")) || p.name == "spring-ldap-test" }
 
 configure(allprojects) {
-    apply plugin: 'eclipse'
-    apply plugin: 'idea'
-    apply plugin: 'java'
+    apply plugin: 'propdeps'
+    apply plugin: 'propdeps-maven'
+    apply plugin: 'propdeps-idea'
+    apply plugin: 'propdeps-eclipse'
 
     group = "org.springframework.ldap"
 
