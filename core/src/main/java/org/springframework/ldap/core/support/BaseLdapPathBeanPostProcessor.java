@@ -20,6 +20,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.Ordered;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.util.StringUtils;
 
@@ -46,7 +47,7 @@ import org.springframework.util.StringUtils;
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
-public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, ApplicationContextAware {
+public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, ApplicationContextAware, Ordered {
 
 	private ApplicationContext applicationContext;
 
@@ -54,7 +55,9 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 
 	private String baseLdapPathSourceName;
 
-	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+    private int order = Ordered.LOWEST_PRECEDENCE;
+
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 		if (bean instanceof BaseLdapPathAware) {
 			BaseLdapPathAware baseLdapPathAware = (BaseLdapPathAware) bean;
 
@@ -87,7 +90,7 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @seeorg.springframework.beans.factory.config.BeanPostProcessor#
+	 * @see org.springframework.beans.factory.config.BeanPostProcessor#
 	 * postProcessAfterInitialization(java.lang.Object, java.lang.String)
 	 */
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
@@ -123,4 +126,18 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 		this.baseLdapPathSourceName = contextSourceName;
 	}
 
+    /**
+     * Set the order value of this object for sorting purposes.
+     *
+     * @param order the order of this instance. Defaults to <code>Ordered.LOWEST_PRECEDENCE</code>.
+     * @see Ordered
+     * @since 1.3.2
+     */
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
+    public int getOrder() {
+        return order;
+    }
 }
