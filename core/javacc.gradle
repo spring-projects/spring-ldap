@@ -38,7 +38,11 @@ task javacc(dependsOn:installJavacc) {
 
     doLast {
         destDir.mkdirs()
-        ant.javacc (target:"src/main/javacc/DnParserImpl.jj", outputdirectory : destDir, javacchome: homeDir)
+        ant.javacc (
+                target:"src/main/javacc/DnParserImpl.jj",
+                outputdirectory : destDir,
+                javacchome: homeDir,
+                jdkversion: sourceCompatibility)
     }
 }
 
