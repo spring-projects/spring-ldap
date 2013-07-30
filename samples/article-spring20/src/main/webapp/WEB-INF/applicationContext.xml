@@ -15,7 +15,7 @@
 		<property name="principal" value="${userDn}" />
 		<property name="password" value="${password}" />
 		<property name="ldifFile" value="/WEB-INF/setup_data.ldif" />
-		<property name="port" value="1888" />
+		<property name="port" value="18881" />
 	</bean>
 
 	<bean id="ldapTemplate"

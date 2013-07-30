@@ -15,7 +15,7 @@
 		<property name="principal" value="${userDn}" />
 		<property name="password" value="${password}" />
 		<property name="ldifFile" value="/setup_data.ldif" />
-		<property name="port" value="1888" />
+		<property name="port" value="18881" />
 	</bean>
 	
 	<bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">
@@ -29,7 +29,7 @@
 
 	<bean id="traditionalPersonDao"
 		class="org.springframework.ldap.samples.article.dao.TraditionalPersonDaoImpl">
-		<property name="url" value="ldap://localhost:1888" />
+		<property name="url" value="ldap://localhost:18881" />
 		<property name="base" value="dc=jayway,dc=se" />
 		<property name="userDn" value="${userDn}" />
 		<property name="password" value="${password}" />
