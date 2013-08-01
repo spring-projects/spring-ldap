@@ -1,0 +1,14 @@
+apply from: JAVA_SCRIPT
+
+dependencies {
+    compile 	project(":spring-ldap-test"),
+                project(":spring-ldap-core-tiger")
+
+    provided	"org.springframework:spring-jdbc:$springVersion",
+                "org.springframework:spring-orm:$springVersion"
+
+    testCompile "org.springframework:spring-test:$springVersion",
+                "junit:junit:$junitVersion"
+}
+
+test.enabled = false // TODO this should be enabled depending on build parameter

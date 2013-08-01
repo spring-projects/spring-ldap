@@ -15,22 +15,22 @@
  */
 package org.springframework.ldap.transaction.compensating;
 
-import java.util.HashSet;
-import java.util.Set;
+import org.springframework.ldap.core.AttributesMapper;
+import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.core.support.DefaultIncrementalAttributesMapper;
+import org.springframework.ldap.core.IncrementalAttributesMapper;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
+import org.springframework.util.Assert;
 
 import javax.naming.Name;
-import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
-
-import org.springframework.ldap.core.AttributesMapper;
-import org.springframework.ldap.core.LdapOperations;
-import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
-import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
-import org.springframework.util.Assert;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A {@link CompensatingTransactionOperationRecorder} keeping track of
@@ -71,8 +71,16 @@ public class ModifyAttributesOperationRecorder implements
         // Get the current values of all referred Attributes.
         String[] attributeNameArray = (String[]) set.toArray(new String[set
                 .size()]);
-        Attributes currentAttributes = (Attributes) ldapOperations.lookup(dn,
-                attributeNameArray, getAttributesMapper());
+
+        // LDAP-234: We need to explicitly an IncrementalAttributesMapper in
+        // case we're working against AD and there are too many attribute values to be returned
+        // by one query.
+        IncrementalAttributesMapper attributesMapper = getAttributesMapper(attributeNameArray);
+        while (attributesMapper.hasMore()) {
+            ldapOperations.lookup(dn, attributesMapper.getAttributesForLookup(), attributesMapper);
+        }
+
+        Attributes currentAttributes = attributesMapper.getCollectedAttributes();
 
         // Get a compensating ModificationItem for each of the incoming
         // modification.
@@ -93,13 +101,8 @@ public class ModifyAttributesOperationRecorder implements
      * @return the {@link AttributesMapper} to use for getting the current
      *         Attributes of the target DN.
      */
-    AttributesMapper getAttributesMapper() {
-        return new AttributesMapper() {
-            public Object mapFromAttributes(Attributes attributes)
-                    throws NamingException {
-                return attributes;
-            }
-        };
+    IncrementalAttributesMapper getAttributesMapper(String[] attributeNames) {
+        return new DefaultIncrementalAttributesMapper(attributeNames);
     }
 
     /**

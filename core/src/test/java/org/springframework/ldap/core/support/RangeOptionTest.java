@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.support.ad;
+package org.springframework.ldap.core.support;
 
 import junit.framework.TestCase;
+import org.springframework.ldap.core.support.RangeOption;
 
 /**
- * IncrementalAttributeMapper Tester.
+ * IncrementalAttributesMapper Tester.
  *
  * @author Marius Scurtescu
  */

@@ -50,4 +50,5 @@
 	<xi:include href="user-authentication.xml" />
 	<xi:include href="ldif-parsing.xml" />
 	<xi:include href="odm.xml" />
+    <xi:include href="utilities.xml" />
 </book>

@@ -13,10 +13,11 @@ include 'samples/demos/demo'
 include 'samples/demos/demo-tiger'
 include 'samples/samples-utils'
 include 'samples/simple-odm'
+include 'test-support'
 include 'test/integration-tests'
 include 'test/integration-tests-openldap'
 include 'test/integration-tests-sunone'
-include 'test-support'
+include 'test/integration-tests-ad'
 
 rootProject.children.each { p->
     def name = p.name

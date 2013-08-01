@@ -15,6 +15,13 @@
  */
 package org.springframework.ldap.transaction.compensating;
 
+import junit.framework.TestCase;
+import org.easymock.MockControl;
+import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.core.IncrementalAttributesMapper;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
+
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
@@ -23,16 +30,6 @@ import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 
-import junit.framework.TestCase;
-
-import org.easymock.MockControl;
-import org.springframework.ldap.core.AttributesMapper;
-import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.transaction.compensating.ModifyAttributesOperationExecutor;
-import org.springframework.ldap.transaction.compensating.ModifyAttributesOperationRecorder;
-import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
-
 public class ModifyAttributesOperationRecorderTest extends TestCase {
     private MockControl ldapOperationsControl;
 
@@ -40,7 +37,7 @@ public class ModifyAttributesOperationRecorderTest extends TestCase {
 
     private MockControl attributesMapperControl;
 
-    private AttributesMapper attributesMapperMock;
+    private IncrementalAttributesMapper attributesMapperMock;
 
     private ModifyAttributesOperationRecorder tested;
 
@@ -49,8 +46,8 @@ public class ModifyAttributesOperationRecorderTest extends TestCase {
         ldapOperationsMock = (LdapOperations) ldapOperationsControl.getMock();
 
         attributesMapperControl = MockControl
-                .createControl(AttributesMapper.class);
-        attributesMapperMock = (AttributesMapper) attributesMapperControl
+                .createControl(IncrementalAttributesMapper.class);
+        attributesMapperMock = (IncrementalAttributesMapper) attributesMapperControl
                 .getMock();
 
         tested = new ModifyAttributesOperationRecorder(ldapOperationsMock);
@@ -79,14 +76,14 @@ public class ModifyAttributesOperationRecorderTest extends TestCase {
     public void testRecordOperation() {
         final ModificationItem incomingItem = new ModificationItem(
                 DirContext.ADD_ATTRIBUTE, new BasicAttribute("attribute1"));
-        ModificationItem[] incomingMods = new ModificationItem[] { incomingItem };
+        ModificationItem[] incomingMods = new ModificationItem[]{incomingItem};
         final ModificationItem compensatingItem = new ModificationItem(
                 DirContext.ADD_ATTRIBUTE, new BasicAttribute("attribute2"));
 
         final Attributes expectedAttributes = new BasicAttributes();
 
         tested = new ModifyAttributesOperationRecorder(ldapOperationsMock) {
-            AttributesMapper getAttributesMapper() {
+            IncrementalAttributesMapper getAttributesMapper(String[] attributeNames) {
                 return attributesMapperMock;
             }
 
@@ -101,14 +98,24 @@ public class ModifyAttributesOperationRecorderTest extends TestCase {
 
         DistinguishedName expectedName = new DistinguishedName("cn=john doe");
         ldapOperationsControl.setDefaultMatcher(MockControl.ARRAY_MATCHER);
-        ldapOperationsControl.expectAndReturn(ldapOperationsMock.lookup(
-                expectedName, new String[] { "attribute1" },
-                attributesMapperMock), expectedAttributes);
+
+        attributesMapperControl.expectAndReturn(
+                attributesMapperMock.hasMore(), true);
+        attributesMapperControl.expectAndReturn(
+                attributesMapperMock.getAttributesForLookup(),
+                new String[]{"attribute1"});
+        ldapOperationsControl.expectAndReturn(
+                ldapOperationsMock.lookup(expectedName, new String[]{"attribute1"}, attributesMapperMock),
+                expectedAttributes);
+        attributesMapperControl.expectAndReturn(attributesMapperMock.hasMore(), false);
+        attributesMapperControl.expectAndReturn(
+                attributesMapperMock.getCollectedAttributes(),
+                expectedAttributes);
 
         replay();
         // Perform test
         CompensatingTransactionOperationExecutor operation = tested
-                .recordOperation(new Object[] { expectedName, incomingMods });
+                .recordOperation(new Object[]{expectedName, incomingMods});
         verify();
 
         // Verify outcome

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.support.ad;
+package org.springframework.ldap.core.support;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -24,10 +24,10 @@ import java.util.regex.Matcher;
  *
  * @author Marius Scurtescu
  *
- * @see IncrementalAttributeMapper
+ * @see DefaultIncrementalAttributesMapper
  * @since 1.3.2
  */
-public class RangeOption implements Comparable {
+class RangeOption implements Comparable {
     public static final int TERMINAL_END_OF_RANGE = -1;
     public static final int TERMINAL_MISSING = -2;
 
@@ -79,13 +79,12 @@ public class RangeOption implements Comparable {
 
     public String toString() {
         StringBuilder rangeBuilder = new StringBuilder();
-
-        toString(rangeBuilder);
+        appendTo(rangeBuilder);
 
         return rangeBuilder.toString();
     }
 
-    public void toString(StringBuilder rangeBuilder) {
+    public void appendTo(StringBuilder rangeBuilder) {
         rangeBuilder.append("Range=").append(initial);
 
         if (!isTerminalMissing()) {

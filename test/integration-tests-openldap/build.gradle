@@ -16,4 +16,4 @@ dependencies {
                 "com.sun:ldapbp:1.0"
 }
 
-test.enabled = false // FIXME this needs to be enabled (error due to missing host)
+test.enabled = false // TODO this should be enabled depending on build parameter

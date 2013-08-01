@@ -1,0 +1,24 @@
+<chapter id="utilities">
+    <title>Utilities</title>
+    <sect1 id="incremental-attributes">
+        <title>Incremental Retrieval of Multi-Valued Attributes</title>
+
+        <para>When there are a very large number of attribute values (>1500) for a specific attribute,
+            Active Directory will typically refuse to return all these values at once. Instead
+            the attribute values will be returned according to the
+            <ulink url="http://www.watersprings.org/pub/id/draft-kashi-incremental-00.txt">Incremental Retrieval of Multi-valued Properties</ulink>
+            method. This requires the calling part to inspect the returned attribute for specific markers and,
+            if necessary, make additional lookup requests until all values are found.
+        </para>
+        <para>
+            Spring LDAP's <code>org.springframework.ldap.core.support.DefaultIncrementalAttributesMapper</code>
+            helps working with this kind of attributes, as follows:
+            <programlisting>
+Attributes attrs = DefaultIncrementalAttributeMapper.lookupAttributes(ldapTemplate, theDn, new Object[]{"oneAttribute", "anotherAttribute"});
+            </programlisting>
+            This will parse any returned attribute range markers and make repeated requests as necessary until all values
+            for all requested attributes have been retrieved.
+        </para>
+    </sect1>
+
+</chapter>
