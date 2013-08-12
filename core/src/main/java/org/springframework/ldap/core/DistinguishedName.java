@@ -139,7 +139,10 @@ public class DistinguishedName implements Name {
 
 	public static final String KEY_CASE_FOLD_NONE = "none";
 
-	private static final Log log = LogFactory.getLog(DistinguishedName.class);
+    private static final String[] MANGLED_DOUBLE_QUOTES = new String[]{"\\\\\""};
+    private static final String[] PROPER_DOUBLE_QUOTES = new String[]{"\\\""};
+
+    private static final Log log = LogFactory.getLog(DistinguishedName.class);
 
 	private static final boolean COMPACT = true;
 
@@ -244,6 +247,8 @@ public class DistinguishedName implements Name {
 		else {
 			tempPath = path;
 		}
+
+        tempPath = StringUtils.replaceEach(tempPath, MANGLED_DOUBLE_QUOTES, PROPER_DOUBLE_QUOTES);
 		return tempPath;
 	}
 

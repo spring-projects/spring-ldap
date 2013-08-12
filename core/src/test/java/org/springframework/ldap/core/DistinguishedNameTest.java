@@ -16,17 +16,14 @@
 
 package org.springframework.ldap.core;
 
-import java.util.Enumeration;
+import com.gargoylesoftware.base.testing.EqualsTester;
+import junit.framework.TestCase;
+import org.springframework.ldap.BadLdapGrammarException;
 
 import javax.naming.CompositeName;
 import javax.naming.InvalidNameException;
 import javax.naming.Name;
-
-import junit.framework.TestCase;
-
-import org.springframework.ldap.BadLdapGrammarException;
-
-import com.gargoylesoftware.base.testing.EqualsTester;
+import java.util.Enumeration;
 
 /**
  * Unit tests for the {@link DistinguishedName} class.
@@ -48,7 +45,22 @@ public class DistinguishedNameTest extends TestCase {
 		assertEquals("cn=foo/bar", path.toString());
 	}
 
-	public void testEmptyPathImmutable() throws Exception {
+    public void testDistinguishedName_Ldap237_NotDestroyedByCompositeName() throws InvalidNameException {
+        DistinguishedName path = new DistinguishedName("ou=Roger \\\"Bunny\\\" Rabbit,dc=somecompany,dc=com");
+        assertEquals("ou=Roger \\\"Bunny\\\" Rabbit,dc=somecompany,dc=com", path.toString());
+    }
+
+    /**
+     * CompositeName screws up distinguished names when there are double qoutes, as described in Ldap237.
+     *
+     * @throws InvalidNameException
+     */
+    public void testDistinguishedName_Ldap237_DestroyedByCompositeName() throws InvalidNameException {
+        DistinguishedName path = new DistinguishedName("ou=Roger \\\\\"Bunny\\\\\" Rabbit,dc=somecompany,dc=com");
+        assertEquals("ou=Roger \\\"Bunny\\\" Rabbit,dc=somecompany,dc=com", path.toString());
+    }
+
+    public void testEmptyPathImmutable() throws Exception {
 		DistinguishedName emptyPath = DistinguishedName.EMPTY_PATH;
 		try {
 			emptyPath.add("cn=John Doe");
