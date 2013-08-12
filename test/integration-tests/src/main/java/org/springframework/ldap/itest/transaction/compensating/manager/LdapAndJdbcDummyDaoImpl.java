@@ -163,4 +163,24 @@ public class LdapAndJdbcDummyDaoImpl implements DummyDao {
 		unbind(dn, fullname);
 		throw new DummyException("This operation failed.");
 	}
+
+    @Override
+    public void deleteRecursively(String dn) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void deleteRecursivelyWithException(String dn) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void createRecursivelyAndUnbindSubnode() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void createRecursivelyAndUnbindSubnodeWithException() {
+        throw new UnsupportedOperationException();
+    }
 }

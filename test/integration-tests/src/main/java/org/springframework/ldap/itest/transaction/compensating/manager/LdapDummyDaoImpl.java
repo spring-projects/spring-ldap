@@ -20,6 +20,7 @@ import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 
 public class LdapDummyDaoImpl implements DummyDao {
+    private static final boolean RECURSIVE = true;
     private LdapTemplate ldapTemplate;
 
     public void setLdapTemplate(LdapTemplate ldapTemplate) {
@@ -159,5 +160,35 @@ public class LdapDummyDaoImpl implements DummyDao {
     public void unbindWithException(String dn, String fullname) {
         unbind(dn, fullname);
         throw new DummyException("This operation failed.");
+    }
+
+    @Override
+    public void deleteRecursively(String dn) {
+        ldapTemplate.unbind(dn, RECURSIVE);
+    }
+
+    @Override
+    public void deleteRecursivelyWithException(String dn) {
+        deleteRecursively(dn);
+        throw new DummyException("This method failed");
+    }
+
+    @Override
+    public void createRecursivelyAndUnbindSubnode() {
+        DirContextAdapter ctx = new DirContextAdapter();
+        ctx.setAttributeValues("objectclass", new String[]{"top", "organizationalUnit"});
+        ctx.setAttributeValue("ou", "dummy");
+        ctx.setAttributeValue("description", "dummy description");
+
+        ldapTemplate.bind("ou=dummy", ctx, null);
+        ldapTemplate.bind("ou=dummy,ou=dummy", ctx, null);
+        ldapTemplate.unbind("ou=dummy,ou=dummy");
+        ldapTemplate.unbind("ou=dummy");
+    }
+
+    @Override
+    public void createRecursivelyAndUnbindSubnodeWithException() {
+        createRecursivelyAndUnbindSubnode();
+        throw new DummyException("This method failed");
     }
 }

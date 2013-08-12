@@ -15,10 +15,6 @@
  */
 package org.springframework.ldap;
 
-import java.io.IOException;
-
-import javax.naming.NamingException;
-
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,19 +24,28 @@ import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.test.LdapTestUtils;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
+import javax.naming.NamingException;
+import java.io.IOException;
+
 public abstract class AbstractLdapTemplateIntegrationTest extends AbstractJUnit4SpringContextTests {
-	private static final ClassPathResource LDIF_FILE_RESOURCE = new ClassPathResource("setup_data.ldif");
+	private static final ClassPathResource LDIF_FILE_RESOURCE = new ClassPathResource("/setup_data.ldif");
 
 	@Autowired
 	@Qualifier("contextSource")
-	private ContextSource contextSource;
+	protected ContextSource contextSource;
 
 	@Before
 	public void cleanAndSetup() throws NamingException, IOException {
-		LdapTestUtils.cleanAndSetup(contextSource, getRoot(), LDIF_FILE_RESOURCE);
-	}
+        if (cleanBefore()) {
+            LdapTestUtils.cleanAndSetup(contextSource, getRoot(), LDIF_FILE_RESOURCE);
+        }
+    }
 
-	protected DistinguishedName getRoot() {
+    protected boolean cleanBefore() {
+        return true;
+    }
+
+    protected DistinguishedName getRoot() {
 		return DistinguishedName.EMPTY_PATH;
 	}
 }

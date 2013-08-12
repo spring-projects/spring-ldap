@@ -15,14 +15,13 @@
  */
 package org.springframework.ldap.transaction.compensating.support;
 
-import java.util.List;
-
-import javax.naming.Name;
-
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapRdn;
 import org.springframework.ldap.core.LdapRdnComponent;
 import org.springframework.ldap.transaction.compensating.TempEntryRenamingStrategy;
+
+import javax.naming.Name;
+import java.util.List;
 
 /**
  * A {@link TempEntryRenamingStrategy} that moves the entry to a different
@@ -53,6 +52,10 @@ public class DifferentSubtreeTempEntryRenamingStrategy implements
 
     public DifferentSubtreeTempEntryRenamingStrategy(Name subtreeNode) {
         this.subtreeNode = subtreeNode;
+    }
+
+    public DifferentSubtreeTempEntryRenamingStrategy(String subtreeNode) {
+        this(new DistinguishedName(subtreeNode));
     }
 
     public Name getSubtreeNode() {

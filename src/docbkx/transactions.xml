@@ -34,6 +34,10 @@
 	transaction (e.g. a <literal>modifyAttributes</literal> followed by a <literal>rebind</literal>), or
 	if transaction synchronization with a JDBC data source is not required (see below) there will be nothing to gain
 	by using the LDAP transaction support.</note>
+    <note>While the default setup will work fine for most simple use cases, some more complex scenarios will
+    require additional configuration; more specifically if you will be creating or deleting subtrees within
+    transactions, you will need to use an alternative <literal>TempEntryRenamingStrategy</literal>, as described
+    in <xref linkend="renaming-strategies"/> below</note>
     </para>
   </sect1>
   

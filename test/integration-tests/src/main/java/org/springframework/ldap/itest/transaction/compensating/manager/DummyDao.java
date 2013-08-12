@@ -41,4 +41,11 @@ public interface DummyDao {
 
     void unbindWithException(String dn, String fullname);
 
+    void deleteRecursively(String dn);
+
+    void deleteRecursivelyWithException(String dn);
+
+    void createRecursivelyAndUnbindSubnode();
+
+    void createRecursivelyAndUnbindSubnodeWithException();
 }
