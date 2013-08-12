@@ -669,4 +669,25 @@ public class DistinguishedNameTest extends TestCase {
 			System.clearProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY);
 		}
 	}
+
+    public void testHashSignLdap229() {
+        assertEquals(
+                new DistinguishedName("cn=Foo\\#Bar"),
+                new DistinguishedName("cn=Foo#Bar")
+        );
+    }
+
+    public void testEqualsSignLdap229() {
+        assertEquals(
+                new DistinguishedName("cn=Foo\\=Bar"),
+                new DistinguishedName("cn=Foo=Bar")
+        );
+    }
+
+    public void testSpaceSignLdap229() {
+        assertEquals(
+                new DistinguishedName("cn=Foo\\ Bar"),
+                new DistinguishedName("cn=Foo Bar")
+        );
+    }
 }
