@@ -1,21 +1,20 @@
 package org.springframework.ldap.odm.test;
 
+import org.springframework.ldap.odm.annotations.Attribute;
+import org.springframework.ldap.odm.annotations.Entry;
+import org.springframework.ldap.odm.annotations.Id;
+
+import javax.naming.Name;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-import javax.naming.Name;
-
-import org.springframework.ldap.odm.annotations.Attribute;
-import org.springframework.ldap.odm.annotations.Entry;
-import org.springframework.ldap.odm.annotations.Id;
-
 /**
  * Automatically generated to represent the LDAP object classes
  * "organizationalunit", "top".
  */
-@Entry(objectClasses = { "organizationalunit", "top" })
+@Entry(objectClasses = { "organizationalUnit", "top" })
 public final class OrganizationalUnit {
 
     @Id
@@ -72,6 +71,10 @@ public final class OrganizationalUnit {
 
     public String getStreet() {
         return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
     }
 
     public String getDescription() {

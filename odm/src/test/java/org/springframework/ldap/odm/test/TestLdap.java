@@ -1,18 +1,5 @@
 package org.springframework.ldap.odm.test;
 
-import static org.junit.Assert.assertEquals;
-
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.naming.Name;
-import javax.naming.directory.SearchControls;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -49,6 +36,18 @@ import org.springframework.ldap.odm.typeconversion.impl.ConverterManagerImpl;
 import org.springframework.ldap.odm.typeconversion.impl.converters.FromStringConverter;
 import org.springframework.ldap.odm.typeconversion.impl.converters.ToStringConverter;
 import org.springframework.ldap.test.LdapTestUtils;
+
+import javax.naming.Name;
+import javax.naming.directory.SearchControls;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
 
 // Tests all OdmManager functions
 public final class TestLdap {
@@ -518,6 +517,16 @@ public final class TestLdap {
     @Test(expected = UnmanagedClassException.class)
     public void unManagedClass() {
         ((OdmManagerImpl)odmManager).read(Integer.class, baseName);
+    }
+
+    @Test
+    public void updateWithChildren_Ldap235() throws Exception {
+        OrganizationalUnit organizationalUnit = odmManager.read(OrganizationalUnit.class, ouTestData[0].getDn());
+        organizationalUnit.setStreet("new street");
+        odmManager.update(organizationalUnit);
+
+        OrganizationalUnit updated = odmManager.read(OrganizationalUnit.class, organizationalUnit.getDn());
+        assertEquals(organizationalUnit, updated);
     }
 
     private enum Flag {

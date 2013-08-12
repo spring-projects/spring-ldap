@@ -1,21 +1,5 @@
 package org.springframework.ldap.odm.core.impl;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.naming.Name;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.SearchControls;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.ContextSource;
@@ -30,6 +14,21 @@ import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.odm.core.OdmException;
 import org.springframework.ldap.odm.core.OdmManager;
 import org.springframework.ldap.odm.typeconversion.ConverterManager;
+
+import javax.naming.Name;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.SearchControls;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * An implementation of {@link org.springframework.ldap.odm.core.OdmManager} which
@@ -189,9 +188,9 @@ public final class OdmManagerImpl implements OdmManager {
             LOG.debug(String.format("Updating entry - %s$1", entry));
         }
         
-        DirContextAdapter context = new DirContextAdapter(getId(entry));
+        DirContextOperations context = ldapTemplate.lookupContext(getId(entry));
         mapToContext(entry, context);
-        ldapTemplate.rebind(context);
+        ldapTemplate.modifyAttributes(context);
     }
 
     /*

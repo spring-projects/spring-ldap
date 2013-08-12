@@ -1,20 +1,19 @@
 package org.springframework.ldap.odm.test;
 
+import org.springframework.ldap.odm.annotations.Attribute;
+import org.springframework.ldap.odm.annotations.Attribute.Type;
+import org.springframework.ldap.odm.annotations.Entry;
+import org.springframework.ldap.odm.annotations.Id;
+import org.springframework.ldap.odm.annotations.Transient;
+
+import javax.naming.Name;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-import javax.naming.Name;
-
-import org.springframework.ldap.odm.annotations.Attribute;
-import org.springframework.ldap.odm.annotations.Entry;
-import org.springframework.ldap.odm.annotations.Id;
-import org.springframework.ldap.odm.annotations.Transient;
-import org.springframework.ldap.odm.annotations.Attribute.Type;
-
 // Simple LDAP entry for testing 
-@Entry(objectClasses = { "inetorgperson", "organizationalperson", "person", "top" })
+@Entry(objectClasses = { "inetOrgPerson", "organizationalPerson", "person", "top" })
 public final class Person {
     public Person() {
     }
