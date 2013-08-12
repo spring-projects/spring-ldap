@@ -15,9 +15,6 @@
  */
 package org.springframework.ldap.transaction.compensating.manager;
 
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.ContextSource;
@@ -27,6 +24,9 @@ import org.springframework.ldap.transaction.compensating.support.DefaultTempEntr
 import org.springframework.transaction.compensating.support.AbstractCompensatingTransactionManagerDelegate;
 import org.springframework.transaction.compensating.support.CompensatingTransactionHolderSupport;
 import org.springframework.transaction.compensating.support.DefaultCompensatingTransactionOperationManager;
+
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
 
 /**
  * This delegate performs all the work for the
@@ -117,5 +117,12 @@ public class ContextSourceTransactionManagerDelegate extends
      */
     public void setRenamingStrategy(TempEntryRenamingStrategy renamingStrategy) {
         this.renamingStrategy = renamingStrategy;
+    }
+
+    void checkRenamingStrategy() {
+        if(renamingStrategy instanceof DefaultTempEntryRenamingStrategy) {
+            log.warn("Using DefaultTempEntryRenamingStrategy. This is not advised for more complex use; " +
+                    "see reference documentation for additional information on how to configure TempEntryRenamingStrategy.");
+        }
     }
 }

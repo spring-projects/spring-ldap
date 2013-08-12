@@ -15,6 +15,7 @@
  */
 package org.springframework.ldap.transaction.compensating.manager;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.transaction.compensating.TempEntryRenamingStrategy;
 import org.springframework.ldap.transaction.compensating.UnbindOperationExecutor;
@@ -111,7 +112,7 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * @since 1.2
  */
 public class ContextSourceTransactionManager extends
-        AbstractPlatformTransactionManager {
+        AbstractPlatformTransactionManager implements InitializingBean {
 
     private static final long serialVersionUID = 7138208218687237856L;
 
@@ -186,5 +187,9 @@ public class ContextSourceTransactionManager extends
      */
     public void setRenamingStrategy(TempEntryRenamingStrategy renamingStrategy) {
         delegate.setRenamingStrategy(renamingStrategy);
+    }
+
+    public void afterPropertiesSet() throws Exception {
+        delegate.checkRenamingStrategy();
     }
 }

@@ -15,12 +15,12 @@
  */
 package org.springframework.ldap.transaction.compensating.manager;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.LdapTemplate;
@@ -41,8 +41,6 @@ import static junit.framework.Assert.fail;
 @ContextConfiguration(locations = { "/conf/ldapTemplateTransactionSubtreeTestContext.xml" })
 public class ContextSourceTransactionManagerSubtreeIntegrationTest extends AbstractLdapTemplateIntegrationTest {
 
-	private static Log log = LogFactory.getLog(ContextSourceTransactionManagerSubtreeIntegrationTest.class);
-
 	@Autowired
 	@Qualifier("dummyDao")
 	private DummyDao dummyDao;
@@ -57,9 +55,8 @@ public class ContextSourceTransactionManagerSubtreeIntegrationTest extends Abstr
 		}
 	}
 
-    @Override
-    protected boolean cleanBefore() {
-        return false;
+    protected Resource getLdifFileResource() {
+        return new ClassPathResource("/setup_data_subtree.ldif");
     }
 
     @Test

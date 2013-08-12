@@ -17,7 +17,6 @@ package org.springframework.ldap.transaction.compensating.manager;
 
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.transaction.compensating.TempEntryRenamingStrategy;
-import org.springframework.ldap.transaction.compensating.manager.ContextSourceTransactionManagerDelegate;
 import org.springframework.orm.hibernate3.HibernateTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
@@ -199,5 +198,9 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
                 "Transaction manager [" + getClass().getName()
                         + "] does not support transaction suspension");
     }
-   
+
+    public void afterPropertiesSet() {
+        super.afterPropertiesSet();
+        ldapManagerDelegate.checkRenamingStrategy();
+    }
 }

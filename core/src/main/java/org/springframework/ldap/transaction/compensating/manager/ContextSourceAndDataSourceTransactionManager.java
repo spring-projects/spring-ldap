@@ -199,4 +199,9 @@ public class ContextSourceAndDataSourceTransactionManager extends
                 "Transaction manager [" + getClass().getName()
                         + "] does not support transaction suspension");
     }
+
+    public void afterPropertiesSet() {
+        super.afterPropertiesSet();
+        ldapManagerDelegate.checkRenamingStrategy();
+    }
 }
