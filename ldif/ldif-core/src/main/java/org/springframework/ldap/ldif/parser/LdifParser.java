@@ -15,15 +15,6 @@
  */
 package org.springframework.ldap.ldif.parser;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.NoSuchElementException;
-
-import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,6 +31,14 @@ import org.springframework.ldap.ldif.support.SeparatorPolicy;
 import org.springframework.ldap.schema.DefaultSchemaSpecification;
 import org.springframework.ldap.schema.Specification;
 import org.springframework.util.Assert;
+
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.NoSuchElementException;
 
 /**
  * The {@link LdifParser LdifParser} is the main class of the {@link org.springframework.ldap.ldif} package.  
@@ -231,7 +230,7 @@ public class LdifParser implements Parser, InitializingBean {
 			return null;
 		}
 		
-		LdapAttributes record = new LdapAttributes(caseInsensitive);
+		LdapAttributes record = null;
 		StringBuilder builder = new StringBuilder();
 		
 		String line = reader.readLine();
@@ -244,8 +243,9 @@ public class LdifParser implements Parser, InitializingBean {
 				case NewRecord:
 					log.trace("Starting new record.");
 					//Start new record.
+                    record = new LdapAttributes(caseInsensitive);
 					builder = new StringBuilder(line);
-					
+
 					break;
 				
 				case Control:
@@ -313,7 +313,10 @@ public class LdifParser implements Parser, InitializingBean {
 			}
 			
 			line = reader.readLine();
-			
+            if(line == null && record == null) {
+                //Never encountered a valid record.
+                return null;
+            }
 		}
 
 	}
