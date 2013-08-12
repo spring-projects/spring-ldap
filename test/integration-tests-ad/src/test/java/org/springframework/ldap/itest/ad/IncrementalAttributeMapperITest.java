@@ -176,7 +176,7 @@ public class IncrementalAttributeMapperITest extends AbstractJUnit4SpringContext
     }
 
     @Test
-    public void JiraLdap234ITest() {
+    public void jiraLdap234ITest() {
         TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
 
         try {
