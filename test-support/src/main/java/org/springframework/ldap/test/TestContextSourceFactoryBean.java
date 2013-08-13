@@ -15,12 +15,6 @@
  */
 package org.springframework.ldap.test;
 
-import org.apache.directory.server.core.DefaultDirectoryService;
-import org.apache.directory.server.core.entry.ServerEntry;
-import org.apache.directory.server.core.partition.impl.btree.jdbm.JdbmPartition;
-import org.apache.directory.server.ldap.LdapServer;
-import org.apache.directory.server.protocol.shared.transport.TcpTransport;
-import org.apache.directory.shared.ldap.name.LdapDN;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 import org.springframework.core.io.Resource;
 import org.springframework.ldap.core.AuthenticationSource;
@@ -28,9 +22,6 @@ import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.support.DefaultDirObjectFactory;
 import org.springframework.ldap.core.support.LdapContextSource;
-
-import java.io.File;
-import java.util.HashMap;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -55,8 +46,6 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean {
 	private boolean pooled = true;
 
 	private AuthenticationSource authenticationSource;
-    private DefaultDirectoryService directoryService;
-    private LdapServer ldapServer;
 
     public void setAuthenticationSource(AuthenticationSource authenticationSource) {
 		this.authenticationSource = authenticationSource;
@@ -99,34 +88,7 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean {
 	}
 
 	protected Object createInstance() throws Exception {
-        directoryService = new DefaultDirectoryService();
-        directoryService.setShutdownHookEnabled(true);
-        directoryService.setAllowAnonymousAccess(true);
-        directoryService.setWorkingDirectory(new File(System.getProperty("java.io.tmpdir") + "/apacheds-test"));
-        directoryService.getChangeLog().setEnabled( false );
-
-        JdbmPartition partition = new JdbmPartition();
-        partition.setId(defaultPartitionName);
-        partition.setSuffix(defaultPartitionSuffix);
-        directoryService.addPartition(partition);
-
-        directoryService.startup();
-
-        // Inject the apache root entry if it does not already exist
-        if ( !directoryService.getAdminSession().exists( partition.getSuffixDn() ) )
-        {
-            ServerEntry entry = directoryService.newEntry(new LdapDN(defaultPartitionSuffix));
-            entry.add("objectClass", "top", "domain", "extensibleObject");
-            entry.add("dc", defaultPartitionName);
-            directoryService.getAdminSession().add( entry );
-        }
-
-        ldapServer = new LdapServer();
-        ldapServer.setDirectoryService(directoryService);
-
-        TcpTransport ldapTransport = new TcpTransport(port);
-        ldapServer.setTransports( ldapTransport );
-        ldapServer.start();
+        LdapTestUtils.startEmbeddedServer(port, defaultPartitionSuffix, defaultPartitionName);
 
 		LdapContextSource targetContextSource = new LdapContextSource();
 		if (baseOnTarget) {
@@ -138,9 +100,6 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean {
 		targetContextSource.setPassword(password);
 		targetContextSource.setDirObjectFactory(dirObjectFactory);
 		targetContextSource.setPooled(pooled);
-        targetContextSource.setBaseEnvironmentProperties(new HashMap(){{
-            put(LdapTestUtils.DIRECTORY_SERVICE_KEY, directoryService);
-        }});
 
 		if (authenticationSource != null) {
 			targetContextSource.setAuthenticationSource(authenticationSource);
@@ -155,7 +114,7 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean {
 		}
 
 		if (ldifFile != null) {
-            LdapTestUtils.loadLdif(directoryService, ldifFile);
+            LdapTestUtils.loadLdif(targetContextSource, ldifFile);
 		}
 
 		return targetContextSource;
@@ -167,8 +126,6 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean {
 
 	protected void destroyInstance(Object instance) throws Exception {
 		super.destroyInstance(instance);
-
-        ldapServer.stop();
-        directoryService.shutdown();
+        LdapTestUtils.shutdownEmbeddedServer();
 	}
 }
