@@ -12,7 +12,7 @@ ext.commonsLangVersion = '2.4'
 ext.commonsLoggingVersion = '1.0.4'
 ext.easyMockVersion = '1.2_Java1.3'
 ext.gsbaseVersion = '2.0.1'
-ext.log4jVersion = '1.2.9'
+ext.log4jVersion = '1.2.15'
 
 repositories {
     mavenCentral()

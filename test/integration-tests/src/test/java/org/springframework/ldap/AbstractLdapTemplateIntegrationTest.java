@@ -23,11 +23,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.test.LdapTestUtils;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 import javax.naming.NamingException;
 import java.io.IOException;
 
+@DirtiesContext
 public abstract class AbstractLdapTemplateIntegrationTest extends AbstractJUnit4SpringContextTests {
 
 	@Autowired

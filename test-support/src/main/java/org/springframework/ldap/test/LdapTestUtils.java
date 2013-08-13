@@ -15,19 +15,16 @@
  */
 package org.springframework.ldap.test;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.Properties;
-import java.util.Set;
+import org.apache.commons.io.IOUtils;
+import org.apache.directory.server.core.DefaultDirectoryService;
+import org.apache.directory.server.protocol.shared.store.LdifFileLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.DistinguishedName;
 
 import javax.naming.Binding;
 import javax.naming.Context;
 import javax.naming.ContextNotEmptyException;
-import javax.naming.InitialContext;
 import javax.naming.Name;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -35,17 +32,13 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.directory.server.configuration.MutableServerStartupConfiguration;
-import org.apache.directory.server.core.configuration.ShutdownConfiguration;
-import org.apache.directory.server.core.partition.impl.btree.MutableBTreePartitionConfiguration;
-import org.apache.directory.server.jndi.ServerContextFactory;
-import org.apache.directory.server.protocol.shared.store.LdifFileLoader;
-import org.springframework.core.io.Resource;
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.DistinguishedName;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Hashtable;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * Utilities for starting, stopping and populating an in-process Apache
@@ -58,8 +51,9 @@ public class LdapTestUtils {
 	public static final String DEFAULT_PRINCIPAL = "uid=admin,ou=system";
 
 	public static final String DEFAULT_PASSWORD = "secret";
+    static final String DIRECTORY_SERVICE_KEY = "org.springldap.test.directory.service";
 
-	/**
+    /**
 	 * Not to be instantiated.
 	 */
 	private LdapTestUtils() {
@@ -85,31 +79,33 @@ public class LdapTestUtils {
 	public static DirContext startApacheDirectoryServer(int port, String defaultPartitionSuffix,
 			String defaultPartitionName, String principal, String credentials, Set extraSchemas) throws NamingException {
 
-		MutableServerStartupConfiguration cfg = new MutableServerStartupConfiguration();
 
-		// Determine an appropriate working directory
-		String tempDir = System.getProperty("java.io.tmpdir");
-		cfg.setWorkingDirectory(new File(tempDir));
-
-		cfg.setLdapPort(port);
-		
-		if (extraSchemas != null) {
-			Set schemas = cfg.getBootstrapSchemas();
-			schemas.addAll(extraSchemas);
-			cfg.setBootstrapSchemas(schemas);
-		}
-
-		MutableBTreePartitionConfiguration partitionConfiguration = new MutableBTreePartitionConfiguration();
-		partitionConfiguration.setSuffix(defaultPartitionSuffix);
-		partitionConfiguration.setContextEntry(getRootPartitionAttributes(defaultPartitionName));
-		partitionConfiguration.setName(defaultPartitionName);
-
-		cfg.setContextPartitionConfigurations(Collections.singleton(partitionConfiguration));
-		// Start the Server
-
-		Hashtable env = createEnv(principal, credentials);
-		env.putAll(cfg.toJndiEnvironment());
-		return new InitialDirContext(env);
+//
+//		MutableServerStartupConfiguration cfg = new MutableServerStartupConfiguration();
+//
+//		// Determine an appropriate working directory
+//		String tempDir = System.getProperty("java.io.tmpdir");
+//		cfg.setWorkingDirectory(new File(tempDir));
+//
+//		cfg.setLdapPort(port);
+//
+//		if (extraSchemas != null) {
+//			Set schemas = cfg.getBootstrapSchemas();
+//			schemas.addAll(extraSchemas);
+//			cfg.setBootstrapSchemas(schemas);
+//		}
+//
+//		MutableBTreePartitionConfiguration partitionConfiguration = new MutableBTreePartitionConfiguration();
+//		partitionConfiguration.setSuffix(defaultPartitionSuffix);
+//		partitionConfiguration.setContextEntry(getRootPartitionAttributes(defaultPartitionName));
+//		partitionConfiguration.setName(defaultPartitionName);
+//
+//		cfg.setContextPartitionConfigurations(Collections.singleton(partitionConfiguration));
+//		// Start the Server
+//
+//		Hashtable env = createEnv(principal, credentials);
+//		env.putAll(cfg.toJndiEnvironment());
+		return null;
 	}
 
 	public static DirContext startApacheDirectoryServer(int port, String defaultPartitionSuffix,
@@ -126,16 +122,16 @@ public class LdapTestUtils {
 	 * @throws Exception If anything goes wrong when shutting down the server.
 	 */
 	public static void destroyApacheDirectoryServer(String principal, String credentials) throws Exception {
-		Properties env = new Properties();
-		env.setProperty(Context.INITIAL_CONTEXT_FACTORY, ServerContextFactory.class.getName());
-		env.setProperty(Context.SECURITY_AUTHENTICATION, "simple");
-		env.setProperty(Context.SECURITY_PRINCIPAL, principal);
-		env.setProperty(Context.SECURITY_CREDENTIALS, credentials);
-
-		ShutdownConfiguration configuration = new ShutdownConfiguration();
-		env.putAll(configuration.toJndiEnvironment());
-
-		new InitialContext(env);
+//		Properties env = new Properties();
+//		env.setProperty(Context.INITIAL_CONTEXT_FACTORY, ServerContextFactory.class.getName());
+//		env.setProperty(Context.SECURITY_AUTHENTICATION, "simple");
+//		env.setProperty(Context.SECURITY_PRINCIPAL, principal);
+//		env.setProperty(Context.SECURITY_CREDENTIALS, credentials);
+//
+//		ShutdownConfiguration configuration = new ShutdownConfiguration();
+//		env.putAll(configuration.toJndiEnvironment());
+//
+//		new InitialContext(env);
 	}
 
 	/**
@@ -233,22 +229,36 @@ public class LdapTestUtils {
 	}
 
 	private static void loadLdif(DirContext context, Resource ldifFile) throws IOException {
-		File tempFile = File.createTempFile("spring_ldap_test", ".ldif");
-		try {
-			InputStream inputStream = ldifFile.getInputStream();
-			IOUtils.copy(inputStream, new FileOutputStream(tempFile));
-			LdifFileLoader fileLoader = new LdifFileLoader(context, tempFile.getAbsolutePath());
-			fileLoader.execute();
-		}
-		finally {
-			try {
-				tempFile.delete();
-			}
-			catch (Exception e) {
-				// Ignore this
-			}
-		}
+        try {
+            DefaultDirectoryService directoryService =
+                    (DefaultDirectoryService) context.getEnvironment().get(DIRECTORY_SERVICE_KEY);
+            if(directoryService == null) {
+                throw new IllegalStateException("The specified context does not appear to have been created by LdapTestUtils");
+            }
+            loadLdif(directoryService, ldifFile);
+        } catch (NamingException e) {
+            throw new RuntimeException("Failed to get environment", e);
+        }
 	}
+
+    public static void loadLdif(DefaultDirectoryService directoryService, Resource ldifFile) throws IOException {
+        File tempFile = File.createTempFile("spring_ldap_test", ".ldif");
+        try {
+            InputStream inputStream = ldifFile.getInputStream();
+            IOUtils.copy(inputStream, new FileOutputStream(tempFile));
+            LdifFileLoader fileLoader = new LdifFileLoader(directoryService.getSession(), tempFile.getAbsolutePath());
+            fileLoader.execute();
+        }
+        finally {
+            try {
+                tempFile.delete();
+            }
+            catch (Exception e) {
+                // Ignore this
+            }
+        }
+    }
+
 
 	private static Hashtable createEnv(String principal, String credentials) {
 		Hashtable env = new Properties();
@@ -274,4 +284,5 @@ public class LdapTestUtils {
 
 		return attributes;
 	}
+
 }

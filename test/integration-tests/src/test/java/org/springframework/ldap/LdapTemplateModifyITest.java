@@ -16,16 +16,6 @@
 
 package org.springframework.ldap;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
-
-import javax.naming.directory.Attributes;
-import javax.naming.directory.BasicAttribute;
-import javax.naming.directory.BasicAttributes;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.ModificationItem;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +25,16 @@ import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.test.context.ContextConfiguration;
+
+import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.BasicAttributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.ModificationItem;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 
 /**
  * Tests the modification methods (rebind and modifyAttributes) of LdapTemplate.
@@ -169,8 +169,11 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 			String upperCasedName = "CN=Some Person,OU=company1,C=Sweden,DC=jayway,DC=se";
 			DirContextOperations ctx = tested.lookupContext(dn);
 			ctx.removeAttributeValue("uniqueMember", lowerCasedName);
+            tested.modifyAttributes(ctx);
+
+            ctx = tested.lookupContext(dn);
 			ctx.addAttributeValue("uniqueMember", upperCasedName);
-			tested.modifyAttributes(ctx);
+            tested.modifyAttributes(ctx);
 
 			// without this, the member added above will not be removed and the test fails
 			System.setProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY, DistinguishedName.KEY_CASE_FOLD_NONE);
