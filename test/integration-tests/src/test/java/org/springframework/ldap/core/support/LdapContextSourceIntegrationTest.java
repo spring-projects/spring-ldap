@@ -15,18 +15,6 @@
  */
 package org.springframework.ldap.core.support;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
-
-import java.util.Hashtable;
-import java.util.List;
-
-import javax.naming.Context;
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -38,6 +26,18 @@ import org.springframework.ldap.core.simple.AbstractParameterizedContextMapper;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
+
+import javax.naming.Context;
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
+import java.util.Hashtable;
+import java.util.List;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 
 /**
  * Integration tests for LdapContextSource.
@@ -87,6 +87,7 @@ public class LdapContextSourceIntegrationTest extends AbstractLdapTemplateIntegr
 			assertNotNull(ctx);
 			// Double check to see that we are authenticated.
 			Hashtable environment = ctx.getEnvironment();
+            assertTrue(environment.containsKey(LdapContextSource.SUN_LDAP_POOLING_FLAG));
 			assertTrue(environment.containsKey(Context.SECURITY_PRINCIPAL));
 			assertTrue(environment.containsKey(Context.SECURITY_CREDENTIALS));
 		}
@@ -111,8 +112,10 @@ public class LdapContextSourceIntegrationTest extends AbstractLdapTemplateIntegr
 			String expectedCredentials = "password";
 			ctx = tested.getContext(expectedPrincipal, expectedCredentials);
 			assertNotNull(ctx);
-			// Double check to see that we are authenticated.
+			// Double check to see that we are authenticated, and that we did not receive
+			// a connection eligible for connection pooling.
 			Hashtable environment = ctx.getEnvironment();
+            assertFalse(environment.containsKey(LdapContextSource.SUN_LDAP_POOLING_FLAG));
 			assertEquals(expectedPrincipal, environment.get(Context.SECURITY_PRINCIPAL));
 			assertEquals(expectedCredentials, environment.get(Context.SECURITY_CREDENTIALS));
 		}

@@ -15,13 +15,6 @@
  */
 package org.springframework.ldap.core.support;
 
-import java.util.Hashtable;
-import java.util.Map;
-
-import javax.naming.Context;
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -32,6 +25,12 @@ import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.support.LdapUtils;
+
+import javax.naming.Context;
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
+import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * Abstract implementation of the {@link ContextSource} interface. By default,
@@ -67,8 +66,10 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	private static final Class DEFAULT_CONTEXT_FACTORY = com.sun.jndi.ldap.LdapCtxFactory.class;
 
 	private static final Class DEFAULT_DIR_OBJECT_FACTORY = DefaultDirObjectFactory.class;
+    private static final boolean DONT_DISABLE_POOLING = false;
+    private static final boolean EXPLICITLY_DISABLE_POOLING = true;
 
-	private Class dirObjectFactory = DEFAULT_DIR_OBJECT_FACTORY;
+    private Class dirObjectFactory = DEFAULT_DIR_OBJECT_FACTORY;
 
 	private Class contextFactory = DEFAULT_CONTEXT_FACTORY;
 
@@ -103,26 +104,40 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	private DirContextAuthenticationStrategy authenticationStrategy = new SimpleDirContextAuthenticationStrategy();
 
 	public DirContext getContext(String principal, String credentials) {
-		DirContext ctx = createContext(getAuthenticatedEnv(principal, credentials));
-
-		try {
-			authenticationStrategy.processContextAfterCreation(ctx, principal, credentials);
-			return ctx;
-		}
-		catch (NamingException e) {
-			closeContext(ctx);
-			throw LdapUtils.convertLdapException(e);
-		}
+        // This method is typically called for authentication purposes, which means that we
+        // should explicitly disable pooling in case passwords are changed (LDAP-183).
+        return doGetContext(principal, credentials, EXPLICITLY_DISABLE_POOLING);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.ldap.core.ContextSource#getReadOnlyContext()
-	 */
+    private DirContext doGetContext(String principal, String credentials, boolean explicitlyDisablePooling) {
+        Hashtable env = getAuthenticatedEnv(principal, credentials);
+        if(explicitlyDisablePooling) {
+            env.remove(SUN_LDAP_POOLING_FLAG);
+        }
+
+        DirContext ctx = createContext(env);
+
+        try {
+            authenticationStrategy.processContextAfterCreation(ctx, principal, credentials);
+            return ctx;
+        }
+        catch (NamingException e) {
+            closeContext(ctx);
+            throw LdapUtils.convertLdapException(e);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.springframework.ldap.core.ContextSource#getReadOnlyContext()
+     */
 	public DirContext getReadOnlyContext() {
 		if (!anonymousReadOnly) {
-			return getContext(authenticationSource.getPrincipal(), authenticationSource.getCredentials());
+			return doGetContext(
+                    authenticationSource.getPrincipal(),
+                    authenticationSource.getCredentials(),
+                    DONT_DISABLE_POOLING);
 		}
 		else {
 			return createContext(getAnonymousEnv());
@@ -135,7 +150,10 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @see org.springframework.ldap.core.ContextSource#getReadWriteContext()
 	 */
 	public DirContext getReadWriteContext() {
-		return getContext(authenticationSource.getPrincipal(), authenticationSource.getCredentials());
+		return doGetContext(
+                authenticationSource.getPrincipal(),
+                authenticationSource.getCredentials(),
+                DONT_DISABLE_POOLING);
 	}
 
 	/**

@@ -218,6 +218,11 @@
       which is why Spring LDAP provides a more sophisticated approach to LDAP connection pooling, 
       described in <xref linkend="pooling" />. If pooling functionality is required, this is the
       recommended approach.</note></para>
+      <para><note>
+          Regardless of the pooling configuration, the <literal>ContextSource#getContext(String principal, String credentials)</literal>
+          method will always explicitly <emphasis>not</emphasis> use native Java LDAP Pooling, in order for
+          reset passwords to take effect as soon as possible.
+      </note></para>
     </sect2>
     <sect2 id="context-source-advanced">
       <title>Advanced ContextSource Configuration</title>
