@@ -75,15 +75,20 @@
         <title>Authenticating a user using Spring LDAP.</title>
 
         <programlisting>boolean authenticated = ldapTemplate.authenticate("", "(uid=john.doe)", "secret");</programlisting>
-      </example></para>
-
-    <tip>
-      <para>Don't write your own custom authenticate methods. Use the ones
-      provided in Spring LDAP 1.3.x.</para>
-    </tip>
+      </example>
+        <note>
+            As described in below, some setups may require additional operations to be performed
+            in order for actual authentication to occur. See <xref linkend="operationsOnAuthenticatedContext"/>
+            for details.
+        </note>
+        <tip>
+            Don't write your own custom authenticate methods. Use the ones
+                provided in Spring LDAP 1.3.x.
+        </tip>
+    </para>
   </sect1>
 
-  <sect1>
+  <sect1 id="operationsOnAuthenticatedContext">
     <title>Performing Operations on the Authenticated Context</title>
 
     <para>Some authentication schemes and LDAP servers require some operation
