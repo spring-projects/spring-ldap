@@ -1,17 +1,16 @@
 package org.springframework.ldap.control;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
+import org.springframework.ldap.UncategorizedLdapException;
+import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.ReflectionUtils;
 
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
-
-import org.springframework.ldap.UncategorizedLdapException;
-import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ReflectionUtils;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 
 /**
  * Convenient base class useful when implementing a standard DirContextProcessor
@@ -183,7 +182,7 @@ public abstract class AbstractFallbackRequestAndResponseControlDirContextProcess
 			}
 		}
 
-		log.fatal("No matching response control found for paged results - looking for '" + responseControlClass);
+		log.info("No matching response control found - looking for '" + responseControlClass);
 	}
 
 	protected abstract void handleResponse(Object control);
