@@ -274,6 +274,17 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 		verifyBoundCorrectData();
 	}
 
+    @Test
+    public void verifyCompleteReplacementOfUniqueMemberAttribute_Ldap119() {
+        DirContextOperations ctx = tested.lookupContext("cn=ROLE_USER,ou=groups");
+        ctx.setAttributeValues("uniqueMember",
+                new String[]{"cn=Some Person4,ou=company1,c=Sweden,dc=jayway,dc=se"},
+                true);
+        ctx.getModificationItems();
+
+        tested.modifyAttributes(ctx);
+    }
+
 	private Attributes setupAttributes() {
 		Attributes attributes = new BasicAttributes();
 		BasicAttribute ocattr = new BasicAttribute("objectclass");
