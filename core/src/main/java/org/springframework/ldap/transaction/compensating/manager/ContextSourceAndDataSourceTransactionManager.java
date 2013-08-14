@@ -77,8 +77,14 @@ public class ContextSourceAndDataSourceTransactionManager extends
 
         super.doBegin(actualTransactionObject.getDataSourceTransactionObject(),
                 definition);
-        ldapManagerDelegate.doBegin(actualTransactionObject
-                .getLdapTransactionObject(), definition);
+        try {
+            ldapManagerDelegate.doBegin(actualTransactionObject
+                    .getLdapTransactionObject(), definition);
+        } catch (TransactionException e) {
+            // Failed to start LDAP transaction - make sure we clean up properly
+            super.doCleanupAfterCompletion(actualTransactionObject.getDataSourceTransactionObject());
+            throw e;
+        }
     }
 
     /*
