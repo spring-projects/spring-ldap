@@ -81,7 +81,7 @@ telephonenumber: 11
 dn: cn=Bramble Harvey,ou=Doctors,o=Whoniverse
 objectClass: person
 objectClass: top
-cn: Bramble
+cn: Bramble Harvey
 description: Really not a Doctor
 sn: Harvey
 telephonenumber: 22

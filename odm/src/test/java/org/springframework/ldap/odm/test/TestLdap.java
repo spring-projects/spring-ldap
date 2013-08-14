@@ -118,12 +118,12 @@ public final class TestLdap {
         port=GetFreePort.getFreePort();
 
         // Start an LDAP server and import test data
-        LdapTestUtils.startApacheDirectoryServer(port, baseName.toString(), "odm-test", "", "", null);
+        LdapTestUtils.startEmbeddedServer(port, baseName.toString(), "odm-test");
     }
 
     @AfterClass
     public static void tearDownClass() throws Exception {
-        LdapTestUtils.destroyApacheDirectoryServer("", "");
+        LdapTestUtils.shutdownEmbeddedServer();
     }
 
     private static ContextSource getContextSource(String url, String username, String password) throws Exception {

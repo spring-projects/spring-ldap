@@ -1,13 +1,5 @@
 package org.springframework.ldap.odm.test;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -20,12 +12,18 @@ import org.springframework.ldap.odm.test.utils.RunnableTest;
 import org.springframework.ldap.odm.tools.SchemaViewer;
 import org.springframework.ldap.test.LdapTestUtils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+
 public final class TestSchemaViewer {
     // Base DN for test data
     private static final DistinguishedName baseName = new DistinguishedName("o=Whoniverse");
 
-    private static final String PRINCIPAL="";
-    private static final String CREDENTIALS="";
     private static final String lineSeparator = System.getProperty ("line.separator");
     
     private static int port;
@@ -44,12 +42,12 @@ public final class TestSchemaViewer {
                 "--error"};
         
         // Start an in process LDAP server
-        LdapTestUtils.startApacheDirectoryServer(port, baseName.toString(), "odm-test", "", "", null);
+        LdapTestUtils.startEmbeddedServer(port, baseName.toString(), "odm-test");
     }
 
     @AfterClass
     public static void tearDownClass() throws Exception {
-        LdapTestUtils.destroyApacheDirectoryServer(PRINCIPAL, CREDENTIALS);
+        LdapTestUtils.shutdownEmbeddedServer();
     }
     
     @Before
@@ -98,17 +96,13 @@ public final class TestSchemaViewer {
     // This makes the test dependent on the order in which the data is returned - it is invalid to assume that this will not change
     private static TestData[] viewerTestData=new TestData[] {
         new TestData("-o", "top", 
-                "NAME:top|MUST:objectClass |NAME:top |NUMERICOID:2.5.6.0 |DESC:top of the superclass chain |ABSTRACT:true"),
+                "NAME:top|MUST:objectClass |X-SCHEMA:system |NAME:top |NUMERICOID:2.5.6.0 |DESC:top of the superclass chain |ABSTRACT:true"),
         new TestData("-o", "country", 
-                "NAME:country|MUST:c |SUP:top |NAME:country |STRUCTURAL:true |NUMERICOID:2.5.6.2 |DESC:RFC2256: a country |MAY:searchGuide description"),
-        new TestData("-a", "sn", 
-                "NAME:sn|SUP:name |SYNTAX:1.3.6.1.4.1.1466.115.121.1.15 |NAME:sn surname |EQUALITY:caseIgnoreMatch |SUBSTR:caseIgnoreSubstringsMatch |USAGE:userApplications |NUMERICOID:2.5.4.4 |DESC:RFC2256: last (family) name(s) for which the entity is known by"),
+                "NAME:country|MUST:c |X-SCHEMA:core |SUP:top |NAME:country |STRUCTURAL:true |NUMERICOID:2.5.6.2 |DESC:RFC2256: a country |MAY:searchGuide description"),
+        new TestData("-a", "sn",
+                "NAME:sn|NAME:sn surname |SUBSTR:caseIgnoreSubstringsMatch |X-SCHEMA:core |SYNTAX:1.3.6.1.4.1.1466.115.121.1.15 |NUMERICOID:2.5.4.4 |SUP:name |DESC:RFC2256: last (family) name(s) for which the entity is known by |USAGE:userApplications |EQUALITY:caseIgnoreMatch"),
         new TestData("-a", "jpegPhoto", 
-                "NAME:jpegPhoto|SYNTAX:1.3.6.1.4.1.1466.115.121.1.28 |NAME:jpegPhoto |USAGE:userApplications |NUMERICOID:0.9.2342.19200300.100.1.60 |DESC:RFC2798: a JPEG image"),
-        new TestData("-s", "jpeg",
-                "NAME:jpeg|NAME:JPEG |NUMERICOID:1.3.6.1.4.1.1466.115.121.1.28"),
-        new TestData("-s", "OID",
-                "NAME:OID|NAME:OID |NUMERICOID:1.3.6.1.4.1.1466.115.121.1.38"),
+                "NAME:jpegPhoto|X-SCHEMA:inetorgperson |SYNTAX:1.3.6.1.4.1.1466.115.121.1.28 |NAME:jpegPhoto |USAGE:userApplications |NUMERICOID:0.9.2342.19200300.100.1.60 |DESC:RFC2798: a JPEG image"),
     };
     
     // Very simple test - mainly just to exercise the code and to

@@ -16,15 +16,6 @@
 
 package org.springframework.ldap;
 
-import static junit.framework.Assert.assertEquals;
-
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.Attributes;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.AttributesMapper;
@@ -32,6 +23,14 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.itest.Person;
 import org.springframework.ldap.itest.PersonAttributesMapper;
 import org.springframework.test.context.ContextConfiguration;
+
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.Attributes;
+import java.util.LinkedList;
+import java.util.List;
+
+import static junit.framework.Assert.assertEquals;
 
 /**
  * Tests the attributes mapper search method.
@@ -78,10 +77,10 @@ public class LdapTemplateAttributesMapperITest extends AbstractLdapTemplateInteg
 				return members;
 			}
 		};
-		List result = tested.search("ou=groups", "(objectclass=groupOfUniqueNames)", mapper);
+		List result = tested.search("ou=groups", "(&(objectclass=groupOfUniqueNames)(cn=ROLE_USER))", mapper);
 
-		assertEquals(2, result.size());
-		assertEquals(1, ((String[]) result.get(0)).length);
-		assertEquals(5, ((String[]) result.get(1)).length);
+		assertEquals(1, result.size());
+
+		assertEquals(5, ((String[]) result.get(0)).length);
 	}
 }

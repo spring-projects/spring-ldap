@@ -16,10 +16,6 @@
 
 package org.springframework.ldap;
 
-import static junit.framework.Assert.assertEquals;
-
-import java.util.List;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.ContextMapper;
@@ -28,6 +24,10 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.itest.Person;
 import org.springframework.ldap.itest.PersonContextMapper;
 import org.springframework.test.context.ContextConfiguration;
+
+import java.util.List;
+
+import static junit.framework.Assert.assertEquals;
 
 /**
  * Tests the ContextMapper search method. In its way this method also
@@ -71,10 +71,9 @@ public class LdapTemplateContextMapperITest extends AbstractLdapTemplateIntegrat
 				return members;
 			}
 		};
-		List result = tested.search("ou=groups", "(objectclass=groupOfUniqueNames)", mapper);
+		List result = tested.search("ou=groups", "(&(objectclass=groupOfUniqueNames)(cn=ROLE_USER))", mapper);
 
-		assertEquals(2, result.size());
-		assertEquals(1, ((String[]) result.get(0)).length);
-		assertEquals(5, ((String[]) result.get(1)).length);
+		assertEquals(1, result.size());
+		assertEquals(5, ((String[]) result.get(0)).length);
 	}
 }

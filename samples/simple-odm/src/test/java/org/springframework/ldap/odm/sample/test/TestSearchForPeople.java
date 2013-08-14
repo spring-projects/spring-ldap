@@ -1,10 +1,5 @@
 package org.springframework.ldap.odm.sample.test;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -16,6 +11,11 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.odm.sample.SearchForPeople;
 import org.springframework.ldap.test.LdapTestUtils;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
+import static org.junit.Assert.assertEquals;
 
 public class TestSearchForPeople {
     // Base DN for test data
@@ -30,12 +30,12 @@ public class TestSearchForPeople {
     @BeforeClass
     public static void setUpClass() throws Exception {
         // Start an LDAP server and import test data
-        LdapTestUtils.startApacheDirectoryServer(PORT, baseName.toString(), "odm-test", PRINCIPAL, CREDENTIALS, null);
+        LdapTestUtils.startEmbeddedServer(PORT, baseName.toString(), "odm-test");
     }
    
     @AfterClass
     public static void tearDownClass() throws Exception {
-        LdapTestUtils.destroyApacheDirectoryServer(PRINCIPAL, CREDENTIALS);
+        LdapTestUtils.shutdownEmbeddedServer();
     }
     
     @Before

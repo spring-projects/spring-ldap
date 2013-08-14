@@ -88,7 +88,7 @@ public class LdapTestUtils {
     }
 
     /**
-     * Start an embedded Apache Directory Server.
+     * Start an embedded Apache Directory Server. Only one embedded server will be permitted in the same JVM.
      *
      * @param port                   the port on which the server will be listening.
      * @param defaultPartitionSuffix The default base suffix that will be used
@@ -96,6 +96,7 @@ public class LdapTestUtils {
      * @param defaultPartitionName   The name to use in the directory server
      *                               configuration for the default base suffix.
      *
+     * @throws IllegalStateException if an embedded server is already started.
      * @since 1.3.2
      */
     public static void startEmbeddedServer(int port, String defaultPartitionSuffix, String defaultPartitionName) {
@@ -110,6 +111,9 @@ public class LdapTestUtils {
         }
     }
 
+    /**
+     * @deprecated use {@link #startEmbeddedServer(int, String, String)} instead.
+     */
     public static DirContext startApacheDirectoryServer(int port, String defaultPartitionSuffix,
                                                         String defaultPartitionName, String principal, String credentials) throws NamingException {
         return LdapTestUtils.startApacheDirectoryServer(port, defaultPartitionSuffix, defaultPartitionName, principal,

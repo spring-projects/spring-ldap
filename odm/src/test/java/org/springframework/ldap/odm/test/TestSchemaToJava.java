@@ -1,15 +1,5 @@
 package org.springframework.ldap.odm.test;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.File;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.After;
@@ -30,6 +20,16 @@ import org.springframework.ldap.odm.typeconversion.impl.ConverterManagerImpl;
 import org.springframework.ldap.odm.typeconversion.impl.converters.FromStringConverter;
 import org.springframework.ldap.odm.typeconversion.impl.converters.ToStringConverter;
 import org.springframework.ldap.test.LdapTestUtils;
+
+import java.io.File;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.junit.Assert.assertEquals;
 
 // Tests the generation of entry Java classes from LDAP schema
 public final class TestSchemaToJava {
@@ -53,13 +53,13 @@ public final class TestSchemaToJava {
         port=GetFreePort.getFreePort();
 
         // Start an in process LDAP server
-        LdapTestUtils.startApacheDirectoryServer(port, baseName.toString(), "odm-test", "", "", null);
+        LdapTestUtils.startEmbeddedServer(port, baseName.toString(), "odm-test");
     }
 
     @AfterClass
     public static void tearDownClass() throws Exception {
         // Stop the in process LDAP server
-        LdapTestUtils.destroyApacheDirectoryServer("", "");
+        LdapTestUtils.shutdownEmbeddedServer();
     }
 
     @Before
