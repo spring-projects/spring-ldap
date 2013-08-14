@@ -16,14 +16,14 @@
 
 package org.springframework.ldap.pool.validation;
 
-import javax.naming.NamingEnumeration;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.SearchControls;
-
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.pool.DirContextType;
+
+import javax.naming.NamingEnumeration;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.SearchControls;
 
 /**
  * Default {@link DirContext} validator that executes {@link DirContext#search(String, String, SearchControls)}. The
@@ -174,11 +174,13 @@ public class DefaultDirContextValidator implements DirContextValidator {
             }
         }
         catch (Exception e) {
-            this.logger.warn("DirContext '" + dirContext + "' failed validation with an exception.", e);
+            if(this.logger.isDebugEnabled()) {
+                this.logger.debug("DirContext '" + dirContext + "' failed validation with an exception.", e);
+            }
         }
 
-        if (this.logger.isInfoEnabled()) {
-            this.logger.info("DirContext '" + dirContext + "' failed validation.");
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("DirContext '" + dirContext + "' failed validation.");
         }
         return false;
     }
