@@ -62,19 +62,23 @@ public final class OdmManagerImpl implements OdmManager {
     
     // A map of managed classes to to meta data about those classes
     private final Map<Class<?>, EntityData> metaDataMap=new HashMap<Class<?>, EntityData>();
-    
+
+    public OdmManagerImpl(ConverterManager converterManager,
+                          LdapOperations ldapOperations,
+                          Set<Class<?>> managedClasses) {
+        this.converterManager=converterManager;
+        this.ldapTemplate = ldapOperations;
+        if (managedClasses!=null) {
+            for (Class<?> managedClass: managedClasses) {
+                addManagedClass(managedClass);
+            }
+        }
+    }
+
     public OdmManagerImpl(ConverterManager converterManager, 
                           ContextSource contextSource,
                           Set<Class<?>> managedClasses) {
-        
-        this.converterManager=converterManager;
-        this.ldapTemplate=new LdapTemplate(contextSource);
-        
-        if (managedClasses!=null) {
-            for (Class<?> managedClass: managedClasses) {
-                addManagedClass(managedClass); 
-            }
-        }
+        this(converterManager, new LdapTemplate(contextSource), managedClasses);
     }
     
     public OdmManagerImpl(ConverterManager converterManager, 

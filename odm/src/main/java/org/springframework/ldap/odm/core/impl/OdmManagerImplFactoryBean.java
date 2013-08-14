@@ -1,11 +1,13 @@
 package org.springframework.ldap.odm.core.impl;
 
-import java.util.Set;
-
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.FactoryBeanNotInitializedException;
 import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.odm.typeconversion.ConverterManager;
+
+import java.util.Set;
 
 /**
  * A Spring Factory bean which creates {@link OdmManagerImpl} instances.
@@ -27,16 +29,25 @@ import org.springframework.ldap.odm.typeconversion.ConverterManager;
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
  */
 public final class OdmManagerImplFactoryBean implements FactoryBean {
-    private ContextSource contextSource=null;
+    private LdapOperations ldapOperations = null;
     private Set<Class<?>> managedClasses=null;
     private ConverterManager converterManager=null;
-    
+
+    /**
+     * Set the LdapOperations instance to use to interact with the LDAP directory.
+     *
+     * @param ldapOperations the LdapOperations instance to use.
+     */
+    public void setLdapOperations(LdapOperations ldapOperations) {
+        this.ldapOperations = ldapOperations;
+    }
+
     /**
      * Set the ContextSource to use to interact with the LDAP directory.
      * @param contextSource The ContextSource to use.
      */
     public void setContextSource(ContextSource contextSource) {
-        this.contextSource=contextSource;
+        this.ldapOperations = new LdapTemplate(contextSource);
     }
     
     /**
@@ -61,8 +72,8 @@ public final class OdmManagerImplFactoryBean implements FactoryBean {
      * @see org.springframework.beans.factory.FactoryBean#getObject()
      */
     public Object getObject() throws Exception {
-        if (contextSource==null) {        
-            throw new FactoryBeanNotInitializedException("contextSource property has not been set");
+        if (ldapOperations==null) {
+            throw new FactoryBeanNotInitializedException("contextSource ldapOperations property has not been set");
         }
         if (managedClasses==null) {        
             throw new FactoryBeanNotInitializedException("managedClasses property has not been set");
@@ -71,7 +82,7 @@ public final class OdmManagerImplFactoryBean implements FactoryBean {
             throw new FactoryBeanNotInitializedException("converterManager property has not been set");
         }
         
-        return new OdmManagerImpl(converterManager, contextSource, managedClasses);
+        return new OdmManagerImpl(converterManager, ldapOperations, managedClasses);
     }
 
     /* (non-Javadoc)
