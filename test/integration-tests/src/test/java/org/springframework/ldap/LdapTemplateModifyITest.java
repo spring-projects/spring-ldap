@@ -275,7 +275,7 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 	}
 
     @Test
-    public void verifyCompleteReplacementOfUniqueMemberAttribute_Ldap119() {
+    public void verifyCompleteReplacementOfUniqueMemberAttribute_Ldap119Workaround() {
         DirContextOperations ctx = tested.lookupContext("cn=ROLE_USER,ou=groups");
         ctx.setAttributeValues("uniqueMember",
                 new String[]{"cn=Some Person4,ou=company1,c=Sweden,dc=jayway,dc=se"},
@@ -285,6 +285,19 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
         tested.modifyAttributes(ctx);
     }
 
+    /**
+     * This test originally failed on ApacheDS complaining that the uniqueMember attribute
+     * was emptied.
+     */
+    @Test
+    public void verifyCompleteReplacementOfUniqueMemberAttribute_Ldap119() {
+        DirContextOperations ctx = tested.lookupContext("cn=ROLE_USER,ou=groups");
+        ctx.setAttributeValues("uniqueMember",
+                new String[]{"cn=Some Person4,ou=company1,c=Sweden,dc=jayway,dc=se"});
+        ctx.getModificationItems();
+
+        tested.modifyAttributes(ctx);
+    }
 	private Attributes setupAttributes() {
 		Attributes attributes = new BasicAttributes();
 		BasicAttribute ocattr = new BasicAttribute("objectclass");

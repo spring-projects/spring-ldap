@@ -16,12 +16,14 @@
 
 package org.springframework.ldap.core;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.ldap.NoSuchAttributeException;
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.util.StringUtils;
 
 import javax.naming.Context;
 import javax.naming.Name;
@@ -36,15 +38,12 @@ import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
-
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.NoSuchAttributeException;
-import org.springframework.ldap.support.LdapUtils;
-import org.springframework.util.StringUtils;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Adapter that implements the interesting methods of the DirContext interface.
@@ -376,18 +375,25 @@ public class DirContextAdapter implements DirContextOperations {
 			}
 		}
 
-		// We have now traversed and removed all values from the original that
-		// were also present in the new values. The remaining values in the
-		// original must be the ones that were removed.
-		if (originalClone.size() > 0) {
-			modificationList.add(new ModificationItem(
-					DirContext.REMOVE_ATTRIBUTE, originalClone));
-		}
+        // We have now traversed and removed all values from the original that
+        // were also present in the new values. The remaining values in the
+        // original must be the ones that were removed.
+        if(originalClone.size() > 0 && originalClone.size() == originalAttr.size()) {
+            // This is actually a complete replacement of the attribute values.
+            // Fall back to REPLACE
+            modificationList.add(new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
+                    addedValuesAttribute));
+        } else {
+            if (originalClone.size() > 0) {
+                modificationList.add(new ModificationItem(
+                        DirContext.REMOVE_ATTRIBUTE, originalClone));
+            }
 
-		if (addedValuesAttribute.size() > 0) {
-			modificationList.add(new ModificationItem(DirContext.ADD_ATTRIBUTE,
-					addedValuesAttribute));
-		}
+            if (addedValuesAttribute.size() > 0) {
+                modificationList.add(new ModificationItem(DirContext.ADD_ATTRIBUTE,
+                        addedValuesAttribute));
+            }
+        }
 	}
 
 	/**
