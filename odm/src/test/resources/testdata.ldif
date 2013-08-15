@@ -73,17 +73,6 @@ description: Fifth Doctor
 sn: Davison
 telephonenumber: 5
 
-dn: cn=Paul Harvey,ou=Doctors,o=Whoniverse
-objectClass: person
-objectClass: inetorgperson
-objectclass: organizationalperson
-objectClass: top
-objectClass: userSecurityInformation
-cn: Paul Harvey
-description: Not a Doctor
-sn: Harvey
-telephonenumber: 11
-
 dn: cn=Bramble Harvey,ou=Doctors,o=Whoniverse
 objectClass: person
 objectClass: top

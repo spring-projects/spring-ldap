@@ -36,6 +36,7 @@ import org.springframework.ldap.odm.typeconversion.impl.ConverterManagerImpl;
 import org.springframework.ldap.odm.typeconversion.impl.converters.FromStringConverter;
 import org.springframework.ldap.odm.typeconversion.impl.converters.ToStringConverter;
 import org.springframework.ldap.test.LdapTestUtils;
+import org.springframework.util.CollectionUtils;
 
 import javax.naming.Name;
 import javax.naming.directory.SearchControls;
@@ -48,6 +49,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 // Tests all OdmManager functions
 public final class TestLdap {
@@ -170,6 +172,7 @@ public final class TestLdap {
         // Create our OdmManager
         Set<Class<?>> managedClasses=new HashSet<Class<?>>();
         managedClasses.add(Person.class);
+        managedClasses.add(PlainPerson.class);
         managedClasses.add(OrganizationalUnit.class);
         odmManager = new OdmManagerImpl(converterManager, contextSource, managedClasses);
     }
@@ -323,6 +326,38 @@ public final class TestLdap {
         assertEquals(new HashSet<Person>(Arrays.asList(personTestData)), new HashSet<Person>(allPeople));
     }
 
+    @Test
+    public void findAllAsPlainPersons() {
+        List<PlainPerson> allPeople = odmManager.findAll(PlainPerson.class, baseName, searchControls);
+
+        assertEquals(9, allPeople.size());
+        assertFalse("No nulls should have been returned", CollectionUtils.containsInstance(allPeople, null));
+    }
+
+    @Test
+    public void verifySearchOnPlainPerson() {
+        List<PlainPerson> result = odmManager.search(PlainPerson.class, baseName, "(cn=William Hartnell)", searchControls);
+        assertEquals(1, result.size());
+
+        PlainPerson foundPerson = result.get(0);
+        assertEquals("William Hartnell", foundPerson.getCn());
+        assertEquals("Hartnell", foundPerson.getSurname());
+    }
+
+    @Test
+    public void updatePlainPerson() {
+        List<PlainPerson> result = odmManager.search(PlainPerson.class, baseName, "(cn=William Hartnell)", searchControls);
+        assertEquals(1, result.size());
+
+        PlainPerson foundPerson = result.get(0);
+        foundPerson.setSurname("Tjolahopp");
+        odmManager.update(foundPerson);
+
+        // Verify that the objectclass was not changed on the target object
+        List<Person> updatedResult = odmManager.search(Person.class, baseName, "(cn=William Hartnell)", searchControls);
+        assertEquals(1, updatedResult.size());
+    }
+
     private Person[] createTestData = {
             new Person(new DistinguishedName("cn=Colin Baker,ou=Doctors,o=Whoniverse"), "Baker", Arrays
                     .asList(new String[] { "Sixth Doctor" }), 6, null),
@@ -390,8 +425,8 @@ public final class TestLdap {
 
     // Read an entry with classes in addition to those supported by the Entry
     @Test(expected = OdmException.class)
-    public void readAdditionalObjectClasses() throws Exception {
-        odmManager.read(Person.class, new DistinguishedName("cn=Paul Harvey,ou=Doctors,o=Whoniverse"));
+    public void readNonMatchingObjectclasses() throws Exception {
+        odmManager.read(Person.class, new DistinguishedName("ou=Doctors,o=Whoniverse"));
     }
 
     private final static class NoEntry {
@@ -516,7 +551,7 @@ public final class TestLdap {
     // The OdmManager should flag any attempt to use a "unmanaged" class
     @Test(expected = UnmanagedClassException.class)
     public void unManagedClass() {
-        ((OdmManagerImpl)odmManager).read(Integer.class, baseName);
+        odmManager.read(Integer.class, baseName);
     }
 
     @Test

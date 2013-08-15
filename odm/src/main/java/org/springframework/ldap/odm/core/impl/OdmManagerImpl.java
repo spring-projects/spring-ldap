@@ -158,7 +158,7 @@ public final class OdmManagerImpl implements OdmManager {
         
         T result = clazz.cast(ldapTemplate.lookup(dn, new GenericContextMapper<T>(clazz)));
         if (result==null) {
-            throw new OdmException(String.format("Entry %1$s has excess object classes", dn));
+            throw new OdmException(String.format("Entry %1$s does not have the required objectclasses ", dn));
         }
         if (LOG.isDebugEnabled()) {
             LOG.debug(String.format("Found entry - %s$1", result));
@@ -280,16 +280,21 @@ public final class OdmManagerImpl implements OdmManager {
      */
     private void mapToContext(Object entry, DirContextOperations context) {
         ObjectMetaData metaData=getEntityData(entry.getClass()).metaData;
-        
-        // Object classes are set from the metadata obtained from the @Entity annotation
-        int numOcs=metaData.getObjectClasses().size();
-        CaseIgnoreString[] metaDataObjectClasses=metaData.getObjectClasses().toArray(new CaseIgnoreString[numOcs]);
-        
-        String[] stringOcs=new String[numOcs];
-        for (int ocIndex=0; ocIndex<numOcs; ocIndex++) {
-            stringOcs[ocIndex]=metaDataObjectClasses[ocIndex].toString();
+
+        Attribute objectclassAttribute = context.getAttributes().get(OBJECT_CLASS_ATTRIBUTE);
+        if(objectclassAttribute == null || objectclassAttribute.size() == 0) {
+            // Object classes are set from the metadata obtained from the @Entity annotation,
+            // but only if this is a new entry.
+            int numOcs=metaData.getObjectClasses().size();
+            CaseIgnoreString[] metaDataObjectClasses=metaData.getObjectClasses().toArray(new CaseIgnoreString[numOcs]);
+
+            String[] stringOcs=new String[numOcs];
+            for (int ocIndex=0; ocIndex<numOcs; ocIndex++) {
+                stringOcs[ocIndex]=metaDataObjectClasses[ocIndex].toString();
+            }
+
+            context.setAttributeValues(OBJECT_CLASS_ATTRIBUTE, stringOcs);
         }
-        context.setAttributeValues(OBJECT_CLASS_ATTRIBUTE, stringOcs);
 
         // Loop through each of the fields in the object to write to LDAP
         for (Field field : metaData) {
@@ -446,11 +451,9 @@ public final class OdmManagerImpl implements OdmManager {
                         objectClassesFromJndi.add(new CaseIgnoreString((String)objectClassesFromJndiEnum.nextElement()));
                     }
                     // OK - checks its the same as the meta-data we have
-                    if (!objectClassesFromJndi.equals(metaData.getObjectClasses())) {
-                        // The items found has classes in addition to those searched for - so ditch it
+                    if(!collectionContainsAll(objectClassesFromJndi, metaData.getObjectClasses())) {
                         return null;
                     }
-
                 } else {
                     throw new InvalidEntryException(String.format("No object classes were returned for class %1$s",
                             managedClass.getName()));
@@ -472,6 +475,16 @@ public final class OdmManagerImpl implements OdmManager {
             
             return result;
         }
+    }
+
+    static boolean collectionContainsAll(Collection<?> collection, Set<?> shouldBePresent) {
+        for (Object o : shouldBePresent) {
+            if(!collection.contains(o)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 }

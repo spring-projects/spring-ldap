@@ -25,10 +25,10 @@ public final class Person {
         this.telephoneNumber = telephoneNumber;
         this.jpegPhoto = jpegPhoto;
         objectClasses = new ArrayList<String>();
-        objectClasses.add("top");
-        objectClasses.add("person");
-        objectClasses.add("organizationalPerson");
         objectClasses.add("inetOrgPerson");
+        objectClasses.add("organizationalPerson");
+        objectClasses.add("person");
+        objectClasses.add("top");
         int size = dn.size();
         if (size > 1) {
             cn = dn.get(size - 1).split("=")[1];
@@ -176,7 +176,7 @@ public final class Person {
         if (objectClasses == null) {
             if (other.objectClasses != null)
                 return false;
-        } else if (desc.size()!=other.desc.size() || !(new HashSet<String>(objectClasses)).equals(new HashSet<String>(other.objectClasses)))
+        } else if (objectClasses.size()!=other.objectClasses.size() || !(new HashSet<String>(objectClasses)).equals(new HashSet<String>(other.objectClasses)))
             return false;
         if (someRandomField == null) {
             if (other.someRandomField != null)
