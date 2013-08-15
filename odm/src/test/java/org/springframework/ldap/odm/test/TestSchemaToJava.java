@@ -1,12 +1,12 @@
 package org.springframework.ldap.odm.test;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ldap.core.DistinguishedName;
@@ -129,10 +129,12 @@ public final class TestSchemaToJava {
     // 4) Use this OdmManager to read an entry from LDAP and check the results.
     //
     @Test
-    @Ignore
     public void generate() throws Exception {
         final String className="Person";
         final String packageName="org.springframework.ldap.odm.testclasses";
+
+        File tempFile = File.createTempFile("test-odm-syntax-to-class-map", ".txt");
+        FileUtils.copyInputStreamToFile(new ClassPathResource("/syntax-to-class-map.txt").getInputStream(), tempFile);
 
         // Add classes dir to class path - needed for compilation
         System.setProperty("java.class.path",
@@ -140,14 +142,16 @@ public final class TestSchemaToJava {
 
         String[] flags=new String[] {
             "--url", "ldap://127.0.0.1:"+port,
-            "--objectclasses", "inetorgperson",
-            "--syntaxmap", "target/test-classes/syntax-to-class-map.txt",
+            "--objectclasses", "organizationalperson",
+            "--syntaxmap", tempFile.getAbsolutePath(),
             "--class", className,
             "--package", packageName,
             "--outputdir", tempDir };
 
         // Generate the code using SchemaToJava
         SchemaToJava.main(flags);
+
+        tempFile.delete();
 
         // Java 5 - we'll use the Java 6 Compiler API once we can drop support for Java 5.
         String javaDir = calculateOutputDirectory(tempDir, packageName);

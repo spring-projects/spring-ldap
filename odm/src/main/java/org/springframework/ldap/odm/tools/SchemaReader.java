@@ -1,15 +1,14 @@
 package org.springframework.ldap.odm.tools;
 
-import java.util.HashSet;
-import java.util.Set;
+import org.springframework.ldap.odm.tools.SyntaxToJavaClass.ClassInfo;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
-
-import org.springframework.ldap.odm.tools.SyntaxToJavaClass.ClassInfo;
+import java.util.HashSet;
+import java.util.Set;
 
 // Processes LDAP Schema
 /* package */ final class SchemaReader {
@@ -55,14 +54,28 @@ import org.springframework.ldap.odm.tools.SyntaxToJavaClass.ClassInfo;
         return result;
     }
 
-    private AttributeSchema createAttributeSchema(String name, DirContext schemaContext) 
+    private AttributeSchema createAttributeSchema(String name, DirContext schemaContext)
         throws NamingException, ClassNotFoundException {
         
         // Get the schema definition
         Attributes attributeSchema = schemaContext.getAttributes("AttributeDefinition/" + name);
 
-        // Get the syntax - ditching any trailing length value that { and whatever follows it
-        String syntax = ((String)attributeSchema.get("SYNTAX").get()).split("\\{")[0];
+        String syntax = null;
+        while(syntax == null) {
+            Attribute syntaxAttribute = attributeSchema.get("SYNTAX");
+            if(syntaxAttribute != null) {
+                syntax = ((String)syntaxAttribute.get()).split("\\{")[0];
+            } else {
+                // Try to recursively retrieve syntax for super definition.
+                Attribute supAttribute = attributeSchema.get("SUP");
+                if(supAttribute == null) {
+                    // Well, at least we tried
+                    throw new IllegalArgumentException("Unable to get syntax definition for attribute " + name);
+                } else {
+                    attributeSchema = schemaContext.getAttributes("AttributeDefinition/" + supAttribute.get());
+                }
+            }
+        }
 
         // Is it binary?
         boolean isBinary=binarySet.contains(syntax);

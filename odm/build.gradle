@@ -18,5 +18,6 @@ dependencies {
 
     testCompile project(":spring-ldap-test"),
                 "junit:junit:$junitVersion",
-                "jdepend:jdepend:2.9.1"
+                "jdepend:jdepend:2.9.1",
+                "commons-io:commons-io:2.4"
 }
