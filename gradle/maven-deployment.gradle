@@ -34,16 +34,16 @@ def customizePom(pom, gradleProject) {
             developer {
                 id = "marthursson"
                 name = "Mattias Hellborg Arthursson"
-                email = "mattias.arthursson@jayway.com"
-                organization = "Jayway"
-                organizationUrl = "http://www.jayway.co"
+                email = "mattias@261consulting.com"
+                organization = "261 Consulting"
+                organizationUrl = "http://www.261consulting.com"
             }
             developer {
                 id = "ulsa"
                 name = "Ulrik Sandberg"
                 email = "ulrik.sandberg@jayway.com"
                 organization = "Jayway"
-                organizationUrl = "http://www.jayway.co"
+                organizationUrl = "http://www.jayway.com"
             }
         }
         contributors {
