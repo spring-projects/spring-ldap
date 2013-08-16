@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,6 @@
 
 package org.springframework.ldap.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-
-import javax.naming.CompositeName;
-import javax.naming.InvalidNameException;
-import javax.naming.Name;
-import javax.naming.ldap.Rdn;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,6 +23,18 @@ import org.springframework.ldap.BadLdapGrammarException;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.support.ListComparator;
 import org.springframework.util.Assert;
+
+import javax.naming.CompositeName;
+import javax.naming.InvalidNameException;
+import javax.naming.Name;
+import javax.naming.ldap.Rdn;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Default implementation of a {@link Name} corresponding to an LDAP path. A
