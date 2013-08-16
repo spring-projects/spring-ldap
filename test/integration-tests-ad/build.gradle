@@ -2,6 +2,7 @@ apply from: JAVA_SCRIPT
 
 dependencies {
     compile 	project(":spring-ldap-test"),
+                project(":spring-ldap-odm"),
                 project(":spring-ldap-core-tiger")
 
     provided	"org.springframework:spring-jdbc:$springVersion",

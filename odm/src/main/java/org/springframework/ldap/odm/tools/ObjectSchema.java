@@ -19,11 +19,18 @@ public final class ObjectSchema {
     private final Set<String> objectClass = new HashSet<String>();
 
     public void addMust(AttributeSchema must) {
+        // if may attributes contain must attribute, remove from may and add to must
+        if (this.may.contains(must)) {
+            this.may.remove(must);
+        }
         this.must.add(must);
     }
 
     public void addMay(AttributeSchema may) {
-        this.may.add(may);
+        // only add may if not in must
+        if (!this.must.contains(may)) {
+            this.may.add(may);
+        }
     }
 
     public void addObjectClass(String objectClass) {

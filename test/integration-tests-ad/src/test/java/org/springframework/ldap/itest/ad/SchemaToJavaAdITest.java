@@ -1,66 +1,52 @@
-package org.springframework.ldap.odm.test;
+package org.springframework.ldap.itest.ad;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.odm.core.impl.OdmManagerImpl;
+import org.springframework.ldap.odm.test.TestLdap;
 import org.springframework.ldap.odm.test.utils.CompilerInterface;
-import org.springframework.ldap.odm.test.utils.GetFreePort;
 import org.springframework.ldap.odm.tools.SchemaToJava;
 import org.springframework.ldap.odm.typeconversion.impl.Converter;
 import org.springframework.ldap.odm.typeconversion.impl.ConverterManagerImpl;
 import org.springframework.ldap.odm.typeconversion.impl.converters.FromStringConverter;
 import org.springframework.ldap.odm.typeconversion.impl.converters.ToStringConverter;
-import org.springframework.ldap.test.LdapTestUtils;
 
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
 
 // Tests the generation of entry Java classes from LDAP schema
-public final class TestSchemaToJava {
+public final class SchemaToJavaAdITest {
     private static final Log LOG = LogFactory.getLog(TestLdap.class);
 
-    private static final DistinguishedName baseName = new DistinguishedName("o=Whoniverse");
+    private static final DistinguishedName baseName = new DistinguishedName("dc=261consulting,dc=local");
 
     private static final String tempDir=System.getProperty("java.io.tmpdir");
+    private static final String USER_DN = "CN=ldaptest,CN=Users,DC=261consulting,DC=local";
+    private static final String PASSWORD = "Buc8xe6AZiewoh7";
 
     // These unit tests require this port to free on localhost
-    private static int port;
+    private static int port = 13636;
 
     private ConverterManagerImpl converterManager;
 
     private LdapContextSource contextSource;
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        // Added because the close down of Apache DS on Linux does
-        // not seem to free up its port.
-        port=GetFreePort.getFreePort();
-
-        // Start an in process LDAP server
-        LdapTestUtils.startEmbeddedServer(port, baseName.toString(), "odm-test");
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-        // Stop the in process LDAP server
-        LdapTestUtils.shutdownEmbeddedServer();
-    }
+    private LdapTemplate ldapTemplate;
 
     @Before
     public void setUp() throws Exception {
@@ -87,22 +73,35 @@ public final class TestSchemaToJava {
 
         // Bind to the directory
         contextSource = new LdapContextSource();
-        contextSource.setUrl("ldap://127.0.0.1:" + port);
-        contextSource.setUserDn("");
-        contextSource.setPassword("");
+        contextSource.setUrl("ldaps://127.0.0.1:" + port);
+        contextSource.setUserDn(USER_DN);
+        contextSource.setPassword(PASSWORD);
         contextSource.setPooled(false);
+        contextSource.setBase("dc=261consulting,dc=local");
+        HashMap<String, String> baseEnvironment = new HashMap<String, String>() {{
+            put("java.naming.ldap.attributes.binary", "thumbnailLogo replPropertyMetaData partialAttributeSet registeredAddress userPassword telexNumber partialAttributeDeletionList mS-DS-ConsistencyGuid attributeCertificateAttribute thumbnailPhoto teletexTerminalIdentifier replUpToDateVector dSASignature objectGUID");
+        }};
+        contextSource.setBaseEnvironmentProperties(baseEnvironment);
         contextSource.afterPropertiesSet();
 
-        // Clear out any old data - and load the test data
-        LdapTestUtils.cleanAndSetup(contextSource, baseName, new ClassPathResource("testdata.ldif"));
+        ldapTemplate = new LdapTemplate(contextSource);
+
+        cleanup();
+
+        DirContextAdapter ctx = new DirContextAdapter("cn=William Hartnell,cn=Users");
+        ctx.setAttributeValues("objectclass", new String[]{"person","inetorgperson","organizationalperson","top"});
+        ctx.setAttributeValue("cn", "William Hartnell");
+        ctx.addAttributeValue("description", "First Doctor");
+        ctx.addAttributeValue("description", "Grumpy");
+        ctx.addAttributeValue("sn", "Hartnell");
+        ctx.addAttributeValue("telephonenumber", "1");
+
+        ldapTemplate.bind(ctx);
     }
 
     @After
-    public void tearDown() throws Exception {
-        LdapTestUtils.shutdownEmbeddedServer();
-
-        contextSource=null;
-        converterManager=null;
+    public void cleanup() {
+        ldapTemplate.unbind("cn=William Hartnell,cn=Users");
     }
 
     // Figure out the path of the created Java file
@@ -129,7 +128,7 @@ public final class TestSchemaToJava {
     // 4) Use this OdmManager to read an entry from LDAP and check the results.
     //
     @Test
-    public void generate() throws Exception {
+    public void verifySchemaToJavaOnAd() throws Exception {
         final String className="Person";
         final String packageName="org.springframework.ldap.odm.testclasses";
 
@@ -141,12 +140,14 @@ public final class TestSchemaToJava {
                 System.getProperty("java.class.path")+File.pathSeparator+"target/classes");
 
         String[] flags=new String[] {
-            "--url", "ldap://127.0.0.1:"+port,
+            "--url", "ldaps://127.0.0.1:" + port,
             "--objectclasses", "organizationalperson",
             "--syntaxmap", tempFile.getAbsolutePath(),
             "--class", className,
             "--package", packageName,
-            "--outputdir", tempDir };
+            "--outputdir", tempDir,
+            "--username", USER_DN,
+            "--password", PASSWORD};
 
         // Generate the code using SchemaToJava
         SchemaToJava.main(flags);
@@ -169,8 +170,7 @@ public final class TestSchemaToJava {
         odmManager.addManagedClass(clazz);
 
         // And try reading from the directory using it
-        DistinguishedName testDn=new DistinguishedName(baseName);
-        testDn.addAll(new DistinguishedName("cn=William Hartnell,ou=Doctors"));
+        DistinguishedName testDn=new DistinguishedName("cn=William Hartnell,cn=Users");
         Object fromDirectory=odmManager.read(clazz, testDn);
 
         LOG.debug(String.format("Read - %1$s", fromDirectory));
@@ -180,25 +180,15 @@ public final class TestSchemaToJava {
         Object dn=getDnMethod.invoke(fromDirectory);
         assertEquals(testDn, dn);
 
-        Method getCnIteratorMethod=clazz.getMethod("getCnIterator");
+        Method getCnIteratorMethod=clazz.getMethod("getCn");
         @SuppressWarnings("unchecked")
-        Iterator<String> cnIterator=(Iterator<String>)getCnIteratorMethod.invoke(fromDirectory);
-        int cnCount=0;
-        while (cnIterator.hasNext()) {
-            cnCount++;
-            assertEquals("William Hartnell", cnIterator.next());
-        }
-        assertEquals(1, cnCount);
+        String cn=(String)getCnIteratorMethod.invoke(fromDirectory);
+        assertEquals("William Hartnell", cn);
 
-        Method telephoneNumberIteratorMethod=clazz.getMethod("getTelephoneNumberIterator");
+        Method telephoneNumberIteratorMethod=clazz.getMethod("getTelephoneNumber");
         @SuppressWarnings("unchecked")
-        Iterator<Integer> telephoneNumberIterator=(Iterator<Integer>)telephoneNumberIteratorMethod.invoke(fromDirectory);
-        int telephoneNumberCount=0;
-        while (telephoneNumberIterator.hasNext()) {
-            telephoneNumberCount++;
-            assertEquals(Integer.valueOf(1), telephoneNumberIterator.next());
-        }
-        assertEquals(1, telephoneNumberCount);
+        String telephoneNumber=(String)telephoneNumberIteratorMethod.invoke(fromDirectory);
+        assertEquals("1", telephoneNumber);
 
         // Reread and check whether equals and hashCode are at least sane
         Object fromDirectory2=odmManager.read(clazz, testDn);

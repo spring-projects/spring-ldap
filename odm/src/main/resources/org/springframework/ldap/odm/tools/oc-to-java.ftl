@@ -16,43 +16,67 @@
     <#list attributes as attribute>
        <#local binary=attribute.isBinary?string(", type=Type.BINARY", "")>
 
-       <#lt/>   @Attribute(name="${attribute.name}", syntax="${attribute.syntax}"${binary})
+       <#lt/>   @Attribute(name="${attribute.javaName}", syntax="${attribute.syntax}"${binary})
        <#if attribute.isMultiValued>
-          <#lt/>   private List<${attribute.scalarType}> ${attribute.name}=new ArrayList<${attribute.scalarType}>();
+          <#lt/>   private List<${attribute.scalarType}> ${attribute.javaName}=new ArrayList<${attribute.scalarType}>();
        <#else>
-             <#lt/>   private ${attribute.scalarType} ${attribute.name};
+             <#lt/>   private ${attribute.scalarType} ${attribute.javaName};
        </#if>
     </#list>
+</#macro>
+<#macro binaryAttributeList must may>
+/**
+List of binary attributes to use in context source baseEnvironmentProperties property
+If you don't set this property and binary attribute is not one of the well-known binary attributes
+the value will be converted to a String and conversion back to byte[] property will fail.
+	<entry>
+    		<key>
+    			<value>java.naming.ldap.attributes.binary</value>
+    		</key>
+    		<value><#rt/>
+        <#list must as attribute>
+              <#if attribute.isBinary>
+                      <#lt/>${attribute.name} <#rt/>
+                   </#if>
+            </#list>
+        <#list may as attribute>
+              <#if attribute.isBinary>
+                      <#lt/>${attribute.name} <#rt/>
+                   </#if>
+            </#list>
+        <#lt/></value>
+    	</entry>
+<#nt>*/
 </#macro>
 
 <#macro getSet attributes>
     <#list attributes as attribute>
-        <#if attribute.name!="objectClass">
+        <#if attribute.javaName!="objectClass">
             <#if attribute.isMultiValued>
-                <#lt/>   public void add${attribute.name?cap_first}(${attribute.scalarType} ${attribute.name}) {
-                <#lt/>      this.${attribute.name}.add(${attribute.name});
+                <#lt/>   public void add${attribute.javaName?cap_first}(${attribute.scalarType} ${attribute.javaName}) {
+                <#lt/>      this.${attribute.javaName}.add(${attribute.javaName});
                 <#lt/>   }
 
-                <#lt/>   public void remove${attribute.name?cap_first}(${attribute.scalarType} ${attribute.name}) {
-                <#lt/>      this.${attribute.name}.remove(${attribute.name});
+                <#lt/>   public void remove${attribute.javaName?cap_first}(${attribute.scalarType} ${attribute.javaName}) {
+                <#lt/>      this.${attribute.javaName}.remove(${attribute.javaName});
                 <#lt/>   }
 
-                <#lt/>   public Iterator<${attribute.scalarType}> get${attribute.name?cap_first}Iterator() {
-                <#lt/>      return ${attribute.name}.iterator();
+                <#lt/>   public Iterator<${attribute.scalarType}> get${attribute.javaName?cap_first}Iterator() {
+                <#lt/>      return ${attribute.javaName}.iterator();
                 <#lt/>   }
 
             <#else>
-                   <#lt/>   public ${attribute.scalarType} get${attribute.name?cap_first}() {
-                   <#lt/>      return ${attribute.name};
+                   <#lt/>   public ${attribute.scalarType} get${attribute.javaName?cap_first}() {
+                   <#lt/>      return ${attribute.javaName};
                    <#lt/>   }
 
-                <#lt/>   public void set${attribute.name?cap_first}(${attribute.scalarType} ${attribute.name}) {
-                   <#lt/>      this.${attribute.name}=${attribute.name};
+                <#lt/>   public void set${attribute.javaName?cap_first}(${attribute.scalarType} ${attribute.javaName}) {
+                   <#lt/>      this.${attribute.javaName}=${attribute.javaName};
                    <#lt/>   }
             </#if>
         <#else>
-            <#lt/>   public Iterator<String> get${attribute.name?cap_first}Iterator() {
-            <#lt/>      return Collections.unmodifiableList(${attribute.name}).iterator();
+            <#lt/>   public Iterator<String> get${attribute.javaName?cap_first}Iterator() {
+            <#lt/>      return Collections.unmodifiableList(${attribute.javaName}).iterator();
             <#lt/>   }
 
         </#if>
@@ -61,13 +85,13 @@
 
 <#macro equalsCode attributes>
    <#list attributes as attribute>
-      <#lt/>         append(${attribute.name}, other.${attribute.name}).
+      <#lt/>         append(${attribute.javaName}, other.${attribute.javaName}).
    </#list>
 </#macro>
 
 <#macro hashCode attributes>
    <#list attributes as attribute>
-      <#lt/>         append(${attribute.name}).
+      <#lt/>         append(${attribute.javaName}).
    </#list>
 </#macro>
 
@@ -102,6 +126,8 @@ import org.springframework.ldap.odm.annotations.Id;
 </#list>
 * </ul>
 */
+
+<@binaryAttributeList schema.must schema.may/>
 @Entry(objectClasses={<@commaSeparatedList schema.objectClass/>})
 public final class ${class} {
 
@@ -125,10 +151,10 @@ public final class ${class} {
    <#lt/>      return new ToStringBuilder(this).
    <#lt/>         append("dn", dn).
    <#list schema.must as attribute>
-   <#lt/>         append("${attribute.name}", ${attribute.name}).
+   <#lt/>         append("${attribute.javaName}", ${attribute.javaName}).
    </#list>
    <#list schema.may as attribute>
-   <#lt/>         append("${attribute.name}", ${attribute.name}).
+   <#lt/>         append("${attribute.javaName}", ${attribute.javaName}).
    </#list>
    <#lt/>         toString();
    <#lt/>   }

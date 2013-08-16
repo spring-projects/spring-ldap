@@ -1,5 +1,7 @@
 package org.springframework.ldap.odm.tools;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Simple value class to hold the schema of an attribute.  
  * <p>
@@ -52,6 +54,10 @@ public final class AttributeSchema {
 
     public String getName() {
         return name;
+    }
+
+    public String getJavaName() {
+        return StringUtils.replace(name, "-", "");
     }
 
     public String getSyntax() {
