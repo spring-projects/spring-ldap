@@ -120,7 +120,7 @@ task distZip(type: Zip, dependsOn: [docsZip]) {
 
 
     from("src/dist") {
-        include "readme.txt"
+        include "readme.md"
         include "license.txt"
         include "notice.txt"
         into "${baseDir}"
