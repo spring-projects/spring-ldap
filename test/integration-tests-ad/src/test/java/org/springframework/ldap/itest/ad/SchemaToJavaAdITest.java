@@ -12,8 +12,6 @@ import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.odm.core.impl.OdmManagerImpl;
-import org.springframework.ldap.odm.test.TestLdap;
-import org.springframework.ldap.odm.test.utils.CompilerInterface;
 import org.springframework.ldap.odm.tools.SchemaToJava;
 import org.springframework.ldap.odm.typeconversion.impl.Converter;
 import org.springframework.ldap.odm.typeconversion.impl.ConverterManagerImpl;
@@ -32,7 +30,7 @@ import static org.junit.Assert.assertEquals;
 
 // Tests the generation of entry Java classes from LDAP schema
 public final class SchemaToJavaAdITest {
-    private static final Log LOG = LogFactory.getLog(TestLdap.class);
+    private static final Log LOG = LogFactory.getLog(SchemaToJavaAdITest.class);
 
     private static final DistinguishedName baseName = new DistinguishedName("dc=261consulting,dc=local");
 
