@@ -1,3 +1,6 @@
+jar {
+    manifest.attributes["Main-Class"] = "org.springframework.ldap.odm.tools.SchemaToJava"
+}
 
 dependencies {
     compile project(":spring-ldap-core"),

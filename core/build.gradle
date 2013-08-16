@@ -3,6 +3,14 @@ targetCompatibility = '1.4'
 
 apply from: 'javacc.gradle'
 
+idea.module.excludeDirs = [
+        file('.gradle'),
+        file('build/javacc'),
+        file('build/classes'),
+        file('build/tmp'),
+        file('build/dependency-cache'),
+        file('build/libs')]
+
 dependencies {
     compile "commons-logging:commons-logging:$commonsLoggingVersion",
              "commons-lang:commons-lang:$commonsLangVersion",

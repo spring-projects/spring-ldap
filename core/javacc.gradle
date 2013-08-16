@@ -61,3 +61,5 @@ sourcesJar {
 
 sourcesJar.dependsOn javacc
 compileJava.dependsOn javacc
+ideaModule.dependsOn javacc
+eclipseClasspath.dependsOn javacc

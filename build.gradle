@@ -16,7 +16,7 @@ ext.JAVA_MODULE_SCRIPT = "${GRADLE_SCRIPT_DIR}/java-module.gradle"
 ext.MAVEN_DEPLOYMENT_SCRIPT = "${GRADLE_SCRIPT_DIR}/maven-deployment.gradle"
 ext.JAVA_SCRIPT = "${GRADLE_SCRIPT_DIR}/java.gradle"
 
-ext.coreModules = subprojects.findAll { p-> (!p.name.contains("test") && !p.name.contains("sample")) || p.name == "spring-ldap-test" }
+ext.coreModules = subprojects.findAll { p-> (!p.name.contains("test") && !p.name.contains("sample") && !p.name.contains("sandbox")) || p.name == "spring-ldap-test" }
 
 configure(allprojects) {
     apply plugin: 'propdeps'

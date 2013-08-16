@@ -19,7 +19,7 @@ jar {
     manifest.attributes["Implementation-Title"] = project.name
     manifest.attributes["Implementation-Version"] = project.version
 
-    from("${rootProject.projectDir}/src/dist") {
+    from("${rootProject.projectDir}") {
         include "license.txt"
         include "notice.txt"
         into "META-INF"
