@@ -44,6 +44,8 @@ configure(subprojects - coreModules) {
     sonarRunner {
         skipProject = true
     }
+
+    tasks.findByPath("artifactoryPublish")?.enabled = false
 }
 
 description = "Spring LDAP"
