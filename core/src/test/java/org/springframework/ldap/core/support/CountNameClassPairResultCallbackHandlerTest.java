@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,30 +15,23 @@
  */
 package org.springframework.ldap.core.support;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import javax.naming.directory.SearchResult;
 
-import org.springframework.ldap.core.support.CountNameClassPairCallbackHandler;
+import static org.junit.Assert.assertEquals;
 
+public class CountNameClassPairResultCallbackHandlerTest {
 
-import junit.framework.TestCase;
-
-public class CountNameClassPairResultCallbackHandlerTest extends TestCase {
-
-    
     private CountNameClassPairCallbackHandler tested;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        
+    @Before
+    public void setUp() throws Exception {
         tested = new CountNameClassPairCallbackHandler();
     }
 
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        
-        tested = null;
-    }
-
+    @Test
     public void testHandleSearchResult() throws Exception {
         SearchResult dummy = new SearchResult(null, null, null);
         tested.handleNameClassPair(dummy);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,52 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.ldap.transaction.compensating;
 
-import org.easymock.MockControl;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.transaction.compensating.RenameOperationExecutor;
 
-import junit.framework.TestCase;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-public class RenameOperationExecutorTest extends TestCase {
-    private MockControl ldapOperationsControl;
-
+public class RenameOperationExecutorTest {
     private LdapOperations ldapOperationsMock;
 
-    protected void setUp() throws Exception {
-        ldapOperationsControl = MockControl.createControl(LdapOperations.class);
-        ldapOperationsMock = (LdapOperations) ldapOperationsControl.getMock();
+    @Before
+    public void setUp() throws Exception {
+        ldapOperationsMock = mock(LdapOperations.class);;
     }
 
-    protected void tearDown() throws Exception {
-        ldapOperationsControl = null;
-        ldapOperationsMock = null;
-    }
 
-    protected void replay() {
-        ldapOperationsControl.replay();
-    }
 
-    protected void verify() {
-        ldapOperationsControl.verify();
-    }
-
+    @Test
     public void testPerformOperation() {
         DistinguishedName expectedNewName = new DistinguishedName("ou=newOu");
         DistinguishedName expectedOldName = new DistinguishedName("ou=someou");
         RenameOperationExecutor tested = new RenameOperationExecutor(
                 ldapOperationsMock, expectedOldName, expectedNewName);
 
-        ldapOperationsMock.rename(expectedOldName, expectedNewName);
-
-        replay();
         // Perform test.
         tested.performOperation();
-        verify();
+
+        verify(ldapOperationsMock).rename(expectedOldName, expectedNewName);
     }
 
+    @Test
     public void testCommit() {
         DistinguishedName expectedNewName = new DistinguishedName("ou=newOu");
         DistinguishedName expectedOldName = new DistinguishedName("ou=someou");
@@ -66,25 +56,23 @@ public class RenameOperationExecutorTest extends TestCase {
                 ldapOperationsMock, expectedOldName, expectedNewName);
 
         // Nothing to do for this operation.
+        verifyNoMoreInteractions(ldapOperationsMock);
 
-        replay();
         // Perform test.
         tested.commit();
-        verify();
     }
 
+    @Test
     public void testRollback() {
         DistinguishedName expectedNewName = new DistinguishedName("ou=newOu");
         DistinguishedName expectedOldName = new DistinguishedName("ou=someou");
         RenameOperationExecutor tested = new RenameOperationExecutor(
                 ldapOperationsMock, expectedOldName, expectedNewName);
 
-        ldapOperationsMock.rename(expectedNewName, expectedOldName);
-
-        replay();
         // Perform test.
         tested.rollback();
-        verify();
+
+        verify(ldapOperationsMock).rename(expectedNewName, expectedOldName);
     }
 
 }

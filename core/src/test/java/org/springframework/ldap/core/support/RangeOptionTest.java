@@ -16,18 +16,21 @@
 
 package org.springframework.ldap.core.support;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * IncrementalAttributesMapper Tester.
  *
  * @author Marius Scurtescu
  */
-public class RangeOptionTest extends TestCase {
-    public RangeOptionTest(String name) {
-        super(name);
-    }
+public class RangeOptionTest  {
 
+    @Test
     public void testConstructorInvalid() {
         try {
             new RangeOption(101, 100);
@@ -62,6 +65,7 @@ public class RangeOptionTest extends TestCase {
         }
     }
 
+    @Test
     public void testToString() throws Exception {
         RangeOption range = new RangeOption(0, 100);
         assertEquals("Range=0-100", range.toString());
@@ -73,6 +77,7 @@ public class RangeOptionTest extends TestCase {
         assertEquals("Range=0", range.toString());
     }
 
+    @Test
     public void testParse() throws Exception {
         RangeOption range = RangeOption.parse("Range=0-100");
         assertEquals(0, range.getInitial());
@@ -95,6 +100,7 @@ public class RangeOptionTest extends TestCase {
         assertEquals(RangeOption.TERMINAL_MISSING, range.getTerminal());
     }
 
+    @Test
     public void testParseInvalid() {
         assertNull(RangeOption.parse("Range=10-"));
         assertNull(RangeOption.parse("Range=10-a"));
@@ -105,6 +111,7 @@ public class RangeOptionTest extends TestCase {
         assertNull(RangeOption.parse("Range=10-100;lang-de"));
     }
 
+    @Test
     public void testCompare() {
         RangeOption range1 = RangeOption.parse("Range=10-500");
         RangeOption range2 = RangeOption.parse("Range=10-500");
@@ -132,6 +139,7 @@ public class RangeOptionTest extends TestCase {
         assertTrue(range2.compareTo(range1) < 0);
     }
 
+    @Test
     public void testCompareInvalid() {
         RangeOption range1 = RangeOption.parse("Range=10-500");
         RangeOption range2 = RangeOption.parse("Range=11-500");
@@ -167,6 +175,7 @@ public class RangeOptionTest extends TestCase {
         }
     }
 
+    @Test
     public void testNext() {
         RangeOption range = RangeOption.parse("Range=0-100");
 

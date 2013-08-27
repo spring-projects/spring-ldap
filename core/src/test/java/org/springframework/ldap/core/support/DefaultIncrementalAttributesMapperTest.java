@@ -16,12 +16,18 @@
 
 package org.springframework.ldap.core.support;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * IncrementalAttributesMapper Tester.
@@ -29,21 +35,15 @@ import javax.naming.directory.BasicAttributes;
  * @author Marius Scurtescu
  * @author Mattias Hellborg Arthursson
  */
-public class DefaultIncrementalAttributesMapperTest extends TestCase {
+public class DefaultIncrementalAttributesMapperTest {
     private DefaultIncrementalAttributesMapper tested;
 
-    public DefaultIncrementalAttributesMapperTest(String name) {
-        super(name);
-    }
-
+    @Before
     public void setUp() throws Exception {
         tested = new DefaultIncrementalAttributesMapper("member");
     }
 
-    public void tearDown() throws Exception {
-        tested = null;
-    }
-
+    @Test
     public void testGetAttributesArray() throws Exception {
         String[] attributes = tested.getAttributesForLookup();
 
@@ -58,6 +58,7 @@ public class DefaultIncrementalAttributesMapperTest extends TestCase {
         assertEquals("member;Range=0-10", attributes[0]);
     }
 
+    @Test
     public void testGetAttributesArrayWithTwoAttributes() {
         tested = new DefaultIncrementalAttributesMapper(20, new String[]{"member", "cn"});
         String[] attributes = tested.getAttributesForLookup();
@@ -68,6 +69,7 @@ public class DefaultIncrementalAttributesMapperTest extends TestCase {
         assertEquals("cn;Range=0-20", attributes[1]);
     }
 
+    @Test
     public void testLoopEmpty() throws Exception {
         assertTrue(tested.hasMore());
 
@@ -79,6 +81,7 @@ public class DefaultIncrementalAttributesMapperTest extends TestCase {
         assertNull(tested.getValues("member"));
     }
 
+    @Test
     public void testLoop() throws Exception {
         Attributes attributes = createAttributes("member", new RangeOption(0, 10));
 
@@ -95,6 +98,7 @@ public class DefaultIncrementalAttributesMapperTest extends TestCase {
         assertEquals(16, tested.getValues("member").size());
     }
 
+    @Test
     public void test1LoopWithPageSizeExact() throws Exception {
         tested = new DefaultIncrementalAttributesMapper(10, "member");
 
@@ -106,6 +110,7 @@ public class DefaultIncrementalAttributesMapperTest extends TestCase {
         assertEquals(11, tested.getValues("member").size());
     }
 
+    @Test
     public void test2LoopsWithPageSizeExact() throws Exception {
         tested = new DefaultIncrementalAttributesMapper(20, "member");
 
@@ -124,6 +129,7 @@ public class DefaultIncrementalAttributesMapperTest extends TestCase {
         assertEquals(31, tested.getValues("member").size());
     }
 
+    @Test
     public void test2LoopsWithPageSize() throws Exception {
         tested = new DefaultIncrementalAttributesMapper(20, "member");
 
@@ -142,6 +148,7 @@ public class DefaultIncrementalAttributesMapperTest extends TestCase {
         assertEquals(16, tested.getValues("member").size());
     }
 
+    @Test
     public void testLoopWithTwoRangedAttributesLoopOnOneAttribute() throws Exception {
         tested = new DefaultIncrementalAttributesMapper(10, new String[]{"member", "cn"});
 
@@ -163,6 +170,7 @@ public class DefaultIncrementalAttributesMapperTest extends TestCase {
         assertFalse(tested.hasMore());
         assertEquals(11, tested.getValues("member").size());
     }
+
     private Attributes createAttributes(String attributeName, RangeOption range) {
         return createAttributes(attributeName, range, range.getTerminal() - range.getInitial() + 1);
     }
@@ -174,7 +182,6 @@ public class DefaultIncrementalAttributesMapperTest extends TestCase {
         attributes.put(attribute);
 
         return attributes;
-
     }
 
     private Attribute createRangeAttribute(String attributeName, RangeOption range, int valueCnt) {

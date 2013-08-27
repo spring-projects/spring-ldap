@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,18 @@
 
 package org.springframework.ldap.filter;
 
-import org.springframework.ldap.filter.WhitespaceWildcardsFilter;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for the WhitespaceWildcardsFilter class.
  * 
  * @author Adam Skogman
  */
-public class WhitespaceWildcardsFilterTest extends TestCase {
+public class WhitespaceWildcardsFilterTest {
 
-    public WhitespaceWildcardsFilterTest(String name) {
-        super(name);
-    }
-
+    @Test
     public void testEncodeValue_blank() {
 
         // blank
@@ -45,6 +42,7 @@ public class WhitespaceWildcardsFilterTest extends TestCase {
 
     }
 
+    @Test
     public void testEncodeValue_normal() {
 
         assertEquals("*foo*", new WhitespaceWildcardsFilter("", "foo")
@@ -58,6 +56,7 @@ public class WhitespaceWildcardsFilterTest extends TestCase {
                 " \t foo \n bar \r ").getEncodedValue());
     }
 
+    @Test
     public void testEncodeValue_escape() {
 
         assertEquals("*\\28\\2a\\29*", new WhitespaceWildcardsFilter("", "(*)")

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,16 @@
 
 package org.springframework.ldap.core.support;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.ldap.core.DistinguishedName;
+
+import javax.naming.Context;
 import java.util.HashMap;
 import java.util.Hashtable;
 
-import javax.naming.Context;
-
-import junit.framework.TestCase;
-
-import org.springframework.ldap.core.DistinguishedName;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * Unit tests for the LdapContextSource class.
@@ -31,28 +33,21 @@ import org.springframework.ldap.core.DistinguishedName;
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  */
-public class LdapContextSourceTest extends TestCase {
+public class LdapContextSourceTest {
 
 	private LdapContextSource tested;
 
-	protected void setUp() throws Exception {
+    @Before
+	public void setUp() throws Exception {
 		tested = new LdapContextSource();
 	}
 
-	protected void tearDown() throws Exception {
-		tested = null;
-	}
-
+    @Test(expected = IllegalArgumentException.class)
 	public void testAfterPropertiesSet_NoUrl() throws Exception {
-		try {
-			tested.afterPropertiesSet();
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertTrue(true);
-		}
-	}
+        tested.afterPropertiesSet();
+    }
 
+    @Test(expected = IllegalArgumentException.class)
 	public void testAfterPropertiesSet_BaseAndTooEarlyJdk() throws Exception {
 		tested = new LdapContextSource() {
 			String getJdkVersion() {
@@ -62,15 +57,10 @@ public class LdapContextSourceTest extends TestCase {
 
 		tested.setUrl("http://ldap.example.com:389");
 		tested.setBase("dc=jayway,dc=se");
-		try {
-			tested.afterPropertiesSet();
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertTrue(true);
-		}
-	}
+        tested.afterPropertiesSet();
+    }
 
+    @Test
 	public void testGetAnonymousEnv() throws Exception {
 		tested.setBase("dc=example,dc=se");
 		tested.setUrl("ldap://ldap.example.com:389");
@@ -101,6 +91,7 @@ public class LdapContextSourceTest extends TestCase {
 		assertEquals(new DistinguishedName("dc=example,dc=se"), env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
 	}
 
+    @Test
 	public void testGetAnonymousEnvWithNoBaseSet() throws Exception {
 		tested.setUrl("ldap://ldap.example.com:389");
 		tested.afterPropertiesSet();
@@ -111,6 +102,7 @@ public class LdapContextSourceTest extends TestCase {
 		assertNull(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
 	}
 
+    @Test
 	public void testGetAnonymousEnvWithBaseEnvironment() throws Exception {
 		tested.setUrl("ldap://ldap.example.com:389");
 		HashMap map = new HashMap();
@@ -122,6 +114,7 @@ public class LdapContextSourceTest extends TestCase {
 		assertNull(env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
 	}
 
+    @Test
 	public void testGetAnonymousEnvWithPoolingInBaseEnvironmentAndPoolingOff() throws Exception {
 		tested.setUrl("ldap://ldap.example.com:389");
 		HashMap map = new HashMap();
@@ -134,6 +127,7 @@ public class LdapContextSourceTest extends TestCase {
 		assertNull(env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
 	}
 
+    @Test
 	public void testGetAnonymousEnvWithEmptyBaseSet() throws Exception {
 		tested.setUrl("ldap://ldap.example.com:389");
 		tested.setBase(null);
@@ -145,6 +139,7 @@ public class LdapContextSourceTest extends TestCase {
 		assertNull(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
 	}
 
+    @Test
 	public void testOldJdkWithNoBaseSetShouldWork() throws Exception {
 		tested = new LdapContextSource() {
 			String getJdkVersion() {
@@ -159,6 +154,7 @@ public class LdapContextSourceTest extends TestCase {
 		assertNull(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
 	}
 
+    @Test(expected = IllegalArgumentException.class)
 	public void testOldJdkWithBaseSetShouldNotWork() throws Exception {
 		tested = new LdapContextSource() {
 			String getJdkVersion() {
@@ -167,15 +163,10 @@ public class LdapContextSourceTest extends TestCase {
 		};
 		tested.setUrl("ldap://ldap.example.com:389");
 		tested.setBase("dc=example,dc=com");
-		try {
-			tested.afterPropertiesSet();
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertTrue(true);
-		}
-	}
+        tested.afterPropertiesSet();
+    }
 
+    @Test
 	public void testOldJdkWithBaseSetToEmptyPathShouldWork() throws Exception {
 		tested = new LdapContextSource() {
 			String getJdkVersion() {
@@ -191,6 +182,7 @@ public class LdapContextSourceTest extends TestCase {
 		assertNull(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
 	}
 
+    @Test
 	public void testGetAuthenticatedEnv() throws Exception {
 		tested.setBase("dc=example,dc=se");
 		tested.setUrl("ldap://ldap.example.com:389");
@@ -209,6 +201,7 @@ public class LdapContextSourceTest extends TestCase {
 		assertEquals(new DistinguishedName("dc=example,dc=se"), env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
 	}
 
+    @Test
 	public void testGetAnonymousEnvWhenCacheIsOff() throws Exception {
 		tested.setBase("dc=example,dc=se");
 		tested.setUrl("ldap://ldap.example.com:389");

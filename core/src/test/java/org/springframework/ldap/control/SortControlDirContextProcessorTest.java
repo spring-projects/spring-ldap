@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,61 +15,44 @@
  */
 package org.springframework.ldap.control;
 
-import java.io.IOException;
+import com.sun.jndi.ldap.Ber;
+import com.sun.jndi.ldap.BerDecoder;
+import com.sun.jndi.ldap.BerEncoder;
+import com.sun.jndi.ldap.ctl.DirSyncResponseControl;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
 import javax.naming.ldap.SortControl;
 import javax.naming.ldap.SortResponseControl;
+import java.io.IOException;
 
-import junit.framework.TestCase;
-
-import org.easymock.MockControl;
-
-import com.sun.jndi.ldap.Ber;
-import com.sun.jndi.ldap.BerDecoder;
-import com.sun.jndi.ldap.BerEncoder;
-import com.sun.jndi.ldap.ctl.DirSyncResponseControl;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for the SortControlDirContextProcessor class.
  * 
  * @author Ulrik Sandberg
  */
-public class SortControlDirContextProcessorTest extends TestCase {
-
-    private MockControl ldapContextControl;
+public class SortControlDirContextProcessorTest {
 
     private LdapContext ldapContextMock;
 
 	private SortControlDirContextProcessor tested;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-
+    @Before
+    public void setUp() throws Exception {
         tested = new SortControlDirContextProcessor("key");
 
         // Create ldapContext mock
-        ldapContextControl = MockControl.createControl(LdapContext.class);
-        ldapContextMock = (LdapContext) ldapContextControl.getMock();
+        ldapContextMock = mock(LdapContext.class);
     }
 
-    protected void tearDown() throws Exception {
-        super.tearDown();
-
-        tested = null;
-        ldapContextControl = null;
-        ldapContextMock = null;
-    }
-
-    protected void replay() {
-        ldapContextControl.replay();
-    }
-
-    protected void verify() {
-        ldapContextControl.verify();
-    }
-
+    @Test
     public void testCreateRequestControl() throws Exception {
         SortControl result = (SortControl) tested.createRequestControl();
         assertNotNull(result);
@@ -77,6 +60,7 @@ public class SortControlDirContextProcessorTest extends TestCase {
         assertEquals(9, result.getEncodedValue().length);
     }
 
+    @Test
     public void testPostProcess() throws Exception {
         byte sortResult = 0; // success
 
@@ -84,19 +68,15 @@ public class SortControlDirContextProcessorTest extends TestCase {
         SortResponseControl control = new SortResponseControl(
                 "dummy", true, value);
 
-        ldapContextControl.expectAndDefaultReturn(ldapContextMock
-                .getResponseControls(), new Control[] { control });
-
-        replay();
+        when(ldapContextMock.getResponseControls()).thenReturn( new Control[]{control});
 
         tested.postProcess(ldapContextMock);
-
-        verify();
 
         assertEquals(true, tested.isSorted());
         assertEquals(0, tested.getResultCode());
     }
 
+    @Test
     public void testPostProcess_NonSuccess() throws Exception {
         byte sortResult = 1;
 
@@ -104,19 +84,15 @@ public class SortControlDirContextProcessorTest extends TestCase {
         SortResponseControl control = new SortResponseControl(
                 "dummy", true, value);
 
-        ldapContextControl.expectAndDefaultReturn(ldapContextMock
-                .getResponseControls(), new Control[] { control });
-
-        replay();
+        when(ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
 
         tested.postProcess(ldapContextMock);
-
-        verify();
 
         assertEquals(false, tested.isSorted());
         assertEquals(1, tested.getResultCode());
     }
 
+    @Test
     public void testPostProcess_InvalidResponseControl() throws Exception {
         int resultSize = 50;
         byte pageSize = 8;
@@ -129,18 +105,14 @@ public class SortControlDirContextProcessorTest extends TestCase {
         DirSyncResponseControl control = new DirSyncResponseControl("dummy",
                 true, cookie);
 
-        ldapContextControl.expectAndDefaultReturn(ldapContextMock
-                .getResponseControls(), new Control[] { control });
-
-        replay();
+        when(ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
 
         tested.postProcess(ldapContextMock);
-
-        verify();
 
         assertEquals(false, tested.isSorted());
     }
 
+    @Test
     public void testBerDecoding() throws Exception {
         int sortResult = 53; // unwilling to perform
         byte[] encoded = encodeValue(sortResult);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,39 +16,31 @@
 
 package org.springframework.ldap.filter;
 
-import org.springframework.ldap.filter.AndFilter;
-import org.springframework.ldap.filter.EqualsFilter;
-
 import com.gargoylesoftware.base.testing.EqualsTester;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Adam Skogman
  */
-public class AndFilterTest extends TestCase {
+public class AndFilterTest {
 
-    /**
-     * Constructor for AndFilterTest.
-     * 
-     * @param name
-     */
-    public AndFilterTest(String name) {
-        super(name);
-    }
-
+    @Test
     public void testZero() {
         AndFilter aq = new AndFilter();
 
         assertEquals("", aq.encode());
     }
 
+    @Test
     public void testOne() {
         AndFilter aq = new AndFilter().and(new EqualsFilter("a", "b"));
 
         assertEquals("(a=b)", aq.encode());
     }
 
+    @Test
     public void testTwo() {
         AndFilter aq = new AndFilter().and(new EqualsFilter("a", "b")).and(
                 new EqualsFilter("c", "d"));
@@ -56,6 +48,7 @@ public class AndFilterTest extends TestCase {
         assertEquals("(&(a=b)(c=d))", aq.encode());
     }
 
+    @Test
     public void testThree() {
         AndFilter aq = new AndFilter().and(new EqualsFilter("a", "b")).and(
                 new EqualsFilter("c", "d")).and(new EqualsFilter("e", "f"));
@@ -63,6 +56,7 @@ public class AndFilterTest extends TestCase {
         assertEquals("(&(a=b)(c=d)(e=f))", aq.encode());
     }
 
+    @Test
     public void testEquals() {
 		EqualsFilter filter = new EqualsFilter("a", "b");
 		AndFilter originalObject = new AndFilter().and(filter);

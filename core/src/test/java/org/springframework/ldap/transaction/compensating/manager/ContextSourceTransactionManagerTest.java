@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.ldap.transaction.compensating.manager;
 
-import java.sql.Connection;
-
-import javax.naming.directory.DirContext;
-import javax.sql.DataSource;
-
-import junit.framework.TestCase;
-
-import org.easymock.MockControl;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.ldap.UncategorizedLdapException;
 import org.springframework.ldap.core.ContextSource;
@@ -39,79 +32,49 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.transaction.support.DefaultTransactionStatus;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-public class ContextSourceTransactionManagerTest extends TestCase {
+import javax.naming.directory.DirContext;
+import javax.sql.DataSource;
+import java.sql.Connection;
 
-	private MockControl contextSourceControl;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+public class ContextSourceTransactionManagerTest {
 
 	private ContextSource contextSourceMock;
-
-	private MockControl contextControl;
-
 	private DirContext contextMock;
 
 	private ContextSourceTransactionManager tested;
-
-	private MockControl transactionDefinitionControl;
-
-	private MockControl transactionDataManagerControl;
-
 	private CompensatingTransactionOperationManager transactionDataManagerMock;
 
 	private TransactionDefinition transactionDefinitionMock;
 
-	private MockControl renamingStrategyControl;
-
 	private TempEntryRenamingStrategy renamingStrategyMock;
 
-	protected void setUp() throws Exception {
-		super.setUp();
+    @Before
+	public void setUp() throws Exception {
 		if (TransactionSynchronizationManager.isSynchronizationActive()) {
 			TransactionSynchronizationManager.clearSynchronization();
 		}
 
-		contextSourceControl = MockControl.createControl(ContextSource.class);
-		contextSourceMock = (ContextSource) contextSourceControl.getMock();
-
-		contextControl = MockControl.createControl(DirContext.class);
-		contextMock = (DirContext) contextControl.getMock();
-
-		transactionDefinitionControl = MockControl.createControl(TransactionDefinition.class);
-		transactionDefinitionMock = (TransactionDefinition) transactionDefinitionControl.getMock();
-
-		transactionDataManagerControl = MockControl.createControl(CompensatingTransactionOperationManager.class);
-		transactionDataManagerMock = (CompensatingTransactionOperationManager) transactionDataManagerControl.getMock();
-
-		renamingStrategyControl = MockControl.createControl(TempEntryRenamingStrategy.class);
-		renamingStrategyMock = (TempEntryRenamingStrategy) renamingStrategyControl.getMock();
+		contextSourceMock = mock(ContextSource.class);
+		contextMock = mock(DirContext.class);
+		transactionDefinitionMock = mock(TransactionDefinition.class);
+		transactionDataManagerMock = mock(CompensatingTransactionOperationManager.class);
+		renamingStrategyMock = mock(TempEntryRenamingStrategy.class);
 
 		tested = new ContextSourceTransactionManager();
 		tested.setContextSource(contextSourceMock);
 		tested.setRenamingStrategy(renamingStrategyMock);
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-
-		contextControl = null;
-		contextMock = null;
-
-		contextSourceControl = null;
-		contextSourceMock = null;
-
-		transactionDefinitionControl = null;
-		transactionDefinitionMock = null;
-
-		transactionDataManagerControl = null;
-		transactionDataManagerMock = null;
-
-		renamingStrategyControl = null;
-		renamingStrategyMock = null;
-
-		if (TransactionSynchronizationManager.isSynchronizationActive()) {
-			TransactionSynchronizationManager.clearSynchronization();
-		}
-	}
-
+    @Test
 	public void testDoGetTransaction() {
 		Object result = tested.doGetTransaction();
 
@@ -121,6 +84,7 @@ public class ContextSourceTransactionManagerTest extends TestCase {
 		assertNull(transactionObject.getHolder());
 	}
 
+    @Test
 	public void testDoGetTransactionTransactionActive() {
 		CompensatingTransactionHolderSupport expectedContextHolder = new DirContextHolder(null, null);
 		TransactionSynchronizationManager.bindResource(contextSourceMock, expectedContextHolder);
@@ -128,52 +92,44 @@ public class ContextSourceTransactionManagerTest extends TestCase {
 		assertSame(expectedContextHolder, ((CompensatingTransactionObject) result).getHolder());
 	}
 
+    @Test
 	public void testDoBegin() {
-		contextSourceControl.expectAndReturn(contextSourceMock.getReadWriteContext(), contextMock);
-
-		contextSourceControl.replay();
+		when(contextSourceMock.getReadWriteContext()).thenReturn(contextMock);
 
 		CompensatingTransactionObject expectedTransactionObject = new CompensatingTransactionObject(null);
 		tested.doBegin(expectedTransactionObject, transactionDefinitionMock);
-
-		contextSourceControl.verify();
 
 		DirContextHolder foundContextHolder = (DirContextHolder) TransactionSynchronizationManager
 				.getResource(contextSourceMock);
 		assertSame(contextMock, foundContextHolder.getCtx());
 	}
 
-	public void testDoCommit() {
-	}
-
-	public void testDoRollback() {
-
+    @Test
+    public void testDoRollback() {
 		DirContextHolder expectedContextHolder = new DirContextHolder(null, contextMock);
 		expectedContextHolder.setTransactionOperationManager(transactionDataManagerMock);
 		TransactionSynchronizationManager.bindResource(contextSourceMock, expectedContextHolder);
 
-		transactionDataManagerMock.rollback();
-		transactionDataManagerControl.replay();
 		CompensatingTransactionObject transactionObject = new CompensatingTransactionObject(null);
 		transactionObject.setHolder(expectedContextHolder);
 		tested.doRollback(new DefaultTransactionStatus(transactionObject, false, false, false, false, null));
-		transactionDataManagerControl.verify();
+
+        verify(transactionDataManagerMock).rollback();
 	}
 
+    @Test
 	public void testDoCleanupAfterCompletion() throws Exception {
 		DirContextHolder expectedContextHolder = new DirContextHolder(null, contextMock);
 		TransactionSynchronizationManager.bindResource(contextSourceMock, expectedContextHolder);
 
-		contextMock.close();
-		contextControl.replay();
-
 		tested.doCleanupAfterCompletion(new CompensatingTransactionObject(expectedContextHolder));
 
-		contextControl.verify();
 		assertNull(TransactionSynchronizationManager.getResource(contextSourceMock));
 		assertNull(expectedContextHolder.getTransactionOperationManager());
+        verify(contextMock).close();
 	}
 
+    @Test
 	public void testSetContextSource_Proxy() {
 		TransactionAwareContextSourceProxy proxy = new TransactionAwareContextSourceProxy(contextSourceMock);
 
@@ -185,26 +141,19 @@ public class ContextSourceTransactionManagerTest extends TestCase {
 		assertSame(contextSourceMock, result);
 	}
 
+    @Test
 	public void testTransactionSuspension_UnconnectableDataSource() throws Exception {
-		MockControl connectionControl = MockControl.createControl(Connection.class);
-		Connection connectionMock = (Connection) connectionControl.getMock();
-		MockControl dataSourceControl=MockControl.createControl(DataSource.class);
-		DataSource dataSourceMock = (DataSource) dataSourceControl.getMock();
+		Connection connectionMock = mock(Connection.class);
+		DataSource dataSourceMock = mock(DataSource.class);
 
-		dataSourceControl.expectAndReturn(dataSourceMock.getConnection(), connectionMock);
-		connectionControl.expectAndReturn(connectionMock.getAutoCommit(), false);
-		connectionMock.rollback();
+		when(dataSourceMock.getConnection()).thenReturn(connectionMock);
+		when(connectionMock.getAutoCommit()).thenReturn(false);
 
-		MockControl unconnectableContextSourceControl = MockControl.createControl(ContextSource.class);
-		ContextSource unconnectableContextSourceMock = (ContextSource) unconnectableContextSourceControl.getMock();
+		ContextSource unconnectableContextSourceMock = mock(ContextSource.class);
 
 		UncategorizedLdapException connectException = new UncategorizedLdapException("dummy");
-		unconnectableContextSourceControl.expectAndThrow(unconnectableContextSourceMock.getReadWriteContext(), connectException);
-		
-		connectionControl.replay();
-		dataSourceControl.replay();
-		unconnectableContextSourceControl.replay();
-		
+		when(unconnectableContextSourceMock.getReadWriteContext()).thenThrow(connectException);
+
 		try {
 			// Create an outer transaction
 			final PlatformTransactionManager txMgrOuter = new DataSourceTransactionManager(dataSourceMock);
@@ -245,9 +194,6 @@ public class ContextSourceTransactionManagerTest extends TestCase {
 			assertSame("Should be thrown exception", connectException, expected.getCause());
 		}
 
-		connectionControl.verify();
-		dataSourceControl.verify();
-		unconnectableContextSourceControl.verify();
-
-	}
+        verify(connectionMock).rollback();
+    }
 }

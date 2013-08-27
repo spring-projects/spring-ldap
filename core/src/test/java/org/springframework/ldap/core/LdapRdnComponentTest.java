@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,19 @@
  */
 package org.springframework.ldap.core;
 
-import org.springframework.ldap.core.LdapRdnComponent;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for LdapRdnComponent.
  * 
  * @author Mattias Hellborg Arthursson
  */
-public class LdapRdnComponentTest extends TestCase {
+public class LdapRdnComponentTest {
 
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
+    @Test
     public void testCompareTo_Less() {
         LdapRdnComponent component1 = new LdapRdnComponent("cn", "john doe");
         LdapRdnComponent component2 = new LdapRdnComponent("sn", "doe");
@@ -41,6 +35,7 @@ public class LdapRdnComponentTest extends TestCase {
         assertTrue(result < 0);
     }
 
+    @Test
     public void testCompareTo_Greater() {
         LdapRdnComponent component1 = new LdapRdnComponent("sn", "doe");
         LdapRdnComponent component2 = new LdapRdnComponent("cn", "john doe");
@@ -48,6 +43,7 @@ public class LdapRdnComponentTest extends TestCase {
         assertTrue(result > 0);
     }
 
+    @Test
     public void testCompareTo_Equal() {
         LdapRdnComponent component1 = new LdapRdnComponent("cn", "john doe");
         LdapRdnComponent component2 = new LdapRdnComponent("cn", "john doe");

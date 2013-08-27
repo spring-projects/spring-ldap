@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,33 +16,26 @@
 
 package org.springframework.ldap.core;
 
+import org.junit.Test;
 import org.springframework.ldap.BadLdapGrammarException;
-import org.springframework.ldap.core.LdapEncoder;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Unit test for the LdapEncode class.
  * 
  * @author Adam Skogman
  */
-public class LdapEncoderTest extends TestCase {
+public class LdapEncoderTest  {
 
-    /**
-     * Constructor for LdapEncoderTest.
-     * 
-     * @param name
-     */
-    public LdapEncoderTest(String name) {
-        super(name);
-    }
-
+    @Test
     public void testFilterEncode() {
         String correct = "\\2aa\\2ab\\28c\\29d\\2a\\5c";
         assertEquals(correct, LdapEncoder.filterEncode("*a*b(c)d*\\"));
 
     }
 
+    @Test
     public void testNameEncode() {
 
         String res = LdapEncoder.nameEncode("# foo ,+\"\\<>; ");
@@ -50,22 +43,18 @@ public class LdapEncoderTest extends TestCase {
         assertEquals("\\# foo \\,\\+\\\"\\\\\\<\\>\\;\\ ", res);
     }
 
+    @Test
     public void testNameDecode() {
 
-        String res = (String) LdapEncoder
+        String res = LdapEncoder
                 .nameDecode("\\# foo \\,\\+\\\"\\\\\\<\\>\\;\\ ");
 
         assertEquals("# foo ,+\"\\<>; ", res);
     }
 
+    @Test(expected = BadLdapGrammarException.class)
     public void testNameDecode_slashlast() {
-
-        try {
-            LdapEncoder.nameDecode("\\");
-            fail("Should throw BadLdapGrammarException");
-        } catch (BadLdapGrammarException e) {
-            assertTrue(true);
-        }
+        LdapEncoder.nameDecode("\\");
     }
 
 }

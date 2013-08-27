@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,39 +16,32 @@
 
 package org.springframework.ldap.filter;
 
-import org.springframework.ldap.filter.EqualsFilter;
-import org.springframework.ldap.filter.OrFilter;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for the OrFilter class.
  * 
  * @author Adam Skogman
  */
-public class OrFilterTest extends TestCase {
+public class OrFilterTest {
 
-    /**
-     * Constructor for OrFilterTest.
-     * 
-     * @param name
-     */
-    public OrFilterTest(String name) {
-        super(name);
-    }
-
+    @Test
     public void testZero() {
         OrFilter of = new OrFilter();
 
         assertEquals("", of.encode());
     }
 
+    @Test
     public void testOne() {
         OrFilter of = new OrFilter().or(new EqualsFilter("a", "b"));
 
         assertEquals("(a=b)", of.encode());
     }
 
+    @Test
     public void testTwo() {
         OrFilter of = new OrFilter().or(new EqualsFilter("a", "b")).or(
                 new EqualsFilter("c", "d"));
@@ -56,6 +49,7 @@ public class OrFilterTest extends TestCase {
         assertEquals("(|(a=b)(c=d))", of.encode());
     }
 
+    @Test
     public void testThree() {
         OrFilter of = new OrFilter().or(new EqualsFilter("a", "b")).or(
                 new EqualsFilter("c", "d")).or(new EqualsFilter("e", "f"));

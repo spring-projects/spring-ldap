@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,77 +15,58 @@
  */
 package org.springframework.ldap.transaction.compensating;
 
-import junit.framework.TestCase;
-
-import org.easymock.MockControl;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.transaction.compensating.UnbindOperationExecutor;
 
-public class UnbindOperationExecutorTest extends TestCase {
-    private MockControl ldapOperationsControl;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
+public class UnbindOperationExecutorTest {
     private LdapOperations ldapOperationsMock;
 
-    protected void setUp() throws Exception {
-        ldapOperationsControl = MockControl.createControl(LdapOperations.class);
-        ldapOperationsMock = (LdapOperations) ldapOperationsControl.getMock();
-
+    @Before
+    public void setUp() throws Exception {
+        ldapOperationsMock = mock(LdapOperations.class);;
     }
 
-    protected void tearDown() throws Exception {
-        ldapOperationsControl = null;
-        ldapOperationsMock = null;
-
-    }
-
-    protected void replay() {
-        ldapOperationsControl.replay();
-    }
-
-    protected void verify() {
-        ldapOperationsControl.verify();
-    }
-
+    @Test
     public void testPerformOperation() {
         DistinguishedName expectedOldName = new DistinguishedName("cn=oldDn");
         DistinguishedName expectedTempName = new DistinguishedName("cn=newDn");
         UnbindOperationExecutor tested = new UnbindOperationExecutor(
                 ldapOperationsMock, expectedOldName, expectedTempName);
 
-        ldapOperationsMock.rename(expectedOldName, expectedTempName);
-        
-        replay();
         // Perform test
         tested.performOperation();
-        verify();
+
+        verify(ldapOperationsMock).rename(expectedOldName, expectedTempName);
     }
 
+    @Test
     public void testCommit() {
         DistinguishedName expectedOldName = new DistinguishedName("cn=oldDn");
         DistinguishedName expectedTempName = new DistinguishedName("cn=newDn");
         UnbindOperationExecutor tested = new UnbindOperationExecutor(
                 ldapOperationsMock, expectedOldName, expectedTempName);
 
-        ldapOperationsMock.unbind(expectedTempName);
-
-        replay();
         // Perform test
         tested.commit();
-        verify();
+        verify(ldapOperationsMock).unbind(expectedTempName);
     }
 
+    @Test
     public void testRollback() {
         DistinguishedName expectedOldName = new DistinguishedName("cn=oldDn");
         DistinguishedName expectedTempName = new DistinguishedName("cn=newDn");
         UnbindOperationExecutor tested = new UnbindOperationExecutor(
                 ldapOperationsMock, expectedOldName, expectedTempName);
 
-        ldapOperationsMock.rename(expectedTempName, expectedOldName);
 
-        replay();
+
         // Perform test
         tested.rollback();
-        verify();
+        verify(ldapOperationsMock).rename(expectedTempName, expectedOldName);
     }
 }

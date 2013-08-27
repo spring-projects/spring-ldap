@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,19 @@
 
 package org.springframework.ldap.filter;
 
-import org.springframework.ldap.filter.EqualsFilter;
-import org.springframework.ldap.filter.NotFilter;
-
 import com.gargoylesoftware.base.testing.EqualsTester;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for the NotFilter class.
  * 
  * @author Mattias Hellborg Arthursson
  */
-public class NotFilterTest extends TestCase {
+public class NotFilterTest {
 
+    @Test
     public void testConstructor() {
         EqualsFilter filter = new EqualsFilter("a", "b");
         NotFilter notFilter = new NotFilter(filter);
@@ -37,6 +36,7 @@ public class NotFilterTest extends TestCase {
         assertEquals("(!(a=b))", notFilter.encode());
     }
 
+    @Test
     public void testEquals() {
         EqualsFilter filter = new EqualsFilter("a", "b");
         NotFilter originalObject = new NotFilter(filter);

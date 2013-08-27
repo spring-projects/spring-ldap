@@ -1,36 +1,46 @@
+/*
+ * Copyright 2005-2013 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.springframework.ldap.support;
 
-import java.util.LinkedList;
+import org.apache.commons.lang.ArrayUtils;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.ldap.NoSuchAttributeException;
 
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
+import java.util.LinkedList;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.easymock.MockControl;
-import org.springframework.ldap.NoSuchAttributeException;
-
-public class LdapUtilsTest extends TestCase {
-
-	private MockControl handlerControl;
+public class LdapUtilsTest {
 
 	private AttributeValueCallbackHandler handlerMock;
 
-	protected void setUp() throws Exception {
-		super.setUp();
-
-		handlerControl = MockControl.createControl(AttributeValueCallbackHandler.class);
-		handlerMock = (AttributeValueCallbackHandler) handlerControl.getMock();
+    @Before
+	public void setUp() throws Exception {
+		handlerMock = mock(AttributeValueCallbackHandler.class);
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-
-		handlerControl = null;
-		handlerMock = null;
-	}
-
+    @Test
 	public void testCollectAttributeValues() {
 		String expectedAttributeName = "someAttribute";
 		BasicAttribute expectedAttribute = new BasicAttribute(expectedAttributeName);
@@ -48,6 +58,7 @@ public class LdapUtilsTest extends TestCase {
 		assertEquals("value2", list.get(1));
 	}
 
+    @Test
 	public void testCollectAttributeValuesThrowsExceptionWhenAttributeNotPresent() {
 		String expectedAttributeName = "someAttribute";
 		BasicAttributes attributes = new BasicAttributes();
@@ -62,6 +73,7 @@ public class LdapUtilsTest extends TestCase {
 		}
 	}
 
+    @Test
 	public void testIterateAttributeValues() {
 		String expectedAttributeName = "someAttribute";
 
@@ -69,31 +81,25 @@ public class LdapUtilsTest extends TestCase {
 		expectedAttribute.add("value1");
 		expectedAttribute.add("value2");
 
-		handlerMock.handleAttributeValue(expectedAttributeName, "value1", 0);
-		handlerMock.handleAttributeValue(expectedAttributeName, "value2", 1);
-
-		handlerControl.replay();
-
 		LdapUtils.iterateAttributeValues(expectedAttribute, handlerMock);
 
-		handlerControl.verify();
+        verify(handlerMock).handleAttributeValue(expectedAttributeName, "value1", 0);
+		verify(handlerMock).handleAttributeValue(expectedAttributeName, "value2", 1);
 	}
 
+    @Test
 	public void testIterateAttributeValuesWithEmptyAttribute() {
 		String expectedAttributeName = "someAttribute";
 
 		BasicAttribute expectedAttribute = new BasicAttribute(expectedAttributeName);
 
-		handlerControl.replay();
-
 		LdapUtils.iterateAttributeValues(expectedAttribute, handlerMock);
-
-		handlerControl.verify();
 	}
 	
 	/**
 	 * Example SID from "http://www.pcreview.co.uk/forums/thread-1458615.php".
 	 */
+    @Test
 	public void testConvertBinarySidToString() throws Exception {
 		byte[] sid = { (byte) 0x01, (byte) 0x05, (byte) 0x00, (byte) 0x00,
 				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x05,
@@ -109,6 +115,7 @@ public class LdapUtilsTest extends TestCase {
 	/**
 	 * Example SID from "http://blogs.msdn.com/oldnewthing/archive/2004/03/15/89753.aspx".
 	 */
+    @Test
 	public void testConvertAnotherBinarySidToString() throws Exception {
 		byte[] sid = { (byte) 0x01, (byte) 0x05, (byte) 0x00, (byte) 0x00,
 				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x05,
@@ -124,6 +131,7 @@ public class LdapUtilsTest extends TestCase {
 	/**
 	 * Hand-crafted SID.
 	 */
+    @Test
 	public void testConvertHandCraftedBinarySidToString() throws Exception {
 		byte[] sid = { (byte) 0x01, (byte) 0x05, (byte) 0x00, (byte) 0x00,
 				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x05,
@@ -135,7 +143,8 @@ public class LdapUtilsTest extends TestCase {
 		String result = LdapUtils.convertBinarySidToString(sid);
 		assertEquals("S-1-5-21-1-2-3-4", result);
 	}
-	
+
+    @Test
 	public void testSmallNumberToBytesBigEndian() throws Exception {
 		byte[] result = LdapUtils.numberToBytes("5", 6, true);
 		assertEquals(6, result.length);
@@ -146,7 +155,8 @@ public class LdapUtilsTest extends TestCase {
 		assertEquals(0, result[4]);
 		assertEquals(5, result[5]);
 	}
-	
+
+    @Test
 	public void testLargeNumberToBytesBigEndian() throws Exception {
 		byte[] result = LdapUtils.numberToBytes("1183728", 6, true);
 		assertEquals(6, result.length);
@@ -157,7 +167,8 @@ public class LdapUtilsTest extends TestCase {
 		assertEquals(15, result[4]);
 		assertEquals(-16, result[5]);
 	}
-	
+
+    @Test
 	public void testSmallNumberToBytesLittleEndian() throws Exception {
 		byte[] result = LdapUtils.numberToBytes("21", 4, false);
 		assertEquals(4, result.length);
@@ -166,7 +177,8 @@ public class LdapUtilsTest extends TestCase {
 		assertEquals(0, result[2]);
 		assertEquals(0, result[3]);
 	}
-	
+
+    @Test
 	public void testLargeNumberToBytesLittleEndian() throws Exception {
 		byte[] result = LdapUtils.numberToBytes("2127521184", 4, false);
 		assertEquals(4, result.length);
@@ -179,6 +191,7 @@ public class LdapUtilsTest extends TestCase {
 	/**
 	 * Hand-crafted SID.
 	 */
+    @Test
 	public void testConvertHandCraftedStringSidToBinary() throws Exception {
 		byte[] expectedSid = { (byte) 0x01, (byte) 0x05, (byte) 0x00, (byte) 0x00,
 				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x05,
@@ -197,6 +210,7 @@ public class LdapUtilsTest extends TestCase {
 	/**
 	 * Example SID from "http://www.pcreview.co.uk/forums/thread-1458615.php".
 	 */
+    @Test
 	public void testConvertStringSidToBinary() throws Exception {
 		byte[] expectedSid = { (byte) 0x01, (byte) 0x05, (byte) 0x00, (byte) 0x00,
 				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x05,

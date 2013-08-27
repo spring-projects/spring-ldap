@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,9 @@ import com.sun.jndi.ldap.Ber;
 import com.sun.jndi.ldap.BerDecoder;
 import com.sun.jndi.ldap.BerEncoder;
 import com.sun.jndi.ldap.ctl.DirSyncResponseControl;
-import junit.framework.TestCase;
-import org.easymock.MockControl;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
@@ -28,46 +29,42 @@ import javax.naming.ldap.PagedResultsControl;
 import javax.naming.ldap.PagedResultsResponseControl;
 import java.io.IOException;
 
-public class PagedResultsDirContextProcessorTest extends TestCase {
+import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-    private MockControl ldapContextControl;
+public class PagedResultsDirContextProcessorTest {
 
     private LdapContext ldapContextMock;
 
 	private PagedResultsDirContextProcessor tested;
 
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
 
         tested = new PagedResultsDirContextProcessor(20);
 
         // Create ldapContext mock
-        ldapContextControl = MockControl.createControl(LdapContext.class);
-        ldapContextMock = (LdapContext) ldapContextControl.getMock();
+        ldapContextMock = mock(LdapContext.class);
     }
 
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
 
         tested = null;
-        ldapContextControl = null;
         ldapContextMock = null;
     }
 
-    protected void replay() {
-        ldapContextControl.replay();
-    }
-
-    protected void verify() {
-        ldapContextControl.verify();
-    }
-
+    @Test
     public void testCreateRequestControl() throws Exception {
         PagedResultsControl control = (PagedResultsControl) tested
                 .createRequestControl();
         assertNotNull(control);
     }
 
+    @Test
     public void testCreateRequestControl_CookieSet() throws Exception {
         PagedResultsCookie cookie = new PagedResultsCookie(new byte[0]);
         PagedResultsDirContextProcessor tested = new PagedResultsDirContextProcessor(20,
@@ -78,6 +75,7 @@ public class PagedResultsDirContextProcessorTest extends TestCase {
         assertNotNull(control);
     }
 
+    @Test
     public void testPostProcess() throws Exception {
         int resultSize = 50;
         byte pageSize = 8;
@@ -88,14 +86,8 @@ public class PagedResultsDirContextProcessorTest extends TestCase {
         PagedResultsResponseControl control = new PagedResultsResponseControl(
                 "dummy", true, cookie);
 
-        ldapContextControl.expectAndDefaultReturn(ldapContextMock
-                .getResponseControls(), new Control[] { control });
-
-        replay();
-
+        when(ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
         tested.postProcess(ldapContextMock);
-
-        verify();
 
         PagedResultsCookie returnedCookie = tested.getCookie();
         assertEquals(8, returnedCookie.getCookie()[0]);
@@ -103,6 +95,7 @@ public class PagedResultsDirContextProcessorTest extends TestCase {
         assertEquals(50, tested.getResultSize());
     }
 
+    @Test
     public void testPostProcess_InvalidResponseControl() throws Exception {
         int resultSize = 50;
         byte pageSize = 8;
@@ -115,35 +108,27 @@ public class PagedResultsDirContextProcessorTest extends TestCase {
         DirSyncResponseControl control = new DirSyncResponseControl(
                 "dummy", true, cookie);
 
-        ldapContextControl.expectAndDefaultReturn(ldapContextMock
-                .getResponseControls(), new Control[] { control });
 
-        replay();
-
+        when(ldapContextMock.getResponseControls()).thenReturn(new Control[]{control});
         tested.postProcess(ldapContextMock);
-
-        verify();
 
         assertNull(tested.getCookie());
         assertEquals(20, tested.getPageSize());
         assertEquals(0, tested.getResultSize());
     }
 
+    @Test
     public void testPostProcess_NoResponseControls() throws Exception {
-        ldapContextControl.expectAndDefaultReturn(ldapContextMock
-                .getResponseControls(), null);
-
-        replay();
+        when(ldapContextMock.getResponseControls()).thenReturn(null);
 
         tested.postProcess(ldapContextMock);
-
-        verify();
 
         assertNull(tested.getCookie());
         assertEquals(20, tested.getPageSize());
         assertEquals(0, tested.getResultSize());
     }
 
+    @Test
     public void testBerDecoding() throws Exception {
         byte[] value = new byte[1];
         value[0] = 8;

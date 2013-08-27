@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,26 +15,30 @@
  */
 package org.springframework.ldap.pool.factory;
 
-import javax.naming.directory.DirContext;
-import javax.naming.ldap.LdapContext;
-
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
-import org.easymock.MockControl;
+import org.junit.Test;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.pool.AbstractPoolTestCase;
 import org.springframework.ldap.pool.validation.DirContextValidator;
 
+import javax.naming.directory.DirContext;
+import javax.naming.ldap.LdapContext;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 /**
  * @author Eric Dalquist
  */
 public class PoolingContextSourceTest extends AbstractPoolTestCase {
-    
+
+    @Test
     public void testProperties() throws Exception {
         final PoolingContextSource poolingContextSource = new PoolingContextSource();
-        
-        replay();
-        
+
         try {
             poolingContextSource.setContextSource(null);
             fail("PoolingContextSource.setBaseName should have thrown an IllegalArgumentException");
@@ -112,15 +116,12 @@ public class PoolingContextSourceTest extends AbstractPoolTestCase {
         assertEquals(0, numIdle);
     }
 
+    @Test
     public void testGetReadOnlyContextPool() throws Exception {
-        MockControl secondDirContextControl = MockControl.createControl(DirContext.class);
-        DirContext secondDirContextMock = (DirContext) secondDirContextControl.getMock();
+        DirContext secondDirContextMock = mock(DirContext.class);
         
-        contextSourceControl.expectAndReturn(contextSourceMock.getReadOnlyContext(), dirContextMock);
-        contextSourceControl.expectAndReturn(contextSourceMock.getReadOnlyContext(), secondDirContextMock);
-        
-        replay();
-        
+        when(contextSourceMock.getReadOnlyContext()).thenReturn(dirContextMock, secondDirContextMock);
+
         final PoolingContextSource poolingContextSource = new PoolingContextSource();
         poolingContextSource.setContextSource(contextSourceMock);
 
@@ -157,16 +158,13 @@ public class PoolingContextSourceTest extends AbstractPoolTestCase {
         assertEquals(0, poolingContextSource.getNumActive());
         assertEquals(2, poolingContextSource.getNumIdle());
     }
-    
+
+    @Test
     public void testGetReadWriteContextPool() throws Exception {
-        MockControl secondDirContextControl = MockControl.createControl(DirContext.class);
-        DirContext secondDirContextMock = (DirContext) secondDirContextControl.getMock();
+        DirContext secondDirContextMock = mock(DirContext.class);
         
-        contextSourceControl.expectAndReturn(contextSourceMock.getReadWriteContext(), dirContextMock);
-        contextSourceControl.expectAndReturn(contextSourceMock.getReadWriteContext(), secondDirContextMock);
-        
-        replay();
-        
+        when(contextSourceMock.getReadWriteContext()).thenReturn(dirContextMock, secondDirContextMock);
+
         final PoolingContextSource poolingContextSource = new PoolingContextSource();
         poolingContextSource.setContextSource(contextSourceMock);
 
@@ -204,11 +202,11 @@ public class PoolingContextSourceTest extends AbstractPoolTestCase {
         assertEquals(2, poolingContextSource.getNumIdle());
     }
 
+    @Test
     public void testGetContextException() throws Exception {
-        contextSourceControl.expectAndThrow(contextSourceMock.getReadWriteContext(), new RuntimeException("Problem getting context"));
-        
-        replay();
-        
+        when(contextSourceMock.getReadWriteContext())
+                .thenThrow(new RuntimeException("Problem getting context"));
+
         final PoolingContextSource poolingContextSource = new PoolingContextSource();
         poolingContextSource.setContextSource(contextSourceMock);
 
@@ -221,17 +219,12 @@ public class PoolingContextSourceTest extends AbstractPoolTestCase {
         }
     }
 
+    @Test
     public void testGetReadOnlyLdapContext() throws Exception {
-        MockControl secondLdapContextControl = MockControl.createControl(LdapContext.class);
-        LdapContext secondLdapContextMock = (LdapContext) secondLdapContextControl.getMock();
+        LdapContext secondLdapContextMock = mock(LdapContext.class);
 
-        secondLdapContextControl.replay();
-        
-        contextSourceControl.expectAndReturn(contextSourceMock.getReadOnlyContext(), ldapContextMock);
-        contextSourceControl.expectAndReturn(contextSourceMock.getReadOnlyContext(), secondLdapContextMock);
-        
-        replay();
-        
+        when(contextSourceMock.getReadOnlyContext()).thenReturn(ldapContextMock, secondLdapContextMock);
+
         final PoolingContextSource poolingContextSource = new PoolingContextSource();
         poolingContextSource.setContextSource(contextSourceMock);
 
@@ -267,7 +260,5 @@ public class PoolingContextSourceTest extends AbstractPoolTestCase {
         readOnlyContext3.close();
         assertEquals(0, poolingContextSource.getNumActive());
         assertEquals(2, poolingContextSource.getNumIdle());
-
-        secondLdapContextControl.verify();
     }
 }

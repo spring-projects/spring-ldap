@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,40 +15,27 @@
  */
 package org.springframework.ldap.transaction.compensating;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.core.LdapOperations;
+
 import javax.naming.Name;
 import javax.naming.directory.ModificationItem;
 
-import org.easymock.MockControl;
-import org.easymock.internal.ArrayMatcher;
-import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.transaction.compensating.ModifyAttributesOperationExecutor;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-import junit.framework.TestCase;
-
-public class ModifyAttributesOperationExecutorTest extends TestCase {
-	private MockControl ldapOperationsControl;
-
+public class ModifyAttributesOperationExecutorTest {
 	private LdapOperations ldapOperationsMock;
 
-	protected void setUp() throws Exception {
-		ldapOperationsControl = MockControl.createControl(LdapOperations.class);
-		ldapOperationsMock = (LdapOperations) ldapOperationsControl.getMock();
+    @Before
+	public void setUp() throws Exception {
+        ldapOperationsMock = mock(LdapOperations.class);
 	}
 
-	protected void tearDown() throws Exception {
-		ldapOperationsControl = null;
-		ldapOperationsMock = null;
-	}
-
-	protected void replay() {
-		ldapOperationsControl.replay();
-	}
-
-	protected void verify() {
-		ldapOperationsControl.verify();
-	}
-
+    @Test
 	public void testPerformOperation() {
 		ModificationItem[] expectedCompensatingItems = new ModificationItem[0];
 		ModificationItem[] expectedActualItems = new ModificationItem[0];
@@ -58,16 +45,13 @@ public class ModifyAttributesOperationExecutorTest extends TestCase {
 		ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(ldapOperationsMock,
 				expectedDn, expectedActualItems, expectedCompensatingItems);
 
-		ldapOperationsMock.modifyAttributes(expectedDn, expectedActualItems);
-		ldapOperationsControl.setMatcher(new ArrayMatcher());
-
-		replay();
 		// Perform test
 		tested.performOperation();
 
-		verify();
+		verify(ldapOperationsMock).modifyAttributes(expectedDn, expectedActualItems);
 	}
 
+    @Test
 	public void testCommit() {
 		ModificationItem[] expectedCompensatingItems = new ModificationItem[0];
 		ModificationItem[] expectedActualItems = new ModificationItem[0];
@@ -78,14 +62,13 @@ public class ModifyAttributesOperationExecutorTest extends TestCase {
 				expectedDn, expectedActualItems, expectedCompensatingItems);
 
 		// No operation here
+        verifyNoMoreInteractions(ldapOperationsMock);
 
-		replay();
 		// Perform test
 		tested.commit();
-
-		verify();
 	}
 
+    @Test
 	public void testRollback() {
 		ModificationItem[] expectedCompensatingItems = new ModificationItem[0];
 		ModificationItem[] expectedActualItems = new ModificationItem[0];
@@ -95,14 +78,9 @@ public class ModifyAttributesOperationExecutorTest extends TestCase {
 		ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(ldapOperationsMock,
 				expectedDn, expectedActualItems, expectedCompensatingItems);
 
-		ldapOperationsMock.modifyAttributes(expectedDn, expectedCompensatingItems);
-		ldapOperationsControl.setMatcher(new ArrayMatcher());
-
-		replay();
 		// Perform test
 		tested.rollback();
 
-		verify();
+		verify(ldapOperationsMock).modifyAttributes(expectedDn, expectedCompensatingItems);
 	}
-
 }

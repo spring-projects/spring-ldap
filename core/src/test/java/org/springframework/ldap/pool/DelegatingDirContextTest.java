@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,31 @@
  */
 package org.springframework.ldap.pool;
 
+import org.apache.commons.pool.KeyedObjectPool;
+import org.junit.Test;
+
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 
-import org.apache.commons.pool.KeyedObjectPool;
-import org.easymock.MockControl;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author Eric Dalquist <a
  *         href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
  */
 public class DelegatingDirContextTest extends AbstractPoolTestCase {
+    @Test
     public void testConstructorAssertions() {
-        replay();
-
         try {
             new DelegatingDirContext(keyedObjectPoolMock, null,
                     DirContextType.READ_ONLY);
@@ -46,16 +54,10 @@ public class DelegatingDirContextTest extends AbstractPoolTestCase {
         } catch (IllegalArgumentException expected) {
             assertTrue(true);
         }
-
-        verify();
     }
 
+    @Test
     public void testHelperMethods() throws Exception {
-        keyedObjectPoolMock.returnObject(DirContextType.READ_ONLY,
-                dirContextMock);
-        keyedObjectPoolControl.setVoidCallable(1);
-
-        replay();
 
         // Wrap the DirContext once
         final DelegatingDirContext delegatingDirContext = new DelegatingDirContext(
@@ -76,14 +78,7 @@ public class DelegatingDirContextTest extends AbstractPoolTestCase {
         delegatingDirContext.assertOpen();
 
         // Wrap the wrapper
-        MockControl secondKeyedObjectPoolControl = MockControl
-                .createControl(KeyedObjectPool.class);
-        KeyedObjectPool secondKeyedObjectPoolMock = (KeyedObjectPool) secondKeyedObjectPoolControl
-                .getMock();
-        secondKeyedObjectPoolMock.returnObject(DirContextType.READ_ONLY,
-                delegatingDirContext);
-        secondKeyedObjectPoolControl.setVoidCallable(1);
-        secondKeyedObjectPoolControl.replay();
+        KeyedObjectPool secondKeyedObjectPoolMock = mock(KeyedObjectPool.class);
 
         final DelegatingDirContext delegatingDirContext2 = new DelegatingDirContext(
                 secondKeyedObjectPoolMock, delegatingDirContext,
@@ -135,23 +130,17 @@ public class DelegatingDirContextTest extends AbstractPoolTestCase {
             // Expected
         }
 
-        secondKeyedObjectPoolControl.verify();
-        verify();
+        verify(secondKeyedObjectPoolMock)
+                .returnObject(DirContextType.READ_ONLY, dirContextMock);
+        verify(keyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, dirContextMock);
     }
 
+    @Test
     public void testObjectMethods() throws Exception {
-        keyedObjectPoolMock.returnObject(DirContextType.READ_ONLY,
-                dirContextMock);
-        keyedObjectPoolControl.setVoidCallable(1);
-
-        replay();
-
         // Wrap the DirContext once
         final DelegatingDirContext delegatingDirContext = new DelegatingDirContext(
                 keyedObjectPoolMock, dirContextMock, DirContextType.READ_ONLY);
-        assertEquals(
-                "EasyMock for interface javax.naming.directory.DirContext",
-                delegatingDirContext.toString());
+        assertEquals(dirContextMock.toString(), delegatingDirContext.toString());
         delegatingDirContext.hashCode(); // Run it to make sure it doesn't
                                             // fail
 
@@ -179,13 +168,11 @@ public class DelegatingDirContextTest extends AbstractPoolTestCase {
         assertFalse(delegatingDirContext2.equals(delegatingDirContext));
         assertFalse(delegatingDirContext.equals(dirContextMock));
 
-        verify();
+        verify(keyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, dirContextMock);
     }
 
-    // nice
+    @Test
     public void testUnsupportedMethods() throws Exception {
-        replay();
-
         final DelegatingDirContext delegatingDirContext = new DelegatingDirContext(
                 keyedObjectPoolMock, dirContextMock, DirContextType.READ_ONLY);
 
@@ -225,17 +212,10 @@ public class DelegatingDirContextTest extends AbstractPoolTestCase {
         } catch (UnsupportedOperationException uoe) {
             // Expected
         }
-        
-        verify();
     }
 
+    @Test
     public void testAllMethodsOpened() throws Exception {
-        // override with a nice control
-        dirContextControl = MockControl.createNiceControl(DirContext.class);
-        dirContextMock = (DirContext) dirContextControl.getMock();
-
-        replay();
-
         final DelegatingDirContext delegatingDirContext = new DelegatingDirContext(
                 keyedObjectPoolMock, dirContextMock, DirContextType.READ_ONLY);
 
@@ -259,17 +239,10 @@ public class DelegatingDirContextTest extends AbstractPoolTestCase {
         delegatingDirContext.search((String) null, null);
         delegatingDirContext.search((String) null, null, null, null);
         delegatingDirContext.search((String) null, (String) null, null);
-
-        verify();
     }
 
+    @Test
     public void testAllMethodsClosed() throws Exception {
-        keyedObjectPoolMock.returnObject(DirContextType.READ_ONLY,
-                dirContextMock);
-        keyedObjectPoolControl.setVoidCallable(1);
-
-        replay();
-
         final DelegatingDirContext delegatingDirContext = new DelegatingDirContext(
                 keyedObjectPoolMock, dirContextMock, DirContextType.READ_ONLY);
 
@@ -396,16 +369,11 @@ public class DelegatingDirContextTest extends AbstractPoolTestCase {
             //  Expected
         }
 
-        verify();
+        verify(keyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, dirContextMock);
     }
 
+    @Test
     public void testDoubleClose() throws Exception {
-        keyedObjectPoolMock.returnObject(DirContextType.READ_ONLY,
-                dirContextMock);
-        keyedObjectPoolControl.setVoidCallable(1);
-
-        replay();
-
         final DelegatingDirContext delegatingDirContext = new DelegatingDirContext(
                 keyedObjectPoolMock, dirContextMock, DirContextType.READ_ONLY);
 
@@ -414,6 +382,6 @@ public class DelegatingDirContextTest extends AbstractPoolTestCase {
         // noop close
         delegatingDirContext.close();
 
-        verify();
+        verify(keyedObjectPoolMock, times(1)).returnObject(DirContextType.READ_ONLY, dirContextMock);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,21 +15,23 @@
  */
 package org.springframework.ldap.pool;
 
+import org.junit.Test;
+
+import static org.mockito.Mockito.verify;
+
 /**
  * Unit tests for the MutableDelegatingLdapContext class.
  * 
  * @author Ulrik Sandberg
  */
 public class MutableDelegatingLdapContextTest extends AbstractPoolTestCase {
+    @Test
 	public void testSupportedMethodsAllowedToCall() throws Exception {
-		ldapContextMock.setRequestControls(null);
-		replay();
-
 		final MutableDelegatingLdapContext delegatingLdapContext = new MutableDelegatingLdapContext(
 				keyedObjectPoolMock, ldapContextMock, DirContextType.READ_ONLY);
 
 		delegatingLdapContext.setRequestControls(null);
 
-		verify();
+		verify(ldapContextMock).setRequestControls(null);
 	}
 }

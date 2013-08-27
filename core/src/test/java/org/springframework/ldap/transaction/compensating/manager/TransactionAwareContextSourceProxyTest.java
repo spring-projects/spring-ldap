@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2007 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,72 +15,45 @@
  */
 package org.springframework.ldap.transaction.compensating.manager;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.DirContextProxy;
+
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 
-import junit.framework.TestCase;
-
-import org.easymock.MockControl;
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.DirContextProxy;
-import org.springframework.ldap.transaction.compensating.manager.TransactionAwareContextSourceProxy;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests for {@link TransactionAwareContextSourceProxy}.
  * 
  * @author Mattias Hellborg Arthursson
  */
-public class TransactionAwareContextSourceProxyTest extends TestCase {
-    private MockControl contextSourceControl;
-
+public class TransactionAwareContextSourceProxyTest {
     private ContextSource contextSourceMock;
-
     private TransactionAwareContextSourceProxy tested;
-
-    private MockControl ldapContextControl;
-
     private LdapContext ldapContextMock;
-
-    private MockControl dirContextControl;
-
     private DirContext dirContextMock;
 
-    protected void setUp() throws Exception {
-
-        contextSourceControl = MockControl.createControl(ContextSource.class);
-        contextSourceMock = (ContextSource) contextSourceControl.getMock();
-
-        ldapContextControl = MockControl.createControl(LdapContext.class);
-        ldapContextMock = (LdapContext) ldapContextControl.getMock();
-
-        dirContextControl = MockControl.createControl(DirContext.class);
-        dirContextMock = (DirContext) dirContextControl.getMock();
+    @Before
+    public void setUp() throws Exception {
+        contextSourceMock = mock(ContextSource.class);
+        ldapContextMock = mock(LdapContext.class);
+        dirContextMock = mock(DirContext.class);
 
         tested = new TransactionAwareContextSourceProxy(contextSourceMock);
     }
 
-    protected void tearDown() throws Exception {
-        contextSourceControl = null;
-        contextSourceMock = null;
-
-        ldapContextControl = null;
-        ldapContextMock = null;
-
-        dirContextControl = null;
-        dirContextMock = null;
-
-        tested = null;
-    }
-
+    @Test
     public void testGetReadWriteContext_LdapContext() {
-        contextSourceControl.expectAndReturn(contextSourceMock
-                .getReadWriteContext(), ldapContextMock);
-
-        contextSourceControl.replay();
+        when(contextSourceMock.getReadWriteContext()).thenReturn(ldapContextMock);
 
         DirContext result = tested.getReadWriteContext();
-
-        contextSourceControl.verify();
 
         assertNotNull("Result should not be null", result);
         assertTrue("Should be an LdapContext instance",
@@ -89,15 +62,11 @@ public class TransactionAwareContextSourceProxyTest extends TestCase {
                 result instanceof DirContextProxy);
     }
 
+    @Test
     public void testGetReadWriteContext_DirContext() {
-        contextSourceControl.expectAndReturn(contextSourceMock
-                .getReadWriteContext(), dirContextMock);
-
-        contextSourceControl.replay();
+        when(contextSourceMock.getReadWriteContext()).thenReturn(dirContextMock);
 
         DirContext result = tested.getReadWriteContext();
-
-        contextSourceControl.verify();
 
         assertNotNull("Result should not be null", result);
         assertTrue("Should be a DirContext instance",
@@ -108,15 +77,11 @@ public class TransactionAwareContextSourceProxyTest extends TestCase {
                 result instanceof DirContextProxy);
     }
 
+    @Test
     public void testGetReadOnlyContext_LdapContext() {
-        contextSourceControl.expectAndReturn(contextSourceMock
-                .getReadWriteContext(), ldapContextMock);
-
-        contextSourceControl.replay();
+        when(contextSourceMock.getReadWriteContext()).thenReturn(ldapContextMock);
 
         DirContext result = tested.getReadOnlyContext();
-
-        contextSourceControl.verify();
 
         assertNotNull("Result should not be null", result);
         assertTrue("Should be an LdapContext instance",

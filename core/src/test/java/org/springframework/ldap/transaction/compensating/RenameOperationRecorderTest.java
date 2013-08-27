@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,47 +15,33 @@
  */
 package org.springframework.ldap.transaction.compensating;
 
-import junit.framework.TestCase;
-
-import org.easymock.MockControl;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.transaction.compensating.RenameOperationExecutor;
-import org.springframework.ldap.transaction.compensating.RenameOperationRecorder;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
-public class RenameOperationRecorderTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
-    private MockControl ldapOperationsControl;
+public class RenameOperationRecorderTest {
 
     private LdapOperations ldapOperationsMock;
 
-    protected void setUp() throws Exception {
-        ldapOperationsControl = MockControl.createControl(LdapOperations.class);
-        ldapOperationsMock = (LdapOperations) ldapOperationsControl.getMock();
+    @Before
+    public void setUp() throws Exception {
+        ldapOperationsMock = mock(LdapOperations.class);;
     }
 
-    protected void tearDown() throws Exception {
-        ldapOperationsControl = null;
-        ldapOperationsMock = null;
-    }
-
-    protected void replay() {
-        ldapOperationsControl.replay();
-    }
-
-    protected void verify() {
-        ldapOperationsControl.verify();
-    }
-
+    @Test
     public void testRecordOperation() {
         RenameOperationRecorder tested = new RenameOperationRecorder(
                 ldapOperationsMock);
 
-        replay();
         // Perform test
         CompensatingTransactionOperationExecutor operation = tested
                 .recordOperation(new Object[] { "ou=someou", "ou=newou" });
-        verify();
 
         assertTrue(operation instanceof RenameOperationExecutor);
         RenameOperationExecutor rollbackOperation = (RenameOperationExecutor) operation;
@@ -63,5 +49,4 @@ public class RenameOperationRecorderTest extends TestCase {
         assertEquals("ou=newou", rollbackOperation.getNewDn().toString());
         assertEquals("ou=someou", rollbackOperation.getOriginalDn().toString());
     }
-
 }

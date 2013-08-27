@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,16 @@
 
 package org.springframework.ldap.core;
 
-import java.util.List;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.naming.NameClassPair;
+import java.util.List;
 
-import org.springframework.ldap.core.CollectingNameClassPairCallbackHandler;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
-import junit.framework.TestCase;
-
-public class CollectingNameClassPairCallbackHandlerTest extends TestCase {
+public class CollectingNameClassPairCallbackHandlerTest {
 
     private CollectingNameClassPairCallbackHandler tested;
 
@@ -32,9 +33,8 @@ public class CollectingNameClassPairCallbackHandlerTest extends TestCase {
 
     private NameClassPair expectedNameClassPair;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-
+    @Before
+    public void setUp() throws Exception {
         expectedResult = new Object();
         expectedNameClassPair = new NameClassPair(null, null);
         tested = new CollectingNameClassPairCallbackHandler() {
@@ -45,14 +45,7 @@ public class CollectingNameClassPairCallbackHandlerTest extends TestCase {
         };
     }
 
-    protected void tearDown() throws Exception {
-        super.tearDown();
-
-        expectedNameClassPair = null;
-        expectedResult = null;
-        tested = null;
-    }
-
+    @Test
     public void testHandleNameClassPair() {
         tested.handleNameClassPair(expectedNameClassPair);
         List result = tested.getList();

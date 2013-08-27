@@ -1,6 +1,3 @@
-sourceCompatibility = '1.4'
-targetCompatibility = '1.4'
-
 apply from: 'javacc.gradle'
 
 idea.module.excludeDirs = [
@@ -25,7 +22,7 @@ dependencies {
              "org.springframework:spring-orm:$springVersion"
 
     testCompile "junit:junit:$junitVersion",
-                "easymock:easymock:$easyMockVersion",
-                "gsbase:gsbase:$gsbaseVersion"
+                "gsbase:gsbase:$gsbaseVersion",
+                "org.mockito:mockito-core:$mockitoVersion"
 }
 

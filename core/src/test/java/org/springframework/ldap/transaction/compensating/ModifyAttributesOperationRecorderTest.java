@@ -16,11 +16,11 @@
 
 package org.springframework.ldap.transaction.compensating;
 
-import junit.framework.TestCase;
-import org.easymock.MockControl;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.core.IncrementalAttributesMapper;
+import org.springframework.ldap.core.LdapOperations;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
 import javax.naming.NamingException;
@@ -31,49 +31,28 @@ import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 
-public class ModifyAttributesOperationRecorderTest extends TestCase {
-    private MockControl ldapOperationsControl;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+public class ModifyAttributesOperationRecorderTest {
     private LdapOperations ldapOperationsMock;
-
-    private MockControl attributesMapperControl;
 
     private IncrementalAttributesMapper attributesMapperMock;
 
     private ModifyAttributesOperationRecorder tested;
 
-    protected void setUp() throws Exception {
-        ldapOperationsControl = MockControl.createControl(LdapOperations.class);
-        ldapOperationsMock = (LdapOperations) ldapOperationsControl.getMock();
-
-        attributesMapperControl = MockControl
-                .createControl(IncrementalAttributesMapper.class);
-        attributesMapperMock = (IncrementalAttributesMapper) attributesMapperControl
-                .getMock();
+    @Before
+    public void setUp() throws Exception {
+        ldapOperationsMock = mock(LdapOperations.class);
+        attributesMapperMock = mock(IncrementalAttributesMapper.class);
 
         tested = new ModifyAttributesOperationRecorder(ldapOperationsMock);
     }
 
-    protected void tearDown() throws Exception {
-        ldapOperationsControl = null;
-        ldapOperationsMock = null;
-
-        attributesMapperControl = null;
-        attributesMapperMock = null;
-
-        tested = null;
-    }
-
-    protected void replay() {
-        ldapOperationsControl.replay();
-        attributesMapperControl.replay();
-    }
-
-    protected void verify() {
-        ldapOperationsControl.verify();
-        attributesMapperControl.verify();
-    }
-
+    @Test
     public void testRecordOperation() {
         final ModificationItem incomingItem = new ModificationItem(
                 DirContext.ADD_ATTRIBUTE, new BasicAttribute("attribute1"));
@@ -98,26 +77,18 @@ public class ModifyAttributesOperationRecorderTest extends TestCase {
         };
 
         DistinguishedName expectedName = new DistinguishedName("cn=john doe");
-        ldapOperationsControl.setDefaultMatcher(MockControl.ARRAY_MATCHER);
 
-        attributesMapperControl.expectAndReturn(
-                attributesMapperMock.hasMore(), true);
-        attributesMapperControl.expectAndReturn(
-                attributesMapperMock.getAttributesForLookup(),
-                new String[]{"attribute1"});
-        ldapOperationsControl.expectAndReturn(
-                ldapOperationsMock.lookup(expectedName, new String[]{"attribute1"}, attributesMapperMock),
-                expectedAttributes);
-        attributesMapperControl.expectAndReturn(attributesMapperMock.hasMore(), false);
-        attributesMapperControl.expectAndReturn(
-                attributesMapperMock.getCollectedAttributes(),
-                expectedAttributes);
+        when(attributesMapperMock.hasMore()).thenReturn(true, false);
+        when(attributesMapperMock.getAttributesForLookup())
+                .thenReturn(new String[]{"attribute1"});
+        when(ldapOperationsMock.lookup(expectedName, new String[]{"attribute1"}, attributesMapperMock))
+                .thenReturn(expectedAttributes);
+        when(attributesMapperMock.getCollectedAttributes())
+                .thenReturn(expectedAttributes);
 
-        replay();
         // Perform test
         CompensatingTransactionOperationExecutor operation = tested
                 .recordOperation(new Object[]{expectedName, incomingMods});
-        verify();
 
         // Verify outcome
         assertTrue(operation instanceof ModifyAttributesOperationExecutor);
@@ -132,6 +103,7 @@ public class ModifyAttributesOperationRecorderTest extends TestCase {
                 .getCompensatingModifications()[0]);
     }
 
+    @Test
     public void testGetCompensatingModificationItem_RemoveFullExistingAttribute()
             throws NamingException {
         BasicAttribute attribute = new BasicAttribute("someattr");
@@ -156,6 +128,7 @@ public class ModifyAttributesOperationRecorderTest extends TestCase {
         assertEquals("value2", resultAttribute.get(1));
     }
 
+    @Test
     public void testGetCompensatingModificationItem_RemoveTwoAttributeValues()
             throws NamingException {
         BasicAttribute attribute = new BasicAttribute("someattr");
@@ -184,6 +157,7 @@ public class ModifyAttributesOperationRecorderTest extends TestCase {
         assertEquals("value2", resultAttribute.get(1));
     }
 
+    @Test
     public void testGetCompensatingModificationItem_ReplaceExistingAttribute()
             throws NamingException {
         BasicAttribute attribute = new BasicAttribute("someattr");
@@ -211,6 +185,7 @@ public class ModifyAttributesOperationRecorderTest extends TestCase {
         assertEquals("value2", resultAttribute.get(1));
     }
 
+    @Test
     public void testGetCompensatingModificationItem_ReplaceNonExistingAttribute()
             throws NamingException {
         Attributes attributes = new BasicAttributes();
@@ -232,6 +207,7 @@ public class ModifyAttributesOperationRecorderTest extends TestCase {
         assertEquals(0, resultAttribute.size());
     }
 
+    @Test
     public void testGetCompensatingModificationItem_AddNonExistingAttribute()
             throws NamingException {
         Attributes attributes = new BasicAttributes();
@@ -253,6 +229,7 @@ public class ModifyAttributesOperationRecorderTest extends TestCase {
         assertEquals(0, resultAttribute.size());
     }
 
+    @Test
     public void testGetCompensatingModificationItem_AddExistingAttribute()
             throws NamingException {
         BasicAttribute attribute = new BasicAttribute("someattr");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,14 @@
  */
 package org.springframework.ldap.pool.factory;
 
-import javax.naming.directory.DirContext;
-
+import org.junit.Test;
 import org.springframework.ldap.pool.AbstractPoolTestCase;
 import org.springframework.ldap.pool.MutableDelegatingLdapContext;
+
+import javax.naming.directory.DirContext;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for the MutablePoolingContextSource class.
@@ -27,20 +31,17 @@ import org.springframework.ldap.pool.MutableDelegatingLdapContext;
  */
 public class MutablePoolingContextSourceTest extends AbstractPoolTestCase {
 
+    @Test
 	public void testGetReadOnlyLdapContext() throws Exception {
 
-		contextSourceControl.expectAndReturn(contextSourceMock.getReadOnlyContext(), ldapContextMock);
-
-		replay();
+		when(contextSourceMock.getReadOnlyContext()).thenReturn(ldapContextMock);
 
 		final MutablePoolingContextSource poolingContextSource = new MutablePoolingContextSource();
 		poolingContextSource.setContextSource(contextSourceMock);
 
 		// Get a context
 		final DirContext result = poolingContextSource.getReadOnlyContext();
-		
-		verify();
-		
+
 		assertEquals(MutableDelegatingLdapContext.class, result.getClass());
 	}
 }

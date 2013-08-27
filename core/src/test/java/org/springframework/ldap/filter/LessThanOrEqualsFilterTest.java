@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,26 +16,17 @@
 
 package org.springframework.ldap.filter;
 
-import org.springframework.ldap.filter.LessThanOrEqualsFilter;
-
 import com.gargoylesoftware.base.testing.EqualsTester;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Mattias Hellborg Arthursson
  */
-public class LessThanOrEqualsFilterTest extends TestCase {
+public class LessThanOrEqualsFilterTest {
 
-    /**
-     * Constructor for EqualsQueryTest.
-     * 
-     * @param name
-     */
-    public LessThanOrEqualsFilterTest(String name) {
-        super(name);
-    }
-
+    @Test
     public void testEncode() {
 
         LessThanOrEqualsFilter eqq = new LessThanOrEqualsFilter("foo",
@@ -48,6 +39,7 @@ public class LessThanOrEqualsFilterTest extends TestCase {
 
     }
 
+    @Test
     public void testEncodeInt() {
 
         LessThanOrEqualsFilter eqq = new LessThanOrEqualsFilter("foo", 456);
@@ -59,6 +51,7 @@ public class LessThanOrEqualsFilterTest extends TestCase {
 
     }
 
+    @Test
     public void testEquals() {
     	String attribute = "a";
 		String value = "b";

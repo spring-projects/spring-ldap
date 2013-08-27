@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,15 @@
  */
 package org.springframework.ldap.transaction.compensating.support;
 
+import org.junit.Test;
+import org.springframework.ldap.core.DistinguishedName;
+
 import javax.naming.Name;
 
-import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.transaction.compensating.support.DifferentSubtreeTempEntryRenamingStrategy;
+import static org.junit.Assert.assertEquals;
 
-import junit.framework.TestCase;
-
-public class DifferentSubtreeTempEntryRenamingStrategyTest extends TestCase {
-
+public class DifferentSubtreeTempEntryRenamingStrategyTest {
+    @Test
     public void testGetTemporaryName() {
         DistinguishedName originalName = new DistinguishedName(
                 "cn=john doe, ou=somecompany, c=SE");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,57 +15,32 @@
  */
 package org.springframework.ldap.transaction.compensating;
 
-import javax.naming.directory.BasicAttributes;
-
-import junit.framework.TestCase;
-
-import org.easymock.MockControl;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.transaction.compensating.RebindOperationExecutor;
-import org.springframework.ldap.transaction.compensating.RebindOperationRecorder;
-import org.springframework.ldap.transaction.compensating.TempEntryRenamingStrategy;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
-public class RebindOperationRecorderTest extends TestCase {
-    private MockControl ldapOperationsControl;
+import javax.naming.directory.BasicAttributes;
 
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+public class RebindOperationRecorderTest {
     private LdapOperations ldapOperationsMock;
-
-    private MockControl renamingStrategyControl;
 
     private TempEntryRenamingStrategy renamingStrategyMock;
 
-    protected void setUp() throws Exception {
-        ldapOperationsControl = MockControl.createControl(LdapOperations.class);
-        ldapOperationsMock = (LdapOperations) ldapOperationsControl.getMock();
-
-        renamingStrategyControl = MockControl
-                .createControl(TempEntryRenamingStrategy.class);
-        renamingStrategyMock = (TempEntryRenamingStrategy) renamingStrategyControl
-                .getMock();
+    @Before
+    public void setUp() throws Exception {
+        ldapOperationsMock = mock(LdapOperations.class);
+        renamingStrategyMock = mock(TempEntryRenamingStrategy.class);
 
     }
 
-    protected void tearDown() throws Exception {
-        ldapOperationsControl = null;
-        ldapOperationsMock = null;
-
-        renamingStrategyControl = null;
-        renamingStrategyMock = null;
-
-    }
-
-    protected void replay() {
-        ldapOperationsControl.replay();
-        renamingStrategyControl.replay();
-    }
-
-    protected void verify() {
-        ldapOperationsControl.verify();
-        renamingStrategyControl.verify();
-    }
-
+    @Test
     public void testRecordOperation() {
         final DistinguishedName expectedDn = new DistinguishedName(
                 "cn=john doe");
@@ -74,10 +49,9 @@ public class RebindOperationRecorderTest extends TestCase {
         RebindOperationRecorder tested = new RebindOperationRecorder(
                 ldapOperationsMock, renamingStrategyMock);
 
-        renamingStrategyControl.expectAndReturn(renamingStrategyMock
-                .getTemporaryName(expectedDn), expectedTempDn);
+        when(renamingStrategyMock.getTemporaryName(expectedDn))
+                .thenReturn(expectedTempDn);
 
-        replay();
         Object expectedObject = new Object();
         BasicAttributes expectedAttributes = new BasicAttributes();
 
@@ -85,8 +59,6 @@ public class RebindOperationRecorderTest extends TestCase {
         CompensatingTransactionOperationExecutor result = tested
                 .recordOperation(new Object[] { expectedDn, expectedObject,
                         expectedAttributes });
-        verify();
-
         assertTrue(result instanceof RebindOperationExecutor);
         RebindOperationExecutor rollbackOperation = (RebindOperationExecutor) result;
         assertSame(ldapOperationsMock, rollbackOperation.getLdapOperations());

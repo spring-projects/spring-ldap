@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,115 +16,76 @@
 
 package org.springframework.ldap.core;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.ldap.NameAlreadyBoundException;
+import org.springframework.ldap.UncategorizedLdapException;
+
 import javax.naming.Name;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 
-import junit.framework.TestCase;
-
-import org.easymock.MockControl;
-import org.springframework.ldap.NameAlreadyBoundException;
-import org.springframework.ldap.UncategorizedLdapException;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for the rename operations in the LdapTemplate class.
  * 
  * @author Ulrik Sandberg
  */
-public class LdapTemplateRenameTest extends TestCase {
-
-    private MockControl contextSourceControl;
+public class LdapTemplateRenameTest {
 
     private ContextSource contextSourceMock;
 
-    private MockControl dirContextControl;
-
     private DirContext dirContextMock;
 
-    private MockControl oldNameControl;
-
     private Name oldNameMock;
-
-    private MockControl newNameControl;
 
     private Name newNameMock;
 
     private LdapTemplate tested;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-
+    @Before
+    public void setUp() throws Exception {
         // Setup ContextSource mock
-        contextSourceControl = MockControl.createControl(ContextSource.class);
-        contextSourceMock = (ContextSource) contextSourceControl.getMock();
+        contextSourceMock = mock(ContextSource.class);
 
         // Setup LdapContext mock
-        dirContextControl = MockControl.createControl(LdapContext.class);
-        dirContextMock = (LdapContext) dirContextControl.getMock();
+        dirContextMock = mock(LdapContext.class);
 
         // Setup Name mock for old name
-        oldNameControl = MockControl.createControl(Name.class);
-        oldNameMock = (Name) oldNameControl.getMock();
+        oldNameMock = mock(Name.class);
 
         // Setup Name mock for new name
-        newNameControl = MockControl.createControl(Name.class);
-        newNameMock = (Name) newNameControl.getMock();
+        newNameMock = mock(Name.class);
 
         tested = new LdapTemplate(contextSourceMock);
     }
 
-    protected void tearDown() throws Exception {
-        super.tearDown();
-
-        contextSourceControl = null;
-        contextSourceMock = null;
-
-        dirContextControl = null;
-        dirContextMock = null;
-
-        oldNameControl = null;
-        newNameMock = null;
-    }
-
-    protected void replay() {
-        contextSourceControl.replay();
-        dirContextControl.replay();
-        oldNameControl.replay();
-    }
-
-    protected void verify() {
-        contextSourceControl.verify();
-        dirContextControl.verify();
-        oldNameControl.verify();
-    }
-
     private void expectGetReadWriteContext() {
-        contextSourceControl.expectAndReturn(contextSourceMock
-                .getReadWriteContext(), dirContextMock);
+        when(contextSourceMock.getReadWriteContext()).thenReturn(dirContextMock);
     }
 
+    @Test
     public void testRename() throws Exception {
         expectGetReadWriteContext();
 
-        dirContextMock.rename(oldNameMock, newNameMock);
-        dirContextMock.close();
-
-        replay();
-
         tested.rename(oldNameMock, newNameMock);
 
-        verify();
+        verify(dirContextMock).rename(oldNameMock, newNameMock);
+        verify(dirContextMock).close();
     }
 
+    @Test
     public void testRename_NameAlreadyBoundException() throws Exception {
         expectGetReadWriteContext();
 
-        dirContextMock.rename(oldNameMock, newNameMock);
         javax.naming.NameAlreadyBoundException ne = new javax.naming.NameAlreadyBoundException();
-        dirContextControl.setThrowable(ne);
-        dirContextMock.close();
-
-        replay();
+        doThrow(ne).when(dirContextMock).rename(oldNameMock, newNameMock);
 
         try {
             tested.rename(oldNameMock, newNameMock);
@@ -133,18 +94,16 @@ public class LdapTemplateRenameTest extends TestCase {
             assertTrue(true);
         }
 
-        verify();
+        verify(dirContextMock).close();
     }
 
+    @Test
     public void testRename_NamingException() throws Exception {
         expectGetReadWriteContext();
 
-        dirContextMock.rename(oldNameMock, newNameMock);
         javax.naming.NamingException ne = new javax.naming.NamingException();
-        dirContextControl.setThrowable(ne);
-        dirContextMock.close();
 
-        replay();
+        doThrow(ne).when(dirContextMock).rename(oldNameMock, newNameMock);
 
         try {
             tested.rename(oldNameMock, newNameMock);
@@ -153,19 +112,16 @@ public class LdapTemplateRenameTest extends TestCase {
             assertTrue(true);
         }
 
-        verify();
+        verify(dirContextMock).close();
     }
 
+    @Test
     public void testRename_String() throws Exception {
         expectGetReadWriteContext();
 
-        dirContextMock.rename("o=example.com", "o=somethingelse.com");
-        dirContextMock.close();
-
-        replay();
-
         tested.rename("o=example.com", "o=somethingelse.com");
 
-        verify();
+        verify(dirContextMock).rename("o=example.com", "o=somethingelse.com");
+        verify(dirContextMock).close();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 
 package org.springframework.ldap.core;
 
-import java.util.Iterator;
-import java.util.SortedSet;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.naming.CompositeName;
 import javax.naming.Name;
@@ -28,8 +28,15 @@ import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
+import java.util.Iterator;
+import java.util.SortedSet;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Tests the DirContextAdapter class.
@@ -38,7 +45,7 @@ import junit.framework.TestCase;
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  */
-public class DirContextAdapterTest extends TestCase {
+public class DirContextAdapterTest {
 	private static final DistinguishedName BASE_NAME = new DistinguishedName(
 			"dc=jayway, dc=se");
 
@@ -47,15 +54,12 @@ public class DirContextAdapterTest extends TestCase {
 
 	private DirContextAdapter tested;
 
-	protected void setUp() throws Exception {
-		super.setUp();
+    @Before
+	public void setUp() throws Exception {
 		tested = new DirContextAdapter();
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
+    @Test
 	public void testSetUpdateMode() throws Exception {
 		assertFalse(tested.isUpdateMode());
 		tested.setUpdateMode(true);
@@ -64,6 +68,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertFalse(tested.isUpdateMode());
 	}
 
+    @Test
 	public void testGetModificationItems() throws Exception {
 		ModificationItem[] items = tested.getModificationItems();
 		assertEquals(0, items.length);
@@ -71,6 +76,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals(0, items.length);
 	}
 
+    @Test
 	public void testAlwaysReplace() throws Exception {
 		ModificationItem[] items = tested.getModificationItems();
 		assertEquals(0, items.length);
@@ -78,11 +84,13 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals(0, items.length);
 	}
 
+    @Test
 	public void testGetStringAttributeWhenAttributeDoesNotExist() throws Exception {
 		String s = tested.getStringAttribute("does not exist");
 		assertNull(s);
 	}
 
+    @Test
 	public void testGetStringAttributeWhenAttributeDoesExistButWithNoValue() throws Exception {
 		final Attributes attrs = new BasicAttributes();
 		attrs.put(new BasicAttribute("abc"));
@@ -96,6 +104,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertNull(s);
 	}
 
+    @Test
 	public void testAttributeExistsWhenAttributeDoesExistButWithNoValue() throws Exception {
 		final Attributes attrs = new BasicAttributes();
 		attrs.put(new BasicAttribute("abc"));
@@ -109,11 +118,13 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals(true, result);
 	}
 
+    @Test
 	public void testAttributeExistsWhenAttributeDoesNotExist() throws Exception {
 		boolean result = tested.attributeExists("does not exist");
 		assertEquals(false, result);
 	}
 
+    @Test
 	public void testGetStringAttributeWhenAttributeExists() throws Exception {
 		final Attributes attrs = new BasicAttributes();
 		attrs.put(new BasicAttribute("abc", "def"));
@@ -127,6 +138,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("def", s);
 	}
 
+    @Test
 	public void testGetStringAttributesWhenMultiValueAttributeExists() throws Exception {
 		final Attributes attrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -145,6 +157,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals(2, s.length);
 	}
 
+    @Test
 	public void testGetStringAttributesExistsWithInvalidType() throws Exception {
 		final Attributes attrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -165,6 +178,7 @@ public class DirContextAdapterTest extends TestCase {
 		}
 	}
 
+    @Test
 	public void testGetStringAttributesExistsEmpty() throws Exception {
 		final Attributes attrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -180,11 +194,13 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals(0, s.length);
 	}
 
+    @Test
 	public void testGetStringAttributesNotExists() throws Exception {
 		String s[] = tested.getStringAttributes("abc");
 		assertNull(s);
 	}
 
+    @Test
 	public void testGetAttributesSortedStringSetExists() throws Exception {
 		final Attributes attrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -205,6 +221,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("234", it.next());
 	}
 
+    @Test
 	public void testGetAttributesSortedStringSetNotExists() throws Exception {
 		final Attributes attrs = new BasicAttributes();
 		class TestableDirContextAdapter extends DirContextAdapter {
@@ -217,6 +234,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertNull(s);
 	}
 
+    @Test
 	public void testAddAttributeValue() throws NamingException {
 		// Perform test
 		tested.addAttributeValue("abc", "123");
@@ -226,6 +244,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("123", (String) attr.get());
 	}
 
+    @Test
 	public void testAddAttributeValueAttributeWithOtherValueExists()
 			throws NamingException {
 		tested.setAttribute(new BasicAttribute("abc", "321"));
@@ -239,6 +258,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("123", (String) attr.get(1));
 	}
 
+    @Test
 	public void testAddAttributeValueAttributeWithSameValueExists()
 			throws NamingException {
 		tested.setAttribute(new BasicAttribute("abc", "123"));
@@ -252,6 +272,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("123", (String) attr.get(0));
 	}
 
+    @Test
 	public void testAddAttributeValueInUpdateMode() throws NamingException {
 		tested.setUpdateMode(true);
 		tested.addAttributeValue("abc", "123");
@@ -267,6 +288,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("123", attribute.get());
 	}
 
+    @Test
 	public void testAddAttributeValueInUpdateModeAttributeWhenOtherValueExistsInOrigAttrs()
 			throws NamingException {
 
@@ -287,6 +309,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("123", attribute.get());
 	}
 
+    @Test
 	public void testGetModificationItemsOnAddAttributeValueInUpdateModeAttributeWhenSameValueExistsInOrigAttrs()
 			throws NamingException {
 
@@ -303,6 +326,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals(0, modificationItems.length);
 	}
 
+    @Test
 	public void testAddAttributeValueInUpdateModeAttributeWithOtherValueExistsInUpdAttrs()
 			throws NamingException {
 		tested.setUpdateMode(true);
@@ -322,6 +346,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("123", attribute.get(1));
 	}
 
+    @Test
 	public void testAddAttributeValueInUpdateModeAttributeWithSameValueExistsInUpdAttrs()
 			throws NamingException {
 		tested.setUpdateMode(true);
@@ -341,6 +366,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("123", attribute.get());
 	}
 
+    @Test
 	public void testRemoveAttributeValueAttributeDoesntExist() {
 		// Perform test
 		tested.removeAttributeValue("abc", "123");
@@ -349,6 +375,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertNull(attributes.get("abc"));
 	}
 
+    @Test
 	public void testRemoveAttributeValueAttributeWithOtherValueExists()
 			throws NamingException {
 		tested.setAttribute(new BasicAttribute("abc", "321"));
@@ -363,6 +390,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("321", attr.get());
 	}
 
+    @Test
 	public void testRemoveAttributeValueAttributeWithSameValueExists() {
 		tested.setAttribute(new BasicAttribute("abc", "123"));
 
@@ -374,6 +402,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertNull(attr);
 	}
 
+    @Test
 	public void testRemoveAttributeValueAttributeWithOtherAndSameValueExists()
 			throws NamingException {
 		BasicAttribute basicAttribute = new BasicAttribute("abc");
@@ -391,6 +420,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("321", attr.get());
 	}
 
+    @Test
 	public void testRemoveAttributeValueInUpdateMode() {
 		tested.setUpdateMode(true);
 
@@ -403,6 +433,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals(0, modificationItems.length);
 	}
 
+    @Test
 	public void testRemoveAttributeValueInUpdateModeSameValueExistsInUpdatedAttrs() {
 		tested.setUpdateMode(true);
 		tested.setAttributeValue("abc", "123");
@@ -416,6 +447,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals(0, modificationItems.length);
 	}
 
+    @Test
 	public void testRemoveAttributeValueInUpdateModeOtherValueExistsInUpdatedAttrs()
 			throws NamingException {
 		tested.setUpdateMode(true);
@@ -434,6 +466,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("321", modificationAttribute.get());
 	}
 
+    @Test
 	public void testRemoveAttributeValueInUpdateModeOtherAndSameValueExistsInUpdatedAttrs()
 			throws NamingException {
 		tested.setUpdateMode(true);
@@ -451,6 +484,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals(1, modificationAttribute.size());
 	}
 
+    @Test
 	public void testRemoveAttributeValueInUpdateModeSameValueExistsInOrigAttrs() {
 		tested.setAttribute(new BasicAttribute("abc", "123"));
 		tested.setUpdateMode(true);
@@ -467,6 +501,7 @@ public class DirContextAdapterTest extends TestCase {
 				.getModificationOp());
 	}
 
+    @Test
 	public void testRemoveAttributeValueInUpdateModeSameAndOtherValueExistsInOrigAttrs()
 			throws NamingException {
 		BasicAttribute basicAttribute = new BasicAttribute("abc");
@@ -488,6 +523,7 @@ public class DirContextAdapterTest extends TestCase {
 				.getModificationOp());
 	}
 
+    @Test
 	public void testSetStringAttribute() throws Exception {
 		assertFalse(tested.isUpdateMode());
 		tested.setAttributeValue("abc", "123");
@@ -496,6 +532,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("123", (String) attr.get());
 	}
 
+    @Test
 	public void testSetStringAttributeNull() throws Exception {
 		assertFalse(tested.isUpdateMode());
 		tested.setAttributeValue("abc", null);
@@ -504,6 +541,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertNull(attr);
 	}
 
+    @Test
 	public void testAddAttribute() throws Exception {
 		tested.setUpdateMode(true);
 		assertTrue(tested.isUpdateMode());
@@ -532,12 +570,14 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("123", (String) attr.get());
 	}
 
+    @Test
 	public void testGetDn() throws Exception {
 		DirContextAdapter tested = new DirContextAdapter(DUMMY_NAME);
 		Name result = tested.getDn();
 		assertEquals(DUMMY_NAME, result);
 	}
 
+    @Test
 	public void testGetDn_BasePath() {
 		DirContextAdapter tested = new DirContextAdapter(null, DUMMY_NAME,
 				BASE_NAME);
@@ -545,12 +585,14 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals(DUMMY_NAME, result);
 	}
 
+    @Test
 	public void testGetNameInNamespace() {
 		DirContextAdapter tested = new DirContextAdapter(DUMMY_NAME);
 		String result = tested.getNameInNamespace();
 		assertEquals(DUMMY_NAME.toString(), result);
 	}
 
+    @Test
 	public void testGetNameInNamespace_BasePath() {
 		DirContextAdapter tested = new DirContextAdapter(null,
 				new DistinguishedName("c=SE"), BASE_NAME);
@@ -558,6 +600,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals(DUMMY_NAME.toString(), result);
 	}
 
+    @Test
 	public void testAddMultiAttributes() throws Exception {
 		tested.setUpdateMode(true);
 		assertTrue(tested.isUpdateMode());
@@ -588,6 +631,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("456", (String) attr.get(1));
 	}
 
+    @Test
 	public void testRemoveAttribute() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		fixtureAttrs.put(new BasicAttribute("abc", "123"));
@@ -625,6 +669,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertNull(attr);
 	}
 
+    @Test
 	public void testRemoveMultiAttribute() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute abc = new BasicAttribute("abc");
@@ -650,6 +695,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals(0, attr.size());
 	}
 
+    @Test
 	public void testChangeAttribute() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		fixtureAttrs.put(new BasicAttribute("abc", "123"));
@@ -670,6 +716,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("234", (String) attr.get());
 	}
 
+    @Test
 	public void testNoChangeAttribute() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		fixtureAttrs.put(new BasicAttribute("abc", "123"));
@@ -687,6 +734,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals(0, mods.length);
 	}
 
+    @Test
 	public void testNoChangeMultiAttribute() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -709,6 +757,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals(0, modNames.length);
 	}
 
+    @Test
 	public void testNoChangeMultiAttributeOrderDoesNotMatter() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -730,6 +779,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals(0, modNames.length);
 	}
 
+    @Test
 	public void testChangeMultiAttributeOrderDoesMatter() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -759,6 +809,7 @@ public class DirContextAdapterTest extends TestCase {
 	 * Test case corresponding to LDAP-96 in Spring Jira.
 	 * http://jira.springframework.org/browse/LDAP-96
 	 */
+    @Test
 	public void testChangeMultiAttributeOrderDoesMatterLDAP96()
 			throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
@@ -787,6 +838,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("Juergen", attr.get(2));
 	}
 
+    @Test
 	public void testChangeMultiAttribute_AddValue() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -812,6 +864,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("klytt", modificationItems[0].getAttribute().get());
 	}
 
+    @Test
 	public void testChangeMultiAttribute_RemoveValue() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -835,6 +888,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("qwe", modificationItems[0].getAttribute().get());
 	}
 
+    @Test
 	public void testChangeMultiAttribute_RemoveTwoValues() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -860,6 +914,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("rty", modificationItems[0].getAttribute().get(1));
 	}
 
+    @Test
 	public void testChangeMultiAttribute_RemoveAllValues() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -882,6 +937,7 @@ public class DirContextAdapterTest extends TestCase {
 				.getModificationOp());
 	}
 
+    @Test
 	public void testChangeMultiAttribute_SameValue() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -902,6 +958,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals(0, modificationItems.length);
 	}
 
+    @Test
 	public void testChangeMultiAttribute_AddAndRemoveValue() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -941,6 +998,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("kalle", modifiedAttribute.get(1));
 	}
 
+    @Test
 	public void testAddAttribute_Multivalue() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -962,6 +1020,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("def", modificationItems[0].getAttribute().getID());
 	}
 
+    @Test
 	public void testChangeAttributeTwice() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		fixtureAttrs.put(new BasicAttribute("abc", "123"));
@@ -994,6 +1053,7 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("987", tested.getStringAttribute("abc"));
 	}
 
+    @Test
 	public void testAddReplaceAndChangeAttribute() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		fixtureAttrs.put(new BasicAttribute("abc", "123"));
@@ -1056,6 +1116,7 @@ public class DirContextAdapterTest extends TestCase {
 	 * 
 	 * @throws NamingException
 	 */
+    @Test
 	public void testSetAttribute_UpdateMode() throws NamingException {
 		// Set original attribute value
 		Attribute attribute = new BasicAttribute("cn", "john doe");
@@ -1078,11 +1139,13 @@ public class DirContextAdapterTest extends TestCase {
 		assertEquals("nisse hult", modificationAttribute.get());
 	}
 
+    @Test
 	public void testGetStringAttributes_NullValue() {
 		String result = tested.getStringAttribute("someAbsentAttribute");
 		assertNull(result);
 	}
 
+    @Test
 	public void testGetStringAttributes_AttributeExists_NullValue() {
 		tested.setAttribute(new BasicAttribute("someAttribute", null));
 		String result = tested.getStringAttribute("someAttribute");
@@ -1098,6 +1161,7 @@ public class DirContextAdapterTest extends TestCase {
 		return null;
 	}
 
+    @Test
 	public void testModifyMultiValueAttributeModificationOrder()
 			throws NamingException {
 		BasicAttribute attribute = new BasicAttribute("abc");
@@ -1126,6 +1190,7 @@ public class DirContextAdapterTest extends TestCase {
 	/**
 	 * Test for LDAP-13.
 	 */
+    @Test
 	public void testModifyAttributeByteArray() {
 		tested.setAttribute(new BasicAttribute("abc", new byte[] { 1, 2, 3 }));
 
@@ -1142,6 +1207,7 @@ public class DirContextAdapterTest extends TestCase {
 	 * Test for LDAP-109, since also DirContextAdapter may get an invalid
 	 * CompositeName sent to it.
 	 */
+    @Test
 	public void testConstructorUsingCompositeNameWithBackslashes()
 			throws Exception {
 		CompositeName compositeName = new CompositeName();
@@ -1151,6 +1217,7 @@ public class DirContextAdapterTest extends TestCase {
 				.toString());
 	}
 
+    @Test
 	public void testStringConstructor() {
 		DirContextAdapter tested = new DirContextAdapter("cn=john doe, ou=company");
 		assertEquals(new DistinguishedName("cn=john doe, ou=company"), tested.getDn());

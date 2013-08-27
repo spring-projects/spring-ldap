@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,10 @@
 
 package org.springframework.ldap.core;
 
-import java.util.List;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.ldap.LimitExceededException;
+import org.springframework.ldap.PartialResultException;
 
 import javax.naming.Binding;
 import javax.naming.Name;
@@ -25,170 +28,103 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
+import java.util.List;
 
-import junit.framework.TestCase;
-
-import org.easymock.MockControl;
-import org.springframework.ldap.LimitExceededException;
-import org.springframework.ldap.PartialResultException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for the <code>list</code> operations in {@link LdapTemplate}.
  * 
  * @author Ulrik Sandberg
  */
-public class LdapTemplateListTest extends TestCase {
+public class LdapTemplateListTest {
 
     private static final String NAME = "o=example.com";
 
     private static final String CLASS = "com.example.SomeClass";
 
-    private MockControl contextSourceControl;
-
     private ContextSource contextSourceMock;
-
-    private MockControl dirContextControl;
 
     private DirContext dirContextMock;
 
-    private MockControl namingEnumerationControl;
-
     private NamingEnumeration namingEnumerationMock;
-
-    private MockControl nameControl;
 
     private Name nameMock;
 
-    private MockControl handlerControl;
-
     private NameClassPairCallbackHandler handlerMock;
-
-    private MockControl contextMapperControl;
 
     private ContextMapper contextMapperMock;
 
     private LdapTemplate tested;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-
+    @Before
+    public void setUp() throws Exception {
         // Setup ContextSource mock
-        contextSourceControl = MockControl.createControl(ContextSource.class);
-        contextSourceMock = (ContextSource) contextSourceControl.getMock();
+        contextSourceMock = mock(ContextSource.class);
 
         // Setup LdapContext mock
-        dirContextControl = MockControl.createControl(LdapContext.class);
-        dirContextMock = (LdapContext) dirContextControl.getMock();
+        dirContextMock = mock(LdapContext.class);
 
         // Setup NamingEnumeration mock
-        namingEnumerationControl = MockControl
-                .createControl(NamingEnumeration.class);
-        namingEnumerationMock = (NamingEnumeration) namingEnumerationControl
-                .getMock();
+        namingEnumerationMock = mock(NamingEnumeration.class);
 
         // Setup Name mock
-        nameControl = MockControl.createControl(Name.class);
-        nameMock = (Name) nameControl.getMock();
+        nameMock = mock(Name.class);
 
         // Setup Handler mock
-        handlerControl = MockControl
-                .createControl(NameClassPairCallbackHandler.class);
-        handlerMock = (NameClassPairCallbackHandler) handlerControl.getMock();
+        handlerMock = mock(NameClassPairCallbackHandler.class);
 
-        contextMapperControl = MockControl.createControl(ContextMapper.class);
-        contextMapperMock = (ContextMapper) contextMapperControl.getMock();
+        contextMapperMock = mock(ContextMapper.class);
 
         tested = new LdapTemplate(contextSourceMock);
     }
 
-    protected void tearDown() throws Exception {
-        super.tearDown();
-
-        contextSourceControl = null;
-        contextSourceMock = null;
-
-        dirContextControl = null;
-        dirContextMock = null;
-
-        namingEnumerationControl = null;
-        namingEnumerationMock = null;
-
-        nameControl = null;
-        nameMock = null;
-
-        handlerControl = null;
-        handlerMock = null;
-
-        contextMapperControl = null;
-        contextMapperMock = null;
-    }
-
-    protected void replay() {
-        contextSourceControl.replay();
-        dirContextControl.replay();
-        namingEnumerationControl.replay();
-        nameControl.replay();
-        handlerControl.replay();
-        contextMapperControl.replay();
-    }
-
-    protected void verify() {
-        contextSourceControl.verify();
-        dirContextControl.verify();
-        namingEnumerationControl.verify();
-        nameControl.verify();
-        handlerControl.verify();
-        contextMapperControl.verify();
-    }
-
     private void expectGetReadOnlyContext() {
-        contextSourceControl.expectAndReturn(contextSourceMock
-                .getReadOnlyContext(), dirContextMock);
+        when(contextSourceMock.getReadOnlyContext()).thenReturn(dirContextMock);
     }
 
     private void setupStringListAndNamingEnumeration(NameClassPair listResult)
             throws NamingException {
-        dirContextControl.expectAndReturn(dirContextMock.list(NAME),
-                namingEnumerationMock);
+        when(dirContextMock.list(NAME)).thenReturn(namingEnumerationMock);
 
         setupNamingEnumeration(listResult);
     }
 
     private void setupListAndNamingEnumeration(NameClassPair listResult)
             throws NamingException {
-        dirContextControl.expectAndReturn(dirContextMock.list(nameMock),
-                namingEnumerationMock);
+        when(dirContextMock.list(nameMock)).thenReturn(namingEnumerationMock);
 
         setupNamingEnumeration(listResult);
     }
 
     private void setupStringListBindingsAndNamingEnumeration(
             NameClassPair listResult) throws NamingException {
-        dirContextControl.expectAndReturn(dirContextMock.listBindings(NAME),
-                namingEnumerationMock);
+        when(dirContextMock.listBindings(NAME)).thenReturn(namingEnumerationMock);
 
         setupNamingEnumeration(listResult);
     }
 
     private void setupListBindingsAndNamingEnumeration(NameClassPair listResult)
             throws NamingException {
-        dirContextControl.expectAndReturn(
-                dirContextMock.listBindings(nameMock), namingEnumerationMock);
+        when(dirContextMock.listBindings(nameMock)).thenReturn(namingEnumerationMock);
 
         setupNamingEnumeration(listResult);
     }
 
     private void setupNamingEnumeration(NameClassPair listResult)
             throws NamingException {
-        namingEnumerationControl.expectAndReturn(namingEnumerationMock
-                .hasMore(), true);
-        namingEnumerationControl.expectAndReturn(namingEnumerationMock.next(),
-                listResult);
-        namingEnumerationControl.expectAndReturn(namingEnumerationMock
-                .hasMore(), false);
-        namingEnumerationMock.close();
+        when(namingEnumerationMock.hasMore()).thenReturn(true, false);
+        when(namingEnumerationMock.next()).thenReturn(listResult);
     }
 
+    @Test
     public void testList_Name() throws NamingException {
         expectGetReadOnlyContext();
 
@@ -196,19 +132,17 @@ public class LdapTemplateListTest extends TestCase {
 
         setupListAndNamingEnumeration(listResult);
 
-        dirContextMock.close();
-
-        replay();
-
         List list = tested.list(nameMock);
 
-        verify();
+        verify(dirContextMock).close();
+        verify(namingEnumerationMock).close();
 
         assertNotNull(list);
         assertEquals(1, list.size());
         assertSame(NAME, list.get(0));
     }
 
+    @Test
     public void testList_String() throws NamingException {
         expectGetReadOnlyContext();
 
@@ -216,19 +150,17 @@ public class LdapTemplateListTest extends TestCase {
 
         setupStringListAndNamingEnumeration(listResult);
 
-        dirContextMock.close();
-
-        replay();
-
         List list = tested.list(NAME);
 
-        verify();
+        verify(dirContextMock).close();
+        verify(namingEnumerationMock).close();
 
         assertNotNull(list);
         assertEquals(1, list.size());
         assertSame(NAME, list.get(0));
     }
 
+    @Test
     public void testList_Name_CallbackHandler() throws NamingException {
         expectGetReadOnlyContext();
 
@@ -236,17 +168,14 @@ public class LdapTemplateListTest extends TestCase {
 
         setupListAndNamingEnumeration(listResult);
 
-        handlerMock.handleNameClassPair(listResult);
-
-        dirContextMock.close();
-
-        replay();
-
         tested.list(nameMock, handlerMock);
 
-        verify();
+        verify(handlerMock).handleNameClassPair(listResult);
+        verify(namingEnumerationMock).close();
+        verify(dirContextMock).close();
     }
 
+    @Test
     public void testList_String_CallbackHandler() throws NamingException {
         expectGetReadOnlyContext();
 
@@ -254,26 +183,19 @@ public class LdapTemplateListTest extends TestCase {
 
         setupStringListAndNamingEnumeration(listResult);
 
-        handlerMock.handleNameClassPair(listResult);
-
-        dirContextMock.close();
-
-        replay();
-
         tested.list("o=example.com", handlerMock);
 
-        verify();
+        verify(handlerMock).handleNameClassPair(listResult);
+        verify(namingEnumerationMock).close();
+        verify(dirContextMock).close();
     }
 
+    @Test
     public void testList_PartialResultException() throws NamingException {
         expectGetReadOnlyContext();
 
         javax.naming.PartialResultException pre = new javax.naming.PartialResultException();
-        dirContextControl.expectAndThrow(dirContextMock.list(NAME), pre);
-
-        dirContextMock.close();
-
-        replay();
+        when(dirContextMock.list(NAME)).thenThrow(pre);
 
         try {
             tested.list(NAME);
@@ -282,38 +204,32 @@ public class LdapTemplateListTest extends TestCase {
             assertTrue(true);
         }
 
-        verify();
+        verify(dirContextMock).close();
     }
 
+    @Test
     public void testList_PartialResultException_Ignore() throws NamingException {
         expectGetReadOnlyContext();
 
         javax.naming.PartialResultException pre = new javax.naming.PartialResultException();
-        dirContextControl.expectAndThrow(dirContextMock.list(NAME), pre);
-
-        dirContextMock.close();
+        when(dirContextMock.list(NAME)).thenThrow(pre);
 
         tested.setIgnorePartialResultException(true);
 
-        replay();
-
         List list = tested.list(NAME);
 
-        verify();
+        verify(dirContextMock).close();
 
         assertNotNull(list);
         assertEquals(0, list.size());
     }
 
+    @Test
     public void testList_NamingException() throws NamingException {
         expectGetReadOnlyContext();
 
         javax.naming.LimitExceededException ne = new javax.naming.LimitExceededException();
-        dirContextControl.expectAndThrow(dirContextMock.list(NAME), ne);
-
-        dirContextMock.close();
-
-        replay();
+        when(dirContextMock.list(NAME)).thenThrow(ne);
 
         try {
             tested.list(NAME);
@@ -322,11 +238,12 @@ public class LdapTemplateListTest extends TestCase {
             assertTrue(true);
         }
 
-        verify();
+        verify(dirContextMock).close();
     }
 
     // Tests for listBindings
 
+    @Test
     public void testListBindings_String() throws NamingException {
         expectGetReadOnlyContext();
 
@@ -334,19 +251,17 @@ public class LdapTemplateListTest extends TestCase {
 
         setupStringListBindingsAndNamingEnumeration(listResult);
 
-        dirContextMock.close();
-
-        replay();
-
         List list = tested.listBindings(NAME);
 
-        verify();
+        verify(dirContextMock).close();
+        verify(namingEnumerationMock).close();
 
         assertNotNull(list);
         assertEquals(1, list.size());
         assertSame(NAME, list.get(0));
     }
 
+    @Test
     public void testListBindings_Name() throws NamingException {
         expectGetReadOnlyContext();
 
@@ -354,19 +269,17 @@ public class LdapTemplateListTest extends TestCase {
 
         setupListBindingsAndNamingEnumeration(listResult);
 
-        dirContextMock.close();
-
-        replay();
-
         List list = tested.listBindings(nameMock);
 
-        verify();
+        verify(dirContextMock).close();
+        verify(namingEnumerationMock).close();
 
         assertNotNull(list);
         assertEquals(1, list.size());
         assertSame(NAME, list.get(0));
     }
 
+    @Test
     public void testListBindings_ContextMapper() throws NamingException {
         expectGetReadOnlyContext();
 
@@ -376,22 +289,19 @@ public class LdapTemplateListTest extends TestCase {
         setupStringListBindingsAndNamingEnumeration(listResult);
 
         Object expectedResult = expectedObject;
-        contextMapperControl.expectAndReturn(contextMapperMock
-                .mapFromContext(expectedObject), expectedResult);
-
-        dirContextMock.close();
-
-        replay();
+        when(contextMapperMock.mapFromContext(expectedObject)).thenReturn(expectedResult);
 
         List list = tested.listBindings(NAME, contextMapperMock);
 
-        verify();
+        verify(dirContextMock).close();
+        verify(namingEnumerationMock).close();
 
         assertNotNull(list);
         assertEquals(1, list.size());
         assertSame(expectedResult, list.get(0));
     }
 
+    @Test
     public void testListBindings_Name_ContextMapper() throws NamingException {
         expectGetReadOnlyContext();
 
@@ -401,16 +311,12 @@ public class LdapTemplateListTest extends TestCase {
         setupListBindingsAndNamingEnumeration(listResult);
 
         Object expectedResult = expectedObject;
-        contextMapperControl.expectAndReturn(contextMapperMock
-                .mapFromContext(expectedObject), expectedResult);
-
-        dirContextMock.close();
-
-        replay();
+        when(contextMapperMock.mapFromContext(expectedObject)).thenReturn(expectedResult);
 
         List list = tested.listBindings(nameMock, contextMapperMock);
 
-        verify();
+        verify(dirContextMock).close();
+        verify(namingEnumerationMock).close();
 
         assertNotNull(list);
         assertEquals(1, list.size());

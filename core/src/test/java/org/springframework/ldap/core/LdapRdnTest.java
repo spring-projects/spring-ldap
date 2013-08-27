@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,21 @@
 
 package org.springframework.ldap.core;
 
-import junit.framework.TestCase;
-
+import com.gargoylesoftware.base.testing.EqualsTester;
+import org.junit.Test;
 import org.springframework.ldap.BadLdapGrammarException;
 
-import com.gargoylesoftware.base.testing.EqualsTester;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit test for the LdapRdn class.
  * 
  * @author Adam Skogman
  */
-public class LdapRdnTest extends TestCase {
+public class LdapRdnTest {
 
+    @Test
     public void testLdapRdn_parse_simple() {
 
         LdapRdn rdn = new LdapRdn("foo=bar");
@@ -40,6 +42,7 @@ public class LdapRdnTest extends TestCase {
         assertEquals("bar", rdn.getValue());
     }
 
+    @Test
     public void testLdapRdn_parse_spaces() {
 
         LdapRdn rdn = new LdapRdn(" foo = bar ");
@@ -49,6 +52,7 @@ public class LdapRdnTest extends TestCase {
         assertEquals("foo=bar", rdn.getComponent().getLdapEncoded());
     }
 
+    @Test
     public void testLdapRdn_parse_escape() {
 
         LdapRdn rdn = new LdapRdn("foo=bar\\=fum");
@@ -58,6 +62,7 @@ public class LdapRdnTest extends TestCase {
         assertEquals("foo=bar\\=fum", rdn.getComponent().getLdapEncoded());
     }
 
+    @Test
     public void testLdapRdn_parse_hexEscape() {
 
         LdapRdn rdn = new LdapRdn("foo=bar\\0dfum");
@@ -67,18 +72,13 @@ public class LdapRdnTest extends TestCase {
         assertEquals("foo=bar\\0Dfum", rdn.getComponent().getLdapEncoded());
     }
 
+    @Test(expected = BadLdapGrammarException.class)
     public void testLdapRdn_parse_trailingBackslash() {
-
-        try {
-            new LdapRdn("foo=bar\\");
-            fail("Should throw BadLdapGrammarException");
-        } catch (BadLdapGrammarException e) {
-            assertTrue(true);
-        }
+        new LdapRdn("foo=bar\\");
     }
 
+    @Test
     public void testLdapRdn_parse_spaces_escape() {
-
         LdapRdn rdn = new LdapRdn(" foo = \\ bar\\20 \\  ");
 
         assertEquals("foo", rdn.getComponent().getKey());
@@ -86,15 +86,12 @@ public class LdapRdnTest extends TestCase {
         assertEquals("foo=\\ bar  \\ ", rdn.getComponent().getLdapEncoded());
     }
 
+    @Test(expected = BadLdapGrammarException.class)
     public void testLdapRdn_parse_tooMuchTrim() {
-        try {
-            new LdapRdn("foo=bar\\");
-            fail("Should throw BadLdapGrammarException");
-        } catch (BadLdapGrammarException e) {
-            assertTrue(true);
-        }
+        new LdapRdn("foo=bar\\");
     }
 
+    @Test
     public void testLdapRdn_parse_slash() {
         LdapRdn rdn = new LdapRdn("ou=Clerical / Secretarial Staff");
 
@@ -105,15 +102,12 @@ public class LdapRdnTest extends TestCase {
                 .getLdapEncoded());
     }
 
+    @Test(expected = BadLdapGrammarException.class)
     public void testLdapRdn_parse_quoteInKey() {
-        try {
-            new LdapRdn("\"umanroleid=2583");
-            fail("Should throw BadLdapGrammarException");
-        } catch (BadLdapGrammarException e) {
-            assertTrue(true);
-        }
+        new LdapRdn("\"umanroleid=2583");
     }
 
+    @Test
     public void testLdapRdn_KeyValue_simple() {
         LdapRdn rdn = new LdapRdn("foo", "bar");
 
@@ -122,6 +116,7 @@ public class LdapRdnTest extends TestCase {
         assertEquals("foo=bar", rdn.getComponent().getLdapEncoded());
     }
 
+    @Test
     public void testLdapRdn_KeyValue_valueNeedsEscape() {
         LdapRdn rdn = new LdapRdn("foo", "bar\\");
 
@@ -130,16 +125,19 @@ public class LdapRdnTest extends TestCase {
         assertEquals("foo=bar\\\\", rdn.getComponent().getLdapEncoded());
     }
 
+    @Test
     public void testEncodeUrl() {
         LdapRdn rdn = new LdapRdn("o = example.com ");
         assertEquals("o=example.com", rdn.encodeUrl());
     }
 
+    @Test
     public void testEncodeUrl_SpacesInValue() {
         LdapRdn rdn = new LdapRdn("o = my organization ");
         assertEquals("o=my%20organization", rdn.encodeUrl());
     }
 
+    @Test
     public void testLdapRdn_Parse_MultipleComponents() {
         LdapRdn rdn = new LdapRdn("cn=John Doe+sn=Doe");
         assertEquals("cn=John Doe", rdn.getComponent(0).encodeLdap());
@@ -151,26 +149,19 @@ public class LdapRdnTest extends TestCase {
         assertEquals("Doe", rdn.getValue("sn"));
     }
 
+    @Test(expected = IllegalArgumentException.class)
     public void testGetValueNoKeyWithCorrectValue() {
         LdapRdn tested = new LdapRdn("cn=john doe");
-        try {
-            tested.getValue("sn");
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertTrue(true);
-        }
+        tested.getValue("sn");
     }
 
+    @Test(expected = IllegalArgumentException.class)
     public void testGetValueNoComponents() {
         LdapRdn tested = new LdapRdn();
-        try {
-            tested.getValue("sn");
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertTrue(true);
-        }
+        tested.getValue("sn");
     }
 
+    @Test
     public void testEquals() throws Exception {
         // original object
         final Object originalObject = new LdapRdn("cn", "john.doe");
@@ -190,6 +181,7 @@ public class LdapRdnTest extends TestCase {
                 subclassObject);
     }
 
+    @Test
     public void testCompareTo_Equals() throws Exception {
         LdapRdn rdn1 = new LdapRdn("cn=john doe");
         LdapRdn rdn2 = new LdapRdn("cn=john doe");
@@ -198,6 +190,7 @@ public class LdapRdnTest extends TestCase {
         assertEquals(0, result);
     }
 
+    @Test
     public void testCompareTo_EqualsComplex() throws Exception {
         LdapRdn rdn1 = new LdapRdn("cn=john doe+sn=doe");
         LdapRdn rdn2 = new LdapRdn("cn=john doe+sn=doe");
@@ -206,6 +199,7 @@ public class LdapRdnTest extends TestCase {
         assertEquals(0, result);
     }
 
+    @Test
     public void testCompareTo_Less() {
         LdapRdn rdn1 = new LdapRdn("cn=john doe+sn=doe");
         LdapRdn rdn2 = new LdapRdn("cn=john doe+tn=doe");
@@ -214,6 +208,7 @@ public class LdapRdnTest extends TestCase {
         assertTrue(result < 0);
     }
 
+    @Test
     public void testCompareTo_Greater() {
         LdapRdn rdn1 = new LdapRdn("cn=john doe+sn=doe");
         LdapRdn rdn2 = new LdapRdn("cn=john doe+an=doe");
@@ -222,6 +217,7 @@ public class LdapRdnTest extends TestCase {
         assertTrue(result > 0);
     }
 
+    @Test
     public void testCompareTo_Shorter() {
         LdapRdn rdn1 = new LdapRdn("cn=john doe+sn=doe");
         LdapRdn rdn2 = new LdapRdn("cn=john doe+sn=doe+description=tjo");
@@ -230,6 +226,7 @@ public class LdapRdnTest extends TestCase {
         assertTrue(result < 0);
     }
 
+    @Test
     public void testCompareTo_Longer() {
         LdapRdn rdn1 = new LdapRdn("cn=john doe+sn=doe+description=tjo");
         LdapRdn rdn2 = new LdapRdn("cn=john doe+sn=doe");

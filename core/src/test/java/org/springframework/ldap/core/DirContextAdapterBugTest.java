@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,13 @@
  */
 package org.springframework.ldap.core;
 
+import org.junit.Test;
+
 import javax.naming.Name;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttributes;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 
 /**
@@ -27,8 +29,9 @@ import junit.framework.TestCase;
  * 
  * @author Luke Taylor
  */
-public class DirContextAdapterBugTest extends TestCase {
+public class DirContextAdapterBugTest {
 
+    @Test
     public void testResetAttributeValuesNotReportedAsModifications() {
         BasicAttributes attrs = new BasicAttributes("myattr", "a");
         attrs.get("myattr").add("b");
@@ -41,6 +44,7 @@ public class DirContextAdapterBugTest extends TestCase {
         assertEquals(0, ctx.getModificationItems().length);
     }
 
+    @Test
     public void testResetAttributeValuesSameLengthNotReportedAsModifications() {
         BasicAttributes attrs = new BasicAttributes("myattr", "a");
         attrs.get("myattr").add("b");
@@ -61,6 +65,7 @@ public class DirContextAdapterBugTest extends TestCase {
      * 
      * TODO Is this correct behaviour?
      */
+    @Test
     public void testResetNullAttributeValuesReportedAsModifications() {
         BasicAttributes attrs = new BasicAttributes("myattr", null);
         UpdateAdapter ctx = new UpdateAdapter(attrs, new DistinguishedName());
@@ -71,6 +76,7 @@ public class DirContextAdapterBugTest extends TestCase {
         assertEquals(1, ctx.getModificationItems().length);
     }
 
+    @Test
     public void testResetNullAttributeValueNotReportedAsModification() throws Exception {
         BasicAttributes attrs = new BasicAttributes("myattr", "b");
         UpdateAdapter ctx = new UpdateAdapter(attrs, new DistinguishedName());

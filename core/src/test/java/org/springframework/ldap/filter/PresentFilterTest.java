@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,19 @@
  */
 package org.springframework.ldap.filter;
 
-import junit.framework.TestCase;
-
-import org.springframework.ldap.filter.AndFilter;
-import org.springframework.ldap.filter.NotFilter;
-
 import com.gargoylesoftware.base.testing.EqualsTester;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for the PresentFilter class.
  *
  * @author Ulrik Sandberg
  */
-public class PresentFilterTest extends TestCase {
+public class PresentFilterTest {
 
+    @Test
 	public void testPresentFilter() {
 		PresentFilter filter = new PresentFilter("foo");
 		assertEquals("(foo=*)", filter.encode());
@@ -47,6 +46,7 @@ public class PresentFilterTest extends TestCase {
 		assertEquals("(&(foo=*)(!(bar=*)))", andFilter.encode());
 	}
 
+    @Test
     public void testEquals() {
 		String attribute = "foo";
 		PresentFilter originalObject = new PresentFilter(attribute);

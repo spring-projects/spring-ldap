@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,74 +15,39 @@
  */
 package org.springframework.transaction.compensating.support;
 
-import java.lang.reflect.Method;
-
-import javax.naming.directory.DirContext;
-
-import junit.framework.TestCase;
-
-import org.easymock.MockControl;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.transaction.compensating.manager.DirContextHolder;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationManager;
-import org.springframework.transaction.compensating.support.CompensatingTransactionHolderSupport;
-import org.springframework.transaction.compensating.support.CompensatingTransactionUtils;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-public class CompensatingTransactionUtilsTest extends TestCase {
+import javax.naming.directory.DirContext;
+import java.lang.reflect.Method;
 
-    private MockControl dirContextControl;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
+public class CompensatingTransactionUtilsTest {
 
     private DirContext dirContextMock;
 
-    private MockControl contextSourceControl;
-
     private ContextSource contextSourceMock;
-
-    private MockControl operationManagerControl;
 
     private CompensatingTransactionOperationManager operationManagerMock;
 
-    protected void setUp() throws Exception {
-        dirContextControl = MockControl.createControl(DirContext.class);
-        dirContextMock = (DirContext) dirContextControl.getMock();
-
-        contextSourceControl = MockControl.createControl(ContextSource.class);
-        contextSourceMock = (ContextSource) contextSourceControl.getMock();
-
-        operationManagerControl = MockControl
-                .createControl(CompensatingTransactionOperationManager.class);
-        operationManagerMock = (CompensatingTransactionOperationManager) operationManagerControl
-                .getMock();
+    @Before
+    public void setUp() throws Exception {
+        dirContextMock = mock(DirContext.class);
+        contextSourceMock = mock(ContextSource.class);
+        operationManagerMock = mock(CompensatingTransactionOperationManager.class);
 
         if (TransactionSynchronizationManager.isSynchronizationActive()) {
             TransactionSynchronizationManager.clearSynchronization();
         }
     }
 
-    protected void tearDown() throws Exception {
-        dirContextControl = null;
-        dirContextMock = null;
-
-        contextSourceControl = null;
-        contextSourceMock = null;
-
-        operationManagerControl = null;
-        operationManagerMock = null;
-    }
-
-    protected void replay() {
-        dirContextControl.replay();
-        contextSourceControl.replay();
-        operationManagerControl.replay();
-    }
-
-    protected void verify() {
-        dirContextControl.verify();
-        contextSourceControl.verify();
-        operationManagerControl.verify();
-    }
-
+    @Test
     public void testPerformOperation() throws Throwable {
         CompensatingTransactionHolderSupport holder = new DirContextHolder(
                 null, dirContextMock);
@@ -92,23 +57,20 @@ public class CompensatingTransactionUtilsTest extends TestCase {
                 holder);
 
         Object[] expectedArgs = new Object[] { "someDn" };
-        operationManagerMock.performOperation(dirContextMock, "unbind",
-                expectedArgs);
 
-        replay();
         CompensatingTransactionUtils.performOperation(contextSourceMock,
                 dirContextMock, getUnbindMethod(), expectedArgs);
-        verify();
+        verify(operationManagerMock).performOperation(dirContextMock, "unbind",
+                expectedArgs);
     }
 
+    @Test
     public void testPerformOperation_NoTransaction() throws Throwable {
         Object[] expectedArgs = new Object[] { "someDn" };
-        dirContextMock.unbind("someDn");
 
-        replay();
         CompensatingTransactionUtils.performOperation(contextSourceMock,
                 dirContextMock, getUnbindMethod(), expectedArgs);
-        verify();
+        verify(dirContextMock).unbind("someDn");
     }
 
     private Method getUnbindMethod() throws NoSuchMethodException {

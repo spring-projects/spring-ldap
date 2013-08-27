@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,33 +15,29 @@
  */
 package org.springframework.ldap.transaction.compensating;
 
-import javax.naming.directory.BasicAttributes;
-
-import junit.framework.TestCase;
-
-import org.easymock.MockControl;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.transaction.compensating.BindOperationExecutor;
-import org.springframework.ldap.transaction.compensating.BindOperationRecorder;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
-public class BindOperationRecorderTest extends TestCase {
-    private MockControl ldapOperationsControl;
+import javax.naming.directory.BasicAttributes;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+
+public class BindOperationRecorderTest {
     private LdapOperations ldapOperationsMock;
 
-    protected void setUp() throws Exception {
-        ldapOperationsControl = MockControl.createControl(LdapOperations.class);
-        ldapOperationsMock = (LdapOperations) ldapOperationsControl.getMock();
+    @Before
+    public void setUp() throws Exception {
+        ldapOperationsMock = mock(LdapOperations.class);
 
     }
 
-    protected void tearDown() throws Exception {
-        ldapOperationsControl = null;
-        ldapOperationsMock = null;
-    }
-
+    @Test
     public void testRecordOperation_DistinguishedName() {
         BindOperationRecorder tested = new BindOperationRecorder(
                 ldapOperationsMock);
@@ -63,6 +59,7 @@ public class BindOperationRecorderTest extends TestCase {
                 .getOriginalAttributes());
     }
 
+    @Test
     public void testPerformOperation_String() {
         BindOperationRecorder tested = new BindOperationRecorder(
                 ldapOperationsMock);
@@ -81,18 +78,13 @@ public class BindOperationRecorderTest extends TestCase {
         assertSame(ldapOperationsMock, rollbackOperation.getLdapOperations());
     }
 
+    @Test(expected = IllegalArgumentException.class)
     public void testPerformOperation_Invalid() {
         BindOperationRecorder tested = new BindOperationRecorder(
                 ldapOperationsMock);
         Object expectedDn = new Object();
 
-        try {
-            // Perform test.
-            tested.recordOperation(new Object[] { expectedDn });
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertTrue(true);
-        }
-
+        // Perform test.
+        tested.recordOperation(new Object[]{expectedDn});
     }
 }

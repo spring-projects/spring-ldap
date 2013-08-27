@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,17 @@
  */
 package org.springframework.ldap.authentication;
 
-import org.easymock.MockControl;
-import org.springframework.ldap.authentication.DefaultValuesAuthenticationSourceDecorator;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.ldap.core.AuthenticationSource;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-public class DefaultValuesAuthenticationSourceDecoratorTest extends TestCase {
+public class DefaultValuesAuthenticationSourceDecoratorTest {
 
     private static final String DEFAULT_PASSWORD = "defaultPassword";
 
@@ -29,79 +33,55 @@ public class DefaultValuesAuthenticationSourceDecoratorTest extends TestCase {
 
     private DefaultValuesAuthenticationSourceDecorator tested;
 
-    private MockControl authenticationSourceControl;
-
     private AuthenticationSource authenticationSourceMock;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-
-        authenticationSourceControl = MockControl
-                .createControl(AuthenticationSource.class);
-        authenticationSourceMock = (AuthenticationSource) authenticationSourceControl
-                .getMock();
+    @Before
+    public void setUp() throws Exception {
+        authenticationSourceMock = mock(AuthenticationSource.class);
         tested = new DefaultValuesAuthenticationSourceDecorator();
         tested.setDefaultUser(DEFAULT_USER);
         tested.setDefaultPassword(DEFAULT_PASSWORD);
         tested.setTarget(authenticationSourceMock);
     }
 
-    protected void tearDown() throws Exception {
-        super.tearDown();
-
-        tested = null;
-        authenticationSourceControl = null;
-        authenticationSourceMock = null;
-    }
-
+    @Test
     public void testGetPrincipal_TargetHasPrincipal() {
-        authenticationSourceControl.expectAndDefaultReturn(
-                authenticationSourceMock.getPrincipal(), "cn=someUser");
-        authenticationSourceControl.replay();
-
+        when(authenticationSourceMock.getPrincipal()).thenReturn("cn=someUser");
         String principal = tested.getPrincipal();
 
-        authenticationSourceControl.verify();
         assertEquals("cn=someUser", principal);
     }
 
+    @Test
     public void testGetPrincipal_TargetHasNoPrincipal() {
-        authenticationSourceControl.expectAndDefaultReturn(
-                authenticationSourceMock.getPrincipal(), "");
-        authenticationSourceControl.replay();
+        when(authenticationSourceMock.getPrincipal()).thenReturn("");
 
         String principal = tested.getPrincipal();
 
-        authenticationSourceControl.verify();
         assertEquals(DEFAULT_USER, principal);
     }
 
+    @Test
     public void testGetCredentials_TargetHasPrincipal() {
-        authenticationSourceControl.expectAndDefaultReturn(
-                authenticationSourceMock.getPrincipal(), "cn=someUser");
-        authenticationSourceControl.expectAndDefaultReturn(
-                authenticationSourceMock.getCredentials(), "somepassword");
-        authenticationSourceControl.replay();
+        when(authenticationSourceMock.getPrincipal()).thenReturn("cn=someUser");
+        when(authenticationSourceMock.getCredentials()).thenReturn("somepassword");
 
         String credentials = tested.getCredentials();
 
-        authenticationSourceControl.verify();
         assertEquals("somepassword", credentials);
     }
 
+    @Test
     public void testGetCredentials_TargetHasNoPrincipal() {
-        authenticationSourceControl.expectAndDefaultReturn(
-                authenticationSourceMock.getPrincipal(), "");
-        authenticationSourceControl.expectAndDefaultReturn(
-                authenticationSourceMock.getCredentials(), "somepassword");
-        authenticationSourceControl.replay();
+        when(authenticationSourceMock.getPrincipal()).thenReturn("");
+        when(authenticationSourceMock.getCredentials()).thenReturn("somepassword");
 
         String credentials = tested.getCredentials();
 
-        authenticationSourceControl.verify();
         assertEquals(DEFAULT_PASSWORD, credentials);
     }
 
+    @Test
     public void testAfterPropertiesSet_noTarget() throws Exception {
         tested.setTarget(null);
         try {
@@ -112,6 +92,7 @@ public class DefaultValuesAuthenticationSourceDecoratorTest extends TestCase {
         }
     }
 
+    @Test
     public void testAfterPropertiesSet_noDefaultUser() throws Exception {
         tested.setDefaultUser(null);
         try {
@@ -122,6 +103,7 @@ public class DefaultValuesAuthenticationSourceDecoratorTest extends TestCase {
         }
     }
 
+    @Test
     public void testAfterPropertiesSet_noDefaultPassword() throws Exception {
         tested.setDefaultPassword(null);
         try {

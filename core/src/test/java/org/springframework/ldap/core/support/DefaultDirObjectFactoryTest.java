@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,24 @@
  */
 package org.springframework.ldap.core.support;
 
-import java.util.Hashtable;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.DistinguishedName;
 
 import javax.naming.CompositeName;
 import javax.naming.Context;
 import javax.naming.InvalidNameException;
 import javax.naming.Name;
 import javax.naming.directory.BasicAttributes;
+import java.util.Hashtable;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import org.easymock.MockControl;
-import org.springframework.ldap.core.DirContextAdapter;
-import org.springframework.ldap.core.DistinguishedName;
-
-public class DefaultDirObjectFactoryTest extends TestCase {
-
-	private MockControl contextControl;
+public class DefaultDirObjectFactoryTest {
 
 	private Context contextMock;
 
@@ -41,68 +42,34 @@ public class DefaultDirObjectFactoryTest extends TestCase {
 
 	private DefaultDirObjectFactory tested;
 
-	private MockControl contextControl2;
-
 	private Context contextMock2;
 
-	protected void setUp() throws Exception {
-		super.setUp();
-
-		contextControl = MockControl.createControl(Context.class);
-		contextMock = (Context) contextControl.getMock();
-
-		contextControl2 = MockControl.createControl(Context.class);
-		contextMock2 = (Context) contextControl2.getMock();
+    @Before
+	public void setUp() throws Exception {
+		contextMock = mock(Context.class);
+		contextMock2 = mock(Context.class);
 
 		tested = new DefaultDirObjectFactory();
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-
-		contextControl = null;
-		contextMock = null;
-
-		contextControl2 = null;
-		contextMock2 = null;
-
-		tested = null;
-	}
-
-	protected void replay() {
-		contextControl.replay();
-		contextControl2.replay();
-	}
-
-	protected void verify() {
-		contextControl.verify();
-		contextControl2.verify();
-	}
-
+    @Test
 	public void testGetObjectInstance() throws Exception {
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		expectedAttributes.put("someAttribute", "someValue");
 
-		contextMock.close();
-
-		replay();
-
 		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(contextMock, DN, null,
 				new Hashtable(), expectedAttributes);
 
-		verify();
+		verify(contextMock).close();
 
 		assertEquals(DN, adapter.getDn());
 		assertEquals(expectedAttributes, adapter.getAttributes());
 	}
 
+    @Test
 	public void testGetObjectInstance_CompositeName() throws Exception {
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		expectedAttributes.put("someAttribute", "someValue");
-
-		contextMock.close();
-
-		replay();
 
 		CompositeName name = new CompositeName();
 		name.add(DN_STRING);
@@ -110,37 +77,31 @@ public class DefaultDirObjectFactoryTest extends TestCase {
 		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(contextMock, name, null,
 				new Hashtable(), expectedAttributes);
 
-		verify();
+        verify(contextMock).close();
 
 		assertEquals(DN, adapter.getDn());
 		assertEquals(expectedAttributes, adapter.getAttributes());
 	}
 
+    @Test
 	public void testGetObjectInstance_nullObject() throws Exception {
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		expectedAttributes.put("someAttribute", "someValue");
 
-		replay();
-
 		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(null, DN, null, new Hashtable(),
 				expectedAttributes);
-
-		verify();
 
 		assertEquals(DN, adapter.getDn());
 		assertEquals(expectedAttributes, adapter.getAttributes());
 	}
 
+    @Test
 	public void testGetObjectInstance_ObjectNotContext() throws Exception {
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		expectedAttributes.put("someAttribute", "someValue");
 
-		replay();
-
 		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(new Object(), DN, null,
 				new Hashtable(), expectedAttributes);
-
-		verify();
 
 		assertEquals(DN, adapter.getDn());
 		assertEquals(expectedAttributes, adapter.getAttributes());
@@ -151,25 +112,24 @@ public class DefaultDirObjectFactoryTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+    @Test
 	public void testGetObjectInstance_BaseSet() throws Exception {
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		expectedAttributes.put("someAttribute", "someValue");
 
-		contextControl2.expectAndReturn(contextMock2.getNameInNamespace(), "dc=jayway, dc=se");
-		contextMock.close();
-
-		replay();
+		when(contextMock2.getNameInNamespace()).thenReturn("dc=jayway, dc=se");
 
 		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(contextMock, new DistinguishedName(
 				"ou=some unit"), contextMock2, new Hashtable(), expectedAttributes);
 
-		verify();
+        verify(contextMock).close();
 
 		assertEquals("ou=some unit", adapter.getDn().toString());
 		assertEquals("ou=some unit,dc=jayway,dc=se", adapter.getNameInNamespace());
 		assertEquals(expectedAttributes, adapter.getAttributes());
 	}
 
+    @Test
 	public void testConstructAdapterFromName() throws InvalidNameException {
 		CompositeName name = new CompositeName();
 		name.add("ldap://localhost:389/ou=People,o=JNDITutorial");
@@ -180,6 +140,7 @@ public class DefaultDirObjectFactoryTest extends TestCase {
 		assertEquals("ldap://localhost:389", result.getReferralUrl().toString());
 	}
 
+    @Test
 	public void testConstructAdapterFromName_Ldaps() throws InvalidNameException {
 		CompositeName name = new CompositeName();
 		name.add("ldaps://localhost:389/ou=People,o=JNDITutorial");
@@ -190,6 +151,7 @@ public class DefaultDirObjectFactoryTest extends TestCase {
 		assertEquals("ldaps://localhost:389", result.getReferralUrl().toString());
 	}
 
+    @Test
 	public void testConstructAdapterFromName_EmptyName() throws InvalidNameException {
 		CompositeName name = new CompositeName();
 		name.add("ldap://localhost:389");
@@ -200,7 +162,7 @@ public class DefaultDirObjectFactoryTest extends TestCase {
 		assertEquals("ldap://localhost:389", result.getReferralUrl().toString());
 	}
 
-	
+    @Test
 	public void testConstructAdapterFromName_OnlySlash() throws InvalidNameException {
 		CompositeName name = new CompositeName();
 		name.add("ldap://localhost:389/");

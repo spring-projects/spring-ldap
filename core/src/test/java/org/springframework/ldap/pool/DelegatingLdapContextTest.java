@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,21 +15,29 @@
  */
 package org.springframework.ldap.pool;
 
+import org.apache.commons.pool.KeyedObjectPool;
+import org.junit.Test;
+
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 
-import org.apache.commons.pool.KeyedObjectPool;
-import org.easymock.MockControl;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author Eric Dalquist <a
  *         href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
  */
 public class DelegatingLdapContextTest extends AbstractPoolTestCase {
+    @Test
     public void testConstructorAssertions() {
-        replay();
-
         try {
             new DelegatingLdapContext(keyedObjectPoolMock, null,
                     DirContextType.READ_ONLY);
@@ -45,17 +53,10 @@ public class DelegatingLdapContextTest extends AbstractPoolTestCase {
         } catch (IllegalArgumentException expected) {
             assertTrue(true);
         }
-
-        verify();
     }
 
+    @Test
     public void testHelperMethods() throws Exception {
-        keyedObjectPoolMock.returnObject(DirContextType.READ_ONLY,
-                ldapContextMock);
-        keyedObjectPoolControl.setVoidCallable(1);
-
-        replay();
-
         // Wrap the LdapContext once
         final DelegatingLdapContext delegatingLdapContext = new DelegatingLdapContext(
                 keyedObjectPoolMock, ldapContextMock, DirContextType.READ_ONLY);
@@ -75,15 +76,7 @@ public class DelegatingLdapContextTest extends AbstractPoolTestCase {
         delegatingLdapContext.assertOpen();
 
         // Wrap the wrapper
-        MockControl secondKeyedObjectPoolControl = MockControl
-                .createControl(KeyedObjectPool.class);
-        KeyedObjectPool secondKeyedObjectPoolMock = (KeyedObjectPool) secondKeyedObjectPoolControl
-                .getMock();
-
-        secondKeyedObjectPoolMock.returnObject(DirContextType.READ_ONLY,
-                delegatingLdapContext);
-        secondKeyedObjectPoolControl.setVoidCallable(1);
-        secondKeyedObjectPoolControl.replay();
+        KeyedObjectPool secondKeyedObjectPoolMock = mock(KeyedObjectPool.class);
 
         final DelegatingLdapContext delegatingLdapContext2 = new DelegatingLdapContext(
                 secondKeyedObjectPoolMock, delegatingLdapContext,
@@ -135,21 +128,17 @@ public class DelegatingLdapContextTest extends AbstractPoolTestCase {
             // Expected
         }
 
-        secondKeyedObjectPoolControl.verify();
-        verify();
+        verify(secondKeyedObjectPoolMock)
+                .returnObject(DirContextType.READ_ONLY, ldapContextMock);
+        verify(keyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, ldapContextMock);
     }
 
+    @Test
     public void testObjectMethods() throws Exception {
-        keyedObjectPoolMock.returnObject(DirContextType.READ_ONLY,
-                ldapContextMock);
-        keyedObjectPoolControl.setVoidCallable(1);
-
-        replay();
-
         // Wrap the LdapContext once
         final DelegatingLdapContext delegatingLdapContext = new DelegatingLdapContext(
                 keyedObjectPoolMock, ldapContextMock, DirContextType.READ_ONLY);
-        assertEquals("EasyMock for interface javax.naming.ldap.LdapContext",
+        assertEquals(ldapContextMock.toString(),
                 delegatingLdapContext.toString());
         delegatingLdapContext.hashCode(); // Run it to make sure it doesn't fail
 
@@ -177,12 +166,11 @@ public class DelegatingLdapContextTest extends AbstractPoolTestCase {
         assertFalse(delegatingLdapContext2.equals(delegatingLdapContext));
         assertFalse(delegatingLdapContext.equals(ldapContextMock));
 
-        verify();
+        verify(keyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, ldapContextMock);
     }
 
+    @Test
     public void testUnsupportedMethods() throws Exception {
-        replay();
-
         final DelegatingLdapContext delegatingLdapContext = new DelegatingLdapContext(
                 keyedObjectPoolMock, ldapContextMock, DirContextType.READ_ONLY);
 
@@ -204,18 +192,11 @@ public class DelegatingLdapContextTest extends AbstractPoolTestCase {
         } catch (UnsupportedOperationException uoe) {
             // Expected
         }
-
-        verify();
     }
 
     // nice
+    @Test
     public void testAllMethodsOpened() throws Exception {
-        MockControl ldapContextControl = MockControl.createNiceControl(LdapContext.class);
-        LdapContext ldapContextMock = (LdapContext) ldapContextControl.getMock();
-
-        ldapContextControl.replay();
-        replay();
-
         final DelegatingLdapContext delegatingLdapContext = new DelegatingLdapContext(
                 keyedObjectPoolMock, ldapContextMock, DirContextType.READ_ONLY);
 
@@ -223,18 +204,10 @@ public class DelegatingLdapContextTest extends AbstractPoolTestCase {
         delegatingLdapContext.getConnectControls();
         delegatingLdapContext.getRequestControls();
         delegatingLdapContext.getResponseControls();
-
-        ldapContextControl.verify();
-        verify();
     }
 
+    @Test
     public void testAllMethodsClosed() throws Exception {
-        keyedObjectPoolMock.returnObject(DirContextType.READ_ONLY,
-                ldapContextMock);
-        keyedObjectPoolControl.setVoidCallable(1);
-
-        replay();
-
         final DelegatingLdapContext delegatingLdapContext = new DelegatingLdapContext(
                 keyedObjectPoolMock, ldapContextMock, DirContextType.READ_ONLY);
 
@@ -264,16 +237,12 @@ public class DelegatingLdapContextTest extends AbstractPoolTestCase {
         } catch (NamingException ne) {
             //  Expected
         }
-        verify();
+
+        verify(keyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, ldapContextMock);
     }
 
+    @Test
     public void testDoubleClose() throws Exception {
-        keyedObjectPoolMock.returnObject(DirContextType.READ_ONLY,
-                ldapContextMock);
-        keyedObjectPoolControl.setVoidCallable(1);
-
-        replay();
-
         final DelegatingLdapContext delegatingLdapContext = new DelegatingLdapContext(
                 keyedObjectPoolMock, ldapContextMock, DirContextType.READ_ONLY);
 
@@ -282,6 +251,6 @@ public class DelegatingLdapContextTest extends AbstractPoolTestCase {
         // noop close
         delegatingLdapContext.close();
 
-        verify();
+        verify(keyedObjectPoolMock, times(1)).returnObject(DirContextType.READ_ONLY, ldapContextMock);
     }
 }

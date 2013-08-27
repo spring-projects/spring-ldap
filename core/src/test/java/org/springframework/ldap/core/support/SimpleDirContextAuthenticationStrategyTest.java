@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,21 +15,24 @@
  */
 package org.springframework.ldap.core.support;
 
-import java.util.Hashtable;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.naming.Context;
+import java.util.Hashtable;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-public class SimpleDirContextAuthenticationStrategyTest extends TestCase {
+public class SimpleDirContextAuthenticationStrategyTest {
 	private SimpleDirContextAuthenticationStrategy tested;
 
-	protected void setUp() throws Exception {
-		super.setUp();
-
+    @Before
+	public void setUp() throws Exception {
 		tested = new SimpleDirContextAuthenticationStrategy();
 	}
 
+    @Test
 	public void testSetupEnvironment() {
 		Hashtable env = new Hashtable();
 		tested.setupEnvironment(env, "cn=John Doe", "pw");
@@ -39,10 +42,13 @@ public class SimpleDirContextAuthenticationStrategyTest extends TestCase {
 		assertEquals("pw", env.get(Context.SECURITY_CREDENTIALS));
 	}
 
+    @Test
 	public void testProcessContextAfterCreation() {
 		Hashtable env = new Hashtable();
 		tested.processContextAfterCreation(null, "cn=John Doe", "pw");
 
 		assertTrue(env.isEmpty());
 	}
+
+
 }

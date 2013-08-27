@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,74 +15,47 @@
  */
 package org.springframework.ldap.core;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import javax.naming.Binding;
 
-import org.easymock.MockControl;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import junit.framework.TestCase;
-
-public class ContextMapperCallbackHandlerTest extends TestCase {
-
-    private MockControl mapperControl;
+public class ContextMapperCallbackHandlerTest {
 
     private ContextMapper mapperMock;
 
     private ContextMapperCallbackHandler tested;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-
-        mapperControl = MockControl.createControl(ContextMapper.class);
-        mapperMock = (ContextMapper) mapperControl.getMock();
+    @Before
+    public void setUp() throws Exception {
+        mapperMock = mock(ContextMapper.class);
         tested = new ContextMapperCallbackHandler(mapperMock);
     }
 
-    protected void tearDown() throws Exception {
-        super.tearDown();
-
-        mapperControl = null;
-        mapperMock = null;
-        tested = null;
-    }
-
+    @Test(expected = IllegalArgumentException.class)
     public void testConstructorWithEmptyArgument() {
-        try {
-            new ContextMapperCallbackHandler(null);
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertTrue(true);
-        }
+        new ContextMapperCallbackHandler(null);
     }
 
+    @Test
     public void testGetObjectFromNameClassPair() {
         Object expectedObject = "object";
         Object expectedResult = "result";
         Binding expectedBinding = new Binding("some name", expectedObject);
 
-        mapperControl.expectAndReturn(
-                mapperMock.mapFromContext(expectedObject), expectedResult);
-
-        mapperControl.replay();
-
+        when(mapperMock.mapFromContext(expectedObject)).thenReturn(expectedResult);
         Object actualResult = tested
                 .getObjectFromNameClassPair(expectedBinding);
-
-        mapperControl.verify();
-
         assertEquals(expectedResult, actualResult);
     }
 
+    @Test(expected = ObjectRetrievalException.class)
     public void testGetObjectFromNameClassPairObjectRetrievalException() {
         Binding expectedBinding = new Binding("some name", null);
-
-        mapperControl.replay();
-
-        try {
-            tested.getObjectFromNameClassPair(expectedBinding);
-            fail("ObjectRetrievalException expected");
-        } catch (ObjectRetrievalException expected) {
-            assertTrue(true);
-        }
-        mapperControl.verify();
+        tested.getObjectFromNameClassPair(expectedBinding);
     }
 }

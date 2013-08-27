@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,22 @@
  */
 package org.springframework.ldap.pool;
 
+import org.apache.commons.pool.KeyedObjectPool;
+import org.junit.Test;
+
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NamingException;
 
-import org.apache.commons.pool.KeyedObjectPool;
-import org.easymock.MockControl;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author Eric Dalquist <a
@@ -28,10 +38,8 @@ import org.easymock.MockControl;
  */
 public class DelegatingContextTest extends AbstractPoolTestCase {
 
+    @Test
     public void testConstructorAssertions() {
-
-        replay();
-
         try {
             new DelegatingContext(null, contextMock, DirContextType.READ_ONLY);
             fail("IllegalArgumentException expected");
@@ -53,16 +61,10 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
         } catch (IllegalArgumentException expected) {
             assertTrue(true);
         }
-
-        verify();
     }
 
+    @Test
     public void testHelperMethods() throws Exception {
-        keyedObjectPoolMock.returnObject(DirContextType.READ_ONLY, contextMock);
-        keyedObjectPoolControl.setVoidCallable(1);
-
-        replay();
-
         // Wrap the Context once
         final DelegatingContext delegatingContext = new DelegatingContext(
                 keyedObjectPoolMock, contextMock, DirContextType.READ_ONLY);
@@ -77,14 +79,7 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
         delegatingContext.assertOpen();
 
         // Wrap the wrapper
-        MockControl secondKeyedObjectPoolControl = MockControl
-                .createControl(KeyedObjectPool.class);
-        KeyedObjectPool secondKeyedObjectPoolMock = (KeyedObjectPool) secondKeyedObjectPoolControl
-                .getMock();
-        secondKeyedObjectPoolMock.returnObject(DirContextType.READ_ONLY,
-                delegatingContext);
-        secondKeyedObjectPoolControl.setVoidCallable(1);
-        secondKeyedObjectPoolControl.replay();
+        KeyedObjectPool secondKeyedObjectPoolMock = mock(KeyedObjectPool.class);
 
         final DelegatingContext delegatingContext2 = new DelegatingContext(
                 secondKeyedObjectPoolMock, delegatingContext,
@@ -135,22 +130,18 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
         } catch (NamingException ne) {
             // Expected
         }
-        
-        verify();
-        secondKeyedObjectPoolControl.verify();
+
+        verify(keyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, contextMock);
+        verify(secondKeyedObjectPoolMock)
+                .returnObject(DirContextType.READ_ONLY, contextMock);
     }
 
+    @Test
     public void testObjectMethods() throws Exception {
-        keyedObjectPoolMock.returnObject(DirContextType.READ_ONLY, contextMock);
-        keyedObjectPoolControl.setVoidCallable(1);
-
-        replay();
-
         // Wrap the Context once
         final DelegatingContext delegatingContext = new DelegatingContext(
                 keyedObjectPoolMock, contextMock, DirContextType.READ_ONLY);
-        assertEquals("EasyMock for interface javax.naming.Context",
-                delegatingContext.toString());
+        assertEquals(contextMock.toString(), delegatingContext.toString());
         delegatingContext.hashCode(); // Run it to make sure it doesn't fail
 
         assertTrue(delegatingContext.equals(delegatingContext));
@@ -175,14 +166,12 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
         assertFalse(delegatingContext.equals(delegatingContext2));
         assertFalse(delegatingContext2.equals(delegatingContext));
         assertFalse(delegatingContext.equals(contextMock));
-        
-        verify();
+
+        verify(keyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, contextMock);
     }
 
+    @Test
     public void testUnsupportedMethods() throws Exception {
-
-        replay();
-
         final DelegatingContext delegatingContext = new DelegatingContext(
                 keyedObjectPoolMock, contextMock, DirContextType.READ_ONLY);
 
@@ -222,15 +211,10 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
         } catch (UnsupportedOperationException uoe) {
             // Expected
         }
-        verify();
     }
 
+    @Test
     public void testAllMethodsOpened() throws Exception {
-        contextControl = MockControl.createNiceControl(Context.class);
-        contextMock = (Context) contextControl.getMock();
-
-        replay();
-
         final DelegatingContext delegatingContext = new DelegatingContext(
                 keyedObjectPoolMock, contextMock, DirContextType.READ_ONLY);
 
@@ -256,16 +240,10 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
         delegatingContext.rename((String) null, (String) null);
         delegatingContext.unbind((Name) null);
         delegatingContext.unbind((String) null);
-        
-        verify();
     }
 
+    @Test
     public void testAllMethodsClosed() throws Exception {
-        keyedObjectPoolMock.returnObject(DirContextType.READ_ONLY, contextMock);
-        keyedObjectPoolControl.setVoidCallable(1);
-
-        replay();
-
         final DelegatingContext delegatingContext = new DelegatingContext(
                 keyedObjectPoolMock, contextMock, DirContextType.READ_ONLY);
 
@@ -403,16 +381,12 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
         } catch (NamingException ne) {
             //  Expected
         }
-        
-        verify();
+
+        verify(keyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, contextMock);
     }
 
+    @Test
     public void testDoubleClose() throws Exception {
-        keyedObjectPoolMock.returnObject(DirContextType.READ_ONLY, contextMock);
-        keyedObjectPoolControl.setVoidCallable(1);
-
-        replay();
-        
         final DelegatingContext delegatingContext = new DelegatingContext(
                 keyedObjectPoolMock, contextMock, DirContextType.READ_ONLY);
 
@@ -420,16 +394,14 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
 
         // noop close
         delegatingContext.close();
-        
-        verify();
+
+        verify(keyedObjectPoolMock, times(1)).returnObject(DirContextType.READ_ONLY, contextMock);
     }
 
+    @Test
     public void testPoolExceptionOnClose() throws Exception {
-        keyedObjectPoolMock.returnObject(DirContextType.READ_ONLY, contextMock);
-        keyedObjectPoolControl.setThrowable(new Exception(
-                "Fake Pool returnObject Exception"));
-
-        replay();
+        doThrow(new Exception("Fake Pool returnObject Exception"))
+                .when(keyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, contextMock);
 
         final DelegatingContext delegatingContext = new DelegatingContext(
                 keyedObjectPoolMock, contextMock, DirContextType.READ_ONLY);
@@ -440,7 +412,5 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
         } catch (NamingException ne) {
             // Expected
         }
-        
-        verify();
     }
 }

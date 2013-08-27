@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,38 +15,30 @@
  */
 package org.springframework.ldap.core.support;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.ldap.core.DirContextProcessor;
+
 import javax.naming.NamingException;
 
-import junit.framework.TestCase;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
-import org.easymock.MockControl;
-import org.springframework.ldap.core.DirContextProcessor;
-import org.springframework.ldap.core.support.AggregateDirContextProcessor;
-
-public class AggregateDirContextProcessorTest extends TestCase {
-
-    private MockControl processor1Control;
+public class AggregateDirContextProcessorTest  {
 
     private DirContextProcessor processor1Mock;
-
-    private MockControl processor2Control;
 
     private DirContextProcessor processor2Mock;
 
     private AggregateDirContextProcessor tested;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-
+    @Before
+    public void setUp() throws Exception {
         // Create processor1 mock
-        processor1Control = MockControl
-                .createControl(DirContextProcessor.class);
-        processor1Mock = (DirContextProcessor) processor1Control.getMock();
+        processor1Mock = mock(DirContextProcessor.class);
 
         // Create processor2 mock
-        processor2Control = MockControl
-                .createControl(DirContextProcessor.class);
-        processor2Mock = (DirContextProcessor) processor2Control.getMock();
+        processor2Mock = mock(DirContextProcessor.class);
 
         tested = new AggregateDirContextProcessor();
         tested.addDirContextProcessor(processor1Mock);
@@ -54,47 +46,20 @@ public class AggregateDirContextProcessorTest extends TestCase {
 
     }
 
-    protected void tearDown() throws Exception {
-        super.tearDown();
-
-        processor1Control = null;
-        processor1Mock = null;
-
-        processor2Control = null;
-        processor2Mock = null;
-    }
-
-    protected void replay() {
-        processor1Control.replay();
-        processor2Control.replay();
-
-    }
-
-    protected void verify() {
-        processor1Control.verify();
-        processor2Control.verify();
-    }
-
+    @Test
     public void testPreProcess() throws NamingException {
-        processor1Mock.preProcess(null);
-        processor2Mock.preProcess(null);
-        
-        replay();
-        
         tested.preProcess(null);
         
-        verify();
+        verify(processor1Mock).preProcess(null);
+        verify(processor2Mock).preProcess(null);
     }
 
+    @Test
     public void testPostProcess() throws NamingException {
-        processor1Mock.postProcess(null);
-        processor2Mock.postProcess(null);
-        
-        replay();
-        
         tested.postProcess(null);
-        
-        verify();
+
+        verify(processor1Mock).postProcess(null);
+        verify(processor2Mock).postProcess(null);
     }
 
 }

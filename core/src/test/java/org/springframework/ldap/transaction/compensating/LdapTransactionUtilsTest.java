@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,57 +15,44 @@
  */
 package org.springframework.ldap.transaction.compensating;
 
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
-
-import junit.framework.TestCase;
-
-import org.easymock.MockControl;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-public class LdapTransactionUtilsTest extends TestCase {
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
 
-    private MockControl dirContextControl;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
+public class LdapTransactionUtilsTest {
 
     private DirContext dirContextMock;
 
-    protected void setUp() throws Exception {
-        dirContextControl = MockControl.createControl(DirContext.class);
-        dirContextMock = (DirContext) dirContextControl.getMock();
+    @Before
+    public void setUp() throws Exception {
+        dirContextMock = mock(DirContext.class);
 
         if (TransactionSynchronizationManager.isSynchronizationActive()) {
             TransactionSynchronizationManager.clearSynchronization();
         }
     }
 
-    protected void tearDown() throws Exception {
-        dirContextControl = null;
-        dirContextMock = null;
-    }
-
-    protected void replay() {
-        dirContextControl.replay();
-    }
-
-    protected void verify() {
-        dirContextControl.verify();
-    }
-
+    @Test
     public void testCloseContext() throws NamingException {
-        dirContextMock.close();
-
-        replay();
         LdapUtils.closeContext(dirContextMock);
-        verify();
+        verify(dirContextMock).close();
     }
 
+    @Test
     public void testCloseContext_NullContext() throws NamingException {
-        replay();
         LdapUtils.closeContext(null);
-        verify();
     }
 
+    @Test
     public void testIsSupportedWriteTransactionOperation() {
         assertTrue(LdapTransactionUtils
                 .isSupportedWriteTransactionOperation("bind"));

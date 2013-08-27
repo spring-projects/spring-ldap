@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,29 @@
  */
 package org.springframework.ldap.core;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Unit tests for {@link DistinguishedNameEditor}.
  * 
  * @author Mattias Hellborg Arthursson
  */
-public class DistinguishedNameEditorTest extends TestCase {
+public class DistinguishedNameEditorTest {
 
 	private DistinguishedNameEditor tested;
 
-	protected void setUp() throws Exception {
+    @Before
+	public void setUp() throws Exception {
 		tested = new DistinguishedNameEditor();
 	}
 
-	protected void tearDown() throws Exception {
-		tested = null;
-	}
-
+    @Test
 	public void testSetAsText() throws Exception {
 		String expectedDn = "dc=jayway, dc=se";
 
@@ -50,12 +54,14 @@ public class DistinguishedNameEditorTest extends TestCase {
 		}
 	}
 
+    @Test
 	public void testSetAsTextNullValue() throws Exception {
 		tested.setAsText(null);
 		Object result = tested.getValue();
 		assertNull(result);
 	}
 
+    @Test
 	public void testGetAsText() throws Exception {
 		String expectedDn = "dc=jayway,dc=se";
 		tested.setValue(new DistinguishedName(expectedDn));
@@ -63,6 +69,7 @@ public class DistinguishedNameEditorTest extends TestCase {
 		assertEquals(expectedDn, text);
 	}
 
+    @Test
 	public void testGetAsTextNullValue() throws Exception {
 		tested.setValue(null);
 		String text = tested.getAsText();

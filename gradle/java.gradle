@@ -6,13 +6,14 @@ targetCompatibility = '1.5'
 
 ext.springVersion = '3.0.6.RELEASE'
 ext.springBatchVersion = '2.0.3.RELEASE'
-ext.junitVersion =  '4.8.2'
+ext.junitVersion =  '4.10'
 ext.commonsPoolVersion = '1.5.4'
 ext.commonsLangVersion = '2.4'
 ext.commonsLoggingVersion = '1.0.4'
 ext.easyMockVersion = '1.2_Java1.3'
 ext.gsbaseVersion = '2.0.1'
 ext.log4jVersion = '1.2.15'
+ext.mockitoVersion = '1.9.5'
 
 repositories {
     mavenCentral()

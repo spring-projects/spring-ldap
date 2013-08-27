@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,29 +16,20 @@
 
 package org.springframework.ldap.filter;
 
-import org.springframework.ldap.filter.AbstractFilter;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Adam Skogman
  */
-public class AbstractFilterTest extends TestCase {
-
-    /**
-     * Constructor for AbstractFilterTest.
-     * 
-     * @param name
-     */
-    public AbstractFilterTest(String name) {
-        super(name);
-    }
+public class AbstractFilterTest {
 
     /*
      * Test for String encode()
      */
+    @Test
     public void testEncode() {
-
         AbstractFilter af = new AbstractFilter() {
             public StringBuffer encode(StringBuffer buff) {
                 return buff.append("foo");
@@ -52,6 +43,7 @@ public class AbstractFilterTest extends TestCase {
     /*
      * Test for toString()
      */
+    @Test
     public void testToString() {
 
         AbstractFilter af = new AbstractFilter() {
