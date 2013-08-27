@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,76 +15,70 @@
  */
 package org.springframework.ldap.util;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.ldap.support.ListComparator;
+
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.ldap.support.ListComparator;
-
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for ListComparator.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
-public class ListComparatorTest extends TestCase {
+public class ListComparatorTest {
 
     private ListComparator tested;
 
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         tested = new ListComparator();
     }
 
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
+    @Test
     public void testCompare_Equals() {
-        List list1 = Arrays.asList(new Object[] { new Integer(0),
-                new Integer(0) });
-        List list2 = Arrays.asList(new Object[] { new Integer(0),
-                new Integer(0) });
+        List<Integer> list1 = Arrays.asList(0, 0);
+        List<Integer> list2 = Arrays.asList(0, 0);
 
         int result = tested.compare(list1, list2);
         assertEquals(0, result);
     }
 
+    @Test
     public void testCompare_Less() {
-        List list1 = Arrays.asList(new Object[] { new Integer(0),
-                new Integer(0) });
-        List list2 = Arrays.asList(new Object[] { new Integer(0),
-                new Integer(1) });
+        List<Integer> list1 = Arrays.asList(0, 0);
+        List<Integer> list2 = Arrays.asList(0, 1);
 
         int result = tested.compare(list1, list2);
         assertTrue(result < 0);
     }
 
+    @Test
     public void testCompare_Greater() {
-        List list1 = Arrays.asList(new Object[] { new Integer(0),
-                new Integer(1) });
-        List list2 = Arrays.asList(new Object[] { new Integer(0),
-                new Integer(0) });
+        List<Integer> list1 = Arrays.asList(0, 1);
+        List<Integer> list2 = Arrays.asList(0, 0);
 
         int result = tested.compare(list1, list2);
         assertTrue(result > 0);
     }
 
+    @Test
     public void testCompare_Longer() {
-        List list1 = Arrays.asList(new Object[] { new Integer(0),
-                new Integer(0), new Integer(0) });
-        List list2 = Arrays.asList(new Object[] { new Integer(0),
-                new Integer(0) });
+        List<Integer> list1 = Arrays.asList(0, 0, 0);
+        List<Integer> list2 = Arrays.asList(0, 0);
 
         int result = tested.compare(list1, list2);
         assertTrue(result > 0);
     }
 
+    @Test
     public void testCompare_Shorter() {
-        List list1 = Arrays.asList(new Object[] { new Integer(0),
-                new Integer(0) });
-        List list2 = Arrays.asList(new Object[] { new Integer(0),
-                new Integer(0), new Integer(0) });
+        List<Integer> list1 = Arrays.asList(0, 0);
+        List<Integer> list2 = Arrays.asList(0, 0, 0);
 
         int result = tested.compare(list1, list2);
         assertTrue(result < 0);

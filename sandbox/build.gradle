@@ -6,6 +6,6 @@ dependencies {
     provided "com.sun:ldapbp:1.0"
 
     testCompile "junit:junit:$junitVersion",
-                "easymock:easymock:$easyMockVersion",
+                "org.mockito:mockito-core:$mockitoVersion",
                 "gsbase:gsbase:$gsbaseVersion"
 }

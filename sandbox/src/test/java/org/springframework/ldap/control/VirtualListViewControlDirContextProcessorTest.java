@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,87 +15,46 @@
  */
 package org.springframework.ldap.control;
 
-import java.io.IOException;
-
-import javax.naming.ldap.Control;
-import javax.naming.ldap.LdapContext;
-
-import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
-
-import org.easymock.MockControl;
-import org.springframework.ldap.OperationNotSupportedException;
-
 import com.sun.jndi.ldap.Ber;
 import com.sun.jndi.ldap.BerDecoder;
 import com.sun.jndi.ldap.BerEncoder;
-import com.sun.jndi.ldap.ctl.SortControl;
 import com.sun.jndi.ldap.ctl.VirtualListViewControl;
 import com.sun.jndi.ldap.ctl.VirtualListViewResponseControl;
+import junit.framework.AssertionFailedError;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.ldap.OperationNotSupportedException;
+
+import javax.naming.ldap.Control;
+import javax.naming.ldap.LdapContext;
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for the VirtualListViewControlDirContextProcessor class.
  *
  * @author Ulrik Sandberg
  */
-public class VirtualListViewControlDirContextProcessorTest extends TestCase {
+public class VirtualListViewControlDirContextProcessorTest {
 
 	private static final String OID_REQUEST = "2.16.840.1.113730.3.4.9";
 
 	private static final String OID_RESPONSE = "2.16.840.1.113730.3.4.10";
 
-	private MockControl ldapContextControl;
-
 	private LdapContext ldapContextMock;
 
-	protected void setUp() throws Exception {
-		super.setUp();
-
+    @Before
+	public void setUp() throws Exception {
 		// Create ldapContext mock
-		ldapContextControl = MockControl.createControl(LdapContext.class);
-		ldapContextMock = (LdapContext) ldapContextControl.getMock();
+		ldapContextMock = mock(LdapContext.class);
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-
-		ldapContextControl = null;
-		ldapContextMock = null;
-	}
-
-	protected void replay() {
-		ldapContextControl.replay();
-	}
-
-	protected void verify() {
-		ldapContextControl.verify();
-	}
-
-/*	public void testPreProcess() throws Exception {
-		int pageSize = 5;
-		VirtualListViewControlAggregateDirContextProcessor tested = new VirtualListViewControlAggregateDirContextProcessor(
-                "cn",
-                pageSize);
-
-		ldapContextControl.expectAndReturn(
-				ldapContextMock.getRequestControls(), new Control[0]);
-
-		SortControl sortControl = new SortControl(new String[] { "cn" }, true);
-		VirtualListViewControl vlvControl = new VirtualListViewControl(0, 0, 0,
-				0, true);
-
-		Control[] controls = new Control[] { sortControl, vlvControl };
-		ldapContextMock.setRequestControls(controls);
-		// just check that class names match
-		ldapContextControl.setMatcher(new ControlArrayMatcher());
-
-		replay();
-
-		tested.preProcess(ldapContextMock);
-
-		verify();
-	}
-*/
+    @Test
 	public void testCreateRequestControlWithTargetAsOffset() throws Exception {
 		int pageSize = 5;
 		int targetOffset = 25;
@@ -118,6 +77,7 @@ public class VirtualListViewControlDirContextProcessorTest extends TestCase {
 				new byte[0]);
 	}
 
+    @Test
 	public void testCreateRequestControlWithTargetAsPercentage()
 			throws Exception {
 		int pageSize = 5;
@@ -143,6 +103,7 @@ public class VirtualListViewControlDirContextProcessorTest extends TestCase {
 				new byte[0]);
 	}
 
+    @Test
 	public void testPostProcess() throws Exception {
 		int pageSize = 5;
 		int targetOffset = 25;
@@ -156,10 +117,7 @@ public class VirtualListViewControlDirContextProcessorTest extends TestCase {
 				virtualListViewResult);
 		VirtualListViewResponseControl control = new VirtualListViewResponseControl(
 				OID_RESPONSE, false, encoded);
-		ldapContextControl.expectAndDefaultReturn(ldapContextMock
-				.getResponseControls(), new Control[] { control });
-
-		replay();
+		when(ldapContextMock.getResponseControls()).thenReturn(new Control[]{control});
 
 		try {
 			tested.postProcess(ldapContextMock);
@@ -172,11 +130,12 @@ public class VirtualListViewControlDirContextProcessorTest extends TestCase {
 			assertEquals("[LDAP: error code 53 - Unwilling To Perform]", cause
 					.getMessage());
 		}
-		verify();
+
 		assertNotNull(tested.getCookie());
 		assertEquals(0, tested.getCookie().getCookie().length);
 	}
 
+    @Test
 	public void testBerDecoding() throws Exception {
 		int virtualListViewResult = 53; // unwilling to perform
 		byte[] encoded = encodeResponseValue(10, 1000, virtualListViewResult);

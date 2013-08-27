@@ -15,24 +15,20 @@
  */
 package org.springframework.ldap.core.simple;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.ldap.core.ObjectRetrievalException;
 
 import javax.naming.Binding;
 import javax.naming.NamingException;
 import javax.naming.ldap.Control;
 import javax.naming.ldap.HasControls;
 
-import junit.framework.TestCase;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.internal.runners.JUnit4ClassRunner;
-import org.junit.runner.RunWith;
-import org.springframework.ldap.core.ObjectRetrievalException;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for the {@link ContextMapperCallbackHandlerWithControlsTest}
@@ -40,8 +36,7 @@ import org.springframework.ldap.core.ObjectRetrievalException;
  * 
  * @author Ulrik Sandberg
  */
-@RunWith(JUnit4ClassRunner.class)
-public class ContextMapperCallbackHandlerWithControlsTest extends TestCase {
+public class ContextMapperCallbackHandlerWithControlsTest {
 
 	private ParameterizedContextMapperWithControls<Object> mapperMock;
 
@@ -62,18 +57,8 @@ public class ContextMapperCallbackHandlerWithControlsTest extends TestCase {
 	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp() throws Exception {
-		super.setUp();
-
 		mapperMock = createMock(ParameterizedContextMapperWithControls.class);
 		tested = new ContextMapperCallbackHandlerWithControls(mapperMock);
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		super.tearDown();
-
-		mapperMock = null;
-		tested = null;
 	}
 
 	@Test(expected = IllegalArgumentException.class)
