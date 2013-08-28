@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,14 @@
  */
 package org.springframework.ldap.ldif.support;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.ldap.core.LdapAttribute;
+import org.springframework.ldap.ldif.InvalidAttributeFormatException;
+import org.springframework.util.StringUtils;
+import sun.misc.BASE64Decoder;
+
+import javax.naming.directory.Attribute;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -22,16 +30,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.naming.directory.Attribute;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.core.LdapAttribute;
-import org.springframework.ldap.ldif.InvalidAttributeFormatException;
-
-import sun.misc.BASE64Decoder;
 
 /**
  * Ensures the buffer represents a valid attribute as defined by RFC2849.
@@ -322,7 +320,7 @@ public class DefaultAttributeValidationPolicy implements AttributeValidationPoli
 	private LdapAttribute parseStringAttribute(Matcher matcher) {
 		String id = matcher.group(1);
 		String value = matcher.group(3);
-		List<String> options = Arrays.asList((StringUtils.isEmpty(matcher.group(2)) ? new String[] {} : matcher.group(2).replaceFirst(";","").split(OPTION_SEPARATOR)));
+		List<String> options = Arrays.asList((!StringUtils.hasLength(matcher.group(2)) ? new String[] {} : matcher.group(2).replaceFirst(";","").split(OPTION_SEPARATOR)));
 		
 		if (options.isEmpty()) {
 			return new LdapAttribute(id, value, ordered);

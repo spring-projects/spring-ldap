@@ -16,7 +16,7 @@
 
 package org.springframework.ldap.odm.tools;
 
-import org.apache.commons.lang.StringUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * Simple value class to hold the schema of an attribute.  

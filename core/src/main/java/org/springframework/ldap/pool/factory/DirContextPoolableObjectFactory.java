@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.ldap.pool.factory;
 
-import javax.naming.directory.DirContext;
-
-import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.BaseKeyedPoolableObjectFactory;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.pool.DirContextType;
 import org.springframework.ldap.pool.validation.DirContextValidator;
+import org.springframework.util.Assert;
+
+import javax.naming.directory.DirContext;
 
 /**
  * Factory that creates {@link DirContext} instances for pooling via a
@@ -114,8 +113,8 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
      * @see org.apache.commons.pool.BaseKeyedPoolableObjectFactory#makeObject(java.lang.Object)
      */
     public Object makeObject(Object key) throws Exception {
-        Validate.notNull(this.contextSource, "ContextSource may not be null");
-        Validate.isTrue(key instanceof DirContextType,
+        Assert.notNull(this.contextSource, "ContextSource may not be null");
+        Assert.isTrue(key instanceof DirContextType,
                 "key must be a DirContextType");
 
         final DirContextType contextType = (DirContextType) key;
@@ -155,11 +154,11 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
      *      java.lang.Object)
      */
     public boolean validateObject(Object key, Object obj) {
-        Validate.notNull(this.dirContextValidator,
+        Assert.notNull(this.dirContextValidator,
                 "DirContextValidator may not be null");
-        Validate.isTrue(key instanceof DirContextType,
+        Assert.isTrue(key instanceof DirContextType,
                 "key must be a DirContextType");
-        Validate.isTrue(obj instanceof DirContext,
+        Assert.isTrue(obj instanceof DirContext,
                 "The Object to validate must be of type '" + DirContext.class
                         + "'");
 
@@ -181,7 +180,7 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
      *      java.lang.Object)
      */
     public void destroyObject(Object key, Object obj) throws Exception {
-        Validate.isTrue(obj instanceof DirContext,
+        Assert.isTrue(obj instanceof DirContext,
                 "The Object to validate must be of type '" + DirContext.class
                         + "'");
 

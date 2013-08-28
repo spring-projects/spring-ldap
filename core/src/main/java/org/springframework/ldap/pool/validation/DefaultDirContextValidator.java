@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.ldap.pool.validation;
 
-import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.pool.DirContextType;
+import org.springframework.util.Assert;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.directory.DirContext;
@@ -159,8 +158,8 @@ public class DefaultDirContextValidator implements DirContextValidator {
      * @see DirContextValidator#validateDirContext(DirContextType, javax.naming.directory.DirContext)
      */
     public boolean validateDirContext(DirContextType contextType, DirContext dirContext) {
-        Validate.notNull(contextType, "contextType may not be null");
-        Validate.notNull(dirContext, "dirContext may not be null");
+        Assert.notNull(contextType, "contextType may not be null");
+        Assert.notNull(dirContext, "dirContext may not be null");
         
         try {
             final NamingEnumeration searchResults = dirContext.search(this.base, this.filter, this.searchControls);

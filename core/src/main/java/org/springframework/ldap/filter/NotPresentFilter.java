@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 package org.springframework.ldap.filter;
-
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.springframework.ldap.filter.AbstractFilter;
 
 /**
  * A convenience class that combines {@code NOT} behavior with {@code present}
@@ -59,28 +55,20 @@ public class NotPresentFilter extends AbstractFilter {
 		return buff;
 	}
 
-	/*
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object o) {
-		if (o == null) {
-			return false;
-		}
-		if (o == this) {
-			return true;
-		}
-		if (o.getClass() != getClass()) {
-			return false;
-		}
-		NotPresentFilter f = (NotPresentFilter) o;
-		return new EqualsBuilder().append(this.attribute, f.attribute).isEquals();
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-	/*
-	 * @see java.lang.Object#hashCode()
-	 */
-	public int hashCode() {
-		HashCodeBuilder builder = new HashCodeBuilder().append(attribute);
-		return builder.toHashCode();
-	}
+        NotPresentFilter that = (NotPresentFilter) o;
+
+        if (attribute != null ? !attribute.equals(that.attribute) : that.attribute != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return attribute != null ? attribute.hashCode() : 0;
+    }
 }

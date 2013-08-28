@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.ldap.pool;
+
+import org.apache.commons.pool.KeyedObjectPool;
+import org.springframework.ldap.core.DirContextProxy;
+import org.springframework.ldap.pool.factory.PoolingContextSource;
+import org.springframework.util.Assert;
 
 import javax.naming.Context;
 import javax.naming.Name;
@@ -24,11 +28,6 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
-
-import org.apache.commons.lang.Validate;
-import org.apache.commons.pool.KeyedObjectPool;
-import org.springframework.ldap.core.DirContextProxy;
-import org.springframework.ldap.pool.factory.PoolingContextSource;
 
 
 /**
@@ -51,7 +50,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
      */
     public DelegatingDirContext(KeyedObjectPool keyedObjectPool, DirContext delegateDirContext, DirContextType dirContextType) {
         super(keyedObjectPool, delegateDirContext, dirContextType);
-        Validate.notNull(delegateDirContext, "delegateDirContext may not be null");
+        Assert.notNull(delegateDirContext, "delegateDirContext may not be null");
 
         this.delegateDirContext = delegateDirContext;
     }

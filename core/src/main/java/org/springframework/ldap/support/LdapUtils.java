@@ -16,21 +16,20 @@
 
 package org.springframework.ldap.support;
 
-import java.math.BigInteger;
-import java.util.Collection;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.ldap.NamingException;
+import org.springframework.ldap.NoSuchAttributeException;
+import org.springframework.util.Assert;
 
 import javax.naming.CompositeName;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
-
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.NamingException;
-import org.springframework.ldap.NoSuchAttributeException;
-import org.springframework.util.Assert;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * Generic utility methods for working with LDAP. Mainly for internal use within
@@ -410,16 +409,23 @@ public final class LdapUtils {
 		String[] parts = string.split("-");
 		byte sidRevision = (byte) Integer.parseInt(parts[1]);
 		int subAuthCount = parts.length - 3;
-		
-		byte[] sid = new byte[] {sidRevision, (byte) subAuthCount};
-		sid = ArrayUtils.addAll(sid, numberToBytes(parts[2], 6, true));
+
+        byte[] sid = new byte[] {sidRevision, (byte) subAuthCount};
+		sid = addAll(sid, numberToBytes(parts[2], 6, true));
 		for (int i = 0; i < subAuthCount; i++) {
-			sid = ArrayUtils.addAll(sid, numberToBytes(parts[3 + i], 4, false));
+			sid = addAll(sid, numberToBytes(parts[3 + i], 4, false));
 		}
 		return sid;
 	}
 
-	/**
+    private static byte[] addAll(byte[] array1, byte[] array2) {
+        byte[] joinedArray = new byte[array1.length + array2.length];
+        System.arraycopy(array1, 0, joinedArray, 0, array1.length);
+        System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);
+        return joinedArray;
+    }
+
+    /**
 	 * Converts the given number to a binary representation of the specified
 	 * length and "endian-ness".
 	 * 
@@ -434,18 +440,31 @@ public final class LdapUtils {
 		byte[] bytes = bi.toByteArray();
 		int remaining = length - bytes.length;
 		if (remaining < 0) {
-			bytes = ArrayUtils.subarray(bytes, -remaining, bytes.length);
+			bytes = Arrays.copyOfRange(bytes, -remaining, bytes.length);
 		} else {
 			byte[] fill = new byte[remaining];
-			bytes = ArrayUtils.addAll(fill, bytes);
+			bytes = addAll(fill, bytes);
 		}
 		if (!bigEndian) {
-			ArrayUtils.reverse(bytes);
+			reverse(bytes);
 		}
 		return bytes;
 	}
-	
-	/**
+
+    private static void reverse(byte[] array) {
+        int i = 0;
+        int j = array.length - 1;
+        byte tmp;
+        while (j > i) {
+            tmp = array[j];
+            array[j] = array[i];
+            array[i] = tmp;
+            j--;
+            i++;
+        }
+    }
+
+    /**
 	 * Converts a byte into its hexadecimal representation, padding with a
 	 * leading zero to get an even number of characters.
 	 * 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.ldap.authentication;
 
-import org.apache.commons.lang.StringUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.ldap.core.AuthenticationSource;
 
@@ -78,7 +77,7 @@ public class DefaultValuesAuthenticationSourceDecorator implements
      *         <code>defaultPassword</code> otherwise.
      */
     public String getCredentials() {
-        if (StringUtils.isNotEmpty(target.getPrincipal())) {
+        if (StringUtils.hasText(target.getPrincipal())) {
             return target.getCredentials();
         } else {
             return defaultPassword;
@@ -94,7 +93,7 @@ public class DefaultValuesAuthenticationSourceDecorator implements
      */
     public String getPrincipal() {
         String principal = target.getPrincipal();
-        if (StringUtils.isNotEmpty(principal)) {
+        if (StringUtils.hasText(principal)) {
             return principal;
         } else {
             return defaultUser;

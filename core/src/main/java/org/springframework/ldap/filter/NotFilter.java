@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.ldap.filter;
 
-import org.apache.commons.lang.Validate;
-import org.apache.commons.lang.builder.EqualsBuilder;
+import org.springframework.util.Assert;
 
 /**
  * A filter for 'not'. The following code:
@@ -39,15 +37,13 @@ public class NotFilter extends AbstractFilter {
 
 	private final Filter filter;
 
-	static private final int HASH = "!".hashCode();
-
 	/**
 	 * Create a filter that negates the outcome of the given <code>filter</code>.
 	 * 
 	 * @param filter The filter that should be negated.
 	 */
 	public NotFilter(Filter filter) {
-		Validate.notNull(filter);
+		Assert.notNull(filter, "Filter must not be null");
 		this.filter = filter;
 	}
 
@@ -63,27 +59,20 @@ public class NotFilter extends AbstractFilter {
 		return buff;
 	}
 
-	/*
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object o) {
-		if (o == null) {
-			return false;
-		}
-		if (o == this) {
-			return true;
-		}
-		if (o.getClass() != getClass()) {
-			return false;
-		}
-		NotFilter f = (NotFilter) o;
-		return new EqualsBuilder().append(this.filter, f.filter).isEquals();
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-	/*
-	 * @see java.lang.Object#hashCode()
-	 */
-	public int hashCode() {
-		return HASH ^ filter.hashCode();
-	}
+        NotFilter notFilter = (NotFilter) o;
+
+        if (filter != null ? !filter.equals(notFilter.filter) : notFilter.filter != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return filter != null ? filter.hashCode() : 0;
+    }
 }

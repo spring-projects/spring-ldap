@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.ldap.pool;
+
+import org.apache.commons.pool.KeyedObjectPool;
+import org.springframework.ldap.pool.factory.PoolingContextSource;
+import org.springframework.util.Assert;
 
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
@@ -22,10 +25,6 @@ import javax.naming.ldap.Control;
 import javax.naming.ldap.ExtendedRequest;
 import javax.naming.ldap.ExtendedResponse;
 import javax.naming.ldap.LdapContext;
-
-import org.apache.commons.lang.Validate;
-import org.apache.commons.pool.KeyedObjectPool;
-import org.springframework.ldap.pool.factory.PoolingContextSource;
 
 /**
  * Used by {@link PoolingContextSource} to wrap a {@link LdapContext}, delegating most methods
@@ -47,7 +46,7 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
      */
     public DelegatingLdapContext(KeyedObjectPool keyedObjectPool, LdapContext delegateLdapContext, DirContextType dirContextType) {
         super(keyedObjectPool, delegateLdapContext, dirContextType);
-        Validate.notNull(delegateLdapContext, "delegateLdapContext may not be null");
+        Assert.notNull(delegateLdapContext, "delegateLdapContext may not be null");
 
         this.delegateLdapContext = delegateLdapContext;
     }

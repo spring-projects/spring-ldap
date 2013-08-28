@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
  */
 package org.springframework.ldap.ldif.support;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.util.StringUtils;
 
 /**
  * Policy object for enforcing LDIF record separation rules. Designed explicitly
@@ -70,7 +70,7 @@ public class SeparatorPolicy {
 		log.trace("Assessing --> [" + line + "]");
 		
 		if (record) {
-			if (StringUtils.isEmpty(line)) {
+			if (!StringUtils.hasLength(line)) {
 				record = false;
 				skip = false;
 				return LineIdentifier.EndOfRecord;
@@ -99,11 +99,11 @@ public class SeparatorPolicy {
 				}
 			}
 		} else {
-			if (StringUtils.isNotEmpty(line) && line.matches(VERSION_IDENTIFIER) && !skip) {
+			if (StringUtils.hasLength(line) && line.matches(VERSION_IDENTIFIER) && !skip) {
 				//Version Identifiers are ignored by parser.
 				return LineIdentifier.VersionIdentifier;		
 				
-			} else if (StringUtils.isNotEmpty(line) && line.matches(NewRecord)) {
+			} else if (StringUtils.hasLength(line) && line.matches(NewRecord)) {
 				record = true;
 				skip = false;
 				return LineIdentifier.NewRecord;

@@ -16,7 +16,6 @@
 
 package org.springframework.ldap.ldif;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
@@ -25,6 +24,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.springframework.ldap.core.LdapAttribute;
 import org.springframework.ldap.ldif.support.DefaultAttributeValidationPolicy;
+import org.springframework.util.StringUtils;
 import sun.misc.BASE64Decoder;
 
 import java.net.URI;
@@ -138,7 +138,7 @@ public class DefaultAttributeValidationPolicyTest {
 			
 			assertTrue("IDs do not match: [expected: " + attribute.getID() + ", obtained: " + id + "]", id.equalsIgnoreCase(attribute.getID()));
 			
-			String[] expected = StringUtils.isEmpty(options) ? new String[] {} : options.replaceFirst(";","").split(";");
+			String[] expected = !StringUtils.hasLength(options) ? new String[] {} : options.replaceFirst(";","").split(";");
 			Arrays.sort(expected);
 			String[] obtained = attribute.getOptions().toArray(new String[] {});
 			Arrays.sort(obtained);
@@ -147,7 +147,7 @@ public class DefaultAttributeValidationPolicyTest {
 			switch(type) {
 			case STRING:
 				assertTrue("Value is not a string.", attribute.get() instanceof String);
-				assertEquals("Values do not match: ", value, (String) attribute.get());
+				assertEquals("Values do not match: ", value, attribute.get());
 				break;
 				
 			case BASE64:
@@ -159,7 +159,7 @@ public class DefaultAttributeValidationPolicyTest {
 			case URL:
 				URI  url = new URI(value);
 				assertTrue("Value is not a URL.", attribute.get() instanceof URI);
-				assertEquals("Values do not match: ", url, (URI) attribute.get());
+				assertEquals("Values do not match: ", url, attribute.get());
 				break;
 			}
 			

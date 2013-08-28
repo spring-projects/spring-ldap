@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,6 @@
 package org.springframework.ldap.transaction.compensating;
 
 
-import javax.naming.directory.DirContext;
-
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.LdapOperations;
@@ -26,6 +23,9 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.SingleContextSource;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationFactory;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
+import org.springframework.util.ObjectUtils;
+
+import javax.naming.directory.DirContext;
 
 /**
  * {@link CompensatingTransactionOperationRecorder} implementation for LDAP
@@ -55,22 +55,22 @@ public class LdapCompensatingTransactionOperationFactory implements Compensating
 	 * #createRecordingOperation(java.lang.Object, java.lang.String)
 	 */
 	public CompensatingTransactionOperationRecorder createRecordingOperation(Object resource, String operation) {
-		if (StringUtils.equals(operation, LdapTransactionUtils.BIND_METHOD_NAME)) {
+		if (ObjectUtils.nullSafeEquals(operation, LdapTransactionUtils.BIND_METHOD_NAME)) {
 			log.debug("Bind operation recorded");
 			return new BindOperationRecorder(createLdapOperationsInstance((DirContext) resource));
 		}
-		else if (StringUtils.equals(operation, LdapTransactionUtils.REBIND_METHOD_NAME)) {
+		else if (ObjectUtils.nullSafeEquals(operation, LdapTransactionUtils.REBIND_METHOD_NAME)) {
 			log.debug("Rebind operation recorded");
 			return new RebindOperationRecorder(createLdapOperationsInstance((DirContext) resource), renamingStrategy);
 		}
-		else if (StringUtils.equals(operation, LdapTransactionUtils.RENAME_METHOD_NAME)) {
+		else if (ObjectUtils.nullSafeEquals(operation, LdapTransactionUtils.RENAME_METHOD_NAME)) {
 			log.debug("Rename operation recorded");
 			return new RenameOperationRecorder(createLdapOperationsInstance((DirContext) resource));
 		}
-		else if (StringUtils.equals(operation, LdapTransactionUtils.MODIFY_ATTRIBUTES_METHOD_NAME)) {
+		else if (ObjectUtils.nullSafeEquals(operation, LdapTransactionUtils.MODIFY_ATTRIBUTES_METHOD_NAME)) {
 			return new ModifyAttributesOperationRecorder(createLdapOperationsInstance((DirContext) resource));
 		}
-		else if (StringUtils.equals(operation, LdapTransactionUtils.UNBIND_METHOD_NAME)) {
+		else if (ObjectUtils.nullSafeEquals(operation, LdapTransactionUtils.UNBIND_METHOD_NAME)) {
 			return new UnbindOperationRecorder(createLdapOperationsInstance((DirContext) resource), renamingStrategy);
 		}
 

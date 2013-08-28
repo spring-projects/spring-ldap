@@ -1,9 +1,6 @@
 
 dependencies {
-    compile project(":spring-ldap-core"),
-            "commons-lang:commons-lang:$commonsLangVersion",
-             "org.springframework.batch:spring-batch-core:$springBatchVersion",
-             "org.springframework.batch:spring-batch-infrastructure:$springBatchVersion"
+    compile project(":spring-ldap-core")
 
     testCompile "junit:junit:$junitVersion",
                  "commons-io:commons-io:2.4"

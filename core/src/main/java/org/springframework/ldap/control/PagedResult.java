@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,6 @@
 package org.springframework.ldap.control;
 
 import java.util.List;
-
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * Bean to encapsulate a result List and a {@link PagedResultsCookie} to use for
@@ -65,28 +62,23 @@ public class PagedResult {
         return resultList;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    public boolean equals(Object obj) {
-        if (obj != null && this.getClass().equals(obj.getClass())) {
-            PagedResult that = (PagedResult) obj;
-            return new EqualsBuilder().append(this.resultList, that.resultList)
-                    .append(this.cookie, that.cookie).isEquals();
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        return false;
+        PagedResult that = (PagedResult) o;
+
+        if (cookie != null ? !cookie.equals(that.cookie) : that.cookie != null) return false;
+        if (resultList != null ? !resultList.equals(that.resultList) : that.resultList != null) return false;
+
+        return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
+    @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(this.resultList)
-                .append(this.cookie).toHashCode();
+        int result = resultList != null ? resultList.hashCode() : 0;
+        result = 31 * result + (cookie != null ? cookie.hashCode() : 0);
+        return result;
     }
 }

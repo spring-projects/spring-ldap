@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.ldap.control;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-
 import com.sun.jndi.ldap.ctl.PagedResultsControl;
+
+import java.util.Arrays;
 
 /**
  * Wrapper class for the cookie returned when using the
@@ -40,7 +37,11 @@ public class PagedResultsCookie {
      *            the cookie returned by a PagedResultsResponseControl.
      */
     public PagedResultsCookie(byte[] cookie) {
-        this.cookie = ArrayUtils.clone(cookie);
+        if (cookie != null) {
+            this.cookie = Arrays.copyOf(cookie, cookie.length);
+        } else {
+            this.cookie = null;
+        }
     }
 
     /**
@@ -49,30 +50,27 @@ public class PagedResultsCookie {
      * @return the cookie.
      */
     public byte[] getCookie() {
-        return ArrayUtils.clone(cookie);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    public boolean equals(Object obj) {
-        if (obj != null && this.getClass().equals(obj.getClass())) {
-            PagedResultsCookie that = (PagedResultsCookie) obj;
-            return new EqualsBuilder().append(this.cookie, that.cookie)
-                    .isEquals();
+        if (cookie != null) {
+            return Arrays.copyOf(cookie, cookie.length);
+        } else {
+            return null;
         }
-
-        return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PagedResultsCookie that = (PagedResultsCookie) o;
+
+        if (!Arrays.equals(cookie, that.cookie)) return false;
+
+        return true;
+    }
+
+    @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(this.cookie).toHashCode();
+        return cookie != null ? Arrays.hashCode(cookie) : 0;
     }
 }

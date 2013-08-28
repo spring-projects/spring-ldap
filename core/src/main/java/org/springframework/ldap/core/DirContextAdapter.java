@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.ldap.core;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.NoSuchAttributeException;
 import org.springframework.ldap.support.LdapUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import javax.naming.Context;
@@ -483,7 +480,7 @@ public class DirContextAdapter implements DirContextOperations {
 				}
 				else {
 					// check all strings
-					if (!ArrayUtils.contains(values, obj)) {
+					if (!ObjectUtils.containsElement(values, obj)) {
 						return true;
 					}
 				}
@@ -513,7 +510,7 @@ public class DirContextAdapter implements DirContextOperations {
 					}
 					else {
 						// check all strings
-						if (!ArrayUtils.contains(values, obj)) {
+						if (!ObjectUtils.containsElement(values, obj)) {
 							return true;
 						}
 					}
@@ -1300,26 +1297,36 @@ public class DirContextAdapter implements DirContextOperations {
 
 	}
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object obj) {
-		// A subclass with identical values should NOT be considered equal.
-		// EqualsBuilder in commons-lang cannot handle subclasses correctly.
-		if (obj == null || obj.getClass() != this.getClass()) {
-			return false;
-		}
-		return EqualsBuilder.reflectionEquals(this, obj);
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-	/**
-	 * @see Object#hashCode()
-	 */
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
+        DirContextAdapter that = (DirContextAdapter) o;
 
-	/**
+        if (updateMode != that.updateMode) return false;
+        if (base != null ? !base.equals(that.base) : that.base != null) return false;
+        if (dn != null ? !dn.equals(that.dn) : that.dn != null) return false;
+        if (originalAttrs != null ? !originalAttrs.equals(that.originalAttrs) : that.originalAttrs != null)
+            return false;
+        if (referralUrl != null ? !referralUrl.equals(that.referralUrl) : that.referralUrl != null) return false;
+        if (updatedAttrs != null ? !updatedAttrs.equals(that.updatedAttrs) : that.updatedAttrs != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = originalAttrs != null ? originalAttrs.hashCode() : 0;
+        result = 31 * result + (dn != null ? dn.hashCode() : 0);
+        result = 31 * result + (base != null ? base.hashCode() : 0);
+        result = 31 * result + (updateMode ? 1 : 0);
+        result = 31 * result + (updatedAttrs != null ? updatedAttrs.hashCode() : 0);
+        result = 31 * result + (referralUrl != null ? referralUrl.hashCode() : 0);
+        return result;
+    }
+
+    /**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {

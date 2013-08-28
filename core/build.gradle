@@ -10,7 +10,6 @@ idea.module.excludeDirs = [
 
 dependencies {
     compile "commons-logging:commons-logging:$commonsLoggingVersion",
-             "commons-lang:commons-lang:$commonsLangVersion",
              "org.springframework:spring-core:$springVersion",
              "org.springframework:spring-beans:$springVersion",
              "org.springframework:spring-tx:$springVersion"
@@ -22,6 +21,7 @@ dependencies {
              "org.springframework:spring-orm:$springVersion"
 
     testCompile "junit:junit:$junitVersion",
+                "commons-lang:commons-lang:$commonsLangVersion",
                 "gsbase:gsbase:$gsbaseVersion",
                 "org.mockito:mockito-core:$mockitoVersion"
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.ldap.transaction.compensating;
 
-import javax.naming.Name;
-
-import org.apache.commons.lang.StringUtils;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
+
+import javax.naming.Name;
 
 /**
  * Utility methods for working with LDAP transactions.
@@ -91,12 +90,11 @@ public final class LdapTransactionUtils {
      *         <code>false</code> otherwise.
      */
     public static boolean isSupportedWriteTransactionOperation(String methodName) {
-        return (StringUtils.equals(methodName, BIND_METHOD_NAME)
-                || StringUtils.equals(methodName, REBIND_METHOD_NAME)
-                || StringUtils.equals(methodName, RENAME_METHOD_NAME)
-                || StringUtils
-                        .equals(methodName, MODIFY_ATTRIBUTES_METHOD_NAME) || StringUtils
-                .equals(methodName, UNBIND_METHOD_NAME));
+        return (ObjectUtils.nullSafeEquals(methodName, BIND_METHOD_NAME)
+                || ObjectUtils.nullSafeEquals(methodName, REBIND_METHOD_NAME)
+                || ObjectUtils.nullSafeEquals(methodName, RENAME_METHOD_NAME)
+                || ObjectUtils.nullSafeEquals(methodName, MODIFY_ATTRIBUTES_METHOD_NAME)
+                || ObjectUtils.nullSafeEquals(methodName, UNBIND_METHOD_NAME));
 
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.ldap.filter;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.springframework.ldap.core.LdapEncoder;
 
 /**
@@ -81,39 +78,27 @@ public abstract class CompareFilter extends AbstractFilter {
 		return buff;
 	}
 
-	/**
-	 * Compares key and value before encoding.
-	 * 
-	 * @see org.springframework.ldap.filter.Filter#equals(java.lang.Object)
-	 */
-	public boolean equals(Object o) {
-		if (o == null) {
-			return false;
-		}
-		if (o == this) {
-			return true;
-		}
-		if (o.getClass() != getClass()) {
-			return false;
-		}
-		CompareFilter f = (CompareFilter) o;
-		EqualsBuilder builder = new EqualsBuilder();
-		return builder.append(this.attribute, f.attribute).append(this.value, f.value).isEquals();
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-	/**
-	 * Calculate the hash code for the attribute and the value.
-	 * 
-	 * @see org.springframework.ldap.filter.Filter#hashCode()
-	 */
-	public int hashCode() {
-		HashCodeBuilder builder = new HashCodeBuilder();
-		builder.append(attribute);
-		builder.append(value);
-		return builder.toHashCode();
-	}
+        CompareFilter that = (CompareFilter) o;
 
-	/**
+        if (attribute != null ? !attribute.equals(that.attribute) : that.attribute != null) return false;
+        if (value != null ? !value.equals(that.value) : that.value != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = attribute != null ? attribute.hashCode() : 0;
+        result = 31 * result + (value != null ? value.hashCode() : 0);
+        return result;
+    }
+
+    /**
 	 * Implement this method in subclass to return a String representing the
 	 * operator. The {@link EqualsFilter#getCompareString()} would for example
 	 * return an equals sign, &quot;=&quot;.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,10 @@
 
 package org.springframework.ldap.core;
 
+import org.springframework.ldap.BadLdapGrammarException;
+import org.springframework.ldap.support.ListComparator;
+import org.springframework.util.ObjectUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,10 +27,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.ldap.BadLdapGrammarException;
-import org.springframework.ldap.support.ListComparator;
 
 /**
  * Datatype for a LDAP name, a part of a path.
@@ -239,7 +239,7 @@ public class LdapRdn implements Serializable, Comparable {
 	public String getValue(String key) {
 		for (Iterator iter = components.iterator(); iter.hasNext();) {
 			LdapRdnComponent component = (LdapRdnComponent) iter.next();
-			if (StringUtils.equals(component.getKey(), key)) {
+			if (ObjectUtils.nullSafeEquals(component.getKey(), key)) {
 				return component.getValue();
 			}
 		}

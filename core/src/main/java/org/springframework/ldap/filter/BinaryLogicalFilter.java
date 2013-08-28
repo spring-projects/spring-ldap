@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.ldap.filter;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * Abstract superclass for binary logical operations, that is &quot;AND&quot;
@@ -74,30 +70,24 @@ public abstract class BinaryLogicalFilter extends AbstractFilter {
 	 */
 	protected abstract String getLogicalOperator();
 
-	/**
-	 * Compares each filter in turn.
-	 * 
-	 * @see org.springframework.ldap.filter.Filter#equals(java.lang.Object)
-	 */
-	public boolean equals(Object obj) {
-		if (obj instanceof BinaryLogicalFilter && this.getClass() == obj.getClass()) {
-			return EqualsBuilder.reflectionEquals(this, obj);
-		}
-		else {
-			return false;
-		}
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-	/**
-	 * Hashes all contained data.
-	 * 
-	 * @see org.springframework.ldap.filter.Filter#hashCode()
-	 */
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
+        BinaryLogicalFilter that = (BinaryLogicalFilter) o;
 
-	/**
+        if (queryList != null ? !queryList.equals(that.queryList) : that.queryList != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return queryList != null ? queryList.hashCode() : 0;
+    }
+
+    /**
 	 * Add a query to this logical operation.
 	 * 
 	 * @param query the query to add.

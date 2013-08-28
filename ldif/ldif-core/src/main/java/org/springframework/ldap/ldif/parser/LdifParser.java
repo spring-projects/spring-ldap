@@ -16,7 +16,6 @@
 
 package org.springframework.ldap.ldif.parser;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -32,6 +31,7 @@ import org.springframework.ldap.ldif.support.SeparatorPolicy;
 import org.springframework.ldap.schema.DefaultSchemaSpecification;
 import org.springframework.ldap.schema.Specification;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
@@ -324,7 +324,7 @@ public class LdifParser implements Parser, InitializingBean {
 	
 	private void addAttributeToRecord(String buffer, LdapAttributes record) {
 		try {
-			if (StringUtils.isNotEmpty(buffer) && record != null) {
+			if (StringUtils.hasLength(buffer) && record != null) {
 				//Validate previous attribute and add to record.
 				Attribute attribute = attributePolicy.parse(buffer);
 					

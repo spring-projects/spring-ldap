@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,14 @@
  */
 package org.springframework.ldap.core;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Represents part of an LdapRdn. As specified in RFC2253 an LdapRdn may be
@@ -68,14 +68,14 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	 * @see DistinguishedName#KEY_CASE_FOLD_PROPERTY
 	 */
 	public LdapRdnComponent(String key, String value, boolean decodeValue) {
-		Validate.notEmpty(key, "Key must not be empty");
-		Validate.notEmpty(value, "Value must not be empty");
+		Assert.hasText(key, "Key must not be empty");
+		Assert.hasText(value, "Value must not be empty");
 
 		String caseFold = System.getProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY);
-		if (StringUtils.isBlank(caseFold) || caseFold.equals(DistinguishedName.KEY_CASE_FOLD_LOWER)) {
-			this.key = StringUtils.lowerCase(key);
+		if (!StringUtils.hasText(caseFold) || caseFold.equals(DistinguishedName.KEY_CASE_FOLD_LOWER)) {
+			this.key = key.toLowerCase();
 		} else if (caseFold.equals(DistinguishedName.KEY_CASE_FOLD_UPPER)) {
-			this.key = StringUtils.upperCase(key);
+			this.key = key.toUpperCase();
 		} else if (caseFold.equals(DistinguishedName.KEY_CASE_FOLD_NONE)) {
 			this.key = key;
 		} else {
@@ -84,7 +84,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 							+ "; expected \"" + DistinguishedName.KEY_CASE_FOLD_LOWER + "\", \""
 							+ DistinguishedName.KEY_CASE_FOLD_UPPER + "\", or \""
 							+ DistinguishedName.KEY_CASE_FOLD_NONE + "\"");
-			this.key = StringUtils.lowerCase(key);
+			this.key = key.toLowerCase();
 		}
 		if (decodeValue) {
 			this.value = LdapEncoder.nameDecode(value);
@@ -201,8 +201,10 @@ public class LdapRdnComponent implements Comparable, Serializable {
 		// instances to equal mutable ones.
 		if (obj != null && obj instanceof LdapRdnComponent) {
 			LdapRdnComponent that = (LdapRdnComponent) obj;
-			return StringUtils.equalsIgnoreCase(this.key, that.key)
-					&& StringUtils.equalsIgnoreCase(this.value, that.value);
+            // It's safe to compare directly against key and value,
+            // because they are validated not to be null on instance creation.
+			return this.key.equalsIgnoreCase(that.key)
+					&& this.value.equalsIgnoreCase(that.value);
 
 		}
 		else {

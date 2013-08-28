@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.ldap.core;
 
-import org.apache.commons.lang.StringUtils;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.BadLdapGrammarException;
@@ -138,8 +138,8 @@ public class DistinguishedName implements Name {
 
 	public static final String KEY_CASE_FOLD_NONE = "none";
 
-    private static final String[] MANGLED_DOUBLE_QUOTES = new String[]{"\\\\\""};
-    private static final String[] PROPER_DOUBLE_QUOTES = new String[]{"\\\""};
+    private static final String MANGLED_DOUBLE_QUOTES = "\\\\\"";
+    private static final String PROPER_DOUBLE_QUOTES = "\\\"";
 
     private static final Log log = LogFactory.getLog(DistinguishedName.class);
 
@@ -169,7 +169,7 @@ public class DistinguishedName implements Name {
 	 * @param path a String corresponding to a (syntactically) valid LDAP path.
 	 */
 	public DistinguishedName(String path) {
-		if (StringUtils.isBlank(path)) {
+		if (!StringUtils.hasText(path)) {
 			names = new LinkedList();
 		}
 		else {
@@ -247,7 +247,7 @@ public class DistinguishedName implements Name {
 			tempPath = path;
 		}
 
-        tempPath = StringUtils.replaceEach(tempPath, MANGLED_DOUBLE_QUOTES, PROPER_DOUBLE_QUOTES);
+        tempPath = StringUtils.replace(tempPath, MANGLED_DOUBLE_QUOTES, PROPER_DOUBLE_QUOTES);
 		return tempPath;
 	}
 
@@ -273,7 +273,7 @@ public class DistinguishedName implements Name {
 	public LdapRdn getLdapRdn(String key) {
 		for (Iterator iter = names.iterator(); iter.hasNext();) {
 			LdapRdn rdn = (LdapRdn) iter.next();
-			if (StringUtils.equals(rdn.getKey(), key)) {
+			if (ObjectUtils.nullSafeEquals(rdn.getKey(), key)) {
 				return rdn;
 			}
 		}
@@ -317,7 +317,7 @@ public class DistinguishedName implements Name {
 	 */
 	public String toString() {
 		String spacedFormatting = System.getProperty(SPACED_DN_FORMAT_PROPERTY);
-		if (StringUtils.isBlank(spacedFormatting)) {
+		if (!StringUtils.hasText(spacedFormatting)) {
 			return format(COMPACT);
 		}
 		else {

@@ -16,8 +16,7 @@
 
 package org.springframework.ldap.core.support;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
+import org.springframework.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -26,6 +25,7 @@ import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.support.LdapUtils;
+import org.springframework.util.ObjectUtils;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
@@ -335,7 +335,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * the class outside of a Spring Context.
 	 */
 	public void afterPropertiesSet() throws Exception {
-		if (ArrayUtils.isEmpty(urls)) {
+		if (ObjectUtils.isEmpty(urls)) {
 			throw new IllegalArgumentException("At least one server url must be set");
 		}
 
@@ -345,10 +345,10 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 		if (authenticationSource == null) {
 			log.debug("AuthenticationSource not set - " + "using default implementation");
-			if (StringUtils.isBlank(userDn)) {
+			if (!StringUtils.hasText(userDn)) {
 				log.info("Property 'userDn' not set - " + "anonymous context will be used for read-write operations");
 			}
-			else if (StringUtils.isBlank(password)) {
+			else if (!StringUtils.hasText(password)) {
 				log.info("Property 'password' not set - " + "blank password will be used");
 			}
 			authenticationSource = new SimpleAuthenticationSource();
@@ -378,7 +378,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 			env.put(Context.OBJECT_FACTORIES, dirObjectFactory.getName());
 		}
 
-		if (!StringUtils.isBlank(referral)) {
+		if (StringUtils.hasText(referral)) {
 			env.put(Context.REFERRAL, referral);
 		}
 

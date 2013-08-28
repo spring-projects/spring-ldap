@@ -8,14 +8,14 @@ dependencies {
             "org.springframework:spring-core:$springVersion",
             "org.freemarker:freemarker:2.3.9",
             "commons-logging:commons-logging:$commonsLoggingVersion",
-            "commons-lang:commons-lang:$commonsLangVersion",
             "commons-cli:commons-cli:1.2"
 
     runtime "org.springframework:spring-context:$springVersion"
 
     provided "commons-pool:commons-pool:$commonsPoolVersion",
              "com.sun:ldapbp:1.0",
-             "org.springframework:spring-context:$springVersion",
+            "commons-lang:commons-lang:$commonsLangVersion",
+            "org.springframework:spring-context:$springVersion",
              "org.springframework:spring-jdbc:$springVersion",
              "org.springframework:spring-orm:$springVersion"
 

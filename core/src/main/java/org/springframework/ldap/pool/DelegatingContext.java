@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.ldap.pool;
 
-import java.util.Hashtable;
+import org.apache.commons.pool.KeyedObjectPool;
+import org.springframework.ldap.pool.factory.PoolingContextSource;
+import org.springframework.util.Assert;
 
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NameParser;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-
-import org.apache.commons.lang.Validate;
-import org.apache.commons.pool.KeyedObjectPool;
-import org.springframework.ldap.pool.factory.PoolingContextSource;
+import java.util.Hashtable;
 
 /**
  * Used by {@link PoolingContextSource} to wrap a {@link Context}, delegating most methods
@@ -50,9 +48,9 @@ public class DelegatingContext implements Context {
      * @throws IllegalArgumentException if any of the arguments are null
      */
     public DelegatingContext(KeyedObjectPool keyedObjectPool, Context delegateContext, DirContextType dirContextType) {
-        Validate.notNull(keyedObjectPool, "keyedObjectPool may not be null");
-        Validate.notNull(delegateContext, "delegateContext may not be null");
-        Validate.notNull(dirContextType, "dirContextType may not be null");
+        Assert.notNull(keyedObjectPool, "keyedObjectPool may not be null");
+        Assert.notNull(delegateContext, "delegateContext may not be null");
+        Assert.notNull(dirContextType, "dirContextType may not be null");
         
         this.keyedObjectPool = keyedObjectPool;
         this.delegateContext = delegateContext;
