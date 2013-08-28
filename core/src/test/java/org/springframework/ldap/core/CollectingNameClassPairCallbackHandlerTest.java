@@ -20,6 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.naming.NameClassPair;
+import javax.naming.NamingException;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -46,7 +47,7 @@ public class CollectingNameClassPairCallbackHandlerTest {
     }
 
     @Test
-    public void testHandleNameClassPair() {
+    public void testHandleNameClassPair() throws NamingException {
         tested.handleNameClassPair(expectedNameClassPair);
         List result = tested.getList();
         assertEquals(1, result.size());

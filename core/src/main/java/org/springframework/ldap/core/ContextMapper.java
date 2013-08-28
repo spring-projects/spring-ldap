@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,13 @@
 
 package org.springframework.ldap.core;
 
-import javax.naming.Binding;
-import javax.naming.Name;
-import javax.naming.directory.SearchResult;
-
 import org.springframework.ldap.core.support.AbstractContextMapper;
 import org.springframework.ldap.core.support.DefaultDirObjectFactory;
+
+import javax.naming.Binding;
+import javax.naming.Name;
+import javax.naming.NamingException;
+import javax.naming.directory.SearchResult;
 
 /**
  * An interface used by LdapTemplate to map LDAP Contexts to beans. When a
@@ -60,6 +61,7 @@ public interface ContextMapper {
      *            <code>DirObjectFactory</code> has been specified on the
      *            <code>ContextSource</code>.
      * @return an object built from the data in the context.
+     * @throws NamingException if an error occurs.
      */
-    Object mapFromContext(Object ctx);
+    Object mapFromContext(Object ctx) throws NamingException;
 }

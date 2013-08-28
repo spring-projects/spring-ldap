@@ -19,6 +19,7 @@ import org.springframework.util.Assert;
 
 import javax.naming.Binding;
 import javax.naming.NameClassPair;
+import javax.naming.NamingException;
 
 /**
  * A CollectingNameClassPairCallbackHandler to wrap a ContextMapper. That is,
@@ -51,8 +52,10 @@ public class ContextMapperCallbackHandler extends
      * @param nameClassPair
      *            a Binding instance.
      * @return the Object returned from the mapper.
+     * @throws NamingException if an error occurs.
+     * @throws ObjectRetrievalException if the object of the nameClassPair is null.
      */
-    public Object getObjectFromNameClassPair(NameClassPair nameClassPair) {
+    public Object getObjectFromNameClassPair(NameClassPair nameClassPair) throws NamingException {
 		if (!(nameClassPair instanceof Binding)) {
 			throw new IllegalArgumentException("Parameter must be an instance of Binding");
 		}

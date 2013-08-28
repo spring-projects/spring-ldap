@@ -17,6 +17,7 @@
 package org.springframework.ldap.core;
 
 import javax.naming.NameClassPair;
+import javax.naming.NamingException;
 
 /**
  * Callback interface used by {@link LdapTemplate} search, list and listBindings
@@ -36,6 +37,8 @@ public interface NameClassPairCallbackHandler {
      * @param nameClassPair
      *            the NameClassPair returned from the
      *            <code>NamingEnumeration</code>.
+     * @throws NamingException if an error occurs.
      */
-    void handleNameClassPair(NameClassPair nameClassPair);
+    void handleNameClassPair(NameClassPair nameClassPair) throws NamingException;
+    ;
 }

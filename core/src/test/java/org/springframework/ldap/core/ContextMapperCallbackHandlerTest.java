@@ -19,6 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.naming.Binding;
+import javax.naming.NamingException;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -42,7 +43,7 @@ public class ContextMapperCallbackHandlerTest {
     }
 
     @Test
-    public void testGetObjectFromNameClassPair() {
+    public void testGetObjectFromNameClassPair() throws NamingException {
         Object expectedObject = "object";
         Object expectedResult = "result";
         Binding expectedBinding = new Binding("some name", expectedObject);
@@ -54,7 +55,7 @@ public class ContextMapperCallbackHandlerTest {
     }
 
     @Test(expected = ObjectRetrievalException.class)
-    public void testGetObjectFromNameClassPairObjectRetrievalException() {
+    public void testGetObjectFromNameClassPairObjectRetrievalException() throws NamingException {
         Binding expectedBinding = new Binding("some name", null);
         tested.getObjectFromNameClassPair(expectedBinding);
     }

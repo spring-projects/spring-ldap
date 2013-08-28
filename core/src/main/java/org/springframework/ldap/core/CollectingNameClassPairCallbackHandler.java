@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 package org.springframework.ldap.core;
 
+import javax.naming.NameClassPair;
+import javax.naming.NamingException;
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.naming.NameClassPair;
 
 /**
  * A NameClassPairCallbackHandler to collect all results in an internal List.
@@ -46,7 +46,7 @@ public abstract class CollectingNameClassPairCallbackHandler implements
      * {@link #getObjectFromNameClassPair(NameClassPair)} and add the result to
      * the internal list.
      */
-    public void handleNameClassPair(NameClassPair nameClassPair) {
+    public final void handleNameClassPair(NameClassPair nameClassPair) throws NamingException {
         list.add(getObjectFromNameClassPair(nameClassPair));
     }
 
@@ -57,7 +57,8 @@ public abstract class CollectingNameClassPairCallbackHandler implements
      * @param nameClassPair
      *            a NameClassPair from a search operation.
      * @return an object constructed from the data in the NameClassPair.
+     * @throws NamingException if an error occurs.
      */
     public abstract Object getObjectFromNameClassPair(
-            NameClassPair nameClassPair);
+            NameClassPair nameClassPair) throws NamingException;
 }
