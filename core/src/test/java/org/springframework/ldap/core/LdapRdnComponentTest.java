@@ -50,4 +50,22 @@ public class LdapRdnComponentTest {
         int result = component1.compareTo(component2);
         assertEquals(0, result);
     }
+
+    @Test
+    public void testCompareTo_DifferentCase_LDAP259() {
+        LdapRdnComponent component1 = new LdapRdnComponent("cn", "john doe");
+        LdapRdnComponent component2 = new LdapRdnComponent("CN", "John Doe");
+
+        assertEquals("Should be equal", component1, component2);
+        assertTrue("0 should be returned by compareTo", component1.compareTo(component2) == 0);
+    }
+
+    @Test
+    public void verifyThatHashCodeDisregardsCase_LDAP259() {
+        LdapRdnComponent component1 = new LdapRdnComponent("cn", "john doe");
+        LdapRdnComponent component2 = new LdapRdnComponent("CN", "John Doe");
+
+        assertEquals("Should be equal", component1.hashCode(), component2.hashCode());
+    }
+
 }

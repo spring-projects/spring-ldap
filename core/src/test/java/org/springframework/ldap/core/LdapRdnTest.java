@@ -191,6 +191,22 @@ public class LdapRdnTest {
     }
 
     @Test
+    public void verifyThatEqualsDisregardsOrder_Ldap260() throws Exception {
+        LdapRdn rdn1 = new LdapRdn("cn=john doe+sn=doe");
+        LdapRdn rdn2 = new LdapRdn("sn=doe+cn=john doe");
+
+        assertEquals("Should be equal", rdn1, rdn2);
+    }
+
+    @Test
+    public void verifyThatHashcodeDisregardsOrder_Ldap260() throws Exception {
+        LdapRdn rdn1 = new LdapRdn("cn=john doe+sn=doe");
+        LdapRdn rdn2 = new LdapRdn("sn=doe+cn=john doe");
+
+        assertEquals("Should be equal", rdn1.hashCode(), rdn2.hashCode());
+    }
+
+    @Test
     public void testCompareTo_EqualsComplex() throws Exception {
         LdapRdn rdn1 = new LdapRdn("cn=john doe+sn=doe");
         LdapRdn rdn2 = new LdapRdn("cn=john doe+sn=doe");
@@ -200,7 +216,7 @@ public class LdapRdnTest {
     }
 
     @Test
-    public void testCompareTo_Less() {
+    public void testCompareTo_LessWithMissingKey() {
         LdapRdn rdn1 = new LdapRdn("cn=john doe+sn=doe");
         LdapRdn rdn2 = new LdapRdn("cn=john doe+tn=doe");
 
@@ -209,9 +225,18 @@ public class LdapRdnTest {
     }
 
     @Test
+    public void testCompareTo_LessWithExistingKey() {
+        LdapRdn rdn1 = new LdapRdn("cn=john doe+sn=doa");
+        LdapRdn rdn2 = new LdapRdn("cn=john doe+sn=doe");
+
+        int result = rdn1.compareTo(rdn2);
+        assertTrue(result < 0);
+    }
+
+    @Test
     public void testCompareTo_Greater() {
         LdapRdn rdn1 = new LdapRdn("cn=john doe+sn=doe");
-        LdapRdn rdn2 = new LdapRdn("cn=john doe+an=doe");
+        LdapRdn rdn2 = new LdapRdn("cn=john doe+sn=doa");
 
         int result = rdn1.compareTo(rdn2);
         assertTrue(result > 0);

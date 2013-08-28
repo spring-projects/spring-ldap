@@ -111,7 +111,8 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	 * DistinguishedName instance. This should be avoided.
 	 */
 	public void setKey(String key) {
-		this.key = key;
+        Assert.hasText(key, "Key must not be empty");
+        this.key = key;
 	}
 
 	/**
@@ -131,6 +132,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	 * DistinguishedName instance. This should be avoided.
 	 */
 	public void setValue(String value) {
+        Assert.hasText(value, "Value must not be empty");
 		this.value = value;
 	}
 
@@ -221,7 +223,15 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	 */
 	public int compareTo(Object obj) {
 		LdapRdnComponent that = (LdapRdnComponent) obj;
-		return this.toString().compareTo(that.toString());
+
+        // It's safe to compare directly against key and value,
+        // because they are validated not to be null on instance creation.
+        int keyCompare = this.key.toLowerCase().compareTo(that.key.toLowerCase());
+        if(keyCompare == 0) {
+            return this.value.toLowerCase().compareTo(that.value.toLowerCase());
+        } else {
+            return keyCompare;
+        }
 	}
 
 	/**
