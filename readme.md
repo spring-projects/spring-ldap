@@ -16,13 +16,8 @@ In addition to this, Spring LDAP provides Exception translation from NamingExcep
 to an unchecked exception hirearchy, as well as several utilities for working with filters,
 LDAP paths and Attributes.
 
-As of version 1.2, support for client-side compensating transaction is provided, as well as 
-Java 5 generics support with the SimpleLdapTemplate.
-
-As of version 1.3.1, there is support for LDIF parsing and Object-Directory Mapping (ODM).
-
-For detailed information on the project, please refer to the [reference documentation](http://static.springsource.org/spring-ldap/docs/1.3.x/reference/html/) and [javadocs](http://static.springsource.org/spring-ldap/site/apidocs/).
-See [the changelog](https://jira.springsource.org/browse/LDAP#selectedTab=com.atlassian.jira.plugin.system.project%3Achangelog-panel) for detailed information on changes.
+For detailed information on the project, please refer to the [reference documentation](http://static.springsource.org/spring-ldap/docs/1.3.x/reference/html/) and [javadocs](http://static.springframework.org/spring-ldap/docs/1.3.x/apidocs/).
+See [the changelog](https://jira.springsource.org/secure/ReleaseNote.jspa?projectId=10071&version=13399) for detailed information on changes in the latest version.
 
 ###MAVEN USERS
 
@@ -41,7 +36,7 @@ To include e.g. the spring-ldap-core component in your project, use the followin
     <dependency>
       <groupId>org.springframework.ldap</groupId>
       <artifactId>spring-ldap-core</artifactId>
-      <version>1.3.1.RELEASE</version>
+      <version>1.3.2.RELEASE</version>
     </dependency>
 
 Milestone releases (such as release candidates) are available from the Spring
@@ -67,7 +62,7 @@ use the following dependency tag:
     <dependency>
       <groupId>org.springframework.ldap</groupId>
       <artifactId>spring-ldap-core</artifactId>
-      <version>1.3.2.CI-SNAPSHOT</version>
+      <version>2.0.M1.CI-SNAPSHOT</version>
     </dependency>
 
 Note that while all milestone and snapshot builds have passed the (quite extensive) test suite,
