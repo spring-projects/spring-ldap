@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import javax.naming.NamingException;
  * 
  * @author Mattias Hellborg Arthursson
  */
-public interface NameClassPairMapper {
+public interface NameClassPairMapper<T> {
     /**
      * Map <code>NameClassPair</code> to an Object. The supplied
      * <code>NameClassPair</code> is one of the results from a search
@@ -39,6 +39,6 @@ public interface NameClassPairMapper {
      * @throws NamingException
      *             if one is encountered in the operation.
      */
-    Object mapFromNameClassPair(NameClassPair nameClassPair)
+    T mapFromNameClassPair(NameClassPair nameClassPair)
             throws NamingException;
 }

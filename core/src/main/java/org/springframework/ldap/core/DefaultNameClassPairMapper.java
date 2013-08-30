@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import javax.naming.NamingException;
  * @author Mattias Hellborg Arthursson
  * 
  */
-public class DefaultNameClassPairMapper implements NameClassPairMapper {
+public class DefaultNameClassPairMapper implements NameClassPairMapper<String> {
 
     /**
      * Gets the Name from the supplied NameClassPair and returns it as the
@@ -37,7 +37,8 @@ public class DefaultNameClassPairMapper implements NameClassPairMapper {
      *            the NameClassPair to transform.
      * @return the Name string from the NameClassPair.
      */
-    public Object mapFromNameClassPair(NameClassPair nameClassPair)
+    @Override
+    public String mapFromNameClassPair(NameClassPair nameClassPair)
             throws NamingException {
 
         return nameClassPair.getName();

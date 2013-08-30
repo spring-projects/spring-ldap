@@ -18,7 +18,6 @@ package org.springframework.ldap.core.support;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.IncrementalAttributesMapper;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.support.LdapUtils;
@@ -33,7 +32,6 @@ import javax.naming.directory.BasicAttributes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -75,38 +73,44 @@ import java.util.Set;
  * @see #lookupAttributeValues(org.springframework.ldap.core.LdapOperations, javax.naming.Name, String)
  * @since 1.3.2
  */
-public class DefaultIncrementalAttributesMapper implements AttributesMapper, IncrementalAttributesMapper {
+public class DefaultIncrementalAttributesMapper implements IncrementalAttributesMapper<DefaultIncrementalAttributesMapper> {
     private final static Log log = LogFactory.getLog(DefaultIncrementalAttributesMapper.class);
 
-    private Map stateMap = new LinkedHashMap();
-    private Set rangedAttributesInNextIteration = new LinkedHashSet();
+    private Map<String, IncrementalAttributeState> stateMap = new LinkedHashMap<String, IncrementalAttributeState>();
+    private Set<String> rangedAttributesInNextIteration = new LinkedHashSet<String>();
 
     /**
      * This guy will be used when an unmapped attribute is encountered. This really should never happen,
      * but this saves us a number of null checks.
      */
     private final static IncrementalAttributeState NOT_FOUND_ATTRIBUTE_STATE = new IncrementalAttributeState() {
+        @Override
         public String getRequestedAttributeName() {
             throw new UnsupportedOperationException("This method should never be called");
         }
 
+        @Override
         public boolean hasMore() {
             return false;
         }
 
+        @Override
         public void calculateNextRange(RangeOption responseRange) {
             // Nothing to do here
         }
 
+        @Override
         public String getAttributeNameForQuery() {
             throw new UnsupportedOperationException("This method should never be called");
         }
 
+        @Override
         public void processValues(Attributes attributes, String attributeName) throws NamingException {
             // Nothing to do here
         }
 
-        public List getValues() {
+        @Override
+        public List<Object> getValues() {
             return null;
         }
     };
@@ -154,20 +158,20 @@ public class DefaultIncrementalAttributesMapper implements AttributesMapper, Inc
      *                       values are managed.
      */
     public DefaultIncrementalAttributesMapper(int pageSize, String[] attributeNames) {
-        for (int i = 0; i < attributeNames.length; i++) {
-            String attributeName = attributeNames[i];
+        for (String attributeName : attributeNames) {
             this.stateMap.put(attributeName, new DefaultIncrementalAttributeState(attributeName, pageSize));
             this.rangedAttributesInNextIteration.add(attributeName);
         }
     }
 
-    public final Object mapFromAttributes(Attributes attributes) throws NamingException {
+    @Override
+    public final DefaultIncrementalAttributesMapper mapFromAttributes(Attributes attributes) throws NamingException {
         if (!hasMore()) {
             throw new IllegalStateException("No more attributes!");
         }
 
         // Reset the affected attributes.
-        rangedAttributesInNextIteration = new HashSet();
+        rangedAttributesInNextIteration = new HashSet<String>();
 
         NamingEnumeration attributeNameEnum = attributes.getIDs();
         while (attributeNameEnum.hasMore()) {
@@ -179,9 +183,7 @@ public class DefaultIncrementalAttributesMapper implements AttributesMapper, Inc
                 // No range specification for this attribute
                 state.processValues(attributes, attributeName);
             } else {
-                for (int i = 0; i < attributeNameSplit.length; i++) {
-                    String option = attributeNameSplit[i];
-
+                for (String option : attributeNameSplit) {
                     RangeOption responseRange = RangeOption.parse(option);
 
                     if (responseRange != null) {
@@ -208,22 +210,21 @@ public class DefaultIncrementalAttributesMapper implements AttributesMapper, Inc
         return (IncrementalAttributeState) mappedState;
     }
 
-    public final List getValues(String attributeName) {
+    @Override
+    public final List<Object> getValues(String attributeName) {
         return getState(attributeName).getValues();
     }
 
-    public Attributes getCollectedAttributes() {
+    @Override
+    public final Attributes getCollectedAttributes() {
         BasicAttributes attributes = new BasicAttributes();
 
-        Set attributeNames = stateMap.keySet();
-        for (Iterator iterator = attributeNames.iterator(); iterator.hasNext(); ) {
-            String attributeName = (String) iterator.next();
-
+        Set<String> attributeNames = stateMap.keySet();
+        for (String attributeName : attributeNames) {
             BasicAttribute oneAttribute = new BasicAttribute(attributeName);
             List values = getValues(attributeName);
             if (values != null) {
-                for (Iterator valueIterator = values.iterator(); valueIterator.hasNext(); ) {
-                    Object oneValue = valueIterator.next();
+                for (Object oneValue : values) {
                     oneAttribute.add(oneValue);
                 }
             }
@@ -234,16 +235,17 @@ public class DefaultIncrementalAttributesMapper implements AttributesMapper, Inc
         return attributes;
     }
 
+    @Override
     public final boolean hasMore() {
         return rangedAttributesInNextIteration.size() > 0;
     }
 
+    @Override
     public final String[] getAttributesForLookup() {
         String[] result = new String[rangedAttributesInNextIteration.size()];
         int index = 0;
-        for (Iterator iterator = rangedAttributesInNextIteration.iterator(); iterator.hasNext(); ) {
-            String next = (String) iterator.next();
-            IncrementalAttributeState state = (IncrementalAttributeState) stateMap.get(next);
+        for (String next : rangedAttributesInNextIteration) {
+            IncrementalAttributeState state = stateMap.get(next);
             result[index++] = state.getAttributeNameForQuery();
         }
 
@@ -315,7 +317,7 @@ public class DefaultIncrementalAttributesMapper implements AttributesMapper, Inc
      * @return a list with all attribute values found for the requested attribute.
      *         Never <code>null</code>, an empty list indicates that the attribute was not set or empty.
      */
-    public static List lookupAttributeValues(LdapOperations ldapOperations, String dn, String attribute) {
+    public static List<Object> lookupAttributeValues(LdapOperations ldapOperations, String dn, String attribute) {
         return lookupAttributeValues(ldapOperations, LdapUtils.newLdapName(dn), attribute);
     }
 
@@ -328,8 +330,8 @@ public class DefaultIncrementalAttributesMapper implements AttributesMapper, Inc
      * @return a list with all attribute values found for the requested attribute.
      *         Never <code>null</code>, an empty list indicates that the attribute was not set or empty.
      */
-    public static List lookupAttributeValues(LdapOperations ldapOperations, Name dn, String attribute) {
-        List values = loopForAllAttributeValues(ldapOperations, dn, new String[]{attribute}).getValues(attribute);
+    public static List<Object> lookupAttributeValues(LdapOperations ldapOperations, Name dn, String attribute) {
+        List<Object> values = loopForAllAttributeValues(ldapOperations, dn, new String[]{attribute}).getValues(attribute);
         if(values == null) {
             values = Collections.emptyList();
         }
@@ -352,7 +354,7 @@ public class DefaultIncrementalAttributesMapper implements AttributesMapper, Inc
      */
     private final static class DefaultIncrementalAttributeState implements IncrementalAttributeState {
         private final String actualAttributeName;
-        private List values = null;
+        private List<Object> values = null;
         private final int pageSize;
         boolean more = true;
 
@@ -364,14 +366,17 @@ public class DefaultIncrementalAttributesMapper implements AttributesMapper, Inc
             this.requestRange = new RangeOption(0, pageSize);
         }
 
+        @Override
         public boolean hasMore() {
             return more;
         }
 
+        @Override
         public String getRequestedAttributeName() {
             return actualAttributeName;
         }
 
+        @Override
         public void calculateNextRange(RangeOption responseRange) {
             more = requestRange.compareTo(responseRange) > 0;
 
@@ -380,6 +385,7 @@ public class DefaultIncrementalAttributesMapper implements AttributesMapper, Inc
             }
         }
 
+        @Override
         public String getAttributeNameForQuery() {
             StringBuilder attributeBuilder = new StringBuilder(actualAttributeName);
 
@@ -391,6 +397,7 @@ public class DefaultIncrementalAttributesMapper implements AttributesMapper, Inc
             return attributeBuilder.toString();
         }
 
+        @Override
         public void processValues(Attributes attributes, String attributeName) throws NamingException {
             Attribute attribute = attributes.get(attributeName);
             NamingEnumeration valueEnum = attribute.getAll();
@@ -403,13 +410,14 @@ public class DefaultIncrementalAttributesMapper implements AttributesMapper, Inc
 
         private void initValuesIfApplicable() {
             if (values == null) {
-                values = new LinkedList();
+                values = new LinkedList<Object>();
             }
         }
 
-        public List getValues() {
+        @Override
+        public List<Object> getValues() {
             if (values != null) {
-                return new ArrayList(values);
+                return new ArrayList<Object>(values);
             } else {
                 return null;
             }
@@ -430,6 +438,6 @@ public class DefaultIncrementalAttributesMapper implements AttributesMapper, Inc
 
         void processValues(Attributes attributes, String attributeName) throws NamingException;
 
-        List getValues();
+        List<Object> getValues();
     }
 }

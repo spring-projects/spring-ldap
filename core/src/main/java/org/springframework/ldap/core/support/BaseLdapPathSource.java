@@ -35,7 +35,7 @@ public interface BaseLdapPathSource {
 	 * 
 	 * @return the base LDAP path as a {@link DistinguishedName}. The path will
 	 * be empty if no base path is specified.
-     * @deprecated {@link DistinguishedName and associated classes and methods are deprecated as of 2.0}.
+     * @deprecated {@link DistinguishedName} and associated classes and methods are deprecated as of 2.0.
      * Use {@link #getBaseLdapName()} instead.
 	 */
 	DistinguishedName getBaseLdapPath();

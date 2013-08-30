@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
 
 package org.springframework.ldap.core;
 
+import org.springframework.ldap.support.LdapUtils;
+
 import javax.naming.NameClassPair;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchResult;
-
-import org.springframework.ldap.support.LdapUtils;
 
 /**
  * A CollectingNameClassPairCallbackHandler to wrap an {@link AttributesMapper}.
@@ -32,15 +32,15 @@ import org.springframework.ldap.support.LdapUtils;
  * @author Ulrik Sandberg
  * @since 1.2
  */
-public class AttributesMapperCallbackHandler extends CollectingNameClassPairCallbackHandler {
-	private AttributesMapper mapper;
+public class AttributesMapperCallbackHandler<T> extends CollectingNameClassPairCallbackHandler<T> {
+	private AttributesMapper<T> mapper;
 
 	/**
 	 * Constructs a new instance around the specified {@link AttributesMapper}.
 	 * 
 	 * @param mapper the target mapper.
 	 */
-	public AttributesMapperCallbackHandler(AttributesMapper mapper) {
+	public AttributesMapperCallbackHandler(AttributesMapper<T> mapper) {
 		this.mapper = mapper;
 	}
 
@@ -51,7 +51,7 @@ public class AttributesMapperCallbackHandler extends CollectingNameClassPairCall
 	 * @param nameClassPair a <code> SearchResult</code> instance.
 	 * @return the Object returned from the mapper.
 	 */
-	public Object getObjectFromNameClassPair(NameClassPair nameClassPair) {
+	public T getObjectFromNameClassPair(NameClassPair nameClassPair) {
 		if (!(nameClassPair instanceof SearchResult)) {
 			throw new IllegalArgumentException("Parameter must be an instance of SearchResult");
 		}

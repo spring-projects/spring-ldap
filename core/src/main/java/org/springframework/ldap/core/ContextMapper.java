@@ -49,7 +49,7 @@ import javax.naming.directory.SearchResult;
  * 
  * @author Mattias Hellborg Arthursson
  */
-public interface ContextMapper {
+public interface ContextMapper<T> {
     /**
      * Map a single LDAP Context to an object. The supplied Object
      * <code>ctx</code> is the object from a single {@link SearchResult},
@@ -63,5 +63,5 @@ public interface ContextMapper {
      * @return an object built from the data in the context.
      * @throws NamingException if an error occurs.
      */
-    Object mapFromContext(Object ctx) throws NamingException;
+    T mapFromContext(Object ctx) throws NamingException;
 }

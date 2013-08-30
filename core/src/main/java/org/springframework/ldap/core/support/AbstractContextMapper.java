@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import org.springframework.ldap.core.DirContextOperations;
  * @author Mattias Hellborg Arthursson
  * 
  */
-public abstract class AbstractContextMapper implements ContextMapper {
+public abstract class AbstractContextMapper<T> implements ContextMapper<T> {
 
     /**
      * {@inheritDoc}
@@ -39,7 +39,7 @@ public abstract class AbstractContextMapper implements ContextMapper {
      *             used, causing the objects passed in be anything else than
      *             {@link DirContextOperations} instances.
      */
-    public final Object mapFromContext(Object ctx) {
+    public final T mapFromContext(Object ctx) {
         return doMapFromContext((DirContextOperations) ctx);
     }
 
@@ -53,6 +53,6 @@ public abstract class AbstractContextMapper implements ContextMapper {
      *            the context to map to an object.
      * @return an object built from the data in the context.
      */
-    protected abstract Object doMapFromContext(DirContextOperations ctx);
+    protected abstract T doMapFromContext(DirContextOperations ctx);
 
 }

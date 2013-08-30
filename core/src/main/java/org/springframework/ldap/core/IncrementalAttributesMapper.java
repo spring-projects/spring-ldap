@@ -29,7 +29,7 @@ import java.util.List;
  * @see <a href="http://www.watersprings.org/pub/id/draft-kashi-incremental-00.txt">Incremental Retrieval of Multi-valued Properties</a>
  * @see {@link org.springframework.ldap.core.support.DefaultIncrementalAttributesMapper}
  */
-public interface IncrementalAttributesMapper extends AttributesMapper {
+public interface IncrementalAttributesMapper<T extends IncrementalAttributesMapper> extends AttributesMapper<T> {
     /**
      * Get all of the collected values for the specified attribute.
      *
@@ -37,7 +37,7 @@ public interface IncrementalAttributesMapper extends AttributesMapper {
      * @return the collected values for the specified attribute. Will be <code>null</code>
      * if the requested attribute has not been returned by the server (attribute did not exist).
      */
-    List getValues(String attributeName);
+    List<Object> getValues(String attributeName);
 
     /**
      * Get all collected values for all managed attributes as an Attributes instance.
@@ -73,5 +73,5 @@ public interface IncrementalAttributesMapper extends AttributesMapper {
      * @return this instance.
      * @throws javax.naming.NamingException
      */
-    Object mapFromAttributes(Attributes attributes) throws NamingException;
+    T mapFromAttributes(Attributes attributes) throws NamingException;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ import javax.naming.directory.Attributes;
  * 
  * @author Mattias Hellborg Arthursson
  */
-public interface AttributesMapper {
+public interface AttributesMapper<T> {
     /**
      * Map Attributes to an object. The supplied attributes are the attributes
      * from a single SearchResult.
@@ -50,6 +50,6 @@ public interface AttributesMapper {
      * @throws NamingException
      *             if any error occurs mapping the attributes
      */
-    Object mapFromAttributes(Attributes attributes)
+    T mapFromAttributes(Attributes attributes)
             throws NamingException;
 }

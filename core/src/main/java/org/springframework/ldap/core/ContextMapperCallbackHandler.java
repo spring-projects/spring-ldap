@@ -30,9 +30,9 @@ import javax.naming.NamingException;
  * @author Ulrik Sandberg
  * @since 1.2
  */
-public class ContextMapperCallbackHandler extends
-        CollectingNameClassPairCallbackHandler {
-    private ContextMapper mapper;
+public class ContextMapperCallbackHandler<T> extends
+        CollectingNameClassPairCallbackHandler<T> {
+    private ContextMapper<T> mapper;
 
     /**
      * Constructs a new instance wrapping the supplied {@link ContextMapper}.
@@ -40,7 +40,7 @@ public class ContextMapperCallbackHandler extends
      * @param mapper
      *            the mapper to be called for each entry.
      */
-    public ContextMapperCallbackHandler(ContextMapper mapper) {
+    public ContextMapperCallbackHandler(ContextMapper<T> mapper) {
         Assert.notNull(mapper, "Mapper must not be empty");
         this.mapper = mapper;
     }
@@ -55,7 +55,7 @@ public class ContextMapperCallbackHandler extends
      * @throws NamingException if an error occurs.
      * @throws ObjectRetrievalException if the object of the nameClassPair is null.
      */
-    public Object getObjectFromNameClassPair(NameClassPair nameClassPair) throws NamingException {
+    public T getObjectFromNameClassPair(NameClassPair nameClassPair) throws NamingException {
 		if (!(nameClassPair instanceof Binding)) {
 			throw new IllegalArgumentException("Parameter must be an instance of Binding");
 		}

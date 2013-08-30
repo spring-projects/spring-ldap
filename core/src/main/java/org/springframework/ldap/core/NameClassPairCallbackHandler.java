@@ -40,5 +40,4 @@ public interface NameClassPairCallbackHandler {
      * @throws NamingException if an error occurs.
      */
     void handleNameClassPair(NameClassPair nameClassPair) throws NamingException;
-    ;
 }

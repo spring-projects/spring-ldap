@@ -106,7 +106,7 @@ public interface LdapOperations {
 	 * @see #search(Name, String, AttributesMapper)
 	 * @see #search(Name, String, ContextMapper)
 	 */
-	Object executeReadOnly(ContextExecutor ce) throws NamingException;
+	<T> T executeReadOnly(ContextExecutor<T> ce) throws NamingException;
 
 	/**
 	 * Perform an operation (or series of operations) on a read-write context.
@@ -126,7 +126,7 @@ public interface LdapOperations {
 	 * @see #rename(Name, Name)
 	 * @see #modifyAttributes(Name, ModificationItem[])
 	 */
-	Object executeReadWrite(ContextExecutor ce) throws NamingException;
+	<T> T executeReadWrite(ContextExecutor<T> ce) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. Each
@@ -211,7 +211,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List search(String base, String filter, SearchControls controls, AttributesMapper mapper,
+	<T> List<T> search(String base, String filter, SearchControls controls, AttributesMapper<T> mapper,
 			DirContextProcessor processor) throws NamingException;
 
 	/**
@@ -235,7 +235,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List search(Name base, String filter, SearchControls controls, AttributesMapper mapper,
+	<T> List<T> search(Name base, String filter, SearchControls controls, AttributesMapper<T> mapper,
 			DirContextProcessor processor) throws NamingException;
 
 	/**
@@ -409,7 +409,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List search(Name base, String filter, int searchScope, String[] attrs, AttributesMapper mapper)
+	<T> List<T> search(Name base, String filter, int searchScope, String[] attrs, AttributesMapper<T> mapper)
 			throws NamingException;
 
 	/**
@@ -432,7 +432,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List search(String base, String filter, int searchScope, String[] attrs, AttributesMapper mapper)
+    <T> List<T> search(String base, String filter, int searchScope, String[] attrs, AttributesMapper<T> mapper)
 			throws NamingException;
 
 	/**
@@ -452,7 +452,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List search(Name base, String filter, int searchScope, AttributesMapper mapper) throws NamingException;
+    <T> List<T> search(Name base, String filter, int searchScope, AttributesMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The Attributes in
@@ -471,7 +471,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List search(String base, String filter, int searchScope, AttributesMapper mapper) throws NamingException;
+    <T> List<T> search(String base, String filter, int searchScope, AttributesMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The Attributes in
@@ -488,7 +488,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List search(Name base, String filter, AttributesMapper mapper) throws NamingException;
+    <T> List<T> search(Name base, String filter, AttributesMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The Attributes in
@@ -505,7 +505,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List search(String base, String filter, AttributesMapper mapper) throws NamingException;
+    <T> List<T> search(String base, String filter, AttributesMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The
@@ -527,7 +527,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List search(Name base, String filter, int searchScope, String[] attrs, ContextMapper mapper) throws NamingException;
+    <T> List<T> search(Name base, String filter, int searchScope, String[] attrs, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The
@@ -549,7 +549,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List search(String base, String filter, int searchScope, String[] attrs, ContextMapper mapper)
+    <T> List<T> search(String base, String filter, int searchScope, String[] attrs, ContextMapper<T> mapper)
 			throws NamingException;
 
 	/**
@@ -569,7 +569,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List search(Name base, String filter, int searchScope, ContextMapper mapper) throws NamingException;
+    <T> List<T> search(Name base, String filter, int searchScope, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The
@@ -588,7 +588,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List search(String base, String filter, int searchScope, ContextMapper mapper) throws NamingException;
+    <T> List<T> search(String base, String filter, int searchScope, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The
@@ -606,7 +606,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List search(Name base, String filter, ContextMapper mapper) throws NamingException;
+    <T> List<T> search(Name base, String filter, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The
@@ -624,7 +624,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List search(String base, String filter, ContextMapper mapper) throws NamingException;
+    <T> List<T> search(String base, String filter, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The
@@ -642,7 +642,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List search(String base, String filter, SearchControls controls, ContextMapper mapper) throws NamingException;
+    <T> List<T> search(String base, String filter, SearchControls controls, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The Object returned
@@ -663,7 +663,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List search(Name base, String filter, SearchControls controls, ContextMapper mapper) throws NamingException;
+    <T> List<T> search(Name base, String filter, SearchControls controls, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The Attributes
@@ -681,7 +681,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List search(String base, String filter, SearchControls controls, AttributesMapper mapper) throws NamingException;
+    <T> List<T> search(String base, String filter, SearchControls controls, AttributesMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The Attributes
@@ -699,7 +699,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List search(Name base, String filter, SearchControls controls, AttributesMapper mapper) throws NamingException;
+    <T> List<T> search(Name base, String filter, SearchControls controls, AttributesMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Perform a non-recursive listing of the children of the given
@@ -744,7 +744,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List list(String base, NameClassPairMapper mapper) throws NamingException;
+    <T> List<T> list(String base, NameClassPairMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Perform a non-recursive listing of the children of the given
@@ -761,7 +761,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List list(Name base, NameClassPairMapper mapper) throws NamingException;
+    <T> List<T> list(Name base, NameClassPairMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Perform a non-recursive listing of the children of the given
@@ -774,7 +774,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List list(String base) throws NamingException;
+    List<String> list(String base) throws NamingException;
 
 	/**
 	 * Perform a non-recursive listing of the children of the given
@@ -787,7 +787,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List list(Name base) throws NamingException;
+	List<String> list(Name base) throws NamingException;
 
 	/**
 	 * Perform a non-recursive listing of the children of the given
@@ -832,7 +832,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List listBindings(String base, NameClassPairMapper mapper) throws NamingException;
+    <T> List<T> listBindings(String base, NameClassPairMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Perform a non-recursive listing of the children of the given
@@ -849,7 +849,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List listBindings(Name base, NameClassPairMapper mapper) throws NamingException;
+    <T> List<T> listBindings(Name base, NameClassPairMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Perform a non-recursive listing of children of the given
@@ -862,7 +862,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List listBindings(final String base) throws NamingException;
+	List<String> listBindings(final String base) throws NamingException;
 
 	/**
 	 * Perform a non-recursive listing of children of the given
@@ -875,7 +875,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List listBindings(final Name base) throws NamingException;
+	List<String> listBindings(final Name base) throws NamingException;
 
 	/**
 	 * Perform a non-recursive listing of the children of the given
@@ -891,7 +891,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List listBindings(String base, ContextMapper mapper) throws NamingException;
+    <T> List<T> listBindings(String base, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Perform a non-recursive listing of the children of the given
@@ -907,7 +907,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List listBindings(Name base, ContextMapper mapper) throws NamingException;
+    <T> List<T> listBindings(Name base, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Lookup the supplied DN and return the found object. This will typically
@@ -945,7 +945,7 @@ public interface LdapOperations {
 	 * @return the object returned from the mapper.
 	 * @throws NamingException if any error occurs.
 	 */
-	Object lookup(Name dn, AttributesMapper mapper) throws NamingException;
+	<T> T lookup(Name dn, AttributesMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Convenience method to get the attributes of a specified DN and
@@ -957,7 +957,7 @@ public interface LdapOperations {
 	 * @return the object returned from the mapper.
 	 * @throws NamingException if any error occurs.
 	 */
-	Object lookup(String dn, AttributesMapper mapper) throws NamingException;
+	<T> T lookup(String dn, AttributesMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Convenience method to lookup a specified DN and automatically pass the
@@ -969,7 +969,7 @@ public interface LdapOperations {
 	 * @return the object returned from the mapper.
 	 * @throws NamingException if any error occurs.
 	 */
-	Object lookup(Name dn, ContextMapper mapper) throws NamingException;
+	<T> T lookup(Name dn, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Convenience method to lookup a specified DN and automatically pass the
@@ -981,7 +981,7 @@ public interface LdapOperations {
 	 * @return the object returned from the mapper.
 	 * @throws NamingException if any error occurs.
 	 */
-	Object lookup(String dn, ContextMapper mapper) throws NamingException;
+	<T> T lookup(String dn, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Convenience method to get the specified attributes of a specified DN and
@@ -994,7 +994,7 @@ public interface LdapOperations {
 	 * @return the object returned from the mapper.
 	 * @throws NamingException if any error occurs.
 	 */
-	Object lookup(Name dn, String[] attributes, AttributesMapper mapper) throws NamingException;
+	<T> T lookup(Name dn, String[] attributes, AttributesMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Convenience method to get the specified attributes of a specified DN and
@@ -1007,7 +1007,7 @@ public interface LdapOperations {
 	 * @return the object returned from the mapper.
 	 * @throws NamingException if any error occurs.
 	 */
-	Object lookup(String dn, String[] attributes, AttributesMapper mapper) throws NamingException;
+	<T> T lookup(String dn, String[] attributes, AttributesMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Convenience method to get the specified attributes of a specified DN and
@@ -1020,7 +1020,7 @@ public interface LdapOperations {
 	 * @return the object returned from the mapper.
 	 * @throws NamingException if any error occurs.
 	 */
-	Object lookup(Name dn, String[] attributes, ContextMapper mapper) throws NamingException;
+	<T> T lookup(Name dn, String[] attributes, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Convenience method to get the specified attributes of a specified DN and
@@ -1033,7 +1033,7 @@ public interface LdapOperations {
 	 * @return the object returned from the mapper.
 	 * @throws NamingException if any error occurs.
 	 */
-	Object lookup(String dn, String[] attributes, ContextMapper mapper) throws NamingException;
+	<T> T lookup(String dn, String[] attributes, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Modify an entry in the LDAP tree using the supplied
@@ -1501,7 +1501,7 @@ public interface LdapOperations {
 	 * @throws IncorrectResultSizeDataAccessException if the result is not one unique entry
 	 * @since 1.3
 	 */
-	Object searchForObject(Name base, String filter, ContextMapper mapper);
+	<T> T searchForObject(Name base, String filter, ContextMapper<T> mapper);
 
 	/**
 	 * Perform a search for a unique entry matching the specified search
@@ -1516,5 +1516,5 @@ public interface LdapOperations {
 	 * @throws IncorrectResultSizeDataAccessException if the result is not one unique entry
 	 * @since 1.3
 	 */
-	Object searchForObject(String base, String filter, ContextMapper mapper);
+	<T> T searchForObject(String base, String filter, ContextMapper<T> mapper);
 }

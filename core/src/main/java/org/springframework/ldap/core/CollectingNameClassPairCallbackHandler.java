@@ -27,17 +27,17 @@ import java.util.List;
  * 
  * @author Mattias Hellborg Arthursson
  */
-public abstract class CollectingNameClassPairCallbackHandler implements
+public abstract class CollectingNameClassPairCallbackHandler<T> implements
         NameClassPairCallbackHandler {
 
-    private List list = new LinkedList();
+    private List<T> list = new LinkedList<T>();
 
     /**
      * Get the assembled list.
      * 
      * @return the list of all assembled objects.
      */
-    public List getList() {
+    public List<T> getList() {
         return list;
     }
 
@@ -59,6 +59,6 @@ public abstract class CollectingNameClassPairCallbackHandler implements
      * @return an object constructed from the data in the NameClassPair.
      * @throws NamingException if an error occurs.
      */
-    public abstract Object getObjectFromNameClassPair(
+    public abstract T getObjectFromNameClassPair(
             NameClassPair nameClassPair) throws NamingException;
 }

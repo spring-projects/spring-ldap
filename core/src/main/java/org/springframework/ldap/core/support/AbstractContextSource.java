@@ -301,7 +301,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
     /**
      * @return
-     * @deprecated {@link DistinguishedName and associated classes and methods are deprecated as of 2.0}.
+     * @deprecated {@link DistinguishedName} and associated classes and methods are deprecated as of 2.0.
      */
     @Override
 	public DistinguishedName getBaseLdapPath() {

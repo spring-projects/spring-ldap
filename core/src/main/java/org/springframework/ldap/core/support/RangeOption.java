@@ -28,7 +28,7 @@ import java.util.regex.Matcher;
  * @see DefaultIncrementalAttributesMapper
  * @since 1.3.2
  */
-class RangeOption implements Comparable {
+class RangeOption implements Comparable<RangeOption> {
     public static final int TERMINAL_END_OF_RANGE = -1;
     public static final int TERMINAL_MISSING = -2;
 
@@ -124,14 +124,7 @@ class RangeOption implements Comparable {
         return new RangeOption(initial, terminal);
     }
 
-    public int compareTo(Object o) {
-        RangeOption that;
-        if (o instanceof RangeOption) {
-            that = (RangeOption) o;
-        } else {
-            throw new IllegalArgumentException("A RangeOption instance cannot be compared to " + o.getClass());
-        }
-
+    public int compareTo(RangeOption that) {
         if (this.getInitial() != that.getInitial())
             throw new IllegalStateException("Ranges cannot be compared, range-initial not the same: " + this.toString() + " vs " + that.toString());
 

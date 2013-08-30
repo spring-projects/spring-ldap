@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import javax.naming.directory.DirContext;
  * 
  * @author Mattias Hellborg Arthursson
  */
-public interface ContextExecutor {
+public interface ContextExecutor<T> {
     /**
      * Perform any operation on the context.
      * 
@@ -46,5 +46,5 @@ public interface ContextExecutor {
      * @throws NamingException
      *             if the operation resulted in one.
      */
-    Object executeWithContext(DirContext ctx) throws NamingException;
+    T executeWithContext(DirContext ctx) throws NamingException;
 }

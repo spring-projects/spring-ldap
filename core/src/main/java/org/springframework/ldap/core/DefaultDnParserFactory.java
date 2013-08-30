@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,12 @@ package org.springframework.ldap.core;
 
 import java.io.StringReader;
 
-import org.springframework.ldap.core.DnParserImpl;
-
 /**
  * A factory for creating DnParser instances. The actual implementation of
  * DnParser is generated using javacc and should not be constructed directly.
  * 
  * @author Mattias Hellborg Arthursson
- * 
+ * @deprecated {@link DistinguishedName} and associated classes are deprecated as of 2.0.
  */
 public class DefaultDnParserFactory {
     /**
