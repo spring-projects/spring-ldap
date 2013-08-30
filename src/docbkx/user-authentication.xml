@@ -36,7 +36,7 @@
 
     <para><programlisting>private String getDnForUser(String uid) {
   Filter f = new EqualsFilter("uid", uid);
-  List result = ldapTemplate.search(DistinguishedName.EMPTY_PATH, f.toString(),
+  List result = ldapTemplate.search(LdapUtils.emptyLdapName(), f.toString(),
       new AbstractContextMapper() {
     protected Object doMapFromContext(DirContextOperations ctx) {
       return ctx.getNameInNamespace();

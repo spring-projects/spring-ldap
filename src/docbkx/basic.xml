@@ -153,82 +153,109 @@ filter.and(new WhitespaceWildcardsFilter("cn", cn));</programlisting>
   </sect1>
 
   <sect1>
-    <title>Building Dynamic Distinguished Names</title>
+    <title>Dynamically Building Distinguished Names</title>
+      <para>
+          The standard Java implementation of Distinguished Name, <ulink
+              url="http://docs.oracle.com/javase/6/docs/api/javax/naming/ldap/LdapName.html">LdapName</ulink>,
+          performs very well when it comes to parsing of Distinguished Names. However, in practical use
+          this implementation has a number of shortcomings:
+          <itemizedlist>
+              <listitem>
+                  <para>
+                      The <literal>LdapName</literal> implementation is mutable, which is badly suited for an object
+                      representing identity.
+                  </para>
+              </listitem>
+              <listitem>
+                  <para>
+                      Despite its mutable nature, the API for dynamically building or modifying Distinguished Names using
+                      <literal>LdapName</literal> is cumbersome. Extracting values of indexed or (particularly)
+                      named components is also a little bit awkward.
+                  </para>
+              </listitem>
+              <listitem>
+                  <para>
+                      Many of the operations on <literal>LdapName</literal> throw checked Exceptions, requiring unnecessary
+                      try-catch statements for situations where the error is typically fatal and cannot be repaired in
+                      a meaningful manner.
+                  </para>
+              </listitem>
+          </itemizedlist>
 
-    <para>The standard <ulink
-    url="http://download.oracle.com/javase/1.5.0/docs/api/javax/naming/Name.html">Name</ulink>
-    interface represents a generic name, which is basically an ordered
-    sequence of components. The <literal>Name</literal> interface also
-    provides operations on that sequence; e.g., <literal>add</literal> or
-    <literal>remove</literal>. LdapTemplate provides an implementation of the
-    <literal>Name</literal> interface: <literal>DistinguishedName</literal>.
-    Using this class will greatly simplify building distinguished names,
-    especially considering the sometimes complex rules regarding escapings and
-    encodings. As with the <literal>Filter</literal> classes this helps preventing
-    potentially malicious data being injected into your LDAP operations.
-    </para>
-    <para>
-    The following example illustrates how
-    <literal>DistinguishedName</literal> can be used to dynamically construct
-    a distinguished name:</para>
-
-    <example>
-      <title>Building a distinguished name dynamically</title>
-
-      <programlisting>package com.example.dao;
-
-import org.springframework.ldap.core.support.DistinguishedName;
+          To simplify working with Distinguished Names, Spring LDAP provides an <literal>LdapNameBuilder</literal>, as
+          well as a number of utility methods in <literal>LdapUtils</literal> that helps working with
+          <literal>LdapName</literal>.
+      </para>
+      <para>
+          Below are a couple of examples of how these utilities can simplify handling of distinguished names.
+          <example>
+          <title>Dynamically building an LdapName using LdapNameBuilder</title>
+          <programlisting>package com.example.dao;
+import org.springframework.ldap.support.LdapNameBuilder;
 import javax.naming.Name;
 
 public class PersonDaoImpl implements PersonDao {
-   public static final String BASE_DN = "dc=example,dc=com";
-   ...
-   protected Name buildDn(Person p) {
-<emphasis role="bold">      DistinguishedName dn = new DistinguishedName(BASE_DN);
-      dn.add("c", p.getCountry());
-      dn.add("ou", p.getCompany());
-      dn.add("cn", p.getFullname());
-</emphasis>      return dn;
-   }
-}</programlisting>
-    </example>
+public static final String BASE_DN = "dc=example,dc=com";
+...
+protected Name buildDn(Person p) {
+<emphasis role="bold">  return LdapNameBuilder.newInstance(BASE_DN)
+    .add("c", p.getCountry())
+    .add("ou", p.getCompany())
+    .add("cn", p.getFullname())
+    .build();
+</emphasis>
+}
+          </programlisting>
+          </example>
+          Assuming that a Person has the following attributes:
+      </para>
+      <informaltable>
+          <tgroup cols="2">
+              <tbody>
+                  <row>
+                      <entry><literal>country</literal></entry>
+                      <entry>Sweden</entry>
+                  </row>
+                  <row>
+                      <entry><literal>company</literal></entry>
+                      <entry>Some Company</entry>
+                  </row>
+                  <row>
+                      <entry><literal>fullname</literal></entry>
+                      <entry>Some Person</entry>
+                  </row>
+              </tbody>
+          </tgroup>
+      </informaltable>
 
-    <para>Assuming that a Person has the following attributes:</para>
+      <para>The code above would then result in the following distinguished
+          name:</para>
 
-    <informaltable>
-      <tgroup cols="2">
-        <tbody>
-          <row>
-            <entry><literal>country</literal></entry>
+      <para><programlisting>cn=Some Person, ou=Some Company, c=Sweden, dc=example, dc=com</programlisting></para>
+      <para>
+          <example>
+              <title>Extracting values from a distinguished name using LdapUtils</title>
+              <programlisting>package com.example.dao;
+import org.springframework.ldap.support.LdapNameBuilder;
+import javax.naming.Name;
+public class PersonDaoImpl implements PersonDao {
+...
+protected Person buildPerson(Name dn, Attributes attrs) {
+  Person person = new Person();
+  person.setCountry(<emphasis>LdapUtils.getStringValue(dn, "c")</emphasis>);
+  person.setCompany(<emphasis>LdapUtils.getStringValue(dn, "ou")</emphasis>);
+  person.setFullname(<emphasis>LdapUtils.getStringValue(dn, "cn")</emphasis>);
+  // Populate rest of person object using attributes.
 
-            <entry>Sweden</entry>
-          </row>
-
-          <row>
-            <entry><literal>company</literal></entry>
-
-            <entry>Some Company</entry>
-          </row>
-
-          <row>
-            <entry><literal>fullname</literal></entry>
-
-            <entry>Some Person</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </informaltable>
-
-    <para>The code above would then result in the following distinguished
-    name:</para>
-
-    <para><programlisting>cn=Some Person, ou=Some Company, c=Sweden, dc=example, dc=com</programlisting></para>
-
-    <para>In Java 5, there is an implementation of the Name interface: <ulink
-    url="http://download.oracle.com/javase/1.5.0/docs/api/javax/naming/ldap/LdapName.html">LdapName</ulink>.
-    If you are in the Java 5 world, you might as well use
-    <literal>LdapName</literal>. However, you may still use
-    <literal>DistinguishedName</literal> if you so wish.</para>
+  return person;
+}
+              </programlisting>
+          </example>
+          Since Java version &lt;=1.4 didn't provide any public Distinguished Name implementation at all, Spring LDAP
+          1.3.2 and lower provided its own implementation, <literal>DistinguishedName</literal>. This implementation
+          suffered from a couple of shortcomings of its own, and have been deprecated in version 2.0.
+          Users are now recommended to use <literal>LdapName</literal> along with the utilities described above instead.
+      </para>
   </sect1>
 
   <sect1 id="basic-binding-unbinding">

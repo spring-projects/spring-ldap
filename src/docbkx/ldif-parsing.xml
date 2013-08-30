@@ -47,7 +47,7 @@
     <para><token>LdapAttribute</token> objects represent options as a
     <token>Set&lt;String&gt;</token>. The DN support added to the
     <token>LdapAttributes</token> object employs the
-    <token>org.springframework.ldap.core.DistinguishedName</token> class. </para>
+    <token>javax.naming.ldap.LdapName</token> class. </para>
   </section>
 
   <section id="ldif-parsing-parser">

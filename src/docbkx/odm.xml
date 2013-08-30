@@ -273,7 +273,7 @@ public class App {
          ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
          OdmManager manager = (OdmManager) context.getBean("odmManager");
 	 List&lt;SimplePerson&gt; people = manager.search(SimplePerson.class,
-	    new DistinguishedName("dc=example,dc=com"), "uid=*", searchControls);
+	    LdapUtils.newLdapName("dc=example,dc=com"), "uid=*", searchControls);
          log.info("People found: " + people.size());
          for (SimplePerson person : people) {
             log.info( person );

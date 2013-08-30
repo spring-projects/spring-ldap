@@ -241,18 +241,17 @@ public class PersonDaoImpl implements PersonDao {
       <title>A complete PersonDao class</title>
 
       <programlisting>package com.example.dao;
-
 import java.util.List;
 
 import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
+import javax.naming.ldap.LdapName;
 
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.DirContextAdapter;
-import org.springframework.ldap.core.support.DistinguishedName;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.filter.WhitespaceWildcardsFilter;
@@ -289,12 +288,12 @@ public class PersonDaoImpl implements PersonDao {
    public List findByName(String name) {
       AndFilter filter = new AndFilter();
       filter.and(new EqualsFilter("objectclass", "person")).and(new WhitespaceWildcardsFilter("cn",name));
-      return ldapTemplate.search(DistinguishedName.EMPTY_PATH, filter.encode(), getContextMapper());
+      return ldapTemplate.search(LdapUtils.emptyPath(), filter.encode(), getContextMapper());
    }
 
    public List findAll() {
       EqualsFilter filter = new EqualsFilter("objectclass", "person");
-      return ldapTemplate.search(DistinguishedName.EMPTY_PATH, filter.encode(), getContextMapper());
+      return ldapTemplate.search(LdapUtils.emptyPath(), filter.encode(), getContextMapper());
    }
 
    protected ContextMapper getContextMapper() {
@@ -306,11 +305,11 @@ public class PersonDaoImpl implements PersonDao {
    }
 
    protected Name buildDn(String fullname, String company, String country) {
-      DistinguishedName dn = new DistinguishedName();
-      dn.add("c", country);
-      dn.add("ou", company);
-      dn.add("cn", fullname);
-      return dn;
+      return LdapNameBuilder.newInstance()
+        .add("c", country)
+        .add("ou", company)
+        .add("cn", fullname)
+        .build();
    }
 
    protected void mapToContext(Person person, DirContextOperations context) {

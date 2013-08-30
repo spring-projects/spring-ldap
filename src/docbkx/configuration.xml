@@ -282,23 +282,23 @@
   	<para>For that reason, Spring LDAP has a mechanism by which any Spring controlled bean may be supplied 
   	the base path on startup. For beans to be notified of the base path, two things need to be in place:
   	First of all, the bean that wants the base path reference needs to implement the 
-  	<literal>BaseLdapPathAware</literal> interface. Secondly, a <literal>BaseLdapPathBeanPostProcessor</literal>
+  	<literal>BaseLdapNameAware</literal> interface. Secondly, a <literal>BaseLdapPathBeanPostProcessor</literal>
   	needs to be defined in the application context</para>
   	<example>
-      <title>Implementing <literal>BaseLdapPathAware</literal></title>
-
+      <title>Implementing <literal>BaseLdapNameAware</literal></title>
       <programlisting>package com.example.service;
-
-public class PersonService implements PersonService, <emphasis role="bold">BaseLdapPathAware</emphasis> {
+public class PersonService implements PersonService, <emphasis role="bold">BaseLdapNameAware</emphasis> {
    ...
-   <emphasis role="bold">private DistinguishedName basePath;
+   <emphasis role="bold">private LdapName basePath;
    
-   public void setBaseLdapPath(DistinguishedName basePath) {
+   public void setBaseLdapPath(LdapName basePath) {
       this.basePath = basePath;
    }</emphasis>
    ...
-   private DistinguishedName getFullPersonDn(Person person) {
-      return new DistinguishedName(<emphasis role="bold">basePath</emphasis>).append(person.getDn());
+   private LdapName getFullPersonDn(Person person) {
+      return LdapNameBuilder.newInstance(<emphasis role="bold">basePath</emphasis>)
+          .append(person.getDn())
+          .build();
    }
    ...
 }</programlisting>
@@ -321,6 +321,7 @@ public class PersonService implements PersonService, <emphasis role="bold">BaseL
   	<para>The default behaviour of the <literal>BaseLdapPathBeanPostProcessor</literal> is to use the base path of the single
   	defined <literal>BaseLdapPathSource</literal> (<literal>AbstractContextSource</literal> )in the <literal>ApplicationContext</literal>. 
   	If more than one <literal>BaseLdapPathSource</literal> is defined, you will need to specify which one to use with the
-  	<literal>baseLdapPathSourceName</literal> property.</para>
+  	<literal>baseLdapPathSourceName</literal> property.
+    </para>
   </sect1>
 </chapter>
