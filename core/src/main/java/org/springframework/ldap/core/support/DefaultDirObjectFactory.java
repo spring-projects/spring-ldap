@@ -16,23 +16,21 @@
 
 package org.springframework.ldap.core.support;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Hashtable;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.core.JdkVersion;
+import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.util.StringUtils;
 
 import javax.naming.CompositeName;
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.directory.Attributes;
 import javax.naming.spi.DirObjectFactory;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.core.JdkVersion;
-import org.springframework.ldap.core.DirContextAdapter;
-import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.support.LdapUtils;
-import org.springframework.util.StringUtils;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Hashtable;
 
 /**
  * Default implementation of the DirObjectFactory interface. Creates a
@@ -138,7 +136,7 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 		if (nameString.startsWith(LDAP_PROTOCOL_PREFIX) || nameString.startsWith(LDAPS_PROTOCOL_PREFIX)) {
 			if (log.isDebugEnabled()) {
 				log.debug("Received name '" + nameString + "' contains protocol delimiter; indicating a referral."
-						+ "Stripping protocol and address info to enable construction of a proper DistinguishedName");
+						+ "Stripping protocol and address info to enable construction of a proper LdapName");
 			}
 			try {
 				URI url = new URI(nameString);
@@ -171,12 +169,11 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 			}
 		}
 
-		DirContextAdapter dirContextAdapter = new DirContextAdapter(attrs, new DistinguishedName(nameString),
-				new DistinguishedName(nameInNamespace), referralUrl);
-		dirContextAdapter.setUpdateMode(true);
-
-		return dirContextAdapter;
-	}
+        DirContextAdapter dirContextAdapter = new DirContextAdapter(attrs, LdapUtils.newLdapName(nameString),
+                LdapUtils.newLdapName(nameInNamespace), referralUrl);
+        dirContextAdapter.setUpdateMode(true);
+        return dirContextAdapter;
+    }
 
 	/*
 	 * (non-Javadoc)

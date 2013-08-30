@@ -18,7 +18,7 @@ package org.springframework.ldap.core.support;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.ldap.core.DirContextAdapter;
-import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.CompositeName;
 import javax.naming.Context;
@@ -36,7 +36,7 @@ public class DefaultDirObjectFactoryTest {
 
 	private Context contextMock;
 
-	private static final Name DN = new DistinguishedName("ou=some unit, dc=jayway, dc=se");
+	private static final Name DN = LdapUtils.newLdapName("ou=some unit, dc=jayway, dc=se");
 
 	private static final String DN_STRING = "ou=some unit, dc=jayway, dc=se";
 
@@ -119,7 +119,7 @@ public class DefaultDirObjectFactoryTest {
 
 		when(contextMock2.getNameInNamespace()).thenReturn("dc=jayway, dc=se");
 
-		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(contextMock, new DistinguishedName(
+		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(contextMock, LdapUtils.newLdapName(
 				"ou=some unit"), contextMock2, new Hashtable(), expectedAttributes);
 
         verify(contextMock).close();

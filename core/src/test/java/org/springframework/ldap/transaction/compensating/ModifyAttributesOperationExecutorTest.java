@@ -17,8 +17,8 @@ package org.springframework.ldap.transaction.compensating;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.Name;
 import javax.naming.directory.ModificationItem;
@@ -40,7 +40,7 @@ public class ModifyAttributesOperationExecutorTest {
 		ModificationItem[] expectedCompensatingItems = new ModificationItem[0];
 		ModificationItem[] expectedActualItems = new ModificationItem[0];
 
-		Name expectedDn = new DistinguishedName("cn=john doe");
+		Name expectedDn = LdapUtils.newLdapName("cn=john doe");
 
 		ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(ldapOperationsMock,
 				expectedDn, expectedActualItems, expectedCompensatingItems);
@@ -56,7 +56,7 @@ public class ModifyAttributesOperationExecutorTest {
 		ModificationItem[] expectedCompensatingItems = new ModificationItem[0];
 		ModificationItem[] expectedActualItems = new ModificationItem[0];
 
-		Name expectedDn = new DistinguishedName("cn=john doe");
+		Name expectedDn = LdapUtils.newLdapName("cn=john doe");
 
 		ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(ldapOperationsMock,
 				expectedDn, expectedActualItems, expectedCompensatingItems);
@@ -73,7 +73,7 @@ public class ModifyAttributesOperationExecutorTest {
 		ModificationItem[] expectedCompensatingItems = new ModificationItem[0];
 		ModificationItem[] expectedActualItems = new ModificationItem[0];
 
-		Name expectedDn = new DistinguishedName("cn=john doe");
+		Name expectedDn = LdapUtils.newLdapName("cn=john doe");
 
 		ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(ldapOperationsMock,
 				expectedDn, expectedActualItems, expectedCompensatingItems);

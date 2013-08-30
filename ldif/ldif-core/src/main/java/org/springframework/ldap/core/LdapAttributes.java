@@ -15,18 +15,18 @@
  */
 package org.springframework.ldap.core;
 
-import java.net.URI;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.ldap.support.LdapUtils;
+import sun.misc.BASE64Encoder;
 
+import javax.naming.Name;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.BasicAttributes;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.core.DistinguishedName;
-
-import sun.misc.BASE64Encoder;
+import javax.naming.ldap.LdapName;
+import java.net.URI;
 
 /**
  * Extends {@link javax.naming.directory.BasicAttributes} to add specialized support
@@ -34,7 +34,7 @@ import sun.misc.BASE64Encoder;
  * <p>
  * While DNs appear to be and can be treated as attributes, they have a special
  * meaning in that they define the address to which the object is bound.  DNs must
- * conform to special formating rules and are typically required to be handled
+ * conform to special formatting rules and are typically required to be handled
  * separately from other attributes.
  * <p>
  * This class makes this distinction between the DN and other
@@ -56,7 +56,7 @@ public class LdapAttributes extends BasicAttributes {
 	/**
 	 * Distinguished name to which the object is bound.
 	 */
-	protected DistinguishedName dn = new DistinguishedName();
+	protected LdapName dn = LdapUtils.emptyLdapName();
 	
 	/**
 	 * Default constructor.
@@ -66,18 +66,8 @@ public class LdapAttributes extends BasicAttributes {
 	}
 
 	/**
-	 * Creates an LdapAttributes object with the specified DN.
-	 * 
-	 * @param dn The {@link org.springframework.ldap.core.DistinguishedName} to which this object is bound.
-	 */
-	public LdapAttributes(DistinguishedName dn) {
-		super();
-		this.dn = dn;
-	}
-
-	/**
 	 * Constructor for specifying whether or not the object is case sensitive.
-	 * 
+	 *
 	 * @param ignoreCase boolean indicator.
 	 */
 	public LdapAttributes(boolean ignoreCase) {
@@ -85,79 +75,37 @@ public class LdapAttributes extends BasicAttributes {
 	}
 
 	/**
-	 * Creates an LdapAttributes object with the specified DN and case sensitivity setting.
-	 * 
-	 * @param dn The {@link org.springframework.ldap.core.DistinguishedName} to which this object is bound.
-	 * @param ignoreCase boolean indicator.
-	 */
-	public LdapAttributes(DistinguishedName dn, boolean ignoreCase) {
-		super(ignoreCase);
-		this.dn = dn;
-	}
-
-	/**
-	 * Creates an LdapAttributes object with the specified attribute.
-	 * 
-	 * @param attrID {@link java.lang.String} ID of the attribute.
-	 * @param val Value of the attribute.
-	 */
-	public LdapAttributes(String attrID, Object val) {
-		put(new LdapAttribute(attrID, val));
-	}
-
-	/**
-	 * Creates an LdapAttributes object with the specifying attribute and value and case sensitivity setting.
-	 * 
-	 * @param dn The {@link org.springframework.ldap.core.DistinguishedName} to which this object is bound.
-	 * @param attrID {@link java.lang.String} ID of the attribute.
-	 * @param val Value of the attribute.
-	 */
-	public LdapAttributes(DistinguishedName dn, String attrID, Object val) {
-		this.dn = dn;
-		put(new LdapAttribute(attrID, val));
-	}
-
-	/**
-	 * Creates an LdapAttributes object with the specifying attribute and value and case sensitivity setting.
-	 * 
-	 * @param attrID {@link java.lang.String} ID of the attribute.
-	 * @param val Value of the attribute.
-	 * @param ignoreCase boolean indicator.
-	 */
-	public LdapAttributes(String attrID, Object val, boolean ignoreCase) {
-		put(new LdapAttribute(attrID, val, ignoreCase));
-	}
-
-	/**
-	 * Creates an LdapAttributes object for the supplied DN with the attribute specified.
-	 * 
-	 * @param dn The {@link org.springframework.ldap.core.DistinguishedName} to which this object is bound.
-	 * @param attrID {@link java.lang.String} ID of the attribute.
-	 * @param val Value of the attribute.
-	 * @param ignoreCase boolean indicator.
-	 */
-	public LdapAttributes(DistinguishedName dn, String attrID, Object val, boolean ignoreCase) {
-		this.dn = dn;
-		put(new LdapAttribute(attrID, val, ignoreCase));
-	}
-	
-	/**
 	 * Returns the distinguished name to which the object is bound.
 	 * 
 	 * @return {@link org.springframework.ldap.core.DistinguishedName} specifying the name to which the object is bound.
+     * @deprecated {@link DistinguishedName and associated classes and methods are deprecated as of 2.0}.
 	 */
 	public DistinguishedName getDN() {
-		return dn;
+		return new DistinguishedName(dn);
 	}
-	
+
+    /**
+     * Returns the distinguished name to which the object is bound.
+     *
+     * @return {@link LdapName} specifying the name to which the object is bound.
+     */
+    public LdapName getName() {
+        return LdapUtils.newLdapName(dn);
+    }
+
 	/**
 	 * Sets the distinguished name of the object.
 	 * 
 	 * @param dn {@link org.springframework.ldap.core.DistinguishedName} specifying the name to which the object is bound.
-	 */
+     * @deprecated {@link DistinguishedName and associated classes and methods are deprecated as of 2.0}.
+     */
 	public void setDN(DistinguishedName dn) {
-		this.dn = dn;
+		this.dn = LdapUtils.newLdapName(dn);
 	}
+
+    public void setName(Name name) {
+        this.dn = LdapUtils.newLdapName(name);
+    }
 	
 	/**
 	 * Returns a string representation of the object in LDIF format.

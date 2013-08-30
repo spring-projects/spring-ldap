@@ -18,6 +18,7 @@ package org.springframework.ldap.core;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.CompositeName;
 import javax.naming.Name;
@@ -28,6 +29,7 @@ import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
+import javax.naming.ldap.LdapName;
 import java.util.Iterator;
 import java.util.SortedSet;
 
@@ -46,11 +48,10 @@ import static org.junit.Assert.fail;
  * @author Ulrik Sandberg
  */
 public class DirContextAdapterTest {
-	private static final DistinguishedName BASE_NAME = new DistinguishedName(
-			"dc=jayway, dc=se");
+	private static final LdapName BASE_NAME = LdapUtils.newLdapName("dc=jayway,dc=se");
 
-	private static final DistinguishedName DUMMY_NAME = new DistinguishedName(
-			"c=SE, dc=jayway, dc=se");
+	private static final LdapName DUMMY_NAME = LdapUtils.newLdapName(
+			"c=SE,dc=jayway,dc=se");
 
 	private DirContextAdapter tested;
 
@@ -595,7 +596,7 @@ public class DirContextAdapterTest {
     @Test
 	public void testGetNameInNamespace_BasePath() {
 		DirContextAdapter tested = new DirContextAdapter(null,
-				new DistinguishedName("c=SE"), BASE_NAME);
+                LdapUtils.newLdapName("c=SE"), BASE_NAME);
 		String result = tested.getNameInNamespace();
 		assertEquals(DUMMY_NAME.toString(), result);
 	}
@@ -1220,6 +1221,6 @@ public class DirContextAdapterTest {
     @Test
 	public void testStringConstructor() {
 		DirContextAdapter tested = new DirContextAdapter("cn=john doe, ou=company");
-		assertEquals(new DistinguishedName("cn=john doe, ou=company"), tested.getDn());
+		assertEquals(LdapUtils.newLdapName("cn=john doe, ou=company"), tested.getDn());
 	}
 }

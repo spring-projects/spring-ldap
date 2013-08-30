@@ -17,8 +17,10 @@ package org.springframework.ldap.transaction.compensating;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.support.LdapUtils;
+
+import javax.naming.ldap.LdapName;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -33,8 +35,8 @@ public class UnbindOperationExecutorTest {
 
     @Test
     public void testPerformOperation() {
-        DistinguishedName expectedOldName = new DistinguishedName("cn=oldDn");
-        DistinguishedName expectedTempName = new DistinguishedName("cn=newDn");
+        LdapName expectedOldName = LdapUtils.newLdapName("cn=oldDn");
+        LdapName expectedTempName = LdapUtils.newLdapName("cn=newDn");
         UnbindOperationExecutor tested = new UnbindOperationExecutor(
                 ldapOperationsMock, expectedOldName, expectedTempName);
 
@@ -46,8 +48,8 @@ public class UnbindOperationExecutorTest {
 
     @Test
     public void testCommit() {
-        DistinguishedName expectedOldName = new DistinguishedName("cn=oldDn");
-        DistinguishedName expectedTempName = new DistinguishedName("cn=newDn");
+        LdapName expectedOldName = LdapUtils.newLdapName("cn=oldDn");
+        LdapName expectedTempName = LdapUtils.newLdapName("cn=newDn");
         UnbindOperationExecutor tested = new UnbindOperationExecutor(
                 ldapOperationsMock, expectedOldName, expectedTempName);
 
@@ -58,8 +60,8 @@ public class UnbindOperationExecutorTest {
 
     @Test
     public void testRollback() {
-        DistinguishedName expectedOldName = new DistinguishedName("cn=oldDn");
-        DistinguishedName expectedTempName = new DistinguishedName("cn=newDn");
+        LdapName expectedOldName = LdapUtils.newLdapName("cn=oldDn");
+        LdapName expectedTempName = LdapUtils.newLdapName("cn=newDn");
         UnbindOperationExecutor tested = new UnbindOperationExecutor(
                 ldapOperationsMock, expectedOldName, expectedTempName);
 

@@ -15,7 +15,7 @@
  */
 package org.springframework.ldap.transaction.compensating;
 
-import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
@@ -71,7 +71,7 @@ public final class LdapTransactionUtils {
      */
     public static Name getArgumentAsName(Object arg) {
         if (arg instanceof String) {
-            return new DistinguishedName((String) arg);
+            return LdapUtils.newLdapName((String) arg);
         } else if (arg instanceof Name) {
             return (Name) arg;
         } else {

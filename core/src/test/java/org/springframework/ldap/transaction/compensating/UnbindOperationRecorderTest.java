@@ -17,9 +17,11 @@ package org.springframework.ldap.transaction.compensating;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
+
+import javax.naming.ldap.LdapName;
 
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -40,9 +42,9 @@ public class UnbindOperationRecorderTest {
 
     @Test
     public void testRecordOperation() {
-        final DistinguishedName expectedTempName = new DistinguishedName(
+        final LdapName expectedTempName = LdapUtils.newLdapName(
                 "cn=john doe_temp");
-        final DistinguishedName expectedDn = new DistinguishedName(
+        final LdapName expectedDn = LdapUtils.newLdapName(
                 "cn=john doe");
         UnbindOperationRecorder tested = new UnbindOperationRecorder(
                 ldapOperationsMock, renamingStrategyMock);

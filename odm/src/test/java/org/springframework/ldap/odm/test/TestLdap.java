@@ -51,6 +51,7 @@ import org.springframework.ldap.odm.typeconversion.impl.Converter;
 import org.springframework.ldap.odm.typeconversion.impl.ConverterManagerImpl;
 import org.springframework.ldap.odm.typeconversion.impl.converters.FromStringConverter;
 import org.springframework.ldap.odm.typeconversion.impl.converters.ToStringConverter;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.test.LdapTestUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -222,21 +223,21 @@ public final class TestLdap {
     }
 
     private Person[] personTestData=new Person[] {
-            new Person(new DistinguishedName("cn=William Hartnell,ou=Doctors,o=Whoniverse"), "Hartnell", Arrays
+            new Person(LdapUtils.newLdapName("cn=William Hartnell,ou=Doctors,o=Whoniverse"), "Hartnell", Arrays
                     .asList(new String[] { "First Doctor", "Grumpy" }), 1, null),
-            new Person(new DistinguishedName("cn=Patrick Troughton,ou=Doctors,o=Whoniverse"), "Troughton", Arrays
+            new Person(LdapUtils.newLdapName("cn=Patrick Troughton,ou=Doctors,o=Whoniverse"), "Troughton", Arrays
                     .asList(new String[] { "Second Doctor", "Clown" }), 2, null),
-            new Person(new DistinguishedName("cn=Jon Pertwee,ou=Doctors,o=Whoniverse"), "Pertwee", Arrays
+            new Person(LdapUtils.newLdapName("cn=Jon Pertwee,ou=Doctors,o=Whoniverse"), "Pertwee", Arrays
                     .asList(new String[] { "Third Doctor", "Dandy" }), 3, null),
-            new Person(new DistinguishedName("cn=Tom Baker,ou=Doctors,o=Whoniverse"), "Baker", Arrays
+            new Person(LdapUtils.newLdapName("cn=Tom Baker,ou=Doctors,o=Whoniverse"), "Baker", Arrays
                     .asList(new String[] { "Fourth Doctor", "The one and only!" }), 4, null),
-            new Person(new DistinguishedName("cn=Peter Davison,ou=Doctors,o=Whoniverse"), "Davison", Arrays
+            new Person(LdapUtils.newLdapName("cn=Peter Davison,ou=Doctors,o=Whoniverse"), "Davison", Arrays
                     .asList(new String[] { "Fifth Doctor" }), 5, null),
-            new Person(new DistinguishedName("cn=Davros,ou=Enemies,o=Whoniverse"), "Unknown", Arrays
+            new Person(LdapUtils.newLdapName("cn=Davros,ou=Enemies,o=Whoniverse"), "Unknown", Arrays
                     .asList(new String[] { "Creator of the Daleks", "Kaled head scientist" }), 0, null),
-            new Person(new DistinguishedName("cn=Daleks,ou=Enemies,o=Whoniverse"), "NA", Arrays
+            new Person(LdapUtils.newLdapName("cn=Daleks,ou=Enemies,o=Whoniverse"), "NA", Arrays
                     .asList(new String[] { "The Doctor's greatest foe" }), 0, null),
-            new Person(new DistinguishedName("cn=Master,ou=Enemies,o=Whoniverse"), "Unknown", Arrays
+            new Person(LdapUtils.newLdapName("cn=Master,ou=Enemies,o=Whoniverse"), "Unknown", Arrays
                     .asList(new String[] { "An evil Time Lord" }), 0, photo), };
 
 
@@ -313,9 +314,9 @@ public final class TestLdap {
     }
 
     private static OrganizationalUnit ouTestData[]=new OrganizationalUnit[] {
-    	new OrganizationalUnit(new DistinguishedName("ou=Enemies,o=Whoniverse"), "Acacia Avenue", "The bad guys"),
-    	new OrganizationalUnit(new DistinguishedName("ou=Assistants,o=Whoniverse"), "Somewhere in space", "The plucky helpers"),
-    	new OrganizationalUnit(new DistinguishedName("ou=Doctors,o=Whoniverse"), "Somewhere in time", "Our hero"),
+    	new OrganizationalUnit(LdapUtils.newLdapName("ou=Enemies,o=Whoniverse"), "Acacia Avenue", "The bad guys"),
+    	new OrganizationalUnit(LdapUtils.newLdapName("ou=Assistants,o=Whoniverse"), "Somewhere in space", "The plucky helpers"),
+    	new OrganizationalUnit(LdapUtils.newLdapName("ou=Doctors,o=Whoniverse"), "Somewhere in time", "Our hero"),
     };
 
     // Check everything works OK with a second managed class
@@ -375,11 +376,11 @@ public final class TestLdap {
     }
 
     private Person[] createTestData = {
-            new Person(new DistinguishedName("cn=Colin Baker,ou=Doctors,o=Whoniverse"), "Baker", Arrays
+            new Person(LdapUtils.newLdapName("cn=Colin Baker,ou=Doctors,o=Whoniverse"), "Baker", Arrays
                     .asList(new String[] { "Sixth Doctor" }), 6, null),
-            new Person(new DistinguishedName("cn=Sylvester McCoy,ou=Doctors,o=Whoniverse"), "McCoy", Arrays
+            new Person(LdapUtils.newLdapName("cn=Sylvester McCoy,ou=Doctors,o=Whoniverse"), "McCoy", Arrays
                     .asList(new String[] { "Seventh Doctor" }), 7, null),
-            new Person(new DistinguishedName("cn=Paul McGann,ou=Doctors,o=Whoniverse"), "McGann", Arrays
+            new Person(LdapUtils.newLdapName("cn=Paul McGann,ou=Doctors,o=Whoniverse"), "McGann", Arrays
                     .asList(new String[] { "Eigth Doctor" }), 8, photo), };
 
     // Create some entries, read them back and check they are what we'd expect.

@@ -19,9 +19,9 @@ package org.springframework.ldap.core.support;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.AttributesMapper;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.IncrementalAttributesMapper;
 import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.Name;
 import javax.naming.NamingEnumeration;
@@ -261,7 +261,7 @@ public class DefaultIncrementalAttributesMapper implements AttributesMapper, Inc
      *         set on the requested object.
      */
     public static Attributes lookupAttributes(LdapOperations ldapOperations, String dn, String attribute) {
-        return lookupAttributes(ldapOperations, new DistinguishedName(dn), attribute);
+        return lookupAttributes(ldapOperations, LdapUtils.newLdapName(dn), attribute);
     }
 
     /**
@@ -275,7 +275,7 @@ public class DefaultIncrementalAttributesMapper implements AttributesMapper, Inc
      *         set on the requested object.
      */
     public static Attributes lookupAttributes(LdapOperations ldapOperations, String dn, String[] attributes) {
-        return lookupAttributes(ldapOperations, new DistinguishedName(dn), attributes);
+        return lookupAttributes(ldapOperations, LdapUtils.newLdapName(dn), attributes);
     }
 
     /**
@@ -316,7 +316,7 @@ public class DefaultIncrementalAttributesMapper implements AttributesMapper, Inc
      *         Never <code>null</code>, an empty list indicates that the attribute was not set or empty.
      */
     public static List lookupAttributeValues(LdapOperations ldapOperations, String dn, String attribute) {
-        return lookupAttributeValues(ldapOperations, new DistinguishedName(dn), attribute);
+        return lookupAttributeValues(ldapOperations, LdapUtils.newLdapName(dn), attribute);
     }
 
     /**

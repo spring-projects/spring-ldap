@@ -21,7 +21,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapAttributes;
 import org.springframework.ldap.ldif.InvalidRecordFormatException;
 import org.springframework.ldap.ldif.support.AttributeValidationPolicy;
@@ -30,6 +29,7 @@ import org.springframework.ldap.ldif.support.LineIdentifier;
 import org.springframework.ldap.ldif.support.SeparatorPolicy;
 import org.springframework.ldap.schema.DefaultSchemaSpecification;
 import org.springframework.ldap.schema.Specification;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -338,7 +338,7 @@ public class LdifParser implements Parser, InitializingBean {
 						dn = (String) attribute.get();
 					}
 
-					record.setDN(new DistinguishedName(dn));
+					record.setName(LdapUtils.newLdapName(dn));
 					
 				} else {
 					log.trace("...adding attribute to record.");

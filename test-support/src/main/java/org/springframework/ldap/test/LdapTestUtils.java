@@ -25,6 +25,7 @@ import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapAttributes;
 import org.springframework.ldap.core.support.DefaultDirObjectFactory;
 import org.springframework.ldap.ldif.parser.LdifParser;
+import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.Binding;
 import javax.naming.Context;
@@ -36,6 +37,7 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
+import javax.naming.ldap.LdapName;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -235,7 +237,7 @@ public class LdapTestUtils {
 
     private static void loadLdif(DirContext context, Resource ldifFile) throws IOException {
         try {
-            DistinguishedName baseDn = (DistinguishedName)
+            LdapName baseDn = (LdapName)
                     context.getEnvironment().get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY);
 
             LdifParser parser = new LdifParser(ldifFile);
@@ -243,28 +245,16 @@ public class LdapTestUtils {
             while (parser.hasMoreRecords()) {
                 LdapAttributes record = parser.getRecord();
 
-                DistinguishedName dn = record.getDN();
+                LdapName dn = record.getName();
+
                 if(baseDn != null) {
-                    dn.removeFirst(baseDn);
+                    dn = LdapUtils.removeFirst(dn, baseDn);
                 }
                 context.bind(dn, null, record);
             }
         } catch (NamingException e) {
             throw new RuntimeException("Failed to populate LDIF", e);
         }
-
-
-//
-//        try {
-//            DefaultDirectoryService directoryService =
-//                    (DefaultDirectoryService) context.getEnvironment().get(DIRECTORY_SERVICE_KEY);
-//            if(directoryService == null) {
-//                throw new IllegalStateException("The specified context does not appear to have been created by LdapTestUtils");
-//            }
-//            loadLdif(directoryService, ldifFile);
-//        } catch (NamingException e) {
-//            throw new RuntimeException("Failed to get environment", e);
-//        }
     }
 
     public static void loadLdif(DefaultDirectoryService directoryService, Resource ldifFile) throws IOException {

@@ -15,14 +15,13 @@
  */
 package org.springframework.ldap.transaction.compensating.support;
 
-import java.util.List;
-
-import javax.naming.Name;
-
-import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.core.LdapRdn;
-import org.springframework.ldap.core.LdapRdnComponent;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.transaction.compensating.TempEntryRenamingStrategy;
+
+import javax.naming.InvalidNameException;
+import javax.naming.Name;
+import javax.naming.ldap.LdapName;
+import javax.naming.ldap.Rdn;
 
 /**
  * Default implementation of {@link TempEntryRenamingStrategy}. This
@@ -61,12 +60,15 @@ public class DefaultTempEntryRenamingStrategy implements
      * @see org.springframework.ldap.support.transaction.TempEntryRenamingStrategy#getTemporaryName(javax.naming.Name)
      */
     public Name getTemporaryName(Name originalName) {
-        DistinguishedName temporaryName = new DistinguishedName(originalName);
-        List names = temporaryName.getNames();
-        LdapRdn rdn = (LdapRdn) names.get(names.size() - 1);
-        LdapRdnComponent rdnComponent = rdn.getComponent();
-        String value = rdnComponent.getValue();
-        rdnComponent.setValue(value + DEFAULT_TEMP_SUFFIX);
+        LdapName temporaryName = LdapUtils.newLdapName(originalName);
+
+        // Add tempSuffix to the leaf node name.
+        try {
+            String leafNode = (String) temporaryName.remove(temporaryName.size() - 1);
+            temporaryName.add(new Rdn(leafNode  + tempSuffix));
+        } catch (InvalidNameException e) {
+            throw new org.springframework.ldap.InvalidNameException(e);
+        }
 
         return temporaryName;
     }

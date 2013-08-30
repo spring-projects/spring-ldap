@@ -23,13 +23,19 @@ import org.springframework.ldap.NoSuchAttributeException;
 import org.springframework.util.Assert;
 
 import javax.naming.CompositeName;
+import javax.naming.InvalidNameException;
+import javax.naming.Name;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
+import javax.naming.ldap.LdapName;
+import javax.naming.ldap.Rdn;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Generic utility methods for working with LDAP. Mainly for internal use within
@@ -274,7 +280,7 @@ public final class LdapUtils {
 		}
 	}
 
-	/**
+    /**
 	 * An {@link AttributeValueCallbackHandler} to collect values in a supplied
 	 * collection.
 	 * 
@@ -311,6 +317,124 @@ public final class LdapUtils {
 			return "";
 		}
 	}
+
+    /**
+     * Construct a new LdapName instance from the supplied Name instance.
+     * LdapName instances will be cloned, CompositeName tweaks will be managed using
+     * {@link #convertCompositeNameToString(javax.naming.CompositeName)}; for all other Name
+     * implementations, new LdapName instances are constructed using {@link LdapName#addAll(int, javax.naming.Name)}.
+     *
+     * @param name the Name instance to convert to LdapName, not <code>null</code>.
+     * @return a new LdapName representing the same Distinguished Name as the supplied instance.
+     * @throws org.springframework.ldap.InvalidNameException to wrap any InvalidNameExceptions thrown by LdapName.
+     * @since 2.0
+     */
+    public static LdapName newLdapName(Name name) {
+        Assert.notNull(name, "name must not be null");
+        if(name instanceof LdapName) {
+            return (LdapName) name.clone();
+        } else if (name instanceof CompositeName) {
+            CompositeName compositeName = (CompositeName) name;
+
+            try {
+                return new LdapName(convertCompositeNameToString(compositeName));
+            } catch (InvalidNameException e) {
+                throw new org.springframework.ldap.InvalidNameException(e);
+            }
+        } else {
+            LdapName result = emptyLdapName();
+            try {
+                result.addAll(0, name);
+            } catch (InvalidNameException e) {
+                throw new org.springframework.ldap.InvalidNameException(e);
+            }
+
+            return result;
+        }
+    }
+
+    /**
+     * Construct a new LdapName instance from the supplied distinguished name string.
+     *
+     * @param distinguishedName the string to parse for constructing an LdapName instance.
+     * @return a new LdapName instance.
+     * @throws org.springframework.ldap.InvalidNameException to wrap any InvalidNameExceptions thrown by LdapName.
+     * @since 2.0
+     */
+    public static LdapName newLdapName(String distinguishedName) {
+        Assert.notNull(distinguishedName, "distinguishedName must not be null");
+
+        try {
+            return new LdapName(distinguishedName);
+        } catch (InvalidNameException e) {
+            throw new org.springframework.ldap.InvalidNameException(e);
+        }
+    }
+
+
+    /**
+     * Remove the supplied path from the beginning of this
+     * <code>LdapName</code> if this instance starts with
+     * <code>path</code>. Useful for stripping base path suffix from a
+     * <code>LdapName</code>. The original LdapName will not be affected.
+     *
+     * @param dn the dn to strip from.
+     * @param path the path to remove from the beginning of this instance.
+     * @return a copy of the original LdapName with the specified path stripped from its beginning.
+     * @since 2.0
+     */
+    public static LdapName removeFirst(LdapName dn, LdapName path) {
+        Assert.notNull(dn, "dn must not be null");
+        Assert.notNull(path, "path must not be null");
+
+        LdapName result = newLdapName(dn);
+
+        if(path.size() == 0 || !dn.startsWith(path)) {
+            return result;
+        }
+
+        for(int i = 0; i < path.size(); i++) {
+            try {
+                result.remove(0);
+            } catch (InvalidNameException e) {
+                throw new org.springframework.ldap.InvalidNameException(e);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Construct a new, empty LdapName instance.
+     * @return a new LdapName instance representing the empty path ("").
+     * @since 2.0
+     */
+    public static LdapName emptyLdapName() {
+        return newLdapName("");
+    }
+
+    /**
+     * Find the Rdn with the requested key in the supplied LdapName.
+     *
+     * @param name the LdapName in which to search for the key.
+     * @param key the attribute key to search for.
+     * @return the rdn corresponding to the <b>first</b> occurrence of the requested key.
+     * @throws NoSuchElementException if no corresponding entry is found.
+     * @since 2.0
+     */
+    public static Rdn getRdn(LdapName name, String key) {
+        Assert.notNull(name, "name must not be null");
+        Assert.hasText(key, "key must not be blank");
+
+        List<Rdn> rdns = name.getRdns();
+        for (Rdn rdn : rdns) {
+            if(rdn.getType().equalsIgnoreCase(key)) {
+                return rdn;
+            }
+        }
+
+        throw new NoSuchElementException("No Rdn with the requested key: '" + key + "'");
+    }
 
 	/**
 	 * Converts a binary SID to its String representation, according to the

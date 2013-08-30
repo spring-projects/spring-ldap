@@ -16,7 +16,11 @@
 
 package org.springframework.ldap.core;
 
-import java.util.List;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.ldap.ContextNotEmptyException;
+import org.springframework.ldap.NamingException;
+import org.springframework.ldap.core.support.AbstractContextSource;
+import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.Binding;
 import javax.naming.Name;
@@ -24,12 +28,7 @@ import javax.naming.NameClassPair;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
-
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.ldap.ContextNotEmptyException;
-import org.springframework.ldap.NamingException;
-import org.springframework.ldap.core.support.AbstractContextSource;
-import org.springframework.ldap.support.LdapUtils;
+import java.util.List;
 
 /**
  * Interface that specifies a basic set of LDAP operations. Implemented by
@@ -1314,7 +1313,7 @@ public interface LdapOperations {
 	 * <pre>
 	 * AndFilter filter = new AndFilter();
 	 * filter.and(&quot;objectclass&quot;, &quot;person&quot;).and(&quot;uid&quot;, userId);
-	 * boolean authenticated = ldapTemplate.authenticate(DistinguishedName.EMPTY_PATH, filter.toString(), password);
+	 * boolean authenticated = ldapTemplate.authenticate(LdapUtils.emptyLdapName(), filter.toString(), password);
 	 * </pre>
 	 * 
 	 * @param base the DN to use as the base of the search.
@@ -1338,7 +1337,7 @@ public interface LdapOperations {
 	 * <pre>
 	 * AndFilter filter = new AndFilter();
 	 * filter.and(&quot;objectclass&quot;, &quot;person&quot;).and(&quot;uid&quot;, userId);
-	 * boolean authenticated = ldapTemplate.authenticate(DistinguishedName.EMPTY_PATH, filter.toString(), password);
+	 * boolean authenticated = ldapTemplate.authenticate(LdapUtils.emptyLdapName(), filter.toString(), password);
 	 * </pre>
 	 * 
 	 * @param base the DN to use as the base of the search.

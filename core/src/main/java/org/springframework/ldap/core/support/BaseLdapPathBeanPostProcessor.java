@@ -23,13 +23,17 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.Ordered;
 import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.StringUtils;
+
+import javax.naming.ldap.LdapName;
 
 /**
  * This <code>BeanPostProcessor</code> checks each bean if it implements
- * {@link BaseLdapPathAware}. If it does, the default context base LDAP path
- * will be determined, and that value will be injected to the
- * {@link BaseLdapPathAware#setBaseLdapPath(DistinguishedName)} method of the
+ * {@link BaseLdapNameAware} or {@link BaseLdapPathAware}.
+ * If it does, the default context base LDAP path will be determined,
+ * and that value will be injected to the {@link BaseLdapNameAware#setBaseLdapPath(javax.naming.ldap.LdapName)}
+ * or  {@link BaseLdapPathAware#setBaseLdapPath(DistinguishedName)} method of the
  * processed bean.
  * <p>
  * If the <code>baseLdapPath</code> property of this
@@ -52,18 +56,28 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 
 	private ApplicationContext applicationContext;
 
-	private DistinguishedName basePath;
+	private LdapName basePath;
 
 	private String baseLdapPathSourceName;
 
     private int order = Ordered.LOWEST_PRECEDENCE;
 
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-		if (bean instanceof BaseLdapPathAware) {
+		if(bean instanceof BaseLdapNameAware) {
+            BaseLdapNameAware baseLdapNameAware = (BaseLdapNameAware) bean;
+
+            if (basePath != null) {
+                baseLdapNameAware.setBaseLdapPath(LdapUtils.newLdapName(basePath));
+            }
+            else {
+                BaseLdapPathSource ldapPathSource = getBaseLdapPathSourceFromApplicationContext();
+                baseLdapNameAware.setBaseLdapPath(LdapUtils.newLdapName(ldapPathSource.getBaseLdapName()));
+            }
+        } else if (bean instanceof BaseLdapPathAware) {
 			BaseLdapPathAware baseLdapPathAware = (BaseLdapPathAware) bean;
 
 			if (basePath != null) {
-				baseLdapPathAware.setBaseLdapPath(basePath);
+				baseLdapPathAware.setBaseLdapPath(new DistinguishedName(basePath));
 			}
 			else {
 				BaseLdapPathSource ldapPathSource = getBaseLdapPathSourceFromApplicationContext();
@@ -110,10 +124,15 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 	 * <code>ApplicationContext</code>.
 	 * 
 	 * @param basePath the base path.
+     * @deprecated {@link DistinguishedName and associated classes and methods are deprecated as of 2.0}.
 	 */
 	public void setBasePath(DistinguishedName basePath) {
-		this.basePath = basePath.immutableDistinguishedName();
+		this.basePath = LdapUtils.newLdapName(basePath);
 	}
+
+    public void setBasePath(String basePath) {
+        this.basePath = LdapUtils.newLdapName(basePath);
+    }
 
 	/**
 	 * Set the name of the <code>ContextSource</code> bean to use for getting

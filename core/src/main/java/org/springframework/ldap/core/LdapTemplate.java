@@ -34,6 +34,7 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
+import javax.naming.ldap.LdapName;
 import java.util.List;
 
 /**
@@ -950,7 +951,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		return executeReadOnly(new ContextExecutor() {
 			public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
 				Attributes filteredAttributes = ctx.getAttributes(dn, attributes);
-				DistinguishedName name = new DistinguishedName(dn);
+				LdapName name = LdapUtils.newLdapName(dn);
 				DirContextAdapter contextAdapter = new DirContextAdapter(filteredAttributes, name);
 				return mapper.mapFromContext(contextAdapter);
 			}
@@ -1079,7 +1080,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	private void doUnbindRecursively(final Name dn) {
 		executeReadWrite(new ContextExecutor() {
 			public Object executeWithContext(DirContext ctx) {
-				deleteRecursively(ctx, new DistinguishedName(dn));
+				deleteRecursively(ctx, LdapUtils.newLdapName(dn));
 				return null;
 			}
 		});
@@ -1088,7 +1089,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	private void doUnbindRecursively(final String dn) {
 		executeReadWrite(new ContextExecutor() {
 			public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
-				deleteRecursively(ctx, new DistinguishedName(dn));
+				deleteRecursively(ctx, LdapUtils.newLdapName(dn));
 				return null;
 			}
 		});
@@ -1101,15 +1102,15 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * @param name The starting point to delete recursively.
 	 * @throws NamingException if any error occurs
 	 */
-	protected void deleteRecursively(DirContext ctx, DistinguishedName name) {
+	protected void deleteRecursively(DirContext ctx, Name name) {
 
 		NamingEnumeration enumeration = null;
 		try {
 			enumeration = ctx.listBindings(name);
 			while (enumeration.hasMore()) {
 				Binding binding = (Binding) enumeration.next();
-				DistinguishedName childName = new DistinguishedName(binding.getName());
-				childName.prepend((DistinguishedName) name);
+				LdapName childName = LdapUtils.newLdapName(binding.getName());
+				childName.addAll(0, name);
 				deleteRecursively(ctx, childName);
 			}
 			ctx.unbind(name);
@@ -1395,7 +1396,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * , java.lang.String, java.lang.String)
 	 */
 	public boolean authenticate(String base, String filter, String password) {
-		return authenticate(new DistinguishedName(base), filter, password,
+		return authenticate(LdapUtils.newLdapName(base), filter, password,
 				new NullAuthenticatedLdapEntryContextCallback(),
 				new NullAuthenticationErrorCallback());
 	}
@@ -1410,7 +1411,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	public boolean authenticate(String base, String filter, String password,
 			AuthenticatedLdapEntryContextCallback callback) {
-		return authenticate(new DistinguishedName(base), filter, password, callback, new NullAuthenticationErrorCallback());
+		return authenticate(LdapUtils.newLdapName(base), filter, password, callback, new NullAuthenticationErrorCallback());
 	}
 
 	/*
@@ -1436,7 +1437,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	public boolean authenticate(String base, String filter, String password,
 			AuthenticationErrorCallback errorCallback) {
-		return authenticate(new DistinguishedName(base), filter, password, new NullAuthenticatedLdapEntryContextCallback(), errorCallback);
+		return authenticate(LdapUtils.newLdapName(base), filter, password, new NullAuthenticatedLdapEntryContextCallback(), errorCallback);
 	}
 
 	/*
@@ -1463,7 +1464,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	public boolean authenticate(String base, String filter, String password,
 			final AuthenticatedLdapEntryContextCallback callback, final AuthenticationErrorCallback errorCallback) {
-		return authenticate(new DistinguishedName(base), filter, password, callback, errorCallback);
+		return authenticate(LdapUtils.newLdapName(base), filter, password, callback, errorCallback);
 	}
 
 	/*
@@ -1534,7 +1535,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * .String, java.lang.String, org.springframework.ldap.core.ContextMapper)
 	 */
 	public Object searchForObject(String base, String filter, ContextMapper mapper) {
-		return searchForObject(new DistinguishedName(base), filter, mapper);
+		return searchForObject(LdapUtils.newLdapName(base), filter, mapper);
 	}
 
 	private static final class NullAuthenticatedLdapEntryContextCallback

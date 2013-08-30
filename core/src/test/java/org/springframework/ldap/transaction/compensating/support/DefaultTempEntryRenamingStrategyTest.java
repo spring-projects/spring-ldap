@@ -16,9 +16,10 @@
 package org.springframework.ldap.transaction.compensating.support;
 
 import org.junit.Test;
-import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.Name;
+import javax.naming.ldap.LdapName;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
@@ -27,7 +28,7 @@ public class DefaultTempEntryRenamingStrategyTest {
 
     @Test
     public void testGetTemporaryName() {
-        DistinguishedName expectedOriginalName = new DistinguishedName(
+        LdapName expectedOriginalName = LdapUtils.newLdapName(
                 "cn=john doe, ou=somecompany, c=SE");
         DefaultTempEntryRenamingStrategy tested = new DefaultTempEntryRenamingStrategy();
 
@@ -39,12 +40,12 @@ public class DefaultTempEntryRenamingStrategyTest {
 
     @Test
     public void testGetTemporaryDN_MultivalueDN() {
-        DistinguishedName expectedOriginalName = new DistinguishedName(
+        LdapName expectedOriginalName = LdapUtils.newLdapName(
                 "cn=john doe+sn=doe, ou=somecompany, c=SE");
         DefaultTempEntryRenamingStrategy tested = new DefaultTempEntryRenamingStrategy();
 
         Name result = tested.getTemporaryName(expectedOriginalName);
-        assertEquals("cn=john doe_temp+sn=doe,ou=somecompany,c=SE", result
+        assertEquals("cn=john doe+sn=doe_temp,ou=somecompany,c=SE", result
                 .toString());
     }
 

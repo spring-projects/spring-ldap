@@ -19,11 +19,13 @@ package org.springframework.ldap.core;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.ldap.NameNotFoundException;
+import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.Name;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
+import javax.naming.ldap.LdapName;
 
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -282,7 +284,7 @@ public class LdapTemplateLookupTest {
         BasicAttributes expectedAttributes = new BasicAttributes();
         expectedAttributes.put("cn", "Some Name");
 
-        DistinguishedName name = new DistinguishedName(DEFAULT_BASE_STRING);
+        LdapName name = LdapUtils.newLdapName(DEFAULT_BASE_STRING);
         DirContextAdapter adapter = new DirContextAdapter(expectedAttributes,
                 name);
 
@@ -310,7 +312,7 @@ public class LdapTemplateLookupTest {
 
         when(dirContextMock.getAttributes(DEFAULT_BASE_STRING, attributeNames)).thenReturn(expectedAttributes);
 
-        DistinguishedName name = new DistinguishedName(DEFAULT_BASE_STRING);
+        LdapName name = LdapUtils.newLdapName(DEFAULT_BASE_STRING);
         DirContextAdapter adapter = new DirContextAdapter(expectedAttributes,
                 name);
 

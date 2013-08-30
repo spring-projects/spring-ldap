@@ -16,21 +16,31 @@
 
 package org.springframework.ldap.core.support;
 
-import org.springframework.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.JdkVersion;
+import org.springframework.ldap.UncategorizedLdapException;
 import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.core.LdapEncoder;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import javax.naming.Context;
+import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
+import javax.naming.ldap.LdapName;
+import javax.naming.ldap.Rdn;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Hashtable;
+import java.util.ListIterator;
 import java.util.Map;
 
 /**
@@ -74,7 +84,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	private Class contextFactory = DEFAULT_CONTEXT_FACTORY;
 
-	private DistinguishedName base = DistinguishedName.EMPTY_PATH;
+	private LdapName base = LdapUtils.emptyLdapName();
 
 	protected String userDn = "";
 
@@ -204,16 +214,75 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 		StringBuffer providerUrlBuffer = new StringBuffer(1024);
 		for (int i = 0; i < ldapUrls.length; i++) {
 			providerUrlBuffer.append(ldapUrls[i]);
-			if (!DistinguishedName.EMPTY_PATH.equals(base)) {
+			if (!base.isEmpty()) {
 				if (!ldapUrls[i].endsWith("/")) {
 					providerUrlBuffer.append("/");
 				}
 			}
-			providerUrlBuffer.append(base.toUrl());
+			providerUrlBuffer.append(formatForUrl(base));
 			providerUrlBuffer.append(' ');
 		}
 		return providerUrlBuffer.toString().trim();
 	}
+
+    static String formatForUrl(LdapName ldapName) {
+        StringBuilder sb = new StringBuilder();
+        ListIterator<Rdn> it = ldapName.getRdns().listIterator(ldapName.size());
+        while (it.hasPrevious()) {
+            Rdn component = it.previous();
+
+            Attributes attributes = component.toAttributes();
+
+            // Loop through all attribute of the rdn (usually just one, but more are supported by RFC)
+            NamingEnumeration<? extends Attribute> allAttributes = attributes.getAll();
+            while(allAttributes.hasMoreElements()) {
+                Attribute oneAttribute = allAttributes.nextElement();
+                String encodedAttributeName = nameEncodeForUrl(oneAttribute.getID());
+
+                // Loop through all values of the attribute (usually just one, but more are supported by RFC)
+                NamingEnumeration <?> allValues;
+                try {
+                    allValues = oneAttribute.getAll();
+                } catch (NamingException e) {
+                    throw new UncategorizedLdapException("Unexpected error occurred formatting base URL", e);
+                }
+
+                while(allValues.hasMoreElements()) {
+                    sb.append(encodedAttributeName).append('=');
+
+                    Object oneValue = allValues.nextElement();
+                    if (oneValue instanceof String) {
+                        String oneString = (String) oneValue;
+                        sb.append(nameEncodeForUrl(oneString));
+                    } else {
+                        throw new IllegalArgumentException("Binary attributes not supported for base URL");
+                    }
+
+                    if(allValues.hasMoreElements()) {
+                        sb.append('+');
+                    }
+                }
+                if(allAttributes.hasMoreElements()) {
+                    sb.append('+');
+                }
+            }
+
+            if(it.hasPrevious()) {
+                sb.append(',');
+            }
+        }
+        return sb.toString();
+    }
+
+    static String nameEncodeForUrl(String value) {
+        try {
+            String ldapEncoded = LdapEncoder.nameEncode(value);
+            URI valueUri = new URI(null, null, ldapEncoded, null);
+            return valueUri.toString();
+        } catch (URISyntaxException e) {
+            throw new UncategorizedLdapException("This really shouldn't happen - report this", e);
+        }
+    }
 
 	/**
 	 * Set the base suffix from which all operations should origin. If a base
@@ -223,39 +292,35 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @param base the base suffix.
 	 */
 	public void setBase(String base) {
-		this.base = new DistinguishedName(base);
-	}
+        if (base != null) {
+            this.base = LdapUtils.newLdapName(base);
+        } else {
+            this.base = LdapUtils.emptyLdapName();
+        }
+    }
 
-	/**
-	 * Get the base suffix from which all operations should originate. If a base
-	 * suffix is set, you will not have to (and, indeed, must not) specify the
-	 * full distinguished names in any operations performed.
-	 * 
-	 * @return the base suffix
-	 */
-	protected DistinguishedName getBase() {
+    /**
+     * @return
+     * @deprecated {@link DistinguishedName and associated classes and methods are deprecated as of 2.0}.
+     */
+    @Override
+	public DistinguishedName getBaseLdapPath() {
 		return new DistinguishedName(base);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.springframework.ldap.core.support.BaseLdapPathSource#getBaseLdapPath
-	 * ()
-	 */
-	public DistinguishedName getBaseLdapPath() {
-		return getBase().immutableDistinguishedName();
-	}
+    @Override
+    public LdapName getBaseLdapName() {
+        return (LdapName) base.clone();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.springframework.ldap.core.support.BaseLdapPathSource#
-	 * getBaseLdapPathAsString()
-	 */
+    /*
+         * (non-Javadoc)
+         *
+         * @seeorg.springframework.ldap.core.support.BaseLdapPathSource#
+         * getBaseLdapPathAsString()
+         */
 	public String getBaseLdapPathAsString() {
-		return getBaseLdapPath().toString();
+		return getBaseLdapName().toString();
 	}
 
 	/**
@@ -339,7 +404,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 			throw new IllegalArgumentException("At least one server url must be set");
 		}
 
-		if (!DistinguishedName.EMPTY_PATH.equals(base) && getJdkVersion().compareTo(JDK_142) < 0) {
+		if (!base.isEmpty() && getJdkVersion().compareTo(JDK_142) < 0) {
 			throw new IllegalArgumentException("Base path is not supported for JDK versions < 1.4.2");
 		}
 
@@ -382,7 +447,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 			env.put(Context.REFERRAL, referral);
 		}
 
-		if (!DistinguishedName.EMPTY_PATH.equals(base)) {
+		if (!base.isEmpty()) {
 			// Save the base path for use in the DefaultDirObjectFactory.
 			env.put(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY, base);
 		}

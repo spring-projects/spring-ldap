@@ -30,7 +30,7 @@ import java.net.URISyntaxException;
  * LdapRdnComponent represents one of these attributes.
  * 
  * @author Mattias Hellborg Arthursson
- * 
+ * @deprecated {@link DistinguishedName and associated classes are deprecated as of 2.0}.
  */
 public class LdapRdnComponent implements Comparable, Serializable {
 	private static final long serialVersionUID = -3296747972616243038L;

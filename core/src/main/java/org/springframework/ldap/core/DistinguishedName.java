@@ -91,6 +91,13 @@ import java.util.ListIterator;
  * <code>true</code>.
  * @author Adam Skogman
  * @author Mattias Hellborg Arthursson
+ *
+ * @deprecated As of 2.0 it is recommended to use {@link javax.naming.ldap.LdapName} along with
+ * utility methods in {@link LdapUtils} instead.
+ * @see javax.naming.ldap.LdapName
+ * @see LdapUtils#newLdapName(javax.naming.Name)
+ * @see LdapUtils#newLdapName(String)
+ * @see org.springframework.ldap.support.LdapUtils#emptyLdapName()
  */
 public class DistinguishedName implements Name {
 	/**

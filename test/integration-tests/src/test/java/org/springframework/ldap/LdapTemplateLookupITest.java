@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,6 @@
 
 package org.springframework.ldap;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
-
-import javax.naming.NamingException;
-import javax.naming.directory.Attributes;
-
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.AttributesMapper;
@@ -34,7 +27,15 @@ import org.springframework.ldap.core.support.AbstractContextSource;
 import org.springframework.ldap.itest.Person;
 import org.springframework.ldap.itest.PersonAttributesMapper;
 import org.springframework.ldap.itest.PersonContextMapper;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
+
+import javax.naming.NamingException;
+import javax.naming.directory.Attributes;
+import javax.naming.ldap.LdapName;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 
 /**
  * Tests the lookup methods of LdapTemplate.
@@ -184,14 +185,13 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 	 * means more than one attribute is part of the relative DN for the entry.
 	 */
 	@Test
-	@Ignore("Enable test when ApacheDS supports multi-valued rdns")
 	public void DISABLED_testLookup_MultiValuedRdn() {
 		AttributesMapper mapper = new PersonAttributesMapper();
 		Person person = (Person) tested.lookup("cn=Some Person+sn=Person, ou=company1,c=Norway", mapper);
 
 		assertEquals("Some Person", person.getFullname());
 		assertEquals("Person", person.getLastname());
-		assertEquals("Norway, Company1, Some Person2", person.getDescription());
+		assertEquals("Norway, Company1, Some Person+Person", person.getDescription());
 	}
 
 	/**
@@ -200,26 +200,27 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 	 * 
 	 */
 	@Test
-	@Ignore("Enable test when ApacheDS supports multi-valued rdns")
 	public void DISABLED_testLookup_MultiValuedRdn_DirContextAdapter() {
 		DirContextAdapter result = (DirContextAdapter) tested.lookup("cn=Some Person+sn=Person, ou=company1,c=Norway");
 
 		assertEquals("Some Person", result.getStringAttribute("cn"));
 		assertEquals("Person", result.getStringAttribute("sn"));
-		assertEquals("Norway, Company1, Some Person", result.getStringAttribute("description"));
+		assertEquals("Norway, Company1, Some Person+Person", result.getStringAttribute("description"));
 	}
 
 	@Test
 	public void testLookup_GetNameInNamespace_Plain() {
-		DirContextAdapter result = (DirContextAdapter) tested.lookup("cn=Some Person2, ou=company1,c=Sweden");
+        String expectedDn = "cn=Some Person2, ou=company1,c=Sweden";
+        DirContextAdapter result = (DirContextAdapter) tested.lookup(expectedDn);
 
-		assertEquals("cn=Some Person2,ou=company1,c=Sweden", result.getDn().toString());
+        LdapName expectedName = LdapUtils.newLdapName(expectedDn);
+        assertEquals(expectedName, result.getDn());
 		assertEquals("cn=Some Person2,ou=company1,c=Sweden,dc=jayway,dc=se", result.getNameInNamespace());
 	}
 
 	@Test
 	public void testLookup_GetNameInNamespace_MultiRdn() {
-		DirContextAdapter result = (DirContextAdapter) tested.lookup("cn=Some Person+sn=Person, ou=company1,c=Norway");
+		DirContextAdapter result = (DirContextAdapter) tested.lookup("cn=Some Person+sn=Person,ou=company1,c=Norway");
 
 		assertEquals("cn=Some Person+sn=Person,ou=company1,c=Norway", result.getDn().toString());
 		assertEquals("cn=Some Person+sn=Person,ou=company1,c=Norway,dc=jayway,dc=se", result.getNameInNamespace());

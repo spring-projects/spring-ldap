@@ -16,19 +16,20 @@
 package org.springframework.ldap.transaction.compensating.support;
 
 import org.junit.Test;
-import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.Name;
+import javax.naming.ldap.LdapName;
 
 import static org.junit.Assert.assertEquals;
 
 public class DifferentSubtreeTempEntryRenamingStrategyTest {
     @Test
     public void testGetTemporaryName() {
-        DistinguishedName originalName = new DistinguishedName(
+        LdapName originalName = LdapUtils.newLdapName(
                 "cn=john doe, ou=somecompany, c=SE");
         DifferentSubtreeTempEntryRenamingStrategy tested = new DifferentSubtreeTempEntryRenamingStrategy(
-                new DistinguishedName("ou=tempEntries"));
+                LdapUtils.newLdapName("ou=tempEntries"));
 
         int nextSequenceNo = tested.getNextSequenceNo();
 

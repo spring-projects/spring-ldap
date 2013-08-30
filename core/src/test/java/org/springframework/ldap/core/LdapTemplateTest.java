@@ -26,6 +26,7 @@ import org.springframework.ldap.LimitExceededException;
 import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.PartialResultException;
 import org.springframework.ldap.UncategorizedLdapException;
+import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.Binding;
 import javax.naming.CompositeName;
@@ -37,6 +38,7 @@ import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.LdapContext;
+import javax.naming.ldap.LdapName;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -970,9 +972,9 @@ public class LdapTemplateTest {
 		Binding binding = new Binding("cn=Some name", null);
 		when(namingEnumerationMock.next()).thenReturn(binding);
 
-		DistinguishedName listDn = new DistinguishedName(DEFAULT_BASE_STRING);
+		LdapName listDn = LdapUtils.newLdapName(DEFAULT_BASE_STRING);
 		when(dirContextMock.listBindings(listDn)).thenReturn(namingEnumerationMock);
-		DistinguishedName subListDn = new DistinguishedName("cn=Some name, o=example.com");
+		LdapName subListDn = LdapUtils.newLdapName("cn=Some name, o=example.com");
 		when(dirContextMock.listBindings(subListDn)).thenReturn(namingEnumerationMock);
 
 		tested.unbind(new CompositeName(DEFAULT_BASE_STRING), true);
@@ -991,9 +993,9 @@ public class LdapTemplateTest {
 		Binding binding = new Binding("cn=Some name", null);
 		when(namingEnumerationMock.next()).thenReturn(binding);
 
-		DistinguishedName listDn = new DistinguishedName(DEFAULT_BASE_STRING);
+		LdapName listDn = LdapUtils.newLdapName(DEFAULT_BASE_STRING);
 		when(dirContextMock.listBindings(listDn)).thenReturn(namingEnumerationMock);
-		DistinguishedName subListDn = new DistinguishedName("cn=Some name, o=example.com");
+		LdapName subListDn = LdapUtils.newLdapName("cn=Some name, o=example.com");
 		when(dirContextMock.listBindings(subListDn)).thenReturn(namingEnumerationMock);
 
 		tested.unbind(DEFAULT_BASE_STRING, true);
@@ -1265,14 +1267,15 @@ public class LdapTemplateTest {
 	public void testLookupContextWithName() {
 		final DirContextAdapter expectedResult = new DirContextAdapter();
 
-		LdapTemplate tested = new LdapTemplate() {
+        final LdapName expectedName = LdapUtils.emptyLdapName();
+        LdapTemplate tested = new LdapTemplate() {
 			public Object lookup(Name dn) {
-				assertSame(DistinguishedName.EMPTY_PATH, dn);
+				assertSame(dn, dn);
 				return expectedResult;
 			}
 		};
 
-		DirContextOperations result = tested.lookupContext(DistinguishedName.EMPTY_PATH);
+		DirContextOperations result = tested.lookupContext(expectedName);
 		assertSame(expectedResult, result);
 
 	}
@@ -1297,13 +1300,14 @@ public class LdapTemplateTest {
 	public void testModifyAttributesWithDirContextOperations() throws Exception {
 		final ModificationItem[] expectedModifications = new ModificationItem[0];
 
-		when(dirContextOperationsMock.getDn()).thenReturn(DistinguishedName.EMPTY_PATH);
+        final LdapName epectedDn = LdapUtils.emptyLdapName();
+        when(dirContextOperationsMock.getDn()).thenReturn(epectedDn);
 		when(dirContextOperationsMock.isUpdateMode()).thenReturn(true);
 		when(dirContextOperationsMock.getModificationItems()).thenReturn(expectedModifications);
 
 		LdapTemplate tested = new LdapTemplate() {
 			public void modifyAttributes(Name dn, ModificationItem[] mods) {
-				assertSame(DistinguishedName.EMPTY_PATH, dn);
+				assertSame(epectedDn, dn);
 				assertSame(expectedModifications, mods);
 			}
 		};
@@ -1314,7 +1318,7 @@ public class LdapTemplateTest {
     @Test
 	public void testModifyAttributesWithDirContextOperationsNotInitializedDn() throws Exception {
 
-		when(dirContextOperationsMock.getDn()).thenReturn(DistinguishedName.EMPTY_PATH);
+		when(dirContextOperationsMock.getDn()).thenReturn(LdapUtils.emptyLdapName());
 		when(dirContextOperationsMock.isUpdateMode()).thenReturn(false);
 
 		LdapTemplate tested = new LdapTemplate() {
@@ -1425,8 +1429,8 @@ public class LdapTemplateTest {
 	public void testAuthenticateWithSingleUserFoundShouldBeSuccessful() throws Exception {
 		when(contextSourceMock.getReadOnlyContext()).thenReturn(dirContextMock);
 
-		Object expectedObject = new DirContextAdapter(new BasicAttributes(), new DistinguishedName("cn=john doe"),
-				new DistinguishedName("dc=jayway, dc=se"));
+		Object expectedObject = new DirContextAdapter(new BasicAttributes(), LdapUtils.newLdapName("cn=john doe"),
+                LdapUtils.newLdapName("dc=jayway, dc=se"));
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
 
 		singleSearchResult(searchControlsRecursive(), searchResult);
@@ -1434,7 +1438,7 @@ public class LdapTemplateTest {
 		when(contextSourceMock.getContext("cn=john doe,dc=jayway,dc=se", "password"))
                 .thenReturn(authenticatedContextMock);
 		entryContextCallbackMock.executeWithContext(authenticatedContextMock, new LdapEntryIdentification(
-				new DistinguishedName("cn=john doe,dc=jayway,dc=se"), new DistinguishedName("cn=john doe")));
+                LdapUtils.newLdapName("cn=john doe,dc=jayway,dc=se"), LdapUtils.newLdapName("cn=john doe")));
 
 		boolean result = tested.authenticate(nameMock, "(ou=somevalue)", "password", entryContextCallbackMock);
 
@@ -1448,8 +1452,8 @@ public class LdapTemplateTest {
 	public void testAuthenticateWithTwoUsersFoundShouldThrowException() throws Exception {
 		when(contextSourceMock.getReadOnlyContext()).thenReturn(dirContextMock);
 
-		Object expectedObject = new DirContextAdapter(new BasicAttributes(), new DistinguishedName("cn=john doe"),
-				new DistinguishedName("dc=jayway, dc=se"));
+		Object expectedObject = new DirContextAdapter(new BasicAttributes(), LdapUtils.newLdapName("cn=john doe"),
+                LdapUtils.newLdapName("dc=jayway, dc=se"));
 		SearchResult searchResult1 = new SearchResult("", expectedObject, new BasicAttributes());
 		SearchResult searchResult2 = new SearchResult("", expectedObject, new BasicAttributes());
 
@@ -1483,8 +1487,8 @@ public class LdapTemplateTest {
 	public void testAuthenticateWithFailedAuthenticationShouldFail() throws Exception {
 		when(contextSourceMock.getReadOnlyContext()).thenReturn(dirContextMock);
 
-		Object expectedObject = new DirContextAdapter(new BasicAttributes(), new DistinguishedName("cn=john doe"),
-				new DistinguishedName("dc=jayway, dc=se"));
+		Object expectedObject = new DirContextAdapter(new BasicAttributes(), LdapUtils.newLdapName("cn=john doe"),
+                LdapUtils.newLdapName("dc=jayway, dc=se"));
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
 
 		singleSearchResult(searchControlsRecursive(), searchResult);
@@ -1503,8 +1507,8 @@ public class LdapTemplateTest {
 	public void testAuthenticateWithErrorInCallbackShouldFail() throws Exception {
 		when(contextSourceMock.getReadOnlyContext()).thenReturn(dirContextMock);
 
-		Object expectedObject = new DirContextAdapter(new BasicAttributes(), new DistinguishedName("cn=john doe"),
-				new DistinguishedName("dc=jayway, dc=se"));
+		Object expectedObject = new DirContextAdapter(new BasicAttributes(), LdapUtils.newLdapName("cn=john doe"),
+				LdapUtils.newLdapName("dc=jayway, dc=se"));
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
 
 		singleSearchResult(searchControlsRecursive(), searchResult);
@@ -1514,7 +1518,7 @@ public class LdapTemplateTest {
         doThrow(new UncategorizedLdapException("Authentication failed")).when(entryContextCallbackMock)
                 .executeWithContext(authenticatedContextMock,
                         new LdapEntryIdentification(
-                                new DistinguishedName("cn=john doe,dc=jayway,dc=se"), new DistinguishedName("cn=john doe")));
+                                LdapUtils.newLdapName("cn=john doe,dc=jayway,dc=se"), LdapUtils.newLdapName("cn=john doe")));
 
 		boolean result = tested.authenticate(nameMock, "(ou=somevalue)", "password", entryContextCallbackMock);
 

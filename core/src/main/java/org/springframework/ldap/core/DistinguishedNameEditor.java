@@ -24,6 +24,7 @@ import java.beans.PropertyEditorSupport;
  * 
  * @author Mattias Hellborg Arthursson
  * @since 1.2
+ * @deprecated {@link DistinguishedName and associated classes are deprecated as of 2.0}.
  */
 public class DistinguishedNameEditor extends PropertyEditorSupport {
 

@@ -19,7 +19,7 @@ package org.springframework.ldap.core;
  * A parser for RFC2253-compliant Distinguished Names.
  * 
  * @author Mattias Hellborg Arthursson
- * 
+ * @deprecated {@link DistinguishedName and associated classes are deprecated as of 2.0}.
  */
 public interface DnParser {
     /**

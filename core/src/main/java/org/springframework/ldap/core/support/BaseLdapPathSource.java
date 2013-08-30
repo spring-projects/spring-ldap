@@ -18,6 +18,8 @@ package org.springframework.ldap.core.support;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DistinguishedName;
 
+import javax.naming.ldap.LdapName;
+
 /**
  * Implementations of this interface are capable of providing a base LDAP path.
  * The base LDAP path is the root path to which all LDAP operations performed on
@@ -33,8 +35,19 @@ public interface BaseLdapPathSource {
 	 * 
 	 * @return the base LDAP path as a {@link DistinguishedName}. The path will
 	 * be empty if no base path is specified.
+     * @deprecated {@link DistinguishedName and associated classes and methods are deprecated as of 2.0}.
+     * Use {@link #getBaseLdapName()} instead.
 	 */
 	DistinguishedName getBaseLdapPath();
+
+    /**
+     * Get the base LDAP path as a {@link LdapName}.
+     *
+     * @return the base LDAP path as a {@link LdapName}. The path will
+     * be empty if no base path is specified.
+     * @since 2.0
+     */
+    LdapName getBaseLdapName();
 
 	/**
 	 * Get the base LDAP path as a String.

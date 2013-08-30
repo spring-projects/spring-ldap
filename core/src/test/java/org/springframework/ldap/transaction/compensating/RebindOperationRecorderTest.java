@@ -17,11 +17,12 @@ package org.springframework.ldap.transaction.compensating;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
 import javax.naming.directory.BasicAttributes;
+import javax.naming.ldap.LdapName;
 
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -42,9 +43,9 @@ public class RebindOperationRecorderTest {
 
     @Test
     public void testRecordOperation() {
-        final DistinguishedName expectedDn = new DistinguishedName(
+        final LdapName expectedDn = LdapUtils.newLdapName(
                 "cn=john doe");
-        final DistinguishedName expectedTempDn = new DistinguishedName(
+        final LdapName expectedTempDn = LdapUtils.newLdapName(
                 "cn=john doe");
         RebindOperationRecorder tested = new RebindOperationRecorder(
                 ldapOperationsMock, renamingStrategyMock);

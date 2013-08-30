@@ -17,10 +17,11 @@ package org.springframework.ldap.transaction.compensating;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.directory.BasicAttributes;
+import javax.naming.ldap.LdapName;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -36,9 +37,9 @@ public class RebindOperationExecutorTest {
 
     @Test
     public void testPerformOperation() {
-        DistinguishedName expectedOriginalDn = new DistinguishedName(
+        LdapName expectedOriginalDn = LdapUtils.newLdapName(
                 "cn=john doe");
-        DistinguishedName expectedTempDn = new DistinguishedName(
+        LdapName expectedTempDn = LdapUtils.newLdapName(
                 "cn=john doe_temp");
         Object expectedObject = new Object();
         BasicAttributes expectedAttributes = new BasicAttributes();
@@ -55,9 +56,9 @@ public class RebindOperationExecutorTest {
 
     @Test
     public void testCommit() {
-        DistinguishedName expectedOriginalDn = new DistinguishedName(
+        LdapName expectedOriginalDn = LdapUtils.newLdapName(
                 "cn=john doe");
-        DistinguishedName expectedTempDn = new DistinguishedName(
+        LdapName expectedTempDn = LdapUtils.newLdapName(
                 "cn=john doe_temp");
         Object expectedObject = new Object();
         BasicAttributes expectedAttributes = new BasicAttributes();
@@ -72,9 +73,9 @@ public class RebindOperationExecutorTest {
 
     @Test
     public void testRollback() {
-        DistinguishedName expectedOriginalDn = new DistinguishedName(
+        LdapName expectedOriginalDn = LdapUtils.newLdapName(
                 "cn=john doe");
-        DistinguishedName expectedTempDn = new DistinguishedName(
+        LdapName expectedTempDn = LdapUtils.newLdapName(
                 "cn=john doe_temp");
         Object expectedObject = new Object();
         BasicAttributes expectedAttributes = new BasicAttributes();

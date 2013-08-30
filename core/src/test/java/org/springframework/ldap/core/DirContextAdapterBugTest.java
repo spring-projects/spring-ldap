@@ -16,6 +16,7 @@
 package org.springframework.ldap.core;
 
 import org.junit.Test;
+import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.Name;
 import javax.naming.directory.Attributes;
@@ -36,7 +37,7 @@ public class DirContextAdapterBugTest {
         BasicAttributes attrs = new BasicAttributes("myattr", "a");
         attrs.get("myattr").add("b");
         attrs.get("myattr").add("c");
-        UpdateAdapter ctx = new UpdateAdapter(attrs, new DistinguishedName());
+        UpdateAdapter ctx = new UpdateAdapter(attrs, LdapUtils.emptyLdapName());
 
         ctx.setAttributeValues("myattr", new String[] { "a", "b" });
         ctx.setAttributeValues("myattr", new String[] { "a", "b", "c" });
@@ -49,7 +50,7 @@ public class DirContextAdapterBugTest {
         BasicAttributes attrs = new BasicAttributes("myattr", "a");
         attrs.get("myattr").add("b");
         attrs.get("myattr").add("c");
-        UpdateAdapter ctx = new UpdateAdapter(attrs, new DistinguishedName());
+        UpdateAdapter ctx = new UpdateAdapter(attrs, LdapUtils.emptyLdapName());
 
         ctx.setAttributeValues("myattr", new String[] { "a", "b", "d" });
         ctx.setAttributeValues("myattr", new String[] { "a", "b", "c" });
@@ -68,7 +69,7 @@ public class DirContextAdapterBugTest {
     @Test
     public void testResetNullAttributeValuesReportedAsModifications() {
         BasicAttributes attrs = new BasicAttributes("myattr", null);
-        UpdateAdapter ctx = new UpdateAdapter(attrs, new DistinguishedName());
+        UpdateAdapter ctx = new UpdateAdapter(attrs, LdapUtils.emptyLdapName());
 
         ctx.setAttributeValues("myattr", new String[] { "a" });
         ctx.setAttributeValues("myattr", null);
@@ -79,7 +80,7 @@ public class DirContextAdapterBugTest {
     @Test
     public void testResetNullAttributeValueNotReportedAsModification() throws Exception {
         BasicAttributes attrs = new BasicAttributes("myattr", "b");
-        UpdateAdapter ctx = new UpdateAdapter(attrs, new DistinguishedName());
+        UpdateAdapter ctx = new UpdateAdapter(attrs, LdapUtils.emptyLdapName());
 
         ctx.setAttributeValue("myattr", "a");
         ctx.setAttributeValue("myattr", "b");

@@ -35,8 +35,10 @@ import org.springframework.ldap.odm.typeconversion.impl.Converter;
 import org.springframework.ldap.odm.typeconversion.impl.ConverterManagerImpl;
 import org.springframework.ldap.odm.typeconversion.impl.converters.FromStringConverter;
 import org.springframework.ldap.odm.typeconversion.impl.converters.ToStringConverter;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.test.LdapTestUtils;
 
+import javax.naming.ldap.LdapName;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -185,8 +187,8 @@ public final class TestSchemaToJava {
         odmManager.addManagedClass(clazz);
 
         // And try reading from the directory using it
-        DistinguishedName testDn=new DistinguishedName(baseName);
-        testDn.addAll(new DistinguishedName("cn=William Hartnell,ou=Doctors"));
+        LdapName testDn= LdapUtils.newLdapName(baseName);
+        testDn.addAll(LdapUtils.newLdapName("cn=William Hartnell,ou=Doctors"));
         Object fromDirectory=odmManager.read(clazz, testDn);
 
         LOG.debug(String.format("Read - %1$s", fromDirectory));

@@ -17,10 +17,11 @@ package org.springframework.ldap.transaction.compensating;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.directory.BasicAttributes;
+import javax.naming.ldap.LdapName;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -36,7 +37,7 @@ public class BindOperationExecutorTest {
 
     @Test
     public void testPerformOperation() {
-        DistinguishedName expectedDn = new DistinguishedName("cn=john doe");
+        LdapName expectedDn = LdapUtils.newLdapName("cn=john doe");
         Object expectedObject = new Object();
         BasicAttributes expectedAttributes = new BasicAttributes();
         BindOperationExecutor tested = new BindOperationExecutor(
@@ -51,7 +52,7 @@ public class BindOperationExecutorTest {
 
     @Test
     public void testCommit() {
-        DistinguishedName expectedDn = new DistinguishedName("cn=john doe");
+        LdapName expectedDn = LdapUtils.newLdapName("cn=john doe");
         Object expectedObject = new Object();
         BasicAttributes expectedAttributes = new BasicAttributes();
         BindOperationExecutor tested = new BindOperationExecutor(
@@ -66,7 +67,7 @@ public class BindOperationExecutorTest {
 
     @Test
     public void testRollback() {
-        DistinguishedName expectedDn = new DistinguishedName("cn=john doe");
+        LdapName expectedDn = LdapUtils.newLdapName("cn=john doe");
         BindOperationExecutor tested = new BindOperationExecutor(
                 ldapOperationsMock, expectedDn, null, null);
 

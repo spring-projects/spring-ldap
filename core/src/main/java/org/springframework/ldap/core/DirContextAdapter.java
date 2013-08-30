@@ -23,6 +23,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import javax.naming.Context;
+import javax.naming.InvalidNameException;
 import javax.naming.Name;
 import javax.naming.NameNotFoundException;
 import javax.naming.NameParser;
@@ -35,7 +36,10 @@ import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
+import javax.naming.ldap.LdapName;
+import javax.naming.ldap.Rdn;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
@@ -87,9 +91,9 @@ public class DirContextAdapter implements DirContextOperations {
 
 	private final Attributes originalAttrs;
 
-	private DistinguishedName dn;
+	private LdapName dn;
 
-	private DistinguishedName base;
+	private LdapName base = LdapUtils.emptyLdapName();
 
 	private boolean updateMode = false;
 
@@ -110,7 +114,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 * exception will be thrown.
 	 */
 	public DirContextAdapter(String dnString) {
-		this(new DistinguishedName(dnString));
+		this(LdapUtils.newLdapName(dnString));
 	}
 
 	/**
@@ -160,19 +164,21 @@ public class DirContextAdapter implements DirContextOperations {
 		else {
 			this.originalAttrs = new BasicAttributes(true);
 		}
-		if (dn != null) {
-			this.dn = new DistinguishedName(dn);
-		}
-		else {
-			this.dn = new DistinguishedName();
-		}
-		if (base != null) {
-			this.base = new DistinguishedName(base);
-		}
-		else {
-			this.base = new DistinguishedName();
-		}
-		if (referralUrl != null) {
+
+        if (dn != null) {
+            this.dn = LdapUtils.newLdapName(dn);
+        }
+        else {
+            this.dn = LdapUtils.emptyLdapName();
+        }
+        if (base != null) {
+            this.base = LdapUtils.newLdapName(base);
+        }
+        else {
+            this.base = LdapUtils.emptyLdapName();
+        }
+
+        if (referralUrl != null) {
 			this.referralUrl = referralUrl;
 		}
 		else {
@@ -1265,9 +1271,17 @@ public class DirContextAdapter implements DirContextOperations {
 	 * @see javax.naming.Context#getNameInNamespace()
 	 */
 	public String getNameInNamespace() {
-		DistinguishedName result = new DistinguishedName(dn);
-		result.prepend(base);
-		return result.toString();
+        if(base.size() == 0) {
+            return dn.toString();
+        }
+
+        try {
+            LdapName result = (LdapName) dn.clone();
+            result.addAll(0, base);
+            return result.toString();
+        } catch (InvalidNameException e) {
+            throw new org.springframework.ldap.InvalidNameException(e);
+        }
 	}
 
 	/*
@@ -1276,7 +1290,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 * @see org.springframework.ldap.support.DirContextOperations#getDn()
 	 */
 	public Name getDn() {
-		return new DistinguishedName(dn);
+		return LdapUtils.newLdapName(dn);
 	}
 
 	/*
@@ -1288,8 +1302,13 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	public final void setDn(Name dn) {
 		if (!updateMode) {
-			this.dn = new DistinguishedName(dn.toString());
-		}
+            this.dn = new LdapName(Collections.<Rdn>emptyList());
+            try {
+                this.dn.addAll(0, dn);
+            } catch (InvalidNameException e) {
+                throw new org.springframework.ldap.InvalidNameException(e);
+            }
+        }
 		else {
 			throw new IllegalStateException(
 					"Not possible to call setDn() on a DirContextAdapter in update mode");

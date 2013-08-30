@@ -21,11 +21,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.ldap.NoSuchAttributeException;
 
+import javax.naming.CompositeName;
+import javax.naming.InvalidNameException;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
+import javax.naming.ldap.LdapName;
 import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
@@ -33,7 +37,8 @@ import static org.mockito.Mockito.verify;
 
 public class LdapUtilsTest {
 
-	private AttributeValueCallbackHandler handlerMock;
+    private static final String EXPECTED_DN_STRING = "cn=john.doe, OU=Users,OU=SE,OU=G,OU=I,OU=M";
+    private AttributeValueCallbackHandler handlerMock;
 
     @Before
 	public void setUp() throws Exception {
@@ -225,4 +230,52 @@ public class LdapUtilsTest {
 			assertEquals("i=" + i + ",", expectedSid[i], result[i]);
 		}
 	}
+
+    @Test
+    public void testNewLdapNameFromLdapName() throws InvalidNameException {
+        LdapName ldapName = new LdapName(EXPECTED_DN_STRING);
+
+        LdapName result = LdapUtils.newLdapName(ldapName);
+        assertEquals(ldapName, result);
+    }
+
+    @Test
+    public void testNewLdapNameFromCompositeName() throws InvalidNameException {
+        LdapName result = LdapUtils.newLdapName(new CompositeName(EXPECTED_DN_STRING));
+        assertEquals(new LdapName(EXPECTED_DN_STRING), result);
+    }
+
+    @Test
+    public void testEmptyLdapName() {
+        LdapName ldapName = LdapUtils.emptyLdapName();
+        assertEquals("", ldapName.toString());
+    }
+
+    @Test
+    public void testRemoveFirst() throws InvalidNameException {
+        LdapName ldapName = new LdapName(EXPECTED_DN_STRING);
+        LdapName result = LdapUtils.removeFirst(ldapName, new LdapName("OU=I,OU=M"));
+
+        assertNotSame(ldapName, result);
+        assertEquals(new LdapName("cn=john.doe, OU=Users,OU=SE,OU=G"), result);
+    }
+
+    @Test
+    public void testRemoveFirstNoMatch() throws InvalidNameException {
+        LdapName ldapName = new LdapName(EXPECTED_DN_STRING);
+        LdapName result = LdapUtils.removeFirst(ldapName, new LdapName("OU=oooooo,OU=M"));
+
+        assertNotSame(ldapName, result);
+        assertEquals(ldapName, result);
+    }
+
+    @Test
+    public void testRemoveFirstEmptyBase() throws InvalidNameException {
+        LdapName ldapName = new LdapName(EXPECTED_DN_STRING);
+        LdapName result = LdapUtils.removeFirst(ldapName, LdapUtils.emptyLdapName());
+
+        assertNotSame(ldapName, result);
+        assertEquals(ldapName, result);
+    }
+
 }

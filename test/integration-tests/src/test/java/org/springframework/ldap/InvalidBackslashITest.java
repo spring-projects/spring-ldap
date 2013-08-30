@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,23 @@
 
 package org.springframework.ldap;
 
-import static junit.framework.Assert.assertEquals;
-
-import java.util.List;
-
-import javax.naming.InvalidNameException;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.AbstractContextMapper;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
+
+import javax.naming.InvalidNameException;
+import javax.naming.ldap.LdapName;
+import javax.naming.ldap.Rdn;
+import java.util.List;
+
+import static junit.framework.Assert.assertEquals;
 
 /**
  * Integration tests for verifying that issues LDAP-50 and LDAP-109 are solved.
@@ -44,7 +45,7 @@ public class InvalidBackslashITest extends AbstractLdapTemplateIntegrationTest {
 	@Autowired
 	private LdapTemplate tested;
 
-	private static DistinguishedName DN = new DistinguishedName("cn=Some\\\\Person6,ou=company1,c=Sweden");
+	private static LdapName DN = LdapUtils.newLdapName("cn=Some\\\\Person6,ou=company1,c=Sweden");
 
 	@Before
 	public void prepareTestedInstance() throws Exception {
@@ -94,9 +95,10 @@ public class InvalidBackslashITest extends AbstractLdapTemplateIntegrationTest {
 		List result = tested.search("", "(sn=Person6)", new AbstractContextMapper() {
 			@Override
 			protected Object doMapFromContext(DirContextOperations ctx) {
-				DistinguishedName dn = (DistinguishedName) ctx.getDn();
-				assertEquals("cn=Some\\\\Person6,ou=company1,c=Sweden", dn.toString());
-				assertEquals("Some\\Person6", dn.getLdapRdn("cn").getValue());
+				LdapName dn = (LdapName) ctx.getDn();
+                Rdn rdn = LdapUtils.getRdn(dn, "cn");
+                assertEquals("cn=Some\\\\Person6,ou=company1,c=Sweden", dn.toString());
+				assertEquals("Some\\Person6", rdn.getValue());
 				return new Object();
 			}
 		});

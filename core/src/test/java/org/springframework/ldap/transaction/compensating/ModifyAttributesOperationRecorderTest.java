@@ -18,9 +18,9 @@ package org.springframework.ldap.transaction.compensating;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.IncrementalAttributesMapper;
 import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
 import javax.naming.NamingException;
@@ -30,6 +30,7 @@ import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
+import javax.naming.ldap.LdapName;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -76,7 +77,7 @@ public class ModifyAttributesOperationRecorderTest {
             }
         };
 
-        DistinguishedName expectedName = new DistinguishedName("cn=john doe");
+        LdapName expectedName = LdapUtils.newLdapName("cn=john doe");
 
         when(attributesMapperMock.hasMore()).thenReturn(true, false);
         when(attributesMapperMock.getAttributesForLookup())

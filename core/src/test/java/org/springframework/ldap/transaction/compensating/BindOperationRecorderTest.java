@@ -17,11 +17,12 @@ package org.springframework.ldap.transaction.compensating;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
 import javax.naming.directory.BasicAttributes;
+import javax.naming.ldap.LdapName;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -38,10 +39,10 @@ public class BindOperationRecorderTest {
     }
 
     @Test
-    public void testRecordOperation_DistinguishedName() {
+    public void testRecordOperation_Name() {
         BindOperationRecorder tested = new BindOperationRecorder(
                 ldapOperationsMock);
-        DistinguishedName expectedDn = new DistinguishedName("cn=John Doe");
+        LdapName expectedDn = LdapUtils.newLdapName("cn=John Doe");
 
         Object expectedObject = new Object();
         BasicAttributes expectedAttributes = new BasicAttributes();
