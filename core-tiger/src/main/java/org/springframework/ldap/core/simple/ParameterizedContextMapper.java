@@ -15,10 +15,10 @@
  */
 package org.springframework.ldap.core.simple;
 
+import org.springframework.ldap.core.ContextMapper;
+
 import javax.naming.Binding;
 import javax.naming.directory.SearchResult;
-
-import org.springframework.ldap.core.ContextMapper;
 
 /**
  * Extension of the {@link ContextMapper} interface. Uses Java 5 covariant
@@ -26,6 +26,7 @@ import org.springframework.ldap.core.ContextMapper;
  * {@link #mapFromContext(Object)} method to be the type parameter T.
  * 
  * @param <T>
+ * @deprecated Core classes are parameterized as of 2.0.
  */
 public interface ParameterizedContextMapper<T> extends ContextMapper {
 

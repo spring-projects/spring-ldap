@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.core.simple;
+package org.springframework.ldap.core.support;
 
 import org.springframework.ldap.core.ContextMapperCallbackHandler;
 import org.springframework.ldap.core.ObjectRetrievalException;
 
 import javax.naming.Binding;
 import javax.naming.NameClassPair;
+import javax.naming.NamingException;
 import javax.naming.ldap.HasControls;
 
 /**
@@ -34,13 +35,12 @@ import javax.naming.ldap.HasControls;
  * 
  * @author Tim Terry
  * @author Ulrik Sandberg
- * @deprecated use {@link org.springframework.ldap.core.support.ContextMapperCallbackHandlerWithControls} instead.
  */
-public class ContextMapperCallbackHandlerWithControls extends ContextMapperCallbackHandler {
+public class ContextMapperCallbackHandlerWithControls<T> extends ContextMapperCallbackHandler<T> {
 
-	private ParameterizedContextMapperWithControls<?> mapper = null;
+	private ContextMapperWithControls<T> mapper = null;
 
-	public ContextMapperCallbackHandlerWithControls(final ParameterizedContextMapperWithControls<?> mapper) {
+	public ContextMapperCallbackHandlerWithControls(final ContextMapperWithControls<T> mapper) {
 		super(mapper);
 		this.mapper = mapper;
 	}
@@ -49,7 +49,7 @@ public class ContextMapperCallbackHandlerWithControls extends ContextMapperCallb
 	 * @see org.springframework.ldap.core.ContextMapperCallbackHandler#
 	 * getObjectFromNameClassPair(javax.naming.NameClassPair)
 	 */
-	public Object getObjectFromNameClassPair(final NameClassPair nameClassPair) {
+	public T getObjectFromNameClassPair(final NameClassPair nameClassPair) throws NamingException{
 		if (!(nameClassPair instanceof Binding)) {
 			throw new IllegalArgumentException("Parameter must be an instance of Binding");
 		}
@@ -59,7 +59,7 @@ public class ContextMapperCallbackHandlerWithControls extends ContextMapperCallb
 		if (object == null) {
 			throw new ObjectRetrievalException("Binding did not contain any object.");
 		}
-		Object result = null;
+		T result;
 		if (nameClassPair instanceof HasControls) {
 			result = mapper.mapFromContextWithControls(object, (HasControls) nameClassPair);
 		}

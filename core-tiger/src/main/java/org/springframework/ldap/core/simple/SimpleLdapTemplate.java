@@ -15,17 +15,16 @@
  */
 package org.springframework.ldap.core.simple;
 
-import java.util.List;
-
-import javax.naming.Name;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.SearchControls;
-
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.DirContextProcessor;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.core.LdapTemplate;
+
+import javax.naming.Name;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.SearchControls;
+import java.util.List;
 
 /**
  * Java-5-based convenience wrapper for the classic LdapTemplate, adding some
@@ -35,6 +34,7 @@ import org.springframework.ldap.core.LdapTemplate;
  * commonly used template methods.
  * 
  * @author Mattias Hellborg Arthursson
+ * @deprecated Core classes are parameterized as of 2.0.
  */
 public class SimpleLdapTemplate implements SimpleLdapOperations {
 

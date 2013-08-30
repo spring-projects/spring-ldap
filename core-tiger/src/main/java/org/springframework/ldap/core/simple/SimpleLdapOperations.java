@@ -32,6 +32,7 @@ import java.util.List;
  * common LDAP operations.
  * 
  * @author Mattias Hellborg Arthursson
+ * @deprecated Core classes are parameterized as of 2.0.
  */
 public interface SimpleLdapOperations {
 
