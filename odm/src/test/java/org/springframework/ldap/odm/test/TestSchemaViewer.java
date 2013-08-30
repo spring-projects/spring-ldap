@@ -21,13 +21,14 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.odm.test.utils.ExecuteRunnable;
 import org.springframework.ldap.odm.test.utils.GetFreePort;
 import org.springframework.ldap.odm.test.utils.RunnableTest;
 import org.springframework.ldap.odm.tools.SchemaViewer;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.test.LdapTestUtils;
 
+import javax.naming.ldap.LdapName;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ import static org.junit.Assert.assertEquals;
 
 public final class TestSchemaViewer {
     // Base DN for test data
-    private static final DistinguishedName baseName = new DistinguishedName("o=Whoniverse");
+    private static final LdapName baseName = LdapUtils.newLdapName("o=Whoniverse");
 
     private static final String lineSeparator = System.getProperty ("line.separator");
     

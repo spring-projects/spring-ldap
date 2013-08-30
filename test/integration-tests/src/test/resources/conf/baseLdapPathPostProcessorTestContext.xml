@@ -20,8 +20,10 @@
 		<constructor-arg ref="contextSource" />
 	</bean>
 
-	<bean id="dummyBaseContextAware"
+	<bean id="dummyBaseLdapPathAware"
 		class="org.springframework.ldap.itest.core.support.DummyBaseLdapPathAware" />
+
+    <bean class="org.springframework.ldap.itest.core.support.DummyBaseLdapNameAware" />
 
 	<bean
 		class="org.springframework.ldap.core.support.BaseLdapPathBeanPostProcessor" />

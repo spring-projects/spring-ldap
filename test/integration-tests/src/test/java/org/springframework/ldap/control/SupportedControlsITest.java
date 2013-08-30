@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,19 @@
 
 package org.springframework.ldap.control;
 
-import static junit.framework.Assert.assertEquals;
-
-import java.util.Arrays;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
+
+import javax.naming.Name;
+import java.util.Arrays;
+
+import static junit.framework.Assert.assertEquals;
 
 /**
  * Provides tests that verify that the server supports certain controls.
@@ -43,8 +44,8 @@ public class SupportedControlsITest extends AbstractLdapTemplateIntegrationTest 
 	private static final String SUPPORTED_CONTROL = "supportedcontrol";
 
 	@Override
-	protected DistinguishedName getRoot() {
-		return new DistinguishedName("dc=jayway,dc=se");
+	protected Name getRoot() {
+		return LdapUtils.newLdapName("dc=jayway,dc=se");
 	}
 	
 	@Test

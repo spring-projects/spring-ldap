@@ -1,12 +1,11 @@
 package org.springframework.ldap.schema;
 
-import javax.naming.NamingException;
-
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapAttributes;
-import org.springframework.ldap.core.LdapRdn;
-
 import sun.misc.BASE64Encoder;
+
+import javax.naming.NamingException;
+import javax.naming.ldap.LdapName;
+import javax.naming.ldap.Rdn;
 
 /**
  * BasicSchemaSpecification establishes a minimal set of requirements for object classes.
@@ -33,25 +32,25 @@ public class BasicSchemaSpecification implements Specification<LdapAttributes> {
 		if (record != null) {
 			
 			//DN is required.
-			DistinguishedName dn = record.getDN();
+			LdapName dn = record.getName();
 			if (dn != null) {
 				
 				//objectClass definition is required.
 				if (record.get("objectClass") != null) {
 					
 					//Naming attribute is required.
-					LdapRdn rdn = dn.getLdapRdn(dn.size() - 1);				
-					if (record.get(rdn.getKey()) != null) {
-						Object object = record.get(rdn.getKey()).get();
+                    Rdn rdn = dn.getRdn(dn.size() - 1);
+                    if (record.get(rdn.getType()) != null) {
+						Object object = record.get(rdn.getType()).get();
 						
 						if (object instanceof String) {
 							String value = (String) object;
-							if (rdn.getValue().equalsIgnoreCase(value)) {
+							if (((String)rdn.getValue()).equalsIgnoreCase(value)) {
 								return true;
 							}
 						} else if(object instanceof byte[]) {
 							BASE64Encoder encoder = new BASE64Encoder();
-							String rdnValue = encoder.encode(rdn.getValue().getBytes());
+							String rdnValue = encoder.encode(((String)rdn.getValue()).getBytes());
 							String attributeValue = encoder.encode((byte[]) object);
 							if (rdnValue.equals(attributeValue)) return true;
 						} 

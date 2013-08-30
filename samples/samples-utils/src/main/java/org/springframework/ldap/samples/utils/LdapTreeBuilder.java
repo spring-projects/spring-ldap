@@ -1,9 +1,11 @@
 package org.springframework.ldap.samples.utils;
 
 import org.springframework.ldap.core.DirContextOperations;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.AbstractContextMapper;
+import org.springframework.ldap.support.LdapUtils;
+
+import javax.naming.Name;
 
 public class LdapTreeBuilder {
 
@@ -13,9 +15,8 @@ public class LdapTreeBuilder {
 		this.ldapTemplate = ldapTemplate;
 	}
 
-	public LdapTree getLdapTree(DistinguishedName root) {
-		DirContextOperations context = ldapTemplate.lookupContext(root
-				.toString());
+	public LdapTree getLdapTree(Name root) {
+		DirContextOperations context = ldapTemplate.lookupContext(root);
 		return getLdapTree(context);
 	}
 
@@ -25,8 +26,8 @@ public class LdapTreeBuilder {
 				new AbstractContextMapper() {
 					@Override
 					protected Object doMapFromContext(DirContextOperations ctx) {
-						DistinguishedName dn = (DistinguishedName) ctx.getDn();
-						dn.prepend((DistinguishedName) rootContext.getDn());
+						Name dn = ctx.getDn();
+						dn = LdapUtils.prepend(dn, rootContext.getDn());
 						ldapTree.addSubTree(getLdapTree(ldapTemplate
 								.lookupContext(dn)));
 						return null;

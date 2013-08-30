@@ -24,6 +24,7 @@ import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
 
 import javax.naming.directory.Attributes;
@@ -95,10 +96,10 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 	}
 
 	@Test
-	public void testRebind_Attributes_DistinguishedName() {
+	public void testRebind_Attributes_LdapName() {
 		Attributes attributes = setupAttributes();
 
-		tested.rebind(new DistinguishedName(PERSON4_DN), null, attributes);
+		tested.rebind(LdapUtils.newLdapName(PERSON4_DN), null, attributes);
 
 		verifyBoundCorrectData();
 	}
@@ -231,11 +232,11 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 	}
 
 	@Test
-	public void testModifyAttributes_DistinguishedName() {
+	public void testModifyAttributes_LdapName() {
 		ModificationItem item = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("description",
 				"Some other description"));
 
-		tested.modifyAttributes(new DistinguishedName(PERSON4_DN), new ModificationItem[] { item });
+		tested.modifyAttributes(LdapUtils.newLdapName(PERSON4_DN), new ModificationItem[] { item });
 
 		verifyBoundCorrectData();
 	}

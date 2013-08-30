@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,20 @@
 
 package org.springframework.ldap;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.test.context.ContextConfiguration;
 
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ldap.core.DirContextAdapter;
-import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.test.context.ContextConfiguration;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 
 /**
  * Tests the bind and unbind methods of LdapTemplate. The test methods in this
@@ -58,11 +58,11 @@ public class LdapTemplateBindUnbindITest extends
 	}
 
 	@Test
-	public void testBindAndUnbindWithAttributesUsingDistinguishedName() {
+	public void testBindAndUnbindWithAttributesUsingLdapName() {
 		Attributes attributes = setupAttributes();
-		tested.bind(new DistinguishedName(DN), null, attributes);
+		tested.bind(LdapUtils.newLdapName(DN), null, attributes);
 		verifyBoundCorrectData();
-		tested.unbind(new DistinguishedName(DN));
+		tested.unbind(LdapUtils.newLdapName(DN));
 		verifyCleanup();
 	}
 
@@ -81,23 +81,22 @@ public class LdapTemplateBindUnbindITest extends
 	}
 
 	@Test
-	public void testBindAndUnbindWithDirContextAdapterUsingDistinguishedName() {
+	public void testBindAndUnbindWithDirContextAdapterUsingLdapName() {
 		DirContextAdapter adapter = new DirContextAdapter();
 		adapter.setAttributeValues("objectclass", new String[] { "top",
 				"person" });
 		adapter.setAttributeValue("cn", "Some Person4");
 		adapter.setAttributeValue("sn", "Person4");
 
-		tested.bind(new DistinguishedName(DN), adapter, null);
+		tested.bind(LdapUtils.newLdapName(DN), adapter, null);
 		verifyBoundCorrectData();
-		tested.unbind(new DistinguishedName(DN));
+		tested.unbind(LdapUtils.newLdapName(DN));
 		verifyCleanup();
 	}
 
 	@Test
 	public void testBindAndUnbindWithDirContextAdapterOnly() {
-		DirContextAdapter adapter = new DirContextAdapter(
-				new DistinguishedName(DN));
+		DirContextAdapter adapter = new DirContextAdapter(LdapUtils.newLdapName(DN));
 		adapter.setAttributeValues("objectclass", new String[] { "top",
 				"person" });
 		adapter.setAttributeValue("cn", "Some Person4");
@@ -111,8 +110,7 @@ public class LdapTemplateBindUnbindITest extends
 
 	@Test
 	public void testBindAndRebindWithDirContextAdapterOnly() {
-		DirContextAdapter adapter = new DirContextAdapter(
-				new DistinguishedName(DN));
+		DirContextAdapter adapter = new DirContextAdapter(LdapUtils.newLdapName(DN));
 		adapter.setAttributeValues("objectclass", new String[] { "top",
 				"person" });
 		adapter.setAttributeValue("cn", "Some Person4");

@@ -21,7 +21,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.simple.ParameterizedContextMapper;
@@ -30,6 +29,7 @@ import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.odm.core.OdmException;
 import org.springframework.ldap.odm.core.OdmManager;
 import org.springframework.ldap.odm.typeconversion.ConverterManager;
+import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.Name;
 import javax.naming.NamingEnumeration;
@@ -254,7 +254,7 @@ public final class OdmManagerImpl implements OdmManager {
         // Search from the root if we are not told where to search from
         Name localBase = base;
         if (base == null || base.size() == 0) {
-            localBase = DistinguishedName.EMPTY_PATH;
+            localBase = LdapUtils.emptyLdapName();
         }
         
         if (LOG.isDebugEnabled()) {

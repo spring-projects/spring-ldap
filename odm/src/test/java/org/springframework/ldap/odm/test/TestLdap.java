@@ -33,7 +33,6 @@ import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
@@ -57,6 +56,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.naming.Name;
 import javax.naming.directory.SearchControls;
+import javax.naming.ldap.LdapName;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -73,7 +73,7 @@ public final class TestLdap {
     private static final Log LOG = LogFactory.getLog(TestLdap.class);
 
     // Base DN for test data
-    private static final DistinguishedName baseName = new DistinguishedName("o=Whoniverse");
+    private static final LdapName baseName = LdapUtils.newLdapName("o=Whoniverse");
 
     // This port MUST be free on local host for these unit tests to function.
     private static int port;
@@ -437,13 +437,13 @@ public final class TestLdap {
     // Trying to read a non-existant entry should be flagged as an error
     @Test(expected = NameNotFoundException.class)
     public void readNonExistant() throws Exception {
-        odmManager.read(Person.class, new DistinguishedName("cn=Hili Harvey,ou=Doctors,o=Whoniverse"));
+        odmManager.read(Person.class, LdapUtils.newLdapName("cn=Hili Harvey,ou=Doctors,o=Whoniverse"));
     }
 
     // Read an entry with classes in addition to those supported by the Entry
     @Test(expected = OdmException.class)
     public void readNonMatchingObjectclasses() throws Exception {
-        odmManager.read(Person.class, new DistinguishedName("ou=Doctors,o=Whoniverse"));
+        odmManager.read(Person.class, LdapUtils.newLdapName("ou=Doctors,o=Whoniverse"));
     }
 
     private final static class NoEntry {

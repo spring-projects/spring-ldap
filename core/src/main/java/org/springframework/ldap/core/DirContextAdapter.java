@@ -37,9 +37,7 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.ldap.LdapName;
-import javax.naming.ldap.Rdn;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
@@ -1302,12 +1300,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	public final void setDn(Name dn) {
 		if (!updateMode) {
-            this.dn = new LdapName(Collections.<Rdn>emptyList());
-            try {
-                this.dn.addAll(0, dn);
-            } catch (InvalidNameException e) {
-                throw new org.springframework.ldap.InvalidNameException(e);
-            }
+            this.dn = LdapUtils.newLdapName(dn);
         }
 		else {
 			throw new IllegalStateException(

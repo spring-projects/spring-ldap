@@ -79,6 +79,7 @@ public class LdapAttributes extends BasicAttributes {
 	 * 
 	 * @return {@link org.springframework.ldap.core.DistinguishedName} specifying the name to which the object is bound.
      * @deprecated {@link DistinguishedName and associated classes and methods are deprecated as of 2.0}.
+     * use {@link #getName()} instead.
 	 */
 	public DistinguishedName getDN() {
 		return new DistinguishedName(dn);
@@ -98,6 +99,7 @@ public class LdapAttributes extends BasicAttributes {
 	 * 
 	 * @param dn {@link org.springframework.ldap.core.DistinguishedName} specifying the name to which the object is bound.
      * @deprecated {@link DistinguishedName and associated classes and methods are deprecated as of 2.0}.
+     * use {@link #setName(javax.naming.Name)} instead.
      */
 	public void setDN(DistinguishedName dn) {
 		this.dn = LdapUtils.newLdapName(dn);
@@ -117,7 +119,7 @@ public class LdapAttributes extends BasicAttributes {
 		
 		try {
 			
-			DistinguishedName dn = getDN();
+			LdapName dn = getName();
 			
 			if (!dn.toString().matches(SAFE_INIT_CHAR + SAFE_CHAR + "*")) {
 				sb.append("dn:: " + new BASE64Encoder().encode(dn.toString().getBytes()) + "\n");

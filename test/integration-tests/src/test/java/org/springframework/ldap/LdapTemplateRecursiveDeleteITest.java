@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,19 @@
 
 package org.springframework.ldap;
 
-import static junit.framework.Assert.fail;
-
-import javax.naming.Name;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextAdapter;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
+
+import javax.naming.Name;
+import javax.naming.ldap.LdapName;
+
+import static junit.framework.Assert.fail;
 
 /**
  * Tests the recursive modification methods (unbind and the protected delete
@@ -42,13 +43,13 @@ public class LdapTemplateRecursiveDeleteITest extends AbstractLdapTemplateIntegr
 	@Autowired
 	private LdapTemplate tested;
 
-	private static DistinguishedName DN = new DistinguishedName("cn=Some Person5,ou=company1,c=Sweden");
+	private static LdapName DN = LdapUtils.newLdapName("cn=Some Person5,ou=company1,c=Sweden");
 
-	private DistinguishedName firstSubDn;
+	private LdapName firstSubDn;
 
-	private DistinguishedName secondSubDn;
+	private LdapName secondSubDn;
 
-	private DistinguishedName leafDn;
+	private LdapName leafDn;
 
 	@Before
 	public void prepareTestedInstance() throws Exception {
@@ -59,16 +60,18 @@ public class LdapTemplateRecursiveDeleteITest extends AbstractLdapTemplateIntegr
 		adapter.setAttributeValue("description", "Some description");
 		tested.bind(DN, adapter, null);
 
-		firstSubDn = new DistinguishedName("cn=subPerson");
-		firstSubDn.prepend(DN);
+		firstSubDn = LdapUtils.newLdapName("cn=subPerson");
+		firstSubDn = LdapUtils.prepend(firstSubDn, DN);
+
 		adapter = new DirContextAdapter();
 		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
 		adapter.setAttributeValue("cn", "subPerson");
 		adapter.setAttributeValue("sn", "subPerson");
 		adapter.setAttributeValue("description", "Should be recursively deleted");
 		tested.bind(firstSubDn, adapter, null);
-		secondSubDn = new DistinguishedName("cn=subPerson2");
-		secondSubDn.prepend(DN);
+		secondSubDn = LdapUtils.newLdapName("cn=subPerson2");
+        secondSubDn = LdapUtils.prepend(secondSubDn, DN);
+
 		adapter = new DirContextAdapter();
 		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
 		adapter.setAttributeValue("cn", "subPerson2");
@@ -76,8 +79,9 @@ public class LdapTemplateRecursiveDeleteITest extends AbstractLdapTemplateIntegr
 		adapter.setAttributeValue("description", "Should be recursively deleted");
 		tested.bind(secondSubDn, adapter, null);
 
-		leafDn = new DistinguishedName("cn=subSubPerson");
-		leafDn.prepend(firstSubDn);
+		leafDn = LdapUtils.newLdapName("cn=subSubPerson");
+        leafDn = LdapUtils.prepend(leafDn, DN);
+
 		adapter = new DirContextAdapter();
 		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
 		adapter.setAttributeValue("cn", "subSubPerson");

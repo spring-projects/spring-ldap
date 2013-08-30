@@ -21,7 +21,6 @@ import org.apache.directory.server.core.DefaultDirectoryService;
 import org.apache.directory.server.protocol.shared.store.LdifFileLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapAttributes;
 import org.springframework.ldap.core.support.DefaultDirObjectFactory;
 import org.springframework.ldap.ldif.parser.LdifParser;
@@ -186,8 +185,8 @@ public class LdapTestUtils {
             enumeration = ctx.listBindings(name);
             while (enumeration.hasMore()) {
                 Binding element = (Binding) enumeration.next();
-                DistinguishedName childName = new DistinguishedName(element.getName());
-                childName.prepend((DistinguishedName) name);
+                Name childName = LdapUtils.newLdapName(element.getName());
+                childName = LdapUtils.prepend(childName, name);
 
                 try {
                     ctx.destroySubcontext(childName);
@@ -228,7 +227,7 @@ public class LdapTestUtils {
         }
     }
 
-    public static void cleanAndSetup(ContextSource contextSource, DistinguishedName rootNode, Resource ldifFile)
+    public static void cleanAndSetup(ContextSource contextSource, Name rootNode, Resource ldifFile)
             throws NamingException, IOException {
 
         clearSubContexts(contextSource, rootNode);

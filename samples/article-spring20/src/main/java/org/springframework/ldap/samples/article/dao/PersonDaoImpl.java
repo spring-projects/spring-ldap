@@ -15,19 +15,19 @@
  */
 package org.springframework.ldap.samples.article.dao;
 
-import java.util.List;
+import org.springframework.ldap.core.AttributesMapper;
+import org.springframework.ldap.core.ContextMapper;
+import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.filter.EqualsFilter;
+import org.springframework.ldap.samples.article.domain.Person;
+import org.springframework.ldap.support.LdapNameBuilder;
+import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
-
-import org.springframework.ldap.core.AttributesMapper;
-import org.springframework.ldap.core.ContextMapper;
-import org.springframework.ldap.core.DirContextAdapter;
-import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.filter.EqualsFilter;
-import org.springframework.ldap.samples.article.domain.Person;
+import java.util.List;
 
 /**
  * Default implementation of PersonDao. This implementation uses
@@ -83,7 +83,7 @@ public class PersonDaoImpl implements PersonDao {
 	 */
 	public List getAllPersonNames() {
 		EqualsFilter filter = new EqualsFilter("objectclass", "person");
-		return ldapTemplate.search(DistinguishedName.EMPTY_PATH, filter.encode(), new AttributesMapper() {
+		return ldapTemplate.search(LdapUtils.emptyLdapName(), filter.encode(), new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attrs) throws NamingException {
 				return attrs.get("cn").get();
 			}
@@ -95,7 +95,7 @@ public class PersonDaoImpl implements PersonDao {
 	 */
 	public List findAll() {
 		EqualsFilter filter = new EqualsFilter("objectclass", "person");
-		return ldapTemplate.search(DistinguishedName.EMPTY_PATH, filter.encode(), getContextMapper());
+		return ldapTemplate.search(LdapUtils.emptyLdapName(), filter.encode(), getContextMapper());
 	}
 
 	/*
@@ -103,7 +103,7 @@ public class PersonDaoImpl implements PersonDao {
 	 * java.lang.String)
 	 */
 	public Person findByPrimaryKey(String country, String company, String fullname) {
-		DistinguishedName dn = buildDn(country, company, fullname);
+		Name dn = buildDn(country, company, fullname);
 		return (Person) ldapTemplate.lookup(dn, getContextMapper());
 	}
 
@@ -111,16 +111,16 @@ public class PersonDaoImpl implements PersonDao {
 		return new PersonContextMapper();
 	}
 
-	private DistinguishedName buildDn(Person person) {
+	private Name buildDn(Person person) {
 		return buildDn(person.getCountry(), person.getCompany(), person.getFullName());
 	}
 
-	private DistinguishedName buildDn(String country, String company, String fullname) {
-		DistinguishedName dn = new DistinguishedName();
-		dn.add("c", country);
-		dn.add("ou", company);
-		dn.add("cn", fullname);
-		return dn;
+	private Name buildDn(String country, String company, String fullname) {
+        return LdapNameBuilder.newInstance()
+                .add("c", country)
+                .add("ou", company)
+                .add("cn", fullname)
+                .build();
 	}
 
 	private void mapToContext(Person person, DirContextAdapter context) {
@@ -135,7 +135,7 @@ public class PersonDaoImpl implements PersonDao {
 	 * Maps from DirContextAdapter to Person objects. A DN for a person will be
 	 * of the form <code>cn=[fullname],ou=[company],c=[country]</code>, so
 	 * the values of these attributes must be extracted from the DN. For this,
-	 * we use the DistinguishedName.
+	 * we use LdapName and helper methods in LdapUtils.
 	 * 
 	 *Mattias Hellborg Arthurssonellborg Arthursson
 	 * @author Ulrik Sandberg
@@ -144,10 +144,10 @@ public class PersonDaoImpl implements PersonDao {
 
 		public Object mapFromContext(Object ctx) {
 			DirContextAdapter context = (DirContextAdapter) ctx;
-			DistinguishedName dn = new DistinguishedName(context.getDn());
+			Name dn = context.getDn();
 			Person person = new Person();
-			person.setCountry(dn.getLdapRdn(0).getComponent().getValue());
-			person.setCompany(dn.getLdapRdn(1).getComponent().getValue());
+			person.setCountry(LdapUtils.getStringValue(dn, 0));
+			person.setCompany(LdapUtils.getStringValue(dn, 1));
 			person.setFullName(context.getStringAttribute("cn"));
 			person.setLastName(context.getStringAttribute("sn"));
 			person.setDescription(context.getStringAttribute("description"));

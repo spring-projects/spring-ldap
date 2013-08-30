@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,17 @@
  */
 package org.springframework.ldap.core.simple;
 
-import java.util.List;
-
-import javax.naming.Name;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.SearchControls;
-
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.DirContextProcessor;
 import org.springframework.ldap.core.LdapOperations;
+
+import javax.naming.Name;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.SearchControls;
+import java.util.List;
 
 /**
  * LDAP operations interface usable on Java 5 and above, exposing a set of
@@ -284,7 +283,7 @@ public interface SimpleLdapOperations {
 	 * <pre>
 	 * AndFilter filter = new AndFilter();
 	 * filter.and(&quot;objectclass&quot;, &quot;person&quot;).and(&quot;uid&quot;, userId);
-	 * boolean authenticated = ldapTemplate.authenticate(DistinguishedName.EMPTY_PATH,
+	 * boolean authenticated = ldapTemplate.authenticate(LdapUtils.emptyLdapName(),
 	 * 		filter.toString(), password);
 	 * </pre>
 	 * 
@@ -309,7 +308,7 @@ public interface SimpleLdapOperations {
 	 * <pre>
 	 * AndFilter filter = new AndFilter();
 	 * filter.and(&quot;objectclass&quot;, &quot;person&quot;).and(&quot;uid&quot;, userId);
-	 * boolean authenticated = ldapTemplate.authenticate(DistinguishedName.EMPTY_PATH,
+	 * boolean authenticated = ldapTemplate.authenticate(LdapUtils.emptyLdapName(),
 	 * 		filter.toString(), password);
 	 * </pre>
 	 * 

@@ -22,12 +22,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.odm.sample.SearchForPeople;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.test.LdapTestUtils;
 
+import javax.naming.ldap.LdapName;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
@@ -35,7 +36,7 @@ import static org.junit.Assert.assertEquals;
 
 public class TestSearchForPeople {
     // Base DN for test data
-    private static final DistinguishedName baseName = new DistinguishedName("o=Whoniverse");
+    private static final LdapName baseName = LdapUtils.newLdapName("o=Whoniverse");
 
     private static final String PRINCIPAL="uid=admin,ou=system";
     private static final String CREDENTIALS="secret";

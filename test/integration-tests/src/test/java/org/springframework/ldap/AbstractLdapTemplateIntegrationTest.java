@@ -22,11 +22,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.test.LdapTestUtils;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
+import javax.naming.Name;
 import javax.naming.NamingException;
 import java.io.IOException;
 
@@ -46,7 +47,7 @@ public abstract class AbstractLdapTemplateIntegrationTest extends AbstractJUnit4
         return new ClassPathResource("/setup_data.ldif");
     }
 
-    protected DistinguishedName getRoot() {
-		return DistinguishedName.EMPTY_PATH;
+    protected Name getRoot() {
+		return LdapUtils.emptyLdapName();
 	}
 }

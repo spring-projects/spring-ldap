@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,21 +15,22 @@
  */
 package org.springframework.ldap;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-
-import java.util.List;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.CountNameClassPairCallbackHandler;
 import org.springframework.ldap.itest.PersonContextMapper;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.test.AttributeCheckContextMapper;
 import org.springframework.test.context.ContextConfiguration;
+
+import javax.naming.ldap.LdapName;
+import java.util.List;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Tests for LdapTemplate's list methods.
@@ -46,7 +47,7 @@ public class LdapTemplateListITest extends AbstractLdapTemplateIntegrationTest {
 
 	private static final String BASE_STRING = "";
 
-	private static final DistinguishedName BASE_NAME = new DistinguishedName(BASE_STRING);
+	private static final LdapName BASE_NAME = LdapUtils.newLdapName(BASE_STRING);
 
 	private static final String[] ALL_ATTRIBUTES = { "cn", "sn", "description", "telephoneNumber" };
 
@@ -75,16 +76,14 @@ public class LdapTemplateListITest extends AbstractLdapTemplateIntegrationTest {
 	public void testListBindings_ContextMapper_Name() {
 		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		contextMapper.setExpectedValues(ALL_VALUES);
-		DistinguishedName dn = new DistinguishedName("ou=company2,c=Sweden");
-		dn.append(BASE_NAME);
+		LdapName dn = LdapUtils.newLdapName("ou=company2,c=Sweden");
 		List list = tested.listBindings(dn, contextMapper);
 		assertEquals(1, list.size());
 	}
 
 	@Test
 	public void testListBindings_ContextMapper_MapToPersons() {
-		DistinguishedName dn = new DistinguishedName("ou=company1,c=Sweden");
-		dn.append(BASE_NAME);
+		LdapName dn = LdapUtils.newLdapName("ou=company1,c=Sweden");
 		List list = tested.listBindings(dn, new PersonContextMapper());
 		assertEquals(3, list.size());
 		String personClass = "org.springframework.ldap.itest.Person";

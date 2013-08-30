@@ -1,17 +1,18 @@
 package org.springframework.ldap.samples.utils;
 
-import static junit.framework.Assert.assertEquals;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ldap.core.DirContextOperations;
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
+import javax.naming.ldap.LdapName;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ldap.core.DirContextOperations;
-import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import static junit.framework.Assert.assertEquals;
 
 @ContextConfiguration(locations = { "/conf/testContext.xml" })
 public class LdapTreeBuilderIntegrationTest extends AbstractJUnit4SpringContextTests {
@@ -21,22 +22,19 @@ public class LdapTreeBuilderIntegrationTest extends AbstractJUnit4SpringContextT
 
 	@Test
 	public void testGetLdapTree() {
-		LdapTree ldapTree = tested.getLdapTree(new DistinguishedName("c=Sweden"));
+		LdapTree ldapTree = tested.getLdapTree(LdapUtils.newLdapName("c=Sweden"));
 		ldapTree.traverse(new TestVisitor());
 	}
 
 	private static final class TestVisitor implements LdapTreeVisitor {
-		private static final DistinguishedName DN_1 = new DistinguishedName("c=Sweden");
+		private static final LdapName DN_1 = LdapUtils.newLdapName("c=Sweden");
+		private static final LdapName DN_2 = LdapUtils.newLdapName("ou=company1,c=Sweden");
+		private static final LdapName DN_3 = LdapUtils.newLdapName("cn=Some Person,ou=company1,c=Sweden");
+		private static final LdapName DN_4 = LdapUtils.newLdapName("cn=Some Person2,ou=company1,c=Sweden");
 
-		private static final DistinguishedName DN_2 = new DistinguishedName("ou=company1,c=Sweden");
+		private Map<LdapName, Integer> names = new LinkedHashMap<LdapName, Integer>();
 
-		private static final DistinguishedName DN_3 = new DistinguishedName("cn=Some Person,ou=company1,c=Sweden");
-
-		private static final DistinguishedName DN_4 = new DistinguishedName("cn=Some Person2,ou=company1,c=Sweden");
-
-		private Map<DistinguishedName, Integer> names = new LinkedHashMap<DistinguishedName, Integer>();
-
-		private Iterator<DistinguishedName> keyIterator;
+		private Iterator<LdapName> keyIterator;
 
 		public TestVisitor() {
 			names.put(DN_1, 0);
@@ -48,7 +46,7 @@ public class LdapTreeBuilderIntegrationTest extends AbstractJUnit4SpringContextT
 		}
 
 		public void visit(DirContextOperations node, int currentDepth) {
-			DistinguishedName next = keyIterator.next();
+			LdapName next = keyIterator.next();
 			assertEquals(next, node.getDn());
 			assertEquals(names.get(next).intValue(), currentDepth);
 		}

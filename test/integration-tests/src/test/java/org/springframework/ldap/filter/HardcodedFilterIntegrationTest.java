@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,17 @@
  */
 package org.springframework.ldap.filter;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.CountNameClassPairCallbackHandler;
 import org.springframework.ldap.itest.filter.DummyFilterConsumer;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -50,7 +50,7 @@ public class HardcodedFilterIntegrationTest extends AbstractLdapTemplateIntegrat
 	public void verifyThatWildcardsAreUnescaped() {
 		HardcodedFilter filter = new HardcodedFilter("cn=Some*");
 		CountNameClassPairCallbackHandler handler = new CountNameClassPairCallbackHandler();
-		ldapTemplate.search(DistinguishedName.EMPTY_PATH, filter.encode(), handler);
+		ldapTemplate.search(LdapUtils.emptyLdapName(), filter.encode(), handler);
 		int hits = handler.getNoOfRows();
 		assertTrue("expected more than one hit, got " + hits, hits > 1);
 	}

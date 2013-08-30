@@ -25,7 +25,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.odm.core.impl.OdmManagerImpl;
 import org.springframework.ldap.odm.test.utils.CompilerInterface;
@@ -53,7 +52,7 @@ import static org.junit.Assert.assertEquals;
 public final class TestSchemaToJava {
     private static final Log LOG = LogFactory.getLog(TestLdap.class);
 
-    private static final DistinguishedName baseName = new DistinguishedName("o=Whoniverse");
+    private static final LdapName baseName = LdapUtils.newLdapName("o=Whoniverse");
 
     private static final String tempDir=System.getProperty("java.io.tmpdir");
 

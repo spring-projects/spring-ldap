@@ -38,6 +38,8 @@ import static org.mockito.Mockito.verify;
 public class LdapUtilsTest {
 
     private static final String EXPECTED_DN_STRING = "cn=john.doe, OU=Users,OU=SE,OU=G,OU=I,OU=M";
+    private static final String EXPECTED_MULTIVALUE_DN_STRING = "cn=john.doe, OU=Users,OU=SE,OU=G+O=GR,OU=I,OU=M";
+
     private AttributeValueCallbackHandler handlerMock;
 
     @Before
@@ -276,6 +278,36 @@ public class LdapUtilsTest {
 
         assertNotSame(ldapName, result);
         assertEquals(ldapName, result);
+    }
+
+    @Test
+    public void testGetValueNamed() throws InvalidNameException {
+        LdapName ldapName = new LdapName(EXPECTED_DN_STRING);
+        assertEquals("john.doe", LdapUtils.getValue(ldapName, "cn"));
+    }
+
+    @Test
+    public void testGetValueNamedReturnesFirstFound() throws InvalidNameException {
+        LdapName ldapName = new LdapName(EXPECTED_DN_STRING);
+        assertEquals("M", LdapUtils.getValue(ldapName, "ou"));
+    }
+
+    @Test
+    public void testGetValueNamedWithMultivalue() throws InvalidNameException {
+        LdapName ldapName = new LdapName(EXPECTED_MULTIVALUE_DN_STRING);
+        assertEquals("GR", LdapUtils.getValue(ldapName, "o"));
+    }
+
+    @Test
+    public void testGetValueIndexed() throws InvalidNameException {
+        LdapName ldapName = new LdapName(EXPECTED_DN_STRING);
+        assertEquals("G", LdapUtils.getValue(ldapName, 2));
+    }
+
+    @Test
+    public void testGetStringValueIndexed() throws InvalidNameException {
+        LdapName ldapName = new LdapName(EXPECTED_DN_STRING);
+        assertEquals("I", LdapUtils.getValue(ldapName, 1));
     }
 
 }

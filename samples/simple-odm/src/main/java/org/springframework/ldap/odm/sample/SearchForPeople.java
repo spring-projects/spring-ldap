@@ -1,13 +1,13 @@
 package org.springframework.ldap.odm.sample;
 
-import java.util.List;
-
-import javax.naming.directory.SearchControls;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.odm.core.OdmManager;
+import org.springframework.ldap.support.LdapUtils;
+
+import javax.naming.directory.SearchControls;
+import javax.naming.ldap.LdapName;
+import java.util.List;
 
 // A very simple example - just showing how little code you actually need to write
 // when using Spring LDAP ODM
@@ -16,7 +16,7 @@ public class SearchForPeople {
         new SearchControls(SearchControls.SUBTREE_SCOPE, 100, 10000,
             null, true, false);
 
-    private static final DistinguishedName baseDn = new DistinguishedName("o=Whoniverse");
+    private static final LdapName baseDn = LdapUtils.newLdapName("o=Whoniverse");
 
     private static void print(List<SimplePerson> personList) {
         for (SimplePerson person : personList) {

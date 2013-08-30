@@ -1,21 +1,21 @@
 package org.springframework.ldap.samples.article.web;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang.StringUtils;
 import org.springframework.ldap.core.DirContextOperations;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.samples.article.dao.PersonDao;
 import org.springframework.ldap.samples.article.domain.Person;
 import org.springframework.ldap.samples.utils.HtmlRowLdapTreeVisitor;
 import org.springframework.ldap.samples.utils.LdapTree;
 import org.springframework.ldap.samples.utils.LdapTreeBuilder;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
+
+import javax.naming.Name;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * Default controller.
@@ -42,7 +42,7 @@ public class DefaultController extends MultiActionController {
 	}
 
 	public ModelAndView showTree(HttpServletRequest request, HttpServletResponse response) {
-		LdapTree ldapTree = ldapTreeBuilder.getLdapTree(DistinguishedName.EMPTY_PATH);
+		LdapTree ldapTree = ldapTreeBuilder.getLdapTree(LdapUtils.emptyLdapName());
 		HtmlRowLdapTreeVisitor visitor = new PersonLinkHtmlRowLdapTreeVisitor();
 		ldapTree.traverse(visitor);
 		return new ModelAndView("showTree", "rows", visitor.getRows());
@@ -98,10 +98,10 @@ public class DefaultController extends MultiActionController {
 		protected String getLinkForNode(DirContextOperations node) {
 			String[] objectClassValues = node.getStringAttributes("objectClass");
 			if (containsValue(objectClassValues, "person")) {
-				DistinguishedName distinguishedName = (DistinguishedName) node.getDn();
-				String country = encodeValue(distinguishedName.getValue("c"));
-				String company = encodeValue(distinguishedName.getValue("ou"));
-				String fullName = encodeValue(distinguishedName.getValue("cn"));
+				Name dn = node.getDn();
+				String country = encodeValue(LdapUtils.getStringValue(dn, "c"));
+				String company = encodeValue(LdapUtils.getStringValue(dn, "ou"));
+				String fullName = encodeValue(LdapUtils.getStringValue(dn, "cn"));
 
 				return "showPerson.do?country=" + country + "&company=" + company + "&fullName=" + fullName;
 			}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,6 @@
  */
 package org.springframework.ldap.core.simple;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
-
-import java.util.List;
-
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.SearchControls;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
@@ -32,16 +22,26 @@ import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.DirContextProcessor;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
+
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.SearchControls;
+import javax.naming.ldap.LdapName;
+import java.util.List;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 
 @ContextConfiguration(locations = { "/conf/simpleLdapTemplateTestContext.xml" })
 public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest {
 	private static String DN_STRING = "cn=Some Person4,ou=company1,c=Sweden";
 
-	private static DistinguishedName DN = new DistinguishedName("cn=Some Person4,ou=company1,c=Sweden");
+	private static LdapName DN = LdapUtils.newLdapName("cn=Some Person4,ou=company1,c=Sweden");
 
 	@Autowired
 	private SimpleLdapTemplate ldapTemplate;
@@ -54,7 +54,7 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 
 	@Test
 	public void testLookupName() {
-		String result = ldapTemplate.lookup(new DistinguishedName("cn=Some Person,ou=company1,c=Sweden"),
+		String result = ldapTemplate.lookup(LdapUtils.newLdapName("cn=Some Person,ou=company1,c=Sweden"),
 				new CnContextMapper());
 		assertEquals("Some Person", result);
 	}
@@ -94,7 +94,7 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 		searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 		DummyDirContextProcessor processor = new DummyDirContextProcessor();
 
-		List<String> cns = ldapTemplate.search(DistinguishedName.EMPTY_PATH, "(&(objectclass=person)(sn=Person3))",
+		List<String> cns = ldapTemplate.search(LdapUtils.emptyLdapName(), "(&(objectclass=person)(sn=Person3))",
 				searchControls, new CnContextMapper(), processor);
 
 		assertEquals(1, cns.size());
@@ -105,7 +105,7 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 
 	@Test
 	public void testSearchName() {
-		List<String> cns = ldapTemplate.search(DistinguishedName.EMPTY_PATH, "(&(objectclass=person)(sn=Person3))",
+		List<String> cns = ldapTemplate.search(LdapUtils.emptyLdapName(), "(&(objectclass=person)(sn=Person3))",
 				new CnContextMapper());
 
 		assertEquals(1, cns.size());
@@ -134,7 +134,7 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 
 	@Test
 	public void testModifyAttributesName() {
-		DirContextOperations ctx = ldapTemplate.lookupContext(new DistinguishedName(
+		DirContextOperations ctx = ldapTemplate.lookupContext(LdapUtils.newLdapName(
 				"cn=Some Person,ou=company1,c=Sweden"));
 
 		ctx.setAttributeValue("description", "updated description");

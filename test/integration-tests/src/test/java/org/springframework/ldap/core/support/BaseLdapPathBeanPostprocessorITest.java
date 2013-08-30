@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,19 @@
  */
 package org.springframework.ldap.core.support;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
-
 import org.junit.Test;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.itest.core.support.DummyBaseLdapNameAware;
 import org.springframework.ldap.itest.core.support.DummyBaseLdapPathAware;
+import org.springframework.ldap.support.LdapUtils;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 
 /**
  * Integration tests for {@link BaseLdapPathBeanPostProcessor}.
@@ -38,12 +40,15 @@ public class BaseLdapPathBeanPostprocessorITest {
 	public void testPostProcessBeforeInitialization() throws Exception {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
 				"/conf/baseLdapPathPostProcessorTestContext.xml");
-		DummyBaseLdapPathAware tested = (DummyBaseLdapPathAware) ctx.getBean("dummyBaseContextAware");
+		DummyBaseLdapPathAware tested = ctx.getBean(DummyBaseLdapPathAware.class);
 
 		DistinguishedName base = tested.getBase();
 		assertNotNull(base);
 		assertEquals(new DistinguishedName("dc=jayway,dc=se"), base);
-	}
+
+        DummyBaseLdapNameAware otherTested = ctx.getBean(DummyBaseLdapNameAware.class);
+        assertEquals(LdapUtils.newLdapName("dc=jayway,dc=se"), otherTested.getBaseLdapPath());
+    }
 
 	@Test
 	public void testPostProcessBeforeInitializationMultipleContextSources() throws Exception {

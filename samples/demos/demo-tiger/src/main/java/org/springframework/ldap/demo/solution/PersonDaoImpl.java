@@ -15,17 +15,17 @@
  */
 package org.springframework.ldap.demo.solution;
 
-import java.util.List;
-
-import javax.naming.Name;
-
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.simple.AbstractParameterizedContextMapper;
 import org.springframework.ldap.core.simple.SimpleLdapTemplate;
 import org.springframework.ldap.demo.dao.PersonDao;
 import org.springframework.ldap.demo.domain.Person;
+import org.springframework.ldap.support.LdapNameBuilder;
+import org.springframework.ldap.support.LdapUtils;
+
+import javax.naming.Name;
+import java.util.List;
 
 /**
  * Spring LDAP implementation of PersonDao. This implementation uses many Spring
@@ -48,9 +48,9 @@ public class PersonDaoImpl implements PersonDao {
 			person.setDescription(ctx.getStringAttribute("description"));
 			person.setPhone(ctx.getStringAttribute("telephoneNumber"));
 
-			DistinguishedName dn = (DistinguishedName) ctx.getDn();
-			person.setCountry(dn.getValue("c"));
-			person.setCompany(dn.getValue("ou"));
+			Name dn = ctx.getDn();
+			person.setCountry(LdapUtils.getStringValue(dn, "c"));
+			person.setCompany(LdapUtils.getStringValue(dn, "ou"));
 			return person;
 		}
 	}
@@ -123,11 +123,11 @@ public class PersonDaoImpl implements PersonDao {
 	}
 
 	private Name buildDn(String country, String company, String fullname) {
-		DistinguishedName dn = new DistinguishedName();
-		dn.append("c", country);
-		dn.append("ou", company);
-		dn.append("cn", fullname);
-		return dn;
+        return LdapNameBuilder.newInstance()
+                .add("c", country)
+                .add("ou", company)
+                .add("cn", fullname)
+                .build();
 	}
 
 	private void mapToContext(Person person, DirContextOperations ctx) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,6 @@
  */
 package org.springframework.ldap.transaction.compensating.manager;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import javax.naming.NamingException;
-import javax.naming.directory.Attributes;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.After;
@@ -39,12 +28,21 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.ldap.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.AttributesMapper;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.itest.transaction.compensating.manager.DummyDao;
 import org.springframework.ldap.itest.transaction.compensating.manager.DummyException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+
+import javax.naming.NamingException;
+import javax.naming.directory.Attributes;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 
 /**
  * Integration tests for {@link ContextSourceAndDataSourceTransactionManager}.

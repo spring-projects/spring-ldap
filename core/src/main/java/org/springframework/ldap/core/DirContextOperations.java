@@ -16,11 +16,10 @@
 
 package org.springframework.ldap.core;
 
-import java.util.SortedSet;
-
 import javax.naming.Name;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
+import java.util.SortedSet;
 
 /**
  * Interface for DirContextAdapter.
@@ -209,6 +208,7 @@ public interface DirContextOperations extends DirContext,
 
 	/**
 	 * Returns the DN relative to the base path.
+     * <b>NB</b>: as of version 2.0 the returned name will be an LdapName instance.
 	 * 
 	 * @return The distinguished name of the current context.
 	 * 

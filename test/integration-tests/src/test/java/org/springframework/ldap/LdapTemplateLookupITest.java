@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.AbstractContextSource;
 import org.springframework.ldap.itest.Person;
@@ -87,9 +86,9 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 	}
 
 	@Test
-	public void testLookup_AttributesMapper_DistinguishedName() {
+	public void testLookup_AttributesMapper_LdapName() {
 		AttributesMapper mapper = new PersonAttributesMapper();
-		Person person = (Person) tested.lookup(new DistinguishedName("cn=Some Person2, ou=company1,c=Sweden"), mapper);
+		Person person = (Person) tested.lookup(LdapUtils.newLdapName("cn=Some Person2, ou=company1,c=Sweden"), mapper);
 
 		assertEquals("Some Person2", person.getFullname());
 		assertEquals("Person2", person.getLastname());
@@ -136,13 +135,13 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 
 	/**
 	 * Verifies that only the subset is used when specifying a subset of the
-	 * available attributes as return attributes. Uses DistinguishedName instead
+	 * available attributes as return attributes. Uses LdapName instead
 	 * of plain string as name.
 	 */
 	@Test
-	public void testLookup_ReturnAttributes_AttributesMapper_DistinguishedName() {
+	public void testLookup_ReturnAttributes_AttributesMapper_LdapName() {
 		AttributesMapper mapper = new SubsetPersonAttributesMapper();
-		Person person = (Person) tested.lookup(new DistinguishedName("cn=Some Person2, ou=company1,c=Sweden"),
+		Person person = (Person) tested.lookup(LdapUtils.newLdapName("cn=Some Person2, ou=company1,c=Sweden"),
 				new String[] { "cn" }, mapper);
 
 		assertEquals("Some Person2", person.getFullname());

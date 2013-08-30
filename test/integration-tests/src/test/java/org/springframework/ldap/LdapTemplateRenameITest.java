@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,19 @@
 
 package org.springframework.ldap;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.fail;
-
-import javax.naming.Name;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextAdapter;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
+
+import javax.naming.Name;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
 
 /**
  * Tests the rename methods of LdapTemplate.
@@ -69,14 +69,14 @@ public class LdapTemplateRenameITest extends AbstractLdapTemplateIntegrationTest
 	public void testRename() {
 		tested.rename(DN, NEWDN);
 
-		verifyDeleted(new DistinguishedName(DN));
+		verifyDeleted(LdapUtils.newLdapName(DN));
 		verifyBoundCorrectData();
 	}
 
 	@Test
-	public void testRename_DistinguishedName() throws Exception {
-		Name oldDn = new DistinguishedName(DN);
-		Name newDn = new DistinguishedName(NEWDN);
+	public void testRename_LdapName() throws Exception {
+		Name oldDn = LdapUtils.newLdapName(DN);
+		Name newDn = LdapUtils.newLdapName(NEWDN);
 		tested.rename(oldDn, newDn);
 
 		verifyDeleted(oldDn);

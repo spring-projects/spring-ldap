@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,6 @@
  */
 package org.springframework.ldap;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
-
-import java.util.List;
-
-import javax.naming.Name;
-import javax.naming.directory.SearchControls;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,12 +23,21 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.AbstractContextMapper;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.test.AttributeCheckAttributesMapper;
 import org.springframework.ldap.test.AttributeCheckContextMapper;
 import org.springframework.test.context.ContextConfiguration;
+
+import javax.naming.Name;
+import javax.naming.directory.SearchControls;
+import java.util.List;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 
 /**
  * Tests for LdapTemplate's search methods. This test class tests all the
@@ -72,7 +71,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
 
 	private static final String FILTER_STRING = "(&(objectclass=person)(sn=Person2))";
 
-	private static final Name BASE_NAME = new DistinguishedName(BASE_STRING);
+	private static final Name BASE_NAME = LdapUtils.newLdapName(BASE_STRING);
 
 	@Before
 	public void prepareTestedInstance() throws Exception {
