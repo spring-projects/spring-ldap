@@ -19,6 +19,7 @@ package org.springframework.ldap.support;
 import org.springframework.util.Assert;
 
 import javax.naming.InvalidNameException;
+import javax.naming.Name;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 
@@ -30,14 +31,39 @@ import javax.naming.ldap.Rdn;
  */
 public class LdapNameBuilder {
 
-    private final LdapName ldapName = LdapUtils.emptyLdapName();
+    private final LdapName ldapName;
 
-    private LdapNameBuilder() {
-
+    private LdapNameBuilder(LdapName ldapName) {
+        this.ldapName = ldapName;
     }
 
+    /**
+     * Construct a new instance, starting with a blank LdapName.
+     *
+     * @return a new instance.
+     */
     public static LdapNameBuilder newInstance() {
-        return new LdapNameBuilder();
+        return new LdapNameBuilder(LdapUtils.emptyLdapName());
+    }
+
+    /**
+     * Construct a new instance, starting with a copy of the supplied LdapName.
+     * @param name the starting point of the LdapName to be built.
+     *
+     * @return a new instance.
+     */
+    public static LdapNameBuilder newInstance(Name name) {
+        return new LdapNameBuilder(LdapUtils.newLdapName(name));
+    }
+
+    /**
+     * Construct a new instance, starting with an LdapName constructed from the supplied string.
+     * @param name the starting point of the LdapName to be built.
+     *
+     * @return a new instance.
+     */
+    public static LdapNameBuilder newInstance(String name) {
+        return new LdapNameBuilder(LdapUtils.newLdapName(name));
     }
 
     /**
