@@ -48,7 +48,7 @@ public class EmbeddedLdapServer {
         DefaultDirectoryService directoryService = new DefaultDirectoryService();
         directoryService.setShutdownHookEnabled(true);
         directoryService.setAllowAnonymousAccess(true);
-        directoryService.setWorkingDirectory(new File(System.getProperty("java.io.tmpdir") + "/apacheds-test"));
+        directoryService.setWorkingDirectory(new File(System.getProperty("java.io.tmpdir") + "/apacheds-test1"));
         directoryService.getChangeLog().setEnabled( false );
 
         JdbmPartition partition = new JdbmPartition();
