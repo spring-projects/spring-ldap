@@ -92,7 +92,7 @@ public final class SchemaToJavaAdITest {
         contextSource.setPassword(PASSWORD);
         contextSource.setPooled(false);
         contextSource.setBase("dc=261consulting,dc=local");
-        HashMap<String, String> baseEnvironment = new HashMap<String, String>() {{
+        HashMap<String, Object> baseEnvironment = new HashMap<String, Object>() {{
             put("java.naming.ldap.attributes.binary", "thumbnailLogo replPropertyMetaData partialAttributeSet registeredAddress userPassword telexNumber partialAttributeDeletionList mS-DS-ConsistencyGuid attributeCertificateAttribute thumbnailPhoto teletexTerminalIdentifier replUpToDateVector dSASignature objectGUID");
         }};
         contextSource.setBaseEnvironmentProperties(baseEnvironment);
