@@ -20,9 +20,9 @@ import org.springframework.beans.factory.config.AbstractFactoryBean;
 import org.springframework.core.io.Resource;
 import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.support.DefaultDirObjectFactory;
 import org.springframework.ldap.core.support.LdapContextSource;
+import org.springframework.ldap.support.LdapUtils;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -108,10 +108,10 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean {
 		targetContextSource.afterPropertiesSet();
 
 		if (baseOnTarget) {
-			LdapTestUtils.clearSubContexts(targetContextSource, DistinguishedName.EMPTY_PATH);
+			LdapTestUtils.clearSubContexts(targetContextSource, LdapUtils.emptyLdapName());
 		}
 		else {
-			LdapTestUtils.clearSubContexts(targetContextSource, new DistinguishedName(defaultPartitionSuffix));
+			LdapTestUtils.clearSubContexts(targetContextSource, LdapUtils.newLdapName(defaultPartitionSuffix));
 		}
 
 		if (ldifFile != null) {
