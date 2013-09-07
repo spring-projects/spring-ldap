@@ -1,0 +1,4 @@
+dependencies {
+    compile '{@= groupId @}:spring-ldap-core:{@= version @}'
+    compile '{@= groupId @}:spring-ldap-core-tiger:{@= version @}'
+}
