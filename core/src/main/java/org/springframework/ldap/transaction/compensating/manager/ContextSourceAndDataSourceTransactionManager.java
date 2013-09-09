@@ -162,7 +162,7 @@ public class ContextSourceAndDataSourceTransactionManager extends
         ldapManagerDelegate.setContextSource(contextSource);
     }
 
-    protected void setRenamingStrategy(
+    public void setRenamingStrategy(
             TempEntryRenamingStrategy renamingStrategy) {
         ldapManagerDelegate.setRenamingStrategy(renamingStrategy);
     }

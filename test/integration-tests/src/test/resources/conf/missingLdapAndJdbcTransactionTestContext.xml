@@ -40,6 +40,9 @@
 		class="org.springframework.ldap.transaction.compensating.manager.ContextSourceAndDataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 		<property name="contextSource" ref="transactedContextSource" />
+        <property name="renamingStrategy">
+            <bean class="org.springframework.ldap.transaction.compensating.support.DefaultTempEntryRenamingStrategy" />
+        </property>
 	</bean>
 
 

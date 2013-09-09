@@ -20,7 +20,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class LdapAndJdbcDummyDaoImpl implements DummyDao {
 	private LdapTemplate ldapTemplate;
 

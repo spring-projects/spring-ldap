@@ -161,7 +161,7 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
         ldapManagerDelegate.setContextSource(contextSource);
     }
 
-    protected void setRenamingStrategy(
+    public void setRenamingStrategy(
             TempEntryRenamingStrategy renamingStrategy) {
         ldapManagerDelegate.setRenamingStrategy(renamingStrategy);
     }

@@ -45,7 +45,7 @@ import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 
 /**
- * Integration tests for {@link ContextSourceAndDataSourceTransactionManager}.
+ * Integration tests for {@link org.springframework.ldap.transaction.compensating.manager.ContextSourceAndDataSourceTransactionManager}.
  * 
  * @author Mattias Hellborg Arthursson
  */

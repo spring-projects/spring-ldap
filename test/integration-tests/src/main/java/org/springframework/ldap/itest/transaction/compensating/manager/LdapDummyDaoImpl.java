@@ -19,7 +19,9 @@ package org.springframework.ldap.itest.transaction.compensating.manager;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class LdapDummyDaoImpl implements DummyDao {
     private static final boolean RECURSIVE = true;
     private LdapTemplate ldapTemplate;

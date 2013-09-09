@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
-                           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <import resource="classpath:/conf/commonTestContext.xml"/>
 
@@ -57,24 +57,17 @@
 		class="org.springframework.ldap.transaction.compensating.manager.ContextSourceAndHibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />
 		<property name="contextSource" ref="transactedContextSource" />
-	</bean>
+        <property name="renamingStrategy">
+            <bean class="org.springframework.ldap.transaction.compensating.support.DefaultTempEntryRenamingStrategy" />
+        </property>
+    </bean>
 
 
-	<bean name="dummyDaoTarget"
+	<bean name="dummyDao"
 		class="org.springframework.ldap.itest.transaction.compensating.manager.hibernate.DummyDaoLdapAndHibernateImpl">
 		<property name="ldapTemplate" ref="ldapTemplate" />
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean name="dummyDao"
-		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-		<property name="transactionManager"
-			ref="transactionManager" />
-		<property name="target" ref="dummyDaoTarget" />
-		<property name="transactionAttributes">
-			<props>
-				<prop key="*">PROPAGATION_REQUIRES_NEW</prop>
-			</props>
-		</property>
-	</bean>
+    <tx:annotation-driven />
 </beans>

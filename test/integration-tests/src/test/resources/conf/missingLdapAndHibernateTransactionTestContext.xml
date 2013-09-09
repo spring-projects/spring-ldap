@@ -54,6 +54,9 @@
 		class="org.springframework.ldap.transaction.compensating.manager.ContextSourceAndHibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />
 		<property name="contextSource" ref="transactedContextSource" />
+        <property name="renamingStrategy">
+            <bean class="org.springframework.ldap.transaction.compensating.support.DefaultTempEntryRenamingStrategy" />
+        </property>
 	</bean>
 
 
