@@ -15,11 +15,10 @@
  */
 package org.springframework.ldap.core;
 
+import javax.naming.directory.BasicAttribute;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.naming.directory.BasicAttribute;
 
 /**
  * Extends {@link javax.naming.directory.BasicAttribute} to add support for 
@@ -199,7 +198,7 @@ public class LdapAttribute extends BasicAttribute {
 	 * @return boolean indicating successful removal of option.
 	 */
 	public boolean removeOption(String option) {
-		return this.options.remove(options);
+		return this.options.remove(option);
 	}
 	
 	/**
