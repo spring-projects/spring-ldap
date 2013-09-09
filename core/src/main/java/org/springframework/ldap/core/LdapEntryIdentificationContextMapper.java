@@ -15,7 +15,6 @@
  */
 package org.springframework.ldap.core;
 
-import org.springframework.ldap.core.support.AbstractContextMapper;
 import org.springframework.ldap.support.LdapUtils;
 
 /**
@@ -25,10 +24,10 @@ import org.springframework.ldap.support.LdapUtils;
  * @author Mattias Hellborg Arthursson
  * @since 1.3
  */
-public class LdapEntryIdentificationContextMapper extends AbstractContextMapper<LdapEntryIdentification> {
+public class LdapEntryIdentificationContextMapper implements ContextMapper<LdapEntryIdentification> {
 
-    @Override
-    public LdapEntryIdentification doMapFromContext(DirContextOperations adapter) {
+    public LdapEntryIdentification mapFromContext(Object ctx) {
+        DirContextOperations adapter = (DirContextOperations) ctx;
         return new LdapEntryIdentification(
                 LdapUtils.newLdapName(adapter.getNameInNamespace()),
                 LdapUtils.newLdapName(adapter.getDn()));
