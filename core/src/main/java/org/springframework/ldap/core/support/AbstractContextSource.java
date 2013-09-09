@@ -212,7 +212,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @param ldapUrls all individual url Strings.
 	 * @return the full url String
 	 */
-	protected String assembleProviderUrlString(String[] ldapUrls) {
+	public String assembleProviderUrlString(String[] ldapUrls) {
 		StringBuilder providerUrlBuffer = new StringBuilder(1024);
         for (String ldapUrl : ldapUrls) {
             providerUrlBuffer.append(ldapUrl);
