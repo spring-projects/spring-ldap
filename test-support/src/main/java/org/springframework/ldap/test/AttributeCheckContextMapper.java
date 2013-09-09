@@ -20,6 +20,8 @@ import junit.framework.Assert;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 
+import java.util.Arrays;
+
 /**
  * Dummy ContextMapper for testing purposes to check that the received
  * Attributes are the expected ones.
@@ -45,22 +47,22 @@ public class AttributeCheckContextMapper implements ContextMapper {
             Assert.assertEquals(expectedValues[i], attributeValue);
         }
 
-        for (int i = 0; i < absentAttributes.length; i++) {
-            Assert.assertNull(adapter.getStringAttribute(absentAttributes[i]));
+        for (String absentAttribute : absentAttributes) {
+            Assert.assertNull(adapter.getStringAttribute(absentAttribute));
         }
 
         return adapter;
     }
 
     public void setAbsentAttributes(String[] absentAttributes) {
-        this.absentAttributes = absentAttributes;
+        this.absentAttributes = Arrays.copyOf(absentAttributes, absentAttributes.length);
     }
 
     public void setExpectedAttributes(String[] expectedAttributes) {
-        this.expectedAttributes = expectedAttributes;
+        this.expectedAttributes = Arrays.copyOf(expectedAttributes, expectedAttributes.length);
     }
 
     public void setExpectedValues(String[] expectedValues) {
-        this.expectedValues = expectedValues;
+        this.expectedValues = Arrays.copyOf(expectedValues, expectedValues.length);
     }
 }

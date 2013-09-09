@@ -15,13 +15,13 @@
  */
 package org.springframework.ldap.test;
 
+import junit.framework.Assert;
+import org.springframework.ldap.core.AttributesMapper;
+
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
-
-import org.springframework.ldap.core.AttributesMapper;
-
-import junit.framework.Assert;
+import java.util.Arrays;
 
 /**
  * Dummy AttributesMapper for testing purposes to check that the received
@@ -55,14 +55,14 @@ public class AttributeCheckAttributesMapper implements AttributesMapper {
     }
 
     public void setAbsentAttributes(String[] absentAttributes) {
-        this.absentAttributes = absentAttributes;
+        this.absentAttributes = Arrays.copyOf(absentAttributes, absentAttributes.length);
     }
 
     public void setExpectedAttributes(String[] expectedAttributes) {
-        this.expectedAttributes = expectedAttributes;
+        this.expectedAttributes = Arrays.copyOf(expectedAttributes, expectedAttributes.length);
     }
 
     public void setExpectedValues(String[] expectedValues) {
-        this.expectedValues = expectedValues;
+        this.expectedValues = Arrays.copyOf(expectedValues, expectedValues.length);
     }
 }

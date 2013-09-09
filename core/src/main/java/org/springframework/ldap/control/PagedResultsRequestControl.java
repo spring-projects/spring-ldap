@@ -174,8 +174,8 @@ public class PagedResultsRequestControl extends AbstractRequestControlDirContext
 
 		Control result = null;
 		try {
-			result = (Control) constructor.newInstance(new Object[] { new Integer(pageSize), actualCookie,
-					Boolean.valueOf(critical) });
+			result = (Control) constructor.newInstance(pageSize, actualCookie,
+                    critical);
 		}
 		catch (Exception e) {
 			ReflectionUtils.handleReflectionException(e);

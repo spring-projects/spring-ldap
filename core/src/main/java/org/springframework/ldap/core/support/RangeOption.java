@@ -151,6 +151,26 @@ class RangeOption implements Comparable<RangeOption> {
         return this.getTerminal() > that.getTerminal() ? 1 : -1;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RangeOption that = (RangeOption) o;
+
+        if (initial != that.initial) return false;
+        if (terminal != that.terminal) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = initial;
+        result = 31 * result + terminal;
+        return result;
+    }
+
     public RangeOption nextRange(int pageSize) {
         if (getTerminal() < 0) {
             throw new IllegalStateException("Cannot generate next range, range-terminal: " + getTerminal());
