@@ -15,7 +15,6 @@
  */
 package org.springframework.ldap.filter;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,13 +26,8 @@ import java.util.List;
  */
 public abstract class BinaryLogicalFilter extends AbstractFilter {
 
-	protected List queryList = new LinkedList();
+	protected List<Filter> queryList = new LinkedList<Filter>();
 
-	/*
-	 * @see
-	 * org.springframework.ldap.filter.AbstractFilter#encode(java.lang.StringBuffer
-	 * )
-	 */
 	public StringBuffer encode(StringBuffer buff) {
 		if (queryList.size() <= 0) {
 
@@ -44,17 +38,16 @@ public abstract class BinaryLogicalFilter extends AbstractFilter {
 		else if (queryList.size() == 1) {
 
 			// don't add the &
-			Filter query = (Filter) queryList.get(0);
+			Filter query = queryList.get(0);
 			return query.encode(buff);
 
 		}
 		else {
-			buff.append("(" + getLogicalOperator());
+			buff.append("(").append(getLogicalOperator());
 
-			for (Iterator i = queryList.iterator(); i.hasNext();) {
-				Filter query = (Filter) i.next();
-				buff = query.encode(buff);
-			}
+            for (Filter query : queryList) {
+                buff = query.encode(buff);
+            }
 
 			buff.append(")");
 

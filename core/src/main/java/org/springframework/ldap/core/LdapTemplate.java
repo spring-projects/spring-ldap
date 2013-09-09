@@ -590,46 +590,24 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		return handler.getList();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.springframework.ldap.core.LdapOperations#search(java.lang.String,
-	 * java.lang.String, javax.naming.directory.SearchControls,
-	 * org.springframework.ldap.core.ContextMapper,
-	 * org.springframework.ldap.core.DirContextProcessor)
-	 */
-	public List search(String base, String filter, SearchControls controls, ContextMapper mapper,
+	public <T> List<T> search(String base, String filter, SearchControls controls, ContextMapper<T> mapper,
 			DirContextProcessor processor) {
 		assureReturnObjFlagSet(controls);
-		ContextMapperCallbackHandler handler = new ContextMapperCallbackHandler(mapper);
+		ContextMapperCallbackHandler<T> handler = new ContextMapperCallbackHandler<T>(mapper);
 		search(base, filter, controls, handler, processor);
 
 		return handler.getList();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
-	 * java.lang.String, javax.naming.directory.SearchControls,
-	 * org.springframework.ldap.core.ContextMapper,
-	 * org.springframework.ldap.core.DirContextProcessor)
-	 */
-	public List search(Name base, String filter, SearchControls controls, ContextMapper mapper,
+	public <T> List<T> search(Name base, String filter, SearchControls controls, ContextMapper<T> mapper,
 			DirContextProcessor processor) {
 		assureReturnObjFlagSet(controls);
-		ContextMapperCallbackHandler handler = new ContextMapperCallbackHandler(mapper);
+		ContextMapperCallbackHandler<T> handler = new ContextMapperCallbackHandler<T>(mapper);
 		search(base, filter, controls, handler, processor);
 
 		return handler.getList();
 	}
 
-	/*
-	 * @see org.springframework.ldap.core.LdapOperations#list(java.lang.String,
-	 * org.springframework.ldap.core.NameClassPairCallbackHandler)
-	 */
 	public void list(final String base, NameClassPairCallbackHandler handler) {
 		SearchExecutor searchExecutor = new SearchExecutor() {
 			public NamingEnumeration executeSearch(DirContext ctx) throws javax.naming.NamingException {

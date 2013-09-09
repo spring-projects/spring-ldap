@@ -23,10 +23,11 @@ import java.util.List;
  * 
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
+ * @deprecated
  */
 public class PagedResult {
 
-    private List resultList;
+    private List<?> resultList;
 
     private PagedResultsCookie cookie;
 
@@ -39,7 +40,7 @@ public class PagedResult {
      * @param cookie
      *            the cookie.
      */
-    public PagedResult(List resultList, PagedResultsCookie cookie) {
+    public PagedResult(List<?> resultList, PagedResultsCookie cookie) {
         this.resultList = resultList;
         this.cookie = cookie;
     }
@@ -58,7 +59,7 @@ public class PagedResult {
      * 
      * @return the result list.
      */
-    public List getResultList() {
+    public List<?> getResultList() {
         return resultList;
     }
 

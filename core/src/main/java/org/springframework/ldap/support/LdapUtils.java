@@ -251,15 +251,38 @@ public final class LdapUtils {
 	 * exists.
 	 * @since 1.3
 	 */
-	public static void collectAttributeValues(Attributes attributes, String name, Collection collection) {
-		Assert.notNull(attributes, "Attributes must not be null");
-		Attribute attribute = attributes.get(name);
-		if (attribute == null) {
-			throw new NoSuchAttributeException("No attribute with name '" + name + "'");
-		}
-
-		iterateAttributeValues(attribute, new CollectingAttributeValueCallbackHandler(collection));
+	public static void collectAttributeValues(Attributes attributes, String name, Collection<Object> collection) {
+        collectAttributeValues(attributes, name, collection, Object.class);
 	}
+
+    /**
+     * Collect all the values of a the specified attribute from the supplied
+     * Attributes as the specified class.
+     *
+     * @param attributes The Attributes; not <code>null</code>.
+     * @param name The name of the Attribute to get values for.
+     * @param collection the collection to collect the values in.
+     * @param clazz the class of the collected attribute values
+     * @throws NoSuchAttributeException if no attribute with the specified name
+     * exists.
+     * @throws IllegalArgumentException if an attribute value cannot be cast to the specified class.
+     * @since 2.0
+     */
+    public static <T> void collectAttributeValues(
+            Attributes attributes, String name, Collection<T> collection, Class<T> clazz) {
+
+        Assert.notNull(attributes, "Attributes must not be null");
+        Assert.hasText(name, "Name must not be empty");
+        Assert.notNull(collection, "Collection must not be null");
+
+        Attribute attribute = attributes.get(name);
+        if (attribute == null) {
+            throw new NoSuchAttributeException("No attribute with name '" + name + "'");
+        }
+
+        iterateAttributeValues(attribute, new CollectingAttributeValueCallbackHandler<T>(collection, clazz));
+
+    }
 
 	/**
 	 * Iterate through all the values of the specified Attribute calling back to
@@ -288,16 +311,21 @@ public final class LdapUtils {
 	 * 
 	 * @author Mattias Hellborg Arthursson
 	 */
-	private final static class CollectingAttributeValueCallbackHandler implements AttributeValueCallbackHandler {
-		private final Collection collection;
+	private final static class CollectingAttributeValueCallbackHandler<T> implements AttributeValueCallbackHandler {
+		private final Collection<T> collection;
+        private final Class<T> clazz;
 
-		public CollectingAttributeValueCallbackHandler(Collection collection) {
-			Assert.notNull(collection, "Collection must not be null");
+        public CollectingAttributeValueCallbackHandler(Collection<T> collection, Class<T> clazz) {
+            Assert.notNull(collection, "Collection must not be null");
+            Assert.notNull(clazz, "Clazz parameter must not be null");
+
 			this.collection = collection;
+            this.clazz = clazz;
 		}
 
 		public final void handleAttributeValue(String attributeName, Object attributeValue, int index) {
-			collection.add(attributeValue);
+            Assert.isTrue(attributeName == null || clazz.isAssignableFrom(attributeValue.getClass()));
+			collection.add(clazz.cast(attributeValue));
 		}
 	}
 

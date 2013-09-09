@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.ldap.filter;
 
 import org.springframework.util.Assert;
@@ -47,9 +48,6 @@ public class NotFilter extends AbstractFilter {
 		this.filter = filter;
 	}
 
-	/*
-	 * @see org.springframework.ldap.filter.AbstractFilter#encode(java.lang.StringBuffer)
-	 */
 	public StringBuffer encode(StringBuffer buff) {
 
 		buff.append("(!");

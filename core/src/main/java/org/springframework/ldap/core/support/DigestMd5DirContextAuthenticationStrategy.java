@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,9 @@
  */
 package org.springframework.ldap.core.support;
 
-import java.util.Hashtable;
-
 import javax.naming.Context;
 import javax.naming.directory.DirContext;
+import java.util.Hashtable;
 
 /**
  * Authentication strategy for LDAP DIGEST-MD5 SASL mechanism.
@@ -45,7 +44,7 @@ public class DigestMd5DirContextAuthenticationStrategy implements DirContextAuth
 	 * @see org.springframework.ldap.core.support.DirContextAuthenticationStrategy#setupEnvironment(java.util.Hashtable,
 	 * java.lang.String, java.lang.String)
 	 */
-	public void setupEnvironment(Hashtable env, String userDn, String password) {
+	public void setupEnvironment(Hashtable<String, Object> env, String userDn, String password) {
 		env.put(Context.SECURITY_AUTHENTICATION, DIGEST_MD5_AUTHENTICATION);
 		// userDn should be a bare username for DIGEST-MD5
 		env.put(Context.SECURITY_PRINCIPAL, userDn);

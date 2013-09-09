@@ -19,8 +19,10 @@ import org.apache.commons.pool.KeyedObjectPool;
 import org.springframework.ldap.pool.factory.PoolingContextSource;
 import org.springframework.util.Assert;
 
+import javax.naming.Binding;
 import javax.naming.Context;
 import javax.naming.Name;
+import javax.naming.NameClassPair;
 import javax.naming.NameParser;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -229,7 +231,7 @@ public class DelegatingContext implements Context {
     /**
      * @see javax.naming.Context#getEnvironment()
      */
-    public Hashtable getEnvironment() throws NamingException {
+    public Hashtable<?, ?> getEnvironment() throws NamingException {
         this.assertOpen();
         return this.getDelegateContext().getEnvironment();
     }
@@ -261,7 +263,7 @@ public class DelegatingContext implements Context {
     /**
      * @see javax.naming.Context#list(javax.naming.Name)
      */
-    public NamingEnumeration list(Name name) throws NamingException {
+    public NamingEnumeration<NameClassPair> list(Name name) throws NamingException {
         this.assertOpen();
         return this.getDelegateContext().list(name);
     }
@@ -269,7 +271,7 @@ public class DelegatingContext implements Context {
     /**
      * @see javax.naming.Context#list(java.lang.String)
      */
-    public NamingEnumeration list(String name) throws NamingException {
+    public NamingEnumeration<NameClassPair> list(String name) throws NamingException {
         this.assertOpen();
         return this.getDelegateContext().list(name);
     }
@@ -277,7 +279,7 @@ public class DelegatingContext implements Context {
     /**
      * @see javax.naming.Context#listBindings(javax.naming.Name)
      */
-    public NamingEnumeration listBindings(Name name) throws NamingException {
+    public NamingEnumeration<Binding> listBindings(Name name) throws NamingException {
         this.assertOpen();
         return this.getDelegateContext().listBindings(name);
     }
@@ -285,7 +287,7 @@ public class DelegatingContext implements Context {
     /**
      * @see javax.naming.Context#listBindings(java.lang.String)
      */
-    public NamingEnumeration listBindings(String name) throws NamingException {
+    public NamingEnumeration<Binding> listBindings(String name) throws NamingException {
         this.assertOpen();
         return this.getDelegateContext().listBindings(name);
     }

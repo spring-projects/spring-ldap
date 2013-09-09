@@ -42,9 +42,6 @@ public class WhitespaceWildcardsFilter extends EqualsFilter {
 		super(attribute, value);
 	}
 
-	/*
-	 * @see org.springframework.ldap.filter.CompareFilter#encodeValue(java.lang.String)
-	 */
 	protected String encodeValue(String value) {
 
 		// blank string means just ONE star

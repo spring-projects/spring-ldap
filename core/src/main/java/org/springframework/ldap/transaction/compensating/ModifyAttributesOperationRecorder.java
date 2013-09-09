@@ -64,19 +64,18 @@ public class ModifyAttributesOperationRecorder implements
 
         ModificationItem[] incomingModifications = (ModificationItem[]) args[1];
 
-        Set set = new HashSet();
-        for (int i = 0; i < incomingModifications.length; i++) {
-            set.add(incomingModifications[i].getAttribute().getID());
+        Set<String> set = new HashSet<String>();
+        for (ModificationItem incomingModification : incomingModifications) {
+            set.add(incomingModification.getAttribute().getID());
         }
 
         // Get the current values of all referred Attributes.
-        String[] attributeNameArray = (String[]) set.toArray(new String[set
-                .size()]);
+        String[] attributeNameArray = set.toArray(new String[set.size()]);
 
         // LDAP-234: We need to explicitly an IncrementalAttributesMapper in
         // case we're working against AD and there are too many attribute values to be returned
         // by one query.
-        IncrementalAttributesMapper attributesMapper = getAttributesMapper(attributeNameArray);
+        IncrementalAttributesMapper<?> attributesMapper = getAttributesMapper(attributeNameArray);
         while (attributesMapper.hasMore()) {
             ldapOperations.lookup(dn, attributesMapper.getAttributesForLookup(), attributesMapper);
         }
@@ -102,7 +101,7 @@ public class ModifyAttributesOperationRecorder implements
      * @return the {@link AttributesMapper} to use for getting the current
      *         Attributes of the target DN.
      */
-    IncrementalAttributesMapper getAttributesMapper(String[] attributeNames) {
+    IncrementalAttributesMapper<?> getAttributesMapper(String[] attributeNames) {
         return new DefaultIncrementalAttributesMapper(attributeNames);
     }
 

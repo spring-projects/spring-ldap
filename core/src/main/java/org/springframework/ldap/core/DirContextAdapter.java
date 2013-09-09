@@ -22,9 +22,11 @@ import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import javax.naming.Binding;
 import javax.naming.Context;
 import javax.naming.InvalidNameException;
 import javax.naming.Name;
+import javax.naming.NameClassPair;
 import javax.naming.NameNotFoundException;
 import javax.naming.NameParser;
 import javax.naming.NamingEnumeration;
@@ -36,6 +38,7 @@ import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
 import javax.naming.ldap.LdapName;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -223,9 +226,9 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	public String[] getNamesOfModifiedAttributes() {
 
-		List tmpList = new ArrayList();
+		List<String> tmpList = new ArrayList<String>();
 
-		NamingEnumeration attributesEnumeration;
+		NamingEnumeration<? extends Attribute> attributesEnumeration;
 		if (isUpdateMode()) {
 			attributesEnumeration = updatedAttrs.getAll();
 		}
@@ -235,7 +238,7 @@ public class DirContextAdapter implements DirContextOperations {
 
 		try {
 			while (attributesEnumeration.hasMore()) {
-				Attribute oneAttribute = (Attribute) attributesEnumeration
+				Attribute oneAttribute = attributesEnumeration
 						.next();
 				tmpList.add(oneAttribute.getID());
 			}
@@ -247,10 +250,10 @@ public class DirContextAdapter implements DirContextOperations {
 			closeNamingEnumeration(attributesEnumeration);
 		}
 
-		return (String[]) tmpList.toArray(new String[0]);
+		return tmpList.toArray(new String[tmpList.size()]);
 	}
 
-	private void closeNamingEnumeration(NamingEnumeration enumeration) {
+	private void closeNamingEnumeration(NamingEnumeration<?> enumeration) {
 		try {
 			if (enumeration != null) {
 				enumeration.close();
@@ -270,14 +273,14 @@ public class DirContextAdapter implements DirContextOperations {
 			return new ModificationItem[0];
 		}
 
-		List tmpList = new LinkedList();
-		NamingEnumeration attributesEnumeration = null;
+		List<ModificationItem> tmpList = new LinkedList<ModificationItem>();
+		NamingEnumeration<? extends Attribute> attributesEnumeration = null;
 		try {
 			attributesEnumeration = updatedAttrs.getAll();
 
 			// find attributes that have been changed, removed or added
 			while (attributesEnumeration.hasMore()) {
-				Attribute oneAttr = (Attribute) attributesEnumeration.next();
+				Attribute oneAttr = attributesEnumeration.next();
 
 				collectModifications(oneAttr, tmpList);
 			}
@@ -293,8 +296,7 @@ public class DirContextAdapter implements DirContextOperations {
 			log.debug("Number of modifications:" + tmpList.size());
 		}
 
-		return (ModificationItem[]) tmpList
-				.toArray(new ModificationItem[tmpList.size()]);
+		return tmpList.toArray(new ModificationItem[tmpList.size()]);
 	}
 
 	/**
@@ -312,7 +314,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 * @throws NamingException if thrown by called Attribute methods.
 	 */
 	private void collectModifications(Attribute changedAttr,
-			List modificationList) throws NamingException {
+			List<ModificationItem> modificationList) throws NamingException {
 		Attribute currentAttribute = originalAttrs.get(changedAttr.getID());
 
 		if (changedAttr.equals(currentAttribute)) {
@@ -346,7 +348,7 @@ public class DirContextAdapter implements DirContextOperations {
 		else if (changedAttr.size() > 0) {
 			// Change of multivalue Attribute. Collect additions and removals
 			// individually.
-			List myModifications = new LinkedList();
+			List<ModificationItem> myModifications = new LinkedList<ModificationItem>();
 			collectModifications(currentAttribute, changedAttr, myModifications);
 
 			if (myModifications.isEmpty()) {
@@ -362,7 +364,7 @@ public class DirContextAdapter implements DirContextOperations {
 	}
 
 	private void collectModifications(Attribute originalAttr,
-			Attribute changedAttr, List modificationList)
+			Attribute changedAttr, List<ModificationItem> modificationList)
 			throws NamingException {
 
 		Attribute originalClone = (Attribute) originalAttr.clone();
@@ -443,11 +445,8 @@ public class DirContextAdapter implements DirContextOperations {
 			// removed)
 			// TODO Also include prev in null check
 			// TODO Also check if there is a single null element
-			if (orig != null) {
-				return true;
-			}
-			return false;
-		}
+            return orig != null;
+        }
 
 		// NOT setting to empty -------------------
 
@@ -585,11 +584,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	public boolean attributeExists(String name) {
 		Attribute oneAttr = originalAttrs.get(name);
-		if (oneAttr == null) {
-			return false;
-		} else {
-			return true;
-		}
+        return oneAttr != null;
 	}
 	
 	/*
@@ -729,14 +724,14 @@ public class DirContextAdapter implements DirContextOperations {
 	 * @see org.springframework.ldap.support.DirContextOperations#update()
 	 */
 	public void update() {
-		NamingEnumeration attributesEnumeration = null;
+		NamingEnumeration<? extends Attribute> attributesEnumeration = null;
 
 		try {
 			attributesEnumeration = updatedAttrs.getAll();
 
 			// find what to update
 			while (attributesEnumeration.hasMore()) {
-				Attribute a = (Attribute) attributesEnumeration.next();
+				Attribute a = attributesEnumeration.next();
 
 				// if it does not exist it should be added
 				if (isEmptyAttribute(a)) {
@@ -766,8 +761,8 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	public String[] getStringAttributes(String name) {
 		try {
-			return (String[]) collectAttributeValuesAsList(name).toArray(
-					new String[0]);
+            List<String> objects = collectAttributeValuesAsList(name, String.class);
+            return objects.toArray(new String[objects.size()]);
 		}
 		catch (NoSuchAttributeException e) {
 			// The attribute does not exist - contract says to return null.
@@ -784,7 +779,8 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	public Object[] getObjectAttributes(String name) {
 		try {
-			return collectAttributeValuesAsList(name).toArray(new Object[0]);
+            List<Object> list = collectAttributeValuesAsList(name, Object.class);
+            return list.toArray(new Object[list.size()]);
 		}
 		catch (NoSuchAttributeException e) {
 			// The attribute does not exist - contract says to return null.
@@ -792,20 +788,17 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
-	private List collectAttributeValuesAsList(String name) {
-		List list = new LinkedList();
-		LdapUtils.collectAttributeValues(originalAttrs, name, list);
+	private <T> List<T> collectAttributeValuesAsList(String name, Class<T> clazz) {
+		List<T> list = new LinkedList<T>();
+		LdapUtils.collectAttributeValues(originalAttrs, name, list, clazz);
 		return list;
 	}
 
-	/*
-	 * @seeorg.springframework.ldap.support.DirContextOperations#
-	 * getAttributeSortedStringSet(java.lang.String)
-	 */
-	public SortedSet getAttributeSortedStringSet(String name) {
+    @Override
+	public SortedSet<String> getAttributeSortedStringSet(String name) {
 		try {
-			TreeSet attrSet = new TreeSet();
-			LdapUtils.collectAttributeValues(originalAttrs, name, attrSet);
+			TreeSet<String> attrSet = new TreeSet<String>();
+			LdapUtils.collectAttributeValues(originalAttrs, name, attrSet, String.class);
 			return attrSet;
 		}
 		catch (NoSuchAttributeException e) {
@@ -873,12 +866,12 @@ public class DirContextAdapter implements DirContextOperations {
 
 		Attributes a = new BasicAttributes(true);
 		Attribute target;
-		for (int i = 0; i < attrIds.length; i++) {
-			target = originalAttrs.get(attrIds[i]);
-			if (target != null) {
-				a.put(target);
-			}
-		}
+        for (String attrId : attrIds) {
+            target = originalAttrs.get(attrId);
+            if (target != null) {
+                a.put(target);
+            }
+        }
 
 		return a;
 	}
@@ -1001,7 +994,7 @@ public class DirContextAdapter implements DirContextOperations {
 	/**
 	 * @see javax.naming.directory.DirContext#search(Name, Attributes, String[])
 	 */
-	public NamingEnumeration search(Name name, Attributes matchingAttributes,
+	public NamingEnumeration<SearchResult> search(Name name, Attributes matchingAttributes,
 			String[] attributesToReturn) throws NamingException {
 		throw new UnsupportedOperationException("Not implemented.");
 	}
@@ -1010,7 +1003,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 * @see javax.naming.directory.DirContext#search(String, Attributes,
 	 * String[])
 	 */
-	public NamingEnumeration search(String name, Attributes matchingAttributes,
+	public NamingEnumeration<SearchResult> search(String name, Attributes matchingAttributes,
 			String[] attributesToReturn) throws NamingException {
 		throw new UnsupportedOperationException("Not implemented.");
 	}
@@ -1018,7 +1011,7 @@ public class DirContextAdapter implements DirContextOperations {
 	/**
 	 * @see javax.naming.directory.DirContext#search(Name, Attributes)
 	 */
-	public NamingEnumeration search(Name name, Attributes matchingAttributes)
+	public NamingEnumeration<SearchResult> search(Name name, Attributes matchingAttributes)
 			throws NamingException {
 		throw new UnsupportedOperationException("Not implemented.");
 	}
@@ -1026,7 +1019,7 @@ public class DirContextAdapter implements DirContextOperations {
 	/**
 	 * @see javax.naming.directory.DirContext#search(String, Attributes)
 	 */
-	public NamingEnumeration search(String name, Attributes matchingAttributes)
+	public NamingEnumeration<SearchResult> search(String name, Attributes matchingAttributes)
 			throws NamingException {
 		throw new UnsupportedOperationException("Not implemented.");
 	}
@@ -1035,7 +1028,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 * @see javax.naming.directory.DirContext#search(Name, String,
 	 * SearchControls)
 	 */
-	public NamingEnumeration search(Name name, String filter,
+	public NamingEnumeration<SearchResult> search(Name name, String filter,
 			SearchControls cons) throws NamingException {
 		throw new UnsupportedOperationException("Not implemented.");
 	}
@@ -1044,7 +1037,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 * @see javax.naming.directory.DirContext#search(String, String,
 	 * SearchControls)
 	 */
-	public NamingEnumeration search(String name, String filter,
+	public NamingEnumeration<SearchResult> search(String name, String filter,
 			SearchControls cons) throws NamingException {
 		throw new UnsupportedOperationException("Not implemented.");
 	}
@@ -1053,7 +1046,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 * @see javax.naming.directory.DirContext#search(Name, String, Object[],
 	 * SearchControls)
 	 */
-	public NamingEnumeration search(Name name, String filterExpr,
+	public NamingEnumeration<SearchResult> search(Name name, String filterExpr,
 			Object[] filterArgs, SearchControls cons) throws NamingException {
 		throw new UnsupportedOperationException("Not implemented.");
 	}
@@ -1062,7 +1055,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 * @see javax.naming.directory.DirContext#search(String, String, Object[],
 	 * SearchControls)
 	 */
-	public NamingEnumeration search(String name, String filterExpr,
+	public NamingEnumeration<SearchResult> search(String name, String filterExpr,
 			Object[] filterArgs, SearchControls cons) throws NamingException {
 		throw new UnsupportedOperationException("Not implemented.");
 	}
@@ -1140,28 +1133,28 @@ public class DirContextAdapter implements DirContextOperations {
 	/**
 	 * @see javax.naming.Context#list(Name)
 	 */
-	public NamingEnumeration list(Name name) throws NamingException {
+	public NamingEnumeration<NameClassPair> list(Name name) throws NamingException {
 		throw new UnsupportedOperationException("Not implemented.");
 	}
 
 	/**
 	 * @see javax.naming.Context#list(String)
 	 */
-	public NamingEnumeration list(String name) throws NamingException {
+	public NamingEnumeration<NameClassPair> list(String name) throws NamingException {
 		throw new UnsupportedOperationException("Not implemented.");
 	}
 
 	/**
 	 * @see javax.naming.Context#listBindings(Name)
 	 */
-	public NamingEnumeration listBindings(Name name) throws NamingException {
+	public NamingEnumeration<Binding> listBindings(Name name) throws NamingException {
 		throw new UnsupportedOperationException("Not implemented.");
 	}
 
 	/**
 	 * @see javax.naming.Context#listBindings(String)
 	 */
-	public NamingEnumeration listBindings(String name) throws NamingException {
+	public NamingEnumeration<Binding> listBindings(String name) throws NamingException {
 		throw new UnsupportedOperationException("Not implemented.");
 	}
 
@@ -1254,7 +1247,7 @@ public class DirContextAdapter implements DirContextOperations {
 	/**
 	 * @see javax.naming.Context#getEnvironment()
 	 */
-	public Hashtable getEnvironment() throws NamingException {
+	public Hashtable<?, ?> getEnvironment() throws NamingException {
 		throw new UnsupportedOperationException("Not implemented.");
 	}
 
@@ -1342,46 +1335,46 @@ public class DirContextAdapter implements DirContextOperations {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		StringBuffer buf = new StringBuffer();
-		buf.append(getClass().getName());
-		buf.append(":");
+		StringBuilder builder = new StringBuilder();
+		builder.append(getClass().getName());
+		builder.append(":");
 		if (dn != null) {
-			buf.append(" dn=" + dn);
+			builder.append(" dn=").append(dn);
 		}
-		buf.append(" {");
+		builder.append(" {");
 
 		try {
-			for (NamingEnumeration i = originalAttrs.getAll(); i.hasMore();) {
-				Attribute attribute = (Attribute) i.next();
+			for (NamingEnumeration<? extends Attribute> i = originalAttrs.getAll(); i.hasMore();) {
+				Attribute attribute = i.next();
 				if (attribute.size() == 1) {
-					buf.append(attribute.getID());
-					buf.append('=');
-					buf.append(attribute.get());
+					builder.append(attribute.getID());
+					builder.append('=');
+					builder.append(attribute.get());
 				}
 				else {
 					for (int j = 0; j < attribute.size(); j++) {
 						if (j > 0) {
-							buf.append(", ");
+							builder.append(", ");
 						}
-						buf.append(attribute.getID());
-						buf.append('[');
-						buf.append(j);
-						buf.append("]=");
-						buf.append(attribute.get(j));
+						builder.append(attribute.getID());
+						builder.append('[');
+						builder.append(j);
+						builder.append("]=");
+						builder.append(attribute.get(j));
 					}
 				}
 
 				if (i.hasMore()) {
-					buf.append(", ");
+					builder.append(", ");
 				}
 			}
 		}
 		catch (NamingException e) {
 			log.warn("Error in toString()");
 		}
-		buf.append('}');
+		builder.append('}');
 
-		return buf.toString();
+		return builder.toString();
 	}
 
 	/*

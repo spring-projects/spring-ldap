@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2007 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,6 @@
  */
 package org.springframework.ldap.transaction.compensating.manager;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import javax.naming.directory.DirContext;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.NamingException;
@@ -28,6 +22,11 @@ import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.transaction.compensating.LdapTransactionUtils;
 import org.springframework.transaction.compensating.support.CompensatingTransactionUtils;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+
+import javax.naming.directory.DirContext;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Proxy implementation for DirContext, making sure that the instance is not
@@ -77,7 +76,7 @@ public class TransactionAwareDirContextInvocationHandler implements
             return (proxy == args[0] ? Boolean.TRUE : Boolean.FALSE);
         } else if (methodName.equals("hashCode")) {
             // Use hashCode of Connection proxy.
-            return new Integer(hashCode());
+            return hashCode();
         } else if (methodName.equals("close")) {
             doCloseConnection(target, contextSource);
             return null;

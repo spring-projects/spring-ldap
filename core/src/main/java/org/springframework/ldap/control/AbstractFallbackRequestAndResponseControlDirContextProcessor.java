@@ -86,9 +86,9 @@ public abstract class AbstractFallbackRequestAndResponseControlDirContextProcess
 
 	private static final boolean CRITICAL_CONTROL = true;
 
-	protected Class responseControlClass;
+	protected Class<?> responseControlClass;
 
-	protected Class requestControlClass;
+	protected Class<?> requestControlClass;
 
 	protected boolean critical = CRITICAL_CONTROL;
 
@@ -129,11 +129,11 @@ public abstract class AbstractFallbackRequestAndResponseControlDirContextProcess
 	 * 
 	 * @param responseControlClass Class of the expected response control.
 	 */
-	public void setResponseControlClass(Class responseControlClass) {
+	public void setResponseControlClass(Class<?> responseControlClass) {
 		this.responseControlClass = responseControlClass;
 	}
 
-	public void setRequestControlClass(Class requestControlClass) {
+	public void setRequestControlClass(Class<?> requestControlClass) {
 		this.requestControlClass = requestControlClass;
 	}
 
@@ -144,7 +144,7 @@ public abstract class AbstractFallbackRequestAndResponseControlDirContextProcess
 	 * @param control Instance that the method should be invoked on
 	 * @return the invocation result, if any
 	 */
-	protected Object invokeMethod(String method, Class clazz, Object control) {
+	protected Object invokeMethod(String method, Class<?> clazz, Object control) {
 		Method actualMethod = ReflectionUtils.findMethod(clazz, method);
 		return ReflectionUtils.invokeMethod(actualMethod, control);
 	}
@@ -156,8 +156,8 @@ public abstract class AbstractFallbackRequestAndResponseControlDirContextProcess
 	 * @param params Actual constructor parameters
 	 * @return Control to be used by the DirContextProcessor
 	 */
-	public Control createRequestControl(Class[] paramTypes, Object[] params) {
-		Constructor constructor = ClassUtils.getConstructorIfAvailable(requestControlClass, paramTypes);
+	public Control createRequestControl(Class<?>[] paramTypes, Object[] params) {
+		Constructor<?> constructor = ClassUtils.getConstructorIfAvailable(requestControlClass, paramTypes);
 		if (constructor == null) {
 			throw new IllegalArgumentException("Failed to find an appropriate RequestControl constructor");
 		}
@@ -187,16 +187,13 @@ public abstract class AbstractFallbackRequestAndResponseControlDirContextProcess
 		}
 
 		// Go through response controls and get info, regardless of class
-		for (int i = 0; i < responseControls.length; i++) {
-			Control responseControl = responseControls[i];
-
-			// check for match, try fallback otherwise
-			if (responseControl.getClass().isAssignableFrom(responseControlClass)) {
-				Object control = responseControl;
-				handleResponse(control);
-				return;
-			}
-		}
+        for (Control responseControl : responseControls) {
+            // check for match, try fallback otherwise
+            if (responseControl.getClass().isAssignableFrom(responseControlClass)) {
+                handleResponse(responseControl);
+                return;
+            }
+        }
 
 		log.info("No matching response control found - looking for '" + responseControlClass);
 	}

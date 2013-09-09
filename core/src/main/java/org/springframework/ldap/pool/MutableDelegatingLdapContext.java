@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 
 package org.springframework.ldap.pool;
 
+import org.apache.commons.pool.KeyedObjectPool;
+import org.springframework.ldap.pool.factory.MutablePoolingContextSource;
+
 import javax.naming.NamingException;
 import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
-
-import org.apache.commons.pool.KeyedObjectPool;
-import org.springframework.ldap.pool.factory.MutablePoolingContextSource;
 
 /**
  * Used by {@link MutablePoolingContextSource} to wrap a {@link LdapContext},
@@ -49,11 +49,6 @@ public class MutableDelegatingLdapContext extends DelegatingLdapContext {
 		super(keyedObjectPool, delegateLdapContext, dirContextType);
 	}
 
-	/*
-	 * @see
-	 * org.springframework.ldap.pool.DelegatingLdapContext#setRequestControls
-	 * (javax.naming.ldap.Control[])
-	 */
 	public void setRequestControls(Control[] requestControls) throws NamingException {
 		assertOpen();
 		getDelegateLdapContext().setRequestControls(requestControls);

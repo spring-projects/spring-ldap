@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,10 @@
 
 package org.springframework.ldap.core.support;
 
-import java.util.Hashtable;
-
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.InitialLdapContext;
+import java.util.Hashtable;
 
 /**
  * ContextSource implementation which creates an <code>InitialLdapContext</code>
@@ -38,7 +37,7 @@ public class LdapContextSource extends AbstractContextSource {
     /*
      * @see org.springframework.ldap.support.AbstractContextSource#getDirContextInstance(java.util.Hashtable)
      */
-    protected DirContext getDirContextInstance(Hashtable environment)
+    protected DirContext getDirContextInstance(Hashtable<String, Object> environment)
             throws NamingException {
         return new InitialLdapContext(environment, null);
     }

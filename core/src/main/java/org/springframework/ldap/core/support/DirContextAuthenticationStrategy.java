@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,12 @@
  */
 package org.springframework.ldap.core.support;
 
-import java.util.Hashtable;
+import org.springframework.ldap.core.AuthenticationSource;
+import org.springframework.ldap.core.ContextSource;
 
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
-
-import org.springframework.ldap.core.AuthenticationSource;
-import org.springframework.ldap.core.ContextSource;
+import java.util.Hashtable;
 
 /**
  * A strategy to use when authenticating LDAP connections on creation. When
@@ -57,7 +56,7 @@ public interface DirContextAuthenticationStrategy {
 	 * <code>DirContext</code> creation to be aborted and the exception to be
 	 * translated and rethrown.
 	 */
-	public void setupEnvironment(Hashtable env, String userDn, String password) throws NamingException;
+	public void setupEnvironment(Hashtable<String, Object> env, String userDn, String password) throws NamingException;
 
 	/**
 	 * This method is responsible for post-processing the

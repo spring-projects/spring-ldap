@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,8 +118,8 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 		if (cookie != null) {
 			actualCookie = cookie.getCookie();
 		}
-		return super.createRequestControl(new Class[] { int.class, byte[].class, boolean.class }, 
-				new Object[] {new Integer(pageSize), actualCookie, Boolean.valueOf(critical)});
+		return super.createRequestControl(new Class<?>[] { int.class, byte[].class, boolean.class },
+				new Object[] {pageSize, actualCookie, critical});
 	}
 
 	/*
@@ -130,7 +130,6 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 	protected void handleResponse(Object control) {
 		byte[] result = (byte[]) invokeMethod("getCookie", responseControlClass, control);
 		this.cookie = new PagedResultsCookie(result);
-		Integer wrapper = (Integer) invokeMethod("getResultSize", responseControlClass, control);
-		this.resultSize = wrapper.intValue();
+        this.resultSize = (Integer) invokeMethod("getResultSize", responseControlClass, control);
 	}
 }

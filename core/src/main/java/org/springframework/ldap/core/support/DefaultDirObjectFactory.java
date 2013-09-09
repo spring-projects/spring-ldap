@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 	 * Key to use in the ContextSource implementation to store the value of the
 	 * base path suffix, if any, in the Ldap Environment.
 	 * 
-	 * @deprecated Use {@link BaseLdapPathAware} and
+	 * @deprecated Use {@link BaseLdapNameAware} and
 	 * {@link BaseLdapPathBeanPostProcessor} instead.
 	 */
 	public static final String JNDI_ENV_BASE_PATH_KEY = "org.springframework.ldap.base.path";
@@ -62,11 +62,15 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 	 * javax.naming.Name, javax.naming.Context, java.util.Hashtable,
 	 * javax.naming.directory.Attributes)
 	 */
-	public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable environment, Attributes attrs)
-			throws Exception {
+	public final Object getObjectInstance(
+            Object obj,
+            Name name,
+            Context nameCtx,
+            Hashtable<?, ?> environment,
+            Attributes attrs) throws Exception {
 
 		try {
-			String nameInNamespace = null;
+			String nameInNamespace;
 			if (nameCtx != null) {
 				nameInNamespace = nameCtx.getNameInNamespace();
 			}
@@ -114,7 +118,7 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 	 * information.
 	 */
 	DirContextAdapter constructAdapterFromName(Attributes attrs, Name name, String nameInNamespace) {
-		String nameString = "";
+		String nameString;
 		String referralUrl = "";
 
 		if (name instanceof CompositeName) {
@@ -181,7 +185,7 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 	 * @see javax.naming.spi.ObjectFactory#getObjectInstance(java.lang.Object,
 	 * javax.naming.Name, javax.naming.Context, java.util.Hashtable)
 	 */
-	public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable environment) throws Exception {
+	public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment) throws Exception {
 		return null;
 	}
 

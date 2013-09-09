@@ -58,10 +58,6 @@ public class HardcodedFilter extends AbstractFilter {
 		this.filter = filter;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.ldap.filter.AbstractFilter#encode(java.lang.StringBuffer)
-	 */
 	public StringBuffer encode(StringBuffer buff) {
 		if (!StringUtils.hasLength(filter)) {
 			return buff;

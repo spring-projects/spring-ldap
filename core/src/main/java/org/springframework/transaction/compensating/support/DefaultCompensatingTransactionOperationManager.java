@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,6 @@
  */
 package org.springframework.transaction.compensating.support;
 
-import java.util.Iterator;
-import java.util.Stack;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.transaction.TransactionSystemException;
@@ -25,6 +22,8 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
 import org.springframework.transaction.compensating.CompensatingTransactionOperationFactory;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationManager;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
+
+import java.util.Stack;
 
 /**
  * Default implementation of {@link CompensatingTransactionOperationManager}.
@@ -40,7 +39,8 @@ public class DefaultCompensatingTransactionOperationManager implements
     private static Log log = LogFactory
             .getLog(DefaultCompensatingTransactionOperationManager.class);
 
-    private Stack operationExecutors = new Stack();
+    private Stack<CompensatingTransactionOperationExecutor> operationExecutors =
+            new Stack<CompensatingTransactionOperationExecutor>();
 
     private CompensatingTransactionOperationFactory operationFactory;
 
@@ -78,8 +78,7 @@ public class DefaultCompensatingTransactionOperationManager implements
     public void rollback() {
         log.debug("Performing rollback");
         while (!operationExecutors.isEmpty()) {
-            CompensatingTransactionOperationExecutor rollbackOperation = (CompensatingTransactionOperationExecutor) operationExecutors
-                    .pop();
+            CompensatingTransactionOperationExecutor rollbackOperation = operationExecutors.pop();
             try {
                 rollbackOperation.rollback();
             } catch (Exception e) {
@@ -94,7 +93,7 @@ public class DefaultCompensatingTransactionOperationManager implements
      * 
      * @return the rollback operations.
      */
-    protected Stack getOperationExecutors() {
+    protected Stack<CompensatingTransactionOperationExecutor> getOperationExecutors() {
         return operationExecutors;
     }
 
@@ -105,7 +104,7 @@ public class DefaultCompensatingTransactionOperationManager implements
      * @param operationExecutors
      *            the rollback operations.
      */
-    void setOperationExecutors(Stack operationExecutors) {
+    void setOperationExecutors(Stack<CompensatingTransactionOperationExecutor> operationExecutors) {
         this.operationExecutors = operationExecutors;
     }
 
@@ -114,9 +113,7 @@ public class DefaultCompensatingTransactionOperationManager implements
      */
     public void commit() {
         log.debug("Performing commit");
-        for (Iterator iter = operationExecutors.iterator(); iter.hasNext();) {
-            CompensatingTransactionOperationExecutor operationExecutor = (CompensatingTransactionOperationExecutor) iter
-                    .next();
+        for (CompensatingTransactionOperationExecutor operationExecutor : operationExecutors) {
             try {
                 operationExecutor.commit();
             } catch (Exception e) {

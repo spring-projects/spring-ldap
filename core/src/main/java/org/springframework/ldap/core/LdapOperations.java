@@ -262,7 +262,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List search(String base, String filter, SearchControls controls, ContextMapper mapper, DirContextProcessor processor)
+    <T> List<T> search(String base, String filter, SearchControls controls, ContextMapper<T> mapper, DirContextProcessor processor)
 			throws NamingException;
 
 	/**
@@ -289,7 +289,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-	List search(Name base, String filter, SearchControls controls, ContextMapper mapper, DirContextProcessor processor)
+    <T> List<T> search(Name base, String filter, SearchControls controls, ContextMapper<T> mapper, DirContextProcessor processor)
 			throws NamingException;
 
 	/**

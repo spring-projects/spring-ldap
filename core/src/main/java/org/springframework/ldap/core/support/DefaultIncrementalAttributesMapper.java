@@ -173,9 +173,9 @@ public class DefaultIncrementalAttributesMapper implements IncrementalAttributes
         // Reset the affected attributes.
         rangedAttributesInNextIteration = new HashSet<String>();
 
-        NamingEnumeration attributeNameEnum = attributes.getIDs();
+        NamingEnumeration<String> attributeNameEnum = attributes.getIDs();
         while (attributeNameEnum.hasMore()) {
-            String attributeName = (String) attributeNameEnum.next();
+            String attributeName = attributeNameEnum.next();
 
             String[] attributeNameSplit = attributeName.split(";");
             IncrementalAttributeState state = getState(attributeNameSplit[0]);
@@ -222,7 +222,7 @@ public class DefaultIncrementalAttributesMapper implements IncrementalAttributes
         Set<String> attributeNames = stateMap.keySet();
         for (String attributeName : attributeNames) {
             BasicAttribute oneAttribute = new BasicAttribute(attributeName);
-            List values = getValues(attributeName);
+            List<Object> values = getValues(attributeName);
             if (values != null) {
                 for (Object oneValue : values) {
                     oneAttribute.add(oneValue);
@@ -400,7 +400,7 @@ public class DefaultIncrementalAttributesMapper implements IncrementalAttributes
         @Override
         public void processValues(Attributes attributes, String attributeName) throws NamingException {
             Attribute attribute = attributes.get(attributeName);
-            NamingEnumeration valueEnum = attribute.getAll();
+            NamingEnumeration<?> valueEnum = attribute.getAll();
 
             initValuesIfApplicable();
             while (valueEnum.hasMore()) {

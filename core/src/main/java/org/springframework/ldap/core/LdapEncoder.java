@@ -94,7 +94,7 @@ public class LdapEncoder {
             return null;
 
         // make buffer roomy
-        StringBuffer encodedValue = new StringBuffer(value.length() * 2);
+        StringBuilder encodedValue = new StringBuilder(value.length() * 2);
 
         int length = value.length();
 
@@ -132,7 +132,7 @@ public class LdapEncoder {
             return null;
 
         // make buffer roomy
-        StringBuffer encodedValue = new StringBuffer(value.length() * 2);
+        StringBuilder encodedValue = new StringBuilder(value.length() * 2);
 
         int length = value.length();
         int last = length - 1;
@@ -181,7 +181,7 @@ public class LdapEncoder {
             return null;
 
         // make buffer same size
-        StringBuffer decoded = new StringBuffer(value.length());
+        StringBuilder decoded = new StringBuilder(value.length());
 
         int i = 0;
         while (i < value.length()) {

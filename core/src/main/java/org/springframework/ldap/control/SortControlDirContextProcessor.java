@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -104,7 +104,7 @@ public class SortControlDirContextProcessor extends AbstractFallbackRequestAndRe
 	 */
 	public Control createRequestControl() {
 		return super.createRequestControl(new Class[] { String[].class, boolean.class }, new Object[] {
-				new String[] { sortKey }, Boolean.valueOf(critical) });
+				new String[] { sortKey }, critical});
 	}
 
 	/*
@@ -113,9 +113,7 @@ public class SortControlDirContextProcessor extends AbstractFallbackRequestAndRe
 	 * #handleResponse(java.lang.Object)
 	 */
 	protected void handleResponse(Object control) {
-		Boolean result = (Boolean) invokeMethod("isSorted", responseControlClass, control);
-		this.sorted = result.booleanValue();
-		Integer code = (Integer) invokeMethod("getResultCode", responseControlClass, control);
-		this.resultCode = code.intValue();
+        this.sorted = (Boolean) invokeMethod("isSorted", responseControlClass, control);
+        this.resultCode = (Integer) invokeMethod("getResultCode", responseControlClass, control);
 	}
 }

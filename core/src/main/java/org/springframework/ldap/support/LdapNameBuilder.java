@@ -24,7 +24,7 @@ import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 
 /**
- * Helper class for building {@javax.naming.ldap.LdapName} instances.
+ * Helper class for building {@link javax.naming.ldap.LdapName} instances.
  *
  * @author Mattias Hellborg Arthursson
  * @since 2.0

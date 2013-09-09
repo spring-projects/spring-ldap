@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,9 @@
  */
 package org.springframework.ldap.core.support;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.Hashtable;
+import org.springframework.ldap.UncategorizedLdapException;
+import org.springframework.ldap.core.DirContextProxy;
+import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
@@ -28,10 +26,11 @@ import javax.naming.ldap.StartTlsRequest;
 import javax.naming.ldap.StartTlsResponse;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
-
-import org.springframework.ldap.UncategorizedLdapException;
-import org.springframework.ldap.core.DirContextProxy;
-import org.springframework.ldap.support.LdapUtils;
+import java.io.IOException;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Hashtable;
 
 /**
  * Abstract superclass for {@link DirContextAuthenticationStrategy}
@@ -117,7 +116,7 @@ public abstract class AbstractTlsDirContextAuthenticationStrategy implements Dir
 	/* (non-Javadoc)
 	 * @see org.springframework.ldap.core.support.DirContextAuthenticationStrategy#setupEnvironment(java.util.Hashtable, java.lang.String, java.lang.String)
 	 */
-	public final void setupEnvironment(Hashtable env, String userDn, String password) {
+	public final void setupEnvironment(Hashtable<String, Object> env, String userDn, String password) {
 		// Nothing to do in this implementation - authentication should take
 		// place after TLS has been negotiated.
 	}
@@ -142,7 +141,7 @@ public abstract class AbstractTlsDirContextAuthenticationStrategy implements Dir
 					// Wrap the target context in a proxy to intercept any calls
 					// to 'close', so that we can shut down the TLS connection
 					// gracefully first.
-					return (DirContext) Proxy.newProxyInstance(DirContextProxy.class.getClassLoader(), new Class[] {
+					return (DirContext) Proxy.newProxyInstance(DirContextProxy.class.getClassLoader(), new Class<?>[] {
 							LdapContext.class, DirContextProxy.class }, new TlsAwareDirContextProxy(ldapCtx,
 							tlsResponse));
 				}

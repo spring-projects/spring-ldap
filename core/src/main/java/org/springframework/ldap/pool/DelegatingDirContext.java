@@ -28,6 +28,7 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
 
 
 /**
@@ -285,7 +286,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
     /**
      * @see javax.naming.directory.DirContext#search(javax.naming.Name, javax.naming.directory.Attributes, java.lang.String[])
      */
-    public NamingEnumeration search(Name name, Attributes matchingAttributes, String[] attributesToReturn) throws NamingException {
+    public NamingEnumeration<SearchResult> search(Name name, Attributes matchingAttributes, String[] attributesToReturn) throws NamingException {
         this.assertOpen();
         return this.getDelegateDirContext().search(name, matchingAttributes, attributesToReturn);
     }
@@ -293,7 +294,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
     /**
      * @see javax.naming.directory.DirContext#search(javax.naming.Name, javax.naming.directory.Attributes)
      */
-    public NamingEnumeration search(Name name, Attributes matchingAttributes) throws NamingException {
+    public NamingEnumeration<SearchResult> search(Name name, Attributes matchingAttributes) throws NamingException {
         this.assertOpen();
         return this.getDelegateDirContext().search(name, matchingAttributes);
     }
@@ -301,7 +302,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
     /**
      * @see javax.naming.directory.DirContext#search(javax.naming.Name, java.lang.String, java.lang.Object[], javax.naming.directory.SearchControls)
      */
-    public NamingEnumeration search(Name name, String filterExpr, Object[] filterArgs, SearchControls cons) throws NamingException {
+    public NamingEnumeration<SearchResult> search(Name name, String filterExpr, Object[] filterArgs, SearchControls cons) throws NamingException {
         this.assertOpen();
         return this.getDelegateDirContext().search(name, filterExpr, filterArgs, cons);
     }
@@ -309,7 +310,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
     /**
      * @see javax.naming.directory.DirContext#search(javax.naming.Name, java.lang.String, javax.naming.directory.SearchControls)
      */
-    public NamingEnumeration search(Name name, String filter, SearchControls cons) throws NamingException {
+    public NamingEnumeration<SearchResult> search(Name name, String filter, SearchControls cons) throws NamingException {
         this.assertOpen();
         return this.getDelegateDirContext().search(name, filter, cons);
     }
@@ -317,7 +318,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
     /**
      * @see javax.naming.directory.DirContext#search(java.lang.String, javax.naming.directory.Attributes, java.lang.String[])
      */
-    public NamingEnumeration search(String name, Attributes matchingAttributes, String[] attributesToReturn) throws NamingException {
+    public NamingEnumeration<SearchResult> search(String name, Attributes matchingAttributes, String[] attributesToReturn) throws NamingException {
         this.assertOpen();
         return this.getDelegateDirContext().search(name, matchingAttributes, attributesToReturn);
     }
@@ -325,7 +326,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
     /**
      * @see javax.naming.directory.DirContext#search(java.lang.String, javax.naming.directory.Attributes)
      */
-    public NamingEnumeration search(String name, Attributes matchingAttributes) throws NamingException {
+    public NamingEnumeration<SearchResult> search(String name, Attributes matchingAttributes) throws NamingException {
         this.assertOpen();
         return this.getDelegateDirContext().search(name, matchingAttributes);
     }
@@ -333,7 +334,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
     /**
      * @see javax.naming.directory.DirContext#search(java.lang.String, java.lang.String, java.lang.Object[], javax.naming.directory.SearchControls)
      */
-    public NamingEnumeration search(String name, String filterExpr, Object[] filterArgs, SearchControls cons) throws NamingException {
+    public NamingEnumeration<SearchResult> search(String name, String filterExpr, Object[] filterArgs, SearchControls cons) throws NamingException {
         this.assertOpen();
         return this.getDelegateDirContext().search(name, filterExpr, filterArgs, cons);
     }
@@ -341,7 +342,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
     /**
      * @see javax.naming.directory.DirContext#search(java.lang.String, java.lang.String, javax.naming.directory.SearchControls)
      */
-    public NamingEnumeration search(String name, String filter, SearchControls cons) throws NamingException {
+    public NamingEnumeration<SearchResult> search(String name, String filter, SearchControls cons) throws NamingException {
         this.assertOpen();
         return this.getDelegateDirContext().search(name, filter, cons);
     }

@@ -74,15 +74,16 @@ import java.util.Map;
  */
 public abstract class AbstractContextSource implements BaseLdapPathContextSource, InitializingBean {
 
-	private static final Class DEFAULT_CONTEXT_FACTORY = com.sun.jndi.ldap.LdapCtxFactory.class;
+	private static final Class<com.sun.jndi.ldap.LdapCtxFactory> DEFAULT_CONTEXT_FACTORY
+            = com.sun.jndi.ldap.LdapCtxFactory.class;
 
-	private static final Class DEFAULT_DIR_OBJECT_FACTORY = DefaultDirObjectFactory.class;
+	private static final Class<DefaultDirObjectFactory> DEFAULT_DIR_OBJECT_FACTORY = DefaultDirObjectFactory.class;
     private static final boolean DONT_DISABLE_POOLING = false;
     private static final boolean EXPLICITLY_DISABLE_POOLING = true;
 
-    private Class dirObjectFactory = DEFAULT_DIR_OBJECT_FACTORY;
+    private Class<?> dirObjectFactory = DEFAULT_DIR_OBJECT_FACTORY;
 
-	private Class contextFactory = DEFAULT_CONTEXT_FACTORY;
+	private Class<?> contextFactory = DEFAULT_CONTEXT_FACTORY;
 
 	private LdapName base = LdapUtils.emptyLdapName();
 
@@ -94,9 +95,9 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	private boolean pooled = false;
 
-	private Hashtable baseEnv = new Hashtable();
+	private Hashtable<String, Object> baseEnv = new Hashtable<String, Object>();
 
-	private Hashtable anonymousEnv;
+	private Hashtable<String, Object> anonymousEnv;
 
 	private AuthenticationSource authenticationSource;
 
@@ -121,7 +122,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	}
 
     private DirContext doGetContext(String principal, String credentials, boolean explicitlyDisablePooling) {
-        Hashtable env = getAuthenticatedEnv(principal, credentials);
+        Hashtable<String, Object> env = getAuthenticatedEnv(principal, credentials);
         if(explicitlyDisablePooling) {
             env.remove(SUN_LDAP_POOLING_FLAG);
         }
@@ -179,7 +180,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @see DirContextAuthenticationStrategy
 	 * @see #setAuthenticationStrategy(DirContextAuthenticationStrategy)
 	 */
-	protected void setupAuthenticatedEnvironment(Hashtable env, String principal, String credentials) {
+	protected void setupAuthenticatedEnvironment(Hashtable<String, Object> env, String principal, String credentials) {
 		try {
 			authenticationStrategy.setupEnvironment(env, principal, credentials);
 		}
@@ -199,6 +200,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 				ctx.close();
 			}
 			catch (Exception e) {
+                log.debug("Exception closing context", e);
 			}
 		}
 	}
@@ -211,17 +213,17 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @return the full url String
 	 */
 	protected String assembleProviderUrlString(String[] ldapUrls) {
-		StringBuffer providerUrlBuffer = new StringBuffer(1024);
-		for (int i = 0; i < ldapUrls.length; i++) {
-			providerUrlBuffer.append(ldapUrls[i]);
-			if (!base.isEmpty()) {
-				if (!ldapUrls[i].endsWith("/")) {
-					providerUrlBuffer.append("/");
-				}
-			}
-			providerUrlBuffer.append(formatForUrl(base));
-			providerUrlBuffer.append(' ');
-		}
+		StringBuilder providerUrlBuffer = new StringBuilder(1024);
+        for (String ldapUrl : ldapUrls) {
+            providerUrlBuffer.append(ldapUrl);
+            if (!base.isEmpty()) {
+                if (!ldapUrl.endsWith("/")) {
+                    providerUrlBuffer.append("/");
+                }
+            }
+            providerUrlBuffer.append(formatForUrl(base));
+            providerUrlBuffer.append(' ');
+        }
 		return providerUrlBuffer.toString().trim();
 	}
 
@@ -300,7 +302,6 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
     }
 
     /**
-     * @return
      * @deprecated {@link DistinguishedName} and associated classes and methods are deprecated as of 2.0.
      */
     @Override
@@ -313,12 +314,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
         return (LdapName) base.clone();
     }
 
-    /*
-         * (non-Javadoc)
-         *
-         * @seeorg.springframework.ldap.core.support.BaseLdapPathSource#
-         * getBaseLdapPathAsString()
-         */
+    @Override
 	public String getBaseLdapPathAsString() {
 		return getBaseLdapName().toString();
 	}
@@ -331,14 +327,14 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @return a new DirContext implementation initialized with the supplied
 	 * environment.
 	 */
-	protected DirContext createContext(Hashtable environment) {
+	protected DirContext createContext(Hashtable<String, Object> environment) {
 		DirContext ctx = null;
 
 		try {
 			ctx = getDirContextInstance(environment);
 
 			if (log.isInfoEnabled()) {
-				Hashtable ctxEnv = ctx.getEnvironment();
+				Hashtable<?, ?> ctxEnv = ctx.getEnvironment();
 				String ldapUrl = (String) ctxEnv.get(Context.PROVIDER_URL);
 				log.debug("Got Ldap context on server '" + ldapUrl + "'");
 			}
@@ -356,7 +352,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * 
 	 * @param contextFactory the context factory used when creating Contexts.
 	 */
-	public void setContextFactory(Class contextFactory) {
+	public void setContextFactory(Class<?> contextFactory) {
 		this.contextFactory = contextFactory;
 	}
 
@@ -365,7 +361,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * 
 	 * @return the context factory used when creating Contexts.
 	 */
-	public Class getContextFactory() {
+	public Class<?> getContextFactory() {
 		return contextFactory;
 	}
 
@@ -379,7 +375,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @param dirObjectFactory the DirObjectFactory to be used. Null means that
 	 * no DirObjectFactory will be used.
 	 */
-	public void setDirObjectFactory(Class dirObjectFactory) {
+	public void setDirObjectFactory(Class<?> dirObjectFactory) {
 		this.dirObjectFactory = dirObjectFactory;
 	}
 
@@ -389,7 +385,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @return the DirObjectFactory to be used. <code>null</code> means that no
 	 * DirObjectFactory will be used.
 	 */
-	public Class getDirObjectFactory() {
+	public Class<?> getDirObjectFactory() {
 		return dirObjectFactory;
 	}
 
@@ -424,7 +420,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 		}
 	}
 
-	private Hashtable setupAnonymousEnv() {
+	private Hashtable<String, Object> setupAnonymousEnv() {
 		if (pooled) {
 			baseEnv.put(SUN_LDAP_POOLING_FLAG, "true");
 			log.debug("Using LDAP pooling.");
@@ -434,7 +430,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 			log.debug("Not using LDAP pooling");
 		}
 
-		Hashtable env = new Hashtable(baseEnv);
+		Hashtable<String, Object> env = new Hashtable<String, Object>(baseEnv);
 
 		env.put(Context.INITIAL_CONTEXT_FACTORY, contextFactory.getName());
 		env.put(Context.PROVIDER_URL, assembleProviderUrlString(urls));
@@ -483,7 +479,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @param urls the urls of all servers.
 	 */
 	public void setUrls(String[] urls) {
-		this.urls = (String[]) urls.clone();
+		this.urls = urls.clone();
 	}
 
 	/**
@@ -492,7 +488,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @return the urls of all servers.
 	 */
 	public String[] getUrls() {
-		return (String[]) urls.clone();
+		return urls.clone();
 	}
 
 	/**
@@ -540,17 +536,18 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * If any custom environment properties are needed, these can be set using
 	 * this method.
 	 * 
-	 * @param baseEnvironmentProperties
+	 * @param baseEnvironmentProperties the base environment properties that should always be used when
+     *                                  creating new Context instances.
 	 */
-	public void setBaseEnvironmentProperties(Map baseEnvironmentProperties) {
-		this.baseEnv = new Hashtable(baseEnvironmentProperties);
+	public void setBaseEnvironmentProperties(Map<String, Object> baseEnvironmentProperties) {
+		this.baseEnv = new Hashtable<String, Object>(baseEnvironmentProperties);
 	}
 
 	String getJdkVersion() {
 		return JdkVersion.getJavaVersion();
 	}
 
-	protected Hashtable getAnonymousEnv() {
+	protected Hashtable<String, Object> getAnonymousEnv() {
 		if (cacheEnvironmentProperties) {
 			return anonymousEnv;
 		}
@@ -559,9 +556,9 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 		}
 	}
 
-	protected Hashtable getAuthenticatedEnv(String principal, String credentials) {
+	protected Hashtable<String, Object> getAuthenticatedEnv(String principal, String credentials) {
 		// The authenticated environment should always be rebuilt.
-		Hashtable env = new Hashtable(getAnonymousEnv());
+		Hashtable<String, Object> env = new Hashtable<String, Object>(getAnonymousEnv());
 		setupAuthenticatedEnvironment(env, principal, credentials);
 		return env;
 	}
@@ -657,7 +654,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @return a new DirContext instance.
 	 * @throws NamingException if one is encountered when creating the instance.
 	 */
-	protected abstract DirContext getDirContextInstance(Hashtable environment) throws NamingException;
+	protected abstract DirContext getDirContextInstance(Hashtable<String, Object> environment) throws NamingException;
 
 	class SimpleAuthenticationSource implements AuthenticationSource {
 

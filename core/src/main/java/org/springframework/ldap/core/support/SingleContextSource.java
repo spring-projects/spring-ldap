@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,19 @@
  */
 package org.springframework.ldap.core.support;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-
-import javax.naming.directory.DirContext;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextProxy;
 import org.springframework.ldap.support.LdapUtils;
-import org.springframework.beans.factory.DisposableBean;
+
+import javax.naming.directory.DirContext;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 /**
  * A {@link ContextSource} to be used as a decorator around a target ContextSource
@@ -68,7 +67,7 @@ public class SingleContextSource implements ContextSource, DisposableBean {
 
     private DirContext getNonClosingDirContextProxy(DirContext context) {
         return (DirContext) Proxy.newProxyInstance(DirContextProxy.class
-                .getClassLoader(), new Class[]{
+                .getClassLoader(), new Class<?>[]{
                 LdapUtils.getActualTargetClass(context),
                 DirContextProxy.class},
                 new SingleContextSource.NonClosingDirContextInvocationHandler(
@@ -125,7 +124,7 @@ public class SingleContextSource implements ContextSource, DisposableBean {
                 return (proxy == args[0] ? Boolean.TRUE : Boolean.FALSE);
             } else if (methodName.equals("hashCode")) {
                 // Use hashCode of Connection proxy.
-                return new Integer(proxy.hashCode());
+                return proxy.hashCode();
             } else if (methodName.equals("close")) {
                 // Never close the target context, as this class will only be
                 // used for operations concerning the compensating transactions.

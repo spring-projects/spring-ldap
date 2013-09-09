@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,9 +42,6 @@ public class LikeFilter extends EqualsFilter {
 		super(attribute, value);
 	}
 
-	/*
-	 * @see org.springframework.ldap.filter.CompareFilter#encodeValue(java.lang.String)
-	 */
 	protected String encodeValue(String value) {
 		// just return if blank string
 		if (value == null) {
@@ -57,16 +54,11 @@ public class LikeFilter extends EqualsFilter {
 			return LdapEncoder.filterEncode(substrings[0]);
 		}
 
-		StringBuffer buff = new StringBuffer();
+		StringBuilder buff = new StringBuilder();
 		for (int i = 0; i < substrings.length; i++) {
 			buff.append(LdapEncoder.filterEncode(substrings[i]));
 			if (i < substrings.length - 1) {
 				buff.append("*");
-			}
-			else {
-				if (substrings[i].equals("")) {
-					continue;
-				}
 			}
 		}
 

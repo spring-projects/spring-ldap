@@ -85,11 +85,10 @@ public class ContextSourceTransactionManagerDelegate extends
      */
     protected CompensatingTransactionHolderSupport getNewHolder() {
         DirContext newCtx = getContextSource().getReadWriteContext();
-        DirContextHolder contextHolder = new DirContextHolder(
+        return new DirContextHolder(
                 new DefaultCompensatingTransactionOperationManager(
                         new LdapCompensatingTransactionOperationFactory(
                                 renamingStrategy)), newCtx);
-        return contextHolder;
     }
 
     /*

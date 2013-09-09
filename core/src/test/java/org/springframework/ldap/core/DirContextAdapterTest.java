@@ -174,7 +174,7 @@ public class DirContextAdapterTest {
 			tested.getStringAttributes("abc");
 			fail("ClassCastException expected");
 		}
-		catch (ArrayStoreException expected) {
+		catch (IllegalArgumentException expected) {
 			assertTrue(true);
 		}
 	}

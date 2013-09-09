@@ -182,7 +182,7 @@ public interface DirContextOperations extends DirContext,
 	 * @return a (possibly empty) array containing all registered values of the
 	 * attribute as Strings if the attribute is defined or <code>null</code>
 	 * otherwise.
-	 * @throws ArrayStoreException if any of the attribute values is not a
+	 * @throws IllegalArgumentException if any of the attribute values is not a
 	 * String.
 	 */
 	String[] getStringAttributes(String name);
@@ -203,8 +203,9 @@ public interface DirContextOperations extends DirContext,
 	 * @param name name of the attribute.
 	 * @return a <code>SortedSet</code> containing all values of the attribute,
 	 * or <code>null</code> if the attribute does not exist.
+     * @throws IllegalArgumentException if one of the found attribute values cannot be cast to a String.
 	 */
-	SortedSet getAttributeSortedStringSet(String name);
+	SortedSet<String> getAttributeSortedStringSet(String name);
 
 	/**
 	 * Returns the DN relative to the base path.
