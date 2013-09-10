@@ -198,5 +198,15 @@ public abstract class AbstractFallbackRequestAndResponseControlDirContextProcess
 		log.info("No matching response control found - looking for '" + responseControlClass);
 	}
 
-	protected abstract void handleResponse(Object control);
+    /**
+     * Set whether this control should be indicated as critical.
+     *
+     * @param critical whether the control is critical.
+     * @since 2.0
+     */
+    public void setCritical(boolean critical) {
+        this.critical = critical;
+    }
+
+    protected abstract void handleResponse(Object control);
 }
