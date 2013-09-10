@@ -47,7 +47,8 @@ public class PagedResultsCookie {
     /**
      * Get the cookie.
      * 
-     * @return the cookie.
+     * @return the cookie. This value may be <code>null</code>, indicating that there are no more requests,
+     * or that the control wasn't supported by the server.
      */
     public byte[] getCookie() {
         if (cookie != null) {
