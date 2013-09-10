@@ -5,15 +5,21 @@
  */
 package org.springframework.ldap.itest.core.support;
 
-import javax.naming.directory.DirContext;
-
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ldap.AuthenticationException;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.ldap.test.LdapTestUtils;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+
+import javax.naming.directory.DirContext;
 
 /**
  * Integration test to verify DIGEST-MD5 authentication support.
@@ -25,14 +31,26 @@ public class DigestMd5AuthenticationITest extends AbstractJUnit4SpringContextTes
 	@Autowired
 	private LdapTemplate ldapTemplate;
 
-	@Test
+    @Autowired
+    @Qualifier("populateContextSource")
+    private ContextSource contextSource;
+
+    @Before
+    public void prepareTestedInstance() throws Exception {
+        LdapTestUtils.cleanAndSetup(
+                contextSource,
+                LdapUtils.newLdapName("ou=People"),
+                new ClassPathResource("/setup_data.ldif"));
+    }
+
+    @After
+    public void cleanup() throws Exception {
+        LdapTestUtils.clearSubContexts(contextSource, LdapUtils.newLdapName("ou=People"));
+    }
+
+    @Test
 	public void testAuthenticate() {
-		try {
-			DirContext ctxt = ldapTemplate.getContextSource().getContext("some.person", "password");
-			Assert.assertNotNull(ctxt);
-		}
-		catch (AuthenticationException e) {
-			Assert.fail(e.getMessage());
-		}
+        DirContext ctxt = ldapTemplate.getContextSource().getContext("some.person1", "password");
+        Assert.assertNotNull(ctxt);
 	}
 }

@@ -47,6 +47,8 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 
 	private int resultSize;
 
+    private boolean more = true;
+
 	/**
 	 * Constructs a new instance. This constructor should be used when
 	 * performing the first paged search operation, when no other results have
@@ -122,6 +124,18 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 				new Object[] {pageSize, actualCookie, critical});
 	}
 
+    /**
+     * Check whether there are more results to retrieved. When there are no more results to retrieve,
+     * this is indicated by a <code>null</code> cookie being returned from the server.
+     * When this happen, the internal status will set to false.
+     *
+     * @return <code>true</code> if there are more results to retrieve, <code>false</code> otherwise.
+     * @since 2.0
+     */
+    public boolean hasMore() {
+        return more;
+    }
+
 	/*
 	 * @seeorg.springframework.ldap.control.
 	 * AbstractFallbackRequestAndResponseControlDirContextProcessor
@@ -129,6 +143,9 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 	 */
 	protected void handleResponse(Object control) {
 		byte[] result = (byte[]) invokeMethod("getCookie", responseControlClass, control);
+        if(result == null) {
+            more = false;
+        }
 		this.cookie = new PagedResultsCookie(result);
         this.resultSize = (Integer) invokeMethod("getResultSize", responseControlClass, control);
 	}

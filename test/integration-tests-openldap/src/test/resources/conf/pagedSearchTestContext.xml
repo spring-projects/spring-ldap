@@ -2,8 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-                           http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <context:property-placeholder ignore-resource-not-found="true"
                                   system-properties-mode="OVERRIDE"
@@ -15,17 +14,10 @@
         <property name="password" value="${itest.openldap.user.password}"/>
         <property name="base" value="${itest.openldap.base}" />
         <property name="pooled" value="false" />
-        <property name="authenticationStrategy">
-            <bean class="org.springframework.ldap.core.support.DefaultTlsDirContextAuthenticationStrategy">
-                <property name="hostnameVerifier">
-                    <bean class="org.springframework.ldap.AllMatchHostnameVerifier" />
-                </property>
-            </bean>
-        </property>
     </bean>
 
-	<bean id="ldapTemplate"
-		class="org.springframework.ldap.core.LdapTemplate">
-		<constructor-arg ref="contextSource" />
-	</bean>
+    <bean class="org.springframework.ldap.core.LdapTemplate">
+        <property name="contextSource" ref="contextSource"/>
+    </bean>
+
 </beans>

@@ -1,0 +1,119 @@
+dn: uid=some.person1,ou=People,dc=261consulting,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: some.person1
+userPassword: password
+cn: Some Person1
+sn: Person1
+description: Sweden, Company1, Some Person1
+telephoneNumber: +46 555-123459
+
+dn: cn=Some Person2,ou=People,dc=261consulting,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: some.person2
+userPassword: password
+cn: Some Person2
+sn: Person2
+description: Sweden, Company1, Some Person2
+telephoneNumber: +46 555-123458
+
+dn: cn=Some Person3,ou=People,dc=261consulting,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: some.person3
+userPassword: password
+cn: Some Person3
+sn: Person3
+description: Sweden, Company1, Some Person3
+telephoneNumber: +46 555-123457
+
+dn: cn=Some Person4,ou=People,dc=261consulting,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: some.person4
+userPassword: password
+cn: Some Person4
+sn: Person4
+description: Sweden, Company1, Some Person4
+telephoneNumber: +46 555-123456
+
+dn: cn=Some Person5,ou=People,dc=261consulting,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: some.person5
+userPassword: password
+cn: Some Person5
+sn: Person5
+description: Sweden, Company1, Some Person5
+telephoneNumber: +46 555-123455
+
+dn: cn=Some Person6,ou=People,dc=261consulting,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: some.person6
+userPassword: password
+cn: Some Person6
+sn: Person6
+description: Sweden, Company1, Some Person6
+telephoneNumber: +46 555-123454
+
+dn: cn=Some Person7,ou=People,dc=261consulting,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: some.person7
+userPassword: password
+cn: Some Person7
+sn: Person7
+description: Sweden, Company1, Some Person7
+telephoneNumber: +46 555-123453
+
+dn: cn=Some Person8,ou=People,dc=261consulting,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: some.person8
+userPassword: password
+cn: Some Person8
+sn: Person8
+description: Sweden, Company1, Some Person8
+telephoneNumber: +46 555-123452
+
+dn: cn=Some Person9,ou=People,dc=261consulting,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: some.person9
+userPassword: password
+cn: Some Person9
+sn: Person9
+description: Sweden, Company1, Some Person9
+telephoneNumber: +46 555-123451
+
+dn: cn=Some Person10,ou=People,dc=261consulting,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: some.person10
+userPassword: password
+cn: Some Person10
+sn: Person10
+description: Sweden, Company1, Some Person10
+telephoneNumber: +46 555-123450

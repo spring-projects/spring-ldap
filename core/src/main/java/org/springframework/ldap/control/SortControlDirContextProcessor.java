@@ -103,7 +103,7 @@ public class SortControlDirContextProcessor extends AbstractFallbackRequestAndRe
 	 * #createRequestControl()
 	 */
 	public Control createRequestControl() {
-		return super.createRequestControl(new Class[] { String[].class, boolean.class }, new Object[] {
+		return super.createRequestControl(new Class<?>[] { String[].class, boolean.class }, new Object[] {
 				new String[] { sortKey }, critical});
 	}
 

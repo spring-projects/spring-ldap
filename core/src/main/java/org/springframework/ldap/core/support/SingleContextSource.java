@@ -21,6 +21,7 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextProxy;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.directory.DirContext;
@@ -39,6 +40,9 @@ import java.lang.reflect.Proxy;
 public class SingleContextSource implements ContextSource, DisposableBean {
 
     private static final Log log = LogFactory.getLog(SingleContextSource.class);
+    private static final boolean DONT_USE_READ_ONLY = false;
+    private static final boolean DONT_IGNORE_PARTIAL_RESULT = false;
+    private static final boolean DONT_IGNORE_NAME_NOT_FOUND = false;
 
     private final DirContext ctx;
 
@@ -91,6 +95,66 @@ public class SingleContextSource implements ContextSource, DisposableBean {
         }
         catch (javax.naming.NamingException e) {
             log.warn(e);
+        }
+    }
+
+    /**
+     * Construct a SingleContextSource and execute the LdapOperationsCallback using the created instance.
+     * This makes sure the same connection will be used for all operations inside the LdapOperationsCallback,
+     * which is particularly useful when working with e.g. Paged Results as these typically require the exact
+     * same connection to be used for all requests involving the same cookie.
+     * The SingleContextSource instance will be properly disposed of once the operation has been completed.
+     * <p>By default, the {@link org.springframework.ldap.core.ContextSource#getReadWriteContext()} method
+     * will be used to create the DirContext instance to operate on.</p>
+     *
+     * @param contextSource The target ContextSource to retrieve a DirContext from.
+     * @param callback the callback to perform the Ldap operations.
+     * @return the result returned from the callback.
+     * @see #doWithSingleContext(org.springframework.ldap.core.ContextSource, LdapOperationsCallback, boolean, boolean, boolean)
+     * @since 2.0
+     */
+    public static <T> T doWithSingleContext(ContextSource contextSource, LdapOperationsCallback<T> callback) {
+        return doWithSingleContext(contextSource, callback, DONT_USE_READ_ONLY, DONT_IGNORE_PARTIAL_RESULT, DONT_IGNORE_NAME_NOT_FOUND);
+
+    }
+
+    /**
+     * Construct a SingleContextSource and execute the LdapOperationsCallback using the created instance.
+     * This makes sure the same connection will be used for all operations inside the LdapOperationsCallback,
+     * which is particularly useful when working with e.g. Paged Results as these typically require the exact
+     * same connection to be used for all requests involving the same cookie..
+     * The SingleContextSource instance will be properly disposed of once the operation has been completed.
+     *
+     * @param contextSource The target ContextSource to retrieve a DirContext from
+     * @param callback the callback to perform the Ldap operations
+     * @param useReadOnly if <code>true</code>, use the {@link org.springframework.ldap.core.ContextSource#getReadOnlyContext()}
+     *                    method on the target ContextSource to get the actual DirContext instance, if <code>false</code>,
+     *                    use {@link org.springframework.ldap.core.ContextSource#getReadWriteContext()}.
+     * @param ignorePartialResultException Used for populating this property on the created LdapTemplate instance.
+     * @param ignoreNameNotFoundException Used for populating this property on the created LdapTemplate instance.
+     * @return the result returned from the callback.
+     * @since 2.0
+     */
+    public static <T> T doWithSingleContext(ContextSource contextSource,
+                                            LdapOperationsCallback<T> callback,
+                                            boolean useReadOnly,
+                                            boolean ignorePartialResultException,
+                                            boolean ignoreNameNotFoundException) {
+        SingleContextSource singleContextSource;
+        if (useReadOnly) {
+            singleContextSource = new SingleContextSource(contextSource.getReadOnlyContext());
+        } else {
+            singleContextSource = new SingleContextSource(contextSource.getReadWriteContext());
+        }
+
+        LdapTemplate ldapTemplate = new LdapTemplate(singleContextSource);
+        ldapTemplate.setIgnorePartialResultException(ignorePartialResultException);
+        ldapTemplate.setIgnoreNameNotFoundException(ignoreNameNotFoundException);
+
+        try {
+            return callback.doWithLdapOperations(ldapTemplate);
+        } finally {
+            singleContextSource.destroy();
         }
     }
 

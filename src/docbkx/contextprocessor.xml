@@ -158,43 +158,49 @@ public class MyCoolRequestControl extends AbstractRequestControlDirContextProces
 
     <para>Spring LDAP provides support for paged results by leveraging the
     concept for pre- and postprocessing of an <literal>LdapContext</literal> that was discussed
-    in the previous sections. It does so by providing two classes:
-    <literal>PagedResultsRequestControl</literal> and
-    <literal>PagedResultsCookie</literal>. The
-    <literal>PagedResultsRequestControl</literal> class creates a
+    in the previous sections. It does so using the class
+    <literal>PagedResultsDirContextProcessor</literal>. The
+    <literal>PagedResultsDirContextProcessor</literal> class creates a
     <literal>PagedResultsControl</literal> with the requested page size and
     adds it to the <literal>LdapContext</literal>. After the search, it gets
-    the <literal>PagedResultsResponseControl</literal> and retrieves two
-    pieces of information from it: the estimated total result size and a
-    cookie. This cookie is a byte array containing information that the server
-    needs the next time it is called with a
-    <literal>PagedResultsControl</literal>. In order to make it easy to store
-    this cookie between searches, Spring LDAP provides the wrapper class
-    <literal>PagedResultsCookie</literal>.</para>
+    the <literal>PagedResultsResponseControl</literal> and retrieves the paged results
+    cookie, which is needed to keep the context between consecutive paged results requests.</para>
 
     <para>Below is an example of how the paged search results functionality may
     be used:</para>
 
     <example>
-      <title>Paged results using <literal>PagedResultsRequestControl</literal></title>
+      <title>Paged results using <literal>PagedResultsDirContextProcessor</literal></title>
 
-      <programlisting>public PagedResult getAllPersons(PagedResultsCookie cookie) {
-   PagedResultsRequestControl control = new PagedResultsRequestControl(PAGE_SIZE, cookie);
-   SearchControls searchControls = new SearchControls();
-   searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-   
-   List persons = ldapTemplate.search("", "objectclass=person", searchControls, control);
-   
-   return new PagedResult(persons, control.getCookie());
- }</programlisting>
+      <programlisting>
+public List&lt;String&gt; getAllPersonNames() {
+  final SearchControls searchControls = new SearchControls();
+  searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+  final PagedResultsDirContextProcessor processor = new PagedResultsDirContextProcessor(PAGE_SIZE);
+
+  return SingleContextSource.doWithSingleContext(contextSource, new LdapOperationsCallback&lt;List&lt;String&gt;&gt;() {
+      @Override
+      public List&lt;String&gt; doWithLdapOperations(LdapOperations operations) {
+        List&lt;String&gt; result = new LinkedList&lt;String&gt;();
+
+        do {
+          List&lt;String&gt; oneResult = operations.search(
+            "ou=People",
+            "(&amp;(objectclass=person))",
+            searchControls,
+            CN_ATTRIBUTES_MAPPER,
+            processor);
+          result.addAll(oneResult);
+        } while(processor.hasMore());
+
+        return result;
+      }
+  });
+}
+</programlisting>
     </example>
-
-    <para>In the first call to this method, <literal>null</literal> will be supplied as
-    the cookie parameter. On subsequent calls the client will need to supply the cookie from
-    the last search (returned wrapped in the <literal>PagedResult</literal>) each time the 
-    method is called. When the actual cookie is <literal>null</literal> (i.e. 
-    <literal>pagedResult.getCookie().getCookie()</literal> returns <literal>null</literal>),
-    the last batch has been returned from the search.</para>
-    
+      <note>In order for a paged results cookie to continue being valid, it is imperative that the same underlying
+      connection is used for each paged results call. This can be accomplished using the <literal>SingleContextSource</literal>,
+      as demonstrated in the example.</note>
   </sect1>
 </chapter>

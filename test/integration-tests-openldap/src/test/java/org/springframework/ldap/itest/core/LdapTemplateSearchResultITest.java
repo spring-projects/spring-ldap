@@ -19,10 +19,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.test.AttributeCheckAttributesMapper;
 import org.springframework.ldap.test.AttributeCheckContextMapper;
+import org.springframework.ldap.test.LdapTestUtils;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
@@ -43,6 +48,9 @@ public class LdapTemplateSearchResultITest extends AbstractJUnit4SpringContextTe
 	@Autowired
 	private LdapTemplate tested;
 
+    @Autowired
+    private ContextSource contextSource;
+
 	private AttributeCheckAttributesMapper attributesMapper;
 
 	private AttributeCheckContextMapper contextMapper;
@@ -56,7 +64,7 @@ public class LdapTemplateSearchResultITest extends AbstractJUnit4SpringContextTe
 	private static final String[] CN_SN_VALUES = { "Some Person2", "Person2" };
 
 	private static final String[] ALL_VALUES = { "Some Person2", "Person2", "Sweden, Company1, Some Person2",
-			"+46 555-654321" };
+			"+46 555-123458" };
 
 	private static final String BASE_STRING = "";
 
@@ -64,14 +72,20 @@ public class LdapTemplateSearchResultITest extends AbstractJUnit4SpringContextTe
 
 	private static final Name BASE_NAME = new DistinguishedName(BASE_STRING);
 
-	@Before
+    @Before
 	public void prepareTestedInstance() throws Exception {
+        LdapTestUtils.cleanAndSetup(
+                contextSource,
+                LdapUtils.newLdapName("ou=People"),
+                new ClassPathResource("/setup_data.ldif"));
+
 		attributesMapper = new AttributeCheckAttributesMapper();
 		contextMapper = new AttributeCheckContextMapper();
 	}
 
 	@After
 	public void cleanup() throws Exception {
+        LdapTestUtils.clearSubContexts(contextSource, LdapUtils.newLdapName("ou=People"));
 		attributesMapper = null;
 		contextMapper = null;
 	}
@@ -80,7 +94,7 @@ public class LdapTemplateSearchResultITest extends AbstractJUnit4SpringContextTe
 	public void testSearch_AttributesMapper() {
 		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		attributesMapper.setExpectedValues(ALL_VALUES);
-		List list = tested.search(BASE_STRING, FILTER_STRING, attributesMapper);
+		List<Object> list = tested.search(BASE_STRING, FILTER_STRING, attributesMapper);
 		assertEquals(1, list.size());
 	}
 
@@ -88,7 +102,7 @@ public class LdapTemplateSearchResultITest extends AbstractJUnit4SpringContextTe
 	public void testSearch_SearchScope_AttributesMapper() {
 		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		attributesMapper.setExpectedValues(ALL_VALUES);
-		List list = tested.search(BASE_STRING, FILTER_STRING, SearchControls.SUBTREE_SCOPE, attributesMapper);
+        List<Object> list = tested.search(BASE_STRING, FILTER_STRING, SearchControls.SUBTREE_SCOPE, attributesMapper);
 		assertEquals(1, list.size());
 	}
 
@@ -97,7 +111,7 @@ public class LdapTemplateSearchResultITest extends AbstractJUnit4SpringContextTe
 		attributesMapper.setExpectedAttributes(CN_SN_ATTRS);
 		attributesMapper.setExpectedValues(CN_SN_VALUES);
 		attributesMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
-		List list = tested.search(BASE_STRING, FILTER_STRING, SearchControls.SUBTREE_SCOPE, CN_SN_ATTRS,
+        List<Object> list = tested.search(BASE_STRING, FILTER_STRING, SearchControls.SUBTREE_SCOPE, CN_SN_ATTRS,
 				attributesMapper);
 		assertEquals(1, list.size());
 	}
@@ -106,7 +120,7 @@ public class LdapTemplateSearchResultITest extends AbstractJUnit4SpringContextTe
 	public void testSearch_AttributesMapper_Name() {
 		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		attributesMapper.setExpectedValues(ALL_VALUES);
-		List list = tested.search(BASE_NAME, FILTER_STRING, attributesMapper);
+        List<Object> list = tested.search(BASE_NAME, FILTER_STRING, attributesMapper);
 		assertEquals(1, list.size());
 	}
 
@@ -114,7 +128,7 @@ public class LdapTemplateSearchResultITest extends AbstractJUnit4SpringContextTe
 	public void testSearch_SearchScope_AttributesMapper_Name() {
 		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		attributesMapper.setExpectedValues(ALL_VALUES);
-		List list = tested.search(BASE_NAME, FILTER_STRING, SearchControls.SUBTREE_SCOPE, attributesMapper);
+        List<Object> list = tested.search(BASE_NAME, FILTER_STRING, SearchControls.SUBTREE_SCOPE, attributesMapper);
 		assertEquals(1, list.size());
 	}
 
@@ -123,7 +137,7 @@ public class LdapTemplateSearchResultITest extends AbstractJUnit4SpringContextTe
 		attributesMapper.setExpectedAttributes(CN_SN_ATTRS);
 		attributesMapper.setExpectedValues(CN_SN_VALUES);
 		attributesMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
-		List list = tested
+        List<Object> list = tested
 				.search(BASE_NAME, FILTER_STRING, SearchControls.SUBTREE_SCOPE, CN_SN_ATTRS, attributesMapper);
 		assertEquals(1, list.size());
 	}
@@ -132,7 +146,7 @@ public class LdapTemplateSearchResultITest extends AbstractJUnit4SpringContextTe
 	public void testSearch_ContextMapper() {
 		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		contextMapper.setExpectedValues(ALL_VALUES);
-		List list = tested.search(BASE_STRING, FILTER_STRING, contextMapper);
+		List<DirContextAdapter> list = tested.search(BASE_STRING, FILTER_STRING, contextMapper);
 		assertEquals(1, list.size());
 	}
 
@@ -140,7 +154,7 @@ public class LdapTemplateSearchResultITest extends AbstractJUnit4SpringContextTe
 	public void testSearch_SearchScope_ContextMapper() {
 		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		contextMapper.setExpectedValues(ALL_VALUES);
-		List list = tested.search(BASE_STRING, FILTER_STRING, SearchControls.SUBTREE_SCOPE, contextMapper);
+        List<DirContextAdapter> list = tested.search(BASE_STRING, FILTER_STRING, SearchControls.SUBTREE_SCOPE, contextMapper);
 		assertEquals(1, list.size());
 	}
 
@@ -149,7 +163,7 @@ public class LdapTemplateSearchResultITest extends AbstractJUnit4SpringContextTe
 		contextMapper.setExpectedAttributes(CN_SN_ATTRS);
 		contextMapper.setExpectedValues(CN_SN_VALUES);
 		contextMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
-		List list = tested.search(BASE_STRING, FILTER_STRING, SearchControls.SUBTREE_SCOPE, CN_SN_ATTRS, contextMapper);
+        List<DirContextAdapter> list = tested.search(BASE_STRING, FILTER_STRING, SearchControls.SUBTREE_SCOPE, CN_SN_ATTRS, contextMapper);
 		assertEquals(1, list.size());
 	}
 
@@ -157,7 +171,7 @@ public class LdapTemplateSearchResultITest extends AbstractJUnit4SpringContextTe
 	public void testSearch_ContextMapper_Name() {
 		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		contextMapper.setExpectedValues(ALL_VALUES);
-		List list = tested.search(BASE_NAME, FILTER_STRING, contextMapper);
+        List<DirContextAdapter> list = tested.search(BASE_NAME, FILTER_STRING, contextMapper);
 		assertEquals(1, list.size());
 	}
 
@@ -165,7 +179,7 @@ public class LdapTemplateSearchResultITest extends AbstractJUnit4SpringContextTe
 	public void testSearch_SearchScope_ContextMapper_Name() {
 		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		contextMapper.setExpectedValues(ALL_VALUES);
-		List list = tested.search(BASE_NAME, FILTER_STRING, SearchControls.SUBTREE_SCOPE, contextMapper);
+        List<DirContextAdapter> list = tested.search(BASE_NAME, FILTER_STRING, SearchControls.SUBTREE_SCOPE, contextMapper);
 		assertEquals(1, list.size());
 	}
 
@@ -174,7 +188,7 @@ public class LdapTemplateSearchResultITest extends AbstractJUnit4SpringContextTe
 		contextMapper.setExpectedAttributes(CN_SN_ATTRS);
 		contextMapper.setExpectedValues(CN_SN_VALUES);
 		contextMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
-		List list = tested.search(BASE_NAME, FILTER_STRING, SearchControls.SUBTREE_SCOPE, CN_SN_ATTRS, contextMapper);
+        List<DirContextAdapter> list = tested.search(BASE_NAME, FILTER_STRING, SearchControls.SUBTREE_SCOPE, CN_SN_ATTRS, contextMapper);
 		assertEquals(1, list.size());
 	}
 }

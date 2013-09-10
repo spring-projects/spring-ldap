@@ -28,14 +28,14 @@ import java.util.Arrays;
  * 
  * @author Mattias Hellborg Arthursson
  */
-public class AttributeCheckContextMapper implements ContextMapper {
+public class AttributeCheckContextMapper implements ContextMapper<DirContextAdapter> {
     private String[] expectedAttributes = new String[0];
 
     private String[] expectedValues = new String[0];
 
     private String[] absentAttributes = new String[0];
 
-    public Object mapFromContext(Object ctx) {
+    public DirContextAdapter mapFromContext(Object ctx) {
         DirContextAdapter adapter = (DirContextAdapter) ctx;
         Assert.assertEquals("Values and attributes need to have the same length ",
                 expectedAttributes.length, expectedValues.length);

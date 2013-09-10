@@ -29,7 +29,7 @@ import java.util.Arrays;
  * 
  * @author Mattias Hellborg Arthursson
  */
-public class AttributeCheckAttributesMapper implements AttributesMapper {
+public class AttributeCheckAttributesMapper implements AttributesMapper<Object> {
     private String[] expectedAttributes = new String[0];
 
     private String[] expectedValues = new String[0];;
@@ -47,8 +47,8 @@ public class AttributeCheckAttributesMapper implements AttributesMapper {
             Assert.assertEquals(expectedValues[i], attribute.get());
         }
 
-        for (int i = 0; i < absentAttributes.length; i++) {
-            Assert.assertNull(attributes.get(absentAttributes[i]));
+        for (String absentAttribute : absentAttributes) {
+            Assert.assertNull(attributes.get(absentAttribute));
         }
 
         return null;
