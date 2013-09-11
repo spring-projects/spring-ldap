@@ -1208,9 +1208,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	public void afterPropertiesSet() throws Exception {
-		if (contextSource == null) {
-			throw new IllegalArgumentException("Property 'contextSource' must be set.");
-		}
+        Assert.notNull(contextSource, "Property 'contextSource' must be set.");
 	}
 
 	private void closeContextAndNamingEnumeration(DirContext ctx, NamingEnumeration results) {
