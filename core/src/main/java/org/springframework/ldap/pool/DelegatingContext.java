@@ -172,7 +172,20 @@ public class DelegatingContext implements Context {
 
         //Return the object to the Pool and then null the pool reference
         try {
-            this.keyedObjectPool.returnObject(this.dirContextType, context);
+            boolean valid = true;
+
+            if (context instanceof FailureAwareContext) {
+                FailureAwareContext failureAwareContext = (FailureAwareContext) context;
+                if(failureAwareContext.hasFailed()) {
+                    valid = false;
+                }
+            }
+
+            if (valid) {
+                this.keyedObjectPool.returnObject(this.dirContextType, context);
+            } else {
+                this.keyedObjectPool.invalidateObject(this.dirContextType, context);
+            }
         }
         catch (Exception e) {
             final NamingException namingException = new NamingException("Failed to return delegate Context to pool.");

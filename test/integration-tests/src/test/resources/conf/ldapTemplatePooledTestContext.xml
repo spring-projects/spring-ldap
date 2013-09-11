@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2005-2013 the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	<import resource="classpath:/conf/commonTestContext.xml" />
+
+	<bean id="contextSourceTarget"
+		class="org.springframework.ldap.core.support.LdapContextSource">
+		<property name="userDn" value="${userDn}" />
+		<property name="password" value="${password}" />
+		<property name="url" value="ldap://localhost:1888" />
+        <property name="base" value="dc=jayway,dc=se" />
+	</bean>
+
+    <bean id="contextSource" class="org.springframework.ldap.pool.factory.PoolingContextSource">
+        <property name="contextSource" ref="contextSourceTarget" />
+        <property name="maxActive" value="1" />
+        <property name="maxTotal" value="1" />
+        <property name="maxIdle" value="1" />
+        <property name="minIdle" value="1" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testWhileIdle" value="false" />
+    </bean>
+
+    <bean id="ldapTemplate"
+		class="org.springframework.ldap.core.LdapTemplate">
+		<constructor-arg ref="contextSource" />
+	</bean>
+
+	<!-- 
+		<bean id="dataLoader" class="org.ddsteps.data.excel.CachingExcelDataLoader" />
+	-->
+</beans>

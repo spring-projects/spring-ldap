@@ -17,12 +17,15 @@ package org.springframework.ldap.pool.factory;
 
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.internal.util.reflection.Whitebox;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.pool.AbstractPoolTestCase;
 import org.springframework.ldap.pool.DirContextType;
 import org.springframework.ldap.pool.validation.DirContextValidator;
 
 import javax.naming.directory.DirContext;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -99,7 +102,8 @@ public class DirContextPoolableObjectFactoryTest extends AbstractPoolTestCase {
         objectFactory.setContextSource(contextSourceMock);
 
         final Object createdDirContext = objectFactory.makeObject(DirContextType.READ_ONLY);
-        assertEquals(readOnlyContextMock, createdDirContext);
+        InvocationHandler invocationHandler = Proxy.getInvocationHandler(createdDirContext);
+        assertEquals(readOnlyContextMock, Whitebox.getInternalState(invocationHandler, "target"));
     }
 
     @Test
@@ -111,9 +115,10 @@ public class DirContextPoolableObjectFactoryTest extends AbstractPoolTestCase {
         when(contextSourceMock.getReadWriteContext()).thenReturn(readWriteContextMock);
         objectFactory.setContextSource(contextSourceMock);
 
-
         final Object createdDirContext = objectFactory.makeObject(DirContextType.READ_WRITE);
-        assertEquals(readWriteContextMock, createdDirContext);
+
+        InvocationHandler invocationHandler = Proxy.getInvocationHandler(createdDirContext);
+        assertEquals(readWriteContextMock, Whitebox.getInternalState(invocationHandler, "target"));
     }
 
     @Test

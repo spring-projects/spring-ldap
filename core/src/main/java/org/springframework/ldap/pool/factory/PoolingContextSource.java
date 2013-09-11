@@ -16,9 +16,6 @@
 
 package org.springframework.ldap.pool.factory;
 
-import javax.naming.directory.DirContext;
-import javax.naming.ldap.LdapContext;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
@@ -30,6 +27,10 @@ import org.springframework.ldap.pool.DelegatingDirContext;
 import org.springframework.ldap.pool.DelegatingLdapContext;
 import org.springframework.ldap.pool.DirContextType;
 import org.springframework.ldap.pool.validation.DirContextValidator;
+
+import javax.naming.directory.DirContext;
+import javax.naming.ldap.LdapContext;
+import java.util.Collection;
 
 /**
  * A {@link ContextSource} implementation that wraps an object pool and another
@@ -376,7 +377,23 @@ public class PoolingContextSource implements ContextSource, DisposableBean {
 		this.dirContextPoolableObjectFactory.setDirContextValidator(dirContextValidator);
 	}
 
-	// ***** DisposableBean interface methods *****//
+    /**
+     * Configure the exception classes that are to be interpreted as no-transient with regards to eager
+     * context invalidation. If one of the configured exceptions is thrown by any method on a pooled
+     * DirContext, that instance will immediately be marked as invalid without any additional testing
+     * (i.e. testOnReturn). This allows for more efficient management of dead connections. Default is
+     * {@link javax.naming.CommunicationException}.
+     *
+     * @param nonTransientExceptions the exception classes that should be interpreted as non-transient
+     *                               with regards to eager invalidation.
+     * @since 2.0
+     */
+    public void setNonTransientExceptions(Collection<Class<? extends Throwable>> nonTransientExceptions) {
+        this.dirContextPoolableObjectFactory.setNonTransientExceptions(nonTransientExceptions);
+    }
+
+
+    // ***** DisposableBean interface methods *****//
 
 	/*
 	 * (non-Javadoc)

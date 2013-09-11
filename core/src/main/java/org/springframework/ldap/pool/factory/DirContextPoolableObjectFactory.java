@@ -19,11 +19,22 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.BaseKeyedPoolableObjectFactory;
 import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.DirContextProxy;
 import org.springframework.ldap.pool.DirContextType;
+import org.springframework.ldap.pool.FailureAwareContext;
 import org.springframework.ldap.pool.validation.DirContextValidator;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.Assert;
 
+import javax.naming.CommunicationException;
 import javax.naming.directory.DirContext;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Factory that creates {@link DirContext} instances for pooling via a
@@ -59,6 +70,7 @@ import javax.naming.directory.DirContext;
  * 
  * @author Eric Dalquist <a
  *         href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
+ * @author Mattias Hellborg Arthursson
  */
 class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
     /**
@@ -66,9 +78,20 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
      */
     protected final Log logger = LogFactory.getLog(this.getClass());
 
+    private final static Set<Class<? extends Throwable>> DEFAULT_NONTRANSIENT_EXCEPTIONS
+            = new HashSet<Class<? extends Throwable>>(){{
+       add(CommunicationException.class);
+    }};
+
     private ContextSource contextSource;
 
     private DirContextValidator dirContextValidator;
+
+    private Set<Class<? extends Throwable>> nonTransientExceptions = DEFAULT_NONTRANSIENT_EXCEPTIONS;
+
+    void setNonTransientExceptions(Collection<Class<? extends Throwable>> nonTransientExceptions) {
+        this.nonTransientExceptions = new HashSet<Class<? extends Throwable>>(nonTransientExceptions);
+    }
 
     /**
      * @return the contextSource
@@ -131,7 +154,7 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
                         + " DirContext='" + readWriteContext + "'");
             }
 
-            return readWriteContext;
+            return makeFailureAwareProxy(readWriteContext);
         } else if (contextType == DirContextType.READ_ONLY) {
 
             final DirContext readOnlyContext = this.contextSource
@@ -142,11 +165,21 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
                         + " DirContext='" + readOnlyContext + "'");
             }
 
-            return readOnlyContext;
+            return makeFailureAwareProxy(readOnlyContext);
         } else {
             throw new IllegalArgumentException("Unrecognized ContextType: "
                     + contextType);
         }
+    }
+
+    private Object makeFailureAwareProxy(DirContext readOnlyContext) {
+        return Proxy.newProxyInstance(DirContextProxy.class
+                .getClassLoader(),
+                new Class<?>[]{
+                        LdapUtils.getActualTargetClass(readOnlyContext),
+                        DirContextProxy.class,
+                        FailureAwareContext.class},
+                new FailureAwareContextProxy(readOnlyContext));
     }
 
     /**
@@ -200,4 +233,61 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
                     "An exception occured while closing '" + obj + "'", e);
         }
     }
+
+    /**
+     * Invocation handler that checks thrown exceptions against the configured {@link #nonTransientExceptions},
+     * marking the Context as invalid on match.
+     *
+     * @author Mattias Hellborg Arthursson
+     * @since 2.0
+     */
+    private class FailureAwareContextProxy implements
+            InvocationHandler {
+
+        private DirContext target;
+
+        private boolean hasFailed = false;
+
+        public FailureAwareContextProxy(DirContext target) {
+            Assert.notNull(target, "Target must not be null");
+            this.target = target;
+        }
+
+        /*
+         * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
+         * java.lang.reflect.Method, java.lang.Object[])
+         */
+        public Object invoke(Object proxy, Method method, Object[] args)
+                throws Throwable {
+
+            String methodName = method.getName();
+            if (methodName.equals("getTargetContext")) {
+                return target;
+            } else if (methodName.equals("hasFailed")) {
+                return hasFailed;
+            }
+
+            try {
+                return method.invoke(target, args);
+            }
+            catch (InvocationTargetException e) {
+                Throwable targetException = e.getTargetException();
+                Class<? extends Throwable> targetExceptionClass = targetException.getClass();
+                if(nonTransientExceptions.contains(targetExceptionClass)) {
+                    logger.info(
+                            String.format("An %s - explicitly configured to be a non-transient exception - encountered; eagerly invalidating the target context.",
+                                    targetExceptionClass));
+                    hasFailed = true;
+                } else {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format("An %s - not explicitly configured to be a non-transient exception - encountered; ignoring.",
+                                targetExceptionClass));
+                    }
+                }
+
+                throw targetException;
+            }
+        }
+    }
+
 }

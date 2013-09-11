@@ -82,6 +82,15 @@
 			<literal>DirContext</literal>
 			.
 		</para>
+        <note>
+            Connections will be automatically invalidated if they throw an exception that is considered
+            non-transient. E.g. if a <literal>DirContext</literal> instance throws a
+            <literal>javax.naming.CommunicationException</literal>, this will be interpreted
+            as a non-transient error and the instance will be automatically invalidated, without the overhead
+            of an additional testOnReturn operation. The exceptions that are interpreted as non-transient are
+            configured using the <literal>nonTransientExceptions</literal> property of the
+            <literal>PoolingContextSource</literal>.
+        </note>
 	</sect1>
 
 	<sect1 id="pooling-properties">
@@ -408,6 +417,25 @@
 							any).
 						</entry>
 					</row>
+                    <row>
+                        <entry>
+                            <literal>
+                                nonTransientExceptions
+                            </literal>
+                        </entry>
+
+                        <entry>
+                            <literal>javax.naming.CommunicationException</literal>
+                        </entry>
+
+                        <entry>
+                            The Exceptions that should be considered non-transient with
+                            regards to eager invalidation. Should any of the listed exceptions be
+                            thrown by a call to a pooled <literal>DirContext</literal> instance,
+                            that object will be automatically invalidated without any additional
+                            testOnReturn operation.
+                        </entry>
+                    </row>
 				</tbody>
 			</tgroup>
 		</table>
