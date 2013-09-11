@@ -183,6 +183,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      * Default is 0, indicating no count limit.
      *
      * @param defaultCountLimit the default count limit to use in searches.
+     * @since 2.0
      */
     public void setDefaultCountLimit(int defaultCountLimit) {
         this.defaultCountLimit = defaultCountLimit;
