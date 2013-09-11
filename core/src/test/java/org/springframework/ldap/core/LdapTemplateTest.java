@@ -454,6 +454,38 @@ public class LdapTemplateTest {
 	}
 
     @Test
+    public void verifyThatDefaultSearchControlParametersAreAutomaticallyAppliedInSearch() throws Exception {
+        tested.setDefaultSearchScope(SearchControls.ONELEVEL_SCOPE);
+        tested.setDefaultCountLimit(5000);
+        tested.setDefaultTimeLimit(500);
+
+        expectGetReadOnlyContext();
+
+        SearchControls controls = new SearchControls();
+        controls.setReturningObjFlag(false);
+        controls.setCountLimit(5000);
+        controls.setTimeLimit(500);
+        controls.setSearchScope(SearchControls.ONELEVEL_SCOPE);
+
+        BasicAttributes expectedAttributes = new BasicAttributes();
+        SearchResult searchResult = new SearchResult("", null, expectedAttributes);
+
+        singleSearchResult(controls, searchResult);
+
+        Object expectedResult = new Object();
+        when(attributesMapperMock.mapFromAttributes(expectedAttributes)).thenReturn(expectedResult);
+
+        List list = tested.search(nameMock, "(ou=somevalue)", attributesMapperMock);
+
+        verify(namingEnumerationMock).close();
+        verify(dirContextMock).close();
+
+        assertNotNull(list);
+        assertEquals(1, list.size());
+        assertSame(expectedResult, list.get(0));
+    }
+
+    @Test
 	public void testSearch_AttributesMapper() throws Exception {
 		expectGetReadOnlyContext();
 
@@ -1597,7 +1629,8 @@ public class LdapTemplateTest {
 
                 return controls.getSearchScope() == s1.getSearchScope()
                         && controls.getReturningObjFlag() == s1.getReturningObjFlag()
-                        && controls.getDerefLinkFlag() == s1.getDerefLinkFlag() && controls.getCountLimit() == s1.getCountLimit()
+                        && controls.getDerefLinkFlag() == s1.getDerefLinkFlag()
+                        && controls.getCountLimit() == s1.getCountLimit()
                         && controls.getTimeLimit() == s1.getTimeLimit()
                         && controls.getReturningAttributes() == s1.getReturningAttributes();
             }

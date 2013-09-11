@@ -62,8 +62,6 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
 	private static final Log log = LogFactory.getLog(LdapTemplate.class);
 
-	private static final int DEFAULT_SEARCH_SCOPE = SearchControls.SUBTREE_SCOPE;
-
 	private static final boolean DONT_RETURN_OBJ_FLAG = false;
 
 	private static final boolean RETURN_OBJ_FLAG = true;
@@ -75,6 +73,12 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	private boolean ignorePartialResultException = false;
 
 	private boolean ignoreNameNotFoundException = false;
+
+    private int defaultSearchScope = SearchControls.SUBTREE_SCOPE;
+
+    private int defaultTimeLimit = 0;
+
+    private int defaultCountLimit = 0;
 
 	/**
 	 * Constructor for bean usage.
@@ -149,12 +153,47 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		this.ignorePartialResultException = ignore;
 	}
 
-	/*
-	 * @see
-	 * org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
-	 * java.lang.String, int, boolean,
-	 * org.springframework.ldap.core.NameClassPairCallbackHandler)
-	 */
+    /**
+     * Set the default scope to be used in searches if not explicitly specified.
+     * Default is {@link SearchControls.SUBTREE_SCOPE}.
+     *
+     * @param defaultSearchScope the default search scope to use in searches.
+     *                           One of {@link SearchControls.OBJECT_SCOPE},
+     *                           {@link SearchControls.ONELEVEL_SCOPE},
+     *                           or {@link SearchControls.SUBTREE_SCOPE}
+     * @since 2.0
+     */
+    public void setDefaultSearchScope(int defaultSearchScope) {
+        this.defaultSearchScope = defaultSearchScope;
+    }
+
+    /**
+     * Set the default time limit be used in searches if not explicitly specified.
+     * Default is 0, indicating no time limit.
+     *
+     * @param defaultTimeLimit the default time limit to use in searches.
+     * @since 2.0
+     */
+    public void setDefaultTimeLimit(int defaultTimeLimit) {
+        this.defaultTimeLimit = defaultTimeLimit;
+    }
+
+    /**
+     * Set the default count limit be used in searches if not explicitly specified.
+     * Default is 0, indicating no count limit.
+     *
+     * @param defaultCountLimit the default count limit to use in searches.
+     */
+    public void setDefaultCountLimit(int defaultCountLimit) {
+        this.defaultCountLimit = defaultCountLimit;
+    }
+
+    /*
+         * @see
+         * org.springframework.ldap.core.LdapOperations#search(javax.naming.Name,
+         * java.lang.String, int, boolean,
+         * org.springframework.ldap.core.NameClassPairCallbackHandler)
+         */
 	public void search(Name base, String filter, int searchScope, boolean returningObjFlag,
 			NameClassPairCallbackHandler handler) {
 
@@ -369,7 +408,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	public void search(Name base, String filter, NameClassPairCallbackHandler handler) {
 
-		SearchControls controls = getDefaultSearchControls(DEFAULT_SEARCH_SCOPE, DONT_RETURN_OBJ_FLAG, ALL_ATTRIBUTES);
+		SearchControls controls = getDefaultSearchControls(defaultSearchScope, DONT_RETURN_OBJ_FLAG, ALL_ATTRIBUTES);
 		if (handler instanceof ContextMapperCallbackHandler) {
 			assureReturnObjFlagSet(controls);
 		}
@@ -384,7 +423,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	public void search(String base, String filter, NameClassPairCallbackHandler handler) {
 
-		SearchControls controls = getDefaultSearchControls(DEFAULT_SEARCH_SCOPE, DONT_RETURN_OBJ_FLAG, ALL_ATTRIBUTES);
+		SearchControls controls = getDefaultSearchControls(defaultSearchScope, DONT_RETURN_OBJ_FLAG, ALL_ATTRIBUTES);
 		if (handler instanceof ContextMapperCallbackHandler) {
 			assureReturnObjFlagSet(controls);
 		}
@@ -438,7 +477,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	public <T> List<T> search(Name base, String filter, AttributesMapper<T> mapper) {
 
-		return search(base, filter, DEFAULT_SEARCH_SCOPE, mapper);
+		return search(base, filter, defaultSearchScope, mapper);
 	}
 
 	/*
@@ -448,7 +487,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	public <T> List<T> search(String base, String filter, AttributesMapper<T> mapper) {
 
-		return search(base, filter, DEFAULT_SEARCH_SCOPE, mapper);
+		return search(base, filter, defaultSearchScope, mapper);
 	}
 
 	/*
@@ -500,7 +539,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	public <T> List<T> search(Name base, String filter, ContextMapper<T> mapper) {
 
-		return search(base, filter, DEFAULT_SEARCH_SCOPE, mapper);
+		return search(base, filter, defaultSearchScope, mapper);
 	}
 
 	/*
@@ -510,7 +549,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	public <T> List<T> search(String base, String filter, ContextMapper<T> mapper) {
 
-		return search(base, filter, DEFAULT_SEARCH_SCOPE, mapper);
+		return search(base, filter, defaultSearchScope, mapper);
 	}
 
 	/*
@@ -1214,9 +1253,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	private SearchControls getDefaultSearchControls(int searchScope, boolean returningObjFlag, String[] attrs) {
-
 		SearchControls controls = new SearchControls();
 		controls.setSearchScope(searchScope);
+        controls.setTimeLimit(defaultTimeLimit);
+        controls.setCountLimit(defaultCountLimit);
 		controls.setReturningObjFlag(returningObjFlag);
 		controls.setReturningAttributes(attrs);
 		return controls;
