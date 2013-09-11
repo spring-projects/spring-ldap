@@ -273,10 +273,19 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
             catch (InvocationTargetException e) {
                 Throwable targetException = e.getTargetException();
                 Class<? extends Throwable> targetExceptionClass = targetException.getClass();
-                if(nonTransientExceptions.contains(targetExceptionClass)) {
-                    logger.info(
-                            String.format("An %s - explicitly configured to be a non-transient exception - encountered; eagerly invalidating the target context.",
-                                    targetExceptionClass));
+
+                boolean nonTransientEncountered = false;
+                for (Class<? extends Throwable> clazz : nonTransientExceptions) {
+                    if(clazz.isAssignableFrom(targetExceptionClass)) {
+                        logger.info(
+                                String.format("An %s - explicitly configured to be a non-transient exception - encountered; eagerly invalidating the target context.",
+                                        targetExceptionClass));
+                        nonTransientEncountered = true;
+                        break;
+                    }
+                }
+
+                if(nonTransientEncountered) {
                     hasFailed = true;
                 } else {
                     if (logger.isDebugEnabled()) {

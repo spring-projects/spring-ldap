@@ -430,10 +430,10 @@
 
                         <entry>
                             The Exceptions that should be considered non-transient with
-                            regards to eager invalidation. Should any of the listed exceptions be
-                            thrown by a call to a pooled <literal>DirContext</literal> instance,
-                            that object will be automatically invalidated without any additional
-                            testOnReturn operation.
+                            regards to eager invalidation. Should any of the listed exceptions
+                            (or subclasses of them) be thrown by a call to a
+                            pooled <literal>DirContext</literal> instance, that object will be
+                            automatically invalidated without any additional testOnReturn operation.
                         </entry>
                     </row>
 				</tbody>

@@ -379,10 +379,11 @@ public class PoolingContextSource implements ContextSource, DisposableBean {
 
     /**
      * Configure the exception classes that are to be interpreted as no-transient with regards to eager
-     * context invalidation. If one of the configured exceptions is thrown by any method on a pooled
-     * DirContext, that instance will immediately be marked as invalid without any additional testing
-     * (i.e. testOnReturn). This allows for more efficient management of dead connections. Default is
-     * {@link javax.naming.CommunicationException}.
+     * context invalidation. If one of the configured exceptions (or subclasses of them)
+     * is thrown by any method on a pooled DirContext, that instance will immediately be marked
+     * as invalid without any additional testing (i.e. testOnReturn).
+     * This allows for more efficient management of dead connections.
+     * Default is {@link javax.naming.CommunicationException}.
      *
      * @param nonTransientExceptions the exception classes that should be interpreted as non-transient
      *                               with regards to eager invalidation.
