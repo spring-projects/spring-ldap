@@ -26,4 +26,8 @@
 		class="org.springframework.ldap.samples.plain.dao.PersonDaoImpl">
 		<property name="ldapTemplate" ref="ldapTemplate" />
 	</bean>
+
+    <bean class="org.springframework.ldap.samples.utils.LdapTreeBuilder">
+        <constructor-arg ref="ldapTemplate" />
+    </bean>
 </beans>

@@ -4,7 +4,6 @@ apply plugin: 'jetty'
 
 dependencies {
     compile project(':spring-ldap-test'),
-            project(':spring-ldap-samples-utils'),
             'log4j:log4j:1.2.9',
             'javax.servlet:jstl:1.2',
             "org.springframework:spring-context:$springVersion",
