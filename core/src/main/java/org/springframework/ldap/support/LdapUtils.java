@@ -540,13 +540,14 @@ public final class LdapUtils {
      * @param index The 0-based index of the rdn value to retrieve. Must be in the range [0,size()).
      * @return the value of the rdn at the requested index.
      * @throws IndexOutOfBoundsException if index is outside the specified range.
+     * @since 2.0
      */
     public static Object getValue(Name name, int index) {
         Assert.notNull(name, "name must not be null");
 
         LdapName ldapName = returnOrConstructLdapNameFromName(name);
         Rdn rdn = ldapName.getRdn(index);
-        if(rdn.size() > 0) {
+        if(rdn.size() > 1) {
             logger.warn("Rdn at position " + index + " of dn '" + name +
                     "' is multi-value - returned value is not to be trusted. " +
                     "Consider using name-based getValue method instead");
@@ -562,6 +563,7 @@ public final class LdapUtils {
      * @return the value of the rdn at the requested index as a String.
      * @throws IndexOutOfBoundsException if index is outside the specified range.
      * @throws ClassCastException if the value of the requested component is not a String.
+     * @since 2.0
      */
     public static String getStringValue(Name name, int index) {
         return (String) getValue(name, index);

@@ -23,7 +23,7 @@ public class LdapTreeBuilder {
 	private LdapTree getLdapTree(final DirContextOperations rootContext) {
 		final LdapTree ldapTree = new LdapTree(rootContext);
 		ldapTemplate.listBindings(rootContext.getDn(),
-				new AbstractContextMapper() {
+				new AbstractContextMapper<Object>() {
 					@Override
 					protected Object doMapFromContext(DirContextOperations ctx) {
 						Name dn = ctx.getDn();

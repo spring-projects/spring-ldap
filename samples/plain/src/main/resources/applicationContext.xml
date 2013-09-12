@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="classpath:/ldap.properties" />
+
+    <!--
+        This is for test and demo purposes only - the TestContextSourceFactoryBean starts an in-process
+        Apache Directory Server instance and populates it with data from the specified LDIF file.
+
+        A real-world application would use a DirContextSource instead.
+    -->
+	<bean id="contextSource"
+		class="org.springframework.ldap.test.TestContextSourceFactoryBean">
+		<property name="defaultPartitionSuffix" value="dc=jayway,dc=se" />
+		<property name="defaultPartitionName" value="jayway" />
+		<property name="principal" value="${userDn}" />
+		<property name="password" value="${password}" />
+		<property name="ldifFile" value="classpath:/setup_data.ldif" />
+		<property name="port" value="18880" />
+	</bean>
+
+    <!--
+        Below is an example of a ContextSource definition as it would look in a real application, connecting
+        against an external LDAP server.
+
+    <bean class="org.springframework.ldap.core.support.LdapContextSource" id="contextSource">
+        <property name="url" value="ldap://ldap.example.com" />
+        <property name="userDn" value="cn=admin,dc=261consulting,dc=com"/>
+        <property name="password" value="secret"/>
+        <property name="base" value="dc=261consulting,dc=com" />
+    </bean>
+    -->
+
+    <bean id="ldapTemplate"
+		class="org.springframework.ldap.core.LdapTemplate">
+		<constructor-arg ref="contextSource" />
+	</bean>
+
+	<bean id="ldapTreeBuilder"
+		class="org.springframework.ldap.samples.utils.LdapTreeBuilder">
+		<constructor-arg ref="ldapTemplate" />
+	</bean>
+
+	<bean id="personDao"
+		class="org.springframework.ldap.samples.plain.dao.PersonDaoImpl">
+		<property name="ldapTemplate" ref="ldapTemplate" />
+	</bean>
+
+</beans>
