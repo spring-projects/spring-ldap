@@ -24,7 +24,7 @@ import org.springframework.ldap.UncategorizedLdapException;
 import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.core.LdapEncoder;
+import org.springframework.ldap.support.LdapEncoder;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;

@@ -16,7 +16,7 @@
 
 package org.springframework.ldap.filter;
 
-import org.springframework.ldap.core.LdapEncoder;
+import org.springframework.ldap.support.LdapEncoder;
 
 /**
  * This filter allows the user to specify wildcards (*) by not escaping them in

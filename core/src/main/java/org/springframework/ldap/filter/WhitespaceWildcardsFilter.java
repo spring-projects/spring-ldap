@@ -16,7 +16,7 @@
 package org.springframework.ldap.filter;
 
 import org.springframework.util.StringUtils;
-import org.springframework.ldap.core.LdapEncoder;
+import org.springframework.ldap.support.LdapEncoder;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

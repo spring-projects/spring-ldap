@@ -15,7 +15,7 @@
  */
 package org.springframework.ldap.filter;
 
-import org.springframework.ldap.core.LdapEncoder;
+import org.springframework.ldap.support.LdapEncoder;
 
 /**
  * Abstract superclass for filters that compare values.
