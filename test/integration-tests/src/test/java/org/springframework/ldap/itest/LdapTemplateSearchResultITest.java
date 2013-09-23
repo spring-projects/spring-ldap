@@ -26,6 +26,7 @@ import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.AbstractContextMapper;
+import org.springframework.ldap.query.SearchScope;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.test.AttributeCheckAttributesMapper;
 import org.springframework.ldap.test.AttributeCheckContextMapper;
@@ -39,6 +40,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 /**
  * Tests for LdapTemplate's search methods. This test class tests all the
@@ -86,7 +88,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
 		contextMapper = null;
 	}
 
-	@Test
+    @Test
 	public void testSearch_AttributesMapper() {
 		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		attributesMapper.setExpectedValues(ALL_VALUES);
@@ -94,7 +96,81 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
 		assertEquals(1, list.size());
 	}
 
-	@Test
+    @Test
+    public void testSearch_LdapQuery_AttributesMapper() {
+        attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+        attributesMapper.setExpectedValues(ALL_VALUES);
+
+        List<Object> list = tested.search(query()
+                .base(BASE_STRING)
+                .where("objectclass").is("person").and("sn").is("Person2"),
+                attributesMapper);
+        assertEquals(1, list.size());
+    }
+
+    @Test
+    public void testSearch_LdapQuery_AttributesMapper_FewerAttributes() {
+        attributesMapper.setExpectedAttributes(new String[] {"cn"});
+        attributesMapper.setExpectedValues(new String[]{"Some Person2"});
+
+        List<Object> list = tested.search(query()
+                .base(BASE_STRING)
+                .attributes("cn")
+                .where("objectclass").is("person").and("sn").is("Person2"),
+                attributesMapper);
+        assertEquals(1, list.size());
+    }
+
+    @Test
+    public void testSearch_LdapQuery_AttributesMapper_SearchScope() {
+        attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+        attributesMapper.setExpectedValues(ALL_VALUES);
+
+        List<Object> list = tested.search(query()
+                .base(BASE_STRING)
+                .searchScope(SearchScope.ONELEVEL)
+                .where("objectclass").is("person").and("sn").is("Person2"),
+                attributesMapper);
+        assertEquals(0, list.size());
+    }
+
+    @Test
+    public void testSearch_LdapQuery_AttributesMapper_SearchScope_CorrectBase() {
+        attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+        attributesMapper.setExpectedValues(ALL_VALUES);
+
+        List<Object> list = tested.search(query()
+                .base("ou=company1,c=Sweden")
+                .searchScope(SearchScope.ONELEVEL)
+                .where("objectclass").is("person").and("sn").is("Person2"),
+                attributesMapper);
+        assertEquals(1, list.size());
+    }
+
+    @Test
+    public void testSearch_LdapQuery_AttributesMapper_NoBase() {
+        attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+        attributesMapper.setExpectedValues(ALL_VALUES);
+
+        List<Object> list = tested.search(query()
+                .where("objectclass").is("person").and("sn").is("Person2"),
+                attributesMapper);
+        assertEquals(1, list.size());
+    }
+
+    @Test
+    public void testSearch_LdapQuery_AttributesMapper_DifferentBase() {
+        attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+        attributesMapper.setExpectedValues(ALL_VALUES);
+
+        List<Object> list = tested.search(query()
+                .base("c=Norway")
+                .where("objectclass").is("person").and("sn").is("Person2"),
+                attributesMapper);
+        assertEquals(0, list.size());
+    }
+
+    @Test
 	public void testSearch_SearchScope_AttributesMapper() {
 		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		attributesMapper.setExpectedValues(ALL_VALUES);
@@ -200,7 +276,80 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
 		assertEquals(1, list.size());
 	}
 
-	@Test
+    @Test
+    public void testSearch_ContextMapper_LdapQuery() {
+        contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+        contextMapper.setExpectedValues(ALL_VALUES);
+        List<DirContextAdapter> list = tested.search(query()
+                .base(BASE_NAME)
+                .where("objectclass").is("person").and("sn").is("Person2"),
+                 contextMapper);
+        assertEquals(1, list.size());
+    }
+
+    @Test
+    public void testSearch_ContextMapper_LdapQuery_NoBase() {
+        contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+        contextMapper.setExpectedValues(ALL_VALUES);
+        List<DirContextAdapter> list = tested.search(query()
+                .where("objectclass").is("person").and("sn").is("Person2"),
+                contextMapper);
+        assertEquals(1, list.size());
+    }
+
+    @Test
+    public void testSearch_ContextMapper_LdapQuery_SearchScope() {
+        contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+        contextMapper.setExpectedValues(ALL_VALUES);
+        List<DirContextAdapter> list = tested.search(query()
+                .base(BASE_NAME)
+                .searchScope(SearchScope.ONELEVEL)
+                .where("objectclass").is("person").and("sn").is("Person2"),
+                contextMapper);
+        assertEquals(0, list.size());
+    }
+
+    @Test
+    public void testSearch_ContextMapper_LdapQuery_SearchScope_CorrectBase() {
+        contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+        contextMapper.setExpectedValues(ALL_VALUES);
+        List<DirContextAdapter> list = tested.search(query()
+                .base("ou=company1,c=Sweden")
+                .searchScope(SearchScope.ONELEVEL)
+                .where("objectclass").is("person").and("sn").is("Person2"),
+                contextMapper);
+        assertEquals(1, list.size());
+    }
+
+    @Test
+    public void testSearchForContext_LdapQuery() {
+        DirContextOperations result = tested.searchForContext(query()
+                .where("objectclass").is("person").and("sn").is("Person2"));
+
+        assertNotNull(result);
+        assertEquals("Person2", result.getStringAttribute("sn"));
+    }
+
+    @Test(expected = EmptyResultDataAccessException.class)
+    public void testSearchForContext_LdapQuery_SearchScopeNotFound() {
+        tested.searchForContext(query()
+                .searchScope(SearchScope.ONELEVEL)
+                .where("objectclass").is("person").and("sn").is("Person2"));
+    }
+
+    @Test
+    public void testSearchForContext_LdapQuery_SearchScope_CorrectBase() {
+        DirContextOperations result =
+                tested.searchForContext(query()
+                .searchScope(SearchScope.ONELEVEL)
+                .base("ou=company1,c=Sweden")
+                .where("objectclass").is("person").and("sn").is("Person2"));
+
+        assertNotNull(result);
+        assertEquals("Person2", result.getStringAttribute("sn"));
+    }
+
+    @Test
 	public void testSearch_SearchScope_ContextMapper_Name() {
 		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		contextMapper.setExpectedValues(ALL_VALUES);

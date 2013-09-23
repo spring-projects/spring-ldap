@@ -21,6 +21,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.ldap.NamingException;
+import org.springframework.ldap.query.LdapQuery;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.Assert;
 
@@ -1527,15 +1528,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * .Name, java.lang.String, org.springframework.ldap.core.ContextMapper)
 	 */
 	public <T> T searchForObject(Name base, String filter, ContextMapper<T> mapper) {
-		List<T> result = search(base, filter, mapper);
-		if (result.size() == 0) {
-			throw new EmptyResultDataAccessException(1);
-		}
-		else if (result.size() != 1) {
-			throw new IncorrectResultSizeDataAccessException(1, result.size());
-		}
-
-		return result.get(0);
+        return searchForObject(base,
+                filter,
+                getDefaultSearchControls(defaultSearchScope, RETURN_OBJ_FLAG, ALL_ATTRIBUTES),
+                mapper);
 	}
 
 	/*
@@ -1549,7 +1545,25 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		return searchForObject(LdapUtils.newLdapName(base), filter, mapper);
 	}
 
-	private static final class NullAuthenticatedLdapEntryContextCallback
+    public <T> T searchForObject (Name base, String filter, SearchControls searchControls, ContextMapper<T> mapper) {
+        List<T> result = search(base, filter, searchControls, mapper);
+
+        if (result.size() == 0) {
+            throw new EmptyResultDataAccessException(1);
+        }
+        else if (result.size() != 1) {
+            throw new IncorrectResultSizeDataAccessException(1, result.size());
+        }
+
+        return result.get(0);
+    }
+
+    @Override
+    public <T> T searchForObject(String base, String filter, SearchControls searchControls, ContextMapper<T> mapper) {
+        return searchForObject(LdapUtils.newLdapName(base), filter, searchControls, mapper);
+    }
+
+    private static final class NullAuthenticatedLdapEntryContextCallback
 			implements AuthenticatedLdapEntryContextCallback {
 		public void executeWithContext(DirContext ctx,
 				LdapEntryIdentification ldapEntryIdentification) {
@@ -1563,4 +1577,65 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			// Do nothing
 		}
 	}
+
+    @Override
+    public <T> List<T> search(LdapQuery query, ContextMapper<T> mapper) {
+        SearchControls searchControls = searchControlsForQuery(query, RETURN_OBJ_FLAG);
+
+        return search(query.base(),
+                query.filter().encode(),
+                searchControls,
+                mapper);
+
+    }
+
+    private SearchControls searchControlsForQuery(LdapQuery query, boolean returnObjFlag) {
+        SearchControls searchControls = getDefaultSearchControls(
+                defaultSearchScope,
+                returnObjFlag,
+                query.attributes());
+
+        if(query.searchScope() != null) {
+            searchControls.setSearchScope(query.searchScope().getId());
+        }
+
+        if(query.countLimit() != null) {
+            searchControls.setCountLimit(query.countLimit());
+        }
+
+        if(query.countLimit() != null) {
+            searchControls.setCountLimit(query.timeLimit());
+        }
+        return searchControls;
+    }
+
+    @Override
+    public <T> List<T> search(LdapQuery query, AttributesMapper<T> mapper) {
+        SearchControls searchControls = searchControlsForQuery(query, DONT_RETURN_OBJ_FLAG);
+
+        return search(query.base(),
+                query.filter().encode(),
+                searchControls,
+                mapper);
+    }
+
+    @Override
+    public DirContextOperations searchForContext(LdapQuery query) {
+        return searchForObject(query, new ContextMapper<DirContextOperations>() {
+            @Override
+            public DirContextOperations mapFromContext(Object ctx) throws javax.naming.NamingException {
+                return (DirContextOperations) ctx;
+            }
+        });
+    }
+
+    @Override
+    public <T> T searchForObject(LdapQuery query, ContextMapper<T> mapper) {
+        SearchControls searchControls = searchControlsForQuery(query, DONT_RETURN_OBJ_FLAG);
+
+        return searchForObject(query.base(),
+                query.filter().encode(),
+                searchControls,
+                mapper);
+    }
 }

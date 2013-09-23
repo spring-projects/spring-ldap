@@ -20,6 +20,7 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.ldap.ContextNotEmptyException;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.support.AbstractContextSource;
+import org.springframework.ldap.query.LdapQuery;
 import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.Binding;
@@ -1503,7 +1504,39 @@ public interface LdapOperations {
 	 */
 	<T> T searchForObject(Name base, String filter, ContextMapper<T> mapper);
 
-	/**
+    /**
+     * Perform a search for a unique entry matching the specified search
+     * criteria and return the found object. If no entry is found or if there
+     * are more than one matching entry, an
+     * {@link IncorrectResultSizeDataAccessException} is thrown.
+     * @param base the DN to use as the base of the search.
+     * @param filter the search filter.
+     * @param searchControls the searchControls to use for the search.
+     * @param mapper the mapper to use for the search.
+     * @return the single object returned by the mapper that matches the search
+     * criteria.
+     * @throws IncorrectResultSizeDataAccessException if the result is not one unique entry
+     * @since 2.0
+     */
+    <T> T searchForObject(Name base, String filter, SearchControls searchControls, ContextMapper<T> mapper);
+
+    /**
+     * Perform a search for a unique entry matching the specified search
+     * criteria and return the found object. If no entry is found or if there
+     * are more than one matching entry, an
+     * {@link IncorrectResultSizeDataAccessException} is thrown.
+     * @param base the DN to use as the base of the search.
+     * @param filter the search filter.
+     * @param searchControls the searchControls to use for the search.
+     * @param mapper the mapper to use for the search.
+     * @return the single object returned by the mapper that matches the search
+     * criteria.
+     * @throws IncorrectResultSizeDataAccessException if the result is not one unique entry
+     * @since 2.0
+     */
+    <T> T searchForObject(String base, String filter, SearchControls searchControls, ContextMapper<T> mapper);
+
+    /**
 	 * Perform a search for a unique entry matching the specified search
 	 * criteria and return the found object. If no entry is found or if there
 	 * are more than one matching entry, an
@@ -1517,4 +1550,57 @@ public interface LdapOperations {
 	 * @since 1.3
 	 */
 	<T> T searchForObject(String base, String filter, ContextMapper<T> mapper);
+
+    /**
+     * Perform a search with parameters from the specified LdapQuery. All found objects will be supplied to the
+     * <code>ContextMapper</code> for processing, and all returned objects will be collected in a list to be returned.
+     *
+     * @param query the LDAP query specification.
+     * @param mapper the <code>ContextMapper</code> to supply all found entries to.
+     * @return a <code>List</code> containing all entries received from the
+     * <code>ContextMapper</code>.
+     *
+     * @throws NamingException if any error occurs.
+     * @since 2.0
+     */
+    <T> List<T> search(LdapQuery query, ContextMapper<T> mapper);
+
+    /**
+     * Perform a search with parameters from the specified LdapQuery. The Attributes of the found entrieswill be supplied to the
+     * <code>AttributesMapper</code> for processing, and all returned objects will be collected in a list to be returned.
+     *
+     * @param query the LDAP query specification.
+     * @param mapper the <code>Attributes</code> to supply all found Attributes to.
+     * @return a <code>List</code> containing all entries received from the
+     * <code>Attributes</code>.
+     *
+     * @throws NamingException if any error occurs.
+     * @since 2.0
+     */
+    <T> List<T> search(LdapQuery query, AttributesMapper<T> mapper);
+
+    /**
+     * Perform a search for a unique entry matching the specified LDAP
+     * query and return the found entry as a DirContextOperation instance. If no entry is found or if there
+     * are more than one matching entry, an
+     * {@link IncorrectResultSizeDataAccessException} is thrown.
+     * @param query the DN to use as the base of the search.
+     * @return the single entry matching the query as a DirContextOperations instance.
+     * @throws IncorrectResultSizeDataAccessException if the result is not one unique entry
+     * @since 2.0
+     */
+    DirContextOperations searchForContext(LdapQuery query);
+
+    /**
+     * Perform a search for a unique entry matching the specified LDAP
+     * query and return the found object. If no entry is found or if there
+     * are more than one matching entry, an
+     * {@link IncorrectResultSizeDataAccessException} is thrown.
+     * @param query the LDAP query specification.
+     * @return the single object returned by the mapper that matches the search
+     * criteria.
+     * @throws IncorrectResultSizeDataAccessException if the result is not one unique entry
+     * @since 2.0
+     */
+    <T> T searchForObject(LdapQuery query, ContextMapper<T> mapper);
 }

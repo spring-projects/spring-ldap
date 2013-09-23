@@ -15,6 +15,7 @@
  */
 package org.springframework.ldap.filter;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -90,4 +91,9 @@ public abstract class BinaryLogicalFilter extends AbstractFilter {
 		queryList.add(query);
 		return this;
 	}
+
+    public final BinaryLogicalFilter appendAll(Collection<Filter> subQueries) {
+        queryList.addAll(subQueries);
+        return this;
+    }
 }
