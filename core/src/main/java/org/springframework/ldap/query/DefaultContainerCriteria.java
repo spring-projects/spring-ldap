@@ -94,8 +94,8 @@ class DefaultContainerCriteria implements ContainerCriteria {
 
     @Override
     public Filter filter() {
-
         if(filters.size() == 1) {
+            // No need to wrap in And/OrFilter if there's just one condition.
             return filters.iterator().next();
         }
 

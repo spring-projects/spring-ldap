@@ -17,7 +17,7 @@
 package org.springframework.ldap.query;
 
 /**
- * Builder for and/or filters.
+ * And/or filter builder support for LdapQuery.
  *
  * @author Mattias Hellborg Arthursson
  * @since 2.0

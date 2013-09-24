@@ -32,6 +32,8 @@ import javax.naming.directory.Attributes;
 import javax.naming.ldap.LdapName;
 import java.util.List;
 
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
+
 /**
  * Default implementation of PersonDao. This implementation uses
  * DirContextAdapter for managing attribute values. We use a ContextMapper
@@ -84,8 +86,9 @@ public class PersonDaoImpl implements PersonDao {
 
     @Override
 	public List<Person> findAll() {
-		EqualsFilter filter = new EqualsFilter("objectclass", "person");
-		return ldapTemplate.search(LdapUtils.emptyLdapName(), filter.encode(), PERSON_CONTEXT_MAPPER);
+		return ldapTemplate.search(query()
+                .where("objectclass").is("person"),
+                PERSON_CONTEXT_MAPPER);
 	}
 
     @Override

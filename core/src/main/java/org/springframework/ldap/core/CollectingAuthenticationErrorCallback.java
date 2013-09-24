@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.core.support;
-
-import org.springframework.ldap.core.AuthenticationErrorCallback;
+package org.springframework.ldap.core;
 
 /**
  * Convenience implementation of AuthenticationErrorCallback that stores the
@@ -47,4 +45,13 @@ public final class CollectingAuthenticationErrorCallback implements Authenticati
 	public Exception getError() {
 		return error;
 	}
+
+    /**
+     * Check whether this callback has collected an error.
+     *
+     * @return <code>true</code> if an error has been collected, <code>false</code> otherwise.
+     */
+    public boolean hasError() {
+        return error != null;
+    }
 }

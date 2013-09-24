@@ -80,7 +80,7 @@
       &lt;property name="ldapTemplate" ref="ldapTemplate" /&gt;
    &lt;/bean&gt;
 
-   &lt;tx:annotation-driven&gt;
+   &lt;tx:annotation-driven /&gt;
 
    ...</programlisting>
         <note>While the this setup will work fine for most simple use cases, some more complex scenarios will

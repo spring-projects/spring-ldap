@@ -126,4 +126,8 @@ public class LdapQueryBuilderTest {
         query.base("dc=261consulting,dc=com");
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void verifyThatOperatorChangeIsIllegal() {
+        query().where("cn").is("John Doe").and("sn").is("Doe").or("objectclass").is("person");
+    }
 }

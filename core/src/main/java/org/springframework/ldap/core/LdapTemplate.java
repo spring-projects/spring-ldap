@@ -20,7 +20,9 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.NamingException;
+import org.springframework.ldap.UncategorizedLdapException;
 import org.springframework.ldap.query.LdapQuery;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.Assert;
@@ -1491,42 +1493,94 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	public boolean authenticate(Name base, String filter, String password,
 			final AuthenticatedLdapEntryContextCallback callback, final AuthenticationErrorCallback errorCallback) {
 
-		List result = search(base, filter, new LdapEntryIdentificationContextMapper());
-		if (result.size() == 0) {
-			String msg = "No results found for search, base: '" + base + "'; filter: '" + filter + "'.";
-			log.info(msg);
-			return false;
-		} else if (result.size() > 1) {
-			String msg = "base: '" + base + "'; filter: '" + filter + "'.";
-			throw new IncorrectResultSizeDataAccessException(msg, 1, result.size());
-		}
-
-		final LdapEntryIdentification entryIdentification = (LdapEntryIdentification) result.get(0);
-
-		try {
-			DirContext ctx = contextSource.getContext(entryIdentification.getAbsoluteDn().toString(), password);
-			executeWithContext(new ContextExecutor<Object>() {
-				public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
-					callback.executeWithContext(ctx, entryIdentification);
-					return null;
-				}
-			}, ctx);
-			return true;
-		}
-		catch (Exception e) {
-			log.info("Authentication failed for entry with DN '" + entryIdentification.getAbsoluteDn() + "'", e);
-			errorCallback.execute(e);
-			return false;
-		}
+        return authenticate(base,
+                filter,
+                password,
+                getDefaultSearchControls(defaultSearchScope, RETURN_OBJ_FLAG, null),
+                callback,
+                errorCallback);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.springframework.ldap.core.LdapOperations#searchForObject(javax.naming
-	 * .Name, java.lang.String, org.springframework.ldap.core.ContextMapper)
-	 */
+    private boolean authenticate(Name base,
+                                String filter,
+                                String password,
+                                SearchControls searchControls,
+                                final AuthenticatedLdapEntryContextCallback callback,
+                                final AuthenticationErrorCallback errorCallback) {
+
+        List<LdapEntryIdentification> result = search(base, filter, searchControls, new LdapEntryIdentificationContextMapper());
+        if (result.size() == 0) {
+            String msg = "No results found for search, base: '" + base + "'; filter: '" + filter + "'.";
+            log.info(msg);
+            return false;
+        } else if (result.size() > 1) {
+            String msg = "base: '" + base + "'; filter: '" + filter + "'.";
+            throw new IncorrectResultSizeDataAccessException(msg, 1, result.size());
+        }
+
+        final LdapEntryIdentification entryIdentification = result.get(0);
+
+        try {
+            DirContext ctx = contextSource.getContext(entryIdentification.getAbsoluteName().toString(), password);
+            executeWithContext(new ContextExecutor<Object>() {
+                public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
+                    callback.executeWithContext(ctx, entryIdentification);
+                    return null;
+                }
+            }, ctx);
+            return true;
+        }
+        catch (Exception e) {
+            log.info("Authentication failed for entry with DN '" + entryIdentification.getAbsoluteName() + "'", e);
+            errorCallback.execute(e);
+            return false;
+        }
+    }
+
+    @Override
+    public <T> T authenticate(LdapQuery query, String password, AuthenticatedLdapEntryContextMapper<T> mapper) {
+        SearchControls searchControls = searchControlsForQuery(query, RETURN_OBJ_FLAG);
+        ReturningAuthenticatedLdapEntryContext<T> mapperCallback =
+                new ReturningAuthenticatedLdapEntryContext<T>(mapper);
+        CollectingAuthenticationErrorCallback errorCallback =
+                new CollectingAuthenticationErrorCallback();
+
+        boolean succeeded = authenticate(query.base(),
+                query.filter().encode(),
+                password,
+                searchControls,
+                mapperCallback,
+                errorCallback);
+
+        if(errorCallback.hasError()) {
+            Exception error = errorCallback.getError();
+
+            if (error instanceof NamingException) {
+                throw (NamingException) error;
+            } else {
+                throw new UncategorizedLdapException(error);
+            }
+        } else if(!succeeded) {
+            throw new AuthenticationException();
+        }
+
+        return mapperCallback.collectedObject;
+    }
+
+    @Override
+    public void authenticate(LdapQuery query, String password) {
+        authenticate(query,
+                password,
+                new NullAuthenticatedLdapEntryContextCallback());
+    }
+
+    /*
+         * (non-Javadoc)
+         *
+         * @see
+         * org.springframework.ldap.core.LdapOperations#searchForObject(javax.naming
+         * .Name, java.lang.String, org.springframework.ldap.core.ContextMapper)
+         */
 	public <T> T searchForObject(Name base, String filter, ContextMapper<T> mapper) {
         return searchForObject(base,
                 filter,
@@ -1564,12 +1618,17 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     }
 
     private static final class NullAuthenticatedLdapEntryContextCallback
-			implements AuthenticatedLdapEntryContextCallback {
+			implements AuthenticatedLdapEntryContextCallback, AuthenticatedLdapEntryContextMapper<Object>{
 		public void executeWithContext(DirContext ctx,
 				LdapEntryIdentification ldapEntryIdentification) {
 			// Do nothing
 		}
-	}
+
+        @Override
+        public Object mapWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
+            return null;
+        }
+    }
 
 	private static final class NullAuthenticationErrorCallback
 			implements AuthenticationErrorCallback {
@@ -1577,6 +1636,22 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			// Do nothing
 		}
 	}
+
+    private static final class ReturningAuthenticatedLdapEntryContext<T>
+            implements AuthenticatedLdapEntryContextCallback {
+        private final AuthenticatedLdapEntryContextMapper<T> mapper;
+
+        private T collectedObject;
+
+        private ReturningAuthenticatedLdapEntryContext(AuthenticatedLdapEntryContextMapper<T> mapper) {
+            this.mapper = mapper;
+        }
+
+        @Override
+        public void executeWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
+            collectedObject = mapper.mapWithContext(ctx, ldapEntryIdentification);
+        }
+    }
 
     @Override
     public <T> List<T> search(LdapQuery query, ContextMapper<T> mapper) {

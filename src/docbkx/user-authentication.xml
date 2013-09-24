@@ -35,8 +35,7 @@
     LDAP search based on e.g. the user name to get this DN:</para>
 
     <para><programlisting>private String getDnForUser(String uid) {
-  Filter f = new EqualsFilter("uid", uid);
-  List result = ldapTemplate.search(LdapUtils.emptyLdapName(), f.toString(),
+  List result = ldapTemplate.search(query().where("uid").is(uid),
       new AbstractContextMapper() {
     protected Object doMapFromContext(DirContextOperations ctx) {
       return ctx.getNameInNamespace();
@@ -52,29 +51,15 @@
     forced to concern herself with the DN of the user, she can only search for
     the user's uid, and the search always starts at the root of the tree (the
     empty path). A more flexible method would let the user specify the search
-    base, the search filter, and the credentials. Spring LDAP 1.3.0 introduced
-    new authenticate methods in LdapTemplate that provide this
-    functionality:</para>
-
-    <itemizedlist>
-      <listitem>
-        <para><literal>boolean authenticate(Name base, String filter, String
-        password);</literal></para>
-      </listitem>
-
-      <listitem>
-        <para><literal>boolean authenticate(String base, String filter, String
-        password);</literal></para>
-      </listitem>
-    </itemizedlist>
-
-    <para>Using one of these methods, authentication becomes as simple as
-    this:</para>
+    base, the search filter, and the credentials. Spring LDAP includes an authenticate
+    method in LdapTemplate that provide this functionality: <literal>boolean authenticate(LdapQuery query, String password);</literal>
+    </para>
+    <para>Using this method authentication becomes as simple as this:</para>
 
     <para><example>
         <title>Authenticating a user using Spring LDAP.</title>
 
-        <programlisting>boolean authenticated = ldapTemplate.authenticate("", "(uid=john.doe)", "secret");</programlisting>
+        <programlisting>ldapTemplate.authenticate(query().where("uid").is("john.doe"), "secret");</programlisting>
       </example>
         <note>
             As described in below, some setups may require additional operations to be performed
@@ -116,25 +101,18 @@
     // It is imperative that the created DirContext instance is always closed
     LdapUtils.closeContext(ctx);
   }
-}</programlisting>It would be better if the operation could be provided as an
+}</programlisting>
+        It would be better if the operation could be provided as an
     implementation of a callback interface, thus not limiting the operation to
-    always be a <literal>lookup</literal>. Spring LDAP 1.3.0 introduced the
-    callback interface
-    <literal>AuthenticatedLdapEntryContextCallback</literal> and a few
-    corresponding <literal>authenticate</literal> methods:</para>
+    always be a <literal>lookup</literal>. Spring LDAP includes the callback interface
+    <literal>AuthenticatedLdapEntryContextMapper</literal> and a
+    corresponding <literal>authenticate</literal> method:
+        <literal>&lt;T&gt; T authenticate(LdapQuery query, String password, AuthenticatedLdapEntryContextMapper&lt;T&gt; mapper);</literal></para>
 
     <itemizedlist>
-      <listitem>
-        <para><literal>boolean authenticate(Name base, String filter, String
-        password, AuthenticatedLdapEntryContextCallback
-        callback);</literal></para>
-      </listitem>
+        <listitem>
 
-      <listitem>
-        <para><literal>boolean authenticate(String base, String filter, String
-        password, AuthenticatedLdapEntryContextCallback
-        callback);</literal></para>
-      </listitem>
+        </listitem>
     </itemizedlist>
 
     <para>This opens up for any operation to be performed on the authenticated
@@ -144,83 +122,30 @@
       <title>Performing an LDAP operation on the authenticated context using
       Spring LDAP.</title>
 
-      <programlisting>AuthenticatedLdapEntryContextCallback contextCallback = new AuthenticatedLdapEntryContextCallback() {
-  public void executeWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
+      <programlisting>AuthenticatedLdapEntryContextMapper&lt;DirContextOperations&gt; mapper = new AuthenticatedLdapEntryContextMapper&lt;DirContextOperations&gt;() {
+  public DirContextOperations mapWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
     try {
-      ctx.lookup(ldapEntryIdentification.getRelativeDn());
+      return (DirContextOperations) ctx.lookup(ldapEntryIdentification.getRelativeName());
     }
     catch (NamingException e) {
-      throw new RuntimeException("Failed to lookup " + ldapEntryIdentification.getRelativeDn(), e);
+      throw new RuntimeException("Failed to lookup " + ldapEntryIdentification.getRelativeName(), e);
     }
   }
 };
 
-ldapTemplate.authenticate("", "(uid=john.doe)", "secret", contextCallback));</programlisting>
+ldapTemplate.authenticate(query().where("uid").is("john.doe"), "secret", mapper);</programlisting>
     </example>
   </sect1>
 
   <sect1>
-    <title>Retrieving the Authentication Exception</title>
+    <title>Obsolete authentication methods</title>
 
-    <para>So far, the methods have only been able to tell the user whether or
-    not the authentication succeeded. There has been no way of retrieving the
-    actual exception. Spring LDAP 1.3.1 introduced the
-    <literal>AuthenticationErrorCallback</literal> and a few more
-    <literal>authenticate</literal> methods:</para>
-
-    <itemizedlist>
-      <listitem>
-        <para><literal>boolean authenticate(Name base, String filter, String
-        password, AuthenticationErrorCallback errorCallback);</literal></para>
-      </listitem>
-
-      <listitem>
-        <para><literal>boolean authenticate(String base, String filter, String
-        password, AuthenticationErrorCallback errorCallback);</literal></para>
-      </listitem>
-
-      <listitem>
-        <para><literal>boolean authenticate(Name base, String filter, String
-        password, AuthenticatedLdapEntryContextCallback callback,
-        AuthenticationErrorCallback errorCallback);</literal></para>
-      </listitem>
-
-      <listitem>
-        <para><literal>boolean authenticate(String base, String filter, String
-        password, AuthenticatedLdapEntryContextCallback callback,
-        AuthenticationErrorCallback errorCallback);</literal></para>
-      </listitem>
-    </itemizedlist>
-
-    <para>A convenient collecting implementation of the error callback
-    interface is also provided:</para>
-
-    <para><programlisting>public final class CollectingAuthenticationErrorCallback implements AuthenticationErrorCallback {
-  private Exception error;
-
-  public void execute(Exception e) {
-    this.error = e;
-  }
-
-  public Exception getError() {
-    return error;
-  }
-}</programlisting>The code needed for authenticating a user and retrieving the
-    authentication exception in case of an error boils down to this:</para>
-
-    <para><example>
-        <title>Authenticating a user and retrieving the authentication
-        exception.</title>
-
-        <programlisting>import org.springframework.ldap.core.support.CollectingAuthenticationErrorCallback;
-...
-CollectingAuthenticationErrorCallback errorCallback = new CollectingAuthenticationErrorCallback();
-boolean result = ldapTemplate.authenticate("", filter.toString(), "invalidpassword", errorCallback);
-if (!result) {
-  Exception error = errorCallback.getError();
-  // error is likely of type org.springframework.ldap.AuthenticationException
-}</programlisting>
-      </example></para>
+    <para>
+        In addition to the <literal>authenticate</literal> methods described above
+        there are a number of deprecated methods that can be used for authentication.
+        While these will work fine, the recommendation is to use the
+        <literal>LdapQuery</literal> methods instead.
+    </para>
   </sect1>
 
   <sect1>

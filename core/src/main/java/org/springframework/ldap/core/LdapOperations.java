@@ -1323,10 +1323,12 @@ public interface LdapOperations {
 	 * @return <code>true</code> if the authentication was successful,
 	 * <code>false</code> otherwise.
 	 * @since 1.3
+     * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
+     *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
 	 */
 	boolean authenticate(Name base, String filter, String password);
 
-	/**
+    /**
 	 * Utility method to perform a simple LDAP 'bind' authentication. Search for
 	 * the LDAP entry to authenticate using the supplied base DN and filter; use
 	 * the DN of the found entry together with the password as input to
@@ -1347,6 +1349,8 @@ public interface LdapOperations {
 	 * @return <code>true</code> if the authentication was successful,
 	 * <code>false</code> otherwise.
 	 * @since 1.3
+     * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
+     *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
 	 */
 	boolean authenticate(String base, String filter, String password);
 
@@ -1368,6 +1372,8 @@ public interface LdapOperations {
 	 * <code>false</code> otherwise.
 	 * @see #authenticate(Name, String, String)
 	 * @since 1.3
+     * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
+     *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
 	 */
 	boolean authenticate(Name base, String filter, String password, AuthenticatedLdapEntryContextCallback callback);
 
@@ -1389,6 +1395,8 @@ public interface LdapOperations {
 	 * <code>false</code> otherwise.
 	 * @see #authenticate(String, String, String)
 	 * @since 1.3
+     * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
+     *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
 	 */
 	boolean authenticate(String base, String filter, String password, AuthenticatedLdapEntryContextCallback callback);
 
@@ -1414,6 +1422,8 @@ public interface LdapOperations {
 	 * <code>false</code> otherwise.
 	 * @see #authenticate(Name, String, String, AuthenticatedLdapEntryContextCallback)
 	 * @since 1.3.1
+     * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
+     *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
 	 */
 	boolean authenticate(Name base, String filter, String password,
 			AuthenticatedLdapEntryContextCallback callback,
@@ -1441,29 +1451,33 @@ public interface LdapOperations {
 	 * <code>false</code> otherwise.
 	 * @see #authenticate(String, String, String, AuthenticatedLdapEntryContextCallback)
 	 * @since 1.3.1
+     * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
+     *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
 	 */
 	boolean authenticate(String base, String filter, String password,
 			AuthenticatedLdapEntryContextCallback callback,
 			AuthenticationErrorCallback errorCallback);
 
-	/**
-	 * Utility method to perform a simple LDAP 'bind' authentication. Search for
-	 * the LDAP entry to authenticate using the supplied base DN and filter; use
-	 * the DN of the found entry together with the password as input to
-	 * {@link ContextSource#getContext(String, String)}, thus authenticating the
-	 * entry. If an exception is caught, the same exception is passed on to the given
-	 * {@link AuthenticationErrorCallback}. This enables the caller to provide a
-	 * callback that, for example, collects the exception for later processing.
-	 * 
-	 * @param base the DN to use as the base of the search.
-	 * @param filter the search filter - must result in a unique result.
-	 * @param password the password to use for authentication.
-	 * @param errorCallback the callback that will be called if an exception is caught.
-	 * @return <code>true</code> if the authentication was successful,
-	 * <code>false</code> otherwise.
-	 * @see #authenticate(Name, String, String, AuthenticatedLdapEntryContextCallback, AuthenticationErrorCallback)
-	 * @since 1.3.1
-	 */
+    /**
+     * Utility method to perform a simple LDAP 'bind' authentication. Search for
+     * the LDAP entry to authenticate using the supplied base DN and filter; use
+     * the DN of the found entry together with the password as input to
+     * {@link ContextSource#getContext(String, String)}, thus authenticating the
+     * entry. If an exception is caught, the same exception is passed on to the given
+     * {@link AuthenticationErrorCallback}. This enables the caller to provide a
+     * callback that, for example, collects the exception for later processing.
+     *
+     * @param base the DN to use as the base of the search.
+     * @param filter the search filter - must result in a unique result.
+     * @param password the password to use for authentication.
+     * @param errorCallback the callback that will be called if an exception is caught.
+     * @return <code>true</code> if the authentication was successful,
+     * <code>false</code> otherwise.
+     * @see #authenticate(Name, String, String, AuthenticatedLdapEntryContextCallback, AuthenticationErrorCallback)
+     * @since 1.3.1
+     * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
+     *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
+     */
 	boolean authenticate(Name base, String filter, String password,
 			AuthenticationErrorCallback errorCallback);
 
@@ -1483,11 +1497,63 @@ public interface LdapOperations {
 	 * @return <code>true</code> if the authentication was successful,
 	 * <code>false</code> otherwise.
 	 * @throws IncorrectResultSizeDataAccessException if more than one users were found
-	 * @see #authenticate(String, String, String, AuthenticatedLdapEntryContextCallback, AuthenticationErrorCallback)
 	 * @since 1.3.1
+     * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
+     *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
 	 */
 	boolean authenticate(String base, String filter, String password,
 			AuthenticationErrorCallback errorCallback);
+
+
+    /**
+     * Utility method to perform a simple LDAP 'bind' authentication. Search for
+     * the LDAP entry to authenticate using the supplied LdapQuery; use
+     * the DN of the found entry together with the password as input to
+     * {@link ContextSource#getContext(String, String)}, thus authenticating the
+     * entry.
+     * <p>
+     *     <b>Note:</b> This method differs from the older authenticate methods in that encountered
+     *     exceptions are thrown rather than supplied to a callback for handling.
+     * </p>
+     *
+     * @param query the LdapQuery specifying the details of the search.
+     * @param password the password to use for authentication.
+     * @param mapper the callback that will be called to perform operations
+     * on the DirContext authenticated with the found user.
+     * <code>false</code> otherwise.
+     * @return the result from the callback.
+     * @throws IncorrectResultSizeDataAccessException if more than one users were found
+     * @throws org.springframework.dao.EmptyResultDataAccessException if only one user was found
+     * @throws NamingException if something went wrong in authentication.
+     *
+     * @since 2.0
+     */
+    <T> T authenticate(LdapQuery query, String password, AuthenticatedLdapEntryContextMapper<T> mapper);
+
+    /**
+     * Utility method to perform a simple LDAP 'bind' authentication. Search for
+     * the LDAP entry to authenticate using the supplied base DN and filter; use
+     * the DN of the found entry together with the password as input to
+     * {@link ContextSource#getContext(String, String)}, thus authenticating the
+     * entry. If an exception is caught, the same exception is passed on to the given
+     * {@link AuthenticationErrorCallback}. This enables the caller to provide a
+     * callback that, for example, collects the exception for later processing.
+     * <p>
+     *     <b>Note:</b> This method differs from the older authenticate methods in that encountered
+     *     exceptions are thrown rather than supplied to a callback for handling.
+     * </p>
+     *
+     * @param query the LdapQuery specifying the details of the search.
+     * @param password the password to use for authentication.
+     * <code>false</code> otherwise.
+     * @throws IncorrectResultSizeDataAccessException if more than one users were found
+     * @throws org.springframework.dao.EmptyResultDataAccessException if only one user was found
+     * @throws NamingException if something went wrong in authentication.
+     *
+     * @since 2.0
+     */
+    void authenticate(LdapQuery query, String password);
+
 
 	/**
 	 * Perform a search for a unique entry matching the specified search

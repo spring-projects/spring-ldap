@@ -16,28 +16,30 @@
 
 package org.springframework.ldap.itest;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertNotNull;
-
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
-
+import junit.framework.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.core.AuthenticatedLdapEntryContextCallback;
+import org.springframework.ldap.core.CollectingAuthenticationErrorCallback;
 import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapEntryIdentification;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.support.CollectingAuthenticationErrorCallback;
 import org.springframework.ldap.core.support.LookupAttemptingCallback;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
-import org.springframework.ldap.filter.WhitespaceWildcardsFilter;
 import org.springframework.test.context.ContextConfiguration;
+
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 /**
  * Tests the authenticate methods of LdapTemplate.
@@ -58,14 +60,34 @@ public class LdapTemplateAuthenticationITest extends AbstractLdapTemplateIntegra
 		assertTrue(tested.authenticate("", filter.toString(), "password"));
 	}
 
-	@Test
+    @Test
+    public void testAuthenticateWithLdapQuery() {
+        AndFilter filter = new AndFilter();
+        filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
+        tested.authenticate(query()
+                .where("objectclass").is("person")
+                .and("uid").is("some.person3"),
+                "password");
+    }
+
+    @Test
 	public void testAuthenticateWithInvalidPassword() {
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
 		assertFalse(tested.authenticate("", filter.toString(), "invalidpassword"));
 	}
 
-	@Test
+    @Test(expected = AuthenticationException.class)
+    public void testAuthenticateWithLdapQueryAndInvalidPassword() {
+        AndFilter filter = new AndFilter();
+        filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
+        tested.authenticate(query()
+                .where("objectclass").is("person")
+                .and("uid").is("some.person3"),
+                "invalidpassword");
+    }
+
+    @Test
 	public void testAuthenticateWithLookupOperationPerformedOnAuthenticatedContext() {
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
@@ -83,7 +105,28 @@ public class LdapTemplateAuthenticationITest extends AbstractLdapTemplateIntegra
 		assertTrue(tested.authenticate("", filter.toString(), "password", contextCallback));
 	}
 
-	@Test
+    @Test
+    public void testAuthenticateWithLdapQueryAndMapper() {
+        DirContextOperations ctx = tested.authenticate(query()
+                .where("objectclass").is("person")
+                .and("uid").is("some.person3"),
+                "password",
+                new LookupAttemptingCallback());
+
+        Assert.assertNotNull(ctx);
+        assertEquals("some.person3", ctx.getStringAttribute("uid"));
+    }
+
+    @Test(expected = AuthenticationException.class)
+    public void testAuthenticateWithLdapQueryAndMapperAndInvalidPassword() {
+        DirContextOperations ctx = tested.authenticate(query()
+                .where("objectclass").is("person")
+                .and("uid").is("some.person3"),
+                "invalidpassword",
+                new LookupAttemptingCallback());
+    }
+
+    @Test
 	public void testAuthenticateWithInvalidPasswordAndCollectedException() {
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));

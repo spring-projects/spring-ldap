@@ -9,7 +9,7 @@
 		<authorgroup>
 			<author>
 				<firstname>Mattias</firstname>
-				<surname>Arthursson</surname>
+				<surname>Hellborg Arthursson</surname>
 			</author>
 			<author>
 				<firstname>Ulrik</firstname>
@@ -41,6 +41,7 @@
 	<xi:include href="overview.xml" />
 	<xi:include href="basic.xml" />
 	<xi:include href="dirobjectfactory.xml" />
+    <xi:include href="advancedqueries.xml" />
 	<xi:include href="executors.xml" />
 	<xi:include href="contextprocessor.xml" />
 	<xi:include href="transactions.xml" />

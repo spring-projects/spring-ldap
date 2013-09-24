@@ -17,6 +17,8 @@
 package org.springframework.ldap.core.support;
 
 import org.springframework.ldap.core.AuthenticatedLdapEntryContextCallback;
+import org.springframework.ldap.core.AuthenticatedLdapEntryContextMapper;
+import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapEntryIdentification;
 import org.springframework.ldap.support.LdapUtils;
 
@@ -27,19 +29,29 @@ import javax.naming.directory.DirContext;
  * Attempts to perform an LDAP operation in the authenticated context, because
  * Active Directory might allow bind with incorrect password (specifically empty
  * password), and later refuse operations. We want to fail fast when
- * authenticating.
+ * authenticating. {@link #mapWithContext(javax.naming.directory.DirContext, org.springframework.ldap.core.LdapEntryIdentification)}
+ * returns the {@link DirContextOperations} instance that results from the lookup operation. This instance
+ * can be used to obtain information regarding the authenticated user.
  * 
  * @author Hugo Josefson
+ * @author Mattias Hellborg Arthursson
  * @since 1.3.1
  */
-public class LookupAttemptingCallback implements AuthenticatedLdapEntryContextCallback {
+public class LookupAttemptingCallback implements
+        AuthenticatedLdapEntryContextCallback, AuthenticatedLdapEntryContextMapper<DirContextOperations> {
+    @Override
 	public void executeWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
-		try {
-			ctx.lookup(ldapEntryIdentification.getRelativeName());
-		}
-		catch (NamingException e) {
-			// rethrow, because we aren't allowed to throw checked exceptions.
-			throw LdapUtils.convertLdapException(e);
-		}
+        mapWithContext(ctx, ldapEntryIdentification);
 	}
+
+    @Override
+    public DirContextOperations mapWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
+        try {
+            return (DirContextOperations) ctx.lookup(ldapEntryIdentification.getRelativeName());
+        }
+        catch (NamingException e) {
+            // rethrow, because we aren't allowed to throw checked exceptions.
+            throw LdapUtils.convertLdapException(e);
+        }
+    }
 }

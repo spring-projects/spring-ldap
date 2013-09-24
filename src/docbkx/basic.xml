@@ -12,6 +12,7 @@
       <title>AttributesMapper that returns a single attribute</title>
 
       <programlisting>package com.example.dao;
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 public class PersonDaoImpl implements PersonDao {
    private LdapTemplate ldapTemplate;
@@ -20,13 +21,13 @@ public class PersonDaoImpl implements PersonDao {
       this.ldapTemplate = ldapTemplate;
    }
 
-   public List getAllPersonNames() {
-      return ldapTemplate.search(
-         "", "(objectclass=person)",
-<emphasis role="bold">         new AttributesMapper() {
-            public Object mapFromAttributes(Attributes attrs)
+   public List&lt;String&gt; getAllPersonNames() {
+      return ldapTemplate.search(query()
+         .where("objectclass").is("person"),
+<emphasis role="bold">         new AttributesMapper&lt;String&gt;() {
+            public String mapFromAttributes(Attributes attrs)
                throws NamingException {
-               return attrs.get("cn").get();
+               return (String) attrs.get("cn").get();
             }
          }</emphasis>);
    }
@@ -49,12 +50,13 @@ public class PersonDaoImpl implements PersonDao {
       <title>AttributesMapper that returns a Person object</title>
 
       <programlisting>package com.example.dao;
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 public class PersonDaoImpl implements PersonDao {
    private LdapTemplate ldapTemplate;
    ...
-<emphasis role="bold">   private class PersonAttributesMapper implements AttributesMapper {
-      public Object mapFromAttributes(Attributes attrs) throws NamingException {
+<emphasis role="bold">   private class PersonAttributesMapper implements AttributesMapper&lt;Person&gt; {
+      public Person mapFromAttributes(Attributes attrs) throws NamingException {
          Person person = new Person();
          person.setFullName((String)attrs.get("cn").get());
          person.setLastName((String)attrs.get("sn").get());
@@ -63,8 +65,9 @@ public class PersonDaoImpl implements PersonDao {
       }
    }
 </emphasis>
-   public List getAllPersons() {
-      return ldapTemplate.search("", "(objectclass=person)", <emphasis
+   public List&lt;Person&gt; getAllPersons() {
+      return ldapTemplate.search(query()
+          .where("objectclass").is("person"), <emphasis
           role="bold">new PersonAttributesMapper()</emphasis>);
    }
 }</programlisting>
@@ -85,7 +88,7 @@ public class PersonDaoImpl implements PersonDao {
    private LdapTemplate ldapTemplate;
    ...
    public Person findPerson(String dn) {
-      return (Person) ldapTemplate.lookup(dn, new PersonAttributesMapper());
+      return ldapTemplate.lookup(dn, new PersonAttributesMapper());
    }
 }</programlisting>
     </example>
@@ -95,31 +98,37 @@ public class PersonDaoImpl implements PersonDao {
     this case resulting in a <literal>Person</literal> object.</para>
   </sect1>
 
-  <sect1 id="basic-filters">
-    <title>Building Dynamic Filters</title>
-
-    <para>We can build dynamic filters to use in searches, using the classes
-    from the <literal>org.springframework.ldap.filter</literal>
-    package. Let's say that we want the following filter:
+  <sect1 id="basic-queries">
+    <title>Building LDAP Queries</title>
+    <para>LDAP searches involve a number of parameters, e.g. Base LDAP path,
+    search scope, attributes to return, and search filters.</para>
+    <para>Spring LDAP provides an <literal>LdapQueryBuilder</literal> with a fluent
+    API for building LDAP Queries.</para>
+    <para>Let's say that we want to perform a search starting at the
+    base DN <literal>dc=261consulting,dc=com</literal>, limiting the returned attributes to &quot;cn&quot;
+    and &quot;sn&quot;, with the following filter:
     <literal>(&amp;(objectclass=person)(sn=?))</literal>, where we want the
     <literal>?</literal> to be replaced with the value of the parameter
-    <literal>lastName</literal>. This is how we do it using the filter support
-    classes:</para>
+    <literal>lastName</literal>. This is how we do it using the LdapQueryBuilder:</para>
 
     <example>
       <title>Building a search filter dynamically</title>
 
       <programlisting>package com.example.dao;
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 public class PersonDaoImpl implements PersonDao {
    private LdapTemplate ldapTemplate;
    ...
    public List getPersonNamesByLastName(String lastName) {
-<emphasis role="bold">      AndFilter filter = new AndFilter();
-      filter.and(new EqualsFilter("objectclass", "person"));
-      filter.and(new EqualsFilter("sn", lastName));
-</emphasis>      return ldapTemplate.search(
-         "", <emphasis role="bold">filter.encode()</emphasis>,
+<emphasis role="bold">
+      LdapQuery query = query()
+         .base("dc=261consulting,dc=com")
+         .attributes("cn", "sn")
+         .where("objectclass").is("person")
+         .and("sn").is(lastName);
+</emphasis>
+      return ldapTemplate.search(query,
          new AttributesMapper() {
             public Object mapFromAttributes(Attributes attrs)
                throws NamingException {
@@ -129,30 +138,31 @@ public class PersonDaoImpl implements PersonDao {
    }
 }</programlisting>
     </example>
-
-    <para>To perform a wildcard search, it's possible to use the
-    <literal>WhitespaceWildcardsFilter</literal>:</para>
-
-    <example>
-      <title>Building a wildcard search filter</title>
-
-      <programlisting>AndFilter filter = new AndFilter();
-filter.and(new EqualsFilter("objectclass", "person"));
-filter.and(new WhitespaceWildcardsFilter("cn", cn));</programlisting>
-    </example>
-
     <para>
     	<note>
-    		In addition to simplifying building of complex search filters,
-    		the <literal>Filter</literal> classes also provide proper escaping
-    		of any unsafe characters. This prevents &quot;ldap injection&quot;,
-    		where a user might use such characters to inject unwanted operations
-    		into your LDAP operations.
+    		In addition to simplifying building of complex search parameters,
+    		the <literal>LdapQueryBuilder</literal> and its associated classes
+            also provide proper escaping of any unsafe characters in search filters.
+            This prevents &quot;ldap injection&quot;, where a user might use such
+            characters to inject unwanted operations into your LDAP operations.
     	</note>
+        <note>
+            There are many overloaded methods in <literal>LdapTemplate</literal> for
+            performing LDAP searches. This is in order to accommodate for as many different use cases
+            and programming style preferences as possible. For the vast majority of use cases the ones that
+            take an <literal>LdapQuery</literal> as input will be the recommended methods to use.
+        </note>
+        <note>
+            The <literal>AttributesMapper</literal> is just one of the available callback interfaces to use
+            when handling search and lookup data. See <xref linkend="dirobjectfactory" /> for alternatives.
+        </note>
+    </para>
+    <para>
+        For more information on the <literal>LdapQueryBuilder</literal> see <xref linkend="query-builder-advanced" />.
     </para>
   </sect1>
 
-  <sect1>
+  <sect1 id="ldap-names">
     <title>Dynamically Building Distinguished Names</title>
       <para>
           The standard Java implementation of Distinguished Name, <ulink
@@ -242,9 +252,9 @@ public class PersonDaoImpl implements PersonDao {
 ...
 protected Person buildPerson(Name dn, Attributes attrs) {
   Person person = new Person();
-  person.setCountry(<emphasis>LdapUtils.getStringValue(dn, "c")</emphasis>);
-  person.setCompany(<emphasis>LdapUtils.getStringValue(dn, "ou")</emphasis>);
-  person.setFullname(<emphasis>LdapUtils.getStringValue(dn, "cn")</emphasis>);
+  person.setCountry(<emphasis role="bold">LdapUtils.getStringValue(dn, "c")</emphasis>);
+  person.setCompany(<emphasis role="bold">LdapUtils.getStringValue(dn, "ou")</emphasis>);
+  person.setFullname(<emphasis role="bold">LdapUtils.getStringValue(dn, "cn")</emphasis>);
   // Populate rest of person object using attributes.
 
   return person;
@@ -253,7 +263,7 @@ protected Person buildPerson(Name dn, Attributes attrs) {
           </example>
           Since Java version &lt;=1.4 didn't provide any public Distinguished Name implementation at all, Spring LDAP
           1.3.2 and lower provided its own implementation, <literal>DistinguishedName</literal>. This implementation
-          suffered from a couple of shortcomings of its own, and have been deprecated in version 2.0.
+          suffered from a couple of shortcomings of its own, and has been deprecated in version 2.0.
           Users are now recommended to use <literal>LdapName</literal> along with the utilities described above instead.
       </para>
   </sect1>
