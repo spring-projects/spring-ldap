@@ -29,6 +29,8 @@ import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.odm.core.OdmException;
 import org.springframework.ldap.odm.core.OdmManager;
 import org.springframework.ldap.odm.typeconversion.ConverterManager;
+import org.springframework.ldap.query.LdapQuery;
+import org.springframework.ldap.query.SearchScope;
 import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.Name;
@@ -52,6 +54,7 @@ import java.util.Set;
  * convert between Java and LDAP representations of attribute values.
  * 
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
+ * @author Mattias Hellborg Arthursson
  *
  */
 public final class OdmManagerImpl implements OdmManager {
@@ -272,11 +275,32 @@ public final class OdmManagerImpl implements OdmManager {
         return result;
     }
 
-   
-    /* 
-     * (non-Javadoc)
-     * @see org.springframework.ldap.odm.core.OdmManager#findAll(javax.naming.Name, javax.naming.directory.SearchControls)
-     */
+    @Override
+    public <T> List<T> search(Class<T> clazz, LdapQuery query) {
+        SearchControls searchControls = new SearchControls();
+        SearchScope searchScope = query.searchScope();
+        if(searchScope == null) {
+            searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+        } else {
+            searchControls.setSearchScope(searchScope.getId());
+        }
+
+        Integer countLimit = query.countLimit();
+        if(countLimit != null) {
+            searchControls.setCountLimit(countLimit);
+        }
+
+        Integer timeLimit = query.timeLimit();
+        if(timeLimit != null) {
+            searchControls.setCountLimit(timeLimit);
+        }
+
+        // Defaults to null which means 'all', so if it's not set we're still good.
+        searchControls.setReturningAttributes(query.attributes());
+
+        return search(clazz, query.base(), query.filter().encode(), searchControls);
+    }
+
     public <T> List<T> findAll(Class<T> managedClass, Name base, SearchControls scope) {
         if (LOG.isDebugEnabled()) {
             LOG.debug(String.format("Searching for all Entries with objectClass=%1$s, with base=%2$s, scope=%3$s", 

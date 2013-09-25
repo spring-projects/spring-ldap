@@ -67,6 +67,7 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 // Tests all OdmManager functions
 public final class TestLdap {
@@ -357,6 +358,16 @@ public final class TestLdap {
         assertEquals(1, result.size());
 
         PlainPerson foundPerson = result.get(0);
+        assertEquals("William Hartnell", foundPerson.getCn());
+        assertEquals("Hartnell", foundPerson.getSurname());
+    }
+
+    @Test
+    public void verifySearchWithLdapQuery() {
+        List<Person> result = odmManager.search(Person.class, query().base(baseName).where("cn").is("William Hartnell"));
+        assertEquals(1, result.size());
+
+        Person foundPerson = result.get(0);
         assertEquals("William Hartnell", foundPerson.getCn());
         assertEquals("Hartnell", foundPerson.getSurname());
     }

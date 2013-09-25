@@ -1,9 +1,26 @@
+/*
+ * Copyright 2005-2013 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.springframework.ldap.odm.core;
 
-import java.util.List;
+import org.springframework.ldap.query.LdapQuery;
 
 import javax.naming.Name;
 import javax.naming.directory.SearchControls;
+import java.util.List;
 
 /**
  * The OdmManager interface provides generic CRUD (create/read/update/delete) 
@@ -13,6 +30,7 @@ import javax.naming.directory.SearchControls;
  * {@link org.springframework.ldap.odm.annotations}. 
  * 
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
+ * @author Mattias Hellborg Arthursson
  * 
  * @see org.springframework.ldap.odm.annotations.Entry
  * @see org.springframework.ldap.odm.annotations.Attribute
@@ -94,4 +112,19 @@ public interface OdmManager {
      * @see <a href="http://www.rfc-editor.org/rfc/rfc4515.txt">LDAP: String Representation of Search Filters RFC.</a>
      */
     <T> List<T> search(Class<T> clazz, Name base, String filter, SearchControls searchControls);
+
+    /**
+     * Search for entries in the LDAP directory.
+     * <p>
+     * Only those entries that both match the query search filter and
+     * are represented by the given Java class are returned.
+     *
+     * @param <T> The Java type to return
+     * @param clazz The Java type to return
+     * @param query the LDAP query specification
+     * @return All matching entries.
+     *
+     * @exception org.springframework.ldap.NamingException on error.
+     */
+    <T> List<T> search(Class<T> clazz, LdapQuery query);
 }

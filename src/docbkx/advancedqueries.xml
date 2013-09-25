@@ -108,4 +108,28 @@ List&lt;Person&gt; persons = ldapTemplate.search(
           </itemizedlist>
       </para>
   </sect1>
+    <sect1>
+        <title>Hardcoded Filters</title>
+        <para>
+            There are occasions when you will want to specify a hardcoded filter as input to an <literal>LdapQuery</literal>.
+            <literal>LdapQueryBuilder</literal> has two methods for this purpose:
+            <itemizedlist>
+                <listitem>
+                    <literal>filter(String hardcodedFilter)</literal> - uses the specified string as filter.
+                    Note that the specified input string will not be touched in any way, meaning that this method is not
+                    particularly well suited if you are building filters from user input.
+                </listitem>
+                <listitem>
+                    <literal>filter(String filterFormat, String... params)</literal> - uses the specified string as input
+                    to <literal>MessageFormat</literal>, properly encoding the parameters and inserting them at the
+                    specified places in the filter string.
+                </listitem>
+            </itemizedlist>
+        </para>
+        <para>
+            You cannot mix the hardcoded filter methods with the <literal>where</literal> approach described above; it's
+            either one or the other. What this means is that if you specified a filter using <literal>filter()</literal>
+            you will get an exception if you try to call <literal>where</literal> afterwards.
+        </para>
+    </sect1>
 </chapter>

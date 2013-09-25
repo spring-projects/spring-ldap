@@ -17,9 +17,12 @@
 package org.springframework.ldap.query;
 
 import org.springframework.ldap.filter.Filter;
+import org.springframework.ldap.filter.HardcodedFilter;
+import org.springframework.ldap.support.LdapEncoder;
 import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.Name;
+import java.text.MessageFormat;
 
 /**
  * Builder of LdapQueries. Start with a call to {@link #query()}, proceed with specifying the
@@ -150,11 +153,50 @@ public class LdapQueryBuilder implements LdapQuery {
      *
      * @param attribute The attribute that the first part of the filter should test against.
      * @return A ConditionCriteria instance for specifying the compare operation.
+     * @throws IllegalStateException if a filter has already been specified.
      */
     public ConditionCriteria where(String attribute) {
         assertFilterNotStarted();
         rootContainer = new DefaultContainerCriteria(this);
         return new DefaultConditionCriteria(rootContainer, attribute);
+    }
+
+    /**
+     * Specify a hardcoded filter. Please note that using this method, the filter string will not be
+     * validated or escaped in any way. <b>Never</b> use direct user input and use it concatenating strings
+     * to use as LDAP filters. Doing so opens up for &quot;LDAP injection&quot;, where malicious user
+     * may inject specifically constructed data to form filters at their convenience. When user input is used
+     * consider using {@link #where(String)} or {@link #filter(String, String...)} instead.
+     *
+     * @param hardcodedFilter The hardcoded filter string to use in the search.
+     * @return this instance.
+     * @throws IllegalStateException if a filter has already been specified.
+     */
+    public LdapQuery filter(String hardcodedFilter) {
+        assertFilterNotStarted();
+        rootContainer = new DefaultContainerCriteria(this);
+        rootContainer.append(new HardcodedFilter(hardcodedFilter));
+        return this;
+    }
+
+    /**
+     * Specify a hardcoded filter using the specified parameters. The parameters will be properly encoded using
+     * {@link LdapEncoder#filterEncode(String)} to make sure no malicious data gets through. The <code>filterFormat</code>
+     * String should be formatted for input to {@link MessageFormat#format(String, Object...)}.
+     *
+     * @param filterFormat the filter format string, formatted for input to {@link MessageFormat#format(String, Object...)}.
+     * @param params the parameters that will be used for building the final filter. All parameters will be properly encoded.
+     * @return this instance.
+     * @throws IllegalStateException if a filter has already been specified.
+     */
+    public LdapQuery filter(String filterFormat, String... params) {
+        Object[] encodedParams = new String[params.length];
+
+        for (int i=0; i < params.length; i++) {
+            encodedParams[i] = LdapEncoder.filterEncode(params[i]);
+        }
+
+        return filter(MessageFormat.format(filterFormat, encodedParams));
     }
 
     private void assertFilterNotStarted() {

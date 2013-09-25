@@ -60,6 +60,34 @@ public class LdapQueryBuilderTest {
     }
 
     @Test
+    public void buildHardcodedFilter() {
+        LdapQuery result = query().filter("(cn=Person*)");
+
+        assertEquals("(cn=Person*)", result.filter().encode());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void verifyThatHardcodedFilterFailsIfFilterAlreadySpecified() {
+        LdapQueryBuilder query = query();
+        query.where("sn").is("Doe");
+        query.filter("(cn=Person*)");
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void verifyThatFilterFormatFailsIfFilterAlreadySpecified() {
+        LdapQueryBuilder query = query();
+        query.where("sn").is("Doe");
+        query.filter("(|(cn={0})(cn={1}))", "Person*", "Parson*");
+    }
+
+    @Test
+    public void buildFilterFormat() {
+        LdapQuery result = query().filter("(|(cn={0})(cn={1}))", "Person*", "Parson*");
+
+        assertEquals("(|(cn=Person\\2a)(cn=Parson\\2a))", result.filter().encode());
+    }
+
+    @Test
     public void testBuildSimpleAnd() {
         LdapQuery query = query()
                 .base("dc=261consulting, dc=com")

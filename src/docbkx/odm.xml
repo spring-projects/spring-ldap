@@ -50,6 +50,9 @@
         <para><code>&lt;T&gt; List&lt;T&gt; search(Class&lt;T&gt; clazz, Name
         base, String filter, SearchControls searchControls)</code></para>
       </listitem>
+        <listitem>
+            <para><code>&lt;T&gt; List&lt;T&gt; search(Class&lt;T&gt; clazz, LdapQuery query)</code></para>
+        </listitem>
     </itemizedlist>
 
     <para>A reference to an implementation of this interface can be obtained
