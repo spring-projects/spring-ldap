@@ -29,7 +29,7 @@ import static org.springframework.ldap.query.CriteriaContainerType.OR;
  * @author Mattias Hellborg Arthursson
  * @since 2.0
  */
-class DefaultContainerCriteria implements ContainerCriteria {
+class DefaultContainerCriteria implements AppendableContainerCriteria {
     private final Set<Filter> filters = new LinkedHashSet<Filter>();
     private final LdapQuery topQuery;
     private CriteriaContainerType type;
@@ -38,7 +38,8 @@ class DefaultContainerCriteria implements ContainerCriteria {
         this.topQuery = topQuery;
     }
 
-    DefaultContainerCriteria append(Filter filter) {
+    @Override
+    public DefaultContainerCriteria append(Filter filter) {
         this.filters.add(filter);
         return this;
     }
