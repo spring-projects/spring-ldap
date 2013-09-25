@@ -48,7 +48,7 @@ public interface OdmManager {
      * @param dn The distinguished name of the entry to read from the LDAP directory.
      * @return The entry as read from the directory
      * 
-     * @exception org.springframework.ldap.NamingException on error.
+     * @throws org.springframework.ldap.NamingException on error.
      */
     <T> T read(Class<T> clazz, Name dn);
 
@@ -57,7 +57,7 @@ public interface OdmManager {
      *  
      * @param entry The entry to be create, it must <em>not</em> already exist in the directory.
      * 
-     * @exception org.springframework.ldap.NamingException on error.
+     * @throws org.springframework.ldap.NamingException on error.
      */
     void create(Object entry);
 
@@ -66,7 +66,7 @@ public interface OdmManager {
      * 
      * @param entry The entry to update, it must already exist in the directory.
      * 
-     * @exception org.springframework.ldap.NamingException on error.
+     * @throws org.springframework.ldap.NamingException on error.
      */
     void update(Object entry);
 
@@ -75,7 +75,7 @@ public interface OdmManager {
      * 
      * @param entry The entry to delete, it must already exist in the directory.
      * 
-     * @exception org.springframework.ldap.NamingException on error.
+     * @throws org.springframework.ldap.NamingException on error.
      */
     void delete(Object entry);
 
@@ -89,7 +89,7 @@ public interface OdmManager {
      * @return All entries that are of the type represented by the given 
      * Java class
      * 
-     * @exception org.springframework.ldap.NamingException on error.
+     * @throws org.springframework.ldap.NamingException on error.
      */
     <T> List<T> findAll(Class<T> clazz, Name base, SearchControls searchControls);
 
@@ -106,7 +106,7 @@ public interface OdmManager {
      * @param searchControls The scope of the search.
      * @return All matching entries.
      * 
-     * @exception org.springframework.ldap.NamingException on error.
+     * @throws org.springframework.ldap.NamingException on error.
      * 
      * @see <a href="http://java.sun.com/products/jndi/tutorial/basics/directory/filter.html">Sun's JNDI tutorial description of search filters.</a>
      * @see <a href="http://www.rfc-editor.org/rfc/rfc4515.txt">LDAP: String Representation of Search Filters RFC.</a>
@@ -124,7 +124,8 @@ public interface OdmManager {
      * @param query the LDAP query specification
      * @return All matching entries.
      *
-     * @exception org.springframework.ldap.NamingException on error.
+     * @throws org.springframework.ldap.NamingException on error.
+     * @see org.springframework.ldap.query.LdapQueryBuilder
      */
     <T> List<T> search(Class<T> clazz, LdapQuery query);
 }

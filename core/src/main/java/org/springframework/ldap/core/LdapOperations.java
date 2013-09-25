@@ -1527,6 +1527,7 @@ public interface LdapOperations {
      * @throws NamingException if something went wrong in authentication.
      *
      * @since 2.0
+     * @see org.springframework.ldap.query.LdapQueryBuilder
      */
     <T> T authenticate(LdapQuery query, String password, AuthenticatedLdapEntryContextMapper<T> mapper);
 
@@ -1551,6 +1552,7 @@ public interface LdapOperations {
      * @throws NamingException if something went wrong in authentication.
      *
      * @since 2.0
+     * @see org.springframework.ldap.query.LdapQueryBuilder
      */
     void authenticate(LdapQuery query, String password);
 
@@ -1628,12 +1630,14 @@ public interface LdapOperations {
      *
      * @throws NamingException if any error occurs.
      * @since 2.0
+     * @see org.springframework.ldap.query.LdapQueryBuilder
      */
     <T> List<T> search(LdapQuery query, ContextMapper<T> mapper);
 
     /**
-     * Perform a search with parameters from the specified LdapQuery. The Attributes of the found entrieswill be supplied to the
-     * <code>AttributesMapper</code> for processing, and all returned objects will be collected in a list to be returned.
+     * Perform a search with parameters from the specified LdapQuery. The Attributes of the found entries will be
+     * supplied to the <code>AttributesMapper</code> for processing, and all
+     * returned objects will be collected in a list to be returned.
      *
      * @param query the LDAP query specification.
      * @param mapper the <code>Attributes</code> to supply all found Attributes to.
@@ -1642,6 +1646,7 @@ public interface LdapOperations {
      *
      * @throws NamingException if any error occurs.
      * @since 2.0
+     * @see org.springframework.ldap.query.LdapQueryBuilder
      */
     <T> List<T> search(LdapQuery query, AttributesMapper<T> mapper);
 
@@ -1650,10 +1655,11 @@ public interface LdapOperations {
      * query and return the found entry as a DirContextOperation instance. If no entry is found or if there
      * are more than one matching entry, an
      * {@link IncorrectResultSizeDataAccessException} is thrown.
-     * @param query the DN to use as the base of the search.
+     * @param query the LDAP query specification.
      * @return the single entry matching the query as a DirContextOperations instance.
      * @throws IncorrectResultSizeDataAccessException if the result is not one unique entry
      * @since 2.0
+     * @see org.springframework.ldap.query.LdapQueryBuilder
      */
     DirContextOperations searchForContext(LdapQuery query);
 
@@ -1667,6 +1673,7 @@ public interface LdapOperations {
      * criteria.
      * @throws IncorrectResultSizeDataAccessException if the result is not one unique entry
      * @since 2.0
+     * @see org.springframework.ldap.query.LdapQueryBuilder
      */
     <T> T searchForObject(LdapQuery query, ContextMapper<T> mapper);
 }

@@ -45,6 +45,7 @@ import java.text.MessageFormat;
  *     defaults will be used. Filter conditions must always be specified.
  * </p>
  * @author Mattias Hellborg Arthursson
+ * @since 2.0
  *
  * @see javax.naming.directory.SearchControls
  * @see org.springframework.ldap.core.LdapOperations#search(LdapQuery, org.springframework.ldap.core.AttributesMapper)

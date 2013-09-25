@@ -22,6 +22,7 @@ import javax.naming.directory.SearchControls;
  * Type safe definitions of search scopes.
  *
  * @author Mattias Hellborg Arthursson
+ * @since 2.0
  */
 public enum SearchScope {
     /**
