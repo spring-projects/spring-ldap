@@ -21,7 +21,6 @@ import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.AbstractContextMapper;
-import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.samples.plain.domain.Person;
 import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.ldap.support.LdapUtils;
@@ -76,13 +75,15 @@ public class PersonDaoImpl implements PersonDao {
 
     @Override
 	public List<String> getAllPersonNames() {
-		EqualsFilter filter = new EqualsFilter("objectclass", "person");
-		return ldapTemplate.search(LdapUtils.emptyLdapName(), filter.encode(), new AttributesMapper<String>() {
-			public String mapFromAttributes(Attributes attrs) throws NamingException {
-				return attrs.get("cn").get().toString();
-			}
-		});
-	}
+        return ldapTemplate.search(query()
+                .attributes("cn")
+                .where("objectclass").is("person"),
+                new AttributesMapper<String>() {
+                    public String mapFromAttributes(Attributes attrs) throws NamingException {
+                        return attrs.get("cn").get().toString();
+                    }
+                });
+    }
 
     @Override
 	public List<Person> findAll() {
