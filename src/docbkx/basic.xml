@@ -208,7 +208,7 @@ public class PersonDaoImpl implements PersonDao {
 public static final String BASE_DN = "dc=example,dc=com";
 ...
 protected Name buildDn(Person p) {
-<emphasis role="bold">  return LdapNameBuilder.newInstance(BASE_DN)
+<emphasis role="bold">  return LdapNameBuilder.newLdapName(BASE_DN)
     .add("c", p.getCountry())
     .add("ou", p.getCompany())
     .add("cn", p.getFullname())

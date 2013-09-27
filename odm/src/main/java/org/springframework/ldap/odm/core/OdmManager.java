@@ -36,6 +36,7 @@ import java.util.List;
  * @see org.springframework.ldap.odm.annotations.Attribute
  * @see org.springframework.ldap.odm.annotations.Id
  * @see org.springframework.ldap.odm.annotations.Transient
+ * @deprecated This functionality is automatically available in LdapTemplate as of version 2.0
  */
 public interface OdmManager {   
    

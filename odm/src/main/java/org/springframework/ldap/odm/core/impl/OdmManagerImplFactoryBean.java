@@ -43,6 +43,7 @@ import java.util.Set;
  * </pre>
  * 
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
+ * @deprecated This functionality is automatically available in LdapTemplate as of version 2.0
  */
 public final class OdmManagerImplFactoryBean implements FactoryBean {
     private LdapOperations ldapOperations = null;

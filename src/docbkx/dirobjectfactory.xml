@@ -305,7 +305,7 @@ public class PersonDaoImpl implements PersonDao {
    }
 
    protected Name buildDn(String fullname, String company, String country) {
-      return LdapNameBuilder.newInstance()
+      return LdapNameBuilder.newLdapName()
         .add("c", country)
         .add("ou", company)
         .add("cn", fullname)

@@ -42,7 +42,6 @@ import org.springframework.ldap.odm.core.OdmManager;
 import org.springframework.ldap.odm.core.impl.InvalidEntryException;
 import org.springframework.ldap.odm.core.impl.MetaDataException;
 import org.springframework.ldap.odm.core.impl.OdmManagerImpl;
-import org.springframework.ldap.odm.core.impl.UnmanagedClassException;
 import org.springframework.ldap.odm.test.utils.ExecuteRunnable;
 import org.springframework.ldap.odm.test.utils.GetFreePort;
 import org.springframework.ldap.odm.test.utils.RunnableTest;
@@ -577,7 +576,7 @@ public final class TestLdap {
     }
 
     // The OdmManager should flag any attempt to use a "unmanaged" class
-    @Test(expected = UnmanagedClassException.class)
+    @Test(expected = MetaDataException.class)
     public void unManagedClass() {
         odmManager.read(Integer.class, baseName);
     }

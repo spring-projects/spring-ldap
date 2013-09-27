@@ -52,7 +52,7 @@ public class LdapNameBuilder {
      *
      * @return a new instance.
      */
-    public static LdapNameBuilder newInstance(Name name) {
+    public static LdapNameBuilder newLdapName(Name name) {
         return new LdapNameBuilder(LdapUtils.newLdapName(name));
     }
 
@@ -62,7 +62,7 @@ public class LdapNameBuilder {
      *
      * @return a new instance.
      */
-    public static LdapNameBuilder newInstance(String name) {
+    public static LdapNameBuilder newLdapName(String name) {
         return new LdapNameBuilder(LdapUtils.newLdapName(name));
     }
 

@@ -20,6 +20,7 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.ldap.ContextNotEmptyException;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.support.AbstractContextSource;
+import org.springframework.ldap.filter.Filter;
 import org.springframework.ldap.query.LdapQuery;
 import org.springframework.ldap.support.LdapUtils;
 
@@ -1676,4 +1677,120 @@ public interface LdapOperations {
      * @see org.springframework.ldap.query.LdapQueryBuilder
      */
     <T> T searchForObject(LdapQuery query, ContextMapper<T> mapper);
+
+    /**
+     * Read a named entry from the LDAP directory.
+     *
+     * @param <T> The Java type to return
+     * @param dn The distinguished name of the entry to read from the LDAP directory.
+     * @param clazz The Java type to return
+     * @return The entry as read from the directory
+     *
+     * @throws org.springframework.ldap.NamingException on error.
+     * @since 2.0
+     */
+    <T> T findByDn(Name dn, Class<T> clazz);
+
+    /**
+     * Create the given entry in the LDAP directory.
+     *
+     * @param entry The entry to be create, it must <em>not</em> already exist in the directory.
+     *
+     * @throws org.springframework.ldap.NamingException on error.
+     * @since 2.0
+     */
+    void create(Object entry);
+
+    /**
+     * Update the given entry in the LDAP directory.
+     *
+     * @param entry The entry to update, it must already exist in the directory.
+     *
+     * @throws org.springframework.ldap.NamingException on error.
+     * @since 2.0
+     */
+    void update(Object entry);
+
+    /**
+     * Delete an entry from the LDAP directory.
+     *
+     * @param entry The entry to delete, it must already exist in the directory.
+     *
+     * @throws org.springframework.ldap.NamingException on error.
+     * @since 2.0
+     */
+    void delete(Object entry);
+
+    /**
+     * Find all entries in the LDAP directory of a given type.
+     *
+     * @param <T> The Java type to return
+     * @param clazz The Java type to return
+     * @return All entries that are of the type represented by the given
+     * Java class
+     *
+     * @throws org.springframework.ldap.NamingException on error.
+     * @since 2.0
+     */
+    <T> List<T> findAll(Class<T> clazz);
+
+    /**
+     * Find all entries in the LDAP directory of a given type.
+     *
+     * @param <T> The Java type to return
+     * @param base The root of the sub-tree at which to begin the search.
+     * @param searchControls The search controls of the search. Note that the 'returned attributes' parameter should
+     *                       typically not be tampered with, since that may affect the attributes populated in returned entries.
+     * @param clazz The Java type to return
+     * @return All entries that are of the type represented by the given
+     * Java class
+     *
+     * @throws org.springframework.ldap.NamingException on error.
+     * @since 2.0
+     */
+    <T> List<T> findAll(Name base, SearchControls searchControls, Class<T> clazz);
+
+    /**
+     * Find all entries in the LDAP directory of a given type that matches the specified filter.
+     *
+     * @param <T> The Java type to return
+     * @param base The root of the sub-tree at which to begin the search.
+     * @param filter The search filter.
+     * @param searchControls The search controls of the search. Note that the 'returned attributes' parameter should
+     *                       typically not be tampered with, since that may affect the attributes populated in returned entries.
+     * @param clazz The Java type to return
+     * @return All entries that are of the type represented by the given
+     * Java class
+     *
+     * @throws org.springframework.ldap.NamingException on error.
+     * @since 2.0
+     */
+    public <T> List<T> find(Name base, Filter filter, SearchControls searchControls, Class<T> clazz);
+
+    /**
+     * Search for entries in the LDAP directory.
+     * <p>
+     * Only those entries that both match the query search filter and
+     * are represented by the given Java class are returned.
+     *
+     * @param <T> The Java type to return
+     * @param query the LDAP query specification
+     * @param clazz The Java type to return
+     * @return All matching entries.
+     *
+     * @throws org.springframework.ldap.NamingException on error.
+     * @see org.springframework.ldap.query.LdapQueryBuilder
+     * @since 2.0
+     */
+    <T> List<T> find(LdapQuery query, Class<T> clazz);
+
+    /**
+     *
+     * @param query
+     * @param clazz
+     * @param <T>
+     * @return
+     * @since 2.0
+     */
+    <T> T findOne(LdapQuery query, Class<T> clazz);
 }

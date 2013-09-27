@@ -23,6 +23,10 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.UncategorizedLdapException;
+import org.springframework.ldap.filter.Filter;
+import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
+import org.springframework.ldap.odm.core.OdmException;
+import org.springframework.ldap.odm.core.impl.DefaultObjectDirectoryMapper;
 import org.springframework.ldap.query.LdapQuery;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.Assert;
@@ -83,6 +87,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
     private int defaultCountLimit = 0;
 
+    private ObjectDirectoryMapper odm = new DefaultObjectDirectoryMapper();
+
 	/**
 	 * Constructor for bean usage.
 	 */
@@ -108,7 +114,17 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		this.contextSource = contextSource;
 	}
 
-	/**
+    /**
+     * Set the ObjectDirectoryMapper instance to use.
+     *
+     * @param odm the ObejctDirectoryMapper to use.
+     * @since 2.0
+     */
+    public void setObjectDirectoryMapper(ObjectDirectoryMapper odm) {
+        this.odm = odm;
+    }
+
+    /**
 	 * Get the ContextSource.
 	 * 
 	 * @return the ContextSource.
@@ -1712,5 +1728,125 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
                 query.filter().encode(),
                 searchControls,
                 mapper);
+    }
+
+    @Override
+    public <T> T findByDn(Name dn, final Class<T> clazz) {
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Reading Entry at - %s$1", dn));
+        }
+
+        // TODO: validate class before lookup
+        // getEntityData(clazz);
+
+        T result = lookup(dn, new ContextMapper<T>() {
+            @Override
+            public T mapFromContext(Object ctx) throws javax.naming.NamingException {
+                return odm.mapFromLdapDataEntry((DirContextOperations) ctx, clazz);
+            }
+        });
+
+        if (result == null) {
+            throw new OdmException(String.format("Entry %1$s does not have the required objectclasses ", dn));
+        }
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Found entry - %s$1", result));
+        }
+
+        return result;
+    }
+
+    @Override
+    public void create(Object entry) {
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Creating entry - %s$1", entry));
+        }
+
+        DirContextAdapter context = new DirContextAdapter(odm.getId(entry));
+        odm.mapToLdapDataEntry(entry, context);
+
+        bind(context);
+    }
+
+    @Override
+    public void update(Object entry) {
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Updating entry - %s$1", entry));
+        }
+
+        DirContextOperations context = lookupContext(odm.getId(entry));
+        odm.mapToLdapDataEntry(entry, context);
+        modifyAttributes(context);
+    }
+
+    @Override
+    public void delete(Object entry) {
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Deleting %s$1", entry));
+        }
+
+        // Just to check that this is a managed class
+        unbind(odm.getId(entry));
+    }
+
+    @Override
+    public <T> List<T> findAll(Name base, SearchControls searchControls, final Class<T> clazz) {
+        return find(base, null, searchControls, clazz);
+    }
+
+    @Override
+    public <T> List<T> findAll(Class<T> clazz) {
+        return findAll(LdapUtils.emptyLdapName(),
+                getDefaultSearchControls(defaultSearchScope, RETURN_OBJ_FLAG, ALL_ATTRIBUTES),
+                clazz);
+    }
+
+    @Override
+    public <T> List<T> find(Name base, Filter filter, SearchControls searchControls, final Class<T> clazz) {
+        Filter finalFilter = odm.filterFor(clazz, filter);
+
+        // Search from the root if we are not told where to search from
+        Name localBase = base;
+        if (base == null || base.size() == 0) {
+            localBase = LdapUtils.emptyLdapName();
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Searching - base=%1$s, finalFilter=%2$s, scope=%3$s", base, finalFilter, searchControls));
+        }
+
+        List<T> result = search(localBase, finalFilter.encode(), searchControls, new ContextMapper<T>() {
+            @Override
+            public T mapFromContext(Object ctx) throws javax.naming.NamingException {
+                return odm.mapFromLdapDataEntry((DirContextOperations) ctx, clazz);
+            }
+        });
+        result.remove(null);
+
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Found %1$s Entries - %2$s", result.size(), result));
+        }
+
+        return result;
+    }
+
+    @Override
+    public <T> List<T> find(LdapQuery query, Class<T> clazz) {
+        SearchControls searchControls = searchControlsForQuery(query, RETURN_OBJ_FLAG);
+        return find(query.base(), query.filter(), searchControls, clazz);
+    }
+
+    @Override
+    public <T> T findOne(LdapQuery query, Class<T> clazz) {
+        List<T> result = find(query, clazz);
+
+        if (result.size() == 0) {
+            throw new EmptyResultDataAccessException(1);
+        }
+        else if (result.size() != 1) {
+            throw new IncorrectResultSizeDataAccessException(1, result.size());
+        }
+
+        return result.get(0);
     }
 }

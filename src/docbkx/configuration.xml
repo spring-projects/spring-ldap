@@ -296,7 +296,7 @@ public class PersonService implements PersonService, <emphasis role="bold">BaseL
    }</emphasis>
    ...
    private LdapName getFullPersonDn(Person person) {
-      return LdapNameBuilder.newInstance(<emphasis role="bold">basePath</emphasis>)
+      return LdapNameBuilder.newLdapName(<emphasis role="bold">basePath</emphasis>)
           .append(person.getDn())
           .build();
    }

@@ -1,10 +1,10 @@
 package org.springframework.ldap.odm.typeconversion.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.ldap.odm.typeconversion.ConverterException;
 import org.springframework.ldap.odm.typeconversion.ConverterManager;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An implementation of {@link org.springframework.ldap.odm.typeconversion.ConverterManager}.
