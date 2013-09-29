@@ -54,7 +54,12 @@
         attribute to the object class field.</para>
       </listitem>
 
-      <listitem>
+        <listitem>
+            <para><literal>@DnAttribute</literal> - Indicates the mapping of a dn
+                attribute to the object class field.</para>
+        </listitem>
+
+        <listitem>
         <para><literal>@Transient</literal> - Indicates the field is not persistent
         and should be ignored by the <literal>OdmManager</literal>.</para>
       </listitem>
@@ -88,9 +93,23 @@
     which allows you to indicate whether the attribute is regarded as binary
     based or string based by the LDAP JNDI provider.</simpara>
 
+      <simpara>
+          The <literal>@DnAttribute</literal> annotation is used to map object class fields
+          to and from components in the distinguished name of an entry. Fields annotated with
+          <literal>@DnAttribute</literal>
+          will automatically be populated with the appropriate value from the distinguished name
+          when an entry is read from the directory tree. If the <literal>index</literal> attribute
+          of all <literal>@DnAttribute</literal> annotations in a class is specified, the DN
+          will also be calculated when creating and updating entries. For update scenarios,
+          this will also automatically take care of moving entries in the tree if attributes
+          that are part of the distinguished name have changed.
+      </simpara>
+
     <simpara>The <literal>@Transient</literal> annotation is used to indicate the
     field should be ignored by the object directory mapping and not mapped to
-    an underlying LDAP property.</simpara>
+    an underlying LDAP property. Note that if a <literal>@DnAttribute</literal> is not to be bound
+    to an Attribute, i.e. it is only part of the Distinguished Name and not represented by an object attibute,
+    it must also be annotated with <literal>@Transient</literal>.</simpara>
   </sect1>
 
   <sect1 id="odm-typeconversion">
@@ -227,18 +246,36 @@
       <title>Execution</title>
 
       <programlisting>
+@Entry(objectClasses = { "person", "top" }, base="ou=someOu")
+public class Person {
+   @Id
+   private Name dn;
+
+   @Attribute(name="cn")
+   @DnAttribute(value="cn", index=1)
+   private String fullName;
+
+   // No @Attribute annotation means this will be bound to the LDAP attribute
+   // with the same value
+   private String description;
+
+   @DnAttribute(value="ou", index=0)
+   @Transient
+   private String company;
+
+   @Transient
+   private String someUnmappedField;
+   // ...more attributes below
+}
+
+
 public class OdmPersonDao {
    @Autowired
    private LdapTemplate ldapTemplate;
 
    public Person create(Person person) {
-      person.setDn(buildDn(person));
       ldapTemplate.create(person);
       return person;
-   }
-
-   private Name buildDn(Person person) {
-       // build a distinguished name based on a person.
    }
 
    public Person findByUid(String uid) {
@@ -246,12 +283,10 @@ public class OdmPersonDao {
    }
 
    public void update(Person person) {
-      // Requires that the Person was originally retrieved from this Dao, i.e. that the Dn is populated.
       ldapTemplate.update(person);
    }
 
    public void delete(Person person) {
-      // Requires that the Person was originally retrieved from this Dao, i.e. that the Dn is populated.
       ldapTemplate.delete(person);
    }
 

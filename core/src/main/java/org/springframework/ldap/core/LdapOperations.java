@@ -1692,31 +1692,46 @@ public interface LdapOperations {
     <T> T findByDn(Name dn, Class<T> clazz);
 
     /**
-     * Create the given entry in the LDAP directory.
+     * Create the given entry in the LDAP directory. If the field annotated with {@link org.springframework.ldap.odm.annotations.Id}
+     * is set in the object, this will be used as the distinguished name of the new entry. If no explicit DN is specified,
+     * an attempt will be made to calculate the name from fields annotated with {@link org.springframework.ldap.odm.annotations.DnAttribute}.
      *
      * @param entry The entry to be create, it must <em>not</em> already exist in the directory.
      *
      * @throws org.springframework.ldap.NamingException on error.
+     * @throws IllegalArgumentException if the entry is null or on failure to determine the distinguished name.
      * @since 2.0
      */
     void create(Object entry);
 
     /**
-     * Update the given entry in the LDAP directory.
+     * Update the given entry in the LDAP directory. If the distinguished name is not explicitly specified (i.e. if the
+     * field annotated with {@link org.springframework.ldap.odm.annotations.Id} is <code>null</code>),
+     * an attempt will be made to calculate the name from fields annotated with
+     * {@link org.springframework.ldap.odm.annotations.DnAttribute}. If the {@link org.springframework.ldap.odm.annotations.Id}
+     * field and the calculated DN is different, the entry will be <strong>moved</strong> (i.e., an {@link #unbind(javax.naming.Name)}
+     * followed by a {@link #bind(DirContextOperations)}. Otherwise
+     * the current data of the entry will be read from the directory and a {@link #modifyAttributes(DirContextOperations)}
+     * operation will be performed using the <code>ModificationItems</code> resulting from the changes of the
+     * entry compared to its current state in the directory.
      *
      * @param entry The entry to update, it must already exist in the directory.
      *
      * @throws org.springframework.ldap.NamingException on error.
+     * @throws IllegalArgumentException if the entry is null or on failure to determine the distinguished name.
      * @since 2.0
      */
     void update(Object entry);
 
     /**
-     * Delete an entry from the LDAP directory.
+     * Delete an entry from the LDAP directory. If the field annotated with {@link org.springframework.ldap.odm.annotations.Id}
+     * is set in the object, this will be used as the distinguished name of the new entry. If no explicit DN is specified,
+     * an attempt will be made to calculate the name from fields annotated with {@link org.springframework.ldap.odm.annotations.DnAttribute}.
      *
      * @param entry The entry to delete, it must already exist in the directory.
      *
      * @throws org.springframework.ldap.NamingException on error.
+     * @throws IllegalArgumentException if the entry is null or on failure to determine the distinguished name.
      * @since 2.0
      */
     void delete(Object entry);

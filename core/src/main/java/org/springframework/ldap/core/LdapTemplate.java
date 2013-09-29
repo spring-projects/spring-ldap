@@ -1819,12 +1819,18 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
     @Override
     public void delete(Object entry) {
+        Assert.notNull(entry, "Entry must not be null");
         if (log.isDebugEnabled()) {
             log.debug(String.format("Deleting %s$1", entry));
         }
 
-        // Just to check that this is a managed class
-        unbind(odm.getId(entry));
+        Name id = odm.getId(entry);
+        if(id == null) {
+            id = odm.getCalculatedId(entry);
+        }
+
+        Assert.notNull(id, String.format("Unable to determine id for entry %s", entry.toString()));
+        unbind(id);
     }
 
     @Override
