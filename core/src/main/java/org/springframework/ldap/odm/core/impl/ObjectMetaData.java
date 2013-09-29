@@ -38,7 +38,7 @@ import java.util.TreeSet;
                 return 0;
             }
 
-            return Integer.compare(a1.getDnAttribute().index(), a2.getDnAttribute().index());
+            return Integer.valueOf(a1.getDnAttribute().index()).compareTo(a2.getDnAttribute().index());
         }
     });
 
