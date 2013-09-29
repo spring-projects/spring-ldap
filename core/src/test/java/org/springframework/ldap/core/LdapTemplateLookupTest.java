@@ -19,9 +19,11 @@ package org.springframework.ldap.core;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.ldap.NameNotFoundException;
+import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.Name;
+import javax.naming.NamingException;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
@@ -49,6 +51,7 @@ public class LdapTemplateLookupTest {
     private ContextMapper contextMapperMock;
 
     private LdapTemplate tested;
+    private ObjectDirectoryMapper odmMock;
 
     @Before
     public void setUp() throws Exception {
@@ -60,12 +63,12 @@ public class LdapTemplateLookupTest {
 
         // Setup Name mock
         nameMock = mock(Name.class);
-
         contextMapperMock = mock(ContextMapper.class);
-
         attributesMapperMock = mock(AttributesMapper.class);
+        odmMock = mock(ObjectDirectoryMapper.class);
 
         tested = new LdapTemplate(contextSourceMock);
+        tested.setObjectDirectoryMapper(odmMock);
     }
 
     private void expectGetReadOnlyContext() {
@@ -191,6 +194,26 @@ public class LdapTemplateLookupTest {
 
         assertSame(transformed, actual);
     }
+
+    @Test
+    public void testFindByDn() throws NamingException {
+        expectGetReadOnlyContext();
+
+        Object transformed = new Object();
+        Class<Object> expectedClass = Object.class;
+
+        DirContextAdapter expectedContext = new DirContextAdapter();
+        when(dirContextMock.lookup(nameMock)).thenReturn(expectedContext);
+        when(odmMock.mapFromLdapDataEntry(expectedContext, expectedClass)).thenReturn(transformed);
+
+        // Perform test
+        Object result = tested.findByDn(nameMock, expectedClass);
+        assertSame(transformed, result);
+
+        verify(odmMock).manageClass(expectedClass);
+    }
+
+
 
     @Test
     public void testLookup_String_ContextMapper() throws Exception {

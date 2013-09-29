@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.samples.plain.dao;
+package org.springframework.ldap.samples.odm.dao;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.NameNotFoundException;
+import org.springframework.ldap.samples.plain.dao.PersonDao;
 import org.springframework.ldap.samples.plain.domain.Person;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
@@ -81,7 +82,10 @@ public class PersonDaoSampleIntegrationTest extends
             assertEquals(
                     "Another description", result
                     .getDescription());
-        } finally {
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        finally {
             personDao.delete(person);
             try {
                 personDao.findByPrimaryKey(

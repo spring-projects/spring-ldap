@@ -56,6 +56,8 @@ public interface ObjectDirectoryMapper {
      */
     Name getId(Object entry);
 
+    Name getCalculatedId(Object entry);
+
     /**
      * Use the specified search filter and return a new one that only applies to entries of the specified class.
      * In effect this means padding the original filter with an objectclass condition.

@@ -1,18 +1,22 @@
 package org.springframework.ldap.odm.core.impl;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
-import org.springframework.ldap.odm.annotations.Transient;
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.util.StringUtils;
+
+import javax.naming.Name;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /*
  * An internal class to process the meta-data and reflection data for an entry.
@@ -26,7 +30,23 @@ import org.springframework.ldap.odm.annotations.Transient;
 
     private Map<Field, AttributeMetaData> fieldToAttribute = new HashMap<Field, AttributeMetaData>();
 
-    private Set<CaseIgnoreString> objectClasses = new HashSet<CaseIgnoreString>();
+    private Set<AttributeMetaData> dnAttributes = new TreeSet<AttributeMetaData>(new Comparator<AttributeMetaData>() {
+        @Override
+        public int compare(AttributeMetaData a1, AttributeMetaData a2) {
+            if(!a1.isDnAttribute() || !a2.isDnAttribute()) {
+                // Not interesting to compare these.
+                return 0;
+            }
+
+            return Integer.compare(a1.getDnAttribute().index(), a2.getDnAttribute().index());
+        }
+    });
+
+    private boolean indexedDnAttributes = false;
+
+    private Set<CaseIgnoreString> objectClasses = new LinkedHashSet<CaseIgnoreString>();
+
+    private Name base = LdapUtils.emptyLdapName();
 
     public Set<CaseIgnoreString> getObjectClasses() {
         return objectClasses;
@@ -55,7 +75,7 @@ import org.springframework.ldap.odm.annotations.Transient;
         }
         
         // Get object class metadata - the @Entity annotation
-        Entry entity = (Entry)clazz.getAnnotation(Entry.class);
+        Entry entity = clazz.getAnnotation(Entry.class);
         if (entity != null) {
             // Default objectclass name to the class name unless it's specified
             // in @Entity(name={objectclass1, objectclass2});
@@ -66,6 +86,11 @@ import org.springframework.ldap.odm.annotations.Transient;
                 }
             } else {
                 objectClasses.add(new CaseIgnoreString(clazz.getSimpleName()));
+            }
+
+            String base = entity.base();
+            if(StringUtils.hasText(base)) {
+                this.base = LdapUtils.newLdapName(base);
             }
         } else {
             throw new MetaDataException(String.format("Class %1$s must have a class level %2$s annotation", clazz,
@@ -83,11 +108,11 @@ import org.springframework.ldap.odm.annotations.Transient;
             // So we can write to private fields
             field.setAccessible(true);
 
-            // Skip transient and synthetic fields
-            if (field.getAnnotation(Transient.class) != null || field.isSynthetic()) {
+            // Skip synthetic fields
+            if (field.isSynthetic()) {
                 continue;
             }
-            
+
             AttributeMetaData currentAttributeMetaData=new AttributeMetaData(field);
             if (currentAttributeMetaData.isId()) {
                 if (idAttribute!=null) {
@@ -98,6 +123,10 @@ import org.springframework.ldap.odm.annotations.Transient;
                 idAttribute=currentAttributeMetaData;
             }
             fieldToAttribute.put(field, currentAttributeMetaData);
+
+            if(currentAttributeMetaData.isDnAttribute()) {
+                dnAttributes.add(currentAttributeMetaData);
+            }
         }
 
         if (idAttribute == null) {
@@ -106,16 +135,58 @@ import org.springframework.ldap.odm.annotations.Transient;
                                   clazz));
         }
 
+        postProcessDnAttributes(clazz);
+
         if (LOG.isDebugEnabled()) {
             LOG.debug(String.format("Extracted metadata from %1$s as %2$s", clazz, this));
         }
     }
 
+    private void postProcessDnAttributes(Class<?> clazz) {
+        boolean hasIndexed = false;
+        boolean hasNonIndexed = false;
+
+        for (AttributeMetaData dnAttribute : dnAttributes) {
+            int declaredIndex = dnAttribute.getDnAttribute().index();
+
+            if(declaredIndex != -1) {
+                hasIndexed = true;
+            }
+
+            if(declaredIndex == -1) {
+                hasNonIndexed = true;
+            }
+        }
+
+        if(hasIndexed && hasNonIndexed) {
+            throw new MetaDataException(String.format("At least one DnAttribute declared on class %s is indexed, " +
+                    "which means that all DnAttributes must be indexed", clazz.toString()));
+        }
+
+        indexedDnAttributes = hasIndexed;
+    }
+
+    int size() {
+        return fieldToAttribute.size();
+    }
+
+    boolean canCalculateDn() {
+        return dnAttributes.size() > 0 && indexedDnAttributes;
+    }
+
+    public Set<AttributeMetaData> getDnAttributes() {
+        return dnAttributes;
+    }
+
+    Name getBase() {
+        return base;
+    }
+
     /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
+         * (non-Javadoc)
+         *
+         * @see java.lang.Object#toString()
+         */
     @Override
     public String toString() {
         return String.format("objectsClasses=%1$s | idField=%2$s | attributes=%3$s", 

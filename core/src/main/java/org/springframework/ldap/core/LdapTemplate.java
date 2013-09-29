@@ -1736,8 +1736,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
             log.debug(String.format("Reading Entry at - %s$1", dn));
         }
 
-        // TODO: validate class before lookup
-        // getEntityData(clazz);
+        // Make sure the class is OK before doing the lookup
+        odm.manageClass(clazz);
 
         T result = lookup(dn, new ContextMapper<T>() {
             @Override
@@ -1758,11 +1758,20 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
     @Override
     public void create(Object entry) {
+        Assert.notNull(entry, "Entry must not be null");
+
         if (log.isDebugEnabled()) {
             log.debug(String.format("Creating entry - %s$1", entry));
         }
 
-        DirContextAdapter context = new DirContextAdapter(odm.getId(entry));
+        Name id = odm.getId(entry);
+        if(id == null) {
+            id = odm.getCalculatedId(entry);
+        }
+
+        Assert.notNull(id, String.format("Unable to determine id for entry %s", entry.toString()));
+
+        DirContextAdapter context = new DirContextAdapter(id);
         odm.mapToLdapDataEntry(entry, context);
 
         bind(context);
@@ -1770,13 +1779,42 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
     @Override
     public void update(Object entry) {
+        Assert.notNull(entry, "Entry must not be null");
         if (log.isDebugEnabled()) {
             log.debug(String.format("Updating entry - %s$1", entry));
         }
 
-        DirContextOperations context = lookupContext(odm.getId(entry));
-        odm.mapToLdapDataEntry(entry, context);
-        modifyAttributes(context);
+        Name originalId = odm.getId(entry);
+        Name calculatedId = odm.getCalculatedId(entry);
+
+        if(originalId != null && calculatedId != null && !originalId.equals(calculatedId)) {
+            // The DN has changed - remove the original entry and bind the new one
+            // (because other data may have changed as well
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("Calculated DN of %s; of entry %s differs from explicitly specified one; %s - moving",
+                        calculatedId, entry, originalId));
+            }
+
+            unbind(originalId);
+
+            DirContextAdapter context = new DirContextAdapter(calculatedId);
+            odm.mapToLdapDataEntry(entry, context);
+
+            bind(context);
+        } else {
+            // DN is the same, just modify the attributes
+
+            Name id = originalId;
+            if(id == null) {
+                id = calculatedId;
+            }
+
+            Assert.notNull(id, String.format("Unable to determine id for entry %s", entry.toString()));
+
+            DirContextOperations context = lookupContext(id);
+            odm.mapToLdapDataEntry(entry, context);
+            modifyAttributes(context);
+        }
     }
 
     @Override

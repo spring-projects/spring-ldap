@@ -1,5 +1,11 @@
 package org.springframework.ldap.odm.core.impl;
 
+import org.springframework.ldap.odm.annotations.Attribute;
+import org.springframework.ldap.odm.annotations.DnAttribute;
+import org.springframework.ldap.odm.annotations.Id;
+import org.springframework.ldap.odm.annotations.Transient;
+
+import javax.naming.Name;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
@@ -7,11 +13,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Set;
-
-import javax.naming.Name;
-
-import org.springframework.ldap.odm.annotations.Attribute;
-import org.springframework.ldap.odm.annotations.Id;
 
 /*
  * Extract attribute meta-data from the @Attribute annotation, the @Id annotation
@@ -47,7 +48,11 @@ import org.springframework.ldap.odm.annotations.Id;
     
     // Is this the objectClass attribute
     private boolean isObjectClass;
-    
+
+    private boolean isTransient = false;
+
+    private DnAttribute dnAttribute;
+
     // Extract information from the @Attribute annotation:
     // syntax, isBinary, isObjectClass and name.
     private boolean processAttributeAnnotation(Field field) {
@@ -157,10 +162,24 @@ import org.springframework.ldap.odm.annotations.Id;
     // Extract meta-data from the given field
     public AttributeMetaData(Field field) {
         this.field=field;
-         
+
+        this.dnAttribute = field.getAnnotation(DnAttribute.class);
+        if(this.dnAttribute != null && !field.getType().equals(String.class)) {
+            throw new MetaDataException(String.format("%s is of type %s, but only String attributes can be declared as @DnAttributes",
+                    field.toString(),
+                    field.getType().toString()));
+        }
+
+        Transient transientAnnotation = field.getAnnotation(Transient.class);
+        if(transientAnnotation != null) {
+            this.isTransient = true;
+            return;
+        }
+
         // Reflection data
         determineFieldType(field);
-        
+
+
         // Data from the @Attribute annotation
         boolean foundAttributeAnnotation=processAttributeAnnotation(field);
 
@@ -180,6 +199,7 @@ import org.springframework.ldap.odm.annotations.Id;
                     field.getDeclaringClass()));
         }
     }
+
 
     public String getSyntax() {
         return syntax;
@@ -203,6 +223,18 @@ import org.springframework.ldap.odm.annotations.Id;
 
     public boolean isId() {
         return isId;
+    }
+
+    public boolean isTransient() {
+        return isTransient;
+    }
+
+    public DnAttribute getDnAttribute() {
+        return dnAttribute;
+    }
+
+    public boolean isDnAttribute() {
+        return dnAttribute != null;
     }
 
     public boolean isObjectClass() {

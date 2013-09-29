@@ -1,5 +1,5 @@
 Sample application demonstrating how to do the most basic stuff in Spring LDAP using the Object-Directory Mapping facilities.
-A very simple dao implementation is provided in org.springframework.ldap.samples.plain.dao.PersonDaoImpl
+A very simple dao implementation is provided in org.springframework.ldap.samples.plain.dao.OdmPersonDaoImpl
 It demonstrates some basic operations using Spring LDAP Object-Directory Mapping.
 
 The core Spring application context of the sample is defined in resources/applicationContext.xml.

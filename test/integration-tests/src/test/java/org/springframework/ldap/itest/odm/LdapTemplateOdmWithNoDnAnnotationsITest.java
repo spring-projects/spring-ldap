@@ -39,7 +39,7 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
  * @author Mattias Hellborg Arthursson
  */
 @ContextConfiguration(locations = {"/conf/ldapTemplateTestContext.xml"})
-public class LdapTemplateOdmITest extends AbstractLdapTemplateIntegrationTest {
+public class LdapTemplateOdmWithNoDnAnnotationsITest extends AbstractLdapTemplateIntegrationTest {
     @Autowired
     private LdapTemplate tested;
 

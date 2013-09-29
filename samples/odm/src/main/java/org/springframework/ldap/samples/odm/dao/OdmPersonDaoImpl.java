@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.ldap.samples.plain.dao;
+package org.springframework.ldap.samples.odm.dao;
 
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.samples.plain.dao.PersonDao;
 import org.springframework.ldap.samples.plain.domain.Person;
 import org.springframework.ldap.support.LdapNameBuilder;
 
@@ -28,33 +29,23 @@ import java.util.List;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 /**
- * Default implementation of PersonDao. This implementation uses
- * DirContextAdapter for managing attribute values. We use a ContextMapper
- * to map from the found contexts to our domain objects. This is especially useful
- * since we in this case have properties in our domain objects that depend on parts of the DN.
- * 
- * We could have worked with Attributes and an AttributesMapper implementation
- * instead, but working with Attributes is a bore and also, working with
- * AttributesMapper objects (or, indeed Attributes) does not give us access to
- * the distinguished name. However, we do use it in one method that only needs a
- * single attribute: {@link #getAllPersonNames()}.
+ * Default implementation of PersonDao. This implementation uses the Object-Directory Mapping feature,
+ * which requires the entity classes to be annotated, but relieves the programmer from the tedious
+ * task of mapping to and from entity objects, using attribute or dn component values.
  * 
  * @author Mattias Hellborg Arthursson
- * @author Ulrik Sandberg
  */
-public class PersonDaoImpl implements PersonDao {
+public class OdmPersonDaoImpl implements PersonDao {
 
 	private LdapTemplate ldapTemplate;
 
     @Override
 	public void create(Person person) {
-		person.setDn(buildDn(person));
 		ldapTemplate.create(person);
 	}
 
     @Override
 	public void update(Person person) {
-        person.setDn(buildDn(person));
 		ldapTemplate.update(person);
 	}
 
@@ -84,11 +75,6 @@ public class PersonDaoImpl implements PersonDao {
 	public Person findByPrimaryKey(String country, String company, String fullname) {
 		LdapName dn = buildDn(country, company, fullname);
         Person person = ldapTemplate.findByDn(dn, Person.class);
-
-        // TODO: This needs to happen automatically
-        person.setCountry(country);
-        person.setCompany(company);
-        person.setFullName(fullname);
 
         return person;
 	}

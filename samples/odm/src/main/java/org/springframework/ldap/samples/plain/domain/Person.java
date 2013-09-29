@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.springframework.ldap.odm.annotations.Attribute;
+import org.springframework.ldap.odm.annotations.DnAttribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
 import org.springframework.ldap.odm.annotations.Transient;
@@ -38,6 +39,7 @@ public class Person {
     private Name dn;
 
     @Attribute(name = "cn")
+    @DnAttribute(value = "cn", index = 2)
     private String fullName;
 
     @Attribute(name = "sn")
@@ -47,9 +49,11 @@ public class Person {
     private String description;
 
     @Transient
+    @DnAttribute(value = "c", index = 0)
     private String country;
 
     @Transient
+    @DnAttribute(value = "ou", index = 1)
     private String company;
 
     @Attribute(name = "telephoneNumber")

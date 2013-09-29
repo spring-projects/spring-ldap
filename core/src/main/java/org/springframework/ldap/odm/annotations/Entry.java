@@ -22,4 +22,12 @@ public @interface Entry {
      * @return A list of LDAP classes which the annotated Java class represents.
      */
     String[] objectClasses();
+
+    /**
+     * The base DN of this entry. If specified, this will be prepended to all calculated
+     * distinguished names for entries of the annotated class.
+     *
+     * @return the base DN for entries of this class
+     */
+    String base() default "";
 }

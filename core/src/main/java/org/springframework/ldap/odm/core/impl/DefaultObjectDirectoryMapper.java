@@ -22,9 +22,14 @@ import org.springframework.LdapDataEntry;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.filter.Filter;
+import org.springframework.ldap.odm.annotations.DnAttribute;
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 import org.springframework.ldap.odm.typeconversion.ConverterManager;
 import org.springframework.ldap.odm.typeconversion.impl.ConverterManagerImpl;
+import org.springframework.ldap.support.LdapNameBuilder;
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.util.Assert;
+import org.springframework.util.ReflectionUtils;
 
 import javax.naming.Name;
 import javax.naming.NamingEnumeration;
@@ -68,9 +73,9 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
         this.converterManager = converterManager;
     }
 
-    private static final class EntityData {
-        private final ObjectMetaData metaData;
-        private final Filter ocFilter;
+    static final class EntityData {
+        final ObjectMetaData metaData;
+        final Filter ocFilter;
 
         private EntityData(ObjectMetaData metaData, Filter ocFilter) {
             this.metaData=metaData;
@@ -120,7 +125,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
         // Check we have all of the necessary converters for the class
         for (Field field : metaData) {
             AttributeMetaData attributeInfo = metaData.getAttribute(field);
-            if (!attributeInfo.isId() && !(attributeInfo.isObjectClass())) {
+            if (!attributeInfo.isTransient() && !attributeInfo.isId() && !(attributeInfo.isObjectClass())) {
                 Class<?> jndiClass = (attributeInfo.isBinary()) ? byte[].class : String.class;
                 Class<?> javaClass = attributeInfo.getValueClass();
                 if (!converterManager.canConvert(jndiClass, attributeInfo.getSyntax(), javaClass)) {
@@ -176,42 +181,53 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
             // Grab the meta data for the current field
             AttributeMetaData attributeInfo = metaData.getAttribute(field);
             // We dealt with the object class field about, and the DN is set by the call to write the object to LDAP
-            if (!attributeInfo.isId() && !(attributeInfo.isObjectClass())) {
+            if (!attributeInfo.isTransient() && !attributeInfo.isId() && !(attributeInfo.isObjectClass())) {
                 try {
                     // If this is a "binary" object the JNDI expects a byte[] otherwise a String
                     Class<?> targetClass = (attributeInfo.isBinary()) ? byte[].class : String.class;
                     // Multi valued?
                     if (!attributeInfo.isList()) {
-                        // Single valued - get the value of the field
-                        Object fieldValue = field.get(entry);
-                        // Ignore null field values
-                        if (fieldValue != null) {
-                            // Convert the field value to the required type and write it into the JNDI context
-                            context.setAttributeValue(attributeInfo.getName().toString(), converterManager.convert(fieldValue,
-                                    attributeInfo.getSyntax(), targetClass));
-                        }
-                    } else { // Multi-valued
-                        // We need to build up a list of of the values
-                        List<String> attributeValues = new ArrayList<String>();
-                        // Get the list of values
-                        Collection<?> fieldValues = (Collection<?>)field.get(entry);
-                        // Ignore null lists
-                        if (fieldValues != null) {
-                            for (final Object o : fieldValues) {
-                                // Ignore null values
-                                if (o != null) {
-                                    attributeValues.add((String)converterManager.convert(o, attributeInfo.getSyntax(),
-                                            targetClass));
-                                }
-                            }
-                            context.setAttributeValues(attributeInfo.getName().toString(), attributeValues.toArray());
-                        }
+                        populateSingleValueAttribute(entry, context, field, attributeInfo, targetClass);
+
+                    } else {
+                        // Multi-valued
+                        populateMultiValueAttribute(entry, context, field, attributeInfo, targetClass);
+
                     }
                 } catch (IllegalAccessException e) {
                     throw new InvalidEntryException(String.format("Can't set attribute %1$s", attributeInfo.getName()),
                             e);
                 }
             }
+        }
+    }
+
+    private void populateMultiValueAttribute(Object entry, LdapDataEntry context, Field field, AttributeMetaData attributeInfo, Class<?> targetClass) throws IllegalAccessException {
+        // We need to build up a list of of the values
+        List<String> attributeValues = new ArrayList<String>();
+        // Get the list of values
+        Collection<?> fieldValues = (Collection<?>)field.get(entry);
+        // Ignore null lists
+        if (fieldValues != null) {
+            for (final Object o : fieldValues) {
+                // Ignore null values
+                if (o != null) {
+                    attributeValues.add((String)converterManager.convert(o, attributeInfo.getSyntax(),
+                            targetClass));
+                }
+            }
+            context.setAttributeValues(attributeInfo.getName().toString(), attributeValues.toArray());
+        }
+    }
+
+    private void populateSingleValueAttribute(Object entry, LdapDataEntry context, Field field, AttributeMetaData attributeInfo, Class<?> targetClass) throws IllegalAccessException {
+        // Single valued - get the value of the field
+        Object fieldValue = field.get(entry);
+        // Ignore null field values
+        if (fieldValue != null) {
+            // Convert the field value to the required type and write it into the JNDI context
+            context.setAttributeValue(attributeInfo.getName().toString(), converterManager.convert(fieldValue,
+                    attributeInfo.getSyntax(), targetClass));
         }
     }
 
@@ -237,7 +253,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
             NamingEnumeration<? extends Attribute> attributesEnumeration = attributes.getAll();
             // Loop through all of the JNDI attributes
             while (attributesEnumeration.hasMoreElements()) {
-                Attribute currentAttribute = (Attribute)attributesEnumeration.nextElement();
+                Attribute currentAttribute = attributesEnumeration.nextElement();
                 // Add the current attribute to the map keyed on the lowercased (case indep) id of the attribute
                 attributeValueMap.put(new CaseIgnoreString(currentAttribute.getID()), currentAttribute);
             }
@@ -248,52 +264,26 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
                 // Get the current field
                 AttributeMetaData attributeInfo = metaData.getAttribute(field);
                 // We deal with the Id field specially
-                if (!attributeInfo.isId()) {
+                Name dn = context.getDn();
+                if (!attributeInfo.isTransient() && !attributeInfo.isId()) {
                     // Not the ID - but is is multi valued?
                     if (!attributeInfo.isList()) {
                         // No - its single valued, grab the JNDI attribute that corresponds to the metadata on the
                         // current field
-                        Attribute attribute = attributeValueMap.get(attributeInfo.getName());
-                        // There is no guarantee that this attribute is present in the directory - so ignore nulls
-                        if (attribute != null) {
-                            // Grab the JNDI value
-                            Object value = attribute.get();
-                            // Check the value is not null
-                            if (value != null) {
-                                // Convert the JNDI value to its Java representation - this will throw if the
-                                // conversion fails
-                                Object convertedValue = converterManager.convert(value, attributeInfo.getSyntax(),
-                                        attributeInfo.getValueClass());
-                                // Set it in the Java version
-                                field.set(result, convertedValue);
-                            }
-                        }
-                    } else { // We are dealing with a multi valued attribute
-                        // We need to build up a list of values
-                        List<Object> fieldValues = new ArrayList<Object>();
-                        // Grab the attribute from the JNDI representation
-                        Attribute currentAttribute = attributeValueMap.get(attributeInfo.getName());
-                        // There is no guarantee that this attribute is present in the directory - so ignore nulls
-                        if (currentAttribute != null) {
-                            // Loop through the values of the JNDI attribute
-                            NamingEnumeration<?> valuesEmumeration = currentAttribute.getAll();
-                            while (valuesEmumeration.hasMore()) {
-                                // Get the current value
-                                Object value = valuesEmumeration.nextElement();
-                                // Check the value is not null
-                                if (value != null) {
-                                    // Convert the value to its Java representation and add it to our working list
-                                    fieldValues.add(converterManager.convert(value, attributeInfo.getSyntax(),
-                                            attributeInfo.getValueClass()));
-                                }
-                            }
-                        }
-                        // Now we need to set the List in to a Java object
-                        field.set(result, fieldValues);
+                        populateSingleValueField(result, attributeValueMap, field, attributeInfo);
+                    } else {
+                        // We are dealing with a multi valued attribute
+                        populateMultiValueField(result, attributeValueMap, field, attributeInfo);
                     }
-                } else { // The id field
-                    field.set(result, converterManager.convert(context.getDn(), attributeInfo.getSyntax(),
+                } else if(attributeInfo.isId()) { // The id field
+                    field.set(result, converterManager.convert(dn, attributeInfo.getSyntax(),
                             attributeInfo.getValueClass()));
+                }
+
+                DnAttribute dnAttribute = attributeInfo.getDnAttribute();
+                if(dnAttribute != null) {
+                    String dnValue = LdapUtils.getStringValue(dn, dnAttribute.value());
+                    field.set(result, dnValue);
                 }
             }
 
@@ -315,7 +305,6 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
                 throw new InvalidEntryException(String.format("No object classes were returned for class %1$s",
                         clazz.getName()));
             }
-
         } catch (NamingException ne) {
             throw new InvalidEntryException(String.format("Problem creating %1$s from LDAP Entry %2$s",
                     clazz, context), ne);
@@ -333,6 +322,48 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
         return result;
     }
 
+    private <T> void populateMultiValueField(T result, Map<CaseIgnoreString, Attribute> attributeValueMap, Field field, AttributeMetaData attributeInfo) throws NamingException, IllegalAccessException {
+        // We need to build up a list of values
+        List<Object> fieldValues = new ArrayList<Object>();
+        // Grab the attribute from the JNDI representation
+        Attribute currentAttribute = attributeValueMap.get(attributeInfo.getName());
+        // There is no guarantee that this attribute is present in the directory - so ignore nulls
+        if (currentAttribute != null) {
+            // Loop through the values of the JNDI attribute
+            NamingEnumeration<?> valuesEmumeration = currentAttribute.getAll();
+            while (valuesEmumeration.hasMore()) {
+                // Get the current value
+                Object value = valuesEmumeration.nextElement();
+                // Check the value is not null
+                if (value != null) {
+                    // Convert the value to its Java representation and add it to our working list
+                    fieldValues.add(converterManager.convert(value, attributeInfo.getSyntax(),
+                            attributeInfo.getValueClass()));
+                }
+            }
+        }
+        // Now we need to set the List in to a Java object
+        field.set(result, fieldValues);
+    }
+
+    private <T> void populateSingleValueField(T result, Map<CaseIgnoreString, Attribute> attributeValueMap, Field field, AttributeMetaData attributeInfo) throws NamingException, IllegalAccessException {
+        Attribute attribute = attributeValueMap.get(attributeInfo.getName());
+        // There is no guarantee that this attribute is present in the directory - so ignore nulls
+        if (attribute != null) {
+            // Grab the JNDI value
+            Object value = attribute.get();
+            // Check the value is not null
+            if (value != null) {
+                // Convert the JNDI value to its Java representation - this will throw if the
+                // conversion fails
+                Object convertedValue = converterManager.convert(value, attributeInfo.getSyntax(),
+                        attributeInfo.getValueClass());
+                // Set it in the Java version
+                field.set(result, convertedValue);
+            }
+        }
+    }
+
     @Override
     public Name getId(Object entry) {
         try {
@@ -341,6 +372,31 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
             throw new InvalidEntryException(String.format("Can't get Id field from Entry %1$s", entry),
                     e);
         }
+    }
+
+    @Override
+    public Name getCalculatedId(Object entry) {
+        Assert.notNull(entry, "Entry must not be null");
+        EntityData entityData = getEntityData(entry.getClass());
+        if(entityData.metaData.canCalculateDn()) {
+            Set<AttributeMetaData> dnAttributes = entityData.metaData.getDnAttributes();
+            LdapNameBuilder ldapNameBuilder = LdapNameBuilder.newLdapName(entityData.metaData.getBase());
+
+            for (AttributeMetaData dnAttribute : dnAttributes) {
+                Object dnFieldValue = ReflectionUtils.getField(dnAttribute.getField(), entry);
+                if(dnFieldValue == null) {
+                    throw new IllegalStateException(
+                            String.format("DnAttribute for field %s on class %s is null; cannot build DN",
+                                    dnAttribute.getField().getName(), entry.getClass().getName()));
+                }
+
+                ldapNameBuilder.add(dnAttribute.getDnAttribute().value(), dnFieldValue.toString());
+            }
+
+            return ldapNameBuilder.build();
+        }
+
+        return null;
     }
 
     @Override
@@ -353,6 +409,11 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 
         AndFilter andFilter = new AndFilter();
         return andFilter.append(ocFilter).append(baseFilter);
+    }
+
+    // For testing purposes
+    ConcurrentMap<Class<?>, EntityData> getMetaDataMap() {
+        return metaDataMap;
     }
 
     static boolean collectionContainsAll(Collection<?> collection, Set<?> shouldBePresent) {

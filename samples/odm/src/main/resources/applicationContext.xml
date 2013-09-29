@@ -45,7 +45,7 @@
 	</bean>
 
 	<bean id="personDao"
-		class="org.springframework.ldap.samples.plain.dao.PersonDaoImpl">
+		class="org.springframework.ldap.samples.odm.dao.OdmPersonDaoImpl">
 		<property name="ldapTemplate" ref="ldapTemplate" />
 	</bean>
 
