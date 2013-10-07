@@ -74,6 +74,8 @@ import javax.naming.directory.SearchResult;
  * @author Eric Dalquist
  */
 public class DefaultDirContextValidator implements DirContextValidator {
+    public static final String DEFAULT_FILTER = "objectclass=*";
+
     /**
      * Logger for this class and sub-classes
      */
@@ -107,7 +109,7 @@ public class DefaultDirContextValidator implements DirContextValidator {
 
         this.base = "";
 
-        this.filter = "objectclass=*";
+        this.filter = DEFAULT_FILTER;
     }
     
     /**

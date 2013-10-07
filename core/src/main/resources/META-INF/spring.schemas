@@ -1,0 +1,2 @@
+http\://www.springframework.org/schema/ldap/spring-ldap.xsd=org/springframework/ldap/config/spring-ldap-2.0.xsd
+http\://www.springframework.org/schema/ldap/spring-ldap-2.0.xsd=org/springframework/ldap/config/spring-ldap-2.0.xsd

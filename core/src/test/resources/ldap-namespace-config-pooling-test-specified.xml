@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ldap="http://www.springframework.org/schema/ldap"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd   http://www.springframework.org/schema/ldap http://www.springframework.org/schema/ldap/spring-ldap.xsd">
+
+
+    <ldap:context-source password="apassword" url="ldap://localhost:389" username="uid=admin">
+        <ldap:pooling
+                test-on-borrow="true"
+                test-on-return="true"
+                test-while-idle="true"
+                min-evictable-time-millis="123"
+                eviction-run-interval-millis="321"
+                tests-per-eviction-run="22"
+                validation-query-base="ou=test"
+                validation-query-filter="objectclass=person"
+                validation-query-search-controls-ref="searchControls"/>
+    </ldap:context-source>
+
+    <bean class="javax.naming.directory.SearchControls" id="searchControls" />
+
+    <ldap:ldap-template />
+</beans>

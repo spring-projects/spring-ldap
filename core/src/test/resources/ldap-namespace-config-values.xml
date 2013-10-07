@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ldap="http://www.springframework.org/schema/ldap"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd   http://www.springframework.org/schema/ldap http://www.springframework.org/schema/ldap/spring-ldap.xsd">
+
+
+    <ldap:context-source
+            id="myContextSource"
+            password="apassword"
+            url="ldap://localhost:389"
+            username="uid=admin"
+            base="dc=261consulting,dc=com"
+            anonymous-read-only="true"
+            authentication-strategy-ref="authenticationStrategy"
+            native-pooling="true"
+            referral="follow" />
+
+    <ldap:ldap-template context-source-ref="myContextSource"
+            count-limit="100"
+            time-limit="200"
+            ignore-name-not-found="true"
+            ignore-partial-result="true"
+            search-scope="OBJECT"
+            odm-ref="odm"/>
+
+    <bean id="authenticationStrategy" class="org.springframework.ldap.core.support.DefaultTlsDirContextAuthenticationStrategy" />
+    <bean id="odm" class="org.springframework.ldap.odm.core.impl.DefaultObjectDirectoryMapper" />
+</beans>
