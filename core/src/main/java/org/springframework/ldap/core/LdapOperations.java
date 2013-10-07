@@ -1679,7 +1679,8 @@ public interface LdapOperations {
     <T> T searchForObject(LdapQuery query, ContextMapper<T> mapper);
 
     /**
-     * Read a named entry from the LDAP directory.
+     * Read a named entry from the LDAP directory. The referenced class must have object-directory mapping metadata
+     * specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
      *
      * @param <T> The Java type to return
      * @param dn The distinguished name of the entry to read from the LDAP directory.
@@ -1692,7 +1693,9 @@ public interface LdapOperations {
     <T> T findByDn(Name dn, Class<T> clazz);
 
     /**
-     * Create the given entry in the LDAP directory. If the field annotated with {@link org.springframework.ldap.odm.annotations.Id}
+     * Create the given entry in the LDAP directory. The referenced class must have object-directory mapping metadata
+     * specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
+     * If the field annotated with {@link org.springframework.ldap.odm.annotations.Id}
      * is set in the object, this will be used as the distinguished name of the new entry. If no explicit DN is specified,
      * an attempt will be made to calculate the name from fields annotated with {@link org.springframework.ldap.odm.annotations.DnAttribute}.
      *
@@ -1705,7 +1708,9 @@ public interface LdapOperations {
     void create(Object entry);
 
     /**
-     * Update the given entry in the LDAP directory. If the distinguished name is not explicitly specified (i.e. if the
+     * Update the given entry in the LDAP directory. The referenced class must have object-directory mapping metadata
+     * specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
+     * If the distinguished name is not explicitly specified (i.e. if the
      * field annotated with {@link org.springframework.ldap.odm.annotations.Id} is <code>null</code>),
      * an attempt will be made to calculate the name from fields annotated with
      * {@link org.springframework.ldap.odm.annotations.DnAttribute}. If the {@link org.springframework.ldap.odm.annotations.Id}
@@ -1724,7 +1729,9 @@ public interface LdapOperations {
     void update(Object entry);
 
     /**
-     * Delete an entry from the LDAP directory. If the field annotated with {@link org.springframework.ldap.odm.annotations.Id}
+     * Delete an entry from the LDAP directory. The referenced class must have object-directory mapping metadata
+     * specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
+     * If the field annotated with {@link org.springframework.ldap.odm.annotations.Id}
      * is set in the object, this will be used as the distinguished name of the new entry. If no explicit DN is specified,
      * an attempt will be made to calculate the name from fields annotated with {@link org.springframework.ldap.odm.annotations.DnAttribute}.
      *
@@ -1737,7 +1744,8 @@ public interface LdapOperations {
     void delete(Object entry);
 
     /**
-     * Find all entries in the LDAP directory of a given type.
+     * Find all entries in the LDAP directory of a given type. The referenced class must have object-directory mapping metadata
+     * specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
      *
      * @param <T> The Java type to return
      * @param clazz The Java type to return
@@ -1750,7 +1758,8 @@ public interface LdapOperations {
     <T> List<T> findAll(Class<T> clazz);
 
     /**
-     * Find all entries in the LDAP directory of a given type.
+     * Find all entries in the LDAP directory of a given type. The referenced class must have object-directory mapping metadata
+     * specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
      *
      * @param <T> The Java type to return
      * @param base The root of the sub-tree at which to begin the search.
@@ -1767,6 +1776,8 @@ public interface LdapOperations {
 
     /**
      * Find all entries in the LDAP directory of a given type that matches the specified filter.
+     * The referenced class must have object-directory mapping metadata specified using
+     * {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
      *
      * @param <T> The Java type to return
      * @param base The root of the sub-tree at which to begin the search.
@@ -1783,7 +1794,8 @@ public interface LdapOperations {
     public <T> List<T> find(Name base, Filter filter, SearchControls searchControls, Class<T> clazz);
 
     /**
-     * Search for entries in the LDAP directory.
+     * Search for entries in the LDAP directory. The referenced class must have object-directory
+     * mapping metadata specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
      * <p>
      * Only those entries that both match the query search filter and
      * are represented by the given Java class are returned.
@@ -1800,12 +1812,17 @@ public interface LdapOperations {
     <T> List<T> find(LdapQuery query, Class<T> clazz);
 
     /**
-     *
-     * @param query
-     * @param clazz
-     * @param <T>
-     * @return
+     * Search for objects in the directory tree matching the specified LdapQuery, expecting to find exactly one match.
+     * The referenced class must have object-directory mapping metadata specified using
+     * {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
+     * @param query the LDAP query specification
+     * @param clazz The Java type to return
+     * @param <T> The Java type to return
+     * @return The single entry matching the search specification.
      * @since 2.0
+     * @throws org.springframework.ldap.NamingException on LDAP error.
+     * @throws org.springframework.dao.EmptyResultDataAccessException if no matching entry can be found
+     * @throws IncorrectResultSizeDataAccessException if more than one matching entry is found
      */
     <T> T findOne(LdapQuery query, Class<T> clazz);
 }
