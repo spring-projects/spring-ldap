@@ -127,35 +127,41 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
         assertEquals("Sweden", person.getCountry());
     }
 
-//    @Test
-//    public void testUpdate() {
-//        Person person = tested.findOne(query()
-//                .where("cn").is("Some Person3"), Person.class);
-//
-//        person.setDesc(Arrays.asList("New Description"));
-//        tested.update(person);
-//
-//        person = tested.findOne(query()
-//                .where("cn").is("Some Person3"), Person.class);
-//
-//        assertEquals("Some Person3", person.getCommonName());
-//        assertEquals("Person3", person.getSurname());
-//        assertEquals("New Description", person.getDesc().get(0));
-//        assertEquals("+46 555-123654", person.getTelephoneNumber());
-//    }
-//
-//    @Test
-//    public void testDelete() {
-//        Person person = tested.findOne(query()
-//                .where("cn").is("Some Person3"), Person.class);
-//
-//        tested.delete(person);
-//
-//        try {
-//            tested.findOne(query().where("cn").is("Some Person3"), Person.class);
-//            fail("EmptyResultDataAccessException e");
-//        } catch (EmptyResultDataAccessException e) {
-//            assertTrue(true);
-//        }
-//    }
+    @Test
+    public void testUpdate() {
+        PersonWithDnAnnotations person = tested.findOne(query()
+                .where("cn").is("Some Person3"), PersonWithDnAnnotations.class);
+
+        person.setDesc(Arrays.asList("New Description"));
+        tested.update(person);
+
+        person = tested.findByDn(
+                LdapUtils.newLdapName("cn=Some Person3, ou=company1, c=Sweden"),
+                PersonWithDnAnnotations.class);
+
+        assertEquals("Some Person3", person.getCommonName());
+        assertEquals("Person3", person.getSurname());
+        assertEquals("New Description", person.getDesc().get(0));
+        assertEquals("+46 555-123654", person.getTelephoneNumber());
+    }
+
+    @Test
+    public void testUpdateWithChangedDn() {
+        PersonWithDnAnnotations person = tested.findOne(query()
+                .where("cn").is("Some Person3"), PersonWithDnAnnotations.class);
+
+        // This should make the entry move
+        person.setCountry("Norway");
+        tested.update(person);
+
+        person = tested.findByDn(
+                LdapUtils.newLdapName("cn=Some Person3, ou=company1, c=Norway"),
+                PersonWithDnAnnotations.class);
+
+        assertEquals("Some Person3", person.getCommonName());
+        assertEquals("Person3", person.getSurname());
+        assertEquals("Norway", person.getCountry());
+        assertEquals("Sweden, Company1, Some Person3", person.getDesc().get(0));
+        assertEquals("+46 555-123654", person.getTelephoneNumber());
+    }
 }
