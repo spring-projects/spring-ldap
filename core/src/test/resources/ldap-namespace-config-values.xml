@@ -11,7 +11,6 @@
             url="ldap://localhost:389"
             username="uid=admin"
             base="dc=261consulting,dc=com"
-            anonymous-read-only="true"
             authentication-strategy-ref="authenticationStrategy"
             native-pooling="true"
             referral="follow" />

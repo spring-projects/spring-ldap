@@ -15,7 +15,8 @@
                 tests-per-eviction-run="22"
                 validation-query-base="ou=test"
                 validation-query-filter="objectclass=person"
-                validation-query-search-controls-ref="searchControls"/>
+                validation-query-search-controls-ref="searchControls"
+                non-transient-exceptions="javax.naming.CannotProceedException,javax.naming.CommunicationException" />
     </ldap:context-source>
 
     <bean class="javax.naming.directory.SearchControls" id="searchControls" />

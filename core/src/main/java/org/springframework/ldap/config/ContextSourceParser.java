@@ -18,22 +18,25 @@ package org.springframework.ldap.config;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.parsing.BeanComponentDefinition;
-import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.ldap.CommunicationException;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.pool.PoolExhaustedAction;
 import org.springframework.ldap.pool.factory.PoolingContextSource;
 import org.springframework.ldap.pool.validation.DefaultDirContextValidator;
 import org.springframework.ldap.transaction.compensating.manager.TransactionAwareContextSourceProxy;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
-import static org.springframework.ldap.config.ParserUtils.NAMESPACE;
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.springframework.ldap.config.ParserUtils.getBoolean;
 import static org.springframework.ldap.config.ParserUtils.getInt;
 import static org.springframework.ldap.config.ParserUtils.getString;
@@ -43,12 +46,14 @@ import static org.springframework.ldap.config.ParserUtils.getString;
  */
 public class ContextSourceParser implements BeanDefinitionParser {
     private final static String ATT_ANONYMOUS_READ_ONLY = "anonymous-read-only";
+    private final static String ATT_AUTHENTICATION_SOURCE_REF = "authentication-source-ref";
     private final static String ATT_AUTHENTICATION_STRATEGY_REF = "authentication-strategy-ref";
     private final static String ATT_BASE = "base";
     private final static String ATT_PASSWORD = "password";
     private final static String ATT_NATIVE_POOLING = "native-pooling";
     private final static String ATT_REFERRAL = "referral";
     private final static String ATT_URL = "url";
+    private final static String ATT_BASE_ENV_PROPS_REF = "base-env-props-ref";
 
     // pooling attributes
     private final static String ATT_MAX_ACTIVE = "max-active";
@@ -66,6 +71,7 @@ public class ContextSourceParser implements BeanDefinitionParser {
     private final static String ATT_VALIDATION_QUERY_BASE = "validation-query-base";
     private final static String ATT_VALIDATION_QUERY_FILTER = "validation-query-filter";
     private final static String ATT_VALIDATION_QUERY_SEARCH_CONTROLS_REF = "validation-query-search-controls-ref";
+    private final static String ATT_NON_TRANSIENT_EXCEPTIONS = "non-transient-exceptions";
 
     private final static String ATT_USERNAME = "username";
     static final String DEFAULT_ID = "contextSource";
@@ -78,8 +84,6 @@ public class ContextSourceParser implements BeanDefinitionParser {
         String password = element.getAttribute(ATT_PASSWORD);
         String url = element.getAttribute(ATT_URL);
 
-        Assert.hasText(username, "username attribute must be specified");
-        Assert.hasText(password, "password attribute must be specified");
         Assert.hasText(url, "url attribute must be specified");
 
         builder.addPropertyValue("userDn", username);
@@ -89,35 +93,60 @@ public class ContextSourceParser implements BeanDefinitionParser {
         builder.addPropertyValue("base", getString(element, ATT_BASE, ""));
         builder.addPropertyValue("referral", getString(element, ATT_REFERRAL, null));
 
-        builder.addPropertyValue("anonymousReadOnly", getBoolean(element, ATT_ANONYMOUS_READ_ONLY, false));
-        builder.addPropertyValue("pooled", getBoolean(element, ATT_NATIVE_POOLING, false));
+        boolean anonymousReadOnly = getBoolean(element, ATT_ANONYMOUS_READ_ONLY, false);
+        builder.addPropertyValue("anonymousReadOnly", anonymousReadOnly);
+        boolean nativePooling = getBoolean(element, ATT_NATIVE_POOLING, false);
+        builder.addPropertyValue("pooled", nativePooling);
 
         String authStrategyRef = element.getAttribute(ATT_AUTHENTICATION_STRATEGY_REF);
         if(StringUtils.hasText(authStrategyRef)) {
             builder.addPropertyReference("authenticationStrategy", authStrategyRef);
         }
 
+        String authSourceRef = element.getAttribute(ATT_AUTHENTICATION_SOURCE_REF);
+        if(StringUtils.hasText(authSourceRef)) {
+            builder.addPropertyReference("authenticationSource", authSourceRef);
+        } else {
+            Assert.hasText(username, "username attribute must be specified unless an authentication-source-ref explicitly configured");
+            Assert.hasText(password, "password attribute must be specified unless an authentication-source-ref explicitly configured");
+        }
+
+        String baseEnvPropsRef = element.getAttribute(ATT_BASE_ENV_PROPS_REF);
+        if(StringUtils.hasText(baseEnvPropsRef)) {
+            builder.addPropertyReference("baseEnvironmentProperties", baseEnvPropsRef);
+        }
+
         BeanDefinition targetContextSourceDefinition = builder.getBeanDefinition();
-        targetContextSourceDefinition = applyPoolingIfApplicable(targetContextSourceDefinition, element);
+        targetContextSourceDefinition = applyPoolingIfApplicable(targetContextSourceDefinition, element, nativePooling);
 
-
-        BeanDefinitionBuilder proxyBuilder = BeanDefinitionBuilder.rootBeanDefinition(TransactionAwareContextSourceProxy.class);
-        proxyBuilder.addConstructorArgValue(targetContextSourceDefinition);
-        AbstractBeanDefinition proxyBeanDefinition = proxyBuilder.getBeanDefinition();
+        BeanDefinition actualContextSourceDefinition = targetContextSourceDefinition;
+        if (!anonymousReadOnly) {
+            BeanDefinitionBuilder proxyBuilder = BeanDefinitionBuilder.rootBeanDefinition(TransactionAwareContextSourceProxy.class);
+            proxyBuilder.addConstructorArgValue(targetContextSourceDefinition);
+            actualContextSourceDefinition = proxyBuilder.getBeanDefinition();
+        }
 
         String id = getString(element, AbstractBeanDefinitionParser.ID_ATTRIBUTE, DEFAULT_ID);
-        parserContext.registerBeanComponent(new BeanComponentDefinition(proxyBeanDefinition, id));
+        parserContext.registerBeanComponent(new BeanComponentDefinition(actualContextSourceDefinition, id));
 
-        return proxyBeanDefinition;
+        return actualContextSourceDefinition;
     }
 
-    private BeanDefinition applyPoolingIfApplicable(BeanDefinition targetContextSourceDefinition, Element element) {
-        NodeList poolingChildren = element.getElementsByTagNameNS(NAMESPACE, Elements.POOLING);
-        if(poolingChildren.getLength() == 0) {
+    private BeanDefinition applyPoolingIfApplicable(
+            BeanDefinition targetContextSourceDefinition,
+            Element element,
+            boolean nativePooling) {
+
+        Element poolingElement = DomUtils.getChildElementByTagName(element, Elements.POOLING);
+        if(poolingElement == null) {
             return targetContextSourceDefinition;
         }
 
-        Element poolingElement = (Element) poolingChildren.item(0);
+        if(nativePooling) {
+            throw new IllegalArgumentException(
+                    String.format("%s cannot be enabled together with %s", ATT_NATIVE_POOLING, Elements.POOLING));
+        }
+
         BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(PoolingContextSource.class);
         builder.addPropertyValue("contextSource", targetContextSourceDefinition);
 
@@ -160,6 +189,18 @@ public class ContextSourceParser implements BeanDefinitionParser {
         builder.addPropertyValue("timeBetweenEvictionRunsMillis", getInt(element, ATT_EVICTION_RUN_MILLIS, -1));
         builder.addPropertyValue("numTestsPerEvictionRun", getInt(element, ATT_TESTS_PER_EVICTION_RUN, 3));
         builder.addPropertyValue("minEvictableIdleTimeMillis", getInt(element, ATT_EVICTABLE_TIME_MILLIS, 1000 * 60 * 30));
-    }
 
+        String nonTransientExceptions = getString(element, ATT_NON_TRANSIENT_EXCEPTIONS, CommunicationException.class.getName());
+        String[] strings = StringUtils.commaDelimitedListToStringArray(nonTransientExceptions);
+        Set<Class<?>> nonTransientExceptionClasses = new HashSet<Class<?>>();
+        for (String className : strings) {
+            try {
+                nonTransientExceptionClasses.add(ClassUtils.getDefaultClassLoader().loadClass(className));
+            } catch (ClassNotFoundException e) {
+                throw new IllegalArgumentException(String.format("%s is not a valid class name", className));
+            }
+        }
+
+        builder.addPropertyValue("nonTransientExceptions", nonTransientExceptionClasses);
+    }
 }

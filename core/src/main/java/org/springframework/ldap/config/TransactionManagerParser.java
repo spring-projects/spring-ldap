@@ -27,10 +27,9 @@ import org.springframework.ldap.transaction.compensating.support.DefaultTempEntr
 import org.springframework.ldap.transaction.compensating.support.DifferentSubtreeTempEntryRenamingStrategy;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
-import static org.springframework.ldap.config.ParserUtils.NAMESPACE;
 import static org.springframework.ldap.config.ParserUtils.getString;
 
 /**
@@ -62,17 +61,15 @@ public class TransactionManagerParser implements BeanDefinitionParser {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(ContextSourceTransactionManager.class);
         builder.addPropertyReference("contextSource", contextSourceRef);
 
-        NodeList defaultStrategyChildren =
-                element.getElementsByTagNameNS(NAMESPACE, Elements.DEFAULT_RENAMING_STRATEGY);
-        NodeList differentSubtreeChildren =
-                element.getElementsByTagNameNS(NAMESPACE, Elements.DIFFERENT_SUBTREE_RENAMING_STRATEGY);
+        Element defaultStrategyChild = DomUtils.getChildElementByTagName(element, Elements.DEFAULT_RENAMING_STRATEGY);
+        Element differentSubtreeChild = DomUtils.getChildElementByTagName(element, Elements.DIFFERENT_SUBTREE_RENAMING_STRATEGY);
 
-        if(defaultStrategyChildren.getLength() == 1) {
-            builder.addPropertyValue("renamingStrategy", parseDefaultRenamingStrategy((Element) defaultStrategyChildren.item(0)));
+        if(defaultStrategyChild != null) {
+            builder.addPropertyValue("renamingStrategy", parseDefaultRenamingStrategy(defaultStrategyChild));
         }
 
-        if(differentSubtreeChildren.getLength() == 1) {
-            builder.addPropertyValue("renamingStrategy", parseDifferentSubtreeRenamingStrategy((Element) differentSubtreeChildren.item(0)));
+        if(differentSubtreeChild != null) {
+            builder.addPropertyValue("renamingStrategy", parseDifferentSubtreeRenamingStrategy(differentSubtreeChild));
         }
 
         String id = getString(element, AbstractBeanDefinitionParser.ID_ATTRIBUTE, DEFAULT_ID);

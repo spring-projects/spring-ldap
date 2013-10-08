@@ -402,21 +402,6 @@ public class PersonDaoImpl implements PersonDao {
 
     <para>It is recommended that you review the Spring LDAP sample
     applications included in the release distribution for best-practice
-    illustrations of the features of this library. A description of each
-    sample is provided below:</para>
-
-    <para><orderedlist>
-        <listitem>
-          <para>spring-ldap-person - the sample demonstrating most
-          features.</para>
-        </listitem>
-
-        <listitem>
-          <para>spring-ldap-article - the sample application that was written
-          to accompany a <ulink
-          url="http://today.java.net/pub/a/today/2006/04/18/ldaptemplate-java-ldap-made-simple.html">java.net
-          article</ulink> about Spring LDAP.</para>
-        </listitem>
-      </orderedlist></para>
+    illustrations of the features of this library.</para>
   </sect1>
 </chapter>

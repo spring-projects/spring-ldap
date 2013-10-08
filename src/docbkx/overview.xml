@@ -138,23 +138,32 @@ public class PersonDaoImpl implements PersonDao {
     defined in various ways, but the most common is through XML:</para>
 
     <informalexample>
-      <programlisting>&lt;beans&gt;
-   &lt;bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource"&gt;
-      &lt;property name="url" value="ldap://localhost:389" /&gt;
-      &lt;property name="base" value="dc=example,dc=com" /&gt;
-      &lt;property name="userDn" value="cn=Manager" /&gt;
-      &lt;property name="password" value="secret" /&gt;
-   &lt;/bean&gt;
+      <programlisting><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ldap="http://www.springframework.org/schema/ldap"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/ldap http://www.springframework.org/schema/ldap/spring-ldap.xsd">
 
-   &lt;bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate"&gt;
-      &lt;constructor-arg ref="contextSource" /&gt;
-   &lt;/bean&gt;
+   <ldap:context-source
+          url="ldap://localhost:389"
+          base="dc=example,dc=com"
+          username="cn=Manager"
+          password="secret" />
 
-   &lt;bean id="personDao" class="com.example.dao.PersonDaoImpl"&gt;
-      &lt;property name="ldapTemplate" ref="ldapTemplate" /&gt;
-   &lt;/bean&gt;
-&lt;/beans&gt;</programlisting>
+   <ldap:ldap-template id="ldapTemplate" />
+
+   <bean id="personDao" class="com.example.dao.PersonDaoImpl">
+      <property name="ldapTemplate" ref="ldapTemplate" />
+   </bean>
+</beans>
+]]></programlisting>
     </informalexample>
+      <note>
+          In order to use the custom XML namespace for configuring the Spring LDAP components
+          you need to include references to this namespace in your XML declaration as in the example above.
+      </note>
   </sect1>
 
   <sect1 id="introduction-packaging">
@@ -243,6 +252,15 @@ public class PersonDaoImpl implements PersonDao {
               to use the core Spring LDAP classes. The parameterization of the core interfaces will most likely cause
               lots of compilation warnings, and you are obviously encouraged to take appropriate action to get rid
               of these warning.
+          </listitem>
+          <listitem>
+              The ODM (Object-Directory Mapping) functionality has been moved to core and there are new methods
+              in <literal>LdapOperations</literal>/<literal>LdapTemplate</literal> that uses this automatic
+              translation to/from ODM-annotated classes. See <xref linkend="odm" /> for more information.
+          </listitem>
+          <listitem>
+              A custom XML namespace is now provided to simplify configuration of Spring LDAP.
+              See <xref linkend="configuration" /> for more information.
           </listitem>
           <listitem>
               <literal>DistinguishedName</literal> and associated classes have been deprecated in favor of standard

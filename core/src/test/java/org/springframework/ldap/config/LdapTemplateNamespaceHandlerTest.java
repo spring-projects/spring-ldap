@@ -18,10 +18,13 @@ package org.springframework.ldap.config;
 
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.junit.Test;
+import org.springframework.beans.BeansException;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.DirContextAuthenticationStrategy;
+import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.pool.factory.PoolingContextSource;
 import org.springframework.ldap.pool.validation.DefaultDirContextValidator;
 import org.springframework.ldap.support.LdapUtils;
@@ -32,7 +35,10 @@ import org.springframework.ldap.transaction.compensating.support.DefaultTempEntr
 import org.springframework.ldap.transaction.compensating.support.DifferentSubtreeTempEntryRenamingStrategy;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import javax.naming.CannotProceedException;
+import javax.naming.CommunicationException;
 import javax.naming.directory.SearchControls;
+import java.util.Set;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -76,6 +82,48 @@ public class LdapTemplateNamespaceHandlerTest {
     }
 
     @Test
+    public void verifyThatAnonymousReadOnlyContextWillNotBeWrappedInProxy() {
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/ldap-namespace-config-anonymous-read-only.xml");
+        ContextSource contextSource = ctx.getBean(ContextSource.class);
+
+        assertNotNull(contextSource);
+        assertTrue(contextSource instanceof LdapContextSource);
+        assertEquals(Boolean.TRUE, getInternalState(contextSource, "anonymousReadOnly"));
+    }
+
+    @Test(expected = BeansException.class)
+    public void verifyThatAnonymousReadOnlyAndTransactionalThrowsException() {
+        new ClassPathXmlApplicationContext("/ldap-namespace-config-anonymous-read-only-and-transactions.xml");
+    }
+
+    @Test(expected = BeansException.class)
+    public void verifyThatMissingUsernameThrowsException() {
+        new ClassPathXmlApplicationContext("/ldap-namespace-config-missing-username.xml");
+    }
+
+    @Test(expected = BeansException.class)
+    public void verifyThatMissingPasswordThrowsException() {
+        new ClassPathXmlApplicationContext("/ldap-namespace-config-missing-password.xml");
+    }
+
+    @Test
+    public void verifyReferences() {
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/ldap-namespace-config-references.xml");
+        ContextSource outerContextSource = ctx.getBean(ContextSource.class);
+        AuthenticationSource authenticationSource = ctx.getBean(AuthenticationSource.class);
+        DirContextAuthenticationStrategy authenticationStrategy = ctx.getBean(DirContextAuthenticationStrategy.class);
+        Object baseEnv = ctx.getBean("baseEnvProps");
+
+        assertNotNull(outerContextSource);
+
+        assertTrue(outerContextSource instanceof TransactionAwareContextSourceProxy);
+        ContextSource contextSource = ((TransactionAwareContextSourceProxy) outerContextSource).getTarget();
+
+        assertSame(authenticationSource, getInternalState(contextSource, "authenticationSource"));
+        assertSame(authenticationStrategy, getInternalState(contextSource, "authenticationStrategy"));
+        assertEquals(baseEnv, getInternalState(contextSource, "baseEnv"));
+    }
+    @Test
     public void verifyParseWithCustomValues() {
         ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/ldap-namespace-config-values.xml");
         ContextSource outerContextSource = ctx.getBean(ContextSource.class);
@@ -93,7 +141,7 @@ public class LdapTemplateNamespaceHandlerTest {
         assertEquals("apassword", getInternalState(contextSource, "password"));
         assertArrayEquals(new String[]{"ldap://localhost:389"}, (Object[]) getInternalState(contextSource, "urls"));
         assertEquals(Boolean.TRUE, getInternalState(contextSource, "pooled"));
-        assertEquals(Boolean.TRUE, getInternalState(contextSource, "anonymousReadOnly"));
+        assertEquals(Boolean.FALSE, getInternalState(contextSource, "anonymousReadOnly"));
         assertEquals("follow", getInternalState(contextSource, "referral"));
         assertSame(authenticationStrategy, getInternalState(contextSource, "authenticationStrategy"));
 
@@ -164,6 +212,7 @@ public class LdapTemplateNamespaceHandlerTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void verifyParsePoolingDefaults() {
         ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/ldap-namespace-config-pooling-defaults.xml");
 
@@ -178,6 +227,10 @@ public class LdapTemplateNamespaceHandlerTest {
         Object objectFactory = getInternalState(pooledContextSource, "dirContextPoolableObjectFactory");
         assertNotNull(getInternalState(objectFactory, "contextSource"));
         assertNull(getInternalState(objectFactory, "dirContextValidator"));
+        Set<Class<? extends Throwable>> nonTransientExceptions =
+                (Set<Class<? extends Throwable>>) getInternalState(objectFactory, "nonTransientExceptions");
+        assertEquals(1, nonTransientExceptions.size());
+        assertTrue(nonTransientExceptions.contains(CommunicationException.class));
 
         GenericKeyedObjectPool objectPool = (GenericKeyedObjectPool) getInternalState(pooledContextSource, "keyedObjectPool");
         assertEquals(8, objectPool.getMaxActive());
@@ -208,6 +261,7 @@ public class LdapTemplateNamespaceHandlerTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void verifyParsePoolingValidationSet() {
         ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/ldap-namespace-config-pooling-test-specified.xml");
 
@@ -230,5 +284,16 @@ public class LdapTemplateNamespaceHandlerTest {
         SearchControls searchControls = ctx.getBean(SearchControls.class);
         assertEquals("objectclass=person", validator.getFilter());
         assertSame(searchControls, validator.getSearchControls());
+
+        Set<Class<? extends Throwable>> nonTransientExceptions =
+                (Set<Class<? extends Throwable>>) getInternalState(objectFactory, "nonTransientExceptions");
+        assertEquals(2, nonTransientExceptions.size());
+        assertTrue(nonTransientExceptions.contains(CommunicationException.class));
+        assertTrue(nonTransientExceptions.contains(CannotProceedException.class));
+    }
+
+    @Test(expected = BeansException.class)
+    public void verifyParseWithPoolingAndNativePoolingWillFail() {
+        new ClassPathXmlApplicationContext("/ldap-namespace-config-pooling-with-native.xml");
     }
 }

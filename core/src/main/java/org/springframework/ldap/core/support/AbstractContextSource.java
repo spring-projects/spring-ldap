@@ -665,6 +665,5 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 		public String getCredentials() {
 			return password;
 		}
-
 	}
 }

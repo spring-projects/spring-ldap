@@ -19,6 +19,7 @@ package org.springframework.ldap.transaction.compensating.manager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.support.AbstractContextSource;
 import org.springframework.ldap.transaction.compensating.LdapCompensatingTransactionOperationFactory;
 import org.springframework.ldap.transaction.compensating.TempEntryRenamingStrategy;
 import org.springframework.ldap.transaction.compensating.support.DefaultTempEntryRenamingStrategy;
@@ -67,6 +68,14 @@ public class ContextSourceTransactionManagerDelegate extends
             this.contextSource = proxy.getTarget();
         } else {
             this.contextSource = contextSource;
+        }
+
+        if (contextSource instanceof AbstractContextSource) {
+            AbstractContextSource abstractContextSource = (AbstractContextSource) contextSource;
+            if(abstractContextSource.isAnonymousReadOnly()) {
+                throw new IllegalArgumentException(
+                        "Compensating LDAP transactions cannot be used when context-source is anonymous-read-only");
+            }
         }
     }
 

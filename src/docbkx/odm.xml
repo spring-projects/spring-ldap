@@ -222,15 +222,11 @@
    &lt;/property&gt;
 &lt;/bean&gt;
 
-&lt;bean id="ldapTemplate"
-          class="org.springframework.ldap.core.LdapTemplate"&gt;
-   &lt;property name="objectDirectoryMapper"&gt;
-      &lt;bean class="org.springframework.ldap.odm.impl.DefaultObjectDirectoryMapper"&gt;
-         &lt;property name="converterManager" ref="converterManager" /&gt;
-      &lt;/bean&gt;
-   &lt;/property&gt;
-   &lt;!-- More configuration of LdapTemplate here --&gt;
+&lt;ldap:ldap-template id="ldapTemplate" odm-ref="odm" /&gt;
+&lt;bean id="odm" class="org.springframework.ldap.odm.impl.DefaultObjectDirectoryMapper"&gt;
+   &lt;property name="converterManager" ref="converterManager" /&gt;
 &lt;/bean&gt;
+
 
 </programlisting>
     </example>

@@ -41,15 +41,15 @@
 	<xi:include href="overview.xml" />
 	<xi:include href="basic.xml" />
 	<xi:include href="dirobjectfactory.xml" />
+    <xi:include href="odm.xml" />
     <xi:include href="advancedqueries.xml" />
+    <xi:include href="configuration.xml" />
+    <xi:include href="pooling.xml" />
 	<xi:include href="executors.xml" />
 	<xi:include href="contextprocessor.xml" />
 	<xi:include href="transactions.xml" />
-	<xi:include href="simple.xml" />
-	<xi:include href="configuration.xml" />
-	<xi:include href="pooling.xml" />
 	<xi:include href="user-authentication.xml" />
 	<xi:include href="ldif-parsing.xml" />
-	<xi:include href="odm.xml" />
     <xi:include href="utilities.xml" />
+    <xi:include href="simple.xml" />
 </book>

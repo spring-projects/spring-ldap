@@ -23,13 +23,10 @@
 		</para>
 
 		<para>
-			Pooling support is provided by
-			<literal>PoolingContextSource</literal>
-			which can wrap any
-			<literal>ContextSource</literal>
-			and pool both read-only and read-write
-			<literal>DirContext</literal>
-			objects.
+			Pooling support is provided by supplying a <literal>&lt;ldap:pooling /&gt;</literal> sub-element
+            to the <literal>&lt;ldap:context-source /&gt;</literal> element in the application context configuration.
+			Read-only and read-write <literal>DirContext</literal> objects are pooled separately
+            (if <literal>anonymous-read-only</literal> is specified.
 			<ulink url="http://commons.apache.org/pool/index.html">
 				Jakarta Commons-Pool
 			</ulink>
@@ -47,17 +44,12 @@
 			<literal>DirContext</literal>
 			connections to be checked to ensure they are still properly
 			connected and configured when checking them out of the pool,
-			in to the pool or while idle in the pool
+			in to the pool or while idle in the pool.
 		</para>
 
 		<para>
-			The
-			<literal>DirContextValidator</literal>
-			interface is used by the
-			<literal>PoolingContextSource</literal>
-			for validation and
-			<literal>DefaultDirContextValidator</literal>
-			is provided as the default validation implementation.
+			If connection validation is configured, pooled connections are validated using
+			<literal>DefaultDirContextValidator</literal>.
 			<literal>DefaultDirContextValidator</literal>
 			does a
 			<literal>
@@ -75,12 +67,11 @@
 			passes validation, if no results are returned or an
 			exception is thrown the
 			<literal>DirContext</literal>
-			fails validation. The
-			<literal>DefaultDirContextValidator</literal>
+			fails validation. The default settings
 			should work with no configuration changes on most LDAP
 			servers and provide the fastest way to validate the
-			<literal>DirContext</literal>
-			.
+			<literal>DirContext</literal>. If customization required this can be done using the validation
+            configuration attributes, described below
 		</para>
         <note>
             Connections will be automatically invalidated if they throw an exception that is considered
@@ -94,21 +85,16 @@
 	</sect1>
 
 	<sect1 id="pooling-properties">
-		<title>Pool Properties</title>
+		<title>Pool Configuration</title>
 
 		<para>
-			The following properties are available on the
-			<literal>PoolingContextSource</literal>
-			for configuration of the DirContext pool. The
-			<literal>contextSource</literal>
-			property must be set and the
-			<literal>dirContextValidator</literal>
-			property must be set if validation is enabled, all other
-			properties are optional.
+			The following attributes are available on the
+			<literal>&lt;ldap:pooling /&gt;</literal> element
+			for configuration of the DirContext pool:
 		</para>
 
 		<table frame="all">
-			<title>Pooling Configuration Properties</title>
+			<title>Pooling Configuration Attributes</title>
 			<tgroup align="left" cols="3" colsep="1" rowsep="1">
 				<colspec colname="c1" />
 
@@ -118,7 +104,7 @@
 
 				<thead>
 					<row>
-						<entry>Parameter</entry>
+						<entry>Attribute</entry>
 
 						<entry>Default</entry>
 
@@ -129,50 +115,7 @@
 				<tbody>
 					<row>
 						<entry>
-							<literal>contextSource</literal>
-						</entry>
-
-						<entry>
-							<literal>null</literal>
-						</entry>
-
-						<entry>
-							The
-							<literal>ContextSource</literal>
-							implementation to get
-							<literal>DirContext</literal>
-							s from to populate the pool.
-						</entry>
-					</row>
-
-					<row>
-						<entry>
-							<literal>dirContextValidator</literal>
-						</entry>
-
-						<entry>
-							<literal>null</literal>
-						</entry>
-
-						<entry>
-							The
-							<literal>DirContextValidator</literal>
-							implementation to use when validating
-							connections. This is required if
-							<literal>testOnBorrow</literal>
-							,
-							<literal>testOnReturn</literal>
-							, or
-							<literal>testWhileIdle</literal>
-							options are set to
-							<literal>true</literal>
-							.
-						</entry>
-					</row>
-
-					<row>
-						<entry>
-							<literal>maxActive</literal>
+							<literal>max-active</literal>
 						</entry>
 
 						<entry>
@@ -189,7 +132,7 @@
 
 					<row>
 						<entry>
-							<literal>maxTotal</literal>
+							<literal>max-total</literal>
 						</entry>
 
 						<entry>
@@ -206,7 +149,7 @@
 
 					<row>
 						<entry>
-							<literal>maxIdle</literal>
+							<literal>max-idle</literal>
 						</entry>
 
 						<entry>
@@ -224,7 +167,7 @@
 
 					<row>
 						<entry>
-							<literal>minIdle</literal>
+							<literal>min-idle</literal>
 						</entry>
 
 						<entry>
@@ -241,7 +184,7 @@
 
 					<row>
 						<entry>
-							<literal>maxWait</literal>
+							<literal>max-wait</literal>
 						</entry>
 
 						<entry>
@@ -259,11 +202,11 @@
 
 					<row>
 						<entry>
-							<literal>whenExhaustedAction</literal>
+							<literal>when-exhausted</literal>
 						</entry>
 
 						<entry>
-							<literal>1</literal> (BLOCK)
+							<literal>BLOCK</literal>
 						</entry>
 
 						<entry>
@@ -272,9 +215,7 @@
 							<itemizedlist>
 								<listitem>
 									<para>
-										The
-										FAIL (<literal>0</literal>)
-										option will throw a
+										The <literal>FAIL</literal> option will throw a
 										<literal>
 											NoSuchElementException
 										</literal>
@@ -284,29 +225,27 @@
 
                                 <listitem>
                                     <para>
-                                        The
-                                        BLOCK (<literal>1</literal>)
+                                        The <literal>BLOCK</literal>
                                         option will wait until a new
                                         object is available. If
-                                        <literal>maxWait</literal>
+                                        <literal>max-wait</literal>
                                         is positive a
                                         <literal>
                                             NoSuchElementException
                                         </literal>
                                         is thrown if no new object is
                                         available after the
-                                        <literal>maxWait</literal>
+                                        <literal>max-wait</literal>
                                         time expires.
                                     </para>
                                 </listitem>
 
 								<listitem>
 									<para>
-										The
-										GROW (<literal>2</literal>)
+										The <literal>GROW</literal>
 										option will create and return a
 										new object (essentially making
-										<literal>maxActive</literal>
+										<literal>max-active</literal>
 										meaningless).
 									</para>
 								</listitem>
@@ -316,7 +255,7 @@
 
 					<row>
 						<entry>
-							<literal>testOnBorrow</literal>
+							<literal>test-on-borrow</literal>
 						</entry>
 
 						<entry>
@@ -334,7 +273,7 @@
 
 					<row>
 						<entry>
-							<literal>testOnReturn</literal>
+							<literal>test-on-return</literal>
 						</entry>
 
 						<entry>
@@ -349,7 +288,7 @@
 
 					<row>
 						<entry>
-							<literal>testWhileIdle</literal>
+							<literal>test-while-idle</literal>
 						</entry>
 
 						<entry>
@@ -367,7 +306,7 @@
 					<row>
 						<entry>
 							<literal>
-								timeBetweenEvictionRunsMillis
+                                eviction-run-interval-millis
 							</literal>
 						</entry>
 
@@ -385,7 +324,7 @@
 
 					<row>
 						<entry>
-							<literal>numTestsPerEvictionRun</literal>
+							<literal>tests-per-eviction-run</literal>
 						</entry>
 
 						<entry>
@@ -402,7 +341,7 @@
 					<row>
 						<entry>
 							<literal>
-								minEvictableIdleTimeMillis
+                                min-evictable-time-millis
 							</literal>
 						</entry>
 
@@ -420,7 +359,58 @@
                     <row>
                         <entry>
                             <literal>
-                                nonTransientExceptions
+                                validation-query-base
+                            </literal>
+                        </entry>
+
+                        <entry>
+                            <literal>LdapUtils.emptyName()</literal>
+                        </entry>
+
+                        <entry>
+                            The search base to be used when validating connections. Only used if
+                            <literal>test-on-borrow</literal>, <literal>test-on-return</literal>,
+                            or <literal>test-while-idle</literal> is specified
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>
+                            <literal>
+                                validation-query-filter
+                            </literal>
+                        </entry>
+
+                        <entry>
+                            <literal>objectclass=*</literal>
+                        </entry>
+
+                        <entry>
+                            The search filter to be used when validating connections. Only used if
+                            <literal>test-on-borrow</literal>, <literal>test-on-return</literal>,
+                            or <literal>test-while-idle</literal> is specified
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>
+                            <literal>
+                                validation-query-search-controls-ref
+                            </literal>
+                        </entry>
+
+                        <entry>
+                            <literal>null</literal>; default search control settings are described above.
+                        </entry>
+
+                        <entry>
+                            Id of a SearchControls instance to be used when validating connections. Only used if
+                            <literal>test-on-borrow</literal>, <literal>test-on-return</literal>,
+                            or <literal>test-while-idle</literal> is specified
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>
+                            <literal>
+                                non-transient-exceptions
                             </literal>
                         </entry>
 
@@ -429,8 +419,8 @@
                         </entry>
 
                         <entry>
-                            The Exceptions that should be considered non-transient with
-                            regards to eager invalidation. Should any of the listed exceptions
+                            Comma-separated list of Exception classes. The listed exceptions will be considered
+                            non-transient with regards to eager invalidation. Should any of the listed exceptions
                             (or subclasses of them) be thrown by a call to a
                             pooled <literal>DirContext</literal> instance, that object will be
                             automatically invalidated without any additional testOnReturn operation.
@@ -456,17 +446,10 @@
 				<programlisting><![CDATA[
 <beans>
    ...
-   <bean id="contextSource" class="org.springframework.ldap.pool.factory.PoolingContextSource">
-      <property name="contextSource" ref="contextSourceTarget" />
-   </bean>
-    
-   <bean id="contextSourceTarget" class="org.springframework.ldap.core.support.LdapContextSource">
-      <property name="url" value="ldap://localhost:389" />
-      <property name="base" value="dc=example,dc=com" />
-      <property name="userDn" value="cn=Manager" />
-      <property name="password" value="secret" />
-      <property name="pooled" value="false"/>
-   </bean>
+    <ldap:context-source
+        password="secret" url="ldap://localhost:389" username="cn=Manager">
+        <ldap:pooling />
+    </ldap:context-source>
    ...
 </beans>
 ]]></programlisting>
@@ -474,37 +457,6 @@
 			In a real world example you would probably configure the
 			pool options and enable connection validation; the above
 			serves as an example to demonstrate the general idea.
-			<note>
-				<para>
-					Ensure that the
-					<literal>pooled</literal>
-					property is set to
-					<literal>false</literal>
-					on any
-					<literal>ContextSource</literal>
-					that will be wrapped in a
-					<literal>PoolingContextSource</literal>
-					. The
-					<literal>PoolingContextSource</literal>
-					must be able to create new connections when needed
-					and if
-					<literal>pooled</literal>
-					is set to
-					<literal>true</literal>
-					that may not be possible.
-				</para>
-			</note>
-			<note>
-				<para>
-					You'll notice that the actual
-					<literal>ContextSource</literal>
-					gets an id with a "Target" suffix. The bean you will
-					actually refer to is the
-					<literal>PoolingContextSource</literal>
-					that wraps the target
-					<literal>contextSource</literal>
-				</para>
-			</note>
 		</para>
 
 		<sect2 id="pooling-advanced-configuration">
@@ -520,23 +472,12 @@
 					<programlisting><![CDATA[
 <beans>
    ...
-   <bean id="contextSource" class="org.springframework.ldap.pool.factory.PoolingContextSource">
-      <property name="contextSource" ref="contextSourceTarget" />
-      <property name="dirContextValidator" ref="dirContextValidator" />
-      <property name="testOnBorrow" value="true" />
-      <property name="testWhileIdle" value="true" />
-   </bean>
-
-   <bean id="dirContextValidator"
-         class="org.springframework.ldap.pool.validation.DefaultDirContextValidator" />
-    
-   <bean id="contextSourceTarget" class="org.springframework.ldap.core.support.LdapContextSource">
-      <property name="url" value="ldap://localhost:389" />
-      <property name="base" value="dc=example,dc=com" />
-      <property name="userDn" value="cn=Manager" />
-      <property name="password" value="secret" />
-      <property name="pooled" value="false"/>
-   </bean>
+    <ldap:context-source
+        username="cn=Manager" password="secret" url="ldap://localhost:389" >
+        <ldap:pooling
+            test-on-borrow="true"
+            test-while-idle="true" />
+    </ldap:context-source>
    ...
 </beans>
 ]]></programlisting>
@@ -544,8 +485,7 @@
 				The above example will test each
 				<literal>DirContext</literal>
 				before it is passed to the client application and test
-				<literal>DirContext</literal>
-				s that have been sitting idle in the pool.
+				<literal>DirContext</literal>s that have been sitting idle in the pool.
 			</para>
 		</sect2>
 	</sect1>

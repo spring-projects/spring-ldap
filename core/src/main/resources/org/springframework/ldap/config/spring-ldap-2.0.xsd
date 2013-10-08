@@ -39,13 +39,13 @@
         <xs:attribute name="base" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
-                    The base DN. If specified, all LDAP operations on contexts retrieved from this ContextSource will
+                    The base DN. If configured, all LDAP operations on contexts retrieved from this ContextSource will
                     be relative to this DN. Default is an empty distinguished name (i.e. all operations will be
                     relative to the directory root).
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="password" type="xs:string" use="required">
+        <xs:attribute name="password" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     The password to use for authentication.
@@ -82,11 +82,19 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="username" type="xs:string" use="required">
+        <xs:attribute name="username" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     The username (principal) to use for authentication. This will normally be the distinguished name
                     of an admin user.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="base-env-props-ref" type="xs:token">
+            <xs:annotation>
+                <xs:documentation>
+                    Reference to a Map of custom environment properties that should supplied with the environment
+                    sent to the DirContext on construction.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
@@ -233,6 +241,14 @@
             </xs:annotation>
         </xs:attribute>
         <xs:attribute name="validation-query-search-controls-ref" type="xs:token">
+            <xs:annotation>
+                <xs:documentation>
+                    Id of the SearchControls instance to use for searches. Default is searchScope=OBJECT_SCOPE;
+                    countLimit: 1; timeLimit: 500; returningAttributes: [objectclass].
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="non-transient-exceptions" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     Id of the SearchControls instance to use for searches. Default is searchScope=OBJECT_SCOPE;

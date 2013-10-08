@@ -43,74 +43,83 @@
     Configuring Spring LDAP transactions should look very familiar if you're used to configuring Spring transactions.
     You will annotate your transacted classes with <literal>@Transactional</literal>, create a
     <literal>TransactionManager</literal> instance and include a <literal>&lt;tx:annotation-driven&gt;</literal>
-    tag in your bean configuraion. In addition to this, you will also need to wrap your <literal>ContextSource</literal>
-    in a <literal>TransactionAwareContextSourceProxy</literal>.
+    tag in your bean configuraion.
     <informalexample>
-    <programlisting>&lt;beans&gt;
+    <programlisting>
+&lt;beans&gt;
    ...
-   &lt;bean id="contextSourceTarget" class="org.springframework.ldap.core.support.LdapContextSource"&gt;
-      &lt;property name="url" value="ldap://localhost:389" /&gt;
-      &lt;property name="base" value="dc=example,dc=com" /&gt;
-      &lt;property name="userDn" value="cn=Manager" /&gt;
-      &lt;property name="password" value="secret" /&gt;
-   &lt;/bean&gt;
+   &lt;ldap:context-source
+       url="ldap://localhost:389"
+       base="dc=example,dc=com"
+       username="cn=Manager"
+       password="secret" /&gt;
 
-   &lt;bean id="contextSource" 
-    class="org.springframework.ldap.transaction.compensating.manager.TransactionAwareContextSourceProxy"&gt;
-      &lt;constructor-arg ref="contextSourceTarget" /&gt;
-   &lt;/bean&gt;
-   
-   &lt;bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate"&gt;
-      &lt;constructor-arg ref="contextSource" /&gt;
-   &lt;/bean&gt;
-   
-   &lt;bean id="transactionManager" 
-    class="org.springframework.ldap.transaction.compensating.manager.ContextSourceTransactionManager"&gt;
-      &lt;property name="contextSource" ref="contextSource" /&gt;
-      &lt;property name="renamingStrategy"&gt;
+   &lt;ldap:ldap-template id="ldapTemplate" /&gt;
+   &lt;ldap:transaction-manager&gt;
         &lt;!--
-          Note this default configuration will not work for more complex scenarios, see below for more information on RenamingStrategies.
+        Note this default configuration will not work for more complex scenarios, see below for more information on RenamingStrategies.
         --&gt;
-        &lt;bean class="org.springframework.ldap.transaction.compensating.support.DefaultTempEntryRenamingStrategy" /&gt;
-      &lt;/property&gt;
+       &lt;ldap:default-renaming-strategy /&gt;
+   &lt;/ldap:transaction-manager&gt;
 
-   &lt;/bean&gt;
-
+    &lt;!--
+       The MyDataAccessObject class is annotated with <literal>@Transactional</literal>.
+    --&gt;
    &lt;bean id="myDataAccessObject" class="com.example.MyDataAccessObject"&gt;
       &lt;property name="ldapTemplate" ref="ldapTemplate" /&gt;
    &lt;/bean&gt;
 
    &lt;tx:annotation-driven /&gt;
-
    ...</programlisting>
-        <note>While the this setup will work fine for most simple use cases, some more complex scenarios will
+        <note>While this setup will work fine for most simple use cases, some more complex scenarios will
             require additional configuration; more specifically if you will be creating or deleting subtrees within
             transactions, you will need to use an alternative <literal>TempEntryRenamingStrategy</literal>, as described
             in <xref linkend="renaming-strategies"/> below</note>
     </informalexample>
     In a real world example you would probably apply the transactions on the service object level
     rather than the DAO level; the above serves as an example to demonstrate the general idea.
-    <note>You'll notice that the actual <literal>ContextSource</literal> instance gets an id with a
-    &quot;Target&quot; suffix. The bean you will actually refer to is the Proxy that are created
-    around the target; <literal>contextSource</literal>.</note>
     </para>
   </sect1>
   <sect1 id="jdbc-transaction-integration">
     <title>JDBC Transaction Integration</title>
-    <para>A common use case when working against LDAP is that some of the data is stored in the LDAP tree, but
-    other data is stored in a relational database. In this case, transaction support becomes even more important,
-    since the update of the different resources should be synchronized.</para>
-    <para>While actual XA transactions is not supported, support is provided to conceptually wrap JDBC and LDAP
-    access within the same transaction using the <literal>ContextSourceAndDataSourceTransactionManager</literal>.
-    A <literal>DataSource</literal> and a <literal>ContextSource</literal> is supplied to the 
-    <literal>ContextSourceAndDataSourceTransactionManager</literal>, which will then manage the two transactions,
-    virtually as if they were one. When performing a commit, the LDAP part of the operation will always
-    be performed first, allowing both transactions to be rolled back should the LDAP commit fail. The JDBC
-    part of the transaction is managed exactly as in <literal>DataSourceTransactionManager</literal>, except that
-    nested transactions is not supported.
-    <note>Once again it should be noted that the provided support is all client side. The wrapped transaction is not 
-    an XA transaction. No two-phase as such commit is performed, as the LDAP server will be unable to vote on its outcome.
-    Once again, however, for the majority of cases the supplied support will be sufficient.</note></para>
+    <para>
+        A common use case when working against LDAP is that some of the data is stored in the LDAP tree, but
+        other data is stored in a relational database. In this case, transaction support becomes even more important,
+        since the update of the different resources should be synchronized.
+    </para>
+    <para>
+        While actual XA transactions is not supported, support is provided to conceptually wrap JDBC and LDAP
+        access within the same transaction by supplying a <literal>data-source-ref</literal> attribute to the
+        <literal>&lt;ldap:transaction-manager&gt;</literal> tag.
+        This will create a <literal>ContextSourceAndDataSourceTransactionManager</literal>,
+        which will then manage the two transactions, virtually as if they were one. When performing a commit,
+        the LDAP part of the operation will always be performed first, allowing both transactions to be rolled
+        back should the LDAP commit fail. The JDBC part of the transaction is managed exactly as in
+        <literal>DataSourceTransactionManager</literal>, except that nested transactions is not supported:
+        <informalexample>
+            <programlisting>
+   &lt;ldap:transaction-manager data-source-ref="dataSource" &gt;
+      &lt;ldap:default-renaming-strategy /&gt;
+   &lt;ldap:transaction-manager /&gt;
+            </programlisting>
+        </informalexample>
+        <note>
+            Once again it should be noted that the provided support is all client side. The wrapped transaction is not
+            an XA transaction. No two-phase as such commit is performed, as the LDAP server will be unable to vote on its outcome.
+            Once again, however, for the majority of cases the supplied support will be sufficient.
+        </note>
+    </para>
+    <para>
+        The same thing can be accomplished for Hibernate integration by supplying a <literal>session-factory-ref</literal>
+        attribute to the <literal>&lt;ldap:transaction-manager&gt;</literal> tag.
+        <informalexample>
+            <programlisting>
+   &lt;ldap:transaction-manager session-factory-ref="dataSource" &gt;
+      &lt;ldap:default-renaming-strategy /&gt;
+   &lt;ldap:transaction-manager /&gt;
+            </programlisting>
+        </informalexample>
+    </para>
   </sect1>
   <sect1 id="compensating-transactions-explained">
   	<title>LDAP Compensating Transactions Explained</title>
@@ -189,23 +198,35 @@
 	javadocs.</para>
 	<sect2 id="renaming-strategies">
 	<title>Renaming Strategies</title>
-	As described in the table above, the transaction management of some operations require the original entry affected
-	by the operation to be temporarily renamed before the actual modification can be made in the commit.
-	The manner in which the temporary DN of the entry is calculated is managed by a <literal>TempEntryRenamingStrategy</literal>
-	supplied to the <literal>ContextSourceTransactionManager</literal>. Two implementations are supplied with Spring LDAP,
-	but if specific behaviour is required a custom implementation can easily be implemented by the user. The
-	provided <literal>TempEntryRenamingStrategy</literal> implementations are:
+        <para>
+            As described in the table above, the transaction management of some operations require the original entry affected
+            by the operation to be temporarily renamed before the actual modification can be made in the commit.
+            The manner in which the temporary DN of the entry is calculated is managed by a <literal>TempEntryRenamingStrategy</literal>
+            specified in a sub-element to the <literal>&lt;ldap:transaction-manager &gt;</literal> declaration
+            in the configuration. Two implementations are supplied with Spring LDAP:
+        </para>
 	<itemizedlist>
-	  <listitem><para><literal>DefaultTempEntryRenamingStrategy</literal> (the default). Adds a suffix to the least significant
-	  part of the entry DN. E.g. for the DN <literal>cn=john doe, ou=users</literal>, this strategy would return the
-	  temporary DN <literal>cn=john doe_temp, ou=users</literal>. The suffix is configurable using the <literal>tempSuffix</literal>
-	  property</para></listitem>
-	  <listitem><para><literal>DifferentSubtreeTempEntryRenamingStrategy</literal>. Takes the least significant part of the DN
-	  and appends a subtree DN to this. This makes all temporary entries be placed at a specific location in the LDAP tree.
-	  The temporary subtree DN is configured using the <literal>subtreeNode</literal> property. E.g., if
-	  <literal>subtreeNode</literal> is <literal>ou=tempEntries</literal> and the original DN of the entry is
-	  <literal>cn=john doe, ou=users</literal>, the temporary DN will be <literal>cn=john doe, ou=tempEntries</literal>.
-	  Note that the configured subtree node needs to be present in the LDAP tree.</para></listitem>
+	    <listitem>
+            <para>
+                <literal>DefaultTempEntryRenamingStrategy</literal> (the default). Specified using a
+                <literal>&lt;ldap:default-renaming-strategy /&gt;</literal> element. Adds a suffix to the least significant
+                part of the entry DN. E.g. for the DN <literal>cn=john doe, ou=users</literal>, this strategy would return the
+                temporary DN <literal>cn=john doe_temp, ou=users</literal>.
+                The suffix is configurable using the <literal>temp-suffix</literal> attribute.
+            </para>
+        </listitem>
+	    <listitem>
+            <para>
+                <literal>DifferentSubtreeTempEntryRenamingStrategy</literal>. Specified using a
+                <literal>&lt;ldap:different-subtree-renaming-strategy /&gt;</literal> element.
+                Takes the least significant part of the DN and appends a subtree DN to this.
+                This makes all temporary entries be placed at a specific location in the LDAP tree.
+	            The temporary subtree DN is configured using the <literal>subtree-node</literal> attribute. E.g., if
+	            <literal>subtree-node</literal> is <literal>ou=tempEntries</literal> and the original DN of the entry is
+	            <literal>cn=john doe, ou=users</literal>, the temporary DN will be <literal>cn=john doe, ou=tempEntries</literal>.
+	            Note that the configured subtree node needs to be present in the LDAP tree.
+            </para>
+        </listitem>
 	</itemizedlist>
 	<note>
 	  There are some situations where the <literal>DefaultTempEntryRenamingStrategy</literal> will not work. E.g. if your are planning
