@@ -18,11 +18,9 @@ package org.springframework.ldap.itest25;
 
 
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -31,12 +29,7 @@ import static junit.framework.Assert.assertEquals;
  * 
  * @author Mattias Hellborg Arthursson
  */
-@ContextConfiguration(locations = {"/conf/ldapTemplateTestContext.xml"})
-public class LdapTemplateLookup25ITest extends AbstractJUnit4SpringContextTests {
-
-    @Autowired
-	private LdapTemplate tested;
-
+public class LdapTemplateLookup25ITest {
     /**
 	 * This method depends on a DirObjectFactory (
 	 * {@link org.springframework.ldap.core.support.DefaultDirObjectFactory})
@@ -44,10 +37,29 @@ public class LdapTemplateLookup25ITest extends AbstractJUnit4SpringContextTests 
 	 */
     @Test
 	public void testThatPlainLookupWorksWithSpring25() {
-		DirContextOperations result = tested.lookupContext("cn=Some Person2, ou=company1,c=Sweden");
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/conf/ldapTemplateTestContext.xml");
+        LdapTemplate tested = (LdapTemplate) ctx.getBean("ldapTemplate");
 
-		assertEquals("Some Person2", result.getStringAttribute("cn"));
-		assertEquals("Person2", result.getStringAttribute("sn"));
-		assertEquals("Sweden, Company1, Some Person2", result.getStringAttribute("description"));
-	}
+        performTestAndShutdownContext(ctx, tested);
+    }
+
+    @Test
+    public void testThatNamespaceConfigurationWorksWithSpring25() {
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/conf/ldapTemplateNamespaceTestContext.xml");
+        LdapTemplate tested = (LdapTemplate) ctx.getBean("ldapTemplate");
+
+        performTestAndShutdownContext(ctx, tested);
+    }
+
+    private void performTestAndShutdownContext(ClassPathXmlApplicationContext ctx, LdapTemplate tested) {
+        try {
+            DirContextOperations result = tested.lookupContext("cn=Some Person2, ou=company1,c=Sweden");
+
+            assertEquals("Some Person2", result.getStringAttribute("cn"));
+            assertEquals("Person2", result.getStringAttribute("sn"));
+            assertEquals("Sweden, Company1, Some Person2", result.getStringAttribute("description"));
+        } finally {
+            ctx.close();
+        }
+    }
 }

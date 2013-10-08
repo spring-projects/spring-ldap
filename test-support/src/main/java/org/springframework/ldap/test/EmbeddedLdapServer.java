@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.test;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.directory.server.core.DefaultDirectoryService;
 import org.apache.directory.server.core.DirectoryService;
 import org.apache.directory.server.core.entry.ServerEntry;
@@ -33,6 +35,8 @@ import java.io.File;
  * @since 1.3.2
  */
 public class EmbeddedLdapServer {
+    private static final Log log = LogFactory.getLog(EmbeddedLdapServer.class);
+
     private final DirectoryService directoryService;
     private final LdapServer ldapServer;
 

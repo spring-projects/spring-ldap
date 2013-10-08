@@ -231,14 +231,14 @@ public class DelegatingContext implements Context {
      * @see javax.naming.Context#destroySubcontext(javax.naming.Name)
      */
     public void destroySubcontext(Name name) throws NamingException {
-        throw new UnsupportedOperationException("Cannot call createSubcontext on a pooled context");
+        throw new UnsupportedOperationException("Cannot call destroySubcontext on a pooled context");
     }
 
     /**
      * @see javax.naming.Context#destroySubcontext(java.lang.String)
      */
     public void destroySubcontext(String name) throws NamingException {
-        throw new UnsupportedOperationException("Cannot call createSubcontext on a pooled context");
+        throw new UnsupportedOperationException("Cannot call destroySubcontext on a pooled context");
     }
 
     /**

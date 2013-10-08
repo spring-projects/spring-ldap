@@ -16,35 +16,23 @@
   -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
-                           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ldap="http://www.springframework.org/schema/ldap"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/ldap http://www.springframework.org/schema/ldap/spring-ldap.xsd">
 	<import resource="classpath:/conf/commonTestContext.xml" />
 
-	<bean id="contextSourceTarget"
-		class="org.springframework.ldap.core.support.LdapContextSource">
-		<property name="userDn" value="${userDn}" />
-		<property name="password" value="${password}" />
-		<property name="url" value="ldap://localhost:1888" />
-        <property name="base" value="dc=jayway,dc=se" />
-	</bean>
+    <ldap:context-source
+            password="${password}"
+            url="ldap://localhost:1888"
+            username="${userDn}"
+            base="dc=jayway,dc=se">
 
-    <bean id="contextSource" class="org.springframework.ldap.pool.factory.PoolingContextSource">
-        <property name="contextSource" ref="contextSourceTarget" />
-        <property name="maxActive" value="1" />
-        <property name="maxTotal" value="1" />
-        <property name="maxIdle" value="1" />
-        <property name="minIdle" value="1" />
-        <property name="testOnBorrow" value="false" />
-        <property name="testWhileIdle" value="false" />
-    </bean>
+        <ldap:pooling
+                max-active="1"
+                max-total="1"
+                max-idle="1"
+                min-idle="1" />
+    </ldap:context-source>
 
-    <bean id="ldapTemplate"
-		class="org.springframework.ldap.core.LdapTemplate">
-		<constructor-arg ref="contextSource" />
-	</bean>
-
-	<!-- 
-		<bean id="dataLoader" class="org.ddsteps.data.excel.CachingExcelDataLoader" />
-	-->
+    <ldap:ldap-template />
 </beans>

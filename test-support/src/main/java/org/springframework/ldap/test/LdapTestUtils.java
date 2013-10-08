@@ -189,10 +189,10 @@ public class LdapTestUtils {
                 childName = LdapUtils.prepend(childName, name);
 
                 try {
-                    ctx.destroySubcontext(childName);
+                    ctx.unbind(childName);
                 } catch (ContextNotEmptyException e) {
                     clearSubContexts(ctx, childName);
-                    ctx.destroySubcontext(childName);
+                    ctx.unbind(childName);
                 }
             }
         } catch (NamingException e) {

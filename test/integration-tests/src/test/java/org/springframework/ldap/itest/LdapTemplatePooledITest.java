@@ -17,15 +17,17 @@
 package org.springframework.ldap.itest;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.pool.factory.PoolingContextSource;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.test.LdapTestUtils;
+import org.springframework.ldap.transaction.compensating.manager.TransactionAwareContextSourceProxy;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
@@ -46,8 +48,7 @@ public class LdapTemplatePooledITest extends AbstractJUnit4SpringContextTests {
 	private LdapTemplate tested;
 
     @Autowired
-    @Qualifier("contextSourceTarget")
-    protected ContextSource contextSource;
+    private ContextSource contextSource;
 
     @After
     public void cleanup() throws Exception {

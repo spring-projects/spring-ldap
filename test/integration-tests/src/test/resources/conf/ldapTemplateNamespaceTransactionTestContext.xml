@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:ldap="http://www.springframework.org/schema/ldap"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/ldap http://www.springframework.org/schema/ldap/spring-ldap.xsd">
+
+    <import resource="classpath:/conf/commonTestContext.xml"/>
+
+    <ldap:context-source
+            password="${password}"
+            url="ldap://localhost:1888"
+            username="${userDn}"
+            base="dc=jayway,dc=se" />
+
+    <bean id="dummy" class="org.springframework.ldap.test.TestContextSourceFactoryBean">
+        <property name="defaultPartitionSuffix" value="dc=jayway,dc=se" />
+        <property name="defaultPartitionName" value="jayway" />
+        <property name="ldifFile" value="classpath:/setup_data.ldif" />
+        <property name="port" value="1888" />
+        <property name="contextSource" ref="contextSource" />
+    </bean>
+
+    <ldap:ldap-template />
+
+    <ldap:transaction-manager>
+        <ldap:default-renaming-strategy />
+    </ldap:transaction-manager>
+
+	<bean name="dummyDao"
+		class="org.springframework.ldap.itest.transaction.compensating.manager.LdapDummyDaoImpl">
+		<property name="ldapTemplate" ref="ldapTemplate" />
+	</bean>
+
+    <tx:annotation-driven />
+</beans>

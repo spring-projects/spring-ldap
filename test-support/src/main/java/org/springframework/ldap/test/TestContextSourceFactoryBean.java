@@ -48,6 +48,8 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean {
 
 	private AuthenticationSource authenticationSource;
 
+    private ContextSource contextSource;
+
     public void setAuthenticationSource(AuthenticationSource authenticationSource) {
 		this.authenticationSource = authenticationSource;
 	}
@@ -88,37 +90,48 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean {
 		this.port = port;
 	}
 
-	protected Object createInstance() throws Exception {
+    public void setContextSource(ContextSource contextSource) {
+        this.contextSource = contextSource;
+    }
+
+    protected Object createInstance() throws Exception {
         LdapTestUtils.startEmbeddedServer(port, defaultPartitionSuffix, defaultPartitionName);
 
-		LdapContextSource targetContextSource = new LdapContextSource();
-		if (baseOnTarget) {
-			targetContextSource.setBase(defaultPartitionSuffix);
-		}
+        if (contextSource == null) {
+            // If not explicitly configured, create a new instance.
+            LdapContextSource targetContextSource = new LdapContextSource();
+            if (baseOnTarget) {
+                targetContextSource.setBase(defaultPartitionSuffix);
+            }
 
-		targetContextSource.setUrl("ldap://localhost:" + port);
-		targetContextSource.setUserDn(principal);
-		targetContextSource.setPassword(password);
-		targetContextSource.setDirObjectFactory(dirObjectFactory);
-		targetContextSource.setPooled(pooled);
+            targetContextSource.setUrl("ldap://localhost:" + port);
+            targetContextSource.setUserDn(principal);
+            targetContextSource.setPassword(password);
+            targetContextSource.setDirObjectFactory(dirObjectFactory);
+            targetContextSource.setPooled(pooled);
 
-		if (authenticationSource != null) {
-			targetContextSource.setAuthenticationSource(authenticationSource);
-		}
-		targetContextSource.afterPropertiesSet();
+            if (authenticationSource != null) {
+                targetContextSource.setAuthenticationSource(authenticationSource);
+            }
+            targetContextSource.afterPropertiesSet();
 
-		if (baseOnTarget) {
-			LdapTestUtils.clearSubContexts(targetContextSource, LdapUtils.emptyLdapName());
+            contextSource = targetContextSource;
+        }
+
+        Thread.sleep(1000);
+
+        if (baseOnTarget) {
+			LdapTestUtils.clearSubContexts(contextSource, LdapUtils.emptyLdapName());
 		}
 		else {
-			LdapTestUtils.clearSubContexts(targetContextSource, LdapUtils.newLdapName(defaultPartitionSuffix));
+			LdapTestUtils.clearSubContexts(contextSource, LdapUtils.newLdapName(defaultPartitionSuffix));
 		}
 
 		if (ldifFile != null) {
-            LdapTestUtils.loadLdif(targetContextSource, ldifFile);
+            LdapTestUtils.loadLdif(contextSource, ldifFile);
 		}
 
-		return targetContextSource;
+		return contextSource;
 	}
 
 	public Class getObjectType() {

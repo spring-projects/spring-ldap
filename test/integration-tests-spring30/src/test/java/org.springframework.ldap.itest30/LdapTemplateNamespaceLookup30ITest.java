@@ -32,9 +32,9 @@ import static junit.framework.Assert.assertEquals;
  * 
  * @author Mattias Hellborg Arthursson
  */
-@ContextConfiguration(locations = {"/conf/ldapTemplateTestContext.xml"})
+@ContextConfiguration(locations = {"/conf/ldapTemplateNamespaceTestContext.xml"})
 @DirtiesContext
-public class LdapTemplateLookup30ITest extends AbstractJUnit4SpringContextTests {
+public class LdapTemplateNamespaceLookup30ITest extends AbstractJUnit4SpringContextTests {
 
     @Autowired
 	private LdapTemplate tested;

@@ -19,8 +19,4 @@
 		class="org.springframework.ldap.core.LdapTemplate">
 		<constructor-arg ref="contextSource" />
 	</bean>
-
-	<!-- 
-		<bean id="dataLoader" class="org.ddsteps.data.excel.CachingExcelDataLoader" />
-	-->
 </beans>
