@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:ldap="http://www.springframework.org/schema/ldap"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/ldap http://www.springframework.org/schema/ldap/spring-ldap.xsd">
+
+    <import resource="classpath:/conf/commonTestContext.xml"/>
+
+    <ldap:context-source id="contextSource"
+                         password="${password}"
+                         url="ldap://localhost:1888"
+                         username="${userDn}"
+                         base="dc=jayway,dc=se" />
+
+    <bean id="dummy" class="org.springframework.ldap.test.TestContextSourceFactoryBean">
+        <property name="defaultPartitionSuffix" value="dc=jayway,dc=se" />
+        <property name="defaultPartitionName" value="jayway" />
+        <property name="ldifFile" value="classpath:/setup_data.ldif" />
+        <property name="port" value="1888" />
+        <property name="contextSource" ref="contextSource" />
+    </bean>
+
+    <ldap:ldap-template id="ldapTemplate"/>
+
+    <ldap:transaction-manager session-factory-ref="sessionFactory">
+        <ldap:default-renaming-strategy />
+    </ldap:transaction-manager>
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
+		<property name="url" value="jdbc:hsqldb:mem:aname" />
+		<property name="username" value="sa" />
+		<property name="password" value="" />
+	</bean>
+
+	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	 <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+	    <property name="dataSource" ref="dataSource"/>
+	    <property name="mappingResources">
+	      <list>
+	        <value>conf/OrgPerson.hbm.xml</value>
+	      </list>
+	    </property>
+	    <property name="hibernateProperties">
+	      <value>
+	        hibernate.dialect=org.hibernate.dialect.HSQLDialect
+	        hibernate.hbm2ddl.auto=create
+	      </value>
+	    </property>
+	  </bean>
+
+	<bean name="dummyDao"
+		class="org.springframework.ldap.itest.transaction.compensating.manager.hibernate.DummyDaoLdapAndHibernateImpl">
+		<property name="ldapTemplate" ref="ldapTemplate" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+    <tx:annotation-driven />
+</beans>

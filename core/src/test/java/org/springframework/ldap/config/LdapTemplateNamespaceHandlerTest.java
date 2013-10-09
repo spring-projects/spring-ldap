@@ -29,6 +29,7 @@ import org.springframework.ldap.pool.factory.PoolingContextSource;
 import org.springframework.ldap.pool.validation.DefaultDirContextValidator;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.transaction.compensating.TempEntryRenamingStrategy;
+import org.springframework.ldap.transaction.compensating.manager.ContextSourceAndDataSourceTransactionManager;
 import org.springframework.ldap.transaction.compensating.manager.ContextSourceTransactionManager;
 import org.springframework.ldap.transaction.compensating.manager.TransactionAwareContextSourceProxy;
 import org.springframework.ldap.transaction.compensating.support.DefaultTempEntryRenamingStrategy;
@@ -175,6 +176,14 @@ public class LdapTemplateNamespaceHandlerTest {
 
         assertTrue(renamingStrategy instanceof DefaultTempEntryRenamingStrategy);
         assertEquals("_temp", getInternalState(renamingStrategy, "tempSuffix"));
+    }
+
+    @Test
+    public void verifyParseTransactionWithDataSource() {
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/ldap-namespace-config-transactional-datasource.xml");
+        PlatformTransactionManager transactionManager = ctx.getBean(PlatformTransactionManager.class);
+
+        assertTrue(transactionManager instanceof ContextSourceAndDataSourceTransactionManager);
     }
 
     @Test

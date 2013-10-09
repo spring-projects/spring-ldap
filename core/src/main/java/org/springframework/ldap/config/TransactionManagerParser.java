@@ -22,6 +22,8 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.ldap.transaction.compensating.manager.ContextSourceAndDataSourceTransactionManager;
+import org.springframework.ldap.transaction.compensating.manager.ContextSourceAndHibernateTransactionManager;
 import org.springframework.ldap.transaction.compensating.manager.ContextSourceTransactionManager;
 import org.springframework.ldap.transaction.compensating.support.DefaultTempEntryRenamingStrategy;
 import org.springframework.ldap.transaction.compensating.support.DifferentSubtreeTempEntryRenamingStrategy;
@@ -58,7 +60,18 @@ public class TransactionManagerParser implements BeanDefinitionParser {
                             ATT_DATA_SOURCE_REF, ATT_SESSION_FACTORY_REF));
         }
 
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(ContextSourceTransactionManager.class);
+        BeanDefinitionBuilder builder;
+        if(StringUtils.hasText(dataSourceRef)) {
+            builder = BeanDefinitionBuilder.rootBeanDefinition(ContextSourceAndDataSourceTransactionManager.class);
+            builder.addPropertyReference("dataSource", dataSourceRef);
+        } else if(StringUtils.hasText(sessionFactoryRef)) {
+            builder = BeanDefinitionBuilder.rootBeanDefinition(ContextSourceAndHibernateTransactionManager.class);
+            builder.addPropertyReference("sessionFactory", sessionFactoryRef);
+        } else {
+            // Standard transaction manager
+            builder = BeanDefinitionBuilder.rootBeanDefinition(ContextSourceTransactionManager.class);
+        }
+
         builder.addPropertyReference("contextSource", contextSourceRef);
 
         Element defaultStrategyChild = DomUtils.getChildElementByTagName(element, Elements.DEFAULT_RENAMING_STRATEGY);
