@@ -22,6 +22,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.support.LdapUtils;
 
+import java.util.HashMap;
+
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -118,8 +120,12 @@ public class BaseLdapPathBeanPostProcessorTest {
 	public void testGetAbstractContextSourceFromApplicationContext() throws Exception {
 		when(applicationContextMock.getBeanNamesForType(BaseLdapPathSource.class))
                 .thenReturn(new String[]{"contextSource"});
-		LdapContextSource expectedContextSource = new LdapContextSource();
-		when(applicationContextMock.getBean("contextSource")).thenReturn(expectedContextSource);
+		final LdapContextSource expectedContextSource = new LdapContextSource();
+
+        HashMap<String, BaseLdapPathSource> expectedBeans = new HashMap<String, BaseLdapPathSource>() {{
+            put("dummy", expectedContextSource);
+        }};
+        when(applicationContextMock.getBeansOfType(BaseLdapPathSource.class)).thenReturn(expectedBeans);
 
 		BaseLdapPathSource result = tested.getBaseLdapPathSourceFromApplicationContext();
 

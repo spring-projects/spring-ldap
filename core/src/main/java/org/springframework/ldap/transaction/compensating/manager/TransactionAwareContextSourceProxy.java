@@ -15,15 +15,16 @@
  */
 package org.springframework.ldap.transaction.compensating.manager;
 
-import java.lang.reflect.Proxy;
-
-import javax.naming.directory.DirContext;
-
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextProxy;
+import org.springframework.ldap.core.support.BaseLdapPathContextSource;
+import org.springframework.ldap.core.support.DelegatingBaseLdapPathContextSourceSupport;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+
+import javax.naming.directory.DirContext;
+import java.lang.reflect.Proxy;
 
 /**
  * A proxy for ContextSource to make sure that the returned DirContext objects
@@ -36,7 +37,10 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
-public class TransactionAwareContextSourceProxy implements ContextSource {
+public class TransactionAwareContextSourceProxy
+        extends DelegatingBaseLdapPathContextSourceSupport
+        implements ContextSource {
+
     private ContextSource target;
 
     /**
@@ -49,11 +53,7 @@ public class TransactionAwareContextSourceProxy implements ContextSource {
         this.target = target;
     }
 
-    /**
-     * Get the target ContextSource.
-     * 
-     * @return the target ContextSource.
-     */
+    @Override
     public ContextSource getTarget() {
         return target;
     }
@@ -102,4 +102,13 @@ public class TransactionAwareContextSourceProxy implements ContextSource {
 	public DirContext getContext(String principal, String credentials) throws NamingException {
 		throw new UnsupportedOperationException("Not supported on a transacted ContextSource");
 	}
+
+    private BaseLdapPathContextSource convertToBaseLdapPathContextSource(ContextSource contextSource) {
+        if (contextSource instanceof BaseLdapPathContextSource) {
+            return (BaseLdapPathContextSource) contextSource;
+        }
+
+        throw new UnsupportedOperationException("This operation is not supported on a target ContextSource that does not " +
+                " implement BaseLdapPathContextSource");
+    }
 }

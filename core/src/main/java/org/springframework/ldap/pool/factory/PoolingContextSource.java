@@ -23,6 +23,7 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.support.DelegatingBaseLdapPathContextSourceSupport;
 import org.springframework.ldap.pool.DelegatingDirContext;
 import org.springframework.ldap.pool.DelegatingLdapContext;
 import org.springframework.ldap.pool.DirContextType;
@@ -141,7 +142,9 @@ import java.util.Collection;
  * 
  * @author Eric Dalquist
  */
-public class PoolingContextSource implements ContextSource, DisposableBean {
+public class PoolingContextSource
+        extends DelegatingBaseLdapPathContextSourceSupport
+        implements ContextSource, DisposableBean {
 	/**
 	 * The logger for this class and sub-classes
 	 */
@@ -410,7 +413,12 @@ public class PoolingContextSource implements ContextSource, DisposableBean {
 		}
 	}
 
-	// ***** ContextSource interface methods *****//
+    @Override
+    protected ContextSource getTarget() {
+        return getContextSource();
+    }
+
+    // ***** ContextSource interface methods *****//
 
 	/*
 	 * @see ContextSource#getReadOnlyContext()

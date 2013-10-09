@@ -27,6 +27,7 @@ import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.StringUtils;
 
 import javax.naming.ldap.LdapName;
+import java.util.Collection;
 
 /**
  * This <code>BeanPostProcessor</code> checks each bean if it implements
@@ -89,17 +90,40 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 
 	BaseLdapPathSource getBaseLdapPathSourceFromApplicationContext() {
 		if (StringUtils.hasLength(baseLdapPathSourceName)) {
-			return (BaseLdapPathSource) applicationContext.getBean(baseLdapPathSourceName);
+			return applicationContext.getBean(baseLdapPathSourceName, BaseLdapPathSource.class);
 		}
-		String[] definedContextSources = applicationContext.getBeanNamesForType(BaseLdapPathSource.class);
-		if (definedContextSources.length < 1) {
-			throw new NoSuchBeanDefinitionException("No BaseLdapPathSource implementation definition found");
-		}
-		else if (definedContextSources.length > 1) {
-			throw new NoSuchBeanDefinitionException(
-					"More than BaseLdapPathSource implementation definition found in current ApplicationContext");
-		}
-		return (BaseLdapPathSource) applicationContext.getBean(definedContextSources[0]);
+
+        Collection<BaseLdapPathSource> beans = applicationContext.getBeansOfType(BaseLdapPathSource.class).values();
+        if (beans.isEmpty()) {
+            throw new NoSuchBeanDefinitionException("No BaseLdapPathSource implementation definition found");
+        } else if (beans.size() == 1) {
+            return beans.iterator().next();
+        } else {
+            BaseLdapPathSource found = null;
+
+            // Try to find the correct one
+            for (BaseLdapPathSource bean : beans) {
+                if(bean instanceof AbstractContextSource) {
+                    if(found != null) {
+                        // More than one found - nothing much to do.
+                        throw new NoSuchBeanDefinitionException(
+                                "More than BaseLdapPathSource implementation definition found in current ApplicationContext; " +
+                                        "unable to determine the one to use. Please specify 'baseLdapPathSourceName'");
+                    }
+
+                    found = bean;
+                }
+            }
+
+            if(found == null) {
+                throw new NoSuchBeanDefinitionException(
+                        "More than BaseLdapPathSource implementation definition found in current ApplicationContext; " +
+                                "unable to determine the one to use (one of them should be an AbstractContextSource instance). " +
+                                "Please specify 'baseLdapPathSourceName'");
+            }
+
+            return found;
+        }
 	}
 
 	/*

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.ldap.itest.core.support;
 
 import org.junit.Test;
@@ -20,8 +21,6 @@ import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.itest.core.support.DummyBaseLdapNameAware;
-import org.springframework.ldap.itest.core.support.DummyBaseLdapPathAware;
 import org.springframework.ldap.support.LdapUtils;
 
 import static junit.framework.Assert.assertEquals;
@@ -30,7 +29,7 @@ import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 
 /**
- * Integration tests for {@link BaseLdapPathBeanPostProcessor}.
+ * Integration tests for {@link org.springframework.ldap.core.support.BaseLdapPathBeanPostProcessor}.
  * 
  * @author Mattias Hellborg Arthursson
  */
