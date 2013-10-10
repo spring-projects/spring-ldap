@@ -16,8 +16,8 @@
 
 package org.springframework.ldap.ldif;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +50,7 @@ import static org.junit.Assert.fail;
  */
 public class LdifParserTest {
 
-	private static Log log = LogFactory.getLog(LdifParserTest.class);
+	private static Logger log = LoggerFactory.getLogger(LdifParserTest.class);
 	
 	private LdifParser parser;
 
@@ -96,7 +96,7 @@ public class LdifParserTest {
 						count++;
 					}
 				} catch (InvalidAttributeFormatException e) {
-					log.error(e);
+					log.error("Invalid attribute", e);
 					if (count != 6) fail();
 				}
 				

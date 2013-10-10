@@ -15,8 +15,8 @@
  */
 package org.springframework.transaction.compensating.support;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationFactory;
@@ -36,8 +36,7 @@ import java.util.Stack;
 public class DefaultCompensatingTransactionOperationManager implements
         CompensatingTransactionOperationManager {
 
-    private static Log log = LogFactory
-            .getLog(DefaultCompensatingTransactionOperationManager.class);
+    private static Logger log = LoggerFactory.getLogger(DefaultCompensatingTransactionOperationManager.class);
 
     private Stack<CompensatingTransactionOperationExecutor> operationExecutors =
             new Stack<CompensatingTransactionOperationExecutor>();

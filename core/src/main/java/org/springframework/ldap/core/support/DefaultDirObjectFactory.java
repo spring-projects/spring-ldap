@@ -16,8 +16,8 @@
 
 package org.springframework.ldap.core.support;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.JdkVersion;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.support.LdapUtils;
@@ -39,7 +39,7 @@ import java.util.Hashtable;
  * @author Mattias Hellborg Arthursson
  */
 public class DefaultDirObjectFactory implements DirObjectFactory {
-	private static final Log log = LogFactory.getLog(DefaultDirObjectFactory.class);
+	private static final Logger log = LoggerFactory.getLogger(DefaultDirObjectFactory.class);
 
 	/**
 	 * Key to use in the ContextSource implementation to store the value of the

@@ -16,8 +16,8 @@
 
 package org.springframework.ldap.pool.validation;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ldap.pool.DirContextType;
 import org.springframework.util.Assert;
 
@@ -79,7 +79,7 @@ public class DefaultDirContextValidator implements DirContextValidator {
     /**
      * Logger for this class and sub-classes
      */
-    protected final Log logger = LogFactory.getLog(this.getClass());
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     
     private String base;
     private String filter;

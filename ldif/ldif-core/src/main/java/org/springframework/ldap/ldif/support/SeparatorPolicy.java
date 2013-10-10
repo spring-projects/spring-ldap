@@ -15,8 +15,8 @@
  */
 package org.springframework.ldap.ldif.support;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 /**
@@ -32,7 +32,7 @@ import org.springframework.util.StringUtils;
  */
 public class SeparatorPolicy {
 
-	private static Log log = LogFactory.getLog(SeparatorPolicy.class);
+	private static Logger log = LoggerFactory.getLogger(SeparatorPolicy.class);
 	
 	/* 
 	 * Line Identification Patterns.

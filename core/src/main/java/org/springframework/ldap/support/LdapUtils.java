@@ -16,8 +16,8 @@
 
 package org.springframework.ldap.support;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.NoSuchAttributeException;
 import org.springframework.util.Assert;
@@ -48,7 +48,7 @@ import java.util.NoSuchElementException;
  */
 public final class LdapUtils {
 
-	private static final Log logger = LogFactory.getLog(LdapUtils.class);
+	private static final Logger logger = LoggerFactory.getLogger(LdapUtils.class);
 
 	/**
 	 * Not to be instantiated.

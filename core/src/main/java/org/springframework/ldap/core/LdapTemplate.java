@@ -15,8 +15,8 @@
  */
 package org.springframework.ldap.core;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -67,7 +67,7 @@ import java.util.List;
  */
 public class LdapTemplate implements LdapOperations, InitializingBean {
 
-	private static final Log log = LogFactory.getLog(LdapTemplate.class);
+	private static final Logger log = LoggerFactory.getLogger(LdapTemplate.class);
 
 	private static final boolean DONT_RETURN_OBJ_FLAG = false;
 

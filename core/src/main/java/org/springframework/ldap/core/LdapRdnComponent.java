@@ -15,8 +15,8 @@
  */
 package org.springframework.ldap.core;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ldap.support.LdapEncoder;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -36,7 +36,7 @@ import java.net.URISyntaxException;
 public class LdapRdnComponent implements Comparable, Serializable {
 	private static final long serialVersionUID = -3296747972616243038L;
 
-	private static final Log log = LogFactory.getLog(LdapRdnComponent.class);
+	private static final Logger log = LoggerFactory.getLogger(LdapRdnComponent.class);
 
 	public static final boolean DONT_DECODE_VALUE = false;
 

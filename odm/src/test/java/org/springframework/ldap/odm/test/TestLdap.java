@@ -23,8 +23,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -70,7 +70,7 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 // Tests all OdmManager functions
 public final class TestLdap {
-    private static final Log LOG = LogFactory.getLog(TestLdap.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TestLdap.class);
 
     // Base DN for test data
     private static final LdapName baseName = LdapUtils.newLdapName("o=Whoniverse");

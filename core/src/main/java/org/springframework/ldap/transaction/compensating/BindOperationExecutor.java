@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,13 @@
  */
 package org.springframework.ldap.transaction.compensating;
 
-import javax.naming.Name;
-import javax.naming.directory.Attributes;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
+
+import javax.naming.Name;
+import javax.naming.directory.Attributes;
 
 /**
  * A {@link CompensatingTransactionOperationExecutor} to manage a bind
@@ -33,7 +33,7 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
  */
 public class BindOperationExecutor implements
         CompensatingTransactionOperationExecutor {
-    private static Log log = LogFactory.getLog(BindOperationExecutor.class);
+    private static Logger log = LoggerFactory.getLogger(BindOperationExecutor.class);
 
     private LdapOperations ldapOperations;
 

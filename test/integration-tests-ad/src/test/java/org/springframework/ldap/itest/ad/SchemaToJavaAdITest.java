@@ -17,8 +17,8 @@
 package org.springframework.ldap.itest.ad;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +46,7 @@ import static org.junit.Assert.assertEquals;
 
 // Tests the generation of entry Java classes from LDAP schema
 public final class SchemaToJavaAdITest {
-    private static final Log LOG = LogFactory.getLog(SchemaToJavaAdITest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SchemaToJavaAdITest.class);
 
     private static final DistinguishedName baseName = new DistinguishedName("dc=261consulting,dc=local");
 

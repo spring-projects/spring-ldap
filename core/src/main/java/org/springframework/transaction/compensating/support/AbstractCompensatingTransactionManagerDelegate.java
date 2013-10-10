@@ -15,8 +15,8 @@
  */
 package org.springframework.transaction.compensating.support;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
@@ -33,7 +33,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  */
 public abstract class AbstractCompensatingTransactionManagerDelegate {
 
-	private static Log log = LogFactory.getLog(AbstractCompensatingTransactionManagerDelegate.class);
+	private static Logger log = LoggerFactory.getLogger(AbstractCompensatingTransactionManagerDelegate.class);
 
 	/**
 	 * Close the target resource - the implementation specific resource held in

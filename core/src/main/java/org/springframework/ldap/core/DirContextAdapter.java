@@ -15,8 +15,8 @@
  */
 package org.springframework.ldap.core;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ldap.NoSuchAttributeException;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.ObjectUtils;
@@ -88,7 +88,7 @@ public class DirContextAdapter implements DirContextOperations {
 
 	private static final boolean ORDER_DOESNT_MATTER = false;
 
-	private static Log log = LogFactory.getLog(DirContextAdapter.class);
+	private static Logger log = LoggerFactory.getLogger(DirContextAdapter.class);
 
 	private final Attributes originalAttrs;
 

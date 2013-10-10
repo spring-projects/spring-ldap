@@ -15,8 +15,8 @@
  */
 package org.springframework.ldap.core;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ldap.support.LdapUtils;
 import sun.misc.BASE64Encoder;
 
@@ -47,7 +47,7 @@ public class LdapAttributes extends BasicAttributes {
 
 	private static final long serialVersionUID = 97903297123869138L;
 	
-	private static Log log = LogFactory.getLog(LdapAttributes.class);
+	private static Logger log = LoggerFactory.getLogger(LdapAttributes.class);
 
 	private static final String SAFE_CHAR = "[\\p{ASCII}&&[^\\x00\\x0A\\x0D]]"; //Any ASCII except NUL, LF, and CR
 	

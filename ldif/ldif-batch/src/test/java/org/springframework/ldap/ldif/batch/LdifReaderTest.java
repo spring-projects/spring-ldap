@@ -1,14 +1,26 @@
+/*
+ * Copyright 2005-2013 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.springframework.ldap.ldif.batch;
 
-import static org.junit.Assert.*;
-
-import java.net.MalformedURLException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.test.AbstractJobTests;
@@ -19,10 +31,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
+import java.net.MalformedURLException;
+
+import static org.junit.Assert.fail;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath*:applicationContext-test1.xml"})
 public class LdifReaderTest extends AbstractJobTests {
-	private static Log log = LogFactory.getLog(LdifReaderTest.class);
+	private static Logger log = LoggerFactory.getLogger(LdifReaderTest.class);
 	
 	private Resource expected;
 	private Resource actual;
@@ -32,7 +48,7 @@ public class LdifReaderTest extends AbstractJobTests {
 			expected = new UrlResource("file:src/test/resources/expectedOutput.ldif");
 			actual = new UrlResource("file:target/test-outputs/output.ldif");
 		} catch (MalformedURLException e) {
-			log.error(e);
+			log.error("Unexpected error", e);
 		}
 	}
 	

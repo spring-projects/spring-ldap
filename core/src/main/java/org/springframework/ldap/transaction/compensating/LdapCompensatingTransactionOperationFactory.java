@@ -16,8 +16,8 @@
 package org.springframework.ldap.transaction.compensating;
 
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.SingleContextSource;
@@ -35,7 +35,7 @@ import javax.naming.directory.DirContext;
  * @since 1.2
  */
 public class LdapCompensatingTransactionOperationFactory implements CompensatingTransactionOperationFactory {
-	private static Log log = LogFactory.getLog(LdapCompensatingTransactionOperationFactory.class);
+	private static Logger log = LoggerFactory.getLogger(LdapCompensatingTransactionOperationFactory.class);
 
 	private TempEntryRenamingStrategy renamingStrategy;
 

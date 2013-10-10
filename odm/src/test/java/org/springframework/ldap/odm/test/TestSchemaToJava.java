@@ -17,8 +17,8 @@
 package org.springframework.ldap.odm.test;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -50,7 +50,7 @@ import static org.junit.Assert.assertEquals;
 
 // Tests the generation of entry Java classes from LDAP schema
 public final class TestSchemaToJava {
-    private static final Log LOG = LogFactory.getLog(TestLdap.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TestLdap.class);
 
     private static final LdapName baseName = LdapUtils.newLdapName("o=Whoniverse");
 

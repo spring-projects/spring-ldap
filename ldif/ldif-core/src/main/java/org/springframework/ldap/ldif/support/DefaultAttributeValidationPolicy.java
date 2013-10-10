@@ -15,8 +15,8 @@
  */
 package org.springframework.ldap.ldif.support;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapAttribute;
 import org.springframework.ldap.ldif.InvalidAttributeFormatException;
 import org.springframework.util.StringUtils;
@@ -48,7 +48,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings("unused")
 public class DefaultAttributeValidationPolicy implements AttributeValidationPolicy {
 
-	private static Log log = LogFactory.getLog(DefaultAttributeValidationPolicy.class);
+	private static Logger log = LoggerFactory.getLogger(DefaultAttributeValidationPolicy.class);
 	
 	/**
 	 * Pattern Declarations.

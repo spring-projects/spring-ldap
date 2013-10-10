@@ -16,8 +16,8 @@
 
 package org.springframework.ldap.odm.core.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.LdapDataEntry;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
@@ -56,7 +56,7 @@ import java.util.concurrent.ConcurrentMap;
  * @since 2.0
  */
 public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
-    private static final Log LOG = LogFactory.getLog(DefaultObjectDirectoryMapper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultObjectDirectoryMapper.class);
 
     // The converter manager to use to translate values between LDAP and Java
     private ConverterManager converterManager;

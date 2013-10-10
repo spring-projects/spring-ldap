@@ -3,13 +3,13 @@ package org.springframework.ldap.odm.test.utils;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // Added because the close down of the embedded Apache DS used
 // for unit testing does not seem to free up its port.
 public class GetFreePort {
-    private static Log LOG=LogFactory.getLog(GetFreePort.class);
+    private static Logger LOG=LoggerFactory.getLogger(GetFreePort.class);
     
     public static int getFreePort()
     throws IOException {

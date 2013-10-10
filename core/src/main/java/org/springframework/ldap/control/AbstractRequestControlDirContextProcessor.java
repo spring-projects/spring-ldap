@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
 
 package org.springframework.ldap.control;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.ldap.core.DirContextProcessor;
+
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.ldap.core.DirContextProcessor;
 
 /**
  * Abstract superclass with responsibility to apply a single RequestControl on
@@ -35,7 +35,7 @@ import org.springframework.ldap.core.DirContextProcessor;
  * @author Ulrik Sandberg
  */
 public abstract class AbstractRequestControlDirContextProcessor implements DirContextProcessor {
-    protected Log log = LogFactory.getLog(AbstractRequestControlDirContextProcessor.class);
+    protected Logger log = LoggerFactory.getLogger(AbstractRequestControlDirContextProcessor.class);
 
     private boolean replaceSameControlEnabled = true;
 

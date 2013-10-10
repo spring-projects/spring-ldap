@@ -16,8 +16,8 @@
 
 package org.springframework.ldap.core.support;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.IncrementalAttributesMapper;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.support.LdapUtils;
@@ -74,7 +74,7 @@ import java.util.Set;
  * @since 1.3.2
  */
 public class DefaultIncrementalAttributesMapper implements IncrementalAttributesMapper<DefaultIncrementalAttributesMapper> {
-    private final static Log log = LogFactory.getLog(DefaultIncrementalAttributesMapper.class);
+    private final static Logger log = LoggerFactory.getLogger(DefaultIncrementalAttributesMapper.class);
 
     private Map<String, IncrementalAttributeState> stateMap = new LinkedHashMap<String, IncrementalAttributeState>();
     private Set<String> rangedAttributesInNextIteration = new LinkedHashSet<String>();

@@ -15,8 +15,8 @@
  */
 package org.springframework.ldap.core.support;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
@@ -39,7 +39,7 @@ import java.lang.reflect.Proxy;
  */
 public class SingleContextSource implements ContextSource, DisposableBean {
 
-    private static final Log log = LogFactory.getLog(SingleContextSource.class);
+    private static final Logger log = LoggerFactory.getLogger(SingleContextSource.class);
     private static final boolean DONT_USE_READ_ONLY = false;
     private static final boolean DONT_IGNORE_PARTIAL_RESULT = false;
     private static final boolean DONT_IGNORE_NAME_NOT_FOUND = false;
@@ -94,7 +94,7 @@ public class SingleContextSource implements ContextSource, DisposableBean {
             ctx.close();
         }
         catch (javax.naming.NamingException e) {
-            log.warn(e);
+            log.warn("Error when closing", e);
         }
     }
 

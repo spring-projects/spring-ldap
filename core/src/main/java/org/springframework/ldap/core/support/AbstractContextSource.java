@@ -16,8 +16,8 @@
 
 package org.springframework.ldap.core.support;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.JdkVersion;
 import org.springframework.ldap.UncategorizedLdapException;
@@ -107,7 +107,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	private String referral = null;
 
-	private static final Log log = LogFactory.getLog(AbstractContextSource.class);
+	private static final Logger log = LoggerFactory.getLogger(AbstractContextSource.class);
 
 	public static final String SUN_LDAP_POOLING_FLAG = "com.sun.jndi.ldap.connect.pool";
 

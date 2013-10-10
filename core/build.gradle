@@ -9,8 +9,7 @@ idea.module.excludeDirs = [
         file('build/libs')]
 
 dependencies {
-    compile "commons-logging:commons-logging:$commonsLoggingVersion",
-             "org.springframework:spring-core:$springVersion",
+    compile  "org.springframework:spring-core:$springVersion",
              "org.springframework:spring-beans:$springVersion",
              "org.springframework:spring-tx:$springVersion",
              "org.springframework.data:spring-data-commons:$springDataVersion"

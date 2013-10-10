@@ -16,8 +16,8 @@
 
 package org.springframework.ldap.ldif;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -48,7 +48,7 @@ import static org.junit.Assert.fail;
 @RunWith(Parameterized.class)
 public class DefaultAttributeValidationPolicyTest {
 
-	private static Log log = LogFactory.getLog(DefaultAttributeValidationPolicyTest.class);
+	private static Logger log = LoggerFactory.getLogger(DefaultAttributeValidationPolicyTest.class);
 	
 	private static DefaultAttributeValidationPolicy policy = new DefaultAttributeValidationPolicy();
 

@@ -16,8 +16,8 @@
 
 package org.springframework.ldap.transaction.compensating.manager;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.support.AbstractContextSource;
 import org.springframework.ldap.transaction.compensating.LdapCompensatingTransactionOperationFactory;
@@ -45,8 +45,7 @@ import javax.naming.directory.DirContext;
 public class ContextSourceTransactionManagerDelegate extends
         AbstractCompensatingTransactionManagerDelegate {
 
-    private static final Log log = LogFactory
-            .getLog(ContextSourceTransactionManagerDelegate.class);
+    private static final Logger log = LoggerFactory.getLogger(ContextSourceTransactionManagerDelegate.class);
 
     private ContextSource contextSource;
 

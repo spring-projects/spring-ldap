@@ -15,8 +15,8 @@
  */
 package org.springframework.ldap.itest.manager;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +52,7 @@ import static junit.framework.Assert.fail;
 @ContextConfiguration(locations = {"/conf/ldapAndJdbcTransactionTestContext.xml"})
 public class ContextSourceAndDataSourceTransactionManagerIntegrationTest extends AbstractLdapTemplateIntegrationTest {
 
-	private static Log log = LogFactory.getLog(ContextSourceAndDataSourceTransactionManagerIntegrationTest.class);
+	private static Logger log = LoggerFactory.getLogger(ContextSourceAndDataSourceTransactionManagerIntegrationTest.class);
 
 	@Autowired
 	@Qualifier("dummyDao")

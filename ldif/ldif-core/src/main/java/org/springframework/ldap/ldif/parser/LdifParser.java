@@ -16,8 +16,8 @@
 
 package org.springframework.ldap.ldif.parser;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -85,7 +85,7 @@ import java.util.NoSuchElementException;
  */
 public class LdifParser implements Parser, InitializingBean {
 
-	private static final Log log = LogFactory.getLog(LdifParser.class);
+	private static final Logger log = LoggerFactory.getLogger(LdifParser.class);
 	
 	/**
 	 * The resource to parse.
@@ -304,7 +304,7 @@ public class LdifParser implements Parser, InitializingBean {
 								throw new InvalidRecordFormatException("Record [dn: " + record.getDN() + "] does not conform to specification.");
 							}
 						} catch(NamingException e) {
-							log.error(e);
+							log.error("Error adding attribute to record", e);
 							return null;
 						}
 					}
@@ -352,9 +352,9 @@ public class LdifParser implements Parser, InitializingBean {
 				}
 			}			
 		} catch (NamingException e) {
-			log.error(e);
+			log.error("Error adding attribute to record", e);
 		} catch (NoSuchElementException e) {
-			log.error(e);
+			log.error("Error adding attribute to record", e);
 		}
 	}
 

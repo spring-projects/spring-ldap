@@ -15,8 +15,8 @@
  */
 package org.springframework.ldap.transaction.compensating;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
@@ -35,8 +35,7 @@ import javax.naming.directory.ModificationItem;
 public class ModifyAttributesOperationExecutor implements
         CompensatingTransactionOperationExecutor {
 
-    private static Log log = LogFactory
-            .getLog(ModifyAttributesOperationExecutor.class);
+    private static Logger log = LoggerFactory.getLogger(ModifyAttributesOperationExecutor.class);
 
     private LdapOperations ldapOperations;
 

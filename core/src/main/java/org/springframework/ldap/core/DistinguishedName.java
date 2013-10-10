@@ -17,8 +17,8 @@ package org.springframework.ldap.core;
 
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ldap.BadLdapGrammarException;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.support.ListComparator;
@@ -148,7 +148,7 @@ public class DistinguishedName implements Name {
     private static final String MANGLED_DOUBLE_QUOTES = "\\\\\"";
     private static final String PROPER_DOUBLE_QUOTES = "\\\"";
 
-    private static final Log log = LogFactory.getLog(DistinguishedName.class);
+    private static final Logger log = LoggerFactory.getLogger(DistinguishedName.class);
 
 	private static final boolean COMPACT = true;
 
@@ -537,7 +537,7 @@ public class DistinguishedName implements Name {
 			return result;
 		}
 		catch (CloneNotSupportedException e) {
-			log.fatal("CloneNotSupported thrown from superclass - this should not happen");
+			log.error("CloneNotSupported thrown from superclass - this should not happen");
 			throw new RuntimeException("Fatal error in clone", e);
 		}
 	}
