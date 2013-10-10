@@ -21,6 +21,7 @@ import org.springframework.ldap.ContextNotEmptyException;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.support.AbstractContextSource;
 import org.springframework.ldap.filter.Filter;
+import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 import org.springframework.ldap.query.LdapQuery;
 import org.springframework.ldap.support.LdapUtils;
 
@@ -1622,6 +1623,22 @@ public interface LdapOperations {
 
     /**
      * Perform a search with parameters from the specified LdapQuery. All found objects will be supplied to the
+     * <code>NameClassPairCallbackHandler</code> for processing.
+     *
+     * @param query the LDAP query specification.
+     * @param callbackHandler the <code>NameClassPairCallbackHandler</code> to supply all found entries to.
+     * @return a <code>List</code> containing all entries received from the
+     * <code>ContextMapper</code>.
+     *
+     * @throws NamingException if any error occurs.
+     * @since 2.0
+     * @see org.springframework.ldap.query.LdapQueryBuilder
+     * @see org.springframework.ldap.core.support.CountNameClassPairCallbackHandler
+     */
+    void search(LdapQuery query, NameClassPairCallbackHandler callbackHandler);
+
+    /**
+     * Perform a search with parameters from the specified LdapQuery. All found objects will be supplied to the
      * <code>ContextMapper</code> for processing, and all returned objects will be collected in a list to be returned.
      *
      * @param query the LDAP query specification.
@@ -1699,7 +1716,7 @@ public interface LdapOperations {
      * is set in the object, this will be used as the distinguished name of the new entry. If no explicit DN is specified,
      * an attempt will be made to calculate the name from fields annotated with {@link org.springframework.ldap.odm.annotations.DnAttribute}.
      *
-     * @param entry The entry to be create, it must <em>not</em> already exist in the directory.
+     * @param entry The entry to be create, it must <em>not</em> be null or already exist in the directory.
      *
      * @throws org.springframework.ldap.NamingException on error.
      * @throws IllegalArgumentException if the entry is null or on failure to determine the distinguished name.
@@ -1825,4 +1842,12 @@ public interface LdapOperations {
      * @throws IncorrectResultSizeDataAccessException if more than one matching entry is found
      */
     <T> T findOne(LdapQuery query, Class<T> clazz);
+
+    /**
+     * Get the configured ObjectDirectoryMapper. For internal use.
+     *
+     * @return the configured ObjectDirectoryMapper.
+     * @since 2.0
+     */
+    ObjectDirectoryMapper getObjectDirectoryMapper();
 }

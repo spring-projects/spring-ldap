@@ -367,10 +367,24 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
     @Override
     public Name getId(Object entry) {
         try {
-            return (Name)getEntityData(entry.getClass()).metaData.getIdAttribute().getField().get(entry);
+            return (Name) getIdField(entry).get(entry);
         } catch (Exception e) {
             throw new InvalidEntryException(String.format("Can't get Id field from Entry %1$s", entry),
                     e);
+        }
+    }
+
+    private Field getIdField(Object entry) {
+        return getEntityData(entry.getClass()).metaData.getIdAttribute().getField();
+    }
+
+    @Override
+    public void setId(Object entry, Name id) {
+        try {
+            getIdField(entry).set(entry, id);
+        } catch (Exception e) {
+            throw new InvalidEntryException(
+                    String.format("Can't set Id field on Entry %s to %s", entry, id), e);
         }
     }
 

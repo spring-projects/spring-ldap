@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:ldap="http://www.springframework.org/schema/ldap"
+           xmlns:repository="http://www.springframework.org/schema/data/repository"
            elementFormDefault="qualified"
            targetNamespace="http://www.springframework.org/schema/ldap">
-    
+
+    <xs:import namespace="http://www.springframework.org/schema/data/repository"
+                schemaLocation="http://www.springframework.org/schema/data/repository/spring-repository.xsd" />
+
     <xs:attributeGroup name="context-source.attlist">
         <xs:attribute name="id" type="xs:token">
             <xs:annotation>
@@ -443,6 +447,22 @@
                 </xs:element>
             </xs:choice>
             <xs:attributeGroup ref="ldap:transaction-manager.attlist" />
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="repositories">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="repository:repositories">
+                    <xs:attribute name="ldap-template-ref">
+                        <xs:annotation>
+                            <xs:documentation>
+                                The reference to an LdapTemplate. Will default to 'ldapTemplate'.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
         </xs:complexType>
     </xs:element>
 </xs:schema>

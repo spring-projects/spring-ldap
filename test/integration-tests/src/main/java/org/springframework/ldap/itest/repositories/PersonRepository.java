@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap.config;
+package org.springframework.ldap.itest.repositories;
+
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.ldap.itest.odm.Person;
+
+import javax.naming.Name;
 
 /**
  * @author Mattias Hellborg Arthursson
  */
-public abstract class Elements {
-    public static final String CONTEXT_SOURCE = "context-source";
-    public static final String POOLING = "pooling";
-    public static final String LDAP_TEMPLATE = "ldap-template";
-    public static final String TRANSACTION_MANAGER = "transaction-manager";
-    public static final String REPOSITORIES = "repositories";
-    public static final String DEFAULT_RENAMING_STRATEGY = "default-renaming-strategy";
-    public static final String DIFFERENT_SUBTREE_RENAMING_STRATEGY = "different-subtree-renaming-strategy";
+public interface PersonRepository extends CrudRepository<Person, Name> {
 }

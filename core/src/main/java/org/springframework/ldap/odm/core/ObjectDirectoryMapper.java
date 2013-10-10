@@ -56,6 +56,15 @@ public interface ObjectDirectoryMapper {
      */
     Name getId(Object entry);
 
+    /**
+     * Set the distinguished name for the specified object.
+     *
+     * @param entry the entry to set the name on
+     * @param id the name to set
+     * @throws org.springframework.ldap.NamingException on error.
+     */
+    void setId(Object entry, Name id);
+
     Name getCalculatedId(Object entry);
 
     /**

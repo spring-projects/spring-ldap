@@ -157,9 +157,13 @@ public class LdapQueryBuilder implements LdapQuery {
      * @throws IllegalStateException if a filter has already been specified.
      */
     public ConditionCriteria where(String attribute) {
+        initRootContainer();
+        return new DefaultConditionCriteria(rootContainer, attribute);
+    }
+
+    private void initRootContainer() {
         assertFilterNotStarted();
         rootContainer = new DefaultContainerCriteria(this);
-        return new DefaultConditionCriteria(rootContainer, attribute);
     }
 
     /**
@@ -174,9 +178,14 @@ public class LdapQueryBuilder implements LdapQuery {
      * @throws IllegalStateException if a filter has already been specified.
      */
     public LdapQuery filter(String hardcodedFilter) {
-        assertFilterNotStarted();
-        rootContainer = new DefaultContainerCriteria(this);
+        initRootContainer();
         rootContainer.append(new HardcodedFilter(hardcodedFilter));
+        return this;
+    }
+
+    public LdapQuery filter(Filter filter) {
+        initRootContainer();
+        rootContainer.append(filter);
         return this;
     }
 

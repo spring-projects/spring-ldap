@@ -114,6 +114,11 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		this.contextSource = contextSource;
 	}
 
+    @Override
+    public ObjectDirectoryMapper getObjectDirectoryMapper() {
+        return odm;
+    }
+
     /**
      * Set the ObjectDirectoryMapper instance to use.
      *
@@ -1667,6 +1672,15 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         public void executeWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
             collectedObject = mapper.mapWithContext(ctx, ldapEntryIdentification);
         }
+    }
+
+    @Override
+    public void search(LdapQuery query, NameClassPairCallbackHandler callbackHandler) {
+        SearchControls searchControls = searchControlsForQuery(query, DONT_RETURN_OBJ_FLAG);
+        search(query.base(),
+                query.filter().encode(),
+                searchControls,
+                callbackHandler);
     }
 
     @Override

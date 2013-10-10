@@ -305,4 +305,12 @@ public class LdapTemplateNamespaceHandlerTest {
     public void verifyParseWithPoolingAndNativePoolingWillFail() {
         new ClassPathXmlApplicationContext("/ldap-namespace-config-pooling-with-native.xml");
     }
+
+    @Test
+    public void verifyAutomaticRepositorySupport() {
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/ldap-namespace-config-with-repositories.xml");
+        DummyLdapRepository repository = ctx.getBean(DummyLdapRepository.class);
+
+        assertNotNull(repository);
+    }
 }
