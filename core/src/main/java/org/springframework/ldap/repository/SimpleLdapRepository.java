@@ -16,8 +16,8 @@
 
 package org.springframework.ldap.repository;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Persistable;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.core.support.CountNameClassPairCallbackHandler;
@@ -28,6 +28,7 @@ import org.springframework.util.Assert;
 
 import javax.naming.Name;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
@@ -37,7 +38,7 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
  * @author Mattias Hellborg Arthursson
  * @since 2.0
  */
-public class SimpleLdapRepository<T> implements CrudRepository<T, Name> {
+public class SimpleLdapRepository<T> implements LdapRepository<T> {
     private static final String OBJECTCLASS_ATTRIBUTE = "objectclass";
     private final LdapOperations ldapOperations;
     private final ObjectDirectoryMapper odm;
@@ -64,7 +65,7 @@ public class SimpleLdapRepository<T> implements CrudRepository<T, Name> {
             Persistable persistable = (Persistable) entity;
             return persistable.isNew();
         } else {
-            return id != null;
+            return id == null;
         }
     }
 
@@ -74,15 +75,21 @@ public class SimpleLdapRepository<T> implements CrudRepository<T, Name> {
         Name declaredId = odm.getId(entity);
         Name calculatedId = odm.getCalculatedId(entity);
 
-        if(isNew(entity, declaredId)) {
-            if(declaredId == null) {
-                odm.setId(entity, calculatedId);
+        if (isNew(entity, declaredId)) {
+            if (declaredId == null) {
+                if (calculatedId != null) {
+                    odm.setId(entity, calculatedId);
+                } else {
+                    throw new IllegalStateException(String.format("Unable to calculate id of entry of class %s - " +
+                            "ID not set and unable to calculate new ID. Missing @DnAttribute annotations with index?",
+                            entity.getClass()));
+                }
             }
 
             ldapOperations.create(entity);
         } else {
             ldapOperations.update(entity);
-            if(declaredId != calculatedId) {
+            if (declaredId != calculatedId) {
                 odm.setId(entity, calculatedId);
             }
         }
@@ -92,7 +99,7 @@ public class SimpleLdapRepository<T> implements CrudRepository<T, Name> {
 
     @Override
     public <S extends T> Iterable<S> save(Iterable<S> entities) {
-        return new DelegatingIterable<S, S>(entities, new Function<S, S>() {
+        return new TransformingIterable<S, S>(entities, new Function<S, S>() {
             @Override
             public S transform(S entry) {
                 return save(entry);
@@ -111,7 +118,24 @@ public class SimpleLdapRepository<T> implements CrudRepository<T, Name> {
     }
 
     @Override
+    public Iterable<T> findAll(LdapQuery ldapQuery) {
+        Assert.notNull(ldapQuery, "LdapQuery must not be null");
+        return ldapOperations.find(ldapQuery, clazz);
+    }
+
+    @Override
+    public T findOne(LdapQuery ldapQuery) {
+        Assert.notNull(ldapQuery, "LdapQuery must not be null");
+        try {
+            return ldapOperations.findOne(ldapQuery, clazz);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
     public boolean exists(Name name) {
+        Assert.notNull(name, "Id must not be null");
         return findOne(name) != null;
     }
 
@@ -122,12 +146,21 @@ public class SimpleLdapRepository<T> implements CrudRepository<T, Name> {
 
     @Override
     public Iterable<T> findAll(final Iterable<Name> names) {
-        return new DelegatingIterable<Name, T>(names, new Function<Name, T>() {
+        Iterable<T> found = new TransformingIterable<Name, T>(names, new Function<Name, T>() {
             @Override
             public T transform(Name name) {
                 return findOne(name);
             }
         });
+
+        LinkedList<T> list = new LinkedList<T>();
+        for (T entry : found) {
+            if (entry != null) {
+                list.add(entry);
+            }
+        }
+
+        return list;
     }
 
     @Override
@@ -154,11 +187,11 @@ public class SimpleLdapRepository<T> implements CrudRepository<T, Name> {
         delete(findAll());
     }
 
-    private static class DelegatingIterable<F, T> implements Iterable<T> {
+    private final static class TransformingIterable<F, T> implements Iterable<T> {
         private final Iterable<F> target;
         private final Function<F, T> function;
 
-        private DelegatingIterable(Iterable<F> target, Function<F, T> function) {
+        private TransformingIterable(Iterable<F> target, Function<F, T> function) {
             this.target = target;
             this.function = function;
         }

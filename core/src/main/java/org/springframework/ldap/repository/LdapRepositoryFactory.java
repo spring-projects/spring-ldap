@@ -24,6 +24,7 @@ import org.springframework.ldap.core.LdapOperations;
 import java.io.Serializable;
 
 /**
+ * Factory to create {@link LdapRepository} instances.
  * @author Mattias Hellborg Arthursson
  * @since 2.0
  */

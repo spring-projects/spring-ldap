@@ -33,11 +33,15 @@ public class Person implements Persistable<Name> {
     private String telephoneNumber;
 
     @Transient
-    private boolean isNew;
+    private boolean isNew = false;
 
     @Override
     public Name getId() {
         return getDn();
+    }
+
+    public void setNew() {
+        isNew = true;
     }
 
     @Override

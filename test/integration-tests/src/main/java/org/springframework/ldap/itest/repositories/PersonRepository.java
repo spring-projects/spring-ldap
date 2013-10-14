@@ -16,13 +16,11 @@
 
 package org.springframework.ldap.itest.repositories;
 
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.ldap.itest.odm.Person;
-
-import javax.naming.Name;
+import org.springframework.ldap.repository.LdapRepository;
 
 /**
  * @author Mattias Hellborg Arthursson
  */
-public interface PersonRepository extends CrudRepository<Person, Name> {
+public interface PersonRepository extends LdapRepository<Person> {
 }
