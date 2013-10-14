@@ -89,7 +89,7 @@ public class SimpleLdapRepository<T> implements LdapRepository<T> {
             ldapOperations.create(entity);
         } else {
             ldapOperations.update(entity);
-            if (declaredId != calculatedId) {
+            if (calculatedId != null && declaredId != calculatedId) {
                 odm.setId(entity, calculatedId);
             }
         }
