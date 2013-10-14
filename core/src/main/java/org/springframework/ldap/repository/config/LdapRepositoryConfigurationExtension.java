@@ -25,6 +25,7 @@ import org.w3c.dom.Element;
 
 /**
  * @author Mattias Hellborg Arthursson
+ * @since 2.0
  */
 public class LdapRepositoryConfigurationExtension extends RepositoryConfigurationExtensionSupport {
 
