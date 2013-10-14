@@ -79,6 +79,16 @@ public interface ObjectDirectoryMapper {
     Filter filterFor(Class<?> clazz, Filter baseFilter);
 
     /**
+     * Get the attribute corresponding to the specified field name.
+     * @param clazz the clazz.
+     * @param fieldName the field name.
+     * @return the attribute name.
+     * @throws IllegalArgumentException if the fieldName is not present in the class or if
+     * it is not mapped to an attribute.
+     */
+    String attributeFor(Class<?> clazz, String fieldName);
+
+    /**
      * Check if the specified class is already managed by this instance; if not, check the metadata and add the class to the
      * managed classes.
      *

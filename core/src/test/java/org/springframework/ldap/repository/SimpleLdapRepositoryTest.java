@@ -10,6 +10,7 @@ import org.springframework.ldap.core.support.CountNameClassPairCallbackHandler;
 import org.springframework.ldap.filter.Filter;
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 import org.springframework.ldap.query.LdapQuery;
+import org.springframework.ldap.repository.support.SimpleLdapRepository;
 import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.Name;

@@ -17,9 +17,11 @@
 package org.springframework.ldap.repository.config;
 
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.core.annotation.AnnotationAttributes;
+import org.springframework.data.repository.config.AnnotationRepositoryConfigurationSource;
 import org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport;
 import org.springframework.data.repository.config.XmlRepositoryConfigurationSource;
-import org.springframework.ldap.repository.LdapRepositoryFactoryBean;
+import org.springframework.ldap.repository.support.LdapRepositoryFactoryBean;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
@@ -50,5 +52,12 @@ public class LdapRepositoryConfigurationExtension extends RepositoryConfiguratio
         }
 
         builder.addPropertyReference("ldapOperations", ldapTemplateRef);
+    }
+
+    @Override
+    public void postProcess(BeanDefinitionBuilder builder, AnnotationRepositoryConfigurationSource config) {
+        AnnotationAttributes attributes = config.getAttributes();
+
+        builder.addPropertyReference("ldapOperations", attributes.getString("ldapTemplateRef"));
     }
 }

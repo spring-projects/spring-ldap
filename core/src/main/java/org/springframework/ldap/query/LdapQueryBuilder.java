@@ -199,11 +199,11 @@ public class LdapQueryBuilder implements LdapQuery {
      * @return this instance.
      * @throws IllegalStateException if a filter has already been specified.
      */
-    public LdapQuery filter(String filterFormat, String... params) {
+    public LdapQuery filter(String filterFormat, Object... params) {
         Object[] encodedParams = new String[params.length];
 
         for (int i=0; i < params.length; i++) {
-            encodedParams[i] = LdapEncoder.filterEncode(params[i]);
+            encodedParams[i] = LdapEncoder.filterEncode(params[i].toString());
         }
 
         return filter(MessageFormat.format(filterFormat, encodedParams));

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap.repository;
+package org.springframework.ldap.repository.support;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Persistable;
@@ -24,6 +24,7 @@ import org.springframework.ldap.core.support.CountNameClassPairCallbackHandler;
 import org.springframework.ldap.filter.Filter;
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 import org.springframework.ldap.query.LdapQuery;
+import org.springframework.ldap.repository.LdapRepository;
 import org.springframework.util.Assert;
 
 import javax.naming.Name;

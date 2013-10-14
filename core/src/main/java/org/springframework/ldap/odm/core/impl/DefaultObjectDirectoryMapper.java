@@ -425,6 +425,19 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
         return andFilter.append(ocFilter).append(baseFilter);
     }
 
+    @Override
+    public String attributeFor(Class<?> clazz, String fieldName) {
+        try {
+            Field field = clazz.getDeclaredField(fieldName);
+            AttributeMetaData attributeMetaData =
+                    getEntityData(clazz).metaData.getAttribute(field);
+            return attributeMetaData.getName().toString();
+        } catch (NoSuchFieldException e) {
+            throw new IllegalArgumentException(
+                    String.format("Field %s cannot be found in class %s", fieldName, clazz), e);
+        }
+    }
+
     // For testing purposes
     ConcurrentMap<Class<?>, EntityData> getMetaDataMap() {
         return metaDataMap;

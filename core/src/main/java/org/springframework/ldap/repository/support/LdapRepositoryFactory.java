@@ -14,17 +14,24 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap.repository;
+package org.springframework.ldap.repository.support;
 
 import org.springframework.data.repository.core.EntityInformation;
+import org.springframework.data.repository.core.NamedQueries;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
+import org.springframework.data.repository.query.QueryLookupStrategy;
+import org.springframework.data.repository.query.RepositoryQuery;
 import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.repository.query.AnnotatedLdapRepositoryQuery;
+import org.springframework.ldap.repository.query.LdapQueryMethod;
+import org.springframework.ldap.repository.query.PartTreeLdapRepositoryQuery;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
 
 /**
- * Factory to create {@link LdapRepository} instances.
+ * Factory to create {@link org.springframework.ldap.repository.LdapRepository} instances.
  * @author Mattias Hellborg Arthursson
  * @since 2.0
  */
@@ -52,5 +59,24 @@ public class LdapRepositoryFactory extends RepositoryFactorySupport {
     @Override
     protected Class<?> getRepositoryBaseClass(RepositoryMetadata metadata) {
         return SimpleLdapRepository.class;
+    }
+
+    @Override
+    protected QueryLookupStrategy getQueryLookupStrategy(QueryLookupStrategy.Key key) {
+        return new LdapQueryLookupStrategy();
+    }
+
+    private final class LdapQueryLookupStrategy implements QueryLookupStrategy {
+        @Override
+        public RepositoryQuery resolveQuery(Method method, RepositoryMetadata metadata, NamedQueries namedQueries) {
+            LdapQueryMethod queryMethod = new LdapQueryMethod(method, metadata);
+            Class<?> domainType = metadata.getDomainType();
+
+            if(queryMethod.hasQueryAnnotation()) {
+                return new AnnotatedLdapRepositoryQuery(queryMethod, domainType, ldapOperations);
+            } else {
+                return new PartTreeLdapRepositoryQuery(queryMethod, domainType, ldapOperations);
+            }
+        }
     }
 }

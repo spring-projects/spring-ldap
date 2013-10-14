@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ldap.repository;
+package org.springframework.ldap.repository.support;
 
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport;
@@ -25,7 +25,7 @@ import org.springframework.util.Assert;
 import javax.naming.Name;
 
 /**
- * {@link org.springframework.beans.factory.FactoryBean} to create {@link LdapRepository} instances.
+ * {@link org.springframework.beans.factory.FactoryBean} to create {@link org.springframework.ldap.repository.LdapRepository} instances.
  *
  * @author Mattias Hellborg Arthursson
  * @since 2.0

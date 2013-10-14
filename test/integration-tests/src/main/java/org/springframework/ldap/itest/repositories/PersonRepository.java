@@ -17,10 +17,18 @@
 package org.springframework.ldap.itest.repositories;
 
 import org.springframework.ldap.itest.odm.Person;
+import org.springframework.ldap.repository.Query;
 import org.springframework.ldap.repository.LdapRepository;
 
 /**
  * @author Mattias Hellborg Arthursson
  */
 public interface PersonRepository extends LdapRepository<Person> {
+    @Query("(sn={0})")
+    Iterable<Person> findByLastName(String lastName);
+
+    @Query("(uid={0})")
+    Person findByUid(String uid);
+
+    Person findByTelephoneNumber(String phoneNumber);
 }

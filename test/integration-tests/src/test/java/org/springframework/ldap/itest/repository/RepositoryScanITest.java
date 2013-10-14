@@ -19,7 +19,6 @@ package org.springframework.ldap.itest.repository;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.itest.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.itest.odm.Person;
 import org.springframework.ldap.itest.repositories.PersonRepository;
@@ -236,4 +235,31 @@ public class RepositoryScanITest extends AbstractLdapTemplateIntegrationTest {
 
         assertEquals(3, tested.count());
     }
+
+    @Test
+    public void testFindByLastName() {
+        Iterable<Person> found = tested.findByLastName("Person3");
+        assertEquals(1, countIterable(found));
+    }
+
+    @Test
+    public void testFindByUid() {
+        Person person = tested.findByUid("some.person3");
+
+        assertEquals("Some Person3", person.getCommonName());
+        assertEquals("Person3", person.getSurname());
+        assertEquals("Sweden, Company1, Some Person3", person.getDesc().get(0));
+        assertEquals("+46 555-123654", person.getTelephoneNumber());
+    }
+
+    @Test
+    public void testFindByPhoneNumber() {
+        Person person = tested.findByTelephoneNumber("+46 555-123654");
+
+        assertEquals("Some Person3", person.getCommonName());
+        assertEquals("Person3", person.getSurname());
+        assertEquals("Sweden, Company1, Some Person3", person.getDesc().get(0));
+        assertEquals("+46 555-123654", person.getTelephoneNumber());
+    }
+
 }
