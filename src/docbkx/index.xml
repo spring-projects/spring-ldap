@@ -44,6 +44,7 @@
     <xi:include href="odm.xml" />
     <xi:include href="advancedqueries.xml" />
     <xi:include href="configuration.xml" />
+    <xi:include href="repositories.xml" />
     <xi:include href="pooling.xml" />
 	<xi:include href="executors.xml" />
 	<xi:include href="contextprocessor.xml" />
