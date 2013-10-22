@@ -14,6 +14,7 @@ ext.commonsLoggingVersion = '1.1.1'
 ext.gsbaseVersion = '2.0.1'
 ext.log4jVersion = '1.2.15'
 ext.mockitoVersion = '1.9.5'
+ext.queryDslVersion = '3.2.4'
 
 repositories {
     mavenCentral()

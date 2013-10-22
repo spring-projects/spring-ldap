@@ -16,6 +16,7 @@
 
 package org.springframework.ldap.repository.support;
 
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.core.EntityInformation;
 import org.springframework.data.repository.core.NamedQueries;
 import org.springframework.data.repository.core.RepositoryMetadata;
@@ -29,6 +30,8 @@ import org.springframework.ldap.repository.query.PartTreeLdapRepositoryQuery;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+
+import static org.springframework.data.querydsl.QueryDslUtils.QUERY_DSL_PRESENT;
 
 /**
  * Factory to create {@link org.springframework.ldap.repository.LdapRepository} instances.
@@ -50,15 +53,32 @@ public class LdapRepositoryFactory extends RepositoryFactorySupport {
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected Object getTargetRepository(RepositoryMetadata metadata) {
-        return new SimpleLdapRepository(
-                ldapOperations,
-                ldapOperations.getObjectDirectoryMapper(),
-                metadata.getDomainType());
+        if(!isQueryDslRepository(metadata.getRepositoryInterface())) {
+            return new SimpleLdapRepository(
+                    ldapOperations,
+                    ldapOperations.getObjectDirectoryMapper(),
+                    metadata.getDomainType());
+        } else {
+            return new QueryDslLdapRepository(
+                    ldapOperations,
+                    ldapOperations.getObjectDirectoryMapper(),
+                    metadata.getDomainType());
+        }
+
     }
+
+    private static boolean isQueryDslRepository(Class<?> repositoryInterface) {
+        return QUERY_DSL_PRESENT && QueryDslPredicateExecutor.class.isAssignableFrom(repositoryInterface);
+    }
+
 
     @Override
     protected Class<?> getRepositoryBaseClass(RepositoryMetadata metadata) {
-        return SimpleLdapRepository.class;
+        if(!isQueryDslRepository(metadata.getRepositoryInterface())) {
+            return SimpleLdapRepository.class;
+        } else {
+            return QueryDslLdapRepository.class;
+        }
     }
 
     @Override

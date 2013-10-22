@@ -30,6 +30,7 @@ import org.springframework.util.Assert;
 import javax.naming.Name;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
@@ -51,6 +52,14 @@ public class SimpleLdapRepository<T> implements LdapRepository<T> {
         this.clazz = clazz;
     }
 
+    protected LdapOperations getLdapOperations() {
+        return ldapOperations;
+    }
+
+    protected Class<T> getClazz() {
+        return clazz;
+    }
+
     @Override
     public long count() {
         Filter filter = odm.filterFor(clazz, null);
@@ -63,7 +72,7 @@ public class SimpleLdapRepository<T> implements LdapRepository<T> {
 
     private <S extends T> boolean isNew(S entity, Name id) {
         if (entity instanceof Persistable) {
-            Persistable persistable = (Persistable) entity;
+            Persistable<?> persistable = (Persistable<?>) entity;
             return persistable.isNew();
         } else {
             return id == null;
@@ -119,7 +128,7 @@ public class SimpleLdapRepository<T> implements LdapRepository<T> {
     }
 
     @Override
-    public Iterable<T> findAll(LdapQuery ldapQuery) {
+    public List<T> findAll(LdapQuery ldapQuery) {
         Assert.notNull(ldapQuery, "LdapQuery must not be null");
         return ldapOperations.find(ldapQuery, clazz);
     }
@@ -141,12 +150,12 @@ public class SimpleLdapRepository<T> implements LdapRepository<T> {
     }
 
     @Override
-    public Iterable<T> findAll() {
+    public List<T> findAll() {
         return ldapOperations.findAll(clazz);
     }
 
     @Override
-    public Iterable<T> findAll(final Iterable<Name> names) {
+    public List<T> findAll(final Iterable<Name> names) {
         Iterable<T> found = new TransformingIterable<Name, T>(names, new Function<Name, T>() {
             @Override
             public T transform(Name name) {

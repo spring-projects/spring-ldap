@@ -3,11 +3,29 @@ repositories {
 }
 apply from: JAVA_SCRIPT
 
+idea.module.excludeDirs = [
+        file('.gradle'),
+        file('build/classes'),
+        file('build/tmp'),
+        file('build/dependency-cache'),
+        file('build/libs')]
+
+sourceSets {
+    generated {
+        java {
+            srcDirs = ['build/generated-src']
+        }
+    }
+}
+
 ext.springSecurityVersion='3.0.5.RELEASE'
 
 dependencies {
     compile 	project(":spring-ldap-test"),
-                project(":spring-ldap-core-tiger"),
+                project(":spring-ldap-core-tiger")
+
+    compile "com.mysema.querydsl:querydsl-apt:$queryDslVersion"
+
     compile("org.springframework.security:spring-security-core:$springSecurityVersion") {
         exclude group: "org.springframework", module: "spring-expression"
         exclude group: "org.springframework", module: "spring-core"
@@ -34,3 +52,37 @@ dependencies {
         exclude group: "org.springframework.ldap", module: "spring-ldap-core"
     }
 }
+
+task generateQueryDSL(type: JavaCompile, group: 'build', description: 'Generates the QueryDSL query types') {
+    source = sourceSets.main.java
+    classpath = configurations.compile
+    options.compilerArgs = [
+            "-proc:only",
+            "-processor", "org.springframework.ldap.repository.support.LdapAnnotationProcessor"
+    ]
+    destinationDir = sourceSets.generated.java.srcDirs.iterator().next()
+}
+
+compileJava {
+    dependsOn generateQueryDSL
+    source generateQueryDSL.destinationDir
+}
+
+compileGeneratedJava {
+    dependsOn generateQueryDSL
+    options.warnings = false
+    classpath += sourceSets.main.runtimeClasspath
+}
+
+clean {
+    delete sourceSets.generated.java.srcDirs
+}
+
+ideaModule.dependsOn generateQueryDSL
+
+idea {
+    module {
+        sourceDirs += file('build/generated-src')
+    }
+}
+

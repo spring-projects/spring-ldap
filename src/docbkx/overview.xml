@@ -245,7 +245,9 @@ public class PersonDaoImpl implements PersonDao {
           Below is a list of the most important changes in Spring LDAP 2.0.
       </para>
       <itemizedlist>
-          <listitem>Java 1.6 is now required when using Spring LDAP. Spring versions starting at 2.0 and up are still supported.</listitem>
+          <listitem>
+              Java 1.6 is now required when using Spring LDAP. Spring versions starting at 2.0 and up are still supported.
+          </listitem>
           <listitem>
               The central API has been updated with Java 5 features such as generics and varargs. As a consequence,
               the entire <literal>spring-ldap-tiger</literal> module has been deprecated and users are encouraged to migrate
@@ -261,6 +263,10 @@ public class PersonDaoImpl implements PersonDao {
           <listitem>
               A custom XML namespace is now provided to simplify configuration of Spring LDAP.
               See <xref linkend="configuration" /> for more information.
+          </listitem>
+          <listitem>
+              Spring Data Repository and QueryDSL support is now included in Spring LDAP.
+              See <xref linkend="repositories" /> for more information.
           </listitem>
           <listitem>
               <literal>DistinguishedName</literal> and associated classes have been deprecated in favor of standard
