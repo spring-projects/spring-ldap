@@ -1300,17 +1300,23 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		}
 	}
 
-	private final static class NullDirContextProcessor implements DirContextProcessor {
-		public void postProcess(DirContext ctx) throws NamingException {
-			// Do nothing
-		}
+    /**
+     * Do-nothing implementation of {@link DirContextProcessor}.
+     *
+     * @author Mattias Hellborg Arthursson
+     * @since 2.0
+     */
+    public final static class NullDirContextProcessor implements DirContextProcessor {
+        public void postProcess(DirContext ctx) throws NamingException {
+            // Do nothing
+        }
 
-		public void preProcess(DirContext ctx) throws NamingException {
-			// Do nothing
-		}
-	}
+        public void preProcess(DirContext ctx) throws NamingException {
+            // Do nothing
+        }
+    }
 
-	/**
+    /**
 	 * A {@link NameClassPairCallbackHandler} that passes the NameClassPairs
 	 * found to a NameClassPairMapper and collects the results in a list.
 	 * 
