@@ -228,6 +228,8 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
             // Convert the field value to the required type and write it into the JNDI context
             context.setAttributeValue(attributeInfo.getName().toString(), converterManager.convert(fieldValue,
                     attributeInfo.getSyntax(), targetClass));
+        } else {
+            context.setAttributeValue(attributeInfo.getName().toString(), null);
         }
     }
 

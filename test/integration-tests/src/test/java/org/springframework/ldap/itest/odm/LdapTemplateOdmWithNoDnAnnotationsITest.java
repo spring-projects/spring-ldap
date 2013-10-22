@@ -31,6 +31,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
@@ -163,5 +164,22 @@ public class LdapTemplateOdmWithNoDnAnnotationsITest extends AbstractLdapTemplat
         } catch (EmptyResultDataAccessException e) {
             assertTrue(true);
         }
+    }
+
+    /**
+     * Test case for Jira LDAP-271.
+     */
+    @Test
+    public void testLdap271() {
+        Person person = tested.findOne(query()
+                .where("cn").is("Some Person3"), Person.class);
+
+        // Perform test
+        person.setTelephoneNumber(null);
+        tested.update(person);
+
+        person = tested.findOne(query()
+                .where("cn").is("Some Person3"), Person.class);
+        assertNull("TelephoneNumber should be null", person.getTelephoneNumber());
     }
 }
