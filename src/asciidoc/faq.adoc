@@ -1,0 +1,13 @@
+= Spring LDAP FAQ
+
+== Operational Attributes
+
+=== How do I remove an operational attribute using context.removeAttributeValue()?
+
+The `DirContextAdapter` will only read the visible attributes per default. This is because the operational attributes will only be returned by the server if explicitly asked for, and there is no way for Spring LDAP to know what attributes to ask for. This means that the `DirContextAdapter` will not be populated with the operational attributes, and hence the `removeAttributeValue` will not have any effect (since from the `DirContextAdapter`'s point of view, it wasn't there in the first place).
+
+There are basically two ways to do this:
+
+* Use a search or lookup method that takes the attribute names as argument, like `LdapTemplate#lookup(Name, String[], ContextMapper)`. Use a `ContextMapper` implementation that just returns the supplied `DirContextAdapter` in `mapFromContext()`.
+
+* Use `LdapTemplate#modifyAttributes(Name, ModificationItem[])` directly, manually building the `ModificationItem` array.

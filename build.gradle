@@ -1,14 +1,15 @@
 buildscript {
     repositories {
         maven { url "http://repo.springsource.org/plugins-release" }
+        maven { url "http://dl.bintray.com/content/aalmiray/asciidoctor" }
     }
     dependencies {
         classpath("org.springframework.build.gradle:propdeps-plugin:0.0.3")
-        classpath("org.springframework.build.gradle:docbook-reference-plugin:0.2.6")
+        classpath('org.asciidoctor:asciidoctor-gradle-plugin:0.7.0')
     }
 }
 
-apply plugin: "docbook-reference"
+apply plugin: "asciidoctor"
 apply plugin: "sonar-runner"
 
 ext.GRADLE_SCRIPT_DIR = "${rootProject.projectDir}/gradle"
@@ -22,6 +23,7 @@ configure(allprojects) {
     apply plugin: 'propdeps'
     apply plugin: 'propdeps-idea'
     apply plugin: 'propdeps-eclipse'
+    apply plugin: 'groovy'
 
     group = "org.springframework.ldap"
 
@@ -65,9 +67,24 @@ sonarRunner {
     }
 }
 
-reference {
-    sourceDir = file("src/docbkx")
-    pdfFilename = "spring-ldap-reference.pdf"
+asciidoctor {
+    outputDir = new File("$buildDir/docs")
+    options = [
+            eruby: 'erubis',
+            attributes: [
+                    copycss : '',
+                    icons : 'font',
+                    'source-highlighter': 'prettify',
+                    sectanchors : '',
+                    toc2: '',
+                    idprefix: '',
+                    idseparator: '-',
+                    doctype: 'book',
+                    numbered: '',
+                    'spring-ldap-version' : project.version,
+                    revnumber : project.version
+            ]
+    ]
 }
 
 task api(type: Javadoc) {
@@ -88,7 +105,7 @@ task api(type: Javadoc) {
     classpath = files(coreModules*.javadoc*.classpath)
 }
 
-task docsZip(type: Zip) {
+task docsZip(type: Zip, dependsOn: asciidoctor) {
     group = "Distribution"
     baseName = "spring-ldap"
     classifier = "docs"
@@ -103,7 +120,8 @@ task docsZip(type: Zip) {
         into "apidocs"
     }
 
-    from (reference) {
+    from (asciidoctor.outputDir) {
+        include "*.html"
         into "reference"
     }
 }
