@@ -193,6 +193,7 @@ Below is a list of the most important changes in Spring LDAP 2.0.
 *  The ODM (Object-Directory Mapping) functionality has been moved to core and there are new methods in `LdapOperations`/`LdapTemplate` that uses this automatic translation to/from ODM-annotated classes. See <<odm>> for more information.
 *  A custom XML namespace is now provided to simplify configuration of Spring LDAP. See <<configuration>> for more information.
 *  Spring Data Repository and QueryDSL support is now included in Spring LDAP. See <<repositories>> for more information.
+*  `Name` instances as attribute values are now handled properly with regards to Distinguished Name equality in `DirContextAdapter` and ODM. See <<dns-as-attribute-values>> and <<odm-dn-attributes>> for more information.
 * `DistinguishedName` and associated classes have been deprecated in favor of standard Java `LdapName`. See <<ldap-names>> for information on how the library helps working with `LdapNames`.
 *  Fluent LDAP query support has been added. This makes for a more pleasant programming experience when working with LDAP searches in Spring LDAP. See <<basic-queries>> and <<query-builder-advanced>> for more information about the LDAP query builder support.
 *  The old `authenticate` methods in `LdapTemplate` have been deprecated in favor of a couple of new `authenticate` methods that work with `LdapQuery` objects and __throw exceptions__ on authentication failure, making it easier for the user to find out what caused an authentication attempt to fail.
@@ -712,7 +713,80 @@ public class PersonDaoImpl implements PersonDao {
 }
 ----
 
+[[dns-as-attribute-values]]
+=== DirContextAdapter and Distinguished Names as Attribute Values.
 
+When managing security groups in LDAP it is very common to have attribute values that are actually
+distinguished names. Since distinguished name equality is not the same as String equality, handling these
+attributes as normal strings when calculating attribute modifications will not work as expected. For instance,
+if a `member` attribute has the value `cn=John Doe,ou=People` and we call `ctx.addAttributeValue("member", "CN=John Doe, OU=People")`,
+the attribute will now be considered to have two values, even though the strings actually represent the same
+distinguished name.
+
+As of version 2.0, if you supply `javax.naming.Name` instances to the attribute modification methods in `DirContextAdapter`,
+modification calculation will use distinguished name equality, meaning that if we modify the example above to:
+`ctx.addAttributeValue("member", LdapUtils.newLdapName("CN=John Doe, OU=People"))`, this will no longer be considered
+a modification.
+
+.Group membership modification example
+[source,java]
+[subs="verbatim,quotes"]
+----
+public class GroupDao implements BaseLdapNameAware {
+    private LdapTemplate ldapTemplate;
+    private LdapName baseLdapPath;
+
+    public void setLdapTemplate(LdapTemplate ldapTemplate) {
+        this.ldapTemplate = ldapTemplate;
+    }
+
+    public void setBaseLdapPath(LdapName baseLdapPath) {
+        this.setBaseLdapPath(baseLdapPath);
+    }
+
+    public void addMemberToGroup(String groupName, Person p) {
+        Name groupDn = buildGroupDn(groupName);
+        Name userDn = buildPersonDn(
+            person.getFullname(),
+            person.getCompany(),
+            person.getCountry());
+
+        DirContextOperation ctx = ldapTemplate.lookupContext(groupDn);
+        ctx.addAttributeValue("member", userDn);
+
+        ldapTemplate.update(ctx);
+    }
+
+    public void removeMemberFromGroup(String groupName, Person p) {
+        Name groupDn = buildGroupDn(String groupName);
+        Name userDn = buildPersonDn(
+            person.getFullname(),
+            person.getCompany(),
+            person.getCountry());
+
+        DirContextOperation ctx = ldapTemplate.lookupContext(groupDn);
+        ctx.removeAttributeValue("member", userDn);
+
+        ldapTemplate.update(ctx);
+    }
+
+    private Name buildGroupDn(String groupName) {
+        return LdapNameBuilder.newLdapName("ou=Groups")
+            .add("cn", groupName).build();
+    }
+
+    private Name buildPersonDn(String fullname, String company, String country) {
+        return LdapNameBuilder.newLdapName(baseLdapPath)
+            .add("c", country)
+            .add("ou", company)
+            .add("cn", fullname)
+            .build();
+   }
+}
+----
+
+In the example above we are implementing `BaseLdapNameAware`, in order to get hold of the base LDAP path as described in <<base-context-configuration>>.
+This is necessary because distinguished names as member attribute values must always be absolute from the directory root.
 
 === A Complete PersonDao Class
 To illustrate the power of Spring LDAP, here is a complete Person DAO implementation for LDAP in just 68 lines:
@@ -862,82 +936,6 @@ The `@DnAttribute` annotation is used to map object class fields to and from com
 
 The `@Transient` annotation is used to indicate the field should be ignored by the object directory mapping and not mapped to an underlying LDAP property. Note that if a `@DnAttribute` is not to be bound to an Attribute, i.e. it is only part of the Distinguished Name and not represented by an object attibute, it must also be annotated with `@Transient`.
 
-=== Type Conversion
-
-The object directory mapping relies on the `org.springframework.ldap.odm.typeconversion` package to convert LDAP attributes to Java fields. For simple setups, no particular configuraion is needed for this purpose. However, more complex mapping scenarios require the `ObjectDirectoryMapper` and its associated `ConverterManager` to be explicitly configured on the `LdapTemplate` instance. The default `ConverterManager` implementation uses the following algorithm when parsing objects to convert fields:
-
-. Try to find and use a `Converter` registered for the `fromClass`, `syntax` and `toClass` and use it.
-. If this fails, then if the `toClass``isAssignableFrom` the `fromClass` then just assign it.
-. If this fails try to find and use a `Converter` registered for the `fromClass` and the `toClass` ignoring the syntax.
-. If this fails then throw a `ConverterException`.
-
-
-
-Implementations of the `ConverterManager` interface can be obtained from the `o.s.l.odm.typeconversion.impl.ConvertManagerFactoryBean`. The factory bean requires converter configurations to be declared in the bean configuration.
-
-The converterConfig property accepts a set of `ConverterConfig` classes, each one defining some conversion logic. A converter config is an instance of `o.s.l.odm.typeconversion.impl.ConverterManagerFactoryBean.ConverterConfig`. The config defines a set of source classes, the set of target classes, and an implementation of the `org.springframework.ldap.odm.typeconversion.impl.Converter` interface which provides the logic to convert from the `fromClass` to the `toClass`. A sample configuration is provided in the following example:
-
-.Configuring the Converter Manager Factory
-[source,xml]
-[subs="verbatim,quotes"]
-----
-<bean id="fromStringConverter"
-   class="org.springframework.ldap.odm.typeconversion.impl.converters.FromStringConverter" />
-<bean id="toStringConverter"
-   class="org.springframework.ldap.odm.typeconversion.impl.converters.ToStringConverter" />
-<bean id="converterManager"
-   class="org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean">
-   <property name="converterConfig">
-      <set>
-      <bean class="org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean$ConverterConfig">
-            <property name="fromClasses">
-               <set>
-                  <value>java.lang.String</value>
-               </set>
-            </property>
-            <property name="toClasses">
-               <set>
-                  <value>java.lang.Byte</value>
-                  <value>java.lang.Short</value>
-                  <value>java.lang.Integer</value>
-                  <value>java.lang.Long</value>
-                  <value>java.lang.Float</value>
-                  <value>java.lang.Double</value>
-                  <value>java.lang.Boolean</value>
-               </set>
-            </property>
-            <property name="converter" ref="fromStringConverter" />
-         </bean>
-         <bean class="org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean$ConverterConfig">
-            <property name="fromClasses">
-               <set>
-                  <value>java.lang.Byte</value>
-                  <value>java.lang.Short</value>
-                  <value>java.lang.Integer</value>
-                  <value>java.lang.Long</value>
-                  <value>java.lang.Float</value>
-                  <value>java.lang.Double</value>
-                  <value>java.lang.Boolean</value>
-               </set>
-            </property>
-            <property name="toClasses">
-               <set>
-                  <value>java.lang.String</value>
-               </set>
-            </property>
-            <property name="converter" ref="toStringConverter" />
-         </bean>
-      </set>
-   </property>
-</bean>
-
-<ldap:ldap-template id="ldapTemplate" odm-ref="odm" />
-<bean id="odm" class="org.springframework.ldap.odm.impl.DefaultObjectDirectoryMapper">
-   <property name="converterManager" ref="converterManager" />
-</bean>
-----
-
-
 
 === Execution
 When all components have been properly configured and annotated, the object mapping methods of `LdapTemplate` can be used as follows:
@@ -995,12 +993,75 @@ public class OdmPersonDao {
       return ldapTemplate.findAll(Person.class);
    }
 
-   public List>Person< findByLastName(String lastName) {
+   public List<Person> findByLastName(String lastName) {
       return ldapTemplate.find(query().where("sn").is(lastName), Person.class);
    }
 }
 ----
 
+
+[[odm-dn-attributes]]
+=== ODM and Distinguished Names as Attribute Values.
+
+Security groups in LDAP commonly contains a multi-value attribute where each of the values is the distinguished name
+of a user in the system. The difficulties involved when handling these kinds of attributes are discussed in <<dns-as-attribute-values>>.
+
+ODM also has support for `javax.naming.Name` attribute values, making group modifications very easy:
+
+.Example Group representation
+[source,java]
+[subs="verbatim,quotes"]
+----
+@Entry(objectClasses = {"top", "groupOfUniqueNames"}, base = "cn=groups")
+public class Group {
+
+    @Id
+    private Name dn;
+
+    @Attribute(name="cn")
+    @DnAttribute("cn")
+    private String name;
+
+    @Attribute(name="uniqueMember")
+    private Set<Name> members;
+
+    public Name getDn() {
+        return dn;
+    }
+
+    public void setDn(Name dn) {
+        this.dn = dn;
+    }
+
+    public Set<Name> getMembers() {
+        return members;
+    }
+
+    public void setMembers(Set<Name> members) {
+        this.members = members;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void addMember(Name member) {
+        members.add(member);
+    }
+
+    public void removeMember(Name member) {
+        members.remove(member);
+    }
+}
+----
+
+Modifying group members using `setMembers`, `addMember` and `removeMember` above, and then calling `ldapTemplate.update()`,
+attribute modifications will be calculated using distinguished name equality, meaning that the text formatting of
+distinguished names will be disregarded when figuring out whether they are equal.
 
 [[query-builder-advanced]]
 == Advanced LDAP Queries
