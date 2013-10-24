@@ -13,7 +13,9 @@ dependencies {
                 "org.springframework:spring-test:$springVersion",
                 "gsbase:gsbase:$gsbaseVersion",
                 "junit:junit:$junitVersion",
-                "com.sun:ldapbp:1.0"
+                "com.sun:ldapbp:1.0",
+                "org.slf4j:slf4j-log4j12:$slf4jVersion"
+
 }
 
 test.enabled = false // TODO this should be enabled depending on build parameter

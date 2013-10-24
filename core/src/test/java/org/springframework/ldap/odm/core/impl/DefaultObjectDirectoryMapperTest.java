@@ -51,7 +51,7 @@ public class DefaultObjectDirectoryMapperTest {
         assertFalse(idAttribute.isBinary());
         assertFalse(idAttribute.isDnAttribute());
         assertFalse(idAttribute.isTransient());
-        assertFalse(idAttribute.isList());
+        assertFalse(idAttribute.isCollection());
 
         assertField(entityData, "fullName", "cn", "cn", false, false, false);
         assertField(entityData, "lastName", "sn", null, false, false, false);
@@ -115,7 +115,7 @@ public class DefaultObjectDirectoryMapperTest {
 
                 assertEquals(expectedBinary, attribute.isBinary());
                 assertEquals(expectedTransient, attribute.isTransient());
-                assertEquals(expectedList, attribute.isList());
+                assertEquals(expectedList, attribute.isCollection());
             }
         }
     }

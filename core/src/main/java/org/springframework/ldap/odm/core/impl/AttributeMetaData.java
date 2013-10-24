@@ -16,6 +16,7 @@
 
 package org.springframework.ldap.odm.core.impl;
 
+import org.springframework.ldap.UncategorizedLdapException;
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.DnAttribute;
 import org.springframework.ldap.odm.annotations.Id;
@@ -27,8 +28,13 @@ import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /*
  * Extract attribute meta-data from the @Attribute annotation, the @Id annotation
@@ -60,8 +66,10 @@ import java.util.Set;
     private boolean isId;
 
     // Is this field multi-valued represented by a List
-    private boolean isList; 
-    
+    private boolean isCollection;
+
+    private Class<? extends Collection> collectionClass;
+
     // Is this the objectClass attribute
     private boolean isObjectClass;
 
@@ -112,18 +120,14 @@ import java.util.Set;
         // Determine the class of data stored in the field
         Class<?> fieldType = field.getType();
 
-        // We support only lists for multi-valued attributes, as we must allow duplicate values
-        if (Set.class.isAssignableFrom(fieldType)) {
-            throw new MetaDataException(String.format("Only lists are allowed for multivlaued attributes, errpr in field %1$s in Entry class %2$s", 
-                    field, field.getDeclaringClass()));
-        }
-        isList = List.class.isAssignableFrom(fieldType);
+        isCollection = Collection.class.isAssignableFrom(fieldType);
 
         valueClass=null;
-        if (!isList) {
+        if (!isCollection) {
             // It's not a list so assume its single valued - so just take the field type
             valueClass = fieldType;
         } else {
+            determineCollectionClass(fieldType);
             // It's multi-valued - so we need to look at the signature in
             // the class file to find the generic type - this is supported for class file
             // format 49 and greater which corresponds to java 5 and later.
@@ -156,7 +160,33 @@ import java.util.Set;
                     field, field.getDeclaringClass()));
         }
     }
-    
+
+    @SuppressWarnings("unchecked")
+    private void determineCollectionClass(Class<?> fieldType) {
+        if(fieldType.isInterface()) {
+            if(Collection.class.equals(fieldType) || List.class.equals(fieldType)) {
+                collectionClass = ArrayList.class;
+            } else if(SortedSet.class.equals(fieldType)) {
+                collectionClass = TreeSet.class;
+            } else if(Set.class.isAssignableFrom(fieldType)) {
+                collectionClass = LinkedHashSet.class;
+            } else {
+                throw new MetaDataException(String.format("Collection class %s is not supported", fieldType));
+            }
+        } else {
+            collectionClass = (Class<? extends Collection>) fieldType;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public Collection<Object> newCollectionInstance() {
+        try {
+            return (Collection<Object>) collectionClass.newInstance();
+        } catch (Exception e) {
+            throw new UncategorizedLdapException("Failed to instantiate collection class", e);
+        }
+    }
+
     // Extract information from the @Id annotation:
     // isId
     private boolean processIdAnnotation(Field field, Class<?> fieldType) {
@@ -210,7 +240,7 @@ import java.util.Set;
         }
         
         // If this is the objectclass attribute then it must be of type List<String>
-        if (isObjectClass() && (!isList() || valueClass!=String.class)) {
+        if (isObjectClass() && (!isCollection() || valueClass!=String.class)) {
             throw new MetaDataException(String.format("The type of the objectclass attribute must be List<String> in classs %1$s",
                     field.getDeclaringClass()));
         }
@@ -233,8 +263,8 @@ import java.util.Set;
         return name;
     }
     
-    public boolean isList() {
-        return isList;
+    public boolean isCollection() {
+        return isCollection;
     }
 
     public boolean isId() {
@@ -261,6 +291,16 @@ import java.util.Set;
         return valueClass;
     }
 
+    public Class<?> getJndiClass() {
+        if(isBinary()) {
+            return byte[].class;
+        } else if(Name.class.isAssignableFrom(valueClass)) {
+            return Name.class;
+        } else {
+            return String.class;
+        }
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -269,6 +309,6 @@ import java.util.Set;
     @Override
     public String toString() {
         return String.format("name=%1$s | field=%2$s | valueClass=%3$s | syntax=%4$s| isBinary=%5$s | isId=%6$s | isList=%7$s | isObjectClass=%8$s",
-                             getName(), getField(), getValueClass().getName(), getSyntax(), isBinary(), isId(), isList(), isObjectClass());
+                             getName(), getField(), getValueClass().getName(), getSyntax(), isBinary(), isId(), isCollection(), isObjectClass());
     }
 }

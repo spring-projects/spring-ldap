@@ -23,5 +23,7 @@ dependencies {
                 "org.springframework:spring-core:$spring25Version",
                 "org.springframework:spring-tx:$spring25Version",
                 "org.springframework:spring-beans:$spring25Version",
-                "junit:junit:$junitVersion"
+                "junit:junit:$junitVersion",
+                "org.slf4j:slf4j-log4j12:$slf4jVersion"
+
 }

@@ -13,6 +13,7 @@ dependencies {
              "org.springframework:spring-beans:$springVersion",
              "org.springframework:spring-tx:$springVersion",
              "org.springframework.data:spring-data-commons:$springDataVersion"
+             "org.slf4j:slf4j-api:$slf4jVersion"
 
     provided "commons-pool:commons-pool:$commonsPoolVersion",
              "com.sun:ldapbp:1.0",
@@ -24,6 +25,7 @@ dependencies {
     testCompile "junit:junit:$junitVersion",
                 "commons-lang:commons-lang:$commonsLangVersion",
                 "gsbase:gsbase:$gsbaseVersion",
-                "org.mockito:mockito-core:$mockitoVersion"
+                "org.mockito:mockito-core:$mockitoVersion",
+                "org.slf4j:slf4j-log4j12:$slf4jVersion"
 }
 

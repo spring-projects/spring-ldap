@@ -33,8 +33,6 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
-import javax.naming.directory.BasicAttribute;
-import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
@@ -60,10 +58,27 @@ import java.util.TreeSet;
  * this class keeps track of the changes made to its attributes, making them
  * available as an array of <code>ModificationItem</code> objects, suitable as
  * input to {@link LdapTemplate#modifyAttributes(DirContextOperations)}.
- * 
- * Note that this is not a complete implementation of DirContext. Several
- * methods are not relevant for the intended usage of this class, so they
- * throw UnsupportOperationException.
+ *
+ * <p>
+ *     This class is aware of the specifics of {@link Name} instances with regards
+ *     to equality when working with attribute values. This comes in very handy
+ *     when working with e.g. security groups and modifications of them. If
+ *     {@link Name} instances are supplied to one of the Attribute manipulation
+ *     methods (e.g. {@link #addAttributeValue(String, Object)},
+ *     {@link #removeAttributeValue(String, Object)}, {@link #setAttributeValue(String, Object)},
+ *     or {@link #setAttributeValues(String, Object[])}), the produced modifications
+ *     will be calculated using {@link Name} equality. This means that if an the <code>member</code>
+ *     has a value of <code>"cn=John Doe,ou=People"</code>, and we call
+ *     <code>addAttributeValue("member", LdapUtils.newLdapName("CN=John Doe,OU=People")</code>,
+ *     this will <strong>not</strong> be considered a modification since the two DN
+ *     strings represent the same distinguished name (case and spacing between attributes is
+ *     disregarded).
+ * </p>
+ * <p>
+ *     Note that this is not a complete implementation of DirContext. Several
+ *     methods are not relevant for the intended usage of this class, so they
+ *     throw UnsupportOperationException.
+ * </p>
  *
  * @see #setAttributeValue(String, Object)
  * @see #setAttributeValues(String, Object[])
@@ -90,7 +105,7 @@ public class DirContextAdapter implements DirContextOperations {
 
 	private static Logger log = LoggerFactory.getLogger(DirContextAdapter.class);
 
-	private final Attributes originalAttrs;
+	private final NameAwareAttributes originalAttrs;
 
 	private LdapName dn;
 
@@ -98,7 +113,7 @@ public class DirContextAdapter implements DirContextOperations {
 
 	private boolean updateMode = false;
 
-	private Attributes updatedAttrs;
+	private NameAwareAttributes updatedAttrs;
 
 	private String referralUrl;
 
@@ -160,10 +175,10 @@ public class DirContextAdapter implements DirContextOperations {
 	public DirContextAdapter(Attributes attrs, Name dn, Name base,
 			String referralUrl) {
 		if (attrs != null) {
-			this.originalAttrs = attrs;
+			this.originalAttrs = new NameAwareAttributes(attrs);
 		}
 		else {
-			this.originalAttrs = new BasicAttributes(true);
+			this.originalAttrs = new NameAwareAttributes();
 		}
 
         if (dn != null) {
@@ -193,9 +208,9 @@ public class DirContextAdapter implements DirContextOperations {
 	 * @param master The adapter to be copied.
 	 */
 	protected DirContextAdapter(DirContextAdapter master) {
-		this.originalAttrs = (Attributes) master.originalAttrs.clone();
+		this.originalAttrs = (NameAwareAttributes) master.originalAttrs.clone();
 		this.dn = master.dn;
-		this.updatedAttrs = (Attributes) master.updatedAttrs.clone();
+		this.updatedAttrs = (NameAwareAttributes) master.updatedAttrs.clone();
 		this.updateMode = master.updateMode;
 	}
 
@@ -209,21 +224,14 @@ public class DirContextAdapter implements DirContextOperations {
 	public void setUpdateMode(boolean mode) {
 		this.updateMode = mode;
 		if (updateMode) {
-			updatedAttrs = new BasicAttributes(true);
+			updatedAttrs = new NameAwareAttributes();
 		}
 	}
 
-	/*
-	 * @see org.springframework.ldap.support.DirContextOperations#isUpdateMode()
-	 */
 	public boolean isUpdateMode() {
 		return updateMode;
 	}
 
-	/*
-	 * @seeorg.springframework.ldap.support.DirContextOperations#
-	 * getNamesOfModifiedAttributes()
-	 */
 	public String[] getNamesOfModifiedAttributes() {
 
 		List<String> tmpList = new ArrayList<String>();
@@ -264,10 +272,6 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
-	/*
-	 * @seeorg.springframework.ldap.support.AttributeModificationsAware#
-	 * getModificationItems()
-	 */
 	public ModificationItem[] getModificationItems() {
 		if (!updateMode) {
 			return new ModificationItem[0];
@@ -280,7 +284,7 @@ public class DirContextAdapter implements DirContextOperations {
 
 			// find attributes that have been changed, removed or added
 			while (attributesEnumeration.hasMore()) {
-				Attribute oneAttr = attributesEnumeration.next();
+				NameAwareAttribute oneAttr = (NameAwareAttribute) attributesEnumeration.next();
 
 				collectModifications(oneAttr, tmpList);
 			}
@@ -313,9 +317,17 @@ public class DirContextAdapter implements DirContextOperations {
 	 * @param modificationList the list in which to add the modifications.
 	 * @throws NamingException if thrown by called Attribute methods.
 	 */
-	private void collectModifications(Attribute changedAttr,
+	private void collectModifications(NameAwareAttribute changedAttr,
 			List<ModificationItem> modificationList) throws NamingException {
-		Attribute currentAttribute = originalAttrs.get(changedAttr.getID());
+		NameAwareAttribute currentAttribute = originalAttrs.get(changedAttr.getID());
+        if(changedAttr.hasValuesAsNames()) {
+            try {
+                currentAttribute.initValuesAsNames();
+            } catch(IllegalArgumentException e) {
+                log.warn("Incompatible attributes; changed attribute has Name values but " +
+                        "original cannot be converted to this");
+            }
+        }
 
 		if (changedAttr.equals(currentAttribute)) {
 			// No changes
@@ -368,15 +380,16 @@ public class DirContextAdapter implements DirContextOperations {
 			throws NamingException {
 
 		Attribute originalClone = (Attribute) originalAttr.clone();
-		Attribute addedValuesAttribute = new BasicAttribute(originalAttr
+		Attribute addedValuesAttribute = new NameAwareAttribute(originalAttr
 				.getID());
 
-		for (int i = 0; i < changedAttr.size(); i++) {
-			Object attributeValue = changedAttr.get(i);
-			if (!originalClone.remove(attributeValue)) {
-				addedValuesAttribute.add(attributeValue);
-			}
-		}
+        NamingEnumeration<?> allValues = changedAttr.getAll();
+        while(allValues.hasMoreElements()) {
+            Object attributeValue = allValues.nextElement();
+            if (!originalClone.remove(attributeValue)) {
+                addedValuesAttribute.add(attributeValue);
+            }
+        }
 
         // We have now traversed and removed all values from the original that
         // were also present in the new values. The remaining values in the
@@ -552,19 +565,10 @@ public class DirContextAdapter implements DirContextOperations {
 		return originalAttrs.get(attrId) != null;
 	}
 
-	/*
-	 * @see
-	 * org.springframework.ldap.support.DirContextOperations#getStringAttribute
-	 * (java.lang.String)
-	 */
 	public String getStringAttribute(String name) {
 		return (String) getObjectAttribute(name);
 	}
 
-	/*
-	 * @see org.springframework.ldap.support.DirContextOperations#getObjectAttribute
-	 * (java.lang.String)
-	 */
 	public Object getObjectAttribute(String name) {
 		Attribute oneAttr = originalAttrs.get(name);
 		if (oneAttr == null || oneAttr.size() == 0) { // LDAP-215
@@ -579,19 +583,11 @@ public class DirContextAdapter implements DirContextOperations {
 	}
 
 	// LDAP-215
-	/* (non-Javadoc)
-	 * @see org.springframework.ldap.core.DirContextOperations#attributeExists(java.lang.String)
-	 */
 	public boolean attributeExists(String name) {
 		Attribute oneAttr = originalAttrs.get(name);
         return oneAttr != null;
 	}
 	
-	/*
-	 * @see
-	 * org.springframework.ldap.support.DirContextOperations#setAttributeValue
-	 * (java.lang.String, java.lang.Object)
-	 */
 	public void setAttributeValue(String name, Object value) {
 		// new entry
 		if (!updateMode && value != null) {
@@ -600,7 +596,7 @@ public class DirContextAdapter implements DirContextOperations {
 
 		// updating entry
 		if (updateMode) {
-			BasicAttribute attribute = new BasicAttribute(name);
+			Attribute attribute = new NameAwareAttribute(name);
 			if (value != null) {
 				attribute.add(value);
 			}
@@ -608,13 +604,6 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.springframework.ldap.core.DirContextOperations#addAttributeValue(
-	 * java.lang.String, java.lang.Object)
-	 */
 	public void addAttributeValue(String name, Object value) {
 		addAttributeValue(name, value, DONT_ADD_IF_DUPLICATE_EXISTS);
 	}
@@ -654,13 +643,6 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.springframework.ldap.core.DirContextOperations#removeAttributeValue
-	 * (java.lang.String, java.lang.Object)
-	 */
 	public void removeAttributeValue(String name, Object value) {
 		if (!updateMode && value != null) {
 			Attribute attr = originalAttrs.get(name);
@@ -686,23 +668,13 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
-	/*
-	 * @see
-	 * org.springframework.ldap.support.DirContextOperations#setAttributeValues
-	 * (java.lang.String, java.lang.Object[])
-	 */
 	public void setAttributeValues(String name, Object[] values) {
 		setAttributeValues(name, values, ORDER_DOESNT_MATTER);
 	}
 
-	/*
-	 * @see
-	 * org.springframework.ldap.support.DirContextOperations#setAttributeValues
-	 * (java.lang.String, java.lang.Object[], boolean)
-	 */
 	public void setAttributeValues(String name, Object[] values,
 			boolean orderMatters) {
-		Attribute a = new BasicAttribute(name, orderMatters);
+		Attribute a = new NameAwareAttribute(name, orderMatters);
 
 		for (int i = 0; values != null && i < values.length; i++) {
 			a.add(values[i]);
@@ -720,9 +692,6 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
-	/*
-	 * @see org.springframework.ldap.support.DirContextOperations#update()
-	 */
 	public void update() {
 		NamingEnumeration<? extends Attribute> attributesEnumeration = null;
 
@@ -751,14 +720,9 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 
 		// Reset the attributes to be updated
-		updatedAttrs = new BasicAttributes(true);
+		updatedAttrs = new NameAwareAttributes();
 	}
 
-	/*
-	 * @see
-	 * org.springframework.ldap.core.DirContextOperations#getStringAttributes
-	 * (java.lang.String)
-	 */
 	public String[] getStringAttributes(String name) {
 		try {
             List<String> objects = collectAttributeValuesAsList(name, String.class);
@@ -770,13 +734,6 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.springframework.ldap.core.DirContextOperations#getObjectAttributes
-	 * (java.lang.String)
-	 */
 	public Object[] getObjectAttributes(String name) {
 		try {
             List<Object> list = collectAttributeValuesAsList(name, Object.class);
@@ -864,7 +821,7 @@ public class DirContextAdapter implements DirContextOperations {
 			throw new NameNotFoundException();
 		}
 
-		Attributes a = new BasicAttributes(true);
+		Attributes a = new NameAwareAttributes();
 		Attribute target;
         for (String attrId : attrIds) {
             target = originalAttrs.get(attrId);

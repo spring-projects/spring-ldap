@@ -19,12 +19,14 @@ package org.springframework.ldap.odm.core.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.LdapDataEntry;
+import org.springframework.core.SpringVersion;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.filter.Filter;
 import org.springframework.ldap.odm.annotations.DnAttribute;
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 import org.springframework.ldap.odm.typeconversion.ConverterManager;
+import org.springframework.ldap.odm.typeconversion.impl.ConversionServiceConverterManager;
 import org.springframework.ldap.odm.typeconversion.impl.ConverterManagerImpl;
 import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.ldap.support.LdapUtils;
@@ -66,7 +68,16 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 
 
     public DefaultObjectDirectoryMapper() {
-        this.converterManager = new ConverterManagerImpl();
+        if(isAtLeast30()) {
+            this.converterManager = new ConversionServiceConverterManager();
+        } else {
+            this.converterManager = new ConverterManagerImpl();
+        }
+
+    }
+
+    private boolean isAtLeast30() {
+        return SpringVersion.getVersion().compareTo("3.0") > 0;
     }
 
     public void setConverterManager(ConverterManager converterManager) {
@@ -126,7 +137,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
         for (Field field : metaData) {
             AttributeMetaData attributeInfo = metaData.getAttribute(field);
             if (!attributeInfo.isTransient() && !attributeInfo.isId() && !(attributeInfo.isObjectClass())) {
-                Class<?> jndiClass = (attributeInfo.isBinary()) ? byte[].class : String.class;
+                Class<?> jndiClass = attributeInfo.getJndiClass();
                 Class<?> javaClass = attributeInfo.getValueClass();
                 if (!converterManager.canConvert(jndiClass, attributeInfo.getSyntax(), javaClass)) {
                     throw new InvalidEntryException(String.format(
@@ -184,9 +195,9 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
             if (!attributeInfo.isTransient() && !attributeInfo.isId() && !(attributeInfo.isObjectClass())) {
                 try {
                     // If this is a "binary" object the JNDI expects a byte[] otherwise a String
-                    Class<?> targetClass = (attributeInfo.isBinary()) ? byte[].class : String.class;
+                    Class<?> targetClass = attributeInfo.getJndiClass();
                     // Multi valued?
-                    if (!attributeInfo.isList()) {
+                    if (!attributeInfo.isCollection()) {
                         populateSingleValueAttribute(entry, context, field, attributeInfo, targetClass);
 
                     } else {
@@ -204,7 +215,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 
     private void populateMultiValueAttribute(Object entry, LdapDataEntry context, Field field, AttributeMetaData attributeInfo, Class<?> targetClass) throws IllegalAccessException {
         // We need to build up a list of of the values
-        List<String> attributeValues = new ArrayList<String>();
+        List<Object> attributeValues = new ArrayList<Object>();
         // Get the list of values
         Collection<?> fieldValues = (Collection<?>)field.get(entry);
         // Ignore null lists
@@ -212,7 +223,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
             for (final Object o : fieldValues) {
                 // Ignore null values
                 if (o != null) {
-                    attributeValues.add((String)converterManager.convert(o, attributeInfo.getSyntax(),
+                    attributeValues.add(converterManager.convert(o, attributeInfo.getSyntax(),
                             targetClass));
                 }
             }
@@ -269,7 +280,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
                 Name dn = context.getDn();
                 if (!attributeInfo.isTransient() && !attributeInfo.isId()) {
                     // Not the ID - but is is multi valued?
-                    if (!attributeInfo.isList()) {
+                    if (!attributeInfo.isCollection()) {
                         // No - its single valued, grab the JNDI attribute that corresponds to the metadata on the
                         // current field
                         populateSingleValueField(result, attributeValueMap, field, attributeInfo);
@@ -326,7 +337,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 
     private <T> void populateMultiValueField(T result, Map<CaseIgnoreString, Attribute> attributeValueMap, Field field, AttributeMetaData attributeInfo) throws NamingException, IllegalAccessException {
         // We need to build up a list of values
-        List<Object> fieldValues = new ArrayList<Object>();
+        Collection<Object> fieldValues = attributeInfo.newCollectionInstance();
         // Grab the attribute from the JNDI representation
         Attribute currentAttribute = attributeValueMap.get(attributeInfo.getName());
         // There is no guarantee that this attribute is present in the directory - so ignore nulls

@@ -18,5 +18,7 @@ dependencies {
                 "org.springframework:spring-context:$spring20Version",
                 "org.springframework:spring-core:$spring20Version",
                 "org.springframework:spring-dao:$spring20Version",
-                "org.springframework:spring-beans:$spring20Version"
+                "org.springframework:spring-beans:$spring20Version",
+                "org.slf4j:slf4j-log4j12:$slf4jVersion"
+
 }

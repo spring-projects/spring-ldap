@@ -18,12 +18,14 @@ package org.springframework.ldap.core.support;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.NameAwareAttributes;
 import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.CompositeName;
 import javax.naming.Context;
 import javax.naming.InvalidNameException;
 import javax.naming.Name;
+import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttributes;
 import java.util.Hashtable;
 
@@ -54,7 +56,7 @@ public class DefaultDirObjectFactoryTest {
 
     @Test
 	public void testGetObjectInstance() throws Exception {
-		BasicAttributes expectedAttributes = new BasicAttributes();
+		Attributes expectedAttributes = new NameAwareAttributes();
 		expectedAttributes.put("someAttribute", "someValue");
 
 		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(contextMock, DN, null,
@@ -68,7 +70,7 @@ public class DefaultDirObjectFactoryTest {
 
     @Test
 	public void testGetObjectInstance_CompositeName() throws Exception {
-		BasicAttributes expectedAttributes = new BasicAttributes();
+        Attributes expectedAttributes = new NameAwareAttributes();
 		expectedAttributes.put("someAttribute", "someValue");
 
 		CompositeName name = new CompositeName();
@@ -85,7 +87,7 @@ public class DefaultDirObjectFactoryTest {
 
     @Test
 	public void testGetObjectInstance_nullObject() throws Exception {
-		BasicAttributes expectedAttributes = new BasicAttributes();
+		Attributes expectedAttributes = new NameAwareAttributes();
 		expectedAttributes.put("someAttribute", "someValue");
 
 		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(null, DN, null, new Hashtable(),
@@ -97,7 +99,7 @@ public class DefaultDirObjectFactoryTest {
 
     @Test
 	public void testGetObjectInstance_ObjectNotContext() throws Exception {
-		BasicAttributes expectedAttributes = new BasicAttributes();
+		Attributes expectedAttributes = new NameAwareAttributes();
 		expectedAttributes.put("someAttribute", "someValue");
 
 		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(new Object(), DN, null,
@@ -114,7 +116,7 @@ public class DefaultDirObjectFactoryTest {
 	 */
     @Test
 	public void testGetObjectInstance_BaseSet() throws Exception {
-		BasicAttributes expectedAttributes = new BasicAttributes();
+		Attributes expectedAttributes = new NameAwareAttributes();
 		expectedAttributes.put("someAttribute", "someValue");
 
 		when(contextMock2.getNameInNamespace()).thenReturn("dc=jayway, dc=se");

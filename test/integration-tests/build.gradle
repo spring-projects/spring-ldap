@@ -46,7 +46,9 @@ dependencies {
                 "aspectj:aspectjweaver:1.5.3",
                 "hsqldb:hsqldb:1.8.0.7",
                 "junit:junit:$junitVersion",
-                "org.springframework.security:spring-security-config:$springSecurityVersion"
+                "org.springframework.security:spring-security-config:$springSecurityVersion",
+                "org.slf4j:slf4j-log4j12:$slf4jVersion"
+
 
     testCompile("org.springframework.security:spring-security-ldap:$springSecurityVersion") {
         exclude group: "org.springframework.ldap", module: "spring-ldap-core"

@@ -42,7 +42,7 @@ import static org.junit.Assert.fail;
 
 /**
  * Tests the DirContextAdapter class.
- * 
+ *
  * @author Andreas Ronge
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
@@ -1114,7 +1114,7 @@ public class DirContextAdapterTest {
 	/**
 	 * Test for LDAP-15: DirContextAdapter.setAttribute(). Verifies that setting
 	 * an Attribute should modify updatedAttrs if in update mode.
-	 * 
+	 *
 	 * @throws NamingException
 	 */
     @Test
@@ -1223,4 +1223,133 @@ public class DirContextAdapterTest {
 		DirContextAdapter tested = new DirContextAdapter("cn=john doe, ou=company");
 		assertEquals(LdapUtils.newLdapName("cn=john doe, ou=company"), tested.getDn());
 	}
+
+    @Test
+    public void testAddDnAttributeValueIdentical() {
+        BasicAttributes attributes = new BasicAttributes();
+        attributes.put("uniqueMember", "cn=john doe, ou=company");
+
+        DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+        tested.setUpdateMode(true);
+
+        tested.addAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
+        ModificationItem[] modificationItems = tested.getModificationItems();
+        assertEquals(0, modificationItems.length);
+    }
+
+    @Test
+    public void testAddDnAttributeSyntacticallyEqual() {
+        BasicAttributes attributes = new BasicAttributes();
+        attributes.put("uniqueMember", "cn=john doe,OU=company");
+
+        DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+        tested.setUpdateMode(true);
+
+        tested.addAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
+        ModificationItem[] modificationItems = tested.getModificationItems();
+        assertEquals(0, modificationItems.length);
+    }
+
+    @Test
+    public void testRemoveDnAttributeSyntacticallyEqual() throws NamingException {
+        BasicAttributes attributes = new BasicAttributes();
+        attributes.put("uniqueMember", "cn=john doe,OU=company");
+
+        DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+        tested.setUpdateMode(true);
+
+        tested.removeAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
+        ModificationItem[] modificationItems = tested.getModificationItems();
+        assertEquals(1, modificationItems.length);
+
+        ModificationItem modificationItem = modificationItems[0];
+        assertEquals(DirContext.REMOVE_ATTRIBUTE, modificationItem.getModificationOp());
+        assertEquals("uniqueMember", modificationItem.getAttribute().getID());
+    }
+
+    @Test
+    public void testRemoveOneOfSeveralDnAttributeSyntacticallyEqual() throws NamingException {
+        BasicAttributes attributes = new BasicAttributes();
+        BasicAttribute attribute = new BasicAttribute("uniqueMember", "cn=john doe,OU=company");
+        attribute.add("cn=jane doe, ou=company");
+        attributes.put(attribute);
+
+        DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+        tested.setUpdateMode(true);
+
+        tested.removeAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
+        ModificationItem[] modificationItems = tested.getModificationItems();
+        assertEquals(1, modificationItems.length);
+
+        ModificationItem modificationItem = modificationItems[0];
+        assertEquals(DirContext.REMOVE_ATTRIBUTE, modificationItem.getModificationOp());
+        assertEquals("uniqueMember", modificationItem.getAttribute().getID());
+        assertEquals("cn=john doe,OU=company", modificationItem.getAttribute().get());
+    }
+
+    @Test
+    public void testAddDnAttributeNewValue() throws NamingException {
+        BasicAttributes attributes = new BasicAttributes();
+        attributes.put("uniqueMember", "cn=john doe, ou=company");
+
+        DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+        tested.setUpdateMode(true);
+
+        tested.addAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=jane doe, ou=company"));
+        ModificationItem[] modificationItems = tested.getModificationItems();
+        assertEquals(1, modificationItems.length);
+
+        ModificationItem modificationItem = modificationItems[0];
+        assertEquals(DirContext.ADD_ATTRIBUTE, modificationItem.getModificationOp());
+        assertEquals("uniqueMember", modificationItem.getAttribute().getID());
+        assertEquals("cn=jane doe, ou=company", modificationItem.getAttribute().get());
+    }
+
+    @Test
+    public void testSetDnAttributeValueIdentical() {
+        BasicAttributes attributes = new BasicAttributes();
+        attributes.put("uniqueMember", "cn=john doe, ou=company");
+
+        DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+        tested.setUpdateMode(true);
+
+        tested.setAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
+        ModificationItem[] modificationItems = tested.getModificationItems();
+        assertEquals(0, modificationItems.length);
+    }
+
+    @Test
+    public void testSetDnAttributesValueIdentical() {
+        BasicAttributes attributes = new BasicAttributes();
+        attributes.put("uniqueMember", "cn=john doe, ou=company");
+
+        DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+        tested.setUpdateMode(true);
+
+        tested.setAttributeValues("uniqueMember", new Object[]{LdapUtils.newLdapName("cn=john doe, ou=company")});
+        ModificationItem[] modificationItems = tested.getModificationItems();
+        assertEquals(0, modificationItems.length);
+    }
+
+    @Test
+    public void testSetDnAttributesValuesOneNewEntry() throws NamingException {
+        BasicAttributes attributes = new BasicAttributes();
+        attributes.put("uniqueMember", "cn=john doe, ou=company");
+
+        DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+        tested.setUpdateMode(true);
+
+        tested.setAttributeValues("uniqueMember", new Object[]{
+                LdapUtils.newLdapName("cn=john doe, ou=company"),
+                LdapUtils.newLdapName("cn=jane doe, ou=company")
+        });
+
+        ModificationItem[] modificationItems = tested.getModificationItems();
+        assertEquals(1, modificationItems.length);
+
+        ModificationItem modificationItem = modificationItems[0];
+        assertEquals(DirContext.ADD_ATTRIBUTE, modificationItem.getModificationOp());
+        assertEquals("uniqueMember", modificationItem.getAttribute().getID());
+        assertEquals("cn=jane doe, ou=company", modificationItem.getAttribute().get());
+    }
 }
