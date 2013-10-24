@@ -18,7 +18,6 @@ package org.springframework.ldap.transaction.compensating.manager;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextProxy;
-import org.springframework.ldap.core.support.BaseLdapPathContextSource;
 import org.springframework.ldap.core.support.DelegatingBaseLdapPathContextSourceSupport;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -102,13 +101,4 @@ public class TransactionAwareContextSourceProxy
 	public DirContext getContext(String principal, String credentials) throws NamingException {
 		throw new UnsupportedOperationException("Not supported on a transacted ContextSource");
 	}
-
-    private BaseLdapPathContextSource convertToBaseLdapPathContextSource(ContextSource contextSource) {
-        if (contextSource instanceof BaseLdapPathContextSource) {
-            return (BaseLdapPathContextSource) contextSource;
-        }
-
-        throw new UnsupportedOperationException("This operation is not supported on a target ContextSource that does not " +
-                " implement BaseLdapPathContextSource");
-    }
 }

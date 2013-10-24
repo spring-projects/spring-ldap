@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
 /**
  * @author Mattias Hellborg Arthursson
  */
-class ParserUtils {
+final class ParserUtils {
     static final String NAMESPACE = "http://www.springframework.org/schema/ldap";
 
     /**

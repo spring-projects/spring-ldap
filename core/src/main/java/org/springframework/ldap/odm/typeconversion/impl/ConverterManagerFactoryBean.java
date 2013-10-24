@@ -91,7 +91,7 @@ import java.util.Set;
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
  */
 public final class ConverterManagerFactoryBean implements FactoryBean {
-    private static Logger LOG = LoggerFactory.getLogger(ConverterManagerFactoryBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConverterManagerFactoryBean.class);
 
     /** 
      * Configuration information for a single Converter instance.

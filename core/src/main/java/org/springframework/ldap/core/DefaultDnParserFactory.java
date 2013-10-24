@@ -24,7 +24,14 @@ import java.io.StringReader;
  * @author Mattias Hellborg Arthursson
  * @deprecated {@link DistinguishedName} and associated classes are deprecated as of 2.0.
  */
-public class DefaultDnParserFactory {
+public final class DefaultDnParserFactory {
+    /**
+     * Not to be instantiated.
+     */
+    private DefaultDnParserFactory() {
+
+    }
+
     /**
      * Create a new DnParser instance.
      * 

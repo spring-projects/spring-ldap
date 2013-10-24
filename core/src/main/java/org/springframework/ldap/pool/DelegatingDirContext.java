@@ -238,9 +238,9 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
     /**
      * @see javax.naming.directory.DirContext#modifyAttributes(javax.naming.Name, int, javax.naming.directory.Attributes)
      */
-    public void modifyAttributes(Name name, int mod_op, Attributes attrs) throws NamingException {
+    public void modifyAttributes(Name name, int modOp, Attributes attrs) throws NamingException {
         this.assertOpen();
-        this.getDelegateDirContext().modifyAttributes(name, mod_op, attrs);
+        this.getDelegateDirContext().modifyAttributes(name, modOp, attrs);
     }
 
     /**
@@ -254,9 +254,9 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
     /**
      * @see javax.naming.directory.DirContext#modifyAttributes(java.lang.String, int, javax.naming.directory.Attributes)
      */
-    public void modifyAttributes(String name, int mod_op, Attributes attrs) throws NamingException {
+    public void modifyAttributes(String name, int modOp, Attributes attrs) throws NamingException {
         this.assertOpen();
-        this.getDelegateDirContext().modifyAttributes(name, mod_op, attrs);
+        this.getDelegateDirContext().modifyAttributes(name, modOp, attrs);
     }
 
     /**

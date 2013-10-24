@@ -39,7 +39,7 @@ import java.util.Set;
  * @author Mattias Hellborg Arthursson
  * @since 2.0
  */
-public class NameAwareAttribute implements Attribute {
+public final class NameAwareAttribute implements Attribute {
 
     private final String id;
     private final boolean orderMatters;
@@ -64,9 +64,9 @@ public class NameAwareAttribute implements Attribute {
     public NameAwareAttribute(Attribute attribute) {
         this(attribute.getID(), attribute.isOrdered());
         try {
-            NamingEnumeration<?> values = attribute.getAll();
-            while(values.hasMore()) {
-                this.add(values.next());
+            NamingEnumeration<?> incomingValues = attribute.getAll();
+            while(incomingValues.hasMore()) {
+                this.add(incomingValues.next());
             }
         } catch (NamingException e) {
             throw LdapUtils.convertLdapException(e);
@@ -155,12 +155,12 @@ public class NameAwareAttribute implements Attribute {
             return;
         }
 
-        Map<Name, String> valuesAsNames = new HashMap<Name, String>();
+        Map<Name, String> newValuesAsNames = new HashMap<Name, String>();
         for (Object value : values) {
             if (value instanceof String) {
                 String s = (String) value;
                 try {
-                    valuesAsNames.put(LdapUtils.newLdapName(s), s);
+                    newValuesAsNames.put(LdapUtils.newLdapName(s), s);
                 } catch (InvalidNameException e) {
                     throw new IllegalArgumentException("This instance has values that are not valid distinguished names; " +
                             "cannot handle Name values");
@@ -171,7 +171,7 @@ public class NameAwareAttribute implements Attribute {
             }
         }
 
-        this.valuesAsNames = valuesAsNames;
+        this.valuesAsNames = newValuesAsNames;
     }
 
     public boolean hasValuesAsNames() {

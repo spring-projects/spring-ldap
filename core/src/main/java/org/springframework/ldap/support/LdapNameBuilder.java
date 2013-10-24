@@ -29,7 +29,7 @@ import javax.naming.ldap.Rdn;
  * @author Mattias Hellborg Arthursson
  * @since 2.0
  */
-public class LdapNameBuilder {
+public final class LdapNameBuilder {
 
     private final LdapName ldapName;
 

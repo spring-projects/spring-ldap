@@ -92,14 +92,14 @@ import java.util.regex.Pattern;
  * 
  */
 public final class SchemaToJava {
-    private static Logger LOG = LoggerFactory.getLogger(SchemaToJava.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SchemaToJava.class);
 
     // Name of the FreeMarker template used to generate the Java code.
-    private static String TEMPLATE_FILE = "oc-to-java.ftl";
+    private static final String TEMPLATE_FILE = "oc-to-java.ftl";
     
     // Name of file containing the list of attributes syntaxes to 
     // returned as byte[] by the JNDI LDAP provider.
-    private static String BINARY_FILE = "binary-attributes.txt";
+    private static final String BINARY_FILE = "binary-attributes.txt";
     
     // Class to use a base for loading resources
     private static final Class<?> loaderClass=SchemaToJava.class;
@@ -153,6 +153,13 @@ public final class SchemaToJava {
         options.addOption(Flag.SYNTAX_MAP.getShort(), Flag.SYNTAX_MAP.getLong(), true, "Syntax map file (optional)");
         options.addOption(Flag.OUTPUT_DIR.getShort(), Flag.OUTPUT_DIR.getLong(), true, "Base output directory (defaults to .)");
         options.addOption(Flag.HELP.getShort(), Flag.HELP.getLong(), false, "Print this help message");
+    }
+
+    /**
+     * Not to be instantiated.
+     */
+    private SchemaToJava() {
+
     }
 
     // Read list of LDAP syntaxes that are returned as byte[] 

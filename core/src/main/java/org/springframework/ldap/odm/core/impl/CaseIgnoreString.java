@@ -16,14 +16,15 @@
 
 package org.springframework.ldap.odm.core.impl;
 
+import org.springframework.util.Assert;
+
 // A case independent String wrapper.
 /* package */ final class CaseIgnoreString implements Comparable<CaseIgnoreString> {
     private final String string;
     private final int hashCode;  
     
     public CaseIgnoreString(String string) {
-        if (string == null)
-            throw new NullPointerException();
+        Assert.notNull(string, "string must not be null");
         this.string = string;
         hashCode = string.toUpperCase().hashCode();
     }
@@ -38,7 +39,7 @@ package org.springframework.ldap.odm.core.impl;
     }
 
     public int compareTo(CaseIgnoreString other) {
-        CaseIgnoreString cis = (CaseIgnoreString)other;
+        CaseIgnoreString cis = other;
         return String.CASE_INSENSITIVE_ORDER.compare(string, cis.string);
     }
 

@@ -32,7 +32,7 @@ import java.io.File;
  * @author Mattias Hellborg Arthursson
  * @since 1.3.2
  */
-public class EmbeddedLdapServer {
+public final class EmbeddedLdapServer {
     private final DirectoryService directoryService;
     private final LdapServer ldapServer;
 

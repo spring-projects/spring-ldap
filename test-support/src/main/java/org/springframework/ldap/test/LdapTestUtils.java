@@ -27,22 +27,16 @@ import org.springframework.ldap.ldif.parser.LdifParser;
 import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.Binding;
-import javax.naming.Context;
 import javax.naming.ContextNotEmptyException;
 import javax.naming.Name;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.BasicAttribute;
-import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapName;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Hashtable;
-import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -51,7 +45,7 @@ import java.util.Set;
  *
  * @author Mattias Hellborg Arthursson
  */
-public class LdapTestUtils {
+public final class LdapTestUtils {
 
     public static final String DEFAULT_PRINCIPAL = "uid=admin,ou=system";
     public static final String DEFAULT_PASSWORD = "secret";
@@ -270,31 +264,5 @@ public class LdapTestUtils {
                 // Ignore this
             }
         }
-    }
-
-
-    private static Hashtable createEnv(String principal, String credentials) {
-        Hashtable env = new Properties();
-
-        env.put(Context.PROVIDER_URL, "");
-        env.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.directory.server.jndi.ServerContextFactory");
-
-        env.put(Context.SECURITY_PRINCIPAL, principal);
-        env.put(Context.SECURITY_CREDENTIALS, credentials);
-        env.put(Context.SECURITY_AUTHENTICATION, "simple");
-
-        return env;
-    }
-
-    private static Attributes getRootPartitionAttributes(String defaultPartitionName) {
-        BasicAttributes attributes = new BasicAttributes();
-        BasicAttribute objectClassAttribute = new BasicAttribute("objectClass");
-        objectClassAttribute.add("top");
-        objectClassAttribute.add("domain");
-        objectClassAttribute.add("extensibleObject");
-        attributes.put(objectClassAttribute);
-        attributes.put("dc", defaultPartitionName);
-
-        return attributes;
     }
 }

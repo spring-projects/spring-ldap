@@ -290,8 +290,9 @@ public class LdifParser implements Parser, InitializingBean {
 					log.trace("...done parsing record. (EndOfRecord)");
 					
 					//Validate record and return.
-					if (record == null) return null;
-					else {
+					if (record == null) {
+                        return null;
+                    } else {
 						try {
 							//flush buffer.
 							addAttributeToRecord(builder.toString(), record);

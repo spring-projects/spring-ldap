@@ -53,7 +53,7 @@ import java.text.MessageFormat;
  * @see org.springframework.ldap.core.LdapOperations#searchForObject(LdapQuery, org.springframework.ldap.core.ContextMapper)
  * @see org.springframework.ldap.core.LdapOperations#searchForContext(LdapQuery)
  */
-public class LdapQueryBuilder implements LdapQuery {
+public final class LdapQueryBuilder implements LdapQuery {
     private Name base = LdapUtils.emptyLdapName();
     private SearchScope searchScope = null;
     private Integer countLimit = null;
@@ -171,7 +171,7 @@ public class LdapQueryBuilder implements LdapQuery {
      * validated or escaped in any way. <b>Never</b> use direct user input and use it concatenating strings
      * to use as LDAP filters. Doing so opens up for &quot;LDAP injection&quot;, where malicious user
      * may inject specifically constructed data to form filters at their convenience. When user input is used
-     * consider using {@link #where(String)} or {@link #filter(String, String...)} instead.
+     * consider using {@link #where(String)} or {@link #filter(String, Object...)} instead.
      *
      * @param hardcodedFilter The hardcoded filter string to use in the search.
      * @return this instance.

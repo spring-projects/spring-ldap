@@ -63,8 +63,8 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
     // The converter manager to use to translate values between LDAP and Java
     private ConverterManager converterManager;
 
-    private static String OBJECT_CLASS_ATTRIBUTE="objectclass";
-    private static CaseIgnoreString OBJECT_CLASS_ATTRIBUTE_CI=new CaseIgnoreString(OBJECT_CLASS_ATTRIBUTE);
+    private static final String OBJECT_CLASS_ATTRIBUTE="objectclass";
+    private static final CaseIgnoreString OBJECT_CLASS_ATTRIBUTE_CI=new CaseIgnoreString(OBJECT_CLASS_ATTRIBUTE);
 
 
     public DefaultObjectDirectoryMapper() {
@@ -137,18 +137,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
         for (Field field : metaData) {
             AttributeMetaData attributeInfo = metaData.getAttribute(field);
             if (!attributeInfo.isTransient() && !attributeInfo.isId() && !(attributeInfo.isObjectClass())) {
-                Class<?> jndiClass = attributeInfo.getJndiClass();
-                Class<?> javaClass = attributeInfo.getValueClass();
-                if (!converterManager.canConvert(jndiClass, attributeInfo.getSyntax(), javaClass)) {
-                    throw new InvalidEntryException(String.format(
-                            "Missing converter from %1$s to %2$s, this is needed for field %3$s on Entry %4$s",
-                            jndiClass, javaClass, field.getName(), managedClass));
-                }
-                if (!converterManager.canConvert(javaClass, attributeInfo.getSyntax(), jndiClass)) {
-                    throw new InvalidEntryException(String.format(
-                            "Missing converter from %1$s to %2$s, this is needed for field %3$s on Entry %4$s",
-                            javaClass, jndiClass, field.getName(), managedClass));
-                }
+                verifyConversion(managedClass, field, attributeInfo);
             }
         }
 
@@ -166,6 +155,21 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
         }
 
         return newValue;
+    }
+
+    private void verifyConversion(Class<?> managedClass, Field field, AttributeMetaData attributeInfo) {
+        Class<?> jndiClass = attributeInfo.getJndiClass();
+        Class<?> javaClass = attributeInfo.getValueClass();
+        if (!converterManager.canConvert(jndiClass, attributeInfo.getSyntax(), javaClass)) {
+            throw new InvalidEntryException(String.format(
+                    "Missing converter from %1$s to %2$s, this is needed for field %3$s on Entry %4$s",
+                    jndiClass, javaClass, field.getName(), managedClass));
+        }
+        if (!converterManager.canConvert(javaClass, attributeInfo.getSyntax(), jndiClass)) {
+            throw new InvalidEntryException(String.format(
+                    "Missing converter from %1$s to %2$s, this is needed for field %3$s on Entry %4$s",
+                    javaClass, jndiClass, field.getName(), managedClass));
+        }
     }
 
     @Override

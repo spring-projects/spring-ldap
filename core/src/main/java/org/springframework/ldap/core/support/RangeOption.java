@@ -35,7 +35,7 @@ class RangeOption implements Comparable<RangeOption> {
     private int initial = 0;
     private int terminal = TERMINAL_END_OF_RANGE;
 
-    private static Pattern RANGE_PATTERN = Pattern.compile("^Range=([0-9]+)(-([0-9]+|\\*))?$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern RANGE_PATTERN = Pattern.compile("^Range=([0-9]+)(-([0-9]+|\\*))?$", Pattern.CASE_INSENSITIVE);
 
     public RangeOption(int initial) {
         this(initial, TERMINAL_END_OF_RANGE);
@@ -91,10 +91,11 @@ class RangeOption implements Comparable<RangeOption> {
         if (!isTerminalMissing()) {
             rangeBuilder.append('-');
 
-            if (isTerminalEndOfRange())
+            if (isTerminalEndOfRange()) {
                 rangeBuilder.append('*');
-            else
+            } else {
                 rangeBuilder.append(terminal);
+            }
         }
     }
 
@@ -115,10 +116,11 @@ class RangeOption implements Comparable<RangeOption> {
         if (rangeMatcher.group(2) != null) {
             String terminalStr = rangeMatcher.group(3);
 
-            if ("*".equals(terminalStr))
+            if ("*".equals(terminalStr)) {
                 terminal = TERMINAL_END_OF_RANGE;
-            else
+            } else {
                 terminal = Integer.parseInt(terminalStr);
+            }
         }
 
         return new RangeOption(initial, terminal);

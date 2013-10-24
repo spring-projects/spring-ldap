@@ -24,7 +24,7 @@ import org.springframework.ldap.BadLdapGrammarException;
  * @author Adam Skogman
  * @author Mattias Hellborg Arthursson
  */
-public class LdapEncoder {
+public final class LdapEncoder {
 
     private static String[] nameEscapeTable = new String[96];
 
@@ -75,10 +75,11 @@ public class LdapEncoder {
 
         String raw = Integer.toHexString(c).toUpperCase();
 
-        if (raw.length() > 1)
+        if (raw.length() > 1) {
             return raw;
-        else
+        } else {
             return "0" + raw;
+        }
     }
 
     /**

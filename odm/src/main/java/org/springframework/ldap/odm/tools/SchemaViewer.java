@@ -1,7 +1,11 @@
 package org.springframework.ldap.odm.tools;
 
-import java.io.PrintStream;
-import java.util.Hashtable;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.PosixParser;
 
 import javax.naming.AuthenticationException;
 import javax.naming.CommunicationException;
@@ -14,13 +18,8 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
+import java.io.PrintStream;
+import java.util.Hashtable;
 
 /**
  * A simple utility to list LDAP directory schema.
@@ -111,6 +110,13 @@ public final class SchemaViewer {
         options.addOption(Flag.ERROR.getShort(), Flag.ERROR.getLong(), false, "Send output to standard error");
     }
 
+    /**
+     * Not to be instantiated.
+     */
+    private SchemaViewer() {
+
+    }
+
     private static void printAttrs(Attributes attrs) throws NamingException {
         NamingEnumeration<? extends Attribute> attrsEnum = attrs.getAll();
         while (attrsEnum.hasMore()) {
@@ -161,7 +167,7 @@ public final class SchemaViewer {
     }
 
     private static PrintStream outstream=System.out;
-    private static String WILDCARD = "?";
+    private final static String WILDCARD = "?";
 
     public static void main(String[] argv) {
         CommandLineParser parser = new PosixParser();

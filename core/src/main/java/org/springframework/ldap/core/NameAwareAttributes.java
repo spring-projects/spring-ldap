@@ -30,7 +30,7 @@ import java.util.Map;
  * @author Mattias Hellborg Arthursson
  * @since 2.0
  */
-public class NameAwareAttributes implements Attributes {
+public final class NameAwareAttributes implements Attributes {
     private Map<String, NameAwareAttribute> attributes = new HashMap<String, NameAwareAttribute>();
 
     /**

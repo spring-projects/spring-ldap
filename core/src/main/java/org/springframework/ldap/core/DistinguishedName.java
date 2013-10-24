@@ -220,7 +220,7 @@ public class DistinguishedName implements Name {
 	 * 
 	 * @param path the LDAP path to parse.
 	 */
-	protected void parse(String path) {
+	protected final void parse(String path) {
 		DnParser parser = DefaultDnParserFactory.createDnParser(unmangleCompositeName(path));
 		DistinguishedName dn;
 		try {
@@ -445,10 +445,7 @@ public class DistinguishedName implements Name {
 		}
 
 		// Done
-		if (!shortiter.hasNext() && longname.equals(shortname))
-			return true;
-		else
-			return false;
+        return !shortiter.hasNext() && longname.equals(shortname);
 
 	}
 
@@ -522,8 +519,9 @@ public class DistinguishedName implements Name {
 	 */
 	public void removeFirst(Name path) {
 		if (path != null && this.startsWith(path)) {
-			for (int i = 0; i < path.size(); i++)
+			for (int i = 0; i < path.size(); i++) {
 				this.removeFirst();
+            }
 		}
 	}
 
