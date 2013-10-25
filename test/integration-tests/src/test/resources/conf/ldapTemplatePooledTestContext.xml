@@ -22,10 +22,10 @@
 	<import resource="classpath:/conf/commonTestContext.xml" />
 
     <ldap:context-source
-            password="${password}"
+            password="secret"
             url="ldap://localhost:1888"
-            username="${userDn}"
-            base="dc=jayway,dc=se">
+            username="uid=admin,ou=system"
+            base="dc=261consulting,dc=com">
 
         <ldap:pooling
                 max-active="1"

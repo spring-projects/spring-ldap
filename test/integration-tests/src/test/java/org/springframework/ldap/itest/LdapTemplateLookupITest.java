@@ -22,10 +22,6 @@ import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.support.AbstractContextSource;
-import org.springframework.ldap.itest.Person;
-import org.springframework.ldap.itest.PersonAttributesMapper;
-import org.springframework.ldap.itest.PersonContextMapper;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -72,7 +68,7 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 		DirContextAdapter result = (DirContextAdapter) tested.lookup("");
 
 		assertEquals("", result.getDn().toString());
-		assertEquals("dc=jayway,dc=se", result.getNameInNamespace());
+		assertEquals(base, result.getNameInNamespace());
 	}
 
 	@Test
@@ -214,7 +210,7 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 
         LdapName expectedName = LdapUtils.newLdapName(expectedDn);
         assertEquals(expectedName, result.getDn());
-		assertEquals("cn=Some Person2,ou=company1,c=Sweden,dc=jayway,dc=se", result.getNameInNamespace());
+		assertEquals("cn=Some Person2,ou=company1,c=Sweden," + base, result.getNameInNamespace());
 	}
 
 	@Test
@@ -222,29 +218,6 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 		DirContextAdapter result = (DirContextAdapter) tested.lookup("cn=Some Person+sn=Person,ou=company1,c=Norway");
 
 		assertEquals("cn=Some Person+sn=Person,ou=company1,c=Norway", result.getDn().toString());
-		assertEquals("cn=Some Person+sn=Person,ou=company1,c=Norway,dc=jayway,dc=se", result.getNameInNamespace());
-	}
-
-	/**
-	 * Tests bind and lookup with Java objects where the ContextSource already
-	 * has a DirObjectFactory configured.
-	 */
-	@Test
-	public void testBindJavaObject() throws Exception {
-		AbstractContextSource contextSource = (AbstractContextSource) tested.getContextSource();
-		Class originalObjectFactory = contextSource.getDirObjectFactory();
-		try {
-			contextSource.setDirObjectFactory(null);
-			contextSource.afterPropertiesSet();
-			tested.bind("cn=myRandomInt", new Integer(54321), null);
-			Integer result = (Integer) tested.lookup("cn=myRandomInt");
-			assertEquals(54321, result.intValue());
-		}
-		finally {
-			// reset the DirObjectFactory so as not to disturb other tests
-			tested.unbind("cn=myRandomInt");
-			contextSource.setDirObjectFactory(originalObjectFactory);
-			contextSource.afterPropertiesSet();
-		}
+		assertEquals("cn=Some Person+sn=Person,ou=company1,c=Norway," + base, result.getNameInNamespace());
 	}
 }

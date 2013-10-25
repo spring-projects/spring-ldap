@@ -6,19 +6,9 @@
     http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd">
 
     <import resource="classpath:/conf/commonTestContext.xml"/>
+    <import resource="classpath:/conf/commonContextSourceConfig.xml"/>
 
-    <bean id="contextSource"
-          class="org.springframework.ldap.test.TestContextSourceFactoryBean">
-        <property name="defaultPartitionSuffix" value="dc=jayway,dc=se" />
-        <property name="defaultPartitionName" value="jayway" />
-        <property name="principal" value="${userDn}" />
-        <property name="password" value="${password}" />
-        <property name="ldifFile" value="classpath:/setup_data.ldif" />
-        <property name="port" value="1888" />
-        <property name="pooled" value="false" />
-    </bean>
-
-    <sec:ldap-server url="${urls}" />
+    <sec:ldap-server url="${url}" />
     <sec:authentication-manager>
         <sec:ldap-authentication-provider
                 group-search-filter="member={0}"

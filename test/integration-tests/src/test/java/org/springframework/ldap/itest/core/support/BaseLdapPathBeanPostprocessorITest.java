@@ -43,10 +43,10 @@ public class BaseLdapPathBeanPostprocessorITest {
 
 		DistinguishedName base = tested.getBase();
 		assertNotNull(base);
-		assertEquals(new DistinguishedName("dc=jayway,dc=se"), base);
+		assertEquals(new DistinguishedName("dc=261consulting,dc=com"), base);
 
         DummyBaseLdapNameAware otherTested = ctx.getBean(DummyBaseLdapNameAware.class);
-        assertEquals(LdapUtils.newLdapName("dc=jayway,dc=se"), otherTested.getBaseLdapPath());
+        assertEquals(LdapUtils.newLdapName("dc=261consulting,dc=com"), otherTested.getBaseLdapPath());
     }
 
 	@Test
@@ -69,7 +69,7 @@ public class BaseLdapPathBeanPostprocessorITest {
 
 		DistinguishedName base = tested.getBase();
 		assertNotNull(base);
-		assertEquals(new DistinguishedName("cn=john doe,dc=jayway,dc=se"), base);
+		assertEquals(new DistinguishedName("cn=john doe,dc=261consulting,dc=com"), base);
 	}
 
 	@Test
@@ -103,6 +103,6 @@ public class BaseLdapPathBeanPostprocessorITest {
 
 		DistinguishedName base = tested.getBase();
 		assertNotNull(base);
-		assertEquals(new DistinguishedName("dc=jayway,dc=se"), base);
+		assertEquals(new DistinguishedName("dc=261consulting,dc=com"), base);
 	}
 }

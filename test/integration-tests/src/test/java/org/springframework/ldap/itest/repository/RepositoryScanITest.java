@@ -70,7 +70,7 @@ public class RepositoryScanITest extends AbstractLdapTemplateIntegrationTest {
 
     @Test
     public void verifyThatFindOneWithNonexistingDnReturnsNull() {
-        Person person = tested.findOne(LdapUtils.newLdapName("dn=unknown"));
+        Person person = tested.findOne(LdapUtils.newLdapName("cn=unknown"));
         assertNull(person);
     }
 

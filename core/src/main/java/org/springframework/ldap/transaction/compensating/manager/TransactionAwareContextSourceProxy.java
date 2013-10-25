@@ -99,6 +99,6 @@ public class TransactionAwareContextSourceProxy
     }
 
 	public DirContext getContext(String principal, String credentials) throws NamingException {
-		throw new UnsupportedOperationException("Not supported on a transacted ContextSource");
+        return target.getContext(principal, credentials);
 	}
 }

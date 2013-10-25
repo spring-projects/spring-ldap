@@ -229,6 +229,10 @@ public final class LdapTestUtils {
     }
 
     private static void loadLdif(DirContext context, Resource ldifFile) throws IOException {
+        loadLdif(context, LdapUtils.emptyLdapName(), ldifFile);
+    }
+
+    private static void loadLdif(DirContext context, Name rootNode, Resource ldifFile) {
         try {
             LdapName baseDn = (LdapName)
                     context.getEnvironment().get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY);
@@ -243,9 +247,13 @@ public final class LdapTestUtils {
                 if(baseDn != null) {
                     dn = LdapUtils.removeFirst(dn, baseDn);
                 }
+
+                if(!rootNode.isEmpty()) {
+                    dn = LdapUtils.prepend(dn, rootNode);
+                }
                 context.bind(dn, null, record);
             }
-        } catch (NamingException e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to populate LDIF", e);
         }
     }

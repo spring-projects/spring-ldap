@@ -27,8 +27,9 @@ import org.springframework.test.context.ContextConfiguration;
 
 import javax.naming.Name;
 import java.util.Arrays;
+import java.util.HashSet;
 
-import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Provides tests that verify that the server supports certain controls.
@@ -45,7 +46,7 @@ public class SupportedControlsITest extends AbstractLdapTemplateIntegrationTest 
 
 	@Override
 	protected Name getRoot() {
-		return LdapUtils.newLdapName("dc=jayway,dc=se");
+		return LdapUtils.newLdapName(base);
 	}
 	
 	@Test
@@ -64,9 +65,11 @@ public class SupportedControlsITest extends AbstractLdapTemplateIntegrationTest 
 
 		String[] controls = (String[]) tested.lookup("", new String[] { SUPPORTED_CONTROL }, mapper);
 		System.out.println(Arrays.toString(controls));
-		assertEquals("Persistent Search LDAPv3 control,", "2.16.840.1.113730.3.4.3", controls[0]);
-		assertEquals("Entry Change Notification LDAPv3 control,", "2.16.840.1.113730.3.4.7", controls[1]);
-		assertEquals("Subentries Control,", "1.3.6.1.4.1.4203.1.10.1", controls[2]);
-		assertEquals("Manage DSA IT LDAPv3 control,", "2.16.840.1.113730.3.4.2", controls[3]);
+
+        HashSet<String> controlsSet = new HashSet<String>(Arrays.asList(controls));
+
+        assertTrue("Entry Change Notification LDAPv3 control,", controlsSet.contains("1.3.6.1.4.1.4203.1.10.1"));
+		assertTrue("Subentries Control,", controlsSet.contains("1.3.6.1.4.1.4203.1.10.1"));
+		assertTrue("Manage DSA IT LDAPv3 control,", controlsSet.contains("2.16.840.1.113730.3.4.2"));
 	}
 }

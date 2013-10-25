@@ -17,17 +17,15 @@
 package org.springframework.ldap.itest;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.pool.factory.PoolingContextSource;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.test.LdapTestUtils;
-import org.springframework.ldap.transaction.compensating.manager.TransactionAwareContextSourceProxy;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
@@ -36,10 +34,7 @@ import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 
 /**
- * Tests the lookup methods of LdapTemplate.
- * 
- * @author Mattias Hellborg Arthursson
- * @author Ulrik Sandberg
+ * This test only works against in-process Apache DS server, regardless of configured profile.
  */
 @ContextConfiguration(locations = {"/conf/ldapTemplatePooledTestContext.xml"})
 public class LdapTemplatePooledITest extends AbstractJUnit4SpringContextTests {
@@ -49,6 +44,9 @@ public class LdapTemplatePooledITest extends AbstractJUnit4SpringContextTests {
 
     @Autowired
     private ContextSource contextSource;
+
+    @Value("${base}")
+    protected String base;
 
     @After
     public void cleanup() throws Exception {
@@ -62,7 +60,7 @@ public class LdapTemplatePooledITest extends AbstractJUnit4SpringContextTests {
 	 */
 	@Test
 	public void verifyThatInvalidConnectionIsAutomaticallyPurged() throws Exception {
-        LdapTestUtils.startEmbeddedServer(1888, "dc=jayway,dc=se", "jayway");
+        LdapTestUtils.startEmbeddedServer(1888, base, "jayway");
         LdapTestUtils.cleanAndSetup(contextSource, LdapUtils.emptyLdapName(), new ClassPathResource("/setup_data.ldif"));
 
 		DirContextOperations result = tested.lookupContext("cn=Some Person2, ou=company1,c=Sweden");
@@ -72,7 +70,7 @@ public class LdapTemplatePooledITest extends AbstractJUnit4SpringContextTests {
 
         // Shutdown server and kill all existing connections
         LdapTestUtils.shutdownEmbeddedServer();
-        LdapTestUtils.startEmbeddedServer(1888, "dc=jayway,dc=se", "jayway");
+        LdapTestUtils.startEmbeddedServer(1888, base, "jayway");
 
         try {
             tested.lookup("cn=Some Person2, ou=company1,c=Sweden");
@@ -82,6 +80,7 @@ public class LdapTemplatePooledITest extends AbstractJUnit4SpringContextTests {
             assertTrue(true);
         }
 
+        LdapTestUtils.cleanAndSetup(contextSource, LdapUtils.emptyLdapName(), new ClassPathResource("/setup_data.ldif"));
         // But this should be OK, because the dirty connection should have been automatically purged.
         tested.lookup("cn=Some Person2, ou=company1,c=Sweden");
     }

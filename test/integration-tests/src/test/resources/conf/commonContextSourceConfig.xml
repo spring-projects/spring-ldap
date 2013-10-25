@@ -1,33 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ldap="http://www.springframework.org/schema/ldap"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-                           http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/ldap http://www.springframework.org/schema/ldap/spring-ldap.xsd">
-
-    <import resource="classpath:/conf/commonTestContext.xml"/>
-	
-	<bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">
-		<constructor-arg ref="contextSource" />
-	</bean>
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/ldap http://www.springframework.org/schema/ldap/spring-ldap.xsd">
 
     <beans profile="default">
         <ldap:context-source id="contextSource"
                              password="${password}"
                              url="ldap://localhost:1888"
-                             username="${userDn}"/>
+                             username="${userDn}"
+                             base="${base}" />
 
         <bean id="dummy" class="org.springframework.ldap.test.TestContextSourceFactoryBean">
             <property name="defaultPartitionSuffix" value="${base}" />
             <property name="defaultPartitionName" value="jayway" />
+            <property name="ldifFile" value="classpath:/setup_data.ldif" />
             <property name="port" value="1888" />
             <property name="contextSource" ref="contextSource" />
-            <property name="baseOnTarget" value="false" />
         </bean>
     </beans>
 
     <beans profile="no-apacheds">
         <ldap:context-source url="ldap://localhost:389"
+                             base="${base}"
                              username="${userDn}"
                              password="${password}"/>
     </beans>
+
 </beans>

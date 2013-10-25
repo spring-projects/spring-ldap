@@ -19,6 +19,7 @@ package org.springframework.ldap.itest;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.ldap.core.ContextSource;
@@ -37,6 +38,12 @@ public abstract class AbstractLdapTemplateIntegrationTest extends AbstractJUnit4
 	@Autowired
 	@Qualifier("contextSource")
 	protected ContextSource contextSource;
+
+    @Value("${base}")
+    protected String base;
+
+    @Value("${testRoot}")
+    protected String testRoot;
 
 	@Before
 	public void cleanAndSetup() throws NamingException, IOException {

@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.AttributeInUseException;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
@@ -158,43 +157,6 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 		}
 		catch (AttributeInUseException expected) {
 			// expected
-		}
-	}
-
-	// LDAP-188
-	@Test
-	public void testModifyAttributes_AddAttributeValueAsDistinguishedName() {
-		try {
-			// prepare test data
-			String dn = "cn=ROLE_USER,ou=groups";
-			String lowerCasedName = "cn=Some Person,ou=company1,c=Sweden,dc=jayway,dc=se";
-			String upperCasedName = "CN=Some Person,OU=company1,C=Sweden,DC=jayway,DC=se";
-			DirContextOperations ctx = tested.lookupContext(dn);
-			ctx.removeAttributeValue("uniqueMember", lowerCasedName);
-            tested.modifyAttributes(ctx);
-
-            ctx = tested.lookupContext(dn);
-			ctx.addAttributeValue("uniqueMember", upperCasedName);
-            tested.modifyAttributes(ctx);
-
-			// without this, the member added above will not be removed and the test fails
-			System.setProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY, DistinguishedName.KEY_CASE_FOLD_NONE);
-			
-			ctx = tested.lookupContext(dn);
-			ctx.removeAttributeValue("uniqueMember", new DistinguishedName(upperCasedName).toCompactString());
-			tested.modifyAttributes(ctx);
-
-			// verify
-			DirContextAdapter result = (DirContextAdapter) tested.lookup(dn);
-			String[] attributes = result.getStringAttributes("uniqueMember");
-			assertEquals(4, attributes.length);
-			assertEquals("0", "cn=Some Person2,ou=company1,c=Sweden,dc=jayway,dc=se", attributes[0]);
-			assertEquals("1", "cn=Some Person,ou=company1,c=Norway,dc=jayway,dc=se", attributes[1]);
-			assertEquals("2", "cn=Some Person,ou=company2,c=Sweden,dc=jayway,dc=se", attributes[2]);
-			assertEquals("3", "cn=Some Person3,ou=company1,c=Sweden,dc=jayway,dc=se", attributes[3]);
-		}
-		finally {
-			System.clearProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY);
 		}
 	}
 

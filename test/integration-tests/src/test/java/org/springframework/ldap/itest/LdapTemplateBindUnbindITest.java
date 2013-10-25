@@ -64,7 +64,7 @@ public class LdapTemplateBindUnbindITest extends
         ctx.addAttributeValue("cn", "TEST");
         ctx.addAttributeValue("objectclass", "top");
         ctx.addAttributeValue("objectclass", "groupOfUniqueNames");
-        ctx.addAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=Some Person,ou=company1,c=Sweden,dc=jayway,dc=se"));
+        ctx.addAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=Some Person,ou=company1,c=Sweden," + base));
         tested.bind(ctx);
     }
 

@@ -16,6 +16,7 @@
 
 package org.springframework.ldap.test;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.directory.server.core.DefaultDirectoryService;
 import org.apache.directory.server.core.DirectoryService;
 import org.apache.directory.server.core.entry.ServerEntry;
@@ -35,6 +36,7 @@ import java.io.File;
 public final class EmbeddedLdapServer {
     private final DirectoryService directoryService;
     private final LdapServer ldapServer;
+    private static File workingDirectory;
 
     private EmbeddedLdapServer(DirectoryService directoryService,
                                LdapServer ldapServer) {
@@ -44,11 +46,14 @@ public final class EmbeddedLdapServer {
 
     public static EmbeddedLdapServer newEmbeddedServer(String defaultPartitionName, String defaultPartitionSuffix, int port)
             throws Exception{
+        workingDirectory = new File(System.getProperty("java.io.tmpdir") + "/apacheds-test1");
+        FileUtils.deleteDirectory(workingDirectory);
 
         DefaultDirectoryService directoryService = new DefaultDirectoryService();
         directoryService.setShutdownHookEnabled(true);
         directoryService.setAllowAnonymousAccess(true);
-        directoryService.setWorkingDirectory(new File(System.getProperty("java.io.tmpdir") + "/apacheds-test1"));
+
+        directoryService.setWorkingDirectory(workingDirectory);
         directoryService.getChangeLog().setEnabled( false );
 
         JdbmPartition partition = new JdbmPartition();
@@ -80,5 +85,7 @@ public final class EmbeddedLdapServer {
     public void shutdown() throws Exception {
         ldapServer.stop();
         directoryService.shutdown();
+
+        FileUtils.deleteDirectory(workingDirectory);
     }
 }

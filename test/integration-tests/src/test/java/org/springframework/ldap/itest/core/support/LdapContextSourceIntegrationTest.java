@@ -18,6 +18,7 @@ package org.springframework.ldap.itest.core.support;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextOperations;
@@ -26,6 +27,7 @@ import org.springframework.ldap.core.simple.AbstractParameterizedContextMapper;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.itest.AbstractLdapTemplateIntegrationTest;
+import org.springframework.ldap.repository.Query;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -50,6 +52,7 @@ import static junit.framework.Assert.fail;
 public class LdapContextSourceIntegrationTest extends AbstractLdapTemplateIntegrationTest {
 
 	@Autowired
+    @Qualifier("contextSource")
 	private ContextSource tested;
 
 	@Autowired
@@ -63,7 +66,7 @@ public class LdapContextSourceIntegrationTest extends AbstractLdapTemplateIntegr
 			ctx = tested.getReadOnlyContext();
 			assertNotNull(ctx);
 			Hashtable environment = ctx.getEnvironment();
-			assertTrue(environment.containsKey(LdapContextSource.SUN_LDAP_POOLING_FLAG));
+			assertFalse(environment.containsKey(LdapContextSource.SUN_LDAP_POOLING_FLAG));
 			assertTrue(environment.containsKey(Context.SECURITY_PRINCIPAL));
 			assertTrue(environment.containsKey(Context.SECURITY_CREDENTIALS));
 		}
@@ -89,7 +92,7 @@ public class LdapContextSourceIntegrationTest extends AbstractLdapTemplateIntegr
 			assertNotNull(ctx);
 			// Double check to see that we are authenticated.
 			Hashtable environment = ctx.getEnvironment();
-            assertTrue(environment.containsKey(LdapContextSource.SUN_LDAP_POOLING_FLAG));
+            assertFalse(environment.containsKey(LdapContextSource.SUN_LDAP_POOLING_FLAG));
 			assertTrue(environment.containsKey(Context.SECURITY_PRINCIPAL));
 			assertTrue(environment.containsKey(Context.SECURITY_CREDENTIALS));
 		}
@@ -110,7 +113,7 @@ public class LdapContextSourceIntegrationTest extends AbstractLdapTemplateIntegr
 	public void testGetContext() throws NamingException {
 		DirContext ctx = null;
 		try {
-			String expectedPrincipal = "cn=Some Person,ou=company1,c=Sweden,dc=jayway,dc=se";
+			String expectedPrincipal = "cn=Some Person,ou=company1,c=Sweden," + base;
 			String expectedCredentials = "password";
 			ctx = tested.getContext(expectedPrincipal, expectedCredentials);
 			assertNotNull(ctx);
