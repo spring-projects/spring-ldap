@@ -19,4 +19,5 @@ ext.slf4jVersion = '1.7.5'
 
 repositories {
     mavenCentral()
+    maven { url "http://repo.springsource.org/libs-snapshot" }
 }
