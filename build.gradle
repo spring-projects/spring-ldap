@@ -16,6 +16,7 @@ ext.GRADLE_SCRIPT_DIR = "${rootProject.projectDir}/gradle"
 ext.JAVA_MODULE_SCRIPT = "${GRADLE_SCRIPT_DIR}/java-module.gradle"
 ext.MAVEN_DEPLOYMENT_SCRIPT = "${GRADLE_SCRIPT_DIR}/maven-deployment.gradle"
 ext.JAVA_SCRIPT = "${GRADLE_SCRIPT_DIR}/java.gradle"
+ext.RELEASE_CHECKS_SCRIPT = "${GRADLE_SCRIPT_DIR}/release-checks.gradle"
 
 ext.coreModules = subprojects.findAll { p-> (!p.name.contains("test") && !p.name.contains("sample") && !p.name.contains("sandbox")) || p.name == "spring-ldap-test" }
 
@@ -27,6 +28,8 @@ configure(allprojects) {
 
     group = "org.springframework.ldap"
 
+    ext.releaseBuild = version.endsWith('RELEASE')
+    ext.snapshotBuild = version.endsWith('SNAPSHOT')
     ext.javadocLinks = [
         "http://download.oracle.com/javase/1.5.0/docs/api",
         "http://static.springframework.org/spring/docs/3.0.x/api/",
