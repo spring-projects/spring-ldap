@@ -129,6 +129,34 @@ task docsZip(type: Zip, dependsOn: asciidoctor) {
     }
 }
 
+task schemaZip(type: Zip) {
+    group = 'Distribution'
+    baseName = rootProject.name
+    classifier = 'schema'
+    description = "Builds -${classifier} archive containing all " +
+        "XSDs for deployment at static.springframework.org/schema."
+
+    coreModules.each { module ->
+        def Properties schemas = new Properties();
+
+        module.sourceSets.main.resources.find {
+            it.path.endsWith('META-INF/spring.schemas')
+        }?.withInputStream { schemas.load(it) }
+
+        for (def key : schemas.keySet()) {
+            def shortName = key.replaceAll(/http.*schema.(.*).spring-.*/, '$1')
+            assert shortName != key
+            File xsdFile = module.sourceSets.main.resources.find {
+                it.path.endsWith(schemas.get(key))
+            }
+            assert xsdFile != null
+            into (shortName) {
+                from xsdFile.path
+            }
+        }
+    }
+}
+
 
 task distZip(type: Zip, dependsOn: [docsZip]) {
     dependsOn subprojects*.tasks*.matching { task -> task.name == 'assemble' }
@@ -170,4 +198,5 @@ task distZip(type: Zip, dependsOn: [docsZip]) {
 artifacts {
     archives docsZip
     archives distZip
+    archives schemaZip
 }
