@@ -57,7 +57,7 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
 
     @Test
     public void testFindByDn() {
-        PersonWithDnAnnotations person = tested.findByDn(LdapUtils.newLdapName("cn=Some Person3,ou=company1,c=Sweden"),
+        PersonWithDnAnnotations person = tested.findByDn(LdapUtils.newLdapName("cn=Some Person3,ou=company1,ou=Sweden"),
                 PersonWithDnAnnotations.class);
 
         assertNotNull(person);
@@ -74,7 +74,7 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
     @Test
     public void testFindInCountry() {
         List<PersonWithDnAnnotations> persons = tested.find(query()
-                .base("c=Sweden")
+                .base("ou=Sweden")
                 .where("cn").isPresent(), PersonWithDnAnnotations.class);
 
         assertEquals(4, persons.size());
@@ -114,7 +114,7 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
 
         assertEquals(6, tested.findAll(PersonWithDnAnnotations.class).size());
 
-        person = tested.findByDn(LdapUtils.newLdapName("cn=New Person,ou=company1,c=Sweden"),
+        person = tested.findByDn(LdapUtils.newLdapName("cn=New Person,ou=company1,ou=Sweden"),
                 PersonWithDnAnnotations.class);
 
         assertEquals("New Person", person.getCommonName());
@@ -136,7 +136,7 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
         tested.update(person);
 
         person = tested.findByDn(
-                LdapUtils.newLdapName("cn=Some Person3, ou=company1, c=Sweden"),
+                LdapUtils.newLdapName("cn=Some Person3, ou=company1, ou=Sweden"),
                 PersonWithDnAnnotations.class);
 
         assertEquals("Some Person3", person.getCommonName());
@@ -155,7 +155,7 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
         tested.update(person);
 
         person = tested.findByDn(
-                LdapUtils.newLdapName("cn=Some Person3, ou=company1, c=Norway"),
+                LdapUtils.newLdapName("cn=Some Person3, ou=company1, ou=Norway"),
                 PersonWithDnAnnotations.class);
 
         assertEquals("Some Person3", person.getCommonName());

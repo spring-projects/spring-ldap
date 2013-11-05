@@ -47,7 +47,7 @@ public class LdapTemplateBindUnbindITest extends
 	@Autowired
 	private LdapTemplate tested;
 
-	private static String DN = "cn=Some Person4,ou=company1,c=Sweden";
+	private static String DN = "cn=Some Person4,ou=company1,ou=Sweden";
 
 	@Test
 	public void testBindAndUnbindWithAttributes() {
@@ -64,7 +64,7 @@ public class LdapTemplateBindUnbindITest extends
         ctx.addAttributeValue("cn", "TEST");
         ctx.addAttributeValue("objectclass", "top");
         ctx.addAttributeValue("objectclass", "groupOfUniqueNames");
-        ctx.addAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=Some Person,ou=company1,c=Sweden," + base));
+        ctx.addAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden," + base));
         tested.bind(ctx);
     }
 

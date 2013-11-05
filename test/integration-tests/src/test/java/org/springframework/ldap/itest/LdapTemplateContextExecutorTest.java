@@ -42,7 +42,7 @@ public class LdapTemplateContextExecutorTest extends AbstractLdapTemplateIntegra
 	public void testLookupLink() {
 		ContextExecutor executor = new ContextExecutor() {
 			public Object executeWithContext(DirContext ctx) throws NamingException {
-				return ctx.lookupLink("cn=Some Person,ou=company1,c=Sweden");
+				return ctx.lookupLink("cn=Some Person,ou=company1,ou=Sweden");
 			}
 		};
 

@@ -21,8 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.itest.Person;
-import org.springframework.ldap.itest.PersonContextMapper;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.util.List;
@@ -48,7 +46,7 @@ public class LdapTemplateContextMapperITest extends AbstractLdapTemplateIntegrat
 	@Test
 	public void testSearch_ContextMapper() {
 		ContextMapper mapper = new PersonContextMapper();
-		List result = tested.search("ou=company1,c=Sweden", "(&(objectclass=person)(sn=Person2))", mapper);
+		List result = tested.search("ou=company1,ou=Sweden", "(&(objectclass=person)(sn=Person2))", mapper);
 
 		assertEquals(1, result.size());
 		Person person = (Person) result.get(0);
@@ -74,6 +72,6 @@ public class LdapTemplateContextMapperITest extends AbstractLdapTemplateIntegrat
 		List result = tested.search("ou=groups", "(&(objectclass=groupOfUniqueNames)(cn=ROLE_USER))", mapper);
 
 		assertEquals(1, result.size());
-		assertEquals(5, ((String[]) result.get(0)).length);
+		assertEquals(4, ((String[]) result.get(0)).length);
 	}
 }

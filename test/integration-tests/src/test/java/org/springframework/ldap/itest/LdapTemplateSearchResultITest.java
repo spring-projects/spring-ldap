@@ -140,7 +140,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
         attributesMapper.setExpectedValues(ALL_VALUES);
 
         List<Object> list = tested.search(query()
-                .base("ou=company1,c=Sweden")
+                .base("ou=company1,ou=Sweden")
                 .searchScope(SearchScope.ONELEVEL)
                 .where("objectclass").is("person").and("sn").is("Person2"),
                 attributesMapper);
@@ -164,7 +164,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
         attributesMapper.setExpectedValues(ALL_VALUES);
 
         List<Object> list = tested.search(query()
-                .base("c=Norway")
+                .base("ou=Norway")
                 .where("objectclass").is("person").and("sn").is("Person2"),
                 attributesMapper);
         assertEquals(0, list.size());
@@ -314,7 +314,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
         contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
         contextMapper.setExpectedValues(ALL_VALUES);
         List<DirContextAdapter> list = tested.search(query()
-                .base("ou=company1,c=Sweden")
+                .base("ou=company1,ou=Sweden")
                 .searchScope(SearchScope.ONELEVEL)
                 .where("objectclass").is("person").and("sn").is("Person2"),
                 contextMapper);
@@ -342,7 +342,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
         DirContextOperations result =
                 tested.searchForContext(query()
                 .searchScope(SearchScope.ONELEVEL)
-                .base("ou=company1,c=Sweden")
+                .base("ou=company1,ou=Sweden")
                 .where("objectclass").is("person").and("sn").is("Person2"));
 
         assertNotNull(result);

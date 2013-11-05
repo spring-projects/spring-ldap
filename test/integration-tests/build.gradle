@@ -88,3 +88,7 @@ idea {
     }
 }
 
+test {
+    systemProperties = System.properties
+}
+

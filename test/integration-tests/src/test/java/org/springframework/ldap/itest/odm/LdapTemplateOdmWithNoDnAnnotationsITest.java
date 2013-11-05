@@ -58,7 +58,7 @@ public class LdapTemplateOdmWithNoDnAnnotationsITest extends AbstractLdapTemplat
 
     @Test
     public void testFindByDn() {
-        Person person = tested.findByDn(LdapUtils.newLdapName("cn=Some Person3,ou=company1,c=Sweden"), Person.class);
+        Person person = tested.findByDn(LdapUtils.newLdapName("cn=Some Person3,ou=company1,ou=Sweden"), Person.class);
 
         assertNotNull(person);
         assertEquals("Some Person3", person.getCommonName());
@@ -69,7 +69,7 @@ public class LdapTemplateOdmWithNoDnAnnotationsITest extends AbstractLdapTemplat
 
     @Test(expected = OdmException.class)
     public void testFindByDnThrowsExceptionOnInvalidEntry() {
-        tested.findByDn(LdapUtils.newLdapName("ou=company1,c=Sweden"), Person.class);
+        tested.findByDn(LdapUtils.newLdapName("ou=company1,ou=Sweden"), Person.class);
     }
 
     @Test(expected = EmptyResultDataAccessException.class)
@@ -96,7 +96,7 @@ public class LdapTemplateOdmWithNoDnAnnotationsITest extends AbstractLdapTemplat
     @Test
     public void testFindInCountry() {
         List<Person> persons = tested.find(query()
-                .base("c=Sweden")
+                .base("ou=Sweden")
                 .where("cn").isPresent(), Person.class);
 
         assertEquals(4, persons.size());
@@ -114,7 +114,7 @@ public class LdapTemplateOdmWithNoDnAnnotationsITest extends AbstractLdapTemplat
     @Test
     public void testCreate() {
         Person person = new Person();
-        person.setDn(LdapNameBuilder.newLdapName("ou=company1,c=Sweden")
+        person.setDn(LdapNameBuilder.newLdapName("ou=company1,ou=Sweden")
                 .add("cn", "New Person").build());
         person.setCommonName("New Person");
         person.setSurname("Person");

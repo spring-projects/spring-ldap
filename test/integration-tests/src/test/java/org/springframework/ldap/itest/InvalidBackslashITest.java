@@ -19,6 +19,7 @@ package org.springframework.ldap.itest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
@@ -45,7 +46,7 @@ public class InvalidBackslashITest extends AbstractLdapTemplateIntegrationTest {
 	@Autowired
 	private LdapTemplate tested;
 
-	private static LdapName DN = LdapUtils.newLdapName("cn=Some\\\\Person6,ou=company1,c=Sweden");
+	private static LdapName DN = LdapUtils.newLdapName("cn=Some\\\\Person6,ou=company1,ou=Sweden");
 
 	@Before
 	public void prepareTestedInstance() throws Exception {
@@ -69,10 +70,10 @@ public class InvalidBackslashITest extends AbstractLdapTemplateIntegrationTest {
 	 * including a backslach ('\') the Name supplied to DefaultDirObjectFactory
 	 * will be invalid.
 	 * <p>
-	 * E.g. the distinguished name "cn=Some\\Person6,ou=company1,c=Sweden"
+	 * E.g. the distinguished name "cn=Some\\Person6,ou=company1,ou=Sweden"
 	 * (indicating that the cn value is 'Some\Person'), will be represented by a
 	 * <code>CompositeName</code> with the string representation
-	 * "cn=Some\\\Person6,ou=company1,c=Sweden", which is in fact an invalid DN.
+	 * "cn=Some\\\Person6,ou=company1,ou=Sweden", which is in fact an invalid DN.
 	 * This will be supplied to <code>DistinguishedName</code> for parsing,
 	 * causing it to fail. This test makes sure that Spring LDAP properly works
 	 * around this bug.
@@ -81,7 +82,7 @@ public class InvalidBackslashITest extends AbstractLdapTemplateIntegrationTest {
 	 * What happens under the covers is (in the Java LDAP Provider code):
 	 * 
 	 * <pre>
-	 * LdapName ldapname = new LdapName(&quot;cn=Some\\\\Person6,ou=company1,c=Sweden&quot;);
+	 * LdapName ldapname = new LdapName(&quot;cn=Some\\\\Person6,ou=company1,ou=Sweden&quot;);
 	 * CompositeName compositeName = new CompositeName();
 	 * compositeName.add(ldapname.get(ldapname.size() - 1)); // for some odd reason
 	 * </pre>
@@ -91,13 +92,14 @@ public class InvalidBackslashITest extends AbstractLdapTemplateIntegrationTest {
 	 * @throws InvalidNameException
 	 */
 	@Test
+    @Category(NoAdTest.class)
 	public void testSearchForDnSpoiledByCompositeName() throws InvalidNameException {
 		List result = tested.search("", "(sn=Person6)", new AbstractContextMapper() {
 			@Override
 			protected Object doMapFromContext(DirContextOperations ctx) {
 				LdapName dn = (LdapName) ctx.getDn();
                 Rdn rdn = LdapUtils.getRdn(dn, "cn");
-                assertEquals("cn=Some\\\\Person6,ou=company1,c=Sweden", dn.toString());
+                assertEquals("cn=Some\\\\Person6,ou=company1,ou=Sweden", dn.toString());
 				assertEquals("Some\\Person6", rdn.getValue());
 				return new Object();
 			}

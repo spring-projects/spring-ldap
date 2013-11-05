@@ -20,8 +20,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.itest.Person;
-import org.springframework.ldap.itest.PersonAttributesMapper;
 import org.springframework.test.context.ContextConfiguration;
 
 import javax.naming.NamingEnumeration;
@@ -49,7 +47,7 @@ public class LdapTemplateAttributesMapperITest extends AbstractLdapTemplateInteg
 	@Test
 	public void testSearch_AttributeMapper() throws Exception {
 		AttributesMapper mapper = new PersonAttributesMapper();
-		List result = tested.search("ou=company1,c=Sweden", "(&(objectclass=person)(sn=Person2))", mapper);
+		List result = tested.search("ou=company1,ou=Sweden", "(&(objectclass=person)(sn=Person2))", mapper);
 
 		assertEquals(1, result.size());
 		Person person = (Person) result.get(0);
@@ -81,6 +79,6 @@ public class LdapTemplateAttributesMapperITest extends AbstractLdapTemplateInteg
 
 		assertEquals(1, result.size());
 
-		assertEquals(5, ((String[]) result.get(0)).length);
+		assertEquals(4, ((String[]) result.get(0)).length);
 	}
 }

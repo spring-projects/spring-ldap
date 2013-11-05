@@ -17,7 +17,7 @@ public class DummyDaoLdapAndHibernateImpl extends HibernateDaoSupport implements
 	
 	public void create(OrgPerson person) {
 		DistinguishedName dn = new DistinguishedName();
-        dn.add("c", person.getCountry());
+        dn.add("ou", person.getCountry());
         dn.add("ou", person.getCompany());
         dn.add("cn", person.getFullname());
 
@@ -69,9 +69,8 @@ public class DummyDaoLdapAndHibernateImpl extends HibernateDaoSupport implements
 		DirContextAdapter ctx = (DirContextAdapter) ldapTemplate.lookup(dn);
         ctx.setAttributeValue("sn", person.getLastname());
         ctx.setAttributeValue("description", person.getDescription());
-        ctx.update();
 
-        ldapTemplate.rebind(dn, ctx, null);
+        ldapTemplate.modifyAttributes(ctx);
         this.getHibernateTemplate().saveOrUpdate(person);
 		
 	}
@@ -85,9 +84,8 @@ public class DummyDaoLdapAndHibernateImpl extends HibernateDaoSupport implements
 		
 		DirContextAdapter ctx = (DirContextAdapter) ldapTemplate.lookup(dn);
         ctx.setAttributeValue("description", updatedDescription);
-        ctx.update();
 
-        ldapTemplate.rebind(dn, ctx, null);
+        ldapTemplate.modifyAttributes(ctx);
         ldapTemplate.rename(dn, newDn);
 		
 	}
@@ -104,7 +102,7 @@ public class DummyDaoLdapAndHibernateImpl extends HibernateDaoSupport implements
 	}
 	
 	private String prepareDn(OrgPerson person){
-		return "cn=" + person.getFullname() + ",ou=" + person.getCompany() + ",c=" + person.getCountry();
+		return "cn=" + person.getFullname() + ",ou=" + person.getCompany() + ",ou=" + person.getCountry();
 	}
 
 }

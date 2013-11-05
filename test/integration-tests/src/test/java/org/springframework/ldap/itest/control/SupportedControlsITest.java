@@ -17,11 +17,13 @@
 package org.springframework.ldap.itest.control;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.itest.AbstractLdapTemplateIntegrationTest;
+import org.springframework.ldap.itest.NoAdTest;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -50,6 +52,7 @@ public class SupportedControlsITest extends AbstractLdapTemplateIntegrationTest 
 	}
 	
 	@Test
+    @Category(NoAdTest.class)
 	public void testExpectedControlsSupported() throws Exception {
 		/**
 		 * Maps the 'supportedcontrol' attribute to a string array.

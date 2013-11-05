@@ -32,6 +32,8 @@ import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
+import java.util.Arrays;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -56,9 +58,9 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 	@Autowired
 	private LdapTemplate tested;
 
-	private static String PERSON4_DN = "cn=Some Person4,ou=company1,c=Sweden";
+	private static String PERSON4_DN = "cn=Some Person4,ou=company1,ou=Sweden";
 
-	private static String PERSON5_DN = "cn=Some Person5,ou=company1,c=Sweden";
+	private static String PERSON5_DN = "cn=Some Person5,ou=company1,ou=Sweden";
 
 	@Before
 	public void prepareTestedInstance() throws Exception {
@@ -114,10 +116,10 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 		tested.modifyAttributes(PERSON4_DN, mods);
 
 		DirContextAdapter result = (DirContextAdapter) tested.lookup(PERSON4_DN);
-		String[] attributes = result.getStringAttributes("description");
-		assertEquals(2, attributes.length);
-		assertEquals("Some other description", attributes[0]);
-		assertEquals("Another description", attributes[1]);
+		List<String> attributes = Arrays.asList(result.getStringAttributes("description"));
+		assertEquals(2, attributes.size());
+		assertTrue(attributes.contains("Some other description"));
+        assertTrue(attributes.contains("Another description"));
 	}
 
 	@Test
@@ -130,17 +132,17 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 		tested.modifyAttributes(PERSON4_DN, mods);
 
 		DirContextAdapter result = (DirContextAdapter) tested.lookup(PERSON4_DN);
-		String[] attributes = result.getStringAttributes("description");
-		assertEquals(3, attributes.length);
-		assertEquals("Some description", attributes[0]);
-		assertEquals("Some other description", attributes[1]);
-		assertEquals("Another description", attributes[2]);
+        List<String> attributes = Arrays.asList(result.getStringAttributes("description"));
+        assertEquals(3, attributes.size());
+        assertTrue(attributes.contains("Some other description"));
+        assertTrue(attributes.contains("Another description"));
+        assertTrue(attributes.contains("Some description"));
 	}
 
 	@Test
 	public void testModifyAttributes_AddAttributeValueWithExistingValue() {
 		DirContextOperations ctx = tested.lookupContext("cn=ROLE_USER,ou=groups");
-		ctx.addAttributeValue("uniqueMember", "cn=Some Person,ou=company1,c=Sweden,dc=jayway,dc=se");
+		ctx.addAttributeValue("uniqueMember", "cn=Some Person,ou=company1,ou=Norway," + base);
 		tested.modifyAttributes(ctx);
 		assertTrue(true);
 	}
@@ -177,11 +179,11 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 		tested.modifyAttributes(PERSON4_DN, mods);
 
 		DirContextAdapter result = (DirContextAdapter) tested.lookup(PERSON4_DN);
-		String[] attributes = result.getStringAttributes("description");
-		assertEquals(3, attributes.length);
-		assertEquals("Some description", attributes[0]);
-		assertEquals("Some other description", attributes[1]);
-		assertEquals("Another description", attributes[2]);
+        List<String> attributes = Arrays.asList(result.getStringAttributes("description"));
+        assertEquals(3, attributes.size());
+        assertTrue(attributes.contains("Some other description"));
+        assertTrue(attributes.contains("Another description"));
+        assertTrue(attributes.contains("Some description"));
 	}
 
 	@Test
@@ -213,12 +215,12 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 
 		// Verify
 		adapter = (DirContextAdapter) tested.lookup(PERSON5_DN);
-		String[] attributes = adapter.getStringAttributes("description");
-		assertEquals(4, attributes.length);
-		assertEquals("qwe", attributes[0]);
-		assertEquals("123", attributes[1]);
-		assertEquals("klytt", attributes[2]);
-		assertEquals("kalle", attributes[3]);
+        List<String> attributes = Arrays.asList(adapter.getStringAttributes("description"));
+        assertEquals(4, attributes.size());
+        assertTrue(attributes.contains("qwe"));
+        assertTrue(attributes.contains("123"));
+        assertTrue(attributes.contains("klytt"));
+        assertTrue(attributes.contains("kalle"));
 	}
 
 	/**
@@ -242,7 +244,7 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
     public void verifyCompleteReplacementOfUniqueMemberAttribute_Ldap119Workaround() {
         DirContextOperations ctx = tested.lookupContext("cn=ROLE_USER,ou=groups");
         ctx.setAttributeValues("uniqueMember",
-                new String[]{"cn=Some Person4,ou=company1,c=Sweden,dc=jayway,dc=se"},
+                new String[]{"cn=Some Person,ou=company1,ou=Norway," + base},
                 true);
         ctx.getModificationItems();
 
@@ -257,7 +259,7 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
     public void verifyCompleteReplacementOfUniqueMemberAttribute_Ldap119() {
         DirContextOperations ctx = tested.lookupContext("cn=ROLE_USER,ou=groups");
         ctx.setAttributeValues("uniqueMember",
-                new String[]{"cn=Some Person4,ou=company1,c=Sweden,dc=jayway,dc=se"});
+                new String[]{"cn=Some Person,ou=company1,ou=Norway," + base});
         ctx.getModificationItems();
 
         tested.modifyAttributes(ctx);

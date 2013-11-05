@@ -19,6 +19,7 @@ package org.springframework.ldap.itest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.DirContextAdapter;
@@ -44,7 +45,7 @@ public class LdapTemplateRecursiveDeleteITest extends AbstractLdapTemplateIntegr
 	@Autowired
 	private LdapTemplate tested;
 
-	private static LdapName DN = LdapUtils.newLdapName("cn=Some Person5,ou=company1,c=Sweden");
+	private static LdapName DN = LdapUtils.newLdapName("cn=Some Person5,ou=company1,ou=Sweden");
 
 	private LdapName firstSubDn;
 
@@ -102,6 +103,7 @@ public class LdapTemplateRecursiveDeleteITest extends AbstractLdapTemplateIntegr
 	}
 
 	@Test
+    @Category(NoAdTest.class)
 	public void testRecursiveUnbind() {
 		tested.unbind(DN, true);
 
@@ -112,6 +114,7 @@ public class LdapTemplateRecursiveDeleteITest extends AbstractLdapTemplateIntegr
 	}
 
 	@Test
+    @Category(NoAdTest.class)
 	public void testRecursiveUnbindOnLeaf() {
 		tested.unbind(leafDn, true);
 		verifyDeleted(leafDn);

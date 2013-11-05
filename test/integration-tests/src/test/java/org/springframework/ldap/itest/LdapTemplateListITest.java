@@ -21,12 +21,12 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.CountNameClassPairCallbackHandler;
-import org.springframework.ldap.itest.PersonContextMapper;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.test.AttributeCheckContextMapper;
 import org.springframework.test.context.ContextConfiguration;
 
 import javax.naming.ldap.LdapName;
+import java.util.LinkedList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -68,7 +68,7 @@ public class LdapTemplateListITest extends AbstractLdapTemplateIntegrationTest {
 	public void testListBindings_ContextMapper() {
 		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		contextMapper.setExpectedValues(ALL_VALUES);
-		List list = tested.listBindings("ou=company2,c=Sweden" + BASE_STRING, contextMapper);
+		List list = tested.listBindings("ou=company2,ou=Sweden" + BASE_STRING, contextMapper);
 		assertEquals(1, list.size());
 	}
 
@@ -76,14 +76,14 @@ public class LdapTemplateListITest extends AbstractLdapTemplateIntegrationTest {
 	public void testListBindings_ContextMapper_Name() {
 		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		contextMapper.setExpectedValues(ALL_VALUES);
-		LdapName dn = LdapUtils.newLdapName("ou=company2,c=Sweden");
+		LdapName dn = LdapUtils.newLdapName("ou=company2,ou=Sweden");
 		List list = tested.listBindings(dn, contextMapper);
 		assertEquals(1, list.size());
 	}
 
 	@Test
 	public void testListBindings_ContextMapper_MapToPersons() {
-		LdapName dn = LdapUtils.newLdapName("ou=company1,c=Sweden");
+		LdapName dn = LdapUtils.newLdapName("ou=company1,ou=Sweden");
 		List list = tested.listBindings(dn, new PersonContextMapper());
 		assertEquals(3, list.size());
 		String personClass = "org.springframework.ldap.itest.Person";
@@ -94,20 +94,28 @@ public class LdapTemplateListITest extends AbstractLdapTemplateIntegrationTest {
 
 	@Test
 	public void testList() {
-		List list = tested.list(BASE_STRING);
+		List<String> list = tested.list(BASE_STRING);
 		assertEquals(3, list.size());
-		assertTrue(list.contains("ou=groups"));
-		assertTrue(list.contains("c=Norway"));
-		assertTrue(list.contains("c=Sweden"));
+        verifyBindings(list);
 	}
 
-	@Test
+    private void verifyBindings(List<String> list) {
+        LinkedList<LdapName> transformed = new LinkedList<LdapName>();
+
+        for (String s : list) {
+            transformed.add(LdapUtils.newLdapName(s));
+        }
+
+        assertTrue(transformed.contains(LdapUtils.newLdapName("ou=groups")));
+        assertTrue(transformed.contains(LdapUtils.newLdapName("ou=Norway")));
+        assertTrue(transformed.contains(LdapUtils.newLdapName("ou=Sweden")));
+    }
+
+    @Test
 	public void testList_Name() {
-		List list = tested.list(BASE_NAME);
+		List<String> list = tested.list(BASE_NAME);
 		assertEquals(3, list.size());
-		assertTrue(list.contains("ou=groups"));
-		assertTrue(list.contains("c=Norway"));
-		assertTrue(list.contains("c=Sweden"));
+        verifyBindings(list);
 	}
 
 	@Test
@@ -126,11 +134,9 @@ public class LdapTemplateListITest extends AbstractLdapTemplateIntegrationTest {
 
 	@Test
 	public void testListBindings() {
-		List list = tested.listBindings(BASE_STRING);
+		List<String> list = tested.listBindings(BASE_STRING);
 		assertEquals(3, list.size());
-		assertTrue(list.contains("ou=groups"));
-		assertTrue(list.contains("c=Norway"));
-		assertTrue(list.contains("c=Sweden"));
+        verifyBindings(list);
 	}
 
 	@Test

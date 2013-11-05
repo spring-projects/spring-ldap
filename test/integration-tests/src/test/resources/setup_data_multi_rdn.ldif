@@ -3,12 +3,6 @@ objectclass: top
 objectclass: organizationalUnit
 ou: groups
 
-dn: ou=temp,dc=261consulting,dc=com
-objectclass: top
-objectclass: organizationalUnit
-ou: temp
-description: temp entry renaming node
-
 dn: ou=Sweden,dc=261consulting,dc=com
 objectclass: top
 objectclass: organizationalUnit
@@ -85,6 +79,18 @@ sn: Person
 description: Sweden, Company2, Some Person
 telephoneNumber: +46 555-456321
 
+dn: cn=Some Person+sn=Person,ou=company1,ou=Norway,dc=261consulting,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: some.norwegian
+userPassword: password
+cn: Some Person
+sn: Person
+description: Norway, Company1, Some Person+Person
+telephoneNumber: +45 555-654123
+
 dn: cn=ROLE_USER,ou=groups,dc=261consulting,dc=com
 objectclass: top
 objectclass: groupOfUniqueNames
@@ -99,4 +105,3 @@ objectclass: top
 objectclass: groupOfUniqueNames
 cn: ROLE_ADMIN
 uniqueMember: cn=Some Person2,ou=company1,ou=Sweden,dc=261consulting,dc=com
-

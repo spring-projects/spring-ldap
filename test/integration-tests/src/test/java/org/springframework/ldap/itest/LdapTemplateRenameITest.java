@@ -45,9 +45,9 @@ public class LdapTemplateRenameITest extends AbstractLdapTemplateIntegrationTest
 	@Autowired
 	private LdapTemplate tested;
 
-	private static String DN = "cn=Some Person6,ou=company1,c=Sweden";
+	private static String DN = "cn=Some Person6,ou=company1,ou=Sweden";
 
-	private static String NEWDN = "cn=Some Person6,ou=company2,c=Sweden";
+	private static String NEWDN = "cn=Some Person6,ou=company2,ou=Sweden";
 
 	@Before
 	public void prepareTestedInstance() throws Exception {

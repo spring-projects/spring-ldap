@@ -37,7 +37,7 @@ public class PersonWithDnAnnotations {
     @Transient
     private String company;
 
-    @DnAttribute(value="c", index=0)
+    @DnAttribute(value="ou", index=0)
     @Transient
     private String country;
 

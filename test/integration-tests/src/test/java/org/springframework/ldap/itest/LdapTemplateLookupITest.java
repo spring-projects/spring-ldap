@@ -51,7 +51,7 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 	 */
 	@Test
 	public void testLookup_Plain() {
-		DirContextAdapter result = (DirContextAdapter) tested.lookup("cn=Some Person2, ou=company1,c=Sweden");
+		DirContextAdapter result = (DirContextAdapter) tested.lookup("cn=Some Person2, ou=company1,ou=Sweden");
 
 		assertEquals("Some Person2", result.getStringAttribute("cn"));
 		assertEquals("Person2", result.getStringAttribute("sn"));
@@ -74,7 +74,7 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 	@Test
 	public void testLookup_AttributesMapper() {
 		AttributesMapper mapper = new PersonAttributesMapper();
-		Person person = (Person) tested.lookup("cn=Some Person2, ou=company1,c=Sweden", mapper);
+		Person person = (Person) tested.lookup("cn=Some Person2, ou=company1,ou=Sweden", mapper);
 
 		assertEquals("Some Person2", person.getFullname());
 		assertEquals("Person2", person.getLastname());
@@ -84,7 +84,7 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 	@Test
 	public void testLookup_AttributesMapper_LdapName() {
 		AttributesMapper mapper = new PersonAttributesMapper();
-		Person person = (Person) tested.lookup(LdapUtils.newLdapName("cn=Some Person2, ou=company1,c=Sweden"), mapper);
+		Person person = (Person) tested.lookup(LdapUtils.newLdapName("cn=Some Person2, ou=company1,ou=Sweden"), mapper);
 
 		assertEquals("Some Person2", person.getFullname());
 		assertEquals("Person2", person.getLastname());
@@ -122,7 +122,7 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 	public void testLookup_ReturnAttributes_AttributesMapper() {
 		AttributesMapper mapper = new SubsetPersonAttributesMapper();
 
-		Person person = (Person) tested.lookup("cn=Some Person2, ou=company1,c=Sweden", new String[] { "cn" }, mapper);
+		Person person = (Person) tested.lookup("cn=Some Person2, ou=company1,ou=Sweden", new String[] { "cn" }, mapper);
 
 		assertEquals("Some Person2", person.getFullname());
 		assertNull("lastName should not be set", person.getLastname());
@@ -137,7 +137,7 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 	@Test
 	public void testLookup_ReturnAttributes_AttributesMapper_LdapName() {
 		AttributesMapper mapper = new SubsetPersonAttributesMapper();
-		Person person = (Person) tested.lookup(LdapUtils.newLdapName("cn=Some Person2, ou=company1,c=Sweden"),
+		Person person = (Person) tested.lookup(LdapUtils.newLdapName("cn=Some Person2, ou=company1,ou=Sweden"),
 				new String[] { "cn" }, mapper);
 
 		assertEquals("Some Person2", person.getFullname());
@@ -153,7 +153,7 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 	@Test
 	public void testLookup_ContextMapper() {
 		ContextMapper mapper = new PersonContextMapper();
-		Person person = (Person) tested.lookup("cn=Some Person2, ou=company1,c=Sweden", mapper);
+		Person person = (Person) tested.lookup("cn=Some Person2, ou=company1,ou=Sweden", mapper);
 
 		assertEquals("Some Person2", person.getFullname());
 		assertEquals("Person2", person.getLastname());
@@ -168,56 +168,20 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 	public void testLookup_ReturnAttributes_ContextMapper() {
 		ContextMapper mapper = new PersonContextMapper();
 
-		Person person = (Person) tested.lookup("cn=Some Person2, ou=company1,c=Sweden", new String[] { "cn" }, mapper);
+		Person person = (Person) tested.lookup("cn=Some Person2, ou=company1,ou=Sweden", new String[] { "cn" }, mapper);
 
 		assertEquals("Some Person2", person.getFullname());
 		assertNull("lastName should not be set", person.getLastname());
 		assertNull("description should not be set", person.getDescription());
 	}
 
-	/**
-	 * Verifies that we can lookup an entry that has a multi-valued rdn, which
-	 * means more than one attribute is part of the relative DN for the entry.
-	 */
-	@Test
-	public void DISABLED_testLookup_MultiValuedRdn() {
-		AttributesMapper mapper = new PersonAttributesMapper();
-		Person person = (Person) tested.lookup("cn=Some Person+sn=Person, ou=company1,c=Norway", mapper);
-
-		assertEquals("Some Person", person.getFullname());
-		assertEquals("Person", person.getLastname());
-		assertEquals("Norway, Company1, Some Person+Person", person.getDescription());
-	}
-
-	/**
-	 * Verifies that we can lookup an entry that has a multi-valued rdn, which
-	 * means more than one attribute is part of the relative DN for the entry.
-	 * 
-	 */
-	@Test
-	public void DISABLED_testLookup_MultiValuedRdn_DirContextAdapter() {
-		DirContextAdapter result = (DirContextAdapter) tested.lookup("cn=Some Person+sn=Person, ou=company1,c=Norway");
-
-		assertEquals("Some Person", result.getStringAttribute("cn"));
-		assertEquals("Person", result.getStringAttribute("sn"));
-		assertEquals("Norway, Company1, Some Person+Person", result.getStringAttribute("description"));
-	}
-
 	@Test
 	public void testLookup_GetNameInNamespace_Plain() {
-        String expectedDn = "cn=Some Person2, ou=company1,c=Sweden";
+        String expectedDn = "cn=Some Person2, ou=company1,ou=Sweden";
         DirContextAdapter result = (DirContextAdapter) tested.lookup(expectedDn);
 
         LdapName expectedName = LdapUtils.newLdapName(expectedDn);
         assertEquals(expectedName, result.getDn());
-		assertEquals("cn=Some Person2,ou=company1,c=Sweden," + base, result.getNameInNamespace());
-	}
-
-	@Test
-	public void testLookup_GetNameInNamespace_MultiRdn() {
-		DirContextAdapter result = (DirContextAdapter) tested.lookup("cn=Some Person+sn=Person,ou=company1,c=Norway");
-
-		assertEquals("cn=Some Person+sn=Person,ou=company1,c=Norway", result.getDn().toString());
-		assertEquals("cn=Some Person+sn=Person,ou=company1,c=Norway," + base, result.getNameInNamespace());
+		assertEquals("cn=Some Person2,ou=company1,ou=Sweden," + base, result.getNameInNamespace());
 	}
 }

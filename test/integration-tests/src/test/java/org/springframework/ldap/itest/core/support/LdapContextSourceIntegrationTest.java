@@ -17,6 +17,7 @@
 package org.springframework.ldap.itest.core.support;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -27,7 +28,7 @@ import org.springframework.ldap.core.simple.AbstractParameterizedContextMapper;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.itest.AbstractLdapTemplateIntegrationTest;
-import org.springframework.ldap.repository.Query;
+import org.springframework.ldap.itest.NoAdTest;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -110,10 +111,11 @@ public class LdapContextSourceIntegrationTest extends AbstractLdapTemplateIntegr
 	}
 
 	@Test
+    @Category(NoAdTest.class)
 	public void testGetContext() throws NamingException {
 		DirContext ctx = null;
 		try {
-			String expectedPrincipal = "cn=Some Person,ou=company1,c=Sweden," + base;
+			String expectedPrincipal = "cn=Some Person,ou=company1,ou=Sweden," + base;
 			String expectedCredentials = "password";
 			ctx = tested.getContext(expectedPrincipal, expectedCredentials);
 			assertNotNull(ctx);
@@ -139,6 +141,7 @@ public class LdapContextSourceIntegrationTest extends AbstractLdapTemplateIntegr
 
 	@SuppressWarnings("unchecked")
 	@Test
+    @Category(NoAdTest.class)
 	public void verifyAuthenticate() {
 		EqualsFilter filter = new EqualsFilter("cn", "Some Person2");
 		List<String> results = ldapTemplate.search("", filter.toString(), new DnContextMapper());

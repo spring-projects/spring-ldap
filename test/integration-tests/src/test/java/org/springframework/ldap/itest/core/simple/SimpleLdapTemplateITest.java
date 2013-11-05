@@ -16,6 +16,7 @@
 package org.springframework.ldap.itest.core.simple;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.DirContextAdapter;
@@ -26,6 +27,7 @@ import org.springframework.ldap.core.simple.SimpleLdapTemplate;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.itest.AbstractLdapTemplateIntegrationTest;
+import org.springframework.ldap.itest.NoAdTest;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -41,22 +43,22 @@ import static junit.framework.Assert.fail;
 
 @ContextConfiguration(locations = {"/conf/simpleLdapTemplateTestContext.xml"})
 public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest {
-	private static String DN_STRING = "cn=Some Person4,ou=company1,c=Sweden";
+	private static String DN_STRING = "cn=Some Person4,ou=company1,ou=Sweden";
 
-	private static LdapName DN = LdapUtils.newLdapName("cn=Some Person4,ou=company1,c=Sweden");
+	private static LdapName DN = LdapUtils.newLdapName("cn=Some Person4,ou=company1,ou=Sweden");
 
 	@Autowired
 	private SimpleLdapTemplate ldapTemplate;
 
 	@Test
 	public void testLookup() {
-		String result = ldapTemplate.lookup("cn=Some Person,ou=company1,c=Sweden", new CnContextMapper());
+		String result = ldapTemplate.lookup("cn=Some Person,ou=company1,ou=Sweden", new CnContextMapper());
 		assertEquals("Some Person", result);
 	}
 
 	@Test
 	public void testLookupName() {
-		String result = ldapTemplate.lookup(LdapUtils.newLdapName("cn=Some Person,ou=company1,c=Sweden"),
+		String result = ldapTemplate.lookup(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden"),
 				new CnContextMapper());
 		assertEquals("Some Person", result);
 	}
@@ -116,7 +118,7 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 
 	@Test
 	public void testModifyAttributes() {
-		DirContextOperations ctx = ldapTemplate.lookupContext("cn=Some Person,ou=company1,c=Sweden");
+		DirContextOperations ctx = ldapTemplate.lookupContext("cn=Some Person,ou=company1,ou=Sweden");
 
 		ctx.setAttributeValue("description", "updated description");
 		ctx.setAttributeValue("telephoneNumber", "0000001");
@@ -124,7 +126,7 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 		ldapTemplate.modifyAttributes(ctx);
 
 		// verify that the data was properly updated.
-		ldapTemplate.lookup("cn=Some Person,ou=company1,c=Sweden", new ParameterizedContextMapper<Object>() {
+		ldapTemplate.lookup("cn=Some Person,ou=company1,ou=Sweden", new ParameterizedContextMapper<Object>() {
 			public Object mapFromContext(Object ctx) {
 				DirContextAdapter adapter = (DirContextAdapter) ctx;
 				assertEquals("updated description", adapter.getStringAttribute("description"));
@@ -137,7 +139,7 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 	@Test
 	public void testModifyAttributesName() {
 		DirContextOperations ctx = ldapTemplate.lookupContext(LdapUtils.newLdapName(
-				"cn=Some Person,ou=company1,c=Sweden"));
+				"cn=Some Person,ou=company1,ou=Sweden"));
 
 		ctx.setAttributeValue("description", "updated description");
 		ctx.setAttributeValue("telephoneNumber", "0000001");
@@ -145,7 +147,7 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 		ldapTemplate.modifyAttributes(ctx);
 
 		// verify that the data was properly updated.
-		ldapTemplate.lookup("cn=Some Person,ou=company1,c=Sweden", new ParameterizedContextMapper<Object>() {
+		ldapTemplate.lookup("cn=Some Person,ou=company1,ou=Sweden", new ParameterizedContextMapper<Object>() {
 			public Object mapFromContext(Object ctx) {
 				DirContextAdapter adapter = (DirContextAdapter) ctx;
 				assertEquals("updated description", adapter.getStringAttribute("description"));
@@ -195,6 +197,7 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 	}
 
 	@Test
+    @Category(NoAdTest.class)
 	public void testAuthenticate() {
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));

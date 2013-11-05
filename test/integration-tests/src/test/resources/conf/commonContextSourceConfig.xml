@@ -20,7 +20,7 @@
     </beans>
 
     <beans profile="no-apacheds">
-        <ldap:context-source url="ldap://localhost:389"
+        <ldap:context-source url="${url}"
                              base="${base}"
                              username="${userDn}"
                              password="${password}"/>

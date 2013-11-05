@@ -62,10 +62,10 @@ public class ContextSourceTransactionManagerSubtreeIntegrationTest extends Abstr
 
     @Test
     public void testLdap168DeleteRecursively() {
-        dummyDao.deleteRecursively("ou=company1,c=Sweden");
+        dummyDao.deleteRecursively("ou=company1,ou=Sweden");
 
         try {
-            ldapTemplate.lookup("ou=company1,c=Sweden");
+            ldapTemplate.lookup("ou=company1,ou=Sweden");
             fail("NameNotFoundException expected");
         } catch (NameNotFoundException expected) {
             assertTrue(true);
@@ -75,14 +75,14 @@ public class ContextSourceTransactionManagerSubtreeIntegrationTest extends Abstr
     @Test
     public void testLdap168DeleteWithException() {
         try {
-            dummyDao.deleteRecursivelyWithException("ou=company1,c=Sweden");
+            dummyDao.deleteRecursivelyWithException("ou=company1,ou=Sweden");
             fail("DummyException expected");
         } catch (DummyException expected) {
             assertTrue(true);
         }
 
         // Entry should have been restored
-        ldapTemplate.lookup("ou=company1,c=Sweden");
+        ldapTemplate.lookup("ou=company1,ou=Sweden");
     }
 
     @Test

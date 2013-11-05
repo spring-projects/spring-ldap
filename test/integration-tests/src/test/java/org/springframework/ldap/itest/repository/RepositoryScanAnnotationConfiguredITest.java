@@ -38,7 +38,7 @@ import static org.junit.Assert.assertTrue;
  */
 @ContextConfiguration(locations = {"/conf/repositoryScanAnnotationTestContext.xml"})
 public class RepositoryScanAnnotationConfiguredITest extends AbstractLdapTemplateIntegrationTest {
-    private static final Name PERSON3_DN = LdapUtils.newLdapName("cn=Some Person3, ou=Company1, c=Sweden");
+    private static final Name PERSON3_DN = LdapUtils.newLdapName("cn=Some Person3, ou=Company1, ou=Sweden");
 
     @Autowired
     private PersonRepository tested;

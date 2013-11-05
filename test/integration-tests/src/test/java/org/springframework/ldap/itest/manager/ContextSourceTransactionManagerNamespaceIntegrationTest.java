@@ -77,7 +77,7 @@ public class ContextSourceTransactionManagerNamespaceIntegrationTest extends Abs
 
 		// Verify that no entry was created
 		try {
-			ldapTemplate.lookup("cn=some testperson, ou=company1, c=Sweden");
+			ldapTemplate.lookup("cn=some testperson, ou=company1, ou=Sweden");
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
@@ -90,7 +90,7 @@ public class ContextSourceTransactionManagerNamespaceIntegrationTest extends Abs
 		dummyDao.create("Sweden", "company1", "some testperson", "testperson", "some description");
 
 		log.debug("Verifying result");
-		String expectedDn = "cn=some testperson, ou=company1, c=Sweden";
+		String expectedDn = "cn=some testperson, ou=company1, ou=Sweden";
 		Object ldapResult = ldapTemplate.lookup(expectedDn);
 		assertNotNull(ldapResult);
 
@@ -99,7 +99,7 @@ public class ContextSourceTransactionManagerNamespaceIntegrationTest extends Abs
 
 	@Test
 	public void testUpdateWithException() {
-		String dn = "cn=Some Person,ou=company1,c=Sweden";
+		String dn = "cn=Some Person,ou=company1,ou=Sweden";
 		try {
 			dummyDao.updateWithException(dn, "Some Person", "Updated Person", "Updated description");
 			fail("DummyException expected");
@@ -123,7 +123,7 @@ public class ContextSourceTransactionManagerNamespaceIntegrationTest extends Abs
 
 	@Test
 	public void testUpdate() {
-		String dn = "cn=Some Person,ou=company1,c=Sweden";
+		String dn = "cn=Some Person,ou=company1,ou=Sweden";
 		dummyDao.update(dn, "Some Person", "Updated Person", "Updated description");
 
 		log.debug("Verifying result");
@@ -142,8 +142,8 @@ public class ContextSourceTransactionManagerNamespaceIntegrationTest extends Abs
 
 	@Test
 	public void testUpdateAndRenameWithException() {
-		String dn = "cn=Some Person2,ou=company1,c=Sweden";
-		String newDn = "cn=Some Person2,ou=company2,c=Sweden";
+		String dn = "cn=Some Person2,ou=company1,ou=Sweden";
+		String newDn = "cn=Some Person2,ou=company2,ou=Sweden";
 		try {
 			// Perform test
 			dummyDao.updateAndRenameWithException(dn, newDn, "Updated description");
@@ -174,8 +174,8 @@ public class ContextSourceTransactionManagerNamespaceIntegrationTest extends Abs
 
 	@Test
 	public void testUpdateAndRename() {
-		String dn = "cn=Some Person2,ou=company1,c=Sweden";
-		String newDn = "cn=Some Person2,ou=company2,c=Sweden";
+		String dn = "cn=Some Person2,ou=company1,ou=Sweden";
+		String newDn = "cn=Some Person2,ou=company2,ou=Sweden";
 		// Perform test
 		dummyDao.updateAndRename(dn, newDn, "Updated description");
 
@@ -193,7 +193,7 @@ public class ContextSourceTransactionManagerNamespaceIntegrationTest extends Abs
 
 	@Test
 	public void testModifyAttributesWithException() {
-		String dn = "cn=Some Person,ou=company1,c=Sweden";
+		String dn = "cn=Some Person,ou=company1,ou=Sweden";
 		try {
 			// Perform test
 			dummyDao.modifyAttributesWithException(dn, "Updated lastname", "Updated description");
@@ -217,7 +217,7 @@ public class ContextSourceTransactionManagerNamespaceIntegrationTest extends Abs
 
 	@Test
 	public void testModifyAttributes() {
-		String dn = "cn=Some Person,ou=company1,c=Sweden";
+		String dn = "cn=Some Person,ou=company1,ou=Sweden";
 		// Perform test
 		dummyDao.modifyAttributes(dn, "Updated lastname", "Updated description");
 
@@ -235,7 +235,7 @@ public class ContextSourceTransactionManagerNamespaceIntegrationTest extends Abs
 
 	@Test
 	public void testUnbindWithException() {
-		String dn = "cn=Some Person,ou=company1,c=Sweden";
+		String dn = "cn=Some Person,ou=company1,ou=Sweden";
 		try {
 			// Perform test
 			dummyDao.unbindWithException(dn, "Some Person");
@@ -258,7 +258,7 @@ public class ContextSourceTransactionManagerNamespaceIntegrationTest extends Abs
 
 	@Test
 	public void testUnbind() {
-		String dn = "cn=Some Person,ou=company1,c=Sweden";
+		String dn = "cn=Some Person,ou=company1,ou=Sweden";
 		// Perform test
 		dummyDao.unbind(dn, "Some Person");
 

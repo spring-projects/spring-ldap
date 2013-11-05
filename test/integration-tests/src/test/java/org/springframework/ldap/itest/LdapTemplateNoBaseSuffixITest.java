@@ -57,7 +57,7 @@ public class LdapTemplateNoBaseSuffixITest extends AbstractLdapTemplateIntegrati
 	 */
 	@Test
 	public void testLookup_Plain() {
-        String expectedDn = "cn=Some Person2, ou=company1, c=Sweden," + base;
+        String expectedDn = "cn=Some Person2, ou=company1, ou=Sweden," + base;
         DirContextAdapter result = (DirContextAdapter) tested.lookup(expectedDn);
 
 		assertEquals("Some Person2", result.getStringAttribute("cn"));
@@ -83,18 +83,18 @@ public class LdapTemplateNoBaseSuffixITest extends AbstractLdapTemplateIntegrati
 		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
 		adapter.setAttributeValue("cn", "Some Person4");
 		adapter.setAttributeValue("sn", "Person4");
-		tested.bind("cn=Some Person4, ou=company1, c=Sweden," + base, adapter, null);
+		tested.bind("cn=Some Person4, ou=company1, ou=Sweden," + base, adapter, null);
 
 		DirContextAdapter result = (DirContextAdapter) tested
-				.lookup("cn=Some Person4, ou=company1, c=Sweden," + base);
+				.lookup("cn=Some Person4, ou=company1, ou=Sweden," + base);
 
 		assertEquals("Some Person4", result.getStringAttribute("cn"));
 		assertEquals("Person4", result.getStringAttribute("sn"));
-		assertEquals(LdapUtils.newLdapName("cn=Some Person4,ou=company1,c=Sweden," + base), result.getDn());
+		assertEquals(LdapUtils.newLdapName("cn=Some Person4,ou=company1,ou=Sweden," + base), result.getDn());
 
-		tested.unbind("cn=Some Person4,ou=company1,c=Sweden," + base);
+		tested.unbind("cn=Some Person4,ou=company1,ou=Sweden," + base);
 		try {
-			tested.lookup("cn=Some Person4, ou=company1, c=Sweden," + base);
+			tested.lookup("cn=Some Person4, ou=company1, ou=Sweden," + base);
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {

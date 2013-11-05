@@ -10,7 +10,7 @@
 		<property name="urls" value="${url}" />
 		<property name="userDn" value="${userDn}" />
 		<property name="password" value="${password}" />
-		<property name="base" value="${base}" />
+		<property name="base" value="dc=261consulting,dc=com" />
 		<property name="dirObjectFactory"
 			value="org.springframework.ldap.core.support.DefaultDirObjectFactory" />
 	</bean>
@@ -20,7 +20,7 @@
 		<property name="urls" value="${url}" />
 		<property name="userDn" value="${userDn}" />
 		<property name="password" value="${password}" />
-		<property name="base" value="cn=john doe, ${base}" />
+		<property name="base" value="cn=john doe, dc=261consulting,dc=com" />
 		<property name="dirObjectFactory"
 			value="org.springframework.ldap.core.support.DefaultDirObjectFactory" />
 	</bean>

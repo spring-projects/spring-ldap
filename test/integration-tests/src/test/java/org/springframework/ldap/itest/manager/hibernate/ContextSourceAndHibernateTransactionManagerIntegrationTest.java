@@ -130,7 +130,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 
 		// Verify that no entry was created in ldap or hibernate db
 		try {
-			ldapTemplate.lookup("cn=some testperson, ou=company1, c=Sweden");
+			ldapTemplate.lookup("cn=some testperson, ou=company1, ou=Sweden");
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
@@ -159,7 +159,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 		this.dummyDao.create(person);
 		person = null;
 		log.debug("Verifying result");
-		Object ldapResult = ldapTemplate.lookup("cn=some testperson, ou=company1, c=Sweden");
+		Object ldapResult = ldapTemplate.lookup("cn=some testperson, ou=company1, ou=Sweden");
 		OrgPerson fromDb = (OrgPerson) this.hibernateTemplate.get(OrgPerson.class, new Integer(2));
 		assertNotNull(ldapResult);
 		assertNotNull(fromDb);
@@ -167,7 +167,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 
 	@Test
 	public void testUpdateWithException() {
-		String dn = "cn=Some Person,ou=company1,c=Sweden";
+		String dn = "cn=Some Person,ou=company1,ou=Sweden";
 		OrgPerson originalPerson = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, new Integer(1));
 		originalPerson.setLastname("fooo");
 		try {
@@ -198,7 +198,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 
 	@Test
 	public void testUpdate() {
-		String dn = "cn=Some Person,ou=company1,c=Sweden";
+		String dn = "cn=Some Person,ou=company1,ou=Sweden";
 		OrgPerson person = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, new Integer(1));
 		person.setLastname("Updated Person");
 		person.setDescription("Updated description");
@@ -222,8 +222,8 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 
 	@Test
 	public void testUpdateAndRenameWithException() {
-		String dn = "cn=Some Person2,ou=company1,c=Sweden";
-		String newDn = "cn=Some Person2,ou=company2,c=Sweden";
+		String dn = "cn=Some Person2,ou=company1,ou=Sweden";
+		String newDn = "cn=Some Person2,ou=company2,ou=Sweden";
 		OrgPerson person = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, new Integer(1));
 		person.setLastname("Updated Person");
 		person.setDescription("Updated description");
@@ -258,8 +258,8 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 
 	@Test
 	public void testUpdateAndRename() {
-		String dn = "cn=Some Person2,ou=company1,c=Sweden";
-		String newDn = "cn=Some Person2,ou=company2,c=Sweden";
+		String dn = "cn=Some Person2,ou=company1,ou=Sweden";
+		String newDn = "cn=Some Person2,ou=company2,ou=Sweden";
 		// Perform test
 		dummyDao.updateAndRename(dn, newDn, "Updated description");
 
@@ -276,7 +276,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 
 	@Test
 	public void testModifyAttributesWithException() {
-		String dn = "cn=Some Person,ou=company1,c=Sweden";
+		String dn = "cn=Some Person,ou=company1,ou=Sweden";
 		try {
 			// Perform test
 			dummyDao.modifyAttributesWithException(dn, "Updated lastname", "Updated description");
@@ -300,7 +300,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 
 	@Test
 	public void testModifyAttributes() {
-		String dn = "cn=Some Person,ou=company1,c=Sweden";
+		String dn = "cn=Some Person,ou=company1,ou=Sweden";
 		// Perform test
 		dummyDao.modifyAttributes(dn, "Updated lastname", "Updated description");
 
@@ -318,7 +318,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 
 	@Test
 	public void testUnbindWithException() {
-		String dn = "cn=Some Person,ou=company1,c=Sweden";
+		String dn = "cn=Some Person,ou=company1,ou=Sweden";
 		OrgPerson person = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, new Integer(1));
 
 		try {
@@ -353,7 +353,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 
 	@Test
 	public void testUnbind() {
-		String dn = "cn=Some Person,ou=company1,c=Sweden";
+		String dn = "cn=Some Person,ou=company1,ou=Sweden";
 		// Perform test
 		OrgPerson person = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, new Integer(1));
 		dummyDao.unbind(person);

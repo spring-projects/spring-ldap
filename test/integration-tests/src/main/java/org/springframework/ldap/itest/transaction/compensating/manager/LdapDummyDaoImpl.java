@@ -53,7 +53,7 @@ public class LdapDummyDaoImpl implements DummyDao {
     public void create(String country, String company, String fullname,
             String lastname, String description) {
         DistinguishedName dn = new DistinguishedName();
-        dn.add("c", country);
+        dn.add("ou", country);
         dn.add("ou", company);
         dn.add("cn", fullname);
 
@@ -76,9 +76,8 @@ public class LdapDummyDaoImpl implements DummyDao {
         DirContextAdapter ctx = (DirContextAdapter) ldapTemplate.lookup(dn);
         ctx.setAttributeValue("sn", lastname);
         ctx.setAttributeValue("description", description);
-        ctx.update();
 
-        ldapTemplate.rebind(dn, ctx, null);
+        ldapTemplate.modifyAttributes(ctx);
     }
 
     /*
@@ -102,9 +101,8 @@ public class LdapDummyDaoImpl implements DummyDao {
     public void updateAndRename(String dn, String newDn, String description) {
         DirContextAdapter ctx = (DirContextAdapter) ldapTemplate.lookup(dn);
         ctx.setAttributeValue("description", description);
-        ctx.update();
 
-        ldapTemplate.rebind(dn, ctx, null);
+        ldapTemplate.modifyAttributes(ctx);
         ldapTemplate.rename(dn, newDn);
     }
 

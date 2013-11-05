@@ -46,8 +46,8 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
  */
 @ContextConfiguration(locations = {"/conf/repositoryScanTestContext.xml"})
 public class RepositoryScanITest extends AbstractLdapTemplateIntegrationTest {
-    private static final Name PERSON1_DN = LdapUtils.newLdapName("cn=Some Person, ou=Company1, c=Sweden");
-    private static final Name PERSON3_DN = LdapUtils.newLdapName("cn=Some Person3, ou=Company1, c=Sweden");
+    private static final Name PERSON1_DN = LdapUtils.newLdapName("cn=Some Person, ou=Company1, ou=Sweden");
+    private static final Name PERSON3_DN = LdapUtils.newLdapName("cn=Some Person3, ou=Company1, ou=Sweden");
 
     @Autowired
     private PersonRepository tested;
@@ -173,7 +173,7 @@ public class RepositoryScanITest extends AbstractLdapTemplateIntegrationTest {
     @Test
     public void testCreate() {
         Person person = new Person();
-        LdapName dn = LdapNameBuilder.newLdapName("ou=company1,c=Sweden")
+        LdapName dn = LdapNameBuilder.newLdapName("ou=company1,ou=Sweden")
                 .add("cn", "New Person").build();
         person.setDn(dn);
         person.setCommonName("New Person");
