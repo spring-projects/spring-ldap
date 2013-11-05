@@ -299,7 +299,14 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 
                 DnAttribute dnAttribute = attributeInfo.getDnAttribute();
                 if(dnAttribute != null) {
-                    String dnValue = LdapUtils.getStringValue(dn, dnAttribute.value());
+                    String dnValue;
+                    int index = dnAttribute.index();
+
+                    if(index != -1) {
+                        dnValue = LdapUtils.getStringValue(dn, index);
+                    } else {
+                        dnValue = LdapUtils.getStringValue(dn, dnAttribute.value());
+                    }
                     field.set(result, dnValue);
                 }
             }
