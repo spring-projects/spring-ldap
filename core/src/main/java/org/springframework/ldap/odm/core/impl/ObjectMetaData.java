@@ -124,8 +124,8 @@ import java.util.TreeSet;
             // So we can write to private fields
             field.setAccessible(true);
 
-            // Skip synthetic fields
-            if (field.isSynthetic()) {
+            // Skip synthetic or static fields
+            if (Modifier.isStatic(field.getModifiers()) || field.isSynthetic()) {
                 continue;
             }
 

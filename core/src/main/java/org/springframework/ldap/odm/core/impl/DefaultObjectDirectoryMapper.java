@@ -275,6 +275,26 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
                 attributeValueMap.put(new CaseIgnoreString(currentAttribute.getID()), currentAttribute);
             }
 
+
+            // If this is the objectclass attribute then check that values correspond to the metadata we have
+            // for the Java representation
+            Attribute ocAttribute = attributeValueMap.get(OBJECT_CLASS_ATTRIBUTE_CI);
+            if (ocAttribute != null) {
+                // Get all object class values from the JNDI attribute
+                Set<CaseIgnoreString> objectClassesFromJndi = new HashSet<CaseIgnoreString>();
+                NamingEnumeration<?> objectClassesFromJndiEnum = ocAttribute.getAll();
+                while (objectClassesFromJndiEnum.hasMoreElements()) {
+                    objectClassesFromJndi.add(new CaseIgnoreString((String)objectClassesFromJndiEnum.nextElement()));
+                }
+                // OK - checks its the same as the meta-data we have
+                if(!collectionContainsAll(objectClassesFromJndi, metaData.getObjectClasses())) {
+                    return null;
+                }
+            } else {
+                throw new InvalidEntryException(String.format("No object classes were returned for class %1$s",
+                        clazz.getName()));
+            }
+
             // Now loop through all the fields in the Java representation populating it with values from the
             // attributeValueMap
             for (Field field : metaData) {
@@ -309,25 +329,6 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
                     }
                     field.set(result, dnValue);
                 }
-            }
-
-            // If this is the objectclass attribute then check that values correspond to the metadata we have
-            // for the Java representation
-            Attribute ocAttribute = attributeValueMap.get(OBJECT_CLASS_ATTRIBUTE_CI);
-            if (ocAttribute != null) {
-                // Get all object class values from the JNDI attribute
-                Set<CaseIgnoreString> objectClassesFromJndi = new HashSet<CaseIgnoreString>();
-                NamingEnumeration<?> objectClassesFromJndiEnum = ocAttribute.getAll();
-                while (objectClassesFromJndiEnum.hasMoreElements()) {
-                    objectClassesFromJndi.add(new CaseIgnoreString((String)objectClassesFromJndiEnum.nextElement()));
-                }
-                // OK - checks its the same as the meta-data we have
-                if(!collectionContainsAll(objectClassesFromJndi, metaData.getObjectClasses())) {
-                    return null;
-                }
-            } else {
-                throw new InvalidEntryException(String.format("No object classes were returned for class %1$s",
-                        clazz.getName()));
             }
         } catch (NamingException ne) {
             throw new InvalidEntryException(String.format("Problem creating %1$s from LDAP Entry %2$s",

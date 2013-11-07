@@ -309,6 +309,6 @@ import java.util.TreeSet;
     @Override
     public String toString() {
         return String.format("name=%1$s | field=%2$s | valueClass=%3$s | syntax=%4$s| isBinary=%5$s | isId=%6$s | isList=%7$s | isObjectClass=%8$s",
-                             getName(), getField(), getValueClass().getName(), getSyntax(), isBinary(), isId(), isCollection(), isObjectClass());
+                             getName(), getField(), getValueClass(), getSyntax(), isBinary(), isId(), isCollection(), isObjectClass());
     }
 }
