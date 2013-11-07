@@ -3,11 +3,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.springframework.ldap</groupId>
-  <artifactId>spring-ldap-user-admin-sample</artifactId>
+  <artifactId>spring-ldap-plain-sample</artifactId>
   <version>2.0.0.CI-SNAPSHOT</version>
   <packaging>war</packaging>
-  <name>spring-ldap-user-admin-sample</name>
-  <description>spring-ldap-user-admin-sample</description>
+  <name>spring-ldap-plain-sample</name>
+  <description>spring-ldap-plain-sample</description>
   <url>http://www.springframework.org/ldap</url>
   <organization>
     <name>SpringSource</name>
@@ -88,7 +88,7 @@
         <version>8.1.14.v20131031</version>
         <configuration>
           <webAppConfig>
-            <contextPath>/spring-ldap-user-admin-sample</contextPath>
+            <contextPath>/spring-ldap-plain-sample</contextPath>
           </webAppConfig>
         </configuration>
       </plugin>
@@ -108,24 +108,6 @@
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.2.3</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>15.0</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.ldap</groupId>
-      <artifactId>spring-ldap-test</artifactId>
-      <version>2.0.0.CI-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>jstl</artifactId>
       <version>1.2</version>
@@ -136,6 +118,12 @@
       <artifactId>junit</artifactId>
       <version>4.10</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.ldap</groupId>
+      <artifactId>spring-ldap-test</artifactId>
+      <version>2.0.0.CI-SNAPSHOT</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>

@@ -7,3 +7,5 @@ apply plugin: 'jetty'
 sonarRunner {
     skipProject = true
 }
+
+build.dependsOn generatePom

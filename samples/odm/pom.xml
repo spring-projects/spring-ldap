@@ -3,11 +3,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.springframework.ldap</groupId>
-  <artifactId>spring-ldap-user-admin-sample</artifactId>
+  <artifactId>spring-ldap-odm-sample</artifactId>
   <version>2.0.0.CI-SNAPSHOT</version>
   <packaging>war</packaging>
-  <name>spring-ldap-user-admin-sample</name>
-  <description>spring-ldap-user-admin-sample</description>
+  <name>spring-ldap-odm-sample</name>
+  <description>spring-ldap-odm-sample</description>
   <url>http://www.springframework.org/ldap</url>
   <organization>
     <name>SpringSource</name>
@@ -88,7 +88,7 @@
         <version>8.1.14.v20131031</version>
         <configuration>
           <webAppConfig>
-            <contextPath>/spring-ldap-user-admin-sample</contextPath>
+            <contextPath>/spring-ldap-odm-sample</contextPath>
           </webAppConfig>
         </configuration>
       </plugin>
@@ -106,18 +106,6 @@
       <artifactId>logback-classic</artifactId>
       <version>1.0.13</version>
       <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.2.3</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>15.0</version>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.ldap</groupId>

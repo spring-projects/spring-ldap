@@ -2,12 +2,13 @@ apply from: SAMPLE_WAR_GRADLE
 
 dependencies {
     compile project(':spring-ldap-test'),
-            'log4j:log4j:1.2.9',
             'javax.servlet:jstl:1.2',
             "org.springframework:spring-context:$springVersion",
             "org.springframework:spring-webmvc:$springVersion"
 
     provided "javax.servlet:servlet-api:2.5"
+
+    runtime 'ch.qos.logback:logback-classic:1.0.13'
 
     testCompile "org.springframework:spring-test:$springVersion",
                 "junit:junit:$junitVersion"
