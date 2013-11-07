@@ -1,0 +1,9 @@
+apply from: JAVA_SCRIPT
+apply from: MAVEN_DEPLOYMENT_SCRIPT
+
+apply plugin: 'war'
+apply plugin: 'jetty'
+
+sonarRunner {
+    skipProject = true
+}

@@ -1,5 +1,9 @@
 apply from: JAVA_SCRIPT
 
+sonarRunner {
+    skipProject = true
+}
+
 dependencies {
     compile project(":spring-ldap-core"),
             project(":spring-ldap-odm"),

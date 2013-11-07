@@ -1,6 +1,4 @@
-apply from: JAVA_SCRIPT
-apply plugin: 'war'
-apply plugin: 'jetty'
+apply from: SAMPLE_WAR_GRADLE
 
 dependencies {
     compile project(':spring-ldap-test'),

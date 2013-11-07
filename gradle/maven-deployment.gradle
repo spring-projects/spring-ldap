@@ -5,8 +5,14 @@ install {
 }
 
 def customizePom(pom, gradleProject) {
+    def isWar = project.hasProperty('war')
+    def projectName = gradleProject.name
+
     pom.project {
-        name = gradleProject.name
+        name = projectName
+        if(isWar) {
+            packaging = "war"
+        }
         description = gradleProject.name
         url = 'http://www.springframework.org/ldap'
         organization {
@@ -64,6 +70,49 @@ def customizePom(pom, gradleProject) {
             }
             contributor {
                 name = "Marvin S. Addison"
+            }
+        }
+
+        if(!project.releaseBuild) {
+            repositories {
+                repository {
+                    id 'spring-snasphot'
+                    url 'http://repo.springsource.org/libs-snapshot'
+                }
+            }
+        }
+
+        build {
+            plugins {
+                plugin {
+                    groupId = 'org.apache.maven.plugins'
+                    artifactId = 'maven-compiler-plugin'
+                    configuration {
+                        source = '1.6'
+                        target = '1.6'
+                    }
+                }
+                if(isWar) {
+                    plugin {
+                        groupId = 'org.apache.maven.plugins'
+                        artifactId = 'maven-war-plugin'
+                        version = '2.3'
+                        configuration {
+                            failOnMissingWebXml = 'false'
+                        }
+                    }
+
+                    plugin {
+                        groupId = 'org.mortbay.jetty'
+                        artifactId = 'jetty-maven-plugin'
+                        version = '8.1.14.v20131031'
+                        configuration {
+                            webAppConfig {
+                                contextPath = projectName
+                            }
+                        }
+                    }
+                }
             }
         }
     }

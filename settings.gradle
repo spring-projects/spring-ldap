@@ -17,6 +17,8 @@ include 'test/integration-tests-ad'
 include 'samples/plain'
 include 'samples/odm'
 include 'samples/simple-odm'
+include 'samples/user-admin'
+
 
 rootProject.children.each { p->
     def name = p.name
