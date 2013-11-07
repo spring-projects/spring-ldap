@@ -108,7 +108,7 @@ def customizePom(pom, gradleProject) {
                         version = '8.1.14.v20131031'
                         configuration {
                             webAppConfig {
-                                contextPath = projectName
+                                contextPath = "/" + projectName
                             }
                         }
                     }
