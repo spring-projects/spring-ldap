@@ -22,11 +22,15 @@ import org.springframework.ldap.itest.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.itest.odm.PersonWithDnAnnotations;
 import org.springframework.ldap.itest.repositories.PersonWithDnAnnotationsRepository;
 import org.springframework.ldap.query.LdapQueryBuilder;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 /**
  * Tests for Spring LDAP automatic repository scan functionality.
@@ -48,15 +52,33 @@ public class RepositoryScanWithDnAnnotationsITest extends AbstractLdapTemplateIn
         person.setCountry("Sweden");
         person.setCompany("company1");
 
+        assertNull(person.getDn());
+
         tested.save(person);
+
+        assertNotNull(person.getDn());
 
         assertEquals(6, tested.count());
 
-        person = tested.findOne(LdapQueryBuilder.query().where("cn").is("New Person"));
+        person = tested.findOne(query().where("cn").is("New Person"));
 
         assertEquals("New Person", person.getCommonName());
         assertEquals("Person", person.getSurname());
         assertEquals("This is the description", person.getDesc().get(0));
         assertEquals("0123456", person.getTelephoneNumber());
+    }
+
+    @Test
+    public void verifyThatMovedEntryGetsUpdatedId() {
+        PersonWithDnAnnotations found = tested.findOne(query().where("cn").is("Some Person3"));
+        assertNotNull(found);
+
+        assertEquals(LdapUtils.newLdapName("cn=Some Person3,ou=company1,ou=Sweden"), found.getDn());
+
+        found.setCompany("company2");
+
+        tested.save(found);
+
+        assertEquals(LdapUtils.newLdapName("cn=Some Person3,ou=company2,ou=Sweden"), found.getDn());
     }
 }

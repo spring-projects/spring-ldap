@@ -1048,6 +1048,7 @@ public class LdapTemplateTest {
 
         tested.create(expectedObject);
 
+        verify(odmMock, never()).setId(expectedObject, expectedName);
         verify(dirContextMock).bind(expectedName, ctxCaptor.getValue(), null);
         verify(dirContextMock).close();
     }
@@ -1066,6 +1067,7 @@ public class LdapTemplateTest {
 
         tested.create(expectedObject);
 
+        verify(odmMock).setId(expectedObject, expectedName);
         verify(dirContextMock).bind(expectedName, ctxCaptor.getValue(), null);
         verify(dirContextMock).close();
     }
@@ -1104,6 +1106,7 @@ public class LdapTemplateTest {
 
         tested.update(expectedObject);
 
+        verify(odmMock, never()).setId(expectedObject, expectedName);
         verify(odmMock).mapToLdapDataEntry(expectedObject, ctxMock);
         verify(dirContextMock).modifyAttributes(expectedName, expectedModificationItems);
 
@@ -1130,6 +1133,7 @@ public class LdapTemplateTest {
 
         tested.update(expectedObject);
 
+        verify(odmMock).setId(expectedObject, expectedName);
         verify(odmMock).mapToLdapDataEntry(expectedObject, ctxMock);
         verify(dirContextMock).modifyAttributes(expectedName, expectedModificationItems);
 
@@ -1152,6 +1156,7 @@ public class LdapTemplateTest {
 
         tested.update(expectedObject);
 
+        verify(odmMock).setId(expectedObject, expectedNewName);
         verify(dirContextMock).unbind(expectedOriginalName);
         verify(dirContextMock).bind(expectedNewName, ctxCaptor.getValue(), null);
         verify(dirContextMock, times(2)).close();

@@ -26,7 +26,6 @@ import static org.junit.Assert.assertSame;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -61,16 +60,6 @@ public class SimpleLdapRepositoryTest {
         assertArrayEquals(new String[]{"objectclass"}, query.attributes());
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void testSaveNonPersistableNoIdNoCalculatedId() {
-        Object expectedEntity = new Object();
-
-        when(odmMock.getId(expectedEntity)).thenReturn(null);
-        when(odmMock.getCalculatedId(expectedEntity)).thenReturn(null);
-
-        tested.save(expectedEntity);
-    }
-
     @Test
     public void testSaveNonPersistableWithIdSet() {
         Object expectedEntity = new Object();
@@ -81,7 +70,6 @@ public class SimpleLdapRepositoryTest {
         tested.save(expectedEntity);
 
         verify(ldapOperationsMock).update(expectedEntity);
-        verify(odmMock, never()).setId(any(Object.class), any(Name.class));
     }
 
     @Test
@@ -95,7 +83,6 @@ public class SimpleLdapRepositoryTest {
         tested.save(expectedEntity);
 
         verify(ldapOperationsMock).update(expectedEntity);
-        verify(odmMock).setId(expectedEntity, expectedName);
     }
 
     @Test
@@ -109,7 +96,6 @@ public class SimpleLdapRepositoryTest {
         tested.save(expectedEntity);
 
         verify(ldapOperationsMock).create(expectedEntity);
-        verify(odmMock).setId(expectedEntity, expectedName);
     }
 
     @Test
@@ -123,7 +109,6 @@ public class SimpleLdapRepositoryTest {
         tested.save(expectedEntity);
 
         verify(ldapOperationsMock).create(expectedEntity);
-        verify(odmMock, never()).setId(any(Object.class), any(Name.class));
     }
 
     @Test
@@ -138,7 +123,6 @@ public class SimpleLdapRepositoryTest {
         tested.save(expectedEntity);
 
         verify(ldapOperationsMock).create(expectedEntity);
-        verify(odmMock).setId(expectedEntity, expectedName);
     }
 
     @Test
@@ -152,7 +136,6 @@ public class SimpleLdapRepositoryTest {
         tested.save(expectedEntity);
 
         verify(ldapOperationsMock).update(expectedEntity);
-        verify(odmMock, never()).setId(any(Object.class), any(Name.class));
     }
 
     @Test

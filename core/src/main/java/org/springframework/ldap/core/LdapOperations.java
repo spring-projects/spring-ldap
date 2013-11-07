@@ -1715,6 +1715,7 @@ public interface LdapOperations {
      * If the field annotated with {@link org.springframework.ldap.odm.annotations.Id}
      * is set in the object, this will be used as the distinguished name of the new entry. If no explicit DN is specified,
      * an attempt will be made to calculate the name from fields annotated with {@link org.springframework.ldap.odm.annotations.DnAttribute}.
+     * If an id can be calculated, this will be populated in the supplied object.
      *
      * @param entry The entry to be create, it must <em>not</em> be null or already exist in the directory.
      *
@@ -1736,6 +1737,8 @@ public interface LdapOperations {
      * the current data of the entry will be read from the directory and a {@link #modifyAttributes(DirContextOperations)}
      * operation will be performed using the <code>ModificationItems</code> resulting from the changes of the
      * entry compared to its current state in the directory.
+     * If the id of the entry has changed, i.e. if it wasn't specified from the beginning, or if it is calculated to
+     * have changed, the new value will be populated in the supplied object.
      *
      * @param entry The entry to update, it must already exist in the directory.
      *

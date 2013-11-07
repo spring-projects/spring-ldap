@@ -193,8 +193,8 @@ public class RepositoryScanITest extends AbstractLdapTemplateIntegrationTest {
         assertEquals("0123456", person.getTelephoneNumber());
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void verifyThatCreateWithNoIdSetAndNotAbleToCalculateThrowsIllegalState() {
+    @Test(expected = IllegalArgumentException.class)
+    public void verifyThatCreateWithNoIdSetAndNotAbleToCalculateThrowsIllegalArgument() {
         Person person = new Person();
         person.setCommonName("New Person");
         person.setSurname("Person");

@@ -1787,6 +1787,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         Name id = odm.getId(entry);
         if(id == null) {
             id = odm.getCalculatedId(entry);
+            odm.setId(entry, id);
         }
 
         Assert.notNull(id, String.format("Unable to determine id for entry %s", entry.toString()));
@@ -1821,12 +1822,14 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
             odm.mapToLdapDataEntry(entry, context);
 
             bind(context);
+            odm.setId(entry, calculatedId);
         } else {
             // DN is the same, just modify the attributes
 
             Name id = originalId;
             if(id == null) {
                 id = calculatedId;
+                odm.setId(entry, calculatedId);
             }
 
             Assert.notNull(id, String.format("Unable to determine id for entry %s", entry.toString()));

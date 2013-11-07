@@ -83,25 +83,11 @@ public class SimpleLdapRepository<T> implements LdapRepository<T> {
     public <S extends T> S save(S entity) {
         Assert.notNull(entity, "Entity must not be null");
         Name declaredId = odm.getId(entity);
-        Name calculatedId = odm.getCalculatedId(entity);
 
         if (isNew(entity, declaredId)) {
-            if (declaredId == null) {
-                if (calculatedId != null) {
-                    odm.setId(entity, calculatedId);
-                } else {
-                    throw new IllegalStateException(String.format("Unable to calculate id of entry of class %s - " +
-                            "ID not set and unable to calculate new ID. Missing @DnAttribute annotations with index?",
-                            entity.getClass()));
-                }
-            }
-
             ldapOperations.create(entity);
         } else {
             ldapOperations.update(entity);
-            if (calculatedId != null && !calculatedId.equals(declaredId)) {
-                odm.setId(entity, calculatedId);
-            }
         }
 
         return entity;
