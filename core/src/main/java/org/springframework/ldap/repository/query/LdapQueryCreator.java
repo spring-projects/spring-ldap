@@ -24,6 +24,7 @@ import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 import org.springframework.data.repository.query.parser.Part;
 import org.springframework.data.repository.query.parser.PartTree;
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
+import org.springframework.ldap.query.ConditionCriteria;
 import org.springframework.ldap.query.ContainerCriteria;
 import org.springframework.ldap.query.LdapQuery;
 
@@ -55,9 +56,44 @@ public class LdapQueryCreator extends AbstractQueryCreator<LdapQuery, ContainerC
 
     @Override
     protected ContainerCriteria create(Part part, Iterator<Object> iterator) {
-        return query()
-                .where(getAttribute(part))
-                .is(iterator.next().toString());
+        ConditionCriteria criteria = query().where(getAttribute(part));
+
+        return appendCondition(part, iterator, criteria);
+    }
+
+    private ContainerCriteria appendCondition(Part part, Iterator<Object> iterator, ConditionCriteria criteria) {
+        Part.Type type = part.getType();
+
+        String value = null;
+        if(iterator.hasNext()){
+            value = iterator.next().toString();
+        }
+        switch (type) {
+            case NEGATING_SIMPLE_PROPERTY:
+                return criteria.not().is(value);
+            case SIMPLE_PROPERTY:
+                return criteria.is(value);
+            case STARTING_WITH:
+                return criteria.like(value + "*");
+            case ENDING_WITH:
+                return criteria.like("*" + value);
+            case CONTAINING:
+                return criteria.like("*" + value + "*");
+            case LIKE:
+                return criteria.like(value);
+            case NOT_LIKE:
+                return criteria.not().like(value);
+            case GREATER_THAN_EQUAL:
+                return criteria.gte(value);
+            case LESS_THAN_EQUAL:
+                return criteria.lte(value);
+            case IS_NOT_NULL:
+                return criteria.isPresent();
+            case IS_NULL:
+                return criteria.not().isPresent();
+        }
+
+        throw new IllegalArgumentException(String.format("%s queries are not supported for LDAP repositories", type));
     }
 
     private String getAttribute(Part part) {
@@ -71,7 +107,9 @@ public class LdapQueryCreator extends AbstractQueryCreator<LdapQuery, ContainerC
 
     @Override
     protected ContainerCriteria and(Part part, ContainerCriteria base, Iterator<Object> iterator) {
-        return base.and(getAttribute(part)).is(iterator.next().toString());
+        ConditionCriteria criteria = base.and(getAttribute(part));
+
+        return appendCondition(part, iterator, criteria);
     }
 
     @Override
