@@ -3,7 +3,23 @@
 
 <div class="container">
     <div class="main-body item-list">
-        <h2>User List</h2>
+        <div class="row">
+            <div class="col-md-2">
+                <h2>Users</h2>
+            </div>
+            <div class="col-md-10">
+                <form method="GET" role="form">
+                    <div class="row search-form">
+                        <div class="col-md-offset-6 col-md-4">
+                            <input type="text" class="form-control" id="name" name="name"/>
+                        </div>
+                        <div class="col-md-1">
+                            <button type="submit" class="btn btn-default">Filter</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
         <c:forEach var="user" items="${users}" varStatus="stat">
             <div class="row row-${stat.index % 2}">
                 <div class="col-md-11">${user.fullName} - ${user.department}&nbsp;</div>

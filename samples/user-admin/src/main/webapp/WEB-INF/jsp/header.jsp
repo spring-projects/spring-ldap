@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
+    <title>Spring LDAP User Admin</title>
     <link rel="icon" type="image/x-icon" href="<c:url value='/resources/img/favicon.png'/>" />
     <link href="<c:url value='/resources/bootstrap/css/bootstrap.min.css'/>" rel="stylesheet" />
     <link href="<c:url value='/resources/css/default.css'/>" rel="stylesheet" />
@@ -29,7 +30,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Spring LDAP User Admin</a>
+            <a class="navbar-brand" href="http://projects.spring.io/spring-ldap/">Spring LDAP</a>
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">

@@ -24,8 +24,10 @@ import org.springframework.ldap.samples.useradmin.domain.User;
 import org.springframework.ldap.samples.useradmin.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
@@ -49,8 +51,12 @@ public class UserController {
     private DepartmentRepo departmentRepo;
 
     @RequestMapping(value = {"/", "/users"}, method = GET)
-    public String index(ModelMap map) {
-        map.put("users", userService.findAll());
+    public String index(ModelMap map, @RequestParam(required = false) String name) {
+        if(StringUtils.hasText(name)) {
+            map.put("users", userService.searchByNameName(name));
+        } else {
+            map.put("users", userService.findAll());
+        }
         return "listUsers";
     }
 
@@ -74,7 +80,7 @@ public class UserController {
     }
 
     private void populateDepartments(ModelMap map) throws JsonProcessingException {
-        Map<String,List<String>> departmentMap = departmentRepo.getDepartmentMap();
+        Map<String, List<String>> departmentMap = departmentRepo.getDepartmentMap();
         ObjectMapper objectMapper = new ObjectMapper();
         String departmentsAsJson = objectMapper.writeValueAsString(departmentMap);
         map.put("departments", departmentsAsJson);

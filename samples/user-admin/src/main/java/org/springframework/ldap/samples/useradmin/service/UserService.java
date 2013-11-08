@@ -31,6 +31,7 @@ import org.springframework.ldap.support.LdapUtils;
 import javax.naming.Name;
 import javax.naming.ldap.LdapName;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -185,5 +186,9 @@ public class UserService implements BaseLdapNameAware {
 
             groupRepo.save(group);
         }
+    }
+
+    public List<User> searchByNameName(String lastName) {
+        return userRepo.findByFullNameContains(lastName);
     }
 }
