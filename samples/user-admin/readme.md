@@ -22,6 +22,7 @@ LDAP server. To do this, use the following system properties:
 * `sample.ldap.directory.type` - NORMAL or AD. Specify AD if running against Active Directory in order to enable some particular AD tweaks
 
 Example:
+
     gradle jettyRun -Dspring.profiles.active=no-apacheds -Dsample.ldap.url=ldaps://127.0.0.1:636 \
      -Dsample.ldap.userDn=CN=ldaptest,CN=Users,DC=261consulting,DC=local -Dsample.ldap.password=secret \
      -Dsample.ldap.base=ou=test,dc=261consulting,dc=local -Dsample.ldap.directory.type=AD
