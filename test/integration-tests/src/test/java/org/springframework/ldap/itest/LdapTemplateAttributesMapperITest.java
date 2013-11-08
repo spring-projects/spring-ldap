@@ -40,10 +40,6 @@ public class LdapTemplateAttributesMapperITest extends AbstractLdapTemplateInteg
 	@Autowired
 	private LdapTemplate tested;
 
-	protected String[] getConfigLocations() {
-		return new String[] {"/conf/ldapTemplateTestContext.xml"};
-	}
-
 	@Test
 	public void testSearch_AttributeMapper() throws Exception {
 		AttributesMapper mapper = new PersonAttributesMapper();

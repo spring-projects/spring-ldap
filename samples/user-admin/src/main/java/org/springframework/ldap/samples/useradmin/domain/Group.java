@@ -29,7 +29,7 @@ import java.util.Set;
  * @author Mattias Hellborg Arthursson
  */
 @Entry(objectClasses = {"groupOfNames", "top"}, base = "ou=Groups")
-public class Group {
+public final class Group {
     @Id
     private Name id;
 

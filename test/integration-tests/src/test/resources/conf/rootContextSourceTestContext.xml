@@ -11,22 +11,16 @@
 		<constructor-arg ref="contextSource" />
 	</bean>
 
+    <ldap:context-source url="${url}"
+                         username="${userDn}"
+                         password="${password}"/>
+
     <beans profile="default">
-        <!-- note that this has no base set, since we want to get at the root entry -->
-        <bean id="contextSource"
-              class="org.springframework.ldap.test.TestContextSourceFactoryBean">
-            <property name="defaultPartitionSuffix" value="${base}" />
-            <property name="defaultPartitionName" value="jayway" />
-            <property name="principal" value="${userDn}" />
-            <property name="password" value="${password}" />
+        <bean id="embeddedLdapServer" class="org.springframework.ldap.test.EmbeddedLdapServerFactoryBean">
+            <property name="partitionName" value="example"/>
+            <property name="partitionSuffix" value="${base}" />
             <property name="port" value="1888" />
-            <property name="baseOnTarget" value="false" />
         </bean>
     </beans>
 
-    <beans profile="no-apacheds">
-        <ldap:context-source url="ldap://localhost:389"
-                             username="${userDn}"
-                             password="${password}"/>
-    </beans>
 </beans>

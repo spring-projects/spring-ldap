@@ -10,24 +10,15 @@
 		<constructor-arg ref="contextSource" />
 	</bean>
 
+    <ldap:context-source url="${url}"
+                         username="${userDn}"
+                         password="${password}"/>
+
     <beans profile="default">
-        <ldap:context-source id="contextSource"
-                             password="${password}"
-                             url="ldap://localhost:1888"
-                             username="${userDn}"/>
-
-        <bean id="dummy" class="org.springframework.ldap.test.TestContextSourceFactoryBean">
-            <property name="defaultPartitionSuffix" value="${base}" />
-            <property name="defaultPartitionName" value="jayway" />
+        <bean id="embeddedLdapServer" class="org.springframework.ldap.test.EmbeddedLdapServerFactoryBean">
+            <property name="partitionName" value="example"/>
+            <property name="partitionSuffix" value="${base}" />
             <property name="port" value="1888" />
-            <property name="contextSource" ref="contextSource" />
-            <property name="baseOnTarget" value="false" />
         </bean>
-    </beans>
-
-    <beans profile="no-apacheds">
-        <ldap:context-source url="${url}"
-                             username="${userDn}"
-                             password="${password}"/>
     </beans>
 </beans>

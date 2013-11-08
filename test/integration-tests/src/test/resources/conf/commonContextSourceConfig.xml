@@ -3,27 +3,16 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ldap="http://www.springframework.org/schema/ldap"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/ldap http://www.springframework.org/schema/ldap/spring-ldap.xsd">
 
-    <beans profile="default">
-        <ldap:context-source id="contextSource"
-                             password="${password}"
-                             url="ldap://localhost:1888"
-                             username="${userDn}"
-                             base="${base}" />
+    <ldap:context-source url="${url}"
+                         base="${base}"
+                         username="${userDn}"
+                         password="${password}"/>
 
-        <bean id="dummy" class="org.springframework.ldap.test.TestContextSourceFactoryBean">
-            <property name="defaultPartitionSuffix" value="${base}" />
-            <property name="defaultPartitionName" value="jayway" />
-            <property name="ldifFile" value="classpath:/setup_data.ldif" />
+    <beans profile="default">
+        <bean id="embeddedLdapServer" class="org.springframework.ldap.test.EmbeddedLdapServerFactoryBean">
+            <property name="partitionName" value="example"/>
+            <property name="partitionSuffix" value="${base}" />
             <property name="port" value="1888" />
-            <property name="contextSource" ref="contextSource" />
         </bean>
     </beans>
-
-    <beans profile="no-apacheds">
-        <ldap:context-source url="${url}"
-                             base="${base}"
-                             username="${userDn}"
-                             password="${password}"/>
-    </beans>
-
 </beans>

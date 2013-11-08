@@ -31,15 +31,15 @@ import java.util.List;
 
 /**
  * @author Mattias Hellborg Arthursson
+ * @since 2.0
  */
 public class LdifPopulator implements InitializingBean {
-    private final static String DEFAULT_BASE = "dc=example,dc=com";
-
     private Resource resource;
     private ContextSource contextSource;
 
     private String base = "";
     private boolean clean = false;
+    private String defaultBase;
 
     public void setContextSource(ContextSource contextSource) {
         this.contextSource = contextSource;
@@ -57,18 +57,22 @@ public class LdifPopulator implements InitializingBean {
         this.clean = clean;
     }
 
+    public void setDefaultBase(String defaultBase) {
+        this.defaultBase = defaultBase;
+    }
+
     @Override
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(contextSource, "ContextSource must be specified");
         Assert.notNull(resource, "Resource must be specified");
 
-        if(!LdapUtils.newLdapName(base).equals(LdapUtils.newLdapName(DEFAULT_BASE))) {
+        if(!LdapUtils.newLdapName(base).equals(LdapUtils.newLdapName(defaultBase))) {
             List<String> lines = IOUtils.readLines(resource.getInputStream());
 
             StringWriter sw = new StringWriter();
             PrintWriter writer = new PrintWriter(sw);
             for (String line : lines) {
-                writer.println(StringUtils.replace(line, DEFAULT_BASE, base));
+                writer.println(StringUtils.replace(line, defaultBase, base));
             }
 
             writer.flush();
