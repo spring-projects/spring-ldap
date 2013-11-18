@@ -43,195 +43,194 @@ public class LdapUtilsTest {
     private AttributeValueCallbackHandler handlerMock;
 
     @Before
-	public void setUp() throws Exception {
-		handlerMock = mock(AttributeValueCallbackHandler.class);
-	}
+    public void setUp() throws Exception {
+        handlerMock = mock(AttributeValueCallbackHandler.class);
+    }
 
     @Test
-	public void testCollectAttributeValues() {
-		String expectedAttributeName = "someAttribute";
-		BasicAttribute expectedAttribute = new BasicAttribute(expectedAttributeName);
-		expectedAttribute.add("value1");
-		expectedAttribute.add("value2");
+    public void testCollectAttributeValues() {
+        String expectedAttributeName = "someAttribute";
+        BasicAttribute expectedAttribute = new BasicAttribute(expectedAttributeName);
+        expectedAttribute.add("value1");
+        expectedAttribute.add("value2");
 
-		BasicAttributes attributes = new BasicAttributes();
-		attributes.put(expectedAttribute);
+        BasicAttributes attributes = new BasicAttributes();
+        attributes.put(expectedAttribute);
 
-		LinkedList list = new LinkedList();
-		LdapUtils.collectAttributeValues(attributes, expectedAttributeName, list);
+        LinkedList list = new LinkedList();
+        LdapUtils.collectAttributeValues(attributes, expectedAttributeName, list);
 
-		assertEquals(2, list.size());
-		assertEquals("value1", list.get(0));
-		assertEquals("value2", list.get(1));
-	}
-
-    @Test
-	public void testCollectAttributeValuesThrowsExceptionWhenAttributeNotPresent() {
-		String expectedAttributeName = "someAttribute";
-		BasicAttributes attributes = new BasicAttributes();
-
-		LinkedList list = new LinkedList();
-		try {
-			LdapUtils.collectAttributeValues(attributes, expectedAttributeName, list);
-			fail("NoSuchAttributeException expected");
-		}
-		catch (NoSuchAttributeException expected) {
-			assertTrue(true);
-		}
-	}
+        assertEquals(2, list.size());
+        assertEquals("value1", list.get(0));
+        assertEquals("value2", list.get(1));
+    }
 
     @Test
-	public void testIterateAttributeValues() {
-		String expectedAttributeName = "someAttribute";
+    public void testCollectAttributeValuesThrowsExceptionWhenAttributeNotPresent() {
+        String expectedAttributeName = "someAttribute";
+        BasicAttributes attributes = new BasicAttributes();
 
-		BasicAttribute expectedAttribute = new BasicAttribute(expectedAttributeName);
-		expectedAttribute.add("value1");
-		expectedAttribute.add("value2");
+        LinkedList list = new LinkedList();
+        try {
+            LdapUtils.collectAttributeValues(attributes, expectedAttributeName, list);
+            fail("NoSuchAttributeException expected");
+        } catch (NoSuchAttributeException expected) {
+            assertTrue(true);
+        }
+    }
 
-		LdapUtils.iterateAttributeValues(expectedAttribute, handlerMock);
+    @Test
+    public void testIterateAttributeValues() {
+        String expectedAttributeName = "someAttribute";
+
+        BasicAttribute expectedAttribute = new BasicAttribute(expectedAttributeName);
+        expectedAttribute.add("value1");
+        expectedAttribute.add("value2");
+
+        LdapUtils.iterateAttributeValues(expectedAttribute, handlerMock);
 
         verify(handlerMock).handleAttributeValue(expectedAttributeName, "value1", 0);
-		verify(handlerMock).handleAttributeValue(expectedAttributeName, "value2", 1);
-	}
+        verify(handlerMock).handleAttributeValue(expectedAttributeName, "value2", 1);
+    }
 
     @Test
-	public void testIterateAttributeValuesWithEmptyAttribute() {
-		String expectedAttributeName = "someAttribute";
+    public void testIterateAttributeValuesWithEmptyAttribute() {
+        String expectedAttributeName = "someAttribute";
 
-		BasicAttribute expectedAttribute = new BasicAttribute(expectedAttributeName);
+        BasicAttribute expectedAttribute = new BasicAttribute(expectedAttributeName);
 
-		LdapUtils.iterateAttributeValues(expectedAttribute, handlerMock);
-	}
-	
-	/**
-	 * Example SID from "http://www.pcreview.co.uk/forums/thread-1458615.php".
-	 */
-    @Test
-	public void testConvertBinarySidToString() throws Exception {
-		byte[] sid = { (byte) 0x01, (byte) 0x05, (byte) 0x00, (byte) 0x00,
-				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x05,
-				(byte) 0x15, (byte) 0x00, (byte) 0x00, (byte) 0x00,
-				(byte) 0xe9, (byte) 0x67, (byte) 0xbb, (byte) 0x98,
-				(byte) 0xd6, (byte) 0xb7, (byte) 0xd7, (byte) 0xbf,
-				(byte) 0x82, (byte) 0x05, (byte) 0x1e, (byte) 0x6c,
-				(byte) 0x28, (byte) 0x06, (byte) 0x00, (byte) 0x00 };
-		String result = LdapUtils.convertBinarySidToString(sid);
-		assertEquals("S-1-5-21-2562418665-3218585558-1813906818-1576", result);
-	}
-	
-	/**
-	 * Example SID from "http://blogs.msdn.com/oldnewthing/archive/2004/03/15/89753.aspx".
-	 */
-    @Test
-	public void testConvertAnotherBinarySidToString() throws Exception {
-		byte[] sid = { (byte) 0x01, (byte) 0x05, (byte) 0x00, (byte) 0x00,
-				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x05,
-				(byte) 0x15, (byte) 0x00, (byte) 0x00, (byte) 0x00,
-				(byte) 0xa0, (byte) 0x65, (byte) 0xcf, (byte) 0x7e,
-				(byte) 0x78, (byte) 0x4b, (byte) 0x9b, (byte) 0x5f,
-				(byte) 0xe7, (byte) 0x7c, (byte) 0x87, (byte) 0x70,
-				(byte) 0x09, (byte) 0x1c, (byte) 0x01, (byte) 0x00 };
-		String result = LdapUtils.convertBinarySidToString(sid);
-		assertEquals("S-1-5-21-2127521184-1604012920-1887927527-72713", result);
-	}
-	
-	/**
-	 * Hand-crafted SID.
-	 */
-    @Test
-	public void testConvertHandCraftedBinarySidToString() throws Exception {
-		byte[] sid = { (byte) 0x01, (byte) 0x05, (byte) 0x00, (byte) 0x00,
-				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x05,
-				(byte) 0x15, (byte) 0x00, (byte) 0x00, (byte) 0x00,
-				(byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0x00,
-				(byte) 0x02, (byte) 0x00, (byte) 0x00, (byte) 0x00,
-				(byte) 0x03, (byte) 0x00, (byte) 0x00, (byte) 0x00,
-				(byte) 0x04, (byte) 0x00, (byte) 0x00, (byte) 0x00 };
-		String result = LdapUtils.convertBinarySidToString(sid);
-		assertEquals("S-1-5-21-1-2-3-4", result);
-	}
+        LdapUtils.iterateAttributeValues(expectedAttribute, handlerMock);
+    }
 
+    /**
+     * Example SID from "http://www.pcreview.co.uk/forums/thread-1458615.php".
+     */
     @Test
-	public void testSmallNumberToBytesBigEndian() throws Exception {
-		byte[] result = LdapUtils.numberToBytes("5", 6, true);
-		assertEquals(6, result.length);
-		assertEquals(0, result[0]);
-		assertEquals(0, result[1]);
-		assertEquals(0, result[2]);
-		assertEquals(0, result[3]);
-		assertEquals(0, result[4]);
-		assertEquals(5, result[5]);
-	}
+    public void testConvertBinarySidToString() throws Exception {
+        byte[] sid = {(byte) 0x01, (byte) 0x05, (byte) 0x00, (byte) 0x00,
+                (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x05,
+                (byte) 0x15, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                (byte) 0xe9, (byte) 0x67, (byte) 0xbb, (byte) 0x98,
+                (byte) 0xd6, (byte) 0xb7, (byte) 0xd7, (byte) 0xbf,
+                (byte) 0x82, (byte) 0x05, (byte) 0x1e, (byte) 0x6c,
+                (byte) 0x28, (byte) 0x06, (byte) 0x00, (byte) 0x00};
+        String result = LdapUtils.convertBinarySidToString(sid);
+        assertEquals("S-1-5-21-2562418665-3218585558-1813906818-1576", result);
+    }
+
+    /**
+     * Example SID from "http://blogs.msdn.com/oldnewthing/archive/2004/03/15/89753.aspx".
+     */
+    @Test
+    public void testConvertAnotherBinarySidToString() throws Exception {
+        byte[] sid = {(byte) 0x01, (byte) 0x05, (byte) 0x00, (byte) 0x00,
+                (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x05,
+                (byte) 0x15, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                (byte) 0xa0, (byte) 0x65, (byte) 0xcf, (byte) 0x7e,
+                (byte) 0x78, (byte) 0x4b, (byte) 0x9b, (byte) 0x5f,
+                (byte) 0xe7, (byte) 0x7c, (byte) 0x87, (byte) 0x70,
+                (byte) 0x09, (byte) 0x1c, (byte) 0x01, (byte) 0x00};
+        String result = LdapUtils.convertBinarySidToString(sid);
+        assertEquals("S-1-5-21-2127521184-1604012920-1887927527-72713", result);
+    }
+
+    /**
+     * Hand-crafted SID.
+     */
+    @Test
+    public void testConvertHandCraftedBinarySidToString() throws Exception {
+        byte[] sid = {(byte) 0x01, (byte) 0x05, (byte) 0x00, (byte) 0x00,
+                (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x05,
+                (byte) 0x15, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                (byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                (byte) 0x02, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                (byte) 0x03, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                (byte) 0x04, (byte) 0x00, (byte) 0x00, (byte) 0x00};
+        String result = LdapUtils.convertBinarySidToString(sid);
+        assertEquals("S-1-5-21-1-2-3-4", result);
+    }
 
     @Test
-	public void testLargeNumberToBytesBigEndian() throws Exception {
-		byte[] result = LdapUtils.numberToBytes("1183728", 6, true);
-		assertEquals(6, result.length);
-		assertEquals(0, result[0]);
-		assertEquals(0, result[1]);
-		assertEquals(0, result[2]);
-		assertEquals(18, result[3]);
-		assertEquals(15, result[4]);
-		assertEquals(-16, result[5]);
-	}
+    public void testSmallNumberToBytesBigEndian() throws Exception {
+        byte[] result = LdapUtils.numberToBytes("5", 6, true);
+        assertEquals(6, result.length);
+        assertEquals(0, result[0]);
+        assertEquals(0, result[1]);
+        assertEquals(0, result[2]);
+        assertEquals(0, result[3]);
+        assertEquals(0, result[4]);
+        assertEquals(5, result[5]);
+    }
 
     @Test
-	public void testSmallNumberToBytesLittleEndian() throws Exception {
-		byte[] result = LdapUtils.numberToBytes("21", 4, false);
-		assertEquals(4, result.length);
-		assertEquals(21, result[0]);
-		assertEquals(0, result[1]);
-		assertEquals(0, result[2]);
-		assertEquals(0, result[3]);
-	}
+    public void testLargeNumberToBytesBigEndian() throws Exception {
+        byte[] result = LdapUtils.numberToBytes("1183728", 6, true);
+        assertEquals(6, result.length);
+        assertEquals(0, result[0]);
+        assertEquals(0, result[1]);
+        assertEquals(0, result[2]);
+        assertEquals(18, result[3]);
+        assertEquals(15, result[4]);
+        assertEquals(-16, result[5]);
+    }
 
     @Test
-	public void testLargeNumberToBytesLittleEndian() throws Exception {
-		byte[] result = LdapUtils.numberToBytes("2127521184", 4, false);
-		assertEquals(4, result.length);
-		assertEquals(-96, result[0]);
-		assertEquals(101, result[1]);
-		assertEquals(-49, result[2]);
-		assertEquals(126, result[3]);
-	}
-	
-	/**
-	 * Hand-crafted SID.
-	 */
-    @Test
-	public void testConvertHandCraftedStringSidToBinary() throws Exception {
-		byte[] expectedSid = { (byte) 0x01, (byte) 0x05, (byte) 0x00, (byte) 0x00,
-				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x05,
-				(byte) 0x15, (byte) 0x00, (byte) 0x00, (byte) 0x00,
-				(byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0x00,
-				(byte) 0x02, (byte) 0x00, (byte) 0x00, (byte) 0x00,
-				(byte) 0x03, (byte) 0x00, (byte) 0x00, (byte) 0x00,
-				(byte) 0x04, (byte) 0x00, (byte) 0x00, (byte) 0x00 };
-		byte[] result = LdapUtils.convertStringSidToBinary("S-1-5-21-1-2-3-4");
-		assertTrue("incorrect length of array", ArrayUtils.isSameLength(expectedSid, result));
-		for (int i = 0; i < result.length; i++) {
-			assertEquals("i=" + i + ",", expectedSid[i], result[i]);
-		}
-	}
+    public void testSmallNumberToBytesLittleEndian() throws Exception {
+        byte[] result = LdapUtils.numberToBytes("21", 4, false);
+        assertEquals(4, result.length);
+        assertEquals(21, result[0]);
+        assertEquals(0, result[1]);
+        assertEquals(0, result[2]);
+        assertEquals(0, result[3]);
+    }
 
-	/**
-	 * Example SID from "http://www.pcreview.co.uk/forums/thread-1458615.php".
-	 */
     @Test
-	public void testConvertStringSidToBinary() throws Exception {
-		byte[] expectedSid = { (byte) 0x01, (byte) 0x05, (byte) 0x00, (byte) 0x00,
-				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x05,
-				(byte) 0x15, (byte) 0x00, (byte) 0x00, (byte) 0x00,
-				(byte) 0xe9, (byte) 0x67, (byte) 0xbb, (byte) 0x98,
-				(byte) 0xd6, (byte) 0xb7, (byte) 0xd7, (byte) 0xbf,
-				(byte) 0x82, (byte) 0x05, (byte) 0x1e, (byte) 0x6c,
-				(byte) 0x28, (byte) 0x06, (byte) 0x00, (byte) 0x00 };
-		byte[] result = LdapUtils.convertStringSidToBinary("S-1-5-21-2562418665-3218585558-1813906818-1576");
-		assertTrue("incorrect length of array", ArrayUtils.isSameLength(expectedSid, result));
-		for (int i = 0; i < result.length; i++) {
-			assertEquals("i=" + i + ",", expectedSid[i], result[i]);
-		}
-	}
+    public void testLargeNumberToBytesLittleEndian() throws Exception {
+        byte[] result = LdapUtils.numberToBytes("2127521184", 4, false);
+        assertEquals(4, result.length);
+        assertEquals(-96, result[0]);
+        assertEquals(101, result[1]);
+        assertEquals(-49, result[2]);
+        assertEquals(126, result[3]);
+    }
+
+    /**
+     * Hand-crafted SID.
+     */
+    @Test
+    public void testConvertHandCraftedStringSidToBinary() throws Exception {
+        byte[] expectedSid = {(byte) 0x01, (byte) 0x05, (byte) 0x00, (byte) 0x00,
+                (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x05,
+                (byte) 0x15, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                (byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                (byte) 0x02, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                (byte) 0x03, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                (byte) 0x04, (byte) 0x00, (byte) 0x00, (byte) 0x00};
+        byte[] result = LdapUtils.convertStringSidToBinary("S-1-5-21-1-2-3-4");
+        assertTrue("incorrect length of array", ArrayUtils.isSameLength(expectedSid, result));
+        for (int i = 0; i < result.length; i++) {
+            assertEquals("i=" + i + ",", expectedSid[i], result[i]);
+        }
+    }
+
+    /**
+     * Example SID from "http://www.pcreview.co.uk/forums/thread-1458615.php".
+     */
+    @Test
+    public void testConvertStringSidToBinary() throws Exception {
+        byte[] expectedSid = {(byte) 0x01, (byte) 0x05, (byte) 0x00, (byte) 0x00,
+                (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x05,
+                (byte) 0x15, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                (byte) 0xe9, (byte) 0x67, (byte) 0xbb, (byte) 0x98,
+                (byte) 0xd6, (byte) 0xb7, (byte) 0xd7, (byte) 0xbf,
+                (byte) 0x82, (byte) 0x05, (byte) 0x1e, (byte) 0x6c,
+                (byte) 0x28, (byte) 0x06, (byte) 0x00, (byte) 0x00};
+        byte[] result = LdapUtils.convertStringSidToBinary("S-1-5-21-2562418665-3218585558-1813906818-1576");
+        assertTrue("incorrect length of array", ArrayUtils.isSameLength(expectedSid, result));
+        for (int i = 0; i < result.length; i++) {
+            assertEquals("i=" + i + ",", expectedSid[i], result[i]);
+        }
+    }
 
     @Test
     public void testNewLdapNameFromLdapName() throws InvalidNameException {
@@ -310,4 +309,235 @@ public class LdapUtilsTest {
         assertEquals("I", LdapUtils.getValue(ldapName, 1));
     }
 
+    @Test
+    public void testConvertLdapExceptions() {
+
+        // Test the Exceptions in the javax.naming package
+        assertEquals(org.springframework.ldap.AttributeInUseException.class,
+                LdapUtils.convertLdapException(new javax.naming.directory.AttributeInUseException()).getClass());
+        assertEquals(org.springframework.ldap.AttributeModificationException.class,
+                LdapUtils.convertLdapException(new javax.naming.directory.AttributeModificationException()).getClass());
+        assertEquals(org.springframework.ldap.CannotProceedException.class,
+                LdapUtils.convertLdapException(new javax.naming.CannotProceedException()).getClass());
+        assertEquals(org.springframework.ldap.CommunicationException.class,
+                LdapUtils.convertLdapException(new javax.naming.CommunicationException()).getClass());
+        assertEquals(org.springframework.ldap.ConfigurationException.class,
+                LdapUtils.convertLdapException(new javax.naming.ConfigurationException()).getClass());
+        assertEquals(org.springframework.ldap.ContextNotEmptyException.class,
+                LdapUtils.convertLdapException(new javax.naming.ContextNotEmptyException()).getClass());
+        assertEquals(org.springframework.ldap.InsufficientResourcesException.class,
+                LdapUtils.convertLdapException(new javax.naming.InsufficientResourcesException()).getClass());
+        assertEquals(org.springframework.ldap.InterruptedNamingException.class,
+                LdapUtils.convertLdapException(new javax.naming.InterruptedNamingException()).getClass());
+        assertEquals(org.springframework.ldap.InvalidAttributeIdentifierException.class,
+                LdapUtils.convertLdapException(new javax.naming.directory.InvalidAttributeIdentifierException()).getClass());
+        assertEquals(org.springframework.ldap.InvalidAttributesException.class,
+                LdapUtils.convertLdapException(new javax.naming.directory.InvalidAttributesException()).getClass());
+        assertEquals(org.springframework.ldap.InvalidAttributeValueException.class,
+                LdapUtils.convertLdapException(new javax.naming.directory.InvalidAttributeValueException()).getClass());
+        assertEquals(org.springframework.ldap.InvalidNameException.class,
+                LdapUtils.convertLdapException(new javax.naming.InvalidNameException()).getClass());
+        assertEquals(org.springframework.ldap.InvalidSearchControlsException.class,
+                LdapUtils.convertLdapException(new javax.naming.directory.InvalidSearchControlsException()).getClass());
+        assertEquals(org.springframework.ldap.InvalidSearchFilterException.class,
+                LdapUtils.convertLdapException(new javax.naming.directory.InvalidSearchFilterException()).getClass());
+        assertEquals(org.springframework.ldap.SizeLimitExceededException.class,
+                LdapUtils.convertLdapException(new javax.naming.SizeLimitExceededException()).getClass());
+        assertEquals(org.springframework.ldap.TimeLimitExceededException.class,
+                LdapUtils.convertLdapException(new javax.naming.TimeLimitExceededException()).getClass());
+        assertEquals(org.springframework.ldap.LimitExceededException.class,
+                LdapUtils.convertLdapException(new javax.naming.LimitExceededException()).getClass());
+        assertEquals(org.springframework.ldap.LinkLoopException.class,
+                LdapUtils.convertLdapException(new javax.naming.LinkLoopException()).getClass());
+        assertEquals(org.springframework.ldap.MalformedLinkException.class,
+                LdapUtils.convertLdapException(new javax.naming.MalformedLinkException()).getClass());
+        assertEquals(org.springframework.ldap.LinkException.class,
+                LdapUtils.convertLdapException(new javax.naming.LinkException()).getClass());
+        assertEquals(org.springframework.ldap.NameAlreadyBoundException.class,
+                LdapUtils.convertLdapException(new javax.naming.NameAlreadyBoundException()).getClass());
+        assertEquals(org.springframework.ldap.NameNotFoundException.class,
+                LdapUtils.convertLdapException(new javax.naming.NameNotFoundException()).getClass());
+        assertEquals(org.springframework.ldap.NoPermissionException.class,
+                LdapUtils.convertLdapException(new javax.naming.NoPermissionException()).getClass());
+        assertEquals(org.springframework.ldap.AuthenticationException.class,
+                LdapUtils.convertLdapException(new javax.naming.AuthenticationException()).getClass());
+        assertEquals(org.springframework.ldap.AuthenticationNotSupportedException.class,
+                LdapUtils.convertLdapException(new javax.naming.AuthenticationNotSupportedException()).getClass());
+        assertEquals(org.springframework.ldap.NoInitialContextException.class,
+                LdapUtils.convertLdapException(new javax.naming.NoInitialContextException()).getClass());
+        assertEquals(org.springframework.ldap.NoSuchAttributeException.class,
+                LdapUtils.convertLdapException(new javax.naming.directory.NoSuchAttributeException()).getClass());
+        assertEquals(org.springframework.ldap.NotContextException.class,
+                LdapUtils.convertLdapException(new javax.naming.NotContextException()).getClass());
+        assertEquals(org.springframework.ldap.OperationNotSupportedException.class,
+                LdapUtils.convertLdapException(new javax.naming.OperationNotSupportedException()).getClass());
+        assertEquals(org.springframework.ldap.PartialResultException.class,
+                LdapUtils.convertLdapException(new javax.naming.PartialResultException()).getClass());
+        assertEquals(org.springframework.ldap.SchemaViolationException.class,
+                LdapUtils.convertLdapException(new javax.naming.directory.SchemaViolationException()).getClass());
+        assertEquals(org.springframework.ldap.ServiceUnavailableException.class,
+                LdapUtils.convertLdapException(new javax.naming.ServiceUnavailableException()).getClass());
+
+        // Test Exceptions that extend javax.naming packaage extensions
+        assertEquals(org.springframework.ldap.AttributeInUseException.class,
+                LdapUtils.convertLdapException(new MockAttributeInUseException()).getClass());
+        assertEquals(org.springframework.ldap.AttributeModificationException.class,
+                LdapUtils.convertLdapException(new MockAttributeModificationException()).getClass());
+        assertEquals(org.springframework.ldap.CannotProceedException.class,
+                LdapUtils.convertLdapException(new MockCannotProceedException()).getClass());
+        assertEquals(org.springframework.ldap.CommunicationException.class,
+                LdapUtils.convertLdapException(new MockCommunicationException()).getClass());
+        assertEquals(org.springframework.ldap.ConfigurationException.class,
+                LdapUtils.convertLdapException(new MockConfigurationException()).getClass());
+        assertEquals(org.springframework.ldap.ContextNotEmptyException.class,
+                LdapUtils.convertLdapException(new MockContextNotEmptyException()).getClass());
+        assertEquals(org.springframework.ldap.InsufficientResourcesException.class,
+                LdapUtils.convertLdapException(new MockInsufficientResourcesException()).getClass());
+        assertEquals(org.springframework.ldap.InterruptedNamingException.class,
+                LdapUtils.convertLdapException(new MockInterruptedNamingException()).getClass());
+        assertEquals(org.springframework.ldap.InvalidAttributeIdentifierException.class,
+                LdapUtils.convertLdapException(new MockInvalidAttributeIdentifierException()).getClass());
+        assertEquals(org.springframework.ldap.InvalidAttributesException.class,
+                LdapUtils.convertLdapException(new MockInvalidAttributesException()).getClass());
+        assertEquals(org.springframework.ldap.InvalidAttributeValueException.class,
+                LdapUtils.convertLdapException(new MockInvalidAttributeValueException()).getClass());
+        assertEquals(org.springframework.ldap.InvalidNameException.class,
+                LdapUtils.convertLdapException(new MockInvalidNameException()).getClass());
+        assertEquals(org.springframework.ldap.InvalidSearchControlsException.class,
+                LdapUtils.convertLdapException(new MockInvalidSearchControlsException()).getClass());
+        assertEquals(org.springframework.ldap.InvalidSearchFilterException.class,
+                LdapUtils.convertLdapException(new MockInvalidSearchFilterException()).getClass());
+        assertEquals(org.springframework.ldap.SizeLimitExceededException.class,
+                LdapUtils.convertLdapException(new MockSizeLimitExceededException()).getClass());
+        assertEquals(org.springframework.ldap.TimeLimitExceededException.class,
+                LdapUtils.convertLdapException(new MockTimeLimitExceededException()).getClass());
+        assertEquals(org.springframework.ldap.LimitExceededException.class,
+                LdapUtils.convertLdapException(new MockLimitExceededException()).getClass());
+        assertEquals(org.springframework.ldap.LinkLoopException.class,
+                LdapUtils.convertLdapException(new MockLinkLoopException()).getClass());
+        assertEquals(org.springframework.ldap.MalformedLinkException.class,
+                LdapUtils.convertLdapException(new MockMalformedLinkException()).getClass());
+        assertEquals(org.springframework.ldap.LinkException.class,
+                LdapUtils.convertLdapException(new MockLinkException()).getClass());
+        assertEquals(org.springframework.ldap.NameAlreadyBoundException.class,
+                LdapUtils.convertLdapException(new MockNameAlreadyBoundException()).getClass());
+        assertEquals(org.springframework.ldap.NameNotFoundException.class,
+                LdapUtils.convertLdapException(new MockNameNotFoundException()).getClass());
+        assertEquals(org.springframework.ldap.NoPermissionException.class,
+                LdapUtils.convertLdapException(new MockNoPermissionException()).getClass());
+        assertEquals(org.springframework.ldap.AuthenticationException.class,
+                LdapUtils.convertLdapException(new MockAuthenticationException()).getClass());
+        assertEquals(org.springframework.ldap.AuthenticationNotSupportedException.class,
+                LdapUtils.convertLdapException(new MockAuthenticationNotSupportedException()).getClass());
+        assertEquals(org.springframework.ldap.NoInitialContextException.class,
+                LdapUtils.convertLdapException(new MockNoInitialContextException()).getClass());
+        assertEquals(org.springframework.ldap.NoSuchAttributeException.class,
+                LdapUtils.convertLdapException(new MockNoSuchAttributeException()).getClass());
+        assertEquals(org.springframework.ldap.NotContextException.class,
+                LdapUtils.convertLdapException(new MockNotContextException()).getClass());
+        assertEquals(org.springframework.ldap.OperationNotSupportedException.class,
+                LdapUtils.convertLdapException(new MockOperationNotSupportedException()).getClass());
+        assertEquals(org.springframework.ldap.PartialResultException.class,
+                LdapUtils.convertLdapException(new MockPartialResultException()).getClass());
+        assertEquals(org.springframework.ldap.SchemaViolationException.class,
+                LdapUtils.convertLdapException(new MockSchemaViolationException()).getClass());
+        assertEquals(org.springframework.ldap.ServiceUnavailableException.class,
+                LdapUtils.convertLdapException(new MockServiceUnavailableException()).getClass());
+    }
+
+    public class MockAttributeInUseException extends javax.naming.directory.AttributeInUseException {
+    }
+
+    public class MockAttributeModificationException extends javax.naming.directory.AttributeModificationException {
+    }
+
+    public class MockCannotProceedException extends javax.naming.CannotProceedException {
+    }
+
+    public class MockCommunicationException extends javax.naming.CommunicationException {
+    }
+
+    public class MockConfigurationException extends javax.naming.ConfigurationException {
+    }
+
+    public class MockContextNotEmptyException extends javax.naming.ContextNotEmptyException {
+    }
+
+    public class MockInsufficientResourcesException extends javax.naming.InsufficientResourcesException {
+    }
+
+    public class MockInterruptedNamingException extends javax.naming.InterruptedNamingException {
+    }
+
+    public class MockInvalidAttributeIdentifierException extends javax.naming.directory.InvalidAttributeIdentifierException {
+    }
+
+    public class MockInvalidAttributesException extends javax.naming.directory.InvalidAttributesException {
+    }
+
+    public class MockInvalidAttributeValueException extends javax.naming.directory.InvalidAttributeValueException {
+    }
+
+    public class MockInvalidNameException extends javax.naming.InvalidNameException {
+    }
+
+    public class MockInvalidSearchControlsException extends javax.naming.directory.InvalidSearchControlsException {
+    }
+
+    public class MockInvalidSearchFilterException extends javax.naming.directory.InvalidSearchFilterException {
+    }
+
+    public class MockSizeLimitExceededException extends javax.naming.SizeLimitExceededException {
+    }
+
+    public class MockTimeLimitExceededException extends javax.naming.TimeLimitExceededException {
+    }
+
+    public class MockLimitExceededException extends javax.naming.LimitExceededException {
+    }
+
+    public class MockLinkLoopException extends javax.naming.LinkLoopException {
+    }
+
+    public class MockMalformedLinkException extends javax.naming.MalformedLinkException {
+    }
+
+    public class MockLinkException extends javax.naming.LinkException {
+    }
+
+    public class MockNameAlreadyBoundException extends javax.naming.NameAlreadyBoundException {
+    }
+
+    public class MockNameNotFoundException extends javax.naming.NameNotFoundException {
+    }
+
+    public class MockNoPermissionException extends javax.naming.NoPermissionException {
+    }
+
+    public class MockAuthenticationException extends javax.naming.AuthenticationException {
+    }
+
+    public class MockAuthenticationNotSupportedException extends javax.naming.AuthenticationNotSupportedException {
+    }
+
+    public class MockNoInitialContextException extends javax.naming.NoInitialContextException {
+    }
+
+    public class MockNoSuchAttributeException extends javax.naming.directory.NoSuchAttributeException {
+    }
+
+    public class MockNotContextException extends javax.naming.NotContextException {
+    }
+
+    public class MockOperationNotSupportedException extends javax.naming.OperationNotSupportedException {
+    }
+
+    public class MockPartialResultException extends javax.naming.PartialResultException {
+    }
+
+    public class MockSchemaViolationException extends javax.naming.directory.SchemaViolationException {
+    }
+
+    public class MockServiceUnavailableException extends javax.naming.ServiceUnavailableException {
+    }
 }

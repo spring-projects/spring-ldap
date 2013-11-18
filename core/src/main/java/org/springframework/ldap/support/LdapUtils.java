@@ -92,130 +92,133 @@ public final class LdapUtils {
 	public static NamingException convertLdapException(javax.naming.NamingException ex) {
 		Assert.notNull(ex, "NamingException must not be null");
 
-		if (ex.getClass().equals(javax.naming.directory.AttributeInUseException.class)) {
+		if (javax.naming.directory.AttributeInUseException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.AttributeInUseException(
 					(javax.naming.directory.AttributeInUseException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.directory.AttributeModificationException.class)) {
+		if (javax.naming.directory.AttributeModificationException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.AttributeModificationException(
 					(javax.naming.directory.AttributeModificationException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.CannotProceedException.class)) {
+		if (javax.naming.CannotProceedException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.CannotProceedException((javax.naming.CannotProceedException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.CommunicationException.class)) {
+		if (javax.naming.CommunicationException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.CommunicationException((javax.naming.CommunicationException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.ConfigurationException.class)) {
+		if (javax.naming.ConfigurationException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.ConfigurationException((javax.naming.ConfigurationException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.ContextNotEmptyException.class)) {
+		if (javax.naming.ContextNotEmptyException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.ContextNotEmptyException((javax.naming.ContextNotEmptyException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.InsufficientResourcesException.class)) {
+		if (javax.naming.InsufficientResourcesException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.InsufficientResourcesException(
 					(javax.naming.InsufficientResourcesException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.InterruptedNamingException.class)) {
+		if (javax.naming.InterruptedNamingException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.InterruptedNamingException((javax.naming.InterruptedNamingException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.directory.InvalidAttributeIdentifierException.class)) {
+		if (javax.naming.directory.InvalidAttributeIdentifierException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.InvalidAttributeIdentifierException(
 					(javax.naming.directory.InvalidAttributeIdentifierException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.directory.InvalidAttributesException.class)) {
+		if (javax.naming.directory.InvalidAttributesException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.InvalidAttributesException(
 					(javax.naming.directory.InvalidAttributesException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.directory.InvalidAttributeValueException.class)) {
+		if (javax.naming.directory.InvalidAttributeValueException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.InvalidAttributeValueException(
 					(javax.naming.directory.InvalidAttributeValueException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.InvalidNameException.class)) {
+		if (javax.naming.InvalidNameException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.InvalidNameException((javax.naming.InvalidNameException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.directory.InvalidSearchControlsException.class)) {
+		if (javax.naming.directory.InvalidSearchControlsException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.InvalidSearchControlsException(
 					(javax.naming.directory.InvalidSearchControlsException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.directory.InvalidSearchFilterException.class)) {
+		if (javax.naming.directory.InvalidSearchFilterException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.InvalidSearchFilterException(
 					(javax.naming.directory.InvalidSearchFilterException) ex);
 		}
 
-		// this class is abstract, so it can never be of exactly this class;
-		// using instanceof
-		if (ex instanceof javax.naming.ldap.LdapReferralException) {
+		if (javax.naming.ldap.LdapReferralException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.LdapReferralException((javax.naming.ldap.LdapReferralException) ex);
 		}
-		// Skipping the abstract superclass javax.naming.ReferralException
+
+        if (javax.naming.ReferralException.class.isAssignableFrom(ex.getClass())) {
+            return new org.springframework.ldap.ReferralException((javax.naming.ReferralException) ex);
+        }
 
 		// LimitExceededException hierarchy
-		if (ex.getClass().equals(javax.naming.SizeLimitExceededException.class)) {
+		if (javax.naming.SizeLimitExceededException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.SizeLimitExceededException((javax.naming.SizeLimitExceededException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.TimeLimitExceededException.class)) {
+		if (javax.naming.TimeLimitExceededException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.TimeLimitExceededException((javax.naming.TimeLimitExceededException) ex);
 		}
 		// this class is the superclass of the two above
-		if (ex.getClass().equals(javax.naming.LimitExceededException.class)) {
+		if (javax.naming.LimitExceededException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.LimitExceededException((javax.naming.LimitExceededException) ex);
 		}
 
 		// LinkException hierarchy
-		if (ex.getClass().equals(javax.naming.LinkLoopException.class)) {
+		if (javax.naming.LinkLoopException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.LinkLoopException((javax.naming.LinkLoopException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.MalformedLinkException.class)) {
+		if (javax.naming.MalformedLinkException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.MalformedLinkException((javax.naming.MalformedLinkException) ex);
 		}
 		// this class is the superclass of the two above
-		if (ex.getClass().equals(javax.naming.LinkException.class)) {
+		if (javax.naming.LinkException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.LinkException((javax.naming.LinkException) ex);
 		}
 
-		if (ex.getClass().equals(javax.naming.NameAlreadyBoundException.class)) {
+		if (javax.naming.NameAlreadyBoundException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.NameAlreadyBoundException((javax.naming.NameAlreadyBoundException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.NameNotFoundException.class)) {
+		if (javax.naming.NameNotFoundException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.NameNotFoundException((javax.naming.NameNotFoundException) ex);
 		}
 
 		// NamingSecurityException hierarchy
-		if (ex.getClass().equals(javax.naming.NoPermissionException.class)) {
+		if (javax.naming.NoPermissionException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.NoPermissionException((javax.naming.NoPermissionException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.AuthenticationException.class)) {
+		if (javax.naming.AuthenticationException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.AuthenticationException((javax.naming.AuthenticationException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.AuthenticationNotSupportedException.class)) {
+		if (javax.naming.AuthenticationNotSupportedException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.AuthenticationNotSupportedException(
 					(javax.naming.AuthenticationNotSupportedException) ex);
 		}
-		// Skipping the abstract superclass javax.naming.NamingSecurityException
+        if (javax.naming.NamingSecurityException.class.isAssignableFrom(ex.getClass())) {
+            return new org.springframework.ldap.NamingSecurityException((javax.naming.NamingSecurityException) ex);
+        }
 
-		if (ex.getClass().equals(javax.naming.NoInitialContextException.class)) {
+		if (javax.naming.NoInitialContextException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.NoInitialContextException((javax.naming.NoInitialContextException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.directory.NoSuchAttributeException.class)) {
+		if (javax.naming.directory.NoSuchAttributeException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.NoSuchAttributeException(
 					(javax.naming.directory.NoSuchAttributeException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.NotContextException.class)) {
+		if (javax.naming.NotContextException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.NotContextException((javax.naming.NotContextException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.OperationNotSupportedException.class)) {
+		if (javax.naming.OperationNotSupportedException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.OperationNotSupportedException(
 					(javax.naming.OperationNotSupportedException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.PartialResultException.class)) {
+		if (javax.naming.PartialResultException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.PartialResultException((javax.naming.PartialResultException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.directory.SchemaViolationException.class)) {
+		if (javax.naming.directory.SchemaViolationException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.SchemaViolationException(
 					(javax.naming.directory.SchemaViolationException) ex);
 		}
-		if (ex.getClass().equals(javax.naming.ServiceUnavailableException.class)) {
+		if (javax.naming.ServiceUnavailableException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.ServiceUnavailableException(
 					(javax.naming.ServiceUnavailableException) ex);
 		}

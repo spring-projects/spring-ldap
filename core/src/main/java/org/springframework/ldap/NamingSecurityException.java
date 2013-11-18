@@ -23,7 +23,7 @@ package org.springframework.ldap;
  * @since 1.2
  * @see javax.naming.NamingSecurityException
  */
-public abstract class NamingSecurityException extends NamingException {
+public class NamingSecurityException extends NamingException {
 
     public NamingSecurityException(javax.naming.NamingSecurityException cause) {
         super(cause);

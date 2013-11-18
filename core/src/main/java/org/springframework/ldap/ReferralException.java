@@ -23,7 +23,7 @@ package org.springframework.ldap;
  * @since 1.2
  * @see javax.naming.ReferralException
  */
-public abstract class ReferralException extends NamingException {
+public class ReferralException extends NamingException {
 
     public ReferralException(javax.naming.ReferralException cause) {
         super(cause);
