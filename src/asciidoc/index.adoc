@@ -158,6 +158,8 @@ At a minimum, to use Spring LDAP you need:
 
 * __spring-beans__ (contains interfaces and classes for manipulating Java beans)
 
+* __spring-data-commons__ (base infrastructure for repository suppport, etc.)
+
 * __slf4j__ (a simple logging facade, used internally)
 
 * __commons-lang__ (misc utilities, used internally)
@@ -198,7 +200,8 @@ Below is a list of the most important changes in Spring LDAP 2.0.
 *  Fluent LDAP query support has been added. This makes for a more pleasant programming experience when working with LDAP searches in Spring LDAP. See <<basic-queries>> and <<query-builder-advanced>> for more information about the LDAP query builder support.
 *  The old `authenticate` methods in `LdapTemplate` have been deprecated in favor of a couple of new `authenticate` methods that work with `LdapQuery` objects and __throw exceptions__ on authentication failure, making it easier for the user to find out what caused an authentication attempt to fail.
 
-
+=== Getting Started
+The https://github.com/spring-projects/spring-ldap/tree/master/samples[samples] provide some useful examples on how to use Spring LDAP for common usecases.
 
 === Support
 Spring LDAP 2.0 is supported on Spring 2.0 and later.
