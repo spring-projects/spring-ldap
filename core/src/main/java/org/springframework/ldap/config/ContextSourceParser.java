@@ -45,36 +45,44 @@ import static org.springframework.ldap.config.ParserUtils.getString;
  * @author Mattias Hellborg Arthursson
  */
 public class ContextSourceParser implements BeanDefinitionParser {
-    private final static String ATT_ANONYMOUS_READ_ONLY = "anonymous-read-only";
-    private final static String ATT_AUTHENTICATION_SOURCE_REF = "authentication-source-ref";
-    private final static String ATT_AUTHENTICATION_STRATEGY_REF = "authentication-strategy-ref";
-    private final static String ATT_BASE = "base";
-    private final static String ATT_PASSWORD = "password";
-    private final static String ATT_NATIVE_POOLING = "native-pooling";
-    private final static String ATT_REFERRAL = "referral";
-    private final static String ATT_URL = "url";
-    private final static String ATT_BASE_ENV_PROPS_REF = "base-env-props-ref";
+    private static final String ATT_ANONYMOUS_READ_ONLY = "anonymous-read-only";
+    private static final String ATT_AUTHENTICATION_SOURCE_REF = "authentication-source-ref";
+    private static final String ATT_AUTHENTICATION_STRATEGY_REF = "authentication-strategy-ref";
+    private static final String ATT_BASE = "base";
+    private static final String ATT_PASSWORD = "password";
+    private static final String ATT_NATIVE_POOLING = "native-pooling";
+    private static final String ATT_REFERRAL = "referral";
+    private static final String ATT_URL = "url";
+    private static final String ATT_BASE_ENV_PROPS_REF = "base-env-props-ref";
 
     // pooling attributes
-    private final static String ATT_MAX_ACTIVE = "max-active";
-    private final static String ATT_MAX_TOTAL = "max-total";
-    private final static String ATT_MAX_IDLE = "max-idle";
-    private final static String ATT_MIN_IDLE = "min-idle";
-    private final static String ATT_MAX_WAIT = "max-wait";
-    private final static String ATT_WHEN_EXHAUSTED = "when-exhausted";
-    private final static String ATT_TEST_ON_BORROW = "test-on-borrow";
-    private final static String ATT_TEST_ON_RETURN = "test-on-return";
-    private final static String ATT_TEST_WHILE_IDLE = "test-while-idle";
-    private final static String ATT_EVICTION_RUN_MILLIS = "eviction-run-interval-millis";
-    private final static String ATT_TESTS_PER_EVICTION_RUN = "tests-per-eviction-run";
-    private final static String ATT_EVICTABLE_TIME_MILLIS = "min-evictable-time-millis";
-    private final static String ATT_VALIDATION_QUERY_BASE = "validation-query-base";
-    private final static String ATT_VALIDATION_QUERY_FILTER = "validation-query-filter";
-    private final static String ATT_VALIDATION_QUERY_SEARCH_CONTROLS_REF = "validation-query-search-controls-ref";
-    private final static String ATT_NON_TRANSIENT_EXCEPTIONS = "non-transient-exceptions";
+    private static final String ATT_MAX_ACTIVE = "max-active";
+    private static final String ATT_MAX_TOTAL = "max-total";
+    private static final String ATT_MAX_IDLE = "max-idle";
+    private static final String ATT_MIN_IDLE = "min-idle";
+    private static final String ATT_MAX_WAIT = "max-wait";
+    private static final String ATT_WHEN_EXHAUSTED = "when-exhausted";
+    private static final String ATT_TEST_ON_BORROW = "test-on-borrow";
+    private static final String ATT_TEST_ON_RETURN = "test-on-return";
+    private static final String ATT_TEST_WHILE_IDLE = "test-while-idle";
+    private static final String ATT_EVICTION_RUN_MILLIS = "eviction-run-interval-millis";
+    private static final String ATT_TESTS_PER_EVICTION_RUN = "tests-per-eviction-run";
+    private static final String ATT_EVICTABLE_TIME_MILLIS = "min-evictable-time-millis";
+    private static final String ATT_VALIDATION_QUERY_BASE = "validation-query-base";
+    private static final String ATT_VALIDATION_QUERY_FILTER = "validation-query-filter";
+    private static final String ATT_VALIDATION_QUERY_SEARCH_CONTROLS_REF = "validation-query-search-controls-ref";
+    private static final String ATT_NON_TRANSIENT_EXCEPTIONS = "non-transient-exceptions";
 
-    private final static String ATT_USERNAME = "username";
+    private static final String ATT_USERNAME = "username";
     static final String DEFAULT_ID = "contextSource";
+    private static final int DEFAULT_MAX_ACTIVE = 8;
+    private static final int DEFAULT_MAX_TOTAL = -1;
+    private static final int DEFAULT_MAX_IDLE = 8;
+    private static final int DEFAULT_MIN_IDLE = 0;
+    private static final int DEFAULT_MAX_WAIT = -1;
+    private static final int DEFAULT_EVICTION_RUN_MILLIS = -1;
+    private static final int DEFAULT_TESTS_PER_EVICTION_RUN = 3;
+    private static final int DEFAULT_EVICTABLE_MILLIS = 1000 * 60 * 30;
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
@@ -150,11 +158,11 @@ public class ContextSourceParser implements BeanDefinitionParser {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(PoolingContextSource.class);
         builder.addPropertyValue("contextSource", targetContextSourceDefinition);
 
-        builder.addPropertyValue("maxActive", getInt(poolingElement, ATT_MAX_ACTIVE, 8));
-        builder.addPropertyValue("maxTotal", getInt(poolingElement, ATT_MAX_TOTAL, -1));
-        builder.addPropertyValue("maxIdle", getInt(poolingElement, ATT_MAX_IDLE, 8));
-        builder.addPropertyValue("minIdle", getInt(poolingElement, ATT_MIN_IDLE, 0));
-        builder.addPropertyValue("maxWait", getInt(poolingElement, ATT_MAX_WAIT, -1));
+        builder.addPropertyValue("maxActive", getInt(poolingElement, ATT_MAX_ACTIVE, DEFAULT_MAX_ACTIVE));
+        builder.addPropertyValue("maxTotal", getInt(poolingElement, ATT_MAX_TOTAL, DEFAULT_MAX_TOTAL));
+        builder.addPropertyValue("maxIdle", getInt(poolingElement, ATT_MAX_IDLE, DEFAULT_MAX_IDLE));
+        builder.addPropertyValue("minIdle", getInt(poolingElement, ATT_MIN_IDLE, DEFAULT_MIN_IDLE));
+        builder.addPropertyValue("maxWait", getInt(poolingElement, ATT_MAX_WAIT, DEFAULT_MAX_WAIT));
         String whenExhausted = getString(poolingElement, ATT_WHEN_EXHAUSTED, PoolExhaustedAction.BLOCK.name());
         builder.addPropertyValue("whenExhaustedAction", PoolExhaustedAction.valueOf(whenExhausted).getValue());
 
@@ -186,9 +194,9 @@ public class ContextSourceParser implements BeanDefinitionParser {
         }
         builder.addPropertyValue("dirContextValidator", validatorBuilder.getBeanDefinition());
 
-        builder.addPropertyValue("timeBetweenEvictionRunsMillis", getInt(element, ATT_EVICTION_RUN_MILLIS, -1));
-        builder.addPropertyValue("numTestsPerEvictionRun", getInt(element, ATT_TESTS_PER_EVICTION_RUN, 3));
-        builder.addPropertyValue("minEvictableIdleTimeMillis", getInt(element, ATT_EVICTABLE_TIME_MILLIS, 1000 * 60 * 30));
+        builder.addPropertyValue("timeBetweenEvictionRunsMillis", getInt(element, ATT_EVICTION_RUN_MILLIS, DEFAULT_EVICTION_RUN_MILLIS));
+        builder.addPropertyValue("numTestsPerEvictionRun", getInt(element, ATT_TESTS_PER_EVICTION_RUN, DEFAULT_TESTS_PER_EVICTION_RUN));
+        builder.addPropertyValue("minEvictableIdleTimeMillis", getInt(element, ATT_EVICTABLE_TIME_MILLIS, DEFAULT_EVICTABLE_MILLIS));
 
         String nonTransientExceptions = getString(element, ATT_NON_TRANSIENT_EXCEPTIONS, CommunicationException.class.getName());
         String[] strings = StringUtils.commaDelimitedListToStringArray(nonTransientExceptions);

@@ -16,12 +16,11 @@
 
 package org.springframework.ldap.pool.factory;
 
+import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.dao.DataAccessResourceFailureException;
-import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.support.DelegatingBaseLdapPathContextSourceSupport;
 import org.springframework.ldap.pool.DelegatingDirContext;
@@ -420,17 +419,13 @@ public class PoolingContextSource
 
     // ***** ContextSource interface methods *****//
 
-	/*
-	 * @see ContextSource#getReadOnlyContext()
-	 */
-	public DirContext getReadOnlyContext() throws NamingException {
+    @Override
+	public DirContext getReadOnlyContext() {
 		return this.getContext(DirContextType.READ_ONLY);
 	}
 
-	/*
-	 * @see ContextSource#getReadWriteContext()
-	 */
-	public DirContext getReadWriteContext() throws NamingException {
+    @Override
+	public DirContext getReadWriteContext() {
 		return this.getContext(DirContextType.READ_WRITE);
 	}
 
@@ -458,7 +453,8 @@ public class PoolingContextSource
 		return new DelegatingDirContext(this.keyedObjectPool, dirContext, dirContextType);
 	}
 
-	public DirContext getContext(String principal, String credentials) throws NamingException {
+    @Override
+	public DirContext getContext(String principal, String credentials) {
 		throw new UnsupportedOperationException("Not supported for this implementation");
 	}
 }

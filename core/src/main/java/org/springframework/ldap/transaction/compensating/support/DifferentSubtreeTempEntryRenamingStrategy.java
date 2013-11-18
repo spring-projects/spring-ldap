@@ -49,7 +49,7 @@ public class DifferentSubtreeTempEntryRenamingStrategy implements
 
     private Name subtreeNode;
 
-    private static final AtomicInteger nextSequenceNo = new AtomicInteger(1);
+    private static final AtomicInteger NEXT_SEQUENCE_NO = new AtomicInteger(1);
 
     public DifferentSubtreeTempEntryRenamingStrategy(Name subtreeNode) {
         this.subtreeNode = subtreeNode;
@@ -68,14 +68,14 @@ public class DifferentSubtreeTempEntryRenamingStrategy implements
     }
 
     int getNextSequenceNo() {
-        return nextSequenceNo.get();
+        return NEXT_SEQUENCE_NO.get();
     }
 
     /*
      * @see org.springframework.ldap.support.transaction.TempEntryRenamingStrategy#getTemporaryName(javax.naming.Name)
      */
     public Name getTemporaryName(Name originalName) {
-        int thisSequenceNo = nextSequenceNo.getAndIncrement();
+        int thisSequenceNo = NEXT_SEQUENCE_NO.getAndIncrement();
 
         LdapName tempName = LdapUtils.newLdapName(originalName);
         try {

@@ -49,10 +49,7 @@ import java.util.Set;
  * @author Mattias Hellborg Arthursson
  */
 public final class LdapTestUtils {
-    private final static Logger logger = LoggerFactory.getLogger(LdapTestUtils.class);
-
-    public static final String DEFAULT_PRINCIPAL = "uid=admin,ou=system";
-    public static final String DEFAULT_PASSWORD = "secret";
+    private final static Logger LOGGER = LoggerFactory.getLogger(LdapTestUtils.class);
 
     private static EmbeddedLdapServer embeddedServer;
 
@@ -194,7 +191,7 @@ public final class LdapTestUtils {
                 }
             }
         } catch (NamingException e) {
-            logger.debug("Error cleaning sub-contexts", e);
+            LOGGER.debug("Error cleaning sub-contexts", e);
         } finally {
             try {
                 enumeration.close();

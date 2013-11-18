@@ -56,7 +56,7 @@ public interface DirContextAuthenticationStrategy {
 	 * <code>DirContext</code> creation to be aborted and the exception to be
 	 * translated and rethrown.
 	 */
-	public void setupEnvironment(Hashtable<String, Object> env, String userDn, String password) throws NamingException;
+	void setupEnvironment(Hashtable<String, Object> env, String userDn, String password) throws NamingException;
 
 	/**
 	 * This method is responsible for post-processing the
@@ -79,7 +79,7 @@ public interface DirContextAuthenticationStrategy {
 	 * <code>DirContext</code> creation to be aborted and the exception to be
 	 * translated and rethrown.
 	 */
-	public DirContext processContextAfterCreation(DirContext ctx, String userDn, String password)
+	DirContext processContextAfterCreation(DirContext ctx, String userDn, String password)
 			throws NamingException;
 
 }

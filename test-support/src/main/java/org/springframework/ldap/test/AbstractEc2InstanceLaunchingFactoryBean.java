@@ -45,7 +45,7 @@ public abstract class AbstractEc2InstanceLaunchingFactoryBean extends AbstractFa
 
     private static final long DEFAULT_PREPARATION_SLEEP_TIME = 30000;
 
-    private static final Logger log = LoggerFactory.getLogger(AbstractEc2InstanceLaunchingFactoryBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractEc2InstanceLaunchingFactoryBean.class);
 
     private String imageName;
 
@@ -114,7 +114,7 @@ public abstract class AbstractEc2InstanceLaunchingFactoryBean extends AbstractFa
         Assert.hasLength(keypairName, "KeyName must be set");
         Assert.hasLength(groupName, "GroupName must be set");
 
-        log.info("Launching EC2 instance for image: " + imageName);
+        LOG.info("Launching EC2 instance for image: " + imageName);
 
         Jec2 jec2 = new Jec2(awsKey, awsSecretKey);
         LaunchConfiguration launchConfiguration = new LaunchConfiguration(imageName);
@@ -124,18 +124,18 @@ public abstract class AbstractEc2InstanceLaunchingFactoryBean extends AbstractFa
         ReservationDescription reservationDescription = jec2.runInstances(launchConfiguration);
         instance = reservationDescription.getInstances().get(0);
         while (!instance.isRunning() && !instance.isTerminated()) {
-            log.info("Instance still starting up; sleeping " + INSTANCE_START_SLEEP_TIME + "ms");
+            LOG.info("Instance still starting up; sleeping " + INSTANCE_START_SLEEP_TIME + "ms");
             Thread.sleep(INSTANCE_START_SLEEP_TIME);
             reservationDescription = jec2.describeInstances(Collections.singletonList(instance.getInstanceId())).get(0);
             instance = reservationDescription.getInstances().get(0);
         }
 
         if (instance.isRunning()) {
-            log.info("EC2 instance is now running");
+            LOG.info("EC2 instance is now running");
             if (preparationSleepTime > 0) {
-                log.info("Sleeping " + preparationSleepTime + "ms allowing instance services to start up properly.");
+                LOG.info("Sleeping " + preparationSleepTime + "ms allowing instance services to start up properly.");
                 Thread.sleep(preparationSleepTime);
-                log.info("Instance prepared - proceeding");
+                LOG.info("Instance prepared - proceeding");
             }
             return doCreateInstance(instance.getDnsName());
         } else {
@@ -156,7 +156,7 @@ public abstract class AbstractEc2InstanceLaunchingFactoryBean extends AbstractFa
     @Override
     protected void destroyInstance(Object ignored) throws Exception {
         if (this.instance != null) {
-            log.info("Shutting down instance");
+            LOG.info("Shutting down instance");
             Jec2 jec2 = new Jec2(awsKey, awsSecretKey);
             jec2.terminateInstances(Collections.singletonList(this.instance.getInstanceId()));
         }

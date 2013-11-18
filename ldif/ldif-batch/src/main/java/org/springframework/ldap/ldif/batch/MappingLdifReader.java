@@ -52,7 +52,7 @@ import org.springframework.util.ClassUtils;
 public class MappingLdifReader<T> extends AbstractItemCountingItemStreamItemReader<T>
 		implements ResourceAwareItemReaderItemStream<T>, InitializingBean {
 
-	private static final Logger log = LoggerFactory.getLogger(MappingLdifReader.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MappingLdifReader.class);
 
 	private Resource resource;
 	
@@ -129,7 +129,7 @@ public class MappingLdifReader<T> extends AbstractItemCountingItemStreamItemRead
 			if (strict) {
 				throw new IllegalStateException("Input resource must exist (reader is in 'strict' mode): "+resource);
 			} else {
-				log.warn("Input resource does not exist " + resource.getDescription());
+				LOG.warn("Input resource does not exist " + resource.getDescription());
 				return;
 			}
 		}
@@ -159,8 +159,8 @@ public class MappingLdifReader<T> extends AbstractItemCountingItemStreamItemRead
 			
 			return null;
 		} catch(Exception ex){
-			log.error("Parsing error at record " + recordCount + " in resource=" + 
-					resource.getDescription() + ", input=[" + attributes + "]", ex);
+			LOG.error("Parsing error at record " + recordCount + " in resource=" +
+                    resource.getDescription() + ", input=[" + attributes + "]", ex);
 			throw ex;
 		}
 	}

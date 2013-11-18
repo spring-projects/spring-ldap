@@ -95,19 +95,19 @@ public final class SchemaViewer {
         }
     }
 
-    private static final Options options = new Options();
+    private static final Options DEFAULT_OPTIONS = new Options();
     static {
-        options.addOption(Flag.URL.getShort(), Flag.URL.getLong(), true, "Ldap url (defaults to "+DEFAULT_URL+")");
-        options.addOption(Flag.USERNAME.getShort(), Flag.USERNAME.getLong(), true, "DN to bind with (defaults to \"\")");
-        options.addOption(Flag.PASSWORD.getShort(), Flag.PASSWORD.getLong(), true, "Password to bind with defaults to \"\")");
-        options.addOption(Flag.OBJECTCLASS.getShort(), Flag.OBJECTCLASS.getLong(), true,
+        DEFAULT_OPTIONS.addOption(Flag.URL.getShort(), Flag.URL.getLong(), true, "Ldap url (defaults to " + DEFAULT_URL + ")");
+        DEFAULT_OPTIONS.addOption(Flag.USERNAME.getShort(), Flag.USERNAME.getLong(), true, "DN to bind with (defaults to \"\")");
+        DEFAULT_OPTIONS.addOption(Flag.PASSWORD.getShort(), Flag.PASSWORD.getLong(), true, "Password to bind with defaults to \"\")");
+        DEFAULT_OPTIONS.addOption(Flag.OBJECTCLASS.getShort(), Flag.OBJECTCLASS.getLong(), true,
                 "Object class name or ? for all. Print object class schema");
-        options.addOption(Flag.ATTRIBUTE.getShort(), Flag.ATTRIBUTE.getLong(), true,
+        DEFAULT_OPTIONS.addOption(Flag.ATTRIBUTE.getShort(), Flag.ATTRIBUTE.getLong(), true,
                 "Attribute name or ? for all. Print attribute schema");
-        options.addOption(Flag.SYNTAX.getShort(), Flag.SYNTAX.getLong(), true,
+        DEFAULT_OPTIONS.addOption(Flag.SYNTAX.getShort(), Flag.SYNTAX.getLong(), true,
                 "Syntax OID or ? for all. Print attribute syntax");
-        options.addOption(Flag.HELP.getShort(), Flag.HELP.getLong(), false, "Print this help message");
-        options.addOption(Flag.ERROR.getShort(), Flag.ERROR.getLong(), false, "Send output to standard error");
+        DEFAULT_OPTIONS.addOption(Flag.HELP.getShort(), Flag.HELP.getLong(), false, "Print this help message");
+        DEFAULT_OPTIONS.addOption(Flag.ERROR.getShort(), Flag.ERROR.getLong(), false, "Send output to standard error");
     }
 
     /**
@@ -174,7 +174,7 @@ public final class SchemaViewer {
         CommandLine cmd = null;
 
         try {
-            cmd = parser.parse(options, argv);
+            cmd = parser.parse(DEFAULT_OPTIONS, argv);
         } catch (ParseException e) {
             System.out.println(e.getMessage());
             System.exit(1);
@@ -183,7 +183,7 @@ public final class SchemaViewer {
         if (cmd.hasOption(Flag.HELP.getShort())) {
             HelpFormatter formatter = new HelpFormatter();
 
-            formatter.printHelp(120, SchemaViewer.class.getSimpleName(), null, options, null, true);
+            formatter.printHelp(120, SchemaViewer.class.getSimpleName(), null, DEFAULT_OPTIONS, null, true);
             System.exit(0);
         }
 

@@ -183,7 +183,7 @@ public class SimpleLdapRepository<T> implements LdapRepository<T> {
         delete(findAll());
     }
 
-    private final static class TransformingIterable<F, T> implements Iterable<T> {
+    private static final class TransformingIterable<F, T> implements Iterable<T> {
         private final Iterable<F> target;
         private final Function<F, T> function;
 

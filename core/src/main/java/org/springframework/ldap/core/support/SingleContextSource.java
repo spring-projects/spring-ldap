@@ -18,7 +18,6 @@ package org.springframework.ldap.core.support;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
-import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextProxy;
 import org.springframework.ldap.core.LdapTemplate;
@@ -39,7 +38,7 @@ import java.lang.reflect.Proxy;
  */
 public class SingleContextSource implements ContextSource, DisposableBean {
 
-    private static final Logger log = LoggerFactory.getLogger(SingleContextSource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SingleContextSource.class);
     private static final boolean DONT_USE_READ_ONLY = false;
     private static final boolean DONT_IGNORE_PARTIAL_RESULT = false;
     private static final boolean DONT_IGNORE_NAME_NOT_FOUND = false;
@@ -58,14 +57,14 @@ public class SingleContextSource implements ContextSource, DisposableBean {
     /*
       * @see org.springframework.ldap.ContextSource#getReadOnlyContext()
       */
-    public DirContext getReadOnlyContext() throws NamingException {
+    public DirContext getReadOnlyContext() {
         return getNonClosingDirContextProxy(ctx);
     }
 
     /*
       * @see org.springframework.ldap.ContextSource#getReadWriteContext()
       */
-    public DirContext getReadWriteContext() throws NamingException {
+    public DirContext getReadWriteContext() {
         return getNonClosingDirContextProxy(ctx);
     }
 
@@ -79,8 +78,7 @@ public class SingleContextSource implements ContextSource, DisposableBean {
 
     }
 
-    public DirContext getContext(String principal, String credentials)
-            throws NamingException {
+    public DirContext getContext(String principal, String credentials) {
         throw new UnsupportedOperationException(
                 "Not a valid operation for this type of ContextSource");
     }
@@ -94,7 +92,7 @@ public class SingleContextSource implements ContextSource, DisposableBean {
             ctx.close();
         }
         catch (javax.naming.NamingException e) {
-            log.warn("Error when closing", e);
+            LOG.warn("Error when closing", e);
         }
     }
 

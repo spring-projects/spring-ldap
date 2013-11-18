@@ -59,7 +59,7 @@ public class ContextSourceAndDataSourceTransactionManager extends
     /*
      * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doGetTransaction()
      */
-    protected Object doGetTransaction() throws TransactionException {
+    protected Object doGetTransaction() {
         Object dataSourceTransactionObject = super.doGetTransaction();
         Object contextSourceTransactionObject = ldapManagerDelegate
                 .doGetTransaction();
@@ -72,8 +72,7 @@ public class ContextSourceAndDataSourceTransactionManager extends
      * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doBegin(java.lang.Object,
      *      org.springframework.transaction.TransactionDefinition)
      */
-    protected void doBegin(Object transaction, TransactionDefinition definition)
-            throws TransactionException {
+    protected void doBegin(Object transaction, TransactionDefinition definition) {
         ContextSourceAndDataSourceTransactionObject actualTransactionObject = (ContextSourceAndDataSourceTransactionObject) transaction;
 
         super.doBegin(actualTransactionObject.getDataSourceTransactionObject(),
@@ -103,8 +102,7 @@ public class ContextSourceAndDataSourceTransactionManager extends
     /*
      * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doCommit(org.springframework.transaction.support.DefaultTransactionStatus)
      */
-    protected void doCommit(DefaultTransactionStatus status)
-            throws TransactionException {
+    protected void doCommit(DefaultTransactionStatus status) {
 
         ContextSourceAndDataSourceTransactionObject actualTransactionObject = (ContextSourceAndDataSourceTransactionObject) status
                 .getTransaction();
@@ -138,8 +136,7 @@ public class ContextSourceAndDataSourceTransactionManager extends
     /*
      * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doRollback(org.springframework.transaction.support.DefaultTransactionStatus)
      */
-    protected void doRollback(DefaultTransactionStatus status)
-            throws TransactionException {
+    protected void doRollback(DefaultTransactionStatus status) {
         ContextSourceAndDataSourceTransactionObject actualTransactionObject = (ContextSourceAndDataSourceTransactionObject) status
                 .getTransaction();
 
@@ -190,7 +187,7 @@ public class ContextSourceAndDataSourceTransactionManager extends
     /*
      * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doSuspend(java.lang.Object)
      */
-    protected Object doSuspend(Object transaction) throws TransactionException {
+    protected Object doSuspend(Object transaction) {
         throw new TransactionSuspensionNotSupportedException(
                 "Transaction manager [" + getClass().getName()
                         + "] does not support transaction suspension");
@@ -200,8 +197,7 @@ public class ContextSourceAndDataSourceTransactionManager extends
      * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doResume(java.lang.Object,
      *      java.lang.Object)
      */
-    protected void doResume(Object transaction, Object suspendedResources)
-            throws TransactionException {
+    protected void doResume(Object transaction, Object suspendedResources) {
         throw new TransactionSuspensionNotSupportedException(
                 "Transaction manager [" + getClass().getName()
                         + "] does not support transaction suspension");

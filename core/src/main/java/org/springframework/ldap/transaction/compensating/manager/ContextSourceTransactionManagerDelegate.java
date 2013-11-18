@@ -45,7 +45,7 @@ import javax.naming.directory.DirContext;
 public class ContextSourceTransactionManagerDelegate extends
         AbstractCompensatingTransactionManagerDelegate {
 
-    private static final Logger log = LoggerFactory.getLogger(ContextSourceTransactionManagerDelegate.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ContextSourceTransactionManagerDelegate.class);
 
     private ContextSource contextSource;
 
@@ -109,10 +109,10 @@ public class ContextSourceTransactionManagerDelegate extends
         DirContext ctx = contextHolder.getCtx();
 
         try {
-            log.debug("Closing target context");
+            LOG.debug("Closing target context");
             ctx.close();
         } catch (NamingException e) {
-            log.warn("Failed to close target context", e);
+            LOG.warn("Failed to close target context", e);
         }
     }
 

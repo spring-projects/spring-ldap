@@ -40,8 +40,9 @@ import java.util.Set;
  */
 public class LdapRdn implements Serializable, Comparable {
 	private static final long serialVersionUID = 5681397547245228750L;
+    private static final int DEFAULT_BUFFER_SIZE = 100;
 
-	private Map<String, LdapRdnComponent> components = new LinkedHashMap<String, LdapRdnComponent>();
+    private Map<String, LdapRdnComponent> components = new LinkedHashMap<String, LdapRdnComponent>();
 
 	/**
 	 * Default constructor. Create an empty, uninitialized LdapRdn.
@@ -136,7 +137,7 @@ public class LdapRdn implements Serializable, Comparable {
 		if (components.size() == 0) {
 			throw new IndexOutOfBoundsException("No components in Rdn.");
 		}
-		StringBuffer sb = new StringBuffer(100);
+		StringBuffer sb = new StringBuffer(DEFAULT_BUFFER_SIZE);
 		for (Iterator iter = components.values().iterator(); iter.hasNext();) {
 			LdapRdnComponent component = (LdapRdnComponent) iter.next();
 			sb.append(component.encodeLdap());
@@ -154,7 +155,7 @@ public class LdapRdn implements Serializable, Comparable {
 	 * @return a String representation of this LdapRdn for use in urls.
 	 */
 	public String encodeUrl() {
-		StringBuffer sb = new StringBuffer(100);
+		StringBuffer sb = new StringBuffer(DEFAULT_BUFFER_SIZE);
 		for (Iterator iter = components.values().iterator(); iter.hasNext();) {
 			LdapRdnComponent component = (LdapRdnComponent) iter.next();
 			sb.append(component.encodeUrl());

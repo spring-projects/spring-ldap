@@ -96,7 +96,7 @@ public final class ConverterManagerFactoryBean implements FactoryBean {
     /** 
      * Configuration information for a single Converter instance.
      */
-    public final static class ConverterConfig {
+    public static final class ConverterConfig {
         // The set of classes the Converter will convert from.
         private Set<Class<?>> fromClasses = new HashSet<Class<?>>();
 

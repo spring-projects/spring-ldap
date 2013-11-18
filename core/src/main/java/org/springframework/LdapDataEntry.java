@@ -56,7 +56,7 @@ public interface LdapDataEntry {
      * and one or several of the currently present attribute values is <strong>not</strong>
      * {@link Name} instances or Strings representing valid Distinguished Names.
      */
-    public void setAttributeValue(String name, Object value);
+    void setAttributeValue(String name, Object value);
 
     /**
      * Sets a multivalue attribute, disregarding the order of the values.

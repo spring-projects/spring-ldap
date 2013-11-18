@@ -149,7 +149,7 @@ public class DistinguishedName implements Name {
     private static final String MANGLED_DOUBLE_QUOTES = "\\\\\"";
     private static final String PROPER_DOUBLE_QUOTES = "\\\"";
 
-    private static final Logger log = LoggerFactory.getLogger(DistinguishedName.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DistinguishedName.class);
 
 	private static final boolean COMPACT = true;
 
@@ -161,8 +161,9 @@ public class DistinguishedName implements Name {
 	 * An empty, unmodifiable DistinguishedName.
 	 */
 	public static final DistinguishedName EMPTY_PATH = new DistinguishedName(Collections.EMPTY_LIST);
+    private static final int DEFAULT_BUFFER_SIZE = 256;
 
-	private List names;
+    private List names;
 
 	/**
 	 * Construct a new DistinguishedName with no components.
@@ -358,10 +359,11 @@ public class DistinguishedName implements Name {
 
 	private String format(boolean compact) {
 		// empty path
-		if (names.size() == 0)
+		if (names.size() == 0) {
 			return "";
+        }
 
-		StringBuffer buffer = new StringBuffer(256);
+		StringBuffer buffer = new StringBuffer(DEFAULT_BUFFER_SIZE);
 
 		ListIterator i = names.listIterator(names.size());
 		while (i.hasPrevious()) {
@@ -390,7 +392,7 @@ public class DistinguishedName implements Name {
 	 * @return the LDAP path, for use in an url.
 	 */
 	public String toUrl() {
-		StringBuffer buffer = new StringBuffer(256);
+		StringBuffer buffer = new StringBuffer(DEFAULT_BUFFER_SIZE);
 
 		for (int i = names.size() - 1; i >= 0; i--) {
 			LdapRdn n = (LdapRdn) names.get(i);
@@ -415,12 +417,14 @@ public class DistinguishedName implements Name {
 		List shortlist = path.getNames();
 
 		// this path must be at least as long
-		if (getNames().size() < shortlist.size())
-			return false;
+		if (getNames().size() < shortlist.size()) {
+            return false;
+        }
 
 		// must have names
-		if (shortlist.size() == 0)
-			return false;
+		if (shortlist.size() == 0) {
+            return false;
+        }
 
 		Iterator longiter = getNames().iterator();
 		Iterator shortiter = shortlist.iterator();
@@ -434,10 +438,12 @@ public class DistinguishedName implements Name {
 		}
 
 		// Done?
-		if (!shortiter.hasNext() && longname.equals(shortname))
-			return true;
-		if (!longiter.hasNext())
-			return false;
+		if (!shortiter.hasNext() && longname.equals(shortname)) {
+            return true;
+        }
+		if (!longiter.hasNext()) {
+            return false;
+        }
 
 		// compare
 		while (longname.equals(shortname) && longiter.hasNext() && shortiter.hasNext()) {
@@ -536,7 +542,7 @@ public class DistinguishedName implements Name {
 			return result;
 		}
 		catch (CloneNotSupportedException e) {
-			log.error("CloneNotSupported thrown from superclass - this should not happen");
+			LOG.error("CloneNotSupported thrown from superclass - this should not happen");
 			throw new UncategorizedLdapException("Fatal error in clone", e);
 		}
 	}
@@ -702,12 +708,14 @@ public class DistinguishedName implements Name {
 		List shortlist = path.getNames();
 
 		// this path must be at least as long
-		if (getNames().size() < shortlist.size())
-			return false;
+		if (getNames().size() < shortlist.size()) {
+            return false;
+        }
 
 		// must have names
-		if (shortlist.size() == 0)
-			return false;
+		if (shortlist.size() == 0) {
+            return false;
+        }
 
 		ListIterator longiter = getNames().listIterator(getNames().size());
 		ListIterator shortiter = shortlist.listIterator(shortlist.size());

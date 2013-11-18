@@ -38,5 +38,5 @@ public interface ParameterizedContextMapper<T> extends ContextMapper {
 	 * @param ctx the context to map to an object.
 	 * @return an object built from the data in the context.
 	 */
-	public T mapFromContext(Object ctx);
+	T mapFromContext(Object ctx);
 }

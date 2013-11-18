@@ -48,9 +48,10 @@ import java.util.NoSuchElementException;
  */
 public final class LdapUtils {
 
-	private static final Logger logger = LoggerFactory.getLogger(LdapUtils.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LdapUtils.class);
+    private static final int HEX = 16;
 
-	/**
+    /**
 	 * Not to be instantiated.
 	 */
 	private LdapUtils() {
@@ -69,12 +70,12 @@ public final class LdapUtils {
 				context.close();
 			}
 			catch (NamingException ex) {
-				logger.debug("Could not close JNDI DirContext", ex);
+				LOGGER.debug("Could not close JNDI DirContext", ex);
 			}
 			catch (Throwable ex) {
 				// We don't trust the JNDI provider: It might throw
 				// RuntimeException or Error.
-				logger.debug("Unexpected exception on closing JNDI DirContext", ex);
+				LOGGER.debug("Unexpected exception on closing JNDI DirContext", ex);
 			}
 		}
 	}
@@ -314,7 +315,7 @@ public final class LdapUtils {
 	 * 
 	 * @author Mattias Hellborg Arthursson
 	 */
-	private final static class CollectingAttributeValueCallbackHandler<T> implements AttributeValueCallbackHandler {
+	private static final class CollectingAttributeValueCallbackHandler<T> implements AttributeValueCallbackHandler {
 		private final Collection<T> collection;
         private final Class<T> clazz;
 
@@ -326,7 +327,7 @@ public final class LdapUtils {
             this.clazz = clazz;
 		}
 
-		public final void handleAttributeValue(String attributeName, Object attributeValue, int index) {
+		public void handleAttributeValue(String attributeName, Object attributeValue, int index) {
             Assert.isTrue(attributeName == null || clazz.isAssignableFrom(attributeValue.getClass()));
 			collection.add(clazz.cast(attributeValue));
 		}
@@ -551,7 +552,7 @@ public final class LdapUtils {
         LdapName ldapName = returnOrConstructLdapNameFromName(name);
         Rdn rdn = ldapName.getRdn(index);
         if(rdn.size() > 1) {
-            logger.warn("Rdn at position " + index + " of dn '" + name +
+            LOGGER.warn("Rdn at position " + index + " of dn '" + name +
                     "' is multi-value - returned value is not to be trusted. " +
                     "Consider using name-based getValue method instead");
         }
@@ -646,7 +647,7 @@ public final class LdapUtils {
 			String hexString = Integer.toHexString(sid[t] & 0xFF);
 			sb.append(hexString);
 		}
-		sidAsString.append(Long.parseLong(sb.toString(), 16));
+		sidAsString.append(Long.parseLong(sb.toString(), HEX));
 
 		// bytes[1] : the sub authorities count
 		int count = sid[1];
@@ -661,7 +662,7 @@ public final class LdapUtils {
 			sb.append(toHexString((byte) (sid[9 + currSubAuthOffset] & 0xFF)));
 			sb.append(toHexString((byte) (sid[8 + currSubAuthOffset] & 0xFF)));
 
-			sidAsString.append('-').append(Long.parseLong(sb.toString(), 16));
+			sidAsString.append('-').append(Long.parseLong(sb.toString(), HEX));
 		}
 
 		// That's it - we have the SID

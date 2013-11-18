@@ -35,15 +35,17 @@ import static org.springframework.ldap.config.ParserUtils.getString;
  * @author Mattias Hellborg Arthursson
  */
 public class LdapTemplateParser implements BeanDefinitionParser {
-    private final static String ATT_COUNT_LIMIT = "count-limit";
-    private final static String ATT_TIME_LIMIT = "time-limit";
-    private final static String ATT_SEARCH_SCOPE = "search-scope";
-    private final static String ATT_IGNORE_PARTIAL_RESULT = "ignore-partial-result";
-    private final static String ATT_IGNORE_NAME_NOT_FOUND = "ignore-name-not-found";
-    private final static String ATT_ODM_REF = "odm-ref";
-    private final static String ATT_CONTEXT_SOURCE_REF = "context-source-ref";
+    private static final String ATT_COUNT_LIMIT = "count-limit";
+    private static final String ATT_TIME_LIMIT = "time-limit";
+    private static final String ATT_SEARCH_SCOPE = "search-scope";
+    private static final String ATT_IGNORE_PARTIAL_RESULT = "ignore-partial-result";
+    private static final String ATT_IGNORE_NAME_NOT_FOUND = "ignore-name-not-found";
+    private static final String ATT_ODM_REF = "odm-ref";
+    private static final String ATT_CONTEXT_SOURCE_REF = "context-source-ref";
 
-    private final static String DEFAULT_ID = "ldapTemplate";
+    private static final String DEFAULT_ID = "ldapTemplate";
+    private static final int DEFAULT_COUNT_LIMIT = 0;
+    private static final int DEFAULT_TIME_LIMIT = 0;
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
@@ -51,8 +53,8 @@ public class LdapTemplateParser implements BeanDefinitionParser {
 
         String contextSourceRef = getString(element, ATT_CONTEXT_SOURCE_REF, ContextSourceParser.DEFAULT_ID);
         builder.addPropertyReference("contextSource", contextSourceRef);
-        builder.addPropertyValue("defaultCountLimit", getInt(element, ATT_COUNT_LIMIT, 0));
-        builder.addPropertyValue("defaultTimeLimit", getInt(element, ATT_TIME_LIMIT, 0));
+        builder.addPropertyValue("defaultCountLimit", getInt(element, ATT_COUNT_LIMIT, DEFAULT_COUNT_LIMIT));
+        builder.addPropertyValue("defaultTimeLimit", getInt(element, ATT_TIME_LIMIT, DEFAULT_TIME_LIMIT));
 
         String searchScope = getString(element, ATT_SEARCH_SCOPE, SearchScope.SUBTREE.toString());
         builder.addPropertyValue("defaultSearchScope", SearchScope.valueOf(searchScope).getId());

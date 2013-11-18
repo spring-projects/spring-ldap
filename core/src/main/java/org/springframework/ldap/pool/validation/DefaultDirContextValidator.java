@@ -75,6 +75,7 @@ import javax.naming.directory.SearchResult;
  */
 public class DefaultDirContextValidator implements DirContextValidator {
     public static final String DEFAULT_FILTER = "objectclass=*";
+    private static final int DEFAULT_TIME_LIMIT = 500;
 
     /**
      * Logger for this class and sub-classes
@@ -105,7 +106,7 @@ public class DefaultDirContextValidator implements DirContextValidator {
         this.searchControls.setSearchScope(searchScope);
         this.searchControls.setCountLimit(1);
         this.searchControls.setReturningAttributes(new String[] { "objectclass" });
-        this.searchControls.setTimeLimit(500);
+        this.searchControls.setTimeLimit(DEFAULT_TIME_LIMIT);
 
         this.base = "";
 

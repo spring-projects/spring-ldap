@@ -58,7 +58,7 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
     /*
      * @see org.springframework.orm.hibernate3.HibernateTransactionManager#doGetTransaction()
      */
-    protected Object doGetTransaction() throws TransactionException {
+    protected Object doGetTransaction() {
         Object dataSourceTransactionObject = super.doGetTransaction();
         Object contextSourceTransactionObject = ldapManagerDelegate
                 .doGetTransaction();
@@ -71,8 +71,7 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
      * @see org.springframework.orm.hibernate3.HibernateTransactionManager#doBegin(java.lang.Object,
      *      org.springframework.transaction.TransactionDefinition)
      */
-    protected void doBegin(Object transaction, TransactionDefinition definition)
-            throws TransactionException {
+    protected void doBegin(Object transaction, TransactionDefinition definition) {
         ContextSourceAndHibernateTransactionObject actualTransactionObject = (ContextSourceAndHibernateTransactionObject) transaction;
 
         super.doBegin(actualTransactionObject.getHibernateTransactionObject(),
@@ -102,8 +101,7 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
     /*
      * @see org.springframework.orm.hibernate3.HibernateTransactionManager#doCommit(org.springframework.transaction.support.DefaultTransactionStatus)
      */
-    protected void doCommit(DefaultTransactionStatus status)
-            throws TransactionException {
+    protected void doCommit(DefaultTransactionStatus status) {
 
         ContextSourceAndHibernateTransactionObject actualTransactionObject = (ContextSourceAndHibernateTransactionObject) status
                 .getTransaction();
@@ -137,8 +135,7 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
     /*
      * @see org.springframework.orm.hibernate3.HibernateTransactionManager#doRollback(org.springframework.transaction.support.DefaultTransactionStatus)
      */
-    protected void doRollback(DefaultTransactionStatus status)
-            throws TransactionException {
+    protected void doRollback(DefaultTransactionStatus status) {
         ContextSourceAndHibernateTransactionObject actualTransactionObject = (ContextSourceAndHibernateTransactionObject) status
                 .getTransaction();
 
@@ -166,7 +163,7 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
         ldapManagerDelegate.setRenamingStrategy(renamingStrategy);
     }
 
-    private final static class ContextSourceAndHibernateTransactionObject {
+    private static final class ContextSourceAndHibernateTransactionObject {
         private Object ldapTransactionObject;
 
         private Object hibernateTransactionObject;
@@ -189,7 +186,7 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
     /*
      * @see org.springframework.orm.hibernate3.HibernateTransactionManager#doSuspend(java.lang.Object)
      */
-    protected Object doSuspend(Object transaction) throws TransactionException {
+    protected Object doSuspend(Object transaction) {
         throw new TransactionSuspensionNotSupportedException(
                 "Transaction manager [" + getClass().getName()
                         + "] does not support transaction suspension");
@@ -199,8 +196,7 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
      * @see org.springframework.orm.hibernate3.HibernateTransactionManager#doResume(java.lang.Object,
      *      java.lang.Object)
      */
-    protected void doResume(Object transaction, Object suspendedResources)
-            throws TransactionException {
+    protected void doResume(Object transaction, Object suspendedResources) {
         throw new TransactionSuspensionNotSupportedException(
                 "Transaction manager [" + getClass().getName()
                         + "] does not support transaction suspension");

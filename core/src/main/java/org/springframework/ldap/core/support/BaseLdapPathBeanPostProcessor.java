@@ -16,7 +16,6 @@
 
 package org.springframework.ldap.core.support;
 
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
@@ -63,7 +62,8 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 
     private int order = Ordered.LOWEST_PRECEDENCE;
 
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) {
 		if(bean instanceof BaseLdapNameAware) {
             BaseLdapNameAware baseLdapNameAware = (BaseLdapNameAware) bean;
 
@@ -126,18 +126,14 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
         }
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.beans.factory.config.BeanPostProcessor#
-	 * postProcessAfterInitialization(java.lang.Object, java.lang.String)
-	 */
-	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+    @Override
+	public Object postProcessAfterInitialization(Object bean, String beanName) {
 		// Do nothing for this implementation
 		return bean;
 	}
 
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    @Override
+	public void setApplicationContext(ApplicationContext applicationContext) {
 		this.applicationContext = applicationContext;
 	}
 

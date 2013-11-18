@@ -30,7 +30,7 @@ import static org.springframework.ldap.config.ParserUtils.getString;
  * @author Mattias Hellborg Arthursson
  */
 public class DefaultRenamingStrategyParser implements BeanDefinitionParser {
-    private final static String ATT_TEMP_SUFFIX = "temp-suffix";
+    private static final String ATT_TEMP_SUFFIX = "temp-suffix";
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {

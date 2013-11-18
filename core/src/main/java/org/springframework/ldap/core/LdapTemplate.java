@@ -68,7 +68,7 @@ import java.util.List;
  */
 public class LdapTemplate implements LdapOperations, InitializingBean {
 
-	private static final Logger log = LoggerFactory.getLogger(LdapTemplate.class);
+	private static final Logger LOG = LoggerFactory.getLogger(LdapTemplate.class);
 
 	private static final boolean DONT_RETURN_OBJ_FLAG = false;
 
@@ -380,7 +380,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		catch (NameNotFoundException e) {
 			// It is possible to ignore errors caused by base not found
 			if (ignoreNameNotFoundException) {
-				log.warn("Base context not found, ignoring: " + e.getMessage());
+				LOG.warn("Base context not found, ignoring: " + e.getMessage());
 			}
 			else {
 				ex = LdapUtils.convertLdapException(e);
@@ -389,7 +389,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		catch (PartialResultException e) {
 			// Workaround for AD servers not handling referrals correctly.
 			if (ignorePartialResultException) {
-				log.debug("PartialResultException encountered and ignored", e);
+				LOG.debug("PartialResultException encountered and ignored", e);
 			}
 			else {
 				ex = LdapUtils.convertLdapException(e);
@@ -397,7 +397,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		}
         catch(SizeLimitExceededException e) {
             if(ignoreSizeLimitExceededException) {
-                log.debug("SizeLimitExceededException encountered and ignored", e);
+                LOG.debug("SizeLimitExceededException encountered and ignored", e);
             }
             else {
                 ex = LdapUtils.convertLdapException(e);
@@ -417,7 +417,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 				else {
 					// We already had an exception from above and should ignore
 					// this one.
-					log.debug("Ignoring Exception from postProcess, " + "main exception thrown instead", e);
+					LOG.debug("Ignoring Exception from postProcess, " + "main exception thrown instead", e);
 				}
 			}
 			closeContextAndNamingEnumeration(ctx, results);
@@ -1174,8 +1174,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 				deleteRecursively(ctx, childName);
 			}
 			ctx.unbind(name);
-			if (log.isDebugEnabled()) {
-				log.debug("Entry " + name + " deleted");
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Entry " + name + " deleted");
 			}
 		}
 		catch (javax.naming.NamingException e) {
@@ -1318,8 +1318,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	private void assureReturnObjFlagSet(SearchControls controls) {
 		Assert.notNull(controls, "controls must not be null");
 		if (!controls.getReturningObjFlag()) {
-			log.debug("The returnObjFlag of supplied SearchControls is not set"
-					+ " but a ContextMapper is used - setting flag to true");
+			LOG.debug("The returnObjFlag of supplied SearchControls is not set"
+                    + " but a ContextMapper is used - setting flag to true");
 			controls.setReturningObjFlag(true);
 		}
 	}
@@ -1330,12 +1330,12 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      * @author Mattias Hellborg Arthursson
      * @since 2.0
      */
-    public final static class NullDirContextProcessor implements DirContextProcessor {
-        public void postProcess(DirContext ctx) throws NamingException {
+    public static final class NullDirContextProcessor implements DirContextProcessor {
+        public void postProcess(DirContext ctx) {
             // Do nothing
         }
 
-        public void preProcess(DirContext ctx) throws NamingException {
+        public void preProcess(DirContext ctx) {
             // Do nothing
         }
     }
@@ -1562,7 +1562,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         List<LdapEntryIdentification> result = search(base, filter, searchControls, new LdapEntryIdentificationContextMapper());
         if (result.size() == 0) {
             String msg = "No results found for search, base: '" + base + "'; filter: '" + filter + "'.";
-            log.info(msg);
+            LOG.info(msg);
             return false;
         } else if (result.size() > 1) {
             String msg = "base: '" + base + "'; filter: '" + filter + "'.";
@@ -1582,7 +1582,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
             return true;
         }
         catch (Exception e) {
-            log.info("Authentication failed for entry with DN '" + entryIdentification.getAbsoluteName() + "'", e);
+            LOG.info("Authentication failed for entry with DN '" + entryIdentification.getAbsoluteName() + "'", e);
             errorCallback.execute(e);
             return false;
         }
@@ -1776,8 +1776,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
     @Override
     public <T> T findByDn(Name dn, final Class<T> clazz) {
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Reading Entry at - %s$1", dn));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(String.format("Reading Entry at - %s$1", dn));
         }
 
         // Make sure the class is OK before doing the lookup
@@ -1793,8 +1793,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         if (result == null) {
             throw new OdmException(String.format("Entry %1$s does not have the required objectclasses ", dn));
         }
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Found entry - %s$1", result));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(String.format("Found entry - %s$1", result));
         }
 
         return result;
@@ -1804,8 +1804,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     public void create(Object entry) {
         Assert.notNull(entry, "Entry must not be null");
 
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Creating entry - %s$1", entry));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(String.format("Creating entry - %s$1", entry));
         }
 
         Name id = odm.getId(entry);
@@ -1825,8 +1825,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     @Override
     public void update(Object entry) {
         Assert.notNull(entry, "Entry must not be null");
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Updating entry - %s$1", entry));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(String.format("Updating entry - %s$1", entry));
         }
 
         Name originalId = odm.getId(entry);
@@ -1835,8 +1835,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         if(originalId != null && calculatedId != null && !originalId.equals(calculatedId)) {
             // The DN has changed - remove the original entry and bind the new one
             // (because other data may have changed as well
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("Calculated DN of %s; of entry %s differs from explicitly specified one; %s - moving",
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(String.format("Calculated DN of %s; of entry %s differs from explicitly specified one; %s - moving",
                         calculatedId, entry, originalId));
             }
 
@@ -1867,8 +1867,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     @Override
     public void delete(Object entry) {
         Assert.notNull(entry, "Entry must not be null");
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Deleting %s$1", entry));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(String.format("Deleting %s$1", entry));
         }
 
         Name id = odm.getId(entry);
@@ -1902,8 +1902,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
             localBase = LdapUtils.emptyLdapName();
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Searching - base=%1$s, finalFilter=%2$s, scope=%3$s", base, finalFilter, searchControls));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(String.format("Searching - base=%1$s, finalFilter=%2$s, scope=%3$s", base, finalFilter, searchControls));
         }
 
         List<T> result = search(localBase, finalFilter.encode(), searchControls, new ContextMapper<T>() {
@@ -1914,8 +1914,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         });
         result.remove(null);
 
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Found %1$s Entries - %2$s", result.size(), result));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(String.format("Found %1$s Entries - %2$s", result.size(), result));
         }
 
         return result;

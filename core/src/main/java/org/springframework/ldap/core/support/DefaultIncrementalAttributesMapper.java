@@ -74,7 +74,7 @@ import java.util.Set;
  * @since 1.3.2
  */
 public class DefaultIncrementalAttributesMapper implements IncrementalAttributesMapper<DefaultIncrementalAttributesMapper> {
-    private final static Logger log = LoggerFactory.getLogger(DefaultIncrementalAttributesMapper.class);
+    private final static Logger LOG = LoggerFactory.getLogger(DefaultIncrementalAttributesMapper.class);
 
     private Map<String, IncrementalAttributeState> stateMap = new LinkedHashMap<String, IncrementalAttributeState>();
     private Set<String> rangedAttributesInNextIteration = new LinkedHashSet<String>();
@@ -83,7 +83,7 @@ public class DefaultIncrementalAttributesMapper implements IncrementalAttributes
      * This guy will be used when an unmapped attribute is encountered. This really should never happen,
      * but this saves us a number of null checks.
      */
-    private final static IncrementalAttributeState NOT_FOUND_ATTRIBUTE_STATE = new IncrementalAttributeState() {
+    private static final IncrementalAttributeState NOT_FOUND_ATTRIBUTE_STATE = new IncrementalAttributeState() {
         @Override
         public String getRequestedAttributeName() {
             throw new UnsupportedOperationException("This method should never be called");
@@ -203,7 +203,7 @@ public class DefaultIncrementalAttributesMapper implements IncrementalAttributes
     private IncrementalAttributeState getState(String attributeName) {
         Object mappedState = stateMap.get(attributeName);
         if (mappedState == null) {
-            log.warn("Attribute '" + attributeName + "' is not handled by this instance");
+            LOG.warn("Attribute '" + attributeName + "' is not handled by this instance");
             mappedState = NOT_FOUND_ATTRIBUTE_STATE;
         }
 
@@ -352,7 +352,7 @@ public class DefaultIncrementalAttributesMapper implements IncrementalAttributes
      * multi-value attributes using ranges. Holds the values collected thus far, the next applicable range,
      * and the actual (requested) attribute name.
      */
-    private final static class DefaultIncrementalAttributeState implements IncrementalAttributeState {
+    private static final class DefaultIncrementalAttributeState implements IncrementalAttributeState {
         private final String actualAttributeName;
         private List<Object> values = null;
         private final int pageSize;
@@ -427,7 +427,7 @@ public class DefaultIncrementalAttributesMapper implements IncrementalAttributes
     /**
      * @author Mattias Hellborg Arthursson
      */
-    private static interface IncrementalAttributeState {
+    private interface IncrementalAttributeState {
         boolean hasMore();
 
         void calculateNextRange(RangeOption responseRange);

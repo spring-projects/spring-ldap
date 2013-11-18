@@ -85,7 +85,7 @@ import java.util.NoSuchElementException;
  */
 public class LdifParser implements Parser, InitializingBean {
 
-	private static final Logger log = LoggerFactory.getLogger(LdifParser.class);
+	private static final Logger LOG = LoggerFactory.getLogger(LdifParser.class);
 	
 	/**
 	 * The resource to parse.
@@ -227,7 +227,7 @@ public class LdifParser implements Parser, InitializingBean {
 		Assert.notNull(reader, "A reader must be obtained: parser not open.");
 		
 		if (!reader.ready()) {
-			log.debug("Reader not ready!");
+			LOG.debug("Reader not ready!");
 			return null;
 		}
 		
@@ -242,7 +242,7 @@ public class LdifParser implements Parser, InitializingBean {
 			
 			switch(identifier) {
 				case NewRecord:
-					log.trace("Starting new record.");
+					LOG.trace("Starting new record.");
 					//Start new record.
                     record = new LdapAttributes(caseInsensitive);
 					builder = new StringBuilder(line);
@@ -250,20 +250,20 @@ public class LdifParser implements Parser, InitializingBean {
 					break;
 				
 				case Control:
-					log.trace("'control' encountered.");
+					LOG.trace("'control' encountered.");
 					
 					//Log WARN and discard record.
-					log.warn("LDIF change records have no implementation: record will be ignored.");					
+					LOG.warn("LDIF change records have no implementation: record will be ignored.");
 					builder = null;
 					record = null;
 					
 					break;
 					
 				case ChangeType:
-					log.trace("'changetype' encountered.");
+					LOG.trace("'changetype' encountered.");
 					
 					//Log WARN and discard record.
-					log.warn("LDIF change records have no implementation: record will be ignored.");					
+					LOG.warn("LDIF change records have no implementation: record will be ignored.");
 					builder = null;
 					record = null;
 					
@@ -273,21 +273,21 @@ public class LdifParser implements Parser, InitializingBean {
 					//flush buffer.
 					addAttributeToRecord(builder.toString(), record);
 
-					log.trace("Starting new attribute.");
+					LOG.trace("Starting new attribute.");
 					//Start new attribute.
 					builder = new StringBuilder(line);	
 					
 					break;
 					
 				case Continuation:
-					log.trace("...appending line to buffer.");
+					LOG.trace("...appending line to buffer.");
 					//Append line to buffer.
 					builder.append(line.replaceFirst(" ", ""));
 					
 					break;					
 				
 				case EndOfRecord:
-					log.trace("...done parsing record. (EndOfRecord)");
+					LOG.trace("...done parsing record. (EndOfRecord)");
 					
 					//Validate record and return.
 					if (record == null) {
@@ -298,14 +298,14 @@ public class LdifParser implements Parser, InitializingBean {
 							addAttributeToRecord(builder.toString(), record);
 							
 							if (specification.isSatisfiedBy(record)) {
-								log.debug("record parsed:\n" + record);
+								LOG.debug("record parsed:\n" + record);
 								return record;
 								
 							} else {
 								throw new InvalidRecordFormatException("Record [dn: " + record.getDN() + "] does not conform to specification.");
 							}
 						} catch(NamingException e) {
-							log.error("Error adding attribute to record", e);
+							LOG.error("Error adding attribute to record", e);
 							return null;
 						}
 					}
@@ -330,7 +330,7 @@ public class LdifParser implements Parser, InitializingBean {
 				Attribute attribute = attributePolicy.parse(buffer);
 					
 				if (attribute.getID().equalsIgnoreCase("dn")) {
-					log.trace("...adding DN to record.");
+					LOG.trace("...adding DN to record.");
 					
 					String dn;
 					if (attribute.get() instanceof byte[]) {
@@ -342,7 +342,7 @@ public class LdifParser implements Parser, InitializingBean {
 					record.setName(LdapUtils.newLdapName(dn));
 					
 				} else {
-					log.trace("...adding attribute to record.");
+					LOG.trace("...adding attribute to record.");
 					Attribute attr = record.get(attribute.getID());
 					
 					if (attr != null) {
@@ -353,9 +353,9 @@ public class LdifParser implements Parser, InitializingBean {
 				}
 			}			
 		} catch (NamingException e) {
-			log.error("Error adding attribute to record", e);
+			LOG.error("Error adding attribute to record", e);
 		} catch (NoSuchElementException e) {
-			log.error("Error adding attribute to record", e);
+			LOG.error("Error adding attribute to record", e);
 		}
 	}
 

@@ -22,7 +22,6 @@ import org.springframework.ldap.transaction.compensating.TempEntryRenamingStrate
 import org.springframework.ldap.transaction.compensating.UnbindOperationExecutor;
 import org.springframework.ldap.transaction.compensating.support.DefaultTempEntryRenamingStrategy;
 import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
 import org.springframework.transaction.compensating.support.DefaultCompensatingTransactionOperationManager;
@@ -123,8 +122,7 @@ public class ContextSourceTransactionManager extends
      * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#doBegin(java.lang.Object,
      *      org.springframework.transaction.TransactionDefinition)
      */
-    protected void doBegin(Object transaction, TransactionDefinition definition)
-            throws TransactionException {
+    protected void doBegin(Object transaction, TransactionDefinition definition) {
         delegate.doBegin(transaction, definition);
     }
 
@@ -138,23 +136,21 @@ public class ContextSourceTransactionManager extends
     /*
      * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#doCommit(org.springframework.transaction.support.DefaultTransactionStatus)
      */
-    protected void doCommit(DefaultTransactionStatus status)
-            throws TransactionException {
+    protected void doCommit(DefaultTransactionStatus status) {
         delegate.doCommit(status);
     }
 
     /*
      * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#doGetTransaction()
      */
-    protected Object doGetTransaction() throws TransactionException {
+    protected Object doGetTransaction() {
         return delegate.doGetTransaction();
     }
 
     /*
      * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#doRollback(org.springframework.transaction.support.DefaultTransactionStatus)
      */
-    protected void doRollback(DefaultTransactionStatus status)
-            throws TransactionException {
+    protected void doRollback(DefaultTransactionStatus status) {
         delegate.doRollback(status);
     }
 

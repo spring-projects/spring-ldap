@@ -39,7 +39,7 @@ import java.util.Hashtable;
  * @author Mattias Hellborg Arthursson
  */
 public class DefaultDirObjectFactory implements DirObjectFactory {
-	private static final Logger log = LoggerFactory.getLogger(DefaultDirObjectFactory.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DefaultDirObjectFactory.class);
 
 	/**
 	 * Key to use in the ContextSource implementation to store the value of the
@@ -54,14 +54,7 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 
 	private static final String LDAPS_PROTOCOL_PREFIX = "ldaps://";
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * javax.naming.spi.DirObjectFactory#getObjectInstance(java.lang.Object,
-	 * javax.naming.Name, javax.naming.Context, java.util.Hashtable,
-	 * javax.naming.directory.Attributes)
-	 */
+    @Override
 	public final Object getObjectInstance(
             Object obj,
             Name name,
@@ -130,16 +123,16 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 					.convertCompositeNameToString((CompositeName) name);
 		}
 		else {
-			log
+			LOG
 					.warn("Expecting a CompositeName as input to getObjectInstance but received a '"
-							+ name.getClass().toString()
-							+ "' - using toString and proceeding with undefined results");
+                            + name.getClass().toString()
+                            + "' - using toString and proceeding with undefined results");
 			nameString = name.toString();
 		}
 
 		if (nameString.startsWith(LDAP_PROTOCOL_PREFIX) || nameString.startsWith(LDAPS_PROTOCOL_PREFIX)) {
-			if (log.isDebugEnabled()) {
-				log.debug("Received name '" + nameString + "' contains protocol delimiter; indicating a referral."
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Received name '" + nameString + "' contains protocol delimiter; indicating a referral."
 						+ "Stripping protocol and address info to enable construction of a proper LdapName");
 			}
 			try {
@@ -168,8 +161,8 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 							e.getMessage());
 				}
 			}
-			if (log.isDebugEnabled()) {
-				log.debug("Resulting name after removal of referral information: '" + nameString + "'");
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Resulting name after removal of referral information: '" + nameString + "'");
 			}
 		}
 
@@ -179,12 +172,7 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
         return dirContextAdapter;
     }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.naming.spi.ObjectFactory#getObjectInstance(java.lang.Object,
-	 * javax.naming.Name, javax.naming.Context, java.util.Hashtable)
-	 */
+    @Override
 	public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment) throws Exception {
 		return null;
 	}

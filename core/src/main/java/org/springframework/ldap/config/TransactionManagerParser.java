@@ -38,14 +38,14 @@ import static org.springframework.ldap.config.ParserUtils.getString;
  * @author Mattias Hellborg Arthursson
  */
 public class TransactionManagerParser implements BeanDefinitionParser {
-    private final static String ATT_CONTEXT_SOURCE_REF = "context-source-ref";
-    private final static String ATT_DATA_SOURCE_REF = "data-source-ref";
-    private final static String ATT_SESSION_FACTORY_REF = "session-factory-ref";
+    private static final String ATT_CONTEXT_SOURCE_REF = "context-source-ref";
+    private static final String ATT_DATA_SOURCE_REF = "data-source-ref";
+    private static final String ATT_SESSION_FACTORY_REF = "session-factory-ref";
 
-    private final static String ATT_TEMP_SUFFIX = "temp-suffix";
-    private final static String ATT_SUBTREE_NODE = "subtree-node";
+    private static final String ATT_TEMP_SUFFIX = "temp-suffix";
+    private static final String ATT_SUBTREE_NODE = "subtree-node";
 
-    private final static String DEFAULT_ID = "transactionManager";
+    private static final String DEFAULT_ID = "transactionManager";
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {

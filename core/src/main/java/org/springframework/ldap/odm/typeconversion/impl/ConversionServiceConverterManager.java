@@ -30,7 +30,7 @@ import javax.naming.Name;
  */
 public class ConversionServiceConverterManager implements ConverterManager {
     private GenericConversionService conversionService;
-    private final static String DEFAULT_CONVERSION_SERVICE_CLASS =
+    private static final String DEFAULT_CONVERSION_SERVICE_CLASS =
             "org.springframework.core.convert.support.DefaultConversionService";
 
     public ConversionServiceConverterManager(GenericConversionService conversionService) {
@@ -79,7 +79,7 @@ public class ConversionServiceConverterManager implements ConverterManager {
         }
     }
 
-    public final static class StringToNameConverter
+    public static final class StringToNameConverter
             implements org.springframework.core.convert.converter.Converter<String, Name> {
 
         @Override

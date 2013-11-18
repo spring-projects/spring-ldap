@@ -78,7 +78,7 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
      */
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final static Set<Class<? extends Throwable>> DEFAULT_NONTRANSIENT_EXCEPTIONS
+    private static final Set<Class<? extends Throwable>> DEFAULT_NONTRANSIENT_EXCEPTIONS
             = new HashSet<Class<? extends Throwable>>(){{
        add(CommunicationException.class);
     }};

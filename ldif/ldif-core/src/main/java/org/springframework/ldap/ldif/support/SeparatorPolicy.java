@@ -48,7 +48,7 @@ public class SeparatorPolicy {
 	
 	private static final String COMMENT = "#";
 	
-	private static final String NewRecord = "^dn:.*$";
+	private static final String NEW_RECORD = "^dn:.*$";
 
 	private boolean record = false;
 	
@@ -103,7 +103,7 @@ public class SeparatorPolicy {
 				//Version Identifiers are ignored by parser.
 				return LineIdentifier.VersionIdentifier;		
 				
-			} else if (StringUtils.hasLength(line) && line.matches(NewRecord)) {
+			} else if (StringUtils.hasLength(line) && line.matches(NEW_RECORD)) {
 				record = true;
 				skip = false;
 				return LineIdentifier.NewRecord;

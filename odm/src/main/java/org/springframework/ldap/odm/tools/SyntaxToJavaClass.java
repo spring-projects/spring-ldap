@@ -10,7 +10,7 @@ import java.util.Map.Entry;
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
  */
 /* package */ final class SyntaxToJavaClass {
-    public final static class ClassInfo {
+    public static final class ClassInfo {
         private final String className;
 
         private final String packageName;

@@ -36,7 +36,7 @@ import java.net.URISyntaxException;
 public class LdapRdnComponent implements Comparable, Serializable {
 	private static final long serialVersionUID = -3296747972616243038L;
 
-	private static final Logger log = LoggerFactory.getLogger(LdapRdnComponent.class);
+	private static final Logger LOG = LoggerFactory.getLogger(LdapRdnComponent.class);
 
 	public static final boolean DONT_DECODE_VALUE = false;
 
@@ -80,11 +80,11 @@ public class LdapRdnComponent implements Comparable, Serializable {
 		} else if (caseFold.equals(DistinguishedName.KEY_CASE_FOLD_NONE)) {
 			this.key = key;
 		} else {
-			log
+			LOG
 					.warn("\"" + caseFold + "\" invalid property value for " + DistinguishedName.KEY_CASE_FOLD_PROPERTY
-							+ "; expected \"" + DistinguishedName.KEY_CASE_FOLD_LOWER + "\", \""
-							+ DistinguishedName.KEY_CASE_FOLD_UPPER + "\", or \""
-							+ DistinguishedName.KEY_CASE_FOLD_NONE + "\"");
+                            + "; expected \"" + DistinguishedName.KEY_CASE_FOLD_LOWER + "\", \""
+                            + DistinguishedName.KEY_CASE_FOLD_UPPER + "\", or \""
+                            + DistinguishedName.KEY_CASE_FOLD_NONE + "\"");
 			this.key = key.toLowerCase();
 		}
 		if (decodeValue) {

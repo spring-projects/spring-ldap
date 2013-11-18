@@ -26,9 +26,10 @@ import org.springframework.ldap.BadLdapGrammarException;
  */
 public final class LdapEncoder {
 
-    private static String[] nameEscapeTable = new String[96];
+    private static final int HEX = 16;
+    private static String[] NAME_ESCAPE_TABLE = new String[96];
 
-    private static String[] filterEscapeTable = new String['\\' + 1];
+    private static String[] FILTER_ESCAPE_TABLE = new String['\\' + 1];
 
     static {
 
@@ -36,32 +37,32 @@ public final class LdapEncoder {
 
         // all below 0x20 (control chars)
         for (char c = 0; c < ' '; c++) {
-            nameEscapeTable[c] = "\\" + toTwoCharHex(c);
+            NAME_ESCAPE_TABLE[c] = "\\" + toTwoCharHex(c);
         }
 
-        nameEscapeTable['#'] = "\\#";
-        nameEscapeTable[','] = "\\,";
-        nameEscapeTable[';'] = "\\;";
-        nameEscapeTable['='] = "\\=";
-        nameEscapeTable['+'] = "\\+";
-        nameEscapeTable['<'] = "\\<";
-        nameEscapeTable['>'] = "\\>";
-        nameEscapeTable['\"'] = "\\\"";
-        nameEscapeTable['\\'] = "\\\\";
+        NAME_ESCAPE_TABLE['#'] = "\\#";
+        NAME_ESCAPE_TABLE[','] = "\\,";
+        NAME_ESCAPE_TABLE[';'] = "\\;";
+        NAME_ESCAPE_TABLE['='] = "\\=";
+        NAME_ESCAPE_TABLE['+'] = "\\+";
+        NAME_ESCAPE_TABLE['<'] = "\\<";
+        NAME_ESCAPE_TABLE['>'] = "\\>";
+        NAME_ESCAPE_TABLE['\"'] = "\\\"";
+        NAME_ESCAPE_TABLE['\\'] = "\\\\";
 
         // Filter encoding table -------------------------------------
 
         // fill with char itself
-        for (char c = 0; c < filterEscapeTable.length; c++) {
-            filterEscapeTable[c] = String.valueOf(c);
+        for (char c = 0; c < FILTER_ESCAPE_TABLE.length; c++) {
+            FILTER_ESCAPE_TABLE[c] = String.valueOf(c);
         }
 
         // escapes (RFC2254)
-        filterEscapeTable['*'] = "\\2a";
-        filterEscapeTable['('] = "\\28";
-        filterEscapeTable[')'] = "\\29";
-        filterEscapeTable['\\'] = "\\5c";
-        filterEscapeTable[0] = "\\00";
+        FILTER_ESCAPE_TABLE['*'] = "\\2a";
+        FILTER_ESCAPE_TABLE['('] = "\\28";
+        FILTER_ESCAPE_TABLE[')'] = "\\29";
+        FILTER_ESCAPE_TABLE['\\'] = "\\5c";
+        FILTER_ESCAPE_TABLE[0] = "\\00";
 
     }
 
@@ -103,8 +104,8 @@ public final class LdapEncoder {
 
             char c = value.charAt(i);
 
-            if (c < filterEscapeTable.length) {
-                encodedValue.append(filterEscapeTable[c]);
+            if (c < FILTER_ESCAPE_TABLE.length) {
+                encodedValue.append(FILTER_ESCAPE_TABLE[c]);
             } else {
                 // default: add the char
                 encodedValue.append(c);
@@ -127,7 +128,7 @@ public final class LdapEncoder {
      *            the value to escape.
      * @return The escaped value.
      */
-    static public String nameEncode(String value) {
+    public static String nameEncode(String value) {
 
         if (value == null)
             return null;
@@ -148,9 +149,9 @@ public final class LdapEncoder {
                 continue;
             }
 
-            if (c < nameEscapeTable.length) {
+            if (c < NAME_ESCAPE_TABLE.length) {
                 // check in table for escapes
-                String esc = nameEscapeTable[c];
+                String esc = NAME_ESCAPE_TABLE[c];
 
                 if (esc != null) {
                     encodedValue.append(esc);
@@ -213,7 +214,7 @@ public final class LdapEncoder {
                             String hexString = "" + nextChar
                                     + value.charAt(i + 2);
                             decoded.append((char) Integer.parseInt(hexString,
-                                    16));
+                                    HEX));
                             i += 3;
                         }
                     }

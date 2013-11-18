@@ -15,11 +15,10 @@
  */
 package org.springframework.ldap.ldif.parser;
 
-import java.io.IOException;
+import org.springframework.core.io.Resource;
 
 import javax.naming.directory.Attributes;
-
-import org.springframework.core.io.Resource;
+import java.io.IOException;
 
 /**
  * The Parser interface represents the required methods to be implemented by parser utilities.
@@ -34,35 +33,35 @@ public interface Parser {
 	 * 
 	 * @param resource The resource to parse.
 	 */
-	public void setResource(Resource resource);
+	void setResource(Resource resource);
 	
 	/**
 	 * Sets the control parameter for specifying case sensitivity on creation of the {@link Attributes} object.
 	 * 
 	 * @param caseInsensitive The resource to parse.
 	 */
-	public void setCaseInsensitive(boolean caseInsensitive);
+	void setCaseInsensitive(boolean caseInsensitive);
 	
 	/**
 	 * Opens the resource: the resource must be opened prior to parsing.
 	 * 
 	 * @throws IOException if a problem is encountered while trying to open the resource.
 	 */
-	public void open() throws IOException;
+	void open() throws IOException;
 	
 	/**
 	 * Closes the resource after parsing.
 	 * 
 	 * @throws IOException if a problem is encountered while trying to close the resource.
 	 */
-	public void close() throws IOException;
+	void close() throws IOException;
 	
 	/**
 	 * Resets the line read parser.
 	 * 
 	 * @throws Exception if a problem is encountered while trying to reset the resource.
 	 */
-	public void reset() throws IOException;
+	void reset() throws IOException;
 	
 	/**
 	 * True if the resource contains more records; false otherwise.
@@ -70,7 +69,7 @@ public interface Parser {
 	 * @return boolean indicating whether or not the end of record has been reached.
 	 * @throws IOException if a problem is encountered while trying to validate the resource is ready.
 	 */
-	public boolean hasMoreRecords() throws IOException;
+	boolean hasMoreRecords() throws IOException;
 	
 	/**
 	 * Parses the next record from the resource.
@@ -78,7 +77,7 @@ public interface Parser {
 	 * @return LdapAttributes object representing the record parsed.
 	 * @throws IOException if a problem is encountered while trying to read from the resource.
 	 */
-	public Attributes getRecord() throws IOException;
+	Attributes getRecord() throws IOException;
 	
 	/**
 	 * Indicates whether or not the parser is ready to to return results.
@@ -86,5 +85,5 @@ public interface Parser {
 	 * @return boolean indicator
 	 * @throws IOException if there is a problem with the underlying resource.
 	 */
-	public boolean isReady() throws IOException;
+	boolean isReady() throws IOException;
 }

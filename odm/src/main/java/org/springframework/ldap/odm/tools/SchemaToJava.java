@@ -102,7 +102,7 @@ public final class SchemaToJava {
     private static final String BINARY_FILE = "binary-attributes.txt";
     
     // Class to use a base for loading resources
-    private static final Class<?> loaderClass=SchemaToJava.class;
+    private static final Class<?> DEFAULT_LOADER_CLASS =SchemaToJava.class;
     
     // Default LDAP Url to bind with
     private static final String DEFAULT_URL="ldap://127.0.0.1:389";
@@ -142,17 +142,17 @@ public final class SchemaToJava {
         }
     }
 
-    private static final Options options = new Options();
+    private static final Options DEFAULT_OPTIONS = new Options();
     static {
-        options.addOption(Flag.URL.getShort(), Flag.URL.getLong(), true, "Ldap url (defaults to "+DEFAULT_URL+")");
-        options.addOption(Flag.USERNAME.getShort(), Flag.USERNAME.getLong(), true, "DN to bind with (defaults to \"\"");
-        options.addOption(Flag.PASSWORD.getShort(), Flag.PASSWORD.getLong(), true, "Password to bind with (defaults to \"\"");
-        options.addOption(Flag.OBJECTCLASS.getShort(), Flag.OBJECTCLASS.getLong(), true, "Comma separated list of object classes");
-        options.addOption(Flag.CLASS.getShort(), Flag.CLASS.getLong(), true, "Name of the Java class to create");
-        options.addOption(Flag.PACKAGE.getShort(), Flag.PACKAGE.getLong(), true, "Package to create the Java class in");
-        options.addOption(Flag.SYNTAX_MAP.getShort(), Flag.SYNTAX_MAP.getLong(), true, "Syntax map file (optional)");
-        options.addOption(Flag.OUTPUT_DIR.getShort(), Flag.OUTPUT_DIR.getLong(), true, "Base output directory (defaults to .)");
-        options.addOption(Flag.HELP.getShort(), Flag.HELP.getLong(), false, "Print this help message");
+        DEFAULT_OPTIONS.addOption(Flag.URL.getShort(), Flag.URL.getLong(), true, "Ldap url (defaults to " + DEFAULT_URL + ")");
+        DEFAULT_OPTIONS.addOption(Flag.USERNAME.getShort(), Flag.USERNAME.getLong(), true, "DN to bind with (defaults to \"\"");
+        DEFAULT_OPTIONS.addOption(Flag.PASSWORD.getShort(), Flag.PASSWORD.getLong(), true, "Password to bind with (defaults to \"\"");
+        DEFAULT_OPTIONS.addOption(Flag.OBJECTCLASS.getShort(), Flag.OBJECTCLASS.getLong(), true, "Comma separated list of object classes");
+        DEFAULT_OPTIONS.addOption(Flag.CLASS.getShort(), Flag.CLASS.getLong(), true, "Name of the Java class to create");
+        DEFAULT_OPTIONS.addOption(Flag.PACKAGE.getShort(), Flag.PACKAGE.getLong(), true, "Package to create the Java class in");
+        DEFAULT_OPTIONS.addOption(Flag.SYNTAX_MAP.getShort(), Flag.SYNTAX_MAP.getLong(), true, "Syntax map file (optional)");
+        DEFAULT_OPTIONS.addOption(Flag.OUTPUT_DIR.getShort(), Flag.OUTPUT_DIR.getLong(), true, "Base output directory (defaults to .)");
+        DEFAULT_OPTIONS.addOption(Flag.HELP.getShort(), Flag.HELP.getLong(), false, "Print this help message");
     }
 
     /**
@@ -265,7 +265,7 @@ public final class SchemaToJava {
         
         Configuration freeMarkerConfiguration = new Configuration();
 
-        freeMarkerConfiguration.setClassForTemplateLoading(loaderClass, ""); 
+        freeMarkerConfiguration.setClassForTemplateLoading(DEFAULT_LOADER_CLASS, "");
         freeMarkerConfiguration.setObjectWrapper(new DefaultObjectWrapper());
 
         // Build the model for FreeMarker
@@ -347,7 +347,7 @@ public final class SchemaToJava {
 
         // Parse out the command line options
         try {
-            cmd = parser.parse(options, argv);
+            cmd = parser.parse(DEFAULT_OPTIONS, argv);
         } catch (ParseException e) {
             error(e.toString());
         }
@@ -355,7 +355,7 @@ public final class SchemaToJava {
         // If the help flag is specified ignore other flags, print a usage message and exit
         if (cmd.hasOption(Flag.HELP.getShort())) {
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp(120, SchemaToJava.class.getSimpleName(), null, options, null, true);
+            formatter.printHelp(120, SchemaToJava.class.getSimpleName(), null, DEFAULT_OPTIONS, null, true);
             System.exit(0);
         }
         
@@ -414,7 +414,7 @@ public final class SchemaToJava {
         }       
         
         // Read binary mapping file
-        URL binarySetUrl=loaderClass.getResource(BINARY_FILE);
+        URL binarySetUrl= DEFAULT_LOADER_CLASS.getResource(BINARY_FILE);
         if (binarySetUrl==null) {
             error(String.format("Can't locatate binary mappings file %1$s", BINARY_FILE));
         }

@@ -80,6 +80,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	private static final Class<DefaultDirObjectFactory> DEFAULT_DIR_OBJECT_FACTORY = DefaultDirObjectFactory.class;
     private static final boolean DONT_DISABLE_POOLING = false;
     private static final boolean EXPLICITLY_DISABLE_POOLING = true;
+    private static final int DEFAULT_BUFFER_SIZE = 1024;
 
     private Class<?> dirObjectFactory = DEFAULT_DIR_OBJECT_FACTORY;
 
@@ -87,9 +88,9 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	private LdapName base = LdapUtils.emptyLdapName();
 
-	protected String userDn = "";
+	private String userDn = "";
 
-	protected String password = "";
+	private String password = "";
 
 	private String[] urls;
 
@@ -107,7 +108,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	private String referral = null;
 
-	private static final Logger log = LoggerFactory.getLogger(AbstractContextSource.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AbstractContextSource.class);
 
 	public static final String SUN_LDAP_POOLING_FLAG = "com.sun.jndi.ldap.connect.pool";
 
@@ -200,7 +201,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 				ctx.close();
 			}
 			catch (Exception e) {
-                log.debug("Exception closing context", e);
+                LOG.debug("Exception closing context", e);
 			}
 		}
 	}
@@ -213,7 +214,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @return the full url String
 	 */
 	public String assembleProviderUrlString(String[] ldapUrls) {
-		StringBuilder providerUrlBuffer = new StringBuilder(1024);
+		StringBuilder providerUrlBuffer = new StringBuilder(DEFAULT_BUFFER_SIZE);
         for (String ldapUrl : ldapUrls) {
             providerUrlBuffer.append(ldapUrl);
             if (!base.isEmpty()) {
@@ -333,10 +334,10 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 		try {
 			ctx = getDirContextInstance(environment);
 
-			if (log.isInfoEnabled()) {
+			if (LOG.isInfoEnabled()) {
 				Hashtable<?, ?> ctxEnv = ctx.getEnvironment();
 				String ldapUrl = (String) ctxEnv.get(Context.PROVIDER_URL);
-				log.debug("Got Ldap context on server '" + ldapUrl + "'");
+				LOG.debug("Got Ldap context on server '" + ldapUrl + "'");
 			}
 
 			return ctx;
@@ -395,7 +396,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * call this method explicitly after setting all desired properties if using
 	 * the class outside of a Spring Context.
 	 */
-	public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() {
 		if (ObjectUtils.isEmpty(urls)) {
 			throw new IllegalArgumentException("At least one server url must be set");
 		}
@@ -405,12 +406,12 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 		}
 
 		if (authenticationSource == null) {
-			log.debug("AuthenticationSource not set - " + "using default implementation");
+			LOG.debug("AuthenticationSource not set - " + "using default implementation");
 			if (!StringUtils.hasText(userDn)) {
-				log.info("Property 'userDn' not set - " + "anonymous context will be used for read-write operations");
+				LOG.info("Property 'userDn' not set - " + "anonymous context will be used for read-write operations");
 			}
 			else if (!StringUtils.hasText(password)) {
-				log.info("Property 'password' not set - " + "blank password will be used");
+				LOG.info("Property 'password' not set - " + "blank password will be used");
 			}
 			authenticationSource = new SimpleAuthenticationSource();
 		}
@@ -423,11 +424,11 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	private Hashtable<String, Object> setupAnonymousEnv() {
 		if (pooled) {
 			baseEnv.put(SUN_LDAP_POOLING_FLAG, "true");
-			log.debug("Using LDAP pooling.");
+			LOG.debug("Using LDAP pooling.");
 		}
 		else {
 			baseEnv.remove(SUN_LDAP_POOLING_FLAG);
-			log.debug("Not using LDAP pooling");
+			LOG.debug("Not using LDAP pooling");
 		}
 
 		Hashtable<String, Object> env = new Hashtable<String, Object>(baseEnv);
@@ -448,7 +449,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 			env.put(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY, base);
 		}
 
-		log.debug("Trying provider Urls: " + assembleProviderUrlString(urls));
+		LOG.debug("Trying provider Urls: " + assembleProviderUrlString(urls));
 
 		return env;
 	}
