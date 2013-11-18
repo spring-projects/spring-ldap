@@ -37,6 +37,7 @@ import javax.naming.NameClassPair;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingEnumeration;
 import javax.naming.PartialResultException;
+import javax.naming.SizeLimitExceededException;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
@@ -80,6 +81,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	private boolean ignorePartialResultException = false;
 
 	private boolean ignoreNameNotFoundException = false;
+
+    private boolean ignoreSizeLimitExceededException = true;
 
     private int defaultSearchScope = SearchControls.SUBTREE_SCOPE;
 
@@ -176,6 +179,19 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	public void setIgnorePartialResultException(boolean ignore) {
 		this.ignorePartialResultException = ignore;
 	}
+
+    /**
+     * Specify whether <code>SizeLimitExceededException</code> should be ignored in searches.
+     * This is typically what you want if you specify count limit in your search controls.
+     *
+     * @param ignore <code>true</code> if <code>SizeLimitExceededException</code>
+     * should be ignored in searches, <code>false</code> otherwise. Default is
+     * <code>true</code>.
+     * @since 2.0
+     */
+    public void setIgnoreSizeLimitExceededException(boolean ignore) {
+        this.ignoreSizeLimitExceededException = ignore;
+    }
 
     /**
      * Set the default scope to be used in searches if not explicitly specified.
@@ -379,6 +395,14 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 				ex = LdapUtils.convertLdapException(e);
 			}
 		}
+        catch(SizeLimitExceededException e) {
+            if(ignoreSizeLimitExceededException) {
+                log.debug("SizeLimitExceededException encountered and ignored", e);
+            }
+            else {
+                ex = LdapUtils.convertLdapException(e);
+            }
+        }
 		catch (javax.naming.NamingException e) {
 			ex = LdapUtils.convertLdapException(e);
 		}
@@ -1714,8 +1738,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
             searchControls.setCountLimit(query.countLimit());
         }
 
-        if(query.countLimit() != null) {
-            searchControls.setCountLimit(query.timeLimit());
+        if(query.timeLimit() != null) {
+            searchControls.setTimeLimit(query.timeLimit());
         }
         return searchControls;
     }
