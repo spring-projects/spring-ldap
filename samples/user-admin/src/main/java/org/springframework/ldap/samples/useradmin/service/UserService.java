@@ -26,6 +26,7 @@ import org.springframework.ldap.samples.useradmin.domain.Group;
 import org.springframework.ldap.samples.useradmin.domain.GroupRepo;
 import org.springframework.ldap.samples.useradmin.domain.User;
 import org.springframework.ldap.samples.useradmin.domain.UserRepo;
+import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.Name;
@@ -83,7 +84,9 @@ public class UserService implements BaseLdapNameAware {
     }
 
     public LdapName toAbsoluteDn(Name relativeName) {
-        return LdapUtils.prepend(relativeName, baseLdapPath);
+        return LdapNameBuilder.newInstance(baseLdapPath)
+                .add(relativeName)
+                .build();
     }
 
     /**

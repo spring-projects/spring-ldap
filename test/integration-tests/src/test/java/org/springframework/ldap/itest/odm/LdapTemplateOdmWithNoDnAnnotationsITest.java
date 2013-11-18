@@ -114,7 +114,7 @@ public class LdapTemplateOdmWithNoDnAnnotationsITest extends AbstractLdapTemplat
     @Test
     public void testCreate() {
         Person person = new Person();
-        person.setDn(LdapNameBuilder.newLdapName("ou=company1,ou=Sweden")
+        person.setDn(LdapNameBuilder.newInstance("ou=company1,ou=Sweden")
                 .add("cn", "New Person").build());
         person.setCommonName("New Person");
         person.setSurname("Person");

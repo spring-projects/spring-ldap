@@ -419,7 +419,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
         EntityData entityData = getEntityData(entry.getClass());
         if(entityData.metaData.canCalculateDn()) {
             Set<AttributeMetaData> dnAttributes = entityData.metaData.getDnAttributes();
-            LdapNameBuilder ldapNameBuilder = LdapNameBuilder.newLdapName(entityData.metaData.getBase());
+            LdapNameBuilder ldapNameBuilder = LdapNameBuilder.newInstance(entityData.metaData.getBase());
 
             for (AttributeMetaData dnAttribute : dnAttributes) {
                 Object dnFieldValue = ReflectionUtils.getField(dnAttribute.getField(), entry);

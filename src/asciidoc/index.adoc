@@ -374,7 +374,7 @@ public class PersonDaoImpl implements PersonDao {
   public static final String BASE_DN = "dc=example,dc=com";
 
   protected Name buildDn(Person p) {
-    **return LdapNameBuilder.newLdapName(BASE_DN)
+    **return LdapNameBuilder.newInstance(BASE_DN)
       .add("c", p.getCountry())
       .add("ou", p.getCompany())
       .add("cn", p.getFullname())
@@ -728,7 +728,7 @@ distinguished name.
 
 As of version 2.0, if you supply `javax.naming.Name` instances to the attribute modification methods in `DirContextAdapter`,
 modification calculation will use distinguished name equality, meaning that if we modify the example above to:
-`ctx.addAttributeValue("member", LdapUtils.newLdapName("CN=John Doe, OU=People"))`, this will no longer be considered
+`ctx.addAttributeValue("member", LdapUtils.newInstance("CN=John Doe, OU=People"))`, this will no longer be considered
 a modification.
 
 .Group membership modification example
@@ -774,12 +774,12 @@ public class GroupDao implements BaseLdapNameAware {
     }
 
     private Name buildGroupDn(String groupName) {
-        return LdapNameBuilder.newLdapName("ou=Groups")
+        return LdapNameBuilder.newInstance("ou=Groups")
             .add("cn", groupName).build();
     }
 
     private Name buildPersonDn(String fullname, String company, String country) {
-        return LdapNameBuilder.newLdapName(baseLdapPath)
+        return LdapNameBuilder.newInstance(baseLdapPath)
             .add("c", country)
             .add("ou", company)
             .add("cn", fullname)
@@ -863,7 +863,7 @@ public class PersonDaoImpl implements PersonDao {
    }
 
    protected Name buildDn(String fullname, String company, String country) {
-      return LdapNameBuilder.newLdapName()
+      return LdapNameBuilder.newInstance()
         .add("c", country)
         .add("ou", company)
         .add("cn", fullname)
@@ -1421,8 +1421,8 @@ public class PersonService implements PersonService**, BaseLdapNameAware** {
    }**
    ...
    private LdapName getFullPersonDn(Person person) {
-      return LdapNameBuilder.newLdapName(**basePath**)
-          .append(person.getDn())
+      return LdapNameBuilder.newInstance(**basePath**)
+          .add(person.getDn())
           .build();
    }
    ...

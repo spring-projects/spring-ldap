@@ -59,7 +59,7 @@ public class DepartmentRepoImpl implements DepartmentRepo {
 
     private List<String> getAllUnitsForDepartment(String department) {
         return ldapTemplate.list(LdapNameBuilder
-                .newLdapName(DEPARTMENTS_OU).add("ou", department).build(), new OuValueNameClassPairMapper());
+                .newInstance(DEPARTMENTS_OU).add("ou", department).build(), new OuValueNameClassPairMapper());
     }
 
     private static class OuValueNameClassPairMapper implements NameClassPairMapper<String> {

@@ -173,7 +173,7 @@ public class RepositoryScanITest extends AbstractLdapTemplateIntegrationTest {
     @Test
     public void testCreate() {
         Person person = new Person();
-        LdapName dn = LdapNameBuilder.newLdapName("ou=company1,ou=Sweden")
+        LdapName dn = LdapNameBuilder.newInstance("ou=company1,ou=Sweden")
                 .add("cn", "New Person").build();
         person.setDn(dn);
         person.setCommonName("New Person");
