@@ -197,7 +197,7 @@ public class ContextSourceParser implements BeanDefinitionParser {
             try {
                 nonTransientExceptionClasses.add(ClassUtils.getDefaultClassLoader().loadClass(className));
             } catch (ClassNotFoundException e) {
-                throw new IllegalArgumentException(String.format("%s is not a valid class name", className));
+                throw new IllegalArgumentException(String.format("%s is not a valid class name", className), e);
             }
         }
 

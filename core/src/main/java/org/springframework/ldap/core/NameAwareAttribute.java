@@ -163,7 +163,7 @@ public final class NameAwareAttribute implements Attribute {
                     newValuesAsNames.put(LdapUtils.newLdapName(s), s);
                 } catch (InvalidNameException e) {
                     throw new IllegalArgumentException("This instance has values that are not valid distinguished names; " +
-                            "cannot handle Name values");
+                            "cannot handle Name values", e);
                 }
             } else {
                 throw new IllegalArgumentException("This instance has non-string attribute values; " +

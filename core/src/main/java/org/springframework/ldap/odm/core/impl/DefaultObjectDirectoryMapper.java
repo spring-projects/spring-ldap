@@ -130,7 +130,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
             managedClass.getConstructor();
         } catch (NoSuchMethodException e) {
             throw new InvalidEntryException(String.format(
-                    "The class %1$s must have a zero argument constructor to be an Entry", managedClass));
+                    "The class %1$s must have a zero argument constructor to be an Entry", managedClass), e);
         }
 
         // Check we have all of the necessary converters for the class

@@ -316,9 +316,9 @@ public final class SchemaToJava {
             directory.mkdirs();
             outputFile.createNewFile();
         } catch (SecurityException se) {
-            throw new IOException(String.format("Can't write to output file %1$s", outputFile.getAbsoluteFile()));
+            throw new IOException(String.format("Can't write to output file %1$s", outputFile.getAbsoluteFile()), se);
         } catch (IOException ioe) {
-            throw new IOException(String.format("Can't write to output file %1$s", outputFile.getAbsoluteFile()));
+            throw new IOException(String.format("Can't write to output file %1$s", outputFile.getAbsoluteFile()), ioe);
         }
         
         return outputFile;

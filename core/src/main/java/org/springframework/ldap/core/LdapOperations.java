@@ -1811,7 +1811,7 @@ public interface LdapOperations {
      * @throws org.springframework.ldap.NamingException on error.
      * @since 2.0
      */
-    public <T> List<T> find(Name base, Filter filter, SearchControls searchControls, Class<T> clazz);
+    <T> List<T> find(Name base, Filter filter, SearchControls searchControls, Class<T> clazz);
 
     /**
      * Search for entries in the LDAP directory. The referenced class must have object-directory

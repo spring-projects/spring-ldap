@@ -49,11 +49,8 @@ public class WhitespaceWildcardsFilter extends EqualsFilter {
 			return "*";
 		}
 
-		// trim value, we will add in stars first and last anywhay
-		value = value.trim();
-
 		// filter encode so that any stars etc. are preserved
-		String filterEncoded = LdapEncoder.filterEncode(value);
+		String filterEncoded = LdapEncoder.filterEncode(value.trim());
 
 		// Now replace all whitespace with stars
 		Matcher m = starReplacePattern.matcher(filterEncoded);

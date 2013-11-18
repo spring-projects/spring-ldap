@@ -19,7 +19,10 @@ package org.springframework.ldap.test;
 import org.apache.commons.io.IOUtils;
 import org.apache.directory.server.core.DefaultDirectoryService;
 import org.apache.directory.server.protocol.shared.store.LdifFileLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
+import org.springframework.ldap.UncategorizedLdapException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapAttributes;
 import org.springframework.ldap.core.support.DefaultDirObjectFactory;
@@ -46,6 +49,7 @@ import java.util.Set;
  * @author Mattias Hellborg Arthursson
  */
 public final class LdapTestUtils {
+    private final static Logger logger = LoggerFactory.getLogger(LdapTestUtils.class);
 
     public static final String DEFAULT_PRINCIPAL = "uid=admin,ou=system";
     public static final String DEFAULT_PASSWORD = "secret";
@@ -103,7 +107,7 @@ public final class LdapTestUtils {
         try {
             embeddedServer = EmbeddedLdapServer.newEmbeddedServer(defaultPartitionName, defaultPartitionSuffix, port);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to start embedded server");
+            throw new UncategorizedLdapException("Failed to start embedded server", e);
         }
     }
 
@@ -190,7 +194,7 @@ public final class LdapTestUtils {
                 }
             }
         } catch (NamingException e) {
-            e.printStackTrace();
+            logger.debug("Error cleaning sub-contexts", e);
         } finally {
             try {
                 enumeration.close();
@@ -254,7 +258,7 @@ public final class LdapTestUtils {
                 context.bind(dn, null, record);
             }
         } catch (Exception e) {
-            throw new RuntimeException("Failed to populate LDIF", e);
+            throw new UncategorizedLdapException("Failed to populate LDIF", e);
         }
     }
 

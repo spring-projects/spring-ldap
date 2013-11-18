@@ -15,6 +15,7 @@
  */
 package org.springframework.ldap.core;
 
+import org.springframework.ldap.UncategorizedLdapException;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.slf4j.Logger;
@@ -536,7 +537,7 @@ public class DistinguishedName implements Name {
 		}
 		catch (CloneNotSupportedException e) {
 			log.error("CloneNotSupported thrown from superclass - this should not happen");
-			throw new RuntimeException("Fatal error in clone", e);
+			throw new UncategorizedLdapException("Fatal error in clone", e);
 		}
 	}
 
