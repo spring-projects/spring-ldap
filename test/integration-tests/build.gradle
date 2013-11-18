@@ -3,6 +3,10 @@ repositories {
 }
 apply from: JAVA_SCRIPT
 
+configurations {
+    jacoco //Configuration Group used by Sonar to provide Code Coverage using JaCoCo
+}
+
 idea.module.excludeDirs = [
         file('.gradle'),
         file('build/classes'),
@@ -88,7 +92,12 @@ idea {
     }
 }
 
+dependencies {
+    jacoco group: "org.jacoco", name: "org.jacoco.agent", version: "0.6.2.201302030002", classifier: "runtime"
+}
+
 test {
+    jvmArgs "-javaagent:${configurations.jacoco.asPath}=destfile=../../core/build/jacoco.exec,includes=${project.group}.*"
     systemProperties = System.properties
 }
 
