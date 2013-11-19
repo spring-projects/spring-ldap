@@ -34,6 +34,8 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * 
  * @author Mattias Hellborg Arthursson
  * @since 1.2
+ * @deprecated The idea of wrapping two transaction managers without actual XA support is probably not such a good idea
+ * after all. AbstractPlatformTransactionManager is not designed for this usage.
  */
 public class ContextSourceAndDataSourceTransactionManager extends
         DataSourceTransactionManager {

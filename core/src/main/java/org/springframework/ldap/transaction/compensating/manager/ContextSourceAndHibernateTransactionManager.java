@@ -35,6 +35,8 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * Furthermore, this manager <b>does not support nested transactions</b>
  * @author Hans Westerbeek
  * @since 1.2.2
+ * @deprecated The idea of wrapping two transaction managers without actual XA support is probably not such a good idea
+ * after all. AbstractPlatformTransactionManager is not designed for this usage.
  */
 public class ContextSourceAndHibernateTransactionManager extends HibernateTransactionManager {
 
