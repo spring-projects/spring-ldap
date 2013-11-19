@@ -60,7 +60,7 @@ configurations.archives.artifacts.clear()
 
 sonarRunner {
     sonarProperties {
-        property "sonar.exclusions", "**/generated-src/**;**/itest/**"
+        property "sonar.exclusions", "file:**/generated-src/**"
         property "sonar.java.coveragePlugin", "jacoco"
         property "sonar.jacoco.reportPath", "${buildDir.name}/jacoco.exec"
         property "sonar.links.homepage", 'https://github.com/SpringSource/spring-ldap'

@@ -229,10 +229,18 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public boolean isUpdateMode() {
 		return updateMode;
 	}
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public String[] getNamesOfModifiedAttributes() {
 
 		List<String> tmpList = new ArrayList<String>();
@@ -273,6 +281,10 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public ModificationItem[] getModificationItems() {
 		if (!updateMode) {
 			return new ModificationItem[0];
@@ -566,10 +578,18 @@ public class DirContextAdapter implements DirContextOperations {
 		return originalAttrs.get(attrId) != null;
 	}
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public String getStringAttribute(String name) {
 		return (String) getObjectAttribute(name);
 	}
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public Object getObjectAttribute(String name) {
 		Attribute oneAttr = originalAttrs.get(name);
 		if (oneAttr == null || oneAttr.size() == 0) { // LDAP-215
@@ -583,12 +603,20 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	// LDAP-215
 	public boolean attributeExists(String name) {
 		Attribute oneAttr = originalAttrs.get(name);
         return oneAttr != null;
 	}
-	
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void setAttributeValue(String name, Object value) {
 		// new entry
 		if (!updateMode && value != null) {
@@ -605,10 +633,18 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void addAttributeValue(String name, Object value) {
 		addAttributeValue(name, value, DONT_ADD_IF_DUPLICATE_EXISTS);
 	}
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void addAttributeValue(String name, Object value,
 			boolean addIfDuplicateExists) {
 		if (!updateMode && value != null) {
@@ -644,6 +680,10 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void removeAttributeValue(String name, Object value) {
 		if (!updateMode && value != null) {
 			Attribute attr = originalAttrs.get(name);
@@ -669,10 +709,18 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void setAttributeValues(String name, Object[] values) {
 		setAttributeValues(name, values, ORDER_DOESNT_MATTER);
 	}
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void setAttributeValues(String name, Object[] values,
 			boolean orderMatters) {
 		Attribute a = new NameAwareAttribute(name, orderMatters);
@@ -693,6 +741,10 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void update() {
 		NamingEnumeration<? extends Attribute> attributesEnumeration = null;
 
@@ -724,6 +776,10 @@ public class DirContextAdapter implements DirContextOperations {
 		updatedAttrs = new NameAwareAttributes();
 	}
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public String[] getStringAttributes(String name) {
 		try {
             List<String> objects = collectAttributeValuesAsList(name, String.class);
@@ -735,6 +791,10 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public Object[] getObjectAttributes(String name) {
 		try {
             List<Object> list = collectAttributeValuesAsList(name, Object.class);
@@ -752,6 +812,9 @@ public class DirContextAdapter implements DirContextOperations {
 		return list;
 	}
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
 	public SortedSet<String> getAttributeSortedStringSet(String name) {
 		try {
@@ -788,16 +851,18 @@ public class DirContextAdapter implements DirContextOperations {
 		return originalAttrs;
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#getAttributes(Name)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public Attributes getAttributes(Name name) throws NamingException {
 		return getAttributes(name.toString());
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#getAttributes(String)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public Attributes getAttributes(String name) throws NamingException {
 		if (StringUtils.hasLength(name)) {
 			throw new NameNotFoundException();
@@ -805,17 +870,19 @@ public class DirContextAdapter implements DirContextOperations {
 		return (Attributes) originalAttrs.clone();
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#getAttributes(Name, String[])
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public Attributes getAttributes(Name name, String[] attrIds)
 			throws NamingException {
 		return getAttributes(name.toString(), attrIds);
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#getAttributes(String, String[])
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public Attributes getAttributes(String name, String[] attrIds)
 			throws NamingException {
 		if (StringUtils.hasLength(name)) {
@@ -834,391 +901,432 @@ public class DirContextAdapter implements DirContextOperations {
 		return a;
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#modifyAttributes(javax.naming.Name,
-	 * int, javax.naming.directory.Attributes)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void modifyAttributes(Name name, int modOp, Attributes attrs)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#modifyAttributes(String, int,
-	 * Attributes)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void modifyAttributes(String name, int modOp, Attributes attrs)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#modifyAttributes(Name,
-	 * ModificationItem[])
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void modifyAttributes(Name name, ModificationItem[] mods)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#modifyAttributes(String,
-	 * ModificationItem[])
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void modifyAttributes(String name, ModificationItem[] mods)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#bind(Name, Object, Attributes)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void bind(Name name, Object obj, Attributes attrs)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#bind(String, Object, Attributes)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void bind(String name, Object obj, Attributes attrs)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#rebind(Name, Object, Attributes)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void rebind(Name name, Object obj, Attributes attrs)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#rebind(String, Object, Attributes)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void rebind(String name, Object obj, Attributes attrs)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#createSubcontext(Name, Attributes)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public DirContext createSubcontext(Name name, Attributes attrs)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#createSubcontext(String,
-	 * Attributes)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public DirContext createSubcontext(String name, Attributes attrs)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#getSchema(Name)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public DirContext getSchema(Name name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#getSchema(String)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public DirContext getSchema(String name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#getSchemaClassDefinition(Name)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public DirContext getSchemaClassDefinition(Name name)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#getSchemaClassDefinition(String)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public DirContext getSchemaClassDefinition(String name)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#search(Name, Attributes, String[])
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public NamingEnumeration<SearchResult> search(Name name, Attributes matchingAttributes,
 			String[] attributesToReturn) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#search(String, Attributes,
-	 * String[])
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public NamingEnumeration<SearchResult> search(String name, Attributes matchingAttributes,
 			String[] attributesToReturn) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#search(Name, Attributes)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public NamingEnumeration<SearchResult> search(Name name, Attributes matchingAttributes)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#search(String, Attributes)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public NamingEnumeration<SearchResult> search(String name, Attributes matchingAttributes)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#search(Name, String,
-	 * SearchControls)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public NamingEnumeration<SearchResult> search(Name name, String filter,
 			SearchControls cons) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#search(String, String,
-	 * SearchControls)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public NamingEnumeration<SearchResult> search(String name, String filter,
 			SearchControls cons) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#search(Name, String, Object[],
-	 * SearchControls)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public NamingEnumeration<SearchResult> search(Name name, String filterExpr,
 			Object[] filterArgs, SearchControls cons) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.directory.DirContext#search(String, String, Object[],
-	 * SearchControls)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public NamingEnumeration<SearchResult> search(String name, String filterExpr,
 			Object[] filterArgs, SearchControls cons) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#lookup(Name)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public Object lookup(Name name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#lookup(String)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public Object lookup(String name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#bind(Name, Object)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void bind(Name name, Object obj) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#bind(String, Object)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void bind(String name, Object obj) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#rebind(Name, Object)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void rebind(Name name, Object obj) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#rebind(String, Object)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void rebind(String name, Object obj) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#unbind(Name)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void unbind(Name name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#unbind(String)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void unbind(String name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#rename(Name, Name)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void rename(Name oldName, Name newName) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#rename(String, String)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void rename(String oldName, String newName) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#list(Name)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public NamingEnumeration<NameClassPair> list(Name name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#list(String)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public NamingEnumeration<NameClassPair> list(String name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#listBindings(Name)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public NamingEnumeration<Binding> listBindings(Name name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#listBindings(String)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public NamingEnumeration<Binding> listBindings(String name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#destroySubcontext(Name)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void destroySubcontext(Name name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#destroySubcontext(String)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void destroySubcontext(String name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#createSubcontext(Name)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public Context createSubcontext(Name name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#createSubcontext(String)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public Context createSubcontext(String name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#lookupLink(Name)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public Object lookupLink(Name name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#lookupLink(String)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public Object lookupLink(String name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#getNameParser(Name)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public NameParser getNameParser(Name name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#getNameParser(String)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public NameParser getNameParser(String name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#composeName(Name, Name)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public Name composeName(Name name, Name prefix) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#composeName(String, String)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public String composeName(String name, String prefix)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#addToEnvironment(String, Object)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public Object addToEnvironment(String propName, Object propVal)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#removeFromEnvironment(String)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public Object removeFromEnvironment(String propName) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#getEnvironment()
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public Hashtable<?, ?> getEnvironment() throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#close()
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void close() throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-	/**
-	 * @see javax.naming.Context#getNameInNamespace()
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public String getNameInNamespace() {
         if(base.size() == 0) {
             return dn.toString();
@@ -1233,22 +1341,18 @@ public class DirContextAdapter implements DirContextOperations {
         }
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.ldap.support.DirContextOperations#getDn()
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public Name getDn() {
 		return LdapUtils.newLdapName(dn);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.springframework.ldap.support.DirContextOperations#setDn(javax.naming
-	 * .Name)
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public final void setDn(Name dn) {
 		if (!updateMode) {
             this.dn = LdapUtils.newLdapName(dn);
@@ -1260,6 +1364,9 @@ public class DirContextAdapter implements DirContextOperations {
 
 	}
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -1278,6 +1385,9 @@ public class DirContextAdapter implements DirContextOperations {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         int result = originalAttrs != null ? originalAttrs.hashCode() : 0;
@@ -1290,8 +1400,9 @@ public class DirContextAdapter implements DirContextOperations {
     }
 
     /**
-	 * @see java.lang.Object#toString()
-	 */
+     * {@inheritDoc}
+     */
+    @Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getClass().getName());
@@ -1335,20 +1446,18 @@ public class DirContextAdapter implements DirContextOperations {
 		return builder.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.ldap.core.DirContextOperations#getReferralUrl()
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public String getReferralUrl() {
 		return referralUrl;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.ldap.core.DirContextOperations#isReferral()
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public boolean isReferral() {
 		return StringUtils.hasLength(referralUrl);
 	}
