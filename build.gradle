@@ -68,7 +68,6 @@ sonarRunner {
         property "sonar.links.issue", 'https://jira.springsource.org/browse/LDAP'
         property "sonar.links.scm", 'https://github.com/SpringSource/spring-ldap'
         property "sonar.links.scm_dev", 'https://github.com/SpringSource/spring-ldap.git'
-        property "sonar.java.coveragePlugin", "jacoco"
     }
 }
 

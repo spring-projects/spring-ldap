@@ -97,7 +97,7 @@ dependencies {
 }
 
 test {
-    jvmArgs "-javaagent:${configurations.jacoco.asPath}=destfile=$projectDir/../../core/build/jacoco.exec,includes=${project.group}.*"
+    jvmArgs "-javaagent:${configurations.jacoco.asPath}=destfile=$projectDir/../../core/build/jacoco.exec,includes=org.springframework.*"
     systemProperties = System.properties
 }
 
