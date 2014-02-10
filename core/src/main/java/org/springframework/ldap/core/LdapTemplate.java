@@ -1461,7 +1461,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
             return true;
         }
         catch (Exception e) {
-            LOG.info("Authentication failed for entry with DN '" + entryIdentification.getAbsoluteName() + "'", e);
+            LOG.debug("Authentication failed for entry with DN '" + entryIdentification.getAbsoluteName() + "'", e);
             errorCallback.execute(e);
             return false;
         }
