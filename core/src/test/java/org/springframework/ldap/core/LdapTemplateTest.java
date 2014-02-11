@@ -30,6 +30,8 @@ import org.springframework.ldap.PartialResultException;
 import org.springframework.ldap.UncategorizedLdapException;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
+import org.springframework.ldap.query.LdapQuery;
+import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.Binding;
@@ -44,6 +46,7 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.LdapContext;
 import javax.naming.ldap.LdapName;
+
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -103,7 +106,10 @@ public class LdapTemplateTest {
 	private AuthenticatedLdapEntryContextCallback entryContextCallbackMock;
     private ObjectDirectoryMapper odmMock;
 
-    @Before
+	private LdapQuery query;
+	private AuthenticatedLdapEntryContextMapper authContextMapperMock;
+
+	@Before
 	public void setUp() throws Exception {
 
 		// Setup ContextSource mock
@@ -125,6 +131,8 @@ public class LdapTemplateTest {
 		authenticatedContextMock = mock(DirContext.class);
 		entryContextCallbackMock = mock(AuthenticatedLdapEntryContextCallback.class);
         odmMock = mock(ObjectDirectoryMapper.class);
+		query = LdapQueryBuilder.query().base("ou=spring").filter("ou=user");
+		authContextMapperMock = mock(AuthenticatedLdapEntryContextMapper.class);
 
         tested = new LdapTemplate(contextSourceMock);
         tested.setObjectDirectoryMapper(odmMock);
@@ -1712,6 +1720,46 @@ public class LdapTemplateTest {
         verify(dirContextMock).close();
 
         assertFalse(result);
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	public void testAuthenticateQueryPasswordMapperWhenNoUserWasFoundShouldThrowEmptyResult() throws Exception {
+
+		when(contextSourceMock.getReadOnlyContext()).thenReturn(dirContextMock);
+
+		 when(dirContextMock.search(
+					any(Name.class),
+					any(String.class),
+					any(SearchControls.class))).thenReturn(namingEnumerationMock);
+
+			when(namingEnumerationMock.hasMore()).thenReturn(false);
+
+		try {
+			tested.authenticate(query, "", authContextMapperMock);
+			fail("Expected Exception");
+		}catch(EmptyResultDataAccessException success) {}
+		verify(dirContextMock).close();
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	public void testAuthenticateQueryPasswordWhenNoUserWasFoundShouldThrowEmptyResult() throws Exception {
+
+		when(contextSourceMock.getReadOnlyContext()).thenReturn(dirContextMock);
+
+		 when(dirContextMock.search(
+					any(Name.class),
+					any(String.class),
+					any(SearchControls.class))).thenReturn(namingEnumerationMock);
+
+			when(namingEnumerationMock.hasMore()).thenReturn(false);
+
+		try {
+			tested.authenticate(query, "");
+			fail("Expected Exception");
+		}catch(EmptyResultDataAccessException success) {}
+		verify(dirContextMock).close();
 	}
 
     @Test

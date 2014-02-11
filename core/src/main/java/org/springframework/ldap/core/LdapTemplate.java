@@ -1428,10 +1428,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
                 password,
                 getDefaultSearchControls(defaultSearchScope, RETURN_OBJ_FLAG, null),
                 callback,
-                errorCallback);
+                errorCallback).isSuccess();
 	}
 
-    private boolean authenticate(Name base,
+    private AuthenticationStatus authenticate(Name base,
                                 String filter,
                                 String password,
                                 SearchControls searchControls,
@@ -1442,7 +1442,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         if (result.size() == 0) {
             String msg = "No results found for search, base: '" + base + "'; filter: '" + filter + "'.";
             LOG.info(msg);
-            return false;
+            return AuthenticationStatus.EMPTYRESULT;
         } else if (result.size() > 1) {
             String msg = "base: '" + base + "'; filter: '" + filter + "'.";
             throw new IncorrectResultSizeDataAccessException(msg, 1, result.size());
@@ -1458,12 +1458,12 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
                     return null;
                 }
             }, ctx);
-            return true;
+            return AuthenticationStatus.SUCCESS;
         }
         catch (Exception e) {
             LOG.debug("Authentication failed for entry with DN '" + entryIdentification.getAbsoluteName() + "'", e);
             errorCallback.execute(e);
-            return false;
+            return AuthenticationStatus.UNDEFINED_FAILURE;
         }
     }
 
@@ -1478,7 +1478,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         CollectingAuthenticationErrorCallback errorCallback =
                 new CollectingAuthenticationErrorCallback();
 
-        boolean succeeded = authenticate(query.base(),
+        AuthenticationStatus authenticationStatus = authenticate(query.base(),
                 query.filter().encode(),
                 password,
                 searchControls,
@@ -1493,7 +1493,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
             } else {
                 throw new UncategorizedLdapException(error);
             }
-        } else if(!succeeded) {
+        } else if(AuthenticationStatus.EMPTYRESULT == authenticationStatus) {
+        	throw new EmptyResultDataAccessException(1);
+        } else if(!authenticationStatus.isSuccess()) {
             throw new AuthenticationException();
         }
 
@@ -1871,4 +1873,38 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
         return result.get(0);
     }
+
+	/**
+	 * The status of an authentication attempt.
+	 *
+	 * @author Rob Winch
+	 */
+	private enum AuthenticationStatus {
+		/**
+		 * Authentication was successful
+		 */
+		SUCCESS(true),
+		/**
+		 * The user was not found
+		 */
+		EMPTYRESULT(false),
+		/**
+		 * Authentication failed for other reason
+		 */
+		UNDEFINED_FAILURE(false);
+
+		private boolean success;
+
+		AuthenticationStatus(boolean success) {
+			this.success = success;
+		}
+
+		/**
+		 * Return true if the authentication attempt was successful
+		 * @return
+		 */
+		public boolean isSuccess() {
+			return success;
+		}
+	}
 }
