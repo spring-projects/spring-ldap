@@ -37,6 +37,7 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Hashtable;
@@ -88,9 +89,17 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	private LdapName base = LdapUtils.emptyLdapName();
 
-	private String userDn = "";
+	/**
+	 * @deprecated use {@link #getUserDn()} and {@link #setUserDn(String)} instead
+	 */
+	@Deprecated
+	protected String userDn = "";
 
-	private String password = "";
+	/**
+	 * @deprecated use {@link #getPassword()} and {@link #setPassword(String)} instead
+	 */
+	@Deprecated
+	protected String password = "";
 
 	private String[] urls;
 
@@ -122,7 +131,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
         return doGetContext(principal, credentials, EXPLICITLY_DISABLE_POOLING);
 	}
 
-    private DirContext doGetContext(String principal, String credentials, boolean explicitlyDisablePooling) {
+	private DirContext doGetContext(String principal, String credentials, boolean explicitlyDisablePooling) {
         Hashtable<String, Object> env = getAuthenticatedEnv(principal, credentials);
         if(explicitlyDisablePooling) {
             env.remove(SUN_LDAP_POOLING_FLAG);
@@ -421,6 +430,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private Hashtable<String, Object> setupAnonymousEnv() {
 		if (pooled) {
 			baseEnv.put(SUN_LDAP_POOLING_FLAG, "true");
@@ -464,6 +474,14 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	}
 
 	/**
+	 * Gets the password (credentials) to use for getting authenticated contexts.
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	/**
 	 * Set the user distinguished name (principal) to use for getting
 	 * authenticated contexts.
 	 * 
@@ -471,6 +489,16 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 */
 	public void setUserDn(String userDn) {
 		this.userDn = userDn;
+	}
+
+	/**
+	 * Gets the user distinguished name (principal) to use for getting
+	 * authenticated contexts.
+	 * 
+	 * @return the user distinguished name.
+	 */
+	protected String getUserDn() {
+		return userDn;
 	}
 
 	/**
