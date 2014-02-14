@@ -38,6 +38,7 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,16 +69,19 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 
 
     public DefaultObjectDirectoryMapper() {
-        if(isAtLeast30()) {
-            this.converterManager = new ConversionServiceConverterManager();
-        } else {
-            this.converterManager = new ConverterManagerImpl();
-        }
-
+        this.converterManager = createDefaultConverterManager();
     }
 
-    private boolean isAtLeast30() {
-        return SpringVersion.getVersion().compareTo("3.0") > 0;
+    private static ConverterManager createDefaultConverterManager() {
+        String springVersion = SpringVersion.getVersion();
+        if(springVersion == null) {
+            LOG.debug("Could not default convertManager, please ensure to explicitly set it");
+            return null;
+        } else if(springVersion.compareTo("3.0") > 0) {
+            return new ConversionServiceConverterManager();
+        } else {
+            return new ConversionServiceConverterManager();
+        }
     }
 
     public void setConverterManager(ConverterManager converterManager) {

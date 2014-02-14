@@ -1,25 +1,34 @@
 package org.springframework.ldap.odm.core.impl;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.matchers.JUnitMatchers;
-import org.springframework.ldap.support.LdapUtils;
-import org.springframework.util.StringUtils;
-
-import javax.naming.Name;
-import java.lang.reflect.Field;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.powermock.api.mockito.PowerMockito.when;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
+
+import java.lang.reflect.Field;
+
+import javax.naming.Name;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.matchers.JUnitMatchers;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.core.SpringVersion;
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Mattias Hellborg Arthursson
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(SpringVersion.class)
 public class DefaultObjectDirectoryMapperTest {
 
     private DefaultObjectDirectoryMapper tested;
@@ -27,6 +36,15 @@ public class DefaultObjectDirectoryMapperTest {
     @Before
     public void prepareTestedInstance() {
         tested = new DefaultObjectDirectoryMapper();
+    }
+
+    // LDAP-295
+    @Test
+    public void springVersionIsNull() {
+        spy(SpringVersion.class);
+        when(SpringVersion.getVersion()).thenReturn(null);
+
+        new DefaultObjectDirectoryMapper();
     }
 
     @Test

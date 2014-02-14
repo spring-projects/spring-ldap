@@ -27,7 +27,6 @@ dependencies {
                 "gsbase:gsbase:$gsbaseVersion",
                 "org.mockito:mockito-core:$mockitoVersion",
                 "org.slf4j:slf4j-log4j12:$slf4jVersion",
-                "org.springframework:spring-test:$springVersion"
-
+                "org.springframework:spring-test:$springVersion",
+                powerMockDependencies
 }
-
