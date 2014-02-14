@@ -16,6 +16,23 @@
 
 package org.springframework.ldap.odm.core.impl;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+import javax.naming.Name;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.LdapDataEntry;
@@ -32,23 +49,6 @@ import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
-
-import javax.naming.Name;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
-import javax.naming.directory.Attributes;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * Default implementation of {@link ObjectDirectoryMapper}. Unless you need to explicitly configure
@@ -80,7 +80,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
         } else if(springVersion.compareTo("3.0") > 0) {
             return new ConversionServiceConverterManager();
         } else {
-            return new ConversionServiceConverterManager();
+            return new ConverterManagerImpl();
         }
     }
 
