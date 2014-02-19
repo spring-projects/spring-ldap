@@ -29,5 +29,4 @@ ext.powerMockDependencies = [
 
 repositories {
     mavenCentral()
-    maven { url "http://repo.springsource.org/libs-snapshot" }
 }
