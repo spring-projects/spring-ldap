@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.springframework.ldap</groupId>
   <artifactId>spring-ldap-plain-sample</artifactId>
-  <version>2.0.0.CI-SNAPSHOT</version>
+  <version>2.0.1.CI-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>spring-ldap-plain-sample</name>
   <description>spring-ldap-plain-sample</description>
@@ -102,10 +102,22 @@
   </repositories>
   <dependencies>
     <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>3.2.8.RELEASE</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
       <version>1.0.13</version>
       <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.ldap</groupId>
+      <artifactId>spring-ldap-test</artifactId>
+      <version>2.0.1.CI-SNAPSHOT</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -114,34 +126,22 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <version>3.2.8.RELEASE</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.10</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.springframework.ldap</groupId>
-      <artifactId>spring-ldap-test</artifactId>
-      <version>2.0.0.CI-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-webmvc</artifactId>
-      <version>3.2.4.RELEASE</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      <version>3.2.4.RELEASE</version>
+      <version>3.2.8.RELEASE</version>
       <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-test</artifactId>
-      <version>3.2.4.RELEASE</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

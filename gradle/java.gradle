@@ -4,7 +4,7 @@ apply plugin: 'propdeps'
 sourceCompatibility = '1.6'
 targetCompatibility = '1.6'
 
-ext.springVersion = '3.2.4.RELEASE'
+ext.springVersion = '3.2.8.RELEASE'
 ext.springDataVersion = '1.6.1.RELEASE'
 ext.springBatchVersion = '2.0.4.RELEASE'
 ext.junitVersion =  '4.10'
