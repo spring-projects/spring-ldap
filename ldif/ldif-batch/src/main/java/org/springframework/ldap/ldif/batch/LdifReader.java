@@ -47,8 +47,10 @@ import org.springframework.util.ClassUtils;
  * an exception being thrown.
  * 
  * @author Keith Barlow
+ * @deprecated Use the support provided in Spring Batch infrastructure
  *
  */
+@Deprecated
 public class LdifReader extends AbstractItemCountingItemStreamItemReader<LdapAttributes> 
 		implements ResourceAwareItemReaderItemStream<LdapAttributes>, InitializingBean {
 

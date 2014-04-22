@@ -23,9 +23,11 @@ import org.springframework.ldap.core.LdapAttributes;
  * implementations can be used in the {@link MappingLdifReader MappingLdifReader}.
  * 
  * @author Keith Barlow
+ * @deprecated Use the support provided in Spring Batch infrastructure
  *
  * @param <T>
  */
+@Deprecated
 public interface RecordMapper<T> {
 
 	/**

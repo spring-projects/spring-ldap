@@ -23,8 +23,9 @@ import org.springframework.ldap.core.LdapAttributes;
  * {@link MappingLdifReader MappingLdifReader}.
  * 
  * @author Keith Barlow
- *
+ * @deprecated Use the support provided in Spring Batch infrastructure
  */
+@Deprecated
 public interface RecordCallbackHandler {
 
 	/**

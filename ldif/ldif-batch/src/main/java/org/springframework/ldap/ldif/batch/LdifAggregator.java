@@ -25,8 +25,9 @@ import org.springframework.ldap.core.LdapAttributes;
  * interface for use with a {@link org.springframework.batch.item.file.FlatFileItemWriter FlatFileItemWriter} to write LDIF records to a file.
  * 
  * @author Keith Barlow
- *
+ * @deprecated Use the support provided in Spring Batch infrastructure
  */
+@Deprecated
 public class LdifAggregator implements LineAggregator<LdapAttributes> {
 
 	/**
