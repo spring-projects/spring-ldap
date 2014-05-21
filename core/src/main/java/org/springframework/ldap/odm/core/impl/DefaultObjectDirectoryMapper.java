@@ -75,8 +75,8 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
     private static ConverterManager createDefaultConverterManager() {
         String springVersion = SpringVersion.getVersion();
         if(springVersion == null) {
-            LOG.debug("Could not default convertManager, please ensure to explicitly set it");
-            return null;
+            LOG.debug("Could not determine the Spring Version. Guessing > Spring 3.0. If this does not work, please ensure to explicitly set converterManager");
+            return new ConversionServiceConverterManager();
         } else if(springVersion.compareTo("3.0") > 0) {
             return new ConversionServiceConverterManager();
         } else {

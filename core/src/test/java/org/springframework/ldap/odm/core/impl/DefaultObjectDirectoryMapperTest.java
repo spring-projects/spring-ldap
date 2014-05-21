@@ -18,6 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.matchers.JUnitMatchers;
 import org.junit.runner.RunWith;
+import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.core.SpringVersion;
@@ -44,7 +45,10 @@ public class DefaultObjectDirectoryMapperTest {
         spy(SpringVersion.class);
         when(SpringVersion.getVersion()).thenReturn(null);
 
-        new DefaultObjectDirectoryMapper();
+        DefaultObjectDirectoryMapper mapper = new DefaultObjectDirectoryMapper();
+
+        // LDAP-300
+        assertNotNull(Whitebox.getInternalState(mapper,"converterManager"));
     }
 
     @Test
