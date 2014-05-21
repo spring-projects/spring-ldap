@@ -36,8 +36,7 @@ import java.net.MalformedURLException;
 import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"classpath*:applicationContext-test2.xml"})
-public class MappingLdifReaderTest extends AbstractJobTests {
+public abstract class MappingLdifReaderTest extends AbstractJobTests {
 	private static Logger log = LoggerFactory.getLogger(MappingLdifReaderTest.class);
 	
 	private Resource expected;

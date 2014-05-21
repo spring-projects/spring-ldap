@@ -18,3 +18,13 @@ dependencies {
         exclude group: "org.springframework", module: "spring-test"
     }
 }
+
+test {
+    exclude '**/Batch22*.class'
+}
+
+project.tasks.withType(Test).all { t->
+    if(name.startsWith('springIo')) {
+        exclude '**/Batch20*.class'
+	}
+}

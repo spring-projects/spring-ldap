@@ -5,7 +5,7 @@ buildscript {
     dependencies {
         classpath("org.springframework.build.gradle:propdeps-plugin:0.0.3")
         classpath('org.asciidoctor:asciidoctor-gradle-plugin:0.7.0')
-        classpath 'org.springframework.build.gradle:springio-platform-plugin:0.0.2.RELEASE'
+        classpath 'org.springframework.build.gradle:spring-io-plugin:0.0.3.RELEASE'
     }
 }
 
@@ -44,7 +44,6 @@ configure(allprojects) {
 
 configure(coreModules) {
     apply from: JAVA_MODULE_SCRIPT
-    apply plugin: 'springio-platform'
 }
 
 configure(subprojects - coreModules) {

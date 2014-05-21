@@ -1,34 +1,22 @@
 apply from: JAVA_SCRIPT
 apply from: MAVEN_DEPLOYMENT_SCRIPT
 apply from: RELEASE_CHECKS_SCRIPT
+apply plugin: 'spring-io'
+
+ext.springIoVersion = project.hasProperty('platformVersion') ? platformVersion : '1.0.0.BUILD-SNAPSHOT'
 
 configurations {
     jacoco //Configuration Group used by Sonar to provide Code Coverage using JaCoCo
-    spring4TestRuntime.extendsFrom testRuntime
-}
-
-configurations.spring4TestRuntime {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        if (details.requested.group == 'org.springframework') {
-            details.useVersion '4.0.2.RELEASE'
-        }
-    }
 }
 
 dependencies {
     jacoco group: "org.jacoco", name: "org.jacoco.agent", version: "0.6.2.201302030002", classifier: "runtime"
+    springIoVersions "io.spring.platform:platform-versions:${springIoVersion}@properties"
 }
 
 test {
     jvmArgs "-javaagent:${configurations.jacoco.asPath}=destfile=${buildDir}/jacoco.exec,includes=org.springframework.*"
 }
-
-task spring4Test(type: Test) {
-    classpath = sourceSets.test.output + sourceSets.main.output + configurations.spring4TestRuntime
-    testResultsDir = file("$buildDir/spring4-test-results/")
-    testReportDir = file("$buildDir/reports/spring4-tests/")
-}
-check.dependsOn spring4Test
 
 jar {
     manifest.attributes["Created-By"] =
