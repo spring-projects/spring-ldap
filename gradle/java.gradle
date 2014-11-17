@@ -17,6 +17,7 @@ ext.mockitoVersion = '1.9.5'
 ext.queryDslVersion = '3.2.4'
 ext.slf4jVersion = '1.7.5'
 ext.powerMockVersion = '1.5.1'
+ext.apacheDsVersion = '1.5.5'
 
 ext.powerMockDependencies = [
     "org.powermock:powermock-core:$powerMockVersion",
