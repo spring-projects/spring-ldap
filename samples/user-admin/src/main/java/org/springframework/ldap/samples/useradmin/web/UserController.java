@@ -62,6 +62,8 @@ public class UserController {
 
     @RequestMapping(value = "/users/{userid}", method = GET)
     public String getUser(@PathVariable String userid, ModelMap map) throws JsonProcessingException {
+        
+        map.put("isNew", false);
         map.put("user", userService.findUser(userid));
         populateDepartments(map);
         return "editUser";
@@ -72,7 +74,7 @@ public class UserController {
         User user = new User();
         user.setEmployeeNumber(nextEmployeeNumber.getAndIncrement());
 
-        map.put("new", true);
+        map.put("isNew", true);
         map.put("user", user);
         populateDepartments(map);
 
