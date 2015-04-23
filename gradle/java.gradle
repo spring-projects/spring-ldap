@@ -16,7 +16,7 @@ ext.gsbaseVersion = '2.0.1'
 ext.log4jVersion = '1.2.15'
 ext.mockitoVersion = '1.9.5'
 ext.queryDslVersion = '3.2.4'
-ext.slf4jVersion = '1.7.5'
+ext.slf4jVersion = '1.7.7'
 ext.powerMockVersion = '1.5.1'
 
 ext.powerMockDependencies = [
@@ -24,7 +24,9 @@ ext.powerMockDependencies = [
     "org.powermock:powermock-api-support:$powerMockVersion",
     "org.powermock:powermock-module-junit4-common:$powerMockVersion",
     "org.powermock:powermock-module-junit4:$powerMockVersion",
-    "org.powermock:powermock-api-mockito:$powerMockVersion",
+    dependencies.create("org.powermock:powermock-api-mockito:$powerMockVersion") {
+        exclude group: 'org.mockito', module: 'mockito-all'
+    },
     "org.powermock:powermock-reflect:$powerMockVersion"
 ]
 
@@ -39,5 +41,5 @@ ext.apachedsDependencies = [
 
 repositories {
     mavenCentral()
-	maven { url 'https://repo.spring.io/libs-snapshot' }
+    maven { url 'https://repo.spring.io/libs-snapshot' }
 }

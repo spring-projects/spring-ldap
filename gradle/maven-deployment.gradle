@@ -81,39 +81,31 @@ def customizePom(pom, gradleProject) {
                 }
             }
         }
+    }
 
-        build {
-            plugins {
-                plugin {
-                    groupId = 'org.apache.maven.plugins'
-                    artifactId = 'maven-compiler-plugin'
-                    configuration {
-                        source = '1.6'
-                        target = '1.6'
-                    }
-                }
-                if(isWar) {
-                    plugin {
-                        groupId = 'org.apache.maven.plugins'
-                        artifactId = 'maven-war-plugin'
-                        version = '2.3'
-                        configuration {
-                            failOnMissingWebXml = 'false'
-                        }
-                    }
-
-                    plugin {
-                        groupId = 'org.mortbay.jetty'
-                        artifactId = 'jetty-maven-plugin'
-                        version = '8.1.14.v20131031'
-                        configuration {
-                            webAppConfig {
-                                contextPath = "/" + projectName
-                            }
-                        }
-                    }
-                }
-            }
+    // http://forums.gradle.org/gradle/topics/after_upgrade_gradle_to_2_0_version_the_maven_pom_not_support_build_property
+    pom.withXml {
+        def plugins = asNode().appendNode('build').appendNode('plugins')
+        plugins
+            .appendNode('plugin')
+                .appendNode('artifactId','maven-compiler-plugin').parent()
+                .appendNode('configuration')
+                    .appendNode('source', '1.6').parent()
+                    .appendNode('target','1.6')
+            .appendNode('plugin')
+                .appendNode('groupId','org.mortbay.jetty').parent()
+                .appendNode('artifactId','jetty-maven-plugin').parent()
+                .appendNode('version','8.1.14.v20131031').parent()
+                .appendNode('configuration')
+                    .appendNode('webAppConfig')
+                        .appendNode('contextPath',"/" + projectName)
+        if(isWar) {
+            plugins
+                .appendNode('plugin')
+                    .appendNode('artifactId','maven-war-plugin').parent()
+                    .appendNode('version','2.3').parent()
+                    .appendNode('configuration')
+                        .appendNode('failOnMissingWebXml','false')
         }
     }
 }
