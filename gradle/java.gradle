@@ -4,6 +4,7 @@ apply plugin: 'propdeps'
 sourceCompatibility = '1.6'
 targetCompatibility = '1.6'
 
+ext.apacheDsVersion = '1.5.5'
 ext.springVersion = '3.2.8.RELEASE'
 ext.springDataVersion = '1.6.1.RELEASE'
 ext.springBatchVersion = '2.0.4.RELEASE'
@@ -25,6 +26,15 @@ ext.powerMockDependencies = [
     "org.powermock:powermock-module-junit4:$powerMockVersion",
     "org.powermock:powermock-api-mockito:$powerMockVersion",
     "org.powermock:powermock-reflect:$powerMockVersion"
+]
+
+ext.apachedsDependencies = [
+         "org.apache.directory.server:apacheds-core:$apacheDsVersion",
+         "org.apache.directory.server:apacheds-core-entry:$apacheDsVersion",
+         "org.apache.directory.server:apacheds-protocol-shared:$apacheDsVersion",
+         "org.apache.directory.server:apacheds-protocol-ldap:$apacheDsVersion",
+         "org.apache.directory.server:apacheds-server-jndi:$apacheDsVersion",
+         'org.apache.directory.shared:shared-ldap:0.9.15'
 ]
 
 repositories {
