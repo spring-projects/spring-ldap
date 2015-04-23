@@ -92,13 +92,7 @@ def customizePom(pom, gradleProject) {
                 .appendNode('configuration')
                     .appendNode('source', '1.6').parent()
                     .appendNode('target','1.6')
-            .appendNode('plugin')
-                .appendNode('groupId','org.mortbay.jetty').parent()
-                .appendNode('artifactId','jetty-maven-plugin').parent()
-                .appendNode('version','8.1.14.v20131031').parent()
-                .appendNode('configuration')
-                    .appendNode('webAppConfig')
-                        .appendNode('contextPath',"/" + projectName)
+
         if(isWar) {
             plugins
                 .appendNode('plugin')
@@ -106,6 +100,14 @@ def customizePom(pom, gradleProject) {
                     .appendNode('version','2.3').parent()
                     .appendNode('configuration')
                         .appendNode('failOnMissingWebXml','false')
+            plugins
+                    .appendNode('plugin')
+                    .appendNode('groupId','org.mortbay.jetty').parent()
+                    .appendNode('artifactId','jetty-maven-plugin').parent()
+                    .appendNode('version','8.1.14.v20131031').parent()
+                    .appendNode('configuration')
+                    .appendNode('webAppConfig')
+                    .appendNode('contextPath',"/" + projectName)
         }
     }
 }
