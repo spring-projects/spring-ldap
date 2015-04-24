@@ -155,6 +155,53 @@ public class LdapTemplateNamespaceHandlerTest {
     }
 
     @Test
+    public void supportsSpel() {
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/ldap-namespace-config-spel.xml");
+        ContextSource outerContextSource = ctx.getBean(ContextSource.class);
+
+        assertNotNull(outerContextSource);
+
+        assertTrue(outerContextSource instanceof TransactionAwareContextSourceProxy);
+        ContextSource contextSource = ((TransactionAwareContextSourceProxy) outerContextSource).getTarget();
+
+        assertEquals(LdapUtils.newLdapName("dc=261consulting,dc=com"), getInternalState(contextSource, "base"));
+        assertEquals("uid=admin", getInternalState(contextSource, "userDn"));
+        assertEquals("apassword", getInternalState(contextSource, "password"));
+        assertArrayEquals(new String[]{"ldap://localhost:389"}, (Object[]) getInternalState(contextSource, "urls"));
+
+    }
+
+    @Test
+    public void supportsSpelMultiUrls() {
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/ldap-namespace-config-spel-multiurls.xml");
+        ContextSource outerContextSource = ctx.getBean(ContextSource.class);
+
+        assertNotNull(outerContextSource);
+
+        assertTrue(outerContextSource instanceof TransactionAwareContextSourceProxy);
+        ContextSource contextSource = ((TransactionAwareContextSourceProxy) outerContextSource).getTarget();
+
+        assertArrayEquals(new String[] { "ldap://a.localhost:389", "ldap://b.localhost:389" },
+                (Object[]) getInternalState(contextSource, "urls"));
+
+    }
+
+    @Test
+    public void supportsMultipleUrls() {
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/ldap-namespace-config-multiurls.xml");
+        ContextSource outerContextSource = ctx.getBean(ContextSource.class);
+
+        assertNotNull(outerContextSource);
+
+        assertTrue(outerContextSource instanceof TransactionAwareContextSourceProxy);
+        ContextSource contextSource = ((TransactionAwareContextSourceProxy) outerContextSource).getTarget();
+
+        assertArrayEquals(new String[] { "ldap://a.localhost:389", "ldap://b.localhost:389" },
+                (Object[]) getInternalState(contextSource, "urls"));
+
+    }
+
+    @Test
     public void verifyParseWithDefaultTransactions() {
         ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/ldap-namespace-config-transactional-defaults.xml");
 

@@ -91,13 +91,17 @@ public class ContextSourceParser implements BeanDefinitionParser {
         String username = element.getAttribute(ATT_USERNAME);
         String password = element.getAttribute(ATT_PASSWORD);
         String url = element.getAttribute(ATT_URL);
-
         Assert.hasText(url, "url attribute must be specified");
 
         builder.addPropertyValue("userDn", username);
         builder.addPropertyValue("password", password);
-        String[] urls = StringUtils.commaDelimitedListToStringArray(url);
-        builder.addPropertyValue("urls", urls);
+
+        BeanDefinitionBuilder urlsBuilder = BeanDefinitionBuilder
+                .rootBeanDefinition(UrlsFactory.class)
+                .setFactoryMethod("urls")
+                .addConstructorArgValue(url);
+
+        builder.addPropertyValue("urls", urlsBuilder.getBeanDefinition());
         builder.addPropertyValue("base", getString(element, ATT_BASE, ""));
         builder.addPropertyValue("referral", getString(element, ATT_REFERRAL, null));
 
@@ -210,5 +214,11 @@ public class ContextSourceParser implements BeanDefinitionParser {
         }
 
         builder.addPropertyValue("nonTransientExceptions", nonTransientExceptionClasses);
+    }
+
+    static class UrlsFactory {
+        public static String[] urls(String value) {
+            return StringUtils.commaDelimitedListToStringArray(value);
+        }
     }
 }
