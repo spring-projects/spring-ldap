@@ -1393,7 +1393,7 @@ If you are using http://spring.io/spring-security[Spring Security] you can make 
         authentication-source-ref="springSecurityAuthenticationSource/>
 
     <bean id="springSecurityAuthenticationSource"
-        class="org.springframework.security.ldap.SpringSecurityAuthenticationSource" />
+        class="org.springframework.security.ldap.authentication.SpringSecurityAuthenticationSource" />
 ...
 </beans>
 ----
