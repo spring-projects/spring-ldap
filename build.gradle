@@ -23,6 +23,7 @@ ext.coreModules = subprojects.findAll { p-> (!p.name.contains("test") && !p.name
 
 configure(allprojects) {
     apply plugin: 'propdeps'
+    apply plugin: 'propdeps-maven'
     apply plugin: 'propdeps-idea'
     apply plugin: 'propdeps-eclipse'
     apply plugin: 'groovy'
