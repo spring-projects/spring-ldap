@@ -41,7 +41,8 @@ public class PartTreeLdapRepositoryQueryTest extends AbstractJUnit4SpringContext
                 "(cn=John Doe)",
                 "John Doe");
     }
-
+    
+    // LDAP-314
     @Test
     public void testFindByFullNameWithBase() throws NoSuchMethodException {
         entityClass = BaseUnitTestPerson.class;
