@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.core.support.DefaultRepositoryMetadata;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.odm.core.impl.BaseUnitTestPerson;
 import org.springframework.ldap.odm.core.impl.UnitTestPerson;
 import org.springframework.ldap.query.LdapQuery;
 import org.springframework.test.context.ContextConfiguration;
@@ -22,11 +23,13 @@ public class PartTreeLdapRepositoryQueryTest extends AbstractJUnit4SpringContext
 
     @Autowired
     private LdapTemplate ldapTemplate;
-    private Class<UnitTestPersonRepository> targetClass;
+    private Class<?> targetClass;
+    private Class<?> entityClass;
     private DefaultRepositoryMetadata repositoryMetadata;
 
     @Before
     public void prepareTest() {
+        entityClass = UnitTestPerson.class;
         targetClass = UnitTestPersonRepository.class;
         repositoryMetadata = new DefaultRepositoryMetadata(targetClass);
     }
@@ -36,6 +39,18 @@ public class PartTreeLdapRepositoryQueryTest extends AbstractJUnit4SpringContext
         assertFilterForMethod(
                 targetClass.getMethod("findByFullName", String.class),
                 "(cn=John Doe)",
+                "John Doe");
+    }
+
+    @Test
+    public void testFindByFullNameWithBase() throws NoSuchMethodException {
+        entityClass = BaseUnitTestPerson.class;
+        targetClass = BaseTestPersonRepository.class;
+        repositoryMetadata = new DefaultRepositoryMetadata(targetClass);
+        assertFilterAndBaseForMethod(
+                targetClass.getMethod("findByFullName", String.class),
+                "(cn=John Doe)",
+                "ou=someOu",
                 "John Doe");
     }
 
@@ -134,10 +149,17 @@ public class PartTreeLdapRepositoryQueryTest extends AbstractJUnit4SpringContext
     }
 
     private void assertFilterForMethod(Method targetMethod, String expectedFilter, Object... expectedParams) {
+            assertFilterAndBaseForMethod(targetMethod, expectedFilter, "",
+                    expectedParams);
+    }
+
+    private void assertFilterAndBaseForMethod(Method targetMethod, String expectedFilter, String expectedBase, Object... expectedParams) {
         LdapQueryMethod queryMethod = new LdapQueryMethod(targetMethod, repositoryMetadata);
-        PartTreeLdapRepositoryQuery tested = new PartTreeLdapRepositoryQuery(queryMethod, UnitTestPerson.class, ldapTemplate);
+        PartTreeLdapRepositoryQuery tested = new PartTreeLdapRepositoryQuery(queryMethod, entityClass, ldapTemplate);
 
         LdapQuery query = tested.createQuery(expectedParams);
+        String base = query.base().toString();
+        assertEquals(expectedBase, base);
         assertEquals(expectedFilter, query.filter().encode());
     }
 }

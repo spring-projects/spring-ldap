@@ -23,6 +23,7 @@ import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 import org.springframework.data.repository.query.parser.Part;
 import org.springframework.data.repository.query.parser.PartTree;
+import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 import org.springframework.ldap.query.ConditionCriteria;
 import org.springframework.ldap.query.ContainerCriteria;
@@ -56,7 +57,8 @@ public class LdapQueryCreator extends AbstractQueryCreator<LdapQuery, ContainerC
 
     @Override
     protected ContainerCriteria create(Part part, Iterator<Object> iterator) {
-        ConditionCriteria criteria = query().where(getAttribute(part));
+        String base = clazz.getAnnotation(Entry.class).base();
+        ConditionCriteria criteria = query().base(base).where(getAttribute(part));
 
         return appendCondition(part, iterator, criteria);
     }
