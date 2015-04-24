@@ -11,7 +11,8 @@ idea.module.excludeDirs = [
 dependencies {
     compile  "org.springframework:spring-core:$springVersion",
              "org.springframework:spring-beans:$springVersion",
-             "org.springframework:spring-tx:$springVersion"
+             "org.springframework:spring-tx:$springVersion",
+             "org.slf4j:slf4j-api:$slf4jVersion"
 
     optional "org.springframework.data:spring-data-commons:$springDataVersion",
             "org.springframework:spring-context:$springVersion",
