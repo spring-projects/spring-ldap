@@ -571,6 +571,18 @@ public class DirContextAdapterTest {
 		assertEquals("123", (String) attr.get());
 	}
 
+	// LDAP-304
+	@Test
+	public void testModifyNull() throws Exception {
+		tested.setAttributeValue("memberDN", null);
+		tested.setUpdateMode(true);
+		assertTrue(tested.isUpdateMode());
+		tested.setAttributeValue("memberDN", new LdapName("ou=test"));
+
+		ModificationItem[] mods = tested.getModificationItems();
+		assertEquals(1, mods.length);
+	}
+
     @Test
 	public void testGetDn() throws Exception {
 		DirContextAdapter tested = new DirContextAdapter(DUMMY_NAME);

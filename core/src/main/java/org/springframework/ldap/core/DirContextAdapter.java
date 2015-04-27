@@ -333,7 +333,7 @@ public class DirContextAdapter implements DirContextOperations {
 	private void collectModifications(NameAwareAttribute changedAttr,
 			List<ModificationItem> modificationList) throws NamingException {
 		NameAwareAttribute currentAttribute = originalAttrs.get(changedAttr.getID());
-        if(changedAttr.hasValuesAsNames()) {
+        if(currentAttribute != null && changedAttr.hasValuesAsNames()) {
             try {
                 currentAttribute.initValuesAsNames();
             } catch(IllegalArgumentException e) {
