@@ -30,6 +30,8 @@ import org.springframework.ldap.query.SearchScope;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.test.AttributeCheckAttributesMapper;
 import org.springframework.ldap.test.AttributeCheckContextMapper;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 
 import javax.naming.Name;
@@ -50,6 +52,7 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
  * @author Mattias Hellborg Arthursson
  */
 @ContextConfiguration(locations = {"/conf/ldapTemplateNamespaceTestContext.xml"})
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class LdapTemplateSearchResultNamespaceConfigITest extends AbstractLdapTemplateIntegrationTest {
 
 	@Autowired
