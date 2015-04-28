@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:ldap="http://www.springframework.org/schema/ldap"
+	xsi:schemaLocation="http://www.springframework.org/schema/ldap http://www.springframework.org/schema/ldap/spring-ldap.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+    <ldap:transaction-manager id="txManager">
+        <ldap:default-renaming-strategy />
+    </ldap:transaction-manager>
+
+    <tx:annotation-driven transaction-manager="txManager"/>
+    <bean class="org.springframework.ldap.itest.ldap321.RoleRepo"/>
+
+    <ldap:context-source password="secret" url="ldap://localhost:9321" username="uid=admin,ou=system" />
+
+    <beans profile="default">
+        <bean id="embeddedLdapServer" class="org.springframework.ldap.test.EmbeddedLdapServerFactoryBean">
+            <property name="partitionName" value="example"/>
+            <property name="partitionSuffix" value="dc=261consulting,dc=com" />
+            <property name="port" value="9321" />
+        </bean>
+    </beans>
+</beans>

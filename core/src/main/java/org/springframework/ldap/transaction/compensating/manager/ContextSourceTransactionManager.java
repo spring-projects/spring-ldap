@@ -22,8 +22,10 @@ import org.springframework.ldap.transaction.compensating.TempEntryRenamingStrate
 import org.springframework.ldap.transaction.compensating.UnbindOperationExecutor;
 import org.springframework.ldap.transaction.compensating.support.DefaultTempEntryRenamingStrategy;
 import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
+import org.springframework.transaction.compensating.support.CompensatingTransactionObject;
 import org.springframework.transaction.compensating.support.DefaultCompensatingTransactionOperationManager;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 import org.springframework.transaction.support.DefaultTransactionStatus;
@@ -101,9 +103,9 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * same logic needs to be used if we want to wrap a JDBC and LDAP transaction in
  * the same logical transaction.
  * </p>
- * 
+ *
  * @author Mattias Hellborg Arthursson
- * 
+ *
  * @see ContextSourceAndDataSourceTransactionManager
  * @see ContextSourceTransactionManagerDelegate
  * @see DefaultCompensatingTransactionOperationManager
@@ -156,7 +158,7 @@ public class ContextSourceTransactionManager extends
 
     /**
      * Get the ContextSource.
-     * 
+     *
      * @return the contextSource.
      * @see ContextSourceTransactionManagerDelegate#getContextSource()
      */
@@ -166,7 +168,7 @@ public class ContextSourceTransactionManager extends
 
     /**
      * Set the ContextSource.
-     * 
+     *
      * @param contextSource
      *            the ContextSource.
      * @see ContextSourceTransactionManagerDelegate#setContextSource(ContextSource)
@@ -177,7 +179,7 @@ public class ContextSourceTransactionManager extends
 
     /**
      * Set the {@link TempEntryRenamingStrategy}.
-     * 
+     *
      * @param renamingStrategy
      *            the Renaming Strategy.
      * @see ContextSourceTransactionManagerDelegate#setRenamingStrategy(TempEntryRenamingStrategy)
@@ -188,5 +190,12 @@ public class ContextSourceTransactionManager extends
 
     public void afterPropertiesSet() throws Exception {
         delegate.checkRenamingStrategy();
+    }
+
+    @Override
+    protected boolean isExistingTransaction(Object transaction)
+            throws TransactionException {
+        CompensatingTransactionObject txObject = (CompensatingTransactionObject) transaction;
+        return (txObject.getHolder() != null);
     }
 }
