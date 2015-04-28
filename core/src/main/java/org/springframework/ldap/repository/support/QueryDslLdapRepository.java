@@ -18,8 +18,10 @@ package org.springframework.ldap.repository.support;
 
 import com.mysema.query.types.OrderSpecifier;
 import com.mysema.query.types.Predicate;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
@@ -55,9 +57,21 @@ public class QueryDslLdapRepository<T> extends SimpleLdapRepository<T> implement
         return findAll(predicate).size();
     }
 
+    public boolean exists(Predicate predicate) {
+    	return count(predicate) > 0;
+    }
+
+    public Iterable<T> findAll(Predicate predicate, Sort sort) {
+        throw new UnsupportedOperationException();
+    }
+
     private QueryDslLdapQuery<T> queryFor(Predicate predicate) {
         return new QueryDslLdapQuery<T>(getLdapOperations(), getClazz())
                 .where(predicate);
+    }
+
+    public Iterable<T> findAll(OrderSpecifier<?>... orders) {
+        throw new UnsupportedOperationException();
     }
 
     @Override

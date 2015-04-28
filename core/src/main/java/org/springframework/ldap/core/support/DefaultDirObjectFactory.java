@@ -35,7 +35,7 @@ import java.util.Hashtable;
 /**
  * Default implementation of the DirObjectFactory interface. Creates a
  * {@link DirContextAdapter} from the supplied arguments.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class DefaultDirObjectFactory implements DirObjectFactory {
@@ -44,7 +44,7 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 	/**
 	 * Key to use in the ContextSource implementation to store the value of the
 	 * base path suffix, if any, in the Ldap Environment.
-	 * 
+	 *
 	 * @deprecated Use {@link BaseLdapNameAware} and
 	 * {@link BaseLdapPathBeanPostProcessor} instead.
 	 */
@@ -102,7 +102,7 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 	 * Names. Also, the name might contain referral information, in which case
 	 * we need to separate the server information from the actual Distinguished
 	 * Name so that we can create a representing DirContextAdapter.
-	 * 
+	 *
 	 * @param attrs the attributes
 	 * @param name the Name, typically a <code>CompositeName</code>, possibly
 	 * including referral information.
@@ -149,17 +149,10 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 				nameString = pathString;
 			}
 			catch (URISyntaxException e) {
-				if (JdkVersion.isAtLeastJava15()) {
-					throw new IllegalArgumentException(
-							"Supplied name starts with protocol prefix indicating a referral,"
-									+ " but is not possible to parse to an URI",
-							e);
-				} else {
-					throw new IllegalArgumentException(
-							"Supplied name starts with protocol prefix indicating a referral,"
-									+ " but is not possible to parse to an URI: " +
-							e.getMessage());
-				}
+				throw new IllegalArgumentException(
+						"Supplied name starts with protocol prefix indicating a referral,"
+								+ " but is not possible to parse to an URI",
+						e);
 			}
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Resulting name after removal of referral information: '" + nameString + "'");
