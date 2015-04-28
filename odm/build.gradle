@@ -6,7 +6,7 @@ dependencies {
     compile project(":spring-ldap-core"),
             project(":spring-ldap-core-tiger"),
             "org.springframework:spring-core:$springVersion",
-            "org.freemarker:freemarker:2.3.9",
+            "org.freemarker:freemarker:2.3.20",
             "commons-logging:commons-logging:$commonsLoggingVersion",
             "commons-cli:commons-cli:1.2"
 
@@ -22,5 +22,5 @@ dependencies {
     testCompile project(":spring-ldap-test"),
                 "junit:junit:$junitVersion",
                 "jdepend:jdepend:2.9.1",
-                "commons-io:commons-io:2.4"
+                "commons-io:commons-io:$commonsIoVersion"
 }
