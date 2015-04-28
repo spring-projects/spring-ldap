@@ -3,7 +3,7 @@ apply from: MAVEN_DEPLOYMENT_SCRIPT
 apply from: RELEASE_CHECKS_SCRIPT
 apply plugin: 'spring-io'
 
-ext.springIoVersion = project.hasProperty('platformVersion') ? platformVersion : '1.0.0.BUILD-SNAPSHOT'
+ext.springIoVersion = project.hasProperty('platformVersion') ? platformVersion : 'latest.integration'
 
 configurations {
     jacoco //Configuration Group used by Sonar to provide Code Coverage using JaCoCo
