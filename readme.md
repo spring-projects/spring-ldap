@@ -25,7 +25,7 @@ All major releases of this library are available in the central Maven repository
 The following components are available:
 
 * spring-ldap-core - the core Spring LDAP library
-* spring-ldap-tiger - the Spring LDAP Java 5 support library
+* spring-ldap-core-tiger - the Spring LDAP Java 5 support library
 * spring-ldap-test - support classes that helps LDAP with integration testing
 * spring-ldap-ldif-core - the Spring LDAP LDIF parsing library
 * spring-ldap-ldif-batch - the Spring Batch integration layer for the LDIF parsing library
