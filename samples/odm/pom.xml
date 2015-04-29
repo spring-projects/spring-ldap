@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.springframework.ldap</groupId>
   <artifactId>spring-ldap-odm-sample</artifactId>
-  <version>2.0.3.CI-SNAPSHOT</version>
+  <version>2.0.3.RELEASE</version>
   <packaging>war</packaging>
   <name>spring-ldap-odm-sample</name>
   <description>spring-ldap-odm-sample</description>
@@ -65,18 +65,42 @@
     <developerConnection>scm:git:git://github.com/SpringSource/spring-ldap</developerConnection>
     <url>https://github.com/SpringSource/spring-ldap</url>
   </scm>
-  <repositories>
-    <repository>
-      <id>spring-snasphot</id>
-      <url>http://repo.springsource.org/libs-snapshot</url>
-    </repository>
-  </repositories>
   <dependencies>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
+      <version>1.2</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-commons</artifactId>
+      <version>1.10.0.RELEASE</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.ldap</groupId>
+      <artifactId>spring-ldap-test</artifactId>
+      <version>2.0.3.RELEASE</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>3.2.13.RELEASE</version>
+      <scope>compile</scope>
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>
-      <version>3.2.8.RELEASE</version>
+      <version>3.2.13.RELEASE</version>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.5</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
@@ -85,34 +109,16 @@
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>org.springframework.ldap</groupId>
-      <artifactId>spring-ldap-test</artifactId>
-      <version>2.0.3.CI-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>jstl</artifactId>
-      <version>1.2</version>
-      <scope>compile</scope>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
-      <version>3.2.8.RELEASE</version>
+      <version>3.2.13.RELEASE</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.10</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
-      <version>3.2.8.RELEASE</version>
-      <scope>compile</scope>
     </dependency>
   </dependencies>
   <build>
