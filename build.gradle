@@ -21,17 +21,24 @@ ext.SAMPLE_WAR_GRADLE = "${GRADLE_SCRIPT_DIR}/sample-war.gradle"
 
 ext.coreModules = subprojects.findAll { p-> (!p.name.contains("test") && !p.name.contains("sample") && !p.name.contains("sandbox")) || p.name == "spring-ldap-test" }
 
-configure(allprojects) {
+allprojects {
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+
+    group = "org.springframework.ldap"
+
+    ext.releaseBuild = version.endsWith('RELEASE')
+    ext.snapshotBuild = version.endsWith('SNAPSHOT')
+}
+
+
+configure(subprojects) {
     apply plugin: 'propdeps'
     apply plugin: 'propdeps-maven'
     apply plugin: 'propdeps-idea'
     apply plugin: 'propdeps-eclipse'
     apply plugin: 'groovy'
 
-    group = "org.springframework.ldap"
-
-    ext.releaseBuild = version.endsWith('RELEASE')
-    ext.snapshotBuild = version.endsWith('SNAPSHOT')
     ext.javadocLinks = [
         "http://download.oracle.com/javase/1.5.0/docs/api",
         "http://static.springframework.org/spring/docs/3.0.x/api/",
