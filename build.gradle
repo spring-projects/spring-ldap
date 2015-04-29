@@ -29,15 +29,6 @@ allprojects {
 
     ext.releaseBuild = version.endsWith('RELEASE')
     ext.snapshotBuild = version.endsWith('SNAPSHOT')
-}
-
-
-configure(subprojects) {
-    apply plugin: 'propdeps'
-    apply plugin: 'propdeps-maven'
-    apply plugin: 'propdeps-idea'
-    apply plugin: 'propdeps-eclipse'
-    apply plugin: 'groovy'
 
     ext.javadocLinks = [
         "http://download.oracle.com/javase/1.5.0/docs/api",
@@ -48,6 +39,16 @@ configure(subprojects) {
         "http://commons.apache.org/pool/apidocs/",
         "http://junit.sourceforge.net/javadoc/",
     ] as String[]
+}
+
+
+configure(subprojects) {
+    apply plugin: 'propdeps'
+    apply plugin: 'propdeps-maven'
+    apply plugin: 'propdeps-idea'
+    apply plugin: 'propdeps-eclipse'
+    apply plugin: 'groovy'
+
 }
 
 configure(coreModules) {
