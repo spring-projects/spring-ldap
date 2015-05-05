@@ -133,7 +133,7 @@ task docsZip(type: Zip, dependsOn: asciidoctor) {
         into "apidocs"
     }
 
-    from (asciidoctor.outputDir) {
+    from (new File(asciidoctor.outputDir, "html5")) {
         include "*.html"
         into "reference"
     }
