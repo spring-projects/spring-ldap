@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,31 @@ import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.support.DefaultDirObjectFactory;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.support.LdapUtils;
+import org.springframework.util.CollectionUtils;
+
+import javax.naming.Name;
+import javax.naming.NamingEnumeration;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.ModificationItem;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
+import java.util.List;
 
 /**
- * @author Mattias Hellborg Arthursson
+ * @author Mattias Hellborg Arthursson Zilic
  */
 public class TestContextSourceFactoryBean extends AbstractFactoryBean {
-    private int port;
+
+	private static final String SCHEMAS_BASE = "ou=schema";
+
+	private static final String SCHEMAS_SEARCH_FORMAT = "(&(objectClass=metaSchema)(cn=%s))";
+
+	private static final String DISABLED_ATTRIBUTE = "m-disabled";
+
+	private static final String SCHEMA_DN_FORMAT = "cn=%s,ou=schema";
+
+	private int port;
 
 	private String defaultPartitionSuffix;
 
@@ -49,6 +68,8 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean {
 	private AuthenticationSource authenticationSource;
 
     private ContextSource contextSource;
+
+	private List<String> additionalSchemas;
 
     public void setAuthenticationSource(AuthenticationSource authenticationSource) {
 		this.authenticationSource = authenticationSource;
@@ -94,6 +115,10 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean {
         this.contextSource = contextSource;
     }
 
+	public void setAdditionalSchemas(List<String> additionalSchemas) {
+		this.additionalSchemas = additionalSchemas;
+	}
+
     protected Object createInstance() throws Exception {
         LdapTestUtils.startEmbeddedServer(port, defaultPartitionSuffix, defaultPartitionName);
 
@@ -125,6 +150,30 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean {
 		}
 		else {
 			LdapTestUtils.clearSubContexts(contextSource, LdapUtils.newLdapName(defaultPartitionSuffix));
+		}
+
+		if (!CollectionUtils.isEmpty(additionalSchemas)) {
+			DirContext context = contextSource.getReadWriteContext();
+			SearchControls controls = new SearchControls();
+			controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+
+			Name schemasBase = LdapUtils.newLdapName(SCHEMAS_BASE);
+			for (String schemaName : additionalSchemas) {
+				String schemaSearch = String.format(SCHEMAS_SEARCH_FORMAT, schemaName);
+				NamingEnumeration<SearchResult> results = context.search(schemasBase, schemaSearch, controls);
+
+				if (!results.hasMoreElements()) {
+					logger.warn("Failed to find schema definition for schema '" + schemaName +"'");
+					continue;
+				}
+
+				ModificationItem[] modItems = new ModificationItem[1];
+				BasicAttribute attr = new BasicAttribute(DISABLED_ATTRIBUTE, "FALSE");
+				modItems[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, attr);
+
+				Name schemaDn = LdapUtils.newLdapName(String.format(SCHEMA_DN_FORMAT, schemaName));
+				context.modifyAttributes(schemaDn, modItems);
+			}
 		}
 
 		if (ldifFile != null) {
