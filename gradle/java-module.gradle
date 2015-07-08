@@ -19,7 +19,13 @@ configurations {
 
 dependencies {
     jacoco group: "org.jacoco", name: "org.jacoco.agent", version: "0.6.2.201302030002", classifier: "runtime"
-    springIoVersions "io.spring.platform:platform-versions:${springIoVersion}@properties"
+    dependencyManagement {
+        springIoTestRuntime {
+            imports {
+                mavenBom "io.spring.platform:platform-bom:${springIoVersion}"
+            }
+        }
+    }
 }
 
 test {
