@@ -19,6 +19,7 @@ package org.springframework.ldap.repository.support;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.core.EntityInformation;
 import org.springframework.data.repository.core.NamedQueries;
+import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 import org.springframework.data.repository.query.QueryLookupStrategy;
@@ -50,7 +51,6 @@ public class LdapRepositoryFactory extends RepositoryFactorySupport {
         return null;
     }
 
-    @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected Object getTargetRepository(RepositoryMetadata metadata) {
         if(!isQueryDslRepository(metadata.getRepositoryInterface())) {
@@ -65,6 +65,10 @@ public class LdapRepositoryFactory extends RepositoryFactorySupport {
                     metadata.getDomainType());
         }
 
+    }
+
+    protected Object getTargetRepository(RepositoryInformation metadata) {
+        return getTargetRepository((RepositoryMetadata) metadata);
     }
 
     private static boolean isQueryDslRepository(Class<?> repositoryInterface) {
