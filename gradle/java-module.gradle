@@ -10,7 +10,7 @@ configurations {
 }
 
 dependencies {
-    jacoco group: "org.jacoco", name: "org.jacoco.agent", version: "0.6.2.201302030002", classifier: "runtime"
+    jacoco group: "org.jacoco", name: "org.jacoco.agent", version: "0.7.1.201405082137", classifier: "runtime"
     dependencyManagement {
         springIoTestRuntime {
             imports {

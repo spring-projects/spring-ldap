@@ -17,7 +17,7 @@
 package org.springframework.ldap.filter;
 
 /**
- * A filter to compare >=. LDAP RFC does not allow > comparison. The following
+ * A filter to compare &gt;=. LDAP RFC does not allow &gt; comparison. The following
  * code:
  * 
  * <pre>

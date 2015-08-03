@@ -34,7 +34,7 @@ import javax.naming.directory.SearchResult;
  * <br>
  * <br>
  * Configuration:
- * <table border="1">
+ * <table border="1" summary="Configuration">
  *     <tr>
  *         <th align="left">Property</th>
  *         <th align="left">Description</th>
@@ -64,8 +64,8 @@ import javax.naming.directory.SearchResult;
  *         </td>
  *         <td valign="top">No</td>
  *         <td valign="top">
- *             {@link SearchControls#setCountLimit(long)} = 1<br/>
- *             {@link SearchControls#setReturningAttributes(String[])} = new String[] { "objectclass" }<br/>
+ *             {@link SearchControls#setCountLimit(long)} = 1<br>
+ *             {@link SearchControls#setReturningAttributes(String[])} = new String[] { "objectclass" }<br>
  *             {@link SearchControls#setTimeLimit(int)} = 500
  *         </td>
  *     </tr>

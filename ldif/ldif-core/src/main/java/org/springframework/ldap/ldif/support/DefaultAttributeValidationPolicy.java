@@ -282,7 +282,7 @@ public class DefaultAttributeValidationPolicy implements AttributeValidationPoli
 	 * <ol>
 	 * 	<li>A standard attribute pattern of the form: ATTR_ID[;options]: VALUE</li>
 	 * 	<li>A Base64 attribute pattern of the form: ATTR_ID[;options]:: BASE64_VALUE</li>
-	 * 	<li>A url attribute pattern of the form: ATTR_ID[;options]:< URL_VALUE</li>
+	 * 	<li>A url attribute pattern of the form: ATTR_ID[;options]:&lt; URL_VALUE</li>
 	 * </ol>
 	 * <p>
 	 * Upon success an LdapAttribute object is returned.  

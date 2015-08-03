@@ -40,55 +40,55 @@ import java.util.Set;
  * Integer, Long, Float, Double, Boolean</code> to <code>String</code></li>
  * </ul>
  * <pre>
- * &lt;bean id="converterManager" class="org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean">
- *   &lt;property name="converterConfig">
- *     &lt;set>
- *       &lt;bean class="org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean$ConverterConfig">
- *         &lt;property name="fromClasses">
- *           &lt;set> 
- *             &lt;value>java.lang.String&lt;/value>
- *           &lt;/set>
- *         &lt;/property>
- *         &lt;property name="toClasses">
- *           &lt;set>
- *             &lt;value>java.lang.Byte&lt;/value>
- *             &lt;value>java.lang.Short&lt;/value>
- *             &lt;value>java.lang.Integer&lt;/value>
- *             &lt;value>java.lang.Long&lt;/value>
- *             &lt;value>java.lang.Float&lt;/value>
- *             &lt;value>java.lang.Double&lt;/value>
- *             &lt;value>java.lang.Boolean&lt;/value>
- *           &lt;/set>
- *         &lt;/property>
- *         &lt;property name="converter" ref="fromStringConverter" />
- *       &lt;/bean>
- *       &lt;bean class="org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean$ConverterConfig">
- *         &lt;property name="fromClasses">
- *           &lt;set>
- *             &lt;value>java.lang.Byte&lt;/value>
- *             &lt;value>java.lang.Short&lt;/value>
- *             &lt;value>java.lang.Integer&lt;/value>
- *             &lt;value>java.lang.Long&lt;/value>
- *             &lt;value>java.lang.Float&lt;/value>
- *             &lt;value>java.lang.Double&lt;/value>
- *             &lt;value>java.lang.Boolean&lt;/value>
- *           &lt;/set> 
- *         &lt;/property>
- *         &lt;property name="toClasses">
- *           &lt;set> 
- *             &lt;value>java.lang.String&lt;/value>
- *           &lt;/set>
- *         &lt;/property>
- *         &lt;property name="converter" ref="toStringConverter" />
- *       &lt;/bean>
- *     &lt;/set>
- *   &lt;/property>
- * &lt;/bean>
+ * &lt;bean id="converterManager" class="org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean"&gt;
+ *   &lt;property name="converterConfig"&gt;
+ *     &lt;set&gt;
+ *       &lt;bean class="org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean$ConverterConfig"&gt;
+ *         &lt;property name="fromClasses"&gt;
+ *           &lt;set&gt;
+ *             &lt;value&gt;java.lang.String&lt;/value&gt;
+ *           &lt;/set&gt;
+ *         &lt;/property&gt;
+ *         &lt;property name="toClasses"&gt;
+ *           &lt;set&gt;
+ *             &lt;value&gt;java.lang.Byte&lt;/value&gt;
+ *             &lt;value&gt;java.lang.Short&lt;/value&gt;
+ *             &lt;value&gt;java.lang.Integer&lt;/value&gt;
+ *             &lt;value&gt;java.lang.Long&lt;/value&gt;
+ *             &lt;value&gt;java.lang.Float&lt;/value&gt;
+ *             &lt;value&gt;java.lang.Double&lt;/value&gt;
+ *             &lt;value&gt;java.lang.Boolean&lt;/value&gt;
+ *           &lt;/set&gt;
+ *         &lt;/property&gt;
+ *         &lt;property name="converter" ref="fromStringConverter"/&gt;
+ *       &lt;/bean&gt;
+ *       &lt;bean class="org.springframework.ldap.odm.typeconversion.impl.ConverterManagerFactoryBean$ConverterConfig"&gt;
+ *         &lt;property name="fromClasses"&gt;
+ *           &lt;set&gt;
+ *             &lt;value&gt;java.lang.Byte&lt;/value&gt;
+ *             &lt;value&gt;java.lang.Short&lt;/value&gt;
+ *             &lt;value&gt;java.lang.Integer&lt;/value&gt;
+ *             &lt;value&gt;java.lang.Long&lt;/value&gt;
+ *             &lt;value&gt;java.lang.Float&lt;/value&gt;
+ *             &lt;value&gt;java.lang.Double&lt;/value&gt;
+ *             &lt;value&gt;java.lang.Boolean&lt;/value&gt;
+ *           &lt;/set&gt;
+ *         &lt;/property&gt;
+ *         &lt;property name="toClasses"&gt;
+ *           &lt;set&gt;
+ *             &lt;value&gt;java.lang.String&lt;/value&gt;
+ *           &lt;/set&gt;
+ *         &lt;/property&gt;
+ *         &lt;property name="converter" ref="toStringConverter"/&gt;
+ *       &lt;/bean&gt;
+ *     &lt;/set&gt;
+ *   &lt;/property&gt;
+ * &lt;/bean&gt;
  * </pre>
  * {@link ConverterConfig} has a second constructor which takes an additional parameter to allow 
  * an LDAP syntax to be defined.
  * 
- * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
+ * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  */
 public final class ConverterManagerFactoryBean implements FactoryBean {
     private static final Logger LOG = LoggerFactory.getLogger(ConverterManagerFactoryBean.class);

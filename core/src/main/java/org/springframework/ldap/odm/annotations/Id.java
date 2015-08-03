@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * The marked field must be of type {@link javax.naming.Name} and must <em>not</em>
  * be annotated {@link Attribute}.
  *
- * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
+ * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  * 
  * @see Attribute
  * @see javax.naming.Name

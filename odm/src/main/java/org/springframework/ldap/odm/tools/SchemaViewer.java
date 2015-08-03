@@ -27,17 +27,17 @@ import java.util.Hashtable;
  * <code>SchemaViewer</code> takes the following flags:
  * <ul>
  * <li><code>-h,--help&lt;</code>                Print this help message</li>
- * <li><code>-l,--url &lt;arg></code>           Ldap url of directory to bind to (defaults to ldap://127.0.0.1:389)</li>
- * <li><code>-u,--username &lt;arg></code>      DN to bind with (defaults to "")</li>
- * <li><code>-p,--password &lt;arg></code>      Password to bind with (defaults to "")</li>
- * <li><code>-o,--objectclass &lt;arg></code>   Object class name or ? for all. Print object class schema</li>
- * <li><code>-a,--attribute &lt;arg></code>     Attribute name or ? for all. Print attribute schema</li>
- * <li><code>-s,--syntax &lt;arg></code>        Syntax or ? for all. Print syntax</li>
+ * <li><code>-l,--url &lt;arg&gt;</code>           Ldap url of directory to bind to (defaults to ldap://127.0.0.1:389)</li>
+ * <li><code>-u,--username &lt;arg&gt;</code>      DN to bind with (defaults to "")</li>
+ * <li><code>-p,--password &lt;arg&gt;</code>      Password to bind with (defaults to "")</li>
+ * <li><code>-o,--objectclass &lt;arg&gt;</code>   Object class name or ? for all. Print object class schema</li>
+ * <li><code>-a,--attribute &lt;arg&gt;</code>     Attribute name or ? for all. Print attribute schema</li>
+ * <li><code>-s,--syntax &lt;arg&gt;</code>        Syntax or ? for all. Print syntax</li>
  * </ul>
  * 
  * Only one of <code>-a</code>, <code>-o</code> and <code>-s</code> should be specified.
  * 
- * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
+ * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  *
  */
 public final class SchemaViewer {

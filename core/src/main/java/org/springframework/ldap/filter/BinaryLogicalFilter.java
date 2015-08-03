@@ -58,7 +58,7 @@ public abstract class BinaryLogicalFilter extends AbstractFilter {
 
 	/**
 	 * Implement this in subclass to return the logical operator, for example
-	 * &qout;&amp;&qout;.
+	 * &quot;&amp;&quot;.
 	 * 
 	 * @return the logical operator.
 	 */

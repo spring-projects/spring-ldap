@@ -52,7 +52,6 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * rolled back, the outcome of this is undetermined, and may in the worst case
  * result in total failure.</li>
  * </ul>
- * </p>
  * <p>
  * While the points above should be noted and considered, the compensating
  * transaction approach will be perfectly sufficient for all but the most
@@ -60,14 +59,12 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * absence of server-side transaction support in the LDAP world, being able to
  * mark operations as transactional in the same way as for relational database
  * operations is surely a step forward.
- * </p>
  * <p>
  * An LDAP transaction is tied to a {@link ContextSource}, to be supplied to
  * the {@link #setContextSource(ContextSource)} method. While the actual
  * ContextSource used by the target LdapTemplate instance needs to be of the
  * type {@link TransactionAwareContextSourceProxy}, the ContextSource supplied
  * to this class should be the actual target ContextSource.
- * </p>
  * <p>
  * Using this TransactionManager along with
  * {@link TransactionAwareContextSourceProxy}, all modifying operations (bind,
@@ -78,7 +75,6 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * {@link CompensatingTransactionOperationExecutor} which is then used to
  * execute the actual operation and is later called for performing the commit or
  * rollback.
- * </p>
  * <p>
  * For several of the operations, performing a rollback is pretty
  * straightforward. For example, in order to roll back a rename operation, it
@@ -96,13 +92,12 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * {@link TempEntryRenamingStrategy} (default
  * {@link DefaultTempEntryRenamingStrategy}), specified in
  * {@link #setRenamingStrategy(TempEntryRenamingStrategy)}.
- * </p>
  * <p>
  * The actual work of this Transaction Manager is delegated to a
  * {@link ContextSourceTransactionManagerDelegate}. This is because the exact
  * same logic needs to be used if we want to wrap a JDBC and LDAP transaction in
  * the same logical transaction.
- * </p>
+ * <p>
  *
  * @author Mattias Hellborg Arthursson
  *

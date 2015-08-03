@@ -22,7 +22,7 @@ import org.springframework.ldap.odm.core.OdmException;
  * Thrown when an OdmManager method is called with a class
  * which is not being managed by the OdmManager.
  * 
- * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
+ * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  *
  */
 @SuppressWarnings("serial")

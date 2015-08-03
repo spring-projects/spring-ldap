@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * <p>
  * The containing class must be annotated with {@link Entry}.
  * 
- * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
+ * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  * @see Entry
  */
 @Target(ElementType.FIELD)

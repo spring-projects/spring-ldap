@@ -118,11 +118,11 @@ public final class LdapEncoder {
     /**
      * LDAP Encodes a value for use with a DN. Escapes for LDAP, not JNDI!
      * 
-     * <br/>Escapes:<br/> ' ' [space] - "\ " [if first or last] <br/> '#'
-     * [hash] - "\#" <br/> ',' [comma] - "\," <br/> ';' [semicolon] - "\;" <br/> '=
-     * [equals] - "\=" <br/> '+' [plus] - "\+" <br/> '&lt;' [less than] -
-     * "\&lt;" <br/> '&gt;' [greater than] - "\&gt;" <br/> '"' [double quote] -
-     * "\"" <br/> '\' [backslash] - "\\" <br/>
+     * <br>Escapes:<br> ' ' [space] - "\ " [if first or last] <br> '#'
+     * [hash] - "\#" <br> ',' [comma] - "\," <br> ';' [semicolon] - "\;" <br> '=
+     * [equals] - "\=" <br> '+' [plus] - "\+" <br> '&lt;' [less than] -
+     * "\&lt;" <br> '&gt;' [greater than] - "\&gt;" <br> '"' [double quote] -
+     * "\"" <br> '\' [backslash] - "\\" <br>
      * 
      * @param value
      *            the value to escape.

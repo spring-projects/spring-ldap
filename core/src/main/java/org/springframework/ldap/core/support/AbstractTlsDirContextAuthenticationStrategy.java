@@ -54,7 +54,6 @@ import java.util.Hashtable;
  * <code>HostnameVerifier</code> is supplied to
  * {@link #setHostnameVerifier(HostnameVerifier)}, that will be applied to the
  * processing.
- * </p>
  * <p>
  * For further information regarding TLS, refer to <a
  * href="http://java.sun.com/products/jndi/tutorial/ldap/ext/starttls.html">this
@@ -94,7 +93,7 @@ public abstract class AbstractTlsDirContextAuthenticationStrategy implements Dir
 
 	/**
 	 * Set the optional
-	 * <code>HostnameVerifier<code> to use for verifying incoming certificates. Defaults to <code>null</code>
+	 * <code>HostnameVerifier</code> to use for verifying incoming certificates. Defaults to <code>null</code>
 	 * , meaning that the default hostname verification will take place.
 	 * 
 	 * @param hostnameVerifier The <code>HostnameVerifier</code> to use, if any.
