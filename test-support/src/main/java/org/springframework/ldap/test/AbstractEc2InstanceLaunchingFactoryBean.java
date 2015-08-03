@@ -32,7 +32,7 @@ import java.util.Collections;
  * for running integration tests against certain server configurations, enabling integration tests aimed at e.g. a particluar
  * DB server to run transparently at the computer of each individual developer without having to have the actual server software
  * installed on their computers.
- * <p/>
+ * <p>
  * Public AMIs will need to be created, bundled and registered for each server setup. A subclass of this FactoryBean
  * is then added to create the actual target object (e.g. a DataSource), implementing the {link #doCreateInstance} method.
  * This method will be supplied the IP address of the instance that was created, enabling the subclass to configure the

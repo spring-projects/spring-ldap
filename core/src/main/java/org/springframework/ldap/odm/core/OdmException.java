@@ -21,7 +21,7 @@ import org.springframework.ldap.NamingException;
 /**
  * The root of the Spring LDAP ODM exception hierarchy.
  * 
- * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
+ * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  *
  */
 @SuppressWarnings("serial")

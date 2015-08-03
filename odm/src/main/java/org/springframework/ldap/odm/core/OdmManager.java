@@ -29,7 +29,7 @@ import java.util.List;
  * Each managed Java class must be appropriately annotated using
  * {@link org.springframework.ldap.odm.annotations}. 
  * 
- * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
+ * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  * @author Mattias Hellborg Arthursson
  * 
  * @see org.springframework.ldap.odm.annotations.Entry

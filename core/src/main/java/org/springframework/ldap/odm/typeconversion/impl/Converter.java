@@ -19,7 +19,7 @@ package org.springframework.ldap.odm.typeconversion.impl;
 /**
  * Interface specifying the conversion between two classes
  * 
- * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
+ * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  */
 public interface Converter {
     /**

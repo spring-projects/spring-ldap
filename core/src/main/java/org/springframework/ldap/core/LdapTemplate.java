@@ -198,12 +198,12 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
     /**
      * Set the default scope to be used in searches if not explicitly specified.
-     * Default is {@link SearchControls.SUBTREE_SCOPE}.
+     * Default is {@link javax.naming.directory.SearchControls#SUBTREE_SCOPE}.
      *
      * @param defaultSearchScope the default search scope to use in searches.
-     *                           One of {@link SearchControls.OBJECT_SCOPE},
-     *                           {@link SearchControls.ONELEVEL_SCOPE},
-     *                           or {@link SearchControls.SUBTREE_SCOPE}
+     *                           One of {@link SearchControls#OBJECT_SCOPE},
+     *                           {@link SearchControls#ONELEVEL_SCOPE},
+     *                           or {@link SearchControls#SUBTREE_SCOPE}
      * @since 2.0
      */
     public void setDefaultSearchScope(int defaultSearchScope) {

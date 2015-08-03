@@ -47,7 +47,7 @@ import java.util.NoSuchElementException;
  * The {@link LdifParser LdifParser} does ignores <i>changetype</i> LDIF entries as their usefulness in the 
  * context of an application has yet to be determined.
  * <p>
- * <b>Design</b><br/>
+ * <b>Design</b><br>
  * {@link LdifParser LdifParser} provides the main interface for operation but requires three supporting classes to 
  * enable operation:
  * <ul>
@@ -57,7 +57,7 @@ import java.util.NoSuchElementException;
  * </ul>
  * Together, these 4 classes read from the resource line by line and translate the data into objects for use.
  * <p>
- * <b>Usage</b><br/>
+ * <b>Usage</b><br>
  * {@link #getRecord() getRecord()} reads the next available record from the resource.  Lines are read and 
  * passed to the {@link SeparatorPolicy SeparatorPolicy} for interpretation.  The parser continues to read
  * lines and appends them to the buffer until it encounters the start of a new attribute or an end of record

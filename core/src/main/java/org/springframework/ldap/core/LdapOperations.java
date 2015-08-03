@@ -1311,7 +1311,7 @@ public interface LdapOperations {
 	 * {@link ContextSource#getContext(String, String)}, thus authenticating the
 	 * entry.
 	 * <p>
-	 * Example:<br/>
+	 * Example:<br>
 	 * 
 	 * <pre>
 	 * AndFilter filter = new AndFilter();
@@ -1337,7 +1337,7 @@ public interface LdapOperations {
 	 * {@link ContextSource#getContext(String, String)}, thus authenticating the
 	 * entry.
 	 * <p>
-	 * Example:<br/>
+	 * Example:<br>
 	 * 
 	 * <pre>
 	 * AndFilter filter = new AndFilter();
@@ -1627,8 +1627,6 @@ public interface LdapOperations {
      *
      * @param query the LDAP query specification.
      * @param callbackHandler the <code>NameClassPairCallbackHandler</code> to supply all found entries to.
-     * @return a <code>List</code> containing all entries received from the
-     * <code>ContextMapper</code>.
      *
      * @throws NamingException if any error occurs.
      * @since 2.0

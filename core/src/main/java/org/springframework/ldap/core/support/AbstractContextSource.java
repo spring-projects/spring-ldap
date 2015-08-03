@@ -47,7 +47,7 @@ import java.util.Map;
 /**
  * Abstract implementation of the {@link ContextSource} interface. By default,
  * returns an authenticated
- * <code>DirContext<code> implementation for both read-only and
+ * <code>DirContext</code> implementation for both read-only and
  * read-write operations. To have an anonymous environment created for read-only
  * operations, set the <code>anonymousReadOnly</code> property to
  * <code>true</code>.
@@ -58,7 +58,7 @@ import java.util.Map;
  * <p>
  * If an {@link AuthenticationSource} is set, this will be used for getting user
  * principal and password for each new connection, otherwise a default one will
- * be created using the specified <code>userDn<code> and <code>password</code>.
+ * be created using the specified <code>userDn</code> and <code>password</code>.
  * <p>
  * <b>Note:</b> When using implementations of this class outside of a Spring
  * Context it is necessary to call {@link #afterPropertiesSet()} when all

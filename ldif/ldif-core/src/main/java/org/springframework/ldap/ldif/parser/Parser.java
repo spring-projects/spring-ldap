@@ -59,7 +59,7 @@ public interface Parser {
 	/**
 	 * Resets the line read parser.
 	 * 
-	 * @throws Exception if a problem is encountered while trying to reset the resource.
+	 * @throws IOException if a problem is encountered while trying to reset the resource.
 	 */
 	void reset() throws IOException;
 	

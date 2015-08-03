@@ -27,10 +27,10 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * A Transaction Manager to manage LDAP and Hibernate 3 operations within the same
  * transaction. Note that even though the same logical transaction is used, this
  * is <b>not</b> a JTA XA transaction; no two-phase commit will be performed,
- * and thus commit and rollback may yield unexpected results.<br />
+ * and thus commit and rollback may yield unexpected results.<br>
  * This Transaction Manager is as good as it gets when you are using in LDAP in 
  * combination with a Hibernate 3 and unable to use XA transactions because LDAP
- * is not transactional by design to begin with.<br />
+ * is not transactional by design to begin with.<br>
  * 
  * Furthermore, this manager <b>does not support nested transactions</b>
  * @author Hans Westerbeek

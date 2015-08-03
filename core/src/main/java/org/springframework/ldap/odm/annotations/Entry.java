@@ -9,8 +9,7 @@ import java.lang.annotation.Target;
 /**
  * This annotation marks a Java class to be persisted in an LDAP directory.
  * 
- * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
- * 
+ * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

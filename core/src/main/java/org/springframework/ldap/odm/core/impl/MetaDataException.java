@@ -21,7 +21,7 @@ import org.springframework.ldap.odm.core.OdmException;
 /**
  * Thrown to indicate an error in the annotated meta-data.
  * 
- * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
+ * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  *
  */
 @SuppressWarnings("serial")

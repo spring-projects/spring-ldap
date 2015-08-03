@@ -42,7 +42,6 @@ import java.util.Set;
 /**
  * Utility class that helps with reading all attribute values from Active Directory using <em>Incremental Retrieval of
  * Multi-valued Properties</em>.
- * <p/>
  * <p>Example usage of this attribute mapper:
  * <pre>
  *     List values = DefaultIncrementalAttributeMapper.lookupAttributeValues(ldapTemplate, theDn, "oneAttribute");
@@ -58,13 +57,11 @@ import java.util.Set;
  *
  *      List values = incrementalAttributeMapper.getValues("someAttribute");
  * </pre>
- * </p>
  * <p>
  * <b>NOTE:</b> Instances of this class are highly stateful and must not be reused or shared between threads in any way.
- * </p>
  * <p>
  * <b>NOTE:</b> Instances of this class can only be used with <b>lookups</b>. No support is given for searches.
- * </p>
+ * <p>
  *
  * @author Marius Scurtescu
  * @author Mattias Hellborg Arthursson

@@ -37,12 +37,11 @@ import org.springframework.util.StringUtils;
  *   &lt;property name="filter" value="(&amp;amp;(objectClass=user)(!(objectClass=computer)))" /&gt;
  * &lt;/bean&gt;
  * </pre>
- * </p>
  * <p>
  * <b>Note 2</b>: There will be no validation to ensure that the supplied filter is
  * valid. Using this implementation to build filters from user input is strongly
  * discouraged.
- * </p>
+ * <p>
  * @author Justen Stepka
  * @author Mathieu Larchet
  */

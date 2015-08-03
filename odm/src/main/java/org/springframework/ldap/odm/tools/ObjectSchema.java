@@ -25,7 +25,7 @@ import java.util.Set;
  * <p>
  * It is public only to allow Freemarker access.
  * 
- * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
+ * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  */
 public final class ObjectSchema {
     private final Set<AttributeSchema> must = new HashSet<AttributeSchema>();

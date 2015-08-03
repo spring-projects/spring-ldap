@@ -77,19 +77,18 @@ import java.util.regex.Pattern;
  * Command line flags are as follows:
  * <p>
  * <ul>
- * <li><code>-c,--class &lt;class name></code>                      Name of the Java class to create. Mandatory.</li>
- * <li><code>-s,--syntaxmap &lt;map file></code>                    Configuration file of LDAP syntaxes to Java classes mappings. Optional.</li>
+ * <li><code>-c,--class &lt;class name&gt;</code>                      Name of the Java class to create. Mandatory.</li>
+ * <li><code>-s,--syntaxmap &lt;map file&gt;</code>                    Configuration file of LDAP syntaxes to Java classes mappings. Optional.</li>
  * <li><code>-h,--help</code>                                       Print this help message then exit.</li>
- * <li><code>-k,--package &lt;package name></code>                  Package to create the Java class in. Mandatory.</li>
- * <li><code>-l,--url &lt;ldap url></code>                          Ldap url of the directory service to bind to.  Defaults to <code>ldap://127.0.0.1:389</code>. Optional.</li>
- * <li><code>-o,--objectclasses &lt;LDAP object class lists></code> Comma separated list of LDAP object classes. Mandatory.</li>
- * <li><code>-u,--username &lt;dn></code>                           DN to bind with.  Defaults to "". Optional.</li>
- * <li><code>-p,--password &lt;password></code>                     Password to bind with. Defaults to "". Optional.</li>
- * <li><code>-t,--outputdir &lt;output directory></code>            Base output directory, defaults to ".". Optional.</li>
+ * <li><code>-k,--package &lt;package name&gt;</code>                  Package to create the Java class in. Mandatory.</li>
+ * <li><code>-l,--url &lt;ldap url&gt;</code>                          Ldap url of the directory service to bind to.  Defaults to <code>ldap://127.0.0.1:389</code>. Optional.</li>
+ * <li><code>-o,--objectclasses &lt;LDAP object class lists&gt;</code> Comma separated list of LDAP object classes. Mandatory.</li>
+ * <li><code>-u,--username &lt;dn&gt;</code>                           DN to bind with.  Defaults to "". Optional.</li>
+ * <li><code>-p,--password &lt;password&gt;</code>                     Password to bind with. Defaults to "". Optional.</li>
+ * <li><code>-t,--outputdir &lt;output directory&gt;</code>            Base output directory, defaults to ".". Optional.</li>
  * </ul>
  * 
- * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
- * 
+ * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  */
 public final class SchemaToJava {
     private static final Logger LOG = LoggerFactory.getLogger(SchemaToJava.class);

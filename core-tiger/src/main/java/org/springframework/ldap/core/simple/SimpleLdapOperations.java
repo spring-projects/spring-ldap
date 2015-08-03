@@ -279,7 +279,7 @@ public interface SimpleLdapOperations {
 	 * {@link ContextSource#getContext(String, String)}, thus authenticating the
 	 * entry.
 	 * <p>
-	 * Example:<br/>
+	 * Example:<br>
 	 * 
 	 * <pre>
 	 * AndFilter filter = new AndFilter();
@@ -304,7 +304,7 @@ public interface SimpleLdapOperations {
 	 * {@link ContextSource#getContext(String, String)}, thus authenticating the
 	 * entry.
 	 * <p>
-	 * Example:<br/>
+	 * Example:<br>
 	 * 
 	 * <pre>
 	 * AndFilter filter = new AndFilter();

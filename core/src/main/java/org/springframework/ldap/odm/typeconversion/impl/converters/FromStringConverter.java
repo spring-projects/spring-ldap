@@ -26,7 +26,7 @@ import java.lang.reflect.Constructor;
  * <p>
  * This should only be used as a fall-back converter, as a last attempt.
  * 
- * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
+ * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  */
 public final class FromStringConverter implements Converter {
 

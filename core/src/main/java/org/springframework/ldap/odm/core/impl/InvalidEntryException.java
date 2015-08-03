@@ -21,7 +21,7 @@ import org.springframework.ldap.odm.core.OdmException;
 /**
  * Thrown to indicate that an instance is not suitable for persisting in the LDAP directory.
  * 
- * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
+ * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  *
  */
 @SuppressWarnings("serial")

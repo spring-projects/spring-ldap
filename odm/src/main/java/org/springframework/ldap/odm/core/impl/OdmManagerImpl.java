@@ -36,7 +36,7 @@ import java.util.Set;
  * uses {@link org.springframework.ldap.odm.typeconversion.ConverterManager} to 
  * convert between Java and LDAP representations of attribute values.
  * 
- * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
+ * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  * @author Mattias Hellborg Arthursson
  * @deprecated This functionality is automatically available in LdapTemplate as of version 2.0
  */

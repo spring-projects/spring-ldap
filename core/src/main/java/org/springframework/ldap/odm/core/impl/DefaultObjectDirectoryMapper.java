@@ -54,7 +54,7 @@ import org.springframework.util.ReflectionUtils;
  * Default implementation of {@link ObjectDirectoryMapper}. Unless you need to explicitly configure
  * converters there is typically no reason to explicitly consider yourself with this class.
  *
- * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
+ * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  * @author Mattias Hellborg Arthursson
  * @since 2.0
  */

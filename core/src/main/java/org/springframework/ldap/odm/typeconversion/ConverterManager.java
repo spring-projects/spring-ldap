@@ -19,7 +19,7 @@ package org.springframework.ldap.odm.typeconversion;
 /**
  * A simple interface to be implemented to provide type conversion functionality.
  *
- * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
+ * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  */
 public interface ConverterManager {
     /**

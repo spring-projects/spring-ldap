@@ -36,7 +36,7 @@ import java.lang.reflect.Method;
  * needs the constructor arguments to be provided. It also handles most of the
  * work in the post processing of the response control, only delegating to a
  * template method for the actual value retrieval. In short, it makes it easy to
- * implement a custom DirContextProcessor.</p>
+ * implement a custom DirContextProcessor.<p>
  * 
  * <pre>
  * public class SortControlDirContextProcessor extends AbstractFallbackRequestAndResponseControlDirContextProcessor {

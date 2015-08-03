@@ -36,7 +36,7 @@ import java.util.Map;
  * <li>If this fails then throw a {@link org.springframework.ldap.odm.typeconversion.ConverterException}.</li>
  * </ol>
  * 
- * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
+ * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  */
 public final class ConverterManagerImpl implements ConverterManager {
     /**

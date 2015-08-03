@@ -41,7 +41,7 @@ import java.util.Collection;
  * <br>
  * <br>
  * Configuration:
- * <table border="1">
+ * <table border="1" summary="Configuration">
  * <tr>
  * <th align="left">Property</th> <th align="left">Description</th> <th
  * align="left">Required</th> <th align="left">Default</th>

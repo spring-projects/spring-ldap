@@ -84,14 +84,14 @@ TOKEN: { <#ESCAPEDSTART: <BACKSLASHCHAR> (<HASHCHAR> | <SPACE>)> }
 }
 
 /**
- * input -> dn
- * dn -> rdn ( ( "," | ";" ) rdn )*
- * rdn -> attributeTypeAndValue ( "+" attributeTypeAndValue )*
- * attributeTypeAndValue ->
- *    ( <SPACE> )* AttributeType SpacedEquals AttributeValue ( <SPACE> )*
- * SpacedEquals -> <SPACED_EQUALS>
- * AttributeType -> <LDAP_OID> | <ATTRIBUTE_TYPE_STRING>
- * AttributeValue -> <ATTRVALUE>
+ * input -&gt; dn
+ * dn -&gt; rdn ( ( "," | ";" ) rdn )*
+ * rdn -&gt; attributeTypeAndValue ( "+" attributeTypeAndValue )*
+ * attributeTypeAndValue -&gt;
+ *    ( &lt;SPACE&gt; )* AttributeType SpacedEquals AttributeValue ( &lt;SPACE&gt; )*
+ * SpacedEquals -&gt; &lt;SPACED_EQUALS&gt;
+ * AttributeType -&gt; &lt;LDAP_OID&gt; | &lt;ATTRIBUTE_TYPE_STRING&gt;
+ * AttributeValue -&gt; &lt;ATTRVALUE&gt;
  */
 void input() :
 {

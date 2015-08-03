@@ -30,19 +30,19 @@ import java.util.Set;
  * <p>
  * Typical configuration would appear as follows:
  * <pre>
- *   &lt;bean id="odmManager" class="org.springframework.ldap.odm.core.impl.OdmManagerImplFactoryBean">
- *       &lt;property name="converterManager" ref="converterManager" />
- *       &lt;property name="contextSource" ref="contextSource" />
- *       &lt;property name="managedClasses">
- *           &lt;set>
- *               &lt;value>org.myorg.myldapentries.Person&lt;/value>
- *               &lt;value>org.myorg.myldapentries.OrganizationalUnit&lt;/value>
- *           &lt;/set>
- *       &lt;/property>
- *   &lt;/bean>
+ *   &lt;bean id="odmManager" class="org.springframework.ldap.odm.core.impl.OdmManagerImplFactoryBean"&gt;
+ *       &lt;property name="converterManager" ref="converterManager" /&gt;
+ *       &lt;property name="contextSource" ref="contextSource" /&gt;
+ *       &lt;property name="managedClasses"&gt;
+ *           &lt;set&gt;
+ *               &lt;value&gt;org.myorg.myldapentries.Person&lt;/value&gt;
+ *               &lt;value&gt;org.myorg.myldapentries.OrganizationalUnit&lt;/value&gt;
+ *           &lt;/set&gt;
+ *       &lt;/property&gt;
+ *   &lt;/bean&gt;
  * </pre>
  * 
- * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
+ * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  * @deprecated This functionality is automatically available in LdapTemplate as of version 2.0
  */
 public final class OdmManagerImplFactoryBean implements FactoryBean {

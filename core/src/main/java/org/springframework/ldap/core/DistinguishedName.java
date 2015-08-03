@@ -60,7 +60,6 @@ import java.util.ListIterator;
  * <dt>Name[2]</dt>
  * <dd>uid=adam.skogman</dd>
  * </dl>
- * </p>
  * <p>
  * <code>Name</code> instances, and consequently <code>DistinguishedName</code>
  * instances are naturally mutable, which is useful when constructing
@@ -74,7 +73,6 @@ import java.util.ListIterator;
  * </pre>
  * 
  * will render <code>uid=adam.skogman,ou=People,dc=jayway,dc=se</code>.
- * </p>
  * <p>
  * <b>NOTE:</b> The fact that DistinguishedName instances are mutable needs to
  * be taken into careful account, as this means that they may be modified
@@ -83,7 +81,6 @@ import java.util.ListIterator;
  * as a constant, you should consider getting an immutable copy of the instance
  * using {@link #immutableDistinguishedName()} or
  * {@link #immutableDistinguishedName(String)}.
- * </p>
  * <p>
  * <b>NB:</b>As of version 1.3 the default toString representation of
  * DistinguishedName now defaults to a compact one, without spaces between the
