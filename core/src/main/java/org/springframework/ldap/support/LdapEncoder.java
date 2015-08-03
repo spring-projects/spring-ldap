@@ -17,12 +17,16 @@
 package org.springframework.ldap.support;
 
 import org.springframework.ldap.BadLdapGrammarException;
+import org.springframework.util.Assert;
+
+import javax.xml.bind.DatatypeConverter;
 
 /**
  * Helper class to encode and decode ldap names and values.
  * 
  * @author Adam Skogman
  * @author Mattias Hellborg Arthursson
+ * @author Thomas Darimont
  */
 public final class LdapEncoder {
 
@@ -31,6 +35,8 @@ public final class LdapEncoder {
 
     private static String[] FILTER_ESCAPE_TABLE = new String['\\' + 1];
 
+    private static final int RFC2849_MAX_BASE64_CHARS_PER_LINE = 76;
+    
     static {
 
         // Name encoding table -------------------------------------
@@ -228,5 +234,61 @@ public final class LdapEncoder {
 
         return decoded.toString();
 
+    }
+
+    /**
+     * Converts an array of bytes into a Base64 encoded string according to the rules for converting LDAP Attributes in RFC2849.
+     *
+     * @param val
+     * @return
+     *   A string containing a lexical representation of base64Binary wrapped around 76 characters.
+     * @throws IllegalArgumentException if <tt>val</tt> is null.
+     */
+    public static String printBase64Binary(byte[] val) {
+
+        Assert.notNull(val, "val must not be null!");
+
+        String encoded = DatatypeConverter.printBase64Binary(val);
+
+        int length = encoded.length();
+        StringBuilder sb = new StringBuilder(length + length / RFC2849_MAX_BASE64_CHARS_PER_LINE);
+
+        for (int i = 0, len = length; i < len; i++) {
+            sb.append(encoded.charAt(i));
+
+            if ((i + 1) % RFC2849_MAX_BASE64_CHARS_PER_LINE == 0) {
+                sb.append('\n');
+            }
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * Converts the Base64 encoded string argument into an array of bytes.
+     *
+     * @param val
+     * @return
+     *   An array of bytes represented by the string argument.
+     * @throws IllegalArgumentException if <tt>val</tt> is null or does not conform to lexical value space defined in XML Schema Part 2: Datatypes for xsd:base64Binary.
+     */
+    public static byte[] parseBase64Binary(String val) {
+
+        Assert.notNull(val, "val must not be null!");
+
+        int length = val.length();
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0, len = length; i < len; i++) {
+
+            char c = val.charAt(i);
+
+            if(c == '\n'){
+                continue;
+            }
+
+            sb.append(c);
+        }
+
+        return DatatypeConverter.parseBase64Binary(sb.toString());
     }
 }

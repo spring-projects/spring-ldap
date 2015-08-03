@@ -19,10 +19,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapAttribute;
 import org.springframework.ldap.ldif.InvalidAttributeFormatException;
+import org.springframework.ldap.support.LdapEncoder;
 import org.springframework.util.StringUtils;
-import sun.misc.BASE64Decoder;
 
 import javax.naming.directory.Attribute;
+import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -337,11 +338,11 @@ public class DefaultAttributeValidationPolicy implements AttributeValidationPoli
 			List<String> options = Arrays.asList((StringUtils.isEmpty(matcher.group(2)) ? new String[] {} : matcher.group(2).replaceFirst(";","").split(OPTION_SEPARATOR)));
 			
 			if (options.isEmpty()) {
-				return new LdapAttribute(id, new BASE64Decoder().decodeBuffer(value), ordered);
+				return new LdapAttribute(id, LdapEncoder.parseBase64Binary(value), ordered);
 			} else {
-				return new LdapAttribute(id, new BASE64Decoder().decodeBuffer(value), options, ordered);
+				return new LdapAttribute(id, LdapEncoder.parseBase64Binary(value), options, ordered);
 			}
-		} catch (IOException e) {
+		} catch (IllegalArgumentException e) {
 			throw new InvalidAttributeFormatException(e);
 		}
 	}
