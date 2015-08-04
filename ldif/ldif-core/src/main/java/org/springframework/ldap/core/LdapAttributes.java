@@ -17,8 +17,8 @@ package org.springframework.ldap.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ldap.support.LdapEncoder;
 import org.springframework.ldap.support.LdapUtils;
-import sun.misc.BASE64Encoder;
 
 import javax.naming.Name;
 import javax.naming.NamingEnumeration;
@@ -122,7 +122,7 @@ public class LdapAttributes extends BasicAttributes {
 			LdapName dn = getName();
 			
 			if (!dn.toString().matches(SAFE_INIT_CHAR + SAFE_CHAR + "*")) {
-				sb.append("dn:: " + new BASE64Encoder().encode(dn.toString().getBytes()) + "\n");
+				sb.append("dn:: " + LdapEncoder.printBase64Binary(dn.toString().getBytes()) + "\n");
 			} else {
 				sb.append("dn: " + getDN() + "\n");
 			}
@@ -140,8 +140,8 @@ public class LdapAttributes extends BasicAttributes {
 						sb.append(attribute.getID() + ": " + (String) value + "\n");
 					
                     } else if (value instanceof byte[]) {
-						sb.append(attribute.getID() + ":: " + new BASE64Encoder().encode((byte[]) value) + "\n");
-					
+						sb.append(attribute.getID() + ":: " + LdapEncoder.printBase64Binary((byte[]) value) + "\n");
+
                     } else if (value instanceof URI) {
 						sb.append(attribute.getID() + ":< " + (URI) value + "\n");
 					

@@ -24,8 +24,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.springframework.ldap.core.LdapAttribute;
 import org.springframework.ldap.ldif.support.DefaultAttributeValidationPolicy;
+import org.springframework.ldap.support.LdapEncoder;
 import org.springframework.util.StringUtils;
-import sun.misc.BASE64Decoder;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -151,7 +151,7 @@ public class DefaultAttributeValidationPolicyTest {
 				break;
 				
 			case BASE64:
-				byte[] bytes = new BASE64Decoder().decodeBuffer(value);
+				byte[] bytes = LdapEncoder.parseBase64Binary(value);
 				assertTrue("Value is not a byte[].", attribute.get() instanceof byte[]);
 				assertArrayEquals("Values do not match: ", bytes, (byte[]) attribute.get());
 				break;

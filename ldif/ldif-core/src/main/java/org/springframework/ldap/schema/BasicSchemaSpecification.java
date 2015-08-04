@@ -1,7 +1,7 @@
 package org.springframework.ldap.schema;
 
 import org.springframework.ldap.core.LdapAttributes;
-import sun.misc.BASE64Encoder;
+import org.springframework.ldap.support.LdapEncoder;
 
 import javax.naming.NamingException;
 import javax.naming.ldap.LdapName;
@@ -49,9 +49,8 @@ public class BasicSchemaSpecification implements Specification<LdapAttributes> {
 								return true;
 							}
 						} else if(object instanceof byte[]) {
-							BASE64Encoder encoder = new BASE64Encoder();
-							String rdnValue = encoder.encode(((String)rdn.getValue()).getBytes());
-							String attributeValue = encoder.encode((byte[]) object);
+							String rdnValue = LdapEncoder.printBase64Binary(((String)rdn.getValue()).getBytes());
+							String attributeValue = LdapEncoder.printBase64Binary((byte[]) object);
 							if (rdnValue.equals(attributeValue)) return true;
 						} 
 					}
