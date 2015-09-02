@@ -29,7 +29,7 @@ dependencies {
                 project(":spring-ldap-core-tiger")
 
     compile "com.mysema.querydsl:querydsl-apt:$queryDslVersion",
-            "org.springframework.data:spring-data-commons:$springDataVersion"
+            "org.springframework.data:spring-data-commons:$springDataSpring3Version"
 
     compile("org.springframework.security:spring-security-core:$springSecurityVersion") {
         exclude group: "org.springframework", module: "spring-expression"
