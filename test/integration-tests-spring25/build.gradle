@@ -1,4 +1,5 @@
 repositories {
+    mavenCentral()
     maven { url "http://download.java.net/maven/2/" }
 }
 apply from: JAVA_SCRIPT
