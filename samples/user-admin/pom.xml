@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.springframework.ldap</groupId>
   <artifactId>spring-ldap-user-admin-sample</artifactId>
-  <version>2.0.4.CI-SNAPSHOT</version>
+  <version>2.0.4.RELEASE</version>
   <packaging>war</packaging>
   <name>spring-ldap-user-admin-sample</name>
   <description>spring-ldap-user-admin-sample</description>
@@ -65,12 +65,6 @@
     <developerConnection>scm:git:git://github.com/SpringSource/spring-ldap</developerConnection>
     <url>https://github.com/SpringSource/spring-ldap</url>
   </scm>
-  <repositories>
-    <repository>
-      <id>spring-snasphot</id>
-      <url>http://repo.springsource.org/libs-snapshot</url>
-    </repository>
-  </repositories>
   <dependencies>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
@@ -93,13 +87,13 @@
     <dependency>
       <groupId>org.springframework.data</groupId>
       <artifactId>spring-data-commons</artifactId>
-      <version>1.10.0.RELEASE</version>
+      <version>1.11.0.RELEASE</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.ldap</groupId>
       <artifactId>spring-ldap-test</artifactId>
-      <version>2.0.4.CI-SNAPSHOT</version>
+      <version>2.0.4.RELEASE</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
