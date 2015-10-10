@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,8 @@ import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.pool.PoolExhaustedAction;
 import org.springframework.ldap.pool.factory.PoolingContextSource;
 import org.springframework.ldap.pool.validation.DefaultDirContextValidator;
+import org.springframework.ldap.pool2.factory.PoolConfig;
+import org.springframework.ldap.pool2.factory.PooledContextSource;
 import org.springframework.ldap.transaction.compensating.manager.TransactionAwareContextSourceProxy;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
@@ -72,6 +74,19 @@ public class ContextSourceParser implements BeanDefinitionParser {
     private static final String ATT_VALIDATION_QUERY_FILTER = "validation-query-filter";
     private static final String ATT_VALIDATION_QUERY_SEARCH_CONTROLS_REF = "validation-query-search-controls-ref";
     private static final String ATT_NON_TRANSIENT_EXCEPTIONS = "non-transient-exceptions";
+    private static final String ATT_MAX_IDLE_PER_KEY = "max-idle-per-key";
+    private static final String ATT_MIN_IDLE_PER_KEY = "min-idle-per-key";
+    private static final String ATT_MAX_TOTAL_PER_KEY = "max-total-per-key";
+    private static final String ATT_EVICTION_POLICY_CLASS = "eviction-policy-class";
+    private static final String ATT_FAIRNESS = "fairness";
+    private static final String ATT_JMX_ENABLE = "jmx-enable";
+    private static final String ATT_JMX_NAME_BASE = "jmx-name-base";
+    private static final String ATT_JMX_NAME_PREFIX = "jmx-name-prefix";
+    private static final String ATT_LIFO = "lifo";
+    private static final String ATT_BLOCK_WHEN_EXHAUSTED = "block-when-exhausted";
+    private static final String ATT_TEST_ON_CREATE = "test-on-create";
+    private static final String ATT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS = "soft-min-evictable-idle-time-millis";
+
 
     private static final String ATT_USERNAME = "username";
     static final String DEFAULT_ID = "contextSource";
@@ -83,6 +98,19 @@ public class ContextSourceParser implements BeanDefinitionParser {
     private static final int DEFAULT_EVICTION_RUN_MILLIS = -1;
     private static final int DEFAULT_TESTS_PER_EVICTION_RUN = 3;
     private static final int DEFAULT_EVICTABLE_MILLIS = 1000 * 60 * 30;
+    private static final int DEFAULT_MAX_TOTAL_PER_KEY = 8;
+    private static final int DEFAULT_MAX_IDLE_PER_KEY = 8;
+    private static final int DEFAULT_MIN_IDLE_PER_KEY = 0;
+    private static final String DEFAULT_EVICTION_POLICY_CLASS_NAME =
+            "org.apache.commons.pool2.impl.DefaultEvictionPolicy";
+    private static final boolean DEFAULT_FAIRNESS = false;
+    private static final boolean DEFAULT_JMX_ENABLE = true;
+    private static final String DEFAULT_JMX_NAME_BASE = null;
+    private static final String DEFAULT_JMX_NAME_PREFIX = "ldap-pool";
+    private static final boolean DEFAULT_LIFO = true;
+    private static final int DEFAULT_MAX_WAIT_MILLIS = -1;
+    private static final boolean DEFAULT_BLOCK_WHEN_EXHAUSTED = true;
+    private static final int DEFAULT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS = -1;
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
@@ -150,7 +178,12 @@ public class ContextSourceParser implements BeanDefinitionParser {
             boolean nativePooling) {
 
         Element poolingElement = DomUtils.getChildElementByTagName(element, Elements.POOLING);
-        if(poolingElement == null) {
+        Element pooling2Element = DomUtils.getChildElementByTagName(element, Elements.POOLING2);
+
+        if (pooling2Element != null && poolingElement != null) {
+            throw new IllegalArgumentException(
+                    String.format("%s cannot be enabled together with %s.", Elements.POOLING2, Elements.POOLING));
+        } else if (poolingElement == null && pooling2Element == null) {
             return targetContextSourceDefinition;
         }
 
@@ -159,26 +192,44 @@ public class ContextSourceParser implements BeanDefinitionParser {
                     String.format("%s cannot be enabled together with %s", ATT_NATIVE_POOLING, Elements.POOLING));
         }
 
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(PoolingContextSource.class);
-        builder.addPropertyValue("contextSource", targetContextSourceDefinition);
+        if (pooling2Element != null) {
+            BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(PooledContextSource.class);
+            builder.addPropertyValue("contextSource", targetContextSourceDefinition);
 
-        builder.addPropertyValue("maxActive", getInt(poolingElement, ATT_MAX_ACTIVE, DEFAULT_MAX_ACTIVE));
-        builder.addPropertyValue("maxTotal", getInt(poolingElement, ATT_MAX_TOTAL, DEFAULT_MAX_TOTAL));
-        builder.addPropertyValue("maxIdle", getInt(poolingElement, ATT_MAX_IDLE, DEFAULT_MAX_IDLE));
-        builder.addPropertyValue("minIdle", getInt(poolingElement, ATT_MIN_IDLE, DEFAULT_MIN_IDLE));
-        builder.addPropertyValue("maxWait", getInt(poolingElement, ATT_MAX_WAIT, DEFAULT_MAX_WAIT));
-        String whenExhausted = getString(poolingElement, ATT_WHEN_EXHAUSTED, PoolExhaustedAction.BLOCK.name());
-        builder.addPropertyValue("whenExhaustedAction", PoolExhaustedAction.valueOf(whenExhausted).getValue());
+            populatePoolConfigProperties(builder, pooling2Element);
 
-        boolean testOnBorrow = getBoolean(poolingElement, ATT_TEST_ON_BORROW, false);
-        boolean testOnReturn = getBoolean(poolingElement, ATT_TEST_ON_RETURN, false);
-        boolean testWhileIdle = getBoolean(poolingElement, ATT_TEST_WHILE_IDLE, false);
+            boolean testOnBorrow = getBoolean(pooling2Element, ATT_TEST_ON_BORROW, false);
+            boolean testOnReturn = getBoolean(pooling2Element, ATT_TEST_ON_RETURN, false);
+            boolean testWhileIdle = getBoolean(pooling2Element, ATT_TEST_WHILE_IDLE, false);
+            boolean testOnCreate = getBoolean(pooling2Element, ATT_TEST_ON_CREATE, false);
 
-        if(testOnBorrow || testOnReturn || testWhileIdle) {
-            populatePoolValidationProperties(builder, poolingElement, testOnBorrow, testOnReturn, testWhileIdle);
+            if (testOnBorrow || testOnCreate || testWhileIdle || testOnReturn) {
+                populatePoolValidationProperties(builder, pooling2Element);
+            }
+
+            return builder.getBeanDefinition();
+        } else {
+            BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(PoolingContextSource.class);
+            builder.addPropertyValue("contextSource", targetContextSourceDefinition);
+
+            builder.addPropertyValue("maxActive", getInt(poolingElement, ATT_MAX_ACTIVE, DEFAULT_MAX_ACTIVE));
+            builder.addPropertyValue("maxTotal", getInt(poolingElement, ATT_MAX_TOTAL, DEFAULT_MAX_TOTAL));
+            builder.addPropertyValue("maxIdle", getInt(poolingElement, ATT_MAX_IDLE, DEFAULT_MAX_IDLE));
+            builder.addPropertyValue("minIdle", getInt(poolingElement, ATT_MIN_IDLE, DEFAULT_MIN_IDLE));
+            builder.addPropertyValue("maxWait", getInt(poolingElement, ATT_MAX_WAIT, DEFAULT_MAX_WAIT));
+            String whenExhausted = getString(poolingElement, ATT_WHEN_EXHAUSTED, PoolExhaustedAction.BLOCK.name());
+            builder.addPropertyValue("whenExhaustedAction", PoolExhaustedAction.valueOf(whenExhausted).getValue());
+
+            boolean testOnBorrow = getBoolean(poolingElement, ATT_TEST_ON_BORROW, false);
+            boolean testOnReturn = getBoolean(poolingElement, ATT_TEST_ON_RETURN, false);
+            boolean testWhileIdle = getBoolean(poolingElement, ATT_TEST_WHILE_IDLE, false);
+
+            if (testOnBorrow || testOnReturn || testWhileIdle) {
+                populatePoolValidationProperties(builder, poolingElement, testOnBorrow, testOnReturn, testWhileIdle);
+            }
+
+            return builder.getBeanDefinition();
         }
-
-        return builder.getBeanDefinition();
     }
 
     private void populatePoolValidationProperties(BeanDefinitionBuilder builder, Element element,
@@ -214,6 +265,63 @@ public class ContextSourceParser implements BeanDefinitionParser {
         }
 
         builder.addPropertyValue("nonTransientExceptions", nonTransientExceptionClasses);
+    }
+
+
+    private void populatePoolValidationProperties(BeanDefinitionBuilder builder, Element element) {
+
+        BeanDefinitionBuilder validatorBuilder = BeanDefinitionBuilder.rootBeanDefinition(
+                org.springframework.ldap.pool2.validation.DefaultDirContextValidator.class);
+        validatorBuilder.addPropertyValue("base", getString(element, ATT_VALIDATION_QUERY_BASE, ""));
+        validatorBuilder.addPropertyValue("filter",
+                getString(element, ATT_VALIDATION_QUERY_FILTER,
+                        org.springframework.ldap.pool2.validation.DefaultDirContextValidator.DEFAULT_FILTER));
+        String searchControlsRef = element.getAttribute(ATT_VALIDATION_QUERY_SEARCH_CONTROLS_REF);
+        if(StringUtils.hasText(searchControlsRef)) {
+            validatorBuilder.addPropertyReference("searchControls", searchControlsRef);
+        }
+        builder.addPropertyValue("dirContextValidator", validatorBuilder.getBeanDefinition());
+
+        String nonTransientExceptions = getString(element, ATT_NON_TRANSIENT_EXCEPTIONS, CommunicationException.class.getName());
+        String[] strings = StringUtils.commaDelimitedListToStringArray(nonTransientExceptions);
+        Set<Class<?>> nonTransientExceptionClasses = new HashSet<Class<?>>();
+        for (String className : strings) {
+            try {
+                nonTransientExceptionClasses.add(ClassUtils.getDefaultClassLoader().loadClass(className));
+            } catch (ClassNotFoundException e) {
+                throw new IllegalArgumentException(String.format("%s is not a valid class name", className), e);
+            }
+        }
+
+        builder.addPropertyValue("nonTransientExceptions", nonTransientExceptionClasses);
+    }
+
+    private void populatePoolConfigProperties(BeanDefinitionBuilder builder, Element element) {
+        BeanDefinitionBuilder configBuilder = BeanDefinitionBuilder
+                .rootBeanDefinition(PoolConfig.class);
+
+        configBuilder.addPropertyValue("maxTotal", getInt(element, ATT_MAX_TOTAL, DEFAULT_MAX_TOTAL));
+        configBuilder.addPropertyValue("maxTotalPerKey", getInt(element, ATT_MAX_TOTAL_PER_KEY, DEFAULT_MAX_TOTAL_PER_KEY));
+        configBuilder.addPropertyValue("maxIdlePerKey", getInt(element, ATT_MAX_IDLE_PER_KEY, DEFAULT_MAX_IDLE_PER_KEY));
+        configBuilder.addPropertyValue("minIdlePerKey", getInt(element, ATT_MIN_IDLE_PER_KEY, DEFAULT_MIN_IDLE_PER_KEY));
+        configBuilder.addPropertyValue("evictionPolicyClassName", getString(element, ATT_EVICTION_POLICY_CLASS, DEFAULT_EVICTION_POLICY_CLASS_NAME));
+        configBuilder.addPropertyValue("fairness", getBoolean(element, ATT_FAIRNESS, DEFAULT_FAIRNESS));
+        configBuilder.addPropertyValue("jmxEnabled", getBoolean(element, ATT_JMX_ENABLE, DEFAULT_JMX_ENABLE));
+        configBuilder.addPropertyValue("jmxNameBase", getString(element, ATT_JMX_NAME_BASE, DEFAULT_JMX_NAME_BASE));
+        configBuilder.addPropertyValue("jmxNamePrefix", getString(element, ATT_JMX_NAME_PREFIX, DEFAULT_JMX_NAME_PREFIX));
+        configBuilder.addPropertyValue("lifo", getBoolean(element, ATT_LIFO, DEFAULT_LIFO));
+        configBuilder.addPropertyValue("maxWaitMillis", getInt(element, ATT_MAX_WAIT, DEFAULT_MAX_WAIT_MILLIS));
+        configBuilder.addPropertyValue("blockWhenExhausted", getBoolean(element, ATT_BLOCK_WHEN_EXHAUSTED, DEFAULT_BLOCK_WHEN_EXHAUSTED));
+        configBuilder.addPropertyValue("testOnBorrow", getBoolean(element, ATT_TEST_ON_BORROW, false));
+        configBuilder.addPropertyValue("testOnCreate", getBoolean(element, ATT_TEST_ON_CREATE, false));
+        configBuilder.addPropertyValue("testOnReturn", getBoolean(element, ATT_TEST_ON_RETURN, false));
+        configBuilder.addPropertyValue("testWhileIdle", getBoolean(element, ATT_TEST_WHILE_IDLE, false));
+        configBuilder.addPropertyValue("timeBetweenEvictionRunsMillis", getInt(element, ATT_EVICTION_RUN_MILLIS, DEFAULT_EVICTION_RUN_MILLIS));
+        configBuilder.addPropertyValue("numTestsPerEvictionRun", getInt(element, ATT_TESTS_PER_EVICTION_RUN, DEFAULT_TESTS_PER_EVICTION_RUN));
+        configBuilder.addPropertyValue("minEvictableIdleTimeMillis", getInt(element, ATT_EVICTABLE_TIME_MILLIS, DEFAULT_EVICTABLE_MILLIS));
+        configBuilder.addPropertyValue("softMinEvictableIdleTimeMillis", getInt(element, ATT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS, DEFAULT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS));
+
+        builder.addConstructorArgValue(configBuilder.getBeanDefinition());
     }
 
     static class UrlsFactory {

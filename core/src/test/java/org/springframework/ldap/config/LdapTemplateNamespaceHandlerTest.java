@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package org.springframework.ldap.config;
 
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.junit.Test;
 import org.springframework.beans.BeansException;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -27,6 +28,7 @@ import org.springframework.ldap.core.support.DirContextAuthenticationStrategy;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.pool.factory.PoolingContextSource;
 import org.springframework.ldap.pool.validation.DefaultDirContextValidator;
+import org.springframework.ldap.pool2.factory.PooledContextSource;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.transaction.compensating.TempEntryRenamingStrategy;
 import org.springframework.ldap.transaction.compensating.manager.ContextSourceAndDataSourceTransactionManager;
@@ -36,9 +38,12 @@ import org.springframework.ldap.transaction.compensating.support.DefaultTempEntr
 import org.springframework.ldap.transaction.compensating.support.DifferentSubtreeTempEntryRenamingStrategy;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import javax.naming.CannotProceedException;
 import javax.naming.CommunicationException;
 import javax.naming.directory.SearchControls;
+import java.lang.management.ManagementFactory;
 import java.util.Set;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -124,6 +129,7 @@ public class LdapTemplateNamespaceHandlerTest {
         assertSame(authenticationStrategy, getInternalState(contextSource, "authenticationStrategy"));
         assertEquals(baseEnv, getInternalState(contextSource, "baseEnv"));
     }
+
     @Test
     public void verifyParseWithCustomValues() {
         ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/ldap-namespace-config-values.xml");
@@ -359,5 +365,133 @@ public class LdapTemplateNamespaceHandlerTest {
         DummyLdapRepository repository = ctx.getBean(DummyLdapRepository.class);
 
         assertNotNull(repository);
+    }
+
+    @Test
+    public void verifyParsePooling2Defaults() {
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/ldap-namespace-config-pooling2-defaults.xml");
+
+        ContextSource outerContextSource = ctx.getBean(ContextSource.class);
+        assertNotNull(outerContextSource);
+        assertTrue(outerContextSource instanceof TransactionAwareContextSourceProxy);
+
+        ContextSource pooledContextSource = ((TransactionAwareContextSourceProxy) outerContextSource).getTarget();
+        assertNotNull(pooledContextSource);
+        assertTrue(pooledContextSource instanceof PooledContextSource);
+        assertNotNull(getInternalState(pooledContextSource, "poolConfig"));
+
+        Object objectFactory = getInternalState(pooledContextSource, "dirContextPooledObjectFactory");
+        assertNotNull(getInternalState(objectFactory, "contextSource"));
+        assertNull(getInternalState(objectFactory, "dirContextValidator"));
+        Set<Class<? extends Throwable>> nonTransientExceptions =
+                (Set<Class<? extends Throwable>>) getInternalState(objectFactory, "nonTransientExceptions");
+        assertEquals(1, nonTransientExceptions.size());
+        assertTrue(nonTransientExceptions.contains(CommunicationException.class));
+
+        org.apache.commons.pool2.impl.GenericKeyedObjectPool objectPool =
+                (org.apache.commons.pool2.impl.GenericKeyedObjectPool) getInternalState(pooledContextSource, "keyedObjectPool");
+        assertEquals(8, objectPool.getMaxIdlePerKey());
+        assertEquals(-1, objectPool.getMaxTotal());
+        assertEquals(8, objectPool.getMaxTotalPerKey());
+        assertEquals(0, objectPool.getMinIdlePerKey());
+        assertEquals(true, objectPool.getBlockWhenExhausted());
+        assertEquals(GenericKeyedObjectPoolConfig.DEFAULT_EVICTION_POLICY_CLASS_NAME, objectPool.getEvictionPolicyClassName());
+        assertEquals(false, objectPool.getFairness());
+
+        // ensures the pool is registered
+        ObjectName oname = objectPool.getJmxName();
+        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        Set<ObjectName> result = mbs.queryNames(oname, null);
+        assertEquals(1, result.size());
+
+        assertEquals(true, objectPool.getLifo());
+        assertEquals(-1L, objectPool.getMaxWaitMillis());
+        assertEquals(1000L*60L*30L, objectPool.getMinEvictableIdleTimeMillis());
+        assertEquals(3, objectPool.getNumTestsPerEvictionRun());
+        assertEquals(-1L, objectPool.getSoftMinEvictableIdleTimeMillis());
+        assertEquals(-1L, objectPool.getTimeBetweenEvictionRunsMillis());
+        assertEquals(false, objectPool.getTestOnBorrow());
+        assertEquals(false, objectPool.getTestOnCreate());
+        assertEquals(false, objectPool.getTestOnReturn());
+        assertEquals(false, objectPool.getTestWhileIdle());
+    }
+
+    @Test
+    public void verifyParsePool2SizeSet() {
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/ldap-namespace-config-pool2-configured-poolsize.xml");
+
+        ContextSource outerContextSource = ctx.getBean(ContextSource.class);
+        assertNotNull(outerContextSource);
+
+        ContextSource pooledContextSource = ((TransactionAwareContextSourceProxy) outerContextSource).getTarget();
+        assertNotNull(pooledContextSource);
+
+        org.apache.commons.pool2.impl.GenericKeyedObjectPool objectPool =
+                (org.apache.commons.pool2.impl.GenericKeyedObjectPool) getInternalState(pooledContextSource, "keyedObjectPool");
+        assertEquals(12, objectPool.getMaxTotal());
+        assertEquals(20, objectPool.getMaxIdlePerKey());
+        assertEquals(10, objectPool.getMaxTotalPerKey());
+        assertEquals(13, objectPool.getMaxWaitMillis());
+        assertEquals(14, objectPool.getMinIdlePerKey());
+        assertEquals(true, objectPool.getBlockWhenExhausted());
+        assertEquals("org.springframework.ldap.pool2.DummyEvictionPolicy", objectPool.getEvictionPolicyClassName());
+        assertEquals(true, objectPool.getFairness());
+        assertEquals(false, objectPool.getLifo());
+
+        // ensures the pool is registered
+        ObjectName oname = objectPool.getJmxName();
+        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        Set<ObjectName> result = mbs.queryNames(oname, null);
+        assertEquals(1, result.size());
+        assertEquals("org.springframework.ldap.pool2:type=ldap-pool,name=test-pool", oname.toString());
+    }
+
+    @Test
+    public void verifyParsePool2ValidationSet() {
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/ldap-namespace-config-pool2-test-specified.xml");
+
+        ContextSource outerContextSource = ctx.getBean(ContextSource.class);
+        assertNotNull(outerContextSource);
+
+        ContextSource pooledContextSource = ((TransactionAwareContextSourceProxy) outerContextSource).getTarget();
+        assertNotNull(pooledContextSource);
+
+        org.apache.commons.pool2.impl.GenericKeyedObjectPool objectPool =
+                (org.apache.commons.pool2.impl.GenericKeyedObjectPool) getInternalState(pooledContextSource, "keyedObjectPool");
+        assertEquals(123, objectPool.getMinEvictableIdleTimeMillis());
+        assertEquals(321, objectPool.getTimeBetweenEvictionRunsMillis());
+        assertEquals(22, objectPool.getNumTestsPerEvictionRun());
+        assertEquals(12, objectPool.getSoftMinEvictableIdleTimeMillis());
+
+        assertEquals(true, objectPool.getTestOnBorrow());
+        assertEquals(true, objectPool.getTestOnReturn());
+        assertEquals(true, objectPool.getTestOnCreate());
+        assertEquals(true, objectPool.getTestWhileIdle());
+
+        Object objectFactory = getInternalState(pooledContextSource, "dirContextPooledObjectFactory");
+        org.springframework.ldap.pool2.validation.DefaultDirContextValidator validator =
+                (org.springframework.ldap.pool2.validation.DefaultDirContextValidator) getInternalState(objectFactory, "dirContextValidator");
+        assertEquals("ou=test", validator.getBase());
+        assertEquals("objectclass=person", validator.getFilter());
+
+        SearchControls searchControls = ctx.getBean(SearchControls.class);
+        assertEquals("objectclass=person", validator.getFilter());
+        assertSame(searchControls, validator.getSearchControls());
+
+        Set<Class<? extends Throwable>> nonTransientExceptions =
+                (Set<Class<? extends Throwable>>) getInternalState(objectFactory, "nonTransientExceptions");
+        assertEquals(2, nonTransientExceptions.size());
+        assertTrue(nonTransientExceptions.contains(CommunicationException.class));
+        assertTrue(nonTransientExceptions.contains(CannotProceedException.class));
+    }
+
+    @Test(expected = BeansException.class)
+    public void verifyParseWithPool2AndNativePoolingWillFail() {
+        new ClassPathXmlApplicationContext("/ldap-namespace-config-pool2-with-native.xml");
+    }
+
+    @Test(expected = BeansException.class)
+    public void verifyParseWithPool1AndPool2WillFail() {
+        new ClassPathXmlApplicationContext("/ldap-namespace-config-pool2-with-pool1.xml");
     }
 }

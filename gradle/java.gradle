@@ -20,6 +20,7 @@ ext.mockitoVersion = '1.10.19'
 ext.queryDslVersion = '3.6.3'
 ext.slf4jVersion = '1.7.12'
 ext.powerMockVersion = '1.6.2'
+ext.commonsPool2Version = '2.4.2'
 
 ext.powerMockDependencies = [
     "org.powermock:powermock-core:$powerMockVersion",
