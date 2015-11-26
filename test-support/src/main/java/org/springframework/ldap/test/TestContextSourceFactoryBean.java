@@ -35,7 +35,7 @@ import javax.naming.directory.SearchResult;
 import java.util.List;
 
 /**
- * @author Mattias Hellborg Arthursson Zilic
+ * @author Mattias Hellborg Arthursson, Franjo Zilic
  */
 public class TestContextSourceFactoryBean extends AbstractFactoryBean {
 
