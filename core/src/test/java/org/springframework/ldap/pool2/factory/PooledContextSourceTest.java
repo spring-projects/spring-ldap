@@ -18,7 +18,7 @@ package org.springframework.ldap.pool2.factory;
 import org.junit.Test;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.pool.validation.DirContextValidator;
+import org.springframework.ldap.pool2.validation.DirContextValidator;
 import org.springframework.ldap.pool2.AbstractPoolTestCase;
 
 import javax.naming.directory.DirContext;
@@ -198,40 +198,40 @@ public class PooledContextSourceTest extends AbstractPoolTestCase {
 
         when(contextSourceMock.getReadOnlyContext()).thenReturn(ldapContextMock, secondLdapContextMock);
 
-        final PooledContextSource PooledContextSource = new PooledContextSource(null);
-        PooledContextSource.setContextSource(contextSourceMock);
+        final PooledContextSource pooledContextSource = new PooledContextSource(null);
+        pooledContextSource.setContextSource(contextSourceMock);
 
         //Get a context
-        final DirContext readOnlyContext1 = PooledContextSource.getReadOnlyContext();
+        final DirContext readOnlyContext1 = pooledContextSource.getReadOnlyContext();
         assertEquals(readOnlyContext1, ldapContextMock); //Order reversed because the 'wrapper' has the needed equals logic
-        assertEquals(1, PooledContextSource.getNumActive());
-        assertEquals(0, PooledContextSource.getNumIdle());
+        assertEquals(1, pooledContextSource.getNumActive());
+        assertEquals(0, pooledContextSource.getNumIdle());
         
         //Close the context
         readOnlyContext1.close();
-        assertEquals(0, PooledContextSource.getNumActive());
-        assertEquals(1, PooledContextSource.getNumIdle());
+        assertEquals(0, pooledContextSource.getNumActive());
+        assertEquals(1, pooledContextSource.getNumIdle());
         
         //Get the context again
-        final DirContext readOnlyContext2 = PooledContextSource.getReadOnlyContext();
+        final DirContext readOnlyContext2 = pooledContextSource.getReadOnlyContext();
         assertEquals(readOnlyContext2, ldapContextMock); //Order reversed because the 'wrapper' has the needed equals logic
-        assertEquals(1, PooledContextSource.getNumActive());
-        assertEquals(0, PooledContextSource.getNumIdle());
+        assertEquals(1, pooledContextSource.getNumActive());
+        assertEquals(0, pooledContextSource.getNumIdle());
         
         //Get a new context
-        final DirContext readOnlyContext3 = PooledContextSource.getReadOnlyContext();
+        final DirContext readOnlyContext3 = pooledContextSource.getReadOnlyContext();
         assertEquals(readOnlyContext3, secondLdapContextMock); //Order reversed because the 'wrapper' has the needed equals logic
-        assertEquals(2, PooledContextSource.getNumActive());
-        assertEquals(0, PooledContextSource.getNumIdle());
+        assertEquals(2, pooledContextSource.getNumActive());
+        assertEquals(0, pooledContextSource.getNumIdle());
 
         //Close context
         readOnlyContext2.close();
-        assertEquals(1, PooledContextSource.getNumActive());
-        assertEquals(1, PooledContextSource.getNumIdle());
+        assertEquals(1, pooledContextSource.getNumActive());
+        assertEquals(1, pooledContextSource.getNumIdle());
         
         //Close context
         readOnlyContext3.close();
-        assertEquals(0, PooledContextSource.getNumActive());
-        assertEquals(2, PooledContextSource.getNumIdle());
+        assertEquals(0, pooledContextSource.getNumActive());
+        assertEquals(2, pooledContextSource.getNumIdle());
     }
 }

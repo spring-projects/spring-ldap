@@ -17,7 +17,7 @@
 package org.springframework.ldap.pool2.factory;
 
 import org.springframework.dao.DataAccessResourceFailureException;
-import org.springframework.ldap.pool.DirContextType;
+import org.springframework.ldap.pool2.DirContextType;
 import org.springframework.ldap.pool2.DelegatingDirContext;
 import org.springframework.ldap.pool2.MutableDelegatingLdapContext;
 

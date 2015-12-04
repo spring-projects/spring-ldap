@@ -469,7 +469,8 @@ public class LdapTemplateNamespaceHandlerTest {
         assertEquals(true, objectPool.getTestWhileIdle());
 
         Object objectFactory = getInternalState(pooledContextSource, "dirContextPooledObjectFactory");
-        DefaultDirContextValidator validator = (DefaultDirContextValidator) getInternalState(objectFactory, "dirContextValidator");
+        org.springframework.ldap.pool2.validation.DefaultDirContextValidator validator =
+                (org.springframework.ldap.pool2.validation.DefaultDirContextValidator) getInternalState(objectFactory, "dirContextValidator");
         assertEquals("ou=test", validator.getBase());
         assertEquals("objectclass=person", validator.getFilter());
 

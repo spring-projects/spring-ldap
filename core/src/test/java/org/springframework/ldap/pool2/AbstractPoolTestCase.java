@@ -18,7 +18,7 @@ package org.springframework.ldap.pool2;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.junit.Before;
 import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.pool.validation.DirContextValidator;
+import org.springframework.ldap.pool2.validation.DirContextValidator;
 
 import javax.naming.Context;
 import javax.naming.directory.DirContext;

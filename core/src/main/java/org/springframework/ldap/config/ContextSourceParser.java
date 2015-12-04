@@ -182,7 +182,7 @@ public class ContextSourceParser implements BeanDefinitionParser {
 
         if (pooling2Element != null && poolingElement != null) {
             throw new IllegalArgumentException(
-                    String.format("%s cannot be enabled together with %s. Use anyone.", Elements.POOLING2, Elements.POOLING));
+                    String.format("%s cannot be enabled together with %s.", Elements.POOLING2, Elements.POOLING));
         } else if (poolingElement == null && pooling2Element == null) {
             return targetContextSourceDefinition;
         }
@@ -270,10 +270,12 @@ public class ContextSourceParser implements BeanDefinitionParser {
 
     private void populatePoolValidationProperties(BeanDefinitionBuilder builder, Element element) {
 
-        BeanDefinitionBuilder validatorBuilder = BeanDefinitionBuilder.rootBeanDefinition(DefaultDirContextValidator.class);
+        BeanDefinitionBuilder validatorBuilder = BeanDefinitionBuilder.rootBeanDefinition(
+                org.springframework.ldap.pool2.validation.DefaultDirContextValidator.class);
         validatorBuilder.addPropertyValue("base", getString(element, ATT_VALIDATION_QUERY_BASE, ""));
         validatorBuilder.addPropertyValue("filter",
-                getString(element, ATT_VALIDATION_QUERY_FILTER, DefaultDirContextValidator.DEFAULT_FILTER));
+                getString(element, ATT_VALIDATION_QUERY_FILTER,
+                        org.springframework.ldap.pool2.validation.DefaultDirContextValidator.DEFAULT_FILTER));
         String searchControlsRef = element.getAttribute(ATT_VALIDATION_QUERY_SEARCH_CONTROLS_REF);
         if(StringUtils.hasText(searchControlsRef)) {
             validatorBuilder.addPropertyReference("searchControls", searchControlsRef);

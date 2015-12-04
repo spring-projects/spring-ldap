@@ -16,7 +16,7 @@
 package org.springframework.ldap.pool2;
 
 import org.apache.commons.pool2.KeyedObjectPool;
-import org.springframework.ldap.pool.DirContextType;
+import org.springframework.ldap.pool2.DirContextType;
 import org.springframework.ldap.pool2.factory.PooledContextSource;
 import org.springframework.util.Assert;
 

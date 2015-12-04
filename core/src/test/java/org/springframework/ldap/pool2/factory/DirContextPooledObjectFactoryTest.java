@@ -21,8 +21,8 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.pool.DirContextType;
-import org.springframework.ldap.pool.validation.DirContextValidator;
+import org.springframework.ldap.pool2.DirContextType;
+import org.springframework.ldap.pool2.validation.DirContextValidator;
 import org.springframework.ldap.pool2.AbstractPoolTestCase;
 
 import javax.naming.directory.DirContext;

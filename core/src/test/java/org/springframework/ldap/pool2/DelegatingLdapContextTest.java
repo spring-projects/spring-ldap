@@ -17,7 +17,6 @@ package org.springframework.ldap.pool2;
 
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.junit.Test;
-import org.springframework.ldap.pool.DirContextType;
 
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;

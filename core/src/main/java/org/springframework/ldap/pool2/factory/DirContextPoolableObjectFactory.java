@@ -22,9 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextProxy;
-import org.springframework.ldap.pool.DirContextType;
-import org.springframework.ldap.pool.FailureAwareContext;
-import org.springframework.ldap.pool.validation.DirContextValidator;
+import org.springframework.ldap.pool2.DirContextType;
+import org.springframework.ldap.pool2.FailureAwareContext;
+import org.springframework.ldap.pool2.validation.DirContextValidator;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.Assert;
 
@@ -42,7 +42,7 @@ import java.util.Set;
  * Factory that creates {@link DirContext} instances for pooling via a
  * configured {@link ContextSource}. The {@link DirContext}s are keyed based
  * on if they are read only or read/write. The expected key type is the
- * {@link org.springframework.ldap.pool.DirContextType} enum.
+ * {@link org.springframework.ldap.pool2.DirContextType} enum.
  * 
  * <br>
  * <br>
@@ -210,7 +210,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory {
     @Override
     public Object create(Object key) throws Exception {
         Assert.notNull(this.contextSource, "ContextSource may not be null");
-        Assert.isTrue(key instanceof org.springframework.ldap.pool.DirContextType,
+        Assert.isTrue(key instanceof DirContextType,
                 "key must be a DirContextType");
 
         final DirContextType contextType = (DirContextType) key;
@@ -223,7 +223,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory {
                     .getReadWriteContext();
 
             if (this.logger.isDebugEnabled()) {
-                this.logger.debug("Created new " + org.springframework.ldap.pool.DirContextType.READ_WRITE
+                this.logger.debug("Created new " + DirContextType.READ_WRITE
                         + " DirContext='" + readWriteContext + "'");
             }
 
@@ -234,7 +234,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory {
                     .getReadOnlyContext();
 
             if (this.logger.isDebugEnabled()) {
-                this.logger.debug("Created new " + org.springframework.ldap.pool.DirContextType.READ_ONLY
+                this.logger.debug("Created new " + DirContextType.READ_ONLY
                         + " DirContext='" + readOnlyContext + "'");
             }
 

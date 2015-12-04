@@ -24,8 +24,8 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.support.DelegatingBaseLdapPathContextSourceSupport;
-import org.springframework.ldap.pool.DirContextType;
-import org.springframework.ldap.pool.validation.DirContextValidator;
+import org.springframework.ldap.pool2.DirContextType;
+import org.springframework.ldap.pool2.validation.DirContextValidator;
 import org.springframework.ldap.pool2.DelegatingDirContext;
 import org.springframework.ldap.pool2.DelegatingLdapContext;
 
@@ -58,7 +58,7 @@ import java.util.Collection;
  * <tr>
  * <td valign="top">dirContextValidator</td>
  * <td valign="top">
- * The {@link org.springframework.ldap.pool.validation.DirContextValidator} to use for validating {@link DirContext}s.
+ * The {@link org.springframework.ldap.pool2.validation.DirContextValidator} to use for validating {@link DirContext}s.
  * Required if any of the test/validate options are enabled.</td>
  * <td valign="top">No</td>
  * <td valign="top">null</td>
