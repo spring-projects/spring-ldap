@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,12 @@ package org.springframework.ldap.config;
 
 /**
  * @author Mattias Hellborg Arthursson
+ * @author Anindya Chatterjee
  */
 public abstract class Elements {
     public static final String CONTEXT_SOURCE = "context-source";
     public static final String POOLING = "pooling";
+    public static final String POOLING2 = "pooling2";
     public static final String LDAP_TEMPLATE = "ldap-template";
     public static final String TRANSACTION_MANAGER = "transaction-manager";
     public static final String REPOSITORIES = "repositories";

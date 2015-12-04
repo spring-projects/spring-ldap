@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ldap="http://www.springframework.org/schema/ldap"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/ldap http://www.springframework.org/schema/ldap/spring-ldap.xsd">
+
+       <ldap:context-source password="apassword" url="ldap://localhost:389" username="uid=admin">
+              <ldap:pooling2
+                      max-total-per-key="10"
+                      max-idle-per-key="20"
+                      max-total="12"
+                      max-wait="13"
+                      min-idle-per-key="14"
+                      block-when-exhausted="true"
+                      eviction-policy-class="org.springframework.ldap.pool2.DummyEvictionPolicy"
+                      fairness="true"
+                      jmx-enable="true"
+                      jmx-name-base="org.springframework.ldap.pool2:type=ldap-pool,name="
+                      jmx-name-prefix="test-pool"
+                      lifo="false" />
+       </ldap:context-source>
+
+       <ldap:ldap-template />
+</beans>
