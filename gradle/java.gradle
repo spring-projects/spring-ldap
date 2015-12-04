@@ -4,7 +4,7 @@ apply plugin: 'propdeps'
 sourceCompatibility = '1.6'
 targetCompatibility = '1.6'
 
-ext.apacheDsVersion = '1.5.5'
+ext.apacheDsVersion = '1.5.7'
 ext.springVersion = '3.2.13.RELEASE'
 ext.springDataVersion = '1.10.0.RELEASE'
 ext.springBatchVersion = '2.0.4.RELEASE'
@@ -37,7 +37,7 @@ ext.apachedsDependencies = [
          "org.apache.directory.server:apacheds-protocol-shared:$apacheDsVersion",
          "org.apache.directory.server:apacheds-protocol-ldap:$apacheDsVersion",
          "org.apache.directory.server:apacheds-server-jndi:$apacheDsVersion",
-         'org.apache.directory.shared:shared-ldap:0.9.15'
+         'org.apache.directory.shared:shared-ldap:0.9.19'
 ]
 
 repositories {
