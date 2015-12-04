@@ -47,7 +47,7 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
      * @param dirContextType The type of context, used as a key for the pool.
      * @throws IllegalArgumentException if any of the arguments are null
      */
-    public DelegatingLdapContext(KeyedObjectPool keyedObjectPool,
+    public DelegatingLdapContext(KeyedObjectPool<Object,Object> keyedObjectPool,
                                  LdapContext delegateLdapContext, DirContextType dirContextType) {
         super(keyedObjectPool, delegateLdapContext, dirContextType);
         Assert.notNull(delegateLdapContext, "delegateLdapContext may not be null");

@@ -42,37 +42,37 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 
     /**
      * Create a new delegating dir context for the specified pool, context and context type.
-     * 
+     *
      * @param keyedObjectPool The pool the delegate context was checked out from.
      * @param delegateDirContext The dir context to delegate operations to.
      * @param dirContextType The type of context, used as a key for the pool.
      * @throws IllegalArgumentException if any of the arguments are null
      */
-    public DelegatingDirContext(KeyedObjectPool keyedObjectPool,
+    public DelegatingDirContext(KeyedObjectPool<Object,Object> keyedObjectPool,
                                 DirContext delegateDirContext, DirContextType dirContextType) {
         super(keyedObjectPool, delegateDirContext, dirContextType);
         Assert.notNull(delegateDirContext, "delegateDirContext may not be null");
 
         this.delegateDirContext = delegateDirContext;
     }
-    
-    
+
+
     //***** Helper Methods *****//
-    
+
     /**
      * @return The direct delegate for this dir context proxy
      */
     public DirContext getDelegateDirContext() {
         return this.delegateDirContext;
     }
-    
+
     public Context getDelegateContext() {
         return this.getDelegateDirContext();
     }
 
     /**
      * Recursivley inspect delegates until a non-delegating dir context is found.
-     * 
+     *
      * @return The innermost (real) DirContext that is being delegated to.
      */
     public DirContext getInnermostDelegateDirContext() {
@@ -93,7 +93,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
         super.assertOpen();
     }
 
-    
+
     //***** Object methods *****//
 
     /**

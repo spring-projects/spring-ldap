@@ -37,7 +37,7 @@ import java.util.Collection;
  * A {@link ContextSource} implementation that wraps an object pool and another
  * {@link ContextSource}. {@link DirContext}s are retrieved from the pool which
  * maintains them.
- * 
+ *
  * NOTE: This implementation is based on apache commons-pool2.
  * <br>
  * <br>
@@ -83,7 +83,7 @@ public class PooledContextSource
 	 */
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	protected final GenericKeyedObjectPool keyedObjectPool;
+	protected final GenericKeyedObjectPool<Object,Object> keyedObjectPool;
 
 	private final DirContextPooledObjectFactory dirContextPooledObjectFactory;
 
@@ -99,10 +99,10 @@ public class PooledContextSource
 			this.poolConfig = poolConfig;
 			GenericKeyedObjectPoolConfig objectPoolConfig = getConfig(poolConfig);
 			this.keyedObjectPool =
-					new GenericKeyedObjectPool(this.dirContextPooledObjectFactory, objectPoolConfig);
+					new GenericKeyedObjectPool<Object,Object>(this.dirContextPooledObjectFactory, objectPoolConfig);
 		} else  {
 			this.keyedObjectPool =
-					new GenericKeyedObjectPool(this.dirContextPooledObjectFactory);
+					new GenericKeyedObjectPool<Object,Object>(this.dirContextPooledObjectFactory);
 		}
 	}
 
@@ -217,7 +217,7 @@ public class PooledContextSource
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.springframework.beans.factory.DisposableBean#destroy()
 	 */
 	public void destroy() throws Exception {
@@ -248,7 +248,7 @@ public class PooledContextSource
 
 	/**
 	 * Gets a DirContext of the specified type from the keyed object pool.
-	 * 
+	 *
 	 * @param dirContextType The type of context to return.
 	 * @return A wrapped DirContext of the specified type.
 	 * @throws DataAccessResourceFailureException If retrieving the object from

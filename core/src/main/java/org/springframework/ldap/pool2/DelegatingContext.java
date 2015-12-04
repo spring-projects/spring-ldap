@@ -32,7 +32,7 @@ import java.util.Hashtable;
  * @author Eric Dalquist
  */
 public class DelegatingContext implements Context {
-    private KeyedObjectPool keyedObjectPool;
+    private KeyedObjectPool<Object,Object> keyedObjectPool;
     private Context delegateContext;
     private final DirContextType dirContextType;
 
@@ -45,7 +45,7 @@ public class DelegatingContext implements Context {
      * @param dirContextType The type of context, used as a key for the pool.
      * @throws IllegalArgumentException if any of the arguments are null
      */
-    public DelegatingContext(KeyedObjectPool keyedObjectPool, Context delegateContext, DirContextType dirContextType) {
+    public DelegatingContext(KeyedObjectPool<Object,Object> keyedObjectPool, Context delegateContext, DirContextType dirContextType) {
         Assert.notNull(keyedObjectPool, "keyedObjectPool may not be null");
         Assert.notNull(delegateContext, "delegateContext may not be null");
         Assert.notNull(dirContextType, "dirContextType may not be null");

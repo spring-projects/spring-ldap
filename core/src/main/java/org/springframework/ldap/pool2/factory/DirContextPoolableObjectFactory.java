@@ -43,7 +43,7 @@ import java.util.Set;
  * configured {@link ContextSource}. The {@link DirContext}s are keyed based
  * on if they are read only or read/write. The expected key type is the
  * {@link org.springframework.ldap.pool2.DirContextType} enum.
- * 
+ *
  * <br>
  * <br>
  * Configuration: <table border="1">
@@ -76,16 +76,18 @@ import java.util.Set;
  * @author Mattias Hellborg Arthursson
  * @author Anindya Chatterjee
  */
-class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory {
+class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,Object> {
     /**
      * Logger for this class and subclasses
      */
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static final Set<Class<? extends Throwable>> DEFAULT_NONTRANSIENT_EXCEPTIONS
-            = new HashSet<Class<? extends Throwable>>(){{
-       add(CommunicationException.class);
-    }};
+            = new HashSet<Class<? extends Throwable>>();
+
+    static {
+        DEFAULT_NONTRANSIENT_EXCEPTIONS.add(CommunicationException.class);
+    };
 
     private ContextSource contextSource;
 
@@ -151,7 +153,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory {
      *
      * */
     @Override
-    public boolean validateObject(Object key, PooledObject pooledObject) {
+    public boolean validateObject(Object key, PooledObject<Object> pooledObject) {
         Assert.notNull(this.dirContextValidator,
                 "DirContextValidator may not be null");
         Assert.isTrue(key instanceof DirContextType,
@@ -179,7 +181,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory {
      *
      * */
     @Override
-    public void destroyObject(Object key, PooledObject pooledObject) throws Exception {
+    public void destroyObject(Object key, PooledObject<Object> pooledObject) throws Exception {
         Assert.notNull(pooledObject,
                 "The Object to destroy must not be null");
         Assert.isTrue(pooledObject.getObject() instanceof DirContext,
@@ -250,8 +252,8 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory {
      *
      * */
     @Override
-    public PooledObject wrap(Object value) {
-        return new DefaultPooledObject(value);
+    public PooledObject<Object> wrap(Object value) {
+        return new DefaultPooledObject<Object>(value);
     }
 
     /**
