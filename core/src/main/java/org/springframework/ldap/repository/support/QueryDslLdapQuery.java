@@ -21,7 +21,9 @@ import com.mysema.query.FilteredClause;
 import com.mysema.query.support.QueryMixin;
 import com.mysema.query.types.EntityPath;
 import com.mysema.query.types.Predicate;
+
 import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.query.LdapQuery;
 
 import java.util.List;
@@ -69,7 +71,8 @@ public class QueryDslLdapQuery<K> implements FilteredClause<QueryDslLdapQuery<K>
     }
 
     LdapQuery buildQuery() {
-        return query().filter(filterGenerator.handle(queryMixin.getMetadata().getWhere()));
+ 	String base = clazz.getAnnotation(Entry.class).base();
+        return query().base(base).filter(filterGenerator.handle(queryMixin.getMetadata().getWhere()));
     }
-
+    
 }
