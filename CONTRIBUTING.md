@@ -6,6 +6,10 @@ to expect from the Spring team when evaluating your submission._
 _Please refer back to this document as a checklist before issuing any pull
 request; this will save time for everyone!_
 
+## Code of Conduct
+This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.adoc).
+By participating, you  are expected to uphold this code. Please report unacceptable behavior to spring-code-of-conduct@pivotal.io.
+
 ## Understand the basics
 
 Not sure what a pull request is, or how to submit one?  Take a look at GitHub's

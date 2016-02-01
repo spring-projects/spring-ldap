@@ -1,5 +1,9 @@
 ##Spring LDAP
 
+## Code of Conduct
+This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.adoc).
+By participating, you  are expected to uphold this code. Please report unacceptable behavior to spring-code-of-conduct@pivotal.io.
+
 ###INTRODUCTION
 
 Spring LDAP is a library to simplify LDAP programming in Java, built on the same
