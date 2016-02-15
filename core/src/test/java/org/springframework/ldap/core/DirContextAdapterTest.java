@@ -367,6 +367,26 @@ public class DirContextAdapterTest {
 		assertEquals("123", attribute.get());
 	}
 
+	@Test
+	public void testNewLdapNameWithString() throws NamingException {
+		tested.addAttributeValue("member", LdapUtils.newLdapName("CN=test,DC=root"));
+		tested.addAttributeValue("member2", LdapUtils.newLdapName("CN=test2,DC=root"));
+
+		Attributes attrs = tested.getAttributes();
+		assertEquals(LdapUtils.newLdapName("CN=test,DC=root"), attrs.get("member").get());
+		assertEquals(LdapUtils.newLdapName("CN=test2,DC=root"), attrs.get("member2").get());
+	}
+
+	@Test
+	public void testNewLdapNameWithLdapName() throws NamingException {
+		tested.addAttributeValue("member", "CN=test,DC=root");
+		tested.addAttributeValue("member2", LdapUtils.newLdapName("CN=test2,DC=root"));
+
+		Attributes attrs = tested.getAttributes();
+		assertEquals("CN=test,DC=root", attrs.get("member").get());
+		assertEquals(LdapUtils.newLdapName("CN=test2,DC=root"), attrs.get("member2").get());
+	}
+
     @Test
 	public void testRemoveAttributeValueAttributeDoesntExist() {
 		// Perform test

@@ -26,6 +26,7 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.DirContext;
+import javax.naming.ldap.LdapName;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -165,6 +166,8 @@ public final class NameAwareAttribute implements Attribute {
                     throw new IllegalArgumentException("This instance has values that are not valid distinguished names; " +
                             "cannot handle Name values", e);
                 }
+            } else if (value instanceof LdapName) {
+                newValuesAsNames.put((LdapName) value, value.toString());
             } else {
                 throw new IllegalArgumentException("This instance has non-string attribute values; " +
                         "cannot handle Name values");
