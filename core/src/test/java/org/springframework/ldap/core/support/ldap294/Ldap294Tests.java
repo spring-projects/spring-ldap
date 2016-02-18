@@ -42,8 +42,8 @@ public class Ldap294Tests {
 			// Verify a subclass outside of package scope can access password
 			// and userDn since Spring Security needs to be able to access these
 			// properties.
-			String pass = super.password;
-			String userDn = super.userDn;
+			String pass = super.getPassword();
+			String userDn = super.getUserDn();
 			return null;
 		}
 		

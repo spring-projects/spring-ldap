@@ -497,8 +497,8 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * 
 	 * @return the user distinguished name.
 	 */
-	protected String getUserDn() {
-		return userDn;
+	public String getUserDn() {
+		return this.userDn;
 	}
 
 	/**
