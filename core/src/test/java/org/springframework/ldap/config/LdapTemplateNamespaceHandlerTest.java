@@ -494,4 +494,33 @@ public class LdapTemplateNamespaceHandlerTest {
     public void verifyParseWithPool1AndPool2WillFail() {
         new ClassPathXmlApplicationContext("/ldap-namespace-config-pool2-with-pool1.xml");
     }
+
+    @Test
+    public void verifyParsePoolWithPlaceholders() {
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/ldap-namespace-config-pooling-config-with-placeholders.xml");
+        ContextSource outerContextSource = ctx.getBean(ContextSource.class);
+        assertNotNull(outerContextSource);
+
+        ContextSource pooledContextSource = ((TransactionAwareContextSourceProxy) outerContextSource).getTarget();
+        assertNotNull(pooledContextSource);
+
+        GenericKeyedObjectPool objectPool = (GenericKeyedObjectPool) getInternalState(pooledContextSource, "keyedObjectPool");
+        assertEquals(10, objectPool.getTimeBetweenEvictionRunsMillis());
+        assertEquals(20, objectPool.getMinEvictableIdleTimeMillis());
+    }
+
+    @Test
+    public void verifyParsePool2WithPlaceholders() {
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/ldap-namespace-config-pooling2-config-with-placeholders.xml");
+        ContextSource outerContextSource = ctx.getBean(ContextSource.class);
+        assertNotNull(outerContextSource);
+
+        ContextSource pooledContextSource = ((TransactionAwareContextSourceProxy) outerContextSource).getTarget();
+        assertNotNull(pooledContextSource);
+
+        org.apache.commons.pool2.impl.GenericKeyedObjectPool objectPool =
+                (org.apache.commons.pool2.impl.GenericKeyedObjectPool) getInternalState(pooledContextSource, "keyedObjectPool");
+        assertEquals(10, objectPool.getTimeBetweenEvictionRunsMillis());
+        assertEquals(20, objectPool.getMinEvictableIdleTimeMillis());
+    }
 }
