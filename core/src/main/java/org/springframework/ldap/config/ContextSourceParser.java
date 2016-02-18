@@ -219,6 +219,8 @@ public class ContextSourceParser implements BeanDefinitionParser {
             builder.addPropertyValue("maxWait", getInt(poolingElement, ATT_MAX_WAIT, DEFAULT_MAX_WAIT));
             String whenExhausted = getString(poolingElement, ATT_WHEN_EXHAUSTED, PoolExhaustedAction.BLOCK.name());
             builder.addPropertyValue("whenExhaustedAction", PoolExhaustedAction.valueOf(whenExhausted).getValue());
+            builder.addPropertyValue("timeBetweenEvictionRunsMillis", getString(poolingElement, ATT_EVICTION_RUN_MILLIS, String.valueOf(DEFAULT_EVICTION_RUN_MILLIS)));
+            builder.addPropertyValue("minEvictableIdleTimeMillis", getString(poolingElement, ATT_EVICTABLE_TIME_MILLIS, String.valueOf(DEFAULT_EVICTABLE_MILLIS)));
 
             boolean testOnBorrow = getBoolean(poolingElement, ATT_TEST_ON_BORROW, false);
             boolean testOnReturn = getBoolean(poolingElement, ATT_TEST_ON_RETURN, false);
@@ -249,9 +251,9 @@ public class ContextSourceParser implements BeanDefinitionParser {
         }
         builder.addPropertyValue("dirContextValidator", validatorBuilder.getBeanDefinition());
 
-        builder.addPropertyValue("timeBetweenEvictionRunsMillis", getInt(element, ATT_EVICTION_RUN_MILLIS, DEFAULT_EVICTION_RUN_MILLIS));
+        builder.addPropertyValue("timeBetweenEvictionRunsMillis", getString(element, ATT_EVICTION_RUN_MILLIS, String.valueOf(DEFAULT_EVICTION_RUN_MILLIS)));
         builder.addPropertyValue("numTestsPerEvictionRun", getInt(element, ATT_TESTS_PER_EVICTION_RUN, DEFAULT_TESTS_PER_EVICTION_RUN));
-        builder.addPropertyValue("minEvictableIdleTimeMillis", getInt(element, ATT_EVICTABLE_TIME_MILLIS, DEFAULT_EVICTABLE_MILLIS));
+        builder.addPropertyValue("minEvictableIdleTimeMillis", getString(element, ATT_EVICTABLE_TIME_MILLIS, String.valueOf(DEFAULT_EVICTABLE_MILLIS)));
 
         String nonTransientExceptions = getString(element, ATT_NON_TRANSIENT_EXCEPTIONS, CommunicationException.class.getName());
         String[] strings = StringUtils.commaDelimitedListToStringArray(nonTransientExceptions);
@@ -316,9 +318,9 @@ public class ContextSourceParser implements BeanDefinitionParser {
         configBuilder.addPropertyValue("testOnCreate", getBoolean(element, ATT_TEST_ON_CREATE, false));
         configBuilder.addPropertyValue("testOnReturn", getBoolean(element, ATT_TEST_ON_RETURN, false));
         configBuilder.addPropertyValue("testWhileIdle", getBoolean(element, ATT_TEST_WHILE_IDLE, false));
-        configBuilder.addPropertyValue("timeBetweenEvictionRunsMillis", getInt(element, ATT_EVICTION_RUN_MILLIS, DEFAULT_EVICTION_RUN_MILLIS));
+        configBuilder.addPropertyValue("timeBetweenEvictionRunsMillis", getString(element, ATT_EVICTION_RUN_MILLIS, String.valueOf(DEFAULT_EVICTION_RUN_MILLIS)));
         configBuilder.addPropertyValue("numTestsPerEvictionRun", getInt(element, ATT_TESTS_PER_EVICTION_RUN, DEFAULT_TESTS_PER_EVICTION_RUN));
-        configBuilder.addPropertyValue("minEvictableIdleTimeMillis", getInt(element, ATT_EVICTABLE_TIME_MILLIS, DEFAULT_EVICTABLE_MILLIS));
+        configBuilder.addPropertyValue("minEvictableIdleTimeMillis", getString(element, ATT_EVICTABLE_TIME_MILLIS, String.valueOf(DEFAULT_EVICTABLE_MILLIS)));
         configBuilder.addPropertyValue("softMinEvictableIdleTimeMillis", getInt(element, ATT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS, DEFAULT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS));
 
         builder.addConstructorArgValue(configBuilder.getBeanDefinition());

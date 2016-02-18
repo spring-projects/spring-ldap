@@ -206,7 +206,7 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="eviction-run-interval-millis" type="xs:int">
+        <xs:attribute name="eviction-run-interval-millis" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     The number of milliseconds to sleep between runs of the idle object evictor thread. When non-positive,
@@ -222,7 +222,7 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="min-evictable-time-millis" type="xs:int">
+        <xs:attribute name="min-evictable-time-millis" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     The minimum amount of time an object may sit idle in the pool before it is eligible
@@ -347,7 +347,7 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="eviction-run-interval-millis" type="xs:int">
+        <xs:attribute name="eviction-run-interval-millis" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     The number of milliseconds to sleep between runs of the idle object evictor thread. When non-positive,
@@ -363,7 +363,7 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="min-evictable-time-millis" type="xs:int">
+        <xs:attribute name="min-evictable-time-millis" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     The minimum amount of time an object may sit idle in the pool before it is eligible
