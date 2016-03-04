@@ -63,7 +63,6 @@ public class LdapTemplateRenameITest extends AbstractLdapTemplateIntegrationTest
 	@After
 	public void cleanup() throws Exception {
 		tested.unbind(NEWDN);
-		tested.unbind(DN);
 	}
 
 	@Test

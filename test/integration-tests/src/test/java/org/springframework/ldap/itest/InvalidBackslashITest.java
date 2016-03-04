@@ -56,7 +56,6 @@ public class InvalidBackslashITest extends AbstractLdapTemplateIntegrationTest {
 		adapter.setAttributeValue("sn", "Person6");
 		adapter.setAttributeValue("description", "Some description");
 
-		tested.unbind(DN);
 		tested.bind(DN, adapter, null);
 	}
 

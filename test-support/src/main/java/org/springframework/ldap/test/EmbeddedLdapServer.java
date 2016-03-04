@@ -17,20 +17,33 @@
 package org.springframework.ldap.test;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.directory.server.constants.ServerDNConstants;
 import org.apache.directory.server.core.DefaultDirectoryService;
 import org.apache.directory.server.core.DirectoryService;
-import org.apache.directory.server.core.entry.ServerEntry;
+import org.apache.directory.server.core.partition.Partition;
 import org.apache.directory.server.core.partition.impl.btree.jdbm.JdbmPartition;
+import org.apache.directory.server.core.partition.ldif.LdifPartition;
+import org.apache.directory.server.core.schema.SchemaPartition;
 import org.apache.directory.server.ldap.LdapServer;
 import org.apache.directory.server.protocol.shared.transport.TcpTransport;
-import org.apache.directory.shared.ldap.name.LdapDN;
+import org.apache.directory.shared.ldap.entry.ServerEntry;
+import org.apache.directory.shared.ldap.exception.LdapInvalidDnException;
+import org.apache.directory.shared.ldap.name.DN;
+import org.apache.directory.shared.ldap.schema.SchemaManager;
+import org.apache.directory.shared.ldap.schema.ldif.extractor.SchemaLdifExtractor;
+import org.apache.directory.shared.ldap.schema.ldif.extractor.impl.DefaultSchemaLdifExtractor;
+import org.apache.directory.shared.ldap.schema.loader.ldif.LdifSchemaLoader;
+import org.apache.directory.shared.ldap.schema.manager.impl.DefaultSchemaManager;
+import org.apache.directory.shared.ldap.schema.registries.SchemaLoader;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Helper class for embedded Apache Directory Server.
  *
  * @author Mattias Hellborg Arthursson
+ * @author Eddu Melendez
  * @since 1.3.2
  */
 public final class EmbeddedLdapServer {
@@ -54,11 +67,17 @@ public final class EmbeddedLdapServer {
         directoryService.setAllowAnonymousAccess(true);
 
         directoryService.setWorkingDirectory(workingDirectory);
-        directoryService.getChangeLog().setEnabled( false );
 
-        JdbmPartition partition = new JdbmPartition();
-        partition.setId(defaultPartitionName);
-        partition.setSuffix(defaultPartitionSuffix);
+	    initSchemaPartition(directoryService);
+
+        directoryService.getChangeLog().setEnabled(false);
+	    directoryService.setDenormalizeOpAttrsEnabled(true);
+
+	    Partition systemPartition = createPartition("system", ServerDNConstants.SYSTEM_DN);
+	    directoryService.addPartition(systemPartition);
+	    directoryService.setSystemPartition(systemPartition);
+
+	    Partition partition = createPartition(defaultPartitionName, defaultPartitionSuffix);
         directoryService.addPartition(partition);
 
         directoryService.startup();
@@ -66,7 +85,7 @@ public final class EmbeddedLdapServer {
         // Inject the apache root entry if it does not already exist
         if ( !directoryService.getAdminSession().exists( partition.getSuffixDn() ) )
         {
-            ServerEntry entry = directoryService.newEntry(new LdapDN(defaultPartitionSuffix));
+            ServerEntry entry = directoryService.newEntry(new DN(defaultPartitionSuffix));
             entry.add("objectClass", "top", "domain", "extensibleObject");
             entry.add("dc", defaultPartitionName);
             directoryService.getAdminSession().add( entry );
@@ -85,7 +104,50 @@ public final class EmbeddedLdapServer {
     public void shutdown() throws Exception {
         ldapServer.stop();
         directoryService.shutdown();
-
-        FileUtils.deleteDirectory(workingDirectory);
     }
+
+	private static void initSchemaPartition(DefaultDirectoryService directoryService)
+			throws Exception {
+		SchemaPartition schemaPartition = directoryService.getSchemaService()
+				.getSchemaPartition();
+
+		// Init the LdifPartition
+		LdifPartition ldifPartition = new LdifPartition();
+		String workingDirectory = directoryService.getWorkingDirectory().getPath();
+		ldifPartition.setWorkingDirectory(workingDirectory + "/schema");
+
+		// Extract the schema on disk (a brand new one) and load the registries
+		File schemaRepository = new File(workingDirectory, "schema");
+		SchemaLdifExtractor extractor = new DefaultSchemaLdifExtractor(
+				new File(workingDirectory));
+		extractor.extractOrCopy(true);
+
+		schemaPartition.setWrappedPartition(ldifPartition);
+
+		SchemaLoader loader = new LdifSchemaLoader(schemaRepository);
+		SchemaManager schemaManager = new DefaultSchemaManager(loader);
+		directoryService.setSchemaManager(schemaManager);
+
+		// We have to load the schema now, otherwise we won't be able
+		// to initialize the Partitions, as we won't be able to parse
+		// and normalize their suffix DN
+		schemaManager.loadAllEnabled();
+
+		schemaPartition.setSchemaManager(schemaManager);
+
+		List<Throwable> errors = schemaManager.getErrors();
+
+		if (errors.size() != 0) {
+			throw new Exception("Schema load failed : " + errors);
+		}
+	}
+
+	private static Partition createPartition(String partitionId, String partitionSuffix)
+			throws LdapInvalidDnException {
+		JdbmPartition partition = new JdbmPartition();
+		partition.setId(partitionId);
+		partition.setPartitionDir(new File(workingDirectory, partitionId));
+		partition.setSuffix(partitionSuffix);
+		return partition;
+	}
 }
