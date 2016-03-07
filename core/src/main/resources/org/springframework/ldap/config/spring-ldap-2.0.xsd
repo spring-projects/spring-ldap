@@ -105,7 +105,7 @@
     </xs:attributeGroup>
 
     <xs:attributeGroup name="pooling.attlist">
-        <xs:attribute name="max-active" type="xs:integer">
+        <xs:attribute name="max-active" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     The maximum number of active connections of each type (read-only|read-write)
@@ -114,7 +114,7 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="max-total" type="xs:integer">
+        <xs:attribute name="max-total" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     The overall maximum number of active connections (for all types) that can be allocated from
@@ -122,7 +122,7 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="max-idle" type="xs:integer">
+        <xs:attribute name="max-idle" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     The maximum number of active connections of each type (read-only|read-write) that can remain idle in the pool,
@@ -130,7 +130,7 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="min-idle" type="xs:integer">
+        <xs:attribute name="min-idle" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     The minimum number of active connections of each type (read-only|read-write) that can remain
@@ -138,7 +138,7 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="max-wait" type="xs:integer">
+        <xs:attribute name="max-wait" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     The maximum number of milliseconds that the pool will wait (when there are no available connections)
@@ -214,7 +214,7 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="tests-per-eviction-run" type="xs:int">
+        <xs:attribute name="tests-per-eviction-run" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     The number of objects to examine during each run of the idle object evictor thread (if any).
@@ -263,7 +263,7 @@
     </xs:attributeGroup>
 
     <xs:attributeGroup name="pooling2.attlist">
-        <xs:attribute name="max-total" type="xs:integer">
+        <xs:attribute name="max-total" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     The overall maximum number of active connections (for all types) that can be allocated from
@@ -271,7 +271,7 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="max-total-per-key" type="xs:integer">
+        <xs:attribute name="max-total-per-key" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     The limit on the number of object instances allocated by the pool (checked out or idle),
@@ -280,7 +280,7 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="max-idle-per-key" type="xs:integer">
+        <xs:attribute name="max-idle-per-key" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     The maximum number of active connections per type (read-only|read-write) that can remain idle in the pool,
@@ -288,7 +288,7 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="min-idle-per-key" type="xs:integer">
+        <xs:attribute name="min-idle-per-key" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     The minimum number of active connections per type (read-only|read-write) that can remain
@@ -296,7 +296,7 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="max-wait" type="xs:integer">
+        <xs:attribute name="max-wait" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     The maximum number of milliseconds that the pool will wait (when there are no available connections)
@@ -355,7 +355,7 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="tests-per-eviction-run" type="xs:int">
+        <xs:attribute name="tests-per-eviction-run" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     The number of objects to examine during each run of the idle object evictor thread (if any).
@@ -371,7 +371,7 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="soft-min-evictable-idle-time-millis" type="xs:int">
+        <xs:attribute name="soft-min-evictable-idle-time-millis" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     The minimum amount of time an object may sit idle in the pool before it is eligible for
