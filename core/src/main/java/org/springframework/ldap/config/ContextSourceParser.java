@@ -45,6 +45,7 @@ import static org.springframework.ldap.config.ParserUtils.getString;
 
 /**
  * @author Mattias Hellborg Arthursson
+ * @author Eddu Melendez
  */
 public class ContextSourceParser implements BeanDefinitionParser {
     private static final String ATT_ANONYMOUS_READ_ONLY = "anonymous-read-only";
@@ -212,15 +213,16 @@ public class ContextSourceParser implements BeanDefinitionParser {
             BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(PoolingContextSource.class);
             builder.addPropertyValue("contextSource", targetContextSourceDefinition);
 
-            builder.addPropertyValue("maxActive", getInt(poolingElement, ATT_MAX_ACTIVE, DEFAULT_MAX_ACTIVE));
-            builder.addPropertyValue("maxTotal", getInt(poolingElement, ATT_MAX_TOTAL, DEFAULT_MAX_TOTAL));
-            builder.addPropertyValue("maxIdle", getInt(poolingElement, ATT_MAX_IDLE, DEFAULT_MAX_IDLE));
-            builder.addPropertyValue("minIdle", getInt(poolingElement, ATT_MIN_IDLE, DEFAULT_MIN_IDLE));
-            builder.addPropertyValue("maxWait", getInt(poolingElement, ATT_MAX_WAIT, DEFAULT_MAX_WAIT));
+            builder.addPropertyValue("maxActive", getString(poolingElement, ATT_MAX_ACTIVE, String.valueOf(DEFAULT_MAX_ACTIVE)));
+            builder.addPropertyValue("maxTotal", getString(poolingElement, ATT_MAX_TOTAL, String.valueOf(DEFAULT_MAX_TOTAL)));
+            builder.addPropertyValue("maxIdle", getString(poolingElement, ATT_MAX_IDLE, String.valueOf(DEFAULT_MAX_IDLE)));
+            builder.addPropertyValue("minIdle", getString(poolingElement, ATT_MIN_IDLE, String.valueOf(DEFAULT_MIN_IDLE)));
+            builder.addPropertyValue("maxWait", getString(poolingElement, ATT_MAX_WAIT, String.valueOf(DEFAULT_MAX_WAIT)));
             String whenExhausted = getString(poolingElement, ATT_WHEN_EXHAUSTED, PoolExhaustedAction.BLOCK.name());
             builder.addPropertyValue("whenExhaustedAction", PoolExhaustedAction.valueOf(whenExhausted).getValue());
             builder.addPropertyValue("timeBetweenEvictionRunsMillis", getString(poolingElement, ATT_EVICTION_RUN_MILLIS, String.valueOf(DEFAULT_EVICTION_RUN_MILLIS)));
             builder.addPropertyValue("minEvictableIdleTimeMillis", getString(poolingElement, ATT_EVICTABLE_TIME_MILLIS, String.valueOf(DEFAULT_EVICTABLE_MILLIS)));
+            builder.addPropertyValue("numTestsPerEvictionRun", getString(poolingElement, ATT_TESTS_PER_EVICTION_RUN, String.valueOf(DEFAULT_TESTS_PER_EVICTION_RUN)));
 
             boolean testOnBorrow = getBoolean(poolingElement, ATT_TEST_ON_BORROW, false);
             boolean testOnReturn = getBoolean(poolingElement, ATT_TEST_ON_RETURN, false);
@@ -302,26 +304,26 @@ public class ContextSourceParser implements BeanDefinitionParser {
         BeanDefinitionBuilder configBuilder = BeanDefinitionBuilder
                 .rootBeanDefinition(PoolConfig.class);
 
-        configBuilder.addPropertyValue("maxTotal", getInt(element, ATT_MAX_TOTAL, DEFAULT_MAX_TOTAL));
-        configBuilder.addPropertyValue("maxTotalPerKey", getInt(element, ATT_MAX_TOTAL_PER_KEY, DEFAULT_MAX_TOTAL_PER_KEY));
-        configBuilder.addPropertyValue("maxIdlePerKey", getInt(element, ATT_MAX_IDLE_PER_KEY, DEFAULT_MAX_IDLE_PER_KEY));
-        configBuilder.addPropertyValue("minIdlePerKey", getInt(element, ATT_MIN_IDLE_PER_KEY, DEFAULT_MIN_IDLE_PER_KEY));
+        configBuilder.addPropertyValue("maxTotal", getString(element, ATT_MAX_TOTAL, String.valueOf(DEFAULT_MAX_TOTAL)));
+        configBuilder.addPropertyValue("maxTotalPerKey", getString(element, ATT_MAX_TOTAL_PER_KEY, String.valueOf(DEFAULT_MAX_TOTAL_PER_KEY)));
+        configBuilder.addPropertyValue("maxIdlePerKey", getString(element, ATT_MAX_IDLE_PER_KEY, String.valueOf(DEFAULT_MAX_IDLE_PER_KEY)));
+        configBuilder.addPropertyValue("minIdlePerKey", getString(element, ATT_MIN_IDLE_PER_KEY, String.valueOf(DEFAULT_MIN_IDLE_PER_KEY)));
         configBuilder.addPropertyValue("evictionPolicyClassName", getString(element, ATT_EVICTION_POLICY_CLASS, DEFAULT_EVICTION_POLICY_CLASS_NAME));
         configBuilder.addPropertyValue("fairness", getBoolean(element, ATT_FAIRNESS, DEFAULT_FAIRNESS));
         configBuilder.addPropertyValue("jmxEnabled", getBoolean(element, ATT_JMX_ENABLE, DEFAULT_JMX_ENABLE));
         configBuilder.addPropertyValue("jmxNameBase", getString(element, ATT_JMX_NAME_BASE, DEFAULT_JMX_NAME_BASE));
         configBuilder.addPropertyValue("jmxNamePrefix", getString(element, ATT_JMX_NAME_PREFIX, DEFAULT_JMX_NAME_PREFIX));
         configBuilder.addPropertyValue("lifo", getBoolean(element, ATT_LIFO, DEFAULT_LIFO));
-        configBuilder.addPropertyValue("maxWaitMillis", getInt(element, ATT_MAX_WAIT, DEFAULT_MAX_WAIT_MILLIS));
-        configBuilder.addPropertyValue("blockWhenExhausted", getBoolean(element, ATT_BLOCK_WHEN_EXHAUSTED, DEFAULT_BLOCK_WHEN_EXHAUSTED));
+        configBuilder.addPropertyValue("maxWaitMillis", getString(element, ATT_MAX_WAIT, String.valueOf(DEFAULT_MAX_WAIT_MILLIS)));
+        configBuilder.addPropertyValue("blockWhenExhausted", Boolean.valueOf(getString(element, ATT_BLOCK_WHEN_EXHAUSTED, String.valueOf(DEFAULT_BLOCK_WHEN_EXHAUSTED))));
         configBuilder.addPropertyValue("testOnBorrow", getBoolean(element, ATT_TEST_ON_BORROW, false));
         configBuilder.addPropertyValue("testOnCreate", getBoolean(element, ATT_TEST_ON_CREATE, false));
         configBuilder.addPropertyValue("testOnReturn", getBoolean(element, ATT_TEST_ON_RETURN, false));
         configBuilder.addPropertyValue("testWhileIdle", getBoolean(element, ATT_TEST_WHILE_IDLE, false));
         configBuilder.addPropertyValue("timeBetweenEvictionRunsMillis", getString(element, ATT_EVICTION_RUN_MILLIS, String.valueOf(DEFAULT_EVICTION_RUN_MILLIS)));
-        configBuilder.addPropertyValue("numTestsPerEvictionRun", getInt(element, ATT_TESTS_PER_EVICTION_RUN, DEFAULT_TESTS_PER_EVICTION_RUN));
+        configBuilder.addPropertyValue("numTestsPerEvictionRun", getString(element, ATT_TESTS_PER_EVICTION_RUN, String.valueOf(DEFAULT_TESTS_PER_EVICTION_RUN)));
         configBuilder.addPropertyValue("minEvictableIdleTimeMillis", getString(element, ATT_EVICTABLE_TIME_MILLIS, String.valueOf(DEFAULT_EVICTABLE_MILLIS)));
-        configBuilder.addPropertyValue("softMinEvictableIdleTimeMillis", getInt(element, ATT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS, DEFAULT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS));
+        configBuilder.addPropertyValue("softMinEvictableIdleTimeMillis", getString(element, ATT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS, String.valueOf(DEFAULT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS)));
 
         builder.addConstructorArgValue(configBuilder.getBeanDefinition());
     }

@@ -507,6 +507,12 @@ public class LdapTemplateNamespaceHandlerTest {
         GenericKeyedObjectPool objectPool = (GenericKeyedObjectPool) getInternalState(pooledContextSource, "keyedObjectPool");
         assertEquals(10, objectPool.getTimeBetweenEvictionRunsMillis());
         assertEquals(20, objectPool.getMinEvictableIdleTimeMillis());
+        assertEquals(10, objectPool.getMaxWait());
+        assertEquals(11, objectPool.getMaxTotal());
+        assertEquals(15, objectPool.getMaxActive());
+        assertEquals(16, objectPool.getMinIdle());
+        assertEquals(17, objectPool.getMaxIdle());
+        assertEquals(18, objectPool.getNumTestsPerEvictionRun());
     }
 
     @Test
@@ -522,5 +528,11 @@ public class LdapTemplateNamespaceHandlerTest {
                 (org.apache.commons.pool2.impl.GenericKeyedObjectPool) getInternalState(pooledContextSource, "keyedObjectPool");
         assertEquals(10, objectPool.getTimeBetweenEvictionRunsMillis());
         assertEquals(20, objectPool.getMinEvictableIdleTimeMillis());
+        assertEquals(10, objectPool.getMaxWaitMillis());
+        assertEquals(11, objectPool.getMaxTotal());
+        assertEquals(12, objectPool.getMinIdlePerKey());
+        assertEquals(13, objectPool.getMaxIdlePerKey());
+        assertEquals(14, objectPool.getMaxTotalPerKey());
+        assertEquals(18, objectPool.getNumTestsPerEvictionRun());
     }
 }

@@ -8,7 +8,9 @@
     <context:property-placeholder location="classpath*:ldap.properties" />
 
     <ldap:context-source password="apassword" url="ldap://localhost:389" username="uid=admin">
-        <ldap:pooling2 eviction-run-interval-millis="${ldap.eviction.run.internal.milis}" min-evictable-time-millis="${ldap.min.evictable.time.milis}"/>
+        <ldap:pooling2 eviction-run-interval-millis="${ldap.eviction.run.internal.milis}" min-evictable-time-millis="${ldap.min.evictable.time.milis}"
+                       max-wait="${ldap.maxWait}" max-total="${ldap.maxTotal}" min-idle-per-key="${ldap.minIdlePerKey}" max-idle-per-key="${ldap.maxIdlePerKey}" max-total-per-key="${ldap.maxTotalPerKey}"
+                       tests-per-eviction-run="${ldap.testsPerEvictionRun}" />
     </ldap:context-source>
 
     <ldap:ldap-template />
