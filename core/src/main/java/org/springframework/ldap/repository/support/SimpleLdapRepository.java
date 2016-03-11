@@ -22,17 +22,21 @@ import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.core.support.CountNameClassPairCallbackHandler;
 import org.springframework.ldap.filter.Filter;
+import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 import org.springframework.ldap.query.LdapQuery;
 import org.springframework.ldap.repository.LdapRepository;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.Assert;
 
 import javax.naming.Name;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
+
 
 /**
  * Base repository implementation for LDAP.
@@ -137,7 +141,8 @@ public class SimpleLdapRepository<T> implements LdapRepository<T> {
 
     @Override
     public List<T> findAll() {
-        return ldapOperations.findAll(clazz);
+	String base = clazz.getAnnotation(Entry.class).base();
+        return ldapOperations.findAll(LdapUtils.newLdapName(base), clazz);
     }
 
     @Override

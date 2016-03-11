@@ -1812,10 +1812,19 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     @Override
     public <T> List<T> findAll(Class<T> clazz) {
         return findAll(LdapUtils.emptyLdapName(),
-                getDefaultSearchControls(defaultSearchScope, RETURN_OBJ_FLAG, ALL_ATTRIBUTES),
                 clazz);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <T> List<T> findAll(Name base, Class<T> clazz) {
+        return findAll(base,
+                getDefaultSearchControls(defaultSearchScope, RETURN_OBJ_FLAG, ALL_ATTRIBUTES),
+                clazz);
+    }
+    
     /**
      * {@inheritDoc}
      */
