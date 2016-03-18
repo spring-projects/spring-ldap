@@ -28,8 +28,12 @@ dependencies {
     compile 	project(":spring-ldap-test"),
                 project(":spring-ldap-core-tiger")
 
-    compile "com.mysema.querydsl:querydsl-apt:$queryDslVersion",
-            "org.springframework.data:spring-data-commons:$springDataSpring3Version"
+    compile "com.querydsl:querydsl-apt:$queryDslVersion",
+
+    compile("org.springframework.data:spring-data-commons:$springDataVersion") {
+        exclude group: "org.springframework", module: "spring-beans"
+        exclude group: "org.springframework", module: "spring-core"
+    }
 
     compile("org.springframework.security:spring-security-core:$springSecurityVersion") {
         exclude group: "org.springframework", module: "spring-expression"

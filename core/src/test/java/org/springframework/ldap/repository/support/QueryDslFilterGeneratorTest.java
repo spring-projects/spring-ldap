@@ -1,6 +1,6 @@
 package org.springframework.ldap.repository.support;
 
-import com.mysema.query.types.Expression;
+import com.querydsl.core.types.Expression;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.ldap.filter.Filter;
@@ -12,6 +12,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * @author Mattias Hellborg Arthursson
+ * @author Eddu Melendez
  */
 public class QueryDslFilterGeneratorTest {
 

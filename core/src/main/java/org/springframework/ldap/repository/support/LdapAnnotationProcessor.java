@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 
 package org.springframework.ldap.repository.support;
 
-import com.mysema.query.annotations.QueryEntities;
-import com.mysema.query.apt.AbstractQuerydslProcessor;
-import com.mysema.query.apt.Configuration;
-import com.mysema.query.apt.DefaultConfiguration;
+import com.querydsl.apt.AbstractQuerydslProcessor;
+import com.querydsl.apt.Configuration;
+import com.querydsl.apt.DefaultConfiguration;
+import com.querydsl.core.annotations.QueryEntities;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Transient;
 
@@ -34,6 +34,7 @@ import java.util.Collections;
  * QueryDSL Annotation Processor to generate QueryDSL classes for entity classes annotated with {@link Entry}.
  *
  * @author Mattias Hellborg Arthursson
+ * @author Eddu Melendez
  * @since 2.0
  */
 @SupportedAnnotationTypes("org.springframework.ldap.odm.annotations.*")
