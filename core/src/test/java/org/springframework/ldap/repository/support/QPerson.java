@@ -1,16 +1,16 @@
 package org.springframework.ldap.repository.support;
 
-import com.mysema.query.types.Path;
-import com.mysema.query.types.PathMetadata;
-import com.mysema.query.types.path.EntityPathBase;
-import com.mysema.query.types.path.ListPath;
-import com.mysema.query.types.path.PathInits;
-import com.mysema.query.types.path.StringPath;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.dsl.EntityPathBase;
+import com.querydsl.core.types.dsl.ListPath;
+import com.querydsl.core.types.dsl.PathInits;
+import com.querydsl.core.types.dsl.StringPath;
 import org.springframework.ldap.odm.core.impl.UnitTestPerson;
 
 import javax.annotation.Generated;
 
-import static com.mysema.query.types.PathMetadataFactory.forVariable;
+import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 
 
 /**
@@ -37,7 +37,7 @@ public class QPerson extends EntityPathBase<UnitTestPerson> {
         super(path.getType(), path.getMetadata());
     }
 
-    public QPerson(PathMetadata<?> metadata) {
+    public QPerson(PathMetadata metadata) {
         super(UnitTestPerson.class, metadata);
     }
 

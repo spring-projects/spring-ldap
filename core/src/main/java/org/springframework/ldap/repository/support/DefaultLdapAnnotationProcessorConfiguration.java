@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package org.springframework.ldap.repository.support;
 
-import com.mysema.query.apt.DefaultConfiguration;
+import com.querydsl.apt.DefaultConfiguration;
 import org.springframework.ldap.odm.annotations.Id;
 
 import javax.annotation.processing.RoundEnvironment;
@@ -27,6 +27,7 @@ import java.util.Map;
 
 /**
  * @author Mattias Hellborg Arthursson
+ * @author Eddu Melendez
  * @since 2.0
  */
 class DefaultLdapAnnotationProcessorConfiguration extends DefaultConfiguration {

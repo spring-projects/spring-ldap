@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,17 @@
 
 package org.springframework.ldap.repository.support;
 
-import com.mysema.query.types.Constant;
-import com.mysema.query.types.Expression;
-import com.mysema.query.types.FactoryExpression;
-import com.mysema.query.types.Operation;
-import com.mysema.query.types.Operator;
-import com.mysema.query.types.Ops;
-import com.mysema.query.types.ParamExpression;
-import com.mysema.query.types.Path;
-import com.mysema.query.types.SubQueryExpression;
-import com.mysema.query.types.TemplateExpression;
-import com.mysema.query.types.Visitor;
+import com.querydsl.core.types.Constant;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.FactoryExpression;
+import com.querydsl.core.types.Operation;
+import com.querydsl.core.types.Operator;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.ParamExpression;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.core.types.TemplateExpression;
+import com.querydsl.core.types.Visitor;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.filter.Filter;
@@ -42,6 +42,7 @@ import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
  * Helper class for generating LDAP filters from QueryDSL Expressions.
  *
  * @author Mattias Hellborg Arthursson
+ * @author Eddu Melendez
  * @since 2.0
  */
 class LdapSerializer implements Visitor<Object, Void> {
@@ -70,7 +71,7 @@ class LdapSerializer implements Visitor<Object, Void> {
 
     @Override
     public Object visit(Operation<?> expr, Void context) {
-        Operator<?> operator = expr.getOperator();
+        Operator operator = expr.getOperator();
         if (operator == Ops.EQ) {
             return new EqualsFilter(attribute(expr), value(expr));
         } else if (operator == Ops.AND) {

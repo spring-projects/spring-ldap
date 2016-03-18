@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
 
 package org.springframework.ldap.repository.support;
 
-import com.mysema.query.DefaultQueryMetadata;
-import com.mysema.query.FilteredClause;
-import com.mysema.query.support.QueryMixin;
-import com.mysema.query.types.EntityPath;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.DefaultQueryMetadata;
+import com.querydsl.core.FilteredClause;
+import com.querydsl.core.support.QueryMixin;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Predicate;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.query.LdapQuery;
 
@@ -32,6 +32,7 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
  * Spring LDAP specific {@link FilteredClause} implementation.
  *
  * @author Mattias Hellborg Arthursson
+ * @author Eddu Melendez
  * @since 2.0
  */
 public class QueryDslLdapQuery<K> implements FilteredClause<QueryDslLdapQuery<K>> {

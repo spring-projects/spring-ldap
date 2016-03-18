@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package org.springframework.ldap.repository.support;
 
+import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.core.EntityInformation;
 import org.springframework.data.repository.core.NamedQueries;
@@ -37,6 +38,7 @@ import static org.springframework.data.querydsl.QueryDslUtils.QUERY_DSL_PRESENT;
 /**
  * Factory to create {@link org.springframework.ldap.repository.LdapRepository} instances.
  * @author Mattias Hellborg Arthursson
+ * @author Eddu Melendez
  * @since 2.0
  */
 public class LdapRepositoryFactory extends RepositoryFactorySupport {
@@ -92,8 +94,8 @@ public class LdapRepositoryFactory extends RepositoryFactorySupport {
 
     private final class LdapQueryLookupStrategy implements QueryLookupStrategy {
         @Override
-        public RepositoryQuery resolveQuery(Method method, RepositoryMetadata metadata, NamedQueries namedQueries) {
-            LdapQueryMethod queryMethod = new LdapQueryMethod(method, metadata);
+        public RepositoryQuery resolveQuery(Method method, RepositoryMetadata metadata, ProjectionFactory factory, NamedQueries namedQueries) {
+            LdapQueryMethod queryMethod = new LdapQueryMethod(method, metadata, factory);
             Class<?> domainType = metadata.getDomainType();
 
             if(queryMethod.hasQueryAnnotation()) {

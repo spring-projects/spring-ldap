@@ -3,6 +3,8 @@ package org.springframework.ldap.repository.query;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.projection.ProjectionFactory;
+import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 import org.springframework.data.repository.core.support.DefaultRepositoryMetadata;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.odm.core.impl.BaseUnitTestPerson;
@@ -17,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * @author Mattias Hellborg Arthursson
+ * @author Eddu Melendez
  */
 @ContextConfiguration("classpath:/query-test.xml")
 public class PartTreeLdapRepositoryQueryTest extends AbstractJUnit4SpringContextTests {
@@ -26,12 +29,14 @@ public class PartTreeLdapRepositoryQueryTest extends AbstractJUnit4SpringContext
     private Class<?> targetClass;
     private Class<?> entityClass;
     private DefaultRepositoryMetadata repositoryMetadata;
+    private ProjectionFactory factory;
 
     @Before
     public void prepareTest() {
         entityClass = UnitTestPerson.class;
         targetClass = UnitTestPersonRepository.class;
         repositoryMetadata = new DefaultRepositoryMetadata(targetClass);
+        factory = new SpelAwareProxyProjectionFactory();
     }
 
     @Test
@@ -155,7 +160,7 @@ public class PartTreeLdapRepositoryQueryTest extends AbstractJUnit4SpringContext
     }
 
     private void assertFilterAndBaseForMethod(Method targetMethod, String expectedFilter, String expectedBase, Object... expectedParams) {
-        LdapQueryMethod queryMethod = new LdapQueryMethod(targetMethod, repositoryMetadata);
+        LdapQueryMethod queryMethod = new LdapQueryMethod(targetMethod, repositoryMetadata, factory);
         PartTreeLdapRepositoryQuery tested = new PartTreeLdapRepositoryQuery(queryMethod, entityClass, ldapTemplate);
 
         LdapQuery query = tested.createQuery(expectedParams);
