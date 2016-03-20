@@ -2359,3 +2359,70 @@ Attributes attrs = DefaultIncrementalAttributeMapper.lookupAttributes(ldapTempla
 ----
 
 This will parse any returned attribute range markers and make repeated requests as necessary until all values for all requested attributes have been retrieved.
+
+== Testing
+
+==== Using Embedded Server
+
+`spring-ldap-test` bring an embedded ldap server based on ApacheDS.
+
+NOTE: `spring-ldap-test` is compatible with ApacheDS 1.5.5. New versions of ApacheDS are not supported.
+
+Download the dependency below:
+
+Maven:
+[source,xml]
+----
+<dependency>
+    <groupId>org.springframework.ldap</groupId>
+    <artifactId>spring-ldap-test</artifactId>
+    <version>${version}</version>
+</dependency>
+----
+
+Gradle:
+[source,groovy]
+[subs="verbatim,quotes"]
+----
+testCompile "org.springframework.ldap:spring-ldap-test:$version"
+----
+
+An embedded ldap server is created using the bean below:
+
+[source,xml]
+----
+<bean id="embeddedLdapServer" class="org.springframework.ldap.test.EmbeddedLdapServerFactoryBean">
+    <property name="partitionName" value="example"/>
+    <property name="partitionSuffix" value="dc=261consulting,dc=com" />
+    <property name="port" value="9321" />
+</bean>
+----
+
+`spring-ldap-test` provided a mechanism to populate the ldap server using `org.springframework.ldap.test.LdifPopulator`. Create the bean as follow:
+
+[source,xml]
+----
+<bean class="org.springframework.ldap.test.LdifPopulator" depends-on="embeddedLdapServer">
+    <property name="contextSource" ref="contextSource" />
+    <property name="resource" value="classpath:/setup_data.ldif" />
+    <property name="base" value="dc=jayway,dc=se" />
+    <property name="clean" value="true" />
+    <property name="defaultBase" value="dc=jayway,dc=se" />
+</bean>
+----
+
+Another way to work against an embedded ldap server is using `org.springframework.ldap.test.TestContextSourceFactoryBean` which allow to use and populate it.
+
+[source,xml]
+----
+<bean id="contextSource" class="org.springframework.ldap.test.TestContextSourceFactoryBean">
+    <property name="defaultPartitionSuffix" value="dc=jayway,dc=se" />
+    <property name="defaultPartitionName" value="jayway" />
+    <property name="principal" value="uid=admin,ou=system" />
+    <property name="password" value="secret" />
+    <property name="ldifFile" value="classpath:/setup_data.ldif" />
+    <property name="port" value="1888" />
+</bean>
+----
+
+Also, `org.springframework.ldap.test.LdapTestUtils` provide methods to work with embedded ldap server programmatically.
