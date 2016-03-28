@@ -1,6 +1,6 @@
 ##Spring LDAP
 
-[![Join the chat at https://gitter.im/spring-projects/spring-ldap](https://badges.gitter.im/spring-projects/spring-ldap.svg)](https://gitter.im/spring-projects/spring-ldap?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+[![Join the chat at https://gitter.im/spring-projects/spring-ldap](https://badges.gitter.im/spring-projects/spring-ldap.svg)](https://gitter.im/spring-projects/spring-ldap?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![Build Status](https://travis-ci.org/spring-projects/spring-ldap.svg?branch=master)](https://travis-ci.org/spring-projects/spring-ldap)
 
