@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.springframework.ldap</groupId>
   <artifactId>spring-ldap-plain-sample</artifactId>
-  <version>2.0.4.CI-SNAPSHOT</version>
+  <version>2.1.0.RC1</version>
   <packaging>war</packaging>
   <name>spring-ldap-plain-sample</name>
   <description>spring-ldap-plain-sample</description>
@@ -65,12 +65,6 @@
     <developerConnection>scm:git:git://github.com/SpringSource/spring-ldap</developerConnection>
     <url>https://github.com/SpringSource/spring-ldap</url>
   </scm>
-  <repositories>
-    <repository>
-      <id>spring-snasphot</id>
-      <url>http://repo.springsource.org/libs-snapshot</url>
-    </repository>
-  </repositories>
   <dependencies>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -81,25 +75,25 @@
     <dependency>
       <groupId>org.springframework.data</groupId>
       <artifactId>spring-data-commons</artifactId>
-      <version>1.10.0.RELEASE</version>
+      <version>1.12.0.RC1</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.ldap</groupId>
       <artifactId>spring-ldap-test</artifactId>
-      <version>2.0.4.CI-SNAPSHOT</version>
+      <version>2.1.0.RC1</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      <version>3.2.13.RELEASE</version>
+      <version>4.2.5.RELEASE</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>
-      <version>3.2.13.RELEASE</version>
+      <version>4.2.5.RELEASE</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -123,10 +117,16 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
-      <version>3.2.13.RELEASE</version>
+      <version>4.2.5.RELEASE</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <repositories>
+    <repository>
+      <id>spring-snasphot</id>
+      <url>http://repo.springsource.org/libs-snapshot</url>
+    </repository>
+  </repositories>
   <build>
     <plugins>
       <plugin>
