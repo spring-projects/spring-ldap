@@ -7,6 +7,8 @@ dependencies {
                 project(":spring-ldap-core-tiger"),
                 "commons-pool:commons-pool:1.4"
 
+    optional apachedsDependencies
+
     provided 	"org.springframework:spring-jdbc:$springVersion",
                 "com.sun:ldapbp:1.0"
 

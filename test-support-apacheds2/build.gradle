@@ -1,0 +1,25 @@
+merge.into = project(":spring-ldap-test")
+
+ext.apacheds2Dependencies = [
+        "org.apache.directory.server:apacheds-core:$apacheDs2Version",
+        "org.apache.directory.server:apacheds-protocol-shared:$apacheDs2Version",
+        "org.apache.directory.server:apacheds-protocol-ldap:$apacheDs2Version",
+        "org.apache.directory.server:apacheds-server-jndi:$apacheDs2Version",
+        "org.apache.directory.server:apacheds-test-framework:$apacheDs2Version"
+]
+
+dependencies {
+    compile project(":spring-ldap-core"),
+            project(":spring-ldap-ldif-core"),
+            "com.google.code.typica:typica:1.3",
+            "commons-io:commons-io:$commonsIoVersion",
+            "javax.activation:activation:1.1",
+            "org.springframework:spring-core:$springVersion",
+            "org.springframework:spring-beans:$springVersion",
+            "org.springframework:spring-context:$springVersion",
+            "org.springframework:spring-test:$springVersion"
+
+    optional apacheds2Dependencies
+
+    testCompile "junit:junit:$junitVersion"
+}

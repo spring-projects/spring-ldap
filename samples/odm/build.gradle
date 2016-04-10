@@ -7,6 +7,8 @@ dependencies {
             "org.springframework:spring-webmvc:$springVersion",
             "org.springframework.data:spring-data-commons:$springDataVersion"
 
+    optional apachedsDependencies
+
     provided "javax.servlet:servlet-api:2.5"
 
     runtime 'ch.qos.logback:logback-classic:1.0.13'

@@ -7,6 +7,8 @@ apply from: JAVA_SCRIPT
 ext.spring20Version = '2.0.8'
 
 dependencies {
+    optional apachedsDependencies
+
     testCompile 	(project(":spring-ldap-test")) {
         exclude group: "org.springframework", module:"spring-core"
         exclude group: "org.springframework", module:"spring-beans"
