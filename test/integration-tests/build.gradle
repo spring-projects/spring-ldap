@@ -41,6 +41,8 @@ dependencies {
         exclude group: "org.springframework", module: "spring-aop"
     }
 
+    optional apachedsDependencies
+
     provided	"commons-pool:commons-pool:$commonsPoolVersion",
                 "org.springframework:spring-jdbc:$springVersion",
                 "org.springframework:spring-orm:$springVersion"

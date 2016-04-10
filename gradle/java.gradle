@@ -24,6 +24,7 @@ ext.commonsPool2Version = '2.4.2'
 ext.assertjVersion= '2.3.0'
 ext.hibernateVersion = '5.2.2.Final'
 ext.springSecurityVersion='4.1.3.RELEASE'
+ext.unboundidVersion = '3.1.1'
 
 ext.powerMockDependencies = [
     "org.powermock:powermock-core:$powerMockVersion",
