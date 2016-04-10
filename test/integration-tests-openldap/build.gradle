@@ -3,6 +3,7 @@ apply from: JAVA_SCRIPT
 dependencies {
     compile     project(":spring-ldap-core-tiger"),
                 project(":spring-ldap-test"),
+                "commons-lang:commons-lang:$commonsLangVersion",
                 "commons-logging:commons-logging:$commonsLoggingVersion",
                 "commons-httpclient:commons-httpclient:3.1",
                 "commons-codec:commons-codec:1.3"
