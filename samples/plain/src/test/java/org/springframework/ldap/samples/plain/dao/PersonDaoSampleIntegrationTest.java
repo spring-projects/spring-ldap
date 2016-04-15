@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Abstract base class for PersonDao integration tests.
@@ -78,9 +78,7 @@ public class PersonDaoSampleIntegrationTest extends
                     .findByPrimaryKey(
                             "Sweden", "company1",
                             "Another Person");
-            assertEquals(
-                    "Another description", result
-                    .getDescription());
+            assertThat(result.getDescription()).isEqualTo("Another description");
         } finally {
             personDao.delete(person);
             try {
@@ -99,24 +97,23 @@ public class PersonDaoSampleIntegrationTest extends
     @Test
     public void testGetAllPersonNames() {
         List result = personDao.getAllPersonNames();
-        assertEquals(2, result.size());
+        assertThat(result).hasSize(2);
         String first = (String) result.get(0);
-        assertEquals("Some Person", first);
+        assertThat(first).isEqualTo("Some Person");
     }
 
     @Test
     public void testFindAll() {
         List result = personDao.findAll();
-        assertEquals(2, result.size());
+        assertThat(result).hasSize(2);
         Person first = (Person) result.get(0);
-        assertEquals("Some Person", first
-                .getFullName());
+        assertThat(first.getFullName()).isEqualTo("Some Person");
     }
 
     @Test
     public void testFindByPrimaryKey() {
         Person result = personDao.findByPrimaryKey(
                 "Sweden", "company1", "Some Person");
-        assertEquals(person, result);
+        assertThat(result).isEqualTo(person);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package org.springframework.ldap.filter;
 import com.gargoylesoftware.base.testing.EqualsTester;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Anders Henja
@@ -28,25 +28,25 @@ public class LikeFilterTest {
 
     @Test
     public void testEncodeValue_blank() {
-        assertEquals("", new LikeFilter("", null).getEncodedValue());
-        assertEquals(" ", new LikeFilter("", " ").getEncodedValue());
+        assertThat("").isEqualTo(new LikeFilter("", null).getEncodedValue());
+        assertThat(" ").isEqualTo(new LikeFilter("", " ").getEncodedValue());
     }
 
     @Test
     public void testEncodeValue_normal() {
-        assertEquals("foo", new LikeFilter("", "foo").getEncodedValue());
-        assertEquals("foo*bar", new LikeFilter("", "foo*bar").getEncodedValue());
-        assertEquals("*foo*bar*", new LikeFilter("", "*foo*bar*")
+        assertThat("foo").isEqualTo(new LikeFilter("", "foo").getEncodedValue());
+        assertThat("foo*bar").isEqualTo(new LikeFilter("", "foo*bar").getEncodedValue());
+        assertThat("*foo*bar*").isEqualTo(new LikeFilter("", "*foo*bar*")
                 .getEncodedValue());
-        assertEquals("**foo**bar**", new LikeFilter("", "**foo**bar**")
+        assertThat("**foo**bar**").isEqualTo(new LikeFilter("", "**foo**bar**")
                 .getEncodedValue());
     }
 
     @Test
     public void testEncodeValue_escape() {
-        assertEquals("*\\28*\\29*", new LikeFilter("", "*(*)*")
+        assertThat("*\\28*\\29*").isEqualTo(new LikeFilter("", "*(*)*")
                 .getEncodedValue());
-        assertEquals("*\\5c2a*", new LikeFilter("", "*\\2a*").getEncodedValue());
+        assertThat("*\\5c2a*").isEqualTo(new LikeFilter("", "*\\2a*").getEncodedValue());
     }
 
     @Test

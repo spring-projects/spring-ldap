@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,7 @@ import javax.naming.ldap.SortControl;
 import javax.naming.ldap.SortResponseControl;
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -55,9 +54,9 @@ public class SortControlDirContextProcessorTest {
     @Test
     public void testCreateRequestControl() throws Exception {
         SortControl result = (SortControl) tested.createRequestControl();
-        assertNotNull(result);
-        assertEquals("1.2.840.113556.1.4.473", result.getID());
-        assertEquals(9, result.getEncodedValue().length);
+        assertThat(result).isNotNull();
+        assertThat(result.getID()).isEqualTo("1.2.840.113556.1.4.473");
+        assertThat(result.getEncodedValue().length).isEqualTo(9);
     }
 
     @Test
@@ -72,8 +71,8 @@ public class SortControlDirContextProcessorTest {
 
         tested.postProcess(ldapContextMock);
 
-        assertEquals(true, tested.isSorted());
-        assertEquals(0, tested.getResultCode());
+        assertThat(tested.isSorted()).isEqualTo(true);
+        assertThat(tested.getResultCode()).isEqualTo(0);
     }
 
     @Test
@@ -88,8 +87,8 @@ public class SortControlDirContextProcessorTest {
 
         tested.postProcess(ldapContextMock);
 
-        assertEquals(false, tested.isSorted());
-        assertEquals(1, tested.getResultCode());
+        assertThat(tested.isSorted()).isEqualTo(false);
+        assertThat(tested.getResultCode()).isEqualTo(1);
     }
 
     @Test
@@ -109,7 +108,7 @@ public class SortControlDirContextProcessorTest {
 
         tested.postProcess(ldapContextMock);
 
-        assertEquals(false, tested.isSorted());
+        assertThat(tested.isSorted()).isEqualTo(false);
     }
 
     @Test
@@ -122,7 +121,7 @@ public class SortControlDirContextProcessorTest {
         ber.parseSeq(null);
         int actualSortResult = ber.parseEnumeration();
 
-        assertEquals("sortResult,", 53, actualSortResult);
+        assertThat(actualSortResult).as("sortResult,").isEqualTo(53);
     }
 
     private byte[] encodeValue(int sortResult) throws IOException {

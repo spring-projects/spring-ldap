@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package org.springframework.ldap.itest;
 
-import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +35,7 @@ import org.springframework.test.context.ContextConfiguration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 /**
@@ -59,7 +55,7 @@ public class LdapTemplateAuthenticationITest extends AbstractLdapTemplateIntegra
 	public void testAuthenticate() {
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
-		assertTrue(tested.authenticate("", filter.toString(), "password"));
+		assertThat(tested.authenticate("", filter.toString(), "password")).isTrue();
 	}
 
     @Test
@@ -78,7 +74,7 @@ public class LdapTemplateAuthenticationITest extends AbstractLdapTemplateIntegra
 	public void testAuthenticateWithInvalidPassword() {
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
-		assertFalse(tested.authenticate("", filter.toString(), "invalidpassword"));
+		assertThat(tested.authenticate("", filter.toString(), "invalidpassword")).isFalse();
 	}
 
     @Test(expected = AuthenticationException.class)
@@ -101,14 +97,14 @@ public class LdapTemplateAuthenticationITest extends AbstractLdapTemplateIntegra
 			public void executeWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
 				try {
 					DirContextAdapter adapter = (DirContextAdapter) ctx.lookup(ldapEntryIdentification.getRelativeDn());
-					assertEquals("Some Person3", adapter.getStringAttribute("cn"));
+					assertThat(adapter.getStringAttribute("cn")).isEqualTo("Some Person3");
 				}
 				catch (NamingException e) {
 					throw new RuntimeException("Failed to lookup " + ldapEntryIdentification.getRelativeDn(), e);
 				}
 			}
 		};
-		assertTrue(tested.authenticate("", filter.toString(), "password", contextCallback));
+		assertThat(tested.authenticate("", filter.toString(), "password", contextCallback)).isTrue();
 	}
 
     @Test
@@ -120,8 +116,8 @@ public class LdapTemplateAuthenticationITest extends AbstractLdapTemplateIntegra
                 "password",
                 new LookupAttemptingCallback());
 
-        Assert.assertNotNull(ctx);
-        assertEquals("some.person3", ctx.getStringAttribute("uid"));
+        assertThat(ctx).isNotNull();
+        assertThat(ctx.getStringAttribute("uid")).isEqualTo("some.person3");
     }
 
     @Test(expected = AuthenticationException.class)
@@ -140,11 +136,11 @@ public class LdapTemplateAuthenticationITest extends AbstractLdapTemplateIntegra
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
 		final CollectingAuthenticationErrorCallback errorCallback = new CollectingAuthenticationErrorCallback();
-		assertFalse(tested.authenticate("", filter.toString(), "invalidpassword", errorCallback));
+		assertThat(tested.authenticate("", filter.toString(), "invalidpassword", errorCallback)).isFalse();
 		final Exception error = errorCallback.getError();
-		assertNotNull("collected error should not be null", error);
-		assertTrue("expected org.springframework.ldap.AuthenticationException", error instanceof AuthenticationException);
-		assertTrue("expected javax.naming.AuthenticationException", error.getCause() instanceof javax.naming.AuthenticationException);
+		assertThat(error).as("collected error should not be null").isNotNull();
+		assertThat(error instanceof AuthenticationException).as("expected org.springframework.ldap.AuthenticationException").isTrue();
+		assertThat(error.getCause() instanceof javax.naming.AuthenticationException).as("expected javax.naming.AuthenticationException").isTrue();
 	}
 
 	@Test
@@ -153,7 +149,7 @@ public class LdapTemplateAuthenticationITest extends AbstractLdapTemplateIntegra
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(
 				new EqualsFilter("uid", "some.person.that.isnt.there"));
-		assertFalse(tested.authenticate("", filter.toString(), "password"));
+		assertThat(tested.authenticate("", filter.toString(), "password")).isFalse();
 	}
 
 	@Test(expected=IncorrectResultSizeDataAccessException.class)
@@ -170,6 +166,6 @@ public class LdapTemplateAuthenticationITest extends AbstractLdapTemplateIntegra
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
 		LookupAttemptingCallback callback = new LookupAttemptingCallback();
-		assertTrue(tested.authenticate("", filter.encode(), "password", callback));
+		assertThat(tested.authenticate("", filter.encode(), "password", callback)).isTrue();
 	}
 }

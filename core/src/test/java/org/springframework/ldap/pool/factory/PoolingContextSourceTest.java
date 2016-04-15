@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ import org.springframework.ldap.pool.validation.DirContextValidator;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -48,7 +48,7 @@ public class PoolingContextSourceTest extends AbstractPoolTestCase {
         }
         poolingContextSource.setContextSource(contextSourceMock);
         final ContextSource contextSource2 = poolingContextSource.getContextSource();
-        assertEquals(contextSourceMock, contextSource2);
+        assertThat(contextSource2).isEqualTo(contextSourceMock);
         
         try {
             poolingContextSource.setDirContextValidator(null);
@@ -59,61 +59,61 @@ public class PoolingContextSourceTest extends AbstractPoolTestCase {
         }
         poolingContextSource.setDirContextValidator(dirContextValidatorMock);
         final DirContextValidator dirContextValidator2 = poolingContextSource.getDirContextValidator();
-        assertEquals(dirContextValidatorMock, dirContextValidator2);
+        assertThat(dirContextValidator2).isEqualTo(dirContextValidatorMock);
         
         poolingContextSource.setMaxActive(1000);
         final int maxActive = poolingContextSource.getMaxActive();
-        assertEquals(1000, maxActive);
+        assertThat(maxActive).isEqualTo(1000);
         
         poolingContextSource.setMaxIdle(500);
         final int maxIdle = poolingContextSource.getMaxIdle();
-        assertEquals(500, maxIdle);
+        assertThat(maxIdle).isEqualTo(500);
         
         poolingContextSource.setMaxTotal(5000);
         final int maxTotal = poolingContextSource.getMaxTotal();
-        assertEquals(5000, maxTotal);
+        assertThat(maxTotal).isEqualTo(5000);
         
         poolingContextSource.setMaxWait(2000L);
         final long maxWait = poolingContextSource.getMaxWait();
-        assertEquals(2000L, maxWait);
+        assertThat(maxWait).isEqualTo(2000L);
         
         poolingContextSource.setMinEvictableIdleTimeMillis(60000L);
         final long minEvictableIdleTimeMillis = poolingContextSource.getMinEvictableIdleTimeMillis();
-        assertEquals(60000L, minEvictableIdleTimeMillis);
+        assertThat(minEvictableIdleTimeMillis).isEqualTo(60000L);
         
         poolingContextSource.setMinIdle(100);
         final int minIdle = poolingContextSource.getMinIdle();
-        assertEquals(100, minIdle);
+        assertThat(minIdle).isEqualTo(100);
         
         poolingContextSource.setNumTestsPerEvictionRun(5);
         final int numTestsPerEvictionRun = poolingContextSource.getNumTestsPerEvictionRun();
-        assertEquals(5, numTestsPerEvictionRun);
+        assertThat(numTestsPerEvictionRun).isEqualTo(5);
         
         poolingContextSource.setTestOnBorrow(true);
         final boolean testOnBorrow = poolingContextSource.getTestOnBorrow();
-        assertEquals(true, testOnBorrow);
+        assertThat(testOnBorrow).isEqualTo(true);
         
         poolingContextSource.setTestOnReturn(true);
         final boolean testOnReturn = poolingContextSource.getTestOnReturn();
-        assertEquals(true, testOnReturn);
+        assertThat(testOnReturn).isEqualTo(true);
         
         poolingContextSource.setTestWhileIdle(true);
         final boolean testWhileIdle = poolingContextSource.getTestWhileIdle();
-        assertEquals(true, testWhileIdle);
+        assertThat(testWhileIdle).isEqualTo(true);
         
         poolingContextSource.setTimeBetweenEvictionRunsMillis(120000L);
         final long timeBetweenEvictionRunsMillis = poolingContextSource.getTimeBetweenEvictionRunsMillis();
-        assertEquals(120000L, timeBetweenEvictionRunsMillis);
+        assertThat(timeBetweenEvictionRunsMillis).isEqualTo(120000L);
         
         poolingContextSource.setWhenExhaustedAction(GenericKeyedObjectPool.WHEN_EXHAUSTED_BLOCK);
         final byte whenExhaustedAction = poolingContextSource.getWhenExhaustedAction();
-        assertEquals(GenericKeyedObjectPool.WHEN_EXHAUSTED_BLOCK, whenExhaustedAction);
+        assertThat(whenExhaustedAction).isEqualTo(GenericKeyedObjectPool.WHEN_EXHAUSTED_BLOCK);
         
         final int numActive = poolingContextSource.getNumActive();
-        assertEquals(0, numActive);
+        assertThat(numActive).isEqualTo(0);
         
         final int numIdle = poolingContextSource.getNumIdle();
-        assertEquals(0, numIdle);
+        assertThat(numIdle).isEqualTo(0);
     }
 
     @Test
@@ -127,36 +127,36 @@ public class PoolingContextSourceTest extends AbstractPoolTestCase {
 
         //Get a context
         final DirContext readOnlyContext1 = poolingContextSource.getReadOnlyContext();
-        assertEquals(readOnlyContext1, dirContextMock); //Order reversed because the 'wrapper' has the needed equals logic
-        assertEquals(1, poolingContextSource.getNumActive());
-        assertEquals(0, poolingContextSource.getNumIdle());
+        assertThat(readOnlyContext1).isEqualTo(dirContextMock); //Order reversed because the 'wrapper' has the needed equals logic
+        assertThat(poolingContextSource.getNumActive()).isEqualTo(1);
+        assertThat(poolingContextSource.getNumIdle()).isEqualTo(0);
         
         //Close the context
         readOnlyContext1.close();
-        assertEquals(0, poolingContextSource.getNumActive());
-        assertEquals(1, poolingContextSource.getNumIdle());
+        assertThat(poolingContextSource.getNumActive()).isEqualTo(0);
+        assertThat(poolingContextSource.getNumIdle()).isEqualTo(1);
         
         //Get the context again
         final DirContext readOnlyContext2 = poolingContextSource.getReadOnlyContext();
-        assertEquals(readOnlyContext2, dirContextMock); //Order reversed because the 'wrapper' has the needed equals logic
-        assertEquals(1, poolingContextSource.getNumActive());
-        assertEquals(0, poolingContextSource.getNumIdle());
+        assertThat(readOnlyContext2).isEqualTo(dirContextMock); //Order reversed because the 'wrapper' has the needed equals logic
+        assertThat(poolingContextSource.getNumActive()).isEqualTo(1);
+        assertThat(poolingContextSource.getNumIdle()).isEqualTo(0);
         
         //Get a new context
         final DirContext readOnlyContext3 = poolingContextSource.getReadOnlyContext();
-        assertEquals(readOnlyContext3, secondDirContextMock); //Order reversed because the 'wrapper' has the needed equals logic
-        assertEquals(2, poolingContextSource.getNumActive());
-        assertEquals(0, poolingContextSource.getNumIdle());
+        assertThat(readOnlyContext3).isEqualTo(secondDirContextMock); //Order reversed because the 'wrapper' has the needed equals logic
+        assertThat(poolingContextSource.getNumActive()).isEqualTo(2);
+        assertThat(poolingContextSource.getNumIdle()).isEqualTo(0);
 
         //Close context
         readOnlyContext2.close();
-        assertEquals(1, poolingContextSource.getNumActive());
-        assertEquals(1, poolingContextSource.getNumIdle());
+        assertThat(poolingContextSource.getNumActive()).isEqualTo(1);
+        assertThat(poolingContextSource.getNumIdle()).isEqualTo(1);
         
         //Close context
         readOnlyContext3.close();
-        assertEquals(0, poolingContextSource.getNumActive());
-        assertEquals(2, poolingContextSource.getNumIdle());
+        assertThat(poolingContextSource.getNumActive()).isEqualTo(0);
+        assertThat(poolingContextSource.getNumIdle()).isEqualTo(2);
     }
 
     @Test
@@ -170,36 +170,36 @@ public class PoolingContextSourceTest extends AbstractPoolTestCase {
 
         //Get a context
         final DirContext readOnlyContext1 = poolingContextSource.getReadWriteContext();
-        assertEquals(readOnlyContext1, dirContextMock); //Order reversed because the 'wrapper' has the needed equals logic
-        assertEquals(1, poolingContextSource.getNumActive());
-        assertEquals(0, poolingContextSource.getNumIdle());
+        assertThat(readOnlyContext1).isEqualTo(dirContextMock); //Order reversed because the 'wrapper' has the needed equals logic
+        assertThat(poolingContextSource.getNumActive()).isEqualTo(1);
+        assertThat(poolingContextSource.getNumIdle()).isEqualTo(0);
         
         //Close the context
         readOnlyContext1.close();
-        assertEquals(0, poolingContextSource.getNumActive());
-        assertEquals(1, poolingContextSource.getNumIdle());
+        assertThat(poolingContextSource.getNumActive()).isEqualTo(0);
+        assertThat(poolingContextSource.getNumIdle()).isEqualTo(1);
         
         //Get the context again
         final DirContext readOnlyContext2 = poolingContextSource.getReadWriteContext();
-        assertEquals(readOnlyContext2, dirContextMock); //Order reversed because the 'wrapper' has the needed equals logic
-        assertEquals(1, poolingContextSource.getNumActive());
-        assertEquals(0, poolingContextSource.getNumIdle());
+        assertThat(readOnlyContext2).isEqualTo(dirContextMock); //Order reversed because the 'wrapper' has the needed equals logic
+        assertThat(poolingContextSource.getNumActive()).isEqualTo(1);
+        assertThat(poolingContextSource.getNumIdle()).isEqualTo(0);
         
         //Get a new context
         final DirContext readOnlyContext3 = poolingContextSource.getReadWriteContext();
-        assertEquals(readOnlyContext3, secondDirContextMock); //Order reversed because the 'wrapper' has the needed equals logic
-        assertEquals(2, poolingContextSource.getNumActive());
-        assertEquals(0, poolingContextSource.getNumIdle());
+        assertThat(readOnlyContext3).isEqualTo(secondDirContextMock); //Order reversed because the 'wrapper' has the needed equals logic
+        assertThat(poolingContextSource.getNumActive()).isEqualTo(2);
+        assertThat(poolingContextSource.getNumIdle()).isEqualTo(0);
 
         //Close context
         readOnlyContext2.close();
-        assertEquals(1, poolingContextSource.getNumActive());
-        assertEquals(1, poolingContextSource.getNumIdle());
+        assertThat(poolingContextSource.getNumActive()).isEqualTo(1);
+        assertThat(poolingContextSource.getNumIdle()).isEqualTo(1);
         
         //Close context
         readOnlyContext3.close();
-        assertEquals(0, poolingContextSource.getNumActive());
-        assertEquals(2, poolingContextSource.getNumIdle());
+        assertThat(poolingContextSource.getNumActive()).isEqualTo(0);
+        assertThat(poolingContextSource.getNumIdle()).isEqualTo(2);
     }
 
     @Test
@@ -230,35 +230,35 @@ public class PoolingContextSourceTest extends AbstractPoolTestCase {
 
         //Get a context
         final DirContext readOnlyContext1 = poolingContextSource.getReadOnlyContext();
-        assertEquals(readOnlyContext1, ldapContextMock); //Order reversed because the 'wrapper' has the needed equals logic
-        assertEquals(1, poolingContextSource.getNumActive());
-        assertEquals(0, poolingContextSource.getNumIdle());
+        assertThat(readOnlyContext1).isEqualTo(ldapContextMock); //Order reversed because the 'wrapper' has the needed equals logic
+        assertThat(poolingContextSource.getNumActive()).isEqualTo(1);
+        assertThat(poolingContextSource.getNumIdle()).isEqualTo(0);
         
         //Close the context
         readOnlyContext1.close();
-        assertEquals(0, poolingContextSource.getNumActive());
-        assertEquals(1, poolingContextSource.getNumIdle());
+        assertThat(poolingContextSource.getNumActive()).isEqualTo(0);
+        assertThat(poolingContextSource.getNumIdle()).isEqualTo(1);
         
         //Get the context again
         final DirContext readOnlyContext2 = poolingContextSource.getReadOnlyContext();
-        assertEquals(readOnlyContext2, ldapContextMock); //Order reversed because the 'wrapper' has the needed equals logic
-        assertEquals(1, poolingContextSource.getNumActive());
-        assertEquals(0, poolingContextSource.getNumIdle());
+        assertThat(readOnlyContext2).isEqualTo(ldapContextMock); //Order reversed because the 'wrapper' has the needed equals logic
+        assertThat(poolingContextSource.getNumActive()).isEqualTo(1);
+        assertThat(poolingContextSource.getNumIdle()).isEqualTo(0);
         
         //Get a new context
         final DirContext readOnlyContext3 = poolingContextSource.getReadOnlyContext();
-        assertEquals(readOnlyContext3, secondLdapContextMock); //Order reversed because the 'wrapper' has the needed equals logic
-        assertEquals(2, poolingContextSource.getNumActive());
-        assertEquals(0, poolingContextSource.getNumIdle());
+        assertThat(readOnlyContext3).isEqualTo(secondLdapContextMock); //Order reversed because the 'wrapper' has the needed equals logic
+        assertThat(poolingContextSource.getNumActive()).isEqualTo(2);
+        assertThat(poolingContextSource.getNumIdle()).isEqualTo(0);
 
         //Close context
         readOnlyContext2.close();
-        assertEquals(1, poolingContextSource.getNumActive());
-        assertEquals(1, poolingContextSource.getNumIdle());
+        assertThat(poolingContextSource.getNumActive()).isEqualTo(1);
+        assertThat(poolingContextSource.getNumIdle()).isEqualTo(1);
         
         //Close context
         readOnlyContext3.close();
-        assertEquals(0, poolingContextSource.getNumActive());
-        assertEquals(2, poolingContextSource.getNumIdle());
+        assertThat(poolingContextSource.getNumActive()).isEqualTo(0);
+        assertThat(poolingContextSource.getNumIdle()).isEqualTo(2);
     }
 }

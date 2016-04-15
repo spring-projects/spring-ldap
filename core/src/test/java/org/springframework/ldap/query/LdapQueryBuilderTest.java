@@ -3,8 +3,7 @@ package org.springframework.ldap.query;
 import org.junit.Test;
 import org.springframework.ldap.support.LdapUtils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 /**
@@ -16,32 +15,32 @@ public class LdapQueryBuilderTest {
     public void buildSimpleWithDefaults() {
         LdapQuery result = query().where("cn").is("John Doe");
 
-        assertEquals(LdapUtils.emptyLdapName(), result.base());
-        assertNull(result.searchScope());
-        assertNull(result.timeLimit());
-        assertNull(result.countLimit());
-        assertEquals("(cn=John Doe)", result.filter().encode());
+        assertThat(result.base()).isEqualTo(LdapUtils.emptyLdapName());
+        assertThat(result.searchScope()).isNull();
+        assertThat(result.timeLimit()).isNull();
+        assertThat(result.countLimit()).isNull();
+        assertThat(result.filter().encode()).isEqualTo("(cn=John Doe)");
     }
 
     @Test
     public void buildGreaterThanOrEquals() {
         LdapQuery result = query().where("cn").gte("John Doe");
 
-        assertEquals("(cn>=John Doe)", result.filter().encode());
+        assertThat(result.filter().encode()).isEqualTo("(cn>=John Doe)");
     }
 
     @Test
     public void buildLessThanOrEquals() {
         LdapQuery result = query().where("cn").lte("John Doe");
 
-        assertEquals("(cn<=John Doe)", result.filter().encode());
+        assertThat(result.filter().encode()).isEqualTo("(cn<=John Doe)");
     }
 
     @Test
     public void buildLike() {
         LdapQuery result = query().where("cn").like("J*hn Doe");
 
-        assertEquals("(cn=J*hn Doe)", result.filter().encode());
+        assertThat(result.filter().encode()).isEqualTo("(cn=J*hn Doe)");
     }
 
 
@@ -49,21 +48,21 @@ public class LdapQueryBuilderTest {
     public void buildWhitespaceWildcards() {
         LdapQuery result = query().where("cn").whitespaceWildcardsLike("John Doe");
 
-        assertEquals("(cn=*John*Doe*)", result.filter().encode());
+        assertThat(result.filter().encode()).isEqualTo("(cn=*John*Doe*)");
     }
 
     @Test
     public void buildPresent() {
         LdapQuery result = query().where("cn").isPresent();
 
-        assertEquals("(cn=*)", result.filter().encode());
+        assertThat(result.filter().encode()).isEqualTo("(cn=*)");
     }
 
     @Test
     public void buildHardcodedFilter() {
         LdapQuery result = query().filter("(cn=Person*)");
 
-        assertEquals("(cn=Person*)", result.filter().encode());
+        assertThat(result.filter().encode()).isEqualTo("(cn=Person*)");
     }
 
     @Test(expected = IllegalStateException.class)
@@ -84,7 +83,7 @@ public class LdapQueryBuilderTest {
     public void buildFilterFormat() {
         LdapQuery result = query().filter("(|(cn={0})(cn={1}))", "Person*", "Parson*");
 
-        assertEquals("(|(cn=Person\\2a)(cn=Parson\\2a))", result.filter().encode());
+        assertThat(result.filter().encode()).isEqualTo("(|(cn=Person\\2a)(cn=Parson\\2a))");
     }
 
     @Test
@@ -96,18 +95,18 @@ public class LdapQueryBuilderTest {
                 .countLimit(221)
                 .where("objectclass").is("person").and("cn").is("John Doe");
 
-        assertEquals(LdapUtils.newLdapName("dc=261consulting, dc=com"), query.base());
-        assertEquals(SearchScope.ONELEVEL, query.searchScope());
-        assertEquals(Integer.valueOf(200), query.timeLimit());
-        assertEquals(Integer.valueOf(221), query.countLimit());
-        assertEquals("(&(objectclass=person)(cn=John Doe))", query.filter().encode());
+        assertThat(query.base()).isEqualTo(LdapUtils.newLdapName("dc=261consulting, dc=com"));
+        assertThat(query.searchScope()).isEqualTo(SearchScope.ONELEVEL);
+        assertThat(query.timeLimit()).isEqualTo(Integer.valueOf(200));
+        assertThat(query.countLimit()).isEqualTo(Integer.valueOf(221));
+        assertThat(query.filter().encode()).isEqualTo("(&(objectclass=person)(cn=John Doe))");
     }
 
     @Test
     public void buildSimpleOr() {
         LdapQuery result = query().where("objectclass").is("person").or("cn").is("John Doe");
 
-        assertEquals("(|(objectclass=person)(cn=John Doe))", result.filter().encode());
+        assertThat(result.filter().encode()).isEqualTo("(|(objectclass=person)(cn=John Doe))");
     }
 
     @Test
@@ -116,13 +115,13 @@ public class LdapQueryBuilderTest {
                 .and("cn").is("John Doe")
                 .or(query().where("sn").is("Doe"));
 
-        assertEquals("(|(&(objectclass=person)(cn=John Doe))(sn=Doe))", result.filter().encode());
+        assertThat(result.filter().encode()).isEqualTo("(|(&(objectclass=person)(cn=John Doe))(sn=Doe))");
     }
 
     @Test
     public void buildOrNegatedSubQueries() {
         LdapQuery result = query().where("objectclass").not().is("person").or("sn").not().is("Doe");
-        assertEquals("(|(!(objectclass=person))(!(sn=Doe)))", result.filter().encode());
+        assertThat(result.filter().encode()).isEqualTo("(|(!(objectclass=person))(!(sn=Doe)))");
     }
 
     @Test
@@ -132,7 +131,7 @@ public class LdapQueryBuilderTest {
                 .and(query()
                         .where("sn").is("Doe")
                         .or("sn").like("Die"));
-        assertEquals("(&(objectclass=person)(|(sn=Doe)(sn=Die)))", result.filter().encode());
+        assertThat(result.filter().encode()).isEqualTo("(&(objectclass=person)(|(sn=Doe)(sn=Die)))");
     }
 
     @Test(expected = IllegalStateException.class)

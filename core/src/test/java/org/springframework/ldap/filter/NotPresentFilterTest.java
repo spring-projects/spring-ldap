@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package org.springframework.ldap.filter;
 import com.gargoylesoftware.base.testing.EqualsTester;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Unit tests for the NotPresentFilter class.
@@ -30,20 +30,20 @@ public class NotPresentFilterTest {
     @Test
 	public void testNotPresentFilter() {
 		NotPresentFilter filter = new NotPresentFilter("foo");
-		assertEquals("(!(foo=*))", filter.encode());
+		assertThat(filter.encode()).isEqualTo("(!(foo=*))");
 
 		NotFilter notFilter = new NotFilter(new NotPresentFilter("foo"));
-		assertEquals("(!(!(foo=*)))", notFilter.encode());
+		assertThat(notFilter.encode()).isEqualTo("(!(!(foo=*)))");
 
 		AndFilter andFilter = new AndFilter();
 		andFilter.and(new NotPresentFilter("foo"));
 		andFilter.and(new NotPresentFilter("bar"));
-		assertEquals("(&(!(foo=*))(!(bar=*)))", andFilter.encode());
+		assertThat(andFilter.encode()).isEqualTo("(&(!(foo=*))(!(bar=*)))");
 
 		andFilter = new AndFilter();
 		andFilter.and(new NotPresentFilter("foo"));
 		andFilter.and(new NotFilter(new NotPresentFilter("bar")));
-		assertEquals("(&(!(foo=*))(!(!(bar=*))))", andFilter.encode());
+		assertThat(andFilter.encode()).isEqualTo("(&(!(foo=*))(!(!(bar=*))))");
 	}
 
     @Test

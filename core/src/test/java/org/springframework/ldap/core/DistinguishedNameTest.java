@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,8 @@ import javax.naming.InvalidNameException;
 import javax.naming.Name;
 import java.util.Enumeration;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Unit tests for the {@link DistinguishedName} class.
@@ -43,20 +40,20 @@ public class DistinguishedNameTest {
 	public void testDistinguishedName_CompositeWithSlash() throws Exception {
 		Name testPath = new CompositeName("cn=foo\\/bar");
 		DistinguishedName path = new DistinguishedName(testPath);
-		assertEquals("cn=foo/bar", path.toString());
+		assertThat(path.toString()).isEqualTo("cn=foo/bar");
 	}
 
     @Test
 	public void testDistinguishedName_CompositeWithSlashAsString() throws Exception {
 		Name testPath = new CompositeName("cn=foo\\/bar");
 		DistinguishedName path = new DistinguishedName(testPath.toString());
-		assertEquals("cn=foo/bar", path.toString());
+		assertThat(path.toString()).isEqualTo("cn=foo/bar");
 	}
 
     @Test
     public void testDistinguishedName_Ldap237_NotDestroyedByCompositeName() throws InvalidNameException {
         DistinguishedName path = new DistinguishedName("ou=Roger \\\"Bunny\\\" Rabbit,dc=somecompany,dc=com");
-        assertEquals("ou=Roger \\\"Bunny\\\" Rabbit,dc=somecompany,dc=com", path.toString());
+        assertThat(path.toString()).isEqualTo("ou=Roger \\\"Bunny\\\" Rabbit,dc=somecompany,dc=com");
     }
 
     /**
@@ -67,7 +64,7 @@ public class DistinguishedNameTest {
     @Test
     public void testDistinguishedName_Ldap237_DestroyedByCompositeName() throws InvalidNameException {
         DistinguishedName path = new DistinguishedName("ou=Roger \\\\\"Bunny\\\\\" Rabbit,dc=somecompany,dc=com");
-        assertEquals("ou=Roger \\\"Bunny\\\" Rabbit,dc=somecompany,dc=com", path.toString());
+        assertThat(path.toString()).isEqualTo("ou=Roger \\\"Bunny\\\" Rabbit,dc=somecompany,dc=com");
     }
 
     @Test
@@ -78,7 +75,7 @@ public class DistinguishedNameTest {
 			fail("UnsupportedOperationException expected");
 		}
 		catch (UnsupportedOperationException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 	}
 
@@ -91,24 +88,24 @@ public class DistinguishedNameTest {
 
 		DistinguishedName path = new DistinguishedName(testPath);
 
-		assertEquals("cn", path.getLdapRdn(8).getComponent().getKey());
-		assertEquals("foo,bar", path.getLdapRdn(8).getComponent().getValue());
-		assertEquals("ou", path.getLdapRdn(7).getComponent().getKey());
-		assertEquals("FOO,bar", path.getLdapRdn(7).getComponent().getValue());
-		assertEquals("ou", path.getLdapRdn(6).getComponent().getKey());
-		assertEquals("foo;bar", path.getLdapRdn(6).getComponent().getValue());
-		assertEquals("ou", path.getLdapRdn(5).getComponent().getKey());
-		assertEquals("foo;bar", path.getLdapRdn(5).getComponent().getValue());
-		assertEquals("ou", path.getLdapRdn(4).getComponent().getKey());
-		assertEquals("foo,", path.getLdapRdn(4).getComponent().getValue());
-		assertEquals("ou", path.getLdapRdn(3).getComponent().getKey());
-		assertEquals("foo,", path.getLdapRdn(3).getComponent().getValue());
-		assertEquals("ou", path.getLdapRdn(2).getComponent().getKey());
-		assertEquals("foo;", path.getLdapRdn(2).getComponent().getValue());
-		assertEquals("ou", path.getLdapRdn(1).getComponent().getKey());
-		assertEquals("foo,", path.getLdapRdn(1).getComponent().getValue());
-		assertEquals("ou", path.getLdapRdn(0).getComponent().getKey());
-		assertEquals("bar,", path.getLdapRdn(0).getComponent().getValue());
+		assertThat(path.getLdapRdn(8).getComponent().getKey()).isEqualTo("cn");
+		assertThat(path.getLdapRdn(8).getComponent().getValue()).isEqualTo("foo,bar");
+		assertThat(path.getLdapRdn(7).getComponent().getKey()).isEqualTo("ou");
+		assertThat(path.getLdapRdn(7).getComponent().getValue()).isEqualTo("FOO,bar");
+		assertThat(path.getLdapRdn(6).getComponent().getKey()).isEqualTo("ou");
+		assertThat(path.getLdapRdn(6).getComponent().getValue()).isEqualTo("foo;bar");
+		assertThat(path.getLdapRdn(5).getComponent().getKey()).isEqualTo("ou");
+		assertThat(path.getLdapRdn(5).getComponent().getValue()).isEqualTo("foo;bar");
+		assertThat(path.getLdapRdn(4).getComponent().getKey()).isEqualTo("ou");
+		assertThat(path.getLdapRdn(4).getComponent().getValue()).isEqualTo("foo,");
+		assertThat(path.getLdapRdn(3).getComponent().getKey()).isEqualTo("ou");
+		assertThat(path.getLdapRdn(3).getComponent().getValue()).isEqualTo("foo,");
+		assertThat(path.getLdapRdn(2).getComponent().getKey()).isEqualTo("ou");
+		assertThat(path.getLdapRdn(2).getComponent().getValue()).isEqualTo("foo;");
+		assertThat(path.getLdapRdn(1).getComponent().getKey()).isEqualTo("ou");
+		assertThat(path.getLdapRdn(1).getComponent().getValue()).isEqualTo("foo,");
+		assertThat(path.getLdapRdn(0).getComponent().getKey()).isEqualTo("ou");
+		assertThat(path.getLdapRdn(0).getComponent().getValue()).isEqualTo("bar,");
 	}
 
     @Test
@@ -120,7 +117,7 @@ public class DistinguishedNameTest {
 		path.remove(1);
 		path.remove(3);
 
-		assertEquals("cn=john.doe,ou=Some Company,ou=G,ou=M", path.toString());
+		assertThat(path.toString()).isEqualTo("cn=john.doe,ou=Some Company,ou=G,ou=M");
 	}
 
 	/**
@@ -138,13 +135,13 @@ public class DistinguishedNameTest {
 		DistinguishedName pathE1 = new DistinguishedName("cn=john.doe, OU=Users,OU=SE,ou=G,OU=L,OU=M, ou=foo");
 		DistinguishedName pathE2 = new DistinguishedName("cn=john.doe, OU=Users,OU=SE");
 
-		assertTrue("Contains MIG", path1.contains(migpath));
-		assertTrue("Contains MIG", path2.contains(migpath));
-		assertTrue("Contains MIG", path3.contains(migpath));
-		assertTrue("Contains MIG", path4.contains(migpath));
+		assertThat(path1.contains(migpath)).isTrue();
+		assertThat(path2.contains(migpath)).isTrue();
+		assertThat(path3.contains(migpath)).isTrue();
+		assertThat(path4.contains(migpath)).isTrue();
 
-		assertFalse("Does not contain MIG", pathE1.contains(migpath));
-		assertFalse("Does not contain MIG", pathE2.contains(migpath));
+		assertThat(pathE1.contains(migpath)).isFalse();
+		assertThat(pathE2.contains(migpath)).isFalse();
 	}
 
     @Test
@@ -154,7 +151,7 @@ public class DistinguishedNameTest {
 
 		path1.append(path2);
 
-		assertEquals("Append failed", "ou=baz,ou=foo,ou=bar", path1.toString());
+		assertThat(path1.toString()).isEqualTo("ou=baz,ou=foo,ou=bar");
 	}
 
     @Test
@@ -164,7 +161,7 @@ public class DistinguishedNameTest {
 
 		path1.prepend(path2);
 
-		assertEquals("Append failed", "ou=foo,ou=bar,cn=fie,ou=baz", path1.toString());
+		assertThat(path1.toString()).isEqualTo("ou=foo,ou=bar,cn=fie,ou=baz");
 	}
 
     @Test
@@ -195,10 +192,10 @@ public class DistinguishedNameTest {
 
 		DistinguishedName path2 = (DistinguishedName) path1.clone();
 
-		assertEquals("Should be equal", path1, path2);
+		assertThat(path2).as("Should be equal").isEqualTo(path1);
 
 		path2.removeFirst();
-		assertFalse("Should not be equal", path1.equals(path2));
+		assertThat(path1.equals(path2)).isFalse();
 
 	}
 
@@ -210,8 +207,8 @@ public class DistinguishedNameTest {
 		DistinguishedName path2 = new DistinguishedName("uid=mtah.test, ou=people, ou=EU, o=example.com");
 		DistinguishedName ending2 = new DistinguishedName("uid=mtah.test, ou=people, ou=EU");
 
-		assertTrue(path1.endsWith(ending1));
-		assertTrue(path2.endsWith(ending2));
+		assertThat(path1.endsWith(ending1)).isTrue();
+		assertThat(path2.endsWith(ending2)).isTrue();
 	}
 
     @Test
@@ -222,8 +219,8 @@ public class DistinguishedNameTest {
 		DistinguishedName path2 = new DistinguishedName("uid=mtah.test, ou=people, ou=EU, o=example.com");
 		DistinguishedName ending2 = new DistinguishedName("ou=EU, o=example.com");
 
-		assertFalse(path1.endsWith(ending1));
-		assertFalse(path2.endsWith(ending2));
+		assertThat(path1.endsWith(ending1)).isFalse();
+		assertThat(path2.endsWith(ending2)).isFalse();
 	}
 
     @Test
@@ -233,16 +230,16 @@ public class DistinguishedNameTest {
 		Enumeration elements = path.getAll();
 
 		String element = (String) elements.nextElement();
-		assertEquals("o=example.com", element);
+		assertThat(element).isEqualTo("o=example.com");
 
 		element = (String) elements.nextElement();
-		assertEquals("ou=EU", element);
+		assertThat(element).isEqualTo("ou=EU");
 
 		element = (String) elements.nextElement();
-		assertEquals("ou=people", element);
+		assertThat(element).isEqualTo("ou=people");
 
 		element = (String) elements.nextElement();
-		assertEquals("uid=mtah.test", element);
+		assertThat(element).isEqualTo("uid=mtah.test");
 	}
 
     @Test
@@ -251,16 +248,16 @@ public class DistinguishedNameTest {
 
 		String string = path.get(1);
 
-		assertEquals("ou=EU", string);
+		assertThat(string).isEqualTo("ou=EU");
 	}
 
     @Test
 	public void testSize() {
 		DistinguishedName path1 = new DistinguishedName();
-		assertEquals(0, path1.size());
+		assertThat(path1.size()).isEqualTo(0);
 
 		DistinguishedName path2 = new DistinguishedName("uid=mtah.test, ou=people, ou=EU, o=example.com");
-		assertEquals(4, path2.size());
+		assertThat(path2.size()).isEqualTo(4);
 	}
 
     @Test
@@ -268,16 +265,16 @@ public class DistinguishedNameTest {
 		DistinguishedName path = new DistinguishedName("uid=mtah.test, ou=people, ou=EU, o=example.com");
 
 		Name prefix = path.getPrefix(0);
-		assertEquals(0, prefix.size());
+		assertThat(prefix.size()).isEqualTo(0);
 
 		prefix = path.getPrefix(1);
-		assertEquals(1, prefix.size());
-		assertEquals("o=example.com", prefix.get(0));
+		assertThat(prefix.size()).isEqualTo(1);
+		assertThat(prefix.get(0)).isEqualTo("o=example.com");
 
 		prefix = path.getPrefix(2);
-		assertEquals(2, prefix.size());
-		assertEquals("o=example.com", prefix.get(0));
-		assertEquals("ou=EU", prefix.get(1));
+		assertThat(prefix.size()).isEqualTo(2);
+		assertThat(prefix.get(0)).isEqualTo("o=example.com");
+		assertThat(prefix.get(1)).isEqualTo("ou=EU");
 	}
 
     @Test
@@ -285,21 +282,21 @@ public class DistinguishedNameTest {
 		DistinguishedName path = new DistinguishedName("uid=mtah.test, ou=people, ou=EU, o=example.com");
 
 		Name suffix = path.getSuffix(0);
-		assertEquals(4, suffix.size());
+		assertThat(suffix.size()).isEqualTo(4);
 
 		suffix = path.getSuffix(2);
-		assertEquals(2, suffix.size());
-		assertEquals("ou=people", suffix.get(0));
+		assertThat(suffix.size()).isEqualTo(2);
+		assertThat(suffix.get(0)).isEqualTo("ou=people");
 
 		suffix = path.getSuffix(4);
-		assertEquals(0, suffix.size());
+		assertThat(suffix.size()).isEqualTo(0);
 
 		try {
 			path.getSuffix(5);
 			fail("ArrayIndexOutOfBoundsException expected");
 		}
 		catch (ArrayIndexOutOfBoundsException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 	}
 
@@ -311,8 +308,8 @@ public class DistinguishedNameTest {
 		DistinguishedName path2 = new DistinguishedName("uid=mtah.test, ou=people, ou=EU, o=example.com");
 		DistinguishedName start2 = new DistinguishedName("ou=people, ou=EU, o=example.com");
 
-		assertTrue(path1.startsWith(start1));
-		assertTrue(path2.startsWith(start2));
+		assertThat(path1.startsWith(start1)).isTrue();
+		assertThat(path2.startsWith(start2)).isTrue();
 	}
 
     @Test
@@ -323,8 +320,8 @@ public class DistinguishedNameTest {
 		DistinguishedName path2 = new DistinguishedName("uid=mtah.test, ou=people, ou=EU, o=example.com");
 		DistinguishedName start2 = new DistinguishedName("uid=mtah.test, ou=EU, ou=people");
 
-		assertFalse(path1.startsWith(start1));
-		assertFalse(path2.startsWith(start2));
+		assertThat(path1.startsWith(start1)).isFalse();
+		assertThat(path2.startsWith(start2)).isFalse();
 	}
 
     @Test
@@ -333,7 +330,7 @@ public class DistinguishedNameTest {
 
 		DistinguishedName path2 = new DistinguishedName("uid=mtah.test, ou=people, ou=EU, o=example.com, o=a.com");
 
-		assertFalse(path1.startsWith(path2));
+		assertThat(path1.startsWith(path2)).isFalse();
 	}
 
     @Test
@@ -342,19 +339,19 @@ public class DistinguishedNameTest {
 
 		DistinguishedName path2 = new DistinguishedName();
 
-		assertFalse(path1.startsWith(path2));
+		assertThat(path1.startsWith(path2)).isFalse();
 	}
 
     @Test
 	public void testIsEmpty_True() {
 		DistinguishedName path = new DistinguishedName();
-		assertTrue(path.isEmpty());
+		assertThat(path.isEmpty()).isTrue();
 	}
 
     @Test
 	public void testIsEmpty_False() {
 		DistinguishedName path = new DistinguishedName("o=example.com");
-		assertFalse(path.isEmpty());
+		assertThat(path.isEmpty()).isFalse();
 	}
 
     @Test
@@ -364,7 +361,7 @@ public class DistinguishedNameTest {
 
 		path1.addAll(path2);
 
-		assertEquals("AddAll failed", "ou=baz,ou=foo,ou=bar", path1.toString());
+		assertThat(path1.toString()).isEqualTo("ou=baz,ou=foo,ou=bar");
 	}
 
     @Test
@@ -374,7 +371,7 @@ public class DistinguishedNameTest {
 
 		path1.addAll(1, path2);
 
-		assertEquals("AddAll failed", "ou=foo,ou=baz,ou=bar", path1.toString());
+		assertThat(path1.toString()).isEqualTo("ou=foo,ou=baz,ou=bar");
 	}
 
     @Test
@@ -382,7 +379,7 @@ public class DistinguishedNameTest {
 		DistinguishedName path1 = new DistinguishedName("ou=foo, ou=bar");
 		path1.add("ou=baz");
 
-		assertEquals("Add failed", "ou=baz,ou=foo,ou=bar", path1.toString());
+		assertThat(path1.toString()).isEqualTo("ou=baz,ou=foo,ou=bar");
 	}
 
     @Test
@@ -390,7 +387,7 @@ public class DistinguishedNameTest {
 		DistinguishedName path1 = new DistinguishedName("ou=foo, ou=bar");
 		path1.add(1, "ou=baz");
 
-		assertEquals("Add failed", "ou=foo,ou=baz,ou=bar", path1.toString());
+		assertThat(path1.toString()).isEqualTo("ou=foo,ou=baz,ou=bar");
 	}
 
     @Test
@@ -398,14 +395,14 @@ public class DistinguishedNameTest {
 		DistinguishedName path = new DistinguishedName("dc=jayway, dc=se");
 		String url = path.toUrl();
 
-		assertEquals("dc=jayway,dc=se", url);
+		assertThat(url).isEqualTo("dc=jayway,dc=se");
 	}
 
     @Test
 	public void testMultiValueRdn() throws Exception {
 		DistinguishedName path = new DistinguishedName("firstName=Rod+lastName=Johnson,ou=UK,dc=interface21,dc=com");
-		assertEquals(4, path.size());
-		assertEquals("firstname=Rod+lastname=Johnson", path.get(3));
+		assertThat(path.size()).isEqualTo(4);
+		assertThat(path.get(3)).isEqualTo("firstname=Rod+lastname=Johnson");
 	}
 
     @Test
@@ -414,7 +411,7 @@ public class DistinguishedNameTest {
 		DistinguishedName name2 = new DistinguishedName("cn=john doe, ou=Some company, c=SE");
 
 		int result = name1.compareTo(name2);
-		assertEquals(0, result);
+		assertThat(result).isEqualTo(0);
 	}
 
     @Test
@@ -423,7 +420,7 @@ public class DistinguishedNameTest {
 		DistinguishedName name2 = new DistinguishedName("cn=john doe, ou=Some company, c=SE");
 
 		int result = name1.compareTo(name2);
-		assertTrue(result < 0);
+		assertThat(result < 0).isTrue();
 	}
 
     @Test
@@ -432,7 +429,7 @@ public class DistinguishedNameTest {
 		DistinguishedName name2 = new DistinguishedName("cn=john doe, ou=Some company, c=SE");
 
 		int result = name1.compareTo(name2);
-		assertTrue(result < 0);
+		assertThat(result < 0).isTrue();
 	}
 
     @Test
@@ -441,7 +438,7 @@ public class DistinguishedNameTest {
 		DistinguishedName name2 = new DistinguishedName("cn=john doe, ou=Some company, c=DK");
 
 		int result = name1.compareTo(name2);
-		assertTrue(result > 0);
+		assertThat(result > 0).isTrue();
 	}
 
     @Test
@@ -450,7 +447,7 @@ public class DistinguishedNameTest {
 		DistinguishedName name2 = new DistinguishedName("cn=john doe, ou=Some company, c=SE");
 
 		int result = name1.compareTo(name2);
-		assertTrue(result > 0);
+		assertThat(result > 0).isTrue();
 	}
 
     @Test
@@ -459,14 +456,14 @@ public class DistinguishedNameTest {
 		DistinguishedName name2 = new DistinguishedName("leaf=someleaf, cn=john doe, ou=Some company, c=SE");
 
 		int result = name1.compareTo(name2);
-		assertTrue(result < 0);
+		assertThat(result < 0).isTrue();
 	}
 
     @Test
 	public void testGetLdapRdnForKey() throws Exception {
 		DistinguishedName dn = new DistinguishedName("cn=john doe, ou=Some company, c=SE");
 		LdapRdn ldapRdn = dn.getLdapRdn("ou");
-		assertEquals(new LdapRdn("ou=Some company"), ldapRdn);
+		assertThat(ldapRdn).isEqualTo(new LdapRdn("ou=Some company"));
 	}
 
     @Test(expected = IllegalArgumentException.class)
@@ -479,7 +476,7 @@ public class DistinguishedNameTest {
 	public void testGetValue() throws Exception {
 		DistinguishedName dn = new DistinguishedName("cn=john doe, ou=Some company, c=SE");
 		String value = dn.getValue("ou");
-		assertEquals("Some company", value);
+		assertThat(value).isEqualTo("Some company");
 	}
 
     @Test(expected = IllegalArgumentException.class)
@@ -491,7 +488,7 @@ public class DistinguishedNameTest {
     @Test
 	public void test_longDN() throws InvalidNameException {
 		DistinguishedName name = new DistinguishedName("");
-		assertNotNull(name);
+		assertThat(name).isNotNull();
 	}
 
 	/**
@@ -500,7 +497,7 @@ public class DistinguishedNameTest {
     @Test
 	public void testParseAtSign() {
 		DistinguishedName name = new DistinguishedName("cn=testname@example.com");
-		assertNotNull(name);
+		assertThat(name).isNotNull();
 	}
 
 	/**
@@ -509,7 +506,7 @@ public class DistinguishedNameTest {
     @Test
 	public void testParseAtSign2() {
 		DistinguishedName name = new DistinguishedName("cn=te\\+stname@example.com");
-		assertNotNull(name);
+		assertThat(name).isNotNull();
 	}
 
 	/**
@@ -526,7 +523,7 @@ public class DistinguishedNameTest {
     @Test
 	public void testParseValidQuotation() {
 		DistinguishedName name = new DistinguishedName("cn=jo\"hn doe");
-		assertNotNull(name);
+		assertThat(name).isNotNull();
 	}
 
     @Test
@@ -534,7 +531,7 @@ public class DistinguishedNameTest {
 		DistinguishedName tested = new DistinguishedName("dc=mycompany,dc=com");
 		tested.append("ou", "company1").append("cn", "john doe");
 
-		assertEquals("cn=john doe,ou=company1,dc=mycompany,dc=com", tested.toString());
+		assertThat(tested.toString()).isEqualTo("cn=john doe,ou=company1,dc=mycompany,dc=com");
 	}
 
     @Test(expected = UnsupportedOperationException.class)
@@ -571,7 +568,7 @@ public class DistinguishedNameTest {
 	public void testUnmodifiableDistinguishedNameEqualsIdenticalMutableOne() throws Exception {
 		DistinguishedName immutable = DistinguishedName.immutableDistinguishedName("cn=john doe");
 		DistinguishedName mutable = new DistinguishedName("cn=john doe");
-		assertTrue(immutable.equals(mutable));
+		assertThat(immutable.equals(mutable)).isTrue();
 	}
 
 	/**
@@ -580,7 +577,7 @@ public class DistinguishedNameTest {
     @Test
 	public void testDistinguishedNameWithCRParsesProperly() {
 		DistinguishedName name = new DistinguishedName("cn=foo \r bar");
-		assertNotNull(name);
+		assertThat(name).isNotNull();
 	}
 
 	/**
@@ -589,13 +586,13 @@ public class DistinguishedNameTest {
     @Test
 	public void testDistinguishedNameWithDotParsesProperly() {
 		DistinguishedName name = new DistinguishedName("cn=first.last,OU=DevTest Users,DC=xyz,DC=com");
-		assertEquals("cn=first.last,ou=DevTest Users,dc=xyz,dc=com", name.toCompactString());
+		assertThat(name.toCompactString()).isEqualTo("cn=first.last,ou=DevTest Users,dc=xyz,dc=com");
 		DistinguishedName dn = new DistinguishedName();
 		dn.parse("cn=first.last,OU=DevTest Users,DC=xyz,DC=com");
-		assertEquals("first.last", dn.getValue("cn"));
-		assertEquals("DevTest Users", dn.getValue("ou"));
-		assertEquals("xyz", dn.getLdapRdn(1).getValue());
-		assertEquals("com", dn.getLdapRdn(0).getValue());
+		assertThat(dn.getValue("cn")).isEqualTo("first.last");
+		assertThat(dn.getValue("ou")).isEqualTo("DevTest Users");
+		assertThat(dn.getLdapRdn(1).getValue()).isEqualTo("xyz");
+		assertThat(dn.getLdapRdn(0).getValue()).isEqualTo("com");
 	}
 
     @Test
@@ -603,9 +600,9 @@ public class DistinguishedNameTest {
 		try {
 			DistinguishedName name = new DistinguishedName("cn=john doe, ou=company");
 			// First check the default
-			assertEquals("cn=john doe,ou=company", name.toString());
+			assertThat(name.toString()).isEqualTo("cn=john doe,ou=company");
 			System.setProperty(DistinguishedName.SPACED_DN_FORMAT_PROPERTY, "true");
-			assertEquals("cn=john doe, ou=company", name.toString());
+			assertThat(name.toString()).isEqualTo("cn=john doe, ou=company");
 		}
 		finally {
 			// Always restore the system setting
@@ -620,12 +617,12 @@ public class DistinguishedNameTest {
 			DistinguishedName name = new DistinguishedName(dnString);
 			
 			// First check the default
-			assertEquals("ou=foo,ou=bar,ou=baz,ou=bim", name.toString());
+			assertThat(name.toString()).isEqualTo("ou=foo,ou=bar,ou=baz,ou=bim");
 
 			System.setProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY, DistinguishedName.KEY_CASE_FOLD_NONE);
 			name = new DistinguishedName(dnString);
 			System.out.println(dnString + " folded as \"" + DistinguishedName.KEY_CASE_FOLD_NONE + "\": " + name);
-			assertEquals(dnString, name.toString());
+			assertThat(name.toString()).isEqualTo(dnString);
 		}
 		finally {
 			// Always restore the system setting
@@ -640,12 +637,12 @@ public class DistinguishedNameTest {
 			DistinguishedName name = new DistinguishedName(dnString);
 
 			// First check the default
-			assertEquals("ou=foo,ou=bar,ou=baz,ou=bim", name.toString());
+			assertThat(name.toString()).isEqualTo("ou=foo,ou=bar,ou=baz,ou=bim");
 			
 			System.setProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY, DistinguishedName.KEY_CASE_FOLD_UPPER);
 			name = new DistinguishedName(dnString);
 			System.out.println(dnString + " folded as \"" + DistinguishedName.KEY_CASE_FOLD_UPPER + "\": " + name);
-			assertEquals("OU=foo,OU=bar,OU=baz,OU=bim", name.toString());
+			assertThat(name.toString()).isEqualTo("OU=foo,OU=bar,OU=baz,OU=bim");
 		}
 		finally {
 			// Always restore the system setting
@@ -660,12 +657,12 @@ public class DistinguishedNameTest {
 			DistinguishedName name = new DistinguishedName(dnString);
 
 			// First check the default
-			assertEquals("ou=foo,ou=bar,ou=baz,ou=bim", name.toString());
+			assertThat(name.toString()).isEqualTo("ou=foo,ou=bar,ou=baz,ou=bim");
 			
 			System.setProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY, DistinguishedName.KEY_CASE_FOLD_LOWER);
 			name = new DistinguishedName(dnString);
 			System.out.println(dnString + " folded as \"" + DistinguishedName.KEY_CASE_FOLD_LOWER + "\": " + name);
-			assertEquals("ou=foo,ou=bar,ou=baz,ou=bim", name.toString());
+			assertThat(name.toString()).isEqualTo("ou=foo,ou=bar,ou=baz,ou=bim");
 		}
 		finally {
 			// Always restore the system setting
@@ -680,12 +677,12 @@ public class DistinguishedNameTest {
 			DistinguishedName name = new DistinguishedName(dnString);
 
 			// First check the default
-			assertEquals("ou=foo,ou=bar,ou=baz,ou=bim", name.toString());
+			assertThat(name.toString()).isEqualTo("ou=foo,ou=bar,ou=baz,ou=bim");
 			
 			System.setProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY, "whatever");
 			name = new DistinguishedName(dnString);
 			System.out.println(dnString + " folded as \"whatever\": " + name);
-			assertEquals("ou=foo,ou=bar,ou=baz,ou=bim", name.toString());
+			assertThat(name.toString()).isEqualTo("ou=foo,ou=bar,ou=baz,ou=bim");
 		}
 		finally {
 			// Always restore the system setting
@@ -695,25 +692,19 @@ public class DistinguishedNameTest {
 
     @Test
     public void testHashSignLdap229() {
-        assertEquals(
-                new DistinguishedName("cn=Foo\\#Bar"),
-                new DistinguishedName("cn=Foo#Bar")
-        );
+		assertThat(new DistinguishedName("cn=Foo\\#Bar")).isEqualTo(
+				new DistinguishedName("cn=Foo#Bar"));
     }
 
     @Test
     public void testEqualsSignLdap229() {
-        assertEquals(
-                new DistinguishedName("cn=Foo\\=Bar"),
-                new DistinguishedName("cn=Foo=Bar")
-        );
+		assertThat(new DistinguishedName("cn=Foo\\=Bar")).isEqualTo(
+				new DistinguishedName("cn=Foo=Bar"));
     }
 
     @Test
     public void testSpaceSignLdap229() {
-        assertEquals(
-                new DistinguishedName("cn=Foo\\ Bar"),
-                new DistinguishedName("cn=Foo Bar")
-        );
+		assertThat(new DistinguishedName("cn=Foo\\ Bar")).isEqualTo(
+				new DistinguishedName("cn=Foo Bar"));
     }
 }

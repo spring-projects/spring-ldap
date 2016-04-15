@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import org.springframework.ldap.schema.BasicSchemaSpecification;
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -44,7 +44,7 @@ public class Ldap233LdifParserTest {
         LdifParser parser = new LdifParser(testFile);
         parser.setRecordSpecification(new BasicSchemaSpecification());
         parser.open();
-        assertNull(parser.getRecord());
+        assertThat(parser.getRecord()).isNull();
 
         testFile.delete();
     }

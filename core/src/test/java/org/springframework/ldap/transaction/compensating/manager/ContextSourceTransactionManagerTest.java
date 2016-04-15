@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,11 +36,8 @@ import javax.naming.directory.DirContext;
 import javax.sql.DataSource;
 import java.sql.Connection;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -78,10 +75,10 @@ public class ContextSourceTransactionManagerTest {
 	public void testDoGetTransaction() {
 		Object result = tested.doGetTransaction();
 
-		assertNotNull(result);
-		assertTrue(result instanceof CompensatingTransactionObject);
+		assertThat(result).isNotNull();
+		assertThat(result instanceof CompensatingTransactionObject).isTrue();
 		CompensatingTransactionObject transactionObject = (CompensatingTransactionObject) result;
-		assertNull(transactionObject.getHolder());
+		assertThat(transactionObject.getHolder()).isNull();
 	}
 
     @Test
@@ -89,7 +86,7 @@ public class ContextSourceTransactionManagerTest {
 		CompensatingTransactionHolderSupport expectedContextHolder = new DirContextHolder(null, null);
 		TransactionSynchronizationManager.bindResource(contextSourceMock, expectedContextHolder);
 		Object result = tested.doGetTransaction();
-		assertSame(expectedContextHolder, ((CompensatingTransactionObject) result).getHolder());
+		assertThat(((CompensatingTransactionObject) result).getHolder()).isSameAs(expectedContextHolder);
 	}
 
     @Test
@@ -101,7 +98,7 @@ public class ContextSourceTransactionManagerTest {
 
 		DirContextHolder foundContextHolder = (DirContextHolder) TransactionSynchronizationManager
 				.getResource(contextSourceMock);
-		assertSame(contextMock, foundContextHolder.getCtx());
+		assertThat(foundContextHolder.getCtx()).isSameAs(contextMock);
 	}
 
     @Test
@@ -124,8 +121,8 @@ public class ContextSourceTransactionManagerTest {
 
 		tested.doCleanupAfterCompletion(new CompensatingTransactionObject(expectedContextHolder));
 
-		assertNull(TransactionSynchronizationManager.getResource(contextSourceMock));
-		assertNull(expectedContextHolder.getTransactionOperationManager());
+		assertThat(TransactionSynchronizationManager.getResource(contextSourceMock)).isNull();
+		assertThat(expectedContextHolder.getTransactionOperationManager()).isNull();
         verify(contextMock).close();
 	}
 
@@ -138,7 +135,7 @@ public class ContextSourceTransactionManagerTest {
 		ContextSource result = tested.getContextSource();
 
 		// Verify result
-		assertSame(contextSourceMock, result);
+		assertThat(result).isSameAs(contextSourceMock);
 	}
 
     @Test
@@ -191,7 +188,7 @@ public class ContextSourceTransactionManagerTest {
 			fail("Exception should be thrown");
 		}
 		catch (CannotCreateTransactionException expected) {
-			assertSame("Should be thrown exception", connectException, expected.getCause());
+			assertThat(expected.getCause()).as("Should be thrown exception").isSameAs(connectException);
 		}
 
         verify(connectionMock).rollback();

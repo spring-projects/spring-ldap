@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,7 @@ import org.springframework.ldap.support.LdapUtils;
 import javax.naming.Name;
 import javax.naming.ldap.LdapName;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DefaultTempEntryRenamingStrategyTest {
 
@@ -33,9 +32,8 @@ public class DefaultTempEntryRenamingStrategyTest {
         DefaultTempEntryRenamingStrategy tested = new DefaultTempEntryRenamingStrategy();
 
         Name result = tested.getTemporaryName(expectedOriginalName);
-        assertEquals("cn=john doe_temp,ou=somecompany,c=SE", result
-                .toString());
-        assertNotSame(expectedOriginalName, result);
+        assertThat(result.toString()).isEqualTo("cn=john doe_temp,ou=somecompany,c=SE");
+        assertThat(result).isNotSameAs(expectedOriginalName);
     }
 
     @Test
@@ -45,8 +43,7 @@ public class DefaultTempEntryRenamingStrategyTest {
         DefaultTempEntryRenamingStrategy tested = new DefaultTempEntryRenamingStrategy();
 
         Name result = tested.getTemporaryName(expectedOriginalName);
-        assertEquals("cn=john doe+sn=doe_temp,ou=somecompany,c=SE", result
-                .toString());
+        assertThat(result.toString()).isEqualTo("cn=john doe+sn=doe_temp,ou=somecompany,c=SE");
     }
 
 

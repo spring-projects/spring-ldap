@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,7 +84,7 @@ public class LdapTemplateSortedSearchITest extends
         tested.search(searchExecutor, callbackHandler, requestControl);
         int resultCode = requestControl.getResultCode();
         boolean sorted = requestControl.isSorted();
-        assertTrue("Search result should have been sorted: " + resultCode, sorted);
+        assertThat("Search result should have been sorted: " + resultCode, sorted).isTrue();
         List list = callbackHandler.getList();
         assertSortedList(list);
     }
@@ -98,26 +98,26 @@ public class LdapTemplateSortedSearchITest extends
                 requestControl);
         int resultCode = requestControl.getResultCode();
         boolean sorted = requestControl.isSorted();
-        assertTrue("Search result should have been sorted: " + resultCode, sorted);
+        assertThat("Search result should have been sorted: " + resultCode, sorted).isTrue();
         List list = callbackHandler.getList();
         assertSortedList(list);
     }
 
     private void assertSortedList(List list) {
         Person person;
-        assertEquals(6, list.size());
+        assertThat(list).hasSize(6);
         person = (Person) list.get(0);
-        assertEquals("Goran Milenkovic", person.getFullname());
+        assertThat(person.getFullname()).isEqualTo("Goran Milenkovic");
         person = (Person) list.get(1);
-        assertEquals("Goran Sundberg", person.getFullname());
+        assertThat(person.getFullname()).isEqualTo("Goran Sundberg");
         person = (Person) list.get(2);
-        assertEquals("Goran Westerberg", person.getFullname());
+        assertThat(person.getFullname()).isEqualTo("Goran Westerberg");
         person = (Person) list.get(3);
-        assertEquals("Gorana  Milicevic", person.getFullname());
+        assertThat(person.getFullname()).isEqualTo("Gorana  Milicevic");
         person = (Person) list.get(4);
-        assertEquals("Gordana Canic", person.getFullname());
+        assertThat(person.getFullname()).isEqualTo("Gordana Canic");
         person = (Person) list.get(5);
-        assertEquals("Gordana  Russ", person.getFullname());
+        assertThat(person.getFullname()).isEqualTo("Gordana  Russ");
     }
 
     public void setTested(LdapTemplate tested) {

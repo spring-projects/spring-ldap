@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,12 +31,8 @@ import javax.naming.ldap.LdapName;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 /**
@@ -54,48 +50,48 @@ public class RepositoryScanITest extends AbstractLdapTemplateIntegrationTest {
 
     @Test
     public void testExists() {
-        assertTrue(tested.exists(PERSON3_DN));
+        assertThat(tested.exists(PERSON3_DN)).isTrue();
     }
 
     @Test
     public void testFindOneWithDn() {
         Person person = tested.findOne(PERSON3_DN);
 
-        assertNotNull(person);
-        assertEquals("Some Person3", person.getCommonName());
-        assertEquals("Person3", person.getSurname());
-        assertEquals("Sweden, Company1, Some Person3", person.getDesc().get(0));
-        assertEquals("+46 555-123654", person.getTelephoneNumber());
+        assertThat(person).isNotNull();
+        assertThat(person.getCommonName()).isEqualTo("Some Person3");
+        assertThat(person.getSurname()).isEqualTo("Person3");
+        assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
+        assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
     }
 
     @Test
     public void verifyThatFindOneWithNonexistingDnReturnsNull() {
         Person person = tested.findOne(LdapUtils.newLdapName("cn=unknown"));
-        assertNull(person);
+        assertThat(person).isNull();
     }
 
     @Test
     public void testFindOneWithQuery() {
         Person person = tested.findOne(query().where("cn").is("Some Person3"));
 
-        assertNotNull(person);
-        assertEquals("Some Person3", person.getCommonName());
-        assertEquals("Person3", person.getSurname());
-        assertEquals("Sweden, Company1, Some Person3", person.getDesc().get(0));
-        assertEquals("+46 555-123654", person.getTelephoneNumber());
+        assertThat(person).isNotNull();
+        assertThat(person.getCommonName()).isEqualTo("Some Person3");
+        assertThat(person.getSurname()).isEqualTo("Person3");
+        assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
+        assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
     }
 
     @Test
     public void testFindAll() {
         Iterable<Person> result = tested.findAll();
-        assertEquals(5, countIterable(result));
+        assertThat(countIterable(result)).isEqualTo(5);
 
         for (Person person : result) {
             if(StringUtils.equals(person.getCommonName(), "Some Person3")) {
-                assertEquals("Some Person3", person.getCommonName());
-                assertEquals("Person3", person.getSurname());
-                assertEquals("Sweden, Company1, Some Person3", person.getDesc().get(0));
-                assertEquals("+46 555-123654", person.getTelephoneNumber());
+                assertThat(person.getCommonName()).isEqualTo("Some Person3");
+                assertThat(person.getSurname()).isEqualTo("Person3");
+                assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
+                assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
 
                 // Done
                 return;
@@ -109,16 +105,16 @@ public class RepositoryScanITest extends AbstractLdapTemplateIntegrationTest {
     public void testFindAllWithQuery() {
         Iterable<Person> persons = tested.findAll(query().where("cn").is("Some Person3"));
 
-        assertNotNull(persons);
+        assertThat(persons).isNotNull();
         Iterator<Person> iterator = persons.iterator();
         Person person = iterator.next();
 
-        assertEquals("Some Person3", person.getCommonName());
-        assertEquals("Person3", person.getSurname());
-        assertEquals("Sweden, Company1, Some Person3", person.getDesc().get(0));
-        assertEquals("+46 555-123654", person.getTelephoneNumber());
+        assertThat(person.getCommonName()).isEqualTo("Some Person3");
+        assertThat(person.getSurname()).isEqualTo("Person3");
+        assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
+        assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
 
-        assertFalse(iterator.hasNext());
+        assertThat(iterator.hasNext()).isFalse();
     }
 
     @Test
@@ -127,19 +123,19 @@ public class RepositoryScanITest extends AbstractLdapTemplateIntegrationTest {
         Iterator<Person> iterator = persons.iterator();
         Person person = iterator.next();
 
-        assertEquals("Some Person", person.getCommonName());
-        assertEquals("Person", person.getSurname());
-        assertEquals("Sweden, Company1, Some Person", person.getDesc().get(0));
-        assertEquals("+46 555-123456", person.getTelephoneNumber());
+        assertThat(person.getCommonName()).isEqualTo("Some Person");
+        assertThat(person.getSurname()).isEqualTo("Person");
+        assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person");
+        assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123456");
 
         person = iterator.next();
 
-        assertEquals("Some Person3", person.getCommonName());
-        assertEquals("Person3", person.getSurname());
-        assertEquals("Sweden, Company1, Some Person3", person.getDesc().get(0));
-        assertEquals("+46 555-123654", person.getTelephoneNumber());
+        assertThat(person.getCommonName()).isEqualTo("Some Person3");
+        assertThat(person.getSurname()).isEqualTo("Person3");
+        assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
+        assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
 
-        assertFalse(iterator.hasNext());
+        assertThat(iterator.hasNext()).isFalse();
     }
 
     @Test
@@ -148,17 +144,17 @@ public class RepositoryScanITest extends AbstractLdapTemplateIntegrationTest {
         Iterator<Person> iterator = persons.iterator();
         Person person = iterator.next();
 
-        assertEquals("Some Person3", person.getCommonName());
-        assertEquals("Person3", person.getSurname());
-        assertEquals("Sweden, Company1, Some Person3", person.getDesc().get(0));
-        assertEquals("+46 555-123654", person.getTelephoneNumber());
+        assertThat(person.getCommonName()).isEqualTo("Some Person3");
+        assertThat(person.getSurname()).isEqualTo("Person3");
+        assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
+        assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
 
-        assertFalse(iterator.hasNext());
+        assertThat(iterator.hasNext()).isFalse();
     }
 
     @Test
     public void testCount() {
-        assertEquals(5, tested.count());
+        assertThat(tested.count()).isEqualTo(5);
     }
 
     private int countIterable(Iterable<?> iterable) {
@@ -183,14 +179,14 @@ public class RepositoryScanITest extends AbstractLdapTemplateIntegrationTest {
         person.setNew();
         tested.save(person);
 
-        assertEquals(6, tested.count());
+        assertThat(tested.count()).isEqualTo(6);
 
         person = tested.findOne(dn);
 
-        assertEquals("New Person", person.getCommonName());
-        assertEquals("Person", person.getSurname());
-        assertEquals("This is the description", person.getDesc().get(0));
-        assertEquals("0123456", person.getTelephoneNumber());
+        assertThat(person.getCommonName()).isEqualTo("New Person");
+        assertThat(person.getSurname()).isEqualTo("Person");
+        assertThat(person.getDesc().get(0)).isEqualTo("This is the description");
+        assertThat(person.getTelephoneNumber()).isEqualTo("0123456");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -213,10 +209,10 @@ public class RepositoryScanITest extends AbstractLdapTemplateIntegrationTest {
 
         person = tested.findOne(query().where("cn").is("Some Person3"));
 
-        assertEquals("Some Person3", person.getCommonName());
-        assertEquals("Person3", person.getSurname());
-        assertEquals("New Description", person.getDesc().get(0));
-        assertEquals("+46 555-123654", person.getTelephoneNumber());
+        assertThat(person.getCommonName()).isEqualTo("Some Person3");
+        assertThat(person.getSurname()).isEqualTo("Person3");
+        assertThat(person.getDesc().get(0)).isEqualTo("New Description");
+        assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
     }
 
     @Test
@@ -225,7 +221,7 @@ public class RepositoryScanITest extends AbstractLdapTemplateIntegrationTest {
         tested.delete(person);
 
         Person found = tested.findOne(query().where("cn").is("Some Person3"));
-        assertNull(found);
+        assertThat(found).isNull();
     }
 
     @Test
@@ -233,33 +229,33 @@ public class RepositoryScanITest extends AbstractLdapTemplateIntegrationTest {
         Iterable<Person> found = tested.findAll(Arrays.asList(PERSON1_DN, PERSON3_DN));
         tested.delete(found);
 
-        assertEquals(3, tested.count());
+        assertThat(tested.count()).isEqualTo(3);
     }
 
     @Test
     public void testFindByLastName() {
         Iterable<Person> found = tested.findByLastName("Person3");
-        assertEquals(1, countIterable(found));
+        assertThat(countIterable(found)).isEqualTo(1);
     }
 
     @Test
     public void testFindByUid() {
         Person person = tested.findByUid("some.person3");
 
-        assertEquals("Some Person3", person.getCommonName());
-        assertEquals("Person3", person.getSurname());
-        assertEquals("Sweden, Company1, Some Person3", person.getDesc().get(0));
-        assertEquals("+46 555-123654", person.getTelephoneNumber());
+        assertThat(person.getCommonName()).isEqualTo("Some Person3");
+        assertThat(person.getSurname()).isEqualTo("Person3");
+        assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
+        assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
     }
 
     @Test
     public void testFindByPhoneNumber() {
         Person person = tested.findByTelephoneNumber("+46 555-123654");
 
-        assertEquals("Some Person3", person.getCommonName());
-        assertEquals("Person3", person.getSurname());
-        assertEquals("Sweden, Company1, Some Person3", person.getDesc().get(0));
-        assertEquals("+46 555-123654", person.getTelephoneNumber());
+        assertThat(person.getCommonName()).isEqualTo("Some Person3");
+        assertThat(person.getSurname()).isEqualTo("Person3");
+        assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
+        assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
     }
 
 }

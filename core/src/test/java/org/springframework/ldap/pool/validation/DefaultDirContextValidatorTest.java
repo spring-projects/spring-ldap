@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,10 +24,8 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchControls;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -51,21 +49,21 @@ public class DefaultDirContextValidatorTest {
     @Test
     public void testSearchScopeOneLevelScopeSetInConstructorIsUsed() throws Exception {
         DefaultDirContextValidator tested = new DefaultDirContextValidator(SearchControls.ONELEVEL_SCOPE);
-        assertEquals("ONELEVEL_SCOPE, ", SearchControls.ONELEVEL_SCOPE, tested.getSearchControls().getSearchScope());
+        assertThat(tested.getSearchControls().getSearchScope()).as("ONELEVEL_SCOPE, ").isEqualTo(SearchControls.ONELEVEL_SCOPE);
 	}
     
     // LDAP-189
     @Test
     public void testSearchScopeSubTreeScopeSetInConstructorIsUsed() throws Exception {
     	DefaultDirContextValidator tested = new DefaultDirContextValidator(SearchControls.SUBTREE_SCOPE);
-    	assertEquals("SUBTREE_SCOPE, ", SearchControls.SUBTREE_SCOPE, tested.getSearchControls().getSearchScope());
+    	assertThat(tested.getSearchControls().getSearchScope()).as("SUBTREE_SCOPE, ").isEqualTo(SearchControls.SUBTREE_SCOPE);
     }
 
     // LDAP-189
     @Test
     public void testSearchScopeObjectScopeSetInConstructorIsUsed() throws Exception {
         DefaultDirContextValidator tested = new DefaultDirContextValidator(SearchControls.OBJECT_SCOPE);
-        assertEquals("OBJECT_SCOPE, ", SearchControls.OBJECT_SCOPE, tested.getSearchControls().getSearchScope());
+        assertThat(tested.getSearchControls().getSearchScope()).as("OBJECT_SCOPE, ").isEqualTo(SearchControls.OBJECT_SCOPE);
 	}
 
     @Test
@@ -74,28 +72,28 @@ public class DefaultDirContextValidatorTest {
 
         dirContextValidator.setBase("baseName");
         final String baseName = dirContextValidator.getBase();
-        assertEquals("baseName", baseName);
+        assertThat(baseName).isEqualTo("baseName");
 
         try {
             dirContextValidator.setFilter(null);
             fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
         dirContextValidator.setFilter("filter");
         final String filter = dirContextValidator.getFilter();
-        assertEquals("filter", filter);
+        assertThat(filter).isEqualTo("filter");
 
         try {
             dirContextValidator.setSearchControls(null);
             fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
         final SearchControls sc = new SearchControls();
         dirContextValidator.setSearchControls(sc);
         final SearchControls sc2 = dirContextValidator.getSearchControls();
-        assertEquals(sc, sc2);
+        assertThat(sc2).isEqualTo(sc);
     }
 
     @Test
@@ -107,14 +105,14 @@ public class DefaultDirContextValidatorTest {
                     null);
             fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
 
         try {
             dirContextValidator.validateDirContext(null, dirContextMock);
             fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
     }
 
@@ -133,7 +131,7 @@ public class DefaultDirContextValidatorTest {
 
         final boolean valid = dirContextValidator.validateDirContext(
                 DirContextType.READ_ONLY, dirContextMock);
-        assertTrue(valid);
+        assertThat(valid).isTrue();
     }
 
     @Test
@@ -152,7 +150,7 @@ public class DefaultDirContextValidatorTest {
         final boolean valid = dirContextValidator.validateDirContext(
                 DirContextType.READ_ONLY, dirContextMock);
 
-        assertFalse(valid);
+        assertThat(valid).isFalse();
     }
 
     @Test
@@ -170,6 +168,6 @@ public class DefaultDirContextValidatorTest {
         final boolean valid = dirContextValidator.validateDirContext(
                 DirContextType.READ_ONLY, dirContextMock);
 
-        assertFalse(valid);
+        assertThat(valid).isFalse();
     }
 }

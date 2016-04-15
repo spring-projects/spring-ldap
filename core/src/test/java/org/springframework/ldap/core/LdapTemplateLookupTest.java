@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,9 +29,8 @@ import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 import javax.naming.ldap.LdapName;
 
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -88,7 +87,7 @@ public class LdapTemplateLookupTest {
 
         verify(dirContextMock).close();
 
-        assertSame(expected, actual);
+        assertThat(actual).isSameAs(expected);
     }
 
     @Test
@@ -102,7 +101,7 @@ public class LdapTemplateLookupTest {
 
         verify(dirContextMock).close();
 
-        assertSame(expected, actual);
+        assertThat(actual).isSameAs(expected);
     }
 
     @Test
@@ -116,7 +115,7 @@ public class LdapTemplateLookupTest {
             tested.lookup(nameMock);
             fail("NameNotFoundException expected");
         } catch (NameNotFoundException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
 
         verify(dirContextMock).close();
@@ -138,7 +137,7 @@ public class LdapTemplateLookupTest {
 
         verify(dirContextMock).close();
 
-        assertSame(expected, actual);
+        assertThat(actual).isSameAs(expected);
     }
 
     @Test
@@ -156,7 +155,7 @@ public class LdapTemplateLookupTest {
 
         verify(dirContextMock).close();
 
-        assertSame(expected, actual);
+        assertThat(actual).isSameAs(expected);
     }
 
     @Test
@@ -170,7 +169,7 @@ public class LdapTemplateLookupTest {
             tested.lookup(nameMock, attributesMapperMock);
             fail("NameNotFoundException expected");
         } catch (NameNotFoundException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
 
         verify(dirContextMock).close();
@@ -192,7 +191,7 @@ public class LdapTemplateLookupTest {
 
         verify(dirContextMock).close();
 
-        assertSame(transformed, actual);
+        assertThat(actual).isSameAs(transformed);
     }
 
     @Test
@@ -208,7 +207,7 @@ public class LdapTemplateLookupTest {
 
         // Perform test
         Object result = tested.findByDn(nameMock, expectedClass);
-        assertSame(transformed, result);
+        assertThat(result).isSameAs(transformed);
 
         verify(odmMock).manageClass(expectedClass);
     }
@@ -229,7 +228,7 @@ public class LdapTemplateLookupTest {
 
         verify(dirContextMock).close();
 
-        assertSame(transformed, actual);
+        assertThat(actual).isSameAs(transformed);
     }
 
     @Test
@@ -243,7 +242,7 @@ public class LdapTemplateLookupTest {
             tested.lookup(nameMock, contextMapperMock);
             fail("NameNotFoundException expected");
         } catch (NameNotFoundException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
 
         verify(dirContextMock).close();
@@ -270,7 +269,7 @@ public class LdapTemplateLookupTest {
 
         verify(dirContextMock).close();
 
-        assertSame(expected, actual);
+        assertThat(actual).isSameAs(expected);
     }
 
     @Test
@@ -293,7 +292,7 @@ public class LdapTemplateLookupTest {
 
         verify(dirContextMock).close();
 
-        assertSame(expected, actual);
+        assertThat(actual).isSameAs(expected);
     }
 
     // Tests for lookup(name, attributes, ContextMapper)
@@ -320,7 +319,7 @@ public class LdapTemplateLookupTest {
 
         verify(dirContextMock).close();
 
-        assertSame(transformed, actual);
+        assertThat(actual).isSameAs(transformed);
     }
 
     @Test
@@ -347,6 +346,6 @@ public class LdapTemplateLookupTest {
 
         verify(dirContextMock).close();
 
-        assertSame(transformed, actual);
+        assertThat(actual).isSameAs(transformed);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,7 @@ import org.junit.Test;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 public class RenameOperationRecorderTest {
@@ -43,10 +41,10 @@ public class RenameOperationRecorderTest {
         CompensatingTransactionOperationExecutor operation = tested
                 .recordOperation(new Object[] { "ou=someou", "ou=newou" });
 
-        assertTrue(operation instanceof RenameOperationExecutor);
+        assertThat(operation instanceof RenameOperationExecutor).isTrue();
         RenameOperationExecutor rollbackOperation = (RenameOperationExecutor) operation;
-        assertSame(ldapOperationsMock, rollbackOperation.getLdapOperations());
-        assertEquals("ou=newou", rollbackOperation.getNewDn().toString());
-        assertEquals("ou=someou", rollbackOperation.getOriginalDn().toString());
+        assertThat(rollbackOperation.getLdapOperations()).isSameAs(ldapOperationsMock);
+        assertThat(rollbackOperation.getNewDn().toString()).isEqualTo("ou=newou");
+        assertThat(rollbackOperation.getOriginalDn().toString()).isEqualTo("ou=someou");
     }
 }

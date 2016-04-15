@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,12 +28,12 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Unit tests for the {@link ContextMapperCallbackHandlerWithControlsTest}
  * class.
- * 
+ *
  * @author Ulrik Sandberg
  */
 public class ContextMapperCallbackHandlerWithControlsTest {
@@ -78,7 +78,7 @@ public class ContextMapperCallbackHandlerWithControlsTest {
 		Object actualResult = tested.getObjectFromNameClassPair(expectedBinding);
 		verify(mapperMock);
 
-		assertEquals(expectedResult, actualResult);
+		assertThat(actualResult).isEqualTo(expectedResult);
 	}
 
 	@Test
@@ -93,7 +93,7 @@ public class ContextMapperCallbackHandlerWithControlsTest {
 		Object actualResult = tested.getObjectFromNameClassPair(expectedBinding);
 		verify(mapperMock);
 
-		assertEquals(expectedResult, actualResult);
+		assertThat(actualResult).isEqualTo(expectedResult);
 	}
 
 	@Test(expected = ObjectRetrievalException.class)

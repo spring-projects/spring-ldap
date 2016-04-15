@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Integration tests for verifying that issues LDAP-50 and LDAP-109 are solved.
@@ -99,12 +99,12 @@ public class InvalidBackslashITest extends AbstractLdapTemplateIntegrationTest {
 			protected Object doMapFromContext(DirContextOperations ctx) {
 				LdapName dn = (LdapName) ctx.getDn();
                 Rdn rdn = LdapUtils.getRdn(dn, "cn");
-                assertEquals("cn=Some\\\\Person6,ou=company1,ou=Sweden", dn.toString());
-				assertEquals("Some\\Person6", rdn.getValue());
+                assertThat(dn.toString()).isEqualTo("cn=Some\\\\Person6,ou=company1,ou=Sweden");
+				assertThat(rdn.getValue()).isEqualTo("Some\\Person6");
 				return new Object();
 			}
 		});
 
-		assertEquals(1, result.size());
+		assertThat(result).hasSize(1);
 	}
 }

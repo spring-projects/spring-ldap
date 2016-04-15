@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +26,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import javax.naming.Name;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for Spring LDAP automatic repository scan functionality enabled with
@@ -45,17 +43,17 @@ public class RepositoryScanAnnotationConfiguredITest extends AbstractLdapTemplat
 
     @Test
     public void testExists() {
-        assertTrue(tested.exists(PERSON3_DN));
+        assertThat(tested.exists(PERSON3_DN)).isTrue();
     }
 
     @Test
     public void testFindOneWithDn() {
         Person person = tested.findOne(PERSON3_DN);
 
-        assertNotNull(person);
-        assertEquals("Some Person3", person.getCommonName());
-        assertEquals("Person3", person.getSurname());
-        assertEquals("Sweden, Company1, Some Person3", person.getDesc().get(0));
-        assertEquals("+46 555-123654", person.getTelephoneNumber());
+        assertThat(person).isNotNull();
+        assertThat(person.getCommonName()).isEqualTo("Some Person3");
+        assertThat(person.getSurname()).isEqualTo("Person3");
+        assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
+        assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
     }
 }

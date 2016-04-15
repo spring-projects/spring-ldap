@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 import javax.naming.NamingException;
 
-import static junit.framework.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Advanced integration tests for LdapContextSource.
@@ -41,6 +41,6 @@ public class LdapContextSourceMultiServerIntegrationTest extends AbstractJUnit4S
 		String[] urls = tested.getUrls();
 		String string = tested.assembleProviderUrlString(urls);
 
-		assertEquals("ldap://127.0.0.1:389 ldap://127.0.0.2:389", string);
+		assertThat(string).isEqualTo("ldap://127.0.0.1:389 ldap://127.0.0.2:389");
 	}
 }

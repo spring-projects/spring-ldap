@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package org.springframework.ldap.filter;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Unit tests for the OrFilter class.
@@ -31,14 +31,14 @@ public class OrFilterTest {
     public void testZero() {
         OrFilter of = new OrFilter();
 
-        assertEquals("", of.encode());
+        assertThat(of.encode()).isEqualTo("");
     }
 
     @Test
     public void testOne() {
         OrFilter of = new OrFilter().or(new EqualsFilter("a", "b"));
 
-        assertEquals("(a=b)", of.encode());
+        assertThat(of.encode()).isEqualTo("(a=b)");
     }
 
     @Test
@@ -46,7 +46,7 @@ public class OrFilterTest {
         OrFilter of = new OrFilter().or(new EqualsFilter("a", "b")).or(
                 new EqualsFilter("c", "d"));
 
-        assertEquals("(|(a=b)(c=d))", of.encode());
+        assertThat(of.encode()).isEqualTo("(|(a=b)(c=d))");
     }
 
     @Test
@@ -54,7 +54,7 @@ public class OrFilterTest {
         OrFilter of = new OrFilter().or(new EqualsFilter("a", "b")).or(
                 new EqualsFilter("c", "d")).or(new EqualsFilter("e", "f"));
 
-        assertEquals("(|(a=b)(c=d)(e=f))", of.encode());
+        assertThat(of.encode()).isEqualTo("(|(a=b)(c=d)(e=f))");
     }
 
 }

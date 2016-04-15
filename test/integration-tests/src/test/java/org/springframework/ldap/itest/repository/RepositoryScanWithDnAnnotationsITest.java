@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,15 +21,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.itest.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.itest.odm.PersonWithDnAnnotations;
 import org.springframework.ldap.itest.repositories.PersonWithDnAnnotationsRepository;
-import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 /**
@@ -52,33 +49,33 @@ public class RepositoryScanWithDnAnnotationsITest extends AbstractLdapTemplateIn
         person.setCountry("Sweden");
         person.setCompany("company1");
 
-        assertNull(person.getDn());
+        assertThat(person.getDn()).isNull();
 
         tested.save(person);
 
-        assertNotNull(person.getDn());
+        assertThat(person.getDn()).isNotNull();
 
-        assertEquals(6, tested.count());
+        assertThat(tested.count()).isEqualTo(6);
 
         person = tested.findOne(query().where("cn").is("New Person"));
 
-        assertEquals("New Person", person.getCommonName());
-        assertEquals("Person", person.getSurname());
-        assertEquals("This is the description", person.getDesc().get(0));
-        assertEquals("0123456", person.getTelephoneNumber());
+        assertThat(person.getCommonName()).isEqualTo("New Person");
+        assertThat(person.getSurname()).isEqualTo("Person");
+        assertThat(person.getDesc().get(0)).isEqualTo("This is the description");
+        assertThat(person.getTelephoneNumber()).isEqualTo("0123456");
     }
 
     @Test
     public void verifyThatMovedEntryGetsUpdatedId() {
         PersonWithDnAnnotations found = tested.findOne(query().where("cn").is("Some Person3"));
-        assertNotNull(found);
+        assertThat(found).isNotNull();
 
-        assertEquals(LdapUtils.newLdapName("cn=Some Person3,ou=company1,ou=Sweden"), found.getDn());
+        assertThat(found.getDn()).isEqualTo(LdapUtils.newLdapName("cn=Some Person3,ou=company1,ou=Sweden"));
 
         found.setCompany("company2");
 
         tested.save(found);
 
-        assertEquals(LdapUtils.newLdapName("cn=Some Person3,ou=company2,ou=Sweden"), found.getDn());
+        assertThat(found.getDn()).isEqualTo(LdapUtils.newLdapName("cn=Some Person3,ou=company2,ou=Sweden"));
     }
 }

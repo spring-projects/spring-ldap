@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,11 +38,8 @@ import javax.naming.directory.DirContext;
 import java.util.Hashtable;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Integration tests for LdapContextSource.
@@ -65,11 +62,11 @@ public class LdapContextSourceIntegrationTest extends AbstractLdapTemplateIntegr
 
 		try {
 			ctx = tested.getReadOnlyContext();
-			assertNotNull(ctx);
+			assertThat(ctx).isNotNull();
 			Hashtable environment = ctx.getEnvironment();
-			assertFalse(environment.containsKey(LdapContextSource.SUN_LDAP_POOLING_FLAG));
-			assertTrue(environment.containsKey(Context.SECURITY_PRINCIPAL));
-			assertTrue(environment.containsKey(Context.SECURITY_CREDENTIALS));
+			assertThat(environment.containsKey(LdapContextSource.SUN_LDAP_POOLING_FLAG)).isFalse();
+			assertThat(environment.containsKey(Context.SECURITY_PRINCIPAL)).isTrue();
+			assertThat(environment.containsKey(Context.SECURITY_CREDENTIALS)).isTrue();
 		}
 		finally {
 			// Always clean up.
@@ -90,12 +87,12 @@ public class LdapContextSourceIntegrationTest extends AbstractLdapTemplateIntegr
 
 		try {
 			ctx = tested.getReadWriteContext();
-			assertNotNull(ctx);
+			assertThat(ctx).isNotNull();
 			// Double check to see that we are authenticated.
 			Hashtable environment = ctx.getEnvironment();
-            assertFalse(environment.containsKey(LdapContextSource.SUN_LDAP_POOLING_FLAG));
-			assertTrue(environment.containsKey(Context.SECURITY_PRINCIPAL));
-			assertTrue(environment.containsKey(Context.SECURITY_CREDENTIALS));
+            assertThat(environment.containsKey(LdapContextSource.SUN_LDAP_POOLING_FLAG)).isFalse();
+			assertThat(environment.containsKey(Context.SECURITY_PRINCIPAL)).isTrue();
+			assertThat(environment.containsKey(Context.SECURITY_CREDENTIALS)).isTrue();
 		}
 		finally {
 			// Always clean up.
@@ -118,13 +115,13 @@ public class LdapContextSourceIntegrationTest extends AbstractLdapTemplateIntegr
 			String expectedPrincipal = "cn=Some Person,ou=company1,ou=Sweden," + base;
 			String expectedCredentials = "password";
 			ctx = tested.getContext(expectedPrincipal, expectedCredentials);
-			assertNotNull(ctx);
+			assertThat(ctx).isNotNull();
 			// Double check to see that we are authenticated, and that we did not receive
 			// a connection eligible for connection pooling.
 			Hashtable environment = ctx.getEnvironment();
-            assertFalse(environment.containsKey(LdapContextSource.SUN_LDAP_POOLING_FLAG));
-			assertEquals(expectedPrincipal, environment.get(Context.SECURITY_PRINCIPAL));
-			assertEquals(expectedCredentials, environment.get(Context.SECURITY_CREDENTIALS));
+            assertThat(environment.containsKey(LdapContextSource.SUN_LDAP_POOLING_FLAG)).isFalse();
+			assertThat(environment.get(Context.SECURITY_PRINCIPAL)).isEqualTo(expectedPrincipal);
+			assertThat(environment.get(Context.SECURITY_CREDENTIALS)).isEqualTo(expectedCredentials);
 		}
 		finally {
 			// Always clean up.
@@ -152,7 +149,7 @@ public class LdapContextSourceIntegrationTest extends AbstractLdapTemplateIntegr
 		DirContext ctx = null;
 		try {
 			ctx = tested.getContext(results.get(0), "password");
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 		catch (Exception e) {
 			fail("Authentication failed");

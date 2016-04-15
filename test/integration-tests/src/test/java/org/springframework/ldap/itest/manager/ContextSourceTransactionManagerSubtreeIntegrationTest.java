@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,8 +30,8 @@ import org.springframework.ldap.itest.transaction.compensating.manager.DummyExce
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Integration tests for {@link org.springframework.ldap.transaction.compensating.manager.ContextSourceAndDataSourceTransactionManager}
@@ -68,7 +68,7 @@ public class ContextSourceTransactionManagerSubtreeIntegrationTest extends Abstr
             ldapTemplate.lookup("ou=company1,ou=Sweden");
             fail("NameNotFoundException expected");
         } catch (NameNotFoundException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
     }
 
@@ -78,7 +78,7 @@ public class ContextSourceTransactionManagerSubtreeIntegrationTest extends Abstr
             dummyDao.deleteRecursivelyWithException("ou=company1,ou=Sweden");
             fail("DummyException expected");
         } catch (DummyException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
 
         // Entry should have been restored
@@ -96,7 +96,7 @@ public class ContextSourceTransactionManagerSubtreeIntegrationTest extends Abstr
             dummyDao.createRecursivelyAndUnbindSubnodeWithException();
             fail("DummyException expected");
         } catch (DummyException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
     }
 }

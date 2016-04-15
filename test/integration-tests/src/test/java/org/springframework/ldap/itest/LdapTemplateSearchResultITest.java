@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,10 +41,8 @@ import javax.naming.NamingException;
 import javax.naming.directory.SearchControls;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 /**
@@ -99,7 +97,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
 		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		attributesMapper.setExpectedValues(ALL_VALUES);
 		List list = tested.search(BASE_STRING, FILTER_STRING, attributesMapper);
-		assertEquals(1, list.size());
+		assertThat(list).hasSize(1);
 	}
 
     @Test
@@ -111,7 +109,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
                 .base(BASE_STRING)
                 .where("objectclass").is("person").and("sn").is("Person2"),
                 attributesMapper);
-        assertEquals(1, list.size());
+        assertThat(list).hasSize(1);
     }
 
     @Test
@@ -124,7 +122,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
                 .attributes("cn")
                 .where("objectclass").is("person").and("sn").is("Person2"),
                 attributesMapper);
-        assertEquals(1, list.size());
+        assertThat(list).hasSize(1);
     }
 
     @Test
@@ -137,7 +135,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
                 .searchScope(SearchScope.ONELEVEL)
                 .where("objectclass").is("person").and("sn").is("Person2"),
                 attributesMapper);
-        assertEquals(0, list.size());
+        assertThat(list).isEmpty();
     }
 
     @Test
@@ -150,7 +148,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
                 .searchScope(SearchScope.ONELEVEL)
                 .where("objectclass").is("person").and("sn").is("Person2"),
                 attributesMapper);
-        assertEquals(1, list.size());
+        assertThat(list).hasSize(1);
     }
 
     @Test
@@ -161,7 +159,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
         List<Object> list = tested.search(query()
                 .where("objectclass").is("person").and("sn").is("Person2"),
                 attributesMapper);
-        assertEquals(1, list.size());
+        assertThat(list).hasSize(1);
     }
 
     @Test
@@ -173,7 +171,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
                 .base("ou=Norway")
                 .where("objectclass").is("person").and("sn").is("Person2"),
                 attributesMapper);
-        assertEquals(0, list.size());
+        assertThat(list).isEmpty();
     }
 
     @Test
@@ -181,7 +179,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
 		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		attributesMapper.setExpectedValues(ALL_VALUES);
 		List list = tested.search(BASE_STRING, FILTER_STRING, SearchControls.SUBTREE_SCOPE, attributesMapper);
-		assertEquals(1, list.size());
+		assertThat(list).hasSize(1);
 	}
 
 	@Test
@@ -191,7 +189,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
 		attributesMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
 		List list = tested.search(BASE_STRING, FILTER_STRING, SearchControls.SUBTREE_SCOPE, CN_SN_ATTRS,
 				attributesMapper);
-		assertEquals(1, list.size());
+		assertThat(list).hasSize(1);
 	}
 
 	@Test
@@ -199,7 +197,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
 		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		attributesMapper.setExpectedValues(ALL_VALUES);
 		List list = tested.search(BASE_NAME, FILTER_STRING, attributesMapper);
-		assertEquals(1, list.size());
+		assertThat(list).hasSize(1);
 	}
 
 	@Test
@@ -207,7 +205,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
 		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		attributesMapper.setExpectedValues(ALL_VALUES);
 		List list = tested.search(BASE_NAME, FILTER_STRING, SearchControls.SUBTREE_SCOPE, attributesMapper);
-		assertEquals(1, list.size());
+		assertThat(list).hasSize(1);
 	}
 
 	@Test
@@ -217,7 +215,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
 		attributesMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
 		List list = tested
 				.search(BASE_NAME, FILTER_STRING, SearchControls.SUBTREE_SCOPE, CN_SN_ATTRS, attributesMapper);
-		assertEquals(1, list.size());
+		assertThat(list).hasSize(1);
 	}
 
 	@Test
@@ -225,7 +223,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
 		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		contextMapper.setExpectedValues(ALL_VALUES);
 		List list = tested.search(BASE_STRING, FILTER_STRING, contextMapper);
-		assertEquals(1, list.size());
+		assertThat(list).hasSize(1);
 	}
 
 	@Test
@@ -234,7 +232,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
 		contextMapper.setExpectedValues(ALL_VALUES);
 		DirContextAdapter result = (DirContextAdapter) tested
 				.searchForObject(BASE_STRING, FILTER_STRING, contextMapper);
-		assertNotNull(result);
+		assertThat(result).isNotNull();
 	}
 
 	@Test(expected = IncorrectResultSizeDataAccessException.class)
@@ -262,7 +260,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
 		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		contextMapper.setExpectedValues(ALL_VALUES);
 		List list = tested.search(BASE_STRING, FILTER_STRING, SearchControls.SUBTREE_SCOPE, contextMapper);
-		assertEquals(1, list.size());
+		assertThat(list).hasSize(1);
 	}
 
 	@Test
@@ -271,7 +269,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
 		contextMapper.setExpectedValues(CN_SN_VALUES);
 		contextMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
 		List list = tested.search(BASE_STRING, FILTER_STRING, SearchControls.SUBTREE_SCOPE, CN_SN_ATTRS, contextMapper);
-		assertEquals(1, list.size());
+		assertThat(list).hasSize(1);
 	}
 
 	@Test
@@ -279,7 +277,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
 		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		contextMapper.setExpectedValues(ALL_VALUES);
 		List list = tested.search(BASE_NAME, FILTER_STRING, contextMapper);
-		assertEquals(1, list.size());
+		assertThat(list).hasSize(1);
 	}
 
     @Test
@@ -290,7 +288,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
                 .base(BASE_NAME)
                 .where("objectclass").is("person").and("sn").is("Person2"),
                  contextMapper);
-        assertEquals(1, list.size());
+        assertThat(list).hasSize(1);
     }
 
     @Test
@@ -300,7 +298,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
         List<DirContextAdapter> list = tested.search(query()
                 .where("objectclass").is("person").and("sn").is("Person2"),
                 contextMapper);
-        assertEquals(1, list.size());
+        assertThat(list).hasSize(1);
     }
 
     @Test
@@ -312,7 +310,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
                 .searchScope(SearchScope.ONELEVEL)
                 .where("objectclass").is("person").and("sn").is("Person2"),
                 contextMapper);
-        assertEquals(0, list.size());
+        assertThat(list).isEmpty();
     }
 
     @Test
@@ -324,7 +322,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
                 .searchScope(SearchScope.ONELEVEL)
                 .where("objectclass").is("person").and("sn").is("Person2"),
                 contextMapper);
-        assertEquals(1, list.size());
+        assertThat(list).hasSize(1);
     }
 
     @Test
@@ -332,8 +330,8 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
         DirContextOperations result = tested.searchForContext(query()
                 .where("objectclass").is("person").and("sn").is("Person2"));
 
-        assertNotNull(result);
-        assertEquals("Person2", result.getStringAttribute("sn"));
+        assertThat(result).isNotNull();
+        assertThat(result.getStringAttribute("sn")).isEqualTo("Person2");
     }
 
     @Test(expected = EmptyResultDataAccessException.class)
@@ -351,8 +349,8 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
                 .base("ou=company1,ou=Sweden")
                 .where("objectclass").is("person").and("sn").is("Person2"));
 
-        assertNotNull(result);
-        assertEquals("Person2", result.getStringAttribute("sn"));
+        assertThat(result).isNotNull();
+        assertThat(result.getStringAttribute("sn")).isEqualTo("Person2");
     }
 
     @Test
@@ -360,7 +358,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
 		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		contextMapper.setExpectedValues(ALL_VALUES);
 		List list = tested.search(BASE_NAME, FILTER_STRING, SearchControls.SUBTREE_SCOPE, contextMapper);
-		assertEquals(1, list.size());
+		assertThat(list).hasSize(1);
 	}
 
 	@Test
@@ -369,7 +367,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
 		contextMapper.setExpectedValues(CN_SN_VALUES);
 		contextMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
 		List list = tested.search(BASE_NAME, FILTER_STRING, SearchControls.SUBTREE_SCOPE, CN_SN_ATTRS, contextMapper);
-		assertEquals(1, list.size());
+		assertThat(list).hasSize(1);
 	}
 
 	@Test
@@ -380,7 +378,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 	}
 
@@ -392,7 +390,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
 		contextMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
 		List list = tested.search(BASE_NAME + "ou=unknown", FILTER_STRING, SearchControls.SUBTREE_SCOPE, CN_SN_ATTRS,
 				contextMapper);
-		assertEquals(0, list.size());
+		assertThat(list).isEmpty();
 	}
 
     @Test
@@ -406,7 +404,7 @@ public class LdapTemplateSearchResultITest extends AbstractLdapTemplateIntegrati
             }
         });
 
-        assertEquals(3, result.size());
+        assertThat(result).hasSize(3);
     }
 
     @Test(expected = SizeLimitExceededException.class)

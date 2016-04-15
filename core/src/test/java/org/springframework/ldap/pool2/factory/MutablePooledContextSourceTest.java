@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import org.springframework.ldap.pool2.MutableDelegatingLdapContext;
 
 import javax.naming.directory.DirContext;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
@@ -43,6 +43,6 @@ public class MutablePooledContextSourceTest extends AbstractPoolTestCase {
 		// Get a context
 		final DirContext result = poolingContextSource.getReadOnlyContext();
 
-		assertEquals(MutableDelegatingLdapContext.class, result.getClass());
+		assertThat(result.getClass()).isEqualTo(MutableDelegatingLdapContext.class);
 	}
 }

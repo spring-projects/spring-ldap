@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import org.junit.Test;
 
 import javax.naming.directory.SearchResult;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CountNameClassPairResultCallbackHandlerTest {
 
@@ -38,7 +38,7 @@ public class CountNameClassPairResultCallbackHandlerTest {
         tested.handleNameClassPair(dummy);
         tested.handleNameClassPair(dummy);
         
-        assertEquals(3, tested.getNoOfRows());
+        assertThat(tested.getNoOfRows()).isEqualTo(3);
     }
     
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,8 @@ package org.springframework.ldap.core.support;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * IncrementalAttributesMapper Tester.
@@ -37,7 +35,7 @@ public class RangeOptionTest  {
 
             fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
 
         try {
@@ -45,7 +43,7 @@ public class RangeOptionTest  {
 
             fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
 
         try {
@@ -53,7 +51,7 @@ public class RangeOptionTest  {
 
             fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
 
         try {
@@ -61,82 +59,82 @@ public class RangeOptionTest  {
 
             fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
     }
 
     @Test
     public void testToString() throws Exception {
         RangeOption range = new RangeOption(0, 100);
-        assertEquals("Range=0-100", range.toString());
+        assertThat(range.toString()).isEqualTo("Range=0-100");
 
         range = new RangeOption(0, RangeOption.TERMINAL_END_OF_RANGE);
-        assertEquals("Range=0-*", range.toString());
+        assertThat(range.toString()).isEqualTo("Range=0-*");
 
         range = new RangeOption(0, RangeOption.TERMINAL_MISSING);
-        assertEquals("Range=0", range.toString());
+        assertThat(range.toString()).isEqualTo("Range=0");
     }
 
     @Test
     public void testParse() throws Exception {
         RangeOption range = RangeOption.parse("Range=0-100");
-        assertEquals(0, range.getInitial());
-        assertEquals(100, range.getTerminal());
+        assertThat(range.getInitial()).isEqualTo(0);
+        assertThat(range.getTerminal()).isEqualTo(100);
 
         range = RangeOption.parse("range=0-100");
-        assertEquals(0, range.getInitial());
-        assertEquals(100, range.getTerminal());
+        assertThat(range.getInitial()).isEqualTo(0);
+        assertThat(range.getTerminal()).isEqualTo(100);
 
         range = RangeOption.parse("RANGE=0-100");
-        assertEquals(0, range.getInitial());
-        assertEquals(100, range.getTerminal());
+        assertThat(range.getInitial()).isEqualTo(0);
+        assertThat(range.getTerminal()).isEqualTo(100);
 
         range = RangeOption.parse("Range=0-*");
-        assertEquals(0, range.getInitial());
-        assertEquals(RangeOption.TERMINAL_END_OF_RANGE, range.getTerminal());
+        assertThat(range.getInitial()).isEqualTo(0);
+        assertThat(range.getTerminal()).isEqualTo(RangeOption.TERMINAL_END_OF_RANGE);
 
         range = RangeOption.parse("Range=10");
-        assertEquals(10, range.getInitial());
-        assertEquals(RangeOption.TERMINAL_MISSING, range.getTerminal());
+        assertThat(range.getInitial()).isEqualTo(10);
+        assertThat(range.getTerminal()).isEqualTo(RangeOption.TERMINAL_MISSING);
     }
 
     @Test
     public void testParseInvalid() {
-        assertNull(RangeOption.parse("Range=10-"));
-        assertNull(RangeOption.parse("Range=10-a"));
-        assertNull(RangeOption.parse("lang-en"));
-        assertNull(RangeOption.parse("member;Range=10-100"));
-        assertNull(RangeOption.parse(";Range=10-100"));
-        assertNull(RangeOption.parse("Range=10-100;"));
-        assertNull(RangeOption.parse("Range=10-100;lang-de"));
+        assertThat(RangeOption.parse("Range=10-")).isNull();
+        assertThat(RangeOption.parse("Range=10-a")).isNull();
+        assertThat(RangeOption.parse("lang-en")).isNull();
+        assertThat(RangeOption.parse("member;Range=10-100")).isNull();
+        assertThat(RangeOption.parse(";Range=10-100")).isNull();
+        assertThat(RangeOption.parse("Range=10-100;")).isNull();
+        assertThat(RangeOption.parse("Range=10-100;lang-de")).isNull();
     }
 
     @Test
     public void testCompare() {
         RangeOption range1 = RangeOption.parse("Range=10-500");
         RangeOption range2 = RangeOption.parse("Range=10-500");
-        assertTrue(range1.compareTo(range2) == 0);
-        assertTrue(range2.compareTo(range1) == 0);
+        assertThat(range1.compareTo(range2) == 0).isTrue();
+        assertThat(range2.compareTo(range1) == 0).isTrue();
 
         range1 = RangeOption.parse("Range=0-*");
         range2 = RangeOption.parse("Range=0-*");
-        assertTrue(range1.compareTo(range2) == 0);
-        assertTrue(range2.compareTo(range1) == 0);
+        assertThat(range1.compareTo(range2) == 0).isTrue();
+        assertThat(range2.compareTo(range1) == 0).isTrue();
 
         range1 = RangeOption.parse("Range=0");
         range2 = RangeOption.parse("Range=0");
-        assertTrue(range1.compareTo(range2) == 0);
-        assertTrue(range2.compareTo(range1) == 0);
+        assertThat(range1.compareTo(range2) == 0).isTrue();
+        assertThat(range2.compareTo(range1) == 0).isTrue();
 
         range1 = RangeOption.parse("Range=0-101");
         range2 = RangeOption.parse("Range=0-100");
-        assertTrue(range1.compareTo(range2) > 0);
-        assertTrue(range2.compareTo(range1) < 0);
+        assertThat(range1.compareTo(range2) > 0).isTrue();
+        assertThat(range2.compareTo(range1) < 0).isTrue();
 
         range1 = RangeOption.parse("Range=0-*");
         range2 = RangeOption.parse("Range=0-100");
-        assertTrue(range1.compareTo(range2) > 0);
-        assertTrue(range2.compareTo(range1) < 0);
+        assertThat(range1.compareTo(range2) > 0).isTrue();
+        assertThat(range2.compareTo(range1) < 0).isTrue();
     }
 
     @Test
@@ -145,33 +143,33 @@ public class RangeOptionTest  {
         RangeOption range2 = RangeOption.parse("Range=11-500");
 
         try {
-            assertTrue(range1.compareTo(range2) == 0);
+            assertThat(range1.compareTo(range2) == 0).isTrue();
 
             fail("IllegalStateException expected");
         } catch (IllegalStateException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
 
         range1 = RangeOption.parse("Range=10");
         range2 = RangeOption.parse("Range=10-500");
 
         try {
-            assertTrue(range1.compareTo(range2) == 0);
+            assertThat(range1.compareTo(range2) == 0).isTrue();
 
             fail("IllegalStateException expected");
         } catch (IllegalStateException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
 
         range1 = RangeOption.parse("Range=10-500");
         range2 = RangeOption.parse("Range=10");
 
         try {
-            assertTrue(range1.compareTo(range2) == 0);
+            assertThat(range1.compareTo(range2) == 0).isTrue();
 
             fail("IllegalStateException expected");
         } catch (IllegalStateException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
     }
 
@@ -180,15 +178,15 @@ public class RangeOptionTest  {
         RangeOption range = RangeOption.parse("Range=0-100");
 
         range = range.nextRange(100);
-        assertEquals(101, range.getInitial());
-        assertEquals(200, range.getTerminal());
+        assertThat(range.getInitial()).isEqualTo(101);
+        assertThat(range.getTerminal()).isEqualTo(200);
 
         range = range.nextRange(10);
-        assertEquals(201, range.getInitial());
-        assertEquals(210, range.getTerminal());
+        assertThat(range.getInitial()).isEqualTo(201);
+        assertThat(range.getTerminal()).isEqualTo(210);
 
         range = range.nextRange(RangeOption.TERMINAL_END_OF_RANGE);
-        assertEquals(211, range.getInitial());
-        assertEquals(RangeOption.TERMINAL_END_OF_RANGE, range.getTerminal());
+        assertThat(range.getInitial()).isEqualTo(211);
+        assertThat(range.getTerminal()).isEqualTo(RangeOption.TERMINAL_END_OF_RANGE);
     }
 }

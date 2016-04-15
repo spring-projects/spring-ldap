@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,8 +49,8 @@ public class LdapTemplateLookupOpenLdapITest extends
         DirContextAdapter result = (DirContextAdapter) tested
                 .lookup("cn=Some Person2, ou=company1,c=Sweden");
 
-        assertEquals("Some Person2", result.getStringAttribute("cn"));
-        assertEquals("Person2", result.getStringAttribute("sn"));
+        assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person2");
+        assertThat(result.getStringAttribute("sn")).isEqualTo("Person2");
         assertEquals("Sweden, Company1, Some Person2", result
                 .getStringAttribute("description"));
     }
@@ -60,9 +60,9 @@ public class LdapTemplateLookupOpenLdapITest extends
         Person person = (Person) tested.lookup(
                 "cn=Some Person2, ou=company1,c=Sweden", mapper);
 
-        assertEquals("Some Person2", person.getFullname());
-        assertEquals("Person2", person.getLastname());
-        assertEquals("Sweden, Company1, Some Person2", person.getDescription());
+        assertThat(person.getFullname()).isEqualTo("Some Person2");
+        assertThat(person.getLastname()).isEqualTo("Person2");
+        assertThat(person.getDescription()).isEqualTo("Sweden, Company1, Some Person2");
     }
 
     public void testLookup_AttributesMapper_DistinguishedName() {
@@ -70,9 +70,9 @@ public class LdapTemplateLookupOpenLdapITest extends
         Person person = (Person) tested.lookup(new DistinguishedName(
                 "cn=Some Person2, ou=company1,c=Sweden"), mapper);
 
-        assertEquals("Some Person2", person.getFullname());
-        assertEquals("Person2", person.getLastname());
-        assertEquals("Sweden, Company1, Some Person2", person.getDescription());
+        assertThat(person.getFullname()).isEqualTo("Some Person2");
+        assertThat(person.getLastname()).isEqualTo("Person2");
+        assertThat(person.getDescription()).isEqualTo("Sweden, Company1, Some Person2");
     }
 
     /**
@@ -94,7 +94,7 @@ public class LdapTemplateLookupOpenLdapITest extends
                 throws NamingException {
             Person person = new Person();
             person.setFullname((String) attributes.get("cn").get());
-            assertNull("sn should be null", attributes.get("sn"));
+            assertThat(attributes.get("sn")).as("sn should be null").isNull();
             assertNull("description should be null", attributes
                     .get("description"));
             return person;
@@ -112,9 +112,9 @@ public class LdapTemplateLookupOpenLdapITest extends
                 "cn=Some Person2, ou=company1,c=Sweden", new String[] { "cn" },
                 mapper);
 
-        assertEquals("Some Person2", person.getFullname());
-        assertNull("lastName should not be set", person.getLastname());
-        assertNull("description should not be set", person.getDescription());
+        assertThat(person.getFullname()).isEqualTo("Some Person2");
+        assertThat(person.getLastname()).as("lastName should not be set").isNull();
+        assertThat(person.getDescription()).as("description should not be set").isNull();
     }
 
     /**
@@ -128,9 +128,9 @@ public class LdapTemplateLookupOpenLdapITest extends
                 "cn=Some Person2, ou=company1,c=Sweden"),
                 new String[] { "cn" }, mapper);
 
-        assertEquals("Some Person2", person.getFullname());
-        assertNull("lastName should not be set", person.getLastname());
-        assertNull("description should not be set", person.getDescription());
+        assertThat(person.getFullname()).isEqualTo("Some Person2");
+        assertThat(person.getLastname()).as("lastName should not be set").isNull();
+        assertThat(person.getDescription()).as("description should not be set").isNull();
     }
 
     /**
@@ -142,9 +142,9 @@ public class LdapTemplateLookupOpenLdapITest extends
         Person person = (Person) tested.lookup(
                 "cn=Some Person2, ou=company1,c=Sweden", mapper);
 
-        assertEquals("Some Person2", person.getFullname());
-        assertEquals("Person2", person.getLastname());
-        assertEquals("Sweden, Company1, Some Person2", person.getDescription());
+        assertThat(person.getFullname()).isEqualTo("Some Person2");
+        assertThat(person.getLastname()).isEqualTo("Person2");
+        assertThat(person.getDescription()).isEqualTo("Sweden, Company1, Some Person2");
     }
 
     /**
@@ -158,9 +158,9 @@ public class LdapTemplateLookupOpenLdapITest extends
                 "cn=Some Person2, ou=company1,c=Sweden", new String[] { "cn" },
                 mapper);
 
-        assertEquals("Some Person2", person.getFullname());
-        assertNull("lastName should not be set", person.getLastname());
-        assertNull("description should not be set", person.getDescription());
+        assertThat(person.getFullname()).isEqualTo("Some Person2");
+        assertThat(person.getLastname()).as("lastName should not be set").isNull();
+        assertThat(person.getDescription()).as("description should not be set").isNull();
     }
 
     /**
@@ -172,8 +172,8 @@ public class LdapTemplateLookupOpenLdapITest extends
         Person person = (Person) tested.lookup(
                 "cn=Some Person+sn=Person, ou=company1,c=Norway", mapper);
 
-        assertEquals("Some Person", person.getFullname());
-        assertEquals("Person", person.getLastname());
+        assertThat(person.getFullname()).isEqualTo("Some Person");
+        assertThat(person.getLastname()).isEqualTo("Person");
         assertEquals("Norway, Company1, Some Person+Person", person
                 .getDescription());
     }
@@ -186,8 +186,8 @@ public class LdapTemplateLookupOpenLdapITest extends
         DirContextAdapter result = (DirContextAdapter) tested
                 .lookup("cn=Some Person+sn=Person, ou=company1,c=Norway");
 
-        assertEquals("Some Person", result.getStringAttribute("cn"));
-        assertEquals("Person", result.getStringAttribute("sn"));
+        assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person");
+        assertThat(result.getStringAttribute("sn")).isEqualTo("Person");
         assertEquals("Norway, Company1, Some Person+Person", result
                 .getStringAttribute("description"));
     }
@@ -196,7 +196,7 @@ public class LdapTemplateLookupOpenLdapITest extends
         DirContextAdapter result = (DirContextAdapter) tested
                 .lookup("cn=Some Person2, ou=company1,c=Sweden");
 
-        assertEquals("cn=Some Person2, ou=company1, c=Sweden", result.getDn()
+        assertThat(result.getDn().isEqualTo("cn=Some Person2, ou=company1, c=Sweden")
                 .toString());
         assertEquals(
                 "cn=Some Person2, ou=company1, c=Sweden, dc=jayway, dc=se",

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,8 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Tests the bind and unbind methods of LdapTemplate. The test methods in this
@@ -149,14 +148,14 @@ public class LdapTemplateBindUnbindITest extends
 
 	private void verifyBoundCorrectData() {
 		DirContextAdapter result = (DirContextAdapter) tested.lookup(DN);
-		assertEquals("Some Person4", result.getStringAttribute("cn"));
-		assertEquals("Person4", result.getStringAttribute("sn"));
+		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person4");
+		assertThat(result.getStringAttribute("sn")).isEqualTo("Person4");
 	}
 
 	private void verifyReboundCorrectData() {
 		DirContextAdapter result = (DirContextAdapter) tested.lookup(DN);
-		assertEquals("Some Person4", result.getStringAttribute("cn"));
-		assertEquals("Person4.Changed", result.getStringAttribute("sn"));
+		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person4");
+		assertThat(result.getStringAttribute("sn")).isEqualTo("Person4.Changed");
 	}
 
 	private void verifyCleanup() {
@@ -165,7 +164,7 @@ public class LdapTemplateBindUnbindITest extends
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 	}
 }

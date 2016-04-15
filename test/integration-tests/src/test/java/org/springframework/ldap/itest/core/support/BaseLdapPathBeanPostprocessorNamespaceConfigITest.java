@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.support.LdapUtils;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Integration tests for {@link org.springframework.ldap.core.support.BaseLdapPathBeanPostProcessor}.
@@ -38,11 +37,11 @@ public class BaseLdapPathBeanPostprocessorNamespaceConfigITest {
 		DummyBaseLdapPathAware tested = ctx.getBean(DummyBaseLdapPathAware.class);
 
 		DistinguishedName base = tested.getBase();
-		assertNotNull(base);
-		assertEquals(new DistinguishedName("dc=jayway,dc=se"), base);
+		assertThat(base).isNotNull();
+		assertThat(base).isEqualTo(new DistinguishedName("dc=jayway,dc=se"));
 
         DummyBaseLdapNameAware otherTested = ctx.getBean(DummyBaseLdapNameAware.class);
-        assertEquals(LdapUtils.newLdapName("dc=jayway,dc=se"), otherTested.getBaseLdapPath());
+        assertThat(otherTested.getBaseLdapPath()).isEqualTo(LdapUtils.newLdapName("dc=jayway,dc=se"));
     }
 
     @Test
@@ -52,11 +51,11 @@ public class BaseLdapPathBeanPostprocessorNamespaceConfigITest {
         DummyBaseLdapPathAware tested = ctx.getBean(DummyBaseLdapPathAware.class);
 
         DistinguishedName base = tested.getBase();
-        assertNotNull(base);
-        assertEquals(new DistinguishedName("dc=jayway,dc=se"), base);
+        assertThat(base).isNotNull();
+        assertThat(base).isEqualTo(new DistinguishedName("dc=jayway,dc=se"));
 
         DummyBaseLdapNameAware otherTested = ctx.getBean(DummyBaseLdapNameAware.class);
-        assertEquals(LdapUtils.newLdapName("dc=jayway,dc=se"), otherTested.getBaseLdapPath());
+        assertThat(otherTested.getBaseLdapPath()).isEqualTo(LdapUtils.newLdapName("dc=jayway,dc=se"));
     }
 
 

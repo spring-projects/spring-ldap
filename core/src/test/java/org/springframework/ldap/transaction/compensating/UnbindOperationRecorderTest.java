@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,7 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
 
 import javax.naming.ldap.LdapName;
 
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -57,11 +56,11 @@ public class UnbindOperationRecorderTest {
                 .recordOperation(new Object[] { expectedDn });
 
         // Verify result
-        assertTrue(operation instanceof UnbindOperationExecutor);
+        assertThat(operation instanceof UnbindOperationExecutor).isTrue();
         UnbindOperationExecutor rollbackOperation = (UnbindOperationExecutor) operation;
-        assertSame(ldapOperationsMock, rollbackOperation.getLdapOperations());
-        assertSame(expectedDn, rollbackOperation.getOriginalDn());
-        assertSame(expectedTempName, rollbackOperation.getTemporaryDn());
+        assertThat(rollbackOperation.getLdapOperations()).isSameAs(ldapOperationsMock);
+        assertThat(rollbackOperation.getOriginalDn()).isSameAs(expectedDn);
+        assertThat(rollbackOperation.getTemporaryDn()).isSameAs(expectedTempName);
     }
 
 }

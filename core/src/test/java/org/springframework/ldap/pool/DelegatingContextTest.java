@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,8 @@ import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NamingException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -44,7 +41,7 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
             new DelegatingContext(null, contextMock, DirContextType.READ_ONLY);
             fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
 
         try {
@@ -52,14 +49,14 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
                     DirContextType.READ_ONLY);
             fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
 
         try {
             new DelegatingContext(keyedObjectPoolMock, contextMock, null);
             fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
     }
 
@@ -70,11 +67,11 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
                 keyedObjectPoolMock, contextMock, DirContextType.READ_ONLY);
 
         final Context delegateContext = delegatingContext.getDelegateContext();
-        assertEquals(contextMock, delegateContext);
+        assertThat(delegateContext).isEqualTo(contextMock);
 
         final Context innerDelegateContext = delegatingContext
                 .getInnermostDelegateContext();
-        assertEquals(contextMock, innerDelegateContext);
+        assertThat(innerDelegateContext).isEqualTo(contextMock);
 
         delegatingContext.assertOpen();
 
@@ -87,11 +84,11 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
 
         final Context delegateContext2 = delegatingContext2
                 .getDelegateContext();
-        assertEquals(delegatingContext, delegateContext2);
+        assertThat(delegateContext2).isEqualTo(delegatingContext);
 
         final Context innerDelegateContext2 = delegatingContext2
                 .getInnermostDelegateContext();
-        assertEquals(contextMock, innerDelegateContext2);
+        assertThat(innerDelegateContext2).isEqualTo(contextMock);
 
         delegatingContext2.assertOpen();
 
@@ -100,11 +97,11 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
 
         final Context delegateContext2closed = delegatingContext2
                 .getDelegateContext();
-        assertNull(delegateContext2closed);
+        assertThat(delegateContext2closed).isNull();
 
         final Context innerDelegateContext2closed = delegatingContext2
                 .getInnermostDelegateContext();
-        assertNull(innerDelegateContext2closed);
+        assertThat(innerDelegateContext2closed).isNull();
 
         try {
             delegatingContext2.assertOpen();
@@ -118,11 +115,11 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
 
         final Context delegateContextclosed = delegatingContext
                 .getDelegateContext();
-        assertNull(delegateContextclosed);
+        assertThat(delegateContextclosed).isNull();
 
         final Context innerDelegateContextclosed = delegatingContext
                 .getInnermostDelegateContext();
-        assertNull(innerDelegateContextclosed);
+        assertThat(innerDelegateContextclosed).isNull();
 
         try {
             delegatingContext.assertOpen();
@@ -141,31 +138,31 @@ public class DelegatingContextTest extends AbstractPoolTestCase {
         // Wrap the Context once
         final DelegatingContext delegatingContext = new DelegatingContext(
                 keyedObjectPoolMock, contextMock, DirContextType.READ_ONLY);
-        assertEquals(contextMock.toString(), delegatingContext.toString());
+        assertThat(delegatingContext.toString()).isEqualTo(contextMock.toString());
         delegatingContext.hashCode(); // Run it to make sure it doesn't fail
 
-        assertTrue(delegatingContext.equals(delegatingContext));
-        assertFalse(delegatingContext.equals(new Object()));
+        assertThat(delegatingContext.equals(delegatingContext)).isTrue();
+        assertThat(delegatingContext.equals(new Object())).isFalse();
 
         final DelegatingContext delegatingContext2 = new DelegatingContext(
                 keyedObjectPoolMock, contextMock, DirContextType.READ_ONLY);
-        assertTrue(delegatingContext.equals(delegatingContext2));
-        assertTrue(delegatingContext2.equals(delegatingContext));
-        assertTrue(delegatingContext.equals(contextMock));
+        assertThat(delegatingContext.equals(delegatingContext2)).isTrue();
+        assertThat(delegatingContext2.equals(delegatingContext)).isTrue();
+        assertThat(delegatingContext.equals(contextMock)).isTrue();
 
         // Close the contextMock and try again
         delegatingContext.close();
 
-        assertEquals("Context is closed", delegatingContext.toString());
-        assertEquals(0, delegatingContext.hashCode()); // Run it to make sure
+        assertThat(delegatingContext.toString()).isEqualTo("Context is closed");
+        assertThat(delegatingContext.hashCode()).isEqualTo(0); // Run it to make sure
         // it doesn't fail
 
-        assertTrue(delegatingContext.equals(delegatingContext));
-        assertFalse(delegatingContext.equals(new Object()));
+        assertThat(delegatingContext.equals(delegatingContext)).isTrue();
+        assertThat(delegatingContext.equals(new Object())).isFalse();
 
-        assertFalse(delegatingContext.equals(delegatingContext2));
-        assertFalse(delegatingContext2.equals(delegatingContext));
-        assertFalse(delegatingContext.equals(contextMock));
+        assertThat(delegatingContext.equals(delegatingContext2)).isFalse();
+        assertThat(delegatingContext2.equals(delegatingContext)).isFalse();
+        assertThat(delegatingContext.equals(contextMock)).isFalse();
 
         verify(keyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, contextMock);
     }

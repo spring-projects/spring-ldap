@@ -37,9 +37,8 @@ import javax.naming.directory.SearchControls;
 import javax.naming.ldap.LdapName;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 @ContextConfiguration(locations = {"/conf/simpleLdapTemplateTestContext.xml"})
 public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest {
@@ -53,28 +52,28 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 	@Test
 	public void testLookup() {
 		String result = ldapTemplate.lookup("cn=Some Person,ou=company1,ou=Sweden", new CnContextMapper());
-		assertEquals("Some Person", result);
+		assertThat(result).isEqualTo("Some Person");
 	}
 
 	@Test
 	public void testLookupName() {
 		String result = ldapTemplate.lookup(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden"),
 				new CnContextMapper());
-		assertEquals("Some Person", result);
+		assertThat(result).isEqualTo("Some Person");
 	}
 
 	@Test
 	public void testSearch() {
 		List<String> cns = ldapTemplate.search("", "(&(objectclass=person)(sn=Person3))", new CnContextMapper());
 
-		assertEquals(1, cns.size());
-		assertEquals("Some Person3", cns.get(0));
+		assertThat(cns).hasSize(1);
+		assertThat(cns.get(0)).isEqualTo("Some Person3");
 	}
 
 	@Test
 	public void testSearchForObject() {
 		String cn = ldapTemplate.searchForObject("", "(&(objectclass=person)(sn=Person3))", new CnContextMapper());
-		assertEquals("Some Person3", cn);
+		assertThat(cn).isEqualTo("Some Person3");
 	}
 
 	@Test
@@ -86,10 +85,10 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 		List<String> cns = ldapTemplate.search("", "(&(objectclass=person)(sn=Person3))", searchControls,
 				new CnContextMapper(), processor);
 
-		assertEquals(1, cns.size());
-		assertEquals("Some Person3", cns.get(0));
-		assertTrue(processor.isPreProcessCalled());
-		assertTrue(processor.isPostProcessCalled());
+		assertThat(cns).hasSize(1);
+		assertThat(cns.get(0)).isEqualTo("Some Person3");
+		assertThat(processor.isPreProcessCalled()).isTrue();
+		assertThat(processor.isPostProcessCalled()).isTrue();
 	}
 
 	@Test
@@ -101,10 +100,10 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 		List<String> cns = ldapTemplate.search(LdapUtils.emptyLdapName(), "(&(objectclass=person)(sn=Person3))",
 				searchControls, new CnContextMapper(), processor);
 
-		assertEquals(1, cns.size());
-		assertEquals("Some Person3", cns.get(0));
-		assertTrue(processor.isPreProcessCalled());
-		assertTrue(processor.isPostProcessCalled());
+		assertThat(cns).hasSize(1);
+		assertThat(cns.get(0)).isEqualTo("Some Person3");
+		assertThat(processor.isPreProcessCalled()).isTrue();
+		assertThat(processor.isPostProcessCalled()).isTrue();
 	}
 
 	@Test
@@ -112,8 +111,8 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 		List<String> cns = ldapTemplate.search(LdapUtils.emptyLdapName(), "(&(objectclass=person)(sn=Person3))",
 				new CnContextMapper());
 
-		assertEquals(1, cns.size());
-		assertEquals("Some Person3", cns.get(0));
+		assertThat(cns).hasSize(1);
+		assertThat(cns.get(0)).isEqualTo("Some Person3");
 	}
 
 	@Test
@@ -129,8 +128,8 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 		ldapTemplate.lookup("cn=Some Person,ou=company1,ou=Sweden", new ParameterizedContextMapper<Object>() {
 			public Object mapFromContext(Object ctx) {
 				DirContextAdapter adapter = (DirContextAdapter) ctx;
-				assertEquals("updated description", adapter.getStringAttribute("description"));
-				assertEquals("0000001", adapter.getStringAttribute("telephoneNumber"));
+				assertThat(adapter.getStringAttribute("description")).isEqualTo("updated description");
+				assertThat(adapter.getStringAttribute("telephoneNumber")).isEqualTo("0000001");
 				return null;
 			}
 		});
@@ -150,8 +149,8 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 		ldapTemplate.lookup("cn=Some Person,ou=company1,ou=Sweden", new ParameterizedContextMapper<Object>() {
 			public Object mapFromContext(Object ctx) {
 				DirContextAdapter adapter = (DirContextAdapter) ctx;
-				assertEquals("updated description", adapter.getStringAttribute("description"));
-				assertEquals("0000001", adapter.getStringAttribute("telephoneNumber"));
+				assertThat(adapter.getStringAttribute("description")).isEqualTo("updated description");
+				assertThat(adapter.getStringAttribute("telephoneNumber")).isEqualTo("0000001");
 				return null;
 			}
 		});
@@ -201,13 +200,13 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 	public void testAuthenticate() {
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
-		assertTrue(ldapTemplate.authenticate("", filter.toString(), "password"));
+		assertThat(ldapTemplate.authenticate("", filter.toString(), "password")).isTrue();
 	}
 	
 	private void verifyBoundCorrectData() {
 		DirContextOperations result = ldapTemplate.lookupContext(DN_STRING);
-		assertEquals("Some Person4", result.getStringAttribute("cn"));
-		assertEquals("Person4", result.getStringAttribute("sn"));
+		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person4");
+		assertThat(result.getStringAttribute("sn")).isEqualTo("Person4");
 	}
 
 	private void verifyCleanup() {
@@ -216,7 +215,7 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 	}
 

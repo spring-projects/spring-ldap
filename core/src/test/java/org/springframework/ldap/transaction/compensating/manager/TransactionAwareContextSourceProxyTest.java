@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,7 @@ import org.springframework.ldap.core.DirContextProxy;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -55,11 +53,9 @@ public class TransactionAwareContextSourceProxyTest {
 
         DirContext result = tested.getReadWriteContext();
 
-        assertNotNull("Result should not be null", result);
-        assertTrue("Should be an LdapContext instance",
-                result instanceof LdapContext);
-        assertTrue("Should be a DirContextProxy instance",
-                result instanceof DirContextProxy);
+        assertThat(result).isNotNull();
+        assertThat(result instanceof LdapContext).isTrue();
+        assertThat(result instanceof DirContextProxy).isTrue();
     }
 
     @Test
@@ -68,13 +64,10 @@ public class TransactionAwareContextSourceProxyTest {
 
         DirContext result = tested.getReadWriteContext();
 
-        assertNotNull("Result should not be null", result);
-        assertTrue("Should be a DirContext instance",
-                result instanceof DirContext);
-        assertFalse("Should not be an LdapContext instance",
-                result instanceof LdapContext);
-        assertTrue("Should be a DirContextProxy instance",
-                result instanceof DirContextProxy);
+        assertThat(result).as("Result should not be null").isNotNull();
+        assertThat(result instanceof DirContext).isTrue();
+        assertThat(result instanceof LdapContext).isFalse();
+        assertThat(result instanceof DirContextProxy).isTrue();
     }
 
     @Test
@@ -83,10 +76,8 @@ public class TransactionAwareContextSourceProxyTest {
 
         DirContext result = tested.getReadOnlyContext();
 
-        assertNotNull("Result should not be null", result);
-        assertTrue("Should be an LdapContext instance",
-                result instanceof LdapContext);
-        assertTrue("Should be a DirContextProxy instance",
-                result instanceof DirContextProxy);
+        assertThat(result).as("Result should not be null").isNotNull();
+        assertThat(result instanceof LdapContext).isTrue();
+        assertThat(result instanceof DirContextProxy).isTrue();
     }
 }

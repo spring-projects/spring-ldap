@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,12 +49,8 @@ import javax.naming.ldap.LdapName;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
@@ -228,7 +224,7 @@ public class LdapTemplateTest {
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 		verify(dirContextMock).close();
 	}
@@ -320,9 +316,9 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-        assertNotNull(list);
-		assertEquals(1, list.size());
-		assertSame(expectedResult, list.get(0));
+        assertThat(list).isNotNull();
+		assertThat(list).hasSize(1);
+		assertThat(list.get(0)).isSameAs(expectedResult);
 	}
 
     @Test
@@ -347,9 +343,9 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-        assertNotNull(list);
-		assertEquals(1, list.size());
-		assertSame(expectedResult, list.get(0));
+        assertThat(list).isNotNull();
+		assertThat(list).hasSize(1);
+		assertThat(list.get(0)).isSameAs(expectedResult);
 	}
 
     @Test
@@ -374,9 +370,9 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-		assertNotNull(list);
-		assertEquals(1, list.size());
-		assertSame(expectedResult, list.get(0));
+		assertThat(list).isNotNull();
+		assertThat(list).hasSize(1);
+		assertThat(list.get(0)).isSameAs(expectedResult);
 	}
 
     @Test
@@ -400,9 +396,9 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-        assertNotNull(list);
-		assertEquals(1, list.size());
-		assertSame(expectedResult, list.get(0));
+        assertThat(list).isNotNull();
+		assertThat(list).hasSize(1);
+		assertThat(list.get(0)).isSameAs(expectedResult);
 	}
 
     @Test
@@ -428,9 +424,9 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-        assertNotNull(list);
-		assertEquals(1, list.size());
-		assertSame(expectedResult, list.get(0));
+        assertThat(list).isNotNull();
+		assertThat(list).hasSize(1);
+		assertThat(list.get(0)).isSameAs(expectedResult);
 	}
 
     @Test
@@ -456,9 +452,9 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-        assertNotNull(list);
-		assertEquals(1, list.size());
-		assertSame(expectedResult, list.get(0));
+        assertThat(list).isNotNull();
+		assertThat(list).hasSize(1);
+		assertThat(list.get(0)).isSameAs(expectedResult);
 	}
 
     @Test
@@ -488,9 +484,9 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-        assertNotNull(list);
-        assertEquals(1, list.size());
-        assertSame(expectedResult, list.get(0));
+        assertThat(list).isNotNull();
+        assertThat(list).hasSize(1);
+        assertThat(list.get(0)).isSameAs(expectedResult);
     }
 
     @Test
@@ -513,9 +509,9 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-		assertNotNull(list);
-		assertEquals(1, list.size());
-		assertSame(expectedResult, list.get(0));
+		assertThat(list).isNotNull();
+		assertThat(list).hasSize(1);
+		assertThat(list.get(0)).isSameAs(expectedResult);
 	}
 
     @Test
@@ -538,9 +534,9 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-        assertNotNull(list);
-		assertEquals(1, list.size());
-		assertSame(expectedResult, list.get(0));
+        assertThat(list).isNotNull();
+		assertThat(list).hasSize(1);
+		assertThat(list.get(0)).isSameAs(expectedResult);
 	}
 
     @Test
@@ -563,9 +559,9 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-        assertNotNull(list);
-		assertEquals(1, list.size());
-		assertSame(expectedResult, list.get(0));
+        assertThat(list).isNotNull();
+		assertThat(list).hasSize(1);
+		assertThat(list.get(0)).isSameAs(expectedResult);
 	}
 
     @Test
@@ -588,9 +584,9 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-        assertNotNull(list);
-		assertEquals(1, list.size());
-		assertSame(expectedResult, list.get(0));
+        assertThat(list).isNotNull();
+		assertThat(list).hasSize(1);
+		assertThat(list.get(0)).isSameAs(expectedResult);
 	}
 
     @Test
@@ -609,9 +605,9 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-        assertNotNull(list);
-		assertEquals(1, list.size());
-		assertSame(expectedResult, list.get(0));
+        assertThat(list).isNotNull();
+		assertThat(list).hasSize(1);
+		assertThat(list.get(0)).isSameAs(expectedResult);
 	}
 
     @Test
@@ -635,7 +631,7 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-        assertSame(expectedResult, result);
+        assertThat(result).isSameAs(expectedResult);
     }
 
     @Test
@@ -652,7 +648,7 @@ public class LdapTemplateTest {
             tested.findOne(query().where("ou").is("somevalue"), expectedClass);
             fail("EmptyResultDataAccessException expected");
         } catch (EmptyResultDataAccessException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
 
         verify(namingEnumerationMock).close();
@@ -680,7 +676,7 @@ public class LdapTemplateTest {
             tested.findOne(query().where("ou").is("somevalue"), expectedClass);
             fail("EmptyResultDataAccessException expected");
         } catch (IncorrectResultSizeDataAccessException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
 
         verify(namingEnumerationMock).close();
@@ -709,9 +705,9 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-        assertNotNull(list);
-		assertEquals(1, list.size());
-		assertSame(expectedResult, list.get(0));
+        assertThat(list).isNotNull();
+		assertThat(list).hasSize(1);
+		assertThat(list.get(0)).isSameAs(expectedResult);
 	}
 
     @Test
@@ -736,9 +732,9 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-        assertNotNull(list);
-		assertEquals(1, list.size());
-		assertSame(expectedResult, list.get(0));
+        assertThat(list).isNotNull();
+		assertThat(list).hasSize(1);
+		assertThat(list.get(0)).isSameAs(expectedResult);
 	}
 
     @Test
@@ -761,9 +757,9 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-        assertNotNull(list);
-		assertEquals(1, list.size());
-		assertSame(expectedResult, list.get(0));
+        assertThat(list).isNotNull();
+		assertThat(list).hasSize(1);
+		assertThat(list.get(0)).isSameAs(expectedResult);
 	}
 
     @Test
@@ -783,9 +779,9 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-        assertNotNull(list);
-		assertEquals(1, list.size());
-		assertSame(expectedResult, list.get(0));
+        assertThat(list).isNotNull();
+		assertThat(list).hasSize(1);
+		assertThat(list.get(0)).isSameAs(expectedResult);
 	}
 
     @Test
@@ -807,9 +803,9 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-        assertNotNull(list);
-		assertEquals(1, list.size());
-		assertSame(expectedResult, list.get(0));
+        assertThat(list).isNotNull();
+		assertThat(list).hasSize(1);
+		assertThat(list.get(0)).isSameAs(expectedResult);
 	}
 
     @Test
@@ -831,9 +827,9 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-		assertNotNull(list);
-		assertEquals(1, list.size());
-		assertSame(expectedResult, list.get(0));
+		assertThat(list).isNotNull();
+		assertThat(list).hasSize(1);
+		assertThat(list.get(0)).isSameAs(expectedResult);
 	}
 
     @Test
@@ -860,9 +856,9 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-        assertNotNull(list);
-		assertEquals(1, list.size());
-		assertSame(expectedResult, list.get(0));
+        assertThat(list).isNotNull();
+		assertThat(list).hasSize(1);
+		assertThat(list.get(0)).isSameAs(expectedResult);
 	}
 
     @Test
@@ -884,9 +880,9 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-        assertNotNull(list);
-		assertEquals(1, list.size());
-		assertSame(expectedResult, list.get(0));
+        assertThat(list).isNotNull();
+		assertThat(list).hasSize(1);
+		assertThat(list.get(0)).isSameAs(expectedResult);
 	}
 
     @Test
@@ -909,9 +905,9 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-        assertNotNull(list);
-		assertEquals(1, list.size());
-		assertSame(expectedResult, list.get(0));
+        assertThat(list).isNotNull();
+		assertThat(list).hasSize(1);
+		assertThat(list.get(0)).isSameAs(expectedResult);
 	}
 
     @Test
@@ -934,9 +930,9 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
 
-        assertNotNull(list);
-		assertEquals(1, list.size());
-		assertSame(expectedResult, list.get(0));
+        assertThat(list).isNotNull();
+		assertThat(list).hasSize(1);
+		assertThat(list.get(0)).isSameAs(expectedResult);
 	}
 
     @Test
@@ -977,7 +973,7 @@ public class LdapTemplateTest {
 			fail("LimitExceededException expected");
 		}
 		catch (LimitExceededException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
         verify(dirContextMock).close();
@@ -1024,7 +1020,7 @@ public class LdapTemplateTest {
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
         verify(dirContextMock).close();
@@ -1090,7 +1086,7 @@ public class LdapTemplateTest {
             tested.create(expectedObject);
             fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
     }
 
@@ -1283,7 +1279,7 @@ public class LdapTemplateTest {
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
         verify(dirContextMock).close();
@@ -1300,7 +1296,7 @@ public class LdapTemplateTest {
 
         verify(dirContextMock).close();
 
-		assertSame(object, result);
+		assertThat(result).isSameAs(object);
 	}
 
     @Test
@@ -1315,7 +1311,7 @@ public class LdapTemplateTest {
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
         verify(dirContextMock).close();
@@ -1332,7 +1328,7 @@ public class LdapTemplateTest {
 
         verify(dirContextMock).close();
 
-        assertSame(object, result);
+        assertThat(result).isSameAs(object);
 	}
 
     @Test
@@ -1347,7 +1343,7 @@ public class LdapTemplateTest {
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
         verify(dirContextMock).close();
@@ -1385,7 +1381,7 @@ public class LdapTemplateTest {
 			fail("LimitExceededException expected");
 		}
 		catch (LimitExceededException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
         verify(dirContextProcessorMock).preProcess(dirContextMock);
@@ -1423,7 +1419,7 @@ public class LdapTemplateTest {
 			fail("LimitExceededException expected");
 		}
 		catch (LimitExceededException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
         verify(dirContextMock).close();
@@ -1443,7 +1439,7 @@ public class LdapTemplateTest {
 			fail("LimitExceededException expected");
 		}
 		catch (LimitExceededException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
         verify(namingEnumerationMock).close();
@@ -1461,7 +1457,7 @@ public class LdapTemplateTest {
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
         verify(dirContextMock).close();
@@ -1479,7 +1475,7 @@ public class LdapTemplateTest {
 			fail("PartialResultException expected");
 		}
 		catch (PartialResultException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
         verify(dirContextProcessorMock).preProcess(dirContextMock);
@@ -1509,13 +1505,13 @@ public class LdapTemplateTest {
         final LdapName expectedName = LdapUtils.emptyLdapName();
         LdapTemplate tested = new LdapTemplate() {
 			public Object lookup(Name dn) {
-				assertSame(dn, dn);
+				assertThat(dn).isSameAs(dn);
 				return expectedResult;
 			}
 		};
 
 		DirContextOperations result = tested.lookupContext(expectedName);
-		assertSame(expectedResult, result);
+		assertThat(result).isSameAs(expectedResult);
 
 	}
 
@@ -1526,13 +1522,13 @@ public class LdapTemplateTest {
 
 		LdapTemplate tested = new LdapTemplate() {
 			public Object lookup(String dn) {
-				assertSame(expectedName, dn);
+				assertThat(dn).isSameAs(expectedName);
 				return expectedResult;
 			}
 		};
 
 		DirContextOperations result = tested.lookupContext(expectedName);
-		assertSame(expectedResult, result);
+		assertThat(result).isSameAs(expectedResult);
 	}
 
     @Test
@@ -1546,8 +1542,8 @@ public class LdapTemplateTest {
 
 		LdapTemplate tested = new LdapTemplate() {
 			public void modifyAttributes(Name dn, ModificationItem[] mods) {
-				assertSame(epectedDn, dn);
-				assertSame(expectedModifications, mods);
+				assertThat(dn).isSameAs(epectedDn);
+				assertThat(mods).isSameAs(expectedModifications);
 			}
 		};
 
@@ -1571,7 +1567,7 @@ public class LdapTemplateTest {
 			fail("IllegalStateException expected");
 		}
 		catch (IllegalStateException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 	}
 
@@ -1590,7 +1586,7 @@ public class LdapTemplateTest {
 			fail("IllegalStateException expected");
 		}
 		catch (IllegalStateException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 	}
 
@@ -1610,8 +1606,8 @@ public class LdapTemplateTest {
 
         verify(dirContextMock).close();
 
-        assertNotNull(result);
-		assertSame(expectedResult, result);
+        assertThat(result).isNotNull();
+		assertThat(result).isSameAs(expectedResult);
 	}
 
     @Test
@@ -1640,7 +1636,7 @@ public class LdapTemplateTest {
 			fail("IncorrectResultSizeDataAccessException expected");
 		}
 		catch (IncorrectResultSizeDataAccessException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
         verify(namingEnumerationMock).close();
@@ -1658,7 +1654,7 @@ public class LdapTemplateTest {
 			fail("EmptyResultDataAccessException expected");
 		}
 		catch (EmptyResultDataAccessException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
         verify(dirContextMock).close();
@@ -1684,7 +1680,7 @@ public class LdapTemplateTest {
         verify(authenticatedContextMock).close();
         verify(dirContextMock).close();
 
-		assertTrue(result);
+		assertThat(result).isTrue();
 	}
 
     @Test
@@ -1719,7 +1715,7 @@ public class LdapTemplateTest {
 
         verify(dirContextMock).close();
 
-        assertFalse(result);
+        assertThat(result).isFalse();
 	}
 
 	@Test
@@ -1779,7 +1775,7 @@ public class LdapTemplateTest {
 
         verify(dirContextMock).close();
 
-        assertFalse(result);
+        assertThat(result).isFalse();
 	}
 
     @Test
@@ -1804,7 +1800,7 @@ public class LdapTemplateTest {
         verify(authenticatedContextMock).close();
         verify(dirContextMock).close();
 
-        assertFalse(result);
+        assertThat(result).isFalse();
 	}
 
 	private void noSearchResults(SearchControls controls) throws Exception {

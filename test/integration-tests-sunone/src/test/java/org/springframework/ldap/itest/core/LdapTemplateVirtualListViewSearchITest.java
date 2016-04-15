@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,6 @@
  */
 package org.springframework.ldap.itest.core;
 
-import static junit.framework.Assert.assertEquals;
-
 import java.util.List;
 
 import javax.naming.directory.SearchControls;
@@ -24,16 +22,19 @@ import javax.naming.directory.SearchControls;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ldap.control.VirtualListViewControlDirContextProcessor;
+import org.springframework.ldap.control.VirtualListViewResultsCookie;
 import org.springframework.ldap.core.CollectingNameClassPairCallbackHandler;
 import org.springframework.ldap.core.ContextMapperCallbackHandler;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.itest.Person;
 import org.springframework.ldap.itest.PersonContextMapper;
-import org.springframework.ldap.control.VirtualListViewControlDirContextProcessor;
-import org.springframework.ldap.control.VirtualListViewResultsCookie;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Integration tests for the virtual list view search result capability of
@@ -141,17 +142,17 @@ public class LdapTemplateVirtualListViewSearchITest extends
 
 		// assert that total count is still 78564
 		listSize = cookie.getContentCount();
-		assertEquals(78564, listSize);
+		assertThat(listSize).isEqualTo(78564);
 
 		// assert that we are now at 1
 		targetOffset = cookie.getTargetPosition();
-		assertEquals(1, targetOffset);
+		assertThat(targetOffset).isEqualTo(1);
 
 		// assert that we got the right 20
 		list = callbackHandler.getList();
-		assertEquals(20, list.size());
+		assertThat(list).hasSize(20);
 		person = (Person) list.get(0);
-		assertEquals("Adam Ace", person.getFullname());
+		assertThat(person.getFullname()).isEqualTo("Adam Ace");
 
 		//
 		// Step 2: Prepare for getting the last 20
@@ -169,17 +170,17 @@ public class LdapTemplateVirtualListViewSearchITest extends
 
 		// assert that total count is still 78564
 		listSize = requestControl.getListSize();
-		assertEquals(78564, listSize);
+		assertThat(listSize).isEqualTo(78564);
 
 		// assert that we are now at 78564
 		targetOffset = requestControl.getTargetOffset();
-		assertEquals(78564, targetOffset);
+		assertThat(targetOffset).isEqualTo(78564);
 
 		// assert that we got the right 20
 		list = callbackHandler.getList();
-		assertEquals(20, list.size());
+		assertThat(list).hasSize(20);
 		person = (Person) list.get(19);
-		assertEquals("Xavier Zyxel", person.getFullname());
+		assertThat(person.getFullname()).isEqualTo("Xavier Zyxel");
 
 		//
 		// Step 3: Prepare for getting the next to last 20
@@ -197,17 +198,17 @@ public class LdapTemplateVirtualListViewSearchITest extends
 
 		// assert that total count is still 78564
 		listSize = requestControl.getListSize();
-		assertEquals(78564, listSize);
+		assertThat(listSize).isEqualTo(78564);
 
 		// assert that we are now at 78525
 		targetOffset = requestControl.getTargetOffset();
-		assertEquals(78525, targetOffset);
+		assertThat(targetOffset).isEqualTo(78525);
 
 		// assert that we got the right 20
 		list = callbackHandler.getList();
-		assertEquals(20, list.size());
+		assertThat(list).hasSize(20);
 		person = (Person) list.get(0);
-		assertEquals("William Schnyder", person.getFullname());
+		assertThat(person.getFullname()).isEqualTo("William Schnyder");
 
 		//
 		// Step 4: Prepare for getting the 20 entries around 68%, ie 53424
@@ -226,17 +227,17 @@ public class LdapTemplateVirtualListViewSearchITest extends
 
 		// assert that total count is still 78564
 		listSize = requestControl.getListSize();
-		assertEquals(78564, listSize);
+		assertThat(listSize).isEqualTo(78564);
 
 		// assert that we are now at 53424
 		targetOffset = requestControl.getTargetOffset();
-		assertEquals(53424, targetOffset);
+		assertThat(targetOffset).isEqualTo(53424);
 
 		// assert that we got the right 20
 		list = callbackHandler.getList();
-		assertEquals(20, list.size());
+		assertThat(list).hasSize(20);
 		person = (Person) list.get(9);
-		assertEquals("Peter Sellers", person.getFullname());
+		assertThat(person.getFullname()).isEqualTo("Peter Sellers");
 
 		//
 		// Step 5: Prepare for getting the 20 entries around the letter 'B', ie 5234
@@ -256,16 +257,16 @@ public class LdapTemplateVirtualListViewSearchITest extends
 
 		// assert that total count is still 78564
 		listSize = requestControl.getListSize();
-		assertEquals(78564, listSize);
+		assertThat(listSize).isEqualTo(78564);
 
 		// assert that we are now at 5234
 		targetOffset = requestControl.getTargetOffset();
-		assertEquals(5234, targetOffset);
+		assertThat(targetOffset).isEqualTo(5234);
 
 		// assert that we got the right 20
 		list = callbackHandler.getList();
-		assertEquals(20, list.size());
+		assertThat(list).hasSize(20);
 		person = (Person) list.get(9);
-		assertEquals("Babs Jensen", person.getFullname());
+		assertThat(person.getFullname()).isEqualTo("Babs Jensen");
 	}
 }

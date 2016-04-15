@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,7 @@ import javax.naming.Context;
 import java.util.HashMap;
 import java.util.Hashtable;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Unit tests for the LdapContextSource class.
@@ -69,13 +68,13 @@ public class LdapContextSourceTest {
 		tested.setPassword("secret");
 		tested.afterPropertiesSet();
 		Hashtable env = tested.getAnonymousEnv();
-		assertEquals("ldap://ldap.example.com:389/dc=some%20example,dc=se", env.get(Context.PROVIDER_URL));
-		assertEquals("true", env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
-		assertNull(env.get(Context.SECURITY_PRINCIPAL));
-		assertNull(env.get(Context.SECURITY_CREDENTIALS));
+		assertThat(env.get(Context.PROVIDER_URL)).isEqualTo("ldap://ldap.example.com:389/dc=some%20example,dc=se");
+		assertThat(env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG)).isEqualTo("true");
+		assertThat(env.get(Context.SECURITY_PRINCIPAL)).isNull();
+		assertThat(env.get(Context.SECURITY_CREDENTIALS)).isNull();
 
 		// check that base was added to environment
-		assertEquals(LdapUtils.newLdapName("dc=some example,dc=se"), env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
+		assertThat(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY)).isEqualTo(LdapUtils.newLdapName("dc=some example,dc=se"));
 
 		// Verify that changing values does not change the environment values.
 		tested.setBase("dc=other,dc=se");
@@ -83,12 +82,12 @@ public class LdapContextSourceTest {
 		tested.setPooled(false);
 
 		env = tested.getAnonymousEnv();
-		assertEquals("ldap://ldap.example.com:389/dc=some%20example,dc=se", env.get(Context.PROVIDER_URL));
-		assertEquals("true", env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
-		assertNull(env.get(Context.SECURITY_PRINCIPAL));
-		assertNull(env.get(Context.SECURITY_CREDENTIALS));
+		assertThat(env.get(Context.PROVIDER_URL)).isEqualTo("ldap://ldap.example.com:389/dc=some%20example,dc=se");
+		assertThat(env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG)).isEqualTo("true");
+		assertThat(env.get(Context.SECURITY_PRINCIPAL)).isNull();
+		assertThat(env.get(Context.SECURITY_CREDENTIALS)).isNull();
 
-		assertEquals(LdapUtils.newLdapName("dc=some example,dc=se"), env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
+		assertThat(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY)).isEqualTo(LdapUtils.newLdapName("dc=some example,dc=se"));
 	}
 
     @Test
@@ -96,10 +95,10 @@ public class LdapContextSourceTest {
 		tested.setUrl("ldap://ldap.example.com:389");
 		tested.afterPropertiesSet();
 		Hashtable env = tested.getAnonymousEnv();
-		assertEquals("ldap://ldap.example.com:389", env.get(Context.PROVIDER_URL));
+		assertThat(env.get(Context.PROVIDER_URL)).isEqualTo("ldap://ldap.example.com:389");
 
 		// check that base was not added to environment
-		assertNull(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
+		assertThat(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY)).isNull();
 	}
 
     @Test
@@ -110,8 +109,8 @@ public class LdapContextSourceTest {
 		tested.setBaseEnvironmentProperties(map);
 		tested.afterPropertiesSet();
 		Hashtable env = tested.getAnonymousEnv();
-		assertEquals("ldap://ldap.example.com:389", env.get(Context.PROVIDER_URL));
-		assertNull(env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
+		assertThat(env.get(Context.PROVIDER_URL)).isEqualTo("ldap://ldap.example.com:389");
+		assertThat(env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG)).isNull();
 	}
 
     @Test
@@ -123,8 +122,8 @@ public class LdapContextSourceTest {
 		tested.setPooled(false);
 		tested.afterPropertiesSet();
 		Hashtable env = tested.getAnonymousEnv();
-		assertEquals("ldap://ldap.example.com:389", env.get(Context.PROVIDER_URL));
-		assertNull(env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
+		assertThat(env.get(Context.PROVIDER_URL)).isEqualTo("ldap://ldap.example.com:389");
+		assertThat(env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG)).isNull();
 	}
 
     @Test
@@ -133,10 +132,10 @@ public class LdapContextSourceTest {
 		tested.setBase(null);
 		tested.afterPropertiesSet();
 		Hashtable env = tested.getAnonymousEnv();
-		assertEquals("ldap://ldap.example.com:389", env.get(Context.PROVIDER_URL));
+		assertThat(env.get(Context.PROVIDER_URL)).isEqualTo("ldap://ldap.example.com:389");
 
 		// check that base was not added to environment
-		assertNull(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
+		assertThat(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY)).isNull();
 	}
 
     @Test
@@ -151,7 +150,7 @@ public class LdapContextSourceTest {
 
 		// check that base was not added to environment
 		Hashtable env = tested.getAnonymousEnv();
-		assertNull(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
+		assertThat(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY)).isNull();
 	}
 
     @Test(expected = IllegalArgumentException.class)
@@ -179,7 +178,7 @@ public class LdapContextSourceTest {
 
 		// check that base was not added to environment
 		Hashtable env = tested.getAnonymousEnv();
-		assertNull(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
+		assertThat(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY)).isNull();
 	}
 
     @Test
@@ -192,13 +191,13 @@ public class LdapContextSourceTest {
 		tested.afterPropertiesSet();
 
 		Hashtable env = tested.getAuthenticatedEnv("cn=Some User", "secret");
-		assertEquals("ldap://ldap.example.com:389/dc=example,dc=se", env.get(Context.PROVIDER_URL));
-		assertEquals("true", env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
-		assertEquals("cn=Some User", env.get(Context.SECURITY_PRINCIPAL));
-		assertEquals("secret", env.get(Context.SECURITY_CREDENTIALS));
+		assertThat(env.get(Context.PROVIDER_URL)).isEqualTo("ldap://ldap.example.com:389/dc=example,dc=se");
+		assertThat(env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG)).isEqualTo("true");
+		assertThat(env.get(Context.SECURITY_PRINCIPAL)).isEqualTo("cn=Some User");
+		assertThat(env.get(Context.SECURITY_CREDENTIALS)).isEqualTo("secret");
 
 		// check that base was added to environment
-		assertEquals(LdapUtils.newLdapName("dc=example,dc=se"), env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY));
+		assertThat(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY)).isEqualTo(LdapUtils.newLdapName("dc=example,dc=se"));
 	}
 
     @Test
@@ -211,13 +210,13 @@ public class LdapContextSourceTest {
 		tested.setCacheEnvironmentProperties(false);
 		tested.afterPropertiesSet();
 		Hashtable env = tested.getAnonymousEnv();
-		assertEquals("ldap://ldap.example.com:389/dc=example,dc=se", env.get(Context.PROVIDER_URL));
-		assertEquals("true", env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG));
-		assertNull(env.get(Context.SECURITY_PRINCIPAL));
-		assertNull(env.get(Context.SECURITY_CREDENTIALS));
+		assertThat(env.get(Context.PROVIDER_URL)).isEqualTo("ldap://ldap.example.com:389/dc=example,dc=se");
+		assertThat(env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG)).isEqualTo("true");
+		assertThat(env.get(Context.SECURITY_PRINCIPAL)).isNull();
+		assertThat(env.get(Context.SECURITY_CREDENTIALS)).isNull();
 
 		tested.setUrl("ldap://ldap2.example.com:389");
 		env = tested.getAnonymousEnv();
-		assertEquals("ldap://ldap2.example.com:389/dc=example,dc=se", env.get(Context.PROVIDER_URL));
+		assertThat(env.get(Context.PROVIDER_URL)).isEqualTo("ldap://ldap2.example.com:389/dc=example,dc=se");
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,8 @@ import org.springframework.test.context.ContextConfiguration;
 import javax.naming.Name;
 import javax.naming.ldap.LdapName;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Tests to verify that not setting a base suffix on the ContextSource (as
@@ -60,13 +59,13 @@ public class LdapTemplateNoBaseSuffixITest extends AbstractLdapTemplateIntegrati
         String expectedDn = "cn=Some Person2, ou=company1, ou=Sweden," + base;
         DirContextAdapter result = (DirContextAdapter) tested.lookup(expectedDn);
 
-		assertEquals("Some Person2", result.getStringAttribute("cn"));
-		assertEquals("Person2", result.getStringAttribute("sn"));
-		assertEquals("Sweden, Company1, Some Person2", result.getStringAttribute("description"));
+		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person2");
+		assertThat(result.getStringAttribute("sn")).isEqualTo("Person2");
+		assertThat(result.getStringAttribute("description")).isEqualTo("Sweden, Company1, Some Person2");
 
         LdapName expectedName = LdapUtils.newLdapName(expectedDn);
-        assertEquals(expectedName, result.getDn());
-		assertEquals(expectedDn, result.getNameInNamespace());
+        assertThat(result.getDn()).isEqualTo(expectedName);
+		assertThat(result.getNameInNamespace()).isEqualTo(expectedDn);
 	}
 
 	@Test
@@ -74,7 +73,7 @@ public class LdapTemplateNoBaseSuffixITest extends AbstractLdapTemplateIntegrati
 		CountNameClassPairCallbackHandler handler = new CountNameClassPairCallbackHandler();
 
 		tested.search(base, "(objectclass=person)", handler);
-		assertEquals(5, handler.getNoOfRows());
+		assertThat(handler.getNoOfRows()).isEqualTo(5);
 	}
 
 	@Test
@@ -88,9 +87,9 @@ public class LdapTemplateNoBaseSuffixITest extends AbstractLdapTemplateIntegrati
 		DirContextAdapter result = (DirContextAdapter) tested
 				.lookup("cn=Some Person4, ou=company1, ou=Sweden," + base);
 
-		assertEquals("Some Person4", result.getStringAttribute("cn"));
-		assertEquals("Person4", result.getStringAttribute("sn"));
-		assertEquals(LdapUtils.newLdapName("cn=Some Person4,ou=company1,ou=Sweden," + base), result.getDn());
+		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person4");
+		assertThat(result.getStringAttribute("sn")).isEqualTo("Person4");
+		assertThat(result.getDn()).isEqualTo(LdapUtils.newLdapName("cn=Some Person4,ou=company1,ou=Sweden," + base));
 
 		tested.unbind("cn=Some Person4,ou=company1,ou=Sweden," + base);
 		try {
@@ -98,7 +97,7 @@ public class LdapTemplateNoBaseSuffixITest extends AbstractLdapTemplateIntegrati
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package org.springframework.ldap.itest30;
 
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextOperations;
@@ -25,11 +24,11 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
-import static junit.framework.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests the lookup methods of LdapTemplate together with Spring 3.0.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
 @ContextConfiguration(locations = {"/conf/ldapTemplateTestContext.xml"})
@@ -48,8 +47,8 @@ public class LdapTemplateLookup30ITest extends AbstractJUnit4SpringContextTests 
 	public void testThatPlainLookupWorksWithSpring30() {
 		DirContextOperations result = tested.lookupContext("cn=Some Person2, ou=company1,c=Sweden");
 
-		assertEquals("Some Person2", result.getStringAttribute("cn"));
-		assertEquals("Person2", result.getStringAttribute("sn"));
-		assertEquals("Sweden, Company1, Some Person2", result.getStringAttribute("description"));
+		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person2");
+		assertThat(result.getStringAttribute("sn")).isEqualTo("Person2");
+		assertThat(result.getStringAttribute("description")).isEqualTo("Sweden, Company1, Some Person2");
 	}
 }

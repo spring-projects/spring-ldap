@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,9 +29,8 @@ import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -64,8 +63,8 @@ public class VirtualListViewControlDirContextProcessorTest {
 				new VirtualListViewResultsCookie(new byte[0], 0, 0));
 		VirtualListViewControl result = (VirtualListViewControl) tested
 				.createRequestControl();
-		assertNotNull(result);
-		assertEquals(OID_REQUEST, result.getID());
+		assertThat(result).isNotNull();
+		assertThat(result.getID()).isEqualTo(OID_REQUEST);
 
 		// verify that the values have been encoded as we expect
 		int expectedBeforeCount = 0;
@@ -89,8 +88,8 @@ public class VirtualListViewControlDirContextProcessorTest {
 		tested.setOffsetPercentage(true);
 		VirtualListViewControl result = (VirtualListViewControl) tested
 				.createRequestControl();
-		assertNotNull(result);
-		assertEquals(OID_REQUEST, result.getID());
+		assertThat(result).isNotNull();
+		assertThat(result.getID()).isEqualTo(OID_REQUEST);
 
 		int expectedBeforeCount = 2;
 		int expectedAfterCount = 2;
@@ -125,14 +124,12 @@ public class VirtualListViewControlDirContextProcessorTest {
 		}
 		catch (OperationNotSupportedException expected) {
 			Throwable cause = expected.getCause();
-			assertEquals(javax.naming.OperationNotSupportedException.class,
-					cause.getClass());
-			assertEquals("[LDAP: error code 53 - Unwilling To Perform]", cause
-					.getMessage());
+			assertThat(cause.getClass()).isEqualTo(javax.naming.OperationNotSupportedException.class);
+			assertThat(cause.getMessage()).isEqualTo("[LDAP: error code 53 - Unwilling To Perform]");
 		}
 
-		assertNotNull(tested.getCookie());
-		assertEquals(0, tested.getCookie().getCookie().length);
+		assertThat(tested.getCookie()).isNotNull();
+		assertThat(tested.getCookie().getCookie().length).isEqualTo(0);
 	}
 
     @Test
@@ -180,11 +177,10 @@ public class VirtualListViewControlDirContextProcessorTest {
 		case 0: // byOffset
 			int actualOffset = ber.parseInt();
 			int actualContentCount = ber.parseInt();
-			assertEquals("beforeCount,", expectedBeforeCount, actualBeforeCount);
-			assertEquals("afterCount,", expectedAfterCount, actualAfterCount);
-			assertEquals("offset,", expectedOffset, actualOffset);
-			assertEquals("contentCount,", expectedContentCount,
-					actualContentCount);
+			assertThat(expectedBeforeCount).isEqualTo(actualBeforeCount);
+			assertThat(expectedAfterCount).isEqualTo(actualAfterCount);
+			assertThat(expectedOffset).isEqualTo(actualOffset);
+			assertThat(actualContentCount).isEqualTo(expectedContentCount);
 			break;
 
 		case 1: // greaterThanOrEqual
@@ -210,7 +206,7 @@ public class VirtualListViewControlDirContextProcessorTest {
 		if (expectedContextId != null && actualContextId == null) {
 			fail("expected <" + expectedContextId + ">, got <null>");
 		}
-		assertEquals(expectedContextId.length, actualContextId.length);
+		assertThat(actualContextId.length).isEqualTo(expectedContextId.length);
 	}
 
 	private void assertEncodedResponse(byte[] encodedValue,
@@ -218,18 +214,16 @@ public class VirtualListViewControlDirContextProcessorTest {
 			int expectedContentCount, int expectedVirtualListViewResult,
 			byte[] expectedContextId) throws Exception {
 		dumpEncodedValue("VirtualListViewResponse\n", encodedValue);
-		assertEquals(expectedEncodingLength, encodedValue.length);
+		assertThat(encodedValue.length).isEqualTo(expectedEncodingLength);
 		BerDecoder ber = new BerDecoder(encodedValue, 0, encodedValue.length);
 		ber.parseSeq(null);
 
 		int actualTargetPosition = ber.parseInt();
 		int actualContentCount = ber.parseInt();
 		int actualVirtualListViewResult = ber.parseEnumeration();
-		assertEquals("targetPosition,", expectedTargetPosition,
-				actualTargetPosition);
-		assertEquals("contentCount,", expectedContentCount, actualContentCount);
-		assertEquals("virtualListViewResult,", expectedVirtualListViewResult,
-				actualVirtualListViewResult);
+		assertThat(actualTargetPosition).isEqualTo(expectedTargetPosition);
+		assertThat(actualContentCount).as("contentCount,").isEqualTo(expectedContentCount);
+		assertThat(actualVirtualListViewResult).isEqualTo(expectedVirtualListViewResult);
 		byte[] bs = ber.parseOctetString(Ber.ASN_OCTET_STR, null);
 		assertContextId(expectedContextId, bs);
 	}

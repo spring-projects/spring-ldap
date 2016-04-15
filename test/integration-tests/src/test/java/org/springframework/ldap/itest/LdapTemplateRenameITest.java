@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,8 @@ import org.springframework.test.context.ContextConfiguration;
 
 import javax.naming.Name;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Tests the rename methods of LdapTemplate.
@@ -96,8 +96,8 @@ public class LdapTemplateRenameITest extends AbstractLdapTemplateIntegrationTest
 
 	private void verifyBoundCorrectData() {
 		DirContextAdapter result = (DirContextAdapter) tested.lookup(NEWDN);
-		assertEquals("Some Person6", result.getStringAttribute("cn"));
-		assertEquals("Person6", result.getStringAttribute("sn"));
-		assertEquals("Some description", result.getStringAttribute("description"));
+		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person6");
+		assertThat(result.getStringAttribute("sn")).isEqualTo("Person6");
+		assertThat(result.getStringAttribute("description")).isEqualTo("Some description");
 	}
 }

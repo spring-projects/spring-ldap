@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,9 +29,7 @@ import javax.naming.ldap.PagedResultsControl;
 import javax.naming.ldap.PagedResultsResponseControl;
 import java.io.IOException;
 
-import static junit.framework.Assert.assertNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -61,7 +59,7 @@ public class PagedResultsDirContextProcessorTest {
     public void testCreateRequestControl() throws Exception {
         PagedResultsControl control = (PagedResultsControl) tested
                 .createRequestControl();
-        assertNotNull(control);
+        assertThat(control).isNotNull();
     }
 
     @Test
@@ -72,7 +70,7 @@ public class PagedResultsDirContextProcessorTest {
 
         PagedResultsControl control = (PagedResultsControl) tested
                 .createRequestControl();
-        assertNotNull(control);
+        assertThat(control).isNotNull();
     }
 
     @Test
@@ -90,9 +88,9 @@ public class PagedResultsDirContextProcessorTest {
         tested.postProcess(ldapContextMock);
 
         PagedResultsCookie returnedCookie = tested.getCookie();
-        assertEquals(8, returnedCookie.getCookie()[0]);
-        assertEquals(20, tested.getPageSize());
-        assertEquals(50, tested.getResultSize());
+        assertThat(returnedCookie.getCookie()[0]).isEqualTo((byte)8);
+        assertThat(tested.getPageSize()).isEqualTo(20);
+        assertThat(tested.getResultSize()).isEqualTo(50);
     }
 
     @Test
@@ -112,9 +110,9 @@ public class PagedResultsDirContextProcessorTest {
         when(ldapContextMock.getResponseControls()).thenReturn(new Control[]{control});
         tested.postProcess(ldapContextMock);
 
-        assertNull(tested.getCookie());
-        assertEquals(20, tested.getPageSize());
-        assertEquals(0, tested.getResultSize());
+        assertThat(tested.getCookie()).isNull();
+        assertThat(tested.getPageSize()).isEqualTo(20);
+        assertThat(tested.getResultSize()).isEqualTo(0);
     }
 
     @Test
@@ -123,9 +121,9 @@ public class PagedResultsDirContextProcessorTest {
 
         tested.postProcess(ldapContextMock);
 
-        assertNull(tested.getCookie());
-        assertEquals(20, tested.getPageSize());
-        assertEquals(0, tested.getResultSize());
+        assertThat(tested.getCookie()).isNull();
+        assertThat(tested.getPageSize()).isEqualTo(20);
+        assertThat(tested.getResultSize()).isEqualTo(0);
     }
 
     @Test
@@ -141,10 +139,10 @@ public class PagedResultsDirContextProcessorTest {
         int actualPageSize = ber.parseInt();
         byte[] actualValue = ber.parseOctetString(Ber.ASN_OCTET_STR, null);
 
-        assertEquals("pageSize,", 20, actualPageSize);
-        assertEquals("value length", value.length, actualValue.length);
+        assertThat(actualPageSize).as("pageSize,").isEqualTo(20);
+        assertThat(actualValue.length).as("value length").isEqualTo(value.length);
         for (int i = 0; i < value.length; i++) {
-            assertEquals("value (index " + i + "),", value[i], actualValue[i]);
+            assertThat(actualValue[i]).as("value (index " + i + "),").isEqualTo(value[i]);
         }
     }
 
