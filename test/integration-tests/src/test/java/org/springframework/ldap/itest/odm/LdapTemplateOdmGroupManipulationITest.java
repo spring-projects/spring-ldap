@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,10 +27,7 @@ import javax.naming.Name;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 /**
@@ -45,15 +42,15 @@ public class LdapTemplateOdmGroupManipulationITest extends AbstractLdapTemplateI
     public void testFindOne() {
         Group group = tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
 
-        assertNotNull(group);
-        assertEquals("ROLE_USER", group.getName());
-        assertEquals(4, group.getMembers().size());
+        assertThat(group).isNotNull();
+        assertThat(group.getName()).isEqualTo("ROLE_USER");
+        assertThat(group.getMembers()).hasSize(4);
 
         Set<Name> members = group.getMembers();
-        assertTrue(members.contains(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden," + base)));
-        assertTrue(members.contains(LdapUtils.newLdapName("cn=Some Person2,ou=company1,ou=Sweden," + base)));
-        assertTrue(members.contains(LdapUtils.newLdapName("cn=Some Person,ou=company2,ou=Sweden," + base)));
-        assertTrue(members.contains(LdapUtils.newLdapName("cn=Some Person3,ou=company1,ou=Sweden," + base)));
+        assertThat(members.contains(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden," + base))).isTrue();
+        assertThat(members.contains(LdapUtils.newLdapName("cn=Some Person2,ou=company1,ou=Sweden," + base))).isTrue();
+        assertThat(members.contains(LdapUtils.newLdapName("cn=Some Person,ou=company2,ou=Sweden," + base))).isTrue();
+        assertThat(members.contains(LdapUtils.newLdapName("cn=Some Person3,ou=company1,ou=Sweden," + base))).isTrue();
     }
 
     @Test
@@ -66,8 +63,8 @@ public class LdapTemplateOdmGroupManipulationITest extends AbstractLdapTemplateI
         Group verification = tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
 
         Set<Name> members = verification.getMembers();
-        assertEquals(3, members.size());
-        assertFalse(members.contains(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden," + base)));
+        assertThat(members).hasSize(3);
+        assertThat(members.contains(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden," + base))).isFalse();
     }
 
     @Test
@@ -80,8 +77,8 @@ public class LdapTemplateOdmGroupManipulationITest extends AbstractLdapTemplateI
         Group verification = tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
 
         Set<Name> members = verification.getMembers();
-        assertEquals(3, members.size());
-        assertFalse(members.contains(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden," + base)));
+        assertThat(members).hasSize(3);
+        assertThat(members.contains(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden," + base))).isFalse();
     }
 
     @Test
@@ -94,8 +91,8 @@ public class LdapTemplateOdmGroupManipulationITest extends AbstractLdapTemplateI
         Group verification = tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
 
         Set<Name> members = verification.getMembers();
-        assertEquals(5, members.size());
-        assertTrue(members.contains(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Norway," + base)));
+        assertThat(members).hasSize(5);
+        assertThat(members.contains(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Norway," + base))).isTrue();
     }
 
     @Test
@@ -108,8 +105,8 @@ public class LdapTemplateOdmGroupManipulationITest extends AbstractLdapTemplateI
         Group verification = tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
 
         Set<Name> members = verification.getMembers();
-        assertEquals(4, members.size());
-        assertTrue(members.contains(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden," + base)));
+        assertThat(members).hasSize(4);
+        assertThat(members.contains(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden," + base))).isTrue();
     }
 
     @Test
@@ -122,8 +119,8 @@ public class LdapTemplateOdmGroupManipulationITest extends AbstractLdapTemplateI
         Group verification = tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
 
         Set<Name> members = verification.getMembers();
-        assertEquals(4, members.size());
-        assertTrue(members.contains(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden," + base)));
+        assertThat(members).hasSize(4);
+        assertThat(members.contains(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden," + base))).isTrue();
     }
 
     @Test
@@ -140,8 +137,8 @@ public class LdapTemplateOdmGroupManipulationITest extends AbstractLdapTemplateI
 
         Set<Name> members = verification.getMembers();
 
-        assertEquals(2, members.size());
-        assertTrue(members.contains(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden," + base)));
-        assertTrue(members.contains(LdapUtils.newLdapName("cn=Some Person2,ou=company1,ou=Sweden," + base)));
+        assertThat(members).hasSize(2);
+        assertThat(members.contains(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden," + base))).isTrue();
+        assertThat(members.contains(LdapUtils.newLdapName("cn=Some Person2,ou=company1,ou=Sweden," + base))).isTrue();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.ldap.core.AuthenticationSource;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -49,7 +48,7 @@ public class DefaultValuesAuthenticationSourceDecoratorTest {
         when(authenticationSourceMock.getPrincipal()).thenReturn("cn=someUser");
         String principal = tested.getPrincipal();
 
-        assertEquals("cn=someUser", principal);
+        assertThat(principal).isEqualTo("cn=someUser");
     }
 
     @Test
@@ -58,7 +57,7 @@ public class DefaultValuesAuthenticationSourceDecoratorTest {
 
         String principal = tested.getPrincipal();
 
-        assertEquals(DEFAULT_USER, principal);
+        assertThat(principal).isEqualTo(DEFAULT_USER);
     }
 
     @Test
@@ -68,7 +67,7 @@ public class DefaultValuesAuthenticationSourceDecoratorTest {
 
         String credentials = tested.getCredentials();
 
-        assertEquals("somepassword", credentials);
+        assertThat(credentials).isEqualTo("somepassword");
     }
 
     @Test
@@ -78,7 +77,7 @@ public class DefaultValuesAuthenticationSourceDecoratorTest {
 
         String credentials = tested.getCredentials();
 
-        assertEquals(DEFAULT_PASSWORD, credentials);
+        assertThat(credentials).isEqualTo(DEFAULT_PASSWORD);
     }
 
     @Test
@@ -88,7 +87,7 @@ public class DefaultValuesAuthenticationSourceDecoratorTest {
             tested.afterPropertiesSet();
             fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
     }
 
@@ -99,7 +98,7 @@ public class DefaultValuesAuthenticationSourceDecoratorTest {
             tested.afterPropertiesSet();
             fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
     }
 
@@ -110,7 +109,7 @@ public class DefaultValuesAuthenticationSourceDecoratorTest {
             tested.afterPropertiesSet();
             fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
     }
 }

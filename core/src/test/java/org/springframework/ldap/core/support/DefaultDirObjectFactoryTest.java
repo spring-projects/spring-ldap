@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttributes;
 import java.util.Hashtable;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -64,8 +64,8 @@ public class DefaultDirObjectFactoryTest {
 
 		verify(contextMock).close();
 
-		assertEquals(DN, adapter.getDn());
-		assertEquals(expectedAttributes, adapter.getAttributes());
+		assertThat(adapter.getDn()).isEqualTo(DN);
+		assertThat(adapter.getAttributes()).isEqualTo(expectedAttributes);
 	}
 
     @Test
@@ -81,8 +81,8 @@ public class DefaultDirObjectFactoryTest {
 
         verify(contextMock).close();
 
-		assertEquals(DN, adapter.getDn());
-		assertEquals(expectedAttributes, adapter.getAttributes());
+		assertThat(adapter.getDn()).isEqualTo(DN);
+		assertThat(adapter.getAttributes()).isEqualTo(expectedAttributes);
 	}
 
     @Test
@@ -93,8 +93,8 @@ public class DefaultDirObjectFactoryTest {
 		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(null, DN, null, new Hashtable(),
 				expectedAttributes);
 
-		assertEquals(DN, adapter.getDn());
-		assertEquals(expectedAttributes, adapter.getAttributes());
+		assertThat(adapter.getDn()).isEqualTo(DN);
+		assertThat(adapter.getAttributes()).isEqualTo(expectedAttributes);
 	}
 
     @Test
@@ -105,8 +105,8 @@ public class DefaultDirObjectFactoryTest {
 		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(new Object(), DN, null,
 				new Hashtable(), expectedAttributes);
 
-		assertEquals(DN, adapter.getDn());
-		assertEquals(expectedAttributes, adapter.getAttributes());
+		assertThat(adapter.getDn()).isEqualTo(DN);
+		assertThat(adapter.getAttributes()).isEqualTo(expectedAttributes);
 	}
 
 	/**
@@ -126,9 +126,9 @@ public class DefaultDirObjectFactoryTest {
 
         verify(contextMock).close();
 
-		assertEquals("ou=some unit", adapter.getDn().toString());
-		assertEquals("ou=some unit,dc=jayway,dc=se", adapter.getNameInNamespace());
-		assertEquals(expectedAttributes, adapter.getAttributes());
+		assertThat(adapter.getDn().toString()).isEqualTo("ou=some unit");
+		assertThat(adapter.getNameInNamespace()).isEqualTo("ou=some unit,dc=jayway,dc=se");
+		assertThat(adapter.getAttributes()).isEqualTo(expectedAttributes);
 	}
 
     @Test
@@ -138,8 +138,8 @@ public class DefaultDirObjectFactoryTest {
 		DefaultDirObjectFactory tested = new DefaultDirObjectFactory();
 		DirContextAdapter result = tested.constructAdapterFromName(new BasicAttributes(), name, "");
 
-		assertEquals("ou=People,o=JNDITutorial", result.getDn().toString());
-		assertEquals("ldap://localhost:389", result.getReferralUrl().toString());
+		assertThat(result.getDn().toString()).isEqualTo("ou=People,o=JNDITutorial");
+		assertThat(result.getReferralUrl().toString()).isEqualTo("ldap://localhost:389");
 	}
 
     @Test
@@ -149,8 +149,8 @@ public class DefaultDirObjectFactoryTest {
 		DefaultDirObjectFactory tested = new DefaultDirObjectFactory();
 		DirContextAdapter result = tested.constructAdapterFromName(new BasicAttributes(), name, "");
 
-		assertEquals("ou=People,o=JNDITutorial", result.getDn().toString());
-		assertEquals("ldaps://localhost:389", result.getReferralUrl().toString());
+		assertThat(result.getDn().toString()).isEqualTo("ou=People,o=JNDITutorial");
+		assertThat(result.getReferralUrl().toString()).isEqualTo("ldaps://localhost:389");
 	}
 
     @Test
@@ -160,8 +160,8 @@ public class DefaultDirObjectFactoryTest {
 		DefaultDirObjectFactory tested = new DefaultDirObjectFactory();
 		DirContextAdapter result = tested.constructAdapterFromName(new BasicAttributes(), name, "");
 
-		assertEquals("", result.getDn().toString());
-		assertEquals("ldap://localhost:389", result.getReferralUrl().toString());
+		assertThat(result.getDn().toString()).isEqualTo("");
+		assertThat(result.getReferralUrl().toString()).isEqualTo("ldap://localhost:389");
 	}
 
     @Test
@@ -171,7 +171,7 @@ public class DefaultDirObjectFactoryTest {
 		DefaultDirObjectFactory tested = new DefaultDirObjectFactory();
 		DirContextAdapter result = tested.constructAdapterFromName(new BasicAttributes(), name, "");
 
-		assertEquals("", result.getDn().toString());
-		assertEquals("ldap://localhost:389", result.getReferralUrl().toString());
+		assertThat(result.getDn().toString()).isEqualTo("");
+		assertThat(result.getReferralUrl().toString()).isEqualTo("ldap://localhost:389");
 	}
 }

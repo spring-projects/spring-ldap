@@ -12,5 +12,6 @@ dependencies {
     runtime 'ch.qos.logback:logback-classic:1.0.13'
 
     testCompile "org.springframework:spring-test:$springVersion",
-                "junit:junit:$junitVersion"
+                "junit:junit:$junitVersion",
+                "org.assertj:assertj-core:$assertjVersion"
 }

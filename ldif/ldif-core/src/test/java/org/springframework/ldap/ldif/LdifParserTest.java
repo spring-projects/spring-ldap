@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,12 +28,12 @@ import org.springframework.ldap.schema.BasicSchemaSpecification;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Unit test for LdifParser.
- * 
+ *
  * Test results in complete end to end test of all LdifParser functionality:
  * 	1.) Open a file
  * 	2.) Read lines and compose an attribute.
@@ -41,17 +41,17 @@ import static org.junit.Assert.fail;
  * 	4.) Repeat until end of record (Identify end of record).
  * 	5.) Return a valid LdapAttributes object.
  * 	6.) Close file upon completion.
- * 
+ *
  * Provided test file is comprised of sample LDIFs from RFC2849 and exhausts the full range of
  * the functionality prescribed by RFC2849 for the LDAP Data Interchange Format (LDIF).
- * 
+ *
  * @author Keith Barlow
- * 
+ *
  */
 public class LdifParserTest {
 
 	private static Logger log = LoggerFactory.getLogger(LdifParserTest.class);
-	
+
 	private LdifParser parser;
 
 	/**
@@ -63,7 +63,7 @@ public class LdifParserTest {
 		parser = new LdifParser(new ClassPathResource("test.ldif"));
 		parser.setRecordSpecification(new BasicSchemaSpecification());
 	}
-	
+
 	/**
 	 * Setup: opens file.
 	 */
@@ -75,44 +75,46 @@ public class LdifParserTest {
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Executes test: reads all records from LDIF file and validates an LdapAttributes object is successfully created.
 	 */
 	@Test
 	public void parseLdif() {
 		int count = 0;
-		
+
 		try {
 			LdapAttributes attributes;
-			
+
 			while (parser.hasMoreRecords()) {
 				try {
 					attributes = parser.getRecord();
 					log.info("attributes:\n" + attributes);
 					if (attributes != null) {
-						assertTrue("A dn is required.", attributes.getDN() != null);
-						assertTrue("Object class is required.", attributes.get("objectclass") != null);
+						assertThat(attributes.getDN() != null).isTrue();
+						assertThat(attributes.get("objectclass") != null).isTrue();
 						count++;
 					}
 				} catch (InvalidAttributeFormatException e) {
 					log.error("Invalid attribute", e);
-					if (count != 6) fail();
+					if (count != 6) {
+						fail(e.getMessage());
+					}
 				}
-				
+
 				log.debug("hasMoreRecords: " + parser.hasMoreRecords());
 			}
-			
+
 			log.info("record count: " + count);
-			//assertTrue("An incorrect number of records were parsed.", count == 8);
-			
+			//assertThat(count == 8).as("An incorrect number of records were parsed.").isTrue();
+
 			log.info("Done!");
-			
+
 		} catch (IOException e) {
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Cleanup: closes file.
 	 */

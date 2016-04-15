@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,11 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author Eric Dalquist <a
@@ -37,7 +40,7 @@ public class DelegatingLdapContextTest extends AbstractPoolTestCase {
                     DirContextType.READ_ONLY);
             fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
 
         try {
@@ -45,7 +48,7 @@ public class DelegatingLdapContextTest extends AbstractPoolTestCase {
                     null);
             fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
     }
 
@@ -57,15 +60,15 @@ public class DelegatingLdapContextTest extends AbstractPoolTestCase {
 
         final DirContext delegateDirContext = delegatingLdapContext
                 .getDelegateDirContext();
-        assertEquals(ldapContextMock, delegateDirContext);
+        assertThat(delegateDirContext).isEqualTo(ldapContextMock);
 
         final LdapContext delegateLdapContext = delegatingLdapContext
                 .getDelegateLdapContext();
-        assertEquals(ldapContextMock, delegateLdapContext);
+        assertThat(delegateLdapContext).isEqualTo(ldapContextMock);
 
         final LdapContext innerDelegateLdapContext = delegatingLdapContext
                 .getInnermostDelegateLdapContext();
-        assertEquals(ldapContextMock, innerDelegateLdapContext);
+        assertThat(innerDelegateLdapContext).isEqualTo(ldapContextMock);
 
         delegatingLdapContext.assertOpen();
 
@@ -78,11 +81,11 @@ public class DelegatingLdapContextTest extends AbstractPoolTestCase {
 
         final LdapContext delegateLdapContext2 = delegatingLdapContext2
                 .getDelegateLdapContext();
-        assertEquals(delegatingLdapContext, delegateLdapContext2);
+        assertThat(delegateLdapContext2).isEqualTo(delegatingLdapContext);
 
         final LdapContext innerDelegateLdapContext2 = delegatingLdapContext2
                 .getInnermostDelegateLdapContext();
-        assertEquals(ldapContextMock, innerDelegateLdapContext2);
+        assertThat(innerDelegateLdapContext2).isEqualTo(ldapContextMock);
 
         delegatingLdapContext2.assertOpen();
 
@@ -91,11 +94,11 @@ public class DelegatingLdapContextTest extends AbstractPoolTestCase {
 
         final LdapContext delegateContext2closed = delegatingLdapContext2
                 .getDelegateLdapContext();
-        assertNull(delegateContext2closed);
+        assertThat(delegateContext2closed).isNull();
 
         final LdapContext innerDelegateContext2closed = delegatingLdapContext2
                 .getInnermostDelegateLdapContext();
-        assertNull(innerDelegateContext2closed);
+        assertThat(innerDelegateContext2closed).isNull();
 
         try {
             delegatingLdapContext2.assertOpen();
@@ -109,11 +112,11 @@ public class DelegatingLdapContextTest extends AbstractPoolTestCase {
 
         final LdapContext delegateLdapContextClosed = delegatingLdapContext
                 .getDelegateLdapContext();
-        assertNull(delegateLdapContextClosed);
+        assertThat(delegateLdapContextClosed).isNull();
 
         final LdapContext innerDelegateLdapContextClosed = delegatingLdapContext
                 .getInnermostDelegateLdapContext();
-        assertNull(innerDelegateLdapContextClosed);
+        assertThat(innerDelegateLdapContextClosed).isNull();
 
         try {
             delegatingLdapContext.assertOpen();
@@ -132,33 +135,32 @@ public class DelegatingLdapContextTest extends AbstractPoolTestCase {
         // Wrap the LdapContext once
         final DelegatingLdapContext delegatingLdapContext = new DelegatingLdapContext(
                 keyedObjectPoolMock, ldapContextMock, DirContextType.READ_ONLY);
-        assertEquals(ldapContextMock.toString(),
-                delegatingLdapContext.toString());
+        assertThat(delegatingLdapContext.toString()).isEqualTo(ldapContextMock.toString());
         delegatingLdapContext.hashCode(); // Run it to make sure it doesn't fail
 
-        assertTrue(delegatingLdapContext.equals(delegatingLdapContext));
-        assertFalse(delegatingLdapContext.equals(new Object()));
+        assertThat(delegatingLdapContext.equals(delegatingLdapContext)).isTrue();
+        assertThat(delegatingLdapContext.equals(new Object())).isFalse();
 
         final DelegatingLdapContext delegatingLdapContext2 = new DelegatingLdapContext(
                 keyedObjectPoolMock, ldapContextMock, DirContextType.READ_ONLY);
-        assertTrue(delegatingLdapContext.equals(delegatingLdapContext2));
-        assertTrue(delegatingLdapContext2.equals(delegatingLdapContext));
-        assertTrue(delegatingLdapContext.equals(ldapContextMock));
+        assertThat(delegatingLdapContext.equals(delegatingLdapContext2)).isTrue();
+        assertThat(delegatingLdapContext2.equals(delegatingLdapContext)).isTrue();
+        assertThat(delegatingLdapContext.equals(ldapContextMock)).isTrue();
 
         // Close the context and try again
         delegatingLdapContext.close();
 
-        assertEquals("LdapContext is closed", delegatingLdapContext.toString());
-        assertEquals(0, delegatingLdapContext.hashCode()); // Run it to make
+        assertThat(delegatingLdapContext.toString()).isEqualTo("LdapContext is closed");
+        assertThat(delegatingLdapContext.hashCode()).isEqualTo(0); // Run it to make
                                                             // sure it doesn't
                                                             // fail
 
-        assertTrue(delegatingLdapContext.equals(delegatingLdapContext));
-        assertFalse(delegatingLdapContext.equals(new Object()));
+        assertThat(delegatingLdapContext.equals(delegatingLdapContext)).isTrue();
+        assertThat(delegatingLdapContext.equals(new Object())).isFalse();
 
-        assertFalse(delegatingLdapContext.equals(delegatingLdapContext2));
-        assertFalse(delegatingLdapContext2.equals(delegatingLdapContext));
-        assertFalse(delegatingLdapContext.equals(ldapContextMock));
+        assertThat(delegatingLdapContext.equals(delegatingLdapContext2)).isFalse();
+        assertThat(delegatingLdapContext2.equals(delegatingLdapContext)).isFalse();
+        assertThat(delegatingLdapContext.equals(ldapContextMock)).isFalse();
 
         verify(keyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, ldapContextMock);
     }

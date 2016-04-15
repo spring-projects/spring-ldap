@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.support.LdapUtils;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Integration tests for {@link org.springframework.ldap.core.support.BaseLdapPathBeanPostProcessor}.
@@ -42,11 +40,11 @@ public class BaseLdapPathBeanPostprocessorITest {
 		DummyBaseLdapPathAware tested = ctx.getBean(DummyBaseLdapPathAware.class);
 
 		DistinguishedName base = tested.getBase();
-		assertNotNull(base);
-		assertEquals(new DistinguishedName("dc=261consulting,dc=com"), base);
+		assertThat(base).isNotNull();
+		assertThat(base).isEqualTo(new DistinguishedName("dc=261consulting,dc=com"));
 
         DummyBaseLdapNameAware otherTested = ctx.getBean(DummyBaseLdapNameAware.class);
-        assertEquals(LdapUtils.newLdapName("dc=261consulting,dc=com"), otherTested.getBaseLdapPath());
+        assertThat(otherTested.getBaseLdapPath()).isEqualTo(LdapUtils.newLdapName("dc=261consulting,dc=com"));
     }
 
 	@Test
@@ -57,7 +55,7 @@ public class BaseLdapPathBeanPostprocessorITest {
 		}
 		catch (BeanCreationException expected) {
 			Throwable cause = expected.getCause();
-			assertTrue(cause instanceof NoSuchBeanDefinitionException);
+			assertThat(cause instanceof NoSuchBeanDefinitionException).isTrue();
 		}
 	}
 
@@ -68,8 +66,8 @@ public class BaseLdapPathBeanPostprocessorITest {
 		DummyBaseLdapPathAware tested = (DummyBaseLdapPathAware) ctx.getBean("dummyBaseContextAware");
 
 		DistinguishedName base = tested.getBase();
-		assertNotNull(base);
-		assertEquals(new DistinguishedName("cn=john doe,dc=261consulting,dc=com"), base);
+		assertThat(base).isNotNull();
+		assertThat(base).isEqualTo(new DistinguishedName("cn=john doe,dc=261consulting,dc=com"));
 	}
 
 	@Test
@@ -80,7 +78,7 @@ public class BaseLdapPathBeanPostprocessorITest {
 		}
 		catch (BeanCreationException expected) {
 			Throwable cause = expected.getCause();
-			assertTrue(cause instanceof NoSuchBeanDefinitionException);
+			assertThat(cause instanceof NoSuchBeanDefinitionException).isTrue();
 		}
 	}
 
@@ -91,8 +89,8 @@ public class BaseLdapPathBeanPostprocessorITest {
 		DummyBaseLdapPathAware tested = (DummyBaseLdapPathAware) ctx.getBean("dummyBaseContextAware");
 
 		DistinguishedName base = tested.getBase();
-		assertNotNull(base);
-		assertEquals(new DistinguishedName("cn=john doe"), base);
+		assertThat(base).isNotNull();
+		assertThat(base).isEqualTo(new DistinguishedName("cn=john doe"));
 	}
 
 	@Test
@@ -102,7 +100,7 @@ public class BaseLdapPathBeanPostprocessorITest {
 		DummyBaseLdapPathAware tested = (DummyBaseLdapPathAware) ctx.getBean("dummyBaseContextAware");
 
 		DistinguishedName base = tested.getBase();
-		assertNotNull(base);
-		assertEquals(new DistinguishedName("dc=261consulting,dc=com"), base);
+		assertThat(base).isNotNull();
+		assertThat(base).isEqualTo(new DistinguishedName("dc=261consulting,dc=com"));
 	}
 }

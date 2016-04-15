@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2015 the original author or authors.
+ * Copyright 2002-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.springframework.ldap.itest.ldap321;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.Map;
 
@@ -41,7 +41,7 @@ public class Ldap321Test{
     @Test
     public void testQueryRoleMap() throws Exception {
         Map<String,String> roleMap=roleRepo.queryRoleMap();
-        assertNotNull(roleMap);
+        assertThat(roleMap).isNotNull();
 
         for(String roleName:roleMap.keySet()){
             System.out.println(roleName+":"+ roleMap.get(roleName));

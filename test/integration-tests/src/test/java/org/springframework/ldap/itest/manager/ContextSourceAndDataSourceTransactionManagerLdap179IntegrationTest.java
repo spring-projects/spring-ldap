@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,9 +32,8 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Integration tests for {@link org.springframework.ldap.transaction.compensating.manager.ContextSourceAndDataSourceTransactionManager}.
@@ -75,17 +74,17 @@ public class ContextSourceAndDataSourceTransactionManagerLdap179IntegrationTest 
             dummyDao.create("Sweden", "company1", "some testperson", "testperson", "some description");
             fail("CannotCreateTransactionException expected");
         } catch (CannotCreateTransactionException expected) {
-            assertTrue(expected.getCause() instanceof CommunicationException);
+            assertThat(expected.getCause() instanceof CommunicationException).isTrue();
         }
 
         // Make sure there is no transaction synchronization
-        assertFalse(TransactionSynchronizationManager.isSynchronizationActive());
+        assertThat(TransactionSynchronizationManager.isSynchronizationActive()).isFalse();
 
         try {
             dummyDao.create("Sweden", "company1", "some testperson", "testperson", "some description");
             fail("CannotCreateTransactionException expected");
         } catch (CannotCreateTransactionException expected) {
-            assertTrue(expected.getCause() instanceof CommunicationException);
+            assertThat(expected.getCause() instanceof CommunicationException).isTrue();
         }
     }
 }

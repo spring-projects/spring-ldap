@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import org.springframework.ldap.itest.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.itest.LdapGroupDao;
 import org.springframework.test.context.ContextConfiguration;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for https://jira.springsource.org/browse/LDAP-247.
@@ -38,12 +38,10 @@ public class JiraLdap247ITest extends AbstractLdapTemplateIntegrationTest {
 
     @Test
     public void verifyThatBasePathIsProperlyPopulated() {
-        assertNotNull(ldapGroupDao);
+        assertThat(ldapGroupDao).isNotNull();
 
         // The base path should be automatically populated by BaseLdapPathBeanPostProcessor,
         // but it doesn't unless it implements Ordered, which caused the assertion below to fail.
-        assertNotNull(
-                "Base path has not been populated by BaseLdapPathBeanPostProcessor",
-                ldapGroupDao.getBasePath());
+        assertThat(ldapGroupDao.getBasePath()).isNotNull();
     }
 }

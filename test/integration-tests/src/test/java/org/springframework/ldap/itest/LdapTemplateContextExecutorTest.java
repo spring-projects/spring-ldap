@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,6 @@
  */
 package org.springframework.ldap.itest;
 
-import static junit.framework.Assert.assertTrue;
-
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
@@ -26,6 +24,8 @@ import org.springframework.ldap.core.ContextExecutor;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.test.context.ContextConfiguration;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for LdapTemplate's context executor methods.
@@ -47,6 +47,6 @@ public class LdapTemplateContextExecutorTest extends AbstractLdapTemplateIntegra
 		};
 
 		Object object = tested.executeReadOnly(executor);
-		assertTrue("Should be a DirContextAdapter", object instanceof DirContextAdapter);
+		assertThat(object instanceof DirContextAdapter).as("Should be a DirContextAdapter").isTrue();
 	}
 }

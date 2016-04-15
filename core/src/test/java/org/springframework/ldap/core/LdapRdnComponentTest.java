@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,7 @@ package org.springframework.ldap.core;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for LdapRdnComponent.
@@ -32,7 +31,7 @@ public class LdapRdnComponentTest {
         LdapRdnComponent component1 = new LdapRdnComponent("cn", "john doe");
         LdapRdnComponent component2 = new LdapRdnComponent("sn", "doe");
         int result = component1.compareTo(component2);
-        assertTrue(result < 0);
+        assertThat(result < 0).isTrue();
     }
 
     @Test
@@ -40,7 +39,7 @@ public class LdapRdnComponentTest {
         LdapRdnComponent component1 = new LdapRdnComponent("sn", "doe");
         LdapRdnComponent component2 = new LdapRdnComponent("cn", "john doe");
         int result = component1.compareTo(component2);
-        assertTrue(result > 0);
+        assertThat(result > 0).isTrue();
     }
 
     @Test
@@ -48,7 +47,7 @@ public class LdapRdnComponentTest {
         LdapRdnComponent component1 = new LdapRdnComponent("cn", "john doe");
         LdapRdnComponent component2 = new LdapRdnComponent("cn", "john doe");
         int result = component1.compareTo(component2);
-        assertEquals(0, result);
+        assertThat(result).isEqualTo(0);
     }
 
     @Test
@@ -56,8 +55,8 @@ public class LdapRdnComponentTest {
         LdapRdnComponent component1 = new LdapRdnComponent("cn", "john doe");
         LdapRdnComponent component2 = new LdapRdnComponent("CN", "John Doe");
 
-        assertEquals("Should be equal", component1, component2);
-        assertTrue("0 should be returned by compareTo", component1.compareTo(component2) == 0);
+        assertThat(component2).as("Should be equal").isEqualTo(component1);
+        assertThat(component1.compareTo(component2) == 0).as("0 should be returned by compareTo").isTrue();
     }
 
     @Test
@@ -65,7 +64,7 @@ public class LdapRdnComponentTest {
         LdapRdnComponent component1 = new LdapRdnComponent("cn", "john doe");
         LdapRdnComponent component2 = new LdapRdnComponent("CN", "John Doe");
 
-        assertEquals("Should be equal", component1.hashCode(), component2.hashCode());
+        assertThat(component2.hashCode()).as("Should be equal").isEqualTo(component1.hashCode());
     }
 
 }

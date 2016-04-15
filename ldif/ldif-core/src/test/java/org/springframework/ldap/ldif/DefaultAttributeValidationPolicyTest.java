@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,10 +32,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Parses a preselected set of attributes to test the full spectrum of functionality
@@ -136,30 +134,30 @@ public class DefaultAttributeValidationPolicyTest {
 		try {
 			LdapAttribute attribute = (LdapAttribute) policy.parse(line);
 			
-			assertTrue("IDs do not match: [expected: " + attribute.getID() + ", obtained: " + id + "]", id.equalsIgnoreCase(attribute.getID()));
+			assertThat(id.equalsIgnoreCase(attribute.getID())).as("IDs do not match: [expected: " + attribute.getID() + ", obtained: " + id + "]").isTrue();
 			
 			String[] expected = !StringUtils.hasLength(options) ? new String[] {} : options.replaceFirst(";","").split(";");
 			Arrays.sort(expected);
 			String[] obtained = attribute.getOptions().toArray(new String[] {});
 			Arrays.sort(obtained);
-			assertArrayEquals("Options do not match: ", expected, obtained);
+			assertThat(obtained).as("Options do not match: ").isEqualTo(expected);
 			
 			switch(type) {
 			case STRING:
-				assertTrue("Value is not a string.", attribute.get() instanceof String);
-				assertEquals("Values do not match: ", value, attribute.get());
+				assertThat(attribute.get() instanceof String).as("Value is not a string.").isTrue();
+				assertThat(attribute.get()).as("Values do not match: ").isEqualTo(value);
 				break;
 				
 			case BASE64:
 				byte[] bytes = LdapEncoder.parseBase64Binary(value);
-				assertTrue("Value is not a byte[].", attribute.get() instanceof byte[]);
-				assertArrayEquals("Values do not match: ", bytes, (byte[]) attribute.get());
+				assertThat(attribute.get() instanceof byte[]).as("Value is not a byte[].").isTrue();
+				assertThat((byte[]) attribute.get()).as("Values do not match: ").isEqualTo(bytes);
 				break;
 				
 			case URL:
 				URI  url = new URI(value);
-				assertTrue("Value is not a URL.", attribute.get() instanceof URI);
-				assertEquals("Values do not match: ", url, attribute.get());
+				assertThat(attribute.get() instanceof URI).as("Value is not a URL.").isTrue();
+				assertThat(attribute.get()).as("Values do not match: ").isEqualTo(url);
 				break;
 			}
 			

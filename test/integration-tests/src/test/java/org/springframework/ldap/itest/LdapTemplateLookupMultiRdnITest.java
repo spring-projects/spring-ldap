@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.test.context.ContextConfiguration;
 
-import static junit.framework.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests the lookup methods of LdapTemplate.
@@ -55,9 +55,9 @@ public class LdapTemplateLookupMultiRdnITest extends AbstractLdapTemplateIntegra
 		AttributesMapper mapper = new PersonAttributesMapper();
 		Person person = (Person) tested.lookup("cn=Some Person+sn=Person, ou=company1,ou=Norway", mapper);
 
-		assertEquals("Some Person", person.getFullname());
-		assertEquals("Person", person.getLastname());
-		assertEquals("Norway, Company1, Some Person+Person", person.getDescription());
+		assertThat(person.getFullname()).isEqualTo("Some Person");
+		assertThat(person.getLastname()).isEqualTo("Person");
+		assertThat(person.getDescription()).isEqualTo("Norway, Company1, Some Person+Person");
 	}
 
 	/**
@@ -70,9 +70,9 @@ public class LdapTemplateLookupMultiRdnITest extends AbstractLdapTemplateIntegra
 	public void testLookup_MultiValuedRdn_DirContextAdapter() {
 		DirContextAdapter result = (DirContextAdapter) tested.lookup("cn=Some Person+sn=Person, ou=company1,ou=Norway");
 
-		assertEquals("Some Person", result.getStringAttribute("cn"));
-		assertEquals("Person", result.getStringAttribute("sn"));
-		assertEquals("Norway, Company1, Some Person+Person", result.getStringAttribute("description"));
+		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person");
+		assertThat(result.getStringAttribute("sn")).isEqualTo("Person");
+		assertThat(result.getStringAttribute("description")).isEqualTo("Norway, Company1, Some Person+Person");
 	}
 
 	@Test
@@ -80,7 +80,7 @@ public class LdapTemplateLookupMultiRdnITest extends AbstractLdapTemplateIntegra
 	public void testLookup_GetNameInNamespace_MultiRdn() {
 		DirContextAdapter result = (DirContextAdapter) tested.lookup("cn=Some Person+sn=Person,ou=company1,ou=Norway");
 
-		assertEquals("cn=Some Person+sn=Person,ou=company1,ou=Norway", result.getDn().toString());
-		assertEquals("cn=Some Person+sn=Person,ou=company1,ou=Norway," + base, result.getNameInNamespace());
+		assertThat(result.getDn().toString()).isEqualTo("cn=Some Person+sn=Person,ou=company1,ou=Norway");
+		assertThat(result.getNameInNamespace()).isEqualTo("cn=Some Person+sn=Person,ou=company1,ou=Norway," + base);
 	}
 }

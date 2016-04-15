@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,10 +24,7 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * IncrementalAttributesMapper Tester.
@@ -47,15 +44,15 @@ public class DefaultIncrementalAttributesMapperTest {
     public void testGetAttributesArray() throws Exception {
         String[] attributes = tested.getAttributesForLookup();
 
-        assertEquals(1, attributes.length);
-        assertEquals("member", attributes[0]);
+        assertThat(attributes.length).isEqualTo(1);
+        assertThat(attributes[0]).isEqualTo("member");
 
         tested = new DefaultIncrementalAttributesMapper(10, "member");
 
         attributes = tested.getAttributesForLookup();
 
-        assertEquals(1, attributes.length);
-        assertEquals("member;Range=0-10", attributes[0]);
+        assertThat(attributes.length).isEqualTo(1);
+        assertThat(attributes[0]).isEqualTo("member;Range=0-10");
     }
 
     @Test
@@ -63,22 +60,22 @@ public class DefaultIncrementalAttributesMapperTest {
         tested = new DefaultIncrementalAttributesMapper(20, new String[]{"member", "cn"});
         String[] attributes = tested.getAttributesForLookup();
 
-        assertEquals(2, attributes.length);
+        assertThat(attributes.length).isEqualTo(2);
 
-        assertEquals("member;Range=0-20", attributes[0]);
-        assertEquals("cn;Range=0-20", attributes[1]);
+        assertThat(attributes[0]).isEqualTo("member;Range=0-20");
+        assertThat(attributes[1]).isEqualTo("cn;Range=0-20");
     }
 
     @Test
     public void testLoopEmpty() throws Exception {
-        assertTrue(tested.hasMore());
+        assertThat(tested.hasMore()).isTrue();
 
         Attributes attributes = new BasicAttributes();
 
         tested.mapFromAttributes(attributes);
 
-        assertFalse(tested.hasMore());
-        assertNull(tested.getValues("member"));
+        assertThat(tested.hasMore()).isFalse();
+        assertThat(tested.getValues("member")).isNull();
     }
 
     @Test
@@ -87,15 +84,15 @@ public class DefaultIncrementalAttributesMapperTest {
 
         tested.mapFromAttributes(attributes);
 
-        assertTrue(tested.hasMore());
-        assertEquals(11, tested.getValues("member").size());
+        assertThat(tested.hasMore()).isTrue();
+        assertThat(tested.getValues("member")).hasSize(11);
 
         attributes = createAttributes("member", new RangeOption(11), 5);
 
         tested.mapFromAttributes(attributes);
 
-        assertFalse(tested.hasMore());
-        assertEquals(16, tested.getValues("member").size());
+        assertThat(tested.hasMore()).isFalse();
+        assertThat(tested.getValues("member")).hasSize(16);
     }
 
     @Test
@@ -106,8 +103,8 @@ public class DefaultIncrementalAttributesMapperTest {
 
         tested.mapFromAttributes(attributes);
 
-        assertFalse(tested.hasMore());
-        assertEquals(11, tested.getValues("member").size());
+        assertThat(tested.hasMore()).isFalse();
+        assertThat(tested.getValues("member")).hasSize(11);
     }
 
     @Test
@@ -118,15 +115,15 @@ public class DefaultIncrementalAttributesMapperTest {
 
         tested.mapFromAttributes(attributes);
 
-        assertTrue(tested.hasMore());
-        assertEquals(11, tested.getValues("member").size());
+        assertThat(tested.hasMore()).isTrue();
+        assertThat(tested.getValues("member")).hasSize(11);
 
         attributes = createAttributes("member", new RangeOption(11, 30));
 
         tested.mapFromAttributes(attributes);
 
-        assertFalse(tested.hasMore());
-        assertEquals(31, tested.getValues("member").size());
+        assertThat(tested.hasMore()).isFalse();
+        assertThat(tested.getValues("member")).hasSize(31);
     }
 
     @Test
@@ -137,15 +134,15 @@ public class DefaultIncrementalAttributesMapperTest {
 
         tested.mapFromAttributes(attributes);
 
-        assertTrue(tested.hasMore());
-        assertEquals(11, tested.getValues("member").size());
+        assertThat(tested.hasMore()).isTrue();
+        assertThat(tested.getValues("member")).hasSize(11);
 
         attributes = createAttributes("member", new RangeOption(11), 5);
 
         tested.mapFromAttributes(attributes);
 
-        assertFalse(tested.hasMore());
-        assertEquals(16, tested.getValues("member").size());
+        assertThat(tested.hasMore()).isFalse();
+        assertThat(tested.getValues("member")).hasSize(16);
     }
 
     @Test
@@ -157,18 +154,18 @@ public class DefaultIncrementalAttributesMapperTest {
 
         tested.mapFromAttributes(attributes);
 
-        assertTrue(tested.hasMore());
-        assertEquals(6, tested.getValues("member").size());
-        assertEquals(10, tested.getValues("cn").size());
+        assertThat(tested.hasMore()).isTrue();
+        assertThat(tested.getValues("member")).hasSize(6);
+        assertThat(tested.getValues("cn")).hasSize(10);
 
-        assertEquals(1, tested.getAttributesForLookup().length);
+        assertThat(tested.getAttributesForLookup().length).isEqualTo(1);
 
         attributes = createAttributes("member", new RangeOption(6), 5);
 
         tested.mapFromAttributes(attributes);
 
-        assertFalse(tested.hasMore());
-        assertEquals(11, tested.getValues("member").size());
+        assertThat(tested.hasMore()).isFalse();
+        assertThat(tested.getValues("member")).hasSize(11);
     }
 
     private Attributes createAttributes(String attributeName, RangeOption range) {

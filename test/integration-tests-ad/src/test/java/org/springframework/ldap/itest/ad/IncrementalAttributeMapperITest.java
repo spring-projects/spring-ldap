@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,12 +40,8 @@ import javax.naming.directory.ModificationItem;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -159,36 +155,36 @@ public class IncrementalAttributeMapperITest extends AbstractJUnit4SpringContext
 
         // The 'member' attribute consists of > 1500 entries and will not be returned without range specifier.
         DirContextOperations ctx = ldapTemplate.lookupContext(testgroupDn);
-        assertNull(ctx.getStringAttribute("member"));
+        assertThat(ctx.getStringAttribute("member")).isNull();
 
         DefaultIncrementalAttributesMapper attributeMapper = new DefaultIncrementalAttributesMapper(new String[]{"member", "cn"});
-        assertTrue("There should be more results to get", attributeMapper.hasMore());
+        assertThat(attributeMapper.hasMore()).as("There should be more results to get").isTrue();
 
         String[] attributesArray = attributeMapper.getAttributesForLookup();
-        assertEquals(2, attributesArray.length);
-        assertEquals("member", attributesArray[0]);
-        assertEquals("cn", attributesArray[1]);
+        assertThat(attributesArray.length).isEqualTo(2);
+        assertThat(attributesArray[0]).isEqualTo("member");
+        assertThat(attributesArray[1]).isEqualTo("cn");
 
         // First iteration - there should now be more members left, but all cn values should have been collected.
         ldapTemplate.lookup(testgroupDn, attributesArray, attributeMapper);
 
-        assertTrue("There should be more results to get", attributeMapper.hasMore());
+        assertThat(attributeMapper.hasMore()).as("There should be more results to get").isTrue();
         // Only member attribute should be requested in this query.
         attributesArray = attributeMapper.getAttributesForLookup();
-        assertEquals(1, attributesArray.length);
-        assertEquals("member;Range=1500-*", attributesArray[0]);
+        assertThat(attributesArray.length).isEqualTo(1);
+        assertThat(attributesArray[0]).isEqualTo("member;Range=1500-*");
 
         // Second iteration - all data should now have been collected.
         ldapTemplate.lookup(testgroupDn, attributeMapper.getAttributesForLookup(), attributeMapper);
-        assertFalse("There should be no more results to get", attributeMapper.hasMore());
+        assertThat(attributeMapper.hasMore()).as("There should be no more results to get").isFalse();
 
         List memberValues = attributeMapper.getValues("member");
-        assertNotNull(memberValues);
-        assertEquals(1501, memberValues.size());
+        assertThat(memberValues).isNotNull();
+        assertThat(memberValues).hasSize(1501);
 
         List cnValues = attributeMapper.getValues("cn");
-        assertNotNull(cnValues);
-        assertEquals(1, cnValues.size());
+        assertThat(cnValues).isNotNull();
+        assertThat(cnValues).hasSize(1);
     }
 
     @Test
@@ -217,10 +213,9 @@ public class IncrementalAttributeMapperITest extends AbstractJUnit4SpringContext
             }
 
             // LDAP-234: After rollback the attribute values were cleared after rollback
-            assertEquals(
-                    1501,
+            assertThat(
                     DefaultIncrementalAttributesMapper.lookupAttributeValues(
-                            ldapTemplate, GROUP_DN, "member").size());
+                            ldapTemplate, GROUP_DN, "member").size()).isEqualTo(1501);
         }
     }
 }

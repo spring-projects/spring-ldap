@@ -1,3 +1,19 @@
+/*
+ * Copyright 2005-2016 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.springframework.ldap.core;
 
 import org.junit.Test;
@@ -5,9 +21,7 @@ import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.NamingException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -18,7 +32,7 @@ public class NameAwareAttributeTest {
         NameAwareAttribute attr1 = new NameAwareAttribute("someAttribute");
         NameAwareAttribute attr2 = new NameAwareAttribute("someOtherAttribute");
 
-        assertFalse(attr1.equals(attr2));
+        assertThat(attr1.equals(attr2)).isFalse();
     }
 
     @Test
@@ -26,8 +40,8 @@ public class NameAwareAttributeTest {
         NameAwareAttribute attr1 = new NameAwareAttribute("someAttribute");
         NameAwareAttribute attr2 = new NameAwareAttribute("someAttribute");
 
-        assertTrue(attr1.equals(attr2));
-        assertEquals(attr1.hashCode(), attr2.hashCode());
+        assertThat(attr1.equals(attr2)).isTrue();
+        assertThat(attr2.hashCode()).isEqualTo(attr1.hashCode());
     }
 
     @Test
@@ -41,8 +55,8 @@ public class NameAwareAttributeTest {
         attr2.add("value2");
         attr2.add("value3");
 
-        assertTrue(attr1.equals(attr2));
-        assertEquals(attr1.hashCode(), attr2.hashCode());
+        assertThat(attr1.equals(attr2)).isTrue();
+        assertThat(attr2.hashCode()).isEqualTo(attr1.hashCode());
     }
 
     @Test
@@ -56,8 +70,8 @@ public class NameAwareAttributeTest {
         attr2.add(new byte[]{3, 2, 1});
         attr2.add(new byte[]{1});
 
-        assertTrue(attr1.equals(attr2));
-        assertEquals(attr1.hashCode(), attr2.hashCode());
+        assertThat(attr1.equals(attr2)).isTrue();
+        assertThat(attr2.hashCode()).isEqualTo(attr1.hashCode());
     }
 
     @Test
@@ -71,8 +85,8 @@ public class NameAwareAttributeTest {
         attr2.add(new byte[]{1});
         attr2.add(new byte[]{1, 2, 3});
 
-        assertTrue(attr1.equals(attr2));
-        assertEquals(attr1.hashCode(), attr2.hashCode());
+        assertThat(attr1.equals(attr2)).isTrue();
+        assertThat(attr2.hashCode()).isEqualTo(attr1.hashCode());
     }
 
     @Test
@@ -86,7 +100,7 @@ public class NameAwareAttributeTest {
         attr2.add(new byte[]{3, 2, 1});
         attr2.add(new byte[]{1});
 
-        assertFalse(attr1.equals(attr2));
+        assertThat(attr1.equals(attr2)).isFalse();
     }
 
     @Test
@@ -99,7 +113,7 @@ public class NameAwareAttributeTest {
         attr2.add(new byte[]{1, 2, 3});
         attr2.add(new byte[]{1});
 
-        assertFalse(attr1.equals(attr2));
+        assertThat(attr1.equals(attr2)).isFalse();
     }
 
     @Test
@@ -113,8 +127,8 @@ public class NameAwareAttributeTest {
         attr2.add(new byte[]{3, 2, 1});
         attr2.add(new byte[]{1});
 
-        assertTrue(attr1.equals(attr2));
-        assertEquals(attr1.hashCode(), attr2.hashCode());
+        assertThat(attr1.equals(attr2)).isTrue();
+        assertThat(attr2.hashCode()).isEqualTo(attr1.hashCode());
     }
 
     @Test
@@ -128,8 +142,8 @@ public class NameAwareAttributeTest {
         attr2.add(new byte[]{3, 2, 1});
         attr2.add(new byte[]{1});
 
-        assertTrue(attr1.equals(attr2));
-        assertEquals(attr1.hashCode(), attr2.hashCode());
+        assertThat(attr1.equals(attr2)).isTrue();
+        assertThat(attr2.hashCode()).isEqualTo(attr1.hashCode());
     }
 
     @Test
@@ -143,7 +157,7 @@ public class NameAwareAttributeTest {
         attr2.add(new byte[]{1});
         attr2.add(new byte[]{1, 2, 3});
 
-        assertFalse(attr1.equals(attr2));
+        assertThat(attr1.equals(attr2)).isFalse();
     }
 
     @Test
@@ -155,10 +169,10 @@ public class NameAwareAttributeTest {
         NameAwareAttribute attr2 = new NameAwareAttribute("someAttribute");
         attr2.add(LdapUtils.newLdapName(expectedName));
 
-        assertEquals(attr1, attr2);
-        assertEquals(attr1.hashCode(), attr2.hashCode());
-        assertEquals(expectedName, attr1.get());
-        assertEquals(expectedName, attr2.get());
+        assertThat(attr2).isEqualTo(attr1);
+        assertThat(attr2.hashCode()).isEqualTo(attr1.hashCode());
+        assertThat(attr1.get()).isEqualTo(expectedName);
+        assertThat(attr2.get()).isEqualTo(expectedName);
     }
 
     @Test
@@ -172,10 +186,10 @@ public class NameAwareAttributeTest {
         NameAwareAttribute attr2 = new NameAwareAttribute("someAttribute");
         attr2.add(LdapUtils.newLdapName(expectedName2));
 
-        assertEquals(attr1, attr2);
-        assertEquals(attr1.hashCode(), attr2.hashCode());
-        assertEquals(expectedName1, attr1.get());
-        assertEquals(expectedName2, attr2.get());
+        assertThat(attr2).isEqualTo(attr1);
+        assertThat(attr2.hashCode()).isEqualTo(attr1.hashCode());
+        assertThat(attr1.get()).isEqualTo(expectedName1);
+        assertThat(attr2.get()).isEqualTo(expectedName2);
     }
 
     @Test
@@ -189,9 +203,9 @@ public class NameAwareAttributeTest {
         NameAwareAttribute attr2 = new NameAwareAttribute("someAttribute");
         attr2.add(LdapUtils.newLdapName(expectedName2));
 
-        assertFalse(attr1.equals(attr2));
-        assertEquals(expectedName1, attr1.get());
-        assertEquals(expectedName2, attr2.get());
+        assertThat(attr1.equals(attr2)).isFalse();
+        assertThat(attr1.get()).isEqualTo(expectedName1);
+        assertThat(attr2.get()).isEqualTo(expectedName2);
     }
 
     @Test
@@ -207,10 +221,10 @@ public class NameAwareAttributeTest {
 
         attr1.initValuesAsNames();
 
-        assertTrue(attr1.equals(attr2));
-        assertEquals(attr1.hashCode(), attr2.hashCode());
-        assertEquals(expectedName1, attr1.get());
-        assertEquals(expectedName2, attr2.get());
+        assertThat(attr1.equals(attr2)).isTrue();
+        assertThat(attr2.hashCode()).isEqualTo(attr1.hashCode());
+        assertThat(attr1.get()).isEqualTo(expectedName1);
+        assertThat(attr2.get()).isEqualTo(expectedName2);
     }
 
     @Test
@@ -224,9 +238,9 @@ public class NameAwareAttributeTest {
         NameAwareAttribute attr2 = new NameAwareAttribute("someAttribute");
         attr2.add(LdapUtils.newLdapName(expectedName2));
 
-        assertFalse(attr1.equals(attr2));
-        assertEquals(expectedName1, attr1.get());
-        assertEquals(expectedName2, attr2.get());
+        assertThat(attr1.equals(attr2)).isFalse();
+        assertThat(attr1.get()).isEqualTo(expectedName1);
+        assertThat(attr2.get()).isEqualTo(expectedName2);
     }
 
     @Test
@@ -240,8 +254,8 @@ public class NameAwareAttributeTest {
         NameAwareAttribute attr2 = new NameAwareAttribute("someAttribute");
         attr2.add(expectedValue2);
 
-        assertFalse(attr1.equals(attr2));
-        assertEquals(expectedName1, attr1.get());
-        assertEquals(expectedValue2, attr2.get());
+        assertThat(attr1.equals(attr2)).isFalse();
+        assertThat(attr1.get()).isEqualTo(expectedName1);
+        assertThat(attr2.get()).isEqualTo(expectedValue2);
     }
 }

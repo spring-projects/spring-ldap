@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,11 +42,8 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Integration tests for {@link ContextSourceAndHibernateTransactionManager}.
@@ -123,7 +120,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
 		log.debug("Verifying result");
@@ -134,12 +131,12 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
 		List result = hibernateTemplate.findByNamedParam("from OrgPerson person where person.lastname = :lastname",
 				"lastname", person.getLastname());
-		assertTrue(result.size() == 0);
+		assertThat(result.size() == 0).isTrue();
 
 	}
 
@@ -161,8 +158,8 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 		log.debug("Verifying result");
 		Object ldapResult = ldapTemplate.lookup("cn=some testperson, ou=company1, ou=Sweden");
 		OrgPerson fromDb = (OrgPerson) this.hibernateTemplate.get(OrgPerson.class, new Integer(2));
-		assertNotNull(ldapResult);
-		assertNotNull(fromDb);
+		assertThat(ldapResult).isNotNull();
+		assertThat(fromDb).isNotNull();
 	}
 
 	@Test
@@ -175,24 +172,24 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
 		log.debug("Verifying result");
 
 		Object ldapResult = ldapTemplate.lookup(dn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
-				assertNotNull("Person", attributes.get("sn").get());
-				assertEquals("Sweden, Company1, Some Person", attributes.get("description").get());
+				assertThat(attributes.get("sn").get()).as("Person").isNotNull();
+				assertThat(attributes.get("description").get()).isEqualTo("Sweden, Company1, Some Person");
 				return new Object();
 			}
 		});
 
 		OrgPerson notUpdatedPerson = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, new Integer(1));
-		assertEquals("Person", notUpdatedPerson.getLastname());
-		assertEquals("Sweden, Company1, Some Person", notUpdatedPerson.getDescription());
+		assertThat(notUpdatedPerson.getLastname()).isEqualTo("Person");
+		assertThat(notUpdatedPerson.getDescription()).isEqualTo("Sweden, Company1, Some Person");
 
-		assertNotNull(ldapResult);
+		assertThat(ldapResult).isNotNull();
 		// no need to assert if notUpdatedPerson exists
 	}
 
@@ -208,16 +205,16 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 		log.debug("Verifying result");
 		Object ldapResult = ldapTemplate.lookup(dn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
-				assertEquals("Updated Person", attributes.get("sn").get());
-				assertEquals("Updated description", attributes.get("description").get());
+				assertThat(attributes.get("sn").get()).isEqualTo("Updated Person");
+				assertThat(attributes.get("description").get()).isEqualTo("Updated description");
 				return new Object();
 			}
 		});
 
 		OrgPerson updatedPerson = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, new Integer(1));
-		assertEquals("Updated Person", updatedPerson.getLastname());
-		assertEquals("Updated description", updatedPerson.getDescription());
-		assertNotNull(ldapResult);
+		assertThat(updatedPerson.getLastname()).isEqualTo("Updated Person");
+		assertThat(updatedPerson.getDescription()).isEqualTo("Updated description");
+		assertThat(ldapResult).isNotNull();
 	}
 
 	@Test
@@ -234,7 +231,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
 		// Verify that entry was not moved.
@@ -243,17 +240,17 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
 		// Verify that original entry was not updated.
 		Object object = ldapTemplate.lookup(dn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
-				assertEquals("Sweden, Company1, Some Person2", attributes.get("description").get());
+				assertThat(attributes.get("description").get()).isEqualTo("Sweden, Company1, Some Person2");
 				return new Object();
 			}
 		});
-		assertNotNull(object);
+		assertThat(object).isNotNull();
 	}
 
 	@Test
@@ -266,12 +263,12 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 		// Verify that entry was moved and updated.
 		Object object = ldapTemplate.lookup(newDn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
-				assertEquals("Updated description", attributes.get("description").get());
+				assertThat(attributes.get("description").get()).isEqualTo("Updated description");
 				return new Object();
 			}
 		});
 
-		assertNotNull(object);
+		assertThat(object).isNotNull();
 	}
 
 	@Test
@@ -283,19 +280,19 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
 		// Verify result - check that the operation was properly rolled back
 		Object result = ldapTemplate.lookup(dn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
-				assertEquals("Person", attributes.get("sn").get());
-				assertEquals("Sweden, Company1, Some Person", attributes.get("description").get());
+				assertThat(attributes.get("sn").get()).isEqualTo("Person");
+				assertThat(attributes.get("description").get()).isEqualTo("Sweden, Company1, Some Person");
 				return new Object();
 			}
 		});
 
-		assertNotNull(result);
+		assertThat(result).isNotNull();
 	}
 
 	@Test
@@ -307,13 +304,13 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 		// Verify result - check that the operation was not rolled back
 		Object result = ldapTemplate.lookup(dn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
-				assertEquals("Updated lastname", attributes.get("sn").get());
-				assertEquals("Updated description", attributes.get("description").get());
+				assertThat(attributes.get("sn").get()).isEqualTo("Updated lastname");
+				assertThat(attributes.get("description").get()).isEqualTo("Updated description");
 				return new Object();
 			}
 		});
 
-		assertNotNull(result);
+		assertThat(result).isNotNull();
 	}
 
 	@Test
@@ -327,7 +324,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
 		person = null;
@@ -348,7 +345,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 		// not
 		// exist
 
-		assertNotNull(ldapResult);
+		assertThat(ldapResult).isNotNull();
 	}
 
 	@Test
@@ -364,10 +361,10 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
 		person = (OrgPerson) this.hibernateTemplate.get(OrgPerson.class, new Integer(1));
-		assertNull(person);
+		assertThat(person).isNull();
 	}
 }

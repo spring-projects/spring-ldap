@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package org.springframework.ldap.filter;
 import com.gargoylesoftware.base.testing.EqualsTester;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Adam Skogman
@@ -30,14 +30,14 @@ public class AndFilterTest {
     public void testZero() {
         AndFilter aq = new AndFilter();
 
-        assertEquals("", aq.encode());
+        assertThat(aq.encode()).isEqualTo("");
     }
 
     @Test
     public void testOne() {
         AndFilter aq = new AndFilter().and(new EqualsFilter("a", "b"));
 
-        assertEquals("(a=b)", aq.encode());
+        assertThat(aq.encode()).isEqualTo("(a=b)");
     }
 
     @Test
@@ -45,7 +45,7 @@ public class AndFilterTest {
         AndFilter aq = new AndFilter().and(new EqualsFilter("a", "b")).and(
                 new EqualsFilter("c", "d"));
 
-        assertEquals("(&(a=b)(c=d))", aq.encode());
+        assertThat(aq.encode()).isEqualTo("(&(a=b)(c=d))");
     }
 
     @Test
@@ -53,7 +53,7 @@ public class AndFilterTest {
         AndFilter aq = new AndFilter().and(new EqualsFilter("a", "b")).and(
                 new EqualsFilter("c", "d")).and(new EqualsFilter("e", "f"));
 
-        assertEquals("(&(a=b)(c=d)(e=f))", aq.encode());
+        assertThat(aq.encode()).isEqualTo("(&(a=b)(c=d)(e=f))");
     }
 
     @Test

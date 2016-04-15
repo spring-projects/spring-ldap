@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,7 @@ import org.springframework.ldap.support.ListComparator;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for ListComparator.
@@ -45,7 +44,7 @@ public class ListComparatorTest {
         List<Integer> list2 = Arrays.asList(0, 0);
 
         int result = tested.compare(list1, list2);
-        assertEquals(0, result);
+        assertThat(result).isEqualTo(0);
     }
 
     @Test
@@ -54,7 +53,7 @@ public class ListComparatorTest {
         List<Integer> list2 = Arrays.asList(0, 1);
 
         int result = tested.compare(list1, list2);
-        assertTrue(result < 0);
+        assertThat(result < 0).isTrue();
     }
 
     @Test
@@ -63,7 +62,7 @@ public class ListComparatorTest {
         List<Integer> list2 = Arrays.asList(0, 0);
 
         int result = tested.compare(list1, list2);
-        assertTrue(result > 0);
+        assertThat(result > 0).isTrue();
     }
 
     @Test
@@ -72,7 +71,7 @@ public class ListComparatorTest {
         List<Integer> list2 = Arrays.asList(0, 0);
 
         int result = tested.compare(list1, list2);
-        assertTrue(result > 0);
+        assertThat(result > 0).isTrue();
     }
 
     @Test
@@ -81,6 +80,6 @@ public class ListComparatorTest {
         List<Integer> list2 = Arrays.asList(0, 0, 0);
 
         int result = tested.compare(list1, list2);
-        assertTrue(result < 0);
+        assertThat(result < 0).isTrue();
     }
 }

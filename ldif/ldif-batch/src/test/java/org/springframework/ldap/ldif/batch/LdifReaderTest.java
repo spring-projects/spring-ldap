@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,21 +27,20 @@ import org.springframework.batch.test.AbstractJobTests;
 import org.springframework.batch.test.AssertFile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
 import java.net.MalformedURLException;
 
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public abstract class LdifReaderTest extends AbstractJobTests {
 	private static Logger log = LoggerFactory.getLogger(LdifReaderTest.class);
-	
+
 	private Resource expected;
 	private Resource actual;
-	
+
 	public LdifReaderTest() {
 		try {
 			expected = new UrlResource("file:src/test/resources/expectedOutput.ldif");
@@ -50,34 +49,34 @@ public abstract class LdifReaderTest extends AbstractJobTests {
 			log.error("Unexpected error", e);
 		}
 	}
-	
+
 	@Before
 	public void checkFiles() {
 		Assert.isTrue(expected.exists(), "Expected does not exist.");
 	}
-	
+
 	@Test
 	public void testValidRun() {
 		try {
 			JobExecution jobExecution = this.launchStep("step1");
-			
+
 			//Ensure job completed successfully.
 			Assert.isTrue(jobExecution.getExitStatus().equals(ExitStatus.COMPLETED), "Step Execution did not complete normally: " + jobExecution.getExitStatus());
 
 			//Check output.
 			Assert.isTrue(actual.exists(), "Actual does not exist.");
 			AssertFile.assertFileEquals(expected.getFile(), actual.getFile());
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
-			fail();
+			fail(e.getMessage());
 		}
 	}
 
 	@Test
 	public void testResourceNotExists() {
 		JobExecution jobExecution = this.launchStep("step2");
-		
+
 		Assert.isTrue(jobExecution.getExitStatus().getExitCode().equals("FAILED"), "The job exit status is not FAILED.");
 		Assert.isTrue(jobExecution.getExitStatus().getExitDescription().contains("Failed to initialize the reader"), "The job failed for the wrong reason.");
 	}

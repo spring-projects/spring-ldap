@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import javax.naming.Name;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import static junit.framework.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Provides tests that verify that the server supports certain controls.
@@ -71,8 +71,8 @@ public class SupportedControlsITest extends AbstractLdapTemplateIntegrationTest 
 
         HashSet<String> controlsSet = new HashSet<String>(Arrays.asList(controls));
 
-        assertTrue("Entry Change Notification LDAPv3 control,", controlsSet.contains("1.3.6.1.4.1.4203.1.10.1"));
-		assertTrue("Subentries Control,", controlsSet.contains("1.3.6.1.4.1.4203.1.10.1"));
-		assertTrue("Manage DSA IT LDAPv3 control,", controlsSet.contains("2.16.840.1.113730.3.4.2"));
+        assertThat(controlsSet.contains("1.3.6.1.4.1.4203.1.10.1")).as("Entry Change Notification LDAPv3 control,").isTrue();
+		assertThat(controlsSet.contains("1.3.6.1.4.1.4203.1.10.1")).as("Subentries Control,").isTrue();
+		assertThat(controlsSet.contains("2.16.840.1.113730.3.4.2")).as("Manage DSA IT LDAPv3 control,").isTrue();
 	}
 }

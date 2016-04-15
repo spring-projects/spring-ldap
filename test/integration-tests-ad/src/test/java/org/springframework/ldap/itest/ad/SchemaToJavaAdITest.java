@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 // Tests the generation of entry Java classes from LDAP schema
 public final class SchemaToJavaAdITest {
@@ -192,21 +192,21 @@ public final class SchemaToJavaAdITest {
         // Check some returned values
         Method getDnMethod=clazz.getMethod("getDn");
         Object dn=getDnMethod.invoke(fromDirectory);
-        assertEquals(testDn, dn);
+        assertThat(dn).isEqualTo(testDn);
 
         Method getCnIteratorMethod=clazz.getMethod("getCn");
         @SuppressWarnings("unchecked")
         String cn=(String)getCnIteratorMethod.invoke(fromDirectory);
-        assertEquals("William Hartnell", cn);
+        assertThat(cn).isEqualTo("William Hartnell");
 
         Method telephoneNumberIteratorMethod=clazz.getMethod("getTelephoneNumber");
         @SuppressWarnings("unchecked")
         String telephoneNumber=(String)telephoneNumberIteratorMethod.invoke(fromDirectory);
-        assertEquals("1", telephoneNumber);
+        assertThat(telephoneNumber).isEqualTo("1");
 
         // Reread and check whether equals and hashCode are at least sane
         Object fromDirectory2=odmManager.read(clazz, testDn);
-        assertEquals(fromDirectory, fromDirectory2);
-        assertEquals(fromDirectory.hashCode(), fromDirectory2.hashCode());
+        assertThat(fromDirectory2).isEqualTo(fromDirectory);
+        assertThat(fromDirectory2.hashCode()).isEqualTo(fromDirectory.hashCode());
     }
 }

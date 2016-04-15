@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,9 +35,8 @@ import javax.naming.directory.ModificationItem;
 import java.util.Arrays;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Tests the modification methods (rebind and modifyAttributes) of LdapTemplate.
@@ -117,9 +116,9 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 
 		DirContextAdapter result = (DirContextAdapter) tested.lookup(PERSON4_DN);
 		List<String> attributes = Arrays.asList(result.getStringAttributes("description"));
-		assertEquals(2, attributes.size());
-		assertTrue(attributes.contains("Some other description"));
-        assertTrue(attributes.contains("Another description"));
+		assertThat(attributes).hasSize(2);
+		assertThat(attributes.contains("Some other description")).isTrue();
+        assertThat(attributes.contains("Another description")).isTrue();
 	}
 
 	@Test
@@ -133,10 +132,10 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 
 		DirContextAdapter result = (DirContextAdapter) tested.lookup(PERSON4_DN);
         List<String> attributes = Arrays.asList(result.getStringAttributes("description"));
-        assertEquals(3, attributes.size());
-        assertTrue(attributes.contains("Some other description"));
-        assertTrue(attributes.contains("Another description"));
-        assertTrue(attributes.contains("Some description"));
+        assertThat(attributes).hasSize(3);
+        assertThat(attributes.contains("Some other description")).isTrue();
+        assertThat(attributes.contains("Another description")).isTrue();
+        assertThat(attributes.contains("Some description")).isTrue();
 	}
 
 	@Test
@@ -144,7 +143,7 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 		DirContextOperations ctx = tested.lookupContext("cn=ROLE_USER,ou=groups");
 		ctx.addAttributeValue("uniqueMember", "cn=Some Person,ou=company1,ou=Norway," + base);
 		tested.modifyAttributes(ctx);
-		assertTrue(true);
+		assertThat(true).isTrue();
 	}
 
 	@Test
@@ -180,10 +179,10 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 
 		DirContextAdapter result = (DirContextAdapter) tested.lookup(PERSON4_DN);
         List<String> attributes = Arrays.asList(result.getStringAttributes("description"));
-        assertEquals(3, attributes.size());
-        assertTrue(attributes.contains("Some other description"));
-        assertTrue(attributes.contains("Another description"));
-        assertTrue(attributes.contains("Some description"));
+        assertThat(attributes).hasSize(3);
+        assertThat(attributes.contains("Some other description")).isTrue();
+        assertThat(attributes.contains("Another description")).isTrue();
+        assertThat(attributes.contains("Some description")).isTrue();
 	}
 
 	@Test
@@ -216,11 +215,11 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 		// Verify
 		adapter = (DirContextAdapter) tested.lookup(PERSON5_DN);
         List<String> attributes = Arrays.asList(adapter.getStringAttributes("description"));
-        assertEquals(4, attributes.size());
-        assertTrue(attributes.contains("qwe"));
-        assertTrue(attributes.contains("123"));
-        assertTrue(attributes.contains("klytt"));
-        assertTrue(attributes.contains("kalle"));
+        assertThat(attributes).hasSize(4);
+        assertThat(attributes.contains("qwe")).isTrue();
+        assertThat(attributes.contains("123")).isTrue();
+        assertThat(attributes.contains("klytt")).isTrue();
+        assertThat(attributes.contains("kalle")).isTrue();
 	}
 
 	/**
@@ -278,8 +277,8 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 
 	private void verifyBoundCorrectData() {
 		DirContextAdapter result = (DirContextAdapter) tested.lookup(PERSON4_DN);
-		assertEquals("Some Person4", result.getStringAttribute("cn"));
-		assertEquals("Person4", result.getStringAttribute("sn"));
-		assertEquals("Some other description", result.getStringAttribute("description"));
+		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person4");
+		assertThat(result.getStringAttribute("sn")).isEqualTo("Person4");
+		assertThat(result.getStringAttribute("description")).isEqualTo("Some other description");
 	}
 }

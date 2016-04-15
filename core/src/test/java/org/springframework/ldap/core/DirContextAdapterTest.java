@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,12 +33,8 @@ import javax.naming.ldap.LdapName;
 import java.util.Iterator;
 import java.util.SortedSet;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Tests the DirContextAdapter class.
@@ -62,33 +58,33 @@ public class DirContextAdapterTest {
 
     @Test
 	public void testSetUpdateMode() throws Exception {
-		assertFalse(tested.isUpdateMode());
+		assertThat(tested.isUpdateMode()).isFalse();
 		tested.setUpdateMode(true);
-		assertTrue(tested.isUpdateMode());
+		assertThat(tested.isUpdateMode()).isTrue();
 		tested.setUpdateMode(false);
-		assertFalse(tested.isUpdateMode());
+		assertThat(tested.isUpdateMode()).isFalse();
 	}
 
     @Test
 	public void testGetModificationItems() throws Exception {
 		ModificationItem[] items = tested.getModificationItems();
-		assertEquals(0, items.length);
+		assertThat(items.length).isEqualTo(0);
 		tested.setUpdateMode(true);
-		assertEquals(0, items.length);
+		assertThat(items.length).isEqualTo(0);
 	}
 
     @Test
 	public void testAlwaysReplace() throws Exception {
 		ModificationItem[] items = tested.getModificationItems();
-		assertEquals(0, items.length);
+		assertThat(items.length).isEqualTo(0);
 		tested.setUpdateMode(true);
-		assertEquals(0, items.length);
+		assertThat(items.length).isEqualTo(0);
 	}
 
     @Test
 	public void testGetStringAttributeWhenAttributeDoesNotExist() throws Exception {
 		String s = tested.getStringAttribute("does not exist");
-		assertNull(s);
+		assertThat(s).isNull();
 	}
 
     @Test
@@ -102,7 +98,7 @@ public class DirContextAdapterTest {
 		}
 		tested = new TestableDirContextAdapter();
 		String s = tested.getStringAttribute("abc");
-		assertNull(s);
+		assertThat(s).isNull();
 	}
 
     @Test
@@ -116,13 +112,13 @@ public class DirContextAdapterTest {
 		}
 		tested = new TestableDirContextAdapter();
 		boolean result = tested.attributeExists("abc");
-		assertEquals(true, result);
+		assertThat(result).isEqualTo(true);
 	}
 
     @Test
 	public void testAttributeExistsWhenAttributeDoesNotExist() throws Exception {
 		boolean result = tested.attributeExists("does not exist");
-		assertEquals(false, result);
+		assertThat(result).isEqualTo(false);
 	}
 
     @Test
@@ -136,7 +132,7 @@ public class DirContextAdapterTest {
 		}
 		tested = new TestableDirContextAdapter();
 		String s = tested.getStringAttribute("abc");
-		assertEquals("def", s);
+		assertThat(s).isEqualTo("def");
 	}
 
     @Test
@@ -153,9 +149,9 @@ public class DirContextAdapterTest {
 		}
 		tested = new TestableDirContextAdapter();
 		String s[] = tested.getStringAttributes("abc");
-		assertEquals("123", s[0]);
-		assertEquals("234", s[1]);
-		assertEquals(2, s.length);
+		assertThat(s[0]).isEqualTo("123");
+		assertThat(s[1]).isEqualTo("234");
+		assertThat(s.length).isEqualTo(2);
 	}
 
     @Test
@@ -175,7 +171,7 @@ public class DirContextAdapterTest {
 			fail("ClassCastException expected");
 		}
 		catch (IllegalArgumentException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 	}
 
@@ -191,14 +187,14 @@ public class DirContextAdapterTest {
 		}
 		tested = new TestableDirContextAdapter();
 		String s[] = tested.getStringAttributes("abc");
-		assertNotNull(s);
-		assertEquals(0, s.length);
+		assertThat(s).isNotNull();
+		assertThat(s.length).isEqualTo(0);
 	}
 
     @Test
 	public void testGetStringAttributesNotExists() throws Exception {
 		String s[] = tested.getStringAttributes("abc");
-		assertNull(s);
+		assertThat(s).isNull();
 	}
 
     @Test
@@ -215,11 +211,11 @@ public class DirContextAdapterTest {
 		}
 		tested = new TestableDirContextAdapter();
 		SortedSet s = tested.getAttributeSortedStringSet("abc");
-		assertNotNull(s);
-		assertEquals(2, s.size());
+		assertThat(s).isNotNull();
+		assertThat(s).hasSize(2);
 		Iterator it = s.iterator();
-		assertEquals("123", it.next());
-		assertEquals("234", it.next());
+		assertThat(it.next()).isEqualTo("123");
+		assertThat(it.next()).isEqualTo("234");
 	}
 
     @Test
@@ -232,7 +228,7 @@ public class DirContextAdapterTest {
 		}
 		tested = new TestableDirContextAdapter();
 		SortedSet s = tested.getAttributeSortedStringSet("abc");
-		assertNull(s);
+		assertThat(s).isNull();
 	}
 
     @Test
@@ -242,7 +238,7 @@ public class DirContextAdapterTest {
 
 		Attributes attrs = tested.getAttributes();
 		Attribute attr = attrs.get("abc");
-		assertEquals("123", (String) attr.get());
+		assertThat((String) attr.get()).isEqualTo("123");
 	}
 
     @Test
@@ -255,8 +251,8 @@ public class DirContextAdapterTest {
 
 		Attributes attrs = tested.getAttributes();
 		Attribute attr = attrs.get("abc");
-		assertEquals("321", (String) attr.get(0));
-		assertEquals("123", (String) attr.get(1));
+		assertThat((String) attr.get(0)).isEqualTo("321");
+		assertThat((String) attr.get(1)).isEqualTo("123");
 	}
 
     @Test
@@ -269,8 +265,8 @@ public class DirContextAdapterTest {
 
 		Attributes attrs = tested.getAttributes();
 		Attribute attr = attrs.get("abc");
-		assertEquals(1, attr.size());
-		assertEquals("123", (String) attr.get(0));
+		assertThat(attr.size()).isEqualTo(1);
+		assertThat((String) attr.get(0)).isEqualTo("123");
 	}
 
     @Test
@@ -280,13 +276,13 @@ public class DirContextAdapterTest {
 
 		// Perform test
 		Attributes attrs = tested.getAttributes();
-		assertNull(attrs.get("abc"));
+		assertThat(attrs.get("abc")).isNull();
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
-		assertEquals(1, modificationItems.length);
+		assertThat(modificationItems.length).isEqualTo(1);
 		Attribute attribute = modificationItems[0].getAttribute();
-		assertEquals("abc", attribute.getID());
-		assertEquals("123", attribute.get());
+		assertThat(attribute.getID()).isEqualTo("abc");
+		assertThat(attribute.get()).isEqualTo("123");
 	}
 
     @Test
@@ -300,14 +296,14 @@ public class DirContextAdapterTest {
 		tested.addAttributeValue("abc", "123");
 
 		Attributes attrs = tested.getAttributes();
-		assertNotNull(attrs.get("abc"));
+		assertThat(attrs.get("abc")).isNotNull();
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
-		assertEquals(1, modificationItems.length);
+		assertThat(modificationItems.length).isEqualTo(1);
 		Attribute attribute = modificationItems[0].getAttribute();
-		assertEquals(1, attribute.size());
-		assertEquals("abc", attribute.getID());
-		assertEquals("123", attribute.get());
+		assertThat(attribute.size()).isEqualTo(1);
+		assertThat(attribute.getID()).isEqualTo("abc");
+		assertThat(attribute.get()).isEqualTo("123");
 	}
 
     @Test
@@ -321,10 +317,10 @@ public class DirContextAdapterTest {
 		tested.addAttributeValue("abc", "123");
 
 		Attributes attrs = tested.getAttributes();
-		assertNotNull(attrs.get("abc"));
+		assertThat(attrs.get("abc")).isNotNull();
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
-		assertEquals(0, modificationItems.length);
+		assertThat(modificationItems.length).isEqualTo(0);
 	}
 
     @Test
@@ -337,14 +333,14 @@ public class DirContextAdapterTest {
 		tested.addAttributeValue("abc", "123");
 
 		Attributes attrs = tested.getAttributes();
-		assertNull(attrs.get("abc"));
+		assertThat(attrs.get("abc")).isNull();
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
-		assertEquals(1, modificationItems.length);
+		assertThat(modificationItems.length).isEqualTo(1);
 		Attribute attribute = modificationItems[0].getAttribute();
-		assertEquals("abc", attribute.getID());
-		assertEquals("321", attribute.get(0));
-		assertEquals("123", attribute.get(1));
+		assertThat(attribute.getID()).isEqualTo("abc");
+		assertThat(attribute.get(0)).isEqualTo("321");
+		assertThat(attribute.get(1)).isEqualTo("123");
 	}
 
     @Test
@@ -357,14 +353,14 @@ public class DirContextAdapterTest {
 		tested.addAttributeValue("abc", "123");
 
 		Attributes attrs = tested.getAttributes();
-		assertNull(attrs.get("abc"));
+		assertThat(attrs.get("abc")).isNull();
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
-		assertEquals(1, modificationItems.length);
+		assertThat(modificationItems.length).isEqualTo(1);
 		Attribute attribute = modificationItems[0].getAttribute();
-		assertEquals(1, attribute.size());
-		assertEquals("abc", attribute.getID());
-		assertEquals("123", attribute.get());
+		assertThat(attribute.size()).isEqualTo(1);
+		assertThat(attribute.getID()).isEqualTo("abc");
+		assertThat(attribute.get()).isEqualTo("123");
 	}
 
 	@Test
@@ -373,8 +369,8 @@ public class DirContextAdapterTest {
 		tested.addAttributeValue("member2", LdapUtils.newLdapName("CN=test2,DC=root"));
 
 		Attributes attrs = tested.getAttributes();
-		assertEquals(LdapUtils.newLdapName("CN=test,DC=root"), attrs.get("member").get());
-		assertEquals(LdapUtils.newLdapName("CN=test2,DC=root"), attrs.get("member2").get());
+		assertThat(attrs.get("member").get()).isEqualTo(LdapUtils.newLdapName("CN=test,DC=root"));
+		assertThat(attrs.get("member2").get()).isEqualTo(LdapUtils.newLdapName("CN=test2,DC=root"));
 	}
 
 	@Test
@@ -383,8 +379,8 @@ public class DirContextAdapterTest {
 		tested.addAttributeValue("member2", LdapUtils.newLdapName("CN=test2,DC=root"));
 
 		Attributes attrs = tested.getAttributes();
-		assertEquals("CN=test,DC=root", attrs.get("member").get());
-		assertEquals(LdapUtils.newLdapName("CN=test2,DC=root"), attrs.get("member2").get());
+		assertThat(attrs.get("member").get()).isEqualTo("CN=test,DC=root");
+		assertThat(attrs.get("member2").get()).isEqualTo(LdapUtils.newLdapName("CN=test2,DC=root"));
 	}
 
     @Test
@@ -393,7 +389,7 @@ public class DirContextAdapterTest {
 		tested.removeAttributeValue("abc", "123");
 
 		Attributes attributes = tested.getAttributes();
-		assertNull(attributes.get("abc"));
+		assertThat(attributes.get("abc")).isNull();
 	}
 
     @Test
@@ -406,9 +402,9 @@ public class DirContextAdapterTest {
 
 		Attributes attributes = tested.getAttributes();
 		Attribute attr = attributes.get("abc");
-		assertNotNull(attr);
-		assertEquals(1, attr.size());
-		assertEquals("321", attr.get());
+		assertThat(attr).isNotNull();
+		assertThat(attr.size()).isEqualTo(1);
+		assertThat(attr.get()).isEqualTo("321");
 	}
 
     @Test
@@ -420,7 +416,7 @@ public class DirContextAdapterTest {
 
 		Attributes attributes = tested.getAttributes();
 		Attribute attr = attributes.get("abc");
-		assertNull(attr);
+		assertThat(attr).isNull();
 	}
 
     @Test
@@ -436,9 +432,9 @@ public class DirContextAdapterTest {
 
 		Attributes attributes = tested.getAttributes();
 		Attribute attr = attributes.get("abc");
-		assertNotNull(attr);
-		assertEquals(1, attr.size());
-		assertEquals("321", attr.get());
+		assertThat(attr).isNotNull();
+		assertThat(attr.size()).isEqualTo(1);
+		assertThat(attr.get()).isEqualTo("321");
 	}
 
     @Test
@@ -448,10 +444,10 @@ public class DirContextAdapterTest {
 		// Perform test
 		tested.removeAttributeValue("abc", "123");
 
-		assertNull(tested.getAttributes().get("abc"));
+		assertThat(tested.getAttributes().get("abc")).isNull();
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
-		assertEquals(0, modificationItems.length);
+		assertThat(modificationItems.length).isEqualTo(0);
 	}
 
     @Test
@@ -462,10 +458,10 @@ public class DirContextAdapterTest {
 		// Perform test
 		tested.removeAttributeValue("abc", "123");
 
-		assertNull(tested.getAttributes().get("abc"));
+		assertThat(tested.getAttributes().get("abc")).isNull();
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
-		assertEquals(0, modificationItems.length);
+		assertThat(modificationItems.length).isEqualTo(0);
 	}
 
     @Test
@@ -477,14 +473,14 @@ public class DirContextAdapterTest {
 		// Perform test
 		tested.removeAttributeValue("abc", "123");
 
-		assertNull(tested.getAttributes().get("abc"));
+		assertThat(tested.getAttributes().get("abc")).isNull();
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
-		assertEquals(1, modificationItems.length);
+		assertThat(modificationItems.length).isEqualTo(1);
 		Attribute modificationAttribute = modificationItems[0].getAttribute();
-		assertEquals("abc", modificationAttribute.getID());
-		assertEquals(1, modificationAttribute.size());
-		assertEquals("321", modificationAttribute.get());
+		assertThat(modificationAttribute.getID()).isEqualTo("abc");
+		assertThat(modificationAttribute.size()).isEqualTo(1);
+		assertThat(modificationAttribute.get()).isEqualTo("321");
 	}
 
     @Test
@@ -496,13 +492,13 @@ public class DirContextAdapterTest {
 		// Perform test
 		tested.removeAttributeValue("abc", "123");
 
-		assertNull(tested.getAttributes().get("abc"));
+		assertThat(tested.getAttributes().get("abc")).isNull();
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
-		assertEquals(1, modificationItems.length);
+		assertThat(modificationItems.length).isEqualTo(1);
 		Attribute modificationAttribute = modificationItems[0].getAttribute();
-		assertEquals("abc", modificationAttribute.getID());
-		assertEquals(1, modificationAttribute.size());
+		assertThat(modificationAttribute.getID()).isEqualTo("abc");
+		assertThat(modificationAttribute.size()).isEqualTo(1);
 	}
 
     @Test
@@ -514,12 +510,11 @@ public class DirContextAdapterTest {
 		tested.removeAttributeValue("abc", "123");
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
-		assertEquals(1, modificationItems.length);
+		assertThat(modificationItems.length).isEqualTo(1);
 		Attribute modificationAttribute = modificationItems[0].getAttribute();
-		assertEquals("abc", modificationAttribute.getID());
-		assertEquals(0, modificationAttribute.size());
-		assertEquals(DirContext.REMOVE_ATTRIBUTE, modificationItems[0]
-				.getModificationOp());
+		assertThat(modificationAttribute.getID()).isEqualTo("abc");
+		assertThat(modificationAttribute.size()).isEqualTo(0);
+	    assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
 	}
 
     @Test
@@ -535,60 +530,59 @@ public class DirContextAdapterTest {
 		tested.removeAttributeValue("abc", "123");
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
-		assertEquals(1, modificationItems.length);
+		assertThat(modificationItems.length).isEqualTo(1);
 		Attribute modificationAttribute = modificationItems[0].getAttribute();
-		assertEquals("abc", modificationAttribute.getID());
-		assertEquals(1, modificationAttribute.size());
-		assertEquals("123", modificationAttribute.get());
-		assertEquals(DirContext.REMOVE_ATTRIBUTE, modificationItems[0]
-				.getModificationOp());
+		assertThat(modificationAttribute.getID()).isEqualTo("abc");
+		assertThat(modificationAttribute.size()).isEqualTo(1);
+		assertThat(modificationAttribute.get()).isEqualTo("123");
+	    assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
 	}
 
     @Test
 	public void testSetStringAttribute() throws Exception {
-		assertFalse(tested.isUpdateMode());
+		assertThat(tested.isUpdateMode()).isFalse();
 		tested.setAttributeValue("abc", "123");
 		Attributes attrs = tested.getAttributes();
 		Attribute attr = attrs.get("abc");
-		assertEquals("123", (String) attr.get());
+		assertThat((String) attr.get()).isEqualTo("123");
 	}
 
     @Test
 	public void testSetStringAttributeNull() throws Exception {
-		assertFalse(tested.isUpdateMode());
+		assertThat(tested.isUpdateMode()).isFalse();
 		tested.setAttributeValue("abc", null);
 		Attributes attrs = tested.getAttributes();
 		Attribute attr = attrs.get("abc");
-		assertNull(attr);
+		assertThat(attr).isNull();
 	}
 
     @Test
 	public void testAddAttribute() throws Exception {
 		tested.setUpdateMode(true);
-		assertTrue(tested.isUpdateMode());
+		assertThat(tested.isUpdateMode()).isTrue();
 		tested.setAttributeValue("abc", "123");
 		Attributes attrs = tested.getAttributes();
 		Attribute attr = attrs.get("abc");
-		assertNull(attr);
+		assertThat(attr).isNull();
 
 		ModificationItem[] mods = tested.getModificationItems();
-		assertEquals(1, mods.length);
-		assertEquals(DirContext.ADD_ATTRIBUTE, mods[0].getModificationOp());
+		assertThat(mods.length).isEqualTo(1);
+		assertThat(mods[0].getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
 		attr = mods[0].getAttribute();
-		assertEquals("123", (String) attr.get());
+		assertThat((String) attr.get()).isEqualTo("123");
 
 		String[] modNames = tested.getNamesOfModifiedAttributes();
-		assertEquals(1, modNames.length);
-		assertEquals("abc", modNames[0]);
+		assertThat(modNames.length).isEqualTo(1);
+		assertThat(modNames[0]).isEqualTo("abc");
 
 		tested.update();
 		mods = tested.getModificationItems();
-		assertEquals(0, mods.length);
+		assertThat(mods.length).isEqualTo(0);
 		modNames = tested.getNamesOfModifiedAttributes();
-		assertEquals(0, modNames.length);
+		assertThat(modNames.length).isEqualTo(0);
 		attrs = tested.getAttributes();
 		attr = attrs.get("abc");
-		assertEquals("123", (String) attr.get());
+		assertThat((String) attr.get()).isEqualTo("123");
 	}
 
 	// LDAP-304
@@ -596,18 +590,18 @@ public class DirContextAdapterTest {
 	public void testModifyNull() throws Exception {
 		tested.setAttributeValue("memberDN", null);
 		tested.setUpdateMode(true);
-		assertTrue(tested.isUpdateMode());
+		assertThat(tested.isUpdateMode()).isTrue();
 		tested.setAttributeValue("memberDN", new LdapName("ou=test"));
 
 		ModificationItem[] mods = tested.getModificationItems();
-		assertEquals(1, mods.length);
+		assertThat(mods.length).isEqualTo(1);
 	}
 
     @Test
 	public void testGetDn() throws Exception {
 		DirContextAdapter tested = new DirContextAdapter(DUMMY_NAME);
 		Name result = tested.getDn();
-		assertEquals(DUMMY_NAME, result);
+		assertThat(result).isEqualTo(DUMMY_NAME);
 	}
 
     @Test
@@ -615,14 +609,14 @@ public class DirContextAdapterTest {
 		DirContextAdapter tested = new DirContextAdapter(null, DUMMY_NAME,
 				BASE_NAME);
 		Name result = tested.getDn();
-		assertEquals(DUMMY_NAME, result);
+		assertThat(result).isEqualTo(DUMMY_NAME);
 	}
 
     @Test
 	public void testGetNameInNamespace() {
 		DirContextAdapter tested = new DirContextAdapter(DUMMY_NAME);
 		String result = tested.getNameInNamespace();
-		assertEquals(DUMMY_NAME.toString(), result);
+		assertThat(result).isEqualTo(DUMMY_NAME.toString());
 	}
 
     @Test
@@ -630,38 +624,38 @@ public class DirContextAdapterTest {
 		DirContextAdapter tested = new DirContextAdapter(null,
                 LdapUtils.newLdapName("c=SE"), BASE_NAME);
 		String result = tested.getNameInNamespace();
-		assertEquals(DUMMY_NAME.toString(), result);
+		assertThat(result).isEqualTo(DUMMY_NAME.toString());
 	}
 
     @Test
 	public void testAddMultiAttributes() throws Exception {
 		tested.setUpdateMode(true);
-		assertTrue(tested.isUpdateMode());
+		assertThat(tested.isUpdateMode()).isTrue();
 		tested.setAttributeValues("abc", new String[] { "123", "456" });
 		Attributes attrs = tested.getAttributes();
 		Attribute attr = attrs.get("abc");
-		assertNull(attr);
+		assertThat(attr).isNull();
 		ModificationItem[] mods = tested.getModificationItems();
-		assertEquals(1, mods.length);
-		assertEquals(DirContext.ADD_ATTRIBUTE, mods[0].getModificationOp());
+		assertThat(mods.length).isEqualTo(1);
+		assertThat(mods[0].getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
 		attr = mods[0].getAttribute();
-		assertEquals(2, attr.size());
-		assertEquals("123", (String) attr.get(0));
-		assertEquals("456", (String) attr.get(1));
+		assertThat(attr.size()).isEqualTo(2);
+		assertThat((String) attr.get(0)).isEqualTo("123");
+		assertThat((String) attr.get(1)).isEqualTo("456");
 
 		String[] modNames = tested.getNamesOfModifiedAttributes();
-		assertEquals(1, modNames.length);
-		assertEquals("abc", modNames[0]);
+		assertThat(modNames.length).isEqualTo(1);
+		assertThat(modNames[0]).isEqualTo("abc");
 
 		tested.update();
 		mods = tested.getModificationItems();
-		assertEquals(0, mods.length);
+		assertThat(mods.length).isEqualTo(0);
 		modNames = tested.getNamesOfModifiedAttributes();
-		assertEquals(0, modNames.length);
+		assertThat(modNames.length).isEqualTo(0);
 		attrs = tested.getAttributes();
 		attr = attrs.get("abc");
-		assertEquals("123", (String) attr.get(0));
-		assertEquals("456", (String) attr.get(1));
+		assertThat((String) attr.get(0)).isEqualTo("123");
+		assertThat((String) attr.get(1)).isEqualTo("456");
 	}
 
     @Test
@@ -677,29 +671,29 @@ public class DirContextAdapterTest {
 		tested = new TestableDirContextAdapter();
 
 		tested.setUpdateMode(true);
-		assertTrue(tested.isUpdateMode());
+		assertThat(tested.isUpdateMode()).isTrue();
 		tested.setAttributeValue("abc", null);
 		Attributes attrs = tested.getAttributes();
 		Attribute attr = attrs.get("abc");
-		assertEquals("123", (String) attr.get());
+		assertThat((String) attr.get()).isEqualTo("123");
 
 		ModificationItem[] mods = tested.getModificationItems();
-		assertEquals(1, mods.length);
-		assertEquals(DirContext.REMOVE_ATTRIBUTE, mods[0].getModificationOp());
+		assertThat(mods.length).isEqualTo(1);
+		assertThat(mods[0].getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
 		attr = mods[0].getAttribute();
-		assertEquals("abc", (String) attr.getID());
+		assertThat((String) attr.getID()).isEqualTo("abc");
 		String[] modNames = tested.getNamesOfModifiedAttributes();
-		assertEquals(1, modNames.length);
-		assertEquals("abc", modNames[0]);
+		assertThat(modNames.length).isEqualTo(1);
+		assertThat(modNames[0]).isEqualTo("abc");
 
 		tested.update();
 		mods = tested.getModificationItems();
-		assertEquals(0, mods.length);
+		assertThat(mods.length).isEqualTo(0);
 		modNames = tested.getNamesOfModifiedAttributes();
-		assertEquals(0, modNames.length);
+		assertThat(modNames.length).isEqualTo(0);
 		attrs = tested.getAttributes();
 		attr = attrs.get("abc");
-		assertNull(attr);
+		assertThat(attr).isNull();
 	}
 
     @Test
@@ -721,11 +715,11 @@ public class DirContextAdapterTest {
 		tested.setAttributeValues("abc", new String[] {});
 
 		ModificationItem[] mods = tested.getModificationItems();
-		assertEquals(1, mods.length);
-		assertEquals(DirContext.REMOVE_ATTRIBUTE, mods[0].getModificationOp());
+		assertThat(mods.length).isEqualTo(1);
+		assertThat(mods[0].getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
 		Attribute attr = mods[0].getAttribute();
-		assertEquals("abc", (String) attr.getID());
-		assertEquals(0, attr.size());
+		assertThat((String) attr.getID()).isEqualTo("abc");
+		assertThat(attr.size()).isEqualTo(0);
 	}
 
     @Test
@@ -742,11 +736,11 @@ public class DirContextAdapterTest {
 		tested.setAttributeValue("abc", "234"); // change
 
 		ModificationItem[] mods = tested.getModificationItems();
-		assertEquals(1, mods.length);
-		assertEquals(DirContext.REPLACE_ATTRIBUTE, mods[0].getModificationOp());
+		assertThat(mods.length).isEqualTo(1);
+		assertThat(mods[0].getModificationOp()).isEqualTo(DirContext.REPLACE_ATTRIBUTE);
 		Attribute attr = mods[0].getAttribute();
-		assertEquals("abc", (String) attr.getID());
-		assertEquals("234", (String) attr.get());
+		assertThat((String) attr.getID()).isEqualTo("abc");
+		assertThat((String) attr.get()).isEqualTo("234");
 	}
 
     @Test
@@ -760,11 +754,11 @@ public class DirContextAdapterTest {
 			}
 		}
 		tested = new TestableDirContextAdapter();
-		assertTrue(tested.isUpdateMode());
+		assertThat(tested.isUpdateMode()).isTrue();
 		tested.setAttributeValue("abc", "123"); // change
 
 		ModificationItem[] mods = tested.getModificationItems();
-		assertEquals(0, mods.length);
+		assertThat(mods.length).isEqualTo(0);
 	}
 
     @Test
@@ -781,13 +775,13 @@ public class DirContextAdapterTest {
 			}
 		}
 		tested = new TestableDirContextAdapter();
-		assertTrue(tested.isUpdateMode());
+		assertThat(tested.isUpdateMode()).isTrue();
 		tested.setAttributeValues("abc", new String[] { "123", "qwe" });
 
 		ModificationItem[] mods = tested.getModificationItems();
-		assertEquals(0, mods.length);
+		assertThat(mods.length).isEqualTo(0);
 		String[] modNames = tested.getNamesOfModifiedAttributes();
-		assertEquals(0, modNames.length);
+		assertThat(modNames.length).isEqualTo(0);
 	}
 
     @Test
@@ -807,9 +801,9 @@ public class DirContextAdapterTest {
 		tested.setAttributeValues("abc", new String[] { "qwe", "123" });
 
 		ModificationItem[] mods = tested.getModificationItems();
-		assertEquals(0, mods.length);
+		assertThat(mods.length).isEqualTo(0);
 		String[] modNames = tested.getNamesOfModifiedAttributes();
-		assertEquals(0, modNames.length);
+		assertThat(modNames.length).isEqualTo(0);
 	}
 
     @Test
@@ -826,16 +820,16 @@ public class DirContextAdapterTest {
 			}
 		}
 		tested = new TestableDirContextAdapter();
-		assertTrue(tested.isUpdateMode());
+		assertThat(tested.isUpdateMode()).isTrue();
 		tested.setAttributeValues("abc", new String[] { "qwe", "123" }, true);
 
 		// change
 		ModificationItem[] mods = tested.getModificationItems();
-		assertEquals(1, mods.length);
-		assertEquals(DirContext.REPLACE_ATTRIBUTE, mods[0].getModificationOp());
+		assertThat(mods.length).isEqualTo(1);
+		assertThat(mods[0].getModificationOp()).isEqualTo(DirContext.REPLACE_ATTRIBUTE);
 		Attribute attr = mods[0].getAttribute();
-		assertEquals("qwe", attr.get(0));
-		assertEquals("123", attr.get(1));
+		assertThat(attr.get(0)).isEqualTo("qwe");
+		assertThat(attr.get(1)).isEqualTo("123");
 	}
 
 	/**
@@ -857,18 +851,18 @@ public class DirContextAdapterTest {
 			}
 		}
 		tested = new TestableDirContextAdapter();
-		assertTrue(tested.isUpdateMode());
+		assertThat(tested.isUpdateMode()).isTrue();
 		tested.setAttributeValues("title", new String[] { "Jim", "George",
 				"Juergen" }, true);
 
 		// change
 		ModificationItem[] mods = tested.getModificationItems();
-		assertEquals(1, mods.length);
-		assertEquals(DirContext.REPLACE_ATTRIBUTE, mods[0].getModificationOp());
+		assertThat(mods.length).isEqualTo(1);
+		assertThat(mods[0].getModificationOp()).isEqualTo(DirContext.REPLACE_ATTRIBUTE);
 		Attribute attr = mods[0].getAttribute();
-		assertEquals("Jim", attr.get(0));
-		assertEquals("George", attr.get(1));
-		assertEquals("Juergen", attr.get(2));
+		assertThat(attr.get(0)).isEqualTo("Jim");
+		assertThat(attr.get(1)).isEqualTo("George");
+		assertThat(attr.get(2)).isEqualTo("Juergen");
 	}
 
     @Test
@@ -885,16 +879,15 @@ public class DirContextAdapterTest {
 			}
 		}
 		tested = new TestableDirContextAdapter();
-		assertTrue(tested.isUpdateMode());
+		assertThat(tested.isUpdateMode()).isTrue();
 		tested
 				.setAttributeValues("abc",
 						new String[] { "123", "qwe", "klytt" });
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
-		assertEquals(1, modificationItems.length);
-		assertEquals(DirContext.ADD_ATTRIBUTE, modificationItems[0]
-				.getModificationOp());
-		assertEquals("klytt", modificationItems[0].getAttribute().get());
+		assertThat(modificationItems.length).isEqualTo(1);
+	    assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
+		assertThat(modificationItems[0].getAttribute().get()).isEqualTo("klytt");
 	}
 
     @Test
@@ -911,14 +904,13 @@ public class DirContextAdapterTest {
 			}
 		}
 		tested = new TestableDirContextAdapter();
-		assertTrue(tested.isUpdateMode());
+		assertThat(tested.isUpdateMode()).isTrue();
 		tested.setAttributeValues("abc", new String[] { "123" });
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
-		assertEquals(1, modificationItems.length);
-		assertEquals(DirContext.REMOVE_ATTRIBUTE, modificationItems[0]
-				.getModificationOp());
-		assertEquals("qwe", modificationItems[0].getAttribute().get());
+		assertThat(modificationItems.length).isEqualTo(1);
+	    assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
+		assertThat(modificationItems[0].getAttribute().get()).isEqualTo("qwe");
 	}
 
     @Test
@@ -936,15 +928,14 @@ public class DirContextAdapterTest {
 			}
 		}
 		tested = new TestableDirContextAdapter();
-		assertTrue(tested.isUpdateMode());
+		assertThat(tested.isUpdateMode()).isTrue();
 		tested.setAttributeValues("abc", new String[] { "123" });
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
-		assertEquals(1, modificationItems.length);
-		assertEquals(DirContext.REMOVE_ATTRIBUTE, modificationItems[0]
-				.getModificationOp());
-		assertEquals("qwe", modificationItems[0].getAttribute().get(0));
-		assertEquals("rty", modificationItems[0].getAttribute().get(1));
+		assertThat(modificationItems.length).isEqualTo(1);
+	    assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
+		assertThat(modificationItems[0].getAttribute().get(0)).isEqualTo("qwe");
+		assertThat(modificationItems[0].getAttribute().get(1)).isEqualTo("rty");
 	}
 
     @Test
@@ -961,13 +952,12 @@ public class DirContextAdapterTest {
 			}
 		}
 		tested = new TestableDirContextAdapter();
-		assertTrue(tested.isUpdateMode());
+		assertThat(tested.isUpdateMode()).isTrue();
 		tested.setAttributeValues("abc", null);
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
-		assertEquals(1, modificationItems.length);
-		assertEquals(DirContext.REMOVE_ATTRIBUTE, modificationItems[0]
-				.getModificationOp());
+		assertThat(modificationItems.length).isEqualTo(1);
+	    assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
 	}
 
     @Test
@@ -984,11 +974,11 @@ public class DirContextAdapterTest {
 			}
 		}
 		tested = new TestableDirContextAdapter();
-		assertTrue(tested.isUpdateMode());
+		assertThat(tested.isUpdateMode()).isTrue();
 		tested.setAttributeValues("abc", new String[] { "123", "qwe" });
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
-		assertEquals(0, modificationItems.length);
+		assertThat(modificationItems.length).isEqualTo(0);
 	}
 
     @Test
@@ -1007,28 +997,26 @@ public class DirContextAdapterTest {
 			}
 		}
 		tested = new TestableDirContextAdapter();
-		assertTrue(tested.isUpdateMode());
+		assertThat(tested.isUpdateMode()).isTrue();
 		tested.setAttributeValues("abc", new String[] { "123", "qwe", "klytt",
 				"kalle" });
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
-		assertEquals(2, modificationItems.length);
+		assertThat(modificationItems.length).isEqualTo(2);
 
 		Attribute modifiedAttribute = modificationItems[0].getAttribute();
-		assertEquals(DirContext.REMOVE_ATTRIBUTE, modificationItems[0]
-				.getModificationOp());
-		assertEquals("abc", modifiedAttribute.getID());
-		assertEquals(2, modifiedAttribute.size());
-		assertEquals("rty", modifiedAttribute.get(0));
-		assertEquals("uio", modifiedAttribute.get(1));
+	    assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
+		assertThat(modifiedAttribute.getID()).isEqualTo("abc");
+		assertThat(modifiedAttribute.size()).isEqualTo(2);
+		assertThat(modifiedAttribute.get(0)).isEqualTo("rty");
+		assertThat(modifiedAttribute.get(1)).isEqualTo("uio");
 
-		assertEquals(DirContext.ADD_ATTRIBUTE, modificationItems[1]
-				.getModificationOp());
+	    assertThat(modificationItems[1].getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
 		modifiedAttribute = modificationItems[1].getAttribute();
-		assertEquals("abc", modifiedAttribute.getID());
-		assertEquals(2, modifiedAttribute.size());
-		assertEquals("klytt", modifiedAttribute.get(0));
-		assertEquals("kalle", modifiedAttribute.get(1));
+		assertThat(modifiedAttribute.getID()).isEqualTo("abc");
+		assertThat(modifiedAttribute.size()).isEqualTo(2);
+		assertThat(modifiedAttribute.get(0)).isEqualTo("klytt");
+		assertThat(modifiedAttribute.get(1)).isEqualTo("kalle");
 	}
 
     @Test
@@ -1045,12 +1033,12 @@ public class DirContextAdapterTest {
 			}
 		}
 		tested = new TestableDirContextAdapter();
-		assertTrue(tested.isUpdateMode());
+		assertThat(tested.isUpdateMode()).isTrue();
 		tested.setAttributeValues("def", new String[] { "kalle", "klytt" });
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
-		assertEquals(1, modificationItems.length);
-		assertEquals("def", modificationItems[0].getAttribute().getID());
+		assertThat(modificationItems.length).isEqualTo(1);
+		assertThat(modificationItems[0].getAttribute().getID()).isEqualTo("def");
 	}
 
     @Test
@@ -1064,26 +1052,26 @@ public class DirContextAdapterTest {
 			}
 		}
 		tested = new TestableDirContextAdapter();
-		assertTrue(tested.isUpdateMode());
+		assertThat(tested.isUpdateMode()).isTrue();
 		tested.setAttributeValue("abc", "234"); // change
 		tested.setAttributeValue("abc", "987");
 		// change a second time
 		ModificationItem[] mods = tested.getModificationItems();
-		assertEquals(1, mods.length);
-		assertEquals(DirContext.REPLACE_ATTRIBUTE, mods[0].getModificationOp());
+		assertThat(mods.length).isEqualTo(1);
+		assertThat(mods[0].getModificationOp()).isEqualTo(DirContext.REPLACE_ATTRIBUTE);
 		Attribute attr = mods[0].getAttribute();
-		assertEquals("abc", (String) attr.getID());
-		assertEquals("987", (String) attr.get());
+		assertThat((String) attr.getID()).isEqualTo("abc");
+		assertThat((String) attr.get()).isEqualTo("987");
 
 		tested.update();
 		mods = tested.getModificationItems();
-		assertEquals(0, mods.length);
+		assertThat(mods.length).isEqualTo(0);
 		String[] modNames = tested.getNamesOfModifiedAttributes();
-		assertEquals(0, modNames.length);
+		assertThat(modNames.length).isEqualTo(0);
 		Attributes attrs = tested.getAttributes();
 		attr = attrs.get("abc");
-		assertEquals("987", (String) attr.get());
-		assertEquals("987", tested.getStringAttribute("abc"));
+		assertThat((String) attr.get()).isEqualTo("987");
+		assertThat(tested.getStringAttribute("abc")).isEqualTo("987");
 	}
 
     @Test
@@ -1098,49 +1086,49 @@ public class DirContextAdapterTest {
 			}
 		}
 		tested = new TestableDirContextAdapter();
-		assertTrue(tested.isUpdateMode());
+		assertThat(tested.isUpdateMode()).isTrue();
 		tested.setAttributeValue("abc", "234"); // change
 		tested.setAttributeValue("qwe", null); // remove
 		tested.setAttributeValue("zzz", "new"); // new
 		Attributes attrs = tested.getAttributes();
 		Attribute attr = attrs.get("abc");
-		assertEquals("123", (String) attr.get());
-		assertEquals(2, attrs.size());
+		assertThat((String) attr.get()).isEqualTo("123");
+		assertThat(attrs.size()).isEqualTo(2);
 
 		ModificationItem[] mods = tested.getModificationItems();
-		assertEquals(3, mods.length);
+		assertThat(mods.length).isEqualTo(3);
 		String[] modNames = tested.getNamesOfModifiedAttributes();
-		assertEquals(3, modNames.length);
+		assertThat(modNames.length).isEqualTo(3);
 
 		ModificationItem mod = getModificationItem(mods,
 				DirContext.REPLACE_ATTRIBUTE);
-		assertNotNull(mod);
+		assertThat(mod).isNotNull();
 		attr = mod.getAttribute();
-		assertEquals("abc", (String) attr.getID());
-		assertEquals("234", (String) attr.get());
+		assertThat((String) attr.getID()).isEqualTo("abc");
+		assertThat((String) attr.get()).isEqualTo("234");
 
 		mod = getModificationItem(mods, DirContext.REMOVE_ATTRIBUTE);
-		assertNotNull(mod);
+		assertThat(mod).isNotNull();
 		attr = mod.getAttribute();
-		assertEquals("qwe", (String) attr.getID());
+		assertThat((String) attr.getID()).isEqualTo("qwe");
 
 		mod = getModificationItem(mods, DirContext.ADD_ATTRIBUTE);
-		assertNotNull(mod);
+		assertThat(mod).isNotNull();
 		attr = mod.getAttribute();
-		assertEquals("zzz", (String) attr.getID());
-		assertEquals("new", (String) attr.get());
+		assertThat((String) attr.getID()).isEqualTo("zzz");
+		assertThat((String) attr.get()).isEqualTo("new");
 
 		tested.update();
 		mods = tested.getModificationItems();
-		assertEquals(0, mods.length);
+		assertThat(mods.length).isEqualTo(0);
 		modNames = tested.getNamesOfModifiedAttributes();
-		assertEquals(0, modNames.length);
+		assertThat(modNames.length).isEqualTo(0);
 
 		attrs = tested.getAttributes();
-		assertEquals(2, attrs.size());
+		assertThat(attrs.size()).isEqualTo(2);
 		attr = attrs.get("abc");
-		assertEquals("234", (String) attr.get());
-		assertEquals("new", tested.getStringAttribute("zzz"));
+		assertThat((String) attr.get()).isEqualTo("234");
+		assertThat(tested.getStringAttribute("zzz")).isEqualTo("new");
 	}
 
 	/**
@@ -1164,25 +1152,25 @@ public class DirContextAdapterTest {
 
 		// Verify result
 		ModificationItem[] mods = tested.getModificationItems();
-		assertEquals(1, mods.length);
-		assertEquals(DirContext.REPLACE_ATTRIBUTE, mods[0].getModificationOp());
+		assertThat(mods.length).isEqualTo(1);
+		assertThat(mods[0].getModificationOp()).isEqualTo(DirContext.REPLACE_ATTRIBUTE);
 
 		Attribute modificationAttribute = mods[0].getAttribute();
-		assertEquals("cn", modificationAttribute.getID());
-		assertEquals("nisse hult", modificationAttribute.get());
+		assertThat(modificationAttribute.getID()).isEqualTo("cn");
+		assertThat(modificationAttribute.get()).isEqualTo("nisse hult");
 	}
 
     @Test
 	public void testGetStringAttributes_NullValue() {
 		String result = tested.getStringAttribute("someAbsentAttribute");
-		assertNull(result);
+		assertThat(result).isNull();
 	}
 
     @Test
 	public void testGetStringAttributes_AttributeExists_NullValue() {
 		tested.setAttribute(new BasicAttribute("someAttribute", null));
 		String result = tested.getStringAttribute("someAttribute");
-		assertNull(result);
+		assertThat(result).isNull();
 	}
 
 	private ModificationItem getModificationItem(ModificationItem[] mods,
@@ -1209,15 +1197,13 @@ public class DirContextAdapterTest {
 
 		// Perform test
 		ModificationItem[] modificationItems = tested.getModificationItems();
-		assertEquals(2, modificationItems.length);
+		assertThat(modificationItems.length).isEqualTo(2);
 		ModificationItem modificationItem = modificationItems[0];
-		assertEquals(DirContext.REMOVE_ATTRIBUTE, modificationItem
-				.getModificationOp());
-		assertEquals("Some Person", modificationItem.getAttribute().get());
+	    assertThat(modificationItem.getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
+		assertThat(modificationItem.getAttribute().get()).isEqualTo("Some Person");
 		modificationItem = modificationItems[1];
-		assertEquals(DirContext.ADD_ATTRIBUTE, modificationItem
-				.getModificationOp());
-		assertEquals("some person", modificationItem.getAttribute().get());
+	    assertThat(modificationItem.getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
+		assertThat(modificationItem.getAttribute().get()).isEqualTo("some person");
 	}
 
 	/**
@@ -1233,7 +1219,7 @@ public class DirContextAdapterTest {
 		tested.setAttributeValue("abc", new byte[] { 1, 2, 3 });
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
-		assertEquals(0, modificationItems.length);
+		assertThat(modificationItems.length).isEqualTo(0);
 	}
 
 	/**
@@ -1246,14 +1232,13 @@ public class DirContextAdapterTest {
 		CompositeName compositeName = new CompositeName();
 		compositeName.add("cn=Some\\\\Person6,ou=company1,c=Sweden");
 		DirContextAdapter adapter = new DirContextAdapter(compositeName);
-		assertEquals("cn=Some\\\\Person6,ou=company1,c=Sweden", adapter.getDn()
-				.toString());
+		assertThat(adapter.getDn().toString()).isEqualTo("cn=Some\\\\Person6,ou=company1,c=Sweden");
 	}
 
     @Test
 	public void testStringConstructor() {
 		DirContextAdapter tested = new DirContextAdapter("cn=john doe, ou=company");
-		assertEquals(LdapUtils.newLdapName("cn=john doe, ou=company"), tested.getDn());
+		assertThat(tested.getDn()).isEqualTo(LdapUtils.newLdapName("cn=john doe, ou=company"));
 	}
 
     @Test
@@ -1266,7 +1251,7 @@ public class DirContextAdapterTest {
 
         tested.addAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
         ModificationItem[] modificationItems = tested.getModificationItems();
-        assertEquals(0, modificationItems.length);
+        assertThat(modificationItems.length).isEqualTo(0);
     }
 
     @Test
@@ -1279,7 +1264,7 @@ public class DirContextAdapterTest {
 
         tested.addAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
         ModificationItem[] modificationItems = tested.getModificationItems();
-        assertEquals(0, modificationItems.length);
+        assertThat(modificationItems.length).isEqualTo(0);
     }
 
     @Test
@@ -1292,11 +1277,11 @@ public class DirContextAdapterTest {
 
         tested.removeAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
         ModificationItem[] modificationItems = tested.getModificationItems();
-        assertEquals(1, modificationItems.length);
+        assertThat(modificationItems.length).isEqualTo(1);
 
         ModificationItem modificationItem = modificationItems[0];
-        assertEquals(DirContext.REMOVE_ATTRIBUTE, modificationItem.getModificationOp());
-        assertEquals("uniqueMember", modificationItem.getAttribute().getID());
+        assertThat(modificationItem.getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
+        assertThat(modificationItem.getAttribute().getID()).isEqualTo("uniqueMember");
     }
 
     @Test
@@ -1311,12 +1296,12 @@ public class DirContextAdapterTest {
 
         tested.removeAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
         ModificationItem[] modificationItems = tested.getModificationItems();
-        assertEquals(1, modificationItems.length);
+        assertThat(modificationItems.length).isEqualTo(1);
 
         ModificationItem modificationItem = modificationItems[0];
-        assertEquals(DirContext.REMOVE_ATTRIBUTE, modificationItem.getModificationOp());
-        assertEquals("uniqueMember", modificationItem.getAttribute().getID());
-        assertEquals("cn=john doe,OU=company", modificationItem.getAttribute().get());
+        assertThat(modificationItem.getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
+        assertThat(modificationItem.getAttribute().getID()).isEqualTo("uniqueMember");
+        assertThat(modificationItem.getAttribute().get()).isEqualTo("cn=john doe,OU=company");
     }
 
     @Test
@@ -1329,12 +1314,12 @@ public class DirContextAdapterTest {
 
         tested.addAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=jane doe, ou=company"));
         ModificationItem[] modificationItems = tested.getModificationItems();
-        assertEquals(1, modificationItems.length);
+        assertThat(modificationItems.length).isEqualTo(1);
 
         ModificationItem modificationItem = modificationItems[0];
-        assertEquals(DirContext.ADD_ATTRIBUTE, modificationItem.getModificationOp());
-        assertEquals("uniqueMember", modificationItem.getAttribute().getID());
-        assertEquals("cn=jane doe, ou=company", modificationItem.getAttribute().get());
+        assertThat(modificationItem.getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
+        assertThat(modificationItem.getAttribute().getID()).isEqualTo("uniqueMember");
+        assertThat(modificationItem.getAttribute().get()).isEqualTo("cn=jane doe, ou=company");
     }
 
     @Test
@@ -1347,7 +1332,7 @@ public class DirContextAdapterTest {
 
         tested.setAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
         ModificationItem[] modificationItems = tested.getModificationItems();
-        assertEquals(0, modificationItems.length);
+        assertThat(modificationItems.length).isEqualTo(0);
     }
 
     @Test
@@ -1360,7 +1345,7 @@ public class DirContextAdapterTest {
 
         tested.setAttributeValues("uniqueMember", new Object[]{LdapUtils.newLdapName("cn=john doe, ou=company")});
         ModificationItem[] modificationItems = tested.getModificationItems();
-        assertEquals(0, modificationItems.length);
+        assertThat(modificationItems.length).isEqualTo(0);
     }
 
     @Test
@@ -1377,11 +1362,11 @@ public class DirContextAdapterTest {
         });
 
         ModificationItem[] modificationItems = tested.getModificationItems();
-        assertEquals(1, modificationItems.length);
+        assertThat(modificationItems.length).isEqualTo(1);
 
         ModificationItem modificationItem = modificationItems[0];
-        assertEquals(DirContext.ADD_ATTRIBUTE, modificationItem.getModificationOp());
-        assertEquals("uniqueMember", modificationItem.getAttribute().getID());
-        assertEquals("cn=jane doe, ou=company", modificationItem.getAttribute().get());
+        assertThat(modificationItem.getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
+        assertThat(modificationItem.getAttribute().getID()).isEqualTo("uniqueMember");
+        assertThat(modificationItem.getAttribute().get()).isEqualTo("cn=jane doe, ou=company");
     }
 }

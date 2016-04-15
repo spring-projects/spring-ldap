@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package org.springframework.ldap.support;
 import org.junit.Test;
 import org.springframework.ldap.BadLdapGrammarException;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Unit test for the LdapEncode class.
@@ -31,7 +31,7 @@ public class LdapEncoderTest  {
     @Test
     public void testFilterEncode() {
         String correct = "\\2aa\\2ab\\28c\\29d\\2a\\5c";
-        assertEquals(correct, LdapEncoder.filterEncode("*a*b(c)d*\\"));
+        assertThat(LdapEncoder.filterEncode("*a*b(c)d*\\")).isEqualTo(correct);
 
     }
 
@@ -40,7 +40,7 @@ public class LdapEncoderTest  {
 
         String res = LdapEncoder.nameEncode("# foo ,+\"\\<>; ");
 
-        assertEquals("\\# foo \\,\\+\\\"\\\\\\<\\>\\;\\ ", res);
+        assertThat(res).isEqualTo("\\# foo \\,\\+\\\"\\\\\\<\\>\\;\\ ");
     }
 
     @Test
@@ -49,7 +49,7 @@ public class LdapEncoderTest  {
         String res = LdapEncoder
                 .nameDecode("\\# foo \\,\\+\\\"\\\\\\<\\>\\;\\ ");
 
-        assertEquals("# foo ,+\"\\<>; ", res);
+        assertThat(res).isEqualTo("# foo ,+\"\\<>; ");
     }
 
     @Test(expected = BadLdapGrammarException.class)

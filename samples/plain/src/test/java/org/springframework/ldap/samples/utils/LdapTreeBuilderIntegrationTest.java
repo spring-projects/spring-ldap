@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static junit.framework.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ContextConfiguration(locations = { "/config/testContext.xml" })
 public class LdapTreeBuilderIntegrationTest extends AbstractJUnit4SpringContextTests {
@@ -63,8 +63,8 @@ public class LdapTreeBuilderIntegrationTest extends AbstractJUnit4SpringContextT
 
 		public void visit(DirContextOperations node, int currentDepth) {
 			LdapName next = keyIterator.next();
-			assertEquals(next, node.getDn());
-			assertEquals(names.get(next).intValue(), currentDepth);
+			assertThat(node.getDn()).isEqualTo(next);
+			assertThat(currentDepth).isEqualTo(names.get(next).intValue());
 		}
 	}
 

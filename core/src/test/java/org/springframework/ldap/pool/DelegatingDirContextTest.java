@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,8 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -45,14 +42,14 @@ public class DelegatingDirContextTest extends AbstractPoolTestCase {
                     DirContextType.READ_ONLY);
             fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
 
         try {
             new DelegatingDirContext(keyedObjectPoolMock, dirContextMock, null);
             fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
     }
 
@@ -65,15 +62,15 @@ public class DelegatingDirContextTest extends AbstractPoolTestCase {
 
         final Context delegateContext = delegatingDirContext
                 .getDelegateContext();
-        assertEquals(dirContextMock, delegateContext);
+        assertThat(delegateContext).isEqualTo(dirContextMock);
 
         final DirContext delegateDirContext = delegatingDirContext
                 .getDelegateDirContext();
-        assertEquals(dirContextMock, delegateDirContext);
+        assertThat(delegateDirContext).isEqualTo(dirContextMock);
 
         final DirContext innerDelegateDirContext = delegatingDirContext
                 .getInnermostDelegateDirContext();
-        assertEquals(dirContextMock, innerDelegateDirContext);
+        assertThat(innerDelegateDirContext).isEqualTo(dirContextMock);
 
         delegatingDirContext.assertOpen();
 
@@ -86,11 +83,11 @@ public class DelegatingDirContextTest extends AbstractPoolTestCase {
 
         final DirContext delegateDirContext2 = delegatingDirContext2
                 .getDelegateDirContext();
-        assertEquals(delegatingDirContext, delegateDirContext2);
+        assertThat(delegateDirContext2).isEqualTo(delegatingDirContext);
 
         final DirContext innerDelegateDirContext2 = delegatingDirContext2
                 .getInnermostDelegateDirContext();
-        assertEquals(dirContextMock, innerDelegateDirContext2);
+        assertThat(innerDelegateDirContext2).isEqualTo(dirContextMock);
 
         delegatingDirContext2.assertOpen();
 
@@ -99,11 +96,11 @@ public class DelegatingDirContextTest extends AbstractPoolTestCase {
 
         final DirContext delegateContext2closed = delegatingDirContext2
                 .getDelegateDirContext();
-        assertNull(delegateContext2closed);
+        assertThat(delegateContext2closed).isNull();
 
         final DirContext innerDelegateContext2closed = delegatingDirContext2
                 .getInnermostDelegateDirContext();
-        assertNull(innerDelegateContext2closed);
+        assertThat(innerDelegateContext2closed).isNull();
 
         try {
             delegatingDirContext2.assertOpen();
@@ -117,11 +114,11 @@ public class DelegatingDirContextTest extends AbstractPoolTestCase {
 
         final DirContext delegateDirContextClosed = delegatingDirContext
                 .getDelegateDirContext();
-        assertNull(delegateDirContextClosed);
+        assertThat(delegateDirContextClosed).isNull();
 
         final DirContext innerDelegateDirContextClosed = delegatingDirContext
                 .getInnermostDelegateDirContext();
-        assertNull(innerDelegateDirContextClosed);
+        assertThat(innerDelegateDirContextClosed).isNull();
 
         try {
             delegatingDirContext.assertOpen();
@@ -140,33 +137,33 @@ public class DelegatingDirContextTest extends AbstractPoolTestCase {
         // Wrap the DirContext once
         final DelegatingDirContext delegatingDirContext = new DelegatingDirContext(
                 keyedObjectPoolMock, dirContextMock, DirContextType.READ_ONLY);
-        assertEquals(dirContextMock.toString(), delegatingDirContext.toString());
+        assertThat(delegatingDirContext.toString()).isEqualTo(dirContextMock.toString());
         delegatingDirContext.hashCode(); // Run it to make sure it doesn't
                                             // fail
 
-        assertTrue(delegatingDirContext.equals(delegatingDirContext));
-        assertFalse(delegatingDirContext.equals(new Object()));
+        assertThat(delegatingDirContext.equals(delegatingDirContext)).isTrue();
+        assertThat(delegatingDirContext.equals(new Object())).isFalse();
 
         final DelegatingDirContext delegatingDirContext2 = new DelegatingDirContext(
                 keyedObjectPoolMock, dirContextMock, DirContextType.READ_ONLY);
-        assertTrue(delegatingDirContext.equals(delegatingDirContext2));
-        assertTrue(delegatingDirContext2.equals(delegatingDirContext));
-        assertTrue(delegatingDirContext.equals(dirContextMock));
+        assertThat(delegatingDirContext.equals(delegatingDirContext2)).isTrue();
+        assertThat(delegatingDirContext2.equals(delegatingDirContext)).isTrue();
+        assertThat(delegatingDirContext.equals(dirContextMock)).isTrue();
 
         // Close the context and try again
         delegatingDirContext.close();
 
-        assertEquals("DirContext is closed", delegatingDirContext.toString());
-        assertEquals(0, delegatingDirContext.hashCode()); // Run it to make
+        assertThat(delegatingDirContext.toString()).isEqualTo("DirContext is closed");
+        assertThat(delegatingDirContext.hashCode()).isEqualTo(0); // Run it to make
                                                             // sure it doesn't
                                                             // fail
 
-        assertTrue(delegatingDirContext.equals(delegatingDirContext));
-        assertFalse(delegatingDirContext.equals(new Object()));
+        assertThat(delegatingDirContext.equals(delegatingDirContext)).isTrue();
+        assertThat(delegatingDirContext.equals(new Object())).isFalse();
 
-        assertFalse(delegatingDirContext.equals(delegatingDirContext2));
-        assertFalse(delegatingDirContext2.equals(delegatingDirContext));
-        assertFalse(delegatingDirContext.equals(dirContextMock));
+        assertThat(delegatingDirContext.equals(delegatingDirContext2)).isFalse();
+        assertThat(delegatingDirContext2.equals(delegatingDirContext)).isFalse();
+        assertThat(delegatingDirContext.equals(dirContextMock)).isFalse();
 
         verify(keyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, dirContextMock);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,31 +90,31 @@ public class LdapTemplatePagedSearchITest extends
         requestControl = new PagedResultsRequestControl(3);
         tested.search(searchExecutor, callbackHandler, requestControl);
         cookie = requestControl.getCookie();
-        assertNotNull("Cookie should not be null yet", cookie.getCookie());
+        assertThat(cookie.getCookie()).as("Cookie should not be null yet").isNotNull();
         list = callbackHandler.getList();
-        assertEquals(3, list.size());
+        assertThat(list).hasSize(3);
         person = (Person) list.get(0);
-        assertEquals("Some Person", person.getFullname());
-        assertEquals("+46 555-123456", person.getPhone());
+        assertThat(person.getFullname()).isEqualTo("Some Person");
+        assertThat(person.getPhone()).isEqualTo("+46 555-123456");
         person = (Person) list.get(1);
-        assertEquals("Some Person2", person.getFullname());
-        assertEquals("+46 555-654321", person.getPhone());
+        assertThat(person.getFullname()).isEqualTo("Some Person2");
+        assertThat(person.getPhone()).isEqualTo("+46 555-654321");
         person = (Person) list.get(2);
-        assertEquals("Some Person3", person.getFullname());
-        assertEquals("+46 555-123654", person.getPhone());
+        assertThat(person.getFullname()).isEqualTo("Some Person3");
+        assertThat(person.getPhone()).isEqualTo("+46 555-123654");
 
         // Prepare for second and last search
         requestControl = new PagedResultsRequestControl(3, cookie);
         tested.search(searchExecutor, callbackHandler, requestControl);
         cookie = requestControl.getCookie();
-        assertNull("Cookie should be null now", cookie.getCookie());
-        assertEquals(5, list.size());
+        assertThat(cookie.getCookie()).as("Cookie should be null now").isNull();
+        assertThat(list).hasSize(5);
         person = (Person) list.get(3);
-        assertEquals("Some Person", person.getFullname());
-        assertEquals("+46 555-456321", person.getPhone());
+        assertThat(person.getFullname()).isEqualTo("Some Person");
+        assertThat(person.getPhone()).isEqualTo("+46 555-456321");
         person = (Person) list.get(4);
-        assertEquals("Some Person", person.getFullname());
-        assertEquals("+45 555-654123", person.getPhone());
+        assertThat(person.getFullname()).isEqualTo("Some Person");
+        assertThat(person.getPhone()).isEqualTo("+45 555-654123");
     }
 
     public void testSearch_PagedResult_ConvenienceMethod() {
@@ -128,27 +128,27 @@ public class LdapTemplatePagedSearchITest extends
         tested.search(BASE, FILTER_STRING, searchControls,
                 callbackHandler, requestControl);
         cookie = requestControl.getCookie();
-        assertNotNull("Cookie should not be null yet", cookie.getCookie());
+        assertThat(cookie.getCookie()).as("Cookie should not be null yet").isNotNull();
         list = callbackHandler.getList();
-        assertEquals(3, list.size());
+        assertThat(list).hasSize(3);
         person = (Person) list.get(0);
-        assertEquals("Some Person", person.getFullname());
+        assertThat(person.getFullname()).isEqualTo("Some Person");
         person = (Person) list.get(1);
-        assertEquals("Some Person2", person.getFullname());
+        assertThat(person.getFullname()).isEqualTo("Some Person2");
         person = (Person) list.get(2);
-        assertEquals("Some Person3", person.getFullname());
+        assertThat(person.getFullname()).isEqualTo("Some Person3");
 
         // Prepare for second and last search
         requestControl = new PagedResultsRequestControl(3, cookie);
         tested.search(BASE, FILTER_STRING, searchControls,
                 callbackHandler, requestControl);
         cookie = requestControl.getCookie();
-        assertNull("Cookie should be null now", cookie.getCookie());
-        assertEquals(5, list.size());
+        assertThat(cookie.getCookie()).as("Cookie should be null now").isNull();
+        assertThat(list).hasSize(5);
         person = (Person) list.get(3);
-        assertEquals("Some Person", person.getFullname());
+        assertThat(person.getFullname()).isEqualTo("Some Person");
         person = (Person) list.get(4);
-        assertEquals("Some Person", person.getFullname());
+        assertThat(person.getFullname()).isEqualTo("Some Person");
     }
 
     public void setTested(LdapTemplate tested) {

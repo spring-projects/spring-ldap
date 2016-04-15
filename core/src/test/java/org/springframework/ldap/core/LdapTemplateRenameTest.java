@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ import javax.naming.Name;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -91,7 +91,7 @@ public class LdapTemplateRenameTest {
             tested.rename(oldNameMock, newNameMock);
             fail("NameAlreadyBoundException expected");
         } catch (NameAlreadyBoundException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
 
         verify(dirContextMock).close();
@@ -109,7 +109,7 @@ public class LdapTemplateRenameTest {
             tested.rename(oldNameMock, newNameMock);
             fail("UncategorizedLdapException expected");
         } catch (UncategorizedLdapException expected) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
 
         verify(dirContextMock).close();

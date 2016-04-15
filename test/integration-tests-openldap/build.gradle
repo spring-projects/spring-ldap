@@ -14,7 +14,8 @@ dependencies {
                 "gsbase:gsbase:$gsbaseVersion",
                 "junit:junit:$junitVersion",
                 "com.sun:ldapbp:1.0",
-                "org.slf4j:slf4j-log4j12:$slf4jVersion"
+                "org.slf4j:slf4j-log4j12:$slf4jVersion",
+                "org.assertj:assertj-core:$assertjVersion"
 
 }
 

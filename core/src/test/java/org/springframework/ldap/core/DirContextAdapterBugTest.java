@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,7 @@ import javax.naming.Name;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttributes;
 
-import static org.junit.Assert.assertEquals;
-
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Unit tests that serve as regression tests for bugs that have been fixed.
@@ -42,7 +41,7 @@ public class DirContextAdapterBugTest {
         ctx.setAttributeValues("myattr", new String[] { "a", "b" });
         ctx.setAttributeValues("myattr", new String[] { "a", "b", "c" });
 
-        assertEquals(0, ctx.getModificationItems().length);
+        assertThat(ctx.getModificationItems().length).isEqualTo(0);
     }
 
     @Test
@@ -55,7 +54,7 @@ public class DirContextAdapterBugTest {
         ctx.setAttributeValues("myattr", new String[] { "a", "b", "d" });
         ctx.setAttributeValues("myattr", new String[] { "a", "b", "c" });
 
-        assertEquals(0, ctx.getModificationItems().length);
+        assertThat(ctx.getModificationItems().length).isEqualTo(0);
     }
 
     /**
@@ -74,7 +73,7 @@ public class DirContextAdapterBugTest {
         ctx.setAttributeValues("myattr", new String[] { "a" });
         ctx.setAttributeValues("myattr", null);
 
-        assertEquals(1, ctx.getModificationItems().length);
+        assertThat(ctx.getModificationItems().length).isEqualTo(1);
     }
 
     @Test
@@ -85,7 +84,7 @@ public class DirContextAdapterBugTest {
         ctx.setAttributeValue("myattr", "a");
         ctx.setAttributeValue("myattr", "b");
 
-        assertEquals(0, ctx.getModificationItems().length);
+        assertThat(ctx.getModificationItems().length).isEqualTo(0);
     }
 
     private static class UpdateAdapter extends DirContextAdapter {

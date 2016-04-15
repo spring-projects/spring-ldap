@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,7 @@ import javax.naming.ldap.LdapName;
 import java.util.LinkedList;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for LdapTemplate's list methods.
@@ -69,7 +68,7 @@ public class LdapTemplateListITest extends AbstractLdapTemplateIntegrationTest {
 		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		contextMapper.setExpectedValues(ALL_VALUES);
 		List list = tested.listBindings("ou=company2,ou=Sweden" + BASE_STRING, contextMapper);
-		assertEquals(1, list.size());
+		assertThat(list).hasSize(1);
 	}
 
 	@Test
@@ -78,24 +77,24 @@ public class LdapTemplateListITest extends AbstractLdapTemplateIntegrationTest {
 		contextMapper.setExpectedValues(ALL_VALUES);
 		LdapName dn = LdapUtils.newLdapName("ou=company2,ou=Sweden");
 		List list = tested.listBindings(dn, contextMapper);
-		assertEquals(1, list.size());
+		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testListBindings_ContextMapper_MapToPersons() {
 		LdapName dn = LdapUtils.newLdapName("ou=company1,ou=Sweden");
 		List list = tested.listBindings(dn, new PersonContextMapper());
-		assertEquals(3, list.size());
+		assertThat(list).hasSize(3);
 		String personClass = "org.springframework.ldap.itest.Person";
-		assertEquals(personClass, list.get(0).getClass().getName());
-		assertEquals(personClass, list.get(1).getClass().getName());
-		assertEquals(personClass, list.get(2).getClass().getName());
+		assertThat(list.get(0).getClass().getName()).isEqualTo(personClass);
+		assertThat(list.get(1).getClass().getName()).isEqualTo(personClass);
+		assertThat(list.get(2).getClass().getName()).isEqualTo(personClass);
 	}
 
 	@Test
 	public void testList() {
 		List<String> list = tested.list(BASE_STRING);
-		assertEquals(3, list.size());
+		assertThat(list).hasSize(3);
         verifyBindings(list);
 	}
 
@@ -106,15 +105,15 @@ public class LdapTemplateListITest extends AbstractLdapTemplateIntegrationTest {
             transformed.add(LdapUtils.newLdapName(s));
         }
 
-        assertTrue(transformed.contains(LdapUtils.newLdapName("ou=groups")));
-        assertTrue(transformed.contains(LdapUtils.newLdapName("ou=Norway")));
-        assertTrue(transformed.contains(LdapUtils.newLdapName("ou=Sweden")));
+        assertThat(transformed.contains(LdapUtils.newLdapName("ou=groups"))).isTrue();
+        assertThat(transformed.contains(LdapUtils.newLdapName("ou=Norway"))).isTrue();
+        assertThat(transformed.contains(LdapUtils.newLdapName("ou=Sweden"))).isTrue();
     }
 
     @Test
 	public void testList_Name() {
 		List<String> list = tested.list(BASE_NAME);
-		assertEquals(3, list.size());
+		assertThat(list).hasSize(3);
         verifyBindings(list);
 	}
 
@@ -122,40 +121,40 @@ public class LdapTemplateListITest extends AbstractLdapTemplateIntegrationTest {
 	public void testList_Handler() throws Exception {
 		CountNameClassPairCallbackHandler handler = new CountNameClassPairCallbackHandler();
 		tested.list(BASE_STRING, handler);
-		assertEquals(3, handler.getNoOfRows());
+		assertThat(handler.getNoOfRows()).isEqualTo(3);
 	}
 
 	@Test
 	public void testList_Name_Handler() throws Exception {
 		CountNameClassPairCallbackHandler handler = new CountNameClassPairCallbackHandler();
 		tested.list(BASE_NAME, handler);
-		assertEquals(3, handler.getNoOfRows());
+		assertThat(handler.getNoOfRows()).isEqualTo(3);
 	}
 
 	@Test
 	public void testListBindings() {
 		List<String> list = tested.listBindings(BASE_STRING);
-		assertEquals(3, list.size());
+		assertThat(list).hasSize(3);
         verifyBindings(list);
 	}
 
 	@Test
 	public void testListBindings_Name() {
 		List list = tested.listBindings(BASE_NAME);
-		assertEquals(3, list.size());
+		assertThat(list).hasSize(3);
 	}
 
 	@Test
 	public void testListBindings_Handler() throws Exception {
 		CountNameClassPairCallbackHandler handler = new CountNameClassPairCallbackHandler();
 		tested.listBindings(BASE_STRING, handler);
-		assertEquals(3, handler.getNoOfRows());
+		assertThat(handler.getNoOfRows()).isEqualTo(3);
 	}
 
 	@Test
 	public void testListBindings_Name_Handler() throws Exception {
 		CountNameClassPairCallbackHandler handler = new CountNameClassPairCallbackHandler();
 		tested.listBindings(BASE_NAME, handler);
-		assertEquals(3, handler.getNoOfRows());
+		assertThat(handler.getNoOfRows()).isEqualTo(3);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import org.springframework.ldap.support.LdapUtils;
 
 import java.util.HashMap;
 
-import static org.junit.Assert.assertSame;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -62,7 +62,7 @@ public class BaseLdapPathBeanPostProcessorTest {
 
 		verify(ldapPathAwareMock).setBaseLdapPath(new DistinguishedName(expectedPath));
 
-		assertSame(ldapPathAwareMock, result);
+		assertThat(result).isSameAs(ldapPathAwareMock);
 	}
 
     @Test
@@ -74,7 +74,7 @@ public class BaseLdapPathBeanPostProcessorTest {
 
         verify(ldapNameAwareMock).setBaseLdapPath(LdapUtils.newLdapName(expectedPath));
 
-        assertSame(ldapNameAwareMock, result);
+        assertThat(result).isSameAs(ldapNameAwareMock);
     }
 
 
@@ -94,7 +94,7 @@ public class BaseLdapPathBeanPostProcessorTest {
 
         verify(ldapPathAwareMock).setBaseLdapPath(new DistinguishedName(expectedPath));
 
-		assertSame(ldapPathAwareMock, result);
+		assertThat(result).isSameAs(ldapPathAwareMock);
 	}
 
     @Test
@@ -113,7 +113,7 @@ public class BaseLdapPathBeanPostProcessorTest {
 
         verify(ldapNameAwareMock).setBaseLdapPath(LdapUtils.newLdapName(expectedPath));
 
-        assertSame(ldapNameAwareMock, result);
+        assertThat(result).isSameAs(ldapNameAwareMock);
     }
 
     @Test
@@ -129,7 +129,7 @@ public class BaseLdapPathBeanPostProcessorTest {
 
 		BaseLdapPathSource result = tested.getBaseLdapPathSourceFromApplicationContext();
 
-		assertSame(expectedContextSource, result);
+		assertThat(result).isSameAs(expectedContextSource);
 	}
 
     @Test(expected = NoSuchBeanDefinitionException.class)

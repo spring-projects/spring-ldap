@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,9 +32,7 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.ldap.LdapName;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -71,8 +69,8 @@ public class ModifyAttributesOperationRecorderTest {
             protected ModificationItem getCompensatingModificationItem(
                     Attributes originalAttributes,
                     ModificationItem modificationItem) {
-                assertSame(expectedAttributes, originalAttributes);
-                assertSame(incomingItem, modificationItem);
+                assertThat(originalAttributes).isSameAs(expectedAttributes);
+                assertThat(modificationItem).isSameAs(incomingItem);
                 return compensatingItem;
             }
         };
@@ -92,16 +90,15 @@ public class ModifyAttributesOperationRecorderTest {
                 .recordOperation(new Object[]{expectedName, incomingMods});
 
         // Verify outcome
-        assertTrue(operation instanceof ModifyAttributesOperationExecutor);
+        assertThat(operation instanceof ModifyAttributesOperationExecutor).isTrue();
         ModifyAttributesOperationExecutor rollbackOperation = (ModifyAttributesOperationExecutor) operation;
-        assertSame(expectedName, rollbackOperation.getDn());
-        assertSame(ldapOperationsMock, rollbackOperation.getLdapOperations());
+        assertThat(rollbackOperation.getDn()).isSameAs(expectedName);
+        assertThat(rollbackOperation.getLdapOperations()).isSameAs(ldapOperationsMock);
         ModificationItem[] actualModifications = rollbackOperation.getActualModifications();
-        assertEquals(incomingMods.length, actualModifications.length);
-        assertEquals(incomingMods[0], actualModifications[0]);
-        assertEquals(1, rollbackOperation.getCompensatingModifications().length);
-        assertSame(compensatingItem, rollbackOperation
-                .getCompensatingModifications()[0]);
+        assertThat(actualModifications.length).isEqualTo(incomingMods.length);
+        assertThat(actualModifications[0]).isEqualTo(incomingMods[0]);
+        assertThat(rollbackOperation.getCompensatingModifications().length).isEqualTo(1);
+        assertThat(rollbackOperation.getCompensatingModifications()[0]).isSameAs(compensatingItem);
     }
 
     @Test
@@ -121,12 +118,12 @@ public class ModifyAttributesOperationRecorderTest {
                 attributes, originalItem);
 
         // Verify result
-        assertEquals(DirContext.ADD_ATTRIBUTE, result.getModificationOp());
+        assertThat(result.getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
         Attribute resultAttribute = result.getAttribute();
-        assertEquals("someattr", resultAttribute.getID());
+        assertThat(resultAttribute.getID()).isEqualTo("someattr");
         Object object = resultAttribute.get(0);
-        assertEquals("value1", object);
-        assertEquals("value2", resultAttribute.get(1));
+        assertThat(object).isEqualTo("value1");
+        assertThat(resultAttribute.get(1)).isEqualTo("value2");
     }
 
     @Test
@@ -150,12 +147,12 @@ public class ModifyAttributesOperationRecorderTest {
                 attributes, originalItem);
 
         // Verify result
-        assertEquals(DirContext.ADD_ATTRIBUTE, result.getModificationOp());
+        assertThat(result.getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
         Attribute resultAttribute = result.getAttribute();
-        assertEquals("someattr", resultAttribute.getID());
+        assertThat(resultAttribute.getID()).isEqualTo("someattr");
         Object object = resultAttribute.get(0);
-        assertEquals("value1", object);
-        assertEquals("value2", resultAttribute.get(1));
+        assertThat(object).isEqualTo("value1");
+        assertThat(resultAttribute.get(1)).isEqualTo("value2");
     }
 
     @Test
@@ -178,12 +175,12 @@ public class ModifyAttributesOperationRecorderTest {
                 attributes, originalItem);
 
         // Verify result
-        assertEquals(DirContext.REPLACE_ATTRIBUTE, result.getModificationOp());
+        assertThat(result.getModificationOp()).isEqualTo(DirContext.REPLACE_ATTRIBUTE);
         Attribute resultAttribute = result.getAttribute();
-        assertEquals("someattr", resultAttribute.getID());
+        assertThat(resultAttribute.getID()).isEqualTo("someattr");
         Object object = resultAttribute.get(0);
-        assertEquals("value1", object);
-        assertEquals("value2", resultAttribute.get(1));
+        assertThat(object).isEqualTo("value1");
+        assertThat(resultAttribute.get(1)).isEqualTo("value2");
     }
 
     @Test
@@ -202,10 +199,10 @@ public class ModifyAttributesOperationRecorderTest {
                 attributes, originalItem);
 
         // Verify result
-        assertEquals(DirContext.REMOVE_ATTRIBUTE, result.getModificationOp());
+        assertThat(result.getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
         Attribute resultAttribute = result.getAttribute();
-        assertEquals("someattr", resultAttribute.getID());
-        assertEquals(0, resultAttribute.size());
+        assertThat(resultAttribute.getID()).isEqualTo("someattr");
+        assertThat(resultAttribute.size()).isEqualTo(0);
     }
 
     @Test
@@ -224,10 +221,10 @@ public class ModifyAttributesOperationRecorderTest {
                 attributes, originalItem);
 
         // Verify result
-        assertEquals(DirContext.REMOVE_ATTRIBUTE, result.getModificationOp());
+        assertThat(result.getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
         Attribute resultAttribute = result.getAttribute();
-        assertEquals("someattr", resultAttribute.getID());
-        assertEquals(0, resultAttribute.size());
+        assertThat(resultAttribute.getID()).isEqualTo("someattr");
+        assertThat(resultAttribute.size()).isEqualTo(0);
     }
 
     @Test
@@ -250,10 +247,10 @@ public class ModifyAttributesOperationRecorderTest {
                 attributes, originalItem);
 
         // Verify result
-        assertEquals(DirContext.REPLACE_ATTRIBUTE, result.getModificationOp());
+        assertThat(result.getModificationOp()).isEqualTo(DirContext.REPLACE_ATTRIBUTE);
         Attribute resultAttribute = result.getAttribute();
-        assertEquals("someattr", resultAttribute.getID());
-        assertEquals("value1", result.getAttribute().get(0));
-        assertEquals("value2", result.getAttribute().get(1));
+        assertThat(resultAttribute.getID()).isEqualTo("someattr");
+        assertThat(result.getAttribute().get(0)).isEqualTo("value1");
+        assertThat(result.getAttribute().get(1)).isEqualTo("value2");
     }
 }

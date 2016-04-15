@@ -7,5 +7,6 @@ dependencies {
 
     testCompile "junit:junit:$junitVersion",
                 "org.mockito:mockito-core:$mockitoVersion",
-                "gsbase:gsbase:$gsbaseVersion"
+                "gsbase:gsbase:$gsbaseVersion",
+                "org.assertj:assertj-core:$assertjVersion"
 }

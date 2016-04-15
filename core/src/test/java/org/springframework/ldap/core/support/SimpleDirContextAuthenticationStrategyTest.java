@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,7 @@ import org.junit.Test;
 import javax.naming.Context;
 import java.util.Hashtable;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class SimpleDirContextAuthenticationStrategyTest {
 	private SimpleDirContextAuthenticationStrategy tested;
@@ -37,9 +36,9 @@ public class SimpleDirContextAuthenticationStrategyTest {
 		Hashtable env = new Hashtable();
 		tested.setupEnvironment(env, "cn=John Doe", "pw");
 
-		assertEquals("simple", env.get(Context.SECURITY_AUTHENTICATION));
-		assertEquals("cn=John Doe", env.get(Context.SECURITY_PRINCIPAL));
-		assertEquals("pw", env.get(Context.SECURITY_CREDENTIALS));
+		assertThat(env.get(Context.SECURITY_AUTHENTICATION)).isEqualTo("simple");
+		assertThat(env.get(Context.SECURITY_PRINCIPAL)).isEqualTo("cn=John Doe");
+		assertThat(env.get(Context.SECURITY_CREDENTIALS)).isEqualTo("pw");
 	}
 
     @Test
@@ -47,7 +46,7 @@ public class SimpleDirContextAuthenticationStrategyTest {
 		Hashtable env = new Hashtable();
 		tested.processContextAfterCreation(null, "cn=John Doe", "pw");
 
-		assertTrue(env.isEmpty());
+		assertThat(env.isEmpty()).isTrue();
 	}
 
 

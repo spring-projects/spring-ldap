@@ -25,7 +25,8 @@ dependencies {
                 "org.springframework:spring-tx:$spring30Version",
                 "org.springframework:spring-beans:$spring30Version",
                 "junit:junit:$junitVersion",
-                "org.slf4j:slf4j-log4j12:$slf4jVersion"
+                "org.slf4j:slf4j-log4j12:$slf4jVersion",
+                "org.assertj:assertj-core:$assertjVersion"
 
     testCompile("org.springframework.data:spring-data-commons:$springDataVersion") {
         exclude group: "org.springframework"

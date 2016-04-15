@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -49,11 +48,11 @@ public class LdapTemplateQueryDslLdapQueryITest extends AbstractLdapTemplateInte
     public void testUniqueResult() {
         Person person = query.where(qperson.commonName.eq("Some Person3")).uniqueResult();
 
-        assertNotNull(person);
-        assertEquals("Some Person3", person.getCommonName());
-        assertEquals("Person3", person.getSurname());
-        assertEquals("Sweden, Company1, Some Person3", person.getDesc().get(0));
-        assertEquals("+46 555-123654", person.getTelephoneNumber());
+        assertThat(person).isNotNull();
+        assertThat(person.getCommonName()).isEqualTo("Some Person3");
+        assertThat(person.getSurname()).isEqualTo("Person3");
+        assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
+        assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
     }
 
     @Test
@@ -61,9 +60,9 @@ public class LdapTemplateQueryDslLdapQueryITest extends AbstractLdapTemplateInte
         List<Person> persons = query.where(qperson.commonName.eq("Some Person3")).list();
 
         Person person = persons.get(0);
-        assertEquals("Some Person3", person.getCommonName());
-        assertEquals("Person3", person.getSurname());
-        assertEquals("Sweden, Company1, Some Person3", person.getDesc().get(0));
-        assertEquals("+46 555-123654", person.getTelephoneNumber());
+        assertThat(person.getCommonName()).isEqualTo("Some Person3");
+        assertThat(person.getSurname()).isEqualTo("Person3");
+        assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
+        assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,10 +39,8 @@ import javax.naming.directory.Attributes;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Integration tests for {@link org.springframework.ldap.transaction.compensating.manager.ContextSourceAndDataSourceTransactionManager}.
@@ -88,7 +86,7 @@ public class ContextSourceAndDataSourceTransactionManagerIntegrationTest extends
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
 		log.debug("Verifying result");
@@ -99,7 +97,7 @@ public class ContextSourceAndDataSourceTransactionManagerIntegrationTest extends
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
 		try {
@@ -111,7 +109,7 @@ public class ContextSourceAndDataSourceTransactionManagerIntegrationTest extends
 			fail("EmptyResultDataAccessException expected");
 		}
 		catch (EmptyResultDataAccessException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 	}
 
@@ -127,8 +125,8 @@ public class ContextSourceAndDataSourceTransactionManagerIntegrationTest extends
 						return new Object();
 					}
 				});
-		assertNotNull(ldapResult);
-		assertNotNull(dbResult);
+		assertThat(ldapResult).isNotNull();
+		assertThat(dbResult).isNotNull();
 
 		ldapTemplate.unbind("cn=some testperson, ou=company1, ou=Sweden");
 	}
@@ -141,15 +139,15 @@ public class ContextSourceAndDataSourceTransactionManagerIntegrationTest extends
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
 		log.debug("Verifying result");
 
 		Object ldapResult = ldapTemplate.lookup(dn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
-				assertEquals("Person", attributes.get("sn").get());
-				assertEquals("Sweden, Company1, Some Person", attributes.get("description").get());
+				assertThat(attributes.get("sn").get()).isEqualTo("Person");
+				assertThat(attributes.get("description").get()).isEqualTo("Sweden, Company1, Some Person");
 				return new Object();
 			}
 		});
@@ -157,14 +155,14 @@ public class ContextSourceAndDataSourceTransactionManagerIntegrationTest extends
 		Object jdbcResult = jdbcTemplate.queryForObject("select * from PERSON where fullname=?",
 				new Object[] { "Some Person" }, new RowMapper() {
 					public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-						assertEquals("Person", rs.getString("lastname"));
-						assertEquals("Sweden, Company1, Some Person", rs.getString("description"));
+						assertThat(rs.getString("lastname")).isEqualTo("Person");
+						assertThat(rs.getString("description")).isEqualTo("Sweden, Company1, Some Person");
 						return new Object();
 					}
 				});
 
-		assertNotNull(ldapResult);
-		assertNotNull(jdbcResult);
+		assertThat(ldapResult).isNotNull();
+		assertThat(jdbcResult).isNotNull();
 	}
 
 	@Test
@@ -175,8 +173,8 @@ public class ContextSourceAndDataSourceTransactionManagerIntegrationTest extends
 		log.debug("Verifying result");
 		Object ldapResult = ldapTemplate.lookup(dn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
-				assertEquals("Updated Person", attributes.get("sn").get());
-				assertEquals("Updated description", attributes.get("description").get());
+				assertThat(attributes.get("sn").get()).isEqualTo("Updated Person");
+				assertThat(attributes.get("description").get()).isEqualTo("Updated description");
 				return new Object();
 			}
 		});
@@ -184,14 +182,14 @@ public class ContextSourceAndDataSourceTransactionManagerIntegrationTest extends
 		Object jdbcResult = jdbcTemplate.queryForObject("select * from PERSON where fullname=?",
 				new Object[] { "Some Person" }, new RowMapper() {
 					public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-						assertEquals("Updated Person", rs.getString("lastname"));
-						assertEquals("Updated description", rs.getString("description"));
+						assertThat(rs.getString("lastname")).isEqualTo("Updated Person");
+						assertThat(rs.getString("description")).isEqualTo("Updated description");
 						return new Object();
 					}
 				});
 
-		assertNotNull(ldapResult);
-		assertNotNull(jdbcResult);
+		assertThat(ldapResult).isNotNull();
+		assertThat(jdbcResult).isNotNull();
 		dummyDao.update(dn, "Some Person", "Person", "Sweden, Company1, Some Person");
 	}
 
@@ -205,7 +203,7 @@ public class ContextSourceAndDataSourceTransactionManagerIntegrationTest extends
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
 		// Verify that entry was not moved.
@@ -214,17 +212,17 @@ public class ContextSourceAndDataSourceTransactionManagerIntegrationTest extends
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
 		// Verify that original entry was not updated.
 		Object object = ldapTemplate.lookup(dn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
-				assertEquals("Sweden, Company1, Some Person2", attributes.get("description").get());
+				assertThat(attributes.get("description").get()).isEqualTo("Sweden, Company1, Some Person2");
 				return new Object();
 			}
 		});
-		assertNotNull(object);
+		assertThat(object).isNotNull();
 	}
 
 	@Test
@@ -237,12 +235,12 @@ public class ContextSourceAndDataSourceTransactionManagerIntegrationTest extends
 		// Verify that entry was moved and updated.
 		Object object = ldapTemplate.lookup(newDn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
-				assertEquals("Updated description", attributes.get("description").get());
+				assertThat(attributes.get("description").get()).isEqualTo("Updated description");
 				return new Object();
 			}
 		});
 
-		assertNotNull(object);
+		assertThat(object).isNotNull();
 		dummyDao.updateAndRename(newDn, dn, "Sweden, Company1, Some Person2");
 	}
 
@@ -255,19 +253,19 @@ public class ContextSourceAndDataSourceTransactionManagerIntegrationTest extends
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
 		// Verify result - check that the operation was properly rolled back
 		Object result = ldapTemplate.lookup(dn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
-				assertEquals("Person", attributes.get("sn").get());
-				assertEquals("Sweden, Company1, Some Person", attributes.get("description").get());
+				assertThat(attributes.get("sn").get()).isEqualTo("Person");
+				assertThat(attributes.get("description").get()).isEqualTo("Sweden, Company1, Some Person");
 				return new Object();
 			}
 		});
 
-		assertNotNull(result);
+		assertThat(result).isNotNull();
 	}
 
 	@Test
@@ -279,13 +277,13 @@ public class ContextSourceAndDataSourceTransactionManagerIntegrationTest extends
 		// Verify result - check that the operation was not rolled back
 		Object result = ldapTemplate.lookup(dn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
-				assertEquals("Updated lastname", attributes.get("sn").get());
-				assertEquals("Updated description", attributes.get("description").get());
+				assertThat(attributes.get("sn").get()).isEqualTo("Updated lastname");
+				assertThat(attributes.get("description").get()).isEqualTo("Updated description");
 				return new Object();
 			}
 		});
 
-		assertNotNull(result);
+		assertThat(result).isNotNull();
 		dummyDao.update(dn, "Some Person", "Person", "Sweden, Company1, Some Person");
 	}
 
@@ -298,7 +296,7 @@ public class ContextSourceAndDataSourceTransactionManagerIntegrationTest extends
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
 		// Verify result - check that the operation was properly rolled back
@@ -317,8 +315,8 @@ public class ContextSourceAndDataSourceTransactionManagerIntegrationTest extends
 					}
 				});
 
-		assertNotNull(ldapResult);
-		assertNotNull(jdbcResult);
+		assertThat(ldapResult).isNotNull();
+		assertThat(jdbcResult).isNotNull();
 	}
 
 	@Test
@@ -333,7 +331,7 @@ public class ContextSourceAndDataSourceTransactionManagerIntegrationTest extends
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 
 		try {
@@ -346,7 +344,7 @@ public class ContextSourceAndDataSourceTransactionManagerIntegrationTest extends
 			fail("EmptyResultDataAccessException expected");
 		}
 		catch (EmptyResultDataAccessException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 	}
 }

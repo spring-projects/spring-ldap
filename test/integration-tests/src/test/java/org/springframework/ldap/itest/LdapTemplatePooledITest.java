@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,9 +29,8 @@ import org.springframework.ldap.test.LdapTestUtils;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * This test only works against in-process Apache DS server, regardless of configured profile.
@@ -64,9 +63,9 @@ public class LdapTemplatePooledITest extends AbstractJUnit4SpringContextTests {
         LdapTestUtils.cleanAndSetup(contextSource, LdapUtils.emptyLdapName(), new ClassPathResource("/setup_data.ldif"));
 
 		DirContextOperations result = tested.lookupContext("cn=Some Person2, ou=company1,ou=Sweden");
-        assertEquals("Some Person2", result.getStringAttribute("cn"));
-        assertEquals("Person2", result.getStringAttribute("sn"));
-        assertEquals("Sweden, Company1, Some Person2", result.getStringAttribute("description"));
+        assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person2");
+        assertThat(result.getStringAttribute("sn")).isEqualTo("Person2");
+        assertThat(result.getStringAttribute("description")).isEqualTo("Sweden, Company1, Some Person2");
 
         // Shutdown server and kill all existing connections
         LdapTestUtils.shutdownEmbeddedServer();
@@ -77,7 +76,7 @@ public class LdapTemplatePooledITest extends AbstractJUnit4SpringContextTests {
             fail("Exception expected");
         } catch (Exception expected) {
             // This should fail because the target connection was closed
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
 
         LdapTestUtils.cleanAndSetup(contextSource, LdapUtils.emptyLdapName(), new ClassPathResource("/setup_data.ldif"));

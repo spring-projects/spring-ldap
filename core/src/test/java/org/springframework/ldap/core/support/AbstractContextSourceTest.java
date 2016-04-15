@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import org.junit.Test;
 import javax.naming.InvalidNameException;
 import javax.naming.ldap.LdapName;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -33,7 +33,7 @@ public class AbstractContextSourceTest {
         LdapName ldapName = new LdapName("dc=261consulting, dc=com");
 
         String result = AbstractContextSource.formatForUrl(ldapName);
-        assertEquals("dc=261consulting,dc=com", result);
+        assertThat(result).isEqualTo("dc=261consulting,dc=com");
     }
 
     @Test
@@ -41,7 +41,7 @@ public class AbstractContextSourceTest {
         LdapName ldapName = new LdapName("dc=261consulting?, dc=com");
 
         String result = AbstractContextSource.formatForUrl(ldapName);
-        assertEquals("dc=261consulting%3F,dc=com", result);
+        assertThat(result).isEqualTo("dc=261consulting%3F,dc=com");
     }
 
     @Test
@@ -49,7 +49,7 @@ public class AbstractContextSourceTest {
         LdapName ldapName = new LdapName("ou=some department, dc=261consulting, dc=com");
 
         String result = AbstractContextSource.formatForUrl(ldapName);
-        assertEquals("ou=some%20department,dc=261consulting,dc=com", result);
+        assertThat(result).isEqualTo("ou=some%20department,dc=261consulting,dc=com");
     }
 
     @Test
@@ -57,6 +57,6 @@ public class AbstractContextSourceTest {
         LdapName ldapName = new LdapName("");
 
         String result = AbstractContextSource.formatForUrl(ldapName);
-        assertEquals("", result);
+        assertThat(result).isEqualTo("");
     }
 }

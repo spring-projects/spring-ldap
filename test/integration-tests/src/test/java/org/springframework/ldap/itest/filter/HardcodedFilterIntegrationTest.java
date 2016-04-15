@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,7 @@ import org.springframework.ldap.itest.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -43,8 +42,8 @@ public class HardcodedFilterIntegrationTest extends AbstractLdapTemplateIntegrat
 	@Test
 	public void verifyThatFilterEditorWorks() {
 		Filter filter = dummyFilterConsumer.getFilter();
-		assertTrue(filter instanceof HardcodedFilter);
-		assertEquals("(&(objectclass=person)(!(objectclass=computer))", filter.toString());
+		assertThat(filter instanceof HardcodedFilter).isTrue();
+		assertThat(filter.toString()).isEqualTo("(&(objectclass=person)(!(objectclass=computer))");
 	}
 	
 	@Test
@@ -53,6 +52,6 @@ public class HardcodedFilterIntegrationTest extends AbstractLdapTemplateIntegrat
 		CountNameClassPairCallbackHandler handler = new CountNameClassPairCallbackHandler();
 		ldapTemplate.search(LdapUtils.emptyLdapName(), filter.encode(), handler);
 		int hits = handler.getNoOfRows();
-		assertTrue("expected more than one hit, got " + hits, hits > 1);
+		assertThat(hits > 1).isTrue();
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests the ContextMapper search method. In its way this method also
@@ -48,11 +48,11 @@ public class LdapTemplateContextMapperITest extends AbstractLdapTemplateIntegrat
 		ContextMapper mapper = new PersonContextMapper();
 		List result = tested.search("ou=company1,ou=Sweden", "(&(objectclass=person)(sn=Person2))", mapper);
 
-		assertEquals(1, result.size());
+		assertThat(result).hasSize(1);
 		Person person = (Person) result.get(0);
-		assertEquals("Some Person2", person.getFullname());
-		assertEquals("Person2", person.getLastname());
-		assertEquals("Sweden, Company1, Some Person2", person.getDescription());
+		assertThat(person.getFullname()).isEqualTo("Some Person2");
+		assertThat(person.getLastname()).isEqualTo("Person2");
+		assertThat(person.getDescription()).isEqualTo("Sweden, Company1, Some Person2");
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class LdapTemplateContextMapperITest extends AbstractLdapTemplateIntegrat
 		};
 		List result = tested.search("ou=groups", "(&(objectclass=groupOfUniqueNames)(cn=ROLE_USER))", mapper);
 
-		assertEquals(1, result.size());
-		assertEquals(4, ((String[]) result.get(0)).length);
+		assertThat(result).hasSize(1);
+		assertThat(((String[]) result.get(0)).length).isEqualTo(4);
 	}
 }

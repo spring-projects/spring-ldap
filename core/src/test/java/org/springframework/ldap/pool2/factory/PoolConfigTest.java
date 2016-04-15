@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.junit.Test;
 import org.springframework.ldap.pool2.AbstractPoolTestCase;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Anindya Chatterjee
@@ -32,82 +32,82 @@ public class PoolConfigTest extends AbstractPoolTestCase {
 
         poolConfig.setMaxTotalPerKey(5);
         final int maxTotalPerKey = poolConfig.getMaxTotalPerKey();
-        assertEquals(5, maxTotalPerKey);
+        assertThat(maxTotalPerKey).isEqualTo(5);
 
         poolConfig.setMaxIdlePerKey(500);
         final int maxIdle = poolConfig.getMaxIdlePerKey();
-        assertEquals(500, maxIdle);
+        assertThat(maxIdle).isEqualTo(500);
 
         poolConfig.setMaxTotal(5000);
         final int maxTotal = poolConfig.getMaxTotal();
-        assertEquals(5000, maxTotal);
+        assertThat(maxTotal).isEqualTo(5000);
 
         poolConfig.setMaxWaitMillis(2000L);
         final long maxWait = poolConfig.getMaxWaitMillis();
-        assertEquals(2000L, maxWait);
+        assertThat(maxWait).isEqualTo(2000L);
 
         poolConfig.setMinEvictableIdleTimeMillis(60000L);
         final long minEvictableIdleTimeMillis = poolConfig.getMinEvictableIdleTimeMillis();
-        assertEquals(60000L, minEvictableIdleTimeMillis);
+        assertThat(minEvictableIdleTimeMillis).isEqualTo(60000L);
 
         poolConfig.setMinIdlePerKey(100);
         final int minIdle = poolConfig.getMinIdlePerKey();
-        assertEquals(100, minIdle);
+        assertThat(minIdle).isEqualTo(100);
 
         poolConfig.setNumTestsPerEvictionRun(5);
         final int numTestsPerEvictionRun = poolConfig.getNumTestsPerEvictionRun();
-        assertEquals(5, numTestsPerEvictionRun);
+        assertThat(numTestsPerEvictionRun).isEqualTo(5);
 
         poolConfig.setTestOnBorrow(true);
         final boolean testOnBorrow = poolConfig.isTestOnBorrow();
-        assertEquals(true, testOnBorrow);
+        assertThat(testOnBorrow).isEqualTo(true);
 
         poolConfig.setTestOnReturn(true);
         final boolean testOnReturn = poolConfig.isTestOnReturn();
-        assertEquals(true, testOnReturn);
+        assertThat(testOnReturn).isEqualTo(true);
 
         poolConfig.setTestWhileIdle(true);
         final boolean testWhileIdle = poolConfig.isTestWhileIdle();
-        assertEquals(true, testWhileIdle);
+        assertThat(testWhileIdle).isEqualTo(true);
 
         poolConfig.setTestOnCreate(true);
         final boolean testOnCreate = poolConfig.isTestOnCreate();
-        assertEquals(true, testOnCreate);
+        assertThat(testOnCreate).isEqualTo(true);
 
         poolConfig.setTimeBetweenEvictionRunsMillis(120000L);
         final long timeBetweenEvictionRunsMillis = poolConfig.getTimeBetweenEvictionRunsMillis();
-        assertEquals(120000L, timeBetweenEvictionRunsMillis);
+        assertThat(timeBetweenEvictionRunsMillis).isEqualTo(120000L);
 
         poolConfig.setSoftMinEvictableIdleTimeMillis(120000L);
         final long softMinEvictableIdleTimeMillis = poolConfig.getSoftMinEvictableIdleTimeMillis();
-        assertEquals(120000L, softMinEvictableIdleTimeMillis);
+        assertThat(softMinEvictableIdleTimeMillis).isEqualTo(120000L);
 
         poolConfig.setBlockWhenExhausted(true);
         final boolean whenExhaustedAction = poolConfig.isBlockWhenExhausted();
-        assertEquals(GenericKeyedObjectPoolConfig.DEFAULT_BLOCK_WHEN_EXHAUSTED, whenExhaustedAction);
+        assertThat(whenExhaustedAction).isEqualTo(GenericKeyedObjectPoolConfig.DEFAULT_BLOCK_WHEN_EXHAUSTED);
 
         poolConfig.setEvictionPolicyClassName(GenericKeyedObjectPoolConfig.DEFAULT_EVICTION_POLICY_CLASS_NAME);
         final String evictionPolicyClassName = poolConfig.getEvictionPolicyClassName();
-        assertEquals(GenericKeyedObjectPoolConfig.DEFAULT_EVICTION_POLICY_CLASS_NAME, evictionPolicyClassName);
+        assertThat(evictionPolicyClassName).isEqualTo(GenericKeyedObjectPoolConfig.DEFAULT_EVICTION_POLICY_CLASS_NAME);
 
         poolConfig.setFairness(true);
         final boolean fairness = poolConfig.isFairness();
-        assertEquals(true, fairness);
+        assertThat(fairness).isEqualTo(true);
 
         poolConfig.setJmxEnabled(true);
         final boolean jmxEnabled = poolConfig.isJmxEnabled();
-        assertEquals(true, jmxEnabled);
+        assertThat(jmxEnabled).isEqualTo(true);
 
         poolConfig.setJmxNameBase("test");
         final String jmxBaseName = poolConfig.getJmxNameBase();
-        assertEquals("test", jmxBaseName);
+        assertThat(jmxBaseName).isEqualTo("test");
 
         poolConfig.setJmxNamePrefix("pool");
         final String prefix = poolConfig.getJmxNamePrefix();
-        assertEquals("pool", prefix);
+        assertThat(prefix).isEqualTo("pool");
 
         poolConfig.setLifo(true);
         final boolean lifo = poolConfig.isLifo();
-        assertEquals(true, lifo);
+        assertThat(lifo).isEqualTo(true);
     }
 }

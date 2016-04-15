@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,14 +22,9 @@ import org.springframework.ldap.itest.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.itest.odm.Person;
 import org.springframework.ldap.itest.odm.QPerson;
 import org.springframework.ldap.itest.repositories.PersonQueryDslRepository;
-import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
 
-import javax.naming.Name;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for Spring LDAP automatic repository scan functionality.
@@ -48,11 +43,11 @@ public class RepositoryScanQueryDslITest extends AbstractLdapTemplateIntegration
 
         Person found = tested.findOne(person.commonName.eq("Some Person3"));
 
-        assertNotNull(found);
-        assertEquals("Some Person3", found.getCommonName());
-        assertEquals("Person3", found.getSurname());
-        assertEquals("Sweden, Company1, Some Person3", found.getDesc().get(0));
-        assertEquals("+46 555-123654", found.getTelephoneNumber());
+        assertThat(found).isNotNull();
+        assertThat(found.getCommonName()).isEqualTo("Some Person3");
+        assertThat(found.getSurname()).isEqualTo("Person3");
+        assertThat(found.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
+        assertThat(found.getTelephoneNumber()).isEqualTo("+46 555-123654");
     }
 
     @Test
@@ -62,10 +57,10 @@ public class RepositoryScanQueryDslITest extends AbstractLdapTemplateIntegration
         Iterable<Person> foundPersons = tested.findAll(person.commonName.eq("Some Person3"));
 
         Person found = foundPersons.iterator().next();
-        assertEquals("Some Person3", found.getCommonName());
-        assertEquals("Person3", found.getSurname());
-        assertEquals("Sweden, Company1, Some Person3", found.getDesc().get(0));
-        assertEquals("+46 555-123654", found.getTelephoneNumber());
+        assertThat(found.getCommonName()).isEqualTo("Some Person3");
+        assertThat(found.getSurname()).isEqualTo("Person3");
+        assertThat(found.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
+        assertThat(found.getTelephoneNumber()).isEqualTo("+46 555-123654");
     }
 
     @Test
@@ -73,6 +68,6 @@ public class RepositoryScanQueryDslITest extends AbstractLdapTemplateIntegration
         QPerson person = QPerson.person;
 
         long count = tested.count(person.commonName.eq("Some Person3"));
-        assertEquals(1, count);
+        assertThat(count).isEqualTo(1);
     }
 }

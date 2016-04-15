@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,7 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
 import javax.naming.directory.BasicAttributes;
 import javax.naming.ldap.LdapName;
 
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -60,13 +59,12 @@ public class RebindOperationRecorderTest {
         CompensatingTransactionOperationExecutor result = tested
                 .recordOperation(new Object[] { expectedDn, expectedObject,
                         expectedAttributes });
-        assertTrue(result instanceof RebindOperationExecutor);
+        assertThat(result instanceof RebindOperationExecutor).isTrue();
         RebindOperationExecutor rollbackOperation = (RebindOperationExecutor) result;
-        assertSame(ldapOperationsMock, rollbackOperation.getLdapOperations());
-        assertSame(expectedDn, rollbackOperation.getOriginalDn());
-        assertSame(expectedTempDn, rollbackOperation.getTemporaryDn());
-        assertSame(expectedObject, rollbackOperation.getOriginalObject());
-        assertSame(expectedAttributes, rollbackOperation
-                .getOriginalAttributes());
+        assertThat(rollbackOperation.getLdapOperations()).isSameAs(ldapOperationsMock);
+        assertThat(rollbackOperation.getOriginalDn()).isSameAs(expectedDn);
+        assertThat(rollbackOperation.getTemporaryDn()).isSameAs(expectedTempDn);
+        assertThat(rollbackOperation.getOriginalObject()).isSameAs(expectedObject);
+        assertThat(rollbackOperation.getOriginalAttributes()).isSameAs(expectedAttributes);
     }
 }

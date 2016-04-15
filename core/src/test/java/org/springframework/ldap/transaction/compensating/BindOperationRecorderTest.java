@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
 import javax.naming.directory.BasicAttributes;
 import javax.naming.ldap.LdapName;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -51,11 +51,11 @@ public class BindOperationRecorderTest {
                 .recordOperation(new Object[] { expectedDn, expectedObject,
                         expectedAttributes });
 
-        assertTrue(operation instanceof BindOperationExecutor);
+        assertThat(operation instanceof BindOperationExecutor).isTrue();
         BindOperationExecutor rollbackOperation = (BindOperationExecutor) operation;
-        assertSame(expectedDn, rollbackOperation.getDn());
-        assertSame(ldapOperationsMock, rollbackOperation.getLdapOperations());
-        assertSame(expectedObject, rollbackOperation.getOriginalObject());
+        assertThat(rollbackOperation.getDn()).isSameAs(expectedDn);
+        assertThat(rollbackOperation.getLdapOperations()).isSameAs(ldapOperationsMock);
+        assertThat(rollbackOperation.getOriginalObject()).isSameAs(expectedObject);
         assertSame(expectedAttributes, rollbackOperation
                 .getOriginalAttributes());
     }
@@ -73,10 +73,10 @@ public class BindOperationRecorderTest {
                 .recordOperation(new Object[] { expectedDn, expectedObject,
                         expectedAttributes });
 
-        assertTrue(operation instanceof BindOperationExecutor);
+        assertThat(operation instanceof BindOperationExecutor).isTrue();
         BindOperationExecutor rollbackOperation = (BindOperationExecutor) operation;
-        assertEquals(expectedDn, rollbackOperation.getDn().toString());
-        assertSame(ldapOperationsMock, rollbackOperation.getLdapOperations());
+        assertThat(rollbackOperation.getDn().toString()).isEqualTo(expectedDn);
+        assertThat(rollbackOperation.getLdapOperations()).isSameAs(ldapOperationsMock);
     }
 
     @Test(expected = IllegalArgumentException.class)

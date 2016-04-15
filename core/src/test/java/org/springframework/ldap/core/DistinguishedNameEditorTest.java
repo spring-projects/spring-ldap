@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,8 @@ package org.springframework.ldap.core;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Unit tests for {@link DistinguishedNameEditor}.
@@ -43,14 +41,14 @@ public class DistinguishedNameEditorTest {
 
 		tested.setAsText(expectedDn);
 		DistinguishedName result = (DistinguishedName) tested.getValue();
-		assertEquals(new DistinguishedName(expectedDn), result);
+		assertThat(result).isEqualTo(new DistinguishedName(expectedDn));
 
 		try {
 			result.getNames().add(new LdapRdn("cn", "john doe"));
 			fail("UnsupportedOperationException expected");
 		}
 		catch (UnsupportedOperationException expected) {
-			assertTrue(true);
+			assertThat(true).isTrue();
 		}
 	}
 
@@ -58,7 +56,7 @@ public class DistinguishedNameEditorTest {
 	public void testSetAsTextNullValue() throws Exception {
 		tested.setAsText(null);
 		Object result = tested.getValue();
-		assertNull(result);
+		assertThat(result).isNull();
 	}
 
     @Test
@@ -66,13 +64,13 @@ public class DistinguishedNameEditorTest {
 		String expectedDn = "dc=jayway,dc=se";
 		tested.setValue(new DistinguishedName(expectedDn));
 		String text = tested.getAsText();
-		assertEquals(expectedDn, text);
+		assertThat(text).isEqualTo(expectedDn);
 	}
 
     @Test
 	public void testGetAsTextNullValue() throws Exception {
 		tested.setValue(null);
 		String text = tested.getAsText();
-		assertNull(text);
+		assertThat(text).isNull();
 	}
 }

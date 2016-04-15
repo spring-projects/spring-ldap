@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,11 +29,8 @@ import org.springframework.test.context.ContextConfiguration;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 /**
@@ -49,22 +46,22 @@ public class LdapTemplateOdmWithNoDnAnnotationsITest extends AbstractLdapTemplat
         Person person = tested.findOne(query()
                 .where("cn").is("Some Person3"), Person.class);
 
-        assertNotNull(person);
-        assertEquals("Some Person3", person.getCommonName());
-        assertEquals("Person3", person.getSurname());
-        assertEquals("Sweden, Company1, Some Person3", person.getDesc().get(0));
-        assertEquals("+46 555-123654", person.getTelephoneNumber());
+        assertThat(person).isNotNull();
+        assertThat(person.getCommonName()).isEqualTo("Some Person3");
+        assertThat(person.getSurname()).isEqualTo("Person3");
+        assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
+        assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
     }
 
     @Test
     public void testFindByDn() {
         Person person = tested.findByDn(LdapUtils.newLdapName("cn=Some Person3,ou=company1,ou=Sweden"), Person.class);
 
-        assertNotNull(person);
-        assertEquals("Some Person3", person.getCommonName());
-        assertEquals("Person3", person.getSurname());
-        assertEquals("Sweden, Company1, Some Person3", person.getDesc().get(0));
-        assertEquals("+46 555-123654", person.getTelephoneNumber());
+        assertThat(person).isNotNull();
+        assertThat(person.getCommonName()).isEqualTo("Some Person3");
+        assertThat(person.getSurname()).isEqualTo("Person3");
+        assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
+        assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
     }
 
     @Test(expected = OdmException.class)
@@ -83,14 +80,14 @@ public class LdapTemplateOdmWithNoDnAnnotationsITest extends AbstractLdapTemplat
         List<Person> persons = tested.find(query()
                 .where("cn").is("Some Person3"), Person.class);
 
-        assertEquals(1, persons.size());
+        assertThat(persons).hasSize(1);
         Person person = persons.get(0);
 
-        assertNotNull(person);
-        assertEquals("Some Person3", person.getCommonName());
-        assertEquals("Person3", person.getSurname());
-        assertEquals("Sweden, Company1, Some Person3", person.getDesc().get(0));
-        assertEquals("+46 555-123654", person.getTelephoneNumber());
+        assertThat(person).isNotNull();
+        assertThat(person.getCommonName()).isEqualTo("Some Person3");
+        assertThat(person.getSurname()).isEqualTo("Person3");
+        assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
+        assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
     }
 
     @Test
@@ -99,16 +96,16 @@ public class LdapTemplateOdmWithNoDnAnnotationsITest extends AbstractLdapTemplat
                 .base("ou=Sweden")
                 .where("cn").isPresent(), Person.class);
 
-        assertEquals(4, persons.size());
+        assertThat(persons).hasSize(4);
         Person person = persons.get(0);
 
-        assertNotNull(person);
+        assertThat(person).isNotNull();
     }
 
     @Test
     public void testFindAll() {
         List<Person> result = tested.findAll(Person.class);
-        assertEquals(5, result.size());
+        assertThat(result).hasSize(5);
     }
 
     @Test
@@ -123,15 +120,15 @@ public class LdapTemplateOdmWithNoDnAnnotationsITest extends AbstractLdapTemplat
 
         tested.create(person);
 
-        assertEquals(6, tested.findAll(Person.class).size());
+        assertThat(tested.findAll(Person.class)).hasSize(6);
 
         person = tested.findOne(query()
                 .where("cn").is("New Person"), Person.class);
 
-        assertEquals("New Person", person.getCommonName());
-        assertEquals("Person", person.getSurname());
-        assertEquals("This is the description", person.getDesc().get(0));
-        assertEquals("0123456", person.getTelephoneNumber());
+        assertThat(person.getCommonName()).isEqualTo("New Person");
+        assertThat(person.getSurname()).isEqualTo("Person");
+        assertThat(person.getDesc().get(0)).isEqualTo("This is the description");
+        assertThat(person.getTelephoneNumber()).isEqualTo("0123456");
     }
 
     @Test
@@ -145,10 +142,10 @@ public class LdapTemplateOdmWithNoDnAnnotationsITest extends AbstractLdapTemplat
         person = tested.findOne(query()
                 .where("cn").is("Some Person3"), Person.class);
 
-        assertEquals("Some Person3", person.getCommonName());
-        assertEquals("Person3", person.getSurname());
-        assertEquals("New Description", person.getDesc().get(0));
-        assertEquals("+46 555-123654", person.getTelephoneNumber());
+        assertThat(person.getCommonName()).isEqualTo("Some Person3");
+        assertThat(person.getSurname()).isEqualTo("Person3");
+        assertThat(person.getDesc().get(0)).isEqualTo("New Description");
+        assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
     }
 
     @Test
@@ -162,7 +159,7 @@ public class LdapTemplateOdmWithNoDnAnnotationsITest extends AbstractLdapTemplat
             tested.findOne(query().where("cn").is("Some Person3"), Person.class);
             fail("EmptyResultDataAccessException e");
         } catch (EmptyResultDataAccessException e) {
-            assertTrue(true);
+            assertThat(true).isTrue();
         }
     }
 
@@ -180,6 +177,6 @@ public class LdapTemplateOdmWithNoDnAnnotationsITest extends AbstractLdapTemplat
 
         person = tested.findOne(query()
                 .where("cn").is("Some Person3"), Person.class);
-        assertNull("TelephoneNumber should be null", person.getTelephoneNumber());
+        assertThat(person.getTelephoneNumber()).as("TelephoneNumber should be null").isNull();
     }
 }
