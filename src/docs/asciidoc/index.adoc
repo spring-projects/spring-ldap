@@ -166,6 +166,7 @@ In order to use the custom XML namespace for configuring the Spring LDAP compone
 For complete details of 2.1 refer to the https://github.com/spring-projects/spring-ldap/issues?q=milestone%3A2.1.0.RC1[changelog]
 The highlights of Spring LDAP 2.1 can be found below.
 
+* https://github.com/spring-projects/spring-ldap/pull/390[#390] - Spring Data Hopper Support
 * https://github.com/spring-projects/spring-ldap/issues/351[#351] - Support for commons-pool2
 * https://github.com/spring-projects/spring-ldap/issues/370[#370] - Support property placeholders in XML Namespace
 * https://github.com/spring-projects/spring-ldap/pull/392[#392] - Document Testing Support
