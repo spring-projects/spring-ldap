@@ -1781,6 +1781,22 @@ public interface LdapOperations {
      *
      * @param <T> The Java type to return
      * @param base The root of the sub-tree at which to begin the search.
+     * @param clazz The Java type to return
+     * @return All entries that are of the type represented by the given
+     * Java class
+     *
+     * @throws org.springframework.ldap.NamingException on error.
+     * @since 3.0
+     */
+    
+    <T> List<T> findAll(Name base, Class<T> clazz);
+    
+    /**
+     * Find all entries in the LDAP directory of a given type. The referenced class must have object-directory mapping metadata
+     * specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
+     *
+     * @param <T> The Java type to return
+     * @param base The root of the sub-tree at which to begin the search.
      * @param searchControls The search controls of the search. Note that the 'returned attributes' parameter should
      *                       typically not be tampered with, since that may affect the attributes populated in returned entries.
      * @param clazz The Java type to return
