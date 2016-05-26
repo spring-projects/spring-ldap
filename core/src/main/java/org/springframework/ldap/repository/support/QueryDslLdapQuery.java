@@ -22,7 +22,10 @@ import com.querydsl.core.support.QueryMixin;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Predicate;
 import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.query.LdapQuery;
+import org.springframework.ldap.query.LdapQueryBuilder;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -38,6 +41,7 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
 public class QueryDslLdapQuery<K> implements FilteredClause<QueryDslLdapQuery<K>> {
     private final LdapOperations ldapOperations;
     private final Class<? extends K> clazz;
+    private final String base;
 
     private QueryMixin<QueryDslLdapQuery<K>> queryMixin =
             new QueryMixin<QueryDslLdapQuery<K>>(this, new DefaultQueryMetadata().noValidate());
@@ -53,6 +57,7 @@ public class QueryDslLdapQuery<K> implements FilteredClause<QueryDslLdapQuery<K>
         this.ldapOperations = ldapOperations;
         this.clazz = clazz;
         this.filterGenerator = new LdapSerializer(ldapOperations.getObjectDirectoryMapper(), clazz);
+        this.base = clazz.getAnnotation(Entry.class) != null ? clazz.getAnnotation(Entry.class).base() : null;
     }
 
     @Override
@@ -70,7 +75,14 @@ public class QueryDslLdapQuery<K> implements FilteredClause<QueryDslLdapQuery<K>
     }
 
     LdapQuery buildQuery() {
-        return query().filter(filterGenerator.handle(queryMixin.getMetadata().getWhere()));
+	
+	LdapQueryBuilder query = query();
+	
+	if (StringUtils.hasText(base)) {
+	    query = query().base(base);
+	}
+	
+        return query.filter(filterGenerator.handle(queryMixin.getMetadata().getWhere()));
     }
 
 }
