@@ -22,10 +22,13 @@ import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.core.support.CountNameClassPairCallbackHandler;
 import org.springframework.ldap.filter.Filter;
+import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 import org.springframework.ldap.query.LdapQuery;
 import org.springframework.ldap.repository.LdapRepository;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import javax.naming.Name;
 import java.util.Iterator;
@@ -45,11 +48,13 @@ public class SimpleLdapRepository<T> implements LdapRepository<T> {
     private final LdapOperations ldapOperations;
     private final ObjectDirectoryMapper odm;
     private final Class<T> clazz;
+    private final String base;
 
     public SimpleLdapRepository(LdapOperations ldapOperations, ObjectDirectoryMapper odm, Class<T> clazz) {
         this.ldapOperations = ldapOperations;
         this.odm = odm;
         this.clazz = clazz;
+        this.base = clazz.getAnnotation(Entry.class) != null ? clazz.getAnnotation(Entry.class).base() : null;
     }
 
     protected LdapOperations getLdapOperations() {
@@ -137,7 +142,11 @@ public class SimpleLdapRepository<T> implements LdapRepository<T> {
 
     @Override
     public List<T> findAll() {
-        return ldapOperations.findAll(clazz);
+	if (StringUtils.hasText(base)) {
+	    return ldapOperations.findAll(LdapUtils.newLdapName(base), clazz);
+	} else {
+	    return ldapOperations.findAll(clazz);
+	}
     }
 
     @Override
