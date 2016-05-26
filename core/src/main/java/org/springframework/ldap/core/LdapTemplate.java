@@ -1858,6 +1858,26 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     }
 
     /**
+     * Find all entries in the LDAP directory of a given type. The referenced class must have object-directory mapping metadata
+     * specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
+     *
+     * @param <T> The Java type to return
+     * @param base The root of the sub-tree at which to begin the search.
+     * @param clazz The Java type to return
+     * @return All entries that are of the type represented by the given
+     * Java class
+     *
+     * @throws org.springframework.ldap.NamingException on error.
+     * @since 3.0
+     */
+    
+    public <T> List<T> findAll(Name base, Class<T> clazz) {
+	return findAll(base,
+		getDefaultSearchControls(defaultSearchScope, RETURN_OBJ_FLAG, ALL_ATTRIBUTES),
+		clazz);
+    }
+    
+    /**
      * {@inheritDoc}
      */
     @Override
