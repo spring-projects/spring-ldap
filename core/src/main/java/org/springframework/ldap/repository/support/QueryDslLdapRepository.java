@@ -66,7 +66,7 @@ public class QueryDslLdapRepository<T> extends SimpleLdapRepository<T> implement
         throw new UnsupportedOperationException();
     }
 
-    private QueryDslLdapQuery<T> queryFor(Predicate predicate) {
+    protected QueryDslLdapQuery<T> queryFor(Predicate predicate) {
         return new QueryDslLdapQuery<T>(getLdapOperations(), getClazz())
                 .where(predicate);
     }
