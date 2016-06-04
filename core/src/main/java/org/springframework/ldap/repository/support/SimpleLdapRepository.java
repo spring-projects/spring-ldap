@@ -69,7 +69,7 @@ public class SimpleLdapRepository<T> implements LdapRepository<T> {
     public long count() {
         Filter filter = odm.filterFor(clazz, null);
         CountNameClassPairCallbackHandler callback = new CountNameClassPairCallbackHandler();
-        LdapQuery query = query().attributes(OBJECTCLASS_ATTRIBUTE).filter(filter);
+        LdapQuery query = query().base(base).attributes(OBJECTCLASS_ATTRIBUTE).filter(filter);
         ldapOperations.search(query, callback);
 
         return callback.getNoOfRows();
