@@ -33,22 +33,8 @@ list for prior discussions.
 
 ## Sign the Contributor License Agreement
 
-If you have not previously done so, please fill out and submit the
-[SpringSource CLA form][]. You'll receive a token when this process is complete.
-Keep track of this; you may be asked for it later!
-
-Note that emailing/postal mailing a signed copy is _not_ necessary. Submission
-of the web form is all that is required.
-
-Once you've completed the web form, simply add the following in a comment on
-your pull request:
-
-    I have signed and agree to the terms of the SpringSource Individual
-    Contributor License Agreement.
-
-You do not need to include your token/id. Please add the statement above to all
-future pull requests as well, simply so that the Spring Framework team knows
-immediately that this process is complete.
+If you have not previously done so, please fill out and
+submit the [Contributor License Agreement](https://cla.pivotal.io/sign/spring).
 
 
 ## Create your branch from `master`
