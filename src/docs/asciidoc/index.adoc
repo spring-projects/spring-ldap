@@ -1663,6 +1663,113 @@ The following attributes are available on the `<ldap:pooling />` element for con
 
 
 
+=== Pool2 Configuration
+The following attributes are available on the `<ldap:pooling2 />` element for configuration of the DirContext pool:
+
+[cols="1,1,4a"]
+.Pooling Configuration Attributes
+|===
+| Attribute | Default | Description
+
+| `max-total`
+| `-1`
+|  The overall maximum number of active connections (for all types) that can be allocated from this pool at the same time, or non-positive for no limit.
+
+| `max-total-per-key`
+| `8`
+| The limit on the number of object instances allocated by the pool (checked out or idle), per key. When the limit is reached, the sub-pool is said to be exhausted. A negative value indicates no limit.
+
+| `max-idle-per-key`
+| `8`
+|  The maximum number of active connections of each type (read-only\|read-write) that can remain idle in the pool, without extra ones being released, or non-positive for no limit.
+
+| `min-idle-per-key`
+| `0`
+|  The minimum number of active connections of each type (read-only\|read-write) that can remain idle in the pool, without extra ones being created, or zero to create none.
+
+| `max-wait`
+| `-1`
+|  The maximum number of milliseconds that the pool will wait (when there are no available connections) for a connection to be returned before throwing an exception, or non-positive to wait indefinitely.
+
+| `block-when-exhausted`
+| `true`
+|  Wait until a new object is available. If max-wait is positive a NoSuchElementException is thrown if no new object is available after the maxWait time expires.
+
+| `test-on-create`
+| `false`
+|  The indication of whether objects will be validated before borrowing. If the object fails to validate, then borrowing will fail.
+
+| `test-on-borrow`
+| `false`
+|  The indication of whether objects will be validated before being borrowed from the pool. If the object fails to validate, it will be dropped from the pool, and an attempt to borrow another will be made.
+
+| `test-on-return`
+| `false`
+|  The indication of whether objects will be validated before being returned to the pool.
+
+| `test-while-idle`
+| `false`
+|  The indication of whether objects will be validated by the idle object evictor (if any). If an object fails to validate, it will be dropped from the pool.
+
+| `eviction-run-interval-millis`
+| `-1`
+|  The number of milliseconds to sleep between runs of the idle object evictor thread. When non-positive, no idle object evictor thread will be run.
+
+| `tests-per-eviction-run`
+| `3`
+|  The number of objects to examine during each run of the idle object evictor thread (if any).
+
+| `min-evictable-time-millis`
+| `1000 * 60 * 30`
+|  The minimum amount of time an object may sit idle in the pool before it is eligible for eviction by the idle object evictor (if any).
+
+| `soft-min-evictable-time-millis`
+| `-1`
+|  The minimum amount of time an object may sit idle in the pool before it is eligible for eviction by the idle object evictor , with the extra condition that at least minimum number of object instances per key remain in the pool. This settings is overridden by min-evictable-time-millis if it is set to a positive value.
+
+| `eviction-policy-class`
+| `org.apache.commons.pool2.impl.DefaultEvictionPolicy`
+|  The eviction policy implementation that is used by this pool. The Pool will attempt to load the class using the thread context class loader. If that fails, the Pool will attempt to load the class using the class loader that loaded this class.
+
+| `fairness`
+| `false`
+|  The pool serves threads waiting to borrow connections fairly. True means that waiting threads are served as if waiting in a FIFO queue.
+
+| `jmx-enable`
+| `true`
+|  JMX will be enabled with the platform MBean server for the pool.
+
+| `jmx-name-base`
+| `null`
+|  The JMX name base that will be used as part of the name assigned to JMX enabled pools.
+
+| `jmx-name-prefix`
+| `pool`
+|  The JMX name prefix that will be used as part of the name assigned to JMX enabled pools.
+
+| `lifo`
+| `true`
+|  The indication of whether the pool has LIFO (last in, first out) behaviour with respect to idle objects - always returning the most recently used object from the pool, or as a FIFO (first in, first out) queue, where the pool always returns the oldest object in the idle object pool.
+
+| `validation-query-base`
+| `LdapUtils.emptyPath()`
+|  The base dn to use for validation searches.
+
+| `validation-query-filter`
+| `objectclass=*`
+|  The filter to use for validation queries.
+
+| `validation-query-search-controls-ref`
+| `null`; default search control settings are described above.
+|  Id of a SearchControls instance to be used when validating connections. Only used if `test-on-borrow`, `test-on-return`, or `test-while-idle` is specified
+
+| `non-transient-exceptions`
+| `javax.naming.CommunicationException`
+|  Comma-separated list of Exception classes. The listed exceptions will be considered non-transient with regards to eager invalidation. Should any of the listed exceptions (or subclasses of them) be thrown by a call to a pooled `DirContext` instance, that object will be automatically invalidated without any additional testOnReturn operation.
+|===
+
+
+
 === Configuration
 Configuring pooling requires adding an `<ldap:pooling>` element nested in the `<ldap:context-source>` element:
 

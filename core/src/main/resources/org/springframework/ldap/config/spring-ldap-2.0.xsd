@@ -309,7 +309,7 @@
             <xs:annotation>
                 <xs:documentation>
                     Sets to wait until a new object is available. If max-wait is positive a NoSuchElementException
-                    is thrown if no new object is available after the maxWait time expires..
+                    is thrown if no new object is available after the maxWait time expires. Default is true.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
