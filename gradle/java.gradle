@@ -5,6 +5,7 @@ sourceCompatibility = '1.6'
 targetCompatibility = '1.6'
 
 ext.apacheDsVersion = '1.5.5'
+ext.apacheDs2Version = '2.0.0-M21'
 ext.springVersion = '4.2.5.RELEASE'
 ext.springDataVersion = '1.12.1.RELEASE'
 ext.springDataSpring3Version = '1.10.2.RELEASE'
