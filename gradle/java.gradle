@@ -22,6 +22,7 @@ ext.slf4jVersion = '1.7.12'
 ext.powerMockVersion = '1.6.2'
 ext.commonsPool2Version = '2.4.2'
 ext.assertjVersion= '2.3.0'
+ext.unboundidVersion = '3.1.1'
 
 ext.powerMockDependencies = [
     "org.powermock:powermock-core:$powerMockVersion",

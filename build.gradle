@@ -22,11 +22,12 @@ ext.JAVA_SCRIPT = "${GRADLE_SCRIPT_DIR}/java.gradle"
 ext.RELEASE_CHECKS_SCRIPT = "${GRADLE_SCRIPT_DIR}/release-checks.gradle"
 ext.SAMPLE_WAR_GRADLE = "${GRADLE_SCRIPT_DIR}/sample-war.gradle"
 
-ext.coreModules = subprojects.findAll { p-> (!p.name.contains("test") && !p.name.contains("sample") && !p.name.contains("sandbox")) || p.name == "spring-ldap-test" }
+ext.coreModules = subprojects.findAll { p-> (!p.name.equals('spring-build-src') && !p.name.contains("test") && !p.name.contains("sample") && !p.name.contains("sandbox")) || p.name.contains("spring-ldap-test") }
 
 allprojects {
     apply plugin: 'idea'
     apply plugin: 'eclipse'
+    apply plugin: 'java'
 
     group = "org.springframework.ldap"
 
@@ -51,6 +52,7 @@ configure(subprojects) {
     apply plugin: 'propdeps-idea'
     apply plugin: 'propdeps-eclipse'
     apply plugin: 'groovy'
+    apply plugin: "merge"
 
 }
 

@@ -18,6 +18,7 @@ dependencies {
             "org.springframework:spring-context:$springVersion",
             "org.springframework:spring-jdbc:$springVersion",
             "org.springframework:spring-orm:$springVersion",
+            "com.querydsl:querydsl-core:$queryDslVersion",
             "com.querydsl:querydsl-apt:$queryDslVersion",
             "commons-pool:commons-pool:$commonsPoolVersion",
             "org.apache.commons:commons-pool2:$commonsPool2Version"
