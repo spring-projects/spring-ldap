@@ -258,6 +258,7 @@ public final class LdapEncoder {
 
             if ((i + 1) % RFC2849_MAX_BASE64_CHARS_PER_LINE == 0) {
                 sb.append('\n');
+                sb.append(' ');
             }
         }
 
@@ -283,6 +284,9 @@ public final class LdapEncoder {
             char c = val.charAt(i);
 
             if(c == '\n'){
+                if(i + 1 < len && val.charAt(i + 1) == ' ') {
+                    i++;
+                }
                 continue;
             }
 

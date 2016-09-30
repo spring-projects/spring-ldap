@@ -57,4 +57,35 @@ public class LdapEncoderTest  {
         LdapEncoder.nameDecode("\\");
     }
 
+    // gh-413
+    @Test
+    public void printBase64WhenReallyLongThenNewLineStartsWithSpace() throws Exception {
+        String toBase64Encode = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        String expected = "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXpBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWjAxMjM0\n NTY3ODk=";
+
+        String actual = LdapEncoder.printBase64Binary(toBase64Encode.getBytes("UTF-8"));
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    // gh-413
+    @Test
+    public void parseBase64BinaryWhenReallyLongThenRemovesNewlineAndSpace() {
+        String toParse = "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXpBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWjAxMjM0\n NTY3ODk=";
+        String expected = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+        String actual = new String(LdapEncoder.parseBase64Binary(toParse));
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void parseBase64BinaryWhenReallyLongThenRemovesNewlineWithNoSpaceForPassivity() {
+        String toParse = "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXpBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWjAxMjM0\nNTY3ODk=";
+        String expected = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+        String actual = new String(LdapEncoder.parseBase64Binary(toParse));
+
+        assertThat(actual).isEqualTo(expected);
+    }
 }
