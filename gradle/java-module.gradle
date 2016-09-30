@@ -1,6 +1,7 @@
 apply from: JAVA_SCRIPT
 apply from: MAVEN_DEPLOYMENT_SCRIPT
 apply from: RELEASE_CHECKS_SCRIPT
+apply from: SPRING_SNAPSHOT_TEST_SCRIPT
 apply plugin: 'spring-io'
 
 ext.springIoVersion = project.hasProperty('platformVersion') ? platformVersion : 'Athens-BUILD-SNAPSHOT'
