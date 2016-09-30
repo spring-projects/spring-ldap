@@ -21,6 +21,7 @@ import java.util.List;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 
+import org.junit.After;
 import org.junit.Test;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -31,10 +32,18 @@ import org.springframework.ldap.query.LdapQueryBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestContextSourceFactoryBeanTest {
+    ClassPathXmlApplicationContext ctx;
+
+    @After
+    public void setup() {
+        if(ctx != null) {
+            ctx.close();
+        }
+    }
 
     @Test
     public void testServerStartup() throws Exception {
-        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/applicationContext-testContextSource.xml");
+        ctx = new ClassPathXmlApplicationContext("/applicationContext-testContextSource.xml");
         LdapTemplate ldapTemplate = ctx.getBean(LdapTemplate.class);
         assertThat(ldapTemplate).isNotNull();
 

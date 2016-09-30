@@ -10,8 +10,6 @@ dependencies {
             "commons-logging:commons-logging:$commonsLoggingVersion",
             "commons-cli:commons-cli:1.2"
 
-    optional apachedsDependencies
-
     runtime "org.springframework:spring-context:$springVersion"
 
     provided "commons-pool:commons-pool:$commonsPoolVersion",
@@ -24,5 +22,6 @@ dependencies {
     testCompile project(":spring-ldap-test"),
                 "junit:junit:$junitVersion",
                 "jdepend:jdepend:2.9.1",
-                "commons-io:commons-io:$commonsIoVersion"
+                "commons-io:commons-io:$commonsIoVersion",
+                apachedsDependencies
 }

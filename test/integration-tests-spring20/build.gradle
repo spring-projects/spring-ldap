@@ -7,8 +7,6 @@ apply from: JAVA_SCRIPT
 ext.spring20Version = '2.0.8'
 
 dependencies {
-    optional apachedsDependencies
-
     testCompile 	(project(":spring-ldap-test")) {
         exclude group: "org.springframework", module:"spring-core"
         exclude group: "org.springframework", module:"spring-beans"
@@ -23,6 +21,7 @@ dependencies {
                 "org.springframework:spring-dao:$spring20Version",
                 "org.springframework:spring-beans:$spring20Version",
                 "org.slf4j:slf4j-log4j12:$slf4jVersion",
-                "org.assertj:assertj-core:$assertjVersion"
+                "org.assertj:assertj-core:$assertjVersion",
+                apachedsDependencies
 
 }

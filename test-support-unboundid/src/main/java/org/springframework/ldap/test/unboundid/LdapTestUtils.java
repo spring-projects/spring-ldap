@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Set;
 
 import javax.naming.Binding;
 import javax.naming.ContextNotEmptyException;
@@ -42,7 +41,6 @@ import org.springframework.ldap.core.LdapAttributes;
 import org.springframework.ldap.core.support.DefaultDirObjectFactory;
 import org.springframework.ldap.ldif.parser.LdifParser;
 import org.springframework.ldap.support.LdapUtils;
-import org.springframework.ldap.test.DummyDirContext;
 
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
 import com.unboundid.ldap.sdk.LDAPException;
@@ -64,31 +62,6 @@ public final class LdapTestUtils {
     private LdapTestUtils() {
     }
 
-
-    /**
-     * Start an in-process Apache Directory Server.
-     *
-     * @param port                   the port on which the server will be listening.
-     * @param defaultPartitionSuffix The default base suffix that will be used
-     *                               for the LDAP server.
-     * @param defaultPartitionName   The name to use in the directory server
-     *                               configuration for the default base suffix.
-     * @param principal              The principal to use when starting the directory server.
-     * @param credentials            The credentials to use when starting the directory
-     *                               server.
-     * @param extraSchemas           Set of extra schemas to add to the bootstrap schemas
-     *                               of ApacheDS. May be <code>null</code>.
-     * @return An unusable DirContext instance.
-     * @throws NamingException If anything goes wrong when starting the server.
-     * @deprecated use {@link #startEmbeddedServer(int, String, String)} instead.
-     */
-    public static DirContext startApacheDirectoryServer(int port, String defaultPartitionSuffix,
-                                                        String defaultPartitionName, String principal, String credentials, Set extraSchemas) throws NamingException {
-
-        startEmbeddedServer(port, defaultPartitionSuffix, defaultPartitionName);
-        return new DummyDirContext();
-    }
-
     /**
      * Start an embedded Apache Directory Server. Only one embedded server will be permitted in the same JVM.
      *
@@ -99,7 +72,6 @@ public final class LdapTestUtils {
      *                               configuration for the default base suffix.
      *
      * @throws IllegalStateException if an embedded server is already started.
-     * @since 1.3.2
      */
     public static void startEmbeddedServer(int port, String defaultPartitionSuffix, String defaultPartitionName) {
         if(embeddedServer != null) {
@@ -118,25 +90,12 @@ public final class LdapTestUtils {
      * this is silently ignored.
      *
      * @throws Exception
-     * @since 1.3.2
      */
     public static void shutdownEmbeddedServer() throws Exception {
         if(embeddedServer != null) {
             embeddedServer.shutdown();
             embeddedServer = null;
         }
-    }
-
-    /**
-     * Shut down the in-process Apache Directory Server.
-     *
-     * @param principal   the principal to be used for authentication.
-     * @param credentials the credentials to be used for authentication.
-     * @throws Exception If anything goes wrong when shutting down the server.
-     * @deprecated use {@link #shutdownEmbeddedServer()} instead.
-     */
-    public static void destroyApacheDirectoryServer(String principal, String credentials) throws Exception {
-        shutdownEmbeddedServer();
     }
 
     /**
@@ -171,7 +130,7 @@ public final class LdapTestUtils {
      */
     public static void clearSubContexts(DirContext ctx, Name name) throws NamingException {
 
-        NamingEnumeration enumeration = null;
+        NamingEnumeration<?> enumeration = null;
         try {
             enumeration = ctx.listBindings(name);
             while (enumeration.hasMore()) {
@@ -229,7 +188,8 @@ public final class LdapTestUtils {
         loadLdif(context, LdapUtils.emptyLdapName(), ldifFile);
     }
 
-    private static void loadLdif(DirContext context, Name rootNode, Resource ldifFile) {
+    @SuppressWarnings("deprecation")
+	private static void loadLdif(DirContext context, Name rootNode, Resource ldifFile) {
         try {
             LdapName baseDn = (LdapName)
                     context.getEnvironment().get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY);

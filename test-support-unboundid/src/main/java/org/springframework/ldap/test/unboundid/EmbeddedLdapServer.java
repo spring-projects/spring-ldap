@@ -30,34 +30,34 @@ import com.unboundid.ldap.sdk.Entry;
  */
 public final class EmbeddedLdapServer {
 
-	private InMemoryDirectoryServer directoryServer;
+    private InMemoryDirectoryServer directoryServer;
 
-	private EmbeddedLdapServer(InMemoryDirectoryServer directoryServer) {
-		this.directoryServer = directoryServer;
-	}
+    private EmbeddedLdapServer(InMemoryDirectoryServer directoryServer) {
+        this.directoryServer = directoryServer;
+    }
 
-	public static EmbeddedLdapServer newEmbeddedServer(String defaultPartitionName,
-			String defaultPartitionSuffix, int port) throws Exception {
-		InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig(
-				defaultPartitionSuffix);
-		config.addAdditionalBindCredentials("uid=admin,ou=system", "secret");
+    public static EmbeddedLdapServer newEmbeddedServer(String defaultPartitionName,
+            String defaultPartitionSuffix, int port) throws Exception {
+        InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig(
+                defaultPartitionSuffix);
+        config.addAdditionalBindCredentials("uid=admin,ou=system", "secret");
 
-		config.setListenerConfigs(InMemoryListenerConfig.createLDAPConfig("LDAP", port));
+        config.setListenerConfigs(InMemoryListenerConfig.createLDAPConfig("LDAP", port));
 
-		config.setEnforceSingleStructuralObjectClass(false);
-		config.setEnforceAttributeSyntaxCompliance(true);
+        config.setEnforceSingleStructuralObjectClass(false);
+        config.setEnforceAttributeSyntaxCompliance(true);
 
-		Entry entry = new Entry(new DN(defaultPartitionSuffix));
-		entry.addAttribute("objectClass", "top", "domain", "extensibleObject");
-		entry.addAttribute("dc", defaultPartitionName);
+        Entry entry = new Entry(new DN(defaultPartitionSuffix));
+        entry.addAttribute("objectClass", "top", "domain", "extensibleObject");
+        entry.addAttribute("dc", defaultPartitionName);
 
-		InMemoryDirectoryServer directoryServer = new InMemoryDirectoryServer(config);
-		directoryServer.add(entry);
-		directoryServer.startListening();
-		return new EmbeddedLdapServer(directoryServer);
-	}
+        InMemoryDirectoryServer directoryServer = new InMemoryDirectoryServer(config);
+        directoryServer.add(entry);
+        directoryServer.startListening();
+        return new EmbeddedLdapServer(directoryServer);
+    }
 
-	public void shutdown() throws Exception {
-		this.directoryServer.shutDown(true);
-	}
+    public void shutdown() throws Exception {
+        this.directoryServer.shutDown(true);
+    }
 }
