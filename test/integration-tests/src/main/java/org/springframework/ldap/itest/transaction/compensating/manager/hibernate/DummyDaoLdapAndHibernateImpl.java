@@ -4,7 +4,7 @@ import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.itest.transaction.compensating.manager.DummyException;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DummyDaoLdapAndHibernateImpl extends HibernateDaoSupport implements OrgPersonDao {
 
 	private LdapTemplate ldapTemplate;
-	
+
 	public void create(OrgPerson person) {
 		DistinguishedName dn = new DistinguishedName();
         dn.add("ou", person.getCountry());
@@ -28,14 +28,14 @@ public class DummyDaoLdapAndHibernateImpl extends HibernateDaoSupport implements
         ctx.setAttributeValue("description", person.getDescription());
         ldapTemplate.bind(dn, ctx, null);
 		this.getHibernateTemplate().saveOrUpdate(person);
-		
-		
+
+
 	}
 
 	public void createWithException(OrgPerson person) {
 		this.create(person);
 		throw new DummyException("This method failed");
-		
+
 	}
 
 	public void modifyAttributes(String dn, String lastName, String description) {
@@ -45,7 +45,7 @@ public class DummyDaoLdapAndHibernateImpl extends HibernateDaoSupport implements
 
         ldapTemplate.modifyAttributes(dn, ctx.getModificationItems());
     }
-	
+
     public void modifyAttributesWithException(String dn, String lastName,
             String description) {
         modifyAttributes(dn, lastName, description);
@@ -56,7 +56,7 @@ public class DummyDaoLdapAndHibernateImpl extends HibernateDaoSupport implements
 		String dn = prepareDn(person);
 		ldapTemplate.unbind(dn);
         this.getHibernateTemplate().delete(person);
-		
+
 	}
 
 	public void unbindWithException(OrgPerson person) {
@@ -72,22 +72,22 @@ public class DummyDaoLdapAndHibernateImpl extends HibernateDaoSupport implements
 
         ldapTemplate.modifyAttributes(ctx);
         this.getHibernateTemplate().saveOrUpdate(person);
-		
+
 	}
 
 	public void updateWithException(OrgPerson person) {
 		this.update(person);
 		throw new DummyException("This method failed");
 	}
-	
+
 	public void updateAndRename(String dn, String newDn, String updatedDescription) {
-		
+
 		DirContextAdapter ctx = (DirContextAdapter) ldapTemplate.lookup(dn);
         ctx.setAttributeValue("description", updatedDescription);
 
         ldapTemplate.modifyAttributes(ctx);
         ldapTemplate.rename(dn, newDn);
-		
+
 	}
 
 	public void updateAndRenameWithException(String dn, String newDn, String updatedDescription) {
@@ -95,12 +95,12 @@ public class DummyDaoLdapAndHibernateImpl extends HibernateDaoSupport implements
 		throw new DummyException("This method failed");
 	}
 
-	
+
 
 	public void setLdapTemplate(LdapTemplate ldapTemplate) {
 		this.ldapTemplate = ldapTemplate;
 	}
-	
+
 	private String prepareDn(OrgPerson person){
 		return "cn=" + person.getFullname() + ",ou=" + person.getCompany() + ",ou=" + person.getCountry();
 	}

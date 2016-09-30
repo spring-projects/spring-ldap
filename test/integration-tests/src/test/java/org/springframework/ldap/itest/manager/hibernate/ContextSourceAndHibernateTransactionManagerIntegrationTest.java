@@ -34,7 +34,7 @@ import org.springframework.ldap.itest.transaction.compensating.manager.DummyExce
 import org.springframework.ldap.itest.transaction.compensating.manager.hibernate.OrgPerson;
 import org.springframework.ldap.itest.transaction.compensating.manager.hibernate.OrgPersonDao;
 import org.springframework.ldap.transaction.compensating.manager.ContextSourceAndHibernateTransactionManager;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -47,7 +47,7 @@ import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Integration tests for {@link ContextSourceAndHibernateTransactionManager}.
- * 
+ *
  * @author Hans Westerbeek
  */
 @ContextConfiguration(locations = {"/conf/ldapAndHibernateTransactionTestContext.xml"})

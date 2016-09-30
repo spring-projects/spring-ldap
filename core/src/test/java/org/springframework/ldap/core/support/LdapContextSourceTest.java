@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Unit tests for the LdapContextSource class.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  */
@@ -43,19 +43,6 @@ public class LdapContextSourceTest {
 
     @Test(expected = IllegalArgumentException.class)
 	public void testAfterPropertiesSet_NoUrl() throws Exception {
-        tested.afterPropertiesSet();
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-	public void testAfterPropertiesSet_BaseAndTooEarlyJdk() throws Exception {
-		tested = new LdapContextSource() {
-			String getJdkVersion() {
-				return "1.4.1_03";
-			}
-		};
-
-		tested.setUrl("http://ldap.example.com:389");
-		tested.setBase("dc=jayway,dc=se");
         tested.afterPropertiesSet();
     }
 
@@ -135,49 +122,6 @@ public class LdapContextSourceTest {
 		assertThat(env.get(Context.PROVIDER_URL)).isEqualTo("ldap://ldap.example.com:389");
 
 		// check that base was not added to environment
-		assertThat(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY)).isNull();
-	}
-
-    @Test
-	public void testOldJdkWithNoBaseSetShouldWork() throws Exception {
-		tested = new LdapContextSource() {
-			String getJdkVersion() {
-				return "1.3";
-			}
-		};
-		tested.setUrl("ldap://ldap.example.com:389");
-		tested.afterPropertiesSet();
-
-		// check that base was not added to environment
-		Hashtable env = tested.getAnonymousEnv();
-		assertThat(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY)).isNull();
-	}
-
-    @Test(expected = IllegalArgumentException.class)
-	public void testOldJdkWithBaseSetShouldNotWork() throws Exception {
-		tested = new LdapContextSource() {
-			String getJdkVersion() {
-				return "1.3";
-			}
-		};
-		tested.setUrl("ldap://ldap.example.com:389");
-		tested.setBase("dc=example,dc=com");
-        tested.afterPropertiesSet();
-    }
-
-    @Test
-	public void testOldJdkWithBaseSetToEmptyPathShouldWork() throws Exception {
-		tested = new LdapContextSource() {
-			String getJdkVersion() {
-				return "1.3";
-			}
-		};
-		tested.setUrl("ldap://ldap.example.com:389");
-		tested.setBase(null);
-		tested.afterPropertiesSet();
-
-		// check that base was not added to environment
-		Hashtable env = tested.getAnonymousEnv();
 		assertThat(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY)).isNull();
 	}
 

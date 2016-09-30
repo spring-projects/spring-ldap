@@ -19,7 +19,6 @@ package org.springframework.ldap.core.support;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.core.JdkVersion;
 import org.springframework.ldap.UncategorizedLdapException;
 import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.ContextSource;
@@ -63,12 +62,12 @@ import java.util.Map;
  * <b>Note:</b> When using implementations of this class outside of a Spring
  * Context it is necessary to call {@link #afterPropertiesSet()} when all
  * properties are set, in order to finish up initialization.
- * 
+ *
  * @see org.springframework.ldap.core.LdapTemplate
  * @see org.springframework.ldap.core.support.DefaultDirObjectFactory
  * @see org.springframework.ldap.core.support.LdapContextSource
  * @see org.springframework.ldap.core.support.DirContextSource
- * 
+ *
  * @author Mattias Hellborg Arthursson
  * @author Adam Skogman
  * @author Ulrik Sandberg
@@ -168,7 +167,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.springframework.ldap.core.ContextSource#getReadWriteContext()
 	 */
 	public DirContext getReadWriteContext() {
@@ -183,7 +182,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * This method should typically NOT be overridden; any customization to the
 	 * authentication mechanism should be managed by setting a different
 	 * {@link DirContextAuthenticationStrategy} on this instance.
-	 * 
+	 *
 	 * @param env the environment to modify.
 	 * @param principal the principal to authenticate with.
 	 * @param credentials the credentials to authenticate with.
@@ -201,7 +200,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/**
 	 * Close the context and swallow any exceptions.
-	 * 
+	 *
 	 * @param ctx the DirContext to close.
 	 */
 	private void closeContext(DirContext ctx) {
@@ -218,7 +217,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	/**
 	 * Assemble a valid url String from all registered urls to add as
 	 * <code>PROVIDER_URL</code> to the environment.
-	 * 
+	 *
 	 * @param ldapUrls all individual url Strings.
 	 * @return the full url String
 	 */
@@ -300,7 +299,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * Set the base suffix from which all operations should origin. If a base
 	 * suffix is set, you will not have to (and, indeed, must not) specify the
 	 * full distinguished names in any operations performed.
-	 * 
+	 *
 	 * @param base the base suffix.
 	 */
 	public void setBase(String base) {
@@ -331,7 +330,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/**
 	 * Create a DirContext using the supplied environment.
-	 * 
+	 *
 	 * @param environment the LDAP environment to use when creating the
 	 * <code>DirContext</code>.
 	 * @return a new DirContext implementation initialized with the supplied
@@ -359,7 +358,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/**
 	 * Set the context factory. Default is com.sun.jndi.ldap.LdapCtxFactory.
-	 * 
+	 *
 	 * @param contextFactory the context factory used when creating Contexts.
 	 */
 	public void setContextFactory(Class<?> contextFactory) {
@@ -368,7 +367,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/**
 	 * Get the context factory.
-	 * 
+	 *
 	 * @return the context factory used when creating Contexts.
 	 */
 	public Class<?> getContextFactory() {
@@ -381,7 +380,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * implementation of javax.naming.spi.DirObjectFactory. <b>Note: </b>Setting
 	 * this value to null may have cause connection leaks when using
 	 * ContextMapper methods in LdapTemplate.
-	 * 
+	 *
 	 * @param dirObjectFactory the DirObjectFactory to be used. Null means that
 	 * no DirObjectFactory will be used.
 	 */
@@ -391,7 +390,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/**
 	 * Get the DirObjectFactory to use.
-	 * 
+	 *
 	 * @return the DirObjectFactory to be used. <code>null</code> means that no
 	 * DirObjectFactory will be used.
 	 */
@@ -408,10 +407,6 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	public void afterPropertiesSet() {
 		if (ObjectUtils.isEmpty(urls)) {
 			throw new IllegalArgumentException("At least one server url must be set");
-		}
-
-		if (!base.isEmpty() && getJdkVersion().compareTo(JDK_142) < 0) {
-			throw new IllegalArgumentException("Base path is not supported for JDK versions < 1.4.2");
 		}
 
 		if (authenticationSource == null) {
@@ -466,7 +461,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/**
 	 * Set the password (credentials) to use for getting authenticated contexts.
-	 * 
+	 *
 	 * @param password the password.
 	 */
 	public void setPassword(String password) {
@@ -484,7 +479,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	/**
 	 * Set the user distinguished name (principal) to use for getting
 	 * authenticated contexts.
-	 * 
+	 *
 	 * @param userDn the user distinguished name.
 	 */
 	public void setUserDn(String userDn) {
@@ -494,7 +489,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	/**
 	 * Gets the user distinguished name (principal) to use for getting
 	 * authenticated contexts.
-	 * 
+	 *
 	 * @return the user distinguished name.
 	 */
 	public String getUserDn() {
@@ -504,7 +499,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	/**
 	 * Set the urls of the LDAP servers. Use this method if several servers are
 	 * required.
-	 * 
+	 *
 	 * @param urls the urls of all servers.
 	 */
 	public void setUrls(String[] urls) {
@@ -513,7 +508,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/**
 	 * Get the urls of the LDAP servers.
-	 * 
+	 *
 	 * @return the urls of all servers.
 	 */
 	public String[] getUrls() {
@@ -523,7 +518,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	/**
 	 * Set the url of the LDAP server. Utility method if only one server is
 	 * used.
-	 * 
+	 *
 	 * @param url the url of the LDAP server.
 	 */
 	public void setUrl(String url) {
@@ -545,7 +540,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * each individually authenticated connection will be pooled separately.
 	 * This means that LDAP pooling will be most efficient using anonymous
 	 * connections or connections authenticated using one single system user.
-	 * 
+	 *
 	 * @param pooled whether Contexts should be pooled.
 	 */
 	public void setPooled(boolean pooled) {
@@ -554,7 +549,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/**
 	 * Get whether the pooling flag should be set.
-	 * 
+	 *
 	 * @return whether Contexts should be pooled.
 	 */
 	public boolean isPooled() {
@@ -564,16 +559,12 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	/**
 	 * If any custom environment properties are needed, these can be set using
 	 * this method.
-	 * 
+	 *
 	 * @param baseEnvironmentProperties the base environment properties that should always be used when
      *                                  creating new Context instances.
 	 */
 	public void setBaseEnvironmentProperties(Map<String, Object> baseEnvironmentProperties) {
 		this.baseEnv = new Hashtable<String, Object>(baseEnvironmentProperties);
-	}
-
-	String getJdkVersion() {
-		return JdkVersion.getJavaVersion();
 	}
 
 	protected Hashtable<String, Object> getAnonymousEnv() {
@@ -595,7 +586,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	/**
 	 * Set the authentication source to use when retrieving user principal and
 	 * credentials.
-	 * 
+	 *
 	 * @param authenticationSource the {@link AuthenticationSource} that will
 	 * provide user info.
 	 */
@@ -605,7 +596,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/**
 	 * Get the authentication source.
-	 * 
+	 *
 	 * @return the {@link AuthenticationSource} that will provide user info.
 	 */
 	public AuthenticationSource getAuthenticationSource() {
@@ -618,7 +609,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * property to <code>false</code> causes the environment Hashmap to be
 	 * rebuilt from the current property settings of this instance between each
 	 * request for an anonymous environment.
-	 * 
+	 *
 	 * @param cacheEnvironmentProperties <code>true</code> causes that the
 	 * anonymous environment properties should be cached, <code>false</code>
 	 * causes the Hashmap to be rebuilt for each request.
@@ -630,7 +621,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	/**
 	 * Set whether an anonymous environment should be used for read-only
 	 * operations. Default is <code>false</code>.
-	 * 
+	 *
 	 * @param anonymousReadOnly <code>true</code> if an anonymous environment
 	 * should be used for read-only operations, <code>false</code> otherwise.
 	 */
@@ -641,7 +632,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	/**
 	 * Get whether an anonymous environment should be used for read-only
 	 * operations.
-	 * 
+	 *
 	 * @return <code>true</code> if an anonymous environment should be used for
 	 * read-only operations, <code>false</code> otherwise.
 	 */
@@ -652,7 +643,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	/**
 	 * Set the {@link DirContextAuthenticationStrategy} to use for preparing the
 	 * environment and processing the created <code>DirContext</code> instances.
-	 * 
+	 *
 	 * @param authenticationStrategy the
 	 * {@link DirContextAuthenticationStrategy} to use; default is
 	 * {@link SimpleDirContextAuthenticationStrategy}.
@@ -678,7 +669,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	/**
 	 * Implement in subclass to create a DirContext of the desired type (e.g.
 	 * InitialDirContext or InitialLdapContext).
-	 * 
+	 *
 	 * @param environment the environment to use when creating the instance.
 	 * @return a new DirContext instance.
 	 * @throws NamingException if one is encountered when creating the instance.

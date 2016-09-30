@@ -40,7 +40,7 @@ public class LdapConditionallyFilteredTestRunner extends SpringJUnit4ClassRunner
         String noadtest = System.getProperty("adtest");
         if (noadtest != null) {
             try {
-                filter(new Categories.CategoryFilter(null, NoAdTest.class));
+                filter(Categories.CategoryFilter.exclude(NoAdTest.class));
             } catch (NoTestsRemainException e) {
                 // Nothing to do here.
             }

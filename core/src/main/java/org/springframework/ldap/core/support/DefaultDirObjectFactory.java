@@ -18,7 +18,6 @@ package org.springframework.ldap.core.support;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.JdkVersion;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.StringUtils;

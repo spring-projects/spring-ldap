@@ -33,7 +33,7 @@ import org.springframework.ldap.itest.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.itest.transaction.compensating.manager.DummyException;
 import org.springframework.ldap.itest.transaction.compensating.manager.hibernate.OrgPerson;
 import org.springframework.ldap.itest.transaction.compensating.manager.hibernate.OrgPersonDao;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 

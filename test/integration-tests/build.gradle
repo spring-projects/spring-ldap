@@ -50,7 +50,7 @@ dependencies {
     testCompile "org.springframework:spring-test:$springVersion",
                 "org.springframework:spring-aop:$springVersion",
                 "org.springframework:spring-expression:$springVersion",
-                "org.hibernate:hibernate-core:3.3.2.GA",
+                "org.hibernate:hibernate-core:$hibernateVersion",
                 "aspectj:aspectjrt:1.5.3",
                 "aspectj:aspectjweaver:1.5.3",
                 "hsqldb:hsqldb:1.8.0.7",
