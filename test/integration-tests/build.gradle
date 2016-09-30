@@ -22,8 +22,6 @@ sourceSets {
     }
 }
 
-ext.springSecurityVersion='3.0.5.RELEASE'
-
 dependencies {
     compile 	project(":spring-ldap-test"),
                 project(":spring-ldap-core-tiger")
