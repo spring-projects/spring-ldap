@@ -161,6 +161,15 @@ Naturally -- this being a Spring Framework sub-project -- we will use Spring to 
 In order to use the custom XML namespace for configuring the Spring LDAP components you need to include references to this namespace in your XML declaration as in the example above.
 ====
 
+=== What's new in 2.2?
+
+For complete details of 2.2 refer to the changelog https://github.com/spring-projects/spring-ldap/milestone/21?closed=1[2.2.0.RC1].
+The highlights of Spring LDAP 2.2 can be found below:
+
+* https://github.com/spring-projects/spring-ldap/issues/415[#415] - Support Spring 5
+* https://github.com/spring-projects/spring-ldap/pull/399[#399] - Embedded UnboundID LDAP Server support
+* https://github.com/spring-projects/spring-ldap/pull/410[#410] - Commons Pool 2 Support
+
 === What's new in 2.1?
 
 For complete details of 2.1 refer to the changelog https://github.com/spring-projects/spring-ldap/issues?q=milestone%3A2.1.0.RC1[2.1.0.RC1] and https://github.com/spring-projects/spring-ldap/issues?utf8=%E2%9C%93&q=milestone%3A2.1.0[2.1.0]
