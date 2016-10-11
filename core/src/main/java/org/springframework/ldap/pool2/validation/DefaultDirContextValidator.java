@@ -170,23 +170,17 @@ public class DefaultDirContextValidator implements DirContextValidator {
             final NamingEnumeration<SearchResult> searchResults = dirContext.search(this.base, this.filter, this.searchControls);
 
             if (searchResults.hasMore()) {
-                if (this.logger.isDebugEnabled()) {
-                    this.logger.debug("DirContext '" + dirContext + "' passed validation.");
-                }
+                this.logger.debug("DirContext '{}' passed validation.", dirContext);
 
                 return true;
             }
         }
         catch (Exception e) {
-            if(this.logger.isDebugEnabled()) {
-                this.logger.debug("DirContext '" + dirContext + "' failed validation with an exception.", e);
-            }
+            this.logger.debug("DirContext '{}' failed validation with an exception.", dirContext, e);
 			return false;
         }
 
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("DirContext '" + dirContext + "' failed validation.");
-        }
+        this.logger.debug("DirContext '{}' failed validation.", dirContext);
         return false;
     }
 }
