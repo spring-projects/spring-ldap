@@ -168,7 +168,7 @@ The highlights of Spring LDAP 2.2 can be found below:
 
 * https://github.com/spring-projects/spring-ldap/issues/415[#415] - Support Spring 5
 * https://github.com/spring-projects/spring-ldap/pull/399[#399] - Embedded UnboundID LDAP Server support
-* https://github.com/spring-projects/spring-ldap/pull/410[#410] - Commons Pool 2 Support
+* https://github.com/spring-projects/spring-ldap/pull/410[#410] - Add documentation for the Commons Pool 2 Support
 
 === What's new in 2.1?
 
