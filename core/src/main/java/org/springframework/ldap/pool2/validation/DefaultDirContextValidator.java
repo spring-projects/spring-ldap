@@ -181,6 +181,7 @@ public class DefaultDirContextValidator implements DirContextValidator {
             if(this.logger.isDebugEnabled()) {
                 this.logger.debug("DirContext '" + dirContext + "' failed validation with an exception.", e);
             }
+			return false;
         }
 
         if (this.logger.isDebugEnabled()) {
