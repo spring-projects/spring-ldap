@@ -122,6 +122,8 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
         		managedAttributeNames.addAll(Arrays.asList(attributesOfField));
         	}
         }
+        // always add the mandatory attribute objectclass (which is always used for the mapping)
+        managedAttributeNames.add(OBJECT_CLASS_ATTRIBUTE);
         return managedAttributeNames.toArray(new String[managedAttributeNames.size()]);
     }
 
