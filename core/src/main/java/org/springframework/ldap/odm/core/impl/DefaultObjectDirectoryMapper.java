@@ -117,7 +117,10 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
         Set<String> managedAttributeNames = new HashSet<String>();
         // extract all relevant attributes
         for (Field field : entityData.metaData) {
-        	managedAttributeNames.addAll(Arrays.asList(entityData.metaData.getAttribute(field).getAttributes()));
+        	String[] attributesOfField = entityData.metaData.getAttribute(field).getAttributes();
+        	if (attributesOfField != null && attributesOfField.length > 0) {
+        		managedAttributeNames.addAll(Arrays.asList(attributesOfField));
+        	}
         }
         return managedAttributeNames.toArray(new String[managedAttributeNames.size()]);
     }
