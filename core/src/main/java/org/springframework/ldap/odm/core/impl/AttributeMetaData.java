@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.ldap.odm.core.impl;
 
 import org.springframework.ldap.UncategorizedLdapException;
@@ -42,7 +43,6 @@ import java.util.TreeSet;
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
  */
 /* package */ final class AttributeMetaData {
-
     private static final CaseIgnoreString OBJECT_CLASS_ATTRIBUTE_CI=new CaseIgnoreString("objectclass");
     
     // Name of the LDAP attribute from the @Attribute annotation
@@ -233,6 +233,7 @@ import java.util.TreeSet;
         // Reflection data
         determineFieldType(field);
 
+
         // Data from the @Attribute annotation
         boolean foundAttributeAnnotation=processAttributeAnnotation(field);
 
@@ -252,6 +253,7 @@ import java.util.TreeSet;
                     field.getDeclaringClass()));
         }
     }
+
 
     public String getSyntax() {
         return syntax;
