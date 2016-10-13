@@ -19,8 +19,6 @@ package org.springframework.ldap.odm.core;
 import org.springframework.LdapDataEntry;
 import org.springframework.ldap.filter.Filter;
 
-import java.util.Set;
-
 import javax.naming.Name;
 
 /**
