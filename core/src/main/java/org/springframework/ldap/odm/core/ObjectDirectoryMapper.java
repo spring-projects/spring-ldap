@@ -19,6 +19,8 @@ package org.springframework.ldap.odm.core;
 import org.springframework.LdapDataEntry;
 import org.springframework.ldap.filter.Filter;
 
+import java.util.Set;
+
 import javax.naming.Name;
 
 /**
@@ -93,7 +95,8 @@ public interface ObjectDirectoryMapper {
      * managed classes.
      *
      * @param clazz the class to manage.
+     * @return all relevant attribute names used in the given class.
      * @throws org.springframework.ldap.NamingException on error.
      */
-    void manageClass(Class<?> clazz);
+    String[] manageClass(Class<?> clazz);
 }

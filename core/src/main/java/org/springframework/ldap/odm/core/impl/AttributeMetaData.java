@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.ldap.odm.core.impl;
 
 import org.springframework.ldap.UncategorizedLdapException;
@@ -43,6 +42,7 @@ import java.util.TreeSet;
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
  */
 /* package */ final class AttributeMetaData {
+
     private static final CaseIgnoreString OBJECT_CLASS_ATTRIBUTE_CI=new CaseIgnoreString("objectclass");
     
     // Name of the LDAP attribute from the @Attribute annotation
@@ -75,6 +75,10 @@ import java.util.TreeSet;
 
     private boolean isTransient = false;
 
+    private boolean isReadOnly = false;
+
+    private String[] attributes;
+
     private DnAttribute dnAttribute;
 
     // Extract information from the @Attribute annotation:
@@ -95,6 +99,7 @@ import java.util.TreeSet;
         // Grab the @Attribute annotation
         Attribute attribute = field.getAnnotation(Attribute.class);
 
+        List<String> attrList = new ArrayList<String>();
         // Did we find the annotation?
         if (attribute != null) {
             // Pull attribute name, syntax and whether attribute is binary
@@ -104,10 +109,13 @@ import java.util.TreeSet;
             // Would be more efficient to use !isEmpty - but that then makes us Java 6 dependent
             if (localAttributeName != null && localAttributeName.length()>0) {
                 name = new CaseIgnoreString(localAttributeName);
+                attrList.add(localAttributeName);
             }
             syntax = attribute.syntax();
             isBinary = attribute.type() == Attribute.Type.BINARY;
+            isReadOnly = attribute.readonly();
         }
+        attributes = attrList.toArray(new String[attrList.size()]);
         
         isObjectClass=name.equals(OBJECT_CLASS_ATTRIBUTE_CI);
         
@@ -225,7 +233,6 @@ import java.util.TreeSet;
         // Reflection data
         determineFieldType(field);
 
-
         // Data from the @Attribute annotation
         boolean foundAttributeAnnotation=processAttributeAnnotation(field);
 
@@ -245,7 +252,6 @@ import java.util.TreeSet;
                     field.getDeclaringClass()));
         }
     }
-
 
     public String getSyntax() {
         return syntax;
@@ -271,6 +277,10 @@ import java.util.TreeSet;
         return isId;
     }
 
+    public boolean isReadOnly() {
+        return isReadOnly;
+    }
+
     public boolean isTransient() {
         return isTransient;
     }
@@ -291,6 +301,10 @@ import java.util.TreeSet;
         return valueClass;
     }
 
+    public String[] getAttributes() {
+        return attributes;
+    }
+
     public Class<?> getJndiClass() {
         if(isBinary()) {
             return byte[].class;
@@ -308,7 +322,7 @@ import java.util.TreeSet;
      */
     @Override
     public String toString() {
-        return String.format("name=%1$s | field=%2$s | valueClass=%3$s | syntax=%4$s| isBinary=%5$s | isId=%6$s | isList=%7$s | isObjectClass=%8$s",
-                             getName(), getField(), getValueClass(), getSyntax(), isBinary(), isId(), isCollection(), isObjectClass());
+        return String.format("name=%1$s | field=%2$s | valueClass=%3$s | syntax=%4$s| isBinary=%5$s | isId=%6$s | isReadOnly=%7$s |  isList=%8$s | isObjectClass=%9$s",
+                getName(), getField(), getValueClass(), getSyntax(), isBinary(), isId(), isReadOnly(), isCollection(), isObjectClass());
     }
 }

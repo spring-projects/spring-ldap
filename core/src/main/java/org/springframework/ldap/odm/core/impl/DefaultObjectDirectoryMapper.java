@@ -18,6 +18,7 @@ package org.springframework.ldap.odm.core.impl;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -110,9 +111,15 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
     }
 
     @Override
-    public void manageClass(Class<?> clazz) {
+    public String[] manageClass(Class<?> clazz) {
         // This throws exception if data is invalid
-        getEntityData(clazz);
+        EntityData entityData = getEntityData(clazz);
+        Set<String> managedAttributeNames = new HashSet<String>();
+        // extract all relevant attributes
+        for (Field field : entityData.metaData) {
+        	managedAttributeNames.addAll(Arrays.asList(entityData.metaData.getAttribute(field).getAttributes()));
+        }
+        return managedAttributeNames.toArray(new String[managedAttributeNames.size()]);
     }
 
     /**
@@ -169,7 +176,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
                     "Missing converter from %1$s to %2$s, this is needed for field %3$s on Entry %4$s",
                     jndiClass, javaClass, field.getName(), managedClass));
         }
-        if (!converterManager.canConvert(javaClass, attributeInfo.getSyntax(), jndiClass)) {
+        if (!attributeInfo.isReadOnly() && !converterManager.canConvert(javaClass, attributeInfo.getSyntax(), jndiClass)) {
             throw new InvalidEntryException(String.format(
                     "Missing converter from %1$s to %2$s, this is needed for field %3$s on Entry %4$s",
                     javaClass, jndiClass, field.getName(), managedClass));
@@ -200,7 +207,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
             // Grab the meta data for the current field
             AttributeMetaData attributeInfo = metaData.getAttribute(field);
             // We dealt with the object class field about, and the DN is set by the call to write the object to LDAP
-            if (!attributeInfo.isTransient() && !attributeInfo.isId() && !(attributeInfo.isObjectClass())) {
+            if (!attributeInfo.isTransient() && !attributeInfo.isId() && !(attributeInfo.isObjectClass()) && !(attributeInfo.isReadOnly())) {
                 try {
                     // If this is a "binary" object the JNDI expects a byte[] otherwise a String
                     Class<?> targetClass = attributeInfo.getJndiClass();

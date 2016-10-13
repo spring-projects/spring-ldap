@@ -62,4 +62,17 @@ public @interface Attribute {
      * @return The LDAP syntax of this attribute.
      */
     String syntax() default "";
+
+    /**
+     * A boolean parameter to indicate if the attribute should be read only.
+     * <p>
+     * This value allows attributes to be read on read, but not persisted, there
+     * are many operational and read-only ldap attributes which will throw errors
+     * if they are persisted back to ldap.
+     * see {@link org.springframework.ldap.odm.core.impl.AttributeMetaData}
+     *
+     * @return true is the attribute should not be written to ldap.
+     */
+    boolean readonly() default false;
+
 }
