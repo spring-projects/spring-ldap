@@ -1690,9 +1690,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         }
 
         // Make sure the class is OK before doing the lookup
-        odm.manageClass(clazz);
+        String[] attributes = odm.manageClass(clazz);
 
-        T result = lookup(dn, new ContextMapper<T>() {
+        T result = lookup(dn, attributes, new ContextMapper<T>() {
             @Override
             public T mapFromContext(Object ctx) throws javax.naming.NamingException {
                 return odm.mapFromLdapDataEntry((DirContextOperations) ctx, clazz);
@@ -1821,7 +1821,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      */
     @Override
     public <T> List<T> find(Name base, Filter filter, SearchControls searchControls, final Class<T> clazz) {
-        Filter finalFilter = odm.filterFor(clazz, filter);
+    	Filter finalFilter = odm.filterFor(clazz, filter);
 
         // Search from the root if we are not told where to search from
         Name localBase = base;
@@ -1829,6 +1829,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
             localBase = LdapUtils.emptyLdapName();
         }
 
+        // extend search controls with the attributes to return
+        String[] attributes = odm.manageClass(clazz);
+        searchControls.setReturningAttributes(attributes);
+        
         if (LOG.isDebugEnabled()) {
             LOG.debug(String.format("Searching - base=%1$s, finalFilter=%2$s, scope=%3$s", base, finalFilter, searchControls));
         }
