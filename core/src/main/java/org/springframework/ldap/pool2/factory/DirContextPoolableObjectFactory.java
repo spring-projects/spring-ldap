@@ -300,7 +300,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
                 for (Class<? extends Throwable> clazz : nonTransientExceptions) {
                     if(clazz.isAssignableFrom(targetExceptionClass)) {
                         logger.info(
-                                String.format("An %s - explicitly configured to be a non-transient exception - encountered; eagerly invalidating the target context.",
+                                String.format("A %s - explicitly configured to be a non-transient exception - encountered; eagerly invalidating the target context.",
                                         targetExceptionClass));
                         nonTransientEncountered = true;
                         break;
@@ -311,7 +311,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
                     hasFailed = true;
                 } else {
                     if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("An %s - not explicitly configured to be a non-transient exception - encountered; ignoring.",
+                        logger.debug(String.format("A %s - not explicitly configured to be a non-transient exception - encountered; ignoring.",
                                 targetExceptionClass));
                     }
                 }
