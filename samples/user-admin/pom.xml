@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.springframework.ldap</groupId>
   <artifactId>spring-ldap-user-admin-sample</artifactId>
-  <version>2.2.0.RC1</version>
+  <version>2.2.0.RELEASE</version>
   <packaging>war</packaging>
   <name>spring-ldap-user-admin-sample</name>
   <description>spring-ldap-user-admin-sample</description>
@@ -93,7 +93,7 @@
     <dependency>
       <groupId>org.springframework.ldap</groupId>
       <artifactId>spring-ldap-test</artifactId>
-      <version>2.2.0.RC1</version>
+      <version>2.2.0.RELEASE</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -139,12 +139,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  <repositories>
-    <repository>
-      <id>spring-snasphot</id>
-      <url>http://repo.springsource.org/libs-snapshot</url>
-    </repository>
-  </repositories>
   <build>
     <plugins>
       <plugin>
