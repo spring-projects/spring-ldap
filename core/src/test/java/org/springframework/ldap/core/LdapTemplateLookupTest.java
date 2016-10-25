@@ -16,12 +16,13 @@
 
 package org.springframework.ldap.core;
 
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.springframework.ldap.NameNotFoundException;
-import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
-import org.springframework.ldap.support.LdapUtils;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Collections;
 
 import javax.naming.Name;
 import javax.naming.NamingException;
@@ -30,11 +31,11 @@ import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 import javax.naming.ldap.LdapName;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.ldap.NameNotFoundException;
+import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
+import org.springframework.ldap.support.LdapUtils;
 
 public class LdapTemplateLookupTest {
 
@@ -196,7 +197,6 @@ public class LdapTemplateLookupTest {
     }
 
     @Test
-    @Ignore("Currently throws a NPE due to the nameMock.getAll returning null")
     public void testFindByDn() throws NamingException {
         expectGetReadOnlyContext();
 
@@ -207,6 +207,7 @@ public class LdapTemplateLookupTest {
         when(dirContextMock.lookup(nameMock)).thenReturn(expectedContext);
         when(odmMock.mapFromLdapDataEntry(expectedContext, expectedClass)).thenReturn(transformed);
 
+        when(nameMock.getAll()).thenReturn(Collections.<String> enumeration(Collections.<String> emptyList()));
         // Perform test
         Object result = tested.findByDn(nameMock, expectedClass);
         assertThat(result).isSameAs(transformed);
