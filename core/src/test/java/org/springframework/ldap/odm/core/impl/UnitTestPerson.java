@@ -16,14 +16,15 @@
 
 package org.springframework.ldap.odm.core.impl;
 
+import java.util.List;
+
+import javax.naming.Name;
+
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.DnAttribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
 import org.springframework.ldap.odm.annotations.Transient;
-
-import javax.naming.Name;
-import java.util.List;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -54,4 +55,7 @@ public class UnitTestPerson {
     // This should be automatically found
     private String telephoneNumber;
 
+    // operational attribute (defined in https://tools.ietf.org/html/rfc4530)
+    @Attribute(readonly = true)
+    private String entryUUID;
 }
