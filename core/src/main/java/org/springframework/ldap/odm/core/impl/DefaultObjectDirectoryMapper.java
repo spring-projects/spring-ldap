@@ -70,7 +70,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 
 
     public DefaultObjectDirectoryMapper() {
-        this.converterManager = createDefaultConverterManager();
+        converterManager = createDefaultConverterManager();
     }
 
     private static ConverterManager createDefaultConverterManager() {
@@ -117,19 +117,19 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
         Set<String> managedAttributeNames = new HashSet<String>();
         // extract all relevant attributes
         for (Field field : entityData.metaData) {
-        	AttributeMetaData attributeMetaData = entityData.metaData.getAttribute(field);
-        	// skip transient field
-        	if (attributeMetaData.isTransient()) {
-        		continue;
-        	}
-        	String[] attributesOfField = attributeMetaData.getAttributes();
-        	if (attributesOfField != null && attributesOfField.length > 0) {
-        		// attribute names are either given through annotation
-        		managedAttributeNames.addAll(Arrays.asList(attributesOfField));
-        	} else {
-        		// or implicitly by relying on the field name
-        		managedAttributeNames.add(field.getName());
-        	}
+            AttributeMetaData attributeMetaData = entityData.metaData.getAttribute(field);
+            // skip transient fields
+            if (attributeMetaData.isTransient()) {
+                continue;
+            }
+            String[] attributesOfField = attributeMetaData.getAttributes();
+            if (attributesOfField != null && attributesOfField.length > 0) {
+                // attribute names are either given through annotation
+                managedAttributeNames.addAll(Arrays.asList(attributesOfField));
+            } else {
+                // or implicitly by relying on the field name
+                managedAttributeNames.add(field.getName());
+            }
         }
         // always add the mandatory attribute objectclass (which is always used for the mapping)
         managedAttributeNames.add(OBJECT_CLASS_ATTRIBUTE);

@@ -1,13 +1,14 @@
 package org.springframework.ldap.itest.odm;
 
+import java.util.List;
+
+import javax.naming.Name;
+
 import org.springframework.data.domain.Persistable;
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
 import org.springframework.ldap.odm.annotations.Transient;
-
-import javax.naming.Name;
-import java.util.List;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -34,6 +35,10 @@ public class Person implements Persistable<Name> {
 
     @Transient
     private boolean isNew = false;
+
+    // operational attribute according to https://tools.ietf.org/html/rfc4530
+    @Attribute(name = "entryUUID", readonly = true)
+    private String entryUuid;
 
     @Override
     public Name getId() {
@@ -95,5 +100,9 @@ public class Person implements Persistable<Name> {
 
     public void setTelephoneNumber(String telephoneNumber) {
         this.telephoneNumber = telephoneNumber;
+    }
+
+    public String getEntryUuid() {
+        return entryUuid;
     }
 }

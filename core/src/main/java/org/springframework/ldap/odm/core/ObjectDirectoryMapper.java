@@ -16,10 +16,10 @@
 
 package org.springframework.ldap.odm.core;
 
+import javax.naming.Name;
+
 import org.springframework.LdapDataEntry;
 import org.springframework.ldap.filter.Filter;
-
-import javax.naming.Name;
 
 /**
  * The ObjectDirectoryMapper keeps track of managed class metadata and is used by {@link org.springframework.ldap.core.LdapTemplate}
@@ -88,13 +88,11 @@ public interface ObjectDirectoryMapper {
      */
     String attributeFor(Class<?> clazz, String fieldName);
 
-    /**
-     * Check if the specified class is already managed by this instance; if not, check the metadata and add the class to the
-     * managed classes.
+    /** Check if the specified class is already managed by this instance; if not, check the metadata and add the class to the managed
+     * classes.
      *
      * @param clazz the class to manage.
-     * @return all relevant attribute names used in the given class.
-     * @throws org.springframework.ldap.NamingException on error.
-     */
+     * @return all relevant attribute names used in the given class (either for reading from LDAP or for writing to LDAP or both)
+     * @throws org.springframework.ldap.NamingException on error. */
     String[] manageClass(Class<?> clazz);
 }
