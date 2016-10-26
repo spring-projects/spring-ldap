@@ -114,8 +114,8 @@ public class DefaultObjectDirectoryMapperTest {
                              String expectedDnAttributeName,
                              boolean expectedBinary,
                              boolean expectedTransient,
-            boolean expectedList,
-            boolean expectedReadOnly) {
+                             boolean expectedList,
+                             boolean expectedReadOnly) {
 
         for (Field field : entityData.metaData) {
             if (fieldName.equals(field.getName())) {

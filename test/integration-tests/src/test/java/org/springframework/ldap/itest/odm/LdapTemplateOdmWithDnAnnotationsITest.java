@@ -16,19 +16,19 @@
 
 package org.springframework.ldap.itest.odm;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
+
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.itest.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
-import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -52,6 +52,7 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
         // Automatically calculated
         assertThat(person.getCompany()).isEqualTo("company1");
         assertThat(person.getCountry()).isEqualTo("Sweden");
+        assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
     }
 
     @Test
@@ -68,6 +69,7 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
         // Automatically calculated
         assertThat(person.getCompany()).isEqualTo("company1");
         assertThat(person.getCountry()).isEqualTo("Sweden");
+        assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
     }
 
     @Test
@@ -83,6 +85,7 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
         // Automatically calculated
         assertThat(person.getCompany()).isEqualTo("company1");
         assertThat(person.getCountry()).isEqualTo("Sweden");
+        assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
     }
 
     private PersonWithDnAnnotations findPerson(List<PersonWithDnAnnotations> persons, String cn) {
@@ -124,6 +127,7 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
         // Automatically calculated
         assertThat(person.getCompany()).isEqualTo("company1");
         assertThat(person.getCountry()).isEqualTo("Sweden");
+        assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
     }
 
     @Test
@@ -132,6 +136,8 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
                 .where("cn").is("Some Person3"), PersonWithDnAnnotations.class);
 
         person.setDesc(Arrays.asList("New Description"));
+        String entryUuid = person.getEntryUuid();
+        assertThat(entryUuid).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
         tested.update(person);
 
         person = tested.findByDn(
@@ -142,6 +148,7 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
         assertThat(person.getSurname()).isEqualTo("Person3");
         assertThat(person.getDesc().get(0)).isEqualTo("New Description");
         assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
+        assertThat(person.getEntryUuid()).isEqualTo(entryUuid);
     }
 
     @Test
@@ -151,6 +158,8 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
 
         // This should make the entry move
         person.setCountry("Norway");
+        String entryUuid = person.getEntryUuid();
+        assertThat(entryUuid).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
         tested.update(person);
 
         person = tested.findByDn(
@@ -162,5 +171,6 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
         assertThat(person.getCountry()).isEqualTo("Norway");
         assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
         assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
+        assertThat(person.getEntryUuid()).isEqualTo(entryUuid);
     }
 }

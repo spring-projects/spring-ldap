@@ -16,6 +16,13 @@
 
 package org.springframework.ldap.itest.odm;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
+
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -25,13 +32,6 @@ import org.springframework.ldap.odm.core.OdmException;
 import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
-import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -51,6 +51,7 @@ public class LdapTemplateOdmWithNoDnAnnotationsITest extends AbstractLdapTemplat
         assertThat(person.getSurname()).isEqualTo("Person3");
         assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
         assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
+        assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
     }
 
     @Test
@@ -62,6 +63,7 @@ public class LdapTemplateOdmWithNoDnAnnotationsITest extends AbstractLdapTemplat
         assertThat(person.getSurname()).isEqualTo("Person3");
         assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
         assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
+        assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
     }
 
     @Test(expected = OdmException.class)
@@ -88,6 +90,7 @@ public class LdapTemplateOdmWithNoDnAnnotationsITest extends AbstractLdapTemplat
         assertThat(person.getSurname()).isEqualTo("Person3");
         assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
         assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
+        assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
     }
 
     @Test
@@ -129,6 +132,7 @@ public class LdapTemplateOdmWithNoDnAnnotationsITest extends AbstractLdapTemplat
         assertThat(person.getSurname()).isEqualTo("Person");
         assertThat(person.getDesc().get(0)).isEqualTo("This is the description");
         assertThat(person.getTelephoneNumber()).isEqualTo("0123456");
+        assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
     }
 
     @Test
@@ -137,6 +141,8 @@ public class LdapTemplateOdmWithNoDnAnnotationsITest extends AbstractLdapTemplat
                 .where("cn").is("Some Person3"), Person.class);
 
         person.setDesc(Arrays.asList("New Description"));
+        String entryUuid = person.getEntryUuid();
+        assertThat(entryUuid).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
         tested.update(person);
 
         person = tested.findOne(query()
@@ -146,6 +152,7 @@ public class LdapTemplateOdmWithNoDnAnnotationsITest extends AbstractLdapTemplat
         assertThat(person.getSurname()).isEqualTo("Person3");
         assertThat(person.getDesc().get(0)).isEqualTo("New Description");
         assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
+        assertThat(person.getEntryUuid()).isEqualTo(entryUuid);
     }
 
     @Test
