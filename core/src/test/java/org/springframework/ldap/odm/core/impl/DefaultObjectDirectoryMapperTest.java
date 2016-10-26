@@ -1,6 +1,12 @@
 package org.springframework.ldap.odm.core.impl;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.powermock.api.mockito.PowerMockito.when;
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
+
 import java.lang.reflect.Field;
+import java.util.Arrays;
 
 import javax.naming.Name;
 
@@ -10,15 +16,9 @@ import org.junit.runner.RunWith;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import org.springframework.core.SpringVersion;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.StringUtils;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -48,7 +48,8 @@ public class DefaultObjectDirectoryMapperTest {
 
     @Test
     public void testMapping() {
-        tested.manageClass(UnitTestPerson.class);
+        assertThat(tested.manageClass(UnitTestPerson.class))
+                .containsOnlyElementsOf(Arrays.asList("dn", "cn", "sn", "description", "telephoneNumber", "entryUUID", "objectclass"));
 
         DefaultObjectDirectoryMapper.EntityData entityData = tested.getMetaDataMap().get(UnitTestPerson.class);
 
@@ -60,7 +61,7 @@ public class DefaultObjectDirectoryMapperTest {
                 .and("objectclass").is("top")
                 .filter());
 
-        assertThat(entityData.metaData).hasSize(7);
+        assertThat(entityData.metaData).hasSize(8);
 
         AttributeMetaData idAttribute = entityData.metaData.getIdAttribute();
         assertThat(idAttribute.getField().getName()).isEqualTo("dn");
@@ -70,12 +71,13 @@ public class DefaultObjectDirectoryMapperTest {
         assertThat(idAttribute.isTransient()).isFalse();
         assertThat(idAttribute.isCollection()).isFalse();
 
-        assertField(entityData, "fullName", "cn", "cn", false, false, false);
-        assertField(entityData, "lastName", "sn", null, false, false, false);
-        assertField(entityData, "description", "description", null, false, false, true);
-        assertField(entityData, "country", null, "c", false, true, false);
-        assertField(entityData, "company", null, "ou", false, true, false);
-        assertField(entityData, "telephoneNumber", "telephoneNumber", null, false, false, false);
+        assertField(entityData, "fullName", "cn", "cn", false, false, false, false);
+        assertField(entityData, "lastName", "sn", null, false, false, false, false);
+        assertField(entityData, "description", "description", null, false, false, true, false);
+        assertField(entityData, "country", null, "c", false, true, false, false);
+        assertField(entityData, "company", null, "ou", false, true, false, false);
+        assertField(entityData, "telephoneNumber", "telephoneNumber", null, false, false, false, false);
+        assertField(entityData, "entryUUID", "entryUUID", null, false, false, false, true);
     }
 
     @Test
@@ -112,7 +114,8 @@ public class DefaultObjectDirectoryMapperTest {
                              String expectedDnAttributeName,
                              boolean expectedBinary,
                              boolean expectedTransient,
-                             boolean expectedList) {
+            boolean expectedList,
+            boolean expectedReadOnly) {
 
         for (Field field : entityData.metaData) {
             if (fieldName.equals(field.getName())) {
@@ -133,6 +136,7 @@ public class DefaultObjectDirectoryMapperTest {
                 assertThat(attribute.isBinary()).isEqualTo(expectedBinary);
                 assertThat(attribute.isTransient()).isEqualTo(expectedTransient);
                 assertThat(attribute.isCollection()).isEqualTo(expectedList);
+                assertThat(attribute.isReadOnly()).isEqualTo(expectedReadOnly);
             }
         }
     }
