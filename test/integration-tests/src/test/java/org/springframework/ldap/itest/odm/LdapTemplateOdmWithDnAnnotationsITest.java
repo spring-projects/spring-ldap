@@ -171,6 +171,7 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
         assertThat(person.getCountry()).isEqualTo("Norway");
         assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
         assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
-        assertThat(person.getEntryUuid()).isEqualTo(entryUuid);
+        assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
+        assertThat(person.getEntryUuid()).isNotEqualTo(entryUuid);
     }
 }
