@@ -69,7 +69,7 @@ public final class NameAwareAttributes implements Attributes {
     }
 
     @Override
-    public NamingEnumeration<? extends Attribute> getAll() {
+    public NamingEnumeration<NameAwareAttribute> getAll() {
         return new IterableNamingEnumeration<NameAwareAttribute>(attributes.values());
     }
 

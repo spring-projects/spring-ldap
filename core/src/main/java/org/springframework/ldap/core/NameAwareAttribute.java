@@ -40,7 +40,7 @@ import java.util.Set;
  * @author Mattias Hellborg Arthursson
  * @since 2.0
  */
-public final class NameAwareAttribute implements Attribute {
+public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
     private final String id;
     private final boolean orderMatters;
@@ -219,6 +219,13 @@ public final class NameAwareAttribute implements Attribute {
         return orderMatters;
     }
 
+    /**
+     * <p>
+     * Due to performance reasons it is not advised to iterate over the attribute's values using this method.
+     * Please use the {@link #iterator()} instead.
+     * </p>
+     * {@inheritDoc}
+     */
     @Override
     public Object get(int ix) throws NamingException {
         Iterator<Object> iterator = values.iterator();
@@ -348,4 +355,10 @@ public final class NameAwareAttribute implements Attribute {
         return String.format("NameAwareAttribute; id: %s; hasValuesAsNames: %s; orderMatters: %s; values: %s",
                 id, hasValuesAsNames(), orderMatters, values);
     }
+
+    @Override
+    public Iterator<Object> iterator() {
+        return values.iterator();
+    }
+
 }
