@@ -19,9 +19,13 @@ package org.springframework.ldap.core;
 import org.junit.Test;
 import org.springframework.ldap.support.LdapUtils;
 
+import javax.naming.InvalidNameException;
+import javax.naming.Name;
 import javax.naming.NamingException;
+import javax.naming.ldap.LdapName;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -257,5 +261,22 @@ public class NameAwareAttributeTest {
         assertThat(attr1.equals(attr2)).isFalse();
         assertThat(attr1.get()).isEqualTo(expectedName1);
         assertThat(attr2.get()).isEqualTo(expectedValue2);
+    }
+
+    @Test
+    public void testRemoveByIndexUpdatesHashcodeAndEquals() throws InvalidNameException {
+        // given
+        Name a = new LdapName("cn=user1");
+        Name b = new LdapName("cn=user2");
+        final NameAwareAttribute attribute = new NameAwareAttribute("test attribute");
+        attribute.add(a);
+        attribute.add(b);
+        // when
+        attribute.remove(0);
+        // then
+        final NameAwareAttribute expectedAttribute = new NameAwareAttribute("test attribute");
+        expectedAttribute.add(b);
+        assertTrue(attribute.equals(expectedAttribute));
+        assertTrue(attribute.hashCode() == expectedAttribute.hashCode());
     }
 }
