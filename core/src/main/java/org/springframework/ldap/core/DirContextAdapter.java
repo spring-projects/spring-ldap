@@ -458,8 +458,8 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	private boolean isChanged(String name, Object[] values, boolean orderMatters) {
 
-		Attribute orig = originalAttrs.get(name);
-		Attribute prev = updatedAttrs.get(name);
+		NameAwareAttribute orig = originalAttrs.get(name);
+		NameAwareAttribute prev = updatedAttrs.get(name);
 
 		// values == null and values.length == 0 is treated the same way
 		boolean emptyNewValue = (values == null || values.length == 0);
@@ -494,64 +494,40 @@ public class DirContextAdapter implements DirContextOperations {
 		// Check contents of arrays
 
 		// Order DOES matter, e.g. first names
-		try {
-			for (int i = 0; i < orig.size(); i++) {
-				Object obj = orig.get(i);
-				// TRUE if one value is not equal
-				if (!(obj instanceof String)) {
-					return true;
-				}
-				if (orderMatters) {
-					// check only the string with same index
-					if (!values[i].equals(obj)) {
-						return true;
-					}
-				}
-				else {
-					// check all strings
-					if (!ObjectUtils.containsElement(values, obj)) {
-						return true;
-					}
-				}
-			}
-
-		}
-		catch (NamingException e) {
-			// TRUE if we can't access the value
+		if (isAttributeUpdated(values, orderMatters, orig))
 			return true;
-		}
 
 		if (prev != null) {
 			// Also check against updatedAttrs, since there might have been
 			// a previous update
-			try {
-				for (int i = 0; i < prev.size(); i++) {
-					Object obj = prev.get(i);
-					// TRUE if one value is not equal
-					if (!(obj instanceof String)) {
-						return true;
-					}
-					if (orderMatters) {
-						// check only the string with same index
-						if (!values[i].equals(obj)) {
-							return true;
-						}
-					}
-					else {
-						// check all strings
-						if (!ObjectUtils.containsElement(values, obj)) {
-							return true;
-						}
-					}
-				}
-
-			}
-			catch (NamingException e) {
-				// TRUE if we can't access the value
+			if (isAttributeUpdated(values, orderMatters, prev))
 				return true;
-			}
 		}
 		// FALSE since we have compared all values
+		return false;
+	}
+
+	private boolean isAttributeUpdated(Object[] values, boolean orderMatters, NameAwareAttribute orig) {
+		int i = 0;
+		for (Object obj : orig) {
+			// TRUE if one value is not equal
+			if (!(obj instanceof String)) {
+				return true;
+			}
+			if (orderMatters) {
+				// check only the string with same index
+				if (!values[i].equals(obj)) {
+					return true;
+				}
+			}
+			else {
+				// check all strings
+				if (!ObjectUtils.containsElement(values, obj)) {
+					return true;
+				}
+			}
+			i++;
+		}
 		return false;
 	}
 
@@ -1413,7 +1389,7 @@ public class DirContextAdapter implements DirContextOperations {
 		builder.append(" {");
 
 		try {
-			for (NamingEnumeration<? extends Attribute> i = originalAttrs.getAll(); i.hasMore();) {
+			for (NamingEnumeration<NameAwareAttribute> i = originalAttrs.getAll(); i.hasMore();) {
 				Attribute attribute = i.next();
 				if (attribute.size() == 1) {
 					builder.append(attribute.getID());
@@ -1421,15 +1397,10 @@ public class DirContextAdapter implements DirContextOperations {
 					builder.append(attribute.get());
 				}
 				else {
-					for (int j = 0; j < attribute.size(); j++) {
-						if (j > 0) {
-							builder.append(", ");
-						}
-						builder.append(attribute.getID());
-						builder.append('[');
-						builder.append(j);
-						builder.append("]=");
-						builder.append(attribute.get(j));
+					int j = 0;
+					for (Object value : (Iterable) attribute) {
+						appendAttributeValue(builder, attribute.getID(), value, j);
+						j++;
 					}
 				}
 
@@ -1446,7 +1417,18 @@ public class DirContextAdapter implements DirContextOperations {
 		return builder.toString();
 	}
 
-    /**
+	private void appendAttributeValue(StringBuilder builder, String attributeID, Object value, int index) throws NamingException {
+		if (index > 0) {
+            builder.append(", ");
+        }
+		builder.append(attributeID);
+		builder.append('[');
+		builder.append(index);
+		builder.append("]=");
+		builder.append(value);
+	}
+
+	/**
      * {@inheritDoc}
      */
     @Override

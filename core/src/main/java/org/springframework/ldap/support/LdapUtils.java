@@ -299,17 +299,29 @@ public final class LdapUtils {
 		Assert.notNull(attribute, "Attribute must not be null");
 		Assert.notNull(callbackHandler, "callbackHandler must not be null");
 
-		for (int i = 0; i < attribute.size(); i++) {
-			try {
-				callbackHandler.handleAttributeValue(attribute.getID(), attribute.get(i), i);
+		if (attribute instanceof Iterable) {
+			int i = 0;
+			for (Object obj : (Iterable) attribute) {
+				handleAttributeValue(attribute.getID(), obj, i, callbackHandler);
+				i++;
 			}
-			catch (javax.naming.NamingException e) {
-				throw convertLdapException(e);
+		}
+		else {
+			for (int i = 0; i < attribute.size(); i++) {
+				try {
+					handleAttributeValue(attribute.getID(), attribute.get(i), i, callbackHandler);
+				} catch (javax.naming.NamingException e) {
+					throw convertLdapException(e);
+				}
 			}
 		}
 	}
 
-    /**
+	private static void handleAttributeValue(String attributeID, Object value, int i, AttributeValueCallbackHandler callbackHandler) {
+		callbackHandler.handleAttributeValue(attributeID, value, i);
+	}
+
+	/**
 	 * An {@link AttributeValueCallbackHandler} to collect values in a supplied
 	 * collection.
 	 * 
