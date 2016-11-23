@@ -251,8 +251,13 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
             for(int i = 0; i < ix; i++) {
                 value = iterator.next();
             }
-
             iterator.remove();
+            if (value instanceof String) {
+                try {
+                    valuesAsNames.remove(new LdapName((String) value));
+                } catch (javax.naming.InvalidNameException ignored) {
+                }
+            }
             return value;
         } catch (NoSuchElementException e) {
             throw new IndexOutOfBoundsException("No value at index i");
