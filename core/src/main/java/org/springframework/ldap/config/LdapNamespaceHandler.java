@@ -17,28 +17,16 @@
 package org.springframework.ldap.config;
 
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
-import org.springframework.data.repository.config.RepositoryBeanDefinitionParser;
-import org.springframework.ldap.repository.config.LdapRepositoryConfigurationExtension;
-import org.springframework.util.ClassUtils;
 
 /**
  * @author Mattias Hellborg Arthursson
  * @author Rob Winch
  */
 public class LdapNamespaceHandler extends NamespaceHandlerSupport {
-    static final String REPOSITORY_CLASS_NAME = "org.springframework.data.repository.config.RepositoryConfigurationExtension";
-
     @Override
     public void init() {
-        LdapRepositoryConfigurationExtension extension = new LdapRepositoryConfigurationExtension();
-
         registerBeanDefinitionParser(Elements.CONTEXT_SOURCE, new ContextSourceParser());
         registerBeanDefinitionParser(Elements.LDAP_TEMPLATE, new LdapTemplateParser());
         registerBeanDefinitionParser(Elements.TRANSACTION_MANAGER, new TransactionManagerParser());
-
-        if (ClassUtils.isPresent(REPOSITORY_CLASS_NAME, getClass().getClassLoader())) {
-            RepositoryBeanDefinitionParser repositoryParser = new RepositoryBeanDefinitionParser(extension);
-            registerBeanDefinitionParser(Elements.REPOSITORIES, repositoryParser);
-        }
     }
 }

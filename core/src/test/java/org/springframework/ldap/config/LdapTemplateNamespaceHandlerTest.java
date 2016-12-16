@@ -356,14 +356,6 @@ public class LdapTemplateNamespaceHandlerTest {
     }
 
     @Test
-    public void verifyAutomaticRepositorySupport() {
-        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/ldap-namespace-config-with-repositories.xml");
-        DummyLdapRepository repository = ctx.getBean(DummyLdapRepository.class);
-
-        assertThat(repository).isNotNull();
-    }
-
-    @Test
     public void verifyParsePooling2Defaults() {
         ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/ldap-namespace-config-pooling2-defaults.xml");
 
