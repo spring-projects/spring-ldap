@@ -33,6 +33,12 @@ import javax.naming.Name;
 public class LdapRepositoryFactoryBean<T extends Repository<S, Name>, S> extends RepositoryFactoryBeanSupport<T, S, Name> {
     private LdapOperations ldapOperations;
 
+    public LdapRepositoryFactoryBean() {}
+
+    public LdapRepositoryFactoryBean(Class<? extends T> clazz) {
+        super(clazz);
+    }
+
     public void setLdapOperations(LdapOperations ldapOperations) {
         this.ldapOperations = ldapOperations;
     }
