@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.springframework.ldap</groupId>
   <artifactId>spring-ldap-user-admin-sample</artifactId>
-  <version>2.2.0.RC1</version>
+  <version>2.2.1.BUILD-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>spring-ldap-user-admin-sample</name>
   <description>spring-ldap-user-admin-sample</description>
@@ -87,25 +87,25 @@
     <dependency>
       <groupId>org.springframework.data</groupId>
       <artifactId>spring-data-commons</artifactId>
-      <version>1.12.1.RELEASE</version>
+      <version>1.12.6.RELEASE</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.ldap</groupId>
       <artifactId>spring-ldap-test</artifactId>
-      <version>2.2.0.RC1</version>
+      <version>2.2.1.BUILD-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      <version>4.3.3.RELEASE</version>
+      <version>4.3.4.RELEASE</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>
-      <version>4.3.3.RELEASE</version>
+      <version>4.3.4.RELEASE</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -135,7 +135,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
-      <version>4.3.3.RELEASE</version>
+      <version>4.3.4.RELEASE</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
