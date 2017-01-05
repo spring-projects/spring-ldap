@@ -2624,7 +2624,7 @@ Maven:
 <dependency>
     <groupId>com.unboundid</groupId>
     <artifactId>unboundid-ldapsdk</artifactId>
-    <version>3.1.1</version>
+    <version>3.2.0</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -2633,7 +2633,7 @@ Gradle:
 [source,groovy]
 [subs="verbatim,quotes"]
 ----
-testCompile "com.unboundid:unboundid-ldapsdk:3.1.1"
+testCompile "com.unboundid:unboundid-ldapsdk:3.2.0"
 ----
 
 An embedded ldap server is created using the bean below:
