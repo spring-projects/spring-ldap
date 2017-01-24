@@ -1,12 +1,12 @@
 = Spring LDAP Reference
 Mattias Hellborg Arthursson; Ulrik Sandberg; Eric Dalquist; Keith Barlow; Rob Winch
- 
+
 Spring LDAP makes it easier to build Spring-based applications that use the Lightweight Directory Access Protocol.
 
 __Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically.__
 
 = Preface
-The Java Naming and Directory Interface (JNDI) is for LDAP programming what Java Database Connectivity (JDBC) is for SQL programming. There are several similarities between JDBC and JNDI/LDAP (Java LDAP). Despite being two completely different APIs with different pros and cons, they share a number of less flattering characteristics: 
+The Java Naming and Directory Interface (JNDI) is for LDAP programming what Java Database Connectivity (JDBC) is for SQL programming. There are several similarities between JDBC and JNDI/LDAP (Java LDAP). Despite being two completely different APIs with different pros and cons, they share a number of less flattering characteristics:
 
 * They require extensive plumbing code, even to perform the simplest of tasks.
 * All resources need to be correctly closed, no matter what happens.
@@ -722,7 +722,7 @@ the task of calculating attribute modifications and constructing `ModificationIt
 `DirContextAdapter` can do all of this for us:
 
 .Updating using using DirContextAdapter
-[[modify-modifyAttributes]]
+[[update-modifyAttributes]]
 [source,java]
 [subs="verbatim,quotes"]
 ----
