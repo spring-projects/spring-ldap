@@ -1,37 +1,23 @@
 rootProject.name = 'spring-ldap'
 
-include 'core'
-include 'core-tiger'
-include 'test-support'
-include 'test-support-unboundid'
-include 'ldif/ldif-batch'
-include 'ldif/ldif-core'
-include 'odm'
-include 'sandbox'
-include 'test/integration-tests'
-include 'test/integration-tests-spring20'
-include 'test/integration-tests-spring25'
-include 'test/integration-tests-spring30'
-include 'test/integration-tests-openldap'
-include 'test/integration-tests-sunone'
-include 'test/integration-tests-ad'
-include 'samples/plain'
-include 'samples/odm'
 
-
-rootProject.children.each { p->
-    def name = p.name
-    def isSample = name.contains("sample")
-    name = name.replaceFirst(".*?/","")
-    if(isSample && !name.contains("sample")) {
-        name += "-sample"
-    }
-    p.name = "spring-ldap-" + name
+FileTree projects = fileTree(rootDir) {
+	include '**/*.gradle'
+	exclude '**/gradle', 'settings.gradle', 'buildSrc', '/build.gradle', '.*'
 }
 
-findProject(":spring-ldap-test-support").name = "spring-ldap-test"
-findProject(":spring-ldap-test-support-unboundid").name = "spring-ldap-test-unboundid"
+String rootDirPath = rootDir.absolutePath + File.separator
+projects.each { File buildFile ->
+	String buildFilePath = buildFile.parentFile.absolutePath
 
-// Exposes gradle buildSrc for IDE support
-include "buildSrc"
-rootProject.children.find{ it.name == "buildSrc" }.name = "spring-build-src"
+	String projectPath = buildFilePath.replace(rootDirPath, '').replaceAll(File.separator, ':')
+
+	include projectPath
+
+	def project = findProject(":${projectPath}")
+	if(!'build.gradle'.equals(buildFile.name)) {
+		project.name = buildFile.name.replace('.gradle','')
+		project.buildFileName = buildFile.name
+	}
+	project.projectDir = buildFile.parentFile
+}

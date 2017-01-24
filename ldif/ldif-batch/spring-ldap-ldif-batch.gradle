@@ -1,0 +1,30 @@
+apply plugin: 'io.spring.convention.spring-module'
+
+dependencies {
+	compile project(':ldif:spring-ldap-ldif-core')
+	compile "commons-lang:commons-lang"
+	compile("org.springframework.batch:spring-batch-infrastructure") {
+		exclude group: "org.springframework", module: "spring-core"
+		exclude group: "org.springframework", module: "spring-context"
+		exclude group: "org.springframework", module: "spring-aop"
+	}
+
+	testCompile "junit:junit"
+	testCompile "org.springframework:spring-context"
+	testCompile "org.springframework:spring-aop"
+	testCompile "org.springframework:spring-test"
+	testCompile "org.assertj:assertj-core"
+	testCompile ("org.springframework.batch:spring-batch-test") {
+		exclude group: "org.springframework", module: "spring-test"
+	}
+}
+
+test {
+	exclude '**/Batch22*.class'
+}
+
+project.tasks.withType(Test).all { t->
+	if(name.startsWith('springIo')) {
+		exclude '**/Batch20*.class'
+	}
+}

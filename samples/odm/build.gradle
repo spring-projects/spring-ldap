@@ -1,19 +1,19 @@
-apply from: SAMPLE_WAR_GRADLE
+apply plugin: 'io.spring.convention.spring-sample'
 
 dependencies {
-    compile project(':spring-ldap-test'),
-            'javax.servlet:jstl:1.2',
-            "org.springframework:spring-context:$springVersion",
-            "org.springframework:spring-webmvc:$springVersion",
-            "org.springframework.data:spring-data-commons:$springDataVersion",
-            "commons-lang:commons-lang:$commonsLangVersion"
+	compile project(':spring-ldap-test')
+	compile 'javax.servlet:jstl'
+	compile "org.springframework:spring-context"
+	compile "org.springframework:spring-webmvc"
+	compile "org.springframework.data:spring-data-commons"
+	compile "commons-lang:commons-lang"
 
-    provided "javax.servlet:servlet-api:2.5"
+	provided "javax.servlet:javax.servlet-api"
 
-    runtime 'ch.qos.logback:logback-classic:1.0.13'
+	runtime 'ch.qos.logback:logback-classic'
 
-    testCompile "org.springframework:spring-test:$springVersion",
-                "junit:junit:$junitVersion",
-                "org.assertj:assertj-core:$assertjVersion",
-                apachedsDependencies
+	testCompile "org.springframework:spring-test"
+	testCompile "junit:junit"
+	testCompile "org.assertj:assertj-core"
+	testCompile apachedsDependencies
 }

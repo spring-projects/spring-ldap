@@ -1,0 +1,17 @@
+apply plugin: 'io.spring.convention.spring-module'
+
+dependencies {
+	compile project(":spring-ldap-core")
+	compile project(":ldif:spring-ldap-ldif-core")
+	compile "com.google.code.typica:typica"
+	compile "commons-io:commons-io"
+	compile "javax.activation:activation"
+	compile "org.springframework:spring-core"
+	compile "org.springframework:spring-beans"
+	compile "org.springframework:spring-context"
+	compile "org.springframework:spring-test"
+
+	optional apachedsDependencies
+
+	provided "junit:junit"
+}

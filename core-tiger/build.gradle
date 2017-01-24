@@ -1,9 +1,0 @@
-
-dependencies {
-    compile project(":spring-ldap-core"),
-            "org.springframework:spring-tx:$springVersion"
-
-    testCompile     "junit:junit:$junitVersion",
-                    "org.easymock:easymock:2.5.1",
-                    "org.assertj:assertj-core:$assertjVersion"
-}

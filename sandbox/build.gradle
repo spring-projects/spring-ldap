@@ -1,12 +1,12 @@
-apply from: JAVA_SCRIPT
+apply plugin: 'io.spring.convention.spring-sample'
 
 dependencies {
-    compile project(":spring-ldap-core")
+	compile project(":spring-ldap-core")
 
-    provided "com.sun:ldapbp:1.0"
+	provided "com.sun:ldapbp"
 
-    testCompile "junit:junit:$junitVersion",
-                "org.mockito:mockito-core:$mockitoVersion",
-                "gsbase:gsbase:$gsbaseVersion",
-                "org.assertj:assertj-core:$assertjVersion"
+	testCompile "junit:junit"
+	testCompile "org.mockito:mockito-core"
+	testCompile "gsbase:gsbase"
+	testCompile "org.assertj:assertj-core"
 }

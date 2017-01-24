@@ -1,0 +1,21 @@
+apply plugin: 'io.spring.convention.spring-module'
+
+merge.into = project(":spring-ldap-test")
+
+dependencies {
+	compile project(":spring-ldap-core")
+	compile project(":ldif:spring-ldap-ldif-core")
+	compile "com.google.code.typica:typica"
+	compile "commons-io:commons-io"
+	compile "commons-lang:commons-lang"
+	compile "javax.activation:activation"
+	compile "org.springframework:spring-core"
+	compile "org.springframework:spring-beans"
+	compile "org.springframework:spring-context"
+	compile "org.springframework:spring-test"
+
+	optional "com.unboundid:unboundid-ldapsdk"
+
+	testCompile "junit:junit"
+	testCompile "org.assertj:assertj-core"
+}

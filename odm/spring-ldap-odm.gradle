@@ -1,0 +1,29 @@
+apply plugin: 'io.spring.convention.spring-module'
+
+dependencies {
+	compile project(":spring-ldap-core")
+	compile project(":spring-ldap-core-tiger")
+	compile "org.springframework:spring-core"
+	compile "org.freemarker:freemarker"
+	compile "commons-logging:commons-logging"
+	compile "commons-cli:commons-cli"
+
+	runtime "org.springframework:spring-context"
+
+	provided "commons-pool:commons-pool"
+	provided "com.sun:ldapbp:1.0"
+	provided "commons-lang:commons-lang"
+	provided "org.springframework:spring-context"
+	provided "org.springframework:spring-jdbc"
+	provided "org.springframework:spring-orm"
+
+	testCompile project(":spring-ldap-test")
+	testCompile "junit:junit"
+	testCompile "jdepend:jdepend:2.9.1"
+	testCompile "commons-io:commons-io"
+	testCompile apachedsDependencies
+}
+
+jar {
+	manifest.attributes["Main-Class"] = "org.springframework.ldap.odm.tools.SchemaToJava"
+}

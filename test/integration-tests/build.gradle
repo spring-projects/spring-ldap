@@ -1,91 +1,39 @@
-repositories {
-    maven { url "http://download.java.net/maven/2/" }
-}
-apply from: JAVA_SCRIPT
-
-configurations {
-    jacoco //Configuration Group used by Sonar to provide Code Coverage using JaCoCo
-}
-
-idea.module.excludeDirs = [
-        file('.gradle'),
-        file('build/classes'),
-        file('build/tmp'),
-        file('build/dependency-cache'),
-        file('build/libs')]
-
-sourceSets {
-    generated {
-        java {
-            srcDirs = ['build/generated-src']
-        }
-    }
-}
+apply plugin: 'io.spring.convention.spring-test'
 
 dependencies {
-    compile 	project(":spring-ldap-test"),
-                project(":spring-ldap-core-tiger")
+	compile 	project(":spring-ldap-test")
+	compile project(":spring-ldap-core-tiger")
+	compile "com.querydsl:querydsl-apt"
+	compile "commons-lang:commons-lang"
+	compile("org.springframework.data:spring-data-commons") {
+		exclude group: "org.springframework", module: "spring-beans"
+		exclude group: "org.springframework", module: "spring-core"
+	}
+	compile("org.springframework.security:spring-security-core") {
+		exclude group: "org.springframework", module: "spring-expression"
+		exclude group: "org.springframework", module: "spring-core"
+		exclude group: "org.springframework", module: "spring-context"
+		exclude group: "org.springframework", module: "spring-tx"
+		exclude group: "org.springframework", module: "spring-aop"
+	}
 
-    compile "com.querydsl:querydsl-apt:$queryDslVersion",
-            "commons-lang:commons-lang:$commonsLangVersion"
+	provided "commons-pool:commons-pool"
+	provided "org.springframework:spring-jdbc"
+	provided "org.springframework:spring-orm"
 
-    compile("org.springframework.data:spring-data-commons:$springDataVersion") {
-        exclude group: "org.springframework", module: "spring-beans"
-        exclude group: "org.springframework", module: "spring-core"
-    }
-
-    compile("org.springframework.security:spring-security-core:$springSecurityVersion") {
-        exclude group: "org.springframework", module: "spring-expression"
-        exclude group: "org.springframework", module: "spring-core"
-        exclude group: "org.springframework", module: "spring-context"
-        exclude group: "org.springframework", module: "spring-tx"
-        exclude group: "org.springframework", module: "spring-aop"
-    }
-
-    provided	"commons-pool:commons-pool:$commonsPoolVersion",
-                "org.springframework:spring-jdbc:$springVersion",
-                "org.springframework:spring-orm:$springVersion"
-
-    testCompile "org.springframework:spring-test:$springVersion",
-                "org.springframework:spring-aop:$springVersion",
-                "org.springframework:spring-expression:$springVersion",
-                "org.hibernate:hibernate-core:$hibernateVersion",
-                "aspectj:aspectjrt:1.5.3",
-                "aspectj:aspectjweaver:1.5.3",
-                "hsqldb:hsqldb:1.8.0.7",
-                "junit:junit:$junitVersion",
-                "org.springframework.security:spring-security-config:$springSecurityVersion",
-                "org.slf4j:slf4j-log4j12:$slf4jVersion",
-                "org.assertj:assertj-core:$assertjVersion",
-                apachedsDependencies
-
-
-    testCompile("org.springframework.security:spring-security-ldap:$springSecurityVersion") {
-        exclude group: "org.springframework.ldap", module: "spring-ldap-core"
-    }
+	testCompile "org.springframework:spring-test"
+	testCompile "org.springframework:spring-aop"
+	testCompile "org.springframework:spring-expression"
+	testCompile "org.hibernate:hibernate-core"
+	testCompile "org.aspectj:aspectjrt"
+	testCompile "org.aspectj:aspectjweaver"
+	testCompile "org.hsqldb:hsqldb"
+	testCompile "junit:junit"
+	testCompile "org.springframework.security:spring-security-config"
+	testCompile "org.slf4j:slf4j-log4j12"
+	testCompile "org.assertj:assertj-core"
+	testCompile apachedsDependencies
+	testCompile("org.springframework.security:spring-security-ldap") {
+		exclude group: "org.springframework.ldap", module: "spring-ldap-core"
+	}
 }
-
-compileGeneratedJava {
-    options.warnings = false
-    classpath += sourceSets.main.runtimeClasspath
-}
-
-clean {
-    delete sourceSets.generated.java.srcDirs
-}
-
-idea {
-    module {
-        sourceDirs += file('build/generated-src')
-    }
-}
-
-dependencies {
-    jacoco group: "org.jacoco", name: "org.jacoco.agent", version: "0.7.1.201405082137", classifier: "runtime"
-}
-
-test {
-    jvmArgs "-javaagent:${configurations.jacoco.asPath}=destfile=$projectDir/../../core/build/jacoco.exec,includes=org.springframework.*"
-    systemProperties = System.properties
-}
-

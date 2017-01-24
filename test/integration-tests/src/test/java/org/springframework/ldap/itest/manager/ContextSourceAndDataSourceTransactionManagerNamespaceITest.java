@@ -46,7 +46,7 @@ import static org.assertj.core.api.Assertions.fail;
 /**
  * Integration tests for {@link org.springframework.ldap.transaction.compensating.manager.ContextSourceAndDataSourceTransactionManager}
  * with namespace configuration.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
 @ContextConfiguration(locations = {"/conf/ldapAndJdbcTransactionNamespaceTestContext.xml"})
@@ -71,7 +71,7 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITest extends 
 		}
 
 		jdbcTemplate.execute("drop table PERSON if exists");
-		jdbcTemplate.execute("create table PERSON(fullname VARCHAR, lastname VARCHAR, description VARCHAR)");
+		jdbcTemplate.execute("create table PERSON(fullname VARCHAR(256), lastname VARCHAR(256), description VARCHAR(256))");
 		jdbcTemplate.update("insert into PERSON values(?, ?, ?)", new Object[] { "Some Person", "Person",
 				"Sweden, Company1, Some Person" });
 	}

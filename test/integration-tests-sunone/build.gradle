@@ -1,23 +1,21 @@
-apply from: JAVA_SCRIPT
+apply plugin: 'io.spring.convention.spring-test'
 
 dependencies {
-    compile     project(":spring-ldap-test"),
-                project(":spring-ldap-integration-tests"),
-                project(":spring-ldap-sandbox"),
-                project(":spring-ldap-core-tiger"),
-                "commons-pool:commons-pool:1.4"
+	compile project(":spring-ldap-test")
+	compile project(":test:integration-tests")
+	compile project(":sandbox")
+	compile project(":spring-ldap-core-tiger")
+	compile "commons-pool:commons-pool"
 
-    provided 	"org.springframework:spring-jdbc:$springVersion",
-                "com.sun:ldapbp:1.0"
+	provided "org.springframework:spring-jdbc"
+	provided "com.sun:ldapbp"
 
-    testCompile "junit:junit:$junitVersion",
-                "org.springframework:spring-aop:$springVersion",
-                "org.springframework:spring-aop:$springVersion",
-                "gsbase:gsbase:$gsbaseVersion",
-                "org.slf4j:slf4j-log4j12:$slf4jVersion",
-                "org.assertj:assertj-core:$assertjVersion",
-                apachedsDependencies
-
+	testCompile "junit:junit"
+	testCompile "org.springframework:spring-aop"
+	testCompile "gsbase:gsbase"
+	testCompile "org.slf4j:slf4j-log4j12"
+	testCompile "org.assertj:assertj-core"
+	testCompile apachedsDependencies
 }
 
-test.enabled = false // TODO this should be enabled depending on build parameter
+test.enabled = project.hasProperty('test-sunone')

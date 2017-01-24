@@ -1,40 +1,23 @@
 buildscript {
-    repositories {
-        maven { url 'https://repo.spring.io/plugins-release' }
-    }
-    dependencies {
-        classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
-        classpath('org.asciidoctor:asciidoctor-gradle-plugin:1.5.1')
-        classpath("io.spring.gradle:spring-io-plugin:0.0.6.RELEASE")
-    }
+	dependencies {
+		classpath 'io.spring.gradle:spring-gradle-build-conventions:1.0-SNAPSHOT'
+	}
+	repositories {
+		maven { url 'https://repo.spring.io/libs-snapshot' }
+		maven { url 'https://repo.spring.io/plugins-release' }
+	}
 }
+apply plugin: 'io.spring.convention.root'
+apply plugin: 'io.spring.convention.spring-module'
+apply plugin: 'io.spring.convention.docs'
 
-plugins {
-    id "org.sonarqube" version "2.1-rc1"
-}
+group = "org.springframework.ldap"
+description = "Spring LDAP"
 
-apply plugin: 'org.asciidoctor.gradle.asciidoctor'
-
-ext.GRADLE_SCRIPT_DIR = "${rootProject.projectDir}/gradle"
-ext.JAVA_MODULE_SCRIPT = "${GRADLE_SCRIPT_DIR}/java-module.gradle"
-ext.MAVEN_DEPLOYMENT_SCRIPT = "${GRADLE_SCRIPT_DIR}/maven-deployment.gradle"
-ext.JAVA_SCRIPT = "${GRADLE_SCRIPT_DIR}/java.gradle"
-ext.RELEASE_CHECKS_SCRIPT = "${GRADLE_SCRIPT_DIR}/release-checks.gradle"
-ext.SAMPLE_WAR_GRADLE = "${GRADLE_SCRIPT_DIR}/sample-war.gradle"
-ext.SPRING_SNAPSHOT_TEST_SCRIPT = "${GRADLE_SCRIPT_DIR}/spring-snapshot-test.gradle"
-
-ext.coreModules = subprojects.findAll { p-> (!p.name.equals('spring-build-src') && !p.name.contains("test") && !p.name.contains("sample") && !p.name.contains("sandbox")) || p.name.contains("spring-ldap-test") }
+ext.releaseBuild = version.endsWith('RELEASE')
+ext.snapshotBuild = version.endsWith('SNAPSHOT')
 
 allprojects {
-    apply plugin: 'idea'
-    apply plugin: 'eclipse'
-    apply plugin: 'java'
-
-    group = "org.springframework.ldap"
-
-    ext.releaseBuild = version.endsWith('RELEASE')
-    ext.snapshotBuild = version.endsWith('SNAPSHOT')
-
     ext.javadocLinks = [
         "http://docs.oracle.com/javase/7/docs/api/",
         "http://docs.spring.io/spring/docs/3.2.x/javadoc-api/",
@@ -44,175 +27,4 @@ allprojects {
         "http://commons.apache.org/proper/commons-pool/apidocs/",
         "http://junit.sourceforge.net/javadoc/",
     ] as String[]
-}
-
-
-configure(subprojects) {
-    apply plugin: 'propdeps'
-    apply plugin: 'propdeps-maven'
-    apply plugin: 'propdeps-idea'
-    apply plugin: 'propdeps-eclipse'
-    apply plugin: 'groovy'
-    apply plugin: "merge"
-
-}
-
-configure(coreModules) {
-    apply from: JAVA_MODULE_SCRIPT
-}
-
-configure(subprojects - coreModules) {
-    sonarqube {
-        skipProject = true
-    }
-
-    tasks.findByPath("artifactoryPublish")?.enabled = false
-}
-
-description = "Spring LDAP"
-
-configurations.archives.artifacts.clear()
-
-sonarqube {
-    properties {
-        property "sonar.exclusions", "file:**/generated-src/**"
-        property "sonar.java.coveragePlugin", "jacoco"
-        property "sonar.jacoco.reportPath", "${buildDir.name}/jacoco.exec"
-        property "sonar.links.homepage", 'https://github.com/SpringSource/spring-ldap'
-        property "sonar.links.ci", 'https://build.springsource.org/browse/LDAP-B20X'
-        property "sonar.links.issue", 'https://jira.springsource.org/browse/LDAP'
-        property "sonar.links.scm", 'https://github.com/SpringSource/spring-ldap'
-        property "sonar.links.scm_dev", 'https://github.com/SpringSource/spring-ldap.git'
-    }
-}
-
-asciidoctor {
-    outputDir = new File("$buildDir/docs")
-    options = [
-            eruby: 'erubis',
-            attributes: [
-                    copycss : '',
-                    icons : 'font',
-                    'source-highlighter': 'prettify',
-                    sectanchors : '',
-                    toc2: '',
-                    idprefix: '',
-                    idseparator: '-',
-                    doctype: 'book',
-                    numbered: '',
-                    'spring-ldap-version' : project.version,
-                    revnumber : project.version
-            ]
-    ]
-}
-
-task api(type: Javadoc) {
-    group = "Documentation"
-    description = "Generates aggregated Javadoc API documentation."
-    title = "${rootProject.description} ${version} API"
-
-    options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
-    options.author = true
-    options.header = rootProject.description
-    options.splitIndex = true
-    options.links(project.ext.javadocLinks)
-
-    maxMemory = "1536m"
-    destinationDir = new File(buildDir, "api")
-
-    source coreModules*.javadoc*.source
-    classpath = files(coreModules*.javadoc*.classpath)
-}
-
-task docsZip(type: Zip, dependsOn: asciidoctor) {
-    group = "Distribution"
-    baseName = "spring-ldap"
-    classifier = "docs"
-    description = "Builds -${classifier} archive containing api and reference " +
-        "for deployment at http://static.springframework.org/spring-ldap/docs."
-
-    from("src/dist") {
-        include "changelog.txt"
-    }
-
-    from (api) {
-        into "apidocs"
-    }
-
-    from (new File(asciidoctor.outputDir, "html5")) {
-        include "*.html"
-        into "reference"
-    }
-}
-
-task schemaZip(type: Zip) {
-    group = 'Distribution'
-    baseName = rootProject.name
-    classifier = 'schema'
-    description = "Builds -${classifier} archive containing all " +
-        "XSDs for deployment at static.springframework.org/schema."
-
-    coreModules.each { module ->
-        def Properties schemas = new Properties();
-
-        module.sourceSets.main.resources.find {
-            it.path.endsWith('META-INF/spring.schemas')
-        }?.withInputStream { schemas.load(it) }
-
-        for (def key : schemas.keySet()) {
-            def shortName = key.replaceAll(/http.*schema.(.*).spring-.*/, '$1')
-            assert shortName != key
-            File xsdFile = module.sourceSets.main.resources.find {
-                it.path.endsWith(schemas.get(key))
-            }
-            assert xsdFile != null
-            into (shortName) {
-                from xsdFile.path
-            }
-        }
-    }
-}
-
-
-task distZip(type: Zip, dependsOn: [docsZip]) {
-    dependsOn subprojects*.tasks*.matching { task -> task.name == 'assemble' }
-
-    group = "Distribution"
-    baseName = "spring-ldap"
-    classifier = "dist"
-    description = "Builds -${classifier} archive, containing all jars and docs, " +
-                "suitable for community download page."
-
-    ext.baseDir = "${baseName}-${project.version}"
-
-
-    from("src/dist") {
-        include "readme.md"
-        include "license.txt"
-        include "notice.txt"
-        into "${baseDir}"
-        expand(copyright: new Date().format("yyyy"), version: project.version)
-    }
-
-    from(zipTree(docsZip.archivePath)) {
-        into "${baseDir}/docs"
-    }
-
-    coreModules.each { subproject ->
-        into ("${baseDir}/libs") {
-            from subproject.jar
-            if (subproject.tasks.findByPath("sourcesJar")) {
-                from subproject.sourcesJar
-            }
-            if (subproject.tasks.findByPath("javadocJar")) {
-                from subproject.javadocJar
-            }
-        }
-    }
-}
-
-artifacts {
-    archives docsZip
-    archives distZip
-    archives schemaZip
 }

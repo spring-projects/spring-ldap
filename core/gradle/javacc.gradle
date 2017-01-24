@@ -1,0 +1,64 @@
+task downloadJavacc {
+	ext.file = "javacc-5.0.tar.gz"
+	ext.dest = file("$buildDir/javacc/$file")
+	ext.url = "https://java.net/downloads/javacc/$file"
+
+	outputs.file dest
+
+	doLast {
+		dest.parentFile.mkdirs()
+		new URL(url).withInputStream{ i -> dest.withOutputStream{ it << i }}
+	}
+}
+
+task installJavacc(type:Copy,dependsOn:downloadJavacc) {
+	ext.archive = downloadJavacc.dest
+	ext.javaccHome = file("$buildDir/javacc/")
+
+	inputs.file archive
+	outputs.dir javaccHome
+
+	if(archive.name.endsWith('.zip')) {
+		from zipTree(archive)
+	} else {
+		from tarTree(archive)
+	}
+	into javaccHome
+}
+
+task javacc(dependsOn:installJavacc) {
+	ext.srcFile = file("src/main/javacc/DnParserImpl.jj")
+	ext.srcDestDir = file("$buildDir/generated-src/javacc")
+	ext.destDir = file("$srcDestDir/org/springframework/ldap/core")
+	ext.homeDir = file("${installJavacc.javaccHome.path}/javacc-5.0")
+
+	inputs.file srcFile
+	outputs.dir destDir
+
+	doLast {
+		destDir.mkdirs()
+		ant.javacc (
+			target:"src/main/javacc/DnParserImpl.jj",
+			outputdirectory : destDir,
+			javacchome: homeDir,
+			jdkversion: sourceCompatibility)
+	}
+}
+
+sourceSets {
+	main {
+		java {
+			srcDir project.javacc.srcDestDir
+		}
+	}
+}
+
+sourcesJar {
+	from javacc.srcDestDir
+	include "**/*.java"
+}
+
+sourcesJar.dependsOn javacc
+compileJava.dependsOn javacc
+ideaModule.dependsOn javacc
+eclipseClasspath.dependsOn javacc

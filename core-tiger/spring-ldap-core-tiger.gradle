@@ -1,0 +1,10 @@
+apply plugin: 'io.spring.convention.spring-module'
+
+dependencies {
+	compile project(":spring-ldap-core")
+	compile "org.springframework:spring-tx"
+
+	testCompile "junit:junit"
+	testCompile "org.easymock:easymock:2.5.1"
+	testCompile "org.assertj:assertj-core"
+}

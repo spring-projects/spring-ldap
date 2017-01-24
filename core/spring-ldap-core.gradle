@@ -1,0 +1,28 @@
+apply plugin: 'io.spring.convention.spring-module'
+apply from: 'gradle/javacc.gradle'
+
+dependencies {
+	compile "org.springframework:spring-core"
+	compile "org.springframework:spring-beans"
+	compile "org.springframework:spring-tx"
+	compile "org.slf4j:slf4j-api"
+
+	optional "org.springframework:spring-context"
+	optional "org.springframework:spring-jdbc"
+	optional "org.springframework:spring-orm"
+	optional "com.querydsl:querydsl-core"
+	optional "com.querydsl:querydsl-apt"
+	optional "commons-pool:commons-pool"
+	optional "org.apache.commons:commons-pool2"
+
+	provided "com.sun:ldapbp"
+
+	testCompile "junit:junit"
+	testCompile "commons-lang:commons-lang"
+	testCompile "gsbase:gsbase"
+	testCompile "org.mockito:mockito-core"
+	testCompile "org.slf4j:slf4j-log4j12"
+	testCompile "org.springframework:spring-test"
+	testCompile "org.assertj:assertj-core"
+	testCompile powerMockDependencies
+}

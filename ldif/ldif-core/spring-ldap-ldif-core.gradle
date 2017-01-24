@@ -1,0 +1,14 @@
+apply plugin: 'io.spring.convention.spring-module'
+
+dependencies {
+	compile project(":spring-ldap-core")
+
+	testCompile "junit:junit"
+	testCompile "commons-io:commons-io"
+	testCompile "org.assertj:assertj-core"
+	testCompile ("log4j:log4j") {
+		exclude group: 'javax.jms'
+		exclude group: 'com.sun.jdmk'
+		exclude group: 'com.sun.jmx'
+	}
+}

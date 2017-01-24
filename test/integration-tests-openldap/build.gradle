@@ -1,23 +1,23 @@
-apply from: JAVA_SCRIPT
+apply plugin: 'io.spring.convention.spring-test'
 
 dependencies {
-    compile     project(":spring-ldap-core-tiger"),
-                project(":spring-ldap-test"),
-                "commons-lang:commons-lang:$commonsLangVersion",
-                "commons-logging:commons-logging:$commonsLoggingVersion",
-                "commons-httpclient:commons-httpclient:3.1",
-                "commons-codec:commons-codec:1.3"
+	compile project(":spring-ldap-core-tiger")
+	compile project(":spring-ldap-test")
+	compile "commons-lang:commons-lang"
+	compile "commons-logging:commons-logging"
+	compile "commons-httpclient:commons-httpclient"
+	compile "commons-codec:commons-codec"
 
-    provided	"org.springframework:spring-jdbc:$springVersion"
+	provided "org.springframework:spring-jdbc"
 
-    testCompile "org.springframework:spring-aop:$springVersion",
-                "org.springframework:spring-test:$springVersion",
-                "gsbase:gsbase:$gsbaseVersion",
-                "junit:junit:$junitVersion",
-                "com.sun:ldapbp:1.0",
-                "org.slf4j:slf4j-log4j12:$slf4jVersion",
-                "org.assertj:assertj-core:$assertjVersion"
+	testCompile "org.springframework:spring-aop"
+	testCompile "org.springframework:spring-test"
+	testCompile "gsbase:gsbase"
+	testCompile "junit:junit"
+	testCompile "com.sun:ldapbp"
+	testCompile "org.slf4j:slf4j-log4j12"
+	testCompile "org.assertj:assertj-core"
 
 }
 
-test.enabled = false // TODO this should be enabled depending on build parameter
+test.enabled = project.hasProperty('test-openldap')
