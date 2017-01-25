@@ -8,7 +8,6 @@ buildscript {
 	}
 }
 apply plugin: 'io.spring.convention.root'
-apply plugin: 'io.spring.convention.spring-module'
 apply plugin: 'io.spring.convention.docs'
 
 group = "org.springframework.ldap"
@@ -16,15 +15,3 @@ description = "Spring LDAP"
 
 ext.releaseBuild = version.endsWith('RELEASE')
 ext.snapshotBuild = version.endsWith('SNAPSHOT')
-
-allprojects {
-    ext.javadocLinks = [
-        "http://docs.oracle.com/javase/7/docs/api/",
-        "http://docs.spring.io/spring/docs/3.2.x/javadoc-api/",
-        "http://logging.apache.org/log4j/1.2/apidocs/",
-        "http://commons.apache.org/proper/commons-logging/apidocs/",
-        "http://commons.apache.org/proper/commons-dbcp/apidocs/",
-        "http://commons.apache.org/proper/commons-pool/apidocs/",
-        "http://junit.sourceforge.net/javadoc/",
-    ] as String[]
-}
