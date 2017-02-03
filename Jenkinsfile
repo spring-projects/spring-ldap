@@ -1,21 +1,12 @@
-/* Only keep the 15 most recent builds. */
-def projectProperties = [
-	[$class: 'BuildDiscarderProperty',strategy: [$class: 'LogRotator', numToKeepStr: '15']],
-]
-
-if (!env.CHANGE_ID) {
-	if (env.BRANCH_NAME == null) {
-		projectProperties.add(pipelineTriggers([cron('@daily')]))
-	}
-}
-
-properties(projectProperties)
-
 parallel check: {
 	stage('Check') {
 		node {
 			checkout scm
-			sh "./gradlew check  --refresh-dependencies --no-daemon"
+			try {
+				sh "./gradlew check  --refresh-dependencies --no-daemon"
+			} finally {
+				junit '**/build/*-results/*/*.xml'
+			}
 		}
 	}
 },
@@ -28,38 +19,37 @@ sonar: {
 			}
 		}
 	}
-},
-ossrh: {
-	stage('OSSRH Deploy') {
-		node {
-			checkout scm
-			withCredentials([file(credentialsId: 'spring-signing-secring.gpg', variable: 'SIGNING_KEYRING_FILE')]) {
-				withCredentials([string(credentialsId: 'spring-gpg-passphrase', variable: 'SIGNING_PASSWORD')]) {
-					withCredentials([usernamePassword(credentialsId: 'oss-token', passwordVariable: 'OSSRH_PASSWORD', usernameVariable: 'OSSRH_USERNAME')]) {
-						sh "./gradlew uploadArchives -Psigning.secretKeyRingFile=$SIGNING_KEYRING_FILE -Psigning.keyId=$SPRING_SIGNING_KEYID -Psigning.password=$SIGNING_PASSWORD -PossrhUsername=$OSSRH_USERNAME -PossrhPassword=$OSSRH_PASSWORD  --refresh-dependencies --no-daemon"
-					}
+}
+
+stage('OSSRH Deploy') {
+	when { currentBuild.result == 'SUCCESS' }
+	node {
+		checkout scm
+		withCredentials([file(credentialsId: 'spring-signing-secring.gpg', variable: 'SIGNING_KEYRING_FILE')]) {
+			withCredentials([string(credentialsId: 'spring-gpg-passphrase', variable: 'SIGNING_PASSWORD')]) {
+				withCredentials([usernamePassword(credentialsId: 'oss-token', passwordVariable: 'OSSRH_PASSWORD', usernameVariable: 'OSSRH_USERNAME')]) {
+					sh "./gradlew uploadArchives -Psigning.secretKeyRingFile=$SIGNING_KEYRING_FILE -Psigning.keyId=$SPRING_SIGNING_KEYID -Psigning.password=$SIGNING_PASSWORD -PossrhUsername=$OSSRH_USERNAME -PossrhPassword=$OSSRH_PASSWORD  --refresh-dependencies --no-daemon"
 				}
 			}
 		}
 	}
-},
-docs: {
-	stage('Deploy Docs') {
-		node {
-			checkout scm
-			withCredentials([file(credentialsId: 'docs.spring.io-jenkins_private_ssh_key', variable: 'DEPLOY_SSH_KEY')]) {
-				sh "./gradlew deployDocs -PdeployDocsSshKeyPath=$DEPLOY_SSH_KEY -PdeployDocsSshUsername=$SPRING_DOCS_USERNAME --refresh-dependencies --no-daemon --stacktrace"
-			}
+}
+
+stage('Deploy Docs') {
+	when { currentBuild.result == 'SUCCESS' }
+	node {
+		checkout scm
+		withCredentials([file(credentialsId: 'docs.spring.io-jenkins_private_ssh_key', variable: 'DEPLOY_SSH_KEY')]) {
+			sh "./gradlew deployDocs -PdeployDocsSshKeyPath=$DEPLOY_SSH_KEY -PdeployDocsSshUsername=$SPRING_DOCS_USERNAME --refresh-dependencies --no-daemon --stacktrace"
 		}
 	}
-},
-schema: {
-	stage('Deploy Schema') {
-		node {
-			checkout scm
-			withCredentials([file(credentialsId: 'docs.spring.io-jenkins_private_ssh_key', variable: 'DEPLOY_SSH_KEY')]) {
-				sh "./gradlew deploySchema -PdeployDocsSshKeyPath=$DEPLOY_SSH_KEY -PdeployDocsSshUsername=$SPRING_DOCS_USERNAME --refresh-dependencies --no-daemon --stacktrace"
-			}
+}
+stage('Deploy Schema') {
+	when { currentBuild.result == 'SUCCESS' }
+	node {
+		checkout scm
+		withCredentials([file(credentialsId: 'docs.spring.io-jenkins_private_ssh_key', variable: 'DEPLOY_SSH_KEY')]) {
+			sh "./gradlew deploySchema -PdeployDocsSshKeyPath=$DEPLOY_SSH_KEY -PdeployDocsSshUsername=$SPRING_DOCS_USERNAME --refresh-dependencies --no-daemon --stacktrace"
 		}
 	}
 }
