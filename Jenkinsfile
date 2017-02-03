@@ -19,6 +19,18 @@ sonar: {
 			}
 		}
 	}
+},
+springio: {
+	stage('Spring IO') {
+		node {
+			checkout scm
+			try {
+				sh "./gradlew springIoCheck  --refresh-dependencies --no-daemon"
+			} finally {
+				junit '**/build/*-results/*/*.xml'
+			}
+		}
+	}
 }
 
 if(currentBuild.result == 'SUCCESS') {
