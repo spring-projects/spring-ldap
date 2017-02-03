@@ -1,3 +1,16 @@
+/* Only keep the 10 most recent builds. */
+def projectProperties = [
+	[$class: 'BuildDiscarderProperty',strategy: [$class: 'LogRotator', numToKeepStr: '10']],
+]
+
+if (!env.CHANGE_ID) {
+	if (env.BRANCH_NAME == null) {
+		projectProperties.add(pipelineTriggers([cron('@daily')]))
+	}
+}
+
+properties(projectProperties)
+
 parallel check: {
 	stage('Check') {
 		node {
