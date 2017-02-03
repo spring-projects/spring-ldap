@@ -44,6 +44,7 @@ stage('Deploy Docs') {
 		}
 	}
 }
+
 stage('Deploy Schema') {
 	when { currentBuild.result == 'SUCCESS' }
 	node {
