@@ -25,7 +25,7 @@ springio: {
 		node {
 			checkout scm
 			try {
-				sh "./gradlew springIoCheck  --refresh-dependencies --no-daemon"
+				sh "./gradlew springIoCheck  --refresh-dependencies --no-daemon --stacktrace"
 			} finally {
 				junit '**/build/*-results/*/*.xml'
 			}
