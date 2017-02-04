@@ -27,7 +27,7 @@ springio: {
 			try {
 				sh "./gradlew springIoCheck  --refresh-dependencies --no-daemon --stacktrace"
 			} finally {
-				junit '**/build/*-results/*/*.xml'
+				junit '**/build/spring-io*-results/*.xml'
 			}
 		}
 	}
