@@ -3,7 +3,7 @@ parallel check: {
 		node {
 			checkout scm
 			try {
-				sh "./gradlew check  --refresh-dependencies --no-daemon"
+				sh "./gradlew clean check  --refresh-dependencies --no-daemon"
 			} finally {
 				junit '**/build/*-results/*/*.xml'
 			}
