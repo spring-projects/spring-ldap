@@ -33,9 +33,9 @@ springio: {
 	}
 }
 
-if(currentBuild.result == 'SUCCESS') {
-	stage('OSSRH Deploy') {
-		node {
+stage('OSSRH Deploy') {
+	node {
+		if(currentBuild.result == 'SUCCESS') {
 			checkout scm
 			withCredentials([file(credentialsId: 'spring-signing-secring.gpg', variable: 'SIGNING_KEYRING_FILE')]) {
 				withCredentials([string(credentialsId: 'spring-gpg-passphrase', variable: 'SIGNING_PASSWORD')]) {
@@ -46,18 +46,22 @@ if(currentBuild.result == 'SUCCESS') {
 			}
 		}
 	}
-	
-	stage('Deploy Docs') {
-		node {
+}
+
+stage('Deploy Docs') {
+	node {
+		if(currentBuild.result == 'SUCCESS') {
 			checkout scm
 			withCredentials([file(credentialsId: 'docs.spring.io-jenkins_private_ssh_key', variable: 'DEPLOY_SSH_KEY')]) {
 				sh "./gradlew deployDocs -PdeployDocsSshKeyPath=$DEPLOY_SSH_KEY -PdeployDocsSshUsername=$SPRING_DOCS_USERNAME --refresh-dependencies --no-daemon --stacktrace"
 			}
 		}
 	}
-	
-	stage('Deploy Schema') {
-		node {
+}
+
+stage('Deploy Schema') {
+	node {
+		if(currentBuild.result == 'SUCCESS') {
 			checkout scm
 			withCredentials([file(credentialsId: 'docs.spring.io-jenkins_private_ssh_key', variable: 'DEPLOY_SSH_KEY')]) {
 				sh "./gradlew deploySchema -PdeployDocsSshKeyPath=$DEPLOY_SSH_KEY -PdeployDocsSshUsername=$SPRING_DOCS_USERNAME --refresh-dependencies --no-daemon --stacktrace"
