@@ -44,7 +44,7 @@
 <div class="container">
 <div class="main-body">
     <form method="POST" role="form" class="form-horizontal">
-        <c:if test="${new}">
+        <c:if test="${isNew}">
             <input type="hidden" name="employeeNumber" value="${user.employeeNumber}" />
         </c:if>
         <div class="form-group">
