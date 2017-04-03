@@ -24,6 +24,7 @@ import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.UncategorizedLdapException;
 import org.springframework.ldap.filter.Filter;
+import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 import org.springframework.ldap.odm.core.OdmException;
 import org.springframework.ldap.odm.core.impl.DefaultObjectDirectoryMapper;
@@ -43,6 +44,7 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.ldap.LdapName;
+import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
@@ -1811,7 +1813,12 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      */
     @Override
     public <T> List<T> findAll(Class<T> clazz) {
-        return findAll(LdapUtils.emptyLdapName(),
+		Entry entryAnnotation = clazz.getAnnotation(Entry.class);
+		Assert.notNull(entryAnnotation, String.format("%s should annotated with Entry.", clazz.getName()));
+
+		Name base = LdapUtils.newLdapName(entryAnnotation.base());
+
+        return findAll(base,
                 getDefaultSearchControls(defaultSearchScope, RETURN_OBJ_FLAG, ALL_ATTRIBUTES),
                 clazz);
     }
