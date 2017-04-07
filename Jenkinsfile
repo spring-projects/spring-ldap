@@ -15,7 +15,7 @@ sonar: {
 		node {
 			checkout scm
 			withCredentials([string(credentialsId: 'spring-sonar.login', variable: 'SONAR_LOGIN')]) {
-				sh "./gradlew sonarqube -Dsonar.host.url=$SPRING_SONAR_HOST_URL -Dsonar.login=$SONAR_LOGIN --refresh-dependencies --no-daemon"
+				sh "./gradlew clean sonarqube -Dsonar.host.url=$SPRING_SONAR_HOST_URL -Dsonar.login=$SONAR_LOGIN --refresh-dependencies --no-daemon"
 			}
 		}
 	}
@@ -25,7 +25,7 @@ springio: {
 		node {
 			checkout scm
 			try {
-				sh "./gradlew springIoCheck  --refresh-dependencies --no-daemon --stacktrace"
+				sh "./gradlew clean springIoCheck  --refresh-dependencies --no-daemon --stacktrace"
 			} finally {
 				junit '**/build/spring-io*-results/*.xml'
 			}
