@@ -1,4 +1,4 @@
-##Spring LDAP
+## Spring LDAP
 
 [![Join the chat at https://gitter.im/spring-projects/spring-ldap](https://badges.gitter.im/spring-projects/spring-ldap.svg)](https://gitter.im/spring-projects/spring-ldap?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -8,7 +8,7 @@
 This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.adoc).
 By participating, you  are expected to uphold this code. Please report unacceptable behavior to spring-code-of-conduct@pivotal.io.
 
-###INTRODUCTION
+### INTRODUCTION
 
 Spring LDAP is a library to simplify LDAP programming in Java, built on the same
 principles as Spring Jdbc. 
@@ -27,7 +27,7 @@ LDAP paths and Attributes.
 For detailed information on the project, please refer to the [reference documentation](http://static.springsource.org/spring-ldap/docs/1.3.x/reference/html/) and [javadocs](http://static.springframework.org/spring-ldap/docs/1.3.x/apidocs/).
 See [the changelog](https://jira.springsource.org/secure/ReleaseNote.jspa?projectId=10071&version=13399) for detailed information on changes in the latest version.
 
-###MAVEN USERS
+### MAVEN USERS
 
 All major releases of this library are available in the central Maven repository.
 The following components are available:
@@ -77,7 +77,7 @@ Note that while all milestone and snapshot builds have passed the (quite extensi
 the artifacts here are obviously still work in progress. Feel free to use them for trying out new functionality
 and bug fixes for an upcoming version. Please report any problems or bugs in the [issue tracker](https://jira.springsource.org/browse/LDAP).
 
-###ADDITIONAL RESOURCES
+### ADDITIONAL RESOURCES
 
 * [Official site](http://www.springframework.org/ldap)
 * [Support forum](http://forum.springframework.org/forumdisplay.php?f=40)
