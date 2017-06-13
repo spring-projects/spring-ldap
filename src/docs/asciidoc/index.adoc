@@ -364,7 +364,7 @@ public class PersonRepoImpl implements PersonRepo {
             public String mapFromAttributes(Attributes attrs)
                throws NamingException {
 
-               return attrs.get("cn").get();
+               return (String) attrs.get("cn").get();
             }
          });
    }
