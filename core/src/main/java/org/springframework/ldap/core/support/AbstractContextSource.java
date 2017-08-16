@@ -139,8 +139,8 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
         DirContext ctx = createContext(env);
 
         try {
-            authenticationStrategy.processContextAfterCreation(ctx, principal, credentials);
-            return ctx;
+            DirContext processedDirContext = authenticationStrategy.processContextAfterCreation(ctx, principal, credentials);
+            return processedDirContext;
         }
         catch (NamingException e) {
             closeContext(ctx);
