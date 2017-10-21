@@ -1686,7 +1686,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     @Override
     public <T> T findByDn(Name dn, final Class<T> clazz) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Reading Entry at - %s$1", dn));
+            LOG.debug(String.format("Reading Entry at - %1$s", dn));
         }
 
         // Make sure the class is OK before doing the lookup
@@ -1703,7 +1703,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
             throw new OdmException(String.format("Entry %1$s does not have the required objectclasses ", dn));
         }
         if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Found entry - %s$1", result));
+            LOG.debug(String.format("Found entry - %1$s", result));
         }
 
         return result;
@@ -1717,7 +1717,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         Assert.notNull(entry, "Entry must not be null");
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Creating entry - %s$1", entry));
+            LOG.debug(String.format("Creating entry - %1$s", entry));
         }
 
         Name id = odm.getId(entry);
@@ -1741,7 +1741,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     public void update(Object entry) {
         Assert.notNull(entry, "Entry must not be null");
         if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Updating entry - %s$1", entry));
+            LOG.debug(String.format("Updating entry - %1$s", entry));
         }
 
         Name originalId = odm.getId(entry);
@@ -1786,7 +1786,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     public void delete(Object entry) {
         Assert.notNull(entry, "Entry must not be null");
         if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Deleting %s$1", entry));
+            LOG.debug(String.format("Deleting %1$s", entry));
         }
 
         Name id = odm.getId(entry);
