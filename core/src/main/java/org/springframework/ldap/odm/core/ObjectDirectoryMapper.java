@@ -20,6 +20,7 @@ import javax.naming.Name;
 
 import org.springframework.LdapDataEntry;
 import org.springframework.ldap.filter.Filter;
+import org.springframework.ldap.odm.annotations.Entry;
 
 /**
  * The ObjectDirectoryMapper keeps track of managed class metadata and is used by {@link org.springframework.ldap.core.LdapTemplate}
@@ -95,4 +96,12 @@ public interface ObjectDirectoryMapper {
      * @return all relevant attribute names used in the given class (either for reading from LDAP or for writing to LDAP or both)
      * @throws org.springframework.ldap.NamingException on error. */
     String[] manageClass(Class<?> clazz);
+
+    /**
+     * Get the base DN corresponding to the {@link Entry#base} property
+     *
+     * @param clazz the clazz
+     * @return the {@link Name} representing the base DN
+     */
+    Name base(Class<?> clazz);
 }
