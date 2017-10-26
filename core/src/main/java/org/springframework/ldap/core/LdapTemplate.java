@@ -1811,7 +1811,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      */
     @Override
     public <T> List<T> findAll(Class<T> clazz) {
-        return findAll(LdapUtils.emptyLdapName(),
+        return findAll(this.odm.base(clazz),
                 getDefaultSearchControls(defaultSearchScope, RETURN_OBJ_FLAG, ALL_ATTRIBUTES),
                 clazz);
     }

@@ -182,6 +182,11 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
         return newValue;
     }
 
+    @Override
+    public Name base(Class<?> clazz) {
+        return this.getEntityData(clazz).metaData.getBase();
+    }
+
     private void verifyConversion(Class<?> managedClass, Field field, AttributeMetaData attributeInfo) {
         Class<?> jndiClass = attributeInfo.getJndiClass();
         Class<?> javaClass = attributeInfo.getValueClass();
