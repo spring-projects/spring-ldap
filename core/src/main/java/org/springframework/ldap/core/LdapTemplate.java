@@ -24,6 +24,7 @@ import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.UncategorizedLdapException;
 import org.springframework.ldap.filter.Filter;
+import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 import org.springframework.ldap.odm.core.OdmException;
 import org.springframework.ldap.odm.core.impl.DefaultObjectDirectoryMapper;
@@ -43,6 +44,8 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.ldap.LdapName;
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -60,9 +63,9 @@ import java.util.List;
  * results are lost) or all referrals are ignored (if the server is unable to
  * handle them properly. Neither is there any simple way to get notified that a
  * <code>PartialResultException</code> has been ignored (other than in the log).
- * 
+ *
  * @see org.springframework.ldap.core.ContextSource
- * 
+ *
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  */
@@ -100,7 +103,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
 	/**
 	 * Constructor to setup instance directly.
-	 * 
+	 *
 	 * @param contextSource the ContextSource to use.
 	 */
 	public LdapTemplate(ContextSource contextSource) {
@@ -110,7 +113,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	/**
 	 * Set the ContextSource. Call this method when the default constructor has
 	 * been used.
-	 * 
+	 *
 	 * @param contextSource the ContextSource.
 	 */
 	public void setContextSource(ContextSource contextSource) {
@@ -137,7 +140,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
     /**
 	 * Get the ContextSource.
-	 * 
+	 *
 	 * @return the ContextSource.
 	 */
 	public ContextSource getContextSource() {
@@ -152,11 +155,11 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * and re-throw the exception. The ability to revert to the previous
 	 * behavior still exists. The only difference is that the incident is in
 	 * that case no longer silently ignored, but logged as a warning.
-	 * 
+	 *
 	 * @param ignore <code>true</code> if <code>NameNotFoundException</code>
 	 * should be ignored in searches, <code>false</code> otherwise. Default is
 	 * <code>false</code>.
-	 * 
+	 *
 	 * @since 1.3
 	 */
 	public void setIgnoreNameNotFoundException(boolean ignore) {
@@ -174,7 +177,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * <code>PartialResultException</code> to be ignored, so that the search
 	 * method returns normally. Default value of this parameter is
 	 * <code>false</code>.
-	 * 
+	 *
 	 * @param ignore <code>true</code> if <code>PartialResultException</code>
 	 * should be ignored in searches, <code>false</code> otherwise. Default is
 	 * <code>false</code>.
@@ -340,7 +343,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * {@link NameClassPair} (this might be a NameClassPair or a subclass
 	 * thereof) is passed to the CallbackHandler. Any encountered
 	 * NamingException will be translated using the NamingExceptionTranslator.
-	 * 
+	 *
 	 * @param se the SearchExecutor to use for performing the actual list.
 	 * @param handler the NameClassPairCallbackHandler to which each found entry
 	 * will be passed.
@@ -427,7 +430,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * {@link NameClassPair} (this might be a NameClassPair or a subclass
 	 * thereof) is passed to the CallbackHandler. Any encountered
 	 * NamingException will be translated using the NamingExceptionTranslator.
-	 * 
+	 *
 	 * @param se the SearchExecutor to use for performing the actual list.
 	 * @param handler the NameClassPairCallbackHandler to which each found entry
 	 * will be passed.
@@ -1088,7 +1091,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
 	/**
 	 * Delete all subcontexts including the current one recursively.
-	 * 
+	 *
 	 * @param ctx The context to use for deleting.
 	 * @param name The starting point to delete recursively.
 	 * @throws NamingException if any error occurs
@@ -1191,7 +1194,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	/**
 	 * Close the supplied DirContext if it is not null. Swallow any exceptions,
 	 * as this is only for cleanup.
-	 * 
+	 *
 	 * @param ctx the context to close.
 	 */
 	private void closeContext(DirContext ctx) {
@@ -1208,7 +1211,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	/**
 	 * Close the supplied NamingEnumeration if it is not null. Swallow any
 	 * exceptions, as this is only for cleanup.
-	 * 
+	 *
 	 * @param results the NamingEnumeration to close.
 	 */
 	private void closeNamingEnumeration(NamingEnumeration results) {
@@ -1235,7 +1238,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	/**
 	 * Make sure the returnObjFlag is set in the supplied SearchControls. Set it
 	 * and log if it's not set.
-	 * 
+	 *
 	 * @param controls the SearchControls to check.
 	 */
 	private void assureReturnObjFlagSet(SearchControls controls) {
@@ -1266,7 +1269,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     /**
 	 * A {@link NameClassPairCallbackHandler} that passes the NameClassPairs
 	 * found to a NameClassPairMapper and collects the results in a list.
-	 * 
+	 *
 	 * @author Mattias Hellborg Arthursson
 	 */
 	public final static class MappingCollectingNameClassPairCallbackHandler<T> extends
@@ -1811,9 +1814,19 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
      */
     @Override
     public <T> List<T> findAll(Class<T> clazz) {
-        return findAll(LdapUtils.emptyLdapName(),
-                getDefaultSearchControls(defaultSearchScope, RETURN_OBJ_FLAG, ALL_ATTRIBUTES),
-                clazz);
+    	Name base = null;
+
+        for (Annotation annotation : clazz.getAnnotations()) {
+            if (Entry.class.isAssignableFrom(annotation.annotationType())) {
+                base = LdapUtils.newLdapName(((Entry) annotation).base());
+            }
+        }
+
+        if (base == null) {
+            base = LdapUtils.emptyLdapName();
+        }
+
+        return findAll(base, getDefaultSearchControls(defaultSearchScope, RETURN_OBJ_FLAG, ALL_ATTRIBUTES), clazz);
     }
 
     /**
@@ -1832,7 +1845,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         // extend search controls with the attributes to return
         String[] attributes = odm.manageClass(clazz);
         searchControls.setReturningAttributes(attributes);
-        
+
         if (LOG.isDebugEnabled()) {
             LOG.debug(String.format("Searching - base=%1$s, finalFilter=%2$s, scope=%3$s", base, finalFilter, searchControls));
         }
