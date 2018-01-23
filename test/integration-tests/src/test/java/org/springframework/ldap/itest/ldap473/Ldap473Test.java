@@ -36,7 +36,7 @@ public class Ldap473Test {
 		@Bean
 		public ContextSource contextSource() {
 			LdapContextSource contextSource = new LdapContextSource();
-			contextSource.setUrl("ldap://localhost:9321");
+			contextSource.setUrl("ldap://localhost:9322");
 			contextSource.setUserDn(null);
 			contextSource.setPassword(null);
 			return contextSource;
@@ -52,7 +52,7 @@ public class Ldap473Test {
 			EmbeddedLdapServerFactoryBean embeddedLdapServer = new EmbeddedLdapServerFactoryBean();
 			embeddedLdapServer.setPartitionName("example");
 			embeddedLdapServer.setPartitionSuffix("dc=261consulting,dc=com");
-			embeddedLdapServer.setPort(9321);
+			embeddedLdapServer.setPort(9322);
 			return embeddedLdapServer;
 		}
 
