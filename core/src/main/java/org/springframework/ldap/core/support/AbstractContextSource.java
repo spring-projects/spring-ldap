@@ -413,6 +413,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 			LOG.debug("AuthenticationSource not set - " + "using default implementation");
 			if (!StringUtils.hasText(userDn)) {
 				LOG.info("Property 'userDn' not set - " + "anonymous context will be used for read-write operations");
+				anonymousReadOnly = true;
 			}
 			else if (!StringUtils.hasText(password)) {
 				LOG.info("Property 'password' not set - " + "blank password will be used");
