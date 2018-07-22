@@ -251,7 +251,7 @@ public final class LdapQueryBuilder implements LdapQuery {
     @Override
     public Filter filter() {
         if(rootContainer == null) {
-            throw new IllegalStateException("No filter conditions have been specified specified");
+            throw new IllegalStateException("No filter conditions have been specified");
         }
         return rootContainer.filter();
     }
