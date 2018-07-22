@@ -167,7 +167,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * Specify whether <code>PartialResultException</code> should be ignored in
 	 * searches. AD servers typically have a problem with referrals. Normally a
 	 * referral should be followed automatically, but this does not seem to work
-	 * with AD servers. The problem manifests itself with a a
+	 * with AD servers. The problem manifests itself with a
 	 * <code>PartialResultException</code> being thrown when a referral is
 	 * encountered by the server. Setting this property to <code>true</code>
 	 * presents a workaround to this problem by causing

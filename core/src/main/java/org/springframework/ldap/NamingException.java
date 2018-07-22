@@ -128,7 +128,7 @@ public abstract class NamingException extends NestedRuntimeException {
      * associated with this exception, if the root cause was an instance of
      * {@link javax.naming.NamingException}.
      * 
-     * @return a composite name describing the the leading portion of the name
+     * @return a composite name describing the leading portion of the name
      *         that was resolved successfully if the root cause is an instance
      *         of javax.naming.NamingException, or <code>null</code> if the
      *         resolved name field has not been set
