@@ -15,7 +15,7 @@
 		creating a DirContext, looping through NamingEnumerations, handling
 		exceptions and cleaning up resources. This leaves the programmer to
 		handle the important stuff - where to find data (DNs and Filters) and
-		what do do with it (map to and from domain objects, bind, modify,
+		what to do with it (map to and from domain objects, bind, modify,
 		unbind, etc.), in the same way that JdbcTemplate relieves the
 		programmer of all but the actual SQL and how the data maps to the
 		domain model.</li>

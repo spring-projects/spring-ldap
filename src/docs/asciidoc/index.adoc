@@ -795,8 +795,7 @@ We previously saw that updating by using `modifyAttributes` is the recommended a
 the task of calculating attribute modifications and constructing `ModificationItem` arrays accordingly.
 `DirContextAdapter` can do all of this for us, as follows:
 
-.Updating using using `DirContextAdapter`
-====
+.Updating using `DirContextAdapter`
 [[modify-modifyAttributes]]
 [source,java]
 [subs="verbatim,quotes"]
