@@ -721,7 +721,7 @@ We previously saw that updating using `modifyAttributes` is the recommended appr
 the task of calculating attribute modifications and constructing `ModificationItem` arrays accordingly.
 `DirContextAdapter` can do all of this for us:
 
-.Updating using using DirContextAdapter
+.Updating using DirContextAdapter
 [[modify-modifyAttributes]]
 [source,java]
 [subs="verbatim,quotes"]
@@ -966,7 +966,7 @@ public class PersonRepoImpl implements PersonRepo {
 In several cases the Distinguished Name (DN) of an object is constructed using properties of the object.
 E.g. in the above example, the country, company and full name of the `Person` are used in the DN, which means that updating any of these properties will actually require moving the entry in the LDAP tree using the `rename()` operation in addition to updating the `Attribute` values.
 Since this is highly implementation specific this is something you'll need to keep track of yourself - either by disallowing the user to change these properties or performing the `rename()` operation in your `update()` method if needed.
-Note that using <<odm>>, the the library can automatically handle this for you if you annotate your domain classes appropriately.
+Note that using <<odm>>, the library can automatically handle this for you if you annotate your domain classes appropriately.
 
 ====
 
