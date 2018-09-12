@@ -50,7 +50,7 @@ public class DefaultAttributeValidationPolicyTest {
 	
 	private static DefaultAttributeValidationPolicy policy = new DefaultAttributeValidationPolicy();
 
-	private static enum AttributeType { STRING, BASE64, URL }
+	private static enum AttributeType { STRING, BASE64, URL, UTF8 }
 	
 	private String line;
 	private String id;
@@ -105,7 +105,10 @@ public class DefaultAttributeValidationPolicyTest {
 				{ "url:< prospero://host.dom:1525//pros/name;key=value", "url", "", "prospero://host.dom:1525//pros/name;key=value", AttributeType.URL},
 				{ "url:< nntp://news.cs.hut.fi/alt.html/239157", "url", "", "nntp://news.cs.hut.fi/alt.html/239157", AttributeType.URL},
 				{ "url:< wais://vega.lib.ncsu.edu/alawon.src?nren", "url", "", "wais://vega.lib.ncsu.edu/alawon.src?nren", AttributeType.URL},
-				{ "url:< http://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html#28", "url", "", "http://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html#28", AttributeType.URL}
+				{ "url:< http://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html#28", "url", "", "http://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html#28", AttributeType.URL},
+				
+				//UTF8
+				{ "company: Østfold Akershus", "company", "", "Østfold Akershus", AttributeType.STRING }
 				
 		});
 	}
@@ -158,6 +161,11 @@ public class DefaultAttributeValidationPolicyTest {
 				URI  url = new URI(value);
 				assertThat(attribute.get() instanceof URI).as("Value is not a URL.").isTrue();
 				assertThat(attribute.get()).as("Values do not match: ").isEqualTo(url);
+				break;
+				
+			case UTF8:
+				assertThat(attribute.get() instanceof String).as("Value is not a UTF8.").isTrue();
+				assertThat(attribute.get()).as("Values do not match: ").isEqualTo(value);
 				break;
 			}
 			

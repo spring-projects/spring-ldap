@@ -120,6 +120,11 @@ public class DefaultAttributeValidationPolicy implements AttributeValidationPoli
 	
 	private static final String BASE64_STRING = "(" + BASE64_CHAR + "*)";
 	
+	//UTF8 Definitions
+	private static final String UTF8_CHAR = "[\\p{L}|[0-9]|\\s]"; // \p{L} for any kind of letter from any language, including spaces and digits
+	
+	private static final String UTF8_STRING = "(" + UTF8_CHAR + "+)";
+
 	//URL Components
 	private static final String USER = "[" + UCHAR + "\\x3B\\x3F\\x26\\x3D]*";		//UCHAR|;|?|&|=
 	
@@ -242,13 +247,17 @@ public class DefaultAttributeValidationPolicy implements AttributeValidationPoli
 	
 	private static final String URL_ATTRIBUTE_EXPRESSION = "^" + ATTRIBUTE_DESCRIPTION + ATTRIBUTE_SEPARATOR + URL_INDICATOR + FILL + URL + "$"; 	//URL
 	
+	private static final String UTF8_ATTRIBUTE_EXPRESSION = "^" + ATTRIBUTE_DESCRIPTION + ATTRIBUTE_SEPARATOR + FILL + UTF8_STRING;
+	
 	//Pattern Declarations
 	private static final Pattern ATTRIBUTE_PATTERN = Pattern.compile(ATTRIBUTE_EXPRESSION);
 	
 	private static final Pattern BASE64_ATTRIBUTE_PATTERN = Pattern.compile(BASE64_ATTRIBUTE_EXPRESSION);
 	
 	private static final Pattern URL_ATTRIBUTE_PATTERN = Pattern.compile(URL_ATTRIBUTE_EXPRESSION);
-	
+
+	private static final Pattern UTF8_ATTRIBUTE_PATTERN = Pattern.compile(UTF8_ATTRIBUTE_EXPRESSION);
+
 	private boolean ordered = false;
 	
 	/**
@@ -279,11 +288,12 @@ public class DefaultAttributeValidationPolicy implements AttributeValidationPoli
 	/**
 	 * Validates attribute contained in the buffer and returns an LdapAttribute.
 	 * <p>
-	 * Ensures attributes meets one of three prescribed patterns for valid attributes:
+	 * Ensures attributes meets one of four prescribed patterns for valid attributes:
 	 * <ol>
 	 * 	<li>A standard attribute pattern of the form: ATTR_ID[;options]: VALUE</li>
 	 * 	<li>A Base64 attribute pattern of the form: ATTR_ID[;options]:: BASE64_VALUE</li>
 	 * 	<li>A url attribute pattern of the form: ATTR_ID[;options]:&lt; URL_VALUE</li>
+	 * 	<li>A UTF8 attribute pattern of the form: ATTR_ID[;options]: UTF8_VALUE</li>
 	 * </ol>
 	 * <p>
 	 * Upon success an LdapAttribute object is returned.  
@@ -312,6 +322,12 @@ public class DefaultAttributeValidationPolicy implements AttributeValidationPoli
 		if (matcher.matches()) {
 			//Is a URL attribute...			
 			return parseUrlAttribute(matcher);				
+		}
+		
+		matcher = UTF8_ATTRIBUTE_PATTERN.matcher(buffer);		
+		if (matcher.matches()) {
+			//Is a UTF8 attribute...			
+			return parseUtf8Attribute(matcher);		
 		}
 		
 		//default: no match.
@@ -363,5 +379,16 @@ public class DefaultAttributeValidationPolicy implements AttributeValidationPoli
 			throw new InvalidAttributeFormatException(e);
 		}
 	}
-
+	
+	private LdapAttribute parseUtf8Attribute(Matcher matcher) {
+		String id = matcher.group(1);
+		String value = matcher.group(3);
+		List<String> options = Arrays.asList((!StringUtils.hasLength(matcher.group(2)) ? new String[] {} : matcher.group(2).replaceFirst(";","").split(OPTION_SEPARATOR)));
+		
+		if (options.isEmpty()) {
+			return new LdapAttribute(id, value, ordered);
+		} else {
+			return new LdapAttribute(id, value, options, ordered);
+		}
+	}
 }
