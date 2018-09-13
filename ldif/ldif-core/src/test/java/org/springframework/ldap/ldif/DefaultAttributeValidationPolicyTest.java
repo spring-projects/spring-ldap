@@ -108,7 +108,7 @@ public class DefaultAttributeValidationPolicyTest {
 				{ "url:< http://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html#28", "url", "", "http://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html#28", AttributeType.URL},
 				
 				//UTF8
-				{ "company: Østfold Akershus", "company", "", "Østfold Akershus", AttributeType.STRING }
+				{ "company: Ã˜stfold Akershus", "company", "", "Ã˜stfold Akershus", AttributeType.STRING }
 				
 		});
 	}
