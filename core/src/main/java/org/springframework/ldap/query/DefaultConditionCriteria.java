@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,14 @@ package org.springframework.ldap.query;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.filter.Filter;
 import org.springframework.ldap.filter.GreaterThanOrEqualsFilter;
+import org.springframework.ldap.filter.InFilter;
 import org.springframework.ldap.filter.LessThanOrEqualsFilter;
 import org.springframework.ldap.filter.LikeFilter;
 import org.springframework.ldap.filter.NotFilter;
 import org.springframework.ldap.filter.PresentFilter;
 import org.springframework.ldap.filter.WhitespaceWildcardsFilter;
+
+import java.util.List;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -85,5 +88,10 @@ class DefaultConditionCriteria implements ConditionCriteria {
     public DefaultConditionCriteria not() {
         negated = !negated;
         return this;
+    }
+
+    @Override
+    public ContainerCriteria in(List<String> values) {
+        return appendToParent(new InFilter(attribute, values));
     }
 }

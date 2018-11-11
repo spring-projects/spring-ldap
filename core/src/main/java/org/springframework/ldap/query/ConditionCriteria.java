@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 
 package org.springframework.ldap.query;
+
+import java.util.List;
 
 /**
  * Constructs a conditional LDAP filter based on the attribute specified in the previous builder step.
@@ -110,4 +112,17 @@ public interface ConditionCriteria {
      * @see org.springframework.ldap.filter.NotFilter
      */
     ConditionCriteria not();
+
+    /**
+     * Appends an {@link org.springframework.ldap.filter.InFilter}.
+     *
+     * @param values the values to compare with.
+     * @return an ContainerCriteria instance that can be used to continue append more criteria
+     * or as the LdapQuery instance to be used as instance to e.g.
+     * {@link org.springframework.ldap.core.LdapOperations#search(LdapQuery, org.springframework.ldap.core.ContextMapper)}.
+     *
+     * @see org.springframework.ldap.filter.InFilter
+     * @since 2.3.3
+     */
+    ContainerCriteria in(List<String> values);
 }
