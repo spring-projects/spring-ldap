@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 /**
  * Indicates that a field is to be automatically populated to/from the distinguished name
  * of an entry. Fields annotated with this annotation will be automatically populated with values from
- * the distinguished names of found entries.
+ * the distinguished names of found entries. Annotated fields must be of type <code>String</code>.
  * <p>
  * For automatic calculation of the DN of an entry to work, the {@link #index()} value
  * must be specified on all DnAttribute annotations in that class, and these attribute values,

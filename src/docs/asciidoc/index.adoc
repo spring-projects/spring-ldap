@@ -1021,6 +1021,7 @@ The `@Attribute` annotation is used to map object class fields to entity fields.
 
 The `@DnAttribute` annotation is used to map object class fields to and from components in the distinguished name of an entry.
 Fields annotated with `@DnAttribute` will automatically be populated with the appropriate value from the distinguished name when an entry is read from the directory tree.
+Only fields of type `String` can be annotated with `@DnAttribute`, other types are not supported.
 If the `index` attribute of all `@DnAttribute` annotations in a class is specified, the DN will also be automatically calculated when creating and updating entries.
 For update scenarios, this will also automatically take care of moving entries in the tree if attributes that are part of the distinguished name have changed.
 
