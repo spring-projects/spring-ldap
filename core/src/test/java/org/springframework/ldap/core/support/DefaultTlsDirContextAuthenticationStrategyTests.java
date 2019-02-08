@@ -21,11 +21,11 @@ public class DefaultTlsDirContextAuthenticationStrategyTests {
 
 	private DefaultTlsDirContextAuthenticationStrategy strategy = new DefaultTlsDirContextAuthenticationStrategy();
 
-	// gh-430
+	// gh-430, gh-502
 	@Test
-	public void applyAuthenticationThenReconnectInvoked() throws Exception {
+	public void applyAuthenticationThenLookupInvoked() throws Exception {
 		this.strategy.applyAuthentication(this.context, "username", "password");
 
-		verify(this.context).reconnect(null);
+		verify(this.context).lookup("");
 	}
 }

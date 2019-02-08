@@ -36,8 +36,8 @@ public class DefaultTlsDirContextAuthenticationStrategy extends AbstractTlsDirCo
 		ctx.addToEnvironment(Context.SECURITY_AUTHENTICATION, SIMPLE_AUTHENTICATION);
 		ctx.addToEnvironment(Context.SECURITY_PRINCIPAL, userDn);
 		ctx.addToEnvironment(Context.SECURITY_CREDENTIALS, password);
-		// Force reconnect with user credentials
-		ctx.reconnect(null);
+		// Force a server call as we have updated the environment (gh-430, gh-502)
+		ctx.lookup("");
 	}
 
 }
