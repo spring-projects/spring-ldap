@@ -16,16 +16,16 @@ principles as Spring Jdbc.
 The LdapTemplate class encapsulates all the plumbing work involved in traditional LDAP 
 programming, such as creating, looping through NamingEnumerations, handling Exceptions
 and cleaning up resources. This leaves the programmer to handle the important stuff - 
-where to find data (DNs and Filters) and what do do with it (map to and from domain 
+where to find data (DNs and Filters) and what to do with it (map to and from domain
 objects, bind, modify, unbind, etc.), in the same way that JdbcTemplate relieves the 
 programmer of all but the actual SQL and how the data maps to the domain model.
 
 In addition to this, Spring LDAP provides Exception translation from NamingExceptions
-to an unchecked exception hirearchy, as well as several utilities for working with filters,
-LDAP paths and Attributes.
+to an unchecked exception hierarchy, as well as several utilities for working with filters,
+LDAP paths and attributes.
 
-For detailed information on the project, please refer to the [reference documentation](http://static.springsource.org/spring-ldap/docs/1.3.x/reference/html/) and [javadocs](http://static.springframework.org/spring-ldap/docs/1.3.x/apidocs/).
-See [the changelog](https://jira.springsource.org/secure/ReleaseNote.jspa?projectId=10071&version=13399) for detailed information on changes in the latest version.
+For detailed information on the project, please refer to the [reference documentation](https://docs.spring.io/spring-ldap/docs/current/reference/) and [javadocs](https://docs.spring.io/spring-ldap/docs/2.3.x/apidocs/).
+See [the changelog](https://github.com/spring-projects/spring-ldap/milestone/28?closed=1) for detailed information on changes in the latest version.
 
 ### MAVEN USERS
 
@@ -34,7 +34,7 @@ The following components are available:
 
 * spring-ldap-core - the core Spring LDAP library
 * spring-ldap-core-tiger - the Spring LDAP Java 5 support library
-* spring-ldap-test - support classes that helps LDAP with integration testing
+* spring-ldap-test - support classes that help LDAP with integration testing
 * spring-ldap-ldif-core - the Spring LDAP LDIF parsing library
 * spring-ldap-ldif-batch - the Spring Batch integration layer for the LDIF parsing library
 * spring-ldap-odm - The Object-Directory Mapping (ODM) framework
@@ -44,7 +44,7 @@ To include e.g. the spring-ldap-core component in your project, use the followin
     <dependency>
       <groupId>org.springframework.ldap</groupId>
       <artifactId>spring-ldap-core</artifactId>
-      <version>1.3.2.RELEASE</version>
+      <version>2.3.2.RELEASE</version>
     </dependency>
 
 Milestone releases (such as release candidates) are available from the Spring
@@ -75,10 +75,10 @@ use the following dependency tag:
 
 Note that while all milestone and snapshot builds have passed the (quite extensive) test suite,
 the artifacts here are obviously still work in progress. Feel free to use them for trying out new functionality
-and bug fixes for an upcoming version. Please report any problems or bugs in the [issue tracker](https://jira.springsource.org/browse/LDAP).
+and bug fixes for an upcoming version. Please report any problems or bugs in the [issue tracker](https://github.com/spring-projects/spring-ldap/issues).
 
 ### ADDITIONAL RESOURCES
 
-* [Official site](http://www.springframework.org/ldap)
-* [Support forum](http://forum.springframework.org/forumdisplay.php?f=40)
-* [Issue tracker](https://jira.springsource.org/browse/LDAP)
+* [Official site](https://spring.io/projects/spring-ldap)
+* [Stack Overflow](https://stackoverflow.com/questions/tagged/spring-ldap)
+* [Issue tracker](https://github.com/spring-projects/spring-ldap/issues)
