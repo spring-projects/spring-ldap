@@ -1,5 +1,7 @@
 = Spring LDAP Reference
-Mattias Hellborg Arthursson; Ulrik Sandberg; Eric Dalquist; Keith Barlow; Rob Winch
+:toc: left
+:toc-levels: 4
+Mattias Hellborg Arthursson; Ulrik Sandberg; Eric Dalquist; Keith Barlow; Rob Winch; Jay Bryant
 
 Spring LDAP makes it easier to build Spring-based applications that use the Lightweight Directory Access Protocol.
 

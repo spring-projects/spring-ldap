@@ -4,17 +4,24 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
-        classpath('org.asciidoctor:asciidoctor-gradle-plugin:1.5.1')
+        classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16'
         classpath("io.spring.gradle:spring-io-plugin:0.0.6.RELEASE")
     }
 }
 
 plugins {
     id "org.sonarqube" version "2.1-rc1"
+    id 'org.asciidoctor.convert' version '1.5.10'
+}
+
+repositories {
+	maven { url 'https://repo.spring.io/plugins-release' }
+	mavenCentral()
 }
 
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 
+ext.docResourcesVersion = '0.1.0.RELEASE'
 ext.GRADLE_SCRIPT_DIR = "${rootProject.projectDir}/gradle"
 ext.JAVA_MODULE_SCRIPT = "${GRADLE_SCRIPT_DIR}/java-module.gradle"
 ext.MAVEN_DEPLOYMENT_SCRIPT = "${GRADLE_SCRIPT_DIR}/maven-deployment.gradle"
@@ -69,6 +76,30 @@ configure(subprojects - coreModules) {
     tasks.findByPath("artifactoryPublish")?.enabled = false
 }
 
+asciidoctorj {
+	version = '1.5.5'
+}
+
+configurations {
+	docs
+}
+
+dependencies {
+	docs "io.spring.docresources:spring-doc-resources:${docResourcesVersion}@zip"
+}
+
+task prepareAsciidocBuild(type: Sync) {
+	dependsOn configurations.docs
+	// copy doc resources
+	from {
+		configurations.docs.collect { zipTree(it) }
+	}
+	// and doc sources
+	from "src/docs/asciidoc/"
+	// to a build directory of your choice
+	into "$buildDir/asciidoc/assemble"
+}
+
 description = "Spring LDAP"
 
 configurations.archives.artifacts.clear()
@@ -87,6 +118,35 @@ sonarqube {
 }
 
 asciidoctor {
+	dependsOn prepareAsciidocBuild
+	backends 'html5', 'pdf'
+	sourceDir "$buildDir/asciidoc/assemble"
+  outputDir = new File("$buildDir/docs")
+	sources {
+		include 'index.adoc'
+	}
+	resources {
+		from(sourceDir) {
+			include 'images/*', 'css/**', 'js/**'
+		}
+	}
+	options doctype: 'book', eruby: 'erubis'
+	logDocuments = true
+	attributes 'docinfo': 'shared',
+		// use provided stylesheet
+		stylesdir: "css/",
+		stylesheet: 'spring.css',
+		'linkcss': true,
+		'icons': 'font',
+    'sectanchors': '',
+		// use provided highlighter
+		'source-highlighter=highlight.js',
+		'highlightjsdir=js/highlight',
+		'highlightjs-theme=atom-one-dark-reasonable'
+}
+
+
+/* asciidoctor {
     outputDir = new File("$buildDir/docs")
     options = [
             eruby: 'erubis',
@@ -104,7 +164,7 @@ asciidoctor {
                     revnumber : project.version
             ]
     ]
-}
+} */
 
 task api(type: Javadoc) {
     group = "Documentation"
