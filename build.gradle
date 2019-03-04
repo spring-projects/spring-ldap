@@ -117,9 +117,27 @@ sonarqube {
     }
 }
 
+task('makePDF', type: org.asciidoctor.gradle.AsciidoctorTask){
+dependsOn prepareAsciidocBuild
+  backends 'pdf'
+  sourceDir "$buildDir/asciidoc/assemble"
+  outputDir = new File("$buildDir/docs")
+	sources {
+		include 'index.adoc'
+	}
+	options doctype: 'book', eruby: 'erubis'
+	logDocuments = true
+	attributes 'docinfo': 'shared',
+		'icons': 'font',
+    'sectanchors': '',
+    'source-highlighter' : 'coderay',
+    'spring-ldap-version' : project.version,
+    revnumber : project.version
+}
+
 asciidoctor {
-	dependsOn prepareAsciidocBuild
-	backends 'html5', 'pdf'
+	dependsOn makePDF
+	backends 'html5'
 	sourceDir "$buildDir/asciidoc/assemble"
   outputDir = new File("$buildDir/docs")
 	sources {
@@ -142,29 +160,10 @@ asciidoctor {
 		// use provided highlighter
 		'source-highlighter=highlight.js',
 		'highlightjsdir=js/highlight',
-		'highlightjs-theme=atom-one-dark-reasonable'
+		'highlightjs-theme=atom-one-dark-reasonable',
+    'spring-ldap-version' : project.version,
+    revnumber : project.version
 }
-
-
-/* asciidoctor {
-    outputDir = new File("$buildDir/docs")
-    options = [
-            eruby: 'erubis',
-            attributes: [
-                    copycss : '',
-                    icons : 'font',
-                    'source-highlighter': 'prettify',
-                    sectanchors : '',
-                    toc2: '',
-                    idprefix: '',
-                    idseparator: '-',
-                    doctype: 'book',
-                    numbered: '',
-                    'spring-ldap-version' : project.version,
-                    revnumber : project.version
-            ]
-    ]
-} */
 
 task api(type: Javadoc) {
     group = "Documentation"
@@ -201,6 +200,11 @@ task docsZip(type: Zip, dependsOn: asciidoctor) {
 
     from (new File(asciidoctor.outputDir, "html5")) {
         include "*.html"
+        include 'images/*', 'css/**', 'js/**'
+        into "reference"
+    }
+    from (new File(asciidoctor.outputDir, "pdf")) {
+        include "*.pdf"
         into "reference"
     }
 }
