@@ -37,12 +37,12 @@ allprojects {
     ext.snapshotBuild = version.endsWith('SNAPSHOT')
 
     ext.javadocLinks = [
-        "http://docs.oracle.com/javase/7/docs/api/",
-        "http://docs.spring.io/spring/docs/3.2.x/javadoc-api/",
-        "http://logging.apache.org/log4j/1.2/apidocs/",
-        "http://commons.apache.org/proper/commons-logging/apidocs/",
-        "http://commons.apache.org/proper/commons-dbcp/apidocs/",
-        "http://commons.apache.org/proper/commons-pool/apidocs/",
+        "https://docs.oracle.com/javase/7/docs/api/",
+        "https://docs.spring.io/spring/docs/3.2.x/javadoc-api/",
+        "https://logging.apache.org/log4j/1.2/apidocs/",
+        "https://commons.apache.org/proper/commons-logging/apidocs/",
+        "https://commons.apache.org/proper/commons-dbcp/apidocs/",
+        "https://commons.apache.org/proper/commons-pool/apidocs/",
         "http://junit.sourceforge.net/javadoc/",
     ] as String[]
 }
@@ -130,7 +130,7 @@ task docsZip(type: Zip, dependsOn: asciidoctor) {
     baseName = "spring-ldap"
     classifier = "docs"
     description = "Builds -${classifier} archive containing api and reference " +
-        "for deployment at http://static.springframework.org/spring-ldap/docs."
+        "for deployment at https://docs.spring.io/spring-ldap/docs."
 
     from("src/dist") {
         include "changelog.txt"
