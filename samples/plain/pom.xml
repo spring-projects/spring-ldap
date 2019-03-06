@@ -7,15 +7,15 @@
   <packaging>war</packaging>
   <name>spring-ldap-plain-sample</name>
   <description>spring-ldap-plain-sample</description>
-  <url>http://www.springframework.org/ldap</url>
+  <url>https://www.springframework.org/ldap</url>
   <organization>
     <name>SpringSource</name>
-    <url>http://springsource.org/</url>
+    <url>https://spring.io</url>
   </organization>
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
@@ -37,7 +37,7 @@
       <name>Ulrik Sandberg</name>
       <email>ulrik.sandberg@jayway.com</email>
       <organization>Jayway</organization>
-      <organizationUrl>http://www.jayway.com</organizationUrl>
+      <organizationUrl>https://www.jayway.com</organizationUrl>
     </developer>
   </developers>
   <contributors>
@@ -172,7 +172,7 @@
   <repositories>
     <repository>
       <id>spring-snasphot</id>
-      <url>http://repo.springsource.org/libs-snapshot</url>
+      <url>https://repo.springsource.org/libs-snapshot</url>
     </repository>
   </repositories>
   <build>
