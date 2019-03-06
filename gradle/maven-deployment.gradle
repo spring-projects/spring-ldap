@@ -25,15 +25,15 @@ def customizePom(pom, gradleProject) {
             packaging = "war"
         }
         description = gradleProject.name
-        url = 'http://www.springframework.org/ldap'
+        url = 'https://www.springframework.org/ldap'
         organization {
             name = 'SpringSource'
-            url = 'http://springsource.org/'
+            url = 'https://spring.io'
         }
         licenses {
             license {
                 name 'The Apache Software License, Version 2.0'
-                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                url 'https://www.apache.org/licenses/LICENSE-2.0.txt'
                 distribution 'repo'
             }
         }
@@ -60,7 +60,7 @@ def customizePom(pom, gradleProject) {
                 name = "Ulrik Sandberg"
                 email = "ulrik.sandberg@jayway.com"
                 organization = "Jayway"
-                organizationUrl = "http://www.jayway.com"
+                organizationUrl = "https://www.jayway.com"
             }
         }
         contributors {
@@ -88,13 +88,13 @@ def customizePom(pom, gradleProject) {
             repositories {
                 repository {
                     id 'spring-snasphot'
-                    url 'http://repo.springsource.org/libs-snapshot'
+                    url 'https://repo.springsource.org/libs-snapshot'
                 }
             }
         }
     }
 
-    // http://forums.gradle.org/gradle/topics/after_upgrade_gradle_to_2_0_version_the_maven_pom_not_support_build_property
+    // https://discuss.gradle.org/gradle/topics/after_upgrade_gradle_to_2_0_version_the_maven_pom_not_support_build_property
     pom.withXml {
         def plugins = asNode().appendNode('build').appendNode('plugins')
         plugins
