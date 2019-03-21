@@ -834,7 +834,7 @@ public class DirContextAdapterTest {
 
 	/**
 	 * Test case corresponding to LDAP-96 in Spring Jira.
-	 * http://jira.springframework.org/browse/LDAP-96
+	 * https://jira.springframework.org/browse/LDAP-96
 	 */
     @Test
 	public void testChangeMultiAttributeOrderDoesMatterLDAP96()

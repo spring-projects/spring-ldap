@@ -1,16 +1,16 @@
 Spring LDAP CHANGELOG
 =====================
-http://www.springframework.org/ldap
+https://www.springframework.org/ldap
 
-http://www.ietf.org/rfc/rfc1960.txt
-http://www.ietf.org/rfc/rfc2251.txt
-http://www.ietf.org/rfc/rfc2252.txt
-http://www.ietf.org/rfc/rfc2253.txt
-http://www.ietf.org/rfc/rfc2254.txt
-http://www.ietf.org/rfc/rfc2255.txt
-http://www.ietf.org/rfc/rfc2256.txt
-http://www.ietf.org/rfc/rfc2696.txt
-http://www.ietf.org/rfc/rfc2829.txt
+https://www.ietf.org/rfc/rfc1960.txt
+https://www.ietf.org/rfc/rfc2251.txt
+https://www.ietf.org/rfc/rfc2252.txt
+https://www.ietf.org/rfc/rfc2253.txt
+https://www.ietf.org/rfc/rfc2254.txt
+https://www.ietf.org/rfc/rfc2255.txt
+https://www.ietf.org/rfc/rfc2256.txt
+https://www.ietf.org/rfc/rfc2696.txt
+https://www.ietf.org/rfc/rfc2829.txt
 
 Changes in version 1.3.2 (Not released yet)
 -------------------------------------------
@@ -39,7 +39,7 @@ Changes in version 1.3.1 (November 2010)
 
 * Added utility methods for converting a Windows security identifier (SID)
   between a binary format and a slightly more readable string format.
-  http://msdn.microsoft.com/en-us/library/aa379571%28VS.85%29.aspx
+  https://msdn.microsoft.com/en-us/library/aa379571%28VS.85%29.aspx
   (LDAP-187)
 
 * Added authentication methods that provide a possible authentication
@@ -57,7 +57,7 @@ Changes in version 1.3.1 (November 2010)
   "none". (LDAP-188)
 
 * DIGEST-MD5 SASL authentication mechanism is now supported, as specified by
-  RFC 2829 (see http://www.ietf.org/rfc/rfc2829.txt, section 4). (LDAP-173)
+  RFC 2829 (see https://www.ietf.org/rfc/rfc2829.txt, section 4). (LDAP-173)
   Contributed by Marvin S. Addison.
 
 * DefaultDirObjectFactory calls a Java5 version of the IllegalArgumentException
