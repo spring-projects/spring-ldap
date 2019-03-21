@@ -26,7 +26,7 @@ import java.util.List;
  *
  * @author Mattias Hellborg Arthursson
  * @since 1.3.2
- * @see <a href="http://www.watersprings.org/pub/id/draft-kashi-incremental-00.txt">Incremental Retrieval of Multi-valued Properties</a>
+ * @see <a href="https://tools.ietf.org/html/draft-kashi-incremental-00">Incremental Retrieval of Multi-valued Properties</a>
  * @see org.springframework.ldap.core.support.DefaultIncrementalAttributesMapper
  */
 public interface IncrementalAttributesMapper<T extends IncrementalAttributesMapper> extends AttributesMapper<T> {

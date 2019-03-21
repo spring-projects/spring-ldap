@@ -65,7 +65,7 @@ import java.util.Set;
  *
  * @author Marius Scurtescu
  * @author Mattias Hellborg Arthursson
- * @see <a href="http://www.watersprings.org/pub/id/draft-kashi-incremental-00.txt">Incremental Retrieval of Multi-valued Properties</a>
+ * @see <a href="https://tools.ietf.org/html/draft-kashi-incremental-00">Incremental Retrieval of Multi-valued Properties</a>
  * @see #lookupAttributes(org.springframework.ldap.core.LdapOperations, javax.naming.Name, String[])
  * @see #lookupAttributeValues(org.springframework.ldap.core.LdapOperations, javax.naming.Name, String)
  * @since 1.3.2
