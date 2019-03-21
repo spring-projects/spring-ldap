@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet
 		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-		xmlns:s3="http://s3.amazonaws.com/doc/2006-03-01/"
+		xmlns:s3="https://s3.amazonaws.com/doc/2006-03-01/"
 		version="1.0">
 	<xsl:output method="html" version="1.0" encoding="UTF-8" indent="yes"/>
 
@@ -25,7 +25,7 @@
 			<xsl:for-each select="s3:Contents[substring(s3:Key, (string-length(s3:Key) - 2)) = 'zip']">
 				<tr>
 					<td class="name">
-						<a class="name" href="http://s3.amazonaws.com/{$bucket-name}/{s3:Key}">
+						<a class="name" href="https://s3.amazonaws.com/{$bucket-name}/{s3:Key}">
 							<xsl:value-of select="substring-after(s3:Key,$prefix)"/><br/>
 						</a>
 					</td>

@@ -13,7 +13,7 @@ Snapshot Builds
 <repository>
     <id>spring-s3</id>
     <name>Spring Portfolio Maven SNAPSHOT Repository</name>
-    <url>http://s3.amazonaws.com/maven.springframework.org/snapshot</url>
+    <url>https://s3.amazonaws.com/maven.springframework.org/snapshot</url>
 </repository>
 +---------------
 
@@ -33,5 +33,5 @@ Snapshot Builds
 +---------------
 
 	Additionally, there are
-    {{{http://static.springframework.org/spring-ldap/downloads/1.3-snapshot-download.php}zips}}
+    {{{https://docs.spring.io/spring-ldap/downloads/1.3-snapshot-download.php}zips}}
     available which contain all jars.

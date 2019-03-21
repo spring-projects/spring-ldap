@@ -101,12 +101,12 @@ public final class TestConverterManager {
                 new ConverterTestData<String>((byte)66, String.class, "66"),
                 new ConverterTestData<String>((int)1234, String.class, "1234"),
                 new ConverterTestData<String>((int)-9876, String.class, "-9876"),
-                new ConverterTestData<URI>("http://google.com/", URI.class, new URI("http://google.com/")),
-                new ConverterTestData<URI>("http://apache.org/index.html", URI.class, new URI(
-                        "http://apache.org/index.html")),
-                new ConverterTestData<String>(new URI("http://google.com/"), String.class, "http://google.com/"),
-                new ConverterTestData<String>(new URI("http://apache.org/index.html"), String.class,
-                        "http://apache.org/index.html") };
+                new ConverterTestData<URI>("https://google.com/", URI.class, new URI("https://google.com/")),
+                new ConverterTestData<URI>("https://apache.org/index.html", URI.class, new URI(
+                        "https://apache.org/index.html")),
+                new ConverterTestData<String>(new URI("https://google.com/"), String.class, "https://google.com/"),
+                new ConverterTestData<String>(new URI("https://apache.org/index.html"), String.class,
+                        "https://apache.org/index.html") };
 
         new ExecuteRunnable<ConverterTestData<?>>().runTests(new RunnableTest<ConverterTestData<?>>() {
             public void runTest(ConverterTestData<?> testData) {

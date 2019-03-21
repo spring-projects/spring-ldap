@@ -40,7 +40,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Integration tests for the virtual list view search result capability of
  * LdapTemplate. The test should reflect the example in Chapter 7 of the <a
  * href=
- * "http://www3.tools.ietf.org/html/draft-ietf-ldapext-ldapv3-vlv-09">Virtual
+ * "https://www3.tools.ietf.org/html/draft-ietf-ldapext-ldapv3-vlv-09">Virtual
  * List View RFC draft</a>.
  *
  * <blockquote> Here we walk through the client-server interaction for a

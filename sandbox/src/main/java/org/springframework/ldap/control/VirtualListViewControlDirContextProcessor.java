@@ -65,7 +65,7 @@ import java.lang.reflect.Method;
  *
  * @author Ulrik Sandberg
  * @author Marius Scurtescu
- * @see <a href="http://www3.ietf.org/proceedings/02nov/I-D/draft-ietf-ldapext-ldapv3-vlv-09.txt">LDAP Extensions for Scrolling View Browsing of Search Results</a>
+ * @see <a href="https://www3.ietf.org/proceedings/02nov/I-D/draft-ietf-ldapext-ldapv3-vlv-09.txt">LDAP Extensions for Scrolling View Browsing of Search Results</a>
  */
 public class VirtualListViewControlDirContextProcessor extends AbstractFallbackRequestAndResponseControlDirContextProcessor
 {

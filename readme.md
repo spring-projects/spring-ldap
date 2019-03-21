@@ -53,7 +53,7 @@ framework milestone repo:
     <repository>
       <id>spring-milestone</id>
       <name>Spring Portfolio Milestone Repository</name>
-      <url>http://maven.springframework.org/milestone</url>
+      <url>https://maven.springframework.org/milestone</url>
     </repository>
 
 Snapshot builds produced by the CI builds are available from the Spring framework snapshot repo:
@@ -61,7 +61,7 @@ Snapshot builds produced by the CI builds are available from the Spring framewor
     <repository>
       <id>spring-milestone</id>
       <name>Spring Portfolio Milestone Repository</name>
-      <url>http://maven.springframework.org/snapshot</url>
+      <url>https://maven.springframework.org/snapshot</url>
     </repository>
 
 In order to e.g. try out the latest build snapshot of the core module, include the repository above and
