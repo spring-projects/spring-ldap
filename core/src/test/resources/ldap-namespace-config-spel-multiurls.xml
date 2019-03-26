@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:ldap="http://www.springframework.org/schema/ldap"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/ldap http://www.springframework.org/schema/ldap/spring-ldap.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+<beans xmlns="https://www.springframework.org/schema/beans"
+       xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ldap="https://www.springframework.org/schema/ldap"
+       xmlns:util="https://www.springframework.org/schema/util"
+       xsi:schemaLocation="https://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+       https://www.springframework.org/schema/ldap https://www.springframework.org/schema/ldap/spring-ldap.xsd https://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
 
     <ldap:context-source
             url="#{ldapProperties.url}"
