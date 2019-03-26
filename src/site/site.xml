@@ -9,18 +9,18 @@
     <bannerLeft>
         <name>Spring LDAP</name>
         <src>images/spring-ldap.png</src>
-        <href>http://www.springframework.org/ldap</href>
+        <href>https://www.springframework.org/ldap</href>
     </bannerLeft>
     <body>
         <links>
-            <item name="Spring Framework" href="http://www.springframework.org"/>
-            <item name="Spring LDAP 1.3" href="http://static.springframework.org/spring-ldap/sites/1.3/"/>
+            <item name="Spring Framework" href="https://www.springframework.org"/>
+            <item name="Spring LDAP 1.3" href="https://docs.spring.io/spring-ldap/sites/1.3/"/>
         </links>
         <head>
             <script type="text/javascript" language="javascript">
                 i=11692
             </script>
-            <script type="text/javascript" language="javascript" src="http://t4.trackalyzer.com/trackalyze.js"></script>
+            <script type="text/javascript" language="javascript" src="https://t4.trackalyzer.com/trackalyze.js"></script>
         </head>
         <menu name="Overview">
             <item name="Home" href="index.html"/>
@@ -34,25 +34,25 @@
             <item name="Resources &amp; Tools" href="resources.html"/>
         </menu>
         <menu name="Support">
-            <item name="Support Forums" href="http://forum.springframework.org/forumdisplay.php?f=40"/>
-            <item name="JIRA" href="http://jira.springframework.org/browse/LDAP"/>
+            <item name="Support Forums" href="https://forum.springframework.org/forumdisplay.php?f=40"/>
+            <item name="JIRA" href="https://jira.springframework.org/browse/LDAP"/>
             <item name="Road Map"
 		    href="https://jira.springframework.org/browse/LDAP?report=com.atlassian.jira.plugin.system.project:roadmap-panel#selectedTab=com.atlassian.jira.plugin.system.project%3Aroadmap-panel"/>
         </menu>
         <menu ref="reports" name="Reports"/>
     </body>
     <poweredBy>
-	<logo name="Powered by Spring" href="http://www.springsource.org/about"
-		img="http://www.springframework.org/buttons/spring_80x15.png"/>
-        <logo name="Analyzed by Structure 101" href="http://www.headwaysoftware.com/products/structure101/"
-		img="http://www.structure101.com/java/images/logo-small.gif"/>
-	<logo name="Bugs and issues tracked by JIRA" href="http://www.atlassian.com/software/jira/"
-		img="http://www.atlassian.com/software/jira/images/badges/v2/bug_tracking_software_sm.png"/>
-	<logo name="Continuous integration by Bamboo" href="http://www.atlassian.com/software/bamboo/"
-		img="http://www.atlassian.com/software/bamboo/images/badges/v2/continuous_integration_tools_sm.png"/>
-	<logo name="Built with Maven" href="http://maven.apache.org"
-		img="http://maven.apache.org/images/logos/maven-feather.png"/>
-	<logo name="Hosted by Contegix" href="http://www.contegix.com/"
-		img="http://www.contegix.com/images/badges/contegix-hosted-90x30.png"/>
+	<logo name="Powered by Spring" href="https://www.springsource.org/about"
+		img="https://www.springframework.org/buttons/spring_80x15.png"/>
+        <logo name="Analyzed by Structure 101" href="https://www.headwaysoftware.com/products/structure101/"
+		img="https://www.structure101.com/java/images/logo-small.gif"/>
+	<logo name="Bugs and issues tracked by JIRA" href="https://www.atlassian.com/software/jira/"
+		img="https://www.atlassian.com/software/jira/images/badges/v2/bug_tracking_software_sm.png"/>
+	<logo name="Continuous integration by Bamboo" href="https://www.atlassian.com/software/bamboo/"
+		img="https://www.atlassian.com/software/bamboo/images/badges/v2/continuous_integration_tools_sm.png"/>
+	<logo name="Built with Maven" href="https://maven.apache.org"
+		img="https://maven.apache.org/images/logos/maven-feather.png"/>
+	<logo name="Hosted by Contegix" href="https://www.contegix.com/"
+		img="https://www.contegix.com/images/badges/contegix-hosted-90x30.png"/>
     </poweredBy>
 </project>
