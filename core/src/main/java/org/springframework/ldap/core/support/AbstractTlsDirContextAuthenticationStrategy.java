@@ -56,7 +56,7 @@ import java.util.Hashtable;
  * processing.
  * <p>
  * For further information regarding TLS, refer to <a
- * href="http://java.sun.com/products/jndi/tutorial/ldap/ext/starttls.html">this
+ * href="https://java.sun.com/products/jndi/tutorial/ldap/ext/starttls.html">this
  * page</a>.
  * <p>
  * <b>NB:</b> TLS negotiation is an expensive process, which is why you will

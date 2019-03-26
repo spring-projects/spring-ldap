@@ -20,7 +20,7 @@ package org.springframework.ldap.filter;
  * A filter that will always evaluate to <code>true</code>, as specified in RFC4526.
  *
  * @author Mattias Hellborg Arthursson
- * @see <a href="http://tools.ietf.org/html/rfc4526">RFC4526</a>
+ * @see <a href="https://tools.ietf.org/html/rfc4526">RFC4526</a>
  * @since 1.3.2
  */
 public class AbsoluteTrueFilter extends AbstractFilter {

@@ -6,7 +6,7 @@
            targetNamespace="http://www.springframework.org/schema/ldap">
 
     <xs:import namespace="http://www.springframework.org/schema/data/repository"
-                schemaLocation="http://www.springframework.org/schema/data/repository/spring-repository.xsd" />
+                schemaLocation="https://www.springframework.org/schema/data/repository/spring-repository.xsd" />
 
     <xs:attributeGroup name="context-source.attlist">
         <xs:attribute name="id" type="xs:token">
@@ -66,7 +66,7 @@
         <xs:attribute name="referral">
             <xs:annotation>
                 <xs:documentation>
-                    Defines the strategy to handle referrals, as described on http://docs.oracle.com/javase/jndi/tutorial/ldap/referral/jndi.html.
+                    Defines the strategy to handle referrals, as described on https://docs.oracle.com/javase/jndi/tutorial/ldap/referral/jndi.html.
                     Default is null.
                 </xs:documentation>
             </xs:annotation>

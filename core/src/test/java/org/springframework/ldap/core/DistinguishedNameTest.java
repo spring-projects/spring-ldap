@@ -581,7 +581,7 @@ public class DistinguishedNameTest {
 	}
 
 	/**
-	 * Test for http://forum.springsource.org/showthread.php?t=86640.
+	 * Test for https://forum.spring.io/showthread.php?t=86640.
 	 */
     @Test
 	public void testDistinguishedNameWithDotParsesProperly() {

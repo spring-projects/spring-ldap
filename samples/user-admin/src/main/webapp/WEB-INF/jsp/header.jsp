@@ -30,7 +30,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="http://projects.spring.io/spring-ldap/">Spring LDAP</a>
+            <a class="navbar-brand" href="https://projects.spring.io/spring-ldap/">Spring LDAP</a>
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">

@@ -24,7 +24,7 @@ In addition to this, Spring LDAP provides Exception translation from NamingExcep
 to an unchecked exception hirearchy, as well as several utilities for working with filters,
 LDAP paths and Attributes.
 
-For detailed information on the project, please refer to the [reference documentation](http://static.springsource.org/spring-ldap/docs/1.3.x/reference/html/) and [javadocs](http://static.springframework.org/spring-ldap/docs/1.3.x/apidocs/).
+For detailed information on the project, please refer to the [reference documentation](https://docs.spring.io/spring-ldap/docs/1.3.x/reference/html/) and [javadocs](https://docs.spring.io/spring-ldap/docs/1.3.x/apidocs/).
 See [the changelog](https://jira.springsource.org/secure/ReleaseNote.jspa?projectId=10071&version=13399) for detailed information on changes in the latest version.
 
 ###MAVEN USERS
@@ -53,7 +53,7 @@ framework milestone repo:
     <repository>
       <id>spring-milestone</id>
       <name>Spring Portfolio Milestone Repository</name>
-      <url>http://maven.springframework.org/milestone</url>
+      <url>https://maven.springframework.org/milestone</url>
     </repository>
 
 Snapshot builds produced by the CI builds are available from the Spring framework snapshot repo:
@@ -61,7 +61,7 @@ Snapshot builds produced by the CI builds are available from the Spring framewor
     <repository>
       <id>spring-milestone</id>
       <name>Spring Portfolio Milestone Repository</name>
-      <url>http://maven.springframework.org/snapshot</url>
+      <url>https://maven.springframework.org/snapshot</url>
     </repository>
 
 In order to e.g. try out the latest build snapshot of the core module, include the repository above and
@@ -79,6 +79,6 @@ and bug fixes for an upcoming version. Please report any problems or bugs in the
 
 ###ADDITIONAL RESOURCES
 
-* [Official site](http://www.springframework.org/ldap)
-* [Support forum](http://forum.springframework.org/forumdisplay.php?f=40)
+* [Official site](https://www.springframework.org/ldap)
+* [Support forum](https://forum.springframework.org/forumdisplay.php?f=40)
 * [Issue tracker](https://jira.springsource.org/browse/LDAP)
