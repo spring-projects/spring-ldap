@@ -61,7 +61,7 @@ public class DefaultAttributeValidationPolicyTest {
 	private List<String> exceptions = Arrays.asList(new String[] {
 			"description: :A big sailing fan.",
 			"cn;lang-ja:: 5bCP56yg5Y6fIO.ODreODieODi+ODvA==",
-			"url:< http://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html#28"
+			"url:< https://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html#28"
 	});
 	
 	/**
@@ -92,8 +92,8 @@ public class DefaultAttributeValidationPolicyTest {
 				{ "cn;lang-ja:: 5bCP56yg5Y6fIO.ODreODieODi+ODvA==", "cn", ";lang-ja", "5bCP56yg5Y6fIO.ODreODieODi+ODvA==", AttributeType.BASE64 },
 				
 				//Url
-				{ "url:< http://www.oracle.com/", "url", "", "http://www.oracle.com/", AttributeType.URL},
-				{ "url:< http://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html", "url", "", "http://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html", AttributeType.URL},
+				{ "url:< https://www.oracle.com/", "url", "", "https://www.oracle.com/", AttributeType.URL},
+				{ "url:< https://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html", "url", "", "https://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html", AttributeType.URL},
 				{ "url:< ftp://kbarlow:test@ftp.is.co.za/rfc/rfc1808.txt", "url", "", "ftp://kbarlow:test@ftp.is.co.za/rfc/rfc1808.txt", AttributeType.URL},
 				{ "url;option:< ftp://ftp.is.co.za:2100/rfc/rfc1808.txt;type=a", "url", ";option", "ftp://ftp.is.co.za:2100/rfc/rfc1808.txt;type=a", AttributeType.URL},
 				{ "url:< telnet://kbarlow@melvyl.ucop.edu/", "url", "", "telnet://kbarlow@melvyl.ucop.edu/", AttributeType.URL},
@@ -105,7 +105,7 @@ public class DefaultAttributeValidationPolicyTest {
 				{ "url:< prospero://host.dom:1525//pros/name;key=value", "url", "", "prospero://host.dom:1525//pros/name;key=value", AttributeType.URL},
 				{ "url:< nntp://news.cs.hut.fi/alt.html/239157", "url", "", "nntp://news.cs.hut.fi/alt.html/239157", AttributeType.URL},
 				{ "url:< wais://vega.lib.ncsu.edu/alawon.src?nren", "url", "", "wais://vega.lib.ncsu.edu/alawon.src?nren", AttributeType.URL},
-				{ "url:< http://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html#28", "url", "", "http://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html#28", AttributeType.URL}
+				{ "url:< https://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html#28", "url", "", "https://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html#28", AttributeType.URL}
 				
 		});
 	}

@@ -20,7 +20,7 @@ package org.springframework.ldap.filter;
  * Common interface for LDAP filters.
  * 
  * @author Adam Skogman
- * @see <a href="http://www.ietf.org/rfc/rfc1960.txt">RFC 1960: A String
+ * @see <a href="https://www.ietf.org/rfc/rfc1960.txt">RFC 1960: A String
  * Representation of LDAP Search Filters</a>
  */
 public interface Filter {

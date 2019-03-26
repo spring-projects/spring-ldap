@@ -109,8 +109,8 @@ public interface OdmManager {
      * 
      * @throws org.springframework.ldap.NamingException on error.
      * 
-     * @see <a href="http://java.sun.com/products/jndi/tutorial/basics/directory/filter.html">Sun's JNDI tutorial description of search filters.</a>
-     * @see <a href="http://www.rfc-editor.org/rfc/rfc4515.txt">LDAP: String Representation of Search Filters RFC.</a>
+     * @see <a href="https://java.sun.com/products/jndi/tutorial/basics/directory/filter.html">Sun's JNDI tutorial description of search filters.</a>
+     * @see <a href="https://www.rfc-editor.org/rfc/rfc4515.txt">LDAP: String Representation of Search Filters RFC.</a>
      */
     <T> List<T> search(Class<T> clazz, Name base, String filter, SearchControls searchControls);
 

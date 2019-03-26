@@ -1,6 +1,6 @@
 # List of syntaxes that will be returned by the JNDI provider as byte[], taken from
-# http://java.sun.com/products/jndi/tutorial/ldap/misc/attrs.html
-# See all http://www.ietf.org/rfc/rfc2256.txt for attribute names with ;binary suffix
+# https://java.sun.com/products/jndi/tutorial/ldap/misc/attrs.html
+# See all https://www.ietf.org/rfc/rfc2256.txt for attribute names with ;binary suffix
 
 # Syntax                       Used by Attributes
 # ------                       ------------------

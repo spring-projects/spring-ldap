@@ -12,17 +12,17 @@ Resources
 
 ** RFCs
 
-	* {{{http://www.ietf.org/rfc/rfc2251.txt}RFC 2251}}, LDAPv3 spec
+	* {{{https://www.ietf.org/rfc/rfc2251.txt}RFC 2251}}, LDAPv3 spec
 	
-	* {{{http://www.ietf.org/rfc/rfc2252.txt}RFC 2252}}, Attribute Syntax Definitions
+	* {{{https://www.ietf.org/rfc/rfc2252.txt}RFC 2252}}, Attribute Syntax Definitions
 	
-	* {{{http://www.ietf.org/rfc/rfc2253.txt}RFC 2253}}, Distinguished Names
+	* {{{https://www.ietf.org/rfc/rfc2253.txt}RFC 2253}}, Distinguished Names
 	
-	* {{{http://www.ietf.org/rfc/rfc2254.txt}RFC 2254}}, LDAP Search Filters
+	* {{{https://www.ietf.org/rfc/rfc2254.txt}RFC 2254}}, LDAP Search Filters
 	
-	* {{{http://www.ietf.org/rfc/rfc2255.txt}RFC 2255}}, LDAP URL Format
+	* {{{https://www.ietf.org/rfc/rfc2255.txt}RFC 2255}}, LDAP URL Format
 	
-	* {{{http://www.ietf.org/rfc/rfc2256.txt}RFC 2256}}, X.500 User Schema for use with LDAPv3
+	* {{{https://www.ietf.org/rfc/rfc2256.txt}RFC 2256}}, X.500 User Schema for use with LDAPv3
 	
-	* {{{http://www.ietf.org/rfc/rfc2696.txt}RFC 2696}}, LDAP Control Extension for Simple Paged Results
+	* {{{https://www.ietf.org/rfc/rfc2696.txt}RFC 2696}}, LDAP Control Extension for Simple Paged Results
 

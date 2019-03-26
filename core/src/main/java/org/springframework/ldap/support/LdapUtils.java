@@ -602,9 +602,9 @@ public final class LdapUtils {
 	/**
 	 * Converts a binary SID to its String representation, according to the
 	 * algorithm described <a
-	 * href="http://blogs.msdn.com/oldnewthing/archive/2004/03/15/89753.aspx"
+	 * href="https://blogs.msdn.com/oldnewthing/archive/2004/03/15/89753.aspx"
 	 * >here</a>. Thanks to <a href=
-	 * "http://www.jroller.com/eyallupu/entry/java_jndi_how_to_convert">Eyal
+	 * "https://www.jroller.com/eyallupu/entry/java_jndi_how_to_convert">Eyal
 	 * Lupu</a> for algorithmic inspiration.
 	 * 
 	 * <pre>
@@ -684,7 +684,7 @@ public final class LdapUtils {
 	/**
 	 * Converts a String SID to its binary representation, according to the
 	 * algorithm described <a
-	 * href="http://blogs.msdn.com/oldnewthing/archive/2004/03/15/89753.aspx"
+	 * href="https://blogs.msdn.com/oldnewthing/archive/2004/03/15/89753.aspx"
 	 * >here</a>. 
 	 * 
 	 * @param string SID in readable format
