@@ -101,7 +101,7 @@ public class LdapUtilsTest {
     }
 
     /**
-     * Example SID from "http://www.pcreview.co.uk/forums/thread-1458615.php".
+     * Example SID from "https://www.pcreview.co.uk/forums/thread-1458615.php".
      */
     @Test
     public void testConvertBinarySidToString() throws Exception {
@@ -117,7 +117,7 @@ public class LdapUtilsTest {
     }
 
     /**
-     * Example SID from "http://blogs.msdn.com/oldnewthing/archive/2004/03/15/89753.aspx".
+     * Example SID from "https://blogs.msdn.com/oldnewthing/archive/2004/03/15/89753.aspx".
      */
     @Test
     public void testConvertAnotherBinarySidToString() throws Exception {
@@ -212,7 +212,7 @@ public class LdapUtilsTest {
     }
 
     /**
-     * Example SID from "http://www.pcreview.co.uk/forums/thread-1458615.php".
+     * Example SID from "https://www.pcreview.co.uk/forums/thread-1458615.php".
      */
     @Test
     public void testConvertStringSidToBinary() throws Exception {
