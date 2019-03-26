@@ -26,7 +26,7 @@
 		parser utility compliant with "RFC 2849 : The LDAP Data Interchange
 		Format (LDIF) - Technical Specification". It also includes classes
 		for using the LDIF parser with the
-		<a href="http://static.springsource.org/spring-batch/">Spring Batch</a>
+		<a href="https://docs.spring.io/spring-batch/">Spring Batch</a>
 		framework.</li>
             <li><b>Object-Directory Mapping (ODM) Framework:</b> The ODM framework
 		provides the ability to use annotations to map LDAP entities and
@@ -39,7 +39,7 @@
             <li><b>Supports Transactions:</b> The LDAP standard does not specify transaction support.
             	Spring LDAP provides a client-side compensating transaction library to fill the void.</li>
             <li><b>Integrates with Spring Security:</b> The authentication system of Spring LDAP provides
-		integration with <a href="http://static.springsource.org/spring-security/site/">Spring Security</a>.
+		integration with <a href="https://docs.spring.io/spring-security/site/">Spring Security</a>.
                 In fact, Spring Security uses Spring LDAP for its LDAP integration.</li>
             <li><b>Built by Maven:</b> This assists you in effectively reusing the Spring LDAP artifacts
                 in your own Maven-based projects.</li>
