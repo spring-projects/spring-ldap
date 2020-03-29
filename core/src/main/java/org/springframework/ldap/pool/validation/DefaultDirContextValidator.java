@@ -22,6 +22,7 @@ import org.springframework.ldap.pool.DirContextType;
 import org.springframework.util.Assert;
 
 import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
@@ -166,8 +167,9 @@ public class DefaultDirContextValidator implements DirContextValidator {
         Assert.notNull(contextType, "contextType may not be null");
         Assert.notNull(dirContext, "dirContext may not be null");
         
+        NamingEnumeration<SearchResult> searchResults = null;
         try {
-            final NamingEnumeration<SearchResult> searchResults = dirContext.search(this.base, this.filter, this.searchControls);
+            searchResults = dirContext.search(this.base, this.filter, this.searchControls);
 
             if (searchResults.hasMore()) {
                 this.logger.debug("DirContext '{}' passed validation.", dirContext);
@@ -178,6 +180,15 @@ public class DefaultDirContextValidator implements DirContextValidator {
         catch (Exception e) {
             this.logger.debug("DirContext '{}' failed validation with an exception.", dirContext, e);
             return false;
+        }
+        finally {
+            if (searchResults != null) {
+                try {
+                    searchResults.close();
+                } 
+                catch (NamingException e) {
+                }
+            }
         }
 
         this.logger.debug("DirContext '{}' failed validation.", dirContext);
