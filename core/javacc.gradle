@@ -2,7 +2,7 @@
 task downloadJavacc {
     ext.file = "javacc-5.0.tar.gz"
     ext.dest = file("$buildDir/javacc/$file")
-    ext.url = "https://javacc.org/downloads/$file"
+    ext.url = "http://download.openpkg.org/components/cache/javacc/$file"
 
     outputs.file dest
 
