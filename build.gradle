@@ -21,7 +21,7 @@ repositories {
 
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 
-ext.docResourcesVersion = '0.1.0.RELEASE'
+ext.docResourcesVersion = '0.2.1.RELEASE'
 ext.GRADLE_SCRIPT_DIR = "${rootProject.projectDir}/gradle"
 ext.JAVA_MODULE_SCRIPT = "${GRADLE_SCRIPT_DIR}/java-module.gradle"
 ext.MAVEN_DEPLOYMENT_SCRIPT = "${GRADLE_SCRIPT_DIR}/maven-deployment.gradle"
@@ -160,7 +160,7 @@ asciidoctor {
 		// use provided highlighter
 		'source-highlighter=highlight.js',
 		'highlightjsdir=js/highlight',
-		'highlightjs-theme=atom-one-dark-reasonable',
+		'highlightjs-theme=github',
     'spring-ldap-version' : project.version,
     revnumber : project.version
 }
