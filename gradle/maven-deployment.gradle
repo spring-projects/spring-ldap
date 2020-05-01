@@ -4,6 +4,12 @@ install {
     customizePom(repositories.mavenInstaller.pom, project)
 }
 
+uploadArchives {
+	repositories.mavenDeployer {
+		customizePom(pom, project)
+	}
+}
+
 def customizePom(pom, gradleProject) {
     def isWar = project.hasProperty('war')
     def projectName = gradleProject.name

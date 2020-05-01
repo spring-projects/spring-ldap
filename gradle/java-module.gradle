@@ -3,6 +3,9 @@ apply from: MAVEN_DEPLOYMENT_SCRIPT
 apply from: RELEASE_CHECKS_SCRIPT
 apply from: SPRING_SNAPSHOT_TEST_SCRIPT
 apply plugin: 'spring-io'
+apply from: "${GRADLE_SCRIPT_DIR}/artifactory.gradle"
+apply from: "${GRADLE_SCRIPT_DIR}/ossrh.gradle"
+apply from: "${GRADLE_SCRIPT_DIR}/deploy-artifacts.gradle"
 
 ext.springIoVersion = project.hasProperty('platformVersion') ? platformVersion : 'Athens-RELEASE'
 
