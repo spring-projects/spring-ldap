@@ -77,6 +77,8 @@ configure(subprojects - coreModules) {
 description = "Spring LDAP"
 
 configurations.archives.artifacts.clear()
+apply from: "${GRADLE_SCRIPT_DIR}/deploy-docs.gradle"
+apply from: "${GRADLE_SCRIPT_DIR}/deploy-schema.gradle"
 
 sonarqube {
     properties {
