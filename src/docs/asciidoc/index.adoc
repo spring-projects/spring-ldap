@@ -2621,12 +2621,12 @@ To get started, you need to include the `spring-ldap-test` dependency.
 The following listing shows how to include the `spring-ldap-test` for Maven:
 
 ====
-[source,xml]
+[source,xml,subs="+attributes"]
 ----
 <dependency>
     <groupId>org.springframework.ldap</groupId>
     <artifactId>spring-ldap-test</artifactId>
-    <version>${version}</version>
+    <version>{project-version}</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -2636,9 +2636,9 @@ The following listing shows how to include the `spring-ldap-test` for Gradle:
 
 ====
 [source,groovy]
-[subs="verbatim,quotes"]
+[subs="verbatim,quotes,attributes"]
 ----
-testCompile "org.springframework.ldap:spring-ldap-test:$version"
+testCompile "org.springframework.ldap:spring-ldap-test:{project-version}"
 ----
 ====
 
