@@ -3,6 +3,7 @@ buildscript {
         maven { url 'https://repo.spring.io/plugins-release' }
     }
     dependencies {
+        classpath "com.github.ben-manes:gradle-versions-plugin:0.17.0"
         classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
         classpath('org.asciidoctor:asciidoctor-gradle-plugin:1.5.1')
         classpath("io.spring.gradle:spring-io-plugin:0.0.6.RELEASE")
@@ -33,6 +34,7 @@ allprojects {
     apply plugin: 'idea'
     apply plugin: 'eclipse'
     apply plugin: 'java'
+    apply plugin: "com.github.ben-manes.versions"
 
     group = "org.springframework.ldap"
 
