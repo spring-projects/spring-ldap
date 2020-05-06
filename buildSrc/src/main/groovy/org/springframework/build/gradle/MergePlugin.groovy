@@ -97,7 +97,7 @@ class MergePlugin implements Plugin<Project> {
 
 	private void setupTaskDependencies(Project project) {
 		// invoking a task will invoke the task with the same name on 'into' project
-		["sourcesJar", "jar", "javadocJar", "javadoc", "install", "artifactoryPublish", "uploadArchives"].each {
+		["sourcesJar", "jar", "javadocJar", "javadoc", "install", "artifactoryPublish", "uploadArchives", "signArchives"].each {
 			def task = project.tasks.findByPath(it)
 			if (task) {
 				task.enabled = false
