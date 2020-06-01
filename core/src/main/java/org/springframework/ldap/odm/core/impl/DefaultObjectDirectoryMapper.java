@@ -286,7 +286,14 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 
         try {
             // The result class must have a zero argument constructor
-            result = clazz.newInstance();
+            Constructor[] allConstructors = clazz.getDeclaredConstructors()
+            for (Constructor ctor : allConstructors) {
+                if(ctor.getParameterTypes().length == 0){
+                    ctor.setAccessible(true);
+                    result = ctor.newInstance();
+                        
+                }
+            }
 
             // Build a map of JNDI attribute names to values
             Map<CaseIgnoreString, Attribute> attributeValueMap = new HashMap<CaseIgnoreString, Attribute>();
