@@ -288,11 +288,14 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
             // The result class must have a zero argument constructor
             Constructor[] allConstructors = clazz.getDeclaredConstructors()
             for (Constructor ctor : allConstructors) {
-                if(ctor.getParameterTypes().length == 0){
+                if(ctor.getParameterTypes().length == 0) {
                     ctor.setAccessible(true);
-                    result = ctor.newInstance();
-                        
+                    result = ctor.newInstance();       
                 }
+            }
+            
+            if(result == null) {
+                throw new InvalidEntryException(String.format("Could not instantiate %1$s", clazz), null);  
             }
 
             // Build a map of JNDI attribute names to values
@@ -369,6 +372,8 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
             throw new InvalidEntryException(String.format(
                     "Could not create an instance of %1$s could not access field", clazz.getName()), iae);
         } catch (InstantiationException ie) {
+            throw new InvalidEntryException(String.format("Could not instantiate %1$s", clazz), ie);
+        } catch (InvocationTargetException inve) {
             throw new InvalidEntryException(String.format("Could not instantiate %1$s", clazz), ie);
         }
 
