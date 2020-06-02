@@ -286,7 +286,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 
         try {
             // The result class must have a zero argument constructor
-            Constructor[] allConstructors = clazz.getDeclaredConstructors()
+            Constructor[] allConstructors = clazz.getDeclaredConstructors();
             for (Constructor ctor : allConstructors) {
                 if(ctor.getParameterTypes().length == 0) {
                     ctor.setAccessible(true);
