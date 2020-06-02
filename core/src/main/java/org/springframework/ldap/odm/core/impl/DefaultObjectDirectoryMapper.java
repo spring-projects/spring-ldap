@@ -294,8 +294,8 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
                 }
             }
             
-            if(result == null) {
-                throw new InvalidEntryException(String.format("Could not instantiate %1$s", clazz), null);  
+            if (result == null) {
+                throw new InvalidEntryException(String.format("Could not instantiate %1$s, no a zero arg. contstructor!", clazz), null);  
             }
 
             // Build a map of JNDI attribute names to values
