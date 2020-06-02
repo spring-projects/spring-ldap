@@ -282,7 +282,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
         }
 
         // The Java representation of the LDAP entry
-        T result;
+        T result = null;
 
         ObjectMetaData metaData=getEntityData(clazz).metaData;
 
