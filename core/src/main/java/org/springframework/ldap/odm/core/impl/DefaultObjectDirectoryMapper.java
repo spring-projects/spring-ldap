@@ -376,7 +376,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
         } catch (InstantiationException ie) {
             throw new InvalidEntryException(String.format("Could not instantiate %1$s", clazz), ie);
         } catch (InvocationTargetException inve) {
-            throw new InvalidEntryException(String.format("Could not instantiate %1$s", clazz), ie);
+            throw new InvalidEntryException(String.format("Could not instantiate %1$s", clazz), inve);
         }
 
         if (LOG.isDebugEnabled()) {
