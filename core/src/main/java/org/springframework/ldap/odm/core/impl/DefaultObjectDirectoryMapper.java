@@ -288,11 +288,11 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 
         try {
             // The result class must have a zero argument constructor
-            Constructor[] allConstructors = clazz.getDeclaredConstructors();
-            for (Constructor ctor : allConstructors) {
+            final Constructor<?>[] allConstructors = clazz.getConstructors();
+            for (Constructor<> ctor : allConstructors) {
                 if(ctor.getParameterTypes().length == 0) {
                     ctor.setAccessible(true);
-                    result = ctor.newInstance();       
+                    result = (T) ctor.newInstance();
                 }
             }
             
