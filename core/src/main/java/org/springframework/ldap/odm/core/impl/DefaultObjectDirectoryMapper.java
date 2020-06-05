@@ -19,6 +19,7 @@ package org.springframework.ldap.odm.core.impl;
 import java.lang.reflect.Field;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -288,17 +289,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 
         try {
             // The result class must have a zero argument constructor
-            final Constructor<?>[] allConstructors = clazz.getConstructors();
-            for (Constructor<?> ctor : allConstructors) {
-                if(ctor.getParameterTypes().length == 0) {
-                    ctor.setAccessible(true);
-                    result = (T) ctor.newInstance();
-                }
-            }
-            
-            if (result == null) {
-                throw new InvalidEntryException(String.format("Could not instantiate %1$s, no a zero arg. contstructor!", clazz), null);  
-            }
+            result = tryInstantiate(clazz);
 
             // Build a map of JNDI attribute names to values
             Map<CaseIgnoreString, Attribute> attributeValueMap = new HashMap<CaseIgnoreString, Attribute>();
@@ -377,6 +368,8 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
             throw new InvalidEntryException(String.format("Could not instantiate %1$s", clazz), ie);
         } catch (InvocationTargetException inve) {
             throw new InvalidEntryException(String.format("Could not instantiate %1$s", clazz), inve);
+        } catch (NoSuchMethodException nsme) {
+            throw new InvalidEntryException(String.format("Could not instantiate %1$s", clazz), nsme);
         }
 
         if (LOG.isDebugEnabled()) {
@@ -384,6 +377,21 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
         }
 
         return result;
+    }
+
+    private <T> T tryInstantiate(Class<T> clazz)
+            throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+
+        final Constructor<T> noArgsConstructor = clazz.getDeclaredConstructor();
+        if (needObtainAccess(noArgsConstructor)) {
+            noArgsConstructor.setAccessible(true);
+        }
+        return noArgsConstructor.newInstance();
+    }
+
+    private boolean needObtainAccess(Constructor<?> ctor) {
+        return (!Modifier.isPublic(ctor.getModifiers()) ||
+                !Modifier.isPublic(ctor.getDeclaringClass().getModifiers())) && !ctor.isAccessible();
     }
 
     private <T> void populateMultiValueField(T result, Map<CaseIgnoreString, Attribute> attributeValueMap, Field field, AttributeMetaData attributeInfo) throws NamingException, IllegalAccessException {
