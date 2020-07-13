@@ -47,7 +47,7 @@ Spring LDAP is designed to simplify LDAP programming in Java. Some of the featur
 === Traditional Java LDAP versus `LdapTemplate`
 
 Consider a method that should search some storage for all persons and return their names in a list.
-By using JDBC, we would create a _connection_ and execute a _query_ by using a _statement_. We would then loop over the _result set_ and retrieve the _column_ we want, adding it to a list.
+By using JDBC, we would create a _connection_ and run a _query_ by using a _statement_. We would then loop over the _result set_ and retrieve the _column_ we want, adding it to a list.
 
 Working against an LDAP database with JNDI, we would create a _context_ and perform a _search_ by using a _search filter_. We would then loop over the resulting _naming enumeration_, retrieve the _attribute_ we want, and add it to a list.
 
@@ -1663,7 +1663,7 @@ Basic QueryDSL support is included in Spring LDAP. This support includes the fol
 
 *  An annotation processor, called `LdapAnnotationProcessor`, for generating QueryDSL classes based on Spring LDAP ODM annotations. See <<odm>> for more information on the ODM annotations.
 
-*  A Query implementation, called `QueryDslLdapQuery`, for building and executing QueryDSL queries in code.
+*  A Query implementation, called `QueryDslLdapQuery`, for building and running QueryDSL queries in code.
 
 *  Spring Data repository support for QueryDSL predicates. `QueryDslPredicateExecutor` includes a number of additional methods with appropriate parameters. You can extend this interface along with `LdapRepository` to include this support in your repository.
 
@@ -2015,7 +2015,7 @@ NOTE: When you use the `ContextMapperCallbackHandler`, you must make sure that y
 
 === Implementing Other Custom Context Methods
 
-In the same manner as for custom `search` methods, you can actually execute any method in `DirContext` by using a `ContextExecutor`, as follows:
+In the same manner as for custom `search` methods, you can actually call any method in `DirContext` by using a `ContextExecutor`, as follows:
 
 ====
 [source,java]
