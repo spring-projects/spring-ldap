@@ -20,7 +20,7 @@ try {
 				try {
 					withCredentials([ARTIFACTORY_CREDENTIALS]) {
 						withEnv(["JAVA_HOME=${ tool 'jdk8' }"]) {
-							sh "./gradlew test -PartifactoryUsername="$ARTIFACTORY_USERNAME" -PartifactoryPassword="$ARTIFACTORY_PASSWORD" --refresh-dependencies --no-daemon --stacktrace"
+							sh "./gradlew test -PartifactoryUsername=$ARTIFACTORY_USERNAME -PartifactoryPassword=$ARTIFACTORY_PASSWORD --refresh-dependencies --no-daemon --stacktrace"
 						}
 					}
 				} catch(Exception e) {
