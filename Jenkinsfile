@@ -8,6 +8,9 @@ properties(projectProperties)
 def SUCCESS = hudson.model.Result.SUCCESS.toString()
 currentBuild.result = SUCCESS
 
+
+def ARTIFACTORY_CREDENTIALS = usernamePassword(credentialsId: '02bd1690-b54f-4c9f-819d-a77cb7a9822c', usernameVariable: 'ARTIFACTORY_USERNAME', passwordVariable: 'ARTIFACTORY_PASSWORD')
+
 try {
 	parallel check: {
 		stage('Check') {
@@ -15,8 +18,10 @@ try {
 				checkout scm
 				sh "git clean -dfx"
 				try {
-					withEnv(["JAVA_HOME=${ tool 'jdk8' }"]) {
-						sh "./gradlew test  --refresh-dependencies --no-daemon --stacktrace"
+					withCredentials([ARTIFACTORY_CREDENTIALS]) {
+						withEnv(["JAVA_HOME=${ tool 'jdk8' }"]) {
+							sh "./gradlew test -PartifactoryUsername="$ARTIFACTORY_USERNAME" -PartifactoryPassword="$ARTIFACTORY_PASSWORD" --refresh-dependencies --no-daemon --stacktrace"
+						}
 					}
 				} catch(Exception e) {
 					currentBuild.result = 'FAILED: check'
