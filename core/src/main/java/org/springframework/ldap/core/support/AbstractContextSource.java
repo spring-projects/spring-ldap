@@ -74,8 +74,7 @@ import java.util.Map;
  */
 public abstract class AbstractContextSource implements BaseLdapPathContextSource, InitializingBean {
 
-	private static final Class<com.sun.jndi.ldap.LdapCtxFactory> DEFAULT_CONTEXT_FACTORY
-            = com.sun.jndi.ldap.LdapCtxFactory.class;
+	private static final String DEFAULT_CONTEXT_FACTORY = "com.sun.jndi.ldap.LdapCtxFactory";
 
 	private static final Class<DefaultDirObjectFactory> DEFAULT_DIR_OBJECT_FACTORY = DefaultDirObjectFactory.class;
     private static final boolean DONT_DISABLE_POOLING = false;
@@ -84,7 +83,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
     private Class<?> dirObjectFactory = DEFAULT_DIR_OBJECT_FACTORY;
 
-	private Class<?> contextFactory = DEFAULT_CONTEXT_FACTORY;
+	private Class<?> contextFactory;
 
 	private LdapName base = LdapUtils.emptyLdapName();
 
@@ -439,7 +438,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 		Hashtable<String, Object> env = new Hashtable<String, Object>(baseEnv);
 
-		env.put(Context.INITIAL_CONTEXT_FACTORY, contextFactory.getName());
+		env.put(Context.INITIAL_CONTEXT_FACTORY, contextFactory != null ? contextFactory.getName() : DEFAULT_CONTEXT_FACTORY);
 		env.put(Context.PROVIDER_URL, assembleProviderUrlString(urls));
 
 		if (dirObjectFactory != null) {
