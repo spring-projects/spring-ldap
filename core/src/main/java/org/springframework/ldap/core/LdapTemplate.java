@@ -1830,8 +1830,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         }
 
         // extend search controls with the attributes to return
-        String[] attributes = odm.manageClass(clazz);
-        searchControls.setReturningAttributes(attributes);
+	if (isNotCustomReturningAttributes(searchControls)) {
+            String[] attributes = this.odm.manageClass(clazz);
+            searchControls.setReturningAttributes(attributes);
+        }
         
         if (LOG.isDebugEnabled()) {
             LOG.debug(String.format("Searching - base=%1$s, finalFilter=%2$s, scope=%3$s", base, finalFilter, searchControls));
@@ -1876,6 +1878,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         }
 
         return result.get(0);
+    }
+	
+    private boolean isNotCustomReturningAttributes(SearchControls searchControls) {
+        return searchControls.getReturningAttributes() == null || searchControls.getReturningAttributes().length == 0;
     }
 
 	/**
