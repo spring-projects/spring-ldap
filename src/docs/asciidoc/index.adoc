@@ -198,7 +198,7 @@ The highlights of Spring LDAP 2.1 are as follows.
 * https://github.com/spring-projects/spring-ldap/issues/351[#351]: Added support for commons-pool2
 * https://github.com/spring-projects/spring-ldap/issues/370[#370]: Added support property placeholders in the XML Namespace
 * https://github.com/spring-projects/spring-ldap/pull/392[#392]: Added document Testing Support
-* https://github.com/spring-projects/spring-ldap/pull/400[#401]: Added a switch to assertj
+* https://github.com/spring-projects/spring-ldap/pull/401[#401]: Added a switch to assertj
 * Migrated from JIRA to https://github.com/spring-projects/spring-ldap/issues[GitHub Issues]
 * Added https://gitter.im/spring-projects/spring-ldap[Gitter Chat]
 
