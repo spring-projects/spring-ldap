@@ -82,7 +82,7 @@ public final class LdapNameBuilder {
      */
     public LdapNameBuilder add(String key, Object value) {
         Assert.hasText(key, "key must not be blank");
-        Assert.notNull(key, "value must not be null");
+        Assert.notNull(value, "value must not be null");
 
         try {
             ldapName.add(new Rdn(key, value));
