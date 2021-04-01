@@ -63,34 +63,63 @@ public final class LdapTestUtils {
     }
 
     /**
-     * Start an embedded Apache Directory Server. Only one embedded server will be permitted in the same JVM.
+     * Start an embedded UnboundId InMemory Directory Server. Only one embedded server will be permitted in the same JVM.
      *
      * @param port                   the port on which the server will be listening.
      * @param defaultPartitionSuffix The default base suffix that will be used
      *                               for the LDAP server.
      * @param defaultPartitionName   The name to use in the directory server
      *                               configuration for the default base suffix.
+     * @param principal              The principal to use when starting the directory server.
+     * @param credentials            The credentials to use when starting the directory
+     *                               server.
      *
      * @throws IllegalStateException if an embedded server is already started.
      */
-    public static void startEmbeddedServer(int port, String defaultPartitionSuffix, String defaultPartitionName) {
+    public static void startEmbeddedServer(int port, String defaultPartitionSuffix, String defaultPartitionName,
+                                           String principal, String credentials) {
         if(embeddedServer != null) {
             throw new IllegalStateException("An embedded server is already started");
         }
 
         try {
-            embeddedServer = EmbeddedLdapServer.newEmbeddedServer(defaultPartitionName, defaultPartitionSuffix, port);
+            if(credentials != null && principal != null) {
+                embeddedServer = EmbeddedLdapServer.newEmbeddedServer(defaultPartitionName, defaultPartitionSuffix,
+                        port, principal, credentials);
+            } else {
+                embeddedServer = EmbeddedLdapServer.newEmbeddedServer(defaultPartitionName, defaultPartitionSuffix,
+                        port);
+            }
         } catch (Exception e) {
             throw new UncategorizedLdapException("Failed to start embedded server", e);
         }
     }
 
     /**
-     * Shuts down the embedded server, if there is one. If no server was previously started in this JVM
-     * this is silently ignored.
+     * Start an embedded UnboundId InMemory Directory Server. Only one embedded server will be permitted in the same JVM.
+     * If you use this method you can only connect using the principal <i>uid=admin,ou=system</i> and credential
+     * <i>secret</i>, otherwise consider using {@link #startEmbeddedServer(int, String, String, String, String)}
      *
-     * @throws Exception
+     * @param port                   the port on which the server will be listening.
+     * @param defaultPartitionSuffix The default base suffix that will be used
+     *                               for the LDAP server.
+     * @param defaultPartitionName   The name to use in the directory server
+     *                               configuration for the default base suffix.
+     *                               server.
+     *
+     * @throws IllegalStateException if an embedded server is already started.
      */
+    public static void startEmbeddedServer(int port, String defaultPartitionSuffix, String defaultPartitionName) {
+        startEmbeddedServer(port, defaultPartitionSuffix, defaultPartitionName, null, null);
+    }
+
+
+        /**
+         * Shuts down the embedded server, if there is one. If no server was previously started in this JVM
+         * this is silently ignored.
+         *
+         * @throws Exception
+         */
     public static void shutdownEmbeddedServer() throws Exception {
         if(embeddedServer != null) {
             embeddedServer.shutdown();

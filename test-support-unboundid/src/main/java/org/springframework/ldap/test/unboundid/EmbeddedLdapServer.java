@@ -37,10 +37,16 @@ public final class EmbeddedLdapServer {
     }
 
     public static EmbeddedLdapServer newEmbeddedServer(String defaultPartitionName,
-            String defaultPartitionSuffix, int port) throws Exception {
+                                                       String defaultPartitionSuffix, int port) throws Exception {
+        return newEmbeddedServer(defaultPartitionName, defaultPartitionSuffix, port,
+                "uid=admin,ou=system", "secret");
+    }
+
+    public static EmbeddedLdapServer newEmbeddedServer(String defaultPartitionName,
+                String defaultPartitionSuffix, int port, String principal, String credentials) throws Exception {
         InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig(
                 defaultPartitionSuffix);
-        config.addAdditionalBindCredentials("uid=admin,ou=system", "secret");
+        config.addAdditionalBindCredentials(principal, credentials);
 
         config.setListenerConfigs(InMemoryListenerConfig.createLDAPConfig("LDAP", port));
 

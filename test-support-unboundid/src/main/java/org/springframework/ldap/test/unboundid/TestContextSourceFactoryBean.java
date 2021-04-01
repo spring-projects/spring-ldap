@@ -99,7 +99,7 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean<ContextSou
 
     protected ContextSource createInstance() throws Exception {
         LdapTestUtils.startEmbeddedServer(port,
-                defaultPartitionSuffix, defaultPartitionName);
+                defaultPartitionSuffix, defaultPartitionName, principal, password);
 
         if (contextSource == null) {
             // If not explicitly configured, create a new instance.

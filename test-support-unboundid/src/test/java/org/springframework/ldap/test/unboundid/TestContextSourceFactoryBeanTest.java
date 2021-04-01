@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.test.unboundid;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import javax.naming.NamingException;
@@ -24,6 +26,10 @@ import javax.naming.directory.Attributes;
 import org.junit.After;
 import org.junit.Test;
 
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+import org.junit.runners.Parameterized.Parameter;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
@@ -31,8 +37,19 @@ import org.springframework.ldap.query.LdapQueryBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@RunWith(Parameterized.class)
 public class TestContextSourceFactoryBeanTest {
     ClassPathXmlApplicationContext ctx;
+
+    @Parameter
+    public String configLocation;
+
+    @Parameters(name = "configLocation={0}")
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][] {
+                { "/applicationContext-testContextSource.xml" }, { "/applicationContext-testContextSource_different_credentials.xml" }
+        });
+    }
 
     @After
     public void setup() {
@@ -43,7 +60,7 @@ public class TestContextSourceFactoryBeanTest {
 
     @Test
     public void testServerStartup() throws Exception {
-        ctx = new ClassPathXmlApplicationContext("/applicationContext-testContextSource.xml");
+        ctx = new ClassPathXmlApplicationContext(configLocation);
         LdapTemplate ldapTemplate = ctx.getBean(LdapTemplate.class);
         assertThat(ldapTemplate).isNotNull();
 
