@@ -119,8 +119,6 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	public static final String SUN_LDAP_POOLING_FLAG = "com.sun.jndi.ldap.connect.pool";
 
-	private static final String JDK_142 = "1.4.2";
-
 	private DirContextAuthenticationStrategy authenticationStrategy = new SimpleDirContextAuthenticationStrategy();
 
 	public AbstractContextSource() {
