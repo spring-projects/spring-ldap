@@ -123,6 +123,14 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	private DirContextAuthenticationStrategy authenticationStrategy = new SimpleDirContextAuthenticationStrategy();
 
+	public AbstractContextSource() {
+		try {
+			this.contextFactory = Class.forName(DEFAULT_CONTEXT_FACTORY);
+		} catch (ClassNotFoundException e) {
+			LOG.trace("The default for contextFactory cannot be resolved", e);
+		}
+	}
+
 	public DirContext getContext(String principal, String credentials) {
         // This method is typically called for authentication purposes, which means that we
         // should explicitly disable pooling in case passwords are changed (LDAP-183).
@@ -407,7 +415,9 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 		if (ObjectUtils.isEmpty(urls)) {
 			throw new IllegalArgumentException("At least one server url must be set");
 		}
-
+		if (contextFactory == null) {
+			throw new IllegalArgumentException("contextFactory must be set");
+		}
 		if (authenticationSource == null) {
 			LOG.debug("AuthenticationSource not set - " + "using default implementation");
 			if (!StringUtils.hasText(userDn)) {
@@ -438,7 +448,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 		Hashtable<String, Object> env = new Hashtable<String, Object>(baseEnv);
 
-		env.put(Context.INITIAL_CONTEXT_FACTORY, contextFactory != null ? contextFactory.getName() : DEFAULT_CONTEXT_FACTORY);
+		env.put(Context.INITIAL_CONTEXT_FACTORY, contextFactory.getName());
 		env.put(Context.PROVIDER_URL, assembleProviderUrlString(urls));
 
 		if (dirObjectFactory != null) {
