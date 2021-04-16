@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2020 the original author or authors.
+ * Copyright 2005-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -122,6 +122,14 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	private static final String JDK_142 = "1.4.2";
 
 	private DirContextAuthenticationStrategy authenticationStrategy = new SimpleDirContextAuthenticationStrategy();
+
+	public AbstractContextSource() {
+		try {
+			contextFactory = Class.forName(DEFAULT_CONTEXT_FACTORY);
+		} catch (ClassNotFoundException e) {
+			LOG.trace("The default for contextFactory cannot be resolved", e);
+		}
+	}
 
 	public DirContext getContext(String principal, String credentials) {
         // This method is typically called for authentication purposes, which means that we
@@ -407,7 +415,9 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 		if (ObjectUtils.isEmpty(urls)) {
 			throw new IllegalArgumentException("At least one server url must be set");
 		}
-
+		if (contextFactory == null) {
+			throw new IllegalArgumentException("contextFactory must be set");
+		}
 		if (authenticationSource == null) {
 			LOG.debug("AuthenticationSource not set - " + "using default implementation");
 			if (!StringUtils.hasText(userDn)) {
@@ -438,7 +448,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 		Hashtable<String, Object> env = new Hashtable<String, Object>(baseEnv);
 
-		env.put(Context.INITIAL_CONTEXT_FACTORY, contextFactory != null ? contextFactory.getName() : DEFAULT_CONTEXT_FACTORY);
+		env.put(Context.INITIAL_CONTEXT_FACTORY, contextFactory.getName());
 		env.put(Context.PROVIDER_URL, assembleProviderUrlString(urls));
 
 		if (dirObjectFactory != null) {
