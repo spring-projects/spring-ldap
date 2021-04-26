@@ -206,13 +206,13 @@ public class DirContextAdapter implements DirContextOperations {
 	/**
 	 * Constructor for cloning an existing adapter.
 	 * 
-	 * @param master The adapter to be copied.
+	 * @param main The adapter to be copied.
 	 */
-	protected DirContextAdapter(DirContextAdapter master) {
-		this.originalAttrs = (NameAwareAttributes) master.originalAttrs.clone();
-		this.dn = master.dn;
-		this.updatedAttrs = (NameAwareAttributes) master.updatedAttrs.clone();
-		this.updateMode = master.updateMode;
+	protected DirContextAdapter(DirContextAdapter main) {
+		this.originalAttrs = (NameAwareAttributes) main.originalAttrs.clone();
+		this.dn = main.dn;
+		this.updatedAttrs = (NameAwareAttributes) main.updatedAttrs.clone();
+		this.updateMode = main.updateMode;
 	}
 
 	/**

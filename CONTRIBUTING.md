@@ -37,10 +37,10 @@ If you have not previously done so, please fill out and
 submit the [Contributor License Agreement](https://cla.pivotal.io/sign/spring).
 
 
-## Create your branch from `master`
+## Create your branch from `main`
 
 If your pull request addresses a bug or improvement, please create your branch
-from Spring LDAP's `master` branch. Rest assured that if your pull
+from Spring LDAP's `main` branch. Rest assured that if your pull
 request is accepted, these changes will also eventually
 be merged into any other branches we feel appropriate.
 

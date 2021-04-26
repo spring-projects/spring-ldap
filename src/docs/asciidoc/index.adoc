@@ -230,8 +230,8 @@ The following list briefly describes the most important changes in Spring LDAP 2
 *  Fluent LDAP query building support has been added. This makes for a more pleasant programming experience when working with LDAP searches in Spring LDAP.
    See <<basic-queries>> and <<query-builder-advanced>> for more information about the LDAP query builder support.
 *  The old `authenticate` methods in `LdapTemplate` have been deprecated in favor of a couple of new `authenticate` methods that work with `LdapQuery` objects and _throw exceptions_ on authentication failure, making it easier for the user to find out what caused an authentication attempt to fail.
-*  The https://github.com/spring-projects/spring-ldap/tree/master/samples[samples] have been polished and updated to make use of the features in 2.0.
-   Quite a bit of effort has been put into providing a useful example of an https://github.com/spring-projects/spring-ldap/tree/master/samples/user-admin[LDAP user management application].
+*  The https://github.com/spring-projects/spring-ldap/tree/main/samples[samples] have been polished and updated to make use of the features in 2.0.
+   Quite a bit of effort has been put into providing a useful example of an https://github.com/spring-projects/spring-ldap/tree/main/samples/user-admin[LDAP user management application].
 
 [[spring-ldap-packaging-overview]]
 === Packaging Overview
@@ -255,7 +255,7 @@ In addition to the required dependencies, the following optional dependencies ar
 [[spring-ldap-getting-started]]
 === Getting Started
 
-The https://github.com/spring-projects/spring-ldap/tree/master/samples[samples] provide some useful examples of how to use Spring LDAP for common use cases.
+The https://github.com/spring-projects/spring-ldap/tree/main/samples[samples] provide some useful examples of how to use Spring LDAP for common use cases.
 
 [[spring-ldap-support]]
 === Support
