@@ -1437,7 +1437,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
                                 SearchControls searchControls,
                                 final AuthenticatedLdapEntryContextCallback callback,
                                 final AuthenticationErrorCallback errorCallback) {
-
+	if ("".equals(password)) {
+            LOG.debug("Authentication failed for password For an empty string");
+            return AuthenticationStatus.UNDEFINED_FAILURE;
+        }
         List<LdapEntryIdentification> result = search(base, filter, searchControls, new LdapEntryIdentificationContextMapper());
         if (result.size() == 0) {
             String msg = "No results found for search, base: '" + base + "'; filter: '" + filter + "'.";
