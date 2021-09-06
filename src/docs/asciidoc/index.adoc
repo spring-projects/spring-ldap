@@ -734,9 +734,9 @@ Using `AbstractContextMapper`, the `PersonContextMapper` shown earlier can thus 
 private static class PersonContextMapper **extends AbstractContextMapper** {
   public Object **doMapFromContext**(DirContextOperations ctx) {
      Person p = new Person();
-     p.setFullName(context.getStringAttribute("cn"));
-     p.setLastName(context.getStringAttribute("sn"));
-     p.setDescription(context.getStringAttribute("description"));
+     p.setFullName(ctx.getStringAttribute("cn"));
+     p.setLastName(ctx.getStringAttribute("sn"));
+     p.setDescription(ctx.getStringAttribute("description"));
      return p;
   }
 }
