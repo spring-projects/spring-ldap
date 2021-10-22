@@ -47,7 +47,10 @@ public final class EmbeddedLdapServer {
     public static EmbeddedLdapServer newEmbeddedServer(String defaultPartitionName, String defaultPartitionSuffix, int port)
             throws Exception{
         workingDirectory = new File(System.getProperty("java.io.tmpdir") + "/apacheds-test1");
-        FileUtils.deleteDirectory(workingDirectory);
+
+        if (workingDirectory.exists()) {
+            FileUtils.deleteDirectory(workingDirectory);
+        }
 
         DefaultDirectoryService directoryService = new DefaultDirectoryService();
         directoryService.setShutdownHookEnabled(true);

@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ldap="http://www.springframework.org/schema/ldap"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ldap="http://www.springframework.org/schema/ldap"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-                           https://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/ldap https://www.springframework.org/schema/ldap/spring-ldap.xsd">
-    <import resource="classpath:/conf/commonTestContext.xml"/>
-
-    <ldap:context-source
-            password="${password}"
-            url="ldap://localhost:1888"
-            username="${userDn}"
-            base="dc=jayway,dc=se" />
-
-	<bean id="dummyBaseLdapPathAware"
-		class="org.springframework.ldap.itest.core.support.DummyBaseLdapPathAware" />
-
-    <bean class="org.springframework.ldap.itest.core.support.DummyBaseLdapNameAware" />
-
-	<bean
-		class="org.springframework.ldap.core.support.BaseLdapPathBeanPostProcessor" />
+                           https://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/ldap
+                           https://www.springframework.org/schema/ldap/spring-ldap.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd"
+       xmlns:context="http://www.springframework.org/schema/context">
+   <import resource="classpath:/conf/commonTestContext.xml"/>
+   <ldap:context-source password="${password}"
+                        url="ldap://localhost:1888"
+                        username="${userDn}"
+                        base="dc=jayway,dc=se"/>
+   <context:annotation-config/>
+   <bean class="org.springframework.ldap.configuration.BaseLdapPathPostProcessorNamespaceTestContext"/>
 </beans>

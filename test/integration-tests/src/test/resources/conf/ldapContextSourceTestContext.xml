@@ -2,11 +2,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-                           https://www.springframework.org/schema/beans/spring-beans.xsd">
-
-	<bean id="contextSource2" class="org.springframework.ldap.core.support.LdapContextSource" >
-		<property name="urls" value="ldap://127.0.0.1:389,ldap://127.0.0.2:389" />
-		<property name="userDn" value="cn=dummy" />
-		<property name="password" value="dummy" />
-	</bean>
+                           https://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd"
+       xmlns:context="http://www.springframework.org/schema/context">
+   <context:annotation-config/>
+   <bean class="org.springframework.ldap.configuration.LdapContextSourceTestContext"/>
 </beans>
