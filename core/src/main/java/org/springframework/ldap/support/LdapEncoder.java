@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,11 @@
 
 package org.springframework.ldap.support;
 
+import java.util.Base64;
+
 import org.springframework.ldap.BadLdapGrammarException;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -248,7 +251,7 @@ public final class LdapEncoder {
 
         Assert.notNull(val, "val must not be null!");
 
-        String encoded = DatatypeConverter.printBase64Binary(val);
+        String encoded = encode(val);
 
         int length = encoded.length();
         StringBuilder sb = new StringBuilder(length + length / RFC2849_MAX_BASE64_CHARS_PER_LINE);
@@ -293,6 +296,32 @@ public final class LdapEncoder {
             sb.append(c);
         }
 
-        return DatatypeConverter.parseBase64Binary(sb.toString());
+        return decode(sb.toString());
+    }
+
+    private static String encode(byte[] decoded) {
+        if (ClassUtils.isPresent("java.util.Base64", null)) {
+            return java.util.Base64.getEncoder().encodeToString(decoded);
+        } else {
+            return Base64Converter.encode(decoded);
+        }
+    }
+
+    private static byte[] decode(String encoded) {
+        if (ClassUtils.isPresent("java.util.Base64", null)) {
+            return java.util.Base64.getDecoder().decode(encoded);
+        } else {
+            return Base64Converter.decode(encoded);
+        }
+    }
+
+    private static class Base64Converter {
+        static byte[] decode(String string) {
+            return DatatypeConverter.parseBase64Binary(string);
+        }
+
+        static String encode(byte[] bytes) {
+            return DatatypeConverter.printBase64Binary(bytes);
+        }
     }
 }
