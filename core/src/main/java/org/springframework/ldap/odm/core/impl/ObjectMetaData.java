@@ -18,9 +18,11 @@ package org.springframework.ldap.odm.core.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
 import org.springframework.ldap.support.LdapUtils;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.naming.Name;
@@ -85,29 +87,33 @@ import java.util.TreeSet;
         return fieldToAttribute.get(field);
     }
     
-    public ObjectMetaData(Class<?> clazz) {
+    public ObjectMetaData(final Class<?> clazz) {
         if (LOG.isDebugEnabled()) {
             LOG.debug(String.format("Extracting metadata from %1$s", clazz));
         }
         
         // Get object class metadata - the @Entity annotation
-        Entry entity = clazz.getAnnotation(Entry.class);
-        if (entity != null) {
+        // findAllMergedAnnotations will return set of inherited annotations and apply them from superclass down to subclass
+        Set<Entry> entities = AnnotatedElementUtils.findAllMergedAnnotations(clazz,Entry.class);
+        if (entities != null && !entities.isEmpty()) {
             // Default objectclass name to the class name unless it's specified
             // in @Entity(name={objectclass1, objectclass2});
-            String[] localObjectClasses = entity.objectClasses();
-            if (localObjectClasses != null && localObjectClasses.length > 0 && localObjectClasses[0].length() > 0) {
-                for (String localObjectClass:localObjectClasses) {
-                    objectClasses.add(new CaseIgnoreString(localObjectClass));
+            for (Entry entity: entities) {
+                String[] localObjectClasses = entity.objectClasses();
+                if (localObjectClasses.length > 0 && localObjectClasses[0].length() > 0) {
+                    for (String localObjectClass : localObjectClasses) {
+                        objectClasses.add(new CaseIgnoreString(localObjectClass));
+                    }
                 }
-            } else {
+                String base = entity.base();
+                if (StringUtils.hasText(base)) {
+                    this.base = LdapUtils.newLdapName(base);
+                }
+            }
+            if(objectClasses.isEmpty()) {
                 objectClasses.add(new CaseIgnoreString(clazz.getSimpleName()));
             }
 
-            String base = entity.base();
-            if(StringUtils.hasText(base)) {
-                this.base = LdapUtils.newLdapName(base);
-            }
         } else {
             throw new MetaDataException(String.format("Class %1$s must have a class level %2$s annotation", clazz,
                     Entry.class));
@@ -119,31 +125,34 @@ import java.util.TreeSet;
         }
 
         // Get field meta-data - the @Attribute annotation
-        Field[] fields = clazz.getDeclaredFields();
-        for (Field field : fields) {
-            // So we can write to private fields
-            field.setAccessible(true);
+        ReflectionUtils.doWithFields(clazz, new ReflectionUtils.FieldCallback() {
+                    @Override
+                    public void doWith(Field field) throws IllegalArgumentException {
+                    // So we can write to private fields
+                    field.setAccessible(true);
 
-            // Skip synthetic or static fields
-            if (Modifier.isStatic(field.getModifiers()) || field.isSynthetic()) {
-                continue;
-            }
+                    // Skip synthetic or static fields
+                    if (Modifier.isStatic(field.getModifiers()) || field.isSynthetic()) {
+                        return;
+                    }
 
-            AttributeMetaData currentAttributeMetaData=new AttributeMetaData(field);
-            if (currentAttributeMetaData.isId()) {
-                if (idAttribute!=null) {
-                    // There can be only one id field
-                    throw new MetaDataException(
-                          String.format("You man have only one field with the %1$s annotation in class %2$s", Id.class, clazz));
+                    AttributeMetaData currentAttributeMetaData=new AttributeMetaData(field);
+                    if (currentAttributeMetaData.isId()) {
+                        if (idAttribute!=null) {
+                            // There can be only one id field
+                            throw new MetaDataException(
+                                    String.format("You man have only one field with the %1$s annotation in class %2$s", Id.class, clazz));
+                        }
+                        idAttribute=currentAttributeMetaData;
+                    }
+                    fieldToAttribute.put(field, currentAttributeMetaData);
+
+                    if(currentAttributeMetaData.isDnAttribute()) {
+                        dnAttributes.add(currentAttributeMetaData);
+                    }
                 }
-                idAttribute=currentAttributeMetaData;
             }
-            fieldToAttribute.put(field, currentAttributeMetaData);
-
-            if(currentAttributeMetaData.isDnAttribute()) {
-                dnAttributes.add(currentAttributeMetaData);
-            }
-        }
+        );
 
         if (idAttribute == null) {
             throw new MetaDataException(
