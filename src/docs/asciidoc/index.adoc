@@ -1348,6 +1348,8 @@ There may be occasions when you want to specify a hardcoded filter as input to a
 
 * `filter(String filterFormat, String... params)`: Uses the specified string as input to `MessageFormat`, properly encoding the parameters and inserting them at the specified places in the filter string.
 
+* `filter(Filter filter)`: Uses the specified filter.
+
 You cannot mix the hardcoded filter methods with the `where` approach described earlier. It is either one or the other. If you specify a filter by using `filter()`, you get an exception if you try to call `where` afterwards.
 
 

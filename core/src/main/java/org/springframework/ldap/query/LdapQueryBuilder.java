@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -171,7 +171,7 @@ public final class LdapQueryBuilder implements LdapQuery {
      * validated or escaped in any way. <b>Never</b> use direct user input and use it concatenating strings
      * to use as LDAP filters. Doing so opens up for &quot;LDAP injection&quot;, where malicious user
      * may inject specifically constructed data to form filters at their convenience. When user input is used
-     * consider using {@link #where(String)} or {@link #filter(String, Object...)} instead.
+     * consider using {@link #where(String)}, {@link #filter(String, Object...)}, or {@link #filter(Filter)} instead.
      *
      * @param hardcodedFilter The hardcoded filter string to use in the search.
      * @return this instance.
@@ -183,6 +183,13 @@ public final class LdapQueryBuilder implements LdapQuery {
         return this;
     }
 
+    /**
+     * Specify the filter to use.
+     *
+     * @param filter The filter to use in the search.
+     * @return this instance.
+     * @throws IllegalStateException if a filter has already been specified.
+     */
     public LdapQuery filter(Filter filter) {
         initRootContainer();
         rootContainer.append(filter);
