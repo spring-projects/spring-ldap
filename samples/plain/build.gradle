@@ -1,5 +1,5 @@
 plugins {
-    id "org.gretty" version "2.3.1"
+    id "org.gretty" version "3.0.7"
     id 'war'
 }
 
