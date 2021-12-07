@@ -31,7 +31,3 @@ rootProject.children.each { p->
 
 findProject(":spring-ldap-test-support").name = "spring-ldap-test"
 findProject(":spring-ldap-test-support-unboundid").name = "spring-ldap-test-unboundid"
-
-// Exposes gradle buildSrc for IDE support
-include "buildSrc"
-rootProject.children.find{ it.name == "buildSrc" }.name = "spring-build-src"

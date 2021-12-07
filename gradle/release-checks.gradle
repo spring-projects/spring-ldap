@@ -1,8 +1,10 @@
-task checkDependencies << {
-    verifyNoDependenciesMatchingVersion(".*-SNAPSHOT")
-    if(releaseBuild) {
-        verifyNoDependenciesMatchingVersion(".*M.*")
-        verifyNoDependenciesMatchingVersion(".*RC.*")
+task checkDependencies {
+    doLast {
+        verifyNoDependenciesMatchingVersion(".*-SNAPSHOT")
+        if (releaseBuild) {
+            verifyNoDependenciesMatchingVersion(".*M.*")
+            verifyNoDependenciesMatchingVersion(".*RC.*")
+        }
     }
 }
 
