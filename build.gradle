@@ -21,10 +21,6 @@ buildscript {
     }
 }
 
-plugins {
-    id "org.sonarqube" version "2.1-rc1"
-}
-
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 
 ext.GRADLE_SCRIPT_DIR = "${rootProject.projectDir}/gradle"
@@ -68,7 +64,6 @@ configure(subprojects) {
     apply plugin: 'propdeps-eclipse'
     apply plugin: 'groovy'
     apply plugin: "merge"
-
 }
 
 configure(coreModules) {
@@ -76,10 +71,6 @@ configure(coreModules) {
 }
 
 configure(subprojects - coreModules) {
-    sonarqube {
-        skipProject = true
-    }
-
     tasks.findByPath("artifactoryPublish")?.enabled = false
     tasks.findByPath("uploadArchives")?.enabled = false
 }
@@ -89,19 +80,6 @@ description = "Spring LDAP"
 configurations.archives.artifacts.clear()
 apply from: "${GRADLE_SCRIPT_DIR}/deploy-docs.gradle"
 apply from: "${GRADLE_SCRIPT_DIR}/deploy-schema.gradle"
-
-sonarqube {
-    properties {
-        property "sonar.exclusions", "file:**/generated-src/**"
-        property "sonar.java.coveragePlugin", "jacoco"
-        property "sonar.jacoco.reportPath", "${buildDir.name}/jacoco.exec"
-        property "sonar.links.homepage", 'https://github.com/SpringSource/spring-ldap'
-        property "sonar.links.ci", 'https://build.springsource.org/browse/LDAP-B20X'
-        property "sonar.links.issue", 'https://jira.springsource.org/browse/LDAP'
-        property "sonar.links.scm", 'https://github.com/SpringSource/spring-ldap'
-        property "sonar.links.scm_dev", 'https://github.com/SpringSource/spring-ldap.git'
-    }
-}
 
 asciidoctor {
     outputDir = new File("$buildDir/docs")
