@@ -1,4 +1,9 @@
-apply from: SAMPLE_WAR_GRADLE
+plugins {
+    id "org.gretty" version "2.3.1"
+    id 'war'
+}
+
+apply from: JAVA_SCRIPT
 
 dependencies {
     compile project(':spring-ldap-test'),

@@ -29,7 +29,6 @@ ext.JAVA_MODULE_SCRIPT = "${GRADLE_SCRIPT_DIR}/java-module.gradle"
 ext.MAVEN_DEPLOYMENT_SCRIPT = "${GRADLE_SCRIPT_DIR}/maven-deployment.gradle"
 ext.JAVA_SCRIPT = "${GRADLE_SCRIPT_DIR}/java.gradle"
 ext.RELEASE_CHECKS_SCRIPT = "${GRADLE_SCRIPT_DIR}/release-checks.gradle"
-ext.SAMPLE_WAR_GRADLE = "${GRADLE_SCRIPT_DIR}/sample-war.gradle"
 ext.SPRING_SNAPSHOT_TEST_SCRIPT = "${GRADLE_SCRIPT_DIR}/spring-snapshot-test.gradle"
 
 ext.coreModules = subprojects.findAll { p-> (!p.name.equals('spring-build-src') && !p.name.contains("test") && !p.name.contains("sample") && !p.name.contains("sandbox")) || p.name.contains("spring-ldap-test") }
