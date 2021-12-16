@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        gradlePluginPortal()
         maven {
 			url = 'https://repo.spring.io/plugins-release'
 			if (project.hasProperty('artifactoryUsername')) {
