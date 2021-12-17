@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
-
-    <bean id="contextSourceTarget" class="org.springframework.ldap.core.support.LdapContextSource">
-        <property name="url" value="ldaps://127.0.0.1:13636" />
-        <property name="userDn" value="CN=ldaptest,CN=Users,DC=261consulting,DC=local" />
-        <property name="password" value="Buc8xe6AZiewoh7" />
-        <property name="base" value="DC=261consulting,DC=local" />
-        <property name="pooled" value="true" />
-    </bean>
-
-    <bean id="contextSource" class="org.springframework.ldap.transaction.compensating.manager.TransactionAwareContextSourceProxy">
-        <constructor-arg ref="contextSourceTarget" />
-    </bean>
-
-    <bean id="transactionManager" class="org.springframework.ldap.transaction.compensating.manager.ContextSourceTransactionManager">
-        <property name="contextSource" ref="contextSourceTarget" />
-    </bean>
-
-    <bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">
-        <property name="contextSource" ref="contextSource" />
-    </bean>
-
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           https://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd"
+       xmlns:context="http://www.springframework.org/schema/context">
+   <context:annotation-config/>
+   <bean class="org.springframework.ldap.configuration.IncrementalAttributeMapperTest"/>
+   <bean id="contextSource"
+         class="org.springframework.ldap.transaction.compensating.manager.TransactionAwareContextSourceProxy">
+      <constructor-arg ref="contextSourceTarget"/>
+   </bean>
+   <bean id="transactionManager"
+         class="org.springframework.ldap.transaction.compensating.manager.ContextSourceTransactionManager">
+      <property name="contextSource" ref="contextSourceTarget"/>
+   </bean>
+   <bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">
+      <property name="contextSource" ref="contextSource"/>
+   </bean>
 </beans>

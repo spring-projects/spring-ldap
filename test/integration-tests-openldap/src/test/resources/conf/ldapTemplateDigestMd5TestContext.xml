@@ -3,33 +3,26 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-                           https://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
-
-    <context:property-placeholder ignore-resource-not-found="true"
-                                  system-properties-mode="OVERRIDE"
-                                  location="classpath:/conf/ldap.properties" />
-
-    <bean class="org.springframework.ldap.core.support.LdapContextSource" id="populateContextSource">
-        <property name="url" value="${itest.openldap.url}" />
-        <property name="userDn" value="${itest.openldap.user.dn}"/>
-        <property name="password" value="${itest.openldap.user.password}"/>
-        <property name="base" value="${itest.openldap.base}" />
-        <property name="pooled" value="false" />
-    </bean>
-
-    <bean class="org.springframework.ldap.core.support.LdapContextSource" id="contextSource">
-        <property name="url" value="${itest.openldap.url}" />
-        <property name="userDn" value="${itest.openldap.user.dn}"/>
-        <property name="password" value="${itest.openldap.user.password}"/>
-        <property name="base" value="${itest.openldap.base}" />
-        <property name="pooled" value="false" />
-        <property name="authenticationStrategy">
-            <bean class="org.springframework.ldap.core.support.DigestMd5DirContextAuthenticationStrategy" />
-        </property>
-    </bean>
-
-	<bean id="ldapTemplate"
-		class="org.springframework.ldap.core.LdapTemplate">
-		<constructor-arg ref="contextSource" />
-	</bean>
+                           https://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           https://www.springframework.org/schema/context/spring-context.xsd">
+   <context:property-placeholder ignore-resource-not-found="true"
+                                 system-properties-mode="OVERRIDE"
+                                 location="classpath:/conf/ldap.properties"/>
+   <context:annotation-config/>
+   <bean class="org.springframework.ldap.configuration.LdapTemplateDigestMd5TestContext"/>
+   <bean class="org.springframework.ldap.core.support.LdapContextSource"
+         id="contextSource">
+      <property name="url" value="${itest.openldap.url}"/>
+      <property name="userDn" value="${itest.openldap.user.dn}"/>
+      <property name="password" value="${itest.openldap.user.password}"/>
+      <property name="base" value="${itest.openldap.base}"/>
+      <property name="pooled" value="false"/>
+      <property name="authenticationStrategy">
+         <bean class="org.springframework.ldap.core.support.DigestMd5DirContextAuthenticationStrategy"/>
+      </property>
+   </bean>
+   <bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">
+      <constructor-arg ref="contextSource"/>
+   </bean>
 </beans>

@@ -2,34 +2,25 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:sec="http://www.springframework.org/schema/security"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-    http://www.springframework.org/schema/security https://www.springframework.org/schema/security/spring-security.xsd">
-
-    <import resource="classpath:/conf/commonTestContext.xml"/>
-    <import resource="classpath:/conf/commonContextSourceConfig.xml"/>
-
-    <sec:ldap-server url="${url}" />
-    <sec:authentication-manager>
-        <sec:ldap-authentication-provider
-                group-search-filter="member={0}"
-                group-search-base="ou=groups"
-                user-search-base="ou=people"
-                user-search-filter="uid={0}"
-                />
-    </sec:authentication-manager>
-
-    <bean id="baseLdapPathBeanPostProcessor"
-          class="org.springframework.ldap.core.support.BaseLdapPathBeanPostProcessor"/>
-
-    <!-- This prevents BaseLdapPathBeanPostProcessor from being applied unless it implements Ordered -->
-
-    <sec:global-method-security pre-post-annotations="enabled">
-        <sec:expression-handler ref="accessExpressionHandler"/>
-    </sec:global-method-security>
-
-    <bean id="accessExpressionHandler" class="org.springframework.ldap.itest.support.springsecurity.MethodSecurityExpressionHandler">
-        <property name="groupDao" ref="groupDao"/>
-    </bean>
-
-    <bean id="groupDao" class="org.springframework.ldap.itest.LdapGroupDao"/>
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           https://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/security
+                           https://www.springframework.org/schema/security/spring-security.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd"
+       xmlns:context="http://www.springframework.org/schema/context">
+   <import resource="classpath:/conf/commonTestContext.xml"/>
+   <import resource="classpath:/conf/commonContextSourceConfig.xml"/>
+   <sec:ldap-server url="${url}"/>
+   <sec:authentication-manager>
+      <sec:ldap-authentication-provider group-search-filter="member={0}"
+                                        group-search-base="ou=groups"
+                                        user-search-base="ou=people"
+                                        user-search-filter="uid={0}"/>
+   </sec:authentication-manager>
+   <context:annotation-config/>
+   <bean class="org.springframework.ldap.configuration.Ldap247TestContext"/>
+   <sec:global-method-security pre-post-annotations="enabled">
+      <sec:expression-handler ref="accessExpressionHandler"/>
+   </sec:global-method-security>
 </beans>
