@@ -2,19 +2,18 @@ buildscript {
     repositories {
         gradlePluginPortal()
         maven {
-			url = 'https://repo.spring.io/plugins-release'
-			if (project.hasProperty('artifactoryUsername')) {
-				credentials {
-					username "$artifactoryUsername"
-					password "$artifactoryPassword"
-				}
-			}
-		}
+			     url = 'https://repo.spring.io/plugins-release'
+			        if (project.hasProperty('artifactoryUsername')) {
+				          credentials {
+					             username "$artifactoryUsername"
+					                  password "$artifactoryPassword"
+				          }
+			        }
+		    }
     }
     dependencies {
         classpath "com.github.ben-manes:gradle-versions-plugin:0.17.0"
         classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
-        classpath('org.asciidoctor:asciidoctor-gradle-plugin:1.5.1')
         classpath("io.spring.gradle:spring-io-plugin:0.0.6.RELEASE")
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.12.0"
         classpath 'org.hidetake:gradle-ssh-plugin:2.10.1'
@@ -22,7 +21,95 @@ buildscript {
     }
 }
 
-apply plugin: 'org.asciidoctor.gradle.asciidoctor'
+plugins {
+	id 'org.asciidoctor.jvm.pdf' version '3.3.2'
+	id 'org.asciidoctor.jvm.gems' version '3.3.2'
+	id 'org.asciidoctor.jvm.convert' version '3.3.2'
+}
+
+repositories {
+	maven { url 'https://repo.spring.io/plugins-release' }
+	mavenCentral()
+}
+
+ext {
+	docResourcesVersion = '0.2.5'
+}
+
+configurations {
+	docs
+}
+
+dependencies {
+	docs "io.spring.docresources:spring-doc-resources:${docResourcesVersion}@zip"
+}
+
+task prepareAsciidocBuild(type: Sync) {
+	dependsOn configurations.docs
+	from {
+		configurations.docs.collect { zipTree(it) }
+	}
+	from 'src/docs/asciidoc/'
+	into "$buildDir/asciidoc"
+}
+
+asciidoctorPdf {
+	dependsOn prepareAsciidocBuild
+
+	options doctype: 'book'
+
+	attributes 'icons': 'font',
+		'sourceDir': '$buildDir/asciidoc',
+		'outputDir': '$buildDir/docs',
+		'sectanchors': '',
+		'sectnums': '',
+		'toc': '',
+		'source-highlighter' : 'coderay',
+		revnumber: project.version,
+		'project-version': project.version,
+		'docinfo': 'shared',
+		'spring-ldap-version' : project.version
+}
+
+asciidoctorj {
+	version = '2.4.2'
+	options doctype: 'book'
+	attributes  'docinfo': 'shared',
+		stylesdir: 'css/',
+		stylesheet: 'spring.css',
+		'linkcss': true,
+		'icons': 'font',
+		'sectanchors': '',
+		'source-highlighter': 'highlight.js',
+		'highlightjsdir': 'js/highlight',
+		'highlightjs-theme': 'github',
+		'idprefix': '',
+		'idseparator': '-',
+		'allow-uri-read': '',
+		'toc': 'left',
+		'toclevels': '4',
+		revnumber: project.version,
+		'project-version': project.version,
+		'spring-ldap-version' : project.version
+}
+
+asciidoctor {
+//	dependsOn asciidoctorPdf
+	dependsOn prepareAsciidocBuild
+	baseDirFollowsSourceFile()
+	sourceDir "$buildDir/asciidoc"
+	inputs.dir(sourceDir)
+
+	sources {
+		include 'index.adoc'
+	}
+
+	resources {
+		from(sourceDir) {
+			include 'images/*', 'css/**', 'js/**'
+		}
+	}
+}
 
 ext.GRADLE_SCRIPT_DIR = "${rootProject.projectDir}/gradle"
 apply from: "${GRADLE_SCRIPT_DIR}/finalize-deploy.gradle"
@@ -80,26 +167,6 @@ description = "Spring LDAP"
 configurations.archives.artifacts.clear()
 apply from: "${GRADLE_SCRIPT_DIR}/deploy-docs.gradle"
 apply from: "${GRADLE_SCRIPT_DIR}/deploy-schema.gradle"
-
-asciidoctor {
-    outputDir = new File("$buildDir/docs")
-    options = [
-            eruby: 'erubis',
-            attributes: [
-                    copycss : '',
-                    icons : 'font',
-                    'source-highlighter': 'prettify',
-                    sectanchors : '',
-                    toc2: '',
-                    idprefix: '',
-                    idseparator: '-',
-                    doctype: 'book',
-                    numbered: '',
-                    'spring-ldap-version' : project.version,
-                    revnumber : project.version
-            ]
-    ]
-}
 
 task api(type: Javadoc) {
     group = "Documentation"
