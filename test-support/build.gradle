@@ -1,6 +1,6 @@
 
 dependencies {
-    compile project(":spring-ldap-core"),
+    implementation project(":spring-ldap-core"),
             project(":spring-ldap-ldif-core"),
             "com.google.code.typica:typica:1.3",
             "commons-io:commons-io:$commonsIoVersion",

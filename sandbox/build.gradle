@@ -1,7 +1,7 @@
 apply from: JAVA_SCRIPT
 
 dependencies {
-    compile project(":spring-ldap-core")
+    implementation project(":spring-ldap-core")
 
     provided "com.sun:ldapbp:1.0"
 

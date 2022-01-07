@@ -1,7 +1,7 @@
 apply from: JAVA_SCRIPT
 
 dependencies {
-    compile     project(":spring-ldap-core-tiger"),
+    implementation     project(":spring-ldap-core-tiger"),
                 project(":spring-ldap-test"),
                 "commons-lang:commons-lang:$commonsLangVersion",
                 "commons-logging:commons-logging:$commonsLoggingVersion",
