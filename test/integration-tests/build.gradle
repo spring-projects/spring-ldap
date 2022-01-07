@@ -46,7 +46,7 @@ dependencies {
                 "org.springframework:spring-jdbc:$springVersion",
                 "org.springframework:spring-orm:$springVersion"
 
-    testCompile "org.springframework:spring-test:$springVersion",
+    testImplementation "org.springframework:spring-test:$springVersion",
                 "org.springframework:spring-aop:$springVersion",
                 "org.springframework:spring-expression:$springVersion",
                 "org.hibernate:hibernate-core:$hibernateVersion",
@@ -60,7 +60,7 @@ dependencies {
                 apachedsDependencies
 
 
-    testCompile("org.springframework.security:spring-security-ldap:$springSecurityVersion") {
+    testImplementation("org.springframework.security:spring-security-ldap:$springSecurityVersion") {
         exclude group: "org.springframework.ldap", module: "spring-ldap-core"
     }
 }
