@@ -1,4 +1,4 @@
-def isSnapshot = version?.matches(/^.*[.-]-SNAPSHOT$/)
+def isSnapshot = version?.endsWith("-SNAPSHOT")
 def isRelease = !isSnapshot
 
 if(project.hasProperty("signing.keyId") && isRelease) {
