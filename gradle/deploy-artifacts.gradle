@@ -1,4 +1,4 @@
-def isSnapshot = version?.matches(/^.*[.-]BUILD-SNAPSHOT$/)
+def isSnapshot = version?.matches(/^.*[.-]-SNAPSHOT$/)
 
 task deployArtifacts {
     group = 'Deploy tasks'

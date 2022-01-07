@@ -1,6 +1,6 @@
 apply plugin: "com.jfrog.artifactory"
 
-def isSnapshot = version?.matches(/^.*[.-]BUILD-SNAPSHOT$/)
+def isSnapshot = version?.matches(/^.*[.-]-SNAPSHOT$/)
 
 artifactory {
     contextUrl = 'https://repo.spring.io'
