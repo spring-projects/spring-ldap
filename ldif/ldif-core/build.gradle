@@ -1,6 +1,6 @@
 
 dependencies {
-    compile project(":spring-ldap-core")
+    implementation project(":spring-ldap-core")
 
     testCompile "junit:junit:$junitVersion",
                  "commons-io:commons-io:$commonsIoVersion",

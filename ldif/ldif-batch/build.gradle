@@ -1,9 +1,9 @@
 
 dependencies {
-    compile project(':spring-ldap-ldif-core'),
+    implementation project(':spring-ldap-ldif-core'),
             "commons-lang:commons-lang:$commonsLangVersion"
 
-    compile("org.springframework.batch:spring-batch-infrastructure:$springBatchVersion") {
+    implementation("org.springframework.batch:spring-batch-infrastructure:$springBatchVersion") {
         exclude group: "org.springframework", module: "spring-core"
         exclude group: "org.springframework", module: "spring-context"
         exclude group: "org.springframework", module: "spring-aop"

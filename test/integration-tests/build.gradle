@@ -23,18 +23,18 @@ sourceSets {
 }
 
 dependencies {
-    compile 	project(":spring-ldap-test"),
+    implementation 	project(":spring-ldap-test"),
                 project(":spring-ldap-core-tiger")
 
-    compile "com.querydsl:querydsl-apt:$queryDslVersion",
+    implementation "com.querydsl:querydsl-apt:$queryDslVersion",
             "commons-lang:commons-lang:$commonsLangVersion"
 
-    compile("org.springframework.data:spring-data-commons:$springDataVersion") {
+    implementation("org.springframework.data:spring-data-commons:$springDataVersion") {
         exclude group: "org.springframework", module: "spring-beans"
         exclude group: "org.springframework", module: "spring-core"
     }
 
-    compile("org.springframework.security:spring-security-core:$springSecurityVersion") {
+    implementation("org.springframework.security:spring-security-core:$springSecurityVersion") {
         exclude group: "org.springframework", module: "spring-expression"
         exclude group: "org.springframework", module: "spring-core"
         exclude group: "org.springframework", module: "spring-context"

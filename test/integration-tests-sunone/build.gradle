@@ -1,7 +1,7 @@
 apply from: JAVA_SCRIPT
 
 dependencies {
-    compile     project(":spring-ldap-test"),
+    implementation     project(":spring-ldap-test"),
                 project(":spring-ldap-integration-tests"),
                 project(":spring-ldap-sandbox"),
                 project(":spring-ldap-core-tiger"),

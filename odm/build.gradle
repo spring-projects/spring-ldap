@@ -3,7 +3,7 @@ jar {
 }
 
 dependencies {
-    compile project(":spring-ldap-core"),
+    implementation project(":spring-ldap-core"),
             project(":spring-ldap-core-tiger"),
             "org.springframework:spring-core:$springVersion",
             "org.freemarker:freemarker:2.3.20",
