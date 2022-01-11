@@ -59,6 +59,7 @@ dependencies {
 		api "org.assertj:assertj-core:3.21.0"
 		api "org.bouncycastle:bcpkix-jdk15on:1.69"
 		api "org.bouncycastle:bcprov-jdk15on:1.69"
+		api "org.easymock:easymock:2.5.1"
 		api "org.eclipse.jetty:jetty-server:11.0.6"
 		api "org.eclipse.jetty:jetty-servlet:11.0.6"
 		api "jakarta.persistence:jakarta.persistence-api:3.0.0"
