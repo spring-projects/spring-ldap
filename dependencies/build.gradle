@@ -34,6 +34,7 @@ dependencies {
 		api "com.unboundid:unboundid-ldapsdk:4.0.14"
 		api "commons-codec:commons-codec:1.15"
 		api "commons-collections:commons-collections:3.2.2"
+		api "commons-io:commons-io:2.11.0"
 		api "commons-lang:commons-lang:2.6"
 		api "commons-logging:commons-logging:1.2"
 		api "gsbase:gsbase:2.0.1"
