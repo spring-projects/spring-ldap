@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.verification.VerificationMode;
+import org.mockito.ArgumentMatcher;
 
 import org.springframework.LdapDataEntry;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -1911,17 +1912,17 @@ public class LdapTemplateTest {
 		return controls;
 	}
 
-    private static class SearchControlsMatcher extends BaseMatcher<SearchControls> {
+    private static class SearchControlsMatcher implements ArgumentMatcher<SearchControls> {
         private final SearchControls controls;
 
         public SearchControlsMatcher(SearchControls controls) {
             this.controls = controls;
         }
 
-        @Override
-        public boolean matches(Object item) {
+		@Override
+		public boolean matches(SearchControls item) {
             if (item instanceof SearchControls) {
-                SearchControls s1 = (SearchControls) item;
+                SearchControls s1 = item;
 
                 return controls.getSearchScope() == s1.getSearchScope()
                         && controls.getReturningObjFlag() == s1.getReturningObjFlag()
@@ -1933,11 +1934,6 @@ public class LdapTemplateTest {
             else {
                 throw new IllegalArgumentException();
             }
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("SearchControls matches");
         }
     }
 }
