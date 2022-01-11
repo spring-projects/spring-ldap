@@ -3,10 +3,13 @@ plugins {
 }
 
 dependencies {
+    management platform(project(":spring-ldap-dependencies"))
     implementation project(":spring-ldap-core"),
             "org.springframework:spring-tx"
 
-    testImplementation     "junit:junit",
-                    "org.easymock:easymock:2.5.1",
-                    "org.assertj:assertj-core"
+    testImplementation platform('org.junit:junit-bom')
+    testImplementation "org.junit.vintage:junit-vintage-engine"
+    testImplementation "junit:junit"
+    testImplementation "org.easymock:easymock"
+    testImplementation "org.assertj:assertj-core"
 }
