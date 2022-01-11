@@ -25,7 +25,7 @@ rootProject.name = 'spring-ldap'
 include 'core'
 include 'core-tiger'
 include 'dependencies'
-//include 'test-support'
+include 'test-support'
 include 'ldif/ldif-core'
 //include 'odm'
 ////include 'sandbox'
@@ -50,4 +50,4 @@ rootProject.children.each { p->
     p.name = "spring-ldap-" + name
 }
 
-//findProject(":spring-ldap-test-support").name = "spring-ldap-test"
+findProject(":spring-ldap-test-support").name = "spring-ldap-test"
