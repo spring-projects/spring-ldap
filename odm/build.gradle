@@ -7,17 +7,17 @@ jar {
 }
 
 dependencies {
+    management platform(project(":spring-ldap-dependencies"))
     implementation project(":spring-ldap-core"),
             project(":spring-ldap-core-tiger"),
             "org.springframework:spring-core",
-            "org.freemarker:freemarker:2.3.20",
+            "org.freemarker:freemarker",
             "commons-logging:commons-logging",
-            "commons-cli:commons-cli:1.2"
+            "commons-cli:commons-cli"
 
     runtimeOnly "org.springframework:spring-context"
 
     provided "commons-pool:commons-pool",
-             "com.sun:ldapbp:1.0",
             "commons-lang:commons-lang",
             "org.springframework:spring-context",
              "org.springframework:spring-jdbc",
@@ -25,6 +25,14 @@ dependencies {
 
     testImplementation project(":spring-ldap-test"),
                 "junit:junit",
-                "jdepend:jdepend:2.9.1",
+                "jdepend:jdepend",
                 "commons-io:commons-io"
+    testImplementation "org.apache.directory.server:apacheds-core-entry"
+    testImplementation "org.apache.directory.server:apacheds-core"
+    testImplementation "org.apache.directory.server:apacheds-protocol-ldap"
+    testImplementation "org.apache.directory.server:apacheds-protocol-shared"
+    testImplementation "org.apache.directory.server:apacheds-server-jndi"
+    testImplementation "org.apache.directory.shared:shared-ldap"
+    testImplementation platform('org.junit:junit-bom')
+    testImplementation "org.junit.vintage:junit-vintage-engine"
 }
