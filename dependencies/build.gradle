@@ -36,6 +36,7 @@ dependencies {
 		api "commons-codec:commons-codec:1.15"
 		api "commons-cli:commons-cli:1.2"
 		api "commons-collections:commons-collections:3.2.2"
+		api "commons-httpclient:commons-httpclient:3.1"
 		api "commons-io:commons-io:2.11.0"
 		api "commons-lang:commons-lang:2.6"
 		api "commons-logging:commons-logging:1.2"

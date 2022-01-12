@@ -1,22 +1,26 @@
 apply plugin: 'io.spring.convention.spring-test'
 
 dependencies {
-    implementation     project(":spring-ldap-core-tiger"),
-                project(":spring-ldap-test"),
-                "commons-lang:commons-lang",
-                "commons-logging:commons-logging",
-                "commons-httpclient:commons-httpclient:3.1",
-                "commons-codec:commons-codec:1.3"
+    management platform(project(":spring-ldap-dependencies"))
+    implementation project(":spring-ldap-core-tiger")
+    implementation project(":spring-ldap-test")
+    implementation "commons-lang:commons-lang"
+    implementation "commons-logging:commons-logging"
+    implementation "commons-httpclient:commons-httpclient"
+    implementation "commons-codec:commons-codec"
 
-    provided	"org.springframework:spring-jdbc"
+    provided "org.springframework:spring-jdbc"
 
-    testImplementation "org.springframework:spring-aop",
-                "org.springframework:spring-test",
-                "gsbase:gsbase",
-                "junit:junit",
-                "com.sun:ldapbp:1.0",
-                "org.slf4j:slf4j-log4j12",
-                "org.assertj:assertj-core"
+    testImplementation platform('org.junit:junit-bom')
+    testImplementation "org.junit.vintage:junit-vintage-engine"
+
+    testImplementation "org.springframework:spring-aop"
+    testImplementation "org.springframework:spring-test"
+    testImplementation "gsbase:gsbase"
+    testImplementation "junit:junit"
+    testImplementation "com.sun:ldapbp:1.0"
+    testImplementation "org.slf4j:slf4j-log4j12"
+    testImplementation "org.assertj:assertj-core"
 
 }
 
