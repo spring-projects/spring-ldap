@@ -40,6 +40,7 @@ dependencies {
 		api "commons-io:commons-io:2.11.0"
 		api "commons-lang:commons-lang:2.6"
 		api "commons-logging:commons-logging:1.2"
+		api "commons-pool:commons-pool:1.4"
 		api "gsbase:gsbase:2.0.1"
 		api "io.mockk:mockk:1.12.0"
 		api "jakarta.annotation:jakarta.annotation-api:2.0.0"
