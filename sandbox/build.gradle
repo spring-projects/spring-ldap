@@ -1,14 +1,17 @@
 plugins {
-    id
+    id 'io.spring.convention.spring-module'
 }
 
 dependencies {
+    management platform(project(":spring-ldap-dependencies"))
     implementation project(":spring-ldap-core")
 
     provided "com.sun:ldapbp:1.0"
 
-    testCompile "junit:junit",
-                "org.mockito:mockito-core",
-                "gsbase:gsbase",
-                "org.assertj:assertj-core"
+    testImplementation platform('org.junit:junit-bom')
+    testImplementation "org.junit.vintage:junit-vintage-engine"
+    testImplementation "junit:junit"
+    testImplementation "org.mockito:mockito-core"
+    testImplementation "gsbase:gsbase"
+    testImplementation "org.assertj:assertj-core"
 }

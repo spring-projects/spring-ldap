@@ -16,11 +16,9 @@
 
 package org.springframework.ldap.control;
 
-import com.sun.jndi.ldap.ctl.VirtualListViewControl;
-
 /**
  * Wrapper class for the cookie returned when using the
- * {@link VirtualListViewControl}.
+ * {@link com.sun.jndi.ldap.ctl.VirtualListViewControl}.
  * 
  * @author Ulrik Sandberg
  */
