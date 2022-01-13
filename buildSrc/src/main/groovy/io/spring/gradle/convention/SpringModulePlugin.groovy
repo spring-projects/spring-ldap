@@ -14,8 +14,9 @@
  * the License.
  */
 
-package io.spring.gradle.convention;
+package io.spring.gradle.convention
 
+import org.gradle.api.JavaVersion;
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaLibraryPlugin;
 import org.gradle.api.plugins.MavenPlugin;
@@ -40,6 +41,7 @@ class SpringModulePlugin extends AbstractSpringJavaPlugin {
 		if (!Utils.isRelease(project)) {
 			deployArtifacts.dependsOn project.tasks.artifactoryPublish
 		}
+		project.java.sourceCompatibility = JavaVersion.VERSION_17
 	}
 
 }
