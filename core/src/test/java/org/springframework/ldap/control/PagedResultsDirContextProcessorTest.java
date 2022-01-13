@@ -37,7 +37,7 @@ public class PagedResultsDirContextProcessorTest {
 
     private LdapContext ldapContextMock;
 
-	private PagedResultsDirContextProcessor tested;
+    private PagedResultsDirContextProcessor tested;
 
     @Before
     public void setUp() throws Exception {
@@ -101,7 +101,7 @@ public class PagedResultsDirContextProcessorTest {
         byte[] value = new byte[1];
         value[0] = pageSize;
         byte[] cookie = encodeDirSyncValue(resultSize, value);
-        
+
         // Using another response control to verify that it is ignored
         DirSyncResponseControl control = new DirSyncResponseControl(
                 "dummy", true, cookie);
@@ -132,7 +132,7 @@ public class PagedResultsDirContextProcessorTest {
         value[0] = 8;
         int pageSize = 20;
         byte[] cookie = encodeValue(pageSize, value);
-        
+
         BerDecoder ber = new BerDecoder(cookie, 0, cookie.length);
 
         ber.parseSeq(null);

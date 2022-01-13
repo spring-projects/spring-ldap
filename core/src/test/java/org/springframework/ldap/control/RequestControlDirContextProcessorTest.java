@@ -15,7 +15,7 @@
  */
 package org.springframework.ldap.control;
 
-import com.sun.jndi.ldap.ctl.SortControl;
+import javax.naming.ldap.SortControl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

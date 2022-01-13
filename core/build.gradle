@@ -19,6 +19,8 @@ dependencies {
     implementation "org.springframework:spring-tx"
     implementation "org.slf4j:slf4j-api"
 
+    provided "com.sun:ldapbp:1.0"
+
     optional "org.springframework:spring-context"
     optional "org.springframework:spring-jdbc"
     optional "org.springframework:spring-orm"
@@ -28,7 +30,8 @@ dependencies {
     optional "org.apache.commons:commons-pool2"
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api'
 
-    provided "com.sun:ldapbp:1.0"
+    testImplementation platform('org.junit:junit-bom')
+    testImplementation "org.junit.vintage:junit-vintage-engine"
 
     testImplementation "junit:junit"
     testImplementation "commons-lang:commons-lang"
@@ -37,4 +40,17 @@ dependencies {
     testImplementation "org.mockito:mockito-inline"
     testImplementation "org.springframework:spring-test"
     testImplementation "org.assertj:assertj-core"
+    testImplementation "com.unboundid:unboundid-ldapsdk"
+}
+
+compileTestJava {
+    doFirst {
+        options.compilerArgs = [
+                '--add-exports', 'java.naming/com.sun.jndi.ldap=ALL-UNNAMED'
+        ]
+    }
+}
+
+test {
+    jvmArgs '--add-exports', 'java.naming/com.sun.jndi.ldap=ALL-UNNAMED'
 }

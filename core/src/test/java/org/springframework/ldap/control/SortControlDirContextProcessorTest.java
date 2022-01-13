@@ -34,14 +34,14 @@ import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for the SortControlDirContextProcessor class.
- * 
+ *
  * @author Ulrik Sandberg
  */
 public class SortControlDirContextProcessorTest {
 
     private LdapContext ldapContextMock;
 
-	private SortControlDirContextProcessor tested;
+    private SortControlDirContextProcessor tested;
 
     @Before
     public void setUp() throws Exception {
