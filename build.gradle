@@ -21,6 +21,7 @@ buildscript {
 }
 
 apply plugin: 'io.spring.convention.root'
+apply plugin: 'io.spring.convention.docs'
 
 description = "Spring LDAP"
 
