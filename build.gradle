@@ -20,4 +20,11 @@ buildscript {
     }
 }
 
+apply plugin: 'io.spring.convention.root'
+
 description = "Spring LDAP"
+
+nohttp {
+	allowlistFile = project.file("etc/nohttp/allowlist.lines")
+	source.exclude "buildSrc/build/**"
+}
