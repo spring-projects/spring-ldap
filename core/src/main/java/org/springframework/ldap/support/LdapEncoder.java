@@ -20,10 +20,12 @@ import java.util.Base64;
 
 import org.springframework.ldap.BadLdapGrammarException;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
+
 
 /**
  * Helper class to encode and decode ldap names and values.
- * 
+ *
  * @author Adam Skogman
  * @author Mattias Hellborg Arthursson
  * @author Thomas Darimont
@@ -36,7 +38,7 @@ public final class LdapEncoder {
     private static String[] FILTER_ESCAPE_TABLE = new String['\\' + 1];
 
     private static final int RFC2849_MAX_BASE64_CHARS_PER_LINE = 76;
-    
+
     static {
 
         // Name encoding table -------------------------------------
@@ -91,7 +93,7 @@ public final class LdapEncoder {
 
     /**
      * Escape a value for use in a filter.
-     * 
+     *
      * @param value
      *            the value to escape.
      * @return a properly escaped representation of the supplied value.
@@ -123,13 +125,13 @@ public final class LdapEncoder {
 
     /**
      * LDAP Encodes a value for use with a DN. Escapes for LDAP, not JNDI!
-     * 
+     *
      * <br>Escapes:<br> ' ' [space] - "\ " [if first or last] <br> '#'
      * [hash] - "\#" <br> ',' [comma] - "\," <br> ';' [semicolon] - "\;" <br> '=
      * [equals] - "\=" <br> '+' [plus] - "\+" <br> '&lt;' [less than] -
      * "\&lt;" <br> '&gt;' [greater than] - "\&gt;" <br> '"' [double quote] -
      * "\"" <br> '\' [backslash] - "\\" <br>
-     * 
+     *
      * @param value
      *            the value to escape.
      * @return The escaped value.
@@ -175,7 +177,7 @@ public final class LdapEncoder {
 
     /**
      * Decodes a value. Converts escaped chars to ordinary chars.
-     * 
+     *
      * @param value
      *            Trimmed value, so no leading an trailing blanks, except an
      *            escaped space last.

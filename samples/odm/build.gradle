@@ -1,24 +1,21 @@
 plugins {
-    id "org.gretty" version "3.0.7"
+    id "org.gretty"
     id 'war'
 }
-
-apply from: JAVA_SCRIPT
 
 dependencies {
     implementation project(':spring-ldap-test'),
             'javax.servlet:jstl:1.2',
-            "org.springframework:spring-context:$springVersion",
-            "org.springframework:spring-webmvc:$springVersion",
-            "org.springframework.data:spring-data-commons:$springDataVersion",
-            "commons-lang:commons-lang:$commonsLangVersion"
+            "org.springframework:spring-context",
+            "org.springframework:spring-webmvc",
+            "org.springframework.data:spring-data-commons",
+            "commons-lang:commons-lang"
 
-    provided "javax.servlet:servlet-api:2.5"
+    compileOnly "javax.servlet:servlet-api:2.5"
 
-    runtime 'ch.qos.logback:logback-classic:1.0.13'
+    runtimeOnly 'ch.qos.logback:logback-classic:1.0.13'
 
-    testCompile "org.springframework:spring-test:$springVersion",
-                "junit:junit:$junitVersion",
-                "org.assertj:assertj-core:$assertjVersion",
-                apachedsDependencies
+    testImplementation "org.springframework:spring-test",
+                "junit:junit",
+                "org.assertj:assertj-core"
 }

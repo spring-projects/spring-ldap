@@ -1,9 +1,12 @@
+plugins {
+    id 'io.spring.convention.spring-module'
+}
 
 dependencies {
     implementation project(":spring-ldap-core"),
-            "org.springframework:spring-tx:$springVersion"
+            "org.springframework:spring-tx"
 
-    testCompile     "junit:junit:$junitVersion",
+    testImplementation     "junit:junit",
                     "org.easymock:easymock:2.5.1",
-                    "org.assertj:assertj-core:$assertjVersion"
+                    "org.assertj:assertj-core"
 }

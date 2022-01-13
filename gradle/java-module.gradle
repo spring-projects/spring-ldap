@@ -1,5 +1,4 @@
 apply from: JAVA_SCRIPT
-apply from: MAVEN_DEPLOYMENT_SCRIPT
 apply from: RELEASE_CHECKS_SCRIPT
 apply from: SPRING_SNAPSHOT_TEST_SCRIPT
 apply plugin: 'spring-io'
@@ -18,7 +17,7 @@ dependencies {
     dependencyManagement {
         springIoTestRuntime {
             imports {
-                mavenBom("io.spring.platform:platform-bom:${springIoVersion}") {
+                mavenBom("io.spring.platform:platform-bom}") {
                     bomProperties([
                         'mockito.version': '1.10.19'
                     ])
