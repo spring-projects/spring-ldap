@@ -37,6 +37,7 @@ import org.springframework.ldap.transaction.compensating.manager.TransactionAwar
 import org.springframework.ldap.transaction.compensating.support.DefaultTempEntryRenamingStrategy;
 import org.springframework.ldap.transaction.compensating.support.DifferentSubtreeTempEntryRenamingStrategy;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.util.ReflectionUtils;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -44,11 +45,11 @@ import javax.naming.CannotProceedException;
 import javax.naming.CommunicationException;
 import javax.naming.directory.SearchControls;
 import java.lang.management.ManagementFactory;
+import java.lang.reflect.Field;
 import java.util.Set;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.internal.util.reflection.Whitebox.getInternalState;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -73,7 +74,7 @@ public class LdapTemplateNamespaceHandlerTest {
         assertThat(new String[]{"ldap://localhost:389"}).isEqualTo((Object[]) getInternalState(contextSource, "urls"));
         assertThat(Boolean.FALSE).isEqualTo(getInternalState(contextSource, "pooled"));
         assertThat(Boolean.FALSE).isEqualTo(getInternalState(contextSource, "anonymousReadOnly"));
-        assertThat(getInternalState(contextSource, "referral")).isNull();
+        assertThat((Object) getInternalState(contextSource, "referral")).isNull();
 
         assertThat(outerContextSource).isSameAs(getInternalState(ldapTemplate, "contextSource"));
         assertThat(Boolean.FALSE).isEqualTo(getInternalState(ldapTemplate, "ignorePartialResultException"));
@@ -183,7 +184,7 @@ public class LdapTemplateNamespaceHandlerTest {
         assertThat(outerContextSource instanceof TransactionAwareContextSourceProxy).isTrue();
         ContextSource contextSource = ((TransactionAwareContextSourceProxy) outerContextSource).getTarget();
 
-        assertArrayEquals(new String[] { "ldap://a.localhost:389", "ldap://b.localhost:389" },
+       assertArrayEquals(new String[] { "ldap://a.localhost:389", "ldap://b.localhost:389" },
                 (Object[]) getInternalState(contextSource, "urls"));
 
     }
@@ -283,8 +284,8 @@ public class LdapTemplateNamespaceHandlerTest {
         assertThat(pooledContextSource instanceof PoolingContextSource).isTrue();
 
         Object objectFactory = getInternalState(pooledContextSource, "dirContextPoolableObjectFactory");
-        assertThat(getInternalState(objectFactory, "contextSource")).isNotNull();
-        assertThat(getInternalState(objectFactory, "dirContextValidator")).isNull();
+        assertThat((Object) getInternalState(objectFactory, "contextSource")).isNotNull();
+        assertThat((Object) getInternalState(objectFactory, "dirContextValidator")).isNull();
         Set<Class<? extends Throwable>> nonTransientExceptions =
                 (Set<Class<? extends Throwable>>) getInternalState(objectFactory, "nonTransientExceptions");
         assertThat(nonTransientExceptions).hasSize(1);
@@ -366,11 +367,11 @@ public class LdapTemplateNamespaceHandlerTest {
         ContextSource pooledContextSource = ((TransactionAwareContextSourceProxy) outerContextSource).getTarget();
         assertThat(pooledContextSource).isNotNull();
         assertThat(pooledContextSource instanceof PooledContextSource).isTrue();
-        assertThat(getInternalState(pooledContextSource, "poolConfig")).isNotNull();
+        assertThat((Object) getInternalState(pooledContextSource, "poolConfig")).isNotNull();
 
         Object objectFactory = getInternalState(pooledContextSource, "dirContextPooledObjectFactory");
-        assertThat(getInternalState(objectFactory, "contextSource")).isNotNull();
-        assertThat(getInternalState(objectFactory, "dirContextValidator")).isNull();
+        assertThat((Object) getInternalState(objectFactory, "contextSource")).isNotNull();
+        assertThat((Object) getInternalState(objectFactory, "dirContextValidator")).isNull();
         Set<Class<? extends Throwable>> nonTransientExceptions =
                 (Set<Class<? extends Throwable>>) getInternalState(objectFactory, "nonTransientExceptions");
         assertThat(nonTransientExceptions).hasSize(1);
@@ -522,5 +523,11 @@ public class LdapTemplateNamespaceHandlerTest {
         assertThat(objectPool.getMaxIdlePerKey()).isEqualTo(13);
         assertThat(objectPool.getMaxTotalPerKey()).isEqualTo(14);
         assertThat(objectPool.getNumTestsPerEvictionRun()).isEqualTo(18);
+    }
+
+    private <T> T getInternalState(Object target, String fieldName) {
+        Field field = ReflectionUtils.findField(target.getClass(), fieldName);
+        field.setAccessible(true);
+        return (T) ReflectionUtils.getField(field, target);
     }
 }

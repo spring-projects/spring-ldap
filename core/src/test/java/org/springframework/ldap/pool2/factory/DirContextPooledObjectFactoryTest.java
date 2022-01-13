@@ -18,13 +18,15 @@ package org.springframework.ldap.pool2.factory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 import org.junit.Test;
-import org.mockito.internal.util.reflection.Whitebox;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.pool2.DirContextType;
 import org.springframework.ldap.pool2.validation.DirContextValidator;
 import org.springframework.ldap.pool2.AbstractPoolTestCase;
+import org.springframework.util.ReflectionUtils;
 
 import javax.naming.directory.DirContext;
+
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 
@@ -103,7 +105,7 @@ public class DirContextPooledObjectFactoryTest extends AbstractPoolTestCase {
 
         final PooledObject createdDirContext = objectFactory.makeObject(DirContextType.READ_ONLY);
         InvocationHandler invocationHandler = Proxy.getInvocationHandler(createdDirContext.getObject());
-        assertThat(readOnlyContextMock).isEqualTo(Whitebox.getInternalState(invocationHandler, "target"));
+        assertThat(readOnlyContextMock).isEqualTo(getInternalState(invocationHandler, "target"));
     }
 
     @Test
@@ -118,7 +120,7 @@ public class DirContextPooledObjectFactoryTest extends AbstractPoolTestCase {
         final PooledObject createdDirContext = objectFactory.makeObject(DirContextType.READ_WRITE);
 
         InvocationHandler invocationHandler = Proxy.getInvocationHandler(createdDirContext.getObject());
-        assertThat(readWriteContextMock).isEqualTo(Whitebox.getInternalState(invocationHandler, "target"));
+        assertThat(readWriteContextMock).isEqualTo(getInternalState(invocationHandler, "target"));
     }
 
     @Test
@@ -226,5 +228,11 @@ public class DirContextPooledObjectFactoryTest extends AbstractPoolTestCase {
         pooledObject = new DefaultPooledObject(throwingDirContextMock);
         objectFactory.destroyObject(DirContextType.READ_ONLY, pooledObject);
         verify(dirContextMock).close();
+    }
+
+    private <T> T getInternalState(Object target, String fieldName) {
+        Field field = ReflectionUtils.findField(target.getClass(), fieldName);
+        field.setAccessible(true);
+        return (T) ReflectionUtils.getField(field, target);
     }
 }
