@@ -18,14 +18,15 @@ package org.springframework.ldap.core.support;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.internal.util.reflection.Whitebox;
 import org.springframework.ldap.core.ContextExecutor;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapOperations;
+import org.springframework.util.ReflectionUtils;
 
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -58,7 +59,7 @@ public class SingleContextSourceTest {
                 operations.executeReadOnly(new ContextExecutor<Object>() {
                     @Override
                     public Object executeWithContext(DirContext ctx) throws NamingException {
-                        Object targetContex = Whitebox.getInternalState(Proxy.getInvocationHandler(ctx), "target");
+                        Object targetContex = getInternalState(Proxy.getInvocationHandler(ctx), "target");
                         assertThat(targetContex).isSameAs(dirContextMock);
                         return false;
                     }
@@ -69,7 +70,7 @@ public class SingleContextSourceTest {
                 operations.executeReadOnly(new ContextExecutor<Object>() {
                     @Override
                     public Object executeWithContext(DirContext ctx) throws NamingException {
-                        Object targetContex = Whitebox.getInternalState(Proxy.getInvocationHandler(ctx), "target");
+                        Object targetContex = getInternalState(Proxy.getInvocationHandler(ctx), "target");
                         assertThat(targetContex).isSameAs(dirContextMock);
                         return false;
                     }
@@ -80,4 +81,9 @@ public class SingleContextSourceTest {
         });
     }
 
+    private <T> T getInternalState(Object target, String fieldName) {
+        Field field = ReflectionUtils.findField(target.getClass(), fieldName);
+        field.setAccessible(true);
+        return (T) ReflectionUtils.getField(field, target);
+    }
 }

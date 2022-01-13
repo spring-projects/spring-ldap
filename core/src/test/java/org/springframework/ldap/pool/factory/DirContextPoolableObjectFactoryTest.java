@@ -17,13 +17,15 @@ package org.springframework.ldap.pool.factory;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.internal.util.reflection.Whitebox;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.pool.AbstractPoolTestCase;
 import org.springframework.ldap.pool.DirContextType;
 import org.springframework.ldap.pool.validation.DirContextValidator;
+import org.springframework.util.ReflectionUtils;
 
 import javax.naming.directory.DirContext;
+
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 
@@ -101,7 +103,7 @@ public class DirContextPoolableObjectFactoryTest extends AbstractPoolTestCase {
 
         final Object createdDirContext = objectFactory.makeObject(DirContextType.READ_ONLY);
         InvocationHandler invocationHandler = Proxy.getInvocationHandler(createdDirContext);
-        assertThat(readOnlyContextMock).isEqualTo(Whitebox.getInternalState(invocationHandler, "target"));
+        assertThat(readOnlyContextMock).isEqualTo(getInternalState(invocationHandler, "target"));
     }
 
     @Test
@@ -116,7 +118,7 @@ public class DirContextPoolableObjectFactoryTest extends AbstractPoolTestCase {
         final Object createdDirContext = objectFactory.makeObject(DirContextType.READ_WRITE);
 
         InvocationHandler invocationHandler = Proxy.getInvocationHandler(createdDirContext);
-        assertThat(readWriteContextMock).isEqualTo(Whitebox.getInternalState(invocationHandler, "target"));
+        assertThat(readWriteContextMock).isEqualTo(getInternalState(invocationHandler, "target"));
     }
 
     @Test
@@ -216,5 +218,11 @@ public class DirContextPoolableObjectFactoryTest extends AbstractPoolTestCase {
 
         objectFactory.destroyObject(DirContextType.READ_ONLY, throwingDirContextMock);
         verify(dirContextMock).close();
+    }
+
+    private <T> T getInternalState(Object target, String fieldName) {
+        Field field = ReflectionUtils.findField(target.getClass(), fieldName);
+        field.setAccessible(true);
+        return (T) ReflectionUtils.getField(field, target);
     }
 }
