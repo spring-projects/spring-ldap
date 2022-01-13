@@ -1,17 +1,17 @@
-apply from: JAVA_SCRIPT
+apply plugin: 'io.spring.convention.spring-test'
 
 dependencies {
     implementation 	project(":spring-ldap-test"),
                 project(":spring-ldap-odm"),
                 project(":spring-ldap-core-tiger")
 
-    provided	"org.springframework:spring-jdbc:$springVersion",
-                "org.springframework:spring-orm:$springVersion"
+    provided	"org.springframework:spring-jdbc",
+                "org.springframework:spring-orm"
 
-    testCompile "org.springframework:spring-test:$springVersion",
-                "junit:junit:$junitVersion",
-                "org.slf4j:slf4j-log4j12:$slf4jVersion",
-                "org.assertj:assertj-core:$assertjVersion"
+    testImplementation "org.springframework:spring-test",
+                "junit:junit",
+                "org.slf4j:slf4j-log4j12",
+                "org.assertj:assertj-core"
 
 }
 

@@ -1,12 +1,14 @@
-apply from: JAVA_SCRIPT
+plugins {
+    id
+}
 
 dependencies {
     implementation project(":spring-ldap-core")
 
     provided "com.sun:ldapbp:1.0"
 
-    testCompile "junit:junit:$junitVersion",
-                "org.mockito:mockito-core:$mockitoVersion",
-                "gsbase:gsbase:$gsbaseVersion",
-                "org.assertj:assertj-core:$assertjVersion"
+    testCompile "junit:junit",
+                "org.mockito:mockito-core",
+                "gsbase:gsbase",
+                "org.assertj:assertj-core"
 }

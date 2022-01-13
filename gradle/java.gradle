@@ -1,8 +1,5 @@
 apply plugin: 'java'
-apply plugin: 'propdeps'
-
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+apply plugin: 'org.springframework.optional'
 
 ext.apacheDsVersion = '1.5.5'
 ext.springVersion = '4.3.27.RELEASE'
@@ -26,22 +23,22 @@ ext.springSecurityVersion='4.2.15.RELEASE'
 ext.unboundidVersion = '3.1.1'
 
 ext.powerMockDependencies = [
-    "org.powermock:powermock-core:$powerMockVersion",
-    "org.powermock:powermock-api-support:$powerMockVersion",
-    "org.powermock:powermock-module-junit4-common:$powerMockVersion",
-    "org.powermock:powermock-module-junit4:$powerMockVersion",
-    dependencies.create("org.powermock:powermock-api-mockito:$powerMockVersion") {
+    "org.powermock:powermock-core",
+    "org.powermock:powermock-api-support",
+    "org.powermock:powermock-module-junit4-common",
+    "org.powermock:powermock-module-junit4",
+    dependencies.create("org.powermock:powermock-api-mockito") {
         exclude group: 'org.mockito', module: 'mockito-all'
     },
-    "org.powermock:powermock-reflect:$powerMockVersion"
+    "org.powermock:powermock-reflect"
 ]
 
 ext.apachedsDependencies = [
-         "org.apache.directory.server:apacheds-core:$apacheDsVersion",
-         "org.apache.directory.server:apacheds-core-entry:$apacheDsVersion",
-         "org.apache.directory.server:apacheds-protocol-shared:$apacheDsVersion",
-         "org.apache.directory.server:apacheds-protocol-ldap:$apacheDsVersion",
-         "org.apache.directory.server:apacheds-server-jndi:$apacheDsVersion",
+         "org.apache.directory.server:apacheds-core",
+         "org.apache.directory.server:apacheds-core-entry",
+         "org.apache.directory.server:apacheds-protocol-shared",
+         "org.apache.directory.server:apacheds-protocol-ldap",
+         "org.apache.directory.server:apacheds-server-jndi",
          'org.apache.directory.shared:shared-ldap:0.9.15'
 ]
 

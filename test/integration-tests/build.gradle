@@ -1,11 +1,4 @@
-repositories {
-    maven { url "https://download.java.net/maven/2/" }
-}
-apply from: JAVA_SCRIPT
-
-configurations {
-    jacoco //Configuration Group used by Sonar to provide Code Coverage using JaCoCo
-}
+apply plugin: 'io.spring.convention.spring-test'
 
 idea.module.excludeDirs = [
         file('.gradle'),
@@ -26,15 +19,15 @@ dependencies {
     implementation 	project(":spring-ldap-test"),
                 project(":spring-ldap-core-tiger")
 
-    implementation "com.querydsl:querydsl-apt:$queryDslVersion",
-            "commons-lang:commons-lang:$commonsLangVersion"
+    implementation "com.querydsl:querydsl-apt",
+            "commons-lang:commons-lang"
 
-    implementation("org.springframework.data:spring-data-commons:$springDataVersion") {
+    implementation("org.springframework.data:spring-data-commons") {
         exclude group: "org.springframework", module: "spring-beans"
         exclude group: "org.springframework", module: "spring-core"
     }
 
-    implementation("org.springframework.security:spring-security-core:$springSecurityVersion") {
+    implementation("org.springframework.security:spring-security-core") {
         exclude group: "org.springframework", module: "spring-expression"
         exclude group: "org.springframework", module: "spring-core"
         exclude group: "org.springframework", module: "spring-context"
@@ -42,25 +35,24 @@ dependencies {
         exclude group: "org.springframework", module: "spring-aop"
     }
 
-    provided	"commons-pool:commons-pool:$commonsPoolVersion",
-                "org.springframework:spring-jdbc:$springVersion",
-                "org.springframework:spring-orm:$springVersion"
+    provided	"commons-pool:commons-pool",
+                "org.springframework:spring-jdbc",
+                "org.springframework:spring-orm"
 
-    testImplementation "org.springframework:spring-test:$springVersion",
-                "org.springframework:spring-aop:$springVersion",
-                "org.springframework:spring-expression:$springVersion",
-                "org.hibernate:hibernate-core:$hibernateVersion",
+    testImplementation "org.springframework:spring-test",
+                "org.springframework:spring-aop",
+                "org.springframework:spring-expression",
+                "org.hibernate:hibernate-core",
                 "aspectj:aspectjrt:1.5.4",
                 "aspectj:aspectjweaver:1.5.4",
                 "hsqldb:hsqldb:1.8.0.7",
-                "junit:junit:$junitVersion",
-                "org.springframework.security:spring-security-config:$springSecurityVersion",
-                "org.slf4j:slf4j-log4j12:$slf4jVersion",
-                "org.assertj:assertj-core:$assertjVersion",
-                apachedsDependencies
+                "junit:junit",
+                "org.springframework.security:spring-security-config",
+                "org.slf4j:slf4j-log4j12",
+                "org.assertj:assertj-core"
 
 
-    testImplementation("org.springframework.security:spring-security-ldap:$springSecurityVersion") {
+    testImplementation("org.springframework.security:spring-security-ldap") {
         exclude group: "org.springframework.ldap", module: "spring-ldap-core"
     }
 }
@@ -80,12 +72,8 @@ idea {
     }
 }
 
-dependencies {
-    jacoco group: "org.jacoco", name: "org.jacoco.agent", version: "0.7.1.201405082137", classifier: "runtime"
-}
 
 test {
-    jvmArgs "-javaagent:${configurations.jacoco.asPath}=destfile=$projectDir/../../core/build/jacoco.exec,includes=org.springframework.*"
     systemProperties = System.properties
 }
 

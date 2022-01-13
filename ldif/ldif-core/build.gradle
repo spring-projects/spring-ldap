@@ -1,11 +1,14 @@
+plugins {
+    id 'io.spring.convention.spring-module'
+}
 
 dependencies {
     implementation project(":spring-ldap-core")
 
-    testCompile "junit:junit:$junitVersion",
-                 "commons-io:commons-io:$commonsIoVersion",
-                "org.assertj:assertj-core:$assertjVersion"
-    testCompile ("log4j:log4j:$log4jVersion") {
+    testImplementation "junit:junit",
+                 "commons-io:commons-io",
+                "org.assertj:assertj-core"
+    testImplementation ("log4j:log4j") {
         exclude group: 'javax.jms'
         exclude group: 'com.sun.jdmk'
         exclude group: 'com.sun.jmx'
