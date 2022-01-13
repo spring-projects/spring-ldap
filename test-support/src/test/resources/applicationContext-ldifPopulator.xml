@@ -9,7 +9,7 @@
 
     <bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource" depends-on="embeddedLdapServer">
         <property name="base" value="dc=jayway,dc=se" />
-        <property name="url" value="ldap://127.0.0.1:18880" />
+        <property name="url" value="ldap://127.0.0.1:18881" />
         <property name="userDn" value="uid=admin,ou=system" />
         <property name="password" value="secret" />
     </bean>
@@ -25,7 +25,7 @@
     <bean id="embeddedLdapServer" class="org.springframework.ldap.test.unboundid.EmbeddedLdapServerFactoryBean">
         <property name="partitionName" value="jayway"/>
         <property name="partitionSuffix" value="dc=jayway,dc=se" />
-        <property name="port" value="18880" />
+        <property name="port" value="18881" />
     </bean>
 
 </beans>
