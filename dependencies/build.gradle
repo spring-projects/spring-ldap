@@ -20,6 +20,7 @@ dependencies {
 	api platform("org.junit:junit-bom:5.8.1")
 	api platform("org.springframework.data:spring-data-bom:2022.1.0-SNAPSHOT")
 	api platform("com.fasterxml.jackson:jackson-bom:2.13.0")
+	api platform("org.junit:junit-bom:5.8.1")
 	constraints {
 		api "com.querydsl:querydsl-core:$queryDslVersion"
 		api "com.querydsl:querydsl-apt:$queryDslVersion"

@@ -729,7 +729,7 @@ public class LdapTemplateTest {
 		Object expectedResult = expectedObject;
 		when(odmMock.mapFromLdapDataEntry(expectedObject, expectedClass)).thenReturn(expectedResult, expectedResult);
 
-		List<Object> results = tested.find(nameMock, null, controls, expectedClass);
+		List<Object> results = tested.find(nameMock, filter, controls, expectedClass);
 		assertThat(results).hasSize(1);
 		verify(odmMock).manageClass(eq(expectedClass));
 

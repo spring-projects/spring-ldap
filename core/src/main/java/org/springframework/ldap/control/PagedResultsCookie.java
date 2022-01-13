@@ -15,8 +15,7 @@
  */
 package org.springframework.ldap.control;
 
-import com.sun.jndi.ldap.ctl.PagedResultsControl;
-
+import javax.naming.ldap.PagedResultsControl;
 import java.util.Arrays;
 
 /**
