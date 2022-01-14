@@ -23,6 +23,7 @@ buildscript {
 apply plugin: 'io.spring.convention.root'
 apply plugin: 'io.spring.convention.docs'
 
+group = "org.springframework.ldap"
 description = "Spring LDAP"
 
 nohttp {
