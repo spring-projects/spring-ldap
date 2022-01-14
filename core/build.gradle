@@ -14,9 +14,11 @@ javacc {
 
 dependencies {
     management platform(project(":spring-ldap-dependencies"))
-    implementation "org.springframework:spring-core"
-    implementation "org.springframework:spring-beans"
-    implementation "org.springframework:spring-tx"
+    api "org.springframework:spring-core"
+    api "org.springframework:spring-beans"
+    api "org.springframework:spring-tx"
+
+    implementation "jakarta.xml.bind:jakarta.xml.bind-api"
     implementation "org.slf4j:slf4j-api"
 
     provided "com.sun:ldapbp:1.0"
@@ -28,7 +30,6 @@ dependencies {
     optional "com.querydsl:querydsl-apt"
     optional "commons-pool:commons-pool"
     optional "org.apache.commons:commons-pool2"
-    implementation 'jakarta.xml.bind:jakarta.xml.bind-api'
 
     testImplementation platform('org.junit:junit-bom')
     testImplementation "org.junit.vintage:junit-vintage-engine"

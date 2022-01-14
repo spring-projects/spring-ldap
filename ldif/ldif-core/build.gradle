@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     management platform(project(":spring-ldap-dependencies"))
-    implementation project(":spring-ldap-core")
+    api project(":spring-ldap-core")
 
     testImplementation platform('org.junit:junit-bom')
     testImplementation "org.junit.vintage:junit-vintage-engine"

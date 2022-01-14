@@ -4,15 +4,16 @@ plugins {
 
 dependencies {
     management platform(project(":spring-ldap-dependencies"))
-    implementation project(":spring-ldap-core"),
-            project(":spring-ldap-ldif-core"),
-            "com.google.code.typica:typica",
-            "commons-io:commons-io",
-            "javax.activation:activation",
-            "org.springframework:spring-core",
-            "org.springframework:spring-beans",
-            "org.springframework:spring-context",
-            "org.springframework:spring-test"
+    api project(":spring-ldap-core")
+    api project(":spring-ldap-ldif-core")
+    api "org.springframework:spring-core"
+    api "org.springframework:spring-beans"
+    api "org.springframework:spring-context"
+    api "org.springframework:spring-test"
+
+    implementation "com.google.code.typica:typica"
+    implementation "commons-io:commons-io"
+    implementation "javax.activation:activation"
 
 
     optional "org.apache.directory.server:apacheds-core-entry"
