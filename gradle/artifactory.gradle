@@ -1,12 +1,18 @@
 apply plugin: "com.jfrog.artifactory"
 
 def isSnapshot = version?.endsWith("-SNAPSHOT")
+def isMilestone = version?.matches('^.*[.-]M\\d+$') || version?.matches('^.*[.-]RC\\d+$')
 
 artifactory {
     contextUrl = 'https://repo.spring.io'
     publish {
         repository {
-            repoKey = isSnapshot ? 'libs-snapshot-local' : 'libs-release-local'
+            repoKey = 'libs-release-local'
+            if (isSnapshot) {
+                repoKey = 'libs-snapshot-local'
+            } else if (isMilestone) {
+                repoKey = 'libs-milestone-local'
+            }
             if(project.hasProperty('artifactoryUsername')) {
                 username = artifactoryUsername
                 password = artifactoryPassword

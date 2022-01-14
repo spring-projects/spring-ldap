@@ -1,5 +1,6 @@
 def isSnapshot = version?.endsWith("-SNAPSHOT")
-def isRelease = !isSnapshot
+def isMilestone = version?.matches('^.*[.-]M\\d+$') || version?.matches('^.*[.-]RC\\d+$')
+def isRelease = !(isSnapshot || isMilestone)
 
 if(project.hasProperty("signing.keyId") && isRelease) {
 	apply plugin: "signing"
