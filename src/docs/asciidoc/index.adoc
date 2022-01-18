@@ -2466,7 +2466,7 @@ Some authentication schemes and LDAP servers require some operation to be perfor
 [source,java]
 [subs="verbatim,quotes"]
 ----
-public boolean authenticate(String userDn, String credentials) {
+public boolean myAuthenticate(String userDn, String credentials) {
   DirContext ctx = null;
   try {
     ctx = contextSource.getContext(userDn, credentials);
