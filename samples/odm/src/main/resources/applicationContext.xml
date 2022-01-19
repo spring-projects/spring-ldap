@@ -27,7 +27,7 @@
 
     <beans profile="default">
         <!-- Populates the LDAP server with initial data -->
-        <bean class="org.springframework.ldap.test.LdifPopulator" depends-on="embeddedLdapServer">
+        <bean class="org.springframework.ldap.test.unboundid.LdifPopulator" depends-on="embeddedLdapServer">
             <property name="contextSource" ref="contextSource" />
             <property name="resource" value="classpath:/setup_data.ldif" />
             <property name="base" value="${sample.ldap.base}" />
