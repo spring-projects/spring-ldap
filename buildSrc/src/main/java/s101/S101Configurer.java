@@ -161,17 +161,21 @@ public class S101Configurer {
 	}
 
 	private String installBuildTool(File installationDirectory, File configurationDirectory) {
-		String source = "https://structure101.com/binaries/19159";
+		String source = "https://structure101.com/binaries/v6";
 		try (final WebClient webClient = new WebClient()) {
 			HtmlPage page = webClient.getPage(source);
+			Matcher matcher = null;
 			for (HtmlAnchor anchor : page.getAnchors()) {
-				Matcher matcher = Pattern.compile("(structure101-build-java-all-)(.*).zip").matcher(anchor.getHrefAttribute());
-				if (matcher.find()) {
-					copyZipToFilesystem(source, installationDirectory, matcher.group(1) + matcher.group(2));
-					return matcher.group(2);
+				Matcher candidate = Pattern.compile("(structure101-build-java-all-)(.*).zip").matcher(anchor.getHrefAttribute());
+				if (candidate.find()) {
+					matcher = candidate;
 				}
 			}
-			return null;
+			if (matcher == null) {
+				return null;
+			}
+			copyZipToFilesystem(source, installationDirectory, matcher.group(1) + matcher.group(2));
+			return matcher.group(2);
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
@@ -233,7 +237,7 @@ public class S101Configurer {
 	}
 
 	private String validateFilename(String filename, String intendedDir)
-			throws IOException {
+			throws java.io.IOException {
 		File f = new File(filename);
 		String canonicalPath = f.getCanonicalPath();
 
@@ -263,7 +267,7 @@ public class S101Configurer {
 	private void copyToProject(String location, File destination) {
 		Resource resource = new ClassPathResource(location);
 		try (InputStream is = resource.getInputStream();
-			OutputStream os = new FileOutputStream(destination)) {
+			 OutputStream os = new FileOutputStream(destination)) {
 			IOUtils.copy(is, os);
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);

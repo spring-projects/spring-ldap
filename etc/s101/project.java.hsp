@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<local-project language="java" version="6.1.19172" xml-version="3" flavor="j2se">
+  <property name="show-as-module" value="false" />
+  <property name="publish-architecture-artifacts" value="true" />
+  <property name="force-classpath" value="false" />
+  <property name="project-type" value="classpath" />
+  <property name="hide-externals" value="true" />
+  <property name="parse-archive-in-archive" value="false" />
+  <property name="include-injected-dependency" value="false" />
+  <property name="relative-to" value="const(THIS_FILE)/.." />
+  <property name="action-set-mod" value="1" />
+  <property name="detail-mode" value="true" />
+  <property name="hide-deprecated" value="false" />
+  <property name="resolve-name-clashes" value="true" />
+  <property name="project-excluded" />
+  <property name="show-needs-to-compile" value="false" />
+  <classpath>
+    <classpathentry kind="lib" path="core/build/classes/java/main" module="spring-ldap-core" />
+    <classpathentry kind="lib" path="core-tiger/build/classes/java/main" module="spring-ldap-core-tiger" />
+    <classpathentry kind="lib" path="ldif/ldif-core/build/classes/java/main" module="spring-ldap-ldif-core" />
+    <classpathentry kind="lib" path="odm/build/classes/java/main" module="spring-ldap-odm" />
+    <classpathentry kind="lib" path="samples/plain/build/classes/java/main" module="spring-ldap-plain-sample" />
+    <classpathentry kind="lib" path="sandbox/build/classes/java/main" module="spring-ldap-sandbox" />
+    <classpathentry kind="lib" path="test-support/build/classes/java/main" module="spring-ldap-test" />
+  </classpath>
+  <pom-root-files />
+  <modules-in-scope />
+  <restructuring>
+    <set version="3" name="Action list 1" hiview="Codemap" active="true" todo="false" list="0" />
+  </restructuring>
+  <grid-set sep="." version="6.1.19172" />
+</local-project>
