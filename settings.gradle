@@ -23,7 +23,6 @@ dependencyResolutionManagement {
 rootProject.name = 'spring-ldap'
 
 include 'core'
-include 'core-tiger'
 include 'dependencies'
 include 'test-support'
 include 'ldif/ldif-core'

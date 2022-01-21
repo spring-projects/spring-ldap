@@ -18,7 +18,7 @@ sourceSets {
 dependencies {
     management platform(project(":spring-ldap-dependencies"))
     implementation 	project(":spring-ldap-test"),
-                project(":spring-ldap-core-tiger")
+                project(":spring-ldap-core")
 
     implementation "com.querydsl:querydsl-apt",
             "commons-lang:commons-lang"

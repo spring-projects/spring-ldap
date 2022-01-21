@@ -5,7 +5,7 @@ dependencies {
     implementation project(":spring-ldap-test")
     implementation project(":spring-ldap-integration-tests")
     implementation project(":spring-ldap-sandbox")
-    implementation project(":spring-ldap-core-tiger")
+    implementation project(":spring-ldap-core")
     implementation "commons-pool:commons-pool"
 
     provided "org.springframework:spring-jdbc"

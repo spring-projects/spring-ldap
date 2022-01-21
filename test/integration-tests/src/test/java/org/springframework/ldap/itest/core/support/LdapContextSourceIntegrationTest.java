@@ -24,7 +24,7 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.simple.AbstractParameterizedContextMapper;
+import org.springframework.ldap.core.support.AbstractContextMapper;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.itest.AbstractLdapTemplateIntegrationTest;
@@ -159,7 +159,7 @@ public class LdapContextSourceIntegrationTest extends AbstractLdapTemplateIntegr
 		}
 	}
 
-	private final static class DnContextMapper extends AbstractParameterizedContextMapper<String> {
+	private final static class DnContextMapper extends AbstractContextMapper<String> {
 		@Override
 		protected String doMapFromContext(DirContextOperations ctx) {
 			return ctx.getNameInNamespace();

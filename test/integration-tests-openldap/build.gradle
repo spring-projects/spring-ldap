@@ -2,7 +2,7 @@ apply plugin: 'io.spring.convention.spring-test'
 
 dependencies {
     management platform(project(":spring-ldap-dependencies"))
-    implementation project(":spring-ldap-core-tiger")
+    implementation project(":spring-ldap-core")
     implementation project(":spring-ldap-test")
     implementation "commons-lang:commons-lang"
     implementation "commons-logging:commons-logging"

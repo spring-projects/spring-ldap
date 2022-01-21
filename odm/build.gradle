@@ -9,7 +9,6 @@ jar {
 dependencies {
     management platform(project(":spring-ldap-dependencies"))
     api project(":spring-ldap-core")
-    api project(":spring-ldap-core-tiger")
     api "org.springframework:spring-core"
 
     implementation "org.freemarker:freemarker"

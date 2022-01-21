@@ -4,7 +4,7 @@ dependencies {
     management platform(project(":spring-ldap-dependencies"))
     implementation project(":spring-ldap-test")
     implementation project(":spring-ldap-odm")
-    implementation project(":spring-ldap-core-tiger")
+    implementation project(":spring-ldap-core")
 
     provided "org.springframework:spring-jdbc"
     provided "org.springframework:spring-orm"
