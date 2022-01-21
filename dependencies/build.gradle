@@ -32,7 +32,7 @@ dependencies {
 		api "com.nimbusds:oauth2-oidc-sdk:9.18"
 		api "com.squareup.okhttp3:mockwebserver:3.14.9"
 		api "com.squareup.okhttp3:okhttp:3.14.9"
-		api "com.unboundid:unboundid-ldapsdk:4.0.14"
+		api "com.unboundid:unboundid-ldapsdk:6.0.3"
 		api "commons-codec:commons-codec:1.15"
 		api "commons-cli:commons-cli:1.2"
 		api "commons-collections:commons-collections:3.2.2"
