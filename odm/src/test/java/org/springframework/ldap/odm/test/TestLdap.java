@@ -87,7 +87,7 @@ public final class TestLdap {
     // Maximum time to wait for results in testing (ms)
     private static final int TIME_LIMIT=60000;
 
-    private static SearchControls searchControls=
+    private SearchControls searchControls =
         new SearchControls(SearchControls.SUBTREE_SCOPE,
             COUNT_LIMIT,
             TIME_LIMIT,
