@@ -20,9 +20,6 @@ import java.util.Base64;
 
 import org.springframework.ldap.BadLdapGrammarException;
 import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
-
-import jakarta.xml.bind.DatatypeConverter;
 
 /**
  * Helper class to encode and decode ldap names and values.
@@ -300,28 +297,10 @@ public final class LdapEncoder {
     }
 
     private static String encode(byte[] decoded) {
-        if (ClassUtils.isPresent("java.util.Base64", null)) {
-            return java.util.Base64.getEncoder().encodeToString(decoded);
-        } else {
-            return Base64Converter.encode(decoded);
-        }
+        return Base64.getEncoder().encodeToString(decoded);
     }
 
     private static byte[] decode(String encoded) {
-        if (ClassUtils.isPresent("java.util.Base64", null)) {
-            return java.util.Base64.getDecoder().decode(encoded);
-        } else {
-            return Base64Converter.decode(encoded);
-        }
-    }
-
-    private static class Base64Converter {
-        static byte[] decode(String string) {
-            return DatatypeConverter.parseBase64Binary(string);
-        }
-
-        static String encode(byte[] bytes) {
-            return DatatypeConverter.printBase64Binary(bytes);
-        }
+        return Base64.getDecoder().decode(encoded);
     }
 }
