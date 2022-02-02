@@ -31,7 +31,27 @@ try {
 				}
 			}
 		}
-	}
+	},
+	check_jdk_11: {
+                stage('Check JDK 11') {
+                        node {
+                                checkout scm
+                                sh "git clean -dfx"
+                                try {
+                                        withCredentials([ARTIFACTORY_CREDENTIALS]) {
+                                                withEnv(["JAVA_HOME=${ tool 'jdk11' }"]) {
+                                                        sh "./gradlew test -PartifactoryUsername=$ARTIFACTORY_USERNAME -PartifactoryPassword=$ARTIFACTORY_PASSWORD --refresh-dependencies --no-daemon --stacktrace"
+                                                }
+                                        }
+                                } catch(Exception e) {
+                                        currentBuild.result = 'FAILED: check'
+                                        throw e
+                                } finally {
+                                        junit '**/build/test-results/*/*.xml'
+                                }
+                        }
+                }
+        }
 
 	if(currentBuild.result == 'SUCCESS') {
 		parallel artifacts: {
