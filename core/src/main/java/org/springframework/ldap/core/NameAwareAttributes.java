@@ -99,7 +99,7 @@ public final class NameAwareAttributes implements Attributes {
     @Override
     public Attribute remove(String attrID) {
         Assert.hasLength(attrID, "Attribute ID must not be empty");
-        return attributes.remove(attrID);
+        return attributes.remove(attrID.toLowerCase());
     }
 
     @Override
