@@ -46,7 +46,16 @@ public class LdapContextSourceTest {
         tested.afterPropertiesSet();
     }
 
-    @Test
+	// gh-538
+	@Test(expected = IllegalArgumentException.class)
+	public void testAfterPropertiesSet_NullPassword() {
+		tested.setUrl("ldap://ldap.example.com:389");
+		tested.setUserDn("value");
+		tested.setPassword(null);
+		tested.afterPropertiesSet();
+	}
+
+	@Test
 	public void testGetAnonymousEnv() throws Exception {
 		tested.setBase("dc=some example,dc=se");
 		tested.setUrl("ldap://ldap.example.com:389");
