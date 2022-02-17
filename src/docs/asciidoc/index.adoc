@@ -241,16 +241,19 @@ At a minimum, to use Spring LDAP you need the following:
 * `spring-ldap-core`: The Spring LDAP library
 * `spring-core`: Miscellaneous utility classes used internally by the framework
 * `spring-beans`: Interfaces and classes for manipulating Java beans
-* `spring-data-commons`: Base infrastructure for repository support and so on
 * `slf4j`: A simple logging facade, used internally
 
 In addition to the required dependencies, the following optional dependencies are required for certain functionality:
 
+* `spring-data-ldap`: Base infrastructure for repository support and so on
 * `spring-context`: Needed if your application is wired up by using the Spring Application Context. `spring-context` adds the ability for application objects to obtain resources by using a consistent API. It is definitely needed if you plan to use the `BaseLdapPathBeanPostProcessor`.
 * `spring-tx`: Needed if you plan to use the client-side compensating transaction support.
 * `spring-jdbc`: Needed if you plan to use the client-side compensating transaction support.
 * `commons-pool`: Needed if you plan to use the pooling functionality.
 * `spring-batch`: Needed if you plan to use the LDIF parsing functionality together with Spring Batch.
+
+NOTE: `spring-data-ldap` transitively adds `spring-repository.xsd`, which `spring-ldap.xsd` uses.
+Because of this, Spring LDAP's XML config support requires the dependency even when Spring Data's feature set is not in use.
 
 [[spring-ldap-getting-started]]
 === Getting Started
