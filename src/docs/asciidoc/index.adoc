@@ -241,7 +241,7 @@ At a minimum, to use Spring LDAP you need the following:
 * `spring-ldap-core`: The Spring LDAP library
 * `spring-core`: Miscellaneous utility classes used internally by the framework
 * `spring-beans`: Interfaces and classes for manipulating Java beans
-* `spring-data-commons`: Base infrastructure for repository suppport and so on
+* `spring-data-commons`: Base infrastructure for repository support and so on
 * `slf4j`: A simple logging facade, used internally
 
 In addition to the required dependencies, the following optional dependencies are required for certain functionality:
