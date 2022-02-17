@@ -26,6 +26,7 @@ dependencies {
     optional "org.springframework:spring-context"
     optional "org.springframework:spring-jdbc"
     optional "org.springframework:spring-orm"
+    optional "org.springframework.data:spring-data-commons"
     optional "com.querydsl:querydsl-core"
     optional "com.querydsl:querydsl-apt"
     optional "commons-pool:commons-pool"
