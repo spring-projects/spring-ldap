@@ -16,17 +16,11 @@
 
 package org.springframework.ldap.core.support;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.ldap.UncategorizedLdapException;
-import org.springframework.ldap.core.AuthenticationSource;
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.DistinguishedName;
-import org.springframework.ldap.support.LdapEncoder;
-import org.springframework.ldap.support.LdapUtils;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Hashtable;
+import java.util.ListIterator;
+import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -37,11 +31,18 @@ import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Hashtable;
-import java.util.ListIterator;
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.ldap.UncategorizedLdapException;
+import org.springframework.ldap.core.AuthenticationSource;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.ldap.support.LdapEncoder;
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * Abstract implementation of the {@link ContextSource} interface. By default,
@@ -424,8 +425,13 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 				LOG.info("Property 'userDn' not set - " + "anonymous context will be used for read-write operations");
 				anonymousReadOnly = true;
 			}
-			else if (!StringUtils.hasText(password)) {
-				LOG.info("Property 'password' not set - " + "blank password will be used");
+			if (!anonymousReadOnly) {
+				if (password == null) {
+					throw new IllegalArgumentException("Property 'password' cannot be null. To use a blank password, please ensure it is set to \"\"");
+				}
+				if (!StringUtils.hasText(password)) {
+					LOG.info("Property 'password' not set - " + "blank password will be used");
+				}
 			}
 			authenticationSource = new SimpleAuthenticationSource();
 		}
