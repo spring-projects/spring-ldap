@@ -83,6 +83,9 @@ idea {
     }
 }
 
+compileTestJava {
+    targetCompatibility = JavaVersion.VERSION_11
+}
 
 test {
     systemProperties = System.properties

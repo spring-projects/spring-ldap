@@ -29,3 +29,7 @@ dependencies {
     testImplementation "org.junit.vintage:junit-vintage-engine"
     testImplementation "org.assertj:assertj-core"
 }
+
+compileTestJava {
+    targetCompatibility = JavaVersion.VERSION_11
+}

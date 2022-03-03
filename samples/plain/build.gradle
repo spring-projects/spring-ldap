@@ -24,3 +24,7 @@ dependencies {
                 "junit:junit",
                 "org.assertj:assertj-core"
 }
+
+compileTestJava {
+    targetCompatibility = JavaVersion.VERSION_11
+}

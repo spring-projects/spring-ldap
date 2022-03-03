@@ -37,3 +37,7 @@ dependencies {
     testImplementation platform('org.junit:junit-bom')
     testImplementation "org.junit.vintage:junit-vintage-engine"
 }
+
+compileTestJava {
+    targetCompatibility = JavaVersion.VERSION_11
+}

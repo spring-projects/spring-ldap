@@ -17,3 +17,7 @@ dependencies {
         exclude group: 'com.sun.jmx'
     }
 }
+
+compileTestJava {
+    targetCompatibility = JavaVersion.VERSION_11
+}

@@ -15,3 +15,12 @@ dependencies {
     testImplementation "gsbase:gsbase"
     testImplementation "org.assertj:assertj-core"
 }
+
+compileTestJava {
+    targetCompatibility = JavaVersion.VERSION_11
+    doFirst {
+        options.compilerArgs = [
+                '--add-exports', 'java.naming/com.sun.jndi.ldap=ALL-UNNAMED'
+        ]
+    }
+}

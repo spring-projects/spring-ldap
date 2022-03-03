@@ -18,6 +18,10 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
+compileTestJava {
+	targetCompatibility = JavaVersion.VERSION_11
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
