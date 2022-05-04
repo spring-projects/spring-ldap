@@ -13,7 +13,7 @@ dependencies {
             "org.springframework:spring-webmvc",
             "commons-lang:commons-lang"
 
-    compileOnly "javax.servlet:servlet-api:2.5"
+    compileOnly "javax.servlet:javax.servlet-api:4.0.1"
 
     runtimeOnly 'ch.qos.logback:logback-classic'
 
