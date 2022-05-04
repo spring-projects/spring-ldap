@@ -15,8 +15,6 @@ ext.queryDslVersion = '4.0.9'
 
 dependencies {
 	api platform("org.springframework:spring-framework-bom:6.0.0-M1")
-	api platform("io.projectreactor:reactor-bom:2020.0.12")
-	api platform("io.rsocket:rsocket-bom:1.1.1")
 	api platform("org.springframework.data:spring-data-bom:2021.1.0")
 	api platform("com.fasterxml.jackson:jackson-bom:2.13.0")
 	api platform("org.junit:junit-bom:5.8.1")
@@ -27,11 +25,6 @@ dependencies {
 		api "org.apache.commons:commons-pool2:2.4.2"
 		api "ch.qos.logback:logback-classic:1.2.6"
 		api "com.google.code.typica:typica:1.7.2"
-		api "com.google.inject:guice:3.0"
-		api "com.nimbusds:nimbus-jose-jwt:9.14"
-		api "com.nimbusds:oauth2-oidc-sdk:9.18"
-		api "com.squareup.okhttp3:mockwebserver:3.14.9"
-		api "com.squareup.okhttp3:okhttp:3.14.9"
 		api "com.unboundid:unboundid-ldapsdk:6.0.3"
 		api "commons-codec:commons-codec:1.15"
 		api "commons-cli:commons-cli:1.2"
@@ -42,12 +35,9 @@ dependencies {
 		api "commons-logging:commons-logging:1.2"
 		api "commons-pool:commons-pool:1.4"
 		api "gsbase:gsbase:2.0.1"
-		api "io.mockk:mockk:1.12.0"
 		api "javax.activation:activation:1.1"
 		api "jdepend:jdepend:2.9.1"
 		api "ldapsdk:ldapsdk:4.1"
-		api "net.sourceforge.htmlunit:htmlunit:2.54.0"
-		api "net.sourceforge.nekohtml:nekohtml:1.9.22"
 		api "org.apache.directory.server:apacheds-core-entry:1.5.5"
 		api "org.apache.directory.server:apacheds-core:1.5.5"
 		api "org.apache.directory.server:apacheds-protocol-ldap:1.5.5"
@@ -58,29 +48,14 @@ dependencies {
 		api "org.aspectj:aspectjrt:1.9.7"
 		api "org.aspectj:aspectjweaver:1.9.7"
 		api "org.assertj:assertj-core:3.21.0"
-		api "org.bouncycastle:bcpkix-jdk15on:1.69"
-		api "org.bouncycastle:bcprov-jdk15on:1.69"
 		api "org.easymock:easymock:2.5.1"
-		api "org.eclipse.jetty:jetty-server:11.0.6"
-		api "org.eclipse.jetty:jetty-servlet:11.0.6"
 		api "org.freemarker:freemarker:2.3.20"
-		api "org.hamcrest:hamcrest:2.2"
 		api "org.hibernate:hibernate-core-jakarta:5.6.0.Final"
 		api "org.hsqldb:hsqldb:2.6.0"
 		api "junit:junit:4.13.2"
-		api "org.jasig.cas.client:cas-client-core:3.6.2"
 		api "org.mockito:mockito-core:3.12.4"
 		api "org.mockito:mockito-inline:3.12.4"
 		api "org.mockito:mockito-junit-jupiter:3.12.4"
-		api "org.openid4java:openid4java-nodeps:0.9.6"
-		api "org.opensaml:opensaml-core"
-		api "org.opensaml:opensaml-saml-api"
-		api "org.opensaml:opensaml-saml-impl"
-		api "org.python:jython:2.5.3"
-		api "org.seleniumhq.selenium:htmlunit-driver:2.52.0"
-		api "org.seleniumhq.selenium:selenium-java:3.141.59"
-		api "org.seleniumhq.selenium:selenium-support:3.141.59"
-		api "org.skyscreamer:jsonassert:1.5.0"
 		api "org.slf4j:jcl-over-slf4j:1.7.32"
 		api "org.slf4j:log4j-over-slf4j:1.7.32"
 		api "org.slf4j:slf4j-api:1.7.32"
@@ -89,7 +64,6 @@ dependencies {
 		api "org.springframework.security:spring-security-core:5.6.1"
 		api "org.springframework.security:spring-security-ldap:5.6.1"
 		api "org.springframework.ldap:spring-ldap-core:2.3.4.RELEASE"
-		api "org.synchronoss.cloud:nio-multipart-parser:1.1.0"
 	}
 }
 
