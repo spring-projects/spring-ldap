@@ -23,7 +23,7 @@ dependencies {
 		api "com.querydsl:querydsl-apt:$queryDslVersion"
 		api "commons-pool:commons-pool:1.6"
 		api "org.apache.commons:commons-pool2:2.4.2"
-		api "ch.qos.logback:logback-classic:1.2.6"
+		api "ch.qos.logback:logback-classic:1.2.11"
 		api "com.google.code.typica:typica:1.7.2"
 		api "com.unboundid:unboundid-ldapsdk:6.0.3"
 		api "commons-codec:commons-codec:1.15"
