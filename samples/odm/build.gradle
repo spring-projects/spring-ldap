@@ -15,7 +15,7 @@ dependencies {
 
     compileOnly "javax.servlet:servlet-api:2.5"
 
-    runtimeOnly 'ch.qos.logback:logback-classic:1.0.13'
+    runtimeOnly 'ch.qos.logback:logback-classic'
 
     testImplementation "com.unboundid:unboundid-ldapsdk"
     testImplementation platform('org.junit:junit-bom')
