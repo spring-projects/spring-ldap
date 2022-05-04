@@ -18,7 +18,6 @@ dependencies {
     api "org.springframework:spring-beans"
     api "org.springframework:spring-tx"
 
-    implementation "jakarta.xml.bind:jakarta.xml.bind-api"
     implementation "org.slf4j:slf4j-api"
 
     provided "com.sun:ldapbp:1.0"
