@@ -27,6 +27,12 @@ apply plugin: 's101'
 group = "org.springframework.ldap"
 description = "Spring LDAP"
 
+ext.coreModules = subprojects.findAll { p-> (!p.name.contains("test") && !p.name.contains("sample") && !p.name.contains("sandbox")) || p.name.contains("spring-ldap-test") }
+
+configure(subprojects - coreModules) {
+	tasks.findByPath("publishArtifacts")?.enabled = false
+}
+
 nohttp {
 	allowlistFile = project.file("etc/nohttp/allowlist.lines")
 	source.exclude "buildSrc/build/**"
