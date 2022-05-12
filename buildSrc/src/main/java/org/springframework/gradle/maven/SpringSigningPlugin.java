@@ -50,14 +50,7 @@ public class SpringSigningPlugin implements Plugin<Project> {
 				return project.getGradle().getTaskGraph().hasTask("publishArtifacts");
 			}
 		});
-		String signingKeyId = (String) project.findProperty("signingKeyId");
-		String signingKey = (String) project.findProperty("signingKey");
-		String signingPassword = (String) project.findProperty("signingPassword");
-		if (signingKeyId != null) {
-			signing.useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword);
-		} else {
-			signing.useInMemoryPgpKeys(signingKey, signingPassword);
-		}
+		sign(project, signing);
 		project.getPlugins().withType(PublishAllJavaComponentsPlugin.class).all(new Action<PublishAllJavaComponentsPlugin>() {
 			@Override
 			public void execute(PublishAllJavaComponentsPlugin publishingPlugin) {
@@ -66,5 +59,19 @@ public class SpringSigningPlugin implements Plugin<Project> {
 				signing.sign(maven);
 			}
 		});
+	}
+
+	private void sign(Project project, SigningExtension signing) {
+		if (project.hasProperty("signing.keyId")) {
+			return; // use Gradle defaults
+		}
+		String signingKeyId = (String) project.findProperty("signingKeyId");
+		String signingKey = (String) project.findProperty("signingKey");
+		String signingPassword = (String) project.findProperty("signingPassword");
+		if (signingKeyId != null) {
+			signing.useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword);
+		} else {
+			signing.useInMemoryPgpKeys(signingKey, signingPassword);
+		}
 	}
 }
