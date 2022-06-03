@@ -1,0 +1,69 @@
+plugins {
+	id 'java-platform'
+}
+
+javaPlatform {
+	allowDependencies()
+}
+
+
+repositories {
+	mavenCentral()
+}
+
+ext.queryDslVersion = '4.0.9'
+
+dependencies {
+	api platform("org.springframework:spring-framework-bom:6.0.0-M3")
+	api platform("org.springframework.data:spring-data-bom:2022.0.0-M3")
+	api platform("com.fasterxml.jackson:jackson-bom:2.13.0")
+	api platform("org.junit:junit-bom:5.8.2")
+	constraints {
+		api "com.querydsl:querydsl-core:$queryDslVersion"
+		api "com.querydsl:querydsl-apt:$queryDslVersion"
+		api "commons-pool:commons-pool:1.6"
+		api "org.apache.commons:commons-pool2:2.11.1"
+		api "ch.qos.logback:logback-classic:1.2.11"
+		api "com.google.code.typica:typica:1.7.2"
+		api "com.unboundid:unboundid-ldapsdk:6.0.4"
+		api "commons-codec:commons-codec:1.15"
+		api "commons-cli:commons-cli:1.2"
+		api "commons-collections:commons-collections:3.2.2"
+		api "commons-httpclient:commons-httpclient:3.1"
+		api "commons-io:commons-io:2.11.0"
+		api "commons-lang:commons-lang:2.6"
+		api "commons-logging:commons-logging:1.2"
+		api "commons-pool:commons-pool:1.4"
+		api "gsbase:gsbase:2.0.1"
+		api "javax.activation:activation:1.1"
+		api "jdepend:jdepend:2.9.1"
+		api "ldapsdk:ldapsdk:4.1"
+		api "org.apache.directory.server:apacheds-core-entry:1.5.5"
+		api "org.apache.directory.server:apacheds-core:1.5.5"
+		api "org.apache.directory.server:apacheds-protocol-ldap:1.5.5"
+		api "org.apache.directory.server:apacheds-protocol-shared:1.5.5"
+		api "org.apache.directory.server:apacheds-server-jndi:1.5.5"
+		api "org.apache.directory.shared:shared-ldap:0.9.15"
+		api "org.apache.httpcomponents:httpclient:4.5.13"
+		api "org.aspectj:aspectjrt:1.9.7"
+		api "org.aspectj:aspectjweaver:1.9.7"
+		api "org.assertj:assertj-core:3.21.0"
+		api "org.easymock:easymock:2.5.1"
+		api "org.freemarker:freemarker:2.3.20"
+		api "org.hibernate:hibernate-core-jakarta:5.6.0.Final"
+		api "org.hsqldb:hsqldb:2.6.0"
+		api "junit:junit:4.13.2"
+		api "org.mockito:mockito-core:3.12.4"
+		api "org.mockito:mockito-inline:3.12.4"
+		api "org.mockito:mockito-junit-jupiter:3.12.4"
+		api "org.slf4j:jcl-over-slf4j:1.7.32"
+		api "org.slf4j:log4j-over-slf4j:1.7.32"
+		api "org.slf4j:slf4j-api:1.7.32"
+		api "org.slf4j:slf4j-log4j12:1.7.32"
+		api "org.springframework.security:spring-security-config:6.0.0-M3"
+		api "org.springframework.security:spring-security-core:6.0.0-M3"
+		api "org.springframework.security:spring-security-ldap:6.0.0-M3"
+		api "org.springframework.ldap:spring-ldap-core:2.3.4.RELEASE"
+	}
+}
+

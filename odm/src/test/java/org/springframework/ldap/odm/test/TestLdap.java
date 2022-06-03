@@ -22,7 +22,8 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
-import org.apache.commons.codec.binary.Base64;
+import java.util.Base64;
+import org.junit.Ignore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.junit.After;
@@ -56,6 +57,8 @@ import org.springframework.util.CollectionUtils;
 import javax.naming.Name;
 import javax.naming.directory.SearchControls;
 import javax.naming.ldap.LdapName;
+import javax.naming.spi.NamingManager;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -84,7 +87,7 @@ public final class TestLdap {
     // Maximum time to wait for results in testing (ms)
     private static final int TIME_LIMIT=60000;
 
-    private static SearchControls searchControls=
+    private SearchControls searchControls =
         new SearchControls(SearchControls.SUBTREE_SCOPE,
             COUNT_LIMIT,
             TIME_LIMIT,
@@ -124,7 +127,7 @@ public final class TestLdap {
                     "Rn0HStE+IrZSQbEuRxvU4De4yc0UVFKCnuerms2vZryP/Z";
 
             byte[] photoBytes=photoString.getBytes("US-ASCII");
-            photo=Base64.decodeBase64(photoBytes);
+            photo=Base64.getDecoder().decode(photoBytes);
         } catch (IOException e) {
             throw new RuntimeException("Problem decoding photo", e);
         }

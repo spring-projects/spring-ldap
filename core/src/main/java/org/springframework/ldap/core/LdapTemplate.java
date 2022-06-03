@@ -30,6 +30,8 @@ import org.springframework.ldap.odm.core.impl.DefaultObjectDirectoryMapper;
 import org.springframework.ldap.query.LdapQuery;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 import javax.naming.Binding;
 import javax.naming.Name;
@@ -43,6 +45,8 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.ldap.LdapName;
+
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -167,7 +171,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * Specify whether <code>PartialResultException</code> should be ignored in
 	 * searches. AD servers typically have a problem with referrals. Normally a
 	 * referral should be followed automatically, but this does not seem to work
-	 * with AD servers. The problem manifests itself with a a
+	 * with AD servers. The problem manifests itself with a
 	 * <code>PartialResultException</code> being thrown when a referral is
 	 * encountered by the server. Setting this property to <code>true</code>
 	 * presents a workaround to this problem by causing
@@ -1686,7 +1690,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     @Override
     public <T> T findByDn(Name dn, final Class<T> clazz) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Reading Entry at - %s$1", dn));
+            LOG.debug(String.format("Reading Entry at - %1$s", dn));
         }
 
         // Make sure the class is OK before doing the lookup
@@ -1703,7 +1707,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
             throw new OdmException(String.format("Entry %1$s does not have the required objectclasses ", dn));
         }
         if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Found entry - %s$1", result));
+            LOG.debug(String.format("Found entry - %1$s", result));
         }
 
         return result;
@@ -1717,7 +1721,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         Assert.notNull(entry, "Entry must not be null");
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Creating entry - %s$1", entry));
+            LOG.debug(String.format("Creating entry - %1$s", entry));
         }
 
         Name id = odm.getId(entry);
@@ -1741,7 +1745,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     public void update(Object entry) {
         Assert.notNull(entry, "Entry must not be null");
         if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Updating entry - %s$1", entry));
+            LOG.debug(String.format("Updating entry - %1$s", entry));
         }
 
         Name originalId = odm.getId(entry);
@@ -1786,7 +1790,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
     public void delete(Object entry) {
         Assert.notNull(entry, "Entry must not be null");
         if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Deleting %s$1", entry));
+            LOG.debug(String.format("Deleting %1$s", entry));
         }
 
         Name id = odm.getId(entry);
@@ -1830,9 +1834,11 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
         }
 
         // extend search controls with the attributes to return
-        String[] attributes = odm.manageClass(clazz);
-        searchControls.setReturningAttributes(attributes);
-        
+        if (searchControls.getReturningAttributes() == null) {
+            String[] attributes = this.odm.manageClass(clazz);
+            searchControls.setReturningAttributes(attributes);
+        }
+
         if (LOG.isDebugEnabled()) {
             LOG.debug(String.format("Searching - base=%1$s, finalFilter=%2$s, scope=%3$s", base, finalFilter, searchControls));
         }

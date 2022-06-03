@@ -1,17 +1,31 @@
+plugins {
+    id 'io.spring.convention.spring-module'
+}
 
 dependencies {
-    compile project(":spring-ldap-core"),
-            project(":spring-ldap-ldif-core"),
-            "com.google.code.typica:typica:1.3",
-            "commons-io:commons-io:$commonsIoVersion",
-            "javax.activation:activation:1.1",
-            "org.springframework:spring-core:$springVersion",
-            "org.springframework:spring-beans:$springVersion",
-            "org.springframework:spring-context:$springVersion",
-            "org.springframework:spring-test:$springVersion"
+    management platform(project(":spring-ldap-dependencies"))
+    api project(":spring-ldap-core")
+    api project(":spring-ldap-ldif-core")
+    api "org.springframework:spring-core"
+    api "org.springframework:spring-beans"
+    api "org.springframework:spring-context"
+    api "org.springframework:spring-test"
+
+    implementation "com.google.code.typica:typica"
+    implementation "commons-io:commons-io"
+    implementation "javax.activation:activation"
 
 
-    optional apachedsDependencies
+    optional "org.apache.directory.server:apacheds-core-entry"
+    optional "org.apache.directory.server:apacheds-core"
+    optional "org.apache.directory.server:apacheds-protocol-ldap"
+    optional "org.apache.directory.server:apacheds-protocol-shared"
+    optional "org.apache.directory.server:apacheds-server-jndi"
+    optional "org.apache.directory.shared:shared-ldap"
+    optional "com.unboundid:unboundid-ldapsdk"
 
-    provided "junit:junit:$junitVersion"
+    provided "junit:junit"
+    testImplementation platform('org.junit:junit-bom')
+    testImplementation "org.junit.vintage:junit-vintage-engine"
+    testImplementation "org.assertj:assertj-core"
 }

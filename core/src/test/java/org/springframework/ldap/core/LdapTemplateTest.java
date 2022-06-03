@@ -21,6 +21,9 @@ import org.hamcrest.Description;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatcher;
+import org.mockito.verification.VerificationMode;
+
 import org.springframework.LdapDataEntry;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -29,6 +32,7 @@ import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.PartialResultException;
 import org.springframework.ldap.UncategorizedLdapException;
 import org.springframework.ldap.filter.EqualsFilter;
+import org.springframework.ldap.filter.Filter;
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 import org.springframework.ldap.query.LdapQuery;
 import org.springframework.ldap.query.LdapQueryBuilder;
@@ -682,6 +686,56 @@ public class LdapTemplateTest {
         verify(namingEnumerationMock).close();
         verify(dirContextMock).close();
     }
+
+	@Test
+	public void findWhenSearchControlsReturningAttributesSpecifiedThenOverridesOdmReturningAttributes() throws Exception {
+		Class<Object> expectedClass = Object.class;
+
+		Filter filter = new EqualsFilter("ou", "somevalue");
+		when(contextSourceMock.getReadOnlyContext()).thenReturn(dirContextMock);
+		when(odmMock.filterFor(any(Class.class), any(Filter.class))).thenReturn(filter);
+		SearchControls controls = new SearchControls();
+		controls.setReturningAttributes(new String[] { "attribute" });
+		DirContextAdapter expectedObject = new DirContextAdapter();
+		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
+		setupSearchResults(controls, searchResult);
+		Object expectedResult = expectedObject;
+		when(odmMock.mapFromLdapDataEntry(expectedObject, expectedClass)).thenReturn(expectedResult, expectedResult);
+
+		List<Object> results = tested.find(nameMock, filter, controls, expectedClass);
+		assertThat(results).hasSize(1);
+		verify(odmMock, never()).manageClass(any(Class.class));
+
+		verify(namingEnumerationMock).close();
+		verify(dirContextMock).close();
+	}
+
+	@Test
+	public void findWhenSearchControlsReturningAttributesUnspecifiedThenOdmReturningAttributesOverrides() throws Exception {
+		Class<Object> expectedClass = Object.class;
+		String[] expectedReturningAttributes = new String[] { "odmattribute" };
+		SearchControls expectedControls = new SearchControls();
+		expectedControls.setReturningObjFlag(true);
+		expectedControls.setReturningAttributes(expectedReturningAttributes);
+
+		Filter filter = new EqualsFilter("ou", "somevalue");
+		when(contextSourceMock.getReadOnlyContext()).thenReturn(dirContextMock);
+		when(odmMock.filterFor(eq(expectedClass), any(Filter.class))).thenReturn(filter);
+		when(odmMock.manageClass(eq(expectedClass))).thenReturn(expectedReturningAttributes);
+		SearchControls controls = new SearchControls();
+		DirContextAdapter expectedObject = new DirContextAdapter();
+		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
+		setupSearchResults(expectedControls, searchResult);
+		Object expectedResult = expectedObject;
+		when(odmMock.mapFromLdapDataEntry(expectedObject, expectedClass)).thenReturn(expectedResult, expectedResult);
+
+		List<Object> results = tested.find(nameMock, filter, controls, expectedClass);
+		assertThat(results).hasSize(1);
+		verify(odmMock).manageClass(eq(expectedClass));
+
+		verify(namingEnumerationMock).close();
+		verify(dirContextMock).close();
+	}
 
     @Test
 	public void testSearch_ContextMapper_ReturningAttrs() throws Exception {
@@ -1816,7 +1870,7 @@ public class LdapTemplateTest {
 		setupSearchResults(controls, new SearchResult[] { searchResult });
 	}
 
-	private void setupSearchResults(SearchControls controls, SearchResult[] searchResults) throws Exception {
+	private void setupSearchResults(SearchControls controls, SearchResult... searchResults) throws Exception {
         when(dirContextMock.search(
                 eq(nameMock),
                 eq("(ou=somevalue)"),
@@ -1858,17 +1912,17 @@ public class LdapTemplateTest {
 		return controls;
 	}
 
-    private static class SearchControlsMatcher extends BaseMatcher<SearchControls> {
+    private static class SearchControlsMatcher implements ArgumentMatcher<SearchControls> {
         private final SearchControls controls;
 
         public SearchControlsMatcher(SearchControls controls) {
             this.controls = controls;
         }
 
-        @Override
-        public boolean matches(Object item) {
+		@Override
+		public boolean matches(SearchControls item) {
             if (item instanceof SearchControls) {
-                SearchControls s1 = (SearchControls) item;
+                SearchControls s1 = item;
 
                 return controls.getSearchScope() == s1.getSearchScope()
                         && controls.getReturningObjFlag() == s1.getReturningObjFlag()
@@ -1880,11 +1934,6 @@ public class LdapTemplateTest {
             else {
                 throw new IllegalArgumentException();
             }
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("SearchControls matches");
         }
     }
 }

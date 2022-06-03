@@ -1,12 +1,29 @@
-apply from: JAVA_SCRIPT
+plugins {
+    id 'io.spring.convention.spring-module'
+}
 
 dependencies {
-    compile project(":spring-ldap-core")
+    management platform(project(":spring-ldap-dependencies"))
+    api project(":spring-ldap-core")
 
     provided "com.sun:ldapbp:1.0"
 
-    testCompile "junit:junit:$junitVersion",
-                "org.mockito:mockito-core:$mockitoVersion",
-                "gsbase:gsbase:$gsbaseVersion",
-                "org.assertj:assertj-core:$assertjVersion"
+    testImplementation platform('org.junit:junit-bom')
+    testImplementation "org.junit.vintage:junit-vintage-engine"
+    testImplementation "junit:junit"
+    testImplementation "org.mockito:mockito-core"
+    testImplementation "gsbase:gsbase"
+    testImplementation "org.assertj:assertj-core"
+}
+
+compileTestJava {
+    doFirst {
+        options.compilerArgs = [
+            '--add-exports', 'java.naming/com.sun.jndi.ldap=ALL-UNNAMED'
+        ]
+    }
+}
+
+test {
+    jvmArgs '--add-exports', 'java.naming/com.sun.jndi.ldap=ALL-UNNAMED'
 }

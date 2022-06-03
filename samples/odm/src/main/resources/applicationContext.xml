@@ -27,7 +27,7 @@
 
     <beans profile="default">
         <!-- Populates the LDAP server with initial data -->
-        <bean class="org.springframework.ldap.test.LdifPopulator" depends-on="embeddedLdapServer">
+        <bean class="org.springframework.ldap.test.unboundid.LdifPopulator" depends-on="embeddedLdapServer">
             <property name="contextSource" ref="contextSource" />
             <property name="resource" value="classpath:/setup_data.ldif" />
             <property name="base" value="${sample.ldap.base}" />
@@ -43,17 +43,6 @@
             <property name="partitionName" value="example"/>
             <property name="partitionSuffix" value="${sample.ldap.base}" />
             <property name="port" value="18880" />
-        </bean>
-    </beans>
-
-    <beans profile="no-apacheds">
-        <!-- Populates the LDAP server with initial data -->
-        <bean class="org.springframework.ldap.test.LdifPopulator">
-            <property name="contextSource" ref="contextSource" />
-            <property name="resource" value="classpath:/setup_data.ldif" />
-            <property name="base" value="${sample.ldap.base}" />
-            <property name="clean" value="${sample.ldap.clean}" />
-            <property name="defaultBase" value="dc=jayway,dc=se" />
         </bean>
     </beans>
 </beans>

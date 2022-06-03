@@ -1,22 +1,43 @@
+pluginManagement {
+    plugins {
+        id 'com.intershop.gradle.javacc' version '4.0.1'
+    }
+    repositories {
+        gradlePluginPortal()
+        maven { url 'https://repo.spring.io/plugins-release' }
+    }
+}
+
+plugins {
+    id "com.gradle.enterprise" version "3.9"
+    id "io.spring.ge.conventions" version "0.0.7"
+}
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        maven { url "https://repo.spring.io/snapshot" }
+    }
+}
+
 rootProject.name = 'spring-ldap'
 
 include 'core'
-include 'core-tiger'
+include 'dependencies'
 include 'test-support'
-include 'test-support-unboundid'
-include 'ldif/ldif-batch'
 include 'ldif/ldif-core'
 include 'odm'
 include 'sandbox'
 include 'test/integration-tests'
-include 'test/integration-tests-spring20'
-include 'test/integration-tests-spring25'
-include 'test/integration-tests-spring30'
+//include 'test/integration-tests-spring20'
+//include 'test/integration-tests-spring25'
+//include 'test/integration-tests-spring30'
 include 'test/integration-tests-openldap'
 include 'test/integration-tests-sunone'
 include 'test/integration-tests-ad'
 include 'samples/plain'
 include 'samples/odm'
+include 'samples/boot'
 
 
 rootProject.children.each { p->
@@ -30,8 +51,3 @@ rootProject.children.each { p->
 }
 
 findProject(":spring-ldap-test-support").name = "spring-ldap-test"
-findProject(":spring-ldap-test-support-unboundid").name = "spring-ldap-test-unboundid"
-
-// Exposes gradle buildSrc for IDE support
-include "buildSrc"
-rootProject.children.find{ it.name == "buildSrc" }.name = "spring-build-src"

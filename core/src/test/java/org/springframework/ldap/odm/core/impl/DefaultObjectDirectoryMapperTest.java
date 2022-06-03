@@ -1,8 +1,6 @@
 package org.springframework.ldap.odm.core.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.when;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 import java.lang.reflect.Field;
@@ -13,18 +11,18 @@ import javax.naming.Name;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.internal.util.reflection.Whitebox;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.SpringVersion;
 import org.springframework.ldap.support.LdapUtils;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Mattias Hellborg Arthursson
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(SpringVersion.class)
+@RunWith(MockitoJUnitRunner.class)
 public class DefaultObjectDirectoryMapperTest {
 
     private DefaultObjectDirectoryMapper tested;
@@ -37,13 +35,12 @@ public class DefaultObjectDirectoryMapperTest {
     // LDAP-295
     @Test
     public void springVersionIsNull() {
-        spy(SpringVersion.class);
-        when(SpringVersion.getVersion()).thenReturn(null);
-
-        DefaultObjectDirectoryMapper mapper = new DefaultObjectDirectoryMapper();
-
-        // LDAP-300
-        assertThat(Whitebox.getInternalState(mapper,"converterManager")).isNotNull();
+        try (MockedStatic<SpringVersion> version = Mockito.mockStatic(SpringVersion.class)) {
+            version.when(SpringVersion::getVersion).thenReturn(null);
+            DefaultObjectDirectoryMapper mapper = new DefaultObjectDirectoryMapper();
+            // LDAP-300
+            assertThat((Object) getInternalState(mapper,"converterManager")).isNotNull();
+        }
     }
 
     @Test
@@ -175,5 +172,11 @@ public class DefaultObjectDirectoryMapperTest {
                 assertThat(attribute.isReadOnly()).isEqualTo(expectedReadOnly);
             }
         }
+    }
+
+    private <T> T getInternalState(Object target, String fieldName) {
+        Field field = ReflectionUtils.findField(target.getClass(), fieldName);
+        field.setAccessible(true);
+        return (T) ReflectionUtils.getField(field, target);
     }
 }

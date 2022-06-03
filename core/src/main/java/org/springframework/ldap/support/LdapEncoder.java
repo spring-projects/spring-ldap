@@ -20,13 +20,10 @@ import java.util.Base64;
 
 import org.springframework.ldap.BadLdapGrammarException;
 import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
-
-import javax.xml.bind.DatatypeConverter;
 
 /**
  * Helper class to encode and decode ldap names and values.
- * 
+ *
  * @author Adam Skogman
  * @author Mattias Hellborg Arthursson
  * @author Thomas Darimont
@@ -39,7 +36,7 @@ public final class LdapEncoder {
     private static String[] FILTER_ESCAPE_TABLE = new String['\\' + 1];
 
     private static final int RFC2849_MAX_BASE64_CHARS_PER_LINE = 76;
-    
+
     static {
 
         // Name encoding table -------------------------------------
@@ -94,7 +91,7 @@ public final class LdapEncoder {
 
     /**
      * Escape a value for use in a filter.
-     * 
+     *
      * @param value
      *            the value to escape.
      * @return a properly escaped representation of the supplied value.
@@ -126,13 +123,13 @@ public final class LdapEncoder {
 
     /**
      * LDAP Encodes a value for use with a DN. Escapes for LDAP, not JNDI!
-     * 
+     *
      * <br>Escapes:<br> ' ' [space] - "\ " [if first or last] <br> '#'
      * [hash] - "\#" <br> ',' [comma] - "\," <br> ';' [semicolon] - "\;" <br> '=
      * [equals] - "\=" <br> '+' [plus] - "\+" <br> '&lt;' [less than] -
      * "\&lt;" <br> '&gt;' [greater than] - "\&gt;" <br> '"' [double quote] -
      * "\"" <br> '\' [backslash] - "\\" <br>
-     * 
+     *
      * @param value
      *            the value to escape.
      * @return The escaped value.
@@ -178,7 +175,7 @@ public final class LdapEncoder {
 
     /**
      * Decodes a value. Converts escaped chars to ordinary chars.
-     * 
+     *
      * @param value
      *            Trimmed value, so no leading an trailing blanks, except an
      *            escaped space last.
@@ -300,28 +297,10 @@ public final class LdapEncoder {
     }
 
     private static String encode(byte[] decoded) {
-        if (ClassUtils.isPresent("java.util.Base64", null)) {
-            return java.util.Base64.getEncoder().encodeToString(decoded);
-        } else {
-            return Base64Converter.encode(decoded);
-        }
+        return Base64.getEncoder().encodeToString(decoded);
     }
 
     private static byte[] decode(String encoded) {
-        if (ClassUtils.isPresent("java.util.Base64", null)) {
-            return java.util.Base64.getDecoder().decode(encoded);
-        } else {
-            return Base64Converter.decode(encoded);
-        }
-    }
-
-    private static class Base64Converter {
-        static byte[] decode(String string) {
-            return DatatypeConverter.parseBase64Binary(string);
-        }
-
-        static String encode(byte[] bytes) {
-            return DatatypeConverter.printBase64Binary(bytes);
-        }
+        return Base64.getDecoder().decode(encoded);
     }
 }

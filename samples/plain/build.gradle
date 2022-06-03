@@ -1,19 +1,26 @@
-apply from: SAMPLE_WAR_GRADLE
+plugins {
+    id 'io.spring.convention.spring-module'
+    id "org.gretty"
+    id 'war'
+}
 
 dependencies {
-    compile project(':spring-ldap-test'),
+    management platform(project(":spring-ldap-dependencies"))
+
+    implementation project(':spring-ldap-test'),
             'javax.servlet:jstl:1.2',
-            "org.springframework:spring-context:$springVersion",
-            "org.springframework:spring-webmvc:$springVersion",
-            "org.springframework.data:spring-data-commons:$springDataVersion"
+            "org.springframework:spring-context",
+            "org.springframework:spring-webmvc",
+            "commons-lang:commons-lang"
 
-    optional apachedsDependencies
+    compileOnly "javax.servlet:servlet-api:2.5"
 
-    provided "javax.servlet:servlet-api:2.5"
+    runtimeOnly 'ch.qos.logback:logback-classic'
 
-    runtime 'ch.qos.logback:logback-classic:1.0.13'
-
-    testCompile "org.springframework:spring-test:$springVersion",
-                "junit:junit:$junitVersion",
-                "org.assertj:assertj-core:$assertjVersion"
+    testImplementation "com.unboundid:unboundid-ldapsdk"
+    testImplementation platform('org.junit:junit-bom')
+    testImplementation "org.junit.vintage:junit-vintage-engine"
+    testImplementation "org.springframework:spring-test",
+                "junit:junit",
+                "org.assertj:assertj-core"
 }

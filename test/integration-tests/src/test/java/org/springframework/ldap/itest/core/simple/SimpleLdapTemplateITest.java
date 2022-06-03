@@ -15,27 +15,29 @@
  */
 package org.springframework.ldap.itest.core.simple;
 
+import java.util.List;
+
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.SearchControls;
+import javax.naming.ldap.LdapName;
+
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.NameNotFoundException;
+import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.DirContextProcessor;
-import org.springframework.ldap.core.simple.ParameterizedContextMapper;
-import org.springframework.ldap.core.simple.SimpleLdapTemplate;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.itest.AbstractLdapTemplateIntegrationTest;
 import org.springframework.ldap.itest.NoAdTest;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
-
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.SearchControls;
-import javax.naming.ldap.LdapName;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -47,7 +49,7 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 	private static LdapName DN = LdapUtils.newLdapName("cn=Some Person4,ou=company1,ou=Sweden");
 
 	@Autowired
-	private SimpleLdapTemplate ldapTemplate;
+	private LdapTemplate ldapTemplate;
 
 	@Test
 	public void testLookup() {
@@ -125,7 +127,7 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 		ldapTemplate.modifyAttributes(ctx);
 
 		// verify that the data was properly updated.
-		ldapTemplate.lookup("cn=Some Person,ou=company1,ou=Sweden", new ParameterizedContextMapper<Object>() {
+		ldapTemplate.lookup("cn=Some Person,ou=company1,ou=Sweden", new ContextMapper<Object>() {
 			public Object mapFromContext(Object ctx) {
 				DirContextAdapter adapter = (DirContextAdapter) ctx;
 				assertThat(adapter.getStringAttribute("description")).isEqualTo("updated description");
@@ -146,7 +148,7 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 		ldapTemplate.modifyAttributes(ctx);
 
 		// verify that the data was properly updated.
-		ldapTemplate.lookup("cn=Some Person,ou=company1,ou=Sweden", new ParameterizedContextMapper<Object>() {
+		ldapTemplate.lookup("cn=Some Person,ou=company1,ou=Sweden", new ContextMapper<Object>() {
 			public Object mapFromContext(Object ctx) {
 				DirContextAdapter adapter = (DirContextAdapter) ctx;
 				assertThat(adapter.getStringAttribute("description")).isEqualTo("updated description");
@@ -219,7 +221,7 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 		}
 	}
 
-	private static final class CnContextMapper implements ParameterizedContextMapper<String> {
+	private static final class CnContextMapper implements ContextMapper<String> {
 
 		public String mapFromContext(Object ctx) {
 			DirContextAdapter adapter = (DirContextAdapter) ctx;

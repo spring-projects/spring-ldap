@@ -7,7 +7,7 @@
     <import resource="classpath:/conf/commonContextSourceConfig.xml"/>
 
 	<bean id="simpleLdapTemplate"
-		class="org.springframework.ldap.core.simple.SimpleLdapTemplate">
+		class="org.springframework.ldap.core.LdapTemplate">
 		<constructor-arg ref="contextSource" />
 	</bean>
 

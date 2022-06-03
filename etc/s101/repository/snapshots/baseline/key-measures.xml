@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<KeyMeasureData formatVersion="2" specViolationDependencies="0" specViolationContainers="0" specItemViolations="0" specDependencyViolatingItems="0" biggestUnspecifiedNumber="0" specCoverage="0.0" feedbackDependencies="0" totalProblemDependencies="0" tangledDesign="0" tanglePercentage="0.0" biggestClassTangle="5" fatPackage="1" fatClass="4" fatMethod="13" fatPercentage="38.0" numDiagrams="0" numDiagramDependencyViolations="0" numDiagramDependencyViolatingItems="0" numUnassociatedItems="0" numDiagramViolationContainers="0" moduleAPIViolations="0" moduleRequiresViolations="0" deprecationViolations="0" moduleViolatingItems="0" moduleCoverage="0.0">
+    <enabled-optional-measures/>
+    <specOverlays/>
+    <archOverlays/>
+    <tangledDesign/>
+    <fatPackage>
+        <node id="6532" measure="145" impact="32574" threshold="120.0"/>
+    </fatPackage>
+    <fatClass>
+        <node id="382" measure="129" impact="945" threshold="120.0"/>
+        <node id="284" measure="133" impact="1014" threshold="120.0"/>
+        <node id="7" measure="272" impact="3150" threshold="120.0"/>
+        <node id="117" measure="497" impact="5400" threshold="120.0"/>
+    </fatClass>
+    <fatMethod>
+        <node id="202" measure="16" impact="119" threshold="15.0"/>
+        <node id="5263" measure="19" impact="244" threshold="15.0"/>
+        <node id="733" measure="19" impact="196" threshold="15.0"/>
+        <node id="5199" measure="20" impact="315" threshold="15.0"/>
+        <node id="758" measure="21" impact="249" threshold="15.0"/>
+        <node id="3873" measure="21" impact="249" threshold="15.0"/>
+        <node id="732" measure="22" impact="222" threshold="15.0"/>
+        <node id="3566" measure="22" impact="175" threshold="15.0"/>
+        <node id="5032" measure="23" impact="241" threshold="15.0"/>
+        <node id="5911" measure="23" impact="209" threshold="15.0"/>
+        <node id="1205" measure="23" impact="241" threshold="15.0"/>
+        <node id="5362" measure="36" impact="394" threshold="15.0"/>
+        <node id="730" measure="38" impact="668" threshold="15.0"/>
+    </fatMethod>
+    <specViolationContainers/>
+    <specItemViolations/>
+    <biggestClassTangle>
+        <node id="3359" measure="3"/>
+        <node id="1139" measure="14"/>
+        <node id="1199" measure="398"/>
+        <node id="27" measure="816"/>
+        <node id="300" measure="878"/>
+    </biggestClassTangle>
+    <archViolationContainers/>
+    <unassociatedItems/>
+    <moduleViolations/>
+    <nodeMap>
+        <entry>
+            <key>3873</key>
+            <value realName="spring-ldap-core.org.springframework.ldap.pool2.DelegatingDirContextTest.testAllMethodsClosed():void" type="method" localSize="249" size="249" displayName="spring-ldap-core.org.springframework.ldap.pool2.DelegatingDirContextTest.testAllMethodsClosed():void" navigationName="spring-ldap-core.org.springframework.ldap.pool2.DelegatingDirContextTest.testAllMethodsClosed():void" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+        <entry>
+            <key>6532</key>
+            <value realName="spring-ldap-core.org.springframework.ldap.core" type="package" localSize="0" size="32574" displayName="spring-ldap-core.org.springframework.ldap.core" navigationName="spring-ldap-core.org.springframework.ldap.core" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+        <entry>
+            <key>7</key>
+            <value realName="spring-ldap-core.org.springframework.ldap.core.LdapTemplate" type="class" localSize="1" size="3150" displayName="spring-ldap-core.org.springframework.ldap.core.LdapTemplate" navigationName="spring-ldap-core.org.springframework.ldap.core.LdapTemplate" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+        <entry>
+            <key>5032</key>
+            <value realName="spring-ldap-core.org.springframework.ldap.pool.DelegatingContextTest.testAllMethodsClosed():void" type="method" localSize="241" size="241" displayName="spring-ldap-core.org.springframework.ldap.pool.DelegatingContextTest.testAllMethodsClosed():void" navigationName="spring-ldap-core.org.springframework.ldap.pool.DelegatingContextTest.testAllMethodsClosed():void" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+        <entry>
+            <key>202</key>
+            <value realName="spring-ldap-core.org.springframework.ldap.core.NameAwareAttribute.equals(java.lang.Object):boolean" type="method" localSize="119" size="119" displayName="spring-ldap-core.org.springframework.ldap.core.NameAwareAttribute.equals(java.lang.Object):boolean" navigationName="spring-ldap-core.org.springframework.ldap.core.NameAwareAttribute.equals(java.lang.Object):boolean" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+        <entry>
+            <key>300</key>
+            <value realName="spring-ldap-core.org.springframework.ldap.core.DistinguishedName" type="class" localSize="1" size="878" displayName="spring-ldap-core.org.springframework.ldap.core.DistinguishedName" navigationName="spring-ldap-core.org.springframework.ldap.core.DistinguishedName" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+        <entry>
+            <key>3566</key>
+            <value realName="spring-ldap-odm.org.springframework.ldap.odm.test.Person.equals(java.lang.Object):boolean" type="method" localSize="175" size="175" displayName="spring-ldap-odm.org.springframework.ldap.odm.test.Person.equals(java.lang.Object):boolean" navigationName="spring-ldap-odm.org.springframework.ldap.odm.test.Person.equals(java.lang.Object):boolean" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+        <entry>
+            <key>5263</key>
+            <value realName="spring-ldap-core.org.springframework.ldap.odm.core.impl.DefaultObjectDirectoryMapper.mapFromLdapDataEntry(org.springframework.LdapDataEntry, java.lang.Class):java.lang.Object" type="method" localSize="244" size="244" displayName="spring-ldap-core.org.springframework.ldap.odm.core.impl.DefaultObjectDirectoryMapper.mapFromLdapDataEntry(org.springframework.LdapDataEntry, java.lang.Class):java.lang.Object" navigationName="spring-ldap-core.org.springframework.ldap.odm.core.impl.DefaultObjectDirectoryMapper.mapFromLdapDataEntry(org.springframework.LdapDataEntry, java.lang.Class):java.lang.Object" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+        <entry>
+            <key>5199</key>
+            <value realName="spring-ldap-odm.org.springframework.ldap.odm.tools.SchemaToJava.main(java.lang.String[]):void" type="method" localSize="315" size="315" displayName="spring-ldap-odm.org.springframework.ldap.odm.tools.SchemaToJava.main(java.lang.String[]):void" navigationName="spring-ldap-odm.org.springframework.ldap.odm.tools.SchemaToJava.main(java.lang.String[]):void" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+        <entry>
+            <key>1199</key>
+            <value realName="spring-ldap-core.org.springframework.ldap.core.LdapRdn" type="class" localSize="1" size="398" displayName="spring-ldap-core.org.springframework.ldap.core.LdapRdn" navigationName="spring-ldap-core.org.springframework.ldap.core.LdapRdn" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+        <entry>
+            <key>5362</key>
+            <value realName="spring-ldap-core.org.springframework.ldap.support.LdapUtils.convertLdapException(javax.naming.NamingException):org.springframework.ldap.NamingException" type="method" localSize="394" size="394" displayName="spring-ldap-core.org.springframework.ldap.support.LdapUtils.convertLdapException(javax.naming.NamingException):org.springframework.ldap.NamingException" navigationName="spring-ldap-core.org.springframework.ldap.support.LdapUtils.convertLdapException(javax.naming.NamingException):org.springframework.ldap.NamingException" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+        <entry>
+            <key>1139</key>
+            <value realName="spring-ldap-core.org.springframework.ldap.core.DefaultDnParserFactory" type="class" localSize="1" size="14" displayName="spring-ldap-core.org.springframework.ldap.core.DefaultDnParserFactory" navigationName="spring-ldap-core.org.springframework.ldap.core.DefaultDnParserFactory" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+        <entry>
+            <key>117</key>
+            <value realName="spring-ldap-core.org.springframework.ldap.core.LdapTemplateTest" type="class" localSize="1" size="5400" displayName="spring-ldap-core.org.springframework.ldap.core.LdapTemplateTest" navigationName="spring-ldap-core.org.springframework.ldap.core.LdapTemplateTest" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+        <entry>
+            <key>1205</key>
+            <value realName="spring-ldap-core.org.springframework.ldap.pool2.DelegatingContextTest.testAllMethodsClosed():void" type="method" localSize="241" size="241" displayName="spring-ldap-core.org.springframework.ldap.pool2.DelegatingContextTest.testAllMethodsClosed():void" navigationName="spring-ldap-core.org.springframework.ldap.pool2.DelegatingContextTest.testAllMethodsClosed():void" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+        <entry>
+            <key>758</key>
+            <value realName="spring-ldap-core.org.springframework.ldap.pool.DelegatingDirContextTest.testAllMethodsClosed():void" type="method" localSize="249" size="249" displayName="spring-ldap-core.org.springframework.ldap.pool.DelegatingDirContextTest.testAllMethodsClosed():void" navigationName="spring-ldap-core.org.springframework.ldap.pool.DelegatingDirContextTest.testAllMethodsClosed():void" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+        <entry>
+            <key>5911</key>
+            <value realName="spring-ldap-core.org.springframework.ldap.core.LdapTemplate.search(org.springframework.ldap.core.SearchExecutor, org.springframework.ldap.core.NameClassPairCallbackHandler, org.springframework.ldap.core.DirContextProcessor):void" type="method" localSize="209" size="209" displayName="spring-ldap-core.org.springframework.ldap.core.LdapTemplate.search(org.springframework.ldap.core.SearchExecutor, org.springframework.ldap.core.NameClassPairCallbackHandler, org.springframework.ldap.core.DirContextProcessor):void" navigationName="spring-ldap-core.org.springframework.ldap.core.LdapTemplate.search(org.springframework.ldap.core.SearchExecutor, org.springframework.ldap.core.NameClassPairCallbackHandler, org.springframework.ldap.core.DirContextProcessor):void" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+        <entry>
+            <key>730</key>
+            <value realName="spring-ldap-core.org.springframework.ldap.core.DnParserImplTokenManager.jjMoveNfa_1(int, int):int" type="method" localSize="668" size="668" displayName="spring-ldap-core.org.springframework.ldap.core.DnParserImplTokenManager.jjMoveNfa_1(int, int):int" navigationName="spring-ldap-core.org.springframework.ldap.core.DnParserImplTokenManager.jjMoveNfa_1(int, int):int" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+        <entry>
+            <key>27</key>
+            <value realName="spring-ldap-core.org.springframework.ldap.core.DnParserImpl" type="class" localSize="1" size="816" displayName="spring-ldap-core.org.springframework.ldap.core.DnParserImpl" navigationName="spring-ldap-core.org.springframework.ldap.core.DnParserImpl" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+        <entry>
+            <key>732</key>
+            <value realName="spring-ldap-core.org.springframework.ldap.core.DnParserImplTokenManager.jjMoveNfa_0(int, int):int" type="method" localSize="222" size="222" displayName="spring-ldap-core.org.springframework.ldap.core.DnParserImplTokenManager.jjMoveNfa_0(int, int):int" navigationName="spring-ldap-core.org.springframework.ldap.core.DnParserImplTokenManager.jjMoveNfa_0(int, int):int" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+        <entry>
+            <key>284</key>
+            <value realName="spring-ldap-integration-tests.org.springframework.ldap.itest.LdapTemplateSearchResultITest" type="class" localSize="1" size="1014" displayName="spring-ldap-integration-tests.org.springframework.ldap.itest.LdapTemplateSearchResultITest" navigationName="spring-ldap-integration-tests.org.springframework.ldap.itest.LdapTemplateSearchResultITest" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+        <entry>
+            <key>733</key>
+            <value realName="spring-ldap-core.org.springframework.ldap.core.DnParserImplTokenManager.jjMoveNfa_2(int, int):int" type="method" localSize="196" size="196" displayName="spring-ldap-core.org.springframework.ldap.core.DnParserImplTokenManager.jjMoveNfa_2(int, int):int" navigationName="spring-ldap-core.org.springframework.ldap.core.DnParserImplTokenManager.jjMoveNfa_2(int, int):int" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+        <entry>
+            <key>382</key>
+            <value realName="spring-ldap-integration-tests.org.springframework.ldap.itest.LdapTemplateSearchResultNamespaceConfigITest" type="class" localSize="1" size="945" displayName="spring-ldap-integration-tests.org.springframework.ldap.itest.LdapTemplateSearchResultNamespaceConfigITest" navigationName="spring-ldap-integration-tests.org.springframework.ldap.itest.LdapTemplateSearchResultNamespaceConfigITest" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+        <entry>
+            <key>3359</key>
+            <value realName="spring-ldap-core.org.springframework.ldap.core.DnParser" type="class" localSize="1" size="3" displayName="spring-ldap-core.org.springframework.ldap.core.DnParser" navigationName="spring-ldap-core.org.springframework.ldap.core.DnParser" isModule="false" isModuleInterface="false" isDeprecated="false"/>
+        </entry>
+    </nodeMap>
+</KeyMeasureData>
