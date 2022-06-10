@@ -30,7 +30,7 @@ public class MavenPublishingConventionsPlugin implements Plugin<Project> {
 	}
 
 	private void customizePom(MavenPom pom, Project project) {
-		pom.getUrl().set("https://spring.io/projects/spring-security");
+		pom.getUrl().set("https://spring.io/projects/spring-ldap");
 		pom.getName().set(project.provider(project::getName));
 		pom.getDescription().set(project.provider(project::getDescription));
 		pom.organization(this::customizeOrganization);
@@ -62,14 +62,14 @@ public class MavenPublishingConventionsPlugin implements Plugin<Project> {
 	}
 
 	private void customizeScm(MavenPomScm scm) {
-		scm.getConnection().set("scm:git:git://github.com/spring-projects/spring-security.git");
-		scm.getDeveloperConnection().set("scm:git:ssh://git@github.com/spring-projects/spring-security.git");
-		scm.getUrl().set("https://github.com/spring-projects/spring-security");
+		scm.getConnection().set("scm:git:git://github.com/spring-projects/spring-ldap.git");
+		scm.getDeveloperConnection().set("scm:git:ssh://git@github.com/spring-projects/spring-ldap.git");
+		scm.getUrl().set("https://github.com/spring-projects/spring-ldap");
 	}
 
 	private void customizeIssueManagement(MavenPomIssueManagement issueManagement) {
 		issueManagement.getSystem().set("GitHub");
-		issueManagement.getUrl().set("https://github.com/spring-projects/spring-security/issues");
+		issueManagement.getUrl().set("https://github.com/spring-projects/spring-ldap/issues");
 	}
 
 	private void customizeJavaPlugin(Project project) {
