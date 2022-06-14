@@ -78,6 +78,42 @@ public class DefaultObjectDirectoryMapperTest {
     }
 
     @Test
+    public void testMappingInherited() {
+        assertThat(tested.manageClass(UnitTestWorker.class))
+                .containsOnlyElementsOf(Arrays.asList("dn", "cn", "sn", "description", "telephoneNumber", "entryUUID", "objectclass", "workerId"));
+
+        DefaultObjectDirectoryMapper.EntityData entityData = tested.getMetaDataMap().get(UnitTestWorker.class);
+
+        assertThat(entityData).isNotNull();
+        assertThat(entityData.ocFilter).isEqualTo(query().
+                where("objectclass").is("inetOrgPerson")
+                .and("objectclass").is("organizationalPerson")
+                .and("objectclass").is("person")
+                .and("objectclass").is("top")
+                .and("objectclass").is("worker")
+                .filter());
+
+        assertThat(entityData.metaData).hasSize(9);
+
+        AttributeMetaData idAttribute = entityData.metaData.getIdAttribute();
+        assertThat(idAttribute.getField().getName()).isEqualTo("dn");
+        assertThat(idAttribute.isId()).isTrue();
+        assertThat(idAttribute.isBinary()).isFalse();
+        assertThat(idAttribute.isDnAttribute()).isFalse();
+        assertThat(idAttribute.isTransient()).isFalse();
+        assertThat(idAttribute.isCollection()).isFalse();
+
+        assertField(entityData, "fullName", "cn", "cn", false, false, false, false);
+        assertField(entityData, "lastName", "sn", null, false, false, false, false);
+        assertField(entityData, "description", "description", null, false, false, true, false);
+        assertField(entityData, "country", null, "c", false, true, false, false);
+        assertField(entityData, "company", null, "ou", false, true, false, false);
+        assertField(entityData, "telephoneNumber", "telephoneNumber", null, false, false, false, false);
+        assertField(entityData, "entryUUID", "entryUUID", null, false, false, false, true);
+        assertField(entityData, "workerId", "workerId", null, false, false, false, false);
+    }
+
+    @Test
     public void testInvalidType() {
         try {
             tested.manageClass(UnitTestPersonWithInvalidFieldType.class);
