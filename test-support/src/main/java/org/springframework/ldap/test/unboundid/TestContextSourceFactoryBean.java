@@ -31,119 +31,119 @@ import org.springframework.ldap.support.LdapUtils;
  */
 public class TestContextSourceFactoryBean extends AbstractFactoryBean<ContextSource> {
 
-    private int port;
+	private int port;
 
-    private String defaultPartitionSuffix;
+	private String defaultPartitionSuffix;
 
-    private String defaultPartitionName;
+	private String defaultPartitionName;
 
-    private String principal;
+	private String principal;
 
-    private String password;
+	private String password;
 
-    private boolean baseOnTarget = true;
+	private boolean baseOnTarget = true;
 
-    private Resource ldifFile;
+	private Resource ldifFile;
 
-    private Class<? extends DirObjectFactory> dirObjectFactory = DefaultDirObjectFactory.class;
+	private Class<? extends DirObjectFactory> dirObjectFactory = DefaultDirObjectFactory.class;
 
-    private boolean pooled = true;
+	private boolean pooled = true;
 
-    private AuthenticationSource authenticationSource;
+	private AuthenticationSource authenticationSource;
 
-    private ContextSource contextSource;
+	private ContextSource contextSource;
 
-    public void setAuthenticationSource(AuthenticationSource authenticationSource) {
-        this.authenticationSource = authenticationSource;
-    }
+	public void setAuthenticationSource(AuthenticationSource authenticationSource) {
+		this.authenticationSource = authenticationSource;
+	}
 
-    public void setPooled(boolean pooled) {
-        this.pooled = pooled;
-    }
+	public void setPooled(boolean pooled) {
+		this.pooled = pooled;
+	}
 
-    public void setDirObjectFactory(Class<? extends DirObjectFactory> dirObjectFactory) {
-        this.dirObjectFactory = dirObjectFactory;
-    }
+	public void setDirObjectFactory(Class<? extends DirObjectFactory> dirObjectFactory) {
+		this.dirObjectFactory = dirObjectFactory;
+	}
 
-    public void setLdifFile(Resource ldifFile) {
-        this.ldifFile = ldifFile;
-    }
+	public void setLdifFile(Resource ldifFile) {
+		this.ldifFile = ldifFile;
+	}
 
-    public void setBaseOnTarget(boolean baseOnTarget) {
-        this.baseOnTarget = baseOnTarget;
-    }
+	public void setBaseOnTarget(boolean baseOnTarget) {
+		this.baseOnTarget = baseOnTarget;
+	}
 
-    public void setDefaultPartitionSuffix(String defaultPartitionSuffix) {
-        this.defaultPartitionSuffix = defaultPartitionSuffix;
-    }
+	public void setDefaultPartitionSuffix(String defaultPartitionSuffix) {
+		this.defaultPartitionSuffix = defaultPartitionSuffix;
+	}
 
-    public void setPrincipal(String principal) {
-        this.principal = principal;
-    }
+	public void setPrincipal(String principal) {
+		this.principal = principal;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public void setDefaultPartitionName(String defaultPartitionName) {
-        this.defaultPartitionName = defaultPartitionName;
-    }
+	public void setDefaultPartitionName(String defaultPartitionName) {
+		this.defaultPartitionName = defaultPartitionName;
+	}
 
-    public void setPort(int port) {
-        this.port = port;
-    }
+	public void setPort(int port) {
+		this.port = port;
+	}
 
-    public void setContextSource(ContextSource contextSource) {
-        this.contextSource = contextSource;
-    }
+	public void setContextSource(ContextSource contextSource) {
+		this.contextSource = contextSource;
+	}
 
-    protected ContextSource createInstance() throws Exception {
-        LdapTestUtils.startEmbeddedServer(port,
-                defaultPartitionSuffix, defaultPartitionName);
+	protected ContextSource createInstance() throws Exception {
+		LdapTestUtils.startEmbeddedServer(port,
+				defaultPartitionSuffix, defaultPartitionName);
 
-        if (contextSource == null) {
-            // If not explicitly configured, create a new instance.
-            LdapContextSource targetContextSource = new LdapContextSource();
-            if (baseOnTarget) {
-                targetContextSource.setBase(defaultPartitionSuffix);
-            }
+		if (contextSource == null) {
+			// If not explicitly configured, create a new instance.
+			LdapContextSource targetContextSource = new LdapContextSource();
+			if (baseOnTarget) {
+				targetContextSource.setBase(defaultPartitionSuffix);
+			}
 
-            targetContextSource.setUrl("ldap://localhost:" + port);
-            targetContextSource.setUserDn(principal);
-            targetContextSource.setPassword(password);
-            targetContextSource.setDirObjectFactory(dirObjectFactory);
-            targetContextSource.setPooled(pooled);
+			targetContextSource.setUrl("ldap://localhost:" + port);
+			targetContextSource.setUserDn(principal);
+			targetContextSource.setPassword(password);
+			targetContextSource.setDirObjectFactory(dirObjectFactory);
+			targetContextSource.setPooled(pooled);
 
-            if (authenticationSource != null) {
-                targetContextSource.setAuthenticationSource(authenticationSource);
-            }
-            targetContextSource.afterPropertiesSet();
+			if (authenticationSource != null) {
+				targetContextSource.setAuthenticationSource(authenticationSource);
+			}
+			targetContextSource.afterPropertiesSet();
 
-            contextSource = targetContextSource;
-        }
+			contextSource = targetContextSource;
+		}
 
-        Thread.sleep(1000);
+		Thread.sleep(1000);
 
-        if (baseOnTarget) {
-            LdapTestUtils.clearSubContexts(contextSource, LdapUtils.emptyLdapName());
-        }
-        else {
-            LdapTestUtils.clearSubContexts(contextSource, LdapUtils.newLdapName(defaultPartitionSuffix));
-        }
+		if (baseOnTarget) {
+			LdapTestUtils.clearSubContexts(contextSource, LdapUtils.emptyLdapName());
+		}
+		else {
+			LdapTestUtils.clearSubContexts(contextSource, LdapUtils.newLdapName(defaultPartitionSuffix));
+		}
 
-        if (ldifFile != null) {
-            LdapTestUtils.loadLdif(contextSource, ldifFile);
-        }
+		if (ldifFile != null) {
+			LdapTestUtils.loadLdif(contextSource, ldifFile);
+		}
 
-        return contextSource;
-    }
+		return contextSource;
+	}
 
-    public Class<ContextSource> getObjectType() {
-        return ContextSource.class;
-    }
+	public Class<ContextSource> getObjectType() {
+		return ContextSource.class;
+	}
 
-    protected void destroyInstance(ContextSource instance) throws Exception {
-        super.destroyInstance(instance);
-        LdapTestUtils.shutdownEmbeddedServer();
-    }
+	protected void destroyInstance(ContextSource instance) throws Exception {
+		super.destroyInstance(instance);
+		LdapTestUtils.shutdownEmbeddedServer();
+	}
 }

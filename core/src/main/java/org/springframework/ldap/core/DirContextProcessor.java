@@ -29,23 +29,23 @@ import javax.naming.directory.DirContext;
  * @author Ulrik Sandberg
  */
 public interface DirContextProcessor {
-    /**
-     * Perform pre-processing on the supplied DirContext.
-     * 
-     * @param ctx
-     *            the <code>DirContext</code> instance.
-     * @throws NamingException
-     *             if thrown by the underlying operation.
-     */
-    void preProcess(DirContext ctx) throws NamingException;
+	/**
+	 * Perform pre-processing on the supplied DirContext.
+	 * 
+	 * @param ctx
+	 *			the <code>DirContext</code> instance.
+	 * @throws NamingException
+	 *			 if thrown by the underlying operation.
+	 */
+	void preProcess(DirContext ctx) throws NamingException;
 
-    /**
-     * Perform post-processing on the supplied <code>DirContext</code>.
-     * 
-     * @param ctx
-     *            the <code>DirContext</code> instance.
-     * @throws NamingException
-     *             if thrown by the underlying operation.
-     */
-    void postProcess(DirContext ctx) throws NamingException;
+	/**
+	 * Perform post-processing on the supplied <code>DirContext</code>.
+	 * 
+	 * @param ctx
+	 *			the <code>DirContext</code> instance.
+	 * @throws NamingException
+	 *			 if thrown by the underlying operation.
+	 */
+	void postProcess(DirContext ctx) throws NamingException;
 }

@@ -25,9 +25,9 @@ import javax.naming.directory.DirContext;
  * 
  * <pre>
  * ContextExecutor executor = new ContextExecutor() {
- *     public Object executeWithContext(DirContext ctx) throws NamingException {
- *         return ctx.lookup(dn);
- *     }
+ *	 public Object executeWithContext(DirContext ctx) throws NamingException {
+ *		 return ctx.lookup(dn);
+ *	 }
  * };
  * </pre>
  * 
@@ -37,14 +37,14 @@ import javax.naming.directory.DirContext;
  * @author Mattias Hellborg Arthursson
  */
 public interface ContextExecutor<T> {
-    /**
-     * Perform any operation on the context.
-     * 
-     * @param ctx
-     *            the DirContext to perform the operation on.
-     * @return any object resulting from the operation - might be null.
-     * @throws NamingException
-     *             if the operation resulted in one.
-     */
-    T executeWithContext(DirContext ctx) throws NamingException;
+	/**
+	 * Perform any operation on the context.
+	 * 
+	 * @param ctx
+	 *			the DirContext to perform the operation on.
+	 * @return any object resulting from the operation - might be null.
+	 * @throws NamingException
+	 *			 if the operation resulted in one.
+	 */
+	T executeWithContext(DirContext ctx) throws NamingException;
 }

@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class NotPresentFilterTest {
 
-    @Test
+	@Test
 	public void testNotPresentFilter() {
 		NotPresentFilter filter = new NotPresentFilter("foo");
 		assertThat(filter.encode()).isEqualTo("(!(foo=*))");
@@ -46,16 +46,16 @@ public class NotPresentFilterTest {
 		assertThat(andFilter.encode()).isEqualTo("(&(!(foo=*))(!(!(bar=*))))");
 	}
 
-    @Test
-    public void testEquals() {
+	@Test
+	public void testEquals() {
 		String attribute = "foo";
 		NotPresentFilter originalObject = new NotPresentFilter(attribute);
 		NotPresentFilter identicalObject = new NotPresentFilter(attribute);
 		NotPresentFilter differentObject = new NotPresentFilter("bar");
 		NotPresentFilter subclassObject = new NotPresentFilter(attribute) {
-        };
+		};
 
-        new EqualsTester(originalObject, identicalObject, differentObject,
-                subclassObject);
-    }
+		new EqualsTester(originalObject, identicalObject, differentObject,
+				subclassObject);
+	}
 }

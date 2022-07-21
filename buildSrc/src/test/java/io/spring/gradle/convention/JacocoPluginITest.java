@@ -19,9 +19,9 @@ public class JacocoPluginITest{
 		this.testKit = new io.spring.gradle.TestKit(tempDir.toFile());
 	}
 
-    @Test
+	@Test
 	public void checkWithJavaPlugin() throws Exception {
-        BuildResult result = this.testKit.withProjectResource("samples/jacoco/java/")
+		BuildResult result = this.testKit.withProjectResource("samples/jacoco/java/")
 				.withArguments("check")
 				.build();
 		assertThat(result.task(":check").getOutcome()).isEqualTo(TaskOutcome.SUCCESS);

@@ -45,47 +45,47 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since 1.2
  */
 public class DifferentSubtreeTempEntryRenamingStrategy implements
-        TempEntryRenamingStrategy {
+		TempEntryRenamingStrategy {
 
-    private Name subtreeNode;
+	private Name subtreeNode;
 
-    private static final AtomicInteger NEXT_SEQUENCE_NO = new AtomicInteger(1);
+	private static final AtomicInteger NEXT_SEQUENCE_NO = new AtomicInteger(1);
 
-    public DifferentSubtreeTempEntryRenamingStrategy(Name subtreeNode) {
-        this.subtreeNode = subtreeNode;
-    }
+	public DifferentSubtreeTempEntryRenamingStrategy(Name subtreeNode) {
+		this.subtreeNode = subtreeNode;
+	}
 
-    public DifferentSubtreeTempEntryRenamingStrategy(String subtreeNode) {
-        this(LdapUtils.newLdapName(subtreeNode));
-    }
+	public DifferentSubtreeTempEntryRenamingStrategy(String subtreeNode) {
+		this(LdapUtils.newLdapName(subtreeNode));
+	}
 
-    public Name getSubtreeNode() {
-        return subtreeNode;
-    }
+	public Name getSubtreeNode() {
+		return subtreeNode;
+	}
 
-    public void setSubtreeNode(Name subtreeNode) {
-        this.subtreeNode = subtreeNode;
-    }
+	public void setSubtreeNode(Name subtreeNode) {
+		this.subtreeNode = subtreeNode;
+	}
 
-    int getNextSequenceNo() {
-        return NEXT_SEQUENCE_NO.get();
-    }
+	int getNextSequenceNo() {
+		return NEXT_SEQUENCE_NO.get();
+	}
 
-    /*
-     * @see org.springframework.ldap.support.transaction.TempEntryRenamingStrategy#getTemporaryName(javax.naming.Name)
-     */
-    public Name getTemporaryName(Name originalName) {
-        int thisSequenceNo = NEXT_SEQUENCE_NO.getAndIncrement();
+	/*
+	 * @see org.springframework.ldap.support.transaction.TempEntryRenamingStrategy#getTemporaryName(javax.naming.Name)
+	 */
+	public Name getTemporaryName(Name originalName) {
+		int thisSequenceNo = NEXT_SEQUENCE_NO.getAndIncrement();
 
-        LdapName tempName = LdapUtils.newLdapName(originalName);
-        try {
-            String leafNode = tempName.get(tempName.size() - 1) + thisSequenceNo;
-            LdapName newName = LdapUtils.newLdapName(subtreeNode);
-            newName.add(leafNode);
+		LdapName tempName = LdapUtils.newLdapName(originalName);
+		try {
+			String leafNode = tempName.get(tempName.size() - 1) + thisSequenceNo;
+			LdapName newName = LdapUtils.newLdapName(subtreeNode);
+			newName.add(leafNode);
 
-            return newName;
-        } catch (InvalidNameException e) {
-            throw new org.springframework.ldap.InvalidNameException(e);
-        }
-    }
+			return newName;
+		} catch (InvalidNameException e) {
+			throw new org.springframework.ldap.InvalidNameException(e);
+		}
+	}
 }

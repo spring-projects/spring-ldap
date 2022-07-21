@@ -38,25 +38,25 @@ package org.springframework.transaction.compensating;
  * @since 1.2
  */
 public interface CompensatingTransactionOperationExecutor {
-    /**
-     * Rollback the operation, restoring state of the target as it was before
-     * the operation was performed using the information supplied on creation of
-     * this instance.
-     */
-    void rollback();
+	/**
+	 * Rollback the operation, restoring state of the target as it was before
+	 * the operation was performed using the information supplied on creation of
+	 * this instance.
+	 */
+	void rollback();
 
-    /**
-     * Commit the operation. In many cases, this will not require any work at
-     * all to be performed. However, in some cases there will be interesting
-     * stuff to do. See class description for elaboration on this.
-     */
-    void commit();
+	/**
+	 * Commit the operation. In many cases, this will not require any work at
+	 * all to be performed. However, in some cases there will be interesting
+	 * stuff to do. See class description for elaboration on this.
+	 */
+	void commit();
 
-    /**
-     * Perform the operation. This will most often require performing the
-     * recorded operation, but in some cases the actual operation performed by
-     * this method might be something else. See class description for
-     * elaboration on this.
-     */
-    void performOperation();
+	/**
+	 * Perform the operation. This will most often require performing the
+	 * recorded operation, but in some cases the actual operation performed by
+	 * this method might be something else. See class description for
+	 * elaboration on this.
+	 */
+	void performOperation();
 }

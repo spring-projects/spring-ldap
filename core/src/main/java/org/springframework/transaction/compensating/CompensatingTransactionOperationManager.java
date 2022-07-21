@@ -25,31 +25,31 @@ package org.springframework.transaction.compensating;
  * @since 1.2
  */
 public interface CompensatingTransactionOperationManager {
-    /**
-     * Indicates that the supplied operation (method name) is to be performed.
-     * This method is responsible for recording the current state (prior to the
-     * operation), performing the operation, and storing the necessary
-     * information to roll back or commit the performed operation.
-     * 
-     * @param resource
-     *            the target resource to perform the operation on.
-     * @param operation
-     *            The method to be invoked.
-     * @param args
-     *            Arguments supplied to the method.
-     */
-    void performOperation(Object resource, String operation,
-            Object[] args);
+	/**
+	 * Indicates that the supplied operation (method name) is to be performed.
+	 * This method is responsible for recording the current state (prior to the
+	 * operation), performing the operation, and storing the necessary
+	 * information to roll back or commit the performed operation.
+	 * 
+	 * @param resource
+	 *			the target resource to perform the operation on.
+	 * @param operation
+	 *			The method to be invoked.
+	 * @param args
+	 *			Arguments supplied to the method.
+	 */
+	void performOperation(Object resource, String operation,
+			Object[] args);
 
-    /**
-     * Rollback all recorded operations by performing each of the recorded
-     * rollback operations.
-     */
-    void rollback();
+	/**
+	 * Rollback all recorded operations by performing each of the recorded
+	 * rollback operations.
+	 */
+	void rollback();
 
-    /**
-     * Commit all recorded operations. In many cases this means doing nothing,
-     * but in some cases some temporary data will need to be removed.
-     */
-    void commit();
+	/**
+	 * Commit all recorded operations. In many cases this means doing nothing,
+	 * but in some cases some temporary data will need to be removed.
+	 */
+	void commit();
 }

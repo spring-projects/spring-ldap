@@ -31,100 +31,100 @@ import static org.mockito.Mockito.when;
 
 public class RequestControlDirContextProcessorTest {
 
-    private AbstractRequestControlDirContextProcessor tested;
+	private AbstractRequestControlDirContextProcessor tested;
 
-    private Control requestControlMock;
+	private Control requestControlMock;
 
-    private Control requestControl2Mock;
+	private Control requestControl2Mock;
 
-    private LdapContext ldapContextMock;
+	private LdapContext ldapContextMock;
 
-    private DirContext dirContextMock;
+	private DirContext dirContextMock;
 
-    @Before
-    public void setUp() throws Exception {
-        // Create requestControl mock
-        requestControlMock = mock(Control.class);
+	@Before
+	public void setUp() throws Exception {
+		// Create requestControl mock
+		requestControlMock = mock(Control.class);
 
-        // Create requestControl2 mock
-        requestControl2Mock = mock(Control.class);
+		// Create requestControl2 mock
+		requestControl2Mock = mock(Control.class);
 
-        // Create ldapContext mock
-        ldapContextMock = mock(LdapContext.class);
+		// Create ldapContext mock
+		ldapContextMock = mock(LdapContext.class);
 
-        // Create dirContext mock
-        dirContextMock = mock(DirContext.class);
+		// Create dirContext mock
+		dirContextMock = mock(DirContext.class);
 
-        tested = new AbstractRequestControlDirContextProcessor() {
+		tested = new AbstractRequestControlDirContextProcessor() {
 
-            public Control createRequestControl() {
-                return requestControlMock;
-            }
+			public Control createRequestControl() {
+				return requestControlMock;
+			}
 
-            public void postProcess(DirContext ctx) throws NamingException {
-            }
+			public void postProcess(DirContext ctx) throws NamingException {
+			}
 
-        };
-    }
+		};
+	}
 
-    @After
-    public void tearDown() throws Exception {
-        requestControlMock = null;
-        requestControl2Mock = null;
-        ldapContextMock = null;
-        dirContextMock = null;
+	@After
+	public void tearDown() throws Exception {
+		requestControlMock = null;
+		requestControl2Mock = null;
+		ldapContextMock = null;
+		dirContextMock = null;
 
-    }
+	}
 
-    @Test
-    public void testPreProcessWithExistingControlOfDifferentClassShouldAdd() throws Exception {
-        SortControl existingControl = new SortControl(new String[] { "cn" }, true);
-        when(ldapContextMock.getRequestControls()).thenReturn(new Control[]{existingControl});
+	@Test
+	public void testPreProcessWithExistingControlOfDifferentClassShouldAdd() throws Exception {
+		SortControl existingControl = new SortControl(new String[] { "cn" }, true);
+		when(ldapContextMock.getRequestControls()).thenReturn(new Control[]{existingControl});
 
-        tested.preProcess(ldapContextMock);
+		tested.preProcess(ldapContextMock);
 
-        verify(ldapContextMock).setRequestControls(new Control[] { existingControl, requestControlMock });
-    }
+		verify(ldapContextMock).setRequestControls(new Control[] { existingControl, requestControlMock });
+	}
 
-    @Test
-    public void testPreProcessWithExistingControlOfSameClassShouldReplace() throws Exception {
-        when(ldapContextMock.getRequestControls()).thenReturn(new Control[]{requestControl2Mock});
+	@Test
+	public void testPreProcessWithExistingControlOfSameClassShouldReplace() throws Exception {
+		when(ldapContextMock.getRequestControls()).thenReturn(new Control[]{requestControl2Mock});
 
-        tested.preProcess(ldapContextMock);
+		tested.preProcess(ldapContextMock);
 
-        verify(ldapContextMock).setRequestControls(new Control[] { requestControlMock });
-    }
+		verify(ldapContextMock).setRequestControls(new Control[] { requestControlMock });
+	}
 
-    @Test
-    public void testPreProcessWithExistingControlOfSameClassAndPropertyFalseShouldAdd() throws Exception {
-        when(ldapContextMock.getRequestControls()).thenReturn(new Control[] { requestControl2Mock });
+	@Test
+	public void testPreProcessWithExistingControlOfSameClassAndPropertyFalseShouldAdd() throws Exception {
+		when(ldapContextMock.getRequestControls()).thenReturn(new Control[] { requestControl2Mock });
 
-        tested.setReplaceSameControlEnabled(false);
-        tested.preProcess(ldapContextMock);
+		tested.setReplaceSameControlEnabled(false);
+		tested.preProcess(ldapContextMock);
 
-        verify(ldapContextMock).setRequestControls(new Control[]{requestControl2Mock, requestControlMock});
-    }
+		verify(ldapContextMock).setRequestControls(new Control[]{requestControl2Mock, requestControlMock});
+	}
 
-    @Test
-    public void testPreProcessWithNoExistingControlsShouldAdd() throws NamingException {
-        when(ldapContextMock.getRequestControls()).thenReturn(new Control[0]);
+	@Test
+	public void testPreProcessWithNoExistingControlsShouldAdd() throws NamingException {
+		when(ldapContextMock.getRequestControls()).thenReturn(new Control[0]);
 
-        tested.preProcess(ldapContextMock);
+		tested.preProcess(ldapContextMock);
 
-        verify(ldapContextMock).setRequestControls(new Control[]{requestControlMock});
-    }
+		verify(ldapContextMock).setRequestControls(new Control[]{requestControlMock});
+	}
 
-    @Test
-    public void testPreProcessWithNullControlsShouldAdd() throws NamingException {
-        when(ldapContextMock.getRequestControls()).thenReturn(null);
+	@Test
+	public void testPreProcessWithNullControlsShouldAdd() throws NamingException {
+		when(ldapContextMock.getRequestControls()).thenReturn(null);
 
-        tested.preProcess(ldapContextMock);
+		tested.preProcess(ldapContextMock);
 
-        verify(ldapContextMock).setRequestControls(new Control[] { requestControlMock });
-    }
+		verify(ldapContextMock).setRequestControls(new Control[] { requestControlMock });
+	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testPreProcessWhenNotLdapContextShouldFail() throws Exception {
-        tested.preProcess(dirContextMock);
-    }
+	@Test(expected = IllegalArgumentException.class)
+	public void testPreProcessWhenNotLdapContextShouldFail() throws Exception {
+		tested.preProcess(dirContextMock);
+	}
 }

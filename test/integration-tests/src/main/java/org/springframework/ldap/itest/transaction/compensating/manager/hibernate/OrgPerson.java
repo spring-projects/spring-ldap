@@ -11,15 +11,15 @@ public class OrgPerson{
 	
 	private String fullname;
 
-    private String lastname;
+	private String lastname;
 
-    private String company;
-    
-    private String country;
-    
-    private String description;
-    
-    public Integer getId() {
+	private String company;
+	
+	private String country;
+	
+	private String description;
+	
+	public Integer getId() {
 		return id;
 	}
 

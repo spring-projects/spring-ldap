@@ -25,8 +25,8 @@ package org.springframework.ldap;
  */
 public class InvalidSearchFilterException extends NamingException {
 
-    public InvalidSearchFilterException(
-            javax.naming.directory.InvalidSearchFilterException cause) {
-        super(cause);
-    }
+	public InvalidSearchFilterException(
+			javax.naming.directory.InvalidSearchFilterException cause) {
+		super(cause);
+	}
 }

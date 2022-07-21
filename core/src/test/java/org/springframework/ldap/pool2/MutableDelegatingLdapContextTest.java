@@ -25,7 +25,7 @@ import static org.mockito.Mockito.verify;
  * @author Ulrik Sandberg
  */
 public class MutableDelegatingLdapContextTest extends AbstractPoolTestCase {
-    @Test
+	@Test
 	public void testSupportedMethodsAllowedToCall() throws Exception {
 		final MutableDelegatingLdapContext delegatingLdapContext = new MutableDelegatingLdapContext(
 				keyedObjectPoolMock, ldapContextMock, DirContextType.READ_ONLY);

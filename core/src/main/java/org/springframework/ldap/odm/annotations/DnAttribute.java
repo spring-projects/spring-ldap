@@ -37,15 +37,15 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DnAttribute {
-    /**
-     * The name of the distinguished name attribute.
-     * @return the attribute name.
-     */
-    String value();
+	/**
+	 * The name of the distinguished name attribute.
+	 * @return the attribute name.
+	 */
+	String value();
 
-    /**
-     * The index of this attribute in the calculated distinguished name of an entry.
-     * @return the 0-based index of this attribute.
-     */
-    int index() default -1;
+	/**
+	 * The index of this attribute in the calculated distinguished name of an entry.
+	 * @return the 0-based index of this attribute.
+	 */
+	int index() default -1;
 }

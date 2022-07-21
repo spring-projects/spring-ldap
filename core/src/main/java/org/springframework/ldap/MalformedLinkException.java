@@ -25,7 +25,7 @@ package org.springframework.ldap;
  */
 public class MalformedLinkException extends LinkException {
 
-    public MalformedLinkException(javax.naming.MalformedLinkException cause) {
-        super(cause);
-    }
+	public MalformedLinkException(javax.naming.MalformedLinkException cause) {
+		super(cause);
+	}
 }

@@ -25,8 +25,8 @@ package org.springframework.ldap;
  */
 public class InvalidAttributeIdentifierException extends NamingException {
 
-    public InvalidAttributeIdentifierException(
-            javax.naming.directory.InvalidAttributeIdentifierException cause) {
-        super(cause);
-    }
+	public InvalidAttributeIdentifierException(
+			javax.naming.directory.InvalidAttributeIdentifierException cause) {
+		super(cause);
+	}
 }

@@ -52,7 +52,7 @@ public class SupportedControlsITest extends AbstractLdapTemplateIntegrationTest 
 	}
 	
 	@Test
-    @Category(NoAdTest.class)
+	@Category(NoAdTest.class)
 	public void testExpectedControlsSupported() throws Exception {
 		/**
 		 * Maps the 'supportedcontrol' attribute to a string array.
@@ -69,9 +69,9 @@ public class SupportedControlsITest extends AbstractLdapTemplateIntegrationTest 
 		String[] controls = (String[]) tested.lookup("", new String[] { SUPPORTED_CONTROL }, mapper);
 		System.out.println(Arrays.toString(controls));
 
-        HashSet<String> controlsSet = new HashSet<String>(Arrays.asList(controls));
+		HashSet<String> controlsSet = new HashSet<String>(Arrays.asList(controls));
 
-        assertThat(controlsSet.contains("1.3.6.1.4.1.4203.1.10.1")).as("Entry Change Notification LDAPv3 control,").isTrue();
+		assertThat(controlsSet.contains("1.3.6.1.4.1.4203.1.10.1")).as("Entry Change Notification LDAPv3 control,").isTrue();
 		assertThat(controlsSet.contains("1.3.6.1.4.1.4203.1.10.1")).as("Subentries Control,").isTrue();
 		assertThat(controlsSet.contains("2.16.840.1.113730.3.4.2")).as("Manage DSA IT LDAPv3 control,").isTrue();
 	}

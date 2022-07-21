@@ -26,11 +26,11 @@ import org.springframework.ldap.odm.core.OdmException;
  */
 @SuppressWarnings("serial")
 public class InvalidEntryException extends OdmException {
-    public InvalidEntryException(String message) {
-        super(message);
-    }
+	public InvalidEntryException(String message) {
+		super(message);
+	}
 
-    public InvalidEntryException(String message, Throwable reason) {
-        super(message, reason);
-    }
+	public InvalidEntryException(String message, Throwable reason) {
+		super(message, reason);
+	}
 }

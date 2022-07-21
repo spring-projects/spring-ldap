@@ -25,11 +25,11 @@ import org.springframework.ldap.NamingException;
  */
 @SuppressWarnings("serial")
 public final class ConverterException extends NamingException {
-    public ConverterException(final String message) {
-        super(message);
-    }
+	public ConverterException(final String message) {
+		super(message);
+	}
 
-    public ConverterException(final String message, final Throwable e) {
-        super(message, e);
-    }
+	public ConverterException(final String message, final Throwable e) {
+		super(message, e);
+	}
 }

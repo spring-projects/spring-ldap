@@ -27,18 +27,18 @@ import org.springframework.transaction.compensating.support.DefaultCompensatingT
  * @since 1.2
  */
 public interface CompensatingTransactionOperationFactory {
-    /**
-     * Create an appropriate {@link CompensatingTransactionOperationRecorder}
-     * instance corresponding to the supplied method name.
-     * 
-     * @param resource
-     *            The target transaction resource.
-     * @param method
-     *            the method name to create a
-     *            {@link CompensatingTransactionOperationRecorder} for.
-     * 
-     * @return a new {@link CompensatingTransactionOperationRecorder} instance.
-     */
-    CompensatingTransactionOperationRecorder createRecordingOperation(
-            Object resource, String method);
+	/**
+	 * Create an appropriate {@link CompensatingTransactionOperationRecorder}
+	 * instance corresponding to the supplied method name.
+	 * 
+	 * @param resource
+	 *			The target transaction resource.
+	 * @param method
+	 *			the method name to create a
+	 *			{@link CompensatingTransactionOperationRecorder} for.
+	 * 
+	 * @return a new {@link CompensatingTransactionOperationRecorder} instance.
+	 */
+	CompensatingTransactionOperationRecorder createRecordingOperation(
+			Object resource, String method);
 }

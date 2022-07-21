@@ -8,33 +8,33 @@ import java.util.Iterator;
 * @author Mattias Hellborg Arthursson
 */
 final class IterableNamingEnumeration<T> implements NamingEnumeration<T> {
-    private final Iterator<T> iterator;
+	private final Iterator<T> iterator;
 
-    IterableNamingEnumeration(Iterable<T> iterable) {
-        this.iterator = iterable.iterator();
-    }
+	IterableNamingEnumeration(Iterable<T> iterable) {
+		this.iterator = iterable.iterator();
+	}
 
-    @Override
-    public T next() {
-        return iterator.next();
-    }
+	@Override
+	public T next() {
+		return iterator.next();
+	}
 
-    @Override
-    public boolean hasMore() {
-        return iterator.hasNext();
-    }
+	@Override
+	public boolean hasMore() {
+		return iterator.hasNext();
+	}
 
-    @Override
-    public void close() throws NamingException {
-    }
+	@Override
+	public void close() throws NamingException {
+	}
 
-    @Override
-    public boolean hasMoreElements() {
-        return hasMore();
-    }
+	@Override
+	public boolean hasMoreElements() {
+		return hasMore();
+	}
 
-    @Override
-    public T nextElement() {
-        return next();
-    }
+	@Override
+	public T nextElement() {
+		return next();
+	}
 }

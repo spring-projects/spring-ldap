@@ -30,12 +30,12 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 public class ModifyAttributesOperationExecutorTest {
 	private LdapOperations ldapOperationsMock;
 
-    @Before
+	@Before
 	public void setUp() throws Exception {
-        ldapOperationsMock = mock(LdapOperations.class);
+		ldapOperationsMock = mock(LdapOperations.class);
 	}
 
-    @Test
+	@Test
 	public void testPerformOperation() {
 		ModificationItem[] expectedCompensatingItems = new ModificationItem[0];
 		ModificationItem[] expectedActualItems = new ModificationItem[0];
@@ -51,7 +51,7 @@ public class ModifyAttributesOperationExecutorTest {
 		verify(ldapOperationsMock).modifyAttributes(expectedDn, expectedActualItems);
 	}
 
-    @Test
+	@Test
 	public void testCommit() {
 		ModificationItem[] expectedCompensatingItems = new ModificationItem[0];
 		ModificationItem[] expectedActualItems = new ModificationItem[0];
@@ -62,13 +62,13 @@ public class ModifyAttributesOperationExecutorTest {
 				expectedDn, expectedActualItems, expectedCompensatingItems);
 
 		// No operation here
-        verifyNoMoreInteractions(ldapOperationsMock);
+		verifyNoMoreInteractions(ldapOperationsMock);
 
 		// Perform test
 		tested.commit();
 	}
 
-    @Test
+	@Test
 	public void testRollback() {
 		ModificationItem[] expectedCompensatingItems = new ModificationItem[0];
 		ModificationItem[] expectedActualItems = new ModificationItem[0];

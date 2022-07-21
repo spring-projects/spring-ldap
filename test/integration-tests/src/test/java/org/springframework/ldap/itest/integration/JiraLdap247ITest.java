@@ -33,15 +33,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ContextConfiguration(locations = {"/conf/ldap-247-testContext.xml"})
 public class JiraLdap247ITest extends AbstractLdapTemplateIntegrationTest {
 
-    @Autowired
-    private LdapGroupDao ldapGroupDao;
+	@Autowired
+	private LdapGroupDao ldapGroupDao;
 
-    @Test
-    public void verifyThatBasePathIsProperlyPopulated() {
-        assertThat(ldapGroupDao).isNotNull();
+	@Test
+	public void verifyThatBasePathIsProperlyPopulated() {
+		assertThat(ldapGroupDao).isNotNull();
 
-        // The base path should be automatically populated by BaseLdapPathBeanPostProcessor,
-        // but it doesn't unless it implements Ordered, which caused the assertion below to fail.
-        assertThat(ldapGroupDao.getBasePath()).isNotNull();
-    }
+		// The base path should be automatically populated by BaseLdapPathBeanPostProcessor,
+		// but it doesn't unless it implements Ordered, which caused the assertion below to fail.
+		assertThat(ldapGroupDao.getBasePath()).isNotNull();
+	}
 }

@@ -31,43 +31,43 @@ import org.springframework.transaction.compensating.support.CompensatingTransact
  * @since 1.2
  */
 public class DirContextHolder extends CompensatingTransactionHolderSupport {
-    private DirContext ctx;
+	private DirContext ctx;
 
-    /**
-     * Constructor.
-     * 
-     * @param manager
-     *            The {@link CompensatingTransactionOperationManager}.
-     * @param ctx
-     *            The DirContext associated with the current transaction.
-     */
-    public DirContextHolder(CompensatingTransactionOperationManager manager,
-            DirContext ctx) {
-        super(manager);
-        this.ctx = ctx;
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param manager
+	 *			The {@link CompensatingTransactionOperationManager}.
+	 * @param ctx
+	 *			The DirContext associated with the current transaction.
+	 */
+	public DirContextHolder(CompensatingTransactionOperationManager manager,
+			DirContext ctx) {
+		super(manager);
+		this.ctx = ctx;
+	}
 
-    /**
-     * Set the DirContext associated with the current transaction.
-     * 
-     * @param ctx
-     *            The DirContext associated with the current transaction.
-     */
-    public void setCtx(DirContext ctx) {
-        this.ctx = ctx;
-    }
+	/**
+	 * Set the DirContext associated with the current transaction.
+	 * 
+	 * @param ctx
+	 *			The DirContext associated with the current transaction.
+	 */
+	public void setCtx(DirContext ctx) {
+		this.ctx = ctx;
+	}
 
-    /**
-     * Return the DirContext associated with the current transaction.
-     */
-    public DirContext getCtx() {
-        return ctx;
-    }
+	/**
+	 * Return the DirContext associated with the current transaction.
+	 */
+	public DirContext getCtx() {
+		return ctx;
+	}
 
-    /*
-     * @see org.springframework.transaction.compensating.support.CompensatingTransactionHolderSupport#getTransactedResource()
-     */
-    protected Object getTransactedResource() {
-        return ctx;
-    }
+	/*
+	 * @see org.springframework.transaction.compensating.support.CompensatingTransactionHolderSupport#getTransactedResource()
+	 */
+	protected Object getTransactedResource() {
+		return ctx;
+	}
 }

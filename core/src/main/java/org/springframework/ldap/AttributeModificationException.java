@@ -25,8 +25,8 @@ package org.springframework.ldap;
  */
 public class AttributeModificationException extends NamingException {
 
-    public AttributeModificationException(
-            javax.naming.directory.AttributeModificationException cause) {
-        super(cause);
-    }
+	public AttributeModificationException(
+			javax.naming.directory.AttributeModificationException cause) {
+		super(cause);
+	}
 }

@@ -30,45 +30,45 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
  * @since 1.2
  */
 public class UnbindOperationRecorder implements
-        CompensatingTransactionOperationRecorder {
+		CompensatingTransactionOperationRecorder {
 
-    private LdapOperations ldapOperations;
+	private LdapOperations ldapOperations;
 
-    private TempEntryRenamingStrategy renamingStrategy;
+	private TempEntryRenamingStrategy renamingStrategy;
 
-    /**
-     * Constructor.
-     * 
-     * @param ldapOperations
-     *            {@link LdapOperations} to use for getting the data prior to
-     *            unbinding the entry and to supply to the
-     *            {@link UnbindOperationExecutor} for rollback.
-     * @param renamingStrategy
-     *            the {@link TempEntryRenamingStrategy} to use when generating
-     *            DNs for temporary entries.
-     */
-    public UnbindOperationRecorder(LdapOperations ldapOperations,
-            TempEntryRenamingStrategy renamingStrategy) {
-        this.ldapOperations = ldapOperations;
-        this.renamingStrategy = renamingStrategy;
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param ldapOperations
+	 *			{@link LdapOperations} to use for getting the data prior to
+	 *			unbinding the entry and to supply to the
+	 *			{@link UnbindOperationExecutor} for rollback.
+	 * @param renamingStrategy
+	 *			the {@link TempEntryRenamingStrategy} to use when generating
+	 *			DNs for temporary entries.
+	 */
+	public UnbindOperationRecorder(LdapOperations ldapOperations,
+			TempEntryRenamingStrategy renamingStrategy) {
+		this.ldapOperations = ldapOperations;
+		this.renamingStrategy = renamingStrategy;
+	}
 
-    /*
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
-     */
-    public CompensatingTransactionOperationExecutor recordOperation(
-            Object[] args) {
-        Name dn = LdapTransactionUtils.getFirstArgumentAsName(args);
-        Name temporaryDn = renamingStrategy.getTemporaryName(dn);
+	/*
+	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
+	 */
+	public CompensatingTransactionOperationExecutor recordOperation(
+			Object[] args) {
+		Name dn = LdapTransactionUtils.getFirstArgumentAsName(args);
+		Name temporaryDn = renamingStrategy.getTemporaryName(dn);
 
-        return new UnbindOperationExecutor(ldapOperations, dn, temporaryDn);
-    }
+		return new UnbindOperationExecutor(ldapOperations, dn, temporaryDn);
+	}
 
-    LdapOperations getLdapOperations() {
-        return ldapOperations;
-    }
+	LdapOperations getLdapOperations() {
+		return ldapOperations;
+	}
 
-    public TempEntryRenamingStrategy getRenamingStrategy() {
-        return renamingStrategy;
-    }
+	public TempEntryRenamingStrategy getRenamingStrategy() {
+		return renamingStrategy;
+	}
 }

@@ -50,18 +50,18 @@ import javax.naming.directory.SearchResult;
  * @author Mattias Hellborg Arthursson
  */
 public interface ContextMapper<T> {
-    /**
-     * Map a single LDAP Context to an object. The supplied Object
-     * <code>ctx</code> is the object from a single {@link SearchResult},
-     * {@link Binding}, or a lookup operation.
-     * 
-     * @param ctx
-     *            the context to map to an object. Typically this will be a
-     *            {@link DirContextAdapter} instance, unless a project specific
-     *            <code>DirObjectFactory</code> has been specified on the
-     *            <code>ContextSource</code>.
-     * @return an object built from the data in the context.
-     * @throws NamingException if an error occurs.
-     */
-    T mapFromContext(Object ctx) throws NamingException;
+	/**
+	 * Map a single LDAP Context to an object. The supplied Object
+	 * <code>ctx</code> is the object from a single {@link SearchResult},
+	 * {@link Binding}, or a lookup operation.
+	 * 
+	 * @param ctx
+	 *			the context to map to an object. Typically this will be a
+	 *			{@link DirContextAdapter} instance, unless a project specific
+	 *			<code>DirObjectFactory</code> has been specified on the
+	 *			<code>ContextSource</code>.
+	 * @return an object built from the data in the context.
+	 * @throws NamingException if an error occurs.
+	 */
+	T mapFromContext(Object ctx) throws NamingException;
 }

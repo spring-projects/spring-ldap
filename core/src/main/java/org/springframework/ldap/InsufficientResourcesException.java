@@ -25,8 +25,8 @@ package org.springframework.ldap;
  */
 public class InsufficientResourcesException extends NamingException {
 
-    public InsufficientResourcesException(
-            javax.naming.InsufficientResourcesException cause) {
-        super(cause);
-    }
+	public InsufficientResourcesException(
+			javax.naming.InsufficientResourcesException cause) {
+		super(cause);
+	}
 }

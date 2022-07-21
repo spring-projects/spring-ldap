@@ -24,20 +24,20 @@ import javax.naming.ldap.LdapName;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DifferentSubtreeTempEntryRenamingStrategyTest {
-    @Test
-    public void testGetTemporaryName() {
-        LdapName originalName = LdapUtils.newLdapName(
-                "cn=john doe, ou=somecompany, c=SE");
-        DifferentSubtreeTempEntryRenamingStrategy tested = new DifferentSubtreeTempEntryRenamingStrategy(
-                LdapUtils.newLdapName("ou=tempEntries"));
+	@Test
+	public void testGetTemporaryName() {
+		LdapName originalName = LdapUtils.newLdapName(
+				"cn=john doe, ou=somecompany, c=SE");
+		DifferentSubtreeTempEntryRenamingStrategy tested = new DifferentSubtreeTempEntryRenamingStrategy(
+				LdapUtils.newLdapName("ou=tempEntries"));
 
-        int nextSequenceNo = tested.getNextSequenceNo();
+		int nextSequenceNo = tested.getNextSequenceNo();
 
-        // Perform test
-        Name result = tested.getTemporaryName(originalName);
+		// Perform test
+		Name result = tested.getTemporaryName(originalName);
 
-        // Verify result
-        assertThat(result.toString()).isEqualTo("cn=john doe" + nextSequenceNo + ",ou=tempEntries");
-    }
+		// Verify result
+		assertThat(result.toString()).isEqualTo("cn=john doe" + nextSequenceNo + ",ou=tempEntries");
+	}
 
 }

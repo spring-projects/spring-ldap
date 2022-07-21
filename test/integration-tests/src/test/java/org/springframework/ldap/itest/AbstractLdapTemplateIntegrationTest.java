@@ -47,39 +47,39 @@ import java.util.List;
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 public abstract class AbstractLdapTemplateIntegrationTest {
 
-    private final static String DEFAULT_BASE = "dc=261consulting,dc=com";
+	private final static String DEFAULT_BASE = "dc=261consulting,dc=com";
 
-    @Autowired
+	@Autowired
 	@Qualifier("contextSource")
 	protected ContextSource contextSource;
 
-    @Value("${base}")
-    protected String base;
+	@Value("${base}")
+	protected String base;
 
 	@Before
 	public void cleanAndSetup() throws NamingException, IOException {
-        Resource ldifResource = getLdifFileResource();
-        if(!LdapUtils.newLdapName(base).equals(LdapUtils.newLdapName(DEFAULT_BASE))) {
-            List<String> lines = IOUtils.readLines(ldifResource.getInputStream());
+		Resource ldifResource = getLdifFileResource();
+		if(!LdapUtils.newLdapName(base).equals(LdapUtils.newLdapName(DEFAULT_BASE))) {
+			List<String> lines = IOUtils.readLines(ldifResource.getInputStream());
 
-            StringWriter sw = new StringWriter();
-            PrintWriter writer = new PrintWriter(sw);
-            for (String line : lines) {
-                writer.println(StringUtils.replace(line, DEFAULT_BASE, base));
-            }
+			StringWriter sw = new StringWriter();
+			PrintWriter writer = new PrintWriter(sw);
+			for (String line : lines) {
+				writer.println(StringUtils.replace(line, DEFAULT_BASE, base));
+			}
 
-            writer.flush();
-            ldifResource = new ByteArrayResource(sw.toString().getBytes("UTF8"));
-        }
+			writer.flush();
+			ldifResource = new ByteArrayResource(sw.toString().getBytes("UTF8"));
+		}
 
-        LdapTestUtils.cleanAndSetup(contextSource, getRoot(), ldifResource);
-    }
+		LdapTestUtils.cleanAndSetup(contextSource, getRoot(), ldifResource);
+	}
 
-    protected Resource getLdifFileResource() {
-        return new ClassPathResource("/setup_data.ldif");
-    }
+	protected Resource getLdifFileResource() {
+		return new ClassPathResource("/setup_data.ldif");
+	}
 
-    protected Name getRoot() {
+	protected Name getRoot() {
 		return LdapUtils.emptyLdapName();
 	}
 }

@@ -36,15 +36,15 @@ public class LdapContextSourceTest {
 
 	private LdapContextSource tested;
 
-    @Before
+	@Before
 	public void setUp() throws Exception {
 		tested = new LdapContextSource();
 	}
 
-    @Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testAfterPropertiesSet_NoUrl() throws Exception {
-        tested.afterPropertiesSet();
-    }
+		tested.afterPropertiesSet();
+	}
 
 	// gh-538
 	@Test(expected = IllegalArgumentException.class)
@@ -86,7 +86,7 @@ public class LdapContextSourceTest {
 		assertThat(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY)).isEqualTo(LdapUtils.newLdapName("dc=some example,dc=se"));
 	}
 
-    @Test
+	@Test
 	public void testGetAnonymousEnvWithNoBaseSet() throws Exception {
 		tested.setUrl("ldap://ldap.example.com:389");
 		tested.afterPropertiesSet();
@@ -97,7 +97,7 @@ public class LdapContextSourceTest {
 		assertThat(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY)).isNull();
 	}
 
-    @Test
+	@Test
 	public void testGetAnonymousEnvWithBaseEnvironment() throws Exception {
 		tested.setUrl("ldap://ldap.example.com:389");
 		HashMap map = new HashMap();
@@ -109,7 +109,7 @@ public class LdapContextSourceTest {
 		assertThat(env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG)).isNull();
 	}
 
-    @Test
+	@Test
 	public void testGetAnonymousEnvWithPoolingInBaseEnvironmentAndPoolingOff() throws Exception {
 		tested.setUrl("ldap://ldap.example.com:389");
 		HashMap map = new HashMap();
@@ -122,7 +122,7 @@ public class LdapContextSourceTest {
 		assertThat(env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG)).isNull();
 	}
 
-    @Test
+	@Test
 	public void testGetAnonymousEnvWithEmptyBaseSet() throws Exception {
 		tested.setUrl("ldap://ldap.example.com:389");
 		tested.setBase(null);
@@ -134,7 +134,7 @@ public class LdapContextSourceTest {
 		assertThat(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY)).isNull();
 	}
 
-    @Test
+	@Test
 	public void testGetAuthenticatedEnv() throws Exception {
 		tested.setBase("dc=example,dc=se");
 		tested.setUrl("ldap://ldap.example.com:389");
@@ -153,7 +153,7 @@ public class LdapContextSourceTest {
 		assertThat(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY)).isEqualTo(LdapUtils.newLdapName("dc=example,dc=se"));
 	}
 
-    @Test
+	@Test
 	public void testGetAnonymousEnvWhenCacheIsOff() throws Exception {
 		tested.setBase("dc=example,dc=se");
 		tested.setUrl("ldap://ldap.example.com:389");

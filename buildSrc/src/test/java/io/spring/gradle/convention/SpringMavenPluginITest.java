@@ -24,10 +24,10 @@ public class SpringMavenPluginITest {
 		this.testKit = new TestKit(tempDir.toFile());
 	}
 
-    @Disabled
+	@Disabled
 	@Test
-    public void install()  throws Exception {
-        BuildResult result = this.testKit.withProjectResource("samples/maven/install")
+	public void install()  throws Exception {
+		BuildResult result = this.testKit.withProjectResource("samples/maven/install")
 				.withArguments("install")
 				.build();
 		assertThat(result.getOutput()).contains("SUCCESS");
@@ -37,13 +37,13 @@ public class SpringMavenPluginITest {
 		assertThat(pomText.replaceAll("\\s", "")).contains("<dependency>\n			<groupId>aopalliance</groupId>\n			<artifactId>aopalliance</artifactId>\n			<version>1.0</version>\n			<scope>compile</scope>\n			<optional>true</optional>\n		</dependency>".replaceAll("\\s", ""));
 	}
 
-    @Disabled
+	@Disabled
 	@Test
-    public void signArchivesWhenInMemory() throws Exception {
-        LinkedHashMap<String, String> map = new LinkedHashMap<String, String>(2);
-        map.put("ORG_GRADLE_PROJECT_signingKey", getSigningKey());
-        map.put("ORG_GRADLE_PROJECT_signingPassword", "password");
-        BuildResult result = this.testKit.withProjectResource("samples/maven/signing")
+	public void signArchivesWhenInMemory() throws Exception {
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>(2);
+		map.put("ORG_GRADLE_PROJECT_signingKey", getSigningKey());
+		map.put("ORG_GRADLE_PROJECT_signingPassword", "password");
+		BuildResult result = this.testKit.withProjectResource("samples/maven/signing")
 				.withArguments("signArchives")
 				.withEnvironment(map)
 				.forwardOutput()
@@ -55,7 +55,7 @@ public class SpringMavenPluginITest {
 		assertThat(signature).exists();
 	}
 
-    public String getSigningKey() throws Exception {
+	public String getSigningKey() throws Exception {
 		return IOUtils.toString(getClass().getResource("/test-private.pgp"));
 	}
 }

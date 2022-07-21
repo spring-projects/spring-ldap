@@ -46,7 +46,7 @@ public class DefaultDirObjectFactoryTest {
 
 	private Context contextMock2;
 
-    @Before
+	@Before
 	public void setUp() throws Exception {
 		contextMock = mock(Context.class);
 		contextMock2 = mock(Context.class);
@@ -54,7 +54,7 @@ public class DefaultDirObjectFactoryTest {
 		tested = new DefaultDirObjectFactory();
 	}
 
-    @Test
+	@Test
 	public void testGetObjectInstance() throws Exception {
 		Attributes expectedAttributes = new NameAwareAttributes();
 		expectedAttributes.put("someAttribute", "someValue");
@@ -68,9 +68,9 @@ public class DefaultDirObjectFactoryTest {
 		assertThat(adapter.getAttributes()).isEqualTo(expectedAttributes);
 	}
 
-    @Test
+	@Test
 	public void testGetObjectInstance_CompositeName() throws Exception {
-        Attributes expectedAttributes = new NameAwareAttributes();
+		Attributes expectedAttributes = new NameAwareAttributes();
 		expectedAttributes.put("someAttribute", "someValue");
 
 		CompositeName name = new CompositeName();
@@ -79,13 +79,13 @@ public class DefaultDirObjectFactoryTest {
 		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(contextMock, name, null,
 				new Hashtable(), expectedAttributes);
 
-        verify(contextMock).close();
+		verify(contextMock).close();
 
 		assertThat(adapter.getDn()).isEqualTo(DN);
 		assertThat(adapter.getAttributes()).isEqualTo(expectedAttributes);
 	}
 
-    @Test
+	@Test
 	public void testGetObjectInstance_nullObject() throws Exception {
 		Attributes expectedAttributes = new NameAwareAttributes();
 		expectedAttributes.put("someAttribute", "someValue");
@@ -97,7 +97,7 @@ public class DefaultDirObjectFactoryTest {
 		assertThat(adapter.getAttributes()).isEqualTo(expectedAttributes);
 	}
 
-    @Test
+	@Test
 	public void testGetObjectInstance_ObjectNotContext() throws Exception {
 		Attributes expectedAttributes = new NameAwareAttributes();
 		expectedAttributes.put("someAttribute", "someValue");
@@ -114,7 +114,7 @@ public class DefaultDirObjectFactoryTest {
 	 * 
 	 * @throws Exception
 	 */
-    @Test
+	@Test
 	public void testGetObjectInstance_BaseSet() throws Exception {
 		Attributes expectedAttributes = new NameAwareAttributes();
 		expectedAttributes.put("someAttribute", "someValue");
@@ -124,14 +124,14 @@ public class DefaultDirObjectFactoryTest {
 		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(contextMock, LdapUtils.newLdapName(
 				"ou=some unit"), contextMock2, new Hashtable(), expectedAttributes);
 
-        verify(contextMock).close();
+		verify(contextMock).close();
 
 		assertThat(adapter.getDn().toString()).isEqualTo("ou=some unit");
 		assertThat(adapter.getNameInNamespace()).isEqualTo("ou=some unit,dc=jayway,dc=se");
 		assertThat(adapter.getAttributes()).isEqualTo(expectedAttributes);
 	}
 
-    @Test
+	@Test
 	public void testConstructAdapterFromName() throws InvalidNameException {
 		CompositeName name = new CompositeName();
 		name.add("ldap://localhost:389/ou=People,o=JNDITutorial");
@@ -142,7 +142,7 @@ public class DefaultDirObjectFactoryTest {
 		assertThat(result.getReferralUrl().toString()).isEqualTo("ldap://localhost:389");
 	}
 
-    @Test
+	@Test
 	public void testConstructAdapterFromName_Ldaps() throws InvalidNameException {
 		CompositeName name = new CompositeName();
 		name.add("ldaps://localhost:389/ou=People,o=JNDITutorial");
@@ -153,7 +153,7 @@ public class DefaultDirObjectFactoryTest {
 		assertThat(result.getReferralUrl().toString()).isEqualTo("ldaps://localhost:389");
 	}
 
-    @Test
+	@Test
 	public void testConstructAdapterFromName_EmptyName() throws InvalidNameException {
 		CompositeName name = new CompositeName();
 		name.add("ldap://localhost:389");
@@ -164,7 +164,7 @@ public class DefaultDirObjectFactoryTest {
 		assertThat(result.getReferralUrl().toString()).isEqualTo("ldap://localhost:389");
 	}
 
-    @Test
+	@Test
 	public void testConstructAdapterFromName_OnlySlash() throws InvalidNameException {
 		CompositeName name = new CompositeName();
 		name.add("ldap://localhost:389/");

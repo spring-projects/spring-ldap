@@ -39,118 +39,118 @@ import static org.mockito.Mockito.when;
  */
 public class SortControlDirContextProcessorTest {
 
-    private LdapContext ldapContextMock;
+	private LdapContext ldapContextMock;
 
-    private SortControlDirContextProcessor tested;
+	private SortControlDirContextProcessor tested;
 
-    @Before
-    public void setUp() throws Exception {
-        tested = new SortControlDirContextProcessor("key");
+	@Before
+	public void setUp() throws Exception {
+		tested = new SortControlDirContextProcessor("key");
 
-        // Create ldapContext mock
-        ldapContextMock = mock(LdapContext.class);
-    }
+		// Create ldapContext mock
+		ldapContextMock = mock(LdapContext.class);
+	}
 
-    @Test
-    public void testCreateRequestControl() throws Exception {
-        SortControl result = (SortControl) tested.createRequestControl();
-        assertThat(result).isNotNull();
-        assertThat(result.getID()).isEqualTo("1.2.840.113556.1.4.473");
-        assertThat(result.getEncodedValue().length).isEqualTo(9);
-    }
+	@Test
+	public void testCreateRequestControl() throws Exception {
+		SortControl result = (SortControl) tested.createRequestControl();
+		assertThat(result).isNotNull();
+		assertThat(result.getID()).isEqualTo("1.2.840.113556.1.4.473");
+		assertThat(result.getEncodedValue().length).isEqualTo(9);
+	}
 
-    @Test
-    public void testPostProcess() throws Exception {
-        byte sortResult = 0; // success
+	@Test
+	public void testPostProcess() throws Exception {
+		byte sortResult = 0; // success
 
-        byte[] value = encodeValue(sortResult);
-        SortResponseControl control = new SortResponseControl(
-                "dummy", true, value);
+		byte[] value = encodeValue(sortResult);
+		SortResponseControl control = new SortResponseControl(
+				"dummy", true, value);
 
-        when(ldapContextMock.getResponseControls()).thenReturn( new Control[]{control});
+		when(ldapContextMock.getResponseControls()).thenReturn( new Control[]{control});
 
-        tested.postProcess(ldapContextMock);
+		tested.postProcess(ldapContextMock);
 
-        assertThat(tested.isSorted()).isEqualTo(true);
-        assertThat(tested.getResultCode()).isEqualTo(0);
-    }
+		assertThat(tested.isSorted()).isEqualTo(true);
+		assertThat(tested.getResultCode()).isEqualTo(0);
+	}
 
-    @Test
-    public void testPostProcess_NonSuccess() throws Exception {
-        byte sortResult = 1;
+	@Test
+	public void testPostProcess_NonSuccess() throws Exception {
+		byte sortResult = 1;
 
-        byte[] value = encodeValue(sortResult);
-        SortResponseControl control = new SortResponseControl(
-                "dummy", true, value);
+		byte[] value = encodeValue(sortResult);
+		SortResponseControl control = new SortResponseControl(
+				"dummy", true, value);
 
-        when(ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
+		when(ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
 
-        tested.postProcess(ldapContextMock);
+		tested.postProcess(ldapContextMock);
 
-        assertThat(tested.isSorted()).isEqualTo(false);
-        assertThat(tested.getResultCode()).isEqualTo(1);
-    }
+		assertThat(tested.isSorted()).isEqualTo(false);
+		assertThat(tested.getResultCode()).isEqualTo(1);
+	}
 
-    @Test
-    public void testPostProcess_InvalidResponseControl() throws Exception {
-        int resultSize = 50;
-        byte pageSize = 8;
+	@Test
+	public void testPostProcess_InvalidResponseControl() throws Exception {
+		int resultSize = 50;
+		byte pageSize = 8;
 
-        byte[] value = new byte[1];
-        value[0] = pageSize;
-        byte[] cookie = encodeDirSyncValue(resultSize, value);
+		byte[] value = new byte[1];
+		value[0] = pageSize;
+		byte[] cookie = encodeDirSyncValue(resultSize, value);
 
-        // Using another response control to verify that it is ignored
-        DirSyncResponseControl control = new DirSyncResponseControl("dummy",
-                true, cookie);
+		// Using another response control to verify that it is ignored
+		DirSyncResponseControl control = new DirSyncResponseControl("dummy",
+				true, cookie);
 
-        when(ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
+		when(ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
 
-        tested.postProcess(ldapContextMock);
+		tested.postProcess(ldapContextMock);
 
-        assertThat(tested.isSorted()).isEqualTo(false);
-    }
+		assertThat(tested.isSorted()).isEqualTo(false);
+	}
 
-    @Test
-    public void testBerDecoding() throws Exception {
-        int sortResult = 53; // unwilling to perform
-        byte[] encoded = encodeValue(sortResult);
+	@Test
+	public void testBerDecoding() throws Exception {
+		int sortResult = 53; // unwilling to perform
+		byte[] encoded = encodeValue(sortResult);
 
-        BerDecoder ber = new BerDecoder(encoded, 0, encoded.length);
+		BerDecoder ber = new BerDecoder(encoded, 0, encoded.length);
 
-        ber.parseSeq(null);
-        int actualSortResult = ber.parseEnumeration();
+		ber.parseSeq(null);
+		int actualSortResult = ber.parseEnumeration();
 
-        assertThat(actualSortResult).as("sortResult,").isEqualTo(53);
-    }
+		assertThat(actualSortResult).as("sortResult,").isEqualTo(53);
+	}
 
-    private byte[] encodeValue(int sortResult) throws IOException {
+	private byte[] encodeValue(int sortResult) throws IOException {
 
-        // build the ASN.1 encoding
-        BerEncoder ber = new BerEncoder(10);
+		// build the ASN.1 encoding
+		BerEncoder ber = new BerEncoder(10);
 
-        ber.beginSeq(Ber.ASN_SEQUENCE | Ber.ASN_CONSTRUCTOR);
-        ber.encodeInt(sortResult, Ber.ASN_ENUMERATED);
-        ber.endSeq();
+		ber.beginSeq(Ber.ASN_SEQUENCE | Ber.ASN_CONSTRUCTOR);
+		ber.encodeInt(sortResult, Ber.ASN_ENUMERATED);
+		ber.endSeq();
 
-        return ber.getTrimmedBuf();
-    }
+		return ber.getTrimmedBuf();
+	}
 
-    /**
-     * Encode a value suitable for the DirSyncResponseControl used in a test.
-     */
-    private byte[] encodeDirSyncValue(int pageSize, byte[] cookie)
-            throws IOException {
+	/**
+	 * Encode a value suitable for the DirSyncResponseControl used in a test.
+	 */
+	private byte[] encodeDirSyncValue(int pageSize, byte[] cookie)
+			throws IOException {
 
-        // build the ASN.1 encoding
-        BerEncoder ber = new BerEncoder(10 + cookie.length);
+		// build the ASN.1 encoding
+		BerEncoder ber = new BerEncoder(10 + cookie.length);
 
-        ber.beginSeq(Ber.ASN_SEQUENCE | Ber.ASN_CONSTRUCTOR);
-        ber.encodeInt(1); // flag
-        ber.encodeInt(pageSize); // maxReturnLength
-        ber.encodeOctetString(cookie, Ber.ASN_OCTET_STR);
-        ber.endSeq();
+		ber.beginSeq(Ber.ASN_SEQUENCE | Ber.ASN_CONSTRUCTOR);
+		ber.encodeInt(1); // flag
+		ber.encodeInt(pageSize); // maxReturnLength
+		ber.encodeOctetString(cookie, Ber.ASN_OCTET_STR);
+		ber.endSeq();
 
-        return ber.getTrimmedBuf();
-    }
+		return ber.getTrimmedBuf();
+	}
 }

@@ -25,7 +25,7 @@ package org.springframework.ldap;
  */
 public class CommunicationException extends NamingException {
 
-    public CommunicationException(javax.naming.CommunicationException cause) {
-        super(cause);
-    }
+	public CommunicationException(javax.naming.CommunicationException cause) {
+		super(cause);
+	}
 }

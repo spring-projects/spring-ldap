@@ -25,10 +25,10 @@ import javax.naming.directory.DirContext;
  * @since 1.2
  */
 public interface DirContextProxy {
-    /**
-     * Get the target <code>DirContext</code> of the proxy.
-     * 
-     * @return the target <code>DirContext</code>.
-     */
-    DirContext getTargetContext();
+	/**
+	 * Get the target <code>DirContext</code> of the proxy.
+	 * 
+	 * @return the target <code>DirContext</code>.
+	 */
+	DirContext getTargetContext();
 }

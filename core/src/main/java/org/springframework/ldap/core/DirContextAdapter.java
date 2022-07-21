@@ -60,24 +60,24 @@ import java.util.TreeSet;
  * input to {@link LdapTemplate#modifyAttributes(DirContextOperations)}.
  *
  * <p>
- *     This class is aware of the specifics of {@link Name} instances with regards
- *     to equality when working with attribute values. This comes in very handy
- *     when working with e.g. security groups and modifications of them. If
- *     {@link Name} instances are supplied to one of the Attribute manipulation
- *     methods (e.g. {@link #addAttributeValue(String, Object)},
- *     {@link #removeAttributeValue(String, Object)}, {@link #setAttributeValue(String, Object)},
- *     or {@link #setAttributeValues(String, Object[])}), the produced modifications
- *     will be calculated using {@link Name} equality. This means that if an the <code>member</code>
- *     has a value of <code>"cn=John Doe,ou=People"</code>, and we call
- *     <code>addAttributeValue("member", LdapUtils.newLdapName("CN=John Doe,OU=People")</code>,
- *     this will <strong>not</strong> be considered a modification since the two DN
- *     strings represent the same distinguished name (case and spacing between attributes is
- *     disregarded).
+ *	 This class is aware of the specifics of {@link Name} instances with regards
+ *	 to equality when working with attribute values. This comes in very handy
+ *	 when working with e.g. security groups and modifications of them. If
+ *	 {@link Name} instances are supplied to one of the Attribute manipulation
+ *	 methods (e.g. {@link #addAttributeValue(String, Object)},
+ *	 {@link #removeAttributeValue(String, Object)}, {@link #setAttributeValue(String, Object)},
+ *	 or {@link #setAttributeValues(String, Object[])}), the produced modifications
+ *	 will be calculated using {@link Name} equality. This means that if an the <code>member</code>
+ *	 has a value of <code>"cn=John Doe,ou=People"</code>, and we call
+ *	 <code>addAttributeValue("member", LdapUtils.newLdapName("CN=John Doe,OU=People")</code>,
+ *	 this will <strong>not</strong> be considered a modification since the two DN
+ *	 strings represent the same distinguished name (case and spacing between attributes is
+ *	 disregarded).
  * </p>
  * <p>
- *     Note that this is not a complete implementation of DirContext. Several
- *     methods are not relevant for the intended usage of this class, so they
- *     throw UnsupportOperationException.
+ *	 Note that this is not a complete implementation of DirContext. Several
+ *	 methods are not relevant for the intended usage of this class, so they
+ *	 throw UnsupportOperationException.
  * </p>
  *
  * @see #setAttributeValue(String, Object)
@@ -102,9 +102,9 @@ public class DirContextAdapter implements DirContextOperations {
 	private static final String EMPTY_STRING = "";
 
 	private static final boolean ORDER_DOESNT_MATTER = false;
-    private static final String NOT_IMPLEMENTED = "Not implemented.";
+	private static final String NOT_IMPLEMENTED = "Not implemented.";
 
-    private static Logger log = LoggerFactory.getLogger(DirContextAdapter.class);
+	private static Logger log = LoggerFactory.getLogger(DirContextAdapter.class);
 
 	private final NameAwareAttributes originalAttrs;
 
@@ -182,20 +182,20 @@ public class DirContextAdapter implements DirContextOperations {
 			this.originalAttrs = new NameAwareAttributes();
 		}
 
-        if (dn != null) {
-            this.dn = LdapUtils.newLdapName(dn);
-        }
-        else {
-            this.dn = LdapUtils.emptyLdapName();
-        }
-        if (base != null) {
-            this.base = LdapUtils.newLdapName(base);
-        }
-        else {
-            this.base = LdapUtils.emptyLdapName();
-        }
+		if (dn != null) {
+			this.dn = LdapUtils.newLdapName(dn);
+		}
+		else {
+			this.dn = LdapUtils.emptyLdapName();
+		}
+		if (base != null) {
+			this.base = LdapUtils.newLdapName(base);
+		}
+		else {
+			this.base = LdapUtils.emptyLdapName();
+		}
 
-        if (referralUrl != null) {
+		if (referralUrl != null) {
 			this.referralUrl = referralUrl;
 		}
 		else {
@@ -229,18 +229,18 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public boolean isUpdateMode() {
 		return updateMode;
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String[] getNamesOfModifiedAttributes() {
 
 		List<String> tmpList = new ArrayList<String>();
@@ -281,10 +281,10 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public ModificationItem[] getModificationItems() {
 		if (!updateMode) {
 			return new ModificationItem[0];
@@ -333,14 +333,14 @@ public class DirContextAdapter implements DirContextOperations {
 	private void collectModifications(NameAwareAttribute changedAttr,
 			List<ModificationItem> modificationList) throws NamingException {
 		NameAwareAttribute currentAttribute = originalAttrs.get(changedAttr.getID());
-        if(currentAttribute != null && changedAttr.hasValuesAsNames()) {
-            try {
-                currentAttribute.initValuesAsNames();
-            } catch(IllegalArgumentException e) {
-                log.warn("Incompatible attributes; changed attribute has Name values but " +
-                        "original cannot be converted to this");
-            }
-        }
+		if(currentAttribute != null && changedAttr.hasValuesAsNames()) {
+			try {
+				currentAttribute.initValuesAsNames();
+			} catch(IllegalArgumentException e) {
+				log.warn("Incompatible attributes; changed attribute has Name values but " +
+						"original cannot be converted to this");
+			}
+		}
 
 		if (changedAttr.equals(currentAttribute)) {
 			// No changes
@@ -396,33 +396,33 @@ public class DirContextAdapter implements DirContextOperations {
 		Attribute addedValuesAttribute = new NameAwareAttribute(originalAttr
 				.getID());
 
-        NamingEnumeration<?> allValues = changedAttr.getAll();
-        while(allValues.hasMoreElements()) {
-            Object attributeValue = allValues.nextElement();
-            if (!originalClone.remove(attributeValue)) {
-                addedValuesAttribute.add(attributeValue);
-            }
-        }
+		NamingEnumeration<?> allValues = changedAttr.getAll();
+		while(allValues.hasMoreElements()) {
+			Object attributeValue = allValues.nextElement();
+			if (!originalClone.remove(attributeValue)) {
+				addedValuesAttribute.add(attributeValue);
+			}
+		}
 
-        // We have now traversed and removed all values from the original that
-        // were also present in the new values. The remaining values in the
-        // original must be the ones that were removed.
-        if(originalClone.size() > 0 && originalClone.size() == originalAttr.size()) {
-            // This is actually a complete replacement of the attribute values.
-            // Fall back to REPLACE
-            modificationList.add(new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
-                    addedValuesAttribute));
-        } else {
-            if (originalClone.size() > 0) {
-                modificationList.add(new ModificationItem(
-                        DirContext.REMOVE_ATTRIBUTE, originalClone));
-            }
+		// We have now traversed and removed all values from the original that
+		// were also present in the new values. The remaining values in the
+		// original must be the ones that were removed.
+		if(originalClone.size() > 0 && originalClone.size() == originalAttr.size()) {
+			// This is actually a complete replacement of the attribute values.
+			// Fall back to REPLACE
+			modificationList.add(new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
+					addedValuesAttribute));
+		} else {
+			if (originalClone.size() > 0) {
+				modificationList.add(new ModificationItem(
+						DirContext.REMOVE_ATTRIBUTE, originalClone));
+			}
 
-            if (addedValuesAttribute.size() > 0) {
-                modificationList.add(new ModificationItem(DirContext.ADD_ATTRIBUTE,
-                        addedValuesAttribute));
-            }
-        }
+			if (addedValuesAttribute.size() > 0) {
+				modificationList.add(new ModificationItem(DirContext.ADD_ATTRIBUTE,
+						addedValuesAttribute));
+			}
+		}
 	}
 
 	/**
@@ -471,8 +471,8 @@ public class DirContextAdapter implements DirContextOperations {
 			// removed)
 			// TODO Also include prev in null check
 			// TODO Also check if there is a single null element
-            return orig != null;
-        }
+			return orig != null;
+		}
 
 		// NOT setting to empty -------------------
 
@@ -554,18 +554,18 @@ public class DirContextAdapter implements DirContextOperations {
 		return originalAttrs.get(attrId) != null;
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String getStringAttribute(String name) {
 		return (String) getObjectAttribute(name);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Object getObjectAttribute(String name) {
 		Attribute oneAttr = originalAttrs.get(name);
 		if (oneAttr == null || oneAttr.size() == 0) { // LDAP-215
@@ -579,20 +579,20 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	// LDAP-215
 	public boolean attributeExists(String name) {
 		Attribute oneAttr = originalAttrs.get(name);
-        return oneAttr != null;
+		return oneAttr != null;
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void setAttributeValue(String name, Object value) {
 		// new entry
 		if (!updateMode && value != null) {
@@ -609,18 +609,18 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void addAttributeValue(String name, Object value) {
 		addAttributeValue(name, value, DONT_ADD_IF_DUPLICATE_EXISTS);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void addAttributeValue(String name, Object value,
 			boolean addIfDuplicateExists) {
 		if (!updateMode && value != null) {
@@ -656,10 +656,10 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void removeAttributeValue(String name, Object value) {
 		if (!updateMode && value != null) {
 			Attribute attr = originalAttrs.get(name);
@@ -685,18 +685,18 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void setAttributeValues(String name, Object[] values) {
 		setAttributeValues(name, values, ORDER_DOESNT_MATTER);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void setAttributeValues(String name, Object[] values,
 			boolean orderMatters) {
 		Attribute a = new NameAwareAttribute(name, orderMatters);
@@ -717,10 +717,10 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void update() {
 		NamingEnumeration<? extends Attribute> attributesEnumeration = null;
 
@@ -752,14 +752,14 @@ public class DirContextAdapter implements DirContextOperations {
 		updatedAttrs = new NameAwareAttributes();
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String[] getStringAttributes(String name) {
 		try {
-            List<String> objects = collectAttributeValuesAsList(name, String.class);
-            return objects.toArray(new String[objects.size()]);
+			List<String> objects = collectAttributeValuesAsList(name, String.class);
+			return objects.toArray(new String[objects.size()]);
 		}
 		catch (NoSuchAttributeException e) {
 			// The attribute does not exist - contract says to return null.
@@ -767,14 +767,14 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Object[] getObjectAttributes(String name) {
 		try {
-            List<Object> list = collectAttributeValuesAsList(name, Object.class);
-            return list.toArray(new Object[list.size()]);
+			List<Object> list = collectAttributeValuesAsList(name, Object.class);
+			return list.toArray(new Object[list.size()]);
 		}
 		catch (NoSuchAttributeException e) {
 			// The attribute does not exist - contract says to return null.
@@ -788,10 +788,10 @@ public class DirContextAdapter implements DirContextOperations {
 		return list;
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public SortedSet<String> getAttributeSortedStringSet(String name) {
 		try {
 			TreeSet<String> attrSet = new TreeSet<String>();
@@ -827,18 +827,18 @@ public class DirContextAdapter implements DirContextOperations {
 		return originalAttrs;
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Attributes getAttributes(Name name) throws NamingException {
 		return getAttributes(name.toString());
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Attributes getAttributes(String name) throws NamingException {
 		if (StringUtils.hasLength(name)) {
 			throw new NameNotFoundException();
@@ -846,19 +846,19 @@ public class DirContextAdapter implements DirContextOperations {
 		return (Attributes) originalAttrs.clone();
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Attributes getAttributes(Name name, String[] attrIds)
 			throws NamingException {
 		return getAttributes(name.toString(), attrIds);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Attributes getAttributes(String name, String[] attrIds)
 			throws NamingException {
 		if (StringUtils.hasLength(name)) {
@@ -867,472 +867,472 @@ public class DirContextAdapter implements DirContextOperations {
 
 		Attributes a = new NameAwareAttributes();
 		Attribute target;
-        for (String attrId : attrIds) {
-            target = originalAttrs.get(attrId);
-            if (target != null) {
-                a.put(target);
-            }
-        }
+		for (String attrId : attrIds) {
+			target = originalAttrs.get(attrId);
+			if (target != null) {
+				a.put(target);
+			}
+		}
 
 		return a;
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void modifyAttributes(Name name, int modOp, Attributes attrs)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void modifyAttributes(String name, int modOp, Attributes attrs)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void modifyAttributes(Name name, ModificationItem[] mods)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void modifyAttributes(String name, ModificationItem[] mods)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void bind(Name name, Object obj, Attributes attrs)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void bind(String name, Object obj, Attributes attrs)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void rebind(Name name, Object obj, Attributes attrs)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void rebind(String name, Object obj, Attributes attrs)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public DirContext createSubcontext(Name name, Attributes attrs)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public DirContext createSubcontext(String name, Attributes attrs)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public DirContext getSchema(Name name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public DirContext getSchema(String name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public DirContext getSchemaClassDefinition(Name name)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public DirContext getSchemaClassDefinition(String name)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(Name name, Attributes matchingAttributes,
 			String[] attributesToReturn) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(String name, Attributes matchingAttributes,
 			String[] attributesToReturn) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(Name name, Attributes matchingAttributes)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(String name, Attributes matchingAttributes)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(Name name, String filter,
 			SearchControls cons) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(String name, String filter,
 			SearchControls cons) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(Name name, String filterExpr,
 			Object[] filterArgs, SearchControls cons) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(String name, String filterExpr,
 			Object[] filterArgs, SearchControls cons) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Object lookup(Name name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Object lookup(String name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void bind(Name name, Object obj) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void bind(String name, Object obj) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void rebind(Name name, Object obj) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void rebind(String name, Object obj) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void unbind(Name name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void unbind(String name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void rename(Name oldName, Name newName) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void rename(String oldName, String newName) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public NamingEnumeration<NameClassPair> list(Name name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public NamingEnumeration<NameClassPair> list(String name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public NamingEnumeration<Binding> listBindings(Name name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public NamingEnumeration<Binding> listBindings(String name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void destroySubcontext(Name name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void destroySubcontext(String name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Context createSubcontext(Name name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Context createSubcontext(String name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Object lookupLink(Name name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Object lookupLink(String name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public NameParser getNameParser(Name name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public NameParser getNameParser(String name) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Name composeName(Name name, Name prefix) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String composeName(String name, String prefix)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Object addToEnvironment(String propName, Object propVal)
 			throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Object removeFromEnvironment(String propName) throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Hashtable<?, ?> getEnvironment() throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void close() throws NamingException {
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String getNameInNamespace() {
-        if(base.size() == 0) {
-            return dn.toString();
-        }
+		if(base.size() == 0) {
+			return dn.toString();
+		}
 
-        try {
-            LdapName result = (LdapName) dn.clone();
-            result.addAll(0, base);
-            return result.toString();
-        } catch (InvalidNameException e) {
-            throw new org.springframework.ldap.InvalidNameException(e);
-        }
+		try {
+			LdapName result = (LdapName) dn.clone();
+			result.addAll(0, base);
+			return result.toString();
+		} catch (InvalidNameException e) {
+			throw new org.springframework.ldap.InvalidNameException(e);
+		}
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Name getDn() {
 		return LdapUtils.newLdapName(dn);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public final void setDn(Name dn) {
 		if (!updateMode) {
-            this.dn = LdapUtils.newLdapName(dn);
-        }
+			this.dn = LdapUtils.newLdapName(dn);
+		}
 		else {
 			throw new IllegalStateException(
 					"Not possible to call setDn() on a DirContextAdapter in update mode");
@@ -1340,45 +1340,45 @@ public class DirContextAdapter implements DirContextOperations {
 
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-        DirContextAdapter that = (DirContextAdapter) o;
+		DirContextAdapter that = (DirContextAdapter) o;
 
-        if (updateMode != that.updateMode) return false;
-        if (base != null ? !base.equals(that.base) : that.base != null) return false;
-        if (dn != null ? !dn.equals(that.dn) : that.dn != null) return false;
-        if (originalAttrs != null ? !originalAttrs.equals(that.originalAttrs) : that.originalAttrs != null)
-            return false;
-        if (referralUrl != null ? !referralUrl.equals(that.referralUrl) : that.referralUrl != null) return false;
-        if (updatedAttrs != null ? !updatedAttrs.equals(that.updatedAttrs) : that.updatedAttrs != null) return false;
+		if (updateMode != that.updateMode) return false;
+		if (base != null ? !base.equals(that.base) : that.base != null) return false;
+		if (dn != null ? !dn.equals(that.dn) : that.dn != null) return false;
+		if (originalAttrs != null ? !originalAttrs.equals(that.originalAttrs) : that.originalAttrs != null)
+			return false;
+		if (referralUrl != null ? !referralUrl.equals(that.referralUrl) : that.referralUrl != null) return false;
+		if (updatedAttrs != null ? !updatedAttrs.equals(that.updatedAttrs) : that.updatedAttrs != null) return false;
 
-        return true;
-    }
+		return true;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int hashCode() {
-        int result = originalAttrs != null ? originalAttrs.hashCode() : 0;
-        result = 31 * result + (dn != null ? dn.hashCode() : 0);
-        result = 31 * result + (base != null ? base.hashCode() : 0);
-        result = 31 * result + (updateMode ? 1 : 0);
-        result = 31 * result + (updatedAttrs != null ? updatedAttrs.hashCode() : 0);
-        result = 31 * result + (referralUrl != null ? referralUrl.hashCode() : 0);
-        return result;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int hashCode() {
+		int result = originalAttrs != null ? originalAttrs.hashCode() : 0;
+		result = 31 * result + (dn != null ? dn.hashCode() : 0);
+		result = 31 * result + (base != null ? base.hashCode() : 0);
+		result = 31 * result + (updateMode ? 1 : 0);
+		result = 31 * result + (updatedAttrs != null ? updatedAttrs.hashCode() : 0);
+		result = 31 * result + (referralUrl != null ? referralUrl.hashCode() : 0);
+		return result;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getClass().getName());
@@ -1419,8 +1419,8 @@ public class DirContextAdapter implements DirContextOperations {
 
 	private void appendAttributeValue(StringBuilder builder, String attributeID, Object value, int index) throws NamingException {
 		if (index > 0) {
-            builder.append(", ");
-        }
+			builder.append(", ");
+		}
 		builder.append(attributeID);
 		builder.append('[');
 		builder.append(index);
@@ -1429,17 +1429,17 @@ public class DirContextAdapter implements DirContextOperations {
 	}
 
 	/**
-     * {@inheritDoc}
-     */
-    @Override
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String getReferralUrl() {
 		return referralUrl;
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public boolean isReferral() {
 		return StringUtils.hasLength(referralUrl);
 	}

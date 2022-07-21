@@ -31,55 +31,55 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class ListComparatorTest {
 
-    private ListComparator tested;
+	private ListComparator tested;
 
-    @Before
-    public void setUp() throws Exception {
-        tested = new ListComparator();
-    }
+	@Before
+	public void setUp() throws Exception {
+		tested = new ListComparator();
+	}
 
-    @Test
-    public void testCompare_Equals() {
-        List<Integer> list1 = Arrays.asList(0, 0);
-        List<Integer> list2 = Arrays.asList(0, 0);
+	@Test
+	public void testCompare_Equals() {
+		List<Integer> list1 = Arrays.asList(0, 0);
+		List<Integer> list2 = Arrays.asList(0, 0);
 
-        int result = tested.compare(list1, list2);
-        assertThat(result).isEqualTo(0);
-    }
+		int result = tested.compare(list1, list2);
+		assertThat(result).isEqualTo(0);
+	}
 
-    @Test
-    public void testCompare_Less() {
-        List<Integer> list1 = Arrays.asList(0, 0);
-        List<Integer> list2 = Arrays.asList(0, 1);
+	@Test
+	public void testCompare_Less() {
+		List<Integer> list1 = Arrays.asList(0, 0);
+		List<Integer> list2 = Arrays.asList(0, 1);
 
-        int result = tested.compare(list1, list2);
-        assertThat(result < 0).isTrue();
-    }
+		int result = tested.compare(list1, list2);
+		assertThat(result < 0).isTrue();
+	}
 
-    @Test
-    public void testCompare_Greater() {
-        List<Integer> list1 = Arrays.asList(0, 1);
-        List<Integer> list2 = Arrays.asList(0, 0);
+	@Test
+	public void testCompare_Greater() {
+		List<Integer> list1 = Arrays.asList(0, 1);
+		List<Integer> list2 = Arrays.asList(0, 0);
 
-        int result = tested.compare(list1, list2);
-        assertThat(result > 0).isTrue();
-    }
+		int result = tested.compare(list1, list2);
+		assertThat(result > 0).isTrue();
+	}
 
-    @Test
-    public void testCompare_Longer() {
-        List<Integer> list1 = Arrays.asList(0, 0, 0);
-        List<Integer> list2 = Arrays.asList(0, 0);
+	@Test
+	public void testCompare_Longer() {
+		List<Integer> list1 = Arrays.asList(0, 0, 0);
+		List<Integer> list2 = Arrays.asList(0, 0);
 
-        int result = tested.compare(list1, list2);
-        assertThat(result > 0).isTrue();
-    }
+		int result = tested.compare(list1, list2);
+		assertThat(result > 0).isTrue();
+	}
 
-    @Test
-    public void testCompare_Shorter() {
-        List<Integer> list1 = Arrays.asList(0, 0);
-        List<Integer> list2 = Arrays.asList(0, 0, 0);
+	@Test
+	public void testCompare_Shorter() {
+		List<Integer> list1 = Arrays.asList(0, 0);
+		List<Integer> list2 = Arrays.asList(0, 0, 0);
 
-        int result = tested.compare(list1, list2);
-        assertThat(result < 0).isTrue();
-    }
+		int result = tested.compare(list1, list2);
+		assertThat(result < 0).isTrue();
+	}
 }

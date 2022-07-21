@@ -25,8 +25,8 @@ package org.springframework.ldap;
  */
 public class SchemaViolationException extends NamingException {
 
-    public SchemaViolationException(
-            javax.naming.directory.SchemaViolationException cause) {
-        super(cause);
-    }
+	public SchemaViolationException(
+			javax.naming.directory.SchemaViolationException cause) {
+		super(cause);
+	}
 }

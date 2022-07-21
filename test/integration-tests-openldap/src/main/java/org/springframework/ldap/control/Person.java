@@ -40,65 +40,65 @@ public class Person {
    private String phone;
 
    public String getDescription() {
-      return description;
+	  return description;
    }
 
    public void setDescription(String description) {
-      this.description = description;
+	  this.description = description;
    }
 
    public String getFullName() {
-      return fullName;
+	  return fullName;
    }
 
    public void setFullName(String fullName) {
-      this.fullName = fullName;
+	  this.fullName = fullName;
    }
 
    public String getLastName() {
-      return lastName;
+	  return lastName;
    }
 
    public void setLastName(String lastName) {
-      this.lastName = lastName;
+	  this.lastName = lastName;
    }
 
    public String getCompany() {
-      return company;
+	  return company;
    }
 
    public void setCompany(String company) {
-      this.company = company;
+	  this.company = company;
    }
 
    public String getCountry() {
-      return country;
+	  return country;
    }
 
    public void setCountry(String country) {
-      this.country = country;
+	  this.country = country;
    }
 
    public String getPhone() {
-      return phone;
+	  return phone;
    }
 
    public void setPhone(String phone) {
-      this.phone = phone;
+	  this.phone = phone;
    }
 
    public boolean equals(Object obj) {
-      return EqualsBuilder.reflectionEquals(
-         this, obj);
+	  return EqualsBuilder.reflectionEquals(
+		 this, obj);
    }
 
    public int hashCode() {
-      return HashCodeBuilder
-         .reflectionHashCode(this);
+	  return HashCodeBuilder
+		 .reflectionHashCode(this);
    }
 
    public String toString() {
-      return ToStringBuilder.reflectionToString(
-         this, ToStringStyle.MULTI_LINE_STYLE);
+	  return ToStringBuilder.reflectionToString(
+		 this, ToStringStyle.MULTI_LINE_STYLE);
    }
 }

@@ -26,40 +26,40 @@ import static org.mockito.Mockito.verify;
 
 public class AggregateDirContextProcessorTest  {
 
-    private DirContextProcessor processor1Mock;
+	private DirContextProcessor processor1Mock;
 
-    private DirContextProcessor processor2Mock;
+	private DirContextProcessor processor2Mock;
 
-    private AggregateDirContextProcessor tested;
+	private AggregateDirContextProcessor tested;
 
-    @Before
-    public void setUp() throws Exception {
-        // Create processor1 mock
-        processor1Mock = mock(DirContextProcessor.class);
+	@Before
+	public void setUp() throws Exception {
+		// Create processor1 mock
+		processor1Mock = mock(DirContextProcessor.class);
 
-        // Create processor2 mock
-        processor2Mock = mock(DirContextProcessor.class);
+		// Create processor2 mock
+		processor2Mock = mock(DirContextProcessor.class);
 
-        tested = new AggregateDirContextProcessor();
-        tested.addDirContextProcessor(processor1Mock);
-        tested.addDirContextProcessor(processor2Mock);
+		tested = new AggregateDirContextProcessor();
+		tested.addDirContextProcessor(processor1Mock);
+		tested.addDirContextProcessor(processor2Mock);
 
-    }
+	}
 
-    @Test
-    public void testPreProcess() throws NamingException {
-        tested.preProcess(null);
-        
-        verify(processor1Mock).preProcess(null);
-        verify(processor2Mock).preProcess(null);
-    }
+	@Test
+	public void testPreProcess() throws NamingException {
+		tested.preProcess(null);
+		
+		verify(processor1Mock).preProcess(null);
+		verify(processor2Mock).preProcess(null);
+	}
 
-    @Test
-    public void testPostProcess() throws NamingException {
-        tested.postProcess(null);
+	@Test
+	public void testPostProcess() throws NamingException {
+		tested.postProcess(null);
 
-        verify(processor1Mock).postProcess(null);
-        verify(processor2Mock).postProcess(null);
-    }
+		verify(processor1Mock).postProcess(null);
+		verify(processor2Mock).postProcess(null);
+	}
 
 }

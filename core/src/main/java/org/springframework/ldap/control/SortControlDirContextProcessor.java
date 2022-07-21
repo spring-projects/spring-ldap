@@ -113,7 +113,7 @@ public class SortControlDirContextProcessor extends AbstractFallbackRequestAndRe
 	 * #handleResponse(java.lang.Object)
 	 */
 	protected void handleResponse(Object control) {
-        this.sorted = (Boolean) invokeMethod("isSorted", responseControlClass, control);
-        this.resultCode = (Integer) invokeMethod("getResultCode", responseControlClass, control);
+		this.sorted = (Boolean) invokeMethod("isSorted", responseControlClass, control);
+		this.resultCode = (Integer) invokeMethod("getResultCode", responseControlClass, control);
 	}
 }

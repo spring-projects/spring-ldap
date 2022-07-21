@@ -25,7 +25,7 @@ package org.springframework.ldap;
  */
 public class LinkException extends NamingException {
 
-    public LinkException(javax.naming.LinkException cause) {
-        super(cause);
-    }
+	public LinkException(javax.naming.LinkException cause) {
+		super(cause);
+	}
 }

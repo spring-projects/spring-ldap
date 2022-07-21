@@ -25,9 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public class RoleRepo {
 
-    @Transactional
-    public Map<String,String> queryRoleMap() {
-        return new HashMap<String,String>();
-    }
+	@Transactional
+	public Map<String,String> queryRoleMap() {
+		return new HashMap<String,String>();
+	}
 
 }

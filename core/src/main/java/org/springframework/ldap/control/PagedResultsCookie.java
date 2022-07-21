@@ -27,50 +27,50 @@ import java.util.Arrays;
  */
 public class PagedResultsCookie {
 
-    private byte[] cookie;
+	private byte[] cookie;
 
-    /**
-     * Constructor.
-     * 
-     * @param cookie
-     *            the cookie returned by a PagedResultsResponseControl.
-     */
-    public PagedResultsCookie(byte[] cookie) {
-        if (cookie != null) {
-            this.cookie = Arrays.copyOf(cookie, cookie.length);
-        } else {
-            this.cookie = null;
-        }
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param cookie
+	 *			the cookie returned by a PagedResultsResponseControl.
+	 */
+	public PagedResultsCookie(byte[] cookie) {
+		if (cookie != null) {
+			this.cookie = Arrays.copyOf(cookie, cookie.length);
+		} else {
+			this.cookie = null;
+		}
+	}
 
-    /**
-     * Get the cookie.
-     * 
-     * @return the cookie. This value may be <code>null</code>, indicating that there are no more requests,
-     * or that the control wasn't supported by the server.
-     */
-    public byte[] getCookie() {
-        if (cookie != null) {
-            return Arrays.copyOf(cookie, cookie.length);
-        } else {
-            return null;
-        }
-    }
+	/**
+	 * Get the cookie.
+	 * 
+	 * @return the cookie. This value may be <code>null</code>, indicating that there are no more requests,
+	 * or that the control wasn't supported by the server.
+	 */
+	public byte[] getCookie() {
+		if (cookie != null) {
+			return Arrays.copyOf(cookie, cookie.length);
+		} else {
+			return null;
+		}
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-        PagedResultsCookie that = (PagedResultsCookie) o;
+		PagedResultsCookie that = (PagedResultsCookie) o;
 
-        if (!Arrays.equals(cookie, that.cookie)) return false;
+		if (!Arrays.equals(cookie, that.cookie)) return false;
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public int hashCode() {
-        return cookie != null ? Arrays.hashCode(cookie) : 0;
-    }
+	@Override
+	public int hashCode() {
+		return cookie != null ? Arrays.hashCode(cookie) : 0;
+	}
 }

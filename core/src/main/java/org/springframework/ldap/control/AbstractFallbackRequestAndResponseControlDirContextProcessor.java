@@ -187,26 +187,26 @@ public abstract class AbstractFallbackRequestAndResponseControlDirContextProcess
 		}
 
 		// Go through response controls and get info, regardless of class
-        for (Control responseControl : responseControls) {
-            // check for match, try fallback otherwise
-            if (responseControl.getClass().isAssignableFrom(responseControlClass)) {
-                handleResponse(responseControl);
-                return;
-            }
-        }
+		for (Control responseControl : responseControls) {
+			// check for match, try fallback otherwise
+			if (responseControl.getClass().isAssignableFrom(responseControlClass)) {
+				handleResponse(responseControl);
+				return;
+			}
+		}
 
 		log.info("No matching response control found - looking for '" + responseControlClass);
 	}
 
-    /**
-     * Set whether this control should be indicated as critical.
-     *
-     * @param critical whether the control is critical.
-     * @since 2.0
-     */
-    public void setCritical(boolean critical) {
-        this.critical = critical;
-    }
+	/**
+	 * Set whether this control should be indicated as critical.
+	 *
+	 * @param critical whether the control is critical.
+	 * @since 2.0
+	 */
+	public void setCritical(boolean critical) {
+		this.critical = critical;
+	}
 
-    protected abstract void handleResponse(Object control);
+	protected abstract void handleResponse(Object control);
 }

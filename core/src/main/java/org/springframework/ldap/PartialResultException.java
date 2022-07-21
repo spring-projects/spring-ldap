@@ -25,7 +25,7 @@ package org.springframework.ldap;
  */
 public class PartialResultException extends NamingException {
 
-    public PartialResultException(javax.naming.PartialResultException cause) {
-        super(cause);
-    }
+	public PartialResultException(javax.naming.PartialResultException cause) {
+		super(cause);
+	}
 }

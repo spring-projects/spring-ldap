@@ -52,7 +52,7 @@ public class PersonDaoImpl implements PersonDao {
 
 	private LdapTemplate ldapTemplate;
 
-    @Override
+	@Override
 	public void create(Person person) {
 		Name dn = buildDn(person);
 		DirContextAdapter context = new DirContextAdapter(dn);
@@ -60,7 +60,7 @@ public class PersonDaoImpl implements PersonDao {
 		ldapTemplate.bind(dn, context, null);
 	}
 
-    @Override
+	@Override
 	public void update(Person person) {
 		Name dn = buildDn(person);
 		DirContextAdapter context = (DirContextAdapter) ldapTemplate.lookup(dn);
@@ -68,31 +68,31 @@ public class PersonDaoImpl implements PersonDao {
 		ldapTemplate.modifyAttributes(dn, context.getModificationItems());
 	}
 
-    @Override
+	@Override
 	public void delete(Person person) {
 		ldapTemplate.unbind(buildDn(person));
 	}
 
-    @Override
+	@Override
 	public List<String> getAllPersonNames() {
-        return ldapTemplate.search(query()
-                .attributes("cn")
-                .where("objectclass").is("person"),
-                new AttributesMapper<String>() {
-                    public String mapFromAttributes(Attributes attrs) throws NamingException {
-                        return attrs.get("cn").get().toString();
-                    }
-                });
-    }
-
-    @Override
-	public List<Person> findAll() {
 		return ldapTemplate.search(query()
-                .where("objectclass").is("person"),
-                PERSON_CONTEXT_MAPPER);
+				.attributes("cn")
+				.where("objectclass").is("person"),
+				new AttributesMapper<String>() {
+					public String mapFromAttributes(Attributes attrs) throws NamingException {
+						return attrs.get("cn").get().toString();
+					}
+				});
 	}
 
-    @Override
+	@Override
+	public List<Person> findAll() {
+		return ldapTemplate.search(query()
+				.where("objectclass").is("person"),
+				PERSON_CONTEXT_MAPPER);
+	}
+
+	@Override
 	public Person findByPrimaryKey(String country, String company, String fullname) {
 		LdapName dn = buildDn(country, company, fullname);
 		return ldapTemplate.lookup(dn, PERSON_CONTEXT_MAPPER);
@@ -103,11 +103,11 @@ public class PersonDaoImpl implements PersonDao {
 	}
 
 	private LdapName buildDn(String country, String company, String fullname) {
-        return LdapNameBuilder.newInstance()
-                .add("c", country)
-                .add("ou", company)
-                .add("cn", fullname)
-                .build();
+		return LdapNameBuilder.newInstance()
+				.add("c", country)
+				.add("ou", company)
+				.add("cn", fullname)
+				.build();
 	}
 
 	private void mapToContext(Person person, DirContextAdapter context) {
@@ -125,11 +125,11 @@ public class PersonDaoImpl implements PersonDao {
 	 * we use the LdapName along with utility methods in LdapUtils.
 	 */
 	private final static ContextMapper<Person> PERSON_CONTEXT_MAPPER = new AbstractContextMapper<Person>() {
-        @Override
+		@Override
 		public Person doMapFromContext(DirContextOperations context) {
 			Person person = new Person();
 
-            LdapName dn = LdapUtils.newLdapName(context.getDn());
+			LdapName dn = LdapUtils.newLdapName(context.getDn());
 			person.setCountry(LdapUtils.getStringValue(dn, 0));
 			person.setCompany(LdapUtils.getStringValue(dn, 1));
 			person.setFullName(context.getStringAttribute("cn"));

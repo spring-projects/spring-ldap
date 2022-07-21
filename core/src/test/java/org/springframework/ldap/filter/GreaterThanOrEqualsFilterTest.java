@@ -26,35 +26,35 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class GreaterThanOrEqualsFilterTest {
 
-    @Test
-    public void testEncode() {
+	@Test
+	public void testEncode() {
 
-        GreaterThanOrEqualsFilter eqq = new GreaterThanOrEqualsFilter("foo",
-                "*bar(fie)");
+		GreaterThanOrEqualsFilter eqq = new GreaterThanOrEqualsFilter("foo",
+				"*bar(fie)");
 
-        StringBuffer buff = new StringBuffer();
-        eqq.encode(buff);
+		StringBuffer buff = new StringBuffer();
+		eqq.encode(buff);
 
-        assertThat(buff.toString()).isEqualTo("(foo>=\\2abar\\28fie\\29)");
+		assertThat(buff.toString()).isEqualTo("(foo>=\\2abar\\28fie\\29)");
 
-    }
+	}
 
-    @Test
-    public void testEncodeInt() {
+	@Test
+	public void testEncodeInt() {
 
-        GreaterThanOrEqualsFilter eqq = new GreaterThanOrEqualsFilter("foo",
-                456);
+		GreaterThanOrEqualsFilter eqq = new GreaterThanOrEqualsFilter("foo",
+				456);
 
-        StringBuffer buff = new StringBuffer();
-        eqq.encode(buff);
+		StringBuffer buff = new StringBuffer();
+		eqq.encode(buff);
 
-        assertThat(buff.toString()).isEqualTo("(foo>=456)");
+		assertThat(buff.toString()).isEqualTo("(foo>=456)");
 
-    }
+	}
 
-    @Test
-    public void testEquals() {
-    	String attribute = "a";
+	@Test
+	public void testEquals() {
+		String attribute = "a";
 		String value = "b";
 		GreaterThanOrEqualsFilter originalObject = new GreaterThanOrEqualsFilter(attribute, value);
 		GreaterThanOrEqualsFilter identicalObject = new GreaterThanOrEqualsFilter(attribute, value);
@@ -63,5 +63,5 @@ public class GreaterThanOrEqualsFilterTest {
 		};
 
 		new EqualsTester(originalObject, identicalObject, differentObject, subclassObject);
-    }
+	}
 }

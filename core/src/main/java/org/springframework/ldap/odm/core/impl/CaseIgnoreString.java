@@ -20,30 +20,30 @@ import org.springframework.util.Assert;
 
 // A case independent String wrapper.
 /* package */ final class CaseIgnoreString implements Comparable<CaseIgnoreString> {
-    private final String string;
-    private final int hashCode;  
-    
-    public CaseIgnoreString(String string) {
-        Assert.notNull(string, "string must not be null");
-        this.string = string;
-        hashCode = string.toUpperCase().hashCode();
-    }
+	private final String string;
+	private final int hashCode;  
+	
+	public CaseIgnoreString(String string) {
+		Assert.notNull(string, "string must not be null");
+		this.string = string;
+		hashCode = string.toUpperCase().hashCode();
+	}
 
-    public boolean equals(Object other) {
-        return other instanceof CaseIgnoreString &&
-            ((CaseIgnoreString)other).string.equalsIgnoreCase(string);
-    }
-    
-    public int hashCode() { 
-        return hashCode;
-    }
+	public boolean equals(Object other) {
+		return other instanceof CaseIgnoreString &&
+			((CaseIgnoreString)other).string.equalsIgnoreCase(string);
+	}
+	
+	public int hashCode() { 
+		return hashCode;
+	}
 
-    public int compareTo(CaseIgnoreString other) {
-        CaseIgnoreString cis = other;
-        return String.CASE_INSENSITIVE_ORDER.compare(string, cis.string);
-    }
+	public int compareTo(CaseIgnoreString other) {
+		CaseIgnoreString cis = other;
+		return String.CASE_INSENSITIVE_ORDER.compare(string, cis.string);
+	}
 
-    public String toString() {
-        return string;
-    }
+	public String toString() {
+		return string;
+	}
 }

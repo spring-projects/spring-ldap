@@ -24,21 +24,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class CountNameClassPairResultCallbackHandlerTest {
 
-    private CountNameClassPairCallbackHandler tested;
+	private CountNameClassPairCallbackHandler tested;
 
-    @Before
-    public void setUp() throws Exception {
-        tested = new CountNameClassPairCallbackHandler();
-    }
+	@Before
+	public void setUp() throws Exception {
+		tested = new CountNameClassPairCallbackHandler();
+	}
 
-    @Test
-    public void testHandleSearchResult() throws Exception {
-        SearchResult dummy = new SearchResult(null, null, null);
-        tested.handleNameClassPair(dummy);
-        tested.handleNameClassPair(dummy);
-        tested.handleNameClassPair(dummy);
-        
-        assertThat(tested.getNoOfRows()).isEqualTo(3);
-    }
-    
+	@Test
+	public void testHandleSearchResult() throws Exception {
+		SearchResult dummy = new SearchResult(null, null, null);
+		tested.handleNameClassPair(dummy);
+		tested.handleNameClassPair(dummy);
+		tested.handleNameClassPair(dummy);
+		
+		assertThat(tested.getNoOfRows()).isEqualTo(3);
+	}
+	
 }

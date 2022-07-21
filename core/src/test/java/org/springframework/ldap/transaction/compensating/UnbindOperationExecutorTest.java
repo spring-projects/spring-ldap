@@ -26,49 +26,49 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 public class UnbindOperationExecutorTest {
-    private LdapOperations ldapOperationsMock;
+	private LdapOperations ldapOperationsMock;
 
-    @Before
-    public void setUp() throws Exception {
-        ldapOperationsMock = mock(LdapOperations.class);;
-    }
+	@Before
+	public void setUp() throws Exception {
+		ldapOperationsMock = mock(LdapOperations.class);;
+	}
 
-    @Test
-    public void testPerformOperation() {
-        LdapName expectedOldName = LdapUtils.newLdapName("cn=oldDn");
-        LdapName expectedTempName = LdapUtils.newLdapName("cn=newDn");
-        UnbindOperationExecutor tested = new UnbindOperationExecutor(
-                ldapOperationsMock, expectedOldName, expectedTempName);
+	@Test
+	public void testPerformOperation() {
+		LdapName expectedOldName = LdapUtils.newLdapName("cn=oldDn");
+		LdapName expectedTempName = LdapUtils.newLdapName("cn=newDn");
+		UnbindOperationExecutor tested = new UnbindOperationExecutor(
+				ldapOperationsMock, expectedOldName, expectedTempName);
 
-        // Perform test
-        tested.performOperation();
+		// Perform test
+		tested.performOperation();
 
-        verify(ldapOperationsMock).rename(expectedOldName, expectedTempName);
-    }
+		verify(ldapOperationsMock).rename(expectedOldName, expectedTempName);
+	}
 
-    @Test
-    public void testCommit() {
-        LdapName expectedOldName = LdapUtils.newLdapName("cn=oldDn");
-        LdapName expectedTempName = LdapUtils.newLdapName("cn=newDn");
-        UnbindOperationExecutor tested = new UnbindOperationExecutor(
-                ldapOperationsMock, expectedOldName, expectedTempName);
+	@Test
+	public void testCommit() {
+		LdapName expectedOldName = LdapUtils.newLdapName("cn=oldDn");
+		LdapName expectedTempName = LdapUtils.newLdapName("cn=newDn");
+		UnbindOperationExecutor tested = new UnbindOperationExecutor(
+				ldapOperationsMock, expectedOldName, expectedTempName);
 
-        // Perform test
-        tested.commit();
-        verify(ldapOperationsMock).unbind(expectedTempName);
-    }
+		// Perform test
+		tested.commit();
+		verify(ldapOperationsMock).unbind(expectedTempName);
+	}
 
-    @Test
-    public void testRollback() {
-        LdapName expectedOldName = LdapUtils.newLdapName("cn=oldDn");
-        LdapName expectedTempName = LdapUtils.newLdapName("cn=newDn");
-        UnbindOperationExecutor tested = new UnbindOperationExecutor(
-                ldapOperationsMock, expectedOldName, expectedTempName);
+	@Test
+	public void testRollback() {
+		LdapName expectedOldName = LdapUtils.newLdapName("cn=oldDn");
+		LdapName expectedTempName = LdapUtils.newLdapName("cn=newDn");
+		UnbindOperationExecutor tested = new UnbindOperationExecutor(
+				ldapOperationsMock, expectedOldName, expectedTempName);
 
 
 
-        // Perform test
-        tested.rollback();
-        verify(ldapOperationsMock).rename(expectedTempName, expectedOldName);
-    }
+		// Perform test
+		tested.rollback();
+		verify(ldapOperationsMock).rename(expectedTempName, expectedOldName);
+	}
 }

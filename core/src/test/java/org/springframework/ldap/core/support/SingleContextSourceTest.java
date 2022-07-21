@@ -39,51 +39,51 @@ import static org.mockito.Mockito.when;
  */
 public class SingleContextSourceTest {
 
-    private ContextSource contextSourceMock;
-    private DirContext dirContextMock;
+	private ContextSource contextSourceMock;
+	private DirContext dirContextMock;
 
-    @Before
-    public void prepareMocks() {
-        contextSourceMock = mock(ContextSource.class);
-        dirContextMock = mock(DirContext.class);
-    }
+	@Before
+	public void prepareMocks() {
+		contextSourceMock = mock(ContextSource.class);
+		dirContextMock = mock(DirContext.class);
+	}
 
-    @Test
-    public void testDoWithSingleContext() {
-        when(contextSourceMock.getReadWriteContext()).thenReturn(dirContextMock);
-        verifyNoMoreInteractions(contextSourceMock);
+	@Test
+	public void testDoWithSingleContext() {
+		when(contextSourceMock.getReadWriteContext()).thenReturn(dirContextMock);
+		verifyNoMoreInteractions(contextSourceMock);
 
-        SingleContextSource.doWithSingleContext(contextSourceMock, new LdapOperationsCallback<Object>() {
-            @Override
-            public Object doWithLdapOperations(LdapOperations operations) {
-                operations.executeReadOnly(new ContextExecutor<Object>() {
-                    @Override
-                    public Object executeWithContext(DirContext ctx) throws NamingException {
-                        Object targetContex = getInternalState(Proxy.getInvocationHandler(ctx), "target");
-                        assertThat(targetContex).isSameAs(dirContextMock);
-                        return false;
-                    }
-                });
+		SingleContextSource.doWithSingleContext(contextSourceMock, new LdapOperationsCallback<Object>() {
+			@Override
+			public Object doWithLdapOperations(LdapOperations operations) {
+				operations.executeReadOnly(new ContextExecutor<Object>() {
+					@Override
+					public Object executeWithContext(DirContext ctx) throws NamingException {
+						Object targetContex = getInternalState(Proxy.getInvocationHandler(ctx), "target");
+						assertThat(targetContex).isSameAs(dirContextMock);
+						return false;
+					}
+				});
 
-                // Second operation will have retrieved new DirContext from the SingleContextSource.
-                // It should be the same instance.
-                operations.executeReadOnly(new ContextExecutor<Object>() {
-                    @Override
-                    public Object executeWithContext(DirContext ctx) throws NamingException {
-                        Object targetContex = getInternalState(Proxy.getInvocationHandler(ctx), "target");
-                        assertThat(targetContex).isSameAs(dirContextMock);
-                        return false;
-                    }
-                });
+				// Second operation will have retrieved new DirContext from the SingleContextSource.
+				// It should be the same instance.
+				operations.executeReadOnly(new ContextExecutor<Object>() {
+					@Override
+					public Object executeWithContext(DirContext ctx) throws NamingException {
+						Object targetContex = getInternalState(Proxy.getInvocationHandler(ctx), "target");
+						assertThat(targetContex).isSameAs(dirContextMock);
+						return false;
+					}
+				});
 
-                return null;
-            }
-        });
-    }
+				return null;
+			}
+		});
+	}
 
-    private <T> T getInternalState(Object target, String fieldName) {
-        Field field = ReflectionUtils.findField(target.getClass(), fieldName);
-        field.setAccessible(true);
-        return (T) ReflectionUtils.getField(field, target);
-    }
+	private <T> T getInternalState(Object target, String fieldName) {
+		Field field = ReflectionUtils.findField(target.getClass(), fieldName);
+		field.setAccessible(true);
+		return (T) ReflectionUtils.getField(field, target);
+	}
 }

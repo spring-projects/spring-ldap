@@ -40,172 +40,172 @@ import java.util.TreeSet;
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
  */
 /* package */ final class ObjectMetaData implements Iterable<Field> {
-    private static final Logger LOG = LoggerFactory.getLogger(ObjectMetaData.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ObjectMetaData.class);
 
-    private AttributeMetaData idAttribute;
+	private AttributeMetaData idAttribute;
 
-    private Map<Field, AttributeMetaData> fieldToAttribute = new HashMap<Field, AttributeMetaData>();
+	private Map<Field, AttributeMetaData> fieldToAttribute = new HashMap<Field, AttributeMetaData>();
 
-    private Set<AttributeMetaData> dnAttributes = new TreeSet<AttributeMetaData>(new Comparator<AttributeMetaData>() {
-        @Override
-        public int compare(AttributeMetaData a1, AttributeMetaData a2) {
-            if(!a1.isDnAttribute() || !a2.isDnAttribute()) {
-                // Not interesting to compare these.
-                return 0;
-            }
+	private Set<AttributeMetaData> dnAttributes = new TreeSet<AttributeMetaData>(new Comparator<AttributeMetaData>() {
+		@Override
+		public int compare(AttributeMetaData a1, AttributeMetaData a2) {
+			if(!a1.isDnAttribute() || !a2.isDnAttribute()) {
+				// Not interesting to compare these.
+				return 0;
+			}
 
-            return Integer.valueOf(a1.getDnAttribute().index()).compareTo(a2.getDnAttribute().index());
-        }
-    });
+			return Integer.valueOf(a1.getDnAttribute().index()).compareTo(a2.getDnAttribute().index());
+		}
+	});
 
-    private boolean indexedDnAttributes = false;
+	private boolean indexedDnAttributes = false;
 
-    private Set<CaseIgnoreString> objectClasses = new LinkedHashSet<CaseIgnoreString>();
+	private Set<CaseIgnoreString> objectClasses = new LinkedHashSet<CaseIgnoreString>();
 
-    private Name base = LdapUtils.emptyLdapName();
+	private Name base = LdapUtils.emptyLdapName();
 
-    public Set<CaseIgnoreString> getObjectClasses() {
-        return objectClasses;
-    }
+	public Set<CaseIgnoreString> getObjectClasses() {
+		return objectClasses;
+	}
 
-    public AttributeMetaData getIdAttribute() {
-        return idAttribute;
-    }
+	public AttributeMetaData getIdAttribute() {
+		return idAttribute;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Iterable#iterator()
-     */
-    public Iterator<Field> iterator() {
-        return fieldToAttribute.keySet().iterator();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Iterable#iterator()
+	 */
+	public Iterator<Field> iterator() {
+		return fieldToAttribute.keySet().iterator();
+	}
 
-    public AttributeMetaData getAttribute(Field field) {
-        return fieldToAttribute.get(field);
-    }
-    
-    public ObjectMetaData(Class<?> clazz) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Extracting metadata from %1$s", clazz));
-        }
-        
-        // Get object class metadata - the @Entity annotation
-        Entry entity = clazz.getAnnotation(Entry.class);
-        if (entity != null) {
-            // Default objectclass name to the class name unless it's specified
-            // in @Entity(name={objectclass1, objectclass2});
-            String[] localObjectClasses = entity.objectClasses();
-            if (localObjectClasses != null && localObjectClasses.length > 0 && localObjectClasses[0].length() > 0) {
-                for (String localObjectClass:localObjectClasses) {
-                    objectClasses.add(new CaseIgnoreString(localObjectClass));
-                }
-            } else {
-                objectClasses.add(new CaseIgnoreString(clazz.getSimpleName()));
-            }
+	public AttributeMetaData getAttribute(Field field) {
+		return fieldToAttribute.get(field);
+	}
+	
+	public ObjectMetaData(Class<?> clazz) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(String.format("Extracting metadata from %1$s", clazz));
+		}
+		
+		// Get object class metadata - the @Entity annotation
+		Entry entity = clazz.getAnnotation(Entry.class);
+		if (entity != null) {
+			// Default objectclass name to the class name unless it's specified
+			// in @Entity(name={objectclass1, objectclass2});
+			String[] localObjectClasses = entity.objectClasses();
+			if (localObjectClasses != null && localObjectClasses.length > 0 && localObjectClasses[0].length() > 0) {
+				for (String localObjectClass:localObjectClasses) {
+					objectClasses.add(new CaseIgnoreString(localObjectClass));
+				}
+			} else {
+				objectClasses.add(new CaseIgnoreString(clazz.getSimpleName()));
+			}
 
-            String base = entity.base();
-            if(StringUtils.hasText(base)) {
-                this.base = LdapUtils.newLdapName(base);
-            }
-        } else {
-            throw new MetaDataException(String.format("Class %1$s must have a class level %2$s annotation", clazz,
-                    Entry.class));
-        }
+			String base = entity.base();
+			if(StringUtils.hasText(base)) {
+				this.base = LdapUtils.newLdapName(base);
+			}
+		} else {
+			throw new MetaDataException(String.format("Class %1$s must have a class level %2$s annotation", clazz,
+					Entry.class));
+		}
 
-        // Check the class is final
-        if (!Modifier.isFinal(clazz.getModifiers())) {
-            LOG.warn(String.format("The Entry class %1$s should be declared final", clazz.getSimpleName()));
-        }
+		// Check the class is final
+		if (!Modifier.isFinal(clazz.getModifiers())) {
+			LOG.warn(String.format("The Entry class %1$s should be declared final", clazz.getSimpleName()));
+		}
 
-        // Get field meta-data - the @Attribute annotation
-        Field[] fields = clazz.getDeclaredFields();
-        for (Field field : fields) {
-            // So we can write to private fields
-            field.setAccessible(true);
+		// Get field meta-data - the @Attribute annotation
+		Field[] fields = clazz.getDeclaredFields();
+		for (Field field : fields) {
+			// So we can write to private fields
+			field.setAccessible(true);
 
-            // Skip synthetic or static fields
-            if (Modifier.isStatic(field.getModifiers()) || field.isSynthetic()) {
-                continue;
-            }
+			// Skip synthetic or static fields
+			if (Modifier.isStatic(field.getModifiers()) || field.isSynthetic()) {
+				continue;
+			}
 
-            AttributeMetaData currentAttributeMetaData=new AttributeMetaData(field);
-            if (currentAttributeMetaData.isId()) {
-                if (idAttribute!=null) {
-                    // There can be only one id field
-                    throw new MetaDataException(
-                          String.format("You man have only one field with the %1$s annotation in class %2$s", Id.class, clazz));
-                }
-                idAttribute=currentAttributeMetaData;
-            }
-            fieldToAttribute.put(field, currentAttributeMetaData);
+			AttributeMetaData currentAttributeMetaData=new AttributeMetaData(field);
+			if (currentAttributeMetaData.isId()) {
+				if (idAttribute!=null) {
+					// There can be only one id field
+					throw new MetaDataException(
+						  String.format("You man have only one field with the %1$s annotation in class %2$s", Id.class, clazz));
+				}
+				idAttribute=currentAttributeMetaData;
+			}
+			fieldToAttribute.put(field, currentAttributeMetaData);
 
-            if(currentAttributeMetaData.isDnAttribute()) {
-                dnAttributes.add(currentAttributeMetaData);
-            }
-        }
+			if(currentAttributeMetaData.isDnAttribute()) {
+				dnAttributes.add(currentAttributeMetaData);
+			}
+		}
 
-        if (idAttribute == null) {
-            throw new MetaDataException(
-                    String.format("All Entry classes must define a field with the %1$s annotation, error in class %2$s", Id.class,
-                                  clazz));
-        }
+		if (idAttribute == null) {
+			throw new MetaDataException(
+					String.format("All Entry classes must define a field with the %1$s annotation, error in class %2$s", Id.class,
+								  clazz));
+		}
 
-        postProcessDnAttributes(clazz);
+		postProcessDnAttributes(clazz);
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Extracted metadata from %1$s as %2$s", clazz, this));
-        }
-    }
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(String.format("Extracted metadata from %1$s as %2$s", clazz, this));
+		}
+	}
 
-    private void postProcessDnAttributes(Class<?> clazz) {
-        boolean hasIndexed = false;
-        boolean hasNonIndexed = false;
+	private void postProcessDnAttributes(Class<?> clazz) {
+		boolean hasIndexed = false;
+		boolean hasNonIndexed = false;
 
-        for (AttributeMetaData dnAttribute : dnAttributes) {
-            int declaredIndex = dnAttribute.getDnAttribute().index();
+		for (AttributeMetaData dnAttribute : dnAttributes) {
+			int declaredIndex = dnAttribute.getDnAttribute().index();
 
-            if(declaredIndex != -1) {
-                hasIndexed = true;
-            }
+			if(declaredIndex != -1) {
+				hasIndexed = true;
+			}
 
-            if(declaredIndex == -1) {
-                hasNonIndexed = true;
-            }
-        }
+			if(declaredIndex == -1) {
+				hasNonIndexed = true;
+			}
+		}
 
-        if(hasIndexed && hasNonIndexed) {
-            throw new MetaDataException(String.format("At least one DnAttribute declared on class %s is indexed, " +
-                    "which means that all DnAttributes must be indexed", clazz.toString()));
-        }
+		if(hasIndexed && hasNonIndexed) {
+			throw new MetaDataException(String.format("At least one DnAttribute declared on class %s is indexed, " +
+					"which means that all DnAttributes must be indexed", clazz.toString()));
+		}
 
-        indexedDnAttributes = hasIndexed;
-    }
+		indexedDnAttributes = hasIndexed;
+	}
 
-    int size() {
-        return fieldToAttribute.size();
-    }
+	int size() {
+		return fieldToAttribute.size();
+	}
 
-    boolean canCalculateDn() {
-        return dnAttributes.size() > 0 && indexedDnAttributes;
-    }
+	boolean canCalculateDn() {
+		return dnAttributes.size() > 0 && indexedDnAttributes;
+	}
 
-    public Set<AttributeMetaData> getDnAttributes() {
-        return dnAttributes;
-    }
+	public Set<AttributeMetaData> getDnAttributes() {
+		return dnAttributes;
+	}
 
-    Name getBase() {
-        return base;
-    }
+	Name getBase() {
+		return base;
+	}
 
-    /*
-         * (non-Javadoc)
-         *
-         * @see java.lang.Object#toString()
-         */
-    @Override
-    public String toString() {
-        return String.format("objectsClasses=%1$s | idField=%2$s | attributes=%3$s", 
-                objectClasses, idAttribute.getName(), fieldToAttribute);
-    }
+	/*
+		 * (non-Javadoc)
+		 *
+		 * @see java.lang.Object#toString()
+		 */
+	@Override
+	public String toString() {
+		return String.format("objectsClasses=%1$s | idField=%2$s | attributes=%3$s", 
+				objectClasses, idAttribute.getName(), fieldToAttribute);
+	}
 }

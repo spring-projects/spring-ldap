@@ -118,7 +118,7 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 		List<String> attributes = Arrays.asList(result.getStringAttributes("description"));
 		assertThat(attributes).hasSize(2);
 		assertThat(attributes.contains("Some other description")).isTrue();
-        assertThat(attributes.contains("Another description")).isTrue();
+		assertThat(attributes.contains("Another description")).isTrue();
 	}
 
 	@Test
@@ -131,11 +131,11 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 		tested.modifyAttributes(PERSON4_DN, mods);
 
 		DirContextAdapter result = (DirContextAdapter) tested.lookup(PERSON4_DN);
-        List<String> attributes = Arrays.asList(result.getStringAttributes("description"));
-        assertThat(attributes).hasSize(3);
-        assertThat(attributes.contains("Some other description")).isTrue();
-        assertThat(attributes.contains("Another description")).isTrue();
-        assertThat(attributes.contains("Some description")).isTrue();
+		List<String> attributes = Arrays.asList(result.getStringAttributes("description"));
+		assertThat(attributes).hasSize(3);
+		assertThat(attributes.contains("Some other description")).isTrue();
+		assertThat(attributes.contains("Another description")).isTrue();
+		assertThat(attributes.contains("Some description")).isTrue();
 	}
 
 	@Test
@@ -178,11 +178,11 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 		tested.modifyAttributes(PERSON4_DN, mods);
 
 		DirContextAdapter result = (DirContextAdapter) tested.lookup(PERSON4_DN);
-        List<String> attributes = Arrays.asList(result.getStringAttributes("description"));
-        assertThat(attributes).hasSize(3);
-        assertThat(attributes.contains("Some other description")).isTrue();
-        assertThat(attributes.contains("Another description")).isTrue();
-        assertThat(attributes.contains("Some description")).isTrue();
+		List<String> attributes = Arrays.asList(result.getStringAttributes("description"));
+		assertThat(attributes).hasSize(3);
+		assertThat(attributes.contains("Some other description")).isTrue();
+		assertThat(attributes.contains("Another description")).isTrue();
+		assertThat(attributes.contains("Some description")).isTrue();
 	}
 
 	@Test
@@ -214,12 +214,12 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 
 		// Verify
 		adapter = (DirContextAdapter) tested.lookup(PERSON5_DN);
-        List<String> attributes = Arrays.asList(adapter.getStringAttributes("description"));
-        assertThat(attributes).hasSize(4);
-        assertThat(attributes.contains("qwe")).isTrue();
-        assertThat(attributes.contains("123")).isTrue();
-        assertThat(attributes.contains("klytt")).isTrue();
-        assertThat(attributes.contains("kalle")).isTrue();
+		List<String> attributes = Arrays.asList(adapter.getStringAttributes("description"));
+		assertThat(attributes).hasSize(4);
+		assertThat(attributes.contains("qwe")).isTrue();
+		assertThat(attributes.contains("123")).isTrue();
+		assertThat(attributes.contains("klytt")).isTrue();
+		assertThat(attributes.contains("kalle")).isTrue();
 	}
 
 	/**
@@ -239,30 +239,30 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 		verifyBoundCorrectData();
 	}
 
-    @Test
-    public void verifyCompleteReplacementOfUniqueMemberAttribute_Ldap119Workaround() {
-        DirContextOperations ctx = tested.lookupContext("cn=ROLE_USER,ou=groups");
-        ctx.setAttributeValues("uniqueMember",
-                new String[]{"cn=Some Person,ou=company1,ou=Norway," + base},
-                true);
-        ctx.getModificationItems();
+	@Test
+	public void verifyCompleteReplacementOfUniqueMemberAttribute_Ldap119Workaround() {
+		DirContextOperations ctx = tested.lookupContext("cn=ROLE_USER,ou=groups");
+		ctx.setAttributeValues("uniqueMember",
+				new String[]{"cn=Some Person,ou=company1,ou=Norway," + base},
+				true);
+		ctx.getModificationItems();
 
-        tested.modifyAttributes(ctx);
-    }
+		tested.modifyAttributes(ctx);
+	}
 
-    /**
-     * This test originally failed on ApacheDS complaining that the uniqueMember attribute
-     * was emptied.
-     */
-    @Test
-    public void verifyCompleteReplacementOfUniqueMemberAttribute_Ldap119() {
-        DirContextOperations ctx = tested.lookupContext("cn=ROLE_USER,ou=groups");
-        ctx.setAttributeValues("uniqueMember",
-                new String[]{"cn=Some Person,ou=company1,ou=Norway," + base});
-        ctx.getModificationItems();
+	/**
+	 * This test originally failed on ApacheDS complaining that the uniqueMember attribute
+	 * was emptied.
+	 */
+	@Test
+	public void verifyCompleteReplacementOfUniqueMemberAttribute_Ldap119() {
+		DirContextOperations ctx = tested.lookupContext("cn=ROLE_USER,ou=groups");
+		ctx.setAttributeValues("uniqueMember",
+				new String[]{"cn=Some Person,ou=company1,ou=Norway," + base});
+		ctx.getModificationItems();
 
-        tested.modifyAttributes(ctx);
-    }
+		tested.modifyAttributes(ctx);
+	}
 	private Attributes setupAttributes() {
 		Attributes attributes = new BasicAttributes();
 		BasicAttribute ocattr = new BasicAttribute("objectclass");

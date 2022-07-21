@@ -48,8 +48,8 @@ public class LdapEntryIdentification {
 	 * returned by {@link DirContext#getNameInNamespace()}.
 	 * @param relativeDn the DN of the identified entry relative to the base
 	 * LDAP path, e.g. as returned by {@link DirContextOperations#getDn()}.
-     * @deprecated {@link DistinguishedName} and associated classes and methods are deprecated as of 2.0.
-     * use {@link #LdapEntryIdentification(javax.naming.ldap.LdapName, javax.naming.ldap.LdapName)} instead.
+	 * @deprecated {@link DistinguishedName} and associated classes and methods are deprecated as of 2.0.
+	 * use {@link #LdapEntryIdentification(javax.naming.ldap.LdapName, javax.naming.ldap.LdapName)} instead.
 	 */
 	public LdapEntryIdentification(DistinguishedName absoluteDn, DistinguishedName relativeDn) {
 		Assert.notNull(absoluteDn, "Absolute DN must not be null");
@@ -58,47 +58,47 @@ public class LdapEntryIdentification {
 		this.relativeDn = LdapUtils.newLdapName(relativeDn);
 	}
 
-    /**
-     * Construct an LdapEntryIdentification instance.
-     * @param absoluteDn the absolute DN of the identified entry, e.g. as
-     * returned by {@link DirContext#getNameInNamespace()}.
-     * @param relativeDn the DN of the identified entry relative to the base
-     * LDAP path, e.g. as returned by {@link DirContextOperations#getDn()}.
-     * @since 2.0
-     */
-    public LdapEntryIdentification(LdapName absoluteDn, LdapName relativeDn) {
-        Assert.notNull(absoluteDn, "Absolute DN must not be null");
-        Assert.notNull(relativeDn, "Relative DN must not be null");
-        this.absoluteDn = LdapUtils.newLdapName(absoluteDn);
-        this.relativeDn = LdapUtils.newLdapName(relativeDn);
-    }
+	/**
+	 * Construct an LdapEntryIdentification instance.
+	 * @param absoluteDn the absolute DN of the identified entry, e.g. as
+	 * returned by {@link DirContext#getNameInNamespace()}.
+	 * @param relativeDn the DN of the identified entry relative to the base
+	 * LDAP path, e.g. as returned by {@link DirContextOperations#getDn()}.
+	 * @since 2.0
+	 */
+	public LdapEntryIdentification(LdapName absoluteDn, LdapName relativeDn) {
+		Assert.notNull(absoluteDn, "Absolute DN must not be null");
+		Assert.notNull(relativeDn, "Relative DN must not be null");
+		this.absoluteDn = LdapUtils.newLdapName(absoluteDn);
+		this.relativeDn = LdapUtils.newLdapName(relativeDn);
+	}
 
-    /**
-     * Get the DN of the identified entry relative to the base LDAP path, e.g.
-     * as returned by {@link DirContextOperations#getDn()}.
-     * @return the relative DN.
-     * @since 2.0
-     */
-    public LdapName getAbsoluteName() {
-        return LdapUtils.newLdapName(absoluteDn);
-    }
-
-    /**
-     * Get the absolute DN of the identified entry, e.g. as returned by
-     * {@link DirContext#getNameInNamespace()}.
-     * @return the absolute DN.
-     * @since 2.0
-     */
-    public LdapName getRelativeName() {
-        return LdapUtils.newLdapName(relativeDn);
-    }
-
-    /**
+	/**
 	 * Get the DN of the identified entry relative to the base LDAP path, e.g.
 	 * as returned by {@link DirContextOperations#getDn()}.
 	 * @return the relative DN.
-     * @deprecated {@link DistinguishedName} and associated classes and methods are deprecated as of 2.0.
-     * use {@link #getRelativeName()} instead.
+	 * @since 2.0
+	 */
+	public LdapName getAbsoluteName() {
+		return LdapUtils.newLdapName(absoluteDn);
+	}
+
+	/**
+	 * Get the absolute DN of the identified entry, e.g. as returned by
+	 * {@link DirContext#getNameInNamespace()}.
+	 * @return the absolute DN.
+	 * @since 2.0
+	 */
+	public LdapName getRelativeName() {
+		return LdapUtils.newLdapName(relativeDn);
+	}
+
+	/**
+	 * Get the DN of the identified entry relative to the base LDAP path, e.g.
+	 * as returned by {@link DirContextOperations#getDn()}.
+	 * @return the relative DN.
+	 * @deprecated {@link DistinguishedName} and associated classes and methods are deprecated as of 2.0.
+	 * use {@link #getRelativeName()} instead.
 	 */
 	public DistinguishedName getRelativeDn() {
 		return new DistinguishedName(relativeDn);
@@ -108,11 +108,11 @@ public class LdapEntryIdentification {
 	 * Get the absolute DN of the identified entry, e.g. as returned by
 	 * {@link DirContext#getNameInNamespace()}.
 	 * @return the absolute DN.
-     * @deprecated {@link DistinguishedName} and associated classes and methods are deprecated as of 2.0.
-     * use {@link #getAbsoluteName()} instead.
+	 * @deprecated {@link DistinguishedName} and associated classes and methods are deprecated as of 2.0.
+	 * use {@link #getAbsoluteName()} instead.
 	 */
 	public DistinguishedName getAbsoluteDn() {
-        return new DistinguishedName(absoluteDn);
+		return new DistinguishedName(absoluteDn);
 	}
 
 	public boolean equals(Object obj) {

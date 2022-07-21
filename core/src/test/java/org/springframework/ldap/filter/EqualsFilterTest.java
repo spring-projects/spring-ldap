@@ -26,39 +26,39 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class EqualsFilterTest {
 
-    @Test
-    public void testEncode() {
+	@Test
+	public void testEncode() {
 
-        EqualsFilter eqq = new EqualsFilter("foo", "*bar(fie)");
+		EqualsFilter eqq = new EqualsFilter("foo", "*bar(fie)");
 
-        StringBuffer buff = new StringBuffer();
-        eqq.encode(buff);
+		StringBuffer buff = new StringBuffer();
+		eqq.encode(buff);
 
-        assertThat(buff.toString()).isEqualTo("(foo=\\2abar\\28fie\\29)");
+		assertThat(buff.toString()).isEqualTo("(foo=\\2abar\\28fie\\29)");
 
-    }
+	}
 
-    @Test
-    public void testEncodeInt() {
+	@Test
+	public void testEncodeInt() {
 
-        EqualsFilter eqq = new EqualsFilter("foo", 456);
+		EqualsFilter eqq = new EqualsFilter("foo", 456);
 
-        StringBuffer buff = new StringBuffer();
-        eqq.encode(buff);
+		StringBuffer buff = new StringBuffer();
+		eqq.encode(buff);
 
-        assertThat(buff.toString()).isEqualTo("(foo=456)");
+		assertThat(buff.toString()).isEqualTo("(foo=456)");
 
-    }
+	}
 
-    @Test
-    public void testEquals() {
-        EqualsFilter originalObject = new EqualsFilter("a", "b");
-        EqualsFilter identicalObject = new EqualsFilter("a", "b");
-        EqualsFilter differentObject = new EqualsFilter("b", "b");
-        EqualsFilter subclassObject = new EqualsFilter("a", "b") {
-        };
+	@Test
+	public void testEquals() {
+		EqualsFilter originalObject = new EqualsFilter("a", "b");
+		EqualsFilter identicalObject = new EqualsFilter("a", "b");
+		EqualsFilter differentObject = new EqualsFilter("b", "b");
+		EqualsFilter subclassObject = new EqualsFilter("a", "b") {
+		};
 
-        new EqualsTester(originalObject, identicalObject, differentObject,
-                subclassObject);
-    }
+		new EqualsTester(originalObject, identicalObject, differentObject,
+				subclassObject);
+	}
 }

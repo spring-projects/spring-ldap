@@ -20,10 +20,10 @@ package org.springframework.ldap.filter;
  * A filter for a logical AND. Example:
  * 
  * <pre>
- *     AndFilter filter = new AndFilter();
- *     filter.and(new EqualsFilter(&quot;objectclass&quot;, &quot;person&quot;);
- *     filter.and(new EqualsFilter(&quot;cn&quot;, &quot;Some CN&quot;);
- *     System.out.println(filter.encode());    
+ *	 AndFilter filter = new AndFilter();
+ *	 filter.and(new EqualsFilter(&quot;objectclass&quot;, &quot;person&quot;);
+ *	 filter.and(new EqualsFilter(&quot;cn&quot;, &quot;Some CN&quot;);
+ *	 System.out.println(filter.encode());	
  * </pre>
  * 
  * would result in: <code>(&amp;(objectclass=person)(cn=Some CN))</code>

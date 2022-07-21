@@ -30,20 +30,20 @@ import static org.springframework.ldap.config.ParserUtils.getString;
  * @author Mattias Hellborg Arthursson
  */
 public class DefaultRenamingStrategyParser implements BeanDefinitionParser {
-    private static final String ATT_TEMP_SUFFIX = "temp-suffix";
+	private static final String ATT_TEMP_SUFFIX = "temp-suffix";
 
-    @Override
-    public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(DefaultTempEntryRenamingStrategy.class);
+	@Override
+	public BeanDefinition parse(Element element, ParserContext parserContext) {
+		BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(DefaultTempEntryRenamingStrategy.class);
 
-        builder.addPropertyValue("tempSuffix",
-                getString(element, ATT_TEMP_SUFFIX,
-                        DefaultTempEntryRenamingStrategy.DEFAULT_TEMP_SUFFIX));
+		builder.addPropertyValue("tempSuffix",
+				getString(element, ATT_TEMP_SUFFIX,
+						DefaultTempEntryRenamingStrategy.DEFAULT_TEMP_SUFFIX));
 
-        AbstractBeanDefinition beanDefinition = builder.getBeanDefinition();
-        parserContext.getContainingBeanDefinition().getPropertyValues()
-                .addPropertyValue("renamingStrategy", beanDefinition);
+		AbstractBeanDefinition beanDefinition = builder.getBeanDefinition();
+		parserContext.getContainingBeanDefinition().getPropertyValues()
+				.addPropertyValue("renamingStrategy", beanDefinition);
 
-        return beanDefinition;
-    }
+		return beanDefinition;
+	}
 }

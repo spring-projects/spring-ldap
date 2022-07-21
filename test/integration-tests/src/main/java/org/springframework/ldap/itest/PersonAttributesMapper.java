@@ -30,18 +30,18 @@ import org.springframework.ldap.core.AttributesMapper;
  */
 public class PersonAttributesMapper implements AttributesMapper {
 
-    /**
-     * Maps the given attributes into a {@link Person} object.
-     * 
-     * @see org.springframework.ldap.core.AttributesMapper#mapFromAttributes(javax.naming.directory.Attributes)
-     */
-    public Object mapFromAttributes(Attributes attributes)
-            throws NamingException {
-        Person person = new Person();
-        person.setFullname((String) attributes.get("cn").get());
-        person.setLastname((String) attributes.get("sn").get());
-        person.setPhone((String) attributes.get("telephoneNumber").get());
-        person.setDescription((String) attributes.get("description").get());
-        return person;
-    }
+	/**
+	 * Maps the given attributes into a {@link Person} object.
+	 * 
+	 * @see org.springframework.ldap.core.AttributesMapper#mapFromAttributes(javax.naming.directory.Attributes)
+	 */
+	public Object mapFromAttributes(Attributes attributes)
+			throws NamingException {
+		Person person = new Person();
+		person.setFullname((String) attributes.get("cn").get());
+		person.setLastname((String) attributes.get("sn").get());
+		person.setPhone((String) attributes.get("telephoneNumber").get());
+		person.setDescription((String) attributes.get("description").get());
+		return person;
+	}
 }

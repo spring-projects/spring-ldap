@@ -57,20 +57,20 @@ public class NotFilter extends AbstractFilter {
 		return buff;
 	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-        NotFilter notFilter = (NotFilter) o;
+		NotFilter notFilter = (NotFilter) o;
 
-        if (filter != null ? !filter.equals(notFilter.filter) : notFilter.filter != null) return false;
+		if (filter != null ? !filter.equals(notFilter.filter) : notFilter.filter != null) return false;
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public int hashCode() {
-        return filter != null ? filter.hashCode() : 0;
-    }
+	@Override
+	public int hashCode() {
+		return filter != null ? filter.hashCode() : 0;
+	}
 }

@@ -29,42 +29,42 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class RebindOperationRecorderTest {
-    private LdapOperations ldapOperationsMock;
+	private LdapOperations ldapOperationsMock;
 
-    private TempEntryRenamingStrategy renamingStrategyMock;
+	private TempEntryRenamingStrategy renamingStrategyMock;
 
-    @Before
-    public void setUp() throws Exception {
-        ldapOperationsMock = mock(LdapOperations.class);
-        renamingStrategyMock = mock(TempEntryRenamingStrategy.class);
+	@Before
+	public void setUp() throws Exception {
+		ldapOperationsMock = mock(LdapOperations.class);
+		renamingStrategyMock = mock(TempEntryRenamingStrategy.class);
 
-    }
+	}
 
-    @Test
-    public void testRecordOperation() {
-        final LdapName expectedDn = LdapUtils.newLdapName(
-                "cn=john doe");
-        final LdapName expectedTempDn = LdapUtils.newLdapName(
-                "cn=john doe");
-        RebindOperationRecorder tested = new RebindOperationRecorder(
-                ldapOperationsMock, renamingStrategyMock);
+	@Test
+	public void testRecordOperation() {
+		final LdapName expectedDn = LdapUtils.newLdapName(
+				"cn=john doe");
+		final LdapName expectedTempDn = LdapUtils.newLdapName(
+				"cn=john doe");
+		RebindOperationRecorder tested = new RebindOperationRecorder(
+				ldapOperationsMock, renamingStrategyMock);
 
-        when(renamingStrategyMock.getTemporaryName(expectedDn))
-                .thenReturn(expectedTempDn);
+		when(renamingStrategyMock.getTemporaryName(expectedDn))
+				.thenReturn(expectedTempDn);
 
-        Object expectedObject = new Object();
-        BasicAttributes expectedAttributes = new BasicAttributes();
+		Object expectedObject = new Object();
+		BasicAttributes expectedAttributes = new BasicAttributes();
 
-        // perform test
-        CompensatingTransactionOperationExecutor result = tested
-                .recordOperation(new Object[] { expectedDn, expectedObject,
-                        expectedAttributes });
-        assertThat(result instanceof RebindOperationExecutor).isTrue();
-        RebindOperationExecutor rollbackOperation = (RebindOperationExecutor) result;
-        assertThat(rollbackOperation.getLdapOperations()).isSameAs(ldapOperationsMock);
-        assertThat(rollbackOperation.getOriginalDn()).isSameAs(expectedDn);
-        assertThat(rollbackOperation.getTemporaryDn()).isSameAs(expectedTempDn);
-        assertThat(rollbackOperation.getOriginalObject()).isSameAs(expectedObject);
-        assertThat(rollbackOperation.getOriginalAttributes()).isSameAs(expectedAttributes);
-    }
+		// perform test
+		CompensatingTransactionOperationExecutor result = tested
+				.recordOperation(new Object[] { expectedDn, expectedObject,
+						expectedAttributes });
+		assertThat(result instanceof RebindOperationExecutor).isTrue();
+		RebindOperationExecutor rollbackOperation = (RebindOperationExecutor) result;
+		assertThat(rollbackOperation.getLdapOperations()).isSameAs(ldapOperationsMock);
+		assertThat(rollbackOperation.getOriginalDn()).isSameAs(expectedDn);
+		assertThat(rollbackOperation.getTemporaryDn()).isSameAs(expectedTempDn);
+		assertThat(rollbackOperation.getOriginalObject()).isSameAs(expectedObject);
+		assertThat(rollbackOperation.getOriginalAttributes()).isSameAs(expectedAttributes);
+	}
 }

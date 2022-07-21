@@ -27,28 +27,28 @@ import javax.naming.Name;
  */
 @Entry(objectClasses = {"inetOrgPerson", "organizationalPerson", "person", "top"})
 public class UnitTestPersonWithIndexedAndUnindexedDnAttributes {
-    @Id
-    private Name dn;
+	@Id
+	private Name dn;
 
-    @DnAttribute(value = "cn", index=2)
-    private String fullName;
+	@DnAttribute(value = "cn", index=2)
+	private String fullName;
 
-    // This makes the entry invalid
-    @DnAttribute(value = "ou")
-    private String company;
+	// This makes the entry invalid
+	@DnAttribute(value = "ou")
+	private String company;
 
-    @DnAttribute(value= "c", index=0)
-    private String country;
+	@DnAttribute(value= "c", index=0)
+	private String country;
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
 
-    public void setCompany(String company) {
-        this.company = company;
-    }
+	public void setCompany(String company) {
+		this.company = company;
+	}
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
+	public void setCountry(String country) {
+		this.country = country;
+	}
 }

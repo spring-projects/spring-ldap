@@ -26,27 +26,27 @@ import javax.naming.directory.DirContext;
  * <pre>
  * SearchExecutor executor = new SearchExecutor(){
  *   public NamingEnumeration executeSearch(DirContext ctx) throws NamingException{
- *     return ctx.search(dn, filter, searchControls);
+ *	 return ctx.search(dn, filter, searchControls);
  *   }
  * }
  * </pre>
  * 
  * @see org.springframework.ldap.core.LdapTemplate#search(SearchExecutor,
- *      NameClassPairCallbackHandler)
+ *	  NameClassPairCallbackHandler)
  * 
  * @author Mattias Hellborg Arthursson
  */
 public interface SearchExecutor {
-    /**
-     * Execute the actual search.
-     * 
-     * @param ctx
-     *            the <code>DirContext</code> on which to work.
-     * @return the <code>NamingEnumeration</code> resulting from the search
-     *         operation.
-     * @throws NamingException
-     *             if the search results in one.
-     */
-    NamingEnumeration executeSearch(DirContext ctx)
-            throws NamingException;
+	/**
+	 * Execute the actual search.
+	 * 
+	 * @param ctx
+	 *			the <code>DirContext</code> on which to work.
+	 * @return the <code>NamingEnumeration</code> resulting from the search
+	 *		 operation.
+	 * @throws NamingException
+	 *			 if the search results in one.
+	 */
+	NamingEnumeration executeSearch(DirContext ctx)
+			throws NamingException;
 }

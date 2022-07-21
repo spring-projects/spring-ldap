@@ -35,16 +35,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Rollback
 public class Ldap321Test{
-    @Autowired
-    private RoleRepo roleRepo;
+	@Autowired
+	private RoleRepo roleRepo;
 
-    @Test
-    public void testQueryRoleMap() throws Exception {
-        Map<String,String> roleMap=roleRepo.queryRoleMap();
-        assertThat(roleMap).isNotNull();
+	@Test
+	public void testQueryRoleMap() throws Exception {
+		Map<String,String> roleMap=roleRepo.queryRoleMap();
+		assertThat(roleMap).isNotNull();
 
-        for(String roleName:roleMap.keySet()){
-            System.out.println(roleName+":"+ roleMap.get(roleName));
-        }
-    }
+		for(String roleName:roleMap.keySet()){
+			System.out.println(roleName+":"+ roleMap.get(roleName));
+		}
+	}
 }

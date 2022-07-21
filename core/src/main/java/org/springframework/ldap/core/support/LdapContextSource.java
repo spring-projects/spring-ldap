@@ -34,11 +34,11 @@ import java.util.Hashtable;
  */
 public class LdapContextSource extends AbstractContextSource {
 
-    /*
-     * @see org.springframework.ldap.support.AbstractContextSource#getDirContextInstance(java.util.Hashtable)
-     */
-    protected DirContext getDirContextInstance(Hashtable<String, Object> environment)
-            throws NamingException {
-        return new InitialLdapContext(environment, null);
-    }
+	/*
+	 * @see org.springframework.ldap.support.AbstractContextSource#getDirContextInstance(java.util.Hashtable)
+	 */
+	protected DirContext getDirContextInstance(Hashtable<String, Object> environment)
+			throws NamingException {
+		return new InitialLdapContext(environment, null);
+	}
 }

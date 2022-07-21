@@ -20,9 +20,9 @@ public class IntegrationTestPluginITest {
 		this.testKit = new TestKit(tempDir.toFile());
 	}
 
-    @Test
+	@Test
 	public void checkWithJavaPlugin() throws Exception {
-        BuildResult result = this.testKit.withProjectResource("samples/integrationtest/withjava/")
+		BuildResult result = this.testKit.withProjectResource("samples/integrationtest/withjava/")
 				.withArguments("check")
 				.build();
 		assertThat(result.task(":check").getOutcome()).isEqualTo(TaskOutcome.SUCCESS);
@@ -31,8 +31,8 @@ public class IntegrationTestPluginITest {
 	}
 
 	@Test
-    public void checkWithPropdeps() throws Exception {
-        BuildResult result = this.testKit.withProjectResource("samples/integrationtest/withpropdeps/")
+	public void checkWithPropdeps() throws Exception {
+		BuildResult result = this.testKit.withProjectResource("samples/integrationtest/withpropdeps/")
 				.withArguments("check")
 				.build();
 		assertThat(result.task(":check").getOutcome()).isEqualTo(TaskOutcome.SUCCESS);
@@ -41,7 +41,7 @@ public class IntegrationTestPluginITest {
 	}
 
 	@Test
-    public void checkWithGroovy() throws Exception {
+	public void checkWithGroovy() throws Exception {
 		BuildResult result = this.testKit.withProjectResource("samples/integrationtest/withgroovy/")
 				.withArguments("check")
 				.build();

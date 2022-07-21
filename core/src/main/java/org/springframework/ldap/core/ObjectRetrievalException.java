@@ -27,27 +27,27 @@ import org.springframework.ldap.NamingException;
  */
 public class ObjectRetrievalException extends NamingException {
 
-    /**
-     * Create a new ObjectRetrievalException.
-     * 
-     * @param msg
-     *            the detail message
-     * 
-     */
-    public ObjectRetrievalException(String msg) {
-        super(msg);
-    }
+	/**
+	 * Create a new ObjectRetrievalException.
+	 * 
+	 * @param msg
+	 *			the detail message
+	 * 
+	 */
+	public ObjectRetrievalException(String msg) {
+		super(msg);
+	}
 
-    /**
-     * Create a new ObjectRetrievalException.
-     * 
-     * @param msg
-     *            the detail message
-     * @param cause
-     *            the root cause (if any)
-     */
-    public ObjectRetrievalException(String msg, Throwable cause) {
-        super(msg, cause);
-    }
+	/**
+	 * Create a new ObjectRetrievalException.
+	 * 
+	 * @param msg
+	 *			the detail message
+	 * @param cause
+	 *			the root cause (if any)
+	 */
+	public ObjectRetrievalException(String msg, Throwable cause) {
+		super(msg, cause);
+	}
 
 }

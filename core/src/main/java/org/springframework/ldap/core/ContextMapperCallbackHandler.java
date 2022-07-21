@@ -31,41 +31,41 @@ import javax.naming.NamingException;
  * @since 1.2
  */
 public class ContextMapperCallbackHandler<T> extends
-        CollectingNameClassPairCallbackHandler<T> {
-    private ContextMapper<T> mapper;
+		CollectingNameClassPairCallbackHandler<T> {
+	private ContextMapper<T> mapper;
 
-    /**
-     * Constructs a new instance wrapping the supplied {@link ContextMapper}.
-     * 
-     * @param mapper
-     *            the mapper to be called for each entry.
-     */
-    public ContextMapperCallbackHandler(ContextMapper<T> mapper) {
-        Assert.notNull(mapper, "Mapper must not be empty");
-        this.mapper = mapper;
-    }
+	/**
+	 * Constructs a new instance wrapping the supplied {@link ContextMapper}.
+	 * 
+	 * @param mapper
+	 *			the mapper to be called for each entry.
+	 */
+	public ContextMapperCallbackHandler(ContextMapper<T> mapper) {
+		Assert.notNull(mapper, "Mapper must not be empty");
+		this.mapper = mapper;
+	}
 
-    /**
-     * Cast the NameClassPair to a {@link Binding} and pass its object to
-     * the ContextMapper.
-     * 
-     * @param nameClassPair
-     *            a Binding instance.
-     * @return the Object returned from the mapper.
-     * @throws NamingException if an error occurs.
-     * @throws ObjectRetrievalException if the object of the nameClassPair is null.
-     */
-    public T getObjectFromNameClassPair(NameClassPair nameClassPair) throws NamingException {
+	/**
+	 * Cast the NameClassPair to a {@link Binding} and pass its object to
+	 * the ContextMapper.
+	 * 
+	 * @param nameClassPair
+	 *			a Binding instance.
+	 * @return the Object returned from the mapper.
+	 * @throws NamingException if an error occurs.
+	 * @throws ObjectRetrievalException if the object of the nameClassPair is null.
+	 */
+	public T getObjectFromNameClassPair(NameClassPair nameClassPair) throws NamingException {
 		if (!(nameClassPair instanceof Binding)) {
 			throw new IllegalArgumentException("Parameter must be an instance of Binding");
 		}
 
 		Binding binding = (Binding) nameClassPair;
-        Object object = binding.getObject();
-        if (object == null) {
-            throw new ObjectRetrievalException(
-                    "Binding did not contain any object.");
-        }
-        return mapper.mapFromContext(object);
-    }
+		Object object = binding.getObject();
+		if (object == null) {
+			throw new ObjectRetrievalException(
+					"Binding did not contain any object.");
+		}
+		return mapper.mapFromContext(object);
+	}
 }

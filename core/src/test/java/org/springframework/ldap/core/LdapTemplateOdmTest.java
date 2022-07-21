@@ -13,22 +13,22 @@ import static org.mockito.Mockito.mock;
  */
 public class LdapTemplateOdmTest {
 
-    private LdapTemplate tested;
-    private ObjectDirectoryMapper odmMock;
+	private LdapTemplate tested;
+	private ObjectDirectoryMapper odmMock;
 
-    @Before
-    public void prepareTestedClass() {
-        tested = mock(LdapTemplate.class);
+	@Before
+	public void prepareTestedClass() {
+		tested = mock(LdapTemplate.class);
 
-        doCallRealMethod().when(tested).setObjectDirectoryMapper(any(ObjectDirectoryMapper.class));
-        odmMock = mock(ObjectDirectoryMapper.class);
+		doCallRealMethod().when(tested).setObjectDirectoryMapper(any(ObjectDirectoryMapper.class));
+		odmMock = mock(ObjectDirectoryMapper.class);
 
-        tested.setObjectDirectoryMapper(odmMock);
-    }
+		tested.setObjectDirectoryMapper(odmMock);
+	}
 
 
-    @Test
-    public void testFindByDn() {
+	@Test
+	public void testFindByDn() {
 
-    }
+	}
 }

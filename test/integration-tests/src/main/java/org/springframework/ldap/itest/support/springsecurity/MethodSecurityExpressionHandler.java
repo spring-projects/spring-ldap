@@ -23,14 +23,14 @@ import org.springframework.security.access.expression.method.DefaultMethodSecuri
  * @author Mattias Hellborg Arthursson
  */
 public class MethodSecurityExpressionHandler extends DefaultMethodSecurityExpressionHandler {
-    private LdapGroupDao groupDao;
+	private LdapGroupDao groupDao;
 
-    public LdapGroupDao getGroupDao() {
-        return groupDao;
-    }
+	public LdapGroupDao getGroupDao() {
+		return groupDao;
+	}
 
-    public void setGroupDao(LdapGroupDao groupDao) {
-        this.groupDao = groupDao;
-    }
+	public void setGroupDao(LdapGroupDao groupDao) {
+		this.groupDao = groupDao;
+	}
 
 }

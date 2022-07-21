@@ -24,17 +24,17 @@ package org.springframework.ldap.core;
  * 
  */
 public interface AuthenticationSource {
-    /**
-     * Get the principal to use when creating an authenticated context.
-     * 
-     * @return the principal (userDn).
-     */
-    String getPrincipal();
+	/**
+	 * Get the principal to use when creating an authenticated context.
+	 * 
+	 * @return the principal (userDn).
+	 */
+	String getPrincipal();
 
-    /**
-     * Get the credentials to use when creating an authenticated context.
-     * 
-     * @return the credentials (password).
-     */
-    String getCredentials();
+	/**
+	 * Get the credentials to use when creating an authenticated context.
+	 * 
+	 * @return the credentials (password).
+	 */
+	String getCredentials();
 }

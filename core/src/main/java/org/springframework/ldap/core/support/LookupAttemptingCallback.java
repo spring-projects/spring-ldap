@@ -38,20 +38,20 @@ import javax.naming.directory.DirContext;
  * @since 1.3.1
  */
 public class LookupAttemptingCallback implements
-        AuthenticatedLdapEntryContextCallback, AuthenticatedLdapEntryContextMapper<DirContextOperations> {
-    @Override
+		AuthenticatedLdapEntryContextCallback, AuthenticatedLdapEntryContextMapper<DirContextOperations> {
+	@Override
 	public void executeWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
-        mapWithContext(ctx, ldapEntryIdentification);
+		mapWithContext(ctx, ldapEntryIdentification);
 	}
 
-    @Override
-    public DirContextOperations mapWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
-        try {
-            return (DirContextOperations) ctx.lookup(ldapEntryIdentification.getRelativeName());
-        }
-        catch (NamingException e) {
-            // rethrow, because we aren't allowed to throw checked exceptions.
-            throw LdapUtils.convertLdapException(e);
-        }
-    }
+	@Override
+	public DirContextOperations mapWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
+		try {
+			return (DirContextOperations) ctx.lookup(ldapEntryIdentification.getRelativeName());
+		}
+		catch (NamingException e) {
+			// rethrow, because we aren't allowed to throw checked exceptions.
+			throw LdapUtils.convertLdapException(e);
+		}
+	}
 }

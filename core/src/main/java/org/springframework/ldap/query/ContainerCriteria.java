@@ -23,41 +23,41 @@ package org.springframework.ldap.query;
  * @since 2.0
  */
 public interface ContainerCriteria extends LdapQuery {
-    /**
-     * Append a logical And condition to the currently built filter.
-     *
-     * @param attribute Name of the attribute to specify a condition for.
-     * @return A ConditionCriteria instance for specifying the compare operation.
-     * @throws IllegalStateException if {@link #or(String)} has previously been called on this instance.
-     */
-    ConditionCriteria and(String attribute);
+	/**
+	 * Append a logical And condition to the currently built filter.
+	 *
+	 * @param attribute Name of the attribute to specify a condition for.
+	 * @return A ConditionCriteria instance for specifying the compare operation.
+	 * @throws IllegalStateException if {@link #or(String)} has previously been called on this instance.
+	 */
+	ConditionCriteria and(String attribute);
 
-    /**
-     * Append a logical Or condition to the currently built filter.
-     *
-     * @param attribute Name of the attribute to specify a condition for.
-     * @return A ConditionCriteria instance for specifying the compare operation.
-     * @throws IllegalStateException if {@link #and(String)} has previously been called on this instance.
-     */
-    ConditionCriteria or(String attribute);
+	/**
+	 * Append a logical Or condition to the currently built filter.
+	 *
+	 * @param attribute Name of the attribute to specify a condition for.
+	 * @return A ConditionCriteria instance for specifying the compare operation.
+	 * @throws IllegalStateException if {@link #and(String)} has previously been called on this instance.
+	 */
+	ConditionCriteria or(String attribute);
 
-    /**
-     * Append an And condition for a nested criterion. Use {@link org.springframework.ldap.query.LdapQueryBuilder#query()}
-     * to start the nested condition. Any base query information on the nested builder instance will not be considered.
-     *
-     * @param nested the nested criterion.
-     *
-     * @return A ConditionCriteria instance for specifying the compare operation.
-     */
-    ContainerCriteria and(ContainerCriteria nested);
+	/**
+	 * Append an And condition for a nested criterion. Use {@link org.springframework.ldap.query.LdapQueryBuilder#query()}
+	 * to start the nested condition. Any base query information on the nested builder instance will not be considered.
+	 *
+	 * @param nested the nested criterion.
+	 *
+	 * @return A ConditionCriteria instance for specifying the compare operation.
+	 */
+	ContainerCriteria and(ContainerCriteria nested);
 
-    /**
-     * Append an Or condition for a nested criterion. Use {@link org.springframework.ldap.query.LdapQueryBuilder#query()}
-     * to start the nested condition. Any base query information on the nested builder instance will not be considered.
-     *
-     * @param nested the nested criterion.
-     *
-     * @return A ConditionCriteria instance for specifying the compare operation.
-     */
-    ContainerCriteria or(ContainerCriteria nested);
+	/**
+	 * Append an Or condition for a nested criterion. Use {@link org.springframework.ldap.query.LdapQueryBuilder#query()}
+	 * to start the nested condition. Any base query information on the nested builder instance will not be considered.
+	 *
+	 * @param nested the nested criterion.
+	 *
+	 * @return A ConditionCriteria instance for specifying the compare operation.
+	 */
+	ContainerCriteria or(ContainerCriteria nested);
 }

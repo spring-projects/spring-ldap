@@ -77,60 +77,60 @@ public class GitHubReleaseApiTests {
 				"  \"created_at\": \"2013-02-27T19:35:32Z\",\n" +
 				"  \"published_at\": \"2013-02-27T19:35:32Z\",\n" +
 				"  \"author\": {\n" +
-				"    \"login\": \"sjohnr\",\n" +
-				"    \"id\": 1,\n" +
-				"    \"node_id\": \"MDQ6VXNlcjE=\",\n" +
-				"    \"avatar_url\": \"https://github.com/images/avatar.gif\",\n" +
-				"    \"gravatar_id\": \"\",\n" +
-				"    \"url\": \"https://api.github.com/users/sjohnr\",\n" +
-				"    \"html_url\": \"https://github.com/sjohnr\",\n" +
-				"    \"followers_url\": \"https://api.github.com/users/sjohnr/followers\",\n" +
-				"    \"following_url\": \"https://api.github.com/users/sjohnr/following{/other_user}\",\n" +
-				"    \"gists_url\": \"https://api.github.com/users/sjohnr/gists{/gist_id}\",\n" +
-				"    \"starred_url\": \"https://api.github.com/users/sjohnr/starred{/owner}{/repo}\",\n" +
-				"    \"subscriptions_url\": \"https://api.github.com/users/sjohnr/subscriptions\",\n" +
-				"    \"organizations_url\": \"https://api.github.com/users/sjohnr/orgs\",\n" +
-				"    \"repos_url\": \"https://api.github.com/users/sjohnr/repos\",\n" +
-				"    \"events_url\": \"https://api.github.com/users/sjohnr/events{/privacy}\",\n" +
-				"    \"received_events_url\": \"https://api.github.com/users/sjohnr/received_events\",\n" +
-				"    \"type\": \"User\",\n" +
-				"    \"site_admin\": false\n" +
+				"	\"login\": \"sjohnr\",\n" +
+				"	\"id\": 1,\n" +
+				"	\"node_id\": \"MDQ6VXNlcjE=\",\n" +
+				"	\"avatar_url\": \"https://github.com/images/avatar.gif\",\n" +
+				"	\"gravatar_id\": \"\",\n" +
+				"	\"url\": \"https://api.github.com/users/sjohnr\",\n" +
+				"	\"html_url\": \"https://github.com/sjohnr\",\n" +
+				"	\"followers_url\": \"https://api.github.com/users/sjohnr/followers\",\n" +
+				"	\"following_url\": \"https://api.github.com/users/sjohnr/following{/other_user}\",\n" +
+				"	\"gists_url\": \"https://api.github.com/users/sjohnr/gists{/gist_id}\",\n" +
+				"	\"starred_url\": \"https://api.github.com/users/sjohnr/starred{/owner}{/repo}\",\n" +
+				"	\"subscriptions_url\": \"https://api.github.com/users/sjohnr/subscriptions\",\n" +
+				"	\"organizations_url\": \"https://api.github.com/users/sjohnr/orgs\",\n" +
+				"	\"repos_url\": \"https://api.github.com/users/sjohnr/repos\",\n" +
+				"	\"events_url\": \"https://api.github.com/users/sjohnr/events{/privacy}\",\n" +
+				"	\"received_events_url\": \"https://api.github.com/users/sjohnr/received_events\",\n" +
+				"	\"type\": \"User\",\n" +
+				"	\"site_admin\": false\n" +
 				"  },\n" +
 				"  \"assets\": [\n" +
-				"    {\n" +
-				"      \"url\": \"https://api.github.com/spring-projects/spring-security/releases/assets/1\",\n" +
-				"      \"browser_download_url\": \"https://github.com/spring-projects/spring-security/releases/download/v1.0.0/example.zip\",\n" +
-				"      \"id\": 1,\n" +
-				"      \"node_id\": \"MDEyOlJlbGVhc2VBc3NldDE=\",\n" +
-				"      \"name\": \"example.zip\",\n" +
-				"      \"label\": \"short description\",\n" +
-				"      \"state\": \"uploaded\",\n" +
-				"      \"content_type\": \"application/zip\",\n" +
-				"      \"size\": 1024,\n" +
-				"      \"download_count\": 42,\n" +
-				"      \"created_at\": \"2013-02-27T19:35:32Z\",\n" +
-				"      \"updated_at\": \"2013-02-27T19:35:32Z\",\n" +
-				"      \"uploader\": {\n" +
-				"        \"login\": \"sjohnr\",\n" +
-				"        \"id\": 1,\n" +
-				"        \"node_id\": \"MDQ6VXNlcjE=\",\n" +
-				"        \"avatar_url\": \"https://github.com/images/avatar.gif\",\n" +
-				"        \"gravatar_id\": \"\",\n" +
-				"        \"url\": \"https://api.github.com/users/sjohnr\",\n" +
-				"        \"html_url\": \"https://github.com/sjohnr\",\n" +
-				"        \"followers_url\": \"https://api.github.com/users/sjohnr/followers\",\n" +
-				"        \"following_url\": \"https://api.github.com/users/sjohnr/following{/other_user}\",\n" +
-				"        \"gists_url\": \"https://api.github.com/users/sjohnr/gists{/gist_id}\",\n" +
-				"        \"starred_url\": \"https://api.github.com/users/sjohnr/starred{/owner}{/repo}\",\n" +
-				"        \"subscriptions_url\": \"https://api.github.com/users/sjohnr/subscriptions\",\n" +
-				"        \"organizations_url\": \"https://api.github.com/users/sjohnr/orgs\",\n" +
-				"        \"repos_url\": \"https://api.github.com/users/sjohnr/repos\",\n" +
-				"        \"events_url\": \"https://api.github.com/users/sjohnr/events{/privacy}\",\n" +
-				"        \"received_events_url\": \"https://api.github.com/users/sjohnr/received_events\",\n" +
-				"        \"type\": \"User\",\n" +
-				"        \"site_admin\": false\n" +
-				"      }\n" +
-				"    }\n" +
+				"	{\n" +
+				"	  \"url\": \"https://api.github.com/spring-projects/spring-security/releases/assets/1\",\n" +
+				"	  \"browser_download_url\": \"https://github.com/spring-projects/spring-security/releases/download/v1.0.0/example.zip\",\n" +
+				"	  \"id\": 1,\n" +
+				"	  \"node_id\": \"MDEyOlJlbGVhc2VBc3NldDE=\",\n" +
+				"	  \"name\": \"example.zip\",\n" +
+				"	  \"label\": \"short description\",\n" +
+				"	  \"state\": \"uploaded\",\n" +
+				"	  \"content_type\": \"application/zip\",\n" +
+				"	  \"size\": 1024,\n" +
+				"	  \"download_count\": 42,\n" +
+				"	  \"created_at\": \"2013-02-27T19:35:32Z\",\n" +
+				"	  \"updated_at\": \"2013-02-27T19:35:32Z\",\n" +
+				"	  \"uploader\": {\n" +
+				"		\"login\": \"sjohnr\",\n" +
+				"		\"id\": 1,\n" +
+				"		\"node_id\": \"MDQ6VXNlcjE=\",\n" +
+				"		\"avatar_url\": \"https://github.com/images/avatar.gif\",\n" +
+				"		\"gravatar_id\": \"\",\n" +
+				"		\"url\": \"https://api.github.com/users/sjohnr\",\n" +
+				"		\"html_url\": \"https://github.com/sjohnr\",\n" +
+				"		\"followers_url\": \"https://api.github.com/users/sjohnr/followers\",\n" +
+				"		\"following_url\": \"https://api.github.com/users/sjohnr/following{/other_user}\",\n" +
+				"		\"gists_url\": \"https://api.github.com/users/sjohnr/gists{/gist_id}\",\n" +
+				"		\"starred_url\": \"https://api.github.com/users/sjohnr/starred{/owner}{/repo}\",\n" +
+				"		\"subscriptions_url\": \"https://api.github.com/users/sjohnr/subscriptions\",\n" +
+				"		\"organizations_url\": \"https://api.github.com/users/sjohnr/orgs\",\n" +
+				"		\"repos_url\": \"https://api.github.com/users/sjohnr/repos\",\n" +
+				"		\"events_url\": \"https://api.github.com/users/sjohnr/events{/privacy}\",\n" +
+				"		\"received_events_url\": \"https://api.github.com/users/sjohnr/received_events\",\n" +
+				"		\"type\": \"User\",\n" +
+				"		\"site_admin\": false\n" +
+				"	  }\n" +
+				"	}\n" +
 				"  ]\n" +
 				"}";
 		this.server.enqueue(new MockResponse().setBody(responseJson));

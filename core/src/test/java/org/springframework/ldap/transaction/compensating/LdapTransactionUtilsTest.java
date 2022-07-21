@@ -30,48 +30,48 @@ import static org.mockito.Mockito.verify;
 
 public class LdapTransactionUtilsTest {
 
-    private DirContext dirContextMock;
+	private DirContext dirContextMock;
 
-    @Before
-    public void setUp() throws Exception {
-        dirContextMock = mock(DirContext.class);
+	@Before
+	public void setUp() throws Exception {
+		dirContextMock = mock(DirContext.class);
 
-        if (TransactionSynchronizationManager.isSynchronizationActive()) {
-            TransactionSynchronizationManager.clearSynchronization();
-        }
-    }
+		if (TransactionSynchronizationManager.isSynchronizationActive()) {
+			TransactionSynchronizationManager.clearSynchronization();
+		}
+	}
 
-    @Test
-    public void testCloseContext() throws NamingException {
-        LdapUtils.closeContext(dirContextMock);
-        verify(dirContextMock).close();
-    }
+	@Test
+	public void testCloseContext() throws NamingException {
+		LdapUtils.closeContext(dirContextMock);
+		verify(dirContextMock).close();
+	}
 
-    @Test
-    public void testCloseContext_NullContext() throws NamingException {
-        LdapUtils.closeContext(null);
-    }
+	@Test
+	public void testCloseContext_NullContext() throws NamingException {
+		LdapUtils.closeContext(null);
+	}
 
-    @Test
-    public void testIsSupportedWriteTransactionOperation() {
-        assertTrue(LdapTransactionUtils
-                .isSupportedWriteTransactionOperation("bind"));
-        assertTrue(LdapTransactionUtils
-                .isSupportedWriteTransactionOperation("rebind"));
-        assertTrue(LdapTransactionUtils
-                .isSupportedWriteTransactionOperation("unbind"));
-        assertTrue(LdapTransactionUtils
-                .isSupportedWriteTransactionOperation("modifyAttributes"));
-        assertTrue(LdapTransactionUtils
-                .isSupportedWriteTransactionOperation("rename"));
-        assertFalse(LdapTransactionUtils
-                .isSupportedWriteTransactionOperation("lookup"));
-        assertFalse(LdapTransactionUtils
-                .isSupportedWriteTransactionOperation("search"));
-    }
+	@Test
+	public void testIsSupportedWriteTransactionOperation() {
+		assertTrue(LdapTransactionUtils
+				.isSupportedWriteTransactionOperation("bind"));
+		assertTrue(LdapTransactionUtils
+				.isSupportedWriteTransactionOperation("rebind"));
+		assertTrue(LdapTransactionUtils
+				.isSupportedWriteTransactionOperation("unbind"));
+		assertTrue(LdapTransactionUtils
+				.isSupportedWriteTransactionOperation("modifyAttributes"));
+		assertTrue(LdapTransactionUtils
+				.isSupportedWriteTransactionOperation("rename"));
+		assertFalse(LdapTransactionUtils
+				.isSupportedWriteTransactionOperation("lookup"));
+		assertFalse(LdapTransactionUtils
+				.isSupportedWriteTransactionOperation("search"));
+	}
 
-    public void dummyMethod() {
+	public void dummyMethod() {
 
-    }
+	}
 
 }

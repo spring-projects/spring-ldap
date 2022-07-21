@@ -25,8 +25,8 @@ package org.springframework.ldap;
  */
 public class InterruptedNamingException extends NamingException {
 
-    public InterruptedNamingException(
-            javax.naming.InterruptedNamingException cause) {
-        super(cause);
-    }
+	public InterruptedNamingException(
+			javax.naming.InterruptedNamingException cause) {
+		super(cause);
+	}
 }

@@ -22,6 +22,6 @@ import java.util.List;
  * @author Mattias Hellborg Arthursson
  */
 public interface GroupRepoExtension {
-    List<String> getAllGroupNames();
-    void create(Group group);
+	List<String> getAllGroupNames();
+	void create(Group group);
 }

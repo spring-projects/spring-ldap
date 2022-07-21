@@ -30,11 +30,11 @@ import java.lang.reflect.Constructor;
  */
 public final class FromStringConverter implements Converter {
 
-    /* (non-Javadoc)
-     * @see org.springframework.ldap.odm.typeconversion.impl.Converter#convert(java.lang.Object, java.lang.Class)
-     */
-    public <T> T convert(Object source, Class<T> toClass) throws Exception {
-        Constructor<T> constructor = toClass.getConstructor(java.lang.String.class);
-        return constructor.newInstance(source);
-    }
+	/* (non-Javadoc)
+	 * @see org.springframework.ldap.odm.typeconversion.impl.Converter#convert(java.lang.Object, java.lang.Class)
+	 */
+	public <T> T convert(Object source, Class<T> toClass) throws Exception {
+		Constructor<T> constructor = toClass.getConstructor(java.lang.String.class);
+		return constructor.newInstance(source);
+	}
 }

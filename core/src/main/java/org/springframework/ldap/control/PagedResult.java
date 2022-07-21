@@ -27,59 +27,59 @@ import java.util.List;
  */
 public class PagedResult {
 
-    private List<?> resultList;
+	private List<?> resultList;
 
-    private PagedResultsCookie cookie;
+	private PagedResultsCookie cookie;
 
-    /**
-     * Constructs a PagedResults using the supplied List and
-     * {@link PagedResultsCookie}.
-     * 
-     * @param resultList
-     *            the result list.
-     * @param cookie
-     *            the cookie.
-     */
-    public PagedResult(List<?> resultList, PagedResultsCookie cookie) {
-        this.resultList = resultList;
-        this.cookie = cookie;
-    }
+	/**
+	 * Constructs a PagedResults using the supplied List and
+	 * {@link PagedResultsCookie}.
+	 * 
+	 * @param resultList
+	 *			the result list.
+	 * @param cookie
+	 *			the cookie.
+	 */
+	public PagedResult(List<?> resultList, PagedResultsCookie cookie) {
+		this.resultList = resultList;
+		this.cookie = cookie;
+	}
 
-    /**
-     * Get the cookie.
-     * 
-     * @return the cookie.
-     */
-    public PagedResultsCookie getCookie() {
-        return cookie;
-    }
+	/**
+	 * Get the cookie.
+	 * 
+	 * @return the cookie.
+	 */
+	public PagedResultsCookie getCookie() {
+		return cookie;
+	}
 
-    /**
-     * Get the result list.
-     * 
-     * @return the result list.
-     */
-    public List<?> getResultList() {
-        return resultList;
-    }
+	/**
+	 * Get the result list.
+	 * 
+	 * @return the result list.
+	 */
+	public List<?> getResultList() {
+		return resultList;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-        PagedResult that = (PagedResult) o;
+		PagedResult that = (PagedResult) o;
 
-        if (cookie != null ? !cookie.equals(that.cookie) : that.cookie != null) return false;
-        if (resultList != null ? !resultList.equals(that.resultList) : that.resultList != null) return false;
+		if (cookie != null ? !cookie.equals(that.cookie) : that.cookie != null) return false;
+		if (resultList != null ? !resultList.equals(that.resultList) : that.resultList != null) return false;
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public int hashCode() {
-        int result = resultList != null ? resultList.hashCode() : 0;
-        result = 31 * result + (cookie != null ? cookie.hashCode() : 0);
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		int result = resultList != null ? resultList.hashCode() : 0;
+		result = 31 * result + (cookie != null ? cookie.hashCode() : 0);
+		return result;
+	}
 }

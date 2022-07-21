@@ -198,7 +198,7 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 	}
 
 	@Test
-    @Category(NoAdTest.class)
+	@Category(NoAdTest.class)
 	public void testAuthenticate() {
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));

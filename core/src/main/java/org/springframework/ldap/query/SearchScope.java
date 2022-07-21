@@ -25,26 +25,26 @@ import javax.naming.directory.SearchControls;
  * @since 2.0
  */
 public enum SearchScope {
-    /**
-     * Corresponds to {@link SearchControls#OBJECT_SCOPE}
-     */
-    OBJECT(SearchControls.OBJECT_SCOPE),
-    /**
-     * Corresponds to {@link SearchControls#ONELEVEL_SCOPE}
-     */
-    ONELEVEL(SearchControls.ONELEVEL_SCOPE),
-    /**
-     * Corresponds to {@link SearchControls#SUBTREE_SCOPE}
-     */
-    SUBTREE(SearchControls.SUBTREE_SCOPE);
+	/**
+	 * Corresponds to {@link SearchControls#OBJECT_SCOPE}
+	 */
+	OBJECT(SearchControls.OBJECT_SCOPE),
+	/**
+	 * Corresponds to {@link SearchControls#ONELEVEL_SCOPE}
+	 */
+	ONELEVEL(SearchControls.ONELEVEL_SCOPE),
+	/**
+	 * Corresponds to {@link SearchControls#SUBTREE_SCOPE}
+	 */
+	SUBTREE(SearchControls.SUBTREE_SCOPE);
 
-    private final int id;
+	private final int id;
 
-    private SearchScope(int id) {
-        this.id = id;
-    }
+	private SearchScope(int id) {
+		this.id = id;
+	}
 
-    public int getId() {
-        return id;
-    }
+	public int getId() {
+		return id;
+	}
 }

@@ -17,16 +17,16 @@ public class DummyDaoLdapAndHibernateImpl extends HibernateDaoSupport implements
 
 	public void create(OrgPerson person) {
 		DistinguishedName dn = new DistinguishedName();
-        dn.add("ou", person.getCountry());
-        dn.add("ou", person.getCompany());
-        dn.add("cn", person.getFullname());
+		dn.add("ou", person.getCountry());
+		dn.add("ou", person.getCompany());
+		dn.add("cn", person.getFullname());
 
-        DirContextAdapter ctx = new DirContextAdapter();
-        ctx.setAttributeValues("objectclass", new String[] { "top", "person" });
-        ctx.setAttributeValue("cn", person.getFullname());
-        ctx.setAttributeValue("sn", person.getLastname());
-        ctx.setAttributeValue("description", person.getDescription());
-        ldapTemplate.bind(dn, ctx, null);
+		DirContextAdapter ctx = new DirContextAdapter();
+		ctx.setAttributeValues("objectclass", new String[] { "top", "person" });
+		ctx.setAttributeValue("cn", person.getFullname());
+		ctx.setAttributeValue("sn", person.getLastname());
+		ctx.setAttributeValue("description", person.getDescription());
+		ldapTemplate.bind(dn, ctx, null);
 		this.getHibernateTemplate().saveOrUpdate(person);
 
 
@@ -39,23 +39,23 @@ public class DummyDaoLdapAndHibernateImpl extends HibernateDaoSupport implements
 	}
 
 	public void modifyAttributes(String dn, String lastName, String description) {
-        DirContextAdapter ctx = (DirContextAdapter) ldapTemplate.lookup(dn);
-        ctx.setAttributeValue("sn", lastName);
-        ctx.setAttributeValue("description", description);
+		DirContextAdapter ctx = (DirContextAdapter) ldapTemplate.lookup(dn);
+		ctx.setAttributeValue("sn", lastName);
+		ctx.setAttributeValue("description", description);
 
-        ldapTemplate.modifyAttributes(dn, ctx.getModificationItems());
-    }
+		ldapTemplate.modifyAttributes(dn, ctx.getModificationItems());
+	}
 
-    public void modifyAttributesWithException(String dn, String lastName,
-            String description) {
-        modifyAttributes(dn, lastName, description);
-        throw new DummyException("This method failed.");
-    }
+	public void modifyAttributesWithException(String dn, String lastName,
+			String description) {
+		modifyAttributes(dn, lastName, description);
+		throw new DummyException("This method failed.");
+	}
 
 	public void unbind(OrgPerson person) {
 		String dn = prepareDn(person);
 		ldapTemplate.unbind(dn);
-        this.getHibernateTemplate().delete(person);
+		this.getHibernateTemplate().delete(person);
 
 	}
 
@@ -67,11 +67,11 @@ public class DummyDaoLdapAndHibernateImpl extends HibernateDaoSupport implements
 	public void update(OrgPerson person) {
 		String dn = prepareDn(person);
 		DirContextAdapter ctx = (DirContextAdapter) ldapTemplate.lookup(dn);
-        ctx.setAttributeValue("sn", person.getLastname());
-        ctx.setAttributeValue("description", person.getDescription());
+		ctx.setAttributeValue("sn", person.getLastname());
+		ctx.setAttributeValue("description", person.getDescription());
 
-        ldapTemplate.modifyAttributes(ctx);
-        this.getHibernateTemplate().saveOrUpdate(person);
+		ldapTemplate.modifyAttributes(ctx);
+		this.getHibernateTemplate().saveOrUpdate(person);
 
 	}
 
@@ -83,10 +83,10 @@ public class DummyDaoLdapAndHibernateImpl extends HibernateDaoSupport implements
 	public void updateAndRename(String dn, String newDn, String updatedDescription) {
 
 		DirContextAdapter ctx = (DirContextAdapter) ldapTemplate.lookup(dn);
-        ctx.setAttributeValue("description", updatedDescription);
+		ctx.setAttributeValue("description", updatedDescription);
 
-        ldapTemplate.modifyAttributes(ctx);
-        ldapTemplate.rename(dn, newDn);
+		ldapTemplate.modifyAttributes(ctx);
+		ldapTemplate.rename(dn, newDn);
 
 	}
 

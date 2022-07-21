@@ -27,34 +27,34 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class OrFilterTest {
 
-    @Test
-    public void testZero() {
-        OrFilter of = new OrFilter();
+	@Test
+	public void testZero() {
+		OrFilter of = new OrFilter();
 
-        assertThat(of.encode()).isEqualTo("");
-    }
+		assertThat(of.encode()).isEqualTo("");
+	}
 
-    @Test
-    public void testOne() {
-        OrFilter of = new OrFilter().or(new EqualsFilter("a", "b"));
+	@Test
+	public void testOne() {
+		OrFilter of = new OrFilter().or(new EqualsFilter("a", "b"));
 
-        assertThat(of.encode()).isEqualTo("(a=b)");
-    }
+		assertThat(of.encode()).isEqualTo("(a=b)");
+	}
 
-    @Test
-    public void testTwo() {
-        OrFilter of = new OrFilter().or(new EqualsFilter("a", "b")).or(
-                new EqualsFilter("c", "d"));
+	@Test
+	public void testTwo() {
+		OrFilter of = new OrFilter().or(new EqualsFilter("a", "b")).or(
+				new EqualsFilter("c", "d"));
 
-        assertThat(of.encode()).isEqualTo("(|(a=b)(c=d))");
-    }
+		assertThat(of.encode()).isEqualTo("(|(a=b)(c=d))");
+	}
 
-    @Test
-    public void testThree() {
-        OrFilter of = new OrFilter().or(new EqualsFilter("a", "b")).or(
-                new EqualsFilter("c", "d")).or(new EqualsFilter("e", "f"));
+	@Test
+	public void testThree() {
+		OrFilter of = new OrFilter().or(new EqualsFilter("a", "b")).or(
+				new EqualsFilter("c", "d")).or(new EqualsFilter("e", "f"));
 
-        assertThat(of.encode()).isEqualTo("(|(a=b)(c=d)(e=f))");
-    }
+		assertThat(of.encode()).isEqualTo("(|(a=b)(c=d)(e=f))");
+	}
 
 }

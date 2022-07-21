@@ -31,63 +31,63 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
  * @since 1.2
  */
 public class RebindOperationRecorder implements
-        CompensatingTransactionOperationRecorder {
+		CompensatingTransactionOperationRecorder {
 
-    private LdapOperations ldapOperations;
+	private LdapOperations ldapOperations;
 
-    private TempEntryRenamingStrategy renamingStrategy;
+	private TempEntryRenamingStrategy renamingStrategy;
 
-    /**
-     * Constructor.
-     * 
-     * @param ldapOperations
-     *            {@link LdapOperations} to use for getting the rollback
-     *            information and supply to the {@link RebindOperationExecutor}.
-     * @param renamingStrategy
-     *            {@link TempEntryRenamingStrategy} to use for generating temp
-     *            DNs.
-     */
-    public RebindOperationRecorder(LdapOperations ldapOperations,
-            TempEntryRenamingStrategy renamingStrategy) {
-        this.ldapOperations = ldapOperations;
-        this.renamingStrategy = renamingStrategy;
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param ldapOperations
+	 *			{@link LdapOperations} to use for getting the rollback
+	 *			information and supply to the {@link RebindOperationExecutor}.
+	 * @param renamingStrategy
+	 *			{@link TempEntryRenamingStrategy} to use for generating temp
+	 *			DNs.
+	 */
+	public RebindOperationRecorder(LdapOperations ldapOperations,
+			TempEntryRenamingStrategy renamingStrategy) {
+		this.ldapOperations = ldapOperations;
+		this.renamingStrategy = renamingStrategy;
+	}
 
-    /*
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
-     */
-    public CompensatingTransactionOperationExecutor recordOperation(
-            Object[] args) {
-        if (args == null || args.length != 3) {
-            throw new IllegalArgumentException(
-                    "Invalid arguments for bind operation");
-        }
-        Name dn = LdapTransactionUtils.getFirstArgumentAsName(args);
-        Object object = args[1];
-        Attributes attributes = null;
-        if (args[2] != null && !(args[2] instanceof Attributes)) {
-            throw new IllegalArgumentException(
-                    "Invalid third argument to bind operation");
-        } else if (args[2] != null) {
-            attributes = (Attributes) args[2];
-        }
+	/*
+	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
+	 */
+	public CompensatingTransactionOperationExecutor recordOperation(
+			Object[] args) {
+		if (args == null || args.length != 3) {
+			throw new IllegalArgumentException(
+					"Invalid arguments for bind operation");
+		}
+		Name dn = LdapTransactionUtils.getFirstArgumentAsName(args);
+		Object object = args[1];
+		Attributes attributes = null;
+		if (args[2] != null && !(args[2] instanceof Attributes)) {
+			throw new IllegalArgumentException(
+					"Invalid third argument to bind operation");
+		} else if (args[2] != null) {
+			attributes = (Attributes) args[2];
+		}
 
-        Name temporaryName = renamingStrategy.getTemporaryName(dn);
+		Name temporaryName = renamingStrategy.getTemporaryName(dn);
 
-        return new RebindOperationExecutor(ldapOperations, dn, temporaryName,
-                object, attributes);
-    }
+		return new RebindOperationExecutor(ldapOperations, dn, temporaryName,
+				object, attributes);
+	}
 
-    /**
-     * Get the LdapOperations. For testing purposes.
-     * 
-     * @return the LdapOperations.
-     */
-    LdapOperations getLdapOperations() {
-        return ldapOperations;
-    }
+	/**
+	 * Get the LdapOperations. For testing purposes.
+	 * 
+	 * @return the LdapOperations.
+	 */
+	LdapOperations getLdapOperations() {
+		return ldapOperations;
+	}
 
-    public TempEntryRenamingStrategy getRenamingStrategy() {
-        return renamingStrategy;
-    }
+	public TempEntryRenamingStrategy getRenamingStrategy() {
+		return renamingStrategy;
+	}
 }

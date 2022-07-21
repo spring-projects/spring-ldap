@@ -24,13 +24,13 @@ package org.springframework.ldap.core;
  * @author Mattias Hellborg Arthursson
  */
 public interface ContextAssembler extends ContextMapper {
-    /**
-     * Map the supplied object to the specified context.
-     * 
-     * @param obj
-     *            the object to read data from.
-     * @param ctx
-     *            the context to map to.
-     */
-    void mapToContext(Object obj, Object ctx);
+	/**
+	 * Map the supplied object to the specified context.
+	 * 
+	 * @param obj
+	 *			the object to read data from.
+	 * @param ctx
+	 *			the context to map to.
+	 */
+	void mapToContext(Object obj, Object ctx);
 }

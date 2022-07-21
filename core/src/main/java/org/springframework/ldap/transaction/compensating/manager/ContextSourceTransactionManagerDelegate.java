@@ -43,92 +43,92 @@ import javax.naming.directory.DirContext;
  * @since 1.2
  */
 public class ContextSourceTransactionManagerDelegate extends
-        AbstractCompensatingTransactionManagerDelegate {
+		AbstractCompensatingTransactionManagerDelegate {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ContextSourceTransactionManagerDelegate.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ContextSourceTransactionManagerDelegate.class);
 
-    private ContextSource contextSource;
+	private ContextSource contextSource;
 
-    private TempEntryRenamingStrategy renamingStrategy;
+	private TempEntryRenamingStrategy renamingStrategy;
 
-    /**
-     * Set the ContextSource to work on. Even though the actual ContextSource
-     * sent to the LdapTemplate instance should be a
-     * {@link TransactionAwareContextSourceProxy}, the one sent to this method
-     * should be the target of that proxy. If it is not, the target will be
-     * extracted and used instead.
-     * 
-     * @param contextSource
-     *            the ContextSource to work on.
-     */
-    public void setContextSource(ContextSource contextSource) {
-        if (contextSource instanceof TransactionAwareContextSourceProxy) {
-            TransactionAwareContextSourceProxy proxy = (TransactionAwareContextSourceProxy) contextSource;
-            this.contextSource = proxy.getTarget();
-        } else {
-            this.contextSource = contextSource;
-        }
+	/**
+	 * Set the ContextSource to work on. Even though the actual ContextSource
+	 * sent to the LdapTemplate instance should be a
+	 * {@link TransactionAwareContextSourceProxy}, the one sent to this method
+	 * should be the target of that proxy. If it is not, the target will be
+	 * extracted and used instead.
+	 * 
+	 * @param contextSource
+	 *			the ContextSource to work on.
+	 */
+	public void setContextSource(ContextSource contextSource) {
+		if (contextSource instanceof TransactionAwareContextSourceProxy) {
+			TransactionAwareContextSourceProxy proxy = (TransactionAwareContextSourceProxy) contextSource;
+			this.contextSource = proxy.getTarget();
+		} else {
+			this.contextSource = contextSource;
+		}
 
-        if (contextSource instanceof AbstractContextSource) {
-            AbstractContextSource abstractContextSource = (AbstractContextSource) contextSource;
-            if(abstractContextSource.isAnonymousReadOnly()) {
-                throw new IllegalArgumentException(
-                        "Compensating LDAP transactions cannot be used when context-source is anonymous-read-only");
-            }
-        }
-    }
+		if (contextSource instanceof AbstractContextSource) {
+			AbstractContextSource abstractContextSource = (AbstractContextSource) contextSource;
+			if(abstractContextSource.isAnonymousReadOnly()) {
+				throw new IllegalArgumentException(
+						"Compensating LDAP transactions cannot be used when context-source is anonymous-read-only");
+			}
+		}
+	}
 
-    public ContextSource getContextSource() {
-        return contextSource;
-    }
+	public ContextSource getContextSource() {
+		return contextSource;
+	}
 
-    /*
-     * @see org.springframework.transaction.compensating.support.AbstractCompensatingTransactionManagerDelegate#getTransactionSynchronizationKey()
-     */
-    protected Object getTransactionSynchronizationKey() {
-        return getContextSource();
-    }
+	/*
+	 * @see org.springframework.transaction.compensating.support.AbstractCompensatingTransactionManagerDelegate#getTransactionSynchronizationKey()
+	 */
+	protected Object getTransactionSynchronizationKey() {
+		return getContextSource();
+	}
 
-    /*
-     * @see org.springframework.transaction.compensating.support.AbstractCompensatingTransactionManagerDelegate#getNewHolder()
-     */
-    protected CompensatingTransactionHolderSupport getNewHolder() {
-        DirContext newCtx = getContextSource().getReadWriteContext();
-        return new DirContextHolder(
-                new DefaultCompensatingTransactionOperationManager(
-                        new LdapCompensatingTransactionOperationFactory(
-                                renamingStrategy)), newCtx);
-    }
+	/*
+	 * @see org.springframework.transaction.compensating.support.AbstractCompensatingTransactionManagerDelegate#getNewHolder()
+	 */
+	protected CompensatingTransactionHolderSupport getNewHolder() {
+		DirContext newCtx = getContextSource().getReadWriteContext();
+		return new DirContextHolder(
+				new DefaultCompensatingTransactionOperationManager(
+						new LdapCompensatingTransactionOperationFactory(
+								renamingStrategy)), newCtx);
+	}
 
-    /*
-     * @see org.springframework.transaction.compensating.support.AbstractCompensatingTransactionManagerDelegate#closeTargetResource(org.springframework.transaction.compensating.support.CompensatingTransactionHolderSupport)
-     */
-    protected void closeTargetResource(
-            CompensatingTransactionHolderSupport transactionHolderSupport) {
-        DirContextHolder contextHolder = (DirContextHolder) transactionHolderSupport;
-        DirContext ctx = contextHolder.getCtx();
+	/*
+	 * @see org.springframework.transaction.compensating.support.AbstractCompensatingTransactionManagerDelegate#closeTargetResource(org.springframework.transaction.compensating.support.CompensatingTransactionHolderSupport)
+	 */
+	protected void closeTargetResource(
+			CompensatingTransactionHolderSupport transactionHolderSupport) {
+		DirContextHolder contextHolder = (DirContextHolder) transactionHolderSupport;
+		DirContext ctx = contextHolder.getCtx();
 
-        try {
-            LOG.debug("Closing target context");
-            ctx.close();
-        } catch (NamingException e) {
-            LOG.warn("Failed to close target context", e);
-        }
-    }
+		try {
+			LOG.debug("Closing target context");
+			ctx.close();
+		} catch (NamingException e) {
+			LOG.warn("Failed to close target context", e);
+		}
+	}
 
-    /**
-     * Set the {@link TempEntryRenamingStrategy} to be used when renaming
-     * temporary entries in unbind and rebind operations. Default value is a
-     * {@link DefaultTempEntryRenamingStrategy}.
-     * 
-     * @param renamingStrategy
-     *            the {@link TempEntryRenamingStrategy} to use.
-     */
-    public void setRenamingStrategy(TempEntryRenamingStrategy renamingStrategy) {
-        this.renamingStrategy = renamingStrategy;
-    }
+	/**
+	 * Set the {@link TempEntryRenamingStrategy} to be used when renaming
+	 * temporary entries in unbind and rebind operations. Default value is a
+	 * {@link DefaultTempEntryRenamingStrategy}.
+	 * 
+	 * @param renamingStrategy
+	 *			the {@link TempEntryRenamingStrategy} to use.
+	 */
+	public void setRenamingStrategy(TempEntryRenamingStrategy renamingStrategy) {
+		this.renamingStrategy = renamingStrategy;
+	}
 
-    void checkRenamingStrategy() {
-        Assert.notNull(renamingStrategy, "RenamingStrategy must be specified");
-    }
+	void checkRenamingStrategy() {
+		Assert.notNull(renamingStrategy, "RenamingStrategy must be specified");
+	}
 }

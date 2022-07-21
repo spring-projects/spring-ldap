@@ -68,7 +68,7 @@ public abstract class AbstractCompensatingTransactionManagerDelegate {
 	public Object doGetTransaction() throws TransactionException {
 		CompensatingTransactionHolderSupport holder = (CompensatingTransactionHolderSupport) TransactionSynchronizationManager
 				.getResource(getTransactionSynchronizationKey());
-        return new CompensatingTransactionObject(holder);
+		return new CompensatingTransactionObject(holder);
 	}
 
 	/*

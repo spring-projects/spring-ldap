@@ -82,9 +82,9 @@ public class LdapRdnComponent implements Comparable, Serializable {
 		} else {
 			LOG
 					.warn("\"" + caseFold + "\" invalid property value for " + DistinguishedName.KEY_CASE_FOLD_PROPERTY
-                            + "; expected \"" + DistinguishedName.KEY_CASE_FOLD_LOWER + "\", \""
-                            + DistinguishedName.KEY_CASE_FOLD_UPPER + "\", or \""
-                            + DistinguishedName.KEY_CASE_FOLD_NONE + "\"");
+							+ "; expected \"" + DistinguishedName.KEY_CASE_FOLD_LOWER + "\", \""
+							+ DistinguishedName.KEY_CASE_FOLD_UPPER + "\", or \""
+							+ DistinguishedName.KEY_CASE_FOLD_NONE + "\"");
 			this.key = key.toLowerCase();
 		}
 		if (decodeValue) {
@@ -112,8 +112,8 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	 * DistinguishedName instance. This should be avoided.
 	 */
 	public void setKey(String key) {
-        Assert.hasText(key, "Key must not be empty");
-        this.key = key;
+		Assert.hasText(key, "Key must not be empty");
+		this.key = key;
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	 * DistinguishedName instance. This should be avoided.
 	 */
 	public void setValue(String value) {
-        Assert.hasText(value, "Value must not be empty");
+		Assert.hasText(value, "Value must not be empty");
 		this.value = value;
 	}
 
@@ -204,8 +204,8 @@ public class LdapRdnComponent implements Comparable, Serializable {
 		// instances to equal mutable ones.
 		if (obj != null && obj instanceof LdapRdnComponent) {
 			LdapRdnComponent that = (LdapRdnComponent) obj;
-            // It's safe to compare directly against key and value,
-            // because they are validated not to be null on instance creation.
+			// It's safe to compare directly against key and value,
+			// because they are validated not to be null on instance creation.
 			return this.key.equalsIgnoreCase(that.key)
 					&& this.value.equalsIgnoreCase(that.value);
 
@@ -225,14 +225,14 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	public int compareTo(Object obj) {
 		LdapRdnComponent that = (LdapRdnComponent) obj;
 
-        // It's safe to compare directly against key and value,
-        // because they are validated not to be null on instance creation.
-        int keyCompare = this.key.toLowerCase().compareTo(that.key.toLowerCase());
-        if(keyCompare == 0) {
-            return this.value.toLowerCase().compareTo(that.value.toLowerCase());
-        } else {
-            return keyCompare;
-        }
+		// It's safe to compare directly against key and value,
+		// because they are validated not to be null on instance creation.
+		int keyCompare = this.key.toLowerCase().compareTo(that.key.toLowerCase());
+		if(keyCompare == 0) {
+			return this.value.toLowerCase().compareTo(that.value.toLowerCase());
+		} else {
+			return keyCompare;
+		}
 	}
 
 	/**

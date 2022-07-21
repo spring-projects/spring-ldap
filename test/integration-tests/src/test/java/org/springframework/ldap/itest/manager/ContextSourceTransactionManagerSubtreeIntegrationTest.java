@@ -56,47 +56,47 @@ public class ContextSourceTransactionManagerSubtreeIntegrationTest extends Abstr
 		}
 	}
 
-    protected Resource getLdifFileResource() {
-        return new ClassPathResource("/setup_data_subtree.ldif");
-    }
+	protected Resource getLdifFileResource() {
+		return new ClassPathResource("/setup_data_subtree.ldif");
+	}
 
-    @Test
-    public void testLdap168DeleteRecursively() {
-        dummyDao.deleteRecursively("ou=company1,ou=Sweden");
+	@Test
+	public void testLdap168DeleteRecursively() {
+		dummyDao.deleteRecursively("ou=company1,ou=Sweden");
 
-        try {
-            ldapTemplate.lookup("ou=company1,ou=Sweden");
-            fail("NameNotFoundException expected");
-        } catch (NameNotFoundException expected) {
-            assertThat(true).isTrue();
-        }
-    }
+		try {
+			ldapTemplate.lookup("ou=company1,ou=Sweden");
+			fail("NameNotFoundException expected");
+		} catch (NameNotFoundException expected) {
+			assertThat(true).isTrue();
+		}
+	}
 
-    @Test
-    public void testLdap168DeleteWithException() {
-        try {
-            dummyDao.deleteRecursivelyWithException("ou=company1,ou=Sweden");
-            fail("DummyException expected");
-        } catch (DummyException expected) {
-            assertThat(true).isTrue();
-        }
+	@Test
+	public void testLdap168DeleteWithException() {
+		try {
+			dummyDao.deleteRecursivelyWithException("ou=company1,ou=Sweden");
+			fail("DummyException expected");
+		} catch (DummyException expected) {
+			assertThat(true).isTrue();
+		}
 
-        // Entry should have been restored
-        ldapTemplate.lookup("ou=company1,ou=Sweden");
-    }
+		// Entry should have been restored
+		ldapTemplate.lookup("ou=company1,ou=Sweden");
+	}
 
-    @Test
-    public void testLdap244CreateRecursively() {
-        dummyDao.createRecursivelyAndUnbindSubnode();
-    }
+	@Test
+	public void testLdap244CreateRecursively() {
+		dummyDao.createRecursivelyAndUnbindSubnode();
+	}
 
-    @Test
-    public void testLdap244CreateRecursivelyWithException() {
-        try {
-            dummyDao.createRecursivelyAndUnbindSubnodeWithException();
-            fail("DummyException expected");
-        } catch (DummyException expected) {
-            assertThat(true).isTrue();
-        }
-    }
+	@Test
+	public void testLdap244CreateRecursivelyWithException() {
+		try {
+			dummyDao.createRecursivelyAndUnbindSubnodeWithException();
+			fail("DummyException expected");
+		} catch (DummyException expected) {
+			assertThat(true).isTrue();
+		}
+	}
 }

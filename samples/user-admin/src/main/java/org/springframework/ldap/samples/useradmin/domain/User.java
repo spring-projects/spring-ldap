@@ -30,137 +30,137 @@ import javax.naming.Name;
  */
 @Entry(objectClasses = { "inetOrgPerson", "organizationalPerson", "person", "top" }, base = "ou=Departments")
 public final class User {
-    @Id
-    private Name id;
+	@Id
+	private Name id;
 
-    @Attribute(name = "cn")
-    @DnAttribute(value="cn", index=3)
-    private String fullName;
+	@Attribute(name = "cn")
+	@DnAttribute(value="cn", index=3)
+	private String fullName;
 
-    @Attribute(name = "employeeNumber")
-    private int employeeNumber;
+	@Attribute(name = "employeeNumber")
+	private int employeeNumber;
 
-    @Attribute(name = "givenName")
-    private String firstName;
+	@Attribute(name = "givenName")
+	private String firstName;
 
-    @Attribute(name = "sn")
-    private String lastName;
+	@Attribute(name = "sn")
+	private String lastName;
 
-    @Attribute(name = "title")
-    private String title;
+	@Attribute(name = "title")
+	private String title;
 
-    @Attribute(name = "mail")
-    private String email;
+	@Attribute(name = "mail")
+	private String email;
 
-    @Attribute(name = "telephoneNumber")
-    private String phone;
+	@Attribute(name = "telephoneNumber")
+	private String phone;
 
-    @DnAttribute(value="ou", index=2)
-    @Transient
-    private String unit;
+	@DnAttribute(value="ou", index=2)
+	@Transient
+	private String unit;
 
-    @DnAttribute(value="ou", index=1)
-    @Transient
-    private String department;
+	@DnAttribute(value="ou", index=1)
+	@Transient
+	private String department;
 
-    public String getUnit() {
-        return unit;
-    }
+	public String getUnit() {
+		return unit;
+	}
 
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
 
-    public String getDepartment() {
-        return department;
-    }
+	public String getDepartment() {
+		return department;
+	}
 
-    public void setDepartment(String department) {
-        this.department = department;
-    }
+	public void setDepartment(String department) {
+		this.department = department;
+	}
 
-    public Name getId() {
-        return id;
-    }
+	public Name getId() {
+		return id;
+	}
 
-    public void setId(Name id) {
-        this.id = id;
-    }
+	public void setId(Name id) {
+		this.id = id;
+	}
 
-    public void setId(String id) {
-        this.id = LdapUtils.newLdapName(id);
-    }
+	public void setId(String id) {
+		this.id = LdapUtils.newLdapName(id);
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public int getEmployeeNumber() {
-        return employeeNumber;
-    }
+	public int getEmployeeNumber() {
+		return employeeNumber;
+	}
 
-    public void setEmployeeNumber(int employeeNumber) {
-        this.employeeNumber = employeeNumber;
-    }
+	public void setEmployeeNumber(int employeeNumber) {
+		this.employeeNumber = employeeNumber;
+	}
 
-    public String getFirstName() {
-        return firstName;
-    }
+	public String getFirstName() {
+		return firstName;
+	}
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
 
-    public String getFullName() {
-        return fullName;
-    }
+	public String getFullName() {
+		return fullName;
+	}
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
 
-    public String getLastName() {
-        return lastName;
-    }
+	public String getLastName() {
+		return lastName;
+	}
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 
-    public String getPhone() {
-        return phone;
-    }
+	public String getPhone() {
+		return phone;
+	}
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-        User user = (User) o;
+		User user = (User) o;
 
-        if (id != null ? !id.equals(user.id) : user.id != null) return false;
+		if (id != null ? !id.equals(user.id) : user.id != null) return false;
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
-    }
+	@Override
+	public int hashCode() {
+		return id != null ? id.hashCode() : 0;
+	}
 }

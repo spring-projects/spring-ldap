@@ -30,33 +30,33 @@ import javax.naming.ldap.LdapName;
  */
 public abstract class DelegatingBaseLdapPathContextSourceSupport implements BaseLdapPathSource {
 
-    /**
-     * Get the target ContextSource.
-     * @return the target ContextSource.
-     */
-    protected abstract ContextSource getTarget();
+	/**
+	 * Get the target ContextSource.
+	 * @return the target ContextSource.
+	 */
+	protected abstract ContextSource getTarget();
 
-    private BaseLdapPathSource getTargetAsBaseLdapPathSource() {
-        try {
-            return (BaseLdapPathSource) getTarget();
-        } catch (ClassCastException e) {
-            throw new UnsupportedOperationException("This operation is not supported on a target ContextSource that does not " +
-                    " implement BaseLdapPathContextSource", e);
-        }
-    }
+	private BaseLdapPathSource getTargetAsBaseLdapPathSource() {
+		try {
+			return (BaseLdapPathSource) getTarget();
+		} catch (ClassCastException e) {
+			throw new UnsupportedOperationException("This operation is not supported on a target ContextSource that does not " +
+					" implement BaseLdapPathContextSource", e);
+		}
+	}
 
-    @Override
-    public final LdapName getBaseLdapName() {
-        return getTargetAsBaseLdapPathSource().getBaseLdapName();
-    }
+	@Override
+	public final LdapName getBaseLdapName() {
+		return getTargetAsBaseLdapPathSource().getBaseLdapName();
+	}
 
-    @Override
-    public final DistinguishedName getBaseLdapPath() {
-        return getTargetAsBaseLdapPathSource().getBaseLdapPath();
-    }
+	@Override
+	public final DistinguishedName getBaseLdapPath() {
+		return getTargetAsBaseLdapPathSource().getBaseLdapPath();
+	}
 
-    @Override
-    public final String getBaseLdapPathAsString() {
-        return getTargetAsBaseLdapPathSource().getBaseLdapPathAsString();
-    }
+	@Override
+	public final String getBaseLdapPathAsString() {
+		return getTargetAsBaseLdapPathSource().getBaseLdapPathAsString();
+	}
 }

@@ -35,38 +35,38 @@ import java.util.Map;
  */
 public class DepartmentRepoImpl implements DepartmentRepo {
 
-    private static final LdapName DEPARTMENTS_OU = LdapUtils.newLdapName("ou=Departments");
-    private final LdapTemplate ldapTemplate;
+	private static final LdapName DEPARTMENTS_OU = LdapUtils.newLdapName("ou=Departments");
+	private final LdapTemplate ldapTemplate;
 
-    @Autowired
-    public DepartmentRepoImpl(LdapTemplate ldapTemplate) {
-        this.ldapTemplate = ldapTemplate;
-    }
+	@Autowired
+	public DepartmentRepoImpl(LdapTemplate ldapTemplate) {
+		this.ldapTemplate = ldapTemplate;
+	}
 
-    @Override
-    public Map<String, List<String>> getDepartmentMap() {
-        return new HashMap<String, List<String>>(){{
-            List<String> allDepartments = getAllDepartments();
-            for (String oneDepartment : allDepartments) {
-                put(oneDepartment, getAllUnitsForDepartment(oneDepartment));
-            }
-        }};
-    }
+	@Override
+	public Map<String, List<String>> getDepartmentMap() {
+		return new HashMap<String, List<String>>(){{
+			List<String> allDepartments = getAllDepartments();
+			for (String oneDepartment : allDepartments) {
+				put(oneDepartment, getAllUnitsForDepartment(oneDepartment));
+			}
+		}};
+	}
 
-    private List<String> getAllDepartments() {
-        return ldapTemplate.list(DEPARTMENTS_OU, new OuValueNameClassPairMapper());
-    }
+	private List<String> getAllDepartments() {
+		return ldapTemplate.list(DEPARTMENTS_OU, new OuValueNameClassPairMapper());
+	}
 
-    private List<String> getAllUnitsForDepartment(String department) {
-        return ldapTemplate.list(LdapNameBuilder
-                .newInstance(DEPARTMENTS_OU).add("ou", department).build(), new OuValueNameClassPairMapper());
-    }
+	private List<String> getAllUnitsForDepartment(String department) {
+		return ldapTemplate.list(LdapNameBuilder
+				.newInstance(DEPARTMENTS_OU).add("ou", department).build(), new OuValueNameClassPairMapper());
+	}
 
-    private static class OuValueNameClassPairMapper implements NameClassPairMapper<String> {
-        @Override
-        public String mapFromNameClassPair(NameClassPair nameClassPair) throws NamingException {
-            LdapName name = LdapUtils.newLdapName(nameClassPair.getName());
-            return LdapUtils.getStringValue(name, "ou");
-        }
-    }
+	private static class OuValueNameClassPairMapper implements NameClassPairMapper<String> {
+		@Override
+		public String mapFromNameClassPair(NameClassPair nameClassPair) throws NamingException {
+			LdapName name = LdapUtils.newLdapName(nameClassPair.getName());
+			return LdapUtils.getStringValue(name, "ou");
+		}
+	}
 }

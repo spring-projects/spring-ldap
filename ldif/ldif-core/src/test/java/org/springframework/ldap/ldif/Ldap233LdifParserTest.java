@@ -31,22 +31,22 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class Ldap233LdifParserTest {
 
-    /**
-     * This previously went into endless loop.
-     *
-     * @throws IOException
-     */
-    @Test
-    public void ldap233Test() throws IOException {
-        File testFile = File.createTempFile("ldapTest", ".ldif");
-        FileUtils.write(testFile, "This is just some random text");
+	/**
+	 * This previously went into endless loop.
+	 *
+	 * @throws IOException
+	 */
+	@Test
+	public void ldap233Test() throws IOException {
+		File testFile = File.createTempFile("ldapTest", ".ldif");
+		FileUtils.write(testFile, "This is just some random text");
 
-        LdifParser parser = new LdifParser(testFile);
-        parser.setRecordSpecification(new BasicSchemaSpecification());
-        parser.open();
-        assertThat(parser.getRecord()).isNull();
+		LdifParser parser = new LdifParser(testFile);
+		parser.setRecordSpecification(new BasicSchemaSpecification());
+		parser.open();
+		assertThat(parser.getRecord()).isNull();
 
-        testFile.delete();
-    }
+		testFile.delete();
+	}
 
 }

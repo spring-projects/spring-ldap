@@ -47,50 +47,50 @@ import javax.naming.ldap.Rdn;
  * @since 1.2
  */
 public class DefaultTempEntryRenamingStrategy implements
-        TempEntryRenamingStrategy {
+		TempEntryRenamingStrategy {
 
-    /**
-     * The default temp entry suffix, &quot;_temp&quot;.
-     */
-    public static final String DEFAULT_TEMP_SUFFIX = "_temp";
+	/**
+	 * The default temp entry suffix, &quot;_temp&quot;.
+	 */
+	public static final String DEFAULT_TEMP_SUFFIX = "_temp";
 
-    private String tempSuffix = DEFAULT_TEMP_SUFFIX;
+	private String tempSuffix = DEFAULT_TEMP_SUFFIX;
 
-    /*
-     * @see org.springframework.ldap.support.transaction.TempEntryRenamingStrategy#getTemporaryName(javax.naming.Name)
-     */
-    public Name getTemporaryName(Name originalName) {
-        LdapName temporaryName = LdapUtils.newLdapName(originalName);
+	/*
+	 * @see org.springframework.ldap.support.transaction.TempEntryRenamingStrategy#getTemporaryName(javax.naming.Name)
+	 */
+	public Name getTemporaryName(Name originalName) {
+		LdapName temporaryName = LdapUtils.newLdapName(originalName);
 
-        // Add tempSuffix to the leaf node name.
-        try {
-            String leafNode = (String) temporaryName.remove(temporaryName.size() - 1);
-            temporaryName.add(new Rdn(leafNode  + tempSuffix));
-        } catch (InvalidNameException e) {
-            throw new org.springframework.ldap.InvalidNameException(e);
-        }
+		// Add tempSuffix to the leaf node name.
+		try {
+			String leafNode = (String) temporaryName.remove(temporaryName.size() - 1);
+			temporaryName.add(new Rdn(leafNode  + tempSuffix));
+		} catch (InvalidNameException e) {
+			throw new org.springframework.ldap.InvalidNameException(e);
+		}
 
-        return temporaryName;
-    }
+		return temporaryName;
+	}
 
-    /**
-     * Get the suffix that will be used for renaming temporary entries.
-     * 
-     * @return the suffix.
-     */
-    public String getTempSuffix() {
-        return tempSuffix;
-    }
+	/**
+	 * Get the suffix that will be used for renaming temporary entries.
+	 * 
+	 * @return the suffix.
+	 */
+	public String getTempSuffix() {
+		return tempSuffix;
+	}
 
-    /**
-     * Set the suffix to use for renaming temporary entries. Default value is
-     * {@link #DEFAULT_TEMP_SUFFIX}.
-     * 
-     * @param tempSuffix
-     *            the suffix.
-     */
-    public void setTempSuffix(String tempSuffix) {
-        this.tempSuffix = tempSuffix;
-    }
+	/**
+	 * Set the suffix to use for renaming temporary entries. Default value is
+	 * {@link #DEFAULT_TEMP_SUFFIX}.
+	 * 
+	 * @param tempSuffix
+	 *			the suffix.
+	 */
+	public void setTempSuffix(String tempSuffix) {
+		this.tempSuffix = tempSuffix;
+	}
 
 }

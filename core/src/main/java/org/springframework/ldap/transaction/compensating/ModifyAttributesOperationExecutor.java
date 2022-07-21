@@ -33,83 +33,83 @@ import javax.naming.directory.ModificationItem;
  * @since 1.2
  */
 public class ModifyAttributesOperationExecutor implements
-        CompensatingTransactionOperationExecutor {
+		CompensatingTransactionOperationExecutor {
 
-    private static Logger log = LoggerFactory.getLogger(ModifyAttributesOperationExecutor.class);
+	private static Logger log = LoggerFactory.getLogger(ModifyAttributesOperationExecutor.class);
 
-    private LdapOperations ldapOperations;
+	private LdapOperations ldapOperations;
 
-    private Name dn;
+	private Name dn;
 
-    private ModificationItem[] compensatingModifications;
+	private ModificationItem[] compensatingModifications;
 
-    private ModificationItem[] actualModifications;
+	private ModificationItem[] actualModifications;
 
-    /**
-     * Constructor.
-     * 
-     * @param ldapOperations
-     *            The {@link LdapOperations} to use to perform the rollback
-     *            operation.
-     * @param dn
-     *            the DN of the target entry.
-     * @param actualModifications
-     *            the actual modificationItems that were sent to the
-     *            modifyAttributes operation.
-     * @param compensatingModifications
-     *            the ModificationItems to undo the recorded operation.
-     */
-    public ModifyAttributesOperationExecutor(LdapOperations ldapOperations,
-            Name dn, ModificationItem[] actualModifications,
-            ModificationItem[] compensatingModifications) {
-        this.ldapOperations = ldapOperations;
-        this.dn = dn;
-        this.actualModifications = actualModifications.clone();
-        this.compensatingModifications = compensatingModifications.clone();
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param ldapOperations
+	 *			The {@link LdapOperations} to use to perform the rollback
+	 *			operation.
+	 * @param dn
+	 *			the DN of the target entry.
+	 * @param actualModifications
+	 *			the actual modificationItems that were sent to the
+	 *			modifyAttributes operation.
+	 * @param compensatingModifications
+	 *			the ModificationItems to undo the recorded operation.
+	 */
+	public ModifyAttributesOperationExecutor(LdapOperations ldapOperations,
+			Name dn, ModificationItem[] actualModifications,
+			ModificationItem[] compensatingModifications) {
+		this.ldapOperations = ldapOperations;
+		this.dn = dn;
+		this.actualModifications = actualModifications.clone();
+		this.compensatingModifications = compensatingModifications.clone();
+	}
 
-    /*
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#rollback()
-     */
-    public void rollback() {
-        try {
-            log.debug("Rolling back modifyAttributes operation");
-            ldapOperations.modifyAttributes(dn, compensatingModifications);
-        } catch (Exception e) {
-            log
-                    .warn("Failed to rollback ModifyAttributes operation, dn: "
-                            + dn);
-        }
-    }
+	/*
+	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#rollback()
+	 */
+	public void rollback() {
+		try {
+			log.debug("Rolling back modifyAttributes operation");
+			ldapOperations.modifyAttributes(dn, compensatingModifications);
+		} catch (Exception e) {
+			log
+					.warn("Failed to rollback ModifyAttributes operation, dn: "
+							+ dn);
+		}
+	}
 
-    /*
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#commit()
-     */
-    public void commit() {
-        log.debug("Nothing to do in commit for modifyAttributes");
-    }
+	/*
+	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#commit()
+	 */
+	public void commit() {
+		log.debug("Nothing to do in commit for modifyAttributes");
+	}
 
-    /*
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#performOperation()
-     */
-    public void performOperation() {
-        log.debug("Performing modifyAttributes operation");
-        ldapOperations.modifyAttributes(dn, actualModifications);
-    }
+	/*
+	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#performOperation()
+	 */
+	public void performOperation() {
+		log.debug("Performing modifyAttributes operation");
+		ldapOperations.modifyAttributes(dn, actualModifications);
+	}
 
-    Name getDn() {
-        return dn;
-    }
+	Name getDn() {
+		return dn;
+	}
 
-    LdapOperations getLdapOperations() {
-        return ldapOperations;
-    }
+	LdapOperations getLdapOperations() {
+		return ldapOperations;
+	}
 
-    ModificationItem[] getActualModifications() {
-        return actualModifications;
-    }
+	ModificationItem[] getActualModifications() {
+		return actualModifications;
+	}
 
-    ModificationItem[] getCompensatingModifications() {
-        return compensatingModifications;
-    }
+	ModificationItem[] getCompensatingModifications() {
+		return compensatingModifications;
+	}
 }

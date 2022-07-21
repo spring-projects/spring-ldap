@@ -22,34 +22,34 @@ import org.springframework.beans.factory.config.AbstractFactoryBean;
  * @author Mattias Hellborg Arthursson
  */
 public class EmbeddedLdapServerFactoryBean extends AbstractFactoryBean<EmbeddedLdapServer> {
-    private int port;
-    private String partitionName;
-    private String partitionSuffix;
+	private int port;
+	private String partitionName;
+	private String partitionSuffix;
 
-    @Override
-    public Class<?> getObjectType() {
-        return EmbeddedLdapServer.class;
-    }
+	@Override
+	public Class<?> getObjectType() {
+		return EmbeddedLdapServer.class;
+	}
 
-    public void setPartitionName(String partitionName) {
-        this.partitionName = partitionName;
-    }
+	public void setPartitionName(String partitionName) {
+		this.partitionName = partitionName;
+	}
 
-    public void setPartitionSuffix(String partitionSuffix) {
-        this.partitionSuffix = partitionSuffix;
-    }
+	public void setPartitionSuffix(String partitionSuffix) {
+		this.partitionSuffix = partitionSuffix;
+	}
 
-    public void setPort(int port) {
-        this.port = port;
-    }
+	public void setPort(int port) {
+		this.port = port;
+	}
 
-    @Override
-    protected EmbeddedLdapServer createInstance() throws Exception {
-	    return EmbeddedLdapServer.newEmbeddedServer(this.partitionName, this.partitionSuffix, this.port);
-    }
+	@Override
+	protected EmbeddedLdapServer createInstance() throws Exception {
+		return EmbeddedLdapServer.newEmbeddedServer(this.partitionName, this.partitionSuffix, this.port);
+	}
 
-    @Override
-    protected void destroyInstance(EmbeddedLdapServer instance) throws Exception {
-        instance.shutdown();
-    }
+	@Override
+	protected void destroyInstance(EmbeddedLdapServer instance) throws Exception {
+		instance.shutdown();
+	}
 }

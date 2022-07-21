@@ -25,8 +25,8 @@ package org.springframework.ldap;
  */
 public class NameAlreadyBoundException extends NamingException {
 
-    public NameAlreadyBoundException(
-            javax.naming.NameAlreadyBoundException cause) {
-        super(cause);
-    }
+	public NameAlreadyBoundException(
+			javax.naming.NameAlreadyBoundException cause) {
+		super(cause);
+	}
 }

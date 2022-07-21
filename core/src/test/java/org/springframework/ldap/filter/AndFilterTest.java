@@ -26,46 +26,46 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class AndFilterTest {
 
-    @Test
-    public void testZero() {
-        AndFilter aq = new AndFilter();
+	@Test
+	public void testZero() {
+		AndFilter aq = new AndFilter();
 
-        assertThat(aq.encode()).isEqualTo("");
-    }
+		assertThat(aq.encode()).isEqualTo("");
+	}
 
-    @Test
-    public void testOne() {
-        AndFilter aq = new AndFilter().and(new EqualsFilter("a", "b"));
+	@Test
+	public void testOne() {
+		AndFilter aq = new AndFilter().and(new EqualsFilter("a", "b"));
 
-        assertThat(aq.encode()).isEqualTo("(a=b)");
-    }
+		assertThat(aq.encode()).isEqualTo("(a=b)");
+	}
 
-    @Test
-    public void testTwo() {
-        AndFilter aq = new AndFilter().and(new EqualsFilter("a", "b")).and(
-                new EqualsFilter("c", "d"));
+	@Test
+	public void testTwo() {
+		AndFilter aq = new AndFilter().and(new EqualsFilter("a", "b")).and(
+				new EqualsFilter("c", "d"));
 
-        assertThat(aq.encode()).isEqualTo("(&(a=b)(c=d))");
-    }
+		assertThat(aq.encode()).isEqualTo("(&(a=b)(c=d))");
+	}
 
-    @Test
-    public void testThree() {
-        AndFilter aq = new AndFilter().and(new EqualsFilter("a", "b")).and(
-                new EqualsFilter("c", "d")).and(new EqualsFilter("e", "f"));
+	@Test
+	public void testThree() {
+		AndFilter aq = new AndFilter().and(new EqualsFilter("a", "b")).and(
+				new EqualsFilter("c", "d")).and(new EqualsFilter("e", "f"));
 
-        assertThat(aq.encode()).isEqualTo("(&(a=b)(c=d)(e=f))");
-    }
+		assertThat(aq.encode()).isEqualTo("(&(a=b)(c=d)(e=f))");
+	}
 
-    @Test
-    public void testEquals() {
+	@Test
+	public void testEquals() {
 		EqualsFilter filter = new EqualsFilter("a", "b");
 		AndFilter originalObject = new AndFilter().and(filter);
-        AndFilter identicalObject = new AndFilter().and(filter);
+		AndFilter identicalObject = new AndFilter().and(filter);
 		AndFilter differentObject = new AndFilter().and(new EqualsFilter("b", "b"));
-        AndFilter subclassObject = new AndFilter() {
-        }.and(filter);
+		AndFilter subclassObject = new AndFilter() {
+		}.and(filter);
 
-        new EqualsTester(originalObject, identicalObject, differentObject,
-                subclassObject);
-    }
+		new EqualsTester(originalObject, identicalObject, differentObject,
+				subclassObject);
+	}
 }

@@ -58,7 +58,7 @@ public class DefaultController {
 		person.setPhone(StringUtils.join(new String[] { person.getPhone(), "0" }));
 
 		personDao.update(person);
-        return "redirect:/showTree.do";
+		return "redirect:/showTree.do";
 	}
 
 	@RequestMapping("/removePerson.do")
@@ -66,7 +66,7 @@ public class DefaultController {
 		Person person = getPerson();
 
 		personDao.delete(person);
-        return "redirect:/showTree.do";
+		return "redirect:/showTree.do";
 	}
 
 	@RequestMapping("/showPerson.do")

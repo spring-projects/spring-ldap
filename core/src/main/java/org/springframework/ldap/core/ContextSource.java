@@ -55,10 +55,10 @@ public interface ContextSource {
 	/**
 	 * Gets a <code>DirContext</code> instance authenticated using the supplied
 	 * principal and credentials. Typically to be used for plain authentication
-     * purposes. <strong>Note</strong> that this method will never make use
-     * of native Java LDAP pooling, even though this instance is configured to do so.
-     * This is to force password changes in the target directory to take effect
-     * as soon as possible.
+	 * purposes. <strong>Note</strong> that this method will never make use
+	 * of native Java LDAP pooling, even though this instance is configured to do so.
+	 * This is to force password changes in the target directory to take effect
+	 * as soon as possible.
 	 *
 	 * @param principal The principal (typically a distinguished name of a user
 	 * in the LDAP tree) to use for authentication.

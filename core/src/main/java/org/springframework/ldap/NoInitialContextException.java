@@ -25,8 +25,8 @@ package org.springframework.ldap;
  */
 public class NoInitialContextException extends NamingException {
 
-    public NoInitialContextException(
-            javax.naming.NoInitialContextException cause) {
-        super(cause);
-    }
+	public NoInitialContextException(
+			javax.naming.NoInitialContextException cause) {
+		super(cause);
+	}
 }

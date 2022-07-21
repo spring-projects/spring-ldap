@@ -109,88 +109,88 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * @since 1.2
  */
 public class ContextSourceTransactionManager extends
-        AbstractPlatformTransactionManager implements InitializingBean {
+		AbstractPlatformTransactionManager implements InitializingBean {
 
-    private static final long serialVersionUID = 7138208218687237856L;
+	private static final long serialVersionUID = 7138208218687237856L;
 
-    private ContextSourceTransactionManagerDelegate delegate = new ContextSourceTransactionManagerDelegate();
+	private ContextSourceTransactionManagerDelegate delegate = new ContextSourceTransactionManagerDelegate();
 
-    /*
-     * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#doBegin(java.lang.Object,
-     *      org.springframework.transaction.TransactionDefinition)
-     */
-    protected void doBegin(Object transaction, TransactionDefinition definition) {
-        delegate.doBegin(transaction, definition);
-    }
+	/*
+	 * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#doBegin(java.lang.Object,
+	 *	  org.springframework.transaction.TransactionDefinition)
+	 */
+	protected void doBegin(Object transaction, TransactionDefinition definition) {
+		delegate.doBegin(transaction, definition);
+	}
 
-    /*
-     * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#doCleanupAfterCompletion(java.lang.Object)
-     */
-    protected void doCleanupAfterCompletion(Object transaction) {
-        delegate.doCleanupAfterCompletion(transaction);
-    }
+	/*
+	 * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#doCleanupAfterCompletion(java.lang.Object)
+	 */
+	protected void doCleanupAfterCompletion(Object transaction) {
+		delegate.doCleanupAfterCompletion(transaction);
+	}
 
-    /*
-     * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#doCommit(org.springframework.transaction.support.DefaultTransactionStatus)
-     */
-    protected void doCommit(DefaultTransactionStatus status) {
-        delegate.doCommit(status);
-    }
+	/*
+	 * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#doCommit(org.springframework.transaction.support.DefaultTransactionStatus)
+	 */
+	protected void doCommit(DefaultTransactionStatus status) {
+		delegate.doCommit(status);
+	}
 
-    /*
-     * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#doGetTransaction()
-     */
-    protected Object doGetTransaction() {
-        return delegate.doGetTransaction();
-    }
+	/*
+	 * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#doGetTransaction()
+	 */
+	protected Object doGetTransaction() {
+		return delegate.doGetTransaction();
+	}
 
-    /*
-     * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#doRollback(org.springframework.transaction.support.DefaultTransactionStatus)
-     */
-    protected void doRollback(DefaultTransactionStatus status) {
-        delegate.doRollback(status);
-    }
+	/*
+	 * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#doRollback(org.springframework.transaction.support.DefaultTransactionStatus)
+	 */
+	protected void doRollback(DefaultTransactionStatus status) {
+		delegate.doRollback(status);
+	}
 
-    /**
-     * Get the ContextSource.
-     *
-     * @return the contextSource.
-     * @see ContextSourceTransactionManagerDelegate#getContextSource()
-     */
-    public ContextSource getContextSource() {
-        return delegate.getContextSource();
-    }
+	/**
+	 * Get the ContextSource.
+	 *
+	 * @return the contextSource.
+	 * @see ContextSourceTransactionManagerDelegate#getContextSource()
+	 */
+	public ContextSource getContextSource() {
+		return delegate.getContextSource();
+	}
 
-    /**
-     * Set the ContextSource.
-     *
-     * @param contextSource
-     *            the ContextSource.
-     * @see ContextSourceTransactionManagerDelegate#setContextSource(ContextSource)
-     */
-    public void setContextSource(ContextSource contextSource) {
-        delegate.setContextSource(contextSource);
-    }
+	/**
+	 * Set the ContextSource.
+	 *
+	 * @param contextSource
+	 *			the ContextSource.
+	 * @see ContextSourceTransactionManagerDelegate#setContextSource(ContextSource)
+	 */
+	public void setContextSource(ContextSource contextSource) {
+		delegate.setContextSource(contextSource);
+	}
 
-    /**
-     * Set the {@link TempEntryRenamingStrategy}.
-     *
-     * @param renamingStrategy
-     *            the Renaming Strategy.
-     * @see ContextSourceTransactionManagerDelegate#setRenamingStrategy(TempEntryRenamingStrategy)
-     */
-    public void setRenamingStrategy(TempEntryRenamingStrategy renamingStrategy) {
-        delegate.setRenamingStrategy(renamingStrategy);
-    }
+	/**
+	 * Set the {@link TempEntryRenamingStrategy}.
+	 *
+	 * @param renamingStrategy
+	 *			the Renaming Strategy.
+	 * @see ContextSourceTransactionManagerDelegate#setRenamingStrategy(TempEntryRenamingStrategy)
+	 */
+	public void setRenamingStrategy(TempEntryRenamingStrategy renamingStrategy) {
+		delegate.setRenamingStrategy(renamingStrategy);
+	}
 
-    public void afterPropertiesSet() throws Exception {
-        delegate.checkRenamingStrategy();
-    }
+	public void afterPropertiesSet() throws Exception {
+		delegate.checkRenamingStrategy();
+	}
 
-    @Override
-    protected boolean isExistingTransaction(Object transaction)
-            throws TransactionException {
-        CompensatingTransactionObject txObject = (CompensatingTransactionObject) transaction;
-        return (txObject.getHolder() != null);
-    }
+	@Override
+	protected boolean isExistingTransaction(Object transaction)
+			throws TransactionException {
+		CompensatingTransactionObject txObject = (CompensatingTransactionObject) transaction;
+		return (txObject.getHolder() != null);
+	}
 }

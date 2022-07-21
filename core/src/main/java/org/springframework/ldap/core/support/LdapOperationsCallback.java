@@ -27,13 +27,13 @@ import org.springframework.ldap.core.LdapOperations;
  * @see SingleContextSource#doWithSingleContext(org.springframework.ldap.core.ContextSource, LdapOperationsCallback, boolean, boolean, boolean)
  */
 public interface LdapOperationsCallback<T> {
-    /**
-     * Perform a sequence of LDAP operations on the supplied LdapOperations instance. The underlying DirContext
-     * that the operations will work on is guaranteed to always be exact same instance during the lifetime of this
-     * method.
-     *
-     * @param operations the LdapOperations instance to perform operations on.
-     * @return The aggregated result of all the performed operations.
-     */
-    T doWithLdapOperations(LdapOperations operations);
+	/**
+	 * Perform a sequence of LDAP operations on the supplied LdapOperations instance. The underlying DirContext
+	 * that the operations will work on is guaranteed to always be exact same instance during the lifetime of this
+	 * method.
+	 *
+	 * @param operations the LdapOperations instance to perform operations on.
+	 * @return The aggregated result of all the performed operations.
+	 */
+	T doWithLdapOperations(LdapOperations operations);
 }

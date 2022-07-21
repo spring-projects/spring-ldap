@@ -22,13 +22,13 @@ import org.springframework.ldap.core.AuthenticationSource;
  * @author Mattias Hellborg Arthursson
  */
 public class DummyAuthenticationSource implements AuthenticationSource {
-    @Override
-    public String getPrincipal() {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public String getPrincipal() {
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public String getCredentials() {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public String getCredentials() {
+		throw new UnsupportedOperationException();
+	}
 }

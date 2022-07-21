@@ -43,115 +43,115 @@ import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
  * @author Ulrik Sandberg
  */
 public class LdapTemplatePagedSearchITest extends
-        AbstractDependencyInjectionSpringContextTests {
+		AbstractDependencyInjectionSpringContextTests {
 
-    private static final Name BASE = DistinguishedName.EMPTY_PATH;
+	private static final Name BASE = DistinguishedName.EMPTY_PATH;
 
-    private static final String FILTER_STRING = "(&(objectclass=person))";
+	private static final String FILTER_STRING = "(&(objectclass=person))";
 
-    private LdapTemplate tested;
+	private LdapTemplate tested;
 
-    private CollectingNameClassPairCallbackHandler callbackHandler;
+	private CollectingNameClassPairCallbackHandler callbackHandler;
 
-    private SearchControls searchControls;
+	private SearchControls searchControls;
 
-    protected String[] getConfigLocations() {
-        return new String[] { "/conf/ldapTemplateTestContext-openldap.xml" };
-    }
+	protected String[] getConfigLocations() {
+		return new String[] { "/conf/ldapTemplateTestContext-openldap.xml" };
+	}
 
-    protected void onSetUp() throws Exception {
-        super.onSetUp();
-        PersonAttributesMapper mapper = new PersonAttributesMapper();
-        callbackHandler = new AttributesMapperCallbackHandler(mapper);
-        searchControls = new SearchControls();
-        searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-    }
+	protected void onSetUp() throws Exception {
+		super.onSetUp();
+		PersonAttributesMapper mapper = new PersonAttributesMapper();
+		callbackHandler = new AttributesMapperCallbackHandler(mapper);
+		searchControls = new SearchControls();
+		searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+	}
 
-    protected void onTearDown() throws Exception {
-        super.onTearDown();
-        callbackHandler = null;
-        tested = null;
-        searchControls = null;
-    }
+	protected void onTearDown() throws Exception {
+		super.onTearDown();
+		callbackHandler = null;
+		tested = null;
+		searchControls = null;
+	}
 
-    public void testSearch_PagedResult() {
-        SearchExecutor searchExecutor = new SearchExecutor() {
-            public NamingEnumeration executeSearch(DirContext ctx)
-                    throws NamingException {
-                return ctx.search(BASE, FILTER_STRING, searchControls);
-            }
-        };
-        Person person;
-        List list;
-        PagedResultsCookie cookie;
-        PagedResultsRequestControl requestControl;
+	public void testSearch_PagedResult() {
+		SearchExecutor searchExecutor = new SearchExecutor() {
+			public NamingEnumeration executeSearch(DirContext ctx)
+					throws NamingException {
+				return ctx.search(BASE, FILTER_STRING, searchControls);
+			}
+		};
+		Person person;
+		List list;
+		PagedResultsCookie cookie;
+		PagedResultsRequestControl requestControl;
 
-        // Prepare for first search
-        requestControl = new PagedResultsRequestControl(3);
-        tested.search(searchExecutor, callbackHandler, requestControl);
-        cookie = requestControl.getCookie();
-        assertThat(cookie.getCookie()).as("Cookie should not be null yet").isNotNull();
-        list = callbackHandler.getList();
-        assertThat(list).hasSize(3);
-        person = (Person) list.get(0);
-        assertThat(person.getFullname()).isEqualTo("Some Person");
-        assertThat(person.getPhone()).isEqualTo("+46 555-123456");
-        person = (Person) list.get(1);
-        assertThat(person.getFullname()).isEqualTo("Some Person2");
-        assertThat(person.getPhone()).isEqualTo("+46 555-654321");
-        person = (Person) list.get(2);
-        assertThat(person.getFullname()).isEqualTo("Some Person3");
-        assertThat(person.getPhone()).isEqualTo("+46 555-123654");
+		// Prepare for first search
+		requestControl = new PagedResultsRequestControl(3);
+		tested.search(searchExecutor, callbackHandler, requestControl);
+		cookie = requestControl.getCookie();
+		assertThat(cookie.getCookie()).as("Cookie should not be null yet").isNotNull();
+		list = callbackHandler.getList();
+		assertThat(list).hasSize(3);
+		person = (Person) list.get(0);
+		assertThat(person.getFullname()).isEqualTo("Some Person");
+		assertThat(person.getPhone()).isEqualTo("+46 555-123456");
+		person = (Person) list.get(1);
+		assertThat(person.getFullname()).isEqualTo("Some Person2");
+		assertThat(person.getPhone()).isEqualTo("+46 555-654321");
+		person = (Person) list.get(2);
+		assertThat(person.getFullname()).isEqualTo("Some Person3");
+		assertThat(person.getPhone()).isEqualTo("+46 555-123654");
 
-        // Prepare for second and last search
-        requestControl = new PagedResultsRequestControl(3, cookie);
-        tested.search(searchExecutor, callbackHandler, requestControl);
-        cookie = requestControl.getCookie();
-        assertThat(cookie.getCookie()).as("Cookie should be null now").isNull();
-        assertThat(list).hasSize(5);
-        person = (Person) list.get(3);
-        assertThat(person.getFullname()).isEqualTo("Some Person");
-        assertThat(person.getPhone()).isEqualTo("+46 555-456321");
-        person = (Person) list.get(4);
-        assertThat(person.getFullname()).isEqualTo("Some Person");
-        assertThat(person.getPhone()).isEqualTo("+45 555-654123");
-    }
+		// Prepare for second and last search
+		requestControl = new PagedResultsRequestControl(3, cookie);
+		tested.search(searchExecutor, callbackHandler, requestControl);
+		cookie = requestControl.getCookie();
+		assertThat(cookie.getCookie()).as("Cookie should be null now").isNull();
+		assertThat(list).hasSize(5);
+		person = (Person) list.get(3);
+		assertThat(person.getFullname()).isEqualTo("Some Person");
+		assertThat(person.getPhone()).isEqualTo("+46 555-456321");
+		person = (Person) list.get(4);
+		assertThat(person.getFullname()).isEqualTo("Some Person");
+		assertThat(person.getPhone()).isEqualTo("+45 555-654123");
+	}
 
-    public void testSearch_PagedResult_ConvenienceMethod() {
-        Person person;
-        List list;
-        PagedResultsCookie cookie;
-        PagedResultsRequestControl requestControl;
+	public void testSearch_PagedResult_ConvenienceMethod() {
+		Person person;
+		List list;
+		PagedResultsCookie cookie;
+		PagedResultsRequestControl requestControl;
 
-        // Prepare for first search
-        requestControl = new PagedResultsRequestControl(3);
-        tested.search(BASE, FILTER_STRING, searchControls,
-                callbackHandler, requestControl);
-        cookie = requestControl.getCookie();
-        assertThat(cookie.getCookie()).as("Cookie should not be null yet").isNotNull();
-        list = callbackHandler.getList();
-        assertThat(list).hasSize(3);
-        person = (Person) list.get(0);
-        assertThat(person.getFullname()).isEqualTo("Some Person");
-        person = (Person) list.get(1);
-        assertThat(person.getFullname()).isEqualTo("Some Person2");
-        person = (Person) list.get(2);
-        assertThat(person.getFullname()).isEqualTo("Some Person3");
+		// Prepare for first search
+		requestControl = new PagedResultsRequestControl(3);
+		tested.search(BASE, FILTER_STRING, searchControls,
+				callbackHandler, requestControl);
+		cookie = requestControl.getCookie();
+		assertThat(cookie.getCookie()).as("Cookie should not be null yet").isNotNull();
+		list = callbackHandler.getList();
+		assertThat(list).hasSize(3);
+		person = (Person) list.get(0);
+		assertThat(person.getFullname()).isEqualTo("Some Person");
+		person = (Person) list.get(1);
+		assertThat(person.getFullname()).isEqualTo("Some Person2");
+		person = (Person) list.get(2);
+		assertThat(person.getFullname()).isEqualTo("Some Person3");
 
-        // Prepare for second and last search
-        requestControl = new PagedResultsRequestControl(3, cookie);
-        tested.search(BASE, FILTER_STRING, searchControls,
-                callbackHandler, requestControl);
-        cookie = requestControl.getCookie();
-        assertThat(cookie.getCookie()).as("Cookie should be null now").isNull();
-        assertThat(list).hasSize(5);
-        person = (Person) list.get(3);
-        assertThat(person.getFullname()).isEqualTo("Some Person");
-        person = (Person) list.get(4);
-        assertThat(person.getFullname()).isEqualTo("Some Person");
-    }
+		// Prepare for second and last search
+		requestControl = new PagedResultsRequestControl(3, cookie);
+		tested.search(BASE, FILTER_STRING, searchControls,
+				callbackHandler, requestControl);
+		cookie = requestControl.getCookie();
+		assertThat(cookie.getCookie()).as("Cookie should be null now").isNull();
+		assertThat(list).hasSize(5);
+		person = (Person) list.get(3);
+		assertThat(person.getFullname()).isEqualTo("Some Person");
+		person = (Person) list.get(4);
+		assertThat(person.getFullname()).isEqualTo("Some Person");
+	}
 
-    public void setTested(LdapTemplate tested) {
-        this.tested = tested;
-    }
+	public void setTested(LdapTemplate tested) {
+		this.tested = tested;
+	}
 }

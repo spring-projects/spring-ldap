@@ -25,8 +25,8 @@ package org.springframework.ldap;
  */
 public class OperationNotSupportedException extends NamingException {
 
-    public OperationNotSupportedException(
-            javax.naming.OperationNotSupportedException cause) {
-        super(cause);
-    }
+	public OperationNotSupportedException(
+			javax.naming.OperationNotSupportedException cause) {
+		super(cause);
+	}
 }

@@ -86,15 +86,15 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
 	private boolean ignoreNameNotFoundException = false;
 
-    private boolean ignoreSizeLimitExceededException = true;
+	private boolean ignoreSizeLimitExceededException = true;
 
-    private int defaultSearchScope = SearchControls.SUBTREE_SCOPE;
+	private int defaultSearchScope = SearchControls.SUBTREE_SCOPE;
 
-    private int defaultTimeLimit = 0;
+	private int defaultTimeLimit = 0;
 
-    private int defaultCountLimit = 0;
+	private int defaultCountLimit = 0;
 
-    private ObjectDirectoryMapper odm = new DefaultObjectDirectoryMapper();
+	private ObjectDirectoryMapper odm = new DefaultObjectDirectoryMapper();
 
 	/**
 	 * Constructor for bean usage.
@@ -121,25 +121,25 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		this.contextSource = contextSource;
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ObjectDirectoryMapper getObjectDirectoryMapper() {
-        return odm;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ObjectDirectoryMapper getObjectDirectoryMapper() {
+		return odm;
+	}
 
-    /**
-     * Set the ObjectDirectoryMapper instance to use.
-     *
-     * @param odm the ObejctDirectoryMapper to use.
-     * @since 2.0
-     */
-    public void setObjectDirectoryMapper(ObjectDirectoryMapper odm) {
-        this.odm = odm;
-    }
+	/**
+	 * Set the ObjectDirectoryMapper instance to use.
+	 *
+	 * @param odm the ObejctDirectoryMapper to use.
+	 * @since 2.0
+	 */
+	public void setObjectDirectoryMapper(ObjectDirectoryMapper odm) {
+		this.odm = odm;
+	}
 
-    /**
+	/**
 	 * Get the ContextSource.
 	 * 
 	 * @return the ContextSource.
@@ -187,79 +187,79 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		this.ignorePartialResultException = ignore;
 	}
 
-    /**
-     * Specify whether <code>SizeLimitExceededException</code> should be ignored in searches.
-     * This is typically what you want if you specify count limit in your search controls.
-     *
-     * @param ignore <code>true</code> if <code>SizeLimitExceededException</code>
-     * should be ignored in searches, <code>false</code> otherwise. Default is
-     * <code>true</code>.
-     * @since 2.0
-     */
-    public void setIgnoreSizeLimitExceededException(boolean ignore) {
-        this.ignoreSizeLimitExceededException = ignore;
-    }
+	/**
+	 * Specify whether <code>SizeLimitExceededException</code> should be ignored in searches.
+	 * This is typically what you want if you specify count limit in your search controls.
+	 *
+	 * @param ignore <code>true</code> if <code>SizeLimitExceededException</code>
+	 * should be ignored in searches, <code>false</code> otherwise. Default is
+	 * <code>true</code>.
+	 * @since 2.0
+	 */
+	public void setIgnoreSizeLimitExceededException(boolean ignore) {
+		this.ignoreSizeLimitExceededException = ignore;
+	}
 
-    /**
-     * Set the default scope to be used in searches if not explicitly specified.
-     * Default is {@link javax.naming.directory.SearchControls#SUBTREE_SCOPE}.
-     *
-     * @param defaultSearchScope the default search scope to use in searches.
-     *                           One of {@link SearchControls#OBJECT_SCOPE},
-     *                           {@link SearchControls#ONELEVEL_SCOPE},
-     *                           or {@link SearchControls#SUBTREE_SCOPE}
-     * @since 2.0
-     */
-    public void setDefaultSearchScope(int defaultSearchScope) {
-        this.defaultSearchScope = defaultSearchScope;
-    }
+	/**
+	 * Set the default scope to be used in searches if not explicitly specified.
+	 * Default is {@link javax.naming.directory.SearchControls#SUBTREE_SCOPE}.
+	 *
+	 * @param defaultSearchScope the default search scope to use in searches.
+	 *						   One of {@link SearchControls#OBJECT_SCOPE},
+	 *						   {@link SearchControls#ONELEVEL_SCOPE},
+	 *						   or {@link SearchControls#SUBTREE_SCOPE}
+	 * @since 2.0
+	 */
+	public void setDefaultSearchScope(int defaultSearchScope) {
+		this.defaultSearchScope = defaultSearchScope;
+	}
 
-    /**
-     * Set the default time limit be used in searches if not explicitly specified.
-     * Default is 0, indicating no time limit.
-     *
-     * @param defaultTimeLimit the default time limit to use in searches.
-     * @since 2.0
-     */
-    public void setDefaultTimeLimit(int defaultTimeLimit) {
-        this.defaultTimeLimit = defaultTimeLimit;
-    }
+	/**
+	 * Set the default time limit be used in searches if not explicitly specified.
+	 * Default is 0, indicating no time limit.
+	 *
+	 * @param defaultTimeLimit the default time limit to use in searches.
+	 * @since 2.0
+	 */
+	public void setDefaultTimeLimit(int defaultTimeLimit) {
+		this.defaultTimeLimit = defaultTimeLimit;
+	}
 
-    /**
-     * Set the default count limit be used in searches if not explicitly specified.
-     * Default is 0, indicating no count limit.
-     *
-     * @param defaultCountLimit the default count limit to use in searches.
-     * @since 2.0
-     */
-    public void setDefaultCountLimit(int defaultCountLimit) {
-        this.defaultCountLimit = defaultCountLimit;
-    }
+	/**
+	 * Set the default count limit be used in searches if not explicitly specified.
+	 * Default is 0, indicating no count limit.
+	 *
+	 * @param defaultCountLimit the default count limit to use in searches.
+	 * @since 2.0
+	 */
+	public void setDefaultCountLimit(int defaultCountLimit) {
+		this.defaultCountLimit = defaultCountLimit;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void search(Name base, String filter, int searchScope, boolean returningObjFlag,
 			NameClassPairCallbackHandler handler) {
 
 		search(base, filter, getDefaultSearchControls(searchScope, returningObjFlag, ALL_ATTRIBUTES), handler);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void search(String base, String filter, int searchScope, boolean returningObjFlag,
 			NameClassPairCallbackHandler handler) {
 
 		search(base, filter, getDefaultSearchControls(searchScope, returningObjFlag, ALL_ATTRIBUTES), handler);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void search(final Name base, final String filter, final SearchControls controls,
 			NameClassPairCallbackHandler handler) {
 
@@ -275,10 +275,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		search(se, handler);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void search(final String base, final String filter, final SearchControls controls,
 			NameClassPairCallbackHandler handler) {
 
@@ -294,10 +294,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		search(se, handler);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void search(final Name base, final String filter, final SearchControls controls,
 			NameClassPairCallbackHandler handler, DirContextProcessor processor) {
 
@@ -313,10 +313,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		search(se, handler, processor);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void search(final String base, final String filter, final SearchControls controls,
 			NameClassPairCallbackHandler handler, DirContextProcessor processor) {
 
@@ -356,7 +356,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * NameNotFoundException will be ignored. Instead this is interpreted that
 	 * no entries were found.
 	 */
-    @Override
+	@Override
 	public void search(SearchExecutor se, NameClassPairCallbackHandler handler, DirContextProcessor processor) {
 		DirContext ctx = contextSource.getReadOnlyContext();
 
@@ -389,14 +389,14 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 				ex = LdapUtils.convertLdapException(e);
 			}
 		}
-        catch(SizeLimitExceededException e) {
-            if(ignoreSizeLimitExceededException) {
-                LOG.debug("SizeLimitExceededException encountered and ignored", e);
-            }
-            else {
-                ex = LdapUtils.convertLdapException(e);
-            }
-        }
+		catch(SizeLimitExceededException e) {
+			if(ignoreSizeLimitExceededException) {
+				LOG.debug("SizeLimitExceededException encountered and ignored", e);
+			}
+			else {
+				ex = LdapUtils.convertLdapException(e);
+			}
+		}
 		catch (javax.naming.NamingException e) {
 			ex = LdapUtils.convertLdapException(e);
 		}
@@ -439,15 +439,15 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * NameNotFoundException will be ignored. Instead this is interpreted that
 	 * no entries were found.
 	 */
-    @Override
+	@Override
 	public void search(SearchExecutor se, NameClassPairCallbackHandler handler) {
 		search(se, handler, new NullDirContextProcessor());
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void search(Name base, String filter, NameClassPairCallbackHandler handler) {
 
 		SearchControls controls = getDefaultSearchControls(defaultSearchScope, DONT_RETURN_OBJ_FLAG, ALL_ATTRIBUTES);
@@ -457,10 +457,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		search(base, filter, controls, handler);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void search(String base, String filter, NameClassPairCallbackHandler handler) {
 
 		SearchControls controls = getDefaultSearchControls(defaultSearchScope, DONT_RETURN_OBJ_FLAG, ALL_ATTRIBUTES);
@@ -470,138 +470,138 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		search(base, filter, controls, handler);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> search(Name base, String filter, int searchScope, String[] attrs, AttributesMapper<T> mapper) {
 		return search(base, filter, getDefaultSearchControls(searchScope, DONT_RETURN_OBJ_FLAG, attrs), mapper);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> search(String base, String filter, int searchScope, String[] attrs, AttributesMapper<T> mapper) {
 		return search(base, filter, getDefaultSearchControls(searchScope, DONT_RETURN_OBJ_FLAG, attrs), mapper);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> search(Name base, String filter, int searchScope, AttributesMapper<T> mapper) {
 		return search(base, filter, searchScope, ALL_ATTRIBUTES, mapper);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> search(String base, String filter, int searchScope, AttributesMapper<T> mapper) {
 		return search(base, filter, searchScope, ALL_ATTRIBUTES, mapper);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> search(Name base, String filter, AttributesMapper<T> mapper) {
 		return search(base, filter, defaultSearchScope, mapper);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> search(String base, String filter, AttributesMapper<T> mapper) {
 		return search(base, filter, defaultSearchScope, mapper);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> search(Name base, String filter, int searchScope, String[] attrs, ContextMapper<T> mapper) {
 		return search(base, filter, getDefaultSearchControls(searchScope, RETURN_OBJ_FLAG, attrs), mapper);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> search(String base, String filter, int searchScope, String[] attrs, ContextMapper<T> mapper) {
 		return search(base, filter, getDefaultSearchControls(searchScope, RETURN_OBJ_FLAG, attrs), mapper);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> search(Name base, String filter, int searchScope, ContextMapper<T> mapper) {
 		return search(base, filter, searchScope, ALL_ATTRIBUTES, mapper);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> search(String base, String filter, int searchScope, ContextMapper<T> mapper) {
 		return search(base, filter, searchScope, ALL_ATTRIBUTES, mapper);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> search(Name base, String filter, ContextMapper<T> mapper) {
 		return search(base, filter, defaultSearchScope, mapper);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> search(String base, String filter, ContextMapper<T> mapper) {
 		return search(base, filter, defaultSearchScope, mapper);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> search(String base, String filter, SearchControls controls, ContextMapper<T> mapper) {
 		return search(base, filter, controls, mapper, new NullDirContextProcessor());
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> search(Name base, String filter, SearchControls controls, ContextMapper<T> mapper) {
 		return search(base, filter, controls, mapper, new NullDirContextProcessor());
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> search(Name base, String filter, SearchControls controls, AttributesMapper<T> mapper) {
 		return search(base, filter, controls, mapper, new NullDirContextProcessor());
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> search(String base, String filter, SearchControls controls, AttributesMapper<T> mapper) {
 		return search(base, filter, controls, mapper, new NullDirContextProcessor());
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> search(String base, String filter, SearchControls controls, AttributesMapper<T> mapper,
 			DirContextProcessor processor) {
 		AttributesMapperCallbackHandler<T> handler = new AttributesMapperCallbackHandler<T>(mapper);
@@ -610,10 +610,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		return handler.getList();
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> search(Name base, String filter, SearchControls controls, AttributesMapper<T> mapper,
 			DirContextProcessor processor) {
 		AttributesMapperCallbackHandler<T> handler = new AttributesMapperCallbackHandler<T>(mapper);
@@ -622,10 +622,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		return handler.getList();
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> search(String base, String filter, SearchControls controls, ContextMapper<T> mapper,
 			DirContextProcessor processor) {
 		assureReturnObjFlagSet(controls);
@@ -635,10 +635,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		return handler.getList();
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> search(Name base, String filter, SearchControls controls, ContextMapper<T> mapper,
 			DirContextProcessor processor) {
 		assureReturnObjFlagSet(controls);
@@ -648,10 +648,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		return handler.getList();
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void list(final String base, NameClassPairCallbackHandler handler) {
 		SearchExecutor searchExecutor = new SearchExecutor() {
 			public NamingEnumeration executeSearch(DirContext ctx) throws javax.naming.NamingException {
@@ -662,10 +662,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		search(searchExecutor, handler);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void list(final Name base, NameClassPairCallbackHandler handler) {
 		SearchExecutor searchExecutor = new SearchExecutor() {
 			public NamingEnumeration executeSearch(DirContext ctx) throws javax.naming.NamingException {
@@ -676,46 +676,46 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		search(searchExecutor, handler);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> list(String base, NameClassPairMapper<T> mapper) {
 		CollectingNameClassPairCallbackHandler<T> handler = new MappingCollectingNameClassPairCallbackHandler<T>(mapper);
 		list(base, handler);
 		return handler.getList();
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> list(Name base, NameClassPairMapper<T> mapper) {
 		CollectingNameClassPairCallbackHandler<T> handler = new MappingCollectingNameClassPairCallbackHandler<T>(mapper);
 		list(base, handler);
 		return handler.getList();
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public List<String> list(final Name base) {
 		return list(base, new DefaultNameClassPairMapper());
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public List<String> list(final String base) {
 		return list(base, new DefaultNameClassPairMapper());
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void listBindings(final String base, NameClassPairCallbackHandler handler) {
 		SearchExecutor searchExecutor = new SearchExecutor() {
 			public NamingEnumeration executeSearch(DirContext ctx) throws javax.naming.NamingException {
@@ -726,10 +726,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		search(searchExecutor, handler);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void listBindings(final Name base, NameClassPairCallbackHandler handler) {
 		SearchExecutor searchExecutor = new SearchExecutor() {
 			public NamingEnumeration executeSearch(DirContext ctx) throws javax.naming.NamingException {
@@ -740,46 +740,46 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		search(searchExecutor, handler);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> listBindings(String base, NameClassPairMapper<T> mapper) {
 		CollectingNameClassPairCallbackHandler<T> handler = new MappingCollectingNameClassPairCallbackHandler<T>(mapper);
 		listBindings(base, handler);
 		return handler.getList();
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> listBindings(Name base, NameClassPairMapper<T> mapper) {
 		CollectingNameClassPairCallbackHandler<T> handler = new MappingCollectingNameClassPairCallbackHandler<T>(mapper);
 		listBindings(base, handler);
 		return handler.getList();
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public List<String> listBindings(final String base) {
 		return listBindings(base, new DefaultNameClassPairMapper());
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public List<String> listBindings(final Name base) {
 		return listBindings(base, new DefaultNameClassPairMapper());
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> listBindings(String base, ContextMapper<T> mapper) {
 		ContextMapperCallbackHandler<T> handler = new ContextMapperCallbackHandler<T>(mapper);
 		listBindings(base, handler);
@@ -787,10 +787,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		return handler.getList();
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> List<T> listBindings(Name base, ContextMapper<T> mapper) {
 		ContextMapperCallbackHandler<T> handler = new ContextMapperCallbackHandler<T>(mapper);
 		listBindings(base, handler);
@@ -798,19 +798,19 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		return handler.getList();
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> T executeReadOnly(ContextExecutor<T> ce) {
 		DirContext ctx = contextSource.getReadOnlyContext();
 		return executeWithContext(ce, ctx);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> T executeReadWrite(ContextExecutor<T> ce) {
 		DirContext ctx = contextSource.getReadWriteContext();
 		return executeWithContext(ce, ctx);
@@ -828,10 +828,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		}
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Object lookup(final Name dn) {
 		return executeReadOnly(new ContextExecutor() {
 			public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
@@ -840,10 +840,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		});
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Object lookup(final String dn) {
 		return executeReadOnly(new ContextExecutor() {
 			public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
@@ -852,10 +852,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		});
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> T lookup(final Name dn, final AttributesMapper<T> mapper) {
 		return executeReadOnly(new ContextExecutor<T>() {
 			public T executeWithContext(DirContext ctx) throws javax.naming.NamingException {
@@ -865,10 +865,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		});
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> T lookup(final String dn, final AttributesMapper<T> mapper) {
 
 		return executeReadOnly(new ContextExecutor<T>() {
@@ -879,10 +879,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		});
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> T lookup(final Name dn, final ContextMapper<T> mapper) {
 		return executeReadOnly(new ContextExecutor<T>() {
 			public T executeWithContext(DirContext ctx) throws javax.naming.NamingException {
@@ -892,10 +892,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		});
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> T lookup(final String dn, final ContextMapper<T> mapper) {
 		return executeReadOnly(new ContextExecutor<T>() {
 			public T executeWithContext(DirContext ctx) throws javax.naming.NamingException {
@@ -905,10 +905,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		});
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> T lookup(final Name dn, final String[] attributes, final AttributesMapper<T> mapper) {
 		return executeReadOnly(new ContextExecutor<T>() {
 			public T executeWithContext(DirContext ctx) throws javax.naming.NamingException {
@@ -918,10 +918,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		});
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> T lookup(final String dn, final String[] attributes, final AttributesMapper<T> mapper) {
 		return executeReadOnly(new ContextExecutor<T>() {
 			public T executeWithContext(DirContext ctx) throws javax.naming.NamingException {
@@ -931,10 +931,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		});
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> T lookup(final Name dn, final String[] attributes, final ContextMapper<T> mapper) {
 		return executeReadOnly(new ContextExecutor<T>() {
 			public T executeWithContext(DirContext ctx) throws javax.naming.NamingException {
@@ -945,10 +945,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		});
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> T lookup(final String dn, final String[] attributes, final ContextMapper<T> mapper) {
 		return executeReadOnly(new ContextExecutor<T>() {
 			public T executeWithContext(DirContext ctx) throws javax.naming.NamingException {
@@ -960,10 +960,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		});
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void modifyAttributes(final Name dn, final ModificationItem[] mods) {
 		executeReadWrite(new ContextExecutor() {
 			public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
@@ -973,10 +973,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		});
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void modifyAttributes(final String dn, final ModificationItem[] mods) {
 		executeReadWrite(new ContextExecutor() {
 			public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
@@ -986,10 +986,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		});
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void bind(final Name dn, final Object obj, final Attributes attributes) {
 		executeReadWrite(new ContextExecutor<Object>() {
 			public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
@@ -999,10 +999,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		});
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void bind(final String dn, final Object obj, final Attributes attributes) {
 		executeReadWrite(new ContextExecutor<Object>() {
 			public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
@@ -1012,26 +1012,26 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		});
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void unbind(final Name dn) {
 		doUnbind(dn);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void unbind(final String dn) {
 		doUnbind(dn);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void unbind(final Name dn, boolean recursive) {
 		if (!recursive) {
 			doUnbind(dn);
@@ -1041,10 +1041,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		}
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void unbind(final String dn, boolean recursive) {
 		if (!recursive) {
 			doUnbind(dn);
@@ -1126,10 +1126,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		}
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void rebind(final Name dn, final Object obj, final Attributes attributes) {
 		executeReadWrite(new ContextExecutor() {
 			public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
@@ -1139,10 +1139,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		});
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void rebind(final String dn, final Object obj, final Attributes attributes) {
 		executeReadWrite(new ContextExecutor() {
 			public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
@@ -1152,10 +1152,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		});
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void rename(final Name oldDn, final Name newDn) {
 		executeReadWrite(new ContextExecutor() {
 			public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
@@ -1165,10 +1165,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		});
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void rename(final String oldDn, final String newDn) {
 		executeReadWrite(new ContextExecutor() {
 			public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
@@ -1178,12 +1178,12 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		});
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void afterPropertiesSet() throws Exception {
-        Assert.notNull(contextSource, "Property 'contextSource' must be set.");
+		Assert.notNull(contextSource, "Property 'contextSource' must be set.");
 	}
 
 	private void closeContextAndNamingEnumeration(DirContext ctx, NamingEnumeration results) {
@@ -1229,8 +1229,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	private SearchControls getDefaultSearchControls(int searchScope, boolean returningObjFlag, String[] attrs) {
 		SearchControls controls = new SearchControls();
 		controls.setSearchScope(searchScope);
-        controls.setTimeLimit(defaultTimeLimit);
-        controls.setCountLimit(defaultCountLimit);
+		controls.setTimeLimit(defaultTimeLimit);
+		controls.setCountLimit(defaultCountLimit);
 		controls.setReturningObjFlag(returningObjFlag);
 		controls.setReturningAttributes(attrs);
 		return controls;
@@ -1246,28 +1246,28 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		Assert.notNull(controls, "controls must not be null");
 		if (!controls.getReturningObjFlag()) {
 			LOG.debug("The returnObjFlag of supplied SearchControls is not set"
-                    + " but a ContextMapper is used - setting flag to true");
+					+ " but a ContextMapper is used - setting flag to true");
 			controls.setReturningObjFlag(true);
 		}
 	}
 
-    /**
-     * Do-nothing implementation of {@link DirContextProcessor}.
-     *
-     * @author Mattias Hellborg Arthursson
-     * @since 2.0
-     */
-    public static final class NullDirContextProcessor implements DirContextProcessor {
-        public void postProcess(DirContext ctx) {
-            // Do nothing
-        }
+	/**
+	 * Do-nothing implementation of {@link DirContextProcessor}.
+	 *
+	 * @author Mattias Hellborg Arthursson
+	 * @since 2.0
+	 */
+	public static final class NullDirContextProcessor implements DirContextProcessor {
+		public void postProcess(DirContext ctx) {
+			// Do nothing
+		}
 
-        public void preProcess(DirContext ctx) {
-            // Do nothing
-        }
-    }
+		public void preProcess(DirContext ctx) {
+			// Do nothing
+		}
+	}
 
-    /**
+	/**
 	 * A {@link NameClassPairCallbackHandler} that passes the NameClassPairs
 	 * found to a NameClassPairMapper and collects the results in a list.
 	 * 
@@ -1282,9 +1282,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			this.mapper = mapper;
 		}
 
-        /**
-         * {@inheritDoc}
-         */
+		/**
+		 * {@inheritDoc}
+		 */
 		public T getObjectFromNameClassPair(NameClassPair nameClassPair) {
 			try {
 				return mapper.mapFromNameClassPair(nameClassPair);
@@ -1295,26 +1295,26 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		}
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public DirContextOperations lookupContext(Name dn) {
 		return (DirContextOperations) lookup(dn);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public DirContextOperations lookupContext(String dn) {
 		return (DirContextOperations) lookup(dn);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void modifyAttributes(DirContextOperations ctx) {
 		Name dn = ctx.getDn();
 		if (dn != null && ctx.isUpdateMode()) {
@@ -1325,10 +1325,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		}
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void bind(DirContextOperations ctx) {
 		Name dn = ctx.getDn();
 		if (dn != null && !ctx.isUpdateMode()) {
@@ -1340,10 +1340,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void rebind(DirContextOperations ctx) {
 		Name dn = ctx.getDn();
 		if (dn != null && !ctx.isUpdateMode()) {
@@ -1355,223 +1355,223 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		}
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public boolean authenticate(Name base, String filter, String password) {
 		return authenticate(base, filter, password,
 				new NullAuthenticatedLdapEntryContextCallback(),
 				new NullAuthenticationErrorCallback());
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public boolean authenticate(String base, String filter, String password) {
 		return authenticate(LdapUtils.newLdapName(base), filter, password,
 				new NullAuthenticatedLdapEntryContextCallback(),
 				new NullAuthenticationErrorCallback());
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public boolean authenticate(String base, String filter, String password,
 			AuthenticatedLdapEntryContextCallback callback) {
 		return authenticate(LdapUtils.newLdapName(base), filter, password, callback, new NullAuthenticationErrorCallback());
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public boolean authenticate(Name base, String filter, String password,
 			final AuthenticatedLdapEntryContextCallback callback) {
 		return authenticate(base, filter, password, callback, new NullAuthenticationErrorCallback());
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public boolean authenticate(String base, String filter, String password,
 			AuthenticationErrorCallback errorCallback) {
 		return authenticate(LdapUtils.newLdapName(base), filter, password, new NullAuthenticatedLdapEntryContextCallback(), errorCallback);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public boolean authenticate(Name base, String filter, String password,
 			final AuthenticationErrorCallback errorCallback) {
 		return authenticate(base, filter, password, new NullAuthenticatedLdapEntryContextCallback(), errorCallback);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public boolean authenticate(String base, String filter, String password,
 			final AuthenticatedLdapEntryContextCallback callback, final AuthenticationErrorCallback errorCallback) {
 		return authenticate(LdapUtils.newLdapName(base), filter, password, callback, errorCallback);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public boolean authenticate(Name base, String filter, String password,
 			final AuthenticatedLdapEntryContextCallback callback, final AuthenticationErrorCallback errorCallback) {
 
-        return authenticate(base,
-                filter,
-                password,
-                getDefaultSearchControls(defaultSearchScope, RETURN_OBJ_FLAG, null),
-                callback,
-                errorCallback).isSuccess();
+		return authenticate(base,
+				filter,
+				password,
+				getDefaultSearchControls(defaultSearchScope, RETURN_OBJ_FLAG, null),
+				callback,
+				errorCallback).isSuccess();
 	}
 
-    private AuthenticationStatus authenticate(Name base,
-                                String filter,
-                                String password,
-                                SearchControls searchControls,
-                                final AuthenticatedLdapEntryContextCallback callback,
-                                final AuthenticationErrorCallback errorCallback) {
+	private AuthenticationStatus authenticate(Name base,
+								String filter,
+								String password,
+								SearchControls searchControls,
+								final AuthenticatedLdapEntryContextCallback callback,
+								final AuthenticationErrorCallback errorCallback) {
 
-        List<LdapEntryIdentification> result = search(base, filter, searchControls, new LdapEntryIdentificationContextMapper());
-        if (result.size() == 0) {
-            String msg = "No results found for search, base: '" + base + "'; filter: '" + filter + "'.";
-            LOG.info(msg);
-            return AuthenticationStatus.EMPTYRESULT;
-        } else if (result.size() > 1) {
-            String msg = "base: '" + base + "'; filter: '" + filter + "'.";
-            throw new IncorrectResultSizeDataAccessException(msg, 1, result.size());
-        }
+		List<LdapEntryIdentification> result = search(base, filter, searchControls, new LdapEntryIdentificationContextMapper());
+		if (result.size() == 0) {
+			String msg = "No results found for search, base: '" + base + "'; filter: '" + filter + "'.";
+			LOG.info(msg);
+			return AuthenticationStatus.EMPTYRESULT;
+		} else if (result.size() > 1) {
+			String msg = "base: '" + base + "'; filter: '" + filter + "'.";
+			throw new IncorrectResultSizeDataAccessException(msg, 1, result.size());
+		}
 
-        final LdapEntryIdentification entryIdentification = result.get(0);
+		final LdapEntryIdentification entryIdentification = result.get(0);
 
-        try {
-            DirContext ctx = contextSource.getContext(entryIdentification.getAbsoluteName().toString(), password);
-            executeWithContext(new ContextExecutor<Object>() {
-                public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
-                    callback.executeWithContext(ctx, entryIdentification);
-                    return null;
-                }
-            }, ctx);
-            return AuthenticationStatus.SUCCESS;
-        }
-        catch (Exception e) {
-            LOG.debug("Authentication failed for entry with DN '" + entryIdentification.getAbsoluteName() + "'", e);
-            errorCallback.execute(e);
-            return AuthenticationStatus.UNDEFINED_FAILURE;
-        }
-    }
+		try {
+			DirContext ctx = contextSource.getContext(entryIdentification.getAbsoluteName().toString(), password);
+			executeWithContext(new ContextExecutor<Object>() {
+				public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
+					callback.executeWithContext(ctx, entryIdentification);
+					return null;
+				}
+			}, ctx);
+			return AuthenticationStatus.SUCCESS;
+		}
+		catch (Exception e) {
+			LOG.debug("Authentication failed for entry with DN '" + entryIdentification.getAbsoluteName() + "'", e);
+			errorCallback.execute(e);
+			return AuthenticationStatus.UNDEFINED_FAILURE;
+		}
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <T> T authenticate(LdapQuery query, String password, AuthenticatedLdapEntryContextMapper<T> mapper) {
-        SearchControls searchControls = searchControlsForQuery(query, RETURN_OBJ_FLAG);
-        ReturningAuthenticatedLdapEntryContext<T> mapperCallback =
-                new ReturningAuthenticatedLdapEntryContext<T>(mapper);
-        CollectingAuthenticationErrorCallback errorCallback =
-                new CollectingAuthenticationErrorCallback();
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <T> T authenticate(LdapQuery query, String password, AuthenticatedLdapEntryContextMapper<T> mapper) {
+		SearchControls searchControls = searchControlsForQuery(query, RETURN_OBJ_FLAG);
+		ReturningAuthenticatedLdapEntryContext<T> mapperCallback =
+				new ReturningAuthenticatedLdapEntryContext<T>(mapper);
+		CollectingAuthenticationErrorCallback errorCallback =
+				new CollectingAuthenticationErrorCallback();
 
-        AuthenticationStatus authenticationStatus = authenticate(query.base(),
-                query.filter().encode(),
-                password,
-                searchControls,
-                mapperCallback,
-                errorCallback);
+		AuthenticationStatus authenticationStatus = authenticate(query.base(),
+				query.filter().encode(),
+				password,
+				searchControls,
+				mapperCallback,
+				errorCallback);
 
-        if(errorCallback.hasError()) {
-            Exception error = errorCallback.getError();
+		if(errorCallback.hasError()) {
+			Exception error = errorCallback.getError();
 
-            if (error instanceof NamingException) {
-                throw (NamingException) error;
-            } else {
-                throw new UncategorizedLdapException(error);
-            }
-        } else if(AuthenticationStatus.EMPTYRESULT == authenticationStatus) {
-        	throw new EmptyResultDataAccessException(1);
-        } else if(!authenticationStatus.isSuccess()) {
-            throw new AuthenticationException();
-        }
+			if (error instanceof NamingException) {
+				throw (NamingException) error;
+			} else {
+				throw new UncategorizedLdapException(error);
+			}
+		} else if(AuthenticationStatus.EMPTYRESULT == authenticationStatus) {
+			throw new EmptyResultDataAccessException(1);
+		} else if(!authenticationStatus.isSuccess()) {
+			throw new AuthenticationException();
+		}
 
-        return mapperCallback.collectedObject;
-    }
+		return mapperCallback.collectedObject;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void authenticate(LdapQuery query, String password) {
-        authenticate(query,
-                password,
-                new NullAuthenticatedLdapEntryContextCallback());
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void authenticate(LdapQuery query, String password) {
+		authenticate(query,
+				password,
+				new NullAuthenticatedLdapEntryContextCallback());
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> T searchForObject(Name base, String filter, ContextMapper<T> mapper) {
-        return searchForObject(base,
-                filter,
-                getDefaultSearchControls(defaultSearchScope, RETURN_OBJ_FLAG, ALL_ATTRIBUTES),
-                mapper);
+		return searchForObject(base,
+				filter,
+				getDefaultSearchControls(defaultSearchScope, RETURN_OBJ_FLAG, ALL_ATTRIBUTES),
+				mapper);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> T searchForObject(String base, String filter, ContextMapper<T> mapper) {
 		return searchForObject(LdapUtils.newLdapName(base), filter, mapper);
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <T> T searchForObject (Name base, String filter, SearchControls searchControls, ContextMapper<T> mapper) {
-        List<T> result = search(base, filter, searchControls, mapper);
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <T> T searchForObject (Name base, String filter, SearchControls searchControls, ContextMapper<T> mapper) {
+		List<T> result = search(base, filter, searchControls, mapper);
 
-        if (result.size() == 0) {
-            throw new EmptyResultDataAccessException(1);
-        }
-        else if (result.size() != 1) {
-            throw new IncorrectResultSizeDataAccessException(1, result.size());
-        }
+		if (result.size() == 0) {
+			throw new EmptyResultDataAccessException(1);
+		}
+		else if (result.size() != 1) {
+			throw new IncorrectResultSizeDataAccessException(1, result.size());
+		}
 
-        return result.get(0);
-    }
+		return result.get(0);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <T> T searchForObject(String base, String filter, SearchControls searchControls, ContextMapper<T> mapper) {
-        return searchForObject(LdapUtils.newLdapName(base), filter, searchControls, mapper);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <T> T searchForObject(String base, String filter, SearchControls searchControls, ContextMapper<T> mapper) {
+		return searchForObject(LdapUtils.newLdapName(base), filter, searchControls, mapper);
+	}
 
-    private static final class NullAuthenticatedLdapEntryContextCallback
+	private static final class NullAuthenticatedLdapEntryContextCallback
 			implements AuthenticatedLdapEntryContextCallback, AuthenticatedLdapEntryContextMapper<Object>{
 		public void executeWithContext(DirContext ctx,
 				LdapEntryIdentification ldapEntryIdentification) {
 			// Do nothing
 		}
 
-        @Override
-        public Object mapWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
-            return null;
-        }
-    }
+		@Override
+		public Object mapWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
+			return null;
+		}
+	}
 
 	private static final class NullAuthenticationErrorCallback
 			implements AuthenticationErrorCallback {
@@ -1580,309 +1580,309 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		}
 	}
 
-    private static final class ReturningAuthenticatedLdapEntryContext<T>
-            implements AuthenticatedLdapEntryContextCallback {
-        private final AuthenticatedLdapEntryContextMapper<T> mapper;
+	private static final class ReturningAuthenticatedLdapEntryContext<T>
+			implements AuthenticatedLdapEntryContextCallback {
+		private final AuthenticatedLdapEntryContextMapper<T> mapper;
 
-        private T collectedObject;
+		private T collectedObject;
 
-        private ReturningAuthenticatedLdapEntryContext(AuthenticatedLdapEntryContextMapper<T> mapper) {
-            this.mapper = mapper;
-        }
+		private ReturningAuthenticatedLdapEntryContext(AuthenticatedLdapEntryContextMapper<T> mapper) {
+			this.mapper = mapper;
+		}
 
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void executeWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
-            collectedObject = mapper.mapWithContext(ctx, ldapEntryIdentification);
-        }
-    }
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void executeWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
+			collectedObject = mapper.mapWithContext(ctx, ldapEntryIdentification);
+		}
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void search(LdapQuery query, NameClassPairCallbackHandler callbackHandler) {
-        SearchControls searchControls = searchControlsForQuery(query, DONT_RETURN_OBJ_FLAG);
-        search(query.base(),
-                query.filter().encode(),
-                searchControls,
-                callbackHandler);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void search(LdapQuery query, NameClassPairCallbackHandler callbackHandler) {
+		SearchControls searchControls = searchControlsForQuery(query, DONT_RETURN_OBJ_FLAG);
+		search(query.base(),
+				query.filter().encode(),
+				searchControls,
+				callbackHandler);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <T> List<T> search(LdapQuery query, ContextMapper<T> mapper) {
-        SearchControls searchControls = searchControlsForQuery(query, RETURN_OBJ_FLAG);
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <T> List<T> search(LdapQuery query, ContextMapper<T> mapper) {
+		SearchControls searchControls = searchControlsForQuery(query, RETURN_OBJ_FLAG);
 
-        return search(query.base(),
-                query.filter().encode(),
-                searchControls,
-                mapper);
+		return search(query.base(),
+				query.filter().encode(),
+				searchControls,
+				mapper);
 
-    }
+	}
 
-    private SearchControls searchControlsForQuery(LdapQuery query, boolean returnObjFlag) {
-        SearchControls searchControls = getDefaultSearchControls(
-                defaultSearchScope,
-                returnObjFlag,
-                query.attributes());
+	private SearchControls searchControlsForQuery(LdapQuery query, boolean returnObjFlag) {
+		SearchControls searchControls = getDefaultSearchControls(
+				defaultSearchScope,
+				returnObjFlag,
+				query.attributes());
 
-        if(query.searchScope() != null) {
-            searchControls.setSearchScope(query.searchScope().getId());
-        }
+		if(query.searchScope() != null) {
+			searchControls.setSearchScope(query.searchScope().getId());
+		}
 
-        if(query.countLimit() != null) {
-            searchControls.setCountLimit(query.countLimit());
-        }
+		if(query.countLimit() != null) {
+			searchControls.setCountLimit(query.countLimit());
+		}
 
-        if(query.timeLimit() != null) {
-            searchControls.setTimeLimit(query.timeLimit());
-        }
-        return searchControls;
-    }
+		if(query.timeLimit() != null) {
+			searchControls.setTimeLimit(query.timeLimit());
+		}
+		return searchControls;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <T> List<T> search(LdapQuery query, AttributesMapper<T> mapper) {
-        SearchControls searchControls = searchControlsForQuery(query, DONT_RETURN_OBJ_FLAG);
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <T> List<T> search(LdapQuery query, AttributesMapper<T> mapper) {
+		SearchControls searchControls = searchControlsForQuery(query, DONT_RETURN_OBJ_FLAG);
 
-        return search(query.base(),
-                query.filter().encode(),
-                searchControls,
-                mapper);
-    }
+		return search(query.base(),
+				query.filter().encode(),
+				searchControls,
+				mapper);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public DirContextOperations searchForContext(LdapQuery query) {
-        return searchForObject(query, new ContextMapper<DirContextOperations>() {
-            @Override
-            public DirContextOperations mapFromContext(Object ctx) throws javax.naming.NamingException {
-                return (DirContextOperations) ctx;
-            }
-        });
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public DirContextOperations searchForContext(LdapQuery query) {
+		return searchForObject(query, new ContextMapper<DirContextOperations>() {
+			@Override
+			public DirContextOperations mapFromContext(Object ctx) throws javax.naming.NamingException {
+				return (DirContextOperations) ctx;
+			}
+		});
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <T> T searchForObject(LdapQuery query, ContextMapper<T> mapper) {
-        SearchControls searchControls = searchControlsForQuery(query, DONT_RETURN_OBJ_FLAG);
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <T> T searchForObject(LdapQuery query, ContextMapper<T> mapper) {
+		SearchControls searchControls = searchControlsForQuery(query, DONT_RETURN_OBJ_FLAG);
 
-        return searchForObject(query.base(),
-                query.filter().encode(),
-                searchControls,
-                mapper);
-    }
+		return searchForObject(query.base(),
+				query.filter().encode(),
+				searchControls,
+				mapper);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <T> T findByDn(Name dn, final Class<T> clazz) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Reading Entry at - %1$s", dn));
-        }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <T> T findByDn(Name dn, final Class<T> clazz) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(String.format("Reading Entry at - %1$s", dn));
+		}
 
-        // Make sure the class is OK before doing the lookup
-        String[] attributes = odm.manageClass(clazz);
+		// Make sure the class is OK before doing the lookup
+		String[] attributes = odm.manageClass(clazz);
 
-        T result = lookup(dn, attributes, new ContextMapper<T>() {
-            @Override
-            public T mapFromContext(Object ctx) throws javax.naming.NamingException {
-                return odm.mapFromLdapDataEntry((DirContextOperations) ctx, clazz);
-            }
-        });
+		T result = lookup(dn, attributes, new ContextMapper<T>() {
+			@Override
+			public T mapFromContext(Object ctx) throws javax.naming.NamingException {
+				return odm.mapFromLdapDataEntry((DirContextOperations) ctx, clazz);
+			}
+		});
 
-        if (result == null) {
-            throw new OdmException(String.format("Entry %1$s does not have the required objectclasses ", dn));
-        }
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Found entry - %1$s", result));
-        }
+		if (result == null) {
+			throw new OdmException(String.format("Entry %1$s does not have the required objectclasses ", dn));
+		}
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(String.format("Found entry - %1$s", result));
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void create(Object entry) {
-        Assert.notNull(entry, "Entry must not be null");
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void create(Object entry) {
+		Assert.notNull(entry, "Entry must not be null");
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Creating entry - %1$s", entry));
-        }
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(String.format("Creating entry - %1$s", entry));
+		}
 
-        Name id = odm.getId(entry);
-        if(id == null) {
-            id = odm.getCalculatedId(entry);
-            odm.setId(entry, id);
-        }
+		Name id = odm.getId(entry);
+		if(id == null) {
+			id = odm.getCalculatedId(entry);
+			odm.setId(entry, id);
+		}
 
-        Assert.notNull(id, String.format("Unable to determine id for entry %s", entry.toString()));
+		Assert.notNull(id, String.format("Unable to determine id for entry %s", entry.toString()));
 
-        DirContextAdapter context = new DirContextAdapter(id);
-        odm.mapToLdapDataEntry(entry, context);
+		DirContextAdapter context = new DirContextAdapter(id);
+		odm.mapToLdapDataEntry(entry, context);
 
-        bind(context);
-    }
+		bind(context);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void update(Object entry) {
-        Assert.notNull(entry, "Entry must not be null");
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Updating entry - %1$s", entry));
-        }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void update(Object entry) {
+		Assert.notNull(entry, "Entry must not be null");
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(String.format("Updating entry - %1$s", entry));
+		}
 
-        Name originalId = odm.getId(entry);
-        Name calculatedId = odm.getCalculatedId(entry);
+		Name originalId = odm.getId(entry);
+		Name calculatedId = odm.getCalculatedId(entry);
 
-        if(originalId != null && calculatedId != null && !originalId.equals(calculatedId)) {
-            // The DN has changed - remove the original entry and bind the new one
-            // (because other data may have changed as well
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(String.format("Calculated DN of %s; of entry %s differs from explicitly specified one; %s - moving",
-                        calculatedId, entry, originalId));
-            }
+		if(originalId != null && calculatedId != null && !originalId.equals(calculatedId)) {
+			// The DN has changed - remove the original entry and bind the new one
+			// (because other data may have changed as well
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(String.format("Calculated DN of %s; of entry %s differs from explicitly specified one; %s - moving",
+						calculatedId, entry, originalId));
+			}
 
-            unbind(originalId);
+			unbind(originalId);
 
-            DirContextAdapter context = new DirContextAdapter(calculatedId);
-            odm.mapToLdapDataEntry(entry, context);
+			DirContextAdapter context = new DirContextAdapter(calculatedId);
+			odm.mapToLdapDataEntry(entry, context);
 
-            bind(context);
-            odm.setId(entry, calculatedId);
-        } else {
-            // DN is the same, just modify the attributes
+			bind(context);
+			odm.setId(entry, calculatedId);
+		} else {
+			// DN is the same, just modify the attributes
 
-            Name id = originalId;
-            if(id == null) {
-                id = calculatedId;
-                odm.setId(entry, calculatedId);
-            }
+			Name id = originalId;
+			if(id == null) {
+				id = calculatedId;
+				odm.setId(entry, calculatedId);
+			}
 
-            Assert.notNull(id, String.format("Unable to determine id for entry %s", entry.toString()));
+			Assert.notNull(id, String.format("Unable to determine id for entry %s", entry.toString()));
 
-            DirContextOperations context = lookupContext(id);
-            odm.mapToLdapDataEntry(entry, context);
-            modifyAttributes(context);
-        }
-    }
+			DirContextOperations context = lookupContext(id);
+			odm.mapToLdapDataEntry(entry, context);
+			modifyAttributes(context);
+		}
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void delete(Object entry) {
-        Assert.notNull(entry, "Entry must not be null");
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Deleting %1$s", entry));
-        }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void delete(Object entry) {
+		Assert.notNull(entry, "Entry must not be null");
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(String.format("Deleting %1$s", entry));
+		}
 
-        Name id = odm.getId(entry);
-        if(id == null) {
-            id = odm.getCalculatedId(entry);
-        }
+		Name id = odm.getId(entry);
+		if(id == null) {
+			id = odm.getCalculatedId(entry);
+		}
 
-        Assert.notNull(id, String.format("Unable to determine id for entry %s", entry.toString()));
-        unbind(id);
-    }
+		Assert.notNull(id, String.format("Unable to determine id for entry %s", entry.toString()));
+		unbind(id);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <T> List<T> findAll(Name base, SearchControls searchControls, final Class<T> clazz) {
-        return find(base, null, searchControls, clazz);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <T> List<T> findAll(Name base, SearchControls searchControls, final Class<T> clazz) {
+		return find(base, null, searchControls, clazz);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <T> List<T> findAll(Class<T> clazz) {
-        return findAll(LdapUtils.emptyLdapName(),
-                getDefaultSearchControls(defaultSearchScope, RETURN_OBJ_FLAG, ALL_ATTRIBUTES),
-                clazz);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <T> List<T> findAll(Class<T> clazz) {
+		return findAll(LdapUtils.emptyLdapName(),
+				getDefaultSearchControls(defaultSearchScope, RETURN_OBJ_FLAG, ALL_ATTRIBUTES),
+				clazz);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <T> List<T> find(Name base, Filter filter, SearchControls searchControls, final Class<T> clazz) {
-    	Filter finalFilter = odm.filterFor(clazz, filter);
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <T> List<T> find(Name base, Filter filter, SearchControls searchControls, final Class<T> clazz) {
+		Filter finalFilter = odm.filterFor(clazz, filter);
 
-        // Search from the root if we are not told where to search from
-        Name localBase = base;
-        if (base == null || base.size() == 0) {
-            localBase = LdapUtils.emptyLdapName();
-        }
+		// Search from the root if we are not told where to search from
+		Name localBase = base;
+		if (base == null || base.size() == 0) {
+			localBase = LdapUtils.emptyLdapName();
+		}
 
-        // extend search controls with the attributes to return
-        if (searchControls.getReturningAttributes() == null) {
-            String[] attributes = this.odm.manageClass(clazz);
-            searchControls.setReturningAttributes(attributes);
-        }
+		// extend search controls with the attributes to return
+		if (searchControls.getReturningAttributes() == null) {
+			String[] attributes = this.odm.manageClass(clazz);
+			searchControls.setReturningAttributes(attributes);
+		}
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Searching - base=%1$s, finalFilter=%2$s, scope=%3$s", base, finalFilter, searchControls));
-        }
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(String.format("Searching - base=%1$s, finalFilter=%2$s, scope=%3$s", base, finalFilter, searchControls));
+		}
 
-        List<T> result = search(localBase, finalFilter.encode(), searchControls, new ContextMapper<T>() {
-            @Override
-            public T mapFromContext(Object ctx) throws javax.naming.NamingException {
-                return odm.mapFromLdapDataEntry((DirContextOperations) ctx, clazz);
-            }
-        });
-        result.remove(null);
+		List<T> result = search(localBase, finalFilter.encode(), searchControls, new ContextMapper<T>() {
+			@Override
+			public T mapFromContext(Object ctx) throws javax.naming.NamingException {
+				return odm.mapFromLdapDataEntry((DirContextOperations) ctx, clazz);
+			}
+		});
+		result.remove(null);
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Found %1$s Entries - %2$s", result.size(), result));
-        }
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(String.format("Found %1$s Entries - %2$s", result.size(), result));
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <T> List<T> find(LdapQuery query, Class<T> clazz) {
-        SearchControls searchControls = searchControlsForQuery(query, RETURN_OBJ_FLAG);
-        return find(query.base(), query.filter(), searchControls, clazz);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <T> List<T> find(LdapQuery query, Class<T> clazz) {
+		SearchControls searchControls = searchControlsForQuery(query, RETURN_OBJ_FLAG);
+		return find(query.base(), query.filter(), searchControls, clazz);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <T> T findOne(LdapQuery query, Class<T> clazz) {
-        List<T> result = find(query, clazz);
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <T> T findOne(LdapQuery query, Class<T> clazz) {
+		List<T> result = find(query, clazz);
 
-        if (result.size() == 0) {
-            throw new EmptyResultDataAccessException(1);
-        }
-        else if (result.size() != 1) {
-            throw new IncorrectResultSizeDataAccessException(1, result.size());
-        }
+		if (result.size() == 0) {
+			throw new EmptyResultDataAccessException(1);
+		}
+		else if (result.size() != 1) {
+			throw new IncorrectResultSizeDataAccessException(1, result.size());
+		}
 
-        return result.get(0);
-    }
+		return result.get(0);
+	}
 
 	/**
 	 * The status of an authentication attempt.

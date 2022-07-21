@@ -24,40 +24,40 @@ package org.springframework.ldap.control;
  */
 public class VirtualListViewResultsCookie {
 
-    private byte[] cookie;
+	private byte[] cookie;
 
-    private int contentCount;
+	private int contentCount;
 
-    private int targetPosition;
+	private int targetPosition;
 
-    /**
-     * Constructor.
-     * 
-     * @param cookie
-     *            the cookie returned by a VirtualListViewResponseControl.
-     * @param targetPosition TODO
-     * @param contentCount TODO
-     */
-    public VirtualListViewResultsCookie(byte[] cookie, int targetPosition, int contentCount) {
-        this.cookie = cookie;
-        this.targetPosition = targetPosition;
-        this.contentCount = contentCount;
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param cookie
+	 *			the cookie returned by a VirtualListViewResponseControl.
+	 * @param targetPosition TODO
+	 * @param contentCount TODO
+	 */
+	public VirtualListViewResultsCookie(byte[] cookie, int targetPosition, int contentCount) {
+		this.cookie = cookie;
+		this.targetPosition = targetPosition;
+		this.contentCount = contentCount;
+	}
 
-    /**
-     * Get the cookie.
-     * 
-     * @return the cookie.
-     */
-    public byte[] getCookie() {
-        return cookie;
-    }
+	/**
+	 * Get the cookie.
+	 * 
+	 * @return the cookie.
+	 */
+	public byte[] getCookie() {
+		return cookie;
+	}
 
-    public int getContentCount() {
-        return contentCount;
-    }
+	public int getContentCount() {
+		return contentCount;
+	}
 
-    public int getTargetPosition() {
-        return targetPosition;
-    }
+	public int getTargetPosition() {
+		return targetPosition;
+	}
 }

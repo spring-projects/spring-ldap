@@ -41,105 +41,105 @@ import java.util.Set;
  * @deprecated This functionality is automatically available in LdapTemplate as of version 2.0
  */
 public final class OdmManagerImpl implements OdmManager {
-    // The link to the LDAP directory
-    private final LdapTemplate ldapTemplate;
+	// The link to the LDAP directory
+	private final LdapTemplate ldapTemplate;
 
-    private DefaultObjectDirectoryMapper objectDirectoryMapper;
+	private DefaultObjectDirectoryMapper objectDirectoryMapper;
 
-    public OdmManagerImpl(ConverterManager converterManager,
-                          LdapOperations ldapOperations,
-                          Set<Class<?>> managedClasses) {
-        this.ldapTemplate = (LdapTemplate)ldapOperations;
-        objectDirectoryMapper = new DefaultObjectDirectoryMapper();
+	public OdmManagerImpl(ConverterManager converterManager,
+						  LdapOperations ldapOperations,
+						  Set<Class<?>> managedClasses) {
+		this.ldapTemplate = (LdapTemplate)ldapOperations;
+		objectDirectoryMapper = new DefaultObjectDirectoryMapper();
 
-        if(converterManager != null) {
-            objectDirectoryMapper.setConverterManager(converterManager);
-        }
+		if(converterManager != null) {
+			objectDirectoryMapper.setConverterManager(converterManager);
+		}
 
-        if (managedClasses!=null) {
-            for (Class<?> managedClass: managedClasses) {
-                addManagedClass(managedClass);
-            }
-        }
+		if (managedClasses!=null) {
+			for (Class<?> managedClass: managedClasses) {
+				addManagedClass(managedClass);
+			}
+		}
 
-        this.ldapTemplate.setObjectDirectoryMapper(objectDirectoryMapper);
-    }
+		this.ldapTemplate.setObjectDirectoryMapper(objectDirectoryMapper);
+	}
 
-    public OdmManagerImpl(ConverterManager converterManager, 
-                          ContextSource contextSource,
-                          Set<Class<?>> managedClasses) {
-        this(converterManager, new LdapTemplate(contextSource), managedClasses);
-    }
-    
-    public OdmManagerImpl(ConverterManager converterManager, 
-                          ContextSource contextSource) {
-        this(converterManager, contextSource, null);
-    }
+	public OdmManagerImpl(ConverterManager converterManager, 
+						  ContextSource contextSource,
+						  Set<Class<?>> managedClasses) {
+		this(converterManager, new LdapTemplate(contextSource), managedClasses);
+	}
+	
+	public OdmManagerImpl(ConverterManager converterManager, 
+						  ContextSource contextSource) {
+		this(converterManager, contextSource, null);
+	}
 
-    /**
-     * Adds an {@link org.springframework.ldap.odm.annotations} annotated class to the set
-     * managed by this OdmManager.
-     * 
-     * @param managedClass The class to add to the managed set.
-     */
-    public void addManagedClass(Class<?> managedClass) {
-        objectDirectoryMapper.manageClass(managedClass);
-    }
+	/**
+	 * Adds an {@link org.springframework.ldap.odm.annotations} annotated class to the set
+	 * managed by this OdmManager.
+	 * 
+	 * @param managedClass The class to add to the managed set.
+	 */
+	public void addManagedClass(Class<?> managedClass) {
+		objectDirectoryMapper.manageClass(managedClass);
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.ldap.odm.core.OdmManager#create(java.lang.Object)
-     */
-    public <T> T read(Class<T> clazz, Name dn) {
-        return ldapTemplate.findByDn(dn, clazz);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.springframework.ldap.odm.core.OdmManager#create(java.lang.Object)
+	 */
+	public <T> T read(Class<T> clazz, Name dn) {
+		return ldapTemplate.findByDn(dn, clazz);
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.ldap.odm.core.OdmManager#create(java.lang.Object)
-     */
-    public void create(Object entry) {
-        ldapTemplate.create(entry);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.springframework.ldap.odm.core.OdmManager#create(java.lang.Object)
+	 */
+	public void create(Object entry) {
+		ldapTemplate.create(entry);
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.ldap.odm.core.OdmManager#update(java.lang.Object, boolean)
-     */
-    public void update(Object entry) {
-        ldapTemplate.update(entry);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.springframework.ldap.odm.core.OdmManager#update(java.lang.Object, boolean)
+	 */
+	public void update(Object entry) {
+		ldapTemplate.update(entry);
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.ldap.odm.core.OdmManager#delete(javax.naming.Name)
-     */
-    public void delete(Object entry) {
-        ldapTemplate.delete(entry);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.springframework.ldap.odm.core.OdmManager#delete(javax.naming.Name)
+	 */
+	public void delete(Object entry) {
+		ldapTemplate.delete(entry);
+	}
 
-    /* (non-Javadoc)
-     * @see org.springframework.ldap.odm.core.OdmManager#search(java.lang.Class, javax.naming.Name, java.lang.String, javax.naming.directory.SearchControls)
-     */
-    public <T> List<T> search(Class<T> managedClass, Name base, String filter, SearchControls scope) {
-        Filter searchFilter = null;
-        if(StringUtils.hasText(filter)) {
-            searchFilter = new HardcodedFilter(filter);
-        }
+	/* (non-Javadoc)
+	 * @see org.springframework.ldap.odm.core.OdmManager#search(java.lang.Class, javax.naming.Name, java.lang.String, javax.naming.directory.SearchControls)
+	 */
+	public <T> List<T> search(Class<T> managedClass, Name base, String filter, SearchControls scope) {
+		Filter searchFilter = null;
+		if(StringUtils.hasText(filter)) {
+			searchFilter = new HardcodedFilter(filter);
+		}
 
-        return ldapTemplate.find(base, searchFilter, scope, managedClass);
-    }
+		return ldapTemplate.find(base, searchFilter, scope, managedClass);
+	}
 
-    @Override
-    public <T> List<T> search(Class<T> clazz, LdapQuery query) {
-        return ldapTemplate.find(query, clazz);
-    }
+	@Override
+	public <T> List<T> search(Class<T> clazz, LdapQuery query) {
+		return ldapTemplate.find(query, clazz);
+	}
 
-    public <T> List<T> findAll(Class<T> managedClass, Name base, SearchControls scope) {
-        return ldapTemplate.findAll(base, scope, managedClass);
-    }
+	public <T> List<T> findAll(Class<T> managedClass, Name base, SearchControls scope) {
+		return ldapTemplate.findAll(base, scope, managedClass);
+	}
 }

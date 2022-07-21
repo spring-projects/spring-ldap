@@ -25,8 +25,8 @@ package org.springframework.ldap;
  */
 public class InvalidSearchControlsException extends NamingException {
 
-    public InvalidSearchControlsException(
-            javax.naming.directory.InvalidSearchControlsException cause) {
-        super(cause);
-    }
+	public InvalidSearchControlsException(
+			javax.naming.directory.InvalidSearchControlsException cause) {
+		super(cause);
+	}
 }

@@ -36,16 +36,16 @@ public class BaseLdapPathBeanPostprocessorITest {
 	@Test
 	public void testPostProcessBeforeInitialization() throws Exception {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
-                "/conf/baseLdapPathPostProcessorTestContext.xml");
+				"/conf/baseLdapPathPostProcessorTestContext.xml");
 		DummyBaseLdapPathAware tested = ctx.getBean(DummyBaseLdapPathAware.class);
 
 		DistinguishedName base = tested.getBase();
 		assertThat(base).isNotNull();
 		assertThat(base).isEqualTo(new DistinguishedName("dc=261consulting,dc=com"));
 
-        DummyBaseLdapNameAware otherTested = ctx.getBean(DummyBaseLdapNameAware.class);
-        assertThat(otherTested.getBaseLdapPath()).isEqualTo(LdapUtils.newLdapName("dc=261consulting,dc=com"));
-    }
+		DummyBaseLdapNameAware otherTested = ctx.getBean(DummyBaseLdapNameAware.class);
+		assertThat(otherTested.getBaseLdapPath()).isEqualTo(LdapUtils.newLdapName("dc=261consulting,dc=com"));
+	}
 
 	@Test
 	public void testPostProcessBeforeInitializationMultipleContextSources() throws Exception {
@@ -62,7 +62,7 @@ public class BaseLdapPathBeanPostprocessorITest {
 	@Test
 	public void testPostProcessBeforeInitializationMultipleContextSourcesOneSpecified() throws Exception {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
-                "/conf/baseLdapPathPostProcessorMultiContextSourceOneSpecTestContext.xml");
+				"/conf/baseLdapPathPostProcessorMultiContextSourceOneSpecTestContext.xml");
 		DummyBaseLdapPathAware tested = (DummyBaseLdapPathAware) ctx.getBean("dummyBaseContextAware");
 
 		DistinguishedName base = tested.getBase();
@@ -85,7 +85,7 @@ public class BaseLdapPathBeanPostprocessorITest {
 	@Test
 	public void testPostProcessBeforeInitializationBaseSetInProperty() throws Exception {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
-                "/conf/baseLdapPathPostProcessorPropertyOverrideTestContext.xml");
+				"/conf/baseLdapPathPostProcessorPropertyOverrideTestContext.xml");
 		DummyBaseLdapPathAware tested = (DummyBaseLdapPathAware) ctx.getBean("dummyBaseContextAware");
 
 		DistinguishedName base = tested.getBase();
@@ -96,7 +96,7 @@ public class BaseLdapPathBeanPostprocessorITest {
 	@Test
 	public void testPostProcessBeforeInitializationTransactionProxy() throws Exception {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
-                "/conf/baseLdapPathPostProcessorTransactionTestContext.xml");
+				"/conf/baseLdapPathPostProcessorTransactionTestContext.xml");
 		DummyBaseLdapPathAware tested = (DummyBaseLdapPathAware) ctx.getBean("dummyBaseContextAware");
 
 		DistinguishedName base = tested.getBase();

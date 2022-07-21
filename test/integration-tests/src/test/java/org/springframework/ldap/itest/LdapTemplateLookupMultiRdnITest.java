@@ -40,9 +40,9 @@ public class LdapTemplateLookupMultiRdnITest extends AbstractLdapTemplateIntegra
 	@Autowired
 	private LdapTemplate tested;
 
-    protected Resource getLdifFileResource() {
-        return new ClassPathResource("/setup_data_multi_rdn.ldif");
-    }
+	protected Resource getLdifFileResource() {
+		return new ClassPathResource("/setup_data_multi_rdn.ldif");
+	}
 
 
 	/**
@@ -50,7 +50,7 @@ public class LdapTemplateLookupMultiRdnITest extends AbstractLdapTemplateIntegra
 	 * means more than one attribute is part of the relative DN for the entry.
 	 */
 	@Test
-    @Category(NoAdTest.class)
+	@Category(NoAdTest.class)
 	public void testLookup_MultiValuedRdn() {
 		AttributesMapper mapper = new PersonAttributesMapper();
 		Person person = (Person) tested.lookup("cn=Some Person+sn=Person, ou=company1,ou=Norway", mapper);
@@ -66,7 +66,7 @@ public class LdapTemplateLookupMultiRdnITest extends AbstractLdapTemplateIntegra
 	 * 
 	 */
 	@Test
-    @Category(NoAdTest.class)
+	@Category(NoAdTest.class)
 	public void testLookup_MultiValuedRdn_DirContextAdapter() {
 		DirContextAdapter result = (DirContextAdapter) tested.lookup("cn=Some Person+sn=Person, ou=company1,ou=Norway");
 
@@ -76,7 +76,7 @@ public class LdapTemplateLookupMultiRdnITest extends AbstractLdapTemplateIntegra
 	}
 
 	@Test
-    @Category(NoAdTest.class)
+	@Category(NoAdTest.class)
 	public void testLookup_GetNameInNamespace_MultiRdn() {
 		DirContextAdapter result = (DirContextAdapter) tested.lookup("cn=Some Person+sn=Person,ou=company1,ou=Norway");
 

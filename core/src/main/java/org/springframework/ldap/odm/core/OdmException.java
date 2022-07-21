@@ -26,11 +26,11 @@ import org.springframework.ldap.NamingException;
  */
 @SuppressWarnings("serial")
 public class OdmException extends NamingException {
-    public OdmException(String message) {
-        super(message);
-    }
+	public OdmException(String message) {
+		super(message);
+	}
 
-    public OdmException(String message, Throwable e) {
-        super(message, e);
-    }
+	public OdmException(String message, Throwable e) {
+		super(message, e);
+	}
 }

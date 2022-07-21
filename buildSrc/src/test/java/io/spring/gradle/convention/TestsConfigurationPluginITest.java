@@ -21,8 +21,8 @@ public class TestsConfigurationPluginITest {
 	}
 
 	@Test
-    public void canFindDepencency() throws Exception {
-        BuildResult result = this.testKit.withProjectResource("samples/testsconfiguration")
+	public void canFindDepencency() throws Exception {
+		BuildResult result = this.testKit.withProjectResource("samples/testsconfiguration")
 				.withArguments("check")
 				.build();
 		assertThat(result.task(":web:check").getOutcome()).isEqualTo(TaskOutcome.SUCCESS);

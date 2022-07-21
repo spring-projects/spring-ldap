@@ -30,101 +30,101 @@ import static org.springframework.ldap.query.CriteriaContainerType.OR;
  * @since 2.0
  */
 class DefaultContainerCriteria implements AppendableContainerCriteria {
-    private final Set<Filter> filters = new LinkedHashSet<Filter>();
-    private final LdapQuery topQuery;
-    private CriteriaContainerType type;
+	private final Set<Filter> filters = new LinkedHashSet<Filter>();
+	private final LdapQuery topQuery;
+	private CriteriaContainerType type;
 
-    DefaultContainerCriteria(LdapQuery topQuery) {
-        this.topQuery = topQuery;
-    }
+	DefaultContainerCriteria(LdapQuery topQuery) {
+		this.topQuery = topQuery;
+	}
 
-    @Override
-    public DefaultContainerCriteria append(Filter filter) {
-        this.filters.add(filter);
-        return this;
-    }
+	@Override
+	public DefaultContainerCriteria append(Filter filter) {
+		this.filters.add(filter);
+		return this;
+	}
 
-    DefaultContainerCriteria withType(CriteriaContainerType newType) {
-        this.type = newType;
-        return this;
-    }
+	DefaultContainerCriteria withType(CriteriaContainerType newType) {
+		this.type = newType;
+		return this;
+	}
 
-    @Override
-    public ConditionCriteria and(String attribute) {
-        AND.validateSameType(type);
-        type = AND;
+	@Override
+	public ConditionCriteria and(String attribute) {
+		AND.validateSameType(type);
+		type = AND;
 
-        return new DefaultConditionCriteria(this, attribute);
-    }
+		return new DefaultConditionCriteria(this, attribute);
+	}
 
-    @Override
-    public ConditionCriteria or(String attribute) {
-        OR.validateSameType(type);
-        type = OR;
+	@Override
+	public ConditionCriteria or(String attribute) {
+		OR.validateSameType(type);
+		type = OR;
 
-        return new DefaultConditionCriteria(this, attribute);
-    }
+		return new DefaultConditionCriteria(this, attribute);
+	}
 
-    @Override
-    public ContainerCriteria and(ContainerCriteria nested) {
-        if(type == OR) {
-            return new DefaultContainerCriteria(topQuery)
-                    .withType(AND)
-                    .append(this.filter())
-                    .append(nested.filter());
-        } else {
-            type = AND;
-            this.filters.add(nested.filter());
-            return this;
-        }
-    }
+	@Override
+	public ContainerCriteria and(ContainerCriteria nested) {
+		if(type == OR) {
+			return new DefaultContainerCriteria(topQuery)
+					.withType(AND)
+					.append(this.filter())
+					.append(nested.filter());
+		} else {
+			type = AND;
+			this.filters.add(nested.filter());
+			return this;
+		}
+	}
 
-    @Override
-    public ContainerCriteria or(ContainerCriteria nested) {
-        if (type == AND) {
-            return new DefaultContainerCriteria(topQuery)
-                    .withType(OR)
-                    .append(this.filter())
-                    .append(nested.filter());
-        } else {
-            type = OR;
-            this.filters.add(nested.filter());
-            return this;
-        }
-    }
+	@Override
+	public ContainerCriteria or(ContainerCriteria nested) {
+		if (type == AND) {
+			return new DefaultContainerCriteria(topQuery)
+					.withType(OR)
+					.append(this.filter())
+					.append(nested.filter());
+		} else {
+			type = OR;
+			this.filters.add(nested.filter());
+			return this;
+		}
+	}
 
-    @Override
-    public Filter filter() {
-        if(filters.size() == 1) {
-            // No need to wrap in And/OrFilter if there's just one condition.
-            return filters.iterator().next();
-        }
+	@Override
+	public Filter filter() {
+		if(filters.size() == 1) {
+			// No need to wrap in And/OrFilter if there's just one condition.
+			return filters.iterator().next();
+		}
 
-        return type.constructFilter().appendAll(filters);
-    }
+		return type.constructFilter().appendAll(filters);
+	}
 
-    @Override
-    public Name base() {
-        return topQuery.base();
-    }
+	@Override
+	public Name base() {
+		return topQuery.base();
+	}
 
-    @Override
-    public SearchScope searchScope() {
-        return topQuery.searchScope();
-    }
+	@Override
+	public SearchScope searchScope() {
+		return topQuery.searchScope();
+	}
 
-    @Override
-    public Integer timeLimit() {
-        return topQuery.timeLimit();
-    }
+	@Override
+	public Integer timeLimit() {
+		return topQuery.timeLimit();
+	}
 
-    @Override
-    public Integer countLimit() {
-        return topQuery.countLimit();
-    }
+	@Override
+	public Integer countLimit() {
+		return topQuery.countLimit();
+	}
 
-    @Override
-    public String[] attributes() {
-        return topQuery.attributes();
-    }
+	@Override
+	public String[] attributes() {
+		return topQuery.attributes();
+	}
 }

@@ -34,73 +34,73 @@ import javax.naming.Name;
  * @since 1.2
  */
 public class UnbindOperationExecutor implements
-        CompensatingTransactionOperationExecutor {
+		CompensatingTransactionOperationExecutor {
 
-    private static Logger log = LoggerFactory.getLogger(UnbindOperationExecutor.class);
+	private static Logger log = LoggerFactory.getLogger(UnbindOperationExecutor.class);
 
-    private LdapOperations ldapOperations;
+	private LdapOperations ldapOperations;
 
-    private Name originalDn;
+	private Name originalDn;
 
-    private Name temporaryDn;
+	private Name temporaryDn;
 
-    /**
-     * Constructor.
-     * 
-     * @param ldapOperations
-     *            The {@link LdapOperations} to use for performing the rollback
-     *            operation.
-     * @param originalDn
-     *            The original DN of the entry to be removed.
-     * @param temporaryDn
-     *            Temporary DN of the entry to be removed; this is where the
-     *            entry is temporarily stored during the transaction.
-     */
-    public UnbindOperationExecutor(LdapOperations ldapOperations,
-            Name originalDn, Name temporaryDn) {
-        this.ldapOperations = ldapOperations;
-        this.originalDn = originalDn;
-        this.temporaryDn = temporaryDn;
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param ldapOperations
+	 *			The {@link LdapOperations} to use for performing the rollback
+	 *			operation.
+	 * @param originalDn
+	 *			The original DN of the entry to be removed.
+	 * @param temporaryDn
+	 *			Temporary DN of the entry to be removed; this is where the
+	 *			entry is temporarily stored during the transaction.
+	 */
+	public UnbindOperationExecutor(LdapOperations ldapOperations,
+			Name originalDn, Name temporaryDn) {
+		this.ldapOperations = ldapOperations;
+		this.originalDn = originalDn;
+		this.temporaryDn = temporaryDn;
+	}
 
-    /*
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#rollback()
-     */
-    public void rollback() {
-        try {
-            ldapOperations.rename(temporaryDn, originalDn);
-        } catch (Exception e) {
-            log.warn("Filed to rollback unbind operation, temporaryDn: "
-                    + temporaryDn + "; originalDn: " + originalDn);
-        }
-    }
+	/*
+	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#rollback()
+	 */
+	public void rollback() {
+		try {
+			ldapOperations.rename(temporaryDn, originalDn);
+		} catch (Exception e) {
+			log.warn("Filed to rollback unbind operation, temporaryDn: "
+					+ temporaryDn + "; originalDn: " + originalDn);
+		}
+	}
 
-    /*
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#commit()
-     */
-    public void commit() {
-        log.debug("Committing unbind operation - unbinding temporary entry");
-        ldapOperations.unbind(temporaryDn);
-    }
+	/*
+	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#commit()
+	 */
+	public void commit() {
+		log.debug("Committing unbind operation - unbinding temporary entry");
+		ldapOperations.unbind(temporaryDn);
+	}
 
-    /*
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#performOperation()
-     */
-    public void performOperation() {
-        log.debug("Performing operation for unbind -"
-                + " renaming to temporary entry.");
-        ldapOperations.rename(originalDn, temporaryDn);
-    }
+	/*
+	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#performOperation()
+	 */
+	public void performOperation() {
+		log.debug("Performing operation for unbind -"
+				+ " renaming to temporary entry.");
+		ldapOperations.rename(originalDn, temporaryDn);
+	}
 
-    LdapOperations getLdapOperations() {
-        return ldapOperations;
-    }
+	LdapOperations getLdapOperations() {
+		return ldapOperations;
+	}
 
-    Name getOriginalDn() {
-        return originalDn;
-    }
+	Name getOriginalDn() {
+		return originalDn;
+	}
 
-    Name getTemporaryDn() {
-        return temporaryDn;
-    }
+	Name getTemporaryDn() {
+		return temporaryDn;
+	}
 }

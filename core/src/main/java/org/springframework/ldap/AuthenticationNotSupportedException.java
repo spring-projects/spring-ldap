@@ -24,10 +24,10 @@ package org.springframework.ldap;
  * @see javax.naming.AuthenticationNotSupportedException
  */
 public class AuthenticationNotSupportedException extends
-        NamingSecurityException {
+		NamingSecurityException {
 
-    public AuthenticationNotSupportedException(
-            javax.naming.AuthenticationNotSupportedException cause) {
-        super(cause);
-    }
+	public AuthenticationNotSupportedException(
+			javax.naming.AuthenticationNotSupportedException cause) {
+		super(cause);
+	}
 }

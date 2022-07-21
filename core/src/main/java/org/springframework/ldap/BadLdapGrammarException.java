@@ -24,13 +24,13 @@ package org.springframework.ldap;
  */
 public class BadLdapGrammarException extends NamingException {
 
-    private static final long serialVersionUID = 961612585331409470L;
+	private static final long serialVersionUID = 961612585331409470L;
 
-    public BadLdapGrammarException(String message) {
-        super(message);
-    }
+	public BadLdapGrammarException(String message) {
+		super(message);
+	}
 
-    public BadLdapGrammarException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public BadLdapGrammarException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

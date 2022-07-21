@@ -25,35 +25,35 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class AbstractFilterTest {
 
-    /*
-     * Test for String encode()
-     */
-    @Test
-    public void testEncode() {
-        AbstractFilter af = new AbstractFilter() {
-            public StringBuffer encode(StringBuffer buff) {
-                return buff.append("foo");
-            }
-        };
+	/*
+	 * Test for String encode()
+	 */
+	@Test
+	public void testEncode() {
+		AbstractFilter af = new AbstractFilter() {
+			public StringBuffer encode(StringBuffer buff) {
+				return buff.append("foo");
+			}
+		};
 
-        assertThat(af.encode()).isEqualTo("foo");
+		assertThat(af.encode()).isEqualTo("foo");
 
-    }
+	}
 
-    /*
-     * Test for toString()
-     */
-    @Test
-    public void testToString() {
+	/*
+	 * Test for toString()
+	 */
+	@Test
+	public void testToString() {
 
-        AbstractFilter af = new AbstractFilter() {
-            public StringBuffer encode(StringBuffer buff) {
-                return buff.append("foo");
-            }
-        };
+		AbstractFilter af = new AbstractFilter() {
+			public StringBuffer encode(StringBuffer buff) {
+				return buff.append("foo");
+			}
+		};
 
-        assertThat(af.toString()).isEqualTo("foo");
+		assertThat(af.toString()).isEqualTo("foo");
 
-    }
+	}
 
 }

@@ -31,31 +31,31 @@ import org.springframework.ldap.odm.annotations.Transient;
  */
 @Entry(objectClasses = {"inetOrgPerson", "organizationalPerson", "person", "top"})
 public class UnitTestPerson {
-    @Id
-    private Name dn;
+	@Id
+	private Name dn;
 
-    @Attribute(name = "cn")
-    @DnAttribute("cn")
-    private String fullName;
+	@Attribute(name = "cn")
+	@DnAttribute("cn")
+	private String fullName;
 
-    @Attribute(name = "sn")
-    private String lastName;
+	@Attribute(name = "sn")
+	private String lastName;
 
-    @Attribute(name = "description")
-    private List<String> description;
+	@Attribute(name = "description")
+	private List<String> description;
 
-    @Transient
-    @DnAttribute("c")
-    private String country;
+	@Transient
+	@DnAttribute("c")
+	private String country;
 
-    @Transient
-    @DnAttribute("ou")
-    private String company;
+	@Transient
+	@DnAttribute("ou")
+	private String company;
 
-    // This should be automatically found
-    private String telephoneNumber;
+	// This should be automatically found
+	private String telephoneNumber;
 
-    // operational attribute (defined in https://tools.ietf.org/html/rfc4530)
-    @Attribute(readonly = true)
-    private String entryUUID;
+	// operational attribute (defined in https://tools.ietf.org/html/rfc4530)
+	@Attribute(readonly = true)
+	private String entryUUID;
 }

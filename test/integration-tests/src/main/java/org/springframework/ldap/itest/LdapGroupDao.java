@@ -27,17 +27,17 @@ import javax.naming.Name;
  */
 public class LdapGroupDao implements BaseLdapPathAware
 {
-    private Name basePath;
+	private Name basePath;
 
-    public LdapGroupDao() {
-        super();
-    }
+	public LdapGroupDao() {
+		super();
+	}
 
-    public void setBaseLdapPath(DistinguishedName baseLdapPath) {
-        this.basePath = baseLdapPath;
-    }
+	public void setBaseLdapPath(DistinguishedName baseLdapPath) {
+		this.basePath = baseLdapPath;
+	}
 
-    public Name getBasePath() {
-        return basePath;
-    }
+	public Name getBasePath() {
+		return basePath;
+	}
 }

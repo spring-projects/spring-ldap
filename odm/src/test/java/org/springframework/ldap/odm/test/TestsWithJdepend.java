@@ -25,18 +25,18 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 
 public class TestsWithJdepend {
-    private JDepend jdepend;
+	private JDepend jdepend;
 
-    @Before
-    public void setUp() throws IOException {
-        jdepend = new JDepend();
-        jdepend.addDirectory("build/classes/java/main");
-    }
-    
-    @Test
-    public void testAllPackages() {
-        jdepend.analyze();
-        assertEquals(false, jdepend.containsCycles());
-    }
+	@Before
+	public void setUp() throws IOException {
+		jdepend = new JDepend();
+		jdepend.addDirectory("build/classes/java/main");
+	}
+	
+	@Test
+	public void testAllPackages() {
+		jdepend.analyze();
+		assertEquals(false, jdepend.containsCycles());
+	}
 
 }

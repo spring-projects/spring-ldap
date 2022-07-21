@@ -26,26 +26,26 @@ import org.springframework.ldap.core.NameClassPairCallbackHandler;
  * 
  */
 public class CountNameClassPairCallbackHandler implements
-        NameClassPairCallbackHandler {
+		NameClassPairCallbackHandler {
 
-    private int noOfRows = 0;
+	private int noOfRows = 0;
 
-    /**
-     * Get the number of rows that was returned by the search.
-     * 
-     * @return the number of entries that have been handled.
-     */
-    public int getNoOfRows() {
-        return noOfRows;
-    }
+	/**
+	 * Get the number of rows that was returned by the search.
+	 * 
+	 * @return the number of entries that have been handled.
+	 */
+	public int getNoOfRows() {
+		return noOfRows;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.ldap.SearchResultCallbackHandler#handleSearchResult(javax.naming.directory.SearchResult)
-     */
-    public void handleNameClassPair(NameClassPair nameClassPair) {
-        noOfRows++;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.springframework.ldap.SearchResultCallbackHandler#handleSearchResult(javax.naming.directory.SearchResult)
+	 */
+	public void handleNameClassPair(NameClassPair nameClassPair) {
+		noOfRows++;
+	}
 
 }

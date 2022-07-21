@@ -244,7 +244,7 @@ public class LdifParser implements Parser, InitializingBean {
 				case NewRecord:
 					LOG.trace("Starting new record.");
 					//Start new record.
-                    record = new LdapAttributes(caseInsensitive);
+					record = new LdapAttributes(caseInsensitive);
 					builder = new StringBuilder(line);
 
 					break;
@@ -291,8 +291,8 @@ public class LdifParser implements Parser, InitializingBean {
 					
 					//Validate record and return.
 					if (record == null) {
-                        return null;
-                    } else {
+						return null;
+					} else {
 						try {
 							//flush buffer.
 							addAttributeToRecord(builder.toString(), record);
@@ -315,10 +315,10 @@ public class LdifParser implements Parser, InitializingBean {
 			}
 			
 			line = reader.readLine();
-            if(line == null && record == null) {
-                //Never encountered a valid record.
-                return null;
-            }
+			if(line == null && record == null) {
+				//Never encountered a valid record.
+				return null;
+			}
 		}
 
 	}

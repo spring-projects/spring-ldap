@@ -34,123 +34,123 @@ import org.springframework.ldap.core.AuthenticationSource;
  * 
  */
 public class DefaultValuesAuthenticationSourceDecorator implements
-        AuthenticationSource, InitializingBean {
+		AuthenticationSource, InitializingBean {
 
-    private AuthenticationSource target;
+	private AuthenticationSource target;
 
-    private String defaultUser;
+	private String defaultUser;
 
-    private String defaultPassword;
+	private String defaultPassword;
 
-    /**
-     * Constructor for bean usage.
-     */
-    public DefaultValuesAuthenticationSourceDecorator() {
-    }
+	/**
+	 * Constructor for bean usage.
+	 */
+	public DefaultValuesAuthenticationSourceDecorator() {
+	}
 
-    /**
-     * Constructor to setup instance directly.
-     * 
-     * @param target
-     *            the target AuthenticationSource.
-     * @param defaultUser
-     *            dn of the user to use when the target returns an empty
-     *            principal.
-     * @param defaultPassword
-     *            password of the user to use when the target returns an empty
-     *            principal.
-     */
-    public DefaultValuesAuthenticationSourceDecorator(
-            AuthenticationSource target, String defaultUser,
-            String defaultPassword) {
-        this.target = target;
-        this.defaultUser = defaultUser;
-        this.defaultPassword = defaultPassword;
-    }
+	/**
+	 * Constructor to setup instance directly.
+	 * 
+	 * @param target
+	 *			the target AuthenticationSource.
+	 * @param defaultUser
+	 *			dn of the user to use when the target returns an empty
+	 *			principal.
+	 * @param defaultPassword
+	 *			password of the user to use when the target returns an empty
+	 *			principal.
+	 */
+	public DefaultValuesAuthenticationSourceDecorator(
+			AuthenticationSource target, String defaultUser,
+			String defaultPassword) {
+		this.target = target;
+		this.defaultUser = defaultUser;
+		this.defaultPassword = defaultPassword;
+	}
 
-    /**
-     * Checks if the target's principal is not empty; if not, the credentials
-     * from the target is returned - otherwise return the
-     * <code>defaultPassword</code>.
-     * 
-     * @return the target's password if the target's principal is not empty, the
-     *         <code>defaultPassword</code> otherwise.
-     */
-    public String getCredentials() {
-        if (StringUtils.hasText(target.getPrincipal())) {
-            return target.getCredentials();
-        } else {
-            return defaultPassword;
-        }
-    }
+	/**
+	 * Checks if the target's principal is not empty; if not, the credentials
+	 * from the target is returned - otherwise return the
+	 * <code>defaultPassword</code>.
+	 * 
+	 * @return the target's password if the target's principal is not empty, the
+	 *		 <code>defaultPassword</code> otherwise.
+	 */
+	public String getCredentials() {
+		if (StringUtils.hasText(target.getPrincipal())) {
+			return target.getCredentials();
+		} else {
+			return defaultPassword;
+		}
+	}
 
-    /**
-     * Checks if the target's principal is not empty; if not, this is returned -
-     * otherwise return the <code>defaultPassword</code>.
-     * 
-     * @return the target's principal if it is not empty, the
-     *         <code>defaultPassword</code> otherwise.
-     */
-    public String getPrincipal() {
-        String principal = target.getPrincipal();
-        if (StringUtils.hasText(principal)) {
-            return principal;
-        } else {
-            return defaultUser;
-        }
-    }
+	/**
+	 * Checks if the target's principal is not empty; if not, this is returned -
+	 * otherwise return the <code>defaultPassword</code>.
+	 * 
+	 * @return the target's principal if it is not empty, the
+	 *		 <code>defaultPassword</code> otherwise.
+	 */
+	public String getPrincipal() {
+		String principal = target.getPrincipal();
+		if (StringUtils.hasText(principal)) {
+			return principal;
+		} else {
+			return defaultUser;
+		}
+	}
 
-    /**
-     * Set the password of the default user.
-     * 
-     * @param defaultPassword
-     *            the password of the default user.
-     */
-    public void setDefaultPassword(String defaultPassword) {
-        this.defaultPassword = defaultPassword;
-    }
+	/**
+	 * Set the password of the default user.
+	 * 
+	 * @param defaultPassword
+	 *			the password of the default user.
+	 */
+	public void setDefaultPassword(String defaultPassword) {
+		this.defaultPassword = defaultPassword;
+	}
 
-    /**
-     * Set the default user DN. This should be a non-privileged user, since it
-     * will be used when no authentication information is returned from the
-     * target.
-     * 
-     * @param defaultUser
-     *            DN of the default user.
-     */
-    public void setDefaultUser(String defaultUser) {
-        this.defaultUser = defaultUser;
-    }
+	/**
+	 * Set the default user DN. This should be a non-privileged user, since it
+	 * will be used when no authentication information is returned from the
+	 * target.
+	 * 
+	 * @param defaultUser
+	 *			DN of the default user.
+	 */
+	public void setDefaultUser(String defaultUser) {
+		this.defaultUser = defaultUser;
+	}
 
-    /**
-     * Set the target AuthenticationSource.
-     * 
-     * @param target
-     *            the target AuthenticationSource.
-     */
-    public void setTarget(AuthenticationSource target) {
-        this.target = target;
-    }
+	/**
+	 * Set the target AuthenticationSource.
+	 * 
+	 * @param target
+	 *			the target AuthenticationSource.
+	 */
+	public void setTarget(AuthenticationSource target) {
+		this.target = target;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
-     */
-    public void afterPropertiesSet() throws Exception {
-        if (target == null) {
-            throw new IllegalArgumentException(
-                    "Property 'target' must be set.'");
-        }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+	 */
+	public void afterPropertiesSet() throws Exception {
+		if (target == null) {
+			throw new IllegalArgumentException(
+					"Property 'target' must be set.'");
+		}
 
-        if (defaultUser == null) {
-            throw new IllegalArgumentException(
-                    "Property 'defaultUser' must be set.'");
-        }
+		if (defaultUser == null) {
+			throw new IllegalArgumentException(
+					"Property 'defaultUser' must be set.'");
+		}
 
-        if (defaultPassword == null) {
-            throw new IllegalArgumentException(
-                    "Property 'defaultPassword' must be set.'");
-        }
-    }
+		if (defaultPassword == null) {
+			throw new IllegalArgumentException(
+					"Property 'defaultPassword' must be set.'");
+		}
+	}
 }

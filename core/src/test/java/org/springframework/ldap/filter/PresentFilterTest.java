@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class PresentFilterTest {
 
-    @Test
+	@Test
 	public void testPresentFilter() {
 		PresentFilter filter = new PresentFilter("foo");
 		assertThat(filter.encode()).isEqualTo("(foo=*)");
@@ -46,16 +46,16 @@ public class PresentFilterTest {
 		assertThat(andFilter.encode()).isEqualTo("(&(foo=*)(!(bar=*)))");
 	}
 
-    @Test
-    public void testEquals() {
+	@Test
+	public void testEquals() {
 		String attribute = "foo";
 		PresentFilter originalObject = new PresentFilter(attribute);
 		PresentFilter identicalObject = new PresentFilter(attribute);
 		PresentFilter differentObject = new PresentFilter("bar");
 		PresentFilter subclassObject = new PresentFilter(attribute) {
-        };
+		};
 
-        new EqualsTester(originalObject, identicalObject, differentObject,
-                subclassObject);
-    }
+		new EqualsTester(originalObject, identicalObject, differentObject,
+				subclassObject);
+	}
 }

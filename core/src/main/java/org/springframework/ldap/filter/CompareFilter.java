@@ -78,27 +78,27 @@ public abstract class CompareFilter extends AbstractFilter {
 		return buff;
 	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-        CompareFilter that = (CompareFilter) o;
+		CompareFilter that = (CompareFilter) o;
 
-        if (attribute != null ? !attribute.equals(that.attribute) : that.attribute != null) return false;
-        if (value != null ? !value.equals(that.value) : that.value != null) return false;
+		if (attribute != null ? !attribute.equals(that.attribute) : that.attribute != null) return false;
+		if (value != null ? !value.equals(that.value) : that.value != null) return false;
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public int hashCode() {
-        int result = attribute != null ? attribute.hashCode() : 0;
-        result = 31 * result + (value != null ? value.hashCode() : 0);
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		int result = attribute != null ? attribute.hashCode() : 0;
+		result = 31 * result + (value != null ? value.hashCode() : 0);
+		return result;
+	}
 
-    /**
+	/**
 	 * Implement this method in subclass to return a String representing the
 	 * operator. The {@link EqualsFilter#getCompareString()} would for example
 	 * return an equals sign, &quot;=&quot;.

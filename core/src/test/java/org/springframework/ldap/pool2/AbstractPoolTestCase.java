@@ -33,25 +33,25 @@ import static org.mockito.Mockito.mock;
  */
 public abstract class AbstractPoolTestCase {
 
-    protected Context contextMock;
+	protected Context contextMock;
 
-    protected DirContext dirContextMock;
+	protected DirContext dirContextMock;
 
-    protected LdapContext ldapContextMock;
+	protected LdapContext ldapContextMock;
 
-    protected KeyedObjectPool keyedObjectPoolMock;
+	protected KeyedObjectPool keyedObjectPoolMock;
 
-    protected ContextSource contextSourceMock;
+	protected ContextSource contextSourceMock;
 
-    protected DirContextValidator dirContextValidatorMock;
+	protected DirContextValidator dirContextValidatorMock;
 
-    @Before
-    public void setUp() throws Exception {
-        contextMock = mock(Context.class);
-        dirContextMock = mock(DirContext.class);
-        ldapContextMock = mock(LdapContext.class);
-        keyedObjectPoolMock = mock(KeyedObjectPool.class);
-        contextSourceMock = mock(ContextSource.class);
-        dirContextValidatorMock = mock(DirContextValidator.class);
-    }
+	@Before
+	public void setUp() throws Exception {
+		contextMock = mock(Context.class);
+		dirContextMock = mock(DirContext.class);
+		ldapContextMock = mock(LdapContext.class);
+		keyedObjectPoolMock = mock(KeyedObjectPool.class);
+		contextSourceMock = mock(ContextSource.class);
+		dirContextValidatorMock = mock(DirContextValidator.class);
+	}
 }

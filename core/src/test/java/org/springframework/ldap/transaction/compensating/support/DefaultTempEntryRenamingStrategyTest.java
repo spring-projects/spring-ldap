@@ -25,26 +25,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class DefaultTempEntryRenamingStrategyTest {
 
-    @Test
-    public void testGetTemporaryName() {
-        LdapName expectedOriginalName = LdapUtils.newLdapName(
-                "cn=john doe, ou=somecompany, c=SE");
-        DefaultTempEntryRenamingStrategy tested = new DefaultTempEntryRenamingStrategy();
+	@Test
+	public void testGetTemporaryName() {
+		LdapName expectedOriginalName = LdapUtils.newLdapName(
+				"cn=john doe, ou=somecompany, c=SE");
+		DefaultTempEntryRenamingStrategy tested = new DefaultTempEntryRenamingStrategy();
 
-        Name result = tested.getTemporaryName(expectedOriginalName);
-        assertThat(result.toString()).isEqualTo("cn=john doe_temp,ou=somecompany,c=SE");
-        assertThat(result).isNotSameAs(expectedOriginalName);
-    }
+		Name result = tested.getTemporaryName(expectedOriginalName);
+		assertThat(result.toString()).isEqualTo("cn=john doe_temp,ou=somecompany,c=SE");
+		assertThat(result).isNotSameAs(expectedOriginalName);
+	}
 
-    @Test
-    public void testGetTemporaryDN_MultivalueDN() {
-        LdapName expectedOriginalName = LdapUtils.newLdapName(
-                "cn=john doe+sn=doe, ou=somecompany, c=SE");
-        DefaultTempEntryRenamingStrategy tested = new DefaultTempEntryRenamingStrategy();
+	@Test
+	public void testGetTemporaryDN_MultivalueDN() {
+		LdapName expectedOriginalName = LdapUtils.newLdapName(
+				"cn=john doe+sn=doe, ou=somecompany, c=SE");
+		DefaultTempEntryRenamingStrategy tested = new DefaultTempEntryRenamingStrategy();
 
-        Name result = tested.getTemporaryName(expectedOriginalName);
-        assertThat(result.toString()).isEqualTo("cn=john doe+sn=doe_temp,ou=somecompany,c=SE");
-    }
+		Name result = tested.getTemporaryName(expectedOriginalName);
+		assertThat(result.toString()).isEqualTo("cn=john doe+sn=doe_temp,ou=somecompany,c=SE");
+	}
 
 
 }

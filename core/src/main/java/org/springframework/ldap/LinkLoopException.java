@@ -25,7 +25,7 @@ package org.springframework.ldap;
  */
 public class LinkLoopException extends LinkException {
 
-    public LinkLoopException(javax.naming.LinkLoopException cause) {
-        super(cause);
-    }
+	public LinkLoopException(javax.naming.LinkLoopException cause) {
+		super(cause);
+	}
 }

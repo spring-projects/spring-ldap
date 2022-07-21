@@ -10,11 +10,11 @@ package org.springframework.ldap.core;
  * @since 1.3.1
  */
 public interface AuthenticationErrorCallback {
-    /**
-     * This method will be called with the authentication exception in
-     * case there is a problem with the authentication.
-     *
-     * @param e the exception that was caught in the authentication method
-     */
-    void execute(Exception e);
+	/**
+	 * This method will be called with the authentication exception in
+	 * case there is a problem with the authentication.
+	 *
+	 * @param e the exception that was caught in the authentication method
+	 */
+	void execute(Exception e);
 }

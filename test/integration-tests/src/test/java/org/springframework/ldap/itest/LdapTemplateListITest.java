@@ -95,26 +95,26 @@ public class LdapTemplateListITest extends AbstractLdapTemplateIntegrationTest {
 	public void testList() {
 		List<String> list = tested.list(BASE_STRING);
 		assertThat(list).hasSize(3);
-        verifyBindings(list);
+		verifyBindings(list);
 	}
 
-    private void verifyBindings(List<String> list) {
-        LinkedList<LdapName> transformed = new LinkedList<LdapName>();
+	private void verifyBindings(List<String> list) {
+		LinkedList<LdapName> transformed = new LinkedList<LdapName>();
 
-        for (String s : list) {
-            transformed.add(LdapUtils.newLdapName(s));
-        }
+		for (String s : list) {
+			transformed.add(LdapUtils.newLdapName(s));
+		}
 
-        assertThat(transformed.contains(LdapUtils.newLdapName("ou=groups"))).isTrue();
-        assertThat(transformed.contains(LdapUtils.newLdapName("ou=Norway"))).isTrue();
-        assertThat(transformed.contains(LdapUtils.newLdapName("ou=Sweden"))).isTrue();
-    }
+		assertThat(transformed.contains(LdapUtils.newLdapName("ou=groups"))).isTrue();
+		assertThat(transformed.contains(LdapUtils.newLdapName("ou=Norway"))).isTrue();
+		assertThat(transformed.contains(LdapUtils.newLdapName("ou=Sweden"))).isTrue();
+	}
 
-    @Test
+	@Test
 	public void testList_Name() {
 		List<String> list = tested.list(BASE_NAME);
 		assertThat(list).hasSize(3);
-        verifyBindings(list);
+		verifyBindings(list);
 	}
 
 	@Test
@@ -135,7 +135,7 @@ public class LdapTemplateListITest extends AbstractLdapTemplateIntegrationTest {
 	public void testListBindings() {
 		List<String> list = tested.listBindings(BASE_STRING);
 		assertThat(list).hasSize(3);
-        verifyBindings(list);
+		verifyBindings(list);
 	}
 
 	@Test

@@ -26,32 +26,32 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class LikeFilterTest {
 
-    @Test
-    public void testEncodeValue_blank() {
-        assertThat("").isEqualTo(new LikeFilter("", null).getEncodedValue());
-        assertThat(" ").isEqualTo(new LikeFilter("", " ").getEncodedValue());
-    }
+	@Test
+	public void testEncodeValue_blank() {
+		assertThat("").isEqualTo(new LikeFilter("", null).getEncodedValue());
+		assertThat(" ").isEqualTo(new LikeFilter("", " ").getEncodedValue());
+	}
 
-    @Test
-    public void testEncodeValue_normal() {
-        assertThat("foo").isEqualTo(new LikeFilter("", "foo").getEncodedValue());
-        assertThat("foo*bar").isEqualTo(new LikeFilter("", "foo*bar").getEncodedValue());
-        assertThat("*foo*bar*").isEqualTo(new LikeFilter("", "*foo*bar*")
-                .getEncodedValue());
-        assertThat("**foo**bar**").isEqualTo(new LikeFilter("", "**foo**bar**")
-                .getEncodedValue());
-    }
+	@Test
+	public void testEncodeValue_normal() {
+		assertThat("foo").isEqualTo(new LikeFilter("", "foo").getEncodedValue());
+		assertThat("foo*bar").isEqualTo(new LikeFilter("", "foo*bar").getEncodedValue());
+		assertThat("*foo*bar*").isEqualTo(new LikeFilter("", "*foo*bar*")
+				.getEncodedValue());
+		assertThat("**foo**bar**").isEqualTo(new LikeFilter("", "**foo**bar**")
+				.getEncodedValue());
+	}
 
-    @Test
-    public void testEncodeValue_escape() {
-        assertThat("*\\28*\\29*").isEqualTo(new LikeFilter("", "*(*)*")
-                .getEncodedValue());
-        assertThat("*\\5c2a*").isEqualTo(new LikeFilter("", "*\\2a*").getEncodedValue());
-    }
+	@Test
+	public void testEncodeValue_escape() {
+		assertThat("*\\28*\\29*").isEqualTo(new LikeFilter("", "*(*)*")
+				.getEncodedValue());
+		assertThat("*\\5c2a*").isEqualTo(new LikeFilter("", "*\\2a*").getEncodedValue());
+	}
 
-    @Test
-    public void testEquals() {
-    	String attribute = "a";
+	@Test
+	public void testEquals() {
+		String attribute = "a";
 		String value = "b";
 		LikeFilter originalObject = new LikeFilter(attribute, value);
 		LikeFilter identicalObject = new LikeFilter(attribute, value);
@@ -59,7 +59,7 @@ public class LikeFilterTest {
 		LikeFilter subclassObject = new LikeFilter(attribute, value) {
 		};
 
-        new EqualsTester(originalObject, identicalObject, differentObject,
-                subclassObject);
-    }
+		new EqualsTester(originalObject, identicalObject, differentObject,
+				subclassObject);
+	}
 }

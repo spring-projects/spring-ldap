@@ -46,9 +46,9 @@ public abstract class BinaryLogicalFilter extends AbstractFilter {
 		else {
 			buff.append("(").append(getLogicalOperator());
 
-            for (Filter query : queryList) {
-                query.encode(buff);
-            }
+			for (Filter query : queryList) {
+				query.encode(buff);
+			}
 
 			buff.append(")");
 
@@ -64,24 +64,24 @@ public abstract class BinaryLogicalFilter extends AbstractFilter {
 	 */
 	protected abstract String getLogicalOperator();
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-        BinaryLogicalFilter that = (BinaryLogicalFilter) o;
+		BinaryLogicalFilter that = (BinaryLogicalFilter) o;
 
-        if (queryList != null ? !queryList.equals(that.queryList) : that.queryList != null) return false;
+		if (queryList != null ? !queryList.equals(that.queryList) : that.queryList != null) return false;
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public int hashCode() {
-        return queryList != null ? queryList.hashCode() : 0;
-    }
+	@Override
+	public int hashCode() {
+		return queryList != null ? queryList.hashCode() : 0;
+	}
 
-    /**
+	/**
 	 * Add a query to this logical operation.
 	 * 
 	 * @param query the query to add.
@@ -92,8 +92,8 @@ public abstract class BinaryLogicalFilter extends AbstractFilter {
 		return this;
 	}
 
-    public final BinaryLogicalFilter appendAll(Collection<Filter> subQueries) {
-        queryList.addAll(subQueries);
-        return this;
-    }
+	public final BinaryLogicalFilter appendAll(Collection<Filter> subQueries) {
+		queryList.addAll(subQueries);
+		return this;
+	}
 }

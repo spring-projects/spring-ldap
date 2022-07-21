@@ -47,13 +47,13 @@ public class VirtualListViewControlDirContextProcessorTest {
 
 	private LdapContext ldapContextMock;
 
-    @Before
+	@Before
 	public void setUp() throws Exception {
 		// Create ldapContext mock
 		ldapContextMock = mock(LdapContext.class);
 	}
 
-    @Test
+	@Test
 	public void testCreateRequestControlWithTargetAsOffset() throws Exception {
 		int pageSize = 5;
 		int targetOffset = 25;
@@ -76,7 +76,7 @@ public class VirtualListViewControlDirContextProcessorTest {
 				new byte[0]);
 	}
 
-    @Test
+	@Test
 	public void testCreateRequestControlWithTargetAsPercentage()
 			throws Exception {
 		int pageSize = 5;
@@ -102,7 +102,7 @@ public class VirtualListViewControlDirContextProcessorTest {
 				new byte[0]);
 	}
 
-    @Test
+	@Test
 	public void testPostProcess() throws Exception {
 		int pageSize = 5;
 		int targetOffset = 25;
@@ -132,7 +132,7 @@ public class VirtualListViewControlDirContextProcessorTest {
 		assertThat(tested.getCookie().getCookie().length).isEqualTo(0);
 	}
 
-    @Test
+	@Test
 	public void testBerDecoding() throws Exception {
 		int virtualListViewResult = 53; // unwilling to perform
 		byte[] encoded = encodeResponseValue(10, 1000, virtualListViewResult);

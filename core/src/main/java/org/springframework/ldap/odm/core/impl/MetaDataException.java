@@ -26,11 +26,11 @@ import org.springframework.ldap.odm.core.OdmException;
  */
 @SuppressWarnings("serial")
 public class MetaDataException extends OdmException {
-    public MetaDataException(String message) {
-        super(message);
-    }
+	public MetaDataException(String message) {
+		super(message);
+	}
 
-    public MetaDataException(String message, Throwable reason) {
-        super(message, reason);
-    }
+	public MetaDataException(String message, Throwable reason) {
+		super(message, reason);
+	}
 }

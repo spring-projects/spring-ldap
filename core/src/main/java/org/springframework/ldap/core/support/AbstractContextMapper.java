@@ -31,28 +31,28 @@ import org.springframework.ldap.core.DirContextOperations;
  */
 public abstract class AbstractContextMapper<T> implements ContextMapper<T> {
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @throws ClassCastException
-     *             if a custom <code>DirObjectFactory</code> implementation is
-     *             used, causing the objects passed in be anything else than
-     *             {@link DirContextOperations} instances.
-     */
-    public final T mapFromContext(Object ctx) {
-        return doMapFromContext((DirContextOperations) ctx);
-    }
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @throws ClassCastException
+	 *			 if a custom <code>DirObjectFactory</code> implementation is
+	 *			 used, causing the objects passed in be anything else than
+	 *			 {@link DirContextOperations} instances.
+	 */
+	public final T mapFromContext(Object ctx) {
+		return doMapFromContext((DirContextOperations) ctx);
+	}
 
-    /**
-     * Map a single <code>DirContextOperation</code> to an object. The
-     * supplied instance is the object supplied to
-     * {@link #mapFromContext(Object)} cast to a
-     * <code>DirContextOperations</code>.
-     * 
-     * @param ctx
-     *            the context to map to an object.
-     * @return an object built from the data in the context.
-     */
-    protected abstract T doMapFromContext(DirContextOperations ctx);
+	/**
+	 * Map a single <code>DirContextOperation</code> to an object. The
+	 * supplied instance is the object supplied to
+	 * {@link #mapFromContext(Object)} cast to a
+	 * <code>DirContextOperations</code>.
+	 * 
+	 * @param ctx
+	 *			the context to map to an object.
+	 * @return an object built from the data in the context.
+	 */
+	protected abstract T doMapFromContext(DirContextOperations ctx);
 
 }

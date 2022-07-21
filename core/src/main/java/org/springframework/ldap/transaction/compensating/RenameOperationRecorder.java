@@ -33,40 +33,40 @@ import javax.naming.Name;
  * @since 1.2
  */
 public class RenameOperationRecorder implements
-        CompensatingTransactionOperationRecorder {
+		CompensatingTransactionOperationRecorder {
 
-    private static Logger log = LoggerFactory.getLogger(RenameOperationRecorder.class);
+	private static Logger log = LoggerFactory.getLogger(RenameOperationRecorder.class);
 
-    private LdapOperations ldapOperations;
+	private LdapOperations ldapOperations;
 
-    /**
-     * Constructor.
-     * 
-     * @param ldapOperations
-     *            The {@link LdapOperations} to supply to the created
-     *            {@link RebindOperationExecutor} objects.
-     */
-    public RenameOperationRecorder(LdapOperations ldapOperations) {
-        this.ldapOperations = ldapOperations;
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param ldapOperations
+	 *			The {@link LdapOperations} to supply to the created
+	 *			{@link RebindOperationExecutor} objects.
+	 */
+	public RenameOperationRecorder(LdapOperations ldapOperations) {
+		this.ldapOperations = ldapOperations;
+	}
 
-    /*
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
-     */
-    public CompensatingTransactionOperationExecutor recordOperation(
-            Object[] args) {
-        log.debug("Storing rollback information for rename operation");
-        Assert.notEmpty(args);
-        if (args.length != 2) {
-            // This really shouldn't happen.
-            throw new IllegalArgumentException("Illegal argument length");
-        }
-        Name oldDn = LdapTransactionUtils.getArgumentAsName(args[0]);
-        Name newDn = LdapTransactionUtils.getArgumentAsName(args[1]);
-        return new RenameOperationExecutor(ldapOperations, oldDn, newDn);
-    }
+	/*
+	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
+	 */
+	public CompensatingTransactionOperationExecutor recordOperation(
+			Object[] args) {
+		log.debug("Storing rollback information for rename operation");
+		Assert.notEmpty(args);
+		if (args.length != 2) {
+			// This really shouldn't happen.
+			throw new IllegalArgumentException("Illegal argument length");
+		}
+		Name oldDn = LdapTransactionUtils.getArgumentAsName(args[0]);
+		Name newDn = LdapTransactionUtils.getArgumentAsName(args[1]);
+		return new RenameOperationExecutor(ldapOperations, oldDn, newDn);
+	}
 
-    LdapOperations getLdapOperations() {
-        return ldapOperations;
-    }
+	LdapOperations getLdapOperations() {
+		return ldapOperations;
+	}
 }

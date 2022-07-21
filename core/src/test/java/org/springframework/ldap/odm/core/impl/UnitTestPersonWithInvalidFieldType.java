@@ -27,10 +27,10 @@ import javax.naming.Name;
  */
 @Entry(objectClasses = {"inetOrgPerson", "organizationalPerson", "person", "top"})
 public class UnitTestPersonWithInvalidFieldType {
-    @Id
-    private Name dn;
+	@Id
+	private Name dn;
 
-    @Attribute(name = "cn")
-    private Class<?> fullName;
+	@Attribute(name = "cn")
+	private Class<?> fullName;
 
 }

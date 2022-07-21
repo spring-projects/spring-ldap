@@ -26,13 +26,13 @@ import java.util.Hashtable;
  * @author Mattias Hellborg Arthursson
  */
 public class DummyAuthenticationStrategy implements DirContextAuthenticationStrategy {
-    @Override
-    public void setupEnvironment(Hashtable<String, Object> env, String userDn, String password) throws NamingException {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public void setupEnvironment(Hashtable<String, Object> env, String userDn, String password) throws NamingException {
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public DirContext processContextAfterCreation(DirContext ctx, String userDn, String password) throws NamingException {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public DirContext processContextAfterCreation(DirContext ctx, String userDn, String password) throws NamingException {
+		throw new UnsupportedOperationException();
+	}
 }

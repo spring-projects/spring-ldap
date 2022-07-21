@@ -26,45 +26,45 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class LdapRdnComponentTest {
 
-    @Test
-    public void testCompareTo_Less() {
-        LdapRdnComponent component1 = new LdapRdnComponent("cn", "john doe");
-        LdapRdnComponent component2 = new LdapRdnComponent("sn", "doe");
-        int result = component1.compareTo(component2);
-        assertThat(result < 0).isTrue();
-    }
+	@Test
+	public void testCompareTo_Less() {
+		LdapRdnComponent component1 = new LdapRdnComponent("cn", "john doe");
+		LdapRdnComponent component2 = new LdapRdnComponent("sn", "doe");
+		int result = component1.compareTo(component2);
+		assertThat(result < 0).isTrue();
+	}
 
-    @Test
-    public void testCompareTo_Greater() {
-        LdapRdnComponent component1 = new LdapRdnComponent("sn", "doe");
-        LdapRdnComponent component2 = new LdapRdnComponent("cn", "john doe");
-        int result = component1.compareTo(component2);
-        assertThat(result > 0).isTrue();
-    }
+	@Test
+	public void testCompareTo_Greater() {
+		LdapRdnComponent component1 = new LdapRdnComponent("sn", "doe");
+		LdapRdnComponent component2 = new LdapRdnComponent("cn", "john doe");
+		int result = component1.compareTo(component2);
+		assertThat(result > 0).isTrue();
+	}
 
-    @Test
-    public void testCompareTo_Equal() {
-        LdapRdnComponent component1 = new LdapRdnComponent("cn", "john doe");
-        LdapRdnComponent component2 = new LdapRdnComponent("cn", "john doe");
-        int result = component1.compareTo(component2);
-        assertThat(result).isEqualTo(0);
-    }
+	@Test
+	public void testCompareTo_Equal() {
+		LdapRdnComponent component1 = new LdapRdnComponent("cn", "john doe");
+		LdapRdnComponent component2 = new LdapRdnComponent("cn", "john doe");
+		int result = component1.compareTo(component2);
+		assertThat(result).isEqualTo(0);
+	}
 
-    @Test
-    public void testCompareTo_DifferentCase_LDAP259() {
-        LdapRdnComponent component1 = new LdapRdnComponent("cn", "john doe");
-        LdapRdnComponent component2 = new LdapRdnComponent("CN", "John Doe");
+	@Test
+	public void testCompareTo_DifferentCase_LDAP259() {
+		LdapRdnComponent component1 = new LdapRdnComponent("cn", "john doe");
+		LdapRdnComponent component2 = new LdapRdnComponent("CN", "John Doe");
 
-        assertThat(component2).as("Should be equal").isEqualTo(component1);
-        assertThat(component1.compareTo(component2) == 0).as("0 should be returned by compareTo").isTrue();
-    }
+		assertThat(component2).as("Should be equal").isEqualTo(component1);
+		assertThat(component1.compareTo(component2) == 0).as("0 should be returned by compareTo").isTrue();
+	}
 
-    @Test
-    public void verifyThatHashCodeDisregardsCase_LDAP259() {
-        LdapRdnComponent component1 = new LdapRdnComponent("cn", "john doe");
-        LdapRdnComponent component2 = new LdapRdnComponent("CN", "John Doe");
+	@Test
+	public void verifyThatHashCodeDisregardsCase_LDAP259() {
+		LdapRdnComponent component1 = new LdapRdnComponent("cn", "john doe");
+		LdapRdnComponent component2 = new LdapRdnComponent("CN", "John Doe");
 
-        assertThat(component2.hashCode()).as("Should be equal").isEqualTo(component1.hashCode());
-    }
+		assertThat(component2.hashCode()).as("Should be equal").isEqualTo(component1.hashCode());
+	}
 
 }

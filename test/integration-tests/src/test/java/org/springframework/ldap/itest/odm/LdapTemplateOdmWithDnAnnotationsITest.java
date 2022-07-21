@@ -35,143 +35,143 @@ import org.springframework.test.context.ContextConfiguration;
  */
 @ContextConfiguration(locations = {"/conf/ldapTemplateTestContext.xml"})
 public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateIntegrationTest {
-    @Autowired
-    private LdapTemplate tested;
+	@Autowired
+	private LdapTemplate tested;
 
-    @Test
-    public void testFindOne() {
-        PersonWithDnAnnotations person = tested.findOne(query()
-                .where("cn").is("Some Person3"), PersonWithDnAnnotations.class);
+	@Test
+	public void testFindOne() {
+		PersonWithDnAnnotations person = tested.findOne(query()
+				.where("cn").is("Some Person3"), PersonWithDnAnnotations.class);
 
-        assertThat(person).isNotNull();
-        assertThat(person.getCommonName()).isEqualTo("Some Person3");
-        assertThat(person.getSurname()).isEqualTo("Person3");
-        assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
-        assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
+		assertThat(person).isNotNull();
+		assertThat(person.getCommonName()).isEqualTo("Some Person3");
+		assertThat(person.getSurname()).isEqualTo("Person3");
+		assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
+		assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
 
-        // Automatically calculated
-        assertThat(person.getCompany()).isEqualTo("company1");
-        assertThat(person.getCountry()).isEqualTo("Sweden");
-        assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
-    }
+		// Automatically calculated
+		assertThat(person.getCompany()).isEqualTo("company1");
+		assertThat(person.getCountry()).isEqualTo("Sweden");
+		assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
+	}
 
-    @Test
-    public void testFindByDn() {
-        PersonWithDnAnnotations person = tested.findByDn(LdapUtils.newLdapName("cn=Some Person3,ou=company1,ou=Sweden"),
-                PersonWithDnAnnotations.class);
+	@Test
+	public void testFindByDn() {
+		PersonWithDnAnnotations person = tested.findByDn(LdapUtils.newLdapName("cn=Some Person3,ou=company1,ou=Sweden"),
+				PersonWithDnAnnotations.class);
 
-        assertThat(person).isNotNull();
-        assertThat(person.getCommonName()).isEqualTo("Some Person3");
-        assertThat(person.getSurname()).isEqualTo("Person3");
-        assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
-        assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
+		assertThat(person).isNotNull();
+		assertThat(person.getCommonName()).isEqualTo("Some Person3");
+		assertThat(person.getSurname()).isEqualTo("Person3");
+		assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
+		assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
 
-        // Automatically calculated
-        assertThat(person.getCompany()).isEqualTo("company1");
-        assertThat(person.getCountry()).isEqualTo("Sweden");
-        assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
-    }
+		// Automatically calculated
+		assertThat(person.getCompany()).isEqualTo("company1");
+		assertThat(person.getCountry()).isEqualTo("Sweden");
+		assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
+	}
 
-    @Test
-    public void testFindInCountry() {
-        List<PersonWithDnAnnotations> persons = tested.find(query()
-                .base("ou=Sweden")
-                .where("cn").isPresent(), PersonWithDnAnnotations.class);
+	@Test
+	public void testFindInCountry() {
+		List<PersonWithDnAnnotations> persons = tested.find(query()
+				.base("ou=Sweden")
+				.where("cn").isPresent(), PersonWithDnAnnotations.class);
 
-        assertThat(persons).hasSize(4);
+		assertThat(persons).hasSize(4);
 
-        PersonWithDnAnnotations person = findPerson(persons, "Some Person3");
+		PersonWithDnAnnotations person = findPerson(persons, "Some Person3");
 
-        // Automatically calculated
-        assertThat(person.getCompany()).isEqualTo("company1");
-        assertThat(person.getCountry()).isEqualTo("Sweden");
-        assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
-    }
+		// Automatically calculated
+		assertThat(person.getCompany()).isEqualTo("company1");
+		assertThat(person.getCountry()).isEqualTo("Sweden");
+		assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
+	}
 
-    private PersonWithDnAnnotations findPerson(List<PersonWithDnAnnotations> persons, String cn) {
-        for (PersonWithDnAnnotations person : persons) {
-            if(person.getCommonName().equals(cn)) {
-                return person;
-            }
-        }
+	private PersonWithDnAnnotations findPerson(List<PersonWithDnAnnotations> persons, String cn) {
+		for (PersonWithDnAnnotations person : persons) {
+			if(person.getCommonName().equals(cn)) {
+				return person;
+			}
+		}
 
-        fail(String.format("Person with cn %s not found", cn));
-        // we'll never get here
-        return null;
-    }
+		fail(String.format("Person with cn %s not found", cn));
+		// we'll never get here
+		return null;
+	}
 
-    @Test
-    public void testCreateWithCalculatedDn() {
-        PersonWithDnAnnotations person = new PersonWithDnAnnotations();
+	@Test
+	public void testCreateWithCalculatedDn() {
+		PersonWithDnAnnotations person = new PersonWithDnAnnotations();
 
-        // Don't explicitly set DN.
-        person.setCommonName("New Person");
-        person.setSurname("Person");
-        person.setDesc(Arrays.asList("This is the description"));
-        person.setTelephoneNumber("0123456");
-        person.setCompany("company1");
-        person.setCountry("Sweden");
+		// Don't explicitly set DN.
+		person.setCommonName("New Person");
+		person.setSurname("Person");
+		person.setDesc(Arrays.asList("This is the description"));
+		person.setTelephoneNumber("0123456");
+		person.setCompany("company1");
+		person.setCountry("Sweden");
 
-        tested.create(person);
+		tested.create(person);
 
-        assertThat(tested.findAll(PersonWithDnAnnotations.class)).hasSize(6);
+		assertThat(tested.findAll(PersonWithDnAnnotations.class)).hasSize(6);
 
-        person = tested.findByDn(LdapUtils.newLdapName("cn=New Person,ou=company1,ou=Sweden"),
-                PersonWithDnAnnotations.class);
+		person = tested.findByDn(LdapUtils.newLdapName("cn=New Person,ou=company1,ou=Sweden"),
+				PersonWithDnAnnotations.class);
 
-        assertThat(person.getCommonName()).isEqualTo("New Person");
-        assertThat(person.getSurname()).isEqualTo("Person");
-        assertThat(person.getDesc().get(0)).isEqualTo("This is the description");
-        assertThat(person.getTelephoneNumber()).isEqualTo("0123456");
+		assertThat(person.getCommonName()).isEqualTo("New Person");
+		assertThat(person.getSurname()).isEqualTo("Person");
+		assertThat(person.getDesc().get(0)).isEqualTo("This is the description");
+		assertThat(person.getTelephoneNumber()).isEqualTo("0123456");
 
-        // Automatically calculated
-        assertThat(person.getCompany()).isEqualTo("company1");
-        assertThat(person.getCountry()).isEqualTo("Sweden");
-        assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
-    }
+		// Automatically calculated
+		assertThat(person.getCompany()).isEqualTo("company1");
+		assertThat(person.getCountry()).isEqualTo("Sweden");
+		assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
+	}
 
-    @Test
-    public void testUpdate() {
-        PersonWithDnAnnotations person = tested.findOne(query()
-                .where("cn").is("Some Person3"), PersonWithDnAnnotations.class);
+	@Test
+	public void testUpdate() {
+		PersonWithDnAnnotations person = tested.findOne(query()
+				.where("cn").is("Some Person3"), PersonWithDnAnnotations.class);
 
-        person.setDesc(Arrays.asList("New Description"));
-        String entryUuid = person.getEntryUuid();
-        assertThat(entryUuid).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
-        tested.update(person);
+		person.setDesc(Arrays.asList("New Description"));
+		String entryUuid = person.getEntryUuid();
+		assertThat(entryUuid).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
+		tested.update(person);
 
-        person = tested.findByDn(
-                LdapUtils.newLdapName("cn=Some Person3, ou=company1, ou=Sweden"),
-                PersonWithDnAnnotations.class);
+		person = tested.findByDn(
+				LdapUtils.newLdapName("cn=Some Person3, ou=company1, ou=Sweden"),
+				PersonWithDnAnnotations.class);
 
-        assertThat(person.getCommonName()).isEqualTo("Some Person3");
-        assertThat(person.getSurname()).isEqualTo("Person3");
-        assertThat(person.getDesc().get(0)).isEqualTo("New Description");
-        assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
-        assertThat(person.getEntryUuid()).isEqualTo(entryUuid);
-    }
+		assertThat(person.getCommonName()).isEqualTo("Some Person3");
+		assertThat(person.getSurname()).isEqualTo("Person3");
+		assertThat(person.getDesc().get(0)).isEqualTo("New Description");
+		assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
+		assertThat(person.getEntryUuid()).isEqualTo(entryUuid);
+	}
 
-    @Test
-    public void testUpdateWithChangedDn() {
-        PersonWithDnAnnotations person = tested.findOne(query()
-                .where("cn").is("Some Person3"), PersonWithDnAnnotations.class);
+	@Test
+	public void testUpdateWithChangedDn() {
+		PersonWithDnAnnotations person = tested.findOne(query()
+				.where("cn").is("Some Person3"), PersonWithDnAnnotations.class);
 
-        // This should make the entry move
-        person.setCountry("Norway");
-        String entryUuid = person.getEntryUuid();
-        assertThat(entryUuid).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
-        tested.update(person);
+		// This should make the entry move
+		person.setCountry("Norway");
+		String entryUuid = person.getEntryUuid();
+		assertThat(entryUuid).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
+		tested.update(person);
 
-        person = tested.findByDn(
-                LdapUtils.newLdapName("cn=Some Person3, ou=company1, ou=Norway"),
-                PersonWithDnAnnotations.class);
+		person = tested.findByDn(
+				LdapUtils.newLdapName("cn=Some Person3, ou=company1, ou=Norway"),
+				PersonWithDnAnnotations.class);
 
-        assertThat(person.getCommonName()).isEqualTo("Some Person3");
-        assertThat(person.getSurname()).isEqualTo("Person3");
-        assertThat(person.getCountry()).isEqualTo("Norway");
-        assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
-        assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
-        assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
-        assertThat(person.getEntryUuid()).isNotEqualTo(entryUuid);
-    }
+		assertThat(person.getCommonName()).isEqualTo("Some Person3");
+		assertThat(person.getSurname()).isEqualTo("Person3");
+		assertThat(person.getCountry()).isEqualTo("Norway");
+		assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
+		assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
+		assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
+		assertThat(person.getEntryUuid()).isNotEqualTo(entryUuid);
+	}
 }

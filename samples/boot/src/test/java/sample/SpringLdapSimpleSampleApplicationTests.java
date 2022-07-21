@@ -17,24 +17,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class SpringLdapSimpleSampleApplicationTests {
 
-    @Autowired
-    MockMvc mvc;
+	@Autowired
+	MockMvc mvc;
 
-    @Test
-    void indexWhenCorrectUsernameAndPasswordThenAuthenticates() throws Exception {
-        HttpHeaders http = new HttpHeaders();
-        http.setBasicAuth("bob", "bobspassword");
-        this.mvc.perform(get("/").headers(http))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Hello, bob"));
-    }
+	@Test
+	void indexWhenCorrectUsernameAndPasswordThenAuthenticates() throws Exception {
+		HttpHeaders http = new HttpHeaders();
+		http.setBasicAuth("bob", "bobspassword");
+		this.mvc.perform(get("/").headers(http))
+				.andExpect(status().isOk())
+				.andExpect(content().string("Hello, bob"));
+	}
 
-    @Test
-    void cnWhenCorrectUsernameAndPasswordThenShowsCommonName() throws Exception {
-        HttpHeaders http = new HttpHeaders();
-        http.setBasicAuth("bob", "bobspassword");
-        this.mvc.perform(get("/cn").headers(http))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0]").value("Bob Hamilton"));
-    }
+	@Test
+	void cnWhenCorrectUsernameAndPasswordThenShowsCommonName() throws Exception {
+		HttpHeaders http = new HttpHeaders();
+		http.setBasicAuth("bob", "bobspassword");
+		this.mvc.perform(get("/cn").headers(http))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.[0]").value("Bob Hamilton"));
+	}
 }

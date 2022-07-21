@@ -27,43 +27,43 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class WhitespaceWildcardsFilterTest {
 
-    @Test
-    public void testEncodeValue_blank() {
+	@Test
+	public void testEncodeValue_blank() {
 
-        // blank
-        assertThat("*").isEqualTo(new WhitespaceWildcardsFilter("", null)
-                .getEncodedValue());
-        assertThat("*").isEqualTo(new WhitespaceWildcardsFilter("", " ")
-                .getEncodedValue());
-        assertThat("*").isEqualTo(new WhitespaceWildcardsFilter("", "  ")
-                .getEncodedValue());
-        assertThat("*").isEqualTo(new WhitespaceWildcardsFilter("", "\t")
-                .getEncodedValue());
+		// blank
+		assertThat("*").isEqualTo(new WhitespaceWildcardsFilter("", null)
+				.getEncodedValue());
+		assertThat("*").isEqualTo(new WhitespaceWildcardsFilter("", " ")
+				.getEncodedValue());
+		assertThat("*").isEqualTo(new WhitespaceWildcardsFilter("", "  ")
+				.getEncodedValue());
+		assertThat("*").isEqualTo(new WhitespaceWildcardsFilter("", "\t")
+				.getEncodedValue());
 
-    }
+	}
 
-    @Test
-    public void testEncodeValue_normal() {
+	@Test
+	public void testEncodeValue_normal() {
 
-        assertThat("*foo*").isEqualTo(new WhitespaceWildcardsFilter("", "foo")
-                .getEncodedValue());
-        assertThat("*foo*bar*").isEqualTo(new WhitespaceWildcardsFilter("", "foo bar")
-                .getEncodedValue());
-        assertThat(new WhitespaceWildcardsFilter("", " foo bar ")
-                .getEncodedValue()).isEqualTo("*foo*bar*");
-        assertThat(new WhitespaceWildcardsFilter("",
-                " \t foo \n bar \r ").getEncodedValue()).isEqualTo("*foo*bar*");
-    }
+		assertThat("*foo*").isEqualTo(new WhitespaceWildcardsFilter("", "foo")
+				.getEncodedValue());
+		assertThat("*foo*bar*").isEqualTo(new WhitespaceWildcardsFilter("", "foo bar")
+				.getEncodedValue());
+		assertThat(new WhitespaceWildcardsFilter("", " foo bar ")
+				.getEncodedValue()).isEqualTo("*foo*bar*");
+		assertThat(new WhitespaceWildcardsFilter("",
+				" \t foo \n bar \r ").getEncodedValue()).isEqualTo("*foo*bar*");
+	}
 
-    @Test
-    public void testEncodeValue_escape() {
+	@Test
+	public void testEncodeValue_escape() {
 
-        assertThat("*\\28\\2a\\29*").isEqualTo(new WhitespaceWildcardsFilter("", "(*)")
-                .getEncodedValue());
-        assertThat("*\\2a*").isEqualTo(new WhitespaceWildcardsFilter("", "*")
-                .getEncodedValue());
-        assertThat("*\\5c*").isEqualTo(new WhitespaceWildcardsFilter("", " \\ ")
-                .getEncodedValue());
+		assertThat("*\\28\\2a\\29*").isEqualTo(new WhitespaceWildcardsFilter("", "(*)")
+				.getEncodedValue());
+		assertThat("*\\2a*").isEqualTo(new WhitespaceWildcardsFilter("", "*")
+				.getEncodedValue());
+		assertThat("*\\5c*").isEqualTo(new WhitespaceWildcardsFilter("", " \\ ")
+				.getEncodedValue());
 
-    }
+	}
 }

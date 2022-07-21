@@ -30,52 +30,52 @@ import java.util.Set;
  */
 @Entry(objectClasses = {"groupOfNames", "top"}, base = "ou=Groups")
 public final class Group {
-    @Id
-    private Name id;
+	@Id
+	private Name id;
 
-    @Attribute(name = "cn")
-    @DnAttribute(value = "cn", index=1)
-    private String name;
+	@Attribute(name = "cn")
+	@DnAttribute(value = "cn", index=1)
+	private String name;
 
-    @Attribute(name = "description")
-    private String description;
+	@Attribute(name = "description")
+	private String description;
 
-    @Attribute(name = "member")
-    private Set<Name> members = new HashSet<Name>();
+	@Attribute(name = "member")
+	private Set<Name> members = new HashSet<Name>();
 
-    public String getDescription() {
-        return description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public Set<Name> getMembers() {
-        return  members;
-    }
+	public Set<Name> getMembers() {
+		return  members;
+	}
 
-    public void addMember(Name newMember) {
-        members.add(newMember);
-    }
+	public void addMember(Name newMember) {
+		members.add(newMember);
+	}
 
-    public void removeMember(Name member) {
-        members.remove(member);
-    }
+	public void removeMember(Name member) {
+		members.remove(member);
+	}
 
-    public Name getId() {
-        return id;
-    }
+	public Name getId() {
+		return id;
+	}
 
-    public void setId(Name id) {
-        this.id = id;
-    }
+	public void setId(Name id) {
+		this.id = id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 }

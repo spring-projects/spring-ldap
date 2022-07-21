@@ -64,19 +64,19 @@ public class ContextSourceAndHibernateTransactionManagerLdap179IntegrationTest e
 		person.setCountry("Sweden");
 		person.setCompany("company1");
 
-        try {
-            this.dummyDao.create(person);
-        } catch (CannotCreateTransactionException expected) {
-            assertThat(expected.getCause() instanceof CommunicationException).isTrue();
-        }
+		try {
+			this.dummyDao.create(person);
+		} catch (CannotCreateTransactionException expected) {
+			assertThat(expected.getCause() instanceof CommunicationException).isTrue();
+		}
 
-        // Make sure there is no transaction synchronization
-        assertThat(TransactionSynchronizationManager.isSynchronizationActive()).isFalse();
+		// Make sure there is no transaction synchronization
+		assertThat(TransactionSynchronizationManager.isSynchronizationActive()).isFalse();
 
-        try {
-            this.dummyDao.create(person);
-        } catch (CannotCreateTransactionException expected) {
-            assertThat(expected.getCause() instanceof CommunicationException).isTrue();
-        }
-    }
+		try {
+			this.dummyDao.create(person);
+		} catch (CannotCreateTransactionException expected) {
+			assertThat(expected.getCause() instanceof CommunicationException).isTrue();
+		}
+	}
 }

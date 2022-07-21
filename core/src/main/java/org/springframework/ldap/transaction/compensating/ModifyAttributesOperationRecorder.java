@@ -42,127 +42,127 @@ import java.util.Set;
  * @since 1.2
  */
 public class ModifyAttributesOperationRecorder implements
-        CompensatingTransactionOperationRecorder {
+		CompensatingTransactionOperationRecorder {
 
-    private LdapOperations ldapOperations;
+	private LdapOperations ldapOperations;
 
-    public ModifyAttributesOperationRecorder(LdapOperations ldapOperations) {
-        this.ldapOperations = ldapOperations;
-    }
+	public ModifyAttributesOperationRecorder(LdapOperations ldapOperations) {
+		this.ldapOperations = ldapOperations;
+	}
 
-    /*
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
-     */
-    public CompensatingTransactionOperationExecutor recordOperation(
-            Object[] args) {
-        Assert.notNull(args);
-        Name dn = LdapTransactionUtils.getFirstArgumentAsName(args);
-        if (args.length != 2 || !(args[1] instanceof ModificationItem[])) {
-            throw new IllegalArgumentException(
-                    "Unexpected arguments to ModifyAttributes operation");
-        }
+	/*
+	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
+	 */
+	public CompensatingTransactionOperationExecutor recordOperation(
+			Object[] args) {
+		Assert.notNull(args);
+		Name dn = LdapTransactionUtils.getFirstArgumentAsName(args);
+		if (args.length != 2 || !(args[1] instanceof ModificationItem[])) {
+			throw new IllegalArgumentException(
+					"Unexpected arguments to ModifyAttributes operation");
+		}
 
-        ModificationItem[] incomingModifications = (ModificationItem[]) args[1];
+		ModificationItem[] incomingModifications = (ModificationItem[]) args[1];
 
-        Set<String> set = new HashSet<String>();
-        for (ModificationItem incomingModification : incomingModifications) {
-            set.add(incomingModification.getAttribute().getID());
-        }
+		Set<String> set = new HashSet<String>();
+		for (ModificationItem incomingModification : incomingModifications) {
+			set.add(incomingModification.getAttribute().getID());
+		}
 
-        // Get the current values of all referred Attributes.
-        String[] attributeNameArray = set.toArray(new String[set.size()]);
+		// Get the current values of all referred Attributes.
+		String[] attributeNameArray = set.toArray(new String[set.size()]);
 
-        // LDAP-234: We need to explicitly an IncrementalAttributesMapper in
-        // case we're working against AD and there are too many attribute values to be returned
-        // by one query.
-        IncrementalAttributesMapper<?> attributesMapper = getAttributesMapper(attributeNameArray);
-        while (attributesMapper.hasMore()) {
-            ldapOperations.lookup(dn, attributesMapper.getAttributesForLookup(), attributesMapper);
-        }
+		// LDAP-234: We need to explicitly an IncrementalAttributesMapper in
+		// case we're working against AD and there are too many attribute values to be returned
+		// by one query.
+		IncrementalAttributesMapper<?> attributesMapper = getAttributesMapper(attributeNameArray);
+		while (attributesMapper.hasMore()) {
+			ldapOperations.lookup(dn, attributesMapper.getAttributesForLookup(), attributesMapper);
+		}
 
-        Attributes currentAttributes = attributesMapper.getCollectedAttributes();
+		Attributes currentAttributes = attributesMapper.getCollectedAttributes();
 
-        // Get a compensating ModificationItem for each of the incoming
-        // modification.
-        ModificationItem[] rollbackItems = new ModificationItem[incomingModifications.length];
-        for (int i = 0; i < incomingModifications.length; i++) {
-            rollbackItems[i] = getCompensatingModificationItem(
-                    currentAttributes, incomingModifications[i]);
-        }
+		// Get a compensating ModificationItem for each of the incoming
+		// modification.
+		ModificationItem[] rollbackItems = new ModificationItem[incomingModifications.length];
+		for (int i = 0; i < incomingModifications.length; i++) {
+			rollbackItems[i] = getCompensatingModificationItem(
+					currentAttributes, incomingModifications[i]);
+		}
 
-        return new ModifyAttributesOperationExecutor(ldapOperations, dn,
-                incomingModifications, rollbackItems);
-    }
+		return new ModifyAttributesOperationExecutor(ldapOperations, dn,
+				incomingModifications, rollbackItems);
+	}
 
-    /**
-     * Get an {@link AttributesMapper} that just returns the supplied
-     * Attributes.
-     * 
-     * @return the {@link AttributesMapper} to use for getting the current
-     *         Attributes of the target DN.
-     */
-    IncrementalAttributesMapper<?> getAttributesMapper(String[] attributeNames) {
-        return new DefaultIncrementalAttributesMapper(attributeNames);
-    }
+	/**
+	 * Get an {@link AttributesMapper} that just returns the supplied
+	 * Attributes.
+	 * 
+	 * @return the {@link AttributesMapper} to use for getting the current
+	 *		 Attributes of the target DN.
+	 */
+	IncrementalAttributesMapper<?> getAttributesMapper(String[] attributeNames) {
+		return new DefaultIncrementalAttributesMapper(attributeNames);
+	}
 
-    /**
-     * Get a ModificationItem to use for rollback of the supplied modification.
-     * 
-     * @param originalAttributes
-     *            All Attributes of the target DN that are affected of any of
-     *            the ModificationItems.
-     * @param modificationItem
-     *            the ModificationItem to create a rollback item for.
-     * @return A ModificationItem to use for rollback of the supplied
-     *         ModificationItem.
-     */
-    protected ModificationItem getCompensatingModificationItem(
-            Attributes originalAttributes, ModificationItem modificationItem) {
-        Attribute modificationAttribute = modificationItem.getAttribute();
-        Attribute originalAttribute = originalAttributes
-                .get(modificationAttribute.getID());
+	/**
+	 * Get a ModificationItem to use for rollback of the supplied modification.
+	 * 
+	 * @param originalAttributes
+	 *			All Attributes of the target DN that are affected of any of
+	 *			the ModificationItems.
+	 * @param modificationItem
+	 *			the ModificationItem to create a rollback item for.
+	 * @return A ModificationItem to use for rollback of the supplied
+	 *		 ModificationItem.
+	 */
+	protected ModificationItem getCompensatingModificationItem(
+			Attributes originalAttributes, ModificationItem modificationItem) {
+		Attribute modificationAttribute = modificationItem.getAttribute();
+		Attribute originalAttribute = originalAttributes
+				.get(modificationAttribute.getID());
 
-        if (modificationItem.getModificationOp() == DirContext.REMOVE_ATTRIBUTE) {
-            if (modificationAttribute.size() == 0) {
-                // If the modification attribute size it means that the
-                // Attribute should be removed entirely - we should store a
-                // ModificationItem to restore all present values for rollback.
-                return new ModificationItem(DirContext.ADD_ATTRIBUTE,
-                        (Attribute) originalAttribute.clone());
-            } else {
-                // The rollback modification will be to re-add the removed
-                // attribute values.
-                return new ModificationItem(DirContext.ADD_ATTRIBUTE,
-                        (Attribute) modificationAttribute.clone());
-            }
-        } else if (modificationItem.getModificationOp() == DirContext.REPLACE_ATTRIBUTE) {
-            if (originalAttribute != null) {
-                return new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
-                        (Attribute) originalAttribute.clone());
-            } else {
-                // The attribute doesn't previously exist - the rollback
-                // operation will be to remove the attribute.
-                return new ModificationItem(DirContext.REMOVE_ATTRIBUTE,
-                        new BasicAttribute(modificationAttribute.getID()));
-            }
-        } else {
-            // An ADD_ATTRIBUTE operation
-            if (originalAttribute == null) {
-                // The attribute doesn't previously exist - the rollback
-                // operation will be to remove the attribute.
-                return new ModificationItem(DirContext.REMOVE_ATTRIBUTE,
-                        new BasicAttribute(modificationAttribute.getID()));
-            } else {
-                // The attribute does exist before - we should store the
-                // previous value and it should be used for replacing in
-                // rollback.
-                return new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
-                        (Attribute) originalAttribute.clone());
-            }
-        }
-    }
+		if (modificationItem.getModificationOp() == DirContext.REMOVE_ATTRIBUTE) {
+			if (modificationAttribute.size() == 0) {
+				// If the modification attribute size it means that the
+				// Attribute should be removed entirely - we should store a
+				// ModificationItem to restore all present values for rollback.
+				return new ModificationItem(DirContext.ADD_ATTRIBUTE,
+						(Attribute) originalAttribute.clone());
+			} else {
+				// The rollback modification will be to re-add the removed
+				// attribute values.
+				return new ModificationItem(DirContext.ADD_ATTRIBUTE,
+						(Attribute) modificationAttribute.clone());
+			}
+		} else if (modificationItem.getModificationOp() == DirContext.REPLACE_ATTRIBUTE) {
+			if (originalAttribute != null) {
+				return new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
+						(Attribute) originalAttribute.clone());
+			} else {
+				// The attribute doesn't previously exist - the rollback
+				// operation will be to remove the attribute.
+				return new ModificationItem(DirContext.REMOVE_ATTRIBUTE,
+						new BasicAttribute(modificationAttribute.getID()));
+			}
+		} else {
+			// An ADD_ATTRIBUTE operation
+			if (originalAttribute == null) {
+				// The attribute doesn't previously exist - the rollback
+				// operation will be to remove the attribute.
+				return new ModificationItem(DirContext.REMOVE_ATTRIBUTE,
+						new BasicAttribute(modificationAttribute.getID()));
+			} else {
+				// The attribute does exist before - we should store the
+				// previous value and it should be used for replacing in
+				// rollback.
+				return new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
+						(Attribute) originalAttribute.clone());
+			}
+		}
+	}
 
-    LdapOperations getLdapOperations() {
-        return ldapOperations;
-    }
+	LdapOperations getLdapOperations() {
+		return ldapOperations;
+	}
 }

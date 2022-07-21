@@ -42,26 +42,26 @@ public class DigestMd5AuthenticationITest extends AbstractJUnit4SpringContextTes
 	@Autowired
 	private LdapTemplate ldapTemplate;
 
-    @Autowired
-    @Qualifier("populateContextSource")
-    private ContextSource contextSource;
+	@Autowired
+	@Qualifier("populateContextSource")
+	private ContextSource contextSource;
 
-    @Before
-    public void prepareTestedInstance() throws Exception {
-        LdapTestUtils.cleanAndSetup(
-                contextSource,
-                LdapUtils.newLdapName("ou=People"),
-                new ClassPathResource("/setup_data.ldif"));
-    }
+	@Before
+	public void prepareTestedInstance() throws Exception {
+		LdapTestUtils.cleanAndSetup(
+				contextSource,
+				LdapUtils.newLdapName("ou=People"),
+				new ClassPathResource("/setup_data.ldif"));
+	}
 
-    @After
-    public void cleanup() throws Exception {
-        LdapTestUtils.clearSubContexts(contextSource, LdapUtils.newLdapName("ou=People"));
-    }
+	@After
+	public void cleanup() throws Exception {
+		LdapTestUtils.clearSubContexts(contextSource, LdapUtils.newLdapName("ou=People"));
+	}
 
-    @Test
+	@Test
 	public void testAuthenticate() {
-        DirContext ctxt = ldapTemplate.getContextSource().getContext("some.person1", "password");
-        assertThat(ctxt).isNotNull();
+		DirContext ctxt = ldapTemplate.getContextSource().getContext("some.person1", "password");
+		assertThat(ctxt).isNotNull();
 	}
 }

@@ -29,40 +29,40 @@ import java.util.Arrays;
  * @author Mattias Hellborg Arthursson
  */
 public class AttributeCheckContextMapper implements ContextMapper<DirContextAdapter> {
-    private String[] expectedAttributes = new String[0];
+	private String[] expectedAttributes = new String[0];
 
-    private String[] expectedValues = new String[0];
+	private String[] expectedValues = new String[0];
 
-    private String[] absentAttributes = new String[0];
+	private String[] absentAttributes = new String[0];
 
-    public DirContextAdapter mapFromContext(Object ctx) {
-        DirContextAdapter adapter = (DirContextAdapter) ctx;
-        Assert.assertEquals("Values and attributes need to have the same length ",
-                expectedAttributes.length, expectedValues.length);
-        for (int i = 0; i < expectedAttributes.length; i++) {
-            String attributeValue = adapter
-                    .getStringAttribute(expectedAttributes[i]);
-            Assert.assertNotNull("Attribute " + expectedAttributes[i]
-                    + " was not present", attributeValue);
-            Assert.assertEquals(expectedValues[i], attributeValue);
-        }
+	public DirContextAdapter mapFromContext(Object ctx) {
+		DirContextAdapter adapter = (DirContextAdapter) ctx;
+		Assert.assertEquals("Values and attributes need to have the same length ",
+				expectedAttributes.length, expectedValues.length);
+		for (int i = 0; i < expectedAttributes.length; i++) {
+			String attributeValue = adapter
+					.getStringAttribute(expectedAttributes[i]);
+			Assert.assertNotNull("Attribute " + expectedAttributes[i]
+					+ " was not present", attributeValue);
+			Assert.assertEquals(expectedValues[i], attributeValue);
+		}
 
-        for (String absentAttribute : absentAttributes) {
-            Assert.assertNull(adapter.getStringAttribute(absentAttribute));
-        }
+		for (String absentAttribute : absentAttributes) {
+			Assert.assertNull(adapter.getStringAttribute(absentAttribute));
+		}
 
-        return adapter;
-    }
+		return adapter;
+	}
 
-    public void setAbsentAttributes(String[] absentAttributes) {
-        this.absentAttributes = Arrays.copyOf(absentAttributes, absentAttributes.length);
-    }
+	public void setAbsentAttributes(String[] absentAttributes) {
+		this.absentAttributes = Arrays.copyOf(absentAttributes, absentAttributes.length);
+	}
 
-    public void setExpectedAttributes(String[] expectedAttributes) {
-        this.expectedAttributes = Arrays.copyOf(expectedAttributes, expectedAttributes.length);
-    }
+	public void setExpectedAttributes(String[] expectedAttributes) {
+		this.expectedAttributes = Arrays.copyOf(expectedAttributes, expectedAttributes.length);
+	}
 
-    public void setExpectedValues(String[] expectedValues) {
-        this.expectedValues = Arrays.copyOf(expectedValues, expectedValues.length);
-    }
+	public void setExpectedValues(String[] expectedValues) {
+		this.expectedValues = Arrays.copyOf(expectedValues, expectedValues.length);
+	}
 }

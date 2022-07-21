@@ -24,15 +24,15 @@ package org.springframework.ldap;
  */
 public class UncategorizedLdapException extends NamingException {
 
-    public UncategorizedLdapException(String msg) {
-        super(msg);
-    }
+	public UncategorizedLdapException(String msg) {
+		super(msg);
+	}
 
-    public UncategorizedLdapException(String msg, Throwable cause) {
-        super(msg, cause);
-    }
+	public UncategorizedLdapException(String msg, Throwable cause) {
+		super(msg, cause);
+	}
 
-    public UncategorizedLdapException(Throwable cause) {
-        super("Uncategorized exception occured during LDAP processing", cause);
-    }
+	public UncategorizedLdapException(Throwable cause) {
+		super("Uncategorized exception occured during LDAP processing", cause);
+	}
 }

@@ -56,15 +56,15 @@ public class LdapTemplateNoBaseSuffixITest extends AbstractLdapTemplateIntegrati
 	 */
 	@Test
 	public void testLookup_Plain() {
-        String expectedDn = "cn=Some Person2, ou=company1, ou=Sweden," + base;
-        DirContextAdapter result = (DirContextAdapter) tested.lookup(expectedDn);
+		String expectedDn = "cn=Some Person2, ou=company1, ou=Sweden," + base;
+		DirContextAdapter result = (DirContextAdapter) tested.lookup(expectedDn);
 
 		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person2");
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person2");
 		assertThat(result.getStringAttribute("description")).isEqualTo("Sweden, Company1, Some Person2");
 
-        LdapName expectedName = LdapUtils.newLdapName(expectedDn);
-        assertThat(result.getDn()).isEqualTo(expectedName);
+		LdapName expectedName = LdapUtils.newLdapName(expectedDn);
+		assertThat(result.getDn()).isEqualTo(expectedName);
 		assertThat(result.getNameInNamespace()).isEqualTo(expectedDn);
 	}
 

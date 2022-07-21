@@ -23,5 +23,5 @@ import java.util.Map;
  * @author Mattias Hellborg Arthursson
  */
 public interface DepartmentRepo {
-    Map<String, List<String>> getDepartmentMap();
+	Map<String, List<String>> getDepartmentMap();
 }

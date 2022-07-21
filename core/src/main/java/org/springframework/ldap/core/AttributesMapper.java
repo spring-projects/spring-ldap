@@ -40,16 +40,16 @@ import javax.naming.directory.Attributes;
  * @author Mattias Hellborg Arthursson
  */
 public interface AttributesMapper<T> {
-    /**
-     * Map Attributes to an object. The supplied attributes are the attributes
-     * from a single SearchResult.
-     * 
-     * @param attributes
-     *            attributes from a SearchResult.
-     * @return an object built from the attributes.
-     * @throws NamingException
-     *             if any error occurs mapping the attributes
-     */
-    T mapFromAttributes(Attributes attributes)
-            throws NamingException;
+	/**
+	 * Map Attributes to an object. The supplied attributes are the attributes
+	 * from a single SearchResult.
+	 * 
+	 * @param attributes
+	 *			attributes from a SearchResult.
+	 * @return an object built from the attributes.
+	 * @throws NamingException
+	 *			 if any error occurs mapping the attributes
+	 */
+	T mapFromAttributes(Attributes attributes)
+			throws NamingException;
 }

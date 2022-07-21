@@ -36,161 +36,161 @@ import javax.naming.directory.SearchResult;
  * <br>
  * Configuration:
  * <table border="1" summary="Configuration">
- *     <tr>
- *         <th align="left">Property</th>
- *         <th align="left">Description</th>
- *         <th align="left">Required</th>
- *         <th align="left">Default</th>
- *     </tr>
- *     <tr>
- *         <td valign="top">base</td>
- *         <td valign="top">
- *             The name parameter to the search method.
- *         </td>
- *         <td valign="top">No</td>
- *         <td valign="top">""</td>
- *     </tr>
- *     <tr>
- *         <td valign="top">filter</td>
- *         <td valign="top">
- *             The filter parameter to the search method.
- *         </td>
- *         <td valign="top">No</td>
- *         <td valign="top">"objectclass=*"</td>
- *     </tr>
- *     <tr>
- *         <td valign="top">searchControls</td>
- *         <td valign="top">
- *             The {@link SearchControls} parameter to the search method.
- *         </td>
- *         <td valign="top">No</td>
- *         <td valign="top">
- *             {@link SearchControls#setCountLimit(long)} = 1<br>
- *             {@link SearchControls#setReturningAttributes(String[])} = new String[] { "objectclass" }<br>
- *             {@link SearchControls#setTimeLimit(int)} = 500
- *         </td>
- *     </tr>
+ *	 <tr>
+ *		 <th align="left">Property</th>
+ *		 <th align="left">Description</th>
+ *		 <th align="left">Required</th>
+ *		 <th align="left">Default</th>
+ *	 </tr>
+ *	 <tr>
+ *		 <td valign="top">base</td>
+ *		 <td valign="top">
+ *			 The name parameter to the search method.
+ *		 </td>
+ *		 <td valign="top">No</td>
+ *		 <td valign="top">""</td>
+ *	 </tr>
+ *	 <tr>
+ *		 <td valign="top">filter</td>
+ *		 <td valign="top">
+ *			 The filter parameter to the search method.
+ *		 </td>
+ *		 <td valign="top">No</td>
+ *		 <td valign="top">"objectclass=*"</td>
+ *	 </tr>
+ *	 <tr>
+ *		 <td valign="top">searchControls</td>
+ *		 <td valign="top">
+ *			 The {@link SearchControls} parameter to the search method.
+ *		 </td>
+ *		 <td valign="top">No</td>
+ *		 <td valign="top">
+ *			 {@link SearchControls#setCountLimit(long)} = 1<br>
+ *			 {@link SearchControls#setReturningAttributes(String[])} = new String[] { "objectclass" }<br>
+ *			 {@link SearchControls#setTimeLimit(int)} = 500
+ *		 </td>
+ *	 </tr>
  * </table>
  * 
  * @author Eric Dalquist
  */
 public class DefaultDirContextValidator implements DirContextValidator {
-    public static final String DEFAULT_FILTER = "objectclass=*";
-    private static final int DEFAULT_TIME_LIMIT = 500;
+	public static final String DEFAULT_FILTER = "objectclass=*";
+	private static final int DEFAULT_TIME_LIMIT = 500;
 
-    /**
-     * Logger for this class and sub-classes
-     */
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-    
-    private String base;
-    private String filter;
-    private SearchControls searchControls;
-    
-    /**
-     * Create the default validator, creates {@link SearchControls} with search scope <code>OBJECT_SCOPE</code>,
-     * a countLimit of 1, returningAttributes of objectclass and timeLimit of 500.
-     * The default base is an empty string and the default filter is objectclass=*
-     */
-    public DefaultDirContextValidator() {
-        this(SearchControls.OBJECT_SCOPE);        
-    }
+	/**
+	 * Logger for this class and sub-classes
+	 */
+	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	private String base;
+	private String filter;
+	private SearchControls searchControls;
+	
+	/**
+	 * Create the default validator, creates {@link SearchControls} with search scope <code>OBJECT_SCOPE</code>,
+	 * a countLimit of 1, returningAttributes of objectclass and timeLimit of 500.
+	 * The default base is an empty string and the default filter is objectclass=*
+	 */
+	public DefaultDirContextValidator() {
+		this(SearchControls.OBJECT_SCOPE);		
+	}
 
-    /**
-     * Create a validator with all the defaults of the default constructor, but with the search scope set to the
-     * referred value.
-     *
-     * @param searchScope The searchScope to be set in the default <code>SearchControls</code>
-     */
-    public DefaultDirContextValidator(int searchScope) {
-        this.searchControls = new SearchControls();
-        this.searchControls.setSearchScope(searchScope);
-        this.searchControls.setCountLimit(1);
-        this.searchControls.setReturningAttributes(new String[] { "objectclass" });
-        this.searchControls.setTimeLimit(DEFAULT_TIME_LIMIT);
+	/**
+	 * Create a validator with all the defaults of the default constructor, but with the search scope set to the
+	 * referred value.
+	 *
+	 * @param searchScope The searchScope to be set in the default <code>SearchControls</code>
+	 */
+	public DefaultDirContextValidator(int searchScope) {
+		this.searchControls = new SearchControls();
+		this.searchControls.setSearchScope(searchScope);
+		this.searchControls.setCountLimit(1);
+		this.searchControls.setReturningAttributes(new String[] { "objectclass" });
+		this.searchControls.setTimeLimit(DEFAULT_TIME_LIMIT);
 
-        this.base = "";
+		this.base = "";
 
-        this.filter = DEFAULT_FILTER;
-    }
-    
-    /**
-     * @return the baseName
-     */
-    public String getBase() {
-        return this.base;
-    }
-    /**
-     * @param base the baseName to set
-     */
-    public void setBase(String base) {
-        this.base = base;
-    }
-    /**
-     * @return the filter
-     */
-    public String getFilter() {
-        return this.filter;
-    }
-    /**
-     * @param filter the filter to set
-     */
-    public void setFilter(String filter) {
-        if (filter == null) {
-            throw new IllegalArgumentException("filter may not be null");
-        }
-        
-        this.filter = filter;
-    }
-    /**
-     * @return the searchControls
-     */
-    public SearchControls getSearchControls() {
-        return this.searchControls;
-    }
-    /**
-     * @param searchControls the searchControls to set
-     */
-    public void setSearchControls(SearchControls searchControls) {
-        if (searchControls == null) {
-            throw new IllegalArgumentException("searchControls may not be null");
-        }
-        
-        this.searchControls = searchControls;
-    }
+		this.filter = DEFAULT_FILTER;
+	}
+	
+	/**
+	 * @return the baseName
+	 */
+	public String getBase() {
+		return this.base;
+	}
+	/**
+	 * @param base the baseName to set
+	 */
+	public void setBase(String base) {
+		this.base = base;
+	}
+	/**
+	 * @return the filter
+	 */
+	public String getFilter() {
+		return this.filter;
+	}
+	/**
+	 * @param filter the filter to set
+	 */
+	public void setFilter(String filter) {
+		if (filter == null) {
+			throw new IllegalArgumentException("filter may not be null");
+		}
+		
+		this.filter = filter;
+	}
+	/**
+	 * @return the searchControls
+	 */
+	public SearchControls getSearchControls() {
+		return this.searchControls;
+	}
+	/**
+	 * @param searchControls the searchControls to set
+	 */
+	public void setSearchControls(SearchControls searchControls) {
+		if (searchControls == null) {
+			throw new IllegalArgumentException("searchControls may not be null");
+		}
+		
+		this.searchControls = searchControls;
+	}
 
 
-    /**
-     * @see DirContextValidator#validateDirContext(DirContextType, DirContext)
-     */
-    public boolean validateDirContext(DirContextType contextType, DirContext dirContext) {
-        Assert.notNull(contextType, "contextType may not be null");
-        Assert.notNull(dirContext, "dirContext may not be null");
-        
-        NamingEnumeration<SearchResult> searchResults = null;
-        try {
-            searchResults = dirContext.search(this.base, this.filter, this.searchControls);
+	/**
+	 * @see DirContextValidator#validateDirContext(DirContextType, DirContext)
+	 */
+	public boolean validateDirContext(DirContextType contextType, DirContext dirContext) {
+		Assert.notNull(contextType, "contextType may not be null");
+		Assert.notNull(dirContext, "dirContext may not be null");
+		
+		NamingEnumeration<SearchResult> searchResults = null;
+		try {
+			searchResults = dirContext.search(this.base, this.filter, this.searchControls);
 
-            if (searchResults.hasMore()) {
-                this.logger.debug("DirContext '{}' passed validation.", dirContext);
+			if (searchResults.hasMore()) {
+				this.logger.debug("DirContext '{}' passed validation.", dirContext);
  
-                return true;
-            }
-        }
-        catch (Exception e) {
-            this.logger.debug("DirContext '{}' failed validation with an exception.", dirContext, e);
-            return false;
-        }
-        finally {
-            if (searchResults != null) {
-                try {
-                    searchResults.close();
-                } catch (NamingException ignored) {
-                }
-            }
-        }
+				return true;
+			}
+		}
+		catch (Exception e) {
+			this.logger.debug("DirContext '{}' failed validation with an exception.", dirContext, e);
+			return false;
+		}
+		finally {
+			if (searchResults != null) {
+				try {
+					searchResults.close();
+				} catch (NamingException ignored) {
+				}
+			}
+		}
 
-        this.logger.debug("DirContext '{}' failed validation.", dirContext);
-        return false;
-    }
+		this.logger.debug("DirContext '{}' failed validation.", dirContext);
+		return false;
+	}
 }

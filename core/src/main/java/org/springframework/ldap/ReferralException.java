@@ -25,7 +25,7 @@ package org.springframework.ldap;
  */
 public class ReferralException extends NamingException {
 
-    public ReferralException(javax.naming.ReferralException cause) {
-        super(cause);
-    }
+	public ReferralException(javax.naming.ReferralException cause) {
+		super(cause);
+	}
 }

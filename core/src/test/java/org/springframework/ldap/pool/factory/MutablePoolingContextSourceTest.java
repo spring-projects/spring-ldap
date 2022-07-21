@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
  */
 public class MutablePoolingContextSourceTest extends AbstractPoolTestCase {
 
-    @Test
+	@Test
 	public void testGetReadOnlyLdapContext() throws Exception {
 
 		when(contextSourceMock.getReadOnlyContext()).thenReturn(ldapContextMock);

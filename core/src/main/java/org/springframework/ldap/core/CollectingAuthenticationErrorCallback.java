@@ -46,12 +46,12 @@ public final class CollectingAuthenticationErrorCallback implements Authenticati
 		return error;
 	}
 
-    /**
-     * Check whether this callback has collected an error.
-     *
-     * @return <code>true</code> if an error has been collected, <code>false</code> otherwise.
-     */
-    public boolean hasError() {
-        return error != null;
-    }
+	/**
+	 * Check whether this callback has collected an error.
+	 *
+	 * @return <code>true</code> if an error has been collected, <code>false</code> otherwise.
+	 */
+	public boolean hasError() {
+		return error != null;
+	}
 }

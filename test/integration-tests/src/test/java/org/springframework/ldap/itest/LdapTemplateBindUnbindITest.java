@@ -57,15 +57,15 @@ public class LdapTemplateBindUnbindITest extends
 		verifyCleanup();
 	}
 
-    @Test
-    public void testBindGroupOfUniqueNamesWithNameValues() {
-        DirContextAdapter ctx = new DirContextAdapter(LdapUtils.newLdapName("cn=TEST,ou=groups"));
-        ctx.addAttributeValue("cn", "TEST");
-        ctx.addAttributeValue("objectclass", "top");
-        ctx.addAttributeValue("objectclass", "groupOfUniqueNames");
-        ctx.addAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden," + base));
-        tested.bind(ctx);
-    }
+	@Test
+	public void testBindGroupOfUniqueNamesWithNameValues() {
+		DirContextAdapter ctx = new DirContextAdapter(LdapUtils.newLdapName("cn=TEST,ou=groups"));
+		ctx.addAttributeValue("cn", "TEST");
+		ctx.addAttributeValue("objectclass", "top");
+		ctx.addAttributeValue("objectclass", "groupOfUniqueNames");
+		ctx.addAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden," + base));
+		tested.bind(ctx);
+	}
 
 	@Test
 	public void testBindAndUnbindWithAttributesUsingLdapName() {

@@ -25,21 +25,21 @@ import java.io.StringReader;
  * @deprecated {@link DistinguishedName} and associated classes are deprecated as of 2.0.
  */
 public final class DefaultDnParserFactory {
-    /**
-     * Not to be instantiated.
-     */
-    private DefaultDnParserFactory() {
+	/**
+	 * Not to be instantiated.
+	 */
+	private DefaultDnParserFactory() {
 
-    }
+	}
 
-    /**
-     * Create a new DnParser instance.
-     * 
-     * @param string
-     *            the DN String to be parsed.
-     * @return a new DnParser instance for parsing the supplied DN string.
-     */
-    public static DnParser createDnParser(String string) {
-        return new DnParserImpl(new StringReader(string));
-    }
+	/**
+	 * Create a new DnParser instance.
+	 * 
+	 * @param string
+	 *			the DN String to be parsed.
+	 * @return a new DnParser instance for parsing the supplied DN string.
+	 */
+	public static DnParser createDnParser(String string) {
+		return new DnParserImpl(new StringReader(string));
+	}
 }

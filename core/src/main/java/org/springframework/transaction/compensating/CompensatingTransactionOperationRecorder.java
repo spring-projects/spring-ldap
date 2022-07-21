@@ -26,16 +26,16 @@ package org.springframework.transaction.compensating;
  * @since 1.2
  */
 public interface CompensatingTransactionOperationRecorder {
-    /**
-     * Record information about the operation performed and return a
-     * corresponding {@link CompensatingTransactionOperationExecutor} to be used
-     * if the operation would need to be rolled back.
-     * 
-     * @param args
-     *            The arguments that have been sent to the operation.
-     * @return A {@link CompensatingTransactionOperationExecutor} to be used if
-     *         the recorded operation should need to be rolled back.
-     */
-    CompensatingTransactionOperationExecutor recordOperation(
-            Object[] args);
+	/**
+	 * Record information about the operation performed and return a
+	 * corresponding {@link CompensatingTransactionOperationExecutor} to be used
+	 * if the operation would need to be rolled back.
+	 * 
+	 * @param args
+	 *			The arguments that have been sent to the operation.
+	 * @return A {@link CompensatingTransactionOperationExecutor} to be used if
+	 *		 the recorded operation should need to be rolled back.
+	 */
+	CompensatingTransactionOperationExecutor recordOperation(
+			Object[] args);
 }

@@ -25,7 +25,7 @@ package org.springframework.ldap;
  */
 public class ConfigurationException extends NamingException {
 
-    public ConfigurationException(javax.naming.ConfigurationException cause) {
-        super(cause);
-    }
+	public ConfigurationException(javax.naming.ConfigurationException cause) {
+		super(cause);
+	}
 }

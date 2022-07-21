@@ -77,8 +77,8 @@ public abstract class AbstractTlsDirContextAuthenticationStrategy implements Dir
 	private boolean shutdownTlsGracefully = false;
 
 	/** SSL socket factory to use for startTLS negotiation */
-    private SSLSocketFactory sslSocketFactory;
-    
+	private SSLSocketFactory sslSocketFactory;
+	
 	/**
 	 * Specify whether the TLS should be shut down gracefully before the target
 	 * context is closed. Defaults to <code>false</code>.
@@ -102,16 +102,16 @@ public abstract class AbstractTlsDirContextAuthenticationStrategy implements Dir
 		this.hostnameVerifier = hostnameVerifier;
 	}
 
-    /**
-     * Sets the optional SSL socket factory used for startTLS negotiation.
-     * Defaults to <code>null</code> to indicate that the default socket factory
-     * provided by the underlying JSSE provider should be used.
-     * @param sslSocketFactory SSL socket factory to use, if any.
-     */
-    public void setSslSocketFactory(final SSLSocketFactory sslSocketFactory) {
-        this.sslSocketFactory = sslSocketFactory;
-    }
-    
+	/**
+	 * Sets the optional SSL socket factory used for startTLS negotiation.
+	 * Defaults to <code>null</code> to indicate that the default socket factory
+	 * provided by the underlying JSSE provider should be used.
+	 * @param sslSocketFactory SSL socket factory to use, if any.
+	 */
+	public void setSslSocketFactory(final SSLSocketFactory sslSocketFactory) {
+		this.sslSocketFactory = sslSocketFactory;
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.springframework.ldap.core.support.DirContextAuthenticationStrategy#setupEnvironment(java.util.Hashtable, java.lang.String, java.lang.String)
 	 */

@@ -265,7 +265,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> search(String base, String filter, SearchControls controls, ContextMapper<T> mapper, DirContextProcessor processor)
+	<T> List<T> search(String base, String filter, SearchControls controls, ContextMapper<T> mapper, DirContextProcessor processor)
 			throws NamingException;
 
 	/**
@@ -292,7 +292,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> search(Name base, String filter, SearchControls controls, ContextMapper<T> mapper, DirContextProcessor processor)
+	<T> List<T> search(Name base, String filter, SearchControls controls, ContextMapper<T> mapper, DirContextProcessor processor)
 			throws NamingException;
 
 	/**
@@ -435,7 +435,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> search(String base, String filter, int searchScope, String[] attrs, AttributesMapper<T> mapper)
+	<T> List<T> search(String base, String filter, int searchScope, String[] attrs, AttributesMapper<T> mapper)
 			throws NamingException;
 
 	/**
@@ -455,7 +455,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> search(Name base, String filter, int searchScope, AttributesMapper<T> mapper) throws NamingException;
+	<T> List<T> search(Name base, String filter, int searchScope, AttributesMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The Attributes in
@@ -474,7 +474,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> search(String base, String filter, int searchScope, AttributesMapper<T> mapper) throws NamingException;
+	<T> List<T> search(String base, String filter, int searchScope, AttributesMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The Attributes in
@@ -491,7 +491,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> search(Name base, String filter, AttributesMapper<T> mapper) throws NamingException;
+	<T> List<T> search(Name base, String filter, AttributesMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The Attributes in
@@ -508,7 +508,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> search(String base, String filter, AttributesMapper<T> mapper) throws NamingException;
+	<T> List<T> search(String base, String filter, AttributesMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The
@@ -530,7 +530,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> search(Name base, String filter, int searchScope, String[] attrs, ContextMapper<T> mapper) throws NamingException;
+	<T> List<T> search(Name base, String filter, int searchScope, String[] attrs, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The
@@ -552,7 +552,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> search(String base, String filter, int searchScope, String[] attrs, ContextMapper<T> mapper)
+	<T> List<T> search(String base, String filter, int searchScope, String[] attrs, ContextMapper<T> mapper)
 			throws NamingException;
 
 	/**
@@ -572,7 +572,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> search(Name base, String filter, int searchScope, ContextMapper<T> mapper) throws NamingException;
+	<T> List<T> search(Name base, String filter, int searchScope, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The
@@ -591,7 +591,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> search(String base, String filter, int searchScope, ContextMapper<T> mapper) throws NamingException;
+	<T> List<T> search(String base, String filter, int searchScope, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The
@@ -609,7 +609,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> search(Name base, String filter, ContextMapper<T> mapper) throws NamingException;
+	<T> List<T> search(Name base, String filter, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The
@@ -627,7 +627,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> search(String base, String filter, ContextMapper<T> mapper) throws NamingException;
+	<T> List<T> search(String base, String filter, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The
@@ -645,7 +645,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> search(String base, String filter, SearchControls controls, ContextMapper<T> mapper) throws NamingException;
+	<T> List<T> search(String base, String filter, SearchControls controls, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The Object returned
@@ -666,7 +666,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> search(Name base, String filter, SearchControls controls, ContextMapper<T> mapper) throws NamingException;
+	<T> List<T> search(Name base, String filter, SearchControls controls, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The Attributes
@@ -684,7 +684,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> search(String base, String filter, SearchControls controls, AttributesMapper<T> mapper) throws NamingException;
+	<T> List<T> search(String base, String filter, SearchControls controls, AttributesMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The Attributes
@@ -702,7 +702,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> search(Name base, String filter, SearchControls controls, AttributesMapper<T> mapper) throws NamingException;
+	<T> List<T> search(Name base, String filter, SearchControls controls, AttributesMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Perform a non-recursive listing of the children of the given
@@ -747,7 +747,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> list(String base, NameClassPairMapper<T> mapper) throws NamingException;
+	<T> List<T> list(String base, NameClassPairMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Perform a non-recursive listing of the children of the given
@@ -764,7 +764,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> list(Name base, NameClassPairMapper<T> mapper) throws NamingException;
+	<T> List<T> list(Name base, NameClassPairMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Perform a non-recursive listing of the children of the given
@@ -777,7 +777,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    List<String> list(String base) throws NamingException;
+	List<String> list(String base) throws NamingException;
 
 	/**
 	 * Perform a non-recursive listing of the children of the given
@@ -835,7 +835,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> listBindings(String base, NameClassPairMapper<T> mapper) throws NamingException;
+	<T> List<T> listBindings(String base, NameClassPairMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Perform a non-recursive listing of the children of the given
@@ -852,7 +852,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> listBindings(Name base, NameClassPairMapper<T> mapper) throws NamingException;
+	<T> List<T> listBindings(Name base, NameClassPairMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Perform a non-recursive listing of children of the given
@@ -894,7 +894,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> listBindings(String base, ContextMapper<T> mapper) throws NamingException;
+	<T> List<T> listBindings(String base, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Perform a non-recursive listing of the children of the given
@@ -910,7 +910,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is
 	 * interpreted that no entries were found.
 	 */
-    <T> List<T> listBindings(Name base, ContextMapper<T> mapper) throws NamingException;
+	<T> List<T> listBindings(Name base, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Lookup the supplied DN and return the found object. This will typically
@@ -1325,12 +1325,12 @@ public interface LdapOperations {
 	 * @return <code>true</code> if the authentication was successful,
 	 * <code>false</code> otherwise.
 	 * @since 1.3
-     * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
-     *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
+	 * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
+	 *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
 	 */
 	boolean authenticate(Name base, String filter, String password);
 
-    /**
+	/**
 	 * Utility method to perform a simple LDAP 'bind' authentication. Search for
 	 * the LDAP entry to authenticate using the supplied base DN and filter; use
 	 * the DN of the found entry together with the password as input to
@@ -1351,8 +1351,8 @@ public interface LdapOperations {
 	 * @return <code>true</code> if the authentication was successful,
 	 * <code>false</code> otherwise.
 	 * @since 1.3
-     * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
-     *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
+	 * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
+	 *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
 	 */
 	boolean authenticate(String base, String filter, String password);
 
@@ -1374,8 +1374,8 @@ public interface LdapOperations {
 	 * <code>false</code> otherwise.
 	 * @see #authenticate(Name, String, String)
 	 * @since 1.3
-     * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
-     *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
+	 * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
+	 *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
 	 */
 	boolean authenticate(Name base, String filter, String password, AuthenticatedLdapEntryContextCallback callback);
 
@@ -1397,8 +1397,8 @@ public interface LdapOperations {
 	 * <code>false</code> otherwise.
 	 * @see #authenticate(String, String, String)
 	 * @since 1.3
-     * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
-     *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
+	 * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
+	 *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
 	 */
 	boolean authenticate(String base, String filter, String password, AuthenticatedLdapEntryContextCallback callback);
 
@@ -1424,8 +1424,8 @@ public interface LdapOperations {
 	 * <code>false</code> otherwise.
 	 * @see #authenticate(Name, String, String, AuthenticatedLdapEntryContextCallback)
 	 * @since 1.3.1
-     * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
-     *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
+	 * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
+	 *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
 	 */
 	boolean authenticate(Name base, String filter, String password,
 			AuthenticatedLdapEntryContextCallback callback,
@@ -1453,33 +1453,33 @@ public interface LdapOperations {
 	 * <code>false</code> otherwise.
 	 * @see #authenticate(String, String, String, AuthenticatedLdapEntryContextCallback)
 	 * @since 1.3.1
-     * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
-     *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
+	 * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
+	 *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
 	 */
 	boolean authenticate(String base, String filter, String password,
 			AuthenticatedLdapEntryContextCallback callback,
 			AuthenticationErrorCallback errorCallback);
 
-    /**
-     * Utility method to perform a simple LDAP 'bind' authentication. Search for
-     * the LDAP entry to authenticate using the supplied base DN and filter; use
-     * the DN of the found entry together with the password as input to
-     * {@link ContextSource#getContext(String, String)}, thus authenticating the
-     * entry. If an exception is caught, the same exception is passed on to the given
-     * {@link AuthenticationErrorCallback}. This enables the caller to provide a
-     * callback that, for example, collects the exception for later processing.
-     *
-     * @param base the DN to use as the base of the search.
-     * @param filter the search filter - must result in a unique result.
-     * @param password the password to use for authentication.
-     * @param errorCallback the callback that will be called if an exception is caught.
-     * @return <code>true</code> if the authentication was successful,
-     * <code>false</code> otherwise.
-     * @see #authenticate(Name, String, String, AuthenticatedLdapEntryContextCallback, AuthenticationErrorCallback)
-     * @since 1.3.1
-     * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
-     *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
-     */
+	/**
+	 * Utility method to perform a simple LDAP 'bind' authentication. Search for
+	 * the LDAP entry to authenticate using the supplied base DN and filter; use
+	 * the DN of the found entry together with the password as input to
+	 * {@link ContextSource#getContext(String, String)}, thus authenticating the
+	 * entry. If an exception is caught, the same exception is passed on to the given
+	 * {@link AuthenticationErrorCallback}. This enables the caller to provide a
+	 * callback that, for example, collects the exception for later processing.
+	 *
+	 * @param base the DN to use as the base of the search.
+	 * @param filter the search filter - must result in a unique result.
+	 * @param password the password to use for authentication.
+	 * @param errorCallback the callback that will be called if an exception is caught.
+	 * @return <code>true</code> if the authentication was successful,
+	 * <code>false</code> otherwise.
+	 * @see #authenticate(Name, String, String, AuthenticatedLdapEntryContextCallback, AuthenticationErrorCallback)
+	 * @since 1.3.1
+	 * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
+	 *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
+	 */
 	boolean authenticate(Name base, String filter, String password,
 			AuthenticationErrorCallback errorCallback);
 
@@ -1500,63 +1500,63 @@ public interface LdapOperations {
 	 * <code>false</code> otherwise.
 	 * @throws IncorrectResultSizeDataAccessException if more than one users were found
 	 * @since 1.3.1
-     * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
-     *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
+	 * @deprecated use {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)}
+	 *  or {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
 	 */
 	boolean authenticate(String base, String filter, String password,
 			AuthenticationErrorCallback errorCallback);
 
 
-    /**
-     * Utility method to perform a simple LDAP 'bind' authentication. Search for
-     * the LDAP entry to authenticate using the supplied LdapQuery; use
-     * the DN of the found entry together with the password as input to
-     * {@link ContextSource#getContext(String, String)}, thus authenticating the
-     * entry.
-     * <p>
-     *     <b>Note:</b> This method differs from the older authenticate methods in that encountered
-     *     exceptions are thrown rather than supplied to a callback for handling.
-     * </p>
-     *
-     * @param query the LdapQuery specifying the details of the search.
-     * @param password the password to use for authentication.
-     * @param mapper the callback that will be called to perform operations
-     * on the DirContext authenticated with the found user.
-     * <code>false</code> otherwise.
-     * @return the result from the callback.
-     * @throws IncorrectResultSizeDataAccessException if more than one users were found
-     * @throws org.springframework.dao.EmptyResultDataAccessException if only one user was found
-     * @throws NamingException if something went wrong in authentication.
-     *
-     * @since 2.0
-     * @see org.springframework.ldap.query.LdapQueryBuilder
-     */
-    <T> T authenticate(LdapQuery query, String password, AuthenticatedLdapEntryContextMapper<T> mapper);
+	/**
+	 * Utility method to perform a simple LDAP 'bind' authentication. Search for
+	 * the LDAP entry to authenticate using the supplied LdapQuery; use
+	 * the DN of the found entry together with the password as input to
+	 * {@link ContextSource#getContext(String, String)}, thus authenticating the
+	 * entry.
+	 * <p>
+	 *	 <b>Note:</b> This method differs from the older authenticate methods in that encountered
+	 *	 exceptions are thrown rather than supplied to a callback for handling.
+	 * </p>
+	 *
+	 * @param query the LdapQuery specifying the details of the search.
+	 * @param password the password to use for authentication.
+	 * @param mapper the callback that will be called to perform operations
+	 * on the DirContext authenticated with the found user.
+	 * <code>false</code> otherwise.
+	 * @return the result from the callback.
+	 * @throws IncorrectResultSizeDataAccessException if more than one users were found
+	 * @throws org.springframework.dao.EmptyResultDataAccessException if only one user was found
+	 * @throws NamingException if something went wrong in authentication.
+	 *
+	 * @since 2.0
+	 * @see org.springframework.ldap.query.LdapQueryBuilder
+	 */
+	<T> T authenticate(LdapQuery query, String password, AuthenticatedLdapEntryContextMapper<T> mapper);
 
-    /**
-     * Utility method to perform a simple LDAP 'bind' authentication. Search for
-     * the LDAP entry to authenticate using the supplied base DN and filter; use
-     * the DN of the found entry together with the password as input to
-     * {@link ContextSource#getContext(String, String)}, thus authenticating the
-     * entry. If an exception is caught, the same exception is passed on to the given
-     * {@link AuthenticationErrorCallback}. This enables the caller to provide a
-     * callback that, for example, collects the exception for later processing.
-     * <p>
-     *     <b>Note:</b> This method differs from the older authenticate methods in that encountered
-     *     exceptions are thrown rather than supplied to a callback for handling.
-     * </p>
-     *
-     * @param query the LdapQuery specifying the details of the search.
-     * @param password the password to use for authentication.
-     * <code>false</code> otherwise.
-     * @throws IncorrectResultSizeDataAccessException if more than one users were found
-     * @throws org.springframework.dao.EmptyResultDataAccessException if only one user was found
-     * @throws NamingException if something went wrong in authentication.
-     *
-     * @since 2.0
-     * @see org.springframework.ldap.query.LdapQueryBuilder
-     */
-    void authenticate(LdapQuery query, String password);
+	/**
+	 * Utility method to perform a simple LDAP 'bind' authentication. Search for
+	 * the LDAP entry to authenticate using the supplied base DN and filter; use
+	 * the DN of the found entry together with the password as input to
+	 * {@link ContextSource#getContext(String, String)}, thus authenticating the
+	 * entry. If an exception is caught, the same exception is passed on to the given
+	 * {@link AuthenticationErrorCallback}. This enables the caller to provide a
+	 * callback that, for example, collects the exception for later processing.
+	 * <p>
+	 *	 <b>Note:</b> This method differs from the older authenticate methods in that encountered
+	 *	 exceptions are thrown rather than supplied to a callback for handling.
+	 * </p>
+	 *
+	 * @param query the LdapQuery specifying the details of the search.
+	 * @param password the password to use for authentication.
+	 * <code>false</code> otherwise.
+	 * @throws IncorrectResultSizeDataAccessException if more than one users were found
+	 * @throws org.springframework.dao.EmptyResultDataAccessException if only one user was found
+	 * @throws NamingException if something went wrong in authentication.
+	 *
+	 * @since 2.0
+	 * @see org.springframework.ldap.query.LdapQueryBuilder
+	 */
+	void authenticate(LdapQuery query, String password);
 
 
 	/**
@@ -1574,39 +1574,39 @@ public interface LdapOperations {
 	 */
 	<T> T searchForObject(Name base, String filter, ContextMapper<T> mapper);
 
-    /**
-     * Perform a search for a unique entry matching the specified search
-     * criteria and return the found object. If no entry is found or if there
-     * are more than one matching entry, an
-     * {@link IncorrectResultSizeDataAccessException} is thrown.
-     * @param base the DN to use as the base of the search.
-     * @param filter the search filter.
-     * @param searchControls the searchControls to use for the search.
-     * @param mapper the mapper to use for the search.
-     * @return the single object returned by the mapper that matches the search
-     * criteria.
-     * @throws IncorrectResultSizeDataAccessException if the result is not one unique entry
-     * @since 2.0
-     */
-    <T> T searchForObject(Name base, String filter, SearchControls searchControls, ContextMapper<T> mapper);
+	/**
+	 * Perform a search for a unique entry matching the specified search
+	 * criteria and return the found object. If no entry is found or if there
+	 * are more than one matching entry, an
+	 * {@link IncorrectResultSizeDataAccessException} is thrown.
+	 * @param base the DN to use as the base of the search.
+	 * @param filter the search filter.
+	 * @param searchControls the searchControls to use for the search.
+	 * @param mapper the mapper to use for the search.
+	 * @return the single object returned by the mapper that matches the search
+	 * criteria.
+	 * @throws IncorrectResultSizeDataAccessException if the result is not one unique entry
+	 * @since 2.0
+	 */
+	<T> T searchForObject(Name base, String filter, SearchControls searchControls, ContextMapper<T> mapper);
 
-    /**
-     * Perform a search for a unique entry matching the specified search
-     * criteria and return the found object. If no entry is found or if there
-     * are more than one matching entry, an
-     * {@link IncorrectResultSizeDataAccessException} is thrown.
-     * @param base the DN to use as the base of the search.
-     * @param filter the search filter.
-     * @param searchControls the searchControls to use for the search.
-     * @param mapper the mapper to use for the search.
-     * @return the single object returned by the mapper that matches the search
-     * criteria.
-     * @throws IncorrectResultSizeDataAccessException if the result is not one unique entry
-     * @since 2.0
-     */
-    <T> T searchForObject(String base, String filter, SearchControls searchControls, ContextMapper<T> mapper);
+	/**
+	 * Perform a search for a unique entry matching the specified search
+	 * criteria and return the found object. If no entry is found or if there
+	 * are more than one matching entry, an
+	 * {@link IncorrectResultSizeDataAccessException} is thrown.
+	 * @param base the DN to use as the base of the search.
+	 * @param filter the search filter.
+	 * @param searchControls the searchControls to use for the search.
+	 * @param mapper the mapper to use for the search.
+	 * @return the single object returned by the mapper that matches the search
+	 * criteria.
+	 * @throws IncorrectResultSizeDataAccessException if the result is not one unique entry
+	 * @since 2.0
+	 */
+	<T> T searchForObject(String base, String filter, SearchControls searchControls, ContextMapper<T> mapper);
 
-    /**
+	/**
 	 * Perform a search for a unique entry matching the specified search
 	 * criteria and return the found object. If no entry is found or if there
 	 * are more than one matching entry, an
@@ -1621,234 +1621,234 @@ public interface LdapOperations {
 	 */
 	<T> T searchForObject(String base, String filter, ContextMapper<T> mapper);
 
-    /**
-     * Perform a search with parameters from the specified LdapQuery. All found objects will be supplied to the
-     * <code>NameClassPairCallbackHandler</code> for processing.
-     *
-     * @param query the LDAP query specification.
-     * @param callbackHandler the <code>NameClassPairCallbackHandler</code> to supply all found entries to.
-     *
-     * @throws NamingException if any error occurs.
-     * @since 2.0
-     * @see org.springframework.ldap.query.LdapQueryBuilder
-     * @see org.springframework.ldap.core.support.CountNameClassPairCallbackHandler
-     */
-    void search(LdapQuery query, NameClassPairCallbackHandler callbackHandler);
+	/**
+	 * Perform a search with parameters from the specified LdapQuery. All found objects will be supplied to the
+	 * <code>NameClassPairCallbackHandler</code> for processing.
+	 *
+	 * @param query the LDAP query specification.
+	 * @param callbackHandler the <code>NameClassPairCallbackHandler</code> to supply all found entries to.
+	 *
+	 * @throws NamingException if any error occurs.
+	 * @since 2.0
+	 * @see org.springframework.ldap.query.LdapQueryBuilder
+	 * @see org.springframework.ldap.core.support.CountNameClassPairCallbackHandler
+	 */
+	void search(LdapQuery query, NameClassPairCallbackHandler callbackHandler);
 
-    /**
-     * Perform a search with parameters from the specified LdapQuery. All found objects will be supplied to the
-     * <code>ContextMapper</code> for processing, and all returned objects will be collected in a list to be returned.
-     *
-     * @param query the LDAP query specification.
-     * @param mapper the <code>ContextMapper</code> to supply all found entries to.
-     * @return a <code>List</code> containing all entries received from the
-     * <code>ContextMapper</code>.
-     *
-     * @throws NamingException if any error occurs.
-     * @since 2.0
-     * @see org.springframework.ldap.query.LdapQueryBuilder
-     */
-    <T> List<T> search(LdapQuery query, ContextMapper<T> mapper);
+	/**
+	 * Perform a search with parameters from the specified LdapQuery. All found objects will be supplied to the
+	 * <code>ContextMapper</code> for processing, and all returned objects will be collected in a list to be returned.
+	 *
+	 * @param query the LDAP query specification.
+	 * @param mapper the <code>ContextMapper</code> to supply all found entries to.
+	 * @return a <code>List</code> containing all entries received from the
+	 * <code>ContextMapper</code>.
+	 *
+	 * @throws NamingException if any error occurs.
+	 * @since 2.0
+	 * @see org.springframework.ldap.query.LdapQueryBuilder
+	 */
+	<T> List<T> search(LdapQuery query, ContextMapper<T> mapper);
 
-    /**
-     * Perform a search with parameters from the specified LdapQuery. The Attributes of the found entries will be
-     * supplied to the <code>AttributesMapper</code> for processing, and all
-     * returned objects will be collected in a list to be returned.
-     *
-     * @param query the LDAP query specification.
-     * @param mapper the <code>Attributes</code> to supply all found Attributes to.
-     * @return a <code>List</code> containing all entries received from the
-     * <code>Attributes</code>.
-     *
-     * @throws NamingException if any error occurs.
-     * @since 2.0
-     * @see org.springframework.ldap.query.LdapQueryBuilder
-     */
-    <T> List<T> search(LdapQuery query, AttributesMapper<T> mapper);
+	/**
+	 * Perform a search with parameters from the specified LdapQuery. The Attributes of the found entries will be
+	 * supplied to the <code>AttributesMapper</code> for processing, and all
+	 * returned objects will be collected in a list to be returned.
+	 *
+	 * @param query the LDAP query specification.
+	 * @param mapper the <code>Attributes</code> to supply all found Attributes to.
+	 * @return a <code>List</code> containing all entries received from the
+	 * <code>Attributes</code>.
+	 *
+	 * @throws NamingException if any error occurs.
+	 * @since 2.0
+	 * @see org.springframework.ldap.query.LdapQueryBuilder
+	 */
+	<T> List<T> search(LdapQuery query, AttributesMapper<T> mapper);
 
-    /**
-     * Perform a search for a unique entry matching the specified LDAP
-     * query and return the found entry as a DirContextOperation instance. If no entry is found or if there
-     * are more than one matching entry, an
-     * {@link IncorrectResultSizeDataAccessException} is thrown.
-     * @param query the LDAP query specification.
-     * @return the single entry matching the query as a DirContextOperations instance.
-     * @throws IncorrectResultSizeDataAccessException if the result is not one unique entry
-     * @since 2.0
-     * @see org.springframework.ldap.query.LdapQueryBuilder
-     */
-    DirContextOperations searchForContext(LdapQuery query);
+	/**
+	 * Perform a search for a unique entry matching the specified LDAP
+	 * query and return the found entry as a DirContextOperation instance. If no entry is found or if there
+	 * are more than one matching entry, an
+	 * {@link IncorrectResultSizeDataAccessException} is thrown.
+	 * @param query the LDAP query specification.
+	 * @return the single entry matching the query as a DirContextOperations instance.
+	 * @throws IncorrectResultSizeDataAccessException if the result is not one unique entry
+	 * @since 2.0
+	 * @see org.springframework.ldap.query.LdapQueryBuilder
+	 */
+	DirContextOperations searchForContext(LdapQuery query);
 
-    /**
-     * Perform a search for a unique entry matching the specified LDAP
-     * query and return the found object. If no entry is found or if there
-     * are more than one matching entry, an
-     * {@link IncorrectResultSizeDataAccessException} is thrown.
-     * @param query the LDAP query specification.
-     * @return the single object returned by the mapper that matches the search
-     * criteria.
-     * @throws IncorrectResultSizeDataAccessException if the result is not one unique entry
-     * @since 2.0
-     * @see org.springframework.ldap.query.LdapQueryBuilder
-     */
-    <T> T searchForObject(LdapQuery query, ContextMapper<T> mapper);
+	/**
+	 * Perform a search for a unique entry matching the specified LDAP
+	 * query and return the found object. If no entry is found or if there
+	 * are more than one matching entry, an
+	 * {@link IncorrectResultSizeDataAccessException} is thrown.
+	 * @param query the LDAP query specification.
+	 * @return the single object returned by the mapper that matches the search
+	 * criteria.
+	 * @throws IncorrectResultSizeDataAccessException if the result is not one unique entry
+	 * @since 2.0
+	 * @see org.springframework.ldap.query.LdapQueryBuilder
+	 */
+	<T> T searchForObject(LdapQuery query, ContextMapper<T> mapper);
 
-    /**
-     * Read a named entry from the LDAP directory. The referenced class must have object-directory mapping metadata
-     * specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
-     *
-     * @param <T> The Java type to return
-     * @param dn The distinguished name of the entry to read from the LDAP directory.
-     * @param clazz The Java type to return
-     * @return The entry as read from the directory
-     *
-     * @throws org.springframework.ldap.NamingException on error.
-     * @since 2.0
-     */
-    <T> T findByDn(Name dn, Class<T> clazz);
+	/**
+	 * Read a named entry from the LDAP directory. The referenced class must have object-directory mapping metadata
+	 * specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
+	 *
+	 * @param <T> The Java type to return
+	 * @param dn The distinguished name of the entry to read from the LDAP directory.
+	 * @param clazz The Java type to return
+	 * @return The entry as read from the directory
+	 *
+	 * @throws org.springframework.ldap.NamingException on error.
+	 * @since 2.0
+	 */
+	<T> T findByDn(Name dn, Class<T> clazz);
 
-    /**
-     * Create the given entry in the LDAP directory. The referenced class must have object-directory mapping metadata
-     * specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
-     * If the field annotated with {@link org.springframework.ldap.odm.annotations.Id}
-     * is set in the object, this will be used as the distinguished name of the new entry. If no explicit DN is specified,
-     * an attempt will be made to calculate the name from fields annotated with {@link org.springframework.ldap.odm.annotations.DnAttribute}.
-     * If an id can be calculated, this will be populated in the supplied object.
-     *
-     * @param entry The entry to be create, it must <em>not</em> be null or already exist in the directory.
-     *
-     * @throws org.springframework.ldap.NamingException on error.
-     * @throws IllegalArgumentException if the entry is null or on failure to determine the distinguished name.
-     * @since 2.0
-     */
-    void create(Object entry);
+	/**
+	 * Create the given entry in the LDAP directory. The referenced class must have object-directory mapping metadata
+	 * specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
+	 * If the field annotated with {@link org.springframework.ldap.odm.annotations.Id}
+	 * is set in the object, this will be used as the distinguished name of the new entry. If no explicit DN is specified,
+	 * an attempt will be made to calculate the name from fields annotated with {@link org.springframework.ldap.odm.annotations.DnAttribute}.
+	 * If an id can be calculated, this will be populated in the supplied object.
+	 *
+	 * @param entry The entry to be create, it must <em>not</em> be null or already exist in the directory.
+	 *
+	 * @throws org.springframework.ldap.NamingException on error.
+	 * @throws IllegalArgumentException if the entry is null or on failure to determine the distinguished name.
+	 * @since 2.0
+	 */
+	void create(Object entry);
 
-    /**
-     * Update the given entry in the LDAP directory. The referenced class must have object-directory mapping metadata
-     * specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
-     * If the distinguished name is not explicitly specified (i.e. if the
-     * field annotated with {@link org.springframework.ldap.odm.annotations.Id} is <code>null</code>),
-     * an attempt will be made to calculate the name from fields annotated with
-     * {@link org.springframework.ldap.odm.annotations.DnAttribute}. If the {@link org.springframework.ldap.odm.annotations.Id}
-     * field and the calculated DN is different, the entry will be <strong>moved</strong> (i.e., an {@link #unbind(javax.naming.Name)}
-     * followed by a {@link #bind(DirContextOperations)}. Otherwise
-     * the current data of the entry will be read from the directory and a {@link #modifyAttributes(DirContextOperations)}
-     * operation will be performed using the <code>ModificationItems</code> resulting from the changes of the
-     * entry compared to its current state in the directory.
-     * If the id of the entry has changed, i.e. if it wasn't specified from the beginning, or if it is calculated to
-     * have changed, the new value will be populated in the supplied object.
-     *
-     * @param entry The entry to update, it must already exist in the directory.
-     *
-     * @throws org.springframework.ldap.NamingException on error.
-     * @throws IllegalArgumentException if the entry is null or on failure to determine the distinguished name.
-     * @since 2.0
-     */
-    void update(Object entry);
+	/**
+	 * Update the given entry in the LDAP directory. The referenced class must have object-directory mapping metadata
+	 * specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
+	 * If the distinguished name is not explicitly specified (i.e. if the
+	 * field annotated with {@link org.springframework.ldap.odm.annotations.Id} is <code>null</code>),
+	 * an attempt will be made to calculate the name from fields annotated with
+	 * {@link org.springframework.ldap.odm.annotations.DnAttribute}. If the {@link org.springframework.ldap.odm.annotations.Id}
+	 * field and the calculated DN is different, the entry will be <strong>moved</strong> (i.e., an {@link #unbind(javax.naming.Name)}
+	 * followed by a {@link #bind(DirContextOperations)}. Otherwise
+	 * the current data of the entry will be read from the directory and a {@link #modifyAttributes(DirContextOperations)}
+	 * operation will be performed using the <code>ModificationItems</code> resulting from the changes of the
+	 * entry compared to its current state in the directory.
+	 * If the id of the entry has changed, i.e. if it wasn't specified from the beginning, or if it is calculated to
+	 * have changed, the new value will be populated in the supplied object.
+	 *
+	 * @param entry The entry to update, it must already exist in the directory.
+	 *
+	 * @throws org.springframework.ldap.NamingException on error.
+	 * @throws IllegalArgumentException if the entry is null or on failure to determine the distinguished name.
+	 * @since 2.0
+	 */
+	void update(Object entry);
 
-    /**
-     * Delete an entry from the LDAP directory. The referenced class must have object-directory mapping metadata
-     * specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
-     * If the field annotated with {@link org.springframework.ldap.odm.annotations.Id}
-     * is set in the object, this will be used as the distinguished name of the new entry. If no explicit DN is specified,
-     * an attempt will be made to calculate the name from fields annotated with {@link org.springframework.ldap.odm.annotations.DnAttribute}.
-     *
-     * @param entry The entry to delete, it must already exist in the directory.
-     *
-     * @throws org.springframework.ldap.NamingException on error.
-     * @throws IllegalArgumentException if the entry is null or on failure to determine the distinguished name.
-     * @since 2.0
-     */
-    void delete(Object entry);
+	/**
+	 * Delete an entry from the LDAP directory. The referenced class must have object-directory mapping metadata
+	 * specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
+	 * If the field annotated with {@link org.springframework.ldap.odm.annotations.Id}
+	 * is set in the object, this will be used as the distinguished name of the new entry. If no explicit DN is specified,
+	 * an attempt will be made to calculate the name from fields annotated with {@link org.springframework.ldap.odm.annotations.DnAttribute}.
+	 *
+	 * @param entry The entry to delete, it must already exist in the directory.
+	 *
+	 * @throws org.springframework.ldap.NamingException on error.
+	 * @throws IllegalArgumentException if the entry is null or on failure to determine the distinguished name.
+	 * @since 2.0
+	 */
+	void delete(Object entry);
 
-    /**
-     * Find all entries in the LDAP directory of a given type. The referenced class must have object-directory mapping metadata
-     * specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
-     *
-     * @param <T> The Java type to return
-     * @param clazz The Java type to return
-     * @return All entries that are of the type represented by the given
-     * Java class
-     *
-     * @throws org.springframework.ldap.NamingException on error.
-     * @since 2.0
-     */
-    <T> List<T> findAll(Class<T> clazz);
+	/**
+	 * Find all entries in the LDAP directory of a given type. The referenced class must have object-directory mapping metadata
+	 * specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
+	 *
+	 * @param <T> The Java type to return
+	 * @param clazz The Java type to return
+	 * @return All entries that are of the type represented by the given
+	 * Java class
+	 *
+	 * @throws org.springframework.ldap.NamingException on error.
+	 * @since 2.0
+	 */
+	<T> List<T> findAll(Class<T> clazz);
 
-    /**
-     * Find all entries in the LDAP directory of a given type. The referenced class must have object-directory mapping metadata
-     * specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
-     *
-     * @param <T> The Java type to return
-     * @param base The root of the sub-tree at which to begin the search.
-     * @param searchControls The search controls of the search. Note that the 'returned attributes' parameter should
-     *                       typically not be tampered with, since that may affect the attributes populated in returned entries.
-     * @param clazz The Java type to return
-     * @return All entries that are of the type represented by the given
-     * Java class
-     *
-     * @throws org.springframework.ldap.NamingException on error.
-     * @since 2.0
-     */
-    <T> List<T> findAll(Name base, SearchControls searchControls, Class<T> clazz);
+	/**
+	 * Find all entries in the LDAP directory of a given type. The referenced class must have object-directory mapping metadata
+	 * specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
+	 *
+	 * @param <T> The Java type to return
+	 * @param base The root of the sub-tree at which to begin the search.
+	 * @param searchControls The search controls of the search. Note that the 'returned attributes' parameter should
+	 *					   typically not be tampered with, since that may affect the attributes populated in returned entries.
+	 * @param clazz The Java type to return
+	 * @return All entries that are of the type represented by the given
+	 * Java class
+	 *
+	 * @throws org.springframework.ldap.NamingException on error.
+	 * @since 2.0
+	 */
+	<T> List<T> findAll(Name base, SearchControls searchControls, Class<T> clazz);
 
-    /**
-     * Find all entries in the LDAP directory of a given type that matches the specified filter.
-     * The referenced class must have object-directory mapping metadata specified using
-     * {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
-     *
-     * @param <T> The Java type to return
-     * @param base The root of the sub-tree at which to begin the search.
-     * @param filter The search filter.
-     * @param searchControls The search controls of the search. Note that the 'returned attributes' parameter should
-     *                       typically not be tampered with, since that may affect the attributes populated in returned entries.
-     * @param clazz The Java type to return
-     * @return All entries that are of the type represented by the given
-     * Java class
-     *
-     * @throws org.springframework.ldap.NamingException on error.
-     * @since 2.0
-     */
-    <T> List<T> find(Name base, Filter filter, SearchControls searchControls, Class<T> clazz);
+	/**
+	 * Find all entries in the LDAP directory of a given type that matches the specified filter.
+	 * The referenced class must have object-directory mapping metadata specified using
+	 * {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
+	 *
+	 * @param <T> The Java type to return
+	 * @param base The root of the sub-tree at which to begin the search.
+	 * @param filter The search filter.
+	 * @param searchControls The search controls of the search. Note that the 'returned attributes' parameter should
+	 *					   typically not be tampered with, since that may affect the attributes populated in returned entries.
+	 * @param clazz The Java type to return
+	 * @return All entries that are of the type represented by the given
+	 * Java class
+	 *
+	 * @throws org.springframework.ldap.NamingException on error.
+	 * @since 2.0
+	 */
+	<T> List<T> find(Name base, Filter filter, SearchControls searchControls, Class<T> clazz);
 
-    /**
-     * Search for entries in the LDAP directory. The referenced class must have object-directory
-     * mapping metadata specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
-     * <p>
-     * Only those entries that both match the query search filter and
-     * are represented by the given Java class are returned.
-     *
-     * @param <T> The Java type to return
-     * @param query the LDAP query specification
-     * @param clazz The Java type to return
-     * @return All matching entries.
-     *
-     * @throws org.springframework.ldap.NamingException on error.
-     * @see org.springframework.ldap.query.LdapQueryBuilder
-     * @since 2.0
-     */
-    <T> List<T> find(LdapQuery query, Class<T> clazz);
+	/**
+	 * Search for entries in the LDAP directory. The referenced class must have object-directory
+	 * mapping metadata specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
+	 * <p>
+	 * Only those entries that both match the query search filter and
+	 * are represented by the given Java class are returned.
+	 *
+	 * @param <T> The Java type to return
+	 * @param query the LDAP query specification
+	 * @param clazz The Java type to return
+	 * @return All matching entries.
+	 *
+	 * @throws org.springframework.ldap.NamingException on error.
+	 * @see org.springframework.ldap.query.LdapQueryBuilder
+	 * @since 2.0
+	 */
+	<T> List<T> find(LdapQuery query, Class<T> clazz);
 
-    /**
-     * Search for objects in the directory tree matching the specified LdapQuery, expecting to find exactly one match.
-     * The referenced class must have object-directory mapping metadata specified using
-     * {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
-     * @param query the LDAP query specification
-     * @param clazz The Java type to return
-     * @param <T> The Java type to return
-     * @return The single entry matching the search specification.
-     * @since 2.0
-     * @throws org.springframework.ldap.NamingException on LDAP error.
-     * @throws org.springframework.dao.EmptyResultDataAccessException if no matching entry can be found
-     * @throws IncorrectResultSizeDataAccessException if more than one matching entry is found
-     */
-    <T> T findOne(LdapQuery query, Class<T> clazz);
+	/**
+	 * Search for objects in the directory tree matching the specified LdapQuery, expecting to find exactly one match.
+	 * The referenced class must have object-directory mapping metadata specified using
+	 * {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
+	 * @param query the LDAP query specification
+	 * @param clazz The Java type to return
+	 * @param <T> The Java type to return
+	 * @return The single entry matching the search specification.
+	 * @since 2.0
+	 * @throws org.springframework.ldap.NamingException on LDAP error.
+	 * @throws org.springframework.dao.EmptyResultDataAccessException if no matching entry can be found
+	 * @throws IncorrectResultSizeDataAccessException if more than one matching entry is found
+	 */
+	<T> T findOne(LdapQuery query, Class<T> clazz);
 
-    /**
-     * Get the configured ObjectDirectoryMapper. For internal use.
-     *
-     * @return the configured ObjectDirectoryMapper.
-     * @since 2.0
-     */
-    ObjectDirectoryMapper getObjectDirectoryMapper();
+	/**
+	 * Get the configured ObjectDirectoryMapper. For internal use.
+	 *
+	 * @return the configured ObjectDirectoryMapper.
+	 * @since 2.0
+	 */
+	ObjectDirectoryMapper getObjectDirectoryMapper();
 }

@@ -26,10 +26,10 @@ import org.springframework.ldap.support.LdapUtils;
  */
 public class LdapEntryIdentificationContextMapper implements ContextMapper<LdapEntryIdentification> {
 
-    public LdapEntryIdentification mapFromContext(Object ctx) {
-        DirContextOperations adapter = (DirContextOperations) ctx;
-        return new LdapEntryIdentification(
-                LdapUtils.newLdapName(adapter.getNameInNamespace()),
-                LdapUtils.newLdapName(adapter.getDn()));
-    }
+	public LdapEntryIdentification mapFromContext(Object ctx) {
+		DirContextOperations adapter = (DirContextOperations) ctx;
+		return new LdapEntryIdentification(
+				LdapUtils.newLdapName(adapter.getNameInNamespace()),
+				LdapUtils.newLdapName(adapter.getDn()));
+	}
 }

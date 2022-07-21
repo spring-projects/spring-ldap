@@ -23,8 +23,8 @@ import javax.net.ssl.SSLSession;
  * @author Mattias Hellborg Arthursson
  */
 public class AllMatchHostnameVerifier implements HostnameVerifier {
-    @Override
-    public boolean verify(String s, SSLSession sslSession) {
-        return true;
-    }
+	@Override
+	public boolean verify(String s, SSLSession sslSession) {
+		return true;
+	}
 }

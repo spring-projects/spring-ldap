@@ -31,49 +31,49 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
  * @since 1.2
  */
 public class BindOperationRecorder implements
-        CompensatingTransactionOperationRecorder {
+		CompensatingTransactionOperationRecorder {
 
-    private LdapOperations ldapOperations;
+	private LdapOperations ldapOperations;
 
-    /**
-     * Constructor.
-     * 
-     * @param ldapOperations
-     *            {@link LdapOperations} to use for supplying to the
-     *            corresponding rollback operation.
-     */
-    public BindOperationRecorder(LdapOperations ldapOperations) {
-        this.ldapOperations = ldapOperations;
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param ldapOperations
+	 *			{@link LdapOperations} to use for supplying to the
+	 *			corresponding rollback operation.
+	 */
+	public BindOperationRecorder(LdapOperations ldapOperations) {
+		this.ldapOperations = ldapOperations;
+	}
 
-    /*
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
-     */
-    public CompensatingTransactionOperationExecutor recordOperation(
-            Object[] args) {
-        if (args == null || args.length != 3) {
-            throw new IllegalArgumentException(
-                    "Invalid arguments for bind operation");
-        }
-        Name dn = LdapTransactionUtils.getFirstArgumentAsName(args);
-        Object object = args[1];
-        Attributes attributes = null;
-        if (args[2] != null && !(args[2] instanceof Attributes)) {
-            throw new IllegalArgumentException(
-                    "Invalid third argument to bind operation");
-        } else if (args[2] != null) {
-            attributes = (Attributes) args[2];
-        }
+	/*
+	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
+	 */
+	public CompensatingTransactionOperationExecutor recordOperation(
+			Object[] args) {
+		if (args == null || args.length != 3) {
+			throw new IllegalArgumentException(
+					"Invalid arguments for bind operation");
+		}
+		Name dn = LdapTransactionUtils.getFirstArgumentAsName(args);
+		Object object = args[1];
+		Attributes attributes = null;
+		if (args[2] != null && !(args[2] instanceof Attributes)) {
+			throw new IllegalArgumentException(
+					"Invalid third argument to bind operation");
+		} else if (args[2] != null) {
+			attributes = (Attributes) args[2];
+		}
 
-        return new BindOperationExecutor(ldapOperations, dn, object, attributes);
-    }
+		return new BindOperationExecutor(ldapOperations, dn, object, attributes);
+	}
 
-    /**
-     * Get the LdapOperations. For testing purposes.s
-     * 
-     * @return the LdapOperations.
-     */
-    LdapOperations getLdapOperations() {
-        return ldapOperations;
-    }
+	/**
+	 * Get the LdapOperations. For testing purposes.s
+	 * 
+	 * @return the LdapOperations.
+	 */
+	LdapOperations getLdapOperations() {
+		return ldapOperations;
+	}
 }

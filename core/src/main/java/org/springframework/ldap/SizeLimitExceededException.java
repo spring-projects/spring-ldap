@@ -25,8 +25,8 @@ package org.springframework.ldap;
  */
 public class SizeLimitExceededException extends LimitExceededException {
 
-    public SizeLimitExceededException(
-            javax.naming.SizeLimitExceededException cause) {
-        super(cause);
-    }
+	public SizeLimitExceededException(
+			javax.naming.SizeLimitExceededException cause) {
+		super(cause);
+	}
 }

@@ -30,14 +30,14 @@ import javax.naming.NamingException;
  * @author Mattias Hellborg Arthursson
  */
 public interface NameClassPairCallbackHandler {
-    /**
-     * Handle one entry. This method will be called once for each entry returned
-     * by a search or list.
-     * 
-     * @param nameClassPair
-     *            the NameClassPair returned from the
-     *            <code>NamingEnumeration</code>.
-     * @throws NamingException if an error occurs.
-     */
-    void handleNameClassPair(NameClassPair nameClassPair) throws NamingException;
+	/**
+	 * Handle one entry. This method will be called once for each entry returned
+	 * by a search or list.
+	 * 
+	 * @param nameClassPair
+	 *			the NameClassPair returned from the
+	 *			<code>NamingEnumeration</code>.
+	 * @throws NamingException if an error occurs.
+	 */
+	void handleNameClassPair(NameClassPair nameClassPair) throws NamingException;
 }

@@ -51,45 +51,45 @@ public class LdapTemplateAuthenticationITest extends AbstractLdapTemplateIntegra
 	private LdapTemplate tested;
 
 	@Test
-    @Category(NoAdTest.class)
+	@Category(NoAdTest.class)
 	public void testAuthenticate() {
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
 		assertThat(tested.authenticate("", filter.toString(), "password")).isTrue();
 	}
 
-    @Test
-    @Category(NoAdTest.class)
-    public void testAuthenticateWithLdapQuery() {
-        AndFilter filter = new AndFilter();
-        filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
-        tested.authenticate(query()
-                .where("objectclass").is("person")
-                .and("uid").is("some.person3"),
-                "password");
-    }
+	@Test
+	@Category(NoAdTest.class)
+	public void testAuthenticateWithLdapQuery() {
+		AndFilter filter = new AndFilter();
+		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
+		tested.authenticate(query()
+				.where("objectclass").is("person")
+				.and("uid").is("some.person3"),
+				"password");
+	}
 
-    @Test
-    @Category(NoAdTest.class)
+	@Test
+	@Category(NoAdTest.class)
 	public void testAuthenticateWithInvalidPassword() {
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
 		assertThat(tested.authenticate("", filter.toString(), "invalidpassword")).isFalse();
 	}
 
-    @Test(expected = AuthenticationException.class)
-    @Category(NoAdTest.class)
-    public void testAuthenticateWithLdapQueryAndInvalidPassword() {
-        AndFilter filter = new AndFilter();
-        filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
-        tested.authenticate(query()
-                .where("objectclass").is("person")
-                .and("uid").is("some.person3"),
-                "invalidpassword");
-    }
+	@Test(expected = AuthenticationException.class)
+	@Category(NoAdTest.class)
+	public void testAuthenticateWithLdapQueryAndInvalidPassword() {
+		AndFilter filter = new AndFilter();
+		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
+		tested.authenticate(query()
+				.where("objectclass").is("person")
+				.and("uid").is("some.person3"),
+				"invalidpassword");
+	}
 
-    @Test
-    @Category(NoAdTest.class)
+	@Test
+	@Category(NoAdTest.class)
 	public void testAuthenticateWithLookupOperationPerformedOnAuthenticatedContext() {
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
@@ -107,31 +107,31 @@ public class LdapTemplateAuthenticationITest extends AbstractLdapTemplateIntegra
 		assertThat(tested.authenticate("", filter.toString(), "password", contextCallback)).isTrue();
 	}
 
-    @Test
-    @Category(NoAdTest.class)
-    public void testAuthenticateWithLdapQueryAndMapper() {
-        DirContextOperations ctx = tested.authenticate(query()
-                .where("objectclass").is("person")
-                .and("uid").is("some.person3"),
-                "password",
-                new LookupAttemptingCallback());
+	@Test
+	@Category(NoAdTest.class)
+	public void testAuthenticateWithLdapQueryAndMapper() {
+		DirContextOperations ctx = tested.authenticate(query()
+				.where("objectclass").is("person")
+				.and("uid").is("some.person3"),
+				"password",
+				new LookupAttemptingCallback());
 
-        assertThat(ctx).isNotNull();
-        assertThat(ctx.getStringAttribute("uid")).isEqualTo("some.person3");
-    }
+		assertThat(ctx).isNotNull();
+		assertThat(ctx.getStringAttribute("uid")).isEqualTo("some.person3");
+	}
 
-    @Test(expected = AuthenticationException.class)
-    @Category(NoAdTest.class)
-    public void testAuthenticateWithLdapQueryAndMapperAndInvalidPassword() {
-        DirContextOperations ctx = tested.authenticate(query()
-                .where("objectclass").is("person")
-                .and("uid").is("some.person3"),
-                "invalidpassword",
-                new LookupAttemptingCallback());
-    }
+	@Test(expected = AuthenticationException.class)
+	@Category(NoAdTest.class)
+	public void testAuthenticateWithLdapQueryAndMapperAndInvalidPassword() {
+		DirContextOperations ctx = tested.authenticate(query()
+				.where("objectclass").is("person")
+				.and("uid").is("some.person3"),
+				"invalidpassword",
+				new LookupAttemptingCallback());
+	}
 
-    @Test
-    @Category(NoAdTest.class)
+	@Test
+	@Category(NoAdTest.class)
 	public void testAuthenticateWithInvalidPasswordAndCollectedException() {
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
@@ -144,7 +144,7 @@ public class LdapTemplateAuthenticationITest extends AbstractLdapTemplateIntegra
 	}
 
 	@Test
-    @Category(NoAdTest.class)
+	@Category(NoAdTest.class)
 	public void testAuthenticateWithFilterThatDoesNotMatchAnything() {
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(
@@ -153,7 +153,7 @@ public class LdapTemplateAuthenticationITest extends AbstractLdapTemplateIntegra
 	}
 
 	@Test(expected=IncorrectResultSizeDataAccessException.class)
-    @Category(NoAdTest.class)
+	@Category(NoAdTest.class)
 	public void testAuthenticateWithFilterThatMatchesSeveralEntries() {
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("cn", "Some Person"));
@@ -161,7 +161,7 @@ public class LdapTemplateAuthenticationITest extends AbstractLdapTemplateIntegra
 	}
 
 	@Test
-    @Category(NoAdTest.class)
+	@Category(NoAdTest.class)
 	public void testLookupAttemptingCallback() {
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));

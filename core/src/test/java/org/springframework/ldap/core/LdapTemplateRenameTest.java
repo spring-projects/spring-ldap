@@ -39,89 +39,89 @@ import static org.mockito.Mockito.when;
  */
 public class LdapTemplateRenameTest {
 
-    private ContextSource contextSourceMock;
+	private ContextSource contextSourceMock;
 
-    private DirContext dirContextMock;
+	private DirContext dirContextMock;
 
-    private Name oldNameMock;
+	private Name oldNameMock;
 
-    private Name newNameMock;
+	private Name newNameMock;
 
-    private LdapTemplate tested;
+	private LdapTemplate tested;
 
-    @Before
-    public void setUp() throws Exception {
-        // Setup ContextSource mock
-        contextSourceMock = mock(ContextSource.class);
+	@Before
+	public void setUp() throws Exception {
+		// Setup ContextSource mock
+		contextSourceMock = mock(ContextSource.class);
 
-        // Setup LdapContext mock
-        dirContextMock = mock(LdapContext.class);
+		// Setup LdapContext mock
+		dirContextMock = mock(LdapContext.class);
 
-        // Setup Name mock for old name
-        oldNameMock = mock(Name.class);
+		// Setup Name mock for old name
+		oldNameMock = mock(Name.class);
 
-        // Setup Name mock for new name
-        newNameMock = mock(Name.class);
+		// Setup Name mock for new name
+		newNameMock = mock(Name.class);
 
-        tested = new LdapTemplate(contextSourceMock);
-    }
+		tested = new LdapTemplate(contextSourceMock);
+	}
 
-    private void expectGetReadWriteContext() {
-        when(contextSourceMock.getReadWriteContext()).thenReturn(dirContextMock);
-    }
+	private void expectGetReadWriteContext() {
+		when(contextSourceMock.getReadWriteContext()).thenReturn(dirContextMock);
+	}
 
-    @Test
-    public void testRename() throws Exception {
-        expectGetReadWriteContext();
+	@Test
+	public void testRename() throws Exception {
+		expectGetReadWriteContext();
 
-        tested.rename(oldNameMock, newNameMock);
+		tested.rename(oldNameMock, newNameMock);
 
-        verify(dirContextMock).rename(oldNameMock, newNameMock);
-        verify(dirContextMock).close();
-    }
+		verify(dirContextMock).rename(oldNameMock, newNameMock);
+		verify(dirContextMock).close();
+	}
 
-    @Test
-    public void testRename_NameAlreadyBoundException() throws Exception {
-        expectGetReadWriteContext();
+	@Test
+	public void testRename_NameAlreadyBoundException() throws Exception {
+		expectGetReadWriteContext();
 
-        javax.naming.NameAlreadyBoundException ne = new javax.naming.NameAlreadyBoundException();
-        doThrow(ne).when(dirContextMock).rename(oldNameMock, newNameMock);
+		javax.naming.NameAlreadyBoundException ne = new javax.naming.NameAlreadyBoundException();
+		doThrow(ne).when(dirContextMock).rename(oldNameMock, newNameMock);
 
-        try {
-            tested.rename(oldNameMock, newNameMock);
-            fail("NameAlreadyBoundException expected");
-        } catch (NameAlreadyBoundException expected) {
-            assertThat(true).isTrue();
-        }
+		try {
+			tested.rename(oldNameMock, newNameMock);
+			fail("NameAlreadyBoundException expected");
+		} catch (NameAlreadyBoundException expected) {
+			assertThat(true).isTrue();
+		}
 
-        verify(dirContextMock).close();
-    }
+		verify(dirContextMock).close();
+	}
 
-    @Test
-    public void testRename_NamingException() throws Exception {
-        expectGetReadWriteContext();
+	@Test
+	public void testRename_NamingException() throws Exception {
+		expectGetReadWriteContext();
 
-        javax.naming.NamingException ne = new javax.naming.NamingException();
+		javax.naming.NamingException ne = new javax.naming.NamingException();
 
-        doThrow(ne).when(dirContextMock).rename(oldNameMock, newNameMock);
+		doThrow(ne).when(dirContextMock).rename(oldNameMock, newNameMock);
 
-        try {
-            tested.rename(oldNameMock, newNameMock);
-            fail("UncategorizedLdapException expected");
-        } catch (UncategorizedLdapException expected) {
-            assertThat(true).isTrue();
-        }
+		try {
+			tested.rename(oldNameMock, newNameMock);
+			fail("UncategorizedLdapException expected");
+		} catch (UncategorizedLdapException expected) {
+			assertThat(true).isTrue();
+		}
 
-        verify(dirContextMock).close();
-    }
+		verify(dirContextMock).close();
+	}
 
-    @Test
-    public void testRename_String() throws Exception {
-        expectGetReadWriteContext();
+	@Test
+	public void testRename_String() throws Exception {
+		expectGetReadWriteContext();
 
-        tested.rename("o=example.com", "o=somethingelse.com");
+		tested.rename("o=example.com", "o=somethingelse.com");
 
-        verify(dirContextMock).rename("o=example.com", "o=somethingelse.com");
-        verify(dirContextMock).close();
-    }
+		verify(dirContextMock).rename("o=example.com", "o=somethingelse.com");
+		verify(dirContextMock).close();
+	}
 }

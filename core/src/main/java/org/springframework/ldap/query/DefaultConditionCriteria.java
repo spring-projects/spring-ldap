@@ -30,60 +30,60 @@ import org.springframework.ldap.filter.WhitespaceWildcardsFilter;
  * @since 2.0
  */
 class DefaultConditionCriteria implements ConditionCriteria {
-    private final AppendableContainerCriteria parent;
-    private final String attribute;
-    private boolean negated = false;
+	private final AppendableContainerCriteria parent;
+	private final String attribute;
+	private boolean negated = false;
 
-    DefaultConditionCriteria(AppendableContainerCriteria parent, String attribute) {
-        this.parent = parent;
-        this.attribute = attribute;
-    }
+	DefaultConditionCriteria(AppendableContainerCriteria parent, String attribute) {
+		this.parent = parent;
+		this.attribute = attribute;
+	}
 
-    @Override
-    public ContainerCriteria is(String value) {
-        return appendToParent(new EqualsFilter(attribute, value));
-    }
+	@Override
+	public ContainerCriteria is(String value) {
+		return appendToParent(new EqualsFilter(attribute, value));
+	}
 
-    @Override
-    public ContainerCriteria gte(String value) {
-        return appendToParent(new GreaterThanOrEqualsFilter(attribute, value));
-    }
+	@Override
+	public ContainerCriteria gte(String value) {
+		return appendToParent(new GreaterThanOrEqualsFilter(attribute, value));
+	}
 
-    @Override
-    public ContainerCriteria lte(String value) {
-        return appendToParent(new LessThanOrEqualsFilter(attribute, value));
-    }
+	@Override
+	public ContainerCriteria lte(String value) {
+		return appendToParent(new LessThanOrEqualsFilter(attribute, value));
+	}
 
-    @Override
-    public ContainerCriteria like(String value) {
-        return appendToParent(new LikeFilter(attribute, value));
-    }
+	@Override
+	public ContainerCriteria like(String value) {
+		return appendToParent(new LikeFilter(attribute, value));
+	}
 
-    @Override
-    public ContainerCriteria whitespaceWildcardsLike(String value) {
-        return appendToParent(new WhitespaceWildcardsFilter(attribute, value));
-    }
+	@Override
+	public ContainerCriteria whitespaceWildcardsLike(String value) {
+		return appendToParent(new WhitespaceWildcardsFilter(attribute, value));
+	}
 
-    @Override
-    public ContainerCriteria isPresent() {
-        return appendToParent(new PresentFilter(attribute));
-    }
+	@Override
+	public ContainerCriteria isPresent() {
+		return appendToParent(new PresentFilter(attribute));
+	}
 
-    private ContainerCriteria appendToParent(Filter filter) {
-        return parent.append(negateIfApplicable(filter));
-    }
+	private ContainerCriteria appendToParent(Filter filter) {
+		return parent.append(negateIfApplicable(filter));
+	}
 
-    private Filter negateIfApplicable(Filter myFilter) {
-        if (negated) {
-            return new NotFilter(myFilter);
-        }
+	private Filter negateIfApplicable(Filter myFilter) {
+		if (negated) {
+			return new NotFilter(myFilter);
+		}
 
-        return myFilter;
-    }
+		return myFilter;
+	}
 
-    @Override
-    public DefaultConditionCriteria not() {
-        negated = !negated;
-        return this;
-    }
+	@Override
+	public DefaultConditionCriteria not() {
+		negated = !negated;
+		return this;
+	}
 }

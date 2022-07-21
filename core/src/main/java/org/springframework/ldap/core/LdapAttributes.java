@@ -79,36 +79,36 @@ public class LdapAttributes extends BasicAttributes {
 	 * Returns the distinguished name to which the object is bound.
 	 * 
 	 * @return {@link org.springframework.ldap.core.DistinguishedName} specifying the name to which the object is bound.
-     * @deprecated {@link DistinguishedName and associated classes and methods are deprecated as of 2.0}.
-     * use {@link #getName()} instead.
+	 * @deprecated {@link DistinguishedName and associated classes and methods are deprecated as of 2.0}.
+	 * use {@link #getName()} instead.
 	 */
 	public DistinguishedName getDN() {
 		return new DistinguishedName(dn);
 	}
 
-    /**
-     * Returns the distinguished name to which the object is bound.
-     *
-     * @return {@link LdapName} specifying the name to which the object is bound.
-     */
-    public LdapName getName() {
-        return LdapUtils.newLdapName(dn);
-    }
+	/**
+	 * Returns the distinguished name to which the object is bound.
+	 *
+	 * @return {@link LdapName} specifying the name to which the object is bound.
+	 */
+	public LdapName getName() {
+		return LdapUtils.newLdapName(dn);
+	}
 
 	/**
 	 * Sets the distinguished name of the object.
 	 * 
 	 * @param dn {@link org.springframework.ldap.core.DistinguishedName} specifying the name to which the object is bound.
-     * @deprecated {@link DistinguishedName and associated classes and methods are deprecated as of 2.0}.
-     * use {@link #setName(javax.naming.Name)} instead.
-     */
+	 * @deprecated {@link DistinguishedName and associated classes and methods are deprecated as of 2.0}.
+	 * use {@link #setName(javax.naming.Name)} instead.
+	 */
 	public void setDN(DistinguishedName dn) {
 		this.dn = LdapUtils.newLdapName(dn);
 	}
 
-    public void setName(Name name) {
-        this.dn = LdapUtils.newLdapName(name);
-    }
+	public void setName(Name name) {
+		this.dn = LdapUtils.newLdapName(name);
+	}
 	
 	/**
 	 * Returns a string representation of the object in LDIF format.
@@ -140,13 +140,13 @@ public class LdapAttributes extends BasicAttributes {
 					if (value instanceof String) {
 						sb.append(attribute.getID() + ": " + (String) value + "\n");
 					
-                    } else if (value instanceof byte[]) {
+					} else if (value instanceof byte[]) {
 						sb.append(attribute.getID() + ":: " + LdapEncoder.printBase64Binary((byte[]) value) + "\n");
 
-                    } else if (value instanceof URI) {
+					} else if (value instanceof URI) {
 						sb.append(attribute.getID() + ":< " + (URI) value + "\n");
 					
-                    } else {
+					} else {
 						sb.append(attribute.getID() + ": " + value + "\n");
 					}
 				}

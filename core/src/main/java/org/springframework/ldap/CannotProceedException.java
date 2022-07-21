@@ -25,7 +25,7 @@ package org.springframework.ldap;
  */
 public class CannotProceedException extends NamingException {
 
-    public CannotProceedException(javax.naming.CannotProceedException cause) {
-        super(cause);
-    }
+	public CannotProceedException(javax.naming.CannotProceedException cause) {
+		super(cause);
+	}
 }

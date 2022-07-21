@@ -31,68 +31,68 @@ import org.springframework.ldap.filter.Filter;
  */
 public interface ObjectDirectoryMapper {
 
-    /**
-     * Used to convert from Java representation of an Ldap Entry when writing to
-     * the Ldap directory
-     *
-     * @param entry - The entry to convert.
-     * @param context - The LDAP context to store the converted entry
-     * @throws org.springframework.ldap.NamingException on error.
-     */
-    void mapToLdapDataEntry(Object entry, LdapDataEntry context);
+	/**
+	 * Used to convert from Java representation of an Ldap Entry when writing to
+	 * the Ldap directory
+	 *
+	 * @param entry - The entry to convert.
+	 * @param context - The LDAP context to store the converted entry
+	 * @throws org.springframework.ldap.NamingException on error.
+	 */
+	void mapToLdapDataEntry(Object entry, LdapDataEntry context);
 
-    /**
-     * Used to convert from the JNDI LDAP representation of an Entry to the Java representation when reading from LDAP.
-     * @throws org.springframework.ldap.NamingException on error.
-     */
-    <T> T mapFromLdapDataEntry(LdapDataEntry ctx, Class<T> clazz);
+	/**
+	 * Used to convert from the JNDI LDAP representation of an Entry to the Java representation when reading from LDAP.
+	 * @throws org.springframework.ldap.NamingException on error.
+	 */
+	<T> T mapFromLdapDataEntry(LdapDataEntry ctx, Class<T> clazz);
 
-    /**
-     * Get the distinguished name for the specified object.
-     *
-     * @param entry the entry to get distinguished name for.
-     * @return the distinguished name of the entry.
-     * @throws org.springframework.ldap.NamingException on error.
-     */
-    Name getId(Object entry);
+	/**
+	 * Get the distinguished name for the specified object.
+	 *
+	 * @param entry the entry to get distinguished name for.
+	 * @return the distinguished name of the entry.
+	 * @throws org.springframework.ldap.NamingException on error.
+	 */
+	Name getId(Object entry);
 
-    /**
-     * Set the distinguished name for the specified object.
-     *
-     * @param entry the entry to set the name on
-     * @param id the name to set
-     * @throws org.springframework.ldap.NamingException on error.
-     */
-    void setId(Object entry, Name id);
+	/**
+	 * Set the distinguished name for the specified object.
+	 *
+	 * @param entry the entry to set the name on
+	 * @param id the name to set
+	 * @throws org.springframework.ldap.NamingException on error.
+	 */
+	void setId(Object entry, Name id);
 
-    Name getCalculatedId(Object entry);
+	Name getCalculatedId(Object entry);
 
-    /**
-     * Use the specified search filter and return a new one that only applies to entries of the specified class.
-     * In effect this means padding the original filter with an objectclass condition.
-     *
-     * @param clazz the class.
-     * @param baseFilter the filter we want to use.
-     * @return the original filter, modified so that it only applies to entries of the specified class.
-     * @throws org.springframework.ldap.NamingException on error.
-     */
-    Filter filterFor(Class<?> clazz, Filter baseFilter);
+	/**
+	 * Use the specified search filter and return a new one that only applies to entries of the specified class.
+	 * In effect this means padding the original filter with an objectclass condition.
+	 *
+	 * @param clazz the class.
+	 * @param baseFilter the filter we want to use.
+	 * @return the original filter, modified so that it only applies to entries of the specified class.
+	 * @throws org.springframework.ldap.NamingException on error.
+	 */
+	Filter filterFor(Class<?> clazz, Filter baseFilter);
 
-    /**
-     * Get the attribute corresponding to the specified field name.
-     * @param clazz the clazz.
-     * @param fieldName the field name.
-     * @return the attribute name.
-     * @throws IllegalArgumentException if the fieldName is not present in the class or if
-     * it is not mapped to an attribute.
-     */
-    String attributeFor(Class<?> clazz, String fieldName);
+	/**
+	 * Get the attribute corresponding to the specified field name.
+	 * @param clazz the clazz.
+	 * @param fieldName the field name.
+	 * @return the attribute name.
+	 * @throws IllegalArgumentException if the fieldName is not present in the class or if
+	 * it is not mapped to an attribute.
+	 */
+	String attributeFor(Class<?> clazz, String fieldName);
 
-    /** Check if the specified class is already managed by this instance; if not, check the metadata and add the class to the managed
-     * classes.
-     *
-     * @param clazz the class to manage.
-     * @return all relevant attribute names used in the given class (either for reading from LDAP or for writing to LDAP or both)
-     * @throws org.springframework.ldap.NamingException on error. */
-    String[] manageClass(Class<?> clazz);
+	/** Check if the specified class is already managed by this instance; if not, check the metadata and add the class to the managed
+	 * classes.
+	 *
+	 * @param clazz the class to manage.
+	 * @return all relevant attribute names used in the given class (either for reading from LDAP or for writing to LDAP or both)
+	 * @throws org.springframework.ldap.NamingException on error. */
+	String[] manageClass(Class<?> clazz);
 }

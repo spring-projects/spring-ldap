@@ -26,22 +26,22 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
  * @since 1.2
  */
 public class NullOperationExecutor implements
-        CompensatingTransactionOperationExecutor {
+		CompensatingTransactionOperationExecutor {
 
-    private static Logger log = LoggerFactory.getLogger(NullOperationExecutor.class);
+	private static Logger log = LoggerFactory.getLogger(NullOperationExecutor.class);
 
-    /*
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#rollback()
-     */
-    public void rollback() {
-        log.info("Rolling back null operation");
-    }
+	/*
+	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#rollback()
+	 */
+	public void rollback() {
+		log.info("Rolling back null operation");
+	}
 
-    public void commit() {
-        log.info("Committing back null operation");
-    }
+	public void commit() {
+		log.info("Committing back null operation");
+	}
 
-    public void performOperation() {
-        log.info("Performing null operation");
-    }
+	public void performOperation() {
+		log.info("Performing null operation");
+	}
 }

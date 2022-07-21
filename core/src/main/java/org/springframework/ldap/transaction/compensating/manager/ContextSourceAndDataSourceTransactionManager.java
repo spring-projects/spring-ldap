@@ -38,175 +38,175 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * after all. AbstractPlatformTransactionManager is not designed for this usage.
  */
 public class ContextSourceAndDataSourceTransactionManager extends
-        DataSourceTransactionManager {
+		DataSourceTransactionManager {
 
-    private static final long serialVersionUID = 6832868697460384648L;
+	private static final long serialVersionUID = 6832868697460384648L;
 
-    private ContextSourceTransactionManagerDelegate ldapManagerDelegate = new ContextSourceTransactionManagerDelegate();
+	private ContextSourceTransactionManagerDelegate ldapManagerDelegate = new ContextSourceTransactionManagerDelegate();
 
-    public ContextSourceAndDataSourceTransactionManager() {
-        super();
-        // Override the default behaviour.
-        setNestedTransactionAllowed(false);
-    }
+	public ContextSourceAndDataSourceTransactionManager() {
+		super();
+		// Override the default behaviour.
+		setNestedTransactionAllowed(false);
+	}
 
-    /*
-     * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#isExistingTransaction(java.lang.Object)
-     */
-    protected boolean isExistingTransaction(Object transaction) {
-    	// We don't support nested transactions here
-    	return false;
-    }
+	/*
+	 * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#isExistingTransaction(java.lang.Object)
+	 */
+	protected boolean isExistingTransaction(Object transaction) {
+		// We don't support nested transactions here
+		return false;
+	}
 
-    /*
-     * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doGetTransaction()
-     */
-    protected Object doGetTransaction() {
-        Object dataSourceTransactionObject = super.doGetTransaction();
-        Object contextSourceTransactionObject = ldapManagerDelegate
-                .doGetTransaction();
+	/*
+	 * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doGetTransaction()
+	 */
+	protected Object doGetTransaction() {
+		Object dataSourceTransactionObject = super.doGetTransaction();
+		Object contextSourceTransactionObject = ldapManagerDelegate
+				.doGetTransaction();
 
-        return new ContextSourceAndDataSourceTransactionObject(
-                contextSourceTransactionObject, dataSourceTransactionObject);
-    }
+		return new ContextSourceAndDataSourceTransactionObject(
+				contextSourceTransactionObject, dataSourceTransactionObject);
+	}
 
-    /*
-     * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doBegin(java.lang.Object,
-     *      org.springframework.transaction.TransactionDefinition)
-     */
-    protected void doBegin(Object transaction, TransactionDefinition definition) {
-        ContextSourceAndDataSourceTransactionObject actualTransactionObject = (ContextSourceAndDataSourceTransactionObject) transaction;
+	/*
+	 * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doBegin(java.lang.Object,
+	 *	  org.springframework.transaction.TransactionDefinition)
+	 */
+	protected void doBegin(Object transaction, TransactionDefinition definition) {
+		ContextSourceAndDataSourceTransactionObject actualTransactionObject = (ContextSourceAndDataSourceTransactionObject) transaction;
 
-        super.doBegin(actualTransactionObject.getDataSourceTransactionObject(),
-                definition);
-        try {
-            ldapManagerDelegate.doBegin(actualTransactionObject
-                    .getLdapTransactionObject(), definition);
-        } catch (TransactionException e) {
-            // Failed to start LDAP transaction - make sure we clean up properly
-            super.doCleanupAfterCompletion(actualTransactionObject.getDataSourceTransactionObject());
-            throw e;
-        }
-    }
+		super.doBegin(actualTransactionObject.getDataSourceTransactionObject(),
+				definition);
+		try {
+			ldapManagerDelegate.doBegin(actualTransactionObject
+					.getLdapTransactionObject(), definition);
+		} catch (TransactionException e) {
+			// Failed to start LDAP transaction - make sure we clean up properly
+			super.doCleanupAfterCompletion(actualTransactionObject.getDataSourceTransactionObject());
+			throw e;
+		}
+	}
 
-    /*
-     * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doCleanupAfterCompletion(java.lang.Object)
-     */
-    protected void doCleanupAfterCompletion(Object transaction) {
-        ContextSourceAndDataSourceTransactionObject actualTransactionObject = (ContextSourceAndDataSourceTransactionObject) transaction;
+	/*
+	 * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doCleanupAfterCompletion(java.lang.Object)
+	 */
+	protected void doCleanupAfterCompletion(Object transaction) {
+		ContextSourceAndDataSourceTransactionObject actualTransactionObject = (ContextSourceAndDataSourceTransactionObject) transaction;
 
-        super.doCleanupAfterCompletion(actualTransactionObject
-                .getDataSourceTransactionObject());
-        ldapManagerDelegate.doCleanupAfterCompletion(actualTransactionObject
-                .getLdapTransactionObject());
-    }
+		super.doCleanupAfterCompletion(actualTransactionObject
+				.getDataSourceTransactionObject());
+		ldapManagerDelegate.doCleanupAfterCompletion(actualTransactionObject
+				.getLdapTransactionObject());
+	}
 
-    /*
-     * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doCommit(org.springframework.transaction.support.DefaultTransactionStatus)
-     */
-    protected void doCommit(DefaultTransactionStatus status) {
+	/*
+	 * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doCommit(org.springframework.transaction.support.DefaultTransactionStatus)
+	 */
+	protected void doCommit(DefaultTransactionStatus status) {
 
-        ContextSourceAndDataSourceTransactionObject actualTransactionObject = (ContextSourceAndDataSourceTransactionObject) status
-                .getTransaction();
+		ContextSourceAndDataSourceTransactionObject actualTransactionObject = (ContextSourceAndDataSourceTransactionObject) status
+				.getTransaction();
 
-        try {
-            super.doCommit(new DefaultTransactionStatus(actualTransactionObject
-                    .getDataSourceTransactionObject(), status
-                    .isNewTransaction(), status.isNewSynchronization(), status
-                    .isReadOnly(), status.isDebug(), status
-                    .getSuspendedResources()));
-        } catch (TransactionException ex) {
-            if (isRollbackOnCommitFailure()) {
-                logger.debug("Failed to commit db resource, rethrowing", ex);
-                // If we are to rollback on commit failure, just rethrow the
-                // exception - this will cause a rollback to be performed on
-                // both resources.
-                throw ex;
-            } else {
-                logger
-                        .warn("Failed to commit and resource is rollbackOnCommit not set -"
-                                + " proceeding to commit ldap resource.");
-            }
-        }
-        ldapManagerDelegate.doCommit(new DefaultTransactionStatus(
-                actualTransactionObject.getLdapTransactionObject(), status
-                        .isNewTransaction(), status.isNewSynchronization(),
-                status.isReadOnly(), status.isDebug(), status
-                        .getSuspendedResources()));
-    }
+		try {
+			super.doCommit(new DefaultTransactionStatus(actualTransactionObject
+					.getDataSourceTransactionObject(), status
+					.isNewTransaction(), status.isNewSynchronization(), status
+					.isReadOnly(), status.isDebug(), status
+					.getSuspendedResources()));
+		} catch (TransactionException ex) {
+			if (isRollbackOnCommitFailure()) {
+				logger.debug("Failed to commit db resource, rethrowing", ex);
+				// If we are to rollback on commit failure, just rethrow the
+				// exception - this will cause a rollback to be performed on
+				// both resources.
+				throw ex;
+			} else {
+				logger
+						.warn("Failed to commit and resource is rollbackOnCommit not set -"
+								+ " proceeding to commit ldap resource.");
+			}
+		}
+		ldapManagerDelegate.doCommit(new DefaultTransactionStatus(
+				actualTransactionObject.getLdapTransactionObject(), status
+						.isNewTransaction(), status.isNewSynchronization(),
+				status.isReadOnly(), status.isDebug(), status
+						.getSuspendedResources()));
+	}
 
-    /*
-     * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doRollback(org.springframework.transaction.support.DefaultTransactionStatus)
-     */
-    protected void doRollback(DefaultTransactionStatus status) {
-        ContextSourceAndDataSourceTransactionObject actualTransactionObject = (ContextSourceAndDataSourceTransactionObject) status
-                .getTransaction();
+	/*
+	 * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doRollback(org.springframework.transaction.support.DefaultTransactionStatus)
+	 */
+	protected void doRollback(DefaultTransactionStatus status) {
+		ContextSourceAndDataSourceTransactionObject actualTransactionObject = (ContextSourceAndDataSourceTransactionObject) status
+				.getTransaction();
 
-        super.doRollback(new DefaultTransactionStatus(actualTransactionObject
-                .getDataSourceTransactionObject(), status.isNewTransaction(),
-                status.isNewSynchronization(), status.isReadOnly(), status
-                        .isDebug(), status.getSuspendedResources()));
-        ldapManagerDelegate.doRollback(new DefaultTransactionStatus(
-                actualTransactionObject.getLdapTransactionObject(), status
-                        .isNewTransaction(), status.isNewSynchronization(),
-                status.isReadOnly(), status.isDebug(), status
-                        .getSuspendedResources()));
-    }
+		super.doRollback(new DefaultTransactionStatus(actualTransactionObject
+				.getDataSourceTransactionObject(), status.isNewTransaction(),
+				status.isNewSynchronization(), status.isReadOnly(), status
+						.isDebug(), status.getSuspendedResources()));
+		ldapManagerDelegate.doRollback(new DefaultTransactionStatus(
+				actualTransactionObject.getLdapTransactionObject(), status
+						.isNewTransaction(), status.isNewSynchronization(),
+				status.isReadOnly(), status.isDebug(), status
+						.getSuspendedResources()));
+	}
 
-    public ContextSource getContextSource() {
-        return ldapManagerDelegate.getContextSource();
-    }
+	public ContextSource getContextSource() {
+		return ldapManagerDelegate.getContextSource();
+	}
 
-    public void setContextSource(ContextSource contextSource) {
-        ldapManagerDelegate.setContextSource(contextSource);
-    }
+	public void setContextSource(ContextSource contextSource) {
+		ldapManagerDelegate.setContextSource(contextSource);
+	}
 
-    public void setRenamingStrategy(
-            TempEntryRenamingStrategy renamingStrategy) {
-        ldapManagerDelegate.setRenamingStrategy(renamingStrategy);
-    }
+	public void setRenamingStrategy(
+			TempEntryRenamingStrategy renamingStrategy) {
+		ldapManagerDelegate.setRenamingStrategy(renamingStrategy);
+	}
 
-    private final static class ContextSourceAndDataSourceTransactionObject {
-        private Object ldapTransactionObject;
+	private final static class ContextSourceAndDataSourceTransactionObject {
+		private Object ldapTransactionObject;
 
-        private Object dataSourceTransactionObject;
+		private Object dataSourceTransactionObject;
 
-        public ContextSourceAndDataSourceTransactionObject(
-                Object ldapTransactionObject, Object dataSourceTransactionObject) {
-            this.ldapTransactionObject = ldapTransactionObject;
-            this.dataSourceTransactionObject = dataSourceTransactionObject;
-        }
+		public ContextSourceAndDataSourceTransactionObject(
+				Object ldapTransactionObject, Object dataSourceTransactionObject) {
+			this.ldapTransactionObject = ldapTransactionObject;
+			this.dataSourceTransactionObject = dataSourceTransactionObject;
+		}
 
-        public Object getDataSourceTransactionObject() {
-            return dataSourceTransactionObject;
-        }
+		public Object getDataSourceTransactionObject() {
+			return dataSourceTransactionObject;
+		}
 
-        public Object getLdapTransactionObject() {
-            return ldapTransactionObject;
-        }
-    }
+		public Object getLdapTransactionObject() {
+			return ldapTransactionObject;
+		}
+	}
 
-    /*
-     * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doSuspend(java.lang.Object)
-     */
-    protected Object doSuspend(Object transaction) {
-        throw new TransactionSuspensionNotSupportedException(
-                "Transaction manager [" + getClass().getName()
-                        + "] does not support transaction suspension");
-    }
+	/*
+	 * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doSuspend(java.lang.Object)
+	 */
+	protected Object doSuspend(Object transaction) {
+		throw new TransactionSuspensionNotSupportedException(
+				"Transaction manager [" + getClass().getName()
+						+ "] does not support transaction suspension");
+	}
 
-    /*
-     * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doResume(java.lang.Object,
-     *      java.lang.Object)
-     */
-    protected void doResume(Object transaction, Object suspendedResources) {
-        throw new TransactionSuspensionNotSupportedException(
-                "Transaction manager [" + getClass().getName()
-                        + "] does not support transaction suspension");
-    }
+	/*
+	 * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doResume(java.lang.Object,
+	 *	  java.lang.Object)
+	 */
+	protected void doResume(Object transaction, Object suspendedResources) {
+		throw new TransactionSuspensionNotSupportedException(
+				"Transaction manager [" + getClass().getName()
+						+ "] does not support transaction suspension");
+	}
 
-    public void afterPropertiesSet() {
-        super.afterPropertiesSet();
-        ldapManagerDelegate.checkRenamingStrategy();
-    }
+	public void afterPropertiesSet() {
+		super.afterPropertiesSet();
+		ldapManagerDelegate.checkRenamingStrategy();
+	}
 }

@@ -54,7 +54,7 @@ public class ContextSourceTransactionManagerTest {
 
 	private TempEntryRenamingStrategy renamingStrategyMock;
 
-    @Before
+	@Before
 	public void setUp() throws Exception {
 		if (TransactionSynchronizationManager.isSynchronizationActive()) {
 			TransactionSynchronizationManager.clearSynchronization();
@@ -71,7 +71,7 @@ public class ContextSourceTransactionManagerTest {
 		tested.setRenamingStrategy(renamingStrategyMock);
 	}
 
-    @Test
+	@Test
 	public void testDoGetTransaction() {
 		Object result = tested.doGetTransaction();
 
@@ -81,7 +81,7 @@ public class ContextSourceTransactionManagerTest {
 		assertThat(transactionObject.getHolder()).isNull();
 	}
 
-    @Test
+	@Test
 	public void testDoGetTransactionTransactionActive() {
 		CompensatingTransactionHolderSupport expectedContextHolder = new DirContextHolder(null, null);
 		TransactionSynchronizationManager.bindResource(contextSourceMock, expectedContextHolder);
@@ -89,7 +89,7 @@ public class ContextSourceTransactionManagerTest {
 		assertThat(((CompensatingTransactionObject) result).getHolder()).isSameAs(expectedContextHolder);
 	}
 
-    @Test
+	@Test
 	public void testDoBegin() {
 		when(contextSourceMock.getReadWriteContext()).thenReturn(contextMock);
 
@@ -101,8 +101,8 @@ public class ContextSourceTransactionManagerTest {
 		assertThat(foundContextHolder.getCtx()).isSameAs(contextMock);
 	}
 
-    @Test
-    public void testDoRollback() {
+	@Test
+	public void testDoRollback() {
 		DirContextHolder expectedContextHolder = new DirContextHolder(null, contextMock);
 		expectedContextHolder.setTransactionOperationManager(transactionDataManagerMock);
 		TransactionSynchronizationManager.bindResource(contextSourceMock, expectedContextHolder);
@@ -111,10 +111,10 @@ public class ContextSourceTransactionManagerTest {
 		transactionObject.setHolder(expectedContextHolder);
 		tested.doRollback(new DefaultTransactionStatus(transactionObject, false, false, false, false, null));
 
-        verify(transactionDataManagerMock).rollback();
+		verify(transactionDataManagerMock).rollback();
 	}
 
-    @Test
+	@Test
 	public void testDoCleanupAfterCompletion() throws Exception {
 		DirContextHolder expectedContextHolder = new DirContextHolder(null, contextMock);
 		TransactionSynchronizationManager.bindResource(contextSourceMock, expectedContextHolder);
@@ -123,10 +123,10 @@ public class ContextSourceTransactionManagerTest {
 
 		assertThat(TransactionSynchronizationManager.getResource(contextSourceMock)).isNull();
 		assertThat(expectedContextHolder.getTransactionOperationManager()).isNull();
-        verify(contextMock).close();
+		verify(contextMock).close();
 	}
 
-    @Test
+	@Test
 	public void testSetContextSource_Proxy() {
 		TransactionAwareContextSourceProxy proxy = new TransactionAwareContextSourceProxy(contextSourceMock);
 
@@ -138,7 +138,7 @@ public class ContextSourceTransactionManagerTest {
 		assertThat(result).isSameAs(contextSourceMock);
 	}
 
-    @Test
+	@Test
 	public void testTransactionSuspension_UnconnectableDataSource() throws Exception {
 		Connection connectionMock = mock(Connection.class);
 		DataSource dataSourceMock = mock(DataSource.class);
@@ -191,6 +191,6 @@ public class ContextSourceTransactionManagerTest {
 			assertThat(expected.getCause()).as("Should be thrown exception").isSameAs(connectException);
 		}
 
-        verify(connectionMock).rollback();
-    }
+		verify(connectionMock).rollback();
+	}
 }

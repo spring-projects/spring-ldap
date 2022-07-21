@@ -26,90 +26,90 @@ import static org.mockito.Mockito.when;
 
 public class DefaultValuesAuthenticationSourceDecoratorTest {
 
-    private static final String DEFAULT_PASSWORD = "defaultPassword";
+	private static final String DEFAULT_PASSWORD = "defaultPassword";
 
-    private static final String DEFAULT_USER = "cn=defaultUser";
+	private static final String DEFAULT_USER = "cn=defaultUser";
 
-    private DefaultValuesAuthenticationSourceDecorator tested;
+	private DefaultValuesAuthenticationSourceDecorator tested;
 
-    private AuthenticationSource authenticationSourceMock;
+	private AuthenticationSource authenticationSourceMock;
 
-    @Before
-    public void setUp() throws Exception {
-        authenticationSourceMock = mock(AuthenticationSource.class);
-        tested = new DefaultValuesAuthenticationSourceDecorator();
-        tested.setDefaultUser(DEFAULT_USER);
-        tested.setDefaultPassword(DEFAULT_PASSWORD);
-        tested.setTarget(authenticationSourceMock);
-    }
+	@Before
+	public void setUp() throws Exception {
+		authenticationSourceMock = mock(AuthenticationSource.class);
+		tested = new DefaultValuesAuthenticationSourceDecorator();
+		tested.setDefaultUser(DEFAULT_USER);
+		tested.setDefaultPassword(DEFAULT_PASSWORD);
+		tested.setTarget(authenticationSourceMock);
+	}
 
-    @Test
-    public void testGetPrincipal_TargetHasPrincipal() {
-        when(authenticationSourceMock.getPrincipal()).thenReturn("cn=someUser");
-        String principal = tested.getPrincipal();
+	@Test
+	public void testGetPrincipal_TargetHasPrincipal() {
+		when(authenticationSourceMock.getPrincipal()).thenReturn("cn=someUser");
+		String principal = tested.getPrincipal();
 
-        assertThat(principal).isEqualTo("cn=someUser");
-    }
+		assertThat(principal).isEqualTo("cn=someUser");
+	}
 
-    @Test
-    public void testGetPrincipal_TargetHasNoPrincipal() {
-        when(authenticationSourceMock.getPrincipal()).thenReturn("");
+	@Test
+	public void testGetPrincipal_TargetHasNoPrincipal() {
+		when(authenticationSourceMock.getPrincipal()).thenReturn("");
 
-        String principal = tested.getPrincipal();
+		String principal = tested.getPrincipal();
 
-        assertThat(principal).isEqualTo(DEFAULT_USER);
-    }
+		assertThat(principal).isEqualTo(DEFAULT_USER);
+	}
 
-    @Test
-    public void testGetCredentials_TargetHasPrincipal() {
-        when(authenticationSourceMock.getPrincipal()).thenReturn("cn=someUser");
-        when(authenticationSourceMock.getCredentials()).thenReturn("somepassword");
+	@Test
+	public void testGetCredentials_TargetHasPrincipal() {
+		when(authenticationSourceMock.getPrincipal()).thenReturn("cn=someUser");
+		when(authenticationSourceMock.getCredentials()).thenReturn("somepassword");
 
-        String credentials = tested.getCredentials();
+		String credentials = tested.getCredentials();
 
-        assertThat(credentials).isEqualTo("somepassword");
-    }
+		assertThat(credentials).isEqualTo("somepassword");
+	}
 
-    @Test
-    public void testGetCredentials_TargetHasNoPrincipal() {
-        when(authenticationSourceMock.getPrincipal()).thenReturn("");
-        when(authenticationSourceMock.getCredentials()).thenReturn("somepassword");
+	@Test
+	public void testGetCredentials_TargetHasNoPrincipal() {
+		when(authenticationSourceMock.getPrincipal()).thenReturn("");
+		when(authenticationSourceMock.getCredentials()).thenReturn("somepassword");
 
-        String credentials = tested.getCredentials();
+		String credentials = tested.getCredentials();
 
-        assertThat(credentials).isEqualTo(DEFAULT_PASSWORD);
-    }
+		assertThat(credentials).isEqualTo(DEFAULT_PASSWORD);
+	}
 
-    @Test
-    public void testAfterPropertiesSet_noTarget() throws Exception {
-        tested.setTarget(null);
-        try {
-            tested.afterPropertiesSet();
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertThat(true).isTrue();
-        }
-    }
+	@Test
+	public void testAfterPropertiesSet_noTarget() throws Exception {
+		tested.setTarget(null);
+		try {
+			tested.afterPropertiesSet();
+			fail("IllegalArgumentException expected");
+		} catch (IllegalArgumentException expected) {
+			assertThat(true).isTrue();
+		}
+	}
 
-    @Test
-    public void testAfterPropertiesSet_noDefaultUser() throws Exception {
-        tested.setDefaultUser(null);
-        try {
-            tested.afterPropertiesSet();
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertThat(true).isTrue();
-        }
-    }
+	@Test
+	public void testAfterPropertiesSet_noDefaultUser() throws Exception {
+		tested.setDefaultUser(null);
+		try {
+			tested.afterPropertiesSet();
+			fail("IllegalArgumentException expected");
+		} catch (IllegalArgumentException expected) {
+			assertThat(true).isTrue();
+		}
+	}
 
-    @Test
-    public void testAfterPropertiesSet_noDefaultPassword() throws Exception {
-        tested.setDefaultPassword(null);
-        try {
-            tested.afterPropertiesSet();
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertThat(true).isTrue();
-        }
-    }
+	@Test
+	public void testAfterPropertiesSet_noDefaultPassword() throws Exception {
+		tested.setDefaultPassword(null);
+		try {
+			tested.afterPropertiesSet();
+			fail("IllegalArgumentException expected");
+		} catch (IllegalArgumentException expected) {
+			assertThat(true).isTrue();
+		}
+	}
 }

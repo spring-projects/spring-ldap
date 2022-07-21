@@ -31,143 +31,143 @@ import static org.mockito.Mockito.when;
 
 /**
  * @author Eric Dalquist <a
- *         href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
+ *		 href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
  */
 public class DefaultDirContextValidatorTest {
 
-    private NamingEnumeration namingEnumerationMock;
+	private NamingEnumeration namingEnumerationMock;
 
-    private DirContext dirContextMock;
+	private DirContext dirContextMock;
 
-    @Before
-    public void setUp() throws Exception {
-        namingEnumerationMock = mock(NamingEnumeration.class);
-        dirContextMock = mock(DirContext.class);
-    }
-
-    // LDAP-189
-    @Test
-    public void testSearchScopeOneLevelScopeSetInConstructorIsUsed() throws Exception {
-        DefaultDirContextValidator tested = new DefaultDirContextValidator(SearchControls.ONELEVEL_SCOPE);
-        assertThat(tested.getSearchControls().getSearchScope()).as("ONELEVEL_SCOPE, ").isEqualTo(SearchControls.ONELEVEL_SCOPE);
-	}
-    
-    // LDAP-189
-    @Test
-    public void testSearchScopeSubTreeScopeSetInConstructorIsUsed() throws Exception {
-    	DefaultDirContextValidator tested = new DefaultDirContextValidator(SearchControls.SUBTREE_SCOPE);
-    	assertThat(tested.getSearchControls().getSearchScope()).as("SUBTREE_SCOPE, ").isEqualTo(SearchControls.SUBTREE_SCOPE);
-    }
-
-    // LDAP-189
-    @Test
-    public void testSearchScopeObjectScopeSetInConstructorIsUsed() throws Exception {
-        DefaultDirContextValidator tested = new DefaultDirContextValidator(SearchControls.OBJECT_SCOPE);
-        assertThat(tested.getSearchControls().getSearchScope()).as("OBJECT_SCOPE, ").isEqualTo(SearchControls.OBJECT_SCOPE);
+	@Before
+	public void setUp() throws Exception {
+		namingEnumerationMock = mock(NamingEnumeration.class);
+		dirContextMock = mock(DirContext.class);
 	}
 
-    @Test
-    public void testProperties() throws Exception {
-        final DefaultDirContextValidator dirContextValidator = new DefaultDirContextValidator();
+	// LDAP-189
+	@Test
+	public void testSearchScopeOneLevelScopeSetInConstructorIsUsed() throws Exception {
+		DefaultDirContextValidator tested = new DefaultDirContextValidator(SearchControls.ONELEVEL_SCOPE);
+		assertThat(tested.getSearchControls().getSearchScope()).as("ONELEVEL_SCOPE, ").isEqualTo(SearchControls.ONELEVEL_SCOPE);
+	}
+	
+	// LDAP-189
+	@Test
+	public void testSearchScopeSubTreeScopeSetInConstructorIsUsed() throws Exception {
+		DefaultDirContextValidator tested = new DefaultDirContextValidator(SearchControls.SUBTREE_SCOPE);
+		assertThat(tested.getSearchControls().getSearchScope()).as("SUBTREE_SCOPE, ").isEqualTo(SearchControls.SUBTREE_SCOPE);
+	}
 
-        dirContextValidator.setBase("baseName");
-        final String baseName = dirContextValidator.getBase();
-        assertThat(baseName).isEqualTo("baseName");
+	// LDAP-189
+	@Test
+	public void testSearchScopeObjectScopeSetInConstructorIsUsed() throws Exception {
+		DefaultDirContextValidator tested = new DefaultDirContextValidator(SearchControls.OBJECT_SCOPE);
+		assertThat(tested.getSearchControls().getSearchScope()).as("OBJECT_SCOPE, ").isEqualTo(SearchControls.OBJECT_SCOPE);
+	}
 
-        try {
-            dirContextValidator.setFilter(null);
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertThat(true).isTrue();
-        }
-        dirContextValidator.setFilter("filter");
-        final String filter = dirContextValidator.getFilter();
-        assertThat(filter).isEqualTo("filter");
+	@Test
+	public void testProperties() throws Exception {
+		final DefaultDirContextValidator dirContextValidator = new DefaultDirContextValidator();
 
-        try {
-            dirContextValidator.setSearchControls(null);
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertThat(true).isTrue();
-        }
-        final SearchControls sc = new SearchControls();
-        dirContextValidator.setSearchControls(sc);
-        final SearchControls sc2 = dirContextValidator.getSearchControls();
-        assertThat(sc2).isEqualTo(sc);
-    }
+		dirContextValidator.setBase("baseName");
+		final String baseName = dirContextValidator.getBase();
+		assertThat(baseName).isEqualTo("baseName");
 
-    @Test
-    public void testValidateDirContextAssertions() throws Exception {
-        final DefaultDirContextValidator dirContextValidator = new DefaultDirContextValidator();
+		try {
+			dirContextValidator.setFilter(null);
+			fail("IllegalArgumentException expected");
+		} catch (IllegalArgumentException expected) {
+			assertThat(true).isTrue();
+		}
+		dirContextValidator.setFilter("filter");
+		final String filter = dirContextValidator.getFilter();
+		assertThat(filter).isEqualTo("filter");
 
-        try {
-            dirContextValidator.validateDirContext(DirContextType.READ_ONLY,
-                    null);
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertThat(true).isTrue();
-        }
+		try {
+			dirContextValidator.setSearchControls(null);
+			fail("IllegalArgumentException expected");
+		} catch (IllegalArgumentException expected) {
+			assertThat(true).isTrue();
+		}
+		final SearchControls sc = new SearchControls();
+		dirContextValidator.setSearchControls(sc);
+		final SearchControls sc2 = dirContextValidator.getSearchControls();
+		assertThat(sc2).isEqualTo(sc);
+	}
 
-        try {
-            dirContextValidator.validateDirContext(null, dirContextMock);
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertThat(true).isTrue();
-        }
-    }
+	@Test
+	public void testValidateDirContextAssertions() throws Exception {
+		final DefaultDirContextValidator dirContextValidator = new DefaultDirContextValidator();
 
-    @Test
-    public void testValidateDirContextHasResult() throws Exception {
-        final DefaultDirContextValidator dirContextValidator = new DefaultDirContextValidator();
+		try {
+			dirContextValidator.validateDirContext(DirContextType.READ_ONLY,
+					null);
+			fail("IllegalArgumentException expected");
+		} catch (IllegalArgumentException expected) {
+			assertThat(true).isTrue();
+		}
 
-        final String baseName = dirContextValidator.getBase();
-        final String filter = dirContextValidator.getFilter();
-        final SearchControls searchControls = dirContextValidator
-                .getSearchControls();
+		try {
+			dirContextValidator.validateDirContext(null, dirContextMock);
+			fail("IllegalArgumentException expected");
+		} catch (IllegalArgumentException expected) {
+			assertThat(true).isTrue();
+		}
+	}
 
-        when(namingEnumerationMock.hasMore()).thenReturn(true);
-        when(dirContextMock.search(baseName, filter, searchControls))
-                .thenReturn(namingEnumerationMock);
+	@Test
+	public void testValidateDirContextHasResult() throws Exception {
+		final DefaultDirContextValidator dirContextValidator = new DefaultDirContextValidator();
 
-        final boolean valid = dirContextValidator.validateDirContext(
-                DirContextType.READ_ONLY, dirContextMock);
-        assertThat(valid).isTrue();
-    }
+		final String baseName = dirContextValidator.getBase();
+		final String filter = dirContextValidator.getFilter();
+		final SearchControls searchControls = dirContextValidator
+				.getSearchControls();
 
-    @Test
-    public void testValidateDirContextNoResult() throws Exception {
-        final DefaultDirContextValidator dirContextValidator = new DefaultDirContextValidator();
+		when(namingEnumerationMock.hasMore()).thenReturn(true);
+		when(dirContextMock.search(baseName, filter, searchControls))
+				.thenReturn(namingEnumerationMock);
 
-        final String baseName = dirContextValidator.getBase();
-        final String filter = dirContextValidator.getFilter();
-        final SearchControls searchControls = dirContextValidator
-                .getSearchControls();
+		final boolean valid = dirContextValidator.validateDirContext(
+				DirContextType.READ_ONLY, dirContextMock);
+		assertThat(valid).isTrue();
+	}
 
-        when(namingEnumerationMock.hasMore()).thenReturn(false);
-        when(dirContextMock.search(baseName, filter, searchControls))
-                .thenReturn(namingEnumerationMock);
+	@Test
+	public void testValidateDirContextNoResult() throws Exception {
+		final DefaultDirContextValidator dirContextValidator = new DefaultDirContextValidator();
 
-        final boolean valid = dirContextValidator.validateDirContext(
-                DirContextType.READ_ONLY, dirContextMock);
+		final String baseName = dirContextValidator.getBase();
+		final String filter = dirContextValidator.getFilter();
+		final SearchControls searchControls = dirContextValidator
+				.getSearchControls();
 
-        assertThat(valid).isFalse();
-    }
+		when(namingEnumerationMock.hasMore()).thenReturn(false);
+		when(dirContextMock.search(baseName, filter, searchControls))
+				.thenReturn(namingEnumerationMock);
 
-    @Test
-    public void testValidateDirContextException() throws Exception {
-        final DefaultDirContextValidator dirContextValidator = new DefaultDirContextValidator();
+		final boolean valid = dirContextValidator.validateDirContext(
+				DirContextType.READ_ONLY, dirContextMock);
 
-        final String baseName = dirContextValidator.getBase();
-        final String filter = dirContextValidator.getFilter();
-        final SearchControls searchControls = dirContextValidator
-                .getSearchControls();
+		assertThat(valid).isFalse();
+	}
 
-        when(dirContextMock.search(baseName, filter, searchControls))
-                .thenThrow(new NamingException("Failed to search"));
+	@Test
+	public void testValidateDirContextException() throws Exception {
+		final DefaultDirContextValidator dirContextValidator = new DefaultDirContextValidator();
 
-        final boolean valid = dirContextValidator.validateDirContext(
-                DirContextType.READ_ONLY, dirContextMock);
+		final String baseName = dirContextValidator.getBase();
+		final String filter = dirContextValidator.getFilter();
+		final SearchControls searchControls = dirContextValidator
+				.getSearchControls();
 
-        assertThat(valid).isFalse();
-    }
+		when(dirContextMock.search(baseName, filter, searchControls))
+				.thenThrow(new NamingException("Failed to search"));
+
+		final boolean valid = dirContextValidator.validateDirContext(
+				DirContextType.READ_ONLY, dirContextMock);
+
+		assertThat(valid).isFalse();
+	}
 }

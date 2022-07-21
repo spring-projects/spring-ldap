@@ -42,328 +42,328 @@ import java.util.Set;
  */
 public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
-    private final String id;
-    private final boolean orderMatters;
-    private final Set<Object> values = new LinkedHashSet<Object>();
-    private Map<Name, String> valuesAsNames = new HashMap<Name, String>();
+	private final String id;
+	private final boolean orderMatters;
+	private final Set<Object> values = new LinkedHashSet<Object>();
+	private Map<Name, String> valuesAsNames = new HashMap<Name, String>();
 
-    /**
-     * Construct a new instance with the specified id and one value.
-     * @param id the attribute id
-     * @param value the value to start off with
-     */
-    public NameAwareAttribute(String id, Object value) {
-        this(id);
-        values.add(value);
-    }
+	/**
+	 * Construct a new instance with the specified id and one value.
+	 * @param id the attribute id
+	 * @param value the value to start off with
+	 */
+	public NameAwareAttribute(String id, Object value) {
+		this(id);
+		values.add(value);
+	}
 
-    /**
-     * Construct a new instance from the supplied Attribute.
-     *
-     * @param attribute the Attribute to copy.
-     */
-    public NameAwareAttribute(Attribute attribute) {
-        this(attribute.getID(), attribute.isOrdered());
-        try {
-            NamingEnumeration<?> incomingValues = attribute.getAll();
-            while(incomingValues.hasMore()) {
-                this.add(incomingValues.next());
-            }
-        } catch (NamingException e) {
-            throw LdapUtils.convertLdapException(e);
-        }
+	/**
+	 * Construct a new instance from the supplied Attribute.
+	 *
+	 * @param attribute the Attribute to copy.
+	 */
+	public NameAwareAttribute(Attribute attribute) {
+		this(attribute.getID(), attribute.isOrdered());
+		try {
+			NamingEnumeration<?> incomingValues = attribute.getAll();
+			while(incomingValues.hasMore()) {
+				this.add(incomingValues.next());
+			}
+		} catch (NamingException e) {
+			throw LdapUtils.convertLdapException(e);
+		}
 
-        if (attribute instanceof NameAwareAttribute) {
-            NameAwareAttribute nameAwareAttribute = (NameAwareAttribute) attribute;
-            populateValuesAsNames(nameAwareAttribute, this);
-        }
-    }
+		if (attribute instanceof NameAwareAttribute) {
+			NameAwareAttribute nameAwareAttribute = (NameAwareAttribute) attribute;
+			populateValuesAsNames(nameAwareAttribute, this);
+		}
+	}
 
-    /**
-     * Construct a new instance with the specified id and no values.
-     * @param id the attribute id
-     */
-    public NameAwareAttribute(String id) {
-        this(id, false);
-    }
+	/**
+	 * Construct a new instance with the specified id and no values.
+	 * @param id the attribute id
+	 */
+	public NameAwareAttribute(String id) {
+		this(id, false);
+	}
 
-    /**
-     * Construct a new instance with the specified id, no values and order significance as specified.
-     * @param id the attribute id
-     * @param orderMatters whether order has significance in this attribute.
-     */
-    public NameAwareAttribute(String id, boolean orderMatters) {
-        this.id = id;
-        this.orderMatters = orderMatters;
-    }
+	/**
+	 * Construct a new instance with the specified id, no values and order significance as specified.
+	 * @param id the attribute id
+	 * @param orderMatters whether order has significance in this attribute.
+	 */
+	public NameAwareAttribute(String id, boolean orderMatters) {
+		this.id = id;
+		this.orderMatters = orderMatters;
+	}
 
-    @Override
-    public NamingEnumeration<?> getAll() {
-        return new IterableNamingEnumeration<Object>(values);
-    }
+	@Override
+	public NamingEnumeration<?> getAll() {
+		return new IterableNamingEnumeration<Object>(values);
+	}
 
-    @Override
-    public Object get() {
-        if(values.isEmpty()) {
-            return null;
-        }
+	@Override
+	public Object get() {
+		if(values.isEmpty()) {
+			return null;
+		}
 
-        return values.iterator().next();
-    }
+		return values.iterator().next();
+	}
 
-    @Override
-    public int size() {
-        return values.size();
-    }
+	@Override
+	public int size() {
+		return values.size();
+	}
 
-    @Override
-    public String getID() {
-        return id;
-    }
+	@Override
+	public String getID() {
+		return id;
+	}
 
-    @Override
-    public boolean contains(Object attrVal) {
-        return values.contains(attrVal);
-    }
+	@Override
+	public boolean contains(Object attrVal) {
+		return values.contains(attrVal);
+	}
 
-    @Override
-    public boolean add(Object attrVal) {
-        if (attrVal instanceof Name) {
-            initValuesAsNames();
+	@Override
+	public boolean add(Object attrVal) {
+		if (attrVal instanceof Name) {
+			initValuesAsNames();
 
-            Name name = LdapUtils.newLdapName((Name) attrVal);
-            String currentValue = valuesAsNames.get(name);
-            String nameAsString = name.toString();
-            if(currentValue == null) {
-                valuesAsNames.put(name, name.toString());
-                values.add(nameAsString);
-                return true;
-            } else {
-                if(!currentValue.equals(nameAsString)) {
-                    values.remove(currentValue);
-                    values.add(nameAsString);
-                }
+			Name name = LdapUtils.newLdapName((Name) attrVal);
+			String currentValue = valuesAsNames.get(name);
+			String nameAsString = name.toString();
+			if(currentValue == null) {
+				valuesAsNames.put(name, name.toString());
+				values.add(nameAsString);
+				return true;
+			} else {
+				if(!currentValue.equals(nameAsString)) {
+					values.remove(currentValue);
+					values.add(nameAsString);
+				}
 
-                return false;
-            }
-        }
+				return false;
+			}
+		}
 
-        return values.add(attrVal);
-    }
+		return values.add(attrVal);
+	}
 
-    public void initValuesAsNames() {
-        if(hasValuesAsNames()) {
-            return;
-        }
+	public void initValuesAsNames() {
+		if(hasValuesAsNames()) {
+			return;
+		}
 
-        Map<Name, String> newValuesAsNames = new HashMap<Name, String>();
-        for (Object value : values) {
-            if (value instanceof String) {
-                String s = (String) value;
-                try {
-                    newValuesAsNames.put(LdapUtils.newLdapName(s), s);
-                } catch (InvalidNameException e) {
-                    throw new IllegalArgumentException("This instance has values that are not valid distinguished names; " +
-                            "cannot handle Name values", e);
-                }
-            } else if (value instanceof LdapName) {
-                newValuesAsNames.put((LdapName) value, value.toString());
-            } else {
-                throw new IllegalArgumentException("This instance has non-string attribute values; " +
-                        "cannot handle Name values");
-            }
-        }
+		Map<Name, String> newValuesAsNames = new HashMap<Name, String>();
+		for (Object value : values) {
+			if (value instanceof String) {
+				String s = (String) value;
+				try {
+					newValuesAsNames.put(LdapUtils.newLdapName(s), s);
+				} catch (InvalidNameException e) {
+					throw new IllegalArgumentException("This instance has values that are not valid distinguished names; " +
+							"cannot handle Name values", e);
+				}
+			} else if (value instanceof LdapName) {
+				newValuesAsNames.put((LdapName) value, value.toString());
+			} else {
+				throw new IllegalArgumentException("This instance has non-string attribute values; " +
+						"cannot handle Name values");
+			}
+		}
 
-        this.valuesAsNames = newValuesAsNames;
-    }
+		this.valuesAsNames = newValuesAsNames;
+	}
 
-    public boolean hasValuesAsNames() {
-        return !valuesAsNames.isEmpty();
-    }
+	public boolean hasValuesAsNames() {
+		return !valuesAsNames.isEmpty();
+	}
 
-    @Override
-    public boolean remove(Object attrval) {
-        if (attrval instanceof Name) {
-            initValuesAsNames();
+	@Override
+	public boolean remove(Object attrval) {
+		if (attrval instanceof Name) {
+			initValuesAsNames();
 
-            Name name = LdapUtils.newLdapName((Name) attrval);
-            String removedValue = valuesAsNames.remove(name);
-            if(removedValue != null) {
-                values.remove(removedValue);
+			Name name = LdapUtils.newLdapName((Name) attrval);
+			String removedValue = valuesAsNames.remove(name);
+			if(removedValue != null) {
+				values.remove(removedValue);
 
-                return true;
-            }
+				return true;
+			}
 
-            return false;
-        }
-        return values.remove(attrval);
-    }
+			return false;
+		}
+		return values.remove(attrval);
+	}
 
-    @Override
-    public void clear() {
-        values.clear();
-    }
+	@Override
+	public void clear() {
+		values.clear();
+	}
 
-    @Override
-    public DirContext getAttributeSyntaxDefinition() throws NamingException {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public DirContext getAttributeSyntaxDefinition() throws NamingException {
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public DirContext getAttributeDefinition() throws NamingException {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public DirContext getAttributeDefinition() throws NamingException {
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public boolean isOrdered() {
-        return orderMatters;
-    }
+	@Override
+	public boolean isOrdered() {
+		return orderMatters;
+	}
 
-    /**
-     * <p>
-     * Due to performance reasons it is not advised to iterate over the attribute's values using this method.
-     * Please use the {@link #iterator()} instead.
-     * </p>
-     * {@inheritDoc}
-     */
-    @Override
-    public Object get(int ix) throws NamingException {
-        Iterator<Object> iterator = values.iterator();
+	/**
+	 * <p>
+	 * Due to performance reasons it is not advised to iterate over the attribute's values using this method.
+	 * Please use the {@link #iterator()} instead.
+	 * </p>
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Object get(int ix) throws NamingException {
+		Iterator<Object> iterator = values.iterator();
 
-        try {
-            Object value = iterator.next();
-            for(int i = 0; i < ix; i++) {
-                value = iterator.next();
-            }
+		try {
+			Object value = iterator.next();
+			for(int i = 0; i < ix; i++) {
+				value = iterator.next();
+			}
 
-            return value;
-        } catch (NoSuchElementException e) {
-            throw new IndexOutOfBoundsException("No value at index i");
-        }
-    }
+			return value;
+		} catch (NoSuchElementException e) {
+			throw new IndexOutOfBoundsException("No value at index i");
+		}
+	}
 
-    @Override
-    public Object remove(int ix) {
-        Iterator<Object> iterator = values.iterator();
+	@Override
+	public Object remove(int ix) {
+		Iterator<Object> iterator = values.iterator();
 
-        try {
-            Object value = iterator.next();
-            for(int i = 0; i < ix; i++) {
-                value = iterator.next();
-            }
-            iterator.remove();
-            if (value instanceof String) {
-                try {
-                    valuesAsNames.remove(new LdapName((String) value));
-                } catch (javax.naming.InvalidNameException ignored) {
-                }
-            }
-            return value;
-        } catch (NoSuchElementException e) {
-            throw new IndexOutOfBoundsException("No value at index i");
-        }
-    }
+		try {
+			Object value = iterator.next();
+			for(int i = 0; i < ix; i++) {
+				value = iterator.next();
+			}
+			iterator.remove();
+			if (value instanceof String) {
+				try {
+					valuesAsNames.remove(new LdapName((String) value));
+				} catch (javax.naming.InvalidNameException ignored) {
+				}
+			}
+			return value;
+		} catch (NoSuchElementException e) {
+			throw new IndexOutOfBoundsException("No value at index i");
+		}
+	}
 
-    @Override
-    public void add(int ix, Object attrVal) {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public void add(int ix, Object attrVal) {
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public Object set(int ix, Object attrVal) {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public Object set(int ix, Object attrVal) {
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public Object clone() {
-        return new NameAwareAttribute(this);
-    }
+	@Override
+	public Object clone() {
+		return new NameAwareAttribute(this);
+	}
 
-    private void populateValuesAsNames(NameAwareAttribute from, NameAwareAttribute to) {
-        Set<Map.Entry<Name, String>> entries = from.valuesAsNames.entrySet();
-        for (Map.Entry<Name, String> entry : entries) {
-            to.valuesAsNames.put(LdapUtils.newLdapName(entry.getKey()), entry.getValue());
-        }
-    }
+	private void populateValuesAsNames(NameAwareAttribute from, NameAwareAttribute to) {
+		Set<Map.Entry<Name, String>> entries = from.valuesAsNames.entrySet();
+		for (Map.Entry<Name, String> entry : entries) {
+			to.valuesAsNames.put(LdapUtils.newLdapName(entry.getKey()), entry.getValue());
+		}
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-        NameAwareAttribute that = (NameAwareAttribute) o;
+		NameAwareAttribute that = (NameAwareAttribute) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if(this.values.size() != that.values.size()) {
-            return false;
-        }
+		if (id != null ? !id.equals(that.id) : that.id != null) return false;
+		if(this.values.size() != that.values.size()) {
+			return false;
+		}
 
-        if(this.orderMatters != that.orderMatters || this.size() != that.size()) {
-            return false;
-        }
+		if(this.orderMatters != that.orderMatters || this.size() != that.size()) {
+			return false;
+		}
 
-        if(this.hasValuesAsNames() != that.hasValuesAsNames()) {
-            return false;
-        }
+		if(this.hasValuesAsNames() != that.hasValuesAsNames()) {
+			return false;
+		}
 
-        Set<?> myValues = this.values;
-        Set<?> theirValues = that.values;
-        if(this.hasValuesAsNames()) {
-            // We have Name values - compare these to get
-            // syntactically correct comparison of the values
+		Set<?> myValues = this.values;
+		Set<?> theirValues = that.values;
+		if(this.hasValuesAsNames()) {
+			// We have Name values - compare these to get
+			// syntactically correct comparison of the values
 
-            myValues = this.valuesAsNames.keySet();
-            theirValues = that.valuesAsNames.keySet();
-        }
+			myValues = this.valuesAsNames.keySet();
+			theirValues = that.valuesAsNames.keySet();
+		}
 
-        if(orderMatters) {
-            Iterator<?> thisIterator = myValues.iterator();
-            Iterator<?> thatIterator = theirValues.iterator();
-            while(thisIterator.hasNext()) {
-                if(!ObjectUtils.nullSafeEquals(thisIterator.next(), thatIterator.next())) {
-                    return false;
-                }
-            }
+		if(orderMatters) {
+			Iterator<?> thisIterator = myValues.iterator();
+			Iterator<?> thatIterator = theirValues.iterator();
+			while(thisIterator.hasNext()) {
+				if(!ObjectUtils.nullSafeEquals(thisIterator.next(), thatIterator.next())) {
+					return false;
+				}
+			}
 
-            return true;
-        } else {
-            for (Object value : myValues) {
-                if(!CollectionUtils.contains(theirValues.iterator(), value)) {
-                    return false;
-                }
-            }
+			return true;
+		} else {
+			for (Object value : myValues) {
+				if(!CollectionUtils.contains(theirValues.iterator(), value)) {
+					return false;
+				}
+			}
 
-            return true;
-        }
-    }
+			return true;
+		}
+	}
 
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
+	@Override
+	public int hashCode() {
+		int result = id != null ? id.hashCode() : 0;
 
-        int valuesHash = 7;
-        Set<?> myValues = this.values;
-        if(hasValuesAsNames()) {
-            myValues = valuesAsNames.keySet();
-        }
+		int valuesHash = 7;
+		Set<?> myValues = this.values;
+		if(hasValuesAsNames()) {
+			myValues = valuesAsNames.keySet();
+		}
 
-        for (Object value : myValues) {
-            result += ObjectUtils.nullSafeHashCode(value);
-        }
-        result = 31 * result + valuesHash;
+		for (Object value : myValues) {
+			result += ObjectUtils.nullSafeHashCode(value);
+		}
+		result = 31 * result + valuesHash;
 
-        return result;
-    }
+		return result;
+	}
 
-    @Override
-    public String toString() {
-        return String.format("NameAwareAttribute; id: %s; hasValuesAsNames: %s; orderMatters: %s; values: %s",
-                id, hasValuesAsNames(), orderMatters, values);
-    }
+	@Override
+	public String toString() {
+		return String.format("NameAwareAttribute; id: %s; hasValuesAsNames: %s; orderMatters: %s; values: %s",
+				id, hasValuesAsNames(), orderMatters, values);
+	}
 
-    @Override
-    public Iterator<Object> iterator() {
-        return values.iterator();
-    }
+	@Override
+	public Iterator<Object> iterator() {
+		return values.iterator();
+	}
 
 }

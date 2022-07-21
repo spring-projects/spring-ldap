@@ -31,66 +31,66 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class DirContextAdapterBugTest {
 
-    @Test
-    public void testResetAttributeValuesNotReportedAsModifications() {
-        BasicAttributes attrs = new BasicAttributes("myattr", "a");
-        attrs.get("myattr").add("b");
-        attrs.get("myattr").add("c");
-        UpdateAdapter ctx = new UpdateAdapter(attrs, LdapUtils.emptyLdapName());
+	@Test
+	public void testResetAttributeValuesNotReportedAsModifications() {
+		BasicAttributes attrs = new BasicAttributes("myattr", "a");
+		attrs.get("myattr").add("b");
+		attrs.get("myattr").add("c");
+		UpdateAdapter ctx = new UpdateAdapter(attrs, LdapUtils.emptyLdapName());
 
-        ctx.setAttributeValues("myattr", new String[] { "a", "b" });
-        ctx.setAttributeValues("myattr", new String[] { "a", "b", "c" });
+		ctx.setAttributeValues("myattr", new String[] { "a", "b" });
+		ctx.setAttributeValues("myattr", new String[] { "a", "b", "c" });
 
-        assertThat(ctx.getModificationItems().length).isEqualTo(0);
-    }
+		assertThat(ctx.getModificationItems().length).isEqualTo(0);
+	}
 
-    @Test
-    public void testResetAttributeValuesSameLengthNotReportedAsModifications() {
-        BasicAttributes attrs = new BasicAttributes("myattr", "a");
-        attrs.get("myattr").add("b");
-        attrs.get("myattr").add("c");
-        UpdateAdapter ctx = new UpdateAdapter(attrs, LdapUtils.emptyLdapName());
+	@Test
+	public void testResetAttributeValuesSameLengthNotReportedAsModifications() {
+		BasicAttributes attrs = new BasicAttributes("myattr", "a");
+		attrs.get("myattr").add("b");
+		attrs.get("myattr").add("c");
+		UpdateAdapter ctx = new UpdateAdapter(attrs, LdapUtils.emptyLdapName());
 
-        ctx.setAttributeValues("myattr", new String[] { "a", "b", "d" });
-        ctx.setAttributeValues("myattr", new String[] { "a", "b", "c" });
+		ctx.setAttributeValues("myattr", new String[] { "a", "b", "d" });
+		ctx.setAttributeValues("myattr", new String[] { "a", "b", "c" });
 
-        assertThat(ctx.getModificationItems().length).isEqualTo(0);
-    }
+		assertThat(ctx.getModificationItems().length).isEqualTo(0);
+	}
 
-    /**
-     * This test starts with an array with a null value in it (because that's
-     * how BasicAttributes will do it), changes to <code>[a]</code>, and then
-     * changes to <code>null</code>. The current code interprets this as a
-     * change and will replace the original array with an empty array.
-     * 
-     * TODO Is this correct behaviour?
-     */
-    @Test
-    public void testResetNullAttributeValuesReportedAsModifications() {
-        BasicAttributes attrs = new BasicAttributes("myattr", null);
-        UpdateAdapter ctx = new UpdateAdapter(attrs, LdapUtils.emptyLdapName());
+	/**
+	 * This test starts with an array with a null value in it (because that's
+	 * how BasicAttributes will do it), changes to <code>[a]</code>, and then
+	 * changes to <code>null</code>. The current code interprets this as a
+	 * change and will replace the original array with an empty array.
+	 * 
+	 * TODO Is this correct behaviour?
+	 */
+	@Test
+	public void testResetNullAttributeValuesReportedAsModifications() {
+		BasicAttributes attrs = new BasicAttributes("myattr", null);
+		UpdateAdapter ctx = new UpdateAdapter(attrs, LdapUtils.emptyLdapName());
 
-        ctx.setAttributeValues("myattr", new String[] { "a" });
-        ctx.setAttributeValues("myattr", null);
+		ctx.setAttributeValues("myattr", new String[] { "a" });
+		ctx.setAttributeValues("myattr", null);
 
-        assertThat(ctx.getModificationItems().length).isEqualTo(1);
-    }
+		assertThat(ctx.getModificationItems().length).isEqualTo(1);
+	}
 
-    @Test
-    public void testResetNullAttributeValueNotReportedAsModification() throws Exception {
-        BasicAttributes attrs = new BasicAttributes("myattr", "b");
-        UpdateAdapter ctx = new UpdateAdapter(attrs, LdapUtils.emptyLdapName());
+	@Test
+	public void testResetNullAttributeValueNotReportedAsModification() throws Exception {
+		BasicAttributes attrs = new BasicAttributes("myattr", "b");
+		UpdateAdapter ctx = new UpdateAdapter(attrs, LdapUtils.emptyLdapName());
 
-        ctx.setAttributeValue("myattr", "a");
-        ctx.setAttributeValue("myattr", "b");
+		ctx.setAttributeValue("myattr", "a");
+		ctx.setAttributeValue("myattr", "b");
 
-        assertThat(ctx.getModificationItems().length).isEqualTo(0);
-    }
+		assertThat(ctx.getModificationItems().length).isEqualTo(0);
+	}
 
-    private static class UpdateAdapter extends DirContextAdapter {
-        public UpdateAdapter(Attributes attrs, Name dn) {
-            super(attrs, dn);
-            setUpdateMode(true);
-        }
-    }
+	private static class UpdateAdapter extends DirContextAdapter {
+		public UpdateAdapter(Attributes attrs, Name dn) {
+			super(attrs, dn);
+			setUpdateMode(true);
+		}
+	}
 }

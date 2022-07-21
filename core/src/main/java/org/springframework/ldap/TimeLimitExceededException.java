@@ -25,8 +25,8 @@ package org.springframework.ldap;
  */
 public class TimeLimitExceededException extends LimitExceededException {
 
-    public TimeLimitExceededException(
-            javax.naming.TimeLimitExceededException cause) {
-        super(cause);
-    }
+	public TimeLimitExceededException(
+			javax.naming.TimeLimitExceededException cause) {
+		super(cause);
+	}
 }

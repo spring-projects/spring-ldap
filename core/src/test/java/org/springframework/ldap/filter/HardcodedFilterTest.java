@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class HardcodedFilterTest {
 
-    @Test
+	@Test
 	public void testHardcodedFilter() {
 		HardcodedFilter filter = new HardcodedFilter("(foo=a*b)");
 		assertThat(filter.encode()).isEqualTo("(foo=a*b)");
@@ -46,16 +46,16 @@ public class HardcodedFilterTest {
 		assertThat(andFilter.encode()).isEqualTo("(&(foo=a*b)(!(bar=a*b)))");
 	}
 
-    @Test
-    public void testEquals() {
+	@Test
+	public void testEquals() {
 		String attribute = "(foo=a*b)";
 		HardcodedFilter originalObject = new HardcodedFilter(attribute);
 		HardcodedFilter identicalObject = new HardcodedFilter(attribute);
 		HardcodedFilter differentObject = new HardcodedFilter("(bar=a*b)");
 		HardcodedFilter subclassObject = new HardcodedFilter(attribute) {
-        };
+		};
 
-        new EqualsTester(originalObject, identicalObject, differentObject,
-                subclassObject);
-    }
+		new EqualsTester(originalObject, identicalObject, differentObject,
+				subclassObject);
+	}
 }

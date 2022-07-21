@@ -11,19 +11,19 @@ import org.springframework.ldap.odm.typeconversion.impl.Converter;
  */
 public class UriConverter implements Converter {
 
-    /* (non-Javadoc)
-     * @see org.springframework.ldap.odm.typeconversion.impl.Converter#convert(java.lang.Object, java.lang.Class)
-     */
-    public <T> T convert(Object source, Class<T> toClass) throws Exception {
-        T result = null;
-        if (String.class.isAssignableFrom(source.getClass()) && toClass == URI.class) {
-            result = toClass.cast(new URI((String)source));
-        } else {
-            if (URI.class.isAssignableFrom(source.getClass()) && toClass == String.class) {
-                result = toClass.cast(source.toString());
-            }
-        }
+	/* (non-Javadoc)
+	 * @see org.springframework.ldap.odm.typeconversion.impl.Converter#convert(java.lang.Object, java.lang.Class)
+	 */
+	public <T> T convert(Object source, Class<T> toClass) throws Exception {
+		T result = null;
+		if (String.class.isAssignableFrom(source.getClass()) && toClass == URI.class) {
+			result = toClass.cast(new URI((String)source));
+		} else {
+			if (URI.class.isAssignableFrom(source.getClass()) && toClass == String.class) {
+				result = toClass.cast(source.toString());
+			}
+		}
 
-        return result;
-    }
+		return result;
+	}
 }

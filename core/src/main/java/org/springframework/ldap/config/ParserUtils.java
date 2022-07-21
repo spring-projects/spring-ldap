@@ -23,39 +23,39 @@ import org.w3c.dom.Element;
  * @author Mattias Hellborg Arthursson
  */
 final class ParserUtils {
-    static final String NAMESPACE = "http://www.springframework.org/schema/ldap";
+	static final String NAMESPACE = "http://www.springframework.org/schema/ldap";
 
-    /**
-     * Not to be instantiated
-     */
-    private ParserUtils() {
+	/**
+	 * Not to be instantiated
+	 */
+	private ParserUtils() {
 
-    }
+	}
 
-    static boolean getBoolean(Element element, String attribute, boolean defaultValue) {
-        String theValue = element.getAttribute(attribute);
-        if (StringUtils.hasText(theValue)) {
-            return Boolean.valueOf(theValue);
-        }
+	static boolean getBoolean(Element element, String attribute, boolean defaultValue) {
+		String theValue = element.getAttribute(attribute);
+		if (StringUtils.hasText(theValue)) {
+			return Boolean.valueOf(theValue);
+		}
 
-        return defaultValue;
-    }
+		return defaultValue;
+	}
 
-    static String getString(Element element, String attribute, String defaultValue) {
-        String theValue = element.getAttribute(attribute);
-        if (StringUtils.hasText(theValue)) {
-            return theValue;
-        }
+	static String getString(Element element, String attribute, String defaultValue) {
+		String theValue = element.getAttribute(attribute);
+		if (StringUtils.hasText(theValue)) {
+			return theValue;
+		}
 
-        return defaultValue;
-    }
+		return defaultValue;
+	}
 
-    static int getInt(Element element, String attribute, int defaultValue) {
-        String theValue = element.getAttribute(attribute);
-        if (StringUtils.hasText(theValue)) {
-            return Integer.parseInt(theValue);
-        }
+	static int getInt(Element element, String attribute, int defaultValue) {
+		String theValue = element.getAttribute(attribute);
+		if (StringUtils.hasText(theValue)) {
+			return Integer.parseInt(theValue);
+		}
 
-        return defaultValue;
-    }
+		return defaultValue;
+	}
 }

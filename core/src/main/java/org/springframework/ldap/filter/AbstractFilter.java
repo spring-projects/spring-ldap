@@ -24,16 +24,16 @@ package org.springframework.ldap.filter;
  */
 public abstract class AbstractFilter implements Filter {
 
-    private static final int DEFAULT_BUFFER_SIZE = 256;
+	private static final int DEFAULT_BUFFER_SIZE = 256;
 
-    @Override
+	@Override
 	public String encode() {
 		StringBuffer buf = new StringBuffer(DEFAULT_BUFFER_SIZE);
 		buf = encode(buf);
 		return buf.toString();
 	}
 
-    @Override
+	@Override
 	public String toString() {
 		return encode();
 	}

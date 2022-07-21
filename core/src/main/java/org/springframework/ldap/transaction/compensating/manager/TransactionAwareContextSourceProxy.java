@@ -36,65 +36,65 @@ import java.lang.reflect.Proxy;
  * @since 1.2
  */
 public class TransactionAwareContextSourceProxy
-        extends DelegatingBaseLdapPathContextSourceSupport
-        implements ContextSource {
+		extends DelegatingBaseLdapPathContextSourceSupport
+		implements ContextSource {
 
-    private ContextSource target;
+	private ContextSource target;
 
-    /**
-     * Constructor.
-     * 
-     * @param target
-     *            the target ContextSource.
-     */
-    public TransactionAwareContextSourceProxy(ContextSource target) {
-        this.target = target;
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param target
+	 *			the target ContextSource.
+	 */
+	public TransactionAwareContextSourceProxy(ContextSource target) {
+		this.target = target;
+	}
 
-    @Override
-    public ContextSource getTarget() {
-        return target;
-    }
+	@Override
+	public ContextSource getTarget() {
+		return target;
+	}
 
-    @Override
-    public DirContext getReadOnlyContext() {
-        return getReadWriteContext();
-    }
+	@Override
+	public DirContext getReadOnlyContext() {
+		return getReadWriteContext();
+	}
 
-    private DirContext getTransactionAwareDirContextProxy(DirContext context,
-            ContextSource target) {
-        return (DirContext) Proxy
-                .newProxyInstance(DirContextProxy.class.getClassLoader(),
-                        new Class[] {
-                                LdapUtils
-                                        .getActualTargetClass(context),
-                                DirContextProxy.class },
-                        new TransactionAwareDirContextInvocationHandler(
-                                context, target));
+	private DirContext getTransactionAwareDirContextProxy(DirContext context,
+			ContextSource target) {
+		return (DirContext) Proxy
+				.newProxyInstance(DirContextProxy.class.getClassLoader(),
+						new Class[] {
+								LdapUtils
+										.getActualTargetClass(context),
+								DirContextProxy.class },
+						new TransactionAwareDirContextInvocationHandler(
+								context, target));
 
-    }
+	}
 
-    @Override
-    public DirContext getReadWriteContext() {
-        DirContextHolder contextHolder = (DirContextHolder) TransactionSynchronizationManager
-                .getResource(target);
-        DirContext ctx = null;
+	@Override
+	public DirContext getReadWriteContext() {
+		DirContextHolder contextHolder = (DirContextHolder) TransactionSynchronizationManager
+				.getResource(target);
+		DirContext ctx = null;
 
-        if (contextHolder != null) {
-            ctx = contextHolder.getCtx();
-        }
+		if (contextHolder != null) {
+			ctx = contextHolder.getCtx();
+		}
 
-        if (ctx == null) {
-            ctx = target.getReadWriteContext();
-            if (contextHolder != null) {
-                contextHolder.setCtx(ctx);
-            }
-        }
-        return getTransactionAwareDirContextProxy(ctx, target);
-    }
+		if (ctx == null) {
+			ctx = target.getReadWriteContext();
+			if (contextHolder != null) {
+				contextHolder.setCtx(ctx);
+			}
+		}
+		return getTransactionAwareDirContextProxy(ctx, target);
+	}
 
-    @Override
+	@Override
 	public DirContext getContext(String principal, String credentials) {
-        return target.getContext(principal, credentials);
+		return target.getContext(principal, credentials);
 	}
 }

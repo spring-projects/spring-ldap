@@ -43,48 +43,48 @@ import static org.assertj.core.api.Assertions.fail;
 @ContextConfiguration(locations = {"/conf/missingLdapAndJdbcTransactionTestContext.xml"})
 public class ContextSourceAndDataSourceTransactionManagerLdap179IntegrationTest extends AbstractJUnit4SpringContextTests {
 
-    private static Logger log = LoggerFactory.getLogger(ContextSourceAndDataSourceTransactionManagerLdap179IntegrationTest.class);
+	private static Logger log = LoggerFactory.getLogger(ContextSourceAndDataSourceTransactionManagerLdap179IntegrationTest.class);
 
-    @Autowired
-    @Qualifier("dummyDao")
-    private DummyDao dummyDao;
+	@Autowired
+	@Qualifier("dummyDao")
+	private DummyDao dummyDao;
 
-    @Autowired
-    private LdapTemplate ldapTemplate;
+	@Autowired
+	private LdapTemplate ldapTemplate;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
-    @Before
-    public void prepareTestedInstance() throws Exception {
-        if (TransactionSynchronizationManager.isSynchronizationActive()) {
-            TransactionSynchronizationManager.clearSynchronization();
-        }
-    }
+	@Before
+	public void prepareTestedInstance() throws Exception {
+		if (TransactionSynchronizationManager.isSynchronizationActive()) {
+			TransactionSynchronizationManager.clearSynchronization();
+		}
+	}
 
-    @After
-    public void cleanup() throws Exception {
-        jdbcTemplate.execute("drop table PERSON if exists");
-    }
+	@After
+	public void cleanup() throws Exception {
+		jdbcTemplate.execute("drop table PERSON if exists");
+	}
 
 
-    @Test
-    public void verifyThatJdbcTransactionIsClosedIfLdapServerUnavailable_ldap179() {
-        try {
-            dummyDao.create("Sweden", "company1", "some testperson", "testperson", "some description");
-            fail("CannotCreateTransactionException expected");
-        } catch (CannotCreateTransactionException expected) {
-            assertThat(expected.getCause() instanceof CommunicationException).isTrue();
-        }
+	@Test
+	public void verifyThatJdbcTransactionIsClosedIfLdapServerUnavailable_ldap179() {
+		try {
+			dummyDao.create("Sweden", "company1", "some testperson", "testperson", "some description");
+			fail("CannotCreateTransactionException expected");
+		} catch (CannotCreateTransactionException expected) {
+			assertThat(expected.getCause() instanceof CommunicationException).isTrue();
+		}
 
-        // Make sure there is no transaction synchronization
-        assertThat(TransactionSynchronizationManager.isSynchronizationActive()).isFalse();
+		// Make sure there is no transaction synchronization
+		assertThat(TransactionSynchronizationManager.isSynchronizationActive()).isFalse();
 
-        try {
-            dummyDao.create("Sweden", "company1", "some testperson", "testperson", "some description");
-            fail("CannotCreateTransactionException expected");
-        } catch (CannotCreateTransactionException expected) {
-            assertThat(expected.getCause() instanceof CommunicationException).isTrue();
-        }
-    }
+		try {
+			dummyDao.create("Sweden", "company1", "some testperson", "testperson", "some description");
+			fail("CannotCreateTransactionException expected");
+		} catch (CannotCreateTransactionException expected) {
+			assertThat(expected.getCause() instanceof CommunicationException).isTrue();
+		}
+	}
 }

@@ -25,26 +25,26 @@ import static org.mockito.Mockito.mock;
 
 public class RenameOperationRecorderTest {
 
-    private LdapOperations ldapOperationsMock;
+	private LdapOperations ldapOperationsMock;
 
-    @Before
-    public void setUp() throws Exception {
-        ldapOperationsMock = mock(LdapOperations.class);;
-    }
+	@Before
+	public void setUp() throws Exception {
+		ldapOperationsMock = mock(LdapOperations.class);;
+	}
 
-    @Test
-    public void testRecordOperation() {
-        RenameOperationRecorder tested = new RenameOperationRecorder(
-                ldapOperationsMock);
+	@Test
+	public void testRecordOperation() {
+		RenameOperationRecorder tested = new RenameOperationRecorder(
+				ldapOperationsMock);
 
-        // Perform test
-        CompensatingTransactionOperationExecutor operation = tested
-                .recordOperation(new Object[] { "ou=someou", "ou=newou" });
+		// Perform test
+		CompensatingTransactionOperationExecutor operation = tested
+				.recordOperation(new Object[] { "ou=someou", "ou=newou" });
 
-        assertThat(operation instanceof RenameOperationExecutor).isTrue();
-        RenameOperationExecutor rollbackOperation = (RenameOperationExecutor) operation;
-        assertThat(rollbackOperation.getLdapOperations()).isSameAs(ldapOperationsMock);
-        assertThat(rollbackOperation.getNewDn().toString()).isEqualTo("ou=newou");
-        assertThat(rollbackOperation.getOriginalDn().toString()).isEqualTo("ou=someou");
-    }
+		assertThat(operation instanceof RenameOperationExecutor).isTrue();
+		RenameOperationExecutor rollbackOperation = (RenameOperationExecutor) operation;
+		assertThat(rollbackOperation.getLdapOperations()).isSameAs(ldapOperationsMock);
+		assertThat(rollbackOperation.getNewDn().toString()).isEqualTo("ou=newou");
+		assertThat(rollbackOperation.getOriginalDn().toString()).isEqualTo("ou=someou");
+	}
 }

@@ -28,10 +28,10 @@ import org.springframework.ldap.odm.typeconversion.impl.Converter;
  */
 public final class ToStringConverter implements Converter {
 
-    /* (non-Javadoc)
-     * @see org.springframework.ldap.odm.typeconversion.impl.Converter#convert(java.lang.Object, java.lang.Class)
-     */
-    public <T> T convert(Object source, Class<T> toClass) {
-        return toClass.cast(source.toString());
-    }
+	/* (non-Javadoc)
+	 * @see org.springframework.ldap.odm.typeconversion.impl.Converter#convert(java.lang.Object, java.lang.Class)
+	 */
+	public <T> T convert(Object source, Class<T> toClass) {
+		return toClass.cast(source.toString());
+	}
 }

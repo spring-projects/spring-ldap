@@ -29,49 +29,49 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class TransactionAwareDirContextInvocationHandlerTest {
 
-    private ContextSource contextSourceMock;
-    private DirContext dirContextMock;
-    private TransactionAwareDirContextInvocationHandler tested;
-    private DirContextHolder holder;
+	private ContextSource contextSourceMock;
+	private DirContext dirContextMock;
+	private TransactionAwareDirContextInvocationHandler tested;
+	private DirContextHolder holder;
 
-    @Before
-    public void setUp() throws Exception {
-        dirContextMock = mock(DirContext.class);
-        contextSourceMock = mock(ContextSource.class);
+	@Before
+	public void setUp() throws Exception {
+		dirContextMock = mock(DirContext.class);
+		contextSourceMock = mock(ContextSource.class);
 
-        holder = new DirContextHolder(null, dirContextMock);
-        tested = new TransactionAwareDirContextInvocationHandler(null, null);
-    }
+		holder = new DirContextHolder(null, dirContextMock);
+		tested = new TransactionAwareDirContextInvocationHandler(null, null);
+	}
 
-    @Test
-    public void testDoCloseConnection_NoTransaction() throws NamingException {
-        tested.doCloseConnection(dirContextMock, contextSourceMock);
+	@Test
+	public void testDoCloseConnection_NoTransaction() throws NamingException {
+		tested.doCloseConnection(dirContextMock, contextSourceMock);
 
-        verify(dirContextMock).close();
-    }
+		verify(dirContextMock).close();
+	}
 
-    @Test
-    public void testDoCloseConnection_ActiveTransaction()
-            throws NamingException {
-        TransactionSynchronizationManager.bindResource(contextSourceMock,
-                holder);
+	@Test
+	public void testDoCloseConnection_ActiveTransaction()
+			throws NamingException {
+		TransactionSynchronizationManager.bindResource(contextSourceMock,
+				holder);
 
-        // Context should not be closed.
-        verifyNoMoreInteractions(dirContextMock);
+		// Context should not be closed.
+		verifyNoMoreInteractions(dirContextMock);
 
-        tested.doCloseConnection(dirContextMock, contextSourceMock);
-    }
+		tested.doCloseConnection(dirContextMock, contextSourceMock);
+	}
 
-    @Test
-    public void testDoCloseConnection_NotTransactionalContext()
-            throws NamingException {
-        TransactionSynchronizationManager.bindResource(contextSourceMock,
-                holder);
+	@Test
+	public void testDoCloseConnection_NotTransactionalContext()
+			throws NamingException {
+		TransactionSynchronizationManager.bindResource(contextSourceMock,
+				holder);
 
-        DirContext dirContextMock2 = mock(DirContext.class);
+		DirContext dirContextMock2 = mock(DirContext.class);
 
-        tested.doCloseConnection(dirContextMock2, contextSourceMock);
-        verify(dirContextMock2).close();
-    }
+		tested.doCloseConnection(dirContextMock2, contextSourceMock);
+		verify(dirContextMock2).close();
+	}
 
 }

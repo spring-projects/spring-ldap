@@ -30,12 +30,12 @@ public class DistinguishedNameEditorTest {
 
 	private DistinguishedNameEditor tested;
 
-    @Before
+	@Before
 	public void setUp() throws Exception {
 		tested = new DistinguishedNameEditor();
 	}
 
-    @Test
+	@Test
 	public void testSetAsText() throws Exception {
 		String expectedDn = "dc=jayway, dc=se";
 
@@ -52,14 +52,14 @@ public class DistinguishedNameEditorTest {
 		}
 	}
 
-    @Test
+	@Test
 	public void testSetAsTextNullValue() throws Exception {
 		tested.setAsText(null);
 		Object result = tested.getValue();
 		assertThat(result).isNull();
 	}
 
-    @Test
+	@Test
 	public void testGetAsText() throws Exception {
 		String expectedDn = "dc=jayway,dc=se";
 		tested.setValue(new DistinguishedName(expectedDn));
@@ -67,7 +67,7 @@ public class DistinguishedNameEditorTest {
 		assertThat(text).isEqualTo(expectedDn);
 	}
 
-    @Test
+	@Test
 	public void testGetAsTextNullValue() throws Exception {
 		tested.setValue(null);
 		String text = tested.getAsText();

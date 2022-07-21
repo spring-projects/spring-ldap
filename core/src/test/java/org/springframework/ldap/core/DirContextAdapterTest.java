@@ -51,12 +51,12 @@ public class DirContextAdapterTest {
 
 	private DirContextAdapter tested;
 
-    @Before
+	@Before
 	public void setUp() throws Exception {
 		tested = new DirContextAdapter();
 	}
 
-    @Test
+	@Test
 	public void testSetUpdateMode() throws Exception {
 		assertThat(tested.isUpdateMode()).isFalse();
 		tested.setUpdateMode(true);
@@ -65,7 +65,7 @@ public class DirContextAdapterTest {
 		assertThat(tested.isUpdateMode()).isFalse();
 	}
 
-    @Test
+	@Test
 	public void testGetModificationItems() throws Exception {
 		ModificationItem[] items = tested.getModificationItems();
 		assertThat(items.length).isEqualTo(0);
@@ -73,7 +73,7 @@ public class DirContextAdapterTest {
 		assertThat(items.length).isEqualTo(0);
 	}
 
-    @Test
+	@Test
 	public void testAlwaysReplace() throws Exception {
 		ModificationItem[] items = tested.getModificationItems();
 		assertThat(items.length).isEqualTo(0);
@@ -81,13 +81,13 @@ public class DirContextAdapterTest {
 		assertThat(items.length).isEqualTo(0);
 	}
 
-    @Test
+	@Test
 	public void testGetStringAttributeWhenAttributeDoesNotExist() throws Exception {
 		String s = tested.getStringAttribute("does not exist");
 		assertThat(s).isNull();
 	}
 
-    @Test
+	@Test
 	public void testGetStringAttributeWhenAttributeDoesExistButWithNoValue() throws Exception {
 		final Attributes attrs = new BasicAttributes();
 		attrs.put(new BasicAttribute("abc"));
@@ -101,7 +101,7 @@ public class DirContextAdapterTest {
 		assertThat(s).isNull();
 	}
 
-    @Test
+	@Test
 	public void testAttributeExistsWhenAttributeDoesExistButWithNoValue() throws Exception {
 		final Attributes attrs = new BasicAttributes();
 		attrs.put(new BasicAttribute("abc"));
@@ -115,13 +115,13 @@ public class DirContextAdapterTest {
 		assertThat(result).isEqualTo(true);
 	}
 
-    @Test
+	@Test
 	public void testAttributeExistsWhenAttributeDoesNotExist() throws Exception {
 		boolean result = tested.attributeExists("does not exist");
 		assertThat(result).isEqualTo(false);
 	}
 
-    @Test
+	@Test
 	public void testGetStringAttributeWhenAttributeExists() throws Exception {
 		final Attributes attrs = new BasicAttributes();
 		attrs.put(new BasicAttribute("abc", "def"));
@@ -135,7 +135,7 @@ public class DirContextAdapterTest {
 		assertThat(s).isEqualTo("def");
 	}
 
-    @Test
+	@Test
 	public void testGetStringAttributesWhenMultiValueAttributeExists() throws Exception {
 		final Attributes attrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -154,7 +154,7 @@ public class DirContextAdapterTest {
 		assertThat(s.length).isEqualTo(2);
 	}
 
-    @Test
+	@Test
 	public void testGetStringAttributesExistsWithInvalidType() throws Exception {
 		final Attributes attrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -175,7 +175,7 @@ public class DirContextAdapterTest {
 		}
 	}
 
-    @Test
+	@Test
 	public void testGetStringAttributesExistsEmpty() throws Exception {
 		final Attributes attrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -191,13 +191,13 @@ public class DirContextAdapterTest {
 		assertThat(s.length).isEqualTo(0);
 	}
 
-    @Test
+	@Test
 	public void testGetStringAttributesNotExists() throws Exception {
 		String s[] = tested.getStringAttributes("abc");
 		assertThat(s).isNull();
 	}
 
-    @Test
+	@Test
 	public void testGetAttributesSortedStringSetExists() throws Exception {
 		final Attributes attrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -218,7 +218,7 @@ public class DirContextAdapterTest {
 		assertThat(it.next()).isEqualTo("234");
 	}
 
-    @Test
+	@Test
 	public void testGetAttributesSortedStringSetNotExists() throws Exception {
 		final Attributes attrs = new BasicAttributes();
 		class TestableDirContextAdapter extends DirContextAdapter {
@@ -231,7 +231,7 @@ public class DirContextAdapterTest {
 		assertThat(s).isNull();
 	}
 
-    @Test
+	@Test
 	public void testAddAttributeValue() throws NamingException {
 		// Perform test
 		tested.addAttributeValue("abc", "123");
@@ -241,7 +241,7 @@ public class DirContextAdapterTest {
 		assertThat((String) attr.get()).isEqualTo("123");
 	}
 
-    @Test
+	@Test
 	public void testAddAttributeValueAttributeWithOtherValueExists()
 			throws NamingException {
 		tested.setAttribute(new BasicAttribute("abc", "321"));
@@ -255,7 +255,7 @@ public class DirContextAdapterTest {
 		assertThat((String) attr.get(1)).isEqualTo("123");
 	}
 
-    @Test
+	@Test
 	public void testAddAttributeValueAttributeWithSameValueExists()
 			throws NamingException {
 		tested.setAttribute(new BasicAttribute("abc", "123"));
@@ -269,7 +269,7 @@ public class DirContextAdapterTest {
 		assertThat((String) attr.get(0)).isEqualTo("123");
 	}
 
-    @Test
+	@Test
 	public void testAddAttributeValueInUpdateMode() throws NamingException {
 		tested.setUpdateMode(true);
 		tested.addAttributeValue("abc", "123");
@@ -285,7 +285,7 @@ public class DirContextAdapterTest {
 		assertThat(attribute.get()).isEqualTo("123");
 	}
 
-    @Test
+	@Test
 	public void testAddAttributeValueInUpdateModeAttributeWhenOtherValueExistsInOrigAttrs()
 			throws NamingException {
 
@@ -306,7 +306,7 @@ public class DirContextAdapterTest {
 		assertThat(attribute.get()).isEqualTo("123");
 	}
 
-    @Test
+	@Test
 	public void testGetModificationItemsOnAddAttributeValueInUpdateModeAttributeWhenSameValueExistsInOrigAttrs()
 			throws NamingException {
 
@@ -323,7 +323,7 @@ public class DirContextAdapterTest {
 		assertThat(modificationItems.length).isEqualTo(0);
 	}
 
-    @Test
+	@Test
 	public void testAddAttributeValueInUpdateModeAttributeWithOtherValueExistsInUpdAttrs()
 			throws NamingException {
 		tested.setUpdateMode(true);
@@ -343,7 +343,7 @@ public class DirContextAdapterTest {
 		assertThat(attribute.get(1)).isEqualTo("123");
 	}
 
-    @Test
+	@Test
 	public void testAddAttributeValueInUpdateModeAttributeWithSameValueExistsInUpdAttrs()
 			throws NamingException {
 		tested.setUpdateMode(true);
@@ -383,7 +383,7 @@ public class DirContextAdapterTest {
 		assertThat(attrs.get("member2").get()).isEqualTo(LdapUtils.newLdapName("CN=test2,DC=root"));
 	}
 
-    @Test
+	@Test
 	public void testRemoveAttributeValueAttributeDoesntExist() {
 		// Perform test
 		tested.removeAttributeValue("abc", "123");
@@ -392,7 +392,7 @@ public class DirContextAdapterTest {
 		assertThat(attributes.get("abc")).isNull();
 	}
 
-    @Test
+	@Test
 	public void testRemoveAttributeValueAttributeWithOtherValueExists()
 			throws NamingException {
 		tested.setAttribute(new BasicAttribute("abc", "321"));
@@ -407,7 +407,7 @@ public class DirContextAdapterTest {
 		assertThat(attr.get()).isEqualTo("321");
 	}
 
-    @Test
+	@Test
 	public void testRemoveAttributeValueAttributeWithSameValueExists() {
 		tested.setAttribute(new BasicAttribute("abc", "123"));
 
@@ -419,7 +419,7 @@ public class DirContextAdapterTest {
 		assertThat(attr).isNull();
 	}
 
-    @Test
+	@Test
 	public void testRemoveAttributeValueAttributeWithOtherAndSameValueExists()
 			throws NamingException {
 		BasicAttribute basicAttribute = new BasicAttribute("abc");
@@ -437,7 +437,7 @@ public class DirContextAdapterTest {
 		assertThat(attr.get()).isEqualTo("321");
 	}
 
-    @Test
+	@Test
 	public void testRemoveAttributeValueInUpdateMode() {
 		tested.setUpdateMode(true);
 
@@ -450,7 +450,7 @@ public class DirContextAdapterTest {
 		assertThat(modificationItems.length).isEqualTo(0);
 	}
 
-    @Test
+	@Test
 	public void testRemoveAttributeValueInUpdateModeSameValueExistsInUpdatedAttrs() {
 		tested.setUpdateMode(true);
 		tested.setAttributeValue("abc", "123");
@@ -464,7 +464,7 @@ public class DirContextAdapterTest {
 		assertThat(modificationItems.length).isEqualTo(0);
 	}
 
-    @Test
+	@Test
 	public void testRemoveAttributeValueInUpdateModeOtherValueExistsInUpdatedAttrs()
 			throws NamingException {
 		tested.setUpdateMode(true);
@@ -483,7 +483,7 @@ public class DirContextAdapterTest {
 		assertThat(modificationAttribute.get()).isEqualTo("321");
 	}
 
-    @Test
+	@Test
 	public void testRemoveAttributeValueInUpdateModeOtherAndSameValueExistsInUpdatedAttrs()
 			throws NamingException {
 		tested.setUpdateMode(true);
@@ -501,7 +501,7 @@ public class DirContextAdapterTest {
 		assertThat(modificationAttribute.size()).isEqualTo(1);
 	}
 
-    @Test
+	@Test
 	public void testRemoveAttributeValueInUpdateModeSameValueExistsInOrigAttrs() {
 		tested.setAttribute(new BasicAttribute("abc", "123"));
 		tested.setUpdateMode(true);
@@ -514,10 +514,10 @@ public class DirContextAdapterTest {
 		Attribute modificationAttribute = modificationItems[0].getAttribute();
 		assertThat(modificationAttribute.getID()).isEqualTo("abc");
 		assertThat(modificationAttribute.size()).isEqualTo(0);
-	    assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
+		assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
 	}
 
-    @Test
+	@Test
 	public void testRemoveAttributeValueInUpdateModeSameAndOtherValueExistsInOrigAttrs()
 			throws NamingException {
 		BasicAttribute basicAttribute = new BasicAttribute("abc");
@@ -535,10 +535,10 @@ public class DirContextAdapterTest {
 		assertThat(modificationAttribute.getID()).isEqualTo("abc");
 		assertThat(modificationAttribute.size()).isEqualTo(1);
 		assertThat(modificationAttribute.get()).isEqualTo("123");
-	    assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
+		assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
 	}
 
-    @Test
+	@Test
 	public void testSetStringAttribute() throws Exception {
 		assertThat(tested.isUpdateMode()).isFalse();
 		tested.setAttributeValue("abc", "123");
@@ -547,7 +547,7 @@ public class DirContextAdapterTest {
 		assertThat((String) attr.get()).isEqualTo("123");
 	}
 
-    @Test
+	@Test
 	public void testSetStringAttributeNull() throws Exception {
 		assertThat(tested.isUpdateMode()).isFalse();
 		tested.setAttributeValue("abc", null);
@@ -556,7 +556,7 @@ public class DirContextAdapterTest {
 		assertThat(attr).isNull();
 	}
 
-    @Test
+	@Test
 	public void testAddAttribute() throws Exception {
 		tested.setUpdateMode(true);
 		assertThat(tested.isUpdateMode()).isTrue();
@@ -597,14 +597,14 @@ public class DirContextAdapterTest {
 		assertThat(mods.length).isEqualTo(1);
 	}
 
-    @Test
+	@Test
 	public void testGetDn() throws Exception {
 		DirContextAdapter tested = new DirContextAdapter(DUMMY_NAME);
 		Name result = tested.getDn();
 		assertThat(result).isEqualTo(DUMMY_NAME);
 	}
 
-    @Test
+	@Test
 	public void testGetDn_BasePath() {
 		DirContextAdapter tested = new DirContextAdapter(null, DUMMY_NAME,
 				BASE_NAME);
@@ -612,22 +612,22 @@ public class DirContextAdapterTest {
 		assertThat(result).isEqualTo(DUMMY_NAME);
 	}
 
-    @Test
+	@Test
 	public void testGetNameInNamespace() {
 		DirContextAdapter tested = new DirContextAdapter(DUMMY_NAME);
 		String result = tested.getNameInNamespace();
 		assertThat(result).isEqualTo(DUMMY_NAME.toString());
 	}
 
-    @Test
+	@Test
 	public void testGetNameInNamespace_BasePath() {
 		DirContextAdapter tested = new DirContextAdapter(null,
-                LdapUtils.newLdapName("c=SE"), BASE_NAME);
+				LdapUtils.newLdapName("c=SE"), BASE_NAME);
 		String result = tested.getNameInNamespace();
 		assertThat(result).isEqualTo(DUMMY_NAME.toString());
 	}
 
-    @Test
+	@Test
 	public void testAddMultiAttributes() throws Exception {
 		tested.setUpdateMode(true);
 		assertThat(tested.isUpdateMode()).isTrue();
@@ -658,7 +658,7 @@ public class DirContextAdapterTest {
 		assertThat((String) attr.get(1)).isEqualTo("456");
 	}
 
-    @Test
+	@Test
 	public void testRemoveAttribute() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		fixtureAttrs.put(new BasicAttribute("abc", "123"));
@@ -696,7 +696,7 @@ public class DirContextAdapterTest {
 		assertThat(attr).isNull();
 	}
 
-    @Test
+	@Test
 	public void testRemoveMultiAttribute() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute abc = new BasicAttribute("abc");
@@ -722,7 +722,7 @@ public class DirContextAdapterTest {
 		assertThat(attr.size()).isEqualTo(0);
 	}
 
-    @Test
+	@Test
 	public void testChangeAttribute() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		fixtureAttrs.put(new BasicAttribute("abc", "123"));
@@ -743,7 +743,7 @@ public class DirContextAdapterTest {
 		assertThat((String) attr.get()).isEqualTo("234");
 	}
 
-    @Test
+	@Test
 	public void testNoChangeAttribute() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		fixtureAttrs.put(new BasicAttribute("abc", "123"));
@@ -761,7 +761,7 @@ public class DirContextAdapterTest {
 		assertThat(mods.length).isEqualTo(0);
 	}
 
-    @Test
+	@Test
 	public void testNoChangeMultiAttribute() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -784,7 +784,7 @@ public class DirContextAdapterTest {
 		assertThat(modNames.length).isEqualTo(0);
 	}
 
-    @Test
+	@Test
 	public void testNoChangeMultiAttributeOrderDoesNotMatter() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -806,7 +806,7 @@ public class DirContextAdapterTest {
 		assertThat(modNames.length).isEqualTo(0);
 	}
 
-    @Test
+	@Test
 	public void testChangeMultiAttributeOrderDoesMatter() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -836,7 +836,7 @@ public class DirContextAdapterTest {
 	 * Test case corresponding to LDAP-96 in Spring Jira.
 	 * https://jira.springframework.org/browse/LDAP-96
 	 */
-    @Test
+	@Test
 	public void testChangeMultiAttributeOrderDoesMatterLDAP96()
 			throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
@@ -865,7 +865,7 @@ public class DirContextAdapterTest {
 		assertThat(attr.get(2)).isEqualTo("Juergen");
 	}
 
-    @Test
+	@Test
 	public void testChangeMultiAttribute_AddValue() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -886,11 +886,11 @@ public class DirContextAdapterTest {
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
 		assertThat(modificationItems.length).isEqualTo(1);
-	    assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
+		assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
 		assertThat(modificationItems[0].getAttribute().get()).isEqualTo("klytt");
 	}
 
-    @Test
+	@Test
 	public void testChangeMultiAttribute_RemoveValue() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -909,11 +909,11 @@ public class DirContextAdapterTest {
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
 		assertThat(modificationItems.length).isEqualTo(1);
-	    assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
+		assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
 		assertThat(modificationItems[0].getAttribute().get()).isEqualTo("qwe");
 	}
 
-    @Test
+	@Test
 	public void testChangeMultiAttribute_RemoveTwoValues() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -933,12 +933,12 @@ public class DirContextAdapterTest {
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
 		assertThat(modificationItems.length).isEqualTo(1);
-	    assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
+		assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
 		assertThat(modificationItems[0].getAttribute().get(0)).isEqualTo("qwe");
 		assertThat(modificationItems[0].getAttribute().get(1)).isEqualTo("rty");
 	}
 
-    @Test
+	@Test
 	public void testChangeMultiAttribute_RemoveAllValues() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -957,10 +957,10 @@ public class DirContextAdapterTest {
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
 		assertThat(modificationItems.length).isEqualTo(1);
-	    assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
+		assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
 	}
 
-    @Test
+	@Test
 	public void testChangeMultiAttribute_SameValue() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -981,7 +981,7 @@ public class DirContextAdapterTest {
 		assertThat(modificationItems.length).isEqualTo(0);
 	}
 
-    @Test
+	@Test
 	public void testChangeMultiAttribute_AddAndRemoveValue() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -1005,13 +1005,13 @@ public class DirContextAdapterTest {
 		assertThat(modificationItems.length).isEqualTo(2);
 
 		Attribute modifiedAttribute = modificationItems[0].getAttribute();
-	    assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
+		assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
 		assertThat(modifiedAttribute.getID()).isEqualTo("abc");
 		assertThat(modifiedAttribute.size()).isEqualTo(2);
 		assertThat(modifiedAttribute.get(0)).isEqualTo("rty");
 		assertThat(modifiedAttribute.get(1)).isEqualTo("uio");
 
-	    assertThat(modificationItems[1].getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
+		assertThat(modificationItems[1].getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
 		modifiedAttribute = modificationItems[1].getAttribute();
 		assertThat(modifiedAttribute.getID()).isEqualTo("abc");
 		assertThat(modifiedAttribute.size()).isEqualTo(2);
@@ -1019,7 +1019,7 @@ public class DirContextAdapterTest {
 		assertThat(modifiedAttribute.get(1)).isEqualTo("kalle");
 	}
 
-    @Test
+	@Test
 	public void testAddAttribute_Multivalue() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("abc");
@@ -1041,7 +1041,7 @@ public class DirContextAdapterTest {
 		assertThat(modificationItems[0].getAttribute().getID()).isEqualTo("def");
 	}
 
-    @Test
+	@Test
 	public void testChangeAttributeTwice() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		fixtureAttrs.put(new BasicAttribute("abc", "123"));
@@ -1074,7 +1074,7 @@ public class DirContextAdapterTest {
 		assertThat(tested.getStringAttribute("abc")).isEqualTo("987");
 	}
 
-    @Test
+	@Test
 	public void testAddReplaceAndChangeAttribute() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		fixtureAttrs.put(new BasicAttribute("abc", "123"));
@@ -1137,7 +1137,7 @@ public class DirContextAdapterTest {
 	 *
 	 * @throws NamingException
 	 */
-    @Test
+	@Test
 	public void testSetAttribute_UpdateMode() throws NamingException {
 		// Set original attribute value
 		Attribute attribute = new BasicAttribute("cn", "john doe");
@@ -1160,13 +1160,13 @@ public class DirContextAdapterTest {
 		assertThat(modificationAttribute.get()).isEqualTo("nisse hult");
 	}
 
-    @Test
+	@Test
 	public void testGetStringAttributes_NullValue() {
 		String result = tested.getStringAttribute("someAbsentAttribute");
 		assertThat(result).isNull();
 	}
 
-    @Test
+	@Test
 	public void testGetStringAttributes_AttributeExists_NullValue() {
 		tested.setAttribute(new BasicAttribute("someAttribute", null));
 		String result = tested.getStringAttribute("someAttribute");
@@ -1182,7 +1182,7 @@ public class DirContextAdapterTest {
 		return null;
 	}
 
-    @Test
+	@Test
 	public void testModifyMultiValueAttributeModificationOrder()
 			throws NamingException {
 		BasicAttribute attribute = new BasicAttribute("abc");
@@ -1199,17 +1199,17 @@ public class DirContextAdapterTest {
 		ModificationItem[] modificationItems = tested.getModificationItems();
 		assertThat(modificationItems.length).isEqualTo(2);
 		ModificationItem modificationItem = modificationItems[0];
-	    assertThat(modificationItem.getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
+		assertThat(modificationItem.getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
 		assertThat(modificationItem.getAttribute().get()).isEqualTo("Some Person");
 		modificationItem = modificationItems[1];
-	    assertThat(modificationItem.getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
+		assertThat(modificationItem.getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
 		assertThat(modificationItem.getAttribute().get()).isEqualTo("some person");
 	}
 
 	/**
 	 * Test for LDAP-13.
 	 */
-    @Test
+	@Test
 	public void testModifyAttributeByteArray() {
 		tested.setAttribute(new BasicAttribute("abc", new byte[] { 1, 2, 3 }));
 
@@ -1226,7 +1226,7 @@ public class DirContextAdapterTest {
 	 * Test for LDAP-109, since also DirContextAdapter may get an invalid
 	 * CompositeName sent to it.
 	 */
-    @Test
+	@Test
 	public void testConstructorUsingCompositeNameWithBackslashes()
 			throws Exception {
 		CompositeName compositeName = new CompositeName();
@@ -1235,138 +1235,138 @@ public class DirContextAdapterTest {
 		assertThat(adapter.getDn().toString()).isEqualTo("cn=Some\\\\Person6,ou=company1,c=Sweden");
 	}
 
-    @Test
+	@Test
 	public void testStringConstructor() {
 		DirContextAdapter tested = new DirContextAdapter("cn=john doe, ou=company");
 		assertThat(tested.getDn()).isEqualTo(LdapUtils.newLdapName("cn=john doe, ou=company"));
 	}
 
-    @Test
-    public void testAddDnAttributeValueIdentical() {
-        BasicAttributes attributes = new BasicAttributes();
-        attributes.put("uniqueMember", "cn=john doe, ou=company");
+	@Test
+	public void testAddDnAttributeValueIdentical() {
+		BasicAttributes attributes = new BasicAttributes();
+		attributes.put("uniqueMember", "cn=john doe, ou=company");
 
-        DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
-        tested.setUpdateMode(true);
+		DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+		tested.setUpdateMode(true);
 
-        tested.addAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
-        ModificationItem[] modificationItems = tested.getModificationItems();
-        assertThat(modificationItems.length).isEqualTo(0);
-    }
+		tested.addAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
+		ModificationItem[] modificationItems = tested.getModificationItems();
+		assertThat(modificationItems.length).isEqualTo(0);
+	}
 
-    @Test
-    public void testAddDnAttributeSyntacticallyEqual() {
-        BasicAttributes attributes = new BasicAttributes();
-        attributes.put("uniqueMember", "cn=john doe,OU=company");
+	@Test
+	public void testAddDnAttributeSyntacticallyEqual() {
+		BasicAttributes attributes = new BasicAttributes();
+		attributes.put("uniqueMember", "cn=john doe,OU=company");
 
-        DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
-        tested.setUpdateMode(true);
+		DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+		tested.setUpdateMode(true);
 
-        tested.addAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
-        ModificationItem[] modificationItems = tested.getModificationItems();
-        assertThat(modificationItems.length).isEqualTo(0);
-    }
+		tested.addAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
+		ModificationItem[] modificationItems = tested.getModificationItems();
+		assertThat(modificationItems.length).isEqualTo(0);
+	}
 
-    @Test
-    public void testRemoveDnAttributeSyntacticallyEqual() throws NamingException {
-        BasicAttributes attributes = new BasicAttributes();
-        attributes.put("uniqueMember", "cn=john doe,OU=company");
+	@Test
+	public void testRemoveDnAttributeSyntacticallyEqual() throws NamingException {
+		BasicAttributes attributes = new BasicAttributes();
+		attributes.put("uniqueMember", "cn=john doe,OU=company");
 
-        DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
-        tested.setUpdateMode(true);
+		DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+		tested.setUpdateMode(true);
 
-        tested.removeAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
-        ModificationItem[] modificationItems = tested.getModificationItems();
-        assertThat(modificationItems.length).isEqualTo(1);
+		tested.removeAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
+		ModificationItem[] modificationItems = tested.getModificationItems();
+		assertThat(modificationItems.length).isEqualTo(1);
 
-        ModificationItem modificationItem = modificationItems[0];
-        assertThat(modificationItem.getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
-        assertThat(modificationItem.getAttribute().getID()).isEqualTo("uniqueMember");
-    }
+		ModificationItem modificationItem = modificationItems[0];
+		assertThat(modificationItem.getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
+		assertThat(modificationItem.getAttribute().getID()).isEqualTo("uniqueMember");
+	}
 
-    @Test
-    public void testRemoveOneOfSeveralDnAttributeSyntacticallyEqual() throws NamingException {
-        BasicAttributes attributes = new BasicAttributes();
-        BasicAttribute attribute = new BasicAttribute("uniqueMember", "cn=john doe,OU=company");
-        attribute.add("cn=jane doe, ou=company");
-        attributes.put(attribute);
+	@Test
+	public void testRemoveOneOfSeveralDnAttributeSyntacticallyEqual() throws NamingException {
+		BasicAttributes attributes = new BasicAttributes();
+		BasicAttribute attribute = new BasicAttribute("uniqueMember", "cn=john doe,OU=company");
+		attribute.add("cn=jane doe, ou=company");
+		attributes.put(attribute);
 
-        DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
-        tested.setUpdateMode(true);
+		DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+		tested.setUpdateMode(true);
 
-        tested.removeAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
-        ModificationItem[] modificationItems = tested.getModificationItems();
-        assertThat(modificationItems.length).isEqualTo(1);
+		tested.removeAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
+		ModificationItem[] modificationItems = tested.getModificationItems();
+		assertThat(modificationItems.length).isEqualTo(1);
 
-        ModificationItem modificationItem = modificationItems[0];
-        assertThat(modificationItem.getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
-        assertThat(modificationItem.getAttribute().getID()).isEqualTo("uniqueMember");
-        assertThat(modificationItem.getAttribute().get()).isEqualTo("cn=john doe,OU=company");
-    }
+		ModificationItem modificationItem = modificationItems[0];
+		assertThat(modificationItem.getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
+		assertThat(modificationItem.getAttribute().getID()).isEqualTo("uniqueMember");
+		assertThat(modificationItem.getAttribute().get()).isEqualTo("cn=john doe,OU=company");
+	}
 
-    @Test
-    public void testAddDnAttributeNewValue() throws NamingException {
-        BasicAttributes attributes = new BasicAttributes();
-        attributes.put("uniqueMember", "cn=john doe, ou=company");
+	@Test
+	public void testAddDnAttributeNewValue() throws NamingException {
+		BasicAttributes attributes = new BasicAttributes();
+		attributes.put("uniqueMember", "cn=john doe, ou=company");
 
-        DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
-        tested.setUpdateMode(true);
+		DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+		tested.setUpdateMode(true);
 
-        tested.addAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=jane doe, ou=company"));
-        ModificationItem[] modificationItems = tested.getModificationItems();
-        assertThat(modificationItems.length).isEqualTo(1);
+		tested.addAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=jane doe, ou=company"));
+		ModificationItem[] modificationItems = tested.getModificationItems();
+		assertThat(modificationItems.length).isEqualTo(1);
 
-        ModificationItem modificationItem = modificationItems[0];
-        assertThat(modificationItem.getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
-        assertThat(modificationItem.getAttribute().getID()).isEqualTo("uniqueMember");
-        assertThat(modificationItem.getAttribute().get()).isEqualTo("cn=jane doe, ou=company");
-    }
+		ModificationItem modificationItem = modificationItems[0];
+		assertThat(modificationItem.getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
+		assertThat(modificationItem.getAttribute().getID()).isEqualTo("uniqueMember");
+		assertThat(modificationItem.getAttribute().get()).isEqualTo("cn=jane doe, ou=company");
+	}
 
-    @Test
-    public void testSetDnAttributeValueIdentical() {
-        BasicAttributes attributes = new BasicAttributes();
-        attributes.put("uniqueMember", "cn=john doe, ou=company");
+	@Test
+	public void testSetDnAttributeValueIdentical() {
+		BasicAttributes attributes = new BasicAttributes();
+		attributes.put("uniqueMember", "cn=john doe, ou=company");
 
-        DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
-        tested.setUpdateMode(true);
+		DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+		tested.setUpdateMode(true);
 
-        tested.setAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
-        ModificationItem[] modificationItems = tested.getModificationItems();
-        assertThat(modificationItems.length).isEqualTo(0);
-    }
+		tested.setAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
+		ModificationItem[] modificationItems = tested.getModificationItems();
+		assertThat(modificationItems.length).isEqualTo(0);
+	}
 
-    @Test
-    public void testSetDnAttributesValueIdentical() {
-        BasicAttributes attributes = new BasicAttributes();
-        attributes.put("uniqueMember", "cn=john doe, ou=company");
+	@Test
+	public void testSetDnAttributesValueIdentical() {
+		BasicAttributes attributes = new BasicAttributes();
+		attributes.put("uniqueMember", "cn=john doe, ou=company");
 
-        DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
-        tested.setUpdateMode(true);
+		DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+		tested.setUpdateMode(true);
 
-        tested.setAttributeValues("uniqueMember", new Object[]{LdapUtils.newLdapName("cn=john doe, ou=company")});
-        ModificationItem[] modificationItems = tested.getModificationItems();
-        assertThat(modificationItems.length).isEqualTo(0);
-    }
+		tested.setAttributeValues("uniqueMember", new Object[]{LdapUtils.newLdapName("cn=john doe, ou=company")});
+		ModificationItem[] modificationItems = tested.getModificationItems();
+		assertThat(modificationItems.length).isEqualTo(0);
+	}
 
-    @Test
-    public void testSetDnAttributesValuesOneNewEntry() throws NamingException {
-        BasicAttributes attributes = new BasicAttributes();
-        attributes.put("uniqueMember", "cn=john doe, ou=company");
+	@Test
+	public void testSetDnAttributesValuesOneNewEntry() throws NamingException {
+		BasicAttributes attributes = new BasicAttributes();
+		attributes.put("uniqueMember", "cn=john doe, ou=company");
 
-        DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
-        tested.setUpdateMode(true);
+		DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+		tested.setUpdateMode(true);
 
-        tested.setAttributeValues("uniqueMember", new Object[]{
-                LdapUtils.newLdapName("cn=john doe, ou=company"),
-                LdapUtils.newLdapName("cn=jane doe, ou=company")
-        });
+		tested.setAttributeValues("uniqueMember", new Object[]{
+				LdapUtils.newLdapName("cn=john doe, ou=company"),
+				LdapUtils.newLdapName("cn=jane doe, ou=company")
+		});
 
-        ModificationItem[] modificationItems = tested.getModificationItems();
-        assertThat(modificationItems.length).isEqualTo(1);
+		ModificationItem[] modificationItems = tested.getModificationItems();
+		assertThat(modificationItems.length).isEqualTo(1);
 
-        ModificationItem modificationItem = modificationItems[0];
-        assertThat(modificationItem.getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
-        assertThat(modificationItem.getAttribute().getID()).isEqualTo("uniqueMember");
-        assertThat(modificationItem.getAttribute().get()).isEqualTo("cn=jane doe, ou=company");
-    }
+		ModificationItem modificationItem = modificationItems[0];
+		assertThat(modificationItem.getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
+		assertThat(modificationItem.getAttribute().getID()).isEqualTo("uniqueMember");
+		assertThat(modificationItem.getAttribute().get()).isEqualTo("cn=jane doe, ou=company");
+	}
 }

@@ -72,7 +72,7 @@ public class LdapTemplateRecursiveDeleteITest extends AbstractLdapTemplateIntegr
 		adapter.setAttributeValue("description", "Should be recursively deleted");
 		tested.bind(firstSubDn, adapter, null);
 		secondSubDn = LdapUtils.newLdapName("cn=subPerson2");
-        secondSubDn = LdapUtils.prepend(secondSubDn, DN);
+		secondSubDn = LdapUtils.prepend(secondSubDn, DN);
 
 		adapter = new DirContextAdapter();
 		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
@@ -82,7 +82,7 @@ public class LdapTemplateRecursiveDeleteITest extends AbstractLdapTemplateIntegr
 		tested.bind(secondSubDn, adapter, null);
 
 		leafDn = LdapUtils.newLdapName("cn=subSubPerson");
-        leafDn = LdapUtils.prepend(leafDn, DN);
+		leafDn = LdapUtils.prepend(leafDn, DN);
 
 		adapter = new DirContextAdapter();
 		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
@@ -103,7 +103,7 @@ public class LdapTemplateRecursiveDeleteITest extends AbstractLdapTemplateIntegr
 	}
 
 	@Test
-    @Category(NoAdTest.class)
+	@Category(NoAdTest.class)
 	public void testRecursiveUnbind() {
 		tested.unbind(DN, true);
 
@@ -114,7 +114,7 @@ public class LdapTemplateRecursiveDeleteITest extends AbstractLdapTemplateIntegr
 	}
 
 	@Test
-    @Category(NoAdTest.class)
+	@Category(NoAdTest.class)
 	public void testRecursiveUnbindOnLeaf() {
 		tested.unbind(leafDn, true);
 		verifyDeleted(leafDn);

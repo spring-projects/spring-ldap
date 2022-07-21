@@ -26,12 +26,12 @@ import org.apache.commons.pool2.impl.EvictionPolicy;
  * */
 public class DummyEvictionPolicy implements EvictionPolicy {
 
-    /**
-     * @see EvictionPolicy#evict(EvictionConfig, PooledObject, int)
-     *
-     * */
-    @Override
-    public boolean evict(EvictionConfig config, PooledObject underTest, int idleCount) {
-        return false;
-    }
+	/**
+	 * @see EvictionPolicy#evict(EvictionConfig, PooledObject, int)
+	 *
+	 * */
+	@Override
+	public boolean evict(EvictionConfig config, PooledObject underTest, int idleCount) {
+		return false;
+	}
 }

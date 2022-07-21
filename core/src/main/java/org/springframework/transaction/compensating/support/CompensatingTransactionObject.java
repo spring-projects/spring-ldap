@@ -25,38 +25,38 @@ package org.springframework.transaction.compensating.support;
  * @since 1.2
  */
 public class CompensatingTransactionObject {
-    private CompensatingTransactionHolderSupport holder;
+	private CompensatingTransactionHolderSupport holder;
 
-    /**
-     * Constructor.
-     * 
-     * @param holder
-     *            the {@link CompensatingTransactionHolderSupport} associated
-     *            with the current transaction.
-     */
-    public CompensatingTransactionObject(
-            CompensatingTransactionHolderSupport holder) {
-        this.holder = holder;
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param holder
+	 *			the {@link CompensatingTransactionHolderSupport} associated
+	 *			with the current transaction.
+	 */
+	public CompensatingTransactionObject(
+			CompensatingTransactionHolderSupport holder) {
+		this.holder = holder;
+	}
 
-    /**
-     * Get the DirContextHolder.
-     * 
-     * @return the DirContextHolder.
-     */
-    public CompensatingTransactionHolderSupport getHolder() {
-        return holder;
-    }
+	/**
+	 * Get the DirContextHolder.
+	 * 
+	 * @return the DirContextHolder.
+	 */
+	public CompensatingTransactionHolderSupport getHolder() {
+		return holder;
+	}
 
-    /**
-     * Set the {@link CompensatingTransactionHolderSupport} associated with the
-     * current transaction.
-     * 
-     * @param holder
-     *            the {@link CompensatingTransactionHolderSupport} associated
-     *            with the current transaction.
-     */
-    public void setHolder(CompensatingTransactionHolderSupport holder) {
-        this.holder = holder;
-    }
+	/**
+	 * Set the {@link CompensatingTransactionHolderSupport} associated with the
+	 * current transaction.
+	 * 
+	 * @param holder
+	 *			the {@link CompensatingTransactionHolderSupport} associated
+	 *			with the current transaction.
+	 */
+	public void setHolder(CompensatingTransactionHolderSupport holder) {
+		this.holder = holder;
+	}
 }

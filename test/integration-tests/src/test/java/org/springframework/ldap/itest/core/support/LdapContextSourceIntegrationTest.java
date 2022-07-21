@@ -50,7 +50,7 @@ import static org.assertj.core.api.Assertions.fail;
 public class LdapContextSourceIntegrationTest extends AbstractLdapTemplateIntegrationTest {
 
 	@Autowired
-    @Qualifier("contextSource")
+	@Qualifier("contextSource")
 	private ContextSource tested;
 
 	@Autowired
@@ -90,7 +90,7 @@ public class LdapContextSourceIntegrationTest extends AbstractLdapTemplateIntegr
 			assertThat(ctx).isNotNull();
 			// Double check to see that we are authenticated.
 			Hashtable environment = ctx.getEnvironment();
-            assertThat(environment.containsKey(LdapContextSource.SUN_LDAP_POOLING_FLAG)).isFalse();
+			assertThat(environment.containsKey(LdapContextSource.SUN_LDAP_POOLING_FLAG)).isFalse();
 			assertThat(environment.containsKey(Context.SECURITY_PRINCIPAL)).isTrue();
 			assertThat(environment.containsKey(Context.SECURITY_CREDENTIALS)).isTrue();
 		}
@@ -108,7 +108,7 @@ public class LdapContextSourceIntegrationTest extends AbstractLdapTemplateIntegr
 	}
 
 	@Test
-    @Category(NoAdTest.class)
+	@Category(NoAdTest.class)
 	public void testGetContext() throws NamingException {
 		DirContext ctx = null;
 		try {
@@ -119,7 +119,7 @@ public class LdapContextSourceIntegrationTest extends AbstractLdapTemplateIntegr
 			// Double check to see that we are authenticated, and that we did not receive
 			// a connection eligible for connection pooling.
 			Hashtable environment = ctx.getEnvironment();
-            assertThat(environment.containsKey(LdapContextSource.SUN_LDAP_POOLING_FLAG)).isFalse();
+			assertThat(environment.containsKey(LdapContextSource.SUN_LDAP_POOLING_FLAG)).isFalse();
 			assertThat(environment.get(Context.SECURITY_PRINCIPAL)).isEqualTo(expectedPrincipal);
 			assertThat(environment.get(Context.SECURITY_CREDENTIALS)).isEqualTo(expectedCredentials);
 		}
@@ -138,7 +138,7 @@ public class LdapContextSourceIntegrationTest extends AbstractLdapTemplateIntegr
 
 	@SuppressWarnings("unchecked")
 	@Test
-    @Category(NoAdTest.class)
+	@Category(NoAdTest.class)
 	public void verifyAuthenticate() {
 		EqualsFilter filter = new EqualsFilter("cn", "Some Person2");
 		List<String> results = ldapTemplate.search("", filter.toString(), new DnContextMapper());

@@ -37,99 +37,99 @@ import javax.naming.directory.Attributes;
  * @since 1.2
  */
 public class RebindOperationExecutor implements
-        CompensatingTransactionOperationExecutor {
+		CompensatingTransactionOperationExecutor {
 
-    private static Logger log = LoggerFactory.getLogger(RebindOperationExecutor.class);
+	private static Logger log = LoggerFactory.getLogger(RebindOperationExecutor.class);
 
-    private LdapOperations ldapOperations;
+	private LdapOperations ldapOperations;
 
-    private Name originalDn;
+	private Name originalDn;
 
-    private Name temporaryDn;
+	private Name temporaryDn;
 
-    private Object originalObject;
+	private Object originalObject;
 
-    private Attributes originalAttributes;
+	private Attributes originalAttributes;
 
-    /**
-     * Constructor.
-     * 
-     * @param ldapOperations
-     *            the {@link LdapOperations} to use to perform the rollback.
-     * @param originalDn
-     *            The original DN of the entry to bind.
-     * @param temporaryDn
-     *            The temporary DN of the entry.
-     * @param originalObject
-     *            Original 'object' parameter sent to the rebind operation.
-     * @param originalAttributes
-     *            Original 'attributes' parameter sent to the rebind operation
-     */
-    public RebindOperationExecutor(LdapOperations ldapOperations,
-            Name originalDn, Name temporaryDn, Object originalObject,
-            Attributes originalAttributes) {
-        this.ldapOperations = ldapOperations;
-        this.originalDn = originalDn;
-        this.temporaryDn = temporaryDn;
-        this.originalObject = originalObject;
-        this.originalAttributes = originalAttributes;
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param ldapOperations
+	 *			the {@link LdapOperations} to use to perform the rollback.
+	 * @param originalDn
+	 *			The original DN of the entry to bind.
+	 * @param temporaryDn
+	 *			The temporary DN of the entry.
+	 * @param originalObject
+	 *			Original 'object' parameter sent to the rebind operation.
+	 * @param originalAttributes
+	 *			Original 'attributes' parameter sent to the rebind operation
+	 */
+	public RebindOperationExecutor(LdapOperations ldapOperations,
+			Name originalDn, Name temporaryDn, Object originalObject,
+			Attributes originalAttributes) {
+		this.ldapOperations = ldapOperations;
+		this.originalDn = originalDn;
+		this.temporaryDn = temporaryDn;
+		this.originalObject = originalObject;
+		this.originalAttributes = originalAttributes;
+	}
 
-    /**
-     * Get the LdapOperations. Package private for testing purposes.
-     * 
-     * @return the LdapOperations.
-     */
-    LdapOperations getLdapOperations() {
-        return ldapOperations;
-    }
+	/**
+	 * Get the LdapOperations. Package private for testing purposes.
+	 * 
+	 * @return the LdapOperations.
+	 */
+	LdapOperations getLdapOperations() {
+		return ldapOperations;
+	}
 
-    /*
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#rollback()
-     */
-    public void rollback() {
-        log.debug("Rolling back rebind operation");
-        try {
-            ldapOperations.unbind(originalDn);
-            ldapOperations.rename(temporaryDn, originalDn);
-        } catch (Exception e) {
-            log.warn("Failed to rollback operation, dn: " + originalDn
-                    + "; temporary DN: " + temporaryDn, e);
-        }
-    }
+	/*
+	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#rollback()
+	 */
+	public void rollback() {
+		log.debug("Rolling back rebind operation");
+		try {
+			ldapOperations.unbind(originalDn);
+			ldapOperations.rename(temporaryDn, originalDn);
+		} catch (Exception e) {
+			log.warn("Failed to rollback operation, dn: " + originalDn
+					+ "; temporary DN: " + temporaryDn, e);
+		}
+	}
 
-    /*
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#commit()
-     */
-    public void commit() {
-        log.debug("Committing rebind operation");
-        ldapOperations.unbind(temporaryDn);
-    }
+	/*
+	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#commit()
+	 */
+	public void commit() {
+		log.debug("Committing rebind operation");
+		ldapOperations.unbind(temporaryDn);
+	}
 
-    /*
-     * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#performOperation()
-     */
-    public void performOperation() {
-        log.debug("Performing rebind operation - "
-                + "renaming original entry and "
-                + "binding new contents to entry.");
-        ldapOperations.rename(originalDn, temporaryDn);
-        ldapOperations.bind(originalDn, originalObject, originalAttributes);
-    }
+	/*
+	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#performOperation()
+	 */
+	public void performOperation() {
+		log.debug("Performing rebind operation - "
+				+ "renaming original entry and "
+				+ "binding new contents to entry.");
+		ldapOperations.rename(originalDn, temporaryDn);
+		ldapOperations.bind(originalDn, originalObject, originalAttributes);
+	}
 
-    Attributes getOriginalAttributes() {
-        return originalAttributes;
-    }
+	Attributes getOriginalAttributes() {
+		return originalAttributes;
+	}
 
-    Name getOriginalDn() {
-        return originalDn;
-    }
+	Name getOriginalDn() {
+		return originalDn;
+	}
 
-    Object getOriginalObject() {
-        return originalObject;
-    }
+	Object getOriginalObject() {
+		return originalObject;
+	}
 
-    Name getTemporaryDn() {
-        return temporaryDn;
-    }
+	Name getTemporaryDn() {
+		return temporaryDn;
+	}
 }

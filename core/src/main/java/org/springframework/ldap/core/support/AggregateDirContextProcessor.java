@@ -34,52 +34,52 @@ import java.util.List;
  */
 public class AggregateDirContextProcessor implements DirContextProcessor {
 
-    private List<DirContextProcessor> dirContextProcessors = new LinkedList<DirContextProcessor>();
+	private List<DirContextProcessor> dirContextProcessors = new LinkedList<DirContextProcessor>();
 
-    /**
-     * Add the supplied DirContextProcessor to the list of managed objects.
-     * 
-     * @param processor
-     *            the DirContextpProcessor to add.
-     */
-    public void addDirContextProcessor(DirContextProcessor processor) {
-        dirContextProcessors.add(processor);
-    }
+	/**
+	 * Add the supplied DirContextProcessor to the list of managed objects.
+	 * 
+	 * @param processor
+	 *			the DirContextpProcessor to add.
+	 */
+	public void addDirContextProcessor(DirContextProcessor processor) {
+		dirContextProcessors.add(processor);
+	}
 
-    /**
-     * Get the list of managed {@link DirContextProcessor} instances.
-     * 
-     * @return the managed list of {@link DirContextProcessor} instances.
-     */
-    public List<DirContextProcessor> getDirContextProcessors() {
-        return dirContextProcessors;
-    }
+	/**
+	 * Get the list of managed {@link DirContextProcessor} instances.
+	 * 
+	 * @return the managed list of {@link DirContextProcessor} instances.
+	 */
+	public List<DirContextProcessor> getDirContextProcessors() {
+		return dirContextProcessors;
+	}
 
-    /**
-     * Set the list of managed {@link DirContextProcessor} instances.
-     * 
-     * @param dirContextProcessors
-     *            the list of {@link DirContextProcessor} instances to set.
-     */
-    public void setDirContextProcessors(List<DirContextProcessor> dirContextProcessors) {
-        this.dirContextProcessors = new ArrayList<DirContextProcessor>(dirContextProcessors);
-    }
+	/**
+	 * Set the list of managed {@link DirContextProcessor} instances.
+	 * 
+	 * @param dirContextProcessors
+	 *			the list of {@link DirContextProcessor} instances to set.
+	 */
+	public void setDirContextProcessors(List<DirContextProcessor> dirContextProcessors) {
+		this.dirContextProcessors = new ArrayList<DirContextProcessor>(dirContextProcessors);
+	}
 
-    /*
-     * @see org.springframework.ldap.core.DirContextProcessor#preProcess(javax.naming.directory.DirContext)
-     */
-    public void preProcess(DirContext ctx) throws NamingException {
-        for (DirContextProcessor processor : dirContextProcessors) {
-            processor.preProcess(ctx);
-        }
-    }
+	/*
+	 * @see org.springframework.ldap.core.DirContextProcessor#preProcess(javax.naming.directory.DirContext)
+	 */
+	public void preProcess(DirContext ctx) throws NamingException {
+		for (DirContextProcessor processor : dirContextProcessors) {
+			processor.preProcess(ctx);
+		}
+	}
 
-    /*
-     * @see org.springframework.ldap.core.DirContextProcessor#postProcess(javax.naming.directory.DirContext)
-     */
-    public void postProcess(DirContext ctx) throws NamingException {
-        for (DirContextProcessor processor : dirContextProcessors) {
-            processor.postProcess(ctx);
-        }
-    }
+	/*
+	 * @see org.springframework.ldap.core.DirContextProcessor#postProcess(javax.naming.directory.DirContext)
+	 */
+	public void postProcess(DirContext ctx) throws NamingException {
+		for (DirContextProcessor processor : dirContextProcessors) {
+			processor.postProcess(ctx);
+		}
+	}
 }

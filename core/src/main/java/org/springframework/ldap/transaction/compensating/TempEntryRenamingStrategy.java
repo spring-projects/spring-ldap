@@ -26,13 +26,13 @@ import javax.naming.Name;
  */
 public interface TempEntryRenamingStrategy {
 
-    /**
-     * Get a temporary name for the current entry to be renamed to.
-     * 
-     * @param originalName
-     *            The original name of the entry.
-     * @return The name to which the entry should be temporarily renamed
-     *         according to this strategy.
-     */
-    Name getTemporaryName(Name originalName);
+	/**
+	 * Get a temporary name for the current entry to be renamed to.
+	 * 
+	 * @param originalName
+	 *			The original name of the entry.
+	 * @return The name to which the entry should be temporarily renamed
+	 *		 according to this strategy.
+	 */
+	Name getTemporaryName(Name originalName);
 }

@@ -49,173 +49,173 @@ import static org.assertj.core.api.Assertions.fail;
 @ContextConfiguration("classpath:/incrementalAttributeMapperTest.xml")
 public class IncrementalAttributeMapperITest extends AbstractJUnit4SpringContextTests {
 
-    private static final DistinguishedName BASE_DN = new DistinguishedName("ou=dummy,dc=261consulting,dc=local");
-    private static final DistinguishedName OU_DN = new DistinguishedName("ou=dummy");
-    private static final DistinguishedName GROUP_DN = new DistinguishedName(OU_DN).append("cn", "testgroup");
-    private static final String DEFAULT_PASSWORD = "ahcoophah5Oi4oh";
+	private static final DistinguishedName BASE_DN = new DistinguishedName("ou=dummy,dc=261consulting,dc=local");
+	private static final DistinguishedName OU_DN = new DistinguishedName("ou=dummy");
+	private static final DistinguishedName GROUP_DN = new DistinguishedName(OU_DN).append("cn", "testgroup");
+	private static final String DEFAULT_PASSWORD = "ahcoophah5Oi4oh";
 
-    @Autowired
-    private LdapTemplate ldapTemplate;
+	@Autowired
+	private LdapTemplate ldapTemplate;
 
-    @Autowired
-    private PlatformTransactionManager transactionManager;
+	@Autowired
+	private PlatformTransactionManager transactionManager;
 
-    @Before
-    public void prepareTestData() throws UnsupportedEncodingException {
-        cleanup();
+	@Before
+	public void prepareTestData() throws UnsupportedEncodingException {
+		cleanup();
 
-        createBaseOu();
-        for (int i = 0; i < 1502; i++) {
-            createUser("test" + i);
-        }
+		createBaseOu();
+		for (int i = 0; i < 1502; i++) {
+			createUser("test" + i);
+		}
 
-        createGroup();
-    }
+		createGroup();
+	}
 
-    private void createGroup() {
-        DirContextAdapter ctx = new DirContextAdapter(GROUP_DN);
+	private void createGroup() {
+		DirContextAdapter ctx = new DirContextAdapter(GROUP_DN);
 
-        ctx.addAttributeValue("objectclass", "top");
-        ctx.addAttributeValue("objectclass", "group");
-        ctx.addAttributeValue("cn", "testgroup");
-        ctx.addAttributeValue("sAMAccountName", "TESTGROUP");
+		ctx.addAttributeValue("objectclass", "top");
+		ctx.addAttributeValue("objectclass", "group");
+		ctx.addAttributeValue("cn", "testgroup");
+		ctx.addAttributeValue("sAMAccountName", "TESTGROUP");
 
-        for (int i = 0; i < 1501; i++) {
-            ctx.addAttributeValue("member", buildUserRefDn("test" + i));
-        }
+		for (int i = 0; i < 1501; i++) {
+			ctx.addAttributeValue("member", buildUserRefDn("test" + i));
+		}
 
-        ldapTemplate.bind(ctx);
-    }
+		ldapTemplate.bind(ctx);
+	}
 
-    private String buildUserRefDn(String username) {
-        return new DistinguishedName(BASE_DN).append("cn", username).toString();
-    }
+	private String buildUserRefDn(String username) {
+		return new DistinguishedName(BASE_DN).append("cn", username).toString();
+	}
 
-    private void createBaseOu() {
-        createOu();
-    }
+	private void createBaseOu() {
+		createOu();
+	}
 
-    private void createUser(String username) throws UnsupportedEncodingException {
-        DirContextAdapter ctx = new DirContextAdapter(new DistinguishedName(OU_DN).append("cn", username));
+	private void createUser(String username) throws UnsupportedEncodingException {
+		DirContextAdapter ctx = new DirContextAdapter(new DistinguishedName(OU_DN).append("cn", username));
 
-        ctx.addAttributeValue("objectclass", "top");
-        ctx.addAttributeValue("objectclass", "person");
-        ctx.addAttributeValue("objectclass", "organizationalPerson");
-        ctx.addAttributeValue("objectclass", "user");
+		ctx.addAttributeValue("objectclass", "top");
+		ctx.addAttributeValue("objectclass", "person");
+		ctx.addAttributeValue("objectclass", "organizationalPerson");
+		ctx.addAttributeValue("objectclass", "user");
 
-        ctx.setAttributeValue("givenName", username);
-        ctx.setAttributeValue("userPrincipalName", username + "@example.com");
-        ctx.setAttributeValue("cn", username);
-        ctx.setAttributeValue("description", "Dummy user");
-        ctx.setAttributeValue("sAMAccountName", username.toUpperCase() + "." + username.toUpperCase());
-        ctx.setAttributeValue("userAccountControl", "512");
+		ctx.setAttributeValue("givenName", username);
+		ctx.setAttributeValue("userPrincipalName", username + "@example.com");
+		ctx.setAttributeValue("cn", username);
+		ctx.setAttributeValue("description", "Dummy user");
+		ctx.setAttributeValue("sAMAccountName", username.toUpperCase() + "." + username.toUpperCase());
+		ctx.setAttributeValue("userAccountControl", "512");
 
-        String newQuotedPassword = "\"" + DEFAULT_PASSWORD + "\"";
-        ctx.setAttributeValue("unicodePwd", newQuotedPassword.getBytes("UTF-16LE"));
+		String newQuotedPassword = "\"" + DEFAULT_PASSWORD + "\"";
+		ctx.setAttributeValue("unicodePwd", newQuotedPassword.getBytes("UTF-16LE"));
 
-        ldapTemplate.bind(ctx);
-    }
+		ldapTemplate.bind(ctx);
+	}
 
-    private void createOu() {
-        DirContextAdapter ctx = new DirContextAdapter(OU_DN);
+	private void createOu() {
+		DirContextAdapter ctx = new DirContextAdapter(OU_DN);
 
-        ctx.addAttributeValue("objectClass", "top");
-        ctx.addAttributeValue("objectClass", "organizationalUnit");
+		ctx.addAttributeValue("objectClass", "top");
+		ctx.addAttributeValue("objectClass", "organizationalUnit");
 
-        ctx.setAttributeValue("ou", "dummy");
-        ctx.setAttributeValue("description", "dummy description");
+		ctx.setAttributeValue("ou", "dummy");
+		ctx.setAttributeValue("description", "dummy description");
 
-        ldapTemplate.bind(ctx);
-    }
+		ldapTemplate.bind(ctx);
+	}
 
-    @After
-    public void cleanup() {
-        try {
-            ldapTemplate.lookup(OU_DN);
-        } catch (NameNotFoundException e) {
-            // Nothing to cleanup
-            return;
-        }
+	@After
+	public void cleanup() {
+		try {
+			ldapTemplate.lookup(OU_DN);
+		} catch (NameNotFoundException e) {
+			// Nothing to cleanup
+			return;
+		}
 
-        while (true) {
-            try {
-                ldapTemplate.unbind(OU_DN, true);
-                // Everything is deleted
-                return;
-            } catch (SizeLimitExceededException e) {
-                // There's more to delete
-            }
-        }
-    }
+		while (true) {
+			try {
+				ldapTemplate.unbind(OU_DN, true);
+				// Everything is deleted
+				return;
+			} catch (SizeLimitExceededException e) {
+				// There's more to delete
+			}
+		}
+	}
 
 
-    @Test
-    public void verifyRetrievalOfLotsOfAttributeValues() {
-        DistinguishedName testgroupDn = new DistinguishedName(OU_DN).append("cn", "testgroup");
+	@Test
+	public void verifyRetrievalOfLotsOfAttributeValues() {
+		DistinguishedName testgroupDn = new DistinguishedName(OU_DN).append("cn", "testgroup");
 
-        // The 'member' attribute consists of > 1500 entries and will not be returned without range specifier.
-        DirContextOperations ctx = ldapTemplate.lookupContext(testgroupDn);
-        assertThat(ctx.getStringAttribute("member")).isNull();
+		// The 'member' attribute consists of > 1500 entries and will not be returned without range specifier.
+		DirContextOperations ctx = ldapTemplate.lookupContext(testgroupDn);
+		assertThat(ctx.getStringAttribute("member")).isNull();
 
-        DefaultIncrementalAttributesMapper attributeMapper = new DefaultIncrementalAttributesMapper(new String[]{"member", "cn"});
-        assertThat(attributeMapper.hasMore()).as("There should be more results to get").isTrue();
+		DefaultIncrementalAttributesMapper attributeMapper = new DefaultIncrementalAttributesMapper(new String[]{"member", "cn"});
+		assertThat(attributeMapper.hasMore()).as("There should be more results to get").isTrue();
 
-        String[] attributesArray = attributeMapper.getAttributesForLookup();
-        assertThat(attributesArray.length).isEqualTo(2);
-        assertThat(attributesArray[0]).isEqualTo("member");
-        assertThat(attributesArray[1]).isEqualTo("cn");
+		String[] attributesArray = attributeMapper.getAttributesForLookup();
+		assertThat(attributesArray.length).isEqualTo(2);
+		assertThat(attributesArray[0]).isEqualTo("member");
+		assertThat(attributesArray[1]).isEqualTo("cn");
 
-        // First iteration - there should now be more members left, but all cn values should have been collected.
-        ldapTemplate.lookup(testgroupDn, attributesArray, attributeMapper);
+		// First iteration - there should now be more members left, but all cn values should have been collected.
+		ldapTemplate.lookup(testgroupDn, attributesArray, attributeMapper);
 
-        assertThat(attributeMapper.hasMore()).as("There should be more results to get").isTrue();
-        // Only member attribute should be requested in this query.
-        attributesArray = attributeMapper.getAttributesForLookup();
-        assertThat(attributesArray.length).isEqualTo(1);
-        assertThat(attributesArray[0]).isEqualTo("member;Range=1500-*");
+		assertThat(attributeMapper.hasMore()).as("There should be more results to get").isTrue();
+		// Only member attribute should be requested in this query.
+		attributesArray = attributeMapper.getAttributesForLookup();
+		assertThat(attributesArray.length).isEqualTo(1);
+		assertThat(attributesArray[0]).isEqualTo("member;Range=1500-*");
 
-        // Second iteration - all data should now have been collected.
-        ldapTemplate.lookup(testgroupDn, attributeMapper.getAttributesForLookup(), attributeMapper);
-        assertThat(attributeMapper.hasMore()).as("There should be no more results to get").isFalse();
+		// Second iteration - all data should now have been collected.
+		ldapTemplate.lookup(testgroupDn, attributeMapper.getAttributesForLookup(), attributeMapper);
+		assertThat(attributeMapper.hasMore()).as("There should be no more results to get").isFalse();
 
-        List memberValues = attributeMapper.getValues("member");
-        assertThat(memberValues).isNotNull();
-        assertThat(memberValues).hasSize(1501);
+		List memberValues = attributeMapper.getValues("member");
+		assertThat(memberValues).isNotNull();
+		assertThat(memberValues).hasSize(1501);
 
-        List cnValues = attributeMapper.getValues("cn");
-        assertThat(cnValues).isNotNull();
-        assertThat(cnValues).hasSize(1);
-    }
+		List cnValues = attributeMapper.getValues("cn");
+		assertThat(cnValues).isNotNull();
+		assertThat(cnValues).hasSize(1);
+	}
 
-    @Test
-    public void jiraLdap234ITest() {
-        TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
+	@Test
+	public void jiraLdap234ITest() {
+		TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
 
-        try {
-            transactionTemplate.execute(new TransactionCallback<Object>() {
-                @Override
-                public Object doInTransaction(TransactionStatus status) {
-                    ModificationItem modificationItem = new ModificationItem(
-                            DirContext.ADD_ATTRIBUTE,
-                            new BasicAttribute("member", buildUserRefDn("test" + 1501)));
-                    ldapTemplate.modifyAttributes(GROUP_DN, new ModificationItem[]{modificationItem});
+		try {
+			transactionTemplate.execute(new TransactionCallback<Object>() {
+				@Override
+				public Object doInTransaction(TransactionStatus status) {
+					ModificationItem modificationItem = new ModificationItem(
+							DirContext.ADD_ATTRIBUTE,
+							new BasicAttribute("member", buildUserRefDn("test" + 1501)));
+					ldapTemplate.modifyAttributes(GROUP_DN, new ModificationItem[]{modificationItem});
 
-                    // The below should cause a rollback
-                    throw new RuntimeException("Simulate some failure");
-                }
-            });
+					// The below should cause a rollback
+					throw new RuntimeException("Simulate some failure");
+				}
+			});
 
-            fail("RuntimeException expected");
-        } catch (RuntimeException expected) {
-            DefaultIncrementalAttributesMapper attributeMapper = new DefaultIncrementalAttributesMapper(new String[]{"member"});
-            while (attributeMapper.hasMore()) {
-                ldapTemplate.lookup(GROUP_DN, attributeMapper.getAttributesForLookup(), attributeMapper);
-            }
+			fail("RuntimeException expected");
+		} catch (RuntimeException expected) {
+			DefaultIncrementalAttributesMapper attributeMapper = new DefaultIncrementalAttributesMapper(new String[]{"member"});
+			while (attributeMapper.hasMore()) {
+				ldapTemplate.lookup(GROUP_DN, attributeMapper.getAttributesForLookup(), attributeMapper);
+			}
 
-            // LDAP-234: After rollback the attribute values were cleared after rollback
-            assertThat(
-                    DefaultIncrementalAttributesMapper.lookupAttributeValues(
-                            ldapTemplate, GROUP_DN, "member").size()).isEqualTo(1501);
-        }
-    }
+			// LDAP-234: After rollback the attribute values were cleared after rollback
+			assertThat(
+					DefaultIncrementalAttributesMapper.lookupAttributeValues(
+							ldapTemplate, GROUP_DN, "member").size()).isEqualTo(1501);
+		}
+	}
 }

@@ -28,35 +28,35 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class AbstractContextSourceTest {
 
-    @Test
-    public void testFormatForUrlNormal() throws InvalidNameException {
-        LdapName ldapName = new LdapName("dc=261consulting, dc=com");
+	@Test
+	public void testFormatForUrlNormal() throws InvalidNameException {
+		LdapName ldapName = new LdapName("dc=261consulting, dc=com");
 
-        String result = AbstractContextSource.formatForUrl(ldapName);
-        assertThat(result).isEqualTo("dc=261consulting,dc=com");
-    }
+		String result = AbstractContextSource.formatForUrl(ldapName);
+		assertThat(result).isEqualTo("dc=261consulting,dc=com");
+	}
 
-    @Test
-    public void testFormatForUrlNormalWithQuestionMark() throws InvalidNameException {
-        LdapName ldapName = new LdapName("dc=261consulting?, dc=com");
+	@Test
+	public void testFormatForUrlNormalWithQuestionMark() throws InvalidNameException {
+		LdapName ldapName = new LdapName("dc=261consulting?, dc=com");
 
-        String result = AbstractContextSource.formatForUrl(ldapName);
-        assertThat(result).isEqualTo("dc=261consulting%3F,dc=com");
-    }
+		String result = AbstractContextSource.formatForUrl(ldapName);
+		assertThat(result).isEqualTo("dc=261consulting%3F,dc=com");
+	}
 
-    @Test
-    public void testFormatForUrlWithSpace() throws InvalidNameException {
-        LdapName ldapName = new LdapName("ou=some department, dc=261consulting, dc=com");
+	@Test
+	public void testFormatForUrlWithSpace() throws InvalidNameException {
+		LdapName ldapName = new LdapName("ou=some department, dc=261consulting, dc=com");
 
-        String result = AbstractContextSource.formatForUrl(ldapName);
-        assertThat(result).isEqualTo("ou=some%20department,dc=261consulting,dc=com");
-    }
+		String result = AbstractContextSource.formatForUrl(ldapName);
+		assertThat(result).isEqualTo("ou=some%20department,dc=261consulting,dc=com");
+	}
 
-    @Test
-    public void testFormatForUrlEmpty() throws InvalidNameException {
-        LdapName ldapName = new LdapName("");
+	@Test
+	public void testFormatForUrlEmpty() throws InvalidNameException {
+		LdapName ldapName = new LdapName("");
 
-        String result = AbstractContextSource.formatForUrl(ldapName);
-        assertThat(result).isEqualTo("");
-    }
+		String result = AbstractContextSource.formatForUrl(ldapName);
+		assertThat(result).isEqualTo("");
+	}
 }

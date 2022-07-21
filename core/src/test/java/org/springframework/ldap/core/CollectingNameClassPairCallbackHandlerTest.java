@@ -28,30 +28,30 @@ import static org.junit.Assert.assertSame;
 
 public class CollectingNameClassPairCallbackHandlerTest {
 
-    private CollectingNameClassPairCallbackHandler tested;
+	private CollectingNameClassPairCallbackHandler tested;
 
-    private Object expectedResult;
+	private Object expectedResult;
 
-    private NameClassPair expectedNameClassPair;
+	private NameClassPair expectedNameClassPair;
 
-    @Before
-    public void setUp() throws Exception {
-        expectedResult = new Object();
-        expectedNameClassPair = new NameClassPair(null, null);
-        tested = new CollectingNameClassPairCallbackHandler() {
-            public Object getObjectFromNameClassPair(NameClassPair nameClassPair) {
-                assertThat(nameClassPair).isSameAs(expectedNameClassPair);
-                return expectedResult;
-            }
-        };
-    }
+	@Before
+	public void setUp() throws Exception {
+		expectedResult = new Object();
+		expectedNameClassPair = new NameClassPair(null, null);
+		tested = new CollectingNameClassPairCallbackHandler() {
+			public Object getObjectFromNameClassPair(NameClassPair nameClassPair) {
+				assertThat(nameClassPair).isSameAs(expectedNameClassPair);
+				return expectedResult;
+			}
+		};
+	}
 
-    @Test
-    public void testHandleNameClassPair() throws NamingException {
-        tested.handleNameClassPair(expectedNameClassPair);
-        List result = tested.getList();
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0)).isSameAs(expectedResult);
-    }
+	@Test
+	public void testHandleNameClassPair() throws NamingException {
+		tested.handleNameClassPair(expectedNameClassPair);
+		List result = tested.getList();
+		assertThat(result).hasSize(1);
+		assertThat(result.get(0)).isSameAs(expectedResult);
+	}
 
 }

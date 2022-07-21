@@ -17,11 +17,11 @@ import org.springframework.ldap.query.LdapQueryBuilder;
 
 public class EmbeddedLdapServerFactoryBeanTest {
 
-    @Test
-    public void testServerStartup() throws Exception {
-        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/applicationContext.xml");
-        LdapTemplate ldapTemplate = ctx.getBean(LdapTemplate.class);
-        assertNotNull(ldapTemplate);
+	@Test
+	public void testServerStartup() throws Exception {
+		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/applicationContext.xml");
+		LdapTemplate ldapTemplate = ctx.getBean(LdapTemplate.class);
+		assertNotNull(ldapTemplate);
 
 		List<String> list = ldapTemplate.search(
 				LdapQueryBuilder.query().where("objectclass").is("person"),
@@ -31,7 +31,7 @@ public class EmbeddedLdapServerFactoryBeanTest {
 						return (String) attrs.get("cn").get();
 					}
 				});
-        assertEquals(5, list.size());
-    }
+		assertEquals(5, list.size());
+	}
 
 }

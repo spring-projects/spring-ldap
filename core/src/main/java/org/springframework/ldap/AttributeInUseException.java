@@ -25,8 +25,8 @@ package org.springframework.ldap;
  */
 public class AttributeInUseException extends NamingException {
 
-    public AttributeInUseException(
-            javax.naming.directory.AttributeInUseException cause) {
-        super(cause);
-    }
+	public AttributeInUseException(
+			javax.naming.directory.AttributeInUseException cause) {
+		super(cause);
+	}
 }

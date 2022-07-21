@@ -34,15 +34,15 @@ import javax.naming.directory.InitialDirContext;
  */
 public class DirContextSource extends AbstractContextSource {
 
-    /**
-     * Create a new InitialDirContext instance.
-     * 
-     * @param environment
-     *            the environment to use when creating the context.
-     * @return a new InitialDirContext implementation.
-     */
-    protected DirContext getDirContextInstance(Hashtable environment)
-            throws NamingException {
-        return new InitialDirContext(environment);
-    }
+	/**
+	 * Create a new InitialDirContext instance.
+	 * 
+	 * @param environment
+	 *			the environment to use when creating the context.
+	 * @return a new InitialDirContext implementation.
+	 */
+	protected DirContext getDirContextInstance(Hashtable environment)
+			throws NamingException {
+		return new InitialDirContext(environment);
+	}
 }

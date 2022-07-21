@@ -42,61 +42,61 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @Controller
 public class UserController {
 
-    private final AtomicInteger nextEmployeeNumber = new AtomicInteger(10);
+	private final AtomicInteger nextEmployeeNumber = new AtomicInteger(10);
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
-    @Autowired
-    private DepartmentRepo departmentRepo;
+	@Autowired
+	private DepartmentRepo departmentRepo;
 
-    @RequestMapping(value = {"/", "/users"}, method = GET)
-    public String index(ModelMap map, @RequestParam(required = false) String name) {
-        if(StringUtils.hasText(name)) {
-            map.put("users", userService.searchByNameName(name));
-        } else {
-            map.put("users", userService.findAll());
-        }
-        return "listUsers";
-    }
+	@RequestMapping(value = {"/", "/users"}, method = GET)
+	public String index(ModelMap map, @RequestParam(required = false) String name) {
+		if(StringUtils.hasText(name)) {
+			map.put("users", userService.searchByNameName(name));
+		} else {
+			map.put("users", userService.findAll());
+		}
+		return "listUsers";
+	}
 
-    @RequestMapping(value = "/users/{userid}", method = GET)
-    public String getUser(@PathVariable String userid, ModelMap map) throws JsonProcessingException {
-        map.put("user", userService.findUser(userid));
-        populateDepartments(map);
-        return "editUser";
-    }
+	@RequestMapping(value = "/users/{userid}", method = GET)
+	public String getUser(@PathVariable String userid, ModelMap map) throws JsonProcessingException {
+		map.put("user", userService.findUser(userid));
+		populateDepartments(map);
+		return "editUser";
+	}
 
-    @RequestMapping(value = "/newuser", method = GET)
-    public String initNewUser(ModelMap map) throws JsonProcessingException {
-        User user = new User();
-        user.setEmployeeNumber(nextEmployeeNumber.getAndIncrement());
+	@RequestMapping(value = "/newuser", method = GET)
+	public String initNewUser(ModelMap map) throws JsonProcessingException {
+		User user = new User();
+		user.setEmployeeNumber(nextEmployeeNumber.getAndIncrement());
 
-        map.put("new", true);
-        map.put("user", user);
-        populateDepartments(map);
+		map.put("new", true);
+		map.put("user", user);
+		populateDepartments(map);
 
-        return "editUser";
-    }
+		return "editUser";
+	}
 
-    private void populateDepartments(ModelMap map) throws JsonProcessingException {
-        Map<String, List<String>> departmentMap = departmentRepo.getDepartmentMap();
-        ObjectMapper objectMapper = new ObjectMapper();
-        String departmentsAsJson = objectMapper.writeValueAsString(departmentMap);
-        map.put("departments", departmentsAsJson);
-    }
+	private void populateDepartments(ModelMap map) throws JsonProcessingException {
+		Map<String, List<String>> departmentMap = departmentRepo.getDepartmentMap();
+		ObjectMapper objectMapper = new ObjectMapper();
+		String departmentsAsJson = objectMapper.writeValueAsString(departmentMap);
+		map.put("departments", departmentsAsJson);
+	}
 
-    @RequestMapping(value = "/newuser", method = POST)
-    public String createUser(User user) {
-        User savedUser = userService.createUser(user);
+	@RequestMapping(value = "/newuser", method = POST)
+	public String createUser(User user) {
+		User savedUser = userService.createUser(user);
 
-        return "redirect:/users/" + savedUser.getId();
-    }
+		return "redirect:/users/" + savedUser.getId();
+	}
 
-    @RequestMapping(value = "/users/{userid}", method = POST)
-    public String updateUser(@PathVariable String userid, User user) {
-        User savedUser = userService.updateUser(userid, user);
+	@RequestMapping(value = "/users/{userid}", method = POST)
+	public String updateUser(@PathVariable String userid, User user) {
+		User savedUser = userService.updateUser(userid, user);
 
-        return "redirect:/users/" + savedUser.getId();
-    }
+		return "redirect:/users/" + savedUser.getId();
+	}
 }

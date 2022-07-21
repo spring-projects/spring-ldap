@@ -28,53 +28,53 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class BindOperationExecutorTest {
-    private LdapOperations ldapOperationsMock;
+	private LdapOperations ldapOperationsMock;
 
-    @Before
-    public void setUp() throws Exception {
-        ldapOperationsMock = mock(LdapOperations.class);
-    }
+	@Before
+	public void setUp() throws Exception {
+		ldapOperationsMock = mock(LdapOperations.class);
+	}
 
-    @Test
-    public void testPerformOperation() {
-        LdapName expectedDn = LdapUtils.newLdapName("cn=john doe");
-        Object expectedObject = new Object();
-        BasicAttributes expectedAttributes = new BasicAttributes();
-        BindOperationExecutor tested = new BindOperationExecutor(
-                ldapOperationsMock, expectedDn, expectedObject,
-                expectedAttributes);
+	@Test
+	public void testPerformOperation() {
+		LdapName expectedDn = LdapUtils.newLdapName("cn=john doe");
+		Object expectedObject = new Object();
+		BasicAttributes expectedAttributes = new BasicAttributes();
+		BindOperationExecutor tested = new BindOperationExecutor(
+				ldapOperationsMock, expectedDn, expectedObject,
+				expectedAttributes);
 
-        // perform teste
-        tested.performOperation();
+		// perform teste
+		tested.performOperation();
 
-        verify(ldapOperationsMock).bind(expectedDn, expectedObject, expectedAttributes);
-    }
+		verify(ldapOperationsMock).bind(expectedDn, expectedObject, expectedAttributes);
+	}
 
-    @Test
-    public void testCommit() {
-        LdapName expectedDn = LdapUtils.newLdapName("cn=john doe");
-        Object expectedObject = new Object();
-        BasicAttributes expectedAttributes = new BasicAttributes();
-        BindOperationExecutor tested = new BindOperationExecutor(
-                ldapOperationsMock, expectedDn, expectedObject,
-                expectedAttributes);
+	@Test
+	public void testCommit() {
+		LdapName expectedDn = LdapUtils.newLdapName("cn=john doe");
+		Object expectedObject = new Object();
+		BasicAttributes expectedAttributes = new BasicAttributes();
+		BindOperationExecutor tested = new BindOperationExecutor(
+				ldapOperationsMock, expectedDn, expectedObject,
+				expectedAttributes);
 
-        verifyNoMoreInteractions(ldapOperationsMock);
+		verifyNoMoreInteractions(ldapOperationsMock);
 
-        // perform teste
-        tested.commit();
-    }
+		// perform teste
+		tested.commit();
+	}
 
-    @Test
-    public void testRollback() {
-        LdapName expectedDn = LdapUtils.newLdapName("cn=john doe");
-        BindOperationExecutor tested = new BindOperationExecutor(
-                ldapOperationsMock, expectedDn, null, null);
+	@Test
+	public void testRollback() {
+		LdapName expectedDn = LdapUtils.newLdapName("cn=john doe");
+		BindOperationExecutor tested = new BindOperationExecutor(
+				ldapOperationsMock, expectedDn, null, null);
 
-        // perform teste
-        tested.rollback();
+		// perform teste
+		tested.rollback();
 
-        verify(ldapOperationsMock).unbind(expectedDn);
-    }
+		verify(ldapOperationsMock).unbind(expectedDn);
+	}
 
 }

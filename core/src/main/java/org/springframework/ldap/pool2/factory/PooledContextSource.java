@@ -76,8 +76,8 @@ import java.util.Collection;
  * @author Anindya Chatterjee
  */
 public class PooledContextSource
-        extends DelegatingBaseLdapPathContextSourceSupport
-        implements ContextSource, DisposableBean {
+		extends DelegatingBaseLdapPathContextSourceSupport
+		implements ContextSource, DisposableBean {
 	/**
 	 * The logger for this class and sub-classes
 	 */
@@ -196,24 +196,24 @@ public class PooledContextSource
 		this.dirContextPooledObjectFactory.setDirContextValidator(dirContextValidator);
 	}
 
-    /**
-     * Configure the exception classes that are to be interpreted as no-transient with regards to eager
-     * context invalidation. If one of the configured exceptions (or subclasses of them)
-     * is thrown by any method on a pooled DirContext, that instance will immediately be marked
-     * as invalid without any additional testing (i.e. testOnReturn).
-     * This allows for more efficient management of dead connections.
-     * Default is {@link javax.naming.CommunicationException}.
-     *
-     * @param nonTransientExceptions the exception classes that should be interpreted as non-transient
-     *                               with regards to eager invalidation.
-     * @since 2.0
-     */
-    public void setNonTransientExceptions(Collection<Class<? extends Throwable>> nonTransientExceptions) {
-        this.dirContextPooledObjectFactory.setNonTransientExceptions(nonTransientExceptions);
-    }
+	/**
+	 * Configure the exception classes that are to be interpreted as no-transient with regards to eager
+	 * context invalidation. If one of the configured exceptions (or subclasses of them)
+	 * is thrown by any method on a pooled DirContext, that instance will immediately be marked
+	 * as invalid without any additional testing (i.e. testOnReturn).
+	 * This allows for more efficient management of dead connections.
+	 * Default is {@link javax.naming.CommunicationException}.
+	 *
+	 * @param nonTransientExceptions the exception classes that should be interpreted as non-transient
+	 *							   with regards to eager invalidation.
+	 * @since 2.0
+	 */
+	public void setNonTransientExceptions(Collection<Class<? extends Throwable>> nonTransientExceptions) {
+		this.dirContextPooledObjectFactory.setNonTransientExceptions(nonTransientExceptions);
+	}
 
 
-    // ***** DisposableBean interface methods *****//
+	// ***** DisposableBean interface methods *****//
 
 	/*
 	 * (non-Javadoc)
@@ -229,19 +229,19 @@ public class PooledContextSource
 		}
 	}
 
-    @Override
-    protected ContextSource getTarget() {
-        return getContextSource();
-    }
+	@Override
+	protected ContextSource getTarget() {
+		return getContextSource();
+	}
 
-    // ***** ContextSource interface methods *****//
+	// ***** ContextSource interface methods *****//
 
-    @Override
+	@Override
 	public DirContext getReadOnlyContext() {
 		return this.getContext(DirContextType.READ_ONLY);
 	}
 
-    @Override
+	@Override
 	public DirContext getReadWriteContext() {
 		return this.getContext(DirContextType.READ_WRITE);
 	}
@@ -270,7 +270,7 @@ public class PooledContextSource
 		return new DelegatingDirContext(this.keyedObjectPool, dirContext, dirContextType);
 	}
 
-    @Override
+	@Override
 	public DirContext getContext(String principal, String credentials) {
 		throw new UnsupportedOperationException("Not supported for this implementation");
 	}

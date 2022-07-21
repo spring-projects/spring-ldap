@@ -11,17 +11,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HelloController {
-    @Autowired
-    LdapTemplate ldap;
+	@Autowired
+	LdapTemplate ldap;
 
-    @GetMapping
-    public String hello(Authentication authentication) {
-        return "Hello, " + authentication.getName();
-    }
+	@GetMapping
+	public String hello(Authentication authentication) {
+		return "Hello, " + authentication.getName();
+	}
 
-    @GetMapping("/cn")
-    public List<String> cn(Authentication authentication) {
-        AttributesMapper<String> mapper = (attrs) -> attrs.get("cn").get().toString();
-        return this.ldap.search("ou=people", "uid=" + authentication.getName(), mapper);
-    }
+	@GetMapping("/cn")
+	public List<String> cn(Authentication authentication) {
+		AttributesMapper<String> mapper = (attrs) -> attrs.get("cn").get().toString();
+		return this.ldap.search("ou=people", "uid=" + authentication.getName(), mapper);
+	}
 }

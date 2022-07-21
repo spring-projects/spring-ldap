@@ -60,21 +60,21 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 
 	private String baseLdapPathSourceName;
 
-    private int order = Ordered.LOWEST_PRECEDENCE;
+	private int order = Ordered.LOWEST_PRECEDENCE;
 
-    @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) {
+	@Override
+	public Object postProcessBeforeInitialization(Object bean, String beanName) {
 		if(bean instanceof BaseLdapNameAware) {
-            BaseLdapNameAware baseLdapNameAware = (BaseLdapNameAware) bean;
+			BaseLdapNameAware baseLdapNameAware = (BaseLdapNameAware) bean;
 
-            if (basePath != null) {
-                baseLdapNameAware.setBaseLdapPath(LdapUtils.newLdapName(basePath));
-            }
-            else {
-                BaseLdapPathSource ldapPathSource = getBaseLdapPathSourceFromApplicationContext();
-                baseLdapNameAware.setBaseLdapPath(LdapUtils.newLdapName(ldapPathSource.getBaseLdapName()));
-            }
-        } else if (bean instanceof BaseLdapPathAware) {
+			if (basePath != null) {
+				baseLdapNameAware.setBaseLdapPath(LdapUtils.newLdapName(basePath));
+			}
+			else {
+				BaseLdapPathSource ldapPathSource = getBaseLdapPathSourceFromApplicationContext();
+				baseLdapNameAware.setBaseLdapPath(LdapUtils.newLdapName(ldapPathSource.getBaseLdapName()));
+			}
+		} else if (bean instanceof BaseLdapPathAware) {
 			BaseLdapPathAware baseLdapPathAware = (BaseLdapPathAware) bean;
 
 			if (basePath != null) {
@@ -93,46 +93,46 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 			return applicationContext.getBean(baseLdapPathSourceName, BaseLdapPathSource.class);
 		}
 
-        Collection<BaseLdapPathSource> beans = applicationContext.getBeansOfType(BaseLdapPathSource.class).values();
-        if (beans.isEmpty()) {
-            throw new NoSuchBeanDefinitionException("No BaseLdapPathSource implementation definition found");
-        } else if (beans.size() == 1) {
-            return beans.iterator().next();
-        } else {
-            BaseLdapPathSource found = null;
+		Collection<BaseLdapPathSource> beans = applicationContext.getBeansOfType(BaseLdapPathSource.class).values();
+		if (beans.isEmpty()) {
+			throw new NoSuchBeanDefinitionException("No BaseLdapPathSource implementation definition found");
+		} else if (beans.size() == 1) {
+			return beans.iterator().next();
+		} else {
+			BaseLdapPathSource found = null;
 
-            // Try to find the correct one
-            for (BaseLdapPathSource bean : beans) {
-                if(bean instanceof AbstractContextSource) {
-                    if(found != null) {
-                        // More than one found - nothing much to do.
-                        throw new NoSuchBeanDefinitionException(
-                                "More than BaseLdapPathSource implementation definition found in current ApplicationContext; " +
-                                        "unable to determine the one to use. Please specify 'baseLdapPathSourceName'");
-                    }
+			// Try to find the correct one
+			for (BaseLdapPathSource bean : beans) {
+				if(bean instanceof AbstractContextSource) {
+					if(found != null) {
+						// More than one found - nothing much to do.
+						throw new NoSuchBeanDefinitionException(
+								"More than BaseLdapPathSource implementation definition found in current ApplicationContext; " +
+										"unable to determine the one to use. Please specify 'baseLdapPathSourceName'");
+					}
 
-                    found = bean;
-                }
-            }
+					found = bean;
+				}
+			}
 
-            if(found == null) {
-                throw new NoSuchBeanDefinitionException(
-                        "More than BaseLdapPathSource implementation definition found in current ApplicationContext; " +
-                                "unable to determine the one to use (one of them should be an AbstractContextSource instance). " +
-                                "Please specify 'baseLdapPathSourceName'");
-            }
+			if(found == null) {
+				throw new NoSuchBeanDefinitionException(
+						"More than BaseLdapPathSource implementation definition found in current ApplicationContext; " +
+								"unable to determine the one to use (one of them should be an AbstractContextSource instance). " +
+								"Please specify 'baseLdapPathSourceName'");
+			}
 
-            return found;
-        }
+			return found;
+		}
 	}
 
-    @Override
+	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) {
 		// Do nothing for this implementation
 		return bean;
 	}
 
-    @Override
+	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) {
 		this.applicationContext = applicationContext;
 	}
@@ -144,15 +144,15 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 	 * <code>ApplicationContext</code>.
 	 * 
 	 * @param basePath the base path.
-     * @deprecated {@link DistinguishedName} and associated classes and methods are deprecated as of 2.0.
+	 * @deprecated {@link DistinguishedName} and associated classes and methods are deprecated as of 2.0.
 	 */
 	public void setBasePath(DistinguishedName basePath) {
 		this.basePath = LdapUtils.newLdapName(basePath);
 	}
 
-    public void setBasePath(String basePath) {
-        this.basePath = LdapUtils.newLdapName(basePath);
-    }
+	public void setBasePath(String basePath) {
+		this.basePath = LdapUtils.newLdapName(basePath);
+	}
 
 	/**
 	 * Set the name of the <code>ContextSource</code> bean to use for getting
@@ -166,18 +166,18 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 		this.baseLdapPathSourceName = contextSourceName;
 	}
 
-    /**
-     * Set the order value of this object for sorting purposes.
-     *
-     * @param order the order of this instance. Defaults to <code>Ordered.LOWEST_PRECEDENCE</code>.
-     * @see Ordered
-     * @since 1.3.2
-     */
-    public void setOrder(int order) {
-        this.order = order;
-    }
+	/**
+	 * Set the order value of this object for sorting purposes.
+	 *
+	 * @param order the order of this instance. Defaults to <code>Ordered.LOWEST_PRECEDENCE</code>.
+	 * @see Ordered
+	 * @since 1.3.2
+	 */
+	public void setOrder(int order) {
+		this.order = order;
+	}
 
-    public int getOrder() {
-        return order;
-    }
+	public int getOrder() {
+		return order;
+	}
 }

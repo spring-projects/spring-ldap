@@ -33,51 +33,51 @@ import static org.mockito.Mockito.when;
  * @author Mattias Hellborg Arthursson
  */
 public class TransactionAwareContextSourceProxyTest {
-    private ContextSource contextSourceMock;
-    private TransactionAwareContextSourceProxy tested;
-    private LdapContext ldapContextMock;
-    private DirContext dirContextMock;
+	private ContextSource contextSourceMock;
+	private TransactionAwareContextSourceProxy tested;
+	private LdapContext ldapContextMock;
+	private DirContext dirContextMock;
 
-    @Before
-    public void setUp() throws Exception {
-        contextSourceMock = mock(ContextSource.class);
-        ldapContextMock = mock(LdapContext.class);
-        dirContextMock = mock(DirContext.class);
+	@Before
+	public void setUp() throws Exception {
+		contextSourceMock = mock(ContextSource.class);
+		ldapContextMock = mock(LdapContext.class);
+		dirContextMock = mock(DirContext.class);
 
-        tested = new TransactionAwareContextSourceProxy(contextSourceMock);
-    }
+		tested = new TransactionAwareContextSourceProxy(contextSourceMock);
+	}
 
-    @Test
-    public void testGetReadWriteContext_LdapContext() {
-        when(contextSourceMock.getReadWriteContext()).thenReturn(ldapContextMock);
+	@Test
+	public void testGetReadWriteContext_LdapContext() {
+		when(contextSourceMock.getReadWriteContext()).thenReturn(ldapContextMock);
 
-        DirContext result = tested.getReadWriteContext();
+		DirContext result = tested.getReadWriteContext();
 
-        assertThat(result).isNotNull();
-        assertThat(result instanceof LdapContext).isTrue();
-        assertThat(result instanceof DirContextProxy).isTrue();
-    }
+		assertThat(result).isNotNull();
+		assertThat(result instanceof LdapContext).isTrue();
+		assertThat(result instanceof DirContextProxy).isTrue();
+	}
 
-    @Test
-    public void testGetReadWriteContext_DirContext() {
-        when(contextSourceMock.getReadWriteContext()).thenReturn(dirContextMock);
+	@Test
+	public void testGetReadWriteContext_DirContext() {
+		when(contextSourceMock.getReadWriteContext()).thenReturn(dirContextMock);
 
-        DirContext result = tested.getReadWriteContext();
+		DirContext result = tested.getReadWriteContext();
 
-        assertThat(result).as("Result should not be null").isNotNull();
-        assertThat(result instanceof DirContext).isTrue();
-        assertThat(result instanceof LdapContext).isFalse();
-        assertThat(result instanceof DirContextProxy).isTrue();
-    }
+		assertThat(result).as("Result should not be null").isNotNull();
+		assertThat(result instanceof DirContext).isTrue();
+		assertThat(result instanceof LdapContext).isFalse();
+		assertThat(result instanceof DirContextProxy).isTrue();
+	}
 
-    @Test
-    public void testGetReadOnlyContext_LdapContext() {
-        when(contextSourceMock.getReadWriteContext()).thenReturn(ldapContextMock);
+	@Test
+	public void testGetReadOnlyContext_LdapContext() {
+		when(contextSourceMock.getReadWriteContext()).thenReturn(ldapContextMock);
 
-        DirContext result = tested.getReadOnlyContext();
+		DirContext result = tested.getReadOnlyContext();
 
-        assertThat(result).as("Result should not be null").isNotNull();
-        assertThat(result instanceof LdapContext).isTrue();
-        assertThat(result instanceof DirContextProxy).isTrue();
-    }
+		assertThat(result).as("Result should not be null").isNotNull();
+		assertThat(result instanceof LdapContext).isTrue();
+		assertThat(result instanceof DirContextProxy).isTrue();
+	}
 }

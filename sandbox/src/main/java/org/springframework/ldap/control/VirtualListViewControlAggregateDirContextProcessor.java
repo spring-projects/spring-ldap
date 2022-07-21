@@ -28,35 +28,35 @@ import org.springframework.ldap.core.support.AggregateDirContextProcessor;
  */
 public class VirtualListViewControlAggregateDirContextProcessor extends AggregateDirContextProcessor
 {
-    private SortControlDirContextProcessor _sortControlDirContextProcessor;
-    private VirtualListViewControlDirContextProcessor _virtualListViewControlDirContextProcessor;
+	private SortControlDirContextProcessor _sortControlDirContextProcessor;
+	private VirtualListViewControlDirContextProcessor _virtualListViewControlDirContextProcessor;
 
-    public VirtualListViewControlAggregateDirContextProcessor(String sortKey, int pageSize)
-    {
-        this(
-            new SortControlDirContextProcessor(sortKey),
-            new VirtualListViewControlDirContextProcessor(pageSize)
-        );
-    }
+	public VirtualListViewControlAggregateDirContextProcessor(String sortKey, int pageSize)
+	{
+		this(
+			new SortControlDirContextProcessor(sortKey),
+			new VirtualListViewControlDirContextProcessor(pageSize)
+		);
+	}
 
-    public VirtualListViewControlAggregateDirContextProcessor(String sortKey, int pageSize, int targetOffset, int listSize, VirtualListViewResultsCookie cookie)
-    {
-        this(
-            new SortControlDirContextProcessor(sortKey),
-            new VirtualListViewControlDirContextProcessor(pageSize, targetOffset, listSize, cookie)
-        );
-    }
+	public VirtualListViewControlAggregateDirContextProcessor(String sortKey, int pageSize, int targetOffset, int listSize, VirtualListViewResultsCookie cookie)
+	{
+		this(
+			new SortControlDirContextProcessor(sortKey),
+			new VirtualListViewControlDirContextProcessor(pageSize, targetOffset, listSize, cookie)
+		);
+	}
 
-    public VirtualListViewControlAggregateDirContextProcessor(SortControlDirContextProcessor sortControlDirContextProcessor, VirtualListViewControlDirContextProcessor virtualListViewControlDirContextProcessor)
-    {
-        _sortControlDirContextProcessor = sortControlDirContextProcessor;
-        _virtualListViewControlDirContextProcessor = virtualListViewControlDirContextProcessor;
+	public VirtualListViewControlAggregateDirContextProcessor(SortControlDirContextProcessor sortControlDirContextProcessor, VirtualListViewControlDirContextProcessor virtualListViewControlDirContextProcessor)
+	{
+		_sortControlDirContextProcessor = sortControlDirContextProcessor;
+		_virtualListViewControlDirContextProcessor = virtualListViewControlDirContextProcessor;
 
-        addDirContextProcessor(sortControlDirContextProcessor);
-        addDirContextProcessor(virtualListViewControlDirContextProcessor);
-    }
+		addDirContextProcessor(sortControlDirContextProcessor);
+		addDirContextProcessor(virtualListViewControlDirContextProcessor);
+	}
 
-    public VirtualListViewResultsCookie getCookie() {
-        return _virtualListViewControlDirContextProcessor.getCookie();
-    }
+	public VirtualListViewResultsCookie getCookie() {
+		return _virtualListViewControlDirContextProcessor.getCookie();
+	}
 }

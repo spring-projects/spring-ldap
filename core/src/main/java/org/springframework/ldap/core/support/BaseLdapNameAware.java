@@ -40,10 +40,10 @@ import javax.naming.ldap.LdapName;
  * @since 2.0
  */
 public interface BaseLdapNameAware {
-    /**
-     * Set the base LDAP path specified in the current
-     * <code>ApplicationContext</code>.
-     * @param baseLdapPath the base path used in the <code>ContextSource</code>
-     */
-    void setBaseLdapPath(LdapName baseLdapPath);
+	/**
+	 * Set the base LDAP path specified in the current
+	 * <code>ApplicationContext</code>.
+	 * @param baseLdapPath the base path used in the <code>ContextSource</code>
+	 */
+	void setBaseLdapPath(LdapName baseLdapPath);
 }

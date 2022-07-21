@@ -27,11 +27,11 @@ import org.springframework.ldap.odm.core.OdmException;
  */
 @SuppressWarnings("serial")
 public class UnmanagedClassException extends OdmException {
-    public UnmanagedClassException(String message, Throwable reason) {
-        super(message, reason);
-    }
-    
-    public UnmanagedClassException(String message) {
-        super(message);
-    }
+	public UnmanagedClassException(String message, Throwable reason) {
+		super(message, reason);
+	}
+	
+	public UnmanagedClassException(String message) {
+		super(message);
+	}
 }

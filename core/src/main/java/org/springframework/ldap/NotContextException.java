@@ -25,7 +25,7 @@ package org.springframework.ldap;
  */
 public class NotContextException extends NamingException {
 
-    public NotContextException(javax.naming.NotContextException cause) {
-        super(cause);
-    }
+	public NotContextException(javax.naming.NotContextException cause) {
+		super(cause);
+	}
 }

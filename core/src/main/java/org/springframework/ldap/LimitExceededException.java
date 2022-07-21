@@ -25,7 +25,7 @@ package org.springframework.ldap;
  */
 public class LimitExceededException extends NamingException {
 
-    public LimitExceededException(javax.naming.LimitExceededException cause) {
-        super(cause);
-    }
+	public LimitExceededException(javax.naming.LimitExceededException cause) {
+		super(cause);
+	}
 }

@@ -22,9 +22,9 @@ public class ShowcaseITest {
 		this.testKit = new TestKit(tempDir.toFile());
 	}
 
-    @Test
+	@Test
 	public void build() throws Exception {
-        BuildResult result = this.testKit.withProjectResource("samples/showcase/")
+		BuildResult result = this.testKit.withProjectResource("samples/showcase/")
 				.withArguments("build", "--stacktrace")
 				.forwardOutput()
 				.build();
@@ -33,13 +33,13 @@ public class ShowcaseITest {
 
 	@Test
 	@Disabled
-    public void install() throws Exception {
+	public void install() throws Exception {
 		BuildResult result = this.testKit
 			.withProjectResource("samples/showcase/")
 			.withArguments("install", "--stacktrace")
 			.build();
 
-        assertThat(result.getOutput()).contains("SUCCESS");
+		assertThat(result.getOutput()).contains("SUCCESS");
 
 		File pom = new File(testKit.getRootDir(), "sgbcs-core/build/poms/pom-default.xml");
 		assertThat(pom).exists();

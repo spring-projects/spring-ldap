@@ -26,12 +26,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class SimpleDirContextAuthenticationStrategyTest {
 	private SimpleDirContextAuthenticationStrategy tested;
 
-    @Before
+	@Before
 	public void setUp() throws Exception {
 		tested = new SimpleDirContextAuthenticationStrategy();
 	}
 
-    @Test
+	@Test
 	public void testSetupEnvironment() {
 		Hashtable env = new Hashtable();
 		tested.setupEnvironment(env, "cn=John Doe", "pw");
@@ -41,7 +41,7 @@ public class SimpleDirContextAuthenticationStrategyTest {
 		assertThat(env.get(Context.SECURITY_CREDENTIALS)).isEqualTo("pw");
 	}
 
-    @Test
+	@Test
 	public void testProcessContextAfterCreation() {
 		Hashtable env = new Hashtable();
 		tested.processContextAfterCreation(null, "cn=John Doe", "pw");

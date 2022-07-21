@@ -43,196 +43,196 @@ import static org.mockito.Mockito.when;
  */
 public class DirContextPooledObjectFactoryTest extends AbstractPoolTestCase {
 
-    @Test
-    public void testProperties() throws Exception {
-        final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
+	@Test
+	public void testProperties() throws Exception {
+		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
 
-        try {
-            objectFactory.setContextSource(null);
-            fail("DirContextPooledObjectFactory.setContextSource should have thrown an IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae) {
-            // Expected
-        }
+		try {
+			objectFactory.setContextSource(null);
+			fail("DirContextPooledObjectFactory.setContextSource should have thrown an IllegalArgumentException");
+		}
+		catch (IllegalArgumentException iae) {
+			// Expected
+		}
 
-        objectFactory.setContextSource(contextSourceMock);
-        final ContextSource contextSource2 = objectFactory.getContextSource();
-        assertThat(contextSource2).isEqualTo(contextSourceMock);
+		objectFactory.setContextSource(contextSourceMock);
+		final ContextSource contextSource2 = objectFactory.getContextSource();
+		assertThat(contextSource2).isEqualTo(contextSourceMock);
 
 
-        try {
-            objectFactory.setDirContextValidator(null);
-            fail("DirContextPooledObjectFactory.setDirContextValidator should have thrown an IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae) {
-            // Expected
-        }
+		try {
+			objectFactory.setDirContextValidator(null);
+			fail("DirContextPooledObjectFactory.setDirContextValidator should have thrown an IllegalArgumentException");
+		}
+		catch (IllegalArgumentException iae) {
+			// Expected
+		}
 
-        objectFactory.setDirContextValidator(dirContextValidatorMock);
-        final DirContextValidator dirContextValidator2 = objectFactory.getDirContextValidator();
-        assertThat(dirContextValidator2).isEqualTo(dirContextValidatorMock);
-    }
+		objectFactory.setDirContextValidator(dirContextValidatorMock);
+		final DirContextValidator dirContextValidator2 = objectFactory.getDirContextValidator();
+		assertThat(dirContextValidator2).isEqualTo(dirContextValidatorMock);
+	}
 
-    @Test
-    public void testMakeObjectAssertions() throws Exception {
-        final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
+	@Test
+	public void testMakeObjectAssertions() throws Exception {
+		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
 
-        try {
-            objectFactory.makeObject(DirContextType.READ_ONLY);
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertThat(true).isTrue();
-        }
+		try {
+			objectFactory.makeObject(DirContextType.READ_ONLY);
+			fail("IllegalArgumentException expected");
+		} catch (IllegalArgumentException expected) {
+			assertThat(true).isTrue();
+		}
 
-        objectFactory.setContextSource(contextSourceMock);
+		objectFactory.setContextSource(contextSourceMock);
 
-        try {
-            objectFactory.makeObject(null);
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertThat(true).isTrue();
-        }
-    }
+		try {
+			objectFactory.makeObject(null);
+			fail("IllegalArgumentException expected");
+		} catch (IllegalArgumentException expected) {
+			assertThat(true).isTrue();
+		}
+	}
 
-    @Test
-    public void testMakeObjectReadOnly() throws Exception {
-        final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
+	@Test
+	public void testMakeObjectReadOnly() throws Exception {
+		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
 
-        DirContext readOnlyContextMock = mock(DirContext.class);
+		DirContext readOnlyContextMock = mock(DirContext.class);
 
-        when(contextSourceMock.getReadOnlyContext()).thenReturn(readOnlyContextMock);
-        objectFactory.setContextSource(contextSourceMock);
+		when(contextSourceMock.getReadOnlyContext()).thenReturn(readOnlyContextMock);
+		objectFactory.setContextSource(contextSourceMock);
 
-        final PooledObject createdDirContext = objectFactory.makeObject(DirContextType.READ_ONLY);
-        InvocationHandler invocationHandler = Proxy.getInvocationHandler(createdDirContext.getObject());
-        assertThat(readOnlyContextMock).isEqualTo(getInternalState(invocationHandler, "target"));
-    }
+		final PooledObject createdDirContext = objectFactory.makeObject(DirContextType.READ_ONLY);
+		InvocationHandler invocationHandler = Proxy.getInvocationHandler(createdDirContext.getObject());
+		assertThat(readOnlyContextMock).isEqualTo(getInternalState(invocationHandler, "target"));
+	}
 
-    @Test
-    public void testMakeObjectReadWrite() throws Exception {
-        final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
+	@Test
+	public void testMakeObjectReadWrite() throws Exception {
+		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
 
-        DirContext readWriteContextMock = mock(DirContext.class);
+		DirContext readWriteContextMock = mock(DirContext.class);
 
-        when(contextSourceMock.getReadWriteContext()).thenReturn(readWriteContextMock);
-        objectFactory.setContextSource(contextSourceMock);
+		when(contextSourceMock.getReadWriteContext()).thenReturn(readWriteContextMock);
+		objectFactory.setContextSource(contextSourceMock);
 
-        final PooledObject createdDirContext = objectFactory.makeObject(DirContextType.READ_WRITE);
+		final PooledObject createdDirContext = objectFactory.makeObject(DirContextType.READ_WRITE);
 
-        InvocationHandler invocationHandler = Proxy.getInvocationHandler(createdDirContext.getObject());
-        assertThat(readWriteContextMock).isEqualTo(getInternalState(invocationHandler, "target"));
-    }
+		InvocationHandler invocationHandler = Proxy.getInvocationHandler(createdDirContext.getObject());
+		assertThat(readWriteContextMock).isEqualTo(getInternalState(invocationHandler, "target"));
+	}
 
-    @Test
-    public void testValidateObjectAssertions() throws Exception {
-        final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
+	@Test
+	public void testValidateObjectAssertions() throws Exception {
+		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
 
-        try {
-            PooledObject pooledObject = new DefaultPooledObject(dirContextMock);
-            objectFactory.validateObject(DirContextType.READ_ONLY, pooledObject);
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertThat(true).isTrue();
-        }
+		try {
+			PooledObject pooledObject = new DefaultPooledObject(dirContextMock);
+			objectFactory.validateObject(DirContextType.READ_ONLY, pooledObject);
+			fail("IllegalArgumentException expected");
+		} catch (IllegalArgumentException expected) {
+			assertThat(true).isTrue();
+		}
 
-        objectFactory.setDirContextValidator(dirContextValidatorMock);
+		objectFactory.setDirContextValidator(dirContextValidatorMock);
 
-        try {
-            PooledObject pooledObject = new DefaultPooledObject(dirContextMock);
-            objectFactory.validateObject(null, pooledObject);
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertThat(true).isTrue();
-        }
+		try {
+			PooledObject pooledObject = new DefaultPooledObject(dirContextMock);
+			objectFactory.validateObject(null, pooledObject);
+			fail("IllegalArgumentException expected");
+		} catch (IllegalArgumentException expected) {
+			assertThat(true).isTrue();
+		}
 
-        try {
-            PooledObject pooledObject = new DefaultPooledObject(dirContextMock);
-            objectFactory.validateObject(new Object(), pooledObject);
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertThat(true).isTrue();
-        }
+		try {
+			PooledObject pooledObject = new DefaultPooledObject(dirContextMock);
+			objectFactory.validateObject(new Object(), pooledObject);
+			fail("IllegalArgumentException expected");
+		} catch (IllegalArgumentException expected) {
+			assertThat(true).isTrue();
+		}
 
-        try {
-            objectFactory.validateObject(DirContextType.READ_ONLY, null);
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertThat(true).isTrue();
-        }
+		try {
+			objectFactory.validateObject(DirContextType.READ_ONLY, null);
+			fail("IllegalArgumentException expected");
+		} catch (IllegalArgumentException expected) {
+			assertThat(true).isTrue();
+		}
 
-        try {
-            PooledObject pooledObject = new DefaultPooledObject(new Object());
-            objectFactory.validateObject(DirContextType.READ_ONLY, pooledObject);
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertThat(true).isTrue();
-        }
-    }
+		try {
+			PooledObject pooledObject = new DefaultPooledObject(new Object());
+			objectFactory.validateObject(DirContextType.READ_ONLY, pooledObject);
+			fail("IllegalArgumentException expected");
+		} catch (IllegalArgumentException expected) {
+			assertThat(true).isTrue();
+		}
+	}
 
-    @Test
-    public void testValidateObject() throws Exception {
-        when(dirContextValidatorMock
-                .validateDirContext(DirContextType.READ_ONLY, dirContextMock))
-                .thenReturn(true);
+	@Test
+	public void testValidateObject() throws Exception {
+		when(dirContextValidatorMock
+				.validateDirContext(DirContextType.READ_ONLY, dirContextMock))
+				.thenReturn(true);
 
-        final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
-        objectFactory.setDirContextValidator(dirContextValidatorMock);
+		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
+		objectFactory.setDirContextValidator(dirContextValidatorMock);
 
-        PooledObject pooledObject = new DefaultPooledObject(dirContextMock);
-        final boolean valid = objectFactory.validateObject(DirContextType.READ_ONLY, pooledObject);
-        assertThat(valid).isTrue();
+		PooledObject pooledObject = new DefaultPooledObject(dirContextMock);
+		final boolean valid = objectFactory.validateObject(DirContextType.READ_ONLY, pooledObject);
+		assertThat(valid).isTrue();
 
-        //Check exception in validator
-        DirContextValidator secondDirContextValidatorMock = mock(DirContextValidator.class);
+		//Check exception in validator
+		DirContextValidator secondDirContextValidatorMock = mock(DirContextValidator.class);
 
-        when(secondDirContextValidatorMock.validateDirContext(DirContextType.READ_ONLY, dirContextMock))
-                .thenThrow(new RuntimeException("Failed to validate"));
-        objectFactory.setDirContextValidator(secondDirContextValidatorMock);
+		when(secondDirContextValidatorMock.validateDirContext(DirContextType.READ_ONLY, dirContextMock))
+				.thenThrow(new RuntimeException("Failed to validate"));
+		objectFactory.setDirContextValidator(secondDirContextValidatorMock);
 
-        final boolean valid2 = objectFactory.validateObject(DirContextType.READ_ONLY, pooledObject);
-        assertThat(valid2).isFalse();
-    }
+		final boolean valid2 = objectFactory.validateObject(DirContextType.READ_ONLY, pooledObject);
+		assertThat(valid2).isFalse();
+	}
 
-    @Test
-    public void testDestroyObjectAssertions() throws Exception {
-        final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
+	@Test
+	public void testDestroyObjectAssertions() throws Exception {
+		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
 
-        try {
-            objectFactory.destroyObject(DirContextType.READ_ONLY, null);
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertThat(true).isTrue();
-        }
+		try {
+			objectFactory.destroyObject(DirContextType.READ_ONLY, null);
+			fail("IllegalArgumentException expected");
+		} catch (IllegalArgumentException expected) {
+			assertThat(true).isTrue();
+		}
 
-        try {
-            PooledObject pooledObject = new DefaultPooledObject(new Object());
-            objectFactory.validateObject(DirContextType.READ_ONLY, pooledObject);
-            fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException expected) {
-            assertThat(true).isTrue();
-        }
-    }
+		try {
+			PooledObject pooledObject = new DefaultPooledObject(new Object());
+			objectFactory.validateObject(DirContextType.READ_ONLY, pooledObject);
+			fail("IllegalArgumentException expected");
+		} catch (IllegalArgumentException expected) {
+			assertThat(true).isTrue();
+		}
+	}
 
-    @Test
-    public void testDestroyObject() throws Exception {
-        final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
+	@Test
+	public void testDestroyObject() throws Exception {
+		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
 
-        PooledObject pooledObject = new DefaultPooledObject(dirContextMock);
-        objectFactory.destroyObject(DirContextType.READ_ONLY, pooledObject);
+		PooledObject pooledObject = new DefaultPooledObject(dirContextMock);
+		objectFactory.destroyObject(DirContextType.READ_ONLY, pooledObject);
 
-        DirContext throwingDirContextMock = mock(DirContext.class);
+		DirContext throwingDirContextMock = mock(DirContext.class);
 
-        doThrow(new RuntimeException("Failed to close"))
-                .when(throwingDirContextMock).close();
+		doThrow(new RuntimeException("Failed to close"))
+				.when(throwingDirContextMock).close();
 
-        pooledObject = new DefaultPooledObject(throwingDirContextMock);
-        objectFactory.destroyObject(DirContextType.READ_ONLY, pooledObject);
-        verify(dirContextMock).close();
-    }
+		pooledObject = new DefaultPooledObject(throwingDirContextMock);
+		objectFactory.destroyObject(DirContextType.READ_ONLY, pooledObject);
+		verify(dirContextMock).close();
+	}
 
-    private <T> T getInternalState(Object target, String fieldName) {
-        Field field = ReflectionUtils.findField(target.getClass(), fieldName);
-        field.setAccessible(true);
-        return (T) ReflectionUtils.getField(field, target);
-    }
+	private <T> T getInternalState(Object target, String fieldName) {
+		Field field = ReflectionUtils.findField(target.getClass(), fieldName);
+		field.setAccessible(true);
+		return (T) ReflectionUtils.getField(field, target);
+	}
 }

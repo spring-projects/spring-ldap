@@ -30,25 +30,25 @@ import java.util.List;
  * @author Ulrik Sandberg
  */
 public class PagedResultTest {
-    @Test
-    public void testEquals() throws Exception {
-        List expectedList = new LinkedList();
-        expectedList.add("dummy");
-        List otherList = new LinkedList();
-        otherList.add("different");
+	@Test
+	public void testEquals() throws Exception {
+		List expectedList = new LinkedList();
+		expectedList.add("dummy");
+		List otherList = new LinkedList();
+		otherList.add("different");
 
-        PagedResult originalObject = new PagedResult(expectedList,
-                new PagedResultsCookie(null));
-        PagedResult identicalObject = new PagedResult(expectedList,
-                new PagedResultsCookie(null));
-        PagedResult differentObject = new PagedResult(otherList,
-                new PagedResultsCookie(null));
-        PagedResult subclassObject = new PagedResult(expectedList,
-                new PagedResultsCookie(null)) {
+		PagedResult originalObject = new PagedResult(expectedList,
+				new PagedResultsCookie(null));
+		PagedResult identicalObject = new PagedResult(expectedList,
+				new PagedResultsCookie(null));
+		PagedResult differentObject = new PagedResult(otherList,
+				new PagedResultsCookie(null));
+		PagedResult subclassObject = new PagedResult(expectedList,
+				new PagedResultsCookie(null)) {
 
-        };
+		};
 
-        new EqualsTester(originalObject, identicalObject, differentObject,
-                subclassObject);
-    }
+		new EqualsTester(originalObject, identicalObject, differentObject,
+				subclassObject);
+	}
 }

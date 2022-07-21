@@ -40,9 +40,9 @@ import java.util.Set;
  */
 public class LdapRdn implements Serializable, Comparable {
 	private static final long serialVersionUID = 5681397547245228750L;
-    private static final int DEFAULT_BUFFER_SIZE = 100;
+	private static final int DEFAULT_BUFFER_SIZE = 100;
 
-    private Map<String, LdapRdnComponent> components = new LinkedHashMap<String, LdapRdnComponent>();
+	private Map<String, LdapRdnComponent> components = new LinkedHashMap<String, LdapRdnComponent>();
 
 	/**
 	 * Default constructor. Create an empty, uninitialized LdapRdn.
@@ -105,9 +105,9 @@ public class LdapRdn implements Serializable, Comparable {
 	 * @throws IndexOutOfBoundsException if there are no components in this Rdn.
 	 */
 	public LdapRdnComponent getComponent() {
-        if(components.size() == 0) {
-            throw new IndexOutOfBoundsException("No components");
-        }
+		if(components.size() == 0) {
+			throw new IndexOutOfBoundsException("No components");
+		}
 
 		return components.values().iterator().next();
 	}
@@ -120,9 +120,9 @@ public class LdapRdn implements Serializable, Comparable {
 	 * @throws IndexOutOfBoundsException if there are no components in this Rdn.
 	 */
 	public LdapRdnComponent getComponent(int idx) {
-        if(idx >= components.size()) {
-            throw new IndexOutOfBoundsException();
-        }
+		if(idx >= components.size()) {
+			throw new IndexOutOfBoundsException();
+		}
 
 		return (LdapRdnComponent) new ArrayList(components.values()).get(idx);
 	}
@@ -177,22 +177,22 @@ public class LdapRdn implements Serializable, Comparable {
 	public int compareTo(Object obj) {
 		LdapRdn that = (LdapRdn) obj;
 
-        if(this.components.size() != that.components.size()) {
-            return this.components.size() - that.components.size();
-        }
+		if(this.components.size() != that.components.size()) {
+			return this.components.size() - that.components.size();
+		}
 
-        Set<Map.Entry<String,LdapRdnComponent>> theseEntries = this.components.entrySet();
-        for (Map.Entry<String, LdapRdnComponent> oneEntry : theseEntries) {
-            LdapRdnComponent thatEntry = that.components.get(oneEntry.getKey());
-            if(thatEntry == null) {
-                return -1;
-            }
+		Set<Map.Entry<String,LdapRdnComponent>> theseEntries = this.components.entrySet();
+		for (Map.Entry<String, LdapRdnComponent> oneEntry : theseEntries) {
+			LdapRdnComponent thatEntry = that.components.get(oneEntry.getKey());
+			if(thatEntry == null) {
+				return -1;
+			}
 
-            int compared = oneEntry.getValue().compareTo(thatEntry);
-            if(compared != 0) {
-                return compared;
-            }
-        }
+			int compared = oneEntry.getValue().compareTo(thatEntry);
+			if(compared != 0) {
+				return compared;
+			}
+		}
 
 		return 0;
 	}
@@ -209,18 +209,18 @@ public class LdapRdn implements Serializable, Comparable {
 
 		LdapRdn that = (LdapRdn) obj;
 
-        if(this.components.size() != that.components.size()) {
-            return false;
-        }
+		if(this.components.size() != that.components.size()) {
+			return false;
+		}
 
-        Set<Map.Entry<String,LdapRdnComponent>> theseEntries = this.components.entrySet();
-        for (Map.Entry<String, LdapRdnComponent> oneEntry : theseEntries) {
-            if(!oneEntry.getValue().equals(that.components.get(oneEntry.getKey()))) {
-                return false;
-            }
-        }
+		Set<Map.Entry<String,LdapRdnComponent>> theseEntries = this.components.entrySet();
+		for (Map.Entry<String, LdapRdnComponent> oneEntry : theseEntries) {
+			if(!oneEntry.getValue().equals(that.components.get(oneEntry.getKey()))) {
+				return false;
+			}
+		}
 
-        return true;
+		return true;
 	}
 
 	/*
@@ -295,7 +295,7 @@ public class LdapRdn implements Serializable, Comparable {
 	 * @since 1.3
 	 */
 	public LdapRdn immutableLdapRdn() {
-        Map<String, LdapRdnComponent> mapWithImmutableRdns = new LinkedHashMap<String, LdapRdnComponent>(components.size());
+		Map<String, LdapRdnComponent> mapWithImmutableRdns = new LinkedHashMap<String, LdapRdnComponent>(components.size());
 		for (Iterator iterator = components.values().iterator(); iterator.hasNext();) {
 			LdapRdnComponent rdnComponent = (LdapRdnComponent) iterator.next();
 			mapWithImmutableRdns.put(rdnComponent.getKey(), rdnComponent.immutableLdapRdnComponent());

@@ -25,8 +25,8 @@ package org.springframework.ldap;
  */
 public class ServiceUnavailableException extends NamingException {
 
-    public ServiceUnavailableException(
-            javax.naming.ServiceUnavailableException cause) {
-        super(cause);
-    }
+	public ServiceUnavailableException(
+			javax.naming.ServiceUnavailableException cause) {
+		super(cause);
+	}
 }

@@ -28,24 +28,24 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class NotFilterTest {
 
-    @Test
-    public void testConstructor() {
-        EqualsFilter filter = new EqualsFilter("a", "b");
-        NotFilter notFilter = new NotFilter(filter);
+	@Test
+	public void testConstructor() {
+		EqualsFilter filter = new EqualsFilter("a", "b");
+		NotFilter notFilter = new NotFilter(filter);
 
-        assertThat(notFilter.encode()).isEqualTo("(!(a=b))");
-    }
+		assertThat(notFilter.encode()).isEqualTo("(!(a=b))");
+	}
 
-    @Test
-    public void testEquals() {
-        EqualsFilter filter = new EqualsFilter("a", "b");
-        NotFilter originalObject = new NotFilter(filter);
-        NotFilter identicalObject = new NotFilter(filter);
-        NotFilter differentObject = new NotFilter(new EqualsFilter("a", "a"));
-        NotFilter subclassObject = new NotFilter(filter) {
-        };
+	@Test
+	public void testEquals() {
+		EqualsFilter filter = new EqualsFilter("a", "b");
+		NotFilter originalObject = new NotFilter(filter);
+		NotFilter identicalObject = new NotFilter(filter);
+		NotFilter differentObject = new NotFilter(new EqualsFilter("a", "a"));
+		NotFilter subclassObject = new NotFilter(filter) {
+		};
 
-        new EqualsTester(originalObject, identicalObject, differentObject,
-                subclassObject);
-    }
+		new EqualsTester(originalObject, identicalObject, differentObject,
+				subclassObject);
+	}
 }

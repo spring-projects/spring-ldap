@@ -49,9 +49,9 @@ import java.util.NoSuchElementException;
 public final class LdapUtils {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LdapUtils.class);
-    private static final int HEX = 16;
+	private static final int HEX = 16;
 
-    /**
+	/**
 	 * Not to be instantiated.
 	 */
 	private LdapUtils() {
@@ -148,9 +148,9 @@ public final class LdapUtils {
 			return new org.springframework.ldap.LdapReferralException((javax.naming.ldap.LdapReferralException) ex);
 		}
 
-        if (javax.naming.ReferralException.class.isAssignableFrom(ex.getClass())) {
-            return new org.springframework.ldap.ReferralException((javax.naming.ReferralException) ex);
-        }
+		if (javax.naming.ReferralException.class.isAssignableFrom(ex.getClass())) {
+			return new org.springframework.ldap.ReferralException((javax.naming.ReferralException) ex);
+		}
 
 		// LimitExceededException hierarchy
 		if (javax.naming.SizeLimitExceededException.class.isAssignableFrom(ex.getClass())) {
@@ -194,9 +194,9 @@ public final class LdapUtils {
 			return new org.springframework.ldap.AuthenticationNotSupportedException(
 					(javax.naming.AuthenticationNotSupportedException) ex);
 		}
-        if (javax.naming.NamingSecurityException.class.isAssignableFrom(ex.getClass())) {
-            return new org.springframework.ldap.NamingSecurityException((javax.naming.NamingSecurityException) ex);
-        }
+		if (javax.naming.NamingSecurityException.class.isAssignableFrom(ex.getClass())) {
+			return new org.springframework.ldap.NamingSecurityException((javax.naming.NamingSecurityException) ex);
+		}
 
 		if (javax.naming.NoInitialContextException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.NoInitialContextException((javax.naming.NoInitialContextException) ex);
@@ -256,37 +256,37 @@ public final class LdapUtils {
 	 * @since 1.3
 	 */
 	public static void collectAttributeValues(Attributes attributes, String name, Collection<Object> collection) {
-        collectAttributeValues(attributes, name, collection, Object.class);
+		collectAttributeValues(attributes, name, collection, Object.class);
 	}
 
-    /**
-     * Collect all the values of a the specified attribute from the supplied
-     * Attributes as the specified class.
-     *
-     * @param attributes The Attributes; not <code>null</code>.
-     * @param name The name of the Attribute to get values for.
-     * @param collection the collection to collect the values in.
-     * @param clazz the class of the collected attribute values
-     * @throws NoSuchAttributeException if no attribute with the specified name
-     * exists.
-     * @throws IllegalArgumentException if an attribute value cannot be cast to the specified class.
-     * @since 2.0
-     */
-    public static <T> void collectAttributeValues(
-            Attributes attributes, String name, Collection<T> collection, Class<T> clazz) {
+	/**
+	 * Collect all the values of a the specified attribute from the supplied
+	 * Attributes as the specified class.
+	 *
+	 * @param attributes The Attributes; not <code>null</code>.
+	 * @param name The name of the Attribute to get values for.
+	 * @param collection the collection to collect the values in.
+	 * @param clazz the class of the collected attribute values
+	 * @throws NoSuchAttributeException if no attribute with the specified name
+	 * exists.
+	 * @throws IllegalArgumentException if an attribute value cannot be cast to the specified class.
+	 * @since 2.0
+	 */
+	public static <T> void collectAttributeValues(
+			Attributes attributes, String name, Collection<T> collection, Class<T> clazz) {
 
-        Assert.notNull(attributes, "Attributes must not be null");
-        Assert.hasText(name, "Name must not be empty");
-        Assert.notNull(collection, "Collection must not be null");
+		Assert.notNull(attributes, "Attributes must not be null");
+		Assert.hasText(name, "Name must not be empty");
+		Assert.notNull(collection, "Collection must not be null");
 
-        Attribute attribute = attributes.get(name);
-        if (attribute == null) {
-            throw new NoSuchAttributeException("No attribute with name '" + name + "'");
-        }
+		Attribute attribute = attributes.get(name);
+		if (attribute == null) {
+			throw new NoSuchAttributeException("No attribute with name '" + name + "'");
+		}
 
-        iterateAttributeValues(attribute, new CollectingAttributeValueCallbackHandler<T>(collection, clazz));
+		iterateAttributeValues(attribute, new CollectingAttributeValueCallbackHandler<T>(collection, clazz));
 
-    }
+	}
 
 	/**
 	 * Iterate through all the values of the specified Attribute calling back to
@@ -329,18 +329,18 @@ public final class LdapUtils {
 	 */
 	private static final class CollectingAttributeValueCallbackHandler<T> implements AttributeValueCallbackHandler {
 		private final Collection<T> collection;
-        private final Class<T> clazz;
+		private final Class<T> clazz;
 
-        public CollectingAttributeValueCallbackHandler(Collection<T> collection, Class<T> clazz) {
-            Assert.notNull(collection, "Collection must not be null");
-            Assert.notNull(clazz, "Clazz parameter must not be null");
+		public CollectingAttributeValueCallbackHandler(Collection<T> collection, Class<T> clazz) {
+			Assert.notNull(collection, "Collection must not be null");
+			Assert.notNull(clazz, "Clazz parameter must not be null");
 
 			this.collection = collection;
-            this.clazz = clazz;
+			this.clazz = clazz;
 		}
 
 		public void handleAttributeValue(String attributeName, Object attributeValue, int index) {
-            Assert.isTrue(attributeName == null || clazz.isAssignableFrom(attributeValue.getClass()));
+			Assert.isTrue(attributeName == null || clazz.isAssignableFrom(attributeValue.getClass()));
 			collection.add(clazz.cast(attributeValue));
 		}
 	}
@@ -364,240 +364,240 @@ public final class LdapUtils {
 		}
 	}
 
-    /**
-     * Construct a new LdapName instance from the supplied Name instance.
-     * LdapName instances will be cloned, CompositeName tweaks will be managed using
-     * {@link #convertCompositeNameToString(javax.naming.CompositeName)}; for all other Name
-     * implementations, new LdapName instances are constructed using {@link LdapName#addAll(int, javax.naming.Name)}.
-     *
-     * @param name the Name instance to convert to LdapName, not <code>null</code>.
-     * @return a new LdapName representing the same Distinguished Name as the supplied instance.
-     * @throws org.springframework.ldap.InvalidNameException to wrap any InvalidNameExceptions thrown by LdapName.
-     * @since 2.0
-     */
-    public static LdapName newLdapName(Name name) {
-        Assert.notNull(name, "name must not be null");
-        if(name instanceof LdapName) {
-            return (LdapName) name.clone();
-        } else if (name instanceof CompositeName) {
-            CompositeName compositeName = (CompositeName) name;
+	/**
+	 * Construct a new LdapName instance from the supplied Name instance.
+	 * LdapName instances will be cloned, CompositeName tweaks will be managed using
+	 * {@link #convertCompositeNameToString(javax.naming.CompositeName)}; for all other Name
+	 * implementations, new LdapName instances are constructed using {@link LdapName#addAll(int, javax.naming.Name)}.
+	 *
+	 * @param name the Name instance to convert to LdapName, not <code>null</code>.
+	 * @return a new LdapName representing the same Distinguished Name as the supplied instance.
+	 * @throws org.springframework.ldap.InvalidNameException to wrap any InvalidNameExceptions thrown by LdapName.
+	 * @since 2.0
+	 */
+	public static LdapName newLdapName(Name name) {
+		Assert.notNull(name, "name must not be null");
+		if(name instanceof LdapName) {
+			return (LdapName) name.clone();
+		} else if (name instanceof CompositeName) {
+			CompositeName compositeName = (CompositeName) name;
 
-            try {
-                return new LdapName(convertCompositeNameToString(compositeName));
-            } catch (InvalidNameException e) {
-                throw convertLdapException(e);
-            }
-        } else {
-            LdapName result = emptyLdapName();
-            try {
-                result.addAll(0, name);
-            } catch (InvalidNameException e) {
-                throw convertLdapException(e);
-            }
+			try {
+				return new LdapName(convertCompositeNameToString(compositeName));
+			} catch (InvalidNameException e) {
+				throw convertLdapException(e);
+			}
+		} else {
+			LdapName result = emptyLdapName();
+			try {
+				result.addAll(0, name);
+			} catch (InvalidNameException e) {
+				throw convertLdapException(e);
+			}
 
-            return result;
-        }
-    }
+			return result;
+		}
+	}
 
-    /**
-     * Construct a new LdapName instance from the supplied distinguished name string.
-     *
-     * @param distinguishedName the string to parse for constructing an LdapName instance.
-     * @return a new LdapName instance.
-     * @throws org.springframework.ldap.InvalidNameException to wrap any InvalidNameExceptions thrown by LdapName.
-     * @since 2.0
-     */
-    public static LdapName newLdapName(String distinguishedName) {
-        Assert.notNull(distinguishedName, "distinguishedName must not be null");
+	/**
+	 * Construct a new LdapName instance from the supplied distinguished name string.
+	 *
+	 * @param distinguishedName the string to parse for constructing an LdapName instance.
+	 * @return a new LdapName instance.
+	 * @throws org.springframework.ldap.InvalidNameException to wrap any InvalidNameExceptions thrown by LdapName.
+	 * @since 2.0
+	 */
+	public static LdapName newLdapName(String distinguishedName) {
+		Assert.notNull(distinguishedName, "distinguishedName must not be null");
 
-        try {
-            return new LdapName(distinguishedName);
-        } catch (InvalidNameException e) {
-            throw convertLdapException(e);
-        }
-    }
+		try {
+			return new LdapName(distinguishedName);
+		} catch (InvalidNameException e) {
+			throw convertLdapException(e);
+		}
+	}
 
 
-    private static LdapName returnOrConstructLdapNameFromName(Name name) {
-        if (name instanceof LdapName) {
-            return (LdapName) name;
-        } else {
-            return newLdapName(name);
-        }
-    }
+	private static LdapName returnOrConstructLdapNameFromName(Name name) {
+		if (name instanceof LdapName) {
+			return (LdapName) name;
+		} else {
+			return newLdapName(name);
+		}
+	}
 
-    /**
-     * Remove the supplied path from the beginning the specified
-     * <code>Name</code> if the name instance starts with
-     * <code>path</code>. Useful for stripping base path suffix from a
-     * <code>Name</code>. The original Name will not be affected.
-     *
-     * @param dn the dn to strip from.
-     * @param pathToRemove the path to remove from the beginning the dn instance.
-     * @return an LdapName instance that is a copy of the original name with the
-     * specified path stripped from its beginning.
-     * @since 2.0
-     */
-    public static LdapName removeFirst(Name dn, Name pathToRemove) {
-        Assert.notNull(dn, "dn must not be null");
-        Assert.notNull(pathToRemove, "pathToRemove must not be null");
+	/**
+	 * Remove the supplied path from the beginning the specified
+	 * <code>Name</code> if the name instance starts with
+	 * <code>path</code>. Useful for stripping base path suffix from a
+	 * <code>Name</code>. The original Name will not be affected.
+	 *
+	 * @param dn the dn to strip from.
+	 * @param pathToRemove the path to remove from the beginning the dn instance.
+	 * @return an LdapName instance that is a copy of the original name with the
+	 * specified path stripped from its beginning.
+	 * @since 2.0
+	 */
+	public static LdapName removeFirst(Name dn, Name pathToRemove) {
+		Assert.notNull(dn, "dn must not be null");
+		Assert.notNull(pathToRemove, "pathToRemove must not be null");
 
-        LdapName result = newLdapName(dn);
-        LdapName path = returnOrConstructLdapNameFromName(pathToRemove);
+		LdapName result = newLdapName(dn);
+		LdapName path = returnOrConstructLdapNameFromName(pathToRemove);
 
-        if(path.size() == 0 || !dn.startsWith(path)) {
-            return result;
-        }
+		if(path.size() == 0 || !dn.startsWith(path)) {
+			return result;
+		}
 
-        for(int i = 0; i < path.size(); i++) {
-            try {
-                result.remove(0);
-            } catch (InvalidNameException e) {
-                throw convertLdapException(e);
-            }
-        }
+		for(int i = 0; i < path.size(); i++) {
+			try {
+				result.remove(0);
+			} catch (InvalidNameException e) {
+				throw convertLdapException(e);
+			}
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    /**
-     * Prepend the supplied path in the beginning the specified
-     * <code>Name</code> if the name instance starts with
-     * <code>path</code>. The original Name will not be affected.
-     *
-     * @param dn the dn to strip from.
-     * @param pathToPrepend the path to prepend in the beginning of the dn.
-     * @return an LdapName instance that is a copy of the original name with the
-     * specified path inserted at its beginning.
-     * @since 2.0
-     */
-    public static LdapName prepend(Name dn, Name pathToPrepend) {
-        Assert.notNull(dn, "dn must not be null");
-        Assert.notNull(pathToPrepend, "pathToRemove must not be null");
+	/**
+	 * Prepend the supplied path in the beginning the specified
+	 * <code>Name</code> if the name instance starts with
+	 * <code>path</code>. The original Name will not be affected.
+	 *
+	 * @param dn the dn to strip from.
+	 * @param pathToPrepend the path to prepend in the beginning of the dn.
+	 * @return an LdapName instance that is a copy of the original name with the
+	 * specified path inserted at its beginning.
+	 * @since 2.0
+	 */
+	public static LdapName prepend(Name dn, Name pathToPrepend) {
+		Assert.notNull(dn, "dn must not be null");
+		Assert.notNull(pathToPrepend, "pathToRemove must not be null");
 
-        LdapName result = newLdapName(dn);
-        try {
-            result.addAll(0, pathToPrepend);
-        } catch (InvalidNameException e) {
-            throw convertLdapException(e);
-        }
+		LdapName result = newLdapName(dn);
+		try {
+			result.addAll(0, pathToPrepend);
+		} catch (InvalidNameException e) {
+			throw convertLdapException(e);
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    /**
-     * Construct a new, empty LdapName instance.
-     * @return a new LdapName instance representing the empty path ("").
-     * @since 2.0
-     */
-    public static LdapName emptyLdapName() {
-        return newLdapName("");
-    }
+	/**
+	 * Construct a new, empty LdapName instance.
+	 * @return a new LdapName instance representing the empty path ("").
+	 * @since 2.0
+	 */
+	public static LdapName emptyLdapName() {
+		return newLdapName("");
+	}
 
-    /**
-     * Find the Rdn with the requested key in the supplied Name.
-     *
-     * @param name the Name in which to search for the key.
-     * @param key the attribute key to search for.
-     * @return the rdn corresponding to the <b>first</b> occurrence of the requested key.
-     * @throws NoSuchElementException if no corresponding entry is found.
-     * @since 2.0
-     */
-    public static Rdn getRdn(Name name, String key) {
-        Assert.notNull(name, "name must not be null");
-        Assert.hasText(key, "key must not be blank");
+	/**
+	 * Find the Rdn with the requested key in the supplied Name.
+	 *
+	 * @param name the Name in which to search for the key.
+	 * @param key the attribute key to search for.
+	 * @return the rdn corresponding to the <b>first</b> occurrence of the requested key.
+	 * @throws NoSuchElementException if no corresponding entry is found.
+	 * @since 2.0
+	 */
+	public static Rdn getRdn(Name name, String key) {
+		Assert.notNull(name, "name must not be null");
+		Assert.hasText(key, "key must not be blank");
 
-        LdapName ldapName = returnOrConstructLdapNameFromName(name);
+		LdapName ldapName = returnOrConstructLdapNameFromName(name);
 
-        List<Rdn> rdns = ldapName.getRdns();
-        for (Rdn rdn : rdns) {
-            NamingEnumeration<String> ids = rdn.toAttributes().getIDs();
-            while (ids.hasMoreElements()) {
-                String id = ids.nextElement();
-                if(key.equalsIgnoreCase(id)) {
-                    return rdn;
-                }
-            }
-        }
+		List<Rdn> rdns = ldapName.getRdns();
+		for (Rdn rdn : rdns) {
+			NamingEnumeration<String> ids = rdn.toAttributes().getIDs();
+			while (ids.hasMoreElements()) {
+				String id = ids.nextElement();
+				if(key.equalsIgnoreCase(id)) {
+					return rdn;
+				}
+			}
+		}
 
-        throw new NoSuchElementException("No Rdn with the requested key: '" + key + "'");
-    }
+		throw new NoSuchElementException("No Rdn with the requested key: '" + key + "'");
+	}
 
-    /**
-     * Get the value of the Rdn with the requested key in the supplied Name.
-     *
-     * @param name the Name in which to search for the key.
-     * @param key the attribute key to search for.
-     * @return the value of the rdn corresponding to the <b>first</b> occurrence of the requested key.
-     * @throws NoSuchElementException if no corresponding entry is found.
-     * @since 2.0
-     */
-    public static Object getValue(Name name, String key) {
-        NamingEnumeration<? extends Attribute> allAttributes = getRdn(name, key).toAttributes().getAll();
-        while (allAttributes.hasMoreElements()) {
-            Attribute oneAttribute = allAttributes.nextElement();
-            if(key.equalsIgnoreCase(oneAttribute.getID())) {
-                try {
-                    return oneAttribute.get();
-                } catch (javax.naming.NamingException e) {
-                    throw convertLdapException(e);
-                }
-            }
-        }
+	/**
+	 * Get the value of the Rdn with the requested key in the supplied Name.
+	 *
+	 * @param name the Name in which to search for the key.
+	 * @param key the attribute key to search for.
+	 * @return the value of the rdn corresponding to the <b>first</b> occurrence of the requested key.
+	 * @throws NoSuchElementException if no corresponding entry is found.
+	 * @since 2.0
+	 */
+	public static Object getValue(Name name, String key) {
+		NamingEnumeration<? extends Attribute> allAttributes = getRdn(name, key).toAttributes().getAll();
+		while (allAttributes.hasMoreElements()) {
+			Attribute oneAttribute = allAttributes.nextElement();
+			if(key.equalsIgnoreCase(oneAttribute.getID())) {
+				try {
+					return oneAttribute.get();
+				} catch (javax.naming.NamingException e) {
+					throw convertLdapException(e);
+				}
+			}
+		}
 
-        // This really shouldn't happen
-        throw new NoSuchElementException("No Rdn with the requested key: '" + key + "'");
-    }
+		// This really shouldn't happen
+		throw new NoSuchElementException("No Rdn with the requested key: '" + key + "'");
+	}
 
-    /**
-     * Get the value of the Rdn at the requested index in the supplied Name.
-     *
-     * @param name the Name to work on.
-     * @param index The 0-based index of the rdn value to retrieve. Must be in the range [0,size()).
-     * @return the value of the rdn at the requested index.
-     * @throws IndexOutOfBoundsException if index is outside the specified range.
-     * @since 2.0
-     */
-    public static Object getValue(Name name, int index) {
-        Assert.notNull(name, "name must not be null");
+	/**
+	 * Get the value of the Rdn at the requested index in the supplied Name.
+	 *
+	 * @param name the Name to work on.
+	 * @param index The 0-based index of the rdn value to retrieve. Must be in the range [0,size()).
+	 * @return the value of the rdn at the requested index.
+	 * @throws IndexOutOfBoundsException if index is outside the specified range.
+	 * @since 2.0
+	 */
+	public static Object getValue(Name name, int index) {
+		Assert.notNull(name, "name must not be null");
 
-        LdapName ldapName = returnOrConstructLdapNameFromName(name);
-        Rdn rdn = ldapName.getRdn(index);
-        if(rdn.size() > 1) {
-            LOGGER.warn("Rdn at position " + index + " of dn '" + name +
-                    "' is multi-value - returned value is not to be trusted. " +
-                    "Consider using name-based getValue method instead");
-        }
-        return rdn.getValue();
-    }
+		LdapName ldapName = returnOrConstructLdapNameFromName(name);
+		Rdn rdn = ldapName.getRdn(index);
+		if(rdn.size() > 1) {
+			LOGGER.warn("Rdn at position " + index + " of dn '" + name +
+					"' is multi-value - returned value is not to be trusted. " +
+					"Consider using name-based getValue method instead");
+		}
+		return rdn.getValue();
+	}
 
-    /**
-     * Get the value of the Rdn at the requested index in the supplied Name as a String.
-     *
-     * @param name the Name to work on.
-     * @param index The 0-based index of the rdn value to retrieve. Must be in the range [0,size()).
-     * @return the value of the rdn at the requested index as a String.
-     * @throws IndexOutOfBoundsException if index is outside the specified range.
-     * @throws ClassCastException if the value of the requested component is not a String.
-     * @since 2.0
-     */
-    public static String getStringValue(Name name, int index) {
-        return (String) getValue(name, index);
-    }
+	/**
+	 * Get the value of the Rdn at the requested index in the supplied Name as a String.
+	 *
+	 * @param name the Name to work on.
+	 * @param index The 0-based index of the rdn value to retrieve. Must be in the range [0,size()).
+	 * @return the value of the rdn at the requested index as a String.
+	 * @throws IndexOutOfBoundsException if index is outside the specified range.
+	 * @throws ClassCastException if the value of the requested component is not a String.
+	 * @since 2.0
+	 */
+	public static String getStringValue(Name name, int index) {
+		return (String) getValue(name, index);
+	}
 
-    /**
-     * Get the value of the Rdn with the requested key in the supplied Name as a String.
-     *
-     * @param name the Name in which to search for the key.
-     * @param key the attribute key to search for.
-     * @return the String value of the rdn corresponding to the <b>first</b> occurrence of the requested key.
-     * @throws NoSuchElementException if no corresponding entry is found.
-     * @throws ClassCastException if the value of the requested component is not a String.
-     * @since 2.0
-     */
-    public static String getStringValue(Name name, String key) {
-        return (String) getValue(name, key);
-    }
+	/**
+	 * Get the value of the Rdn with the requested key in the supplied Name as a String.
+	 *
+	 * @param name the Name in which to search for the key.
+	 * @param key the attribute key to search for.
+	 * @return the String value of the rdn corresponding to the <b>first</b> occurrence of the requested key.
+	 * @throws NoSuchElementException if no corresponding entry is found.
+	 * @throws ClassCastException if the value of the requested component is not a String.
+	 * @since 2.0
+	 */
+	public static String getStringValue(Name name, String key) {
+		return (String) getValue(name, key);
+	}
 
 	/**
 	 * Converts a binary SID to its String representation, according to the
@@ -697,7 +697,7 @@ public final class LdapUtils {
 		byte sidRevision = (byte) Integer.parseInt(parts[1]);
 		int subAuthCount = parts.length - 3;
 
-        byte[] sid = new byte[] {sidRevision, (byte) subAuthCount};
+		byte[] sid = new byte[] {sidRevision, (byte) subAuthCount};
 		sid = addAll(sid, numberToBytes(parts[2], 6, true));
 		for (int i = 0; i < subAuthCount; i++) {
 			sid = addAll(sid, numberToBytes(parts[3 + i], 4, false));
@@ -705,14 +705,14 @@ public final class LdapUtils {
 		return sid;
 	}
 
-    private static byte[] addAll(byte[] array1, byte[] array2) {
-        byte[] joinedArray = new byte[array1.length + array2.length];
-        System.arraycopy(array1, 0, joinedArray, 0, array1.length);
-        System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);
-        return joinedArray;
-    }
+	private static byte[] addAll(byte[] array1, byte[] array2) {
+		byte[] joinedArray = new byte[array1.length + array2.length];
+		System.arraycopy(array1, 0, joinedArray, 0, array1.length);
+		System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);
+		return joinedArray;
+	}
 
-    /**
+	/**
 	 * Converts the given number to a binary representation of the specified
 	 * length and "endian-ness".
 	 * 
@@ -738,20 +738,20 @@ public final class LdapUtils {
 		return bytes;
 	}
 
-    private static void reverse(byte[] array) {
-        int i = 0;
-        int j = array.length - 1;
-        byte tmp;
-        while (j > i) {
-            tmp = array[j];
-            array[j] = array[i];
-            array[i] = tmp;
-            j--;
-            i++;
-        }
-    }
+	private static void reverse(byte[] array) {
+		int i = 0;
+		int j = array.length - 1;
+		byte tmp;
+		while (j > i) {
+			tmp = array[j];
+			array[j] = array[i];
+			array[i] = tmp;
+			j--;
+			i++;
+		}
+	}
 
-    /**
+	/**
 	 * Converts a byte into its hexadecimal representation, padding with a
 	 * leading zero to get an even number of characters.
 	 * 

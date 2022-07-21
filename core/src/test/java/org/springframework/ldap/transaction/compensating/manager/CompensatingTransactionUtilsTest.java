@@ -31,56 +31,56 @@ import static org.mockito.Mockito.verify;
 
 public class CompensatingTransactionUtilsTest {
 
-    private DirContext dirContextMock;
+	private DirContext dirContextMock;
 
-    private ContextSource contextSourceMock;
+	private ContextSource contextSourceMock;
 
-    private CompensatingTransactionOperationManager operationManagerMock;
+	private CompensatingTransactionOperationManager operationManagerMock;
 
-    @Before
-    public void setUp() throws Exception {
-        dirContextMock = mock(DirContext.class);
-        contextSourceMock = mock(ContextSource.class);
-        operationManagerMock = mock(CompensatingTransactionOperationManager.class);
+	@Before
+	public void setUp() throws Exception {
+		dirContextMock = mock(DirContext.class);
+		contextSourceMock = mock(ContextSource.class);
+		operationManagerMock = mock(CompensatingTransactionOperationManager.class);
 
-        if (TransactionSynchronizationManager.isSynchronizationActive()) {
-            TransactionSynchronizationManager.clearSynchronization();
-        }
-    }
+		if (TransactionSynchronizationManager.isSynchronizationActive()) {
+			TransactionSynchronizationManager.clearSynchronization();
+		}
+	}
 
-    @Test
-    public void testPerformOperation() throws Throwable {
-        CompensatingTransactionHolderSupport holder = new DirContextHolder(
-                null, dirContextMock);
-        holder.setTransactionOperationManager(operationManagerMock);
+	@Test
+	public void testPerformOperation() throws Throwable {
+		CompensatingTransactionHolderSupport holder = new DirContextHolder(
+				null, dirContextMock);
+		holder.setTransactionOperationManager(operationManagerMock);
 
-        TransactionSynchronizationManager.bindResource(contextSourceMock,
-                holder);
+		TransactionSynchronizationManager.bindResource(contextSourceMock,
+				holder);
 
-        Object[] expectedArgs = new Object[] { "someDn" };
+		Object[] expectedArgs = new Object[] { "someDn" };
 
-        CompensatingTransactionUtils.performOperation(contextSourceMock,
-                dirContextMock, getUnbindMethod(), expectedArgs);
-        verify(operationManagerMock).performOperation(dirContextMock, "unbind",
-                expectedArgs);
-    }
+		CompensatingTransactionUtils.performOperation(contextSourceMock,
+				dirContextMock, getUnbindMethod(), expectedArgs);
+		verify(operationManagerMock).performOperation(dirContextMock, "unbind",
+				expectedArgs);
+	}
 
-    @Test
-    public void testPerformOperation_NoTransaction() throws Throwable {
-        Object[] expectedArgs = new Object[] { "someDn" };
+	@Test
+	public void testPerformOperation_NoTransaction() throws Throwable {
+		Object[] expectedArgs = new Object[] { "someDn" };
 
-        CompensatingTransactionUtils.performOperation(contextSourceMock,
-                dirContextMock, getUnbindMethod(), expectedArgs);
-        verify(dirContextMock).unbind("someDn");
-    }
+		CompensatingTransactionUtils.performOperation(contextSourceMock,
+				dirContextMock, getUnbindMethod(), expectedArgs);
+		verify(dirContextMock).unbind("someDn");
+	}
 
-    private Method getUnbindMethod() throws NoSuchMethodException {
-        return DirContext.class.getMethod("unbind",
-                new Class[] { String.class });
-    }
+	private Method getUnbindMethod() throws NoSuchMethodException {
+		return DirContext.class.getMethod("unbind",
+				new Class[] { String.class });
+	}
 
-    public void dummyMethod() {
+	public void dummyMethod() {
 
-    }
+	}
 
 }

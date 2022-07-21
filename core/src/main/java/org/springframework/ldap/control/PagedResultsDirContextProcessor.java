@@ -47,7 +47,7 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 
 	private int resultSize;
 
-    private boolean more = true;
+	private boolean more = true;
 
 	/**
 	 * Constructs a new instance. This constructor should be used when
@@ -85,9 +85,9 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 	 * Get the cookie.
 	 * 
 	 * @return the cookie. The cookie will always be set after at leas one query, however the actual cookie content
-     * can be <code>null</code>, indicating that there are no more results, in which case {@link #hasMore()} will return
-     * <code>false</code>.
-     * @see #hasMore()
+	 * can be <code>null</code>, indicating that there are no more results, in which case {@link #hasMore()} will return
+	 * <code>false</code>.
+	 * @see #hasMore()
 	 */
 	public PagedResultsCookie getCookie() {
 		return cookie;
@@ -127,17 +127,17 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 				new Object[] {pageSize, actualCookie, critical});
 	}
 
-    /**
-     * Check whether there are more results to retrieved. When there are no more results to retrieve,
-     * this is indicated by a <code>null</code> cookie being returned from the server.
-     * When this happen, the internal status will set to false.
-     *
-     * @return <code>true</code> if there are more results to retrieve, <code>false</code> otherwise.
-     * @since 2.0
-     */
-    public boolean hasMore() {
-        return more;
-    }
+	/**
+	 * Check whether there are more results to retrieved. When there are no more results to retrieve,
+	 * this is indicated by a <code>null</code> cookie being returned from the server.
+	 * When this happen, the internal status will set to false.
+	 *
+	 * @return <code>true</code> if there are more results to retrieve, <code>false</code> otherwise.
+	 * @since 2.0
+	 */
+	public boolean hasMore() {
+		return more;
+	}
 
 	/*
 	 * @seeorg.springframework.ldap.control.
@@ -146,10 +146,10 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 	 */
 	protected void handleResponse(Object control) {
 		byte[] result = (byte[]) invokeMethod("getCookie", responseControlClass, control);
-        if(result == null) {
-            more = false;
-        }
+		if(result == null) {
+			more = false;
+		}
 		this.cookie = new PagedResultsCookie(result);
-        this.resultSize = (Integer) invokeMethod("getResultSize", responseControlClass, control);
+		this.resultSize = (Integer) invokeMethod("getResultSize", responseControlClass, control);
 	}
 }

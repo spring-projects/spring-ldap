@@ -53,13 +53,13 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 
 	private static final String LDAPS_PROTOCOL_PREFIX = "ldaps://";
 
-    @Override
+	@Override
 	public final Object getObjectInstance(
-            Object obj,
-            Name name,
-            Context nameCtx,
-            Hashtable<?, ?> environment,
-            Attributes attrs) throws Exception {
+			Object obj,
+			Name name,
+			Context nameCtx,
+			Hashtable<?, ?> environment,
+			Attributes attrs) throws Exception {
 
 		try {
 			String nameInNamespace;
@@ -124,8 +124,8 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 		else {
 			LOG
 					.warn("Expecting a CompositeName as input to getObjectInstance but received a '"
-                            + name.getClass().toString()
-                            + "' - using toString and proceeding with undefined results");
+							+ name.getClass().toString()
+							+ "' - using toString and proceeding with undefined results");
 			nameString = name.toString();
 		}
 
@@ -158,13 +158,13 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 			}
 		}
 
-        DirContextAdapter dirContextAdapter = new DirContextAdapter(attrs, LdapUtils.newLdapName(nameString),
-                LdapUtils.newLdapName(nameInNamespace), referralUrl);
-        dirContextAdapter.setUpdateMode(true);
-        return dirContextAdapter;
-    }
+		DirContextAdapter dirContextAdapter = new DirContextAdapter(attrs, LdapUtils.newLdapName(nameString),
+				LdapUtils.newLdapName(nameInNamespace), referralUrl);
+		dirContextAdapter.setUpdateMode(true);
+		return dirContextAdapter;
+	}
 
-    @Override
+	@Override
 	public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment) throws Exception {
 		return null;
 	}

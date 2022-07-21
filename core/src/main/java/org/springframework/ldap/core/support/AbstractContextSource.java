@@ -78,11 +78,11 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	private static final String DEFAULT_CONTEXT_FACTORY = "com.sun.jndi.ldap.LdapCtxFactory";
 
 	private static final Class<DefaultDirObjectFactory> DEFAULT_DIR_OBJECT_FACTORY = DefaultDirObjectFactory.class;
-    private static final boolean DONT_DISABLE_POOLING = false;
-    private static final boolean EXPLICITLY_DISABLE_POOLING = true;
-    private static final int DEFAULT_BUFFER_SIZE = 1024;
+	private static final boolean DONT_DISABLE_POOLING = false;
+	private static final boolean EXPLICITLY_DISABLE_POOLING = true;
+	private static final int DEFAULT_BUFFER_SIZE = 1024;
 
-    private Class<?> dirObjectFactory = DEFAULT_DIR_OBJECT_FACTORY;
+	private Class<?> dirObjectFactory = DEFAULT_DIR_OBJECT_FACTORY;
 
 	private Class<?> contextFactory;
 
@@ -133,40 +133,40 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	}
 
 	public DirContext getContext(String principal, String credentials) {
-        // This method is typically called for authentication purposes, which means that we
-        // should explicitly disable pooling in case passwords are changed (LDAP-183).
-        return doGetContext(principal, credentials, EXPLICITLY_DISABLE_POOLING);
+		// This method is typically called for authentication purposes, which means that we
+		// should explicitly disable pooling in case passwords are changed (LDAP-183).
+		return doGetContext(principal, credentials, EXPLICITLY_DISABLE_POOLING);
 	}
 
 	private DirContext doGetContext(String principal, String credentials, boolean explicitlyDisablePooling) {
-        Hashtable<String, Object> env = getAuthenticatedEnv(principal, credentials);
-        if(explicitlyDisablePooling) {
-            env.remove(SUN_LDAP_POOLING_FLAG);
-        }
+		Hashtable<String, Object> env = getAuthenticatedEnv(principal, credentials);
+		if(explicitlyDisablePooling) {
+			env.remove(SUN_LDAP_POOLING_FLAG);
+		}
 
-        DirContext ctx = createContext(env);
+		DirContext ctx = createContext(env);
 
-        try {
-            DirContext processedDirContext = authenticationStrategy.processContextAfterCreation(ctx, principal, credentials);
-            return processedDirContext;
-        }
-        catch (NamingException e) {
-            closeContext(ctx);
-            throw LdapUtils.convertLdapException(e);
-        }
-    }
+		try {
+			DirContext processedDirContext = authenticationStrategy.processContextAfterCreation(ctx, principal, credentials);
+			return processedDirContext;
+		}
+		catch (NamingException e) {
+			closeContext(ctx);
+			throw LdapUtils.convertLdapException(e);
+		}
+	}
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.springframework.ldap.core.ContextSource#getReadOnlyContext()
-     */
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.springframework.ldap.core.ContextSource#getReadOnlyContext()
+	 */
 	public DirContext getReadOnlyContext() {
 		if (!anonymousReadOnly) {
 			return doGetContext(
-                    authenticationSource.getPrincipal(),
-                    authenticationSource.getCredentials(),
-                    DONT_DISABLE_POOLING);
+					authenticationSource.getPrincipal(),
+					authenticationSource.getCredentials(),
+					DONT_DISABLE_POOLING);
 		}
 		else {
 			return createContext(getAnonymousEnv());
@@ -180,9 +180,9 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 */
 	public DirContext getReadWriteContext() {
 		return doGetContext(
-                authenticationSource.getPrincipal(),
-                authenticationSource.getCredentials(),
-                DONT_DISABLE_POOLING);
+				authenticationSource.getPrincipal(),
+				authenticationSource.getCredentials(),
+				DONT_DISABLE_POOLING);
 	}
 
 	/**
@@ -217,7 +217,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 				ctx.close();
 			}
 			catch (Exception e) {
-                LOG.debug("Exception closing context", e);
+				LOG.debug("Exception closing context", e);
 			}
 		}
 	}
@@ -231,77 +231,77 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 */
 	public String assembleProviderUrlString(String[] ldapUrls) {
 		StringBuilder providerUrlBuffer = new StringBuilder(DEFAULT_BUFFER_SIZE);
-        for (String ldapUrl : ldapUrls) {
-            providerUrlBuffer.append(ldapUrl);
-            if (!base.isEmpty()) {
-                if (!ldapUrl.endsWith("/")) {
-                    providerUrlBuffer.append("/");
-                }
-            }
-            providerUrlBuffer.append(formatForUrl(base));
-            providerUrlBuffer.append(' ');
-        }
+		for (String ldapUrl : ldapUrls) {
+			providerUrlBuffer.append(ldapUrl);
+			if (!base.isEmpty()) {
+				if (!ldapUrl.endsWith("/")) {
+					providerUrlBuffer.append("/");
+				}
+			}
+			providerUrlBuffer.append(formatForUrl(base));
+			providerUrlBuffer.append(' ');
+		}
 		return providerUrlBuffer.toString().trim();
 	}
 
-    static String formatForUrl(LdapName ldapName) {
-        StringBuilder sb = new StringBuilder();
-        ListIterator<Rdn> it = ldapName.getRdns().listIterator(ldapName.size());
-        while (it.hasPrevious()) {
-            Rdn component = it.previous();
+	static String formatForUrl(LdapName ldapName) {
+		StringBuilder sb = new StringBuilder();
+		ListIterator<Rdn> it = ldapName.getRdns().listIterator(ldapName.size());
+		while (it.hasPrevious()) {
+			Rdn component = it.previous();
 
-            Attributes attributes = component.toAttributes();
+			Attributes attributes = component.toAttributes();
 
-            // Loop through all attribute of the rdn (usually just one, but more are supported by RFC)
-            NamingEnumeration<? extends Attribute> allAttributes = attributes.getAll();
-            while(allAttributes.hasMoreElements()) {
-                Attribute oneAttribute = allAttributes.nextElement();
-                String encodedAttributeName = nameEncodeForUrl(oneAttribute.getID());
+			// Loop through all attribute of the rdn (usually just one, but more are supported by RFC)
+			NamingEnumeration<? extends Attribute> allAttributes = attributes.getAll();
+			while(allAttributes.hasMoreElements()) {
+				Attribute oneAttribute = allAttributes.nextElement();
+				String encodedAttributeName = nameEncodeForUrl(oneAttribute.getID());
 
-                // Loop through all values of the attribute (usually just one, but more are supported by RFC)
-                NamingEnumeration <?> allValues;
-                try {
-                    allValues = oneAttribute.getAll();
-                } catch (NamingException e) {
-                    throw new UncategorizedLdapException("Unexpected error occurred formatting base URL", e);
-                }
+				// Loop through all values of the attribute (usually just one, but more are supported by RFC)
+				NamingEnumeration <?> allValues;
+				try {
+					allValues = oneAttribute.getAll();
+				} catch (NamingException e) {
+					throw new UncategorizedLdapException("Unexpected error occurred formatting base URL", e);
+				}
 
-                while(allValues.hasMoreElements()) {
-                    sb.append(encodedAttributeName).append('=');
+				while(allValues.hasMoreElements()) {
+					sb.append(encodedAttributeName).append('=');
 
-                    Object oneValue = allValues.nextElement();
-                    if (oneValue instanceof String) {
-                        String oneString = (String) oneValue;
-                        sb.append(nameEncodeForUrl(oneString));
-                    } else {
-                        throw new IllegalArgumentException("Binary attributes not supported for base URL");
-                    }
+					Object oneValue = allValues.nextElement();
+					if (oneValue instanceof String) {
+						String oneString = (String) oneValue;
+						sb.append(nameEncodeForUrl(oneString));
+					} else {
+						throw new IllegalArgumentException("Binary attributes not supported for base URL");
+					}
 
-                    if(allValues.hasMoreElements()) {
-                        sb.append('+');
-                    }
-                }
-                if(allAttributes.hasMoreElements()) {
-                    sb.append('+');
-                }
-            }
+					if(allValues.hasMoreElements()) {
+						sb.append('+');
+					}
+				}
+				if(allAttributes.hasMoreElements()) {
+					sb.append('+');
+				}
+			}
 
-            if(it.hasPrevious()) {
-                sb.append(',');
-            }
-        }
-        return sb.toString();
-    }
+			if(it.hasPrevious()) {
+				sb.append(',');
+			}
+		}
+		return sb.toString();
+	}
 
-    static String nameEncodeForUrl(String value) {
-        try {
-            String ldapEncoded = LdapEncoder.nameEncode(value);
-            URI valueUri = new URI(null, null, ldapEncoded, null);
-            return valueUri.toString();
-        } catch (URISyntaxException e) {
-            throw new UncategorizedLdapException("This really shouldn't happen - report this", e);
-        }
-    }
+	static String nameEncodeForUrl(String value) {
+		try {
+			String ldapEncoded = LdapEncoder.nameEncode(value);
+			URI valueUri = new URI(null, null, ldapEncoded, null);
+			return valueUri.toString();
+		} catch (URISyntaxException e) {
+			throw new UncategorizedLdapException("This really shouldn't happen - report this", e);
+		}
+	}
 
 	/**
 	 * Set the base suffix from which all operations should origin. If a base
@@ -311,27 +311,27 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @param base the base suffix.
 	 */
 	public void setBase(String base) {
-        if (base != null) {
-            this.base = LdapUtils.newLdapName(base);
-        } else {
-            this.base = LdapUtils.emptyLdapName();
-        }
-    }
+		if (base != null) {
+			this.base = LdapUtils.newLdapName(base);
+		} else {
+			this.base = LdapUtils.emptyLdapName();
+		}
+	}
 
-    /**
-     * @deprecated {@link DistinguishedName} and associated classes and methods are deprecated as of 2.0.
-     */
-    @Override
+	/**
+	 * @deprecated {@link DistinguishedName} and associated classes and methods are deprecated as of 2.0.
+	 */
+	@Override
 	public DistinguishedName getBaseLdapPath() {
 		return new DistinguishedName(base);
 	}
 
-    @Override
-    public LdapName getBaseLdapName() {
-        return (LdapName) base.clone();
-    }
+	@Override
+	public LdapName getBaseLdapName() {
+		return (LdapName) base.clone();
+	}
 
-    @Override
+	@Override
 	public String getBaseLdapPathAsString() {
 		return getBaseLdapName().toString();
 	}
@@ -577,7 +577,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * this method.
 	 *
 	 * @param baseEnvironmentProperties the base environment properties that should always be used when
-     *                                  creating new Context instances.
+	 *								  creating new Context instances.
 	 */
 	public void setBaseEnvironmentProperties(Map<String, Object> baseEnvironmentProperties) {
 		this.baseEnv = new Hashtable<String, Object>(baseEnvironmentProperties);

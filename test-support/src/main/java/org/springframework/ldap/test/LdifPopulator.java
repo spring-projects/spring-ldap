@@ -34,55 +34,55 @@ import java.util.List;
  * @since 2.0
  */
 public class LdifPopulator implements InitializingBean {
-    private Resource resource;
-    private ContextSource contextSource;
+	private Resource resource;
+	private ContextSource contextSource;
 
-    private String base = "";
-    private boolean clean = false;
-    private String defaultBase;
+	private String base = "";
+	private boolean clean = false;
+	private String defaultBase;
 
-    public void setContextSource(ContextSource contextSource) {
-        this.contextSource = contextSource;
-    }
+	public void setContextSource(ContextSource contextSource) {
+		this.contextSource = contextSource;
+	}
 
-    public void setResource(Resource resource) {
-        this.resource = resource;
-    }
+	public void setResource(Resource resource) {
+		this.resource = resource;
+	}
 
-    public void setBase(String base) {
-        this.base = base;
-    }
+	public void setBase(String base) {
+		this.base = base;
+	}
 
-    public void setClean(boolean clean) {
-        this.clean = clean;
-    }
+	public void setClean(boolean clean) {
+		this.clean = clean;
+	}
 
-    public void setDefaultBase(String defaultBase) {
-        this.defaultBase = defaultBase;
-    }
+	public void setDefaultBase(String defaultBase) {
+		this.defaultBase = defaultBase;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Assert.notNull(contextSource, "ContextSource must be specified");
-        Assert.notNull(resource, "Resource must be specified");
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(contextSource, "ContextSource must be specified");
+		Assert.notNull(resource, "Resource must be specified");
 
-        if(!LdapUtils.newLdapName(base).equals(LdapUtils.newLdapName(defaultBase))) {
-            List<String> lines = IOUtils.readLines(resource.getInputStream());
+		if(!LdapUtils.newLdapName(base).equals(LdapUtils.newLdapName(defaultBase))) {
+			List<String> lines = IOUtils.readLines(resource.getInputStream());
 
-            StringWriter sw = new StringWriter();
-            PrintWriter writer = new PrintWriter(sw);
-            for (String line : lines) {
-                writer.println(StringUtils.replace(line, defaultBase, base));
-            }
+			StringWriter sw = new StringWriter();
+			PrintWriter writer = new PrintWriter(sw);
+			for (String line : lines) {
+				writer.println(StringUtils.replace(line, defaultBase, base));
+			}
 
-            writer.flush();
-            resource = new ByteArrayResource(sw.toString().getBytes("UTF8"));
-        }
+			writer.flush();
+			resource = new ByteArrayResource(sw.toString().getBytes("UTF8"));
+		}
 
-        if(clean) {
-            LdapTestUtils.clearSubContexts(contextSource, LdapUtils.emptyLdapName());
-        }
+		if(clean) {
+			LdapTestUtils.clearSubContexts(contextSource, LdapUtils.emptyLdapName());
+		}
 
-        LdapTestUtils.loadLdif(contextSource, resource);
-    }
+		LdapTestUtils.loadLdif(contextSource, resource);
+	}
 }

@@ -92,14 +92,14 @@ public class InvalidBackslashITest extends AbstractLdapTemplateIntegrationTest {
 	 * @throws InvalidNameException
 	 */
 	@Test
-    @Category(NoAdTest.class)
+	@Category(NoAdTest.class)
 	public void testSearchForDnSpoiledByCompositeName() throws InvalidNameException {
 		List result = tested.search("", "(sn=Person6)", new AbstractContextMapper() {
 			@Override
 			protected Object doMapFromContext(DirContextOperations ctx) {
 				LdapName dn = (LdapName) ctx.getDn();
-                Rdn rdn = LdapUtils.getRdn(dn, "cn");
-                assertThat(dn.toString()).isEqualTo("cn=Some\\\\Person6,ou=company1,ou=Sweden");
+				Rdn rdn = LdapUtils.getRdn(dn, "cn");
+				assertThat(dn.toString()).isEqualTo("cn=Some\\\\Person6,ou=company1,ou=Sweden");
 				assertThat(rdn.getValue()).isEqualTo("Some\\Person6");
 				return new Object();
 			}

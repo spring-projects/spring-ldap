@@ -25,7 +25,7 @@ package org.springframework.ldap;
  */
 public class InvalidNameException extends NamingException {
 
-    public InvalidNameException(javax.naming.InvalidNameException cause) {
-        super(cause);
-    }
+	public InvalidNameException(javax.naming.InvalidNameException cause) {
+		super(cause);
+	}
 }

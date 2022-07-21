@@ -176,11 +176,11 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 
 	@Test
 	public void testLookup_GetNameInNamespace_Plain() {
-        String expectedDn = "cn=Some Person2, ou=company1,ou=Sweden";
-        DirContextAdapter result = (DirContextAdapter) tested.lookup(expectedDn);
+		String expectedDn = "cn=Some Person2, ou=company1,ou=Sweden";
+		DirContextAdapter result = (DirContextAdapter) tested.lookup(expectedDn);
 
-        LdapName expectedName = LdapUtils.newLdapName(expectedDn);
-        assertThat(result.getDn()).isEqualTo(expectedName);
+		LdapName expectedName = LdapUtils.newLdapName(expectedDn);
+		assertThat(result.getDn()).isEqualTo(expectedName);
 		assertThat(result.getNameInNamespace()).isEqualTo("cn=Some Person2,ou=company1,ou=Sweden," + base);
 	}
 }

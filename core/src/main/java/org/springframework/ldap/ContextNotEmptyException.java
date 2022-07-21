@@ -25,7 +25,7 @@ package org.springframework.ldap;
  */
 public class ContextNotEmptyException extends NamingException {
 
-    public ContextNotEmptyException(javax.naming.ContextNotEmptyException cause) {
-        super(cause);
-    }
+	public ContextNotEmptyException(javax.naming.ContextNotEmptyException cause) {
+		super(cause);
+	}
 }

@@ -34,58 +34,58 @@ import java.io.File;
  * @since 1.3.2
  */
 public final class EmbeddedLdapServer {
-    private final DirectoryService directoryService;
-    private final LdapServer ldapServer;
-    private static File workingDirectory;
+	private final DirectoryService directoryService;
+	private final LdapServer ldapServer;
+	private static File workingDirectory;
 
-    private EmbeddedLdapServer(DirectoryService directoryService,
-                               LdapServer ldapServer) {
-        this.directoryService = directoryService;
-        this.ldapServer = ldapServer;
-    }
+	private EmbeddedLdapServer(DirectoryService directoryService,
+							   LdapServer ldapServer) {
+		this.directoryService = directoryService;
+		this.ldapServer = ldapServer;
+	}
 
-    public static EmbeddedLdapServer newEmbeddedServer(String defaultPartitionName, String defaultPartitionSuffix, int port)
-            throws Exception{
-        workingDirectory = new File(System.getProperty("java.io.tmpdir") + "/apacheds-test1");
-        FileUtils.deleteDirectory(workingDirectory);
+	public static EmbeddedLdapServer newEmbeddedServer(String defaultPartitionName, String defaultPartitionSuffix, int port)
+			throws Exception{
+		workingDirectory = new File(System.getProperty("java.io.tmpdir") + "/apacheds-test1");
+		FileUtils.deleteDirectory(workingDirectory);
 
-        DefaultDirectoryService directoryService = new DefaultDirectoryService();
-        directoryService.setShutdownHookEnabled(true);
-        directoryService.setAllowAnonymousAccess(true);
+		DefaultDirectoryService directoryService = new DefaultDirectoryService();
+		directoryService.setShutdownHookEnabled(true);
+		directoryService.setAllowAnonymousAccess(true);
 
-        directoryService.setWorkingDirectory(workingDirectory);
-        directoryService.getChangeLog().setEnabled( false );
+		directoryService.setWorkingDirectory(workingDirectory);
+		directoryService.getChangeLog().setEnabled( false );
 
-        JdbmPartition partition = new JdbmPartition();
-        partition.setId(defaultPartitionName);
-        partition.setSuffix(defaultPartitionSuffix);
-        directoryService.addPartition(partition);
+		JdbmPartition partition = new JdbmPartition();
+		partition.setId(defaultPartitionName);
+		partition.setSuffix(defaultPartitionSuffix);
+		directoryService.addPartition(partition);
 
-        directoryService.startup();
+		directoryService.startup();
 
-        // Inject the apache root entry if it does not already exist
-        if ( !directoryService.getAdminSession().exists( partition.getSuffixDn() ) )
-        {
-            ServerEntry entry = directoryService.newEntry(new LdapDN(defaultPartitionSuffix));
-            entry.add("objectClass", "top", "domain", "extensibleObject");
-            entry.add("dc", defaultPartitionName);
-            directoryService.getAdminSession().add( entry );
-        }
+		// Inject the apache root entry if it does not already exist
+		if ( !directoryService.getAdminSession().exists( partition.getSuffixDn() ) )
+		{
+			ServerEntry entry = directoryService.newEntry(new LdapDN(defaultPartitionSuffix));
+			entry.add("objectClass", "top", "domain", "extensibleObject");
+			entry.add("dc", defaultPartitionName);
+			directoryService.getAdminSession().add( entry );
+		}
 
-        LdapServer ldapServer = new LdapServer();
-        ldapServer.setDirectoryService(directoryService);
+		LdapServer ldapServer = new LdapServer();
+		ldapServer.setDirectoryService(directoryService);
 
-        TcpTransport ldapTransport = new TcpTransport(port);
-        ldapServer.setTransports( ldapTransport );
-        ldapServer.start();
+		TcpTransport ldapTransport = new TcpTransport(port);
+		ldapServer.setTransports( ldapTransport );
+		ldapServer.start();
 
-        return new EmbeddedLdapServer(directoryService, ldapServer);
-    }
+		return new EmbeddedLdapServer(directoryService, ldapServer);
+	}
 
-    public void shutdown() throws Exception {
-        ldapServer.stop();
-        directoryService.shutdown();
+	public void shutdown() throws Exception {
+		ldapServer.stop();
+		directoryService.shutdown();
 
-        FileUtils.deleteDirectory(workingDirectory);
-    }
+		FileUtils.deleteDirectory(workingDirectory);
+	}
 }

@@ -24,19 +24,19 @@ import static org.mockito.Mockito.mock;
  * @author Mattias Hellborg Arthursson
  */
 public class MockFactoryBean extends AbstractFactoryBean<Object> {
-    private final Class<?> clazz;
+	private final Class<?> clazz;
 
-    public MockFactoryBean(Class<?> clazz) {
-        this.clazz = clazz;
-    }
+	public MockFactoryBean(Class<?> clazz) {
+		this.clazz = clazz;
+	}
 
-    @Override
-    public Class<?> getObjectType() {
-        return clazz;
-    }
+	@Override
+	public Class<?> getObjectType() {
+		return clazz;
+	}
 
-    @Override
-    protected Object createInstance() throws Exception {
-        return mock(clazz);
-    }
+	@Override
+	protected Object createInstance() throws Exception {
+		return mock(clazz);
+	}
 }

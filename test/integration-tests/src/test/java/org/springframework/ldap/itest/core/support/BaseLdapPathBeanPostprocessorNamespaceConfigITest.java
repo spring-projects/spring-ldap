@@ -33,30 +33,30 @@ public class BaseLdapPathBeanPostprocessorNamespaceConfigITest {
 	@Test
 	public void testPostProcessBeforeInitializationWithNamespaceConfig() throws Exception {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
-                "/conf/baseLdapPathPostProcessorNamespaceTestContext.xml");
+				"/conf/baseLdapPathPostProcessorNamespaceTestContext.xml");
 		DummyBaseLdapPathAware tested = ctx.getBean(DummyBaseLdapPathAware.class);
 
 		DistinguishedName base = tested.getBase();
 		assertThat(base).isNotNull();
 		assertThat(base).isEqualTo(new DistinguishedName("dc=jayway,dc=se"));
 
-        DummyBaseLdapNameAware otherTested = ctx.getBean(DummyBaseLdapNameAware.class);
-        assertThat(otherTested.getBaseLdapPath()).isEqualTo(LdapUtils.newLdapName("dc=jayway,dc=se"));
-    }
+		DummyBaseLdapNameAware otherTested = ctx.getBean(DummyBaseLdapNameAware.class);
+		assertThat(otherTested.getBaseLdapPath()).isEqualTo(LdapUtils.newLdapName("dc=jayway,dc=se"));
+	}
 
-    @Test
-    public void testPostProcessBeforeInitializationWithNamespaceConfigAndPooling() throws Exception {
-        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
-                "/conf/baseLdapPathPostProcessorPoolingNamespaceTestContext.xml");
-        DummyBaseLdapPathAware tested = ctx.getBean(DummyBaseLdapPathAware.class);
+	@Test
+	public void testPostProcessBeforeInitializationWithNamespaceConfigAndPooling() throws Exception {
+		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
+				"/conf/baseLdapPathPostProcessorPoolingNamespaceTestContext.xml");
+		DummyBaseLdapPathAware tested = ctx.getBean(DummyBaseLdapPathAware.class);
 
-        DistinguishedName base = tested.getBase();
-        assertThat(base).isNotNull();
-        assertThat(base).isEqualTo(new DistinguishedName("dc=jayway,dc=se"));
+		DistinguishedName base = tested.getBase();
+		assertThat(base).isNotNull();
+		assertThat(base).isEqualTo(new DistinguishedName("dc=jayway,dc=se"));
 
-        DummyBaseLdapNameAware otherTested = ctx.getBean(DummyBaseLdapNameAware.class);
-        assertThat(otherTested.getBaseLdapPath()).isEqualTo(LdapUtils.newLdapName("dc=jayway,dc=se"));
-    }
+		DummyBaseLdapNameAware otherTested = ctx.getBean(DummyBaseLdapNameAware.class);
+		assertThat(otherTested.getBaseLdapPath()).isEqualTo(LdapUtils.newLdapName("dc=jayway,dc=se"));
+	}
 
 
 }

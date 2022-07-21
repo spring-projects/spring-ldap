@@ -37,166 +37,166 @@ import javax.naming.ldap.LdapContext;
  * @author Anindya Chatterjee
  */
 public class DelegatingLdapContext extends DelegatingDirContext implements LdapContext {
-    private LdapContext delegateLdapContext;
+	private LdapContext delegateLdapContext;
 
-    /**
-     * Create a new delegating ldap context for the specified pool, context and context type.
-     *
-     * @param keyedObjectPool The pool the delegate context was checked out from.
-     * @param delegateLdapContext The ldap context to delegate operations to.
-     * @param dirContextType The type of context, used as a key for the pool.
-     * @throws IllegalArgumentException if any of the arguments are null
-     */
-    public DelegatingLdapContext(KeyedObjectPool<Object,Object> keyedObjectPool,
-                                 LdapContext delegateLdapContext, DirContextType dirContextType) {
-        super(keyedObjectPool, delegateLdapContext, dirContextType);
-        Assert.notNull(delegateLdapContext, "delegateLdapContext may not be null");
+	/**
+	 * Create a new delegating ldap context for the specified pool, context and context type.
+	 *
+	 * @param keyedObjectPool The pool the delegate context was checked out from.
+	 * @param delegateLdapContext The ldap context to delegate operations to.
+	 * @param dirContextType The type of context, used as a key for the pool.
+	 * @throws IllegalArgumentException if any of the arguments are null
+	 */
+	public DelegatingLdapContext(KeyedObjectPool<Object,Object> keyedObjectPool,
+								 LdapContext delegateLdapContext, DirContextType dirContextType) {
+		super(keyedObjectPool, delegateLdapContext, dirContextType);
+		Assert.notNull(delegateLdapContext, "delegateLdapContext may not be null");
 
-        this.delegateLdapContext = delegateLdapContext;
-    }
-
-
-    //***** Helper Methods *****//
-
-    /**
-     * @return The direct delegate for this ldap context proxy
-     */
-    public LdapContext getDelegateLdapContext() {
-        return this.delegateLdapContext;
-    }
-
-    // cannot return subtype in overridden method unless Java5
-    public DirContext getDelegateDirContext() {
-        return this.getDelegateLdapContext();
-    }
-
-    /**
-     * Recursivley inspect delegates until a non-delegating ldap context is found.
-     *
-     * @return The innermost (real) DirContext that is being delegated to.
-     */
-    public LdapContext getInnermostDelegateLdapContext() {
-        final LdapContext delegateLdapContext = this.getDelegateLdapContext();
-
-        if (delegateLdapContext instanceof DelegatingLdapContext) {
-            return ((DelegatingLdapContext)delegateLdapContext).getInnermostDelegateLdapContext();
-        }
-
-        return delegateLdapContext;
-    }
-
-    protected void assertOpen() throws NamingException {
-        if (this.delegateLdapContext == null) {
-            throw new NamingException("LdapContext is closed.");
-        }
-
-        super.assertOpen();
-    }
+		this.delegateLdapContext = delegateLdapContext;
+	}
 
 
-    //***** Object methods *****//
+	//***** Helper Methods *****//
 
-    /**
-     * @see Object#equals(Object)
-     */
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof LdapContext)) {
-            return false;
-        }
+	/**
+	 * @return The direct delegate for this ldap context proxy
+	 */
+	public LdapContext getDelegateLdapContext() {
+		return this.delegateLdapContext;
+	}
 
-        final LdapContext thisLdapContext = this.getInnermostDelegateLdapContext();
-        LdapContext otherLdapContext = (LdapContext)obj;
-        if (otherLdapContext instanceof DelegatingLdapContext) {
-            otherLdapContext = ((DelegatingLdapContext)otherLdapContext).getInnermostDelegateLdapContext();
-        }
+	// cannot return subtype in overridden method unless Java5
+	public DirContext getDelegateDirContext() {
+		return this.getDelegateLdapContext();
+	}
 
-        return thisLdapContext == otherLdapContext || (thisLdapContext != null && thisLdapContext.equals(otherLdapContext));
-    }
+	/**
+	 * Recursivley inspect delegates until a non-delegating ldap context is found.
+	 *
+	 * @return The innermost (real) DirContext that is being delegated to.
+	 */
+	public LdapContext getInnermostDelegateLdapContext() {
+		final LdapContext delegateLdapContext = this.getDelegateLdapContext();
 
-    /**
-     * @see Object#hashCode()
-     */
-    public int hashCode() {
-        final LdapContext context = this.getInnermostDelegateLdapContext();
-        return (context != null ? context.hashCode() : 0);
-    }
+		if (delegateLdapContext instanceof DelegatingLdapContext) {
+			return ((DelegatingLdapContext)delegateLdapContext).getInnermostDelegateLdapContext();
+		}
 
-    /**
-     * @see Object#toString()
-     */
-    public String toString() {
-        final LdapContext context = this.getInnermostDelegateLdapContext();
-        return (context != null ? context.toString() : "LdapContext is closed");
-    }
+		return delegateLdapContext;
+	}
+
+	protected void assertOpen() throws NamingException {
+		if (this.delegateLdapContext == null) {
+			throw new NamingException("LdapContext is closed.");
+		}
+
+		super.assertOpen();
+	}
 
 
-    //***** LdapContext Interface Delegates *****//
+	//***** Object methods *****//
 
-    /**
-     * @see LdapContext#extendedOperation(ExtendedRequest)
-     */
-    public ExtendedResponse extendedOperation(ExtendedRequest request) throws NamingException {
-        this.assertOpen();
-        return this.getDelegateLdapContext().extendedOperation(request);
-    }
+	/**
+	 * @see Object#equals(Object)
+	 */
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof LdapContext)) {
+			return false;
+		}
 
-    /**
-     * @see LdapContext#getConnectControls()
-     */
-    public Control[] getConnectControls() throws NamingException {
-        this.assertOpen();
-        return this.getDelegateLdapContext().getConnectControls();
-    }
+		final LdapContext thisLdapContext = this.getInnermostDelegateLdapContext();
+		LdapContext otherLdapContext = (LdapContext)obj;
+		if (otherLdapContext instanceof DelegatingLdapContext) {
+			otherLdapContext = ((DelegatingLdapContext)otherLdapContext).getInnermostDelegateLdapContext();
+		}
 
-    /**
-     * @see LdapContext#getRequestControls()
-     */
-    public Control[] getRequestControls() throws NamingException {
-        this.assertOpen();
-        return this.getDelegateLdapContext().getRequestControls();
-    }
+		return thisLdapContext == otherLdapContext || (thisLdapContext != null && thisLdapContext.equals(otherLdapContext));
+	}
 
-    /**
-     * @see LdapContext#getResponseControls()
-     */
-    public Control[] getResponseControls() throws NamingException {
-        this.assertOpen();
-        return this.getDelegateLdapContext().getResponseControls();
-    }
+	/**
+	 * @see Object#hashCode()
+	 */
+	public int hashCode() {
+		final LdapContext context = this.getInnermostDelegateLdapContext();
+		return (context != null ? context.hashCode() : 0);
+	}
 
-    /**
-     * @see LdapContext#newInstance(Control[])
-     */
-    public LdapContext newInstance(Control[] requestControls) throws NamingException {
-        throw new UnsupportedOperationException("Cannot call newInstance on a pooled context");
-    }
+	/**
+	 * @see Object#toString()
+	 */
+	public String toString() {
+		final LdapContext context = this.getInnermostDelegateLdapContext();
+		return (context != null ? context.toString() : "LdapContext is closed");
+	}
 
-    /**
-     * @see LdapContext#reconnect(Control[])
-     */
-    public void reconnect(Control[] connCtls) throws NamingException {
-        throw new UnsupportedOperationException("Cannot call reconnect on a pooled context");
-    }
 
-    /**
-     * @see LdapContext#setRequestControls(Control[])
-     */
-    public void setRequestControls(Control[] requestControls) throws NamingException {
-        throw new UnsupportedOperationException("Cannot call setRequestControls on a pooled context");
-    }
+	//***** LdapContext Interface Delegates *****//
 
-    /**
-     * @see DelegatingDirContext#close()
-     */
-    public void close() throws NamingException {
-        if (this.delegateLdapContext == null) {
-            return;
-        }
+	/**
+	 * @see LdapContext#extendedOperation(ExtendedRequest)
+	 */
+	public ExtendedResponse extendedOperation(ExtendedRequest request) throws NamingException {
+		this.assertOpen();
+		return this.getDelegateLdapContext().extendedOperation(request);
+	}
 
-        super.close();
-        this.delegateLdapContext = null;
-    }
+	/**
+	 * @see LdapContext#getConnectControls()
+	 */
+	public Control[] getConnectControls() throws NamingException {
+		this.assertOpen();
+		return this.getDelegateLdapContext().getConnectControls();
+	}
+
+	/**
+	 * @see LdapContext#getRequestControls()
+	 */
+	public Control[] getRequestControls() throws NamingException {
+		this.assertOpen();
+		return this.getDelegateLdapContext().getRequestControls();
+	}
+
+	/**
+	 * @see LdapContext#getResponseControls()
+	 */
+	public Control[] getResponseControls() throws NamingException {
+		this.assertOpen();
+		return this.getDelegateLdapContext().getResponseControls();
+	}
+
+	/**
+	 * @see LdapContext#newInstance(Control[])
+	 */
+	public LdapContext newInstance(Control[] requestControls) throws NamingException {
+		throw new UnsupportedOperationException("Cannot call newInstance on a pooled context");
+	}
+
+	/**
+	 * @see LdapContext#reconnect(Control[])
+	 */
+	public void reconnect(Control[] connCtls) throws NamingException {
+		throw new UnsupportedOperationException("Cannot call reconnect on a pooled context");
+	}
+
+	/**
+	 * @see LdapContext#setRequestControls(Control[])
+	 */
+	public void setRequestControls(Control[] requestControls) throws NamingException {
+		throw new UnsupportedOperationException("Cannot call setRequestControls on a pooled context");
+	}
+
+	/**
+	 * @see DelegatingDirContext#close()
+	 */
+	public void close() throws NamingException {
+		if (this.delegateLdapContext == null) {
+			return;
+		}
+
+		super.close();
+		this.delegateLdapContext = null;
+	}
 }

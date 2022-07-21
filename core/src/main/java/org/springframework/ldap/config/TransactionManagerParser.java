@@ -38,80 +38,80 @@ import static org.springframework.ldap.config.ParserUtils.getString;
  * @author Mattias Hellborg Arthursson
  */
 public class TransactionManagerParser implements BeanDefinitionParser {
-    private static final String ATT_CONTEXT_SOURCE_REF = "context-source-ref";
-    private static final String ATT_DATA_SOURCE_REF = "data-source-ref";
-    private static final String ATT_SESSION_FACTORY_REF = "session-factory-ref";
+	private static final String ATT_CONTEXT_SOURCE_REF = "context-source-ref";
+	private static final String ATT_DATA_SOURCE_REF = "data-source-ref";
+	private static final String ATT_SESSION_FACTORY_REF = "session-factory-ref";
 
-    private static final String ATT_TEMP_SUFFIX = "temp-suffix";
-    private static final String ATT_SUBTREE_NODE = "subtree-node";
+	private static final String ATT_TEMP_SUFFIX = "temp-suffix";
+	private static final String ATT_SUBTREE_NODE = "subtree-node";
 
-    private static final String DEFAULT_ID = "transactionManager";
+	private static final String DEFAULT_ID = "transactionManager";
 
-    @Override
-    public BeanDefinition parse(Element element, ParserContext parserContext) {
+	@Override
+	public BeanDefinition parse(Element element, ParserContext parserContext) {
 
-        String contextSourceRef = getString(element, ATT_CONTEXT_SOURCE_REF, ContextSourceParser.DEFAULT_ID);
-        String dataSourceRef = element.getAttribute(ATT_DATA_SOURCE_REF);
-        String sessionFactoryRef = element.getAttribute(ATT_SESSION_FACTORY_REF);
+		String contextSourceRef = getString(element, ATT_CONTEXT_SOURCE_REF, ContextSourceParser.DEFAULT_ID);
+		String dataSourceRef = element.getAttribute(ATT_DATA_SOURCE_REF);
+		String sessionFactoryRef = element.getAttribute(ATT_SESSION_FACTORY_REF);
 
-        if(StringUtils.hasText(dataSourceRef) && StringUtils.hasText(sessionFactoryRef)) {
-            throw new IllegalArgumentException(
-                    String.format("Only one of %s and %s can be specified",
-                            ATT_DATA_SOURCE_REF, ATT_SESSION_FACTORY_REF));
-        }
+		if(StringUtils.hasText(dataSourceRef) && StringUtils.hasText(sessionFactoryRef)) {
+			throw new IllegalArgumentException(
+					String.format("Only one of %s and %s can be specified",
+							ATT_DATA_SOURCE_REF, ATT_SESSION_FACTORY_REF));
+		}
 
-        BeanDefinitionBuilder builder;
-        if(StringUtils.hasText(dataSourceRef)) {
-            builder = BeanDefinitionBuilder.rootBeanDefinition(ContextSourceAndDataSourceTransactionManager.class);
-            builder.addPropertyReference("dataSource", dataSourceRef);
-        } else if(StringUtils.hasText(sessionFactoryRef)) {
-            builder = BeanDefinitionBuilder.rootBeanDefinition(ContextSourceAndHibernateTransactionManager.class);
-            builder.addPropertyReference("sessionFactory", sessionFactoryRef);
-        } else {
-            // Standard transaction manager
-            builder = BeanDefinitionBuilder.rootBeanDefinition(ContextSourceTransactionManager.class);
-        }
+		BeanDefinitionBuilder builder;
+		if(StringUtils.hasText(dataSourceRef)) {
+			builder = BeanDefinitionBuilder.rootBeanDefinition(ContextSourceAndDataSourceTransactionManager.class);
+			builder.addPropertyReference("dataSource", dataSourceRef);
+		} else if(StringUtils.hasText(sessionFactoryRef)) {
+			builder = BeanDefinitionBuilder.rootBeanDefinition(ContextSourceAndHibernateTransactionManager.class);
+			builder.addPropertyReference("sessionFactory", sessionFactoryRef);
+		} else {
+			// Standard transaction manager
+			builder = BeanDefinitionBuilder.rootBeanDefinition(ContextSourceTransactionManager.class);
+		}
 
-        builder.addPropertyReference("contextSource", contextSourceRef);
+		builder.addPropertyReference("contextSource", contextSourceRef);
 
-        Element defaultStrategyChild = DomUtils.getChildElementByTagName(element, Elements.DEFAULT_RENAMING_STRATEGY);
-        Element differentSubtreeChild = DomUtils.getChildElementByTagName(element, Elements.DIFFERENT_SUBTREE_RENAMING_STRATEGY);
+		Element defaultStrategyChild = DomUtils.getChildElementByTagName(element, Elements.DEFAULT_RENAMING_STRATEGY);
+		Element differentSubtreeChild = DomUtils.getChildElementByTagName(element, Elements.DIFFERENT_SUBTREE_RENAMING_STRATEGY);
 
-        if(defaultStrategyChild != null) {
-            builder.addPropertyValue("renamingStrategy", parseDefaultRenamingStrategy(defaultStrategyChild));
-        }
+		if(defaultStrategyChild != null) {
+			builder.addPropertyValue("renamingStrategy", parseDefaultRenamingStrategy(defaultStrategyChild));
+		}
 
-        if(differentSubtreeChild != null) {
-            builder.addPropertyValue("renamingStrategy", parseDifferentSubtreeRenamingStrategy(differentSubtreeChild));
-        }
+		if(differentSubtreeChild != null) {
+			builder.addPropertyValue("renamingStrategy", parseDifferentSubtreeRenamingStrategy(differentSubtreeChild));
+		}
 
-        String id = getString(element, AbstractBeanDefinitionParser.ID_ATTRIBUTE, DEFAULT_ID);
+		String id = getString(element, AbstractBeanDefinitionParser.ID_ATTRIBUTE, DEFAULT_ID);
 
-        BeanDefinition beanDefinition = builder.getBeanDefinition();
-        parserContext.registerBeanComponent(new BeanComponentDefinition(beanDefinition, id));
+		BeanDefinition beanDefinition = builder.getBeanDefinition();
+		parserContext.registerBeanComponent(new BeanComponentDefinition(beanDefinition, id));
 
-        return beanDefinition;
-    }
+		return beanDefinition;
+	}
 
-    private BeanDefinition parseDifferentSubtreeRenamingStrategy(Element element) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(DifferentSubtreeTempEntryRenamingStrategy.class);
+	private BeanDefinition parseDifferentSubtreeRenamingStrategy(Element element) {
+		BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(DifferentSubtreeTempEntryRenamingStrategy.class);
 
-        String subtreeNode = element.getAttribute(ATT_SUBTREE_NODE);
-        Assert.hasText(subtreeNode, ATT_SUBTREE_NODE + " must be specified");
+		String subtreeNode = element.getAttribute(ATT_SUBTREE_NODE);
+		Assert.hasText(subtreeNode, ATT_SUBTREE_NODE + " must be specified");
 
-        builder.addConstructorArgValue(subtreeNode);
+		builder.addConstructorArgValue(subtreeNode);
 
-        return builder.getBeanDefinition();
-    }
+		return builder.getBeanDefinition();
+	}
 
-    public BeanDefinition parseDefaultRenamingStrategy(Element element) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(DefaultTempEntryRenamingStrategy.class);
+	public BeanDefinition parseDefaultRenamingStrategy(Element element) {
+		BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(DefaultTempEntryRenamingStrategy.class);
 
-        builder.addPropertyValue("tempSuffix",
-                getString(element, ATT_TEMP_SUFFIX,
-                        DefaultTempEntryRenamingStrategy.DEFAULT_TEMP_SUFFIX));
+		builder.addPropertyValue("tempSuffix",
+				getString(element, ATT_TEMP_SUFFIX,
+						DefaultTempEntryRenamingStrategy.DEFAULT_TEMP_SUFFIX));
 
-        return builder.getBeanDefinition();
-    }
+		return builder.getBeanDefinition();
+	}
 
 }

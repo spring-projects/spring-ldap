@@ -25,7 +25,7 @@ package org.springframework.ldap;
  */
 public class NoPermissionException extends NamingSecurityException {
 
-    public NoPermissionException(javax.naming.NoPermissionException cause) {
-        super(cause);
-    }
+	public NoPermissionException(javax.naming.NoPermissionException cause) {
+		super(cause);
+	}
 }

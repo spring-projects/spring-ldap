@@ -22,18 +22,18 @@ package org.springframework.ldap.core;
  * @deprecated {@link DistinguishedName} and associated classes are deprecated as of 2.0.
  */
 public interface DnParser {
-    /**
-     * Parse a full Distinguished Name.
-     * 
-     * @return the <code>DistinguishedName</code> corresponding to the parsed
-     *         stream.
-     */
-    public DistinguishedName dn() throws ParseException;
+	/**
+	 * Parse a full Distinguished Name.
+	 * 
+	 * @return the <code>DistinguishedName</code> corresponding to the parsed
+	 *		 stream.
+	 */
+	public DistinguishedName dn() throws ParseException;
 
-    /**
-     * Parse a Relative Distinguished Name.
-     * 
-     * @return the next rdn on the stream.
-     */
-    public LdapRdn rdn() throws ParseException;
+	/**
+	 * Parse a Relative Distinguished Name.
+	 * 
+	 * @return the next rdn on the stream.
+	 */
+	public LdapRdn rdn() throws ParseException;
 }

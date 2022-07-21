@@ -39,44 +39,44 @@ public class OdmPersonDaoImpl implements PersonDao {
 
 	private LdapTemplate ldapTemplate;
 
-    @Override
+	@Override
 	public void create(Person person) {
 		ldapTemplate.create(person);
 	}
 
-    @Override
+	@Override
 	public void update(Person person) {
 		ldapTemplate.update(person);
 	}
 
-    @Override
+	@Override
 	public void delete(Person person) {
 		ldapTemplate.delete(ldapTemplate.findByDn(buildDn(person), Person.class));
 	}
 
-    @Override
+	@Override
 	public List<String> getAllPersonNames() {
-        return ldapTemplate.search(query()
-                .attributes("cn")
-                .where("objectclass").is("person"),
-                new AttributesMapper<String>() {
-                    public String mapFromAttributes(Attributes attrs) throws NamingException {
-                        return attrs.get("cn").get().toString();
-                    }
-                });
-    }
-
-    @Override
-	public List<Person> findAll() {
-        return ldapTemplate.findAll(Person.class);
+		return ldapTemplate.search(query()
+				.attributes("cn")
+				.where("objectclass").is("person"),
+				new AttributesMapper<String>() {
+					public String mapFromAttributes(Attributes attrs) throws NamingException {
+						return attrs.get("cn").get().toString();
+					}
+				});
 	}
 
-    @Override
+	@Override
+	public List<Person> findAll() {
+		return ldapTemplate.findAll(Person.class);
+	}
+
+	@Override
 	public Person findByPrimaryKey(String country, String company, String fullname) {
 		LdapName dn = buildDn(country, company, fullname);
-        Person person = ldapTemplate.findByDn(dn, Person.class);
+		Person person = ldapTemplate.findByDn(dn, Person.class);
 
-        return person;
+		return person;
 	}
 
 	private LdapName buildDn(Person person) {
@@ -84,11 +84,11 @@ public class OdmPersonDaoImpl implements PersonDao {
 	}
 
 	private LdapName buildDn(String country, String company, String fullname) {
-        return LdapNameBuilder.newInstance()
-                .add("c", country)
-                .add("ou", company)
-                .add("cn", fullname)
-                .build();
+		return LdapNameBuilder.newInstance()
+				.add("c", country)
+				.add("ou", company)
+				.add("cn", fullname)
+				.build();
 	}
 
 	public void setLdapTemplate(LdapTemplate ldapTemplate) {

@@ -27,25 +27,25 @@ import org.springframework.ldap.NamingException;
  */
 public class CreateControlFailedException extends NamingException {
 
-    /**
-     * Create a new CreateControlFailedException.
-     * 
-     * @param msg
-     *            the detail message
-     */
-    public CreateControlFailedException(String msg) {
-        super(msg);
-    }
+	/**
+	 * Create a new CreateControlFailedException.
+	 * 
+	 * @param msg
+	 *			the detail message
+	 */
+	public CreateControlFailedException(String msg) {
+		super(msg);
+	}
 
-    /**
-     * Create a new CreateControlFailedException.
-     * 
-     * @param msg
-     *            the detail message
-     * @param cause
-     *            the root cause (if any)
-     */
-    public CreateControlFailedException(String msg, Throwable cause) {
-        super(msg, cause);
-    }
+	/**
+	 * Create a new CreateControlFailedException.
+	 * 
+	 * @param msg
+	 *			the detail message
+	 * @param cause
+	 *			the root cause (if any)
+	 */
+	public CreateControlFailedException(String msg, Throwable cause) {
+		super(msg, cause);
+	}
 }

@@ -37,85 +37,85 @@ import java.lang.reflect.Method;
  * @since 1.2
  */
 public class TransactionAwareDirContextInvocationHandler implements
-        InvocationHandler {
+		InvocationHandler {
 
-    private static Logger log = LoggerFactory.getLogger(TransactionAwareDirContextInvocationHandler.class);
+	private static Logger log = LoggerFactory.getLogger(TransactionAwareDirContextInvocationHandler.class);
 
-    private DirContext target;
+	private DirContext target;
 
-    private ContextSource contextSource;
+	private ContextSource contextSource;
 
-    /**
-     * Constructor.
-     * 
-     * @param target
-     *            The target DirContext.
-     * @param contextSource
-     *            The transactional ContextSource, needed to get hold of the
-     *            current transaction's {@link DirContextHolder}.
-     */
-    public TransactionAwareDirContextInvocationHandler(DirContext target,
-            ContextSource contextSource) {
-        this.target = target;
-        this.contextSource = contextSource;
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param target
+	 *			The target DirContext.
+	 * @param contextSource
+	 *			The transactional ContextSource, needed to get hold of the
+	 *			current transaction's {@link DirContextHolder}.
+	 */
+	public TransactionAwareDirContextInvocationHandler(DirContext target,
+			ContextSource contextSource) {
+		this.target = target;
+		this.contextSource = contextSource;
+	}
 
-    /*
-     * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
-     *      java.lang.reflect.Method, java.lang.Object[])
-     */
-    public Object invoke(Object proxy, Method method, Object[] args)
-            throws Throwable {
+	/*
+	 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
+	 *	  java.lang.reflect.Method, java.lang.Object[])
+	 */
+	public Object invoke(Object proxy, Method method, Object[] args)
+			throws Throwable {
 
-        String methodName = method.getName();
-        if (methodName.equals("getTargetContext")) {
-            return target;
-        } else if (methodName.equals("equals")) {
-            // Only consider equal when proxies are identical.
-            return (proxy == args[0] ? Boolean.TRUE : Boolean.FALSE);
-        } else if (methodName.equals("hashCode")) {
-            // Use hashCode of Connection proxy.
-            return hashCode();
-        } else if (methodName.equals("close")) {
-            doCloseConnection(target, contextSource);
-            return null;
-        } else if (LdapTransactionUtils
-                .isSupportedWriteTransactionOperation(methodName)) {
-            // Store transaction data and allow operation to proceed.
-            CompensatingTransactionUtils.performOperation(contextSource,
-                    target, method, args);
-            return null;
-        } else {
-            try {
-                return method.invoke(target, args);
-            } catch (InvocationTargetException e) {
-                throw e.getTargetException();
-            }
-        }
-    }
+		String methodName = method.getName();
+		if (methodName.equals("getTargetContext")) {
+			return target;
+		} else if (methodName.equals("equals")) {
+			// Only consider equal when proxies are identical.
+			return (proxy == args[0] ? Boolean.TRUE : Boolean.FALSE);
+		} else if (methodName.equals("hashCode")) {
+			// Use hashCode of Connection proxy.
+			return hashCode();
+		} else if (methodName.equals("close")) {
+			doCloseConnection(target, contextSource);
+			return null;
+		} else if (LdapTransactionUtils
+				.isSupportedWriteTransactionOperation(methodName)) {
+			// Store transaction data and allow operation to proceed.
+			CompensatingTransactionUtils.performOperation(contextSource,
+					target, method, args);
+			return null;
+		} else {
+			try {
+				return method.invoke(target, args);
+			} catch (InvocationTargetException e) {
+				throw e.getTargetException();
+			}
+		}
+	}
 
-    /**
-     * Close the supplied context, but only if it is not associated with the
-     * current transaction.
-     * 
-     * @param context
-     *            the DirContext to close.
-     * @param contextSource
-     *            the ContextSource bound to the transaction.
-     * @throws NamingException
-     */
-    void doCloseConnection(DirContext context, ContextSource contextSource)
-            throws javax.naming.NamingException {
-        DirContextHolder transactionContextHolder = (DirContextHolder) TransactionSynchronizationManager
-                .getResource(contextSource);
-        if (transactionContextHolder == null
-                || transactionContextHolder.getCtx() != context) {
-            log.debug("Closing context");
-            // This is not the transactional context or the transaction is
-            // no longer active - we should close it.
-            context.close();
-        } else {
-            log.debug("Leaving transactional context open");
-        }
-    }
+	/**
+	 * Close the supplied context, but only if it is not associated with the
+	 * current transaction.
+	 * 
+	 * @param context
+	 *			the DirContext to close.
+	 * @param contextSource
+	 *			the ContextSource bound to the transaction.
+	 * @throws NamingException
+	 */
+	void doCloseConnection(DirContext context, ContextSource contextSource)
+			throws javax.naming.NamingException {
+		DirContextHolder transactionContextHolder = (DirContextHolder) TransactionSynchronizationManager
+				.getResource(contextSource);
+		if (transactionContextHolder == null
+				|| transactionContextHolder.getCtx() != context) {
+			log.debug("Closing context");
+			// This is not the transactional context or the transaction is
+			// no longer active - we should close it.
+			context.close();
+		} else {
+			log.debug("Leaving transactional context open");
+		}
+	}
 }

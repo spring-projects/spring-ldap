@@ -27,11 +27,11 @@ import javax.naming.directory.ModificationItem;
  */
 public interface AttributeModificationsAware {
 
-    /**
-     * Creates an array of which attributes have been changed, added or removed
-     * since the initialization of this object.
-     * 
-     * @return an array of modification items.
-     */
-    ModificationItem[] getModificationItems();
+	/**
+	 * Creates an array of which attributes have been changed, added or removed
+	 * since the initialization of this object.
+	 * 
+	 * @return an array of modification items.
+	 */
+	ModificationItem[] getModificationItems();
 }

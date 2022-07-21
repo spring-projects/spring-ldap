@@ -143,10 +143,10 @@ public class DistinguishedName implements Name {
 
 	public static final String KEY_CASE_FOLD_NONE = "none";
 
-    private static final String MANGLED_DOUBLE_QUOTES = "\\\\\"";
-    private static final String PROPER_DOUBLE_QUOTES = "\\\"";
+	private static final String MANGLED_DOUBLE_QUOTES = "\\\\\"";
+	private static final String PROPER_DOUBLE_QUOTES = "\\\"";
 
-    private static final Logger LOG = LoggerFactory.getLogger(DistinguishedName.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DistinguishedName.class);
 
 	private static final boolean COMPACT = true;
 
@@ -158,9 +158,9 @@ public class DistinguishedName implements Name {
 	 * An empty, unmodifiable DistinguishedName.
 	 */
 	public static final DistinguishedName EMPTY_PATH = new DistinguishedName(Collections.EMPTY_LIST);
-    private static final int DEFAULT_BUFFER_SIZE = 256;
+	private static final int DEFAULT_BUFFER_SIZE = 256;
 
-    private List names;
+	private List names;
 
 	/**
 	 * Construct a new DistinguishedName with no components.
@@ -253,7 +253,7 @@ public class DistinguishedName implements Name {
 			tempPath = path;
 		}
 
-        tempPath = StringUtils.replace(tempPath, MANGLED_DOUBLE_QUOTES, PROPER_DOUBLE_QUOTES);
+		tempPath = StringUtils.replace(tempPath, MANGLED_DOUBLE_QUOTES, PROPER_DOUBLE_QUOTES);
 		return tempPath;
 	}
 
@@ -358,7 +358,7 @@ public class DistinguishedName implements Name {
 		// empty path
 		if (names.size() == 0) {
 			return "";
-        }
+		}
 
 		StringBuffer buffer = new StringBuffer(DEFAULT_BUFFER_SIZE);
 
@@ -415,13 +415,13 @@ public class DistinguishedName implements Name {
 
 		// this path must be at least as long
 		if (getNames().size() < shortlist.size()) {
-            return false;
-        }
+			return false;
+		}
 
 		// must have names
 		if (shortlist.size() == 0) {
-            return false;
-        }
+			return false;
+		}
 
 		Iterator longiter = getNames().iterator();
 		Iterator shortiter = shortlist.iterator();
@@ -436,11 +436,11 @@ public class DistinguishedName implements Name {
 
 		// Done?
 		if (!shortiter.hasNext() && longname.equals(shortname)) {
-            return true;
-        }
+			return true;
+		}
 		if (!longiter.hasNext()) {
-            return false;
-        }
+			return false;
+		}
 
 		// compare
 		while (longname.equals(shortname) && longiter.hasNext() && shortiter.hasNext()) {
@@ -449,7 +449,7 @@ public class DistinguishedName implements Name {
 		}
 
 		// Done
-        return !shortiter.hasNext() && longname.equals(shortname);
+		return !shortiter.hasNext() && longname.equals(shortname);
 
 	}
 
@@ -525,7 +525,7 @@ public class DistinguishedName implements Name {
 		if (path != null && this.startsWith(path)) {
 			for (int i = 0; i < path.size(); i++) {
 				this.removeFirst();
-            }
+			}
 		}
 	}
 
@@ -706,13 +706,13 @@ public class DistinguishedName implements Name {
 
 		// this path must be at least as long
 		if (getNames().size() < shortlist.size()) {
-            return false;
-        }
+			return false;
+		}
 
 		// must have names
 		if (shortlist.size() == 0) {
-            return false;
-        }
+			return false;
+		}
 
 		ListIterator longiter = getNames().listIterator(getNames().size());
 		ListIterator shortiter = shortlist.listIterator(shortlist.size());

@@ -31,14 +31,14 @@ import java.util.Set;
  * Typical configuration would appear as follows:
  * <pre>
  *   &lt;bean id="odmManager" class="org.springframework.ldap.odm.core.impl.OdmManagerImplFactoryBean"&gt;
- *       &lt;property name="converterManager" ref="converterManager" /&gt;
- *       &lt;property name="contextSource" ref="contextSource" /&gt;
- *       &lt;property name="managedClasses"&gt;
- *           &lt;set&gt;
- *               &lt;value&gt;org.myorg.myldapentries.Person&lt;/value&gt;
- *               &lt;value&gt;org.myorg.myldapentries.OrganizationalUnit&lt;/value&gt;
- *           &lt;/set&gt;
- *       &lt;/property&gt;
+ *	   &lt;property name="converterManager" ref="converterManager" /&gt;
+ *	   &lt;property name="contextSource" ref="contextSource" /&gt;
+ *	   &lt;property name="managedClasses"&gt;
+ *		   &lt;set&gt;
+ *			   &lt;value&gt;org.myorg.myldapentries.Person&lt;/value&gt;
+ *			   &lt;value&gt;org.myorg.myldapentries.OrganizationalUnit&lt;/value&gt;
+ *		   &lt;/set&gt;
+ *	   &lt;/property&gt;
  *   &lt;/bean&gt;
  * </pre>
  * 
@@ -46,73 +46,73 @@ import java.util.Set;
  * @deprecated This functionality is automatically available in LdapTemplate as of version 2.0
  */
 public final class OdmManagerImplFactoryBean implements FactoryBean {
-    private LdapOperations ldapOperations = null;
-    private Set<Class<?>> managedClasses=null;
-    private ConverterManager converterManager=null;
+	private LdapOperations ldapOperations = null;
+	private Set<Class<?>> managedClasses=null;
+	private ConverterManager converterManager=null;
 
-    /**
-     * Set the LdapOperations instance to use to interact with the LDAP directory.
-     *
-     * @param ldapOperations the LdapOperations instance to use.
-     */
-    public void setLdapOperations(LdapOperations ldapOperations) {
-        this.ldapOperations = ldapOperations;
-    }
+	/**
+	 * Set the LdapOperations instance to use to interact with the LDAP directory.
+	 *
+	 * @param ldapOperations the LdapOperations instance to use.
+	 */
+	public void setLdapOperations(LdapOperations ldapOperations) {
+		this.ldapOperations = ldapOperations;
+	}
 
-    /**
-     * Set the ContextSource to use to interact with the LDAP directory.
-     * @param contextSource The ContextSource to use.
-     */
-    public void setContextSource(ContextSource contextSource) {
-        this.ldapOperations = new LdapTemplate(contextSource);
-    }
-    
-    /**
-     * Set the list of {@link org.springframework.ldap.odm.annotations} 
-     * annotated classes the OdmManager will process.
-     * @param managedClasses The list of classes to manage.
-     */
-    public void setManagedClasses(Set<Class<?>> managedClasses) {
-        this.managedClasses=managedClasses;
-    }
-    
-    /**
-     * Set the ConverterManager to use to convert between LDAP
-     * and Java representations of attributes.
-     * @param converterManager The ConverterManager to use.
-     */
-    public void setConverterManager(ConverterManager converterManager) {
-        this.converterManager=converterManager;
-    }
+	/**
+	 * Set the ContextSource to use to interact with the LDAP directory.
+	 * @param contextSource The ContextSource to use.
+	 */
+	public void setContextSource(ContextSource contextSource) {
+		this.ldapOperations = new LdapTemplate(contextSource);
+	}
+	
+	/**
+	 * Set the list of {@link org.springframework.ldap.odm.annotations} 
+	 * annotated classes the OdmManager will process.
+	 * @param managedClasses The list of classes to manage.
+	 */
+	public void setManagedClasses(Set<Class<?>> managedClasses) {
+		this.managedClasses=managedClasses;
+	}
+	
+	/**
+	 * Set the ConverterManager to use to convert between LDAP
+	 * and Java representations of attributes.
+	 * @param converterManager The ConverterManager to use.
+	 */
+	public void setConverterManager(ConverterManager converterManager) {
+		this.converterManager=converterManager;
+	}
 
-    /* (non-Javadoc)
-     * @see org.springframework.beans.factory.FactoryBean#getObject()
-     */
-    public Object getObject() throws Exception {
-        if (ldapOperations==null) {
-            throw new FactoryBeanNotInitializedException("contextSource ldapOperations property has not been set");
-        }
-        if (managedClasses==null) {        
-            throw new FactoryBeanNotInitializedException("managedClasses property has not been set");
-        }
-        if (converterManager==null) {        
-            throw new FactoryBeanNotInitializedException("converterManager property has not been set");
-        }
-        
-        return new OdmManagerImpl(converterManager, ldapOperations, managedClasses);
-    }
+	/* (non-Javadoc)
+	 * @see org.springframework.beans.factory.FactoryBean#getObject()
+	 */
+	public Object getObject() throws Exception {
+		if (ldapOperations==null) {
+			throw new FactoryBeanNotInitializedException("contextSource ldapOperations property has not been set");
+		}
+		if (managedClasses==null) {		
+			throw new FactoryBeanNotInitializedException("managedClasses property has not been set");
+		}
+		if (converterManager==null) {		
+			throw new FactoryBeanNotInitializedException("converterManager property has not been set");
+		}
+		
+		return new OdmManagerImpl(converterManager, ldapOperations, managedClasses);
+	}
 
-    /* (non-Javadoc)
-     * @see org.springframework.beans.factory.FactoryBean#getObjectType()
-     */
-    public Class<?> getObjectType() {
-        return OdmManagerImpl.class;
-    }
+	/* (non-Javadoc)
+	 * @see org.springframework.beans.factory.FactoryBean#getObjectType()
+	 */
+	public Class<?> getObjectType() {
+		return OdmManagerImpl.class;
+	}
 
-    /* (non-Javadoc)
-     * @see org.springframework.beans.factory.FactoryBean#isSingleton()
-     */
-    public boolean isSingleton() {
-        return true;
-    }
+	/* (non-Javadoc)
+	 * @see org.springframework.beans.factory.FactoryBean#isSingleton()
+	 */
+	public boolean isSingleton() {
+		return true;
+	}
 }

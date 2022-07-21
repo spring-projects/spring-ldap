@@ -39,316 +39,316 @@ import org.springframework.ldap.support.LdapUtils;
 
 public class LdapTemplateLookupTest {
 
-    private static final String DEFAULT_BASE_STRING = "o=example.com";
+	private static final String DEFAULT_BASE_STRING = "o=example.com";
 
-    private ContextSource contextSourceMock;
+	private ContextSource contextSourceMock;
 
-    private DirContext dirContextMock;
+	private DirContext dirContextMock;
 
-    private AttributesMapper attributesMapperMock;
+	private AttributesMapper attributesMapperMock;
 
-    private Name nameMock;
+	private Name nameMock;
 
-    private ContextMapper contextMapperMock;
+	private ContextMapper contextMapperMock;
 
-    private LdapTemplate tested;
-    private ObjectDirectoryMapper odmMock;
+	private LdapTemplate tested;
+	private ObjectDirectoryMapper odmMock;
 
-    @Before
-    public void setUp() throws Exception {
-        // Setup ContextSource mock
-        contextSourceMock = mock(ContextSource.class);
+	@Before
+	public void setUp() throws Exception {
+		// Setup ContextSource mock
+		contextSourceMock = mock(ContextSource.class);
 
-        // Setup LdapContext mock
-        dirContextMock = mock(LdapContext.class);
+		// Setup LdapContext mock
+		dirContextMock = mock(LdapContext.class);
 
-        // Setup Name mock
-        nameMock = mock(Name.class);
-        contextMapperMock = mock(ContextMapper.class);
-        attributesMapperMock = mock(AttributesMapper.class);
-        odmMock = mock(ObjectDirectoryMapper.class);
+		// Setup Name mock
+		nameMock = mock(Name.class);
+		contextMapperMock = mock(ContextMapper.class);
+		attributesMapperMock = mock(AttributesMapper.class);
+		odmMock = mock(ObjectDirectoryMapper.class);
 
-        tested = new LdapTemplate(contextSourceMock);
-        tested.setObjectDirectoryMapper(odmMock);
-    }
+		tested = new LdapTemplate(contextSourceMock);
+		tested.setObjectDirectoryMapper(odmMock);
+	}
 
-    private void expectGetReadOnlyContext() {
-        when(contextSourceMock.getReadOnlyContext()).thenReturn(dirContextMock);
-    }
+	private void expectGetReadOnlyContext() {
+		when(contextSourceMock.getReadOnlyContext()).thenReturn(dirContextMock);
+	}
 
-    // Tests for lookup(name)
+	// Tests for lookup(name)
 
-    @Test
-    public void testLookup() throws Exception {
-        expectGetReadOnlyContext();
+	@Test
+	public void testLookup() throws Exception {
+		expectGetReadOnlyContext();
 
-        Object expected = new Object();
-        when(dirContextMock.lookup(nameMock)).thenReturn(expected);
+		Object expected = new Object();
+		when(dirContextMock.lookup(nameMock)).thenReturn(expected);
 
-        Object actual = tested.lookup(nameMock);
+		Object actual = tested.lookup(nameMock);
 
-        verify(dirContextMock).close();
+		verify(dirContextMock).close();
 
-        assertThat(actual).isSameAs(expected);
-    }
+		assertThat(actual).isSameAs(expected);
+	}
 
-    @Test
-    public void testLookup_String() throws Exception {
-        expectGetReadOnlyContext();
+	@Test
+	public void testLookup_String() throws Exception {
+		expectGetReadOnlyContext();
 
-        Object expected = new Object();
-        when(dirContextMock.lookup(DEFAULT_BASE_STRING)).thenReturn(expected);
+		Object expected = new Object();
+		when(dirContextMock.lookup(DEFAULT_BASE_STRING)).thenReturn(expected);
 
-        Object actual = tested.lookup(DEFAULT_BASE_STRING);
+		Object actual = tested.lookup(DEFAULT_BASE_STRING);
 
-        verify(dirContextMock).close();
+		verify(dirContextMock).close();
 
-        assertThat(actual).isSameAs(expected);
-    }
+		assertThat(actual).isSameAs(expected);
+	}
 
-    @Test
-    public void testLookup_NamingException() throws Exception {
-        expectGetReadOnlyContext();
+	@Test
+	public void testLookup_NamingException() throws Exception {
+		expectGetReadOnlyContext();
 
-        javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
-        when(dirContextMock.lookup(nameMock)).thenThrow(ne);
+		javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
+		when(dirContextMock.lookup(nameMock)).thenThrow(ne);
 
-        try {
-            tested.lookup(nameMock);
-            fail("NameNotFoundException expected");
-        } catch (NameNotFoundException expected) {
-            assertThat(true).isTrue();
-        }
+		try {
+			tested.lookup(nameMock);
+			fail("NameNotFoundException expected");
+		} catch (NameNotFoundException expected) {
+			assertThat(true).isTrue();
+		}
 
-        verify(dirContextMock).close();
-    }
+		verify(dirContextMock).close();
+	}
 
-    // Tests for lookup(name, AttributesMapper)
+	// Tests for lookup(name, AttributesMapper)
 
-    @Test
-    public void testLookup_AttributesMapper() throws Exception {
-        expectGetReadOnlyContext();
+	@Test
+	public void testLookup_AttributesMapper() throws Exception {
+		expectGetReadOnlyContext();
 
-        BasicAttributes expectedAttributes = new BasicAttributes();
-        when(dirContextMock.getAttributes(nameMock)).thenReturn(expectedAttributes);
+		BasicAttributes expectedAttributes = new BasicAttributes();
+		when(dirContextMock.getAttributes(nameMock)).thenReturn(expectedAttributes);
 
-        Object expected = new Object();
-        when(attributesMapperMock.mapFromAttributes(expectedAttributes)).thenReturn(expected);
+		Object expected = new Object();
+		when(attributesMapperMock.mapFromAttributes(expectedAttributes)).thenReturn(expected);
 
-        Object actual = tested.lookup(nameMock, attributesMapperMock);
+		Object actual = tested.lookup(nameMock, attributesMapperMock);
 
-        verify(dirContextMock).close();
+		verify(dirContextMock).close();
 
-        assertThat(actual).isSameAs(expected);
-    }
+		assertThat(actual).isSameAs(expected);
+	}
 
-    @Test
-    public void testLookup_String_AttributesMapper() throws Exception {
-        expectGetReadOnlyContext();
+	@Test
+	public void testLookup_String_AttributesMapper() throws Exception {
+		expectGetReadOnlyContext();
 
-        BasicAttributes expectedAttributes = new BasicAttributes();
-        when(dirContextMock.getAttributes(DEFAULT_BASE_STRING)).thenReturn(expectedAttributes);
+		BasicAttributes expectedAttributes = new BasicAttributes();
+		when(dirContextMock.getAttributes(DEFAULT_BASE_STRING)).thenReturn(expectedAttributes);
 
-        Object expected = new Object();
-        when(attributesMapperMock.mapFromAttributes(expectedAttributes)).thenReturn(expected);
+		Object expected = new Object();
+		when(attributesMapperMock.mapFromAttributes(expectedAttributes)).thenReturn(expected);
 
-        Object actual = tested
-                .lookup(DEFAULT_BASE_STRING, attributesMapperMock);
+		Object actual = tested
+				.lookup(DEFAULT_BASE_STRING, attributesMapperMock);
 
-        verify(dirContextMock).close();
+		verify(dirContextMock).close();
 
-        assertThat(actual).isSameAs(expected);
-    }
+		assertThat(actual).isSameAs(expected);
+	}
 
-    @Test
-    public void testLookup_AttributesMapper_NamingException() throws Exception {
-        expectGetReadOnlyContext();
+	@Test
+	public void testLookup_AttributesMapper_NamingException() throws Exception {
+		expectGetReadOnlyContext();
 
-        javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
-        when(dirContextMock.getAttributes(nameMock)).thenThrow(ne);
+		javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
+		when(dirContextMock.getAttributes(nameMock)).thenThrow(ne);
 
-        try {
-            tested.lookup(nameMock, attributesMapperMock);
-            fail("NameNotFoundException expected");
-        } catch (NameNotFoundException expected) {
-            assertThat(true).isTrue();
-        }
+		try {
+			tested.lookup(nameMock, attributesMapperMock);
+			fail("NameNotFoundException expected");
+		} catch (NameNotFoundException expected) {
+			assertThat(true).isTrue();
+		}
 
-        verify(dirContextMock).close();
-    }
+		verify(dirContextMock).close();
+	}
 
-    // Tests for lookup(name, ContextMapper)
+	// Tests for lookup(name, ContextMapper)
 
-    @Test
-    public void testLookup_ContextMapper() throws Exception {
-        expectGetReadOnlyContext();
+	@Test
+	public void testLookup_ContextMapper() throws Exception {
+		expectGetReadOnlyContext();
 
-        Object transformed = new Object();
-        Object expected = new Object();
-        when(dirContextMock.lookup(nameMock)).thenReturn(expected);
+		Object transformed = new Object();
+		Object expected = new Object();
+		when(dirContextMock.lookup(nameMock)).thenReturn(expected);
 
-        when(contextMapperMock.mapFromContext(expected)).thenReturn(transformed);
+		when(contextMapperMock.mapFromContext(expected)).thenReturn(transformed);
 
-        Object actual = tested.lookup(nameMock, contextMapperMock);
+		Object actual = tested.lookup(nameMock, contextMapperMock);
 
-        verify(dirContextMock).close();
+		verify(dirContextMock).close();
 
-        assertThat(actual).isSameAs(transformed);
-    }
+		assertThat(actual).isSameAs(transformed);
+	}
 
-    @Test
-    public void testFindByDn() throws NamingException {
-        expectGetReadOnlyContext();
+	@Test
+	public void testFindByDn() throws NamingException {
+		expectGetReadOnlyContext();
 
-        Object transformed = new Object();
-        Class<Object> expectedClass = Object.class;
+		Object transformed = new Object();
+		Class<Object> expectedClass = Object.class;
 
-        DirContextAdapter expectedContext = new DirContextAdapter();
-        when(dirContextMock.lookup(nameMock)).thenReturn(expectedContext);
-        when(odmMock.mapFromLdapDataEntry(expectedContext, expectedClass)).thenReturn(transformed);
+		DirContextAdapter expectedContext = new DirContextAdapter();
+		when(dirContextMock.lookup(nameMock)).thenReturn(expectedContext);
+		when(odmMock.mapFromLdapDataEntry(expectedContext, expectedClass)).thenReturn(transformed);
 
-        when(nameMock.getAll()).thenReturn(Collections.<String> enumeration(Collections.<String> emptyList()));
-        // Perform test
-        Object result = tested.findByDn(nameMock, expectedClass);
-        assertThat(result).isSameAs(transformed);
+		when(nameMock.getAll()).thenReturn(Collections.<String> enumeration(Collections.<String> emptyList()));
+		// Perform test
+		Object result = tested.findByDn(nameMock, expectedClass);
+		assertThat(result).isSameAs(transformed);
 
-        verify(odmMock).manageClass(expectedClass);
-    }
+		verify(odmMock).manageClass(expectedClass);
+	}
 
 
 
-    @Test
-    public void testLookup_String_ContextMapper() throws Exception {
-        expectGetReadOnlyContext();
+	@Test
+	public void testLookup_String_ContextMapper() throws Exception {
+		expectGetReadOnlyContext();
 
-        Object transformed = new Object();
-        Object expected = new Object();
-        when(dirContextMock.lookup(DEFAULT_BASE_STRING)).thenReturn(expected);
+		Object transformed = new Object();
+		Object expected = new Object();
+		when(dirContextMock.lookup(DEFAULT_BASE_STRING)).thenReturn(expected);
 
-        when(contextMapperMock.mapFromContext(expected)).thenReturn(transformed);
+		when(contextMapperMock.mapFromContext(expected)).thenReturn(transformed);
 
-        Object actual = tested.lookup(DEFAULT_BASE_STRING, contextMapperMock);
+		Object actual = tested.lookup(DEFAULT_BASE_STRING, contextMapperMock);
 
-        verify(dirContextMock).close();
+		verify(dirContextMock).close();
 
-        assertThat(actual).isSameAs(transformed);
-    }
+		assertThat(actual).isSameAs(transformed);
+	}
 
-    @Test
-    public void testLookup_ContextMapper_NamingException() throws Exception {
-        expectGetReadOnlyContext();
+	@Test
+	public void testLookup_ContextMapper_NamingException() throws Exception {
+		expectGetReadOnlyContext();
 
-        javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
-        when(dirContextMock.lookup(nameMock)).thenThrow(ne);
+		javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
+		when(dirContextMock.lookup(nameMock)).thenThrow(ne);
 
-        try {
-            tested.lookup(nameMock, contextMapperMock);
-            fail("NameNotFoundException expected");
-        } catch (NameNotFoundException expected) {
-            assertThat(true).isTrue();
-        }
+		try {
+			tested.lookup(nameMock, contextMapperMock);
+			fail("NameNotFoundException expected");
+		} catch (NameNotFoundException expected) {
+			assertThat(true).isTrue();
+		}
 
-        verify(dirContextMock).close();
-    }
+		verify(dirContextMock).close();
+	}
 
-    // Tests for lookup(name, attributes, AttributesMapper)
+	// Tests for lookup(name, attributes, AttributesMapper)
 
-    @Test
-    public void testLookup_ReturnAttributes_AttributesMapper() throws Exception {
-        expectGetReadOnlyContext();
+	@Test
+	public void testLookup_ReturnAttributes_AttributesMapper() throws Exception {
+		expectGetReadOnlyContext();
 
-        String[] attributeNames = new String[] { "cn" };
+		String[] attributeNames = new String[] { "cn" };
 
-        BasicAttributes expectedAttributes = new BasicAttributes();
-        expectedAttributes.put("cn", "Some Name");
+		BasicAttributes expectedAttributes = new BasicAttributes();
+		expectedAttributes.put("cn", "Some Name");
 
-        when(dirContextMock.getAttributes(nameMock, attributeNames)).thenReturn(expectedAttributes);
+		when(dirContextMock.getAttributes(nameMock, attributeNames)).thenReturn(expectedAttributes);
 
-        Object expected = new Object();
-        when(attributesMapperMock.mapFromAttributes(expectedAttributes)).thenReturn(expected);
+		Object expected = new Object();
+		when(attributesMapperMock.mapFromAttributes(expectedAttributes)).thenReturn(expected);
 
-        Object actual = tested.lookup(nameMock, attributeNames,
-                attributesMapperMock);
+		Object actual = tested.lookup(nameMock, attributeNames,
+				attributesMapperMock);
 
-        verify(dirContextMock).close();
+		verify(dirContextMock).close();
 
-        assertThat(actual).isSameAs(expected);
-    }
+		assertThat(actual).isSameAs(expected);
+	}
 
-    @Test
-    public void testLookup_String_ReturnAttributes_AttributesMapper()
-            throws Exception {
-        expectGetReadOnlyContext();
+	@Test
+	public void testLookup_String_ReturnAttributes_AttributesMapper()
+			throws Exception {
+		expectGetReadOnlyContext();
 
-        String[] attributeNames = new String[] { "cn" };
+		String[] attributeNames = new String[] { "cn" };
 
-        BasicAttributes expectedAttributes = new BasicAttributes();
-        expectedAttributes.put("cn", "Some Name");
+		BasicAttributes expectedAttributes = new BasicAttributes();
+		expectedAttributes.put("cn", "Some Name");
 
-        when(dirContextMock.getAttributes(DEFAULT_BASE_STRING, attributeNames)).thenReturn(expectedAttributes);
+		when(dirContextMock.getAttributes(DEFAULT_BASE_STRING, attributeNames)).thenReturn(expectedAttributes);
 
-        Object expected = new Object();
-        when(attributesMapperMock.mapFromAttributes(expectedAttributes)).thenReturn(expected);
+		Object expected = new Object();
+		when(attributesMapperMock.mapFromAttributes(expectedAttributes)).thenReturn(expected);
 
-        Object actual = tested.lookup(DEFAULT_BASE_STRING, attributeNames,
-                attributesMapperMock);
+		Object actual = tested.lookup(DEFAULT_BASE_STRING, attributeNames,
+				attributesMapperMock);
 
-        verify(dirContextMock).close();
+		verify(dirContextMock).close();
 
-        assertThat(actual).isSameAs(expected);
-    }
+		assertThat(actual).isSameAs(expected);
+	}
 
-    // Tests for lookup(name, attributes, ContextMapper)
+	// Tests for lookup(name, attributes, ContextMapper)
 
-    @Test
-    public void testLookup_ReturnAttributes_ContextMapper() throws Exception {
-        expectGetReadOnlyContext();
+	@Test
+	public void testLookup_ReturnAttributes_ContextMapper() throws Exception {
+		expectGetReadOnlyContext();
 
-        String[] attributeNames = new String[] { "cn" };
+		String[] attributeNames = new String[] { "cn" };
 
-        BasicAttributes expectedAttributes = new BasicAttributes();
-        expectedAttributes.put("cn", "Some Name");
+		BasicAttributes expectedAttributes = new BasicAttributes();
+		expectedAttributes.put("cn", "Some Name");
 
-        LdapName name = LdapUtils.newLdapName(DEFAULT_BASE_STRING);
-        DirContextAdapter adapter = new DirContextAdapter(expectedAttributes,
-                name);
+		LdapName name = LdapUtils.newLdapName(DEFAULT_BASE_STRING);
+		DirContextAdapter adapter = new DirContextAdapter(expectedAttributes,
+				name);
 
-        when(dirContextMock.getAttributes(name,attributeNames)).thenReturn(expectedAttributes);
+		when(dirContextMock.getAttributes(name,attributeNames)).thenReturn(expectedAttributes);
 
-        Object transformed = new Object();
-        when(contextMapperMock.mapFromContext(adapter)).thenReturn(transformed);
+		Object transformed = new Object();
+		when(contextMapperMock.mapFromContext(adapter)).thenReturn(transformed);
 
-        Object actual = tested.lookup(name, attributeNames, contextMapperMock);
+		Object actual = tested.lookup(name, attributeNames, contextMapperMock);
 
-        verify(dirContextMock).close();
+		verify(dirContextMock).close();
 
-        assertThat(actual).isSameAs(transformed);
-    }
+		assertThat(actual).isSameAs(transformed);
+	}
 
-    @Test
-    public void testLookup_String_ReturnAttributes_ContextMapper()
-            throws Exception {
-        expectGetReadOnlyContext();
+	@Test
+	public void testLookup_String_ReturnAttributes_ContextMapper()
+			throws Exception {
+		expectGetReadOnlyContext();
 
-        String[] attributeNames = new String[] { "cn" };
+		String[] attributeNames = new String[] { "cn" };
 
-        BasicAttributes expectedAttributes = new BasicAttributes();
-        expectedAttributes.put("cn", "Some Name");
+		BasicAttributes expectedAttributes = new BasicAttributes();
+		expectedAttributes.put("cn", "Some Name");
 
-        when(dirContextMock.getAttributes(DEFAULT_BASE_STRING, attributeNames)).thenReturn(expectedAttributes);
+		when(dirContextMock.getAttributes(DEFAULT_BASE_STRING, attributeNames)).thenReturn(expectedAttributes);
 
-        LdapName name = LdapUtils.newLdapName(DEFAULT_BASE_STRING);
-        DirContextAdapter adapter = new DirContextAdapter(expectedAttributes,
-                name);
+		LdapName name = LdapUtils.newLdapName(DEFAULT_BASE_STRING);
+		DirContextAdapter adapter = new DirContextAdapter(expectedAttributes,
+				name);
 
-        Object transformed = new Object();
-        when(contextMapperMock.mapFromContext(adapter)).thenReturn(transformed);
+		Object transformed = new Object();
+		when(contextMapperMock.mapFromContext(adapter)).thenReturn(transformed);
 
-        Object actual = tested.lookup(DEFAULT_BASE_STRING, attributeNames,
-                contextMapperMock);
+		Object actual = tested.lookup(DEFAULT_BASE_STRING, attributeNames,
+				contextMapperMock);
 
-        verify(dirContextMock).close();
+		verify(dirContextMock).close();
 
-        assertThat(actual).isSameAs(transformed);
-    }
+		assertThat(actual).isSameAs(transformed);
+	}
 }

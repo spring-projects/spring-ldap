@@ -39,105 +39,105 @@ import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
  * @author Ulrik Sandberg
  */
 public class LdapTemplateSortedSearchITest extends
-        AbstractDependencyInjectionSpringContextTests {
+		AbstractDependencyInjectionSpringContextTests {
 
-    private static final Name BASE = DistinguishedName.EMPTY_PATH;
+	private static final Name BASE = DistinguishedName.EMPTY_PATH;
 
-    private static final String FILTER_STRING = "(&(objectclass=ikeaperson)(cn=gor*))";
+	private static final String FILTER_STRING = "(&(objectclass=ikeaperson)(cn=gor*))";
 
-    private LdapTemplate tested;
+	private LdapTemplate tested;
 
-    private CollectingNameClassPairCallbackHandler callbackHandler;
+	private CollectingNameClassPairCallbackHandler callbackHandler;
 
-    private SearchControls searchControls;
+	private SearchControls searchControls;
 
-    protected String[] getConfigLocations() {
-        return new String[] { "/conf/ldapTemplateTestContext-openldap.xml" };
-    }
+	protected String[] getConfigLocations() {
+		return new String[] { "/conf/ldapTemplateTestContext-openldap.xml" };
+	}
 
-    protected void onSetUp() throws Exception {
-        super.onSetUp();
-        PersonAttributesMapper mapper = new PersonAttributesMapper();
-        callbackHandler = new AttributesMapperCallbackHandler(mapper);
-        searchControls = new SearchControls();
-        searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-    }
+	protected void onSetUp() throws Exception {
+		super.onSetUp();
+		PersonAttributesMapper mapper = new PersonAttributesMapper();
+		callbackHandler = new AttributesMapperCallbackHandler(mapper);
+		searchControls = new SearchControls();
+		searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+	}
 
-    protected void onTearDown() throws Exception {
-        super.onTearDown();
-        callbackHandler = null;
-        tested = null;
-        searchControls = null;
-    }
+	protected void onTearDown() throws Exception {
+		super.onTearDown();
+		callbackHandler = null;
+		tested = null;
+		searchControls = null;
+	}
 
-    public void testSearch_SortControl() {
-        SearchExecutor searchExecutor = new SearchExecutor() {
-            public NamingEnumeration executeSearch(DirContext ctx)
-                    throws NamingException {
-                return ctx.search(BASE, FILTER_STRING, searchControls);
-            }
-        };
-        SortControlDirContextProcessor requestControl;
+	public void testSearch_SortControl() {
+		SearchExecutor searchExecutor = new SearchExecutor() {
+			public NamingEnumeration executeSearch(DirContext ctx)
+					throws NamingException {
+				return ctx.search(BASE, FILTER_STRING, searchControls);
+			}
+		};
+		SortControlDirContextProcessor requestControl;
 
-        // Prepare for first search
-        requestControl = new SortControlDirContextProcessor("cn");
-        tested.search(searchExecutor, callbackHandler, requestControl);
-        int resultCode = requestControl.getResultCode();
-        boolean sorted = requestControl.isSorted();
-        assertThat("Search result should have been sorted: " + resultCode, sorted).isTrue();
-        List list = callbackHandler.getList();
-        assertSortedList(list);
-    }
+		// Prepare for first search
+		requestControl = new SortControlDirContextProcessor("cn");
+		tested.search(searchExecutor, callbackHandler, requestControl);
+		int resultCode = requestControl.getResultCode();
+		boolean sorted = requestControl.isSorted();
+		assertThat("Search result should have been sorted: " + resultCode, sorted).isTrue();
+		List list = callbackHandler.getList();
+		assertSortedList(list);
+	}
 
-    public void testSearch_SortControl_ConvenienceMethod() {
-        SortControlDirContextProcessor requestControl;
+	public void testSearch_SortControl_ConvenienceMethod() {
+		SortControlDirContextProcessor requestControl;
 
-        // Prepare for first search
-        requestControl = new SortControlDirContextProcessor("cn");
-        tested.search(BASE, FILTER_STRING, searchControls, callbackHandler,
-                requestControl);
-        int resultCode = requestControl.getResultCode();
-        boolean sorted = requestControl.isSorted();
-        assertThat("Search result should have been sorted: " + resultCode, sorted).isTrue();
-        List list = callbackHandler.getList();
-        assertSortedList(list);
-    }
+		// Prepare for first search
+		requestControl = new SortControlDirContextProcessor("cn");
+		tested.search(BASE, FILTER_STRING, searchControls, callbackHandler,
+				requestControl);
+		int resultCode = requestControl.getResultCode();
+		boolean sorted = requestControl.isSorted();
+		assertThat("Search result should have been sorted: " + resultCode, sorted).isTrue();
+		List list = callbackHandler.getList();
+		assertSortedList(list);
+	}
 
-    private void assertSortedList(List list) {
-        Person person;
-        assertThat(list).hasSize(6);
-        person = (Person) list.get(0);
-        assertThat(person.getFullname()).isEqualTo("Goran Milenkovic");
-        person = (Person) list.get(1);
-        assertThat(person.getFullname()).isEqualTo("Goran Sundberg");
-        person = (Person) list.get(2);
-        assertThat(person.getFullname()).isEqualTo("Goran Westerberg");
-        person = (Person) list.get(3);
-        assertThat(person.getFullname()).isEqualTo("Gorana  Milicevic");
-        person = (Person) list.get(4);
-        assertThat(person.getFullname()).isEqualTo("Gordana Canic");
-        person = (Person) list.get(5);
-        assertThat(person.getFullname()).isEqualTo("Gordana  Russ");
-    }
+	private void assertSortedList(List list) {
+		Person person;
+		assertThat(list).hasSize(6);
+		person = (Person) list.get(0);
+		assertThat(person.getFullname()).isEqualTo("Goran Milenkovic");
+		person = (Person) list.get(1);
+		assertThat(person.getFullname()).isEqualTo("Goran Sundberg");
+		person = (Person) list.get(2);
+		assertThat(person.getFullname()).isEqualTo("Goran Westerberg");
+		person = (Person) list.get(3);
+		assertThat(person.getFullname()).isEqualTo("Gorana  Milicevic");
+		person = (Person) list.get(4);
+		assertThat(person.getFullname()).isEqualTo("Gordana Canic");
+		person = (Person) list.get(5);
+		assertThat(person.getFullname()).isEqualTo("Gordana  Russ");
+	}
 
-    public void setTested(LdapTemplate tested) {
-        this.tested = tested;
-    }
+	public void setTested(LdapTemplate tested) {
+		this.tested = tested;
+	}
 
-    private class PersonAttributesMapper implements AttributesMapper {
+	private class PersonAttributesMapper implements AttributesMapper {
 
-        /**
-         * Maps the given attributes into a {@link Person} object.
-         * 
-         * @see org.springframework.ldap.core.AttributesMapper#mapFromAttributes(javax.naming.directory.Attributes)
-         */
-        public Object mapFromAttributes(Attributes attributes)
-                throws NamingException {
-            Person person = new Person();
-            person.setFullname((String) attributes.get("cn").get());
-            person.setLastname((String) attributes.get("sn").get());
-            person.setDescription((String) attributes.get("givenName").get());
-            return person;
-        }
-    }
+		/**
+		 * Maps the given attributes into a {@link Person} object.
+		 * 
+		 * @see org.springframework.ldap.core.AttributesMapper#mapFromAttributes(javax.naming.directory.Attributes)
+		 */
+		public Object mapFromAttributes(Attributes attributes)
+				throws NamingException {
+			Person person = new Person();
+			person.setFullname((String) attributes.get("cn").get());
+			person.setLastname((String) attributes.get("sn").get());
+			person.setDescription((String) attributes.get("givenName").get());
+			return person;
+		}
+	}
 }

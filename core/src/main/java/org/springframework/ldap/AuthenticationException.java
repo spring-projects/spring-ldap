@@ -25,11 +25,11 @@ package org.springframework.ldap;
  */
 public class AuthenticationException extends NamingSecurityException {
 
-    public AuthenticationException(javax.naming.AuthenticationException cause) {
-        super(cause);
-    }
+	public AuthenticationException(javax.naming.AuthenticationException cause) {
+		super(cause);
+	}
 
-    public AuthenticationException() {
-        this(null);
-    }
+	public AuthenticationException() {
+		this(null);
+	}
 }

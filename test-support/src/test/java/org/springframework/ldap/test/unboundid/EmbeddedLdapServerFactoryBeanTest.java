@@ -32,30 +32,30 @@ import org.springframework.ldap.query.LdapQueryBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class EmbeddedLdapServerFactoryBeanTest {
-    ClassPathXmlApplicationContext ctx;
+	ClassPathXmlApplicationContext ctx;
 
-    @After
-    public void setup() {
-        if(ctx != null) {
-            ctx.close();
-        }
-    }
+	@After
+	public void setup() {
+		if(ctx != null) {
+			ctx.close();
+		}
+	}
 
-    @Test
-    public void testServerStartup() throws Exception {
-        ctx = new ClassPathXmlApplicationContext("/applicationContext-ldifPopulator.xml");
-        LdapTemplate ldapTemplate = ctx.getBean(LdapTemplate.class);
-        assertThat(ldapTemplate).isNotNull();
+	@Test
+	public void testServerStartup() throws Exception {
+		ctx = new ClassPathXmlApplicationContext("/applicationContext-ldifPopulator.xml");
+		LdapTemplate ldapTemplate = ctx.getBean(LdapTemplate.class);
+		assertThat(ldapTemplate).isNotNull();
 
-        List<String> list = ldapTemplate.search(
-                LdapQueryBuilder.query().where("objectclass").is("person"),
-                new AttributesMapper<String>() {
-                    public String mapFromAttributes(Attributes attrs)
-                            throws NamingException {
-                        return (String) attrs.get("cn").get();
-                    }
-                });
-        assertThat(list.size()).isEqualTo(5);
-    }
+		List<String> list = ldapTemplate.search(
+				LdapQueryBuilder.query().where("objectclass").is("person"),
+				new AttributesMapper<String>() {
+					public String mapFromAttributes(Attributes attrs)
+							throws NamingException {
+						return (String) attrs.get("cn").get();
+					}
+				});
+		assertThat(list.size()).isEqualTo(5);
+	}
 
 }

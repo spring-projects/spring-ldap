@@ -39,8 +39,8 @@ public class BasicSchemaSpecification implements Specification<LdapAttributes> {
 				if (record.get("objectClass") != null) {
 					
 					//Naming attribute is required.
-                    Rdn rdn = dn.getRdn(dn.size() - 1);
-                    if (record.get(rdn.getType()) != null) {
+					Rdn rdn = dn.getRdn(dn.size() - 1);
+					if (record.get(rdn.getType()) != null) {
 						Object object = record.get(rdn.getType()).get();
 						
 						if (object instanceof String) {

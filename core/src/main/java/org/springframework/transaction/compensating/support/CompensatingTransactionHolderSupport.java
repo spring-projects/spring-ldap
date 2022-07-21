@@ -25,56 +25,56 @@ import org.springframework.transaction.support.ResourceHolderSupport;
  * @since 1.2
  */
 public abstract class CompensatingTransactionHolderSupport extends
-        ResourceHolderSupport {
+		ResourceHolderSupport {
 
-    private CompensatingTransactionOperationManager transactionOperationManager;
+	private CompensatingTransactionOperationManager transactionOperationManager;
 
-    /**
-     * Constructor.
-     * 
-     * @param manager
-     *            The {@link CompensatingTransactionOperationManager} to use for
-     *            creating Compensating operations.
-     */
-    public CompensatingTransactionHolderSupport(
-            CompensatingTransactionOperationManager manager) {
-        this.transactionOperationManager = manager;
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param manager
+	 *			The {@link CompensatingTransactionOperationManager} to use for
+	 *			creating Compensating operations.
+	 */
+	public CompensatingTransactionHolderSupport(
+			CompensatingTransactionOperationManager manager) {
+		this.transactionOperationManager = manager;
+	}
 
-    /**
-     * Get the actual transacted resource.
-     * 
-     * @return the transaction's target resource
-     */
-    protected abstract Object getTransactedResource();
+	/**
+	 * Get the actual transacted resource.
+	 * 
+	 * @return the transaction's target resource
+	 */
+	protected abstract Object getTransactedResource();
 
-    /*
-     * @see org.springframework.transaction.support.ResourceHolderSupport#clear()
-     */
-    public void clear() {
-        super.clear();
-        transactionOperationManager = null;
-    }
+	/*
+	 * @see org.springframework.transaction.support.ResourceHolderSupport#clear()
+	 */
+	public void clear() {
+		super.clear();
+		transactionOperationManager = null;
+	}
 
-    /**
-     * Get the CompensatingTransactionOperationManager to handle the data for
-     * the current transaction.
-     * 
-     * @return the CompensatingTransactionOperationManager.
-     */
-    public CompensatingTransactionOperationManager getTransactionOperationManager() {
-        return transactionOperationManager;
-    }
+	/**
+	 * Get the CompensatingTransactionOperationManager to handle the data for
+	 * the current transaction.
+	 * 
+	 * @return the CompensatingTransactionOperationManager.
+	 */
+	public CompensatingTransactionOperationManager getTransactionOperationManager() {
+		return transactionOperationManager;
+	}
 
-    /**
-     * Set the CompensatingTransactionOperationManager. For testing purposes
-     * only.
-     * 
-     * @param transactionOperationManager
-     *            the CompensatingTransactionOperationManager to use.
-     */
-    public void setTransactionOperationManager(
-            CompensatingTransactionOperationManager transactionOperationManager) {
-        this.transactionOperationManager = transactionOperationManager;
-    }
+	/**
+	 * Set the CompensatingTransactionOperationManager. For testing purposes
+	 * only.
+	 * 
+	 * @param transactionOperationManager
+	 *			the CompensatingTransactionOperationManager to use.
+	 */
+	public void setTransactionOperationManager(
+			CompensatingTransactionOperationManager transactionOperationManager) {
+		this.transactionOperationManager = transactionOperationManager;
+	}
 }

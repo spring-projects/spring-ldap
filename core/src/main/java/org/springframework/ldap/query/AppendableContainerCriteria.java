@@ -22,5 +22,5 @@ import org.springframework.ldap.filter.Filter;
  * @author Mattias Hellborg Arthursson
  */
 interface AppendableContainerCriteria extends ContainerCriteria {
-    ContainerCriteria append(Filter filter);
+	ContainerCriteria append(Filter filter);
 }

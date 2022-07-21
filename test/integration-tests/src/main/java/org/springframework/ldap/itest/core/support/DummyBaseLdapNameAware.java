@@ -24,14 +24,14 @@ import javax.naming.ldap.LdapName;
  * @author Mattias Hellborg Arthursson
  */
 public class DummyBaseLdapNameAware implements BaseLdapNameAware {
-    private LdapName baseLdapPath;
+	private LdapName baseLdapPath;
 
-    @Override
-    public void setBaseLdapPath(LdapName baseLdapPath) {
-        this.baseLdapPath = baseLdapPath;
-    }
+	@Override
+	public void setBaseLdapPath(LdapName baseLdapPath) {
+		this.baseLdapPath = baseLdapPath;
+	}
 
-    public LdapName getBaseLdapPath() {
-        return baseLdapPath;
-    }
+	public LdapName getBaseLdapPath() {
+		return baseLdapPath;
+	}
 }

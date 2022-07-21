@@ -34,65 +34,65 @@ import static org.mockito.Mockito.when;
  * @author Mattias Hellborg Arthursson
  */
 public class ContextMapperCallbackHandlerWithControlsTest {
-    private ContextMapperWithControls mapperMock;
+	private ContextMapperWithControls mapperMock;
 
-    private ContextMapperCallbackHandlerWithControls tested;
+	private ContextMapperCallbackHandlerWithControls tested;
 
-    private static class MyBindingThatHasControls extends Binding implements HasControls {
-        private static final long serialVersionUID = 1L;
+	private static class MyBindingThatHasControls extends Binding implements HasControls {
+		private static final long serialVersionUID = 1L;
 
-        public MyBindingThatHasControls(String name, Object obj) {
-            super(name, obj);
-        }
+		public MyBindingThatHasControls(String name, Object obj) {
+			super(name, obj);
+		}
 
-        public Control[] getControls() throws NamingException {
-            return null;
-        }
-    }
+		public Control[] getControls() throws NamingException {
+			return null;
+		}
+	}
 
-    @SuppressWarnings("unchecked")
-    @Before
-    public void setUp() throws Exception {
-        mapperMock = mock(ContextMapperWithControls.class);
-        tested = new ContextMapperCallbackHandlerWithControls(mapperMock);
-    }
+	@SuppressWarnings("unchecked")
+	@Before
+	public void setUp() throws Exception {
+		mapperMock = mock(ContextMapperWithControls.class);
+		tested = new ContextMapperCallbackHandlerWithControls(mapperMock);
+	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithEmptyArgument() {
-        new ContextMapperCallbackHandlerWithControls<Object>(null);
-    }
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructorWithEmptyArgument() {
+		new ContextMapperCallbackHandlerWithControls<Object>(null);
+	}
 
-    @Test
-    public void testGetObjectFromNameClassPair() throws NamingException {
-        Object expectedObject = "object";
-        Object expectedResult = "result";
-        Binding expectedBinding = new Binding("some name", expectedObject);
+	@Test
+	public void testGetObjectFromNameClassPair() throws NamingException {
+		Object expectedObject = "object";
+		Object expectedResult = "result";
+		Binding expectedBinding = new Binding("some name", expectedObject);
 
-        when(mapperMock.mapFromContext(expectedObject)).thenReturn(expectedResult);
+		when(mapperMock.mapFromContext(expectedObject)).thenReturn(expectedResult);
 
-        Object actualResult = tested.getObjectFromNameClassPair(expectedBinding);
+		Object actualResult = tested.getObjectFromNameClassPair(expectedBinding);
 
-        assertThat(actualResult).isEqualTo(expectedResult);
-    }
+		assertThat(actualResult).isEqualTo(expectedResult);
+	}
 
-    @Test
-    public void testGetObjectFromNameClassPairImplementingHasControls() throws NamingException {
-        Object expectedObject = "object";
-        Object expectedResult = "result";
-        MyBindingThatHasControls expectedBinding = new MyBindingThatHasControls("some name", expectedObject);
+	@Test
+	public void testGetObjectFromNameClassPairImplementingHasControls() throws NamingException {
+		Object expectedObject = "object";
+		Object expectedResult = "result";
+		MyBindingThatHasControls expectedBinding = new MyBindingThatHasControls("some name", expectedObject);
 
-        when(mapperMock.mapFromContextWithControls(expectedObject, expectedBinding)).thenReturn(expectedResult);
+		when(mapperMock.mapFromContextWithControls(expectedObject, expectedBinding)).thenReturn(expectedResult);
 
-        Object actualResult = tested.getObjectFromNameClassPair(expectedBinding);
+		Object actualResult = tested.getObjectFromNameClassPair(expectedBinding);
 
-        assertThat(actualResult).isEqualTo(expectedResult);
-    }
+		assertThat(actualResult).isEqualTo(expectedResult);
+	}
 
-    @Test(expected = ObjectRetrievalException.class)
-    public void testGetObjectFromNameClassPairObjectRetrievalException() throws NamingException {
-        Binding expectedBinding = new Binding("some name", null);
+	@Test(expected = ObjectRetrievalException.class)
+	public void testGetObjectFromNameClassPairObjectRetrievalException() throws NamingException {
+		Binding expectedBinding = new Binding("some name", null);
 
-        tested.getObjectFromNameClassPair(expectedBinding);
-    }
+		tested.getObjectFromNameClassPair(expectedBinding);
+	}
 
 }
