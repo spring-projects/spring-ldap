@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,10 +28,10 @@ import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 import org.springframework.ldap.odm.core.OdmException;
 import org.springframework.ldap.odm.core.impl.DefaultObjectDirectoryMapper;
 import org.springframework.ldap.query.LdapQuery;
+import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
 
 import javax.naming.Binding;
 import javax.naming.Name;
@@ -44,10 +44,16 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
 import javax.naming.ldap.LdapName;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.function.Function;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Executes core LDAP functionality and helps to avoid common errors, relieving
@@ -1688,6 +1694,53 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public <T> Stream<T> searchForStream(LdapQuery query, AttributesMapper<T> attributesMapper) {
+		return searchForStream(query, (SearchResult result) -> {
+			Attributes attributes = result.getAttributes();
+			return unchecked(() -> attributesMapper.mapFromAttributes(attributes));
+		});
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <T> Stream<T> searchForStream(LdapQuery query, ContextMapper<T> mapper) {
+		return searchForStream(query, (SearchResult result) -> {
+			Object object = result.getObject();
+			if (object == null) {
+				throw new ObjectRetrievalException("Binding did not contain any object.");
+			}
+			return unchecked(() -> mapper.mapFromContext(object));
+		});
+	}
+
+	<T> Stream<T> searchForStream(LdapQuery query, Function<SearchResult, T> mapper) {
+		Name base = query.base();
+		Filter filter = query.filter();
+		SearchControls searchControls = searchControlsForQuery(query, RETURN_OBJ_FLAG);
+		DirContext ctx = contextSource.getReadOnlyContext();
+		String encodedFilter = filter.encode();
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(String.format("Searching - base=%1$s, finalFilter=%2$s, scope=%3$s", base, filter, searchControls));
+		}
+
+		assureReturnObjFlagSet(searchControls);
+
+		NamingEnumeration<SearchResult> results = unchecked(() -> ctx.search(base, encodedFilter, searchControls));
+		if (results == null) {
+			return Stream.empty();
+		}
+		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(CollectionUtils.toIterator(results), Spliterator.ORDERED), false)
+				.map((nameClassPair) -> unchecked(() -> mapper.apply(nameClassPair)))
+				.filter(Objects::nonNull).onClose(() -> closeContextAndNamingEnumeration(ctx, results));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public <T> T findByDn(Name dn, final Class<T> clazz) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug(String.format("Reading Entry at - %1$s", dn));
@@ -1882,6 +1935,51 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		}
 
 		return result.get(0);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <T> Stream<T> findForStream(LdapQuery query, Class<T> clazz) {
+		LdapQueryBuilder builder = LdapQueryBuilder.fromQuery(query);
+		if (query.attributes() == null) {
+			String[] attributes = odm.manageClass(clazz);
+			builder.attributes(attributes);
+		}
+		Filter includeClass = odm.filterFor(clazz, query.filter());
+		ContextMapper<T> contextMapper = (object) -> odm.mapFromLdapDataEntry((DirContextOperations) object, clazz);
+		return searchForStream(builder.filter(includeClass), contextMapper);
+	}
+
+	private <T> T unchecked(CheckedSupplier<T> supplier) {
+		try {
+			return supplier.get();
+		} catch (NameNotFoundException e) {
+			// It is possible to ignore errors caused by base not found
+			if (!ignoreNameNotFoundException) {
+				throw LdapUtils.convertLdapException(e);
+			}
+			LOG.warn("Base context not found, ignoring: " + e.getMessage());
+		} catch (PartialResultException e) {
+			// Workaround for AD servers not handling referrals correctly.
+			if (!ignorePartialResultException) {
+				throw LdapUtils.convertLdapException(e);
+			}
+			LOG.debug("PartialResultException encountered and ignored", e);
+		} catch(SizeLimitExceededException e) {
+			if(!ignoreSizeLimitExceededException) {
+				throw LdapUtils.convertLdapException(e);
+			}
+			LOG.debug("SizeLimitExceededException encountered and ignored", e);
+		} catch (javax.naming.NamingException e) {
+			throw LdapUtils.convertLdapException(e);
+		}
+		return null;
+	}
+
+	private interface CheckedSupplier<T> {
+		T get() throws javax.naming.NamingException;
 	}
 
 	/**

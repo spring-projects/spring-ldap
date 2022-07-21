@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Interface that specifies a basic set of LDAP operations. Implemented by
@@ -1694,6 +1695,37 @@ public interface LdapOperations {
 	<T> T searchForObject(LdapQuery query, ContextMapper<T> mapper);
 
 	/**
+	 * Perform a search with parameters from the specified LdapQuery. The Attributes of the found entries will be
+	 * supplied to the <code>AttributesMapper</code> for processing, and all
+	 * returned objects will be collected in a list to be returned.
+	 *
+	 * @param query the LDAP query specification.
+	 * @param mapper the <code>Attributes</code> to supply all found Attributes to.
+	 * @return a <code>Stream</code> of all entries received from the
+	 * <code>Attributes</code>.
+	 *
+	 * @throws NamingException if any error occurs.
+	 * @since 3.0
+	 * @see org.springframework.ldap.query.LdapQueryBuilder
+	 */
+	<T> Stream<T> searchForStream(LdapQuery query, AttributesMapper<T> mapper);
+
+	/**
+	 * Perform a search with parameters from the specified LdapQuery. All found objects will be supplied to the
+	 * <code>ContextMapper</code> for processing, and all returned objects will be collected in a list to be returned.
+	 *
+	 * @param query the LDAP query specification.
+	 * @param mapper the <code>ContextMapper</code> to supply all found entries to.
+	 * @return a <code>Stream</code> of all entries received from the
+	 * <code>ContextMapper</code>.
+	 *
+	 * @throws NamingException if any error occurs.
+	 * @since 3.0
+	 * @see org.springframework.ldap.query.LdapQueryBuilder
+	 */
+	<T> Stream<T> searchForStream(LdapQuery query, ContextMapper<T> mapper);
+
+	/**
 	 * Read a named entry from the LDAP directory. The referenced class must have object-directory mapping metadata
 	 * specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
 	 *
@@ -1843,6 +1875,24 @@ public interface LdapOperations {
 	 * @throws IncorrectResultSizeDataAccessException if more than one matching entry is found
 	 */
 	<T> T findOne(LdapQuery query, Class<T> clazz);
+
+	/**
+	 * Search for entries in the LDAP directory. The referenced class must have object-directory
+	 * mapping metadata specified using {@link org.springframework.ldap.odm.annotations.Entry} and associated annotations.
+	 * <p>
+	 * Only those entries that both match the query search filter and
+	 * are represented by the given Java class are returned.
+	 *
+	 * @param <T> The Java type to return
+	 * @param query the LDAP query specification
+	 * @param clazz The Java type to return
+	 * @return All matching entries.
+	 *
+	 * @throws org.springframework.ldap.NamingException on error.
+	 * @see org.springframework.ldap.query.LdapQueryBuilder
+	 * @since 3.0
+	 */
+	<T> Stream<T> findForStream(LdapQuery query, Class<T> clazz);
 
 	/**
 	 * Get the configured ObjectDirectoryMapper. For internal use.

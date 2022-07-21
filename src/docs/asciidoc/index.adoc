@@ -1158,6 +1158,10 @@ public class OdmPersonRepo {
    public List<Person> findByLastName(String lastName) {
       return ldapTemplate.find(query().where("sn").is(lastName), Person.class);
    }
+
+   public Stream<Person> streamFindByLastName(String lastName) {
+      return ldapTemplate.findStream(query().where("sn").is(lastName), Person.class);
+   }
 }
 ----
 ====

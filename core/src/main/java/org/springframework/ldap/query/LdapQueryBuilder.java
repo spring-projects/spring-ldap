@@ -79,6 +79,26 @@ public final class LdapQueryBuilder implements LdapQuery {
 	}
 
 	/**
+	 * Construct a new LdapQueryBuilder based on an existing {@link LdapQuery}
+	 * All non-filter fields are copied.
+	 * @return a new instance.
+	 * @since 3.0
+	 */
+	public static LdapQueryBuilder fromQuery(LdapQuery query) {
+		LdapQueryBuilder builder = LdapQueryBuilder.query()
+				.attributes(query.attributes())
+				.base(query.base());
+		if (query.countLimit() != null) {
+			builder.countLimit(query.countLimit());
+		}
+		builder.searchScope(query.searchScope());
+		if (query.timeLimit() != null) {
+			builder.timeLimit(query.timeLimit());
+		}
+		return builder;
+	}
+
+	/**
 	 * Set the base search path for the query.
 	 * Default is {@link org.springframework.ldap.support.LdapUtils#emptyLdapName()}.
 	 *

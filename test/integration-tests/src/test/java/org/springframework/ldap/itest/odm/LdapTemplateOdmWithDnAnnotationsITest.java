@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +78,23 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
 		List<PersonWithDnAnnotations> persons = tested.find(query()
 				.base("ou=Sweden")
 				.where("cn").isPresent(), PersonWithDnAnnotations.class);
+
+		assertThat(persons).hasSize(4);
+
+		PersonWithDnAnnotations person = findPerson(persons, "Some Person3");
+
+		// Automatically calculated
+		assertThat(person.getCompany()).isEqualTo("company1");
+		assertThat(person.getCountry()).isEqualTo("Sweden");
+		assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
+	}
+
+	@Test
+	public void testFindForStreamInCountry() {
+		List<PersonWithDnAnnotations> persons = tested.findForStream(query()
+						.base("ou=Sweden")
+						.where("cn").isPresent(), PersonWithDnAnnotations.class)
+				.collect(Collectors.toList());
 
 		assertThat(persons).hasSize(4);
 

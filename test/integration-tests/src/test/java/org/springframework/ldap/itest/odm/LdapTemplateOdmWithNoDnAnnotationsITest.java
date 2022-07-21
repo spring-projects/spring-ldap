@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,10 +95,40 @@ public class LdapTemplateOdmWithNoDnAnnotationsITest extends AbstractLdapTemplat
 	}
 
 	@Test
+	public void testFindForStream() {
+		List<Person> persons = tested.findForStream(query()
+						.where("cn").is("Some Person3"), Person.class)
+				.collect(Collectors.toList());
+
+		assertThat(persons).hasSize(1);
+		Person person = persons.get(0);
+
+		assertThat(person).isNotNull();
+		assertThat(person.getCommonName()).isEqualTo("Some Person3");
+		assertThat(person.getSurname()).isEqualTo("Person3");
+		assertThat(person.getDesc().get(0)).isEqualTo("Sweden, Company1, Some Person3");
+		assertThat(person.getTelephoneNumber()).isEqualTo("+46 555-123654");
+		assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
+	}
+
+	@Test
 	public void testFindInCountry() {
 		List<Person> persons = tested.find(query()
 				.base("ou=Sweden")
 				.where("cn").isPresent(), Person.class);
+
+		assertThat(persons).hasSize(4);
+		Person person = persons.get(0);
+
+		assertThat(person).isNotNull();
+	}
+
+	@Test
+	public void testFindForStreamInCountry() {
+		List<Person> persons = tested.findForStream(query()
+						.base("ou=Sweden")
+						.where("cn").isPresent(), Person.class)
+				.collect(Collectors.toList());
 
 		assertThat(persons).hasSize(4);
 		Person person = persons.get(0);
