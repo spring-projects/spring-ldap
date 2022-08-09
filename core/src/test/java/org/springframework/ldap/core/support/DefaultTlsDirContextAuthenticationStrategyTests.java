@@ -1,13 +1,12 @@
 package org.springframework.ldap.core.support;
 
+import javax.naming.ldap.LdapContext;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import javax.naming.ldap.LdapContext;
-
-import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 
 /**
