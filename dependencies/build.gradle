@@ -16,7 +16,7 @@ ext.queryDslVersion = '4.0.9'
 dependencies {
 	api platform("org.springframework:spring-framework-bom:6.0.0-M5")
 	api platform("org.springframework.data:spring-data-bom:2022.0.0-M5")
-	api platform("com.fasterxml.jackson:jackson-bom:2.13.0")
+	api platform("com.fasterxml.jackson:jackson-bom:2.13.3")
 	api platform("org.junit:junit-bom:5.8.2")
 	constraints {
 		api "com.querydsl:querydsl-core:$queryDslVersion"
