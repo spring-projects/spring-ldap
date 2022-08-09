@@ -33,7 +33,7 @@ dependencies {
 		api "commons-io:commons-io:2.11.0"
 		api "commons-lang:commons-lang:2.6"
 		api "commons-logging:commons-logging:1.2"
-		api "commons-pool:commons-pool:1.4"
+		api "commons-pool:commons-pool:1.6"
 		api "gsbase:gsbase:2.0.1"
 		api "javax.activation:activation:1.1"
 		api "jdepend:jdepend:2.9.1"
