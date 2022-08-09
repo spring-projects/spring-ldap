@@ -13,8 +13,6 @@ dependencies {
 
     implementation "com.google.code.typica:typica"
     implementation "commons-io:commons-io"
-    implementation "javax.activation:activation"
-
 
     optional "org.apache.directory.server:apacheds-core-entry"
     optional "org.apache.directory.server:apacheds-core"
