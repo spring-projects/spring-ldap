@@ -1,0 +1,59 @@
+# Release Process
+
+### 1. Update Dependencies
+
+Check for available updates. If available, update at least Spring Framework, Spring Data, and Spring Security.
+
+### 2. Update Release Number
+
+Update `build.gradle`'s version property:
+
+```bash
+export RELEASE=3.0.0-M4
+sed -i 's/version=(.*)/version=${RELEASE}/' build.gradle
+```
+
+### 3. Build
+
+Check to ensure that everything builds:
+
+```bash
+gw check
+```
+
+### 4. Commit and Watch
+
+Commit the release:
+
+```bash
+git commit -m "Release ${RELEASE}"
+```
+
+This will push a build to https://jenkins.spring.io/job/spring-ldap/job/main/.
+Once the build passes, proceed to the next step.
+
+### 5. Tag
+
+Tag and push the release commit:
+
+```bash
+git tag ${RELEASE}
+git push origin ${RELEASE}
+```
+
+### 6. Notify on Slack
+
+Announce the release on the `#spring-release` channel:
+
+```bash
+spring-ldap-announcing `3.0.0-M4` is out!
+```
+
+### 7. Prepare for Next Development Cycle
+
+Update and commit `build.gradle`:
+
+```bash
+sed -i 's/version=(.*)/version=3.0.0-SNAPSHOT'
+git commit -am "Next Development Version"
+```
