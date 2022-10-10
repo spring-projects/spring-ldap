@@ -31,6 +31,11 @@ import java.lang.annotation.Target;
  * prepended with the {@link org.springframework.ldap.odm.annotations.Entry#base()} value will be used
  * to figure out the distinguished name of entries to create and update.
  * </p>
+ * <p>
+ * A field annotated with {@code @DnAttribute} that shall not be bound to an Attribute, i.e. it is
+ * only part of the Distinguished Name and not represented by an object attribute, must also be
+ * annotated with {@link org.springframework.ldap.odm.annotations.Transient}.
+ * </p>
  * @author Mattias Hellborg Arthursson
  * @since 2.0
  */
