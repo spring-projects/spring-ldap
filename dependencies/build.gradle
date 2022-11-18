@@ -15,7 +15,7 @@ ext.queryDslVersion = '5.0.0'
 
 dependencies {
 	api platform("org.springframework:spring-framework-bom:6.0.0")
-	api platform("org.springframework.data:spring-data-bom:2022.0.0-M6")
+	api platform("org.springframework.data:spring-data-bom:2021.2.5")
 	api platform('com.fasterxml.jackson:jackson-bom:2.14.0')
 	api platform("org.junit:junit-bom:5.9.1")
 	constraints {
@@ -59,9 +59,9 @@ dependencies {
 		api "org.slf4j:log4j-over-slf4j:1.7.32"
 		api "org.slf4j:slf4j-api:1.7.32"
 		api "org.slf4j:slf4j-log4j12:1.7.32"
-		api "org.springframework.security:spring-security-config:6.0.0-M7"
-		api "org.springframework.security:spring-security-core:6.0.0-M7"
-		api "org.springframework.security:spring-security-ldap:6.0.0-M7"
+		api "org.springframework.security:spring-security-config:5.7.5"
+		api "org.springframework.security:spring-security-core:5.7.5"
+		api "org.springframework.security:spring-security-ldap:5.7.5"
 		api "org.springframework.ldap:spring-ldap-core:2.4.1"
 	}
 }
