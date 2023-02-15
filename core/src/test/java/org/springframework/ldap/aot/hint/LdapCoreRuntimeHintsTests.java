@@ -1,5 +1,7 @@
 package org.springframework.ldap.aot.hint;
 
+import javax.net.ssl.SSLSocketFactory;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,4 +48,9 @@ public class LdapCoreRuntimeHintsTests {
 				.accepts(this.hints);
 	}
 
+	@Test
+	public void sslSocketFactoryHasHints() throws Exception {
+		assertThat(RuntimeHintsPredicates.reflection().onMethod(SSLSocketFactory.class.getDeclaredMethod("getDefault")))
+				.accepts(this.hints);
+	}
 }

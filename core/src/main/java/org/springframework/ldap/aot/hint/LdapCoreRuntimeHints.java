@@ -16,6 +16,9 @@
 
 package org.springframework.ldap.aot.hint;
 
+import java.util.Collections;
+
+import org.springframework.aot.hint.ExecutableMode;
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
@@ -65,6 +68,9 @@ class LdapCoreRuntimeHints implements RuntimeHintsRegistrar {
 		hints.reflection().registerTypeIfPresent(classLoader, "com.sun.jndi.ldap.ctl.SortResponseControl",
 				(builder) -> builder.onReachableType(SortControlDirContextProcessor.class)
 						.withMembers(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS));
+		hints.reflection().registerType(TypeReference.of("javax.net.ssl.SSLSocketFactory"), (builder) -> builder
+				.withMethod("getDefault", Collections.emptyList(), ExecutableMode.INVOKE)
+				.onReachableType(TypeReference.of("com.sun.jndi.ldap.Connection")));
 	}
 
 }
