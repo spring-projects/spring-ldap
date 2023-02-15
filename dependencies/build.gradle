@@ -48,7 +48,7 @@ dependencies {
 		api "org.aspectj:aspectjweaver:1.9.19"
 		api "org.assertj:assertj-core:3.23.1"
 		api "org.easymock:easymock:4.3"
-		api "org.freemarker:freemarker:2.3.31"
+		api "org.freemarker:freemarker:2.3.32"
 		api "org.hibernate:hibernate-core-jakarta:5.6.12.Final"
 		api "org.hsqldb:hsqldb:2.7.0"
 		api "junit:junit:4.13.2"
