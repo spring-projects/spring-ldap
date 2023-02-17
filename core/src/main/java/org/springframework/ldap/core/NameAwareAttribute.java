@@ -293,7 +293,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 		NameAwareAttribute that = (NameAwareAttribute) o;
 
-		if (id != null ? !id.equals(that.id) : that.id != null) return false;
+		if (id != null ? !id.equalsIgnoreCase(that.id) : that.id != null) return false;
 		if(this.values.size() != that.values.size()) {
 			return false;
 		}
