@@ -25,9 +25,9 @@ import org.springframework.ldap.core.support.AbstractContextMapper;
  * 
  * @author Mattias Hellborg Arthursson
  */
-public class PersonContextMapper extends AbstractContextMapper {
+public class PersonContextMapper extends AbstractContextMapper<Person> {
 
-	protected Object doMapFromContext(DirContextOperations ctx) {
+	protected Person doMapFromContext(DirContextOperations ctx) {
 		Person person = new Person();
 		person.setFullname(ctx.getStringAttribute("cn"));
 		person.setLastname(ctx.getStringAttribute("sn"));

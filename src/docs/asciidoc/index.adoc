@@ -43,8 +43,9 @@ Spring LDAP is designed to simplify LDAP programming in Java. Some of the featur
 * Proper LDAP connection pooling.
 * Client-side LDAP compensating transaction support.
 
+[[spring-ldap-traditional-ldap-vs-ldapclient]]
 [[spring-ldap-traditional-ldap-vs-ldaptemplate]]
-=== Traditional Java LDAP versus `LdapTemplate`
+=== Traditional Java LDAP versus `LdapClient`
 
 Consider a method that should search some storage for all persons and return their names in a list.
 By using JDBC, we would create a _connection_ and run a _query_ by using a _statement_. We would then loop over the _result set_ and retrieve the _column_ we want, adding it to a list.
@@ -114,7 +115,7 @@ public class TraditionalPersonRepoImpl implements PersonRepo {
 ----
 ====
 
-By using the Spring LDAP `AttributesMapper` and `LdapTemplate` classes, we get the exact same functionality with the following code:
+By using the Spring LDAP `AttributesMapper` and `LdapClient` classes, we get the exact same functionality with the following code:
 
 ====
 [source,java]
@@ -124,28 +125,25 @@ package com.example.repo;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 public class PersonRepoImpl implements PersonRepo {
-   private LdapTemplate ldapTemplate;
+   private LdapClient ldapClient;
 
-   public void setLdapTemplate(LdapTemplate ldapTemplate) {
-      this.ldapTemplate = ldapTemplate;
+   public void setLdapClient(LdapClient ldapClient) {
+      this.ldapClient = ldapClient;
    }
 
    public List<String> getAllPersonNames() {
-      return ldapTemplate.search(
-         **query().where("objectclass").is("person")**,
-         new AttributesMapper<String>() {
-            public String mapFromAttributes(Attributes attrs)
-               throws NamingException {
-               **return attrs.get("cn").get().toString();**
-            }
-         });
+      return ldapClient.search().query(
+            **query().where("objectclass").is("person")**
+         ).toObject((Attributes attrs) ->
+            **attrs.get("cn").get().toString();**
+         );
    }
 }
 ----
 ====
 
 The amount of boilerplate code is significantly less than in the traditional example.
-The `LdapTemplate` search method makes sure a `DirContext` instance is created, performs the search, maps the attributes to a string by using the given `AttributesMapper`,
+The `LdapClient` search method makes sure a `DirContext` instance is created, performs the search, maps the attributes to a string by using the given `AttributesMapper`,
 collects the strings in an internal list, and, finally, returns the list. It also makes sure that the `NamingEnumeration` and `DirContext` are properly closed and
 takes care of any exceptions that might happen.
 
@@ -167,10 +165,12 @@ Naturally, this being a Spring Framework sub-project, we use Spring to configure
           username="cn=Manager"
           password="secret" />
 
-   <ldap:ldap-template id="ldapTemplate" />
+   <bean id="ldapClient" class="org.springframework.ldap.core.LdapClient" factory-method="create">
+        <constructor-arg ref="contextSource" />
+    </bean>
 
    <bean id="personRepo" class="com.example.repo.PersonRepoImpl">
-      <property name="ldapTemplate" ref="ldapTemplate" />
+      <property name="ldapClient" ref="ldapClient" />
    </bean>
 </beans>
 ----
@@ -300,27 +300,22 @@ package com.example.repo;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 public class PersonRepoImpl implements PersonRepo {
-   private LdapTemplate ldapTemplate;
+   private LdapClient ldapClient;
 
-   public void setLdapTemplate(LdapTemplate ldapTemplate) {
-      this.ldapTemplate = ldapTemplate;
+   public void setLdapClient(LdapClient ldapClient) {
+      this.ldapClient = ldapClient;
    }
 
    public List<String> getAllPersonNames() {
-      return ldapTemplate.search(
-         query().where("objectclass").is("person"),
-         **new AttributesMapper<String>() {
-            public String mapFromAttributes(Attributes attrs)
-               throws NamingException {
-               return (String) attrs.get("cn").get();
-            }
-         });
-   }**
+      return ldapClient.search()
+                .query(query().where("objectclass").is("person"))
+                .toList(**(Attributes attrs) -> (String) attrs.get("cn").get()**);
+   }
 }
 ----
 ====
 
-The inline implementation of `AttributesMapper` gets the desired attribute value from the `Attributes` object and returns it. Internally, `LdapTemplate` iterates over all entries found, calls the given `AttributesMapper` for each entry, and collects the results in a list. The list is then returned by the `search` method.
+The inline implementation of `AttributesMapper` gets the desired attribute value from the `Attributes` object and returns it. Internally, `LdapClient` iterates over all entries found, calls the given `AttributesMapper` for each entry, and collects the results in a list. The list is then returned by the `search` method.
 
 Note that the `AttributesMapper` implementation could easily be modified to return a full `Person` object, as follows:
 
@@ -333,7 +328,7 @@ package com.example.repo;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 public class PersonRepoImpl implements PersonRepo {
-   private LdapTemplate ldapTemplate;
+   private LdapClient ldapClient;
    ...
    **private class PersonAttributesMapper implements AttributesMapper<Person> {
       public Person mapFromAttributes(Attributes attrs) throws NamingException {
@@ -346,15 +341,16 @@ public class PersonRepoImpl implements PersonRepo {
    }**
 
    public List<Person> getAllPersons() {
-      return ldapTemplate.search(query()
-          .where("objectclass").is("person"), **new PersonAttributesMapper()**);
+      return ldapClient.search()
+            .query(query().where("objectclass").is("person"))
+            .toList(new PersonAttributesMapper());
    }
 }
 ----
 ====
 
 Entries in LDAP are uniquely identified by their distinguished name (DN).
-If you have the DN of an entry, you can retrieve the entry directly without searching for it.
+If you have the DN of an entry, you can retrieve the entry directly without querying for it.
 This is called a "`lookup`" in Java LDAP. The following example shows a lookup for a `Person` object:
 
 .A lookup resulting in a Person object
@@ -364,10 +360,10 @@ This is called a "`lookup`" in Java LDAP. The following example shows a lookup f
 package com.example.repo;
 
 public class PersonRepoImpl implements PersonRepo {
-   private LdapTemplate ldapTemplate;
+   private LdapClient ldapClient;
    ...
    public Person findPerson(String dn) {
-      return ldapTemplate.lookup(dn, new PersonAttributesMapper());
+      return ldapClient.search().name(dn).toObject(new PersonAttributesMapper());
    }
 }
 ----
@@ -400,7 +396,7 @@ package com.example.repo;
 **import static org.springframework.ldap.query.LdapQueryBuilder.query;**
 
 public class PersonRepoImpl implements PersonRepo {
-   private LdapTemplate ldapTemplate;
+   private LdapClient ldapClient;
    ...
    public List<String> getPersonNamesByLastName(String lastName) {
 
@@ -410,14 +406,8 @@ public class PersonRepoImpl implements PersonRepo {
          .where("objectclass").is("person")
          .and("sn").is(lastName);**
 
-      return ldapTemplate.search(**query**,
-         new AttributesMapper<String>() {
-            public String mapFromAttributes(Attributes attrs)
-               throws NamingException {
-
-               return (String) attrs.get("cn").get();
-            }
-         });
+      return ldapClient.search().query(**query**)
+            .toObject((Attributes attrs) -> (String) attrs.get("cn").get());
    }
 }
 ----
@@ -425,7 +415,7 @@ public class PersonRepoImpl implements PersonRepo {
 
 NOTE: In addition to simplifying building of complex search parameters, the `LdapQueryBuilder` and its associated classes also provide proper escaping of any unsafe characters in search filters. This prevents "`LDAP injection`", where a user might use such characters to inject unwanted operations into your LDAP operations.
 
-NOTE: `LdapTemplate` includes many overloaded methods for performing LDAP searches. This is in order to accommodate as many different use cases and programming style preferences as possible. For the vast majority of use cases, the methods that take an `LdapQuery` as input are the recommended methods to use.
+NOTE: `LdapClient` includes many overloaded methods for performing LDAP searches. This is in order to accommodate as many different use cases and programming style preferences as possible. For the vast majority of use cases, the methods that take an `LdapQuery` as input are the recommended methods to use.
 
 NOTE: The `AttributesMapper` is only one of the available callback interfaces you can use when handling search and lookup data. See <<dirobjectfactory>> for alternatives.
 
@@ -536,7 +526,7 @@ This section describes how to add and remove data. Updating is covered in the <<
 
 Inserting data in Java LDAP is called binding. This is somewhat confusing, because in LDAP terminology, "`bind`" means something completely different.
 A JNDI bind performs an LDAP Add operation, associating a new entry that has a specified distinguished name with a set of attributes.
-The following example adds data by using `LdapTemplate`:
+The following example adds data by using `LdapClient`:
 
 .Adding data using Attributes
 ====
@@ -546,11 +536,11 @@ The following example adds data by using `LdapTemplate`:
 package com.example.repo;
 
 public class PersonRepoImpl implements PersonRepo {
-   private LdapTemplate ldapTemplate;
+   private LdapClient ldapClient;
    ...
    public void create(Person p) {
       Name dn = buildDn(p);
-      **ldapTemplate.bind(dn, null, buildAttributes(p));**
+      **ldapClient.bind(dn).attributes(buildAttributes(p)).execute();**
    }
 
    private Attributes buildAttributes(Person p) {
@@ -574,7 +564,7 @@ Manual attributes building is -- while dull and verbose -- sufficient for many p
 
 Removing data in Java LDAP is called unbinding.
 A JNDI unbind performs an LDAP Delete operation, removing the entry associated with the specified distinguished name from the LDAP tree.
-The following example removes data by using `LdapTemplate`:
+The following example removes data by using `LdapClient`:
 
 .Removing data
 ====
@@ -584,11 +574,11 @@ The following example removes data by using `LdapTemplate`:
 package com.example.repo;
 
 public class PersonRepoImpl implements PersonRepo {
-   private LdapTemplate ldapTemplate;
+   private LdapClient ldapClient;
    ...
    public void delete(Person p) {
       Name dn = buildDn(p);
-      **ldapTemplate.unbind(dn);**
+      **ldapClient.unbind(dn).execute();**
    }
 }
 ----
@@ -603,7 +593,7 @@ In Java LDAP, data can be modified in two ways: either by using `rebind` or by u
 ==== Updating by Using Rebind
 
 A `rebind` is a crude way to modify data. It is basically an `unbind` followed by a `bind`.
-The following example uses `rebind`:
+The following example invokes LDAP's `rebind`:
 
 .Modifying using rebind
 ====
@@ -613,11 +603,11 @@ The following example uses `rebind`:
 package com.example.repo;
 
 public class PersonRepoImpl implements PersonRepo {
-   private LdapTemplate ldapTemplate;
+   private LdapClient ldapClient;
    ...
    public void update(Person p) {
       Name dn = buildDn(p);
-      **ldapTemplate.rebind(dn, null, buildAttributes(p));**
+      **ldapTemplate.bind(dn).attributes(buildAttributes(p)).replaceExisting(true).execute();**
    }
 }
 ----
@@ -637,13 +627,13 @@ and performs them on a specific entry, as follows:
 package com.example.repo;
 
 public class PersonRepoImpl implements PersonRepo {
-   private LdapTemplate ldapTemplate;
+   private LdapClient ldapClient;
    ...
    public void updateDescription(Person p) {
       Name dn = buildDn(p);
       Attribute attr = new BasicAttribute("description", p.getDescription())
       ModificationItem item = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, attr);
-      **ldapTemplate.modifyAttributes(dn, new ModificationItem[] {item});**
+      **ldapTemplate.modify().name(dn).attributes(item).execute();**
    }
 }
 ----
@@ -689,7 +679,7 @@ public class PersonRepoImpl implements PersonRepo {
    public Person findByPrimaryKey(
       String name, String company, String country) {
       Name dn = buildDn(name, company, country);
-      return ldapTemplate.lookup(dn, **new PersonContextMapper()**);
+      return ldapClient.search().name(dn).toObject(**new PersonContextMapper()**);
    }
 }
 ----
@@ -776,7 +766,7 @@ public class PersonRepoImpl implements PersonRepo {
       context.setAttributeValue("sn", p.getLastname());
       context.setAttributeValue("description", p.getDescription());**
 
-      ldapTemplate.bind(context);
+      ldapClient.bind(dn).object(context).execute();
    }
 }
 ----
@@ -807,23 +797,23 @@ public class PersonRepoImpl implements PersonRepo {
    ...
    public void update(Person p) {
       Name dn = buildDn(p);
-      **DirContextOperations context = ldapTemplate.lookupContext(dn);**
+      **DirContextOperations context = ldapClient.search().name(dn).toEntry();**
 
       context.setAttributeValue("cn", p.getFullname());
       context.setAttributeValue("sn", p.getLastname());
       context.setAttributeValue("description", p.getDescription());
 
-      **ldapTemplate.modifyAttributes(context);**
+      **ldapClient.modify(dn).attributes(context.getModificationItems()).execute();**
    }
 }
 ----
 ====
 
-When no mapper is passed to a `ldapTemplate.lookup()`, the result is a `DirContextAdapter` instance.
-While the `lookup` method returns an `Object`, the `lookupContext` convenience method method automatically casts the return value to a `DirContextOperations`
+When calling `SearchSpec#toEntry`, the result is a `DirContextAdapter` instance by default.
+While the `lookup` method returns an `Object`, `toEntry` automatically casts the return value to a `DirContextOperations`
 (the interface that `DirContextAdapter` implements).
 
-Notice that we have duplicate code in the `create` and `update` methods. This code maps from a domain object to a context. It can be extracted to a separate method, as follows:
+Notice that we have duplicate code in the `LdapTemplate#create` and `LdapTemplate#update` methods. This code maps from a domain object to a context. It can be extracted to a separate method, as follows:
 
 .Adding and modifying using DirContextAdapter
 ====
@@ -833,7 +823,7 @@ Notice that we have duplicate code in the `create` and `update` methods. This co
 package com.example.repo;
 
 public class PersonRepoImpl implements PersonRepo {
-   private LdapTemplate ldapTemplate;
+   private LdapClient ldapClient;
 
    ...
    public void create(Person p) {
@@ -842,14 +832,14 @@ public class PersonRepoImpl implements PersonRepo {
 
       context.setAttributeValues("objectclass", new String[] {"top", "person"});
       mapToContext(p, context);
-      ldapTemplate.bind(context);
+      ldapClient.bind(dn).object(context).execute();
    }
 
    public void update(Person p) {
       Name dn = buildDn(p);
-      DirContextOperations context = ldapTemplate.lookupContext(dn);
+      DirContextOperations context = ldapClient.search().name(dn).toEntry();
       mapToContext(person, context);
-      ldapTemplate.modifyAttributes(context);
+      ldapClient.modify(dn).attributes(context.getModificationItems()).execute();
    }
 
    protected void mapToContext (Person p, DirContextOperations context) {
@@ -882,11 +872,11 @@ use distinguished name equality when calculating attribute modifications. If we 
 [subs="verbatim,quotes"]
 ----
 public class GroupRepo implements BaseLdapNameAware {
-    private LdapTemplate ldapTemplate;
+    private LdapClient ldapClient;
     private LdapName baseLdapPath;
 
-    public void setLdapTemplate(LdapTemplate ldapTemplate) {
-        this.ldapTemplate = ldapTemplate;
+    public void setLdapClient(LdapClient ldapClient) {
+        this.ldapClient = ldapClient;
     }
 
     public void setBaseLdapPath(LdapName baseLdapPath) {
@@ -900,10 +890,10 @@ public class GroupRepo implements BaseLdapNameAware {
             person.getCompany(),
             person.getCountry());
 
-        DirContextOperation ctx = ldapTemplate.lookupContext(groupDn);
+        DirContextOperation ctx = ldapClient.search().name(groupDn).toEntry();
         ctx.addAttributeValue("member", userDn);
 
-        ldapTemplate.update(ctx);
+        ldapClient.modify(groupDn).attributes(ctx.getModificationItems()).execute();
     }
 
     public void removeMemberFromGroup(String groupName, Person p) {
@@ -913,10 +903,10 @@ public class GroupRepo implements BaseLdapNameAware {
             person.getCompany(),
             person.getCountry());
 
-        DirContextOperation ctx = ldapTemplate.lookupContext(groupDn);
+        DirContextOperation ctx = ldapClient.search().name(groupDn).toEntry();
         ctx.removeAttributeValue("member", userDn);
 
-        ldapTemplate.update(ctx);
+        ldapClient.modify(groupDn).attributes(ctx.getModificationItems()).execute();
     }
 
     private Name buildGroupDn(String groupName) {
@@ -965,45 +955,45 @@ import org.springframework.ldap.filter.WhitespaceWildcardsFilter;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 public class PersonRepoImpl implements PersonRepo {
-   private LdapTemplate ldapTemplate;
+   private LdapClient ldapClient;
 
-   public void setLdapTemplate(LdapTemplate ldapTemplate) {
-      this.ldapTemplate = ldapTemplate;
+   public void setLdapClient(LdapClient ldapClient) {
+      this.ldapClient = ldapClient;
    }
 
    public void create(Person person) {
       DirContextAdapter context = new DirContextAdapter(buildDn(person));
       mapToContext(person, context);
-      ldapTemplate.bind(context);
+      ldapClient.bind(context.getDn()).object(context).execute();
    }
 
    public void update(Person person) {
       Name dn = buildDn(person);
-      DirContextOperations context = ldapTemplate.lookupContext(dn);
+      DirContextOperations context = ldapClient.lookupContext(dn);
       mapToContext(person, context);
-      ldapTemplate.modifyAttributes(context);
+      ldapClient.modify(dn).attributes(context.getModificationItems()).execute();
    }
 
    public void delete(Person person) {
-      ldapTemplate.unbind(buildDn(person));
+      ldapClient.unbind(buildDn(person)).execute();
    }
 
    public Person findByPrimaryKey(String name, String company, String country) {
       Name dn = buildDn(name, company, country);
-      return ldapTemplate.lookup(dn, getContextMapper());
+      return ldapClient.search().name(dn).toObject(getContextMapper());
    }
 
-   public List findByName(String name) {
+   public List<Person> findByName(String name) {
       LdapQuery query = query()
          .where("objectclass").is("person")
          .and("cn").whitespaceWildcardsLike("name");
 
-      return ldapTemplate.search(query, getContextMapper());
+      return ldapClient.search().query(query).toList(getContextMapper());
    }
 
-   public List findAll() {
+   public List<Person> findAll() {
       EqualsFilter filter = new EqualsFilter("objectclass", "person");
-      return ldapTemplate.search(LdapUtils.emptyPath(), filter.encode(), getContextMapper());
+      return ldapClient.search().query((query) -> query.filter(filter)).toList(getContextMapper());
    }
 
    protected ContextMapper getContextMapper() {
@@ -1259,9 +1249,9 @@ The following query searches for all entries with an object class of `Person`:
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 ...
 
-List<Person> persons = ldapTemplate.search(
-      query().where("objectclass").is("person"),
-      new PersonAttributesMapper());
+List<Person> persons = ldapClient.search()
+      .query(query().where("objectclass").is("person"))
+      .toList(new PersonAttributesMapper());
 
 ----
 ====
@@ -1276,10 +1266,9 @@ The following query searches for all entries with an object class of `person` an
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 ...
 
-List<Person> persons = ldapTemplate.search(
-      query().where("objectclass").is("person")
-             .and("cn").is("John Doe"),
-      new PersonAttributesMapper());
+List<Person> persons = ldapClient.search()
+      .query(query().where("objectclass").is("person").and("cn").is("John Doe"))
+      .toList(new PersonAttributesMapper());
 ----
 ====
 
@@ -1293,10 +1282,9 @@ The following query searches for all entries with an object class of `person` an
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 ...
 
-List<Person> persons = ldapTemplate.search(
-      query().base("dc=261consulting,dc=com")
-             .where("objectclass").is("person"),
-      new PersonAttributesMapper());
+List<Person> persons = ldapClient.search()
+      .query(query().base("dc=261consulting,dc=com").where("objectclass").is("person"))
+      .toList(new PersonAttributesMapper());
 ----
 ====
 
@@ -1311,11 +1299,11 @@ The following query returns the `cn` (common name) attribute for all entries wit
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 ...
 
-List<Person> persons = ldapTemplate.search(
-      query().base("dc=261consulting,dc=com")
+Stream<Person> persons = ldapClient.search()
+      .query(query().base("dc=261consulting,dc=com")
              .attributes("cn")
-             .where("objectclass").is("person"),
-      new PersonAttributesMapper());
+             .where("objectclass").is("person")),
+      .toStream(new PersonAttributesMapper());
 
 ----
 ====
@@ -1328,10 +1316,10 @@ The following query uses `or` to search for multiple spellings of a common name 
 ----
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 ...
-List<Person> persons = ldapTemplate.search(
-      query().where("objectclass").is("person"),
-             .and(query().where("cn").is("Doe").or("cn").is("Doo"));
-      new PersonAttributesMapper());
+Stream<Person> persons = ldapClient.search()
+      .query(query().where("objectclass").is("person"),
+             .and(query().where("cn").is("Doe").or("cn").is("Doo"))
+      .toStream(new PersonAttributesMapper());
 ----
 ====
 
@@ -1463,7 +1451,7 @@ a|  Defines the strategy with which to handle referrals, as described https://do
 When `DirContext` instances are created to be used for performing operations on an LDAP server, these contexts often need to be authenticated.
 Spring LDAP offers various options for configuring this.
 
-NOTE: This section refers to authenticating contexts in the core functionality of the `ContextSource`, to construct `DirContext` instances for use by `LdapTemplate`. LDAP is commonly used for the sole purpose of user authentication, and the `ContextSource` may be used for that as well. That process is discussed in <<user-authentication>>.
+NOTE: This section refers to authenticating contexts in the core functionality of the `ContextSource`, to construct `DirContext` instances for use by `LdapClient` and `LdapTemplate`. LDAP is commonly used for the sole purpose of user authentication, and the `ContextSource` may be used for that as well. That process is discussed in <<user-authentication>>.
 
 By default, authenticated contexts are created for both read-only and read-write operations. You should specify the `username` and `password` of the LDAP user to be used for authentication on the `context-source` element.
 
@@ -1536,6 +1524,33 @@ This section covers more advanced ways to configure a `ContextSource`.
 
 In some cases, you might want to specify additional environment setup properties, in addition to the ones directly configurable on `context-source`. You should set such properties in a `Map` and reference them in the `base-env-props-ref` attribute.
 
+=== `LdapClient` Configuration
+
+`LdapClient` is the new interface for calling an LDAP backend. It improves upon `LdapTemplate` in the following ways:
+
+* Provides built-in `Stream` support
+* Provides a simplified API centered around bind (C), search (R), modify (U), unbind (D), and authenticate.
+
+[NOTE]
+`LdapClient` does not yet support ODM.
+If this is something you need, `LdapTemplate` has this capacity.
+Both `LdapClient` and `LdapTemplate` can coexist quite nicely in the same application, if needed.
+
+An `LdapClient` is defined by using the `LdapClient#create` factory method like so:
+
+.Simplest possible LdapClient declaration
+====
+[source,xml]
+----
+<bean id="ldapClient" class="org.springframework.ldap.core.LdapClient" factory-method="create">
+   <constructor-arg ref="contextSource" />
+</bean>
+----
+====
+
+This element references the default `ContextSource`, which is expected to have an ID of `contextSource` (the default for the `context-source` element).
+
+Your `LdapClient` instance can be configured for how to handle certain checked exceptions and what any default `SearchControls` should be used for queries.
 
 === `LdapTemplate` Configuration
 
@@ -2400,7 +2415,7 @@ This section covers user authentication with Spring LDAP. It contains the follow
 [[spring-ldap-user-authentication-basic]]
 === Basic Authentication
 
-While the core functionality of the `ContextSource` is to provide `DirContext` instances for use by `LdapTemplate`, you can also use it for authenticating users against an LDAP server. The `getContext(principal, credentials)` method of `ContextSource` does exactly that. It constructs a `DirContext` instance according to the `ContextSource` configuration and authenticates the context by using the supplied principal and credentials. A custom authenticate method could look like the following example:
+While the core functionality of the `ContextSource` is to provide `DirContext` instances for use by `LdapClient` and `LdapTemplate`, you can also use it for authenticating users against an LDAP server. The `getContext(principal, credentials)` method of `ContextSource` does exactly that. It constructs a `DirContext` instance according to the `ContextSource` configuration and authenticates the context by using the supplied principal and credentials. A custom authenticate method could look like the following example:
 
 ====
 [source,java]
@@ -2430,13 +2445,9 @@ The `userDn` supplied to the `authenticate` method needs to be the full DN of th
 [subs="verbatim,quotes"]
 ----
 private String getDnForUser(String uid) {
-  List<String> result = ldapTemplate.search(
-      query().where("uid").is(uid),
-      new AbstractContextMapper() {
-         protected String doMapFromContext(DirContextOperations ctx) {
-            return ctx.getNameInNamespace();
-         }
-      });
+  List<String> result = ldapClient.search()
+      .query(query().where("uid").is(uid))
+      .toList((Object ctx) -> ((DirContextOperations) ctx).getNameInNamespace());
 
   if(result.size() != 1) {
     throw new RuntimeException("User not found or not unique");
@@ -2447,7 +2458,7 @@ private String getDnForUser(String uid) {
 ----
 ====
 
-There are some drawbacks to this approach. You are forced to concern yourself with the DN of the user, you can search only for the user's uid, and the search always starts at the root of the tree (the empty path). A more flexible method would let you specify the search base, the search filter, and the credentials. Spring LDAP includes an authenticate method in `LdapTemplate` that provides this functionality: `boolean authenticate(LdapQuery query, String password);`.
+There are some drawbacks to this approach. You are forced to concern yourself with the DN of the user, you can search only for the user's uid, and the search always starts at the root of the tree (the empty path). A more flexible method would let you specify the search base, the search filter, and the credentials. Spring LDAP includes an authenticate method in `LdapClient` that provides this functionality.
 
 When you use this method, authentication becomes as simple as follows:
 
@@ -2456,7 +2467,7 @@ When you use this method, authentication becomes as simple as follows:
 [source,java]
 [subs="verbatim,quotes"]
 ----
-ldapTemplate.authenticate(query().where("uid").is("john.doe"), "secret");
+ldapClient.authenticate().query(query().where("uid").is("john.doe")).password("secret").execute();
 ----
 ====
 
@@ -2493,7 +2504,7 @@ public boolean myAuthenticate(String userDn, String credentials) {
 ----
 ====
 
-It would be better if the operation could be provided as an implementation of a callback interface, rather than limiting the operation to always be a `lookup`. Spring LDAP includes the `AuthenticatedLdapEntryContextMapper` callback interface and a corresponding `authenticate` method: `<T> T authenticate(LdapQuery query, String password, AuthenticatedLdapEntryContextMapper<T> mapper);`
+It would be better if the operation could be provided as an implementation of a callback interface, rather than limiting the operation to always be a `lookup`. Spring LDAP includes the `AuthenticatedLdapEntryContextMapper` callback interface and a corresponding `authenticate` method.
 
 This method lets any operation be performed on the authenticated context, as follows:
 
@@ -2513,7 +2524,7 @@ AuthenticatedLdapEntryContextMapper<DirContextOperations> mapper = new Authentic
   }
 };
 
-ldapTemplate.authenticate(query().where("uid").is("john.doe"), "secret", mapper);
+ldapClient.authenticate().query(query().where("uid").is("john.doe")).password("secret").execute(mapper);
 ----
 ====
 

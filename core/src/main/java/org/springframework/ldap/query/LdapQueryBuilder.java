@@ -20,6 +20,7 @@ import org.springframework.ldap.filter.Filter;
 import org.springframework.ldap.filter.HardcodedFilter;
 import org.springframework.ldap.support.LdapEncoder;
 import org.springframework.ldap.support.LdapUtils;
+import org.springframework.util.Assert;
 
 import javax.naming.Name;
 import java.text.MessageFormat;
@@ -62,6 +63,8 @@ public final class LdapQueryBuilder implements LdapQuery {
 
 	private DefaultContainerCriteria rootContainer = null;
 
+	private boolean isFilterStarted = false;
+
 	/**
 	 * Not to be instantiated directly - use static query() method.
 	 */
@@ -79,15 +82,20 @@ public final class LdapQueryBuilder implements LdapQuery {
 	}
 
 	/**
-	 * Construct a new LdapQueryBuilder based on an existing {@link LdapQuery}
-	 * All non-filter fields are copied.
+	 * Construct a new {@link LdapQueryBuilder} based on an existing {@link LdapQuery}
+	 * All fields are copied, including giving the query a default filter.
+	 *
+	 * <p>
+	 * Note that all filter invariants are still enforced; an application cannot specify
+	 * any non-filter values after it specifies a filter.
+	 *
 	 * @return a new instance.
 	 * @since 3.0
 	 */
 	public static LdapQueryBuilder fromQuery(LdapQuery query) {
-		LdapQueryBuilder builder = LdapQueryBuilder.query()
-				.attributes(query.attributes())
-				.base(query.base());
+		LdapQueryBuilder builder = new LdapQueryBuilder();
+		builder.rootContainer = new DefaultContainerCriteria(builder).append(query.filter());
+		builder.attributes(query.attributes()).base(query.base());
 		if (query.countLimit() != null) {
 			builder.countLimit(query.countLimit());
 		}
@@ -184,6 +192,7 @@ public final class LdapQueryBuilder implements LdapQuery {
 	private void initRootContainer() {
 		assertFilterNotStarted();
 		rootContainer = new DefaultContainerCriteria(this);
+		isFilterStarted = true;
 	}
 
 	/**
@@ -237,9 +246,7 @@ public final class LdapQueryBuilder implements LdapQuery {
 	}
 
 	private void assertFilterNotStarted() {
-		if(rootContainer != null) {
-			throw new IllegalStateException("Invalid operation - filter condition specification already started");
-		}
+		Assert.state(!isFilterStarted, "Invalid operation - filter condition specification already started");
 	}
 
 	@Override
