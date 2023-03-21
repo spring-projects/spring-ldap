@@ -17,7 +17,7 @@ buildscript {
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.28.2"
         classpath 'org.hidetake:gradle-ssh-plugin:2.10.1'
         classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.30.0'
-        classpath 'io.spring.javaformat:spring-javaformat-gradle-plugin:0.0.38'
+        classpath "io.spring.javaformat:spring-javaformat-gradle-plugin:$springJavaformatVersion"
     }
 }
 
@@ -67,10 +67,22 @@ s101 {
 allprojects {
         if (!['spring-ldap-bom', 'spring-security-docs'].contains(project.name)) {
                 apply plugin: 'io.spring.javaformat'
+		apply plugin: 'checkstyle'
+		
+		pluginManager.withPlugin("io.spring.convention.checkstyle", { plugin ->
+                        configure(plugin) {
+                                dependencies {
+                                        checkstyle "io.spring.javaformat:spring-javaformat-checkstyle:$springJavaformatVersion"
+                                }
+                                checkstyle {
+                                        toolVersion = '8.34'
+                                }
+                        }
+                })
 
                 if (project.name.contains('sample')) {
                         tasks.whenTaskAdded { task ->
-                                if (task.name.contains('format') || task.name.contains('checkFormat')) {
+                                if (task.name.contains('format') || task.name.contains('checkFormat') || task.name.contains('checkstyle')) {
                                         task.enabled = false
                                 }
                         }
