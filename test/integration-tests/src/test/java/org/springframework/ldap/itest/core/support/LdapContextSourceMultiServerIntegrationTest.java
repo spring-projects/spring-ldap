@@ -27,10 +27,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Advanced integration tests for LdapContextSource.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
-@ContextConfiguration(locations = {"/conf/ldapContextSourceTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapContextSourceTestContext.xml" })
 public class LdapContextSourceMultiServerIntegrationTest extends AbstractJUnit4SpringContextTests {
 
 	@Autowired
@@ -43,4 +43,5 @@ public class LdapContextSourceMultiServerIntegrationTest extends AbstractJUnit4S
 
 		assertThat(string).isEqualTo("ldap://127.0.0.1:389 ldap://127.0.0.2:389");
 	}
+
 }

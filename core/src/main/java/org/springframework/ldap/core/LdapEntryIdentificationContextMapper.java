@@ -28,8 +28,8 @@ public class LdapEntryIdentificationContextMapper implements ContextMapper<LdapE
 
 	public LdapEntryIdentification mapFromContext(Object ctx) {
 		DirContextOperations adapter = (DirContextOperations) ctx;
-		return new LdapEntryIdentification(
-				LdapUtils.newLdapName(adapter.getNameInNamespace()),
+		return new LdapEntryIdentification(LdapUtils.newLdapName(adapter.getNameInNamespace()),
 				LdapUtils.newLdapName(adapter.getDn()));
 	}
+
 }

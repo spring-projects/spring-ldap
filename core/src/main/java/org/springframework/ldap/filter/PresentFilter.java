@@ -16,22 +16,23 @@
 package org.springframework.ldap.filter;
 
 /**
- * Filter that allows the user to check for the existence of a attribute. For an
- * attribute to be {@code 'present'} it must contain a value. Attributes that do
- * not contain a value are {@code 'NOT present'}. To filter on attributes that
- * are {@code 'NOT present'} use the {@link NotPresentFilter} or use this filter
- * in combination with a {@link NotFilter} .
- * 
+ * Filter that allows the user to check for the existence of a attribute. For an attribute
+ * to be {@code 'present'} it must contain a value. Attributes that do not contain a value
+ * are {@code 'NOT present'}. To filter on attributes that are {@code 'NOT present'} use
+ * the {@link NotPresentFilter} or use this filter in combination with a {@link NotFilter}
+ * .
+ *
  * <pre>
  * PresentFilter filter = new PresentFilter(&quot;foo&quot;);
  * System.out.println(filter.encode());
  * </pre>
- * 
+ *
  * would result in:
- * 
+ *
  * <pre>
  *  (foo=*)
  * </pre>
+ *
  * @author Jordan Hein
  */
 public class PresentFilter extends AbstractFilter {
@@ -40,9 +41,7 @@ public class PresentFilter extends AbstractFilter {
 
 	/**
 	 * Creates a new instance of a present filter for a particular attribute.
-	 * 
-	 * @param attribute the attribute expected to be present (ie, contains a
-	 * value).
+	 * @param attribute the attribute expected to be present (ie, contains a value).
 	 */
 	public PresentFilter(String attribute) {
 		this.attribute = attribute;
@@ -57,12 +56,15 @@ public class PresentFilter extends AbstractFilter {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 
 		PresentFilter that = (PresentFilter) o;
 
-		if (attribute != null ? !attribute.equals(that.attribute) : that.attribute != null) return false;
+		if (attribute != null ? !attribute.equals(that.attribute) : that.attribute != null)
+			return false;
 
 		return true;
 	}
@@ -71,4 +73,5 @@ public class PresentFilter extends AbstractFilter {
 	public int hashCode() {
 		return attribute != null ? attribute.hashCode() : 0;
 	}
+
 }

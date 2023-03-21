@@ -18,7 +18,7 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI MalformedLinkException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.MalformedLinkException
@@ -28,4 +28,5 @@ public class MalformedLinkException extends LinkException {
 	public MalformedLinkException(javax.naming.MalformedLinkException cause) {
 		super(cause);
 	}
+
 }

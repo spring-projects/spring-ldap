@@ -59,4 +59,5 @@ public class AbstractContextSourceTest {
 		String result = AbstractContextSource.formatForUrl(ldapName);
 		assertThat(result).isEqualTo("");
 	}
+
 }

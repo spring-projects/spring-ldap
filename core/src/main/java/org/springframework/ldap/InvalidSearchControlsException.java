@@ -18,15 +18,15 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI InvalidSearchControlsException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.directory.InvalidSearchControlsException
  */
 public class InvalidSearchControlsException extends NamingException {
 
-	public InvalidSearchControlsException(
-			javax.naming.directory.InvalidSearchControlsException cause) {
+	public InvalidSearchControlsException(javax.naming.directory.InvalidSearchControlsException cause) {
 		super(cause);
 	}
+
 }

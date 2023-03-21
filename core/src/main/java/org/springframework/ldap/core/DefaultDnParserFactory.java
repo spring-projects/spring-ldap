@@ -18,13 +18,14 @@ package org.springframework.ldap.core;
 import java.io.StringReader;
 
 /**
- * A factory for creating DnParser instances. The actual implementation of
- * DnParser is generated using javacc and should not be constructed directly.
- * 
+ * A factory for creating DnParser instances. The actual implementation of DnParser is
+ * generated using javacc and should not be constructed directly.
+ *
  * @author Mattias Hellborg Arthursson
  * @deprecated {@link DistinguishedName} and associated classes are deprecated as of 2.0.
  */
 public final class DefaultDnParserFactory {
+
 	/**
 	 * Not to be instantiated.
 	 */
@@ -34,12 +35,11 @@ public final class DefaultDnParserFactory {
 
 	/**
 	 * Create a new DnParser instance.
-	 * 
-	 * @param string
-	 *			the DN String to be parsed.
+	 * @param string the DN String to be parsed.
 	 * @return a new DnParser instance for parsing the supplied DN string.
 	 */
 	public static DnParser createDnParser(String string) {
 		return new DnParserImpl(new StringReader(string));
 	}
+
 }

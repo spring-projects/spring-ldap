@@ -25,15 +25,14 @@ import javax.naming.directory.ModificationItem;
 
 /**
  * A {@link CompensatingTransactionOperationExecutor} to manage a
- * <code>modifyAttributes</code> operation. Performs a
- * <code>modifyAttributes</code> in {@link #performOperation()}, a negating
- * modifyAttributes in {@link #rollback()}, and nothing in {@link #commit()}.
- * 
+ * <code>modifyAttributes</code> operation. Performs a <code>modifyAttributes</code> in
+ * {@link #performOperation()}, a negating modifyAttributes in {@link #rollback()}, and
+ * nothing in {@link #commit()}.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
-public class ModifyAttributesOperationExecutor implements
-		CompensatingTransactionOperationExecutor {
+public class ModifyAttributesOperationExecutor implements CompensatingTransactionOperationExecutor {
 
 	private static Logger log = LoggerFactory.getLogger(ModifyAttributesOperationExecutor.class);
 
@@ -47,21 +46,16 @@ public class ModifyAttributesOperationExecutor implements
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param ldapOperations
-	 *			The {@link LdapOperations} to use to perform the rollback
-	 *			operation.
-	 * @param dn
-	 *			the DN of the target entry.
-	 * @param actualModifications
-	 *			the actual modificationItems that were sent to the
-	 *			modifyAttributes operation.
-	 * @param compensatingModifications
-	 *			the ModificationItems to undo the recorded operation.
+	 * @param ldapOperations The {@link LdapOperations} to use to perform the rollback
+	 * operation.
+	 * @param dn the DN of the target entry.
+	 * @param actualModifications the actual modificationItems that were sent to the
+	 * modifyAttributes operation.
+	 * @param compensatingModifications the ModificationItems to undo the recorded
+	 * operation.
 	 */
-	public ModifyAttributesOperationExecutor(LdapOperations ldapOperations,
-			Name dn, ModificationItem[] actualModifications,
-			ModificationItem[] compensatingModifications) {
+	public ModifyAttributesOperationExecutor(LdapOperations ldapOperations, Name dn,
+			ModificationItem[] actualModifications, ModificationItem[] compensatingModifications) {
 		this.ldapOperations = ldapOperations;
 		this.dn = dn;
 		this.actualModifications = actualModifications.clone();
@@ -69,28 +63,30 @@ public class ModifyAttributesOperationExecutor implements
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#rollback()
+	 * @see org.springframework.ldap.support.transaction.
+	 * CompensatingTransactionOperationExecutor#rollback()
 	 */
 	public void rollback() {
 		try {
 			log.debug("Rolling back modifyAttributes operation");
 			ldapOperations.modifyAttributes(dn, compensatingModifications);
-		} catch (Exception e) {
-			log
-					.warn("Failed to rollback ModifyAttributes operation, dn: "
-							+ dn);
+		}
+		catch (Exception e) {
+			log.warn("Failed to rollback ModifyAttributes operation, dn: " + dn);
 		}
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#commit()
+	 * @see org.springframework.ldap.support.transaction.
+	 * CompensatingTransactionOperationExecutor#commit()
 	 */
 	public void commit() {
 		log.debug("Nothing to do in commit for modifyAttributes");
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#performOperation()
+	 * @see org.springframework.ldap.support.transaction.
+	 * CompensatingTransactionOperationExecutor#performOperation()
 	 */
 	public void performOperation() {
 		log.debug("Performing modifyAttributes operation");
@@ -112,4 +108,5 @@ public class ModifyAttributesOperationExecutor implements
 	ModificationItem[] getCompensatingModifications() {
 		return compensatingModifications;
 	}
+
 }

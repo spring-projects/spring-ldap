@@ -44,10 +44,10 @@ import static org.assertj.core.api.Assertions.fail;
  * @author Ulrik Sandberg
  */
 public class DirContextAdapterTest {
+
 	private static final LdapName BASE_NAME = LdapUtils.newLdapName("dc=jayway,dc=se");
 
-	private static final LdapName DUMMY_NAME = LdapUtils.newLdapName(
-			"c=SE,dc=jayway,dc=se");
+	private static final LdapName DUMMY_NAME = LdapUtils.newLdapName("c=SE,dc=jayway,dc=se");
 
 	private DirContextAdapter tested;
 
@@ -92,9 +92,11 @@ public class DirContextAdapterTest {
 		final Attributes attrs = new BasicAttributes();
 		attrs.put(new BasicAttribute("abc"));
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(attrs, null);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		String s = tested.getStringAttribute("abc");
@@ -106,9 +108,11 @@ public class DirContextAdapterTest {
 		final Attributes attrs = new BasicAttributes();
 		attrs.put(new BasicAttribute("abc"));
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(attrs, null);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		boolean result = tested.attributeExists("abc");
@@ -126,9 +130,11 @@ public class DirContextAdapterTest {
 		final Attributes attrs = new BasicAttributes();
 		attrs.put(new BasicAttribute("abc", "def"));
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(attrs, null);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		String s = tested.getStringAttribute("abc");
@@ -143,9 +149,11 @@ public class DirContextAdapterTest {
 		multi.add("234");
 		attrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(attrs, null);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		String s[] = tested.getStringAttributes("abc");
@@ -161,9 +169,11 @@ public class DirContextAdapterTest {
 		multi.add(new Object());
 		attrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(attrs, null);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		try {
@@ -181,9 +191,11 @@ public class DirContextAdapterTest {
 		Attribute multi = new BasicAttribute("abc");
 		attrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(attrs, null);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		String s[] = tested.getStringAttributes("abc");
@@ -205,9 +217,11 @@ public class DirContextAdapterTest {
 		multi.add("234");
 		attrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(attrs, null);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		SortedSet s = tested.getAttributeSortedStringSet("abc");
@@ -222,9 +236,11 @@ public class DirContextAdapterTest {
 	public void testGetAttributesSortedStringSetNotExists() throws Exception {
 		final Attributes attrs = new BasicAttributes();
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(attrs, null);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		SortedSet s = tested.getAttributeSortedStringSet("abc");
@@ -242,8 +258,7 @@ public class DirContextAdapterTest {
 	}
 
 	@Test
-	public void testAddAttributeValueAttributeWithOtherValueExists()
-			throws NamingException {
+	public void testAddAttributeValueAttributeWithOtherValueExists() throws NamingException {
 		tested.setAttribute(new BasicAttribute("abc", "321"));
 
 		// Perform test
@@ -256,8 +271,7 @@ public class DirContextAdapterTest {
 	}
 
 	@Test
-	public void testAddAttributeValueAttributeWithSameValueExists()
-			throws NamingException {
+	public void testAddAttributeValueAttributeWithSameValueExists() throws NamingException {
 		tested.setAttribute(new BasicAttribute("abc", "123"));
 
 		// Perform test
@@ -286,8 +300,7 @@ public class DirContextAdapterTest {
 	}
 
 	@Test
-	public void testAddAttributeValueInUpdateModeAttributeWhenOtherValueExistsInOrigAttrs()
-			throws NamingException {
+	public void testAddAttributeValueInUpdateModeAttributeWhenOtherValueExistsInOrigAttrs() throws NamingException {
 
 		tested.setAttribute(new BasicAttribute("abc", "321"));
 		tested.setUpdateMode(true);
@@ -324,8 +337,7 @@ public class DirContextAdapterTest {
 	}
 
 	@Test
-	public void testAddAttributeValueInUpdateModeAttributeWithOtherValueExistsInUpdAttrs()
-			throws NamingException {
+	public void testAddAttributeValueInUpdateModeAttributeWithOtherValueExistsInUpdAttrs() throws NamingException {
 		tested.setUpdateMode(true);
 		tested.setAttributeValue("abc", "321");
 
@@ -344,8 +356,7 @@ public class DirContextAdapterTest {
 	}
 
 	@Test
-	public void testAddAttributeValueInUpdateModeAttributeWithSameValueExistsInUpdAttrs()
-			throws NamingException {
+	public void testAddAttributeValueInUpdateModeAttributeWithSameValueExistsInUpdAttrs() throws NamingException {
 		tested.setUpdateMode(true);
 		tested.setAttributeValue("abc", "123");
 
@@ -393,8 +404,7 @@ public class DirContextAdapterTest {
 	}
 
 	@Test
-	public void testRemoveAttributeValueAttributeWithOtherValueExists()
-			throws NamingException {
+	public void testRemoveAttributeValueAttributeWithOtherValueExists() throws NamingException {
 		tested.setAttribute(new BasicAttribute("abc", "321"));
 
 		// Perform test
@@ -420,8 +430,7 @@ public class DirContextAdapterTest {
 	}
 
 	@Test
-	public void testRemoveAttributeValueAttributeWithOtherAndSameValueExists()
-			throws NamingException {
+	public void testRemoveAttributeValueAttributeWithOtherAndSameValueExists() throws NamingException {
 		BasicAttribute basicAttribute = new BasicAttribute("abc");
 		basicAttribute.add("123");
 		basicAttribute.add("321");
@@ -465,8 +474,7 @@ public class DirContextAdapterTest {
 	}
 
 	@Test
-	public void testRemoveAttributeValueInUpdateModeOtherValueExistsInUpdatedAttrs()
-			throws NamingException {
+	public void testRemoveAttributeValueInUpdateModeOtherValueExistsInUpdatedAttrs() throws NamingException {
 		tested.setUpdateMode(true);
 		tested.setAttributeValue("abc", "321");
 
@@ -484,8 +492,7 @@ public class DirContextAdapterTest {
 	}
 
 	@Test
-	public void testRemoveAttributeValueInUpdateModeOtherAndSameValueExistsInUpdatedAttrs()
-			throws NamingException {
+	public void testRemoveAttributeValueInUpdateModeOtherAndSameValueExistsInUpdatedAttrs() throws NamingException {
 		tested.setUpdateMode(true);
 		tested.setAttributeValues("abc", new String[] { "321", "123" });
 
@@ -518,8 +525,7 @@ public class DirContextAdapterTest {
 	}
 
 	@Test
-	public void testRemoveAttributeValueInUpdateModeSameAndOtherValueExistsInOrigAttrs()
-			throws NamingException {
+	public void testRemoveAttributeValueInUpdateModeSameAndOtherValueExistsInOrigAttrs() throws NamingException {
 		BasicAttribute basicAttribute = new BasicAttribute("abc");
 		basicAttribute.add("123");
 		basicAttribute.add("321");
@@ -606,8 +612,7 @@ public class DirContextAdapterTest {
 
 	@Test
 	public void testGetDn_BasePath() {
-		DirContextAdapter tested = new DirContextAdapter(null, DUMMY_NAME,
-				BASE_NAME);
+		DirContextAdapter tested = new DirContextAdapter(null, DUMMY_NAME, BASE_NAME);
 		Name result = tested.getDn();
 		assertThat(result).isEqualTo(DUMMY_NAME);
 	}
@@ -621,8 +626,7 @@ public class DirContextAdapterTest {
 
 	@Test
 	public void testGetNameInNamespace_BasePath() {
-		DirContextAdapter tested = new DirContextAdapter(null,
-				LdapUtils.newLdapName("c=SE"), BASE_NAME);
+		DirContextAdapter tested = new DirContextAdapter(null, LdapUtils.newLdapName("c=SE"), BASE_NAME);
 		String result = tested.getNameInNamespace();
 		assertThat(result).isEqualTo(DUMMY_NAME.toString());
 	}
@@ -663,10 +667,12 @@ public class DirContextAdapterTest {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		fixtureAttrs.put(new BasicAttribute("abc", "123"));
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 
@@ -704,10 +710,12 @@ public class DirContextAdapterTest {
 		abc.add("456");
 		fixtureAttrs.put(abc);
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 
@@ -727,10 +735,12 @@ public class DirContextAdapterTest {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		fixtureAttrs.put(new BasicAttribute("abc", "123"));
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		tested.setAttributeValue("abc", "234"); // change
@@ -748,10 +758,12 @@ public class DirContextAdapterTest {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		fixtureAttrs.put(new BasicAttribute("abc", "123"));
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		assertThat(tested.isUpdateMode()).isTrue();
@@ -769,10 +781,12 @@ public class DirContextAdapterTest {
 		multi.add("qwe");
 		fixtureAttrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		assertThat(tested.isUpdateMode()).isTrue();
@@ -792,10 +806,12 @@ public class DirContextAdapterTest {
 		multi.add("qwe");
 		fixtureAttrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		tested.setAttributeValues("abc", new String[] { "qwe", "123" });
@@ -814,10 +830,12 @@ public class DirContextAdapterTest {
 		multi.add("qwe");
 		fixtureAttrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		assertThat(tested.isUpdateMode()).isTrue();
@@ -837,23 +855,23 @@ public class DirContextAdapterTest {
 	 * https://jira.springframework.org/browse/LDAP-96
 	 */
 	@Test
-	public void testChangeMultiAttributeOrderDoesMatterLDAP96()
-			throws Exception {
+	public void testChangeMultiAttributeOrderDoesMatterLDAP96() throws Exception {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		Attribute multi = new BasicAttribute("title");
 		multi.add("Juergen");
 		multi.add("George");
 		fixtureAttrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		assertThat(tested.isUpdateMode()).isTrue();
-		tested.setAttributeValues("title", new String[] { "Jim", "George",
-				"Juergen" }, true);
+		tested.setAttributeValues("title", new String[] { "Jim", "George", "Juergen" }, true);
 
 		// change
 		ModificationItem[] mods = tested.getModificationItems();
@@ -873,16 +891,16 @@ public class DirContextAdapterTest {
 		multi.add("qwe");
 		fixtureAttrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		assertThat(tested.isUpdateMode()).isTrue();
-		tested
-				.setAttributeValues("abc",
-						new String[] { "123", "qwe", "klytt" });
+		tested.setAttributeValues("abc", new String[] { "123", "qwe", "klytt" });
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
 		assertThat(modificationItems.length).isEqualTo(1);
@@ -898,10 +916,12 @@ public class DirContextAdapterTest {
 		multi.add("qwe");
 		fixtureAttrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		assertThat(tested.isUpdateMode()).isTrue();
@@ -922,10 +942,12 @@ public class DirContextAdapterTest {
 		multi.add("rty");
 		fixtureAttrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		assertThat(tested.isUpdateMode()).isTrue();
@@ -946,10 +968,12 @@ public class DirContextAdapterTest {
 		multi.add("qwe");
 		fixtureAttrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		assertThat(tested.isUpdateMode()).isTrue();
@@ -968,10 +992,12 @@ public class DirContextAdapterTest {
 		multi.add("qwe");
 		fixtureAttrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		assertThat(tested.isUpdateMode()).isTrue();
@@ -991,15 +1017,16 @@ public class DirContextAdapterTest {
 		multi.add("uio");
 		fixtureAttrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		assertThat(tested.isUpdateMode()).isTrue();
-		tested.setAttributeValues("abc", new String[] { "123", "qwe", "klytt",
-				"kalle" });
+		tested.setAttributeValues("abc", new String[] { "123", "qwe", "klytt", "kalle" });
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
 		assertThat(modificationItems.length).isEqualTo(2);
@@ -1027,10 +1054,12 @@ public class DirContextAdapterTest {
 		multi.add("qwe");
 		fixtureAttrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		assertThat(tested.isUpdateMode()).isTrue();
@@ -1046,10 +1075,12 @@ public class DirContextAdapterTest {
 		final Attributes fixtureAttrs = new BasicAttributes();
 		fixtureAttrs.put(new BasicAttribute("abc", "123"));
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		assertThat(tested.isUpdateMode()).isTrue();
@@ -1080,10 +1111,12 @@ public class DirContextAdapterTest {
 		fixtureAttrs.put(new BasicAttribute("abc", "123"));
 		fixtureAttrs.put(new BasicAttribute("qwe", "42"));
 		class TestableDirContextAdapter extends DirContextAdapter {
+
 			public TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
+
 		}
 		tested = new TestableDirContextAdapter();
 		assertThat(tested.isUpdateMode()).isTrue();
@@ -1100,8 +1133,7 @@ public class DirContextAdapterTest {
 		String[] modNames = tested.getNamesOfModifiedAttributes();
 		assertThat(modNames.length).isEqualTo(3);
 
-		ModificationItem mod = getModificationItem(mods,
-				DirContext.REPLACE_ATTRIBUTE);
+		ModificationItem mod = getModificationItem(mods, DirContext.REPLACE_ATTRIBUTE);
 		assertThat(mod).isNotNull();
 		attr = mod.getAttribute();
 		assertThat((String) attr.getID()).isEqualTo("abc");
@@ -1132,9 +1164,8 @@ public class DirContextAdapterTest {
 	}
 
 	/**
-	 * Test for LDAP-15: DirContextAdapter.setAttribute(). Verifies that setting
-	 * an Attribute should modify updatedAttrs if in update mode.
-	 *
+	 * Test for LDAP-15: DirContextAdapter.setAttribute(). Verifies that setting an
+	 * Attribute should modify updatedAttrs if in update mode.
 	 * @throws NamingException
 	 */
 	@Test
@@ -1173,8 +1204,7 @@ public class DirContextAdapterTest {
 		assertThat(result).isNull();
 	}
 
-	private ModificationItem getModificationItem(ModificationItem[] mods,
-			int operation) {
+	private ModificationItem getModificationItem(ModificationItem[] mods, int operation) {
 		for (int i = 0; i < mods.length; i++) {
 			if (mods[i].getModificationOp() == operation)
 				return mods[i];
@@ -1183,8 +1213,7 @@ public class DirContextAdapterTest {
 	}
 
 	@Test
-	public void testModifyMultiValueAttributeModificationOrder()
-			throws NamingException {
+	public void testModifyMultiValueAttributeModificationOrder() throws NamingException {
 		BasicAttribute attribute = new BasicAttribute("abc");
 		attribute.add("Some Person");
 		attribute.add("Some Other Person");
@@ -1192,8 +1221,7 @@ public class DirContextAdapterTest {
 		tested.setAttribute(attribute);
 		tested.setUpdateMode(true);
 
-		tested.setAttributeValues("abc", new String[] { "some person",
-				"Some Other Person" });
+		tested.setAttributeValues("abc", new String[] { "some person", "Some Other Person" });
 
 		// Perform test
 		ModificationItem[] modificationItems = tested.getModificationItems();
@@ -1223,12 +1251,11 @@ public class DirContextAdapterTest {
 	}
 
 	/**
-	 * Test for LDAP-109, since also DirContextAdapter may get an invalid
-	 * CompositeName sent to it.
+	 * Test for LDAP-109, since also DirContextAdapter may get an invalid CompositeName
+	 * sent to it.
 	 */
 	@Test
-	public void testConstructorUsingCompositeNameWithBackslashes()
-			throws Exception {
+	public void testConstructorUsingCompositeNameWithBackslashes() throws Exception {
 		CompositeName compositeName = new CompositeName();
 		compositeName.add("cn=Some\\\\Person6,ou=company1,c=Sweden");
 		DirContextAdapter adapter = new DirContextAdapter(compositeName);
@@ -1246,7 +1273,8 @@ public class DirContextAdapterTest {
 		BasicAttributes attributes = new BasicAttributes();
 		attributes.put("uniqueMember", "cn=john doe, ou=company");
 
-		DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+		DirContextAdapter tested = new DirContextAdapter(attributes,
+				LdapUtils.newLdapName("cn=administrators, ou=groups"));
 		tested.setUpdateMode(true);
 
 		tested.addAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
@@ -1259,7 +1287,8 @@ public class DirContextAdapterTest {
 		BasicAttributes attributes = new BasicAttributes();
 		attributes.put("uniqueMember", "cn=john doe,OU=company");
 
-		DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+		DirContextAdapter tested = new DirContextAdapter(attributes,
+				LdapUtils.newLdapName("cn=administrators, ou=groups"));
 		tested.setUpdateMode(true);
 
 		tested.addAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
@@ -1272,7 +1301,8 @@ public class DirContextAdapterTest {
 		BasicAttributes attributes = new BasicAttributes();
 		attributes.put("uniqueMember", "cn=john doe,OU=company");
 
-		DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+		DirContextAdapter tested = new DirContextAdapter(attributes,
+				LdapUtils.newLdapName("cn=administrators, ou=groups"));
 		tested.setUpdateMode(true);
 
 		tested.removeAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
@@ -1291,7 +1321,8 @@ public class DirContextAdapterTest {
 		attribute.add("cn=jane doe, ou=company");
 		attributes.put(attribute);
 
-		DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+		DirContextAdapter tested = new DirContextAdapter(attributes,
+				LdapUtils.newLdapName("cn=administrators, ou=groups"));
 		tested.setUpdateMode(true);
 
 		tested.removeAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
@@ -1309,7 +1340,8 @@ public class DirContextAdapterTest {
 		BasicAttributes attributes = new BasicAttributes();
 		attributes.put("uniqueMember", "cn=john doe, ou=company");
 
-		DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+		DirContextAdapter tested = new DirContextAdapter(attributes,
+				LdapUtils.newLdapName("cn=administrators, ou=groups"));
 		tested.setUpdateMode(true);
 
 		tested.addAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=jane doe, ou=company"));
@@ -1327,7 +1359,8 @@ public class DirContextAdapterTest {
 		BasicAttributes attributes = new BasicAttributes();
 		attributes.put("uniqueMember", "cn=john doe, ou=company");
 
-		DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+		DirContextAdapter tested = new DirContextAdapter(attributes,
+				LdapUtils.newLdapName("cn=administrators, ou=groups"));
 		tested.setUpdateMode(true);
 
 		tested.setAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=john doe, ou=company"));
@@ -1340,10 +1373,11 @@ public class DirContextAdapterTest {
 		BasicAttributes attributes = new BasicAttributes();
 		attributes.put("uniqueMember", "cn=john doe, ou=company");
 
-		DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+		DirContextAdapter tested = new DirContextAdapter(attributes,
+				LdapUtils.newLdapName("cn=administrators, ou=groups"));
 		tested.setUpdateMode(true);
 
-		tested.setAttributeValues("uniqueMember", new Object[]{LdapUtils.newLdapName("cn=john doe, ou=company")});
+		tested.setAttributeValues("uniqueMember", new Object[] { LdapUtils.newLdapName("cn=john doe, ou=company") });
 		ModificationItem[] modificationItems = tested.getModificationItems();
 		assertThat(modificationItems.length).isEqualTo(0);
 	}
@@ -1353,13 +1387,12 @@ public class DirContextAdapterTest {
 		BasicAttributes attributes = new BasicAttributes();
 		attributes.put("uniqueMember", "cn=john doe, ou=company");
 
-		DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=administrators, ou=groups"));
+		DirContextAdapter tested = new DirContextAdapter(attributes,
+				LdapUtils.newLdapName("cn=administrators, ou=groups"));
 		tested.setUpdateMode(true);
 
-		tested.setAttributeValues("uniqueMember", new Object[]{
-				LdapUtils.newLdapName("cn=john doe, ou=company"),
-				LdapUtils.newLdapName("cn=jane doe, ou=company")
-		});
+		tested.setAttributeValues("uniqueMember", new Object[] { LdapUtils.newLdapName("cn=john doe, ou=company"),
+				LdapUtils.newLdapName("cn=jane doe, ou=company") });
 
 		ModificationItem[] modificationItems = tested.getModificationItems();
 		assertThat(modificationItems.length).isEqualTo(1);
@@ -1369,4 +1402,5 @@ public class DirContextAdapterTest {
 		assertThat(modificationItem.getAttribute().getID()).isEqualTo("uniqueMember");
 		assertThat(modificationItem.getAttribute().get()).isEqualTo("cn=jane doe, ou=company");
 	}
+
 }

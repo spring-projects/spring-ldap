@@ -17,11 +17,13 @@ buildscript {
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.28.2"
         classpath 'org.hidetake:gradle-ssh-plugin:2.10.1'
         classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.30.0'
+        classpath 'io.spring.javaformat:spring-javaformat-gradle-plugin:0.0.38'
     }
 }
 
 apply plugin: 'io.spring.convention.root'
 apply plugin: 'io.spring.convention.docs'
+apply plugin: 'io.spring.javaformat'
 apply plugin: 's101'
 
 group = "org.springframework.ldap"
@@ -60,4 +62,18 @@ asciidoctor {
 
 s101 {
 	configurationDirectory = project.file("etc/s101")
+}
+
+allprojects {
+        if (!['spring-ldap-bom', 'spring-security-docs'].contains(project.name)) {
+                apply plugin: 'io.spring.javaformat'
+
+                if (project.name.contains('sample')) {
+                        tasks.whenTaskAdded { task ->
+                                if (task.name.contains('format') || task.name.contains('checkFormat')) {
+                                        task.enabled = false
+                                }
+                        }
+                }
+        }
 }

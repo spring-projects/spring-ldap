@@ -43,12 +43,13 @@ import java.io.InputStream;
 import java.util.Set;
 
 /**
- * Utilities for starting, stopping and populating an in-process Apache
- * Directory Server to use for integration testing purposes.
+ * Utilities for starting, stopping and populating an in-process Apache Directory Server
+ * to use for integration testing purposes.
  *
  * @author Mattias Hellborg Arthursson
  */
 public final class LdapTestUtils {
+
 	private final static Logger LOGGER = LoggerFactory.getLogger(LdapTestUtils.class);
 
 	private static EmbeddedLdapServer embeddedServer;
@@ -59,51 +60,49 @@ public final class LdapTestUtils {
 	private LdapTestUtils() {
 	}
 
-
 	/**
 	 * Start an in-process Apache Directory Server.
-	 *
-	 * @param port				   the port on which the server will be listening.
-	 * @param defaultPartitionSuffix The default base suffix that will be used
-	 *							   for the LDAP server.
-	 * @param defaultPartitionName   The name to use in the directory server
-	 *							   configuration for the default base suffix.
-	 * @param principal			  The principal to use when starting the directory server.
-	 * @param credentials			The credentials to use when starting the directory
-	 *							   server.
-	 * @param extraSchemas		   Set of extra schemas to add to the bootstrap schemas
-	 *							   of ApacheDS. May be <code>null</code>.
+	 * @param port the port on which the server will be listening.
+	 * @param defaultPartitionSuffix The default base suffix that will be used for the
+	 * LDAP server.
+	 * @param defaultPartitionName The name to use in the directory server configuration
+	 * for the default base suffix.
+	 * @param principal The principal to use when starting the directory server.
+	 * @param credentials The credentials to use when starting the directory server.
+	 * @param extraSchemas Set of extra schemas to add to the bootstrap schemas of
+	 * ApacheDS. May be <code>null</code>.
 	 * @return An unusable DirContext instance.
 	 * @throws NamingException If anything goes wrong when starting the server.
 	 * @deprecated use {@link #startEmbeddedServer(int, String, String)} instead.
 	 */
 	public static DirContext startApacheDirectoryServer(int port, String defaultPartitionSuffix,
-														String defaultPartitionName, String principal, String credentials, Set extraSchemas) throws NamingException {
+			String defaultPartitionName, String principal, String credentials, Set extraSchemas)
+			throws NamingException {
 
 		startEmbeddedServer(port, defaultPartitionSuffix, defaultPartitionName);
 		return new DummyDirContext();
 	}
 
 	/**
-	 * Start an embedded Apache Directory Server. Only one embedded server will be permitted in the same JVM.
-	 *
-	 * @param port				   the port on which the server will be listening.
-	 * @param defaultPartitionSuffix The default base suffix that will be used
-	 *							   for the LDAP server.
-	 * @param defaultPartitionName   The name to use in the directory server
-	 *							   configuration for the default base suffix.
-	 *
+	 * Start an embedded Apache Directory Server. Only one embedded server will be
+	 * permitted in the same JVM.
+	 * @param port the port on which the server will be listening.
+	 * @param defaultPartitionSuffix The default base suffix that will be used for the
+	 * LDAP server.
+	 * @param defaultPartitionName The name to use in the directory server configuration
+	 * for the default base suffix.
 	 * @throws IllegalStateException if an embedded server is already started.
 	 * @since 1.3.2
 	 */
 	public static void startEmbeddedServer(int port, String defaultPartitionSuffix, String defaultPartitionName) {
-		if(embeddedServer != null) {
+		if (embeddedServer != null) {
 			throw new IllegalStateException("An embedded server is already started");
 		}
 
 		try {
 			embeddedServer = EmbeddedLdapServer.newEmbeddedServer(defaultPartitionName, defaultPartitionSuffix, port);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw new UncategorizedLdapException("Failed to start embedded server", e);
 		}
 	}
@@ -112,20 +111,19 @@ public final class LdapTestUtils {
 	 * @deprecated use {@link #startEmbeddedServer(int, String, String)} instead.
 	 */
 	public static DirContext startApacheDirectoryServer(int port, String defaultPartitionSuffix,
-														String defaultPartitionName, String principal, String credentials) throws NamingException {
+			String defaultPartitionName, String principal, String credentials) throws NamingException {
 		return LdapTestUtils.startApacheDirectoryServer(port, defaultPartitionSuffix, defaultPartitionName, principal,
 				credentials, null);
 	}
 
 	/**
-	 * Shuts down the embedded server, if there is one. If no server was previously started in this JVM
-	 * this is silently ignored.
-	 *
+	 * Shuts down the embedded server, if there is one. If no server was previously
+	 * started in this JVM this is silently ignored.
 	 * @throws Exception
 	 * @since 1.3.2
 	 */
 	public static void shutdownEmbeddedServer() throws Exception {
-		if(embeddedServer != null) {
+		if (embeddedServer != null) {
 			embeddedServer.shutdown();
 			embeddedServer = null;
 		}
@@ -133,8 +131,7 @@ public final class LdapTestUtils {
 
 	/**
 	 * Shut down the in-process Apache Directory Server.
-	 *
-	 * @param principal   the principal to be used for authentication.
+	 * @param principal the principal to be used for authentication.
 	 * @param credentials the credentials to be used for authentication.
 	 * @throws Exception If anything goes wrong when shutting down the server.
 	 * @deprecated use {@link #shutdownEmbeddedServer()} instead.
@@ -144,11 +141,10 @@ public final class LdapTestUtils {
 	}
 
 	/**
-	 * Clear the directory sub-tree starting with the node represented by the
-	 * supplied distinguished name.
-	 *
+	 * Clear the directory sub-tree starting with the node represented by the supplied
+	 * distinguished name.
 	 * @param contextSource the ContextSource to use for getting a DirContext.
-	 * @param name		  the distinguished name of the root node.
+	 * @param name the distinguished name of the root node.
 	 * @throws NamingException if anything goes wrong removing the sub-tree.
 	 */
 	public static void clearSubContexts(ContextSource contextSource, Name name) throws NamingException {
@@ -156,20 +152,21 @@ public final class LdapTestUtils {
 		try {
 			ctx = contextSource.getReadWriteContext();
 			clearSubContexts(ctx, name);
-		} finally {
+		}
+		finally {
 			try {
 				ctx.close();
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				// Never mind this
 			}
 		}
 	}
 
 	/**
-	 * Clear the directory sub-tree starting with the node represented by the
-	 * supplied distinguished name.
-	 *
-	 * @param ctx  The DirContext to use for cleaning the tree.
+	 * Clear the directory sub-tree starting with the node represented by the supplied
+	 * distinguished name.
+	 * @param ctx The DirContext to use for cleaning the tree.
 	 * @param name the distinguished name of the root node.
 	 * @throws NamingException if anything goes wrong removing the sub-tree.
 	 */
@@ -185,17 +182,21 @@ public final class LdapTestUtils {
 
 				try {
 					ctx.unbind(childName);
-				} catch (ContextNotEmptyException e) {
+				}
+				catch (ContextNotEmptyException e) {
 					clearSubContexts(ctx, childName);
 					ctx.unbind(childName);
 				}
 			}
-		} catch (NamingException e) {
+		}
+		catch (NamingException e) {
 			LOGGER.debug("Error cleaning sub-contexts", e);
-		} finally {
+		}
+		finally {
 			try {
 				enumeration.close();
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				// Never mind this
 			}
 		}
@@ -203,20 +204,21 @@ public final class LdapTestUtils {
 
 	/**
 	 * Load an Ldif file into an LDAP server.
-	 *
-	 * @param contextSource ContextSource to use for getting a DirContext to
-	 *					  interact with the LDAP server.
-	 * @param ldifFile	  a Resource representing a valid LDIF file.
+	 * @param contextSource ContextSource to use for getting a DirContext to interact with
+	 * the LDAP server.
+	 * @param ldifFile a Resource representing a valid LDIF file.
 	 * @throws IOException if the Resource cannot be read.
 	 */
 	public static void loadLdif(ContextSource contextSource, Resource ldifFile) throws IOException {
 		DirContext context = contextSource.getReadWriteContext();
 		try {
 			loadLdif(context, ldifFile);
-		} finally {
+		}
+		finally {
 			try {
 				context.close();
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				// This is not the exception we are interested in.
 			}
 		}
@@ -235,8 +237,7 @@ public final class LdapTestUtils {
 
 	private static void loadLdif(DirContext context, Name rootNode, Resource ldifFile) {
 		try {
-			LdapName baseDn = (LdapName)
-					context.getEnvironment().get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY);
+			LdapName baseDn = (LdapName) context.getEnvironment().get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY);
 
 			LdifParser parser = new LdifParser(ldifFile);
 			parser.open();
@@ -245,16 +246,17 @@ public final class LdapTestUtils {
 
 				LdapName dn = record.getName();
 
-				if(baseDn != null) {
+				if (baseDn != null) {
 					dn = LdapUtils.removeFirst(dn, baseDn);
 				}
 
-				if(!rootNode.isEmpty()) {
+				if (!rootNode.isEmpty()) {
 					dn = LdapUtils.prepend(dn, rootNode);
 				}
 				context.bind(dn, null, record);
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw new UncategorizedLdapException("Failed to populate LDIF", e);
 		}
 	}
@@ -266,12 +268,15 @@ public final class LdapTestUtils {
 			IOUtils.copy(inputStream, new FileOutputStream(tempFile));
 			LdifFileLoader fileLoader = new LdifFileLoader(directoryService.getSession(), tempFile.getAbsolutePath());
 			fileLoader.execute();
-		} finally {
+		}
+		finally {
 			try {
 				tempFile.delete();
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				// Ignore this
 			}
 		}
 	}
+
 }

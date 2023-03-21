@@ -30,25 +30,23 @@ import java.util.Collection;
 
 /**
  * This <code>BeanPostProcessor</code> checks each bean if it implements
- * {@link BaseLdapNameAware} or {@link BaseLdapPathAware}.
- * If it does, the default context base LDAP path will be determined,
- * and that value will be injected to the {@link BaseLdapNameAware#setBaseLdapPath(javax.naming.ldap.LdapName)}
- * or  {@link BaseLdapPathAware#setBaseLdapPath(DistinguishedName)} method of the
- * processed bean.
+ * {@link BaseLdapNameAware} or {@link BaseLdapPathAware}. If it does, the default context
+ * base LDAP path will be determined, and that value will be injected to the
+ * {@link BaseLdapNameAware#setBaseLdapPath(javax.naming.ldap.LdapName)} or
+ * {@link BaseLdapPathAware#setBaseLdapPath(DistinguishedName)} method of the processed
+ * bean.
  * <p>
- * If the <code>baseLdapPath</code> property of this
- * <code>BeanPostProcessor</code> is set, that value will be used. Otherwise, in
- * order to determine which base LDAP path to supply to the instance the
- * <code>ApplicationContext</code> is searched for any beans that are
- * implementations of {@link BaseLdapPathSource}. If one single occurrence is
- * found, that instance is queried for its base path, and that is what will be
- * injected. If more than one {@link BaseLdapPathSource} instance is configured
- * in the <code>ApplicationContext</code>, the name of the one to use will need
- * to be specified to the <code>baseLdapPathSourceName</code> property;
- * otherwise the post processing will fail. If no {@link BaseLdapPathSource}
- * implementing bean is found in the context and the <code>basePath</code>
- * property is not set, post processing will also fail.
- * 
+ * If the <code>baseLdapPath</code> property of this <code>BeanPostProcessor</code> is
+ * set, that value will be used. Otherwise, in order to determine which base LDAP path to
+ * supply to the instance the <code>ApplicationContext</code> is searched for any beans
+ * that are implementations of {@link BaseLdapPathSource}. If one single occurrence is
+ * found, that instance is queried for its base path, and that is what will be injected.
+ * If more than one {@link BaseLdapPathSource} instance is configured in the
+ * <code>ApplicationContext</code>, the name of the one to use will need to be specified
+ * to the <code>baseLdapPathSourceName</code> property; otherwise the post processing will
+ * fail. If no {@link BaseLdapPathSource} implementing bean is found in the context and
+ * the <code>basePath</code> property is not set, post processing will also fail.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
@@ -64,7 +62,7 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) {
-		if(bean instanceof BaseLdapNameAware) {
+		if (bean instanceof BaseLdapNameAware) {
 			BaseLdapNameAware baseLdapNameAware = (BaseLdapNameAware) bean;
 
 			if (basePath != null) {
@@ -74,7 +72,8 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 				BaseLdapPathSource ldapPathSource = getBaseLdapPathSourceFromApplicationContext();
 				baseLdapNameAware.setBaseLdapPath(LdapUtils.newLdapName(ldapPathSource.getBaseLdapName()));
 			}
-		} else if (bean instanceof BaseLdapPathAware) {
+		}
+		else if (bean instanceof BaseLdapPathAware) {
 			BaseLdapPathAware baseLdapPathAware = (BaseLdapPathAware) bean;
 
 			if (basePath != null) {
@@ -96,30 +95,32 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 		Collection<BaseLdapPathSource> beans = applicationContext.getBeansOfType(BaseLdapPathSource.class).values();
 		if (beans.isEmpty()) {
 			throw new NoSuchBeanDefinitionException("No BaseLdapPathSource implementation definition found");
-		} else if (beans.size() == 1) {
+		}
+		else if (beans.size() == 1) {
 			return beans.iterator().next();
-		} else {
+		}
+		else {
 			BaseLdapPathSource found = null;
 
 			// Try to find the correct one
 			for (BaseLdapPathSource bean : beans) {
-				if(bean instanceof AbstractContextSource) {
-					if(found != null) {
+				if (bean instanceof AbstractContextSource) {
+					if (found != null) {
 						// More than one found - nothing much to do.
 						throw new NoSuchBeanDefinitionException(
-								"More than BaseLdapPathSource implementation definition found in current ApplicationContext; " +
-										"unable to determine the one to use. Please specify 'baseLdapPathSourceName'");
+								"More than BaseLdapPathSource implementation definition found in current ApplicationContext; "
+										+ "unable to determine the one to use. Please specify 'baseLdapPathSourceName'");
 					}
 
 					found = bean;
 				}
 			}
 
-			if(found == null) {
+			if (found == null) {
 				throw new NoSuchBeanDefinitionException(
-						"More than BaseLdapPathSource implementation definition found in current ApplicationContext; " +
-								"unable to determine the one to use (one of them should be an AbstractContextSource instance). " +
-								"Please specify 'baseLdapPathSourceName'");
+						"More than BaseLdapPathSource implementation definition found in current ApplicationContext; "
+								+ "unable to determine the one to use (one of them should be an AbstractContextSource instance). "
+								+ "Please specify 'baseLdapPathSourceName'");
 			}
 
 			return found;
@@ -138,13 +139,13 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 	}
 
 	/**
-	 * Set the base path to be injected in all {@link BaseLdapPathAware} beans.
-	 * If this property is not set, the default base path will be determined
-	 * from any defined {@link BaseLdapPathSource} instances available in the
+	 * Set the base path to be injected in all {@link BaseLdapPathAware} beans. If this
+	 * property is not set, the default base path will be determined from any defined
+	 * {@link BaseLdapPathSource} instances available in the
 	 * <code>ApplicationContext</code>.
-	 * 
 	 * @param basePath the base path.
-	 * @deprecated {@link DistinguishedName} and associated classes and methods are deprecated as of 2.0.
+	 * @deprecated {@link DistinguishedName} and associated classes and methods are
+	 * deprecated as of 2.0.
 	 */
 	public void setBasePath(DistinguishedName basePath) {
 		this.basePath = LdapUtils.newLdapName(basePath);
@@ -155,12 +156,11 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 	}
 
 	/**
-	 * Set the name of the <code>ContextSource</code> bean to use for getting
-	 * the base path. This method is typically useful if several ContextSource
-	 * instances have been configured.
-	 * 
-	 * @param contextSourceName the name of the <code>ContextSource</code> bean
-	 * to use for determining the base path.
+	 * Set the name of the <code>ContextSource</code> bean to use for getting the base
+	 * path. This method is typically useful if several ContextSource instances have been
+	 * configured.
+	 * @param contextSourceName the name of the <code>ContextSource</code> bean to use for
+	 * determining the base path.
 	 */
 	public void setBaseLdapPathSourceName(String contextSourceName) {
 		this.baseLdapPathSourceName = contextSourceName;
@@ -168,8 +168,8 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 
 	/**
 	 * Set the order value of this object for sorting purposes.
-	 *
-	 * @param order the order of this instance. Defaults to <code>Ordered.LOWEST_PRECEDENCE</code>.
+	 * @param order the order of this instance. Defaults to
+	 * <code>Ordered.LOWEST_PRECEDENCE</code>.
 	 * @see Ordered
 	 * @since 1.3.2
 	 */
@@ -180,4 +180,5 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 	public int getOrder() {
 		return order;
 	}
+
 }

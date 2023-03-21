@@ -38,18 +38,18 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * Default implementation of a {@link Name} corresponding to an LDAP path. A
- * Distinguished Name manipulation implementation is included in JDK1.5
- * (LdapName), but not in prior releases.
- * 
- * A <code>DistinguishedName</code> is particularly useful when building or
- * modifying an LDAP path dynamically, as escaping will be taken care of.
- * 
- * A path is split into several names. The {@link Name} interface specifies that
- * the most significant part be in position 0.
+ * Default implementation of a {@link Name} corresponding to an LDAP path. A Distinguished
+ * Name manipulation implementation is included in JDK1.5 (LdapName), but not in prior
+ * releases.
+ *
+ * A <code>DistinguishedName</code> is particularly useful when building or modifying an
+ * LDAP path dynamically, as escaping will be taken care of.
+ *
+ * A path is split into several names. The {@link Name} interface specifies that the most
+ * significant part be in position 0.
  * <p>
  * Example:
- * 
+ *
  * <dl>
  * <dt>The path</dt>
  * <dd>uid=adam.skogman, ou=People, ou=EU</dd>
@@ -61,49 +61,46 @@ import java.util.ListIterator;
  * <dd>uid=adam.skogman</dd>
  * </dl>
  * <p>
- * <code>Name</code> instances, and consequently <code>DistinguishedName</code>
- * instances are naturally mutable, which is useful when constructing
- * DistinguishedNames. Example:
- * 
+ * <code>Name</code> instances, and consequently <code>DistinguishedName</code> instances
+ * are naturally mutable, which is useful when constructing DistinguishedNames. Example:
+ *
  * <pre>
  * DistinguishedName path = new DistinguishedName(&quot;dc=jayway,dc=se&quot;);
  * path.add(&quot;ou&quot;, &quot;People&quot;);
  * path.add(&quot;uid&quot;, &quot;adam.skogman&quot;);
  * String dn = path.toString();
  * </pre>
- * 
+ *
  * will render <code>uid=adam.skogman,ou=People,dc=jayway,dc=se</code>.
  * <p>
- * <b>NOTE:</b> The fact that DistinguishedName instances are mutable needs to
- * be taken into careful account, as this means that they may be modified
- * involuntarily. This means that whenever a <code>DistinguishedName</code>
- * instance is kept for reference (e.g. for identification of a domain entry) or
- * as a constant, you should consider getting an immutable copy of the instance
- * using {@link #immutableDistinguishedName()} or
+ * <b>NOTE:</b> The fact that DistinguishedName instances are mutable needs to be taken
+ * into careful account, as this means that they may be modified involuntarily. This means
+ * that whenever a <code>DistinguishedName</code> instance is kept for reference (e.g. for
+ * identification of a domain entry) or as a constant, you should consider getting an
+ * immutable copy of the instance using {@link #immutableDistinguishedName()} or
  * {@link #immutableDistinguishedName(String)}.
  * <p>
- * <b>NB:</b>As of version 1.3 the default toString representation of
- * DistinguishedName now defaults to a compact one, without spaces between the
- * respective RDNs. For backward compatibility, set the
- * {@link #SPACED_DN_FORMAT_PROPERTY} ({@value #SPACED_DN_FORMAT_PROPERTY}) to
- * <code>true</code>.
+ * <b>NB:</b>As of version 1.3 the default toString representation of DistinguishedName
+ * now defaults to a compact one, without spaces between the respective RDNs. For backward
+ * compatibility, set the {@link #SPACED_DN_FORMAT_PROPERTY}
+ * ({@value #SPACED_DN_FORMAT_PROPERTY}) to <code>true</code>.
+ *
  * @author Adam Skogman
  * @author Mattias Hellborg Arthursson
- *
- * @deprecated As of 2.0 it is recommended to use {@link javax.naming.ldap.LdapName} along with
- * utility methods in {@link LdapUtils} instead.
+ * @deprecated As of 2.0 it is recommended to use {@link javax.naming.ldap.LdapName} along
+ * with utility methods in {@link LdapUtils} instead.
  * @see javax.naming.ldap.LdapName
  * @see LdapUtils#newLdapName(javax.naming.Name)
  * @see LdapUtils#newLdapName(String)
  * @see org.springframework.ldap.support.LdapUtils#emptyLdapName()
  */
 public class DistinguishedName implements Name {
+
 	/**
-	 * System property that will be inspected to determine whether
-	 * {@link #toString()} will format the DN with spaces after each comma or
-	 * use a more compact representation, i.e.:
-	 * <code>uid=adam.skogman, ou=People, dc=jayway, dc=se</code> rather than
-	 * <code>uid=adam.skogman,ou=People,dc=jayway,dc=se</code>. A value other
+	 * System property that will be inspected to determine whether {@link #toString()}
+	 * will format the DN with spaces after each comma or use a more compact
+	 * representation, i.e.: <code>uid=adam.skogman, ou=People, dc=jayway, dc=se</code>
+	 * rather than <code>uid=adam.skogman,ou=People,dc=jayway,dc=se</code>. A value other
 	 * than null or blank will trigger the spaced format. Default is the compact
 	 * representation.
 	 * <p>
@@ -119,10 +116,9 @@ public class DistinguishedName implements Name {
 
 	/**
 	 * System property that will be inspected to determine whether creating a
-	 * DistinguishedName will convert the keys to <em>lowercase</em>, convert
-	 * the keys to <em>uppercase</em>, or leave the keys as they were in the
-	 * original String, ie <em>none</em>. Default is to convert the keys to
-	 * lowercase.
+	 * DistinguishedName will convert the keys to <em>lowercase</em>, convert the keys to
+	 * <em>uppercase</em>, or leave the keys as they were in the original String, ie
+	 * <em>none</em>. Default is to convert the keys to lowercase.
 	 * <p>
 	 * Valid values are:
 	 * <ul>
@@ -144,6 +140,7 @@ public class DistinguishedName implements Name {
 	public static final String KEY_CASE_FOLD_NONE = "none";
 
 	private static final String MANGLED_DOUBLE_QUOTES = "\\\\\"";
+
 	private static final String PROPER_DOUBLE_QUOTES = "\\\"";
 
 	private static final Logger LOG = LoggerFactory.getLogger(DistinguishedName.class);
@@ -158,6 +155,7 @@ public class DistinguishedName implements Name {
 	 * An empty, unmodifiable DistinguishedName.
 	 */
 	public static final DistinguishedName EMPTY_PATH = new DistinguishedName(Collections.EMPTY_LIST);
+
 	private static final int DEFAULT_BUFFER_SIZE = 256;
 
 	private List names;
@@ -171,7 +169,6 @@ public class DistinguishedName implements Name {
 
 	/**
 	 * Construct a new <code>DistinguishedName</code> from a String.
-	 * 
 	 * @param path a String corresponding to a (syntactically) valid LDAP path.
 	 */
 	public DistinguishedName(String path) {
@@ -184,9 +181,8 @@ public class DistinguishedName implements Name {
 	}
 
 	/**
-	 * Construct a new <code>DistinguishedName</code> from the supplied
-	 * <code>List</code> of {@link LdapRdn} objects.
-	 * 
+	 * Construct a new <code>DistinguishedName</code> from the supplied <code>List</code>
+	 * of {@link LdapRdn} objects.
 	 * @param list the components that this instance will consist of.
 	 */
 	public DistinguishedName(List list) {
@@ -194,12 +190,10 @@ public class DistinguishedName implements Name {
 	}
 
 	/**
-	 * Construct a new <code>DistinguishedName</code> from the supplied
-	 * {@link Name}. The parts of the supplied {@link Name} must be
-	 * syntactically correct {@link LdapRdn}s.
-	 * 
-	 * @param name the {@link Name} to construct a new
-	 * <code>DistinguishedName</code> from.
+	 * Construct a new <code>DistinguishedName</code> from the supplied {@link Name}. The
+	 * parts of the supplied {@link Name} must be syntactically correct {@link LdapRdn}s.
+	 * @param name the {@link Name} to construct a new <code>DistinguishedName</code>
+	 * from.
 	 */
 	public DistinguishedName(Name name) {
 		Assert.notNull(name, "name cannot be null");
@@ -214,9 +208,8 @@ public class DistinguishedName implements Name {
 	}
 
 	/**
-	 * Parse the supplied String and make this instance represent the
-	 * corresponding distinguished name.
-	 * 
+	 * Parse the supplied String and make this instance represent the corresponding
+	 * distinguished name.
 	 * @param path the LDAP path to parse.
 	 */
 	protected final void parse(String path) {
@@ -235,11 +228,9 @@ public class DistinguishedName implements Name {
 	}
 
 	/**
-	 * If path is surrounded by quotes, strip them. JNDI considers forward slash
-	 * ('/') special, but LDAP doesn't. {@link CompositeName#toString()} tends
-	 * to mangle a {@link Name} with a slash by surrounding it with quotes
-	 * ('"').
-	 * 
+	 * If path is surrounded by quotes, strip them. JNDI considers forward slash ('/')
+	 * special, but LDAP doesn't. {@link CompositeName#toString()} tends to mangle a
+	 * {@link Name} with a slash by surrounding it with quotes ('"').
 	 * @param path Path to check and possibly strip.
 	 * @return A String with the possibly stripped path.
 	 */
@@ -259,7 +250,6 @@ public class DistinguishedName implements Name {
 
 	/**
 	 * Get the {@link LdapRdn} at a specified position.
-	 * 
 	 * @param index the {@link LdapRdn} to retrieve.
 	 * @return the {@link LdapRdn} at the requested position.
 	 */
@@ -268,10 +258,8 @@ public class DistinguishedName implements Name {
 	}
 
 	/**
-	 * Get the {@link LdapRdn} with the specified key. If there are several
-	 * {@link Rdn}s with the same key, the first one found (in order of
-	 * significance) will be returned.
-	 * 
+	 * Get the {@link LdapRdn} with the specified key. If there are several {@link Rdn}s
+	 * with the same key, the first one found (in order of significance) will be returned.
 	 * @param key Attribute name of the {@link LdapRdn} to retrieve.
 	 * @return the {@link LdapRdn} with the requested key.
 	 * @throws IllegalArgumentException if no Rdn matches the given key.
@@ -288,10 +276,9 @@ public class DistinguishedName implements Name {
 	}
 
 	/**
-	 * Get the value of the {@link LdapRdnComponent} with the specified key
-	 * (Attribute value). If there are several Rdns with the same key, the value
-	 * of the first one found (in order of significance) will be returned.
-	 * 
+	 * Get the value of the {@link LdapRdnComponent} with the specified key (Attribute
+	 * value). If there are several Rdns with the same key, the value of the first one
+	 * found (in order of significance) will be returned.
 	 * @param key Attribute name of the {@link LdapRdn} to retrieve.
 	 * @return the value.
 	 * @throws IllegalArgumentException if no Rdn matches the given key.
@@ -302,23 +289,20 @@ public class DistinguishedName implements Name {
 
 	/**
 	 * Get the name <code>List</code>.
-	 * 
-	 * @return the list of {@link LdapRdn}s that this
-	 * <code>DistinguishedName</code> consists of.
+	 * @return the list of {@link LdapRdn}s that this <code>DistinguishedName</code>
+	 * consists of.
 	 */
 	public List getNames() {
 		return names;
 	}
 
 	/**
-	 * Get the String representation of this <code>DistinguishedName</code>.
-	 * Depending on the setting of property
-	 * <code>org.springframework.ldap.core.spacedDnFormat</code> a space will be
-	 * added after each comma, to make the result more readable. Default is
+	 * Get the String representation of this <code>DistinguishedName</code>. Depending on
+	 * the setting of property <code>org.springframework.ldap.core.spacedDnFormat</code> a
+	 * space will be added after each comma, to make the result more readable. Default is
 	 * compact representation, i.e. without any spaces.
-	 * 
-	 * @return a syntactically correct, properly escaped String representation
-	 * of the <code>DistinguishedName</code>.
+	 * @return a syntactically correct, properly escaped String representation of the
+	 * <code>DistinguishedName</code>.
 	 * @see #SPACED_DN_FORMAT_PROPERTY
 	 */
 	public String toString() {
@@ -332,12 +316,10 @@ public class DistinguishedName implements Name {
 	}
 
 	/**
-	 * Get the compact String representation of this
-	 * <code>DistinguishedName</code>. Add no space after each comma, to make it
-	 * compact.
-	 * 
-	 * @return a syntactically correct, properly escaped String representation
-	 * of the <code>DistinguishedName</code>.
+	 * Get the compact String representation of this <code>DistinguishedName</code>. Add
+	 * no space after each comma, to make it compact.
+	 * @return a syntactically correct, properly escaped String representation of the
+	 * <code>DistinguishedName</code>.
 	 */
 	public String toCompactString() {
 		return format(COMPACT);
@@ -345,9 +327,8 @@ public class DistinguishedName implements Name {
 
 	/**
 	 * Builds a complete LDAP path, ldap encoded, useful as a DN.
-	 * 
+	 *
 	 * Always uses lowercase, always separates with ", " i.e. comma and a space.
-	 * 
 	 * @return the LDAP path.
 	 */
 	public String encode() {
@@ -383,9 +364,7 @@ public class DistinguishedName implements Name {
 	}
 
 	/**
-	 * Builds a complete LDAP path, ldap and url encoded. Separates only with
-	 * ",".
-	 * 
+	 * Builds a complete LDAP path, ldap and url encoded. Separates only with ",".
 	 * @return the LDAP path, for use in an url.
 	 */
 	public String toUrl() {
@@ -402,12 +381,10 @@ public class DistinguishedName implements Name {
 	}
 
 	/**
-	 * Determines if this <code>DistinguishedName</code> path contains another
-	 * path.
-	 * 
+	 * Determines if this <code>DistinguishedName</code> path contains another path.
 	 * @param path the path to check.
-	 * @return <code>true</code> if the supplied path is conained in this
-	 * instance, <code>false</code> otherwise.
+	 * @return <code>true</code> if the supplied path is conained in this instance,
+	 * <code>false</code> otherwise.
 	 */
 	public boolean contains(DistinguishedName path) {
 
@@ -455,15 +432,14 @@ public class DistinguishedName implements Name {
 
 	/**
 	 * Add an LDAP path last in this DistinguishedName. E.g.:
-	 * 
+	 *
 	 * <pre>
 	 * DistinguishedName name1 = new DistinguishedName(&quot;c=SE, dc=jayway, dc=se&quot;);
 	 * DistinguishedName name2 = new DistinguishedName(&quot;ou=people&quot;);
 	 * name1.append(name2);
 	 * </pre>
-	 * 
+	 *
 	 * will result in <code>ou=people, c=SE, dc=jayway, dc=se</code>
-	 * 
 	 * @param path the path to append.
 	 * @return this instance.
 	 */
@@ -474,7 +450,6 @@ public class DistinguishedName implements Name {
 
 	/**
 	 * Append a new {@link LdapRdn} using the supplied key and value.
-	 * 
 	 * @param key the key of the {@link LdapRdn}.
 	 * @param value the value of the {@link LdapRdn}.
 	 * @return this instance.
@@ -486,15 +461,14 @@ public class DistinguishedName implements Name {
 
 	/**
 	 * Add an LDAP path first in this DistinguishedName. E.g.:
-	 * 
+	 *
 	 * <pre>
 	 * DistinguishedName name1 = new DistinguishedName(&quot;ou=people&quot;);
 	 * DistinguishedName name2 = new DistinguishedName(&quot;c=SE, dc=jayway, dc=se&quot;);
 	 * name1.prepend(name2);
 	 * </pre>
-	 * 
+	 *
 	 * will result in <code>ou=people, c=SE, dc=jayway, dc=se</code>
-	 * 
 	 * @param path the path to prepend.
 	 */
 	public void prepend(DistinguishedName path) {
@@ -506,7 +480,6 @@ public class DistinguishedName implements Name {
 
 	/**
 	 * Remove the first part of this <code>DistinguishedName</code>.
-	 * 
 	 * @return the removed entry.
 	 */
 	public LdapRdn removeFirst() {
@@ -514,11 +487,9 @@ public class DistinguishedName implements Name {
 	}
 
 	/**
-	 * Remove the supplied path from the beginning of this
-	 * <code>DistinguishedName</code> if this instance starts with
-	 * <code>path</code>. Useful for stripping base path suffix from a
-	 * <code>DistinguishedName</code>.
-	 * 
+	 * Remove the supplied path from the beginning of this <code>DistinguishedName</code>
+	 * if this instance starts with <code>path</code>. Useful for stripping base path
+	 * suffix from a <code>DistinguishedName</code>.
 	 * @param path the path to remove from the beginning of this instance.
 	 */
 	public void removeFirst(Name path) {
@@ -568,10 +539,10 @@ public class DistinguishedName implements Name {
 	}
 
 	/**
-	 * Compare this instance to another object. Note that the comparison is done
-	 * in order of significance, so the most significant Rdn is compared first,
-	 * then the second and so on.
-	 * 
+	 * Compare this instance to another object. Note that the comparison is done in order
+	 * of significance, so the most significant Rdn is compared first, then the second and
+	 * so on.
+	 *
 	 * @see javax.naming.Name#compareTo(java.lang.Object)
 	 */
 	public int compareTo(Object obj) {
@@ -590,7 +561,7 @@ public class DistinguishedName implements Name {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.naming.Name#getAll()
 	 */
 	public Enumeration getAll() {
@@ -605,7 +576,7 @@ public class DistinguishedName implements Name {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.naming.Name#get(int)
 	 */
 	public String get(int index) {
@@ -615,7 +586,7 @@ public class DistinguishedName implements Name {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.naming.Name#getPrefix(int)
 	 */
 	public Name getPrefix(int index) {
@@ -629,7 +600,7 @@ public class DistinguishedName implements Name {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.naming.Name#getSuffix(int)
 	 */
 	public Name getSuffix(int index) {
@@ -647,7 +618,7 @@ public class DistinguishedName implements Name {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.naming.Name#startsWith(javax.naming.Name)
 	 */
 	public boolean startsWith(Name name) {
@@ -684,14 +655,12 @@ public class DistinguishedName implements Name {
 	}
 
 	/**
-	 * Determines if this <code>DistinguishedName</code> ends with a certian
-	 * path.
-	 * 
+	 * Determines if this <code>DistinguishedName</code> ends with a certian path.
+	 *
 	 * If the argument path is empty (no names in path) this method will return
 	 * <code>false</code>.
-	 * 
 	 * @param name The suffix to check for.
-	 * 
+	 *
 	 */
 	public boolean endsWith(Name name) {
 		DistinguishedName path = null;
@@ -732,7 +701,7 @@ public class DistinguishedName implements Name {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.naming.Name#addAll(javax.naming.Name)
 	 */
 	public Name addAll(Name name) throws InvalidNameException {
@@ -741,7 +710,7 @@ public class DistinguishedName implements Name {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.naming.Name#addAll(int, javax.naming.Name)
 	 */
 	public Name addAll(int arg0, Name name) throws InvalidNameException {
@@ -759,7 +728,7 @@ public class DistinguishedName implements Name {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.naming.Name#add(java.lang.String)
 	 */
 	public Name add(String string) throws InvalidNameException {
@@ -768,7 +737,7 @@ public class DistinguishedName implements Name {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.naming.Name#add(int, java.lang.String)
 	 */
 	public Name add(int index, String string) throws InvalidNameException {
@@ -783,7 +752,7 @@ public class DistinguishedName implements Name {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.naming.Name#remove(int)
 	 */
 	public Object remove(int arg0) throws InvalidNameException {
@@ -793,7 +762,6 @@ public class DistinguishedName implements Name {
 
 	/**
 	 * Remove the last part of this <code>DistinguishedName</code>.
-	 * 
 	 * @return the removed {@link LdapRdn}.
 	 */
 	public LdapRdn removeLast() {
@@ -802,7 +770,6 @@ public class DistinguishedName implements Name {
 
 	/**
 	 * Add a new {@link LdapRdn} using the supplied key and value.
-	 * 
 	 * @param key the key of the {@link LdapRdn}.
 	 * @param value the value of the {@link LdapRdn}.
 	 */
@@ -812,7 +779,6 @@ public class DistinguishedName implements Name {
 
 	/**
 	 * Add the supplied {@link LdapRdn} last in the list of Rdns.
-	 * 
 	 * @param rdn the {@link LdapRdn} to add.
 	 */
 	public void add(LdapRdn rdn) {
@@ -821,7 +787,6 @@ public class DistinguishedName implements Name {
 
 	/**
 	 * Add the supplied {@link LdapRdn} att the specified index.
-	 * 
 	 * @param idx the index at which to add the LdapRdn.
 	 * @param rdn the LdapRdn to add.
 	 */
@@ -830,10 +795,9 @@ public class DistinguishedName implements Name {
 	}
 
 	/**
-	 * Return an immutable copy of this instance. It will not be possible to add
-	 * or remove any Rdns to or from the returned instance, and the respective
-	 * Rdns will also be immutable in turn.
-	 * 
+	 * Return an immutable copy of this instance. It will not be possible to add or remove
+	 * any Rdns to or from the returned instance, and the respective Rdns will also be
+	 * immutable in turn.
 	 * @return a copy of this instance backed by an immutable list.
 	 * @since 1.2
 	 */
@@ -849,13 +813,12 @@ public class DistinguishedName implements Name {
 
 	/**
 	 * Create an immutable DistinguishedName instance, suitable as a constant.
-	 * 
 	 * @param dnString the DN string to parse.
-	 * @return an immutable DistinguishedName corresponding to the supplied DN
-	 * string.
+	 * @return an immutable DistinguishedName corresponding to the supplied DN string.
 	 * @since 1.3
 	 */
 	public static final DistinguishedName immutableDistinguishedName(String dnString) {
 		return new DistinguishedName(dnString).immutableDistinguishedName();
 	}
+
 }

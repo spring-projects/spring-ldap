@@ -22,7 +22,7 @@ import org.springframework.ldap.core.support.AbstractContextMapper;
 /**
  * Dummy implemention of ContextMapper for use in the integration tests and for
  * illustration purposes.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class PersonContextMapper extends AbstractContextMapper<Person> {
@@ -36,4 +36,5 @@ public class PersonContextMapper extends AbstractContextMapper<Person> {
 
 		return person;
 	}
+
 }

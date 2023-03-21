@@ -40,15 +40,14 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Utility class that helps with reading all attribute values from Active Directory using <em>Incremental Retrieval of
- * Multi-valued Properties</em>.
- * <p>Example usage of this attribute mapper:
- * <pre>
+ * Utility class that helps with reading all attribute values from Active Directory using
+ * <em>Incremental Retrieval of Multi-valued Properties</em>.
+ * <p>
+ * Example usage of this attribute mapper: <pre>
  *	 List values = DefaultIncrementalAttributeMapper.lookupAttributeValues(ldapTemplate, theDn, "oneAttribute");
  *	 Attributes attrs = DefaultIncrementalAttributeMapper.lookupAttributeValues(ldapTemplate, theDn, new Object[]{"oneAttribute", "anotherAttribute"});
- * </pre>
- * For greater control, e.g. explicitly specifying the requested page size, create and use an instance yourself:
- * <pre>
+ * </pre> For greater control, e.g. explicitly specifying the requested page size, create
+ * and use an instance yourself: <pre>
  *
  *	  IncrementalAttributesMapper incrementalAttributeMapper = new DefaultIncrementalAttributeMapper(10, "someAttribute");
  *	  while (incrementalAttributeMapper.hasMore()) {
@@ -58,27 +57,35 @@ import java.util.Set;
  *	  List values = incrementalAttributeMapper.getValues("someAttribute");
  * </pre>
  * <p>
- * <b>NOTE:</b> Instances of this class are highly stateful and must not be reused or shared between threads in any way.
+ * <b>NOTE:</b> Instances of this class are highly stateful and must not be reused or
+ * shared between threads in any way.
  * <p>
- * <b>NOTE:</b> Instances of this class can only be used with <b>lookups</b>. No support is given for searches.
+ * <b>NOTE:</b> Instances of this class can only be used with <b>lookups</b>. No support
+ * is given for searches.
  * <p>
  *
  * @author Marius Scurtescu
  * @author Mattias Hellborg Arthursson
- * @see <a href="https://tools.ietf.org/html/draft-kashi-incremental-00">Incremental Retrieval of Multi-valued Properties</a>
- * @see #lookupAttributes(org.springframework.ldap.core.LdapOperations, javax.naming.Name, String[])
- * @see #lookupAttributeValues(org.springframework.ldap.core.LdapOperations, javax.naming.Name, String)
+ * @see <a href="https://tools.ietf.org/html/draft-kashi-incremental-00">Incremental
+ * Retrieval of Multi-valued Properties</a>
+ * @see #lookupAttributes(org.springframework.ldap.core.LdapOperations, javax.naming.Name,
+ * String[])
+ * @see #lookupAttributeValues(org.springframework.ldap.core.LdapOperations,
+ * javax.naming.Name, String)
  * @since 1.3.2
  */
-public class DefaultIncrementalAttributesMapper implements IncrementalAttributesMapper<DefaultIncrementalAttributesMapper> {
+public class DefaultIncrementalAttributesMapper
+		implements IncrementalAttributesMapper<DefaultIncrementalAttributesMapper> {
+
 	private final static Logger LOG = LoggerFactory.getLogger(DefaultIncrementalAttributesMapper.class);
 
 	private Map<String, IncrementalAttributeState> stateMap = new LinkedHashMap<String, IncrementalAttributeState>();
+
 	private Set<String> rangedAttributesInNextIteration = new LinkedHashSet<String>();
 
 	/**
-	 * This guy will be used when an unmapped attribute is encountered. This really should never happen,
-	 * but this saves us a number of null checks.
+	 * This guy will be used when an unmapped attribute is encountered. This really should
+	 * never happen, but this saves us a number of null checks.
 	 */
 	private static final IncrementalAttributeState NOT_FOUND_ATTRIBUTE_STATE = new IncrementalAttributeState() {
 		@Override
@@ -114,10 +121,8 @@ public class DefaultIncrementalAttributesMapper implements IncrementalAttributes
 
 	/**
 	 * Create an instance for the requested attribute.
-	 *
-	 * @param attributeName the name of the attribute that this instance handles.
-	 *					  This is the attribute name that will be requested, and whose
-	 *					  values are managed.
+	 * @param attributeName the name of the attribute that this instance handles. This is
+	 * the attribute name that will be requested, and whose values are managed.
 	 */
 	public DefaultIncrementalAttributesMapper(String attributeName) {
 		this(RangeOption.TERMINAL_END_OF_RANGE, attributeName);
@@ -125,10 +130,8 @@ public class DefaultIncrementalAttributesMapper implements IncrementalAttributes
 
 	/**
 	 * Create an instance for the requested attributes.
-	 *
-	 * @param attributeNames the name of the attributes that this instance handles.
-	 *					   These are the attribute names that will be requested, and whose
-	 *					   values are managed.
+	 * @param attributeNames the name of the attributes that this instance handles. These
+	 * are the attribute names that will be requested, and whose values are managed.
 	 */
 	public DefaultIncrementalAttributesMapper(String[] attributeNames) {
 		this(RangeOption.TERMINAL_END_OF_RANGE, attributeNames);
@@ -136,23 +139,21 @@ public class DefaultIncrementalAttributesMapper implements IncrementalAttributes
 
 	/**
 	 * Create an instance for the requested attribute with a specific page size.
-	 *
-	 * @param pageSize	  the requested page size that will be included in range query attribute names.
-	 * @param attributeName the name of the attribute that this instance handles.
-	 *					  This is the attribute name that will be requested, and whose
-	 *					  values are managed.
+	 * @param pageSize the requested page size that will be included in range query
+	 * attribute names.
+	 * @param attributeName the name of the attribute that this instance handles. This is
+	 * the attribute name that will be requested, and whose values are managed.
 	 */
 	public DefaultIncrementalAttributesMapper(int pageSize, String attributeName) {
-		this(pageSize, new String[]{attributeName});
+		this(pageSize, new String[] { attributeName });
 	}
 
 	/**
 	 * Create an instance for the requested attributes with a specific page size.
-	 *
-	 * @param pageSize	   the requested page size that will be included in range query attribute names.
-	 * @param attributeNames the name of the attributes that this instance handles.
-	 *					   These are the attribute names that will be requested, and whose
-	 *					   values are managed.
+	 * @param pageSize the requested page size that will be included in range query
+	 * attribute names.
+	 * @param attributeNames the name of the attributes that this instance handles. These
+	 * are the attribute names that will be requested, and whose values are managed.
 	 */
 	public DefaultIncrementalAttributesMapper(int pageSize, String[] attributeNames) {
 		for (String attributeName : attributeNames) {
@@ -179,7 +180,8 @@ public class DefaultIncrementalAttributesMapper implements IncrementalAttributes
 			if (attributeNameSplit.length == 1) {
 				// No range specification for this attribute
 				state.processValues(attributes, attributeName);
-			} else {
+			}
+			else {
 				for (String option : attributeNameSplit) {
 					RangeOption responseRange = RangeOption.parse(option);
 
@@ -250,93 +252,95 @@ public class DefaultIncrementalAttributesMapper implements IncrementalAttributes
 	}
 
 	/**
-	 * Lookup all values for the specified attribute, looping through the results incrementally if necessary.
-	 *
+	 * Lookup all values for the specified attribute, looping through the results
+	 * incrementally if necessary.
 	 * @param ldapOperations The instance to use for performing the actual lookup.
-	 * @param dn			 The distinguished name of the object to find.
-	 * @param attribute	  name of the attribute to request.
-	 * @return an Attributes instance, populated with all found values for the requested attribute.
-	 *		 Never <code>null</code>, though the actual attribute may not be set if it was not
-	 *		 set on the requested object.
+	 * @param dn The distinguished name of the object to find.
+	 * @param attribute name of the attribute to request.
+	 * @return an Attributes instance, populated with all found values for the requested
+	 * attribute. Never <code>null</code>, though the actual attribute may not be set if
+	 * it was not set on the requested object.
 	 */
 	public static Attributes lookupAttributes(LdapOperations ldapOperations, String dn, String attribute) {
 		return lookupAttributes(ldapOperations, LdapUtils.newLdapName(dn), attribute);
 	}
 
 	/**
-	 * Lookup all values for the specified attributes, looping through the results incrementally if necessary.
-	 *
+	 * Lookup all values for the specified attributes, looping through the results
+	 * incrementally if necessary.
 	 * @param ldapOperations The instance to use for performing the actual lookup.
-	 * @param dn			 The distinguished name of the object to find.
-	 * @param attributes	 names of the attributes to request.
-	 * @return an Attributes instance, populated with all found values for the requested attributes.
-	 *		 Never <code>null</code>, though the actual attributes may not be set if they was not
-	 *		 set on the requested object.
+	 * @param dn The distinguished name of the object to find.
+	 * @param attributes names of the attributes to request.
+	 * @return an Attributes instance, populated with all found values for the requested
+	 * attributes. Never <code>null</code>, though the actual attributes may not be set if
+	 * they was not set on the requested object.
 	 */
 	public static Attributes lookupAttributes(LdapOperations ldapOperations, String dn, String[] attributes) {
 		return lookupAttributes(ldapOperations, LdapUtils.newLdapName(dn), attributes);
 	}
 
 	/**
-	 * Lookup all values for the specified attribute, looping through the results incrementally if necessary.
-	 *
+	 * Lookup all values for the specified attribute, looping through the results
+	 * incrementally if necessary.
 	 * @param ldapOperations The instance to use for performing the actual lookup.
-	 * @param dn			 The distinguished name of the object to find.
-	 * @param attribute	  name of the attribute to request.
-	 * @return an Attributes instance, populated with all found values for the requested attribute.
-	 *		 Never <code>null</code>, though the actual attribute may not be set if it was not
-	 *		 set on the requested object.
+	 * @param dn The distinguished name of the object to find.
+	 * @param attribute name of the attribute to request.
+	 * @return an Attributes instance, populated with all found values for the requested
+	 * attribute. Never <code>null</code>, though the actual attribute may not be set if
+	 * it was not set on the requested object.
 	 */
 	public static Attributes lookupAttributes(LdapOperations ldapOperations, Name dn, String attribute) {
-		return lookupAttributes(ldapOperations, dn, new String[]{attribute});
+		return lookupAttributes(ldapOperations, dn, new String[] { attribute });
 	}
 
 	/**
-	 * Lookup all values for the specified attributes, looping through the results incrementally if necessary.
-	 *
+	 * Lookup all values for the specified attributes, looping through the results
+	 * incrementally if necessary.
 	 * @param ldapOperations The instance to use for performing the actual lookup.
-	 * @param dn			 The distinguished name of the object to find.
-	 * @param attributes	 names of the attributes to request.
-	 * @return an Attributes instance, populated with all found values for the requested attributes.
-	 *		 Never <code>null</code>, though the actual attributes may not be set if they was not
-	 *		 set on the requested object.
+	 * @param dn The distinguished name of the object to find.
+	 * @param attributes names of the attributes to request.
+	 * @return an Attributes instance, populated with all found values for the requested
+	 * attributes. Never <code>null</code>, though the actual attributes may not be set if
+	 * they was not set on the requested object.
 	 */
 	public static Attributes lookupAttributes(LdapOperations ldapOperations, Name dn, String[] attributes) {
 		return loopForAllAttributeValues(ldapOperations, dn, attributes).getCollectedAttributes();
 	}
 
 	/**
-	 * Lookup all values for the specified attribute, looping through the results incrementally if necessary.
-	 *
+	 * Lookup all values for the specified attribute, looping through the results
+	 * incrementally if necessary.
 	 * @param ldapOperations The instance to use for performing the actual lookup.
-	 * @param dn			 The distinguished name of the object to find.
-	 * @param attribute	  name of the attribute to request.
-	 * @return a list with all attribute values found for the requested attribute.
-	 *		 Never <code>null</code>, an empty list indicates that the attribute was not set or empty.
+	 * @param dn The distinguished name of the object to find.
+	 * @param attribute name of the attribute to request.
+	 * @return a list with all attribute values found for the requested attribute. Never
+	 * <code>null</code>, an empty list indicates that the attribute was not set or empty.
 	 */
 	public static List<Object> lookupAttributeValues(LdapOperations ldapOperations, String dn, String attribute) {
 		return lookupAttributeValues(ldapOperations, LdapUtils.newLdapName(dn), attribute);
 	}
 
 	/**
-	 * Lookup all values for the specified attribute, looping through the results incrementally if necessary.
-	 *
+	 * Lookup all values for the specified attribute, looping through the results
+	 * incrementally if necessary.
 	 * @param ldapOperations The instance to use for performing the actual lookup.
-	 * @param dn			 The distinguished name of the object to find.
-	 * @param attribute	  name of the attribute to request.
-	 * @return a list with all attribute values found for the requested attribute.
-	 *		 Never <code>null</code>, an empty list indicates that the attribute was not set or empty.
+	 * @param dn The distinguished name of the object to find.
+	 * @param attribute name of the attribute to request.
+	 * @return a list with all attribute values found for the requested attribute. Never
+	 * <code>null</code>, an empty list indicates that the attribute was not set or empty.
 	 */
 	public static List<Object> lookupAttributeValues(LdapOperations ldapOperations, Name dn, String attribute) {
-		List<Object> values = loopForAllAttributeValues(ldapOperations, dn, new String[]{attribute}).getValues(attribute);
-		if(values == null) {
+		List<Object> values = loopForAllAttributeValues(ldapOperations, dn, new String[] { attribute })
+				.getValues(attribute);
+		if (values == null) {
 			values = Collections.emptyList();
 		}
 
 		return values;
 	}
 
-	private static DefaultIncrementalAttributesMapper loopForAllAttributeValues(LdapOperations ldapOperations, Name dn, String[] attributes) {
+	private static DefaultIncrementalAttributesMapper loopForAllAttributeValues(LdapOperations ldapOperations, Name dn,
+			String[] attributes) {
 		DefaultIncrementalAttributesMapper mapper = new DefaultIncrementalAttributesMapper(attributes);
 		while (mapper.hasMore()) {
 			ldapOperations.lookup(dn, mapper.getAttributesForLookup(), mapper);
@@ -345,14 +349,18 @@ public class DefaultIncrementalAttributesMapper implements IncrementalAttributes
 	}
 
 	/**
-	 * This class keeps track of the state of an individual attribute in the process of collecting
-	 * multi-value attributes using ranges. Holds the values collected thus far, the next applicable range,
-	 * and the actual (requested) attribute name.
+	 * This class keeps track of the state of an individual attribute in the process of
+	 * collecting multi-value attributes using ranges. Holds the values collected thus
+	 * far, the next applicable range, and the actual (requested) attribute name.
 	 */
 	private static final class DefaultIncrementalAttributeState implements IncrementalAttributeState {
+
 		private final String actualAttributeName;
+
 		private List<Object> values = null;
+
 		private final int pageSize;
+
 		boolean more = true;
 
 		private RangeOption requestRange;
@@ -415,16 +423,19 @@ public class DefaultIncrementalAttributesMapper implements IncrementalAttributes
 		public List<Object> getValues() {
 			if (values != null) {
 				return new ArrayList<Object>(values);
-			} else {
+			}
+			else {
 				return null;
 			}
 		}
+
 	}
 
 	/**
 	 * @author Mattias Hellborg Arthursson
 	 */
 	private interface IncrementalAttributeState {
+
 		boolean hasMore();
 
 		void calculateNextRange(RangeOption responseRange);
@@ -436,5 +447,7 @@ public class DefaultIncrementalAttributesMapper implements IncrementalAttributes
 		void processValues(Attributes attributes, String attributeName) throws NamingException;
 
 		List<Object> getValues();
+
 	}
+
 }

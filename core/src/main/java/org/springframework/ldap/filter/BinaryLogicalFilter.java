@@ -20,9 +20,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Abstract superclass for binary logical operations, that is &quot;AND&quot;
- * and &quot;OR&quot; operations.
- * 
+ * Abstract superclass for binary logical operations, that is &quot;AND&quot; and
+ * &quot;OR&quot; operations.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public abstract class BinaryLogicalFilter extends AbstractFilter {
@@ -59,19 +59,21 @@ public abstract class BinaryLogicalFilter extends AbstractFilter {
 	/**
 	 * Implement this in subclass to return the logical operator, for example
 	 * &quot;&amp;&quot;.
-	 * 
 	 * @return the logical operator.
 	 */
 	protected abstract String getLogicalOperator();
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 
 		BinaryLogicalFilter that = (BinaryLogicalFilter) o;
 
-		if (queryList != null ? !queryList.equals(that.queryList) : that.queryList != null) return false;
+		if (queryList != null ? !queryList.equals(that.queryList) : that.queryList != null)
+			return false;
 
 		return true;
 	}
@@ -83,7 +85,6 @@ public abstract class BinaryLogicalFilter extends AbstractFilter {
 
 	/**
 	 * Add a query to this logical operation.
-	 * 
 	 * @param query the query to add.
 	 * @return This instance.
 	 */
@@ -96,4 +97,5 @@ public abstract class BinaryLogicalFilter extends AbstractFilter {
 		queryList.addAll(subQueries);
 		return this;
 	}
+
 }

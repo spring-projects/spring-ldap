@@ -35,31 +35,32 @@ import java.util.Collection;
 
 /**
  * A {@link ContextSource} implementation that wraps an object pool and another
- * {@link ContextSource}. {@link DirContext}s are retrieved from the pool which
- * maintains them.
+ * {@link ContextSource}. {@link DirContext}s are retrieved from the pool which maintains
+ * them.
  *
- * NOTE: This implementation is based on apache commons-pool2.
- * <br>
+ * NOTE: This implementation is based on apache commons-pool2. <br>
  * <br>
  * Configuration:
  * <table border="1" summary="Configuration">
  * <tr>
- * <th align="left">Property</th> <th align="left">Description</th> <th
- * align="left">Required</th> <th align="left">Default</th>
+ * <th align="left">Property</th>
+ * <th align="left">Description</th>
+ * <th align="left">Required</th>
+ * <th align="left">Default</th>
  * </tr>
  * <tr>
  * <td valign="top">contextSource</td>
- * <td valign="top">
- * The {@link ContextSource} to get {@link DirContext}s from for adding to the
- * pool.</td>
+ * <td valign="top">The {@link ContextSource} to get {@link DirContext}s from for adding
+ * to the pool.</td>
  * <td valign="top">Yes</td>
  * <td valign="top">null</td>
  * </tr>
  * <tr>
  * <td valign="top">dirContextValidator</td>
- * <td valign="top">
- * The {@link org.springframework.ldap.pool2.validation.DirContextValidator} to use for validating {@link DirContext}s.
- * Required if any of the test/validate options are enabled.</td>
+ * <td valign="top">The
+ * {@link org.springframework.ldap.pool2.validation.DirContextValidator} to use for
+ * validating {@link DirContext}s. Required if any of the test/validate options are
+ * enabled.</td>
  * <td valign="top">No</td>
  * <td valign="top">null</td>
  * </tr>
@@ -75,34 +76,34 @@ import java.util.Collection;
  * @author Eric Dalquist
  * @author Anindya Chatterjee
  */
-public class PooledContextSource
-		extends DelegatingBaseLdapPathContextSourceSupport
+public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupport
 		implements ContextSource, DisposableBean {
+
 	/**
 	 * The logger for this class and sub-classes
 	 */
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	protected final GenericKeyedObjectPool<Object,Object> keyedObjectPool;
+	protected final GenericKeyedObjectPool<Object, Object> keyedObjectPool;
 
 	private final DirContextPooledObjectFactory dirContextPooledObjectFactory;
 
 	private PoolConfig poolConfig;
 
 	/**
-	 * Creates a new pooling context source, setting up the DirContext object
-	 * factory and generic keyed object pool.
+	 * Creates a new pooling context source, setting up the DirContext object factory and
+	 * generic keyed object pool.
 	 */
 	public PooledContextSource(PoolConfig poolConfig) {
 		this.dirContextPooledObjectFactory = new DirContextPooledObjectFactory();
 		if (poolConfig != null) {
 			this.poolConfig = poolConfig;
 			GenericKeyedObjectPoolConfig objectPoolConfig = getConfig(poolConfig);
-			this.keyedObjectPool =
-					new GenericKeyedObjectPool<Object,Object>(this.dirContextPooledObjectFactory, objectPoolConfig);
-		} else  {
-			this.keyedObjectPool =
-					new GenericKeyedObjectPool<Object,Object>(this.dirContextPooledObjectFactory);
+			this.keyedObjectPool = new GenericKeyedObjectPool<Object, Object>(this.dirContextPooledObjectFactory,
+					objectPoolConfig);
+		}
+		else {
+			this.keyedObjectPool = new GenericKeyedObjectPool<Object, Object>(this.dirContextPooledObjectFactory);
 		}
 	}
 
@@ -110,56 +111,56 @@ public class PooledContextSource
 
 	/**
 	 * @return the poolConfig
-	 * */
+	 */
 	public PoolConfig getPoolConfig() {
 		return poolConfig;
 	}
 
 	/**
 	 * @see GenericKeyedObjectPool#getNumIdle()
-	 * */
+	 */
 	public int getNumIdle() {
 		return this.keyedObjectPool.getNumIdle();
 	}
 
 	/**
 	 * @see GenericKeyedObjectPool#getNumIdle(Object)
-	 * */
+	 */
 	public int getNumIdleRead() {
 		return this.keyedObjectPool.getNumIdle(DirContextType.READ_ONLY);
 	}
 
 	/**
 	 * @see GenericKeyedObjectPool#getNumIdle(Object)
-	 * */
+	 */
 	public int getNumIdleWrite() {
 		return this.keyedObjectPool.getNumIdle(DirContextType.READ_WRITE);
 	}
 
 	/**
 	 * @see GenericKeyedObjectPool#getNumActive()
-	 * */
+	 */
 	public int getNumActive() {
 		return this.keyedObjectPool.getNumActive();
 	}
 
 	/**
 	 * @see GenericKeyedObjectPool#getNumActive(Object)
-	 * */
+	 */
 	public int getNumActiveRead() {
 		return this.keyedObjectPool.getNumActive(DirContextType.READ_ONLY);
 	}
 
 	/**
 	 * @see GenericKeyedObjectPool#getNumActive(Object)
-	 * */
+	 */
 	public int getNumActiveWrite() {
 		return this.keyedObjectPool.getNumActive(DirContextType.READ_WRITE);
 	}
 
 	/**
 	 * @see GenericKeyedObjectPool#getNumWaiters()
-	 * */
+	 */
 	public int getNumWaiters() {
 		return this.keyedObjectPool.getNumWaiters();
 	}
@@ -181,37 +182,33 @@ public class PooledContextSource
 	}
 
 	/**
-	 * @param contextSource the contextSource to set
-	 * Required
+	 * @param contextSource the contextSource to set Required
 	 */
 	public void setContextSource(ContextSource contextSource) {
 		this.dirContextPooledObjectFactory.setContextSource(contextSource);
 	}
 
 	/**
-	 * @param dirContextValidator the dirContextValidator to set
-	 * Required
+	 * @param dirContextValidator the dirContextValidator to set Required
 	 */
 	public void setDirContextValidator(DirContextValidator dirContextValidator) {
 		this.dirContextPooledObjectFactory.setDirContextValidator(dirContextValidator);
 	}
 
 	/**
-	 * Configure the exception classes that are to be interpreted as no-transient with regards to eager
-	 * context invalidation. If one of the configured exceptions (or subclasses of them)
-	 * is thrown by any method on a pooled DirContext, that instance will immediately be marked
-	 * as invalid without any additional testing (i.e. testOnReturn).
-	 * This allows for more efficient management of dead connections.
+	 * Configure the exception classes that are to be interpreted as no-transient with
+	 * regards to eager context invalidation. If one of the configured exceptions (or
+	 * subclasses of them) is thrown by any method on a pooled DirContext, that instance
+	 * will immediately be marked as invalid without any additional testing (i.e.
+	 * testOnReturn). This allows for more efficient management of dead connections.
 	 * Default is {@link javax.naming.CommunicationException}.
-	 *
-	 * @param nonTransientExceptions the exception classes that should be interpreted as non-transient
-	 *							   with regards to eager invalidation.
+	 * @param nonTransientExceptions the exception classes that should be interpreted as
+	 * non-transient with regards to eager invalidation.
 	 * @since 2.0
 	 */
 	public void setNonTransientExceptions(Collection<Class<? extends Throwable>> nonTransientExceptions) {
 		this.dirContextPooledObjectFactory.setNonTransientExceptions(nonTransientExceptions);
 	}
-
 
 	// ***** DisposableBean interface methods *****//
 
@@ -248,11 +245,10 @@ public class PooledContextSource
 
 	/**
 	 * Gets a DirContext of the specified type from the keyed object pool.
-	 *
 	 * @param dirContextType The type of context to return.
 	 * @return A wrapped DirContext of the specified type.
-	 * @throws DataAccessResourceFailureException If retrieving the object from
-	 * the pool throws an exception
+	 * @throws DataAccessResourceFailureException If retrieving the object from the pool
+	 * throws an exception
 	 */
 	protected DirContext getContext(DirContextType dirContextType) {
 		final DirContext dirContext;
@@ -307,4 +303,5 @@ public class PooledContextSource
 
 		return objectPoolConfig;
 	}
+
 }

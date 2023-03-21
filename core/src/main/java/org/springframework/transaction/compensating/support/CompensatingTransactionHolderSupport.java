@@ -20,30 +20,25 @@ import org.springframework.transaction.support.ResourceHolderSupport;
 
 /**
  * Base class for compensating transaction resource holders.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
-public abstract class CompensatingTransactionHolderSupport extends
-		ResourceHolderSupport {
+public abstract class CompensatingTransactionHolderSupport extends ResourceHolderSupport {
 
 	private CompensatingTransactionOperationManager transactionOperationManager;
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param manager
-	 *			The {@link CompensatingTransactionOperationManager} to use for
-	 *			creating Compensating operations.
+	 * @param manager The {@link CompensatingTransactionOperationManager} to use for
+	 * creating Compensating operations.
 	 */
-	public CompensatingTransactionHolderSupport(
-			CompensatingTransactionOperationManager manager) {
+	public CompensatingTransactionHolderSupport(CompensatingTransactionOperationManager manager) {
 		this.transactionOperationManager = manager;
 	}
 
 	/**
 	 * Get the actual transacted resource.
-	 * 
 	 * @return the transaction's target resource
 	 */
 	protected abstract Object getTransactedResource();
@@ -57,9 +52,8 @@ public abstract class CompensatingTransactionHolderSupport extends
 	}
 
 	/**
-	 * Get the CompensatingTransactionOperationManager to handle the data for
-	 * the current transaction.
-	 * 
+	 * Get the CompensatingTransactionOperationManager to handle the data for the current
+	 * transaction.
 	 * @return the CompensatingTransactionOperationManager.
 	 */
 	public CompensatingTransactionOperationManager getTransactionOperationManager() {
@@ -67,14 +61,12 @@ public abstract class CompensatingTransactionHolderSupport extends
 	}
 
 	/**
-	 * Set the CompensatingTransactionOperationManager. For testing purposes
-	 * only.
-	 * 
-	 * @param transactionOperationManager
-	 *			the CompensatingTransactionOperationManager to use.
+	 * Set the CompensatingTransactionOperationManager. For testing purposes only.
+	 * @param transactionOperationManager the CompensatingTransactionOperationManager to
+	 * use.
 	 */
-	public void setTransactionOperationManager(
-			CompensatingTransactionOperationManager transactionOperationManager) {
+	public void setTransactionOperationManager(CompensatingTransactionOperationManager transactionOperationManager) {
 		this.transactionOperationManager = transactionOperationManager;
 	}
+
 }

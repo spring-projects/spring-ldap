@@ -31,6 +31,7 @@ import static org.junit.Assert.assertTrue;
  * @author Mattias Hellborg Arthursson
  */
 public class NameAwareAttributeTest {
+
 	@Test
 	public void testEqualsWithIdNotSame() {
 		NameAwareAttribute attr1 = new NameAwareAttribute("someAttribute");
@@ -66,13 +67,13 @@ public class NameAwareAttributeTest {
 	@Test
 	public void testEqualsUnorderedWithIdenticalArrayAttributes() {
 		NameAwareAttribute attr1 = new NameAwareAttribute("someAttribute");
-		attr1.add(new byte[]{1, 2, 3});
-		attr1.add(new byte[]{3, 2, 1});
-		attr1.add(new byte[]{1});
+		attr1.add(new byte[] { 1, 2, 3 });
+		attr1.add(new byte[] { 3, 2, 1 });
+		attr1.add(new byte[] { 1 });
 		NameAwareAttribute attr2 = new NameAwareAttribute("someAttribute");
-		attr2.add(new byte[]{1, 2, 3});
-		attr2.add(new byte[]{3, 2, 1});
-		attr2.add(new byte[]{1});
+		attr2.add(new byte[] { 1, 2, 3 });
+		attr2.add(new byte[] { 3, 2, 1 });
+		attr2.add(new byte[] { 1 });
 
 		assertThat(attr1.equals(attr2)).isTrue();
 		assertThat(attr2.hashCode()).isEqualTo(attr1.hashCode());
@@ -81,13 +82,13 @@ public class NameAwareAttributeTest {
 	@Test
 	public void testEqualsUnorderedWithDifferentOrderArrayAttributes() {
 		NameAwareAttribute attr1 = new NameAwareAttribute("someAttribute");
-		attr1.add(new byte[]{1, 2, 3});
-		attr1.add(new byte[]{3, 2, 1});
-		attr1.add(new byte[]{1});
+		attr1.add(new byte[] { 1, 2, 3 });
+		attr1.add(new byte[] { 3, 2, 1 });
+		attr1.add(new byte[] { 1 });
 		NameAwareAttribute attr2 = new NameAwareAttribute("someAttribute");
-		attr2.add(new byte[]{3, 2, 1});
-		attr2.add(new byte[]{1});
-		attr2.add(new byte[]{1, 2, 3});
+		attr2.add(new byte[] { 3, 2, 1 });
+		attr2.add(new byte[] { 1 });
+		attr2.add(new byte[] { 1, 2, 3 });
 
 		assertThat(attr1.equals(attr2)).isTrue();
 		assertThat(attr2.hashCode()).isEqualTo(attr1.hashCode());
@@ -96,13 +97,13 @@ public class NameAwareAttributeTest {
 	@Test
 	public void testEqualsUnorderedWithDifferentArrayAttributes() {
 		NameAwareAttribute attr1 = new NameAwareAttribute("someAttribute");
-		attr1.add(new byte[]{1, 2, 3});
-		attr1.add(new byte[]{3, 2, 2});
-		attr1.add(new byte[]{1});
+		attr1.add(new byte[] { 1, 2, 3 });
+		attr1.add(new byte[] { 3, 2, 2 });
+		attr1.add(new byte[] { 1 });
 		NameAwareAttribute attr2 = new NameAwareAttribute("someAttribute");
-		attr2.add(new byte[]{1, 2, 3});
-		attr2.add(new byte[]{3, 2, 1});
-		attr2.add(new byte[]{1});
+		attr2.add(new byte[] { 1, 2, 3 });
+		attr2.add(new byte[] { 3, 2, 1 });
+		attr2.add(new byte[] { 1 });
 
 		assertThat(attr1.equals(attr2)).isFalse();
 	}
@@ -110,12 +111,12 @@ public class NameAwareAttributeTest {
 	@Test
 	public void testEqualsUnorderedWithDifferentNumberOfArrayAttributes() {
 		NameAwareAttribute attr1 = new NameAwareAttribute("someAttribute");
-		attr1.add(new byte[]{1, 2, 3});
-		attr1.add(new byte[]{3, 2, 1});
-		attr1.add(new byte[]{1});
+		attr1.add(new byte[] { 1, 2, 3 });
+		attr1.add(new byte[] { 3, 2, 1 });
+		attr1.add(new byte[] { 1 });
 		NameAwareAttribute attr2 = new NameAwareAttribute("someAttribute");
-		attr2.add(new byte[]{1, 2, 3});
-		attr2.add(new byte[]{1});
+		attr2.add(new byte[] { 1, 2, 3 });
+		attr2.add(new byte[] { 1 });
 
 		assertThat(attr1.equals(attr2)).isFalse();
 	}
@@ -123,13 +124,13 @@ public class NameAwareAttributeTest {
 	@Test
 	public void testEqualsOrderedWithIdenticalArrayAttributes() {
 		NameAwareAttribute attr1 = new NameAwareAttribute("someAttribute", true);
-		attr1.add(new byte[]{1, 2, 3});
-		attr1.add(new byte[]{3, 2, 1});
-		attr1.add(new byte[]{1});
+		attr1.add(new byte[] { 1, 2, 3 });
+		attr1.add(new byte[] { 3, 2, 1 });
+		attr1.add(new byte[] { 1 });
 		NameAwareAttribute attr2 = new NameAwareAttribute("someAttribute", true);
-		attr2.add(new byte[]{1, 2, 3});
-		attr2.add(new byte[]{3, 2, 1});
-		attr2.add(new byte[]{1});
+		attr2.add(new byte[] { 1, 2, 3 });
+		attr2.add(new byte[] { 3, 2, 1 });
+		attr2.add(new byte[] { 1 });
 
 		assertThat(attr1.equals(attr2)).isTrue();
 		assertThat(attr2.hashCode()).isEqualTo(attr1.hashCode());
@@ -138,13 +139,13 @@ public class NameAwareAttributeTest {
 	@Test
 	public void testEqualsOrderedWithArrayAttributes() {
 		NameAwareAttribute attr1 = new NameAwareAttribute("someAttribute", true);
-		attr1.add(new byte[]{1, 2, 3});
-		attr1.add(new byte[]{3, 2, 1});
-		attr1.add(new byte[]{1});
+		attr1.add(new byte[] { 1, 2, 3 });
+		attr1.add(new byte[] { 3, 2, 1 });
+		attr1.add(new byte[] { 1 });
 		NameAwareAttribute attr2 = new NameAwareAttribute("someAttribute", true);
-		attr2.add(new byte[]{1, 2, 3});
-		attr2.add(new byte[]{3, 2, 1});
-		attr2.add(new byte[]{1});
+		attr2.add(new byte[] { 1, 2, 3 });
+		attr2.add(new byte[] { 3, 2, 1 });
+		attr2.add(new byte[] { 1 });
 
 		assertThat(attr1.equals(attr2)).isTrue();
 		assertThat(attr2.hashCode()).isEqualTo(attr1.hashCode());
@@ -153,13 +154,13 @@ public class NameAwareAttributeTest {
 	@Test
 	public void testEqualsOrderedWithDifferentOrderArrayAttributes() {
 		NameAwareAttribute attr1 = new NameAwareAttribute("someAttribute", true);
-		attr1.add(new byte[]{1, 2, 3});
-		attr1.add(new byte[]{3, 2, 1});
-		attr1.add(new byte[]{1});
+		attr1.add(new byte[] { 1, 2, 3 });
+		attr1.add(new byte[] { 3, 2, 1 });
+		attr1.add(new byte[] { 1 });
 		NameAwareAttribute attr2 = new NameAwareAttribute("someAttribute", true);
-		attr2.add(new byte[]{3, 2, 1});
-		attr2.add(new byte[]{1});
-		attr2.add(new byte[]{1, 2, 3});
+		attr2.add(new byte[] { 3, 2, 1 });
+		attr2.add(new byte[] { 1 });
+		attr2.add(new byte[] { 1, 2, 3 });
 
 		assertThat(attr1.equals(attr2)).isFalse();
 	}
@@ -181,7 +182,8 @@ public class NameAwareAttributeTest {
 
 	@Test
 	public void testEqualDistinguishedNameValue() throws NamingException {
-		// The names here are syntactically equal, but differ in exact string representation
+		// The names here are syntactically equal, but differ in exact string
+		// representation
 		String expectedName1 = "cn=John Doe, OU=People";
 		String expectedName2 = "cn=John Doe,ou=People";
 
@@ -198,7 +200,8 @@ public class NameAwareAttributeTest {
 
 	@Test
 	public void testEqualDistinguishedNameValueUninitialized() throws NamingException {
-		// The names here are syntactically equal, but differ in exact string representation
+		// The names here are syntactically equal, but differ in exact string
+		// representation
 		String expectedName1 = "cn=John Doe, OU=People";
 		String expectedName2 = "cn=John Doe,ou=People";
 
@@ -214,7 +217,8 @@ public class NameAwareAttributeTest {
 
 	@Test
 	public void testEqualDistinguishedNameValueManuallyInitialized() throws NamingException {
-		// The names here are syntactically equal, but differ in exact string representation
+		// The names here are syntactically equal, but differ in exact string
+		// representation
 		String expectedName1 = "cn=John Doe, OU=People";
 		String expectedName2 = "cn=John Doe,ou=People";
 
@@ -233,7 +237,8 @@ public class NameAwareAttributeTest {
 
 	@Test
 	public void testUnequalDistinguishedNameValue() throws NamingException {
-		// The names here are syntactically equal, but differ in exact string representation
+		// The names here are syntactically equal, but differ in exact string
+		// representation
 		String expectedName1 = "cn=Jane Doe,ou=People";
 		String expectedName2 = "cn=John Doe,ou=People";
 
@@ -249,7 +254,8 @@ public class NameAwareAttributeTest {
 
 	@Test
 	public void testComparingWDistinguishedNameValueWithInvalidName() throws NamingException {
-		// The names here are syntactically equal, but differ in exact string representation
+		// The names here are syntactically equal, but differ in exact string
+		// representation
 		String expectedName1 = "cn=Jane Doe,ou=People";
 		String expectedValue2 = "thisisnotavaliddn";
 
@@ -279,4 +285,5 @@ public class NameAwareAttributeTest {
 		assertTrue(attribute.equals(expectedAttribute));
 		assertTrue(attribute.hashCode() == expectedAttribute.hashCode());
 	}
+
 }

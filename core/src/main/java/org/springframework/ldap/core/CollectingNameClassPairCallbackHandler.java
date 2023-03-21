@@ -22,19 +22,16 @@ import java.util.List;
 
 /**
  * A NameClassPairCallbackHandler to collect all results in an internal List.
- * 
+ *
  * @see LdapTemplate
- * 
  * @author Mattias Hellborg Arthursson
  */
-public abstract class CollectingNameClassPairCallbackHandler<T> implements
-		NameClassPairCallbackHandler {
+public abstract class CollectingNameClassPairCallbackHandler<T> implements NameClassPairCallbackHandler {
 
 	private List<T> list = new LinkedList<T>();
 
 	/**
 	 * Get the assembled list.
-	 * 
 	 * @return the list of all assembled objects.
 	 */
 	public List<T> getList() {
@@ -43,22 +40,20 @@ public abstract class CollectingNameClassPairCallbackHandler<T> implements
 
 	/**
 	 * Pass on the supplied NameClassPair to
-	 * {@link #getObjectFromNameClassPair(NameClassPair)} and add the result to
-	 * the internal list.
+	 * {@link #getObjectFromNameClassPair(NameClassPair)} and add the result to the
+	 * internal list.
 	 */
 	public final void handleNameClassPair(NameClassPair nameClassPair) throws NamingException {
 		list.add(getObjectFromNameClassPair(nameClassPair));
 	}
 
 	/**
-	 * Handle a NameClassPair and transform it to an Object of the desired type
-	 * and with data from the NameClassPair.
-	 * 
-	 * @param nameClassPair
-	 *			a NameClassPair from a search operation.
+	 * Handle a NameClassPair and transform it to an Object of the desired type and with
+	 * data from the NameClassPair.
+	 * @param nameClassPair a NameClassPair from a search operation.
 	 * @return an object constructed from the data in the NameClassPair.
 	 * @throws NamingException if an error occurs.
 	 */
-	public abstract T getObjectFromNameClassPair(
-			NameClassPair nameClassPair) throws NamingException;
+	public abstract T getObjectFromNameClassPair(NameClassPair nameClassPair) throws NamingException;
+
 }

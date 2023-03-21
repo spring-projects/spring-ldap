@@ -20,26 +20,21 @@ import javax.naming.NameClassPair;
 import javax.naming.NamingException;
 
 /**
- * The default NameClassPairMapper implementation. This implementation simply
- * takes the Name string from the supplied NameClassPair and returns it as
- * result.
- * 
+ * The default NameClassPairMapper implementation. This implementation simply takes the
+ * Name string from the supplied NameClassPair and returns it as result.
+ *
  * @author Mattias Hellborg Arthursson
- * 
+ *
  */
 public class DefaultNameClassPairMapper implements NameClassPairMapper<String> {
 
 	/**
-	 * Gets the Name from the supplied NameClassPair and returns it as the
-	 * result.
-	 * 
-	 * @param nameClassPair
-	 *			the NameClassPair to transform.
+	 * Gets the Name from the supplied NameClassPair and returns it as the result.
+	 * @param nameClassPair the NameClassPair to transform.
 	 * @return the Name string from the NameClassPair.
 	 */
 	@Override
-	public String mapFromNameClassPair(NameClassPair nameClassPair)
-			throws NamingException {
+	public String mapFromNameClassPair(NameClassPair nameClassPair) throws NamingException {
 
 		return nameClassPair.getName();
 	}

@@ -18,16 +18,16 @@ package org.springframework.ldap.filter;
 
 /**
  * A filter for a logical AND. Example:
- * 
+ *
  * <pre>
  *	 AndFilter filter = new AndFilter();
  *	 filter.and(new EqualsFilter(&quot;objectclass&quot;, &quot;person&quot;);
  *	 filter.and(new EqualsFilter(&quot;cn&quot;, &quot;Some CN&quot;);
  *	 System.out.println(filter.encode());	
  * </pre>
- * 
+ *
  * would result in: <code>(&amp;(objectclass=person)(cn=Some CN))</code>
- * 
+ *
  * @see org.springframework.ldap.filter.EqualsFilter
  * @author Adam Skogman
  * @author Mattias Hellborg Arthursson
@@ -45,13 +45,12 @@ public class AndFilter extends BinaryLogicalFilter {
 
 	/**
 	 * Add a query to the AND expression.
-	 * 
-	 * @param query The expression to AND with the rest of the AND:ed
-	 * expressions.
+	 * @param query The expression to AND with the rest of the AND:ed expressions.
 	 * @return This LdapAndQuery
 	 */
 	public AndFilter and(Filter query) {
 		append(query);
 		return this;
 	}
+
 }

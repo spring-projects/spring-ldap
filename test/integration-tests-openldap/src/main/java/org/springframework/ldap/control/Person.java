@@ -22,83 +22,82 @@ import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
  * Simple class representing a single person.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  */
 public class Person {
-   private String fullName;
 
-   private String lastName;
+	private String fullName;
 
-   private String description;
+	private String lastName;
 
-   private String country;
+	private String description;
 
-   private String company;
+	private String country;
 
-   private String phone;
+	private String company;
 
-   public String getDescription() {
-	  return description;
-   }
+	private String phone;
 
-   public void setDescription(String description) {
-	  this.description = description;
-   }
+	public String getDescription() {
+		return description;
+	}
 
-   public String getFullName() {
-	  return fullName;
-   }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-   public void setFullName(String fullName) {
-	  this.fullName = fullName;
-   }
+	public String getFullName() {
+		return fullName;
+	}
 
-   public String getLastName() {
-	  return lastName;
-   }
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
 
-   public void setLastName(String lastName) {
-	  this.lastName = lastName;
-   }
+	public String getLastName() {
+		return lastName;
+	}
 
-   public String getCompany() {
-	  return company;
-   }
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 
-   public void setCompany(String company) {
-	  this.company = company;
-   }
+	public String getCompany() {
+		return company;
+	}
 
-   public String getCountry() {
-	  return country;
-   }
+	public void setCompany(String company) {
+		this.company = company;
+	}
 
-   public void setCountry(String country) {
-	  this.country = country;
-   }
+	public String getCountry() {
+		return country;
+	}
 
-   public String getPhone() {
-	  return phone;
-   }
+	public void setCountry(String country) {
+		this.country = country;
+	}
 
-   public void setPhone(String phone) {
-	  this.phone = phone;
-   }
+	public String getPhone() {
+		return phone;
+	}
 
-   public boolean equals(Object obj) {
-	  return EqualsBuilder.reflectionEquals(
-		 this, obj);
-   }
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
 
-   public int hashCode() {
-	  return HashCodeBuilder
-		 .reflectionHashCode(this);
-   }
+	public boolean equals(Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
+	}
 
-   public String toString() {
-	  return ToStringBuilder.reflectionToString(
-		 this, ToStringStyle.MULTI_LINE_STYLE);
-   }
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+
 }

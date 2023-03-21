@@ -33,6 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Mattias Hellborg Arthursson
  */
 public class DefaultIncrementalAttributesMapperTest {
+
 	private DefaultIncrementalAttributesMapper tested;
 
 	@Before
@@ -57,7 +58,7 @@ public class DefaultIncrementalAttributesMapperTest {
 
 	@Test
 	public void testGetAttributesArrayWithTwoAttributes() {
-		tested = new DefaultIncrementalAttributesMapper(20, new String[]{"member", "cn"});
+		tested = new DefaultIncrementalAttributesMapper(20, new String[] { "member", "cn" });
 		String[] attributes = tested.getAttributesForLookup();
 
 		assertThat(attributes.length).isEqualTo(2);
@@ -147,7 +148,7 @@ public class DefaultIncrementalAttributesMapperTest {
 
 	@Test
 	public void testLoopWithTwoRangedAttributesLoopOnOneAttribute() throws Exception {
-		tested = new DefaultIncrementalAttributesMapper(10, new String[]{"member", "cn"});
+		tested = new DefaultIncrementalAttributesMapper(10, new String[] { "member", "cn" });
 
 		Attributes attributes = createAttributes("member", new RangeOption(0, 5));
 		attributes.put(createRangeAttribute("cn", new RangeOption(0, 10), 10));
@@ -188,4 +189,5 @@ public class DefaultIncrementalAttributesMapperTest {
 		}
 		return attribute;
 	}
+
 }

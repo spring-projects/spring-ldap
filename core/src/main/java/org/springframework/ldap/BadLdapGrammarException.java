@@ -17,9 +17,9 @@
 package org.springframework.ldap;
 
 /**
- * Thrown to indicate that an invalid value has been supplied to an LDAP
- * operation. This could be an invalid filter or dn.
- * 
+ * Thrown to indicate that an invalid value has been supplied to an LDAP operation. This
+ * could be an invalid filter or dn.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class BadLdapGrammarException extends NamingException {
@@ -33,4 +33,5 @@ public class BadLdapGrammarException extends NamingException {
 	public BadLdapGrammarException(String message, Throwable cause) {
 		super(message, cause);
 	}
+
 }

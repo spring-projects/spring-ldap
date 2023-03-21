@@ -23,18 +23,16 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
 import javax.naming.Name;
 
 /**
- * A {@link CompensatingTransactionOperationExecutor} to manage an unbind
- * operation. The methods in this class do not behave as expected, since it
- * might be impossible to retrieve all the original attributes from the entry.
- * Instead this class performs a <b>rename</b> in {@link #performOperation()},
- * a negating rename in {@link #rollback()}, and {@link #commit()} unbinds the
- * entry from its temporary location.
- * 
+ * A {@link CompensatingTransactionOperationExecutor} to manage an unbind operation. The
+ * methods in this class do not behave as expected, since it might be impossible to
+ * retrieve all the original attributes from the entry. Instead this class performs a
+ * <b>rename</b> in {@link #performOperation()}, a negating rename in {@link #rollback()},
+ * and {@link #commit()} unbinds the entry from its temporary location.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
-public class UnbindOperationExecutor implements
-		CompensatingTransactionOperationExecutor {
+public class UnbindOperationExecutor implements CompensatingTransactionOperationExecutor {
 
 	private static Logger log = LoggerFactory.getLogger(UnbindOperationExecutor.class);
 
@@ -46,37 +44,34 @@ public class UnbindOperationExecutor implements
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param ldapOperations
-	 *			The {@link LdapOperations} to use for performing the rollback
-	 *			operation.
-	 * @param originalDn
-	 *			The original DN of the entry to be removed.
-	 * @param temporaryDn
-	 *			Temporary DN of the entry to be removed; this is where the
-	 *			entry is temporarily stored during the transaction.
+	 * @param ldapOperations The {@link LdapOperations} to use for performing the rollback
+	 * operation.
+	 * @param originalDn The original DN of the entry to be removed.
+	 * @param temporaryDn Temporary DN of the entry to be removed; this is where the entry
+	 * is temporarily stored during the transaction.
 	 */
-	public UnbindOperationExecutor(LdapOperations ldapOperations,
-			Name originalDn, Name temporaryDn) {
+	public UnbindOperationExecutor(LdapOperations ldapOperations, Name originalDn, Name temporaryDn) {
 		this.ldapOperations = ldapOperations;
 		this.originalDn = originalDn;
 		this.temporaryDn = temporaryDn;
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#rollback()
+	 * @see org.springframework.ldap.support.transaction.
+	 * CompensatingTransactionOperationExecutor#rollback()
 	 */
 	public void rollback() {
 		try {
 			ldapOperations.rename(temporaryDn, originalDn);
-		} catch (Exception e) {
-			log.warn("Filed to rollback unbind operation, temporaryDn: "
-					+ temporaryDn + "; originalDn: " + originalDn);
+		}
+		catch (Exception e) {
+			log.warn("Filed to rollback unbind operation, temporaryDn: " + temporaryDn + "; originalDn: " + originalDn);
 		}
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#commit()
+	 * @see org.springframework.ldap.support.transaction.
+	 * CompensatingTransactionOperationExecutor#commit()
 	 */
 	public void commit() {
 		log.debug("Committing unbind operation - unbinding temporary entry");
@@ -84,11 +79,11 @@ public class UnbindOperationExecutor implements
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#performOperation()
+	 * @see org.springframework.ldap.support.transaction.
+	 * CompensatingTransactionOperationExecutor#performOperation()
 	 */
 	public void performOperation() {
-		log.debug("Performing operation for unbind -"
-				+ " renaming to temporary entry.");
+		log.debug("Performing operation for unbind -" + " renaming to temporary entry.");
 		ldapOperations.rename(originalDn, temporaryDn);
 	}
 
@@ -103,4 +98,5 @@ public class UnbindOperationExecutor implements
 	Name getTemporaryDn() {
 		return temporaryDn;
 	}
+
 }

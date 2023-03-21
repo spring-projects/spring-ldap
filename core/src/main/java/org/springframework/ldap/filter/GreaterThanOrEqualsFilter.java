@@ -17,20 +17,19 @@
 package org.springframework.ldap.filter;
 
 /**
- * A filter to compare &gt;=. LDAP RFC does not allow &gt; comparison. The following
- * code:
- * 
+ * A filter to compare &gt;=. LDAP RFC does not allow &gt; comparison. The following code:
+ *
  * <pre>
  * GreaterThanOrEqualsFilter filter = new GreaterThanOrEqualsFilter(&quot;cn&quot;, &quot;Some CN&quot;);
  * System.out.println(filter.ecode());
  * </pre>
- * 
+ *
  * would result in:
- * 
+ *
  * <pre>
  * (cn&gt;=Some CN)
  * </pre>
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class GreaterThanOrEqualsFilter extends CompareFilter {
@@ -48,4 +47,5 @@ public class GreaterThanOrEqualsFilter extends CompareFilter {
 	protected String getCompareString() {
 		return GREATER_THAN_OR_EQUALS;
 	}
+
 }

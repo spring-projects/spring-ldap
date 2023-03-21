@@ -18,30 +18,29 @@ package org.springframework.ldap.filter;
 import org.springframework.util.StringUtils;
 
 /**
- * Allows hard coded parts to be included in a search filter. Particularly useful
- * if some filters are specified in configuration files and these should be
- * combined with other ones.
- * 
+ * Allows hard coded parts to be included in a search filter. Particularly useful if some
+ * filters are specified in configuration files and these should be combined with other
+ * ones.
+ *
  * <pre>
  * Filter filter = new HardcodedFilter(&quot;(&amp;(objectClass=user)(!(objectClass=computer)))&quot;);
  * System.out.println(filter.toString());
  * </pre>
- * 
- * would result in:
- * <code>(&amp;(objectClass=user)(!(objectClass=computer)))</code>
+ *
+ * would result in: <code>(&amp;(objectClass=user)(!(objectClass=computer)))</code>
  * <p>
- * <b>Note 1</b>: If the definition is in XML you will need to properly encode any special characters so that they are valid in an XML file,
- * e.g. &quot;&amp;&quot; needs to be encoded as &quot;&amp;amp;&quot;, e.g.
- * <pre>
+ * <b>Note 1</b>: If the definition is in XML you will need to properly encode any special
+ * characters so that they are valid in an XML file, e.g. &quot;&amp;&quot; needs to be
+ * encoded as &quot;&amp;amp;&quot;, e.g. <pre>
  * &lt;bean class="MyClass"&gt;
  *   &lt;property name="filter" value="(&amp;amp;(objectClass=user)(!(objectClass=computer)))" /&gt;
  * &lt;/bean&gt;
  * </pre>
  * <p>
- * <b>Note 2</b>: There will be no validation to ensure that the supplied filter is
- * valid. Using this implementation to build filters from user input is strongly
- * discouraged.
+ * <b>Note 2</b>: There will be no validation to ensure that the supplied filter is valid.
+ * Using this implementation to build filters from user input is strongly discouraged.
  * <p>
+ *
  * @author Justen Stepka
  * @author Mathieu Larchet
  */
@@ -68,12 +67,15 @@ public class HardcodedFilter extends AbstractFilter {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 
 		HardcodedFilter that = (HardcodedFilter) o;
 
-		if (filter != null ? !filter.equals(that.filter) : that.filter != null) return false;
+		if (filter != null ? !filter.equals(that.filter) : that.filter != null)
+			return false;
 
 		return true;
 	}
@@ -82,4 +84,5 @@ public class HardcodedFilter extends AbstractFilter {
 	public int hashCode() {
 		return filter != null ? filter.hashCode() : 0;
 	}
+
 }

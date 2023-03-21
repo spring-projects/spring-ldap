@@ -43,8 +43,11 @@ import java.util.Set;
 public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 	private final String id;
+
 	private final boolean orderMatters;
+
 	private final Set<Object> values = new LinkedHashSet<Object>();
+
 	private Map<Name, String> valuesAsNames = new HashMap<Name, String>();
 
 	/**
@@ -59,17 +62,17 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 	/**
 	 * Construct a new instance from the supplied Attribute.
-	 *
 	 * @param attribute the Attribute to copy.
 	 */
 	public NameAwareAttribute(Attribute attribute) {
 		this(attribute.getID(), attribute.isOrdered());
 		try {
 			NamingEnumeration<?> incomingValues = attribute.getAll();
-			while(incomingValues.hasMore()) {
+			while (incomingValues.hasMore()) {
 				this.add(incomingValues.next());
 			}
-		} catch (NamingException e) {
+		}
+		catch (NamingException e) {
 			throw LdapUtils.convertLdapException(e);
 		}
 
@@ -88,7 +91,8 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 	}
 
 	/**
-	 * Construct a new instance with the specified id, no values and order significance as specified.
+	 * Construct a new instance with the specified id, no values and order significance as
+	 * specified.
 	 * @param id the attribute id
 	 * @param orderMatters whether order has significance in this attribute.
 	 */
@@ -104,7 +108,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 	@Override
 	public Object get() {
-		if(values.isEmpty()) {
+		if (values.isEmpty()) {
 			return null;
 		}
 
@@ -134,12 +138,13 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 			Name name = LdapUtils.newLdapName((Name) attrVal);
 			String currentValue = valuesAsNames.get(name);
 			String nameAsString = name.toString();
-			if(currentValue == null) {
+			if (currentValue == null) {
 				valuesAsNames.put(name, name.toString());
 				values.add(nameAsString);
 				return true;
-			} else {
-				if(!currentValue.equals(nameAsString)) {
+			}
+			else {
+				if (!currentValue.equals(nameAsString)) {
 					values.remove(currentValue);
 					values.add(nameAsString);
 				}
@@ -152,7 +157,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 	}
 
 	public void initValuesAsNames() {
-		if(hasValuesAsNames()) {
+		if (hasValuesAsNames()) {
 			return;
 		}
 
@@ -162,15 +167,20 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 				String s = (String) value;
 				try {
 					newValuesAsNames.put(LdapUtils.newLdapName(s), s);
-				} catch (InvalidNameException e) {
-					throw new IllegalArgumentException("This instance has values that are not valid distinguished names; " +
-							"cannot handle Name values", e);
 				}
-			} else if (value instanceof LdapName) {
+				catch (InvalidNameException e) {
+					throw new IllegalArgumentException(
+							"This instance has values that are not valid distinguished names; "
+									+ "cannot handle Name values",
+							e);
+				}
+			}
+			else if (value instanceof LdapName) {
 				newValuesAsNames.put((LdapName) value, value.toString());
-			} else {
-				throw new IllegalArgumentException("This instance has non-string attribute values; " +
-						"cannot handle Name values");
+			}
+			else {
+				throw new IllegalArgumentException(
+						"This instance has non-string attribute values; " + "cannot handle Name values");
 			}
 		}
 
@@ -188,7 +198,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 			Name name = LdapUtils.newLdapName((Name) attrval);
 			String removedValue = valuesAsNames.remove(name);
-			if(removedValue != null) {
+			if (removedValue != null) {
 				values.remove(removedValue);
 
 				return true;
@@ -221,8 +231,8 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 	/**
 	 * <p>
-	 * Due to performance reasons it is not advised to iterate over the attribute's values using this method.
-	 * Please use the {@link #iterator()} instead.
+	 * Due to performance reasons it is not advised to iterate over the attribute's values
+	 * using this method. Please use the {@link #iterator()} instead.
 	 * </p>
 	 * {@inheritDoc}
 	 */
@@ -232,12 +242,13 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 		try {
 			Object value = iterator.next();
-			for(int i = 0; i < ix; i++) {
+			for (int i = 0; i < ix; i++) {
 				value = iterator.next();
 			}
 
 			return value;
-		} catch (NoSuchElementException e) {
+		}
+		catch (NoSuchElementException e) {
 			throw new IndexOutOfBoundsException("No value at index i");
 		}
 	}
@@ -248,18 +259,20 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 		try {
 			Object value = iterator.next();
-			for(int i = 0; i < ix; i++) {
+			for (int i = 0; i < ix; i++) {
 				value = iterator.next();
 			}
 			iterator.remove();
 			if (value instanceof String) {
 				try {
 					valuesAsNames.remove(new LdapName((String) value));
-				} catch (javax.naming.InvalidNameException ignored) {
+				}
+				catch (javax.naming.InvalidNameException ignored) {
 				}
 			}
 			return value;
-		} catch (NoSuchElementException e) {
+		}
+		catch (NoSuchElementException e) {
 			throw new IndexOutOfBoundsException("No value at index i");
 		}
 	}
@@ -288,27 +301,30 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 
 		NameAwareAttribute that = (NameAwareAttribute) o;
 
-		if (id != null ? !id.equals(that.id) : that.id != null) return false;
-		if(this.values.size() != that.values.size()) {
+		if (id != null ? !id.equals(that.id) : that.id != null)
+			return false;
+		if (this.values.size() != that.values.size()) {
 			return false;
 		}
 
-		if(this.orderMatters != that.orderMatters || this.size() != that.size()) {
+		if (this.orderMatters != that.orderMatters || this.size() != that.size()) {
 			return false;
 		}
 
-		if(this.hasValuesAsNames() != that.hasValuesAsNames()) {
+		if (this.hasValuesAsNames() != that.hasValuesAsNames()) {
 			return false;
 		}
 
 		Set<?> myValues = this.values;
 		Set<?> theirValues = that.values;
-		if(this.hasValuesAsNames()) {
+		if (this.hasValuesAsNames()) {
 			// We have Name values - compare these to get
 			// syntactically correct comparison of the values
 
@@ -316,19 +332,20 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 			theirValues = that.valuesAsNames.keySet();
 		}
 
-		if(orderMatters) {
+		if (orderMatters) {
 			Iterator<?> thisIterator = myValues.iterator();
 			Iterator<?> thatIterator = theirValues.iterator();
-			while(thisIterator.hasNext()) {
-				if(!ObjectUtils.nullSafeEquals(thisIterator.next(), thatIterator.next())) {
+			while (thisIterator.hasNext()) {
+				if (!ObjectUtils.nullSafeEquals(thisIterator.next(), thatIterator.next())) {
 					return false;
 				}
 			}
 
 			return true;
-		} else {
+		}
+		else {
 			for (Object value : myValues) {
-				if(!CollectionUtils.contains(theirValues.iterator(), value)) {
+				if (!CollectionUtils.contains(theirValues.iterator(), value)) {
 					return false;
 				}
 			}
@@ -343,7 +360,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 		int valuesHash = 7;
 		Set<?> myValues = this.values;
-		if(hasValuesAsNames()) {
+		if (hasValuesAsNames()) {
 			myValues = valuesAsNames.keySet();
 		}
 
@@ -357,8 +374,8 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 	@Override
 	public String toString() {
-		return String.format("NameAwareAttribute; id: %s; hasValuesAsNames: %s; orderMatters: %s; values: %s",
-				id, hasValuesAsNames(), orderMatters, values);
+		return String.format("NameAwareAttribute; id: %s; hasValuesAsNames: %s; orderMatters: %s; values: %s", id,
+				hasValuesAsNames(), orderMatters, values);
 	}
 
 	@Override

@@ -18,9 +18,9 @@ package org.springframework.ldap.transaction.compensating;
 import javax.naming.Name;
 
 /**
- * Interface for different strategies to rename temporary entries for unbind and
- * rebind operations.
- * 
+ * Interface for different strategies to rename temporary entries for unbind and rebind
+ * operations.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
@@ -28,11 +28,10 @@ public interface TempEntryRenamingStrategy {
 
 	/**
 	 * Get a temporary name for the current entry to be renamed to.
-	 * 
-	 * @param originalName
-	 *			The original name of the entry.
-	 * @return The name to which the entry should be temporarily renamed
-	 *		 according to this strategy.
+	 * @param originalName The original name of the entry.
+	 * @return The name to which the entry should be temporarily renamed according to this
+	 * strategy.
 	 */
 	Name getTemporaryName(Name originalName);
+
 }

@@ -23,30 +23,31 @@ import java.util.List;
 /**
  * @author Rob Winch
  */
-@Entry(base="ou=someOu", objectClasses = {"inetOrgPerson", "organizationalPerson", "person", "top"})
+@Entry(base = "ou=someOu", objectClasses = { "inetOrgPerson", "organizationalPerson", "person", "top" })
 public class BaseUnitTestPerson {
-		@Id
-		private Name dn;
 
-		@Attribute(name = "cn")
-		@DnAttribute("cn")
-		private String fullName;
+	@Id
+	private Name dn;
 
-		@Attribute(name = "sn")
-		private String lastName;
+	@Attribute(name = "cn")
+	@DnAttribute("cn")
+	private String fullName;
 
-		@Attribute(name = "description")
-		private List<String> description;
+	@Attribute(name = "sn")
+	private String lastName;
 
-		@Transient
-		@DnAttribute("c")
-		private String country;
+	@Attribute(name = "description")
+	private List<String> description;
 
-		@Transient
-		@DnAttribute("ou")
-		private String company;
+	@Transient
+	@DnAttribute("c")
+	private String country;
 
-		// This should be automatically found
-		private String telephoneNumber;
+	@Transient
+	@DnAttribute("ou")
+	private String company;
+
+	// This should be automatically found
+	private String telephoneNumber;
 
 }

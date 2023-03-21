@@ -5,6 +5,7 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class NameAwareAttributesTest {
+
 	// gh-548
 	@Test
 	public void removeWhenDifferentCaseThenRemoves() {
@@ -22,4 +23,5 @@ public class NameAwareAttributesTest {
 		attributes.remove("myOtherID");
 		assertThat(attributes.size()).isEqualTo(0);
 	}
+
 }

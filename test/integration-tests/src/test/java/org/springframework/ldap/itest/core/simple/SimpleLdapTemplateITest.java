@@ -42,8 +42,9 @@ import org.springframework.test.context.ContextConfiguration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
-@ContextConfiguration(locations = {"/conf/simpleLdapTemplateTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/simpleLdapTemplateTestContext.xml" })
 public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest {
+
 	private static String DN_STRING = "cn=Some Person4,ou=company1,ou=Sweden";
 
 	private static LdapName DN = LdapUtils.newLdapName("cn=Some Person4,ou=company1,ou=Sweden");
@@ -139,8 +140,8 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 
 	@Test
 	public void testModifyAttributesName() {
-		DirContextOperations ctx = ldapTemplate.lookupContext(LdapUtils.newLdapName(
-				"cn=Some Person,ou=company1,ou=Sweden"));
+		DirContextOperations ctx = ldapTemplate
+				.lookupContext(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden"));
 
 		ctx.setAttributeValue("description", "updated description");
 		ctx.setAttributeValue("telephoneNumber", "0000001");
@@ -204,7 +205,7 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
 		assertThat(ldapTemplate.authenticate("", filter.toString(), "password")).isTrue();
 	}
-	
+
 	private void verifyBoundCorrectData() {
 		DirContextOperations result = ldapTemplate.lookupContext(DN_STRING);
 		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person4");
@@ -228,6 +229,7 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 
 			return adapter.getStringAttribute("cn");
 		}
+
 	}
 
 	private static final class DummyDirContextProcessor implements DirContextProcessor {
@@ -253,4 +255,5 @@ public class SimpleLdapTemplateITest extends AbstractLdapTemplateIntegrationTest
 		}
 
 	}
+
 }

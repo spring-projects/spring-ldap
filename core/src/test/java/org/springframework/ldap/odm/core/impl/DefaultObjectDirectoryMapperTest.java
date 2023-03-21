@@ -39,24 +39,20 @@ public class DefaultObjectDirectoryMapperTest {
 			version.when(SpringVersion::getVersion).thenReturn(null);
 			DefaultObjectDirectoryMapper mapper = new DefaultObjectDirectoryMapper();
 			// LDAP-300
-			assertThat((Object) getInternalState(mapper,"converterManager")).isNotNull();
+			assertThat((Object) getInternalState(mapper, "converterManager")).isNotNull();
 		}
 	}
 
 	@Test
 	public void testMapping() {
-		assertThat(tested.manageClass(UnitTestPerson.class))
-				.containsOnlyElementsOf(Arrays.asList("dn", "cn", "sn", "description", "telephoneNumber", "entryUUID", "objectclass"));
+		assertThat(tested.manageClass(UnitTestPerson.class)).containsOnlyElementsOf(
+				Arrays.asList("dn", "cn", "sn", "description", "telephoneNumber", "entryUUID", "objectclass"));
 
 		DefaultObjectDirectoryMapper.EntityData entityData = tested.getMetaDataMap().get(UnitTestPerson.class);
 
 		assertThat(entityData).isNotNull();
-		assertThat(entityData.ocFilter).isEqualTo(query().
-				where("objectclass").is("inetOrgPerson")
-				.and("objectclass").is("organizationalPerson")
-				.and("objectclass").is("person")
-				.and("objectclass").is("top")
-				.filter());
+		assertThat(entityData.ocFilter).isEqualTo(query().where("objectclass").is("inetOrgPerson").and("objectclass")
+				.is("organizationalPerson").and("objectclass").is("person").and("objectclass").is("top").filter());
 
 		assertThat(entityData.metaData).hasSize(8);
 
@@ -81,7 +77,8 @@ public class DefaultObjectDirectoryMapperTest {
 	public void testInvalidType() {
 		try {
 			tested.manageClass(UnitTestPersonWithInvalidFieldType.class);
-		} catch (InvalidEntryException expected) {
+		}
+		catch (InvalidEntryException expected) {
 			assertThat(expected.getMessage()).contains("Missing converter from");
 		}
 	}
@@ -95,7 +92,6 @@ public class DefaultObjectDirectoryMapperTest {
 		testPerson.setCompany("Some Company");
 		testPerson.setCountry("Sweden");
 
-
 		Name calculatedId = tested.getCalculatedId(testPerson);
 		assertThat(calculatedId).isEqualTo(LdapUtils.newLdapName("cn=Some Person, ou=Some Company, c=Sweden"));
 	}
@@ -105,28 +101,25 @@ public class DefaultObjectDirectoryMapperTest {
 		tested.manageClass(UnitTestPersonWithIndexedAndUnindexedDnAttributes.class);
 	}
 
-	private void assertField(DefaultObjectDirectoryMapper.EntityData entityData,
-							 String fieldName,
-							 String expectedAttributeName,
-							 String expectedDnAttributeName,
-							 boolean expectedBinary,
-							 boolean expectedTransient,
-							 boolean expectedList,
-							 boolean expectedReadOnly) {
+	private void assertField(DefaultObjectDirectoryMapper.EntityData entityData, String fieldName,
+			String expectedAttributeName, String expectedDnAttributeName, boolean expectedBinary,
+			boolean expectedTransient, boolean expectedList, boolean expectedReadOnly) {
 
 		for (Field field : entityData.metaData) {
 			if (fieldName.equals(field.getName())) {
 				AttributeMetaData attribute = entityData.metaData.getAttribute(field);
 				if (StringUtils.hasLength(expectedAttributeName)) {
 					assertThat(attribute.getName().toString()).isEqualTo(expectedAttributeName);
-				} else {
+				}
+				else {
 					assertThat(attribute.getName()).isNull();
 				}
 
 				if (StringUtils.hasLength(expectedDnAttributeName)) {
 					assertThat(attribute.isDnAttribute()).isTrue();
 					assertThat(attribute.getDnAttribute().value()).isEqualTo(expectedDnAttributeName);
-				} else {
+				}
+				else {
 					assertThat(attribute.isDnAttribute()).isFalse();
 				}
 
@@ -143,4 +136,5 @@ public class DefaultObjectDirectoryMapperTest {
 		field.setAccessible(true);
 		return (T) ReflectionUtils.getField(field, target);
 	}
+
 }

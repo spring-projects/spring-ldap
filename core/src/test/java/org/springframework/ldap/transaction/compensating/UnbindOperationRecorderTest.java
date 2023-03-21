@@ -28,32 +28,29 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class UnbindOperationRecorderTest {
+
 	private LdapOperations ldapOperationsMock;
 
 	private TempEntryRenamingStrategy renamingStrategyMock;
 
 	@Before
 	public void setUp() throws Exception {
-		ldapOperationsMock = mock(LdapOperations.class);;
+		ldapOperationsMock = mock(LdapOperations.class);
+		;
 
 		renamingStrategyMock = mock(TempEntryRenamingStrategy.class);
 	}
 
 	@Test
 	public void testRecordOperation() {
-		final LdapName expectedTempName = LdapUtils.newLdapName(
-				"cn=john doe_temp");
-		final LdapName expectedDn = LdapUtils.newLdapName(
-				"cn=john doe");
-		UnbindOperationRecorder tested = new UnbindOperationRecorder(
-				ldapOperationsMock, renamingStrategyMock);
+		final LdapName expectedTempName = LdapUtils.newLdapName("cn=john doe_temp");
+		final LdapName expectedDn = LdapUtils.newLdapName("cn=john doe");
+		UnbindOperationRecorder tested = new UnbindOperationRecorder(ldapOperationsMock, renamingStrategyMock);
 
-		when(renamingStrategyMock.getTemporaryName(expectedDn))
-				.thenReturn(expectedTempName);
+		when(renamingStrategyMock.getTemporaryName(expectedDn)).thenReturn(expectedTempName);
 
 		// Perform test
-		CompensatingTransactionOperationExecutor operation = tested
-				.recordOperation(new Object[] { expectedDn });
+		CompensatingTransactionOperationExecutor operation = tested.recordOperation(new Object[] { expectedDn });
 
 		// Verify result
 		assertThat(operation instanceof UnbindOperationExecutor).isTrue();

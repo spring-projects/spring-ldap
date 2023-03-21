@@ -34,15 +34,16 @@ import org.springframework.test.context.ContextConfiguration;
 /**
  * @author Mattias Hellborg Arthursson
  */
-@ContextConfiguration(locations = {"/conf/ldapTemplateTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
 public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateIntegrationTest {
+
 	@Autowired
 	private LdapTemplate tested;
 
 	@Test
 	public void testFindOne() {
-		PersonWithDnAnnotations person = tested.findOne(query()
-				.where("cn").is("Some Person3"), PersonWithDnAnnotations.class);
+		PersonWithDnAnnotations person = tested.findOne(query().where("cn").is("Some Person3"),
+				PersonWithDnAnnotations.class);
 
 		assertThat(person).isNotNull();
 		assertThat(person.getCommonName()).isEqualTo("Some Person3");
@@ -75,9 +76,8 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
 
 	@Test
 	public void testFindInCountry() {
-		List<PersonWithDnAnnotations> persons = tested.find(query()
-				.base("ou=Sweden")
-				.where("cn").isPresent(), PersonWithDnAnnotations.class);
+		List<PersonWithDnAnnotations> persons = tested.find(query().base("ou=Sweden").where("cn").isPresent(),
+				PersonWithDnAnnotations.class);
 
 		assertThat(persons).hasSize(4);
 
@@ -91,9 +91,8 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
 
 	@Test
 	public void testFindForStreamInCountry() {
-		List<PersonWithDnAnnotations> persons = tested.findForStream(query()
-						.base("ou=Sweden")
-						.where("cn").isPresent(), PersonWithDnAnnotations.class)
+		List<PersonWithDnAnnotations> persons = tested
+				.findForStream(query().base("ou=Sweden").where("cn").isPresent(), PersonWithDnAnnotations.class)
 				.collect(Collectors.toList());
 
 		assertThat(persons).hasSize(4);
@@ -108,7 +107,7 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
 
 	private PersonWithDnAnnotations findPerson(List<PersonWithDnAnnotations> persons, String cn) {
 		for (PersonWithDnAnnotations person : persons) {
-			if(person.getCommonName().equals(cn)) {
+			if (person.getCommonName().equals(cn)) {
 				return person;
 			}
 		}
@@ -150,16 +149,15 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
 
 	@Test
 	public void testUpdate() {
-		PersonWithDnAnnotations person = tested.findOne(query()
-				.where("cn").is("Some Person3"), PersonWithDnAnnotations.class);
+		PersonWithDnAnnotations person = tested.findOne(query().where("cn").is("Some Person3"),
+				PersonWithDnAnnotations.class);
 
 		person.setDesc(Arrays.asList("New Description"));
 		String entryUuid = person.getEntryUuid();
 		assertThat(entryUuid).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
 		tested.update(person);
 
-		person = tested.findByDn(
-				LdapUtils.newLdapName("cn=Some Person3, ou=company1, ou=Sweden"),
+		person = tested.findByDn(LdapUtils.newLdapName("cn=Some Person3, ou=company1, ou=Sweden"),
 				PersonWithDnAnnotations.class);
 
 		assertThat(person.getCommonName()).isEqualTo("Some Person3");
@@ -171,8 +169,8 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
 
 	@Test
 	public void testUpdateWithChangedDn() {
-		PersonWithDnAnnotations person = tested.findOne(query()
-				.where("cn").is("Some Person3"), PersonWithDnAnnotations.class);
+		PersonWithDnAnnotations person = tested.findOne(query().where("cn").is("Some Person3"),
+				PersonWithDnAnnotations.class);
 
 		// This should make the entry move
 		person.setCountry("Norway");
@@ -180,8 +178,7 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
 		assertThat(entryUuid).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
 		tested.update(person);
 
-		person = tested.findByDn(
-				LdapUtils.newLdapName("cn=Some Person3, ou=company1, ou=Norway"),
+		person = tested.findByDn(LdapUtils.newLdapName("cn=Some Person3, ou=company1, ou=Norway"),
 				PersonWithDnAnnotations.class);
 
 		assertThat(person.getCommonName()).isEqualTo("Some Person3");
@@ -192,4 +189,5 @@ public class LdapTemplateOdmWithDnAnnotationsITest extends AbstractLdapTemplateI
 		assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
 		assertThat(person.getEntryUuid()).isNotEqualTo(entryUuid);
 	}
+
 }

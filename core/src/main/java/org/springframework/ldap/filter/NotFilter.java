@@ -20,18 +20,18 @@ import org.springframework.util.Assert;
 
 /**
  * A filter for 'not'. The following code:
- * 
+ *
  * <pre>
  * Filter filter = new NotFilter(new EqualsFilter(&quot;cn&quot;, &quot;foo&quot;);
  * System.out.println(filter.encode());
  * </pre>
- * 
+ *
  * would result in:
- * 
+ *
  * <pre>
  * (!(cn = foo))
  * </pre>
- * 
+ *
  * @author Adam Skogman
  */
 public class NotFilter extends AbstractFilter {
@@ -40,7 +40,6 @@ public class NotFilter extends AbstractFilter {
 
 	/**
 	 * Create a filter that negates the outcome of the given <code>filter</code>.
-	 * 
 	 * @param filter The filter that should be negated.
 	 */
 	public NotFilter(Filter filter) {
@@ -59,12 +58,15 @@ public class NotFilter extends AbstractFilter {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 
 		NotFilter notFilter = (NotFilter) o;
 
-		if (filter != null ? !filter.equals(notFilter.filter) : notFilter.filter != null) return false;
+		if (filter != null ? !filter.equals(notFilter.filter) : notFilter.filter != null)
+			return false;
 
 		return true;
 	}
@@ -73,4 +75,5 @@ public class NotFilter extends AbstractFilter {
 	public int hashCode() {
 		return filter != null ? filter.hashCode() : 0;
 	}
+
 }

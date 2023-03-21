@@ -36,10 +36,11 @@ import java.util.TreeSet;
 
 /*
  * An internal class to process the meta-data and reflection data for an entry.
- * 
+ *
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
  */
 /* package */ final class ObjectMetaData implements Iterable<Field> {
+
 	private static final Logger LOG = LoggerFactory.getLogger(ObjectMetaData.class);
 
 	private AttributeMetaData idAttribute;
@@ -49,7 +50,7 @@ import java.util.TreeSet;
 	private Set<AttributeMetaData> dnAttributes = new TreeSet<AttributeMetaData>(new Comparator<AttributeMetaData>() {
 		@Override
 		public int compare(AttributeMetaData a1, AttributeMetaData a2) {
-			if(!a1.isDnAttribute() || !a2.isDnAttribute()) {
+			if (!a1.isDnAttribute() || !a2.isDnAttribute()) {
 				// Not interesting to compare these.
 				return 0;
 			}
@@ -74,7 +75,7 @@ import java.util.TreeSet;
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Iterable#iterator()
 	 */
 	public Iterator<Field> iterator() {
@@ -84,12 +85,12 @@ import java.util.TreeSet;
 	public AttributeMetaData getAttribute(Field field) {
 		return fieldToAttribute.get(field);
 	}
-	
+
 	public ObjectMetaData(Class<?> clazz) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug(String.format("Extracting metadata from %1$s", clazz));
 		}
-		
+
 		// Get object class metadata - the @Entity annotation
 		Entry entity = clazz.getAnnotation(Entry.class);
 		if (entity != null) {
@@ -97,20 +98,22 @@ import java.util.TreeSet;
 			// in @Entity(name={objectclass1, objectclass2});
 			String[] localObjectClasses = entity.objectClasses();
 			if (localObjectClasses != null && localObjectClasses.length > 0 && localObjectClasses[0].length() > 0) {
-				for (String localObjectClass:localObjectClasses) {
+				for (String localObjectClass : localObjectClasses) {
 					objectClasses.add(new CaseIgnoreString(localObjectClass));
 				}
-			} else {
+			}
+			else {
 				objectClasses.add(new CaseIgnoreString(clazz.getSimpleName()));
 			}
 
 			String base = entity.base();
-			if(StringUtils.hasText(base)) {
+			if (StringUtils.hasText(base)) {
 				this.base = LdapUtils.newLdapName(base);
 			}
-		} else {
-			throw new MetaDataException(String.format("Class %1$s must have a class level %2$s annotation", clazz,
-					Entry.class));
+		}
+		else {
+			throw new MetaDataException(
+					String.format("Class %1$s must have a class level %2$s annotation", clazz, Entry.class));
 		}
 
 		// Check the class is final
@@ -129,26 +132,26 @@ import java.util.TreeSet;
 				continue;
 			}
 
-			AttributeMetaData currentAttributeMetaData=new AttributeMetaData(field);
+			AttributeMetaData currentAttributeMetaData = new AttributeMetaData(field);
 			if (currentAttributeMetaData.isId()) {
-				if (idAttribute!=null) {
+				if (idAttribute != null) {
 					// There can be only one id field
-					throw new MetaDataException(
-						  String.format("You man have only one field with the %1$s annotation in class %2$s", Id.class, clazz));
+					throw new MetaDataException(String.format(
+							"You man have only one field with the %1$s annotation in class %2$s", Id.class, clazz));
 				}
-				idAttribute=currentAttributeMetaData;
+				idAttribute = currentAttributeMetaData;
 			}
 			fieldToAttribute.put(field, currentAttributeMetaData);
 
-			if(currentAttributeMetaData.isDnAttribute()) {
+			if (currentAttributeMetaData.isDnAttribute()) {
 				dnAttributes.add(currentAttributeMetaData);
 			}
 		}
 
 		if (idAttribute == null) {
 			throw new MetaDataException(
-					String.format("All Entry classes must define a field with the %1$s annotation, error in class %2$s", Id.class,
-								  clazz));
+					String.format("All Entry classes must define a field with the %1$s annotation, error in class %2$s",
+							Id.class, clazz));
 		}
 
 		postProcessDnAttributes(clazz);
@@ -165,18 +168,18 @@ import java.util.TreeSet;
 		for (AttributeMetaData dnAttribute : dnAttributes) {
 			int declaredIndex = dnAttribute.getDnAttribute().index();
 
-			if(declaredIndex != -1) {
+			if (declaredIndex != -1) {
 				hasIndexed = true;
 			}
 
-			if(declaredIndex == -1) {
+			if (declaredIndex == -1) {
 				hasNonIndexed = true;
 			}
 		}
 
-		if(hasIndexed && hasNonIndexed) {
-			throw new MetaDataException(String.format("At least one DnAttribute declared on class %s is indexed, " +
-					"which means that all DnAttributes must be indexed", clazz.toString()));
+		if (hasIndexed && hasNonIndexed) {
+			throw new MetaDataException(String.format("At least one DnAttribute declared on class %s is indexed, "
+					+ "which means that all DnAttributes must be indexed", clazz.toString()));
 		}
 
 		indexedDnAttributes = hasIndexed;
@@ -199,13 +202,14 @@ import java.util.TreeSet;
 	}
 
 	/*
-		 * (non-Javadoc)
-		 *
-		 * @see java.lang.Object#toString()
-		 */
+	 * (non-Javadoc)
+	 *
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return String.format("objectsClasses=%1$s | idField=%2$s | attributes=%3$s", 
-				objectClasses, idAttribute.getName(), fieldToAttribute);
+		return String.format("objectsClasses=%1$s | idField=%2$s | attributes=%3$s", objectClasses,
+				idAttribute.getName(), fieldToAttribute);
 	}
+
 }

@@ -33,7 +33,6 @@ public class Ldap233LdifParserTest {
 
 	/**
 	 * This previously went into endless loop.
-	 *
 	 * @throws IOException
 	 */
 	@Test

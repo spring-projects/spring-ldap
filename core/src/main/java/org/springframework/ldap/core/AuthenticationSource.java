@@ -17,24 +17,24 @@
 package org.springframework.ldap.core;
 
 /**
- * An <code>AuthenticationSource</code> is responsible for providing the
- * principal (user DN) and credentials to be used when creating a new context.
- * 
+ * An <code>AuthenticationSource</code> is responsible for providing the principal (user
+ * DN) and credentials to be used when creating a new context.
+ *
  * @author Mattias Hellborg Arthursson
- * 
+ *
  */
 public interface AuthenticationSource {
+
 	/**
 	 * Get the principal to use when creating an authenticated context.
-	 * 
 	 * @return the principal (userDn).
 	 */
 	String getPrincipal();
 
 	/**
 	 * Get the credentials to use when creating an authenticated context.
-	 * 
 	 * @return the credentials (password).
 	 */
 	String getCredentials();
+
 }

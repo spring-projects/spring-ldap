@@ -30,8 +30,11 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 public class TransactionAwareDirContextInvocationHandlerTest {
 
 	private ContextSource contextSourceMock;
+
 	private DirContext dirContextMock;
+
 	private TransactionAwareDirContextInvocationHandler tested;
+
 	private DirContextHolder holder;
 
 	@Before
@@ -51,10 +54,8 @@ public class TransactionAwareDirContextInvocationHandlerTest {
 	}
 
 	@Test
-	public void testDoCloseConnection_ActiveTransaction()
-			throws NamingException {
-		TransactionSynchronizationManager.bindResource(contextSourceMock,
-				holder);
+	public void testDoCloseConnection_ActiveTransaction() throws NamingException {
+		TransactionSynchronizationManager.bindResource(contextSourceMock, holder);
 
 		// Context should not be closed.
 		verifyNoMoreInteractions(dirContextMock);
@@ -63,10 +64,8 @@ public class TransactionAwareDirContextInvocationHandlerTest {
 	}
 
 	@Test
-	public void testDoCloseConnection_NotTransactionalContext()
-			throws NamingException {
-		TransactionSynchronizationManager.bindResource(contextSourceMock,
-				holder);
+	public void testDoCloseConnection_NotTransactionalContext() throws NamingException {
+		TransactionSynchronizationManager.bindResource(contextSourceMock, holder);
 
 		DirContext dirContextMock2 = mock(DirContext.class);
 

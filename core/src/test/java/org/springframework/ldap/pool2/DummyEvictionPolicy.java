@@ -23,15 +23,16 @@ import org.apache.commons.pool2.impl.EvictionPolicy;
  * A dummy {@link EvictionPolicy} implementation to test pool2 config.
  *
  * @author Anindya Chatterjee
- * */
+ */
 public class DummyEvictionPolicy implements EvictionPolicy {
 
 	/**
 	 * @see EvictionPolicy#evict(EvictionConfig, PooledObject, int)
 	 *
-	 * */
+	 */
 	@Override
 	public boolean evict(EvictionConfig config, PooledObject underTest, int idleCount) {
 		return false;
 	}
+
 }

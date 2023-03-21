@@ -19,9 +19,9 @@ package org.springframework.ldap.core;
 import org.springframework.ldap.NamingException;
 
 /**
- * Thrown by a {@link ContextMapperCallbackHandler} when it cannot retrieve an
- * object from the given <code>Binding</code>.
- * 
+ * Thrown by a {@link ContextMapperCallbackHandler} when it cannot retrieve an object from
+ * the given <code>Binding</code>.
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  */
@@ -29,10 +29,8 @@ public class ObjectRetrievalException extends NamingException {
 
 	/**
 	 * Create a new ObjectRetrievalException.
-	 * 
-	 * @param msg
-	 *			the detail message
-	 * 
+	 * @param msg the detail message
+	 *
 	 */
 	public ObjectRetrievalException(String msg) {
 		super(msg);
@@ -40,11 +38,8 @@ public class ObjectRetrievalException extends NamingException {
 
 	/**
 	 * Create a new ObjectRetrievalException.
-	 * 
-	 * @param msg
-	 *			the detail message
-	 * @param cause
-	 *			the root cause (if any)
+	 * @param msg the detail message
+	 * @param cause the root cause (if any)
 	 */
 	public ObjectRetrievalException(String msg, Throwable cause) {
 		super(msg, cause);

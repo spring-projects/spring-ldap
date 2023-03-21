@@ -34,6 +34,7 @@ import java.util.Hashtable;
  * @author Mattias Hellborg Arthursson
  */
 public class DummyDirContext implements DirContext {
+
 	@Override
 	public Attributes getAttributes(Name name) throws NamingException {
 		throw new UnsupportedOperationException();
@@ -125,12 +126,14 @@ public class DummyDirContext implements DirContext {
 	}
 
 	@Override
-	public NamingEnumeration<SearchResult> search(Name name, Attributes matchingAttributes, String[] attributesToReturn) throws NamingException {
+	public NamingEnumeration<SearchResult> search(Name name, Attributes matchingAttributes, String[] attributesToReturn)
+			throws NamingException {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public NamingEnumeration<SearchResult> search(String name, Attributes matchingAttributes, String[] attributesToReturn) throws NamingException {
+	public NamingEnumeration<SearchResult> search(String name, Attributes matchingAttributes,
+			String[] attributesToReturn) throws NamingException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -145,22 +148,26 @@ public class DummyDirContext implements DirContext {
 	}
 
 	@Override
-	public NamingEnumeration<SearchResult> search(Name name, String filter, SearchControls cons) throws NamingException {
+	public NamingEnumeration<SearchResult> search(Name name, String filter, SearchControls cons)
+			throws NamingException {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public NamingEnumeration<SearchResult> search(String name, String filter, SearchControls cons) throws NamingException {
+	public NamingEnumeration<SearchResult> search(String name, String filter, SearchControls cons)
+			throws NamingException {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public NamingEnumeration<SearchResult> search(Name name, String filterExpr, Object[] filterArgs, SearchControls cons) throws NamingException {
+	public NamingEnumeration<SearchResult> search(Name name, String filterExpr, Object[] filterArgs,
+			SearchControls cons) throws NamingException {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public NamingEnumeration<SearchResult> search(String name, String filterExpr, Object[] filterArgs, SearchControls cons) throws NamingException {
+	public NamingEnumeration<SearchResult> search(String name, String filterExpr, Object[] filterArgs,
+			SearchControls cons) throws NamingException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -308,4 +315,5 @@ public class DummyDirContext implements DirContext {
 	public String getNameInNamespace() throws NamingException {
 		throw new UnsupportedOperationException();
 	}
+
 }

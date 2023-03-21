@@ -34,11 +34,13 @@ import static org.mockito.Mockito.when;
  * @author Mattias Hellborg Arthursson
  */
 public class ContextMapperCallbackHandlerWithControlsTest {
+
 	private ContextMapperWithControls mapperMock;
 
 	private ContextMapperCallbackHandlerWithControls tested;
 
 	private static class MyBindingThatHasControls extends Binding implements HasControls {
+
 		private static final long serialVersionUID = 1L;
 
 		public MyBindingThatHasControls(String name, Object obj) {
@@ -48,6 +50,7 @@ public class ContextMapperCallbackHandlerWithControlsTest {
 		public Control[] getControls() throws NamingException {
 			return null;
 		}
+
 	}
 
 	@SuppressWarnings("unchecked")

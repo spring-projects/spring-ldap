@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Unit tests that serve as regression tests for bugs that have been fixed.
- * 
+ *
  * @author Luke Taylor
  */
 public class DirContextAdapterBugTest {
@@ -58,11 +58,11 @@ public class DirContextAdapterBugTest {
 	}
 
 	/**
-	 * This test starts with an array with a null value in it (because that's
-	 * how BasicAttributes will do it), changes to <code>[a]</code>, and then
-	 * changes to <code>null</code>. The current code interprets this as a
-	 * change and will replace the original array with an empty array.
-	 * 
+	 * This test starts with an array with a null value in it (because that's how
+	 * BasicAttributes will do it), changes to <code>[a]</code>, and then changes to
+	 * <code>null</code>. The current code interprets this as a change and will replace
+	 * the original array with an empty array.
+	 *
 	 * TODO Is this correct behaviour?
 	 */
 	@Test
@@ -88,9 +88,12 @@ public class DirContextAdapterBugTest {
 	}
 
 	private static class UpdateAdapter extends DirContextAdapter {
+
 		public UpdateAdapter(Attributes attrs, Name dn) {
 			super(attrs, dn);
 			setUpdateMode(true);
 		}
+
 	}
+
 }

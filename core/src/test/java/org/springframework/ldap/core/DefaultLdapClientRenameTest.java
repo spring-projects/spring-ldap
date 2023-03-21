@@ -36,7 +36,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for the rename operations in the LdapTemplate class.
- * 
+ *
  * @author Josh Cummings
  */
 public class DefaultLdapClientRenameTest {
@@ -86,7 +86,8 @@ public class DefaultLdapClientRenameTest {
 		try {
 			tested.modify(oldName).name(newName).execute();
 			fail("NameAlreadyBoundException expected");
-		} catch (NameAlreadyBoundException expected) {
+		}
+		catch (NameAlreadyBoundException expected) {
 			assertThat(true).isTrue();
 		}
 
@@ -104,7 +105,8 @@ public class DefaultLdapClientRenameTest {
 		try {
 			tested.modify(oldName).name(newName).execute();
 			fail("UncategorizedLdapException expected");
-		} catch (UncategorizedLdapException expected) {
+		}
+		catch (UncategorizedLdapException expected) {
 			assertThat(true).isTrue();
 		}
 
@@ -121,4 +123,5 @@ public class DefaultLdapClientRenameTest {
 				LdapUtils.newLdapName("o=somethingelse.com"));
 		verify(dirContextMock).close();
 	}
+
 }

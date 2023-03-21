@@ -42,16 +42,15 @@ public class AndFilterTest {
 
 	@Test
 	public void testTwo() {
-		AndFilter aq = new AndFilter().and(new EqualsFilter("a", "b")).and(
-				new EqualsFilter("c", "d"));
+		AndFilter aq = new AndFilter().and(new EqualsFilter("a", "b")).and(new EqualsFilter("c", "d"));
 
 		assertThat(aq.encode()).isEqualTo("(&(a=b)(c=d))");
 	}
 
 	@Test
 	public void testThree() {
-		AndFilter aq = new AndFilter().and(new EqualsFilter("a", "b")).and(
-				new EqualsFilter("c", "d")).and(new EqualsFilter("e", "f"));
+		AndFilter aq = new AndFilter().and(new EqualsFilter("a", "b")).and(new EqualsFilter("c", "d"))
+				.and(new EqualsFilter("e", "f"));
 
 		assertThat(aq.encode()).isEqualTo("(&(a=b)(c=d)(e=f))");
 	}
@@ -65,7 +64,7 @@ public class AndFilterTest {
 		AndFilter subclassObject = new AndFilter() {
 		}.and(filter);
 
-		new EqualsTester(originalObject, identicalObject, differentObject,
-				subclassObject);
+		new EqualsTester(originalObject, identicalObject, differentObject, subclassObject);
 	}
+
 }

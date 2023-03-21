@@ -21,24 +21,21 @@ import javax.naming.NamingException;
 
 /**
  * Responsible for mapping <code>NameClassPair</code> objects to beans.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
 public interface NameClassPairMapper<T> {
+
 	/**
 	 * Map <code>NameClassPair</code> to an Object. The supplied
-	 * <code>NameClassPair</code> is one of the results from a search
-	 * operation (search, list or listBindings). Depending on which search
-	 * operation is being performed, the <code>NameClassPair</code> might be a
-	 * <code>SearchResult</code>, <code>Binding</code> or
-	 * <code>NameClassPair</code>.
-	 * 
-	 * @param nameClassPair
-	 *			<code>NameClassPair</code> from a search operation.
+	 * <code>NameClassPair</code> is one of the results from a search operation (search,
+	 * list or listBindings). Depending on which search operation is being performed, the
+	 * <code>NameClassPair</code> might be a <code>SearchResult</code>,
+	 * <code>Binding</code> or <code>NameClassPair</code>.
+	 * @param nameClassPair <code>NameClassPair</code> from a search operation.
 	 * @return and Object built from the <code>NameClassPair</code>.
-	 * @throws NamingException
-	 *			 if one is encountered in the operation.
+	 * @throws NamingException if one is encountered in the operation.
 	 */
-	T mapFromNameClassPair(NameClassPair nameClassPair)
-			throws NamingException;
+	T mapFromNameClassPair(NameClassPair nameClassPair) throws NamingException;
+
 }

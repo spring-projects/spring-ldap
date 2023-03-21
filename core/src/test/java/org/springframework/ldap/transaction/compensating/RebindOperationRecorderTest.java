@@ -29,6 +29,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class RebindOperationRecorderTest {
+
 	private LdapOperations ldapOperationsMock;
 
 	private TempEntryRenamingStrategy renamingStrategyMock;
@@ -42,23 +43,18 @@ public class RebindOperationRecorderTest {
 
 	@Test
 	public void testRecordOperation() {
-		final LdapName expectedDn = LdapUtils.newLdapName(
-				"cn=john doe");
-		final LdapName expectedTempDn = LdapUtils.newLdapName(
-				"cn=john doe");
-		RebindOperationRecorder tested = new RebindOperationRecorder(
-				ldapOperationsMock, renamingStrategyMock);
+		final LdapName expectedDn = LdapUtils.newLdapName("cn=john doe");
+		final LdapName expectedTempDn = LdapUtils.newLdapName("cn=john doe");
+		RebindOperationRecorder tested = new RebindOperationRecorder(ldapOperationsMock, renamingStrategyMock);
 
-		when(renamingStrategyMock.getTemporaryName(expectedDn))
-				.thenReturn(expectedTempDn);
+		when(renamingStrategyMock.getTemporaryName(expectedDn)).thenReturn(expectedTempDn);
 
 		Object expectedObject = new Object();
 		BasicAttributes expectedAttributes = new BasicAttributes();
 
 		// perform test
 		CompensatingTransactionOperationExecutor result = tested
-				.recordOperation(new Object[] { expectedDn, expectedObject,
-						expectedAttributes });
+				.recordOperation(new Object[] { expectedDn, expectedObject, expectedAttributes });
 		assertThat(result instanceof RebindOperationExecutor).isTrue();
 		RebindOperationExecutor rollbackOperation = (RebindOperationExecutor) result;
 		assertThat(rollbackOperation.getLdapOperations()).isSameAs(ldapOperationsMock);
@@ -67,4 +63,5 @@ public class RebindOperationRecorderTest {
 		assertThat(rollbackOperation.getOriginalObject()).isSameAs(expectedObject);
 		assertThat(rollbackOperation.getOriginalAttributes()).isSameAs(expectedAttributes);
 	}
+
 }

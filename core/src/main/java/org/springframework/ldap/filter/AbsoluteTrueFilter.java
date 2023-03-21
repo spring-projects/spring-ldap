@@ -24,8 +24,10 @@ package org.springframework.ldap.filter;
  * @since 1.3.2
  */
 public class AbsoluteTrueFilter extends AbstractFilter {
+
 	public StringBuffer encode(StringBuffer buff) {
 		buff.append("(&)");
 		return buff;
 	}
+
 }

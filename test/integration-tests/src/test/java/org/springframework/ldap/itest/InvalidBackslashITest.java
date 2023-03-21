@@ -37,10 +37,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Integration tests for verifying that issues LDAP-50 and LDAP-109 are solved.
- * 
+ *
  * @author Ulrik Sandberg
  */
-@ContextConfiguration(locations = {"/conf/ldapTemplateTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
 public class InvalidBackslashITest extends AbstractLdapTemplateIntegrationTest {
 
 	@Autowired
@@ -66,28 +66,25 @@ public class InvalidBackslashITest extends AbstractLdapTemplateIntegrationTest {
 	}
 
 	/**
-	 * Test for LDAP-109, LDAP-50. When an entry has a distinguished name
-	 * including a backslach ('\') the Name supplied to DefaultDirObjectFactory
-	 * will be invalid.
+	 * Test for LDAP-109, LDAP-50. When an entry has a distinguished name including a
+	 * backslach ('\') the Name supplied to DefaultDirObjectFactory will be invalid.
 	 * <p>
-	 * E.g. the distinguished name "cn=Some\\Person6,ou=company1,ou=Sweden"
-	 * (indicating that the cn value is 'Some\Person'), will be represented by a
+	 * E.g. the distinguished name "cn=Some\\Person6,ou=company1,ou=Sweden" (indicating
+	 * that the cn value is 'Some\Person'), will be represented by a
 	 * <code>CompositeName</code> with the string representation
-	 * "cn=Some\\\Person6,ou=company1,ou=Sweden", which is in fact an invalid DN.
-	 * This will be supplied to <code>DistinguishedName</code> for parsing,
-	 * causing it to fail. This test makes sure that Spring LDAP properly works
-	 * around this bug.
+	 * "cn=Some\\\Person6,ou=company1,ou=Sweden", which is in fact an invalid DN. This
+	 * will be supplied to <code>DistinguishedName</code> for parsing, causing it to fail.
+	 * This test makes sure that Spring LDAP properly works around this bug.
 	 * </p>
 	 * <p>
 	 * What happens under the covers is (in the Java LDAP Provider code):
-	 * 
+	 *
 	 * <pre>
 	 * LdapName ldapname = new LdapName(&quot;cn=Some\\\\Person6,ou=company1,ou=Sweden&quot;);
 	 * CompositeName compositeName = new CompositeName();
 	 * compositeName.add(ldapname.get(ldapname.size() - 1)); // for some odd reason
-	 * </pre>
-	 * <code>CompositeName#add()</code> cannot handle this and the result is
-	 * the spoiled DN.
+	 * </pre> <code>CompositeName#add()</code> cannot handle this and the result is the
+	 * spoiled DN.
 	 * </p>
 	 * @throws InvalidNameException
 	 */
@@ -107,4 +104,5 @@ public class InvalidBackslashITest extends AbstractLdapTemplateIntegrationTest {
 
 		assertThat(result).hasSize(1);
 	}
+
 }

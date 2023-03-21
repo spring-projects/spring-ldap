@@ -39,19 +39,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 /**
- * Tests the modification methods (rebind and modifyAttributes) of LdapTemplate.
- * It also illustrates the use of DirContextAdapter as a means of getting
- * ModificationItems, in order to avoid doing a full rebind and use
- * modifyAttributes() instead. We rely on that the bind, unbind and lookup
- * methods work as they should - that should be ok, since that is verified in a
- * separate test class. NOTE: if any of the tests in this class fails, it may be
- * necessary to run the cleanup script as described in README.txt under
+ * Tests the modification methods (rebind and modifyAttributes) of LdapTemplate. It also
+ * illustrates the use of DirContextAdapter as a means of getting ModificationItems, in
+ * order to avoid doing a full rebind and use modifyAttributes() instead. We rely on that
+ * the bind, unbind and lookup methods work as they should - that should be ok, since that
+ * is verified in a separate test class. NOTE: if any of the tests in this class fails, it
+ * may be necessary to run the cleanup script as described in README.txt under
  * /src/iutest/.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  */
-@ContextConfiguration(locations = {"/conf/ldapTemplateTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
 public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest {
 
 	@Autowired
@@ -163,8 +162,8 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 
 	/**
 	 * Test written originally to verify that duplicates are allowed on ordered
-	 * attributes, but had to be changed since Apache DS seems to disallow
-	 * duplicates even for ordered attributes.
+	 * attributes, but had to be changed since Apache DS seems to disallow duplicates even
+	 * for ordered attributes.
 	 */
 	@Test
 	public void testModifyAttributes_MultiValueAddDuplicateToOrdered() {
@@ -187,8 +186,8 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 
 	@Test
 	public void testModifyAttributes_Plain() {
-		ModificationItem item = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("description",
-				"Some other description"));
+		ModificationItem item = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
+				new BasicAttribute("description", "Some other description"));
 
 		tested.modifyAttributes(PERSON4_DN, new ModificationItem[] { item });
 
@@ -197,8 +196,8 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 
 	@Test
 	public void testModifyAttributes_LdapName() {
-		ModificationItem item = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("description",
-				"Some other description"));
+		ModificationItem item = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
+				new BasicAttribute("description", "Some other description"));
 
 		tested.modifyAttributes(LdapUtils.newLdapName(PERSON4_DN), new ModificationItem[] { item });
 
@@ -223,9 +222,9 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 	}
 
 	/**
-	 * Demonstrates how the DirContextAdapter can be used to automatically keep
-	 * track of changes of the attributes and deliver ModificationItems to use
-	 * in moifyAttributes().
+	 * Demonstrates how the DirContextAdapter can be used to automatically keep track of
+	 * changes of the attributes and deliver ModificationItems to use in
+	 * moifyAttributes().
 	 */
 	@Test
 	public void testModifyAttributes_DirContextAdapter() throws Exception {
@@ -242,9 +241,7 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 	@Test
 	public void verifyCompleteReplacementOfUniqueMemberAttribute_Ldap119Workaround() {
 		DirContextOperations ctx = tested.lookupContext("cn=ROLE_USER,ou=groups");
-		ctx.setAttributeValues("uniqueMember",
-				new String[]{"cn=Some Person,ou=company1,ou=Norway," + base},
-				true);
+		ctx.setAttributeValues("uniqueMember", new String[] { "cn=Some Person,ou=company1,ou=Norway," + base }, true);
 		ctx.getModificationItems();
 
 		tested.modifyAttributes(ctx);
@@ -257,12 +254,12 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 	@Test
 	public void verifyCompleteReplacementOfUniqueMemberAttribute_Ldap119() {
 		DirContextOperations ctx = tested.lookupContext("cn=ROLE_USER,ou=groups");
-		ctx.setAttributeValues("uniqueMember",
-				new String[]{"cn=Some Person,ou=company1,ou=Norway," + base});
+		ctx.setAttributeValues("uniqueMember", new String[] { "cn=Some Person,ou=company1,ou=Norway," + base });
 		ctx.getModificationItems();
 
 		tested.modifyAttributes(ctx);
 	}
+
 	private Attributes setupAttributes() {
 		Attributes attributes = new BasicAttributes();
 		BasicAttribute ocattr = new BasicAttribute("objectclass");
@@ -281,4 +278,5 @@ public class LdapTemplateModifyITest extends AbstractLdapTemplateIntegrationTest
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person4");
 		assertThat(result.getStringAttribute("description")).isEqualTo("Some other description");
 	}
+
 }

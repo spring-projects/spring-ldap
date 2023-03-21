@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Anindya Chatterjee
- * */
+ */
 public class PoolConfigTest extends AbstractPoolTestCase {
 
 	@Test
@@ -110,4 +110,5 @@ public class PoolConfigTest extends AbstractPoolTestCase {
 		final boolean lifo = poolConfig.isLifo();
 		assertThat(lifo).isEqualTo(true);
 	}
+
 }

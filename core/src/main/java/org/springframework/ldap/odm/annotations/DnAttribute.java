@@ -23,13 +23,15 @@ import java.lang.annotation.Target;
 
 /**
  * Indicates that a field is to be automatically populated to/from the distinguished name
- * of an entry. Fields annotated with this annotation will be automatically populated with values from
- * the distinguished names of found entries. Annotated fields must be of type <code>String</code>.
+ * of an entry. Fields annotated with this annotation will be automatically populated with
+ * values from the distinguished names of found entries. Annotated fields must be of type
+ * <code>String</code>.
  * <p>
  * For automatic calculation of the DN of an entry to work, the {@link #index()} value
- * must be specified on all DnAttribute annotations in that class, and these attribute values,
- * prepended with the {@link org.springframework.ldap.odm.annotations.Entry#base()} value will be used
- * to figure out the distinguished name of entries to create and update.
+ * must be specified on all DnAttribute annotations in that class, and these attribute
+ * values, prepended with the
+ * {@link org.springframework.ldap.odm.annotations.Entry#base()} value will be used to
+ * figure out the distinguished name of entries to create and update.
  * </p>
  * @author Mattias Hellborg Arthursson
  * @since 2.0
@@ -37,6 +39,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DnAttribute {
+
 	/**
 	 * The name of the distinguished name attribute.
 	 * @return the attribute name.
@@ -48,4 +51,5 @@ public @interface DnAttribute {
 	 * @return the 0-based index of this attribute.
 	 */
 	int index() default -1;
+
 }

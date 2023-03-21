@@ -58,11 +58,9 @@ public class VirtualListViewControlDirContextProcessorTest {
 		int pageSize = 5;
 		int targetOffset = 25;
 		int listSize = 1000;
-		VirtualListViewControlDirContextProcessor tested = new VirtualListViewControlDirContextProcessor(
-				pageSize, targetOffset, listSize,
-				new VirtualListViewResultsCookie(new byte[0], 0, 0));
-		VirtualListViewControl result = (VirtualListViewControl) tested
-				.createRequestControl();
+		VirtualListViewControlDirContextProcessor tested = new VirtualListViewControlDirContextProcessor(pageSize,
+				targetOffset, listSize, new VirtualListViewResultsCookie(new byte[0], 0, 0));
+		VirtualListViewControl result = (VirtualListViewControl) tested.createRequestControl();
 		assertThat(result).isNotNull();
 		assertThat(result.getID()).isEqualTo(OID_REQUEST);
 
@@ -71,23 +69,19 @@ public class VirtualListViewControlDirContextProcessorTest {
 		int expectedAfterCount = 4;
 		int expectedOffset = 25;
 		int expectedContentCount = listSize;
-		assertEncodedRequest(result.getEncodedValue(), expectedBeforeCount,
-				expectedAfterCount, expectedOffset, expectedContentCount,
-				new byte[0]);
+		assertEncodedRequest(result.getEncodedValue(), expectedBeforeCount, expectedAfterCount, expectedOffset,
+				expectedContentCount, new byte[0]);
 	}
 
 	@Test
-	public void testCreateRequestControlWithTargetAsPercentage()
-			throws Exception {
+	public void testCreateRequestControlWithTargetAsPercentage() throws Exception {
 		int pageSize = 5;
 		int targetPercentage = 25;
 		int listSize = 1000;
-		VirtualListViewControlDirContextProcessor tested = new VirtualListViewControlDirContextProcessor(
-				pageSize, targetPercentage, listSize,
-				new VirtualListViewResultsCookie(new byte[0], 0, 0));
+		VirtualListViewControlDirContextProcessor tested = new VirtualListViewControlDirContextProcessor(pageSize,
+				targetPercentage, listSize, new VirtualListViewResultsCookie(new byte[0], 0, 0));
 		tested.setOffsetPercentage(true);
-		VirtualListViewControl result = (VirtualListViewControl) tested
-				.createRequestControl();
+		VirtualListViewControl result = (VirtualListViewControl) tested.createRequestControl();
 		assertThat(result).isNotNull();
 		assertThat(result.getID()).isEqualTo(OID_REQUEST);
 
@@ -97,9 +91,8 @@ public class VirtualListViewControlDirContextProcessorTest {
 		// the VLVControl requests 25 out of an expected 100
 		int expectedOffset = 25;
 		int expectedContentCount = 100;
-		assertEncodedRequest(result.getEncodedValue(), expectedBeforeCount,
-				expectedAfterCount, expectedOffset, expectedContentCount,
-				new byte[0]);
+		assertEncodedRequest(result.getEncodedValue(), expectedBeforeCount, expectedAfterCount, expectedOffset,
+				expectedContentCount, new byte[0]);
 	}
 
 	@Test
@@ -107,16 +100,13 @@ public class VirtualListViewControlDirContextProcessorTest {
 		int pageSize = 5;
 		int targetOffset = 25;
 		int listSize = 1000;
-		VirtualListViewControlDirContextProcessor tested = new VirtualListViewControlDirContextProcessor(
-				pageSize, targetOffset, listSize,
-				new VirtualListViewResultsCookie(new byte[0], 0, 0));
+		VirtualListViewControlDirContextProcessor tested = new VirtualListViewControlDirContextProcessor(pageSize,
+				targetOffset, listSize, new VirtualListViewResultsCookie(new byte[0], 0, 0));
 
 		int virtualListViewResult = 53; // unwilling to perform
-		byte[] encoded = encodeResponseValue(10, listSize,
-				virtualListViewResult);
-		VirtualListViewResponseControl control = new VirtualListViewResponseControl(
-				OID_RESPONSE, false, encoded);
-		when(ldapContextMock.getResponseControls()).thenReturn(new Control[]{control});
+		byte[] encoded = encodeResponseValue(10, listSize, virtualListViewResult);
+		VirtualListViewResponseControl control = new VirtualListViewResponseControl(OID_RESPONSE, false, encoded);
+		when(ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
 
 		try {
 			tested.postProcess(ldapContextMock);
@@ -138,12 +128,11 @@ public class VirtualListViewControlDirContextProcessorTest {
 		byte[] encoded = encodeResponseValue(10, 1000, virtualListViewResult);
 
 		int expectedLength = 14;
-		assertEncodedResponse(encoded, expectedLength, 10, 1000, 53,
-				new byte[0]);
+		assertEncodedResponse(encoded, expectedLength, 10, 1000, 53, new byte[0]);
 	}
 
-	private byte[] encodeResponseValue(int targetPosition, int contentCount,
-			int virtualListViewResult) throws IOException {
+	private byte[] encodeResponseValue(int targetPosition, int contentCount, int virtualListViewResult)
+			throws IOException {
 
 		// build the ASN.1 encoding
 		BerEncoder ber = new BerEncoder(10);
@@ -159,10 +148,8 @@ public class VirtualListViewControlDirContextProcessorTest {
 		return ber.getTrimmedBuf();
 	}
 
-	private void assertEncodedRequest(byte[] encodedValue,
-			int expectedBeforeCount, int expectedAfterCount,
-			int expectedOffset, int expectedContentCount,
-			byte[] expectedContextId) throws Exception {
+	private void assertEncodedRequest(byte[] encodedValue, int expectedBeforeCount, int expectedAfterCount,
+			int expectedOffset, int expectedContentCount, byte[] expectedContextId) throws Exception {
 		dumpEncodedValue("VirtualListViewRequest\n", encodedValue);
 		BerDecoder ber = new BerDecoder(encodedValue, 0, encodedValue.length);
 		ber.parseSeq(null);
@@ -184,19 +171,16 @@ public class VirtualListViewControlDirContextProcessorTest {
 			break;
 
 		case 1: // greaterThanOrEqual
-			throw new AssertionFailedError(
-					"CHOICE value greaterThanOrEqual not supported");
+			throw new AssertionFailedError("CHOICE value greaterThanOrEqual not supported");
 
 		default:
-			throw new AssertionFailedError("illegal CHOICE value: "
-					+ targetType);
+			throw new AssertionFailedError("illegal CHOICE value: " + targetType);
 		}
 		byte[] bs = ber.parseOctetString(Ber.ASN_OCTET_STR, null);
 		assertContextId(expectedContextId, bs);
 	}
 
-	private void assertContextId(byte[] expectedContextId,
-			byte[] actualContextId) {
+	private void assertContextId(byte[] expectedContextId, byte[] actualContextId) {
 		if (expectedContextId == null && actualContextId == null) {
 			return;
 		}
@@ -209,10 +193,8 @@ public class VirtualListViewControlDirContextProcessorTest {
 		assertThat(actualContextId.length).isEqualTo(expectedContextId.length);
 	}
 
-	private void assertEncodedResponse(byte[] encodedValue,
-			int expectedEncodingLength, int expectedTargetPosition,
-			int expectedContentCount, int expectedVirtualListViewResult,
-			byte[] expectedContextId) throws Exception {
+	private void assertEncodedResponse(byte[] encodedValue, int expectedEncodingLength, int expectedTargetPosition,
+			int expectedContentCount, int expectedVirtualListViewResult, byte[] expectedContextId) throws Exception {
 		dumpEncodedValue("VirtualListViewResponse\n", encodedValue);
 		assertThat(encodedValue.length).isEqualTo(expectedEncodingLength);
 		BerDecoder ber = new BerDecoder(encodedValue, 0, encodedValue.length);
@@ -231,4 +213,5 @@ public class VirtualListViewControlDirContextProcessorTest {
 	private void dumpEncodedValue(String message, byte[] encodedValue) {
 		Ber.dumpBER(System.out, message, encodedValue, 0, encodedValue.length);
 	}
+
 }

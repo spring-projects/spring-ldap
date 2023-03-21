@@ -55,7 +55,7 @@ public class NotPresentFilterTest {
 		NotPresentFilter subclassObject = new NotPresentFilter(attribute) {
 		};
 
-		new EqualsTester(originalObject, identicalObject, differentObject,
-				subclassObject);
+		new EqualsTester(originalObject, identicalObject, differentObject, subclassObject);
 	}
+
 }

@@ -20,9 +20,11 @@ import org.springframework.util.Assert;
 
 // A case independent String wrapper.
 /* package */ final class CaseIgnoreString implements Comparable<CaseIgnoreString> {
+
 	private final String string;
-	private final int hashCode;  
-	
+
+	private final int hashCode;
+
 	public CaseIgnoreString(String string) {
 		Assert.notNull(string, "string must not be null");
 		this.string = string;
@@ -30,11 +32,10 @@ import org.springframework.util.Assert;
 	}
 
 	public boolean equals(Object other) {
-		return other instanceof CaseIgnoreString &&
-			((CaseIgnoreString)other).string.equalsIgnoreCase(string);
+		return other instanceof CaseIgnoreString && ((CaseIgnoreString) other).string.equalsIgnoreCase(string);
 	}
-	
-	public int hashCode() { 
+
+	public int hashCode() {
 		return hashCode;
 	}
 
@@ -46,4 +47,5 @@ import org.springframework.util.Assert;
 	public String toString() {
 		return string;
 	}
+
 }

@@ -18,9 +18,9 @@ package org.springframework.ldap.core.support;
 import org.springframework.ldap.core.ContextSource;
 
 /**
- * Interface to be implemented by <code>ContextSources</code> that are capable
- * of providing the base LDAP path.
- * 
+ * Interface to be implemented by <code>ContextSources</code> that are capable of
+ * providing the base LDAP path.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public interface BaseLdapPathContextSource extends ContextSource, BaseLdapPathSource {

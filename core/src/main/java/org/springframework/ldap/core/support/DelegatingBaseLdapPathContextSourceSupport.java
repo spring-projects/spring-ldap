@@ -22,8 +22,8 @@ import org.springframework.ldap.core.DistinguishedName;
 import javax.naming.ldap.LdapName;
 
 /**
- * Support class to provide {@link BaseLdapPathSource} functionality to ContextSource instances
- * that act as proxies.
+ * Support class to provide {@link BaseLdapPathSource} functionality to ContextSource
+ * instances that act as proxies.
  *
  * @author Mattias Hellborg Arthursson
  * @since 2.0
@@ -39,9 +39,12 @@ public abstract class DelegatingBaseLdapPathContextSourceSupport implements Base
 	private BaseLdapPathSource getTargetAsBaseLdapPathSource() {
 		try {
 			return (BaseLdapPathSource) getTarget();
-		} catch (ClassCastException e) {
-			throw new UnsupportedOperationException("This operation is not supported on a target ContextSource that does not " +
-					" implement BaseLdapPathContextSource", e);
+		}
+		catch (ClassCastException e) {
+			throw new UnsupportedOperationException(
+					"This operation is not supported on a target ContextSource that does not "
+							+ " implement BaseLdapPathContextSource",
+					e);
 		}
 	}
 
@@ -59,4 +62,5 @@ public abstract class DelegatingBaseLdapPathContextSourceSupport implements Base
 	public final String getBaseLdapPathAsString() {
 		return getTargetAsBaseLdapPathSource().getBaseLdapPathAsString();
 	}
+
 }

@@ -33,39 +33,35 @@ import java.lang.reflect.Proxy;
 import java.util.Hashtable;
 
 /**
- * Abstract superclass for {@link DirContextAuthenticationStrategy}
- * implementations that apply TLS security to the connections. The supported TLS
- * behavior differs between servers. E.g., some servers expect the TLS
- * connection be shut down gracefully before the actual target context is
- * closed, whereas other servers do not support that. The
- * <code>shutdownTlsGracefully</code> property controls this behavior; the
- * property defaults to <code>false</code>.
+ * Abstract superclass for {@link DirContextAuthenticationStrategy} implementations that
+ * apply TLS security to the connections. The supported TLS behavior differs between
+ * servers. E.g., some servers expect the TLS connection be shut down gracefully before
+ * the actual target context is closed, whereas other servers do not support that. The
+ * <code>shutdownTlsGracefully</code> property controls this behavior; the property
+ * defaults to <code>false</code>.
  * <p>
- * The <code>SSLSocketFactory</code> used for TLS negotiation can be customized
- * using the <code>sslSocketFactory</code> property. This allows for example a
- * socket factory that can load the keystore/truststore using the Spring
- * Resource abstraction. This provides a much more Spring-like strategy for
- * configuring PKI credentials for authentication, in addition to allowing
- * application-specific keystores and truststores running in the same JVM.
+ * The <code>SSLSocketFactory</code> used for TLS negotiation can be customized using the
+ * <code>sslSocketFactory</code> property. This allows for example a socket factory that
+ * can load the keystore/truststore using the Spring Resource abstraction. This provides a
+ * much more Spring-like strategy for configuring PKI credentials for authentication, in
+ * addition to allowing application-specific keystores and truststores running in the same
+ * JVM.
  * <p>
- * In some rare occasions there is a need to supply a
- * <code>HostnameVerifier</code> to the TLS processing instructions in order to
- * have the returned certificate properly validated. If a
- * <code>HostnameVerifier</code> is supplied to
- * {@link #setHostnameVerifier(HostnameVerifier)}, that will be applied to the
- * processing.
+ * In some rare occasions there is a need to supply a <code>HostnameVerifier</code> to the
+ * TLS processing instructions in order to have the returned certificate properly
+ * validated. If a <code>HostnameVerifier</code> is supplied to
+ * {@link #setHostnameVerifier(HostnameVerifier)}, that will be applied to the processing.
  * <p>
- * For further information regarding TLS, refer to <a
- * href="https://java.sun.com/products/jndi/tutorial/ldap/ext/starttls.html">this
+ * For further information regarding TLS, refer to
+ * <a href="https://java.sun.com/products/jndi/tutorial/ldap/ext/starttls.html">this
  * page</a>.
  * <p>
- * <b>NB:</b> TLS negotiation is an expensive process, which is why you will
- * most likely want to use connection pooling, to make sure new connections are
- * not created for each individual request. It is imperative however, that the
- * built-in LDAP connection pooling is not used in combination with the TLS
- * AuthenticationStrategy implementations - this will not work. You should use
- * the Spring LDAP PoolingContextSource instead.
- * 
+ * <b>NB:</b> TLS negotiation is an expensive process, which is why you will most likely
+ * want to use connection pooling, to make sure new connections are not created for each
+ * individual request. It is imperative however, that the built-in LDAP connection pooling
+ * is not used in combination with the TLS AuthenticationStrategy implementations - this
+ * will not work. You should use the Spring LDAP PoolingContextSource instead.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public abstract class AbstractTlsDirContextAuthenticationStrategy implements DirContextAuthenticationStrategy {
@@ -78,24 +74,21 @@ public abstract class AbstractTlsDirContextAuthenticationStrategy implements Dir
 
 	/** SSL socket factory to use for startTLS negotiation */
 	private SSLSocketFactory sslSocketFactory;
-	
+
 	/**
-	 * Specify whether the TLS should be shut down gracefully before the target
-	 * context is closed. Defaults to <code>false</code>.
-	 * 
-	 * @param shutdownTlsGracefully <code>true</code> to shut down the TLS
-	 * connection explicitly, <code>false</code> closes the target context
-	 * immediately.
+	 * Specify whether the TLS should be shut down gracefully before the target context is
+	 * closed. Defaults to <code>false</code>.
+	 * @param shutdownTlsGracefully <code>true</code> to shut down the TLS connection
+	 * explicitly, <code>false</code> closes the target context immediately.
 	 */
 	public void setShutdownTlsGracefully(boolean shutdownTlsGracefully) {
 		this.shutdownTlsGracefully = shutdownTlsGracefully;
 	}
 
 	/**
-	 * Set the optional
-	 * <code>HostnameVerifier</code> to use for verifying incoming certificates. Defaults to <code>null</code>
-	 * , meaning that the default hostname verification will take place.
-	 * 
+	 * Set the optional <code>HostnameVerifier</code> to use for verifying incoming
+	 * certificates. Defaults to <code>null</code> , meaning that the default hostname
+	 * verification will take place.
 	 * @param hostnameVerifier The <code>HostnameVerifier</code> to use, if any.
 	 */
 	public void setHostnameVerifier(HostnameVerifier hostnameVerifier) {
@@ -103,25 +96,32 @@ public abstract class AbstractTlsDirContextAuthenticationStrategy implements Dir
 	}
 
 	/**
-	 * Sets the optional SSL socket factory used for startTLS negotiation.
-	 * Defaults to <code>null</code> to indicate that the default socket factory
-	 * provided by the underlying JSSE provider should be used.
+	 * Sets the optional SSL socket factory used for startTLS negotiation. Defaults to
+	 * <code>null</code> to indicate that the default socket factory provided by the
+	 * underlying JSSE provider should be used.
 	 * @param sslSocketFactory SSL socket factory to use, if any.
 	 */
 	public void setSslSocketFactory(final SSLSocketFactory sslSocketFactory) {
 		this.sslSocketFactory = sslSocketFactory;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.springframework.ldap.core.support.DirContextAuthenticationStrategy#setupEnvironment(java.util.Hashtable, java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.springframework.ldap.core.support.DirContextAuthenticationStrategy#
+	 * setupEnvironment(java.util.Hashtable, java.lang.String, java.lang.String)
 	 */
 	public final void setupEnvironment(Hashtable<String, Object> env, String userDn, String password) {
 		// Nothing to do in this implementation - authentication should take
 		// place after TLS has been negotiated.
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.ldap.core.support.DirContextAuthenticationStrategy#processContextAfterCreation(javax.naming.directory.DirContext, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.springframework.ldap.core.support.DirContextAuthenticationStrategy#
+	 * processContextAfterCreation(javax.naming.directory.DirContext, java.lang.String,
+	 * java.lang.String)
 	 */
 	public final DirContext processContextAfterCreation(DirContext ctx, String userDn, String password)
 			throws NamingException {
@@ -133,16 +133,17 @@ public abstract class AbstractTlsDirContextAuthenticationStrategy implements Dir
 				if (hostnameVerifier != null) {
 					tlsResponse.setHostnameVerifier(hostnameVerifier);
 				}
-				tlsResponse.negotiate(sslSocketFactory); // If null, the default SSL socket factory is used
+				tlsResponse.negotiate(sslSocketFactory); // If null, the default SSL
+															// socket factory is used
 				applyAuthentication(ldapCtx, userDn, password);
 
 				if (shutdownTlsGracefully) {
 					// Wrap the target context in a proxy to intercept any calls
 					// to 'close', so that we can shut down the TLS connection
 					// gracefully first.
-					return (DirContext) Proxy.newProxyInstance(DirContextProxy.class.getClassLoader(), new Class<?>[] {
-							LdapContext.class, DirContextProxy.class }, new TlsAwareDirContextProxy(ldapCtx,
-							tlsResponse));
+					return (DirContext) Proxy.newProxyInstance(DirContextProxy.class.getClassLoader(),
+							new Class<?>[] { LdapContext.class, DirContextProxy.class },
+							new TlsAwareDirContextProxy(ldapCtx, tlsResponse));
 				}
 				else {
 					return ctx;
@@ -161,9 +162,8 @@ public abstract class AbstractTlsDirContextAuthenticationStrategy implements Dir
 	}
 
 	/**
-	 * Apply the actual authentication to the specified <code>LdapContext</code>
-	 * . Typically, this will involve adding stuff to the environment.
-	 * 
+	 * Apply the actual authentication to the specified <code>LdapContext</code> .
+	 * Typically, this will involve adding stuff to the environment.
 	 * @param ctx the <code>LdapContext</code> instance.
 	 * @param userDn the user dn of the user to authenticate.
 	 * @param password the password of the user to authenticate.
@@ -202,5 +202,7 @@ public abstract class AbstractTlsDirContextAuthenticationStrategy implements Dir
 				return method.invoke(target, args);
 			}
 		}
+
 	}
+
 }

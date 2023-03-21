@@ -17,6 +17,7 @@ import org.springframework.ldap.odm.typeconversion.impl.converters.FromStringCon
 import org.springframework.ldap.odm.typeconversion.impl.converters.ToStringConverter;
 
 public final class TestConverterManager {
+
 	private ConverterManagerImpl converterManager;
 
 	@Before
@@ -50,8 +51,9 @@ public final class TestConverterManager {
 	public void tearDown() {
 		converterManager = null;
 	}
-	
+
 	private static class ConverterTestData<T> {
+
 		public final Class<T> destClass;
 
 		public final Object sourceData;
@@ -76,16 +78,17 @@ public final class TestConverterManager {
 			return String.format("sourceData=%1$s | syntax=%2$s | destClass=%3$s | expectedValue=%4$s", sourceData,
 					syntax, destClass, expectedValue);
 		}
+
 	}
 
 	// Class to Class conversion without any syntaxes
 	@Test
 	public void basicTypeConverion() throws Exception {
 		final ConverterTestData<?>[] primitiveTypeTests = new ConverterTestData<?>[] {
-				new ConverterTestData<Byte>("33", Byte.class, Byte.valueOf((byte)33)),
-				new ConverterTestData<Byte>("-88", Byte.class, Byte.valueOf((byte)-88)),
-				new ConverterTestData<Short>("666", Short.class, Short.valueOf((short)666)),
-				new ConverterTestData<Short>("-123", Short.class, Short.valueOf((short)-123)),
+				new ConverterTestData<Byte>("33", Byte.class, Byte.valueOf((byte) 33)),
+				new ConverterTestData<Byte>("-88", Byte.class, Byte.valueOf((byte) -88)),
+				new ConverterTestData<Short>("666", Short.class, Short.valueOf((short) 666)),
+				new ConverterTestData<Short>("-123", Short.class, Short.valueOf((short) -123)),
 				new ConverterTestData<Integer>("123", Integer.class, Integer.valueOf(123)),
 				new ConverterTestData<Integer>("-500", Integer.class, Integer.valueOf(-500)),
 				new ConverterTestData<Long>("123456", Long.class, Long.valueOf(123456)),
@@ -98,34 +101,35 @@ public final class TestConverterManager {
 				new ConverterTestData<Boolean>("TRUE", Boolean.class, Boolean.TRUE),
 				new ConverterTestData<String>("This is a string", String.class, "This is a string"),
 				new ConverterTestData<String>("This is another String", String.class, "This is another String"),
-				new ConverterTestData<String>((byte)66, String.class, "66"),
-				new ConverterTestData<String>((int)1234, String.class, "1234"),
-				new ConverterTestData<String>((int)-9876, String.class, "-9876"),
+				new ConverterTestData<String>((byte) 66, String.class, "66"),
+				new ConverterTestData<String>((int) 1234, String.class, "1234"),
+				new ConverterTestData<String>((int) -9876, String.class, "-9876"),
 				new ConverterTestData<URI>("https://google.com/", URI.class, new URI("https://google.com/")),
-				new ConverterTestData<URI>("https://apache.org/index.html", URI.class, new URI(
-						"https://apache.org/index.html")),
+				new ConverterTestData<URI>("https://apache.org/index.html", URI.class,
+						new URI("https://apache.org/index.html")),
 				new ConverterTestData<String>(new URI("https://google.com/"), String.class, "https://google.com/"),
 				new ConverterTestData<String>(new URI("https://apache.org/index.html"), String.class,
 						"https://apache.org/index.html") };
 
 		new ExecuteRunnable<ConverterTestData<?>>().runTests(new RunnableTest<ConverterTestData<?>>() {
 			public void runTest(ConverterTestData<?> testData) {
-				assertEquals(testData.expectedValue, converterManager.convert(testData.sourceData, "",
-						testData.destClass));
+				assertEquals(testData.expectedValue,
+						converterManager.convert(testData.sourceData, "", testData.destClass));
 			}
 		}, primitiveTypeTests);
 	}
 
 	private static class SquaredConverter implements Converter {
+
 		public <T> T convert(Object source, Class<T> toClass) throws Exception {
 			Integer intSource = null;
 
 			if (source.getClass() == String.class) {
-				intSource = new Integer((String)source);
+				intSource = new Integer((String) source);
 			}
 			else {
 				if (source.getClass() == Integer.class) {
-					intSource = (Integer)source;
+					intSource = (Integer) source;
 				}
 			}
 
@@ -136,18 +140,20 @@ public final class TestConverterManager {
 
 			return toClass.cast(result);
 		}
+
 	}
 
 	private static class CubedConverter implements Converter {
+
 		public <T> T convert(Object source, Class<T> toClass) throws Exception {
 			Integer intSource = null;
 
 			if (source.getClass() == String.class) {
-				intSource = new Integer((String)source);
+				intSource = new Integer((String) source);
 			}
 			else {
 				if (source.getClass() == Integer.class) {
-					intSource = (Integer)source;
+					intSource = (Integer) source;
 				}
 			}
 
@@ -158,6 +164,7 @@ public final class TestConverterManager {
 
 			return toClass.cast(result);
 		}
+
 	}
 
 	// Tests using syntaxes for "finer grained" mapping
@@ -186,8 +193,8 @@ public final class TestConverterManager {
 
 		new ExecuteRunnable<ConverterTestData<?>>().runTests(new RunnableTest<ConverterTestData<?>>() {
 			public void runTest(ConverterTestData<?> testData) {
-				assertEquals(testData.expectedValue, converterManager.convert(testData.sourceData, testData.syntax,
-						testData.destClass));
+				assertEquals(testData.expectedValue,
+						converterManager.convert(testData.sourceData, testData.syntax, testData.destClass));
 			}
 		}, syntaxTests);
 
@@ -204,4 +211,5 @@ public final class TestConverterManager {
 	public void invalidSyntax() throws Exception {
 		converterManager.convert(String.class, "not a uri", URI.class);
 	}
+
 }

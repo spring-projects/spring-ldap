@@ -23,13 +23,14 @@ import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.test.ContextSourceEc2InstanceLaunchingFactoryBean;
 
 /**
- * FactoryBean for testing LDAP TLS connections on an Amazon EC2 image launched by superclass.
+ * FactoryBean for testing LDAP TLS connections on an Amazon EC2 image launched by
+ * superclass.
  */
 public class TlsContextSourceEc2InstanceLaunchingFactoryBean extends ContextSourceEc2InstanceLaunchingFactoryBean {
-	
+
 	protected void setAdditionalContextSourceProperties(LdapContextSource ctx, final String dnsName) {
 		DefaultTlsDirContextAuthenticationStrategy authenticationStrategy = new DefaultTlsDirContextAuthenticationStrategy();
-	
+
 		authenticationStrategy.setHostnameVerifier(new HostnameVerifier() {
 			public boolean verify(String hostname, SSLSession session) {
 				return hostname.equals(dnsName);
@@ -39,4 +40,5 @@ public class TlsContextSourceEc2InstanceLaunchingFactoryBean extends ContextSour
 		ctx.setAuthenticationStrategy(authenticationStrategy);
 		ctx.setPooled(false);
 	}
+
 }

@@ -32,8 +32,10 @@ public class DigestMd5DirContextAuthenticationStrategy implements DirContextAuth
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.ldap.core.support.DirContextAuthenticationStrategy#processContextAfterCreation(javax.naming.directory.DirContext,
-	 * java.lang.String, java.lang.String)
+	 *
+	 * @see org.springframework.ldap.core.support.DirContextAuthenticationStrategy#
+	 * processContextAfterCreation(javax.naming.directory.DirContext, java.lang.String,
+	 * java.lang.String)
 	 */
 	public DirContext processContextAfterCreation(DirContext ctx, String userDn, String password) {
 		return ctx;
@@ -41,8 +43,9 @@ public class DigestMd5DirContextAuthenticationStrategy implements DirContextAuth
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.ldap.core.support.DirContextAuthenticationStrategy#setupEnvironment(java.util.Hashtable,
-	 * java.lang.String, java.lang.String)
+	 *
+	 * @see org.springframework.ldap.core.support.DirContextAuthenticationStrategy#
+	 * setupEnvironment(java.util.Hashtable, java.lang.String, java.lang.String)
 	 */
 	public void setupEnvironment(Hashtable<String, Object> env, String userDn, String password) {
 		env.put(Context.SECURITY_AUTHENTICATION, DIGEST_MD5_AUTHENTICATION);
@@ -50,4 +53,5 @@ public class DigestMd5DirContextAuthenticationStrategy implements DirContextAuth
 		env.put(Context.SECURITY_PRINCIPAL, userDn);
 		env.put(Context.SECURITY_CREDENTIALS, password);
 	}
+
 }

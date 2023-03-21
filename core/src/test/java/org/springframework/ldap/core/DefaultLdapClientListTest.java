@@ -43,7 +43,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for the <code>list</code> operations in {@link LdapTemplate}.
- * 
+ *
  * @author Ulrik Sandberg
  */
 public class DefaultLdapClientListTest {
@@ -84,22 +84,19 @@ public class DefaultLdapClientListTest {
 		when(contextSourceMock.getReadOnlyContext()).thenReturn(dirContextMock);
 	}
 
-	private void setupListAndNamingEnumeration(NameClassPair listResult)
-			throws NamingException {
+	private void setupListAndNamingEnumeration(NameClassPair listResult) throws NamingException {
 		when(dirContextMock.list(nameMock)).thenReturn(namingEnumerationMock);
 
 		setupNamingEnumeration(listResult);
 	}
 
-	private void setupListBindingsAndNamingEnumeration(NameClassPair listResult)
-			throws NamingException {
+	private void setupListBindingsAndNamingEnumeration(NameClassPair listResult) throws NamingException {
 		when(dirContextMock.listBindings(nameMock)).thenReturn(namingEnumerationMock);
 
 		setupNamingEnumeration(listResult);
 	}
 
-	private void setupNamingEnumeration(NameClassPair listResult)
-			throws NamingException {
+	private void setupNamingEnumeration(NameClassPair listResult) throws NamingException {
 		when(namingEnumerationMock.hasMore()).thenReturn(true, false);
 		when(namingEnumerationMock.next()).thenReturn(listResult);
 	}
@@ -121,7 +118,6 @@ public class DefaultLdapClientListTest {
 		assertThat(list).hasSize(1);
 		assertThat(list.get(0)).isSameAs(NAME);
 	}
-
 
 	@Test
 	public void testList_String() throws NamingException {
@@ -147,8 +143,8 @@ public class DefaultLdapClientListTest {
 		javax.naming.PartialResultException pre = new javax.naming.PartialResultException();
 		when(dirContextMock.list(nameMock)).thenThrow(pre);
 
-		assertThatExceptionOfType(PartialResultException.class).isThrownBy(() ->
-			tested.list(NAME).toList(NameClassPair::getName));
+		assertThatExceptionOfType(PartialResultException.class)
+				.isThrownBy(() -> tested.list(NAME).toList(NameClassPair::getName));
 
 		verify(dirContextMock).close();
 	}
@@ -159,8 +155,8 @@ public class DefaultLdapClientListTest {
 		javax.naming.PartialResultException pre = new javax.naming.PartialResultException();
 		when(dirContextMock.list(nameMock)).thenThrow(pre);
 
-		assertThatExceptionOfType(PartialResultException.class).isThrownBy(() ->
-				tested.list(NAME).toStream(NameClassPair::getName).collect(Collectors.toList()));
+		assertThatExceptionOfType(PartialResultException.class)
+				.isThrownBy(() -> tested.list(NAME).toStream(NameClassPair::getName).collect(Collectors.toList()));
 
 		verify(dirContextMock).close();
 	}
@@ -205,8 +201,8 @@ public class DefaultLdapClientListTest {
 		expectGetReadOnlyContext();
 		javax.naming.LimitExceededException ne = new javax.naming.LimitExceededException();
 		when(dirContextMock.list(nameMock)).thenThrow(ne);
-		assertThatExceptionOfType(LimitExceededException.class).isThrownBy(() ->
-				tested.list(NAME).toList(NameClassPair::getName));
+		assertThatExceptionOfType(LimitExceededException.class)
+				.isThrownBy(() -> tested.list(NAME).toList(NameClassPair::getName));
 		verify(dirContextMock).close();
 	}
 
@@ -215,8 +211,8 @@ public class DefaultLdapClientListTest {
 		expectGetReadOnlyContext();
 		javax.naming.LimitExceededException ne = new javax.naming.LimitExceededException();
 		when(dirContextMock.list(nameMock)).thenThrow(ne);
-		assertThatExceptionOfType(LimitExceededException.class).isThrownBy(() ->
-				tested.list(NAME).toStream(NameClassPair::getName).collect(Collectors.toList()));
+		assertThatExceptionOfType(LimitExceededException.class)
+				.isThrownBy(() -> tested.list(NAME).toStream(NameClassPair::getName).collect(Collectors.toList()));
 		verify(dirContextMock).close();
 	}
 
@@ -385,4 +381,5 @@ public class DefaultLdapClientListTest {
 		verify(dirContextMock).close();
 		verify(namingEnumerationMock).close();
 	}
+
 }

@@ -18,7 +18,7 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI ConfigurationException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.ConfigurationException
@@ -28,4 +28,5 @@ public class ConfigurationException extends NamingException {
 	public ConfigurationException(javax.naming.ConfigurationException cause) {
 		super(cause);
 	}
+
 }

@@ -29,8 +29,7 @@ public class GreaterThanOrEqualsFilterTest {
 	@Test
 	public void testEncode() {
 
-		GreaterThanOrEqualsFilter eqq = new GreaterThanOrEqualsFilter("foo",
-				"*bar(fie)");
+		GreaterThanOrEqualsFilter eqq = new GreaterThanOrEqualsFilter("foo", "*bar(fie)");
 
 		StringBuffer buff = new StringBuffer();
 		eqq.encode(buff);
@@ -42,8 +41,7 @@ public class GreaterThanOrEqualsFilterTest {
 	@Test
 	public void testEncodeInt() {
 
-		GreaterThanOrEqualsFilter eqq = new GreaterThanOrEqualsFilter("foo",
-				456);
+		GreaterThanOrEqualsFilter eqq = new GreaterThanOrEqualsFilter("foo", 456);
 
 		StringBuffer buff = new StringBuffer();
 		eqq.encode(buff);
@@ -64,4 +62,5 @@ public class GreaterThanOrEqualsFilterTest {
 
 		new EqualsTester(originalObject, identicalObject, differentObject, subclassObject);
 	}
+
 }

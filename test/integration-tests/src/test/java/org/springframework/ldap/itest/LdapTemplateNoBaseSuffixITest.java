@@ -32,14 +32,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 /**
- * Tests to verify that not setting a base suffix on the ContextSource (as
- * defined in ldapTemplateNoBaseSuffixTestContext.xml) works as expected.
- * 
+ * Tests to verify that not setting a base suffix on the ContextSource (as defined in
+ * ldapTemplateNoBaseSuffixTestContext.xml) works as expected.
+ *
  * NOTE: This test will not work under Java 1.4.1 or earlier.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
-@ContextConfiguration(locations = {"/conf/ldapTemplateNoBaseSuffixTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapTemplateNoBaseSuffixTestContext.xml" })
 public class LdapTemplateNoBaseSuffixITest extends AbstractLdapTemplateIntegrationTest {
 
 	@Autowired
@@ -51,8 +51,9 @@ public class LdapTemplateNoBaseSuffixITest extends AbstractLdapTemplateIntegrati
 	}
 
 	/**
-	 * This method depends on a DirObjectFactory ({@link org.springframework.ldap.core.support.DefaultDirObjectFactory})
-	 * being set in the ContextSource.
+	 * This method depends on a DirObjectFactory
+	 * ({@link org.springframework.ldap.core.support.DefaultDirObjectFactory}) being set
+	 * in the ContextSource.
 	 */
 	@Test
 	public void testLookup_Plain() {
@@ -84,8 +85,7 @@ public class LdapTemplateNoBaseSuffixITest extends AbstractLdapTemplateIntegrati
 		adapter.setAttributeValue("sn", "Person4");
 		tested.bind("cn=Some Person4, ou=company1, ou=Sweden," + base, adapter, null);
 
-		DirContextAdapter result = (DirContextAdapter) tested
-				.lookup("cn=Some Person4, ou=company1, ou=Sweden," + base);
+		DirContextAdapter result = (DirContextAdapter) tested.lookup("cn=Some Person4, ou=company1, ou=Sweden," + base);
 
 		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person4");
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person4");
@@ -100,4 +100,5 @@ public class LdapTemplateNoBaseSuffixITest extends AbstractLdapTemplateIntegrati
 			assertThat(true).isTrue();
 		}
 	}
+
 }

@@ -26,14 +26,15 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
- * Represents part of an LdapRdn. As specified in RFC2253 an LdapRdn may be
- * composed of several attributes, separated by &quot;+&quot;. An
- * LdapRdnComponent represents one of these attributes.
- * 
+ * Represents part of an LdapRdn. As specified in RFC2253 an LdapRdn may be composed of
+ * several attributes, separated by &quot;+&quot;. An LdapRdnComponent represents one of
+ * these attributes.
+ *
  * @author Mattias Hellborg Arthursson
  * @deprecated {@link DistinguishedName} and associated classes are deprecated as of 2.0.
  */
 public class LdapRdnComponent implements Comparable, Serializable {
+
 	private static final long serialVersionUID = -3296747972616243038L;
 
 	private static final Logger LOG = LoggerFactory.getLogger(LdapRdnComponent.class);
@@ -46,7 +47,6 @@ public class LdapRdnComponent implements Comparable, Serializable {
 
 	/**
 	 * Constructs an LdapRdnComponent without decoding the value.
-	 * 
 	 * @param key the Attribute name.
 	 * @param value the Attribute value.
 	 */
@@ -57,15 +57,13 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	/**
 	 * Constructs an LdapRdnComponent, optionally decoding the value.
 	 * <p>
-	 * Depending on the value of the "key case fold" System property, the keys
-	 * will be lowercased, uppercased, or preserve their original case. Default
-	 * is to convert them to lowercase.
-	 * 
+	 * Depending on the value of the "key case fold" System property, the keys will be
+	 * lowercased, uppercased, or preserve their original case. Default is to convert them
+	 * to lowercase.
 	 * @param key the Attribute name.
 	 * @param value the Attribute value.
-	 * @param decodeValue if <code>true</code> the value is decoded (typically
-	 * used when a DN is parsed from a String), otherwise the value is used as
-	 * specified.
+	 * @param decodeValue if <code>true</code> the value is decoded (typically used when a
+	 * DN is parsed from a String), otherwise the value is used as specified.
 	 * @see DistinguishedName#KEY_CASE_FOLD_PROPERTY
 	 */
 	public LdapRdnComponent(String key, String value, boolean decodeValue) {
@@ -75,16 +73,18 @@ public class LdapRdnComponent implements Comparable, Serializable {
 		String caseFold = System.getProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY);
 		if (!StringUtils.hasText(caseFold) || caseFold.equals(DistinguishedName.KEY_CASE_FOLD_LOWER)) {
 			this.key = key.toLowerCase();
-		} else if (caseFold.equals(DistinguishedName.KEY_CASE_FOLD_UPPER)) {
+		}
+		else if (caseFold.equals(DistinguishedName.KEY_CASE_FOLD_UPPER)) {
 			this.key = key.toUpperCase();
-		} else if (caseFold.equals(DistinguishedName.KEY_CASE_FOLD_NONE)) {
+		}
+		else if (caseFold.equals(DistinguishedName.KEY_CASE_FOLD_NONE)) {
 			this.key = key;
-		} else {
-			LOG
-					.warn("\"" + caseFold + "\" invalid property value for " + DistinguishedName.KEY_CASE_FOLD_PROPERTY
-							+ "; expected \"" + DistinguishedName.KEY_CASE_FOLD_LOWER + "\", \""
-							+ DistinguishedName.KEY_CASE_FOLD_UPPER + "\", or \""
-							+ DistinguishedName.KEY_CASE_FOLD_NONE + "\"");
+		}
+		else {
+			LOG.warn("\"" + caseFold + "\" invalid property value for " + DistinguishedName.KEY_CASE_FOLD_PROPERTY
+					+ "; expected \"" + DistinguishedName.KEY_CASE_FOLD_LOWER + "\", \""
+					+ DistinguishedName.KEY_CASE_FOLD_UPPER + "\", or \"" + DistinguishedName.KEY_CASE_FOLD_NONE
+					+ "\"");
 			this.key = key.toLowerCase();
 		}
 		if (decodeValue) {
@@ -97,7 +97,6 @@ public class LdapRdnComponent implements Comparable, Serializable {
 
 	/**
 	 * Get the key (Attribute name) of this component.
-	 * 
 	 * @return the key.
 	 */
 	public String getKey() {
@@ -106,7 +105,6 @@ public class LdapRdnComponent implements Comparable, Serializable {
 
 	/**
 	 * Set the key (Attribute name) of this component.
-	 * 
 	 * @param key the key.
 	 * @deprecated Using this method changes the internal state of surrounding
 	 * DistinguishedName instance. This should be avoided.
@@ -118,7 +116,6 @@ public class LdapRdnComponent implements Comparable, Serializable {
 
 	/**
 	 * Get the (Attribute) value of this component.
-	 * 
 	 * @return the value.
 	 */
 	public String getValue() {
@@ -127,7 +124,6 @@ public class LdapRdnComponent implements Comparable, Serializable {
 
 	/**
 	 * Set the (Attribute) value of this component.
-	 * 
 	 * @param value the value.
 	 * @deprecated Using this method changes the internal state of surrounding
 	 * DistinguishedName instance. This should be avoided.
@@ -139,7 +135,6 @@ public class LdapRdnComponent implements Comparable, Serializable {
 
 	/**
 	 * Encode key and value to ldap.
-	 * 
 	 * @return Properly ldap escaped rdn.
 	 */
 	protected String encodeLdap() {
@@ -154,7 +149,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
@@ -170,7 +165,6 @@ public class LdapRdnComponent implements Comparable, Serializable {
 
 	/**
 	 * Get a String representation of this instance for use in URLs.
-	 * 
 	 * @return a properly URL encoded representation of this instancs.
 	 */
 	public String encodeUrl() {
@@ -187,7 +181,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() {
@@ -196,7 +190,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object obj) {
@@ -206,8 +200,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 			LdapRdnComponent that = (LdapRdnComponent) obj;
 			// It's safe to compare directly against key and value,
 			// because they are validated not to be null on instance creation.
-			return this.key.equalsIgnoreCase(that.key)
-					&& this.value.equalsIgnoreCase(that.value);
+			return this.key.equalsIgnoreCase(that.key) && this.value.equalsIgnoreCase(that.value);
 
 		}
 		else {
@@ -217,7 +210,6 @@ public class LdapRdnComponent implements Comparable, Serializable {
 
 	/**
 	 * Compare this instance to the supplied object.
-	 * 
 	 * @param obj the object to compare to.
 	 * @throws ClassCastException if the object is not possible to cast to an
 	 * LdapRdnComponent.
@@ -228,17 +220,17 @@ public class LdapRdnComponent implements Comparable, Serializable {
 		// It's safe to compare directly against key and value,
 		// because they are validated not to be null on instance creation.
 		int keyCompare = this.key.toLowerCase().compareTo(that.key.toLowerCase());
-		if(keyCompare == 0) {
+		if (keyCompare == 0) {
 			return this.value.toLowerCase().compareTo(that.value.toLowerCase());
-		} else {
+		}
+		else {
 			return keyCompare;
 		}
 	}
 
 	/**
-	 * Create an immutable copy of this instance. It will not be possible to
-	 * modify the key or the value of the returned instance.
-	 * 
+	 * Create an immutable copy of this instance. It will not be possible to modify the
+	 * key or the value of the returned instance.
 	 * @return an immutable copy of this instance.
 	 * @since 1.3
 	 */
@@ -247,6 +239,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	}
 
 	private static class ImmutableLdapRdnComponent extends LdapRdnComponent {
+
 		private static final long serialVersionUID = -7099970046426346567L;
 
 		public ImmutableLdapRdnComponent(String key, String value) {
@@ -260,5 +253,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 		public void setValue(String value) {
 			throw new UnsupportedOperationException("SetKey not supported for this immutable LdapRdnComponent");
 		}
+
 	}
+
 }

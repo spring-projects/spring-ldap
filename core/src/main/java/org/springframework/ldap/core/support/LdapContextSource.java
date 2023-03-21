@@ -22,12 +22,12 @@ import javax.naming.ldap.InitialLdapContext;
 import java.util.Hashtable;
 
 /**
- * ContextSource implementation which creates an <code>InitialLdapContext</code>
- * instance. For configuration information, see
- * {@link org.springframework.ldap.core.support.AbstractContextSource AbstractContextSource}.
- * 
+ * ContextSource implementation which creates an <code>InitialLdapContext</code> instance.
+ * For configuration information, see
+ * {@link org.springframework.ldap.core.support.AbstractContextSource
+ * AbstractContextSource}.
+ *
  * @see org.springframework.ldap.core.support.AbstractContextSource
- * 
  * @author Mattias Hellborg Arthursson
  * @author Adam Skogman
  * @author Ulrik Sandberg
@@ -35,10 +35,12 @@ import java.util.Hashtable;
 public class LdapContextSource extends AbstractContextSource {
 
 	/*
-	 * @see org.springframework.ldap.support.AbstractContextSource#getDirContextInstance(java.util.Hashtable)
+	 * @see
+	 * org.springframework.ldap.support.AbstractContextSource#getDirContextInstance(java.
+	 * util.Hashtable)
 	 */
-	protected DirContext getDirContextInstance(Hashtable<String, Object> environment)
-			throws NamingException {
+	protected DirContext getDirContextInstance(Hashtable<String, Object> environment) throws NamingException {
 		return new InitialLdapContext(environment, null);
 	}
+
 }

@@ -18,7 +18,7 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI AuthenticationException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.AuthenticationException
@@ -32,4 +32,5 @@ public class AuthenticationException extends NamingSecurityException {
 	public AuthenticationException() {
 		this(null);
 	}
+
 }

@@ -43,10 +43,10 @@ import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Integration tests for LdapContextSource.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
-@ContextConfiguration(locations = {"/conf/ldapTemplateTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
 public class LdapContextSourceIntegrationTest extends AbstractLdapTemplateIntegrationTest {
 
 	@Autowired
@@ -160,9 +160,12 @@ public class LdapContextSourceIntegrationTest extends AbstractLdapTemplateIntegr
 	}
 
 	private final static class DnContextMapper extends AbstractContextMapper<String> {
+
 		@Override
 		protected String doMapFromContext(DirContextOperations ctx) {
 			return ctx.getNameInNamespace();
 		}
+
 	}
+
 }

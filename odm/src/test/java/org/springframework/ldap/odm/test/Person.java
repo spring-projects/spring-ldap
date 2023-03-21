@@ -28,13 +28,14 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-// Simple LDAP entry for testing 
+// Simple LDAP entry for testing
 @Entry(objectClasses = { "inetOrgPerson", "organizationalPerson", "person", "top" })
 public final class Person {
+
 	public Person() {
 	}
 
-	public Person(Name dn, String surname, List<String> desc, int telephoneNumber, byte[]  jpegPhoto) {
+	public Person(Name dn, String surname, List<String> desc, int telephoneNumber, byte[] jpegPhoto) {
 		this.dn = dn;
 		this.surname = surname;
 		this.desc = desc;
@@ -48,7 +49,8 @@ public final class Person {
 		int size = dn.size();
 		if (size > 1) {
 			cn = dn.get(size - 1).split("=")[1];
-		} else {
+		}
+		else {
 			cn = "";
 		}
 	}
@@ -71,7 +73,8 @@ public final class Person {
 	@Attribute(name = "sn")
 	private String surname;
 
-	// Everything should be sets and in search operations also as results can be in any order
+	// Everything should be sets and in search operations also as results can be in any
+	// order
 	@Attribute(name = "description")
 	private List<String> desc;
 
@@ -135,13 +138,13 @@ public final class Person {
 
 	@Override
 	public String toString() {
-		StringBuilder jpegString=new StringBuilder();
-		if (jpegPhoto!=null) {
-			for (byte b:jpegPhoto) {
+		StringBuilder jpegString = new StringBuilder();
+		if (jpegPhoto != null) {
+			for (byte b : jpegPhoto) {
 				jpegString.append(Byte.toString(b));
 			}
 		}
-		
+
 		return String.format(
 				"objectClasses=%1$s | dn=%2$s | cn=%3$s | sn=%4$s | desc=%5$s | telephoneNumber=%6$s | jpegPhoto=%7$s",
 				objectClasses, dn, cn, surname, desc, telephoneNumber, jpegString);
@@ -175,42 +178,52 @@ public final class Person {
 		if (cn == null) {
 			if (other.cn != null)
 				return false;
-		} else if (!cn.equals(other.cn))
+		}
+		else if (!cn.equals(other.cn))
 			return false;
 		if (desc == null) {
 			if (other.desc != null)
 				return false;
-		} else if (desc.size()!=other.desc.size() || !(new HashSet<String>(desc)).equals(new HashSet<String>(other.desc)))
+		}
+		else if (desc.size() != other.desc.size()
+				|| !(new HashSet<String>(desc)).equals(new HashSet<String>(other.desc)))
 			return false;
 		if (dn == null) {
 			if (other.dn != null)
 				return false;
-		} else if (!dn.equals(other.dn))
+		}
+		else if (!dn.equals(other.dn))
 			return false;
 		if (!Arrays.equals(jpegPhoto, other.jpegPhoto))
 			return false;
 		if (objectClasses == null) {
 			if (other.objectClasses != null)
 				return false;
-		} else if (objectClasses.size()!=other.objectClasses.size() || !(new HashSet<String>(objectClasses)).equals(new HashSet<String>(other.objectClasses)))
+		}
+		else if (objectClasses.size() != other.objectClasses.size()
+				|| !(new HashSet<String>(objectClasses)).equals(new HashSet<String>(other.objectClasses)))
 			return false;
 		if (someRandomField == null) {
 			if (other.someRandomField != null)
 				return false;
-		} else if (!someRandomField.equals(other.someRandomField))
+		}
+		else if (!someRandomField.equals(other.someRandomField))
 			return false;
 		if (someRandomList == null) {
 			if (other.someRandomList != null)
 				return false;
-		} else if (!someRandomList.equals(other.someRandomList))
+		}
+		else if (!someRandomList.equals(other.someRandomList))
 			return false;
 		if (surname == null) {
 			if (other.surname != null)
 				return false;
-		} else if (!surname.equals(other.surname))
+		}
+		else if (!surname.equals(other.surname))
 			return false;
 		if (telephoneNumber != other.telephoneNumber)
 			return false;
 		return true;
 	}
+
 }

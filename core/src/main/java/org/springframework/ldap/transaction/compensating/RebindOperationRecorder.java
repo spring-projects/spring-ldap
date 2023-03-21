@@ -23,15 +23,13 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
 import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
 
 /**
- * A {@link CompensatingTransactionOperationRecorder} keeping track of a rebind
- * operation. Creates {@link RebindOperationExecutor} objects in
- * {@link #recordOperation(Object[])}.
- * 
+ * A {@link CompensatingTransactionOperationRecorder} keeping track of a rebind operation.
+ * Creates {@link RebindOperationExecutor} objects in {@link #recordOperation(Object[])}.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
-public class RebindOperationRecorder implements
-		CompensatingTransactionOperationRecorder {
+public class RebindOperationRecorder implements CompensatingTransactionOperationRecorder {
 
 	private LdapOperations ldapOperations;
 
@@ -39,48 +37,41 @@ public class RebindOperationRecorder implements
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param ldapOperations
-	 *			{@link LdapOperations} to use for getting the rollback
-	 *			information and supply to the {@link RebindOperationExecutor}.
-	 * @param renamingStrategy
-	 *			{@link TempEntryRenamingStrategy} to use for generating temp
-	 *			DNs.
+	 * @param ldapOperations {@link LdapOperations} to use for getting the rollback
+	 * information and supply to the {@link RebindOperationExecutor}.
+	 * @param renamingStrategy {@link TempEntryRenamingStrategy} to use for generating
+	 * temp DNs.
 	 */
-	public RebindOperationRecorder(LdapOperations ldapOperations,
-			TempEntryRenamingStrategy renamingStrategy) {
+	public RebindOperationRecorder(LdapOperations ldapOperations, TempEntryRenamingStrategy renamingStrategy) {
 		this.ldapOperations = ldapOperations;
 		this.renamingStrategy = renamingStrategy;
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
+	 * @see org.springframework.ldap.support.transaction.
+	 * CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
 	 */
-	public CompensatingTransactionOperationExecutor recordOperation(
-			Object[] args) {
+	public CompensatingTransactionOperationExecutor recordOperation(Object[] args) {
 		if (args == null || args.length != 3) {
-			throw new IllegalArgumentException(
-					"Invalid arguments for bind operation");
+			throw new IllegalArgumentException("Invalid arguments for bind operation");
 		}
 		Name dn = LdapTransactionUtils.getFirstArgumentAsName(args);
 		Object object = args[1];
 		Attributes attributes = null;
 		if (args[2] != null && !(args[2] instanceof Attributes)) {
-			throw new IllegalArgumentException(
-					"Invalid third argument to bind operation");
-		} else if (args[2] != null) {
+			throw new IllegalArgumentException("Invalid third argument to bind operation");
+		}
+		else if (args[2] != null) {
 			attributes = (Attributes) args[2];
 		}
 
 		Name temporaryName = renamingStrategy.getTemporaryName(dn);
 
-		return new RebindOperationExecutor(ldapOperations, dn, temporaryName,
-				object, attributes);
+		return new RebindOperationExecutor(ldapOperations, dn, temporaryName, object, attributes);
 	}
 
 	/**
 	 * Get the LdapOperations. For testing purposes.
-	 * 
 	 * @return the LdapOperations.
 	 */
 	LdapOperations getLdapOperations() {
@@ -90,4 +81,5 @@ public class RebindOperationRecorder implements
 	public TempEntryRenamingStrategy getRenamingStrategy() {
 		return renamingStrategy;
 	}
+
 }

@@ -79,7 +79,7 @@ public class RequestControlDirContextProcessorTest {
 	@Test
 	public void testPreProcessWithExistingControlOfDifferentClassShouldAdd() throws Exception {
 		SortControl existingControl = new SortControl(new String[] { "cn" }, true);
-		when(ldapContextMock.getRequestControls()).thenReturn(new Control[]{existingControl});
+		when(ldapContextMock.getRequestControls()).thenReturn(new Control[] { existingControl });
 
 		tested.preProcess(ldapContextMock);
 
@@ -88,7 +88,7 @@ public class RequestControlDirContextProcessorTest {
 
 	@Test
 	public void testPreProcessWithExistingControlOfSameClassShouldReplace() throws Exception {
-		when(ldapContextMock.getRequestControls()).thenReturn(new Control[]{requestControl2Mock});
+		when(ldapContextMock.getRequestControls()).thenReturn(new Control[] { requestControl2Mock });
 
 		tested.preProcess(ldapContextMock);
 
@@ -102,7 +102,7 @@ public class RequestControlDirContextProcessorTest {
 		tested.setReplaceSameControlEnabled(false);
 		tested.preProcess(ldapContextMock);
 
-		verify(ldapContextMock).setRequestControls(new Control[]{requestControl2Mock, requestControlMock});
+		verify(ldapContextMock).setRequestControls(new Control[] { requestControl2Mock, requestControlMock });
 	}
 
 	@Test
@@ -111,7 +111,7 @@ public class RequestControlDirContextProcessorTest {
 
 		tested.preProcess(ldapContextMock);
 
-		verify(ldapContextMock).setRequestControls(new Control[]{requestControlMock});
+		verify(ldapContextMock).setRequestControls(new Control[] { requestControlMock });
 	}
 
 	@Test
@@ -127,4 +127,5 @@ public class RequestControlDirContextProcessorTest {
 	public void testPreProcessWhenNotLdapContextShouldFail() throws Exception {
 		tested.preProcess(dirContextMock);
 	}
+
 }

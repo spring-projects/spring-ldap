@@ -18,16 +18,15 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI AuthenticationNotSupportedException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.AuthenticationNotSupportedException
  */
-public class AuthenticationNotSupportedException extends
-		NamingSecurityException {
+public class AuthenticationNotSupportedException extends NamingSecurityException {
 
-	public AuthenticationNotSupportedException(
-			javax.naming.AuthenticationNotSupportedException cause) {
+	public AuthenticationNotSupportedException(javax.naming.AuthenticationNotSupportedException cause) {
 		super(cause);
 	}
+
 }

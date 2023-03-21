@@ -21,35 +21,31 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 
 /**
- * An interface used by LdapTemplate for mapping LDAP Attributes to beans.
- * Implementions of this interface perform the actual work of extracting
- * results, but need not worry about exception handling. <code>NamingExceptions</code> will
- * be caught and handled correctly by the {@link LdapTemplate} class.
+ * An interface used by LdapTemplate for mapping LDAP Attributes to beans. Implementions
+ * of this interface perform the actual work of extracting results, but need not worry
+ * about exception handling. <code>NamingExceptions</code> will be caught and handled
+ * correctly by the {@link LdapTemplate} class.
  * <p>
- * Typically used in search methods of {@link LdapTemplate}.
- * <code>AttributeMapper</code> objects are normally stateless and thus
- * reusable; they are ideal for implementing attribute-mapping logic in one
- * place.
+ * Typically used in search methods of {@link LdapTemplate}. <code>AttributeMapper</code>
+ * objects are normally stateless and thus reusable; they are ideal for implementing
+ * attribute-mapping logic in one place.
  * <p>
  * Alternatively, consider using a {@link ContextMapper} in stead.
- * 
+ *
  * @see LdapTemplate#search(Name, String, AttributesMapper)
  * @see LdapTemplate#lookup(Name, AttributesMapper)
  * @see ContextMapper
- * 
  * @author Mattias Hellborg Arthursson
  */
 public interface AttributesMapper<T> {
+
 	/**
-	 * Map Attributes to an object. The supplied attributes are the attributes
-	 * from a single SearchResult.
-	 * 
-	 * @param attributes
-	 *			attributes from a SearchResult.
+	 * Map Attributes to an object. The supplied attributes are the attributes from a
+	 * single SearchResult.
+	 * @param attributes attributes from a SearchResult.
 	 * @return an object built from the attributes.
-	 * @throws NamingException
-	 *			 if any error occurs mapping the attributes
+	 * @throws NamingException if any error occurs mapping the attributes
 	 */
-	T mapFromAttributes(Attributes attributes)
-			throws NamingException;
+	T mapFromAttributes(Attributes attributes) throws NamingException;
+
 }

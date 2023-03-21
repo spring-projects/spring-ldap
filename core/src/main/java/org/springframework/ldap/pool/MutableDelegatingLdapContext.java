@@ -24,22 +24,20 @@ import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
 
 /**
- * Used by {@link MutablePoolingContextSource} to wrap a {@link LdapContext},
- * delegating most methods to the underlying context. This class extends
- * {@link DelegatingLdapContext}, allowing request controls to be set on the
- * wrapped ldap context. This enables the Spring LDAP pooling to be used for
- * scenarios such as paged results.
- * 
+ * Used by {@link MutablePoolingContextSource} to wrap a {@link LdapContext}, delegating
+ * most methods to the underlying context. This class extends
+ * {@link DelegatingLdapContext}, allowing request controls to be set on the wrapped ldap
+ * context. This enables the Spring LDAP pooling to be used for scenarios such as paged
+ * results.
+ *
  * @author Ulrik Sandberg
  */
 public class MutableDelegatingLdapContext extends DelegatingLdapContext {
 
 	/**
-	 * Create a new mutable delegating ldap context for the specified pool,
-	 * context and context type.
-	 * 
-	 * @param keyedObjectPool The pool the delegate context was checked out
-	 * from.
+	 * Create a new mutable delegating ldap context for the specified pool, context and
+	 * context type.
+	 * @param keyedObjectPool The pool the delegate context was checked out from.
 	 * @param delegateLdapContext The ldap context to delegate operations to.
 	 * @param dirContextType The type of context, used as a key for the pool.
 	 * @throws IllegalArgumentException if any of the arguments are null
@@ -53,4 +51,5 @@ public class MutableDelegatingLdapContext extends DelegatingLdapContext {
 		assertOpen();
 		getDelegateLdapContext().setRequestControls(requestControls);
 	}
+
 }

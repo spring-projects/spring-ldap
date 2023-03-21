@@ -21,37 +21,31 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
 import org.springframework.transaction.compensating.support.CompensatingTransactionHolderSupport;
 
 /**
- * Keeps track of the transaction DirContext. The same DirContext instance will
- * be reused throughout a transaction. Also keeps a
- * {@link CompensatingTransactionOperationManager}, responsible for performing
- * operations and keeping track of all changes and storing information necessary
- * for commit or rollback.
- * 
+ * Keeps track of the transaction DirContext. The same DirContext instance will be reused
+ * throughout a transaction. Also keeps a {@link CompensatingTransactionOperationManager},
+ * responsible for performing operations and keeping track of all changes and storing
+ * information necessary for commit or rollback.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
 public class DirContextHolder extends CompensatingTransactionHolderSupport {
+
 	private DirContext ctx;
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param manager
-	 *			The {@link CompensatingTransactionOperationManager}.
-	 * @param ctx
-	 *			The DirContext associated with the current transaction.
+	 * @param manager The {@link CompensatingTransactionOperationManager}.
+	 * @param ctx The DirContext associated with the current transaction.
 	 */
-	public DirContextHolder(CompensatingTransactionOperationManager manager,
-			DirContext ctx) {
+	public DirContextHolder(CompensatingTransactionOperationManager manager, DirContext ctx) {
 		super(manager);
 		this.ctx = ctx;
 	}
 
 	/**
 	 * Set the DirContext associated with the current transaction.
-	 * 
-	 * @param ctx
-	 *			The DirContext associated with the current transaction.
+	 * @param ctx The DirContext associated with the current transaction.
 	 */
 	public void setCtx(DirContext ctx) {
 		this.ctx = ctx;
@@ -65,9 +59,11 @@ public class DirContextHolder extends CompensatingTransactionHolderSupport {
 	}
 
 	/*
-	 * @see org.springframework.transaction.compensating.support.CompensatingTransactionHolderSupport#getTransactedResource()
+	 * @see org.springframework.transaction.compensating.support.
+	 * CompensatingTransactionHolderSupport#getTransactedResource()
 	 */
 	protected Object getTransactedResource() {
 		return ctx;
 	}
+
 }

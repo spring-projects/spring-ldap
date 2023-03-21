@@ -24,15 +24,15 @@ import javax.naming.Name;
 import javax.naming.directory.Attributes;
 
 /**
- * A {@link CompensatingTransactionOperationExecutor} to manage a bind
- * operation. Performs a bind in {@link #performOperation()}, a corresponding
- * unbind in {@link #rollback()}, and nothing in {@link #commit()}.
- * 
+ * A {@link CompensatingTransactionOperationExecutor} to manage a bind operation. Performs
+ * a bind in {@link #performOperation()}, a corresponding unbind in {@link #rollback()},
+ * and nothing in {@link #commit()}.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
-public class BindOperationExecutor implements
-		CompensatingTransactionOperationExecutor {
+public class BindOperationExecutor implements CompensatingTransactionOperationExecutor {
+
 	private static Logger log = LoggerFactory.getLogger(BindOperationExecutor.class);
 
 	private LdapOperations ldapOperations;
@@ -45,21 +45,16 @@ public class BindOperationExecutor implements
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param ldapOperations
-	 *			{@link LdapOperations} to use for performing the rollback
-	 *			operation.
-	 * @param dn
-	 *			DN of the entry to be unbound.
-	 * @param originalObject
-	 *			original value sent to the 'object' parameter of the bind
-	 *			operation.
-	 * @param originalAttributes
-	 *			original value sent to the 'attributes' parameter of the bind
-	 *			operation.
+	 * @param ldapOperations {@link LdapOperations} to use for performing the rollback
+	 * operation.
+	 * @param dn DN of the entry to be unbound.
+	 * @param originalObject original value sent to the 'object' parameter of the bind
+	 * operation.
+	 * @param originalAttributes original value sent to the 'attributes' parameter of the
+	 * bind operation.
 	 */
-	public BindOperationExecutor(LdapOperations ldapOperations, Name dn,
-			Object originalObject, Attributes originalAttributes) {
+	public BindOperationExecutor(LdapOperations ldapOperations, Name dn, Object originalObject,
+			Attributes originalAttributes) {
 		this.ldapOperations = ldapOperations;
 		this.dn = dn;
 		this.originalObject = originalObject;
@@ -68,21 +63,24 @@ public class BindOperationExecutor implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#rollback()
+	 *
+	 * @see org.springframework.ldap.support.transaction.
+	 * CompensatingTransactionOperationExecutor#rollback()
 	 */
 	public void rollback() {
 		try {
 			ldapOperations.unbind(dn);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			log.warn("Failed to rollback, dn:" + dn.toString(), e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#commit()
+	 *
+	 * @see org.springframework.ldap.support.transaction.
+	 * CompensatingTransactionOperationExecutor#commit()
 	 */
 	public void commit() {
 		log.debug("Nothing to do in commit for bind operation");
@@ -90,8 +88,9 @@ public class BindOperationExecutor implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#performOperation()
+	 *
+	 * @see org.springframework.ldap.support.transaction.
+	 * CompensatingTransactionOperationExecutor#performOperation()
 	 */
 	public void performOperation() {
 		log.debug("Performing bind operation");
@@ -100,7 +99,6 @@ public class BindOperationExecutor implements
 
 	/**
 	 * Get the DN. Package private for testing purposes.
-	 * 
 	 * @return the target DN.
 	 */
 	Name getDn() {
@@ -109,7 +107,6 @@ public class BindOperationExecutor implements
 
 	/**
 	 * Get the LdapOperations. Package private for testing purposes.
-	 * 
 	 * @return the LdapOperations.
 	 */
 	LdapOperations getLdapOperations() {

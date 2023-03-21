@@ -17,17 +17,18 @@ package org.springframework.ldap.support;
 
 /**
  * Callback interface for use when looping through Attribute values.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.3
  */
 public interface AttributeValueCallbackHandler {
+
 	/**
 	 * Implement to take handle one of the Attribute values.
-	 * 
 	 * @param attributeName the name of the Attribute.
 	 * @param attributeValue the value.
 	 * @param index the index of the value within the Attribute.
 	 */
 	void handleAttributeValue(String attributeName, Object attributeValue, int index);
+
 }

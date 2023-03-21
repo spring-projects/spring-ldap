@@ -19,7 +19,7 @@ import org.springframework.ldap.support.LdapEncoder;
 
 /**
  * Abstract superclass for filters that compare values.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
 public abstract class CompareFilter extends AbstractFilter {
@@ -38,7 +38,6 @@ public abstract class CompareFilter extends AbstractFilter {
 
 	/**
 	 * For testing purposes.
-	 * 
 	 * @return the encoded value.
 	 */
 	String getEncodedValue() {
@@ -47,7 +46,6 @@ public abstract class CompareFilter extends AbstractFilter {
 
 	/**
 	 * Override to perform special encoding in subclass.
-	 * 
 	 * @param value the value to encode.
 	 * @return properly escaped value.
 	 */
@@ -57,7 +55,6 @@ public abstract class CompareFilter extends AbstractFilter {
 
 	/**
 	 * Convenience constructor for <code>int</code> values.
-	 * 
 	 * @param attribute Name of attribute in filter.
 	 * @param value The value of the attribute in the filter.
 	 */
@@ -80,13 +77,17 @@ public abstract class CompareFilter extends AbstractFilter {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 
 		CompareFilter that = (CompareFilter) o;
 
-		if (attribute != null ? !attribute.equals(that.attribute) : that.attribute != null) return false;
-		if (value != null ? !value.equals(that.value) : that.value != null) return false;
+		if (attribute != null ? !attribute.equals(that.attribute) : that.attribute != null)
+			return false;
+		if (value != null ? !value.equals(that.value) : that.value != null)
+			return false;
 
 		return true;
 	}
@@ -99,12 +100,11 @@ public abstract class CompareFilter extends AbstractFilter {
 	}
 
 	/**
-	 * Implement this method in subclass to return a String representing the
-	 * operator. The {@link EqualsFilter#getCompareString()} would for example
-	 * return an equals sign, &quot;=&quot;.
-	 * 
-	 * @return the String to use as operator in the comparison for the specific
-	 * subclass.
+	 * Implement this method in subclass to return a String representing the operator. The
+	 * {@link EqualsFilter#getCompareString()} would for example return an equals sign,
+	 * &quot;=&quot;.
+	 * @return the String to use as operator in the comparison for the specific subclass.
 	 */
 	protected abstract String getCompareString();
+
 }

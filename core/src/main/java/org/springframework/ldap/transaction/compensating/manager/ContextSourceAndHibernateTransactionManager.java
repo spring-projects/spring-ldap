@@ -23,20 +23,23 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.TransactionSuspensionNotSupportedException;
 import org.springframework.transaction.support.DefaultTransactionStatus;
+
 /**
  * A Transaction Manager to manage LDAP and Hibernate 3 operations within the same
- * transaction. Note that even though the same logical transaction is used, this
- * is <b>not</b> a JTA XA transaction; no two-phase commit will be performed,
- * and thus commit and rollback may yield unexpected results.<br>
+ * transaction. Note that even though the same logical transaction is used, this is
+ * <b>not</b> a JTA XA transaction; no two-phase commit will be performed, and thus commit
+ * and rollback may yield unexpected results.<br>
  * This Transaction Manager is as good as it gets when you are using in LDAP in
- * combination with a Hibernate 3 and unable to use XA transactions because LDAP
- * is not transactional by design to begin with.<br>
+ * combination with a Hibernate 3 and unable to use XA transactions because LDAP is not
+ * transactional by design to begin with.<br>
  *
  * Furthermore, this manager <b>does not support nested transactions</b>
+ *
  * @author Hans Westerbeek
  * @since 1.2.2
- * @deprecated The idea of wrapping two transaction managers without actual XA support is probably not such a good idea
- * after all. AbstractPlatformTransactionManager is not designed for this usage.
+ * @deprecated The idea of wrapping two transaction managers without actual XA support is
+ * probably not such a good idea after all. AbstractPlatformTransactionManager is not
+ * designed for this usage.
  */
 public class ContextSourceAndHibernateTransactionManager extends HibernateTransactionManager {
 
@@ -47,41 +50,41 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 
 	private ContextSourceTransactionManagerDelegate ldapManagerDelegate = new ContextSourceTransactionManagerDelegate();
 
-	 /*
-	 * @see org.springframework.orm.hibernate5.HibernateTransactionManager#isExistingTransaction(java.lang.Object)
+	/*
+	 * @see org.springframework.orm.hibernate5.HibernateTransactionManager#
+	 * isExistingTransaction(java.lang.Object)
 	 */
 	protected boolean isExistingTransaction(Object transaction) {
 		ContextSourceAndHibernateTransactionObject actualTransactionObject = (ContextSourceAndHibernateTransactionObject) transaction;
 
-		return super.isExistingTransaction(actualTransactionObject
-				.getHibernateTransactionObject());
+		return super.isExistingTransaction(actualTransactionObject.getHibernateTransactionObject());
 	}
 
 	/*
-	 * @see org.springframework.orm.hibernate5.HibernateTransactionManager#doGetTransaction()
+	 * @see
+	 * org.springframework.orm.hibernate5.HibernateTransactionManager#doGetTransaction()
 	 */
 	protected Object doGetTransaction() {
 		Object dataSourceTransactionObject = super.doGetTransaction();
-		Object contextSourceTransactionObject = ldapManagerDelegate
-				.doGetTransaction();
+		Object contextSourceTransactionObject = ldapManagerDelegate.doGetTransaction();
 
-		return new ContextSourceAndHibernateTransactionObject(
-				contextSourceTransactionObject, dataSourceTransactionObject);
+		return new ContextSourceAndHibernateTransactionObject(contextSourceTransactionObject,
+				dataSourceTransactionObject);
 	}
 
 	/*
-	 * @see org.springframework.orm.hibernate5.HibernateTransactionManager#doBegin(java.lang.Object,
-	 *	  org.springframework.transaction.TransactionDefinition)
+	 * @see
+	 * org.springframework.orm.hibernate5.HibernateTransactionManager#doBegin(java.lang.
+	 * Object, org.springframework.transaction.TransactionDefinition)
 	 */
 	protected void doBegin(Object transaction, TransactionDefinition definition) {
 		ContextSourceAndHibernateTransactionObject actualTransactionObject = (ContextSourceAndHibernateTransactionObject) transaction;
 
-		super.doBegin(actualTransactionObject.getHibernateTransactionObject(),
-				definition);
+		super.doBegin(actualTransactionObject.getHibernateTransactionObject(), definition);
 		try {
-			ldapManagerDelegate.doBegin(actualTransactionObject
-					.getLdapTransactionObject(), definition);
-		} catch (TransactionException e) {
+			ldapManagerDelegate.doBegin(actualTransactionObject.getLdapTransactionObject(), definition);
+		}
+		catch (TransactionException e) {
 			// Failed to start LDAP transaction - make sure we clean up properly
 			super.doCleanupAfterCompletion(actualTransactionObject.getHibernateTransactionObject());
 			throw e;
@@ -89,19 +92,19 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 	}
 
 	/*
-	 * @see org.springframework.orm.hibernate5.HibernateTransactionManager#doCleanupAfterCompletion(java.lang.Object)
+	 * @see org.springframework.orm.hibernate5.HibernateTransactionManager#
+	 * doCleanupAfterCompletion(java.lang.Object)
 	 */
 	protected void doCleanupAfterCompletion(Object transaction) {
 		ContextSourceAndHibernateTransactionObject actualTransactionObject = (ContextSourceAndHibernateTransactionObject) transaction;
 
-		super.doCleanupAfterCompletion(actualTransactionObject
-				.getHibernateTransactionObject());
-		ldapManagerDelegate.doCleanupAfterCompletion(actualTransactionObject
-				.getLdapTransactionObject());
+		super.doCleanupAfterCompletion(actualTransactionObject.getHibernateTransactionObject());
+		ldapManagerDelegate.doCleanupAfterCompletion(actualTransactionObject.getLdapTransactionObject());
 	}
 
 	/*
-	 * @see org.springframework.orm.hibernate5.HibernateTransactionManager#doCommit(org.springframework.transaction.support.DefaultTransactionStatus)
+	 * @see org.springframework.orm.hibernate5.HibernateTransactionManager#doCommit(org.
+	 * springframework.transaction.support.DefaultTransactionStatus)
 	 */
 	protected void doCommit(DefaultTransactionStatus status) {
 
@@ -109,47 +112,42 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 				.getTransaction();
 
 		try {
-			super.doCommit(new DefaultTransactionStatus(actualTransactionObject
-					.getHibernateTransactionObject(), status
-					.isNewTransaction(), status.isNewSynchronization(), status
-					.isReadOnly(), status.isDebug(), status
-					.getSuspendedResources()));
-		} catch (TransactionException ex) {
+			super.doCommit(new DefaultTransactionStatus(actualTransactionObject.getHibernateTransactionObject(),
+					status.isNewTransaction(), status.isNewSynchronization(), status.isReadOnly(), status.isDebug(),
+					status.getSuspendedResources()));
+		}
+		catch (TransactionException ex) {
 			if (isRollbackOnCommitFailure()) {
 				logger.debug("Failed to commit db resource, rethrowing", ex);
 				// If we are to rollback on commit failure, just rethrow the
 				// exception - this will cause a rollback to be performed on
 				// both resources.
 				throw ex;
-			} else {
-				logger
-						.warn("Failed to commit and resource is rollbackOnCommit not set -"
-								+ " proceeding to commit ldap resource.");
+			}
+			else {
+				logger.warn("Failed to commit and resource is rollbackOnCommit not set -"
+						+ " proceeding to commit ldap resource.");
 			}
 		}
-		ldapManagerDelegate.doCommit(new DefaultTransactionStatus(
-				actualTransactionObject.getLdapTransactionObject(), status
-						.isNewTransaction(), status.isNewSynchronization(),
-				status.isReadOnly(), status.isDebug(), status
-						.getSuspendedResources()));
+		ldapManagerDelegate.doCommit(new DefaultTransactionStatus(actualTransactionObject.getLdapTransactionObject(),
+				status.isNewTransaction(), status.isNewSynchronization(), status.isReadOnly(), status.isDebug(),
+				status.getSuspendedResources()));
 	}
 
 	/*
-	 * @see org.springframework.orm.hibernate5.HibernateTransactionManager#doRollback(org.springframework.transaction.support.DefaultTransactionStatus)
+	 * @see org.springframework.orm.hibernate5.HibernateTransactionManager#doRollback(org.
+	 * springframework.transaction.support.DefaultTransactionStatus)
 	 */
 	protected void doRollback(DefaultTransactionStatus status) {
 		ContextSourceAndHibernateTransactionObject actualTransactionObject = (ContextSourceAndHibernateTransactionObject) status
 				.getTransaction();
 
-		super.doRollback(new DefaultTransactionStatus(actualTransactionObject
-				.getHibernateTransactionObject(), status.isNewTransaction(),
-				status.isNewSynchronization(), status.isReadOnly(), status
-						.isDebug(), status.getSuspendedResources()));
-		ldapManagerDelegate.doRollback(new DefaultTransactionStatus(
-				actualTransactionObject.getLdapTransactionObject(), status
-						.isNewTransaction(), status.isNewSynchronization(),
-				status.isReadOnly(), status.isDebug(), status
-						.getSuspendedResources()));
+		super.doRollback(new DefaultTransactionStatus(actualTransactionObject.getHibernateTransactionObject(),
+				status.isNewTransaction(), status.isNewSynchronization(), status.isReadOnly(), status.isDebug(),
+				status.getSuspendedResources()));
+		ldapManagerDelegate.doRollback(new DefaultTransactionStatus(actualTransactionObject.getLdapTransactionObject(),
+				status.isNewTransaction(), status.isNewSynchronization(), status.isReadOnly(), status.isDebug(),
+				status.getSuspendedResources()));
 	}
 
 	public ContextSource getContextSource() {
@@ -160,18 +158,18 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 		ldapManagerDelegate.setContextSource(contextSource);
 	}
 
-	public void setRenamingStrategy(
-			TempEntryRenamingStrategy renamingStrategy) {
+	public void setRenamingStrategy(TempEntryRenamingStrategy renamingStrategy) {
 		ldapManagerDelegate.setRenamingStrategy(renamingStrategy);
 	}
 
 	private static final class ContextSourceAndHibernateTransactionObject {
+
 		private Object ldapTransactionObject;
 
 		private Object hibernateTransactionObject;
 
-		public ContextSourceAndHibernateTransactionObject(
-				Object ldapTransactionObject, Object hibernateTransactionObject) {
+		public ContextSourceAndHibernateTransactionObject(Object ldapTransactionObject,
+				Object hibernateTransactionObject) {
 			this.ldapTransactionObject = ldapTransactionObject;
 			this.hibernateTransactionObject = hibernateTransactionObject;
 		}
@@ -183,29 +181,32 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 		public Object getLdapTransactionObject() {
 			return ldapTransactionObject;
 		}
+
 	}
 
 	/*
-	 * @see org.springframework.orm.hibernate5.HibernateTransactionManager#doSuspend(java.lang.Object)
+	 * @see
+	 * org.springframework.orm.hibernate5.HibernateTransactionManager#doSuspend(java.lang.
+	 * Object)
 	 */
 	protected Object doSuspend(Object transaction) {
 		throw new TransactionSuspensionNotSupportedException(
-				"Transaction manager [" + getClass().getName()
-						+ "] does not support transaction suspension");
+				"Transaction manager [" + getClass().getName() + "] does not support transaction suspension");
 	}
 
 	/*
-	 * @see org.springframework.orm.hibernate5.HibernateTransactionManager#doResume(java.lang.Object,
-	 *	  java.lang.Object)
+	 * @see
+	 * org.springframework.orm.hibernate5.HibernateTransactionManager#doResume(java.lang.
+	 * Object, java.lang.Object)
 	 */
 	protected void doResume(Object transaction, Object suspendedResources) {
 		throw new TransactionSuspensionNotSupportedException(
-				"Transaction manager [" + getClass().getName()
-						+ "] does not support transaction suspension");
+				"Transaction manager [" + getClass().getName() + "] does not support transaction suspension");
 	}
 
 	public void afterPropertiesSet() {
 		super.afterPropertiesSet();
 		ldapManagerDelegate.checkRenamingStrategy();
 	}
+
 }

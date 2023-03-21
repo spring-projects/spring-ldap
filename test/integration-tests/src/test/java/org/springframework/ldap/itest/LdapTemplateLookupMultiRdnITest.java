@@ -30,11 +30,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests the lookup methods of LdapTemplate.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  */
-@ContextConfiguration(locations = {"/conf/ldapTemplateTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
 public class LdapTemplateLookupMultiRdnITest extends AbstractLdapTemplateIntegrationTest {
 
 	@Autowired
@@ -44,10 +44,9 @@ public class LdapTemplateLookupMultiRdnITest extends AbstractLdapTemplateIntegra
 		return new ClassPathResource("/setup_data_multi_rdn.ldif");
 	}
 
-
 	/**
-	 * Verifies that we can lookup an entry that has a multi-valued rdn, which
-	 * means more than one attribute is part of the relative DN for the entry.
+	 * Verifies that we can lookup an entry that has a multi-valued rdn, which means more
+	 * than one attribute is part of the relative DN for the entry.
 	 */
 	@Test
 	@Category(NoAdTest.class)
@@ -61,9 +60,9 @@ public class LdapTemplateLookupMultiRdnITest extends AbstractLdapTemplateIntegra
 	}
 
 	/**
-	 * Verifies that we can lookup an entry that has a multi-valued rdn, which
-	 * means more than one attribute is part of the relative DN for the entry.
-	 * 
+	 * Verifies that we can lookup an entry that has a multi-valued rdn, which means more
+	 * than one attribute is part of the relative DN for the entry.
+	 *
 	 */
 	@Test
 	@Category(NoAdTest.class)
@@ -83,4 +82,5 @@ public class LdapTemplateLookupMultiRdnITest extends AbstractLdapTemplateIntegra
 		assertThat(result.getDn().toString()).isEqualTo("cn=Some Person+sn=Person,ou=company1,ou=Norway");
 		assertThat(result.getNameInNamespace()).isEqualTo("cn=Some Person+sn=Person,ou=company1,ou=Norway," + base);
 	}
+
 }

@@ -30,8 +30,11 @@ import org.springframework.ldap.filter.WhitespaceWildcardsFilter;
  * @since 2.0
  */
 class DefaultConditionCriteria implements ConditionCriteria {
+
 	private final AppendableContainerCriteria parent;
+
 	private final String attribute;
+
 	private boolean negated = false;
 
 	DefaultConditionCriteria(AppendableContainerCriteria parent, String attribute) {
@@ -86,4 +89,5 @@ class DefaultConditionCriteria implements ConditionCriteria {
 		negated = !negated;
 		return this;
 	}
+
 }

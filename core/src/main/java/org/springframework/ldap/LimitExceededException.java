@@ -18,7 +18,7 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI LimitExceededException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.LimitExceededException
@@ -28,4 +28,5 @@ public class LimitExceededException extends NamingException {
 	public LimitExceededException(javax.naming.LimitExceededException cause) {
 		super(cause);
 	}
+
 }

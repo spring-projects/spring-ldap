@@ -20,11 +20,13 @@ import java.beans.PropertyEditorSupport;
 /**
  * Property editor for {@link Filter} instances. Creates {@link HardcodedFilter}
  * instances.
- * 
+ *
  * @author Mathieu Larchet
  */
 public class FilterEditor extends PropertyEditorSupport {
+
 	public void setAsText(String text) throws IllegalArgumentException {
 		setValue(new HardcodedFilter(text));
 	}
+
 }

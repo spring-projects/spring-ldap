@@ -43,7 +43,6 @@ public class LdapQueryBuilderTest {
 		assertThat(result.filter().encode()).isEqualTo("(cn=J*hn Doe)");
 	}
 
-
 	@Test
 	public void buildWhitespaceWildcards() {
 		LdapQuery result = query().where("cn").whitespaceWildcardsLike("John Doe");
@@ -88,12 +87,8 @@ public class LdapQueryBuilderTest {
 
 	@Test
 	public void testBuildSimpleAnd() {
-		LdapQuery query = query()
-				.base("dc=261consulting, dc=com")
-				.searchScope(SearchScope.ONELEVEL)
-				.timeLimit(200)
-				.countLimit(221)
-				.where("objectclass").is("person").and("cn").is("John Doe");
+		LdapQuery query = query().base("dc=261consulting, dc=com").searchScope(SearchScope.ONELEVEL).timeLimit(200)
+				.countLimit(221).where("objectclass").is("person").and("cn").is("John Doe");
 
 		assertThat(query.base()).isEqualTo(LdapUtils.newLdapName("dc=261consulting, dc=com"));
 		assertThat(query.searchScope()).isEqualTo(SearchScope.ONELEVEL);
@@ -111,8 +106,7 @@ public class LdapQueryBuilderTest {
 
 	@Test
 	public void buildAndOrPrecedence() {
-		LdapQuery result = query().where("objectclass").is("person")
-				.and("cn").is("John Doe")
+		LdapQuery result = query().where("objectclass").is("person").and("cn").is("John Doe")
 				.or(query().where("sn").is("Doe"));
 
 		assertThat(result.filter().encode()).isEqualTo("(|(&(objectclass=person)(cn=John Doe))(sn=Doe))");
@@ -126,11 +120,8 @@ public class LdapQueryBuilderTest {
 
 	@Test
 	public void buildNestedAnd() {
-		LdapQuery result = query()
-				.where("objectclass").is("person")
-				.and(query()
-						.where("sn").is("Doe")
-						.or("sn").like("Die"));
+		LdapQuery result = query().where("objectclass").is("person")
+				.and(query().where("sn").is("Doe").or("sn").like("Die"));
 		assertThat(result.filter().encode()).isEqualTo("(&(objectclass=person)(|(sn=Doe)(sn=Die)))");
 	}
 
@@ -157,4 +148,5 @@ public class LdapQueryBuilderTest {
 	public void verifyThatOperatorChangeIsIllegal() {
 		query().where("cn").is("John Doe").and("sn").is("Doe").or("objectclass").is("person");
 	}
+
 }

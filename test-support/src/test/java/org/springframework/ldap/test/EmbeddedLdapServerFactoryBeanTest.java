@@ -23,11 +23,9 @@ public class EmbeddedLdapServerFactoryBeanTest {
 		LdapTemplate ldapTemplate = ctx.getBean(LdapTemplate.class);
 		assertNotNull(ldapTemplate);
 
-		List<String> list = ldapTemplate.search(
-				LdapQueryBuilder.query().where("objectclass").is("person"),
+		List<String> list = ldapTemplate.search(LdapQueryBuilder.query().where("objectclass").is("person"),
 				new AttributesMapper<String>() {
-					public String mapFromAttributes(Attributes attrs)
-							throws NamingException {
+					public String mapFromAttributes(Attributes attrs) throws NamingException {
 						return (String) attrs.get("cn").get();
 					}
 				});

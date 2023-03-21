@@ -29,8 +29,9 @@ import org.springframework.ldap.odm.annotations.Transient;
 /**
  * @author Mattias Hellborg Arthursson
  */
-@Entry(objectClasses = {"inetOrgPerson", "organizationalPerson", "person", "top"})
+@Entry(objectClasses = { "inetOrgPerson", "organizationalPerson", "person", "top" })
 public class UnitTestPerson {
+
 	@Id
 	private Name dn;
 
@@ -58,4 +59,5 @@ public class UnitTestPerson {
 	// operational attribute (defined in https://tools.ietf.org/html/rfc4530)
 	@Attribute(readonly = true)
 	private String entryUUID;
+
 }

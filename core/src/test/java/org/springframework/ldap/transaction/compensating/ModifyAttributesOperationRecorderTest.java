@@ -37,6 +37,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ModifyAttributesOperationRecorderTest {
+
 	private LdapOperations ldapOperationsMock;
 
 	private IncrementalAttributesMapper attributesMapperMock;
@@ -53,11 +54,11 @@ public class ModifyAttributesOperationRecorderTest {
 
 	@Test
 	public void testRecordOperation() {
-		final ModificationItem incomingItem = new ModificationItem(
-				DirContext.ADD_ATTRIBUTE, new BasicAttribute("attribute1"));
-		ModificationItem[] incomingMods = new ModificationItem[]{incomingItem};
-		final ModificationItem compensatingItem = new ModificationItem(
-				DirContext.ADD_ATTRIBUTE, new BasicAttribute("attribute2"));
+		final ModificationItem incomingItem = new ModificationItem(DirContext.ADD_ATTRIBUTE,
+				new BasicAttribute("attribute1"));
+		ModificationItem[] incomingMods = new ModificationItem[] { incomingItem };
+		final ModificationItem compensatingItem = new ModificationItem(DirContext.ADD_ATTRIBUTE,
+				new BasicAttribute("attribute2"));
 
 		final Attributes expectedAttributes = new BasicAttributes();
 
@@ -66,8 +67,7 @@ public class ModifyAttributesOperationRecorderTest {
 				return attributesMapperMock;
 			}
 
-			protected ModificationItem getCompensatingModificationItem(
-					Attributes originalAttributes,
+			protected ModificationItem getCompensatingModificationItem(Attributes originalAttributes,
 					ModificationItem modificationItem) {
 				assertThat(originalAttributes).isSameAs(expectedAttributes);
 				assertThat(modificationItem).isSameAs(incomingItem);
@@ -78,16 +78,14 @@ public class ModifyAttributesOperationRecorderTest {
 		LdapName expectedName = LdapUtils.newLdapName("cn=john doe");
 
 		when(attributesMapperMock.hasMore()).thenReturn(true, false);
-		when(attributesMapperMock.getAttributesForLookup())
-				.thenReturn(new String[]{"attribute1"});
-		when(ldapOperationsMock.lookup(expectedName, new String[]{"attribute1"}, attributesMapperMock))
+		when(attributesMapperMock.getAttributesForLookup()).thenReturn(new String[] { "attribute1" });
+		when(ldapOperationsMock.lookup(expectedName, new String[] { "attribute1" }, attributesMapperMock))
 				.thenReturn(expectedAttributes);
-		when(attributesMapperMock.getCollectedAttributes())
-				.thenReturn(expectedAttributes);
+		when(attributesMapperMock.getCollectedAttributes()).thenReturn(expectedAttributes);
 
 		// Perform test
 		CompensatingTransactionOperationExecutor operation = tested
-				.recordOperation(new Object[]{expectedName, incomingMods});
+				.recordOperation(new Object[] { expectedName, incomingMods });
 
 		// Verify outcome
 		assertThat(operation instanceof ModifyAttributesOperationExecutor).isTrue();
@@ -102,20 +100,18 @@ public class ModifyAttributesOperationRecorderTest {
 	}
 
 	@Test
-	public void testGetCompensatingModificationItem_RemoveFullExistingAttribute()
-			throws NamingException {
+	public void testGetCompensatingModificationItem_RemoveFullExistingAttribute() throws NamingException {
 		BasicAttribute attribute = new BasicAttribute("someattr");
 		attribute.add("value1");
 		attribute.add("value2");
 		Attributes attributes = new BasicAttributes();
 		attributes.put(attribute);
 
-		ModificationItem originalItem = new ModificationItem(
-				DirContext.REMOVE_ATTRIBUTE, new BasicAttribute("someattr"));
+		ModificationItem originalItem = new ModificationItem(DirContext.REMOVE_ATTRIBUTE,
+				new BasicAttribute("someattr"));
 
 		// Perform test
-		ModificationItem result = tested.getCompensatingModificationItem(
-				attributes, originalItem);
+		ModificationItem result = tested.getCompensatingModificationItem(attributes, originalItem);
 
 		// Verify result
 		assertThat(result.getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
@@ -127,8 +123,7 @@ public class ModifyAttributesOperationRecorderTest {
 	}
 
 	@Test
-	public void testGetCompensatingModificationItem_RemoveTwoAttributeValues()
-			throws NamingException {
+	public void testGetCompensatingModificationItem_RemoveTwoAttributeValues() throws NamingException {
 		BasicAttribute attribute = new BasicAttribute("someattr");
 		attribute.add("value1");
 		attribute.add("value2");
@@ -139,12 +134,10 @@ public class ModifyAttributesOperationRecorderTest {
 		BasicAttribute modificationAttribute = new BasicAttribute("someattr");
 		modificationAttribute.add("value1");
 		modificationAttribute.add("value2");
-		ModificationItem originalItem = new ModificationItem(
-				DirContext.REMOVE_ATTRIBUTE, modificationAttribute);
+		ModificationItem originalItem = new ModificationItem(DirContext.REMOVE_ATTRIBUTE, modificationAttribute);
 
 		// Perform test
-		ModificationItem result = tested.getCompensatingModificationItem(
-				attributes, originalItem);
+		ModificationItem result = tested.getCompensatingModificationItem(attributes, originalItem);
 
 		// Verify result
 		assertThat(result.getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
@@ -156,8 +149,7 @@ public class ModifyAttributesOperationRecorderTest {
 	}
 
 	@Test
-	public void testGetCompensatingModificationItem_ReplaceExistingAttribute()
-			throws NamingException {
+	public void testGetCompensatingModificationItem_ReplaceExistingAttribute() throws NamingException {
 		BasicAttribute attribute = new BasicAttribute("someattr");
 		attribute.add("value1");
 		attribute.add("value2");
@@ -167,12 +159,11 @@ public class ModifyAttributesOperationRecorderTest {
 		BasicAttribute modificationAttribute = new BasicAttribute("someattr");
 		modificationAttribute.add("newvalue1");
 		modificationAttribute.add("newvalue2");
-		ModificationItem originalItem = new ModificationItem(
-				DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("someattr"));
+		ModificationItem originalItem = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
+				new BasicAttribute("someattr"));
 
 		// Perform test
-		ModificationItem result = tested.getCompensatingModificationItem(
-				attributes, originalItem);
+		ModificationItem result = tested.getCompensatingModificationItem(attributes, originalItem);
 
 		// Verify result
 		assertThat(result.getModificationOp()).isEqualTo(DirContext.REPLACE_ATTRIBUTE);
@@ -184,19 +175,16 @@ public class ModifyAttributesOperationRecorderTest {
 	}
 
 	@Test
-	public void testGetCompensatingModificationItem_ReplaceNonExistingAttribute()
-			throws NamingException {
+	public void testGetCompensatingModificationItem_ReplaceNonExistingAttribute() throws NamingException {
 		Attributes attributes = new BasicAttributes();
 
 		BasicAttribute modificationAttribute = new BasicAttribute("someattr");
 		modificationAttribute.add("newvalue1");
 		modificationAttribute.add("newvalue2");
-		ModificationItem originalItem = new ModificationItem(
-				DirContext.REPLACE_ATTRIBUTE, modificationAttribute);
+		ModificationItem originalItem = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, modificationAttribute);
 
 		// Perform test
-		ModificationItem result = tested.getCompensatingModificationItem(
-				attributes, originalItem);
+		ModificationItem result = tested.getCompensatingModificationItem(attributes, originalItem);
 
 		// Verify result
 		assertThat(result.getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
@@ -206,19 +194,16 @@ public class ModifyAttributesOperationRecorderTest {
 	}
 
 	@Test
-	public void testGetCompensatingModificationItem_AddNonExistingAttribute()
-			throws NamingException {
+	public void testGetCompensatingModificationItem_AddNonExistingAttribute() throws NamingException {
 		Attributes attributes = new BasicAttributes();
 
 		BasicAttribute modificationAttribute = new BasicAttribute("someattr");
 		modificationAttribute.add("newvalue1");
 		modificationAttribute.add("newvalue2");
-		ModificationItem originalItem = new ModificationItem(
-				DirContext.ADD_ATTRIBUTE, modificationAttribute);
+		ModificationItem originalItem = new ModificationItem(DirContext.ADD_ATTRIBUTE, modificationAttribute);
 
 		// Perform test
-		ModificationItem result = tested.getCompensatingModificationItem(
-				attributes, originalItem);
+		ModificationItem result = tested.getCompensatingModificationItem(attributes, originalItem);
 
 		// Verify result
 		assertThat(result.getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
@@ -228,8 +213,7 @@ public class ModifyAttributesOperationRecorderTest {
 	}
 
 	@Test
-	public void testGetCompensatingModificationItem_AddExistingAttribute()
-			throws NamingException {
+	public void testGetCompensatingModificationItem_AddExistingAttribute() throws NamingException {
 		BasicAttribute attribute = new BasicAttribute("someattr");
 		attribute.add("value1");
 		attribute.add("value2");
@@ -239,12 +223,10 @@ public class ModifyAttributesOperationRecorderTest {
 		BasicAttribute modificationAttribute = new BasicAttribute("someattr");
 		modificationAttribute.add("newvalue1");
 		modificationAttribute.add("newvalue2");
-		ModificationItem originalItem = new ModificationItem(
-				DirContext.ADD_ATTRIBUTE, new BasicAttribute("someattr"));
+		ModificationItem originalItem = new ModificationItem(DirContext.ADD_ATTRIBUTE, new BasicAttribute("someattr"));
 
 		// Perform test
-		ModificationItem result = tested.getCompensatingModificationItem(
-				attributes, originalItem);
+		ModificationItem result = tested.getCompensatingModificationItem(attributes, originalItem);
 
 		// Verify result
 		assertThat(result.getModificationOp()).isEqualTo(DirContext.REPLACE_ATTRIBUTE);
@@ -253,4 +235,5 @@ public class ModifyAttributesOperationRecorderTest {
 		assertThat(result.getAttribute().get(0)).isEqualTo("value1");
 		assertThat(result.getAttribute().get(1)).isEqualTo("value2");
 	}
+
 }

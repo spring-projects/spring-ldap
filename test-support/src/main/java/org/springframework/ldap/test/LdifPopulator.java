@@ -34,11 +34,15 @@ import java.util.List;
  * @since 2.0
  */
 public class LdifPopulator implements InitializingBean {
+
 	private Resource resource;
+
 	private ContextSource contextSource;
 
 	private String base = "";
+
 	private boolean clean = false;
+
 	private String defaultBase;
 
 	public void setContextSource(ContextSource contextSource) {
@@ -66,7 +70,7 @@ public class LdifPopulator implements InitializingBean {
 		Assert.notNull(contextSource, "ContextSource must be specified");
 		Assert.notNull(resource, "Resource must be specified");
 
-		if(!LdapUtils.newLdapName(base).equals(LdapUtils.newLdapName(defaultBase))) {
+		if (!LdapUtils.newLdapName(base).equals(LdapUtils.newLdapName(defaultBase))) {
 			List<String> lines = IOUtils.readLines(resource.getInputStream());
 
 			StringWriter sw = new StringWriter();
@@ -79,10 +83,11 @@ public class LdifPopulator implements InitializingBean {
 			resource = new ByteArrayResource(sw.toString().getBytes("UTF8"));
 		}
 
-		if(clean) {
+		if (clean) {
 			LdapTestUtils.clearSubContexts(contextSource, LdapUtils.emptyLdapName());
 		}
 
 		LdapTestUtils.loadLdif(contextSource, resource);
 	}
+
 }

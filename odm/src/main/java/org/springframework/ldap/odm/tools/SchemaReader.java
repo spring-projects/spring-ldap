@@ -28,6 +28,7 @@ import java.util.Set;
 
 // Processes LDAP Schema
 /* package */ final class SchemaReader {
+
 	private final DirContext schemaContext;
 
 	private final SyntaxToJavaClass syntaxToJavaClass;
@@ -41,16 +42,17 @@ import java.util.Set;
 	}
 
 	// Get the object schema for the given object classes
-	public ObjectSchema getObjectSchema(Set<String> objectClasses) 
-		throws NamingException, ClassNotFoundException {
-		
+	public ObjectSchema getObjectSchema(Set<String> objectClasses) throws NamingException, ClassNotFoundException {
+
 		ObjectSchema result = new ObjectSchema();
 		createObjectClass(objectClasses, schemaContext, result);
 		return result;
 	}
 
 	private enum SchemaAttributeType {
+
 		SUP, MUST, MAY, UNKNOWN
+
 	}
 
 	private SchemaAttributeType getSchemaAttributeType(String type) {
@@ -58,10 +60,12 @@ import java.util.Set;
 
 		if (type.equals("SUP")) {
 			result = SchemaAttributeType.SUP;
-		} else {
+		}
+		else {
 			if (type.equals("MUST")) {
 				result = SchemaAttributeType.MUST;
-			} else {
+			}
+			else {
 				if (type.equals("MAY")) {
 					result = SchemaAttributeType.MAY;
 				}
@@ -71,31 +75,33 @@ import java.util.Set;
 	}
 
 	private AttributeSchema createAttributeSchema(String name, DirContext schemaContext)
-		throws NamingException, ClassNotFoundException {
-		
+			throws NamingException, ClassNotFoundException {
+
 		// Get the schema definition
 		Attributes attributeSchema = schemaContext.getAttributes("AttributeDefinition/" + name);
 
 		String syntax = null;
-		while(syntax == null) {
+		while (syntax == null) {
 			Attribute syntaxAttribute = attributeSchema.get("SYNTAX");
-			if(syntaxAttribute != null) {
-				syntax = ((String)syntaxAttribute.get()).split("\\{")[0];
-			} else {
+			if (syntaxAttribute != null) {
+				syntax = ((String) syntaxAttribute.get()).split("\\{")[0];
+			}
+			else {
 				// Try to recursively retrieve syntax for super definition.
 				Attribute supAttribute = attributeSchema.get("SUP");
-				if(supAttribute == null) {
+				if (supAttribute == null) {
 					// Well, at least we tried
 					throw new IllegalArgumentException("Unable to get syntax definition for attribute " + name);
-				} else {
+				}
+				else {
 					attributeSchema = schemaContext.getAttributes("AttributeDefinition/" + supAttribute.get());
 				}
 			}
 		}
 
 		// Is it binary?
-		boolean isBinary=binarySet.contains(syntax);
-		
+		boolean isBinary = binarySet.contains(syntax);
+
 		// Use it to look up the required Java class
 		ClassInfo classInfo = syntaxToJavaClass.getClassInfo(syntax);
 
@@ -103,28 +109,29 @@ import java.util.Set;
 		String javaClassName = null;
 		boolean isPrimitive = false;
 		boolean isArray = false;
-		
-		if (classInfo!=null) {
-			javaClassName=classInfo.getClassName();
-			Class<?> javaClass=Class.forName(classInfo.getFullClassName());
-			javaClassName=javaClass.getSimpleName();
-			isPrimitive=javaClass.isPrimitive();
-			isArray=javaClass.isArray();
-		} else {
+
+		if (classInfo != null) {
+			javaClassName = classInfo.getClassName();
+			Class<?> javaClass = Class.forName(classInfo.getFullClassName());
+			javaClassName = javaClass.getSimpleName();
+			isPrimitive = javaClass.isPrimitive();
+			isArray = javaClass.isArray();
+		}
+		else {
 			if (isBinary) {
-				javaClassName="byte[]";
-				isPrimitive=false;
-				isArray=true;
-			} else {
-				javaClassName="String";
-				isPrimitive=false;
-				isArray=false;
+				javaClassName = "byte[]";
+				isPrimitive = false;
+				isArray = true;
+			}
+			else {
+				javaClassName = "String";
+				isPrimitive = false;
+				isArray = false;
 			}
 		}
-		
-		return new AttributeSchema(name, syntax, 
-				attributeSchema.get("SINGLE-VALUE") == null, 
-				isPrimitive, isBinary, isArray, javaClassName);
+
+		return new AttributeSchema(name, syntax, attributeSchema.get("SINGLE-VALUE") == null, isPrimitive, isBinary,
+				isArray, javaClassName);
 	}
 
 	// Recursively extract schema from the directory and process it
@@ -138,7 +145,7 @@ import java.util.Set;
 		for (String objectClass : objectClasses) {
 			// Add to set of included object classes
 			schema.addObjectClass(objectClass);
-			
+
 			// Grab the LDAP schema of the object class
 			Attributes attributes = schemaContext.getAttributes("ClassDefinition/" + objectClass);
 			NamingEnumeration<? extends Attribute> valuesEnumeration = attributes.getAll();
@@ -149,32 +156,32 @@ import java.util.Set;
 
 				// Get the attribute name and lower case it (as this is all case indep)
 				String currentId = currentAttribute.getID().toUpperCase();
-				
+
 				// Is this a MUST, MAY or SUP attribute
 				SchemaAttributeType type = getSchemaAttributeType(currentId);
 
 				// Loop through all the values
 				NamingEnumeration<?> currentValues = currentAttribute.getAll();
 				while (currentValues.hasMoreElements()) {
-					String currentValue = (String)currentValues.nextElement();
+					String currentValue = (String) currentValues.nextElement();
 					switch (type) {
-						case SUP:
-							// Its a super class
-							String lowerCased=currentValue.toLowerCase();
-							if (!schema.getObjectClass().contains(lowerCased)) {
-								supList.add(lowerCased);
-							}
-							break;
-						case MUST:
-							// Add must attribute
-							schema.addMust(createAttributeSchema(currentValue, schemaContext));
-							break;
-						case MAY:
-							// Add may attribute
-							schema.addMay(createAttributeSchema(currentValue, schemaContext));
-							break;
-						default:
-							// Nothing to do
+					case SUP:
+						// Its a super class
+						String lowerCased = currentValue.toLowerCase();
+						if (!schema.getObjectClass().contains(lowerCased)) {
+							supList.add(lowerCased);
+						}
+						break;
+					case MUST:
+						// Add must attribute
+						schema.addMust(createAttributeSchema(currentValue, schemaContext));
+						break;
+					case MAY:
+						// Add may attribute
+						schema.addMay(createAttributeSchema(currentValue, schemaContext));
+						break;
+					default:
+						// Nothing to do
 					}
 				}
 			}
@@ -183,4 +190,5 @@ import java.util.Set;
 			createObjectClass(supList, schemaContext, schema);
 		}
 	}
+
 }

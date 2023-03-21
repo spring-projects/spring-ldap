@@ -19,7 +19,7 @@ import org.springframework.ldap.filter.Filter;
 
 /**
  * Dummy class to test Filter property editor.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class DummyFilterConsumer {
@@ -33,4 +33,5 @@ public class DummyFilterConsumer {
 	public void setFilter(Filter filter) {
 		this.filter = filter;
 	}
+
 }

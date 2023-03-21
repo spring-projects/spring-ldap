@@ -20,5 +20,7 @@ package org.springframework.ldap.pool;
  * @author Mattias Hellborg Arthursson
  */
 public interface FailureAwareContext {
+
 	boolean hasFailed();
+
 }

@@ -33,14 +33,17 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Integration tests for {@link org.springframework.ldap.transaction.compensating.manager.ContextSourceAndHibernateTransactionManager}.
+ * Integration tests for
+ * {@link org.springframework.ldap.transaction.compensating.manager.ContextSourceAndHibernateTransactionManager}.
  *
  * @author Hans Westerbeek
  */
-@ContextConfiguration(locations = {"/conf/missingLdapAndHibernateTransactionTestContext.xml"})
-public class ContextSourceAndHibernateTransactionManagerLdap179IntegrationTest extends AbstractJUnit4SpringContextTests {
+@ContextConfiguration(locations = { "/conf/missingLdapAndHibernateTransactionTestContext.xml" })
+public class ContextSourceAndHibernateTransactionManagerLdap179IntegrationTest
+		extends AbstractJUnit4SpringContextTests {
 
-	private static Logger log = LoggerFactory.getLogger(ContextSourceAndHibernateTransactionManagerLdap179IntegrationTest.class);
+	private static Logger log = LoggerFactory
+			.getLogger(ContextSourceAndHibernateTransactionManagerLdap179IntegrationTest.class);
 
 	@Autowired
 	@Qualifier("dummyDao")
@@ -66,7 +69,8 @@ public class ContextSourceAndHibernateTransactionManagerLdap179IntegrationTest e
 
 		try {
 			this.dummyDao.create(person);
-		} catch (CannotCreateTransactionException expected) {
+		}
+		catch (CannotCreateTransactionException expected) {
 			assertThat(expected.getCause() instanceof CommunicationException).isTrue();
 		}
 
@@ -75,8 +79,10 @@ public class ContextSourceAndHibernateTransactionManagerLdap179IntegrationTest e
 
 		try {
 			this.dummyDao.create(person);
-		} catch (CannotCreateTransactionException expected) {
+		}
+		catch (CannotCreateTransactionException expected) {
 			assertThat(expected.getCause() instanceof CommunicationException).isTrue();
 		}
 	}
+
 }

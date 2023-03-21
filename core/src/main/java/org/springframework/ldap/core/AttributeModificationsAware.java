@@ -19,19 +19,19 @@ package org.springframework.ldap.core;
 import javax.naming.directory.ModificationItem;
 
 /**
- * Indicates that the implementing class is capable of keeping track of any
- * attribute modifications and return them as ModificationItems.
- * 
+ * Indicates that the implementing class is capable of keeping track of any attribute
+ * modifications and return them as ModificationItems.
+ *
  * @author Mattias Hellborg Arthursson
- * 
+ *
  */
 public interface AttributeModificationsAware {
 
 	/**
-	 * Creates an array of which attributes have been changed, added or removed
-	 * since the initialization of this object.
-	 * 
+	 * Creates an array of which attributes have been changed, added or removed since the
+	 * initialization of this object.
 	 * @return an array of modification items.
 	 */
 	ModificationItem[] getModificationItems();
+
 }

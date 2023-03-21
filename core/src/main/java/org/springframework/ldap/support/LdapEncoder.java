@@ -31,6 +31,7 @@ import org.springframework.util.Assert;
 public final class LdapEncoder {
 
 	private static final int HEX = 16;
+
 	private static String[] NAME_ESCAPE_TABLE = new String[96];
 
 	private static String[] FILTER_ESCAPE_TABLE = new String['\\' + 1];
@@ -84,16 +85,15 @@ public final class LdapEncoder {
 
 		if (raw.length() > 1) {
 			return raw;
-		} else {
+		}
+		else {
 			return "0" + raw;
 		}
 	}
 
 	/**
 	 * Escape a value for use in a filter.
-	 *
-	 * @param value
-	 *			the value to escape.
+	 * @param value the value to escape.
 	 * @return a properly escaped representation of the supplied value.
 	 */
 	public static String filterEncode(String value) {
@@ -112,7 +112,8 @@ public final class LdapEncoder {
 
 			if (c < FILTER_ESCAPE_TABLE.length) {
 				encodedValue.append(FILTER_ESCAPE_TABLE[c]);
-			} else {
+			}
+			else {
 				// default: add the char
 				encodedValue.append(c);
 			}
@@ -124,14 +125,19 @@ public final class LdapEncoder {
 	/**
 	 * LDAP Encodes a value for use with a DN. Escapes for LDAP, not JNDI!
 	 *
-	 * <br>Escapes:<br> ' ' [space] - "\ " [if first or last] <br> '#'
-	 * [hash] - "\#" <br> ',' [comma] - "\," <br> ';' [semicolon] - "\;" <br> '=
-	 * [equals] - "\=" <br> '+' [plus] - "\+" <br> '&lt;' [less than] -
-	 * "\&lt;" <br> '&gt;' [greater than] - "\&gt;" <br> '"' [double quote] -
-	 * "\"" <br> '\' [backslash] - "\\" <br>
-	 *
-	 * @param value
-	 *			the value to escape.
+	 * <br>
+	 * Escapes:<br>
+	 * ' ' [space] - "\ " [if first or last] <br>
+	 * '#' [hash] - "\#" <br>
+	 * ',' [comma] - "\," <br>
+	 * ';' [semicolon] - "\;" <br>
+	 * '= [equals] - "\=" <br>
+	 * '+' [plus] - "\+" <br>
+	 * '&lt;' [less than] - "\&lt;" <br>
+	 * '&gt;' [greater than] - "\&gt;" <br>
+	 * '"' [double quote] - "\"" <br>
+	 * '\' [backslash] - "\\" <br>
+	 * @param value the value to escape.
 	 * @return The escaped value.
 	 */
 	public static String nameEncode(String value) {
@@ -175,15 +181,12 @@ public final class LdapEncoder {
 
 	/**
 	 * Decodes a value. Converts escaped chars to ordinary chars.
-	 *
-	 * @param value
-	 *			Trimmed value, so no leading an trailing blanks, except an
-	 *			escaped space last.
+	 * @param value Trimmed value, so no leading an trailing blanks, except an escaped
+	 * space last.
 	 * @return The decoded value as a string.
 	 * @throws BadLdapGrammarException
 	 */
-	static public String nameDecode(String value)
-			throws BadLdapGrammarException {
+	static public String nameDecode(String value) throws BadLdapGrammarException {
 
 		if (value == null)
 			return null;
@@ -197,35 +200,32 @@ public final class LdapEncoder {
 			if (currentChar == '\\') {
 				if (value.length() <= i + 1) {
 					// Ending with a single backslash is not allowed
-					throw new BadLdapGrammarException(
-							"Unexpected end of value " + "unterminated '\\'");
-				} else {
+					throw new BadLdapGrammarException("Unexpected end of value " + "unterminated '\\'");
+				}
+				else {
 					char nextChar = value.charAt(i + 1);
-					if (nextChar == ',' || nextChar == '=' || nextChar == '+'
-							|| nextChar == '<' || nextChar == '>'
-							|| nextChar == '#' || nextChar == ';'
-							|| nextChar == '\\' || nextChar == '\"'
+					if (nextChar == ',' || nextChar == '=' || nextChar == '+' || nextChar == '<' || nextChar == '>'
+							|| nextChar == '#' || nextChar == ';' || nextChar == '\\' || nextChar == '\"'
 							|| nextChar == ' ') {
 						// Normal backslash escape
 						decoded.append(nextChar);
 						i += 2;
-					} else {
+					}
+					else {
 						if (value.length() <= i + 2) {
 							throw new BadLdapGrammarException(
-									"Unexpected end of value "
-											+ "expected special or hex, found '"
-											+ nextChar + "'");
-						} else {
+									"Unexpected end of value " + "expected special or hex, found '" + nextChar + "'");
+						}
+						else {
 							// This should be a hex value
-							String hexString = "" + nextChar
-									+ value.charAt(i + 2);
-							decoded.append((char) Integer.parseInt(hexString,
-									HEX));
+							String hexString = "" + nextChar + value.charAt(i + 2);
+							decoded.append((char) Integer.parseInt(hexString, HEX));
 							i += 3;
 						}
 					}
 				}
-			} else {
+			}
+			else {
 				// This character wasn't escaped - just append it
 				decoded.append(currentChar);
 				i++;
@@ -237,11 +237,11 @@ public final class LdapEncoder {
 	}
 
 	/**
-	 * Converts an array of bytes into a Base64 encoded string according to the rules for converting LDAP Attributes in RFC2849.
-	 *
+	 * Converts an array of bytes into a Base64 encoded string according to the rules for
+	 * converting LDAP Attributes in RFC2849.
 	 * @param val
-	 * @return
-	 *   A string containing a lexical representation of base64Binary wrapped around 76 characters.
+	 * @return A string containing a lexical representation of base64Binary wrapped around
+	 * 76 characters.
 	 * @throws IllegalArgumentException if <tt>val</tt> is null.
 	 */
 	public static String printBase64Binary(byte[] val) {
@@ -267,11 +267,10 @@ public final class LdapEncoder {
 
 	/**
 	 * Converts the Base64 encoded string argument into an array of bytes.
-	 *
 	 * @param val
-	 * @return
-	 *   An array of bytes represented by the string argument.
-	 * @throws IllegalArgumentException if <tt>val</tt> is null or does not conform to lexical value space defined in XML Schema Part 2: Datatypes for xsd:base64Binary.
+	 * @return An array of bytes represented by the string argument.
+	 * @throws IllegalArgumentException if <tt>val</tt> is null or does not conform to
+	 * lexical value space defined in XML Schema Part 2: Datatypes for xsd:base64Binary.
 	 */
 	public static byte[] parseBase64Binary(String val) {
 
@@ -283,8 +282,8 @@ public final class LdapEncoder {
 
 			char c = val.charAt(i);
 
-			if(c == '\n'){
-				if(i + 1 < len && val.charAt(i + 1) == ' ') {
+			if (c == '\n') {
+				if (i + 1 < len && val.charAt(i + 1) == ' ') {
 					i++;
 				}
 				continue;
@@ -303,4 +302,5 @@ public final class LdapEncoder {
 	private static byte[] decode(String encoded) {
 		return Base64.getDecoder().decode(encoded);
 	}
+
 }

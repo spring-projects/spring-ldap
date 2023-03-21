@@ -19,7 +19,7 @@ package org.springframework.ldap.control;
 /**
  * Wrapper class for the cookie returned when using the
  * {@link com.sun.jndi.ldap.ctl.VirtualListViewControl}.
- * 
+ *
  * @author Ulrik Sandberg
  */
 public class VirtualListViewResultsCookie {
@@ -32,9 +32,7 @@ public class VirtualListViewResultsCookie {
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param cookie
-	 *			the cookie returned by a VirtualListViewResponseControl.
+	 * @param cookie the cookie returned by a VirtualListViewResponseControl.
 	 * @param targetPosition TODO
 	 * @param contentCount TODO
 	 */
@@ -46,7 +44,6 @@ public class VirtualListViewResultsCookie {
 
 	/**
 	 * Get the cookie.
-	 * 
 	 * @return the cookie.
 	 */
 	public byte[] getCookie() {
@@ -60,4 +57,5 @@ public class VirtualListViewResultsCookie {
 	public int getTargetPosition() {
 		return targetPosition;
 	}
+
 }

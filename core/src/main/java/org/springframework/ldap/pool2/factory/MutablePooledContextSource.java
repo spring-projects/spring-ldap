@@ -26,18 +26,17 @@ import javax.naming.ldap.LdapContext;
 
 /**
  * A {@link PooledContextSource} subclass that creates
- * {@link MutableDelegatingLdapContext} instances. This enables the Spring LDAP
- * pooling to be used in scenarios that require request controls to be set, such
- * as paged results.
+ * {@link MutableDelegatingLdapContext} instances. This enables the Spring LDAP pooling to
+ * be used in scenarios that require request controls to be set, such as paged results.
  *
  * @since 2.0
  * @author Anindya Chatterjee
  */
 public class MutablePooledContextSource extends PooledContextSource {
+
 	/**
-	 * Creates a new pooling context source, setting up the DirContext object
-	 * factory and generic keyed object pool.
-	 *
+	 * Creates a new pooling context source, setting up the DirContext object factory and
+	 * generic keyed object pool.
 	 * @param poolConfig pool configurations to set.
 	 */
 	public MutablePooledContextSource(PoolConfig poolConfig) {
@@ -59,4 +58,5 @@ public class MutablePooledContextSource extends PooledContextSource {
 
 		return new DelegatingDirContext(this.keyedObjectPool, dirContext, dirContextType);
 	}
+
 }

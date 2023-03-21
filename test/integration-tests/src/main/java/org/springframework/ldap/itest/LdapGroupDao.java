@@ -22,11 +22,10 @@ import org.springframework.ldap.core.support.BaseLdapPathAware;
 import javax.naming.Name;
 
 /**
- *
  * @author Mattias Hellborg Arthursson
  */
-public class LdapGroupDao implements BaseLdapPathAware
-{
+public class LdapGroupDao implements BaseLdapPathAware {
+
 	private Name basePath;
 
 	public LdapGroupDao() {
@@ -40,4 +39,5 @@ public class LdapGroupDao implements BaseLdapPathAware
 	public Name getBasePath() {
 		return basePath;
 	}
+
 }

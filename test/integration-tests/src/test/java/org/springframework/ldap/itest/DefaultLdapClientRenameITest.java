@@ -37,10 +37,10 @@ import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Tests {@link LdapClient}'s rename methods.
- * 
+ *
  * @author Josh Cummings
  */
-@ContextConfiguration(locations = {"/conf/ldapClientTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapClientTestContext.xml" })
 public class DefaultLdapClientRenameITest extends AbstractLdapTemplateIntegrationTest {
 
 	@Autowired
@@ -99,4 +99,5 @@ public class DefaultLdapClientRenameITest extends AbstractLdapTemplateIntegratio
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person6");
 		assertThat(result.getStringAttribute("description")).isEqualTo("Some description");
 	}
+
 }

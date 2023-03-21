@@ -24,6 +24,7 @@ import javax.naming.ldap.LdapName;
  * @author Mattias Hellborg Arthursson
  */
 public class DummyBaseLdapNameAware implements BaseLdapNameAware {
+
 	private LdapName baseLdapPath;
 
 	@Override
@@ -34,4 +35,5 @@ public class DummyBaseLdapNameAware implements BaseLdapNameAware {
 	public LdapName getBaseLdapPath() {
 		return baseLdapPath;
 	}
+
 }

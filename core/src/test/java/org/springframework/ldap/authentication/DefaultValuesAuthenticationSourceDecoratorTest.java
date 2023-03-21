@@ -86,7 +86,8 @@ public class DefaultValuesAuthenticationSourceDecoratorTest {
 		try {
 			tested.afterPropertiesSet();
 			fail("IllegalArgumentException expected");
-		} catch (IllegalArgumentException expected) {
+		}
+		catch (IllegalArgumentException expected) {
 			assertThat(true).isTrue();
 		}
 	}
@@ -97,7 +98,8 @@ public class DefaultValuesAuthenticationSourceDecoratorTest {
 		try {
 			tested.afterPropertiesSet();
 			fail("IllegalArgumentException expected");
-		} catch (IllegalArgumentException expected) {
+		}
+		catch (IllegalArgumentException expected) {
 			assertThat(true).isTrue();
 		}
 	}
@@ -108,8 +110,10 @@ public class DefaultValuesAuthenticationSourceDecoratorTest {
 		try {
 			tested.afterPropertiesSet();
 			fail("IllegalArgumentException expected");
-		} catch (IllegalArgumentException expected) {
+		}
+		catch (IllegalArgumentException expected) {
 			assertThat(true).isTrue();
 		}
 	}
+
 }

@@ -24,26 +24,29 @@ import javax.naming.directory.Attributes;
 import java.util.Arrays;
 
 /**
- * Dummy AttributesMapper for testing purposes to check that the received
- * Attributes are the expected ones.
- * 
+ * Dummy AttributesMapper for testing purposes to check that the received Attributes are
+ * the expected ones.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class AttributeCheckAttributesMapper implements AttributesMapper<Object> {
+
 	private String[] expectedAttributes = new String[0];
 
-	private String[] expectedValues = new String[0];;
+	private String[] expectedValues = new String[0];
 
-	private String[] absentAttributes = new String[0];;
+	;
 
-	public Object mapFromAttributes(Attributes attributes)
-			throws NamingException {
-		Assert.assertEquals("Values and attributes need to have the same length ",
-				expectedAttributes.length, expectedValues.length);
+	private String[] absentAttributes = new String[0];
+
+	;
+
+	public Object mapFromAttributes(Attributes attributes) throws NamingException {
+		Assert.assertEquals("Values and attributes need to have the same length ", expectedAttributes.length,
+				expectedValues.length);
 		for (int i = 0; i < expectedAttributes.length; i++) {
 			Attribute attribute = attributes.get(expectedAttributes[i]);
-			Assert.assertNotNull("Attribute " + expectedAttributes[i]
-					+ " was not present", attribute);
+			Assert.assertNotNull("Attribute " + expectedAttributes[i] + " was not present", attribute);
 			Assert.assertEquals(expectedValues[i], attribute.get());
 		}
 
@@ -65,4 +68,5 @@ public class AttributeCheckAttributesMapper implements AttributesMapper<Object> 
 	public void setExpectedValues(String[] expectedValues) {
 		this.expectedValues = Arrays.copyOf(expectedValues, expectedValues.length);
 	}
+
 }

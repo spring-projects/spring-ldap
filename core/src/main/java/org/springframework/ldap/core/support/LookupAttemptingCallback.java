@@ -26,19 +26,21 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
 /**
- * Attempts to perform an LDAP operation in the authenticated context, because
- * Active Directory might allow bind with incorrect password (specifically empty
- * password), and later refuse operations. We want to fail fast when
- * authenticating. {@link #mapWithContext(javax.naming.directory.DirContext, org.springframework.ldap.core.LdapEntryIdentification)}
- * returns the {@link DirContextOperations} instance that results from the lookup operation. This instance
- * can be used to obtain information regarding the authenticated user.
- * 
+ * Attempts to perform an LDAP operation in the authenticated context, because Active
+ * Directory might allow bind with incorrect password (specifically empty password), and
+ * later refuse operations. We want to fail fast when authenticating.
+ * {@link #mapWithContext(javax.naming.directory.DirContext, org.springframework.ldap.core.LdapEntryIdentification)}
+ * returns the {@link DirContextOperations} instance that results from the lookup
+ * operation. This instance can be used to obtain information regarding the authenticated
+ * user.
+ *
  * @author Hugo Josefson
  * @author Mattias Hellborg Arthursson
  * @since 1.3.1
  */
-public class LookupAttemptingCallback implements
-		AuthenticatedLdapEntryContextCallback, AuthenticatedLdapEntryContextMapper<DirContextOperations> {
+public class LookupAttemptingCallback
+		implements AuthenticatedLdapEntryContextCallback, AuthenticatedLdapEntryContextMapper<DirContextOperations> {
+
 	@Override
 	public void executeWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
 		mapWithContext(ctx, ldapEntryIdentification);
@@ -54,4 +56,5 @@ public class LookupAttemptingCallback implements
 			throw LdapUtils.convertLdapException(e);
 		}
 	}
+
 }

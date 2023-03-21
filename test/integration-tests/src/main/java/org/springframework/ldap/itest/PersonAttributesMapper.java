@@ -21,22 +21,20 @@ import javax.naming.directory.Attributes;
 
 import org.springframework.ldap.core.AttributesMapper;
 
-
 /**
  * Dummy implementation of AttributesMapper for use in integration tests.
- * 
+ *
  * @author Mattias Hellborg Arthursson
- * 
+ *
  */
 public class PersonAttributesMapper implements AttributesMapper<Person> {
 
 	/**
 	 * Maps the given attributes into a {@link Person} object.
-	 * 
+	 *
 	 * @see org.springframework.ldap.core.AttributesMapper#mapFromAttributes(javax.naming.directory.Attributes)
 	 */
-	public Person mapFromAttributes(Attributes attributes)
-			throws NamingException {
+	public Person mapFromAttributes(Attributes attributes) throws NamingException {
 		Person person = new Person();
 		person.setFullname((String) attributes.get("cn").get());
 		person.setLastname((String) attributes.get("sn").get());
@@ -44,4 +42,5 @@ public class PersonAttributesMapper implements AttributesMapper<Person> {
 		person.setDescription((String) attributes.get("description").get());
 		return person;
 	}
+
 }

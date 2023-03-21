@@ -26,11 +26,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Mattias Hellborg Arthursson
  */
 public class LdapConditionallyFilteredTestRunner extends SpringJUnit4ClassRunner {
+
 	/**
 	 * Constructs a new {@code SpringJUnit4ClassRunner} and initializes a
-	 * {@link org.springframework.test.context.TestContextManager} to provide Spring testing functionality to
-	 * standard JUnit tests.
-	 *
+	 * {@link org.springframework.test.context.TestContextManager} to provide Spring
+	 * testing functionality to standard JUnit tests.
 	 * @param clazz the test class to be run
 	 * @see #createTestContextManager(Class)
 	 */
@@ -41,9 +41,11 @@ public class LdapConditionallyFilteredTestRunner extends SpringJUnit4ClassRunner
 		if (noadtest != null) {
 			try {
 				filter(Categories.CategoryFilter.exclude(NoAdTest.class));
-			} catch (NoTestsRemainException e) {
+			}
+			catch (NoTestsRemainException e) {
 				// Nothing to do here.
 			}
 		}
 	}
+
 }

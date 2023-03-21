@@ -15,11 +15,12 @@ import org.springframework.ldap.odm.annotations.Transient;
  */
 @Entry(objectClasses = { "inetOrgPerson", "organizationalPerson", "person", "top" })
 public class PersonWithDnAnnotations {
+
 	@Id
 	private Name dn;
 
 	@Attribute(name = "cn")
-	@DnAttribute(value="cn", index=2)
+	@DnAttribute(value = "cn", index = 2)
 	private String commonName;
 
 	@Attribute(name = "sn")
@@ -34,11 +35,11 @@ public class PersonWithDnAnnotations {
 	@Attribute(name = "telephoneNumber")
 	private String telephoneNumber;
 
-	@DnAttribute(value="ou", index=1)
+	@DnAttribute(value = "ou", index = 1)
 	@Transient
 	private String company;
 
-	@DnAttribute(value="ou", index=0)
+	@DnAttribute(value = "ou", index = 0)
 	@Transient
 	private String country;
 
@@ -113,4 +114,5 @@ public class PersonWithDnAnnotations {
 	public String getEntryUuid() {
 		return entryUuid;
 	}
+
 }

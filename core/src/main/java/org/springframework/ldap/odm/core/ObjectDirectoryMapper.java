@@ -22,9 +22,11 @@ import org.springframework.LdapDataEntry;
 import org.springframework.ldap.filter.Filter;
 
 /**
- * The ObjectDirectoryMapper keeps track of managed class metadata and is used by {@link org.springframework.ldap.core.LdapTemplate}
- * to map to/from entity objects annotated with the annotations specified in the {@link org.springframework.ldap.odm.annotations}
- * package. Instances of this class are typically intended for internal use only.
+ * The ObjectDirectoryMapper keeps track of managed class metadata and is used by
+ * {@link org.springframework.ldap.core.LdapTemplate} to map to/from entity objects
+ * annotated with the annotations specified in the
+ * {@link org.springframework.ldap.odm.annotations} package. Instances of this class are
+ * typically intended for internal use only.
  *
  * @author Mattias Hellborg Arthursson
  * @since 2.0
@@ -32,9 +34,8 @@ import org.springframework.ldap.filter.Filter;
 public interface ObjectDirectoryMapper {
 
 	/**
-	 * Used to convert from Java representation of an Ldap Entry when writing to
-	 * the Ldap directory
-	 *
+	 * Used to convert from Java representation of an Ldap Entry when writing to the Ldap
+	 * directory
 	 * @param entry - The entry to convert.
 	 * @param context - The LDAP context to store the converted entry
 	 * @throws org.springframework.ldap.NamingException on error.
@@ -42,14 +43,14 @@ public interface ObjectDirectoryMapper {
 	void mapToLdapDataEntry(Object entry, LdapDataEntry context);
 
 	/**
-	 * Used to convert from the JNDI LDAP representation of an Entry to the Java representation when reading from LDAP.
+	 * Used to convert from the JNDI LDAP representation of an Entry to the Java
+	 * representation when reading from LDAP.
 	 * @throws org.springframework.ldap.NamingException on error.
 	 */
 	<T> T mapFromLdapDataEntry(LdapDataEntry ctx, Class<T> clazz);
 
 	/**
 	 * Get the distinguished name for the specified object.
-	 *
 	 * @param entry the entry to get distinguished name for.
 	 * @return the distinguished name of the entry.
 	 * @throws org.springframework.ldap.NamingException on error.
@@ -58,7 +59,6 @@ public interface ObjectDirectoryMapper {
 
 	/**
 	 * Set the distinguished name for the specified object.
-	 *
 	 * @param entry the entry to set the name on
 	 * @param id the name to set
 	 * @throws org.springframework.ldap.NamingException on error.
@@ -68,12 +68,13 @@ public interface ObjectDirectoryMapper {
 	Name getCalculatedId(Object entry);
 
 	/**
-	 * Use the specified search filter and return a new one that only applies to entries of the specified class.
-	 * In effect this means padding the original filter with an objectclass condition.
-	 *
+	 * Use the specified search filter and return a new one that only applies to entries
+	 * of the specified class. In effect this means padding the original filter with an
+	 * objectclass condition.
 	 * @param clazz the class.
 	 * @param baseFilter the filter we want to use.
-	 * @return the original filter, modified so that it only applies to entries of the specified class.
+	 * @return the original filter, modified so that it only applies to entries of the
+	 * specified class.
 	 * @throws org.springframework.ldap.NamingException on error.
 	 */
 	Filter filterFor(Class<?> clazz, Filter baseFilter);
@@ -88,11 +89,14 @@ public interface ObjectDirectoryMapper {
 	 */
 	String attributeFor(Class<?> clazz, String fieldName);
 
-	/** Check if the specified class is already managed by this instance; if not, check the metadata and add the class to the managed
-	 * classes.
-	 *
+	/**
+	 * Check if the specified class is already managed by this instance; if not, check the
+	 * metadata and add the class to the managed classes.
 	 * @param clazz the class to manage.
-	 * @return all relevant attribute names used in the given class (either for reading from LDAP or for writing to LDAP or both)
-	 * @throws org.springframework.ldap.NamingException on error. */
+	 * @return all relevant attribute names used in the given class (either for reading
+	 * from LDAP or for writing to LDAP or both)
+	 * @throws org.springframework.ldap.NamingException on error.
+	 */
 	String[] manageClass(Class<?> clazz);
+
 }

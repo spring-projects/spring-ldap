@@ -28,20 +28,21 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests the ContextMapper search method. In its way this method also
- * demonstrates the use of DirContextAdapter and the DirObjectFactory.
- * 
+ * Tests the ContextMapper search method. In its way this method also demonstrates the use
+ * of DirContextAdapter and the DirObjectFactory.
+ *
  * @author Mattias Hellborg Arthursson
  */
-@ContextConfiguration(locations = {"/conf/ldapTemplateTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
 public class LdapTemplateContextMapperITest extends AbstractLdapTemplateIntegrationTest {
-	
+
 	@Autowired
 	private LdapTemplate tested;
 
 	/**
-	 * This method depends on a DirObjectFactory ({@link org.springframework.ldap.core.support.DefaultDirObjectFactory})
-	 * being set in the ContextSource.
+	 * This method depends on a DirObjectFactory
+	 * ({@link org.springframework.ldap.core.support.DefaultDirObjectFactory}) being set
+	 * in the ContextSource.
 	 */
 	@Test
 	public void testSearch_ContextMapper() {
@@ -57,7 +58,7 @@ public class LdapTemplateContextMapperITest extends AbstractLdapTemplateIntegrat
 
 	/**
 	 * Demonstrates how to retrieve all values of a multi-value attribute.
-	 * 
+	 *
 	 * @see LdapTemplateAttributesMapperITest#testSearch_AttributesMapper_MultiValue()
 	 */
 	@Test
@@ -74,4 +75,5 @@ public class LdapTemplateContextMapperITest extends AbstractLdapTemplateIntegrat
 		assertThat(result).hasSize(1);
 		assertThat(((String[]) result.get(0)).length).isEqualTo(4);
 	}
+
 }

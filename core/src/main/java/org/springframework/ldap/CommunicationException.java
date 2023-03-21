@@ -18,7 +18,7 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI CommunicationException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.CommunicationException
@@ -28,4 +28,5 @@ public class CommunicationException extends NamingException {
 	public CommunicationException(javax.naming.CommunicationException cause) {
 		super(cause);
 	}
+
 }

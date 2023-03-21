@@ -57,19 +57,16 @@ public class PagedResultsDirContextProcessorTest {
 
 	@Test
 	public void testCreateRequestControl() throws Exception {
-		PagedResultsControl control = (PagedResultsControl) tested
-				.createRequestControl();
+		PagedResultsControl control = (PagedResultsControl) tested.createRequestControl();
 		assertThat(control).isNotNull();
 	}
 
 	@Test
 	public void testCreateRequestControl_CookieSet() throws Exception {
 		PagedResultsCookie cookie = new PagedResultsCookie(new byte[0]);
-		PagedResultsDirContextProcessor tested = new PagedResultsDirContextProcessor(20,
-				cookie);
+		PagedResultsDirContextProcessor tested = new PagedResultsDirContextProcessor(20, cookie);
 
-		PagedResultsControl control = (PagedResultsControl) tested
-				.createRequestControl();
+		PagedResultsControl control = (PagedResultsControl) tested.createRequestControl();
 		assertThat(control).isNotNull();
 	}
 
@@ -81,14 +78,13 @@ public class PagedResultsDirContextProcessorTest {
 		byte[] value = new byte[1];
 		value[0] = pageSize;
 		byte[] cookie = encodeValue(resultSize, value);
-		PagedResultsResponseControl control = new PagedResultsResponseControl(
-				"dummy", true, cookie);
+		PagedResultsResponseControl control = new PagedResultsResponseControl("dummy", true, cookie);
 
 		when(ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
 		tested.postProcess(ldapContextMock);
 
 		PagedResultsCookie returnedCookie = tested.getCookie();
-		assertThat(returnedCookie.getCookie()[0]).isEqualTo((byte)8);
+		assertThat(returnedCookie.getCookie()[0]).isEqualTo((byte) 8);
 		assertThat(tested.getPageSize()).isEqualTo(20);
 		assertThat(tested.getResultSize()).isEqualTo(50);
 	}
@@ -103,11 +99,9 @@ public class PagedResultsDirContextProcessorTest {
 		byte[] cookie = encodeDirSyncValue(resultSize, value);
 
 		// Using another response control to verify that it is ignored
-		DirSyncResponseControl control = new DirSyncResponseControl(
-				"dummy", true, cookie);
+		DirSyncResponseControl control = new DirSyncResponseControl("dummy", true, cookie);
 
-
-		when(ldapContextMock.getResponseControls()).thenReturn(new Control[]{control});
+		when(ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
 		tested.postProcess(ldapContextMock);
 
 		assertThat(tested.getCookie()).isNull();
@@ -146,8 +140,7 @@ public class PagedResultsDirContextProcessorTest {
 		}
 	}
 
-	private byte[] encodeValue(int pageSize, byte[] cookie)
-			throws IOException {
+	private byte[] encodeValue(int pageSize, byte[] cookie) throws IOException {
 
 		// build the ASN.1 encoding
 		BerEncoder ber = new BerEncoder(10 + cookie.length);
@@ -163,8 +156,7 @@ public class PagedResultsDirContextProcessorTest {
 	/**
 	 * Encode a value suitable for the DirSyncResponseControl used in a test.
 	 */
-	private byte[] encodeDirSyncValue(int pageSize, byte[] cookie)
-			throws IOException {
+	private byte[] encodeDirSyncValue(int pageSize, byte[] cookie) throws IOException {
 
 		// build the ASN.1 encoding
 		BerEncoder ber = new BerEncoder(10 + cookie.length);
@@ -177,4 +169,5 @@ public class PagedResultsDirContextProcessorTest {
 
 		return ber.getTrimmedBuf();
 	}
+
 }

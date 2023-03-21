@@ -33,13 +33,13 @@ import javax.naming.ldap.LdapName;
 import static junit.framework.Assert.fail;
 
 /**
- * Tests the recursive modification methods (unbind and the protected delete
- * methods) of LdapTemplate.
- * 
+ * Tests the recursive modification methods (unbind and the protected delete methods) of
+ * LdapTemplate.
+ *
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  */
-@ContextConfiguration(locations = {"/conf/ldapTemplateTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
 public class LdapTemplateRecursiveDeleteITest extends AbstractLdapTemplateIntegrationTest {
 
 	@Autowired
@@ -129,4 +129,5 @@ public class LdapTemplateRecursiveDeleteITest extends AbstractLdapTemplateIntegr
 			// expected
 		}
 	}
+
 }

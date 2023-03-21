@@ -19,9 +19,8 @@ import javax.naming.ldap.PagedResultsControl;
 import java.util.Arrays;
 
 /**
- * Wrapper class for the cookie returned when using the
- * {@link PagedResultsControl}.
- * 
+ * Wrapper class for the cookie returned when using the {@link PagedResultsControl}.
+ *
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  */
@@ -31,40 +30,42 @@ public class PagedResultsCookie {
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param cookie
-	 *			the cookie returned by a PagedResultsResponseControl.
+	 * @param cookie the cookie returned by a PagedResultsResponseControl.
 	 */
 	public PagedResultsCookie(byte[] cookie) {
 		if (cookie != null) {
 			this.cookie = Arrays.copyOf(cookie, cookie.length);
-		} else {
+		}
+		else {
 			this.cookie = null;
 		}
 	}
 
 	/**
 	 * Get the cookie.
-	 * 
-	 * @return the cookie. This value may be <code>null</code>, indicating that there are no more requests,
-	 * or that the control wasn't supported by the server.
+	 * @return the cookie. This value may be <code>null</code>, indicating that there are
+	 * no more requests, or that the control wasn't supported by the server.
 	 */
 	public byte[] getCookie() {
 		if (cookie != null) {
 			return Arrays.copyOf(cookie, cookie.length);
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 
 		PagedResultsCookie that = (PagedResultsCookie) o;
 
-		if (!Arrays.equals(cookie, that.cookie)) return false;
+		if (!Arrays.equals(cookie, that.cookie))
+			return false;
 
 		return true;
 	}
@@ -73,4 +74,5 @@ public class PagedResultsCookie {
 	public int hashCode() {
 		return cookie != null ? Arrays.hashCode(cookie) : 0;
 	}
+
 }

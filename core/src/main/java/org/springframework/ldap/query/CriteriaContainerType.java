@@ -25,12 +25,14 @@ import org.springframework.ldap.filter.OrFilter;
  * @since 2.0
  */
 enum CriteriaContainerType {
+
 	AND {
 		@Override
 		public BinaryLogicalFilter constructFilter() {
 			return new AndFilter();
 		}
-	}, OR {
+	},
+	OR {
 		@Override
 		public BinaryLogicalFilter constructFilter() {
 			return new OrFilter();
@@ -41,11 +43,11 @@ enum CriteriaContainerType {
 		if (oldType != null && oldType != this) {
 			throw new IllegalStateException(
 					String.format("Container type has already been specified as %s, cannot change it to %s",
-							oldType.toString(),
-							this.toString()));
+							oldType.toString(), this.toString()));
 		}
 
 	}
 
 	public abstract BinaryLogicalFilter constructFilter();
+
 }

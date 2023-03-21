@@ -18,15 +18,15 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI OperationNotSupportedException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.OperationNotSupportedException
  */
 public class OperationNotSupportedException extends NamingException {
 
-	public OperationNotSupportedException(
-			javax.naming.OperationNotSupportedException cause) {
+	public OperationNotSupportedException(javax.naming.OperationNotSupportedException cause) {
 		super(cause);
 	}
+
 }

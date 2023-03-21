@@ -27,18 +27,17 @@ import javax.naming.directory.SearchResult;
 /**
  * An interface used by LdapTemplate to map LDAP Contexts to beans. When a
  * DirObjectFactory is set on the ContextSource, the objects returned from
- * <code>search</code> and <code>listBindings</code> operations are
- * automatically transformed to DirContext objects (when using the
- * {@link DefaultDirObjectFactory} - which is typically the case, unless
- * something else has been explicitly specified - you get a
- * {@link DirContextAdapter} object). This object will then be passed to the
+ * <code>search</code> and <code>listBindings</code> operations are automatically
+ * transformed to DirContext objects (when using the {@link DefaultDirObjectFactory} -
+ * which is typically the case, unless something else has been explicitly specified - you
+ * get a {@link DirContextAdapter} object). This object will then be passed to the
  * ContextMapper implementation for transformation to the desired bean.
  * <p>
- * ContextMapper implementations are typically stateless and thus reusable; they
- * are ideal for implementing mapping logic in one place.
+ * ContextMapper implementations are typically stateless and thus reusable; they are ideal
+ * for implementing mapping logic in one place.
  * <p>
  * Alternatively, consider using an {@link AttributesMapper} in stead.
- * 
+ *
  * @see LdapTemplate#search(Name, String, ContextMapper)
  * @see LdapTemplate#listBindings(Name, ContextMapper)
  * @see LdapTemplate#lookup(Name, ContextMapper)
@@ -46,22 +45,19 @@ import javax.naming.directory.SearchResult;
  * @see DefaultDirObjectFactory
  * @see DirContextAdapter
  * @see AbstractContextMapper
- * 
  * @author Mattias Hellborg Arthursson
  */
 public interface ContextMapper<T> {
+
 	/**
-	 * Map a single LDAP Context to an object. The supplied Object
-	 * <code>ctx</code> is the object from a single {@link SearchResult},
-	 * {@link Binding}, or a lookup operation.
-	 * 
-	 * @param ctx
-	 *			the context to map to an object. Typically this will be a
-	 *			{@link DirContextAdapter} instance, unless a project specific
-	 *			<code>DirObjectFactory</code> has been specified on the
-	 *			<code>ContextSource</code>.
+	 * Map a single LDAP Context to an object. The supplied Object <code>ctx</code> is the
+	 * object from a single {@link SearchResult}, {@link Binding}, or a lookup operation.
+	 * @param ctx the context to map to an object. Typically this will be a
+	 * {@link DirContextAdapter} instance, unless a project specific
+	 * <code>DirObjectFactory</code> has been specified on the <code>ContextSource</code>.
 	 * @return an object built from the data in the context.
 	 * @throws NamingException if an error occurs.
 	 */
 	T mapFromContext(Object ctx) throws NamingException;
+
 }

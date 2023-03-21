@@ -23,21 +23,20 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchResult;
 
 /**
- * A CollectingNameClassPairCallbackHandler to wrap an {@link AttributesMapper}.
- * That is, the found object is extracted from the {@link Attributes} of each
- * {@link SearchResult}, and then passed to the specified
- * {@link AttributesMapper} for translation.
- * 
+ * A CollectingNameClassPairCallbackHandler to wrap an {@link AttributesMapper}. That is,
+ * the found object is extracted from the {@link Attributes} of each {@link SearchResult},
+ * and then passed to the specified {@link AttributesMapper} for translation.
+ *
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  * @since 1.2
  */
 public class AttributesMapperCallbackHandler<T> extends CollectingNameClassPairCallbackHandler<T> {
+
 	private AttributesMapper<T> mapper;
 
 	/**
 	 * Constructs a new instance around the specified {@link AttributesMapper}.
-	 * 
 	 * @param mapper the target mapper.
 	 */
 	public AttributesMapperCallbackHandler(AttributesMapper<T> mapper) {
@@ -47,7 +46,6 @@ public class AttributesMapperCallbackHandler<T> extends CollectingNameClassPairC
 	/**
 	 * Cast the NameClassPair to a SearchResult and pass its attributes to the
 	 * {@link AttributesMapper}.
-	 * 
 	 * @param nameClassPair a <code> SearchResult</code> instance.
 	 * @return the Object returned from the mapper.
 	 */
@@ -65,4 +63,5 @@ public class AttributesMapperCallbackHandler<T> extends CollectingNameClassPairC
 			throw LdapUtils.convertLdapException(e);
 		}
 	}
+
 }

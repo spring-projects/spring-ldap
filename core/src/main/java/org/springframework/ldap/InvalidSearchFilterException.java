@@ -18,15 +18,15 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI InvalidSearchFilterException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.directory.InvalidSearchFilterException
  */
 public class InvalidSearchFilterException extends NamingException {
 
-	public InvalidSearchFilterException(
-			javax.naming.directory.InvalidSearchFilterException cause) {
+	public InvalidSearchFilterException(javax.naming.directory.InvalidSearchFilterException cause) {
 		super(cause);
 	}
+
 }

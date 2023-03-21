@@ -18,12 +18,13 @@ package org.springframework.ldap.itest.core;
 import org.springframework.ldap.core.DistinguishedName;
 
 /**
- * Dummy implementation of a class that has a {@link DistinguishedName} setter,
- * used for testing purposes.
- * 
+ * Dummy implementation of a class that has a {@link DistinguishedName} setter, used for
+ * testing purposes.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class DummyDistinguishedNameConsumer {
+
 	private DistinguishedName distinguishedName;
 
 	public DistinguishedName getDistinguishedName() {
@@ -33,4 +34,5 @@ public class DummyDistinguishedNameConsumer {
 	public void setDistinguishedName(DistinguishedName distinguishedName) {
 		this.distinguishedName = distinguishedName;
 	}
+
 }

@@ -29,10 +29,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for LdapTemplate's context executor methods.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
-@ContextConfiguration(locations = {"/conf/ldapTemplateTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
 public class LdapTemplateContextExecutorTest extends AbstractLdapTemplateIntegrationTest {
 
 	@Autowired
@@ -49,4 +49,5 @@ public class LdapTemplateContextExecutorTest extends AbstractLdapTemplateIntegra
 		Object object = tested.executeReadOnly(executor);
 		assertThat(object instanceof DirContextAdapter).as("Should be a DirContextAdapter").isTrue();
 	}
+
 }

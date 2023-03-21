@@ -24,7 +24,7 @@ import javax.naming.NamingException;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class AggregateDirContextProcessorTest  {
+public class AggregateDirContextProcessorTest {
 
 	private DirContextProcessor processor1Mock;
 
@@ -49,7 +49,7 @@ public class AggregateDirContextProcessorTest  {
 	@Test
 	public void testPreProcess() throws NamingException {
 		tested.preProcess(null);
-		
+
 		verify(processor1Mock).preProcess(null);
 		verify(processor2Mock).preProcess(null);
 	}

@@ -25,6 +25,7 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 
 public class TestsWithJdepend {
+
 	private JDepend jdepend;
 
 	@Before
@@ -32,7 +33,7 @@ public class TestsWithJdepend {
 		jdepend = new JDepend();
 		jdepend.addDirectory("build/classes/java/main");
 	}
-	
+
 	@Test
 	public void testAllPackages() {
 		jdepend.analyze();

@@ -43,38 +43,30 @@ import org.springframework.ldap.query.LdapQueryBuilder;
 public interface LdapClient {
 
 	/**
-	 * Start building a request for all children of the
-	 * given {@code name}.
-	 *
+	 * Start building a request for all children of the given {@code name}.
 	 * @param name the distinguished name to find children for
 	 * @return a spec for specifying the list parameters
 	 */
 	ListSpec list(String name);
 
 	/**
-	 * Start building a request for all children of the
-	 * given {@code name}.
-	 *
+	 * Start building a request for all children of the given {@code name}.
 	 * @param name the distinguished name to find children for
 	 * @return a spec for specifying the list parameters
 	 */
 	ListSpec list(Name name);
 
 	/**
-	 * Start building a request for all children of the
-	 * given {@code name}. The result will include the object bound to
-	 * the name.
-	 *
+	 * Start building a request for all children of the given {@code name}. The result
+	 * will include the object bound to the name.
 	 * @param name the distinguished name to find children for
 	 * @return a spec for specifying the list parameters
 	 */
 	ListBindingsSpec listBindings(String name);
 
 	/**
-	 * Start building a request for all children of the
-	 * given {@code name}. The result will include the object bound to
-	 * the name.
-	 *
+	 * Start building a request for all children of the given {@code name}. The result
+	 * will include the object bound to the name.
 	 * @param name the distinguished name to find children for
 	 * @return a spec for specifying the list parameters
 	 */
@@ -82,67 +74,62 @@ public interface LdapClient {
 
 	/**
 	 * Start building a search request.
-	 *
 	 * @return a spec for specifying the search parameters
 	 */
 	SearchSpec search();
 
 	/**
 	 * Start building an authentication request.
-	 *
 	 * @return a spec for specifying the authentication parameters
 	 */
 	AuthenticateSpec authenticate();
 
 	/**
-	 * Start building a bind request, using the given {@code name}
-	 * as the identifier.
-	 *
+	 * Start building a bind request, using the given {@code name} as the identifier.
 	 * @return a spec for specifying the bind parameters
 	 */
 	BindSpec bind(String name);
 
 	/**
-	 * Start building a bind or rebind request, using the given {@code name}
-	 * as the identifier.
-	 *
+	 * Start building a bind or rebind request, using the given {@code name} as the
+	 * identifier.
 	 * @return a spec for specifying the bind parameters
 	 */
 	BindSpec bind(Name name);
 
 	/**
-	 * Start building a request to modify name or attributes of an entry, using the given {@code name}
-	 * as the identifier.
+	 * Start building a request to modify name or attributes of an entry, using the given
+	 * {@code name} as the identifier.
 	 *
 	 * <p>
-	 * Note that a {@link #modify(Name)} is different from a rebind in that
-	 * entries are changed instead of removed and recreated.
+	 * Note that a {@link #modify(Name)} is different from a rebind in that entries are
+	 * changed instead of removed and recreated.
 	 *
 	 * <p>
-	 * A change in name uses LDAP's {@link DirContext#rename} function.
-	 * A change in attributes uses LDAP's {@link DirContext#modifyAttributes} function.
-	 * The {@code rename} action is optimistically performed before the {@code modify} function.
-	 * A rollback of the name is attempted in the event that attribute modification fails.
-	 *
+	 * A change in name uses LDAP's {@link DirContext#rename} function. A change in
+	 * attributes uses LDAP's {@link DirContext#modifyAttributes} function. The
+	 * {@code rename} action is optimistically performed before the {@code modify}
+	 * function. A rollback of the name is attempted in the event that attribute
+	 * modification fails.
 	 * @param name the name of the entry to modify
 	 * @return a spec for specifying the modify parameters
 	 */
 	ModifySpec modify(String name);
 
 	/**
-	 * Start building a request to modify name or attributes of an entry, using the given {@code name}
-	 * as the identifier.
+	 * Start building a request to modify name or attributes of an entry, using the given
+	 * {@code name} as the identifier.
 	 *
 	 * <p>
-	 * Note that a {@link #modify(Name)} is different from a rebind in that
-	 * entries are changed instead of removed and recreated.
+	 * Note that a {@link #modify(Name)} is different from a rebind in that entries are
+	 * changed instead of removed and recreated.
 	 *
 	 * <p>
-	 * A change in name uses LDAP's {@link DirContext#rename} function.
-	 * A change in attributes uses LDAP's {@link DirContext#modifyAttributes} function.
-	 * The {@code rename} action is optimistically performed before the {@code modify} function.
-	 * A rollback of the name is attempted in the event that attribute modification fails.
-	 *
+	 * A change in name uses LDAP's {@link DirContext#rename} function. A change in
+	 * attributes uses LDAP's {@link DirContext#modifyAttributes} function. The
+	 * {@code rename} action is optimistically performed before the {@code modify}
+	 * function. A rollback of the name is attempted in the event that attribute
+	 * modification fails.
 	 * @param name the name of the entry to modify
 	 * @return a spec for specifying the modify parameters
 	 */
@@ -150,7 +137,6 @@ public interface LdapClient {
 
 	/**
 	 * Start building a request to remove the {@code name} entry.
-	 *
 	 * @param name the name of the entry to remove
 	 * @return a spec for specifying the unbind parameters
 	 */
@@ -158,18 +144,16 @@ public interface LdapClient {
 
 	/**
 	 * Start building a request to remove the {@code name} entry.
-	 *
 	 * @param name the name of the entry to remove
 	 * @return a spec for specifying the unbind parameters
 	 */
 	UnbindSpec unbind(Name name);
 
 	/**
-	 * Return a builder to create a new {@code LdapClient} whose settings are
-	 * replicated from the current {@code LdapClient}.
+	 * Return a builder to create a new {@code LdapClient} whose settings are replicated
+	 * from the current {@code LdapClient}.
 	 */
 	Builder mutate();
-
 
 	// Static, factory methods
 
@@ -189,7 +173,6 @@ public interface LdapClient {
 		return new DefaultLdapClientBuilder();
 	}
 
-
 	/**
 	 * A mutable builder for creating an {@link LdapClient}.
 	 */
@@ -202,8 +185,8 @@ public interface LdapClient {
 		Builder contextSource(ContextSource contextSource);
 
 		/**
-		 * Use this {@link Supplier} to generate a {@link SearchControls}.
-		 * It should generate a new {@link SearchControls} on each call.
+		 * Use this {@link Supplier} to generate a {@link SearchControls}. It should
+		 * generate a new {@link SearchControls} on each call.
 		 * @param searchControlsSupplier the {@link Supplier} to use
 		 * @return the {@link Builder} for further customizations
 		 */
@@ -212,7 +195,6 @@ public interface LdapClient {
 		/**
 		 * Whether to ignore the {@link org.springframework.ldap.PartialResultException}.
 		 * Defaults to {@code true}.
-		 *
 		 * @param ignore whether to ignore the {@link PartialResultException}
 		 * @return the {@link LdapClient.Builder} for further customizations
 		 */
@@ -221,16 +203,15 @@ public interface LdapClient {
 		/**
 		 * Whether to ignore the {@link org.springframework.ldap.NameNotFoundException}.
 		 * Defaults to {@code true}.
-		 *
 		 * @param ignore whether to ignore the {@link NameNotFoundException}
 		 * @return the {@link LdapClient.Builder} for further customizations
 		 */
 		Builder ignoreNameNotFoundException(boolean ignore);
 
 		/**
-		 * Whether to ignore the {@link org.springframework.ldap.SizeLimitExceededException}.
-		 * Defaults to {@code true}.
-		 *
+		 * Whether to ignore the
+		 * {@link org.springframework.ldap.SizeLimitExceededException}. Defaults to
+		 * {@code true}.
 		 * @param ignore whether to ignore the {@link SizeLimitExceededException}
 		 * @return the {@link LdapClient.Builder} for further customizations
 		 */
@@ -238,7 +219,8 @@ public interface LdapClient {
 
 		/**
 		 * Apply the given {@code Consumer} to this builder instance.
-		 * <p>This can be useful for applying pre-packaged customizations.
+		 * <p>
+		 * This can be useful for applying pre-packaged customizations.
 		 * @param builderConsumer the consumer to apply
 		 */
 		Builder apply(Consumer<Builder> builderConsumer);
@@ -252,97 +234,100 @@ public interface LdapClient {
 		 * Build the {@link LdapClient} instance.
 		 */
 		LdapClient build();
+
 	}
 
 	/**
 	 * The specifications for the {@link #list} request.
 	 */
 	interface ListSpec {
+
 		/**
 		 * Return the entry's children as a list of mapped results
-		 *
-		 * @param mapper the {@link NameClassPairMapper} strategy to mapping each search result
+		 * @param mapper the {@link NameClassPairMapper} strategy to mapping each search
+		 * result
 		 * @return the entry's children or an empty list
 		 */
 		<T> List<T> toList(NameClassPairMapper<T> mapper);
 
 		/**
-		 * Return the entry's children as a stream of mapped results. Note that
-		 * the {@link Stream} must be closed when done reading from it.
-		 *
-		 * @param mapper the {@link NameClassPairMapper} strategy to mapping each search result
+		 * Return the entry's children as a stream of mapped results. Note that the
+		 * {@link Stream} must be closed when done reading from it.
+		 * @param mapper the {@link NameClassPairMapper} strategy to mapping each search
+		 * result
 		 * @return the entry's children or an empty stream
 		 */
 		<T> Stream<T> toStream(NameClassPairMapper<T> mapper);
+
 	}
 
 	/**
 	 * The specifications for the {@link #listBindings} request.
 	 */
 	interface ListBindingsSpec {
+
 		/**
 		 * Return the entry's children as a list of mapped results
-		 *
-		 * @param mapper the {@link NameClassPairMapper} strategy to mapping each search result
+		 * @param mapper the {@link NameClassPairMapper} strategy to mapping each search
+		 * result
 		 * @return the entry's children or an empty list
 		 */
 		<T> List<T> toList(NameClassPairMapper<T> mapper);
 
 		/**
 		 * Return the entry's children as a list of mapped results
-		 *
 		 * @param mapper the {@link ContextMapper} strategy to mapping each search result
 		 * @return the entry's children or an empty list
 		 */
 		<T> List<T> toList(ContextMapper<T> mapper);
 
 		/**
-		 * Return the entry's children as a stream of mapped results. Note that
-		 * the {@link Stream} must be closed when done reading from it.
-		 *
-		 * @param mapper the {@link NameClassPairMapper} strategy to mapping each search result
+		 * Return the entry's children as a stream of mapped results. Note that the
+		 * {@link Stream} must be closed when done reading from it.
+		 * @param mapper the {@link NameClassPairMapper} strategy to mapping each search
+		 * result
 		 * @return the entry's children or an empty stream
 		 */
 		<T> Stream<T> toStream(NameClassPairMapper<T> mapper);
 
 		/**
-		 * Return the entry's children as a stream of mapped results. Note that
-		 * the {@link Stream} must be closed when done reading from it.
-		 *
+		 * Return the entry's children as a stream of mapped results. Note that the
+		 * {@link Stream} must be closed when done reading from it.
 		 * @param mapper the {@link ContextMapper} strategy to mapping each search result
 		 * @return the entry's children or an empty stream
 		 */
 		<T> Stream<T> toStream(ContextMapper<T> mapper);
+
 	}
 
 	/**
 	 * The specifications for the {@link #search} request.
 	 */
 	interface SearchSpec {
+
 		/**
-		 * The name to search for. This is a convenience method for
-		 * creating an {@link LdapQuery} based only on the {@code name}.
-		 *
+		 * The name to search for. This is a convenience method for creating an
+		 * {@link LdapQuery} based only on the {@code name}.
 		 * @param name the name to search for
 		 * @return the {@link SearchSpec} for further configuration
 		 */
 		SearchSpec name(String name);
 
 		/**
-		 * The name to search for. This is a convenience method for
-		 * creating an {@link LdapQuery} based only on the {@code name}.
-		 *
+		 * The name to search for. This is a convenience method for creating an
+		 * {@link LdapQuery} based only on the {@code name}.
 		 * @param name the name to search for
 		 * @return the {@link SearchSpec} for further configuration
 		 */
 		SearchSpec name(Name name);
 
 		/**
-		 * The no-filter query to execute. Or, that is, the filter is {@code (objectclass=*)}.
+		 * The no-filter query to execute. Or, that is, the filter is
+		 * {@code (objectclass=*)}.
 		 *
-		 * <p>This is helpful when searching by name and needing to customize the {@link SearchControls} or the
-		 * returned attribute set.
-		 *
+		 * <p>
+		 * This is helpful when searching by name and needing to customize the
+		 * {@link SearchControls} or the returned attribute set.
 		 * @param consumer the consumer to alter a default query
 		 * @return the {@link SearchSpec} for further configuration
 		 */
@@ -350,7 +335,6 @@ public interface LdapClient {
 
 		/**
 		 * The query to execute.
-		 *
 		 * @param query the query to execute
 		 * @return the {@link SearchSpec} for further configuration
 		 */
@@ -364,22 +348,21 @@ public interface LdapClient {
 		/**
 		 * Expect at most one search result, mapped by the given strategy.
 		 *
-		 * <p>Returns {@code null} if no result is found.
-		 *
+		 * <p>
+		 * Returns {@code null} if no result is found.
 		 * @param mapper the {@link ContextMapper} strategy to use to map the result
 		 * @return the single search result, or {@code null} if none was found
-		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the result
-		 * set contains more than one result
+		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the
+		 * result set contains more than one result
 		 */
 		<O> O toObject(ContextMapper<O> mapper);
 
 		/**
 		 * Expect at most one search result, mapped by the given strategy.
-		 *
 		 * @param mapper the {@link AttributesMapper} strategy to use to map the result
 		 * @return the single search result, or {@code null} if none was found
-		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the result
-		 * set contains more than one result
+		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the
+		 * result set contains more than one result
 		 */
 		<O> O toObject(AttributesMapper<O> mapper);
 
@@ -390,21 +373,19 @@ public interface LdapClient {
 
 		/**
 		 * Return a list of search results, each mapped by the given strategy.
-		 *
 		 * @param mapper the {@link ContextMapper} strategy to use to map the result
 		 * @return the single search result, or empty list if none was found
-		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the result
-		 * set contains more than one result
+		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the
+		 * result set contains more than one result
 		 */
 		<O> List<O> toList(ContextMapper<O> mapper);
 
 		/**
 		 * Return a list of search results, each mapped by the given strategy.
-		 *
 		 * @param mapper the {@link AttributesMapper} strategy to use to map the result
 		 * @return the single search result, or empty list if none was found
-		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the result
-		 * set contains more than one result
+		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the
+		 * result set contains more than one result
 		 */
 		<O> List<O> toList(AttributesMapper<O> mapper);
 
@@ -415,32 +396,31 @@ public interface LdapClient {
 
 		/**
 		 * Return a stream of search results, each mapped by the given strategy.
-		 *
 		 * @param mapper the {@link ContextMapper} strategy to use to map the result
 		 * @return the single search result, or empty stream if none was found
-		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the result
-		 * set contains more than one result
+		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the
+		 * result set contains more than one result
 		 */
 		<O> Stream<O> toStream(ContextMapper<O> mapper);
 
 		/**
 		 * Return a stream of search results, each mapped by the given strategy.
-		 *
 		 * @param mapper the {@link AttributesMapper} strategy to use to map the result
 		 * @return the single search result, or empty stream if none was found
-		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the result
-		 * set contains more than one result
+		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the
+		 * result set contains more than one result
 		 */
 		<O> Stream<O> toStream(AttributesMapper<O> mapper);
+
 	}
 
 	/**
 	 * The specifications for the {@link #authenticate} request.
 	 */
 	interface AuthenticateSpec {
+
 		/**
 		 * The query to authenticate
-		 *
 		 * @param query the query to authenticate
 		 * @return the {@link AuthenticateSpec} for further configuration
 		 */
@@ -448,7 +428,6 @@ public interface LdapClient {
 
 		/**
 		 * The password to use
-		 *
 		 * @param password the password to use
 		 * @return the {@link AuthenticateSpec} for further configuration
 		 */
@@ -456,32 +435,34 @@ public interface LdapClient {
 
 		/**
 		 * Authenticate the query against the provided password
-		 *
-		 * @throws org.springframework.ldap.AuthenticationException if authentication fails or the query returns no results
+		 * @throws org.springframework.ldap.AuthenticationException if authentication
+		 * fails or the query returns no results
 		 */
 		void execute();
 
 		/**
 		 * Authenticate the query against the provided password.
-		 *
-		 * @param mapper a strategy for mapping the query results against another datasource
-		 * @throws org.springframework.ldap.AuthenticationException if authentication fails or the query returns no results
+		 * @param mapper a strategy for mapping the query results against another
+		 * datasource
+		 * @throws org.springframework.ldap.AuthenticationException if authentication
+		 * fails or the query returns no results
 		 */
 		<T> T execute(AuthenticatedLdapEntryContextMapper<T> mapper);
+
 	}
 
 	/**
 	 * The specifications for the {@link #bind} request.
 	 */
 	interface BindSpec {
+
 		/**
 		 * The object to associate with this binding.
 		 *
 		 * <p>
-		 * Note that this object is encoded into a set of attributes. If the object is
-		 * of type {@link DirContext}, then it will be converted into attributes via
+		 * Note that this object is encoded into a set of attributes. If the object is of
+		 * type {@link DirContext}, then it will be converted into attributes via
 		 * {@link DirContext#getAttributes}.
-		 *
 		 * @param object the object to associate
 		 * @return the {@link BindSpec} for further configuration
 		 */
@@ -498,9 +479,8 @@ public interface LdapClient {
 		 * Replace any existing binding with this one (equivalent to "rebind").
 		 *
 		 * <p>
-		 * If {@code false}, then bind will throw a {@link NameAlreadyBoundException} if the entry
-		 * already exists.
-		 *
+		 * If {@code false}, then bind will throw a {@link NameAlreadyBoundException} if
+		 * the entry already exists.
 		 * @param replaceExisting whether to replace any existing entry
 		 * @return the {@link BindSpec} for further configuration
 		 */
@@ -508,19 +488,20 @@ public interface LdapClient {
 
 		/**
 		 * Bind the name, object, and attributes together
-		 *
-		 * @throws NameAlreadyBoundException if {@code name} is already bound and {@link #replaceExisting} is {@code false}
+		 * @throws NameAlreadyBoundException if {@code name} is already bound and
+		 * {@link #replaceExisting} is {@code false}
 		 */
 		void execute();
+
 	}
 
 	/**
 	 * The specifications for the {@link #modify} request.
 	 */
 	interface ModifySpec {
+
 		/**
 		 * The new name for this entry.
-		 *
 		 * @param name the new name
 		 * @return the {@link ModifySpec} for further configuration
 		 */
@@ -528,7 +509,6 @@ public interface LdapClient {
 
 		/**
 		 * The new name for this entry.
-		 *
 		 * @param name the new name
 		 * @return the {@link ModifySpec} for further configuration
 		 */
@@ -536,7 +516,6 @@ public interface LdapClient {
 
 		/**
 		 * The attribute modifications to apply to this entry
-		 *
 		 * @param modifications the attribute modifications
 		 * @return the {@link ModifySpec} for further configuration
 		 */
@@ -546,15 +525,16 @@ public interface LdapClient {
 		 * Modify the name and attributes for this entry
 		 */
 		void execute();
+
 	}
 
 	/**
 	 * The specifications for the {@link #unbind} request.
 	 */
 	interface UnbindSpec {
+
 		/**
 		 * Delete all children related to this entry
-		 *
 		 * @param recursive whether to delete all children as well
 		 * @return the {@link UnbindSpec} for further configuration
 		 */
@@ -564,5 +544,7 @@ public interface LdapClient {
 		 * Delete the entry
 		 */
 		void execute();
+
 	}
+
 }

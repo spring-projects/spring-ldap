@@ -29,38 +29,34 @@ import static org.junit.Assert.assertNull;
 
 /**
  * Unit tests for the NamingException class.
- * 
+ *
  * @author Ulrik Sandberg
  */
 public class NamingExceptionTest {
+
 	private ByteArrayOutputStream byteArrayOutputStream;
 
 	@Test
-	public void testNamingExceptionWithNonSerializableResolvedObj()
-			throws Exception {
+	public void testNamingExceptionWithNonSerializableResolvedObj() throws Exception {
 		javax.naming.NameAlreadyBoundException wrappedException = new javax.naming.NameAlreadyBoundException(
 				"some error");
 		wrappedException.setResolvedObj(new InitialDirContext());
-		NamingException exception = new NameAlreadyBoundException(
-				wrappedException);
+		NamingException exception = new NameAlreadyBoundException(wrappedException);
 		writeToStream(exception);
 		NamingException deSerializedException = readFromStream();
-		assertNotNull(
-				"Original exception resolvedObj after serialization should not be null",
+		assertNotNull("Original exception resolvedObj after serialization should not be null",
 				exception.getResolvedObj());
-		assertNull("De-serialized exception resolvedObj should be null",
-				deSerializedException.getResolvedObj());
+		assertNull("De-serialized exception resolvedObj should be null", deSerializedException.getResolvedObj());
 	}
 
-	private NamingException readFromStream() throws IOException,
-			ClassNotFoundException {
-		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
-				byteArrayOutputStream.toByteArray());
+	private NamingException readFromStream() throws IOException, ClassNotFoundException {
+		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
 		ObjectInputStream in = new ObjectInputStream(byteArrayInputStream);
 		NamingException deSerializedException;
 		try {
 			deSerializedException = (NamingException) in.readObject();
-		} finally {
+		}
+		finally {
 			in.close();
 		}
 		return deSerializedException;
@@ -72,8 +68,10 @@ public class NamingExceptionTest {
 		try {
 			out.writeObject(exception);
 			out.flush();
-		} finally {
+		}
+		finally {
 			out.close();
 		}
 	}
+
 }

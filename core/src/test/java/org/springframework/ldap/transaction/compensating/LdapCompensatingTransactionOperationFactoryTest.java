@@ -26,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 public class LdapCompensatingTransactionOperationFactoryTest {
+
 	private LdapOperations ldapOperationsMock;
 
 	private TempEntryRenamingStrategy renamingStrategyMock;
@@ -40,8 +41,7 @@ public class LdapCompensatingTransactionOperationFactoryTest {
 		renamingStrategyMock = mock(TempEntryRenamingStrategy.class);
 		dirContextMock = mock(DirContext.class);
 
-		tested = new LdapCompensatingTransactionOperationFactory(
-				renamingStrategyMock) {
+		tested = new LdapCompensatingTransactionOperationFactory(renamingStrategyMock) {
 
 			LdapOperations createLdapOperationsInstance(DirContext ctx) {
 				assertThat(ctx).isEqualTo(dirContextMock);
@@ -53,8 +53,7 @@ public class LdapCompensatingTransactionOperationFactoryTest {
 	@Test
 	public void testGetRecordingOperation_Bind() throws Exception {
 
-		CompensatingTransactionOperationRecorder result = tested
-				.createRecordingOperation(dirContextMock, "bind");
+		CompensatingTransactionOperationRecorder result = tested.createRecordingOperation(dirContextMock, "bind");
 		assertThat(result instanceof BindOperationRecorder).isTrue();
 		BindOperationRecorder bindOperationRecorder = (BindOperationRecorder) result;
 		assertThat(bindOperationRecorder.getLdapOperations()).isSameAs(ldapOperationsMock);
@@ -62,8 +61,7 @@ public class LdapCompensatingTransactionOperationFactoryTest {
 
 	@Test
 	public void testGetRecordingOperation_Rebind() throws Exception {
-		CompensatingTransactionOperationRecorder result = tested
-				.createRecordingOperation(dirContextMock, "rebind");
+		CompensatingTransactionOperationRecorder result = tested.createRecordingOperation(dirContextMock, "rebind");
 		assertThat(result instanceof RebindOperationRecorder).isTrue();
 		RebindOperationRecorder rebindOperationRecorder = (RebindOperationRecorder) result;
 		assertThat(rebindOperationRecorder.getLdapOperations()).isSameAs(ldapOperationsMock);
@@ -72,8 +70,7 @@ public class LdapCompensatingTransactionOperationFactoryTest {
 
 	@Test
 	public void testGetRecordingOperation_Rename() throws Exception {
-		CompensatingTransactionOperationRecorder result = tested
-				.createRecordingOperation(dirContextMock, "rename");
+		CompensatingTransactionOperationRecorder result = tested.createRecordingOperation(dirContextMock, "rename");
 		assertThat(result instanceof RenameOperationRecorder).isTrue();
 		RenameOperationRecorder recordingOperation = (RenameOperationRecorder) result;
 		assertThat(recordingOperation.getLdapOperations()).isSameAs(ldapOperationsMock);
@@ -81,8 +78,8 @@ public class LdapCompensatingTransactionOperationFactoryTest {
 
 	@Test
 	public void testGetRecordingOperation_ModifyAttributes() throws Exception {
-		CompensatingTransactionOperationRecorder result = tested
-				.createRecordingOperation(dirContextMock, "modifyAttributes");
+		CompensatingTransactionOperationRecorder result = tested.createRecordingOperation(dirContextMock,
+				"modifyAttributes");
 		assertThat(result instanceof ModifyAttributesOperationRecorder).isTrue();
 		ModifyAttributesOperationRecorder recordingOperation = (ModifyAttributesOperationRecorder) result;
 		assertThat(recordingOperation.getLdapOperations()).isSameAs(ldapOperationsMock);
@@ -90,11 +87,11 @@ public class LdapCompensatingTransactionOperationFactoryTest {
 
 	@Test
 	public void testGetRecordingOperation_Unbind() throws Exception {
-		CompensatingTransactionOperationRecorder result = tested
-				.createRecordingOperation(dirContextMock, "unbind");
+		CompensatingTransactionOperationRecorder result = tested.createRecordingOperation(dirContextMock, "unbind");
 		assertThat(result instanceof UnbindOperationRecorder).isTrue();
 		UnbindOperationRecorder recordingOperation = (UnbindOperationRecorder) result;
 		assertThat(recordingOperation.getLdapOperations()).isSameAs(ldapOperationsMock);
 		assertThat(recordingOperation.getRenamingStrategy()).isSameAs(renamingStrategyMock);
 	}
+
 }

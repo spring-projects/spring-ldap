@@ -18,7 +18,7 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI NoPermissionException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.NoPermissionException
@@ -28,4 +28,5 @@ public class NoPermissionException extends NamingSecurityException {
 	public NoPermissionException(javax.naming.NoPermissionException cause) {
 		super(cause);
 	}
+
 }

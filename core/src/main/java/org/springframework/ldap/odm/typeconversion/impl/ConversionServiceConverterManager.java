@@ -29,9 +29,10 @@ import javax.naming.Name;
  * @since 2.0
  */
 public class ConversionServiceConverterManager implements ConverterManager {
+
 	private GenericConversionService conversionService;
-	private static final String DEFAULT_CONVERSION_SERVICE_CLASS =
-			"org.springframework.core.convert.support.DefaultConversionService";
+
+	private static final String DEFAULT_CONVERSION_SERVICE_CLASS = "org.springframework.core.convert.support.DefaultConversionService";
 
 	public ConversionServiceConverterManager(GenericConversionService conversionService) {
 		this.conversionService = conversionService;
@@ -39,14 +40,16 @@ public class ConversionServiceConverterManager implements ConverterManager {
 
 	public ConversionServiceConverterManager() {
 		ClassLoader defaultClassLoader = ClassUtils.getDefaultClassLoader();
-		if(ClassUtils.isPresent(DEFAULT_CONVERSION_SERVICE_CLASS, defaultClassLoader)) {
+		if (ClassUtils.isPresent(DEFAULT_CONVERSION_SERVICE_CLASS, defaultClassLoader)) {
 			try {
 				Class<?> clazz = ClassUtils.forName(DEFAULT_CONVERSION_SERVICE_CLASS, defaultClassLoader);
 				conversionService = (GenericConversionService) clazz.newInstance();
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				ReflectionUtils.handleReflectionException(e);
 			}
-		} else {
+		}
+		else {
 			conversionService = new GenericConversionService();
 		}
 
@@ -69,14 +72,16 @@ public class ConversionServiceConverterManager implements ConverterManager {
 
 	public final static class NameToStringConverter
 			implements org.springframework.core.convert.converter.Converter<Name, String> {
+
 		@Override
 		public String convert(Name source) {
-			if(source == null) {
+			if (source == null) {
 				return null;
 			}
 
 			return source.toString();
 		}
+
 	}
 
 	public static final class StringToNameConverter
@@ -84,12 +89,13 @@ public class ConversionServiceConverterManager implements ConverterManager {
 
 		@Override
 		public Name convert(String source) {
-			if(source == null) {
+			if (source == null) {
 				return null;
 			}
 
 			return LdapUtils.newLdapName(source);
 		}
+
 	}
 
 }

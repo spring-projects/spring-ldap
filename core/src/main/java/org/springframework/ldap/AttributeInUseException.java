@@ -18,15 +18,15 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI AttributeInUseException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.directory.AttributeInUseException
  */
 public class AttributeInUseException extends NamingException {
 
-	public AttributeInUseException(
-			javax.naming.directory.AttributeInUseException cause) {
+	public AttributeInUseException(javax.naming.directory.AttributeInUseException cause) {
 		super(cause);
 	}
+
 }

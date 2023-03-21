@@ -23,10 +23,12 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
  * @author Rob Winch
  */
 public class LdapNamespaceHandler extends NamespaceHandlerSupport {
+
 	@Override
 	public void init() {
 		registerBeanDefinitionParser(Elements.CONTEXT_SOURCE, new ContextSourceParser());
 		registerBeanDefinitionParser(Elements.LDAP_TEMPLATE, new LdapTemplateParser());
 		registerBeanDefinitionParser(Elements.TRANSACTION_MANAGER, new TransactionManagerParser());
 	}
+
 }

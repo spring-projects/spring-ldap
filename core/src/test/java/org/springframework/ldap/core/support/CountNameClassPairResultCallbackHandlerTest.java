@@ -37,8 +37,8 @@ public class CountNameClassPairResultCallbackHandlerTest {
 		tested.handleNameClassPair(dummy);
 		tested.handleNameClassPair(dummy);
 		tested.handleNameClassPair(dummy);
-		
+
 		assertThat(tested.getNoOfRows()).isEqualTo(3);
 	}
-	
+
 }

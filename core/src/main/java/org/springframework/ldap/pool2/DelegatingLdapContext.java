@@ -28,35 +28,35 @@ import javax.naming.ldap.ExtendedResponse;
 import javax.naming.ldap.LdapContext;
 
 /**
- * Used by {@link PooledContextSource} to wrap a {@link LdapContext}, delegating most methods
- * to the underlying context. This class extends {@link DelegatingDirContext} which handles returning
- * the context to the pool on a call to {@link #close()}
+ * Used by {@link PooledContextSource} to wrap a {@link LdapContext}, delegating most
+ * methods to the underlying context. This class extends {@link DelegatingDirContext}
+ * which handles returning the context to the pool on a call to {@link #close()}
  *
  * @since 2.0
  * @author Eric Dalquist
  * @author Anindya Chatterjee
  */
 public class DelegatingLdapContext extends DelegatingDirContext implements LdapContext {
+
 	private LdapContext delegateLdapContext;
 
 	/**
-	 * Create a new delegating ldap context for the specified pool, context and context type.
-	 *
+	 * Create a new delegating ldap context for the specified pool, context and context
+	 * type.
 	 * @param keyedObjectPool The pool the delegate context was checked out from.
 	 * @param delegateLdapContext The ldap context to delegate operations to.
 	 * @param dirContextType The type of context, used as a key for the pool.
 	 * @throws IllegalArgumentException if any of the arguments are null
 	 */
-	public DelegatingLdapContext(KeyedObjectPool<Object,Object> keyedObjectPool,
-								 LdapContext delegateLdapContext, DirContextType dirContextType) {
+	public DelegatingLdapContext(KeyedObjectPool<Object, Object> keyedObjectPool, LdapContext delegateLdapContext,
+			DirContextType dirContextType) {
 		super(keyedObjectPool, delegateLdapContext, dirContextType);
 		Assert.notNull(delegateLdapContext, "delegateLdapContext may not be null");
 
 		this.delegateLdapContext = delegateLdapContext;
 	}
 
-
-	//***** Helper Methods *****//
+	// ***** Helper Methods *****//
 
 	/**
 	 * @return The direct delegate for this ldap context proxy
@@ -72,14 +72,13 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
 
 	/**
 	 * Recursivley inspect delegates until a non-delegating ldap context is found.
-	 *
 	 * @return The innermost (real) DirContext that is being delegated to.
 	 */
 	public LdapContext getInnermostDelegateLdapContext() {
 		final LdapContext delegateLdapContext = this.getDelegateLdapContext();
 
 		if (delegateLdapContext instanceof DelegatingLdapContext) {
-			return ((DelegatingLdapContext)delegateLdapContext).getInnermostDelegateLdapContext();
+			return ((DelegatingLdapContext) delegateLdapContext).getInnermostDelegateLdapContext();
 		}
 
 		return delegateLdapContext;
@@ -93,8 +92,7 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
 		super.assertOpen();
 	}
 
-
-	//***** Object methods *****//
+	// ***** Object methods *****//
 
 	/**
 	 * @see Object#equals(Object)
@@ -108,12 +106,13 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
 		}
 
 		final LdapContext thisLdapContext = this.getInnermostDelegateLdapContext();
-		LdapContext otherLdapContext = (LdapContext)obj;
+		LdapContext otherLdapContext = (LdapContext) obj;
 		if (otherLdapContext instanceof DelegatingLdapContext) {
-			otherLdapContext = ((DelegatingLdapContext)otherLdapContext).getInnermostDelegateLdapContext();
+			otherLdapContext = ((DelegatingLdapContext) otherLdapContext).getInnermostDelegateLdapContext();
 		}
 
-		return thisLdapContext == otherLdapContext || (thisLdapContext != null && thisLdapContext.equals(otherLdapContext));
+		return thisLdapContext == otherLdapContext
+				|| (thisLdapContext != null && thisLdapContext.equals(otherLdapContext));
 	}
 
 	/**
@@ -132,8 +131,7 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
 		return (context != null ? context.toString() : "LdapContext is closed");
 	}
 
-
-	//***** LdapContext Interface Delegates *****//
+	// ***** LdapContext Interface Delegates *****//
 
 	/**
 	 * @see LdapContext#extendedOperation(ExtendedRequest)
@@ -199,4 +197,5 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
 		super.close();
 		this.delegateLdapContext = null;
 	}
+
 }

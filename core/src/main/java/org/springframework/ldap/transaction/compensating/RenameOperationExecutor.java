@@ -23,15 +23,14 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
 import javax.naming.Name;
 
 /**
- * A {@link CompensatingTransactionOperationExecutor} to manage a rename
- * operation. Performs a rename operation in {@link #performOperation()}, a
- * negating rename in {@link #rollback()}, and nothing in {@link #commit()}.
- * 
+ * A {@link CompensatingTransactionOperationExecutor} to manage a rename operation.
+ * Performs a rename operation in {@link #performOperation()}, a negating rename in
+ * {@link #rollback()}, and nothing in {@link #commit()}.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
-public class RenameOperationExecutor implements
-		CompensatingTransactionOperationExecutor {
+public class RenameOperationExecutor implements CompensatingTransactionOperationExecutor {
 
 	private static Logger log = LoggerFactory.getLogger(RenameOperationExecutor.class);
 
@@ -43,44 +42,42 @@ public class RenameOperationExecutor implements
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param ldapOperations
-	 *			The {@link LdapOperations} to use for performing the rollback
-	 *			operation.
-	 * @param originalDn
-	 *			DN that the entry was moved from in the recorded operation.
-	 * @param newDn
-	 *			DN that the entry has been moved to in the recorded operation.
+	 * @param ldapOperations The {@link LdapOperations} to use for performing the rollback
+	 * operation.
+	 * @param originalDn DN that the entry was moved from in the recorded operation.
+	 * @param newDn DN that the entry has been moved to in the recorded operation.
 	 */
-	public RenameOperationExecutor(LdapOperations ldapOperations,
-			Name originalDn, Name newDn) {
+	public RenameOperationExecutor(LdapOperations ldapOperations, Name originalDn, Name newDn) {
 		this.ldapOperations = ldapOperations;
 		this.originalDn = originalDn;
 		this.newDn = newDn;
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#rollback()
+	 * @see org.springframework.ldap.support.transaction.
+	 * CompensatingTransactionOperationExecutor#rollback()
 	 */
 	public void rollback() {
 		log.debug("Rolling back rename operation");
 		try {
 			ldapOperations.rename(newDn, originalDn);
-		} catch (Exception e) {
-			log.warn("Unable to rollback rename operation. " + "originalDn: "
-					+ newDn + "; newDn: " + originalDn);
+		}
+		catch (Exception e) {
+			log.warn("Unable to rollback rename operation. " + "originalDn: " + newDn + "; newDn: " + originalDn);
 		}
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#commit()
+	 * @see org.springframework.ldap.support.transaction.
+	 * CompensatingTransactionOperationExecutor#commit()
 	 */
 	public void commit() {
 		log.debug("Nothing to do in commit for rename operation");
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationExecutor#performOperation()
+	 * @see org.springframework.ldap.support.transaction.
+	 * CompensatingTransactionOperationExecutor#performOperation()
 	 */
 	public void performOperation() {
 		log.debug("Performing rename operation");
@@ -98,4 +95,5 @@ public class RenameOperationExecutor implements
 	Name getOriginalDn() {
 		return originalDn;
 	}
+
 }

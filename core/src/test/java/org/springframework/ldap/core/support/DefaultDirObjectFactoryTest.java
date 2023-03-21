@@ -59,8 +59,8 @@ public class DefaultDirObjectFactoryTest {
 		Attributes expectedAttributes = new NameAwareAttributes();
 		expectedAttributes.put("someAttribute", "someValue");
 
-		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(contextMock, DN, null,
-				new Hashtable(), expectedAttributes);
+		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(contextMock, DN, null, new Hashtable(),
+				expectedAttributes);
 
 		verify(contextMock).close();
 
@@ -75,7 +75,7 @@ public class DefaultDirObjectFactoryTest {
 
 		CompositeName name = new CompositeName();
 		name.add(DN_STRING);
-		
+
 		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(contextMock, name, null,
 				new Hashtable(), expectedAttributes);
 
@@ -111,7 +111,6 @@ public class DefaultDirObjectFactoryTest {
 
 	/**
 	 * Make sure that the base suffix is stripped off from the DN.
-	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -121,8 +120,8 @@ public class DefaultDirObjectFactoryTest {
 
 		when(contextMock2.getNameInNamespace()).thenReturn("dc=jayway, dc=se");
 
-		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(contextMock, LdapUtils.newLdapName(
-				"ou=some unit"), contextMock2, new Hashtable(), expectedAttributes);
+		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(contextMock,
+				LdapUtils.newLdapName("ou=some unit"), contextMock2, new Hashtable(), expectedAttributes);
 
 		verify(contextMock).close();
 
@@ -174,4 +173,5 @@ public class DefaultDirObjectFactoryTest {
 		assertThat(result.getDn().toString()).isEqualTo("");
 		assertThat(result.getReferralUrl().toString()).isEqualTo("ldap://localhost:389");
 	}
+
 }

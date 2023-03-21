@@ -27,8 +27,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 /**
- * Integration tests for {@link org.springframework.ldap.core.support.BaseLdapPathBeanPostProcessor}.
- * 
+ * Integration tests for
+ * {@link org.springframework.ldap.core.support.BaseLdapPathBeanPostProcessor}.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class BaseLdapPathBeanPostprocessorITest {
@@ -103,4 +104,5 @@ public class BaseLdapPathBeanPostprocessorITest {
 		assertThat(base).isNotNull();
 		assertThat(base).isEqualTo(new DistinguishedName("dc=261consulting,dc=com"));
 	}
+
 }

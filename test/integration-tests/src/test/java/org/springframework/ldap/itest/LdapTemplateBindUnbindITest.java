@@ -32,17 +32,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 /**
- * Tests the bind and unbind methods of LdapTemplate. The test methods in this
- * class tests a little too much, but we need to clean up after binding, so the
- * most efficient way to test is to do it all in one test method. Also, the
- * methods in this class relies on that the lookup method works as it should -
- * that should be ok, since that is verified in a separate test class.
- * 
+ * Tests the bind and unbind methods of LdapTemplate. The test methods in this class tests
+ * a little too much, but we need to clean up after binding, so the most efficient way to
+ * test is to do it all in one test method. Also, the methods in this class relies on that
+ * the lookup method works as it should - that should be ok, since that is verified in a
+ * separate test class.
+ *
  * @author Mattias Hellborg Arthursson
  */
-@ContextConfiguration(locations = {"/conf/ldapTemplateTestContext.xml"})
-public class LdapTemplateBindUnbindITest extends
-		AbstractLdapTemplateIntegrationTest {
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
+public class LdapTemplateBindUnbindITest extends AbstractLdapTemplateIntegrationTest {
+
 	@Autowired
 	private LdapTemplate tested;
 
@@ -79,8 +79,7 @@ public class LdapTemplateBindUnbindITest extends
 	@Test
 	public void testBindAndUnbindWithDirContextAdapter() {
 		DirContextAdapter adapter = new DirContextAdapter();
-		adapter.setAttributeValues("objectclass", new String[] { "top",
-				"person" });
+		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
 		adapter.setAttributeValue("cn", "Some Person4");
 		adapter.setAttributeValue("sn", "Person4");
 
@@ -93,8 +92,7 @@ public class LdapTemplateBindUnbindITest extends
 	@Test
 	public void testBindAndUnbindWithDirContextAdapterUsingLdapName() {
 		DirContextAdapter adapter = new DirContextAdapter();
-		adapter.setAttributeValues("objectclass", new String[] { "top",
-				"person" });
+		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
 		adapter.setAttributeValue("cn", "Some Person4");
 		adapter.setAttributeValue("sn", "Person4");
 
@@ -107,8 +105,7 @@ public class LdapTemplateBindUnbindITest extends
 	@Test
 	public void testBindAndUnbindWithDirContextAdapterOnly() {
 		DirContextAdapter adapter = new DirContextAdapter(LdapUtils.newLdapName(DN));
-		adapter.setAttributeValues("objectclass", new String[] { "top",
-				"person" });
+		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
 		adapter.setAttributeValue("cn", "Some Person4");
 		adapter.setAttributeValue("sn", "Person4");
 
@@ -121,8 +118,7 @@ public class LdapTemplateBindUnbindITest extends
 	@Test
 	public void testBindAndRebindWithDirContextAdapterOnly() {
 		DirContextAdapter adapter = new DirContextAdapter(LdapUtils.newLdapName(DN));
-		adapter.setAttributeValues("objectclass", new String[] { "top",
-				"person" });
+		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
 		adapter.setAttributeValue("cn", "Some Person4");
 		adapter.setAttributeValue("sn", "Person4");
 
@@ -167,4 +163,5 @@ public class LdapTemplateBindUnbindITest extends
 			assertThat(true).isTrue();
 		}
 	}
+
 }

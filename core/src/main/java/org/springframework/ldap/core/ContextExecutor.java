@@ -20,9 +20,9 @@ import javax.naming.directory.DirContext;
 
 /**
  * Interface for delegating an actual operation to be performed on a
- * <code>DirContext</code>. For searches, use {@link SearchExecutor} in
- * stead. A typical usage of this interface could be e.g.:
- * 
+ * <code>DirContext</code>. For searches, use {@link SearchExecutor} in stead. A typical
+ * usage of this interface could be e.g.:
+ *
  * <pre>
  * ContextExecutor executor = new ContextExecutor() {
  *	 public Object executeWithContext(DirContext ctx) throws NamingException {
@@ -30,21 +30,19 @@ import javax.naming.directory.DirContext;
  *	 }
  * };
  * </pre>
- * 
+ *
  * @see LdapTemplate#executeReadOnly(ContextExecutor)
  * @see LdapTemplate#executeReadWrite(ContextExecutor)
- * 
  * @author Mattias Hellborg Arthursson
  */
 public interface ContextExecutor<T> {
+
 	/**
 	 * Perform any operation on the context.
-	 * 
-	 * @param ctx
-	 *			the DirContext to perform the operation on.
+	 * @param ctx the DirContext to perform the operation on.
 	 * @return any object resulting from the operation - might be null.
-	 * @throws NamingException
-	 *			 if the operation resulted in one.
+	 * @throws NamingException if the operation resulted in one.
 	 */
 	T executeWithContext(DirContext ctx) throws NamingException;
+
 }

@@ -23,22 +23,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * An implementation of {@link org.springframework.ldap.odm.typeconversion.ConverterManager}.
+ * An implementation of
+ * {@link org.springframework.ldap.odm.typeconversion.ConverterManager}.
  * <p>
  * The algorithm used is to:
  * <ol>
- * <li>Try to find and use a {@link Converter} registered for the 
- * <code>fromClass</code>, <code>syntax</code> and <code>toClass</code> and use it.</li>
- * <li>If this fails, then if the <code>toClass isAssignableFrom</code> 
- * the <code>fromClass</code> then just assign it.</li>
- * <li>If this fails try to find and use a {@link Converter} registered for the <code>fromClass</code> and 
- * the <code>toClass</code> ignoring the <code>syntax</code>.</li>
- * <li>If this fails then throw a {@link org.springframework.ldap.odm.typeconversion.ConverterException}.</li>
+ * <li>Try to find and use a {@link Converter} registered for the <code>fromClass</code>,
+ * <code>syntax</code> and <code>toClass</code> and use it.</li>
+ * <li>If this fails, then if the <code>toClass isAssignableFrom</code> the
+ * <code>fromClass</code> then just assign it.</li>
+ * <li>If this fails try to find and use a {@link Converter} registered for the
+ * <code>fromClass</code> and the <code>toClass</code> ignoring the
+ * <code>syntax</code>.</li>
+ * <li>If this fails then throw a
+ * {@link org.springframework.ldap.odm.typeconversion.ConverterException}.</li>
  * </ol>
- * 
+ *
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  */
 public final class ConverterManagerImpl implements ConverterManager {
+
 	/**
 	 * Separator used to form keys into the converters Map.
 	 */
@@ -50,8 +54,8 @@ public final class ConverterManagerImpl implements ConverterManager {
 	private final Map<String, Converter> converters = new HashMap<String, Converter>();
 
 	/**
-	 * Make a key into the converters map - the keys is formed from the <code>fromClass</code>, syntax and <code>toClass</code>
-	 * 
+	 * Make a key into the converters map - the keys is formed from the
+	 * <code>fromClass</code>, syntax and <code>toClass</code>
 	 * @param fromClass The class to convert from.
 	 * @param syntax The LDAP syntax.
 	 * @param toClass The class to convert to.
@@ -59,8 +63,8 @@ public final class ConverterManagerImpl implements ConverterManager {
 	 */
 	private String makeConverterKey(Class<?> fromClass, String syntax, Class<?> toClass) {
 		StringBuilder key = new StringBuilder();
-		if (syntax==null) {
-			syntax="";
+		if (syntax == null) {
+			syntax = "";
 		}
 		key.append(fromClass.getName()).append(KEY_SEP).append(syntax).append(KEY_SEP).append(toClass.getName());
 		return key.toString();
@@ -73,7 +77,7 @@ public final class ConverterManagerImpl implements ConverterManager {
 	}
 
 	/**
-	 * Used to help in the process of dealing with primitive types by mapping them to 
+	 * Used to help in the process of dealing with primitive types by mapping them to
 	 * their equivalent boxed class.
 	 */
 	private static Map<Class<?>, Class<?>> primitiveTypeMap = new HashMap<Class<?>, Class<?>>();
@@ -88,10 +92,12 @@ public final class ConverterManagerImpl implements ConverterManager {
 		primitiveTypeMap.put(Character.TYPE, Character.class);
 	}
 
-   
-	/* 
+	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.ldap.odm.typeconversion.ConverterManager#canConvert(java.lang.Class, java.lang.String, java.lang.Class)
+	 *
+	 * @see
+	 * org.springframework.ldap.odm.typeconversion.ConverterManager#canConvert(java.lang.
+	 * Class, java.lang.String, java.lang.Class)
 	 */
 	public boolean canConvert(Class<?> fromClass, String syntax, Class<?> toClass) {
 		Class<?> fixedToClass = toClass;
@@ -102,15 +108,17 @@ public final class ConverterManagerImpl implements ConverterManager {
 		if (fromClass.isPrimitive()) {
 			fixedFromClass = primitiveTypeMap.get(fromClass);
 		}
-		return fixedToClass.isAssignableFrom(fixedFromClass) ||
-				(converters.get(makeConverterKey(fixedFromClass, syntax, fixedToClass)) != null) ||
-				(converters.get(makeConverterKey(fixedFromClass, null, fixedToClass)) != null);
+		return fixedToClass.isAssignableFrom(fixedFromClass)
+				|| (converters.get(makeConverterKey(fixedFromClass, syntax, fixedToClass)) != null)
+				|| (converters.get(makeConverterKey(fixedFromClass, null, fixedToClass)) != null);
 	}
 
-
-	/* 
+	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.ldap.odm.typeconversion.ConverterManager#convert(java.lang.Object, java.lang.String, java.lang.Class)
+	 *
+	 * @see
+	 * org.springframework.ldap.odm.typeconversion.ConverterManager#convert(java.lang.
+	 * Object, java.lang.String, java.lang.Class)
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T convert(Object source, String syntax, Class<T> toClass) {
@@ -130,7 +138,8 @@ public final class ConverterManagerImpl implements ConverterManager {
 		if (syntaxConverter != null) {
 			try {
 				result = syntaxConverter.convert(source, targetClass);
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				// Ignore as we may still be able to convert successfully
 			}
 		}
@@ -147,26 +156,28 @@ public final class ConverterManagerImpl implements ConverterManager {
 			if (nullSyntaxConverter != null) {
 				try {
 					result = nullSyntaxConverter.convert(source, targetClass);
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					// Handled at the end of the method
 				}
 			}
 		}
 
 		if (result == null) {
-			throw new ConverterException(String.format(
-					"Cannot convert %1$s of class %2$s via syntax %3$s to class %4$s", source, source.getClass(),
-					syntax, toClass));
+			throw new ConverterException(
+					String.format("Cannot convert %1$s of class %2$s via syntax %3$s to class %4$s", source,
+							source.getClass(), syntax, toClass));
 		}
 
-		// We cannot do the safe thing of doing a .cast as we need to rely on auto-unboxing to deal with primitives!
-		return (T)result;
+		// We cannot do the safe thing of doing a .cast as we need to rely on
+		// auto-unboxing to deal with primitives!
+		return (T) result;
 	}
 
 	/**
 	 * Add a {@link Converter} to this <code>ConverterManager</code>.
-	 * 
-	 * @param fromClass The class the <code>Converter</code> should be used to convert from.
+	 * @param fromClass The class the <code>Converter</code> should be used to convert
+	 * from.
 	 * @param syntax The LDAP syntax that the <code>Converter</code> should be used for.
 	 * @param toClass The class the <code>Converter</code> should be used to convert to.
 	 * @param converter The <code>Converter</code> to add.
@@ -174,4 +185,5 @@ public final class ConverterManagerImpl implements ConverterManager {
 	public void addConverter(Class<?> fromClass, String syntax, Class<?> toClass, Converter converter) {
 		converters.put(makeConverterKey(fromClass, syntax, toClass), converter);
 	}
+
 }

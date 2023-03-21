@@ -18,7 +18,7 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI PartialResultException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.PartialResultException
@@ -28,4 +28,5 @@ public class PartialResultException extends NamingException {
 	public PartialResultException(javax.naming.PartialResultException cause) {
 		super(cause);
 	}
+
 }

@@ -44,13 +44,14 @@ import static org.assertj.core.api.Assertions.fail;
 /**
  * Tests {@link LdapClient}'s modification methods (rebind and modifyAttributes)
  *
- * <p>It also illustrates the use of DirContextAdapter as a means of getting
+ * <p>
+ * It also illustrates the use of DirContextAdapter as a means of getting
  * {@code ModificationItems}, in order to avoid doing a full rebind and use
  * {@code modify()} instead.
- * 
+ *
  * @author Josh Cummings
  */
-@ContextConfiguration(locations = {"/conf/ldapClientTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapClientTestContext.xml" })
 public class DefaultLdapClientModifyITest extends AbstractLdapTemplateIntegrationTest {
 
 	@Autowired
@@ -158,8 +159,8 @@ public class DefaultLdapClientModifyITest extends AbstractLdapTemplateIntegratio
 
 	/**
 	 * Test written originally to verify that duplicates are allowed on ordered
-	 * attributes, but had to be changed since Apache DS seems to disallow
-	 * duplicates even for ordered attributes.
+	 * attributes, but had to be changed since Apache DS seems to disallow duplicates even
+	 * for ordered attributes.
 	 */
 	@Test
 	public void testModifyAttributes_MultiValueAddDuplicateToOrdered() {
@@ -180,16 +181,16 @@ public class DefaultLdapClientModifyITest extends AbstractLdapTemplateIntegratio
 
 	@Test
 	public void testModifyAttributes_Plain() {
-		ModificationItem item = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("description",
-				"Some other description"));
+		ModificationItem item = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
+				new BasicAttribute("description", "Some other description"));
 		tested.modify(PERSON4_DN).attributes(item).execute();
 		verifyBoundCorrectData();
 	}
 
 	@Test
 	public void testModifyAttributes_LdapName() {
-		ModificationItem item = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("description",
-				"Some other description"));
+		ModificationItem item = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
+				new BasicAttribute("description", "Some other description"));
 		tested.modify(LdapUtils.newLdapName(PERSON4_DN)).attributes(item).execute();
 		verifyBoundCorrectData();
 	}
@@ -211,9 +212,9 @@ public class DefaultLdapClientModifyITest extends AbstractLdapTemplateIntegratio
 	}
 
 	/**
-	 * Demonstrates how the DirContextAdapter can be used to automatically keep
-	 * track of changes of the attributes and deliver ModificationItems to use
-	 * in moifyAttributes().
+	 * Demonstrates how the DirContextAdapter can be used to automatically keep track of
+	 * changes of the attributes and deliver ModificationItems to use in
+	 * moifyAttributes().
 	 */
 	@Test
 	public void testModifyAttributes_DirContextAdapter() {
@@ -248,4 +249,5 @@ public class DefaultLdapClientModifyITest extends AbstractLdapTemplateIntegratio
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person4");
 		assertThat(result.getStringAttribute("description")).isEqualTo("Some other description");
 	}
+
 }

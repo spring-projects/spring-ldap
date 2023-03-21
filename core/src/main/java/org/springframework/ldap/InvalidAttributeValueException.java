@@ -18,15 +18,15 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI InvalidAttributeValueException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.directory.InvalidAttributeValueException
  */
 public class InvalidAttributeValueException extends NamingException {
 
-	public InvalidAttributeValueException(
-			javax.naming.directory.InvalidAttributeValueException cause) {
+	public InvalidAttributeValueException(javax.naming.directory.InvalidAttributeValueException cause) {
 		super(cause);
 	}
+
 }

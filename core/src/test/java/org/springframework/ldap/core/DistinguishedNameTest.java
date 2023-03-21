@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Unit tests for the {@link DistinguishedName} class.
- * 
+ *
  * @author Adam Skogman
  * @author Mattias Hellborg Arthursson
  */
@@ -57,8 +57,8 @@ public class DistinguishedNameTest {
 	}
 
 	/**
-	 * CompositeName screws up distinguished names when there are double qoutes, as described in Ldap237.
-	 *
+	 * CompositeName screws up distinguished names when there are double qoutes, as
+	 * described in Ldap237.
 	 * @throws InvalidNameException
 	 */
 	@Test
@@ -180,6 +180,7 @@ public class DistinguishedNameTest {
 		// a subclass with the same values as the original
 		final Object subclassObject = new DistinguishedName("cn=john.doe, OU=Users,OU=Some company,C=SE") {
 			private static final long serialVersionUID = 1L;
+
 		};
 
 		new EqualsTester(originalObject, identicalObject, differentObject, subclassObject);
@@ -615,7 +616,7 @@ public class DistinguishedNameTest {
 		try {
 			String dnString = "ou=foo,Ou=bar,oU=baz,OU=bim";
 			DistinguishedName name = new DistinguishedName(dnString);
-			
+
 			// First check the default
 			assertThat(name.toString()).isEqualTo("ou=foo,ou=bar,ou=baz,ou=bim");
 
@@ -638,7 +639,7 @@ public class DistinguishedNameTest {
 
 			// First check the default
 			assertThat(name.toString()).isEqualTo("ou=foo,ou=bar,ou=baz,ou=bim");
-			
+
 			System.setProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY, DistinguishedName.KEY_CASE_FOLD_UPPER);
 			name = new DistinguishedName(dnString);
 			System.out.println(dnString + " folded as \"" + DistinguishedName.KEY_CASE_FOLD_UPPER + "\": " + name);
@@ -658,7 +659,7 @@ public class DistinguishedNameTest {
 
 			// First check the default
 			assertThat(name.toString()).isEqualTo("ou=foo,ou=bar,ou=baz,ou=bim");
-			
+
 			System.setProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY, DistinguishedName.KEY_CASE_FOLD_LOWER);
 			name = new DistinguishedName(dnString);
 			System.out.println(dnString + " folded as \"" + DistinguishedName.KEY_CASE_FOLD_LOWER + "\": " + name);
@@ -678,7 +679,7 @@ public class DistinguishedNameTest {
 
 			// First check the default
 			assertThat(name.toString()).isEqualTo("ou=foo,ou=bar,ou=baz,ou=bim");
-			
+
 			System.setProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY, "whatever");
 			name = new DistinguishedName(dnString);
 			System.out.println(dnString + " folded as \"whatever\": " + name);
@@ -692,19 +693,17 @@ public class DistinguishedNameTest {
 
 	@Test
 	public void testHashSignLdap229() {
-		assertThat(new DistinguishedName("cn=Foo\\#Bar")).isEqualTo(
-				new DistinguishedName("cn=Foo#Bar"));
+		assertThat(new DistinguishedName("cn=Foo\\#Bar")).isEqualTo(new DistinguishedName("cn=Foo#Bar"));
 	}
 
 	@Test
 	public void testEqualsSignLdap229() {
-		assertThat(new DistinguishedName("cn=Foo\\=Bar")).isEqualTo(
-				new DistinguishedName("cn=Foo=Bar"));
+		assertThat(new DistinguishedName("cn=Foo\\=Bar")).isEqualTo(new DistinguishedName("cn=Foo=Bar"));
 	}
 
 	@Test
 	public void testSpaceSignLdap229() {
-		assertThat(new DistinguishedName("cn=Foo\\ Bar")).isEqualTo(
-				new DistinguishedName("cn=Foo Bar"));
+		assertThat(new DistinguishedName("cn=Foo\\ Bar")).isEqualTo(new DistinguishedName("cn=Foo Bar"));
 	}
+
 }

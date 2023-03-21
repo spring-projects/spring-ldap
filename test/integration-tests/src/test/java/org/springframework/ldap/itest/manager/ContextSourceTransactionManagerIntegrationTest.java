@@ -37,11 +37,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 /**
- * Integration tests for {@link org.springframework.ldap.transaction.compensating.manager.ContextSourceTransactionManager}.
- * 
+ * Integration tests for
+ * {@link org.springframework.ldap.transaction.compensating.manager.ContextSourceTransactionManager}.
+ *
  * @author Mattias Hellborg Arthursson
  */
-@ContextConfiguration(locations = {"/conf/ldapTemplateTransactionTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapTemplateTransactionTestContext.xml" })
 public class ContextSourceTransactionManagerIntegrationTest extends AbstractLdapTemplateIntegrationTest {
 
 	private static Logger log = LoggerFactory.getLogger(ContextSourceTransactionManagerIntegrationTest.class);
@@ -269,4 +270,5 @@ public class ContextSourceTransactionManagerIntegrationTest extends AbstractLdap
 		}
 
 	}
+
 }

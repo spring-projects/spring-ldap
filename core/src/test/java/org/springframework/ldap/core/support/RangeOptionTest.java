@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.fail;
  *
  * @author Marius Scurtescu
  */
-public class RangeOptionTest  {
+public class RangeOptionTest {
 
 	@Test
 	public void testConstructorInvalid() {
@@ -34,7 +34,8 @@ public class RangeOptionTest  {
 			new RangeOption(101, 100);
 
 			fail("IllegalArgumentException expected");
-		} catch (IllegalArgumentException expected) {
+		}
+		catch (IllegalArgumentException expected) {
 			assertThat(true).isTrue();
 		}
 
@@ -42,7 +43,8 @@ public class RangeOptionTest  {
 			new RangeOption(-1, 100);
 
 			fail("IllegalArgumentException expected");
-		} catch (IllegalArgumentException expected) {
+		}
+		catch (IllegalArgumentException expected) {
 			assertThat(true).isTrue();
 		}
 
@@ -50,7 +52,8 @@ public class RangeOptionTest  {
 			new RangeOption(-10, 100);
 
 			fail("IllegalArgumentException expected");
-		} catch (IllegalArgumentException expected) {
+		}
+		catch (IllegalArgumentException expected) {
 			assertThat(true).isTrue();
 		}
 
@@ -58,7 +61,8 @@ public class RangeOptionTest  {
 			new RangeOption(0, -3);
 
 			fail("IllegalArgumentException expected");
-		} catch (IllegalArgumentException expected) {
+		}
+		catch (IllegalArgumentException expected) {
 			assertThat(true).isTrue();
 		}
 	}
@@ -146,7 +150,8 @@ public class RangeOptionTest  {
 			assertThat(range1.compareTo(range2) == 0).isTrue();
 
 			fail("IllegalStateException expected");
-		} catch (IllegalStateException expected) {
+		}
+		catch (IllegalStateException expected) {
 			assertThat(true).isTrue();
 		}
 
@@ -157,7 +162,8 @@ public class RangeOptionTest  {
 			assertThat(range1.compareTo(range2) == 0).isTrue();
 
 			fail("IllegalStateException expected");
-		} catch (IllegalStateException expected) {
+		}
+		catch (IllegalStateException expected) {
 			assertThat(true).isTrue();
 		}
 
@@ -168,7 +174,8 @@ public class RangeOptionTest  {
 			assertThat(range1.compareTo(range2) == 0).isTrue();
 
 			fail("IllegalStateException expected");
-		} catch (IllegalStateException expected) {
+		}
+		catch (IllegalStateException expected) {
 			assertThat(true).isTrue();
 		}
 	}
@@ -189,4 +196,5 @@ public class RangeOptionTest  {
 		assertThat(range.getInitial()).isEqualTo(211);
 		assertThat(range.getTerminal()).isEqualTo(RangeOption.TERMINAL_END_OF_RANGE);
 	}
+
 }

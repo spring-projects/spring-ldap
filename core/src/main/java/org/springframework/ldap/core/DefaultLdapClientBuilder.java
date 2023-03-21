@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import javax.naming.directory.SearchControls;
 
 class DefaultLdapClientBuilder implements LdapClient.Builder {
+
 	private ContextSource contextSource;
 
 	private Supplier<SearchControls> searchControlsSupplier = () -> {
@@ -22,10 +23,10 @@ class DefaultLdapClientBuilder implements LdapClient.Builder {
 
 	private boolean ignoreSizeLimitExceededException = true;
 
-	DefaultLdapClientBuilder() {}
+	DefaultLdapClientBuilder() {
+	}
 
-	DefaultLdapClientBuilder(ContextSource contextSource,
-							 Supplier<SearchControls> searchControlsSupplier) {
+	DefaultLdapClientBuilder(ContextSource contextSource, Supplier<SearchControls> searchControlsSupplier) {
 		this.contextSource = contextSource;
 		this.searchControlsSupplier = searchControlsSupplier;
 	}
@@ -88,4 +89,5 @@ class DefaultLdapClientBuilder implements LdapClient.Builder {
 		client.setIgnoreNameNotFoundException(this.ignoreNameNotFoundException);
 		return client;
 	}
+
 }

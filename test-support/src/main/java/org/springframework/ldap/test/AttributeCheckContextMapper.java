@@ -23,12 +23,13 @@ import org.springframework.ldap.core.DirContextAdapter;
 import java.util.Arrays;
 
 /**
- * Dummy ContextMapper for testing purposes to check that the received
- * Attributes are the expected ones.
- * 
+ * Dummy ContextMapper for testing purposes to check that the received Attributes are the
+ * expected ones.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class AttributeCheckContextMapper implements ContextMapper<DirContextAdapter> {
+
 	private String[] expectedAttributes = new String[0];
 
 	private String[] expectedValues = new String[0];
@@ -37,13 +38,11 @@ public class AttributeCheckContextMapper implements ContextMapper<DirContextAdap
 
 	public DirContextAdapter mapFromContext(Object ctx) {
 		DirContextAdapter adapter = (DirContextAdapter) ctx;
-		Assert.assertEquals("Values and attributes need to have the same length ",
-				expectedAttributes.length, expectedValues.length);
+		Assert.assertEquals("Values and attributes need to have the same length ", expectedAttributes.length,
+				expectedValues.length);
 		for (int i = 0; i < expectedAttributes.length; i++) {
-			String attributeValue = adapter
-					.getStringAttribute(expectedAttributes[i]);
-			Assert.assertNotNull("Attribute " + expectedAttributes[i]
-					+ " was not present", attributeValue);
+			String attributeValue = adapter.getStringAttribute(expectedAttributes[i]);
+			Assert.assertNotNull("Attribute " + expectedAttributes[i] + " was not present", attributeValue);
 			Assert.assertEquals(expectedValues[i], attributeValue);
 		}
 
@@ -65,4 +64,5 @@ public class AttributeCheckContextMapper implements ContextMapper<DirContextAdap
 	public void setExpectedValues(String[] expectedValues) {
 		this.expectedValues = Arrays.copyOf(expectedValues, expectedValues.length);
 	}
+
 }

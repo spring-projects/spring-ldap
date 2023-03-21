@@ -29,8 +29,7 @@ public class LessThanOrEqualsFilterTest {
 	@Test
 	public void testEncode() {
 
-		LessThanOrEqualsFilter eqq = new LessThanOrEqualsFilter("foo",
-				"*bar(fie)");
+		LessThanOrEqualsFilter eqq = new LessThanOrEqualsFilter("foo", "*bar(fie)");
 
 		StringBuffer buff = new StringBuffer();
 		eqq.encode(buff);
@@ -61,7 +60,7 @@ public class LessThanOrEqualsFilterTest {
 		LessThanOrEqualsFilter subclassObject = new LessThanOrEqualsFilter(attribute, value) {
 		};
 
-		new EqualsTester(originalObject, identicalObject, differentObject,
-				subclassObject);
+		new EqualsTester(originalObject, identicalObject, differentObject, subclassObject);
 	}
+
 }

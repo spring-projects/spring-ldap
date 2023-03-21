@@ -62,6 +62,7 @@ import org.springframework.util.Assert;
  * @since 3.1
  */
 class DefaultLdapClient implements LdapClient {
+
 	private final Logger logger = LoggerFactory.getLogger(DefaultLdapClient.class);
 
 	private static final boolean DONT_RETURN_OBJ_FLAG = false;
@@ -151,13 +152,13 @@ class DefaultLdapClient implements LdapClient {
 	 */
 	@Override
 	public Builder mutate() {
-		return new DefaultLdapClientBuilder(this.contextSource,  this.searchControlsSupplier);
+		return new DefaultLdapClientBuilder(this.contextSource, this.searchControlsSupplier);
 	}
 
 	/**
 	 * Ignore {@link PartialResultException}s.
-	 *
-	 * @param ignorePartialResultException whether to ignore {@link PartialResultException}s
+	 * @param ignorePartialResultException whether to ignore
+	 * {@link PartialResultException}s
 	 */
 	void setIgnorePartialResultException(boolean ignorePartialResultException) {
 		this.ignorePartialResultException = ignorePartialResultException;
@@ -165,24 +166,23 @@ class DefaultLdapClient implements LdapClient {
 
 	/**
 	 * Ignore {@link NameNotFoundException}s.
-	 *
 	 * @param ignoreNameNotFoundException whether to ignore {@link NameNotFoundException}s
 	 */
 	void setIgnoreNameNotFoundException(boolean ignoreNameNotFoundException) {
 		this.ignoreNameNotFoundException = ignoreNameNotFoundException;
 	}
 
-
 	/**
 	 * Ignore {@link SizeLimitExceededException}s.
-	 *
-	 * @param ignoreSizeLimitExceededException whether to ignore {@link SizeLimitExceededException}s
+	 * @param ignoreSizeLimitExceededException whether to ignore
+	 * {@link SizeLimitExceededException}s
 	 */
 	void setIgnoreSizeLimitExceededException(boolean ignoreSizeLimitExceededException) {
 		this.ignoreSizeLimitExceededException = ignoreSizeLimitExceededException;
 	}
 
 	private final class DefaultListSpec implements ListSpec {
+
 		private final Name name;
 
 		private DefaultListSpec(Name name) {
@@ -202,9 +202,11 @@ class DefaultLdapClient implements LdapClient {
 			NamingEnumeration<NameClassPair> results = computeWithReadOnlyContext(executor);
 			return DefaultLdapClient.this.toStream(results, mapper::mapFromNameClassPair);
 		}
+
 	}
 
 	private final class DefaultListBindingsSpec implements ListBindingsSpec {
+
 		private final Name name;
 
 		private DefaultListBindingsSpec(Name name) {
@@ -238,9 +240,11 @@ class DefaultLdapClient implements LdapClient {
 			NamingEnumeration<Binding> results = computeWithReadOnlyContext(executor);
 			return DefaultLdapClient.this.toStream(results, function(mapper));
 		}
+
 	}
 
 	private final class DefaultAuthenticateSpec implements AuthenticateSpec {
+
 		LdapClient.SearchSpec search = new DefaultSearchSpec();
 
 		char[] password;
@@ -277,14 +281,17 @@ class DefaultLdapClient implements LdapClient {
 				String password = (this.password != null) ? new String(this.password) : null;
 				ctx = contextSource.getContext(identification.get(0).getAbsoluteName().toString(), password);
 				return mapper.mapWithContext(ctx, identification.get(0));
-			} finally {
+			}
+			finally {
 				this.password = null;
 				closeContext(ctx);
 			}
 		}
+
 	}
 
 	private final class DefaultSearchSpec implements SearchSpec {
+
 		LdapQuery query = LdapQueryBuilder.query().filter("(objectClass=*)");
 
 		SearchControls controls;
@@ -373,12 +380,17 @@ class DefaultLdapClient implements LdapClient {
 			}
 			return controls;
 		}
+
 	}
 
 	private final class DefaultBindSpec implements BindSpec {
+
 		private final Name name;
+
 		private Object obj;
+
 		private Attributes attributes;
+
 		private boolean rebind = false;
 
 		private DefaultBindSpec(Name name) {
@@ -409,15 +421,20 @@ class DefaultLdapClient implements LdapClient {
 		public void execute() {
 			if (this.rebind) {
 				runWithReadWriteContext((ctx) -> ctx.rebind(this.name, this.obj, this.attributes));
-			} else {
+			}
+			else {
 				runWithReadWriteContext((ctx) -> ctx.bind(this.name, this.obj, this.attributes));
 			}
 		}
+
 	}
 
 	private final class DefaultModifySpec implements ModifySpec {
+
 		private final DirContextOperations entry;
+
 		private Name name;
+
 		private ModificationItem[] items;
 
 		private DefaultModifySpec(DirContextOperations entry) {
@@ -455,7 +472,8 @@ class DefaultLdapClient implements LdapClient {
 				if (this.items.length > 0) {
 					runWithReadWriteContext((ctx) -> ctx.modifyAttributes(this.name, this.items));
 				}
-			} catch (Throwable t) {
+			}
+			catch (Throwable t) {
 				if (renamed) {
 					// attempt to change the name back
 					runWithReadWriteContext((ctx) -> ctx.rename(this.name, this.entry.getDn()));
@@ -463,10 +481,13 @@ class DefaultLdapClient implements LdapClient {
 				throw t;
 			}
 		}
+
 	}
 
 	private final class DefaultUnbindSpec implements UnbindSpec {
+
 		private final Name name;
+
 		private boolean recursive = false;
 
 		private DefaultUnbindSpec(Name name) {
@@ -502,20 +523,24 @@ class DefaultLdapClient implements LdapClient {
 				if (DefaultLdapClient.this.logger.isDebugEnabled()) {
 					DefaultLdapClient.this.logger.debug("Entry " + name + " deleted");
 				}
-			} finally {
+			}
+			finally {
 				closeNamingEnumeration(bindings);
 			}
 		}
+
 	}
 
 	<T> T computeWithReadOnlyContext(ContextExecutor<T> executor) {
 		DirContext context = this.contextSource.getReadOnlyContext();
 		try {
 			return executor.executeWithContext(context);
-		} catch (NamingException ex) {
+		}
+		catch (NamingException ex) {
 			this.namingExceptionHandler.accept(ex);
 			return null;
-		} finally {
+		}
+		finally {
 			closeContext(context);
 		}
 	}
@@ -524,9 +549,11 @@ class DefaultLdapClient implements LdapClient {
 		DirContext context = this.contextSource.getReadWriteContext();
 		try {
 			runnable.run(context);
-		} catch (NamingException ex) {
+		}
+		catch (NamingException ex) {
 			this.namingExceptionHandler.accept(ex);
-		} finally {
+		}
+		finally {
 			closeContext(context);
 		}
 	}
@@ -545,7 +572,8 @@ class DefaultLdapClient implements LdapClient {
 			public boolean hasMoreElements() {
 				try {
 					return enumeration.hasMore();
-				} catch (NamingException ex) {
+				}
+				catch (NamingException ex) {
 					namingExceptionHandler.accept(ex);
 					return false;
 				}
@@ -555,7 +583,8 @@ class DefaultLdapClient implements LdapClient {
 			public T nextElement() {
 				try {
 					return enumeration.next();
-				} catch (NamingException ex) {
+				}
+				catch (NamingException ex) {
 					namingExceptionHandler.accept(ex);
 					throw new NoSuchElementException("no such element", ex);
 				}
@@ -589,7 +618,8 @@ class DefaultLdapClient implements LdapClient {
 		throw LdapUtils.convertLdapException(ex);
 	};
 
-	private <S extends NameClassPair, T> T toObject(NamingEnumeration<S> results, NamingExceptionFunction<? super S, T> mapper) {
+	private <S extends NameClassPair, T> T toObject(NamingEnumeration<S> results,
+			NamingExceptionFunction<? super S, T> mapper) {
 		try {
 			Enumeration<S> enumeration = enumeration(results);
 			Function<? super S, T> function = mapper.wrap(this.namingExceptionHandler);
@@ -601,12 +631,14 @@ class DefaultLdapClient implements LdapClient {
 				throw new IncorrectResultSizeDataAccessException(1);
 			}
 			return result;
-		} finally {
+		}
+		finally {
 			closeNamingEnumeration(results);
 		}
 	}
 
-	private <S extends NameClassPair, T> List<T> toList(NamingEnumeration<S> results, NamingExceptionFunction<? super S, T> mapper) {
+	private <S extends NameClassPair, T> List<T> toList(NamingEnumeration<S> results,
+			NamingExceptionFunction<? super S, T> mapper) {
 		if (results == null) {
 			return Collections.emptyList();
 		}
@@ -621,20 +653,22 @@ class DefaultLdapClient implements LdapClient {
 				}
 			}
 			return mapped;
-		} finally {
+		}
+		finally {
 			closeNamingEnumeration(results);
 		}
 	}
 
-	private <S extends NameClassPair, T> Stream<T> toStream(NamingEnumeration<S> results, NamingExceptionFunction<? super S, T> mapper) {
+	private <S extends NameClassPair, T> Stream<T> toStream(NamingEnumeration<S> results,
+			NamingExceptionFunction<? super S, T> mapper) {
 		if (results == null) {
 			return Stream.empty();
 		}
 		Enumeration<S> enumeration = enumeration(results);
 		Function<? super S, T> function = mapper.wrap(this.namingExceptionHandler);
-		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(enumeration.asIterator(), Spliterator.ORDERED), false)
-				.map(function::apply).filter(Objects::nonNull)
-				.onClose(() -> closeNamingEnumeration(results));
+		return StreamSupport
+				.stream(Spliterators.spliteratorUnknownSize(enumeration.asIterator(), Spliterator.ORDERED), false)
+				.map(function::apply).filter(Objects::nonNull).onClose(() -> closeNamingEnumeration(results));
 	}
 
 	private void closeContext(DirContext ctx) {
@@ -660,22 +694,27 @@ class DefaultLdapClient implements LdapClient {
 	}
 
 	interface ContextRunnable {
+
 		void run(DirContext ctx) throws NamingException;
+
 	}
 
 	interface NamingExceptionFunction<S, T> {
+
 		T apply(S element) throws NamingException;
 
 		default Function<S, T> wrap(Consumer<NamingException> handler) {
 			return (s) -> {
 				try {
 					return apply(s);
-				} catch (NamingException ex) {
+				}
+				catch (NamingException ex) {
 					handler.accept(ex);
 					return null;
 				}
 			};
 		}
-	}
-}
 
+	}
+
+}

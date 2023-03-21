@@ -45,30 +45,26 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * Abstract implementation of the {@link ContextSource} interface. By default,
- * returns an authenticated
- * <code>DirContext</code> implementation for both read-only and
- * read-write operations. To have an anonymous environment created for read-only
- * operations, set the <code>anonymousReadOnly</code> property to
- * <code>true</code>.
+ * Abstract implementation of the {@link ContextSource} interface. By default, returns an
+ * authenticated <code>DirContext</code> implementation for both read-only and read-write
+ * operations. To have an anonymous environment created for read-only operations, set the
+ * <code>anonymousReadOnly</code> property to <code>true</code>.
  * <p>
- * Implementing classes need to implement
- * {@link #getDirContextInstance(Hashtable)} to create a <code>DirContext</code>
- * instance of the desired type.
+ * Implementing classes need to implement {@link #getDirContextInstance(Hashtable)} to
+ * create a <code>DirContext</code> instance of the desired type.
  * <p>
- * If an {@link AuthenticationSource} is set, this will be used for getting user
- * principal and password for each new connection, otherwise a default one will
- * be created using the specified <code>userDn</code> and <code>password</code>.
+ * If an {@link AuthenticationSource} is set, this will be used for getting user principal
+ * and password for each new connection, otherwise a default one will be created using the
+ * specified <code>userDn</code> and <code>password</code>.
  * <p>
- * <b>Note:</b> When using implementations of this class outside of a Spring
- * Context it is necessary to call {@link #afterPropertiesSet()} when all
- * properties are set, in order to finish up initialization.
+ * <b>Note:</b> When using implementations of this class outside of a Spring Context it is
+ * necessary to call {@link #afterPropertiesSet()} when all properties are set, in order
+ * to finish up initialization.
  *
  * @see org.springframework.ldap.core.LdapTemplate
  * @see org.springframework.ldap.core.support.DefaultDirObjectFactory
  * @see org.springframework.ldap.core.support.LdapContextSource
  * @see org.springframework.ldap.core.support.DirContextSource
- *
  * @author Mattias Hellborg Arthursson
  * @author Adam Skogman
  * @author Ulrik Sandberg
@@ -78,8 +74,11 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	private static final String DEFAULT_CONTEXT_FACTORY = "com.sun.jndi.ldap.LdapCtxFactory";
 
 	private static final Class<DefaultDirObjectFactory> DEFAULT_DIR_OBJECT_FACTORY = DefaultDirObjectFactory.class;
+
 	private static final boolean DONT_DISABLE_POOLING = false;
+
 	private static final boolean EXPLICITLY_DISABLE_POOLING = true;
+
 	private static final int DEFAULT_BUFFER_SIZE = 1024;
 
 	private Class<?> dirObjectFactory = DEFAULT_DIR_OBJECT_FACTORY;
@@ -127,27 +126,30 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	public AbstractContextSource() {
 		try {
 			contextFactory = Class.forName(DEFAULT_CONTEXT_FACTORY);
-		} catch (ClassNotFoundException e) {
+		}
+		catch (ClassNotFoundException e) {
 			LOG.trace("The default for contextFactory cannot be resolved", e);
 		}
 	}
 
 	public DirContext getContext(String principal, String credentials) {
-		// This method is typically called for authentication purposes, which means that we
+		// This method is typically called for authentication purposes, which means that
+		// we
 		// should explicitly disable pooling in case passwords are changed (LDAP-183).
 		return doGetContext(principal, credentials, EXPLICITLY_DISABLE_POOLING);
 	}
 
 	private DirContext doGetContext(String principal, String credentials, boolean explicitlyDisablePooling) {
 		Hashtable<String, Object> env = getAuthenticatedEnv(principal, credentials);
-		if(explicitlyDisablePooling) {
+		if (explicitlyDisablePooling) {
 			env.remove(SUN_LDAP_POOLING_FLAG);
 		}
 
 		DirContext ctx = createContext(env);
 
 		try {
-			DirContext processedDirContext = authenticationStrategy.processContextAfterCreation(ctx, principal, credentials);
+			DirContext processedDirContext = authenticationStrategy.processContextAfterCreation(ctx, principal,
+					credentials);
 			return processedDirContext;
 		}
 		catch (NamingException e) {
@@ -163,9 +165,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 */
 	public DirContext getReadOnlyContext() {
 		if (!anonymousReadOnly) {
-			return doGetContext(
-					authenticationSource.getPrincipal(),
-					authenticationSource.getCredentials(),
+			return doGetContext(authenticationSource.getPrincipal(), authenticationSource.getCredentials(),
 					DONT_DISABLE_POOLING);
 		}
 		else {
@@ -179,18 +179,15 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @see org.springframework.ldap.core.ContextSource#getReadWriteContext()
 	 */
 	public DirContext getReadWriteContext() {
-		return doGetContext(
-				authenticationSource.getPrincipal(),
-				authenticationSource.getCredentials(),
+		return doGetContext(authenticationSource.getPrincipal(), authenticationSource.getCredentials(),
 				DONT_DISABLE_POOLING);
 	}
 
 	/**
-	 * Default implementation of setting the environment up to be authenticated.
-	 * This method should typically NOT be overridden; any customization to the
-	 * authentication mechanism should be managed by setting a different
+	 * Default implementation of setting the environment up to be authenticated. This
+	 * method should typically NOT be overridden; any customization to the authentication
+	 * mechanism should be managed by setting a different
 	 * {@link DirContextAuthenticationStrategy} on this instance.
-	 *
 	 * @param env the environment to modify.
 	 * @param principal the principal to authenticate with.
 	 * @param credentials the credentials to authenticate with.
@@ -208,7 +205,6 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/**
 	 * Close the context and swallow any exceptions.
-	 *
 	 * @param ctx the DirContext to close.
 	 */
 	private void closeContext(DirContext ctx) {
@@ -225,7 +221,6 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	/**
 	 * Assemble a valid url String from all registered urls to add as
 	 * <code>PROVIDER_URL</code> to the environment.
-	 *
 	 * @param ldapUrls all individual url Strings.
 	 * @return the full url String
 	 */
@@ -252,41 +247,45 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 			Attributes attributes = component.toAttributes();
 
-			// Loop through all attribute of the rdn (usually just one, but more are supported by RFC)
+			// Loop through all attribute of the rdn (usually just one, but more are
+			// supported by RFC)
 			NamingEnumeration<? extends Attribute> allAttributes = attributes.getAll();
-			while(allAttributes.hasMoreElements()) {
+			while (allAttributes.hasMoreElements()) {
 				Attribute oneAttribute = allAttributes.nextElement();
 				String encodedAttributeName = nameEncodeForUrl(oneAttribute.getID());
 
-				// Loop through all values of the attribute (usually just one, but more are supported by RFC)
-				NamingEnumeration <?> allValues;
+				// Loop through all values of the attribute (usually just one, but more
+				// are supported by RFC)
+				NamingEnumeration<?> allValues;
 				try {
 					allValues = oneAttribute.getAll();
-				} catch (NamingException e) {
+				}
+				catch (NamingException e) {
 					throw new UncategorizedLdapException("Unexpected error occurred formatting base URL", e);
 				}
 
-				while(allValues.hasMoreElements()) {
+				while (allValues.hasMoreElements()) {
 					sb.append(encodedAttributeName).append('=');
 
 					Object oneValue = allValues.nextElement();
 					if (oneValue instanceof String) {
 						String oneString = (String) oneValue;
 						sb.append(nameEncodeForUrl(oneString));
-					} else {
+					}
+					else {
 						throw new IllegalArgumentException("Binary attributes not supported for base URL");
 					}
 
-					if(allValues.hasMoreElements()) {
+					if (allValues.hasMoreElements()) {
 						sb.append('+');
 					}
 				}
-				if(allAttributes.hasMoreElements()) {
+				if (allAttributes.hasMoreElements()) {
 					sb.append('+');
 				}
 			}
 
-			if(it.hasPrevious()) {
+			if (it.hasPrevious()) {
 				sb.append(',');
 			}
 		}
@@ -298,28 +297,30 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 			String ldapEncoded = LdapEncoder.nameEncode(value);
 			URI valueUri = new URI(null, null, ldapEncoded, null);
 			return valueUri.toString();
-		} catch (URISyntaxException e) {
+		}
+		catch (URISyntaxException e) {
 			throw new UncategorizedLdapException("This really shouldn't happen - report this", e);
 		}
 	}
 
 	/**
-	 * Set the base suffix from which all operations should origin. If a base
-	 * suffix is set, you will not have to (and, indeed, must not) specify the
-	 * full distinguished names in any operations performed.
-	 *
+	 * Set the base suffix from which all operations should origin. If a base suffix is
+	 * set, you will not have to (and, indeed, must not) specify the full distinguished
+	 * names in any operations performed.
 	 * @param base the base suffix.
 	 */
 	public void setBase(String base) {
 		if (base != null) {
 			this.base = LdapUtils.newLdapName(base);
-		} else {
+		}
+		else {
 			this.base = LdapUtils.emptyLdapName();
 		}
 	}
 
 	/**
-	 * @deprecated {@link DistinguishedName} and associated classes and methods are deprecated as of 2.0.
+	 * @deprecated {@link DistinguishedName} and associated classes and methods are
+	 * deprecated as of 2.0.
 	 */
 	@Override
 	public DistinguishedName getBaseLdapPath() {
@@ -338,11 +339,9 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/**
 	 * Create a DirContext using the supplied environment.
-	 *
 	 * @param environment the LDAP environment to use when creating the
 	 * <code>DirContext</code>.
-	 * @return a new DirContext implementation initialized with the supplied
-	 * environment.
+	 * @return a new DirContext implementation initialized with the supplied environment.
 	 */
 	protected DirContext createContext(Hashtable<String, Object> environment) {
 		DirContext ctx = null;
@@ -366,7 +365,6 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/**
 	 * Set the context factory. Default is com.sun.jndi.ldap.LdapCtxFactory.
-	 *
 	 * @param contextFactory the context factory used when creating Contexts.
 	 */
 	public void setContextFactory(Class<?> contextFactory) {
@@ -375,7 +373,6 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/**
 	 * Get the context factory.
-	 *
 	 * @return the context factory used when creating Contexts.
 	 */
 	public Class<?> getContextFactory() {
@@ -383,14 +380,12 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	}
 
 	/**
-	 * Set the DirObjectFactory to use. Default is
-	 * {@link DefaultDirObjectFactory}. The specified class needs to be an
-	 * implementation of javax.naming.spi.DirObjectFactory. <b>Note: </b>Setting
-	 * this value to null may have cause connection leaks when using
+	 * Set the DirObjectFactory to use. Default is {@link DefaultDirObjectFactory}. The
+	 * specified class needs to be an implementation of javax.naming.spi.DirObjectFactory.
+	 * <b>Note: </b>Setting this value to null may have cause connection leaks when using
 	 * ContextMapper methods in LdapTemplate.
-	 *
-	 * @param dirObjectFactory the DirObjectFactory to be used. Null means that
-	 * no DirObjectFactory will be used.
+	 * @param dirObjectFactory the DirObjectFactory to be used. Null means that no
+	 * DirObjectFactory will be used.
 	 */
 	public void setDirObjectFactory(Class<?> dirObjectFactory) {
 		this.dirObjectFactory = dirObjectFactory;
@@ -398,7 +393,6 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/**
 	 * Get the DirObjectFactory to use.
-	 *
 	 * @return the DirObjectFactory to be used. <code>null</code> means that no
 	 * DirObjectFactory will be used.
 	 */
@@ -407,10 +401,10 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	}
 
 	/**
-	 * Checks that all necessary data is set and that there is no compatibility
-	 * issues, after which the instance is initialized. Note that you need to
-	 * call this method explicitly after setting all desired properties if using
-	 * the class outside of a Spring Context.
+	 * Checks that all necessary data is set and that there is no compatibility issues,
+	 * after which the instance is initialized. Note that you need to call this method
+	 * explicitly after setting all desired properties if using the class outside of a
+	 * Spring Context.
 	 */
 	public void afterPropertiesSet() {
 		if (ObjectUtils.isEmpty(urls)) {
@@ -427,7 +421,8 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 			}
 			if (!anonymousReadOnly) {
 				if (password == null) {
-					throw new IllegalArgumentException("Property 'password' cannot be null. To use a blank password, please ensure it is set to \"\"");
+					throw new IllegalArgumentException(
+							"Property 'password' cannot be null. To use a blank password, please ensure it is set to \"\"");
 				}
 				if (!StringUtils.hasText(password)) {
 					LOG.info("Property 'password' not set - " + "blank password will be used");
@@ -477,7 +472,6 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/**
 	 * Set the password (credentials) to use for getting authenticated contexts.
-	 *
 	 * @param password the password.
 	 */
 	public void setPassword(String password) {
@@ -493,9 +487,8 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	}
 
 	/**
-	 * Set the user distinguished name (principal) to use for getting
-	 * authenticated contexts.
-	 *
+	 * Set the user distinguished name (principal) to use for getting authenticated
+	 * contexts.
 	 * @param userDn the user distinguished name.
 	 */
 	public void setUserDn(String userDn) {
@@ -503,9 +496,8 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	}
 
 	/**
-	 * Gets the user distinguished name (principal) to use for getting
-	 * authenticated contexts.
-	 *
+	 * Gets the user distinguished name (principal) to use for getting authenticated
+	 * contexts.
 	 * @return the user distinguished name.
 	 */
 	public String getUserDn() {
@@ -513,9 +505,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	}
 
 	/**
-	 * Set the urls of the LDAP servers. Use this method if several servers are
-	 * required.
-	 *
+	 * Set the urls of the LDAP servers. Use this method if several servers are required.
 	 * @param urls the urls of all servers.
 	 */
 	public void setUrls(String[] urls) {
@@ -524,7 +514,6 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/**
 	 * Get the urls of the LDAP servers.
-	 *
 	 * @return the urls of all servers.
 	 */
 	public String[] getUrls() {
@@ -532,9 +521,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	}
 
 	/**
-	 * Set the url of the LDAP server. Utility method if only one server is
-	 * used.
-	 *
+	 * Set the url of the LDAP server. Utility method if only one server is used.
 	 * @param url the url of the LDAP server.
 	 */
 	public void setUrl(String url) {
@@ -542,21 +529,19 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	}
 
 	/**
-	 * Set whether the pooling flag should be set, enabling the built-in LDAP
-	 * connection pooling. Default is <code>false</code>. The built-in LDAP
-	 * connection pooling suffers from a number of deficiencies, e.g. no
-	 * connection validation. Also, enabling this flag when using TLS
-	 * connections will explicitly not work. Consider using the Spring LDAP
-	 * <code>PoolingContextSource</code> as an alternative instead of enabling
-	 * this flag.
+	 * Set whether the pooling flag should be set, enabling the built-in LDAP connection
+	 * pooling. Default is <code>false</code>. The built-in LDAP connection pooling
+	 * suffers from a number of deficiencies, e.g. no connection validation. Also,
+	 * enabling this flag when using TLS connections will explicitly not work. Consider
+	 * using the Spring LDAP <code>PoolingContextSource</code> as an alternative instead
+	 * of enabling this flag.
 	 * <p>
-	 * Note that since LDAP pooling is system wide, full configuration of this
-	 * needs be done using system parameters as specified in the LDAP/JNDI
-	 * documentation. Also note, that pooling is done on user dn basis, i.e.
-	 * each individually authenticated connection will be pooled separately.
-	 * This means that LDAP pooling will be most efficient using anonymous
-	 * connections or connections authenticated using one single system user.
-	 *
+	 * Note that since LDAP pooling is system wide, full configuration of this needs be
+	 * done using system parameters as specified in the LDAP/JNDI documentation. Also
+	 * note, that pooling is done on user dn basis, i.e. each individually authenticated
+	 * connection will be pooled separately. This means that LDAP pooling will be most
+	 * efficient using anonymous connections or connections authenticated using one single
+	 * system user.
 	 * @param pooled whether Contexts should be pooled.
 	 */
 	public void setPooled(boolean pooled) {
@@ -565,7 +550,6 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/**
 	 * Get whether the pooling flag should be set.
-	 *
 	 * @return whether Contexts should be pooled.
 	 */
 	public boolean isPooled() {
@@ -573,11 +557,10 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	}
 
 	/**
-	 * If any custom environment properties are needed, these can be set using
-	 * this method.
-	 *
-	 * @param baseEnvironmentProperties the base environment properties that should always be used when
-	 *								  creating new Context instances.
+	 * If any custom environment properties are needed, these can be set using this
+	 * method.
+	 * @param baseEnvironmentProperties the base environment properties that should always
+	 * be used when creating new Context instances.
 	 */
 	public void setBaseEnvironmentProperties(Map<String, Object> baseEnvironmentProperties) {
 		this.baseEnv = new Hashtable<String, Object>(baseEnvironmentProperties);
@@ -602,9 +585,8 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	/**
 	 * Set the authentication source to use when retrieving user principal and
 	 * credentials.
-	 *
-	 * @param authenticationSource the {@link AuthenticationSource} that will
-	 * provide user info.
+	 * @param authenticationSource the {@link AuthenticationSource} that will provide user
+	 * info.
 	 */
 	public void setAuthenticationSource(AuthenticationSource authenticationSource) {
 		this.authenticationSource = authenticationSource;
@@ -612,7 +594,6 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	/**
 	 * Get the authentication source.
-	 *
 	 * @return the {@link AuthenticationSource} that will provide user info.
 	 */
 	public AuthenticationSource getAuthenticationSource() {
@@ -620,37 +601,33 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	}
 
 	/**
-	 * Set whether environment properties should be cached between requsts for
-	 * anonymous environment. Default is <code>true</code>; setting this
-	 * property to <code>false</code> causes the environment Hashmap to be
-	 * rebuilt from the current property settings of this instance between each
-	 * request for an anonymous environment.
-	 *
-	 * @param cacheEnvironmentProperties <code>true</code> causes that the
-	 * anonymous environment properties should be cached, <code>false</code>
-	 * causes the Hashmap to be rebuilt for each request.
+	 * Set whether environment properties should be cached between requsts for anonymous
+	 * environment. Default is <code>true</code>; setting this property to
+	 * <code>false</code> causes the environment Hashmap to be rebuilt from the current
+	 * property settings of this instance between each request for an anonymous
+	 * environment.
+	 * @param cacheEnvironmentProperties <code>true</code> causes that the anonymous
+	 * environment properties should be cached, <code>false</code> causes the Hashmap to
+	 * be rebuilt for each request.
 	 */
 	public void setCacheEnvironmentProperties(boolean cacheEnvironmentProperties) {
 		this.cacheEnvironmentProperties = cacheEnvironmentProperties;
 	}
 
 	/**
-	 * Set whether an anonymous environment should be used for read-only
-	 * operations. Default is <code>false</code>.
-	 *
-	 * @param anonymousReadOnly <code>true</code> if an anonymous environment
-	 * should be used for read-only operations, <code>false</code> otherwise.
+	 * Set whether an anonymous environment should be used for read-only operations.
+	 * Default is <code>false</code>.
+	 * @param anonymousReadOnly <code>true</code> if an anonymous environment should be
+	 * used for read-only operations, <code>false</code> otherwise.
 	 */
 	public void setAnonymousReadOnly(boolean anonymousReadOnly) {
 		this.anonymousReadOnly = anonymousReadOnly;
 	}
 
 	/**
-	 * Get whether an anonymous environment should be used for read-only
-	 * operations.
-	 *
-	 * @return <code>true</code> if an anonymous environment should be used for
-	 * read-only operations, <code>false</code> otherwise.
+	 * Get whether an anonymous environment should be used for read-only operations.
+	 * @return <code>true</code> if an anonymous environment should be used for read-only
+	 * operations, <code>false</code> otherwise.
 	 */
 	public boolean isAnonymousReadOnly() {
 		return anonymousReadOnly;
@@ -659,24 +636,20 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	/**
 	 * Set the {@link DirContextAuthenticationStrategy} to use for preparing the
 	 * environment and processing the created <code>DirContext</code> instances.
-	 *
-	 * @param authenticationStrategy the
-	 * {@link DirContextAuthenticationStrategy} to use; default is
-	 * {@link SimpleDirContextAuthenticationStrategy}.
+	 * @param authenticationStrategy the {@link DirContextAuthenticationStrategy} to use;
+	 * default is {@link SimpleDirContextAuthenticationStrategy}.
 	 */
 	public void setAuthenticationStrategy(DirContextAuthenticationStrategy authenticationStrategy) {
 		this.authenticationStrategy = authenticationStrategy;
 	}
 
 	/**
-	 * Set the method to handle referrals. Default is 'ignore'; setting this
-	 * flag to 'follow' will enable referrals to be automatically followed. Note
-	 * that this might require particular name server setup in order to work
-	 * (the referred URLs will need to be automatically found using standard DNS
-	 * resolution).
-	 * @param referral the value to set the system property
-	 * <code>Context.REFERRAL</code> to, customizing the way that referrals are
-	 * handled.
+	 * Set the method to handle referrals. Default is 'ignore'; setting this flag to
+	 * 'follow' will enable referrals to be automatically followed. Note that this might
+	 * require particular name server setup in order to work (the referred URLs will need
+	 * to be automatically found using standard DNS resolution).
+	 * @param referral the value to set the system property <code>Context.REFERRAL</code>
+	 * to, customizing the way that referrals are handled.
 	 */
 	public void setReferral(String referral) {
 		this.referral = referral;
@@ -685,7 +658,6 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	/**
 	 * Implement in subclass to create a DirContext of the desired type (e.g.
 	 * InitialDirContext or InitialLdapContext).
-	 *
 	 * @param environment the environment to use when creating the instance.
 	 * @return a new DirContext instance.
 	 * @throws NamingException if one is encountered when creating the instance.
@@ -701,5 +673,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 		public String getCredentials() {
 			return password;
 		}
+
 	}
+
 }

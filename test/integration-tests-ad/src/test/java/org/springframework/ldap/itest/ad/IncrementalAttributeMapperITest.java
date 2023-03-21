@@ -50,8 +50,11 @@ import static org.assertj.core.api.Assertions.fail;
 public class IncrementalAttributeMapperITest extends AbstractJUnit4SpringContextTests {
 
 	private static final DistinguishedName BASE_DN = new DistinguishedName("ou=dummy,dc=261consulting,dc=local");
+
 	private static final DistinguishedName OU_DN = new DistinguishedName("ou=dummy");
+
 	private static final DistinguishedName GROUP_DN = new DistinguishedName(OU_DN).append("cn", "testgroup");
+
 	private static final String DEFAULT_PASSWORD = "ahcoophah5Oi4oh";
 
 	@Autowired
@@ -132,7 +135,8 @@ public class IncrementalAttributeMapperITest extends AbstractJUnit4SpringContext
 	public void cleanup() {
 		try {
 			ldapTemplate.lookup(OU_DN);
-		} catch (NameNotFoundException e) {
+		}
+		catch (NameNotFoundException e) {
 			// Nothing to cleanup
 			return;
 		}
@@ -142,22 +146,24 @@ public class IncrementalAttributeMapperITest extends AbstractJUnit4SpringContext
 				ldapTemplate.unbind(OU_DN, true);
 				// Everything is deleted
 				return;
-			} catch (SizeLimitExceededException e) {
+			}
+			catch (SizeLimitExceededException e) {
 				// There's more to delete
 			}
 		}
 	}
 
-
 	@Test
 	public void verifyRetrievalOfLotsOfAttributeValues() {
 		DistinguishedName testgroupDn = new DistinguishedName(OU_DN).append("cn", "testgroup");
 
-		// The 'member' attribute consists of > 1500 entries and will not be returned without range specifier.
+		// The 'member' attribute consists of > 1500 entries and will not be returned
+		// without range specifier.
 		DirContextOperations ctx = ldapTemplate.lookupContext(testgroupDn);
 		assertThat(ctx.getStringAttribute("member")).isNull();
 
-		DefaultIncrementalAttributesMapper attributeMapper = new DefaultIncrementalAttributesMapper(new String[]{"member", "cn"});
+		DefaultIncrementalAttributesMapper attributeMapper = new DefaultIncrementalAttributesMapper(
+				new String[] { "member", "cn" });
 		assertThat(attributeMapper.hasMore()).as("There should be more results to get").isTrue();
 
 		String[] attributesArray = attributeMapper.getAttributesForLookup();
@@ -165,7 +171,8 @@ public class IncrementalAttributeMapperITest extends AbstractJUnit4SpringContext
 		assertThat(attributesArray[0]).isEqualTo("member");
 		assertThat(attributesArray[1]).isEqualTo("cn");
 
-		// First iteration - there should now be more members left, but all cn values should have been collected.
+		// First iteration - there should now be more members left, but all cn values
+		// should have been collected.
 		ldapTemplate.lookup(testgroupDn, attributesArray, attributeMapper);
 
 		assertThat(attributeMapper.hasMore()).as("There should be more results to get").isTrue();
@@ -195,10 +202,9 @@ public class IncrementalAttributeMapperITest extends AbstractJUnit4SpringContext
 			transactionTemplate.execute(new TransactionCallback<Object>() {
 				@Override
 				public Object doInTransaction(TransactionStatus status) {
-					ModificationItem modificationItem = new ModificationItem(
-							DirContext.ADD_ATTRIBUTE,
+					ModificationItem modificationItem = new ModificationItem(DirContext.ADD_ATTRIBUTE,
 							new BasicAttribute("member", buildUserRefDn("test" + 1501)));
-					ldapTemplate.modifyAttributes(GROUP_DN, new ModificationItem[]{modificationItem});
+					ldapTemplate.modifyAttributes(GROUP_DN, new ModificationItem[] { modificationItem });
 
 					// The below should cause a rollback
 					throw new RuntimeException("Simulate some failure");
@@ -206,16 +212,19 @@ public class IncrementalAttributeMapperITest extends AbstractJUnit4SpringContext
 			});
 
 			fail("RuntimeException expected");
-		} catch (RuntimeException expected) {
-			DefaultIncrementalAttributesMapper attributeMapper = new DefaultIncrementalAttributesMapper(new String[]{"member"});
+		}
+		catch (RuntimeException expected) {
+			DefaultIncrementalAttributesMapper attributeMapper = new DefaultIncrementalAttributesMapper(
+					new String[] { "member" });
 			while (attributeMapper.hasMore()) {
 				ldapTemplate.lookup(GROUP_DN, attributeMapper.getAttributesForLookup(), attributeMapper);
 			}
 
 			// LDAP-234: After rollback the attribute values were cleared after rollback
 			assertThat(
-					DefaultIncrementalAttributesMapper.lookupAttributeValues(
-							ldapTemplate, GROUP_DN, "member").size()).isEqualTo(1501);
+					DefaultIncrementalAttributesMapper.lookupAttributeValues(ldapTemplate, GROUP_DN, "member").size())
+							.isEqualTo(1501);
 		}
 	}
+
 }

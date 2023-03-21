@@ -50,10 +50,11 @@ import static org.assertj.core.api.Assertions.fail;
  *
  * @author Hans Westerbeek
  */
-@ContextConfiguration(locations = {"/conf/ldapAndHibernateTransactionTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapAndHibernateTransactionTestContext.xml" })
 public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends AbstractLdapTemplateIntegrationTest {
 
-	private static Logger log = LoggerFactory.getLogger(ContextSourceAndHibernateTransactionManagerIntegrationTest.class);
+	private static Logger log = LoggerFactory
+			.getLogger(ContextSourceAndHibernateTransactionManagerIntegrationTest.class);
 
 	@Autowired
 	@Qualifier("dummyDao")
@@ -367,4 +368,5 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTest extends 
 		person = (OrgPerson) this.hibernateTemplate.get(OrgPerson.class, new Integer(1));
 		assertThat(person).isNull();
 	}
+
 }

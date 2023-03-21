@@ -20,21 +20,19 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.ldap.core.AuthenticationSource;
 
 /**
- * Decorator on AuthenticationSource to have default authentication information
- * be returned should the target return empty principal and credentials. Useful
- * in combination with <code>AcegiAuthenticationSource</code> if users are to be
- * allowed to read some information even though they are not logged in.
+ * Decorator on AuthenticationSource to have default authentication information be
+ * returned should the target return empty principal and credentials. Useful in
+ * combination with <code>AcegiAuthenticationSource</code> if users are to be allowed to
+ * read some information even though they are not logged in.
  * <p>
- * <b>Note:</b> The <code>defaultUser</code> should be an non-privileged
- * user. This is important as this is the one that will be used when no user is
- * logged in (i.e. empty principal is returned from the target
- * AuthenticationSource).
- * 
+ * <b>Note:</b> The <code>defaultUser</code> should be an non-privileged user. This is
+ * important as this is the one that will be used when no user is logged in (i.e. empty
+ * principal is returned from the target AuthenticationSource).
+ *
  * @author Mattias Hellborg Arthursson
- * 
+ *
  */
-public class DefaultValuesAuthenticationSourceDecorator implements
-		AuthenticationSource, InitializingBean {
+public class DefaultValuesAuthenticationSourceDecorator implements AuthenticationSource, InitializingBean {
 
 	private AuthenticationSource target;
 
@@ -50,18 +48,13 @@ public class DefaultValuesAuthenticationSourceDecorator implements
 
 	/**
 	 * Constructor to setup instance directly.
-	 * 
-	 * @param target
-	 *			the target AuthenticationSource.
-	 * @param defaultUser
-	 *			dn of the user to use when the target returns an empty
-	 *			principal.
-	 * @param defaultPassword
-	 *			password of the user to use when the target returns an empty
-	 *			principal.
+	 * @param target the target AuthenticationSource.
+	 * @param defaultUser dn of the user to use when the target returns an empty
+	 * principal.
+	 * @param defaultPassword password of the user to use when the target returns an empty
+	 * principal.
 	 */
-	public DefaultValuesAuthenticationSourceDecorator(
-			AuthenticationSource target, String defaultUser,
+	public DefaultValuesAuthenticationSourceDecorator(AuthenticationSource target, String defaultUser,
 			String defaultPassword) {
 		this.target = target;
 		this.defaultUser = defaultUser;
@@ -69,54 +62,48 @@ public class DefaultValuesAuthenticationSourceDecorator implements
 	}
 
 	/**
-	 * Checks if the target's principal is not empty; if not, the credentials
-	 * from the target is returned - otherwise return the
-	 * <code>defaultPassword</code>.
-	 * 
+	 * Checks if the target's principal is not empty; if not, the credentials from the
+	 * target is returned - otherwise return the <code>defaultPassword</code>.
 	 * @return the target's password if the target's principal is not empty, the
-	 *		 <code>defaultPassword</code> otherwise.
+	 * <code>defaultPassword</code> otherwise.
 	 */
 	public String getCredentials() {
 		if (StringUtils.hasText(target.getPrincipal())) {
 			return target.getCredentials();
-		} else {
+		}
+		else {
 			return defaultPassword;
 		}
 	}
 
 	/**
-	 * Checks if the target's principal is not empty; if not, this is returned -
-	 * otherwise return the <code>defaultPassword</code>.
-	 * 
-	 * @return the target's principal if it is not empty, the
-	 *		 <code>defaultPassword</code> otherwise.
+	 * Checks if the target's principal is not empty; if not, this is returned - otherwise
+	 * return the <code>defaultPassword</code>.
+	 * @return the target's principal if it is not empty, the <code>defaultPassword</code>
+	 * otherwise.
 	 */
 	public String getPrincipal() {
 		String principal = target.getPrincipal();
 		if (StringUtils.hasText(principal)) {
 			return principal;
-		} else {
+		}
+		else {
 			return defaultUser;
 		}
 	}
 
 	/**
 	 * Set the password of the default user.
-	 * 
-	 * @param defaultPassword
-	 *			the password of the default user.
+	 * @param defaultPassword the password of the default user.
 	 */
 	public void setDefaultPassword(String defaultPassword) {
 		this.defaultPassword = defaultPassword;
 	}
 
 	/**
-	 * Set the default user DN. This should be a non-privileged user, since it
-	 * will be used when no authentication information is returned from the
-	 * target.
-	 * 
-	 * @param defaultUser
-	 *			DN of the default user.
+	 * Set the default user DN. This should be a non-privileged user, since it will be
+	 * used when no authentication information is returned from the target.
+	 * @param defaultUser DN of the default user.
 	 */
 	public void setDefaultUser(String defaultUser) {
 		this.defaultUser = defaultUser;
@@ -124,9 +111,7 @@ public class DefaultValuesAuthenticationSourceDecorator implements
 
 	/**
 	 * Set the target AuthenticationSource.
-	 * 
-	 * @param target
-	 *			the target AuthenticationSource.
+	 * @param target the target AuthenticationSource.
 	 */
 	public void setTarget(AuthenticationSource target) {
 		this.target = target;
@@ -134,23 +119,21 @@ public class DefaultValuesAuthenticationSourceDecorator implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	public void afterPropertiesSet() throws Exception {
 		if (target == null) {
-			throw new IllegalArgumentException(
-					"Property 'target' must be set.'");
+			throw new IllegalArgumentException("Property 'target' must be set.'");
 		}
 
 		if (defaultUser == null) {
-			throw new IllegalArgumentException(
-					"Property 'defaultUser' must be set.'");
+			throw new IllegalArgumentException("Property 'defaultUser' must be set.'");
 		}
 
 		if (defaultPassword == null) {
-			throw new IllegalArgumentException(
-					"Property 'defaultPassword' must be set.'");
+			throw new IllegalArgumentException("Property 'defaultPassword' must be set.'");
 		}
 	}
+
 }

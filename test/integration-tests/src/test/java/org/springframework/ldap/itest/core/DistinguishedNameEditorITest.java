@@ -25,10 +25,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Integration tests for {@link org.springframework.ldap.core.DistinguishedNameEditor}.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
-@ContextConfiguration(locations = {"/conf/distinguishedNameEditorTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/distinguishedNameEditorTestContext.xml" })
 public class DistinguishedNameEditorITest extends AbstractJUnit4SpringContextTests {
 
 	@Autowired
@@ -40,4 +40,5 @@ public class DistinguishedNameEditorITest extends AbstractJUnit4SpringContextTes
 		DistinguishedName name = distinguishedNameConsumer.getDistinguishedName();
 		assertThat(name).isEqualTo(new DistinguishedName("dc=jayway, dc=se"));
 	}
+
 }

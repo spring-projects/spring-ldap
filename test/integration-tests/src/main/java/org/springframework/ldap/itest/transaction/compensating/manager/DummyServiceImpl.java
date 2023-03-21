@@ -16,9 +16,11 @@
 package org.springframework.ldap.itest.transaction.compensating.manager;
 
 public class DummyServiceImpl {
+
 	private DummyDao dummyDaoImpl;
 
 	public void setDummyDaoImpl(DummyDao dummyDaoImpl) {
 		this.dummyDaoImpl = dummyDaoImpl;
 	}
+
 }

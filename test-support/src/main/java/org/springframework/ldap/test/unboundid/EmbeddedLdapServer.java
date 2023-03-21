@@ -36,10 +36,9 @@ public final class EmbeddedLdapServer {
 		this.directoryServer = directoryServer;
 	}
 
-	public static EmbeddedLdapServer newEmbeddedServer(String defaultPartitionName,
-			String defaultPartitionSuffix, int port) throws Exception {
-		InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig(
-				defaultPartitionSuffix);
+	public static EmbeddedLdapServer newEmbeddedServer(String defaultPartitionName, String defaultPartitionSuffix,
+			int port) throws Exception {
+		InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig(defaultPartitionSuffix);
 		config.addAdditionalBindCredentials("uid=admin,ou=system", "secret");
 
 		config.setListenerConfigs(InMemoryListenerConfig.createLDAPConfig("LDAP", port));
@@ -60,4 +59,5 @@ public final class EmbeddedLdapServer {
 	public void shutdown() throws Exception {
 		this.directoryServer.shutDown(true);
 	}
+
 }

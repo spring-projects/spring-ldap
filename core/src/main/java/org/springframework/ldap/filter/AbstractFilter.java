@@ -17,9 +17,8 @@
 package org.springframework.ldap.filter;
 
 /**
- * Convenience class that implements most of the methods in the Filter
- * interface.
- * 
+ * Convenience class that implements most of the methods in the Filter interface.
+ *
  * @author Adam Skogman
  */
 public abstract class AbstractFilter implements Filter {
@@ -37,4 +36,5 @@ public abstract class AbstractFilter implements Filter {
 	public String toString() {
 		return encode();
 	}
+
 }

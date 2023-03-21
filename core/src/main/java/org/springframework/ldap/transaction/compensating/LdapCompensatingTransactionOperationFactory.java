@@ -15,7 +15,6 @@
  */
 package org.springframework.ldap.transaction.compensating;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapOperations;
@@ -28,22 +27,21 @@ import org.springframework.util.ObjectUtils;
 import javax.naming.directory.DirContext;
 
 /**
- * {@link CompensatingTransactionOperationRecorder} implementation for LDAP
- * operations.
- * 
+ * {@link CompensatingTransactionOperationRecorder} implementation for LDAP operations.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
 public class LdapCompensatingTransactionOperationFactory implements CompensatingTransactionOperationFactory {
+
 	private static Logger log = LoggerFactory.getLogger(LdapCompensatingTransactionOperationFactory.class);
 
 	private TempEntryRenamingStrategy renamingStrategy;
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param renamingStrategy the {@link TempEntryRenamingStrategy} to supply
-	 * to relevant operations.
+	 * @param renamingStrategy the {@link TempEntryRenamingStrategy} to supply to relevant
+	 * operations.
 	 */
 	public LdapCompensatingTransactionOperationFactory(TempEntryRenamingStrategy renamingStrategy) {
 		this.renamingStrategy = renamingStrategy;
@@ -51,8 +49,8 @@ public class LdapCompensatingTransactionOperationFactory implements Compensating
 
 	/*
 	 * @see org.springframework.transaction.compensating.
-	 * CompensatingTransactionOperationFactory
-	 * #createRecordingOperation(java.lang.Object, java.lang.String)
+	 * CompensatingTransactionOperationFactory #createRecordingOperation(java.lang.Object,
+	 * java.lang.String)
 	 */
 	public CompensatingTransactionOperationRecorder createRecordingOperation(Object resource, String operation) {
 		if (ObjectUtils.nullSafeEquals(operation, LdapTransactionUtils.BIND_METHOD_NAME)) {
@@ -82,4 +80,5 @@ public class LdapCompensatingTransactionOperationFactory implements Compensating
 	LdapOperations createLdapOperationsInstance(DirContext ctx) {
 		return new LdapTemplate(new SingleContextSource(ctx));
 	}
+
 }

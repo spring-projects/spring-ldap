@@ -15,7 +15,6 @@
  */
 package org.springframework.ldap.pool2.factory;
 
-
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 
 /**
@@ -26,27 +25,46 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
  * @since 2.0
  */
 public class PoolConfig {
-	private int maxIdlePerKey = 8;
-	private int maxTotal = -1;
-	private int maxTotalPerKey = 8;
-	private int minIdlePerKey = 0;
-	private boolean blockWhenExhausted = true;
-	private String evictionPolicyClassName = "org.apache.commons.pool2.impl.DefaultEvictionPolicy";
-	private boolean fairness = false;
-	private boolean jmxEnabled = true;
-	private String jmxNameBase = null;
-	private String jmxNamePrefix = "ldap-pool";
-	private boolean lifo = true;
-	private long maxWaitMillis = -1L;
-	private long minEvictableIdleTimeMillis = 1000L * 60L * 30L;
-	private int numTestsPerEvictionRun = 3;
-	private long softMinEvictableIdleTimeMillis = -1L;
-	private boolean testOnBorrow = false;
-	private boolean testOnCreate = false;
-	private boolean testOnReturn = false;
-	private boolean testWhileIdle = false;
-	private long timeBetweenEvictionRunsMillis = -1L;
 
+	private int maxIdlePerKey = 8;
+
+	private int maxTotal = -1;
+
+	private int maxTotalPerKey = 8;
+
+	private int minIdlePerKey = 0;
+
+	private boolean blockWhenExhausted = true;
+
+	private String evictionPolicyClassName = "org.apache.commons.pool2.impl.DefaultEvictionPolicy";
+
+	private boolean fairness = false;
+
+	private boolean jmxEnabled = true;
+
+	private String jmxNameBase = null;
+
+	private String jmxNamePrefix = "ldap-pool";
+
+	private boolean lifo = true;
+
+	private long maxWaitMillis = -1L;
+
+	private long minEvictableIdleTimeMillis = 1000L * 60L * 30L;
+
+	private int numTestsPerEvictionRun = 3;
+
+	private long softMinEvictableIdleTimeMillis = -1L;
+
+	private boolean testOnBorrow = false;
+
+	private boolean testOnCreate = false;
+
+	private boolean testOnReturn = false;
+
+	private boolean testWhileIdle = false;
+
+	private long timeBetweenEvictionRunsMillis = -1L;
 
 	/**
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setMaxIdlePerKey(int)
@@ -58,7 +76,7 @@ public class PoolConfig {
 
 	/**
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setMaxTotal(int)
-	 * 
+	 *
 	 */
 	public void setMaxTotal(int maxTotal) {
 		this.maxTotal = maxTotal;
@@ -329,4 +347,5 @@ public class PoolConfig {
 	public long getTimeBetweenEvictionRunsMillis() {
 		return timeBetweenEvictionRunsMillis;
 	}
+
 }

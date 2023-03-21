@@ -24,10 +24,10 @@ import javax.naming.ldap.LdapName;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DifferentSubtreeTempEntryRenamingStrategyTest {
+
 	@Test
 	public void testGetTemporaryName() {
-		LdapName originalName = LdapUtils.newLdapName(
-				"cn=john doe, ou=somecompany, c=SE");
+		LdapName originalName = LdapUtils.newLdapName("cn=john doe, ou=somecompany, c=SE");
 		DifferentSubtreeTempEntryRenamingStrategy tested = new DifferentSubtreeTempEntryRenamingStrategy(
 				LdapUtils.newLdapName("ou=tempEntries"));
 

@@ -26,32 +26,32 @@ import java.util.Hashtable;
  * <p>
  * <code>SchemaViewer</code> takes the following flags:
  * <ul>
- * <li><code>-h,--help&lt;</code>				Print this help message</li>
- * <li><code>-l,--url &lt;arg&gt;</code>		   Ldap url of directory to bind to (defaults to ldap://127.0.0.1:389)</li>
- * <li><code>-u,--username &lt;arg&gt;</code>	  DN to bind with (defaults to "")</li>
- * <li><code>-p,--password &lt;arg&gt;</code>	  Password to bind with (defaults to "")</li>
- * <li><code>-o,--objectclass &lt;arg&gt;</code>   Object class name or ? for all. Print object class schema</li>
- * <li><code>-a,--attribute &lt;arg&gt;</code>	 Attribute name or ? for all. Print attribute schema</li>
- * <li><code>-s,--syntax &lt;arg&gt;</code>		Syntax or ? for all. Print syntax</li>
+ * <li><code>-h,--help&lt;</code> Print this help message</li>
+ * <li><code>-l,--url &lt;arg&gt;</code> Ldap url of directory to bind to (defaults to
+ * ldap://127.0.0.1:389)</li>
+ * <li><code>-u,--username &lt;arg&gt;</code> DN to bind with (defaults to "")</li>
+ * <li><code>-p,--password &lt;arg&gt;</code> Password to bind with (defaults to "")</li>
+ * <li><code>-o,--objectclass &lt;arg&gt;</code> Object class name or ? for all. Print
+ * object class schema</li>
+ * <li><code>-a,--attribute &lt;arg&gt;</code> Attribute name or ? for all. Print
+ * attribute schema</li>
+ * <li><code>-s,--syntax &lt;arg&gt;</code> Syntax or ? for all. Print syntax</li>
  * </ul>
- * 
+ *
  * Only one of <code>-a</code>, <code>-o</code> and <code>-s</code> should be specified.
- * 
+ *
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  *
  */
 public final class SchemaViewer {
-	private static final String DEFAULT_URL="ldap://127.0.0.1:389";
-	
+
+	private static final String DEFAULT_URL = "ldap://127.0.0.1:389";
+
 	private enum Flag {
-		URL("l", "url"),
-		USERNAME("u", "username"),
-		PASSWORD("p", "password"),
-		OBJECTCLASS("o", "objectclass"),
-		ATTRIBUTE("a", "attribute"),
-		SYNTAX("s", "syntax"),
-		HELP("h", "help"),
-		ERROR("e", "error");
+
+		URL("l", "url"), USERNAME("u", "username"), PASSWORD("p", "password"), OBJECTCLASS("o",
+				"objectclass"), ATTRIBUTE("a",
+						"attribute"), SYNTAX("s", "syntax"), HELP("h", "help"), ERROR("e", "error");
 
 		private String shortName;
 
@@ -74,9 +74,11 @@ public final class SchemaViewer {
 		public String toString() {
 			return String.format("short=%1$s, long=%2$s", shortName, longName);
 		}
+
 	}
 
 	private enum SchemaContext {
+
 		OBJECTCLASS("ClassDefinition"), ATTRIBUTE("AttributeDefinition"), SYNTAX("SyntaxDefinition");
 
 		private String value;
@@ -93,13 +95,17 @@ public final class SchemaViewer {
 		public String toString() {
 			return String.format("value=%1$s", value);
 		}
+
 	}
 
 	private static final Options DEFAULT_OPTIONS = new Options();
 	static {
-		DEFAULT_OPTIONS.addOption(Flag.URL.getShort(), Flag.URL.getLong(), true, "Ldap url (defaults to " + DEFAULT_URL + ")");
-		DEFAULT_OPTIONS.addOption(Flag.USERNAME.getShort(), Flag.USERNAME.getLong(), true, "DN to bind with (defaults to \"\")");
-		DEFAULT_OPTIONS.addOption(Flag.PASSWORD.getShort(), Flag.PASSWORD.getLong(), true, "Password to bind with defaults to \"\")");
+		DEFAULT_OPTIONS.addOption(Flag.URL.getShort(), Flag.URL.getLong(), true,
+				"Ldap url (defaults to " + DEFAULT_URL + ")");
+		DEFAULT_OPTIONS.addOption(Flag.USERNAME.getShort(), Flag.USERNAME.getLong(), true,
+				"DN to bind with (defaults to \"\")");
+		DEFAULT_OPTIONS.addOption(Flag.PASSWORD.getShort(), Flag.PASSWORD.getLong(), true,
+				"Password to bind with defaults to \"\")");
 		DEFAULT_OPTIONS.addOption(Flag.OBJECTCLASS.getShort(), Flag.OBJECTCLASS.getLong(), true,
 				"Object class name or ? for all. Print object class schema");
 		DEFAULT_OPTIONS.addOption(Flag.ATTRIBUTE.getShort(), Flag.ATTRIBUTE.getLong(), true,
@@ -133,14 +139,14 @@ public final class SchemaViewer {
 	private static void printObject(String contextName, String schemaName, DirContext schemaContext)
 			throws NameNotFoundException, NamingException {
 
-		DirContext oContext = (DirContext)schemaContext.lookup(contextName + "/" + schemaName);
+		DirContext oContext = (DirContext) schemaContext.lookup(contextName + "/" + schemaName);
 
 		outstream.println("NAME:" + schemaName);
 		printAttrs(oContext.getAttributes(""));
 	}
-	
-	private static void printSchema(String contextName, DirContext schemaContext) throws NameNotFoundException,
-			NamingException {
+
+	private static void printSchema(String contextName, DirContext schemaContext)
+			throws NameNotFoundException, NamingException {
 
 		outstream.println();
 
@@ -161,12 +167,14 @@ public final class SchemaViewer {
 
 		if (optionValue.equals(WILDCARD)) {
 			printSchema(contextName, schemaContext);
-		} else {
+		}
+		else {
 			printObject(contextName, optionValue, schemaContext);
 		}
 	}
 
-	private static PrintStream outstream=System.out;
+	private static PrintStream outstream = System.out;
+
 	private final static String WILDCARD = "?";
 
 	public static void main(String[] argv) {
@@ -175,7 +183,8 @@ public final class SchemaViewer {
 
 		try {
 			cmd = parser.parse(DEFAULT_OPTIONS, argv);
-		} catch (ParseException e) {
+		}
+		catch (ParseException e) {
 			System.out.println(e.getMessage());
 			System.exit(1);
 		}
@@ -188,9 +197,9 @@ public final class SchemaViewer {
 		}
 
 		if (cmd.hasOption(Flag.ERROR.getShort())) {
-			outstream=System.err;
+			outstream = System.err;
 		}
-		
+
 		String url = cmd.getOptionValue(Flag.URL.getShort(), DEFAULT_URL);
 		String user = cmd.getOptionValue(Flag.USERNAME.getShort(), "");
 		String pass = cmd.getOptionValue(Flag.PASSWORD.getShort(), "");
@@ -226,14 +235,19 @@ public final class SchemaViewer {
 				print(cmd.getOptionValue(Flag.SYNTAX.getShort()), SchemaContext.SYNTAX.getValue(), schemaContext);
 			}
 
-		} catch (AuthenticationException e) {
+		}
+		catch (AuthenticationException e) {
 			System.err.println(String.format("Failed to bind to ldap server at %1$s", url));
-		} catch (CommunicationException e) {
+		}
+		catch (CommunicationException e) {
 			System.err.println(String.format("Failed to contact ldap server at %1$s", url));
-		} catch (NameNotFoundException e) {
+		}
+		catch (NameNotFoundException e) {
 			System.err.println(String.format("Can't find object %1$s", e.getMessage()));
-		} catch (NamingException e) {
+		}
+		catch (NamingException e) {
 			System.err.println(e.toString());
 		}
 	}
+
 }

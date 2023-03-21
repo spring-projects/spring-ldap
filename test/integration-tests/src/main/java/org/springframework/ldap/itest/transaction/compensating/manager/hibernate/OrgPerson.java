@@ -2,23 +2,24 @@ package org.springframework.ldap.itest.transaction.compensating.manager.hibernat
 
 /**
  * Pojo for use with the ContextSourceAndHibernateTransactionManager integration tests
+ *
  * @author Hans Westerbeek
  *
  */
-public class OrgPerson{
-	
+public class OrgPerson {
+
 	private Integer id;
-	
+
 	private String fullname;
 
 	private String lastname;
 
 	private String company;
-	
+
 	private String country;
-	
+
 	private String description;
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -42,7 +43,6 @@ public class OrgPerson{
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
 	}
-
 
 	public String getCountry() {
 		return country;
@@ -119,5 +119,5 @@ public class OrgPerson{
 			return false;
 		return true;
 	}
-	
+
 }

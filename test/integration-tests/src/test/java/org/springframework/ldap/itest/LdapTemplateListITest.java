@@ -33,10 +33,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for LdapTemplate's list methods.
- * 
+ *
  * @author Ulrik Sandberg
  */
-@ContextConfiguration(locations = {"/conf/ldapTemplateTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
 public class LdapTemplateListITest extends AbstractLdapTemplateIntegrationTest {
 
 	@Autowired
@@ -157,4 +157,5 @@ public class LdapTemplateListITest extends AbstractLdapTemplateIntegrationTest {
 		tested.listBindings(BASE_NAME, handler);
 		assertThat(handler.getNoOfRows()).isEqualTo(3);
 	}
+
 }

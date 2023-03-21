@@ -64,10 +64,9 @@ public class SortControlDirContextProcessorTest {
 		byte sortResult = 0; // success
 
 		byte[] value = encodeValue(sortResult);
-		SortResponseControl control = new SortResponseControl(
-				"dummy", true, value);
+		SortResponseControl control = new SortResponseControl("dummy", true, value);
 
-		when(ldapContextMock.getResponseControls()).thenReturn( new Control[]{control});
+		when(ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
 
 		tested.postProcess(ldapContextMock);
 
@@ -80,8 +79,7 @@ public class SortControlDirContextProcessorTest {
 		byte sortResult = 1;
 
 		byte[] value = encodeValue(sortResult);
-		SortResponseControl control = new SortResponseControl(
-				"dummy", true, value);
+		SortResponseControl control = new SortResponseControl("dummy", true, value);
 
 		when(ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
 
@@ -101,8 +99,7 @@ public class SortControlDirContextProcessorTest {
 		byte[] cookie = encodeDirSyncValue(resultSize, value);
 
 		// Using another response control to verify that it is ignored
-		DirSyncResponseControl control = new DirSyncResponseControl("dummy",
-				true, cookie);
+		DirSyncResponseControl control = new DirSyncResponseControl("dummy", true, cookie);
 
 		when(ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
 
@@ -139,8 +136,7 @@ public class SortControlDirContextProcessorTest {
 	/**
 	 * Encode a value suitable for the DirSyncResponseControl used in a test.
 	 */
-	private byte[] encodeDirSyncValue(int pageSize, byte[] cookie)
-			throws IOException {
+	private byte[] encodeDirSyncValue(int pageSize, byte[] cookie) throws IOException {
 
 		// build the ASN.1 encoding
 		BerEncoder ber = new BerEncoder(10 + cookie.length);
@@ -153,4 +149,5 @@ public class SortControlDirContextProcessorTest {
 
 		return ber.getTrimmedBuf();
 	}
+
 }

@@ -59,7 +59,7 @@ public abstract class AbstractLdapTemplateIntegrationTest {
 	@Before
 	public void cleanAndSetup() throws NamingException, IOException {
 		Resource ldifResource = getLdifFileResource();
-		if(!LdapUtils.newLdapName(base).equals(LdapUtils.newLdapName(DEFAULT_BASE))) {
+		if (!LdapUtils.newLdapName(base).equals(LdapUtils.newLdapName(DEFAULT_BASE))) {
 			List<String> lines = IOUtils.readLines(ldifResource.getInputStream());
 
 			StringWriter sw = new StringWriter();
@@ -82,4 +82,5 @@ public abstract class AbstractLdapTemplateIntegrationTest {
 	protected Name getRoot() {
 		return LdapUtils.emptyLdapName();
 	}
+
 }

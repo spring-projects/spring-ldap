@@ -100,8 +100,7 @@ public class DefaultLdapClientLookupTest {
 		javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
 		whenSearching(name).thenThrow(ne);
 
-		assertThatExceptionOfType(NameNotFoundException.class)
-				.describedAs("NameNotFoundException expected")
+		assertThatExceptionOfType(NameNotFoundException.class).describedAs("NameNotFoundException expected")
 				.isThrownBy(() -> tested.search().name(name).toEntry());
 		verify(dirContextMock).close();
 	}
@@ -142,8 +141,7 @@ public class DefaultLdapClientLookupTest {
 		whenSearching(name).thenThrow(ne);
 
 		AttributesMapper<?> mapper = (attributes) -> attributes;
-		assertThatExceptionOfType(NameNotFoundException.class)
-				.describedAs("NameNotFoundException expected")
+		assertThatExceptionOfType(NameNotFoundException.class).describedAs("NameNotFoundException expected")
 				.isThrownBy(() -> tested.search().name(name).toObject(mapper));
 		verify(dirContextMock).close();
 	}
@@ -186,8 +184,7 @@ public class DefaultLdapClientLookupTest {
 		whenSearching(name).thenThrow(ne);
 
 		ContextMapper<?> mapper = (ctx) -> ctx;
-		assertThatExceptionOfType(NameNotFoundException.class)
-				.describedAs("NameNotFoundException expected")
+		assertThatExceptionOfType(NameNotFoundException.class).describedAs("NameNotFoundException expected")
 				.isThrownBy(() -> tested.search().name(name).toObject(mapper));
 		verify(dirContextMock).close();
 	}
@@ -205,6 +202,7 @@ public class DefaultLdapClientLookupTest {
 	}
 
 	private static class NamingEnumeration implements javax.naming.NamingEnumeration<SearchResult> {
+
 		private final Iterator<SearchResult> names;
 
 		public NamingEnumeration(SearchResult... results) {
@@ -235,5 +233,7 @@ public class DefaultLdapClientLookupTest {
 		public SearchResult nextElement() {
 			return this.names.next();
 		}
+
 	}
+
 }

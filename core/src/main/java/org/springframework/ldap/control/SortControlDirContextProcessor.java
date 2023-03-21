@@ -19,10 +19,9 @@ package org.springframework.ldap.control;
 import javax.naming.ldap.Control;
 
 /**
- * DirContextProcessor implementation for managing the SortControl. Note that
- * this class is stateful, so a new instance needs to be instantiated for each
- * new search.
- * 
+ * DirContextProcessor implementation for managing the SortControl. Note that this class
+ * is stateful, so a new instance needs to be instantiated for each new search.
+ *
  * @author Ulrik Sandberg
  */
 public class SortControlDirContextProcessor extends AbstractFallbackRequestAndResponseControlDirContextProcessor {
@@ -52,7 +51,6 @@ public class SortControlDirContextProcessor extends AbstractFallbackRequestAndRe
 
 	/**
 	 * Constructs a new instance using the supplied sort key.
-	 * 
 	 * @param sortKey the sort key, i.e. the attribute name to sort on.
 	 */
 	public SortControlDirContextProcessor(String sortKey) {
@@ -71,9 +69,7 @@ public class SortControlDirContextProcessor extends AbstractFallbackRequestAndRe
 
 	/**
 	 * Check whether the returned values were actually sorted by the server.
-	 * 
-	 * @return <code>true</code> if the result was sorted, <code>false</code>
-	 * otherwise.
+	 * @return <code>true</code> if the result was sorted, <code>false</code> otherwise.
 	 */
 	public boolean isSorted() {
 		return sorted;
@@ -81,7 +77,6 @@ public class SortControlDirContextProcessor extends AbstractFallbackRequestAndRe
 
 	/**
 	 * Get the result code returned by the control.
-	 * 
 	 * @return result code.
 	 */
 	public int getResultCode() {
@@ -90,7 +85,6 @@ public class SortControlDirContextProcessor extends AbstractFallbackRequestAndRe
 
 	/**
 	 * Get the sort key.
-	 * 
 	 * @return the sort key.
 	 */
 	public String getSortKey() {
@@ -98,13 +92,12 @@ public class SortControlDirContextProcessor extends AbstractFallbackRequestAndRe
 	}
 
 	/*
-	 * @see
-	 * org.springframework.ldap.control.AbstractRequestControlDirContextProcessor
+	 * @see org.springframework.ldap.control.AbstractRequestControlDirContextProcessor
 	 * #createRequestControl()
 	 */
 	public Control createRequestControl() {
-		return super.createRequestControl(new Class<?>[] { String[].class, boolean.class }, new Object[] {
-				new String[] { sortKey }, critical});
+		return super.createRequestControl(new Class<?>[] { String[].class, boolean.class },
+				new Object[] { new String[] { sortKey }, critical });
 	}
 
 	/*
@@ -116,4 +109,5 @@ public class SortControlDirContextProcessor extends AbstractFallbackRequestAndRe
 		this.sorted = (Boolean) invokeMethod("isSorted", responseControlClass, control);
 		this.resultCode = (Integer) invokeMethod("getResultCode", responseControlClass, control);
 	}
+
 }

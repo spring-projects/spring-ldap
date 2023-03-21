@@ -32,18 +32,19 @@ import java.util.Hashtable;
  * Used by {@link PoolingContextSource} to wrap a {@link Context}, delegating most methods
  * to the underlying context, retains a reference to the pool the context was checked out
  * from and returns itself to the pool when {@link #close()} is called.
- * 
+ *
  * @author Eric Dalquist
  */
 public class DelegatingContext implements Context {
+
 	private KeyedObjectPool keyedObjectPool;
+
 	private Context delegateContext;
+
 	private final DirContextType dirContextType;
-	
 
 	/**
 	 * Create a new delegating context for the specified pool, context and context type.
-	 * 
 	 * @param keyedObjectPool The pool the delegate context was checked out from.
 	 * @param delegateContext The context to delegate operations to.
 	 * @param dirContextType The type of context, used as a key for the pool.
@@ -53,37 +54,35 @@ public class DelegatingContext implements Context {
 		Assert.notNull(keyedObjectPool, "keyedObjectPool may not be null");
 		Assert.notNull(delegateContext, "delegateContext may not be null");
 		Assert.notNull(dirContextType, "dirContextType may not be null");
-		
+
 		this.keyedObjectPool = keyedObjectPool;
 		this.delegateContext = delegateContext;
 		this.dirContextType = dirContextType;
 	}
-	
-	
-	//***** Helper Methods *****//
-	
+
+	// ***** Helper Methods *****//
+
 	/**
 	 * @return The direct delegate for this context proxy
 	 */
 	public Context getDelegateContext() {
 		return this.delegateContext;
 	}
-	
+
 	/**
 	 * Recursivley inspect delegates until a non-delegating context is found.
-	 * 
 	 * @return The innermost (real) Context that is being delegated to.
 	 */
 	public Context getInnermostDelegateContext() {
 		final Context delegateContext = this.getDelegateContext();
-		
+
 		if (delegateContext instanceof DelegatingContext) {
-			return ((DelegatingContext)delegateContext).getInnermostDelegateContext();
+			return ((DelegatingContext) delegateContext).getInnermostDelegateContext();
 		}
 
 		return delegateContext;
 	}
-	
+
 	/**
 	 * @throws NamingException If the delegate is null, {@link #close()} has been called.
 	 */
@@ -93,8 +92,7 @@ public class DelegatingContext implements Context {
 		}
 	}
 
-	
-	//***** Object methods *****//
+	// ***** Object methods *****//
 
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -106,13 +104,13 @@ public class DelegatingContext implements Context {
 		if (!(obj instanceof Context)) {
 			return false;
 		}
-		
+
 		final Context thisContext = this.getInnermostDelegateContext();
-		Context otherContext = (Context)obj;
+		Context otherContext = (Context) obj;
 		if (otherContext instanceof DelegatingContext) {
-			otherContext = ((DelegatingContext)otherContext).getInnermostDelegateContext();
+			otherContext = ((DelegatingContext) otherContext).getInnermostDelegateContext();
 		}
-		
+
 		return thisContext == otherContext || (thisContext != null && thisContext.equals(otherContext));
 	}
 
@@ -131,9 +129,8 @@ public class DelegatingContext implements Context {
 		final Context context = this.getInnermostDelegateContext();
 		return (context != null ? context.toString() : "Context is closed");
 	}
-	
-	
-	//***** Context Interface Delegates *****//
+
+	// ***** Context Interface Delegates *****//
 
 	/**
 	 * @see javax.naming.Context#addToEnvironment(java.lang.String, java.lang.Object)
@@ -166,24 +163,25 @@ public class DelegatingContext implements Context {
 		if (context == null) {
 			return;
 		}
-		
-		//Get a local reference so the member can be nulled earlier
+
+		// Get a local reference so the member can be nulled earlier
 		this.delegateContext = null;
 
-		//Return the object to the Pool and then null the pool reference
+		// Return the object to the Pool and then null the pool reference
 		try {
 			boolean valid = true;
 
 			if (context instanceof FailureAwareContext) {
 				FailureAwareContext failureAwareContext = (FailureAwareContext) context;
-				if(failureAwareContext.hasFailed()) {
+				if (failureAwareContext.hasFailed()) {
 					valid = false;
 				}
 			}
 
 			if (valid) {
 				this.keyedObjectPool.returnObject(this.dirContextType, context);
-			} else {
+			}
+			else {
 				this.keyedObjectPool.invalidateObject(this.dirContextType, context);
 			}
 		}
@@ -391,4 +389,5 @@ public class DelegatingContext implements Context {
 		this.assertOpen();
 		this.getDelegateContext().unbind(name);
 	}
+
 }

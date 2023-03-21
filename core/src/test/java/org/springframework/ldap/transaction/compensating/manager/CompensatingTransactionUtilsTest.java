@@ -50,33 +50,29 @@ public class CompensatingTransactionUtilsTest {
 
 	@Test
 	public void testPerformOperation() throws Throwable {
-		CompensatingTransactionHolderSupport holder = new DirContextHolder(
-				null, dirContextMock);
+		CompensatingTransactionHolderSupport holder = new DirContextHolder(null, dirContextMock);
 		holder.setTransactionOperationManager(operationManagerMock);
 
-		TransactionSynchronizationManager.bindResource(contextSourceMock,
-				holder);
+		TransactionSynchronizationManager.bindResource(contextSourceMock, holder);
 
 		Object[] expectedArgs = new Object[] { "someDn" };
 
-		CompensatingTransactionUtils.performOperation(contextSourceMock,
-				dirContextMock, getUnbindMethod(), expectedArgs);
-		verify(operationManagerMock).performOperation(dirContextMock, "unbind",
+		CompensatingTransactionUtils.performOperation(contextSourceMock, dirContextMock, getUnbindMethod(),
 				expectedArgs);
+		verify(operationManagerMock).performOperation(dirContextMock, "unbind", expectedArgs);
 	}
 
 	@Test
 	public void testPerformOperation_NoTransaction() throws Throwable {
 		Object[] expectedArgs = new Object[] { "someDn" };
 
-		CompensatingTransactionUtils.performOperation(contextSourceMock,
-				dirContextMock, getUnbindMethod(), expectedArgs);
+		CompensatingTransactionUtils.performOperation(contextSourceMock, dirContextMock, getUnbindMethod(),
+				expectedArgs);
 		verify(dirContextMock).unbind("someDn");
 	}
 
 	private Method getUnbindMethod() throws NoSuchMethodException {
-		return DirContext.class.getMethod("unbind",
-				new Class[] { String.class });
+		return DirContext.class.getMethod("unbind", new Class[] { String.class });
 	}
 
 	public void dummyMethod() {

@@ -37,7 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Josh Cummings
  */
-@ContextConfiguration(locations = {"/conf/ldapClientTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapClientTestContext.xml" })
 public class DefaultLdapClientLookupITest extends AbstractLdapTemplateIntegrationTest {
 
 	@Autowired
@@ -45,8 +45,8 @@ public class DefaultLdapClientLookupITest extends AbstractLdapTemplateIntegratio
 
 	/**
 	 * This method depends on a DirObjectFactory (
-	 * {@link org.springframework.ldap.core.support.DefaultDirObjectFactory})
-	 * being set in the ContextSource.
+	 * {@link org.springframework.ldap.core.support.DefaultDirObjectFactory}) being set in
+	 * the ContextSource.
 	 */
 	@Test
 	public void testLookup_Plain() {
@@ -59,8 +59,8 @@ public class DefaultLdapClientLookupITest extends AbstractLdapTemplateIntegratio
 
 	/**
 	 * This method depends on a DirObjectFactory (
-	 * {@link org.springframework.ldap.core.support.DefaultDirObjectFactory})
-	 * being set in the ContextSource.
+	 * {@link org.springframework.ldap.core.support.DefaultDirObjectFactory}) being set in
+	 * the ContextSource.
 	 */
 	@Test
 	public void testLookupContextRoot() {
@@ -82,7 +82,8 @@ public class DefaultLdapClientLookupITest extends AbstractLdapTemplateIntegratio
 	@Test
 	public void testLookup_AttributesMapper_LdapName() {
 		AttributesMapper<Person> mapper = new PersonAttributesMapper();
-		Person person = tested.search().name(LdapUtils.newLdapName("cn=Some Person2, ou=company1,ou=Sweden")).toObject(mapper);
+		Person person = tested.search().name(LdapUtils.newLdapName("cn=Some Person2, ou=company1,ou=Sweden"))
+				.toObject(mapper);
 
 		assertThat(person.getFullname()).isEqualTo("Some Person2");
 		assertThat(person.getLastname()).isEqualTo("Person2");
@@ -90,17 +91,17 @@ public class DefaultLdapClientLookupITest extends AbstractLdapTemplateIntegratio
 	}
 
 	/**
-	 * An {@link AttributesMapper} that only maps a subset of the full
-	 * attributes list. Used in tests where the return attributes list has been
-	 * limited.
-	 * 
+	 * An {@link AttributesMapper} that only maps a subset of the full attributes list.
+	 * Used in tests where the return attributes list has been limited.
+	 *
 	 * @author Ulrik Sandberg
 	 */
 	private static final class SubsetPersonAttributesMapper implements AttributesMapper<Person> {
+
 		/**
-		 * Maps the <code>cn</code> attribute into a {@link Person} object. Also
-		 * verifies that the other attributes haven't been set.
-		 * 
+		 * Maps the <code>cn</code> attribute into a {@link Person} object. Also verifies
+		 * that the other attributes haven't been set.
+		 *
 		 * @see AttributesMapper#mapFromAttributes(Attributes)
 		 */
 		public Person mapFromAttributes(Attributes attributes) throws NamingException {
@@ -110,19 +111,20 @@ public class DefaultLdapClientLookupITest extends AbstractLdapTemplateIntegratio
 			assertThat(attributes.get("description")).as("description should be null").isNull();
 			return person;
 		}
+
 	}
 
 	/**
-	 * Verifies that only the subset is used when specifying a subset of the
-	 * available attributes as return attributes.
+	 * Verifies that only the subset is used when specifying a subset of the available
+	 * attributes as return attributes.
 	 */
 	@Test
 	public void testLookup_ReturnAttributes_AttributesMapper() {
 		AttributesMapper<Person> mapper = new SubsetPersonAttributesMapper();
 
-		Person person = tested.search().query((builder) -> builder
-				.base("cn=Some Person2, ou=company1,ou=Sweden")
-				.attributes("cn")).toObject(mapper);
+		Person person = tested.search()
+				.query((builder) -> builder.base("cn=Some Person2, ou=company1,ou=Sweden").attributes("cn"))
+				.toObject(mapper);
 
 		assertThat(person.getFullname()).isEqualTo("Some Person2");
 		assertThat(person.getLastname()).as("lastName should not be set").isNull();
@@ -130,16 +132,16 @@ public class DefaultLdapClientLookupITest extends AbstractLdapTemplateIntegratio
 	}
 
 	/**
-	 * Verifies that only the subset is used when specifying a subset of the
-	 * available attributes as return attributes. Uses LdapName instead
-	 * of plain string as name.
+	 * Verifies that only the subset is used when specifying a subset of the available
+	 * attributes as return attributes. Uses LdapName instead of plain string as name.
 	 */
 	@Test
 	public void testLookup_ReturnAttributes_AttributesMapper_LdapName() {
 		AttributesMapper<Person> mapper = new SubsetPersonAttributesMapper();
-		Person person = tested.search().query((builder) -> builder
-				.base(LdapUtils.newLdapName("cn=Some Person2, ou=company1,ou=Sweden"))
-				.attributes("cn")).toObject(mapper);
+		Person person = tested
+				.search().query((builder) -> builder
+						.base(LdapUtils.newLdapName("cn=Some Person2, ou=company1,ou=Sweden")).attributes("cn"))
+				.toObject(mapper);
 
 		assertThat(person.getFullname()).isEqualTo("Some Person2");
 		assertThat(person.getLastname()).as("lastName should not be set").isNull();
@@ -148,8 +150,8 @@ public class DefaultLdapClientLookupITest extends AbstractLdapTemplateIntegratio
 
 	/**
 	 * This method depends on a DirObjectFactory (
-	 * {@link org.springframework.ldap.core.support.DefaultDirObjectFactory})
-	 * being set in the ContextSource.
+	 * {@link org.springframework.ldap.core.support.DefaultDirObjectFactory}) being set in
+	 * the ContextSource.
 	 */
 	@Test
 	public void testLookup_ContextMapper() {
@@ -162,15 +164,16 @@ public class DefaultLdapClientLookupITest extends AbstractLdapTemplateIntegratio
 	}
 
 	/**
-	 * Verifies that only the subset is used when specifying a subset of the
-	 * available attributes as return attributes.
+	 * Verifies that only the subset is used when specifying a subset of the available
+	 * attributes as return attributes.
 	 */
 	@Test
 	public void testLookup_ReturnAttributes_ContextMapper() {
 		ContextMapper<Person> mapper = new PersonContextMapper();
 
-		Person person = tested.search().query((builder) -> builder
-				.base("cn=Some Person2, ou=company1,ou=Sweden").attributes("cn")).toObject(mapper);
+		Person person = tested.search()
+				.query((builder) -> builder.base("cn=Some Person2, ou=company1,ou=Sweden").attributes("cn"))
+				.toObject(mapper);
 
 		assertThat(person.getFullname()).isEqualTo("Some Person2");
 		assertThat(person.getLastname()).as("lastName should not be set").isNull();
@@ -186,4 +189,5 @@ public class DefaultLdapClientLookupITest extends AbstractLdapTemplateIntegratio
 		assertThat(result.getDn()).isEqualTo(expectedName);
 		assertThat(result.getNameInNamespace()).isEqualTo("cn=Some Person2,ou=company1,ou=Sweden," + base);
 	}
+
 }

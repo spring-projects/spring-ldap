@@ -33,9 +33,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 /**
- * This test only works against in-process Apache DS server, regardless of configured profile.
+ * This test only works against in-process Apache DS server, regardless of configured
+ * profile.
  */
-@ContextConfiguration(locations = {"/conf/ldapTemplatePooledTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapTemplatePooledTestContext.xml" })
 public class LdapTemplatePooledITest extends AbstractJUnit4SpringContextTests {
 
 	@Autowired
@@ -54,13 +55,14 @@ public class LdapTemplatePooledITest extends AbstractJUnit4SpringContextTests {
 
 	/**
 	 * This method depends on a DirObjectFactory (
-	 * {@link org.springframework.ldap.core.support.DefaultDirObjectFactory})
-	 * being set in the ContextSource.
+	 * {@link org.springframework.ldap.core.support.DefaultDirObjectFactory}) being set in
+	 * the ContextSource.
 	 */
 	@Test
 	public void verifyThatInvalidConnectionIsAutomaticallyPurged() throws Exception {
 		LdapTestUtils.startEmbeddedServer(1888, "dc=261consulting,dc=com", "jayway");
-		LdapTestUtils.cleanAndSetup(contextSource, LdapUtils.emptyLdapName(), new ClassPathResource("/setup_data.ldif"));
+		LdapTestUtils.cleanAndSetup(contextSource, LdapUtils.emptyLdapName(),
+				new ClassPathResource("/setup_data.ldif"));
 
 		DirContextOperations result = tested.lookupContext("cn=Some Person2, ou=company1,ou=Sweden");
 		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person2");
@@ -74,13 +76,17 @@ public class LdapTemplatePooledITest extends AbstractJUnit4SpringContextTests {
 		try {
 			tested.lookup("cn=Some Person2, ou=company1,ou=Sweden");
 			fail("Exception expected");
-		} catch (Exception expected) {
+		}
+		catch (Exception expected) {
 			// This should fail because the target connection was closed
 			assertThat(true).isTrue();
 		}
 
-		LdapTestUtils.cleanAndSetup(contextSource, LdapUtils.emptyLdapName(), new ClassPathResource("/setup_data.ldif"));
-		// But this should be OK, because the dirty connection should have been automatically purged.
+		LdapTestUtils.cleanAndSetup(contextSource, LdapUtils.emptyLdapName(),
+				new ClassPathResource("/setup_data.ldif"));
+		// But this should be OK, because the dirty connection should have been
+		// automatically purged.
 		tested.lookup("cn=Some Person2, ou=company1,ou=Sweden");
 	}
+
 }

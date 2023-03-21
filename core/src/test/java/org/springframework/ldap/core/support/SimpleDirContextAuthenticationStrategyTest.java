@@ -24,6 +24,7 @@ import java.util.Hashtable;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SimpleDirContextAuthenticationStrategyTest {
+
 	private SimpleDirContextAuthenticationStrategy tested;
 
 	@Before
@@ -48,6 +49,5 @@ public class SimpleDirContextAuthenticationStrategyTest {
 
 		assertThat(env.isEmpty()).isTrue();
 	}
-
 
 }

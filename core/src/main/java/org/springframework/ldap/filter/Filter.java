@@ -18,23 +18,21 @@ package org.springframework.ldap.filter;
 
 /**
  * Common interface for LDAP filters.
- * 
+ *
  * @author Adam Skogman
- * @see <a href="https://www.ietf.org/rfc/rfc1960.txt">RFC 1960: A String
- * Representation of LDAP Search Filters</a>
+ * @see <a href="https://www.ietf.org/rfc/rfc1960.txt">RFC 1960: A String Representation
+ * of LDAP Search Filters</a>
  */
 public interface Filter {
 
 	/**
 	 * Encodes the filter to a String.
-	 * 
 	 * @return The encoded filter in the standard String format
 	 */
 	String encode();
 
 	/**
 	 * Encodes the filter to a StringBuffer.
-	 * 
 	 * @param buf The StringBuffer to encode the filter to
 	 * @return The same StringBuffer as was given
 	 */
@@ -42,7 +40,6 @@ public interface Filter {
 
 	/**
 	 * All filters must implement equals.
-	 * 
 	 * @param o
 	 * @return <code>true</code> if the objects are equal.
 	 */
@@ -50,9 +47,8 @@ public interface Filter {
 
 	/**
 	 * All filters must implement hashCode.
-	 * 
-	 * @return the hash code according to the contract in
-	 * {@link Object#hashCode()}
+	 * @return the hash code according to the contract in {@link Object#hashCode()}
 	 */
 	int hashCode();
+
 }

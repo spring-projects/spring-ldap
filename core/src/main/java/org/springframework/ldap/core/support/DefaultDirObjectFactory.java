@@ -38,14 +38,14 @@ import java.util.Hashtable;
  * @author Mattias Hellborg Arthursson
  */
 public class DefaultDirObjectFactory implements DirObjectFactory {
+
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultDirObjectFactory.class);
 
 	/**
-	 * Key to use in the ContextSource implementation to store the value of the
-	 * base path suffix, if any, in the Ldap Environment.
-	 *
-	 * @deprecated Use {@link BaseLdapNameAware} and
-	 * {@link BaseLdapPathBeanPostProcessor} instead.
+	 * Key to use in the ContextSource implementation to store the value of the base path
+	 * suffix, if any, in the Ldap Environment.
+	 * @deprecated Use {@link BaseLdapNameAware} and {@link BaseLdapPathBeanPostProcessor}
+	 * instead.
 	 */
 	public static final String JNDI_ENV_BASE_PATH_KEY = "org.springframework.ldap.base.path";
 
@@ -54,11 +54,7 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 	private static final String LDAPS_PROTOCOL_PREFIX = "ldaps://";
 
 	@Override
-	public final Object getObjectInstance(
-			Object obj,
-			Name name,
-			Context nameCtx,
-			Hashtable<?, ?> environment,
+	public final Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment,
 			Attributes attrs) throws Exception {
 
 		try {
@@ -94,20 +90,18 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 	}
 
 	/**
-	 * Construct a DirContextAdapter given the supplied paramters. The
-	 * <code>name</code> is normally a JNDI <code>CompositeName</code>, which
-	 * needs to be handled with particuclar care. Specifically the escaping of a
-	 * <code>CompositeName</code> destroys proper escaping of Distinguished
-	 * Names. Also, the name might contain referral information, in which case
-	 * we need to separate the server information from the actual Distinguished
-	 * Name so that we can create a representing DirContextAdapter.
-	 *
+	 * Construct a DirContextAdapter given the supplied paramters. The <code>name</code>
+	 * is normally a JNDI <code>CompositeName</code>, which needs to be handled with
+	 * particuclar care. Specifically the escaping of a <code>CompositeName</code>
+	 * destroys proper escaping of Distinguished Names. Also, the name might contain
+	 * referral information, in which case we need to separate the server information from
+	 * the actual Distinguished Name so that we can create a representing
+	 * DirContextAdapter.
 	 * @param attrs the attributes
-	 * @param name the Name, typically a <code>CompositeName</code>, possibly
-	 * including referral information.
+	 * @param name the Name, typically a <code>CompositeName</code>, possibly including
+	 * referral information.
 	 * @param nameInNamespace the Name in namespace.
-	 * @return a {@link DirContextAdapter} representing the specified
-	 * information.
+	 * @return a {@link DirContextAdapter} representing the specified information.
 	 */
 	DirContextAdapter constructAdapterFromName(Attributes attrs, Name name, String nameInNamespace) {
 		String nameString;
@@ -118,14 +112,11 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 			// problem. CompositeName.toString() completely screws up the
 			// formatting
 			// in some cases, particularly when backslashes are involved.
-			nameString = LdapUtils
-					.convertCompositeNameToString((CompositeName) name);
+			nameString = LdapUtils.convertCompositeNameToString((CompositeName) name);
 		}
 		else {
-			LOG
-					.warn("Expecting a CompositeName as input to getObjectInstance but received a '"
-							+ name.getClass().toString()
-							+ "' - using toString and proceeding with undefined results");
+			LOG.warn("Expecting a CompositeName as input to getObjectInstance but received a '"
+					+ name.getClass().toString() + "' - using toString and proceeding with undefined results");
 			nameString = name.toString();
 		}
 
@@ -148,10 +139,8 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 				nameString = pathString;
 			}
 			catch (URISyntaxException e) {
-				throw new IllegalArgumentException(
-						"Supplied name starts with protocol prefix indicating a referral,"
-								+ " but is not possible to parse to an URI",
-						e);
+				throw new IllegalArgumentException("Supplied name starts with protocol prefix indicating a referral,"
+						+ " but is not possible to parse to an URI", e);
 			}
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Resulting name after removal of referral information: '" + nameString + "'");
@@ -165,7 +154,8 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 	}
 
 	@Override
-	public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment) throws Exception {
+	public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment)
+			throws Exception {
 		return null;
 	}
 

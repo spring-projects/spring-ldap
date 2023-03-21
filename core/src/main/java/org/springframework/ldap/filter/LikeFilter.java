@@ -19,20 +19,20 @@ package org.springframework.ldap.filter;
 import org.springframework.ldap.support.LdapEncoder;
 
 /**
- * This filter allows the user to specify wildcards (*) by not escaping them in
- * the filter. The following code:
- * 
+ * This filter allows the user to specify wildcards (*) by not escaping them in the
+ * filter. The following code:
+ *
  * <pre>
  * LikeFilter filter = new LikeFilter(&quot;cn&quot;, &quot;foo*&quot;);
  * System.out.println(filter.ecode());
  * </pre>
- * 
+ *
  * would result in:
- * 
+ *
  * <pre>
  *  (cn=foo*)
  * </pre>
- * 
+ *
  * @author Anders Henja
  * @author Mattias Hellborg Arthursson
  */
@@ -64,4 +64,5 @@ public class LikeFilter extends EqualsFilter {
 
 		return buff.toString();
 	}
+
 }

@@ -20,7 +20,7 @@ import org.springframework.ldap.core.support.BaseLdapPathAware;
 
 /**
  * Dummy implementation of {@link BaseLdapPathAware}.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class DummyBaseLdapPathAware implements BaseLdapPathAware {

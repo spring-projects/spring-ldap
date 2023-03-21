@@ -22,7 +22,7 @@ import org.springframework.util.StopWatch;
 
 /**
  * Performance test for the {@link DistinguishedName} class.
- * 
+ *
  * @author Ulrik Sandberg
  */
 public class DnParsePerformanceITest {
@@ -60,7 +60,7 @@ public class DnParsePerformanceITest {
 
 		StopWatch stopWatch = new StopWatch("Create from DistinguishedName");
 		stopWatch.start();
-		
+
 		for (int i = 0; i < 2000; i++) {
 			migpath = new DistinguishedName(migpath);
 			path1 = new DistinguishedName(path1);
@@ -75,4 +75,5 @@ public class DnParsePerformanceITest {
 		stopWatch.stop();
 		System.out.println(stopWatch.prettyPrint());
 	}
+
 }

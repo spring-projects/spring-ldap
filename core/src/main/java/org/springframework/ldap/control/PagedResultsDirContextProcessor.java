@@ -19,15 +19,14 @@ package org.springframework.ldap.control;
 import javax.naming.ldap.Control;
 
 /**
- * DirContextProcessor implementation for managing the paged results control.
- * Note that due to the internal workings of <code>LdapTemplate</code>, the
- * target connection is closed after each LDAP call. The PagedResults control
- * require the same connection be used for each call, which means we need to
- * make sure the target connection is never actually closed. There's basically
- * two ways of making this happen: use the <code>SingleContextSource</code>
- * implementation or make sure all calls happen within a single LDAP transaction
- * (using <code>ContextSourceTransactionManager</code>).
- * 
+ * DirContextProcessor implementation for managing the paged results control. Note that
+ * due to the internal workings of <code>LdapTemplate</code>, the target connection is
+ * closed after each LDAP call. The PagedResults control require the same connection be
+ * used for each call, which means we need to make sure the target connection is never
+ * actually closed. There's basically two ways of making this happen: use the
+ * <code>SingleContextSource</code> implementation or make sure all calls happen within a
+ * single LDAP transaction (using <code>ContextSourceTransactionManager</code>).
+ *
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  */
@@ -50,10 +49,8 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 	private boolean more = true;
 
 	/**
-	 * Constructs a new instance. This constructor should be used when
-	 * performing the first paged search operation, when no other results have
-	 * been retrieved.
-	 * 
+	 * Constructs a new instance. This constructor should be used when performing the
+	 * first paged search operation, when no other results have been retrieved.
 	 * @param pageSize the page size.
 	 */
 	public PagedResultsDirContextProcessor(int pageSize) {
@@ -61,11 +58,9 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 	}
 
 	/**
-	 * Constructs a new instance with the supplied page size and cookie. The
-	 * cookie must be the exact same instance as received from a previous paged
-	 * results search, or <code>null</code> if it is the first in an operation
-	 * sequence.
-	 * 
+	 * Constructs a new instance with the supplied page size and cookie. The cookie must
+	 * be the exact same instance as received from a previous paged results search, or
+	 * <code>null</code> if it is the first in an operation sequence.
 	 * @param pageSize the page size.
 	 * @param cookie the cookie, as received from a previous search.
 	 */
@@ -77,16 +72,15 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 		defaultResponseControl = DEFAULT_RESPONSE_CONTROL;
 		fallbackRequestControl = FALLBACK_REQUEST_CONTROL;
 		fallbackResponseControl = FALLBACK_RESPONSE_CONTROL;
-		
+
 		loadControlClasses();
 	}
 
 	/**
 	 * Get the cookie.
-	 * 
-	 * @return the cookie. The cookie will always be set after at leas one query, however the actual cookie content
-	 * can be <code>null</code>, indicating that there are no more results, in which case {@link #hasMore()} will return
-	 * <code>false</code>.
+	 * @return the cookie. The cookie will always be set after at leas one query, however
+	 * the actual cookie content can be <code>null</code>, indicating that there are no
+	 * more results, in which case {@link #hasMore()} will return <code>false</code>.
 	 * @see #hasMore()
 	 */
 	public PagedResultsCookie getCookie() {
@@ -95,7 +89,6 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 
 	/**
 	 * Get the page size.
-	 * 
 	 * @return the page size.
 	 */
 	public int getPageSize() {
@@ -103,10 +96,9 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 	}
 
 	/**
-	 * Get the total estimated number of entries that matches the issued search.
-	 * Note that this value is optional for the LDAP server to return, so it
-	 * does not always contain any valid data.
-	 * 
+	 * Get the total estimated number of entries that matches the issued search. Note that
+	 * this value is optional for the LDAP server to return, so it does not always contain
+	 * any valid data.
 	 * @return the estimated result size, if returned from the server.
 	 */
 	public int getResultSize() {
@@ -114,8 +106,7 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 	}
 
 	/*
-	 * @see
-	 * org.springframework.ldap.control.AbstractRequestControlDirContextProcessor
+	 * @see org.springframework.ldap.control.AbstractRequestControlDirContextProcessor
 	 * #createRequestControl()
 	 */
 	public Control createRequestControl() {
@@ -124,15 +115,15 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 			actualCookie = cookie.getCookie();
 		}
 		return super.createRequestControl(new Class<?>[] { int.class, byte[].class, boolean.class },
-				new Object[] {pageSize, actualCookie, critical});
+				new Object[] { pageSize, actualCookie, critical });
 	}
 
 	/**
-	 * Check whether there are more results to retrieved. When there are no more results to retrieve,
-	 * this is indicated by a <code>null</code> cookie being returned from the server.
-	 * When this happen, the internal status will set to false.
-	 *
-	 * @return <code>true</code> if there are more results to retrieve, <code>false</code> otherwise.
+	 * Check whether there are more results to retrieved. When there are no more results
+	 * to retrieve, this is indicated by a <code>null</code> cookie being returned from
+	 * the server. When this happen, the internal status will set to false.
+	 * @return <code>true</code> if there are more results to retrieve, <code>false</code>
+	 * otherwise.
 	 * @since 2.0
 	 */
 	public boolean hasMore() {
@@ -146,10 +137,11 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 	 */
 	protected void handleResponse(Object control) {
 		byte[] result = (byte[]) invokeMethod("getCookie", responseControlClass, control);
-		if(result == null) {
+		if (result == null) {
 			more = false;
 		}
 		this.cookie = new PagedResultsCookie(result);
 		this.resultSize = (Integer) invokeMethod("getResultSize", responseControlClass, control);
 	}
+
 }

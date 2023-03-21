@@ -21,39 +21,37 @@ import org.springframework.ldap.core.DistinguishedName;
 import javax.naming.ldap.LdapName;
 
 /**
- * Implementations of this interface are capable of providing a base LDAP path.
- * The base LDAP path is the root path to which all LDAP operations performed on
- * a particular context are relative.
- * 
+ * Implementations of this interface are capable of providing a base LDAP path. The base
+ * LDAP path is the root path to which all LDAP operations performed on a particular
+ * context are relative.
+ *
  * @see ContextSource
- * 
  * @author Mattias Hellborg Arthursson
  */
 public interface BaseLdapPathSource {
+
 	/**
 	 * Get the base LDAP path as a {@link DistinguishedName}.
-	 * 
-	 * @return the base LDAP path as a {@link DistinguishedName}. The path will
-	 * be empty if no base path is specified.
-	 * @deprecated {@link DistinguishedName} and associated classes and methods are deprecated as of 2.0.
-	 * Use {@link #getBaseLdapName()} instead.
+	 * @return the base LDAP path as a {@link DistinguishedName}. The path will be empty
+	 * if no base path is specified.
+	 * @deprecated {@link DistinguishedName} and associated classes and methods are
+	 * deprecated as of 2.0. Use {@link #getBaseLdapName()} instead.
 	 */
 	DistinguishedName getBaseLdapPath();
 
 	/**
 	 * Get the base LDAP path as a {@link LdapName}.
-	 *
-	 * @return the base LDAP path as a {@link LdapName}. The path will
-	 * be empty if no base path is specified.
+	 * @return the base LDAP path as a {@link LdapName}. The path will be empty if no base
+	 * path is specified.
 	 * @since 2.0
 	 */
 	LdapName getBaseLdapName();
 
 	/**
 	 * Get the base LDAP path as a String.
-	 * 
-	 * @return the base LDAP path as a An empty String will be returned if no
-	 * base path is specified.
+	 * @return the base LDAP path as a An empty String will be returned if no base path is
+	 * specified.
 	 */
 	String getBaseLdapPathAsString();
+
 }

@@ -20,4 +20,5 @@ package org.springframework.ldap.itest;
  * @author Mattias Hellborg Arthursson
  */
 public interface NoAdTest {
+
 }

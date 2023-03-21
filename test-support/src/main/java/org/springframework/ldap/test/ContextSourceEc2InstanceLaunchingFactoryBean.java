@@ -21,8 +21,7 @@ import org.springframework.ldap.test.AbstractEc2InstanceLaunchingFactoryBean;
 import org.springframework.util.Assert;
 
 /**
- * FactoryBean to create a ContextSource using the EC2 instance created by
- * superclass.
+ * FactoryBean to create a ContextSource using the EC2 instance created by superclass.
  */
 public class ContextSourceEc2InstanceLaunchingFactoryBean extends AbstractEc2InstanceLaunchingFactoryBean {
 
@@ -60,7 +59,6 @@ public class ContextSourceEc2InstanceLaunchingFactoryBean extends AbstractEc2Ins
 
 	/**
 	 * Override to set additional properties on the ContextSource.
-	 * 
 	 * @param ctx The created instance.
 	 * @param dnsName The dns name of the created Ec2 instance.
 	 */

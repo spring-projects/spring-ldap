@@ -18,15 +18,15 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI ServiceUnavailableException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.ServiceUnavailableException
  */
 public class ServiceUnavailableException extends NamingException {
 
-	public ServiceUnavailableException(
-			javax.naming.ServiceUnavailableException cause) {
+	public ServiceUnavailableException(javax.naming.ServiceUnavailableException cause) {
 		super(cause);
 	}
+
 }

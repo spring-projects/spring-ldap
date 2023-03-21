@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for the <code>list</code> operations in {@link LdapTemplate}.
- * 
+ *
  * @author Ulrik Sandberg
  */
 public class LdapTemplateListTest {
@@ -87,36 +87,31 @@ public class LdapTemplateListTest {
 		when(contextSourceMock.getReadOnlyContext()).thenReturn(dirContextMock);
 	}
 
-	private void setupStringListAndNamingEnumeration(NameClassPair listResult)
-			throws NamingException {
+	private void setupStringListAndNamingEnumeration(NameClassPair listResult) throws NamingException {
 		when(dirContextMock.list(NAME)).thenReturn(namingEnumerationMock);
 
 		setupNamingEnumeration(listResult);
 	}
 
-	private void setupListAndNamingEnumeration(NameClassPair listResult)
-			throws NamingException {
+	private void setupListAndNamingEnumeration(NameClassPair listResult) throws NamingException {
 		when(dirContextMock.list(nameMock)).thenReturn(namingEnumerationMock);
 
 		setupNamingEnumeration(listResult);
 	}
 
-	private void setupStringListBindingsAndNamingEnumeration(
-			NameClassPair listResult) throws NamingException {
+	private void setupStringListBindingsAndNamingEnumeration(NameClassPair listResult) throws NamingException {
 		when(dirContextMock.listBindings(NAME)).thenReturn(namingEnumerationMock);
 
 		setupNamingEnumeration(listResult);
 	}
 
-	private void setupListBindingsAndNamingEnumeration(NameClassPair listResult)
-			throws NamingException {
+	private void setupListBindingsAndNamingEnumeration(NameClassPair listResult) throws NamingException {
 		when(dirContextMock.listBindings(nameMock)).thenReturn(namingEnumerationMock);
 
 		setupNamingEnumeration(listResult);
 	}
 
-	private void setupNamingEnumeration(NameClassPair listResult)
-			throws NamingException {
+	private void setupNamingEnumeration(NameClassPair listResult) throws NamingException {
 		when(namingEnumerationMock.hasMore()).thenReturn(true, false);
 		when(namingEnumerationMock.next()).thenReturn(listResult);
 	}
@@ -197,7 +192,8 @@ public class LdapTemplateListTest {
 		try {
 			tested.list(NAME);
 			fail("PartialResultException expected");
-		} catch (PartialResultException expected) {
+		}
+		catch (PartialResultException expected) {
 			assertThat(true).isTrue();
 		}
 
@@ -231,7 +227,8 @@ public class LdapTemplateListTest {
 		try {
 			tested.list(NAME);
 			fail("LimitExceededException expected");
-		} catch (LimitExceededException expected) {
+		}
+		catch (LimitExceededException expected) {
 			assertThat(true).isTrue();
 		}
 
@@ -319,4 +316,5 @@ public class LdapTemplateListTest {
 		assertThat(list).hasSize(1);
 		assertThat(list.get(0)).isSameAs(expectedResult);
 	}
+
 }

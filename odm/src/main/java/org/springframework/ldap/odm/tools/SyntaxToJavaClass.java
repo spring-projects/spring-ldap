@@ -6,11 +6,13 @@ import java.util.Map.Entry;
 
 /**
  * A map from an LDAP syntax to the Java class used to represent it.
- * 
+ *
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk>
  */
 /* package */ final class SyntaxToJavaClass {
+
 	public static final class ClassInfo {
+
 		private final String className;
 
 		private final String packageName;
@@ -27,16 +29,18 @@ import java.util.Map.Entry;
 		public String getPackageName() {
 			return packageName;
 		}
-		
+
 		public String getFullClassName() {
-			StringBuilder result=new StringBuilder();
-			if (packageName!=null) {
+			StringBuilder result = new StringBuilder();
+			if (packageName != null) {
 				result.append(packageName).append(".").append(className);
-			} else {
+			}
+			else {
 				result.append(className);
 			}
 			return result.toString();
 		}
+
 	}
 
 	private final Map<String, ClassInfo> mapSyntaxToClassInfo = new HashMap<String, ClassInfo>();
@@ -50,7 +54,8 @@ import java.util.Map.Entry;
 			if (lastDotIndex != -1) {
 				className = fullClassName.substring(lastDotIndex + 1);
 				packageName = fullClassName.substring(0, lastDotIndex);
-			} else {
+			}
+			else {
 				className = fullClassName;
 			}
 			mapSyntaxToClassInfo.put(syntaxAndClass.getKey(), new ClassInfo(className, packageName));
@@ -60,4 +65,5 @@ import java.util.Map.Entry;
 	public ClassInfo getClassInfo(String syntax) {
 		return mapSyntaxToClassInfo.get(syntax);
 	}
+
 }

@@ -18,7 +18,7 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI NoSuchAttributeException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.directory.NoSuchAttributeException
@@ -32,4 +32,5 @@ public class NoSuchAttributeException extends NamingException {
 	public NoSuchAttributeException(javax.naming.directory.NoSuchAttributeException cause) {
 		super(cause);
 	}
+
 }

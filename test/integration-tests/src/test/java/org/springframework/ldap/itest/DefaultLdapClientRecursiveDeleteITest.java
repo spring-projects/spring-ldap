@@ -35,12 +35,12 @@ import org.springframework.test.context.ContextConfiguration;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
- * Tests {@code LdapClient}'s recursive modification methods (unbind and the protected delete
- * methods).
- * 
+ * Tests {@code LdapClient}'s recursive modification methods (unbind and the protected
+ * delete methods).
+ *
  * @author Josh Cummings
  */
-@ContextConfiguration(locations = {"/conf/ldapClientTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapClientTestContext.xml" })
 public class DefaultLdapClientRecursiveDeleteITest extends AbstractLdapTemplateIntegrationTest {
 
 	@Autowired
@@ -126,4 +126,5 @@ public class DefaultLdapClientRecursiveDeleteITest extends AbstractLdapTemplateI
 				.describedAs("Expected entry '" + dn + "' to be non-existent")
 				.isThrownBy(() -> tested.list(dn).toList(NameClassPair::getName));
 	}
+
 }

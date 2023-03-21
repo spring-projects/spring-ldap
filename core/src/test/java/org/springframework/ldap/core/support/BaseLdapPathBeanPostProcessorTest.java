@@ -31,14 +31,17 @@ import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link BaseLdapPathBeanPostProcessor}.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class BaseLdapPathBeanPostProcessorTest {
 
 	private BaseLdapPathBeanPostProcessor tested;
+
 	private BaseLdapPathAware ldapPathAwareMock;
+
 	private ApplicationContext applicationContextMock;
+
 	private BaseLdapNameAware ldapNameAwareMock;
 
 	@Before
@@ -76,7 +79,6 @@ public class BaseLdapPathBeanPostProcessorTest {
 
 		assertThat(result).isSameAs(ldapNameAwareMock);
 	}
-
 
 	@Test
 	public void testPostProcessBeforeInitializationWithLdapPathAwareNoBasePathSet() throws Exception {
@@ -119,12 +121,14 @@ public class BaseLdapPathBeanPostProcessorTest {
 	@Test
 	public void testGetAbstractContextSourceFromApplicationContext() throws Exception {
 		when(applicationContextMock.getBeanNamesForType(BaseLdapPathSource.class))
-				.thenReturn(new String[]{"contextSource"});
+				.thenReturn(new String[] { "contextSource" });
 		final LdapContextSource expectedContextSource = new LdapContextSource();
 
-		HashMap<String, BaseLdapPathSource> expectedBeans = new HashMap<String, BaseLdapPathSource>() {{
-			put("dummy", expectedContextSource);
-		}};
+		HashMap<String, BaseLdapPathSource> expectedBeans = new HashMap<String, BaseLdapPathSource>() {
+			{
+				put("dummy", expectedContextSource);
+			}
+		};
 		when(applicationContextMock.getBeansOfType(BaseLdapPathSource.class)).thenReturn(expectedBeans);
 
 		BaseLdapPathSource result = tested.getBaseLdapPathSourceFromApplicationContext();
@@ -134,16 +138,14 @@ public class BaseLdapPathBeanPostProcessorTest {
 
 	@Test(expected = NoSuchBeanDefinitionException.class)
 	public void testGetAbstractContextSourceFromApplicationContextNoContextSource() throws Exception {
-		when(applicationContextMock.getBeanNamesForType(BaseLdapPathSource.class))
-				.thenReturn(new String[0]);
+		when(applicationContextMock.getBeanNamesForType(BaseLdapPathSource.class)).thenReturn(new String[0]);
 
 		tested.getBaseLdapPathSourceFromApplicationContext();
 	}
 
 	@Test(expected = NoSuchBeanDefinitionException.class)
 	public void testGetAbstractContextSourceFromApplicationContextTwoContextSources() throws Exception {
-		when(applicationContextMock
-				.getBeanNamesForType(BaseLdapPathSource.class)).thenReturn(new String[2]);
+		when(applicationContextMock.getBeanNamesForType(BaseLdapPathSource.class)).thenReturn(new String[2]);
 
 		tested.getBaseLdapPathSourceFromApplicationContext();
 	}
@@ -157,4 +159,5 @@ public class BaseLdapPathBeanPostProcessorTest {
 
 		tested.getBaseLdapPathSourceFromApplicationContext();
 	}
+
 }

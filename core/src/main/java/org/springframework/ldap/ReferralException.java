@@ -18,7 +18,7 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI ReferralException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.ReferralException
@@ -28,4 +28,5 @@ public class ReferralException extends NamingException {
 	public ReferralException(javax.naming.ReferralException cause) {
 		super(cause);
 	}
+
 }

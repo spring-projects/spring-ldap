@@ -45,4 +45,5 @@ public class MutablePooledContextSourceTest extends AbstractPoolTestCase {
 
 		assertThat(result.getClass()).isEqualTo(MutableDelegatingLdapContext.class);
 	}
+
 }

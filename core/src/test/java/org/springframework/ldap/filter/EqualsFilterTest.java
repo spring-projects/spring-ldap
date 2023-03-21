@@ -58,7 +58,7 @@ public class EqualsFilterTest {
 		EqualsFilter subclassObject = new EqualsFilter("a", "b") {
 		};
 
-		new EqualsTester(originalObject, identicalObject, differentObject,
-				subclassObject);
+		new EqualsTester(originalObject, identicalObject, differentObject, subclassObject);
 	}
+
 }

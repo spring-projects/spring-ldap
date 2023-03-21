@@ -19,24 +19,22 @@ package org.springframework.ldap.core;
 import javax.naming.directory.DirContext;
 
 /**
- * Callback interface to be used in the authentication methods in
- * {@link LdapOperations} for performing operations on individually
- * authenticated contexts.
+ * Callback interface to be used in the authentication methods in {@link LdapOperations}
+ * for performing operations on individually authenticated contexts.
  *
  * @author Mattias Hellborg Arthursson
  * @since 2.0
  */
 public interface AuthenticatedLdapEntryContextMapper<T> {
+
 	/**
-	 * Perform some LDAP operation on the supplied authenticated
-	 * <code>DirContext</code> instance. The target context will be
-	 * automatically closed.
-	 *
-	 * @param ctx the <code>DirContext</code> instance to perform an operation
-	 * on.
-	 * @param ldapEntryIdentification the identification of the LDAP entry used
-	 * to authenticate the supplied <code>DirContext</code>.
+	 * Perform some LDAP operation on the supplied authenticated <code>DirContext</code>
+	 * instance. The target context will be automatically closed.
+	 * @param ctx the <code>DirContext</code> instance to perform an operation on.
+	 * @param ldapEntryIdentification the identification of the LDAP entry used to
+	 * authenticate the supplied <code>DirContext</code>.
 	 * @return the result of the operation, if any.
 	 */
 	T mapWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification);
+
 }

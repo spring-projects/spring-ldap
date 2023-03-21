@@ -18,13 +18,13 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI NameNotFoundException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.NameNotFoundException
  */
 public class NameNotFoundException extends NamingException {
-	
+
 	public NameNotFoundException(String msg) {
 		super(msg);
 	}
@@ -32,4 +32,5 @@ public class NameNotFoundException extends NamingException {
 	public NameNotFoundException(javax.naming.NameNotFoundException cause) {
 		super(cause);
 	}
+
 }

@@ -25,19 +25,20 @@ import javax.naming.Name;
 /**
  * @author Mattias Hellborg Arthursson
  */
-@Entry(objectClasses = {"inetOrgPerson", "organizationalPerson", "person", "top"})
+@Entry(objectClasses = { "inetOrgPerson", "organizationalPerson", "person", "top" })
 public class UnitTestPersonWithIndexedAndUnindexedDnAttributes {
+
 	@Id
 	private Name dn;
 
-	@DnAttribute(value = "cn", index=2)
+	@DnAttribute(value = "cn", index = 2)
 	private String fullName;
 
 	// This makes the entry invalid
 	@DnAttribute(value = "ou")
 	private String company;
 
-	@DnAttribute(value= "c", index=0)
+	@DnAttribute(value = "c", index = 0)
 	private String country;
 
 	public void setFullName(String fullName) {
@@ -51,4 +52,5 @@ public class UnitTestPersonWithIndexedAndUnindexedDnAttributes {
 	public void setCountry(String country) {
 		this.country = country;
 	}
+
 }

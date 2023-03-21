@@ -23,10 +23,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Unit test for the LdapEncode class.
- * 
+ *
  * @author Adam Skogman
  */
-public class LdapEncoderTest  {
+public class LdapEncoderTest {
 
 	@Test
 	public void testFilterEncode() {
@@ -46,8 +46,7 @@ public class LdapEncoderTest  {
 	@Test
 	public void testNameDecode() {
 
-		String res = LdapEncoder
-				.nameDecode("\\# foo \\,\\+\\\"\\\\\\<\\>\\;\\ ");
+		String res = LdapEncoder.nameDecode("\\# foo \\,\\+\\\"\\\\\\<\\>\\;\\ ");
 
 		assertThat(res).isEqualTo("# foo ,+\"\\<>; ");
 	}
@@ -88,4 +87,5 @@ public class LdapEncoderTest  {
 
 		assertThat(actual).isEqualTo(expected);
 	}
+
 }

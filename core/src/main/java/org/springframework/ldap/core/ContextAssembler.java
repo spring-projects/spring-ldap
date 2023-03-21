@@ -17,20 +17,19 @@
 package org.springframework.ldap.core;
 
 /**
- * Helper interface to be used by Dao implementations for assembling to and from
- * context. Useful if we have assembler classes responsible for mapping to and
- * from a specific entry.
- * 
+ * Helper interface to be used by Dao implementations for assembling to and from context.
+ * Useful if we have assembler classes responsible for mapping to and from a specific
+ * entry.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public interface ContextAssembler extends ContextMapper {
+
 	/**
 	 * Map the supplied object to the specified context.
-	 * 
-	 * @param obj
-	 *			the object to read data from.
-	 * @param ctx
-	 *			the context to map to.
+	 * @param obj the object to read data from.
+	 * @param ctx the context to map to.
 	 */
 	void mapToContext(Object obj, Object ctx);
+
 }

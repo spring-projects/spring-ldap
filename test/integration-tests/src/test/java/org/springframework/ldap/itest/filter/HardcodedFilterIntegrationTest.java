@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Mattias Hellborg Arthursson
  */
-@ContextConfiguration(locations = {"/conf/hardcodedFilterTestContext.xml", "/conf/ldapTemplateTestContext.xml" })
+@ContextConfiguration(locations = { "/conf/hardcodedFilterTestContext.xml", "/conf/ldapTemplateTestContext.xml" })
 public class HardcodedFilterIntegrationTest extends AbstractLdapTemplateIntegrationTest {
 
 	@Autowired
@@ -45,7 +45,7 @@ public class HardcodedFilterIntegrationTest extends AbstractLdapTemplateIntegrat
 		assertThat(filter instanceof HardcodedFilter).isTrue();
 		assertThat(filter.toString()).isEqualTo("(&(objectclass=person)(!(objectclass=computer))");
 	}
-	
+
 	@Test
 	public void verifyThatWildcardsAreUnescaped() {
 		HardcodedFilter filter = new HardcodedFilter("cn=Some*");
@@ -54,4 +54,5 @@ public class HardcodedFilterIntegrationTest extends AbstractLdapTemplateIntegrat
 		int hits = handler.getNoOfRows();
 		assertThat(hits > 1).isTrue();
 	}
+
 }

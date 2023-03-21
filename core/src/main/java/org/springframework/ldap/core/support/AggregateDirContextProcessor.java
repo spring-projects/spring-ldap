@@ -26,9 +26,9 @@ import java.util.List;
 
 /**
  * Manages a sequence of {@link DirContextProcessor} instances. Applies
- * {@link #preProcess(DirContext)} and {@link #postProcess(DirContext)}
- * respectively in sequence on the managed objects.
- * 
+ * {@link #preProcess(DirContext)} and {@link #postProcess(DirContext)} respectively in
+ * sequence on the managed objects.
+ *
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  */
@@ -38,9 +38,7 @@ public class AggregateDirContextProcessor implements DirContextProcessor {
 
 	/**
 	 * Add the supplied DirContextProcessor to the list of managed objects.
-	 * 
-	 * @param processor
-	 *			the DirContextpProcessor to add.
+	 * @param processor the DirContextpProcessor to add.
 	 */
 	public void addDirContextProcessor(DirContextProcessor processor) {
 		dirContextProcessors.add(processor);
@@ -48,7 +46,6 @@ public class AggregateDirContextProcessor implements DirContextProcessor {
 
 	/**
 	 * Get the list of managed {@link DirContextProcessor} instances.
-	 * 
 	 * @return the managed list of {@link DirContextProcessor} instances.
 	 */
 	public List<DirContextProcessor> getDirContextProcessors() {
@@ -57,16 +54,17 @@ public class AggregateDirContextProcessor implements DirContextProcessor {
 
 	/**
 	 * Set the list of managed {@link DirContextProcessor} instances.
-	 * 
-	 * @param dirContextProcessors
-	 *			the list of {@link DirContextProcessor} instances to set.
+	 * @param dirContextProcessors the list of {@link DirContextProcessor} instances to
+	 * set.
 	 */
 	public void setDirContextProcessors(List<DirContextProcessor> dirContextProcessors) {
 		this.dirContextProcessors = new ArrayList<DirContextProcessor>(dirContextProcessors);
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.DirContextProcessor#preProcess(javax.naming.directory.DirContext)
+	 * @see
+	 * org.springframework.ldap.core.DirContextProcessor#preProcess(javax.naming.directory
+	 * .DirContext)
 	 */
 	public void preProcess(DirContext ctx) throws NamingException {
 		for (DirContextProcessor processor : dirContextProcessors) {
@@ -75,11 +73,13 @@ public class AggregateDirContextProcessor implements DirContextProcessor {
 	}
 
 	/*
-	 * @see org.springframework.ldap.core.DirContextProcessor#postProcess(javax.naming.directory.DirContext)
+	 * @see org.springframework.ldap.core.DirContextProcessor#postProcess(javax.naming.
+	 * directory.DirContext)
 	 */
 	public void postProcess(DirContext ctx) throws NamingException {
 		for (DirContextProcessor processor : dirContextProcessors) {
 			processor.postProcess(ctx);
 		}
 	}
+
 }

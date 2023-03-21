@@ -18,15 +18,15 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI SizeLimitExceededException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.SizeLimitExceededException
  */
 public class SizeLimitExceededException extends LimitExceededException {
 
-	public SizeLimitExceededException(
-			javax.naming.SizeLimitExceededException cause) {
+	public SizeLimitExceededException(javax.naming.SizeLimitExceededException cause) {
 		super(cause);
 	}
+
 }

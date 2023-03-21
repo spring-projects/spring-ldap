@@ -1,6 +1,7 @@
 package org.springframework.ldap.itest.transaction.compensating.manager.hibernate;
 
 public interface OrgPersonDao {
+
 	void createWithException(OrgPerson person);
 
 	void create(OrgPerson person);
@@ -20,4 +21,5 @@ public interface OrgPersonDao {
 	void unbind(OrgPerson person);
 
 	void unbindWithException(OrgPerson person);
+
 }

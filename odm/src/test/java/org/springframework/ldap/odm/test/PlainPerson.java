@@ -24,9 +24,10 @@ import javax.naming.Name;
 import java.util.ArrayList;
 import java.util.List;
 
-// Simple LDAP entry for testing 
+// Simple LDAP entry for testing
 @Entry(objectClasses = { "person", "top" })
 public final class PlainPerson {
+
 	public PlainPerson() {
 	}
 
@@ -77,16 +78,21 @@ public final class PlainPerson {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 
 		PlainPerson that = (PlainPerson) o;
 
-		if (cn != null ? !cn.equals(that.cn) : that.cn != null) return false;
-		if (dn != null ? !dn.equals(that.dn) : that.dn != null) return false;
+		if (cn != null ? !cn.equals(that.cn) : that.cn != null)
+			return false;
+		if (dn != null ? !dn.equals(that.dn) : that.dn != null)
+			return false;
 		if (objectClasses != null ? !objectClasses.equals(that.objectClasses) : that.objectClasses != null)
 			return false;
-		if (surname != null ? !surname.equals(that.surname) : that.surname != null) return false;
+		if (surname != null ? !surname.equals(that.surname) : that.surname != null)
+			return false;
 
 		return true;
 	}
@@ -99,4 +105,5 @@ public final class PlainPerson {
 		result = 31 * result + (surname != null ? surname.hashCode() : 0);
 		return result;
 	}
+
 }

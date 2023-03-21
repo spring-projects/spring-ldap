@@ -31,6 +31,7 @@ import java.util.Map;
  * @since 2.0
  */
 public final class NameAwareAttributes implements Attributes {
+
 	private Map<String, NameAwareAttribute> attributes = new HashMap<String, NameAwareAttribute>();
 
 	/**
@@ -46,7 +47,7 @@ public final class NameAwareAttributes implements Attributes {
 	 */
 	public NameAwareAttributes(Attributes attributes) {
 		NamingEnumeration<? extends Attribute> allAttributes = attributes.getAll();
-		while(allAttributes.hasMoreElements()) {
+		while (allAttributes.hasMoreElements()) {
 			Attribute attribute = allAttributes.nextElement();
 			put(new NameAwareAttribute(attribute));
 		}
@@ -109,12 +110,15 @@ public final class NameAwareAttributes implements Attributes {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 
 		NameAwareAttributes that = (NameAwareAttributes) o;
 
-		if (attributes != null ? !attributes.equals(that.attributes) : that.attributes != null) return false;
+		if (attributes != null ? !attributes.equals(that.attributes) : that.attributes != null)
+			return false;
 
 		return true;
 	}
@@ -128,4 +132,5 @@ public final class NameAwareAttributes implements Attributes {
 	public String toString() {
 		return String.format("NameAwareAttribute; attributes: %s", attributes.toString());
 	}
+
 }

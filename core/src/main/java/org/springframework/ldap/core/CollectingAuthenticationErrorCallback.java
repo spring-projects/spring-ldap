@@ -16,23 +16,23 @@
 package org.springframework.ldap.core;
 
 /**
- * Convenience implementation of AuthenticationErrorCallback that stores the
- * given exception and provides a method for retrieving it. The caller of the
- * authenticate method can provide an instance of this class as an error
- * callback. If the authentication fails, the caller can ask the callback
- * instance for the actual authentication exception.
- * 
+ * Convenience implementation of AuthenticationErrorCallback that stores the given
+ * exception and provides a method for retrieving it. The caller of the authenticate
+ * method can provide an instance of this class as an error callback. If the
+ * authentication fails, the caller can ask the callback instance for the actual
+ * authentication exception.
+ *
  * @author Ulrik Sandberg
  * @since 1.3.1
  */
 public final class CollectingAuthenticationErrorCallback implements AuthenticationErrorCallback {
+
 	private Exception error;
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.springframework.ldap.core.AuthenticationErrorCallback#execute(java
+	 *
+	 * @see org.springframework.ldap.core.AuthenticationErrorCallback#execute(java
 	 * .lang.Exception)
 	 */
 	public void execute(Exception e) {
@@ -48,10 +48,11 @@ public final class CollectingAuthenticationErrorCallback implements Authenticati
 
 	/**
 	 * Check whether this callback has collected an error.
-	 *
-	 * @return <code>true</code> if an error has been collected, <code>false</code> otherwise.
+	 * @return <code>true</code> if an error has been collected, <code>false</code>
+	 * otherwise.
 	 */
 	public boolean hasError() {
 		return error != null;
 	}
+
 }

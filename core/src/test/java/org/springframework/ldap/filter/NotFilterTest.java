@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Unit tests for the NotFilter class.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class NotFilterTest {
@@ -45,7 +45,7 @@ public class NotFilterTest {
 		NotFilter subclassObject = new NotFilter(filter) {
 		};
 
-		new EqualsTester(originalObject, identicalObject, differentObject,
-				subclassObject);
+		new EqualsTester(originalObject, identicalObject, differentObject, subclassObject);
 	}
+
 }

@@ -16,47 +16,45 @@
 package org.springframework.transaction.compensating;
 
 /**
- * Responsible for executing a single recorded operation as well as committing
- * or rolling it back, depending on the transaction outcome. Instances of this
- * interface are constructed by {@link CompensatingTransactionOperationRecorder}
- * objects, supplying them with the information necessary for the respective
- * operations.
+ * Responsible for executing a single recorded operation as well as committing or rolling
+ * it back, depending on the transaction outcome. Instances of this interface are
+ * constructed by {@link CompensatingTransactionOperationRecorder} objects, supplying them
+ * with the information necessary for the respective operations.
  * <p>
- * The actual operations performed by the respective methods of this class might
- * not be what would originally be expected. E.g. one would expect that the
- * {@link #performOperation()} method of a
- * CompensatingTransactionOperationExecutor implementation would actually delete
- * the entry, leaving it for the {@link #rollback()} method to recreate it using
- * data from the original entry. However, this will not always be possible. In
- * an LDAP system, for instance, it might not be possible to retrieve all the
- * stored data from the original entry. In that case, the
- * {@link #performOperation()} method will instead move the entry to a temporary
- * location and leave it for the {@link #commit()} method to actually remove the
- * entry.
- * 
+ * The actual operations performed by the respective methods of this class might not be
+ * what would originally be expected. E.g. one would expect that the
+ * {@link #performOperation()} method of a CompensatingTransactionOperationExecutor
+ * implementation would actually delete the entry, leaving it for the {@link #rollback()}
+ * method to recreate it using data from the original entry. However, this will not always
+ * be possible. In an LDAP system, for instance, it might not be possible to retrieve all
+ * the stored data from the original entry. In that case, the {@link #performOperation()}
+ * method will instead move the entry to a temporary location and leave it for the
+ * {@link #commit()} method to actually remove the entry.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
 public interface CompensatingTransactionOperationExecutor {
+
 	/**
-	 * Rollback the operation, restoring state of the target as it was before
-	 * the operation was performed using the information supplied on creation of
-	 * this instance.
+	 * Rollback the operation, restoring state of the target as it was before the
+	 * operation was performed using the information supplied on creation of this
+	 * instance.
 	 */
 	void rollback();
 
 	/**
-	 * Commit the operation. In many cases, this will not require any work at
-	 * all to be performed. However, in some cases there will be interesting
-	 * stuff to do. See class description for elaboration on this.
+	 * Commit the operation. In many cases, this will not require any work at all to be
+	 * performed. However, in some cases there will be interesting stuff to do. See class
+	 * description for elaboration on this.
 	 */
 	void commit();
 
 	/**
-	 * Perform the operation. This will most often require performing the
-	 * recorded operation, but in some cases the actual operation performed by
-	 * this method might be something else. See class description for
-	 * elaboration on this.
+	 * Perform the operation. This will most often require performing the recorded
+	 * operation, but in some cases the actual operation performed by this method might be
+	 * something else. See class description for elaboration on this.
 	 */
 	void performOperation();
+
 }

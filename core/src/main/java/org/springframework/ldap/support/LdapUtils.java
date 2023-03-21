@@ -39,9 +39,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
- * Generic utility methods for working with LDAP. Mainly for internal use within
- * the framework, but also useful for custom code.
- * 
+ * Generic utility methods for working with LDAP. Mainly for internal use within the
+ * framework, but also useful for custom code.
+ *
  * @author Ulrik Sandberg
  * @author Mattias Hellborg Arthursson
  * @since 1.2
@@ -49,6 +49,7 @@ import java.util.NoSuchElementException;
 public final class LdapUtils {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LdapUtils.class);
+
 	private static final int HEX = 16;
 
 	/**
@@ -59,9 +60,8 @@ public final class LdapUtils {
 	}
 
 	/**
-	 * Close the given JNDI Context and ignore any thrown exception. This is
-	 * useful for typical <code>finally</code> blocks in JNDI code.
-	 * 
+	 * Close the given JNDI Context and ignore any thrown exception. This is useful for
+	 * typical <code>finally</code> blocks in JNDI code.
 	 * @param context the JNDI Context to close (may be <code>null</code>)
 	 */
 	public static void closeContext(DirContext context) {
@@ -81,14 +81,11 @@ public final class LdapUtils {
 	}
 
 	/**
-	 * Convert the specified checked {@link javax.naming.NamingException
-	 * NamingException} to a Spring LDAP runtime
-	 * {@link org.springframework.ldap.NamingException NamingException}
-	 * equivalent.
-	 * 
+	 * Convert the specified checked {@link javax.naming.NamingException NamingException}
+	 * to a Spring LDAP runtime {@link org.springframework.ldap.NamingException
+	 * NamingException} equivalent.
 	 * @param ex the original checked NamingException to convert
-	 * @return the Spring LDAP runtime NamingException wrapping the given
-	 * exception
+	 * @return the Spring LDAP runtime NamingException wrapping the given exception
 	 */
 	public static NamingException convertLdapException(javax.naming.NamingException ex) {
 		Assert.notNull(ex, "NamingException must not be null");
@@ -118,7 +115,8 @@ public final class LdapUtils {
 					(javax.naming.InsufficientResourcesException) ex);
 		}
 		if (javax.naming.InterruptedNamingException.class.isAssignableFrom(ex.getClass())) {
-			return new org.springframework.ldap.InterruptedNamingException((javax.naming.InterruptedNamingException) ex);
+			return new org.springframework.ldap.InterruptedNamingException(
+					(javax.naming.InterruptedNamingException) ex);
 		}
 		if (javax.naming.directory.InvalidAttributeIdentifierException.class.isAssignableFrom(ex.getClass())) {
 			return new org.springframework.ldap.InvalidAttributeIdentifierException(
@@ -154,10 +152,12 @@ public final class LdapUtils {
 
 		// LimitExceededException hierarchy
 		if (javax.naming.SizeLimitExceededException.class.isAssignableFrom(ex.getClass())) {
-			return new org.springframework.ldap.SizeLimitExceededException((javax.naming.SizeLimitExceededException) ex);
+			return new org.springframework.ldap.SizeLimitExceededException(
+					(javax.naming.SizeLimitExceededException) ex);
 		}
 		if (javax.naming.TimeLimitExceededException.class.isAssignableFrom(ex.getClass())) {
-			return new org.springframework.ldap.TimeLimitExceededException((javax.naming.TimeLimitExceededException) ex);
+			return new org.springframework.ldap.TimeLimitExceededException(
+					(javax.naming.TimeLimitExceededException) ex);
 		}
 		// this class is the superclass of the two above
 		if (javax.naming.LimitExceededException.class.isAssignableFrom(ex.getClass())) {
@@ -231,10 +231,8 @@ public final class LdapUtils {
 	/**
 	 * Get the actual class of the supplied DirContext instance; LdapContext or
 	 * DirContext.
-	 * 
 	 * @param context the DirContext instance to check.
-	 * @return LdapContext.class if context is an LdapContext, DirContext.class
-	 * otherwise.
+	 * @return LdapContext.class if context is an LdapContext, DirContext.class otherwise.
 	 */
 	public static Class getActualTargetClass(DirContext context) {
 		if (context instanceof LdapContext) {
@@ -245,14 +243,11 @@ public final class LdapUtils {
 	}
 
 	/**
-	 * Collect all the values of a the specified attribute from the supplied
-	 * Attributes.
-	 * 
+	 * Collect all the values of a the specified attribute from the supplied Attributes.
 	 * @param attributes The Attributes; not <code>null</code>.
 	 * @param name The name of the Attribute to get values for.
 	 * @param collection the collection to collect the values in.
-	 * @throws NoSuchAttributeException if no attribute with the specified name
-	 * exists.
+	 * @throws NoSuchAttributeException if no attribute with the specified name exists.
 	 * @since 1.3
 	 */
 	public static void collectAttributeValues(Attributes attributes, String name, Collection<Object> collection) {
@@ -260,20 +255,19 @@ public final class LdapUtils {
 	}
 
 	/**
-	 * Collect all the values of a the specified attribute from the supplied
-	 * Attributes as the specified class.
-	 *
+	 * Collect all the values of a the specified attribute from the supplied Attributes as
+	 * the specified class.
 	 * @param attributes The Attributes; not <code>null</code>.
 	 * @param name The name of the Attribute to get values for.
 	 * @param collection the collection to collect the values in.
 	 * @param clazz the class of the collected attribute values
-	 * @throws NoSuchAttributeException if no attribute with the specified name
-	 * exists.
-	 * @throws IllegalArgumentException if an attribute value cannot be cast to the specified class.
+	 * @throws NoSuchAttributeException if no attribute with the specified name exists.
+	 * @throws IllegalArgumentException if an attribute value cannot be cast to the
+	 * specified class.
 	 * @since 2.0
 	 */
-	public static <T> void collectAttributeValues(
-			Attributes attributes, String name, Collection<T> collection, Class<T> clazz) {
+	public static <T> void collectAttributeValues(Attributes attributes, String name, Collection<T> collection,
+			Class<T> clazz) {
 
 		Assert.notNull(attributes, "Attributes must not be null");
 		Assert.hasText(name, "Name must not be empty");
@@ -289,8 +283,8 @@ public final class LdapUtils {
 	}
 
 	/**
-	 * Iterate through all the values of the specified Attribute calling back to
-	 * the specified callbackHandler.
+	 * Iterate through all the values of the specified Attribute calling back to the
+	 * specified callbackHandler.
 	 * @param attribute the Attribute to work with; not <code>null</code>.
 	 * @param callbackHandler the callbackHandler; not <code>null</code>.
 	 * @since 1.3
@@ -310,25 +304,29 @@ public final class LdapUtils {
 			for (int i = 0; i < attribute.size(); i++) {
 				try {
 					handleAttributeValue(attribute.getID(), attribute.get(i), i, callbackHandler);
-				} catch (javax.naming.NamingException e) {
+				}
+				catch (javax.naming.NamingException e) {
 					throw convertLdapException(e);
 				}
 			}
 		}
 	}
 
-	private static void handleAttributeValue(String attributeID, Object value, int i, AttributeValueCallbackHandler callbackHandler) {
+	private static void handleAttributeValue(String attributeID, Object value, int i,
+			AttributeValueCallbackHandler callbackHandler) {
 		callbackHandler.handleAttributeValue(attributeID, value, i);
 	}
 
 	/**
 	 * An {@link AttributeValueCallbackHandler} to collect values in a supplied
 	 * collection.
-	 * 
+	 *
 	 * @author Mattias Hellborg Arthursson
 	 */
 	private static final class CollectingAttributeValueCallbackHandler<T> implements AttributeValueCallbackHandler {
+
 		private final Collection<T> collection;
+
 		private final Class<T> clazz;
 
 		public CollectingAttributeValueCallbackHandler(Collection<T> collection, Class<T> clazz) {
@@ -343,17 +341,16 @@ public final class LdapUtils {
 			Assert.isTrue(attributeName == null || clazz.isAssignableFrom(attributeValue.getClass()));
 			collection.add(clazz.cast(attributeValue));
 		}
+
 	}
 
 	/**
-	 * Converts a CompositeName to a String in a way that avoids escaping
-	 * problems, such as the dreaded "triple backslash" problem.
-	 * 
+	 * Converts a CompositeName to a String in a way that avoids escaping problems, such
+	 * as the dreaded "triple backslash" problem.
 	 * @param compositeName The CompositeName to convert
 	 * @return String containing the String representation of <code>name</code>
 	 */
-	public static String convertCompositeNameToString(
-			CompositeName compositeName) {
+	public static String convertCompositeNameToString(CompositeName compositeName) {
 		if (compositeName.size() > 0) {
 			// A lookup with an empty String seems to produce an empty
 			// compositeName here; need to take this into account.
@@ -365,33 +362,39 @@ public final class LdapUtils {
 	}
 
 	/**
-	 * Construct a new LdapName instance from the supplied Name instance.
-	 * LdapName instances will be cloned, CompositeName tweaks will be managed using
-	 * {@link #convertCompositeNameToString(javax.naming.CompositeName)}; for all other Name
-	 * implementations, new LdapName instances are constructed using {@link LdapName#addAll(int, javax.naming.Name)}.
-	 *
+	 * Construct a new LdapName instance from the supplied Name instance. LdapName
+	 * instances will be cloned, CompositeName tweaks will be managed using
+	 * {@link #convertCompositeNameToString(javax.naming.CompositeName)}; for all other
+	 * Name implementations, new LdapName instances are constructed using
+	 * {@link LdapName#addAll(int, javax.naming.Name)}.
 	 * @param name the Name instance to convert to LdapName, not <code>null</code>.
-	 * @return a new LdapName representing the same Distinguished Name as the supplied instance.
-	 * @throws org.springframework.ldap.InvalidNameException to wrap any InvalidNameExceptions thrown by LdapName.
+	 * @return a new LdapName representing the same Distinguished Name as the supplied
+	 * instance.
+	 * @throws org.springframework.ldap.InvalidNameException to wrap any
+	 * InvalidNameExceptions thrown by LdapName.
 	 * @since 2.0
 	 */
 	public static LdapName newLdapName(Name name) {
 		Assert.notNull(name, "name must not be null");
-		if(name instanceof LdapName) {
+		if (name instanceof LdapName) {
 			return (LdapName) name.clone();
-		} else if (name instanceof CompositeName) {
+		}
+		else if (name instanceof CompositeName) {
 			CompositeName compositeName = (CompositeName) name;
 
 			try {
 				return new LdapName(convertCompositeNameToString(compositeName));
-			} catch (InvalidNameException e) {
+			}
+			catch (InvalidNameException e) {
 				throw convertLdapException(e);
 			}
-		} else {
+		}
+		else {
 			LdapName result = emptyLdapName();
 			try {
 				result.addAll(0, name);
-			} catch (InvalidNameException e) {
+			}
+			catch (InvalidNameException e) {
 				throw convertLdapException(e);
 			}
 
@@ -401,10 +404,10 @@ public final class LdapUtils {
 
 	/**
 	 * Construct a new LdapName instance from the supplied distinguished name string.
-	 *
 	 * @param distinguishedName the string to parse for constructing an LdapName instance.
 	 * @return a new LdapName instance.
-	 * @throws org.springframework.ldap.InvalidNameException to wrap any InvalidNameExceptions thrown by LdapName.
+	 * @throws org.springframework.ldap.InvalidNameException to wrap any
+	 * InvalidNameExceptions thrown by LdapName.
 	 * @since 2.0
 	 */
 	public static LdapName newLdapName(String distinguishedName) {
@@ -412,30 +415,29 @@ public final class LdapUtils {
 
 		try {
 			return new LdapName(distinguishedName);
-		} catch (InvalidNameException e) {
+		}
+		catch (InvalidNameException e) {
 			throw convertLdapException(e);
 		}
 	}
 
-
 	private static LdapName returnOrConstructLdapNameFromName(Name name) {
 		if (name instanceof LdapName) {
 			return (LdapName) name;
-		} else {
+		}
+		else {
 			return newLdapName(name);
 		}
 	}
 
 	/**
-	 * Remove the supplied path from the beginning the specified
-	 * <code>Name</code> if the name instance starts with
-	 * <code>path</code>. Useful for stripping base path suffix from a
-	 * <code>Name</code>. The original Name will not be affected.
-	 *
+	 * Remove the supplied path from the beginning the specified <code>Name</code> if the
+	 * name instance starts with <code>path</code>. Useful for stripping base path suffix
+	 * from a <code>Name</code>. The original Name will not be affected.
 	 * @param dn the dn to strip from.
 	 * @param pathToRemove the path to remove from the beginning the dn instance.
-	 * @return an LdapName instance that is a copy of the original name with the
-	 * specified path stripped from its beginning.
+	 * @return an LdapName instance that is a copy of the original name with the specified
+	 * path stripped from its beginning.
 	 * @since 2.0
 	 */
 	public static LdapName removeFirst(Name dn, Name pathToRemove) {
@@ -445,14 +447,15 @@ public final class LdapUtils {
 		LdapName result = newLdapName(dn);
 		LdapName path = returnOrConstructLdapNameFromName(pathToRemove);
 
-		if(path.size() == 0 || !dn.startsWith(path)) {
+		if (path.size() == 0 || !dn.startsWith(path)) {
 			return result;
 		}
 
-		for(int i = 0; i < path.size(); i++) {
+		for (int i = 0; i < path.size(); i++) {
 			try {
 				result.remove(0);
-			} catch (InvalidNameException e) {
+			}
+			catch (InvalidNameException e) {
 				throw convertLdapException(e);
 			}
 		}
@@ -461,14 +464,13 @@ public final class LdapUtils {
 	}
 
 	/**
-	 * Prepend the supplied path in the beginning the specified
-	 * <code>Name</code> if the name instance starts with
-	 * <code>path</code>. The original Name will not be affected.
-	 *
+	 * Prepend the supplied path in the beginning the specified <code>Name</code> if the
+	 * name instance starts with <code>path</code>. The original Name will not be
+	 * affected.
 	 * @param dn the dn to strip from.
 	 * @param pathToPrepend the path to prepend in the beginning of the dn.
-	 * @return an LdapName instance that is a copy of the original name with the
-	 * specified path inserted at its beginning.
+	 * @return an LdapName instance that is a copy of the original name with the specified
+	 * path inserted at its beginning.
 	 * @since 2.0
 	 */
 	public static LdapName prepend(Name dn, Name pathToPrepend) {
@@ -478,7 +480,8 @@ public final class LdapUtils {
 		LdapName result = newLdapName(dn);
 		try {
 			result.addAll(0, pathToPrepend);
-		} catch (InvalidNameException e) {
+		}
+		catch (InvalidNameException e) {
 			throw convertLdapException(e);
 		}
 
@@ -496,7 +499,6 @@ public final class LdapUtils {
 
 	/**
 	 * Find the Rdn with the requested key in the supplied Name.
-	 *
 	 * @param name the Name in which to search for the key.
 	 * @param key the attribute key to search for.
 	 * @return the rdn corresponding to the <b>first</b> occurrence of the requested key.
@@ -514,7 +516,7 @@ public final class LdapUtils {
 			NamingEnumeration<String> ids = rdn.toAttributes().getIDs();
 			while (ids.hasMoreElements()) {
 				String id = ids.nextElement();
-				if(key.equalsIgnoreCase(id)) {
+				if (key.equalsIgnoreCase(id)) {
 					return rdn;
 				}
 			}
@@ -525,10 +527,10 @@ public final class LdapUtils {
 
 	/**
 	 * Get the value of the Rdn with the requested key in the supplied Name.
-	 *
 	 * @param name the Name in which to search for the key.
 	 * @param key the attribute key to search for.
-	 * @return the value of the rdn corresponding to the <b>first</b> occurrence of the requested key.
+	 * @return the value of the rdn corresponding to the <b>first</b> occurrence of the
+	 * requested key.
 	 * @throws NoSuchElementException if no corresponding entry is found.
 	 * @since 2.0
 	 */
@@ -536,10 +538,11 @@ public final class LdapUtils {
 		NamingEnumeration<? extends Attribute> allAttributes = getRdn(name, key).toAttributes().getAll();
 		while (allAttributes.hasMoreElements()) {
 			Attribute oneAttribute = allAttributes.nextElement();
-			if(key.equalsIgnoreCase(oneAttribute.getID())) {
+			if (key.equalsIgnoreCase(oneAttribute.getID())) {
 				try {
 					return oneAttribute.get();
-				} catch (javax.naming.NamingException e) {
+				}
+				catch (javax.naming.NamingException e) {
 					throw convertLdapException(e);
 				}
 			}
@@ -551,9 +554,9 @@ public final class LdapUtils {
 
 	/**
 	 * Get the value of the Rdn at the requested index in the supplied Name.
-	 *
 	 * @param name the Name to work on.
-	 * @param index The 0-based index of the rdn value to retrieve. Must be in the range [0,size()).
+	 * @param index The 0-based index of the rdn value to retrieve. Must be in the range
+	 * [0,size()).
 	 * @return the value of the rdn at the requested index.
 	 * @throws IndexOutOfBoundsException if index is outside the specified range.
 	 * @since 2.0
@@ -563,19 +566,19 @@ public final class LdapUtils {
 
 		LdapName ldapName = returnOrConstructLdapNameFromName(name);
 		Rdn rdn = ldapName.getRdn(index);
-		if(rdn.size() > 1) {
-			LOGGER.warn("Rdn at position " + index + " of dn '" + name +
-					"' is multi-value - returned value is not to be trusted. " +
-					"Consider using name-based getValue method instead");
+		if (rdn.size() > 1) {
+			LOGGER.warn("Rdn at position " + index + " of dn '" + name
+					+ "' is multi-value - returned value is not to be trusted. "
+					+ "Consider using name-based getValue method instead");
 		}
 		return rdn.getValue();
 	}
 
 	/**
 	 * Get the value of the Rdn at the requested index in the supplied Name as a String.
-	 *
 	 * @param name the Name to work on.
-	 * @param index The 0-based index of the rdn value to retrieve. Must be in the range [0,size()).
+	 * @param index The 0-based index of the rdn value to retrieve. Must be in the range
+	 * [0,size()).
 	 * @return the value of the rdn at the requested index as a String.
 	 * @throws IndexOutOfBoundsException if index is outside the specified range.
 	 * @throws ClassCastException if the value of the requested component is not a String.
@@ -587,10 +590,10 @@ public final class LdapUtils {
 
 	/**
 	 * Get the value of the Rdn with the requested key in the supplied Name as a String.
-	 *
 	 * @param name the Name in which to search for the key.
 	 * @param key the attribute key to search for.
-	 * @return the String value of the rdn corresponding to the <b>first</b> occurrence of the requested key.
+	 * @return the String value of the rdn corresponding to the <b>first</b> occurrence of
+	 * the requested key.
 	 * @throws NoSuchElementException if no corresponding entry is found.
 	 * @throws ClassCastException if the value of the requested component is not a String.
 	 * @since 2.0
@@ -600,16 +603,16 @@ public final class LdapUtils {
 	}
 
 	/**
-	 * Converts a binary SID to its String representation, according to the
-	 * algorithm described <a
-	 * href="https://blogs.msdn.com/oldnewthing/archive/2004/03/15/89753.aspx"
-	 * >here</a>. Thanks to <a href=
-	 * "https://www.jroller.com/eyallupu/entry/java_jndi_how_to_convert">Eyal
+	 * Converts a binary SID to its String representation, according to the algorithm
+	 * described
+	 * <a href="https://blogs.msdn.com/oldnewthing/archive/2004/03/15/89753.aspx"
+	 * >here</a>. Thanks to
+	 * <a href= "https://www.jroller.com/eyallupu/entry/java_jndi_how_to_convert">Eyal
 	 * Lupu</a> for algorithmic inspiration.
-	 * 
+	 *
 	 * <pre>
 	 * If you have a SID like S-a-b-c-d-e-f-g-...
-	 * 
+	 *
 	 * Then the bytes are
 	 * a	(revision)
 	 * N	(number of dashes minus two)
@@ -619,11 +622,11 @@ public final class LdapUtils {
 	 * eeee	(four bytes of &quot;e&quot; treated as a 32-bit number in little-endian format)
 	 * ffff	(four bytes of &quot;f&quot; treated as a 32-bit number in little-endian format)
 	 * etc.	
-	 * 
+	 *
 	 * So for example, if your SID is S-1-5-21-2127521184-1604012920-1887927527-72713, then your raw hex SID is
-	 * 
+	 *
 	 * 010500000000000515000000A065CF7E784B9B5FE77C8770091C0100
-	 * 
+	 *
 	 * This breaks down as follows:
 	 * 01	S-1
 	 * 05	(seven dashes, seven minus two = 5)
@@ -633,14 +636,13 @@ public final class LdapUtils {
 	 * 784B9B5F	(1604012920 = 0x5F9B4B78, little-endian)
 	 * E77C8770	(1887927527 = 0X70877CE7, little-endian)
 	 * 091C0100	(72713 = 0x00011c09, little-endian)
-	 * 
+	 *
 	 * S-1-	version number (SID_REVISION)
 	 * -5-	SECURITY_NT_AUTHORITY
 	 * -21-	SECURITY_NT_NON_UNIQUE
 	 * -...-...-...-	these identify the machine that issued the SID
 	 * 72713	unique user id on the machine
 	 * </pre>
-	 * 
 	 * @param sid binary SID in byte array format
 	 * @return String version of the given sid
 	 * @since 1.3.1
@@ -680,13 +682,12 @@ public final class LdapUtils {
 		// That's it - we have the SID
 		return sidAsString.toString();
 	}
-	
+
 	/**
-	 * Converts a String SID to its binary representation, according to the
-	 * algorithm described <a
-	 * href="https://blogs.msdn.com/oldnewthing/archive/2004/03/15/89753.aspx"
-	 * >here</a>. 
-	 * 
+	 * Converts a String SID to its binary representation, according to the algorithm
+	 * described
+	 * <a href="https://blogs.msdn.com/oldnewthing/archive/2004/03/15/89753.aspx"
+	 * >here</a>.
 	 * @param string SID in readable format
 	 * @return Binary version of the given sid
 	 * @see LdapUtils#convertBinarySidToString(byte[])
@@ -697,7 +698,7 @@ public final class LdapUtils {
 		byte sidRevision = (byte) Integer.parseInt(parts[1]);
 		int subAuthCount = parts.length - 3;
 
-		byte[] sid = new byte[] {sidRevision, (byte) subAuthCount};
+		byte[] sid = new byte[] { sidRevision, (byte) subAuthCount };
 		sid = addAll(sid, numberToBytes(parts[2], 6, true));
 		for (int i = 0; i < subAuthCount; i++) {
 			sid = addAll(sid, numberToBytes(parts[3 + i], 4, false));
@@ -713,13 +714,12 @@ public final class LdapUtils {
 	}
 
 	/**
-	 * Converts the given number to a binary representation of the specified
-	 * length and "endian-ness".
-	 * 
+	 * Converts the given number to a binary representation of the specified length and
+	 * "endian-ness".
 	 * @param number String with number to convert
 	 * @param length How long the resulting binary array should be
-	 * @param bigEndian <code>true</code> if big endian (5=0005), or
-	 * <code>false</code> if little endian (5=5000)
+	 * @param bigEndian <code>true</code> if big endian (5=0005), or <code>false</code> if
+	 * little endian (5=5000)
 	 * @return byte array containing the binary result in the given order
 	 */
 	static byte[] numberToBytes(String number, int length, boolean bigEndian) {
@@ -728,7 +728,8 @@ public final class LdapUtils {
 		int remaining = length - bytes.length;
 		if (remaining < 0) {
 			bytes = Arrays.copyOfRange(bytes, -remaining, bytes.length);
-		} else {
+		}
+		else {
 			byte[] fill = new byte[remaining];
 			bytes = addAll(fill, bytes);
 		}
@@ -752,9 +753,8 @@ public final class LdapUtils {
 	}
 
 	/**
-	 * Converts a byte into its hexadecimal representation, padding with a
-	 * leading zero to get an even number of characters.
-	 * 
+	 * Converts a byte into its hexadecimal representation, padding with a leading zero to
+	 * get an even number of characters.
 	 * @param b value to convert
 	 * @return hex string, possibly padded with a zero
 	 */
@@ -768,9 +768,8 @@ public final class LdapUtils {
 	}
 
 	/**
-	 * Converts a byte array into its hexadecimal representation, padding each
-	 * with a leading zero to get an even number of characters.
-	 * 
+	 * Converts a byte array into its hexadecimal representation, padding each with a
+	 * leading zero to get an even number of characters.
 	 * @param b values to convert
 	 * @return hex string, possibly with elements padded with a zero
 	 */
@@ -785,4 +784,5 @@ public final class LdapUtils {
 		sb.append("}");
 		return sb.toString();
 	}
+
 }

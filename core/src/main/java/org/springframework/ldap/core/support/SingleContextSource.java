@@ -30,8 +30,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 /**
- * A {@link ContextSource} to be used as a decorator around a target ContextSource
- * to make sure the target is never actually closed. Useful when working with e.g. paged results,
+ * A {@link ContextSource} to be used as a decorator around a target ContextSource to make
+ * sure the target is never actually closed. Useful when working with e.g. paged results,
  * as these require the same target to be used.
  *
  * @author Mattias Hellborg Arthursson
@@ -39,15 +39,17 @@ import java.lang.reflect.Proxy;
 public class SingleContextSource implements ContextSource, DisposableBean {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SingleContextSource.class);
+
 	private static final boolean DONT_USE_READ_ONLY = false;
+
 	private static final boolean DONT_IGNORE_PARTIAL_RESULT = false;
+
 	private static final boolean DONT_IGNORE_NAME_NOT_FOUND = false;
 
 	private final DirContext ctx;
 
 	/**
 	 * Constructor.
-	 *
 	 * @param ctx the target DirContext.
 	 */
 	public SingleContextSource(DirContext ctx) {
@@ -55,37 +57,33 @@ public class SingleContextSource implements ContextSource, DisposableBean {
 	}
 
 	/*
-	  * @see org.springframework.ldap.ContextSource#getReadOnlyContext()
-	  */
+	 * @see org.springframework.ldap.ContextSource#getReadOnlyContext()
+	 */
 	public DirContext getReadOnlyContext() {
 		return getNonClosingDirContextProxy(ctx);
 	}
 
 	/*
-	  * @see org.springframework.ldap.ContextSource#getReadWriteContext()
-	  */
+	 * @see org.springframework.ldap.ContextSource#getReadWriteContext()
+	 */
 	public DirContext getReadWriteContext() {
 		return getNonClosingDirContextProxy(ctx);
 	}
 
 	private DirContext getNonClosingDirContextProxy(DirContext context) {
-		return (DirContext) Proxy.newProxyInstance(DirContextProxy.class
-				.getClassLoader(), new Class<?>[]{
-				LdapUtils.getActualTargetClass(context),
-				DirContextProxy.class},
-				new SingleContextSource.NonClosingDirContextInvocationHandler(
-						context));
+		return (DirContext) Proxy.newProxyInstance(DirContextProxy.class.getClassLoader(),
+				new Class<?>[] { LdapUtils.getActualTargetClass(context), DirContextProxy.class },
+				new SingleContextSource.NonClosingDirContextInvocationHandler(context));
 
 	}
 
 	public DirContext getContext(String principal, String credentials) {
-		throw new UnsupportedOperationException(
-				"Not a valid operation for this type of ContextSource");
+		throw new UnsupportedOperationException("Not a valid operation for this type of ContextSource");
 	}
 
 	/**
-	 * Destroy method that allows the target DirContext to be cleaned up when
-	 * the SingleContextSource is not going to be used any more.
+	 * Destroy method that allows the target DirContext to be cleaned up when the
+	 * SingleContextSource is not going to be used any more.
 	 */
 	public void destroy() {
 		try {
@@ -97,51 +95,60 @@ public class SingleContextSource implements ContextSource, DisposableBean {
 	}
 
 	/**
-	 * Construct a SingleContextSource and execute the LdapOperationsCallback using the created instance.
-	 * This makes sure the same connection will be used for all operations inside the LdapOperationsCallback,
-	 * which is particularly useful when working with e.g. Paged Results as these typically require the exact
-	 * same connection to be used for all requests involving the same cookie.
-	 * The SingleContextSource instance will be properly disposed of once the operation has been completed.
-	 * <p>By default, the {@link org.springframework.ldap.core.ContextSource#getReadWriteContext()} method
-	 * will be used to create the DirContext instance to operate on.</p>
-	 *
+	 * Construct a SingleContextSource and execute the LdapOperationsCallback using the
+	 * created instance. This makes sure the same connection will be used for all
+	 * operations inside the LdapOperationsCallback, which is particularly useful when
+	 * working with e.g. Paged Results as these typically require the exact same
+	 * connection to be used for all requests involving the same cookie. The
+	 * SingleContextSource instance will be properly disposed of once the operation has
+	 * been completed.
+	 * <p>
+	 * By default, the
+	 * {@link org.springframework.ldap.core.ContextSource#getReadWriteContext()} method
+	 * will be used to create the DirContext instance to operate on.
+	 * </p>
 	 * @param contextSource The target ContextSource to retrieve a DirContext from.
 	 * @param callback the callback to perform the Ldap operations.
 	 * @return the result returned from the callback.
-	 * @see #doWithSingleContext(org.springframework.ldap.core.ContextSource, LdapOperationsCallback, boolean, boolean, boolean)
+	 * @see #doWithSingleContext(org.springframework.ldap.core.ContextSource,
+	 * LdapOperationsCallback, boolean, boolean, boolean)
 	 * @since 2.0
 	 */
 	public static <T> T doWithSingleContext(ContextSource contextSource, LdapOperationsCallback<T> callback) {
-		return doWithSingleContext(contextSource, callback, DONT_USE_READ_ONLY, DONT_IGNORE_PARTIAL_RESULT, DONT_IGNORE_NAME_NOT_FOUND);
+		return doWithSingleContext(contextSource, callback, DONT_USE_READ_ONLY, DONT_IGNORE_PARTIAL_RESULT,
+				DONT_IGNORE_NAME_NOT_FOUND);
 
 	}
 
 	/**
-	 * Construct a SingleContextSource and execute the LdapOperationsCallback using the created instance.
-	 * This makes sure the same connection will be used for all operations inside the LdapOperationsCallback,
-	 * which is particularly useful when working with e.g. Paged Results as these typically require the exact
-	 * same connection to be used for all requests involving the same cookie..
-	 * The SingleContextSource instance will be properly disposed of once the operation has been completed.
-	 *
+	 * Construct a SingleContextSource and execute the LdapOperationsCallback using the
+	 * created instance. This makes sure the same connection will be used for all
+	 * operations inside the LdapOperationsCallback, which is particularly useful when
+	 * working with e.g. Paged Results as these typically require the exact same
+	 * connection to be used for all requests involving the same cookie.. The
+	 * SingleContextSource instance will be properly disposed of once the operation has
+	 * been completed.
 	 * @param contextSource The target ContextSource to retrieve a DirContext from
 	 * @param callback the callback to perform the Ldap operations
-	 * @param useReadOnly if <code>true</code>, use the {@link org.springframework.ldap.core.ContextSource#getReadOnlyContext()}
-	 *					method on the target ContextSource to get the actual DirContext instance, if <code>false</code>,
-	 *					use {@link org.springframework.ldap.core.ContextSource#getReadWriteContext()}.
-	 * @param ignorePartialResultException Used for populating this property on the created LdapTemplate instance.
-	 * @param ignoreNameNotFoundException Used for populating this property on the created LdapTemplate instance.
+	 * @param useReadOnly if <code>true</code>, use the
+	 * {@link org.springframework.ldap.core.ContextSource#getReadOnlyContext()} method on
+	 * the target ContextSource to get the actual DirContext instance, if
+	 * <code>false</code>, use
+	 * {@link org.springframework.ldap.core.ContextSource#getReadWriteContext()}.
+	 * @param ignorePartialResultException Used for populating this property on the
+	 * created LdapTemplate instance.
+	 * @param ignoreNameNotFoundException Used for populating this property on the created
+	 * LdapTemplate instance.
 	 * @return the result returned from the callback.
 	 * @since 2.0
 	 */
-	public static <T> T doWithSingleContext(ContextSource contextSource,
-											LdapOperationsCallback<T> callback,
-											boolean useReadOnly,
-											boolean ignorePartialResultException,
-											boolean ignoreNameNotFoundException) {
+	public static <T> T doWithSingleContext(ContextSource contextSource, LdapOperationsCallback<T> callback,
+			boolean useReadOnly, boolean ignorePartialResultException, boolean ignoreNameNotFoundException) {
 		SingleContextSource singleContextSource;
 		if (useReadOnly) {
 			singleContextSource = new SingleContextSource(contextSource.getReadOnlyContext());
-		} else {
+		}
+		else {
 			singleContextSource = new SingleContextSource(contextSource.getReadWriteContext());
 		}
 
@@ -151,19 +158,19 @@ public class SingleContextSource implements ContextSource, DisposableBean {
 
 		try {
 			return callback.doWithLdapOperations(ldapTemplate);
-		} finally {
+		}
+		finally {
 			singleContextSource.destroy();
 		}
 	}
 
 	/**
-	 * A proxy for DirContext forwarding all operation to the target DirContext,
-	 * but making sure that no <code>close</code> operations will be performed.
+	 * A proxy for DirContext forwarding all operation to the target DirContext, but
+	 * making sure that no <code>close</code> operations will be performed.
 	 *
 	 * @author Mattias Hellborg Arthursson
 	 */
-	public static class NonClosingDirContextInvocationHandler implements
-			InvocationHandler {
+	public static class NonClosingDirContextInvocationHandler implements InvocationHandler {
 
 		private DirContext target;
 
@@ -175,19 +182,21 @@ public class SingleContextSource implements ContextSource, DisposableBean {
 		 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
 		 * java.lang.reflect.Method, java.lang.Object[])
 		 */
-		public Object invoke(Object proxy, Method method, Object[] args)
-				throws Throwable {
+		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
 			String methodName = method.getName();
 			if (methodName.equals("getTargetContext")) {
 				return target;
-			} else if (methodName.equals("equals")) {
+			}
+			else if (methodName.equals("equals")) {
 				// Only consider equal when proxies are identical.
 				return (proxy == args[0] ? Boolean.TRUE : Boolean.FALSE);
-			} else if (methodName.equals("hashCode")) {
+			}
+			else if (methodName.equals("hashCode")) {
 				// Use hashCode of Connection proxy.
 				return proxy.hashCode();
-			} else if (methodName.equals("close")) {
+			}
+			else if (methodName.equals("close")) {
 				// Never close the target context, as this class will only be
 				// used for operations concerning the compensating transactions.
 				return null;
@@ -200,5 +209,7 @@ public class SingleContextSource implements ContextSource, DisposableBean {
 				throw e.getTargetException();
 			}
 		}
+
 	}
+
 }

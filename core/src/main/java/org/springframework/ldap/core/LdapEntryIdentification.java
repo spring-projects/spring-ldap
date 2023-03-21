@@ -22,34 +22,36 @@ import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapName;
 
 /**
- * Wrapper class to handle the full identification of an LDAP entry. An LDAP
- * entry is identified by its Distinguished Name, in Spring LDAP represented by
- * the {@link DistinguishedName} class. A Distinguished Name can be absolute -
- * i.e. complete including the very root (base) of the LDAP tree - or relative -
- * i.e relative to the base LDAP path of the current LDAP connection (specified
- * as <code>base</code> to the {@link ContextSource}).
+ * Wrapper class to handle the full identification of an LDAP entry. An LDAP entry is
+ * identified by its Distinguished Name, in Spring LDAP represented by the
+ * {@link DistinguishedName} class. A Distinguished Name can be absolute - i.e. complete
+ * including the very root (base) of the LDAP tree - or relative - i.e relative to the
+ * base LDAP path of the current LDAP connection (specified as <code>base</code> to the
+ * {@link ContextSource}).
  * <p>
- * The different representations are needed on different occasions, e.g. the
- * relative DN is typically what is needed to perform lookups and searches in
- * the LDAP tree, whereas the absolute DN is needed when authenticating and when
- * an LDAP entry is referred to in e.g. a group. This wrapper class contains
- * both of these representations.
- * 
+ * The different representations are needed on different occasions, e.g. the relative DN
+ * is typically what is needed to perform lookups and searches in the LDAP tree, whereas
+ * the absolute DN is needed when authenticating and when an LDAP entry is referred to in
+ * e.g. a group. This wrapper class contains both of these representations.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class LdapEntryIdentification {
+
 	private final LdapName relativeDn;
 
 	private final LdapName absoluteDn;
 
 	/**
 	 * Construct an LdapEntryIdentification instance.
-	 * @param absoluteDn the absolute DN of the identified entry, e.g. as
-	 * returned by {@link DirContext#getNameInNamespace()}.
-	 * @param relativeDn the DN of the identified entry relative to the base
-	 * LDAP path, e.g. as returned by {@link DirContextOperations#getDn()}.
-	 * @deprecated {@link DistinguishedName} and associated classes and methods are deprecated as of 2.0.
-	 * use {@link #LdapEntryIdentification(javax.naming.ldap.LdapName, javax.naming.ldap.LdapName)} instead.
+	 * @param absoluteDn the absolute DN of the identified entry, e.g. as returned by
+	 * {@link DirContext#getNameInNamespace()}.
+	 * @param relativeDn the DN of the identified entry relative to the base LDAP path,
+	 * e.g. as returned by {@link DirContextOperations#getDn()}.
+	 * @deprecated {@link DistinguishedName} and associated classes and methods are
+	 * deprecated as of 2.0. use
+	 * {@link #LdapEntryIdentification(javax.naming.ldap.LdapName, javax.naming.ldap.LdapName)}
+	 * instead.
 	 */
 	public LdapEntryIdentification(DistinguishedName absoluteDn, DistinguishedName relativeDn) {
 		Assert.notNull(absoluteDn, "Absolute DN must not be null");
@@ -60,10 +62,10 @@ public class LdapEntryIdentification {
 
 	/**
 	 * Construct an LdapEntryIdentification instance.
-	 * @param absoluteDn the absolute DN of the identified entry, e.g. as
-	 * returned by {@link DirContext#getNameInNamespace()}.
-	 * @param relativeDn the DN of the identified entry relative to the base
-	 * LDAP path, e.g. as returned by {@link DirContextOperations#getDn()}.
+	 * @param absoluteDn the absolute DN of the identified entry, e.g. as returned by
+	 * {@link DirContext#getNameInNamespace()}.
+	 * @param relativeDn the DN of the identified entry relative to the base LDAP path,
+	 * e.g. as returned by {@link DirContextOperations#getDn()}.
 	 * @since 2.0
 	 */
 	public LdapEntryIdentification(LdapName absoluteDn, LdapName relativeDn) {
@@ -74,8 +76,8 @@ public class LdapEntryIdentification {
 	}
 
 	/**
-	 * Get the DN of the identified entry relative to the base LDAP path, e.g.
-	 * as returned by {@link DirContextOperations#getDn()}.
+	 * Get the DN of the identified entry relative to the base LDAP path, e.g. as returned
+	 * by {@link DirContextOperations#getDn()}.
 	 * @return the relative DN.
 	 * @since 2.0
 	 */
@@ -94,11 +96,11 @@ public class LdapEntryIdentification {
 	}
 
 	/**
-	 * Get the DN of the identified entry relative to the base LDAP path, e.g.
-	 * as returned by {@link DirContextOperations#getDn()}.
+	 * Get the DN of the identified entry relative to the base LDAP path, e.g. as returned
+	 * by {@link DirContextOperations#getDn()}.
 	 * @return the relative DN.
-	 * @deprecated {@link DistinguishedName} and associated classes and methods are deprecated as of 2.0.
-	 * use {@link #getRelativeName()} instead.
+	 * @deprecated {@link DistinguishedName} and associated classes and methods are
+	 * deprecated as of 2.0. use {@link #getRelativeName()} instead.
 	 */
 	public DistinguishedName getRelativeDn() {
 		return new DistinguishedName(relativeDn);
@@ -108,8 +110,8 @@ public class LdapEntryIdentification {
 	 * Get the absolute DN of the identified entry, e.g. as returned by
 	 * {@link DirContext#getNameInNamespace()}.
 	 * @return the absolute DN.
-	 * @deprecated {@link DistinguishedName} and associated classes and methods are deprecated as of 2.0.
-	 * use {@link #getAbsoluteName()} instead.
+	 * @deprecated {@link DistinguishedName} and associated classes and methods are
+	 * deprecated as of 2.0. use {@link #getAbsoluteName()} instead.
 	 */
 	public DistinguishedName getAbsoluteDn() {
 		return new DistinguishedName(absoluteDn);
@@ -127,4 +129,5 @@ public class LdapEntryIdentification {
 	public int hashCode() {
 		return absoluteDn.hashCode() ^ relativeDn.hashCode();
 	}
+
 }

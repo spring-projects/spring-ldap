@@ -22,14 +22,14 @@ import javax.naming.ldap.LdapContext;
 /**
  * Default implementation of TLS authentication. Applies <code>SIMPLE</code>
  * authentication on top of the negotiated TLS session. Refer to
- * {@link AbstractTlsDirContextAuthenticationStrategy} for configuration
- * options.
- * 
+ * {@link AbstractTlsDirContextAuthenticationStrategy} for configuration options.
+ *
  * @author Mattias Hellborg Arthursson
  * @see AbstractTlsDirContextAuthenticationStrategy
  * @see AbstractContextSource
  */
 public class DefaultTlsDirContextAuthenticationStrategy extends AbstractTlsDirContextAuthenticationStrategy {
+
 	private static final String SIMPLE_AUTHENTICATION = "simple";
 
 	protected void applyAuthentication(LdapContext ctx, String userDn, String password) throws NamingException {

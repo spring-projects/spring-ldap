@@ -34,12 +34,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 /**
- * Integration tests for {@link org.springframework.ldap.transaction.compensating.manager.ContextSourceAndDataSourceTransactionManager}
+ * Integration tests for
+ * {@link org.springframework.ldap.transaction.compensating.manager.ContextSourceAndDataSourceTransactionManager}
  * that tests unbind/rebind of recursive entries.
  *
  * @author Mattias Hellborg Arthursson
  */
-@ContextConfiguration(locations = {"/conf/ldapTemplateTransactionSubtreeTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapTemplateTransactionSubtreeTestContext.xml" })
 public class ContextSourceTransactionManagerSubtreeIntegrationTest extends AbstractLdapTemplateIntegrationTest {
 
 	@Autowired
@@ -67,7 +68,8 @@ public class ContextSourceTransactionManagerSubtreeIntegrationTest extends Abstr
 		try {
 			ldapTemplate.lookup("ou=company1,ou=Sweden");
 			fail("NameNotFoundException expected");
-		} catch (NameNotFoundException expected) {
+		}
+		catch (NameNotFoundException expected) {
 			assertThat(true).isTrue();
 		}
 	}
@@ -77,7 +79,8 @@ public class ContextSourceTransactionManagerSubtreeIntegrationTest extends Abstr
 		try {
 			dummyDao.deleteRecursivelyWithException("ou=company1,ou=Sweden");
 			fail("DummyException expected");
-		} catch (DummyException expected) {
+		}
+		catch (DummyException expected) {
 			assertThat(true).isTrue();
 		}
 
@@ -95,8 +98,10 @@ public class ContextSourceTransactionManagerSubtreeIntegrationTest extends Abstr
 		try {
 			dummyDao.createRecursivelyAndUnbindSubnodeWithException();
 			fail("DummyException expected");
-		} catch (DummyException expected) {
+		}
+		catch (DummyException expected) {
 			assertThat(true).isTrue();
 		}
 	}
+
 }

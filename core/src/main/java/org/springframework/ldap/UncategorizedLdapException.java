@@ -18,7 +18,7 @@ package org.springframework.ldap;
 
 /**
  * NamingException to be thrown when no other matching subclass is found.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  */
@@ -35,4 +35,5 @@ public class UncategorizedLdapException extends NamingException {
 	public UncategorizedLdapException(Throwable cause) {
 		super("Uncategorized exception occured during LDAP processing", cause);
 	}
+
 }

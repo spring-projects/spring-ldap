@@ -14,6 +14,7 @@ import static org.mockito.Mockito.mock;
 public class LdapTemplateOdmTest {
 
 	private LdapTemplate tested;
+
 	private ObjectDirectoryMapper odmMock;
 
 	@Before
@@ -26,9 +27,9 @@ public class LdapTemplateOdmTest {
 		tested.setObjectDirectoryMapper(odmMock);
 	}
 
-
 	@Test
 	public void testFindByDn() {
 
 	}
+
 }

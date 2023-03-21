@@ -24,15 +24,14 @@ import javax.naming.NamingException;
 import javax.naming.ldap.HasControls;
 
 /**
- * Currently only per request controls can be inspected via the post process
- * method on a context processor. If a request control gives a different value
- * for each search result, then this cannot be inspected using the existing
- * support classes. An example control that requires this feature would be
- * 1.3.6.1.4.1.42.2.27.9.5.8 Account usability control, that can be used with
- * for example the Sun ONE or the OpenDS directory servers.
- * 
+ * Currently only per request controls can be inspected via the post process method on a
+ * context processor. If a request control gives a different value for each search result,
+ * then this cannot be inspected using the existing support classes. An example control
+ * that requires this feature would be 1.3.6.1.4.1.42.2.27.9.5.8 Account usability
+ * control, that can be used with for example the Sun ONE or the OpenDS directory servers.
+ *
  * The extended callback handler can pass hasControls to mapper.
- * 
+ *
  * @author Tim Terry
  * @author Ulrik Sandberg
  */
@@ -49,7 +48,7 @@ public class ContextMapperCallbackHandlerWithControls<T> extends ContextMapperCa
 	 * @see org.springframework.ldap.core.ContextMapperCallbackHandler#
 	 * getObjectFromNameClassPair(javax.naming.NameClassPair)
 	 */
-	public T getObjectFromNameClassPair(final NameClassPair nameClassPair) throws NamingException{
+	public T getObjectFromNameClassPair(final NameClassPair nameClassPair) throws NamingException {
 		if (!(nameClassPair instanceof Binding)) {
 			throw new IllegalArgumentException("Parameter must be an instance of Binding");
 		}
@@ -68,4 +67,5 @@ public class ContextMapperCallbackHandlerWithControls<T> extends ContextMapperCa
 		}
 		return result;
 	}
+
 }

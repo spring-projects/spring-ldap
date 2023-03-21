@@ -24,8 +24,9 @@ import org.springframework.ldap.support.LdapUtils;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Integration tests for {@link org.springframework.ldap.core.support.BaseLdapPathBeanPostProcessor}.
- * 
+ * Integration tests for
+ * {@link org.springframework.ldap.core.support.BaseLdapPathBeanPostProcessor}.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class BaseLdapPathBeanPostprocessorNamespaceConfigITest {
@@ -57,6 +58,5 @@ public class BaseLdapPathBeanPostprocessorNamespaceConfigITest {
 		DummyBaseLdapNameAware otherTested = ctx.getBean(DummyBaseLdapNameAware.class);
 		assertThat(otherTested.getBaseLdapPath()).isEqualTo(LdapUtils.newLdapName("dc=jayway,dc=se"));
 	}
-
 
 }

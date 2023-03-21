@@ -21,17 +21,19 @@ import static org.mockito.Mockito.verify;
 
 /**
  * Unit tests for the MutableDelegatingLdapContext class.
- * 
+ *
  * @author Ulrik Sandberg
  */
 public class MutableDelegatingLdapContextTest extends AbstractPoolTestCase {
+
 	@Test
 	public void testSupportedMethodsAllowedToCall() throws Exception {
-		final MutableDelegatingLdapContext delegatingLdapContext = new MutableDelegatingLdapContext(
-				keyedObjectPoolMock, ldapContextMock, DirContextType.READ_ONLY);
+		final MutableDelegatingLdapContext delegatingLdapContext = new MutableDelegatingLdapContext(keyedObjectPoolMock,
+				ldapContextMock, DirContextType.READ_ONLY);
 
 		delegatingLdapContext.setRequestControls(null);
 
 		verify(ldapContextMock).setRequestControls(null);
 	}
+
 }

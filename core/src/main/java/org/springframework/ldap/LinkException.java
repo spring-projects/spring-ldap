@@ -18,7 +18,7 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI LinkException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.LinkException
@@ -28,4 +28,5 @@ public class LinkException extends NamingException {
 	public LinkException(javax.naming.LinkException cause) {
 		super(cause);
 	}
+
 }

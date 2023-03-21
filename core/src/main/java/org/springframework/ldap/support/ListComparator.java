@@ -21,19 +21,19 @@ import java.util.List;
 
 /**
  * Comparator for comparing lists of Comparable objects.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class ListComparator implements Comparator, Serializable {
+
 	private static final long serialVersionUID = -3068381879731157178L;
 
 	/**
 	 * Compare two lists of Comparable objects.
-	 * 
 	 * @param o1 the first object to be compared.
 	 * @param o2 the second object to be compared.
-	 * @throws ClassCastException if any of the lists contains an object that
-	 * is not Comparable.
+	 * @throws ClassCastException if any of the lists contains an object that is not
+	 * Comparable.
 	 */
 	public int compare(Object o1, Object o2) {
 		List list1 = (List) o1;
@@ -64,4 +64,5 @@ public class ListComparator implements Comparator, Serializable {
 			return 0;
 		}
 	}
+
 }

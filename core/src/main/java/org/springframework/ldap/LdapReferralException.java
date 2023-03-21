@@ -18,11 +18,11 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI LdapReferralException.
- * 
- * This class is not abstract. We need to be able to instantiate it, should the
- * caught exception be a provider-specific subclass of
+ *
+ * This class is not abstract. We need to be able to instantiate it, should the caught
+ * exception be a provider-specific subclass of
  * {@link javax.naming.ldap.LdapReferralException}.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.ldap.LdapReferralException
@@ -32,4 +32,5 @@ public class LdapReferralException extends ReferralException {
 	public LdapReferralException(javax.naming.ldap.LdapReferralException cause) {
 		super(cause);
 	}
+
 }

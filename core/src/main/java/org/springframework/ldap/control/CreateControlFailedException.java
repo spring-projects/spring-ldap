@@ -19,9 +19,9 @@ package org.springframework.ldap.control;
 import org.springframework.ldap.NamingException;
 
 /**
- * Thrown by an AbstractRequestControlDirContextProcessor when it cannot create
- * a request control.
- * 
+ * Thrown by an AbstractRequestControlDirContextProcessor when it cannot create a request
+ * control.
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  */
@@ -29,9 +29,7 @@ public class CreateControlFailedException extends NamingException {
 
 	/**
 	 * Create a new CreateControlFailedException.
-	 * 
-	 * @param msg
-	 *			the detail message
+	 * @param msg the detail message
 	 */
 	public CreateControlFailedException(String msg) {
 		super(msg);
@@ -39,13 +37,11 @@ public class CreateControlFailedException extends NamingException {
 
 	/**
 	 * Create a new CreateControlFailedException.
-	 * 
-	 * @param msg
-	 *			the detail message
-	 * @param cause
-	 *			the root cause (if any)
+	 * @param msg the detail message
+	 * @param cause the root cause (if any)
 	 */
 	public CreateControlFailedException(String msg, Throwable cause) {
 		super(msg, cause);
 	}
+
 }

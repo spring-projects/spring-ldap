@@ -36,14 +36,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 /**
- * Integration tests for {@link org.springframework.ldap.transaction.compensating.manager.ContextSourceAndDataSourceTransactionManager}.
+ * Integration tests for
+ * {@link org.springframework.ldap.transaction.compensating.manager.ContextSourceAndDataSourceTransactionManager}.
  *
  * @author Mattias Hellborg Arthursson
  */
-@ContextConfiguration(locations = {"/conf/missingLdapAndJdbcTransactionTestContext.xml"})
-public class ContextSourceAndDataSourceTransactionManagerLdap179IntegrationTest extends AbstractJUnit4SpringContextTests {
+@ContextConfiguration(locations = { "/conf/missingLdapAndJdbcTransactionTestContext.xml" })
+public class ContextSourceAndDataSourceTransactionManagerLdap179IntegrationTest
+		extends AbstractJUnit4SpringContextTests {
 
-	private static Logger log = LoggerFactory.getLogger(ContextSourceAndDataSourceTransactionManagerLdap179IntegrationTest.class);
+	private static Logger log = LoggerFactory
+			.getLogger(ContextSourceAndDataSourceTransactionManagerLdap179IntegrationTest.class);
 
 	@Autowired
 	@Qualifier("dummyDao")
@@ -67,13 +70,13 @@ public class ContextSourceAndDataSourceTransactionManagerLdap179IntegrationTest 
 		jdbcTemplate.execute("drop table PERSON if exists");
 	}
 
-
 	@Test
 	public void verifyThatJdbcTransactionIsClosedIfLdapServerUnavailable_ldap179() {
 		try {
 			dummyDao.create("Sweden", "company1", "some testperson", "testperson", "some description");
 			fail("CannotCreateTransactionException expected");
-		} catch (CannotCreateTransactionException expected) {
+		}
+		catch (CannotCreateTransactionException expected) {
 			assertThat(expected.getCause() instanceof CommunicationException).isTrue();
 		}
 
@@ -83,8 +86,10 @@ public class ContextSourceAndDataSourceTransactionManagerLdap179IntegrationTest 
 		try {
 			dummyDao.create("Sweden", "company1", "some testperson", "testperson", "some description");
 			fail("CannotCreateTransactionException expected");
-		} catch (CannotCreateTransactionException expected) {
+		}
+		catch (CannotCreateTransactionException expected) {
 			assertThat(expected.getCause() instanceof CommunicationException).isTrue();
 		}
 	}
+
 }

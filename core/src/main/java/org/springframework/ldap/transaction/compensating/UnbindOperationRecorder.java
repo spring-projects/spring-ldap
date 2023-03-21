@@ -22,15 +22,13 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
 import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
 
 /**
- * {@link CompensatingTransactionOperationRecorder} to keep track of unbind
- * operations. This class creates {@link UnbindOperationExecutor} objects for
- * rollback.
- * 
+ * {@link CompensatingTransactionOperationRecorder} to keep track of unbind operations.
+ * This class creates {@link UnbindOperationExecutor} objects for rollback.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
-public class UnbindOperationRecorder implements
-		CompensatingTransactionOperationRecorder {
+public class UnbindOperationRecorder implements CompensatingTransactionOperationRecorder {
 
 	private LdapOperations ldapOperations;
 
@@ -38,26 +36,22 @@ public class UnbindOperationRecorder implements
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param ldapOperations
-	 *			{@link LdapOperations} to use for getting the data prior to
-	 *			unbinding the entry and to supply to the
-	 *			{@link UnbindOperationExecutor} for rollback.
-	 * @param renamingStrategy
-	 *			the {@link TempEntryRenamingStrategy} to use when generating
-	 *			DNs for temporary entries.
+	 * @param ldapOperations {@link LdapOperations} to use for getting the data prior to
+	 * unbinding the entry and to supply to the {@link UnbindOperationExecutor} for
+	 * rollback.
+	 * @param renamingStrategy the {@link TempEntryRenamingStrategy} to use when
+	 * generating DNs for temporary entries.
 	 */
-	public UnbindOperationRecorder(LdapOperations ldapOperations,
-			TempEntryRenamingStrategy renamingStrategy) {
+	public UnbindOperationRecorder(LdapOperations ldapOperations, TempEntryRenamingStrategy renamingStrategy) {
 		this.ldapOperations = ldapOperations;
 		this.renamingStrategy = renamingStrategy;
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
+	 * @see org.springframework.ldap.support.transaction.
+	 * CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
 	 */
-	public CompensatingTransactionOperationExecutor recordOperation(
-			Object[] args) {
+	public CompensatingTransactionOperationExecutor recordOperation(Object[] args) {
 		Name dn = LdapTransactionUtils.getFirstArgumentAsName(args);
 		Name temporaryDn = renamingStrategy.getTemporaryName(dn);
 
@@ -71,4 +65,5 @@ public class UnbindOperationRecorder implements
 	public TempEntryRenamingStrategy getRenamingStrategy() {
 		return renamingStrategy;
 	}
+
 }

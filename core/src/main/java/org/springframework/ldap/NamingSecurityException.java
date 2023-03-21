@@ -18,7 +18,7 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI NamingSecurityException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.NamingSecurityException
@@ -28,4 +28,5 @@ public class NamingSecurityException extends NamingException {
 	public NamingSecurityException(javax.naming.NamingSecurityException cause) {
 		super(cause);
 	}
+
 }

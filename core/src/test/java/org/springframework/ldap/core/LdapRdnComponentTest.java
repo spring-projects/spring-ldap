@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for LdapRdnComponent.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class LdapRdnComponentTest {

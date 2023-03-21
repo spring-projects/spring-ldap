@@ -19,14 +19,14 @@ package org.springframework.ldap.odm.tools;
 import org.springframework.util.StringUtils;
 
 /**
- * Simple value class to hold the schema of an attribute.  
+ * Simple value class to hold the schema of an attribute.
  * <p>
  * It is only public to allow Freemarker access.
- * 
+ *
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  */
 public final class AttributeSchema {
- 
+
 	private final String name;
 
 	private final String syntax;
@@ -55,7 +55,7 @@ public final class AttributeSchema {
 	public boolean getIsArray() {
 		return isArray;
 	}
-	
+
 	public boolean getIsBinary() {
 		return isBinary;
 	}
@@ -86,7 +86,7 @@ public final class AttributeSchema {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -96,7 +96,7 @@ public final class AttributeSchema {
 				"{ name=%1$s, syntax=%2$s, isMultiValued=%3$s, isPrimitive=%4$s, isBinary=%5$s, isArray=%6$s, scalarType=%7$s }",
 				name, syntax, isMultiValued, isPrimitive, isBinary, isArray, scalarType);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -131,17 +131,20 @@ public final class AttributeSchema {
 		if (name == null) {
 			if (other.name != null)
 				return false;
-		} else if (!name.equals(other.name))
+		}
+		else if (!name.equals(other.name))
 			return false;
 		if (scalarType == null) {
 			if (other.scalarType != null)
 				return false;
-		} else if (!scalarType.equals(other.scalarType))
+		}
+		else if (!scalarType.equals(other.scalarType))
 			return false;
 		if (syntax == null) {
 			if (other.syntax != null)
 				return false;
-		} else if (!syntax.equals(other.syntax))
+		}
+		else if (!syntax.equals(other.syntax))
 			return false;
 		return true;
 	}

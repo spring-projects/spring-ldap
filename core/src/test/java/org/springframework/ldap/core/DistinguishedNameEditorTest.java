@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Unit tests for {@link DistinguishedNameEditor}.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class DistinguishedNameEditorTest {
@@ -73,4 +73,5 @@ public class DistinguishedNameEditorTest {
 		String text = tested.getAsText();
 		assertThat(text).isNull();
 	}
+
 }

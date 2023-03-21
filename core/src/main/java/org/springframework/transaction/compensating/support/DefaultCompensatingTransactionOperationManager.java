@@ -26,44 +26,38 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
 import java.util.Stack;
 
 /**
- * Default implementation of {@link CompensatingTransactionOperationManager}.
- * Manages a stack of {@link CompensatingTransactionOperationExecutor} objects
- * and performs rollback of these in the reverse order.
- * 
+ * Default implementation of {@link CompensatingTransactionOperationManager}. Manages a
+ * stack of {@link CompensatingTransactionOperationExecutor} objects and performs rollback
+ * of these in the reverse order.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
-public class DefaultCompensatingTransactionOperationManager implements
-		CompensatingTransactionOperationManager {
+public class DefaultCompensatingTransactionOperationManager implements CompensatingTransactionOperationManager {
 
 	private static Logger log = LoggerFactory.getLogger(DefaultCompensatingTransactionOperationManager.class);
 
-	private Stack<CompensatingTransactionOperationExecutor> operationExecutors =
-			new Stack<CompensatingTransactionOperationExecutor>();
+	private Stack<CompensatingTransactionOperationExecutor> operationExecutors = new Stack<CompensatingTransactionOperationExecutor>();
 
 	private CompensatingTransactionOperationFactory operationFactory;
 
 	/**
 	 * Set the {@link CompensatingTransactionOperationFactory} to use.
-	 * 
-	 * @param operationFactory
-	 *			the {@link CompensatingTransactionOperationFactory}.
+	 * @param operationFactory the {@link CompensatingTransactionOperationFactory}.
 	 */
-	public DefaultCompensatingTransactionOperationManager(
-			CompensatingTransactionOperationFactory operationFactory) {
+	public DefaultCompensatingTransactionOperationManager(CompensatingTransactionOperationFactory operationFactory) {
 		this.operationFactory = operationFactory;
 	}
 
 	/*
-	 * @see org.springframework.transaction.compensating.CompensatingTransactionOperationManager#performOperation(java.lang.Object,
-	 *	  java.lang.String, java.lang.Object[])
+	 * @see org.springframework.transaction.compensating.
+	 * CompensatingTransactionOperationManager#performOperation(java.lang.Object,
+	 * java.lang.String, java.lang.Object[])
 	 */
-	public void performOperation(Object resource, String operation,
-			Object[] args) {
-		CompensatingTransactionOperationRecorder recorder = operationFactory
-				.createRecordingOperation(resource, operation);
-		CompensatingTransactionOperationExecutor executor = recorder
-				.recordOperation(args);
+	public void performOperation(Object resource, String operation, Object[] args) {
+		CompensatingTransactionOperationRecorder recorder = operationFactory.createRecordingOperation(resource,
+				operation);
+		CompensatingTransactionOperationExecutor executor = recorder.recordOperation(args);
 
 		executor.performOperation();
 
@@ -72,7 +66,8 @@ public class DefaultCompensatingTransactionOperationManager implements
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationManager#rollback()
+	 * @see org.springframework.ldap.support.transaction.
+	 * CompensatingTransactionOperationManager#rollback()
 	 */
 	public void rollback() {
 		log.debug("Performing rollback");
@@ -80,16 +75,15 @@ public class DefaultCompensatingTransactionOperationManager implements
 			CompensatingTransactionOperationExecutor rollbackOperation = operationExecutors.pop();
 			try {
 				rollbackOperation.rollback();
-			} catch (Exception e) {
-				throw new TransactionSystemException(
-						"Error occurred during rollback", e);
+			}
+			catch (Exception e) {
+				throw new TransactionSystemException("Error occurred during rollback", e);
 			}
 		}
 	}
 
 	/**
 	 * Get the rollback operations. Used for testing purposes.
-	 * 
 	 * @return the rollback operations.
 	 */
 	protected Stack<CompensatingTransactionOperationExecutor> getOperationExecutors() {
@@ -97,28 +91,27 @@ public class DefaultCompensatingTransactionOperationManager implements
 	}
 
 	/**
-	 * Set the rollback operations. Package protected - for testing purposes
-	 * only.
-	 * 
-	 * @param operationExecutors
-	 *			the rollback operations.
+	 * Set the rollback operations. Package protected - for testing purposes only.
+	 * @param operationExecutors the rollback operations.
 	 */
 	void setOperationExecutors(Stack<CompensatingTransactionOperationExecutor> operationExecutors) {
 		this.operationExecutors = operationExecutors;
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationManager#commit()
+	 * @see org.springframework.ldap.support.transaction.
+	 * CompensatingTransactionOperationManager#commit()
 	 */
 	public void commit() {
 		log.debug("Performing commit");
 		for (CompensatingTransactionOperationExecutor operationExecutor : operationExecutors) {
 			try {
 				operationExecutor.commit();
-			} catch (Exception e) {
-				throw new TransactionSystemException(
-						"Error occurred during commit", e);
+			}
+			catch (Exception e) {
+				throw new TransactionSystemException("Error occurred during commit", e);
 			}
 		}
 	}
+
 }

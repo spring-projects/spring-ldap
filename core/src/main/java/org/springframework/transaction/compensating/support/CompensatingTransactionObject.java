@@ -16,32 +16,28 @@
 package org.springframework.transaction.compensating.support;
 
 /**
- * Transaction object used by
- * {@link AbstractCompensatingTransactionManagerDelegate}. Keeps a reference to
- * the {@link CompensatingTransactionHolderSupport} associated with the current
- * transaction.
- * 
+ * Transaction object used by {@link AbstractCompensatingTransactionManagerDelegate}.
+ * Keeps a reference to the {@link CompensatingTransactionHolderSupport} associated with
+ * the current transaction.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
 public class CompensatingTransactionObject {
+
 	private CompensatingTransactionHolderSupport holder;
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param holder
-	 *			the {@link CompensatingTransactionHolderSupport} associated
-	 *			with the current transaction.
+	 * @param holder the {@link CompensatingTransactionHolderSupport} associated with the
+	 * current transaction.
 	 */
-	public CompensatingTransactionObject(
-			CompensatingTransactionHolderSupport holder) {
+	public CompensatingTransactionObject(CompensatingTransactionHolderSupport holder) {
 		this.holder = holder;
 	}
 
 	/**
 	 * Get the DirContextHolder.
-	 * 
 	 * @return the DirContextHolder.
 	 */
 	public CompensatingTransactionHolderSupport getHolder() {
@@ -49,14 +45,13 @@ public class CompensatingTransactionObject {
 	}
 
 	/**
-	 * Set the {@link CompensatingTransactionHolderSupport} associated with the
+	 * Set the {@link CompensatingTransactionHolderSupport} associated with the current
+	 * transaction.
+	 * @param holder the {@link CompensatingTransactionHolderSupport} associated with the
 	 * current transaction.
-	 * 
-	 * @param holder
-	 *			the {@link CompensatingTransactionHolderSupport} associated
-	 *			with the current transaction.
 	 */
 	public void setHolder(CompensatingTransactionHolderSupport holder) {
 		this.holder = holder;
 	}
+
 }

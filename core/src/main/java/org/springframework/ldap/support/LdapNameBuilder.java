@@ -26,12 +26,11 @@ import javax.naming.ldap.Rdn;
 /**
  * Helper class for building {@link javax.naming.ldap.LdapName} instances.
  *
- * Note that the first part of a Distinguished Name is the least significant, which means that when adding components,
- * they will be added to the <b>beginning</b> of the resulting string, e.g.
- * <pre>
+ * Note that the first part of a Distinguished Name is the least significant, which means
+ * that when adding components, they will be added to the <b>beginning</b> of the
+ * resulting string, e.g. <pre>
  *	 LdapNameBuilder.newInstance("dc=261consulting,dc=com").add("ou=people").build().toString();
- * </pre>
- * will result in <code>ou=people,dc=261consulting,dc=com</code>.
+ * </pre> will result in <code>ou=people,dc=261consulting,dc=com</code>.
  *
  * @author Mattias Hellborg Arthursson
  * @since 2.0
@@ -46,7 +45,6 @@ public final class LdapNameBuilder {
 
 	/**
 	 * Construct a new instance, starting with a blank LdapName.
-	 *
 	 * @return a new instance.
 	 */
 	public static LdapNameBuilder newInstance() {
@@ -56,7 +54,6 @@ public final class LdapNameBuilder {
 	/**
 	 * Construct a new instance, starting with a copy of the supplied LdapName.
 	 * @param name the starting point of the LdapName to be built.
-	 *
 	 * @return a new instance.
 	 */
 	public static LdapNameBuilder newInstance(Name name) {
@@ -64,9 +61,9 @@ public final class LdapNameBuilder {
 	}
 
 	/**
-	 * Construct a new instance, starting with an LdapName constructed from the supplied string.
+	 * Construct a new instance, starting with an LdapName constructed from the supplied
+	 * string.
 	 * @param name the starting point of the LdapName to be built.
-	 *
 	 * @return a new instance.
 	 */
 	public static LdapNameBuilder newInstance(String name) {
@@ -77,7 +74,6 @@ public final class LdapNameBuilder {
 	 * Add a Rdn to the built LdapName.
 	 * @param key the rdn attribute key.
 	 * @param value the rdn value.
-	 *
 	 * @return this builder.
 	 */
 	public LdapNameBuilder add(String key, Object value) {
@@ -87,14 +83,14 @@ public final class LdapNameBuilder {
 		try {
 			ldapName.add(new Rdn(key, value));
 			return this;
-		} catch (InvalidNameException e) {
+		}
+		catch (InvalidNameException e) {
 			throw new org.springframework.ldap.InvalidNameException(e);
 		}
 	}
 
 	/**
 	 * Append the specified name to the currently built LdapName.
-	 *
 	 * @param name the name to add.
 	 * @return this builder.
 	 */
@@ -104,14 +100,15 @@ public final class LdapNameBuilder {
 		try {
 			ldapName.addAll(ldapName.size(), name);
 			return this;
-		} catch (InvalidNameException e) {
+		}
+		catch (InvalidNameException e) {
 			throw new org.springframework.ldap.InvalidNameException(e);
 		}
 	}
 
 	/**
-	 * Append the LdapName represented by the specified string to the currently built LdapName.
-	 *
+	 * Append the LdapName represented by the specified string to the currently built
+	 * LdapName.
 	 * @param name the name to add.
 	 * @return this builder.
 	 */
@@ -123,10 +120,10 @@ public final class LdapNameBuilder {
 
 	/**
 	 * Build the LdapName instance.
-	 *
 	 * @return the LdapName instance that has been built.
 	 */
 	public LdapName build() {
 		return LdapUtils.newLdapName(ldapName);
 	}
+
 }

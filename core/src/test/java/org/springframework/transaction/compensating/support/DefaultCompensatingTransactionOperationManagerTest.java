@@ -33,7 +33,9 @@ import static org.mockito.Mockito.when;
 public class DefaultCompensatingTransactionOperationManagerTest {
 
 	private CompensatingTransactionOperationExecutor operationExecutorMock;
+
 	private CompensatingTransactionOperationFactory operationFactoryMock;
+
 	private CompensatingTransactionOperationRecorder operationRecorderMock;
 
 	@Before
@@ -104,4 +106,5 @@ public class DefaultCompensatingTransactionOperationManagerTest {
 
 		tested.commit();
 	}
+
 }

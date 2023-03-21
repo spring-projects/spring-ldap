@@ -98,8 +98,7 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean<ContextSou
 	}
 
 	protected ContextSource createInstance() throws Exception {
-		LdapTestUtils.startEmbeddedServer(port,
-				defaultPartitionSuffix, defaultPartitionName);
+		LdapTestUtils.startEmbeddedServer(port, defaultPartitionSuffix, defaultPartitionName);
 
 		if (contextSource == null) {
 			// If not explicitly configured, create a new instance.
@@ -146,4 +145,5 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean<ContextSou
 		super.destroyInstance(instance);
 		LdapTestUtils.shutdownEmbeddedServer();
 	}
+
 }

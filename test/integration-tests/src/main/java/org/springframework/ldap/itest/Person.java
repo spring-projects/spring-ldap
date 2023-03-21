@@ -21,10 +21,11 @@ import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
  * Dummy bean to be used in the LdapTemplate integration tests.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class Person {
+
 	private String fullname;
 
 	private String lastname;
@@ -64,9 +65,10 @@ public class Person {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	
+
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
 	}
+
 }

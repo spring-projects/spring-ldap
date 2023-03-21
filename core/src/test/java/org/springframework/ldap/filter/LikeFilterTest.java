@@ -36,16 +36,13 @@ public class LikeFilterTest {
 	public void testEncodeValue_normal() {
 		assertThat("foo").isEqualTo(new LikeFilter("", "foo").getEncodedValue());
 		assertThat("foo*bar").isEqualTo(new LikeFilter("", "foo*bar").getEncodedValue());
-		assertThat("*foo*bar*").isEqualTo(new LikeFilter("", "*foo*bar*")
-				.getEncodedValue());
-		assertThat("**foo**bar**").isEqualTo(new LikeFilter("", "**foo**bar**")
-				.getEncodedValue());
+		assertThat("*foo*bar*").isEqualTo(new LikeFilter("", "*foo*bar*").getEncodedValue());
+		assertThat("**foo**bar**").isEqualTo(new LikeFilter("", "**foo**bar**").getEncodedValue());
 	}
 
 	@Test
 	public void testEncodeValue_escape() {
-		assertThat("*\\28*\\29*").isEqualTo(new LikeFilter("", "*(*)*")
-				.getEncodedValue());
+		assertThat("*\\28*\\29*").isEqualTo(new LikeFilter("", "*(*)*").getEncodedValue());
 		assertThat("*\\5c2a*").isEqualTo(new LikeFilter("", "*\\2a*").getEncodedValue());
 	}
 
@@ -59,7 +56,7 @@ public class LikeFilterTest {
 		LikeFilter subclassObject = new LikeFilter(attribute, value) {
 		};
 
-		new EqualsTester(originalObject, identicalObject, differentObject,
-				subclassObject);
+		new EqualsTester(originalObject, identicalObject, differentObject, subclassObject);
 	}
+
 }

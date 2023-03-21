@@ -27,8 +27,8 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * Automatically generated to represent the LDAP object classes
- * "organizationalunit", "top".
+ * Automatically generated to represent the LDAP object classes "organizationalunit",
+ * "top".
  */
 @Entry(objectClasses = { "organizationalUnit", "top" })
 public final class OrganizationalUnit {
@@ -58,12 +58,12 @@ public final class OrganizationalUnit {
 
 		objectClass.add("top");
 		objectClass.add("organizationalUnit");
-	   
 
 		int size = dn.size();
 		if (size > 1) {
 			ou = dn.get(size - 1).split("=")[1];
-		} else {
+		}
+		else {
 			ou = "";
 		}
 
@@ -99,8 +99,8 @@ public final class OrganizationalUnit {
 
 	@Override
 	public String toString() {
-		return String.format("objectClasses=%1$s | dn=%2$s | ou=%3$s | street=%4$s | description=%5$s", objectClass,
-				dn, ou, street, description);
+		return String.format("objectClasses=%1$s | dn=%2$s | ou=%3$s | street=%4$s | description=%5$s", objectClass, dn,
+				ou, street, description);
 	}
 
 	@Override
@@ -127,30 +127,35 @@ public final class OrganizationalUnit {
 		if (description == null) {
 			if (other.description != null)
 				return false;
-		} else if (!description.equals(other.description))
+		}
+		else if (!description.equals(other.description))
 			return false;
 		if (dn == null) {
 			if (other.dn != null)
 				return false;
-		} else if (!dn.equals(other.dn))
+		}
+		else if (!dn.equals(other.dn))
 			return false;
 		if (objectClass == null) {
 			if (other.objectClass != null)
 				return false;
-		} else 
-			if (objectClass.size()!=other.objectClass.size() || 
-					!(new HashSet<String>(objectClass)).equals(new HashSet<String>(other.objectClass)))
-				return false;
+		}
+		else if (objectClass.size() != other.objectClass.size()
+				|| !(new HashSet<String>(objectClass)).equals(new HashSet<String>(other.objectClass)))
+			return false;
 		if (ou == null) {
 			if (other.ou != null)
 				return false;
-		} else if (!ou.equals(other.ou))
+		}
+		else if (!ou.equals(other.ou))
 			return false;
 		if (street == null) {
 			if (other.street != null)
 				return false;
-		} else if (!street.equals(other.street))
+		}
+		else if (!street.equals(other.street))
 			return false;
 		return true;
 	}
+
 }

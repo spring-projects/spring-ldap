@@ -18,34 +18,31 @@ package org.springframework.ldap.core.support;
 import org.springframework.ldap.core.DistinguishedName;
 
 /**
- * Interface to be implemented by classes that want to have access to the base
- * context used in the active <code>ContextSource</code>. There are several
- * cases in which services may want to have access to the base context, e.g.
- * when working with groups (<code>groupOfNames</code> objectclass), in which
- * case the full DN of each group member needs to be specified in the attribute
- * value.
+ * Interface to be implemented by classes that want to have access to the base context
+ * used in the active <code>ContextSource</code>. There are several cases in which
+ * services may want to have access to the base context, e.g. when working with groups
+ * (<code>groupOfNames</code> objectclass), in which case the full DN of each group member
+ * needs to be specified in the attribute value.
  * <p>
- * If a class implements this interface and a
- * {@link BaseLdapPathBeanPostProcessor} is defined in the
- * <code>ApplicationContext</code>, the default base path will automatically
- * passed to the {@link #setBaseLdapPath(DistinguishedName)} method on
+ * If a class implements this interface and a {@link BaseLdapPathBeanPostProcessor} is
+ * defined in the <code>ApplicationContext</code>, the default base path will
+ * automatically passed to the {@link #setBaseLdapPath(DistinguishedName)} method on
  * initialization.
  * <p>
  * <b>NB:</b>The <code>ContextSource</code> needs to be a subclass of
  * {@link AbstractContextSource} for this mechanism to work.
- * 
- * 
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
- * @deprecated {@link DistinguishedName} and associated classes and methods are deprecated as of 2.0.
- * Use {@link BaseLdapNameAware} instead.
+ * @deprecated {@link DistinguishedName} and associated classes and methods are deprecated
+ * as of 2.0. Use {@link BaseLdapNameAware} instead.
  */
 public interface BaseLdapPathAware {
 
 	/**
-	 * Set the base LDAP path specified in the current
-	 * <code>ApplicationContext</code>.
+	 * Set the base LDAP path specified in the current <code>ApplicationContext</code>.
 	 * @param baseLdapPath the base path used in the <code>ContextSource</code>
 	 */
 	void setBaseLdapPath(DistinguishedName baseLdapPath);
+
 }

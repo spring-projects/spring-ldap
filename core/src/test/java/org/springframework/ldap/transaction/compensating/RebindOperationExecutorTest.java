@@ -37,34 +37,27 @@ public class RebindOperationExecutorTest {
 
 	@Test
 	public void testPerformOperation() {
-		LdapName expectedOriginalDn = LdapUtils.newLdapName(
-				"cn=john doe");
-		LdapName expectedTempDn = LdapUtils.newLdapName(
-				"cn=john doe_temp");
+		LdapName expectedOriginalDn = LdapUtils.newLdapName("cn=john doe");
+		LdapName expectedTempDn = LdapUtils.newLdapName("cn=john doe_temp");
 		Object expectedObject = new Object();
 		BasicAttributes expectedAttributes = new BasicAttributes();
-		RebindOperationExecutor tested = new RebindOperationExecutor(
-				ldapOperationsMock, expectedOriginalDn, expectedTempDn,
-				expectedObject, expectedAttributes);
+		RebindOperationExecutor tested = new RebindOperationExecutor(ldapOperationsMock, expectedOriginalDn,
+				expectedTempDn, expectedObject, expectedAttributes);
 
 		// perform test
 		tested.performOperation();
 		verify(ldapOperationsMock).rename(expectedOriginalDn, expectedTempDn);
-		verify(ldapOperationsMock)
-				.bind(expectedOriginalDn, expectedObject, expectedAttributes);
+		verify(ldapOperationsMock).bind(expectedOriginalDn, expectedObject, expectedAttributes);
 	}
 
 	@Test
 	public void testCommit() {
-		LdapName expectedOriginalDn = LdapUtils.newLdapName(
-				"cn=john doe");
-		LdapName expectedTempDn = LdapUtils.newLdapName(
-				"cn=john doe_temp");
+		LdapName expectedOriginalDn = LdapUtils.newLdapName("cn=john doe");
+		LdapName expectedTempDn = LdapUtils.newLdapName("cn=john doe_temp");
 		Object expectedObject = new Object();
 		BasicAttributes expectedAttributes = new BasicAttributes();
-		RebindOperationExecutor tested = new RebindOperationExecutor(
-				ldapOperationsMock, expectedOriginalDn, expectedTempDn,
-				expectedObject, expectedAttributes);
+		RebindOperationExecutor tested = new RebindOperationExecutor(ldapOperationsMock, expectedOriginalDn,
+				expectedTempDn, expectedObject, expectedAttributes);
 
 		// perform test
 		tested.commit();
@@ -73,15 +66,12 @@ public class RebindOperationExecutorTest {
 
 	@Test
 	public void testRollback() {
-		LdapName expectedOriginalDn = LdapUtils.newLdapName(
-				"cn=john doe");
-		LdapName expectedTempDn = LdapUtils.newLdapName(
-				"cn=john doe_temp");
+		LdapName expectedOriginalDn = LdapUtils.newLdapName("cn=john doe");
+		LdapName expectedTempDn = LdapUtils.newLdapName("cn=john doe_temp");
 		Object expectedObject = new Object();
 		BasicAttributes expectedAttributes = new BasicAttributes();
-		RebindOperationExecutor tested = new RebindOperationExecutor(
-				ldapOperationsMock, expectedOriginalDn, expectedTempDn,
-				expectedObject, expectedAttributes);
+		RebindOperationExecutor tested = new RebindOperationExecutor(ldapOperationsMock, expectedOriginalDn,
+				expectedTempDn, expectedObject, expectedAttributes);
 
 		// perform test
 		tested.rollback();
@@ -89,4 +79,5 @@ public class RebindOperationExecutorTest {
 		verify(ldapOperationsMock).unbind(expectedOriginalDn);
 		verify(ldapOperationsMock).rename(expectedTempDn, expectedOriginalDn);
 	}
+
 }

@@ -21,57 +21,61 @@ import org.springframework.ldap.filter.Filter;
 import javax.naming.Name;
 
 /**
- * Holds all information regarding a Ldap query to be performed. Contains information regarding search base,
- * search scope, time and count limits, and search filter.
+ * Holds all information regarding a Ldap query to be performed. Contains information
+ * regarding search base, search scope, time and count limits, and search filter.
  *
  * @author Mattias Hellborg Arthursson
  * @since 2.0
  * @see LdapQueryBuilder
- *
- * @see org.springframework.ldap.core.LdapOperations#search(LdapQuery, org.springframework.ldap.core.AttributesMapper)
- * @see org.springframework.ldap.core.LdapOperations#search(LdapQuery, org.springframework.ldap.core.ContextMapper)
- * @see org.springframework.ldap.core.LdapOperations#searchForObject(LdapQuery, org.springframework.ldap.core.ContextMapper)
+ * @see org.springframework.ldap.core.LdapOperations#search(LdapQuery,
+ * org.springframework.ldap.core.AttributesMapper)
+ * @see org.springframework.ldap.core.LdapOperations#search(LdapQuery,
+ * org.springframework.ldap.core.ContextMapper)
+ * @see org.springframework.ldap.core.LdapOperations#searchForObject(LdapQuery,
+ * org.springframework.ldap.core.ContextMapper)
  * @see org.springframework.ldap.core.LdapOperations#searchForContext(LdapQuery)
  */
 public interface LdapQuery {
+
 	/**
-	 * Get the search base. Default is {@link org.springframework.ldap.support.LdapUtils#emptyLdapName()}.
-	 *
+	 * Get the search base. Default is
+	 * {@link org.springframework.ldap.support.LdapUtils#emptyLdapName()}.
 	 * @return the search base.
 	 */
 	Name base();
 
 	/**
-	 * Get the search scope. Default is <code>null</code>, indicating that the LdapTemplate default should be used.
-	 *
+	 * Get the search scope. Default is <code>null</code>, indicating that the
+	 * LdapTemplate default should be used.
 	 * @return the search scope.
 	 */
 	SearchScope searchScope();
 
 	/**
-	 * Get the time limit. Default is <code>null</code>, indicating that the LdapTemplate default should be used.
-	 *
+	 * Get the time limit. Default is <code>null</code>, indicating that the LdapTemplate
+	 * default should be used.
 	 * @return the time limit.
 	 */
 	Integer timeLimit();
 
 	/**
-	 * Get the count limit. Default is <code>null</code>, indicating that the LdapTemplate default should be used.
+	 * Get the count limit. Default is <code>null</code>, indicating that the LdapTemplate
+	 * default should be used.
 	 * @return the count limit.
 	 */
 	Integer countLimit();
 
 	/**
-	 * Get the attributes to return. Default is <code>null</code>, indicating that all attributes should be returned.
-	 *
+	 * Get the attributes to return. Default is <code>null</code>, indicating that all
+	 * attributes should be returned.
 	 * @return the attributes to return.
 	 */
 	String[] attributes();
 
 	/**
 	 * Get the filter.
-	 *
 	 * @return the filter.
 	 */
 	Filter filter();
+
 }

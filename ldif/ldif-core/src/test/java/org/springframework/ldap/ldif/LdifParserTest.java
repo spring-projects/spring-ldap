@@ -34,16 +34,14 @@ import static org.assertj.core.api.Assertions.fail;
 /**
  * Unit test for LdifParser.
  *
- * Test results in complete end to end test of all LdifParser functionality:
- * 	1.) Open a file
- * 	2.) Read lines and compose an attribute.
- * 	3.) Parse the attribute and create a LdapAttribute object.
- * 	4.) Repeat until end of record (Identify end of record).
- * 	5.) Return a valid LdapAttributes object.
- * 	6.) Close file upon completion.
+ * Test results in complete end to end test of all LdifParser functionality: 1.) Open a
+ * file 2.) Read lines and compose an attribute. 3.) Parse the attribute and create a
+ * LdapAttribute object. 4.) Repeat until end of record (Identify end of record). 5.)
+ * Return a valid LdapAttributes object. 6.) Close file upon completion.
  *
- * Provided test file is comprised of sample LDIFs from RFC2849 and exhausts the full range of
- * the functionality prescribed by RFC2849 for the LDAP Data Interchange Format (LDIF).
+ * Provided test file is comprised of sample LDIFs from RFC2849 and exhausts the full
+ * range of the functionality prescribed by RFC2849 for the LDAP Data Interchange Format
+ * (LDIF).
  *
  * @author Keith Barlow
  *
@@ -55,9 +53,9 @@ public class LdifParserTest {
 	private LdifParser parser;
 
 	/**
-	 * Default constructor: loads a preselected resource with sample LDIF entries.
-	 * Each entry is parsed and checked for a DN and objectclass.  Output is printed for visual verification
-	 * of LDIF correctness.
+	 * Default constructor: loads a preselected resource with sample LDIF entries. Each
+	 * entry is parsed and checked for a DN and objectclass. Output is printed for visual
+	 * verification of LDIF correctness.
 	 */
 	public LdifParserTest() {
 		parser = new LdifParser(new ClassPathResource("test.ldif"));
@@ -71,13 +69,15 @@ public class LdifParserTest {
 	public void openLdif() {
 		try {
 			parser.open();
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			fail(e.getMessage());
 		}
 	}
 
 	/**
-	 * Executes test: reads all records from LDIF file and validates an LdapAttributes object is successfully created.
+	 * Executes test: reads all records from LDIF file and validates an LdapAttributes
+	 * object is successfully created.
 	 */
 	@Test
 	public void parseLdif() {
@@ -95,7 +95,8 @@ public class LdifParserTest {
 						assertThat(attributes.get("objectclass") != null).isTrue();
 						count++;
 					}
-				} catch (InvalidAttributeFormatException e) {
+				}
+				catch (InvalidAttributeFormatException e) {
 					log.error("Invalid attribute", e);
 					if (count != 6) {
 						fail(e.getMessage());
@@ -106,11 +107,13 @@ public class LdifParserTest {
 			}
 
 			log.info("record count: " + count);
-			//assertThat(count == 8).as("An incorrect number of records were parsed.").isTrue();
+			// assertThat(count == 8).as("An incorrect number of records were
+			// parsed.").isTrue();
 
 			log.info("Done!");
 
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -122,8 +125,10 @@ public class LdifParserTest {
 	public void closeLdif() {
 		try {
 			parser.close();
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			fail(e.getMessage());
 		}
 	}
+
 }

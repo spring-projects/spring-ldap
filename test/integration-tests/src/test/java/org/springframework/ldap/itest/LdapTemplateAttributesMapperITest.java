@@ -32,11 +32,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests the attributes mapper search method.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
-@ContextConfiguration(locations = {"/conf/ldapTemplateTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
 public class LdapTemplateAttributesMapperITest extends AbstractLdapTemplateIntegrationTest {
+
 	@Autowired
 	private LdapTemplate tested;
 
@@ -54,7 +55,7 @@ public class LdapTemplateAttributesMapperITest extends AbstractLdapTemplateInteg
 
 	/**
 	 * Demonstrates how to retrieve all values of a multi-value attribute.
-	 * 
+	 *
 	 * @see LdapTemplateContextMapperITest#testSearch_ContextMapper_MultiValue()
 	 */
 	@Test
@@ -77,4 +78,5 @@ public class LdapTemplateAttributesMapperITest extends AbstractLdapTemplateInteg
 
 		assertThat(((String[]) result.get(0)).length).isEqualTo(4);
 	}
+
 }

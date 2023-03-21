@@ -44,15 +44,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 /**
- * Integration tests for {@link org.springframework.ldap.transaction.compensating.manager.ContextSourceAndDataSourceTransactionManager}
+ * Integration tests for
+ * {@link org.springframework.ldap.transaction.compensating.manager.ContextSourceAndDataSourceTransactionManager}
  * with namespace configuration.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
-@ContextConfiguration(locations = {"/conf/ldapAndJdbcTransactionNamespaceTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapAndJdbcTransactionNamespaceTestContext.xml" })
 public class ContextSourceAndDataSourceTransactionManagerNamespaceITest extends AbstractLdapTemplateIntegrationTest {
 
-	private static Logger log = LoggerFactory.getLogger(ContextSourceAndDataSourceTransactionManagerNamespaceITest.class);
+	private static Logger log = LoggerFactory
+			.getLogger(ContextSourceAndDataSourceTransactionManagerNamespaceITest.class);
 
 	@Autowired
 	@Qualifier("dummyDao")
@@ -71,9 +73,10 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITest extends 
 		}
 
 		jdbcTemplate.execute("drop table PERSON if exists");
-		jdbcTemplate.execute("create table PERSON(fullname VARCHAR(256), lastname VARCHAR(256), description VARCHAR(256))");
-		jdbcTemplate.update("insert into PERSON values(?, ?, ?)", new Object[] { "Some Person", "Person",
-				"Sweden, Company1, Some Person" });
+		jdbcTemplate
+				.execute("create table PERSON(fullname VARCHAR(256), lastname VARCHAR(256), description VARCHAR(256))");
+		jdbcTemplate.update("insert into PERSON values(?, ?, ?)",
+				new Object[] { "Some Person", "Person", "Sweden, Company1, Some Person" });
 	}
 
 	@After
@@ -349,4 +352,5 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITest extends 
 			assertThat(true).isTrue();
 		}
 	}
+
 }

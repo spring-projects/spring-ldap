@@ -18,17 +18,16 @@ package org.springframework.ldap.filter;
 
 /**
  * Filter for logical OR.
- * 
+ *
  * <pre>
  * OrFilter filter = new OrFilter();
  * filter.or(new EqualsFilter(&quot;objectclass&quot;, &quot;person&quot;);
  * filter.or(new EqualsFilter(&quot;objectclass&quot;, &quot;organizationalUnit&quot;);
  * System.out.println(filter.encode());	
  * </pre>
- * 
- * would result in:
- * <code>(|(objectclass=person)(objectclass=organizationalUnit))</code>
- * 
+ *
+ * would result in: <code>(|(objectclass=person)(objectclass=organizationalUnit))</code>
+ *
  * @author Adam Skogman
  * @author Mattias Hellborg Arthursson
  */
@@ -38,7 +37,6 @@ public class OrFilter extends BinaryLogicalFilter {
 
 	/**
 	 * Add a query to the OR expression
-	 * 
 	 * @param query The query to or with the rest of the or:ed queries.
 	 * @return This LdapOrQuery
 	 */
@@ -50,4 +48,5 @@ public class OrFilter extends BinaryLogicalFilter {
 	protected String getLogicalOperator() {
 		return PIPE_SIGN;
 	}
+
 }

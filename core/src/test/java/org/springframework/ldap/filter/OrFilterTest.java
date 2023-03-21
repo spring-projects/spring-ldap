@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Unit tests for the OrFilter class.
- * 
+ *
  * @author Adam Skogman
  */
 public class OrFilterTest {
@@ -43,16 +43,15 @@ public class OrFilterTest {
 
 	@Test
 	public void testTwo() {
-		OrFilter of = new OrFilter().or(new EqualsFilter("a", "b")).or(
-				new EqualsFilter("c", "d"));
+		OrFilter of = new OrFilter().or(new EqualsFilter("a", "b")).or(new EqualsFilter("c", "d"));
 
 		assertThat(of.encode()).isEqualTo("(|(a=b)(c=d))");
 	}
 
 	@Test
 	public void testThree() {
-		OrFilter of = new OrFilter().or(new EqualsFilter("a", "b")).or(
-				new EqualsFilter("c", "d")).or(new EqualsFilter("e", "f"));
+		OrFilter of = new OrFilter().or(new EqualsFilter("a", "b")).or(new EqualsFilter("c", "d"))
+				.or(new EqualsFilter("e", "f"));
 
 		assertThat(of.encode()).isEqualTo("(|(a=b)(c=d)(e=f))");
 	}

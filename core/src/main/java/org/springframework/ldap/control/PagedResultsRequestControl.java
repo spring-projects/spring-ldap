@@ -28,15 +28,14 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 /**
- * DirContextProcessor implementation for managing the paged results control.
- * Note that due to the internal workings of <code>LdapTemplate</code>, the
- * target connection is closed after each LDAP call. The PagedResults control
- * require the same connection be used for each call, which means we need to
- * make sure the target connection is never actually closed. There's basically
- * two ways of making this happen: use the <code>SingleContextSource</code>
- * implementation or make sure all calls happen within a single LDAP transaction
- * (using <code>ContextSourceTransactionManager</code>).
- * 
+ * DirContextProcessor implementation for managing the paged results control. Note that
+ * due to the internal workings of <code>LdapTemplate</code>, the target connection is
+ * closed after each LDAP call. The PagedResults control require the same connection be
+ * used for each call, which means we need to make sure the target connection is never
+ * actually closed. There's basically two ways of making this happen: use the
+ * <code>SingleContextSource</code> implementation or make sure all calls happen within a
+ * single LDAP transaction (using <code>ContextSourceTransactionManager</code>).
+ *
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  * @deprecated Use PagedResultsDirContextProcessor instead.
@@ -66,10 +65,8 @@ public class PagedResultsRequestControl extends AbstractRequestControlDirContext
 	private Class requestControlClass;
 
 	/**
-	 * Constructs a new instance. This constructor should be used when
-	 * performing the first paged search operation, when no other results have
-	 * been retrieved.
-	 * 
+	 * Constructs a new instance. This constructor should be used when performing the
+	 * first paged search operation, when no other results have been retrieved.
 	 * @param pageSize the page size.
 	 */
 	public PagedResultsRequestControl(int pageSize) {
@@ -77,11 +74,9 @@ public class PagedResultsRequestControl extends AbstractRequestControlDirContext
 	}
 
 	/**
-	 * Constructs a new instance with the supplied page size and cookie. The
-	 * cookie must be the exact same instance as received from a previous paged
-	 * resullts search, or <code>null</code> if it is the first in an operation
-	 * sequence.
-	 * 
+	 * Constructs a new instance with the supplied page size and cookie. The cookie must
+	 * be the exact same instance as received from a previous paged resullts search, or
+	 * <code>null</code> if it is the first in an operation sequence.
 	 * @param pageSize the page size.
 	 * @param cookie the cookie, as received from a previous search.
 	 */
@@ -114,7 +109,6 @@ public class PagedResultsRequestControl extends AbstractRequestControlDirContext
 
 	/**
 	 * Get the cookie.
-	 * 
 	 * @return the cookie.
 	 */
 	public PagedResultsCookie getCookie() {
@@ -123,7 +117,6 @@ public class PagedResultsRequestControl extends AbstractRequestControlDirContext
 
 	/**
 	 * Get the page size.
-	 * 
 	 * @return the page size.
 	 */
 	public int getPageSize() {
@@ -131,10 +124,9 @@ public class PagedResultsRequestControl extends AbstractRequestControlDirContext
 	}
 
 	/**
-	 * Get the total estimated number of entries that matches the issued search.
-	 * Note that this value is optional for the LDAP server to return, so it
-	 * does not always contain any valid data.
-	 * 
+	 * Get the total estimated number of entries that matches the issued search. Note that
+	 * this value is optional for the LDAP server to return, so it does not always contain
+	 * any valid data.
 	 * @return the estimated result size, if returned from the server.
 	 */
 	public int getResultSize() {
@@ -142,9 +134,7 @@ public class PagedResultsRequestControl extends AbstractRequestControlDirContext
 	}
 
 	/**
-	 * Set the class of the expected ResponseControl for the paged results
-	 * response.
-	 * 
+	 * Set the class of the expected ResponseControl for the paged results response.
 	 * @param responseControlClass Class of the expected response control.
 	 */
 	public void setResponseControlClass(Class responseControlClass) {
@@ -156,8 +146,7 @@ public class PagedResultsRequestControl extends AbstractRequestControlDirContext
 	}
 
 	/*
-	 * @see
-	 * org.springframework.ldap.control.AbstractRequestControlDirContextProcessor
+	 * @see org.springframework.ldap.control.AbstractRequestControlDirContextProcessor
 	 * #createRequestControl()
 	 */
 
@@ -166,16 +155,15 @@ public class PagedResultsRequestControl extends AbstractRequestControlDirContext
 		if (cookie != null) {
 			actualCookie = cookie.getCookie();
 		}
-		Constructor constructor = ClassUtils.getConstructorIfAvailable(requestControlClass, new Class[] { int.class,
-				byte[].class, boolean.class });
+		Constructor constructor = ClassUtils.getConstructorIfAvailable(requestControlClass,
+				new Class[] { int.class, byte[].class, boolean.class });
 		if (constructor == null) {
 			throw new IllegalArgumentException("Failed to find an appropriate RequestControl constructor");
 		}
 
 		Control result = null;
 		try {
-			result = (Control) constructor.newInstance(pageSize, actualCookie,
-					critical);
+			result = (Control) constructor.newInstance(pageSize, actualCookie, critical);
 		}
 		catch (Exception e) {
 			ReflectionUtils.handleReflectionException(e);
@@ -185,8 +173,7 @@ public class PagedResultsRequestControl extends AbstractRequestControlDirContext
 	}
 
 	/*
-	 * @see
-	 * org.springframework.ldap.core.DirContextProcessor#postProcess(javax.naming
+	 * @see org.springframework.ldap.core.DirContextProcessor#postProcess(javax.naming
 	 * .directory.DirContext)
 	 */
 
@@ -220,4 +207,5 @@ public class PagedResultsRequestControl extends AbstractRequestControlDirContext
 		Method actualMethod = ReflectionUtils.findMethod(clazz, method);
 		return ReflectionUtils.invokeMethod(actualMethod, control);
 	}
+
 }

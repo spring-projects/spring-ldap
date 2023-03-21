@@ -27,20 +27,24 @@ import org.springframework.util.Assert;
 import java.util.Collections;
 
 /**
- * Abstract FactoryBean superclass to use for automatically launching an EC2 instance before creating the actual target object.
- * This approach is particularly useful for integration testing purposes - the idea is to have particular EC2 images prepared
- * for running integration tests against certain server configurations, enabling integration tests aimed at e.g. a particluar
- * DB server to run transparently at the computer of each individual developer without having to have the actual server software
- * installed on their computers.
+ * Abstract FactoryBean superclass to use for automatically launching an EC2 instance
+ * before creating the actual target object. This approach is particularly useful for
+ * integration testing purposes - the idea is to have particular EC2 images prepared for
+ * running integration tests against certain server configurations, enabling integration
+ * tests aimed at e.g. a particluar DB server to run transparently at the computer of each
+ * individual developer without having to have the actual server software installed on
+ * their computers.
  * <p>
- * Public AMIs will need to be created, bundled and registered for each server setup. A subclass of this FactoryBean
- * is then added to create the actual target object (e.g. a DataSource), implementing the {link #doCreateInstance} method.
- * This method will be supplied the IP address of the instance that was created, enabling the subclass to configure the
- * created instance appropriately.
- * 
+ * Public AMIs will need to be created, bundled and registered for each server setup. A
+ * subclass of this FactoryBean is then added to create the actual target object (e.g. a
+ * DataSource), implementing the {link #doCreateInstance} method. This method will be
+ * supplied the IP address of the instance that was created, enabling the subclass to
+ * configure the created instance appropriately.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public abstract class AbstractEc2InstanceLaunchingFactoryBean extends AbstractFactoryBean {
+
 	private static final int INSTANCE_START_SLEEP_TIME = 1000;
 
 	private static final long DEFAULT_PREPARATION_SLEEP_TIME = 30000;
@@ -63,7 +67,6 @@ public abstract class AbstractEc2InstanceLaunchingFactoryBean extends AbstractFa
 
 	/**
 	 * Set the name of the AMI image to be launched.
-	 *
 	 * @param imageName the AMI image name.
 	 */
 	public void setImageName(String imageName) {
@@ -72,7 +75,6 @@ public abstract class AbstractEc2InstanceLaunchingFactoryBean extends AbstractFa
 
 	/**
 	 * Set the AWS key.
-	 *
 	 * @param awsKey the AWS key.
 	 */
 	public void setAwsKey(String awsKey) {
@@ -81,7 +83,6 @@ public abstract class AbstractEc2InstanceLaunchingFactoryBean extends AbstractFa
 
 	/**
 	 * Set the AWS secret key.
-	 *
 	 * @param awsSecretKey the aws secret key.
 	 */
 	public void setAwsSecretKey(String awsSecretKey) {
@@ -90,7 +91,6 @@ public abstract class AbstractEc2InstanceLaunchingFactoryBean extends AbstractFa
 
 	/**
 	 * Set the name of the keypair.
-	 *
 	 * @param keypairName The keypair name.
 	 */
 	public void setKeypairName(String keypairName) {
@@ -98,8 +98,8 @@ public abstract class AbstractEc2InstanceLaunchingFactoryBean extends AbstractFa
 	}
 
 	/**
-	 * Set the name of the access group. This group should be configured with the appropriate ports open for this test case to execute.
-	 *
+	 * Set the name of the access group. This group should be configured with the
+	 * appropriate ports open for this test case to execute.
 	 * @param groupName the group name.
 	 */
 	public void setGroupName(String groupName) {
@@ -138,7 +138,8 @@ public abstract class AbstractEc2InstanceLaunchingFactoryBean extends AbstractFa
 				LOG.info("Instance prepared - proceeding");
 			}
 			return doCreateInstance(instance.getDnsName());
-		} else {
+		}
+		else {
 			throw new IllegalStateException("Failed to start a new instance");
 		}
 
@@ -146,7 +147,6 @@ public abstract class AbstractEc2InstanceLaunchingFactoryBean extends AbstractFa
 
 	/**
 	 * Implement to create the actual target object.
-	 *
 	 * @param ip the ip address of the launched EC2 image.
 	 * @return the object to be returned by this FactoryBean.
 	 * @throws Exception if an error occurs during initialization.
@@ -162,4 +162,5 @@ public abstract class AbstractEc2InstanceLaunchingFactoryBean extends AbstractFa
 		}
 
 	}
+
 }

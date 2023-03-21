@@ -24,30 +24,28 @@ import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 
 /**
- * Default implementation of {@link TempEntryRenamingStrategy}. This
- * implementation simply adds "_temp" to the leftmost (least significant part)
- * of the name. For example:
- * 
+ * Default implementation of {@link TempEntryRenamingStrategy}. This implementation simply
+ * adds "_temp" to the leftmost (least significant part) of the name. For example:
+ *
  * <pre>
  * cn=john doe, ou=company1, c=SE
  * </pre>
- * 
+ *
  * becomes:
- * 
+ *
  * <pre>
  * cn=john doe_temp, ou=company1, c=SE
  * </pre>
  * <p>
- * Note that using this strategy means that the entry remains in virtually the
- * same location as where it originally resided. This means that searches later
- * in the same transaction might return references to the temporary entry even
- * though it should have been removed or rebound.
- * 
+ * Note that using this strategy means that the entry remains in virtually the same
+ * location as where it originally resided. This means that searches later in the same
+ * transaction might return references to the temporary entry even though it should have
+ * been removed or rebound.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
-public class DefaultTempEntryRenamingStrategy implements
-		TempEntryRenamingStrategy {
+public class DefaultTempEntryRenamingStrategy implements TempEntryRenamingStrategy {
 
 	/**
 	 * The default temp entry suffix, &quot;_temp&quot;.
@@ -57,7 +55,8 @@ public class DefaultTempEntryRenamingStrategy implements
 	private String tempSuffix = DEFAULT_TEMP_SUFFIX;
 
 	/*
-	 * @see org.springframework.ldap.support.transaction.TempEntryRenamingStrategy#getTemporaryName(javax.naming.Name)
+	 * @see org.springframework.ldap.support.transaction.TempEntryRenamingStrategy#
+	 * getTemporaryName(javax.naming.Name)
 	 */
 	public Name getTemporaryName(Name originalName) {
 		LdapName temporaryName = LdapUtils.newLdapName(originalName);
@@ -65,8 +64,9 @@ public class DefaultTempEntryRenamingStrategy implements
 		// Add tempSuffix to the leaf node name.
 		try {
 			String leafNode = (String) temporaryName.remove(temporaryName.size() - 1);
-			temporaryName.add(new Rdn(leafNode  + tempSuffix));
-		} catch (InvalidNameException e) {
+			temporaryName.add(new Rdn(leafNode + tempSuffix));
+		}
+		catch (InvalidNameException e) {
 			throw new org.springframework.ldap.InvalidNameException(e);
 		}
 
@@ -75,7 +75,6 @@ public class DefaultTempEntryRenamingStrategy implements
 
 	/**
 	 * Get the suffix that will be used for renaming temporary entries.
-	 * 
 	 * @return the suffix.
 	 */
 	public String getTempSuffix() {
@@ -85,9 +84,7 @@ public class DefaultTempEntryRenamingStrategy implements
 	/**
 	 * Set the suffix to use for renaming temporary entries. Default value is
 	 * {@link #DEFAULT_TEMP_SUFFIX}.
-	 * 
-	 * @param tempSuffix
-	 *			the suffix.
+	 * @param tempSuffix the suffix.
 	 */
 	public void setTempSuffix(String tempSuffix) {
 		this.tempSuffix = tempSuffix;

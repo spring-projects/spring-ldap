@@ -25,8 +25,9 @@ import javax.naming.Name;
 /**
  * @author Mattias Hellborg Arthursson
  */
-@Entry(objectClasses = {"inetOrgPerson", "organizationalPerson", "person", "top"})
+@Entry(objectClasses = { "inetOrgPerson", "organizationalPerson", "person", "top" })
 public class UnitTestPersonWithInvalidFieldType {
+
 	@Id
 	private Name dn;
 

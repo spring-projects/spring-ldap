@@ -33,11 +33,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests the lookup methods of LdapTemplate.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  */
-@ContextConfiguration(locations = {"/conf/ldapTemplateTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
 public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest {
 
 	@Autowired
@@ -45,8 +45,8 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 
 	/**
 	 * This method depends on a DirObjectFactory (
-	 * {@link org.springframework.ldap.core.support.DefaultDirObjectFactory})
-	 * being set in the ContextSource.
+	 * {@link org.springframework.ldap.core.support.DefaultDirObjectFactory}) being set in
+	 * the ContextSource.
 	 */
 	@Test
 	public void testLookup_Plain() {
@@ -59,8 +59,8 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 
 	/**
 	 * This method depends on a DirObjectFactory (
-	 * {@link org.springframework.ldap.core.support.DefaultDirObjectFactory})
-	 * being set in the ContextSource.
+	 * {@link org.springframework.ldap.core.support.DefaultDirObjectFactory}) being set in
+	 * the ContextSource.
 	 */
 	@Test
 	public void testLookupContextRoot() {
@@ -91,17 +91,17 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 	}
 
 	/**
-	 * An {@link AttributesMapper} that only maps a subset of the full
-	 * attributes list. Used in tests where the return attributes list has been
-	 * limited.
-	 * 
+	 * An {@link AttributesMapper} that only maps a subset of the full attributes list.
+	 * Used in tests where the return attributes list has been limited.
+	 *
 	 * @author Ulrik Sandberg
 	 */
 	private final class SubsetPersonAttributesMapper implements AttributesMapper {
+
 		/**
-		 * Maps the <code>cn</code> attribute into a {@link Person} object. Also
-		 * verifies that the other attributes haven't been set.
-		 * 
+		 * Maps the <code>cn</code> attribute into a {@link Person} object. Also verifies
+		 * that the other attributes haven't been set.
+		 *
 		 * @see org.springframework.ldap.core.AttributesMapper#mapFromAttributes(javax.naming.directory.Attributes)
 		 */
 		public Object mapFromAttributes(Attributes attributes) throws NamingException {
@@ -111,11 +111,12 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 			assertThat(attributes.get("description")).as("description should be null").isNull();
 			return person;
 		}
+
 	}
 
 	/**
-	 * Verifies that only the subset is used when specifying a subset of the
-	 * available attributes as return attributes.
+	 * Verifies that only the subset is used when specifying a subset of the available
+	 * attributes as return attributes.
 	 */
 	@Test
 	public void testLookup_ReturnAttributes_AttributesMapper() {
@@ -129,9 +130,8 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 	}
 
 	/**
-	 * Verifies that only the subset is used when specifying a subset of the
-	 * available attributes as return attributes. Uses LdapName instead
-	 * of plain string as name.
+	 * Verifies that only the subset is used when specifying a subset of the available
+	 * attributes as return attributes. Uses LdapName instead of plain string as name.
 	 */
 	@Test
 	public void testLookup_ReturnAttributes_AttributesMapper_LdapName() {
@@ -146,8 +146,8 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 
 	/**
 	 * This method depends on a DirObjectFactory (
-	 * {@link org.springframework.ldap.core.support.DefaultDirObjectFactory})
-	 * being set in the ContextSource.
+	 * {@link org.springframework.ldap.core.support.DefaultDirObjectFactory}) being set in
+	 * the ContextSource.
 	 */
 	@Test
 	public void testLookup_ContextMapper() {
@@ -160,8 +160,8 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 	}
 
 	/**
-	 * Verifies that only the subset is used when specifying a subset of the
-	 * available attributes as return attributes.
+	 * Verifies that only the subset is used when specifying a subset of the available
+	 * attributes as return attributes.
 	 */
 	@Test
 	public void testLookup_ReturnAttributes_ContextMapper() {
@@ -183,4 +183,5 @@ public class LdapTemplateLookupITest extends AbstractLdapTemplateIntegrationTest
 		assertThat(result.getDn()).isEqualTo(expectedName);
 		assertThat(result.getNameInNamespace()).isEqualTo("cn=Some Person2,ou=company1,ou=Sweden," + base);
 	}
+
 }

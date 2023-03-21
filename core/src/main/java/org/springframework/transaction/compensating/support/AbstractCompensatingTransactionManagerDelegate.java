@@ -25,9 +25,8 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 /**
  * Abstract superclass for Compensating TransactionManager delegates. The actual
- * transaction work is extracted to a delegate to enable composite Transaction
- * Managers.
- * 
+ * transaction work is extracted to a delegate to enable composite Transaction Managers.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
@@ -36,27 +35,23 @@ public abstract class AbstractCompensatingTransactionManagerDelegate {
 	private static Logger log = LoggerFactory.getLogger(AbstractCompensatingTransactionManagerDelegate.class);
 
 	/**
-	 * Close the target resource - the implementation specific resource held in
-	 * the specified {@link CompensatingTransactionHolderSupport}.
-	 * 
-	 * @param transactionHolderSupport the
-	 * {@link CompensatingTransactionHolderSupport} that holds the transaction
-	 * specific target resource.
+	 * Close the target resource - the implementation specific resource held in the
+	 * specified {@link CompensatingTransactionHolderSupport}.
+	 * @param transactionHolderSupport the {@link CompensatingTransactionHolderSupport}
+	 * that holds the transaction specific target resource.
 	 */
 	protected abstract void closeTargetResource(CompensatingTransactionHolderSupport transactionHolderSupport);
 
 	/**
-	 * Get a new implementation specific
-	 * {@link CompensatingTransactionHolderSupport} instance.
-	 * 
+	 * Get a new implementation specific {@link CompensatingTransactionHolderSupport}
+	 * instance.
 	 * @return a new {@link CompensatingTransactionHolderSupport} instance.
 	 */
 	protected abstract CompensatingTransactionHolderSupport getNewHolder();
 
 	/**
-	 * Get the key (normally, a DataSource or similar) that should be used for
-	 * transaction synchronization.
-	 * 
+	 * Get the key (normally, a DataSource or similar) that should be used for transaction
+	 * synchronization.
 	 * @return the transaction synchronization key
 	 */
 	protected abstract Object getTransactionSynchronizationKey();
@@ -72,8 +67,7 @@ public abstract class AbstractCompensatingTransactionManagerDelegate {
 	}
 
 	/*
-	 * @see
-	 * org.springframework.jdbc.datasource.DataSourceTransactionManager#doBegin
+	 * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doBegin
 	 * (java.lang.Object, org.springframework.transaction.TransactionDefinition)
 	 */
 	public void doBegin(Object transaction, TransactionDefinition definition) throws TransactionException {
@@ -92,8 +86,7 @@ public abstract class AbstractCompensatingTransactionManagerDelegate {
 	}
 
 	/*
-	 * @see
-	 * org.springframework.jdbc.datasource.DataSourceTransactionManager#doCommit
+	 * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doCommit
 	 * (org.springframework.transaction.support.DefaultTransactionStatus)
 	 */
 	public void doCommit(DefaultTransactionStatus status) throws TransactionException {
@@ -103,8 +96,7 @@ public abstract class AbstractCompensatingTransactionManagerDelegate {
 	}
 
 	/*
-	 * @see
-	 * org.springframework.jdbc.datasource.DataSourceTransactionManager#doRollback
+	 * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doRollback
 	 * (org.springframework.transaction.support.DefaultTransactionStatus)
 	 */
 	public void doRollback(DefaultTransactionStatus status) throws TransactionException {
@@ -127,4 +119,5 @@ public abstract class AbstractCompensatingTransactionManagerDelegate {
 
 		txObject.getHolder().clear();
 	}
+
 }

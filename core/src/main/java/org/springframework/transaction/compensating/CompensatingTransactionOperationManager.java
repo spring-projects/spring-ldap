@@ -17,39 +17,35 @@ package org.springframework.transaction.compensating;
 
 /**
  * A CompensatingTransactionOperationManager implementation records and performs
- * operations that are to be performed within a compensating transaction. It
- * keeps track of compensating actions necessary for rolling back each
- * individual operation.
- * 
+ * operations that are to be performed within a compensating transaction. It keeps track
+ * of compensating actions necessary for rolling back each individual operation.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
 public interface CompensatingTransactionOperationManager {
-	/**
-	 * Indicates that the supplied operation (method name) is to be performed.
-	 * This method is responsible for recording the current state (prior to the
-	 * operation), performing the operation, and storing the necessary
-	 * information to roll back or commit the performed operation.
-	 * 
-	 * @param resource
-	 *			the target resource to perform the operation on.
-	 * @param operation
-	 *			The method to be invoked.
-	 * @param args
-	 *			Arguments supplied to the method.
-	 */
-	void performOperation(Object resource, String operation,
-			Object[] args);
 
 	/**
-	 * Rollback all recorded operations by performing each of the recorded
-	 * rollback operations.
+	 * Indicates that the supplied operation (method name) is to be performed. This method
+	 * is responsible for recording the current state (prior to the operation), performing
+	 * the operation, and storing the necessary information to roll back or commit the
+	 * performed operation.
+	 * @param resource the target resource to perform the operation on.
+	 * @param operation The method to be invoked.
+	 * @param args Arguments supplied to the method.
+	 */
+	void performOperation(Object resource, String operation, Object[] args);
+
+	/**
+	 * Rollback all recorded operations by performing each of the recorded rollback
+	 * operations.
 	 */
 	void rollback();
 
 	/**
-	 * Commit all recorded operations. In many cases this means doing nothing,
-	 * but in some cases some temporary data will need to be removed.
+	 * Commit all recorded operations. In many cases this means doing nothing, but in some
+	 * cases some temporary data will need to be removed.
 	 */
 	void commit();
+
 }

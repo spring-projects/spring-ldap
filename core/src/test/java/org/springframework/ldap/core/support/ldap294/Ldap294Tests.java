@@ -25,20 +25,20 @@ import org.springframework.ldap.core.support.AbstractContextSource;
 
 /**
  * These tests just ensure that the subclass compiles
- * 
+ *
  * @author Rob Winch
  *
  */
 public class Ldap294Tests {
 
 	@Test
-	public void concerteContextSourceCanAccessPasswordAndUserDn() {}
+	public void concerteContextSourceCanAccessPasswordAndUserDn() {
+	}
 
 	static class ConcerteContextSource extends AbstractContextSource {
 
 		@Override
-		protected DirContext getDirContextInstance(
-				Hashtable<String, Object> environment) throws NamingException {
+		protected DirContext getDirContextInstance(Hashtable<String, Object> environment) throws NamingException {
 			// Verify a subclass outside of package scope can access password
 			// and userDn since Spring Security needs to be able to access these
 			// properties.
@@ -46,6 +46,7 @@ public class Ldap294Tests {
 			String userDn = super.getUserDn();
 			return null;
 		}
-		
+
 	}
+
 }

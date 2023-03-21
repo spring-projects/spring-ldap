@@ -17,10 +17,10 @@
 package org.springframework.ldap.query;
 
 /**
- * Constructs a conditional LDAP filter based on the attribute specified in the previous builder step.
+ * Constructs a conditional LDAP filter based on the attribute specified in the previous
+ * builder step.
  *
  * @author Mattias Hellborg Arthursson
- *
  * @see LdapQueryBuilder#where(String)
  * @see ContainerCriteria#and(String)
  * @see ContainerCriteria#or(String)
@@ -30,10 +30,9 @@ public interface ConditionCriteria {
 
 	/**
 	 * Appends an {@link org.springframework.ldap.filter.EqualsFilter}.
-	 *
 	 * @param value the value to compare with.
-	 * @return an ContainerCriteria instance that can be used to continue append more criteria
-	 * or as the LdapQuery instance to be used as instance to e.g.
+	 * @return an ContainerCriteria instance that can be used to continue append more
+	 * criteria or as the LdapQuery instance to be used as instance to e.g.
 	 * {@link org.springframework.ldap.core.LdapOperations#search(LdapQuery, org.springframework.ldap.core.ContextMapper)}.
 	 *
 	 * @see org.springframework.ldap.filter.EqualsFilter
@@ -42,10 +41,9 @@ public interface ConditionCriteria {
 
 	/**
 	 * Appends an {@link org.springframework.ldap.filter.GreaterThanOrEqualsFilter}.
-	 *
 	 * @param value the value to compare with.
-	 * @return an ContainerCriteria instance that can be used to continue append more criteria
-	 * or as the LdapQuery instance to be used as instance to e.g.
+	 * @return an ContainerCriteria instance that can be used to continue append more
+	 * criteria or as the LdapQuery instance to be used as instance to e.g.
 	 * {@link org.springframework.ldap.core.LdapOperations#search(LdapQuery, org.springframework.ldap.core.ContextMapper)}.
 	 *
 	 * @see org.springframework.ldap.filter.GreaterThanOrEqualsFilter
@@ -54,10 +52,9 @@ public interface ConditionCriteria {
 
 	/**
 	 * Appends a {@link org.springframework.ldap.filter.LessThanOrEqualsFilter}.
-	 *
 	 * @param value the value to compare with.
-	 * @return an ContainerCriteria instance that can be used to continue append more criteria
-	 * or as the LdapQuery instance to be used as instance to e.g.
+	 * @return an ContainerCriteria instance that can be used to continue append more
+	 * criteria or as the LdapQuery instance to be used as instance to e.g.
 	 * {@link org.springframework.ldap.core.LdapOperations#search(LdapQuery, org.springframework.ldap.core.ContextMapper)}.
 	 *
 	 * @see org.springframework.ldap.filter.LessThanOrEqualsFilter
@@ -66,10 +63,9 @@ public interface ConditionCriteria {
 
 	/**
 	 * Appends a {@link org.springframework.ldap.filter.LikeFilter}.
-	 *
 	 * @param value the value to compare with.
-	 * @return an ContainerCriteria instance that can be used to continue append more criteria
-	 * or as the LdapQuery instance to be used as instance to e.g.
+	 * @return an ContainerCriteria instance that can be used to continue append more
+	 * criteria or as the LdapQuery instance to be used as instance to e.g.
 	 * {@link org.springframework.ldap.core.LdapOperations#search(LdapQuery, org.springframework.ldap.core.ContextMapper)}.
 	 *
 	 * @see org.springframework.ldap.filter.LikeFilter
@@ -78,10 +74,9 @@ public interface ConditionCriteria {
 
 	/**
 	 * Appends a {@link org.springframework.ldap.filter.WhitespaceWildcardsFilter}.
-	 *
 	 * @param value the value to compare with.
-	 * @return an ContainerCriteria instance that can be used to continue append more criteria
-	 * or as the LdapQuery instance to be used as instance to e.g.
+	 * @return an ContainerCriteria instance that can be used to continue append more
+	 * criteria or as the LdapQuery instance to be used as instance to e.g.
 	 * {@link org.springframework.ldap.core.LdapOperations#search(LdapQuery, org.springframework.ldap.core.ContextMapper)}.
 	 *
 	 * @see org.springframework.ldap.filter.WhitespaceWildcardsFilter
@@ -90,9 +85,8 @@ public interface ConditionCriteria {
 
 	/**
 	 * Appends a {@link org.springframework.ldap.filter.PresentFilter}.
-	 *
-	 * @return an ContainerCriteria instance that can be used to continue append more criteria
-	 * or as the LdapQuery instance to be used as instance to e.g.
+	 * @return an ContainerCriteria instance that can be used to continue append more
+	 * criteria or as the LdapQuery instance to be used as instance to e.g.
 	 * {@link org.springframework.ldap.core.LdapOperations#search(LdapQuery, org.springframework.ldap.core.ContextMapper)}.
 	 *
 	 * @see org.springframework.ldap.filter.PresentFilter
@@ -100,14 +94,15 @@ public interface ConditionCriteria {
 	ContainerCriteria isPresent();
 
 	/**
-	 * Negates the currently constructed operation. In effect this means that the resulting filter will be
-	 * wrapped in a {@link org.springframework.ldap.filter.NotFilter}.
-	 *
-	 * @return an ContainerCriteria instance that can be used to continue append more criteria
-	 * or as the LdapQuery instance to be used as instance to e.g.
+	 * Negates the currently constructed operation. In effect this means that the
+	 * resulting filter will be wrapped in a
+	 * {@link org.springframework.ldap.filter.NotFilter}.
+	 * @return an ContainerCriteria instance that can be used to continue append more
+	 * criteria or as the LdapQuery instance to be used as instance to e.g.
 	 * {@link org.springframework.ldap.core.LdapOperations#search(LdapQuery, org.springframework.ldap.core.ContextMapper)}.
 	 *
 	 * @see org.springframework.ldap.filter.NotFilter
 	 */
 	ConditionCriteria not();
+
 }

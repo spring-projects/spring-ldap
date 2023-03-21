@@ -28,21 +28,21 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class RenameOperationExecutorTest {
+
 	private LdapOperations ldapOperationsMock;
 
 	@Before
 	public void setUp() throws Exception {
-		ldapOperationsMock = mock(LdapOperations.class);;
+		ldapOperationsMock = mock(LdapOperations.class);
+		;
 	}
-
-
 
 	@Test
 	public void testPerformOperation() {
 		LdapName expectedNewName = LdapUtils.newLdapName("ou=newOu");
 		LdapName expectedOldName = LdapUtils.newLdapName("ou=someou");
-		RenameOperationExecutor tested = new RenameOperationExecutor(
-				ldapOperationsMock, expectedOldName, expectedNewName);
+		RenameOperationExecutor tested = new RenameOperationExecutor(ldapOperationsMock, expectedOldName,
+				expectedNewName);
 
 		// Perform test.
 		tested.performOperation();
@@ -54,8 +54,8 @@ public class RenameOperationExecutorTest {
 	public void testCommit() {
 		LdapName expectedNewName = LdapUtils.newLdapName("ou=newOu");
 		LdapName expectedOldName = LdapUtils.newLdapName("ou=someou");
-		RenameOperationExecutor tested = new RenameOperationExecutor(
-				ldapOperationsMock, expectedOldName, expectedNewName);
+		RenameOperationExecutor tested = new RenameOperationExecutor(ldapOperationsMock, expectedOldName,
+				expectedNewName);
 
 		// Nothing to do for this operation.
 		verifyNoMoreInteractions(ldapOperationsMock);
@@ -68,8 +68,8 @@ public class RenameOperationExecutorTest {
 	public void testRollback() {
 		LdapName expectedNewName = LdapUtils.newLdapName("ou=newOu");
 		LdapName expectedOldName = LdapUtils.newLdapName("ou=someou");
-		RenameOperationExecutor tested = new RenameOperationExecutor(
-				ldapOperationsMock, expectedOldName, expectedNewName);
+		RenameOperationExecutor tested = new RenameOperationExecutor(ldapOperationsMock, expectedOldName,
+				expectedNewName);
 
 		// Perform test.
 		tested.rollback();

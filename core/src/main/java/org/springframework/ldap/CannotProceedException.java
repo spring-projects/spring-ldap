@@ -18,7 +18,7 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI CannotProceedException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.CannotProceedException
@@ -28,4 +28,5 @@ public class CannotProceedException extends NamingException {
 	public CannotProceedException(javax.naming.CannotProceedException cause) {
 		super(cause);
 	}
+
 }

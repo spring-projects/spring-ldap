@@ -45,15 +45,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 /**
- * Integration tests for {@link org.springframework.ldap.transaction.compensating.manager.ContextSourceAndHibernateTransactionManager}
+ * Integration tests for
+ * {@link org.springframework.ldap.transaction.compensating.manager.ContextSourceAndHibernateTransactionManager}
  * with namespace configuration.
  *
  * @author Hans Westerbeek
  */
-@ContextConfiguration(locations = {"/conf/ldapAndHibernateTransactionNamespaceTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapAndHibernateTransactionNamespaceTestContext.xml" })
 public class ContextSourceAndHibernateTransactionManagerNamespaceITest extends AbstractLdapTemplateIntegrationTest {
 
-	private static Logger log = LoggerFactory.getLogger(ContextSourceAndHibernateTransactionManagerNamespaceITest.class);
+	private static Logger log = LoggerFactory
+			.getLogger(ContextSourceAndHibernateTransactionManagerNamespaceITest.class);
 
 	@Autowired
 	@Qualifier("dummyDao")
@@ -367,4 +369,5 @@ public class ContextSourceAndHibernateTransactionManagerNamespaceITest extends A
 		person = (OrgPerson) this.hibernateTemplate.get(OrgPerson.class, new Integer(1));
 		assertThat(person).isNull();
 	}
+
 }

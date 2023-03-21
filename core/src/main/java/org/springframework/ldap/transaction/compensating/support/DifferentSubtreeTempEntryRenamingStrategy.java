@@ -25,27 +25,23 @@ import javax.naming.ldap.LdapName;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * A {@link TempEntryRenamingStrategy} that moves the entry to a different
- * subtree than the original entry. The specified subtree needs to be present in
- * the LDAP tree; it will not be created and operations using this strategy will
- * fail if the destination is not in place. However, this strategy is preferable
- * to {@link DefaultTempEntryRenamingStrategy}, as it makes searches have the
- * expected result even though the temporary entry still exists during the
- * transaction.
+ * A {@link TempEntryRenamingStrategy} that moves the entry to a different subtree than
+ * the original entry. The specified subtree needs to be present in the LDAP tree; it will
+ * not be created and operations using this strategy will fail if the destination is not
+ * in place. However, this strategy is preferable to
+ * {@link DefaultTempEntryRenamingStrategy}, as it makes searches have the expected result
+ * even though the temporary entry still exists during the transaction.
  * <p>
- * Example: If the specified <code>subtreeNode</code> is
- * <code>ou=tempEntries</code> and the <code>originalName</code> is
- * <code>cn=john doe, ou=company1, c=SE</code>, the result of
- * {@link #getTemporaryName(Name)} will be
- * <code>cn=john doe1, ou=tempEntries</code>. The &quot;1&quot; suffix is a
- * sequence number needed to prevent potential collisions in the temporary
- * storage.
- * 
+ * Example: If the specified <code>subtreeNode</code> is <code>ou=tempEntries</code> and
+ * the <code>originalName</code> is <code>cn=john doe, ou=company1, c=SE</code>, the
+ * result of {@link #getTemporaryName(Name)} will be
+ * <code>cn=john doe1, ou=tempEntries</code>. The &quot;1&quot; suffix is a sequence
+ * number needed to prevent potential collisions in the temporary storage.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
-public class DifferentSubtreeTempEntryRenamingStrategy implements
-		TempEntryRenamingStrategy {
+public class DifferentSubtreeTempEntryRenamingStrategy implements TempEntryRenamingStrategy {
 
 	private Name subtreeNode;
 
@@ -72,7 +68,8 @@ public class DifferentSubtreeTempEntryRenamingStrategy implements
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.transaction.TempEntryRenamingStrategy#getTemporaryName(javax.naming.Name)
+	 * @see org.springframework.ldap.support.transaction.TempEntryRenamingStrategy#
+	 * getTemporaryName(javax.naming.Name)
 	 */
 	public Name getTemporaryName(Name originalName) {
 		int thisSequenceNo = NEXT_SEQUENCE_NO.getAndIncrement();
@@ -84,8 +81,10 @@ public class DifferentSubtreeTempEntryRenamingStrategy implements
 			newName.add(leafNode);
 
 			return newName;
-		} catch (InvalidNameException e) {
+		}
+		catch (InvalidNameException e) {
 			throw new org.springframework.ldap.InvalidNameException(e);
 		}
 	}
+
 }

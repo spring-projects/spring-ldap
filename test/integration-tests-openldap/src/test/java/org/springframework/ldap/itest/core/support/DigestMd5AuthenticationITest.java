@@ -34,11 +34,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Integration test to verify DIGEST-MD5 authentication support.
- * 
+ *
  * @author Marvin S. Addison
  */
 @ContextConfiguration(locations = { "/conf/ldapTemplateDigestMd5TestContext.xml" })
 public class DigestMd5AuthenticationITest extends AbstractJUnit4SpringContextTests {
+
 	@Autowired
 	private LdapTemplate ldapTemplate;
 
@@ -48,9 +49,7 @@ public class DigestMd5AuthenticationITest extends AbstractJUnit4SpringContextTes
 
 	@Before
 	public void prepareTestedInstance() throws Exception {
-		LdapTestUtils.cleanAndSetup(
-				contextSource,
-				LdapUtils.newLdapName("ou=People"),
+		LdapTestUtils.cleanAndSetup(contextSource, LdapUtils.newLdapName("ou=People"),
 				new ClassPathResource("/setup_data.ldif"));
 	}
 
@@ -64,4 +63,5 @@ public class DigestMd5AuthenticationITest extends AbstractJUnit4SpringContextTes
 		DirContext ctxt = ldapTemplate.getContextSource().getContext("some.person1", "password");
 		assertThat(ctxt).isNotNull();
 	}
+
 }

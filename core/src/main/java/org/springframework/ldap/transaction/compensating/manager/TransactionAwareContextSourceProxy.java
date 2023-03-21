@@ -25,27 +25,23 @@ import javax.naming.directory.DirContext;
 import java.lang.reflect.Proxy;
 
 /**
- * A proxy for ContextSource to make sure that the returned DirContext objects
- * are aware of the surrounding transactions. This makes sure that the
- * DirContext is not closed during the transaction and that all modifying
- * operations are recorded, keeping track of the corresponding rollback
- * operations. All returned DirContext instances will be of the type
- * {@link TransactionAwareDirContextInvocationHandler}.
- * 
+ * A proxy for ContextSource to make sure that the returned DirContext objects are aware
+ * of the surrounding transactions. This makes sure that the DirContext is not closed
+ * during the transaction and that all modifying operations are recorded, keeping track of
+ * the corresponding rollback operations. All returned DirContext instances will be of the
+ * type {@link TransactionAwareDirContextInvocationHandler}.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
-public class TransactionAwareContextSourceProxy
-		extends DelegatingBaseLdapPathContextSourceSupport
+public class TransactionAwareContextSourceProxy extends DelegatingBaseLdapPathContextSourceSupport
 		implements ContextSource {
 
 	private ContextSource target;
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param target
-	 *			the target ContextSource.
+	 * @param target the target ContextSource.
 	 */
 	public TransactionAwareContextSourceProxy(ContextSource target) {
 		this.target = target;
@@ -61,23 +57,16 @@ public class TransactionAwareContextSourceProxy
 		return getReadWriteContext();
 	}
 
-	private DirContext getTransactionAwareDirContextProxy(DirContext context,
-			ContextSource target) {
-		return (DirContext) Proxy
-				.newProxyInstance(DirContextProxy.class.getClassLoader(),
-						new Class[] {
-								LdapUtils
-										.getActualTargetClass(context),
-								DirContextProxy.class },
-						new TransactionAwareDirContextInvocationHandler(
-								context, target));
+	private DirContext getTransactionAwareDirContextProxy(DirContext context, ContextSource target) {
+		return (DirContext) Proxy.newProxyInstance(DirContextProxy.class.getClassLoader(),
+				new Class[] { LdapUtils.getActualTargetClass(context), DirContextProxy.class },
+				new TransactionAwareDirContextInvocationHandler(context, target));
 
 	}
 
 	@Override
 	public DirContext getReadWriteContext() {
-		DirContextHolder contextHolder = (DirContextHolder) TransactionSynchronizationManager
-				.getResource(target);
+		DirContextHolder contextHolder = (DirContextHolder) TransactionSynchronizationManager.getResource(target);
 		DirContext ctx = null;
 
 		if (contextHolder != null) {
@@ -97,4 +86,5 @@ public class TransactionAwareContextSourceProxy
 	public DirContext getContext(String principal, String credentials) {
 		return target.getContext(principal, credentials);
 	}
+
 }

@@ -54,20 +54,13 @@ public class LdapTransactionUtilsTest {
 
 	@Test
 	public void testIsSupportedWriteTransactionOperation() {
-		assertTrue(LdapTransactionUtils
-				.isSupportedWriteTransactionOperation("bind"));
-		assertTrue(LdapTransactionUtils
-				.isSupportedWriteTransactionOperation("rebind"));
-		assertTrue(LdapTransactionUtils
-				.isSupportedWriteTransactionOperation("unbind"));
-		assertTrue(LdapTransactionUtils
-				.isSupportedWriteTransactionOperation("modifyAttributes"));
-		assertTrue(LdapTransactionUtils
-				.isSupportedWriteTransactionOperation("rename"));
-		assertFalse(LdapTransactionUtils
-				.isSupportedWriteTransactionOperation("lookup"));
-		assertFalse(LdapTransactionUtils
-				.isSupportedWriteTransactionOperation("search"));
+		assertTrue(LdapTransactionUtils.isSupportedWriteTransactionOperation("bind"));
+		assertTrue(LdapTransactionUtils.isSupportedWriteTransactionOperation("rebind"));
+		assertTrue(LdapTransactionUtils.isSupportedWriteTransactionOperation("unbind"));
+		assertTrue(LdapTransactionUtils.isSupportedWriteTransactionOperation("modifyAttributes"));
+		assertTrue(LdapTransactionUtils.isSupportedWriteTransactionOperation("rename"));
+		assertFalse(LdapTransactionUtils.isSupportedWriteTransactionOperation("lookup"));
+		assertFalse(LdapTransactionUtils.isSupportedWriteTransactionOperation("search"));
 	}
 
 	public void dummyMethod() {

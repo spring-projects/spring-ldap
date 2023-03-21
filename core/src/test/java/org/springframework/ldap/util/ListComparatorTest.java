@@ -82,4 +82,5 @@ public class ListComparatorTest {
 		int result = tested.compare(list1, list2);
 		assertThat(result < 0).isTrue();
 	}
+
 }

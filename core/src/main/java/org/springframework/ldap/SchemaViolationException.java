@@ -18,15 +18,15 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI SchemaViolationException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.directory.SchemaViolationException
  */
 public class SchemaViolationException extends NamingException {
 
-	public SchemaViolationException(
-			javax.naming.directory.SchemaViolationException cause) {
+	public SchemaViolationException(javax.naming.directory.SchemaViolationException cause) {
 		super(cause);
 	}
+
 }

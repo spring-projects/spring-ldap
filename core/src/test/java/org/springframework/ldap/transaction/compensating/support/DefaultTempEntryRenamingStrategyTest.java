@@ -27,8 +27,7 @@ public class DefaultTempEntryRenamingStrategyTest {
 
 	@Test
 	public void testGetTemporaryName() {
-		LdapName expectedOriginalName = LdapUtils.newLdapName(
-				"cn=john doe, ou=somecompany, c=SE");
+		LdapName expectedOriginalName = LdapUtils.newLdapName("cn=john doe, ou=somecompany, c=SE");
 		DefaultTempEntryRenamingStrategy tested = new DefaultTempEntryRenamingStrategy();
 
 		Name result = tested.getTemporaryName(expectedOriginalName);
@@ -38,13 +37,11 @@ public class DefaultTempEntryRenamingStrategyTest {
 
 	@Test
 	public void testGetTemporaryDN_MultivalueDN() {
-		LdapName expectedOriginalName = LdapUtils.newLdapName(
-				"cn=john doe+sn=doe, ou=somecompany, c=SE");
+		LdapName expectedOriginalName = LdapUtils.newLdapName("cn=john doe+sn=doe, ou=somecompany, c=SE");
 		DefaultTempEntryRenamingStrategy tested = new DefaultTempEntryRenamingStrategy();
 
 		Name result = tested.getTemporaryName(expectedOriginalName);
 		assertThat(result.toString()).isEqualTo("cn=john doe+sn=doe_temp,ou=somecompany,c=SE");
 	}
-
 
 }

@@ -58,9 +58,7 @@ public class PagedSearchITest extends AbstractJUnit4SpringContextTests {
 
 	@Before
 	public void prepareTestedData() throws IOException, NamingException {
-		LdapTestUtils.cleanAndSetup(
-				contextSource,
-				LdapUtils.newLdapName("ou=People"),
+		LdapTestUtils.cleanAndSetup(contextSource, LdapUtils.newLdapName("ou=People"),
 				new ClassPathResource("/setup_data.ldif"));
 	}
 
@@ -74,41 +72,25 @@ public class PagedSearchITest extends AbstractJUnit4SpringContextTests {
 		final SearchControls searchControls = new SearchControls();
 		searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
-		// There  should be three pages of three entries, and one final page with one entry
+		// There should be three pages of three entries, and one final page with one entry
 		final PagedResultsDirContextProcessor processor = new PagedResultsDirContextProcessor(3);
 
 		SingleContextSource.doWithSingleContext(contextSource, new LdapOperationsCallback<Object>() {
 			@Override
 			public Object doWithLdapOperations(LdapOperations operations) {
-				List<String> result = operations.search(
-						"ou=People",
-						"(&(objectclass=person))",
-						searchControls,
-						CN_ATTRIBUTES_MAPPER,
+				List<String> result = operations.search("ou=People", "(&(objectclass=person))", searchControls,
+						CN_ATTRIBUTES_MAPPER, processor);
+				assertThat(result).hasSize(3);
+
+				result = operations.search("ou=People", "(&(objectclass=person))", searchControls, CN_ATTRIBUTES_MAPPER,
 						processor);
 				assertThat(result).hasSize(3);
 
-				result = operations.search(
-						"ou=People",
-						"(&(objectclass=person))",
-						searchControls,
-						CN_ATTRIBUTES_MAPPER,
+				result = operations.search("ou=People", "(&(objectclass=person))", searchControls, CN_ATTRIBUTES_MAPPER,
 						processor);
 				assertThat(result).hasSize(3);
 
-				result = operations.search(
-						"ou=People",
-						"(&(objectclass=person))",
-						searchControls,
-						CN_ATTRIBUTES_MAPPER,
-						processor);
-				assertThat(result).hasSize(3);
-
-				result = operations.search(
-						"ou=People",
-						"(&(objectclass=person))",
-						searchControls,
-						CN_ATTRIBUTES_MAPPER,
+				result = operations.search("ou=People", "(&(objectclass=person))", searchControls, CN_ATTRIBUTES_MAPPER,
 						processor);
 				assertThat(result).hasSize(1);
 
@@ -118,4 +100,5 @@ public class PagedSearchITest extends AbstractJUnit4SpringContextTests {
 		});
 
 	}
+
 }

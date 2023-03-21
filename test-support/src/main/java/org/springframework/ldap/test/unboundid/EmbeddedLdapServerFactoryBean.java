@@ -22,8 +22,11 @@ import org.springframework.beans.factory.config.AbstractFactoryBean;
  * @author Mattias Hellborg Arthursson
  */
 public class EmbeddedLdapServerFactoryBean extends AbstractFactoryBean<EmbeddedLdapServer> {
+
 	private int port;
+
 	private String partitionName;
+
 	private String partitionSuffix;
 
 	@Override
@@ -52,4 +55,5 @@ public class EmbeddedLdapServerFactoryBean extends AbstractFactoryBean<EmbeddedL
 	protected void destroyInstance(EmbeddedLdapServer instance) throws Exception {
 		instance.shutdown();
 	}
+
 }

@@ -19,9 +19,9 @@ import java.beans.PropertyEditorSupport;
 
 /**
  * Property editor for use with {@link DistinguishedName} instances. The
- * {@link #setAsText(String)} method sets the value as an <i>immutable</i>
- * instance of a DistinguishedName.
- * 
+ * {@link #setAsText(String)} method sets the value as an <i>immutable</i> instance of a
+ * DistinguishedName.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  * @deprecated {@link DistinguishedName} and associated classes are deprecated as of 2.0.
@@ -30,6 +30,7 @@ public class DistinguishedNameEditor extends PropertyEditorSupport {
 
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see java.beans.PropertyEditorSupport#setAsText(java.lang.String)
 	 */
 	public void setAsText(String text) throws IllegalArgumentException {
@@ -43,6 +44,7 @@ public class DistinguishedNameEditor extends PropertyEditorSupport {
 
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see java.beans.PropertyEditorSupport#getAsText()
 	 */
 	public String getAsText() {

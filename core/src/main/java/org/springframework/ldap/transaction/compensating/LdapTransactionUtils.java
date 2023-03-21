@@ -23,7 +23,7 @@ import javax.naming.Name;
 
 /**
  * Utility methods for working with LDAP transactions.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
@@ -48,11 +48,9 @@ public final class LdapTransactionUtils {
 
 	/**
 	 * Get the first parameter in the argument list as a Name.
-	 * 
-	 * @param args
-	 *			arguments supplied to a ldap operation.
-	 * @return a Name representation of the first argument, or the Name itself
-	 *		 if it is a name.
+	 * @param args arguments supplied to a ldap operation.
+	 * @return a Name representation of the first argument, or the Name itself if it is a
+	 * name.
 	 */
 	public static Name getFirstArgumentAsName(Object[] args) {
 		Assert.notEmpty(args);
@@ -63,31 +61,27 @@ public final class LdapTransactionUtils {
 
 	/**
 	 * Get the argument as a Name.
-	 * 
-	 * @param arg
-	 *			an argument supplied to an Ldap operation.
-	 * @return a Name representation of the argument, or the Name itself if it
-	 *		 is a Name.
+	 * @param arg an argument supplied to an Ldap operation.
+	 * @return a Name representation of the argument, or the Name itself if it is a Name.
 	 */
 	public static Name getArgumentAsName(Object arg) {
 		if (arg instanceof String) {
 			return LdapUtils.newLdapName((String) arg);
-		} else if (arg instanceof Name) {
+		}
+		else if (arg instanceof Name) {
 			return (Name) arg;
-		} else {
-			throw new IllegalArgumentException(
-					"First argument needs to be a Name or a String representation thereof");
+		}
+		else {
+			throw new IllegalArgumentException("First argument needs to be a Name or a String representation thereof");
 		}
 	}
 
 	/**
-	 * Check whether the supplied method is a method for which transactions is
-	 * supported (and which should be recorded for possible rollback later).
-	 * 
-	 * @param methodName
-	 *			name of the method to check.
+	 * Check whether the supplied method is a method for which transactions is supported
+	 * (and which should be recorded for possible rollback later).
+	 * @param methodName name of the method to check.
 	 * @return <code>true</code> if this is a supported transaction operation,
-	 *		 <code>false</code> otherwise.
+	 * <code>false</code> otherwise.
 	 */
 	public static boolean isSupportedWriteTransactionOperation(String methodName) {
 		return (ObjectUtils.nullSafeEquals(methodName, BIND_METHOD_NAME)
@@ -97,4 +91,5 @@ public final class LdapTransactionUtils {
 				|| ObjectUtils.nullSafeEquals(methodName, UNBIND_METHOD_NAME));
 
 	}
+
 }

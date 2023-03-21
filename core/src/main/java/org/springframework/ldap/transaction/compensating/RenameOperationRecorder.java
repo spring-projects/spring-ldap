@@ -25,15 +25,13 @@ import org.springframework.util.Assert;
 import javax.naming.Name;
 
 /**
- * A {@link CompensatingTransactionOperationRecorder} for keeping track of
- * rename operations. Creates {@link RenameOperationExecutor} objects for
- * rolling back.
- * 
+ * A {@link CompensatingTransactionOperationRecorder} for keeping track of rename
+ * operations. Creates {@link RenameOperationExecutor} objects for rolling back.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  */
-public class RenameOperationRecorder implements
-		CompensatingTransactionOperationRecorder {
+public class RenameOperationRecorder implements CompensatingTransactionOperationRecorder {
 
 	private static Logger log = LoggerFactory.getLogger(RenameOperationRecorder.class);
 
@@ -41,20 +39,18 @@ public class RenameOperationRecorder implements
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param ldapOperations
-	 *			The {@link LdapOperations} to supply to the created
-	 *			{@link RebindOperationExecutor} objects.
+	 * @param ldapOperations The {@link LdapOperations} to supply to the created
+	 * {@link RebindOperationExecutor} objects.
 	 */
 	public RenameOperationRecorder(LdapOperations ldapOperations) {
 		this.ldapOperations = ldapOperations;
 	}
 
 	/*
-	 * @see org.springframework.ldap.support.transaction.CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
+	 * @see org.springframework.ldap.support.transaction.
+	 * CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
 	 */
-	public CompensatingTransactionOperationExecutor recordOperation(
-			Object[] args) {
+	public CompensatingTransactionOperationExecutor recordOperation(Object[] args) {
 		log.debug("Storing rollback information for rename operation");
 		Assert.notEmpty(args);
 		if (args.length != 2) {
@@ -69,4 +65,5 @@ public class RenameOperationRecorder implements
 	LdapOperations getLdapOperations() {
 		return ldapOperations;
 	}
+
 }

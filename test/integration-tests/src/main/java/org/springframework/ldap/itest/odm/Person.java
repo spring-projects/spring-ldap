@@ -15,6 +15,7 @@ import org.springframework.ldap.odm.annotations.Transient;
  */
 @Entry(objectClasses = { "inetOrgPerson", "organizationalPerson", "person", "top" })
 public class Person implements Persistable<Name> {
+
 	@Id
 	private Name dn;
 
@@ -105,4 +106,5 @@ public class Person implements Persistable<Name> {
 	public String getEntryUuid() {
 		return entryUuid;
 	}
+
 }

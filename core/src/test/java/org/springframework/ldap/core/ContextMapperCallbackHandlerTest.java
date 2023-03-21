@@ -49,8 +49,7 @@ public class ContextMapperCallbackHandlerTest {
 		Binding expectedBinding = new Binding("some name", expectedObject);
 
 		when(mapperMock.mapFromContext(expectedObject)).thenReturn(expectedResult);
-		Object actualResult = tested
-				.getObjectFromNameClassPair(expectedBinding);
+		Object actualResult = tested.getObjectFromNameClassPair(expectedBinding);
 		assertThat(actualResult).isEqualTo(expectedResult);
 	}
 
@@ -59,4 +58,5 @@ public class ContextMapperCallbackHandlerTest {
 		Binding expectedBinding = new Binding("some name", null);
 		tested.getObjectFromNameClassPair(expectedBinding);
 	}
+
 }

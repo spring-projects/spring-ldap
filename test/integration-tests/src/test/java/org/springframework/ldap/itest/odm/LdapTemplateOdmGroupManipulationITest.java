@@ -33,8 +33,9 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
 /**
  * @author Mattias Hellborg Arthursson
  */
-@ContextConfiguration(locations = {"/conf/ldapTemplateTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
 public class LdapTemplateOdmGroupManipulationITest extends AbstractLdapTemplateIntegrationTest {
+
 	@Autowired
 	private LdapTemplate tested;
 
@@ -127,10 +128,12 @@ public class LdapTemplateOdmGroupManipulationITest extends AbstractLdapTemplateI
 	public void testSetMembersSyntacticallyEqual() {
 		Group group = tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
 
-		group.setMembers(new HashSet<Name>(){{
-			add(LdapUtils.newLdapName("CN=Some Person,OU=company1, ou=Sweden, " + base));
-			add(LdapUtils.newLdapName("CN=Some Person2, OU=company1,ou=Sweden," + base));
-		}});
+		group.setMembers(new HashSet<Name>() {
+			{
+				add(LdapUtils.newLdapName("CN=Some Person,OU=company1, ou=Sweden, " + base));
+				add(LdapUtils.newLdapName("CN=Some Person2, OU=company1,ou=Sweden," + base));
+			}
+		});
 		tested.update(group);
 
 		Group verification = tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
@@ -141,4 +144,5 @@ public class LdapTemplateOdmGroupManipulationITest extends AbstractLdapTemplateI
 		assertThat(members.contains(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden," + base))).isTrue();
 		assertThat(members.contains(LdapUtils.newLdapName("cn=Some Person2,ou=company1,ou=Sweden," + base))).isTrue();
 	}
+
 }

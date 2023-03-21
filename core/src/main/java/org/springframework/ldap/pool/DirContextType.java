@@ -20,14 +20,14 @@ import org.springframework.ldap.core.ContextSource;
 
 import javax.naming.directory.DirContext;
 
-
 /**
  * An enum representing the two types of {@link DirContext}s that can be returned by a
  * {@link ContextSource}.
- * 
+ *
  * @author Eric Dalquist
  */
 public final class DirContextType {
+
 	private String name;
 
 	private DirContextType(String name) {
@@ -37,14 +37,17 @@ public final class DirContextType {
 	public String toString() {
 		return name;
 	}
-	
+
 	/**
-	 * The type of {@link DirContext} returned by {@link ContextSource#getReadOnlyContext()}
+	 * The type of {@link DirContext} returned by
+	 * {@link ContextSource#getReadOnlyContext()}
 	 */
 	public static final DirContextType READ_ONLY = new DirContextType("READ_ONLY");
-	
+
 	/**
-	 * The type of {@link DirContext} returned by {@link ContextSource#getReadWriteContext()}
+	 * The type of {@link DirContext} returned by
+	 * {@link ContextSource#getReadWriteContext()}
 	 */
 	public static final DirContextType READ_WRITE = new DirContextType("READ_WRITE");
+
 }

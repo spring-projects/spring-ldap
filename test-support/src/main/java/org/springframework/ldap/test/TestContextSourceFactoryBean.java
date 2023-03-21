@@ -28,6 +28,7 @@ import org.springframework.ldap.support.LdapUtils;
  * @author Mattias Hellborg Arthursson
  */
 public class TestContextSourceFactoryBean extends AbstractFactoryBean {
+
 	private int port;
 
 	private String defaultPartitionSuffix;
@@ -142,4 +143,5 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean {
 		super.destroyInstance(instance);
 		LdapTestUtils.shutdownEmbeddedServer();
 	}
+
 }

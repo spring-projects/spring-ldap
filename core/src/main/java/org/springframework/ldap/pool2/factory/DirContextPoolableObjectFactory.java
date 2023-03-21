@@ -39,14 +39,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Factory that creates {@link DirContext} instances for pooling via a
- * configured {@link ContextSource}. The {@link DirContext}s are keyed based
- * on if they are read only or read/write. The expected key type is the
+ * Factory that creates {@link DirContext} instances for pooling via a configured
+ * {@link ContextSource}. The {@link DirContext}s are keyed based on if they are read only
+ * or read/write. The expected key type is the
  * {@link org.springframework.ldap.pool2.DirContextType} enum.
  *
  * <br>
  * <br>
- * Configuration: <table border="1">
+ * Configuration:
+ * <table border="1">
  * <tr>
  * <th align="left">Property</th>
  * <th align="left">Description</th>
@@ -55,35 +56,35 @@ import java.util.Set;
  * </tr>
  * <tr>
  * <td valign="top">contextSource</td>
- * <td valign="top"> The {@link ContextSource} to get {@link DirContext}s from
- * for adding to the pool. </td>
+ * <td valign="top">The {@link ContextSource} to get {@link DirContext}s from for adding
+ * to the pool.</td>
  * <td valign="top">Yes</td>
  * <td valign="top">null</td>
  * </tr>
  * <tr>
  * <td valign="top">dirContextValidator</td>
- * <td valign="top"> The {@link DirContextValidator} to use to validate
- * {@link DirContext}s. This is only required if the pool has validation of any
- * kind turned on. </td>
+ * <td valign="top">The {@link DirContextValidator} to use to validate
+ * {@link DirContext}s. This is only required if the pool has validation of any kind
+ * turned on.</td>
  * <td valign="top">No</td>
  * <td valign="top">null</td>
  * </tr>
  * </table>
  *
  * @since 2.0
- * @author Eric Dalquist <a
- *		 href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
+ * @author Eric Dalquist
+ * <a href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
  * @author Mattias Hellborg Arthursson
  * @author Anindya Chatterjee
  */
-class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,Object> {
+class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object, Object> {
+
 	/**
 	 * Logger for this class and subclasses
 	 */
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	private static final Set<Class<? extends Throwable>> DEFAULT_NONTRANSIENT_EXCEPTIONS
-			= new HashSet<Class<? extends Throwable>>();
+	private static final Set<Class<? extends Throwable>> DEFAULT_NONTRANSIENT_EXCEPTIONS = new HashSet<Class<? extends Throwable>>();
 
 	static {
 		DEFAULT_NONTRANSIENT_EXCEPTIONS.add(CommunicationException.class);
@@ -107,8 +108,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 	}
 
 	/**
-	 * @param contextSource
-	 *			the contextSource to set
+	 * @param contextSource the contextSource to set
 	 */
 	public void setContextSource(ContextSource contextSource) {
 		if (contextSource == null) {
@@ -126,52 +126,42 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 	}
 
 	/**
-	 * @param dirContextValidator
-	 *			the dirContextValidator to set
+	 * @param dirContextValidator the dirContextValidator to set
 	 */
 	public void setDirContextValidator(DirContextValidator dirContextValidator) {
 		if (dirContextValidator == null) {
-			throw new IllegalArgumentException(
-					"dirContextValidator may not be null");
+			throw new IllegalArgumentException("dirContextValidator may not be null");
 		}
 
 		this.dirContextValidator = dirContextValidator;
 	}
 
 	private Object makeFailureAwareProxy(DirContext readOnlyContext) {
-		return Proxy.newProxyInstance(DirContextProxy.class
-				.getClassLoader(),
-				new Class<?>[]{
-						LdapUtils.getActualTargetClass(readOnlyContext),
-						DirContextProxy.class,
-						FailureAwareContext.class},
+		return Proxy.newProxyInstance(DirContextProxy.class.getClassLoader(), new Class<?>[] {
+				LdapUtils.getActualTargetClass(readOnlyContext), DirContextProxy.class, FailureAwareContext.class },
 				new FailureAwareContextProxy(readOnlyContext));
 	}
 
 	/**
 	 * @see BaseKeyedPooledObjectFactory#validateObject(Object, PooledObject)
 	 *
-	 * */
+	 */
 	@Override
 	public boolean validateObject(Object key, PooledObject<Object> pooledObject) {
-		Assert.notNull(this.dirContextValidator,
-				"DirContextValidator may not be null");
-		Assert.isTrue(key instanceof DirContextType,
-				"key must be a DirContextType");
-		Assert.notNull(pooledObject,
-				"The Object to validate must not be null");
+		Assert.notNull(this.dirContextValidator, "DirContextValidator may not be null");
+		Assert.isTrue(key instanceof DirContextType, "key must be a DirContextType");
+		Assert.notNull(pooledObject, "The Object to validate must not be null");
 		Assert.isTrue(pooledObject.getObject() instanceof DirContext,
-				"The Object to validate must be of type '" + DirContext.class
-						+ "'");
+				"The Object to validate must be of type '" + DirContext.class + "'");
 
 		try {
 			final DirContextType contextType = (DirContextType) key;
 			final DirContext dirContext = (DirContext) pooledObject.getObject();
-			return this.dirContextValidator.validateDirContext(contextType,
-					dirContext);
-		} catch (Exception e) {
-			this.logger.warn("Failed to validate '" + pooledObject.getObject()
-					+ "' due to an unexpected exception.", e);
+			return this.dirContextValidator.validateDirContext(contextType, dirContext);
+		}
+		catch (Exception e) {
+			this.logger.warn("Failed to validate '" + pooledObject.getObject() + "' due to an unexpected exception.",
+					e);
 			return false;
 		}
 	}
@@ -179,41 +169,36 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 	/**
 	 * @see BaseKeyedPooledObjectFactory#destroyObject(Object, PooledObject)
 	 *
-	 * */
+	 */
 	@Override
 	public void destroyObject(Object key, PooledObject<Object> pooledObject) throws Exception {
-		Assert.notNull(pooledObject,
-				"The Object to destroy must not be null");
+		Assert.notNull(pooledObject, "The Object to destroy must not be null");
 		Assert.isTrue(pooledObject.getObject() instanceof DirContext,
-				"The Object to destroy must be of type '" + DirContext.class
-						+ "'");
+				"The Object to destroy must be of type '" + DirContext.class + "'");
 
 		try {
 			final DirContext dirContext = (DirContext) pooledObject.getObject();
 			if (this.logger.isDebugEnabled()) {
-				this.logger.debug("Closing " + key + " DirContext='"
-						+ dirContext + "'");
+				this.logger.debug("Closing " + key + " DirContext='" + dirContext + "'");
 			}
 			dirContext.close();
 			if (this.logger.isDebugEnabled()) {
-				this.logger.debug("Closed " + key + " DirContext='"
-						+ dirContext + "'");
+				this.logger.debug("Closed " + key + " DirContext='" + dirContext + "'");
 			}
-		} catch (Exception e) {
-			this.logger.warn(
-					"An exception occured while closing '" + pooledObject.getObject() + "'", e);
+		}
+		catch (Exception e) {
+			this.logger.warn("An exception occured while closing '" + pooledObject.getObject() + "'", e);
 		}
 	}
 
 	/**
 	 * @see BaseKeyedPooledObjectFactory#create(Object)
 	 *
-	 * */
+	 */
 	@Override
 	public Object create(Object key) throws Exception {
 		Assert.notNull(this.contextSource, "ContextSource may not be null");
-		Assert.isTrue(key instanceof DirContextType,
-				"key must be a DirContextType");
+		Assert.isTrue(key instanceof DirContextType, "key must be a DirContextType");
 
 		final DirContextType contextType = (DirContextType) key;
 		if (this.logger.isDebugEnabled()) {
@@ -221,50 +206,47 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 		}
 
 		if (contextType == DirContextType.READ_WRITE) {
-			final DirContext readWriteContext = this.contextSource
-					.getReadWriteContext();
+			final DirContext readWriteContext = this.contextSource.getReadWriteContext();
 
 			if (this.logger.isDebugEnabled()) {
-				this.logger.debug("Created new " + DirContextType.READ_WRITE
-						+ " DirContext='" + readWriteContext + "'");
+				this.logger
+						.debug("Created new " + DirContextType.READ_WRITE + " DirContext='" + readWriteContext + "'");
 			}
 
 			return makeFailureAwareProxy(readWriteContext);
-		} else if (contextType == DirContextType.READ_ONLY) {
+		}
+		else if (contextType == DirContextType.READ_ONLY) {
 
-			final DirContext readOnlyContext = this.contextSource
-					.getReadOnlyContext();
+			final DirContext readOnlyContext = this.contextSource.getReadOnlyContext();
 
 			if (this.logger.isDebugEnabled()) {
-				this.logger.debug("Created new " + DirContextType.READ_ONLY
-						+ " DirContext='" + readOnlyContext + "'");
+				this.logger.debug("Created new " + DirContextType.READ_ONLY + " DirContext='" + readOnlyContext + "'");
 			}
 
 			return makeFailureAwareProxy(readOnlyContext);
-		} else {
-			throw new IllegalArgumentException("Unrecognized ContextType: "
-					+ contextType);
+		}
+		else {
+			throw new IllegalArgumentException("Unrecognized ContextType: " + contextType);
 		}
 	}
 
 	/**
 	 * @see BaseKeyedPooledObjectFactory#wrap(Object)
 	 *
-	 * */
+	 */
 	@Override
 	public PooledObject<Object> wrap(Object value) {
 		return new DefaultPooledObject<Object>(value);
 	}
 
 	/**
-	 * Invocation handler that checks thrown exceptions against the configured {@link #nonTransientExceptions},
-	 * marking the Context as invalid on match.
+	 * Invocation handler that checks thrown exceptions against the configured
+	 * {@link #nonTransientExceptions}, marking the Context as invalid on match.
 	 *
 	 * @author Mattias Hellborg Arthursson
 	 * @since 2.0
 	 */
-	private class FailureAwareContextProxy implements
-			InvocationHandler {
+	private class FailureAwareContextProxy implements InvocationHandler {
 
 		private DirContext target;
 
@@ -279,13 +261,13 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 		 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
 		 * java.lang.reflect.Method, java.lang.Object[])
 		 */
-		public Object invoke(Object proxy, Method method, Object[] args)
-				throws Throwable {
+		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
 			String methodName = method.getName();
 			if (methodName.equals("getTargetContext")) {
 				return target;
-			} else if (methodName.equals("hasFailed")) {
+			}
+			else if (methodName.equals("hasFailed")) {
 				return hasFailed;
 			}
 
@@ -298,22 +280,24 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 
 				boolean nonTransientEncountered = false;
 				for (Class<? extends Throwable> clazz : nonTransientExceptions) {
-					if(clazz.isAssignableFrom(targetExceptionClass)) {
+					if (clazz.isAssignableFrom(targetExceptionClass)) {
 						if (logger.isDebugEnabled()) {
-							logger.debug(
-									String.format("A %s - explicitly configured to be a non-transient exception - encountered; eagerly invalidating the target context.",
-										targetExceptionClass));
+							logger.debug(String.format(
+									"A %s - explicitly configured to be a non-transient exception - encountered; eagerly invalidating the target context.",
+									targetExceptionClass));
 						}
 						nonTransientEncountered = true;
 						break;
 					}
 				}
 
-				if(nonTransientEncountered) {
+				if (nonTransientEncountered) {
 					hasFailed = true;
-				} else {
+				}
+				else {
 					if (logger.isDebugEnabled()) {
-						logger.debug(String.format("A %s - not explicitly configured to be a non-transient exception - encountered; ignoring.",
+						logger.debug(String.format(
+								"A %s - not explicitly configured to be a non-transient exception - encountered; ignoring.",
 								targetExceptionClass));
 					}
 				}
@@ -321,5 +305,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 				throw targetException;
 			}
 		}
+
 	}
+
 }

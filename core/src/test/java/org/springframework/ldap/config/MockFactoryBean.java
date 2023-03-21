@@ -24,6 +24,7 @@ import static org.mockito.Mockito.mock;
  * @author Mattias Hellborg Arthursson
  */
 public class MockFactoryBean extends AbstractFactoryBean<Object> {
+
 	private final Class<?> clazz;
 
 	public MockFactoryBean(Class<?> clazz) {
@@ -39,4 +40,5 @@ public class MockFactoryBean extends AbstractFactoryBean<Object> {
 	protected Object createInstance() throws Exception {
 		return mock(clazz);
 	}
+
 }

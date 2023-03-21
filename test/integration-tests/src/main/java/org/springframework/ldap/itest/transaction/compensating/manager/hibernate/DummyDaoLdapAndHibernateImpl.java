@@ -29,7 +29,6 @@ public class DummyDaoLdapAndHibernateImpl extends HibernateDaoSupport implements
 		ldapTemplate.bind(dn, ctx, null);
 		this.getHibernateTemplate().saveOrUpdate(person);
 
-
 	}
 
 	public void createWithException(OrgPerson person) {
@@ -46,8 +45,7 @@ public class DummyDaoLdapAndHibernateImpl extends HibernateDaoSupport implements
 		ldapTemplate.modifyAttributes(dn, ctx.getModificationItems());
 	}
 
-	public void modifyAttributesWithException(String dn, String lastName,
-			String description) {
+	public void modifyAttributesWithException(String dn, String lastName, String description) {
 		modifyAttributes(dn, lastName, description);
 		throw new DummyException("This method failed.");
 	}
@@ -95,13 +93,11 @@ public class DummyDaoLdapAndHibernateImpl extends HibernateDaoSupport implements
 		throw new DummyException("This method failed");
 	}
 
-
-
 	public void setLdapTemplate(LdapTemplate ldapTemplate) {
 		this.ldapTemplate = ldapTemplate;
 	}
 
-	private String prepareDn(OrgPerson person){
+	private String prepareDn(OrgPerson person) {
 		return "cn=" + person.getFullname() + ",ou=" + person.getCompany() + ",ou=" + person.getCountry();
 	}
 

@@ -18,7 +18,7 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI ContextNotEmptyException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.ContextNotEmptyException
@@ -28,4 +28,5 @@ public class ContextNotEmptyException extends NamingException {
 	public ContextNotEmptyException(javax.naming.ContextNotEmptyException cause) {
 		super(cause);
 	}
+
 }

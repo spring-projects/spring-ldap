@@ -29,13 +29,17 @@ import static org.mockito.Mockito.when;
 
 /**
  * Tests for {@link TransactionAwareContextSourceProxy}.
- * 
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class TransactionAwareContextSourceProxyTest {
+
 	private ContextSource contextSourceMock;
+
 	private TransactionAwareContextSourceProxy tested;
+
 	private LdapContext ldapContextMock;
+
 	private DirContext dirContextMock;
 
 	@Before
@@ -80,4 +84,5 @@ public class TransactionAwareContextSourceProxyTest {
 		assertThat(result instanceof LdapContext).isTrue();
 		assertThat(result instanceof DirContextProxy).isTrue();
 	}
+
 }

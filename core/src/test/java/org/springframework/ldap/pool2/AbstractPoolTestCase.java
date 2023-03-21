@@ -28,7 +28,7 @@ import static org.mockito.Mockito.mock;
 
 /**
  * Contains mocks common to many tests for the connection pool.
- * 
+ *
  * @author Ulrik Sandberg
  */
 public abstract class AbstractPoolTestCase {
@@ -54,4 +54,5 @@ public abstract class AbstractPoolTestCase {
 		contextSourceMock = mock(ContextSource.class);
 		dirContextValidatorMock = mock(DirContextValidator.class);
 	}
+
 }

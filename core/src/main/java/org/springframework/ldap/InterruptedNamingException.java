@@ -18,15 +18,15 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI InterruptedNamingException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.InterruptedNamingException
  */
 public class InterruptedNamingException extends NamingException {
 
-	public InterruptedNamingException(
-			javax.naming.InterruptedNamingException cause) {
+	public InterruptedNamingException(javax.naming.InterruptedNamingException cause) {
 		super(cause);
 	}
+
 }

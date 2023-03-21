@@ -24,7 +24,7 @@ import org.springframework.ldap.core.LdapAttributes;
  * <p>
  * This specification is intended for cases where validation of the parsed entries is not
  * required.
- * 
+ *
  * @author Keith Barlow
  *
  */
@@ -32,9 +32,8 @@ public class DefaultSchemaSpecification implements Specification<LdapAttributes>
 
 	/**
 	 * Determines if the policy is satisfied by the supplied LdapAttributes object.
-	 * 
-	 * @throws NamingException 
-	 */	
+	 * @throws NamingException
+	 */
 	public boolean isSatisfiedBy(LdapAttributes record) throws NamingException {
 		return true;
 	}

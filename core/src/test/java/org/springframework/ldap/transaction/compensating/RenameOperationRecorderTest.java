@@ -29,13 +29,13 @@ public class RenameOperationRecorderTest {
 
 	@Before
 	public void setUp() throws Exception {
-		ldapOperationsMock = mock(LdapOperations.class);;
+		ldapOperationsMock = mock(LdapOperations.class);
+		;
 	}
 
 	@Test
 	public void testRecordOperation() {
-		RenameOperationRecorder tested = new RenameOperationRecorder(
-				ldapOperationsMock);
+		RenameOperationRecorder tested = new RenameOperationRecorder(ldapOperationsMock);
 
 		// Perform test
 		CompensatingTransactionOperationExecutor operation = tested
@@ -47,4 +47,5 @@ public class RenameOperationRecorderTest {
 		assertThat(rollbackOperation.getNewDn().toString()).isEqualTo("ou=newou");
 		assertThat(rollbackOperation.getOriginalDn().toString()).isEqualTo("ou=someou");
 	}
+
 }

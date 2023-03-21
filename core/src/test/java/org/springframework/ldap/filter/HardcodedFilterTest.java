@@ -55,7 +55,7 @@ public class HardcodedFilterTest {
 		HardcodedFilter subclassObject = new HardcodedFilter(attribute) {
 		};
 
-		new EqualsTester(originalObject, identicalObject, differentObject,
-				subclassObject);
+		new EqualsTester(originalObject, identicalObject, differentObject, subclassObject);
 	}
+
 }

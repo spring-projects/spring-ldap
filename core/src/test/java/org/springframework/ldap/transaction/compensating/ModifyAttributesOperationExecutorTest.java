@@ -28,6 +28,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class ModifyAttributesOperationExecutorTest {
+
 	private LdapOperations ldapOperationsMock;
 
 	@Before
@@ -42,8 +43,8 @@ public class ModifyAttributesOperationExecutorTest {
 
 		Name expectedDn = LdapUtils.newLdapName("cn=john doe");
 
-		ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(ldapOperationsMock,
-				expectedDn, expectedActualItems, expectedCompensatingItems);
+		ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(ldapOperationsMock, expectedDn,
+				expectedActualItems, expectedCompensatingItems);
 
 		// Perform test
 		tested.performOperation();
@@ -58,8 +59,8 @@ public class ModifyAttributesOperationExecutorTest {
 
 		Name expectedDn = LdapUtils.newLdapName("cn=john doe");
 
-		ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(ldapOperationsMock,
-				expectedDn, expectedActualItems, expectedCompensatingItems);
+		ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(ldapOperationsMock, expectedDn,
+				expectedActualItems, expectedCompensatingItems);
 
 		// No operation here
 		verifyNoMoreInteractions(ldapOperationsMock);
@@ -75,12 +76,13 @@ public class ModifyAttributesOperationExecutorTest {
 
 		Name expectedDn = LdapUtils.newLdapName("cn=john doe");
 
-		ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(ldapOperationsMock,
-				expectedDn, expectedActualItems, expectedCompensatingItems);
+		ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(ldapOperationsMock, expectedDn,
+				expectedActualItems, expectedCompensatingItems);
 
 		// Perform test
 		tested.rollback();
 
 		verify(ldapOperationsMock).modifyAttributes(expectedDn, expectedCompensatingItems);
 	}
+
 }

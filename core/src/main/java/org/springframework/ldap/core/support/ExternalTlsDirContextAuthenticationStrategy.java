@@ -22,12 +22,12 @@ import javax.naming.ldap.LdapContext;
 
 /**
  * {@link DirContextAuthenticationStrategy} for using TLS and external (SASL)
- * authentication. This implementation requires a client certificate to be
- * pointed out using system variables, as described <a
- * href="https://java.sun.com/products/jndi/tutorial/ldap/ext/starttls.html"
- * >here</a>. Refer to {@link AbstractTlsDirContextAuthenticationStrategy} for
- * other configuration options.
- * 
+ * authentication. This implementation requires a client certificate to be pointed out
+ * using system variables, as described
+ * <a href="https://java.sun.com/products/jndi/tutorial/ldap/ext/starttls.html" >here</a>.
+ * Refer to {@link AbstractTlsDirContextAuthenticationStrategy} for other configuration
+ * options.
+ *
  * @author Mattias Hellborg Arthursson
  * @see AbstractTlsDirContextAuthenticationStrategy
  * @see AbstractContextSource

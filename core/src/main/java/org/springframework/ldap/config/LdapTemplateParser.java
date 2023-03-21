@@ -35,16 +35,25 @@ import static org.springframework.ldap.config.ParserUtils.getString;
  * @author Mattias Hellborg Arthursson
  */
 public class LdapTemplateParser implements BeanDefinitionParser {
+
 	private static final String ATT_COUNT_LIMIT = "count-limit";
+
 	private static final String ATT_TIME_LIMIT = "time-limit";
+
 	private static final String ATT_SEARCH_SCOPE = "search-scope";
+
 	private static final String ATT_IGNORE_PARTIAL_RESULT = "ignore-partial-result";
+
 	private static final String ATT_IGNORE_NAME_NOT_FOUND = "ignore-name-not-found";
+
 	private static final String ATT_ODM_REF = "odm-ref";
+
 	private static final String ATT_CONTEXT_SOURCE_REF = "context-source-ref";
 
 	private static final String DEFAULT_ID = "ldapTemplate";
+
 	private static final int DEFAULT_COUNT_LIMIT = 0;
+
 	private static final int DEFAULT_TIME_LIMIT = 0;
 
 	@Override
@@ -62,7 +71,7 @@ public class LdapTemplateParser implements BeanDefinitionParser {
 		builder.addPropertyValue("ignoreNameNotFoundException", getBoolean(element, ATT_IGNORE_NAME_NOT_FOUND, false));
 
 		String odmRef = element.getAttribute(ATT_ODM_REF);
-		if(StringUtils.hasText(odmRef)) {
+		if (StringUtils.hasText(odmRef)) {
 			builder.addPropertyReference("objectDirectoryMapper", odmRef);
 		}
 
@@ -73,4 +82,5 @@ public class LdapTemplateParser implements BeanDefinitionParser {
 
 		return beanDefinition;
 	}
+
 }

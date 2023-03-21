@@ -25,6 +25,7 @@ import javax.naming.directory.SearchControls;
  * @since 2.0
  */
 public enum SearchScope {
+
 	/**
 	 * Corresponds to {@link SearchControls#OBJECT_SCOPE}
 	 */
@@ -47,4 +48,5 @@ public enum SearchScope {
 	public int getId() {
 		return id;
 	}
+
 }

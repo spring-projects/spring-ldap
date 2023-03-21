@@ -15,6 +15,7 @@ import static org.mockito.Mockito.verify;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultTlsDirContextAuthenticationStrategyTests {
+
 	@Mock
 	private LdapContext context;
 
@@ -27,4 +28,5 @@ public class DefaultTlsDirContextAuthenticationStrategyTests {
 
 		verify(this.context).lookup("");
 	}
+
 }

@@ -18,15 +18,15 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI NameAlreadyBoundException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.NameAlreadyBoundException
  */
 public class NameAlreadyBoundException extends NamingException {
 
-	public NameAlreadyBoundException(
-			javax.naming.NameAlreadyBoundException cause) {
+	public NameAlreadyBoundException(javax.naming.NameAlreadyBoundException cause) {
 		super(cause);
 	}
+
 }

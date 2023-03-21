@@ -40,6 +40,7 @@ import static org.mockito.Mockito.when;
 public class SingleContextSourceTest {
 
 	private ContextSource contextSourceMock;
+
 	private DirContext dirContextMock;
 
 	@Before
@@ -65,7 +66,8 @@ public class SingleContextSourceTest {
 					}
 				});
 
-				// Second operation will have retrieved new DirContext from the SingleContextSource.
+				// Second operation will have retrieved new DirContext from the
+				// SingleContextSource.
 				// It should be the same instance.
 				operations.executeReadOnly(new ContextExecutor<Object>() {
 					@Override
@@ -86,4 +88,5 @@ public class SingleContextSourceTest {
 		field.setAccessible(true);
 		return (T) ReflectionUtils.getField(field, target);
 	}
+
 }

@@ -29,47 +29,47 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 /**
- * Convenient base class useful when implementing a standard DirContextProcessor
- * which has a request control and a response control. It handles the loading of
- * the control classes, using fallback implementations specified by the subclass
- * if necessary. It handles the request control constructor invocation; it only
- * needs the constructor arguments to be provided. It also handles most of the
- * work in the post processing of the response control, only delegating to a
- * template method for the actual value retrieval. In short, it makes it easy to
- * implement a custom DirContextProcessor.<p>
- * 
+ * Convenient base class useful when implementing a standard DirContextProcessor which has
+ * a request control and a response control. It handles the loading of the control
+ * classes, using fallback implementations specified by the subclass if necessary. It
+ * handles the request control constructor invocation; it only needs the constructor
+ * arguments to be provided. It also handles most of the work in the post processing of
+ * the response control, only delegating to a template method for the actual value
+ * retrieval. In short, it makes it easy to implement a custom DirContextProcessor.
+ * <p>
+ *
  * <pre>
  * public class SortControlDirContextProcessor extends AbstractFallbackRequestAndResponseControlDirContextProcessor {
  * 	String sortKey;
- * 
+ *
  * 	private boolean sorted = false;
- * 
+ *
  * 	private int resultCode = -1;
- * 
+ *
  * 	public SortControlDirContextProcessor(String sortKey) {
  * 		this.sortKey = sortKey;
- * 
+ *
  * 		defaultRequestControl = &quot;javax.naming.ldap.SortControl&quot;;
  * 		defaultResponseControl = &quot;com.sun.jndi.ldap.ctl.SortControl&quot;;
  * 		fallbackRequestControl = &quot;javax.naming.ldap.SortResponseControl&quot;;
  * 		fallbackResponseControl = &quot;com.sun.jndi.ldap.ctl.SortResponseControl&quot;;
- * 
+ *
  * 		loadControlClasses();
  * 	}
- * 
+ *
  * 	public boolean isSorted() {
  * 		return sorted;
  * 	}
- * 
+ *
  * 	public int getResultCode() {
  * 		return resultCode;
  * 	}
- * 
+ *
  * 	public Control createRequestControl() {
  * 		return super.createRequestControl(new Class[] { String[].class, boolean.class }, new Object[] {
  *				new String[] { sortKey }, Boolean.valueOf(critical) });
  * 	}
- * 
+ *
  * 	protected void handleResponse(Object control) {
  * 		Boolean result = (Boolean) invokeMethod(&quot;isSorted&quot;, responseControlClass, control);
  * 		this.sorted = result.booleanValue();
@@ -78,11 +78,11 @@ import java.lang.reflect.Method;
  * 	}
  * }
  * </pre>
- * 
+ *
  * @author Ulrik Sandberg
  */
-public abstract class AbstractFallbackRequestAndResponseControlDirContextProcessor extends
-		AbstractRequestControlDirContextProcessor {
+public abstract class AbstractFallbackRequestAndResponseControlDirContextProcessor
+		extends AbstractRequestControlDirContextProcessor {
 
 	private static final boolean CRITICAL_CONTROL = true;
 
@@ -124,9 +124,7 @@ public abstract class AbstractFallbackRequestAndResponseControlDirContextProcess
 	}
 
 	/**
-	 * Set the class of the expected ResponseControl for the sorted result
-	 * response.
-	 * 
+	 * Set the class of the expected ResponseControl for the sorted result response.
 	 * @param responseControlClass Class of the expected response control.
 	 */
 	public void setResponseControlClass(Class<?> responseControlClass) {
@@ -174,8 +172,7 @@ public abstract class AbstractFallbackRequestAndResponseControlDirContextProcess
 	}
 
 	/*
-	 * @see
-	 * org.springframework.ldap.core.DirContextProcessor#postProcess(javax.naming
+	 * @see org.springframework.ldap.core.DirContextProcessor#postProcess(javax.naming
 	 * .directory.DirContext)
 	 */
 	public void postProcess(DirContext ctx) throws NamingException {
@@ -200,7 +197,6 @@ public abstract class AbstractFallbackRequestAndResponseControlDirContextProcess
 
 	/**
 	 * Set whether this control should be indicated as critical.
-	 *
 	 * @param critical whether the control is critical.
 	 * @since 2.0
 	 */
@@ -209,4 +205,5 @@ public abstract class AbstractFallbackRequestAndResponseControlDirContextProcess
 	}
 
 	protected abstract void handleResponse(Object control);
+
 }

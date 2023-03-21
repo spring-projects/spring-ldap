@@ -33,13 +33,13 @@ import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Tests the rename methods of LdapTemplate.
- * 
- * We rely on that the bind, unbind and lookup methods work as they should -
- * that should be ok, since that is verified in a separate test class. *
- * 
+ *
+ * We rely on that the bind, unbind and lookup methods work as they should - that should
+ * be ok, since that is verified in a separate test class. *
+ *
  * @author Ulrik Sandberg
  */
-@ContextConfiguration(locations = {"/conf/ldapTemplateTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
 public class LdapTemplateRenameITest extends AbstractLdapTemplateIntegrationTest {
 
 	@Autowired
@@ -100,4 +100,5 @@ public class LdapTemplateRenameITest extends AbstractLdapTemplateIntegrationTest
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person6");
 		assertThat(result.getStringAttribute("description")).isEqualTo("Some description");
 	}
+
 }

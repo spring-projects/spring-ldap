@@ -32,11 +32,12 @@ import org.springframework.ldap.query.LdapQueryBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class EmbeddedLdapServerFactoryBeanTest {
+
 	ClassPathXmlApplicationContext ctx;
 
 	@After
 	public void setup() {
-		if(ctx != null) {
+		if (ctx != null) {
 			ctx.close();
 		}
 	}
@@ -47,11 +48,9 @@ public class EmbeddedLdapServerFactoryBeanTest {
 		LdapTemplate ldapTemplate = ctx.getBean(LdapTemplate.class);
 		assertThat(ldapTemplate).isNotNull();
 
-		List<String> list = ldapTemplate.search(
-				LdapQueryBuilder.query().where("objectclass").is("person"),
+		List<String> list = ldapTemplate.search(LdapQueryBuilder.query().where("objectclass").is("person"),
 				new AttributesMapper<String>() {
-					public String mapFromAttributes(Attributes attrs)
-							throws NamingException {
+					public String mapFromAttributes(Attributes attrs) throws NamingException {
 						return (String) attrs.get("cn").get();
 					}
 				});

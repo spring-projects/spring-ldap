@@ -30,6 +30,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 public class BindOperationRecorderTest {
+
 	private LdapOperations ldapOperationsMock;
 
 	@Before
@@ -40,38 +41,33 @@ public class BindOperationRecorderTest {
 
 	@Test
 	public void testRecordOperation_Name() {
-		BindOperationRecorder tested = new BindOperationRecorder(
-				ldapOperationsMock);
+		BindOperationRecorder tested = new BindOperationRecorder(ldapOperationsMock);
 		LdapName expectedDn = LdapUtils.newLdapName("cn=John Doe");
 
 		Object expectedObject = new Object();
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		// Perform test.
 		CompensatingTransactionOperationExecutor operation = tested
-				.recordOperation(new Object[] { expectedDn, expectedObject,
-						expectedAttributes });
+				.recordOperation(new Object[] { expectedDn, expectedObject, expectedAttributes });
 
 		assertThat(operation instanceof BindOperationExecutor).isTrue();
 		BindOperationExecutor rollbackOperation = (BindOperationExecutor) operation;
 		assertThat(rollbackOperation.getDn()).isSameAs(expectedDn);
 		assertThat(rollbackOperation.getLdapOperations()).isSameAs(ldapOperationsMock);
 		assertThat(rollbackOperation.getOriginalObject()).isSameAs(expectedObject);
-		assertSame(expectedAttributes, rollbackOperation
-				.getOriginalAttributes());
+		assertSame(expectedAttributes, rollbackOperation.getOriginalAttributes());
 	}
 
 	@Test
 	public void testPerformOperation_String() {
-		BindOperationRecorder tested = new BindOperationRecorder(
-				ldapOperationsMock);
+		BindOperationRecorder tested = new BindOperationRecorder(ldapOperationsMock);
 		String expectedDn = "cn=John Doe";
 
 		Object expectedObject = new Object();
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		// Perform test.
 		CompensatingTransactionOperationExecutor operation = tested
-				.recordOperation(new Object[] { expectedDn, expectedObject,
-						expectedAttributes });
+				.recordOperation(new Object[] { expectedDn, expectedObject, expectedAttributes });
 
 		assertThat(operation instanceof BindOperationExecutor).isTrue();
 		BindOperationExecutor rollbackOperation = (BindOperationExecutor) operation;
@@ -81,11 +77,11 @@ public class BindOperationRecorderTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testPerformOperation_Invalid() {
-		BindOperationRecorder tested = new BindOperationRecorder(
-				ldapOperationsMock);
+		BindOperationRecorder tested = new BindOperationRecorder(ldapOperationsMock);
 		Object expectedDn = new Object();
 
 		// Perform test.
-		tested.recordOperation(new Object[]{expectedDn});
+		tested.recordOperation(new Object[] { expectedDn });
 	}
+
 }

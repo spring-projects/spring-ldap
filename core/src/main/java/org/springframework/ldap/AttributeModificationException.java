@@ -18,15 +18,15 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI AttributeModificationException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.directory.AttributeModificationException
  */
 public class AttributeModificationException extends NamingException {
 
-	public AttributeModificationException(
-			javax.naming.directory.AttributeModificationException cause) {
+	public AttributeModificationException(javax.naming.directory.AttributeModificationException cause) {
 		super(cause);
 	}
+
 }

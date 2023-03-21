@@ -55,7 +55,7 @@ public class PresentFilterTest {
 		PresentFilter subclassObject = new PresentFilter(attribute) {
 		};
 
-		new EqualsTester(originalObject, identicalObject, differentObject,
-				subclassObject);
+		new EqualsTester(originalObject, identicalObject, differentObject, subclassObject);
 	}
+
 }

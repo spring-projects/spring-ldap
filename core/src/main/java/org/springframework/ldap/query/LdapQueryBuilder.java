@@ -26,10 +26,9 @@ import javax.naming.Name;
 import java.text.MessageFormat;
 
 /**
- * Builder of LdapQueries. Start with a call to {@link #query()}, proceed with specifying the
- * basic search configuration (e.g. search base, time limit, etc.), finally specify the actual query.
- * Example:
- * <pre>
+ * Builder of LdapQueries. Start with a call to {@link #query()}, proceed with specifying
+ * the basic search configuration (e.g. search base, time limit, etc.), finally specify
+ * the actual query. Example: <pre>
  * import static org.springframework.ldap.query.LdapQueryBuilder.query;
  * ...
  *
@@ -41,24 +40,33 @@ import java.text.MessageFormat;
  *  .where("objectclass").is("person").and("cn").is("John Doe");
  * </pre>
  * <p>
- *	 Default configuration is that base path is {@link org.springframework.ldap.support.LdapUtils#emptyLdapName()}.
- *	 All other parameters are undefined, meaning that (in the case of base search parameters), the LdapTemplate
- *	 defaults will be used. Filter conditions must always be specified.
+ * Default configuration is that base path is
+ * {@link org.springframework.ldap.support.LdapUtils#emptyLdapName()}. All other
+ * parameters are undefined, meaning that (in the case of base search parameters), the
+ * LdapTemplate defaults will be used. Filter conditions must always be specified.
  * </p>
+ *
  * @author Mattias Hellborg Arthursson
  * @since 2.0
- *
  * @see javax.naming.directory.SearchControls
- * @see org.springframework.ldap.core.LdapOperations#search(LdapQuery, org.springframework.ldap.core.AttributesMapper)
- * @see org.springframework.ldap.core.LdapOperations#search(LdapQuery, org.springframework.ldap.core.ContextMapper)
- * @see org.springframework.ldap.core.LdapOperations#searchForObject(LdapQuery, org.springframework.ldap.core.ContextMapper)
+ * @see org.springframework.ldap.core.LdapOperations#search(LdapQuery,
+ * org.springframework.ldap.core.AttributesMapper)
+ * @see org.springframework.ldap.core.LdapOperations#search(LdapQuery,
+ * org.springframework.ldap.core.ContextMapper)
+ * @see org.springframework.ldap.core.LdapOperations#searchForObject(LdapQuery,
+ * org.springframework.ldap.core.ContextMapper)
  * @see org.springframework.ldap.core.LdapOperations#searchForContext(LdapQuery)
  */
 public final class LdapQueryBuilder implements LdapQuery {
+
 	private Name base = LdapUtils.emptyLdapName();
+
 	private SearchScope searchScope = null;
+
 	private Integer countLimit = null;
+
 	private Integer timeLimit = null;
+
 	private String[] attributes = null;
 
 	private DefaultContainerCriteria rootContainer = null;
@@ -74,7 +82,6 @@ public final class LdapQueryBuilder implements LdapQuery {
 
 	/**
 	 * Construct a new LdapQueryBuilder.
-	 *
 	 * @return a new instance.
 	 */
 	public static LdapQueryBuilder query() {
@@ -82,13 +89,12 @@ public final class LdapQueryBuilder implements LdapQuery {
 	}
 
 	/**
-	 * Construct a new {@link LdapQueryBuilder} based on an existing {@link LdapQuery}
-	 * All fields are copied, including giving the query a default filter.
+	 * Construct a new {@link LdapQueryBuilder} based on an existing {@link LdapQuery} All
+	 * fields are copied, including giving the query a default filter.
 	 *
 	 * <p>
 	 * Note that all filter invariants are still enforced; an application cannot specify
 	 * any non-filter values after it specifies a filter.
-	 *
 	 * @return a new instance.
 	 * @since 3.0
 	 */
@@ -107,9 +113,8 @@ public final class LdapQueryBuilder implements LdapQuery {
 	}
 
 	/**
-	 * Set the base search path for the query.
-	 * Default is {@link org.springframework.ldap.support.LdapUtils#emptyLdapName()}.
-	 *
+	 * Set the base search path for the query. Default is
+	 * {@link org.springframework.ldap.support.LdapUtils#emptyLdapName()}.
 	 * @param baseDn the base search path.
 	 * @return this instance.
 	 */
@@ -120,9 +125,8 @@ public final class LdapQueryBuilder implements LdapQuery {
 	}
 
 	/**
-	 * Set the base search path for the query.
-	 * Default is {@link org.springframework.ldap.support.LdapUtils#emptyLdapName()}.
-	 *
+	 * Set the base search path for the query. Default is
+	 * {@link org.springframework.ldap.support.LdapUtils#emptyLdapName()}.
 	 * @param baseDn the base search path.
 	 * @return this instance.
 	 */
@@ -133,9 +137,7 @@ public final class LdapQueryBuilder implements LdapQuery {
 	}
 
 	/**
-	 * Set the search scope for the query.
-	 * Default is {@link SearchScope#SUBTREE}.
-	 *
+	 * Set the search scope for the query. Default is {@link SearchScope#SUBTREE}.
 	 * @param searchScope the search scope.
 	 * @return this instance.
 	 */
@@ -146,9 +148,7 @@ public final class LdapQueryBuilder implements LdapQuery {
 	}
 
 	/**
-	 * Set the count limit for the query.
-	 * Default is 0 (no limit).
-	 *
+	 * Set the count limit for the query. Default is 0 (no limit).
 	 * @param countLimit the count limit.
 	 * @return this instance.
 	 */
@@ -165,9 +165,7 @@ public final class LdapQueryBuilder implements LdapQuery {
 	}
 
 	/**
-	 * Set the time limit for the query.
-	 * Default is 0 (no limit).
-	 *
+	 * Set the time limit for the query. Default is 0 (no limit).
 	 * @param timeLimit the time limit.
 	 * @return this instance.
 	 */
@@ -179,8 +177,8 @@ public final class LdapQueryBuilder implements LdapQuery {
 
 	/**
 	 * Start specifying the filter conditions in this query.
-	 *
-	 * @param attribute The attribute that the first part of the filter should test against.
+	 * @param attribute The attribute that the first part of the filter should test
+	 * against.
 	 * @return A ConditionCriteria instance for specifying the compare operation.
 	 * @throws IllegalStateException if a filter has already been specified.
 	 */
@@ -196,12 +194,13 @@ public final class LdapQueryBuilder implements LdapQuery {
 	}
 
 	/**
-	 * Specify a hardcoded filter. Please note that using this method, the filter string will not be
-	 * validated or escaped in any way. <b>Never</b> use direct user input and use it concatenating strings
-	 * to use as LDAP filters. Doing so opens up for &quot;LDAP injection&quot;, where malicious user
-	 * may inject specifically constructed data to form filters at their convenience. When user input is used
-	 * consider using {@link #where(String)}, {@link #filter(String, Object...)}, or {@link #filter(Filter)} instead.
-	 *
+	 * Specify a hardcoded filter. Please note that using this method, the filter string
+	 * will not be validated or escaped in any way. <b>Never</b> use direct user input and
+	 * use it concatenating strings to use as LDAP filters. Doing so opens up for
+	 * &quot;LDAP injection&quot;, where malicious user may inject specifically
+	 * constructed data to form filters at their convenience. When user input is used
+	 * consider using {@link #where(String)}, {@link #filter(String, Object...)}, or
+	 * {@link #filter(Filter)} instead.
 	 * @param hardcodedFilter The hardcoded filter string to use in the search.
 	 * @return this instance.
 	 * @throws IllegalStateException if a filter has already been specified.
@@ -214,7 +213,6 @@ public final class LdapQueryBuilder implements LdapQuery {
 
 	/**
 	 * Specify the filter to use.
-	 *
 	 * @param filter The filter to use in the search.
 	 * @return this instance.
 	 * @throws IllegalStateException if a filter has already been specified.
@@ -226,19 +224,21 @@ public final class LdapQueryBuilder implements LdapQuery {
 	}
 
 	/**
-	 * Specify a hardcoded filter using the specified parameters. The parameters will be properly encoded using
-	 * {@link LdapEncoder#filterEncode(String)} to make sure no malicious data gets through. The <code>filterFormat</code>
-	 * String should be formatted for input to {@link MessageFormat#format(String, Object...)}.
-	 *
-	 * @param filterFormat the filter format string, formatted for input to {@link MessageFormat#format(String, Object...)}.
-	 * @param params the parameters that will be used for building the final filter. All parameters will be properly encoded.
+	 * Specify a hardcoded filter using the specified parameters. The parameters will be
+	 * properly encoded using {@link LdapEncoder#filterEncode(String)} to make sure no
+	 * malicious data gets through. The <code>filterFormat</code> String should be
+	 * formatted for input to {@link MessageFormat#format(String, Object...)}.
+	 * @param filterFormat the filter format string, formatted for input to
+	 * {@link MessageFormat#format(String, Object...)}.
+	 * @param params the parameters that will be used for building the final filter. All
+	 * parameters will be properly encoded.
 	 * @return this instance.
 	 * @throws IllegalStateException if a filter has already been specified.
 	 */
 	public LdapQuery filter(String filterFormat, Object... params) {
 		Object[] encodedParams = new String[params.length];
 
-		for (int i=0; i < params.length; i++) {
+		for (int i = 0; i < params.length; i++) {
 			encodedParams[i] = LdapEncoder.filterEncode(params[i].toString());
 		}
 
@@ -274,12 +274,12 @@ public final class LdapQueryBuilder implements LdapQuery {
 		return attributes;
 	}
 
-
 	@Override
 	public Filter filter() {
-		if(rootContainer == null) {
+		if (rootContainer == null) {
 			throw new IllegalStateException("No filter conditions have been specified");
 		}
 		return rootContainer.filter();
 	}
+
 }

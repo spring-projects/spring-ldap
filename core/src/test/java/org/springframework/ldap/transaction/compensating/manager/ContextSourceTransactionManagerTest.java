@@ -45,9 +45,11 @@ import static org.mockito.Mockito.when;
 public class ContextSourceTransactionManagerTest {
 
 	private ContextSource contextSourceMock;
+
 	private DirContext contextMock;
 
 	private ContextSourceTransactionManager tested;
+
 	private CompensatingTransactionOperationManager transactionDataManagerMock;
 
 	private TransactionDefinition transactionDefinitionMock;
@@ -163,8 +165,8 @@ public class ContextSourceTransactionManagerTest {
 				final ContextSourceTransactionManager txMgrInner = new ContextSourceTransactionManager();
 				txMgrInner.setContextSource(unconnectableContextSourceMock);
 
-				final TransactionStatus txInner = txMgrInner.getTransaction(new DefaultTransactionDefinition(
-						TransactionDefinition.PROPAGATION_REQUIRES_NEW));
+				final TransactionStatus txInner = txMgrInner.getTransaction(
+						new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRES_NEW));
 
 				try {
 					// Do something with the connection that succeeds or fails
@@ -193,4 +195,5 @@ public class ContextSourceTransactionManagerTest {
 
 		verify(connectionMock).rollback();
 	}
+
 }

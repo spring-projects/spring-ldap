@@ -18,15 +18,15 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI TimeLimitExceededException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.TimeLimitExceededException
  */
 public class TimeLimitExceededException extends LimitExceededException {
 
-	public TimeLimitExceededException(
-			javax.naming.TimeLimitExceededException cause) {
+	public TimeLimitExceededException(javax.naming.TimeLimitExceededException cause) {
 		super(cause);
 	}
+
 }

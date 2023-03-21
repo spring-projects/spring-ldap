@@ -35,11 +35,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Provides tests that verify that the server supports certain controls.
- * 
+ *
  * @author Ulrik Sandberg
  */
-@ContextConfiguration(locations = {"/conf/rootContextSourceTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/rootContextSourceTestContext.xml" })
 public class SupportedControlsITest extends AbstractLdapTemplateIntegrationTest {
+
 	/** must use a context source that has no base set */
 	@Autowired
 	private LdapTemplate tested;
@@ -50,7 +51,7 @@ public class SupportedControlsITest extends AbstractLdapTemplateIntegrationTest 
 	protected Name getRoot() {
 		return LdapUtils.newLdapName(base);
 	}
-	
+
 	@Test
 	@Category(NoAdTest.class)
 	public void testExpectedControlsSupported() throws Exception {
@@ -71,8 +72,10 @@ public class SupportedControlsITest extends AbstractLdapTemplateIntegrationTest 
 
 		HashSet<String> controlsSet = new HashSet<String>(Arrays.asList(controls));
 
-		assertThat(controlsSet.contains("1.3.6.1.4.1.4203.1.10.1")).as("Entry Change Notification LDAPv3 control,").isTrue();
+		assertThat(controlsSet.contains("1.3.6.1.4.1.4203.1.10.1")).as("Entry Change Notification LDAPv3 control,")
+				.isTrue();
 		assertThat(controlsSet.contains("1.3.6.1.4.1.4203.1.10.1")).as("Subentries Control,").isTrue();
 		assertThat(controlsSet.contains("2.16.840.1.113730.3.4.2")).as("Manage DSA IT LDAPv3 control,").isTrue();
 	}
+
 }

@@ -5,9 +5,10 @@ import javax.naming.NamingException;
 import java.util.Iterator;
 
 /**
-* @author Mattias Hellborg Arthursson
-*/
+ * @author Mattias Hellborg Arthursson
+ */
 final class IterableNamingEnumeration<T> implements NamingEnumeration<T> {
+
 	private final Iterator<T> iterator;
 
 	IterableNamingEnumeration(Iterable<T> iterable) {
@@ -37,4 +38,5 @@ final class IterableNamingEnumeration<T> implements NamingEnumeration<T> {
 	public T nextElement() {
 		return next();
 	}
+
 }

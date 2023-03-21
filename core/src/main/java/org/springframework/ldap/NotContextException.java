@@ -18,7 +18,7 @@ package org.springframework.ldap;
 
 /**
  * Runtime exception mirroring the JNDI NotContextException.
- * 
+ *
  * @author Ulrik Sandberg
  * @since 1.2
  * @see javax.naming.NotContextException
@@ -28,4 +28,5 @@ public class NotContextException extends NamingException {
 	public NotContextException(javax.naming.NotContextException cause) {
 		super(cause);
 	}
+
 }

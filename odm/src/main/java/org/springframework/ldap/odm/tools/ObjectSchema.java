@@ -24,10 +24,11 @@ import java.util.Set;
  * Simple value class to hold the schema of an object class
  * <p>
  * It is public only to allow Freemarker access.
- * 
+ *
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  */
 public final class ObjectSchema {
+
 	private final Set<AttributeSchema> must = new HashSet<AttributeSchema>();
 
 	private final Set<AttributeSchema> may = new HashSet<AttributeSchema>();
@@ -67,7 +68,7 @@ public final class ObjectSchema {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -97,18 +98,22 @@ public final class ObjectSchema {
 		if (may == null) {
 			if (other.may != null)
 				return false;
-		} else if (!may.equals(other.may))
+		}
+		else if (!may.equals(other.may))
 			return false;
 		if (must == null) {
 			if (other.must != null)
 				return false;
-		} else if (!must.equals(other.must))
+		}
+		else if (!must.equals(other.must))
 			return false;
 		if (objectClass == null) {
 			if (other.objectClass != null)
 				return false;
-		} else if (!objectClass.equals(other.objectClass))
+		}
+		else if (!objectClass.equals(other.objectClass))
 			return false;
 		return true;
 	}
+
 }

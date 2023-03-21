@@ -18,9 +18,9 @@ package org.springframework.ldap.control;
 import java.util.List;
 
 /**
- * Bean to encapsulate a result List and a {@link PagedResultsCookie} to use for
- * returning the results when using {@link PagedResultsRequestControl}.
- * 
+ * Bean to encapsulate a result List and a {@link PagedResultsCookie} to use for returning
+ * the results when using {@link PagedResultsRequestControl}.
+ *
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  * @deprecated
@@ -32,13 +32,9 @@ public class PagedResult {
 	private PagedResultsCookie cookie;
 
 	/**
-	 * Constructs a PagedResults using the supplied List and
-	 * {@link PagedResultsCookie}.
-	 * 
-	 * @param resultList
-	 *			the result list.
-	 * @param cookie
-	 *			the cookie.
+	 * Constructs a PagedResults using the supplied List and {@link PagedResultsCookie}.
+	 * @param resultList the result list.
+	 * @param cookie the cookie.
 	 */
 	public PagedResult(List<?> resultList, PagedResultsCookie cookie) {
 		this.resultList = resultList;
@@ -47,7 +43,6 @@ public class PagedResult {
 
 	/**
 	 * Get the cookie.
-	 * 
 	 * @return the cookie.
 	 */
 	public PagedResultsCookie getCookie() {
@@ -56,7 +51,6 @@ public class PagedResult {
 
 	/**
 	 * Get the result list.
-	 * 
 	 * @return the result list.
 	 */
 	public List<?> getResultList() {
@@ -65,13 +59,17 @@ public class PagedResult {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 
 		PagedResult that = (PagedResult) o;
 
-		if (cookie != null ? !cookie.equals(that.cookie) : that.cookie != null) return false;
-		if (resultList != null ? !resultList.equals(that.resultList) : that.resultList != null) return false;
+		if (cookie != null ? !cookie.equals(that.cookie) : that.cookie != null)
+			return false;
+		if (resultList != null ? !resultList.equals(that.resultList) : that.resultList != null)
+			return false;
 
 		return true;
 	}
@@ -82,4 +80,5 @@ public class PagedResult {
 		result = 31 * result + (cookie != null ? cookie.hashCode() : 0);
 		return result;
 	}
+
 }

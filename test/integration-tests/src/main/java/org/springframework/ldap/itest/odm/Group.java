@@ -27,17 +27,17 @@ import java.util.Set;
 /**
  * @author Mattias Hellborg Arthursson
  */
-@Entry(objectClasses = {"top", "groupOfUniqueNames"}, base = "cn=groups")
+@Entry(objectClasses = { "top", "groupOfUniqueNames" }, base = "cn=groups")
 public class Group {
 
 	@Id
 	private Name dn;
 
-	@Attribute(name="cn")
+	@Attribute(name = "cn")
 	@DnAttribute("cn")
 	private String name;
 
-	@Attribute(name="uniqueMember")
+	@Attribute(name = "uniqueMember")
 	private Set<Name> members;
 
 	public Name getDn() {
@@ -71,4 +71,5 @@ public class Group {
 	public void removeMember(Name member) {
 		members.remove(member);
 	}
+
 }

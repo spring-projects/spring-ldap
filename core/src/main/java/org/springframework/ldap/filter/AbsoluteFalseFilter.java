@@ -24,7 +24,9 @@ package org.springframework.ldap.filter;
  * @since 1.3.2
  */
 public class AbsoluteFalseFilter extends AbstractFilter {
+
 	public StringBuffer encode(StringBuffer buff) {
 		return buff.append("(|)");
 	}
+
 }

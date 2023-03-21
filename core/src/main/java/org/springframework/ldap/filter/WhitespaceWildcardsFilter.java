@@ -22,20 +22,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This filter automatically converts all whitespace to wildcards (*). The
- * following code:
- * 
+ * This filter automatically converts all whitespace to wildcards (*). The following code:
+ *
  * <pre>
  * WhitespaceWildcardsFilter filter = new WhitespaceWildcardsFilter(&quot;cn&quot;, &quot;Some CN&quot;);
  * System.out.println(filter.ecode());
  * </pre>
- * 
+ *
  * would result in: <code>(cn=*Some*CN*)</code>
- * 
+ *
  * @author Adam Skogman
  * @author Mattias Hellborg Arthursson
  */
 public class WhitespaceWildcardsFilter extends EqualsFilter {
+
 	private static Pattern starReplacePattern = Pattern.compile("\\s+");
 
 	public WhitespaceWildcardsFilter(String attribute, String value) {
@@ -69,4 +69,5 @@ public class WhitespaceWildcardsFilter extends EqualsFilter {
 
 		return buff.toString();
 	}
+
 }

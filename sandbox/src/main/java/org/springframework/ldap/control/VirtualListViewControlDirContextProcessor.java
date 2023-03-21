@@ -65,11 +65,15 @@ import java.lang.reflect.Method;
  *
  * @author Ulrik Sandberg
  * @author Marius Scurtescu
- * @see <a href="https://www3.ietf.org/proceedings/02nov/I-D/draft-ietf-ldapext-ldapv3-vlv-09.txt">LDAP Extensions for Scrolling View Browsing of Search Results</a>
+ * @see <a href=
+ * "https://www3.ietf.org/proceedings/02nov/I-D/draft-ietf-ldapext-ldapv3-vlv-09.txt">LDAP
+ * Extensions for Scrolling View Browsing of Search Results</a>
  */
-public class VirtualListViewControlDirContextProcessor extends AbstractFallbackRequestAndResponseControlDirContextProcessor
-{
-	private static final String DEFAULT_REQUEST_CONTROL  = "com.sun.jndi.ldap.ctl.VirtualListViewControl";
+public class VirtualListViewControlDirContextProcessor
+		extends AbstractFallbackRequestAndResponseControlDirContextProcessor {
+
+	private static final String DEFAULT_REQUEST_CONTROL = "com.sun.jndi.ldap.ctl.VirtualListViewControl";
+
 	private static final String DEFAULT_RESPONSE_CONTROL = "com.sun.jndi.ldap.ctl.VirtualListViewResponseControl";
 
 	private static final boolean CRITICAL_CONTROL = true;
@@ -90,16 +94,16 @@ public class VirtualListViewControlDirContextProcessor extends AbstractFallbackR
 		this(pageSize, 1, 0, null);
 	}
 
-	public VirtualListViewControlDirContextProcessor(int pageSize,
-			int targetOffset, int listSize, VirtualListViewResultsCookie cookie) {
+	public VirtualListViewControlDirContextProcessor(int pageSize, int targetOffset, int listSize,
+			VirtualListViewResultsCookie cookie) {
 		this.pageSize = pageSize;
 		this.targetOffset = targetOffset;
 		this.listSize = listSize;
 		this.cookie = cookie;
 
-		defaultRequestControl   = DEFAULT_REQUEST_CONTROL;
-		defaultResponseControl  = DEFAULT_RESPONSE_CONTROL;
-		fallbackRequestControl  = DEFAULT_REQUEST_CONTROL;
+		defaultRequestControl = DEFAULT_REQUEST_CONTROL;
+		defaultResponseControl = DEFAULT_RESPONSE_CONTROL;
+		fallbackRequestControl = DEFAULT_REQUEST_CONTROL;
 		fallbackResponseControl = DEFAULT_RESPONSE_CONTROL;
 
 		loadControlClasses();
@@ -126,98 +130,62 @@ public class VirtualListViewControlDirContextProcessor extends AbstractFallbackR
 	}
 
 	/**
-	 * Set whether the <code>targetOffset</code> should be interpreted as
-	 * percentage of the list or an offset into the list.
+	 * Set whether the <code>targetOffset</code> should be interpreted as percentage of
+	 * the list or an offset into the list.
 	 * @param isPercentage <code>true</code> if targetOffset is a percentage
 	 */
 	public void setOffsetPercentage(boolean isPercentage) {
 		this.offsetPercentage = isPercentage;
 	}
 
-	public boolean isOffsetPercentage()
-	{
+	public boolean isOffsetPercentage() {
 		return offsetPercentage;
 	}
 
 	/*
-	 * @see org.springframework.ldap.control.AbstractRequestControlDirContextProcessor#createRequestControl()
+	 * @see org.springframework.ldap.control.AbstractRequestControlDirContextProcessor#
+	 * createRequestControl()
 	 */
-	public Control createRequestControl()
-	{
+	public Control createRequestControl() {
 		Control control;
 
-		if (offsetPercentage)
-		{
-			control = super.createRequestControl(
-					new Class[] {
-							int.class,
-							int.class,
-							boolean.class
-					},
-					new Object[] {
-							Integer.valueOf(targetOffset),
-							Integer.valueOf(pageSize),
-							Boolean.valueOf(CRITICAL_CONTROL)
-					}
-			);
+		if (offsetPercentage) {
+			control = super.createRequestControl(new Class[] { int.class, int.class, boolean.class }, new Object[] {
+					Integer.valueOf(targetOffset), Integer.valueOf(pageSize), Boolean.valueOf(CRITICAL_CONTROL) });
 		}
-		else
-		{
+		else {
 			control = super.createRequestControl(
-					new Class[] {
-							int.class,
-							int.class,
-							int.class,
-							int.class,
-							boolean.class
-					},
-					new Object[] {
-							Integer.valueOf(targetOffset),
-							Integer.valueOf(listSize),
-							Integer.valueOf(0),
-							Integer.valueOf(pageSize - 1),
-							Boolean.valueOf(CRITICAL_CONTROL)
-					}
-			);
+					new Class[] { int.class, int.class, int.class, int.class, boolean.class },
+					new Object[] { Integer.valueOf(targetOffset), Integer.valueOf(listSize), Integer.valueOf(0),
+							Integer.valueOf(pageSize - 1), Boolean.valueOf(CRITICAL_CONTROL) });
 		}
 
-		if (cookie != null)
-		{
-			invokeMethod(
-					"setContextID",
-					requestControlClass,
-					control,
-					new Class[] {byte[].class},
-					new Object[] {cookie.getCookie()}
-			);
+		if (cookie != null) {
+			invokeMethod("setContextID", requestControlClass, control, new Class[] { byte[].class },
+					new Object[] { cookie.getCookie() });
 		}
 
 		return control;
 	}
 
-	protected void handleResponse(Object control)
-	{
-		byte[] result = (byte[]) invokeMethod("getContextID",
-				responseControlClass, control);
-		Integer listSize = (Integer) invokeMethod("getListSize",
-				responseControlClass, control);
-		Integer targetOffset = (Integer) invokeMethod(
-				"getTargetOffset", responseControlClass, control);
-		this.exception = (NamingException) invokeMethod("getException",
-				responseControlClass, control);
+	protected void handleResponse(Object control) {
+		byte[] result = (byte[]) invokeMethod("getContextID", responseControlClass, control);
+		Integer listSize = (Integer) invokeMethod("getListSize", responseControlClass, control);
+		Integer targetOffset = (Integer) invokeMethod("getTargetOffset", responseControlClass, control);
+		this.exception = (NamingException) invokeMethod("getException", responseControlClass, control);
 
-		this.cookie = new VirtualListViewResultsCookie(result,
-				targetOffset.intValue(), listSize.intValue());
+		this.cookie = new VirtualListViewResultsCookie(result, targetOffset.intValue(), listSize.intValue());
 
 		if (exception != null) {
 			throw LdapUtils.convertLdapException(exception);
 		}
 	}
 
-	protected static Object invokeMethod(String methodName, Class clazz, Object control, Class[] paramTypes, Object[] paramValues)
-	{
+	protected static Object invokeMethod(String methodName, Class clazz, Object control, Class[] paramTypes,
+			Object[] paramValues) {
 		Method method = ReflectionUtils.findMethod(clazz, methodName, paramTypes);
 
 		return ReflectionUtils.invokeMethod(method, control, paramValues);
 	}
+
 }

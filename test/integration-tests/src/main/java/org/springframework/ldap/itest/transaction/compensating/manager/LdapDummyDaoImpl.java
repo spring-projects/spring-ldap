@@ -23,7 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class LdapDummyDaoImpl implements DummyDao {
+
 	private static final boolean RECURSIVE = true;
+
 	private LdapTemplate ldapTemplate;
 
 	public void setLdapTemplate(LdapTemplate ldapTemplate) {
@@ -32,26 +34,24 @@ public class LdapDummyDaoImpl implements DummyDao {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.ldap.transaction.support.DummyDao#createWithException(java.lang.String,
-	 *	  java.lang.String, java.lang.String, java.lang.String,
-	 *	  java.lang.String)
+	 *
+	 * @see
+	 * org.springframework.ldap.transaction.support.DummyDao#createWithException(java.lang
+	 * .String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
-	public void createWithException(String country, String company,
-			String fullname, String lastname, String description) {
+	public void createWithException(String country, String company, String fullname, String lastname,
+			String description) {
 		create(country, company, fullname, lastname, description);
 		throw new DummyException("This method failed");
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.springframework.ldap.transaction.support.DummyDao#create(java.lang.String,
-	 *	  java.lang.String, java.lang.String, java.lang.String,
-	 *	  java.lang.String)
+	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
-	public void create(String country, String company, String fullname,
-			String lastname, String description) {
+	public void create(String country, String company, String fullname, String lastname, String description) {
 		DistinguishedName dn = new DistinguishedName();
 		dn.add("ou", country);
 		dn.add("ou", company);
@@ -67,12 +67,11 @@ public class LdapDummyDaoImpl implements DummyDao {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.springframework.ldap.transaction.support.DummyDao#update(java.lang.String,
-	 *	  java.lang.String, java.lang.String)
+	 * java.lang.String, java.lang.String)
 	 */
-	public void update(String dn, String fullname, String lastname,
-			String description) {
+	public void update(String dn, String fullname, String lastname, String description) {
 		DirContextAdapter ctx = (DirContextAdapter) ldapTemplate.lookup(dn);
 		ctx.setAttributeValue("sn", lastname);
 		ctx.setAttributeValue("description", description);
@@ -82,21 +81,22 @@ public class LdapDummyDaoImpl implements DummyDao {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.ldap.transaction.support.DummyDao#updateWithException(java.lang.String,
-	 *	  java.lang.String, java.lang.String)
+	 *
+	 * @see
+	 * org.springframework.ldap.transaction.support.DummyDao#updateWithException(java.lang
+	 * .String, java.lang.String, java.lang.String)
 	 */
-	public void updateWithException(String dn, String fullname,
-			String lastname, String description) {
+	public void updateWithException(String dn, String fullname, String lastname, String description) {
 		update(dn, fullname, lastname, description);
 		throw new DummyException("This method failed.");
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.ldap.transaction.support.DummyDao#updateAndRename(java.lang.String,
-	 *	  java.lang.String, java.lang.String)
+	 *
+	 * @see
+	 * org.springframework.ldap.transaction.support.DummyDao#updateAndRename(java.lang.
+	 * String, java.lang.String, java.lang.String)
 	 */
 	public void updateAndRename(String dn, String newDn, String description) {
 		DirContextAdapter ctx = (DirContextAdapter) ldapTemplate.lookup(dn);
@@ -108,21 +108,22 @@ public class LdapDummyDaoImpl implements DummyDao {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.ldap.transaction.support.DummyDao#updateAndRenameWithException(java.lang.String,
-	 *	  java.lang.String, java.lang.String)
+	 *
+	 * @see
+	 * org.springframework.ldap.transaction.support.DummyDao#updateAndRenameWithException(
+	 * java.lang.String, java.lang.String, java.lang.String)
 	 */
-	public void updateAndRenameWithException(String dn, String newDn,
-			String description) {
+	public void updateAndRenameWithException(String dn, String newDn, String description) {
 		updateAndRename(dn, newDn, description);
 		throw new DummyException("This method failed.");
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.ldap.transaction.support.DummyDao#modifyAttributes(java.lang.String,
-	 *	  java.lang.String, java.lang.String)
+	 *
+	 * @see
+	 * org.springframework.ldap.transaction.support.DummyDao#modifyAttributes(java.lang.
+	 * String, java.lang.String, java.lang.String)
 	 */
 	public void modifyAttributes(String dn, String lastName, String description) {
 		DirContextAdapter ctx = (DirContextAdapter) ldapTemplate.lookup(dn);
@@ -134,19 +135,19 @@ public class LdapDummyDaoImpl implements DummyDao {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.ldap.transaction.support.DummyDao#modifyAttributesWithException(java.lang.String,
-	 *	  java.lang.String, java.lang.String)
+	 *
+	 * @see
+	 * org.springframework.ldap.transaction.support.DummyDao#modifyAttributesWithException
+	 * (java.lang.String, java.lang.String, java.lang.String)
 	 */
-	public void modifyAttributesWithException(String dn, String lastName,
-			String description) {
+	public void modifyAttributesWithException(String dn, String lastName, String description) {
 		modifyAttributes(dn, lastName, description);
 		throw new DummyException("This method failed.");
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.springframework.ldap.transaction.support.DummyDao#unbind(java.lang.String)
 	 */
 	public void unbind(String dn, String fullname) {
@@ -155,8 +156,10 @@ public class LdapDummyDaoImpl implements DummyDao {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.ldap.transaction.support.DummyDao#unbindWithException(java.lang.String)
+	 *
+	 * @see
+	 * org.springframework.ldap.transaction.support.DummyDao#unbindWithException(java.lang
+	 * .String)
 	 */
 	public void unbindWithException(String dn, String fullname) {
 		unbind(dn, fullname);
@@ -177,7 +180,7 @@ public class LdapDummyDaoImpl implements DummyDao {
 	@Override
 	public void createRecursivelyAndUnbindSubnode() {
 		DirContextAdapter ctx = new DirContextAdapter();
-		ctx.setAttributeValues("objectclass", new String[]{"top", "organizationalUnit"});
+		ctx.setAttributeValues("objectclass", new String[] { "top", "organizationalUnit" });
 		ctx.setAttributeValue("ou", "dummy");
 		ctx.setAttributeValue("description", "dummy description");
 
@@ -192,4 +195,5 @@ public class LdapDummyDaoImpl implements DummyDao {
 		createRecursivelyAndUnbindSubnode();
 		throw new DummyException("This method failed");
 	}
+
 }

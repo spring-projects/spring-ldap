@@ -34,16 +34,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
- * Tests the bind and unbind methods of LdapTemplate. The test methods in this
- * class tests a little too much, but we need to clean up after binding, so the
- * most efficient way to test is to do it all in one test method. Also, the
- * methods in this class relies on that the lookup method works as it should -
- * that should be ok, since that is verified in a separate test class.
- * 
+ * Tests the bind and unbind methods of LdapTemplate. The test methods in this class tests
+ * a little too much, but we need to clean up after binding, so the most efficient way to
+ * test is to do it all in one test method. Also, the methods in this class relies on that
+ * the lookup method works as it should - that should be ok, since that is verified in a
+ * separate test class.
+ *
  * @author Mattias Hellborg Arthursson
  */
-@ContextConfiguration(locations = {"/conf/ldapClientTestContext.xml"})
+@ContextConfiguration(locations = { "/conf/ldapClientTestContext.xml" })
 public class DefaultLdapClientBindUnbindITest extends AbstractLdapTemplateIntegrationTest {
+
 	@Autowired
 	private LdapClient tested;
 
@@ -80,8 +81,7 @@ public class DefaultLdapClientBindUnbindITest extends AbstractLdapTemplateIntegr
 	@Test
 	public void testBindAndUnbindWithDirContextAdapter() {
 		DirContextAdapter adapter = new DirContextAdapter();
-		adapter.setAttributeValues("objectclass", new String[] { "top",
-				"person" });
+		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
 		adapter.setAttributeValue("cn", "Some Person4");
 		adapter.setAttributeValue("sn", "Person4");
 
@@ -94,8 +94,7 @@ public class DefaultLdapClientBindUnbindITest extends AbstractLdapTemplateIntegr
 	@Test
 	public void testBindAndUnbindWithDirContextAdapterUsingLdapName() {
 		DirContextAdapter adapter = new DirContextAdapter();
-		adapter.setAttributeValues("objectclass", new String[] { "top",
-				"person" });
+		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
 		adapter.setAttributeValue("cn", "Some Person4");
 		adapter.setAttributeValue("sn", "Person4");
 
@@ -108,8 +107,7 @@ public class DefaultLdapClientBindUnbindITest extends AbstractLdapTemplateIntegr
 	@Test
 	public void testBindAndUnbindWithDirContextAdapterOnly() {
 		DirContextAdapter adapter = new DirContextAdapter(LdapUtils.newLdapName(DN));
-		adapter.setAttributeValues("objectclass", new String[] { "top",
-				"person" });
+		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
 		adapter.setAttributeValue("cn", "Some Person4");
 		adapter.setAttributeValue("sn", "Person4");
 
@@ -122,8 +120,7 @@ public class DefaultLdapClientBindUnbindITest extends AbstractLdapTemplateIntegr
 	@Test
 	public void testBindAndRebindWithDirContextAdapterOnly() {
 		DirContextAdapter adapter = new DirContextAdapter(LdapUtils.newLdapName(DN));
-		adapter.setAttributeValues("objectclass", new String[] { "top",
-				"person" });
+		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
 		adapter.setAttributeValue("cn", "Some Person4");
 		adapter.setAttributeValue("sn", "Person4");
 
@@ -160,8 +157,8 @@ public class DefaultLdapClientBindUnbindITest extends AbstractLdapTemplateIntegr
 	}
 
 	private void verifyCleanup() {
-		assertThatExceptionOfType(NameNotFoundException.class)
-				.describedAs("NameNotFoundException expected")
+		assertThatExceptionOfType(NameNotFoundException.class).describedAs("NameNotFoundException expected")
 				.isThrownBy(() -> tested.search().name(DN).toEntry());
 	}
+
 }

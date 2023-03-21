@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for the MutablePoolingContextSource class.
- * 
+ *
  * @author Ulrik Sandberg
  */
 public class MutablePoolingContextSourceTest extends AbstractPoolTestCase {
@@ -44,4 +44,5 @@ public class MutablePoolingContextSourceTest extends AbstractPoolTestCase {
 
 		assertThat(result.getClass()).isEqualTo(MutableDelegatingLdapContext.class);
 	}
+
 }

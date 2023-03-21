@@ -21,11 +21,11 @@ import javax.naming.NamingException;
 import javax.naming.ldap.HasControls;
 
 /**
- * Extension of the {@link org.springframework.ldap.core.ContextMapper} interface that allows
- * controls to be passed to the mapper implementation. Uses Java 5 covariant
- * return types to override the return type of the
- * {@link #mapFromContextWithControls(Object, javax.naming.ldap.HasControls)} method to be the
- * type parameter T.
+ * Extension of the {@link org.springframework.ldap.core.ContextMapper} interface that
+ * allows controls to be passed to the mapper implementation. Uses Java 5 covariant return
+ * types to override the return type of the
+ * {@link #mapFromContextWithControls(Object, javax.naming.ldap.HasControls)} method to be
+ * the type parameter T.
  *
  * @author Tim Terry
  * @author Ulrik Sandberg
@@ -33,5 +33,7 @@ import javax.naming.ldap.HasControls;
  * {@link #mapFromContextWithControls(Object, javax.naming.ldap.HasControls)} method
  */
 public interface ContextMapperWithControls<T> extends ContextMapper<T> {
+
 	T mapFromContextWithControls(final Object ctx, final HasControls hasControls) throws NamingException;
+
 }

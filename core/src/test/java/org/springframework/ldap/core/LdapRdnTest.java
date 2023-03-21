@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Unit test for the LdapRdn class.
- * 
+ *
  * @author Adam Skogman
  */
 public class LdapRdnTest {
@@ -172,10 +172,10 @@ public class LdapRdnTest {
 		// a subclass with the same values as the original
 		final Object subclassObject = new LdapRdn("cn", "john.doe") {
 			private static final long serialVersionUID = 1L;
+
 		};
 
-		new EqualsTester(originalObject, identicalObject, differentObject,
-				subclassObject);
+		new EqualsTester(originalObject, identicalObject, differentObject, subclassObject);
 	}
 
 	@Test
@@ -256,4 +256,5 @@ public class LdapRdnTest {
 		int result = rdn1.compareTo(rdn2);
 		assertThat(result > 0).isTrue();
 	}
+
 }

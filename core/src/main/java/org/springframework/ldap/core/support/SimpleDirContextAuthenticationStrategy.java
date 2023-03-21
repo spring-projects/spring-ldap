@@ -20,12 +20,11 @@ import javax.naming.directory.DirContext;
 import java.util.Hashtable;
 
 /**
- * The default {@link DirContextAuthenticationStrategy} implementation, setting
- * the <code>DirContext</code> environment up for 'SIMPLE' authentication, and
- * specifying the user DN and password as SECURITY_PRINCIPAL and
- * SECURITY_CREDENTIALS respectively in the authenticated environment before the
- * context is created.
- * 
+ * The default {@link DirContextAuthenticationStrategy} implementation, setting the
+ * <code>DirContext</code> environment up for 'SIMPLE' authentication, and specifying the
+ * user DN and password as SECURITY_PRINCIPAL and SECURITY_CREDENTIALS respectively in the
+ * authenticated environment before the context is created.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class SimpleDirContextAuthenticationStrategy implements DirContextAuthenticationStrategy {
@@ -34,8 +33,9 @@ public class SimpleDirContextAuthenticationStrategy implements DirContextAuthent
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.ldap.core.support.DirContextAuthenticationStrategy#setupEnvironment(java.util.Hashtable,
-	 * java.lang.String, java.lang.String)
+	 *
+	 * @see org.springframework.ldap.core.support.DirContextAuthenticationStrategy#
+	 * setupEnvironment(java.util.Hashtable, java.lang.String, java.lang.String)
 	 */
 	public void setupEnvironment(Hashtable<String, Object> env, String userDn, String password) {
 		env.put(Context.SECURITY_AUTHENTICATION, SIMPLE_AUTHENTICATION);
@@ -45,8 +45,10 @@ public class SimpleDirContextAuthenticationStrategy implements DirContextAuthent
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.ldap.core.support.DirContextAuthenticationStrategy#processContextAfterCreation(javax.naming.directory.DirContext,
-	 * java.lang.String, java.lang.String)
+	 *
+	 * @see org.springframework.ldap.core.support.DirContextAuthenticationStrategy#
+	 * processContextAfterCreation(javax.naming.directory.DirContext, java.lang.String,
+	 * java.lang.String)
 	 */
 	public DirContext processContextAfterCreation(DirContext ctx, String userDn, String password) {
 		return ctx;

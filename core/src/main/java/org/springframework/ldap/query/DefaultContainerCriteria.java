@@ -30,8 +30,11 @@ import static org.springframework.ldap.query.CriteriaContainerType.OR;
  * @since 2.0
  */
 class DefaultContainerCriteria implements AppendableContainerCriteria {
+
 	private final Set<Filter> filters = new LinkedHashSet<Filter>();
+
 	private final LdapQuery topQuery;
+
 	private CriteriaContainerType type;
 
 	DefaultContainerCriteria(LdapQuery topQuery) {
@@ -67,12 +70,10 @@ class DefaultContainerCriteria implements AppendableContainerCriteria {
 
 	@Override
 	public ContainerCriteria and(ContainerCriteria nested) {
-		if(type == OR) {
-			return new DefaultContainerCriteria(topQuery)
-					.withType(AND)
-					.append(this.filter())
-					.append(nested.filter());
-		} else {
+		if (type == OR) {
+			return new DefaultContainerCriteria(topQuery).withType(AND).append(this.filter()).append(nested.filter());
+		}
+		else {
 			type = AND;
 			this.filters.add(nested.filter());
 			return this;
@@ -82,11 +83,9 @@ class DefaultContainerCriteria implements AppendableContainerCriteria {
 	@Override
 	public ContainerCriteria or(ContainerCriteria nested) {
 		if (type == AND) {
-			return new DefaultContainerCriteria(topQuery)
-					.withType(OR)
-					.append(this.filter())
-					.append(nested.filter());
-		} else {
+			return new DefaultContainerCriteria(topQuery).withType(OR).append(this.filter()).append(nested.filter());
+		}
+		else {
 			type = OR;
 			this.filters.add(nested.filter());
 			return this;
@@ -95,7 +94,7 @@ class DefaultContainerCriteria implements AppendableContainerCriteria {
 
 	@Override
 	public Filter filter() {
-		if(filters.size() == 1) {
+		if (filters.size() == 1) {
 			// No need to wrap in And/OrFilter if there's just one condition.
 			return filters.iterator().next();
 		}
@@ -127,4 +126,5 @@ class DefaultContainerCriteria implements AppendableContainerCriteria {
 	public String[] attributes() {
 		return topQuery.attributes();
 	}
+
 }
