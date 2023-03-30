@@ -65,7 +65,7 @@ public class ContextSourceAndDataSourceTransactionManager extends DataSourceTran
 	 */
 	protected Object doGetTransaction() {
 		Object dataSourceTransactionObject = super.doGetTransaction();
-		Object contextSourceTransactionObject = ldapManagerDelegate.doGetTransaction();
+		Object contextSourceTransactionObject = this.ldapManagerDelegate.doGetTransaction();
 
 		return new ContextSourceAndDataSourceTransactionObject(contextSourceTransactionObject,
 				dataSourceTransactionObject);
@@ -81,7 +81,7 @@ public class ContextSourceAndDataSourceTransactionManager extends DataSourceTran
 
 		super.doBegin(actualTransactionObject.getDataSourceTransactionObject(), definition);
 		try {
-			ldapManagerDelegate.doBegin(actualTransactionObject.getLdapTransactionObject(), definition);
+			this.ldapManagerDelegate.doBegin(actualTransactionObject.getLdapTransactionObject(), definition);
 		}
 		catch (TransactionException e) {
 			// Failed to start LDAP transaction - make sure we clean up properly
@@ -98,7 +98,7 @@ public class ContextSourceAndDataSourceTransactionManager extends DataSourceTran
 		ContextSourceAndDataSourceTransactionObject actualTransactionObject = (ContextSourceAndDataSourceTransactionObject) transaction;
 
 		super.doCleanupAfterCompletion(actualTransactionObject.getDataSourceTransactionObject());
-		ldapManagerDelegate.doCleanupAfterCompletion(actualTransactionObject.getLdapTransactionObject());
+		this.ldapManagerDelegate.doCleanupAfterCompletion(actualTransactionObject.getLdapTransactionObject());
 	}
 
 	/*
@@ -128,9 +128,9 @@ public class ContextSourceAndDataSourceTransactionManager extends DataSourceTran
 						+ " proceeding to commit ldap resource.");
 			}
 		}
-		ldapManagerDelegate.doCommit(new DefaultTransactionStatus(actualTransactionObject.getLdapTransactionObject(),
-				status.isNewTransaction(), status.isNewSynchronization(), status.isReadOnly(), status.isDebug(),
-				status.getSuspendedResources()));
+		this.ldapManagerDelegate.doCommit(new DefaultTransactionStatus(
+				actualTransactionObject.getLdapTransactionObject(), status.isNewTransaction(),
+				status.isNewSynchronization(), status.isReadOnly(), status.isDebug(), status.getSuspendedResources()));
 	}
 
 	/*
@@ -145,21 +145,21 @@ public class ContextSourceAndDataSourceTransactionManager extends DataSourceTran
 		super.doRollback(new DefaultTransactionStatus(actualTransactionObject.getDataSourceTransactionObject(),
 				status.isNewTransaction(), status.isNewSynchronization(), status.isReadOnly(), status.isDebug(),
 				status.getSuspendedResources()));
-		ldapManagerDelegate.doRollback(new DefaultTransactionStatus(actualTransactionObject.getLdapTransactionObject(),
-				status.isNewTransaction(), status.isNewSynchronization(), status.isReadOnly(), status.isDebug(),
-				status.getSuspendedResources()));
+		this.ldapManagerDelegate.doRollback(new DefaultTransactionStatus(
+				actualTransactionObject.getLdapTransactionObject(), status.isNewTransaction(),
+				status.isNewSynchronization(), status.isReadOnly(), status.isDebug(), status.getSuspendedResources()));
 	}
 
 	public ContextSource getContextSource() {
-		return ldapManagerDelegate.getContextSource();
+		return this.ldapManagerDelegate.getContextSource();
 	}
 
 	public void setContextSource(ContextSource contextSource) {
-		ldapManagerDelegate.setContextSource(contextSource);
+		this.ldapManagerDelegate.setContextSource(contextSource);
 	}
 
 	public void setRenamingStrategy(TempEntryRenamingStrategy renamingStrategy) {
-		ldapManagerDelegate.setRenamingStrategy(renamingStrategy);
+		this.ldapManagerDelegate.setRenamingStrategy(renamingStrategy);
 	}
 
 	private final static class ContextSourceAndDataSourceTransactionObject {
@@ -175,11 +175,11 @@ public class ContextSourceAndDataSourceTransactionManager extends DataSourceTran
 		}
 
 		public Object getDataSourceTransactionObject() {
-			return dataSourceTransactionObject;
+			return this.dataSourceTransactionObject;
 		}
 
 		public Object getLdapTransactionObject() {
-			return ldapTransactionObject;
+			return this.ldapTransactionObject;
 		}
 
 	}
@@ -206,7 +206,7 @@ public class ContextSourceAndDataSourceTransactionManager extends DataSourceTran
 
 	public void afterPropertiesSet() {
 		super.afterPropertiesSet();
-		ldapManagerDelegate.checkRenamingStrategy();
+		this.ldapManagerDelegate.checkRenamingStrategy();
 	}
 
 }

@@ -19,12 +19,12 @@ public class LdapTemplateOdmTest {
 
 	@Before
 	public void prepareTestedClass() {
-		tested = mock(LdapTemplate.class);
+		this.tested = mock(LdapTemplate.class);
 
-		doCallRealMethod().when(tested).setObjectDirectoryMapper(any(ObjectDirectoryMapper.class));
-		odmMock = mock(ObjectDirectoryMapper.class);
+		doCallRealMethod().when(this.tested).setObjectDirectoryMapper(any(ObjectDirectoryMapper.class));
+		this.odmMock = mock(ObjectDirectoryMapper.class);
 
-		tested.setObjectDirectoryMapper(odmMock);
+		this.tested.setObjectDirectoryMapper(this.odmMock);
 	}
 
 	@Test

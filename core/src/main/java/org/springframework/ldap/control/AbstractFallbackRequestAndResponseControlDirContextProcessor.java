@@ -101,20 +101,20 @@ public abstract class AbstractFallbackRequestAndResponseControlDirContextProcess
 	protected String fallbackResponseControl;
 
 	protected void loadControlClasses() {
-		Assert.notNull(defaultRequestControl, "defaultRequestControl must not be null");
-		Assert.notNull(defaultResponseControl, "defaultResponseControl must not be null");
-		Assert.notNull(fallbackRequestControl, "fallbackRequestControl must not be null");
-		Assert.notNull(fallbackResponseControl, "fallbackReponseControl must not be null");
+		Assert.notNull(this.defaultRequestControl, "defaultRequestControl must not be null");
+		Assert.notNull(this.defaultResponseControl, "defaultResponseControl must not be null");
+		Assert.notNull(this.fallbackRequestControl, "fallbackRequestControl must not be null");
+		Assert.notNull(this.fallbackResponseControl, "fallbackReponseControl must not be null");
 		try {
-			requestControlClass = Class.forName(defaultRequestControl);
-			responseControlClass = Class.forName(defaultResponseControl);
+			this.requestControlClass = Class.forName(this.defaultRequestControl);
+			this.responseControlClass = Class.forName(this.defaultResponseControl);
 		}
 		catch (ClassNotFoundException e) {
-			log.debug("Default control classes not found - falling back to LdapBP classes", e);
+			this.log.debug("Default control classes not found - falling back to LdapBP classes", e);
 
 			try {
-				requestControlClass = Class.forName(fallbackRequestControl);
-				responseControlClass = Class.forName(fallbackResponseControl);
+				this.requestControlClass = Class.forName(this.fallbackRequestControl);
+				this.responseControlClass = Class.forName(this.fallbackResponseControl);
 			}
 			catch (ClassNotFoundException e1) {
 				throw new UncategorizedLdapException(
@@ -155,7 +155,7 @@ public abstract class AbstractFallbackRequestAndResponseControlDirContextProcess
 	 * @return Control to be used by the DirContextProcessor
 	 */
 	public Control createRequestControl(Class<?>[] paramTypes, Object[] params) {
-		Constructor<?> constructor = ClassUtils.getConstructorIfAvailable(requestControlClass, paramTypes);
+		Constructor<?> constructor = ClassUtils.getConstructorIfAvailable(this.requestControlClass, paramTypes);
 		if (constructor == null) {
 			throw new IllegalArgumentException("Failed to find an appropriate RequestControl constructor");
 		}
@@ -186,13 +186,13 @@ public abstract class AbstractFallbackRequestAndResponseControlDirContextProcess
 		// Go through response controls and get info, regardless of class
 		for (Control responseControl : responseControls) {
 			// check for match, try fallback otherwise
-			if (responseControl.getClass().isAssignableFrom(responseControlClass)) {
+			if (responseControl.getClass().isAssignableFrom(this.responseControlClass)) {
 				handleResponse(responseControl);
 				return;
 			}
 		}
 
-		log.info("No matching response control found - looking for '" + responseControlClass);
+		this.log.info("No matching response control found - looking for '" + this.responseControlClass);
 	}
 
 	/**

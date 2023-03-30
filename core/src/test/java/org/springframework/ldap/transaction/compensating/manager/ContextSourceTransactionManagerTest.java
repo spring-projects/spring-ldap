@@ -62,20 +62,20 @@ public class ContextSourceTransactionManagerTest {
 			TransactionSynchronizationManager.clearSynchronization();
 		}
 
-		contextSourceMock = mock(ContextSource.class);
-		contextMock = mock(DirContext.class);
-		transactionDefinitionMock = mock(TransactionDefinition.class);
-		transactionDataManagerMock = mock(CompensatingTransactionOperationManager.class);
-		renamingStrategyMock = mock(TempEntryRenamingStrategy.class);
+		this.contextSourceMock = mock(ContextSource.class);
+		this.contextMock = mock(DirContext.class);
+		this.transactionDefinitionMock = mock(TransactionDefinition.class);
+		this.transactionDataManagerMock = mock(CompensatingTransactionOperationManager.class);
+		this.renamingStrategyMock = mock(TempEntryRenamingStrategy.class);
 
-		tested = new ContextSourceTransactionManager();
-		tested.setContextSource(contextSourceMock);
-		tested.setRenamingStrategy(renamingStrategyMock);
+		this.tested = new ContextSourceTransactionManager();
+		this.tested.setContextSource(this.contextSourceMock);
+		this.tested.setRenamingStrategy(this.renamingStrategyMock);
 	}
 
 	@Test
 	public void testDoGetTransaction() {
-		Object result = tested.doGetTransaction();
+		Object result = this.tested.doGetTransaction();
 
 		assertThat(result).isNotNull();
 		assertThat(result instanceof CompensatingTransactionObject).isTrue();
@@ -86,58 +86,58 @@ public class ContextSourceTransactionManagerTest {
 	@Test
 	public void testDoGetTransactionTransactionActive() {
 		CompensatingTransactionHolderSupport expectedContextHolder = new DirContextHolder(null, null);
-		TransactionSynchronizationManager.bindResource(contextSourceMock, expectedContextHolder);
-		Object result = tested.doGetTransaction();
+		TransactionSynchronizationManager.bindResource(this.contextSourceMock, expectedContextHolder);
+		Object result = this.tested.doGetTransaction();
 		assertThat(((CompensatingTransactionObject) result).getHolder()).isSameAs(expectedContextHolder);
 	}
 
 	@Test
 	public void testDoBegin() {
-		when(contextSourceMock.getReadWriteContext()).thenReturn(contextMock);
+		when(this.contextSourceMock.getReadWriteContext()).thenReturn(this.contextMock);
 
 		CompensatingTransactionObject expectedTransactionObject = new CompensatingTransactionObject(null);
-		tested.doBegin(expectedTransactionObject, transactionDefinitionMock);
+		this.tested.doBegin(expectedTransactionObject, this.transactionDefinitionMock);
 
 		DirContextHolder foundContextHolder = (DirContextHolder) TransactionSynchronizationManager
-				.getResource(contextSourceMock);
-		assertThat(foundContextHolder.getCtx()).isSameAs(contextMock);
+				.getResource(this.contextSourceMock);
+		assertThat(foundContextHolder.getCtx()).isSameAs(this.contextMock);
 	}
 
 	@Test
 	public void testDoRollback() {
-		DirContextHolder expectedContextHolder = new DirContextHolder(null, contextMock);
-		expectedContextHolder.setTransactionOperationManager(transactionDataManagerMock);
-		TransactionSynchronizationManager.bindResource(contextSourceMock, expectedContextHolder);
+		DirContextHolder expectedContextHolder = new DirContextHolder(null, this.contextMock);
+		expectedContextHolder.setTransactionOperationManager(this.transactionDataManagerMock);
+		TransactionSynchronizationManager.bindResource(this.contextSourceMock, expectedContextHolder);
 
 		CompensatingTransactionObject transactionObject = new CompensatingTransactionObject(null);
 		transactionObject.setHolder(expectedContextHolder);
-		tested.doRollback(new DefaultTransactionStatus(transactionObject, false, false, false, false, null));
+		this.tested.doRollback(new DefaultTransactionStatus(transactionObject, false, false, false, false, null));
 
-		verify(transactionDataManagerMock).rollback();
+		verify(this.transactionDataManagerMock).rollback();
 	}
 
 	@Test
 	public void testDoCleanupAfterCompletion() throws Exception {
-		DirContextHolder expectedContextHolder = new DirContextHolder(null, contextMock);
-		TransactionSynchronizationManager.bindResource(contextSourceMock, expectedContextHolder);
+		DirContextHolder expectedContextHolder = new DirContextHolder(null, this.contextMock);
+		TransactionSynchronizationManager.bindResource(this.contextSourceMock, expectedContextHolder);
 
-		tested.doCleanupAfterCompletion(new CompensatingTransactionObject(expectedContextHolder));
+		this.tested.doCleanupAfterCompletion(new CompensatingTransactionObject(expectedContextHolder));
 
-		assertThat(TransactionSynchronizationManager.getResource(contextSourceMock)).isNull();
+		assertThat(TransactionSynchronizationManager.getResource(this.contextSourceMock)).isNull();
 		assertThat(expectedContextHolder.getTransactionOperationManager()).isNull();
-		verify(contextMock).close();
+		verify(this.contextMock).close();
 	}
 
 	@Test
 	public void testSetContextSource_Proxy() {
-		TransactionAwareContextSourceProxy proxy = new TransactionAwareContextSourceProxy(contextSourceMock);
+		TransactionAwareContextSourceProxy proxy = new TransactionAwareContextSourceProxy(this.contextSourceMock);
 
 		// Perform test
-		tested.setContextSource(proxy);
-		ContextSource result = tested.getContextSource();
+		this.tested.setContextSource(proxy);
+		ContextSource result = this.tested.getContextSource();
 
 		// Verify result
-		assertThat(result).isSameAs(contextSourceMock);
+		assertThat(result).isSameAs(this.contextSourceMock);
 	}
 
 	@Test

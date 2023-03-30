@@ -29,7 +29,7 @@ public class DefaultObjectDirectoryMapperTest {
 
 	@Before
 	public void prepareTestedInstance() {
-		tested = new DefaultObjectDirectoryMapper();
+		this.tested = new DefaultObjectDirectoryMapper();
 	}
 
 	// LDAP-295
@@ -45,10 +45,10 @@ public class DefaultObjectDirectoryMapperTest {
 
 	@Test
 	public void testMapping() {
-		assertThat(tested.manageClass(UnitTestPerson.class)).containsOnlyElementsOf(
+		assertThat(this.tested.manageClass(UnitTestPerson.class)).containsOnlyElementsOf(
 				Arrays.asList("dn", "cn", "sn", "description", "telephoneNumber", "entryUUID", "objectclass"));
 
-		DefaultObjectDirectoryMapper.EntityData entityData = tested.getMetaDataMap().get(UnitTestPerson.class);
+		DefaultObjectDirectoryMapper.EntityData entityData = this.tested.getMetaDataMap().get(UnitTestPerson.class);
 
 		assertThat(entityData).isNotNull();
 		assertThat(entityData.ocFilter).isEqualTo(query().where("objectclass").is("inetOrgPerson").and("objectclass")
@@ -76,7 +76,7 @@ public class DefaultObjectDirectoryMapperTest {
 	@Test
 	public void testInvalidType() {
 		try {
-			tested.manageClass(UnitTestPersonWithInvalidFieldType.class);
+			this.tested.manageClass(UnitTestPersonWithInvalidFieldType.class);
 		}
 		catch (InvalidEntryException expected) {
 			assertThat(expected.getMessage()).contains("Missing converter from");
@@ -85,20 +85,20 @@ public class DefaultObjectDirectoryMapperTest {
 
 	@Test
 	public void testIndexedDnAttributes() {
-		tested.manageClass(UnitTestPersonWithIndexedDnAttributes.class);
+		this.tested.manageClass(UnitTestPersonWithIndexedDnAttributes.class);
 
 		UnitTestPersonWithIndexedDnAttributes testPerson = new UnitTestPersonWithIndexedDnAttributes();
 		testPerson.setFullName("Some Person");
 		testPerson.setCompany("Some Company");
 		testPerson.setCountry("Sweden");
 
-		Name calculatedId = tested.getCalculatedId(testPerson);
+		Name calculatedId = this.tested.getCalculatedId(testPerson);
 		assertThat(calculatedId).isEqualTo(LdapUtils.newLdapName("cn=Some Person, ou=Some Company, c=Sweden"));
 	}
 
 	@Test(expected = MetaDataException.class)
 	public void testIndexedDnAttributesRequiresThatAllAreIndexed() {
-		tested.manageClass(UnitTestPersonWithIndexedAndUnindexedDnAttributes.class);
+		this.tested.manageClass(UnitTestPersonWithIndexedAndUnindexedDnAttributes.class);
 	}
 
 	private void assertField(DefaultObjectDirectoryMapper.EntityData entityData, String fieldName,

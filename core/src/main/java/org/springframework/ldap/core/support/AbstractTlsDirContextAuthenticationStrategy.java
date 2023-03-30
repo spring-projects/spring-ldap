@@ -130,14 +130,14 @@ public abstract class AbstractTlsDirContextAuthenticationStrategy implements Dir
 			final LdapContext ldapCtx = (LdapContext) ctx;
 			final StartTlsResponse tlsResponse = (StartTlsResponse) ldapCtx.extendedOperation(new StartTlsRequest());
 			try {
-				if (hostnameVerifier != null) {
-					tlsResponse.setHostnameVerifier(hostnameVerifier);
+				if (this.hostnameVerifier != null) {
+					tlsResponse.setHostnameVerifier(this.hostnameVerifier);
 				}
-				tlsResponse.negotiate(sslSocketFactory); // If null, the default SSL
-															// socket factory is used
+				tlsResponse.negotiate(this.sslSocketFactory); // If null, the default SSL
+																// socket factory is used
 				applyAuthentication(ldapCtx, userDn, password);
 
-				if (shutdownTlsGracefully) {
+				if (this.shutdownTlsGracefully) {
 					// Wrap the target context in a proxy to intercept any calls
 					// to 'close', so that we can shut down the TLS connection
 					// gracefully first.
@@ -187,19 +187,19 @@ public abstract class AbstractTlsDirContextAuthenticationStrategy implements Dir
 		}
 
 		public DirContext getTargetContext() {
-			return target;
+			return this.target;
 		}
 
 		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 			if (method.getName().equals(CLOSE_METHOD_NAME)) {
-				tlsResponse.close();
-				return method.invoke(target, args);
+				this.tlsResponse.close();
+				return method.invoke(this.target, args);
 			}
 			else if (method.getName().equals(GET_TARGET_CONTEXT_METHOD_NAME)) {
-				return target;
+				return this.target;
 			}
 			else {
-				return method.invoke(target, args);
+				return method.invoke(this.target, args);
 			}
 		}
 

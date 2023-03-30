@@ -33,8 +33,8 @@ public class ContextMapperCallbackHandlerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		mapperMock = mock(ContextMapper.class);
-		tested = new ContextMapperCallbackHandler(mapperMock);
+		this.mapperMock = mock(ContextMapper.class);
+		this.tested = new ContextMapperCallbackHandler(this.mapperMock);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -48,15 +48,15 @@ public class ContextMapperCallbackHandlerTest {
 		Object expectedResult = "result";
 		Binding expectedBinding = new Binding("some name", expectedObject);
 
-		when(mapperMock.mapFromContext(expectedObject)).thenReturn(expectedResult);
-		Object actualResult = tested.getObjectFromNameClassPair(expectedBinding);
+		when(this.mapperMock.mapFromContext(expectedObject)).thenReturn(expectedResult);
+		Object actualResult = this.tested.getObjectFromNameClassPair(expectedBinding);
 		assertThat(actualResult).isEqualTo(expectedResult);
 	}
 
 	@Test(expected = ObjectRetrievalException.class)
 	public void testGetObjectFromNameClassPairObjectRetrievalException() throws NamingException {
 		Binding expectedBinding = new Binding("some name", null);
-		tested.getObjectFromNameClassPair(expectedBinding);
+		this.tested.getObjectFromNameClassPair(expectedBinding);
 	}
 
 }

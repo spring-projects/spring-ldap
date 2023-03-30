@@ -169,7 +169,7 @@ public class DefaultIncrementalAttributesMapper
 		}
 
 		// Reset the affected attributes.
-		rangedAttributesInNextIteration = new HashSet<String>();
+		this.rangedAttributesInNextIteration = new HashSet<String>();
 
 		NamingEnumeration<String> attributeNameEnum = attributes.getIDs();
 		while (attributeNameEnum.hasMore()) {
@@ -189,7 +189,7 @@ public class DefaultIncrementalAttributesMapper
 						state.processValues(attributes, attributeName);
 						state.calculateNextRange(responseRange);
 						if (state.hasMore()) {
-							rangedAttributesInNextIteration.add(state.getRequestedAttributeName());
+							this.rangedAttributesInNextIteration.add(state.getRequestedAttributeName());
 						}
 					}
 				}
@@ -200,7 +200,7 @@ public class DefaultIncrementalAttributesMapper
 	}
 
 	private IncrementalAttributeState getState(String attributeName) {
-		Object mappedState = stateMap.get(attributeName);
+		Object mappedState = this.stateMap.get(attributeName);
 		if (mappedState == null) {
 			LOG.warn("Attribute '" + attributeName + "' is not handled by this instance");
 			mappedState = NOT_FOUND_ATTRIBUTE_STATE;
@@ -218,7 +218,7 @@ public class DefaultIncrementalAttributesMapper
 	public final Attributes getCollectedAttributes() {
 		BasicAttributes attributes = new BasicAttributes();
 
-		Set<String> attributeNames = stateMap.keySet();
+		Set<String> attributeNames = this.stateMap.keySet();
 		for (String attributeName : attributeNames) {
 			BasicAttribute oneAttribute = new BasicAttribute(attributeName);
 			List<Object> values = getValues(attributeName);
@@ -236,15 +236,15 @@ public class DefaultIncrementalAttributesMapper
 
 	@Override
 	public final boolean hasMore() {
-		return rangedAttributesInNextIteration.size() > 0;
+		return this.rangedAttributesInNextIteration.size() > 0;
 	}
 
 	@Override
 	public final String[] getAttributesForLookup() {
-		String[] result = new String[rangedAttributesInNextIteration.size()];
+		String[] result = new String[this.rangedAttributesInNextIteration.size()];
 		int index = 0;
-		for (String next : rangedAttributesInNextIteration) {
-			IncrementalAttributeState state = stateMap.get(next);
+		for (String next : this.rangedAttributesInNextIteration) {
+			IncrementalAttributeState state = this.stateMap.get(next);
 			result[index++] = state.getAttributeNameForQuery();
 		}
 
@@ -373,30 +373,30 @@ public class DefaultIncrementalAttributesMapper
 
 		@Override
 		public boolean hasMore() {
-			return more;
+			return this.more;
 		}
 
 		@Override
 		public String getRequestedAttributeName() {
-			return actualAttributeName;
+			return this.actualAttributeName;
 		}
 
 		@Override
 		public void calculateNextRange(RangeOption responseRange) {
-			more = requestRange.compareTo(responseRange) > 0;
+			this.more = this.requestRange.compareTo(responseRange) > 0;
 
-			if (more) {
-				requestRange = responseRange.nextRange(pageSize);
+			if (this.more) {
+				this.requestRange = responseRange.nextRange(this.pageSize);
 			}
 		}
 
 		@Override
 		public String getAttributeNameForQuery() {
-			StringBuilder attributeBuilder = new StringBuilder(actualAttributeName);
+			StringBuilder attributeBuilder = new StringBuilder(this.actualAttributeName);
 
-			if (!(requestRange.isFullRange())) {
+			if (!(this.requestRange.isFullRange())) {
 				attributeBuilder.append(';');
-				requestRange.appendTo(attributeBuilder);
+				this.requestRange.appendTo(attributeBuilder);
 			}
 
 			return attributeBuilder.toString();
@@ -409,20 +409,20 @@ public class DefaultIncrementalAttributesMapper
 
 			initValuesIfApplicable();
 			while (valueEnum.hasMore()) {
-				values.add(valueEnum.next());
+				this.values.add(valueEnum.next());
 			}
 		}
 
 		private void initValuesIfApplicable() {
-			if (values == null) {
-				values = new LinkedList<Object>();
+			if (this.values == null) {
+				this.values = new LinkedList<Object>();
 			}
 		}
 
 		@Override
 		public List<Object> getValues() {
-			if (values != null) {
-				return new ArrayList<Object>(values);
+			if (this.values != null) {
+				return new ArrayList<Object>(this.values);
 			}
 			else {
 				return null;

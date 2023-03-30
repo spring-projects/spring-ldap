@@ -33,7 +33,7 @@ public class BindOperationExecutorTest {
 
 	@Before
 	public void setUp() throws Exception {
-		ldapOperationsMock = mock(LdapOperations.class);
+		this.ldapOperationsMock = mock(LdapOperations.class);
 	}
 
 	@Test
@@ -41,13 +41,13 @@ public class BindOperationExecutorTest {
 		LdapName expectedDn = LdapUtils.newLdapName("cn=john doe");
 		Object expectedObject = new Object();
 		BasicAttributes expectedAttributes = new BasicAttributes();
-		BindOperationExecutor tested = new BindOperationExecutor(ldapOperationsMock, expectedDn, expectedObject,
+		BindOperationExecutor tested = new BindOperationExecutor(this.ldapOperationsMock, expectedDn, expectedObject,
 				expectedAttributes);
 
 		// perform teste
 		tested.performOperation();
 
-		verify(ldapOperationsMock).bind(expectedDn, expectedObject, expectedAttributes);
+		verify(this.ldapOperationsMock).bind(expectedDn, expectedObject, expectedAttributes);
 	}
 
 	@Test
@@ -55,10 +55,10 @@ public class BindOperationExecutorTest {
 		LdapName expectedDn = LdapUtils.newLdapName("cn=john doe");
 		Object expectedObject = new Object();
 		BasicAttributes expectedAttributes = new BasicAttributes();
-		BindOperationExecutor tested = new BindOperationExecutor(ldapOperationsMock, expectedDn, expectedObject,
+		BindOperationExecutor tested = new BindOperationExecutor(this.ldapOperationsMock, expectedDn, expectedObject,
 				expectedAttributes);
 
-		verifyNoMoreInteractions(ldapOperationsMock);
+		verifyNoMoreInteractions(this.ldapOperationsMock);
 
 		// perform teste
 		tested.commit();
@@ -67,12 +67,12 @@ public class BindOperationExecutorTest {
 	@Test
 	public void testRollback() {
 		LdapName expectedDn = LdapUtils.newLdapName("cn=john doe");
-		BindOperationExecutor tested = new BindOperationExecutor(ldapOperationsMock, expectedDn, null, null);
+		BindOperationExecutor tested = new BindOperationExecutor(this.ldapOperationsMock, expectedDn, null, null);
 
 		// perform teste
 		tested.rollback();
 
-		verify(ldapOperationsMock).unbind(expectedDn);
+		verify(this.ldapOperationsMock).unbind(expectedDn);
 	}
 
 }

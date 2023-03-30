@@ -40,9 +40,9 @@ public class DefaultCompensatingTransactionOperationManagerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		operationExecutorMock = mock(CompensatingTransactionOperationExecutor.class);
-		operationFactoryMock = mock(CompensatingTransactionOperationFactory.class);
-		operationRecorderMock = mock(CompensatingTransactionOperationRecorder.class);
+		this.operationExecutorMock = mock(CompensatingTransactionOperationExecutor.class);
+		this.operationFactoryMock = mock(CompensatingTransactionOperationFactory.class);
+		this.operationRecorderMock = mock(CompensatingTransactionOperationRecorder.class);
 
 	}
 
@@ -51,37 +51,37 @@ public class DefaultCompensatingTransactionOperationManagerTest {
 		Object[] expectedArgs = new Object[0];
 		Object expectedResource = new Object();
 
-		when(operationFactoryMock.createRecordingOperation(expectedResource, "some method"))
-				.thenReturn(operationRecorderMock);
-		when(operationRecorderMock.recordOperation(expectedArgs)).thenReturn(operationExecutorMock);
+		when(this.operationFactoryMock.createRecordingOperation(expectedResource, "some method"))
+				.thenReturn(this.operationRecorderMock);
+		when(this.operationRecorderMock.recordOperation(expectedArgs)).thenReturn(this.operationExecutorMock);
 
 		DefaultCompensatingTransactionOperationManager tested = new DefaultCompensatingTransactionOperationManager(
-				operationFactoryMock);
+				this.operationFactoryMock);
 		tested.performOperation(expectedResource, "some method", expectedArgs);
-		verify(operationExecutorMock).performOperation();
+		verify(this.operationExecutorMock).performOperation();
 
 		Stack result = tested.getOperationExecutors();
 		assertThat(result.isEmpty()).isFalse();
-		assertThat(result.peek()).isSameAs(operationExecutorMock);
+		assertThat(result.peek()).isSameAs(this.operationExecutorMock);
 	}
 
 	@Test
 	public void testRollback() {
 		DefaultCompensatingTransactionOperationManager tested = new DefaultCompensatingTransactionOperationManager(
-				operationFactoryMock);
-		tested.getOperationExecutors().push(operationExecutorMock);
+				this.operationFactoryMock);
+		tested.getOperationExecutors().push(this.operationExecutorMock);
 
 		tested.rollback();
-		verify(operationExecutorMock).rollback();
+		verify(this.operationExecutorMock).rollback();
 	}
 
 	@Test(expected = TransactionSystemException.class)
 	public void testRollback_Exception() {
 		DefaultCompensatingTransactionOperationManager tested = new DefaultCompensatingTransactionOperationManager(
-				operationFactoryMock);
-		tested.getOperationExecutors().push(operationExecutorMock);
+				this.operationFactoryMock);
+		tested.getOperationExecutors().push(this.operationExecutorMock);
 
-		doThrow(new RuntimeException()).when(operationExecutorMock).rollback();
+		doThrow(new RuntimeException()).when(this.operationExecutorMock).rollback();
 
 		tested.rollback();
 	}
@@ -89,20 +89,20 @@ public class DefaultCompensatingTransactionOperationManagerTest {
 	@Test
 	public void testCommit() {
 		DefaultCompensatingTransactionOperationManager tested = new DefaultCompensatingTransactionOperationManager(
-				operationFactoryMock);
-		tested.getOperationExecutors().push(operationExecutorMock);
+				this.operationFactoryMock);
+		tested.getOperationExecutors().push(this.operationExecutorMock);
 
 		tested.commit();
-		verify(operationExecutorMock).commit();
+		verify(this.operationExecutorMock).commit();
 	}
 
 	@Test(expected = TransactionSystemException.class)
 	public void testCommit_Exception() {
 		DefaultCompensatingTransactionOperationManager tested = new DefaultCompensatingTransactionOperationManager(
-				operationFactoryMock);
-		tested.getOperationExecutors().push(operationExecutorMock);
+				this.operationFactoryMock);
+		tested.getOperationExecutors().push(this.operationExecutorMock);
 
-		doThrow(new RuntimeException()).when(operationExecutorMock).commit();
+		doThrow(new RuntimeException()).when(this.operationExecutorMock).commit();
 
 		tested.commit();
 	}

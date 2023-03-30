@@ -82,7 +82,7 @@ public class LdapEntryIdentification {
 	 * @since 2.0
 	 */
 	public LdapName getAbsoluteName() {
-		return LdapUtils.newLdapName(absoluteDn);
+		return LdapUtils.newLdapName(this.absoluteDn);
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class LdapEntryIdentification {
 	 * @since 2.0
 	 */
 	public LdapName getRelativeName() {
-		return LdapUtils.newLdapName(relativeDn);
+		return LdapUtils.newLdapName(this.relativeDn);
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class LdapEntryIdentification {
 	 * deprecated as of 2.0. use {@link #getRelativeName()} instead.
 	 */
 	public DistinguishedName getRelativeDn() {
-		return new DistinguishedName(relativeDn);
+		return new DistinguishedName(this.relativeDn);
 	}
 
 	/**
@@ -114,7 +114,7 @@ public class LdapEntryIdentification {
 	 * deprecated as of 2.0. use {@link #getAbsoluteName()} instead.
 	 */
 	public DistinguishedName getAbsoluteDn() {
-		return new DistinguishedName(absoluteDn);
+		return new DistinguishedName(this.absoluteDn);
 	}
 
 	public boolean equals(Object obj) {
@@ -127,7 +127,7 @@ public class LdapEntryIdentification {
 	}
 
 	public int hashCode() {
-		return absoluteDn.hashCode() ^ relativeDn.hashCode();
+		return this.absoluteDn.hashCode() ^ this.relativeDn.hashCode();
 	}
 
 }

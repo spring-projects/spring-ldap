@@ -38,19 +38,19 @@ public class DefaultIncrementalAttributesMapperTest {
 
 	@Before
 	public void setUp() throws Exception {
-		tested = new DefaultIncrementalAttributesMapper("member");
+		this.tested = new DefaultIncrementalAttributesMapper("member");
 	}
 
 	@Test
 	public void testGetAttributesArray() throws Exception {
-		String[] attributes = tested.getAttributesForLookup();
+		String[] attributes = this.tested.getAttributesForLookup();
 
 		assertThat(attributes.length).isEqualTo(1);
 		assertThat(attributes[0]).isEqualTo("member");
 
-		tested = new DefaultIncrementalAttributesMapper(10, "member");
+		this.tested = new DefaultIncrementalAttributesMapper(10, "member");
 
-		attributes = tested.getAttributesForLookup();
+		attributes = this.tested.getAttributesForLookup();
 
 		assertThat(attributes.length).isEqualTo(1);
 		assertThat(attributes[0]).isEqualTo("member;Range=0-10");
@@ -58,8 +58,8 @@ public class DefaultIncrementalAttributesMapperTest {
 
 	@Test
 	public void testGetAttributesArrayWithTwoAttributes() {
-		tested = new DefaultIncrementalAttributesMapper(20, new String[] { "member", "cn" });
-		String[] attributes = tested.getAttributesForLookup();
+		this.tested = new DefaultIncrementalAttributesMapper(20, new String[] { "member", "cn" });
+		String[] attributes = this.tested.getAttributesForLookup();
 
 		assertThat(attributes.length).isEqualTo(2);
 
@@ -69,104 +69,104 @@ public class DefaultIncrementalAttributesMapperTest {
 
 	@Test
 	public void testLoopEmpty() throws Exception {
-		assertThat(tested.hasMore()).isTrue();
+		assertThat(this.tested.hasMore()).isTrue();
 
 		Attributes attributes = new BasicAttributes();
 
-		tested.mapFromAttributes(attributes);
+		this.tested.mapFromAttributes(attributes);
 
-		assertThat(tested.hasMore()).isFalse();
-		assertThat(tested.getValues("member")).isNull();
+		assertThat(this.tested.hasMore()).isFalse();
+		assertThat(this.tested.getValues("member")).isNull();
 	}
 
 	@Test
 	public void testLoop() throws Exception {
 		Attributes attributes = createAttributes("member", new RangeOption(0, 10));
 
-		tested.mapFromAttributes(attributes);
+		this.tested.mapFromAttributes(attributes);
 
-		assertThat(tested.hasMore()).isTrue();
-		assertThat(tested.getValues("member")).hasSize(11);
+		assertThat(this.tested.hasMore()).isTrue();
+		assertThat(this.tested.getValues("member")).hasSize(11);
 
 		attributes = createAttributes("member", new RangeOption(11), 5);
 
-		tested.mapFromAttributes(attributes);
+		this.tested.mapFromAttributes(attributes);
 
-		assertThat(tested.hasMore()).isFalse();
-		assertThat(tested.getValues("member")).hasSize(16);
+		assertThat(this.tested.hasMore()).isFalse();
+		assertThat(this.tested.getValues("member")).hasSize(16);
 	}
 
 	@Test
 	public void test1LoopWithPageSizeExact() throws Exception {
-		tested = new DefaultIncrementalAttributesMapper(10, "member");
+		this.tested = new DefaultIncrementalAttributesMapper(10, "member");
 
 		Attributes attributes = createAttributes("member", new RangeOption(0, 10));
 
-		tested.mapFromAttributes(attributes);
+		this.tested.mapFromAttributes(attributes);
 
-		assertThat(tested.hasMore()).isFalse();
-		assertThat(tested.getValues("member")).hasSize(11);
+		assertThat(this.tested.hasMore()).isFalse();
+		assertThat(this.tested.getValues("member")).hasSize(11);
 	}
 
 	@Test
 	public void test2LoopsWithPageSizeExact() throws Exception {
-		tested = new DefaultIncrementalAttributesMapper(20, "member");
+		this.tested = new DefaultIncrementalAttributesMapper(20, "member");
 
 		Attributes attributes = createAttributes("member", new RangeOption(0, 10));
 
-		tested.mapFromAttributes(attributes);
+		this.tested.mapFromAttributes(attributes);
 
-		assertThat(tested.hasMore()).isTrue();
-		assertThat(tested.getValues("member")).hasSize(11);
+		assertThat(this.tested.hasMore()).isTrue();
+		assertThat(this.tested.getValues("member")).hasSize(11);
 
 		attributes = createAttributes("member", new RangeOption(11, 30));
 
-		tested.mapFromAttributes(attributes);
+		this.tested.mapFromAttributes(attributes);
 
-		assertThat(tested.hasMore()).isFalse();
-		assertThat(tested.getValues("member")).hasSize(31);
+		assertThat(this.tested.hasMore()).isFalse();
+		assertThat(this.tested.getValues("member")).hasSize(31);
 	}
 
 	@Test
 	public void test2LoopsWithPageSize() throws Exception {
-		tested = new DefaultIncrementalAttributesMapper(20, "member");
+		this.tested = new DefaultIncrementalAttributesMapper(20, "member");
 
 		Attributes attributes = createAttributes("member", new RangeOption(0, 10));
 
-		tested.mapFromAttributes(attributes);
+		this.tested.mapFromAttributes(attributes);
 
-		assertThat(tested.hasMore()).isTrue();
-		assertThat(tested.getValues("member")).hasSize(11);
+		assertThat(this.tested.hasMore()).isTrue();
+		assertThat(this.tested.getValues("member")).hasSize(11);
 
 		attributes = createAttributes("member", new RangeOption(11), 5);
 
-		tested.mapFromAttributes(attributes);
+		this.tested.mapFromAttributes(attributes);
 
-		assertThat(tested.hasMore()).isFalse();
-		assertThat(tested.getValues("member")).hasSize(16);
+		assertThat(this.tested.hasMore()).isFalse();
+		assertThat(this.tested.getValues("member")).hasSize(16);
 	}
 
 	@Test
 	public void testLoopWithTwoRangedAttributesLoopOnOneAttribute() throws Exception {
-		tested = new DefaultIncrementalAttributesMapper(10, new String[] { "member", "cn" });
+		this.tested = new DefaultIncrementalAttributesMapper(10, new String[] { "member", "cn" });
 
 		Attributes attributes = createAttributes("member", new RangeOption(0, 5));
 		attributes.put(createRangeAttribute("cn", new RangeOption(0, 10), 10));
 
-		tested.mapFromAttributes(attributes);
+		this.tested.mapFromAttributes(attributes);
 
-		assertThat(tested.hasMore()).isTrue();
-		assertThat(tested.getValues("member")).hasSize(6);
-		assertThat(tested.getValues("cn")).hasSize(10);
+		assertThat(this.tested.hasMore()).isTrue();
+		assertThat(this.tested.getValues("member")).hasSize(6);
+		assertThat(this.tested.getValues("cn")).hasSize(10);
 
-		assertThat(tested.getAttributesForLookup().length).isEqualTo(1);
+		assertThat(this.tested.getAttributesForLookup().length).isEqualTo(1);
 
 		attributes = createAttributes("member", new RangeOption(6), 5);
 
-		tested.mapFromAttributes(attributes);
+		this.tested.mapFromAttributes(attributes);
 
-		assertThat(tested.hasMore()).isFalse();
-		assertThat(tested.getValues("member")).hasSize(11);
+		assertThat(this.tested.hasMore()).isFalse();
+		assertThat(this.tested.getValues("member")).hasSize(11);
 	}
 
 	private Attributes createAttributes(String attributeName, RangeOption range) {

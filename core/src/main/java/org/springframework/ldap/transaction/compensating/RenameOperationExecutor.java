@@ -60,10 +60,11 @@ public class RenameOperationExecutor implements CompensatingTransactionOperation
 	public void rollback() {
 		log.debug("Rolling back rename operation");
 		try {
-			ldapOperations.rename(newDn, originalDn);
+			this.ldapOperations.rename(this.newDn, this.originalDn);
 		}
 		catch (Exception e) {
-			log.warn("Unable to rollback rename operation. " + "originalDn: " + newDn + "; newDn: " + originalDn);
+			log.warn("Unable to rollback rename operation. " + "originalDn: " + this.newDn + "; newDn:this. "
+					+ this.originalDn);
 		}
 	}
 
@@ -81,19 +82,19 @@ public class RenameOperationExecutor implements CompensatingTransactionOperation
 	 */
 	public void performOperation() {
 		log.debug("Performing rename operation");
-		ldapOperations.rename(originalDn, newDn);
+		this.ldapOperations.rename(this.originalDn, this.newDn);
 	}
 
 	Name getNewDn() {
-		return newDn;
+		return this.newDn;
 	}
 
 	LdapOperations getLdapOperations() {
-		return ldapOperations;
+		return this.ldapOperations;
 	}
 
 	Name getOriginalDn() {
-		return originalDn;
+		return this.originalDn;
 	}
 
 }

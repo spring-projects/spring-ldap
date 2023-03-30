@@ -32,15 +32,15 @@ public class DistinguishedNameEditorTest {
 
 	@Before
 	public void setUp() throws Exception {
-		tested = new DistinguishedNameEditor();
+		this.tested = new DistinguishedNameEditor();
 	}
 
 	@Test
 	public void testSetAsText() throws Exception {
 		String expectedDn = "dc=jayway, dc=se";
 
-		tested.setAsText(expectedDn);
-		DistinguishedName result = (DistinguishedName) tested.getValue();
+		this.tested.setAsText(expectedDn);
+		DistinguishedName result = (DistinguishedName) this.tested.getValue();
 		assertThat(result).isEqualTo(new DistinguishedName(expectedDn));
 
 		try {
@@ -54,23 +54,23 @@ public class DistinguishedNameEditorTest {
 
 	@Test
 	public void testSetAsTextNullValue() throws Exception {
-		tested.setAsText(null);
-		Object result = tested.getValue();
+		this.tested.setAsText(null);
+		Object result = this.tested.getValue();
 		assertThat(result).isNull();
 	}
 
 	@Test
 	public void testGetAsText() throws Exception {
 		String expectedDn = "dc=jayway,dc=se";
-		tested.setValue(new DistinguishedName(expectedDn));
-		String text = tested.getAsText();
+		this.tested.setValue(new DistinguishedName(expectedDn));
+		String text = this.tested.getAsText();
 		assertThat(text).isEqualTo(expectedDn);
 	}
 
 	@Test
 	public void testGetAsTextNullValue() throws Exception {
-		tested.setValue(null);
-		String text = tested.getAsText();
+		this.tested.setValue(null);
+		String text = this.tested.getAsText();
 		assertThat(text).isNull();
 	}
 

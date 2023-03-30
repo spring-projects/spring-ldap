@@ -57,11 +57,11 @@ public class HardcodedFilter extends AbstractFilter {
 	}
 
 	public StringBuffer encode(StringBuffer buff) {
-		if (!StringUtils.hasLength(filter)) {
+		if (!StringUtils.hasLength(this.filter)) {
 			return buff;
 		}
 
-		buff.append(filter);
+		buff.append(this.filter);
 		return buff;
 	}
 
@@ -74,7 +74,7 @@ public class HardcodedFilter extends AbstractFilter {
 
 		HardcodedFilter that = (HardcodedFilter) o;
 
-		if (filter != null ? !filter.equals(that.filter) : that.filter != null)
+		if (this.filter != null ? !this.filter.equals(that.filter) : that.filter != null)
 			return false;
 
 		return true;
@@ -82,7 +82,7 @@ public class HardcodedFilter extends AbstractFilter {
 
 	@Override
 	public int hashCode() {
-		return filter != null ? filter.hashCode() : 0;
+		return this.filter != null ? this.filter.hashCode() : 0;
 	}
 
 }

@@ -112,7 +112,7 @@ public class ContextSourceTransactionManager extends AbstractPlatformTransaction
 	 * java.lang.Object, org.springframework.transaction.TransactionDefinition)
 	 */
 	protected void doBegin(Object transaction, TransactionDefinition definition) {
-		delegate.doBegin(transaction, definition);
+		this.delegate.doBegin(transaction, definition);
 	}
 
 	/*
@@ -120,7 +120,7 @@ public class ContextSourceTransactionManager extends AbstractPlatformTransaction
 	 * doCleanupAfterCompletion(java.lang.Object)
 	 */
 	protected void doCleanupAfterCompletion(Object transaction) {
-		delegate.doCleanupAfterCompletion(transaction);
+		this.delegate.doCleanupAfterCompletion(transaction);
 	}
 
 	/*
@@ -129,7 +129,7 @@ public class ContextSourceTransactionManager extends AbstractPlatformTransaction
 	 * (org.springframework.transaction.support.DefaultTransactionStatus)
 	 */
 	protected void doCommit(DefaultTransactionStatus status) {
-		delegate.doCommit(status);
+		this.delegate.doCommit(status);
 	}
 
 	/*
@@ -137,7 +137,7 @@ public class ContextSourceTransactionManager extends AbstractPlatformTransaction
 	 * doGetTransaction()
 	 */
 	protected Object doGetTransaction() {
-		return delegate.doGetTransaction();
+		return this.delegate.doGetTransaction();
 	}
 
 	/*
@@ -145,7 +145,7 @@ public class ContextSourceTransactionManager extends AbstractPlatformTransaction
 	 * doRollback(org.springframework.transaction.support.DefaultTransactionStatus)
 	 */
 	protected void doRollback(DefaultTransactionStatus status) {
-		delegate.doRollback(status);
+		this.delegate.doRollback(status);
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class ContextSourceTransactionManager extends AbstractPlatformTransaction
 	 * @see ContextSourceTransactionManagerDelegate#getContextSource()
 	 */
 	public ContextSource getContextSource() {
-		return delegate.getContextSource();
+		return this.delegate.getContextSource();
 	}
 
 	/**
@@ -163,7 +163,7 @@ public class ContextSourceTransactionManager extends AbstractPlatformTransaction
 	 * @see ContextSourceTransactionManagerDelegate#setContextSource(ContextSource)
 	 */
 	public void setContextSource(ContextSource contextSource) {
-		delegate.setContextSource(contextSource);
+		this.delegate.setContextSource(contextSource);
 	}
 
 	/**
@@ -172,11 +172,11 @@ public class ContextSourceTransactionManager extends AbstractPlatformTransaction
 	 * @see ContextSourceTransactionManagerDelegate#setRenamingStrategy(TempEntryRenamingStrategy)
 	 */
 	public void setRenamingStrategy(TempEntryRenamingStrategy renamingStrategy) {
-		delegate.setRenamingStrategy(renamingStrategy);
+		this.delegate.setRenamingStrategy(renamingStrategy);
 	}
 
 	public void afterPropertiesSet() throws Exception {
-		delegate.checkRenamingStrategy();
+		this.delegate.checkRenamingStrategy();
 	}
 
 	@Override

@@ -48,10 +48,10 @@ public class DefaultDirObjectFactoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		contextMock = mock(Context.class);
-		contextMock2 = mock(Context.class);
+		this.contextMock = mock(Context.class);
+		this.contextMock2 = mock(Context.class);
 
-		tested = new DefaultDirObjectFactory();
+		this.tested = new DefaultDirObjectFactory();
 	}
 
 	@Test
@@ -59,10 +59,10 @@ public class DefaultDirObjectFactoryTest {
 		Attributes expectedAttributes = new NameAwareAttributes();
 		expectedAttributes.put("someAttribute", "someValue");
 
-		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(contextMock, DN, null, new Hashtable(),
-				expectedAttributes);
+		DirContextAdapter adapter = (DirContextAdapter) this.tested.getObjectInstance(this.contextMock, DN, null,
+				new Hashtable(), expectedAttributes);
 
-		verify(contextMock).close();
+		verify(this.contextMock).close();
 
 		assertThat(adapter.getDn()).isEqualTo(DN);
 		assertThat(adapter.getAttributes()).isEqualTo(expectedAttributes);
@@ -76,10 +76,10 @@ public class DefaultDirObjectFactoryTest {
 		CompositeName name = new CompositeName();
 		name.add(DN_STRING);
 
-		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(contextMock, name, null,
+		DirContextAdapter adapter = (DirContextAdapter) this.tested.getObjectInstance(this.contextMock, name, null,
 				new Hashtable(), expectedAttributes);
 
-		verify(contextMock).close();
+		verify(this.contextMock).close();
 
 		assertThat(adapter.getDn()).isEqualTo(DN);
 		assertThat(adapter.getAttributes()).isEqualTo(expectedAttributes);
@@ -90,7 +90,7 @@ public class DefaultDirObjectFactoryTest {
 		Attributes expectedAttributes = new NameAwareAttributes();
 		expectedAttributes.put("someAttribute", "someValue");
 
-		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(null, DN, null, new Hashtable(),
+		DirContextAdapter adapter = (DirContextAdapter) this.tested.getObjectInstance(null, DN, null, new Hashtable(),
 				expectedAttributes);
 
 		assertThat(adapter.getDn()).isEqualTo(DN);
@@ -102,7 +102,7 @@ public class DefaultDirObjectFactoryTest {
 		Attributes expectedAttributes = new NameAwareAttributes();
 		expectedAttributes.put("someAttribute", "someValue");
 
-		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(new Object(), DN, null,
+		DirContextAdapter adapter = (DirContextAdapter) this.tested.getObjectInstance(new Object(), DN, null,
 				new Hashtable(), expectedAttributes);
 
 		assertThat(adapter.getDn()).isEqualTo(DN);
@@ -118,12 +118,12 @@ public class DefaultDirObjectFactoryTest {
 		Attributes expectedAttributes = new NameAwareAttributes();
 		expectedAttributes.put("someAttribute", "someValue");
 
-		when(contextMock2.getNameInNamespace()).thenReturn("dc=jayway, dc=se");
+		when(this.contextMock2.getNameInNamespace()).thenReturn("dc=jayway, dc=se");
 
-		DirContextAdapter adapter = (DirContextAdapter) tested.getObjectInstance(contextMock,
-				LdapUtils.newLdapName("ou=some unit"), contextMock2, new Hashtable(), expectedAttributes);
+		DirContextAdapter adapter = (DirContextAdapter) this.tested.getObjectInstance(this.contextMock,
+				LdapUtils.newLdapName("ou=some unit"), this.contextMock2, new Hashtable(), expectedAttributes);
 
-		verify(contextMock).close();
+		verify(this.contextMock).close();
 
 		assertThat(adapter.getDn().toString()).isEqualTo("ou=some unit");
 		assertThat(adapter.getNameInNamespace()).isEqualTo("ou=some unit,dc=jayway,dc=se");

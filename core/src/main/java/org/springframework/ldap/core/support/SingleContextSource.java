@@ -60,14 +60,14 @@ public class SingleContextSource implements ContextSource, DisposableBean {
 	 * @see org.springframework.ldap.ContextSource#getReadOnlyContext()
 	 */
 	public DirContext getReadOnlyContext() {
-		return getNonClosingDirContextProxy(ctx);
+		return getNonClosingDirContextProxy(this.ctx);
 	}
 
 	/*
 	 * @see org.springframework.ldap.ContextSource#getReadWriteContext()
 	 */
 	public DirContext getReadWriteContext() {
-		return getNonClosingDirContextProxy(ctx);
+		return getNonClosingDirContextProxy(this.ctx);
 	}
 
 	private DirContext getNonClosingDirContextProxy(DirContext context) {
@@ -87,7 +87,7 @@ public class SingleContextSource implements ContextSource, DisposableBean {
 	 */
 	public void destroy() {
 		try {
-			ctx.close();
+			this.ctx.close();
 		}
 		catch (javax.naming.NamingException e) {
 			LOG.warn("Error when closing", e);
@@ -186,7 +186,7 @@ public class SingleContextSource implements ContextSource, DisposableBean {
 
 			String methodName = method.getName();
 			if (methodName.equals("getTargetContext")) {
-				return target;
+				return this.target;
 			}
 			else if (methodName.equals("equals")) {
 				// Only consider equal when proxies are identical.
@@ -203,7 +203,7 @@ public class SingleContextSource implements ContextSource, DisposableBean {
 			}
 
 			try {
-				return method.invoke(target, args);
+				return method.invoke(this.target, args);
 			}
 			catch (InvocationTargetException e) {
 				throw e.getTargetException();

@@ -113,7 +113,7 @@ public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupp
 	 * @return the poolConfig
 	 */
 	public PoolConfig getPoolConfig() {
-		return poolConfig;
+		return this.poolConfig;
 	}
 
 	/**

@@ -86,13 +86,13 @@ import java.util.TreeSet;
 	// syntax, isBinary, isObjectClass and name.
 	private boolean processAttributeAnnotation(Field field) {
 		// Default to no syntax specified
-		syntax = "";
+		this.syntax = "";
 
 		// Default to a String based attribute
-		isBinary = false;
+		this.isBinary = false;
 
 		// Default name of attribute to the name of the field
-		name = new CaseIgnoreString(field.getName());
+		this.name = new CaseIgnoreString(field.getName());
 
 		// We have not yet found the @Attribute annotation
 		boolean foundAnnotation = false;
@@ -110,16 +110,16 @@ import java.util.TreeSet;
 			// Would be more efficient to use !isEmpty - but that then makes us Java 6
 			// dependent
 			if (localAttributeName != null && localAttributeName.length() > 0) {
-				name = new CaseIgnoreString(localAttributeName);
+				this.name = new CaseIgnoreString(localAttributeName);
 				attrList.add(localAttributeName);
 			}
-			syntax = attribute.syntax();
-			isBinary = attribute.type() == Attribute.Type.BINARY;
-			isReadOnly = attribute.readonly();
+			this.syntax = attribute.syntax();
+			this.isBinary = attribute.type() == Attribute.Type.BINARY;
+			this.isReadOnly = attribute.readonly();
 		}
-		attributes = attrList.toArray(new String[attrList.size()]);
+		this.attributes = attrList.toArray(new String[attrList.size()]);
 
-		isObjectClass = name.equals(OBJECT_CLASS_ATTRIBUTE_CI);
+		this.isObjectClass = this.name.equals(OBJECT_CLASS_ATTRIBUTE_CI);
 
 		return foundAnnotation;
 	}
@@ -130,12 +130,12 @@ import java.util.TreeSet;
 		// Determine the class of data stored in the field
 		Class<?> fieldType = field.getType();
 
-		isCollection = Collection.class.isAssignableFrom(fieldType);
+		this.isCollection = Collection.class.isAssignableFrom(fieldType);
 
-		valueClass = null;
-		if (!isCollection) {
+		this.valueClass = null;
+		if (!this.isCollection) {
 			// It's not a list so assume its single valued - so just take the field type
-			valueClass = fieldType;
+			this.valueClass = fieldType;
 		}
 		else {
 			determineCollectionClass(fieldType);
@@ -155,14 +155,14 @@ import java.util.TreeSet;
 			Type[] actualParamArguments = paramType.getActualTypeArguments();
 			if (actualParamArguments.length == 1) {
 				if (actualParamArguments[0] instanceof Class) {
-					valueClass = (Class<?>) actualParamArguments[0];
+					this.valueClass = (Class<?>) actualParamArguments[0];
 				}
 				else {
 					if (actualParamArguments[0] instanceof GenericArrayType) {
 						// Deal with arrays
 						Type type = ((GenericArrayType) actualParamArguments[0]).getGenericComponentType();
 						if (type instanceof Class) {
-							valueClass = Array.newInstance((Class<?>) type, 0).getClass();
+							this.valueClass = Array.newInstance((Class<?>) type, 0).getClass();
 						}
 					}
 				}
@@ -170,7 +170,7 @@ import java.util.TreeSet;
 		}
 
 		// Check we have been able to determine the value class
-		if (valueClass == null) {
+		if (this.valueClass == null) {
 			throw new MetaDataException(String.format("Can't determine destination type for field %1$s in class %2$s",
 					field, field.getDeclaringClass()));
 		}
@@ -180,27 +180,27 @@ import java.util.TreeSet;
 	private void determineCollectionClass(Class<?> fieldType) {
 		if (fieldType.isInterface()) {
 			if (Collection.class.equals(fieldType) || List.class.equals(fieldType)) {
-				collectionClass = ArrayList.class;
+				this.collectionClass = ArrayList.class;
 			}
 			else if (SortedSet.class.equals(fieldType)) {
-				collectionClass = TreeSet.class;
+				this.collectionClass = TreeSet.class;
 			}
 			else if (Set.class.isAssignableFrom(fieldType)) {
-				collectionClass = LinkedHashSet.class;
+				this.collectionClass = LinkedHashSet.class;
 			}
 			else {
 				throw new MetaDataException(String.format("Collection class %s is not supported", fieldType));
 			}
 		}
 		else {
-			collectionClass = (Class<? extends Collection>) fieldType;
+			this.collectionClass = (Class<? extends Collection>) fieldType;
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public Collection<Object> newCollectionInstance() {
 		try {
-			return (Collection<Object>) collectionClass.newInstance();
+			return (Collection<Object>) this.collectionClass.newInstance();
 		}
 		catch (Exception e) {
 			throw new UncategorizedLdapException("Failed to instantiate collection class", e);
@@ -211,9 +211,9 @@ import java.util.TreeSet;
 	// isId
 	private boolean processIdAnnotation(Field field, Class<?> fieldType) {
 		// Are we dealing with the Id field?
-		isId = field.getAnnotation(Id.class) != null;
+		this.isId = field.getAnnotation(Id.class) != null;
 
-		if (isId) {
+		if (this.isId) {
 			// It must be of type Name or a subclass of that of
 			if (!Name.class.isAssignableFrom(fieldType)) {
 				throw new MetaDataException(String.format(
@@ -222,7 +222,7 @@ import java.util.TreeSet;
 			}
 		}
 
-		return isId;
+		return this.isId;
 	}
 
 	// Extract meta-data from the given field
@@ -249,7 +249,7 @@ import java.util.TreeSet;
 		boolean foundAttributeAnnotation = processAttributeAnnotation(field);
 
 		// Data from the @Id annotation
-		boolean foundIdAnnoation = processIdAnnotation(field, valueClass);
+		boolean foundIdAnnoation = processIdAnnotation(field, this.valueClass);
 
 		// Check that the field has not been annotated with both @Attribute and with @Id
 		if (foundAttributeAnnotation && foundIdAnnoation) {
@@ -259,7 +259,7 @@ import java.util.TreeSet;
 		}
 
 		// If this is the objectclass attribute then it must be of type List<String>
-		if (isObjectClass() && (!isCollection() || valueClass != String.class)) {
+		if (isObjectClass() && (!isCollection() || this.valueClass != String.class)) {
 			throw new MetaDataException(
 					String.format("The type of the objectclass attribute must be List<String> in classs %1$s",
 							field.getDeclaringClass()));
@@ -267,62 +267,62 @@ import java.util.TreeSet;
 	}
 
 	public String getSyntax() {
-		return syntax;
+		return this.syntax;
 	}
 
 	public boolean isBinary() {
-		return isBinary;
+		return this.isBinary;
 	}
 
 	public Field getField() {
-		return field;
+		return this.field;
 	}
 
 	public CaseIgnoreString getName() {
-		return name;
+		return this.name;
 	}
 
 	public boolean isCollection() {
-		return isCollection;
+		return this.isCollection;
 	}
 
 	public boolean isId() {
-		return isId;
+		return this.isId;
 	}
 
 	public boolean isReadOnly() {
-		return isReadOnly;
+		return this.isReadOnly;
 	}
 
 	public boolean isTransient() {
-		return isTransient;
+		return this.isTransient;
 	}
 
 	public DnAttribute getDnAttribute() {
-		return dnAttribute;
+		return this.dnAttribute;
 	}
 
 	public boolean isDnAttribute() {
-		return dnAttribute != null;
+		return this.dnAttribute != null;
 	}
 
 	public boolean isObjectClass() {
-		return isObjectClass;
+		return this.isObjectClass;
 	}
 
 	public Class<?> getValueClass() {
-		return valueClass;
+		return this.valueClass;
 	}
 
 	public String[] getAttributes() {
-		return attributes;
+		return this.attributes;
 	}
 
 	public Class<?> getJndiClass() {
 		if (isBinary()) {
 			return byte[].class;
 		}
-		else if (Name.class.isAssignableFrom(valueClass)) {
+		else if (Name.class.isAssignableFrom(this.valueClass)) {
 			return Name.class;
 		}
 		else {

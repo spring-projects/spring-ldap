@@ -214,8 +214,8 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	public void setUpdateMode(boolean mode) {
 		this.updateMode = mode;
-		if (updateMode) {
-			updatedAttrs = new NameAwareAttributes();
+		if (this.updateMode) {
+			this.updatedAttrs = new NameAwareAttributes();
 		}
 	}
 
@@ -224,7 +224,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	@Override
 	public boolean isUpdateMode() {
-		return updateMode;
+		return this.updateMode;
 	}
 
 	/**
@@ -237,10 +237,10 @@ public class DirContextAdapter implements DirContextOperations {
 
 		NamingEnumeration<? extends Attribute> attributesEnumeration;
 		if (isUpdateMode()) {
-			attributesEnumeration = updatedAttrs.getAll();
+			attributesEnumeration = this.updatedAttrs.getAll();
 		}
 		else {
-			attributesEnumeration = originalAttrs.getAll();
+			attributesEnumeration = this.originalAttrs.getAll();
 		}
 
 		try {
@@ -275,14 +275,14 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	@Override
 	public ModificationItem[] getModificationItems() {
-		if (!updateMode) {
+		if (!this.updateMode) {
 			return new ModificationItem[0];
 		}
 
 		List<ModificationItem> tmpList = new LinkedList<ModificationItem>();
 		NamingEnumeration<? extends Attribute> attributesEnumeration = null;
 		try {
-			attributesEnumeration = updatedAttrs.getAll();
+			attributesEnumeration = this.updatedAttrs.getAll();
 
 			// find attributes that have been changed, removed or added
 			while (attributesEnumeration.hasMore()) {
@@ -319,7 +319,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	private void collectModifications(NameAwareAttribute changedAttr, List<ModificationItem> modificationList)
 			throws NamingException {
-		NameAwareAttribute currentAttribute = originalAttrs.get(changedAttr.getID());
+		NameAwareAttribute currentAttribute = this.originalAttrs.get(changedAttr.getID());
 		if (currentAttribute != null && changedAttr.hasValuesAsNames()) {
 			try {
 				currentAttribute.initValuesAsNames();
@@ -431,8 +431,8 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	private boolean isChanged(String name, Object[] values, boolean orderMatters) {
 
-		NameAwareAttribute orig = originalAttrs.get(name);
-		NameAwareAttribute prev = updatedAttrs.get(name);
+		NameAwareAttribute orig = this.originalAttrs.get(name);
+		NameAwareAttribute prev = this.updatedAttrs.get(name);
 
 		// values == null and values.length == 0 is treated the same way
 		boolean emptyNewValue = (values == null || values.length == 0);
@@ -522,7 +522,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 * @return true if the attribute exists in the entry.
 	 */
 	protected final boolean exists(String attrId) {
-		return originalAttrs.get(attrId) != null;
+		return this.originalAttrs.get(attrId) != null;
 	}
 
 	/**
@@ -538,7 +538,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	@Override
 	public Object getObjectAttribute(String name) {
-		Attribute oneAttr = originalAttrs.get(name);
+		Attribute oneAttr = this.originalAttrs.get(name);
 		if (oneAttr == null || oneAttr.size() == 0) { // LDAP-215
 			return null;
 		}
@@ -556,7 +556,7 @@ public class DirContextAdapter implements DirContextOperations {
 	@Override
 	// LDAP-215
 	public boolean attributeExists(String name) {
-		Attribute oneAttr = originalAttrs.get(name);
+		Attribute oneAttr = this.originalAttrs.get(name);
 		return oneAttr != null;
 	}
 
@@ -566,17 +566,17 @@ public class DirContextAdapter implements DirContextOperations {
 	@Override
 	public void setAttributeValue(String name, Object value) {
 		// new entry
-		if (!updateMode && value != null) {
-			originalAttrs.put(name, value);
+		if (!this.updateMode && value != null) {
+			this.originalAttrs.put(name, value);
 		}
 
 		// updating entry
-		if (updateMode) {
+		if (this.updateMode) {
 			Attribute attribute = new NameAwareAttribute(name);
 			if (value != null) {
 				attribute.add(value);
 			}
-			updatedAttrs.put(attribute);
+			this.updatedAttrs.put(attribute);
 		}
 	}
 
@@ -593,31 +593,31 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	@Override
 	public void addAttributeValue(String name, Object value, boolean addIfDuplicateExists) {
-		if (!updateMode && value != null) {
-			Attribute attr = originalAttrs.get(name);
+		if (!this.updateMode && value != null) {
+			Attribute attr = this.originalAttrs.get(name);
 			if (attr == null) {
-				originalAttrs.put(name, value);
+				this.originalAttrs.put(name, value);
 			}
 			else {
 				attr.add(value);
 			}
 		}
-		else if (updateMode) {
-			Attribute attr = updatedAttrs.get(name);
+		else if (this.updateMode) {
+			Attribute attr = this.updatedAttrs.get(name);
 			if (attr == null) {
-				if (originalAttrs.get(name) == null) {
+				if (this.originalAttrs.get(name) == null) {
 					// No match in the original attributes -
 					// add a new Attribute to updatedAttrs
-					updatedAttrs.put(name, value);
+					this.updatedAttrs.put(name, value);
 				}
 				else {
 					// The attribute exists in the original attributes - clone
 					// that and add the new entry to it
-					attr = (Attribute) originalAttrs.get(name).clone();
+					attr = (Attribute) this.originalAttrs.get(name).clone();
 					if (addIfDuplicateExists || !attr.contains(value)) {
 						attr.add(value);
 					}
-					updatedAttrs.put(attr);
+					this.updatedAttrs.put(attr);
 				}
 			}
 			else {
@@ -631,22 +631,22 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	@Override
 	public void removeAttributeValue(String name, Object value) {
-		if (!updateMode && value != null) {
-			Attribute attr = originalAttrs.get(name);
+		if (!this.updateMode && value != null) {
+			Attribute attr = this.originalAttrs.get(name);
 			if (attr != null) {
 				attr.remove(value);
 				if (attr.size() == 0) {
-					originalAttrs.remove(name);
+					this.originalAttrs.remove(name);
 				}
 			}
 		}
-		else if (updateMode) {
-			Attribute attr = updatedAttrs.get(name);
+		else if (this.updateMode) {
+			Attribute attr = this.updatedAttrs.get(name);
 			if (attr == null) {
-				if (originalAttrs.get(name) != null) {
-					attr = (Attribute) originalAttrs.get(name).clone();
+				if (this.originalAttrs.get(name) != null) {
+					attr = (Attribute) this.originalAttrs.get(name).clone();
 					attr.remove(value);
-					updatedAttrs.put(attr);
+					this.updatedAttrs.put(attr);
 				}
 			}
 			else {
@@ -675,14 +675,14 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 
 		// only change the original attribute if not in update mode
-		if (!updateMode && values != null && values.length > 0) {
+		if (!this.updateMode && values != null && values.length > 0) {
 			// don't save empty arrays
-			originalAttrs.put(a);
+			this.originalAttrs.put(a);
 		}
 
 		// possible to set an already existing attribute to an empty array
-		if (updateMode && isChanged(name, values, orderMatters)) {
-			updatedAttrs.put(a);
+		if (this.updateMode && isChanged(name, values, orderMatters)) {
+			this.updatedAttrs.put(a);
 		}
 	}
 
@@ -694,7 +694,7 @@ public class DirContextAdapter implements DirContextOperations {
 		NamingEnumeration<? extends Attribute> attributesEnumeration = null;
 
 		try {
-			attributesEnumeration = updatedAttrs.getAll();
+			attributesEnumeration = this.updatedAttrs.getAll();
 
 			// find what to update
 			while (attributesEnumeration.hasMore()) {
@@ -702,11 +702,11 @@ public class DirContextAdapter implements DirContextOperations {
 
 				// if it does not exist it should be added
 				if (isEmptyAttribute(a)) {
-					originalAttrs.remove(a.getID());
+					this.originalAttrs.remove(a.getID());
 				}
 				else {
 					// Otherwise it should be set.
-					originalAttrs.put(a);
+					this.originalAttrs.put(a);
 				}
 			}
 		}
@@ -718,7 +718,7 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 
 		// Reset the attributes to be updated
-		updatedAttrs = new NameAwareAttributes();
+		this.updatedAttrs = new NameAwareAttributes();
 	}
 
 	/**
@@ -753,7 +753,7 @@ public class DirContextAdapter implements DirContextOperations {
 
 	private <T> List<T> collectAttributeValuesAsList(String name, Class<T> clazz) {
 		List<T> list = new LinkedList<T>();
-		LdapUtils.collectAttributeValues(originalAttrs, name, list, clazz);
+		LdapUtils.collectAttributeValues(this.originalAttrs, name, list, clazz);
 		return list;
 	}
 
@@ -764,7 +764,7 @@ public class DirContextAdapter implements DirContextOperations {
 	public SortedSet<String> getAttributeSortedStringSet(String name) {
 		try {
 			TreeSet<String> attrSet = new TreeSet<String>();
-			LdapUtils.collectAttributeValues(originalAttrs, name, attrSet, String.class);
+			LdapUtils.collectAttributeValues(this.originalAttrs, name, attrSet, String.class);
 			return attrSet;
 		}
 		catch (NoSuchAttributeException e) {
@@ -778,11 +778,11 @@ public class DirContextAdapter implements DirContextOperations {
 	 * @param attribute the attribute to set.
 	 */
 	public void setAttribute(Attribute attribute) {
-		if (!updateMode) {
-			originalAttrs.put(attribute);
+		if (!this.updateMode) {
+			this.originalAttrs.put(attribute);
 		}
 		else {
-			updatedAttrs.put(attribute);
+			this.updatedAttrs.put(attribute);
 		}
 	}
 
@@ -791,7 +791,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 * @return all attributes.
 	 */
 	public Attributes getAttributes() {
-		return originalAttrs;
+		return this.originalAttrs;
 	}
 
 	/**
@@ -810,7 +810,7 @@ public class DirContextAdapter implements DirContextOperations {
 		if (StringUtils.hasLength(name)) {
 			throw new NameNotFoundException();
 		}
-		return (Attributes) originalAttrs.clone();
+		return (Attributes) this.originalAttrs.clone();
 	}
 
 	/**
@@ -833,7 +833,7 @@ public class DirContextAdapter implements DirContextOperations {
 		Attributes a = new NameAwareAttributes();
 		Attribute target;
 		for (String attrId : attrIds) {
-			target = originalAttrs.get(attrId);
+			target = this.originalAttrs.get(attrId);
 			if (target != null) {
 				a.put(target);
 			}
@@ -1253,13 +1253,13 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	@Override
 	public String getNameInNamespace() {
-		if (base.size() == 0) {
-			return dn.toString();
+		if (this.base.size() == 0) {
+			return this.dn.toString();
 		}
 
 		try {
-			LdapName result = (LdapName) dn.clone();
-			result.addAll(0, base);
+			LdapName result = (LdapName) this.dn.clone();
+			result.addAll(0, this.base);
 			return result.toString();
 		}
 		catch (InvalidNameException e) {
@@ -1272,7 +1272,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	@Override
 	public Name getDn() {
-		return LdapUtils.newLdapName(dn);
+		return LdapUtils.newLdapName(this.dn);
 	}
 
 	/**
@@ -1280,7 +1280,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	@Override
 	public final void setDn(Name dn) {
-		if (!updateMode) {
+		if (!this.updateMode) {
 			this.dn = LdapUtils.newLdapName(dn);
 		}
 		else {
@@ -1301,17 +1301,17 @@ public class DirContextAdapter implements DirContextOperations {
 
 		DirContextAdapter that = (DirContextAdapter) o;
 
-		if (updateMode != that.updateMode)
+		if (this.updateMode != that.updateMode)
 			return false;
-		if (base != null ? !base.equals(that.base) : that.base != null)
+		if (this.base != null ? !this.base.equals(that.base) : that.base != null)
 			return false;
-		if (dn != null ? !dn.equals(that.dn) : that.dn != null)
+		if (this.dn != null ? !this.dn.equals(that.dn) : that.dn != null)
 			return false;
-		if (originalAttrs != null ? !originalAttrs.equals(that.originalAttrs) : that.originalAttrs != null)
+		if (this.originalAttrs != null ? !this.originalAttrs.equals(that.originalAttrs) : that.originalAttrs != null)
 			return false;
-		if (referralUrl != null ? !referralUrl.equals(that.referralUrl) : that.referralUrl != null)
+		if (this.referralUrl != null ? !this.referralUrl.equals(that.referralUrl) : that.referralUrl != null)
 			return false;
-		if (updatedAttrs != null ? !updatedAttrs.equals(that.updatedAttrs) : that.updatedAttrs != null)
+		if (this.updatedAttrs != null ? !this.updatedAttrs.equals(that.updatedAttrs) : that.updatedAttrs != null)
 			return false;
 
 		return true;
@@ -1322,12 +1322,12 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	@Override
 	public int hashCode() {
-		int result = originalAttrs != null ? originalAttrs.hashCode() : 0;
-		result = 31 * result + (dn != null ? dn.hashCode() : 0);
-		result = 31 * result + (base != null ? base.hashCode() : 0);
-		result = 31 * result + (updateMode ? 1 : 0);
-		result = 31 * result + (updatedAttrs != null ? updatedAttrs.hashCode() : 0);
-		result = 31 * result + (referralUrl != null ? referralUrl.hashCode() : 0);
+		int result = this.originalAttrs != null ? this.originalAttrs.hashCode() : 0;
+		result = 31 * result + (this.dn != null ? this.dn.hashCode() : 0);
+		result = 31 * result + (this.base != null ? this.base.hashCode() : 0);
+		result = 31 * result + (this.updateMode ? 1 : 0);
+		result = 31 * result + (this.updatedAttrs != null ? this.updatedAttrs.hashCode() : 0);
+		result = 31 * result + (this.referralUrl != null ? this.referralUrl.hashCode() : 0);
 		return result;
 	}
 
@@ -1339,13 +1339,13 @@ public class DirContextAdapter implements DirContextOperations {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getClass().getName());
 		builder.append(":");
-		if (dn != null) {
-			builder.append(" dn=").append(dn);
+		if (this.dn != null) {
+			builder.append(" dn=").append(this.dn);
 		}
 		builder.append(" {");
 
 		try {
-			for (NamingEnumeration<NameAwareAttribute> i = originalAttrs.getAll(); i.hasMore();) {
+			for (NamingEnumeration<NameAwareAttribute> i = this.originalAttrs.getAll(); i.hasMore();) {
 				Attribute attribute = i.next();
 				if (attribute.size() == 1) {
 					builder.append(attribute.getID());
@@ -1390,7 +1390,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	@Override
 	public String getReferralUrl() {
-		return referralUrl;
+		return this.referralUrl;
 	}
 
 	/**
@@ -1398,7 +1398,7 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	@Override
 	public boolean isReferral() {
-		return StringUtils.hasLength(referralUrl);
+		return StringUtils.hasLength(this.referralUrl);
 	}
 
 }

@@ -36,22 +36,23 @@ public class CollectingNameClassPairCallbackHandlerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		expectedResult = new Object();
-		expectedNameClassPair = new NameClassPair(null, null);
-		tested = new CollectingNameClassPairCallbackHandler() {
+		this.expectedResult = new Object();
+		this.expectedNameClassPair = new NameClassPair(null, null);
+		this.tested = new CollectingNameClassPairCallbackHandler() {
 			public Object getObjectFromNameClassPair(NameClassPair nameClassPair) {
-				assertThat(nameClassPair).isSameAs(expectedNameClassPair);
-				return expectedResult;
+				assertThat(nameClassPair)
+						.isSameAs(CollectingNameClassPairCallbackHandlerTest.this.expectedNameClassPair);
+				return CollectingNameClassPairCallbackHandlerTest.this.expectedResult;
 			}
 		};
 	}
 
 	@Test
 	public void testHandleNameClassPair() throws NamingException {
-		tested.handleNameClassPair(expectedNameClassPair);
-		List result = tested.getList();
+		this.tested.handleNameClassPair(this.expectedNameClassPair);
+		List result = this.tested.getList();
 		assertThat(result).hasSize(1);
-		assertThat(result.get(0)).isSameAs(expectedResult);
+		assertThat(result.get(0)).isSameAs(this.expectedResult);
 	}
 
 }

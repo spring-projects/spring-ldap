@@ -65,9 +65,9 @@ public class RebindOperationRecorder implements CompensatingTransactionOperation
 			attributes = (Attributes) args[2];
 		}
 
-		Name temporaryName = renamingStrategy.getTemporaryName(dn);
+		Name temporaryName = this.renamingStrategy.getTemporaryName(dn);
 
-		return new RebindOperationExecutor(ldapOperations, dn, temporaryName, object, attributes);
+		return new RebindOperationExecutor(this.ldapOperations, dn, temporaryName, object, attributes);
 	}
 
 	/**
@@ -75,11 +75,11 @@ public class RebindOperationRecorder implements CompensatingTransactionOperation
 	 * @return the LdapOperations.
 	 */
 	LdapOperations getLdapOperations() {
-		return ldapOperations;
+		return this.ldapOperations;
 	}
 
 	public TempEntryRenamingStrategy getRenamingStrategy() {
-		return renamingStrategy;
+		return this.renamingStrategy;
 	}
 
 }

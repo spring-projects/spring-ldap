@@ -72,7 +72,7 @@ public class RebindOperationExecutor implements CompensatingTransactionOperation
 	 * @return the LdapOperations.
 	 */
 	LdapOperations getLdapOperations() {
-		return ldapOperations;
+		return this.ldapOperations;
 	}
 
 	/*
@@ -82,11 +82,13 @@ public class RebindOperationExecutor implements CompensatingTransactionOperation
 	public void rollback() {
 		log.debug("Rolling back rebind operation");
 		try {
-			ldapOperations.unbind(originalDn);
-			ldapOperations.rename(temporaryDn, originalDn);
+			this.ldapOperations.unbind(this.originalDn);
+			this.ldapOperations.rename(this.temporaryDn, this.originalDn);
 		}
 		catch (Exception e) {
-			log.warn("Failed to rollback operation, dn: " + originalDn + "; temporary DN: " + temporaryDn, e);
+			log.warn(
+					"Failed to rollback operation, dn: " + this.originalDn + "; temporary DN:this. " + this.temporaryDn,
+					e);
 		}
 	}
 
@@ -96,7 +98,7 @@ public class RebindOperationExecutor implements CompensatingTransactionOperation
 	 */
 	public void commit() {
 		log.debug("Committing rebind operation");
-		ldapOperations.unbind(temporaryDn);
+		this.ldapOperations.unbind(this.temporaryDn);
 	}
 
 	/*
@@ -105,24 +107,24 @@ public class RebindOperationExecutor implements CompensatingTransactionOperation
 	 */
 	public void performOperation() {
 		log.debug("Performing rebind operation - " + "renaming original entry and " + "binding new contents to entry.");
-		ldapOperations.rename(originalDn, temporaryDn);
-		ldapOperations.bind(originalDn, originalObject, originalAttributes);
+		this.ldapOperations.rename(this.originalDn, this.temporaryDn);
+		this.ldapOperations.bind(this.originalDn, this.originalObject, this.originalAttributes);
 	}
 
 	Attributes getOriginalAttributes() {
-		return originalAttributes;
+		return this.originalAttributes;
 	}
 
 	Name getOriginalDn() {
-		return originalDn;
+		return this.originalDn;
 	}
 
 	Object getOriginalObject() {
-		return originalObject;
+		return this.originalObject;
 	}
 
 	Name getTemporaryDn() {
-		return temporaryDn;
+		return this.temporaryDn;
 	}
 
 }

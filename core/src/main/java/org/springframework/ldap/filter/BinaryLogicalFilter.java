@@ -30,23 +30,23 @@ public abstract class BinaryLogicalFilter extends AbstractFilter {
 	private List<Filter> queryList = new LinkedList<Filter>();
 
 	public StringBuffer encode(StringBuffer buff) {
-		if (queryList.size() <= 0) {
+		if (this.queryList.size() <= 0) {
 
 			// only output query if contains anything
 			return buff;
 
 		}
-		else if (queryList.size() == 1) {
+		else if (this.queryList.size() == 1) {
 
 			// don't add the &
-			Filter query = queryList.get(0);
+			Filter query = this.queryList.get(0);
 			return query.encode(buff);
 
 		}
 		else {
 			buff.append("(").append(getLogicalOperator());
 
-			for (Filter query : queryList) {
+			for (Filter query : this.queryList) {
 				query.encode(buff);
 			}
 
@@ -72,7 +72,7 @@ public abstract class BinaryLogicalFilter extends AbstractFilter {
 
 		BinaryLogicalFilter that = (BinaryLogicalFilter) o;
 
-		if (queryList != null ? !queryList.equals(that.queryList) : that.queryList != null)
+		if (this.queryList != null ? !this.queryList.equals(that.queryList) : that.queryList != null)
 			return false;
 
 		return true;
@@ -80,7 +80,7 @@ public abstract class BinaryLogicalFilter extends AbstractFilter {
 
 	@Override
 	public int hashCode() {
-		return queryList != null ? queryList.hashCode() : 0;
+		return this.queryList != null ? this.queryList.hashCode() : 0;
 	}
 
 	/**
@@ -89,12 +89,12 @@ public abstract class BinaryLogicalFilter extends AbstractFilter {
 	 * @return This instance.
 	 */
 	public final BinaryLogicalFilter append(Filter query) {
-		queryList.add(query);
+		this.queryList.add(query);
 		return this;
 	}
 
 	public final BinaryLogicalFilter appendAll(Collection<Filter> subQueries) {
-		queryList.addAll(subQueries);
+		this.queryList.addAll(subQueries);
 		return this;
 	}
 

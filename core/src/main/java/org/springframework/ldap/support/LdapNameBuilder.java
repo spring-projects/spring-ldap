@@ -81,7 +81,7 @@ public final class LdapNameBuilder {
 		Assert.notNull(value, "value must not be null");
 
 		try {
-			ldapName.add(new Rdn(key, value));
+			this.ldapName.add(new Rdn(key, value));
 			return this;
 		}
 		catch (InvalidNameException e) {
@@ -98,7 +98,7 @@ public final class LdapNameBuilder {
 		Assert.notNull(name, "name must not be null");
 
 		try {
-			ldapName.addAll(ldapName.size(), name);
+			this.ldapName.addAll(this.ldapName.size(), name);
 			return this;
 		}
 		catch (InvalidNameException e) {
@@ -123,7 +123,7 @@ public final class LdapNameBuilder {
 	 * @return the LdapName instance that has been built.
 	 */
 	public LdapName build() {
-		return LdapUtils.newLdapName(ldapName);
+		return LdapUtils.newLdapName(this.ldapName);
 	}
 
 }

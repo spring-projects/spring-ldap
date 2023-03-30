@@ -50,7 +50,7 @@ public class NamingExceptionTest {
 	}
 
 	private NamingException readFromStream() throws IOException, ClassNotFoundException {
-		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(this.byteArrayOutputStream.toByteArray());
 		ObjectInputStream in = new ObjectInputStream(byteArrayInputStream);
 		NamingException deSerializedException;
 		try {
@@ -63,8 +63,8 @@ public class NamingExceptionTest {
 	}
 
 	private void writeToStream(NamingException exception) throws IOException {
-		byteArrayOutputStream = new ByteArrayOutputStream();
-		ObjectOutputStream out = new ObjectOutputStream(byteArrayOutputStream);
+		this.byteArrayOutputStream = new ByteArrayOutputStream();
+		ObjectOutputStream out = new ObjectOutputStream(this.byteArrayOutputStream);
 		try {
 			out.writeObject(exception);
 			out.flush();

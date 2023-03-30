@@ -28,17 +28,17 @@ public class CountNameClassPairResultCallbackHandlerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		tested = new CountNameClassPairCallbackHandler();
+		this.tested = new CountNameClassPairCallbackHandler();
 	}
 
 	@Test
 	public void testHandleSearchResult() throws Exception {
 		SearchResult dummy = new SearchResult(null, null, null);
-		tested.handleNameClassPair(dummy);
-		tested.handleNameClassPair(dummy);
-		tested.handleNameClassPair(dummy);
+		this.tested.handleNameClassPair(dummy);
+		this.tested.handleNameClassPair(dummy);
+		this.tested.handleNameClassPair(dummy);
 
-		assertThat(tested.getNoOfRows()).isEqualTo(3);
+		assertThat(this.tested.getNoOfRows()).isEqualTo(3);
 	}
 
 }

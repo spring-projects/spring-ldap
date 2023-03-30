@@ -35,7 +35,7 @@ public abstract class CollectingNameClassPairCallbackHandler<T> implements NameC
 	 * @return the list of all assembled objects.
 	 */
 	public List<T> getList() {
-		return list;
+		return this.list;
 	}
 
 	/**
@@ -44,7 +44,7 @@ public abstract class CollectingNameClassPairCallbackHandler<T> implements NameC
 	 * internal list.
 	 */
 	public final void handleNameClassPair(NameClassPair nameClassPair) throws NamingException {
-		list.add(getObjectFromNameClassPair(nameClassPair));
+		this.list.add(getObjectFromNameClassPair(nameClassPair));
 	}
 
 	/**

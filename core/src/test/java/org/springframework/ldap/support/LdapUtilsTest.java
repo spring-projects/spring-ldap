@@ -43,7 +43,7 @@ public class LdapUtilsTest {
 
 	@Before
 	public void setUp() throws Exception {
-		handlerMock = mock(AttributeValueCallbackHandler.class);
+		this.handlerMock = mock(AttributeValueCallbackHandler.class);
 	}
 
 	@Test
@@ -87,10 +87,10 @@ public class LdapUtilsTest {
 		expectedAttribute.add("value1");
 		expectedAttribute.add("value2");
 
-		LdapUtils.iterateAttributeValues(expectedAttribute, handlerMock);
+		LdapUtils.iterateAttributeValues(expectedAttribute, this.handlerMock);
 
-		verify(handlerMock).handleAttributeValue(expectedAttributeName, "value1", 0);
-		verify(handlerMock).handleAttributeValue(expectedAttributeName, "value2", 1);
+		verify(this.handlerMock).handleAttributeValue(expectedAttributeName, "value1", 0);
+		verify(this.handlerMock).handleAttributeValue(expectedAttributeName, "value2", 1);
 	}
 
 	@Test
@@ -99,7 +99,7 @@ public class LdapUtilsTest {
 
 		BasicAttribute expectedAttribute = new BasicAttribute(expectedAttributeName);
 
-		LdapUtils.iterateAttributeValues(expectedAttribute, handlerMock);
+		LdapUtils.iterateAttributeValues(expectedAttribute, this.handlerMock);
 	}
 
 	/**

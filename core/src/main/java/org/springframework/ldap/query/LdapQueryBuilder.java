@@ -184,13 +184,13 @@ public final class LdapQueryBuilder implements LdapQuery {
 	 */
 	public ConditionCriteria where(String attribute) {
 		initRootContainer();
-		return new DefaultConditionCriteria(rootContainer, attribute);
+		return new DefaultConditionCriteria(this.rootContainer, attribute);
 	}
 
 	private void initRootContainer() {
 		assertFilterNotStarted();
-		rootContainer = new DefaultContainerCriteria(this);
-		isFilterStarted = true;
+		this.rootContainer = new DefaultContainerCriteria(this);
+		this.isFilterStarted = true;
 	}
 
 	/**
@@ -207,7 +207,7 @@ public final class LdapQueryBuilder implements LdapQuery {
 	 */
 	public LdapQuery filter(String hardcodedFilter) {
 		initRootContainer();
-		rootContainer.append(new HardcodedFilter(hardcodedFilter));
+		this.rootContainer.append(new HardcodedFilter(hardcodedFilter));
 		return this;
 	}
 
@@ -219,7 +219,7 @@ public final class LdapQueryBuilder implements LdapQuery {
 	 */
 	public LdapQuery filter(Filter filter) {
 		initRootContainer();
-		rootContainer.append(filter);
+		this.rootContainer.append(filter);
 		return this;
 	}
 
@@ -246,40 +246,40 @@ public final class LdapQueryBuilder implements LdapQuery {
 	}
 
 	private void assertFilterNotStarted() {
-		Assert.state(!isFilterStarted, "Invalid operation - filter condition specification already started");
+		Assert.state(!this.isFilterStarted, "Invalid operation - filter condition specification already started");
 	}
 
 	@Override
 	public Name base() {
-		return base;
+		return this.base;
 	}
 
 	@Override
 	public SearchScope searchScope() {
-		return searchScope;
+		return this.searchScope;
 	}
 
 	@Override
 	public Integer countLimit() {
-		return countLimit;
+		return this.countLimit;
 	}
 
 	@Override
 	public Integer timeLimit() {
-		return timeLimit;
+		return this.timeLimit;
 	}
 
 	@Override
 	public String[] attributes() {
-		return attributes;
+		return this.attributes;
 	}
 
 	@Override
 	public Filter filter() {
-		if (rootContainer == null) {
+		if (this.rootContainer == null) {
 			throw new IllegalStateException("No filter conditions have been specified");
 		}
-		return rootContainer.filter();
+		return this.rootContainer.filter();
 	}
 
 }

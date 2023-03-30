@@ -28,24 +28,24 @@ import org.springframework.util.Assert;
 	public CaseIgnoreString(String string) {
 		Assert.notNull(string, "string must not be null");
 		this.string = string;
-		hashCode = string.toUpperCase().hashCode();
+		this.hashCode = string.toUpperCase().hashCode();
 	}
 
 	public boolean equals(Object other) {
-		return other instanceof CaseIgnoreString && ((CaseIgnoreString) other).string.equalsIgnoreCase(string);
+		return other instanceof CaseIgnoreString && ((CaseIgnoreString) other).string.equalsIgnoreCase(this.string);
 	}
 
 	public int hashCode() {
-		return hashCode;
+		return this.hashCode;
 	}
 
 	public int compareTo(CaseIgnoreString other) {
 		CaseIgnoreString cis = other;
-		return String.CASE_INSENSITIVE_ORDER.compare(string, cis.string);
+		return String.CASE_INSENSITIVE_ORDER.compare(this.string, cis.string);
 	}
 
 	public String toString() {
-		return string;
+		return this.string;
 	}
 
 }

@@ -47,12 +47,12 @@ public abstract class AbstractPoolTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		contextMock = mock(Context.class);
-		dirContextMock = mock(DirContext.class);
-		ldapContextMock = mock(LdapContext.class);
-		keyedObjectPoolMock = mock(KeyedObjectPool.class);
-		contextSourceMock = mock(ContextSource.class);
-		dirContextValidatorMock = mock(DirContextValidator.class);
+		this.contextMock = mock(Context.class);
+		this.dirContextMock = mock(DirContext.class);
+		this.ldapContextMock = mock(LdapContext.class);
+		this.keyedObjectPoolMock = mock(KeyedObjectPool.class);
+		this.contextSourceMock = mock(ContextSource.class);
+		this.dirContextValidatorMock = mock(DirContextValidator.class);
 	}
 
 }

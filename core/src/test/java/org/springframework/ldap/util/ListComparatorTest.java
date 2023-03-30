@@ -35,7 +35,7 @@ public class ListComparatorTest {
 
 	@Before
 	public void setUp() throws Exception {
-		tested = new ListComparator();
+		this.tested = new ListComparator();
 	}
 
 	@Test
@@ -43,7 +43,7 @@ public class ListComparatorTest {
 		List<Integer> list1 = Arrays.asList(0, 0);
 		List<Integer> list2 = Arrays.asList(0, 0);
 
-		int result = tested.compare(list1, list2);
+		int result = this.tested.compare(list1, list2);
 		assertThat(result).isEqualTo(0);
 	}
 
@@ -52,7 +52,7 @@ public class ListComparatorTest {
 		List<Integer> list1 = Arrays.asList(0, 0);
 		List<Integer> list2 = Arrays.asList(0, 1);
 
-		int result = tested.compare(list1, list2);
+		int result = this.tested.compare(list1, list2);
 		assertThat(result < 0).isTrue();
 	}
 
@@ -61,7 +61,7 @@ public class ListComparatorTest {
 		List<Integer> list1 = Arrays.asList(0, 1);
 		List<Integer> list2 = Arrays.asList(0, 0);
 
-		int result = tested.compare(list1, list2);
+		int result = this.tested.compare(list1, list2);
 		assertThat(result > 0).isTrue();
 	}
 
@@ -70,7 +70,7 @@ public class ListComparatorTest {
 		List<Integer> list1 = Arrays.asList(0, 0, 0);
 		List<Integer> list2 = Arrays.asList(0, 0);
 
-		int result = tested.compare(list1, list2);
+		int result = this.tested.compare(list1, list2);
 		assertThat(result > 0).isTrue();
 	}
 
@@ -79,7 +79,7 @@ public class ListComparatorTest {
 		List<Integer> list1 = Arrays.asList(0, 0);
 		List<Integer> list2 = Arrays.asList(0, 0, 0);
 
-		int result = tested.compare(list1, list2);
+		int result = this.tested.compare(list1, list2);
 		assertThat(result < 0).isTrue();
 	}
 

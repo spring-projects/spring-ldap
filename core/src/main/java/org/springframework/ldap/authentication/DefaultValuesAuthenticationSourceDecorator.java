@@ -68,11 +68,11 @@ public class DefaultValuesAuthenticationSourceDecorator implements Authenticatio
 	 * <code>defaultPassword</code> otherwise.
 	 */
 	public String getCredentials() {
-		if (StringUtils.hasText(target.getPrincipal())) {
-			return target.getCredentials();
+		if (StringUtils.hasText(this.target.getPrincipal())) {
+			return this.target.getCredentials();
 		}
 		else {
-			return defaultPassword;
+			return this.defaultPassword;
 		}
 	}
 
@@ -83,12 +83,12 @@ public class DefaultValuesAuthenticationSourceDecorator implements Authenticatio
 	 * otherwise.
 	 */
 	public String getPrincipal() {
-		String principal = target.getPrincipal();
+		String principal = this.target.getPrincipal();
 		if (StringUtils.hasText(principal)) {
 			return principal;
 		}
 		else {
-			return defaultUser;
+			return this.defaultUser;
 		}
 	}
 
@@ -123,15 +123,15 @@ public class DefaultValuesAuthenticationSourceDecorator implements Authenticatio
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	public void afterPropertiesSet() throws Exception {
-		if (target == null) {
+		if (this.target == null) {
 			throw new IllegalArgumentException("Property 'target' must be set.'");
 		}
 
-		if (defaultUser == null) {
+		if (this.defaultUser == null) {
 			throw new IllegalArgumentException("Property 'defaultUser' must be set.'");
 		}
 
-		if (defaultPassword == null) {
+		if (this.defaultPassword == null) {
 			throw new IllegalArgumentException("Property 'defaultPassword' must be set.'");
 		}
 	}

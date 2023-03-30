@@ -59,7 +59,8 @@ public class LdapCompensatingTransactionOperationFactory implements Compensating
 		}
 		else if (ObjectUtils.nullSafeEquals(operation, LdapTransactionUtils.REBIND_METHOD_NAME)) {
 			log.debug("Rebind operation recorded");
-			return new RebindOperationRecorder(createLdapOperationsInstance((DirContext) resource), renamingStrategy);
+			return new RebindOperationRecorder(createLdapOperationsInstance((DirContext) resource),
+					this.renamingStrategy);
 		}
 		else if (ObjectUtils.nullSafeEquals(operation, LdapTransactionUtils.RENAME_METHOD_NAME)) {
 			log.debug("Rename operation recorded");
@@ -69,7 +70,8 @@ public class LdapCompensatingTransactionOperationFactory implements Compensating
 			return new ModifyAttributesOperationRecorder(createLdapOperationsInstance((DirContext) resource));
 		}
 		else if (ObjectUtils.nullSafeEquals(operation, LdapTransactionUtils.UNBIND_METHOD_NAME)) {
-			return new UnbindOperationRecorder(createLdapOperationsInstance((DirContext) resource), renamingStrategy);
+			return new UnbindOperationRecorder(createLdapOperationsInstance((DirContext) resource),
+					this.renamingStrategy);
 		}
 
 		log.warn("No suitable CompensatingTransactionOperationRecorder found for method " + operation

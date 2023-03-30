@@ -46,10 +46,10 @@ public class ModifyAttributesOperationRecorderTest {
 
 	@Before
 	public void setUp() throws Exception {
-		ldapOperationsMock = mock(LdapOperations.class);
-		attributesMapperMock = mock(IncrementalAttributesMapper.class);
+		this.ldapOperationsMock = mock(LdapOperations.class);
+		this.attributesMapperMock = mock(IncrementalAttributesMapper.class);
 
-		tested = new ModifyAttributesOperationRecorder(ldapOperationsMock);
+		this.tested = new ModifyAttributesOperationRecorder(this.ldapOperationsMock);
 	}
 
 	@Test
@@ -62,9 +62,9 @@ public class ModifyAttributesOperationRecorderTest {
 
 		final Attributes expectedAttributes = new BasicAttributes();
 
-		tested = new ModifyAttributesOperationRecorder(ldapOperationsMock) {
+		this.tested = new ModifyAttributesOperationRecorder(this.ldapOperationsMock) {
 			IncrementalAttributesMapper getAttributesMapper(String[] attributeNames) {
-				return attributesMapperMock;
+				return ModifyAttributesOperationRecorderTest.this.attributesMapperMock;
 			}
 
 			protected ModificationItem getCompensatingModificationItem(Attributes originalAttributes,
@@ -77,21 +77,21 @@ public class ModifyAttributesOperationRecorderTest {
 
 		LdapName expectedName = LdapUtils.newLdapName("cn=john doe");
 
-		when(attributesMapperMock.hasMore()).thenReturn(true, false);
-		when(attributesMapperMock.getAttributesForLookup()).thenReturn(new String[] { "attribute1" });
-		when(ldapOperationsMock.lookup(expectedName, new String[] { "attribute1" }, attributesMapperMock))
+		when(this.attributesMapperMock.hasMore()).thenReturn(true, false);
+		when(this.attributesMapperMock.getAttributesForLookup()).thenReturn(new String[] { "attribute1" });
+		when(this.ldapOperationsMock.lookup(expectedName, new String[] { "attribute1" }, this.attributesMapperMock))
 				.thenReturn(expectedAttributes);
-		when(attributesMapperMock.getCollectedAttributes()).thenReturn(expectedAttributes);
+		when(this.attributesMapperMock.getCollectedAttributes()).thenReturn(expectedAttributes);
 
 		// Perform test
-		CompensatingTransactionOperationExecutor operation = tested
+		CompensatingTransactionOperationExecutor operation = this.tested
 				.recordOperation(new Object[] { expectedName, incomingMods });
 
 		// Verify outcome
 		assertThat(operation instanceof ModifyAttributesOperationExecutor).isTrue();
 		ModifyAttributesOperationExecutor rollbackOperation = (ModifyAttributesOperationExecutor) operation;
 		assertThat(rollbackOperation.getDn()).isSameAs(expectedName);
-		assertThat(rollbackOperation.getLdapOperations()).isSameAs(ldapOperationsMock);
+		assertThat(rollbackOperation.getLdapOperations()).isSameAs(this.ldapOperationsMock);
 		ModificationItem[] actualModifications = rollbackOperation.getActualModifications();
 		assertThat(actualModifications.length).isEqualTo(incomingMods.length);
 		assertThat(actualModifications[0]).isEqualTo(incomingMods[0]);
@@ -111,7 +111,7 @@ public class ModifyAttributesOperationRecorderTest {
 				new BasicAttribute("someattr"));
 
 		// Perform test
-		ModificationItem result = tested.getCompensatingModificationItem(attributes, originalItem);
+		ModificationItem result = this.tested.getCompensatingModificationItem(attributes, originalItem);
 
 		// Verify result
 		assertThat(result.getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
@@ -137,7 +137,7 @@ public class ModifyAttributesOperationRecorderTest {
 		ModificationItem originalItem = new ModificationItem(DirContext.REMOVE_ATTRIBUTE, modificationAttribute);
 
 		// Perform test
-		ModificationItem result = tested.getCompensatingModificationItem(attributes, originalItem);
+		ModificationItem result = this.tested.getCompensatingModificationItem(attributes, originalItem);
 
 		// Verify result
 		assertThat(result.getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
@@ -163,7 +163,7 @@ public class ModifyAttributesOperationRecorderTest {
 				new BasicAttribute("someattr"));
 
 		// Perform test
-		ModificationItem result = tested.getCompensatingModificationItem(attributes, originalItem);
+		ModificationItem result = this.tested.getCompensatingModificationItem(attributes, originalItem);
 
 		// Verify result
 		assertThat(result.getModificationOp()).isEqualTo(DirContext.REPLACE_ATTRIBUTE);
@@ -184,7 +184,7 @@ public class ModifyAttributesOperationRecorderTest {
 		ModificationItem originalItem = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, modificationAttribute);
 
 		// Perform test
-		ModificationItem result = tested.getCompensatingModificationItem(attributes, originalItem);
+		ModificationItem result = this.tested.getCompensatingModificationItem(attributes, originalItem);
 
 		// Verify result
 		assertThat(result.getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
@@ -203,7 +203,7 @@ public class ModifyAttributesOperationRecorderTest {
 		ModificationItem originalItem = new ModificationItem(DirContext.ADD_ATTRIBUTE, modificationAttribute);
 
 		// Perform test
-		ModificationItem result = tested.getCompensatingModificationItem(attributes, originalItem);
+		ModificationItem result = this.tested.getCompensatingModificationItem(attributes, originalItem);
 
 		// Verify result
 		assertThat(result.getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
@@ -226,7 +226,7 @@ public class ModifyAttributesOperationRecorderTest {
 		ModificationItem originalItem = new ModificationItem(DirContext.ADD_ATTRIBUTE, new BasicAttribute("someattr"));
 
 		// Perform test
-		ModificationItem result = tested.getCompensatingModificationItem(attributes, originalItem);
+		ModificationItem result = this.tested.getCompensatingModificationItem(attributes, originalItem);
 
 		// Verify result
 		assertThat(result.getModificationOp()).isEqualTo(DirContext.REPLACE_ATTRIBUTE);

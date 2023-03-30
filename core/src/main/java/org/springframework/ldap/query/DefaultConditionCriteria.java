@@ -44,40 +44,40 @@ class DefaultConditionCriteria implements ConditionCriteria {
 
 	@Override
 	public ContainerCriteria is(String value) {
-		return appendToParent(new EqualsFilter(attribute, value));
+		return appendToParent(new EqualsFilter(this.attribute, value));
 	}
 
 	@Override
 	public ContainerCriteria gte(String value) {
-		return appendToParent(new GreaterThanOrEqualsFilter(attribute, value));
+		return appendToParent(new GreaterThanOrEqualsFilter(this.attribute, value));
 	}
 
 	@Override
 	public ContainerCriteria lte(String value) {
-		return appendToParent(new LessThanOrEqualsFilter(attribute, value));
+		return appendToParent(new LessThanOrEqualsFilter(this.attribute, value));
 	}
 
 	@Override
 	public ContainerCriteria like(String value) {
-		return appendToParent(new LikeFilter(attribute, value));
+		return appendToParent(new LikeFilter(this.attribute, value));
 	}
 
 	@Override
 	public ContainerCriteria whitespaceWildcardsLike(String value) {
-		return appendToParent(new WhitespaceWildcardsFilter(attribute, value));
+		return appendToParent(new WhitespaceWildcardsFilter(this.attribute, value));
 	}
 
 	@Override
 	public ContainerCriteria isPresent() {
-		return appendToParent(new PresentFilter(attribute));
+		return appendToParent(new PresentFilter(this.attribute));
 	}
 
 	private ContainerCriteria appendToParent(Filter filter) {
-		return parent.append(negateIfApplicable(filter));
+		return this.parent.append(negateIfApplicable(filter));
 	}
 
 	private Filter negateIfApplicable(Filter myFilter) {
-		if (negated) {
+		if (this.negated) {
 			return new NotFilter(myFilter);
 		}
 
@@ -86,7 +86,7 @@ class DefaultConditionCriteria implements ConditionCriteria {
 
 	@Override
 	public DefaultConditionCriteria not() {
-		negated = !negated;
+		this.negated = !this.negated;
 		return this;
 	}
 

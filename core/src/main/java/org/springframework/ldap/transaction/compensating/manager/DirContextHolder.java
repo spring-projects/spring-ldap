@@ -55,7 +55,7 @@ public class DirContextHolder extends CompensatingTransactionHolderSupport {
 	 * Return the DirContext associated with the current transaction.
 	 */
 	public DirContext getCtx() {
-		return ctx;
+		return this.ctx;
 	}
 
 	/*
@@ -63,7 +63,7 @@ public class DirContextHolder extends CompensatingTransactionHolderSupport {
 	 * CompensatingTransactionHolderSupport#getTransactedResource()
 	 */
 	protected Object getTransactedResource() {
-		return ctx;
+		return this.ctx;
 	}
 
 }

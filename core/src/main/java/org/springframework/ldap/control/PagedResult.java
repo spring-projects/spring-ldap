@@ -46,7 +46,7 @@ public class PagedResult {
 	 * @return the cookie.
 	 */
 	public PagedResultsCookie getCookie() {
-		return cookie;
+		return this.cookie;
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class PagedResult {
 	 * @return the result list.
 	 */
 	public List<?> getResultList() {
-		return resultList;
+		return this.resultList;
 	}
 
 	@Override
@@ -66,9 +66,9 @@ public class PagedResult {
 
 		PagedResult that = (PagedResult) o;
 
-		if (cookie != null ? !cookie.equals(that.cookie) : that.cookie != null)
+		if (this.cookie != null ? !this.cookie.equals(that.cookie) : that.cookie != null)
 			return false;
-		if (resultList != null ? !resultList.equals(that.resultList) : that.resultList != null)
+		if (this.resultList != null ? !this.resultList.equals(that.resultList) : that.resultList != null)
 			return false;
 
 		return true;
@@ -76,8 +76,8 @@ public class PagedResult {
 
 	@Override
 	public int hashCode() {
-		int result = resultList != null ? resultList.hashCode() : 0;
-		result = 31 * result + (cookie != null ? cookie.hashCode() : 0);
+		int result = this.resultList != null ? this.resultList.hashCode() : 0;
+		result = 31 * result + (this.cookie != null ? this.cookie.hashCode() : 0);
 		return result;
 	}
 

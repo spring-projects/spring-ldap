@@ -54,26 +54,26 @@ public class DefaultLdapClientRenameTest {
 	@Before
 	public void setUp() throws Exception {
 		// Setup ContextSource mock
-		contextSourceMock = mock(ContextSource.class);
+		this.contextSourceMock = mock(ContextSource.class);
 
 		// Setup LdapContext mock
-		dirContextMock = mock(LdapContext.class);
+		this.dirContextMock = mock(LdapContext.class);
 
-		tested = LdapClient.create(contextSourceMock);
+		this.tested = LdapClient.create(this.contextSourceMock);
 	}
 
 	private void expectGetReadWriteContext() {
-		when(contextSourceMock.getReadWriteContext()).thenReturn(dirContextMock);
+		when(this.contextSourceMock.getReadWriteContext()).thenReturn(this.dirContextMock);
 	}
 
 	@Test
 	public void testRename() throws Exception {
 		expectGetReadWriteContext();
 
-		tested.modify(oldName).name(newName).execute();
+		this.tested.modify(this.oldName).name(this.newName).execute();
 
-		verify(dirContextMock).rename(oldName, newName);
-		verify(dirContextMock).close();
+		verify(this.dirContextMock).rename(this.oldName, this.newName);
+		verify(this.dirContextMock).close();
 	}
 
 	@Test
@@ -81,17 +81,17 @@ public class DefaultLdapClientRenameTest {
 		expectGetReadWriteContext();
 
 		javax.naming.NameAlreadyBoundException ne = new javax.naming.NameAlreadyBoundException();
-		doThrow(ne).when(dirContextMock).rename(oldName, newName);
+		doThrow(ne).when(this.dirContextMock).rename(this.oldName, this.newName);
 
 		try {
-			tested.modify(oldName).name(newName).execute();
+			this.tested.modify(this.oldName).name(this.newName).execute();
 			fail("NameAlreadyBoundException expected");
 		}
 		catch (NameAlreadyBoundException expected) {
 			assertThat(true).isTrue();
 		}
 
-		verify(dirContextMock).close();
+		verify(this.dirContextMock).close();
 	}
 
 	@Test
@@ -100,28 +100,28 @@ public class DefaultLdapClientRenameTest {
 
 		javax.naming.NamingException ne = new javax.naming.NamingException();
 
-		doThrow(ne).when(dirContextMock).rename(oldName, newName);
+		doThrow(ne).when(this.dirContextMock).rename(this.oldName, this.newName);
 
 		try {
-			tested.modify(oldName).name(newName).execute();
+			this.tested.modify(this.oldName).name(this.newName).execute();
 			fail("UncategorizedLdapException expected");
 		}
 		catch (UncategorizedLdapException expected) {
 			assertThat(true).isTrue();
 		}
 
-		verify(dirContextMock).close();
+		verify(this.dirContextMock).close();
 	}
 
 	@Test
 	public void testRename_String() throws Exception {
 		expectGetReadWriteContext();
 
-		tested.modify("o=example.com").name("o=somethingelse.com").execute();
+		this.tested.modify("o=example.com").name("o=somethingelse.com").execute();
 
-		verify(dirContextMock).rename(LdapUtils.newLdapName("o=example.com"),
+		verify(this.dirContextMock).rename(LdapUtils.newLdapName("o=example.com"),
 				LdapUtils.newLdapName("o=somethingelse.com"));
-		verify(dirContextMock).close();
+		verify(this.dirContextMock).close();
 	}
 
 }

@@ -42,22 +42,22 @@ public class PagedResultsDirContextProcessorTest {
 	@Before
 	public void setUp() throws Exception {
 
-		tested = new PagedResultsDirContextProcessor(20);
+		this.tested = new PagedResultsDirContextProcessor(20);
 
 		// Create ldapContext mock
-		ldapContextMock = mock(LdapContext.class);
+		this.ldapContextMock = mock(LdapContext.class);
 	}
 
 	@After
 	public void tearDown() throws Exception {
 
-		tested = null;
-		ldapContextMock = null;
+		this.tested = null;
+		this.ldapContextMock = null;
 	}
 
 	@Test
 	public void testCreateRequestControl() throws Exception {
-		PagedResultsControl control = (PagedResultsControl) tested.createRequestControl();
+		PagedResultsControl control = (PagedResultsControl) this.tested.createRequestControl();
 		assertThat(control).isNotNull();
 	}
 
@@ -80,13 +80,13 @@ public class PagedResultsDirContextProcessorTest {
 		byte[] cookie = encodeValue(resultSize, value);
 		PagedResultsResponseControl control = new PagedResultsResponseControl("dummy", true, cookie);
 
-		when(ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
-		tested.postProcess(ldapContextMock);
+		when(this.ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
+		this.tested.postProcess(this.ldapContextMock);
 
-		PagedResultsCookie returnedCookie = tested.getCookie();
+		PagedResultsCookie returnedCookie = this.tested.getCookie();
 		assertThat(returnedCookie.getCookie()[0]).isEqualTo((byte) 8);
-		assertThat(tested.getPageSize()).isEqualTo(20);
-		assertThat(tested.getResultSize()).isEqualTo(50);
+		assertThat(this.tested.getPageSize()).isEqualTo(20);
+		assertThat(this.tested.getResultSize()).isEqualTo(50);
 	}
 
 	@Test
@@ -101,23 +101,23 @@ public class PagedResultsDirContextProcessorTest {
 		// Using another response control to verify that it is ignored
 		DirSyncResponseControl control = new DirSyncResponseControl("dummy", true, cookie);
 
-		when(ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
-		tested.postProcess(ldapContextMock);
+		when(this.ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
+		this.tested.postProcess(this.ldapContextMock);
 
-		assertThat(tested.getCookie()).isNull();
-		assertThat(tested.getPageSize()).isEqualTo(20);
-		assertThat(tested.getResultSize()).isEqualTo(0);
+		assertThat(this.tested.getCookie()).isNull();
+		assertThat(this.tested.getPageSize()).isEqualTo(20);
+		assertThat(this.tested.getResultSize()).isEqualTo(0);
 	}
 
 	@Test
 	public void testPostProcess_NoResponseControls() throws Exception {
-		when(ldapContextMock.getResponseControls()).thenReturn(null);
+		when(this.ldapContextMock.getResponseControls()).thenReturn(null);
 
-		tested.postProcess(ldapContextMock);
+		this.tested.postProcess(this.ldapContextMock);
 
-		assertThat(tested.getCookie()).isNull();
-		assertThat(tested.getPageSize()).isEqualTo(20);
-		assertThat(tested.getResultSize()).isEqualTo(0);
+		assertThat(this.tested.getCookie()).isNull();
+		assertThat(this.tested.getPageSize()).isEqualTo(20);
+		assertThat(this.tested.getResultSize()).isEqualTo(0);
 	}
 
 	@Test

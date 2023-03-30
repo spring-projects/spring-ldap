@@ -38,32 +38,32 @@ public class LdapContextSourceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		tested = new LdapContextSource();
+		this.tested = new LdapContextSource();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testAfterPropertiesSet_NoUrl() throws Exception {
-		tested.afterPropertiesSet();
+		this.tested.afterPropertiesSet();
 	}
 
 	// gh-538
 	@Test(expected = IllegalArgumentException.class)
 	public void testAfterPropertiesSet_NullPassword() {
-		tested.setUrl("ldap://ldap.example.com:389");
-		tested.setUserDn("value");
-		tested.setPassword(null);
-		tested.afterPropertiesSet();
+		this.tested.setUrl("ldap://ldap.example.com:389");
+		this.tested.setUserDn("value");
+		this.tested.setPassword(null);
+		this.tested.afterPropertiesSet();
 	}
 
 	@Test
 	public void testGetAnonymousEnv() throws Exception {
-		tested.setBase("dc=some example,dc=se");
-		tested.setUrl("ldap://ldap.example.com:389");
-		tested.setPooled(true);
-		tested.setUserDn("cn=Some User");
-		tested.setPassword("secret");
-		tested.afterPropertiesSet();
-		Hashtable env = tested.getAnonymousEnv();
+		this.tested.setBase("dc=some example,dc=se");
+		this.tested.setUrl("ldap://ldap.example.com:389");
+		this.tested.setPooled(true);
+		this.tested.setUserDn("cn=Some User");
+		this.tested.setPassword("secret");
+		this.tested.afterPropertiesSet();
+		Hashtable env = this.tested.getAnonymousEnv();
 		assertThat(env.get(Context.PROVIDER_URL)).isEqualTo("ldap://ldap.example.com:389/dc=some%20example,dc=se");
 		assertThat(env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG)).isEqualTo("true");
 		assertThat(env.get(Context.SECURITY_PRINCIPAL)).isNull();
@@ -74,11 +74,11 @@ public class LdapContextSourceTest {
 				.isEqualTo(LdapUtils.newLdapName("dc=some example,dc=se"));
 
 		// Verify that changing values does not change the environment values.
-		tested.setBase("dc=other,dc=se");
-		tested.setUrl("ldap://ldap2.example.com:389");
-		tested.setPooled(false);
+		this.tested.setBase("dc=other,dc=se");
+		this.tested.setUrl("ldap://ldap2.example.com:389");
+		this.tested.setPooled(false);
 
-		env = tested.getAnonymousEnv();
+		env = this.tested.getAnonymousEnv();
 		assertThat(env.get(Context.PROVIDER_URL)).isEqualTo("ldap://ldap.example.com:389/dc=some%20example,dc=se");
 		assertThat(env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG)).isEqualTo("true");
 		assertThat(env.get(Context.SECURITY_PRINCIPAL)).isNull();
@@ -90,9 +90,9 @@ public class LdapContextSourceTest {
 
 	@Test
 	public void testGetAnonymousEnvWithNoBaseSet() throws Exception {
-		tested.setUrl("ldap://ldap.example.com:389");
-		tested.afterPropertiesSet();
-		Hashtable env = tested.getAnonymousEnv();
+		this.tested.setUrl("ldap://ldap.example.com:389");
+		this.tested.afterPropertiesSet();
+		Hashtable env = this.tested.getAnonymousEnv();
 		assertThat(env.get(Context.PROVIDER_URL)).isEqualTo("ldap://ldap.example.com:389");
 
 		// check that base was not added to environment
@@ -101,35 +101,35 @@ public class LdapContextSourceTest {
 
 	@Test
 	public void testGetAnonymousEnvWithBaseEnvironment() throws Exception {
-		tested.setUrl("ldap://ldap.example.com:389");
+		this.tested.setUrl("ldap://ldap.example.com:389");
 		HashMap map = new HashMap();
 		map.put(LdapContextSource.SUN_LDAP_POOLING_FLAG, "true");
-		tested.setBaseEnvironmentProperties(map);
-		tested.afterPropertiesSet();
-		Hashtable env = tested.getAnonymousEnv();
+		this.tested.setBaseEnvironmentProperties(map);
+		this.tested.afterPropertiesSet();
+		Hashtable env = this.tested.getAnonymousEnv();
 		assertThat(env.get(Context.PROVIDER_URL)).isEqualTo("ldap://ldap.example.com:389");
 		assertThat(env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG)).isNull();
 	}
 
 	@Test
 	public void testGetAnonymousEnvWithPoolingInBaseEnvironmentAndPoolingOff() throws Exception {
-		tested.setUrl("ldap://ldap.example.com:389");
+		this.tested.setUrl("ldap://ldap.example.com:389");
 		HashMap map = new HashMap();
 		map.put(LdapContextSource.SUN_LDAP_POOLING_FLAG, "true");
-		tested.setBaseEnvironmentProperties(map);
-		tested.setPooled(false);
-		tested.afterPropertiesSet();
-		Hashtable env = tested.getAnonymousEnv();
+		this.tested.setBaseEnvironmentProperties(map);
+		this.tested.setPooled(false);
+		this.tested.afterPropertiesSet();
+		Hashtable env = this.tested.getAnonymousEnv();
 		assertThat(env.get(Context.PROVIDER_URL)).isEqualTo("ldap://ldap.example.com:389");
 		assertThat(env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG)).isNull();
 	}
 
 	@Test
 	public void testGetAnonymousEnvWithEmptyBaseSet() throws Exception {
-		tested.setUrl("ldap://ldap.example.com:389");
-		tested.setBase(null);
-		tested.afterPropertiesSet();
-		Hashtable env = tested.getAnonymousEnv();
+		this.tested.setUrl("ldap://ldap.example.com:389");
+		this.tested.setBase(null);
+		this.tested.afterPropertiesSet();
+		Hashtable env = this.tested.getAnonymousEnv();
 		assertThat(env.get(Context.PROVIDER_URL)).isEqualTo("ldap://ldap.example.com:389");
 
 		// check that base was not added to environment
@@ -138,14 +138,14 @@ public class LdapContextSourceTest {
 
 	@Test
 	public void testGetAuthenticatedEnv() throws Exception {
-		tested.setBase("dc=example,dc=se");
-		tested.setUrl("ldap://ldap.example.com:389");
-		tested.setPooled(true);
-		tested.setUserDn("cn=Some User");
-		tested.setPassword("secret");
-		tested.afterPropertiesSet();
+		this.tested.setBase("dc=example,dc=se");
+		this.tested.setUrl("ldap://ldap.example.com:389");
+		this.tested.setPooled(true);
+		this.tested.setUserDn("cn=Some User");
+		this.tested.setPassword("secret");
+		this.tested.afterPropertiesSet();
 
-		Hashtable env = tested.getAuthenticatedEnv("cn=Some User", "secret");
+		Hashtable env = this.tested.getAuthenticatedEnv("cn=Some User", "secret");
 		assertThat(env.get(Context.PROVIDER_URL)).isEqualTo("ldap://ldap.example.com:389/dc=example,dc=se");
 		assertThat(env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG)).isEqualTo("true");
 		assertThat(env.get(Context.SECURITY_PRINCIPAL)).isEqualTo("cn=Some User");
@@ -158,21 +158,21 @@ public class LdapContextSourceTest {
 
 	@Test
 	public void testGetAnonymousEnvWhenCacheIsOff() throws Exception {
-		tested.setBase("dc=example,dc=se");
-		tested.setUrl("ldap://ldap.example.com:389");
-		tested.setPooled(true);
-		tested.setUserDn("cn=Some User");
-		tested.setPassword("secret");
-		tested.setCacheEnvironmentProperties(false);
-		tested.afterPropertiesSet();
-		Hashtable env = tested.getAnonymousEnv();
+		this.tested.setBase("dc=example,dc=se");
+		this.tested.setUrl("ldap://ldap.example.com:389");
+		this.tested.setPooled(true);
+		this.tested.setUserDn("cn=Some User");
+		this.tested.setPassword("secret");
+		this.tested.setCacheEnvironmentProperties(false);
+		this.tested.afterPropertiesSet();
+		Hashtable env = this.tested.getAnonymousEnv();
 		assertThat(env.get(Context.PROVIDER_URL)).isEqualTo("ldap://ldap.example.com:389/dc=example,dc=se");
 		assertThat(env.get(LdapContextSource.SUN_LDAP_POOLING_FLAG)).isEqualTo("true");
 		assertThat(env.get(Context.SECURITY_PRINCIPAL)).isNull();
 		assertThat(env.get(Context.SECURITY_CREDENTIALS)).isNull();
 
-		tested.setUrl("ldap://ldap2.example.com:389");
-		env = tested.getAnonymousEnv();
+		this.tested.setUrl("ldap://ldap2.example.com:389");
+		env = this.tested.getAnonymousEnv();
 		assertThat(env.get(Context.PROVIDER_URL)).isEqualTo("ldap://ldap2.example.com:389/dc=example,dc=se");
 	}
 

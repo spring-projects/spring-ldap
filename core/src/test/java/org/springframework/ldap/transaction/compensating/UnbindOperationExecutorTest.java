@@ -31,7 +31,7 @@ public class UnbindOperationExecutorTest {
 
 	@Before
 	public void setUp() throws Exception {
-		ldapOperationsMock = mock(LdapOperations.class);
+		this.ldapOperationsMock = mock(LdapOperations.class);
 		;
 	}
 
@@ -39,37 +39,37 @@ public class UnbindOperationExecutorTest {
 	public void testPerformOperation() {
 		LdapName expectedOldName = LdapUtils.newLdapName("cn=oldDn");
 		LdapName expectedTempName = LdapUtils.newLdapName("cn=newDn");
-		UnbindOperationExecutor tested = new UnbindOperationExecutor(ldapOperationsMock, expectedOldName,
+		UnbindOperationExecutor tested = new UnbindOperationExecutor(this.ldapOperationsMock, expectedOldName,
 				expectedTempName);
 
 		// Perform test
 		tested.performOperation();
 
-		verify(ldapOperationsMock).rename(expectedOldName, expectedTempName);
+		verify(this.ldapOperationsMock).rename(expectedOldName, expectedTempName);
 	}
 
 	@Test
 	public void testCommit() {
 		LdapName expectedOldName = LdapUtils.newLdapName("cn=oldDn");
 		LdapName expectedTempName = LdapUtils.newLdapName("cn=newDn");
-		UnbindOperationExecutor tested = new UnbindOperationExecutor(ldapOperationsMock, expectedOldName,
+		UnbindOperationExecutor tested = new UnbindOperationExecutor(this.ldapOperationsMock, expectedOldName,
 				expectedTempName);
 
 		// Perform test
 		tested.commit();
-		verify(ldapOperationsMock).unbind(expectedTempName);
+		verify(this.ldapOperationsMock).unbind(expectedTempName);
 	}
 
 	@Test
 	public void testRollback() {
 		LdapName expectedOldName = LdapUtils.newLdapName("cn=oldDn");
 		LdapName expectedTempName = LdapUtils.newLdapName("cn=newDn");
-		UnbindOperationExecutor tested = new UnbindOperationExecutor(ldapOperationsMock, expectedOldName,
+		UnbindOperationExecutor tested = new UnbindOperationExecutor(this.ldapOperationsMock, expectedOldName,
 				expectedTempName);
 
 		// Perform test
 		tested.rollback();
-		verify(ldapOperationsMock).rename(expectedTempName, expectedOldName);
+		verify(this.ldapOperationsMock).rename(expectedTempName, expectedOldName);
 	}
 
 }

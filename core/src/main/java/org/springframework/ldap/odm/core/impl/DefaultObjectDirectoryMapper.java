@@ -72,7 +72,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 	private static final CaseIgnoreString OBJECT_CLASS_ATTRIBUTE_CI = new CaseIgnoreString(OBJECT_CLASS_ATTRIBUTE);
 
 	public DefaultObjectDirectoryMapper() {
-		converterManager = createDefaultConverterManager();
+		this.converterManager = createDefaultConverterManager();
 	}
 
 	private static ConverterManager createDefaultConverterManager() {
@@ -111,7 +111,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 	private final ConcurrentMap<Class<?>, EntityData> metaDataMap = new ConcurrentHashMap<Class<?>, EntityData>();
 
 	private EntityData getEntityData(Class<?> managedClass) {
-		EntityData result = metaDataMap.get(managedClass);
+		EntityData result = this.metaDataMap.get(managedClass);
 		if (result == null) {
 			return addManagedClass(managedClass);
 		}
@@ -185,7 +185,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 		}
 
 		EntityData newValue = new EntityData(metaData, ocFilter);
-		EntityData previousValue = metaDataMap.putIfAbsent(managedClass, newValue);
+		EntityData previousValue = this.metaDataMap.putIfAbsent(managedClass, newValue);
 		// Just in case someone beat us to it
 		if (previousValue != null) {
 			return previousValue;
@@ -197,13 +197,13 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 	private void verifyConversion(Class<?> managedClass, Field field, AttributeMetaData attributeInfo) {
 		Class<?> jndiClass = attributeInfo.getJndiClass();
 		Class<?> javaClass = attributeInfo.getValueClass();
-		if (!converterManager.canConvert(jndiClass, attributeInfo.getSyntax(), javaClass)) {
+		if (!this.converterManager.canConvert(jndiClass, attributeInfo.getSyntax(), javaClass)) {
 			throw new InvalidEntryException(
 					String.format("Missing converter from %1$s to %2$s, this is needed for field %3$s on Entry %4$s",
 							jndiClass, javaClass, field.getName(), managedClass));
 		}
 		if (!attributeInfo.isReadOnly()
-				&& !converterManager.canConvert(javaClass, attributeInfo.getSyntax(), jndiClass)) {
+				&& !this.converterManager.canConvert(javaClass, attributeInfo.getSyntax(), jndiClass)) {
 			throw new InvalidEntryException(
 					String.format("Missing converter from %1$s to %2$s, this is needed for field %3$s on Entry %4$s",
 							javaClass, jndiClass, field.getName(), managedClass));
@@ -273,7 +273,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 			for (final Object o : fieldValues) {
 				// Ignore null values
 				if (o != null) {
-					attributeValues.add(converterManager.convert(o, attributeInfo.getSyntax(), targetClass));
+					attributeValues.add(this.converterManager.convert(o, attributeInfo.getSyntax(), targetClass));
 				}
 			}
 			context.setAttributeValues(attributeInfo.getName().toString(), attributeValues.toArray());
@@ -289,7 +289,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 			// Convert the field value to the required type and write it into the JNDI
 			// context
 			context.setAttributeValue(attributeInfo.getName().toString(),
-					converterManager.convert(fieldValue, attributeInfo.getSyntax(), targetClass));
+					this.converterManager.convert(fieldValue, attributeInfo.getSyntax(), targetClass));
 		}
 		else {
 			context.setAttributeValue(attributeInfo.getName().toString(), null);
@@ -367,8 +367,8 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 					}
 				}
 				else if (attributeInfo.isId()) { // The id field
-					field.set(result,
-							converterManager.convert(dn, attributeInfo.getSyntax(), attributeInfo.getValueClass()));
+					field.set(result, this.converterManager.convert(dn, attributeInfo.getSyntax(),
+							attributeInfo.getValueClass()));
 				}
 
 				DnAttribute dnAttribute = attributeInfo.getDnAttribute();
@@ -423,8 +423,8 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 				if (value != null) {
 					// Convert the value to its Java representation and add it to our
 					// working list
-					fieldValues.add(
-							converterManager.convert(value, attributeInfo.getSyntax(), attributeInfo.getValueClass()));
+					fieldValues.add(this.converterManager.convert(value, attributeInfo.getSyntax(),
+							attributeInfo.getValueClass()));
 				}
 			}
 		}
@@ -445,7 +445,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 				// Convert the JNDI value to its Java representation - this will throw if
 				// the
 				// conversion fails
-				Object convertedValue = converterManager.convert(value, attributeInfo.getSyntax(),
+				Object convertedValue = this.converterManager.convert(value, attributeInfo.getSyntax(),
 						attributeInfo.getValueClass());
 				// Set it in the Java version
 				field.set(result, convertedValue);
@@ -529,7 +529,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 
 	// For testing purposes
 	ConcurrentMap<Class<?>, EntityData> getMetaDataMap() {
-		return metaDataMap;
+		return this.metaDataMap;
 	}
 
 	static boolean collectionContainsAll(Collection<?> collection, Set<?> shouldBePresent) {

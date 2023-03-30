@@ -61,7 +61,7 @@ public class ContextMapperCallbackHandler<T> extends CollectingNameClassPairCall
 		if (object == null) {
 			throw new ObjectRetrievalException("Binding did not contain any object.");
 		}
-		return mapper.mapFromContext(object);
+		return this.mapper.mapFromContext(object);
 	}
 
 }

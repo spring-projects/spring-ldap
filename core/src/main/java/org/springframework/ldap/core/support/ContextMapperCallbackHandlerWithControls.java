@@ -60,10 +60,10 @@ public class ContextMapperCallbackHandlerWithControls<T> extends ContextMapperCa
 		}
 		T result;
 		if (nameClassPair instanceof HasControls) {
-			result = mapper.mapFromContextWithControls(object, (HasControls) nameClassPair);
+			result = this.mapper.mapFromContextWithControls(object, (HasControls) nameClassPair);
 		}
 		else {
-			result = mapper.mapFromContext(object);
+			result = this.mapper.mapFromContext(object);
 		}
 		return result;
 	}

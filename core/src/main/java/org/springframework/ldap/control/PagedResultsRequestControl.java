@@ -89,15 +89,15 @@ public class PagedResultsRequestControl extends AbstractRequestControlDirContext
 
 	private void loadControlClasses() {
 		try {
-			requestControlClass = Class.forName(DEFAULT_REQUEST_CONTROL);
-			responseControlClass = Class.forName(DEFAULT_RESPONSE_CONTROL);
+			this.requestControlClass = Class.forName(DEFAULT_REQUEST_CONTROL);
+			this.responseControlClass = Class.forName(DEFAULT_RESPONSE_CONTROL);
 		}
 		catch (ClassNotFoundException e) {
-			log.debug("Default control classes not found - falling back to LdapBP classes", e);
+			this.log.debug("Default control classes not found - falling back to LdapBP classes", e);
 
 			try {
-				requestControlClass = Class.forName(LDAPBP_REQUEST_CONTROL);
-				responseControlClass = Class.forName(LDAPBP_RESPONSE_CONTROL);
+				this.requestControlClass = Class.forName(LDAPBP_REQUEST_CONTROL);
+				this.responseControlClass = Class.forName(LDAPBP_RESPONSE_CONTROL);
 			}
 			catch (ClassNotFoundException e1) {
 				throw new UncategorizedLdapException(
@@ -112,7 +112,7 @@ public class PagedResultsRequestControl extends AbstractRequestControlDirContext
 	 * @return the cookie.
 	 */
 	public PagedResultsCookie getCookie() {
-		return cookie;
+		return this.cookie;
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class PagedResultsRequestControl extends AbstractRequestControlDirContext
 	 * @return the page size.
 	 */
 	public int getPageSize() {
-		return pageSize;
+		return this.pageSize;
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class PagedResultsRequestControl extends AbstractRequestControlDirContext
 	 * @return the estimated result size, if returned from the server.
 	 */
 	public int getResultSize() {
-		return resultSize;
+		return this.resultSize;
 	}
 
 	/**
@@ -152,10 +152,10 @@ public class PagedResultsRequestControl extends AbstractRequestControlDirContext
 
 	public Control createRequestControl() {
 		byte[] actualCookie = null;
-		if (cookie != null) {
-			actualCookie = cookie.getCookie();
+		if (this.cookie != null) {
+			actualCookie = this.cookie.getCookie();
 		}
-		Constructor constructor = ClassUtils.getConstructorIfAvailable(requestControlClass,
+		Constructor constructor = ClassUtils.getConstructorIfAvailable(this.requestControlClass,
 				new Class[] { int.class, byte[].class, boolean.class });
 		if (constructor == null) {
 			throw new IllegalArgumentException("Failed to find an appropriate RequestControl constructor");
@@ -163,7 +163,7 @@ public class PagedResultsRequestControl extends AbstractRequestControlDirContext
 
 		Control result = null;
 		try {
-			result = (Control) constructor.newInstance(pageSize, actualCookie, critical);
+			result = (Control) constructor.newInstance(this.pageSize, actualCookie, this.critical);
 		}
 		catch (Exception e) {
 			ReflectionUtils.handleReflectionException(e);
@@ -190,17 +190,18 @@ public class PagedResultsRequestControl extends AbstractRequestControlDirContext
 			Control responseControl = responseControls[i];
 
 			// check for match, try fallback otherwise
-			if (responseControl.getClass().isAssignableFrom(responseControlClass)) {
+			if (responseControl.getClass().isAssignableFrom(this.responseControlClass)) {
 				Object control = responseControl;
-				byte[] result = (byte[]) invokeMethod("getCookie", responseControlClass, control);
+				byte[] result = (byte[]) invokeMethod("getCookie", this.responseControlClass, control);
 				this.cookie = new PagedResultsCookie(result);
-				Integer wrapper = (Integer) invokeMethod("getResultSize", responseControlClass, control);
+				Integer wrapper = (Integer) invokeMethod("getResultSize", this.responseControlClass, control);
 				this.resultSize = wrapper.intValue();
 				return;
 			}
 		}
 
-		log.error("No matching response control found for paged results - looking for '{}", responseControlClass);
+		this.log.error("No matching response control found for paged results - looking for '{}",
+				this.responseControlClass);
 	}
 
 	private Object invokeMethod(String method, Class clazz, Object control) {

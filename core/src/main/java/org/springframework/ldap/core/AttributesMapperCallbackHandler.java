@@ -57,7 +57,7 @@ public class AttributesMapperCallbackHandler<T> extends CollectingNameClassPairC
 		SearchResult searchResult = (SearchResult) nameClassPair;
 		Attributes attributes = searchResult.getAttributes();
 		try {
-			return mapper.mapFromAttributes(attributes);
+			return this.mapper.mapFromAttributes(attributes);
 		}
 		catch (javax.naming.NamingException e) {
 			throw LdapUtils.convertLdapException(e);

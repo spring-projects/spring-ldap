@@ -56,7 +56,7 @@ public class DifferentSubtreeTempEntryRenamingStrategy implements TempEntryRenam
 	}
 
 	public Name getSubtreeNode() {
-		return subtreeNode;
+		return this.subtreeNode;
 	}
 
 	public void setSubtreeNode(Name subtreeNode) {
@@ -77,7 +77,7 @@ public class DifferentSubtreeTempEntryRenamingStrategy implements TempEntryRenam
 		LdapName tempName = LdapUtils.newLdapName(originalName);
 		try {
 			String leafNode = tempName.get(tempName.size() - 1) + thisSequenceNo;
-			LdapName newName = LdapUtils.newLdapName(subtreeNode);
+			LdapName newName = LdapUtils.newLdapName(this.subtreeNode);
 			newName.add(leafNode);
 
 			return newName;

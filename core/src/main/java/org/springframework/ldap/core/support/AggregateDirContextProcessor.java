@@ -41,7 +41,7 @@ public class AggregateDirContextProcessor implements DirContextProcessor {
 	 * @param processor the DirContextpProcessor to add.
 	 */
 	public void addDirContextProcessor(DirContextProcessor processor) {
-		dirContextProcessors.add(processor);
+		this.dirContextProcessors.add(processor);
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class AggregateDirContextProcessor implements DirContextProcessor {
 	 * @return the managed list of {@link DirContextProcessor} instances.
 	 */
 	public List<DirContextProcessor> getDirContextProcessors() {
-		return dirContextProcessors;
+		return this.dirContextProcessors;
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class AggregateDirContextProcessor implements DirContextProcessor {
 	 * .DirContext)
 	 */
 	public void preProcess(DirContext ctx) throws NamingException {
-		for (DirContextProcessor processor : dirContextProcessors) {
+		for (DirContextProcessor processor : this.dirContextProcessors) {
 			processor.preProcess(ctx);
 		}
 	}
@@ -77,7 +77,7 @@ public class AggregateDirContextProcessor implements DirContextProcessor {
 	 * directory.DirContext)
 	 */
 	public void postProcess(DirContext ctx) throws NamingException {
-		for (DirContextProcessor processor : dirContextProcessors) {
+		for (DirContextProcessor processor : this.dirContextProcessors) {
 			processor.postProcess(ctx);
 		}
 	}

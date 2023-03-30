@@ -34,7 +34,7 @@ public class LdapTransactionUtilsTest {
 
 	@Before
 	public void setUp() throws Exception {
-		dirContextMock = mock(DirContext.class);
+		this.dirContextMock = mock(DirContext.class);
 
 		if (TransactionSynchronizationManager.isSynchronizationActive()) {
 			TransactionSynchronizationManager.clearSynchronization();
@@ -43,8 +43,8 @@ public class LdapTransactionUtilsTest {
 
 	@Test
 	public void testCloseContext() throws NamingException {
-		LdapUtils.closeContext(dirContextMock);
-		verify(dirContextMock).close();
+		LdapUtils.closeContext(this.dirContextMock);
+		verify(this.dirContextMock).close();
 	}
 
 	@Test

@@ -35,31 +35,31 @@ public class AggregateDirContextProcessorTest {
 	@Before
 	public void setUp() throws Exception {
 		// Create processor1 mock
-		processor1Mock = mock(DirContextProcessor.class);
+		this.processor1Mock = mock(DirContextProcessor.class);
 
 		// Create processor2 mock
-		processor2Mock = mock(DirContextProcessor.class);
+		this.processor2Mock = mock(DirContextProcessor.class);
 
-		tested = new AggregateDirContextProcessor();
-		tested.addDirContextProcessor(processor1Mock);
-		tested.addDirContextProcessor(processor2Mock);
+		this.tested = new AggregateDirContextProcessor();
+		this.tested.addDirContextProcessor(this.processor1Mock);
+		this.tested.addDirContextProcessor(this.processor2Mock);
 
 	}
 
 	@Test
 	public void testPreProcess() throws NamingException {
-		tested.preProcess(null);
+		this.tested.preProcess(null);
 
-		verify(processor1Mock).preProcess(null);
-		verify(processor2Mock).preProcess(null);
+		verify(this.processor1Mock).preProcess(null);
+		verify(this.processor2Mock).preProcess(null);
 	}
 
 	@Test
 	public void testPostProcess() throws NamingException {
-		tested.postProcess(null);
+		this.tested.postProcess(null);
 
-		verify(processor1Mock).postProcess(null);
-		verify(processor2Mock).postProcess(null);
+		verify(this.processor1Mock).postProcess(null);
+		verify(this.processor2Mock).postProcess(null);
 	}
 
 }

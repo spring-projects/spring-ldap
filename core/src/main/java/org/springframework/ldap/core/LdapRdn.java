@@ -65,7 +65,7 @@ public class LdapRdn implements Serializable, Comparable {
 		catch (ParseException e) {
 			throw new BadLdapGrammarException("Failed to parse Rdn", e);
 		}
-		catch (TokenMgrError e) {
+		catch (org.springframework.ldap.core.TokenMgrError e) {
 			throw new BadLdapGrammarException("Failed to parse Rdn", e);
 		}
 		this.components = rdn.components;
@@ -77,7 +77,7 @@ public class LdapRdn implements Serializable, Comparable {
 	 * @param value the attribute value.
 	 */
 	public LdapRdn(String key, String value) {
-		components.put(key, new LdapRdnComponent(key, value));
+		this.components.put(key, new LdapRdnComponent(key, value));
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class LdapRdn implements Serializable, Comparable {
 	 * @param rdnComponent the LdapRdnComponent to add.s
 	 */
 	public void addComponent(LdapRdnComponent rdnComponent) {
-		components.put(rdnComponent.getKey(), rdnComponent);
+		this.components.put(rdnComponent.getKey(), rdnComponent);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class LdapRdn implements Serializable, Comparable {
 	 * @return the List of all LdapRdnComponents composing this LdapRdn.
 	 */
 	public List getComponents() {
-		return new ArrayList(components.values());
+		return new ArrayList(this.components.values());
 	}
 
 	/**
@@ -102,11 +102,11 @@ public class LdapRdn implements Serializable, Comparable {
 	 * @throws IndexOutOfBoundsException if there are no components in this Rdn.
 	 */
 	public LdapRdnComponent getComponent() {
-		if (components.size() == 0) {
+		if (this.components.size() == 0) {
 			throw new IndexOutOfBoundsException("No components");
 		}
 
-		return components.values().iterator().next();
+		return this.components.values().iterator().next();
 	}
 
 	/**
@@ -116,11 +116,11 @@ public class LdapRdn implements Serializable, Comparable {
 	 * @throws IndexOutOfBoundsException if there are no components in this Rdn.
 	 */
 	public LdapRdnComponent getComponent(int idx) {
-		if (idx >= components.size()) {
+		if (idx >= this.components.size()) {
 			throw new IndexOutOfBoundsException();
 		}
 
-		return (LdapRdnComponent) new ArrayList(components.values()).get(idx);
+		return (LdapRdnComponent) new ArrayList(this.components.values()).get(idx);
 	}
 
 	/**
@@ -129,11 +129,11 @@ public class LdapRdn implements Serializable, Comparable {
 	 * @throws IndexOutOfBoundsException if there are no components in this Rdn.
 	 */
 	public String getLdapEncoded() {
-		if (components.size() == 0) {
+		if (this.components.size() == 0) {
 			throw new IndexOutOfBoundsException("No components in Rdn.");
 		}
 		StringBuffer sb = new StringBuffer(DEFAULT_BUFFER_SIZE);
-		for (Iterator iter = components.values().iterator(); iter.hasNext();) {
+		for (Iterator iter = this.components.values().iterator(); iter.hasNext();) {
 			LdapRdnComponent component = (LdapRdnComponent) iter.next();
 			sb.append(component.encodeLdap());
 			if (iter.hasNext()) {
@@ -150,7 +150,7 @@ public class LdapRdn implements Serializable, Comparable {
 	 */
 	public String encodeUrl() {
 		StringBuffer sb = new StringBuffer(DEFAULT_BUFFER_SIZE);
-		for (Iterator iter = components.values().iterator(); iter.hasNext();) {
+		for (Iterator iter = this.components.values().iterator(); iter.hasNext();) {
 			LdapRdnComponent component = (LdapRdnComponent) iter.next();
 			sb.append(component.encodeUrl());
 			if (iter.hasNext()) {
@@ -262,7 +262,7 @@ public class LdapRdn implements Serializable, Comparable {
 	 * @throws IllegalArgumentException if there is no component with the specified key.
 	 */
 	public String getValue(String key) {
-		for (Iterator iter = components.values().iterator(); iter.hasNext();) {
+		for (Iterator iter = this.components.values().iterator(); iter.hasNext();) {
 			LdapRdnComponent component = (LdapRdnComponent) iter.next();
 			if (ObjectUtils.nullSafeEquals(component.getKey(), key)) {
 				return component.getValue();
@@ -280,8 +280,8 @@ public class LdapRdn implements Serializable, Comparable {
 	 */
 	public LdapRdn immutableLdapRdn() {
 		Map<String, LdapRdnComponent> mapWithImmutableRdns = new LinkedHashMap<String, LdapRdnComponent>(
-				components.size());
-		for (Iterator iterator = components.values().iterator(); iterator.hasNext();) {
+				this.components.size());
+		for (Iterator iterator = this.components.values().iterator(); iterator.hasNext();) {
 			LdapRdnComponent rdnComponent = (LdapRdnComponent) iterator.next();
 			mapWithImmutableRdns.put(rdnComponent.getKey(), rdnComponent.immutableLdapRdnComponent());
 		}

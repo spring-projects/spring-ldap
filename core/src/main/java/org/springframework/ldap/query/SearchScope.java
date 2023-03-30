@@ -46,7 +46,7 @@ public enum SearchScope {
 	}
 
 	public int getId() {
-		return id;
+		return this.id;
 	}
 
 }

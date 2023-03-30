@@ -64,7 +64,7 @@ public class DefaultTempEntryRenamingStrategy implements TempEntryRenamingStrate
 		// Add tempSuffix to the leaf node name.
 		try {
 			String leafNode = (String) temporaryName.remove(temporaryName.size() - 1);
-			temporaryName.add(new Rdn(leafNode + tempSuffix));
+			temporaryName.add(new Rdn(leafNode + this.tempSuffix));
 		}
 		catch (InvalidNameException e) {
 			throw new org.springframework.ldap.InvalidNameException(e);
@@ -78,7 +78,7 @@ public class DefaultTempEntryRenamingStrategy implements TempEntryRenamingStrate
 	 * @return the suffix.
 	 */
 	public String getTempSuffix() {
-		return tempSuffix;
+		return this.tempSuffix;
 	}
 
 	/**

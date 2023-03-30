@@ -338,8 +338,8 @@ public final class LdapUtils {
 		}
 
 		public void handleAttributeValue(String attributeName, Object attributeValue, int index) {
-			Assert.isTrue(attributeName == null || clazz.isAssignableFrom(attributeValue.getClass()));
-			collection.add(clazz.cast(attributeValue));
+			Assert.isTrue(attributeName == null || this.clazz.isAssignableFrom(attributeValue.getClass()));
+			this.collection.add(this.clazz.cast(attributeValue));
 		}
 
 	}

@@ -265,24 +265,24 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 
 			String methodName = method.getName();
 			if (methodName.equals("getTargetContext")) {
-				return target;
+				return this.target;
 			}
 			else if (methodName.equals("hasFailed")) {
-				return hasFailed;
+				return this.hasFailed;
 			}
 
 			try {
-				return method.invoke(target, args);
+				return method.invoke(this.target, args);
 			}
 			catch (InvocationTargetException e) {
 				Throwable targetException = e.getTargetException();
 				Class<? extends Throwable> targetExceptionClass = targetException.getClass();
 
 				boolean nonTransientEncountered = false;
-				for (Class<? extends Throwable> clazz : nonTransientExceptions) {
+				for (Class<? extends Throwable> clazz : DirContextPooledObjectFactory.this.nonTransientExceptions) {
 					if (clazz.isAssignableFrom(targetExceptionClass)) {
-						if (logger.isDebugEnabled()) {
-							logger.debug(String.format(
+						if (DirContextPooledObjectFactory.this.logger.isDebugEnabled()) {
+							DirContextPooledObjectFactory.this.logger.debug(String.format(
 									"A %s - explicitly configured to be a non-transient exception - encountered; eagerly invalidating the target context.",
 									targetExceptionClass));
 						}
@@ -292,11 +292,11 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 				}
 
 				if (nonTransientEncountered) {
-					hasFailed = true;
+					this.hasFailed = true;
 				}
 				else {
-					if (logger.isDebugEnabled()) {
-						logger.debug(String.format(
+					if (DirContextPooledObjectFactory.this.logger.isDebugEnabled()) {
+						DirContextPooledObjectFactory.this.logger.debug(String.format(
 								"A %s - not explicitly configured to be a non-transient exception - encountered; ignoring.",
 								targetExceptionClass));
 					}

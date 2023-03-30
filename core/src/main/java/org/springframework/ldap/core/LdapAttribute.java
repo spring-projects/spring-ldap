@@ -178,7 +178,7 @@ public class LdapAttribute extends BasicAttribute {
 	 * @return boolean indicating result.
 	 */
 	public boolean hasOptions() {
-		return !options.isEmpty();
+		return !this.options.isEmpty();
 	}
 
 	/**

@@ -66,11 +66,11 @@ import java.util.TreeSet;
 	private Name base = LdapUtils.emptyLdapName();
 
 	public Set<CaseIgnoreString> getObjectClasses() {
-		return objectClasses;
+		return this.objectClasses;
 	}
 
 	public AttributeMetaData getIdAttribute() {
-		return idAttribute;
+		return this.idAttribute;
 	}
 
 	/*
@@ -79,11 +79,11 @@ import java.util.TreeSet;
 	 * @see java.lang.Iterable#iterator()
 	 */
 	public Iterator<Field> iterator() {
-		return fieldToAttribute.keySet().iterator();
+		return this.fieldToAttribute.keySet().iterator();
 	}
 
 	public AttributeMetaData getAttribute(Field field) {
-		return fieldToAttribute.get(field);
+		return this.fieldToAttribute.get(field);
 	}
 
 	public ObjectMetaData(Class<?> clazz) {
@@ -99,11 +99,11 @@ import java.util.TreeSet;
 			String[] localObjectClasses = entity.objectClasses();
 			if (localObjectClasses != null && localObjectClasses.length > 0 && localObjectClasses[0].length() > 0) {
 				for (String localObjectClass : localObjectClasses) {
-					objectClasses.add(new CaseIgnoreString(localObjectClass));
+					this.objectClasses.add(new CaseIgnoreString(localObjectClass));
 				}
 			}
 			else {
-				objectClasses.add(new CaseIgnoreString(clazz.getSimpleName()));
+				this.objectClasses.add(new CaseIgnoreString(clazz.getSimpleName()));
 			}
 
 			String base = entity.base();
@@ -134,21 +134,21 @@ import java.util.TreeSet;
 
 			AttributeMetaData currentAttributeMetaData = new AttributeMetaData(field);
 			if (currentAttributeMetaData.isId()) {
-				if (idAttribute != null) {
+				if (this.idAttribute != null) {
 					// There can be only one id field
 					throw new MetaDataException(String.format(
 							"You man have only one field with the %1$s annotation in class %2$s", Id.class, clazz));
 				}
-				idAttribute = currentAttributeMetaData;
+				this.idAttribute = currentAttributeMetaData;
 			}
-			fieldToAttribute.put(field, currentAttributeMetaData);
+			this.fieldToAttribute.put(field, currentAttributeMetaData);
 
 			if (currentAttributeMetaData.isDnAttribute()) {
-				dnAttributes.add(currentAttributeMetaData);
+				this.dnAttributes.add(currentAttributeMetaData);
 			}
 		}
 
-		if (idAttribute == null) {
+		if (this.idAttribute == null) {
 			throw new MetaDataException(
 					String.format("All Entry classes must define a field with the %1$s annotation, error in class %2$s",
 							Id.class, clazz));
@@ -165,7 +165,7 @@ import java.util.TreeSet;
 		boolean hasIndexed = false;
 		boolean hasNonIndexed = false;
 
-		for (AttributeMetaData dnAttribute : dnAttributes) {
+		for (AttributeMetaData dnAttribute : this.dnAttributes) {
 			int declaredIndex = dnAttribute.getDnAttribute().index();
 
 			if (declaredIndex != -1) {
@@ -182,23 +182,23 @@ import java.util.TreeSet;
 					+ "which means that all DnAttributes must be indexed", clazz.toString()));
 		}
 
-		indexedDnAttributes = hasIndexed;
+		this.indexedDnAttributes = hasIndexed;
 	}
 
 	int size() {
-		return fieldToAttribute.size();
+		return this.fieldToAttribute.size();
 	}
 
 	boolean canCalculateDn() {
-		return dnAttributes.size() > 0 && indexedDnAttributes;
+		return this.dnAttributes.size() > 0 && this.indexedDnAttributes;
 	}
 
 	public Set<AttributeMetaData> getDnAttributes() {
-		return dnAttributes;
+		return this.dnAttributes;
 	}
 
 	Name getBase() {
-		return base;
+		return this.base;
 	}
 
 	/*
@@ -208,8 +208,8 @@ import java.util.TreeSet;
 	 */
 	@Override
 	public String toString() {
-		return String.format("objectsClasses=%1$s | idField=%2$s | attributes=%3$s", objectClasses,
-				idAttribute.getName(), fieldToAttribute);
+		return String.format("objectsClasses=%1$s | idField=%2$s | attributes=%3$s", this.objectClasses,
+				this.idAttribute.getName(), this.fieldToAttribute);
 	}
 
 }

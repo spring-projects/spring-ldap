@@ -43,7 +43,7 @@ public final class CollectingAuthenticationErrorCallback implements Authenticati
 	 * @return the collected exception
 	 */
 	public Exception getError() {
-		return error;
+		return this.error;
 	}
 
 	/**
@@ -52,7 +52,7 @@ public final class CollectingAuthenticationErrorCallback implements Authenticati
 	 * otherwise.
 	 */
 	public boolean hasError() {
-		return error != null;
+		return this.error != null;
 	}
 
 }

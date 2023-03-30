@@ -50,7 +50,7 @@ public class NotFilter extends AbstractFilter {
 	public StringBuffer encode(StringBuffer buff) {
 
 		buff.append("(!");
-		filter.encode(buff);
+		this.filter.encode(buff);
 		buff.append(')');
 
 		return buff;
@@ -65,7 +65,7 @@ public class NotFilter extends AbstractFilter {
 
 		NotFilter notFilter = (NotFilter) o;
 
-		if (filter != null ? !filter.equals(notFilter.filter) : notFilter.filter != null)
+		if (this.filter != null ? !this.filter.equals(notFilter.filter) : notFilter.filter != null)
 			return false;
 
 		return true;
@@ -73,7 +73,7 @@ public class NotFilter extends AbstractFilter {
 
 	@Override
 	public int hashCode() {
-		return filter != null ? filter.hashCode() : 0;
+		return this.filter != null ? this.filter.hashCode() : 0;
 	}
 
 }

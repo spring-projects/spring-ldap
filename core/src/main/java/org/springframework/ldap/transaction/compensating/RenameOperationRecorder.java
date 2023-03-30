@@ -59,11 +59,11 @@ public class RenameOperationRecorder implements CompensatingTransactionOperation
 		}
 		Name oldDn = LdapTransactionUtils.getArgumentAsName(args[0]);
 		Name newDn = LdapTransactionUtils.getArgumentAsName(args[1]);
-		return new RenameOperationExecutor(ldapOperations, oldDn, newDn);
+		return new RenameOperationExecutor(this.ldapOperations, oldDn, newDn);
 	}
 
 	LdapOperations getLdapOperations() {
-		return ldapOperations;
+		return this.ldapOperations;
 	}
 
 }

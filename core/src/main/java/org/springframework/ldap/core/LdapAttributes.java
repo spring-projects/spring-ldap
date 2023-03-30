@@ -96,7 +96,7 @@ public class LdapAttributes extends BasicAttributes {
 	 * deprecated as of 2.0}. use {@link #getName()} instead.
 	 */
 	public DistinguishedName getDN() {
-		return new DistinguishedName(dn);
+		return new DistinguishedName(this.dn);
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class LdapAttributes extends BasicAttributes {
 	 * @return {@link LdapName} specifying the name to which the object is bound.
 	 */
 	public LdapName getName() {
-		return LdapUtils.newLdapName(dn);
+		return LdapUtils.newLdapName(this.dn);
 	}
 
 	/**

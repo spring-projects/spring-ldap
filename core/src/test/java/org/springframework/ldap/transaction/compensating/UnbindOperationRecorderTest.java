@@ -35,19 +35,20 @@ public class UnbindOperationRecorderTest {
 
 	@Before
 	public void setUp() throws Exception {
-		ldapOperationsMock = mock(LdapOperations.class);
+		this.ldapOperationsMock = mock(LdapOperations.class);
 		;
 
-		renamingStrategyMock = mock(TempEntryRenamingStrategy.class);
+		this.renamingStrategyMock = mock(TempEntryRenamingStrategy.class);
 	}
 
 	@Test
 	public void testRecordOperation() {
 		final LdapName expectedTempName = LdapUtils.newLdapName("cn=john doe_temp");
 		final LdapName expectedDn = LdapUtils.newLdapName("cn=john doe");
-		UnbindOperationRecorder tested = new UnbindOperationRecorder(ldapOperationsMock, renamingStrategyMock);
+		UnbindOperationRecorder tested = new UnbindOperationRecorder(this.ldapOperationsMock,
+				this.renamingStrategyMock);
 
-		when(renamingStrategyMock.getTemporaryName(expectedDn)).thenReturn(expectedTempName);
+		when(this.renamingStrategyMock.getTemporaryName(expectedDn)).thenReturn(expectedTempName);
 
 		// Perform test
 		CompensatingTransactionOperationExecutor operation = tested.recordOperation(new Object[] { expectedDn });
@@ -55,7 +56,7 @@ public class UnbindOperationRecorderTest {
 		// Verify result
 		assertThat(operation instanceof UnbindOperationExecutor).isTrue();
 		UnbindOperationExecutor rollbackOperation = (UnbindOperationExecutor) operation;
-		assertThat(rollbackOperation.getLdapOperations()).isSameAs(ldapOperationsMock);
+		assertThat(rollbackOperation.getLdapOperations()).isSameAs(this.ldapOperationsMock);
 		assertThat(rollbackOperation.getOriginalDn()).isSameAs(expectedDn);
 		assertThat(rollbackOperation.getTemporaryDn()).isSameAs(expectedTempName);
 	}

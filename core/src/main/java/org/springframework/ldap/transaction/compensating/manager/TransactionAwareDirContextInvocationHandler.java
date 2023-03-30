@@ -63,7 +63,7 @@ public class TransactionAwareDirContextInvocationHandler implements InvocationHa
 
 		String methodName = method.getName();
 		if (methodName.equals("getTargetContext")) {
-			return target;
+			return this.target;
 		}
 		else if (methodName.equals("equals")) {
 			// Only consider equal when proxies are identical.
@@ -74,17 +74,17 @@ public class TransactionAwareDirContextInvocationHandler implements InvocationHa
 			return hashCode();
 		}
 		else if (methodName.equals("close")) {
-			doCloseConnection(target, contextSource);
+			doCloseConnection(this.target, this.contextSource);
 			return null;
 		}
 		else if (LdapTransactionUtils.isSupportedWriteTransactionOperation(methodName)) {
 			// Store transaction data and allow operation to proceed.
-			CompensatingTransactionUtils.performOperation(contextSource, target, method, args);
+			CompensatingTransactionUtils.performOperation(this.contextSource, this.target, method, args);
 			return null;
 		}
 		else {
 			try {
-				return method.invoke(target, args);
+				return method.invoke(this.target, args);
 			}
 			catch (InvocationTargetException e) {
 				throw e.getTargetException();

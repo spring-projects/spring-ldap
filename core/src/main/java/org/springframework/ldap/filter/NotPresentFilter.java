@@ -48,7 +48,7 @@ public class NotPresentFilter extends AbstractFilter {
 
 	public StringBuffer encode(StringBuffer buff) {
 		buff.append("(!(");
-		buff.append(attribute);
+		buff.append(this.attribute);
 		buff.append("=*))");
 		return buff;
 	}
@@ -62,7 +62,7 @@ public class NotPresentFilter extends AbstractFilter {
 
 		NotPresentFilter that = (NotPresentFilter) o;
 
-		if (attribute != null ? !attribute.equals(that.attribute) : that.attribute != null)
+		if (this.attribute != null ? !this.attribute.equals(that.attribute) : that.attribute != null)
 			return false;
 
 		return true;
@@ -70,7 +70,7 @@ public class NotPresentFilter extends AbstractFilter {
 
 	@Override
 	public int hashCode() {
-		return attribute != null ? attribute.hashCode() : 0;
+		return this.attribute != null ? this.attribute.hashCode() : 0;
 	}
 
 }

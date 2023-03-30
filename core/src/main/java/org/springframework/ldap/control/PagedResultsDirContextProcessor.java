@@ -68,10 +68,10 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 		this.pageSize = pageSize;
 		this.cookie = cookie;
 
-		defaultRequestControl = DEFAULT_REQUEST_CONTROL;
-		defaultResponseControl = DEFAULT_RESPONSE_CONTROL;
-		fallbackRequestControl = FALLBACK_REQUEST_CONTROL;
-		fallbackResponseControl = FALLBACK_RESPONSE_CONTROL;
+		this.defaultRequestControl = DEFAULT_REQUEST_CONTROL;
+		this.defaultResponseControl = DEFAULT_RESPONSE_CONTROL;
+		this.fallbackRequestControl = FALLBACK_REQUEST_CONTROL;
+		this.fallbackResponseControl = FALLBACK_RESPONSE_CONTROL;
 
 		loadControlClasses();
 	}
@@ -84,7 +84,7 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 	 * @see #hasMore()
 	 */
 	public PagedResultsCookie getCookie() {
-		return cookie;
+		return this.cookie;
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 	 * @return the page size.
 	 */
 	public int getPageSize() {
-		return pageSize;
+		return this.pageSize;
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 	 * @return the estimated result size, if returned from the server.
 	 */
 	public int getResultSize() {
-		return resultSize;
+		return this.resultSize;
 	}
 
 	/*
@@ -111,11 +111,11 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 	 */
 	public Control createRequestControl() {
 		byte[] actualCookie = null;
-		if (cookie != null) {
-			actualCookie = cookie.getCookie();
+		if (this.cookie != null) {
+			actualCookie = this.cookie.getCookie();
 		}
 		return super.createRequestControl(new Class<?>[] { int.class, byte[].class, boolean.class },
-				new Object[] { pageSize, actualCookie, critical });
+				new Object[] { this.pageSize, actualCookie, this.critical });
 	}
 
 	/**
@@ -127,7 +127,7 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 	 * @since 2.0
 	 */
 	public boolean hasMore() {
-		return more;
+		return this.more;
 	}
 
 	/*
@@ -136,12 +136,12 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 	 * #handleResponse(java.lang.Object)
 	 */
 	protected void handleResponse(Object control) {
-		byte[] result = (byte[]) invokeMethod("getCookie", responseControlClass, control);
+		byte[] result = (byte[]) invokeMethod("getCookie", this.responseControlClass, control);
 		if (result == null) {
-			more = false;
+			this.more = false;
 		}
 		this.cookie = new PagedResultsCookie(result);
-		this.resultSize = (Integer) invokeMethod("getResultSize", responseControlClass, control);
+		this.resultSize = (Integer) invokeMethod("getResultSize", this.responseControlClass, control);
 	}
 
 }

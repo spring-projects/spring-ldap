@@ -33,7 +33,7 @@ public class ModifyAttributesOperationExecutorTest {
 
 	@Before
 	public void setUp() throws Exception {
-		ldapOperationsMock = mock(LdapOperations.class);
+		this.ldapOperationsMock = mock(LdapOperations.class);
 	}
 
 	@Test
@@ -43,13 +43,13 @@ public class ModifyAttributesOperationExecutorTest {
 
 		Name expectedDn = LdapUtils.newLdapName("cn=john doe");
 
-		ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(ldapOperationsMock, expectedDn,
-				expectedActualItems, expectedCompensatingItems);
+		ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(this.ldapOperationsMock,
+				expectedDn, expectedActualItems, expectedCompensatingItems);
 
 		// Perform test
 		tested.performOperation();
 
-		verify(ldapOperationsMock).modifyAttributes(expectedDn, expectedActualItems);
+		verify(this.ldapOperationsMock).modifyAttributes(expectedDn, expectedActualItems);
 	}
 
 	@Test
@@ -59,11 +59,11 @@ public class ModifyAttributesOperationExecutorTest {
 
 		Name expectedDn = LdapUtils.newLdapName("cn=john doe");
 
-		ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(ldapOperationsMock, expectedDn,
-				expectedActualItems, expectedCompensatingItems);
+		ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(this.ldapOperationsMock,
+				expectedDn, expectedActualItems, expectedCompensatingItems);
 
 		// No operation here
-		verifyNoMoreInteractions(ldapOperationsMock);
+		verifyNoMoreInteractions(this.ldapOperationsMock);
 
 		// Perform test
 		tested.commit();
@@ -76,13 +76,13 @@ public class ModifyAttributesOperationExecutorTest {
 
 		Name expectedDn = LdapUtils.newLdapName("cn=john doe");
 
-		ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(ldapOperationsMock, expectedDn,
-				expectedActualItems, expectedCompensatingItems);
+		ModifyAttributesOperationExecutor tested = new ModifyAttributesOperationExecutor(this.ldapOperationsMock,
+				expectedDn, expectedActualItems, expectedCompensatingItems);
 
 		// Perform test
 		tested.rollback();
 
-		verify(ldapOperationsMock).modifyAttributes(expectedDn, expectedCompensatingItems);
+		verify(this.ldapOperationsMock).modifyAttributes(expectedDn, expectedCompensatingItems);
 	}
 
 }

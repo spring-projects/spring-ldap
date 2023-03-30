@@ -17,12 +17,12 @@ final class IterableNamingEnumeration<T> implements NamingEnumeration<T> {
 
 	@Override
 	public T next() {
-		return iterator.next();
+		return this.iterator.next();
 	}
 
 	@Override
 	public boolean hasMore() {
-		return iterator.hasNext();
+		return this.iterator.hasNext();
 	}
 
 	@Override

@@ -43,31 +43,31 @@ public class ConversionServiceConverterManager implements ConverterManager {
 		if (ClassUtils.isPresent(DEFAULT_CONVERSION_SERVICE_CLASS, defaultClassLoader)) {
 			try {
 				Class<?> clazz = ClassUtils.forName(DEFAULT_CONVERSION_SERVICE_CLASS, defaultClassLoader);
-				conversionService = (GenericConversionService) clazz.newInstance();
+				this.conversionService = (GenericConversionService) clazz.newInstance();
 			}
 			catch (Exception e) {
 				ReflectionUtils.handleReflectionException(e);
 			}
 		}
 		else {
-			conversionService = new GenericConversionService();
+			this.conversionService = new GenericConversionService();
 		}
 
 		prePopulateWithNameConverter();
 	}
 
 	private void prePopulateWithNameConverter() {
-		conversionService.addConverter(new StringToNameConverter());
+		this.conversionService.addConverter(new StringToNameConverter());
 	}
 
 	@Override
 	public boolean canConvert(Class<?> fromClass, String syntax, Class<?> toClass) {
-		return conversionService.canConvert(fromClass, toClass);
+		return this.conversionService.canConvert(fromClass, toClass);
 	}
 
 	@Override
 	public <T> T convert(Object source, String syntax, Class<T> toClass) {
-		return conversionService.convert(source, toClass);
+		return this.conversionService.convert(source, toClass);
 	}
 
 	public final static class NameToStringConverter

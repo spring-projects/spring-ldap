@@ -69,10 +69,10 @@ public class ModifyAttributesOperationExecutor implements CompensatingTransactio
 	public void rollback() {
 		try {
 			log.debug("Rolling back modifyAttributes operation");
-			ldapOperations.modifyAttributes(dn, compensatingModifications);
+			this.ldapOperations.modifyAttributes(this.dn, this.compensatingModifications);
 		}
 		catch (Exception e) {
-			log.warn("Failed to rollback ModifyAttributes operation, dn: " + dn);
+			log.warn("Failed to rollback ModifyAttributes operation, dn: " + this.dn);
 		}
 	}
 
@@ -90,23 +90,23 @@ public class ModifyAttributesOperationExecutor implements CompensatingTransactio
 	 */
 	public void performOperation() {
 		log.debug("Performing modifyAttributes operation");
-		ldapOperations.modifyAttributes(dn, actualModifications);
+		this.ldapOperations.modifyAttributes(this.dn, this.actualModifications);
 	}
 
 	Name getDn() {
-		return dn;
+		return this.dn;
 	}
 
 	LdapOperations getLdapOperations() {
-		return ldapOperations;
+		return this.ldapOperations;
 	}
 
 	ModificationItem[] getActualModifications() {
-		return actualModifications;
+		return this.actualModifications;
 	}
 
 	ModificationItem[] getCompensatingModifications() {
-		return compensatingModifications;
+		return this.compensatingModifications;
 	}
 
 }

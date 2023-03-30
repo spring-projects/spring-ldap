@@ -75,7 +75,7 @@ public class ContextSourceTransactionManagerDelegate extends AbstractCompensatin
 	}
 
 	public ContextSource getContextSource() {
-		return contextSource;
+		return this.contextSource;
 	}
 
 	/*
@@ -93,7 +93,7 @@ public class ContextSourceTransactionManagerDelegate extends AbstractCompensatin
 	protected CompensatingTransactionHolderSupport getNewHolder() {
 		DirContext newCtx = getContextSource().getReadWriteContext();
 		return new DirContextHolder(new DefaultCompensatingTransactionOperationManager(
-				new LdapCompensatingTransactionOperationFactory(renamingStrategy)), newCtx);
+				new LdapCompensatingTransactionOperationFactory(this.renamingStrategy)), newCtx);
 	}
 
 	/*
@@ -126,7 +126,7 @@ public class ContextSourceTransactionManagerDelegate extends AbstractCompensatin
 	}
 
 	void checkRenamingStrategy() {
-		Assert.notNull(renamingStrategy, "RenamingStrategy must be specified");
+		Assert.notNull(this.renamingStrategy, "RenamingStrategy must be specified");
 	}
 
 }

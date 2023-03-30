@@ -56,8 +56,8 @@ public class ContextMapperCallbackHandlerWithControlsTest {
 	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp() throws Exception {
-		mapperMock = mock(ContextMapperWithControls.class);
-		tested = new ContextMapperCallbackHandlerWithControls(mapperMock);
+		this.mapperMock = mock(ContextMapperWithControls.class);
+		this.tested = new ContextMapperCallbackHandlerWithControls(this.mapperMock);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -71,9 +71,9 @@ public class ContextMapperCallbackHandlerWithControlsTest {
 		Object expectedResult = "result";
 		Binding expectedBinding = new Binding("some name", expectedObject);
 
-		when(mapperMock.mapFromContext(expectedObject)).thenReturn(expectedResult);
+		when(this.mapperMock.mapFromContext(expectedObject)).thenReturn(expectedResult);
 
-		Object actualResult = tested.getObjectFromNameClassPair(expectedBinding);
+		Object actualResult = this.tested.getObjectFromNameClassPair(expectedBinding);
 
 		assertThat(actualResult).isEqualTo(expectedResult);
 	}
@@ -84,9 +84,9 @@ public class ContextMapperCallbackHandlerWithControlsTest {
 		Object expectedResult = "result";
 		MyBindingThatHasControls expectedBinding = new MyBindingThatHasControls("some name", expectedObject);
 
-		when(mapperMock.mapFromContextWithControls(expectedObject, expectedBinding)).thenReturn(expectedResult);
+		when(this.mapperMock.mapFromContextWithControls(expectedObject, expectedBinding)).thenReturn(expectedResult);
 
-		Object actualResult = tested.getObjectFromNameClassPair(expectedBinding);
+		Object actualResult = this.tested.getObjectFromNameClassPair(expectedBinding);
 
 		assertThat(actualResult).isEqualTo(expectedResult);
 	}
@@ -95,7 +95,7 @@ public class ContextMapperCallbackHandlerWithControlsTest {
 	public void testGetObjectFromNameClassPairObjectRetrievalException() throws NamingException {
 		Binding expectedBinding = new Binding("some name", null);
 
-		tested.getObjectFromNameClassPair(expectedBinding);
+		this.tested.getObjectFromNameClassPair(expectedBinding);
 	}
 
 }

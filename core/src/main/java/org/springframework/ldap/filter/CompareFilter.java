@@ -41,7 +41,7 @@ public abstract class CompareFilter extends AbstractFilter {
 	 * @return the encoded value.
 	 */
 	String getEncodedValue() {
-		return encodedValue;
+		return this.encodedValue;
 	}
 
 	/**
@@ -69,7 +69,7 @@ public abstract class CompareFilter extends AbstractFilter {
 	 */
 	public StringBuffer encode(StringBuffer buff) {
 		buff.append('(');
-		buff.append(attribute).append(getCompareString()).append(encodedValue);
+		buff.append(this.attribute).append(getCompareString()).append(this.encodedValue);
 		buff.append(')');
 
 		return buff;
@@ -84,9 +84,9 @@ public abstract class CompareFilter extends AbstractFilter {
 
 		CompareFilter that = (CompareFilter) o;
 
-		if (attribute != null ? !attribute.equals(that.attribute) : that.attribute != null)
+		if (this.attribute != null ? !this.attribute.equals(that.attribute) : that.attribute != null)
 			return false;
-		if (value != null ? !value.equals(that.value) : that.value != null)
+		if (this.value != null ? !this.value.equals(that.value) : that.value != null)
 			return false;
 
 		return true;
@@ -94,8 +94,8 @@ public abstract class CompareFilter extends AbstractFilter {
 
 	@Override
 	public int hashCode() {
-		int result = attribute != null ? attribute.hashCode() : 0;
-		result = 31 * result + (value != null ? value.hashCode() : 0);
+		int result = this.attribute != null ? this.attribute.hashCode() : 0;
+		result = 31 * result + (this.value != null ? this.value.hashCode() : 0);
 		return result;
 	}
 

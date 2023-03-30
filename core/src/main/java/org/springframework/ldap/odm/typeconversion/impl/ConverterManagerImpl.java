@@ -109,8 +109,8 @@ public final class ConverterManagerImpl implements ConverterManager {
 			fixedFromClass = primitiveTypeMap.get(fromClass);
 		}
 		return fixedToClass.isAssignableFrom(fixedFromClass)
-				|| (converters.get(makeConverterKey(fixedFromClass, syntax, fixedToClass)) != null)
-				|| (converters.get(makeConverterKey(fixedFromClass, null, fixedToClass)) != null);
+				|| (this.converters.get(makeConverterKey(fixedFromClass, syntax, fixedToClass)) != null)
+				|| (this.converters.get(makeConverterKey(fixedFromClass, null, fixedToClass)) != null);
 	}
 
 	/*
@@ -134,7 +134,7 @@ public final class ConverterManagerImpl implements ConverterManager {
 		}
 
 		// Try to convert with any syntax we have been given
-		Converter syntaxConverter = converters.get(makeConverterKey(fromClass, syntax, targetClass));
+		Converter syntaxConverter = this.converters.get(makeConverterKey(fromClass, syntax, targetClass));
 		if (syntaxConverter != null) {
 			try {
 				result = syntaxConverter.convert(source, targetClass);
@@ -152,7 +152,7 @@ public final class ConverterManagerImpl implements ConverterManager {
 		// If we were given a syntax and we failed to convert drop back to any mapping
 		// that will work from class -> to class
 		if (result == null && syntax != null) {
-			Converter nullSyntaxConverter = converters.get(makeConverterKey(fromClass, null, targetClass));
+			Converter nullSyntaxConverter = this.converters.get(makeConverterKey(fromClass, null, targetClass));
 			if (nullSyntaxConverter != null) {
 				try {
 					result = nullSyntaxConverter.convert(source, targetClass);
@@ -183,7 +183,7 @@ public final class ConverterManagerImpl implements ConverterManager {
 	 * @param converter The <code>Converter</code> to add.
 	 */
 	public void addConverter(Class<?> fromClass, String syntax, Class<?> toClass, Converter converter) {
-		converters.put(makeConverterKey(fromClass, syntax, toClass), converter);
+		this.converters.put(makeConverterKey(fromClass, syntax, toClass), converter);
 	}
 
 }

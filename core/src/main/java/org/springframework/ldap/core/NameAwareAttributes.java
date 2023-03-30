@@ -60,30 +60,30 @@ public final class NameAwareAttributes implements Attributes {
 
 	@Override
 	public int size() {
-		return attributes.size();
+		return this.attributes.size();
 	}
 
 	@Override
 	public NameAwareAttribute get(String attrID) {
 		Assert.hasLength(attrID, "Attribute ID must not be empty");
-		return attributes.get(attrID.toLowerCase());
+		return this.attributes.get(attrID.toLowerCase());
 	}
 
 	@Override
 	public NamingEnumeration<NameAwareAttribute> getAll() {
-		return new IterableNamingEnumeration<NameAwareAttribute>(attributes.values());
+		return new IterableNamingEnumeration<NameAwareAttribute>(this.attributes.values());
 	}
 
 	@Override
 	public NamingEnumeration<String> getIDs() {
-		return new IterableNamingEnumeration<String>(attributes.keySet());
+		return new IterableNamingEnumeration<String>(this.attributes.keySet());
 	}
 
 	@Override
 	public Attribute put(String attrID, Object val) {
 		Assert.hasLength(attrID, "Attribute ID must not be empty");
 		NameAwareAttribute newAttribute = new NameAwareAttribute(attrID, val);
-		attributes.put(attrID.toLowerCase(), newAttribute);
+		this.attributes.put(attrID.toLowerCase(), newAttribute);
 
 		return newAttribute;
 	}
@@ -92,7 +92,7 @@ public final class NameAwareAttributes implements Attributes {
 	public Attribute put(Attribute attr) {
 		Assert.notNull(attr, "Attribute must not be null");
 		NameAwareAttribute newAttribute = new NameAwareAttribute(attr);
-		attributes.put(attr.getID().toLowerCase(), newAttribute);
+		this.attributes.put(attr.getID().toLowerCase(), newAttribute);
 
 		return newAttribute;
 	}
@@ -100,7 +100,7 @@ public final class NameAwareAttributes implements Attributes {
 	@Override
 	public Attribute remove(String attrID) {
 		Assert.hasLength(attrID, "Attribute ID must not be empty");
-		return attributes.remove(attrID.toLowerCase());
+		return this.attributes.remove(attrID.toLowerCase());
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public final class NameAwareAttributes implements Attributes {
 
 		NameAwareAttributes that = (NameAwareAttributes) o;
 
-		if (attributes != null ? !attributes.equals(that.attributes) : that.attributes != null)
+		if (this.attributes != null ? !this.attributes.equals(that.attributes) : that.attributes != null)
 			return false;
 
 		return true;
@@ -125,12 +125,12 @@ public final class NameAwareAttributes implements Attributes {
 
 	@Override
 	public int hashCode() {
-		return attributes != null ? attributes.hashCode() : 0;
+		return this.attributes != null ? this.attributes.hashCode() : 0;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("NameAwareAttribute; attributes: %s", attributes.toString());
+		return String.format("NameAwareAttribute; attributes: %s", this.attributes.toString());
 	}
 
 }

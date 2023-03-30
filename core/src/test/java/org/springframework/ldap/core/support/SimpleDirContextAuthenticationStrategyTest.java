@@ -29,13 +29,13 @@ public class SimpleDirContextAuthenticationStrategyTest {
 
 	@Before
 	public void setUp() throws Exception {
-		tested = new SimpleDirContextAuthenticationStrategy();
+		this.tested = new SimpleDirContextAuthenticationStrategy();
 	}
 
 	@Test
 	public void testSetupEnvironment() {
 		Hashtable env = new Hashtable();
-		tested.setupEnvironment(env, "cn=John Doe", "pw");
+		this.tested.setupEnvironment(env, "cn=John Doe", "pw");
 
 		assertThat(env.get(Context.SECURITY_AUTHENTICATION)).isEqualTo("simple");
 		assertThat(env.get(Context.SECURITY_PRINCIPAL)).isEqualTo("cn=John Doe");
@@ -45,7 +45,7 @@ public class SimpleDirContextAuthenticationStrategyTest {
 	@Test
 	public void testProcessContextAfterCreation() {
 		Hashtable env = new Hashtable();
-		tested.processContextAfterCreation(null, "cn=John Doe", "pw");
+		this.tested.processContextAfterCreation(null, "cn=John Doe", "pw");
 
 		assertThat(env.isEmpty()).isTrue();
 	}

@@ -47,8 +47,8 @@ public class PagedResultsCookie {
 	 * no more requests, or that the control wasn't supported by the server.
 	 */
 	public byte[] getCookie() {
-		if (cookie != null) {
-			return Arrays.copyOf(cookie, cookie.length);
+		if (this.cookie != null) {
+			return Arrays.copyOf(this.cookie, this.cookie.length);
 		}
 		else {
 			return null;
@@ -64,7 +64,7 @@ public class PagedResultsCookie {
 
 		PagedResultsCookie that = (PagedResultsCookie) o;
 
-		if (!Arrays.equals(cookie, that.cookie))
+		if (!Arrays.equals(this.cookie, that.cookie))
 			return false;
 
 		return true;
@@ -72,7 +72,7 @@ public class PagedResultsCookie {
 
 	@Override
 	public int hashCode() {
-		return cookie != null ? Arrays.hashCode(cookie) : 0;
+		return this.cookie != null ? Arrays.hashCode(this.cookie) : 0;
 	}
 
 }

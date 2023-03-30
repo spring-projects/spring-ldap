@@ -39,9 +39,9 @@ public class CompensatingTransactionUtilsTest {
 
 	@Before
 	public void setUp() throws Exception {
-		dirContextMock = mock(DirContext.class);
-		contextSourceMock = mock(ContextSource.class);
-		operationManagerMock = mock(CompensatingTransactionOperationManager.class);
+		this.dirContextMock = mock(DirContext.class);
+		this.contextSourceMock = mock(ContextSource.class);
+		this.operationManagerMock = mock(CompensatingTransactionOperationManager.class);
 
 		if (TransactionSynchronizationManager.isSynchronizationActive()) {
 			TransactionSynchronizationManager.clearSynchronization();
@@ -50,25 +50,25 @@ public class CompensatingTransactionUtilsTest {
 
 	@Test
 	public void testPerformOperation() throws Throwable {
-		CompensatingTransactionHolderSupport holder = new DirContextHolder(null, dirContextMock);
-		holder.setTransactionOperationManager(operationManagerMock);
+		CompensatingTransactionHolderSupport holder = new DirContextHolder(null, this.dirContextMock);
+		holder.setTransactionOperationManager(this.operationManagerMock);
 
-		TransactionSynchronizationManager.bindResource(contextSourceMock, holder);
+		TransactionSynchronizationManager.bindResource(this.contextSourceMock, holder);
 
 		Object[] expectedArgs = new Object[] { "someDn" };
 
-		CompensatingTransactionUtils.performOperation(contextSourceMock, dirContextMock, getUnbindMethod(),
+		CompensatingTransactionUtils.performOperation(this.contextSourceMock, this.dirContextMock, getUnbindMethod(),
 				expectedArgs);
-		verify(operationManagerMock).performOperation(dirContextMock, "unbind", expectedArgs);
+		verify(this.operationManagerMock).performOperation(this.dirContextMock, "unbind", expectedArgs);
 	}
 
 	@Test
 	public void testPerformOperation_NoTransaction() throws Throwable {
 		Object[] expectedArgs = new Object[] { "someDn" };
 
-		CompensatingTransactionUtils.performOperation(contextSourceMock, dirContextMock, getUnbindMethod(),
+		CompensatingTransactionUtils.performOperation(this.contextSourceMock, this.dirContextMock, getUnbindMethod(),
 				expectedArgs);
-		verify(dirContextMock).unbind("someDn");
+		verify(this.dirContextMock).unbind("someDn");
 	}
 
 	private Method getUnbindMethod() throws NoSuchMethodException {

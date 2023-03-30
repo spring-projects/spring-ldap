@@ -48,7 +48,7 @@ public abstract class CompensatingTransactionHolderSupport extends ResourceHolde
 	 */
 	public void clear() {
 		super.clear();
-		transactionOperationManager = null;
+		this.transactionOperationManager = null;
 	}
 
 	/**
@@ -57,7 +57,7 @@ public abstract class CompensatingTransactionHolderSupport extends ResourceHolde
 	 * @return the CompensatingTransactionOperationManager.
 	 */
 	public CompensatingTransactionOperationManager getTransactionOperationManager() {
-		return transactionOperationManager;
+		return this.transactionOperationManager;
 	}
 
 	/**

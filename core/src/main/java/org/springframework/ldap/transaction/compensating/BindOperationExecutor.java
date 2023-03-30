@@ -69,10 +69,10 @@ public class BindOperationExecutor implements CompensatingTransactionOperationEx
 	 */
 	public void rollback() {
 		try {
-			ldapOperations.unbind(dn);
+			this.ldapOperations.unbind(this.dn);
 		}
 		catch (Exception e) {
-			log.warn("Failed to rollback, dn:" + dn.toString(), e);
+			log.warn("Failed to rollback, dn:" + this.dn.toString(), e);
 		}
 	}
 
@@ -94,7 +94,7 @@ public class BindOperationExecutor implements CompensatingTransactionOperationEx
 	 */
 	public void performOperation() {
 		log.debug("Performing bind operation");
-		ldapOperations.bind(dn, originalObject, originalAttributes);
+		this.ldapOperations.bind(this.dn, this.originalObject, this.originalAttributes);
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class BindOperationExecutor implements CompensatingTransactionOperationEx
 	 * @return the target DN.
 	 */
 	Name getDn() {
-		return dn;
+		return this.dn;
 	}
 
 	/**
@@ -110,15 +110,15 @@ public class BindOperationExecutor implements CompensatingTransactionOperationEx
 	 * @return the LdapOperations.
 	 */
 	LdapOperations getLdapOperations() {
-		return ldapOperations;
+		return this.ldapOperations;
 	}
 
 	Attributes getOriginalAttributes() {
-		return originalAttributes;
+		return this.originalAttributes;
 	}
 
 	Object getOriginalObject() {
-		return originalObject;
+		return this.originalObject;
 	}
 
 }

@@ -62,10 +62,11 @@ public class UnbindOperationExecutor implements CompensatingTransactionOperation
 	 */
 	public void rollback() {
 		try {
-			ldapOperations.rename(temporaryDn, originalDn);
+			this.ldapOperations.rename(this.temporaryDn, this.originalDn);
 		}
 		catch (Exception e) {
-			log.warn("Filed to rollback unbind operation, temporaryDn: " + temporaryDn + "; originalDn: " + originalDn);
+			log.warn("Filed to rollback unbind operation, temporaryDn: " + this.temporaryDn + "; originalDn:this. "
+					+ this.originalDn);
 		}
 	}
 
@@ -75,7 +76,7 @@ public class UnbindOperationExecutor implements CompensatingTransactionOperation
 	 */
 	public void commit() {
 		log.debug("Committing unbind operation - unbinding temporary entry");
-		ldapOperations.unbind(temporaryDn);
+		this.ldapOperations.unbind(this.temporaryDn);
 	}
 
 	/*
@@ -84,19 +85,19 @@ public class UnbindOperationExecutor implements CompensatingTransactionOperation
 	 */
 	public void performOperation() {
 		log.debug("Performing operation for unbind -" + " renaming to temporary entry.");
-		ldapOperations.rename(originalDn, temporaryDn);
+		this.ldapOperations.rename(this.originalDn, this.temporaryDn);
 	}
 
 	LdapOperations getLdapOperations() {
-		return ldapOperations;
+		return this.ldapOperations;
 	}
 
 	Name getOriginalDn() {
-		return originalDn;
+		return this.originalDn;
 	}
 
 	Name getTemporaryDn() {
-		return temporaryDn;
+		return this.temporaryDn;
 	}
 
 }

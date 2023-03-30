@@ -57,7 +57,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 	 */
 	public NameAwareAttribute(String id, Object value) {
 		this(id);
-		values.add(value);
+		this.values.add(value);
 	}
 
 	/**
@@ -103,31 +103,31 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 	@Override
 	public NamingEnumeration<?> getAll() {
-		return new IterableNamingEnumeration<Object>(values);
+		return new IterableNamingEnumeration<Object>(this.values);
 	}
 
 	@Override
 	public Object get() {
-		if (values.isEmpty()) {
+		if (this.values.isEmpty()) {
 			return null;
 		}
 
-		return values.iterator().next();
+		return this.values.iterator().next();
 	}
 
 	@Override
 	public int size() {
-		return values.size();
+		return this.values.size();
 	}
 
 	@Override
 	public String getID() {
-		return id;
+		return this.id;
 	}
 
 	@Override
 	public boolean contains(Object attrVal) {
-		return values.contains(attrVal);
+		return this.values.contains(attrVal);
 	}
 
 	@Override
@@ -136,24 +136,24 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 			initValuesAsNames();
 
 			Name name = LdapUtils.newLdapName((Name) attrVal);
-			String currentValue = valuesAsNames.get(name);
+			String currentValue = this.valuesAsNames.get(name);
 			String nameAsString = name.toString();
 			if (currentValue == null) {
-				valuesAsNames.put(name, name.toString());
-				values.add(nameAsString);
+				this.valuesAsNames.put(name, name.toString());
+				this.values.add(nameAsString);
 				return true;
 			}
 			else {
 				if (!currentValue.equals(nameAsString)) {
-					values.remove(currentValue);
-					values.add(nameAsString);
+					this.values.remove(currentValue);
+					this.values.add(nameAsString);
 				}
 
 				return false;
 			}
 		}
 
-		return values.add(attrVal);
+		return this.values.add(attrVal);
 	}
 
 	public void initValuesAsNames() {
@@ -162,7 +162,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 		}
 
 		Map<Name, String> newValuesAsNames = new HashMap<Name, String>();
-		for (Object value : values) {
+		for (Object value : this.values) {
 			if (value instanceof String) {
 				String s = (String) value;
 				try {
@@ -188,7 +188,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 	}
 
 	public boolean hasValuesAsNames() {
-		return !valuesAsNames.isEmpty();
+		return !this.valuesAsNames.isEmpty();
 	}
 
 	@Override
@@ -197,21 +197,21 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 			initValuesAsNames();
 
 			Name name = LdapUtils.newLdapName((Name) attrval);
-			String removedValue = valuesAsNames.remove(name);
+			String removedValue = this.valuesAsNames.remove(name);
 			if (removedValue != null) {
-				values.remove(removedValue);
+				this.values.remove(removedValue);
 
 				return true;
 			}
 
 			return false;
 		}
-		return values.remove(attrval);
+		return this.values.remove(attrval);
 	}
 
 	@Override
 	public void clear() {
-		values.clear();
+		this.values.clear();
 	}
 
 	@Override
@@ -226,7 +226,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 	@Override
 	public boolean isOrdered() {
-		return orderMatters;
+		return this.orderMatters;
 	}
 
 	/**
@@ -238,7 +238,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 	 */
 	@Override
 	public Object get(int ix) throws NamingException {
-		Iterator<Object> iterator = values.iterator();
+		Iterator<Object> iterator = this.values.iterator();
 
 		try {
 			Object value = iterator.next();
@@ -255,7 +255,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 	@Override
 	public Object remove(int ix) {
-		Iterator<Object> iterator = values.iterator();
+		Iterator<Object> iterator = this.values.iterator();
 
 		try {
 			Object value = iterator.next();
@@ -265,7 +265,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 			iterator.remove();
 			if (value instanceof String) {
 				try {
-					valuesAsNames.remove(new LdapName((String) value));
+					this.valuesAsNames.remove(new LdapName((String) value));
 				}
 				catch (javax.naming.InvalidNameException ignored) {
 				}
@@ -308,7 +308,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 		NameAwareAttribute that = (NameAwareAttribute) o;
 
-		if (id != null ? !id.equals(that.id) : that.id != null)
+		if (this.id != null ? !this.id.equals(that.id) : that.id != null)
 			return false;
 		if (this.values.size() != that.values.size()) {
 			return false;
@@ -332,7 +332,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 			theirValues = that.valuesAsNames.keySet();
 		}
 
-		if (orderMatters) {
+		if (this.orderMatters) {
 			Iterator<?> thisIterator = myValues.iterator();
 			Iterator<?> thatIterator = theirValues.iterator();
 			while (thisIterator.hasNext()) {
@@ -356,12 +356,12 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 	@Override
 	public int hashCode() {
-		int result = id != null ? id.hashCode() : 0;
+		int result = this.id != null ? this.id.hashCode() : 0;
 
 		int valuesHash = 7;
 		Set<?> myValues = this.values;
 		if (hasValuesAsNames()) {
-			myValues = valuesAsNames.keySet();
+			myValues = this.valuesAsNames.keySet();
 		}
 
 		for (Object value : myValues) {
@@ -374,13 +374,13 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 	@Override
 	public String toString() {
-		return String.format("NameAwareAttribute; id: %s; hasValuesAsNames: %s; orderMatters: %s; values: %s", id,
-				hasValuesAsNames(), orderMatters, values);
+		return String.format("NameAwareAttribute; id: %s; hasValuesAsNames: %s; orderMatters: %s; values: %s", this.id,
+				hasValuesAsNames(), this.orderMatters, this.values);
 	}
 
 	@Override
 	public Iterator<Object> iterator() {
-		return values.iterator();
+		return this.values.iterator();
 	}
 
 }

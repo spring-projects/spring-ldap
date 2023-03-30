@@ -45,23 +45,23 @@ public class SingleContextSourceTest {
 
 	@Before
 	public void prepareMocks() {
-		contextSourceMock = mock(ContextSource.class);
-		dirContextMock = mock(DirContext.class);
+		this.contextSourceMock = mock(ContextSource.class);
+		this.dirContextMock = mock(DirContext.class);
 	}
 
 	@Test
 	public void testDoWithSingleContext() {
-		when(contextSourceMock.getReadWriteContext()).thenReturn(dirContextMock);
-		verifyNoMoreInteractions(contextSourceMock);
+		when(this.contextSourceMock.getReadWriteContext()).thenReturn(this.dirContextMock);
+		verifyNoMoreInteractions(this.contextSourceMock);
 
-		SingleContextSource.doWithSingleContext(contextSourceMock, new LdapOperationsCallback<Object>() {
+		SingleContextSource.doWithSingleContext(this.contextSourceMock, new LdapOperationsCallback<Object>() {
 			@Override
 			public Object doWithLdapOperations(LdapOperations operations) {
 				operations.executeReadOnly(new ContextExecutor<Object>() {
 					@Override
 					public Object executeWithContext(DirContext ctx) throws NamingException {
 						Object targetContex = getInternalState(Proxy.getInvocationHandler(ctx), "target");
-						assertThat(targetContex).isSameAs(dirContextMock);
+						assertThat(targetContex).isSameAs(SingleContextSourceTest.this.dirContextMock);
 						return false;
 					}
 				});
@@ -73,7 +73,7 @@ public class SingleContextSourceTest {
 					@Override
 					public Object executeWithContext(DirContext ctx) throws NamingException {
 						Object targetContex = getInternalState(Proxy.getInvocationHandler(ctx), "target");
-						assertThat(targetContex).isSameAs(dirContextMock);
+						assertThat(targetContex).isSameAs(SingleContextSourceTest.this.dirContextMock);
 						return false;
 					}
 				});

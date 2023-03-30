@@ -33,7 +33,7 @@ public class RenameOperationExecutorTest {
 
 	@Before
 	public void setUp() throws Exception {
-		ldapOperationsMock = mock(LdapOperations.class);
+		this.ldapOperationsMock = mock(LdapOperations.class);
 		;
 	}
 
@@ -41,24 +41,24 @@ public class RenameOperationExecutorTest {
 	public void testPerformOperation() {
 		LdapName expectedNewName = LdapUtils.newLdapName("ou=newOu");
 		LdapName expectedOldName = LdapUtils.newLdapName("ou=someou");
-		RenameOperationExecutor tested = new RenameOperationExecutor(ldapOperationsMock, expectedOldName,
+		RenameOperationExecutor tested = new RenameOperationExecutor(this.ldapOperationsMock, expectedOldName,
 				expectedNewName);
 
 		// Perform test.
 		tested.performOperation();
 
-		verify(ldapOperationsMock).rename(expectedOldName, expectedNewName);
+		verify(this.ldapOperationsMock).rename(expectedOldName, expectedNewName);
 	}
 
 	@Test
 	public void testCommit() {
 		LdapName expectedNewName = LdapUtils.newLdapName("ou=newOu");
 		LdapName expectedOldName = LdapUtils.newLdapName("ou=someou");
-		RenameOperationExecutor tested = new RenameOperationExecutor(ldapOperationsMock, expectedOldName,
+		RenameOperationExecutor tested = new RenameOperationExecutor(this.ldapOperationsMock, expectedOldName,
 				expectedNewName);
 
 		// Nothing to do for this operation.
-		verifyNoMoreInteractions(ldapOperationsMock);
+		verifyNoMoreInteractions(this.ldapOperationsMock);
 
 		// Perform test.
 		tested.commit();
@@ -68,13 +68,13 @@ public class RenameOperationExecutorTest {
 	public void testRollback() {
 		LdapName expectedNewName = LdapUtils.newLdapName("ou=newOu");
 		LdapName expectedOldName = LdapUtils.newLdapName("ou=someou");
-		RenameOperationExecutor tested = new RenameOperationExecutor(ldapOperationsMock, expectedOldName,
+		RenameOperationExecutor tested = new RenameOperationExecutor(this.ldapOperationsMock, expectedOldName,
 				expectedNewName);
 
 		// Perform test.
 		tested.rollback();
 
-		verify(ldapOperationsMock).rename(expectedNewName, expectedOldName);
+		verify(this.ldapOperationsMock).rename(expectedNewName, expectedOldName);
 	}
 
 }

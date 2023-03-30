@@ -41,7 +41,7 @@ public class CompensatingTransactionObject {
 	 * @return the DirContextHolder.
 	 */
 	public CompensatingTransactionHolderSupport getHolder() {
-		return holder;
+		return this.holder;
 	}
 
 	/**

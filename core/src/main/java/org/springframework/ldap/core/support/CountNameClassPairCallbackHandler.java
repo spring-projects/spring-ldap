@@ -34,7 +34,7 @@ public class CountNameClassPairCallbackHandler implements NameClassPairCallbackH
 	 * @return the number of entries that have been handled.
 	 */
 	public int getNoOfRows() {
-		return noOfRows;
+		return this.noOfRows;
 	}
 
 	/*
@@ -44,7 +44,7 @@ public class CountNameClassPairCallbackHandler implements NameClassPairCallbackH
 	 * naming.directory.SearchResult)
 	 */
 	public void handleNameClassPair(NameClassPair nameClassPair) {
-		noOfRows++;
+		this.noOfRows++;
 	}
 
 }

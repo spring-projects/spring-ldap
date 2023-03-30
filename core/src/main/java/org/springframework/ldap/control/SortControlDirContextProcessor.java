@@ -58,11 +58,11 @@ public class SortControlDirContextProcessor extends AbstractFallbackRequestAndRe
 		this.sorted = false;
 		this.resultCode = -1;
 
-		defaultRequestControl = DEFAULT_REQUEST_CONTROL;
-		defaultResponseControl = DEFAULT_RESPONSE_CONTROL;
+		this.defaultRequestControl = DEFAULT_REQUEST_CONTROL;
+		this.defaultResponseControl = DEFAULT_RESPONSE_CONTROL;
 
-		fallbackRequestControl = FALLBACK_REQUEST_CONTROL;
-		fallbackResponseControl = FALLBACK_RESPONSE_CONTROL;
+		this.fallbackRequestControl = FALLBACK_REQUEST_CONTROL;
+		this.fallbackResponseControl = FALLBACK_RESPONSE_CONTROL;
 
 		loadControlClasses();
 	}
@@ -72,7 +72,7 @@ public class SortControlDirContextProcessor extends AbstractFallbackRequestAndRe
 	 * @return <code>true</code> if the result was sorted, <code>false</code> otherwise.
 	 */
 	public boolean isSorted() {
-		return sorted;
+		return this.sorted;
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class SortControlDirContextProcessor extends AbstractFallbackRequestAndRe
 	 * @return result code.
 	 */
 	public int getResultCode() {
-		return resultCode;
+		return this.resultCode;
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class SortControlDirContextProcessor extends AbstractFallbackRequestAndRe
 	 * @return the sort key.
 	 */
 	public String getSortKey() {
-		return sortKey;
+		return this.sortKey;
 	}
 
 	/*
@@ -97,7 +97,7 @@ public class SortControlDirContextProcessor extends AbstractFallbackRequestAndRe
 	 */
 	public Control createRequestControl() {
 		return super.createRequestControl(new Class<?>[] { String[].class, boolean.class },
-				new Object[] { new String[] { sortKey }, critical });
+				new Object[] { new String[] { this.sortKey }, this.critical });
 	}
 
 	/*
@@ -106,8 +106,8 @@ public class SortControlDirContextProcessor extends AbstractFallbackRequestAndRe
 	 * #handleResponse(java.lang.Object)
 	 */
 	protected void handleResponse(Object control) {
-		this.sorted = (Boolean) invokeMethod("isSorted", responseControlClass, control);
-		this.resultCode = (Integer) invokeMethod("getResultCode", responseControlClass, control);
+		this.sorted = (Boolean) invokeMethod("isSorted", this.responseControlClass, control);
+		this.resultCode = (Integer) invokeMethod("getResultCode", this.responseControlClass, control);
 	}
 
 }

@@ -35,13 +35,13 @@ public class BindOperationRecorderTest {
 
 	@Before
 	public void setUp() throws Exception {
-		ldapOperationsMock = mock(LdapOperations.class);
+		this.ldapOperationsMock = mock(LdapOperations.class);
 
 	}
 
 	@Test
 	public void testRecordOperation_Name() {
-		BindOperationRecorder tested = new BindOperationRecorder(ldapOperationsMock);
+		BindOperationRecorder tested = new BindOperationRecorder(this.ldapOperationsMock);
 		LdapName expectedDn = LdapUtils.newLdapName("cn=John Doe");
 
 		Object expectedObject = new Object();
@@ -53,14 +53,14 @@ public class BindOperationRecorderTest {
 		assertThat(operation instanceof BindOperationExecutor).isTrue();
 		BindOperationExecutor rollbackOperation = (BindOperationExecutor) operation;
 		assertThat(rollbackOperation.getDn()).isSameAs(expectedDn);
-		assertThat(rollbackOperation.getLdapOperations()).isSameAs(ldapOperationsMock);
+		assertThat(rollbackOperation.getLdapOperations()).isSameAs(this.ldapOperationsMock);
 		assertThat(rollbackOperation.getOriginalObject()).isSameAs(expectedObject);
 		assertSame(expectedAttributes, rollbackOperation.getOriginalAttributes());
 	}
 
 	@Test
 	public void testPerformOperation_String() {
-		BindOperationRecorder tested = new BindOperationRecorder(ldapOperationsMock);
+		BindOperationRecorder tested = new BindOperationRecorder(this.ldapOperationsMock);
 		String expectedDn = "cn=John Doe";
 
 		Object expectedObject = new Object();
@@ -72,12 +72,12 @@ public class BindOperationRecorderTest {
 		assertThat(operation instanceof BindOperationExecutor).isTrue();
 		BindOperationExecutor rollbackOperation = (BindOperationExecutor) operation;
 		assertThat(rollbackOperation.getDn().toString()).isEqualTo(expectedDn);
-		assertThat(rollbackOperation.getLdapOperations()).isSameAs(ldapOperationsMock);
+		assertThat(rollbackOperation.getLdapOperations()).isSameAs(this.ldapOperationsMock);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testPerformOperation_Invalid() {
-		BindOperationRecorder tested = new BindOperationRecorder(ldapOperationsMock);
+		BindOperationRecorder tested = new BindOperationRecorder(this.ldapOperationsMock);
 		Object expectedDn = new Object();
 
 		// Perform test.

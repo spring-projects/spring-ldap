@@ -32,7 +32,7 @@ public class RebindOperationExecutorTest {
 
 	@Before
 	public void setUp() throws Exception {
-		ldapOperationsMock = mock(LdapOperations.class);
+		this.ldapOperationsMock = mock(LdapOperations.class);
 	}
 
 	@Test
@@ -41,13 +41,13 @@ public class RebindOperationExecutorTest {
 		LdapName expectedTempDn = LdapUtils.newLdapName("cn=john doe_temp");
 		Object expectedObject = new Object();
 		BasicAttributes expectedAttributes = new BasicAttributes();
-		RebindOperationExecutor tested = new RebindOperationExecutor(ldapOperationsMock, expectedOriginalDn,
+		RebindOperationExecutor tested = new RebindOperationExecutor(this.ldapOperationsMock, expectedOriginalDn,
 				expectedTempDn, expectedObject, expectedAttributes);
 
 		// perform test
 		tested.performOperation();
-		verify(ldapOperationsMock).rename(expectedOriginalDn, expectedTempDn);
-		verify(ldapOperationsMock).bind(expectedOriginalDn, expectedObject, expectedAttributes);
+		verify(this.ldapOperationsMock).rename(expectedOriginalDn, expectedTempDn);
+		verify(this.ldapOperationsMock).bind(expectedOriginalDn, expectedObject, expectedAttributes);
 	}
 
 	@Test
@@ -56,12 +56,12 @@ public class RebindOperationExecutorTest {
 		LdapName expectedTempDn = LdapUtils.newLdapName("cn=john doe_temp");
 		Object expectedObject = new Object();
 		BasicAttributes expectedAttributes = new BasicAttributes();
-		RebindOperationExecutor tested = new RebindOperationExecutor(ldapOperationsMock, expectedOriginalDn,
+		RebindOperationExecutor tested = new RebindOperationExecutor(this.ldapOperationsMock, expectedOriginalDn,
 				expectedTempDn, expectedObject, expectedAttributes);
 
 		// perform test
 		tested.commit();
-		verify(ldapOperationsMock).unbind(expectedTempDn);
+		verify(this.ldapOperationsMock).unbind(expectedTempDn);
 	}
 
 	@Test
@@ -70,14 +70,14 @@ public class RebindOperationExecutorTest {
 		LdapName expectedTempDn = LdapUtils.newLdapName("cn=john doe_temp");
 		Object expectedObject = new Object();
 		BasicAttributes expectedAttributes = new BasicAttributes();
-		RebindOperationExecutor tested = new RebindOperationExecutor(ldapOperationsMock, expectedOriginalDn,
+		RebindOperationExecutor tested = new RebindOperationExecutor(this.ldapOperationsMock, expectedOriginalDn,
 				expectedTempDn, expectedObject, expectedAttributes);
 
 		// perform test
 		tested.rollback();
 
-		verify(ldapOperationsMock).unbind(expectedOriginalDn);
-		verify(ldapOperationsMock).rename(expectedTempDn, expectedOriginalDn);
+		verify(this.ldapOperationsMock).unbind(expectedOriginalDn);
+		verify(this.ldapOperationsMock).rename(expectedTempDn, expectedOriginalDn);
 	}
 
 }

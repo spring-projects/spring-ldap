@@ -33,12 +33,12 @@ public class MockFactoryBean extends AbstractFactoryBean<Object> {
 
 	@Override
 	public Class<?> getObjectType() {
-		return clazz;
+		return this.clazz;
 	}
 
 	@Override
 	protected Object createInstance() throws Exception {
-		return mock(clazz);
+		return mock(this.clazz);
 	}
 
 }

@@ -49,7 +49,7 @@ public class TransactionAwareContextSourceProxy extends DelegatingBaseLdapPathCo
 
 	@Override
 	public ContextSource getTarget() {
-		return target;
+		return this.target;
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class TransactionAwareContextSourceProxy extends DelegatingBaseLdapPathCo
 
 	@Override
 	public DirContext getReadWriteContext() {
-		DirContextHolder contextHolder = (DirContextHolder) TransactionSynchronizationManager.getResource(target);
+		DirContextHolder contextHolder = (DirContextHolder) TransactionSynchronizationManager.getResource(this.target);
 		DirContext ctx = null;
 
 		if (contextHolder != null) {
@@ -74,17 +74,17 @@ public class TransactionAwareContextSourceProxy extends DelegatingBaseLdapPathCo
 		}
 
 		if (ctx == null) {
-			ctx = target.getReadWriteContext();
+			ctx = this.target.getReadWriteContext();
 			if (contextHolder != null) {
 				contextHolder.setCtx(ctx);
 			}
 		}
-		return getTransactionAwareDirContextProxy(ctx, target);
+		return getTransactionAwareDirContextProxy(ctx, this.target);
 	}
 
 	@Override
 	public DirContext getContext(String principal, String credentials) {
-		return target.getContext(principal, credentials);
+		return this.target.getContext(principal, credentials);
 	}
 
 }

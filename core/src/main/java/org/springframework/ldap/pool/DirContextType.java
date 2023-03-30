@@ -35,7 +35,7 @@ public final class DirContextType {
 	}
 
 	public String toString() {
-		return name;
+		return this.name;
 	}
 
 	/**

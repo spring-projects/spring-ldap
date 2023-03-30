@@ -44,18 +44,18 @@ public class TransactionAwareContextSourceProxyTest {
 
 	@Before
 	public void setUp() throws Exception {
-		contextSourceMock = mock(ContextSource.class);
-		ldapContextMock = mock(LdapContext.class);
-		dirContextMock = mock(DirContext.class);
+		this.contextSourceMock = mock(ContextSource.class);
+		this.ldapContextMock = mock(LdapContext.class);
+		this.dirContextMock = mock(DirContext.class);
 
-		tested = new TransactionAwareContextSourceProxy(contextSourceMock);
+		this.tested = new TransactionAwareContextSourceProxy(this.contextSourceMock);
 	}
 
 	@Test
 	public void testGetReadWriteContext_LdapContext() {
-		when(contextSourceMock.getReadWriteContext()).thenReturn(ldapContextMock);
+		when(this.contextSourceMock.getReadWriteContext()).thenReturn(this.ldapContextMock);
 
-		DirContext result = tested.getReadWriteContext();
+		DirContext result = this.tested.getReadWriteContext();
 
 		assertThat(result).isNotNull();
 		assertThat(result instanceof LdapContext).isTrue();
@@ -64,9 +64,9 @@ public class TransactionAwareContextSourceProxyTest {
 
 	@Test
 	public void testGetReadWriteContext_DirContext() {
-		when(contextSourceMock.getReadWriteContext()).thenReturn(dirContextMock);
+		when(this.contextSourceMock.getReadWriteContext()).thenReturn(this.dirContextMock);
 
-		DirContext result = tested.getReadWriteContext();
+		DirContext result = this.tested.getReadWriteContext();
 
 		assertThat(result).as("Result should not be null").isNotNull();
 		assertThat(result instanceof DirContext).isTrue();
@@ -76,9 +76,9 @@ public class TransactionAwareContextSourceProxyTest {
 
 	@Test
 	public void testGetReadOnlyContext_LdapContext() {
-		when(contextSourceMock.getReadWriteContext()).thenReturn(ldapContextMock);
+		when(this.contextSourceMock.getReadWriteContext()).thenReturn(this.ldapContextMock);
 
-		DirContext result = tested.getReadOnlyContext();
+		DirContext result = this.tested.getReadOnlyContext();
 
 		assertThat(result).as("Result should not be null").isNotNull();
 		assertThat(result instanceof LdapContext).isTrue();

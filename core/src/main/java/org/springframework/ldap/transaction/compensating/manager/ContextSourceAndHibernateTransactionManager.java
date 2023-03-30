@@ -66,7 +66,7 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 	 */
 	protected Object doGetTransaction() {
 		Object dataSourceTransactionObject = super.doGetTransaction();
-		Object contextSourceTransactionObject = ldapManagerDelegate.doGetTransaction();
+		Object contextSourceTransactionObject = this.ldapManagerDelegate.doGetTransaction();
 
 		return new ContextSourceAndHibernateTransactionObject(contextSourceTransactionObject,
 				dataSourceTransactionObject);
@@ -82,7 +82,7 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 
 		super.doBegin(actualTransactionObject.getHibernateTransactionObject(), definition);
 		try {
-			ldapManagerDelegate.doBegin(actualTransactionObject.getLdapTransactionObject(), definition);
+			this.ldapManagerDelegate.doBegin(actualTransactionObject.getLdapTransactionObject(), definition);
 		}
 		catch (TransactionException e) {
 			// Failed to start LDAP transaction - make sure we clean up properly
@@ -99,7 +99,7 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 		ContextSourceAndHibernateTransactionObject actualTransactionObject = (ContextSourceAndHibernateTransactionObject) transaction;
 
 		super.doCleanupAfterCompletion(actualTransactionObject.getHibernateTransactionObject());
-		ldapManagerDelegate.doCleanupAfterCompletion(actualTransactionObject.getLdapTransactionObject());
+		this.ldapManagerDelegate.doCleanupAfterCompletion(actualTransactionObject.getLdapTransactionObject());
 	}
 
 	/*
@@ -129,9 +129,9 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 						+ " proceeding to commit ldap resource.");
 			}
 		}
-		ldapManagerDelegate.doCommit(new DefaultTransactionStatus(actualTransactionObject.getLdapTransactionObject(),
-				status.isNewTransaction(), status.isNewSynchronization(), status.isReadOnly(), status.isDebug(),
-				status.getSuspendedResources()));
+		this.ldapManagerDelegate.doCommit(new DefaultTransactionStatus(
+				actualTransactionObject.getLdapTransactionObject(), status.isNewTransaction(),
+				status.isNewSynchronization(), status.isReadOnly(), status.isDebug(), status.getSuspendedResources()));
 	}
 
 	/*
@@ -145,21 +145,21 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 		super.doRollback(new DefaultTransactionStatus(actualTransactionObject.getHibernateTransactionObject(),
 				status.isNewTransaction(), status.isNewSynchronization(), status.isReadOnly(), status.isDebug(),
 				status.getSuspendedResources()));
-		ldapManagerDelegate.doRollback(new DefaultTransactionStatus(actualTransactionObject.getLdapTransactionObject(),
-				status.isNewTransaction(), status.isNewSynchronization(), status.isReadOnly(), status.isDebug(),
-				status.getSuspendedResources()));
+		this.ldapManagerDelegate.doRollback(new DefaultTransactionStatus(
+				actualTransactionObject.getLdapTransactionObject(), status.isNewTransaction(),
+				status.isNewSynchronization(), status.isReadOnly(), status.isDebug(), status.getSuspendedResources()));
 	}
 
 	public ContextSource getContextSource() {
-		return ldapManagerDelegate.getContextSource();
+		return this.ldapManagerDelegate.getContextSource();
 	}
 
 	public void setContextSource(ContextSource contextSource) {
-		ldapManagerDelegate.setContextSource(contextSource);
+		this.ldapManagerDelegate.setContextSource(contextSource);
 	}
 
 	public void setRenamingStrategy(TempEntryRenamingStrategy renamingStrategy) {
-		ldapManagerDelegate.setRenamingStrategy(renamingStrategy);
+		this.ldapManagerDelegate.setRenamingStrategy(renamingStrategy);
 	}
 
 	private static final class ContextSourceAndHibernateTransactionObject {
@@ -175,11 +175,11 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 		}
 
 		public Object getHibernateTransactionObject() {
-			return hibernateTransactionObject;
+			return this.hibernateTransactionObject;
 		}
 
 		public Object getLdapTransactionObject() {
-			return ldapTransactionObject;
+			return this.ldapTransactionObject;
 		}
 
 	}
@@ -206,7 +206,7 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 
 	public void afterPropertiesSet() {
 		super.afterPropertiesSet();
-		ldapManagerDelegate.checkRenamingStrategy();
+		this.ldapManagerDelegate.checkRenamingStrategy();
 	}
 
 }

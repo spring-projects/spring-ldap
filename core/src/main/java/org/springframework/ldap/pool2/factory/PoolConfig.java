@@ -212,140 +212,140 @@ public class PoolConfig {
 	 * @see GenericKeyedObjectPoolConfig#getMaxIdlePerKey()
 	 */
 	public int getMaxIdlePerKey() {
-		return maxIdlePerKey;
+		return this.maxIdlePerKey;
 	}
 
 	/**
 	 * @see GenericKeyedObjectPoolConfig#getMaxTotal()
 	 */
 	public int getMaxTotal() {
-		return maxTotal;
+		return this.maxTotal;
 	}
 
 	/**
 	 * @see GenericKeyedObjectPoolConfig#getMaxIdlePerKey()
 	 */
 	public int getMaxTotalPerKey() {
-		return maxTotalPerKey;
+		return this.maxTotalPerKey;
 	}
 
 	/**
 	 * @see GenericKeyedObjectPoolConfig#getMinIdlePerKey()
 	 */
 	public int getMinIdlePerKey() {
-		return minIdlePerKey;
+		return this.minIdlePerKey;
 	}
 
 	/**
 	 * @see GenericKeyedObjectPoolConfig#getBlockWhenExhausted()
 	 */
 	public boolean isBlockWhenExhausted() {
-		return blockWhenExhausted;
+		return this.blockWhenExhausted;
 	}
 
 	/**
 	 * @see GenericKeyedObjectPoolConfig#getEvictionPolicyClassName()
 	 */
 	public String getEvictionPolicyClassName() {
-		return evictionPolicyClassName;
+		return this.evictionPolicyClassName;
 	}
 
 	/**
 	 * @see GenericKeyedObjectPoolConfig#getFairness()
 	 */
 	public boolean isFairness() {
-		return fairness;
+		return this.fairness;
 	}
 
 	/**
 	 * @see GenericKeyedObjectPoolConfig#getJmxEnabled()
 	 */
 	public boolean isJmxEnabled() {
-		return jmxEnabled;
+		return this.jmxEnabled;
 	}
 
 	/**
 	 * @see GenericKeyedObjectPoolConfig#getJmxNameBase()
 	 */
 	public String getJmxNameBase() {
-		return jmxNameBase;
+		return this.jmxNameBase;
 	}
 
 	/**
 	 * @see GenericKeyedObjectPoolConfig#getJmxNamePrefix()
 	 */
 	public String getJmxNamePrefix() {
-		return jmxNamePrefix;
+		return this.jmxNamePrefix;
 	}
 
 	/**
 	 * @see GenericKeyedObjectPoolConfig#getLifo()
 	 */
 	public boolean isLifo() {
-		return lifo;
+		return this.lifo;
 	}
 
 	/**
 	 * @see GenericKeyedObjectPoolConfig#getMaxWaitMillis()
 	 */
 	public long getMaxWaitMillis() {
-		return maxWaitMillis;
+		return this.maxWaitMillis;
 	}
 
 	/**
 	 * @see GenericKeyedObjectPoolConfig#getMinEvictableIdleTimeMillis()
 	 */
 	public long getMinEvictableIdleTimeMillis() {
-		return minEvictableIdleTimeMillis;
+		return this.minEvictableIdleTimeMillis;
 	}
 
 	/**
 	 * @see GenericKeyedObjectPoolConfig#getNumTestsPerEvictionRun()
 	 */
 	public int getNumTestsPerEvictionRun() {
-		return numTestsPerEvictionRun;
+		return this.numTestsPerEvictionRun;
 	}
 
 	/**
 	 * @see GenericKeyedObjectPoolConfig#getSoftMinEvictableIdleTimeMillis()
 	 */
 	public long getSoftMinEvictableIdleTimeMillis() {
-		return softMinEvictableIdleTimeMillis;
+		return this.softMinEvictableIdleTimeMillis;
 	}
 
 	/**
 	 * @see GenericKeyedObjectPoolConfig#getTestOnBorrow()
 	 */
 	public boolean isTestOnBorrow() {
-		return testOnBorrow;
+		return this.testOnBorrow;
 	}
 
 	/**
 	 * @see GenericKeyedObjectPoolConfig#getTestOnCreate()
 	 */
 	public boolean isTestOnCreate() {
-		return testOnCreate;
+		return this.testOnCreate;
 	}
 
 	/**
 	 * @see GenericKeyedObjectPoolConfig#getTestOnReturn()
 	 */
 	public boolean isTestOnReturn() {
-		return testOnReturn;
+		return this.testOnReturn;
 	}
 
 	/**
 	 * @see GenericKeyedObjectPoolConfig#getTestWhileIdle()
 	 */
 	public boolean isTestWhileIdle() {
-		return testWhileIdle;
+		return this.testWhileIdle;
 	}
 
 	/**
 	 * @see GenericKeyedObjectPoolConfig#getTimeBetweenEvictionRunsMillis()
 	 */
 	public long getTimeBetweenEvictionRunsMillis() {
-		return timeBetweenEvictionRunsMillis;
+		return this.timeBetweenEvictionRunsMillis;
 	}
 
 }

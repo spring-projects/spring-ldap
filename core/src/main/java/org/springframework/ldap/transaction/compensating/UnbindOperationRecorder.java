@@ -53,17 +53,17 @@ public class UnbindOperationRecorder implements CompensatingTransactionOperation
 	 */
 	public CompensatingTransactionOperationExecutor recordOperation(Object[] args) {
 		Name dn = LdapTransactionUtils.getFirstArgumentAsName(args);
-		Name temporaryDn = renamingStrategy.getTemporaryName(dn);
+		Name temporaryDn = this.renamingStrategy.getTemporaryName(dn);
 
-		return new UnbindOperationExecutor(ldapOperations, dn, temporaryDn);
+		return new UnbindOperationExecutor(this.ldapOperations, dn, temporaryDn);
 	}
 
 	LdapOperations getLdapOperations() {
-		return ldapOperations;
+		return this.ldapOperations;
 	}
 
 	public TempEntryRenamingStrategy getRenamingStrategy() {
-		return renamingStrategy;
+		return this.renamingStrategy;
 	}
 
 }

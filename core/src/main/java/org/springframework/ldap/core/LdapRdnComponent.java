@@ -100,7 +100,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	 * @return the key.
 	 */
 	public String getKey() {
-		return key;
+		return this.key;
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	 * @return the value.
 	 */
 	public String getValue() {
-		return value;
+		return this.value;
 	}
 
 	/**
@@ -138,11 +138,11 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	 * @return Properly ldap escaped rdn.
 	 */
 	protected String encodeLdap() {
-		StringBuffer buff = new StringBuffer(key.length() + value.length() * 2);
+		StringBuffer buff = new StringBuffer(this.key.length() + this.value.length() * 2);
 
-		buff.append(key);
+		buff.append(this.key);
 		buff.append('=');
-		buff.append(LdapEncoder.nameEncode(value));
+		buff.append(LdapEncoder.nameEncode(this.value));
 
 		return buff.toString();
 	}
@@ -170,12 +170,12 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	public String encodeUrl() {
 		// Use the URI class to properly URL encode the value.
 		try {
-			URI valueUri = new URI(null, null, value, null);
-			return key + "=" + valueUri.toString();
+			URI valueUri = new URI(null, null, this.value, null);
+			return this.key + "=" + valueUri.toString();
 		}
 		catch (URISyntaxException e) {
 			// This should really never happen...
-			return key + "=" + "value";
+			return this.key + "=" + "value";
 		}
 	}
 
@@ -185,7 +185,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() {
-		return key.toUpperCase().hashCode() ^ value.toUpperCase().hashCode();
+		return this.key.toUpperCase().hashCode() ^ this.value.toUpperCase().hashCode();
 	}
 
 	/*
@@ -235,7 +235,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	 * @since 1.3
 	 */
 	public LdapRdnComponent immutableLdapRdnComponent() {
-		return new ImmutableLdapRdnComponent(key, value);
+		return new ImmutableLdapRdnComponent(this.key, this.value);
 	}
 
 	private static class ImmutableLdapRdnComponent extends LdapRdnComponent {

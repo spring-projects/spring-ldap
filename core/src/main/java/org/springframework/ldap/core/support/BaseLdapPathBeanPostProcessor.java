@@ -65,8 +65,8 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 		if (bean instanceof BaseLdapNameAware) {
 			BaseLdapNameAware baseLdapNameAware = (BaseLdapNameAware) bean;
 
-			if (basePath != null) {
-				baseLdapNameAware.setBaseLdapPath(LdapUtils.newLdapName(basePath));
+			if (this.basePath != null) {
+				baseLdapNameAware.setBaseLdapPath(LdapUtils.newLdapName(this.basePath));
 			}
 			else {
 				BaseLdapPathSource ldapPathSource = getBaseLdapPathSourceFromApplicationContext();
@@ -76,8 +76,8 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 		else if (bean instanceof BaseLdapPathAware) {
 			BaseLdapPathAware baseLdapPathAware = (BaseLdapPathAware) bean;
 
-			if (basePath != null) {
-				baseLdapPathAware.setBaseLdapPath(new DistinguishedName(basePath));
+			if (this.basePath != null) {
+				baseLdapPathAware.setBaseLdapPath(new DistinguishedName(this.basePath));
 			}
 			else {
 				BaseLdapPathSource ldapPathSource = getBaseLdapPathSourceFromApplicationContext();
@@ -88,11 +88,12 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 	}
 
 	BaseLdapPathSource getBaseLdapPathSourceFromApplicationContext() {
-		if (StringUtils.hasLength(baseLdapPathSourceName)) {
-			return applicationContext.getBean(baseLdapPathSourceName, BaseLdapPathSource.class);
+		if (StringUtils.hasLength(this.baseLdapPathSourceName)) {
+			return this.applicationContext.getBean(this.baseLdapPathSourceName, BaseLdapPathSource.class);
 		}
 
-		Collection<BaseLdapPathSource> beans = applicationContext.getBeansOfType(BaseLdapPathSource.class).values();
+		Collection<BaseLdapPathSource> beans = this.applicationContext.getBeansOfType(BaseLdapPathSource.class)
+				.values();
 		if (beans.isEmpty()) {
 			throw new NoSuchBeanDefinitionException("No BaseLdapPathSource implementation definition found");
 		}
@@ -178,7 +179,7 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 	}
 
 	public int getOrder() {
-		return order;
+		return this.order;
 	}
 
 }

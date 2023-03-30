@@ -55,14 +55,14 @@ public class DefaultCompensatingTransactionOperationManager implements Compensat
 	 * java.lang.String, java.lang.Object[])
 	 */
 	public void performOperation(Object resource, String operation, Object[] args) {
-		CompensatingTransactionOperationRecorder recorder = operationFactory.createRecordingOperation(resource,
+		CompensatingTransactionOperationRecorder recorder = this.operationFactory.createRecordingOperation(resource,
 				operation);
 		CompensatingTransactionOperationExecutor executor = recorder.recordOperation(args);
 
 		executor.performOperation();
 
 		// Don't push the executor until the actual operation passed.
-		operationExecutors.push(executor);
+		this.operationExecutors.push(executor);
 	}
 
 	/*
@@ -71,8 +71,8 @@ public class DefaultCompensatingTransactionOperationManager implements Compensat
 	 */
 	public void rollback() {
 		log.debug("Performing rollback");
-		while (!operationExecutors.isEmpty()) {
-			CompensatingTransactionOperationExecutor rollbackOperation = operationExecutors.pop();
+		while (!this.operationExecutors.isEmpty()) {
+			CompensatingTransactionOperationExecutor rollbackOperation = this.operationExecutors.pop();
 			try {
 				rollbackOperation.rollback();
 			}
@@ -87,7 +87,7 @@ public class DefaultCompensatingTransactionOperationManager implements Compensat
 	 * @return the rollback operations.
 	 */
 	protected Stack<CompensatingTransactionOperationExecutor> getOperationExecutors() {
-		return operationExecutors;
+		return this.operationExecutors;
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class DefaultCompensatingTransactionOperationManager implements Compensat
 	 */
 	public void commit() {
 		log.debug("Performing commit");
-		for (CompensatingTransactionOperationExecutor operationExecutor : operationExecutors) {
+		for (CompensatingTransactionOperationExecutor operationExecutor : this.operationExecutors) {
 			try {
 				operationExecutor.commit();
 			}

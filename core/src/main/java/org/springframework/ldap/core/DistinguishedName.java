@@ -164,7 +164,7 @@ public class DistinguishedName implements Name {
 	 * Construct a new DistinguishedName with no components.
 	 */
 	public DistinguishedName() {
-		names = new LinkedList();
+		this.names = new LinkedList();
 	}
 
 	/**
@@ -173,7 +173,7 @@ public class DistinguishedName implements Name {
 	 */
 	public DistinguishedName(String path) {
 		if (!StringUtils.hasText(path)) {
-			names = new LinkedList();
+			this.names = new LinkedList();
 		}
 		else {
 			parse(path);
@@ -201,9 +201,9 @@ public class DistinguishedName implements Name {
 			parse(LdapUtils.convertCompositeNameToString((CompositeName) name));
 			return;
 		}
-		names = new LinkedList();
+		this.names = new LinkedList();
 		for (int i = 0; i < name.size(); i++) {
-			names.add(new LdapRdn(name.get(i)));
+			this.names.add(new LdapRdn(name.get(i)));
 		}
 	}
 
@@ -221,7 +221,7 @@ public class DistinguishedName implements Name {
 		catch (ParseException e) {
 			throw new BadLdapGrammarException("Failed to parse DN", e);
 		}
-		catch (TokenMgrError e) {
+		catch (org.springframework.ldap.core.TokenMgrError e) {
 			throw new BadLdapGrammarException("Failed to parse DN", e);
 		}
 		this.names = dn.names;
@@ -254,7 +254,7 @@ public class DistinguishedName implements Name {
 	 * @return the {@link LdapRdn} at the requested position.
 	 */
 	public LdapRdn getLdapRdn(int index) {
-		return (LdapRdn) names.get(index);
+		return (LdapRdn) this.names.get(index);
 	}
 
 	/**
@@ -265,7 +265,7 @@ public class DistinguishedName implements Name {
 	 * @throws IllegalArgumentException if no Rdn matches the given key.
 	 */
 	public LdapRdn getLdapRdn(String key) {
-		for (Iterator iter = names.iterator(); iter.hasNext();) {
+		for (Iterator iter = this.names.iterator(); iter.hasNext();) {
 			LdapRdn rdn = (LdapRdn) iter.next();
 			if (ObjectUtils.nullSafeEquals(rdn.getKey(), key)) {
 				return rdn;
@@ -293,7 +293,7 @@ public class DistinguishedName implements Name {
 	 * consists of.
 	 */
 	public List getNames() {
-		return names;
+		return this.names;
 	}
 
 	/**
@@ -337,13 +337,13 @@ public class DistinguishedName implements Name {
 
 	private String format(boolean compact) {
 		// empty path
-		if (names.size() == 0) {
+		if (this.names.size() == 0) {
 			return "";
 		}
 
 		StringBuffer buffer = new StringBuffer(DEFAULT_BUFFER_SIZE);
 
-		ListIterator i = names.listIterator(names.size());
+		ListIterator i = this.names.listIterator(this.names.size());
 		while (i.hasPrevious()) {
 			LdapRdn rdn = (LdapRdn) i.previous();
 			buffer.append(rdn.getLdapEncoded());
@@ -370,8 +370,8 @@ public class DistinguishedName implements Name {
 	public String toUrl() {
 		StringBuffer buffer = new StringBuffer(DEFAULT_BUFFER_SIZE);
 
-		for (int i = names.size() - 1; i >= 0; i--) {
-			LdapRdn n = (LdapRdn) names.get(i);
+		for (int i = this.names.size() - 1; i >= 0; i--) {
+			LdapRdn n = (LdapRdn) this.names.get(i);
 			buffer.append(n.encodeUrl());
 			if (i > 0) {
 				buffer.append(",");
@@ -474,7 +474,7 @@ public class DistinguishedName implements Name {
 	public void prepend(DistinguishedName path) {
 		ListIterator i = path.getNames().listIterator(path.getNames().size());
 		while (i.hasPrevious()) {
-			names.add(0, i.previous());
+			this.names.add(0, i.previous());
 		}
 	}
 
@@ -483,7 +483,7 @@ public class DistinguishedName implements Name {
 	 * @return the removed entry.
 	 */
 	public LdapRdn removeFirst() {
-		return (LdapRdn) names.remove(0);
+		return (LdapRdn) this.names.remove(0);
 	}
 
 	/**
@@ -506,7 +506,7 @@ public class DistinguishedName implements Name {
 	public Object clone() {
 		try {
 			DistinguishedName result = (DistinguishedName) super.clone();
-			result.names = new LinkedList(names);
+			result.names = new LinkedList(this.names);
 			return result;
 		}
 		catch (CloneNotSupportedException e) {
@@ -552,11 +552,11 @@ public class DistinguishedName implements Name {
 	}
 
 	public int size() {
-		return names.size();
+		return this.names.size();
 	}
 
 	public boolean isEmpty() {
-		return names.size() == 0;
+		return this.names.size() == 0;
 	}
 
 	/*
@@ -566,7 +566,7 @@ public class DistinguishedName implements Name {
 	 */
 	public Enumeration getAll() {
 		LinkedList strings = new LinkedList();
-		for (Iterator iter = names.iterator(); iter.hasNext();) {
+		for (Iterator iter = this.names.iterator(); iter.hasNext();) {
 			LdapRdn rdn = (LdapRdn) iter.next();
 			strings.add(rdn.getLdapEncoded());
 		}
@@ -580,7 +580,7 @@ public class DistinguishedName implements Name {
 	 * @see javax.naming.Name#get(int)
 	 */
 	public String get(int index) {
-		LdapRdn rdn = (LdapRdn) names.get(index);
+		LdapRdn rdn = (LdapRdn) this.names.get(index);
 		return rdn.getLdapEncoded();
 	}
 
@@ -592,7 +592,7 @@ public class DistinguishedName implements Name {
 	public Name getPrefix(int index) {
 		LinkedList newNames = new LinkedList();
 		for (int i = 0; i < index; i++) {
-			newNames.add(names.get(i));
+			newNames.add(this.names.get(i));
 		}
 
 		return new DistinguishedName(newNames);
@@ -604,13 +604,13 @@ public class DistinguishedName implements Name {
 	 * @see javax.naming.Name#getSuffix(int)
 	 */
 	public Name getSuffix(int index) {
-		if (index > names.size()) {
+		if (index > this.names.size()) {
 			throw new ArrayIndexOutOfBoundsException();
 		}
 
 		LinkedList newNames = new LinkedList();
-		for (int i = index; i < names.size(); i++) {
-			newNames.add(names.get(i));
+		for (int i = index; i < this.names.size(); i++) {
+			newNames.add(this.names.get(i));
 		}
 
 		return new DistinguishedName(newNames);
@@ -638,7 +638,7 @@ public class DistinguishedName implements Name {
 			return false;
 		}
 
-		Iterator longiter = names.iterator();
+		Iterator longiter = this.names.iterator();
 		Iterator shortiter = start.getNames().iterator();
 
 		while (shortiter.hasNext()) {
@@ -705,7 +705,7 @@ public class DistinguishedName implements Name {
 	 * @see javax.naming.Name#addAll(javax.naming.Name)
 	 */
 	public Name addAll(Name name) throws InvalidNameException {
-		return addAll(names.size(), name);
+		return addAll(this.names.size(), name);
 	}
 
 	/*
@@ -722,7 +722,7 @@ public class DistinguishedName implements Name {
 			throw new InvalidNameException("Invalid name type");
 		}
 
-		names.addAll(arg0, distinguishedName.getNames());
+		this.names.addAll(arg0, distinguishedName.getNames());
 		return this;
 	}
 
@@ -732,7 +732,7 @@ public class DistinguishedName implements Name {
 	 * @see javax.naming.Name#add(java.lang.String)
 	 */
 	public Name add(String string) throws InvalidNameException {
-		return add(names.size(), string);
+		return add(this.names.size(), string);
 	}
 
 	/*
@@ -742,7 +742,7 @@ public class DistinguishedName implements Name {
 	 */
 	public Name add(int index, String string) throws InvalidNameException {
 		try {
-			names.add(index, new LdapRdn(string));
+			this.names.add(index, new LdapRdn(string));
 		}
 		catch (BadLdapGrammarException e) {
 			throw new InvalidNameException("Failed to parse rdn '" + string + "'");
@@ -756,7 +756,7 @@ public class DistinguishedName implements Name {
 	 * @see javax.naming.Name#remove(int)
 	 */
 	public Object remove(int arg0) throws InvalidNameException {
-		LdapRdn rdn = (LdapRdn) names.remove(arg0);
+		LdapRdn rdn = (LdapRdn) this.names.remove(arg0);
 		return rdn.getLdapEncoded();
 	}
 
@@ -765,7 +765,7 @@ public class DistinguishedName implements Name {
 	 * @return the removed {@link LdapRdn}.
 	 */
 	public LdapRdn removeLast() {
-		return (LdapRdn) names.remove(names.size() - 1);
+		return (LdapRdn) this.names.remove(this.names.size() - 1);
 	}
 
 	/**
@@ -774,7 +774,7 @@ public class DistinguishedName implements Name {
 	 * @param value the value of the {@link LdapRdn}.
 	 */
 	public void add(String key, String value) {
-		names.add(new LdapRdn(key, value));
+		this.names.add(new LdapRdn(key, value));
 	}
 
 	/**
@@ -782,7 +782,7 @@ public class DistinguishedName implements Name {
 	 * @param rdn the {@link LdapRdn} to add.
 	 */
 	public void add(LdapRdn rdn) {
-		names.add(rdn);
+		this.names.add(rdn);
 	}
 
 	/**
@@ -791,7 +791,7 @@ public class DistinguishedName implements Name {
 	 * @param rdn the LdapRdn to add.
 	 */
 	public void add(int idx, LdapRdn rdn) {
-		names.add(idx, rdn);
+		this.names.add(idx, rdn);
 	}
 
 	/**
@@ -802,8 +802,8 @@ public class DistinguishedName implements Name {
 	 * @since 1.2
 	 */
 	public DistinguishedName immutableDistinguishedName() {
-		List listWithImmutableRdns = new ArrayList(names.size());
-		for (Iterator iterator = names.iterator(); iterator.hasNext();) {
+		List listWithImmutableRdns = new ArrayList(this.names.size());
+		for (Iterator iterator = this.names.iterator(); iterator.hasNext();) {
 			LdapRdn rdn = (LdapRdn) iterator.next();
 			listWithImmutableRdns.add(rdn.immutableLdapRdn());
 		}

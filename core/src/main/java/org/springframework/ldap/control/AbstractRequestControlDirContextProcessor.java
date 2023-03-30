@@ -47,7 +47,7 @@ public abstract class AbstractRequestControlDirContextProcessor implements DirCo
 	 * @return true if an already existing control will be replaced
 	 */
 	public boolean isReplaceSameControlEnabled() {
-		return replaceSameControlEnabled;
+		return this.replaceSameControlEnabled;
 	}
 
 	/**
@@ -93,8 +93,8 @@ public abstract class AbstractRequestControlDirContextProcessor implements DirCo
 
 		Control[] newControls = new Control[requestControls.length + 1];
 		for (int i = 0; i < requestControls.length; i++) {
-			if (replaceSameControlEnabled && requestControls[i].getClass() == newControl.getClass()) {
-				log.debug("Replacing already existing control in context: " + newControl);
+			if (this.replaceSameControlEnabled && requestControls[i].getClass() == newControl.getClass()) {
+				this.log.debug("Replacing already existing control in context: " + newControl);
 				requestControls[i] = newControl;
 				ldapContext.setRequestControls(requestControls);
 				return;

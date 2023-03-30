@@ -60,7 +60,7 @@ public class BindOperationRecorder implements CompensatingTransactionOperationRe
 			attributes = (Attributes) args[2];
 		}
 
-		return new BindOperationExecutor(ldapOperations, dn, object, attributes);
+		return new BindOperationExecutor(this.ldapOperations, dn, object, attributes);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class BindOperationRecorder implements CompensatingTransactionOperationRe
 	 * @return the LdapOperations.
 	 */
 	LdapOperations getLdapOperations() {
-		return ldapOperations;
+		return this.ldapOperations;
 	}
 
 }

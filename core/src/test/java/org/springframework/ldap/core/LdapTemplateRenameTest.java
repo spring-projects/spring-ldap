@@ -52,32 +52,32 @@ public class LdapTemplateRenameTest {
 	@Before
 	public void setUp() throws Exception {
 		// Setup ContextSource mock
-		contextSourceMock = mock(ContextSource.class);
+		this.contextSourceMock = mock(ContextSource.class);
 
 		// Setup LdapContext mock
-		dirContextMock = mock(LdapContext.class);
+		this.dirContextMock = mock(LdapContext.class);
 
 		// Setup Name mock for old name
-		oldNameMock = mock(Name.class);
+		this.oldNameMock = mock(Name.class);
 
 		// Setup Name mock for new name
-		newNameMock = mock(Name.class);
+		this.newNameMock = mock(Name.class);
 
-		tested = new LdapTemplate(contextSourceMock);
+		this.tested = new LdapTemplate(this.contextSourceMock);
 	}
 
 	private void expectGetReadWriteContext() {
-		when(contextSourceMock.getReadWriteContext()).thenReturn(dirContextMock);
+		when(this.contextSourceMock.getReadWriteContext()).thenReturn(this.dirContextMock);
 	}
 
 	@Test
 	public void testRename() throws Exception {
 		expectGetReadWriteContext();
 
-		tested.rename(oldNameMock, newNameMock);
+		this.tested.rename(this.oldNameMock, this.newNameMock);
 
-		verify(dirContextMock).rename(oldNameMock, newNameMock);
-		verify(dirContextMock).close();
+		verify(this.dirContextMock).rename(this.oldNameMock, this.newNameMock);
+		verify(this.dirContextMock).close();
 	}
 
 	@Test
@@ -85,17 +85,17 @@ public class LdapTemplateRenameTest {
 		expectGetReadWriteContext();
 
 		javax.naming.NameAlreadyBoundException ne = new javax.naming.NameAlreadyBoundException();
-		doThrow(ne).when(dirContextMock).rename(oldNameMock, newNameMock);
+		doThrow(ne).when(this.dirContextMock).rename(this.oldNameMock, this.newNameMock);
 
 		try {
-			tested.rename(oldNameMock, newNameMock);
+			this.tested.rename(this.oldNameMock, this.newNameMock);
 			fail("NameAlreadyBoundException expected");
 		}
 		catch (NameAlreadyBoundException expected) {
 			assertThat(true).isTrue();
 		}
 
-		verify(dirContextMock).close();
+		verify(this.dirContextMock).close();
 	}
 
 	@Test
@@ -104,27 +104,27 @@ public class LdapTemplateRenameTest {
 
 		javax.naming.NamingException ne = new javax.naming.NamingException();
 
-		doThrow(ne).when(dirContextMock).rename(oldNameMock, newNameMock);
+		doThrow(ne).when(this.dirContextMock).rename(this.oldNameMock, this.newNameMock);
 
 		try {
-			tested.rename(oldNameMock, newNameMock);
+			this.tested.rename(this.oldNameMock, this.newNameMock);
 			fail("UncategorizedLdapException expected");
 		}
 		catch (UncategorizedLdapException expected) {
 			assertThat(true).isTrue();
 		}
 
-		verify(dirContextMock).close();
+		verify(this.dirContextMock).close();
 	}
 
 	@Test
 	public void testRename_String() throws Exception {
 		expectGetReadWriteContext();
 
-		tested.rename("o=example.com", "o=somethingelse.com");
+		this.tested.rename("o=example.com", "o=somethingelse.com");
 
-		verify(dirContextMock).rename("o=example.com", "o=somethingelse.com");
-		verify(dirContextMock).close();
+		verify(this.dirContextMock).rename("o=example.com", "o=somethingelse.com");
+		verify(this.dirContextMock).close();
 	}
 
 }

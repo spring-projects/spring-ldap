@@ -63,19 +63,19 @@ class RangeOption implements Comparable<RangeOption> {
 	}
 
 	public boolean isTerminalEndOfRange() {
-		return terminal == TERMINAL_END_OF_RANGE;
+		return this.terminal == TERMINAL_END_OF_RANGE;
 	}
 
 	public boolean isTerminalMissing() {
-		return terminal == TERMINAL_MISSING;
+		return this.terminal == TERMINAL_MISSING;
 	}
 
 	public int getInitial() {
-		return initial;
+		return this.initial;
 	}
 
 	public int getTerminal() {
-		return terminal;
+		return this.terminal;
 	}
 
 	public boolean isFullRange() {
@@ -90,7 +90,7 @@ class RangeOption implements Comparable<RangeOption> {
 	}
 
 	public void appendTo(StringBuilder rangeBuilder) {
-		rangeBuilder.append("Range=").append(initial);
+		rangeBuilder.append("Range=").append(this.initial);
 
 		if (!isTerminalMissing()) {
 			rangeBuilder.append('-');
@@ -99,7 +99,7 @@ class RangeOption implements Comparable<RangeOption> {
 				rangeBuilder.append('*');
 			}
 			else {
-				rangeBuilder.append(terminal);
+				rangeBuilder.append(this.terminal);
 			}
 		}
 	}
@@ -169,9 +169,9 @@ class RangeOption implements Comparable<RangeOption> {
 
 		RangeOption that = (RangeOption) o;
 
-		if (initial != that.initial)
+		if (this.initial != that.initial)
 			return false;
-		if (terminal != that.terminal)
+		if (this.terminal != that.terminal)
 			return false;
 
 		return true;
@@ -179,8 +179,8 @@ class RangeOption implements Comparable<RangeOption> {
 
 	@Override
 	public int hashCode() {
-		int result = initial;
-		result = 31 * result + terminal;
+		int result = this.initial;
+		result = 31 * result + this.terminal;
 		return result;
 	}
 

@@ -76,7 +76,7 @@ public class ModifyAttributesOperationRecorder implements CompensatingTransactio
 		// by one query.
 		IncrementalAttributesMapper<?> attributesMapper = getAttributesMapper(attributeNameArray);
 		while (attributesMapper.hasMore()) {
-			ldapOperations.lookup(dn, attributesMapper.getAttributesForLookup(), attributesMapper);
+			this.ldapOperations.lookup(dn, attributesMapper.getAttributesForLookup(), attributesMapper);
 		}
 
 		Attributes currentAttributes = attributesMapper.getCollectedAttributes();
@@ -88,7 +88,7 @@ public class ModifyAttributesOperationRecorder implements CompensatingTransactio
 			rollbackItems[i] = getCompensatingModificationItem(currentAttributes, incomingModifications[i]);
 		}
 
-		return new ModifyAttributesOperationExecutor(ldapOperations, dn, incomingModifications, rollbackItems);
+		return new ModifyAttributesOperationExecutor(this.ldapOperations, dn, incomingModifications, rollbackItems);
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class ModifyAttributesOperationRecorder implements CompensatingTransactio
 	}
 
 	LdapOperations getLdapOperations() {
-		return ldapOperations;
+		return this.ldapOperations;
 	}
 
 }

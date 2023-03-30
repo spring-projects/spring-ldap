@@ -149,8 +149,8 @@ public final class ConverterManagerFactoryBean implements FactoryBean {
 
 		@Override
 		public String toString() {
-			return String.format("fromClasses=%1$s, syntax=%2$s, toClasses=%3$s, converter=%4$s", fromClasses, syntax,
-					toClasses, converter);
+			return String.format("fromClasses=%1$s, syntax=%2$s, toClasses=%3$s, converter=%4$s", this.fromClasses,
+					this.syntax, this.toClasses, this.converter);
 		}
 
 	}
@@ -175,12 +175,12 @@ public final class ConverterManagerFactoryBean implements FactoryBean {
 	 * @see org.springframework.beans.factory.FactoryBean#getObject()
 	 */
 	public Object getObject() throws Exception {
-		if (converterConfigList == null) {
+		if (this.converterConfigList == null) {
 			throw new FactoryBeanNotInitializedException("converterConfigList has not been set");
 		}
 
 		ConverterManagerImpl result = new ConverterManagerImpl();
-		for (ConverterConfig converterConfig : converterConfigList) {
+		for (ConverterConfig converterConfig : this.converterConfigList) {
 			if (converterConfig.fromClasses == null || converterConfig.toClasses == null
 					|| converterConfig.converter == null) {
 

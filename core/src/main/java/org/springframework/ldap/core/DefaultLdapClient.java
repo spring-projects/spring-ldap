@@ -279,7 +279,8 @@ class DefaultLdapClient implements LdapClient {
 			DirContext ctx = null;
 			try {
 				String password = (this.password != null) ? new String(this.password) : null;
-				ctx = contextSource.getContext(identification.get(0).getAbsoluteName().toString(), password);
+				ctx = DefaultLdapClient.this.contextSource
+						.getContext(identification.get(0).getAbsoluteName().toString(), password);
 				return mapper.mapWithContext(ctx, identification.get(0));
 			}
 			finally {
@@ -370,13 +371,13 @@ class DefaultLdapClient implements LdapClient {
 			controls.setReturningObjFlag(returnObjFlag);
 			controls.setReturningAttributes(this.query.attributes());
 			if (this.query.searchScope() != null) {
-				controls.setSearchScope(query.searchScope().getId());
+				controls.setSearchScope(this.query.searchScope().getId());
 			}
 			if (this.query.countLimit() != null) {
-				controls.setCountLimit(query.countLimit());
+				controls.setCountLimit(this.query.countLimit());
 			}
 			if (this.query.timeLimit() != null) {
-				controls.setTimeLimit(query.timeLimit());
+				controls.setTimeLimit(this.query.timeLimit());
 			}
 			return controls;
 		}
@@ -574,7 +575,7 @@ class DefaultLdapClient implements LdapClient {
 					return enumeration.hasMore();
 				}
 				catch (NamingException ex) {
-					namingExceptionHandler.accept(ex);
+					DefaultLdapClient.this.namingExceptionHandler.accept(ex);
 					return false;
 				}
 			}
@@ -585,7 +586,7 @@ class DefaultLdapClient implements LdapClient {
 					return enumeration.next();
 				}
 				catch (NamingException ex) {
-					namingExceptionHandler.accept(ex);
+					DefaultLdapClient.this.namingExceptionHandler.accept(ex);
 					throw new NoSuchElementException("no such element", ex);
 				}
 			}

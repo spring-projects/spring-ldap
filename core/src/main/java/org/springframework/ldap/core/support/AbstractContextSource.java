@@ -125,7 +125,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	public AbstractContextSource() {
 		try {
-			contextFactory = Class.forName(DEFAULT_CONTEXT_FACTORY);
+			this.contextFactory = Class.forName(DEFAULT_CONTEXT_FACTORY);
 		}
 		catch (ClassNotFoundException e) {
 			LOG.trace("The default for contextFactory cannot be resolved", e);
@@ -148,7 +148,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 		DirContext ctx = createContext(env);
 
 		try {
-			DirContext processedDirContext = authenticationStrategy.processContextAfterCreation(ctx, principal,
+			DirContext processedDirContext = this.authenticationStrategy.processContextAfterCreation(ctx, principal,
 					credentials);
 			return processedDirContext;
 		}
@@ -164,8 +164,8 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @see org.springframework.ldap.core.ContextSource#getReadOnlyContext()
 	 */
 	public DirContext getReadOnlyContext() {
-		if (!anonymousReadOnly) {
-			return doGetContext(authenticationSource.getPrincipal(), authenticationSource.getCredentials(),
+		if (!this.anonymousReadOnly) {
+			return doGetContext(this.authenticationSource.getPrincipal(), this.authenticationSource.getCredentials(),
 					DONT_DISABLE_POOLING);
 		}
 		else {
@@ -179,7 +179,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @see org.springframework.ldap.core.ContextSource#getReadWriteContext()
 	 */
 	public DirContext getReadWriteContext() {
-		return doGetContext(authenticationSource.getPrincipal(), authenticationSource.getCredentials(),
+		return doGetContext(this.authenticationSource.getPrincipal(), this.authenticationSource.getCredentials(),
 				DONT_DISABLE_POOLING);
 	}
 
@@ -196,7 +196,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 */
 	protected void setupAuthenticatedEnvironment(Hashtable<String, Object> env, String principal, String credentials) {
 		try {
-			authenticationStrategy.setupEnvironment(env, principal, credentials);
+			this.authenticationStrategy.setupEnvironment(env, principal, credentials);
 		}
 		catch (NamingException e) {
 			throw LdapUtils.convertLdapException(e);
@@ -228,12 +228,12 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 		StringBuilder providerUrlBuffer = new StringBuilder(DEFAULT_BUFFER_SIZE);
 		for (String ldapUrl : ldapUrls) {
 			providerUrlBuffer.append(ldapUrl);
-			if (!base.isEmpty()) {
+			if (!this.base.isEmpty()) {
 				if (!ldapUrl.endsWith("/")) {
 					providerUrlBuffer.append("/");
 				}
 			}
-			providerUrlBuffer.append(formatForUrl(base));
+			providerUrlBuffer.append(formatForUrl(this.base));
 			providerUrlBuffer.append(' ');
 		}
 		return providerUrlBuffer.toString().trim();
@@ -324,12 +324,12 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 */
 	@Override
 	public DistinguishedName getBaseLdapPath() {
-		return new DistinguishedName(base);
+		return new DistinguishedName(this.base);
 	}
 
 	@Override
 	public LdapName getBaseLdapName() {
-		return (LdapName) base.clone();
+		return (LdapName) this.base.clone();
 	}
 
 	@Override
@@ -376,7 +376,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @return the context factory used when creating Contexts.
 	 */
 	public Class<?> getContextFactory() {
-		return contextFactory;
+		return this.contextFactory;
 	}
 
 	/**
@@ -397,7 +397,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * DirObjectFactory will be used.
 	 */
 	public Class<?> getDirObjectFactory() {
-		return dirObjectFactory;
+		return this.dirObjectFactory;
 	}
 
 	/**
@@ -407,65 +407,65 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * Spring Context.
 	 */
 	public void afterPropertiesSet() {
-		if (ObjectUtils.isEmpty(urls)) {
+		if (ObjectUtils.isEmpty(this.urls)) {
 			throw new IllegalArgumentException("At least one server url must be set");
 		}
-		if (contextFactory == null) {
+		if (this.contextFactory == null) {
 			throw new IllegalArgumentException("contextFactory must be set");
 		}
-		if (authenticationSource == null) {
+		if (this.authenticationSource == null) {
 			LOG.debug("AuthenticationSource not set - " + "using default implementation");
-			if (!StringUtils.hasText(userDn)) {
+			if (!StringUtils.hasText(this.userDn)) {
 				LOG.info("Property 'userDn' not set - " + "anonymous context will be used for read-write operations");
-				anonymousReadOnly = true;
+				this.anonymousReadOnly = true;
 			}
-			if (!anonymousReadOnly) {
-				if (password == null) {
+			if (!this.anonymousReadOnly) {
+				if (this.password == null) {
 					throw new IllegalArgumentException(
 							"Property 'password' cannot be null. To use a blank password, please ensure it is set to \"\"");
 				}
-				if (!StringUtils.hasText(password)) {
+				if (!StringUtils.hasText(this.password)) {
 					LOG.info("Property 'password' not set - " + "blank password will be used");
 				}
 			}
-			authenticationSource = new SimpleAuthenticationSource();
+			this.authenticationSource = new SimpleAuthenticationSource();
 		}
 
-		if (cacheEnvironmentProperties) {
-			anonymousEnv = setupAnonymousEnv();
+		if (this.cacheEnvironmentProperties) {
+			this.anonymousEnv = setupAnonymousEnv();
 		}
 	}
 
 	@SuppressWarnings("deprecation")
 	private Hashtable<String, Object> setupAnonymousEnv() {
-		if (pooled) {
-			baseEnv.put(SUN_LDAP_POOLING_FLAG, "true");
+		if (this.pooled) {
+			this.baseEnv.put(SUN_LDAP_POOLING_FLAG, "true");
 			LOG.debug("Using LDAP pooling.");
 		}
 		else {
-			baseEnv.remove(SUN_LDAP_POOLING_FLAG);
+			this.baseEnv.remove(SUN_LDAP_POOLING_FLAG);
 			LOG.debug("Not using LDAP pooling");
 		}
 
-		Hashtable<String, Object> env = new Hashtable<String, Object>(baseEnv);
+		Hashtable<String, Object> env = new Hashtable<String, Object>(this.baseEnv);
 
-		env.put(Context.INITIAL_CONTEXT_FACTORY, contextFactory.getName());
-		env.put(Context.PROVIDER_URL, assembleProviderUrlString(urls));
+		env.put(Context.INITIAL_CONTEXT_FACTORY, this.contextFactory.getName());
+		env.put(Context.PROVIDER_URL, assembleProviderUrlString(this.urls));
 
-		if (dirObjectFactory != null) {
-			env.put(Context.OBJECT_FACTORIES, dirObjectFactory.getName());
+		if (this.dirObjectFactory != null) {
+			env.put(Context.OBJECT_FACTORIES, this.dirObjectFactory.getName());
 		}
 
-		if (StringUtils.hasText(referral)) {
-			env.put(Context.REFERRAL, referral);
+		if (StringUtils.hasText(this.referral)) {
+			env.put(Context.REFERRAL, this.referral);
 		}
 
-		if (!base.isEmpty()) {
+		if (!this.base.isEmpty()) {
 			// Save the base path for use in the DefaultDirObjectFactory.
-			env.put(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY, base);
+			env.put(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY, this.base);
 		}
 
-		LOG.debug("Trying provider Urls: " + assembleProviderUrlString(urls));
+		LOG.debug("Trying provider Urls: " + assembleProviderUrlString(this.urls));
 
 		return env;
 	}
@@ -483,7 +483,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @return the password
 	 */
 	public String getPassword() {
-		return password;
+		return this.password;
 	}
 
 	/**
@@ -517,7 +517,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @return the urls of all servers.
 	 */
 	public String[] getUrls() {
-		return urls.clone();
+		return this.urls.clone();
 	}
 
 	/**
@@ -553,7 +553,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @return whether Contexts should be pooled.
 	 */
 	public boolean isPooled() {
-		return pooled;
+		return this.pooled;
 	}
 
 	/**
@@ -567,8 +567,8 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	}
 
 	protected Hashtable<String, Object> getAnonymousEnv() {
-		if (cacheEnvironmentProperties) {
-			return anonymousEnv;
+		if (this.cacheEnvironmentProperties) {
+			return this.anonymousEnv;
 		}
 		else {
 			return setupAnonymousEnv();
@@ -597,7 +597,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * @return the {@link AuthenticationSource} that will provide user info.
 	 */
 	public AuthenticationSource getAuthenticationSource() {
-		return authenticationSource;
+		return this.authenticationSource;
 	}
 
 	/**
@@ -630,7 +630,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * operations, <code>false</code> otherwise.
 	 */
 	public boolean isAnonymousReadOnly() {
-		return anonymousReadOnly;
+		return this.anonymousReadOnly;
 	}
 
 	/**
@@ -667,11 +667,11 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	class SimpleAuthenticationSource implements AuthenticationSource {
 
 		public String getPrincipal() {
-			return userDn;
+			return AbstractContextSource.this.userDn;
 		}
 
 		public String getCredentials() {
-			return password;
+			return AbstractContextSource.this.password;
 		}
 
 	}

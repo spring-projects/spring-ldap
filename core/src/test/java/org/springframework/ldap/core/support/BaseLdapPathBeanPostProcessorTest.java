@@ -46,38 +46,38 @@ public class BaseLdapPathBeanPostProcessorTest {
 
 	@Before
 	public void setUp() throws Exception {
-		tested = new BaseLdapPathBeanPostProcessor();
+		this.tested = new BaseLdapPathBeanPostProcessor();
 
-		ldapPathAwareMock = mock(BaseLdapPathAware.class);
-		ldapNameAwareMock = mock(BaseLdapNameAware.class);
+		this.ldapPathAwareMock = mock(BaseLdapPathAware.class);
+		this.ldapNameAwareMock = mock(BaseLdapNameAware.class);
 
-		applicationContextMock = mock(ApplicationContext.class);
+		this.applicationContextMock = mock(ApplicationContext.class);
 
-		tested.setApplicationContext(applicationContextMock);
+		this.tested.setApplicationContext(this.applicationContextMock);
 	}
 
 	@Test
 	public void testPostProcessBeforeInitializationWithLdapPathAwareBasePathSet() throws Exception {
 		String expectedPath = "dc=example, dc=com";
-		tested.setBasePath(new DistinguishedName(expectedPath));
+		this.tested.setBasePath(new DistinguishedName(expectedPath));
 
-		Object result = tested.postProcessBeforeInitialization(ldapPathAwareMock, "someName");
+		Object result = this.tested.postProcessBeforeInitialization(this.ldapPathAwareMock, "someName");
 
-		verify(ldapPathAwareMock).setBaseLdapPath(new DistinguishedName(expectedPath));
+		verify(this.ldapPathAwareMock).setBaseLdapPath(new DistinguishedName(expectedPath));
 
-		assertThat(result).isSameAs(ldapPathAwareMock);
+		assertThat(result).isSameAs(this.ldapPathAwareMock);
 	}
 
 	@Test
 	public void testPostProcessBeforeInitializationWithLdapNameAwareBasePathSet() throws Exception {
 		String expectedPath = "dc=example, dc=com";
-		tested.setBasePath(expectedPath);
+		this.tested.setBasePath(expectedPath);
 
-		Object result = tested.postProcessBeforeInitialization(ldapNameAwareMock, "someName");
+		Object result = this.tested.postProcessBeforeInitialization(this.ldapNameAwareMock, "someName");
 
-		verify(ldapNameAwareMock).setBaseLdapPath(LdapUtils.newLdapName(expectedPath));
+		verify(this.ldapNameAwareMock).setBaseLdapPath(LdapUtils.newLdapName(expectedPath));
 
-		assertThat(result).isSameAs(ldapNameAwareMock);
+		assertThat(result).isSameAs(this.ldapNameAwareMock);
 	}
 
 	@Test
@@ -86,17 +86,17 @@ public class BaseLdapPathBeanPostProcessorTest {
 		String expectedPath = "dc=example, dc=com";
 		expectedContextSource.setBase(expectedPath);
 
-		tested = new BaseLdapPathBeanPostProcessor() {
+		this.tested = new BaseLdapPathBeanPostProcessor() {
 			BaseLdapPathSource getBaseLdapPathSourceFromApplicationContext() {
 				return expectedContextSource;
 			}
 		};
 
-		Object result = tested.postProcessBeforeInitialization(ldapPathAwareMock, "someName");
+		Object result = this.tested.postProcessBeforeInitialization(this.ldapPathAwareMock, "someName");
 
-		verify(ldapPathAwareMock).setBaseLdapPath(new DistinguishedName(expectedPath));
+		verify(this.ldapPathAwareMock).setBaseLdapPath(new DistinguishedName(expectedPath));
 
-		assertThat(result).isSameAs(ldapPathAwareMock);
+		assertThat(result).isSameAs(this.ldapPathAwareMock);
 	}
 
 	@Test
@@ -105,22 +105,22 @@ public class BaseLdapPathBeanPostProcessorTest {
 		String expectedPath = "dc=example, dc=com";
 		expectedContextSource.setBase(expectedPath);
 
-		tested = new BaseLdapPathBeanPostProcessor() {
+		this.tested = new BaseLdapPathBeanPostProcessor() {
 			BaseLdapPathSource getBaseLdapPathSourceFromApplicationContext() {
 				return expectedContextSource;
 			}
 		};
 
-		Object result = tested.postProcessBeforeInitialization(ldapNameAwareMock, "someName");
+		Object result = this.tested.postProcessBeforeInitialization(this.ldapNameAwareMock, "someName");
 
-		verify(ldapNameAwareMock).setBaseLdapPath(LdapUtils.newLdapName(expectedPath));
+		verify(this.ldapNameAwareMock).setBaseLdapPath(LdapUtils.newLdapName(expectedPath));
 
-		assertThat(result).isSameAs(ldapNameAwareMock);
+		assertThat(result).isSameAs(this.ldapNameAwareMock);
 	}
 
 	@Test
 	public void testGetAbstractContextSourceFromApplicationContext() throws Exception {
-		when(applicationContextMock.getBeanNamesForType(BaseLdapPathSource.class))
+		when(this.applicationContextMock.getBeanNamesForType(BaseLdapPathSource.class))
 				.thenReturn(new String[] { "contextSource" });
 		final LdapContextSource expectedContextSource = new LdapContextSource();
 
@@ -129,35 +129,35 @@ public class BaseLdapPathBeanPostProcessorTest {
 				put("dummy", expectedContextSource);
 			}
 		};
-		when(applicationContextMock.getBeansOfType(BaseLdapPathSource.class)).thenReturn(expectedBeans);
+		when(this.applicationContextMock.getBeansOfType(BaseLdapPathSource.class)).thenReturn(expectedBeans);
 
-		BaseLdapPathSource result = tested.getBaseLdapPathSourceFromApplicationContext();
+		BaseLdapPathSource result = this.tested.getBaseLdapPathSourceFromApplicationContext();
 
 		assertThat(result).isSameAs(expectedContextSource);
 	}
 
 	@Test(expected = NoSuchBeanDefinitionException.class)
 	public void testGetAbstractContextSourceFromApplicationContextNoContextSource() throws Exception {
-		when(applicationContextMock.getBeanNamesForType(BaseLdapPathSource.class)).thenReturn(new String[0]);
+		when(this.applicationContextMock.getBeanNamesForType(BaseLdapPathSource.class)).thenReturn(new String[0]);
 
-		tested.getBaseLdapPathSourceFromApplicationContext();
+		this.tested.getBaseLdapPathSourceFromApplicationContext();
 	}
 
 	@Test(expected = NoSuchBeanDefinitionException.class)
 	public void testGetAbstractContextSourceFromApplicationContextTwoContextSources() throws Exception {
-		when(applicationContextMock.getBeanNamesForType(BaseLdapPathSource.class)).thenReturn(new String[2]);
+		when(this.applicationContextMock.getBeanNamesForType(BaseLdapPathSource.class)).thenReturn(new String[2]);
 
-		tested.getBaseLdapPathSourceFromApplicationContext();
+		this.tested.getBaseLdapPathSourceFromApplicationContext();
 	}
 
 	@Test
 	public void testGetAbstractContextSourceFromApplicationContextTwoContextSourcesAndSpecifiedName() throws Exception {
 		LdapContextSource expectedContextSource = new LdapContextSource();
 
-		tested.setBaseLdapPathSourceName("myContextSource");
-		when(applicationContextMock.getBean("myContextSource")).thenReturn(expectedContextSource);
+		this.tested.setBaseLdapPathSourceName("myContextSource");
+		when(this.applicationContextMock.getBean("myContextSource")).thenReturn(expectedContextSource);
 
-		tested.getBaseLdapPathSourceFromApplicationContext();
+		this.tested.getBaseLdapPathSourceFromApplicationContext();
 	}
 
 }

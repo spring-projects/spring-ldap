@@ -127,7 +127,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public ObjectDirectoryMapper getObjectDirectoryMapper() {
-		return odm;
+		return this.odm;
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * @return the ContextSource.
 	 */
 	public ContextSource getContextSource() {
-		return contextSource;
+		return this.contextSource;
 	}
 
 	/**
@@ -342,7 +342,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public void search(SearchExecutor se, NameClassPairCallbackHandler handler, DirContextProcessor processor) {
-		DirContext ctx = contextSource.getReadOnlyContext();
+		DirContext ctx = this.contextSource.getReadOnlyContext();
 
 		NamingEnumeration results = null;
 		RuntimeException ex = null;
@@ -357,7 +357,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		}
 		catch (NameNotFoundException e) {
 			// It is possible to ignore errors caused by base not found
-			if (ignoreNameNotFoundException) {
+			if (this.ignoreNameNotFoundException) {
 				LOG.warn("Base context not found, ignoring: " + e.getMessage());
 			}
 			else {
@@ -366,7 +366,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		}
 		catch (PartialResultException e) {
 			// Workaround for AD servers not handling referrals correctly.
-			if (ignorePartialResultException) {
+			if (this.ignorePartialResultException) {
 				LOG.debug("PartialResultException encountered and ignored", e);
 			}
 			else {
@@ -374,7 +374,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			}
 		}
 		catch (SizeLimitExceededException e) {
-			if (ignoreSizeLimitExceededException) {
+			if (this.ignoreSizeLimitExceededException) {
 				LOG.debug("SizeLimitExceededException encountered and ignored", e);
 			}
 			else {
@@ -432,7 +432,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	@Override
 	public void search(Name base, String filter, NameClassPairCallbackHandler handler) {
 
-		SearchControls controls = getDefaultSearchControls(defaultSearchScope, DONT_RETURN_OBJ_FLAG, ALL_ATTRIBUTES);
+		SearchControls controls = getDefaultSearchControls(this.defaultSearchScope, DONT_RETURN_OBJ_FLAG,
+				ALL_ATTRIBUTES);
 		if (handler instanceof ContextMapperCallbackHandler) {
 			assureReturnObjFlagSet(controls);
 		}
@@ -445,7 +446,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	@Override
 	public void search(String base, String filter, NameClassPairCallbackHandler handler) {
 
-		SearchControls controls = getDefaultSearchControls(defaultSearchScope, DONT_RETURN_OBJ_FLAG, ALL_ATTRIBUTES);
+		SearchControls controls = getDefaultSearchControls(this.defaultSearchScope, DONT_RETURN_OBJ_FLAG,
+				ALL_ATTRIBUTES);
 		if (handler instanceof ContextMapperCallbackHandler) {
 			assureReturnObjFlagSet(controls);
 		}
@@ -489,7 +491,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> List<T> search(Name base, String filter, AttributesMapper<T> mapper) {
-		return search(base, filter, defaultSearchScope, mapper);
+		return search(base, filter, this.defaultSearchScope, mapper);
 	}
 
 	/**
@@ -497,7 +499,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> List<T> search(String base, String filter, AttributesMapper<T> mapper) {
-		return search(base, filter, defaultSearchScope, mapper);
+		return search(base, filter, this.defaultSearchScope, mapper);
 	}
 
 	/**
@@ -537,7 +539,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> List<T> search(Name base, String filter, ContextMapper<T> mapper) {
-		return search(base, filter, defaultSearchScope, mapper);
+		return search(base, filter, this.defaultSearchScope, mapper);
 	}
 
 	/**
@@ -545,7 +547,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> List<T> search(String base, String filter, ContextMapper<T> mapper) {
-		return search(base, filter, defaultSearchScope, mapper);
+		return search(base, filter, this.defaultSearchScope, mapper);
 	}
 
 	/**
@@ -789,7 +791,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> T executeReadOnly(ContextExecutor<T> ce) {
-		DirContext ctx = contextSource.getReadOnlyContext();
+		DirContext ctx = this.contextSource.getReadOnlyContext();
 		return executeWithContext(ce, ctx);
 	}
 
@@ -798,7 +800,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> T executeReadWrite(ContextExecutor<T> ce) {
-		DirContext ctx = contextSource.getReadWriteContext();
+		DirContext ctx = this.contextSource.getReadWriteContext();
 		return executeWithContext(ce, ctx);
 	}
 
@@ -1168,7 +1170,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		Assert.notNull(contextSource, "Property 'contextSource' must be set.");
+		Assert.notNull(this.contextSource, "Property 'contextSource' must be set.");
 	}
 
 	private void closeContextAndNamingEnumeration(DirContext ctx, NamingEnumeration results) {
@@ -1212,8 +1214,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	private SearchControls getDefaultSearchControls(int searchScope, boolean returningObjFlag, String[] attrs) {
 		SearchControls controls = new SearchControls();
 		controls.setSearchScope(searchScope);
-		controls.setTimeLimit(defaultTimeLimit);
-		controls.setCountLimit(defaultCountLimit);
+		controls.setTimeLimit(this.defaultTimeLimit);
+		controls.setCountLimit(this.defaultCountLimit);
 		controls.setReturningObjFlag(returningObjFlag);
 		controls.setReturningAttributes(attrs);
 		return controls;
@@ -1271,7 +1273,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		 */
 		public T getObjectFromNameClassPair(NameClassPair nameClassPair) {
 			try {
-				return mapper.mapFromNameClassPair(nameClassPair);
+				return this.mapper.mapFromNameClassPair(nameClassPair);
 			}
 			catch (javax.naming.NamingException e) {
 				throw LdapUtils.convertLdapException(e);
@@ -1410,8 +1412,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	public boolean authenticate(Name base, String filter, String password,
 			final AuthenticatedLdapEntryContextCallback callback, final AuthenticationErrorCallback errorCallback) {
 
-		return authenticate(base, filter, password, getDefaultSearchControls(defaultSearchScope, RETURN_OBJ_FLAG, null),
-				callback, errorCallback).isSuccess();
+		return authenticate(base, filter, password,
+				getDefaultSearchControls(this.defaultSearchScope, RETURN_OBJ_FLAG, null), callback, errorCallback)
+						.isSuccess();
 	}
 
 	private AuthenticationStatus authenticate(Name base, String filter, String password, SearchControls searchControls,
@@ -1432,7 +1435,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		final LdapEntryIdentification entryIdentification = result.get(0);
 
 		try {
-			DirContext ctx = contextSource.getContext(entryIdentification.getAbsoluteName().toString(), password);
+			DirContext ctx = this.contextSource.getContext(entryIdentification.getAbsoluteName().toString(), password);
 			executeWithContext(new ContextExecutor<Object>() {
 				public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
 					callback.executeWithContext(ctx, entryIdentification);
@@ -1495,7 +1498,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	@Override
 	public <T> T searchForObject(Name base, String filter, ContextMapper<T> mapper) {
 		return searchForObject(base, filter,
-				getDefaultSearchControls(defaultSearchScope, RETURN_OBJ_FLAG, ALL_ATTRIBUTES), mapper);
+				getDefaultSearchControls(this.defaultSearchScope, RETURN_OBJ_FLAG, ALL_ATTRIBUTES), mapper);
 	}
 
 	/**
@@ -1569,7 +1572,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		 */
 		@Override
 		public void executeWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
-			collectedObject = mapper.mapWithContext(ctx, ldapEntryIdentification);
+			this.collectedObject = this.mapper.mapWithContext(ctx, ldapEntryIdentification);
 		}
 
 	}
@@ -1595,7 +1598,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	private SearchControls searchControlsForQuery(LdapQuery query, boolean returnObjFlag) {
-		SearchControls searchControls = getDefaultSearchControls(defaultSearchScope, returnObjFlag, query.attributes());
+		SearchControls searchControls = getDefaultSearchControls(this.defaultSearchScope, returnObjFlag,
+				query.attributes());
 
 		if (query.searchScope() != null) {
 			searchControls.setSearchScope(query.searchScope().getId());
@@ -1673,7 +1677,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		Name base = query.base();
 		Filter filter = query.filter();
 		SearchControls searchControls = searchControlsForQuery(query, RETURN_OBJ_FLAG);
-		DirContext ctx = contextSource.getReadOnlyContext();
+		DirContext ctx = this.contextSource.getReadOnlyContext();
 		String encodedFilter = filter.encode();
 
 		if (LOG.isDebugEnabled()) {
@@ -1704,12 +1708,12 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		}
 
 		// Make sure the class is OK before doing the lookup
-		String[] attributes = odm.manageClass(clazz);
+		String[] attributes = this.odm.manageClass(clazz);
 
 		T result = lookup(dn, attributes, new ContextMapper<T>() {
 			@Override
 			public T mapFromContext(Object ctx) throws javax.naming.NamingException {
-				return odm.mapFromLdapDataEntry((DirContextOperations) ctx, clazz);
+				return LdapTemplate.this.odm.mapFromLdapDataEntry((DirContextOperations) ctx, clazz);
 			}
 		});
 
@@ -1734,16 +1738,16 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			LOG.debug(String.format("Creating entry - %1$s", entry));
 		}
 
-		Name id = odm.getId(entry);
+		Name id = this.odm.getId(entry);
 		if (id == null) {
-			id = odm.getCalculatedId(entry);
-			odm.setId(entry, id);
+			id = this.odm.getCalculatedId(entry);
+			this.odm.setId(entry, id);
 		}
 
 		Assert.notNull(id, String.format("Unable to determine id for entry %s", entry.toString()));
 
 		DirContextAdapter context = new DirContextAdapter(id);
-		odm.mapToLdapDataEntry(entry, context);
+		this.odm.mapToLdapDataEntry(entry, context);
 
 		bind(context);
 	}
@@ -1758,8 +1762,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			LOG.debug(String.format("Updating entry - %1$s", entry));
 		}
 
-		Name originalId = odm.getId(entry);
-		Name calculatedId = odm.getCalculatedId(entry);
+		Name originalId = this.odm.getId(entry);
+		Name calculatedId = this.odm.getCalculatedId(entry);
 
 		if (originalId != null && calculatedId != null && !originalId.equals(calculatedId)) {
 			// The DN has changed - remove the original entry and bind the new one
@@ -1773,10 +1777,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			unbind(originalId);
 
 			DirContextAdapter context = new DirContextAdapter(calculatedId);
-			odm.mapToLdapDataEntry(entry, context);
+			this.odm.mapToLdapDataEntry(entry, context);
 
 			bind(context);
-			odm.setId(entry, calculatedId);
+			this.odm.setId(entry, calculatedId);
 		}
 		else {
 			// DN is the same, just modify the attributes
@@ -1784,13 +1788,13 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			Name id = originalId;
 			if (id == null) {
 				id = calculatedId;
-				odm.setId(entry, calculatedId);
+				this.odm.setId(entry, calculatedId);
 			}
 
 			Assert.notNull(id, String.format("Unable to determine id for entry %s", entry.toString()));
 
 			DirContextOperations context = lookupContext(id);
-			odm.mapToLdapDataEntry(entry, context);
+			this.odm.mapToLdapDataEntry(entry, context);
 			modifyAttributes(context);
 		}
 	}
@@ -1805,9 +1809,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			LOG.debug(String.format("Deleting %1$s", entry));
 		}
 
-		Name id = odm.getId(entry);
+		Name id = this.odm.getId(entry);
 		if (id == null) {
-			id = odm.getCalculatedId(entry);
+			id = this.odm.getCalculatedId(entry);
 		}
 
 		Assert.notNull(id, String.format("Unable to determine id for entry %s", entry.toString()));
@@ -1828,7 +1832,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	@Override
 	public <T> List<T> findAll(Class<T> clazz) {
 		return findAll(LdapUtils.emptyLdapName(),
-				getDefaultSearchControls(defaultSearchScope, RETURN_OBJ_FLAG, ALL_ATTRIBUTES), clazz);
+				getDefaultSearchControls(this.defaultSearchScope, RETURN_OBJ_FLAG, ALL_ATTRIBUTES), clazz);
 	}
 
 	/**
@@ -1836,7 +1840,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> List<T> find(Name base, Filter filter, SearchControls searchControls, final Class<T> clazz) {
-		Filter finalFilter = odm.filterFor(clazz, filter);
+		Filter finalFilter = this.odm.filterFor(clazz, filter);
 
 		// Search from the root if we are not told where to search from
 		Name localBase = base;
@@ -1858,7 +1862,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		List<T> result = search(localBase, finalFilter.encode(), searchControls, new ContextMapper<T>() {
 			@Override
 			public T mapFromContext(Object ctx) throws javax.naming.NamingException {
-				return odm.mapFromLdapDataEntry((DirContextOperations) ctx, clazz);
+				return LdapTemplate.this.odm.mapFromLdapDataEntry((DirContextOperations) ctx, clazz);
 			}
 		});
 		result.remove(null);
@@ -1903,11 +1907,12 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	public <T> Stream<T> findForStream(LdapQuery query, Class<T> clazz) {
 		LdapQueryBuilder builder = LdapQueryBuilder.fromQuery(query);
 		if (query.attributes() == null) {
-			String[] attributes = odm.manageClass(clazz);
+			String[] attributes = this.odm.manageClass(clazz);
 			builder.attributes(attributes);
 		}
-		Filter includeClass = odm.filterFor(clazz, query.filter());
-		ContextMapper<T> contextMapper = (object) -> odm.mapFromLdapDataEntry((DirContextOperations) object, clazz);
+		Filter includeClass = this.odm.filterFor(clazz, query.filter());
+		ContextMapper<T> contextMapper = (object) -> this.odm.mapFromLdapDataEntry((DirContextOperations) object,
+				clazz);
 		return searchForStream(builder.filter(includeClass), contextMapper);
 	}
 
@@ -1917,20 +1922,20 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		}
 		catch (NameNotFoundException e) {
 			// It is possible to ignore errors caused by base not found
-			if (!ignoreNameNotFoundException) {
+			if (!this.ignoreNameNotFoundException) {
 				throw LdapUtils.convertLdapException(e);
 			}
 			LOG.warn("Base context not found, ignoring: " + e.getMessage());
 		}
 		catch (PartialResultException e) {
 			// Workaround for AD servers not handling referrals correctly.
-			if (!ignorePartialResultException) {
+			if (!this.ignorePartialResultException) {
 				throw LdapUtils.convertLdapException(e);
 			}
 			LOG.debug("PartialResultException encountered and ignored", e);
 		}
 		catch (SizeLimitExceededException e) {
-			if (!ignoreSizeLimitExceededException) {
+			if (!this.ignoreSizeLimitExceededException) {
 				throw LdapUtils.convertLdapException(e);
 			}
 			LOG.debug("SizeLimitExceededException encountered and ignored", e);
@@ -1978,7 +1983,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		 * @return
 		 */
 		public boolean isSuccess() {
-			return success;
+			return this.success;
 		}
 
 	}

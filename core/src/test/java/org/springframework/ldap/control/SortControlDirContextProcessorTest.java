@@ -45,15 +45,15 @@ public class SortControlDirContextProcessorTest {
 
 	@Before
 	public void setUp() throws Exception {
-		tested = new SortControlDirContextProcessor("key");
+		this.tested = new SortControlDirContextProcessor("key");
 
 		// Create ldapContext mock
-		ldapContextMock = mock(LdapContext.class);
+		this.ldapContextMock = mock(LdapContext.class);
 	}
 
 	@Test
 	public void testCreateRequestControl() throws Exception {
-		SortControl result = (SortControl) tested.createRequestControl();
+		SortControl result = (SortControl) this.tested.createRequestControl();
 		assertThat(result).isNotNull();
 		assertThat(result.getID()).isEqualTo("1.2.840.113556.1.4.473");
 		assertThat(result.getEncodedValue().length).isEqualTo(9);
@@ -66,12 +66,12 @@ public class SortControlDirContextProcessorTest {
 		byte[] value = encodeValue(sortResult);
 		SortResponseControl control = new SortResponseControl("dummy", true, value);
 
-		when(ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
+		when(this.ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
 
-		tested.postProcess(ldapContextMock);
+		this.tested.postProcess(this.ldapContextMock);
 
-		assertThat(tested.isSorted()).isEqualTo(true);
-		assertThat(tested.getResultCode()).isEqualTo(0);
+		assertThat(this.tested.isSorted()).isEqualTo(true);
+		assertThat(this.tested.getResultCode()).isEqualTo(0);
 	}
 
 	@Test
@@ -81,12 +81,12 @@ public class SortControlDirContextProcessorTest {
 		byte[] value = encodeValue(sortResult);
 		SortResponseControl control = new SortResponseControl("dummy", true, value);
 
-		when(ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
+		when(this.ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
 
-		tested.postProcess(ldapContextMock);
+		this.tested.postProcess(this.ldapContextMock);
 
-		assertThat(tested.isSorted()).isEqualTo(false);
-		assertThat(tested.getResultCode()).isEqualTo(1);
+		assertThat(this.tested.isSorted()).isEqualTo(false);
+		assertThat(this.tested.getResultCode()).isEqualTo(1);
 	}
 
 	@Test
@@ -101,11 +101,11 @@ public class SortControlDirContextProcessorTest {
 		// Using another response control to verify that it is ignored
 		DirSyncResponseControl control = new DirSyncResponseControl("dummy", true, cookie);
 
-		when(ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
+		when(this.ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
 
-		tested.postProcess(ldapContextMock);
+		this.tested.postProcess(this.ldapContextMock);
 
-		assertThat(tested.isSorted()).isEqualTo(false);
+		assertThat(this.tested.isSorted()).isEqualTo(false);
 	}
 
 	@Test

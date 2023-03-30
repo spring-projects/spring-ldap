@@ -54,27 +54,28 @@ class DefaultContainerCriteria implements AppendableContainerCriteria {
 
 	@Override
 	public ConditionCriteria and(String attribute) {
-		AND.validateSameType(type);
-		type = AND;
+		AND.validateSameType(this.type);
+		this.type = AND;
 
 		return new DefaultConditionCriteria(this, attribute);
 	}
 
 	@Override
 	public ConditionCriteria or(String attribute) {
-		OR.validateSameType(type);
-		type = OR;
+		OR.validateSameType(this.type);
+		this.type = OR;
 
 		return new DefaultConditionCriteria(this, attribute);
 	}
 
 	@Override
 	public ContainerCriteria and(ContainerCriteria nested) {
-		if (type == OR) {
-			return new DefaultContainerCriteria(topQuery).withType(AND).append(this.filter()).append(nested.filter());
+		if (this.type == OR) {
+			return new DefaultContainerCriteria(this.topQuery).withType(AND).append(this.filter())
+					.append(nested.filter());
 		}
 		else {
-			type = AND;
+			this.type = AND;
 			this.filters.add(nested.filter());
 			return this;
 		}
@@ -82,11 +83,12 @@ class DefaultContainerCriteria implements AppendableContainerCriteria {
 
 	@Override
 	public ContainerCriteria or(ContainerCriteria nested) {
-		if (type == AND) {
-			return new DefaultContainerCriteria(topQuery).withType(OR).append(this.filter()).append(nested.filter());
+		if (this.type == AND) {
+			return new DefaultContainerCriteria(this.topQuery).withType(OR).append(this.filter())
+					.append(nested.filter());
 		}
 		else {
-			type = OR;
+			this.type = OR;
 			this.filters.add(nested.filter());
 			return this;
 		}
@@ -94,37 +96,37 @@ class DefaultContainerCriteria implements AppendableContainerCriteria {
 
 	@Override
 	public Filter filter() {
-		if (filters.size() == 1) {
+		if (this.filters.size() == 1) {
 			// No need to wrap in And/OrFilter if there's just one condition.
-			return filters.iterator().next();
+			return this.filters.iterator().next();
 		}
 
-		return type.constructFilter().appendAll(filters);
+		return this.type.constructFilter().appendAll(this.filters);
 	}
 
 	@Override
 	public Name base() {
-		return topQuery.base();
+		return this.topQuery.base();
 	}
 
 	@Override
 	public SearchScope searchScope() {
-		return topQuery.searchScope();
+		return this.topQuery.searchScope();
 	}
 
 	@Override
 	public Integer timeLimit() {
-		return topQuery.timeLimit();
+		return this.topQuery.timeLimit();
 	}
 
 	@Override
 	public Integer countLimit() {
-		return topQuery.countLimit();
+		return this.topQuery.countLimit();
 	}
 
 	@Override
 	public String[] attributes() {
-		return topQuery.attributes();
+		return this.topQuery.attributes();
 	}
 
 }

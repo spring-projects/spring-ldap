@@ -37,15 +37,15 @@ public class LdapCompensatingTransactionOperationFactoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		ldapOperationsMock = mock(LdapOperations.class);
-		renamingStrategyMock = mock(TempEntryRenamingStrategy.class);
-		dirContextMock = mock(DirContext.class);
+		this.ldapOperationsMock = mock(LdapOperations.class);
+		this.renamingStrategyMock = mock(TempEntryRenamingStrategy.class);
+		this.dirContextMock = mock(DirContext.class);
 
-		tested = new LdapCompensatingTransactionOperationFactory(renamingStrategyMock) {
+		this.tested = new LdapCompensatingTransactionOperationFactory(this.renamingStrategyMock) {
 
 			LdapOperations createLdapOperationsInstance(DirContext ctx) {
-				assertThat(ctx).isEqualTo(dirContextMock);
-				return ldapOperationsMock;
+				assertThat(ctx).isEqualTo(LdapCompensatingTransactionOperationFactoryTest.this.dirContextMock);
+				return LdapCompensatingTransactionOperationFactoryTest.this.ldapOperationsMock;
 			}
 		};
 	}
@@ -53,45 +53,49 @@ public class LdapCompensatingTransactionOperationFactoryTest {
 	@Test
 	public void testGetRecordingOperation_Bind() throws Exception {
 
-		CompensatingTransactionOperationRecorder result = tested.createRecordingOperation(dirContextMock, "bind");
+		CompensatingTransactionOperationRecorder result = this.tested.createRecordingOperation(this.dirContextMock,
+				"bind");
 		assertThat(result instanceof BindOperationRecorder).isTrue();
 		BindOperationRecorder bindOperationRecorder = (BindOperationRecorder) result;
-		assertThat(bindOperationRecorder.getLdapOperations()).isSameAs(ldapOperationsMock);
+		assertThat(bindOperationRecorder.getLdapOperations()).isSameAs(this.ldapOperationsMock);
 	}
 
 	@Test
 	public void testGetRecordingOperation_Rebind() throws Exception {
-		CompensatingTransactionOperationRecorder result = tested.createRecordingOperation(dirContextMock, "rebind");
+		CompensatingTransactionOperationRecorder result = this.tested.createRecordingOperation(this.dirContextMock,
+				"rebind");
 		assertThat(result instanceof RebindOperationRecorder).isTrue();
 		RebindOperationRecorder rebindOperationRecorder = (RebindOperationRecorder) result;
-		assertThat(rebindOperationRecorder.getLdapOperations()).isSameAs(ldapOperationsMock);
-		assertThat(rebindOperationRecorder.getRenamingStrategy()).isSameAs(renamingStrategyMock);
+		assertThat(rebindOperationRecorder.getLdapOperations()).isSameAs(this.ldapOperationsMock);
+		assertThat(rebindOperationRecorder.getRenamingStrategy()).isSameAs(this.renamingStrategyMock);
 	}
 
 	@Test
 	public void testGetRecordingOperation_Rename() throws Exception {
-		CompensatingTransactionOperationRecorder result = tested.createRecordingOperation(dirContextMock, "rename");
+		CompensatingTransactionOperationRecorder result = this.tested.createRecordingOperation(this.dirContextMock,
+				"rename");
 		assertThat(result instanceof RenameOperationRecorder).isTrue();
 		RenameOperationRecorder recordingOperation = (RenameOperationRecorder) result;
-		assertThat(recordingOperation.getLdapOperations()).isSameAs(ldapOperationsMock);
+		assertThat(recordingOperation.getLdapOperations()).isSameAs(this.ldapOperationsMock);
 	}
 
 	@Test
 	public void testGetRecordingOperation_ModifyAttributes() throws Exception {
-		CompensatingTransactionOperationRecorder result = tested.createRecordingOperation(dirContextMock,
+		CompensatingTransactionOperationRecorder result = this.tested.createRecordingOperation(this.dirContextMock,
 				"modifyAttributes");
 		assertThat(result instanceof ModifyAttributesOperationRecorder).isTrue();
 		ModifyAttributesOperationRecorder recordingOperation = (ModifyAttributesOperationRecorder) result;
-		assertThat(recordingOperation.getLdapOperations()).isSameAs(ldapOperationsMock);
+		assertThat(recordingOperation.getLdapOperations()).isSameAs(this.ldapOperationsMock);
 	}
 
 	@Test
 	public void testGetRecordingOperation_Unbind() throws Exception {
-		CompensatingTransactionOperationRecorder result = tested.createRecordingOperation(dirContextMock, "unbind");
+		CompensatingTransactionOperationRecorder result = this.tested.createRecordingOperation(this.dirContextMock,
+				"unbind");
 		assertThat(result instanceof UnbindOperationRecorder).isTrue();
 		UnbindOperationRecorder recordingOperation = (UnbindOperationRecorder) result;
-		assertThat(recordingOperation.getLdapOperations()).isSameAs(ldapOperationsMock);
-		assertThat(recordingOperation.getRenamingStrategy()).isSameAs(renamingStrategyMock);
+		assertThat(recordingOperation.getLdapOperations()).isSameAs(this.ldapOperationsMock);
+		assertThat(recordingOperation.getRenamingStrategy()).isSameAs(this.renamingStrategyMock);
 	}
 
 }
