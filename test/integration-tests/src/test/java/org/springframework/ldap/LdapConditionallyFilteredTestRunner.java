@@ -19,7 +19,7 @@ package org.springframework.ldap;
 import org.junit.experimental.categories.Categories;
 import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runners.model.InitializationError;
-import org.springframework.ldap.itest.NoAdTest;
+import org.springframework.ldap.itest.NoAdTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
@@ -40,7 +40,7 @@ public class LdapConditionallyFilteredTestRunner extends SpringJUnit4ClassRunner
 		String noadtest = System.getProperty("adtest");
 		if (noadtest != null) {
 			try {
-				filter(Categories.CategoryFilter.exclude(NoAdTest.class));
+				filter(Categories.CategoryFilter.exclude(NoAdTests.class));
 			}
 			catch (NoTestsRemainException e) {
 				// Nothing to do here.
