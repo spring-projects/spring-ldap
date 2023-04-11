@@ -16,13 +16,8 @@
 
 package org.springframework.ldap.transaction.compensating;
 
-import org.springframework.ldap.core.AttributesMapper;
-import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.core.support.DefaultIncrementalAttributesMapper;
-import org.springframework.ldap.core.IncrementalAttributesMapper;
-import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
-import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
-import org.springframework.util.Assert;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.naming.Name;
 import javax.naming.directory.Attribute;
@@ -30,8 +25,14 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
-import java.util.HashSet;
-import java.util.Set;
+
+import org.springframework.ldap.core.AttributesMapper;
+import org.springframework.ldap.core.IncrementalAttributesMapper;
+import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.core.support.DefaultIncrementalAttributesMapper;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
+import org.springframework.util.Assert;
 
 /**
  * A {@link CompensatingTransactionOperationRecorder} keeping track of modifyAttributes

@@ -16,6 +16,11 @@
 
 package org.springframework.ldap.config;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.w3c.dom.Element;
+
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.parsing.BeanComponentDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -34,10 +39,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
-import org.w3c.dom.Element;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.springframework.ldap.config.ParserUtils.getBoolean;
 import static org.springframework.ldap.config.ParserUtils.getInt;

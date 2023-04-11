@@ -17,7 +17,6 @@ package org.springframework.ldap.test;
 
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.support.LdapContextSource;
-import org.springframework.ldap.test.AbstractEc2InstanceLaunchingFactoryBean;
 import org.springframework.util.Assert;
 
 /**

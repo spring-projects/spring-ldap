@@ -1,13 +1,12 @@
 package org.springframework.ldap.odm.test;
 
-import static org.junit.Assert.assertEquals;
-
 import java.net.URI;
 import java.util.BitSet;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.ldap.odm.test.utils.ExecuteRunnable;
 import org.springframework.ldap.odm.test.utils.RunnableTests;
 import org.springframework.ldap.odm.typeconversion.ConverterException;
@@ -15,6 +14,8 @@ import org.springframework.ldap.odm.typeconversion.impl.Converter;
 import org.springframework.ldap.odm.typeconversion.impl.ConverterManagerImpl;
 import org.springframework.ldap.odm.typeconversion.impl.converters.FromStringConverter;
 import org.springframework.ldap.odm.typeconversion.impl.converters.ToStringConverter;
+
+import static org.junit.Assert.assertEquals;
 
 public final class ConverterManagerTests {
 

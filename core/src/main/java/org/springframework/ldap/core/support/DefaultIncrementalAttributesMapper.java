@@ -16,19 +16,6 @@
 
 package org.springframework.ldap.core.support;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.ldap.core.IncrementalAttributesMapper;
-import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.support.LdapUtils;
-
-import javax.naming.Name;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.BasicAttribute;
-import javax.naming.directory.BasicAttributes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -38,6 +25,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.naming.Name;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.BasicAttributes;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.ldap.core.IncrementalAttributesMapper;
+import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.support.LdapUtils;
 
 /**
  * Utility class that helps with reading all attribute values from Active Directory using

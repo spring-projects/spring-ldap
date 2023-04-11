@@ -15,12 +15,13 @@
  */
 package org.springframework.ldap.core;
 
-import org.junit.Test;
-import org.springframework.ldap.support.LdapUtils;
-
 import javax.naming.Name;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttributes;
+
+import org.junit.Test;
+
+import org.springframework.ldap.support.LdapUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

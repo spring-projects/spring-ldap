@@ -16,12 +16,13 @@
 
 package org.springframework.ldap.control;
 
-import org.springframework.ldap.support.LdapUtils;
-import org.springframework.util.ReflectionUtils;
+import java.lang.reflect.Method;
 
 import javax.naming.NamingException;
 import javax.naming.ldap.Control;
-import java.lang.reflect.Method;
+
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.util.ReflectionUtils;
 
 /**
  * DirContextProcessor implementation for managing a virtual list view.

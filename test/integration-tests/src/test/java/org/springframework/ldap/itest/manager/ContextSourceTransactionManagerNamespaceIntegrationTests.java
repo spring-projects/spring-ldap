@@ -15,10 +15,14 @@
  */
 package org.springframework.ldap.itest.manager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.naming.NamingException;
+import javax.naming.directory.Attributes;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.ldap.NameNotFoundException;
@@ -29,9 +33,6 @@ import org.springframework.ldap.itest.transaction.compensating.manager.DummyDao;
 import org.springframework.ldap.itest.transaction.compensating.manager.DummyException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-
-import javax.naming.NamingException;
-import javax.naming.directory.Attributes;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;

@@ -16,9 +16,20 @@
 
 package org.springframework.ldap.config;
 
+import java.lang.management.ManagementFactory;
+import java.lang.reflect.Field;
+import java.util.Set;
+
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import javax.naming.CannotProceedException;
+import javax.naming.CommunicationException;
+import javax.naming.directory.SearchControls;
+
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.junit.Test;
+
 import org.springframework.beans.BeansException;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ldap.core.AuthenticationSource;
@@ -39,17 +50,8 @@ import org.springframework.ldap.transaction.compensating.support.DifferentSubtre
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.util.ReflectionUtils;
 
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-import javax.naming.CannotProceedException;
-import javax.naming.CommunicationException;
-import javax.naming.directory.SearchControls;
-import java.lang.management.ManagementFactory;
-import java.lang.reflect.Field;
-import java.util.Set;
-
-import static org.junit.Assert.assertArrayEquals;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertArrayEquals;
 
 /**
  * @author Mattias Hellborg Arthursson

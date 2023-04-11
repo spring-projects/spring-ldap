@@ -15,13 +15,14 @@
  */
 package org.springframework.ldap.transaction.compensating.manager;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.DirContextProxy;
-
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.DirContextProxy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

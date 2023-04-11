@@ -16,15 +16,16 @@
 
 package org.springframework.ldap.odm.tools;
 
-import org.springframework.ldap.odm.tools.SyntaxToJavaClass.ClassInfo;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
-import java.util.HashSet;
-import java.util.Set;
+
+import org.springframework.ldap.odm.tools.SyntaxToJavaClass.ClassInfo;
 
 // Processes LDAP Schema
 /* package */ final class SchemaReader {

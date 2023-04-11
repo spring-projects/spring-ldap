@@ -16,11 +16,11 @@
 
 package org.springframework.transaction.compensating.support;
 
-import org.springframework.transaction.compensating.CompensatingTransactionOperationManager;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import org.springframework.transaction.compensating.CompensatingTransactionOperationManager;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 /**
  * Common methods for use with compensating transactions.

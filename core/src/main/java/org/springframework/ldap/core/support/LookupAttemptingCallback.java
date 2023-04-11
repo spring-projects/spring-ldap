@@ -16,14 +16,14 @@
 
 package org.springframework.ldap.core.support;
 
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
+
 import org.springframework.ldap.core.AuthenticatedLdapEntryContextCallback;
 import org.springframework.ldap.core.AuthenticatedLdapEntryContextMapper;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapEntryIdentification;
 import org.springframework.ldap.support.LdapUtils;
-
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
 
 /**
  * Attempts to perform an LDAP operation in the authenticated context, because Active

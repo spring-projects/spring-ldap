@@ -16,10 +16,10 @@
 
 package org.springframework.ldap.itest;
 
+import javax.naming.Name;
+
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.support.BaseLdapPathAware;
-
-import javax.naming.Name;
 
 /**
  * @author Mattias Hellborg Arthursson

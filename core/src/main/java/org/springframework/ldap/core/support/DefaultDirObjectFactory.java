@@ -16,20 +16,22 @@
 
 package org.springframework.ldap.core.support;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.ldap.core.DirContextAdapter;
-import org.springframework.ldap.support.LdapUtils;
-import org.springframework.util.StringUtils;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Hashtable;
 
 import javax.naming.CompositeName;
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.directory.Attributes;
 import javax.naming.spi.DirObjectFactory;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Hashtable;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * Default implementation of the DirObjectFactory interface. Creates a

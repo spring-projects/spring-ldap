@@ -16,11 +16,11 @@
 
 package org.springframework.ldap.support;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.ldap.NamingException;
-import org.springframework.ldap.NoSuchAttributeException;
-import org.springframework.util.Assert;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.naming.CompositeName;
 import javax.naming.InvalidNameException;
@@ -32,11 +32,13 @@ import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
-import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.NoSuchElementException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.ldap.NamingException;
+import org.springframework.ldap.NoSuchAttributeException;
+import org.springframework.util.Assert;
 
 /**
  * Generic utility methods for working with LDAP. Mainly for internal use within the

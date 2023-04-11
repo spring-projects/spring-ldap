@@ -15,16 +15,17 @@
  */
 package org.springframework.ldap.transaction.compensating;
 
+import javax.naming.directory.DirContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.SingleContextSource;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationFactory;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
 import org.springframework.util.ObjectUtils;
-
-import javax.naming.directory.DirContext;
 
 /**
  * {@link CompensatingTransactionOperationRecorder} implementation for LDAP operations.

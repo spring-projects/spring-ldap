@@ -15,11 +15,11 @@
  */
 package org.springframework.ldap.core;
 
-import org.springframework.ldap.support.LdapUtils;
-import org.springframework.util.Assert;
-
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapName;
+
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.util.Assert;
 
 /**
  * Wrapper class to handle the full identification of an LDAP entry. An LDAP entry is

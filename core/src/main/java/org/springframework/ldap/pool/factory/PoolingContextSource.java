@@ -16,9 +16,15 @@
 
 package org.springframework.ldap.pool.factory;
 
+import java.util.Collection;
+
+import javax.naming.directory.DirContext;
+import javax.naming.ldap.LdapContext;
+
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.ldap.core.ContextSource;
@@ -27,10 +33,6 @@ import org.springframework.ldap.pool.DelegatingDirContext;
 import org.springframework.ldap.pool.DelegatingLdapContext;
 import org.springframework.ldap.pool.DirContextType;
 import org.springframework.ldap.pool.validation.DirContextValidator;
-
-import javax.naming.directory.DirContext;
-import javax.naming.ldap.LdapContext;
-import java.util.Collection;
 
 /**
  * A {@link ContextSource} implementation that wraps an object pool and another

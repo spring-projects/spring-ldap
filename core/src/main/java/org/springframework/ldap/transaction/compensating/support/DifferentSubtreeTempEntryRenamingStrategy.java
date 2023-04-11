@@ -16,13 +16,14 @@
 
 package org.springframework.ldap.transaction.compensating.support;
 
-import org.springframework.ldap.support.LdapUtils;
-import org.springframework.ldap.transaction.compensating.TempEntryRenamingStrategy;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.naming.InvalidNameException;
 import javax.naming.Name;
 import javax.naming.ldap.LdapName;
-import java.util.concurrent.atomic.AtomicInteger;
+
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.ldap.transaction.compensating.TempEntryRenamingStrategy;
 
 /**
  * A {@link TempEntryRenamingStrategy} that moves the entry to a different subtree than

@@ -16,6 +16,12 @@
 
 package org.springframework.ldap.odm.core.impl;
 
+import java.util.List;
+import java.util.Set;
+
+import javax.naming.Name;
+import javax.naming.directory.SearchControls;
+
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.core.LdapTemplate;
@@ -25,11 +31,6 @@ import org.springframework.ldap.odm.core.OdmManager;
 import org.springframework.ldap.odm.typeconversion.ConverterManager;
 import org.springframework.ldap.query.LdapQuery;
 import org.springframework.util.StringUtils;
-
-import javax.naming.Name;
-import javax.naming.directory.SearchControls;
-import java.util.List;
-import java.util.Set;
 
 /**
  * An implementation of {@link org.springframework.ldap.odm.core.OdmManager} which uses

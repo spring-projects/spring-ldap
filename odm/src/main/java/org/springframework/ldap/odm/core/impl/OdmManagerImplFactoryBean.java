@@ -16,14 +16,14 @@
 
 package org.springframework.ldap.odm.core.impl;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.FactoryBeanNotInitializedException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.odm.typeconversion.ConverterManager;
-
-import java.util.Set;
 
 /**
  * A Spring Factory bean which creates {@link OdmManagerImpl} instances.

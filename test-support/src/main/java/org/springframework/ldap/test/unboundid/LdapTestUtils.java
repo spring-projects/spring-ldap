@@ -29,6 +29,8 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapName;
 
+import com.unboundid.ldap.listener.InMemoryDirectoryServer;
+import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldif.LDIFReader;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -41,9 +43,6 @@ import org.springframework.ldap.core.LdapAttributes;
 import org.springframework.ldap.core.support.DefaultDirObjectFactory;
 import org.springframework.ldap.ldif.parser.LdifParser;
 import org.springframework.ldap.support.LdapUtils;
-
-import com.unboundid.ldap.listener.InMemoryDirectoryServer;
-import com.unboundid.ldap.sdk.LDAPException;
 
 /**
  * Utilities for starting, stopping and populating an in-process Apache Directory Server

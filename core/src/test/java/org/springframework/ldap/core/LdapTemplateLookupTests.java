@@ -16,12 +16,6 @@
 
 package org.springframework.ldap.core;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import java.util.Collections;
 
 import javax.naming.Name;
@@ -33,9 +27,16 @@ import javax.naming.ldap.LdapName;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 import org.springframework.ldap.support.LdapUtils;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class LdapTemplateLookupTests {
 

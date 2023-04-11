@@ -15,15 +15,16 @@
  */
 package org.springframework.ldap.core;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.ldap.support.LdapEncoder;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.ldap.support.LdapEncoder;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * Represents part of an LdapRdn. As specified in RFC2253 an LdapRdn may be composed of

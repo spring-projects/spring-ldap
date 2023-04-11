@@ -16,13 +16,13 @@
 
 package org.springframework.ldap.core;
 
-import org.springframework.ldap.core.support.AbstractContextMapper;
-import org.springframework.ldap.core.support.DefaultDirObjectFactory;
-
 import javax.naming.Binding;
 import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.directory.SearchResult;
+
+import org.springframework.ldap.core.support.AbstractContextMapper;
+import org.springframework.ldap.core.support.DefaultDirObjectFactory;
 
 /**
  * An interface used by LdapTemplate to map LDAP Contexts to beans. When a

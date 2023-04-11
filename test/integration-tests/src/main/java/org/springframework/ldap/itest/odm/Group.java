@@ -16,13 +16,14 @@
 
 package org.springframework.ldap.itest.odm;
 
+import java.util.Set;
+
+import javax.naming.Name;
+
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.DnAttribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
-
-import javax.naming.Name;
-import java.util.Set;
 
 /**
  * @author Mattias Hellborg Arthursson

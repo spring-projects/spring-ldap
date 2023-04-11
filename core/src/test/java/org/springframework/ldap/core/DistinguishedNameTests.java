@@ -16,14 +16,16 @@
 
 package org.springframework.ldap.core;
 
-import com.gargoylesoftware.base.testing.EqualsTester;
-import org.junit.Test;
-import org.springframework.ldap.BadLdapGrammarException;
+import java.util.Enumeration;
 
 import javax.naming.CompositeName;
 import javax.naming.InvalidNameException;
 import javax.naming.Name;
-import java.util.Enumeration;
+
+import com.gargoylesoftware.base.testing.EqualsTester;
+import org.junit.Test;
+
+import org.springframework.ldap.BadLdapGrammarException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;

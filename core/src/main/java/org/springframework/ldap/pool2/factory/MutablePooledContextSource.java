@@ -16,13 +16,13 @@
 
 package org.springframework.ldap.pool2.factory;
 
-import org.springframework.dao.DataAccessResourceFailureException;
-import org.springframework.ldap.pool2.DirContextType;
-import org.springframework.ldap.pool2.DelegatingDirContext;
-import org.springframework.ldap.pool2.MutableDelegatingLdapContext;
-
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
+
+import org.springframework.dao.DataAccessResourceFailureException;
+import org.springframework.ldap.pool2.DelegatingDirContext;
+import org.springframework.ldap.pool2.DirContextType;
+import org.springframework.ldap.pool2.MutableDelegatingLdapContext;
 
 /**
  * A {@link PooledContextSource} subclass that creates

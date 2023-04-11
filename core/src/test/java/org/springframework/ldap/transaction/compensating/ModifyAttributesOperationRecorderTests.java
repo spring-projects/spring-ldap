@@ -16,13 +16,6 @@
 
 package org.springframework.ldap.transaction.compensating;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.ldap.core.IncrementalAttributesMapper;
-import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.support.LdapUtils;
-import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
-
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
@@ -31,6 +24,14 @@ import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.ldap.LdapName;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import org.springframework.ldap.core.IncrementalAttributesMapper;
+import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

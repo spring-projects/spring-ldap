@@ -15,11 +15,12 @@
  */
 package org.springframework.ldap.core.support;
 
-import org.junit.Before;
-import org.junit.Test;
+import java.util.Hashtable;
 
 import javax.naming.Context;
-import java.util.Hashtable;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

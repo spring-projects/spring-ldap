@@ -16,14 +16,6 @@
 
 package org.springframework.ldap.odm.core.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.ldap.odm.annotations.Entry;
-import org.springframework.ldap.odm.annotations.Id;
-import org.springframework.ldap.support.LdapUtils;
-import org.springframework.util.StringUtils;
-
-import javax.naming.Name;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Comparator;
@@ -33,6 +25,16 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
+import javax.naming.Name;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.ldap.odm.annotations.Entry;
+import org.springframework.ldap.odm.annotations.Id;
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.util.StringUtils;
 
 /*
  * An internal class to process the meta-data and reflection data for an entry.

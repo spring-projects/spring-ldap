@@ -16,9 +16,9 @@
 
 package org.springframework.ldap.core;
 
-import org.springframework.ldap.NamingException;
-
 import javax.naming.directory.DirContext;
+
+import org.springframework.ldap.NamingException;
 
 /**
  * A <code>ContextSource</code> is responsible for configuring and creating

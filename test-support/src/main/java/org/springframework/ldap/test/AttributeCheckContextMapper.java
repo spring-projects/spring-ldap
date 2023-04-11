@@ -15,12 +15,12 @@
  */
 package org.springframework.ldap.test;
 
+import java.util.Arrays;
+
 import junit.framework.Assert;
 
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
-
-import java.util.Arrays;
 
 /**
  * Dummy ContextMapper for testing purposes to check that the received Attributes are the

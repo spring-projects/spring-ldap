@@ -16,8 +16,12 @@
 
 package org.springframework.ldap.transaction.compensating.manager;
 
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.support.AbstractContextSource;
 import org.springframework.ldap.transaction.compensating.LdapCompensatingTransactionOperationFactory;
@@ -27,9 +31,6 @@ import org.springframework.transaction.compensating.support.AbstractCompensating
 import org.springframework.transaction.compensating.support.CompensatingTransactionHolderSupport;
 import org.springframework.transaction.compensating.support.DefaultCompensatingTransactionOperationManager;
 import org.springframework.util.Assert;
-
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
 
 /**
  * This delegate performs all the work for the {@link ContextSourceTransactionManager}.

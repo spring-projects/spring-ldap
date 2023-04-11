@@ -16,13 +16,15 @@
 
 package org.springframework.ldap.core.support;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.ldap.support.LdapUtils;
-
-import javax.naming.Context;
 import java.util.HashMap;
 import java.util.Hashtable;
+
+import javax.naming.Context;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import org.springframework.ldap.support.LdapUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -16,6 +16,16 @@
 
 package org.springframework.ldap.core;
 
+import java.util.List;
+import java.util.stream.Stream;
+
+import javax.naming.Binding;
+import javax.naming.Name;
+import javax.naming.NameClassPair;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.ModificationItem;
+import javax.naming.directory.SearchControls;
+
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.ldap.ContextNotEmptyException;
 import org.springframework.ldap.NamingException;
@@ -24,15 +34,6 @@ import org.springframework.ldap.filter.Filter;
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 import org.springframework.ldap.query.LdapQuery;
 import org.springframework.ldap.support.LdapUtils;
-
-import javax.naming.Binding;
-import javax.naming.Name;
-import javax.naming.NameClassPair;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.ModificationItem;
-import javax.naming.directory.SearchControls;
-import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Interface that specifies a basic set of LDAP operations. Implemented by LdapTemplate,

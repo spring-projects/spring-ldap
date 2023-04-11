@@ -16,10 +16,12 @@
 
 package org.springframework.ldap.core;
 
-import org.springframework.ldap.InvalidNameException;
-import org.springframework.ldap.support.LdapUtils;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 import javax.naming.Name;
 import javax.naming.NamingEnumeration;
@@ -27,12 +29,11 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapName;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
+
+import org.springframework.ldap.InvalidNameException;
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 /**
  * Used internally to make DirContextAdapter properly handle Names as values.

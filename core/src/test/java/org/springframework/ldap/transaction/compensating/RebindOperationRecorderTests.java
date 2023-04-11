@@ -15,14 +15,15 @@
  */
 package org.springframework.ldap.transaction.compensating;
 
+import javax.naming.directory.BasicAttributes;
+import javax.naming.ldap.LdapName;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
-
-import javax.naming.directory.BasicAttributes;
-import javax.naming.ldap.LdapName;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

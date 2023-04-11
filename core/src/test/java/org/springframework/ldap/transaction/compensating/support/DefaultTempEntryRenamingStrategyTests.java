@@ -15,11 +15,12 @@
  */
 package org.springframework.ldap.transaction.compensating.support;
 
-import org.junit.Test;
-import org.springframework.ldap.support.LdapUtils;
-
 import javax.naming.Name;
 import javax.naming.ldap.LdapName;
+
+import org.junit.Test;
+
+import org.springframework.ldap.support.LdapUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

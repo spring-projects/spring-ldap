@@ -15,20 +15,22 @@
  */
 package org.springframework.ldap.ldif.support;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.ldap.core.LdapAttribute;
-import org.springframework.ldap.ldif.InvalidAttributeFormatException;
-import org.springframework.ldap.support.LdapEncoder;
-import org.springframework.util.StringUtils;
-
-import javax.naming.directory.Attribute;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.naming.directory.Attribute;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.ldap.core.LdapAttribute;
+import org.springframework.ldap.ldif.InvalidAttributeFormatException;
+import org.springframework.ldap.support.LdapEncoder;
+import org.springframework.util.StringUtils;
 
 /**
  * Ensures the buffer represents a valid attribute as defined by RFC2849.

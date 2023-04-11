@@ -15,11 +15,7 @@
  */
 package org.springframework.ldap.core.support;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.ldap.core.DirContextAdapter;
-import org.springframework.ldap.core.NameAwareAttributes;
-import org.springframework.ldap.support.LdapUtils;
+import java.util.Hashtable;
 
 import javax.naming.CompositeName;
 import javax.naming.Context;
@@ -27,7 +23,13 @@ import javax.naming.InvalidNameException;
 import javax.naming.Name;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttributes;
-import java.util.Hashtable;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.NameAwareAttributes;
+import org.springframework.ldap.support.LdapUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

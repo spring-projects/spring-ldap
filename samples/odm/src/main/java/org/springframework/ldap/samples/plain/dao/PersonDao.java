@@ -15,9 +15,9 @@
  */
 package org.springframework.ldap.samples.plain.dao;
 
-import org.springframework.ldap.samples.plain.domain.Person;
-
 import java.util.List;
+
+import org.springframework.ldap.samples.plain.domain.Person;
 
 
 /**

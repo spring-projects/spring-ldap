@@ -15,14 +15,15 @@
  */
 package org.springframework.ldap.pool;
 
-import org.apache.commons.pool.KeyedObjectPool;
-import org.junit.Before;
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.pool.validation.DirContextValidator;
-
 import javax.naming.Context;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
+
+import org.apache.commons.pool.KeyedObjectPool;
+import org.junit.Before;
+
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.pool.validation.DirContextValidator;
 
 import static org.mockito.Mockito.mock;
 

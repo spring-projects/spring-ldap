@@ -15,13 +15,14 @@
  */
 package org.springframework.ldap.transaction.compensating.manager;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
-
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

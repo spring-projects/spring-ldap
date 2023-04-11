@@ -15,14 +15,15 @@
  */
 package org.springframework.ldap.transaction.compensating;
 
+import javax.naming.Name;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
 import org.springframework.util.Assert;
-
-import javax.naming.Name;
 
 /**
  * A {@link CompensatingTransactionOperationRecorder} for keeping track of rename

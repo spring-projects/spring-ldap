@@ -15,14 +15,15 @@
  */
 package org.springframework.ldap.pool2.factory;
 
-import org.junit.Test;
-import org.springframework.dao.DataAccessResourceFailureException;
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.pool2.validation.DirContextValidator;
-import org.springframework.ldap.pool2.AbstractPoolTestCase;
-
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
+
+import org.junit.Test;
+
+import org.springframework.dao.DataAccessResourceFailureException;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.pool2.AbstractPoolTestCase;
+import org.springframework.ldap.pool2.validation.DirContextValidator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;

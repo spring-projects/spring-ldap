@@ -15,13 +15,14 @@
  */
 package org.springframework.ldap.itest.core.support;
 
+import javax.naming.NamingException;
+
 import org.junit.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
-
-import javax.naming.NamingException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

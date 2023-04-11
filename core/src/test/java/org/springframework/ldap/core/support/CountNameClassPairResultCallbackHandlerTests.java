@@ -15,10 +15,10 @@
  */
 package org.springframework.ldap.core.support;
 
+import javax.naming.directory.SearchResult;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import javax.naming.directory.SearchResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

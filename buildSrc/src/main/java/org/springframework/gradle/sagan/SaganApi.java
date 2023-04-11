@@ -16,11 +16,16 @@
 
 package org.springframework.gradle.sagan;
 
-import com.google.gson.Gson;
-import okhttp3.*;
-
 import java.io.IOException;
 import java.util.Base64;
+
+import com.google.gson.Gson;
+import okhttp3.Interceptor;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * Implements necessary calls to the Sagan API See https://spring.io/restdocs/index.html

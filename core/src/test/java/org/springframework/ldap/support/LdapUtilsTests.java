@@ -16,17 +16,19 @@
 
 package org.springframework.ldap.support;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.ldap.NoSuchAttributeException;
+import java.util.LinkedList;
 
 import javax.naming.CompositeName;
 import javax.naming.InvalidNameException;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.ldap.LdapName;
-import java.util.LinkedList;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.junit.Before;
+import org.junit.Test;
+
+import org.springframework.ldap.NoSuchAttributeException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;

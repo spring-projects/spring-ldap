@@ -16,13 +16,14 @@
 
 package org.springframework.ldap.config;
 
+import org.w3c.dom.Element;
+
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.ldap.transaction.compensating.support.DefaultTempEntryRenamingStrategy;
-import org.w3c.dom.Element;
 
 import static org.springframework.ldap.config.ParserUtils.getString;
 

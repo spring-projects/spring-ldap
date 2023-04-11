@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.config;
 
+import org.w3c.dom.Element;
+
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.parsing.BeanComponentDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -25,7 +27,6 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.query.SearchScope;
 import org.springframework.util.StringUtils;
-import org.w3c.dom.Element;
 
 import static org.springframework.ldap.config.ParserUtils.getBoolean;
 import static org.springframework.ldap.config.ParserUtils.getInt;

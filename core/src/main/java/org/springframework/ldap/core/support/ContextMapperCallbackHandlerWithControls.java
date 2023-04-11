@@ -15,13 +15,13 @@
  */
 package org.springframework.ldap.core.support;
 
-import org.springframework.ldap.core.ContextMapperCallbackHandler;
-import org.springframework.ldap.core.ObjectRetrievalException;
-
 import javax.naming.Binding;
 import javax.naming.NameClassPair;
 import javax.naming.NamingException;
 import javax.naming.ldap.HasControls;
+
+import org.springframework.ldap.core.ContextMapperCallbackHandler;
+import org.springframework.ldap.core.ObjectRetrievalException;
 
 /**
  * Currently only per request controls can be inspected via the post process method on a

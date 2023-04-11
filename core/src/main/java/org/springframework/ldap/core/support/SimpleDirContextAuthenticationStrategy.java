@@ -15,9 +15,10 @@
  */
 package org.springframework.ldap.core.support;
 
+import java.util.Hashtable;
+
 import javax.naming.Context;
 import javax.naming.directory.DirContext;
-import java.util.Hashtable;
 
 /**
  * The default {@link DirContextAuthenticationStrategy} implementation, setting the

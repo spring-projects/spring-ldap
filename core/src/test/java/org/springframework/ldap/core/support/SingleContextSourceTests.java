@@ -16,18 +16,19 @@
 
 package org.springframework.ldap.core.support;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.ldap.core.ContextExecutor;
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.LdapOperations;
-import org.springframework.util.ReflectionUtils;
+import java.lang.reflect.Field;
+import java.lang.reflect.Proxy;
 
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Proxy;
+import org.junit.Before;
+import org.junit.Test;
+
+import org.springframework.ldap.core.ContextExecutor;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.LdapOperations;
+import org.springframework.util.ReflectionUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

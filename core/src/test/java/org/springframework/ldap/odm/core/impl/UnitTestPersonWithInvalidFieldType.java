@@ -16,11 +16,11 @@
 
 package org.springframework.ldap.odm.core.impl;
 
+import javax.naming.Name;
+
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
-
-import javax.naming.Name;
 
 /**
  * @author Mattias Hellborg Arthursson

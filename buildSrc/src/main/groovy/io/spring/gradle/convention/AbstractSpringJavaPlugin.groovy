@@ -14,19 +14,19 @@
  * the License.
  */
 
-package io.spring.gradle.convention;
+package io.spring.gradle.convention
 
-import org.gradle.api.Plugin;
-import org.gradle.api.Project;
-import org.gradle.api.plugins.GroovyPlugin;
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.api.plugins.GroovyPlugin
 import org.gradle.api.plugins.JavaPlugin
-import org.gradle.api.plugins.PluginManager;
-import org.gradle.plugins.ide.eclipse.EclipseWtpPlugin;
-import org.gradle.plugins.ide.idea.IdeaPlugin;
+import org.gradle.api.plugins.PluginManager
+import org.gradle.plugins.ide.eclipse.EclipseWtpPlugin
+import org.gradle.plugins.ide.idea.IdeaPlugin
 import org.springframework.gradle.CopyPropertiesPlugin
 import org.springframework.gradle.propdeps.PropDepsEclipsePlugin
 import org.springframework.gradle.propdeps.PropDepsIdeaPlugin
-import org.springframework.gradle.propdeps.PropDepsPlugin;
+import org.springframework.gradle.propdeps.PropDepsPlugin
 
 /**
  * @author Rob Winch

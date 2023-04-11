@@ -17,6 +17,7 @@ package org.springframework.ldap.pool2.factory;
 
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.junit.Test;
+
 import org.springframework.ldap.pool2.AbstractPoolTestCase;
 
 import static org.assertj.core.api.Assertions.assertThat;

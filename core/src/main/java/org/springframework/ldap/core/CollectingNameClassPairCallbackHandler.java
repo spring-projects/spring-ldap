@@ -15,10 +15,11 @@
  */
 package org.springframework.ldap.core;
 
-import javax.naming.NameClassPair;
-import javax.naming.NamingException;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.naming.NameClassPair;
+import javax.naming.NamingException;
 
 /**
  * A NameClassPairCallbackHandler to collect all results in an internal List.

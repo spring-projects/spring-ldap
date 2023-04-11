@@ -16,10 +16,10 @@
 
 package org.springframework.ldap.pool2.validation;
 
+import javax.naming.directory.DirContext;
+
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.pool2.DirContextType;
-
-import javax.naming.directory.DirContext;
 
 /**
  * A validator for {@link DirContext}s.

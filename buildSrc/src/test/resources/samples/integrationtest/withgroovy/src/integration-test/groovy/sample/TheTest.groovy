@@ -13,10 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package sample;
+package sample
 
-import org.springframework.core.Ordered;
-import spock.lang.Specification;
+import org.springframework.core.Ordered
+import spock.lang.Specification
 
 class TheTest extends Specification {
 	def "has Ordered"() {

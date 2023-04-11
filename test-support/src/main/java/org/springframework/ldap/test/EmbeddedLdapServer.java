@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.test;
 
+import java.io.File;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.directory.server.core.DefaultDirectoryService;
 import org.apache.directory.server.core.DirectoryService;
@@ -24,8 +26,6 @@ import org.apache.directory.server.core.partition.impl.btree.jdbm.JdbmPartition;
 import org.apache.directory.server.ldap.LdapServer;
 import org.apache.directory.server.protocol.shared.transport.TcpTransport;
 import org.apache.directory.shared.ldap.name.LdapDN;
-
-import java.io.File;
 
 /**
  * Helper class for embedded Apache Directory Server.

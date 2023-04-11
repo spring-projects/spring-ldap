@@ -16,13 +16,14 @@
 
 package org.springframework.ldap.core;
 
-import org.junit.Test;
-import org.springframework.ldap.support.LdapUtils;
-
 import javax.naming.InvalidNameException;
 import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.ldap.LdapName;
+
+import org.junit.Test;
+
+import org.springframework.ldap.support.LdapUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;

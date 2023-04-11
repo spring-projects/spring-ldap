@@ -15,12 +15,20 @@
  */
 package org.springframework.ldap.pool2;
 
+import java.util.Hashtable;
+
+import javax.naming.Binding;
+import javax.naming.Context;
+import javax.naming.Name;
+import javax.naming.NameClassPair;
+import javax.naming.NameParser;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+
 import org.apache.commons.pool2.KeyedObjectPool;
+
 import org.springframework.ldap.pool2.factory.PooledContextSource;
 import org.springframework.util.Assert;
-
-import javax.naming.*;
-import java.util.Hashtable;
 
 /**
  * Used by {@link PooledContextSource} to wrap a {@link Context}, delegating most methods

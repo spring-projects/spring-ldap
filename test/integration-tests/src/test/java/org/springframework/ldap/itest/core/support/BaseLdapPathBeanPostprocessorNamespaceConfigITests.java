@@ -17,6 +17,7 @@
 package org.springframework.ldap.itest.core.support;
 
 import org.junit.Test;
+
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.support.LdapUtils;

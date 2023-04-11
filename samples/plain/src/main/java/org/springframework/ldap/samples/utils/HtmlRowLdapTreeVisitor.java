@@ -16,10 +16,10 @@
 
 package org.springframework.ldap.samples.utils;
 
-import org.springframework.ldap.core.DirContextOperations;
-
 import java.util.LinkedList;
 import java.util.List;
+
+import org.springframework.ldap.core.DirContextOperations;
 
 public class HtmlRowLdapTreeVisitor implements LdapTreeVisitor {
 

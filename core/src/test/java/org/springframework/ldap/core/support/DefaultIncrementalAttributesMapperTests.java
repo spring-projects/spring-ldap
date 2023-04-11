@@ -16,13 +16,13 @@
 
 package org.springframework.ldap.core.support;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

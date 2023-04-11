@@ -19,7 +19,6 @@ package io.spring.gradle.convention
 import io.spring.gradle.IncludeRepoTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.provider.Property
 import org.gradle.api.tasks.GradleBuild
 import org.gradle.api.tasks.TaskProvider
 

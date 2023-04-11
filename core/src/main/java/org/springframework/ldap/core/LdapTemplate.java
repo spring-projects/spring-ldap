@@ -15,23 +15,13 @@
  */
 package org.springframework.ldap.core;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.ldap.AuthenticationException;
-import org.springframework.ldap.NamingException;
-import org.springframework.ldap.UncategorizedLdapException;
-import org.springframework.ldap.filter.Filter;
-import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
-import org.springframework.ldap.odm.core.OdmException;
-import org.springframework.ldap.odm.core.impl.DefaultObjectDirectoryMapper;
-import org.springframework.ldap.query.LdapQuery;
-import org.springframework.ldap.query.LdapQueryBuilder;
-import org.springframework.ldap.support.LdapUtils;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
+import java.util.List;
+import java.util.Objects;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.function.Function;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import javax.naming.Binding;
 import javax.naming.Name;
@@ -47,13 +37,24 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.LdapName;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Spliterator;
-import java.util.Spliterators;
-import java.util.function.Function;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.ldap.AuthenticationException;
+import org.springframework.ldap.NamingException;
+import org.springframework.ldap.UncategorizedLdapException;
+import org.springframework.ldap.filter.Filter;
+import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
+import org.springframework.ldap.odm.core.OdmException;
+import org.springframework.ldap.odm.core.impl.DefaultObjectDirectoryMapper;
+import org.springframework.ldap.query.LdapQuery;
+import org.springframework.ldap.query.LdapQueryBuilder;
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 /**
  * Executes core LDAP functionality and helps to avoid common errors, relieving the user

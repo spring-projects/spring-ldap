@@ -15,16 +15,18 @@
  */
 package org.springframework.ldap.transaction.compensating.manager;
 
+import java.lang.reflect.Method;
+
+import javax.naming.directory.DirContext;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationManager;
 import org.springframework.transaction.compensating.support.CompensatingTransactionHolderSupport;
 import org.springframework.transaction.compensating.support.CompensatingTransactionUtils;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-
-import javax.naming.directory.DirContext;
-import java.lang.reflect.Method;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

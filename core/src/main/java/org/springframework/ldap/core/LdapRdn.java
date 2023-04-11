@@ -16,9 +16,6 @@
 
 package org.springframework.ldap.core;
 
-import org.springframework.ldap.BadLdapGrammarException;
-import org.springframework.util.ObjectUtils;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,6 +25,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.springframework.ldap.BadLdapGrammarException;
+import org.springframework.util.ObjectUtils;
 
 /**
  * Datatype for a LDAP name, a part of a path.

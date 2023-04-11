@@ -15,12 +15,12 @@
  */
 package org.springframework.ldap.core;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.ldap.NoSuchAttributeException;
-import org.springframework.ldap.support.LdapUtils;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.naming.Binding;
 import javax.naming.Context;
@@ -38,12 +38,14 @@ import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.LdapName;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.ldap.NoSuchAttributeException;
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * Adapter that implements the interesting methods of the DirContext interface. In

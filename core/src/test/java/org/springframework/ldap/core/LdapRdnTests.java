@@ -18,6 +18,7 @@ package org.springframework.ldap.core;
 
 import com.gargoylesoftware.base.testing.EqualsTester;
 import org.junit.Test;
+
 import org.springframework.ldap.BadLdapGrammarException;
 
 import static org.assertj.core.api.Assertions.assertThat;

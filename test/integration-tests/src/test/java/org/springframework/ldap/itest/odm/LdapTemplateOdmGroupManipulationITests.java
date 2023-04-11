@@ -16,16 +16,18 @@
 
 package org.springframework.ldap.itest.odm;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.naming.Name;
+
 import org.junit.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.itest.AbstractLdapTemplateIntegrationTests;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
-
-import javax.naming.Name;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;

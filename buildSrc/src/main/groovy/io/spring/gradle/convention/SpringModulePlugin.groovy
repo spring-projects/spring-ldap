@@ -16,12 +16,11 @@
 
 package io.spring.gradle.convention
 
-import org.gradle.api.JavaVersion;
+import org.gradle.api.JavaVersion
 import org.gradle.api.Project
-import org.gradle.api.plugins.JavaLibraryPlugin;
-import org.gradle.api.plugins.MavenPlugin;
+import org.gradle.api.plugins.JavaLibraryPlugin
 import org.gradle.api.plugins.PluginManager
-import org.springframework.gradle.maven.SpringMavenPlugin;
+import org.springframework.gradle.maven.SpringMavenPlugin
 
 /**
  * @author Rob Winch

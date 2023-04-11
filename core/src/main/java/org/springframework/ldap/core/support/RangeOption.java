@@ -16,8 +16,8 @@
 
 package org.springframework.ldap.core.support;
 
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Attribute name Range Option used for <em>Incremental Retrieval of Multi-valued

@@ -15,13 +15,13 @@
  */
 package org.springframework.ldap.transaction.compensating.support;
 
-import org.springframework.ldap.support.LdapUtils;
-import org.springframework.ldap.transaction.compensating.TempEntryRenamingStrategy;
-
 import javax.naming.InvalidNameException;
 import javax.naming.Name;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
+
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.ldap.transaction.compensating.TempEntryRenamingStrategy;
 
 /**
  * Default implementation of {@link TempEntryRenamingStrategy}. This implementation simply

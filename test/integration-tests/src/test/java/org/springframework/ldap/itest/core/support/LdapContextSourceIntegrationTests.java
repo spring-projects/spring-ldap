@@ -16,8 +16,16 @@
 
 package org.springframework.ldap.itest.core.support;
 
+import java.util.Hashtable;
+import java.util.List;
+
+import javax.naming.Context;
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
+
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -31,12 +39,6 @@ import org.springframework.ldap.itest.AbstractLdapTemplateIntegrationTests;
 import org.springframework.ldap.itest.NoAdTests;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
-
-import javax.naming.Context;
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
-import java.util.Hashtable;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;

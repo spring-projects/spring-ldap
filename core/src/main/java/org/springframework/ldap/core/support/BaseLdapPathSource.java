@@ -15,10 +15,10 @@
  */
 package org.springframework.ldap.core.support;
 
+import javax.naming.ldap.LdapName;
+
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DistinguishedName;
-
-import javax.naming.ldap.LdapName;
 
 /**
  * Implementations of this interface are capable of providing a base LDAP path. The base

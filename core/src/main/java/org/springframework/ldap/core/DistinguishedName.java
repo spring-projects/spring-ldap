@@ -15,20 +15,6 @@
  */
 package org.springframework.ldap.core;
 
-import org.springframework.ldap.UncategorizedLdapException;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.ldap.BadLdapGrammarException;
-import org.springframework.ldap.support.LdapUtils;
-import org.springframework.ldap.support.ListComparator;
-import org.springframework.util.Assert;
-
-import javax.naming.CompositeName;
-import javax.naming.InvalidNameException;
-import javax.naming.Name;
-import javax.naming.ldap.Rdn;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -36,6 +22,22 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+
+import javax.naming.CompositeName;
+import javax.naming.InvalidNameException;
+import javax.naming.Name;
+import javax.naming.ldap.Rdn;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.ldap.BadLdapGrammarException;
+import org.springframework.ldap.UncategorizedLdapException;
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.ldap.support.ListComparator;
+import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * Default implementation of a {@link Name} corresponding to an LDAP path. A Distinguished

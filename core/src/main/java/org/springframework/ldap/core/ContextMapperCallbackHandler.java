@@ -15,11 +15,11 @@
  */
 package org.springframework.ldap.core;
 
-import org.springframework.util.Assert;
-
 import javax.naming.Binding;
 import javax.naming.NameClassPair;
 import javax.naming.NamingException;
+
+import org.springframework.util.Assert;
 
 /**
  * A CollectingNameClassPairCallbackHandler to wrap a ContextMapper. That is, the found

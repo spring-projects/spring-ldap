@@ -16,14 +16,25 @@
 
 package org.springframework.ldap.odm.test;
 
+import java.io.File;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.naming.ldap.LdapName;
+
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.odm.core.impl.OdmManagerImpl;
@@ -36,15 +47,6 @@ import org.springframework.ldap.odm.typeconversion.impl.converters.FromStringCon
 import org.springframework.ldap.odm.typeconversion.impl.converters.ToStringConverter;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.test.LdapTestUtils;
-
-import javax.naming.ldap.LdapName;
-import java.io.File;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
 

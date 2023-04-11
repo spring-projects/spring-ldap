@@ -15,8 +15,14 @@
  */
 package org.springframework.ldap.transaction.compensating.manager;
 
+import java.sql.Connection;
+
+import javax.naming.directory.DirContext;
+import javax.sql.DataSource;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.ldap.UncategorizedLdapException;
 import org.springframework.ldap.core.ContextSource;
@@ -31,10 +37,6 @@ import org.springframework.transaction.compensating.support.CompensatingTransact
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.transaction.support.DefaultTransactionStatus;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-
-import javax.naming.directory.DirContext;
-import javax.sql.DataSource;
-import java.sql.Connection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;

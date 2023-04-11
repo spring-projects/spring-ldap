@@ -18,6 +18,7 @@ package org.springframework.ldap.itest;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;

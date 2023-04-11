@@ -16,16 +16,17 @@
 
 package org.springframework.ldap.pool2.validation;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.ldap.pool2.DirContextType;
-import org.springframework.util.Assert;
-
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.ldap.pool2.DirContextType;
+import org.springframework.util.Assert;
 
 /**
  * Default {@link DirContext} validator that executes

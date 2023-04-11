@@ -1,6 +1,12 @@
 package org.springframework.ldap.samples.plain.web;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+import javax.naming.Name;
+
 import org.apache.commons.lang.StringUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.samples.plain.dao.PersonDao;
@@ -13,10 +19,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.naming.Name;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 /**
  * Default controller.

@@ -15,20 +15,21 @@
  */
 package org.springframework.ldap.pool2.factory;
 
-import org.apache.commons.pool2.PooledObject;
-import org.apache.commons.pool2.impl.DefaultPooledObject;
-import org.junit.Test;
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.pool2.DirContextType;
-import org.springframework.ldap.pool2.validation.DirContextValidator;
-import org.springframework.ldap.pool2.AbstractPoolTestCase;
-import org.springframework.util.ReflectionUtils;
-
-import javax.naming.directory.DirContext;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+
+import javax.naming.directory.DirContext;
+
+import org.apache.commons.pool2.PooledObject;
+import org.apache.commons.pool2.impl.DefaultPooledObject;
+import org.junit.Test;
+
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.pool2.AbstractPoolTestCase;
+import org.springframework.ldap.pool2.DirContextType;
+import org.springframework.ldap.pool2.validation.DirContextValidator;
+import org.springframework.util.ReflectionUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;

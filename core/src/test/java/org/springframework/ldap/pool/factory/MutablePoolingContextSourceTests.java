@@ -15,11 +15,12 @@
  */
 package org.springframework.ldap.pool.factory;
 
+import javax.naming.directory.DirContext;
+
 import org.junit.Test;
+
 import org.springframework.ldap.pool.AbstractPoolTestCase;
 import org.springframework.ldap.pool.MutableDelegatingLdapContext;
-
-import javax.naming.directory.DirContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;

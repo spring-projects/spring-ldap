@@ -16,6 +16,7 @@
 package org.springframework.ldap.itest.core;
 
 import org.junit.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.test.context.ContextConfiguration;

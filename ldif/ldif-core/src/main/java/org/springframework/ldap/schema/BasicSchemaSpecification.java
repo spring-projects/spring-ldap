@@ -1,11 +1,11 @@
 package org.springframework.ldap.schema;
 
-import org.springframework.ldap.core.LdapAttributes;
-import org.springframework.ldap.support.LdapEncoder;
-
 import javax.naming.NamingException;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
+
+import org.springframework.ldap.core.LdapAttributes;
+import org.springframework.ldap.support.LdapEncoder;
 
 /**
  * BasicSchemaSpecification establishes a minimal set of requirements for object classes.

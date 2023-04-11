@@ -15,11 +15,12 @@
  */
 package org.springframework.ldap.core.support;
 
+import javax.naming.NamingException;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.ldap.core.DirContextProcessor;
 
-import javax.naming.NamingException;
+import org.springframework.ldap.core.DirContextProcessor;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

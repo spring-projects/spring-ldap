@@ -16,13 +16,13 @@
 
 package org.springframework.ldap.odm.typeconversion.impl;
 
+import javax.naming.Name;
+
 import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.ldap.odm.typeconversion.ConverterManager;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
-
-import javax.naming.Name;
 
 /**
  * @author Mattias Hellborg Arthursson

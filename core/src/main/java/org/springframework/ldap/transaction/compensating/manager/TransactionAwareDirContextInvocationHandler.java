@@ -15,18 +15,20 @@
  */
 package org.springframework.ldap.transaction.compensating.manager;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import javax.naming.directory.DirContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.transaction.compensating.LdapTransactionUtils;
 import org.springframework.transaction.compensating.support.CompensatingTransactionUtils;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-
-import javax.naming.directory.DirContext;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 /**
  * Proxy implementation for DirContext, making sure that the instance is not closed during

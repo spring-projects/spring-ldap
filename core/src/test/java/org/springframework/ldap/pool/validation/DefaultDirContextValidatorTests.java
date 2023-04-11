@@ -15,14 +15,15 @@
  */
 package org.springframework.ldap.pool.validation;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.ldap.pool.DirContextType;
-
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchControls;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import org.springframework.ldap.pool.DirContextType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;

@@ -1,14 +1,14 @@
 package org.springframework.gradle.maven;
 
+import java.net.URI;
+import java.time.Duration;
+
 import io.github.gradlenexus.publishplugin.NexusPublishExtension;
 import io.github.gradlenexus.publishplugin.NexusPublishPlugin;
 import io.github.gradlenexus.publishplugin.NexusRepository;
 import org.gradle.api.Action;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
-
-import java.net.URI;
-import java.time.Duration;
 
 public class SpringNexusPublishPlugin implements Plugin<Project> {
 	@Override

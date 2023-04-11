@@ -15,16 +15,17 @@
  */
 package org.springframework.ldap.pool;
 
-import org.apache.commons.pool.KeyedObjectPool;
-import org.springframework.ldap.pool.factory.PoolingContextSource;
-import org.springframework.util.Assert;
-
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.Control;
 import javax.naming.ldap.ExtendedRequest;
 import javax.naming.ldap.ExtendedResponse;
 import javax.naming.ldap.LdapContext;
+
+import org.apache.commons.pool.KeyedObjectPool;
+
+import org.springframework.ldap.pool.factory.PoolingContextSource;
+import org.springframework.util.Assert;
 
 /**
  * Used by {@link PoolingContextSource} to wrap a {@link LdapContext}, delegating most

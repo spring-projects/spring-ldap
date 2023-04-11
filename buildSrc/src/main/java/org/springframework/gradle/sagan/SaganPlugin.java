@@ -17,7 +17,9 @@
 package org.springframework.gradle.sagan;
 
 import io.spring.gradle.convention.Utils;
-import org.gradle.api.*;
+import org.gradle.api.Action;
+import org.gradle.api.Plugin;
+import org.gradle.api.Project;
 
 public class SaganPlugin implements Plugin<Project> {
 	@Override

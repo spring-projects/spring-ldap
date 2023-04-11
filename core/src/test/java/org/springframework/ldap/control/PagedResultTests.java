@@ -15,12 +15,13 @@
  */
 package org.springframework.ldap.control;
 
-import com.gargoylesoftware.base.testing.EqualsTester;
-import org.junit.Test;
-
-import javax.naming.ldap.PagedResultsControl;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.naming.ldap.PagedResultsControl;
+
+import com.gargoylesoftware.base.testing.EqualsTester;
+import org.junit.Test;
 
 /**
  * Unit tests for the PagedResult class. {@link PagedResultsControl}

@@ -1,5 +1,10 @@
 package io.spring.gradle.convention;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.LinkedHashMap;
+
 import io.spring.gradle.TestKit;
 import org.apache.commons.io.IOUtils;
 import org.gradle.testkit.runner.BuildResult;
@@ -7,11 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.LinkedHashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

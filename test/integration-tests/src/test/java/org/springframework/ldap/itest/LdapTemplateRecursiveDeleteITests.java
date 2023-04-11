@@ -16,19 +16,20 @@
 
 package org.springframework.ldap.itest;
 
+import javax.naming.Name;
+import javax.naming.ldap.LdapName;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
-
-import javax.naming.Name;
-import javax.naming.ldap.LdapName;
 
 import static junit.framework.Assert.fail;
 

@@ -15,18 +15,19 @@
  */
 package org.springframework.ldap.control;
 
+import java.io.IOException;
+
+import javax.naming.ldap.Control;
+import javax.naming.ldap.LdapContext;
+import javax.naming.ldap.SortControl;
+import javax.naming.ldap.SortResponseControl;
+
 import com.sun.jndi.ldap.Ber;
 import com.sun.jndi.ldap.BerDecoder;
 import com.sun.jndi.ldap.BerEncoder;
 import com.sun.jndi.ldap.ctl.DirSyncResponseControl;
 import org.junit.Before;
 import org.junit.Test;
-
-import javax.naming.ldap.Control;
-import javax.naming.ldap.LdapContext;
-import javax.naming.ldap.SortControl;
-import javax.naming.ldap.SortResponseControl;
-import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

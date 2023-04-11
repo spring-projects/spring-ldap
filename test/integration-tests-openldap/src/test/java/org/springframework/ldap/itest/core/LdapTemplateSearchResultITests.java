@@ -15,9 +15,15 @@
  */
 package org.springframework.ldap.itest.core;
 
+import java.util.List;
+
+import javax.naming.Name;
+import javax.naming.directory.SearchControls;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ldap.core.ContextSource;
@@ -30,10 +36,6 @@ import org.springframework.ldap.test.AttributeCheckContextMapper;
 import org.springframework.ldap.test.LdapTestUtils;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
-
-import javax.naming.Name;
-import javax.naming.directory.SearchControls;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

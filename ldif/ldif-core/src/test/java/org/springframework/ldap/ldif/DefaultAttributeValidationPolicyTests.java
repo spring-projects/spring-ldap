@@ -16,21 +16,22 @@
 
 package org.springframework.ldap.ldif;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-import org.springframework.ldap.core.LdapAttribute;
-import org.springframework.ldap.ldif.support.DefaultAttributeValidationPolicy;
-import org.springframework.ldap.support.LdapEncoder;
-import org.springframework.util.StringUtils;
-
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.ldap.core.LdapAttribute;
+import org.springframework.ldap.ldif.support.DefaultAttributeValidationPolicy;
+import org.springframework.ldap.support.LdapEncoder;
+import org.springframework.util.StringUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;

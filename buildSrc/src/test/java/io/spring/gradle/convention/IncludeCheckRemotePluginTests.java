@@ -16,6 +16,8 @@
 
 package io.spring.gradle.convention;
 
+import java.util.Arrays;
+
 import io.spring.gradle.IncludeRepoTask;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.Project;
@@ -23,8 +25,6 @@ import org.gradle.api.tasks.GradleBuild;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

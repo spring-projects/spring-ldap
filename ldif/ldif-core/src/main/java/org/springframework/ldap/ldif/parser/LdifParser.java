@@ -16,8 +16,18 @@
 
 package org.springframework.ldap.ldif.parser;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.NoSuchElementException;
+
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -32,14 +42,6 @@ import org.springframework.ldap.schema.Specification;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-
-import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.NoSuchElementException;
 
 /**
  * The {@link LdifParser LdifParser} is the main class of the

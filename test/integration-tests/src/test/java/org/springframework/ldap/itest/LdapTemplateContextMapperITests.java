@@ -16,14 +16,15 @@
 
 package org.springframework.ldap.itest;
 
+import java.util.List;
+
 import org.junit.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.test.context.ContextConfiguration;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

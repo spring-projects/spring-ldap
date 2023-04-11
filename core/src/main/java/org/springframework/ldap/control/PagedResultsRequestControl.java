@@ -16,16 +16,17 @@
 
 package org.springframework.ldap.control;
 
-import org.springframework.ldap.UncategorizedLdapException;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ReflectionUtils;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
+
+import org.springframework.ldap.UncategorizedLdapException;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.ReflectionUtils;
 
 /**
  * DirContextProcessor implementation for managing the paged results control. Note that

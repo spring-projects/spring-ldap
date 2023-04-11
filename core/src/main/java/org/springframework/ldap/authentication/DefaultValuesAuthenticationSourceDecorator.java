@@ -15,9 +15,9 @@
  */
 package org.springframework.ldap.authentication;
 
-import org.springframework.util.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.ldap.core.AuthenticationSource;
+import org.springframework.util.StringUtils;
 
 /**
  * Decorator on AuthenticationSource to have default authentication information be

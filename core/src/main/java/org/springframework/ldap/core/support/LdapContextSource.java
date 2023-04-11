@@ -16,10 +16,11 @@
 
 package org.springframework.ldap.core.support;
 
+import java.util.Hashtable;
+
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.InitialLdapContext;
-import java.util.Hashtable;
 
 /**
  * ContextSource implementation which creates an <code>InitialLdapContext</code> instance.

@@ -16,13 +16,6 @@
 
 package org.springframework.ldap.odm.core.impl;
 
-import org.springframework.ldap.UncategorizedLdapException;
-import org.springframework.ldap.odm.annotations.Attribute;
-import org.springframework.ldap.odm.annotations.DnAttribute;
-import org.springframework.ldap.odm.annotations.Id;
-import org.springframework.ldap.odm.annotations.Transient;
-
-import javax.naming.Name;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
@@ -35,6 +28,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import javax.naming.Name;
+
+import org.springframework.ldap.UncategorizedLdapException;
+import org.springframework.ldap.odm.annotations.Attribute;
+import org.springframework.ldap.odm.annotations.DnAttribute;
+import org.springframework.ldap.odm.annotations.Id;
+import org.springframework.ldap.odm.annotations.Transient;
 
 /*
  * Extract attribute meta-data from the @Attribute annotation, the @Id annotation

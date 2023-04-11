@@ -15,8 +15,9 @@
  */
 package org.springframework.ldap.control;
 
-import javax.naming.ldap.PagedResultsControl;
 import java.util.Arrays;
+
+import javax.naming.ldap.PagedResultsControl;
 
 /**
  * Wrapper class for the cookie returned when using the {@link PagedResultsControl}.

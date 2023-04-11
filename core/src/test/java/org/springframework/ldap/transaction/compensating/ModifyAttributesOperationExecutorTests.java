@@ -15,13 +15,14 @@
  */
 package org.springframework.ldap.transaction.compensating;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.ldap.core.LdapOperations;
-import org.springframework.ldap.support.LdapUtils;
-
 import javax.naming.Name;
 import javax.naming.directory.ModificationItem;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import org.springframework.ldap.core.LdapOperations;
+import org.springframework.ldap.support.LdapUtils;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

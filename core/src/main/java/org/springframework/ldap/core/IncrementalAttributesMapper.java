@@ -16,9 +16,10 @@
 
 package org.springframework.ldap.core;
 
+import java.util.List;
+
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
-import java.util.List;
 
 /**
  * Utility that helps with reading all attribute values from Active Directory using

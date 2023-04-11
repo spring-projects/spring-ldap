@@ -16,10 +16,10 @@
 
 package org.springframework.ldap.core;
 
-import org.springframework.LdapDataEntry;
-
 import javax.naming.Name;
 import javax.naming.directory.DirContext;
+
+import org.springframework.LdapDataEntry;
 
 /**
  * Interface for DirContextAdapter.

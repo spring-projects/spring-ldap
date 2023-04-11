@@ -17,6 +17,7 @@
 package org.springframework.ldap.itest.integration;
 
 import org.junit.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.itest.AbstractLdapTemplateIntegrationTests;
 import org.springframework.ldap.itest.LdapGroupDao;

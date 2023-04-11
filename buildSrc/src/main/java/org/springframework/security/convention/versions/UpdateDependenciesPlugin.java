@@ -16,6 +16,24 @@
 
 package org.springframework.security.convention.versions;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.nio.file.Files;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.SortedSet;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.github.benmanes.gradle.versions.reporter.result.Dependency;
 import com.github.benmanes.gradle.versions.reporter.result.DependencyOutdated;
 import com.github.benmanes.gradle.versions.reporter.result.Result;
@@ -31,18 +49,6 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier;
 import reactor.core.publisher.Mono;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.nio.file.Files;
-import java.time.Duration;
-import java.util.*;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static org.springframework.security.convention.versions.TransitiveDependencyLookupUtils.NIMBUS_JOSE_JWT_NAME;
 import static org.springframework.security.convention.versions.TransitiveDependencyLookupUtils.OIDC_SDK_NAME;

@@ -16,12 +16,12 @@
 
 package org.springframework.ldap.support;
 
-import org.springframework.util.Assert;
-
 import javax.naming.InvalidNameException;
 import javax.naming.Name;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
+
+import org.springframework.util.Assert;
 
 /**
  * Helper class for building {@link javax.naming.ldap.LdapName} instances.

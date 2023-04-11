@@ -15,15 +15,16 @@
  */
 package org.springframework.transaction.compensating.support;
 
+import java.util.Stack;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationFactory;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationManager;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
-
-import java.util.Stack;
 
 /**
  * Default implementation of {@link CompensatingTransactionOperationManager}. Manages a

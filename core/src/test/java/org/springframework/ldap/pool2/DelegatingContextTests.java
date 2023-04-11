@@ -15,17 +15,17 @@
  */
 package org.springframework.ldap.pool2;
 
-import org.apache.commons.pool2.KeyedObjectPool;
-import org.junit.Test;
-
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NamingException;
 
+import org.apache.commons.pool2.KeyedObjectPool;
+import org.junit.Test;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 

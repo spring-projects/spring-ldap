@@ -1,8 +1,5 @@
 package org.springframework.ldap.odm.core.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.ldap.query.LdapQueryBuilder.query;
-
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
@@ -14,10 +11,14 @@ import org.junit.runner.RunWith;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import org.springframework.core.SpringVersion;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 /**
  * @author Mattias Hellborg Arthursson

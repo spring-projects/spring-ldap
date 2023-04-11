@@ -15,16 +15,17 @@
  */
 package org.springframework.ldap.samples.odm.dao;
 
+import java.util.List;
+
+import javax.naming.NamingException;
+import javax.naming.directory.Attributes;
+import javax.naming.ldap.LdapName;
+
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.samples.plain.dao.PersonDao;
 import org.springframework.ldap.samples.plain.domain.Person;
 import org.springframework.ldap.support.LdapNameBuilder;
-
-import javax.naming.NamingException;
-import javax.naming.directory.Attributes;
-import javax.naming.ldap.LdapName;
-import java.util.List;
 
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 

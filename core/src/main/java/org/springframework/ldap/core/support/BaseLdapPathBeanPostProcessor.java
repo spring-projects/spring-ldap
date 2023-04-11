@@ -16,6 +16,10 @@
 
 package org.springframework.ldap.core.support;
 
+import java.util.Collection;
+
+import javax.naming.ldap.LdapName;
+
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
@@ -24,9 +28,6 @@ import org.springframework.core.Ordered;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.StringUtils;
-
-import javax.naming.ldap.LdapName;
-import java.util.Collection;
 
 /**
  * This <code>BeanPostProcessor</code> checks each bean if it implements

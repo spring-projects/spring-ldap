@@ -16,18 +16,11 @@
 
 package org.springframework.ldap.test;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.directory.server.core.DefaultDirectoryService;
-import org.apache.directory.server.protocol.shared.store.LdifFileLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.ldap.UncategorizedLdapException;
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.LdapAttributes;
-import org.springframework.ldap.core.support.DefaultDirObjectFactory;
-import org.springframework.ldap.ldif.parser.LdifParser;
-import org.springframework.ldap.support.LdapUtils;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Set;
 
 import javax.naming.Binding;
 import javax.naming.ContextNotEmptyException;
@@ -36,11 +29,20 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapName;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Set;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.directory.server.core.DefaultDirectoryService;
+import org.apache.directory.server.protocol.shared.store.LdifFileLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.core.io.Resource;
+import org.springframework.ldap.UncategorizedLdapException;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.LdapAttributes;
+import org.springframework.ldap.core.support.DefaultDirObjectFactory;
+import org.springframework.ldap.ldif.parser.LdifParser;
+import org.springframework.ldap.support.LdapUtils;
 
 /**
  * Utilities for starting, stopping and populating an in-process Apache Directory Server

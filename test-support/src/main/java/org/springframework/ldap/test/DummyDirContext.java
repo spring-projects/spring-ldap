@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.test;
 
+import java.util.Hashtable;
+
 import javax.naming.Binding;
 import javax.naming.Context;
 import javax.naming.Name;
@@ -28,7 +30,6 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
-import java.util.Hashtable;
 
 /**
  * @author Mattias Hellborg Arthursson

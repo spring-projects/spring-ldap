@@ -15,17 +15,21 @@
  */
 package org.springframework.ldap.pool2;
 
-import org.apache.commons.pool2.KeyedObjectPool;
-import org.springframework.ldap.core.DirContextProxy;
-import org.springframework.ldap.pool2.DirContextType;
-import org.springframework.ldap.pool2.factory.PooledContextSource;
-import org.springframework.util.Assert;
-
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.directory.*;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.ModificationItem;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
+
+import org.apache.commons.pool2.KeyedObjectPool;
+
+import org.springframework.ldap.core.DirContextProxy;
+import org.springframework.ldap.pool2.factory.PooledContextSource;
+import org.springframework.util.Assert;
 
 /**
  * Used by {@link PooledContextSource} to wrap a {@link DirContext}, delegating most

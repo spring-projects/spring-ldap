@@ -15,11 +15,7 @@
  */
 package org.springframework.ldap.core;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.ldap.support.LdapEncoder;
-import org.springframework.ldap.support.LdapUtils;
+import java.net.URI;
 
 import javax.naming.Name;
 import javax.naming.NamingEnumeration;
@@ -27,7 +23,12 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.ldap.LdapName;
-import java.net.URI;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.ldap.support.LdapEncoder;
+import org.springframework.ldap.support.LdapUtils;
 
 /**
  * Extends {@link javax.naming.directory.BasicAttributes} to add specialized support for

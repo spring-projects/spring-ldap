@@ -16,11 +16,11 @@
 
 package org.springframework.ldap.core;
 
-import org.springframework.ldap.support.LdapUtils;
-
 import javax.naming.NameClassPair;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchResult;
+
+import org.springframework.ldap.support.LdapUtils;
 
 /**
  * A CollectingNameClassPairCallbackHandler to wrap an {@link AttributesMapper}. That is,

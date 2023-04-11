@@ -15,15 +15,15 @@
  */
 package org.springframework.ldap.control;
 
-import javax.naming.ldap.SortControl;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
+import javax.naming.ldap.SortControl;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

@@ -16,16 +16,15 @@
 
 package org.springframework.gradle.maven;
 
+import java.util.concurrent.Callable;
+
 import org.gradle.api.Action;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.publish.Publication;
 import org.gradle.api.publish.PublishingExtension;
-import org.gradle.api.publish.plugins.PublishingPlugin;
 import org.gradle.plugins.signing.SigningExtension;
 import org.gradle.plugins.signing.SigningPlugin;
-
-import java.util.concurrent.Callable;
 
 public class SpringSigningPlugin implements Plugin<Project> {
 	@Override

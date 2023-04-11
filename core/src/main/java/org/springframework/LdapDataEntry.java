@@ -1,8 +1,9 @@
 package org.springframework;
 
+import java.util.SortedSet;
+
 import javax.naming.Name;
 import javax.naming.directory.Attributes;
-import java.util.SortedSet;
 
 /**
  * Common data access methods for entries in an LDAP tree.

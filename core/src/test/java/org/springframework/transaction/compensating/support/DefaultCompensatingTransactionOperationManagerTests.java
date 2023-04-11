@@ -15,14 +15,15 @@
  */
 package org.springframework.transaction.compensating.support;
 
+import java.util.Stack;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationFactory;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
-
-import java.util.Stack;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doThrow;

@@ -15,19 +15,6 @@
  */
 package org.springframework.ldap.pool.factory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.commons.pool.BaseKeyedPoolableObjectFactory;
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.DirContextProxy;
-import org.springframework.ldap.pool.DirContextType;
-import org.springframework.ldap.pool.FailureAwareContext;
-import org.springframework.ldap.pool.validation.DirContextValidator;
-import org.springframework.ldap.support.LdapUtils;
-import org.springframework.util.Assert;
-
-import javax.naming.CommunicationException;
-import javax.naming.directory.DirContext;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -35,6 +22,21 @@ import java.lang.reflect.Proxy;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.naming.CommunicationException;
+import javax.naming.directory.DirContext;
+
+import org.apache.commons.pool.BaseKeyedPoolableObjectFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.DirContextProxy;
+import org.springframework.ldap.pool.DirContextType;
+import org.springframework.ldap.pool.FailureAwareContext;
+import org.springframework.ldap.pool.validation.DirContextValidator;
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.util.Assert;
 
 /**
  * Factory that creates {@link DirContext} instances for pooling via a configured

@@ -15,14 +15,15 @@
  */
 package org.springframework.ldap.transaction.compensating.manager;
 
+import java.lang.reflect.Proxy;
+
+import javax.naming.directory.DirContext;
+
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextProxy;
 import org.springframework.ldap.core.support.DelegatingBaseLdapPathContextSourceSupport;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-
-import javax.naming.directory.DirContext;
-import java.lang.reflect.Proxy;
 
 /**
  * A proxy for ContextSource to make sure that the returned DirContext objects are aware

@@ -15,6 +15,11 @@
  */
 package org.springframework.ldap.control;
 
+import java.io.IOException;
+
+import javax.naming.ldap.Control;
+import javax.naming.ldap.LdapContext;
+
 import com.sun.jndi.ldap.Ber;
 import com.sun.jndi.ldap.BerDecoder;
 import com.sun.jndi.ldap.BerEncoder;
@@ -23,11 +28,8 @@ import com.sun.jndi.ldap.ctl.VirtualListViewResponseControl;
 import junit.framework.AssertionFailedError;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.ldap.OperationNotSupportedException;
 
-import javax.naming.ldap.Control;
-import javax.naming.ldap.LdapContext;
-import java.io.IOException;
+import org.springframework.ldap.OperationNotSupportedException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;

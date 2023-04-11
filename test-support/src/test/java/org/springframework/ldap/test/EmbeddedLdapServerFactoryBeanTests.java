@@ -1,8 +1,5 @@
 package org.springframework.ldap.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import java.util.List;
 
 import javax.naming.NamingException;
@@ -14,6 +11,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.query.LdapQueryBuilder;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class EmbeddedLdapServerFactoryBeanTests {
 

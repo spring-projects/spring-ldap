@@ -16,9 +16,9 @@
 
 package org.springframework.ldap.query;
 
-import org.springframework.ldap.filter.Filter;
-
 import javax.naming.Name;
+
+import org.springframework.ldap.filter.Filter;
 
 /**
  * Holds all information regarding a Ldap query to be performed. Contains information

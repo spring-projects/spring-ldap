@@ -16,11 +16,12 @@
 
 package org.springframework.ldap.config;
 
-import org.springframework.ldap.core.support.DirContextAuthenticationStrategy;
+import java.util.Hashtable;
 
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
-import java.util.Hashtable;
+
+import org.springframework.ldap.core.support.DirContextAuthenticationStrategy;
 
 /**
  * @author Mattias Hellborg Arthursson

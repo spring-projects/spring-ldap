@@ -15,12 +15,13 @@
  */
 package org.springframework.ldap.core.support;
 
-import org.springframework.ldap.core.AuthenticationSource;
-import org.springframework.ldap.core.ContextSource;
+import java.util.Hashtable;
 
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
-import java.util.Hashtable;
+
+import org.springframework.ldap.core.AuthenticationSource;
+import org.springframework.ldap.core.ContextSource;
 
 /**
  * A strategy to use when authenticating LDAP connections on creation. When authenticating

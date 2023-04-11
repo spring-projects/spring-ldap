@@ -15,11 +15,11 @@
  */
 package org.springframework.ldap.transaction.compensating;
 
+import javax.naming.Name;
+
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
-
-import javax.naming.Name;
 
 /**
  * Utility methods for working with LDAP transactions.

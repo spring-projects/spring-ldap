@@ -19,6 +19,7 @@ package org.springframework.ldap;
 import org.junit.experimental.categories.Categories;
 import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runners.model.InitializationError;
+
 import org.springframework.ldap.itest.NoAdTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 

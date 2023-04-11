@@ -15,12 +15,12 @@
  */
 package org.springframework.ldap.pool;
 
-import org.apache.commons.pool.KeyedObjectPool;
-import org.junit.Test;
-
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NamingException;
+
+import org.apache.commons.pool.KeyedObjectPool;
+import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;

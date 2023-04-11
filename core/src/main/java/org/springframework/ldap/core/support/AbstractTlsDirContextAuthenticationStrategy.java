@@ -15,9 +15,11 @@
  */
 package org.springframework.ldap.core.support;
 
-import org.springframework.ldap.UncategorizedLdapException;
-import org.springframework.ldap.core.DirContextProxy;
-import org.springframework.ldap.support.LdapUtils;
+import java.io.IOException;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Hashtable;
 
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
@@ -26,11 +28,10 @@ import javax.naming.ldap.StartTlsRequest;
 import javax.naming.ldap.StartTlsResponse;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
-import java.io.IOException;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.Hashtable;
+
+import org.springframework.ldap.UncategorizedLdapException;
+import org.springframework.ldap.core.DirContextProxy;
+import org.springframework.ldap.support.LdapUtils;
 
 /**
  * Abstract superclass for {@link DirContextAuthenticationStrategy} implementations that

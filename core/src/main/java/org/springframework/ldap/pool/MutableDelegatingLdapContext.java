@@ -16,12 +16,13 @@
 
 package org.springframework.ldap.pool;
 
-import org.apache.commons.pool.KeyedObjectPool;
-import org.springframework.ldap.pool.factory.MutablePoolingContextSource;
-
 import javax.naming.NamingException;
 import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
+
+import org.apache.commons.pool.KeyedObjectPool;
+
+import org.springframework.ldap.pool.factory.MutablePoolingContextSource;
 
 /**
  * Used by {@link MutablePoolingContextSource} to wrap a {@link LdapContext}, delegating

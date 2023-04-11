@@ -16,11 +16,12 @@
 
 package org.springframework.ldap.odm.core;
 
-import org.springframework.ldap.query.LdapQuery;
+import java.util.List;
 
 import javax.naming.Name;
 import javax.naming.directory.SearchControls;
-import java.util.List;
+
+import org.springframework.ldap.query.LdapQuery;
 
 /**
  * The OdmManager interface provides generic CRUD (create/read/update/delete) and

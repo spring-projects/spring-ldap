@@ -19,12 +19,13 @@ package io.spring.gradle.convention;
 import java.io.File;
 
 import org.apache.commons.io.FileUtils;
-import static org.assertj.core.api.Assertions.assertThat;
 import org.gradle.api.Project;
 import org.gradle.api.tasks.javadoc.Javadoc;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Rob Winch

@@ -2,6 +2,7 @@ package org.springframework.ldap.core;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 
 import static org.mockito.ArgumentMatchers.any;

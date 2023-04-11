@@ -16,11 +16,12 @@
 
 package org.springframework.ldap.query;
 
-import org.springframework.ldap.filter.Filter;
-
-import javax.naming.Name;
 import java.util.LinkedHashSet;
 import java.util.Set;
+
+import javax.naming.Name;
+
+import org.springframework.ldap.filter.Filter;
 
 import static org.springframework.ldap.query.CriteriaContainerType.AND;
 import static org.springframework.ldap.query.CriteriaContainerType.OR;

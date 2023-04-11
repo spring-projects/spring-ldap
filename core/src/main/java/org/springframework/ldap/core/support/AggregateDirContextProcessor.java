@@ -16,13 +16,14 @@
 
 package org.springframework.ldap.core.support;
 
-import org.springframework.ldap.core.DirContextProcessor;
-
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
+
+import org.springframework.ldap.core.DirContextProcessor;
 
 /**
  * Manages a sequence of {@link DirContextProcessor} instances. Applies

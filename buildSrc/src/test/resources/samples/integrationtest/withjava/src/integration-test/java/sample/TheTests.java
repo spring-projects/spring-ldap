@@ -1,6 +1,7 @@
 package sample;
 
 import org.junit.Test;
+
 import org.springframework.core.Ordered;
 
 public class TheTests {

@@ -15,11 +15,11 @@
  */
 package org.springframework.ldap.filter;
 
-import org.springframework.util.StringUtils;
-import org.springframework.ldap.support.LdapEncoder;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.springframework.ldap.support.LdapEncoder;
+import org.springframework.util.StringUtils;
 
 /**
  * This filter automatically converts all whitespace to wildcards (*). The following code:

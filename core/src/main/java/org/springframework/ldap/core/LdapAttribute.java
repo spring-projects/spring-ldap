@@ -15,10 +15,11 @@
  */
 package org.springframework.ldap.core;
 
-import javax.naming.directory.BasicAttribute;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.naming.directory.BasicAttribute;
 
 /**
  * Extends {@link javax.naming.directory.BasicAttribute} to add support for options as

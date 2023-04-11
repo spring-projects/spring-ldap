@@ -16,10 +16,7 @@
 
 package org.springframework.ldap.core;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.ldap.LimitExceededException;
-import org.springframework.ldap.PartialResultException;
+import java.util.List;
 
 import javax.naming.Binding;
 import javax.naming.Name;
@@ -28,7 +25,12 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
-import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import org.springframework.ldap.LimitExceededException;
+import org.springframework.ldap.PartialResultException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;

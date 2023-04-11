@@ -15,9 +15,7 @@
  */
 package org.springframework.ldap.pool;
 
-import org.apache.commons.pool.KeyedObjectPool;
-import org.springframework.ldap.pool.factory.PoolingContextSource;
-import org.springframework.util.Assert;
+import java.util.Hashtable;
 
 import javax.naming.Binding;
 import javax.naming.Context;
@@ -26,7 +24,11 @@ import javax.naming.NameClassPair;
 import javax.naming.NameParser;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import java.util.Hashtable;
+
+import org.apache.commons.pool.KeyedObjectPool;
+
+import org.springframework.ldap.pool.factory.PoolingContextSource;
+import org.springframework.util.Assert;
 
 /**
  * Used by {@link PoolingContextSource} to wrap a {@link Context}, delegating most methods

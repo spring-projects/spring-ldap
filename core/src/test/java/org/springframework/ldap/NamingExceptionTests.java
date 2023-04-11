@@ -15,14 +15,15 @@
  */
 package org.springframework.ldap;
 
-import org.junit.Test;
-
-import javax.naming.directory.InitialDirContext;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
+import javax.naming.directory.InitialDirContext;
+
+import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;

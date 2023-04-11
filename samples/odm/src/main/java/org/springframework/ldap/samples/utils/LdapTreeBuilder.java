@@ -16,12 +16,12 @@
 
 package org.springframework.ldap.samples.utils;
 
+import javax.naming.Name;
+
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.AbstractContextMapper;
 import org.springframework.ldap.support.LdapUtils;
-
-import javax.naming.Name;
 
 public class LdapTreeBuilder {
 

@@ -16,14 +16,15 @@
 
 package org.springframework.ldap.core;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.ldap.NameAlreadyBoundException;
-import org.springframework.ldap.UncategorizedLdapException;
-
 import javax.naming.Name;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import org.springframework.ldap.NameAlreadyBoundException;
+import org.springframework.ldap.UncategorizedLdapException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;

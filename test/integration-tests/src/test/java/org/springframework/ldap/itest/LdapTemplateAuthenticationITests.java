@@ -16,8 +16,12 @@
 
 package org.springframework.ldap.itest;
 
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
+
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.ldap.AuthenticationException;
@@ -31,9 +35,6 @@ import org.springframework.ldap.core.support.LookupAttemptingCallback;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.test.context.ContextConfiguration;
-
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;

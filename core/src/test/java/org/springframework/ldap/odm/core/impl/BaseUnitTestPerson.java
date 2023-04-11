@@ -15,10 +15,15 @@
  */
 package org.springframework.ldap.odm.core.impl;
 
-import org.springframework.ldap.odm.annotations.*;
+import java.util.List;
 
 import javax.naming.Name;
-import java.util.List;
+
+import org.springframework.ldap.odm.annotations.Attribute;
+import org.springframework.ldap.odm.annotations.DnAttribute;
+import org.springframework.ldap.odm.annotations.Entry;
+import org.springframework.ldap.odm.annotations.Id;
+import org.springframework.ldap.odm.annotations.Transient;
 
 /**
  * @author Rob Winch

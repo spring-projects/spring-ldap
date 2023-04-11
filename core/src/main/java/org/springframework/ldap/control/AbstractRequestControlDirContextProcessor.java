@@ -16,14 +16,15 @@
 
 package org.springframework.ldap.control;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.ldap.core.DirContextProcessor;
-
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.ldap.core.DirContextProcessor;
 
 /**
  * Abstract superclass with responsibility to apply a single RequestControl on an

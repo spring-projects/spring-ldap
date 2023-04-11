@@ -15,19 +15,20 @@
  */
 package org.springframework.ldap.pool.factory;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+
+import javax.naming.directory.DirContext;
+
 import org.junit.Test;
 import org.mockito.Mockito;
+
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.pool.AbstractPoolTestCase;
 import org.springframework.ldap.pool.DirContextType;
 import org.springframework.ldap.pool.validation.DirContextValidator;
 import org.springframework.util.ReflectionUtils;
-
-import javax.naming.directory.DirContext;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;

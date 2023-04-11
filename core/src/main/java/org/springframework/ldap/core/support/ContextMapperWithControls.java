@@ -15,10 +15,10 @@
  */
 package org.springframework.ldap.core.support;
 
-import org.springframework.ldap.core.ContextMapper;
-
 import javax.naming.NamingException;
 import javax.naming.ldap.HasControls;
+
+import org.springframework.ldap.core.ContextMapper;
 
 /**
  * Extension of the {@link org.springframework.ldap.core.ContextMapper} interface that

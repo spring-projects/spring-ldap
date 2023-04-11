@@ -16,13 +16,14 @@
 
 package org.springframework.ldap.core;
 
-import org.springframework.util.Assert;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
-import java.util.HashMap;
-import java.util.Map;
+
+import org.springframework.util.Assert;
 
 /**
  * Used internally to help DirContextAdapter properly handle Names as values.

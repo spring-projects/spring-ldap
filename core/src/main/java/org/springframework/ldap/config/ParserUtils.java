@@ -16,8 +16,9 @@
 
 package org.springframework.ldap.config;
 
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
+
+import org.springframework.util.StringUtils;
 
 /**
  * @author Mattias Hellborg Arthursson

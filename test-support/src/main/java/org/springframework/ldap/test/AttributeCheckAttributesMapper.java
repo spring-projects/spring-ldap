@@ -15,13 +15,15 @@
  */
 package org.springframework.ldap.test;
 
-import junit.framework.Assert;
-import org.springframework.ldap.core.AttributesMapper;
+import java.util.Arrays;
 
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
-import java.util.Arrays;
+
+import junit.framework.Assert;
+
+import org.springframework.ldap.core.AttributesMapper;
 
 /**
  * Dummy AttributesMapper for testing purposes to check that the received Attributes are

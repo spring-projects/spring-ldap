@@ -15,13 +15,14 @@
  */
 package org.springframework.ldap.transaction.compensating;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.ldap.support.LdapUtils;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
-
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import org.springframework.ldap.support.LdapUtils;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

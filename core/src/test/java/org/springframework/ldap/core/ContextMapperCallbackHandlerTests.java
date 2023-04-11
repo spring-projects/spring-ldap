@@ -15,11 +15,11 @@
  */
 package org.springframework.ldap.core;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import javax.naming.Binding;
 import javax.naming.NamingException;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

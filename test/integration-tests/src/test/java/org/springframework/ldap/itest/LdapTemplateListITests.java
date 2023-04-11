@@ -15,19 +15,21 @@
  */
 package org.springframework.ldap.itest;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.naming.ldap.LdapName;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.CountNameClassPairCallbackHandler;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.test.AttributeCheckContextMapper;
 import org.springframework.test.context.ContextConfiguration;
-
-import javax.naming.ldap.LdapName;
-import java.util.LinkedList;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

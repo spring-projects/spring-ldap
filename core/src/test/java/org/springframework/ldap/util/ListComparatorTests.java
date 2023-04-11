@@ -15,12 +15,13 @@
  */
 package org.springframework.ldap.util;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.ldap.support.ListComparator;
-
 import java.util.Arrays;
 import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import org.springframework.ldap.support.ListComparator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -17,6 +17,7 @@
 package org.springframework.ldap.support;
 
 import org.junit.Test;
+
 import org.springframework.ldap.BadLdapGrammarException;
 
 import static org.assertj.core.api.Assertions.assertThat;

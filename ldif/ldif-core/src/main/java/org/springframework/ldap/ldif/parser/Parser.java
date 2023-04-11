@@ -15,10 +15,11 @@
  */
 package org.springframework.ldap.ldif.parser;
 
-import org.springframework.core.io.Resource;
+import java.io.IOException;
 
 import javax.naming.directory.Attributes;
-import java.io.IOException;
+
+import org.springframework.core.io.Resource;
 
 /**
  * The Parser interface represents the required methods to be implemented by parser

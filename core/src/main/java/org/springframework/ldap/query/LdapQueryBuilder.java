@@ -16,14 +16,15 @@
 
 package org.springframework.ldap.query;
 
+import java.text.MessageFormat;
+
+import javax.naming.Name;
+
 import org.springframework.ldap.filter.Filter;
 import org.springframework.ldap.filter.HardcodedFilter;
 import org.springframework.ldap.support.LdapEncoder;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.Assert;
-
-import javax.naming.Name;
-import java.text.MessageFormat;
 
 /**
  * Builder of LdapQueries. Start with a call to {@link #query()}, proceed with specifying

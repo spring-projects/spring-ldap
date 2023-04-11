@@ -16,9 +16,9 @@
 
 package org.springframework.ldap.pool;
 
-import org.springframework.ldap.core.ContextSource;
-
 import javax.naming.directory.DirContext;
+
+import org.springframework.ldap.core.ContextSource;
 
 /**
  * An enum representing the two types of {@link DirContext}s that can be returned by a

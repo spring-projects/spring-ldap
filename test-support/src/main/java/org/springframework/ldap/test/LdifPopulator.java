@@ -16,18 +16,19 @@
 
 package org.springframework.ldap.test;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.List;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.Assert;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.List;
 
 /**
  * @author Mattias Hellborg Arthursson

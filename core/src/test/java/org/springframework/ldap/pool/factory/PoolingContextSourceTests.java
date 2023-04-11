@@ -15,15 +15,16 @@
  */
 package org.springframework.ldap.pool.factory;
 
+import javax.naming.directory.DirContext;
+import javax.naming.ldap.LdapContext;
+
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.junit.Test;
+
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.pool.AbstractPoolTestCase;
 import org.springframework.ldap.pool.validation.DirContextValidator;
-
-import javax.naming.directory.DirContext;
-import javax.naming.ldap.LdapContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;

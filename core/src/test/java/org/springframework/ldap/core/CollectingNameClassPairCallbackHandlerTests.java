@@ -16,15 +16,15 @@
 
 package org.springframework.ldap.core;
 
-import org.junit.Before;
-import org.junit.Test;
+import java.util.List;
 
 import javax.naming.NameClassPair;
 import javax.naming.NamingException;
-import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertSame;
 
 public class CollectingNameClassPairCallbackHandlerTests {
 

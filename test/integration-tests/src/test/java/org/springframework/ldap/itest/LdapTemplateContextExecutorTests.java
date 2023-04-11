@@ -19,6 +19,7 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
 import org.junit.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.ContextExecutor;
 import org.springframework.ldap.core.DirContextAdapter;

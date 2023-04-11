@@ -16,17 +16,19 @@
 
 package org.springframework.security.convention.versions;
 
+import java.util.Collections;
+
 import com.github.benmanes.gradle.versions.updates.resolutionstrategy.ComponentSelectionWithCurrent;
 import org.gradle.api.Action;
 import org.gradle.api.artifacts.ComponentSelection;
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class DependencyExcludesTests {
 

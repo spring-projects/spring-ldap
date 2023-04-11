@@ -15,9 +15,16 @@
  */
 package org.springframework.ldap.itest;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.naming.Name;
+import javax.naming.directory.SearchControls;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -33,11 +40,6 @@ import org.springframework.ldap.test.AttributeCheckContextMapper;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
-
-import javax.naming.Name;
-import javax.naming.directory.SearchControls;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;

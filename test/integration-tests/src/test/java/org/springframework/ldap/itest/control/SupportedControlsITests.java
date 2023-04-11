@@ -16,8 +16,14 @@
 
 package org.springframework.ldap.itest.control;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
+import javax.naming.Name;
+
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
@@ -26,10 +32,6 @@ import org.springframework.ldap.itest.AbstractLdapTemplateIntegrationTests;
 import org.springframework.ldap.itest.NoAdTests;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
-
-import javax.naming.Name;
-import java.util.Arrays;
-import java.util.HashSet;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

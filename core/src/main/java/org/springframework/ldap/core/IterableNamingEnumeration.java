@@ -1,8 +1,9 @@
 package org.springframework.ldap.core;
 
+import java.util.Iterator;
+
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import java.util.Iterator;
 
 /**
  * @author Mattias Hellborg Arthursson

@@ -16,13 +16,14 @@
 
 package org.springframework.ldap.ldif;
 
-import org.apache.commons.io.FileUtils;
-import org.junit.Test;
-import org.springframework.ldap.ldif.parser.LdifParser;
-import org.springframework.ldap.schema.BasicSchemaSpecification;
-
 import java.io.File;
 import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
+import org.junit.Test;
+
+import org.springframework.ldap.ldif.parser.LdifParser;
+import org.springframework.ldap.schema.BasicSchemaSpecification;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

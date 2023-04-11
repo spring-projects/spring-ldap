@@ -16,13 +16,14 @@
 
 package org.springframework.ldap.odm.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.naming.Name;
+
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
-
-import javax.naming.Name;
-import java.util.ArrayList;
-import java.util.List;
 
 // Simple LDAP entry for testing
 @Entry(objectClasses = { "person", "top" })

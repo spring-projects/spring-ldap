@@ -16,9 +16,9 @@
 
 package org.springframework.ldap.odm.typeconversion.impl.converters;
 
-import org.springframework.ldap.odm.typeconversion.impl.Converter;
-
 import java.lang.reflect.Constructor;
+
+import org.springframework.ldap.odm.typeconversion.impl.Converter;
 
 /**
  * A Converter from a {@link java.lang.String} to any class which has a single argument
