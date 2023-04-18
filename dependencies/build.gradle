@@ -62,7 +62,6 @@ dependencies {
 		api "org.springframework.security:spring-security-config:5.8.2"
 		api "org.springframework.security:spring-security-core:5.8.2"
 		api "org.springframework.security:spring-security-ldap:5.8.2"
-		api "org.springframework.ldap:spring-ldap-core:3.0.2"
 	}
 }
 
