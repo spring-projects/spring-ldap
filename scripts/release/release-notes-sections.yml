@@ -1,4 +1,7 @@
-releasenotes:
+changelog:
+  issues:
+    exclude:
+      labels: ["duplicate", "invalid", "declined"]
   sections:
     - title: "New Features"
       emoji: ":star:"
