@@ -828,11 +828,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> T lookup(final Name dn, final AttributesMapper<T> mapper) {
-		return executeReadOnly(new ContextExecutor<T>() {
-			public T executeWithContext(DirContext ctx) throws javax.naming.NamingException {
-				Attributes attributes = ctx.getAttributes(dn);
-				return mapper.mapFromAttributes(attributes);
-			}
+		return executeReadOnly(ctx -> {
+			Attributes attributes = ctx.getAttributes(dn);
+			return mapper.mapFromAttributes(attributes);
 		});
 	}
 
@@ -842,11 +840,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	@Override
 	public <T> T lookup(final String dn, final AttributesMapper<T> mapper) {
 
-		return executeReadOnly(new ContextExecutor<T>() {
-			public T executeWithContext(DirContext ctx) throws javax.naming.NamingException {
-				Attributes attributes = ctx.getAttributes(dn);
-				return mapper.mapFromAttributes(attributes);
-			}
+		return executeReadOnly(ctx -> {
+			Attributes attributes = ctx.getAttributes(dn);
+			return mapper.mapFromAttributes(attributes);
 		});
 	}
 
@@ -855,11 +851,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> T lookup(final Name dn, final ContextMapper<T> mapper) {
-		return executeReadOnly(new ContextExecutor<T>() {
-			public T executeWithContext(DirContext ctx) throws javax.naming.NamingException {
-				Object object = ctx.lookup(dn);
-				return mapper.mapFromContext(object);
-			}
+		return executeReadOnly(ctx -> {
+			Object object = ctx.lookup(dn);
+			return mapper.mapFromContext(object);
 		});
 	}
 
@@ -868,11 +862,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> T lookup(final String dn, final ContextMapper<T> mapper) {
-		return executeReadOnly(new ContextExecutor<T>() {
-			public T executeWithContext(DirContext ctx) throws javax.naming.NamingException {
-				Object object = ctx.lookup(dn);
-				return mapper.mapFromContext(object);
-			}
+		return executeReadOnly(ctx -> {
+			Object object = ctx.lookup(dn);
+			return mapper.mapFromContext(object);
 		});
 	}
 
@@ -881,11 +873,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> T lookup(final Name dn, final String[] attributes, final AttributesMapper<T> mapper) {
-		return executeReadOnly(new ContextExecutor<T>() {
-			public T executeWithContext(DirContext ctx) throws javax.naming.NamingException {
-				Attributes filteredAttributes = ctx.getAttributes(dn, attributes);
-				return mapper.mapFromAttributes(filteredAttributes);
-			}
+		return executeReadOnly(ctx -> {
+			Attributes filteredAttributes = ctx.getAttributes(dn, attributes);
+			return mapper.mapFromAttributes(filteredAttributes);
 		});
 	}
 
@@ -894,11 +884,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> T lookup(final String dn, final String[] attributes, final AttributesMapper<T> mapper) {
-		return executeReadOnly(new ContextExecutor<T>() {
-			public T executeWithContext(DirContext ctx) throws javax.naming.NamingException {
-				Attributes filteredAttributes = ctx.getAttributes(dn, attributes);
-				return mapper.mapFromAttributes(filteredAttributes);
-			}
+		return executeReadOnly(ctx -> {
+			Attributes filteredAttributes = ctx.getAttributes(dn, attributes);
+			return mapper.mapFromAttributes(filteredAttributes);
 		});
 	}
 
@@ -907,12 +895,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> T lookup(final Name dn, final String[] attributes, final ContextMapper<T> mapper) {
-		return executeReadOnly(new ContextExecutor<T>() {
-			public T executeWithContext(DirContext ctx) throws javax.naming.NamingException {
-				Attributes filteredAttributes = ctx.getAttributes(dn, attributes);
-				DirContextAdapter contextAdapter = new DirContextAdapter(filteredAttributes, dn);
-				return mapper.mapFromContext(contextAdapter);
-			}
+		return executeReadOnly(ctx -> {
+			Attributes filteredAttributes = ctx.getAttributes(dn, attributes);
+			DirContextAdapter contextAdapter = new DirContextAdapter(filteredAttributes, dn);
+			return mapper.mapFromContext(contextAdapter);
 		});
 	}
 
@@ -921,13 +907,11 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> T lookup(final String dn, final String[] attributes, final ContextMapper<T> mapper) {
-		return executeReadOnly(new ContextExecutor<T>() {
-			public T executeWithContext(DirContext ctx) throws javax.naming.NamingException {
-				Attributes filteredAttributes = ctx.getAttributes(dn, attributes);
-				LdapName name = LdapUtils.newLdapName(dn);
-				DirContextAdapter contextAdapter = new DirContextAdapter(filteredAttributes, name);
-				return mapper.mapFromContext(contextAdapter);
-			}
+		return executeReadOnly(ctx -> {
+			Attributes filteredAttributes = ctx.getAttributes(dn, attributes);
+			LdapName name = LdapUtils.newLdapName(dn);
+			DirContextAdapter contextAdapter = new DirContextAdapter(filteredAttributes, name);
+			return mapper.mapFromContext(contextAdapter);
 		});
 	}
 
@@ -962,11 +946,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public void bind(final Name dn, final Object obj, final Attributes attributes) {
-		executeReadWrite(new ContextExecutor<Object>() {
-			public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
-				ctx.bind(dn, obj, attributes);
-				return null;
-			}
+		executeReadWrite(ctx -> {
+			ctx.bind(dn, obj, attributes);
+			return null;
 		});
 	}
 
@@ -975,11 +957,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public void bind(final String dn, final Object obj, final Attributes attributes) {
-		executeReadWrite(new ContextExecutor<Object>() {
-			public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
-				ctx.bind(dn, obj, attributes);
-				return null;
-			}
+		executeReadWrite(ctx -> {
+			ctx.bind(dn, obj, attributes);
+			return null;
 		});
 	}
 
@@ -1026,38 +1006,30 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	private void doUnbind(final Name dn) {
-		executeReadWrite(new ContextExecutor<Object>() {
-			public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
-				ctx.unbind(dn);
-				return null;
-			}
+		executeReadWrite(ctx -> {
+			ctx.unbind(dn);
+			return null;
 		});
 	}
 
 	private void doUnbind(final String dn) {
-		executeReadWrite(new ContextExecutor<Object>() {
-			public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
-				ctx.unbind(dn);
-				return null;
-			}
+		executeReadWrite(ctx -> {
+			ctx.unbind(dn);
+			return null;
 		});
 	}
 
 	private void doUnbindRecursively(final Name dn) {
-		executeReadWrite(new ContextExecutor<Object>() {
-			public Object executeWithContext(DirContext ctx) {
-				deleteRecursively(ctx, LdapUtils.newLdapName(dn));
-				return null;
-			}
+		executeReadWrite(ctx -> {
+			deleteRecursively(ctx, LdapUtils.newLdapName(dn));
+			return null;
 		});
 	}
 
 	private void doUnbindRecursively(final String dn) {
-		executeReadWrite(new ContextExecutor<Object>() {
-			public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
-				deleteRecursively(ctx, LdapUtils.newLdapName(dn));
-				return null;
-			}
+		executeReadWrite(ctx -> {
+			deleteRecursively(ctx, LdapUtils.newLdapName(dn));
+			return null;
 		});
 	}
 
@@ -1897,7 +1869,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		 */
 		UNDEFINED_FAILURE(false);
 
-		private boolean success;
+		private final boolean success;
 
 		AuthenticationStatus(boolean success) {
 			this.success = success;
@@ -1905,7 +1877,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
 		/**
 		 * Return true if the authentication attempt was successful
-		 * @return
+		 * @return true if the authentication attempt was successful
 		 */
 		public boolean isSuccess() {
 			return this.success;
