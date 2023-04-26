@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,6 +74,7 @@ import org.springframework.util.CollectionUtils;
  *
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
+ * @author Roman Zabaluev
  * @see org.springframework.ldap.core.ContextSource
  */
 public class LdapTemplate implements LdapOperations, InitializingBean {
@@ -253,15 +254,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			NameClassPairCallbackHandler handler) {
 
 		// Create a SearchExecutor to perform the search.
-		SearchExecutor se = new SearchExecutor() {
-			public NamingEnumeration executeSearch(DirContext ctx) throws javax.naming.NamingException {
-				return ctx.search(base, filter, controls);
-			}
-		};
 		if (handler instanceof ContextMapperCallbackHandler) {
 			assureReturnObjFlagSet(controls);
 		}
-		search(se, handler);
+		search(searchExecutorWithLogging(base, filter, controls), handler);
 	}
 
 	/**
@@ -272,15 +268,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			NameClassPairCallbackHandler handler) {
 
 		// Create a SearchExecutor to perform the search.
-		SearchExecutor se = new SearchExecutor() {
-			public NamingEnumeration executeSearch(DirContext ctx) throws javax.naming.NamingException {
-				return ctx.search(base, filter, controls);
-			}
-		};
 		if (handler instanceof ContextMapperCallbackHandler) {
 			assureReturnObjFlagSet(controls);
 		}
-		search(se, handler);
+		search(searchExecutorWithLogging(base, filter, controls), handler);
 	}
 
 	/**
@@ -291,15 +282,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			NameClassPairCallbackHandler handler, DirContextProcessor processor) {
 
 		// Create a SearchExecutor to perform the search.
-		SearchExecutor se = new SearchExecutor() {
-			public NamingEnumeration executeSearch(DirContext ctx) throws javax.naming.NamingException {
-				return ctx.search(base, filter, controls);
-			}
-		};
 		if (handler instanceof ContextMapperCallbackHandler) {
 			assureReturnObjFlagSet(controls);
 		}
-		search(se, handler, processor);
+		search(searchExecutorWithLogging(base, filter, controls), handler, processor);
 	}
 
 	/**
@@ -310,15 +296,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			NameClassPairCallbackHandler handler, DirContextProcessor processor) {
 
 		// Create a SearchExecutor to perform the search.
-		SearchExecutor se = new SearchExecutor() {
-			public NamingEnumeration executeSearch(DirContext ctx) throws javax.naming.NamingException {
-				return ctx.search(base, filter, controls);
-			}
-		};
 		if (handler instanceof ContextMapperCallbackHandler) {
 			assureReturnObjFlagSet(controls);
 		}
-		search(se, handler, processor);
+		search(searchExecutorWithLogging(base, filter, controls), handler, processor);
 	}
 
 	/**
@@ -1599,7 +1580,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
 		assureReturnObjFlagSet(searchControls);
 
-		NamingEnumeration<SearchResult> results = unchecked(() -> ctx.search(base, encodedFilter, searchControls));
+		NamingEnumeration<SearchResult> results = unchecked(searchSupplier(ctx, base, encodedFilter, searchControls));
 		if (results == null) {
 			return Stream.empty();
 		}
@@ -1826,6 +1807,38 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		ContextMapper<T> contextMapper = (object) -> this.odm.mapFromLdapDataEntry((DirContextOperations) object,
 				clazz);
 		return searchForStream(builder.filter(includeClass), contextMapper);
+	}
+
+	private SearchExecutor searchExecutorWithLogging(final Name base, final String filter,
+												   final SearchControls controls) {
+		return ctx -> {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Executing search with base [{}] and filter [{}]", base, filter);
+			}
+			return ctx.search(base, filter, controls);
+		};
+	}
+
+	private SearchExecutor searchExecutorWithLogging(final String base, final String filter,
+													 final SearchControls controls) {
+		return ctx -> {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Executing search with base [{}] and filter [{}]", base, filter);
+			}
+			return ctx.search(base, filter, controls);
+		};
+	}
+
+	private CheckedSupplier<NamingEnumeration<SearchResult>> searchSupplier(final DirContext ctx,
+                                                                            final Name base,
+                                                                            final String filter,
+                                                                            final SearchControls controls) {
+		return () -> {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Executing search with base [{}] and filter [{}]", base, filter);
+            }
+            return ctx.search(base, filter, controls);
+        };
 	}
 
 	private <T> T unchecked(CheckedSupplier<T> supplier) {
