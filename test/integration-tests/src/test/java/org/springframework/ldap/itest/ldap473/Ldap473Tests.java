@@ -50,7 +50,7 @@ public class Ldap473Tests {
 	static class ContextSourceConfig {
 
 		@Bean
-		public ContextSource contextSource() {
+		ContextSource contextSource() {
 			LdapContextSource contextSource = new LdapContextSource();
 			contextSource.setUrl("ldap://localhost:9322");
 			contextSource.setUserDn(null);
@@ -64,7 +64,7 @@ public class Ldap473Tests {
 	static class EmbeddedLdapConfig {
 
 		@Bean
-		public EmbeddedLdapServerFactoryBean embeddedLdapServer() {
+		EmbeddedLdapServerFactoryBean embeddedLdapServer() {
 			EmbeddedLdapServerFactoryBean embeddedLdapServer = new EmbeddedLdapServerFactoryBean();
 			embeddedLdapServer.setPartitionName("example");
 			embeddedLdapServer.setPartitionSuffix("dc=261consulting,dc=com");

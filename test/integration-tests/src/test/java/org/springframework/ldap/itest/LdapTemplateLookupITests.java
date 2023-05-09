@@ -178,6 +178,7 @@ public class LdapTemplateLookupITests extends AbstractLdapTemplateIntegrationTes
 		 *
 		 * @see org.springframework.ldap.core.AttributesMapper#mapFromAttributes(javax.naming.directory.Attributes)
 		 */
+		@Override
 		public Object mapFromAttributes(Attributes attributes) throws NamingException {
 			Person person = new Person();
 			person.setFullname((String) attributes.get("cn").get());

@@ -49,7 +49,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 public abstract class AbstractLdapTemplateIntegrationTests {
 
-	private final static String DEFAULT_BASE = "dc=261consulting,dc=com";
+	private static final String DEFAULT_BASE = "dc=261consulting,dc=com";
 
 	@Autowired
 	@Qualifier("contextSource")

@@ -225,6 +225,7 @@ public class SimpleLdapTemplateITests extends AbstractLdapTemplateIntegrationTes
 
 	private static final class CnContextMapper implements ContextMapper<String> {
 
+		@Override
 		public String mapFromContext(Object ctx) {
 			DirContextAdapter adapter = (DirContextAdapter) ctx;
 
@@ -239,18 +240,20 @@ public class SimpleLdapTemplateITests extends AbstractLdapTemplateIntegrationTes
 
 		private boolean postProcessCalled;
 
-		public boolean isPreProcessCalled() {
+		boolean isPreProcessCalled() {
 			return this.preProcessCalled;
 		}
 
-		public boolean isPostProcessCalled() {
+		boolean isPostProcessCalled() {
 			return this.postProcessCalled;
 		}
 
+		@Override
 		public void postProcess(DirContext ctx) throws NamingException {
 			this.preProcessCalled = true;
 		}
 
+		@Override
 		public void preProcess(DirContext ctx) throws NamingException {
 			this.postProcessCalled = true;
 		}

@@ -180,6 +180,7 @@ public class DefaultLdapClientLookupITests extends AbstractLdapTemplateIntegrati
 		 *
 		 * @see AttributesMapper#mapFromAttributes(Attributes)
 		 */
+		@Override
 		public Person mapFromAttributes(Attributes attributes) throws NamingException {
 			Person person = new Person();
 			person.setFullname((String) attributes.get("cn").get());
