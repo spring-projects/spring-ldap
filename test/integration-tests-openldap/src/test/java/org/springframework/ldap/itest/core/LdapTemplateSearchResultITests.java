@@ -77,123 +77,125 @@ public class LdapTemplateSearchResultITests extends AbstractJUnit4SpringContextT
 
 	@Before
 	public void prepareTestedInstance() throws Exception {
-		LdapTestUtils.cleanAndSetup(contextSource, LdapUtils.newLdapName("ou=People"),
+		LdapTestUtils.cleanAndSetup(this.contextSource, LdapUtils.newLdapName("ou=People"),
 				new ClassPathResource("/setup_data.ldif"));
 
-		attributesMapper = new AttributeCheckAttributesMapper();
-		contextMapper = new AttributeCheckContextMapper();
+		this.attributesMapper = new AttributeCheckAttributesMapper();
+		this.contextMapper = new AttributeCheckContextMapper();
 	}
 
 	@After
 	public void cleanup() throws Exception {
-		LdapTestUtils.clearSubContexts(contextSource, LdapUtils.newLdapName("ou=People"));
-		attributesMapper = null;
-		contextMapper = null;
+		LdapTestUtils.clearSubContexts(this.contextSource, LdapUtils.newLdapName("ou=People"));
+		this.attributesMapper = null;
+		this.contextMapper = null;
 	}
 
 	@Test
 	public void testSearch_AttributesMapper() {
-		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		attributesMapper.setExpectedValues(ALL_VALUES);
-		List<Object> list = tested.search(BASE_STRING, FILTER_STRING, attributesMapper);
+		this.attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.attributesMapper.setExpectedValues(ALL_VALUES);
+		List<Object> list = this.tested.search(BASE_STRING, FILTER_STRING, this.attributesMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_SearchScope_AttributesMapper() {
-		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		attributesMapper.setExpectedValues(ALL_VALUES);
-		List<Object> list = tested.search(BASE_STRING, FILTER_STRING, SearchControls.SUBTREE_SCOPE, attributesMapper);
+		this.attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.attributesMapper.setExpectedValues(ALL_VALUES);
+		List<Object> list = this.tested.search(BASE_STRING, FILTER_STRING, SearchControls.SUBTREE_SCOPE,
+				this.attributesMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_SearchScope_LimitedAttrs_AttributesMapper() {
-		attributesMapper.setExpectedAttributes(CN_SN_ATTRS);
-		attributesMapper.setExpectedValues(CN_SN_VALUES);
-		attributesMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
-		List<Object> list = tested.search(BASE_STRING, FILTER_STRING, SearchControls.SUBTREE_SCOPE, CN_SN_ATTRS,
-				attributesMapper);
+		this.attributesMapper.setExpectedAttributes(CN_SN_ATTRS);
+		this.attributesMapper.setExpectedValues(CN_SN_VALUES);
+		this.attributesMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
+		List<Object> list = this.tested.search(BASE_STRING, FILTER_STRING, SearchControls.SUBTREE_SCOPE, CN_SN_ATTRS,
+				this.attributesMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_AttributesMapper_Name() {
-		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		attributesMapper.setExpectedValues(ALL_VALUES);
-		List<Object> list = tested.search(BASE_NAME, FILTER_STRING, attributesMapper);
+		this.attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.attributesMapper.setExpectedValues(ALL_VALUES);
+		List<Object> list = this.tested.search(BASE_NAME, FILTER_STRING, this.attributesMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_SearchScope_AttributesMapper_Name() {
-		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		attributesMapper.setExpectedValues(ALL_VALUES);
-		List<Object> list = tested.search(BASE_NAME, FILTER_STRING, SearchControls.SUBTREE_SCOPE, attributesMapper);
+		this.attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.attributesMapper.setExpectedValues(ALL_VALUES);
+		List<Object> list = this.tested.search(BASE_NAME, FILTER_STRING, SearchControls.SUBTREE_SCOPE,
+				this.attributesMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_SearchScope_LimitedAttrs_AttributesMapper_Name() {
-		attributesMapper.setExpectedAttributes(CN_SN_ATTRS);
-		attributesMapper.setExpectedValues(CN_SN_VALUES);
-		attributesMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
-		List<Object> list = tested.search(BASE_NAME, FILTER_STRING, SearchControls.SUBTREE_SCOPE, CN_SN_ATTRS,
-				attributesMapper);
+		this.attributesMapper.setExpectedAttributes(CN_SN_ATTRS);
+		this.attributesMapper.setExpectedValues(CN_SN_VALUES);
+		this.attributesMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
+		List<Object> list = this.tested.search(BASE_NAME, FILTER_STRING, SearchControls.SUBTREE_SCOPE, CN_SN_ATTRS,
+				this.attributesMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_ContextMapper() {
-		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		contextMapper.setExpectedValues(ALL_VALUES);
-		List<DirContextAdapter> list = tested.search(BASE_STRING, FILTER_STRING, contextMapper);
+		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.contextMapper.setExpectedValues(ALL_VALUES);
+		List<DirContextAdapter> list = this.tested.search(BASE_STRING, FILTER_STRING, this.contextMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_SearchScope_ContextMapper() {
-		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		contextMapper.setExpectedValues(ALL_VALUES);
-		List<DirContextAdapter> list = tested.search(BASE_STRING, FILTER_STRING, SearchControls.SUBTREE_SCOPE,
-				contextMapper);
+		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.contextMapper.setExpectedValues(ALL_VALUES);
+		List<DirContextAdapter> list = this.tested.search(BASE_STRING, FILTER_STRING, SearchControls.SUBTREE_SCOPE,
+				this.contextMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_SearchScope_LimitedAttrs_ContextMapper() {
-		contextMapper.setExpectedAttributes(CN_SN_ATTRS);
-		contextMapper.setExpectedValues(CN_SN_VALUES);
-		contextMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
-		List<DirContextAdapter> list = tested.search(BASE_STRING, FILTER_STRING, SearchControls.SUBTREE_SCOPE,
-				CN_SN_ATTRS, contextMapper);
+		this.contextMapper.setExpectedAttributes(CN_SN_ATTRS);
+		this.contextMapper.setExpectedValues(CN_SN_VALUES);
+		this.contextMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
+		List<DirContextAdapter> list = this.tested.search(BASE_STRING, FILTER_STRING, SearchControls.SUBTREE_SCOPE,
+				CN_SN_ATTRS, this.contextMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_ContextMapper_Name() {
-		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		contextMapper.setExpectedValues(ALL_VALUES);
-		List<DirContextAdapter> list = tested.search(BASE_NAME, FILTER_STRING, contextMapper);
+		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.contextMapper.setExpectedValues(ALL_VALUES);
+		List<DirContextAdapter> list = this.tested.search(BASE_NAME, FILTER_STRING, this.contextMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_SearchScope_ContextMapper_Name() {
-		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		contextMapper.setExpectedValues(ALL_VALUES);
-		List<DirContextAdapter> list = tested.search(BASE_NAME, FILTER_STRING, SearchControls.SUBTREE_SCOPE,
-				contextMapper);
+		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.contextMapper.setExpectedValues(ALL_VALUES);
+		List<DirContextAdapter> list = this.tested.search(BASE_NAME, FILTER_STRING, SearchControls.SUBTREE_SCOPE,
+				this.contextMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_SearchScope_LimitedAttrs_ContextMapper_Name() {
-		contextMapper.setExpectedAttributes(CN_SN_ATTRS);
-		contextMapper.setExpectedValues(CN_SN_VALUES);
-		contextMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
-		List<DirContextAdapter> list = tested.search(BASE_NAME, FILTER_STRING, SearchControls.SUBTREE_SCOPE,
-				CN_SN_ATTRS, contextMapper);
+		this.contextMapper.setExpectedAttributes(CN_SN_ATTRS);
+		this.contextMapper.setExpectedValues(CN_SN_VALUES);
+		this.contextMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
+		List<DirContextAdapter> list = this.tested.search(BASE_NAME, FILTER_STRING, SearchControls.SUBTREE_SCOPE,
+				CN_SN_ATTRS, this.contextMapper);
 		assertThat(list).hasSize(1);
 	}
 

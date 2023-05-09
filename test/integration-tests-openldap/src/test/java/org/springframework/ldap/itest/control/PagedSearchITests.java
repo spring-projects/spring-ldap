@@ -60,13 +60,13 @@ public class PagedSearchITests extends AbstractJUnit4SpringContextTests {
 
 	@Before
 	public void prepareTestedData() throws IOException, NamingException {
-		LdapTestUtils.cleanAndSetup(contextSource, LdapUtils.newLdapName("ou=People"),
+		LdapTestUtils.cleanAndSetup(this.contextSource, LdapUtils.newLdapName("ou=People"),
 				new ClassPathResource("/setup_data.ldif"));
 	}
 
 	@After
 	public void cleanup() throws NamingException {
-		LdapTestUtils.clearSubContexts(contextSource, LdapUtils.newLdapName("ou=People"));
+		LdapTestUtils.clearSubContexts(this.contextSource, LdapUtils.newLdapName("ou=People"));
 	}
 
 	@Test
@@ -77,7 +77,7 @@ public class PagedSearchITests extends AbstractJUnit4SpringContextTests {
 		// There should be three pages of three entries, and one final page with one entry
 		final PagedResultsDirContextProcessor processor = new PagedResultsDirContextProcessor(3);
 
-		SingleContextSource.doWithSingleContext(contextSource, new LdapOperationsCallback<Object>() {
+		SingleContextSource.doWithSingleContext(this.contextSource, new LdapOperationsCallback<Object>() {
 			@Override
 			public Object doWithLdapOperations(LdapOperations operations) {
 				List<String> result = operations.search("ou=People", "(&(objectclass=person))", searchControls,

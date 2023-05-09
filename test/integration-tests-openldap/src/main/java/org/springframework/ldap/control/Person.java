@@ -42,7 +42,7 @@ public class Person {
 	private String phone;
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(String description) {
@@ -50,7 +50,7 @@ public class Person {
 	}
 
 	public String getFullName() {
-		return fullName;
+		return this.fullName;
 	}
 
 	public void setFullName(String fullName) {
@@ -58,7 +58,7 @@ public class Person {
 	}
 
 	public String getLastName() {
-		return lastName;
+		return this.lastName;
 	}
 
 	public void setLastName(String lastName) {
@@ -66,7 +66,7 @@ public class Person {
 	}
 
 	public String getCompany() {
-		return company;
+		return this.company;
 	}
 
 	public void setCompany(String company) {
@@ -74,7 +74,7 @@ public class Person {
 	}
 
 	public String getCountry() {
-		return country;
+		return this.country;
 	}
 
 	public void setCountry(String country) {
@@ -82,7 +82,7 @@ public class Person {
 	}
 
 	public String getPhone() {
-		return phone;
+		return this.phone;
 	}
 
 	public void setPhone(String phone) {
