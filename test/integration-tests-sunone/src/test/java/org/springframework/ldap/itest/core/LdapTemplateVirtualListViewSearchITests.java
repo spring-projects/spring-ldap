@@ -106,13 +106,13 @@ public class LdapTemplateVirtualListViewSearchITests extends AbstractJUnit4Sprin
 
 	@Before
 	public void prepareTestedInstance() throws Exception {
-		searchControls = new SearchControls();
-		searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+		this.searchControls = new SearchControls();
+		this.searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 	}
 
 	@After
 	public void cleanup() throws Exception {
-		searchControls = null;
+		this.searchControls = null;
 	}
 
 	@Test
@@ -129,10 +129,10 @@ public class LdapTemplateVirtualListViewSearchITests extends AbstractJUnit4Sprin
 		// Step 1: Prepare for getting the first 20
 		//
 
-		callbackHandler = new ContextMapperCallbackHandler(contextMapper);
+		this.callbackHandler = new ContextMapperCallbackHandler(contextMapper);
 		requestControl = new VirtualListViewControlDirContextProcessor(20);
 
-		tested.search(BASE_STRING, FILTER_STRING, searchControls, callbackHandler, requestControl);
+		this.tested.search(BASE_STRING, FILTER_STRING, this.searchControls, this.callbackHandler, requestControl);
 		cookie = requestControl.getCookie();
 
 		// assert that total count is still 78564
@@ -144,7 +144,7 @@ public class LdapTemplateVirtualListViewSearchITests extends AbstractJUnit4Sprin
 		assertThat(targetOffset).isEqualTo(1);
 
 		// assert that we got the right 20
-		list = callbackHandler.getList();
+		list = this.callbackHandler.getList();
 		assertThat(list).hasSize(20);
 		person = (Person) list.get(0);
 		assertThat(person.getFullname()).isEqualTo("Adam Ace");
@@ -153,12 +153,12 @@ public class LdapTemplateVirtualListViewSearchITests extends AbstractJUnit4Sprin
 		// Step 2: Prepare for getting the last 20
 		//
 
-		callbackHandler = new ContextMapperCallbackHandler(contextMapper);
+		this.callbackHandler = new ContextMapperCallbackHandler(contextMapper);
 
 		// we need a constructor that takes a beforeCount and an afterCount
 		requestControl = new VirtualListViewControlDirContextProcessor(20, 78564, listSize, cookie);
 
-		tested.search(BASE_STRING, FILTER_STRING, searchControls, callbackHandler, requestControl);
+		this.tested.search(BASE_STRING, FILTER_STRING, this.searchControls, this.callbackHandler, requestControl);
 		cookie = requestControl.getCookie();
 
 		// assert that total count is still 78564
@@ -170,7 +170,7 @@ public class LdapTemplateVirtualListViewSearchITests extends AbstractJUnit4Sprin
 		assertThat(targetOffset).isEqualTo(78564);
 
 		// assert that we got the right 20
-		list = callbackHandler.getList();
+		list = this.callbackHandler.getList();
 		assertThat(list).hasSize(20);
 		person = (Person) list.get(19);
 		assertThat(person.getFullname()).isEqualTo("Xavier Zyxel");
@@ -179,12 +179,12 @@ public class LdapTemplateVirtualListViewSearchITests extends AbstractJUnit4Sprin
 		// Step 3: Prepare for getting the next to last 20
 		//
 
-		callbackHandler = new ContextMapperCallbackHandler(contextMapper);
+		this.callbackHandler = new ContextMapperCallbackHandler(contextMapper);
 
 		// we need a constructor that takes a beforeCount and an afterCount
 		requestControl = new VirtualListViewControlDirContextProcessor(20, 78564 - 19 - 20, listSize, cookie);
 
-		tested.search(BASE_STRING, FILTER_STRING, searchControls, callbackHandler, requestControl);
+		this.tested.search(BASE_STRING, FILTER_STRING, this.searchControls, this.callbackHandler, requestControl);
 		cookie = requestControl.getCookie();
 
 		// assert that total count is still 78564
@@ -196,7 +196,7 @@ public class LdapTemplateVirtualListViewSearchITests extends AbstractJUnit4Sprin
 		assertThat(targetOffset).isEqualTo(78525);
 
 		// assert that we got the right 20
-		list = callbackHandler.getList();
+		list = this.callbackHandler.getList();
 		assertThat(list).hasSize(20);
 		person = (Person) list.get(0);
 		assertThat(person.getFullname()).isEqualTo("William Schnyder");
@@ -205,13 +205,13 @@ public class LdapTemplateVirtualListViewSearchITests extends AbstractJUnit4Sprin
 		// Step 4: Prepare for getting the 20 entries around 68%, ie 53424
 		//
 
-		callbackHandler = new ContextMapperCallbackHandler(contextMapper);
+		this.callbackHandler = new ContextMapperCallbackHandler(contextMapper);
 
 		// we need a constructor that takes a beforeCount and an afterCount
 		requestControl = new VirtualListViewControlDirContextProcessor(20, 68, listSize, cookie);
 
 		requestControl.setOffsetPercentage(true);
-		tested.search(BASE_STRING, FILTER_STRING, searchControls, callbackHandler, requestControl);
+		this.tested.search(BASE_STRING, FILTER_STRING, this.searchControls, this.callbackHandler, requestControl);
 		cookie = requestControl.getCookie();
 
 		// assert that total count is still 78564
@@ -223,7 +223,7 @@ public class LdapTemplateVirtualListViewSearchITests extends AbstractJUnit4Sprin
 		assertThat(targetOffset).isEqualTo(53424);
 
 		// assert that we got the right 20
-		list = callbackHandler.getList();
+		list = this.callbackHandler.getList();
 		assertThat(list).hasSize(20);
 		person = (Person) list.get(9);
 		assertThat(person.getFullname()).isEqualTo("Peter Sellers");
@@ -232,14 +232,14 @@ public class LdapTemplateVirtualListViewSearchITests extends AbstractJUnit4Sprin
 		// Step 5: Prepare for getting the 20 entries around the letter 'B', ie 5234
 		//
 
-		callbackHandler = new ContextMapperCallbackHandler(contextMapper);
+		this.callbackHandler = new ContextMapperCallbackHandler(contextMapper);
 
 		// we need a constructor that takes a String for 'greaterThanOrEqual'
 		// also beforeCount and afterCount
 		requestControl = new VirtualListViewControlDirContextProcessor(20, 5234, listSize, cookie);
 
 		requestControl.setOffsetPercentage(true);
-		tested.search(BASE_STRING, FILTER_STRING, searchControls, callbackHandler, requestControl);
+		this.tested.search(BASE_STRING, FILTER_STRING, this.searchControls, this.callbackHandler, requestControl);
 		cookie = requestControl.getCookie();
 
 		// assert that total count is still 78564
@@ -251,7 +251,7 @@ public class LdapTemplateVirtualListViewSearchITests extends AbstractJUnit4Sprin
 		assertThat(targetOffset).isEqualTo(5234);
 
 		// assert that we got the right 20
-		list = callbackHandler.getList();
+		list = this.callbackHandler.getList();
 		assertThat(list).hasSize(20);
 		person = (Person) list.get(9);
 		assertThat(person.getFullname()).isEqualTo("Babs Jensen");
