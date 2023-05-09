@@ -37,15 +37,15 @@ public class TestContextSourceFactoryBeanTests {
 
 	@After
 	public void setup() {
-		if (ctx != null) {
-			ctx.close();
+		if (this.ctx != null) {
+			this.ctx.close();
 		}
 	}
 
 	@Test
 	public void testServerStartup() throws Exception {
-		ctx = new ClassPathXmlApplicationContext("/applicationContext-testContextSource.xml");
-		LdapTemplate ldapTemplate = ctx.getBean(LdapTemplate.class);
+		this.ctx = new ClassPathXmlApplicationContext("/applicationContext-testContextSource.xml");
+		LdapTemplate ldapTemplate = this.ctx.getBean(LdapTemplate.class);
 		assertThat(ldapTemplate).isNotNull();
 
 		List<String> list = ldapTemplate.search(LdapQueryBuilder.query().where("objectclass").is("person"),
