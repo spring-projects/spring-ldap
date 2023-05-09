@@ -34,8 +34,8 @@ import org.springframework.ldap.OperationNotSupportedException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
 
 /**
  * Unit tests for the VirtualListViewControlDirContextProcessor class.
@@ -109,7 +109,7 @@ public class VirtualListViewControlDirContextProcessorTests {
 		int virtualListViewResult = 53; // unwilling to perform
 		byte[] encoded = encodeResponseValue(10, listSize, virtualListViewResult);
 		VirtualListViewResponseControl control = new VirtualListViewResponseControl(OID_RESPONSE, false, encoded);
-		when(this.ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
+		given(this.ldapContextMock.getResponseControls()).willReturn(new Control[] { control });
 
 		try {
 			tested.postProcess(this.ldapContextMock);
