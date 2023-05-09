@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.ldap.itest.manager;
 
 import javax.naming.NamingException;
@@ -66,7 +67,8 @@ public class ContextSourceTransactionManagerNamespaceIntegrationTests extends Ab
 	@Test
 	public void testCreateWithException() {
 		try {
-			this.dummyDao.createWithException("Sweden", "company1", "some testperson", "testperson", "some description");
+			this.dummyDao.createWithException("Sweden", "company1", "some testperson", "testperson",
+					"some description");
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {

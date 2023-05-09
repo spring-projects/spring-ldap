@@ -86,7 +86,8 @@ public class LdapTemplateNoBaseSuffixITests extends AbstractLdapTemplateIntegrat
 		adapter.setAttributeValue("sn", "Person4");
 		this.tested.bind("cn=Some Person4, ou=company1, ou=Sweden," + base, adapter, null);
 
-		DirContextAdapter result = (DirContextAdapter) this.tested.lookup("cn=Some Person4, ou=company1, ou=Sweden," + base);
+		DirContextAdapter result = (DirContextAdapter) this.tested
+				.lookup("cn=Some Person4, ou=company1, ou=Sweden," + base);
 
 		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person4");
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person4");

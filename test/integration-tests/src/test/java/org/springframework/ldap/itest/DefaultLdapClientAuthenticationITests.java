@@ -100,8 +100,8 @@ public class DefaultLdapClientAuthenticationITests extends AbstractLdapTemplateI
 				DirContextAdapter adapter = (DirContextAdapter) ctx.lookup(entry.getRelativeDn());
 				assertThat(adapter.getStringAttribute("cn")).isEqualTo("Some Person3");
 			}
-			catch (NamingException e) {
-				throw new RuntimeException("Failed to lookup " + entry.getRelativeDn(), e);
+			catch (NamingException ex) {
+				throw new RuntimeException("Failed to lookup " + entry.getRelativeDn(), ex);
 			}
 		};
 		this.tested.authenticate().query(query).password("password").execute((ctx, entry) -> {
@@ -125,8 +125,8 @@ public class DefaultLdapClientAuthenticationITests extends AbstractLdapTemplateI
 	@Category(NoAdTests.class)
 	public void testAuthenticateWithLdapQueryAndMapperAndInvalidPassword() {
 		LdapQuery query = LdapQueryBuilder.query().where("objectclass").is("person").and("uid").is("some.person3");
-		assertThatExceptionOfType(AuthenticationException.class).isThrownBy(() -> this.tested.authenticate().query(query)
-				.password("invalidpassword").execute(new LookupAttemptingCallback()));
+		assertThatExceptionOfType(AuthenticationException.class).isThrownBy(() -> this.tested.authenticate()
+				.query(query).password("invalidpassword").execute(new LookupAttemptingCallback()));
 	}
 
 	@Test

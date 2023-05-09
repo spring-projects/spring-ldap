@@ -43,7 +43,7 @@ public class LdapConditionallyFilteredTestRunner extends SpringJUnit4ClassRunner
 			try {
 				filter(Categories.CategoryFilter.exclude(NoAdTests.class));
 			}
-			catch (NoTestsRemainException e) {
+			catch (NoTestsRemainException ex) {
 				// Nothing to do here.
 			}
 		}

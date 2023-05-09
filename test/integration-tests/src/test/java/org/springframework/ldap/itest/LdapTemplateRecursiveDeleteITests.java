@@ -31,7 +31,7 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
 
-import static junit.framework.Assert.fail;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Tests the recursive modification methods (unbind and the protected delete methods) of

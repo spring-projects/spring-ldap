@@ -76,7 +76,7 @@ public class LdapContextSourceIntegrationTests extends AbstractLdapTemplateInteg
 				try {
 					ctx.close();
 				}
-				catch (Exception e) {
+				catch (Exception ex) {
 					// Never mind this
 				}
 			}
@@ -102,7 +102,7 @@ public class LdapContextSourceIntegrationTests extends AbstractLdapTemplateInteg
 				try {
 					ctx.close();
 				}
-				catch (Exception e) {
+				catch (Exception ex) {
 					// Never mind this
 				}
 			}
@@ -131,7 +131,7 @@ public class LdapContextSourceIntegrationTests extends AbstractLdapTemplateInteg
 				try {
 					ctx.close();
 				}
-				catch (Exception e) {
+				catch (Exception ex) {
 					// Never mind this
 				}
 			}
@@ -153,7 +153,7 @@ public class LdapContextSourceIntegrationTests extends AbstractLdapTemplateInteg
 			ctx = this.tested.getContext(results.get(0), "password");
 			assertThat(true).isTrue();
 		}
-		catch (Exception e) {
+		catch (Exception ex) {
 			fail("Authentication failed");
 		}
 		finally {

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.ldap.itest;
 
 import java.util.LinkedList;
@@ -71,7 +72,8 @@ public class DefaultLdapClientListITests extends AbstractLdapTemplateIntegration
 	public void testListBindings_ContextMapper() {
 		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		this.contextMapper.setExpectedValues(ALL_VALUES);
-		List<DirContextAdapter> list = this.tested.listBindings("ou=company2,ou=Sweden" + BASE_STRING).toList(this.contextMapper);
+		List<DirContextAdapter> list = this.tested.listBindings("ou=company2,ou=Sweden" + BASE_STRING)
+				.toList(this.contextMapper);
 		assertThat(list).hasSize(1);
 	}
 

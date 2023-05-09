@@ -91,30 +91,6 @@ public class DefaultLdapClientLookupITests extends AbstractLdapTemplateIntegrati
 	}
 
 	/**
-	 * An {@link AttributesMapper} that only maps a subset of the full attributes list.
-	 * Used in tests where the return attributes list has been limited.
-	 *
-	 * @author Ulrik Sandberg
-	 */
-	private static final class SubsetPersonAttributesMapper implements AttributesMapper<Person> {
-
-		/**
-		 * Maps the <code>cn</code> attribute into a {@link Person} object. Also verifies
-		 * that the other attributes haven't been set.
-		 *
-		 * @see AttributesMapper#mapFromAttributes(Attributes)
-		 */
-		public Person mapFromAttributes(Attributes attributes) throws NamingException {
-			Person person = new Person();
-			person.setFullname((String) attributes.get("cn").get());
-			assertThat(attributes.get("sn")).as("sn should be null").isNull();
-			assertThat(attributes.get("description")).as("description should be null").isNull();
-			return person;
-		}
-
-	}
-
-	/**
 	 * Verifies that only the subset is used when specifying a subset of the available
 	 * attributes as return attributes.
 	 */
@@ -188,6 +164,30 @@ public class DefaultLdapClientLookupITests extends AbstractLdapTemplateIntegrati
 		LdapName expectedName = LdapUtils.newLdapName(expectedDn);
 		assertThat(result.getDn()).isEqualTo(expectedName);
 		assertThat(result.getNameInNamespace()).isEqualTo("cn=Some Person2,ou=company1,ou=Sweden," + base);
+	}
+
+	/**
+	 * An {@link AttributesMapper} that only maps a subset of the full attributes list.
+	 * Used in tests where the return attributes list has been limited.
+	 *
+	 * @author Ulrik Sandberg
+	 */
+	private static final class SubsetPersonAttributesMapper implements AttributesMapper<Person> {
+
+		/**
+		 * Maps the <code>cn</code> attribute into a {@link Person} object. Also verifies
+		 * that the other attributes haven't been set.
+		 *
+		 * @see AttributesMapper#mapFromAttributes(Attributes)
+		 */
+		public Person mapFromAttributes(Attributes attributes) throws NamingException {
+			Person person = new Person();
+			person.setFullname((String) attributes.get("cn").get());
+			assertThat(attributes.get("sn")).as("sn should be null").isNull();
+			assertThat(attributes.get("description")).as("description should be null").isNull();
+			return person;
+		}
+
 	}
 
 }

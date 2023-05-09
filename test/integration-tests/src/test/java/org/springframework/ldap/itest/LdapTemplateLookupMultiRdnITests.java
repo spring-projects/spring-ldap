@@ -68,7 +68,8 @@ public class LdapTemplateLookupMultiRdnITests extends AbstractLdapTemplateIntegr
 	@Test
 	@Category(NoAdTests.class)
 	public void testLookup_MultiValuedRdn_DirContextAdapter() {
-		DirContextAdapter result = (DirContextAdapter) this.tested.lookup("cn=Some Person+sn=Person, ou=company1,ou=Norway");
+		DirContextAdapter result = (DirContextAdapter) this.tested
+				.lookup("cn=Some Person+sn=Person, ou=company1,ou=Norway");
 
 		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person");
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person");
@@ -78,7 +79,8 @@ public class LdapTemplateLookupMultiRdnITests extends AbstractLdapTemplateIntegr
 	@Test
 	@Category(NoAdTests.class)
 	public void testLookup_GetNameInNamespace_MultiRdn() {
-		DirContextAdapter result = (DirContextAdapter) this.tested.lookup("cn=Some Person+sn=Person,ou=company1,ou=Norway");
+		DirContextAdapter result = (DirContextAdapter) this.tested
+				.lookup("cn=Some Person+sn=Person,ou=company1,ou=Norway");
 
 		assertThat(result.getDn().toString()).isEqualTo("cn=Some Person+sn=Person,ou=company1,ou=Norway");
 		assertThat(result.getNameInNamespace()).isEqualTo("cn=Some Person+sn=Person,ou=company1,ou=Norway," + base);

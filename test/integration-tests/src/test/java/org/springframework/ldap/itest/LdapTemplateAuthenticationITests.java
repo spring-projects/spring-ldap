@@ -34,10 +34,10 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LookupAttemptingCallback;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
+import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 /**
  * Tests the authenticate methods of LdapTemplate.
@@ -64,7 +64,8 @@ public class LdapTemplateAuthenticationITests extends AbstractLdapTemplateIntegr
 	public void testAuthenticateWithLdapQuery() {
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
-		this.tested.authenticate(query().where("objectclass").is("person").and("uid").is("some.person3"), "password");
+		this.tested.authenticate(
+				LdapQueryBuilder.query().where("objectclass").is("person").and("uid").is("some.person3"), "password");
 	}
 
 	@Test
@@ -80,7 +81,9 @@ public class LdapTemplateAuthenticationITests extends AbstractLdapTemplateIntegr
 	public void testAuthenticateWithLdapQueryAndInvalidPassword() {
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
-		this.tested.authenticate(query().where("objectclass").is("person").and("uid").is("some.person3"), "invalidpassword");
+		this.tested.authenticate(
+				LdapQueryBuilder.query().where("objectclass").is("person").and("uid").is("some.person3"),
+				"invalidpassword");
 	}
 
 	@Test
@@ -94,8 +97,8 @@ public class LdapTemplateAuthenticationITests extends AbstractLdapTemplateIntegr
 					DirContextAdapter adapter = (DirContextAdapter) ctx.lookup(ldapEntryIdentification.getRelativeDn());
 					assertThat(adapter.getStringAttribute("cn")).isEqualTo("Some Person3");
 				}
-				catch (NamingException e) {
-					throw new RuntimeException("Failed to lookup " + ldapEntryIdentification.getRelativeDn(), e);
+				catch (NamingException ex) {
+					throw new RuntimeException("Failed to lookup " + ldapEntryIdentification.getRelativeDn(), ex);
 				}
 			}
 		};
@@ -106,7 +109,7 @@ public class LdapTemplateAuthenticationITests extends AbstractLdapTemplateIntegr
 	@Category(NoAdTests.class)
 	public void testAuthenticateWithLdapQueryAndMapper() {
 		DirContextOperations ctx = this.tested.authenticate(
-				query().where("objectclass").is("person").and("uid").is("some.person3"), "password",
+				LdapQueryBuilder.query().where("objectclass").is("person").and("uid").is("some.person3"), "password",
 				new LookupAttemptingCallback());
 
 		assertThat(ctx).isNotNull();
@@ -117,8 +120,8 @@ public class LdapTemplateAuthenticationITests extends AbstractLdapTemplateIntegr
 	@Category(NoAdTests.class)
 	public void testAuthenticateWithLdapQueryAndMapperAndInvalidPassword() {
 		DirContextOperations ctx = this.tested.authenticate(
-				query().where("objectclass").is("person").and("uid").is("some.person3"), "invalidpassword",
-				new LookupAttemptingCallback());
+				LdapQueryBuilder.query().where("objectclass").is("person").and("uid").is("some.person3"),
+				"invalidpassword", new LookupAttemptingCallback());
 	}
 
 	@Test

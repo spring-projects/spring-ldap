@@ -89,7 +89,8 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 	@Test
 	public void testCreateWithException() {
 		try {
-			this.dummyDao.createWithException("Sweden", "company1", "some testperson", "testperson", "some description");
+			this.dummyDao.createWithException("Sweden", "company1", "some testperson", "testperson",
+					"some description");
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {

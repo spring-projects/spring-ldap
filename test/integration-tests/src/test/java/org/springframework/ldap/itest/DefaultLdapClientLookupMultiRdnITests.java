@@ -76,7 +76,8 @@ public class DefaultLdapClientLookupMultiRdnITests extends AbstractLdapTemplateI
 	@Test
 	@Category(NoAdTests.class)
 	public void testLookup_GetNameInNamespace_MultiRdn() {
-		DirContextOperations result = this.tested.search().name("cn=Some Person+sn=Person,ou=company1,ou=Norway").toEntry();
+		DirContextOperations result = this.tested.search().name("cn=Some Person+sn=Person,ou=company1,ou=Norway")
+				.toEntry();
 		assertThat(result.getDn().toString()).isEqualTo("cn=Some Person+sn=Person,ou=company1,ou=Norway");
 		assertThat(result.getNameInNamespace()).isEqualTo("cn=Some Person+sn=Person,ou=company1,ou=Norway," + base);
 	}

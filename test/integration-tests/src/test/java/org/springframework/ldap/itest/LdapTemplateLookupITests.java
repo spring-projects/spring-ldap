@@ -84,35 +84,12 @@ public class LdapTemplateLookupITests extends AbstractLdapTemplateIntegrationTes
 	@Test
 	public void testLookup_AttributesMapper_LdapName() {
 		AttributesMapper mapper = new PersonAttributesMapper();
-		Person person = (Person) this.tested.lookup(LdapUtils.newLdapName("cn=Some Person2, ou=company1,ou=Sweden"), mapper);
+		Person person = (Person) this.tested.lookup(LdapUtils.newLdapName("cn=Some Person2, ou=company1,ou=Sweden"),
+				mapper);
 
 		assertThat(person.getFullname()).isEqualTo("Some Person2");
 		assertThat(person.getLastname()).isEqualTo("Person2");
 		assertThat(person.getDescription()).isEqualTo("Sweden, Company1, Some Person2");
-	}
-
-	/**
-	 * An {@link AttributesMapper} that only maps a subset of the full attributes list.
-	 * Used in tests where the return attributes list has been limited.
-	 *
-	 * @author Ulrik Sandberg
-	 */
-	private final class SubsetPersonAttributesMapper implements AttributesMapper {
-
-		/**
-		 * Maps the <code>cn</code> attribute into a {@link Person} object. Also verifies
-		 * that the other attributes haven't been set.
-		 *
-		 * @see org.springframework.ldap.core.AttributesMapper#mapFromAttributes(javax.naming.directory.Attributes)
-		 */
-		public Object mapFromAttributes(Attributes attributes) throws NamingException {
-			Person person = new Person();
-			person.setFullname((String) attributes.get("cn").get());
-			assertThat(attributes.get("sn")).as("sn should be null").isNull();
-			assertThat(attributes.get("description")).as("description should be null").isNull();
-			return person;
-		}
-
 	}
 
 	/**
@@ -123,7 +100,8 @@ public class LdapTemplateLookupITests extends AbstractLdapTemplateIntegrationTes
 	public void testLookup_ReturnAttributes_AttributesMapper() {
 		AttributesMapper mapper = new SubsetPersonAttributesMapper();
 
-		Person person = (Person) this.tested.lookup("cn=Some Person2, ou=company1,ou=Sweden", new String[] { "cn" }, mapper);
+		Person person = (Person) this.tested.lookup("cn=Some Person2, ou=company1,ou=Sweden", new String[] { "cn" },
+				mapper);
 
 		assertThat(person.getFullname()).isEqualTo("Some Person2");
 		assertThat(person.getLastname()).as("lastName should not be set").isNull();
@@ -168,7 +146,8 @@ public class LdapTemplateLookupITests extends AbstractLdapTemplateIntegrationTes
 	public void testLookup_ReturnAttributes_ContextMapper() {
 		ContextMapper mapper = new PersonContextMapper();
 
-		Person person = (Person) this.tested.lookup("cn=Some Person2, ou=company1,ou=Sweden", new String[] { "cn" }, mapper);
+		Person person = (Person) this.tested.lookup("cn=Some Person2, ou=company1,ou=Sweden", new String[] { "cn" },
+				mapper);
 
 		assertThat(person.getFullname()).isEqualTo("Some Person2");
 		assertThat(person.getLastname()).as("lastName should not be set").isNull();
@@ -183,6 +162,30 @@ public class LdapTemplateLookupITests extends AbstractLdapTemplateIntegrationTes
 		LdapName expectedName = LdapUtils.newLdapName(expectedDn);
 		assertThat(result.getDn()).isEqualTo(expectedName);
 		assertThat(result.getNameInNamespace()).isEqualTo("cn=Some Person2,ou=company1,ou=Sweden," + base);
+	}
+
+	/**
+	 * An {@link AttributesMapper} that only maps a subset of the full attributes list.
+	 * Used in tests where the return attributes list has been limited.
+	 *
+	 * @author Ulrik Sandberg
+	 */
+	private final class SubsetPersonAttributesMapper implements AttributesMapper {
+
+		/**
+		 * Maps the <code>cn</code> attribute into a {@link Person} object. Also verifies
+		 * that the other attributes haven't been set.
+		 *
+		 * @see org.springframework.ldap.core.AttributesMapper#mapFromAttributes(javax.naming.directory.Attributes)
+		 */
+		public Object mapFromAttributes(Attributes attributes) throws NamingException {
+			Person person = new Person();
+			person.setFullname((String) attributes.get("cn").get());
+			assertThat(attributes.get("sn")).as("sn should be null").isNull();
+			assertThat(attributes.get("description")).as("description should be null").isNull();
+			return person;
+		}
+
 	}
 
 }

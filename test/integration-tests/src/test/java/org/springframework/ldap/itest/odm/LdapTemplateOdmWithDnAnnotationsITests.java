@@ -25,12 +25,12 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.itest.AbstractLdapTemplateIntegrationTests;
+import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -43,7 +43,7 @@ public class LdapTemplateOdmWithDnAnnotationsITests extends AbstractLdapTemplate
 
 	@Test
 	public void testFindOne() {
-		PersonWithDnAnnotations person = this.tested.findOne(query().where("cn").is("Some Person3"),
+		PersonWithDnAnnotations person = this.tested.findOne(LdapQueryBuilder.query().where("cn").is("Some Person3"),
 				PersonWithDnAnnotations.class);
 
 		assertThat(person).isNotNull();
@@ -60,8 +60,8 @@ public class LdapTemplateOdmWithDnAnnotationsITests extends AbstractLdapTemplate
 
 	@Test
 	public void testFindByDn() {
-		PersonWithDnAnnotations person = this.tested.findByDn(LdapUtils.newLdapName("cn=Some Person3,ou=company1,ou=Sweden"),
-				PersonWithDnAnnotations.class);
+		PersonWithDnAnnotations person = this.tested.findByDn(
+				LdapUtils.newLdapName("cn=Some Person3,ou=company1,ou=Sweden"), PersonWithDnAnnotations.class);
 
 		assertThat(person).isNotNull();
 		assertThat(person.getCommonName()).isEqualTo("Some Person3");
@@ -77,8 +77,8 @@ public class LdapTemplateOdmWithDnAnnotationsITests extends AbstractLdapTemplate
 
 	@Test
 	public void testFindInCountry() {
-		List<PersonWithDnAnnotations> persons = this.tested.find(query().base("ou=Sweden").where("cn").isPresent(),
-				PersonWithDnAnnotations.class);
+		List<PersonWithDnAnnotations> persons = this.tested.find(
+				LdapQueryBuilder.query().base("ou=Sweden").where("cn").isPresent(), PersonWithDnAnnotations.class);
 
 		assertThat(persons).hasSize(4);
 
@@ -93,7 +93,8 @@ public class LdapTemplateOdmWithDnAnnotationsITests extends AbstractLdapTemplate
 	@Test
 	public void testFindForStreamInCountry() {
 		List<PersonWithDnAnnotations> persons = this.tested
-				.findForStream(query().base("ou=Sweden").where("cn").isPresent(), PersonWithDnAnnotations.class)
+				.findForStream(LdapQueryBuilder.query().base("ou=Sweden").where("cn").isPresent(),
+						PersonWithDnAnnotations.class)
 				.collect(Collectors.toList());
 
 		assertThat(persons).hasSize(4);
@@ -150,7 +151,7 @@ public class LdapTemplateOdmWithDnAnnotationsITests extends AbstractLdapTemplate
 
 	@Test
 	public void testUpdate() {
-		PersonWithDnAnnotations person = this.tested.findOne(query().where("cn").is("Some Person3"),
+		PersonWithDnAnnotations person = this.tested.findOne(LdapQueryBuilder.query().where("cn").is("Some Person3"),
 				PersonWithDnAnnotations.class);
 
 		person.setDesc(Arrays.asList("New Description"));
@@ -170,7 +171,7 @@ public class LdapTemplateOdmWithDnAnnotationsITests extends AbstractLdapTemplate
 
 	@Test
 	public void testUpdateWithChangedDn() {
-		PersonWithDnAnnotations person = this.tested.findOne(query().where("cn").is("Some Person3"),
+		PersonWithDnAnnotations person = this.tested.findOne(LdapQueryBuilder.query().where("cn").is("Some Person3"),
 				PersonWithDnAnnotations.class);
 
 		// This should make the entry move
