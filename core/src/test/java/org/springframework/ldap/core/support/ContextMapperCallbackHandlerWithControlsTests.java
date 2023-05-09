@@ -93,6 +93,7 @@ public class ContextMapperCallbackHandlerWithControlsTests {
 			super(name, obj);
 		}
 
+		@Override
 		public Control[] getControls() throws NamingException {
 			return null;
 		}
