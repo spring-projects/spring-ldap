@@ -59,8 +59,8 @@ public class LdifParserTests {
 	 * verification of LDIF correctness.
 	 */
 	public LdifParserTests() {
-		parser = new LdifParser(new ClassPathResource("test.ldif"));
-		parser.setRecordSpecification(new BasicSchemaSpecification());
+		this.parser = new LdifParser(new ClassPathResource("test.ldif"));
+		this.parser.setRecordSpecification(new BasicSchemaSpecification());
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class LdifParserTests {
 	@Before
 	public void openLdif() {
 		try {
-			parser.open();
+			this.parser.open();
 		}
 		catch (IOException e) {
 			fail(e.getMessage());
@@ -87,9 +87,9 @@ public class LdifParserTests {
 		try {
 			LdapAttributes attributes;
 
-			while (parser.hasMoreRecords()) {
+			while (this.parser.hasMoreRecords()) {
 				try {
-					attributes = parser.getRecord();
+					attributes = this.parser.getRecord();
 					log.info("attributes:\n" + attributes);
 					if (attributes != null) {
 						assertThat(attributes.getDN() != null).isTrue();
@@ -104,7 +104,7 @@ public class LdifParserTests {
 					}
 				}
 
-				log.debug("hasMoreRecords: " + parser.hasMoreRecords());
+				log.debug("hasMoreRecords: " + this.parser.hasMoreRecords());
 			}
 
 			log.info("record count: " + count);
@@ -125,7 +125,7 @@ public class LdifParserTests {
 	@After
 	public void closeLdif() {
 		try {
-			parser.close();
+			this.parser.close();
 		}
 		catch (IOException e) {
 			fail(e.getMessage());

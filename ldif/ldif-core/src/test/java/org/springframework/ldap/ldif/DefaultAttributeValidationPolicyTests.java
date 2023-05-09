@@ -162,39 +162,39 @@ public class DefaultAttributeValidationPolicyTests {
 	@Test
 	public void parseAttribute() {
 		try {
-			LdapAttribute attribute = (LdapAttribute) policy.parse(line);
+			LdapAttribute attribute = (LdapAttribute) policy.parse(this.line);
 
-			assertThat(id.equalsIgnoreCase(attribute.getID()))
-					.as("IDs do not match: [expected: " + attribute.getID() + ", obtained: " + id + "]").isTrue();
+			assertThat(this.id.equalsIgnoreCase(attribute.getID()))
+					.as("IDs do not match: [expected: " + attribute.getID() + ", obtained: " + this.id + "]").isTrue();
 
-			String[] expected = !StringUtils.hasLength(options) ? new String[] {}
-					: options.replaceFirst(";", "").split(";");
+			String[] expected = !StringUtils.hasLength(this.options) ? new String[] {}
+					: this.options.replaceFirst(";", "").split(";");
 			Arrays.sort(expected);
 			String[] obtained = attribute.getOptions().toArray(new String[] {});
 			Arrays.sort(obtained);
 			assertThat(obtained).as("Options do not match: ").isEqualTo(expected);
 
-			switch (type) {
+			switch (this.type) {
 			case STRING:
 				assertThat(attribute.get() instanceof String).as("Value is not a string.").isTrue();
-				assertThat(attribute.get()).as("Values do not match: ").isEqualTo(value);
+				assertThat(attribute.get()).as("Values do not match: ").isEqualTo(this.value);
 				break;
 
 			case BASE64:
-				byte[] bytes = LdapEncoder.parseBase64Binary(value);
+				byte[] bytes = LdapEncoder.parseBase64Binary(this.value);
 				assertThat(attribute.get() instanceof byte[]).as("Value is not a byte[].").isTrue();
 				assertThat((byte[]) attribute.get()).as("Values do not match: ").isEqualTo(bytes);
 				break;
 
 			case URL:
-				URI url = new URI(value);
+				URI url = new URI(this.value);
 				assertThat(attribute.get() instanceof URI).as("Value is not a URL.").isTrue();
 				assertThat(attribute.get()).as("Values do not match: ").isEqualTo(url);
 				break;
 
 			case UTF8:
 				assertThat(attribute.get() instanceof String).as("Value is not a UTF8.").isTrue();
-				assertThat(attribute.get()).as("Values do not match: ").isEqualTo(value);
+				assertThat(attribute.get()).as("Values do not match: ").isEqualTo(this.value);
 				break;
 			}
 
@@ -202,7 +202,7 @@ public class DefaultAttributeValidationPolicyTests {
 
 		}
 		catch (Exception e) {
-			if (!exceptions.contains(line))
+			if (!this.exceptions.contains(this.line))
 				fail("Exception thrown: " + e.getClass().getSimpleName() + " (message: " + e.getMessage() + ")");
 		}
 	}
