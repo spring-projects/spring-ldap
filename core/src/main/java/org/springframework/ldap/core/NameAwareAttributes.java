@@ -111,22 +111,25 @@ public final class NameAwareAttributes implements Attributes {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if (o == null || getClass() != o.getClass())
+		}
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 
 		NameAwareAttributes that = (NameAwareAttributes) o;
 
-		if (this.attributes != null ? !this.attributes.equals(that.attributes) : that.attributes != null)
+		if ((this.attributes != null) ? !this.attributes.equals(that.attributes) : that.attributes != null) {
 			return false;
+		}
 
 		return true;
 	}
 
 	@Override
 	public int hashCode() {
-		return this.attributes != null ? this.attributes.hashCode() : 0;
+		return (this.attributes != null) ? this.attributes.hashCode() : 0;
 	}
 
 	@Override

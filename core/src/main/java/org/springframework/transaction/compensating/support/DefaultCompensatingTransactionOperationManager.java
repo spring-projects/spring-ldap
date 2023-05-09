@@ -78,8 +78,8 @@ public class DefaultCompensatingTransactionOperationManager implements Compensat
 			try {
 				rollbackOperation.rollback();
 			}
-			catch (Exception e) {
-				throw new TransactionSystemException("Error occurred during rollback", e);
+			catch (Exception ex) {
+				throw new TransactionSystemException("Error occurred during rollback", ex);
 			}
 		}
 	}
@@ -110,8 +110,8 @@ public class DefaultCompensatingTransactionOperationManager implements Compensat
 			try {
 				operationExecutor.commit();
 			}
-			catch (Exception e) {
-				throw new TransactionSystemException("Error occurred during commit", e);
+			catch (Exception ex) {
+				throw new TransactionSystemException("Error occurred during commit", ex);
 			}
 		}
 	}

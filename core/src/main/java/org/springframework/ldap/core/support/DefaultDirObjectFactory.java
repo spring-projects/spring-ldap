@@ -83,7 +83,7 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 				try {
 					ctx.close();
 				}
-				catch (Exception e) {
+				catch (Exception ex) {
 					// Never mind this
 				}
 
@@ -140,9 +140,9 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 
 				nameString = pathString;
 			}
-			catch (URISyntaxException e) {
+			catch (URISyntaxException ex) {
 				throw new IllegalArgumentException("Supplied name starts with protocol prefix indicating a referral,"
-						+ " but is not possible to parse to an URI", e);
+						+ " but is not possible to parse to an URI", ex);
 			}
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Resulting name after removal of referral information: '" + nameString + "'");

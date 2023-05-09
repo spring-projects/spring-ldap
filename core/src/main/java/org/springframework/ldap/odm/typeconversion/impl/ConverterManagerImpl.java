@@ -139,7 +139,7 @@ public final class ConverterManagerImpl implements ConverterManager {
 			try {
 				result = syntaxConverter.convert(source, targetClass);
 			}
-			catch (Exception e) {
+			catch (Exception ex) {
 				// Ignore as we may still be able to convert successfully
 			}
 		}
@@ -157,7 +157,7 @@ public final class ConverterManagerImpl implements ConverterManager {
 				try {
 					result = nullSyntaxConverter.convert(source, targetClass);
 				}
-				catch (Exception e) {
+				catch (Exception ex) {
 					// Handled at the end of the method
 				}
 			}

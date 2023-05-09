@@ -347,7 +347,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		DirContext ctx = this.contextSource.getReadOnlyContext();
 
 		NamingEnumeration results = null;
-		RuntimeException ex = null;
+		RuntimeException exception = null;
 		try {
 			processor.preProcess(ctx);
 			results = se.executeSearch(ctx);
@@ -357,53 +357,53 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 				handler.handleNameClassPair(result);
 			}
 		}
-		catch (NameNotFoundException e) {
+		catch (NameNotFoundException ex) {
 			// It is possible to ignore errors caused by base not found
 			if (this.ignoreNameNotFoundException) {
-				LOG.warn("Base context not found, ignoring: " + e.getMessage());
+				LOG.warn("Base context not found, ignoring: " + ex.getMessage());
 			}
 			else {
-				ex = LdapUtils.convertLdapException(e);
+				exception = LdapUtils.convertLdapException(ex);
 			}
 		}
-		catch (PartialResultException e) {
+		catch (PartialResultException ex) {
 			// Workaround for AD servers not handling referrals correctly.
 			if (this.ignorePartialResultException) {
-				LOG.debug("PartialResultException encountered and ignored", e);
+				LOG.debug("PartialResultException encountered and ignored", ex);
 			}
 			else {
-				ex = LdapUtils.convertLdapException(e);
+				exception = LdapUtils.convertLdapException(ex);
 			}
 		}
-		catch (SizeLimitExceededException e) {
+		catch (SizeLimitExceededException ex) {
 			if (this.ignoreSizeLimitExceededException) {
-				LOG.debug("SizeLimitExceededException encountered and ignored", e);
+				LOG.debug("SizeLimitExceededException encountered and ignored", ex);
 			}
 			else {
-				ex = LdapUtils.convertLdapException(e);
+				exception = LdapUtils.convertLdapException(ex);
 			}
 		}
-		catch (javax.naming.NamingException e) {
-			ex = LdapUtils.convertLdapException(e);
+		catch (javax.naming.NamingException ex) {
+			exception = LdapUtils.convertLdapException(ex);
 		}
 		finally {
 			try {
 				processor.postProcess(ctx);
 			}
-			catch (javax.naming.NamingException e) {
-				if (ex == null) {
-					ex = LdapUtils.convertLdapException(e);
+			catch (javax.naming.NamingException ex) {
+				if (exception == null) {
+					exception = LdapUtils.convertLdapException(ex);
 				}
 				else {
 					// We already had an exception from above and should ignore
 					// this one.
-					LOG.debug("Ignoring Exception from postProcess, " + "main exception thrown instead", e);
+					LOG.debug("Ignoring Exception from postProcess, " + "main exception thrown instead", ex);
 				}
 			}
 			closeContextAndNamingEnumeration(ctx, results);
 			// If we got an exception it should be thrown.
-			if (ex != null) {
-				throw ex;
+			if (exception != null) {
+				throw exception;
 			}
 		}
 	}
@@ -810,8 +810,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		try {
 			return ce.executeWithContext(ctx);
 		}
-		catch (javax.naming.NamingException e) {
-			throw LdapUtils.convertLdapException(e);
+		catch (javax.naming.NamingException ex) {
+			throw LdapUtils.convertLdapException(ex);
 		}
 		finally {
 			closeContext(ctx);
@@ -1102,14 +1102,14 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 				LOG.debug("Entry " + name + " deleted");
 			}
 		}
-		catch (javax.naming.NamingException e) {
-			throw LdapUtils.convertLdapException(e);
+		catch (javax.naming.NamingException ex) {
+			throw LdapUtils.convertLdapException(ex);
 		}
 		finally {
 			try {
 				enumeration.close();
 			}
-			catch (Exception e) {
+			catch (Exception ex) {
 				// Never mind this
 			}
 		}
@@ -1191,7 +1191,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			try {
 				ctx.close();
 			}
-			catch (Exception e) {
+			catch (Exception ex) {
 				// Never mind this.
 			}
 		}
@@ -1207,7 +1207,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			try {
 				results.close();
 			}
-			catch (Exception e) {
+			catch (Exception ex) {
 				// Never mind this.
 			}
 		}
@@ -1235,53 +1235,6 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 					+ " but a ContextMapper is used - setting flag to true");
 			controls.setReturningObjFlag(true);
 		}
-	}
-
-	/**
-	 * Do-nothing implementation of {@link DirContextProcessor}.
-	 *
-	 * @author Mattias Hellborg Arthursson
-	 * @since 2.0
-	 */
-	public static final class NullDirContextProcessor implements DirContextProcessor {
-
-		public void postProcess(DirContext ctx) {
-			// Do nothing
-		}
-
-		public void preProcess(DirContext ctx) {
-			// Do nothing
-		}
-
-	}
-
-	/**
-	 * A {@link NameClassPairCallbackHandler} that passes the NameClassPairs found to a
-	 * NameClassPairMapper and collects the results in a list.
-	 *
-	 * @author Mattias Hellborg Arthursson
-	 */
-	public final static class MappingCollectingNameClassPairCallbackHandler<T>
-			extends CollectingNameClassPairCallbackHandler<T> {
-
-		private NameClassPairMapper<T> mapper;
-
-		public MappingCollectingNameClassPairCallbackHandler(NameClassPairMapper<T> mapper) {
-			this.mapper = mapper;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public T getObjectFromNameClassPair(NameClassPair nameClassPair) {
-			try {
-				return this.mapper.mapFromNameClassPair(nameClassPair);
-			}
-			catch (javax.naming.NamingException e) {
-				throw LdapUtils.convertLdapException(e);
-			}
-		}
-
 	}
 
 	/**
@@ -1446,9 +1399,9 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			}, ctx);
 			return AuthenticationStatus.SUCCESS;
 		}
-		catch (Exception e) {
-			LOG.debug("Authentication failed for entry with DN '" + entryIdentification.getAbsoluteName() + "'", e);
-			errorCallback.execute(e);
+		catch (Exception ex) {
+			LOG.debug("Authentication failed for entry with DN '" + entryIdentification.getAbsoluteName() + "'", ex);
+			errorCallback.execute(ex);
 			return AuthenticationStatus.UNDEFINED_FAILURE;
 		}
 	}
@@ -1534,49 +1487,6 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	@Override
 	public <T> T searchForObject(String base, String filter, SearchControls searchControls, ContextMapper<T> mapper) {
 		return searchForObject(LdapUtils.newLdapName(base), filter, searchControls, mapper);
-	}
-
-	private static final class NullAuthenticatedLdapEntryContextCallback
-			implements AuthenticatedLdapEntryContextCallback, AuthenticatedLdapEntryContextMapper<Object> {
-
-		public void executeWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
-			// Do nothing
-		}
-
-		@Override
-		public Object mapWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
-			return null;
-		}
-
-	}
-
-	private static final class NullAuthenticationErrorCallback implements AuthenticationErrorCallback {
-
-		public void execute(Exception e) {
-			// Do nothing
-		}
-
-	}
-
-	private static final class ReturningAuthenticatedLdapEntryContext<T>
-			implements AuthenticatedLdapEntryContextCallback {
-
-		private final AuthenticatedLdapEntryContextMapper<T> mapper;
-
-		private T collectedObject;
-
-		private ReturningAuthenticatedLdapEntryContext(AuthenticatedLdapEntryContextMapper<T> mapper) {
-			this.mapper = mapper;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void executeWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
-			this.collectedObject = this.mapper.mapWithContext(ctx, ldapEntryIdentification);
-		}
-
 	}
 
 	/**
@@ -1922,28 +1832,28 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		try {
 			return supplier.get();
 		}
-		catch (NameNotFoundException e) {
+		catch (NameNotFoundException ex) {
 			// It is possible to ignore errors caused by base not found
 			if (!this.ignoreNameNotFoundException) {
-				throw LdapUtils.convertLdapException(e);
+				throw LdapUtils.convertLdapException(ex);
 			}
-			LOG.warn("Base context not found, ignoring: " + e.getMessage());
+			LOG.warn("Base context not found, ignoring: " + ex.getMessage());
 		}
-		catch (PartialResultException e) {
+		catch (PartialResultException ex) {
 			// Workaround for AD servers not handling referrals correctly.
 			if (!this.ignorePartialResultException) {
-				throw LdapUtils.convertLdapException(e);
+				throw LdapUtils.convertLdapException(ex);
 			}
-			LOG.debug("PartialResultException encountered and ignored", e);
+			LOG.debug("PartialResultException encountered and ignored", ex);
 		}
-		catch (SizeLimitExceededException e) {
+		catch (SizeLimitExceededException ex) {
 			if (!this.ignoreSizeLimitExceededException) {
-				throw LdapUtils.convertLdapException(e);
+				throw LdapUtils.convertLdapException(ex);
 			}
-			LOG.debug("SizeLimitExceededException encountered and ignored", e);
+			LOG.debug("SizeLimitExceededException encountered and ignored", ex);
 		}
-		catch (javax.naming.NamingException e) {
-			throw LdapUtils.convertLdapException(e);
+		catch (javax.naming.NamingException ex) {
+			throw LdapUtils.convertLdapException(ex);
 		}
 		return null;
 	}
@@ -1986,6 +1896,96 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		 */
 		public boolean isSuccess() {
 			return this.success;
+		}
+
+	}
+
+	private static final class NullAuthenticatedLdapEntryContextCallback
+			implements AuthenticatedLdapEntryContextCallback, AuthenticatedLdapEntryContextMapper<Object> {
+
+		public void executeWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
+			// Do nothing
+		}
+
+		@Override
+		public Object mapWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
+			return null;
+		}
+
+	}
+
+	/**
+	 * Do-nothing implementation of {@link DirContextProcessor}.
+	 *
+	 * @author Mattias Hellborg Arthursson
+	 * @since 2.0
+	 */
+	public static final class NullDirContextProcessor implements DirContextProcessor {
+
+		public void postProcess(DirContext ctx) {
+			// Do nothing
+		}
+
+		public void preProcess(DirContext ctx) {
+			// Do nothing
+		}
+
+	}
+
+	/**
+	 * A {@link NameClassPairCallbackHandler} that passes the NameClassPairs found to a
+	 * NameClassPairMapper and collects the results in a list.
+	 *
+	 * @author Mattias Hellborg Arthursson
+	 */
+	public final static class MappingCollectingNameClassPairCallbackHandler<T>
+			extends CollectingNameClassPairCallbackHandler<T> {
+
+		private NameClassPairMapper<T> mapper;
+
+		public MappingCollectingNameClassPairCallbackHandler(NameClassPairMapper<T> mapper) {
+			this.mapper = mapper;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public T getObjectFromNameClassPair(NameClassPair nameClassPair) {
+			try {
+				return this.mapper.mapFromNameClassPair(nameClassPair);
+			}
+			catch (javax.naming.NamingException ex) {
+				throw LdapUtils.convertLdapException(ex);
+			}
+		}
+
+	}
+
+	private static final class NullAuthenticationErrorCallback implements AuthenticationErrorCallback {
+
+		public void execute(Exception ex) {
+			// Do nothing
+		}
+
+	}
+
+	private static final class ReturningAuthenticatedLdapEntryContext<T>
+			implements AuthenticatedLdapEntryContextCallback {
+
+		private final AuthenticatedLdapEntryContextMapper<T> mapper;
+
+		private T collectedObject;
+
+		private ReturningAuthenticatedLdapEntryContext(AuthenticatedLdapEntryContextMapper<T> mapper) {
+			this.mapper = mapper;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void executeWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
+			this.collectedObject = this.mapper.mapWithContext(ctx, ldapEntryIdentification);
 		}
 
 	}

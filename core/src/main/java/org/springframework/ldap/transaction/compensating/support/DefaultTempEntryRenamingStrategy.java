@@ -67,8 +67,8 @@ public class DefaultTempEntryRenamingStrategy implements TempEntryRenamingStrate
 			String leafNode = (String) temporaryName.remove(temporaryName.size() - 1);
 			temporaryName.add(new Rdn(leafNode + this.tempSuffix));
 		}
-		catch (InvalidNameException e) {
-			throw new org.springframework.ldap.InvalidNameException(e);
+		catch (InvalidNameException ex) {
+			throw new org.springframework.ldap.InvalidNameException(ex);
 		}
 
 		return temporaryName;

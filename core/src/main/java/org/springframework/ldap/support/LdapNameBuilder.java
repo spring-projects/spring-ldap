@@ -84,8 +84,8 @@ public final class LdapNameBuilder {
 			this.ldapName.add(new Rdn(key, value));
 			return this;
 		}
-		catch (InvalidNameException e) {
-			throw new org.springframework.ldap.InvalidNameException(e);
+		catch (InvalidNameException ex) {
+			throw new org.springframework.ldap.InvalidNameException(ex);
 		}
 	}
 
@@ -101,8 +101,8 @@ public final class LdapNameBuilder {
 			this.ldapName.addAll(this.ldapName.size(), name);
 			return this;
 		}
-		catch (InvalidNameException e) {
-			throw new org.springframework.ldap.InvalidNameException(e);
+		catch (InvalidNameException ex) {
+			throw new org.springframework.ldap.InvalidNameException(ex);
 		}
 	}
 

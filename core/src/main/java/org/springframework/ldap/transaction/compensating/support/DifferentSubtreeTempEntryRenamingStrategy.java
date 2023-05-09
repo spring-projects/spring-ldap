@@ -83,8 +83,8 @@ public class DifferentSubtreeTempEntryRenamingStrategy implements TempEntryRenam
 
 			return newName;
 		}
-		catch (InvalidNameException e) {
-			throw new org.springframework.ldap.InvalidNameException(e);
+		catch (InvalidNameException ex) {
+			throw new org.springframework.ldap.InvalidNameException(ex);
 		}
 	}
 

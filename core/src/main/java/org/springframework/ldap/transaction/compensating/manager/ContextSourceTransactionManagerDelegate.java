@@ -111,8 +111,8 @@ public class ContextSourceTransactionManagerDelegate extends AbstractCompensatin
 			LOG.debug("Closing target context");
 			ctx.close();
 		}
-		catch (NamingException e) {
-			LOG.warn("Failed to close target context", e);
+		catch (NamingException ex) {
+			LOG.warn("Failed to close target context", ex);
 		}
 	}
 

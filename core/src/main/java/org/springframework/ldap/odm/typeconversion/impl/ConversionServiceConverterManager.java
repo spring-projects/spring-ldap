@@ -45,8 +45,8 @@ public class ConversionServiceConverterManager implements ConverterManager {
 				Class<?> clazz = ClassUtils.forName(DEFAULT_CONVERSION_SERVICE_CLASS, defaultClassLoader);
 				this.conversionService = (GenericConversionService) clazz.newInstance();
 			}
-			catch (Exception e) {
-				ReflectionUtils.handleReflectionException(e);
+			catch (Exception ex) {
+				ReflectionUtils.handleReflectionException(ex);
 			}
 		}
 		else {

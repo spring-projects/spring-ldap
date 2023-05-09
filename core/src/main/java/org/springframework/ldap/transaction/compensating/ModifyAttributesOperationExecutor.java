@@ -73,7 +73,7 @@ public class ModifyAttributesOperationExecutor implements CompensatingTransactio
 			log.debug("Rolling back modifyAttributes operation");
 			this.ldapOperations.modifyAttributes(this.dn, this.compensatingModifications);
 		}
-		catch (Exception e) {
+		catch (Exception ex) {
 			log.warn("Failed to rollback ModifyAttributes operation, dn: " + this.dn);
 		}
 	}

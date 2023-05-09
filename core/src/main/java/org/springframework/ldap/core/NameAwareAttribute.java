@@ -73,8 +73,8 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 				this.add(incomingValues.next());
 			}
 		}
-		catch (NamingException e) {
-			throw LdapUtils.convertLdapException(e);
+		catch (NamingException ex) {
+			throw LdapUtils.convertLdapException(ex);
 		}
 
 		if (attribute instanceof NameAwareAttribute) {
@@ -169,11 +169,11 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 				try {
 					newValuesAsNames.put(LdapUtils.newLdapName(s), s);
 				}
-				catch (InvalidNameException e) {
+				catch (InvalidNameException ex) {
 					throw new IllegalArgumentException(
 							"This instance has values that are not valid distinguished names; "
 									+ "cannot handle Name values",
-							e);
+							ex);
 				}
 			}
 			else if (value instanceof LdapName) {
@@ -249,7 +249,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 			return value;
 		}
-		catch (NoSuchElementException e) {
+		catch (NoSuchElementException ex) {
 			throw new IndexOutOfBoundsException("No value at index i");
 		}
 	}
@@ -273,7 +273,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 			}
 			return value;
 		}
-		catch (NoSuchElementException e) {
+		catch (NoSuchElementException ex) {
 			throw new IndexOutOfBoundsException("No value at index i");
 		}
 	}
@@ -302,15 +302,18 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if (o == null || getClass() != o.getClass())
+		}
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 
 		NameAwareAttribute that = (NameAwareAttribute) o;
 
-		if (this.id != null ? !this.id.equals(that.id) : that.id != null)
+		if ((this.id != null) ? !this.id.equals(that.id) : that.id != null) {
 			return false;
+		}
 		if (this.values.size() != that.values.size()) {
 			return false;
 		}
@@ -357,7 +360,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 	@Override
 	public int hashCode() {
-		int result = this.id != null ? this.id.hashCode() : 0;
+		int result = (this.id != null) ? this.id.hashCode() : 0;
 
 		int valuesHash = 7;
 		Set<?> myValues = this.values;

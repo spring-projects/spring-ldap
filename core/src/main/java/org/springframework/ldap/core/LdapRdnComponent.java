@@ -175,7 +175,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 			URI valueUri = new URI(null, null, this.value, null);
 			return this.key + "=" + valueUri.toString();
 		}
-		catch (URISyntaxException e) {
+		catch (URISyntaxException ex) {
 			// This should really never happen...
 			return this.key + "=" + "value";
 		}

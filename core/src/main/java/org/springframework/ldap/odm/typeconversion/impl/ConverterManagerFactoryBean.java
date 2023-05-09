@@ -97,65 +97,6 @@ public final class ConverterManagerFactoryBean implements FactoryBean {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ConverterManagerFactoryBean.class);
 
-	/**
-	 * Configuration information for a single Converter instance.
-	 */
-	public static final class ConverterConfig {
-
-		// The set of classes the Converter will convert from.
-		private Set<Class<?>> fromClasses = new HashSet<Class<?>>();
-
-		// The (optional) LDAP syntax.
-		private String syntax = null;
-
-		// The set of classes the Converter will convert to.
-		private Set<Class<?>> toClasses = new HashSet<Class<?>>();
-
-		// The Converter to use.
-		private Converter converter = null;
-
-		public ConverterConfig() {
-		}
-
-		/**
-		 * @param fromClasses Comma separated list of classes the {@link Converter} should
-		 * can convert from.
-		 */
-		public void setFromClasses(Set<Class<?>> fromClasses) {
-			this.fromClasses = fromClasses;
-		}
-
-		/**
-		 * @param toClasses Comma separated list of classes the {@link Converter} can
-		 * convert to.
-		 */
-		public void setToClasses(Set<Class<?>> toClasses) {
-			this.toClasses = toClasses;
-
-		}
-
-		/**
-		 * @param syntax An LDAP syntax supported by the {@link Converter}.
-		 */
-		public void setSyntax(String syntax) {
-			this.syntax = syntax;
-		}
-
-		/**
-		 * @param converter The {@link Converter} to use.
-		 */
-		public void setConverter(Converter converter) {
-			this.converter = converter;
-		}
-
-		@Override
-		public String toString() {
-			return String.format("fromClasses=%1$s, syntax=%2$s, toClasses=%3$s, converter=%4$s", this.fromClasses,
-					this.syntax, this.toClasses, this.converter);
-		}
-
-	}
-
 	private Set<ConverterConfig> converterConfigList = null;
 
 	/**
@@ -217,6 +158,65 @@ public final class ConverterManagerFactoryBean implements FactoryBean {
 	 */
 	public boolean isSingleton() {
 		return true;
+	}
+
+	/**
+	 * Configuration information for a single Converter instance.
+	 */
+	public static final class ConverterConfig {
+
+		// The set of classes the Converter will convert from.
+		private Set<Class<?>> fromClasses = new HashSet<Class<?>>();
+
+		// The (optional) LDAP syntax.
+		private String syntax = null;
+
+		// The set of classes the Converter will convert to.
+		private Set<Class<?>> toClasses = new HashSet<Class<?>>();
+
+		// The Converter to use.
+		private Converter converter = null;
+
+		public ConverterConfig() {
+		}
+
+		/**
+		 * @param fromClasses Comma separated list of classes the {@link Converter} should
+		 * can convert from.
+		 */
+		public void setFromClasses(Set<Class<?>> fromClasses) {
+			this.fromClasses = fromClasses;
+		}
+
+		/**
+		 * @param toClasses Comma separated list of classes the {@link Converter} can
+		 * convert to.
+		 */
+		public void setToClasses(Set<Class<?>> toClasses) {
+			this.toClasses = toClasses;
+
+		}
+
+		/**
+		 * @param syntax An LDAP syntax supported by the {@link Converter}.
+		 */
+		public void setSyntax(String syntax) {
+			this.syntax = syntax;
+		}
+
+		/**
+		 * @param converter The {@link Converter} to use.
+		 */
+		public void setConverter(Converter converter) {
+			this.converter = converter;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("fromClasses=%1$s, syntax=%2$s, toClasses=%3$s, converter=%4$s", this.fromClasses,
+					this.syntax, this.toClasses, this.converter);
+		}
+
 	}
 
 }

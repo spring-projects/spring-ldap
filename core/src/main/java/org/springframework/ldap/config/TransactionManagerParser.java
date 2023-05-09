@@ -33,8 +33,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 
-import static org.springframework.ldap.config.ParserUtils.getString;
-
 /**
  * @author Mattias Hellborg Arthursson
  */
@@ -55,7 +53,8 @@ public class TransactionManagerParser implements BeanDefinitionParser {
 	@Override
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
 
-		String contextSourceRef = getString(element, ATT_CONTEXT_SOURCE_REF, ContextSourceParser.DEFAULT_ID);
+		String contextSourceRef = ParserUtils.getString(element, ATT_CONTEXT_SOURCE_REF,
+				ContextSourceParser.DEFAULT_ID);
 		String dataSourceRef = element.getAttribute(ATT_DATA_SOURCE_REF);
 		String sessionFactoryRef = element.getAttribute(ATT_SESSION_FACTORY_REF);
 
@@ -92,7 +91,7 @@ public class TransactionManagerParser implements BeanDefinitionParser {
 			builder.addPropertyValue("renamingStrategy", parseDifferentSubtreeRenamingStrategy(differentSubtreeChild));
 		}
 
-		String id = getString(element, AbstractBeanDefinitionParser.ID_ATTRIBUTE, DEFAULT_ID);
+		String id = ParserUtils.getString(element, AbstractBeanDefinitionParser.ID_ATTRIBUTE, DEFAULT_ID);
 
 		BeanDefinition beanDefinition = builder.getBeanDefinition();
 		parserContext.registerBeanComponent(new BeanComponentDefinition(beanDefinition, id));
@@ -117,7 +116,7 @@ public class TransactionManagerParser implements BeanDefinitionParser {
 				.rootBeanDefinition(DefaultTempEntryRenamingStrategy.class);
 
 		builder.addPropertyValue("tempSuffix",
-				getString(element, ATT_TEMP_SUFFIX, DefaultTempEntryRenamingStrategy.DEFAULT_TEMP_SUFFIX));
+				ParserUtils.getString(element, ATT_TEMP_SUFFIX, DefaultTempEntryRenamingStrategy.DEFAULT_TEMP_SUFFIX));
 
 		return builder.getBeanDefinition();
 	}

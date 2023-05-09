@@ -98,8 +98,9 @@ public final class LdapEncoder {
 	 */
 	public static String filterEncode(String value) {
 
-		if (value == null)
+		if (value == null) {
 			return null;
+		}
 
 		// make buffer roomy
 		StringBuilder encodedValue = new StringBuilder(value.length() * 2);
@@ -142,8 +143,9 @@ public final class LdapEncoder {
 	 */
 	public static String nameEncode(String value) {
 
-		if (value == null)
+		if (value == null) {
 			return null;
+		}
 
 		// make buffer roomy
 		StringBuilder encodedValue = new StringBuilder(value.length() * 2);
@@ -188,8 +190,9 @@ public final class LdapEncoder {
 	 */
 	static public String nameDecode(String value) throws BadLdapGrammarException {
 
-		if (value == null)
+		if (value == null) {
 			return null;
+		}
 
 		// make buffer same size
 		StringBuilder decoded = new StringBuilder(value.length());

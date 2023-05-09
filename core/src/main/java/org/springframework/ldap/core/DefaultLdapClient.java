@@ -182,6 +182,192 @@ class DefaultLdapClient implements LdapClient {
 		this.ignoreSizeLimitExceededException = ignoreSizeLimitExceededException;
 	}
 
+	<T> T computeWithReadOnlyContext(ContextExecutor<T> executor) {
+		DirContext context = this.contextSource.getReadOnlyContext();
+		try {
+			return executor.executeWithContext(context);
+		}
+		catch (NamingException ex) {
+			this.namingExceptionHandler.accept(ex);
+			return null;
+		}
+		finally {
+			closeContext(context);
+		}
+	}
+
+	void runWithReadWriteContext(ContextRunnable runnable) {
+		DirContext context = this.contextSource.getReadWriteContext();
+		try {
+			runnable.run(context);
+		}
+		catch (NamingException ex) {
+			this.namingExceptionHandler.accept(ex);
+		}
+		finally {
+			closeContext(context);
+		}
+	}
+
+	private <T> NamingExceptionFunction<? extends Binding, T> function(ContextMapper<T> mapper) {
+		return (result) -> mapper.mapFromContext(result.getObject());
+	}
+
+	private <T> NamingExceptionFunction<? extends SearchResult, T> function(AttributesMapper<T> mapper) {
+		return (result) -> mapper.mapFromAttributes(result.getAttributes());
+	}
+
+	private <T> Enumeration<T> enumeration(NamingEnumeration<T> enumeration) {
+		return new Enumeration<>() {
+			@Override
+			public boolean hasMoreElements() {
+				try {
+					return enumeration.hasMore();
+				}
+				catch (NamingException ex) {
+					DefaultLdapClient.this.namingExceptionHandler.accept(ex);
+					return false;
+				}
+			}
+
+			@Override
+			public T nextElement() {
+				try {
+					return enumeration.next();
+				}
+				catch (NamingException ex) {
+					DefaultLdapClient.this.namingExceptionHandler.accept(ex);
+					throw new NoSuchElementException("no such element", ex);
+				}
+			}
+		};
+	}
+
+	private final Consumer<NamingException> namingExceptionHandler = (ex) -> {
+		if (ex instanceof NameNotFoundException) {
+			if (!this.ignoreNameNotFoundException) {
+				throw LdapUtils.convertLdapException(ex);
+			}
+			this.logger.warn("Base context not found, ignoring: " + ex.getMessage());
+			return;
+		}
+		if (ex instanceof PartialResultException) {
+			// Workaround for AD servers not handling referrals correctly.
+			if (!this.ignorePartialResultException) {
+				throw LdapUtils.convertLdapException(ex);
+			}
+			this.logger.debug("PartialResultException encountered and ignored", ex);
+			return;
+		}
+		if (ex instanceof SizeLimitExceededException) {
+			if (!this.ignoreSizeLimitExceededException) {
+				throw LdapUtils.convertLdapException(ex);
+			}
+			this.logger.debug("SizeLimitExceededException encountered and ignored", ex);
+			return;
+		}
+		throw LdapUtils.convertLdapException(ex);
+	};
+
+	private <S extends NameClassPair, T> T toObject(NamingEnumeration<S> results,
+			NamingExceptionFunction<? super S, T> mapper) {
+		try {
+			Enumeration<S> enumeration = enumeration(results);
+			Function<? super S, T> function = mapper.wrap(this.namingExceptionHandler);
+			if (!enumeration.hasMoreElements()) {
+				return null;
+			}
+			T result = function.apply(enumeration.nextElement());
+			if (enumeration.hasMoreElements()) {
+				throw new IncorrectResultSizeDataAccessException(1);
+			}
+			return result;
+		}
+		finally {
+			closeNamingEnumeration(results);
+		}
+	}
+
+	private <S extends NameClassPair, T> List<T> toList(NamingEnumeration<S> results,
+			NamingExceptionFunction<? super S, T> mapper) {
+		if (results == null) {
+			return Collections.emptyList();
+		}
+		try {
+			Enumeration<S> enumeration = enumeration(results);
+			Function<? super S, T> function = mapper.wrap(this.namingExceptionHandler);
+			List<T> mapped = new ArrayList<>();
+			while (enumeration.hasMoreElements()) {
+				T result = function.apply(enumeration.nextElement());
+				if (result != null) {
+					mapped.add(result);
+				}
+			}
+			return mapped;
+		}
+		finally {
+			closeNamingEnumeration(results);
+		}
+	}
+
+	private <S extends NameClassPair, T> Stream<T> toStream(NamingEnumeration<S> results,
+			NamingExceptionFunction<? super S, T> mapper) {
+		if (results == null) {
+			return Stream.empty();
+		}
+		Enumeration<S> enumeration = enumeration(results);
+		Function<? super S, T> function = mapper.wrap(this.namingExceptionHandler);
+		return StreamSupport
+				.stream(Spliterators.spliteratorUnknownSize(enumeration.asIterator(), Spliterator.ORDERED), false)
+				.map(function::apply).filter(Objects::nonNull).onClose(() -> closeNamingEnumeration(results));
+	}
+
+	private void closeContext(DirContext ctx) {
+		if (ctx != null) {
+			try {
+				ctx.close();
+			}
+			catch (Exception ex) {
+				// Never mind this.
+			}
+		}
+	}
+
+	private <T> void closeNamingEnumeration(NamingEnumeration<T> results) {
+		if (results != null) {
+			try {
+				results.close();
+			}
+			catch (Exception ex) {
+				// Never mind this.
+			}
+		}
+	}
+
+	interface ContextRunnable {
+
+		void run(DirContext ctx) throws NamingException;
+
+	}
+
+	interface NamingExceptionFunction<S, T> {
+
+		T apply(S element) throws NamingException;
+
+		default Function<S, T> wrap(Consumer<NamingException> handler) {
+			return (s) -> {
+				try {
+					return apply(s);
+				}
+				catch (NamingException ex) {
+					handler.accept(ex);
+					return null;
+				}
+			};
+		}
+
+	}
+
 	private final class DefaultListSpec implements ListSpec {
 
 		private final Name name;
@@ -475,12 +661,12 @@ class DefaultLdapClient implements LdapClient {
 					runWithReadWriteContext((ctx) -> ctx.modifyAttributes(this.name, this.items));
 				}
 			}
-			catch (Throwable t) {
+			catch (Throwable th) {
 				if (renamed) {
 					// attempt to change the name back
 					runWithReadWriteContext((ctx) -> ctx.rename(this.name, this.entry.getDn()));
 				}
-				throw t;
+				throw th;
 			}
 		}
 
@@ -529,192 +715,6 @@ class DefaultLdapClient implements LdapClient {
 			finally {
 				closeNamingEnumeration(bindings);
 			}
-		}
-
-	}
-
-	<T> T computeWithReadOnlyContext(ContextExecutor<T> executor) {
-		DirContext context = this.contextSource.getReadOnlyContext();
-		try {
-			return executor.executeWithContext(context);
-		}
-		catch (NamingException ex) {
-			this.namingExceptionHandler.accept(ex);
-			return null;
-		}
-		finally {
-			closeContext(context);
-		}
-	}
-
-	void runWithReadWriteContext(ContextRunnable runnable) {
-		DirContext context = this.contextSource.getReadWriteContext();
-		try {
-			runnable.run(context);
-		}
-		catch (NamingException ex) {
-			this.namingExceptionHandler.accept(ex);
-		}
-		finally {
-			closeContext(context);
-		}
-	}
-
-	private <T> NamingExceptionFunction<? extends Binding, T> function(ContextMapper<T> mapper) {
-		return (result) -> mapper.mapFromContext(result.getObject());
-	}
-
-	private <T> NamingExceptionFunction<? extends SearchResult, T> function(AttributesMapper<T> mapper) {
-		return (result) -> mapper.mapFromAttributes(result.getAttributes());
-	}
-
-	private <T> Enumeration<T> enumeration(NamingEnumeration<T> enumeration) {
-		return new Enumeration<>() {
-			@Override
-			public boolean hasMoreElements() {
-				try {
-					return enumeration.hasMore();
-				}
-				catch (NamingException ex) {
-					DefaultLdapClient.this.namingExceptionHandler.accept(ex);
-					return false;
-				}
-			}
-
-			@Override
-			public T nextElement() {
-				try {
-					return enumeration.next();
-				}
-				catch (NamingException ex) {
-					DefaultLdapClient.this.namingExceptionHandler.accept(ex);
-					throw new NoSuchElementException("no such element", ex);
-				}
-			}
-		};
-	}
-
-	private final Consumer<NamingException> namingExceptionHandler = (ex) -> {
-		if (ex instanceof NameNotFoundException) {
-			if (!this.ignoreNameNotFoundException) {
-				throw LdapUtils.convertLdapException(ex);
-			}
-			this.logger.warn("Base context not found, ignoring: " + ex.getMessage());
-			return;
-		}
-		if (ex instanceof PartialResultException) {
-			// Workaround for AD servers not handling referrals correctly.
-			if (!this.ignorePartialResultException) {
-				throw LdapUtils.convertLdapException(ex);
-			}
-			this.logger.debug("PartialResultException encountered and ignored", ex);
-			return;
-		}
-		if (ex instanceof SizeLimitExceededException) {
-			if (!this.ignoreSizeLimitExceededException) {
-				throw LdapUtils.convertLdapException(ex);
-			}
-			this.logger.debug("SizeLimitExceededException encountered and ignored", ex);
-			return;
-		}
-		throw LdapUtils.convertLdapException(ex);
-	};
-
-	private <S extends NameClassPair, T> T toObject(NamingEnumeration<S> results,
-			NamingExceptionFunction<? super S, T> mapper) {
-		try {
-			Enumeration<S> enumeration = enumeration(results);
-			Function<? super S, T> function = mapper.wrap(this.namingExceptionHandler);
-			if (!enumeration.hasMoreElements()) {
-				return null;
-			}
-			T result = function.apply(enumeration.nextElement());
-			if (enumeration.hasMoreElements()) {
-				throw new IncorrectResultSizeDataAccessException(1);
-			}
-			return result;
-		}
-		finally {
-			closeNamingEnumeration(results);
-		}
-	}
-
-	private <S extends NameClassPair, T> List<T> toList(NamingEnumeration<S> results,
-			NamingExceptionFunction<? super S, T> mapper) {
-		if (results == null) {
-			return Collections.emptyList();
-		}
-		try {
-			Enumeration<S> enumeration = enumeration(results);
-			Function<? super S, T> function = mapper.wrap(this.namingExceptionHandler);
-			List<T> mapped = new ArrayList<>();
-			while (enumeration.hasMoreElements()) {
-				T result = function.apply(enumeration.nextElement());
-				if (result != null) {
-					mapped.add(result);
-				}
-			}
-			return mapped;
-		}
-		finally {
-			closeNamingEnumeration(results);
-		}
-	}
-
-	private <S extends NameClassPair, T> Stream<T> toStream(NamingEnumeration<S> results,
-			NamingExceptionFunction<? super S, T> mapper) {
-		if (results == null) {
-			return Stream.empty();
-		}
-		Enumeration<S> enumeration = enumeration(results);
-		Function<? super S, T> function = mapper.wrap(this.namingExceptionHandler);
-		return StreamSupport
-				.stream(Spliterators.spliteratorUnknownSize(enumeration.asIterator(), Spliterator.ORDERED), false)
-				.map(function::apply).filter(Objects::nonNull).onClose(() -> closeNamingEnumeration(results));
-	}
-
-	private void closeContext(DirContext ctx) {
-		if (ctx != null) {
-			try {
-				ctx.close();
-			}
-			catch (Exception e) {
-				// Never mind this.
-			}
-		}
-	}
-
-	private <T> void closeNamingEnumeration(NamingEnumeration<T> results) {
-		if (results != null) {
-			try {
-				results.close();
-			}
-			catch (Exception e) {
-				// Never mind this.
-			}
-		}
-	}
-
-	interface ContextRunnable {
-
-		void run(DirContext ctx) throws NamingException;
-
-	}
-
-	interface NamingExceptionFunction<S, T> {
-
-		T apply(S element) throws NamingException;
-
-		default Function<S, T> wrap(Consumer<NamingException> handler) {
-			return (s) -> {
-				try {
-					return apply(s);
-				}
-				catch (NamingException ex) {
-					handler.accept(ex);
-					return null;
-				}
-			};
 		}
 
 	}

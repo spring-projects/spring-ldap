@@ -64,7 +64,7 @@ public class RenameOperationExecutor implements CompensatingTransactionOperation
 		try {
 			this.ldapOperations.rename(this.newDn, this.originalDn);
 		}
-		catch (Exception e) {
+		catch (Exception ex) {
 			log.warn("Unable to rollback rename operation. " + "originalDn: " + this.newDn + "; newDn:this. "
 					+ this.originalDn);
 		}

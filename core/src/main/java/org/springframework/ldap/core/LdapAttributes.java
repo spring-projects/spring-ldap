@@ -170,8 +170,8 @@ public class LdapAttributes extends BasicAttributes {
 			}
 
 		}
-		catch (NamingException e) {
-			log.error("Error formating attributes for output.", e);
+		catch (NamingException ex) {
+			log.error("Error formating attributes for output.", ex);
 			sb = new StringBuilder();
 		}
 

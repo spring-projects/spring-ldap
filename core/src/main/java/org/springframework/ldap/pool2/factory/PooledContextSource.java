@@ -223,8 +223,8 @@ public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupp
 		try {
 			this.keyedObjectPool.close();
 		}
-		catch (Exception e) {
-			this.logger.warn("An exception occurred while closing the underlying pool.", e);
+		catch (Exception ex) {
+			this.logger.warn("An exception occurred while closing the underlying pool.", ex);
 		}
 	}
 
@@ -257,8 +257,8 @@ public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupp
 		try {
 			dirContext = (DirContext) this.keyedObjectPool.borrowObject(dirContextType);
 		}
-		catch (Exception e) {
-			throw new DataAccessResourceFailureException("Failed to borrow DirContext from pool.", e);
+		catch (Exception ex) {
+			throw new DataAccessResourceFailureException("Failed to borrow DirContext from pool.", ex);
 		}
 
 		if (dirContext instanceof LdapContext) {

@@ -133,9 +133,10 @@ class RangeOption implements Comparable<RangeOption> {
 	}
 
 	public int compareTo(RangeOption that) {
-		if (this.getInitial() != that.getInitial())
+		if (this.getInitial() != that.getInitial()) {
 			throw new IllegalStateException("Ranges cannot be compared, range-initial not the same: " + this.toString()
 					+ " vs " + that.toString());
+		}
 
 		if (this.getTerminal() == that.getTerminal()) {
 			return 0;
@@ -157,22 +158,26 @@ class RangeOption implements Comparable<RangeOption> {
 			return -1;
 		}
 
-		return this.getTerminal() > that.getTerminal() ? 1 : -1;
+		return (this.getTerminal() > that.getTerminal()) ? 1 : -1;
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if (o == null || getClass() != o.getClass())
+		}
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 
 		RangeOption that = (RangeOption) o;
 
-		if (this.initial != that.initial)
+		if (this.initial != that.initial) {
 			return false;
-		if (this.terminal != that.terminal)
+		}
+		if (this.terminal != that.terminal) {
 			return false;
+		}
 
 		return true;
 	}
@@ -194,7 +199,7 @@ class RangeOption implements Comparable<RangeOption> {
 		}
 
 		int initial = getTerminal() + 1;
-		int terminal = pageSize == TERMINAL_END_OF_RANGE ? TERMINAL_END_OF_RANGE : getTerminal() + pageSize;
+		int terminal = (pageSize != TERMINAL_END_OF_RANGE) ? getTerminal() + pageSize : TERMINAL_END_OF_RANGE;
 
 		return new RangeOption(initial, terminal);
 	}

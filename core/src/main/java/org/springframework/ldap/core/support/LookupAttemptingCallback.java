@@ -51,9 +51,9 @@ public class LookupAttemptingCallback
 		try {
 			return (DirContextOperations) ctx.lookup(ldapEntryIdentification.getRelativeName());
 		}
-		catch (NamingException e) {
+		catch (NamingException ex) {
 			// rethrow, because we aren't allowed to throw checked exceptions.
-			throw LdapUtils.convertLdapException(e);
+			throw LdapUtils.convertLdapException(ex);
 		}
 	}
 

@@ -66,22 +66,25 @@ public abstract class BinaryLogicalFilter extends AbstractFilter {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if (o == null || getClass() != o.getClass())
+		}
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 
 		BinaryLogicalFilter that = (BinaryLogicalFilter) o;
 
-		if (this.queryList != null ? !this.queryList.equals(that.queryList) : that.queryList != null)
+		if ((this.queryList != null) ? !this.queryList.equals(that.queryList) : that.queryList != null) {
 			return false;
+		}
 
 		return true;
 	}
 
 	@Override
 	public int hashCode() {
-		return this.queryList != null ? this.queryList.hashCode() : 0;
+		return (this.queryList != null) ? this.queryList.hashCode() : 0;
 	}
 
 	/**

@@ -162,9 +162,9 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 			final DirContext dirContext = (DirContext) pooledObject.getObject();
 			return this.dirContextValidator.validateDirContext(contextType, dirContext);
 		}
-		catch (Exception e) {
+		catch (Exception ex) {
 			this.logger.warn("Failed to validate '" + pooledObject.getObject() + "' due to an unexpected exception.",
-					e);
+					ex);
 			return false;
 		}
 	}
@@ -189,8 +189,8 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 				this.logger.debug("Closed " + key + " DirContext='" + dirContext + "'");
 			}
 		}
-		catch (Exception e) {
-			this.logger.warn("An exception occured while closing '" + pooledObject.getObject() + "'", e);
+		catch (Exception ex) {
+			this.logger.warn("An exception occured while closing '" + pooledObject.getObject() + "'", ex);
 		}
 	}
 
@@ -277,8 +277,8 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 			try {
 				return method.invoke(this.target, args);
 			}
-			catch (InvocationTargetException e) {
-				Throwable targetException = e.getTargetException();
+			catch (InvocationTargetException ex) {
+				Throwable targetException = ex.getTargetException();
 				Class<? extends Throwable> targetExceptionClass = targetException.getClass();
 
 				boolean nonTransientEncountered = false;

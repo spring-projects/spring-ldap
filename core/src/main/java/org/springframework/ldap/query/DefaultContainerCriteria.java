@@ -23,9 +23,6 @@ import javax.naming.Name;
 
 import org.springframework.ldap.filter.Filter;
 
-import static org.springframework.ldap.query.CriteriaContainerType.AND;
-import static org.springframework.ldap.query.CriteriaContainerType.OR;
-
 /**
  * @author Mattias Hellborg Arthursson
  * @since 2.0
@@ -55,28 +52,28 @@ class DefaultContainerCriteria implements AppendableContainerCriteria {
 
 	@Override
 	public ConditionCriteria and(String attribute) {
-		AND.validateSameType(this.type);
-		this.type = AND;
+		CriteriaContainerType.AND.validateSameType(this.type);
+		this.type = CriteriaContainerType.AND;
 
 		return new DefaultConditionCriteria(this, attribute);
 	}
 
 	@Override
 	public ConditionCriteria or(String attribute) {
-		OR.validateSameType(this.type);
-		this.type = OR;
+		CriteriaContainerType.OR.validateSameType(this.type);
+		this.type = CriteriaContainerType.OR;
 
 		return new DefaultConditionCriteria(this, attribute);
 	}
 
 	@Override
 	public ContainerCriteria and(ContainerCriteria nested) {
-		if (this.type == OR) {
-			return new DefaultContainerCriteria(this.topQuery).withType(AND).append(this.filter())
+		if (this.type == CriteriaContainerType.OR) {
+			return new DefaultContainerCriteria(this.topQuery).withType(CriteriaContainerType.AND).append(this.filter())
 					.append(nested.filter());
 		}
 		else {
-			this.type = AND;
+			this.type = CriteriaContainerType.AND;
 			this.filters.add(nested.filter());
 			return this;
 		}
@@ -84,12 +81,12 @@ class DefaultContainerCriteria implements AppendableContainerCriteria {
 
 	@Override
 	public ContainerCriteria or(ContainerCriteria nested) {
-		if (this.type == AND) {
-			return new DefaultContainerCriteria(this.topQuery).withType(OR).append(this.filter())
+		if (this.type == CriteriaContainerType.AND) {
+			return new DefaultContainerCriteria(this.topQuery).withType(CriteriaContainerType.OR).append(this.filter())
 					.append(nested.filter());
 		}
 		else {
-			this.type = OR;
+			this.type = CriteriaContainerType.OR;
 			this.filters.add(nested.filter());
 			return this;
 		}

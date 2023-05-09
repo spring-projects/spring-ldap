@@ -25,8 +25,6 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.ldap.transaction.compensating.support.DefaultTempEntryRenamingStrategy;
 
-import static org.springframework.ldap.config.ParserUtils.getString;
-
 /**
  * @author Mattias Hellborg Arthursson
  */
@@ -40,7 +38,7 @@ public class DefaultRenamingStrategyParser implements BeanDefinitionParser {
 				.rootBeanDefinition(DefaultTempEntryRenamingStrategy.class);
 
 		builder.addPropertyValue("tempSuffix",
-				getString(element, ATT_TEMP_SUFFIX, DefaultTempEntryRenamingStrategy.DEFAULT_TEMP_SUFFIX));
+				ParserUtils.getString(element, ATT_TEMP_SUFFIX, DefaultTempEntryRenamingStrategy.DEFAULT_TEMP_SUFFIX));
 
 		AbstractBeanDefinition beanDefinition = builder.getBeanDefinition();
 		parserContext.getContainingBeanDefinition().getPropertyValues().addPropertyValue("renamingStrategy",

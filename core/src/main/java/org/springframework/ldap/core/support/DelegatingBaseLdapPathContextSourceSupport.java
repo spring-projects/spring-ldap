@@ -40,11 +40,11 @@ public abstract class DelegatingBaseLdapPathContextSourceSupport implements Base
 		try {
 			return (BaseLdapPathSource) getTarget();
 		}
-		catch (ClassCastException e) {
+		catch (ClassCastException ex) {
 			throw new UnsupportedOperationException(
 					"This operation is not supported on a target ContextSource that does not "
 							+ " implement BaseLdapPathContextSource",
-					e);
+					ex);
 		}
 	}
 

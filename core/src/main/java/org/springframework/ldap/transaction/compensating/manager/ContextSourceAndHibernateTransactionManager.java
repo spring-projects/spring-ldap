@@ -84,10 +84,10 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 		try {
 			this.ldapManagerDelegate.doBegin(actualTransactionObject.getLdapTransactionObject(), definition);
 		}
-		catch (TransactionException e) {
+		catch (TransactionException ex) {
 			// Failed to start LDAP transaction - make sure we clean up properly
 			super.doCleanupAfterCompletion(actualTransactionObject.getHibernateTransactionObject());
-			throw e;
+			throw ex;
 		}
 	}
 
@@ -162,28 +162,6 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 		this.ldapManagerDelegate.setRenamingStrategy(renamingStrategy);
 	}
 
-	private static final class ContextSourceAndHibernateTransactionObject {
-
-		private Object ldapTransactionObject;
-
-		private Object hibernateTransactionObject;
-
-		public ContextSourceAndHibernateTransactionObject(Object ldapTransactionObject,
-				Object hibernateTransactionObject) {
-			this.ldapTransactionObject = ldapTransactionObject;
-			this.hibernateTransactionObject = hibernateTransactionObject;
-		}
-
-		public Object getHibernateTransactionObject() {
-			return this.hibernateTransactionObject;
-		}
-
-		public Object getLdapTransactionObject() {
-			return this.ldapTransactionObject;
-		}
-
-	}
-
 	/*
 	 * @see
 	 * org.springframework.orm.hibernate5.HibernateTransactionManager#doSuspend(java.lang.
@@ -207,6 +185,28 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 	public void afterPropertiesSet() {
 		super.afterPropertiesSet();
 		this.ldapManagerDelegate.checkRenamingStrategy();
+	}
+
+	private static final class ContextSourceAndHibernateTransactionObject {
+
+		private Object ldapTransactionObject;
+
+		private Object hibernateTransactionObject;
+
+		public ContextSourceAndHibernateTransactionObject(Object ldapTransactionObject,
+				Object hibernateTransactionObject) {
+			this.ldapTransactionObject = ldapTransactionObject;
+			this.hibernateTransactionObject = hibernateTransactionObject;
+		}
+
+		public Object getHibernateTransactionObject() {
+			return this.hibernateTransactionObject;
+		}
+
+		public Object getLdapTransactionObject() {
+			return this.ldapTransactionObject;
+		}
+
 	}
 
 }

@@ -66,7 +66,7 @@ public class UnbindOperationExecutor implements CompensatingTransactionOperation
 		try {
 			this.ldapOperations.rename(this.temporaryDn, this.originalDn);
 		}
-		catch (Exception e) {
+		catch (Exception ex) {
 			log.warn("Filed to rollback unbind operation, temporaryDn: " + this.temporaryDn + "; originalDn:this. "
 					+ this.originalDn);
 		}

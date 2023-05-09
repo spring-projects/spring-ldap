@@ -122,7 +122,7 @@ public class DelegatingContext implements Context {
 	 */
 	public int hashCode() {
 		final Context context = this.getInnermostDelegateContext();
-		return (context != null ? context.hashCode() : 0);
+		return (context != null) ? context.hashCode() : 0;
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class DelegatingContext implements Context {
 	 */
 	public String toString() {
 		final Context context = this.getInnermostDelegateContext();
-		return (context != null ? context.toString() : "Context is closed");
+		return (context != null) ? context.toString() : "Context is closed";
 	}
 
 	// ***** Context Interface Delegates *****//
@@ -188,9 +188,9 @@ public class DelegatingContext implements Context {
 				this.keyedObjectPool.invalidateObject(this.dirContextType, context);
 			}
 		}
-		catch (Exception e) {
+		catch (Exception ex) {
 			final NamingException namingException = new NamingException("Failed to return delegate Context to pool.");
-			namingException.setRootCause(e);
+			namingException.setRootCause(ex);
 			throw namingException;
 		}
 		finally {

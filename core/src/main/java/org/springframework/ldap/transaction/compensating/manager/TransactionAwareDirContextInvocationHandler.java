@@ -70,7 +70,7 @@ public class TransactionAwareDirContextInvocationHandler implements InvocationHa
 		}
 		else if (methodName.equals("equals")) {
 			// Only consider equal when proxies are identical.
-			return (proxy == args[0] ? Boolean.TRUE : Boolean.FALSE);
+			return (proxy != args[0]) ? Boolean.FALSE : Boolean.TRUE;
 		}
 		else if (methodName.equals("hashCode")) {
 			// Use hashCode of Connection proxy.
@@ -89,8 +89,8 @@ public class TransactionAwareDirContextInvocationHandler implements InvocationHa
 			try {
 				return method.invoke(this.target, args);
 			}
-			catch (InvocationTargetException e) {
-				throw e.getTargetException();
+			catch (InvocationTargetException ex) {
+				throw ex.getTargetException();
 			}
 		}
 	}

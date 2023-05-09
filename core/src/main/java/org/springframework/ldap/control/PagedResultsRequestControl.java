@@ -93,8 +93,8 @@ public class PagedResultsRequestControl extends AbstractRequestControlDirContext
 			this.requestControlClass = Class.forName(DEFAULT_REQUEST_CONTROL);
 			this.responseControlClass = Class.forName(DEFAULT_RESPONSE_CONTROL);
 		}
-		catch (ClassNotFoundException e) {
-			this.log.debug("Default control classes not found - falling back to LdapBP classes", e);
+		catch (ClassNotFoundException ex) {
+			this.log.debug("Default control classes not found - falling back to LdapBP classes", ex);
 
 			try {
 				this.requestControlClass = Class.forName(LDAPBP_REQUEST_CONTROL);
@@ -102,7 +102,7 @@ public class PagedResultsRequestControl extends AbstractRequestControlDirContext
 			}
 			catch (ClassNotFoundException e1) {
 				throw new UncategorizedLdapException(
-						"Neither default nor fallback classes are available - unable to proceed", e);
+						"Neither default nor fallback classes are available - unable to proceed", ex);
 			}
 
 		}
@@ -166,8 +166,8 @@ public class PagedResultsRequestControl extends AbstractRequestControlDirContext
 		try {
 			result = (Control) constructor.newInstance(this.pageSize, actualCookie, this.critical);
 		}
-		catch (Exception e) {
-			ReflectionUtils.handleReflectionException(e);
+		catch (Exception ex) {
+			ReflectionUtils.handleReflectionException(ex);
 		}
 
 		return result;

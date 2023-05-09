@@ -127,8 +127,8 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 		try {
 			this.contextFactory = Class.forName(DEFAULT_CONTEXT_FACTORY);
 		}
-		catch (ClassNotFoundException e) {
-			LOG.trace("The default for contextFactory cannot be resolved", e);
+		catch (ClassNotFoundException ex) {
+			LOG.trace("The default for contextFactory cannot be resolved", ex);
 		}
 	}
 
@@ -152,9 +152,9 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 					credentials);
 			return processedDirContext;
 		}
-		catch (NamingException e) {
+		catch (NamingException ex) {
 			closeContext(ctx);
-			throw LdapUtils.convertLdapException(e);
+			throw LdapUtils.convertLdapException(ex);
 		}
 	}
 
@@ -198,8 +198,8 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 		try {
 			this.authenticationStrategy.setupEnvironment(env, principal, credentials);
 		}
-		catch (NamingException e) {
-			throw LdapUtils.convertLdapException(e);
+		catch (NamingException ex) {
+			throw LdapUtils.convertLdapException(ex);
 		}
 	}
 
@@ -212,8 +212,8 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 			try {
 				ctx.close();
 			}
-			catch (Exception e) {
-				LOG.debug("Exception closing context", e);
+			catch (Exception ex) {
+				LOG.debug("Exception closing context", ex);
 			}
 		}
 	}
@@ -260,8 +260,8 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 				try {
 					allValues = oneAttribute.getAll();
 				}
-				catch (NamingException e) {
-					throw new UncategorizedLdapException("Unexpected error occurred formatting base URL", e);
+				catch (NamingException ex) {
+					throw new UncategorizedLdapException("Unexpected error occurred formatting base URL", ex);
 				}
 
 				while (allValues.hasMoreElements()) {
@@ -298,8 +298,8 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 			URI valueUri = new URI(null, null, ldapEncoded, null);
 			return valueUri.toString();
 		}
-		catch (URISyntaxException e) {
-			throw new UncategorizedLdapException("This really shouldn't happen - report this", e);
+		catch (URISyntaxException ex) {
+			throw new UncategorizedLdapException("This really shouldn't happen - report this", ex);
 		}
 	}
 
@@ -357,9 +357,9 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 			return ctx;
 		}
-		catch (NamingException e) {
+		catch (NamingException ex) {
 			closeContext(ctx);
-			throw LdapUtils.convertLdapException(e);
+			throw LdapUtils.convertLdapException(ex);
 		}
 	}
 

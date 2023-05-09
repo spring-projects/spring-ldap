@@ -73,8 +73,8 @@ public class BindOperationExecutor implements CompensatingTransactionOperationEx
 		try {
 			this.ldapOperations.unbind(this.dn);
 		}
-		catch (Exception e) {
-			log.warn("Failed to rollback, dn:" + this.dn.toString(), e);
+		catch (Exception ex) {
+			log.warn("Failed to rollback, dn:" + this.dn.toString(), ex);
 		}
 	}
 

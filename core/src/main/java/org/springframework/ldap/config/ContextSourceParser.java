@@ -40,10 +40,6 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 
-import static org.springframework.ldap.config.ParserUtils.getBoolean;
-import static org.springframework.ldap.config.ParserUtils.getInt;
-import static org.springframework.ldap.config.ParserUtils.getString;
-
 /**
  * @author Mattias Hellborg Arthursson
  * @author Eddu Melendez
@@ -184,12 +180,12 @@ public class ContextSourceParser implements BeanDefinitionParser {
 				.setFactoryMethod("urls").addConstructorArgValue(url);
 
 		builder.addPropertyValue("urls", urlsBuilder.getBeanDefinition());
-		builder.addPropertyValue("base", getString(element, ATT_BASE, ""));
-		builder.addPropertyValue("referral", getString(element, ATT_REFERRAL, null));
+		builder.addPropertyValue("base", ParserUtils.getString(element, ATT_BASE, ""));
+		builder.addPropertyValue("referral", ParserUtils.getString(element, ATT_REFERRAL, null));
 
-		boolean anonymousReadOnly = getBoolean(element, ATT_ANONYMOUS_READ_ONLY, false);
+		boolean anonymousReadOnly = ParserUtils.getBoolean(element, ATT_ANONYMOUS_READ_ONLY, false);
 		builder.addPropertyValue("anonymousReadOnly", anonymousReadOnly);
-		boolean nativePooling = getBoolean(element, ATT_NATIVE_POOLING, false);
+		boolean nativePooling = ParserUtils.getBoolean(element, ATT_NATIVE_POOLING, false);
 		builder.addPropertyValue("pooled", nativePooling);
 
 		String authStrategyRef = element.getAttribute(ATT_AUTHENTICATION_STRATEGY_REF);
@@ -224,7 +220,7 @@ public class ContextSourceParser implements BeanDefinitionParser {
 			actualContextSourceDefinition = proxyBuilder.getBeanDefinition();
 		}
 
-		String id = getString(element, AbstractBeanDefinitionParser.ID_ATTRIBUTE, DEFAULT_ID);
+		String id = ParserUtils.getString(element, AbstractBeanDefinitionParser.ID_ATTRIBUTE, DEFAULT_ID);
 		parserContext.registerBeanComponent(new BeanComponentDefinition(actualContextSourceDefinition, id));
 
 		return actualContextSourceDefinition;
@@ -255,10 +251,10 @@ public class ContextSourceParser implements BeanDefinitionParser {
 
 			populatePoolConfigProperties(builder, pooling2Element);
 
-			boolean testOnBorrow = getBoolean(pooling2Element, ATT_TEST_ON_BORROW, false);
-			boolean testOnReturn = getBoolean(pooling2Element, ATT_TEST_ON_RETURN, false);
-			boolean testWhileIdle = getBoolean(pooling2Element, ATT_TEST_WHILE_IDLE, false);
-			boolean testOnCreate = getBoolean(pooling2Element, ATT_TEST_ON_CREATE, false);
+			boolean testOnBorrow = ParserUtils.getBoolean(pooling2Element, ATT_TEST_ON_BORROW, false);
+			boolean testOnReturn = ParserUtils.getBoolean(pooling2Element, ATT_TEST_ON_RETURN, false);
+			boolean testWhileIdle = ParserUtils.getBoolean(pooling2Element, ATT_TEST_WHILE_IDLE, false);
+			boolean testOnCreate = ParserUtils.getBoolean(pooling2Element, ATT_TEST_ON_CREATE, false);
 
 			if (testOnBorrow || testOnCreate || testWhileIdle || testOnReturn) {
 				populatePoolValidationProperties(builder, pooling2Element);
@@ -271,27 +267,28 @@ public class ContextSourceParser implements BeanDefinitionParser {
 			builder.addPropertyValue("contextSource", targetContextSourceDefinition);
 
 			builder.addPropertyValue("maxActive",
-					getString(poolingElement, ATT_MAX_ACTIVE, String.valueOf(DEFAULT_MAX_ACTIVE)));
+					ParserUtils.getString(poolingElement, ATT_MAX_ACTIVE, String.valueOf(DEFAULT_MAX_ACTIVE)));
 			builder.addPropertyValue("maxTotal",
-					getString(poolingElement, ATT_MAX_TOTAL, String.valueOf(DEFAULT_MAX_TOTAL)));
+					ParserUtils.getString(poolingElement, ATT_MAX_TOTAL, String.valueOf(DEFAULT_MAX_TOTAL)));
 			builder.addPropertyValue("maxIdle",
-					getString(poolingElement, ATT_MAX_IDLE, String.valueOf(DEFAULT_MAX_IDLE)));
+					ParserUtils.getString(poolingElement, ATT_MAX_IDLE, String.valueOf(DEFAULT_MAX_IDLE)));
 			builder.addPropertyValue("minIdle",
-					getString(poolingElement, ATT_MIN_IDLE, String.valueOf(DEFAULT_MIN_IDLE)));
+					ParserUtils.getString(poolingElement, ATT_MIN_IDLE, String.valueOf(DEFAULT_MIN_IDLE)));
 			builder.addPropertyValue("maxWait",
-					getString(poolingElement, ATT_MAX_WAIT, String.valueOf(DEFAULT_MAX_WAIT)));
-			String whenExhausted = getString(poolingElement, ATT_WHEN_EXHAUSTED, PoolExhaustedAction.BLOCK.name());
+					ParserUtils.getString(poolingElement, ATT_MAX_WAIT, String.valueOf(DEFAULT_MAX_WAIT)));
+			String whenExhausted = ParserUtils.getString(poolingElement, ATT_WHEN_EXHAUSTED,
+					PoolExhaustedAction.BLOCK.name());
 			builder.addPropertyValue("whenExhaustedAction", PoolExhaustedAction.valueOf(whenExhausted).getValue());
-			builder.addPropertyValue("timeBetweenEvictionRunsMillis",
-					getString(poolingElement, ATT_EVICTION_RUN_MILLIS, String.valueOf(DEFAULT_EVICTION_RUN_MILLIS)));
-			builder.addPropertyValue("minEvictableIdleTimeMillis",
-					getString(poolingElement, ATT_EVICTABLE_TIME_MILLIS, String.valueOf(DEFAULT_EVICTABLE_MILLIS)));
-			builder.addPropertyValue("numTestsPerEvictionRun", getString(poolingElement, ATT_TESTS_PER_EVICTION_RUN,
-					String.valueOf(DEFAULT_TESTS_PER_EVICTION_RUN)));
+			builder.addPropertyValue("timeBetweenEvictionRunsMillis", ParserUtils.getString(poolingElement,
+					ATT_EVICTION_RUN_MILLIS, String.valueOf(DEFAULT_EVICTION_RUN_MILLIS)));
+			builder.addPropertyValue("minEvictableIdleTimeMillis", ParserUtils.getString(poolingElement,
+					ATT_EVICTABLE_TIME_MILLIS, String.valueOf(DEFAULT_EVICTABLE_MILLIS)));
+			builder.addPropertyValue("numTestsPerEvictionRun", ParserUtils.getString(poolingElement,
+					ATT_TESTS_PER_EVICTION_RUN, String.valueOf(DEFAULT_TESTS_PER_EVICTION_RUN)));
 
-			boolean testOnBorrow = getBoolean(poolingElement, ATT_TEST_ON_BORROW, false);
-			boolean testOnReturn = getBoolean(poolingElement, ATT_TEST_ON_RETURN, false);
-			boolean testWhileIdle = getBoolean(poolingElement, ATT_TEST_WHILE_IDLE, false);
+			boolean testOnBorrow = ParserUtils.getBoolean(poolingElement, ATT_TEST_ON_BORROW, false);
+			boolean testOnReturn = ParserUtils.getBoolean(poolingElement, ATT_TEST_ON_RETURN, false);
+			boolean testWhileIdle = ParserUtils.getBoolean(poolingElement, ATT_TEST_WHILE_IDLE, false);
 
 			if (testOnBorrow || testOnReturn || testWhileIdle) {
 				populatePoolValidationProperties(builder, poolingElement, testOnBorrow, testOnReturn, testWhileIdle);
@@ -310,9 +307,9 @@ public class ContextSourceParser implements BeanDefinitionParser {
 
 		BeanDefinitionBuilder validatorBuilder = BeanDefinitionBuilder
 				.rootBeanDefinition(DefaultDirContextValidator.class);
-		validatorBuilder.addPropertyValue("base", getString(element, ATT_VALIDATION_QUERY_BASE, ""));
+		validatorBuilder.addPropertyValue("base", ParserUtils.getString(element, ATT_VALIDATION_QUERY_BASE, ""));
 		validatorBuilder.addPropertyValue("filter",
-				getString(element, ATT_VALIDATION_QUERY_FILTER, DefaultDirContextValidator.DEFAULT_FILTER));
+				ParserUtils.getString(element, ATT_VALIDATION_QUERY_FILTER, DefaultDirContextValidator.DEFAULT_FILTER));
 		String searchControlsRef = element.getAttribute(ATT_VALIDATION_QUERY_SEARCH_CONTROLS_REF);
 		if (StringUtils.hasText(searchControlsRef)) {
 			validatorBuilder.addPropertyReference("searchControls", searchControlsRef);
@@ -320,13 +317,13 @@ public class ContextSourceParser implements BeanDefinitionParser {
 		builder.addPropertyValue("dirContextValidator", validatorBuilder.getBeanDefinition());
 
 		builder.addPropertyValue("timeBetweenEvictionRunsMillis",
-				getString(element, ATT_EVICTION_RUN_MILLIS, String.valueOf(DEFAULT_EVICTION_RUN_MILLIS)));
+				ParserUtils.getString(element, ATT_EVICTION_RUN_MILLIS, String.valueOf(DEFAULT_EVICTION_RUN_MILLIS)));
 		builder.addPropertyValue("numTestsPerEvictionRun",
-				getInt(element, ATT_TESTS_PER_EVICTION_RUN, DEFAULT_TESTS_PER_EVICTION_RUN));
+				ParserUtils.getInt(element, ATT_TESTS_PER_EVICTION_RUN, DEFAULT_TESTS_PER_EVICTION_RUN));
 		builder.addPropertyValue("minEvictableIdleTimeMillis",
-				getString(element, ATT_EVICTABLE_TIME_MILLIS, String.valueOf(DEFAULT_EVICTABLE_MILLIS)));
+				ParserUtils.getString(element, ATT_EVICTABLE_TIME_MILLIS, String.valueOf(DEFAULT_EVICTABLE_MILLIS)));
 
-		String nonTransientExceptions = getString(element, ATT_NON_TRANSIENT_EXCEPTIONS,
+		String nonTransientExceptions = ParserUtils.getString(element, ATT_NON_TRANSIENT_EXCEPTIONS,
 				CommunicationException.class.getName());
 		String[] strings = StringUtils.commaDelimitedListToStringArray(nonTransientExceptions);
 		Set<Class<?>> nonTransientExceptionClasses = new HashSet<Class<?>>();
@@ -334,8 +331,8 @@ public class ContextSourceParser implements BeanDefinitionParser {
 			try {
 				nonTransientExceptionClasses.add(ClassUtils.getDefaultClassLoader().loadClass(className));
 			}
-			catch (ClassNotFoundException e) {
-				throw new IllegalArgumentException(String.format("%s is not a valid class name", className), e);
+			catch (ClassNotFoundException ex) {
+				throw new IllegalArgumentException(String.format("%s is not a valid class name", className), ex);
 			}
 		}
 
@@ -346,8 +343,8 @@ public class ContextSourceParser implements BeanDefinitionParser {
 
 		BeanDefinitionBuilder validatorBuilder = BeanDefinitionBuilder
 				.rootBeanDefinition(org.springframework.ldap.pool2.validation.DefaultDirContextValidator.class);
-		validatorBuilder.addPropertyValue("base", getString(element, ATT_VALIDATION_QUERY_BASE, ""));
-		validatorBuilder.addPropertyValue("filter", getString(element, ATT_VALIDATION_QUERY_FILTER,
+		validatorBuilder.addPropertyValue("base", ParserUtils.getString(element, ATT_VALIDATION_QUERY_BASE, ""));
+		validatorBuilder.addPropertyValue("filter", ParserUtils.getString(element, ATT_VALIDATION_QUERY_FILTER,
 				org.springframework.ldap.pool2.validation.DefaultDirContextValidator.DEFAULT_FILTER));
 		String searchControlsRef = element.getAttribute(ATT_VALIDATION_QUERY_SEARCH_CONTROLS_REF);
 		if (StringUtils.hasText(searchControlsRef)) {
@@ -355,7 +352,7 @@ public class ContextSourceParser implements BeanDefinitionParser {
 		}
 		builder.addPropertyValue("dirContextValidator", validatorBuilder.getBeanDefinition());
 
-		String nonTransientExceptions = getString(element, ATT_NON_TRANSIENT_EXCEPTIONS,
+		String nonTransientExceptions = ParserUtils.getString(element, ATT_NON_TRANSIENT_EXCEPTIONS,
 				CommunicationException.class.getName());
 		String[] strings = StringUtils.commaDelimitedListToStringArray(nonTransientExceptions);
 		Set<Class<?>> nonTransientExceptionClasses = new HashSet<Class<?>>();
@@ -363,8 +360,8 @@ public class ContextSourceParser implements BeanDefinitionParser {
 			try {
 				nonTransientExceptionClasses.add(ClassUtils.getDefaultClassLoader().loadClass(className));
 			}
-			catch (ClassNotFoundException e) {
-				throw new IllegalArgumentException(String.format("%s is not a valid class name", className), e);
+			catch (ClassNotFoundException ex) {
+				throw new IllegalArgumentException(String.format("%s is not a valid class name", className), ex);
 			}
 		}
 
@@ -375,36 +372,38 @@ public class ContextSourceParser implements BeanDefinitionParser {
 		BeanDefinitionBuilder configBuilder = BeanDefinitionBuilder.rootBeanDefinition(PoolConfig.class);
 
 		configBuilder.addPropertyValue("maxTotal",
-				getString(element, ATT_MAX_TOTAL, String.valueOf(DEFAULT_MAX_TOTAL)));
+				ParserUtils.getString(element, ATT_MAX_TOTAL, String.valueOf(DEFAULT_MAX_TOTAL)));
 		configBuilder.addPropertyValue("maxTotalPerKey",
-				getString(element, ATT_MAX_TOTAL_PER_KEY, String.valueOf(DEFAULT_MAX_TOTAL_PER_KEY)));
+				ParserUtils.getString(element, ATT_MAX_TOTAL_PER_KEY, String.valueOf(DEFAULT_MAX_TOTAL_PER_KEY)));
 		configBuilder.addPropertyValue("maxIdlePerKey",
-				getString(element, ATT_MAX_IDLE_PER_KEY, String.valueOf(DEFAULT_MAX_IDLE_PER_KEY)));
+				ParserUtils.getString(element, ATT_MAX_IDLE_PER_KEY, String.valueOf(DEFAULT_MAX_IDLE_PER_KEY)));
 		configBuilder.addPropertyValue("minIdlePerKey",
-				getString(element, ATT_MIN_IDLE_PER_KEY, String.valueOf(DEFAULT_MIN_IDLE_PER_KEY)));
+				ParserUtils.getString(element, ATT_MIN_IDLE_PER_KEY, String.valueOf(DEFAULT_MIN_IDLE_PER_KEY)));
 		configBuilder.addPropertyValue("evictionPolicyClassName",
-				getString(element, ATT_EVICTION_POLICY_CLASS, DEFAULT_EVICTION_POLICY_CLASS_NAME));
-		configBuilder.addPropertyValue("fairness", getBoolean(element, ATT_FAIRNESS, DEFAULT_FAIRNESS));
-		configBuilder.addPropertyValue("jmxEnabled", getBoolean(element, ATT_JMX_ENABLE, DEFAULT_JMX_ENABLE));
-		configBuilder.addPropertyValue("jmxNameBase", getString(element, ATT_JMX_NAME_BASE, DEFAULT_JMX_NAME_BASE));
+				ParserUtils.getString(element, ATT_EVICTION_POLICY_CLASS, DEFAULT_EVICTION_POLICY_CLASS_NAME));
+		configBuilder.addPropertyValue("fairness", ParserUtils.getBoolean(element, ATT_FAIRNESS, DEFAULT_FAIRNESS));
+		configBuilder.addPropertyValue("jmxEnabled",
+				ParserUtils.getBoolean(element, ATT_JMX_ENABLE, DEFAULT_JMX_ENABLE));
+		configBuilder.addPropertyValue("jmxNameBase",
+				ParserUtils.getString(element, ATT_JMX_NAME_BASE, DEFAULT_JMX_NAME_BASE));
 		configBuilder.addPropertyValue("jmxNamePrefix",
-				getString(element, ATT_JMX_NAME_PREFIX, DEFAULT_JMX_NAME_PREFIX));
-		configBuilder.addPropertyValue("lifo", getBoolean(element, ATT_LIFO, DEFAULT_LIFO));
+				ParserUtils.getString(element, ATT_JMX_NAME_PREFIX, DEFAULT_JMX_NAME_PREFIX));
+		configBuilder.addPropertyValue("lifo", ParserUtils.getBoolean(element, ATT_LIFO, DEFAULT_LIFO));
 		configBuilder.addPropertyValue("maxWaitMillis",
-				getString(element, ATT_MAX_WAIT, String.valueOf(DEFAULT_MAX_WAIT_MILLIS)));
-		configBuilder.addPropertyValue("blockWhenExhausted", Boolean
-				.valueOf(getString(element, ATT_BLOCK_WHEN_EXHAUSTED, String.valueOf(DEFAULT_BLOCK_WHEN_EXHAUSTED))));
-		configBuilder.addPropertyValue("testOnBorrow", getBoolean(element, ATT_TEST_ON_BORROW, false));
-		configBuilder.addPropertyValue("testOnCreate", getBoolean(element, ATT_TEST_ON_CREATE, false));
-		configBuilder.addPropertyValue("testOnReturn", getBoolean(element, ATT_TEST_ON_RETURN, false));
-		configBuilder.addPropertyValue("testWhileIdle", getBoolean(element, ATT_TEST_WHILE_IDLE, false));
+				ParserUtils.getString(element, ATT_MAX_WAIT, String.valueOf(DEFAULT_MAX_WAIT_MILLIS)));
+		configBuilder.addPropertyValue("blockWhenExhausted", Boolean.valueOf(ParserUtils.getString(element,
+				ATT_BLOCK_WHEN_EXHAUSTED, String.valueOf(DEFAULT_BLOCK_WHEN_EXHAUSTED))));
+		configBuilder.addPropertyValue("testOnBorrow", ParserUtils.getBoolean(element, ATT_TEST_ON_BORROW, false));
+		configBuilder.addPropertyValue("testOnCreate", ParserUtils.getBoolean(element, ATT_TEST_ON_CREATE, false));
+		configBuilder.addPropertyValue("testOnReturn", ParserUtils.getBoolean(element, ATT_TEST_ON_RETURN, false));
+		configBuilder.addPropertyValue("testWhileIdle", ParserUtils.getBoolean(element, ATT_TEST_WHILE_IDLE, false));
 		configBuilder.addPropertyValue("timeBetweenEvictionRunsMillis",
-				getString(element, ATT_EVICTION_RUN_MILLIS, String.valueOf(DEFAULT_EVICTION_RUN_MILLIS)));
-		configBuilder.addPropertyValue("numTestsPerEvictionRun",
-				getString(element, ATT_TESTS_PER_EVICTION_RUN, String.valueOf(DEFAULT_TESTS_PER_EVICTION_RUN)));
+				ParserUtils.getString(element, ATT_EVICTION_RUN_MILLIS, String.valueOf(DEFAULT_EVICTION_RUN_MILLIS)));
+		configBuilder.addPropertyValue("numTestsPerEvictionRun", ParserUtils.getString(element,
+				ATT_TESTS_PER_EVICTION_RUN, String.valueOf(DEFAULT_TESTS_PER_EVICTION_RUN)));
 		configBuilder.addPropertyValue("minEvictableIdleTimeMillis",
-				getString(element, ATT_EVICTABLE_TIME_MILLIS, String.valueOf(DEFAULT_EVICTABLE_MILLIS)));
-		configBuilder.addPropertyValue("softMinEvictableIdleTimeMillis", getString(element,
+				ParserUtils.getString(element, ATT_EVICTABLE_TIME_MILLIS, String.valueOf(DEFAULT_EVICTABLE_MILLIS)));
+		configBuilder.addPropertyValue("softMinEvictableIdleTimeMillis", ParserUtils.getString(element,
 				ATT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS, String.valueOf(DEFAULT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS)));
 
 		builder.addConstructorArgValue(configBuilder.getBeanDefinition());
@@ -412,9 +411,11 @@ public class ContextSourceParser implements BeanDefinitionParser {
 
 	static class UrlsFactory {
 
+		// CHECKSTYLE:OFF
 		public static String[] urls(String value) {
 			return StringUtils.commaDelimitedListToStringArray(value);
 		}
+		// CHECKSTYLE:ON
 
 	}
 

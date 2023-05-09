@@ -92,8 +92,8 @@ public class SingleContextSource implements ContextSource, DisposableBean {
 		try {
 			this.ctx.close();
 		}
-		catch (javax.naming.NamingException e) {
-			LOG.warn("Error when closing", e);
+		catch (javax.naming.NamingException ex) {
+			LOG.warn("Error when closing", ex);
 		}
 	}
 
@@ -193,7 +193,7 @@ public class SingleContextSource implements ContextSource, DisposableBean {
 			}
 			else if (methodName.equals("equals")) {
 				// Only consider equal when proxies are identical.
-				return (proxy == args[0] ? Boolean.TRUE : Boolean.FALSE);
+				return (proxy != args[0]) ? Boolean.FALSE : Boolean.TRUE;
 			}
 			else if (methodName.equals("hashCode")) {
 				// Use hashCode of Connection proxy.
@@ -208,8 +208,8 @@ public class SingleContextSource implements ContextSource, DisposableBean {
 			try {
 				return method.invoke(this.target, args);
 			}
-			catch (InvocationTargetException e) {
-				throw e.getTargetException();
+			catch (InvocationTargetException ex) {
+				throw ex.getTargetException();
 			}
 		}
 

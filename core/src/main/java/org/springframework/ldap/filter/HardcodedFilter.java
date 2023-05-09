@@ -68,22 +68,25 @@ public class HardcodedFilter extends AbstractFilter {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if (o == null || getClass() != o.getClass())
+		}
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 
 		HardcodedFilter that = (HardcodedFilter) o;
 
-		if (this.filter != null ? !this.filter.equals(that.filter) : that.filter != null)
+		if ((this.filter != null) ? !this.filter.equals(that.filter) : that.filter != null) {
 			return false;
+		}
 
 		return true;
 	}
 
 	@Override
 	public int hashCode() {
-		return this.filter != null ? this.filter.hashCode() : 0;
+		return (this.filter != null) ? this.filter.hashCode() : 0;
 	}
 
 }

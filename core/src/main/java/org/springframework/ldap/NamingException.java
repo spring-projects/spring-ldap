@@ -33,7 +33,7 @@ import org.springframework.core.NestedRuntimeException;
  */
 public abstract class NamingException extends NestedRuntimeException {
 
-	private Throwable cause;
+	private final Throwable cause;
 
 	/**
 	 * Overrides {@link NestedRuntimeException#getCause()} since serialization always
@@ -47,7 +47,7 @@ public abstract class NamingException extends NestedRuntimeException {
 		// the constructor, we check for the cause being "this" here, as the cause
 		// could still be set to "this" via reflection: for example, by a remoting
 		// deserializer like Hessian's.
-		return (this.cause == this ? null : this.cause);
+		return (this.cause != this) ? this.cause : null;
 	}
 
 	/**
@@ -56,6 +56,7 @@ public abstract class NamingException extends NestedRuntimeException {
 	 */
 	public NamingException(String msg) {
 		super(msg);
+		this.cause = null;
 	}
 
 	/**
@@ -76,7 +77,7 @@ public abstract class NamingException extends NestedRuntimeException {
 	 * a proper subclass of {@link javax.naming.NamingException}.
 	 */
 	public NamingException(Throwable cause) {
-		this(cause != null ? cause.getMessage() : null, cause);
+		this((cause != null) ? cause.getMessage() : null, cause);
 	}
 
 	/**

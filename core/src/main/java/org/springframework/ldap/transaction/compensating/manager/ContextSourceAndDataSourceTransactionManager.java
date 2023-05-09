@@ -83,10 +83,10 @@ public class ContextSourceAndDataSourceTransactionManager extends DataSourceTran
 		try {
 			this.ldapManagerDelegate.doBegin(actualTransactionObject.getLdapTransactionObject(), definition);
 		}
-		catch (TransactionException e) {
+		catch (TransactionException ex) {
 			// Failed to start LDAP transaction - make sure we clean up properly
 			super.doCleanupAfterCompletion(actualTransactionObject.getDataSourceTransactionObject());
-			throw e;
+			throw ex;
 		}
 	}
 
@@ -162,28 +162,6 @@ public class ContextSourceAndDataSourceTransactionManager extends DataSourceTran
 		this.ldapManagerDelegate.setRenamingStrategy(renamingStrategy);
 	}
 
-	private final static class ContextSourceAndDataSourceTransactionObject {
-
-		private Object ldapTransactionObject;
-
-		private Object dataSourceTransactionObject;
-
-		public ContextSourceAndDataSourceTransactionObject(Object ldapTransactionObject,
-				Object dataSourceTransactionObject) {
-			this.ldapTransactionObject = ldapTransactionObject;
-			this.dataSourceTransactionObject = dataSourceTransactionObject;
-		}
-
-		public Object getDataSourceTransactionObject() {
-			return this.dataSourceTransactionObject;
-		}
-
-		public Object getLdapTransactionObject() {
-			return this.ldapTransactionObject;
-		}
-
-	}
-
 	/*
 	 * @see
 	 * org.springframework.jdbc.datasource.DataSourceTransactionManager#doSuspend(java.
@@ -207,6 +185,28 @@ public class ContextSourceAndDataSourceTransactionManager extends DataSourceTran
 	public void afterPropertiesSet() {
 		super.afterPropertiesSet();
 		this.ldapManagerDelegate.checkRenamingStrategy();
+	}
+
+	private final static class ContextSourceAndDataSourceTransactionObject {
+
+		private Object ldapTransactionObject;
+
+		private Object dataSourceTransactionObject;
+
+		public ContextSourceAndDataSourceTransactionObject(Object ldapTransactionObject,
+				Object dataSourceTransactionObject) {
+			this.ldapTransactionObject = ldapTransactionObject;
+			this.dataSourceTransactionObject = dataSourceTransactionObject;
+		}
+
+		public Object getDataSourceTransactionObject() {
+			return this.dataSourceTransactionObject;
+		}
+
+		public Object getLdapTransactionObject() {
+			return this.ldapTransactionObject;
+		}
+
 	}
 
 }

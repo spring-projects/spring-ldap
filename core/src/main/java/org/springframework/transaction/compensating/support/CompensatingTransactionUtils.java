@@ -63,8 +63,8 @@ public final class CompensatingTransactionUtils {
 			try {
 				method.invoke(target, args);
 			}
-			catch (InvocationTargetException e) {
-				throw e.getTargetException();
+			catch (InvocationTargetException ex) {
+				throw ex.getTargetException();
 			}
 		}
 	}

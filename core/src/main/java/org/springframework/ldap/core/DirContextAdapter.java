@@ -252,8 +252,8 @@ public class DirContextAdapter implements DirContextOperations {
 				tmpList.add(oneAttribute.getID());
 			}
 		}
-		catch (NamingException e) {
-			throw LdapUtils.convertLdapException(e);
+		catch (NamingException ex) {
+			throw LdapUtils.convertLdapException(ex);
 		}
 		finally {
 			closeNamingEnumeration(attributesEnumeration);
@@ -268,7 +268,7 @@ public class DirContextAdapter implements DirContextOperations {
 				enumeration.close();
 			}
 		}
-		catch (NamingException e) {
+		catch (NamingException ex) {
 			// Never mind this
 		}
 	}
@@ -294,8 +294,8 @@ public class DirContextAdapter implements DirContextOperations {
 				collectModifications(oneAttr, tmpList);
 			}
 		}
-		catch (NamingException e) {
-			throw LdapUtils.convertLdapException(e);
+		catch (NamingException ex) {
+			throw LdapUtils.convertLdapException(ex);
 		}
 		finally {
 			closeNamingEnumeration(attributesEnumeration);
@@ -327,7 +327,7 @@ public class DirContextAdapter implements DirContextOperations {
 			try {
 				currentAttribute.initValuesAsNames();
 			}
-			catch (IllegalArgumentException e) {
+			catch (IllegalArgumentException ex) {
 				log.warn("Incompatible attributes; changed attribute has Name values but "
 						+ "original cannot be converted to this");
 			}
@@ -413,7 +413,7 @@ public class DirContextAdapter implements DirContextOperations {
 		try {
 			return (a == null || a.size() == 0 || a.get() == null);
 		}
-		catch (NamingException e) {
+		catch (NamingException ex) {
 			return true;
 		}
 	}
@@ -470,14 +470,16 @@ public class DirContextAdapter implements DirContextOperations {
 		// Check contents of arrays
 
 		// Order DOES matter, e.g. first names
-		if (isAttributeUpdated(values, orderMatters, orig))
+		if (isAttributeUpdated(values, orderMatters, orig)) {
 			return true;
+		}
 
 		if (prev != null) {
 			// Also check against updatedAttrs, since there might have been
 			// a previous update
-			if (isAttributeUpdated(values, orderMatters, prev))
+			if (isAttributeUpdated(values, orderMatters, prev)) {
 				return true;
+			}
 		}
 		// FALSE since we have compared all values
 		return false;
@@ -548,8 +550,8 @@ public class DirContextAdapter implements DirContextOperations {
 		try {
 			return oneAttr.get();
 		}
-		catch (NamingException e) {
-			throw LdapUtils.convertLdapException(e);
+		catch (NamingException ex) {
+			throw LdapUtils.convertLdapException(ex);
 		}
 	}
 
@@ -713,8 +715,8 @@ public class DirContextAdapter implements DirContextOperations {
 				}
 			}
 		}
-		catch (NamingException e) {
-			throw LdapUtils.convertLdapException(e);
+		catch (NamingException ex) {
+			throw LdapUtils.convertLdapException(ex);
 		}
 		finally {
 			closeNamingEnumeration(attributesEnumeration);
@@ -733,7 +735,7 @@ public class DirContextAdapter implements DirContextOperations {
 			List<String> objects = collectAttributeValuesAsList(name, String.class);
 			return objects.toArray(new String[objects.size()]);
 		}
-		catch (NoSuchAttributeException e) {
+		catch (NoSuchAttributeException ex) {
 			// The attribute does not exist - contract says to return null.
 			return null;
 		}
@@ -748,7 +750,7 @@ public class DirContextAdapter implements DirContextOperations {
 			List<Object> list = collectAttributeValuesAsList(name, Object.class);
 			return list.toArray(new Object[list.size()]);
 		}
-		catch (NoSuchAttributeException e) {
+		catch (NoSuchAttributeException ex) {
 			// The attribute does not exist - contract says to return null.
 			return null;
 		}
@@ -770,7 +772,7 @@ public class DirContextAdapter implements DirContextOperations {
 			LdapUtils.collectAttributeValues(this.originalAttrs, name, attrSet, String.class);
 			return attrSet;
 		}
-		catch (NoSuchAttributeException e) {
+		catch (NoSuchAttributeException ex) {
 			// The attribute does not exist - contract says to return null.
 			return null;
 		}
@@ -1265,8 +1267,8 @@ public class DirContextAdapter implements DirContextOperations {
 			result.addAll(0, this.base);
 			return result.toString();
 		}
-		catch (InvalidNameException e) {
-			throw new org.springframework.ldap.InvalidNameException(e);
+		catch (InvalidNameException ex) {
+			throw new org.springframework.ldap.InvalidNameException(ex);
 		}
 	}
 
@@ -1297,25 +1299,34 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if (o == null || getClass() != o.getClass())
+		}
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 
 		DirContextAdapter that = (DirContextAdapter) o;
 
-		if (this.updateMode != that.updateMode)
+		if (this.updateMode != that.updateMode) {
 			return false;
-		if (this.base != null ? !this.base.equals(that.base) : that.base != null)
+		}
+		if ((this.base != null) ? !this.base.equals(that.base) : that.base != null) {
 			return false;
-		if (this.dn != null ? !this.dn.equals(that.dn) : that.dn != null)
+		}
+		if ((this.dn != null) ? !this.dn.equals(that.dn) : that.dn != null) {
 			return false;
-		if (this.originalAttrs != null ? !this.originalAttrs.equals(that.originalAttrs) : that.originalAttrs != null)
+		}
+		if ((this.originalAttrs != null) ? !this.originalAttrs.equals(that.originalAttrs)
+				: that.originalAttrs != null) {
 			return false;
-		if (this.referralUrl != null ? !this.referralUrl.equals(that.referralUrl) : that.referralUrl != null)
+		}
+		if ((this.referralUrl != null) ? !this.referralUrl.equals(that.referralUrl) : that.referralUrl != null) {
 			return false;
-		if (this.updatedAttrs != null ? !this.updatedAttrs.equals(that.updatedAttrs) : that.updatedAttrs != null)
+		}
+		if ((this.updatedAttrs != null) ? !this.updatedAttrs.equals(that.updatedAttrs) : that.updatedAttrs != null) {
 			return false;
+		}
 
 		return true;
 	}
@@ -1325,12 +1336,12 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	@Override
 	public int hashCode() {
-		int result = this.originalAttrs != null ? this.originalAttrs.hashCode() : 0;
-		result = 31 * result + (this.dn != null ? this.dn.hashCode() : 0);
-		result = 31 * result + (this.base != null ? this.base.hashCode() : 0);
+		int result = (this.originalAttrs != null) ? this.originalAttrs.hashCode() : 0;
+		result = 31 * result + ((this.dn != null) ? this.dn.hashCode() : 0);
+		result = 31 * result + ((this.base != null) ? this.base.hashCode() : 0);
 		result = 31 * result + (this.updateMode ? 1 : 0);
-		result = 31 * result + (this.updatedAttrs != null ? this.updatedAttrs.hashCode() : 0);
-		result = 31 * result + (this.referralUrl != null ? this.referralUrl.hashCode() : 0);
+		result = 31 * result + ((this.updatedAttrs != null) ? this.updatedAttrs.hashCode() : 0);
+		result = 31 * result + ((this.referralUrl != null) ? this.referralUrl.hashCode() : 0);
 		return result;
 	}
 
@@ -1368,7 +1379,7 @@ public class DirContextAdapter implements DirContextOperations {
 				}
 			}
 		}
-		catch (NamingException e) {
+		catch (NamingException ex) {
 			log.warn("Error in toString()");
 		}
 		builder.append('}');

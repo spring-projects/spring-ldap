@@ -110,8 +110,8 @@ public abstract class AbstractFallbackRequestAndResponseControlDirContextProcess
 			this.requestControlClass = Class.forName(this.defaultRequestControl);
 			this.responseControlClass = Class.forName(this.defaultResponseControl);
 		}
-		catch (ClassNotFoundException e) {
-			this.log.debug("Default control classes not found - falling back to LdapBP classes", e);
+		catch (ClassNotFoundException ex) {
+			this.log.debug("Default control classes not found - falling back to LdapBP classes", ex);
 
 			try {
 				this.requestControlClass = Class.forName(this.fallbackRequestControl);
@@ -119,7 +119,7 @@ public abstract class AbstractFallbackRequestAndResponseControlDirContextProcess
 			}
 			catch (ClassNotFoundException e1) {
 				throw new UncategorizedLdapException(
-						"Neither default nor fallback classes are available - unable to proceed", e);
+						"Neither default nor fallback classes are available - unable to proceed", ex);
 			}
 		}
 	}
@@ -165,8 +165,8 @@ public abstract class AbstractFallbackRequestAndResponseControlDirContextProcess
 		try {
 			result = (Control) constructor.newInstance(params);
 		}
-		catch (Exception e) {
-			ReflectionUtils.handleReflectionException(e);
+		catch (Exception ex) {
+			ReflectionUtils.handleReflectionException(ex);
 		}
 
 		return result;

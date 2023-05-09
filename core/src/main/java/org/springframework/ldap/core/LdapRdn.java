@@ -62,11 +62,11 @@ public class LdapRdn implements Serializable, Comparable {
 		try {
 			rdn = parser.rdn();
 		}
-		catch (ParseException e) {
-			throw new BadLdapGrammarException("Failed to parse Rdn", e);
+		catch (ParseException ex) {
+			throw new BadLdapGrammarException("Failed to parse Rdn", ex);
 		}
-		catch (org.springframework.ldap.core.TokenMgrError e) {
-			throw new BadLdapGrammarException("Failed to parse Rdn", e);
+		catch (org.springframework.ldap.core.TokenMgrError ex) {
+			throw new BadLdapGrammarException("Failed to parse Rdn", ex);
 		}
 		this.components = rdn.components;
 	}

@@ -78,25 +78,29 @@ public abstract class CompareFilter extends AbstractFilter {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if (o == null || getClass() != o.getClass())
+		}
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 
 		CompareFilter that = (CompareFilter) o;
 
-		if (this.attribute != null ? !this.attribute.equals(that.attribute) : that.attribute != null)
+		if ((this.attribute != null) ? !this.attribute.equals(that.attribute) : that.attribute != null) {
 			return false;
-		if (this.value != null ? !this.value.equals(that.value) : that.value != null)
+		}
+		if ((this.value != null) ? !this.value.equals(that.value) : that.value != null) {
 			return false;
+		}
 
 		return true;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = this.attribute != null ? this.attribute.hashCode() : 0;
-		result = 31 * result + (this.value != null ? this.value.hashCode() : 0);
+		int result = (this.attribute != null) ? this.attribute.hashCode() : 0;
+		result = 31 * result + ((this.value != null) ? this.value.hashCode() : 0);
 		return result;
 	}
 

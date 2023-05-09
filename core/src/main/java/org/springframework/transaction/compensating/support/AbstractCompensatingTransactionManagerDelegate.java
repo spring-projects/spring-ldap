@@ -82,8 +82,8 @@ public abstract class AbstractCompensatingTransactionManagerDelegate {
 				TransactionSynchronizationManager.bindResource(getTransactionSynchronizationKey(), contextHolder);
 			}
 		}
-		catch (Exception e) {
-			throw new CannotCreateTransactionException("Could not create DirContext instance for transaction", e);
+		catch (Exception ex) {
+			throw new CannotCreateTransactionException("Could not create DirContext instance for transaction", ex);
 		}
 	}
 

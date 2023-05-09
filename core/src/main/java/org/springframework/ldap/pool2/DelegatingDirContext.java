@@ -123,7 +123,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	 */
 	public int hashCode() {
 		final DirContext context = this.getInnermostDelegateDirContext();
-		return (context != null ? context.hashCode() : 0);
+		return (context != null) ? context.hashCode() : 0;
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	 */
 	public String toString() {
 		final DirContext context = this.getInnermostDelegateDirContext();
-		return (context != null ? context.toString() : "DirContext is closed");
+		return (context != null) ? context.toString() : "DirContext is closed";
 	}
 
 	// ***** DirContextProxy Interface Methods *****//

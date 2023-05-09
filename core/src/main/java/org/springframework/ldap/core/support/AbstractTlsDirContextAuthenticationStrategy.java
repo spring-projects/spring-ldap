@@ -151,9 +151,9 @@ public abstract class AbstractTlsDirContextAuthenticationStrategy implements Dir
 					return ctx;
 				}
 			}
-			catch (IOException e) {
+			catch (IOException ex) {
 				LdapUtils.closeContext(ctx);
-				throw new UncategorizedLdapException("Failed to negotiate TLS session", e);
+				throw new UncategorizedLdapException("Failed to negotiate TLS session", ex);
 			}
 		}
 		else {

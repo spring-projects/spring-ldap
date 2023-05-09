@@ -307,8 +307,8 @@ public final class LdapUtils {
 				try {
 					handleAttributeValue(attribute.getID(), attribute.get(i), i, callbackHandler);
 				}
-				catch (javax.naming.NamingException e) {
-					throw convertLdapException(e);
+				catch (javax.naming.NamingException ex) {
+					throw convertLdapException(ex);
 				}
 			}
 		}
@@ -317,33 +317,6 @@ public final class LdapUtils {
 	private static void handleAttributeValue(String attributeID, Object value, int i,
 			AttributeValueCallbackHandler callbackHandler) {
 		callbackHandler.handleAttributeValue(attributeID, value, i);
-	}
-
-	/**
-	 * An {@link AttributeValueCallbackHandler} to collect values in a supplied
-	 * collection.
-	 *
-	 * @author Mattias Hellborg Arthursson
-	 */
-	private static final class CollectingAttributeValueCallbackHandler<T> implements AttributeValueCallbackHandler {
-
-		private final Collection<T> collection;
-
-		private final Class<T> clazz;
-
-		public CollectingAttributeValueCallbackHandler(Collection<T> collection, Class<T> clazz) {
-			Assert.notNull(collection, "Collection must not be null");
-			Assert.notNull(clazz, "Clazz parameter must not be null");
-
-			this.collection = collection;
-			this.clazz = clazz;
-		}
-
-		public void handleAttributeValue(String attributeName, Object attributeValue, int index) {
-			Assert.isTrue(attributeName == null || this.clazz.isAssignableFrom(attributeValue.getClass()));
-			this.collection.add(this.clazz.cast(attributeValue));
-		}
-
 	}
 
 	/**
@@ -387,8 +360,8 @@ public final class LdapUtils {
 			try {
 				return new LdapName(convertCompositeNameToString(compositeName));
 			}
-			catch (InvalidNameException e) {
-				throw convertLdapException(e);
+			catch (InvalidNameException ex) {
+				throw convertLdapException(ex);
 			}
 		}
 		else {
@@ -396,8 +369,8 @@ public final class LdapUtils {
 			try {
 				result.addAll(0, name);
 			}
-			catch (InvalidNameException e) {
-				throw convertLdapException(e);
+			catch (InvalidNameException ex) {
+				throw convertLdapException(ex);
 			}
 
 			return result;
@@ -418,8 +391,8 @@ public final class LdapUtils {
 		try {
 			return new LdapName(distinguishedName);
 		}
-		catch (InvalidNameException e) {
-			throw convertLdapException(e);
+		catch (InvalidNameException ex) {
+			throw convertLdapException(ex);
 		}
 	}
 
@@ -457,8 +430,8 @@ public final class LdapUtils {
 			try {
 				result.remove(0);
 			}
-			catch (InvalidNameException e) {
-				throw convertLdapException(e);
+			catch (InvalidNameException ex) {
+				throw convertLdapException(ex);
 			}
 		}
 
@@ -483,8 +456,8 @@ public final class LdapUtils {
 		try {
 			result.addAll(0, pathToPrepend);
 		}
-		catch (InvalidNameException e) {
-			throw convertLdapException(e);
+		catch (InvalidNameException ex) {
+			throw convertLdapException(ex);
 		}
 
 		return result;
@@ -544,8 +517,8 @@ public final class LdapUtils {
 				try {
 					return oneAttribute.get();
 				}
-				catch (javax.naming.NamingException e) {
-					throw convertLdapException(e);
+				catch (javax.naming.NamingException ex) {
+					throw convertLdapException(ex);
 				}
 			}
 		}
@@ -785,6 +758,33 @@ public final class LdapUtils {
 		}
 		sb.append("}");
 		return sb.toString();
+	}
+
+	/**
+	 * An {@link AttributeValueCallbackHandler} to collect values in a supplied
+	 * collection.
+	 *
+	 * @author Mattias Hellborg Arthursson
+	 */
+	private static final class CollectingAttributeValueCallbackHandler<T> implements AttributeValueCallbackHandler {
+
+		private final Collection<T> collection;
+
+		private final Class<T> clazz;
+
+		public CollectingAttributeValueCallbackHandler(Collection<T> collection, Class<T> clazz) {
+			Assert.notNull(collection, "Collection must not be null");
+			Assert.notNull(clazz, "Clazz parameter must not be null");
+
+			this.collection = collection;
+			this.clazz = clazz;
+		}
+
+		public void handleAttributeValue(String attributeName, Object attributeValue, int index) {
+			Assert.isTrue(attributeName == null || this.clazz.isAssignableFrom(attributeValue.getClass()));
+			this.collection.add(this.clazz.cast(attributeValue));
+		}
+
 	}
 
 }

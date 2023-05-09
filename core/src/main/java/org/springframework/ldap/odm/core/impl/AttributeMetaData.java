@@ -147,11 +147,11 @@ import org.springframework.ldap.odm.annotations.Transient;
 			try {
 				paramType = (ParameterizedType) field.getGenericType();
 			}
-			catch (ClassCastException e) {
+			catch (ClassCastException ex) {
 				throw new MetaDataException(
 						String.format("Can't determine destination type for field %1$s in Entry class %2$s", field,
 								field.getDeclaringClass()),
-						e);
+						ex);
 			}
 			Type[] actualParamArguments = paramType.getActualTypeArguments();
 			if (actualParamArguments.length == 1) {
@@ -203,8 +203,8 @@ import org.springframework.ldap.odm.annotations.Transient;
 		try {
 			return (Collection<Object>) this.collectionClass.newInstance();
 		}
-		catch (Exception e) {
-			throw new UncategorizedLdapException("Failed to instantiate collection class", e);
+		catch (Exception ex) {
+			throw new UncategorizedLdapException("Failed to instantiate collection class", ex);
 		}
 	}
 

@@ -119,7 +119,7 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
 	 */
 	public int hashCode() {
 		final LdapContext context = this.getInnermostDelegateLdapContext();
-		return (context != null ? context.hashCode() : 0);
+		return (context != null) ? context.hashCode() : 0;
 	}
 
 	/**
@@ -127,7 +127,7 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
 	 */
 	public String toString() {
 		final LdapContext context = this.getInnermostDelegateLdapContext();
-		return (context != null ? context.toString() : "LdapContext is closed");
+		return (context != null) ? context.toString() : "LdapContext is closed";
 	}
 
 	// ***** LdapContext Interface Delegates *****//

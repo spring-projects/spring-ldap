@@ -221,11 +221,11 @@ public class DistinguishedName implements Name {
 		try {
 			dn = parser.dn();
 		}
-		catch (ParseException e) {
-			throw new BadLdapGrammarException("Failed to parse DN", e);
+		catch (ParseException ex) {
+			throw new BadLdapGrammarException("Failed to parse DN", ex);
 		}
-		catch (org.springframework.ldap.core.TokenMgrError e) {
-			throw new BadLdapGrammarException("Failed to parse DN", e);
+		catch (org.springframework.ldap.core.TokenMgrError ex) {
+			throw new BadLdapGrammarException("Failed to parse DN", ex);
 		}
 		this.names = dn.names;
 	}
@@ -512,9 +512,9 @@ public class DistinguishedName implements Name {
 			result.names = new LinkedList(this.names);
 			return result;
 		}
-		catch (CloneNotSupportedException e) {
+		catch (CloneNotSupportedException ex) {
 			LOG.error("CloneNotSupported thrown from superclass - this should not happen");
-			throw new UncategorizedLdapException("Fatal error in clone", e);
+			throw new UncategorizedLdapException("Fatal error in clone", ex);
 		}
 	}
 
@@ -693,8 +693,9 @@ public class DistinguishedName implements Name {
 			LdapRdn longname = (LdapRdn) longiter.previous();
 			LdapRdn shortname = (LdapRdn) shortiter.previous();
 
-			if (!longname.equals(shortname))
+			if (!longname.equals(shortname)) {
 				return false;
+			}
 		}
 
 		// if short list ended, all were equal
@@ -721,7 +722,7 @@ public class DistinguishedName implements Name {
 		try {
 			distinguishedName = (DistinguishedName) name;
 		}
-		catch (ClassCastException e) {
+		catch (ClassCastException ex) {
 			throw new InvalidNameException("Invalid name type");
 		}
 
@@ -747,7 +748,7 @@ public class DistinguishedName implements Name {
 		try {
 			this.names.add(index, new LdapRdn(string));
 		}
-		catch (BadLdapGrammarException e) {
+		catch (BadLdapGrammarException ex) {
 			throw new InvalidNameException("Failed to parse rdn '" + string + "'");
 		}
 		return this;

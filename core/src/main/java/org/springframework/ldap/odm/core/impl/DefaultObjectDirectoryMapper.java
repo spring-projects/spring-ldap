@@ -95,19 +95,6 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 		this.converterManager = converterManager;
 	}
 
-	static final class EntityData {
-
-		final ObjectMetaData metaData;
-
-		final Filter ocFilter;
-
-		private EntityData(ObjectMetaData metaData, Filter ocFilter) {
-			this.metaData = metaData;
-			this.ocFilter = ocFilter;
-		}
-
-	}
-
 	// A map of managed classes to to meta data about those classes
 	private final ConcurrentMap<Class<?>, EntityData> metaDataMap = new ConcurrentHashMap<Class<?>, EntityData>();
 
@@ -165,10 +152,10 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 		try {
 			managedClass.getConstructor();
 		}
-		catch (NoSuchMethodException e) {
+		catch (NoSuchMethodException ex) {
 			throw new InvalidEntryException(
 					String.format("The class %1$s must have a zero argument constructor to be an Entry", managedClass),
-					e);
+					ex);
 		}
 
 		// Check we have all of the necessary converters for the class
@@ -255,9 +242,9 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 
 					}
 				}
-				catch (IllegalAccessException e) {
+				catch (IllegalAccessException ex) {
 					throw new InvalidEntryException(String.format("Can't set attribute %1$s", attributeInfo.getName()),
-							e);
+							ex);
 				}
 			}
 		}
@@ -459,8 +446,8 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 		try {
 			return (Name) getIdField(entry).get(entry);
 		}
-		catch (Exception e) {
-			throw new InvalidEntryException(String.format("Can't get Id field from Entry %1$s", entry), e);
+		catch (Exception ex) {
+			throw new InvalidEntryException(String.format("Can't get Id field from Entry %1$s", entry), ex);
 		}
 	}
 
@@ -473,8 +460,8 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 		try {
 			getIdField(entry).set(entry, id);
 		}
-		catch (Exception e) {
-			throw new InvalidEntryException(String.format("Can't set Id field on Entry %s to %s", entry, id), e);
+		catch (Exception ex) {
+			throw new InvalidEntryException(String.format("Can't set Id field on Entry %s to %s", entry, id), ex);
 		}
 	}
 
@@ -522,9 +509,9 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 			AttributeMetaData attributeMetaData = getEntityData(clazz).metaData.getAttribute(field);
 			return attributeMetaData.getName().toString();
 		}
-		catch (NoSuchFieldException e) {
+		catch (NoSuchFieldException ex) {
 			throw new IllegalArgumentException(String.format("Field %s cannot be found in class %s", fieldName, clazz),
-					e);
+					ex);
 		}
 	}
 
@@ -541,6 +528,19 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 		}
 
 		return true;
+	}
+
+	static final class EntityData {
+
+		final ObjectMetaData metaData;
+
+		final Filter ocFilter;
+
+		private EntityData(ObjectMetaData metaData, Filter ocFilter) {
+			this.metaData = metaData;
+			this.ocFilter = ocFilter;
+		}
+
 	}
 
 }
