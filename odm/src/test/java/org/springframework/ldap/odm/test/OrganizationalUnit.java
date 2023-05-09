@@ -99,9 +99,59 @@ public final class OrganizationalUnit {
 	}
 
 	@Override
-	public String toString() {
-		return String.format("objectClasses=%1$s | dn=%2$s | ou=%3$s | street=%4$s | description=%5$s",
-				this.objectClass, this.dn, this.ou, this.street, this.description);
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		OrganizationalUnit other = (OrganizationalUnit) obj;
+		if (this.description == null) {
+			if (other.description != null) {
+				return false;
+			}
+		}
+		else if (!this.description.equals(other.description)) {
+			return false;
+		}
+		if (this.dn == null) {
+			if (other.dn != null) {
+				return false;
+			}
+		}
+		else if (!this.dn.equals(other.dn)) {
+			return false;
+		}
+		if (this.objectClass == null) {
+			if (other.objectClass != null) {
+				return false;
+			}
+		}
+		else if (this.objectClass.size() != other.objectClass.size()
+				|| !(new HashSet<String>(this.objectClass)).equals(new HashSet<String>(other.objectClass))) {
+			return false;
+		}
+		if (this.ou == null) {
+			if (other.ou != null) {
+				return false;
+			}
+		}
+		else if (!this.ou.equals(other.ou)) {
+			return false;
+		}
+		if (this.street == null) {
+			if (other.street != null) {
+				return false;
+			}
+		}
+		else if (!this.street.equals(other.street)) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -117,46 +167,9 @@ public final class OrganizationalUnit {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		OrganizationalUnit other = (OrganizationalUnit) obj;
-		if (this.description == null) {
-			if (other.description != null)
-				return false;
-		}
-		else if (!this.description.equals(other.description))
-			return false;
-		if (this.dn == null) {
-			if (other.dn != null)
-				return false;
-		}
-		else if (!this.dn.equals(other.dn))
-			return false;
-		if (this.objectClass == null) {
-			if (other.objectClass != null)
-				return false;
-		}
-		else if (this.objectClass.size() != other.objectClass.size()
-				|| !(new HashSet<String>(this.objectClass)).equals(new HashSet<String>(other.objectClass)))
-			return false;
-		if (this.ou == null) {
-			if (other.ou != null)
-				return false;
-		}
-		else if (!this.ou.equals(other.ou))
-			return false;
-		if (this.street == null) {
-			if (other.street != null)
-				return false;
-		}
-		else if (!this.street.equals(other.street))
-			return false;
-		return true;
+	public String toString() {
+		return String.format("objectClasses=%1$s | dn=%2$s | ou=%3$s | street=%4$s | description=%5$s",
+				this.objectClass, this.dn, this.ou, this.street, this.description);
 	}
 
 }

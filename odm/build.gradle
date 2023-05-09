@@ -33,6 +33,7 @@ dependencies {
     testImplementation "org.apache.directory.server:apacheds-protocol-shared"
     testImplementation "org.apache.directory.server:apacheds-server-jndi"
     testImplementation "org.apache.directory.shared:shared-ldap"
+    testImplementation "org.assertj:assertj-core"
     testImplementation platform('org.junit:junit-bom')
     testImplementation "org.junit.vintage:junit-vintage-engine"
 }

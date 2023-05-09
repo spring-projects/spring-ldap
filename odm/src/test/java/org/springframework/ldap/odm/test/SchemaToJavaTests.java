@@ -48,7 +48,7 @@ import org.springframework.ldap.odm.typeconversion.impl.converters.ToStringConve
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.test.LdapTestUtils;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 // Tests the generation of entry Java classes from LDAP schema
 public final class SchemaToJavaTests {
@@ -194,7 +194,7 @@ public final class SchemaToJavaTests {
 		// Check some returned values
 		Method getDnMethod = clazz.getMethod("getDn");
 		Object dn = getDnMethod.invoke(fromDirectory);
-		assertEquals(testDn, dn);
+		assertThat(testDn).isEqualTo(dn);
 
 		Method getCnIteratorMethod = clazz.getMethod("getCnIterator");
 		@SuppressWarnings("unchecked")
@@ -202,9 +202,9 @@ public final class SchemaToJavaTests {
 		int cnCount = 0;
 		while (cnIterator.hasNext()) {
 			cnCount++;
-			assertEquals("William Hartnell", cnIterator.next());
+			assertThat("William Hartnell").isEqualTo(cnIterator.next());
 		}
-		assertEquals(1, cnCount);
+		assertThat(1).isEqualTo(cnCount);
 
 		Method telephoneNumberIteratorMethod = clazz.getMethod("getTelephoneNumberIterator");
 		@SuppressWarnings("unchecked")
@@ -213,14 +213,14 @@ public final class SchemaToJavaTests {
 		int telephoneNumberCount = 0;
 		while (telephoneNumberIterator.hasNext()) {
 			telephoneNumberCount++;
-			assertEquals(Integer.valueOf(1), telephoneNumberIterator.next());
+			assertThat(Integer.valueOf(1)).isEqualTo(telephoneNumberIterator.next());
 		}
-		assertEquals(1, telephoneNumberCount);
+		assertThat(1).isEqualTo(telephoneNumberCount);
 
 		// Reread and check whether equals and hashCode are at least sane
 		Object fromDirectory2 = odmManager.read(clazz, testDn);
-		assertEquals(fromDirectory, fromDirectory2);
-		assertEquals(fromDirectory.hashCode(), fromDirectory2.hashCode());
+		assertThat(fromDirectory).isEqualTo(fromDirectory2);
+		assertThat(fromDirectory.hashCode()).isEqualTo(fromDirectory2.hashCode());
 	}
 
 }

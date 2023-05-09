@@ -37,7 +37,7 @@ import org.springframework.ldap.odm.tools.SchemaViewer;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.test.LdapTestUtils;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public final class SchemaViewerTests {
 
@@ -99,22 +99,6 @@ public final class SchemaViewerTests {
 		return result;
 	}
 
-	private static class TestData {
-
-		private final String flag;
-
-		private final String value;
-
-		private final String result;
-
-		public TestData(String flag, String value, String result) {
-			this.flag = flag;
-			this.value = value;
-			this.result = result;
-		}
-
-	}
-
 	// This makes the test dependent on the order in which the data is returned - it is
 	// invalid to assume that this will not change
 	private static TestData[] viewerTestData = new TestData[] { new TestData("-o", "top",
@@ -133,9 +117,25 @@ public final class SchemaViewerTests {
 		new ExecuteRunnable<TestData>().runTests(new RunnableTests<TestData>() {
 			public void runTest(TestData testData) {
 				String result = runSchemaViewer(testData.flag, testData.value);
-				assertEquals(testData.result, result);
+				assertThat(testData.result).isEqualTo(result);
 			}
 		}, viewerTestData);
+	}
+
+	private static class TestData {
+
+		private final String flag;
+
+		private final String value;
+
+		private final String result;
+
+		public TestData(String flag, String value, String result) {
+			this.flag = flag;
+			this.value = value;
+			this.result = result;
+		}
+
 	}
 
 }

@@ -62,13 +62,12 @@ import org.springframework.ldap.odm.typeconversion.impl.Converter;
 import org.springframework.ldap.odm.typeconversion.impl.ConverterManagerImpl;
 import org.springframework.ldap.odm.typeconversion.impl.converters.FromStringConverter;
 import org.springframework.ldap.odm.typeconversion.impl.converters.ToStringConverter;
+import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.test.LdapTestUtils;
 import org.springframework.util.CollectionUtils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.springframework.ldap.query.LdapQueryBuilder.query;
+import static org.assertj.core.api.Assertions.assertThat;
 
 // Tests all OdmManager functions
 public final class LdapTests {
@@ -124,8 +123,8 @@ public final class LdapTests {
 			byte[] photoBytes = photoString.getBytes("US-ASCII");
 			photo = Base64.getDecoder().decode(photoBytes);
 		}
-		catch (IOException e) {
-			throw new RuntimeException("Problem decoding photo", e);
+		catch (IOException ex) {
+			throw new RuntimeException("Problem decoding photo", ex);
 		}
 	}
 
@@ -250,25 +249,9 @@ public final class LdapTests {
 				LOG.debug(String.format("reading - %1$s", dn));
 				Person personEntry = LdapTests.this.odmManager.read(Person.class, dn);
 				LOG.debug(String.format("read - %1$s", personEntry));
-				assertEquals(testData, personEntry);
+				assertThat(testData).isEqualTo(personEntry);
 			}
 		}, this.personTestData);
-	}
-
-	private static class SearchTestData {
-
-		private String search;
-
-		private SearchControls searchScope;
-
-		private Person[] people;
-
-		public SearchTestData(String search, SearchControls searchScope, Person[] people) {
-			this.search = search;
-			this.searchScope = searchScope;
-			this.people = people;
-		}
-
 	}
 
 	private SearchTestData[] searchTestData = {
@@ -293,7 +276,7 @@ public final class LdapTests {
 				List<Person> results = LdapTests.this.odmManager.search(Person.class, baseName, testData.search,
 						testData.searchScope);
 				LOG.debug(String.format("found - %1$s", results));
-				assertEquals(new HashSet<Person>(Arrays.asList(testData.people)), new HashSet<Person>(results));
+				assertThat(new HashSet<Person>(Arrays.asList(testData.people))).isEqualTo(new HashSet<Person>(results));
 			}
 		}, this.searchTestData);
 	}
@@ -314,7 +297,7 @@ public final class LdapTests {
 
 	}
 
-	private static OrganizationalUnit ouTestData[] = new OrganizationalUnit[] {
+	private static OrganizationalUnit[] ouTestData = new OrganizationalUnit[] {
 			new OrganizationalUnit(LdapUtils.newLdapName("ou=Enemies,o=Whoniverse"), "Acacia Avenue", "The bad guys"),
 			new OrganizationalUnit(LdapUtils.newLdapName("ou=Assistants,o=Whoniverse"), "Somewhere in space",
 					"The plucky helpers"),
@@ -328,14 +311,14 @@ public final class LdapTests {
 		List<OrganizationalUnit> allOus = this.odmManager.findAll(OrganizationalUnit.class, baseName,
 				this.searchControls);
 		LOG.debug(String.format("Found - %1$s", allOus));
-		assertEquals(new HashSet<OrganizationalUnit>(Arrays.asList(ouTestData)),
-				new HashSet<OrganizationalUnit>(allOus));
+		assertThat(new HashSet<OrganizationalUnit>(Arrays.asList(ouTestData)))
+				.isEqualTo(new HashSet<OrganizationalUnit>(allOus));
 
 		OrganizationalUnit testOu = ouTestData[OrganizationalName.ASSISTANTS.getIndex()];
 		LOG.debug(String.format("Reading - %1$s", testOu.getDn()));
 		OrganizationalUnit ou = this.odmManager.read(OrganizationalUnit.class, testOu.getDn());
 		LOG.debug(String.format("Found - %1$s", ou));
-		assertEquals(testOu, ou);
+		assertThat(testOu).isEqualTo(ou);
 	}
 
 	// Find all entries managed by the OdmManager in the test data set and check they are
@@ -345,44 +328,45 @@ public final class LdapTests {
 		LOG.debug("finding all people");
 		List<Person> allPeople = this.odmManager.findAll(Person.class, baseName, this.searchControls);
 		LOG.debug(String.format("found %1$s", allPeople));
-		assertEquals(new HashSet<Person>(Arrays.asList(this.personTestData)), new HashSet<Person>(allPeople));
+		assertThat(new HashSet<Person>(Arrays.asList(this.personTestData))).isEqualTo(new HashSet<Person>(allPeople));
 	}
 
 	@Test
 	public void findAllAsPlainPersons() {
 		List<PlainPerson> allPeople = this.odmManager.findAll(PlainPerson.class, baseName, this.searchControls);
 
-		assertEquals(9, allPeople.size());
-		assertFalse("No nulls should have been returned", CollectionUtils.containsInstance(allPeople, null));
+		assertThat(9).isEqualTo(allPeople.size());
+		assertThat(CollectionUtils.containsInstance(allPeople, null)).isFalse()
+				.withFailMessage("No nulls should have been returned");
 	}
 
 	@Test
 	public void verifySearchOnPlainPerson() {
 		List<PlainPerson> result = this.odmManager.search(PlainPerson.class, baseName, "(cn=William Hartnell)",
 				this.searchControls);
-		assertEquals(1, result.size());
+		assertThat(1).isEqualTo(result.size());
 
 		PlainPerson foundPerson = result.get(0);
-		assertEquals("William Hartnell", foundPerson.getCn());
-		assertEquals("Hartnell", foundPerson.getSurname());
+		assertThat("William Hartnell").isEqualTo(foundPerson.getCn());
+		assertThat("Hartnell").isEqualTo(foundPerson.getSurname());
 	}
 
 	@Test
 	public void verifySearchWithLdapQuery() {
 		List<Person> result = this.odmManager.search(Person.class,
-				query().base(baseName).where("cn").is("William Hartnell"));
-		assertEquals(1, result.size());
+				LdapQueryBuilder.query().base(baseName).where("cn").is("William Hartnell"));
+		assertThat(1).isEqualTo(result.size());
 
 		Person foundPerson = result.get(0);
-		assertEquals("William Hartnell", foundPerson.getCn());
-		assertEquals("Hartnell", foundPerson.getSurname());
+		assertThat("William Hartnell").isEqualTo(foundPerson.getCn());
+		assertThat("Hartnell").isEqualTo(foundPerson.getSurname());
 	}
 
 	@Test
 	public void updatePlainPerson() {
 		List<PlainPerson> result = this.odmManager.search(PlainPerson.class, baseName, "(cn=William Hartnell)",
 				this.searchControls);
-		assertEquals(1, result.size());
+		assertThat(1).isEqualTo(result.size());
 
 		PlainPerson foundPerson = result.get(0);
 		foundPerson.setSurname("Tjolahopp");
@@ -391,7 +375,7 @@ public final class LdapTests {
 		// Verify that the objectclass was not changed on the target object
 		List<Person> updatedResult = this.odmManager.search(Person.class, baseName, "(cn=William Hartnell)",
 				this.searchControls);
-		assertEquals(1, updatedResult.size());
+		assertThat(1).isEqualTo(updatedResult.size());
 	}
 
 	private Person[] createTestData = {
@@ -416,7 +400,7 @@ public final class LdapTests {
 				LOG.debug(String.format("reading - %1$s", dn));
 				Person personEntry = LdapTests.this.odmManager.read(Person.class, dn);
 				LOG.debug(String.format("read - %1$s", personEntry));
-				assertEquals(testData, personEntry);
+				assertThat(testData).isEqualTo(personEntry);
 			}
 		}, this.createTestData);
 	}
@@ -430,7 +414,7 @@ public final class LdapTests {
 		william.setSurname("Harvey");
 		this.odmManager.update(william);
 		Person readWilliam = this.odmManager.read(Person.class, william.getDn());
-		assertEquals(william, readWilliam);
+		assertThat(william).isEqualTo(readWilliam);
 	}
 
 	private Person[] deleteData = { this.personTestData[PersonName.JON.getIndex()],
@@ -450,7 +434,7 @@ public final class LdapTests {
 		}
 
 		List<Person> allPeople = this.odmManager.findAll(Person.class, baseName, this.searchControls);
-		assertEquals(new HashSet<Person>(Arrays.asList(this.whatsLeft)), new HashSet<Person>(allPeople));
+		assertThat(new HashSet<Person>(Arrays.asList(this.whatsLeft))).isEqualTo(new HashSet<Person>(allPeople));
 	}
 
 	// Trying to read a non-existant entry should be flagged as an error
@@ -465,23 +449,10 @@ public final class LdapTests {
 		this.odmManager.read(Person.class, LdapUtils.newLdapName("ou=Doctors,o=Whoniverse"));
 	}
 
-	private final static class NoEntry {
-
-		@SuppressWarnings("unused")
-		@Id
-		Name id;
-
-	}
-
 	// Every class to be managed must be annotated @Entry
 	@Test(expected = MetaDataException.class)
 	public void noEntryAnnotation() {
 		((OdmManagerImpl) this.odmManager).addManagedClass(NoEntry.class);
-	}
-
-	@Entry(objectClasses = "test")
-	private final static class NoId {
-
 	}
 
 	// There must be a field with the @Id annotation
@@ -490,39 +461,10 @@ public final class LdapTests {
 		((OdmManagerImpl) this.odmManager).addManagedClass(NoId.class);
 	}
 
-	@Entry(objectClasses = "test")
-	private final static class TwoIds {
-
-		@SuppressWarnings("unused")
-		@Id
-		private Name firstId;
-
-		@SuppressWarnings("unused")
-		@Id
-		private Name secondId;
-
-		@SuppressWarnings("unused")
-		public TwoIds() {
-		}
-
-	}
-
 	// Only one field may be annotated @Id
 	@Test(expected = MetaDataException.class)
 	public void twoIds() {
 		((OdmManagerImpl) this.odmManager).addManagedClass(TwoIds.class);
-	}
-
-	@Entry(objectClasses = "test")
-	public final static class NoConstructor {
-
-		@SuppressWarnings("unused")
-		@Id
-		private Name id;
-
-		public NoConstructor(String aValue) {
-		}
-
 	}
 
 	// All Entry annotated classes must have a zero argument public constructor
@@ -531,29 +473,10 @@ public final class LdapTests {
 		((OdmManagerImpl) this.odmManager).addManagedClass(NoConstructor.class);
 	}
 
-	@Entry(objectClasses = "test")
-	public final static class AttributeOnId {
-
-		@SuppressWarnings("unused")
-		@Id
-		@Attribute
-		private Name id;
-
-	}
-
 	// It is illegal put put both the Id and the Attribute annotation on the same field
 	@Test(expected = MetaDataException.class)
 	public void attributeOnId() {
 		((OdmManagerImpl) this.odmManager).addManagedClass(AttributeOnId.class);
-	}
-
-	@Entry(objectClasses = "test")
-	public final static class IdIsNotAName {
-
-		@SuppressWarnings("unused")
-		@Id
-		private String id;
-
 	}
 
 	// The field annotation with @Id must be of type javax.naming.Name
@@ -562,35 +485,10 @@ public final class LdapTests {
 		((OdmManagerImpl) this.odmManager).addManagedClass(IdIsNotAName.class);
 	}
 
-	@Entry(objectClasses = "test")
-	public final static class MissingConverter {
-
-		@SuppressWarnings("unused")
-		@Id
-		private Name id;
-
-		@SuppressWarnings("unused")
-		private BufferedImage image;
-
-	}
-
 	// The OdmManager should flag any missing converters when it is instantiated
 	@Test(expected = InvalidEntryException.class)
 	public void missingConverter() {
 		((OdmManagerImpl) this.odmManager).addManagedClass(MissingConverter.class);
-	}
-
-	@Entry(objectClasses = "test")
-	public final static class WrongClassForOc {
-
-		@SuppressWarnings("unused")
-		@Id
-		private Name id;
-
-		@SuppressWarnings("unused")
-		@Attribute(name = "objectClass")
-		private int ocs;
-
 	}
 
 	// The OdmManager should flag if the objectClass attribute is not of the appropriate
@@ -613,7 +511,7 @@ public final class LdapTests {
 		this.odmManager.update(organizationalUnit);
 
 		OrganizationalUnit updated = this.odmManager.read(OrganizationalUnit.class, organizationalUnit.getDn());
-		assertEquals(organizationalUnit, updated);
+		assertThat(organizationalUnit).isEqualTo(updated);
 	}
 
 	private enum Flag {
@@ -700,8 +598,8 @@ public final class LdapTests {
 		try {
 			cmd = parser.parse(options, argv);
 		}
-		catch (ParseException e) {
-			System.out.println(e.getMessage());
+		catch (ParseException ex) {
+			System.out.println(ex.getMessage());
 			System.exit(1);
 		}
 
@@ -719,6 +617,108 @@ public final class LdapTests {
 		// Run all the tests
 		runLdapTestCases(url, username, password,
 				new String[] { "create", "delete", "findAll", "read", "search", "update", "testSecondOc" });
+	}
+
+	private static class SearchTestData {
+
+		private String search;
+
+		private SearchControls searchScope;
+
+		private Person[] people;
+
+		public SearchTestData(String search, SearchControls searchScope, Person[] people) {
+			this.search = search;
+			this.searchScope = searchScope;
+			this.people = people;
+		}
+
+	}
+
+	private final static class NoEntry {
+
+		@SuppressWarnings("unused")
+		@Id
+		Name id;
+
+	}
+
+	@Entry(objectClasses = "test")
+	private final static class NoId {
+
+	}
+
+	@Entry(objectClasses = "test")
+	private final static class TwoIds {
+
+		@SuppressWarnings("unused")
+		@Id
+		private Name firstId;
+
+		@SuppressWarnings("unused")
+		@Id
+		private Name secondId;
+
+		@SuppressWarnings("unused")
+		public TwoIds() {
+		}
+
+	}
+
+	@Entry(objectClasses = "test")
+	public final static class NoConstructor {
+
+		@SuppressWarnings("unused")
+		@Id
+		private Name id;
+
+		public NoConstructor(String aValue) {
+		}
+
+	}
+
+	@Entry(objectClasses = "test")
+	public final static class AttributeOnId {
+
+		@SuppressWarnings("unused")
+		@Id
+		@Attribute
+		private Name id;
+
+	}
+
+	@Entry(objectClasses = "test")
+	public final static class IdIsNotAName {
+
+		@SuppressWarnings("unused")
+		@Id
+		private String id;
+
+	}
+
+	@Entry(objectClasses = "test")
+	public final static class MissingConverter {
+
+		@SuppressWarnings("unused")
+		@Id
+		private Name id;
+
+		@SuppressWarnings("unused")
+		private BufferedImage image;
+
+	}
+
+	@Entry(objectClasses = "test")
+	public final static class WrongClassForOc {
+
+		@SuppressWarnings("unused")
+		@Id
+		private Name id;
+
+		@SuppressWarnings("unused")
+		@Attribute(name = "objectClass")
+		private int ocs;
+
 	}
 
 }

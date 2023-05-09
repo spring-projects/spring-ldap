@@ -138,17 +138,82 @@ public final class Person {
 	}
 
 	@Override
-	public String toString() {
-		StringBuilder jpegString = new StringBuilder();
-		if (this.jpegPhoto != null) {
-			for (byte b : this.jpegPhoto) {
-				jpegString.append(Byte.toString(b));
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Person other = (Person) obj;
+		if (this.cn == null) {
+			if (other.cn != null) {
+				return false;
 			}
 		}
-
-		return String.format(
-				"objectClasses=%1$s | dn=%2$s | cn=%3$s | sn=%4$s | desc=%5$s | telephoneNumber=%6$s | jpegPhoto=%7$s",
-				this.objectClasses, this.dn, this.cn, this.surname, this.desc, this.telephoneNumber, jpegString);
+		else if (!this.cn.equals(other.cn)) {
+			return false;
+		}
+		if (this.desc == null) {
+			if (other.desc != null) {
+				return false;
+			}
+		}
+		else if (this.desc.size() != other.desc.size()
+				|| !(new HashSet<String>(this.desc)).equals(new HashSet<String>(other.desc))) {
+			return false;
+		}
+		if (this.dn == null) {
+			if (other.dn != null) {
+				return false;
+			}
+		}
+		else if (!this.dn.equals(other.dn)) {
+			return false;
+		}
+		if (!Arrays.equals(this.jpegPhoto, other.jpegPhoto)) {
+			return false;
+		}
+		if (this.objectClasses == null) {
+			if (other.objectClasses != null) {
+				return false;
+			}
+		}
+		else if (this.objectClasses.size() != other.objectClasses.size()
+				|| !(new HashSet<String>(this.objectClasses)).equals(new HashSet<String>(other.objectClasses))) {
+			return false;
+		}
+		if (this.someRandomField == null) {
+			if (other.someRandomField != null) {
+				return false;
+			}
+		}
+		else if (!this.someRandomField.equals(other.someRandomField)) {
+			return false;
+		}
+		if (this.someRandomList == null) {
+			if (other.someRandomList != null) {
+				return false;
+			}
+		}
+		else if (!this.someRandomList.equals(other.someRandomList)) {
+			return false;
+		}
+		if (this.surname == null) {
+			if (other.surname != null) {
+				return false;
+			}
+		}
+		else if (!this.surname.equals(other.surname)) {
+			return false;
+		}
+		if (this.telephoneNumber != other.telephoneNumber) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -169,63 +234,17 @@ public final class Person {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Person other = (Person) obj;
-		if (this.cn == null) {
-			if (other.cn != null)
-				return false;
+	public String toString() {
+		StringBuilder jpegString = new StringBuilder();
+		if (this.jpegPhoto != null) {
+			for (byte b : this.jpegPhoto) {
+				jpegString.append(Byte.toString(b));
+			}
 		}
-		else if (!this.cn.equals(other.cn))
-			return false;
-		if (this.desc == null) {
-			if (other.desc != null)
-				return false;
-		}
-		else if (this.desc.size() != other.desc.size()
-				|| !(new HashSet<String>(this.desc)).equals(new HashSet<String>(other.desc)))
-			return false;
-		if (this.dn == null) {
-			if (other.dn != null)
-				return false;
-		}
-		else if (!this.dn.equals(other.dn))
-			return false;
-		if (!Arrays.equals(this.jpegPhoto, other.jpegPhoto))
-			return false;
-		if (this.objectClasses == null) {
-			if (other.objectClasses != null)
-				return false;
-		}
-		else if (this.objectClasses.size() != other.objectClasses.size()
-				|| !(new HashSet<String>(this.objectClasses)).equals(new HashSet<String>(other.objectClasses)))
-			return false;
-		if (this.someRandomField == null) {
-			if (other.someRandomField != null)
-				return false;
-		}
-		else if (!this.someRandomField.equals(other.someRandomField))
-			return false;
-		if (this.someRandomList == null) {
-			if (other.someRandomList != null)
-				return false;
-		}
-		else if (!this.someRandomList.equals(other.someRandomList))
-			return false;
-		if (this.surname == null) {
-			if (other.surname != null)
-				return false;
-		}
-		else if (!this.surname.equals(other.surname))
-			return false;
-		if (this.telephoneNumber != other.telephoneNumber)
-			return false;
-		return true;
+
+		return String.format(
+				"objectClasses=%1$s | dn=%2$s | cn=%3$s | sn=%4$s | desc=%5$s | telephoneNumber=%6$s | jpegPhoto=%7$s",
+				this.objectClasses, this.dn, this.cn, this.surname, this.desc, this.telephoneNumber, jpegString);
 	}
 
 }

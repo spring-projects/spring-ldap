@@ -79,31 +79,38 @@ public final class PlainPerson {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if (o == null || getClass() != o.getClass())
+		}
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 
 		PlainPerson that = (PlainPerson) o;
 
-		if (this.cn != null ? !this.cn.equals(that.cn) : that.cn != null)
+		if ((this.cn != null) ? !this.cn.equals(that.cn) : that.cn != null) {
 			return false;
-		if (this.dn != null ? !this.dn.equals(that.dn) : that.dn != null)
+		}
+		if ((this.dn != null) ? !this.dn.equals(that.dn) : that.dn != null) {
 			return false;
-		if (this.objectClasses != null ? !this.objectClasses.equals(that.objectClasses) : that.objectClasses != null)
+		}
+		if ((this.objectClasses != null) ? !this.objectClasses.equals(that.objectClasses)
+				: that.objectClasses != null) {
 			return false;
-		if (this.surname != null ? !this.surname.equals(that.surname) : that.surname != null)
+		}
+		if ((this.surname != null) ? !this.surname.equals(that.surname) : that.surname != null) {
 			return false;
+		}
 
 		return true;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = this.objectClasses != null ? this.objectClasses.hashCode() : 0;
-		result = 31 * result + (this.dn != null ? this.dn.hashCode() : 0);
-		result = 31 * result + (this.cn != null ? this.cn.hashCode() : 0);
-		result = 31 * result + (this.surname != null ? this.surname.hashCode() : 0);
+		int result = (this.objectClasses != null) ? this.objectClasses.hashCode() : 0;
+		result = 31 * result + ((this.dn != null) ? this.dn.hashCode() : 0);
+		result = 31 * result + ((this.cn != null) ? this.cn.hashCode() : 0);
+		result = 31 * result + ((this.surname != null) ? this.surname.hashCode() : 0);
 		return result;
 	}
 

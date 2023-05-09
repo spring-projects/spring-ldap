@@ -31,7 +31,7 @@ import org.springframework.ldap.odm.typeconversion.impl.ConverterManagerImpl;
 import org.springframework.ldap.odm.typeconversion.impl.converters.FromStringConverter;
 import org.springframework.ldap.odm.typeconversion.impl.converters.ToStringConverter;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public final class ConverterManagerTests {
 
@@ -69,35 +69,6 @@ public final class ConverterManagerTests {
 		this.converterManager = null;
 	}
 
-	private static class ConverterTestData<T> {
-
-		public final Class<T> destClass;
-
-		public final Object sourceData;
-
-		public final T expectedValue;
-
-		public final String syntax;
-
-		public ConverterTestData(Object sourceData, Class<T> destClass, T expectedValue) {
-			this(sourceData, "", destClass, expectedValue);
-		}
-
-		public ConverterTestData(Object sourceData, String syntax, Class<T> destClass, T expectedValue) {
-			this.destClass = destClass;
-			this.sourceData = sourceData;
-			this.expectedValue = expectedValue;
-			this.syntax = syntax;
-		}
-
-		@Override
-		public String toString() {
-			return String.format("sourceData=%1$s | syntax=%2$s | destClass=%3$s | expectedValue=%4$s", this.sourceData,
-					this.syntax, this.destClass, this.expectedValue);
-		}
-
-	}
-
 	// Class to Class conversion without any syntaxes
 	@Test
 	public void basicTypeConverion() throws Exception {
@@ -130,10 +101,84 @@ public final class ConverterManagerTests {
 
 		new ExecuteRunnable<ConverterTestData<?>>().runTests(new RunnableTests<ConverterTestData<?>>() {
 			public void runTest(ConverterTestData<?> testData) {
-				assertEquals(testData.expectedValue, ConverterManagerTests.this.converterManager
+				assertThat(testData.expectedValue).isEqualTo(ConverterManagerTests.this.converterManager
 						.convert(testData.sourceData, "", testData.destClass));
 			}
 		}, primitiveTypeTests);
+	}
+
+	// Tests using syntaxes for "finer grained" mapping
+	@Test
+	public void syntaxBasedConversion() throws Exception {
+		Converter squaredConverter = new SquaredConverter();
+		this.converterManager.addConverter(String.class, "1", Integer.class, squaredConverter);
+		this.converterManager.addConverter(Integer.class, "1", Integer.class, squaredConverter);
+		Converter cubedConverter = new CubedConverter();
+		this.converterManager.addConverter(String.class, "2", Integer.class, cubedConverter);
+		this.converterManager.addConverter(Integer.class, "3", Integer.class, cubedConverter);
+
+		final ConverterTestData<?>[] syntaxTests = new ConverterTestData<?>[] {
+				new ConverterTestData<Integer>("3", "", Integer.class, Integer.valueOf(3)),
+				new ConverterTestData<Integer>("4", "", Integer.class, Integer.valueOf(4)),
+				new ConverterTestData<Integer>(5, "", Integer.class, Integer.valueOf(5)),
+				new ConverterTestData<Integer>(6, "", Integer.class, Integer.valueOf(6)),
+				new ConverterTestData<Integer>("3", "1", Integer.class, Integer.valueOf(9)),
+				new ConverterTestData<Integer>("4", "1", Integer.class, Integer.valueOf(16)),
+				new ConverterTestData<Integer>(5, "1", Integer.class, Integer.valueOf(25)),
+				new ConverterTestData<Integer>(6, "1", Integer.class, Integer.valueOf(36)),
+				new ConverterTestData<Integer>("3", "2", Integer.class, Integer.valueOf(27)),
+				new ConverterTestData<Integer>("4", "2", Integer.class, Integer.valueOf(64)),
+				new ConverterTestData<Integer>(5, "3", Integer.class, Integer.valueOf(125)),
+				new ConverterTestData<Integer>(6, "3", Integer.class, Integer.valueOf(216)), };
+
+		new ExecuteRunnable<ConverterTestData<?>>().runTests(new RunnableTests<ConverterTestData<?>>() {
+			public void runTest(ConverterTestData<?> testData) {
+				assertThat(testData.expectedValue).isEqualTo(ConverterManagerTests.this.converterManager
+						.convert(testData.sourceData, testData.syntax, testData.destClass));
+			}
+		}, syntaxTests);
+
+	}
+
+	// No converter for classes
+	@Test(expected = ConverterException.class)
+	public void noClassConverter() throws Exception {
+		this.converterManager.convert(BitSet.class, "", Integer.class);
+	}
+
+	// Invalid syntax so converter fails
+	@Test(expected = ConverterException.class)
+	public void invalidSyntax() throws Exception {
+		this.converterManager.convert(String.class, "not a uri", URI.class);
+	}
+
+	private static class ConverterTestData<T> {
+
+		public final Class<T> destClass;
+
+		public final Object sourceData;
+
+		public final T expectedValue;
+
+		public final String syntax;
+
+		public ConverterTestData(Object sourceData, Class<T> destClass, T expectedValue) {
+			this(sourceData, "", destClass, expectedValue);
+		}
+
+		public ConverterTestData(Object sourceData, String syntax, Class<T> destClass, T expectedValue) {
+			this.destClass = destClass;
+			this.sourceData = sourceData;
+			this.expectedValue = expectedValue;
+			this.syntax = syntax;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("sourceData=%1$s | syntax=%2$s | destClass=%3$s | expectedValue=%4$s", this.sourceData,
+					this.syntax, this.destClass, this.expectedValue);
+		}
+
 	}
 
 	private static class SquaredConverter implements Converter {
@@ -182,51 +227,6 @@ public final class ConverterManagerTests {
 			return toClass.cast(result);
 		}
 
-	}
-
-	// Tests using syntaxes for "finer grained" mapping
-	@Test
-	public void syntaxBasedConversion() throws Exception {
-		Converter squaredConverter = new SquaredConverter();
-		this.converterManager.addConverter(String.class, "1", Integer.class, squaredConverter);
-		this.converterManager.addConverter(Integer.class, "1", Integer.class, squaredConverter);
-		Converter cubedConverter = new CubedConverter();
-		this.converterManager.addConverter(String.class, "2", Integer.class, cubedConverter);
-		this.converterManager.addConverter(Integer.class, "3", Integer.class, cubedConverter);
-
-		final ConverterTestData<?>[] syntaxTests = new ConverterTestData<?>[] {
-				new ConverterTestData<Integer>("3", "", Integer.class, Integer.valueOf(3)),
-				new ConverterTestData<Integer>("4", "", Integer.class, Integer.valueOf(4)),
-				new ConverterTestData<Integer>(5, "", Integer.class, Integer.valueOf(5)),
-				new ConverterTestData<Integer>(6, "", Integer.class, Integer.valueOf(6)),
-				new ConverterTestData<Integer>("3", "1", Integer.class, Integer.valueOf(9)),
-				new ConverterTestData<Integer>("4", "1", Integer.class, Integer.valueOf(16)),
-				new ConverterTestData<Integer>(5, "1", Integer.class, Integer.valueOf(25)),
-				new ConverterTestData<Integer>(6, "1", Integer.class, Integer.valueOf(36)),
-				new ConverterTestData<Integer>("3", "2", Integer.class, Integer.valueOf(27)),
-				new ConverterTestData<Integer>("4", "2", Integer.class, Integer.valueOf(64)),
-				new ConverterTestData<Integer>(5, "3", Integer.class, Integer.valueOf(125)),
-				new ConverterTestData<Integer>(6, "3", Integer.class, Integer.valueOf(216)), };
-
-		new ExecuteRunnable<ConverterTestData<?>>().runTests(new RunnableTests<ConverterTestData<?>>() {
-			public void runTest(ConverterTestData<?> testData) {
-				assertEquals(testData.expectedValue, ConverterManagerTests.this.converterManager
-						.convert(testData.sourceData, testData.syntax, testData.destClass));
-			}
-		}, syntaxTests);
-
-	}
-
-	// No converter for classes
-	@Test(expected = ConverterException.class)
-	public void noClassConverter() throws Exception {
-		this.converterManager.convert(BitSet.class, "", Integer.class);
-	}
-
-	// Invalid syntax so converter fails
-	@Test(expected = ConverterException.class)
-	public void invalidSyntax() throws Exception {
-		this.converterManager.convert(String.class, "not a uri", URI.class);
 	}
 
 }
