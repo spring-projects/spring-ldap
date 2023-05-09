@@ -52,7 +52,7 @@ public class VirtualListViewControlDirContextProcessorTests {
 	@Before
 	public void setUp() throws Exception {
 		// Create ldapContext mock
-		ldapContextMock = mock(LdapContext.class);
+		this.ldapContextMock = mock(LdapContext.class);
 	}
 
 	@Test
@@ -108,10 +108,10 @@ public class VirtualListViewControlDirContextProcessorTests {
 		int virtualListViewResult = 53; // unwilling to perform
 		byte[] encoded = encodeResponseValue(10, listSize, virtualListViewResult);
 		VirtualListViewResponseControl control = new VirtualListViewResponseControl(OID_RESPONSE, false, encoded);
-		when(ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
+		when(this.ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
 
 		try {
-			tested.postProcess(ldapContextMock);
+			tested.postProcess(this.ldapContextMock);
 			fail("OperationNotSupportedException expected");
 		}
 		catch (OperationNotSupportedException expected) {
