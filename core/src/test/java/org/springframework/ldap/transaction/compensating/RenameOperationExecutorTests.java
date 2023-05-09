@@ -35,7 +35,6 @@ public class RenameOperationExecutorTests {
 	@Before
 	public void setUp() throws Exception {
 		this.ldapOperationsMock = mock(LdapOperations.class);
-		;
 	}
 
 	@Test

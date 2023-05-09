@@ -29,7 +29,7 @@ import javax.naming.ldap.LdapContext;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.stubbing.OngoingStubbing;
+import org.mockito.BDDMockito;
 
 import org.springframework.LdapDataEntry;
 import org.springframework.ldap.NameNotFoundException;
@@ -40,9 +40,9 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
+import static org.mockito.BDDMockito.verify;
 
 public class DefaultLdapClientLookupTests {
 
@@ -64,7 +64,7 @@ public class DefaultLdapClientLookupTests {
 	}
 
 	private void expectGetReadOnlyContext() {
-		when(this.contextSourceMock.getReadOnlyContext()).thenReturn(this.dirContextMock);
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(this.dirContextMock);
 	}
 
 	@Test
@@ -72,7 +72,7 @@ public class DefaultLdapClientLookupTests {
 		expectGetReadOnlyContext();
 
 		LdapDataEntry expected = new DirContextAdapter();
-		whenSearching(this.name).thenReturn(result(expected, null));
+		whenSearching(this.name).willReturn(result(expected, null));
 
 		LdapDataEntry actual = this.tested.search().name(this.name).toEntry();
 
@@ -85,7 +85,7 @@ public class DefaultLdapClientLookupTests {
 		expectGetReadOnlyContext();
 
 		LdapDataEntry expected = new DirContextAdapter();
-		whenSearching(DEFAULT_BASE).thenReturn(result(expected, null));
+		whenSearching(DEFAULT_BASE).willReturn(result(expected, null));
 
 		LdapDataEntry actual = this.tested.search().name(DEFAULT_BASE.toString()).toEntry();
 
@@ -98,7 +98,7 @@ public class DefaultLdapClientLookupTests {
 		expectGetReadOnlyContext();
 
 		javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
-		whenSearching(this.name).thenThrow(ne);
+		whenSearching(this.name).willThrow(ne);
 
 		assertThatExceptionOfType(NameNotFoundException.class).describedAs("NameNotFoundException expected")
 				.isThrownBy(() -> this.tested.search().name(this.name).toEntry());
@@ -110,7 +110,7 @@ public class DefaultLdapClientLookupTests {
 		expectGetReadOnlyContext();
 
 		Attributes expected = new BasicAttributes();
-		whenSearching(this.name).thenReturn(result(null, expected));
+		whenSearching(this.name).willReturn(result(null, expected));
 
 		AttributesMapper<Attributes> mapper = (attributes) -> attributes;
 		Attributes actual = this.tested.search().name(this.name).toObject(mapper);
@@ -124,7 +124,7 @@ public class DefaultLdapClientLookupTests {
 		expectGetReadOnlyContext();
 
 		Attributes expected = new BasicAttributes();
-		whenSearching(DEFAULT_BASE).thenReturn(result(null, expected));
+		whenSearching(DEFAULT_BASE).willReturn(result(null, expected));
 
 		AttributesMapper<Attributes> mapper = (attributes) -> attributes;
 		Attributes actual = this.tested.search().name(DEFAULT_BASE.toString()).toObject(mapper);
@@ -138,7 +138,7 @@ public class DefaultLdapClientLookupTests {
 		expectGetReadOnlyContext();
 
 		javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
-		whenSearching(this.name).thenThrow(ne);
+		whenSearching(this.name).willThrow(ne);
 
 		AttributesMapper<?> mapper = (attributes) -> attributes;
 		assertThatExceptionOfType(NameNotFoundException.class).describedAs("NameNotFoundException expected")
@@ -153,7 +153,7 @@ public class DefaultLdapClientLookupTests {
 		expectGetReadOnlyContext();
 
 		Object expected = new Object();
-		whenSearching(this.name).thenReturn(result(expected, null));
+		whenSearching(this.name).willReturn(result(expected, null));
 
 		ContextMapper<?> mapper = (ctx) -> ctx;
 		Object actual = this.tested.search().name(this.name).toObject(mapper);
@@ -167,7 +167,7 @@ public class DefaultLdapClientLookupTests {
 		expectGetReadOnlyContext();
 
 		Object expected = new Object();
-		whenSearching(DEFAULT_BASE).thenReturn(result(expected, null));
+		whenSearching(DEFAULT_BASE).willReturn(result(expected, null));
 
 		ContextMapper<?> mapper = (ctx) -> ctx;
 		Object actual = this.tested.search().name(DEFAULT_BASE.toString()).toObject(mapper);
@@ -181,7 +181,7 @@ public class DefaultLdapClientLookupTests {
 		expectGetReadOnlyContext();
 
 		javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
-		whenSearching(this.name).thenThrow(ne);
+		whenSearching(this.name).willThrow(ne);
 
 		ContextMapper<?> mapper = (ctx) -> ctx;
 		assertThatExceptionOfType(NameNotFoundException.class).describedAs("NameNotFoundException expected")
@@ -197,8 +197,9 @@ public class DefaultLdapClientLookupTests {
 		return new NamingEnumeration(results);
 	}
 
-	private OngoingStubbing<javax.naming.NamingEnumeration<SearchResult>> whenSearching(Name name) throws Exception {
-		return when(this.dirContextMock.search(eq(name), anyString(), any()));
+	private BDDMockito.BDDMyOngoingStubbing<javax.naming.NamingEnumeration<SearchResult>> whenSearching(Name name)
+			throws Exception {
+		return given(this.dirContextMock.search(eq(name), anyString(), any()));
 	}
 
 	private static class NamingEnumeration implements javax.naming.NamingEnumeration<SearchResult> {

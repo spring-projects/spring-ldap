@@ -25,10 +25,10 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.BDDMockito.mock;
+import static org.mockito.BDDMockito.times;
+import static org.mockito.BDDMockito.verify;
+import static org.mockito.BDDMockito.willThrow;
 
 /**
  * @author Eric Dalquist
@@ -421,7 +421,7 @@ public class DelegatingContextTests extends AbstractPoolTestCase {
 
 	@Test
 	public void testPoolExceptionOnClose() throws Exception {
-		doThrow(new Exception("Fake Pool returnObject Exception")).when(keyedObjectPoolMock)
+		willThrow(new Exception("Fake Pool returnObject Exception")).given(keyedObjectPoolMock)
 				.returnObject(DirContextType.READ_ONLY, contextMock);
 
 		final DelegatingContext delegatingContext = new DelegatingContext(keyedObjectPoolMock, contextMock,

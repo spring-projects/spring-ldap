@@ -33,10 +33,10 @@ import org.springframework.util.ReflectionUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
+import static org.mockito.BDDMockito.verify;
+import static org.mockito.BDDMockito.willThrow;
 
 /**
  * @author Eric Dalquist
@@ -101,7 +101,7 @@ public class DirContextPoolableObjectFactoryTests extends AbstractPoolTestCase {
 
 		DirContext readOnlyContextMock = mock(DirContext.class);
 
-		when(contextSourceMock.getReadOnlyContext()).thenReturn(readOnlyContextMock);
+		given(contextSourceMock.getReadOnlyContext()).willReturn(readOnlyContextMock);
 		objectFactory.setContextSource(contextSourceMock);
 
 		final Object createdDirContext = objectFactory.makeObject(DirContextType.READ_ONLY);
@@ -115,7 +115,7 @@ public class DirContextPoolableObjectFactoryTests extends AbstractPoolTestCase {
 
 		DirContext readWriteContextMock = mock(DirContext.class);
 
-		when(contextSourceMock.getReadWriteContext()).thenReturn(readWriteContextMock);
+		given(contextSourceMock.getReadWriteContext()).willReturn(readWriteContextMock);
 		objectFactory.setContextSource(contextSourceMock);
 
 		final Object createdDirContext = objectFactory.makeObject(DirContextType.READ_WRITE);
@@ -173,7 +173,7 @@ public class DirContextPoolableObjectFactoryTests extends AbstractPoolTestCase {
 
 	@Test
 	public void testValidateObject() throws Exception {
-		when(dirContextValidatorMock.validateDirContext(DirContextType.READ_ONLY, dirContextMock)).thenReturn(true);
+		given(dirContextValidatorMock.validateDirContext(DirContextType.READ_ONLY, dirContextMock)).willReturn(true);
 
 		final DirContextPoolableObjectFactory objectFactory = new DirContextPoolableObjectFactory();
 		objectFactory.setDirContextValidator(dirContextValidatorMock);
@@ -184,8 +184,8 @@ public class DirContextPoolableObjectFactoryTests extends AbstractPoolTestCase {
 		// Check exception in validator
 		DirContextValidator secondDirContextValidatorMock = mock(DirContextValidator.class);
 
-		when(secondDirContextValidatorMock.validateDirContext(DirContextType.READ_ONLY, dirContextMock))
-				.thenThrow(new RuntimeException("Failed to validate"));
+		given(secondDirContextValidatorMock.validateDirContext(DirContextType.READ_ONLY, dirContextMock))
+				.willThrow(new RuntimeException("Failed to validate"));
 		objectFactory.setDirContextValidator(secondDirContextValidatorMock);
 
 		final boolean valid2 = objectFactory.validateObject(DirContextType.READ_ONLY, dirContextMock);
@@ -221,7 +221,7 @@ public class DirContextPoolableObjectFactoryTests extends AbstractPoolTestCase {
 
 		DirContext throwingDirContextMock = Mockito.mock(DirContext.class);
 
-		doThrow(new RuntimeException("Failed to close")).when(throwingDirContextMock).close();
+		willThrow(new RuntimeException("Failed to close")).given(throwingDirContextMock).close();
 
 		objectFactory.destroyObject(DirContextType.READ_ONLY, throwingDirContextMock);
 		verify(dirContextMock).close();

@@ -26,8 +26,8 @@ import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextProxy;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
 
 /**
  * Tests for {@link TransactionAwareContextSourceProxy}.
@@ -55,7 +55,7 @@ public class TransactionAwareContextSourceProxyTests {
 
 	@Test
 	public void testGetReadWriteContext_LdapContext() {
-		when(this.contextSourceMock.getReadWriteContext()).thenReturn(this.ldapContextMock);
+		given(this.contextSourceMock.getReadWriteContext()).willReturn(this.ldapContextMock);
 
 		DirContext result = this.tested.getReadWriteContext();
 
@@ -66,7 +66,7 @@ public class TransactionAwareContextSourceProxyTests {
 
 	@Test
 	public void testGetReadWriteContext_DirContext() {
-		when(this.contextSourceMock.getReadWriteContext()).thenReturn(this.dirContextMock);
+		given(this.contextSourceMock.getReadWriteContext()).willReturn(this.dirContextMock);
 
 		DirContext result = this.tested.getReadWriteContext();
 
@@ -78,7 +78,7 @@ public class TransactionAwareContextSourceProxyTests {
 
 	@Test
 	public void testGetReadOnlyContext_LdapContext() {
-		when(this.contextSourceMock.getReadWriteContext()).thenReturn(this.ldapContextMock);
+		given(this.contextSourceMock.getReadWriteContext()).willReturn(this.ldapContextMock);
 
 		DirContext result = this.tested.getReadOnlyContext();
 

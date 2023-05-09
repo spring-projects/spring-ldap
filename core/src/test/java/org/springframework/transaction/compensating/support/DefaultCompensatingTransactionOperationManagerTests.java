@@ -27,10 +27,10 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
 import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
+import static org.mockito.BDDMockito.verify;
+import static org.mockito.BDDMockito.willThrow;
 
 public class DefaultCompensatingTransactionOperationManagerTests {
 
@@ -53,9 +53,9 @@ public class DefaultCompensatingTransactionOperationManagerTests {
 		Object[] expectedArgs = new Object[0];
 		Object expectedResource = new Object();
 
-		when(this.operationFactoryMock.createRecordingOperation(expectedResource, "some method"))
-				.thenReturn(this.operationRecorderMock);
-		when(this.operationRecorderMock.recordOperation(expectedArgs)).thenReturn(this.operationExecutorMock);
+		given(this.operationFactoryMock.createRecordingOperation(expectedResource, "some method"))
+				.willReturn(this.operationRecorderMock);
+		given(this.operationRecorderMock.recordOperation(expectedArgs)).willReturn(this.operationExecutorMock);
 
 		DefaultCompensatingTransactionOperationManager tested = new DefaultCompensatingTransactionOperationManager(
 				this.operationFactoryMock);
@@ -83,7 +83,7 @@ public class DefaultCompensatingTransactionOperationManagerTests {
 				this.operationFactoryMock);
 		tested.getOperationExecutors().push(this.operationExecutorMock);
 
-		doThrow(new RuntimeException()).when(this.operationExecutorMock).rollback();
+		willThrow(new RuntimeException()).given(this.operationExecutorMock).rollback();
 
 		tested.rollback();
 	}
@@ -104,7 +104,7 @@ public class DefaultCompensatingTransactionOperationManagerTests {
 				this.operationFactoryMock);
 		tested.getOperationExecutors().push(this.operationExecutorMock);
 
-		doThrow(new RuntimeException()).when(this.operationExecutorMock).commit();
+		willThrow(new RuntimeException()).given(this.operationExecutorMock).commit();
 
 		tested.commit();
 	}

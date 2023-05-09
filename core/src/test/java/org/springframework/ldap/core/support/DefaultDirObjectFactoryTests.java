@@ -33,9 +33,9 @@ import org.springframework.ldap.core.NameAwareAttributes;
 import org.springframework.ldap.support.LdapUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
+import static org.mockito.BDDMockito.verify;
 
 public class DefaultDirObjectFactoryTests {
 
@@ -121,7 +121,7 @@ public class DefaultDirObjectFactoryTests {
 		Attributes expectedAttributes = new NameAwareAttributes();
 		expectedAttributes.put("someAttribute", "someValue");
 
-		when(this.contextMock2.getNameInNamespace()).thenReturn("dc=jayway, dc=se");
+		given(this.contextMock2.getNameInNamespace()).willReturn("dc=jayway, dc=se");
 
 		DirContextAdapter adapter = (DirContextAdapter) this.tested.getObjectInstance(this.contextMock,
 				LdapUtils.newLdapName("ou=some unit"), this.contextMock2, new Hashtable(), expectedAttributes);

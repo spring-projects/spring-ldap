@@ -28,8 +28,8 @@ import org.springframework.ldap.pool.DirContextType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
 
 /**
  * @author Eric Dalquist
@@ -132,8 +132,8 @@ public class DefaultDirContextValidatorTests {
 		final String filter = dirContextValidator.getFilter();
 		final SearchControls searchControls = dirContextValidator.getSearchControls();
 
-		when(this.namingEnumerationMock.hasMore()).thenReturn(true);
-		when(this.dirContextMock.search(baseName, filter, searchControls)).thenReturn(this.namingEnumerationMock);
+		given(this.namingEnumerationMock.hasMore()).willReturn(true);
+		given(this.dirContextMock.search(baseName, filter, searchControls)).willReturn(this.namingEnumerationMock);
 
 		final boolean valid = dirContextValidator.validateDirContext(DirContextType.READ_ONLY, this.dirContextMock);
 		assertThat(valid).isTrue();
@@ -147,8 +147,8 @@ public class DefaultDirContextValidatorTests {
 		final String filter = dirContextValidator.getFilter();
 		final SearchControls searchControls = dirContextValidator.getSearchControls();
 
-		when(this.namingEnumerationMock.hasMore()).thenReturn(false);
-		when(this.dirContextMock.search(baseName, filter, searchControls)).thenReturn(this.namingEnumerationMock);
+		given(this.namingEnumerationMock.hasMore()).willReturn(false);
+		given(this.dirContextMock.search(baseName, filter, searchControls)).willReturn(this.namingEnumerationMock);
 
 		final boolean valid = dirContextValidator.validateDirContext(DirContextType.READ_ONLY, this.dirContextMock);
 
@@ -163,8 +163,8 @@ public class DefaultDirContextValidatorTests {
 		final String filter = dirContextValidator.getFilter();
 		final SearchControls searchControls = dirContextValidator.getSearchControls();
 
-		when(this.dirContextMock.search(baseName, filter, searchControls))
-				.thenThrow(new NamingException("Failed to search"));
+		given(this.dirContextMock.search(baseName, filter, searchControls))
+				.willThrow(new NamingException("Failed to search"));
 
 		final boolean valid = dirContextValidator.validateDirContext(DirContextType.READ_ONLY, this.dirContextMock);
 

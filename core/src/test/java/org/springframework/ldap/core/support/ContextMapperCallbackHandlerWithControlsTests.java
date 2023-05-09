@@ -27,8 +27,8 @@ import org.junit.Test;
 import org.springframework.ldap.core.ObjectRetrievalException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
 
 /**
  * @Ulrik Sandberg
@@ -39,20 +39,6 @@ public class ContextMapperCallbackHandlerWithControlsTests {
 	private ContextMapperWithControls mapperMock;
 
 	private ContextMapperCallbackHandlerWithControls tested;
-
-	private static class MyBindingThatHasControls extends Binding implements HasControls {
-
-		private static final long serialVersionUID = 1L;
-
-		MyBindingThatHasControls(String name, Object obj) {
-			super(name, obj);
-		}
-
-		public Control[] getControls() throws NamingException {
-			return null;
-		}
-
-	}
 
 	@SuppressWarnings("unchecked")
 	@Before
@@ -72,7 +58,7 @@ public class ContextMapperCallbackHandlerWithControlsTests {
 		Object expectedResult = "result";
 		Binding expectedBinding = new Binding("some name", expectedObject);
 
-		when(this.mapperMock.mapFromContext(expectedObject)).thenReturn(expectedResult);
+		given(this.mapperMock.mapFromContext(expectedObject)).willReturn(expectedResult);
 
 		Object actualResult = this.tested.getObjectFromNameClassPair(expectedBinding);
 
@@ -85,7 +71,7 @@ public class ContextMapperCallbackHandlerWithControlsTests {
 		Object expectedResult = "result";
 		MyBindingThatHasControls expectedBinding = new MyBindingThatHasControls("some name", expectedObject);
 
-		when(this.mapperMock.mapFromContextWithControls(expectedObject, expectedBinding)).thenReturn(expectedResult);
+		given(this.mapperMock.mapFromContextWithControls(expectedObject, expectedBinding)).willReturn(expectedResult);
 
 		Object actualResult = this.tested.getObjectFromNameClassPair(expectedBinding);
 
@@ -97,6 +83,20 @@ public class ContextMapperCallbackHandlerWithControlsTests {
 		Binding expectedBinding = new Binding("some name", null);
 
 		this.tested.getObjectFromNameClassPair(expectedBinding);
+	}
+
+	private static class MyBindingThatHasControls extends Binding implements HasControls {
+
+		private static final long serialVersionUID = 1L;
+
+		MyBindingThatHasControls(String name, Object obj) {
+			super(name, obj);
+		}
+
+		public Control[] getControls() throws NamingException {
+			return null;
+		}
+
 	}
 
 }

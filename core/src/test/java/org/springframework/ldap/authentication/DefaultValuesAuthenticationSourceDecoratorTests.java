@@ -23,8 +23,8 @@ import org.springframework.ldap.core.AuthenticationSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
 
 public class DefaultValuesAuthenticationSourceDecoratorTests {
 
@@ -47,7 +47,7 @@ public class DefaultValuesAuthenticationSourceDecoratorTests {
 
 	@Test
 	public void testGetPrincipal_TargetHasPrincipal() {
-		when(this.authenticationSourceMock.getPrincipal()).thenReturn("cn=someUser");
+		given(this.authenticationSourceMock.getPrincipal()).willReturn("cn=someUser");
 		String principal = this.tested.getPrincipal();
 
 		assertThat(principal).isEqualTo("cn=someUser");
@@ -55,7 +55,7 @@ public class DefaultValuesAuthenticationSourceDecoratorTests {
 
 	@Test
 	public void testGetPrincipal_TargetHasNoPrincipal() {
-		when(this.authenticationSourceMock.getPrincipal()).thenReturn("");
+		given(this.authenticationSourceMock.getPrincipal()).willReturn("");
 
 		String principal = this.tested.getPrincipal();
 
@@ -64,8 +64,8 @@ public class DefaultValuesAuthenticationSourceDecoratorTests {
 
 	@Test
 	public void testGetCredentials_TargetHasPrincipal() {
-		when(this.authenticationSourceMock.getPrincipal()).thenReturn("cn=someUser");
-		when(this.authenticationSourceMock.getCredentials()).thenReturn("somepassword");
+		given(this.authenticationSourceMock.getPrincipal()).willReturn("cn=someUser");
+		given(this.authenticationSourceMock.getCredentials()).willReturn("somepassword");
 
 		String credentials = this.tested.getCredentials();
 
@@ -74,8 +74,8 @@ public class DefaultValuesAuthenticationSourceDecoratorTests {
 
 	@Test
 	public void testGetCredentials_TargetHasNoPrincipal() {
-		when(this.authenticationSourceMock.getPrincipal()).thenReturn("");
-		when(this.authenticationSourceMock.getCredentials()).thenReturn("somepassword");
+		given(this.authenticationSourceMock.getPrincipal()).willReturn("");
+		given(this.authenticationSourceMock.getCredentials()).willReturn("somepassword");
 
 		String credentials = this.tested.getCredentials();
 

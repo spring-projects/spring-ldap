@@ -29,8 +29,8 @@ import org.springframework.ldap.pool.validation.DirContextValidator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
 
 /**
  * @author Eric Dalquist
@@ -122,7 +122,7 @@ public class PoolingContextSourceTests extends AbstractPoolTestCase {
 	public void testGetReadOnlyContextPool() throws Exception {
 		DirContext secondDirContextMock = mock(DirContext.class);
 
-		when(contextSourceMock.getReadOnlyContext()).thenReturn(dirContextMock, secondDirContextMock);
+		given(contextSourceMock.getReadOnlyContext()).willReturn(dirContextMock, secondDirContextMock);
 
 		final PoolingContextSource poolingContextSource = new PoolingContextSource();
 		poolingContextSource.setContextSource(contextSourceMock);
@@ -173,7 +173,7 @@ public class PoolingContextSourceTests extends AbstractPoolTestCase {
 	public void testGetReadWriteContextPool() throws Exception {
 		DirContext secondDirContextMock = mock(DirContext.class);
 
-		when(contextSourceMock.getReadWriteContext()).thenReturn(dirContextMock, secondDirContextMock);
+		given(contextSourceMock.getReadWriteContext()).willReturn(dirContextMock, secondDirContextMock);
 
 		final PoolingContextSource poolingContextSource = new PoolingContextSource();
 		poolingContextSource.setContextSource(contextSourceMock);
@@ -222,7 +222,7 @@ public class PoolingContextSourceTests extends AbstractPoolTestCase {
 
 	@Test
 	public void testGetContextException() throws Exception {
-		when(contextSourceMock.getReadWriteContext()).thenThrow(new RuntimeException("Problem getting context"));
+		given(contextSourceMock.getReadWriteContext()).willThrow(new RuntimeException("Problem getting context"));
 
 		final PoolingContextSource poolingContextSource = new PoolingContextSource();
 		poolingContextSource.setContextSource(contextSourceMock);
@@ -240,7 +240,7 @@ public class PoolingContextSourceTests extends AbstractPoolTestCase {
 	public void testGetReadOnlyLdapContext() throws Exception {
 		LdapContext secondLdapContextMock = mock(LdapContext.class);
 
-		when(contextSourceMock.getReadOnlyContext()).thenReturn(ldapContextMock, secondLdapContextMock);
+		given(contextSourceMock.getReadOnlyContext()).willReturn(ldapContextMock, secondLdapContextMock);
 
 		final PoolingContextSource poolingContextSource = new PoolingContextSource();
 		poolingContextSource.setContextSource(contextSourceMock);

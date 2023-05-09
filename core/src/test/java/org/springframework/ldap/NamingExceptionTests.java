@@ -26,8 +26,7 @@ import javax.naming.directory.InitialDirContext;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Unit tests for the NamingException class.
@@ -46,9 +45,10 @@ public class NamingExceptionTests {
 		NamingException exception = new NameAlreadyBoundException(wrappedException);
 		writeToStream(exception);
 		NamingException deSerializedException = readFromStream();
-		assertNotNull("Original exception resolvedObj after serialization should not be null",
-				exception.getResolvedObj());
-		assertNull("De-serialized exception resolvedObj should be null", deSerializedException.getResolvedObj());
+		assertThat(exception.getResolvedObj())
+				.withFailMessage("Original exception resolvedObj after serialization should not be null").isNotNull();
+		assertThat(deSerializedException.getResolvedObj())
+				.withFailMessage("De-serialized exception resolvedObj should be null").isNull();
 	}
 
 	private NamingException readFromStream() throws IOException, ClassNotFoundException {

@@ -53,11 +53,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
+import static org.mockito.BDDMockito.times;
+import static org.mockito.BDDMockito.verify;
+import static org.mockito.BDDMockito.willThrow;
 
 /**
  * Unit tests for {@link LdapClient}
@@ -131,11 +131,11 @@ public class DefaultLdapClientTests {
 	}
 
 	private void expectGetReadWriteContext() {
-		when(this.contextSourceMock.getReadWriteContext()).thenReturn(this.dirContextMock);
+		given(this.contextSourceMock.getReadWriteContext()).willReturn(this.dirContextMock);
 	}
 
 	private void expectGetReadOnlyContext() {
-		when(this.contextSourceMock.getReadOnlyContext()).thenReturn(this.dirContextMock);
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(this.dirContextMock);
 	}
 
 	@Test
@@ -216,8 +216,8 @@ public class DefaultLdapClientTests {
 		controls.setReturningObjFlag(false);
 
 		javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException("some text");
-		when(this.dirContextMock.search(eq(this.nameMock), eq("(ou=somevalue)"),
-				argThat(new SearchControlsMatcher(controls)))).thenThrow(ne);
+		given(this.dirContextMock.search(eq(this.nameMock), eq("(ou=somevalue)"),
+				argThat(new SearchControlsMatcher(controls)))).willThrow(ne);
 
 		try {
 			this.tested.search().query(
@@ -239,8 +239,8 @@ public class DefaultLdapClientTests {
 		controls.setReturningObjFlag(false);
 
 		javax.naming.LimitExceededException ne = new javax.naming.LimitExceededException();
-		when(this.dirContextMock.search(eq(this.nameMock), eq("(ou=somevalue)"),
-				argThat(new SearchControlsMatcher(controls)))).thenThrow(ne);
+		given(this.dirContextMock.search(eq(this.nameMock), eq("(ou=somevalue)"),
+				argThat(new SearchControlsMatcher(controls)))).willThrow(ne);
 
 		try {
 			this.tested.search().query((builder) -> builder.base(this.nameMock).filter("(ou=somevalue)"))
@@ -257,13 +257,13 @@ public class DefaultLdapClientTests {
 	@Test
 	public void verifyThatDefaultSearchControlParametersAreAutomaticallyAppliedInSearch() throws Exception {
 		Supplier<SearchControls> defaults = mock(Supplier.class);
-		when(defaults.get()).thenReturn(new SearchControls());
+		given(defaults.get()).willReturn(new SearchControls());
 		LdapClient tested = LdapClient.builder().contextSource(this.contextSourceMock).defaultSearchControls(defaults)
 				.build();
 
 		expectGetReadOnlyContext();
 
-		when(this.dirContextMock.search(eq(this.nameMock), anyString(), any())).thenReturn(this.namingEnumerationMock);
+		given(this.dirContextMock.search(eq(this.nameMock), anyString(), any())).willReturn(this.namingEnumerationMock);
 		tested.search().name(this.nameMock).toEntry();
 
 		verify(defaults).get();
@@ -302,7 +302,7 @@ public class DefaultLdapClientTests {
 		ModificationItem[] mods = new ModificationItem[1];
 
 		javax.naming.LimitExceededException ne = new javax.naming.LimitExceededException();
-		doThrow(ne).when(this.dirContextMock).modifyAttributes(this.nameMock, mods);
+		willThrow(ne).given(this.dirContextMock).modifyAttributes(this.nameMock, mods);
 
 		try {
 			this.tested.modify(this.nameMock).attributes(mods).execute();
@@ -349,7 +349,7 @@ public class DefaultLdapClientTests {
 		Object expectedObject = new Object();
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
-		doThrow(ne).when(this.dirContextMock).bind(this.nameMock, expectedObject, expectedAttributes);
+		willThrow(ne).given(this.dirContextMock).bind(this.nameMock, expectedObject, expectedAttributes);
 
 		try {
 			this.tested.bind(this.nameMock).object(expectedObject).attributes(expectedAttributes).execute();
@@ -366,8 +366,8 @@ public class DefaultLdapClientTests {
 	public void testBindWithContext() throws Exception {
 		expectGetReadWriteContext();
 
-		when(this.dirContextOperationsMock.getDn()).thenReturn(this.nameMock);
-		when(this.dirContextOperationsMock.isUpdateMode()).thenReturn(false);
+		given(this.dirContextOperationsMock.getDn()).willReturn(this.nameMock);
+		given(this.dirContextOperationsMock.isUpdateMode()).willReturn(false);
 
 		this.tested.bind(this.nameMock).object(this.dirContextOperationsMock).execute();
 
@@ -379,8 +379,8 @@ public class DefaultLdapClientTests {
 	public void testRebindWithContext() throws Exception {
 		expectGetReadWriteContext();
 
-		when(this.dirContextOperationsMock.getDn()).thenReturn(this.nameMock);
-		when(this.dirContextOperationsMock.isUpdateMode()).thenReturn(false);
+		given(this.dirContextOperationsMock.getDn()).willReturn(this.nameMock);
+		given(this.dirContextOperationsMock.isUpdateMode()).willReturn(false);
 
 		this.tested.bind(this.nameMock).object(this.dirContextOperationsMock).replaceExisting(true).execute();
 
@@ -440,14 +440,14 @@ public class DefaultLdapClientTests {
 	public void testUnbindRecursive() throws Exception {
 		expectGetReadWriteContext();
 
-		when(this.namingEnumerationMock.hasMore()).thenReturn(true, false, false);
+		given(this.namingEnumerationMock.hasMore()).willReturn(true, false, false);
 		Binding binding = new Binding("cn=Some name", null);
-		when(this.namingEnumerationMock.next()).thenReturn(binding);
+		given(this.namingEnumerationMock.next()).willReturn(binding);
 
 		LdapName listDn = LdapUtils.newLdapName(DEFAULT_BASE);
-		when(this.dirContextMock.listBindings(listDn)).thenReturn(this.namingEnumerationMock);
+		given(this.dirContextMock.listBindings(listDn)).willReturn(this.namingEnumerationMock);
 		LdapName subListDn = LdapUtils.newLdapName("cn=Some name, o=example.com");
-		when(this.dirContextMock.listBindings(subListDn)).thenReturn(this.namingEnumerationMock);
+		given(this.dirContextMock.listBindings(subListDn)).willReturn(this.namingEnumerationMock);
 
 		this.tested.unbind(new CompositeName(DEFAULT_BASE.toString())).recursive(true).execute();
 
@@ -461,14 +461,14 @@ public class DefaultLdapClientTests {
 	public void testUnbindRecursive_String() throws Exception {
 		expectGetReadWriteContext();
 
-		when(this.namingEnumerationMock.hasMore()).thenReturn(true, false, false);
+		given(this.namingEnumerationMock.hasMore()).willReturn(true, false, false);
 		Binding binding = new Binding("cn=Some name", null);
-		when(this.namingEnumerationMock.next()).thenReturn(binding);
+		given(this.namingEnumerationMock.next()).willReturn(binding);
 
 		LdapName listDn = LdapUtils.newLdapName(DEFAULT_BASE);
-		when(this.dirContextMock.listBindings(listDn)).thenReturn(this.namingEnumerationMock);
+		given(this.dirContextMock.listBindings(listDn)).willReturn(this.namingEnumerationMock);
 		LdapName subListDn = LdapUtils.newLdapName("cn=Some name, o=example.com");
-		when(this.dirContextMock.listBindings(subListDn)).thenReturn(this.namingEnumerationMock);
+		given(this.dirContextMock.listBindings(subListDn)).willReturn(this.namingEnumerationMock);
 
 		this.tested.unbind(DEFAULT_BASE.toString()).recursive(true).execute();
 
@@ -483,7 +483,7 @@ public class DefaultLdapClientTests {
 		expectGetReadWriteContext();
 
 		javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
-		doThrow(ne).when(this.dirContextMock).unbind(this.nameMock);
+		willThrow(ne).given(this.dirContextMock).unbind(this.nameMock);
 
 		try {
 			this.tested.unbind(this.nameMock).execute();
@@ -501,7 +501,7 @@ public class DefaultLdapClientTests {
 		expectGetReadOnlyContext();
 
 		javax.naming.PartialResultException ex = new javax.naming.PartialResultException();
-		when(this.dirContextMock.search(eq(this.nameMock), anyString(), any())).thenThrow(ex);
+		given(this.dirContextMock.search(eq(this.nameMock), anyString(), any())).willThrow(ex);
 
 		try {
 			this.tested.search().name(this.nameMock).toEntryList();
@@ -521,8 +521,8 @@ public class DefaultLdapClientTests {
 
 		expectGetReadOnlyContext();
 
-		when(this.dirContextMock.search(eq(this.nameMock), anyString(), any()))
-				.thenThrow(javax.naming.PartialResultException.class);
+		given(this.dirContextMock.search(eq(this.nameMock), anyString(), any()))
+				.willThrow(javax.naming.PartialResultException.class);
 
 		tested.search().name(this.nameMock).toEntryStream();
 
@@ -534,16 +534,16 @@ public class DefaultLdapClientTests {
 		AuthenticatedLdapEntryContextMapper<Object> entryContextMapper = mock(
 				AuthenticatedLdapEntryContextMapper.class);
 
-		when(this.contextSourceMock.getReadOnlyContext()).thenReturn(this.dirContextMock);
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(this.dirContextMock);
 
 		Object expectedObject = new DirContextAdapter(new BasicAttributes(), LdapUtils.newLdapName("cn=john doe"),
 				LdapUtils.newLdapName("dc=jayway, dc=se"));
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
 		singleSearchResult(searchControlsRecursive(), searchResult);
 
-		when(this.contextSourceMock.getContext("cn=john doe,dc=jayway,dc=se", "password"))
-				.thenReturn(this.authenticatedContextMock);
-		when(entryContextMapper.mapWithContext(any(), any())).thenReturn(new Object());
+		given(this.contextSourceMock.getContext("cn=john doe,dc=jayway,dc=se", "password"))
+				.willReturn(this.authenticatedContextMock);
+		given(entryContextMapper.mapWithContext(any(), any())).willReturn(new Object());
 
 		LdapQuery query = LdapQueryBuilder.query().base(this.nameMock).filter("(ou=somevalue)");
 		Object result = this.tested.authenticate().query(query).password("password").execute(entryContextMapper);
@@ -555,7 +555,7 @@ public class DefaultLdapClientTests {
 
 	@Test
 	public void testAuthenticateWithTwoUsersFoundShouldThrowException() throws Exception {
-		when(this.contextSourceMock.getReadOnlyContext()).thenReturn(this.dirContextMock);
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(this.dirContextMock);
 
 		Object expectedObject = new DirContextAdapter(new BasicAttributes(), LdapUtils.newLdapName("cn=john doe"),
 				LdapUtils.newLdapName("dc=jayway, dc=se"));
@@ -578,7 +578,7 @@ public class DefaultLdapClientTests {
 
 	@Test
 	public void testAuthenticateWhenNoUserWasFoundShouldFail() throws Exception {
-		when(this.contextSourceMock.getReadOnlyContext()).thenReturn(this.dirContextMock);
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(this.dirContextMock);
 
 		noSearchResults(searchControlsRecursive());
 
@@ -592,7 +592,7 @@ public class DefaultLdapClientTests {
 	@Test
 	@SuppressWarnings("unchecked")
 	public void testAuthenticateQueryPasswordWhenNoUserWasFoundShouldThrowEmptyResult() throws Exception {
-		when(this.contextSourceMock.getReadOnlyContext()).thenReturn(this.dirContextMock);
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(this.dirContextMock);
 
 		noSearchResults(searchControlsRecursive());
 
@@ -605,7 +605,7 @@ public class DefaultLdapClientTests {
 
 	@Test
 	public void testAuthenticateWithFailedAuthenticationShouldFail() throws Exception {
-		when(this.contextSourceMock.getReadOnlyContext()).thenReturn(this.dirContextMock);
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(this.dirContextMock);
 
 		Object expectedObject = new DirContextAdapter(new BasicAttributes(), LdapUtils.newLdapName("cn=john doe"),
 				LdapUtils.newLdapName("dc=jayway, dc=se"));
@@ -613,8 +613,8 @@ public class DefaultLdapClientTests {
 
 		singleSearchResult(searchControlsRecursive(), searchResult);
 
-		when(this.contextSourceMock.getContext("cn=john doe,dc=jayway,dc=se", "password"))
-				.thenThrow(new UncategorizedLdapException("Authentication failed"));
+		given(this.contextSourceMock.getContext("cn=john doe,dc=jayway,dc=se", "password"))
+				.willThrow(new UncategorizedLdapException("Authentication failed"));
 
 		LdapQuery query = LdapQueryBuilder.query().base(this.nameMock).filter("(ou=somevalue)");
 		assertThatExceptionOfType(UncategorizedLdapException.class)
@@ -623,10 +623,10 @@ public class DefaultLdapClientTests {
 	}
 
 	private void noSearchResults(SearchControls controls) throws Exception {
-		when(this.dirContextMock.search(eq(this.nameMock), eq("(ou=somevalue)"),
-				argThat(new SearchControlsMatcher(controls)))).thenReturn(this.namingEnumerationMock);
+		given(this.dirContextMock.search(eq(this.nameMock), eq("(ou=somevalue)"),
+				argThat(new SearchControlsMatcher(controls)))).willReturn(this.namingEnumerationMock);
 
-		when(this.namingEnumerationMock.hasMore()).thenReturn(false);
+		given(this.namingEnumerationMock.hasMore()).willReturn(false);
 	}
 
 	private void singleSearchResult(SearchControls controls, SearchResult searchResult) throws Exception {
@@ -634,16 +634,16 @@ public class DefaultLdapClientTests {
 	}
 
 	private void setupSearchResults(SearchControls controls, SearchResult... searchResults) throws Exception {
-		when(this.dirContextMock.search(eq(this.nameMock), eq("(ou=somevalue)"),
-				argThat(new SearchControlsMatcher(controls)))).thenReturn(this.namingEnumerationMock);
+		given(this.dirContextMock.search(eq(this.nameMock), eq("(ou=somevalue)"),
+				argThat(new SearchControlsMatcher(controls)))).willReturn(this.namingEnumerationMock);
 
 		if (searchResults.length == 1) {
-			when(this.namingEnumerationMock.hasMore()).thenReturn(true, false);
-			when(this.namingEnumerationMock.next()).thenReturn(searchResults[0]);
+			given(this.namingEnumerationMock.hasMore()).willReturn(true, false);
+			given(this.namingEnumerationMock.next()).willReturn(searchResults[0]);
 		}
 		else if (searchResults.length == 2) {
-			when(this.namingEnumerationMock.hasMore()).thenReturn(true, true, false);
-			when(this.namingEnumerationMock.next()).thenReturn(searchResults[0], searchResults[1]);
+			given(this.namingEnumerationMock.hasMore()).willReturn(true, true, false);
+			given(this.namingEnumerationMock.next()).willReturn(searchResults[0], searchResults[1]);
 		}
 		else {
 			throw new IllegalArgumentException("Cannot handle " + searchResults.length + " search results");
@@ -651,11 +651,11 @@ public class DefaultLdapClientTests {
 	}
 
 	private void singleSearchResultWithStringBase(SearchControls controls, SearchResult searchResult) throws Exception {
-		when(this.dirContextMock.search(eq(DEFAULT_BASE), eq("(ou=somevalue)"),
-				argThat(new SearchControlsMatcher(controls)))).thenReturn(this.namingEnumerationMock);
+		given(this.dirContextMock.search(eq(DEFAULT_BASE), eq("(ou=somevalue)"),
+				argThat(new SearchControlsMatcher(controls)))).willReturn(this.namingEnumerationMock);
 
-		when(this.namingEnumerationMock.hasMore()).thenReturn(true, false);
-		when(this.namingEnumerationMock.next()).thenReturn(searchResult);
+		given(this.namingEnumerationMock.hasMore()).willReturn(true, false);
+		given(this.namingEnumerationMock.next()).willReturn(searchResult);
 	}
 
 	private SearchControls searchControlsRecursive() {

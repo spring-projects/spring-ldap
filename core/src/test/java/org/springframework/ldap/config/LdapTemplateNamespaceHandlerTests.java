@@ -51,7 +51,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.util.ReflectionUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertArrayEquals;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -192,8 +191,8 @@ public class LdapTemplateNamespaceHandlerTests {
 		assertThat(outerContextSource instanceof TransactionAwareContextSourceProxy).isTrue();
 		ContextSource contextSource = ((TransactionAwareContextSourceProxy) outerContextSource).getTarget();
 
-		assertArrayEquals(new String[] { "ldap://a.localhost:389", "ldap://b.localhost:389" },
-				(Object[]) getInternalState(contextSource, "urls"));
+		assertThat(new String[] { "ldap://a.localhost:389", "ldap://b.localhost:389" })
+				.isEqualTo(getInternalState(contextSource, "urls"));
 
 	}
 
@@ -207,8 +206,8 @@ public class LdapTemplateNamespaceHandlerTests {
 		assertThat(outerContextSource instanceof TransactionAwareContextSourceProxy).isTrue();
 		ContextSource contextSource = ((TransactionAwareContextSourceProxy) outerContextSource).getTarget();
 
-		assertArrayEquals(new String[] { "ldap://a.localhost:389", "ldap://b.localhost:389" },
-				(Object[]) getInternalState(contextSource, "urls"));
+		assertThat(new String[] { "ldap://a.localhost:389", "ldap://b.localhost:389" })
+				.isEqualTo(getInternalState(contextSource, "urls"));
 
 	}
 

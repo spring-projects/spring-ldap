@@ -26,8 +26,8 @@ import org.springframework.ldap.support.LdapUtils;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
 
 public class UnbindOperationRecorderTests {
 
@@ -38,7 +38,6 @@ public class UnbindOperationRecorderTests {
 	@Before
 	public void setUp() throws Exception {
 		this.ldapOperationsMock = mock(LdapOperations.class);
-		;
 
 		this.renamingStrategyMock = mock(TempEntryRenamingStrategy.class);
 	}
@@ -50,7 +49,7 @@ public class UnbindOperationRecorderTests {
 		UnbindOperationRecorder tested = new UnbindOperationRecorder(this.ldapOperationsMock,
 				this.renamingStrategyMock);
 
-		when(this.renamingStrategyMock.getTemporaryName(expectedDn)).thenReturn(expectedTempName);
+		given(this.renamingStrategyMock.getTemporaryName(expectedDn)).willReturn(expectedTempName);
 
 		// Perform test
 		CompensatingTransactionOperationExecutor operation = tested.recordOperation(new Object[] { expectedDn });

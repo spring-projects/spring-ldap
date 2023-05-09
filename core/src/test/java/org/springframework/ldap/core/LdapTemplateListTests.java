@@ -34,9 +34,9 @@ import org.springframework.ldap.PartialResultException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
+import static org.mockito.BDDMockito.verify;
 
 /**
  * Unit tests for the <code>list</code> operations in {@link LdapTemplate}.
@@ -86,36 +86,36 @@ public class LdapTemplateListTests {
 	}
 
 	private void expectGetReadOnlyContext() {
-		when(this.contextSourceMock.getReadOnlyContext()).thenReturn(this.dirContextMock);
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(this.dirContextMock);
 	}
 
 	private void setupStringListAndNamingEnumeration(NameClassPair listResult) throws NamingException {
-		when(this.dirContextMock.list(NAME)).thenReturn(this.namingEnumerationMock);
+		given(this.dirContextMock.list(NAME)).willReturn(this.namingEnumerationMock);
 
 		setupNamingEnumeration(listResult);
 	}
 
 	private void setupListAndNamingEnumeration(NameClassPair listResult) throws NamingException {
-		when(this.dirContextMock.list(this.nameMock)).thenReturn(this.namingEnumerationMock);
+		given(this.dirContextMock.list(this.nameMock)).willReturn(this.namingEnumerationMock);
 
 		setupNamingEnumeration(listResult);
 	}
 
 	private void setupStringListBindingsAndNamingEnumeration(NameClassPair listResult) throws NamingException {
-		when(this.dirContextMock.listBindings(NAME)).thenReturn(this.namingEnumerationMock);
+		given(this.dirContextMock.listBindings(NAME)).willReturn(this.namingEnumerationMock);
 
 		setupNamingEnumeration(listResult);
 	}
 
 	private void setupListBindingsAndNamingEnumeration(NameClassPair listResult) throws NamingException {
-		when(this.dirContextMock.listBindings(this.nameMock)).thenReturn(this.namingEnumerationMock);
+		given(this.dirContextMock.listBindings(this.nameMock)).willReturn(this.namingEnumerationMock);
 
 		setupNamingEnumeration(listResult);
 	}
 
 	private void setupNamingEnumeration(NameClassPair listResult) throws NamingException {
-		when(this.namingEnumerationMock.hasMore()).thenReturn(true, false);
-		when(this.namingEnumerationMock.next()).thenReturn(listResult);
+		given(this.namingEnumerationMock.hasMore()).willReturn(true, false);
+		given(this.namingEnumerationMock.next()).willReturn(listResult);
 	}
 
 	@Test
@@ -189,7 +189,7 @@ public class LdapTemplateListTests {
 		expectGetReadOnlyContext();
 
 		javax.naming.PartialResultException pre = new javax.naming.PartialResultException();
-		when(this.dirContextMock.list(NAME)).thenThrow(pre);
+		given(this.dirContextMock.list(NAME)).willThrow(pre);
 
 		try {
 			this.tested.list(NAME);
@@ -207,7 +207,7 @@ public class LdapTemplateListTests {
 		expectGetReadOnlyContext();
 
 		javax.naming.PartialResultException pre = new javax.naming.PartialResultException();
-		when(this.dirContextMock.list(NAME)).thenThrow(pre);
+		given(this.dirContextMock.list(NAME)).willThrow(pre);
 
 		this.tested.setIgnorePartialResultException(true);
 
@@ -224,7 +224,7 @@ public class LdapTemplateListTests {
 		expectGetReadOnlyContext();
 
 		javax.naming.LimitExceededException ne = new javax.naming.LimitExceededException();
-		when(this.dirContextMock.list(NAME)).thenThrow(ne);
+		given(this.dirContextMock.list(NAME)).willThrow(ne);
 
 		try {
 			this.tested.list(NAME);
@@ -285,7 +285,7 @@ public class LdapTemplateListTests {
 		setupStringListBindingsAndNamingEnumeration(listResult);
 
 		Object expectedResult = expectedObject;
-		when(this.contextMapperMock.mapFromContext(expectedObject)).thenReturn(expectedResult);
+		given(this.contextMapperMock.mapFromContext(expectedObject)).willReturn(expectedResult);
 
 		List list = this.tested.listBindings(NAME, this.contextMapperMock);
 
@@ -307,7 +307,7 @@ public class LdapTemplateListTests {
 		setupListBindingsAndNamingEnumeration(listResult);
 
 		Object expectedResult = expectedObject;
-		when(this.contextMapperMock.mapFromContext(expectedObject)).thenReturn(expectedResult);
+		given(this.contextMapperMock.mapFromContext(expectedObject)).willReturn(expectedResult);
 
 		List list = this.tested.listBindings(this.nameMock, this.contextMapperMock);
 

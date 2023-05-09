@@ -29,12 +29,12 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import org.springframework.core.SpringVersion;
+import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -68,8 +68,9 @@ public class DefaultObjectDirectoryMapperTests {
 		DefaultObjectDirectoryMapper.EntityData entityData = this.tested.getMetaDataMap().get(UnitTestPerson.class);
 
 		assertThat(entityData).isNotNull();
-		assertThat(entityData.ocFilter).isEqualTo(query().where("objectclass").is("inetOrgPerson").and("objectclass")
-				.is("organizationalPerson").and("objectclass").is("person").and("objectclass").is("top").filter());
+		assertThat(entityData.ocFilter).isEqualTo(LdapQueryBuilder.query().where("objectclass").is("inetOrgPerson")
+				.and("objectclass").is("organizationalPerson").and("objectclass").is("person").and("objectclass")
+				.is("top").filter());
 
 		assertThat(entityData.metaData).hasSize(8);
 

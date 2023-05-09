@@ -34,8 +34,8 @@ import org.springframework.ldap.support.LdapUtils;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
 
 public class ModifyAttributesOperationRecorderTests {
 
@@ -78,11 +78,11 @@ public class ModifyAttributesOperationRecorderTests {
 
 		LdapName expectedName = LdapUtils.newLdapName("cn=john doe");
 
-		when(this.attributesMapperMock.hasMore()).thenReturn(true, false);
-		when(this.attributesMapperMock.getAttributesForLookup()).thenReturn(new String[] { "attribute1" });
-		when(this.ldapOperationsMock.lookup(expectedName, new String[] { "attribute1" }, this.attributesMapperMock))
-				.thenReturn(expectedAttributes);
-		when(this.attributesMapperMock.getCollectedAttributes()).thenReturn(expectedAttributes);
+		given(this.attributesMapperMock.hasMore()).willReturn(true, false);
+		given(this.attributesMapperMock.getAttributesForLookup()).willReturn(new String[] { "attribute1" });
+		given(this.ldapOperationsMock.lookup(expectedName, new String[] { "attribute1" }, this.attributesMapperMock))
+				.willReturn(expectedAttributes);
+		given(this.attributesMapperMock.getCollectedAttributes()).willReturn(expectedAttributes);
 
 		// Perform test
 		CompensatingTransactionOperationExecutor operation = this.tested

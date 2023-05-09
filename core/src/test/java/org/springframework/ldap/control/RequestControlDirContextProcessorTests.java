@@ -26,9 +26,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
+import static org.mockito.BDDMockito.verify;
 
 public class RequestControlDirContextProcessorTests {
 
@@ -80,7 +80,7 @@ public class RequestControlDirContextProcessorTests {
 	@Test
 	public void testPreProcessWithExistingControlOfDifferentClassShouldAdd() throws Exception {
 		SortControl existingControl = new SortControl(new String[] { "cn" }, true);
-		when(this.ldapContextMock.getRequestControls()).thenReturn(new Control[] { existingControl });
+		given(this.ldapContextMock.getRequestControls()).willReturn(new Control[] { existingControl });
 
 		this.tested.preProcess(this.ldapContextMock);
 
@@ -89,7 +89,7 @@ public class RequestControlDirContextProcessorTests {
 
 	@Test
 	public void testPreProcessWithExistingControlOfSameClassShouldReplace() throws Exception {
-		when(this.ldapContextMock.getRequestControls()).thenReturn(new Control[] { this.requestControl2Mock });
+		given(this.ldapContextMock.getRequestControls()).willReturn(new Control[] { this.requestControl2Mock });
 
 		this.tested.preProcess(this.ldapContextMock);
 
@@ -98,7 +98,7 @@ public class RequestControlDirContextProcessorTests {
 
 	@Test
 	public void testPreProcessWithExistingControlOfSameClassAndPropertyFalseShouldAdd() throws Exception {
-		when(this.ldapContextMock.getRequestControls()).thenReturn(new Control[] { this.requestControl2Mock });
+		given(this.ldapContextMock.getRequestControls()).willReturn(new Control[] { this.requestControl2Mock });
 
 		this.tested.setReplaceSameControlEnabled(false);
 		this.tested.preProcess(this.ldapContextMock);
@@ -109,7 +109,7 @@ public class RequestControlDirContextProcessorTests {
 
 	@Test
 	public void testPreProcessWithNoExistingControlsShouldAdd() throws NamingException {
-		when(this.ldapContextMock.getRequestControls()).thenReturn(new Control[0]);
+		given(this.ldapContextMock.getRequestControls()).willReturn(new Control[0]);
 
 		this.tested.preProcess(this.ldapContextMock);
 
@@ -118,7 +118,7 @@ public class RequestControlDirContextProcessorTests {
 
 	@Test
 	public void testPreProcessWithNullControlsShouldAdd() throws NamingException {
-		when(this.ldapContextMock.getRequestControls()).thenReturn(null);
+		given(this.ldapContextMock.getRequestControls()).willReturn(null);
 
 		this.tested.preProcess(this.ldapContextMock);
 

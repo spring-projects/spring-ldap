@@ -23,8 +23,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
 
 public class ContextMapperCallbackHandlerTests {
 
@@ -49,7 +49,7 @@ public class ContextMapperCallbackHandlerTests {
 		Object expectedResult = "result";
 		Binding expectedBinding = new Binding("some name", expectedObject);
 
-		when(this.mapperMock.mapFromContext(expectedObject)).thenReturn(expectedResult);
+		given(this.mapperMock.mapFromContext(expectedObject)).willReturn(expectedResult);
 		Object actualResult = this.tested.getObjectFromNameClassPair(expectedBinding);
 		assertThat(actualResult).isEqualTo(expectedResult);
 	}

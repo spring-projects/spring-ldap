@@ -25,8 +25,7 @@ import org.junit.Test;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -56,13 +55,13 @@ public class LdapTransactionUtilsTests {
 
 	@Test
 	public void testIsSupportedWriteTransactionOperation() {
-		assertTrue(LdapTransactionUtils.isSupportedWriteTransactionOperation("bind"));
-		assertTrue(LdapTransactionUtils.isSupportedWriteTransactionOperation("rebind"));
-		assertTrue(LdapTransactionUtils.isSupportedWriteTransactionOperation("unbind"));
-		assertTrue(LdapTransactionUtils.isSupportedWriteTransactionOperation("modifyAttributes"));
-		assertTrue(LdapTransactionUtils.isSupportedWriteTransactionOperation("rename"));
-		assertFalse(LdapTransactionUtils.isSupportedWriteTransactionOperation("lookup"));
-		assertFalse(LdapTransactionUtils.isSupportedWriteTransactionOperation("search"));
+		assertThat(LdapTransactionUtils.isSupportedWriteTransactionOperation("bind")).isTrue();
+		assertThat(LdapTransactionUtils.isSupportedWriteTransactionOperation("rebind")).isTrue();
+		assertThat(LdapTransactionUtils.isSupportedWriteTransactionOperation("unbind")).isTrue();
+		assertThat(LdapTransactionUtils.isSupportedWriteTransactionOperation("modifyAttributes")).isTrue();
+		assertThat(LdapTransactionUtils.isSupportedWriteTransactionOperation("rename")).isTrue();
+		assertThat(LdapTransactionUtils.isSupportedWriteTransactionOperation("lookup")).isFalse();
+		assertThat(LdapTransactionUtils.isSupportedWriteTransactionOperation("search")).isFalse();
 	}
 
 	public void dummyMethod() {

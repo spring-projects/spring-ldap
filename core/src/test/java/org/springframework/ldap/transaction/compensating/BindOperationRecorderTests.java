@@ -27,7 +27,6 @@ import org.springframework.ldap.support.LdapUtils;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
 
 public class BindOperationRecorderTests {
@@ -56,7 +55,7 @@ public class BindOperationRecorderTests {
 		assertThat(rollbackOperation.getDn()).isSameAs(expectedDn);
 		assertThat(rollbackOperation.getLdapOperations()).isSameAs(this.ldapOperationsMock);
 		assertThat(rollbackOperation.getOriginalObject()).isSameAs(expectedObject);
-		assertSame(expectedAttributes, rollbackOperation.getOriginalAttributes());
+		assertThat(expectedAttributes).isSameAs(rollbackOperation.getOriginalAttributes());
 	}
 
 	@Test

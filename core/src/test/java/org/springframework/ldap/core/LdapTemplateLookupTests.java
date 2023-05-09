@@ -34,9 +34,9 @@ import org.springframework.ldap.support.LdapUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
+import static org.mockito.BDDMockito.verify;
 
 public class LdapTemplateLookupTests {
 
@@ -75,7 +75,7 @@ public class LdapTemplateLookupTests {
 	}
 
 	private void expectGetReadOnlyContext() {
-		when(this.contextSourceMock.getReadOnlyContext()).thenReturn(this.dirContextMock);
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(this.dirContextMock);
 	}
 
 	// Tests for lookup(name)
@@ -85,7 +85,7 @@ public class LdapTemplateLookupTests {
 		expectGetReadOnlyContext();
 
 		Object expected = new Object();
-		when(this.dirContextMock.lookup(this.nameMock)).thenReturn(expected);
+		given(this.dirContextMock.lookup(this.nameMock)).willReturn(expected);
 
 		Object actual = this.tested.lookup(this.nameMock);
 
@@ -99,7 +99,7 @@ public class LdapTemplateLookupTests {
 		expectGetReadOnlyContext();
 
 		Object expected = new Object();
-		when(this.dirContextMock.lookup(DEFAULT_BASE_STRING)).thenReturn(expected);
+		given(this.dirContextMock.lookup(DEFAULT_BASE_STRING)).willReturn(expected);
 
 		Object actual = this.tested.lookup(DEFAULT_BASE_STRING);
 
@@ -113,7 +113,7 @@ public class LdapTemplateLookupTests {
 		expectGetReadOnlyContext();
 
 		javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
-		when(this.dirContextMock.lookup(this.nameMock)).thenThrow(ne);
+		given(this.dirContextMock.lookup(this.nameMock)).willThrow(ne);
 
 		try {
 			this.tested.lookup(this.nameMock);
@@ -133,10 +133,10 @@ public class LdapTemplateLookupTests {
 		expectGetReadOnlyContext();
 
 		BasicAttributes expectedAttributes = new BasicAttributes();
-		when(this.dirContextMock.getAttributes(this.nameMock)).thenReturn(expectedAttributes);
+		given(this.dirContextMock.getAttributes(this.nameMock)).willReturn(expectedAttributes);
 
 		Object expected = new Object();
-		when(this.attributesMapperMock.mapFromAttributes(expectedAttributes)).thenReturn(expected);
+		given(this.attributesMapperMock.mapFromAttributes(expectedAttributes)).willReturn(expected);
 
 		Object actual = this.tested.lookup(this.nameMock, this.attributesMapperMock);
 
@@ -150,10 +150,10 @@ public class LdapTemplateLookupTests {
 		expectGetReadOnlyContext();
 
 		BasicAttributes expectedAttributes = new BasicAttributes();
-		when(this.dirContextMock.getAttributes(DEFAULT_BASE_STRING)).thenReturn(expectedAttributes);
+		given(this.dirContextMock.getAttributes(DEFAULT_BASE_STRING)).willReturn(expectedAttributes);
 
 		Object expected = new Object();
-		when(this.attributesMapperMock.mapFromAttributes(expectedAttributes)).thenReturn(expected);
+		given(this.attributesMapperMock.mapFromAttributes(expectedAttributes)).willReturn(expected);
 
 		Object actual = this.tested.lookup(DEFAULT_BASE_STRING, this.attributesMapperMock);
 
@@ -167,7 +167,7 @@ public class LdapTemplateLookupTests {
 		expectGetReadOnlyContext();
 
 		javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
-		when(this.dirContextMock.getAttributes(this.nameMock)).thenThrow(ne);
+		given(this.dirContextMock.getAttributes(this.nameMock)).willThrow(ne);
 
 		try {
 			this.tested.lookup(this.nameMock, this.attributesMapperMock);
@@ -188,9 +188,9 @@ public class LdapTemplateLookupTests {
 
 		Object transformed = new Object();
 		Object expected = new Object();
-		when(this.dirContextMock.lookup(this.nameMock)).thenReturn(expected);
+		given(this.dirContextMock.lookup(this.nameMock)).willReturn(expected);
 
-		when(this.contextMapperMock.mapFromContext(expected)).thenReturn(transformed);
+		given(this.contextMapperMock.mapFromContext(expected)).willReturn(transformed);
 
 		Object actual = this.tested.lookup(this.nameMock, this.contextMapperMock);
 
@@ -207,10 +207,10 @@ public class LdapTemplateLookupTests {
 		Class<Object> expectedClass = Object.class;
 
 		DirContextAdapter expectedContext = new DirContextAdapter();
-		when(this.dirContextMock.lookup(this.nameMock)).thenReturn(expectedContext);
-		when(this.odmMock.mapFromLdapDataEntry(expectedContext, expectedClass)).thenReturn(transformed);
+		given(this.dirContextMock.lookup(this.nameMock)).willReturn(expectedContext);
+		given(this.odmMock.mapFromLdapDataEntry(expectedContext, expectedClass)).willReturn(transformed);
 
-		when(this.nameMock.getAll()).thenReturn(Collections.<String>enumeration(Collections.<String>emptyList()));
+		given(this.nameMock.getAll()).willReturn(Collections.<String>enumeration(Collections.<String>emptyList()));
 		// Perform test
 		Object result = this.tested.findByDn(this.nameMock, expectedClass);
 		assertThat(result).isSameAs(transformed);
@@ -224,9 +224,9 @@ public class LdapTemplateLookupTests {
 
 		Object transformed = new Object();
 		Object expected = new Object();
-		when(this.dirContextMock.lookup(DEFAULT_BASE_STRING)).thenReturn(expected);
+		given(this.dirContextMock.lookup(DEFAULT_BASE_STRING)).willReturn(expected);
 
-		when(this.contextMapperMock.mapFromContext(expected)).thenReturn(transformed);
+		given(this.contextMapperMock.mapFromContext(expected)).willReturn(transformed);
 
 		Object actual = this.tested.lookup(DEFAULT_BASE_STRING, this.contextMapperMock);
 
@@ -240,7 +240,7 @@ public class LdapTemplateLookupTests {
 		expectGetReadOnlyContext();
 
 		javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
-		when(this.dirContextMock.lookup(this.nameMock)).thenThrow(ne);
+		given(this.dirContextMock.lookup(this.nameMock)).willThrow(ne);
 
 		try {
 			this.tested.lookup(this.nameMock, this.contextMapperMock);
@@ -264,10 +264,10 @@ public class LdapTemplateLookupTests {
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		expectedAttributes.put("cn", "Some Name");
 
-		when(this.dirContextMock.getAttributes(this.nameMock, attributeNames)).thenReturn(expectedAttributes);
+		given(this.dirContextMock.getAttributes(this.nameMock, attributeNames)).willReturn(expectedAttributes);
 
 		Object expected = new Object();
-		when(this.attributesMapperMock.mapFromAttributes(expectedAttributes)).thenReturn(expected);
+		given(this.attributesMapperMock.mapFromAttributes(expectedAttributes)).willReturn(expected);
 
 		Object actual = this.tested.lookup(this.nameMock, attributeNames, this.attributesMapperMock);
 
@@ -285,10 +285,10 @@ public class LdapTemplateLookupTests {
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		expectedAttributes.put("cn", "Some Name");
 
-		when(this.dirContextMock.getAttributes(DEFAULT_BASE_STRING, attributeNames)).thenReturn(expectedAttributes);
+		given(this.dirContextMock.getAttributes(DEFAULT_BASE_STRING, attributeNames)).willReturn(expectedAttributes);
 
 		Object expected = new Object();
-		when(this.attributesMapperMock.mapFromAttributes(expectedAttributes)).thenReturn(expected);
+		given(this.attributesMapperMock.mapFromAttributes(expectedAttributes)).willReturn(expected);
 
 		Object actual = this.tested.lookup(DEFAULT_BASE_STRING, attributeNames, this.attributesMapperMock);
 
@@ -311,10 +311,10 @@ public class LdapTemplateLookupTests {
 		LdapName name = LdapUtils.newLdapName(DEFAULT_BASE_STRING);
 		DirContextAdapter adapter = new DirContextAdapter(expectedAttributes, name);
 
-		when(this.dirContextMock.getAttributes(name, attributeNames)).thenReturn(expectedAttributes);
+		given(this.dirContextMock.getAttributes(name, attributeNames)).willReturn(expectedAttributes);
 
 		Object transformed = new Object();
-		when(this.contextMapperMock.mapFromContext(adapter)).thenReturn(transformed);
+		given(this.contextMapperMock.mapFromContext(adapter)).willReturn(transformed);
 
 		Object actual = this.tested.lookup(name, attributeNames, this.contextMapperMock);
 
@@ -332,13 +332,13 @@ public class LdapTemplateLookupTests {
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		expectedAttributes.put("cn", "Some Name");
 
-		when(this.dirContextMock.getAttributes(DEFAULT_BASE_STRING, attributeNames)).thenReturn(expectedAttributes);
+		given(this.dirContextMock.getAttributes(DEFAULT_BASE_STRING, attributeNames)).willReturn(expectedAttributes);
 
 		LdapName name = LdapUtils.newLdapName(DEFAULT_BASE_STRING);
 		DirContextAdapter adapter = new DirContextAdapter(expectedAttributes, name);
 
 		Object transformed = new Object();
-		when(this.contextMapperMock.mapFromContext(adapter)).thenReturn(transformed);
+		given(this.contextMapperMock.mapFromContext(adapter)).willReturn(transformed);
 
 		Object actual = this.tested.lookup(DEFAULT_BASE_STRING, attributeNames, this.contextMapperMock);
 

@@ -31,8 +31,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
 
 /**
  * Unit tests for the SortControlDirContextProcessor class.
@@ -68,7 +68,7 @@ public class SortControlDirContextProcessorTests {
 		byte[] value = encodeValue(sortResult);
 		SortResponseControl control = new SortResponseControl("dummy", true, value);
 
-		when(this.ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
+		given(this.ldapContextMock.getResponseControls()).willReturn(new Control[] { control });
 
 		this.tested.postProcess(this.ldapContextMock);
 
@@ -83,7 +83,7 @@ public class SortControlDirContextProcessorTests {
 		byte[] value = encodeValue(sortResult);
 		SortResponseControl control = new SortResponseControl("dummy", true, value);
 
-		when(this.ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
+		given(this.ldapContextMock.getResponseControls()).willReturn(new Control[] { control });
 
 		this.tested.postProcess(this.ldapContextMock);
 
@@ -103,7 +103,7 @@ public class SortControlDirContextProcessorTests {
 		// Using another response control to verify that it is ignored
 		DirSyncResponseControl control = new DirSyncResponseControl("dummy", true, cookie);
 
-		when(this.ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
+		given(this.ldapContextMock.getResponseControls()).willReturn(new Control[] { control });
 
 		this.tested.postProcess(this.ldapContextMock);
 

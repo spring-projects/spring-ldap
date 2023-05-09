@@ -24,7 +24,7 @@ import org.springframework.ldap.pool.AbstractPoolTestCase;
 import org.springframework.ldap.pool.MutableDelegatingLdapContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 /**
  * Unit tests for the MutablePoolingContextSource class.
@@ -36,7 +36,7 @@ public class MutablePoolingContextSourceTests extends AbstractPoolTestCase {
 	@Test
 	public void testGetReadOnlyLdapContext() throws Exception {
 
-		when(contextSourceMock.getReadOnlyContext()).thenReturn(ldapContextMock);
+		given(contextSourceMock.getReadOnlyContext()).willReturn(ldapContextMock);
 
 		final MutablePoolingContextSource poolingContextSource = new MutablePoolingContextSource();
 		poolingContextSource.setContextSource(contextSourceMock);

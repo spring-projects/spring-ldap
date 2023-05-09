@@ -35,7 +35,7 @@ public class UnitTestPersonWithIndexedAndUnindexedDnAttributes {
 	private String fullName;
 
 	// This makes the entry invalid
-	@DnAttribute(value = "ou")
+	@DnAttribute("ou")
 	private String company;
 
 	@DnAttribute(value = "c", index = 0)

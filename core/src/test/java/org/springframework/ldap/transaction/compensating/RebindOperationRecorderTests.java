@@ -27,8 +27,8 @@ import org.springframework.ldap.support.LdapUtils;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
 
 public class RebindOperationRecorderTests {
 
@@ -50,7 +50,7 @@ public class RebindOperationRecorderTests {
 		RebindOperationRecorder tested = new RebindOperationRecorder(this.ldapOperationsMock,
 				this.renamingStrategyMock);
 
-		when(this.renamingStrategyMock.getTemporaryName(expectedDn)).thenReturn(expectedTempDn);
+		given(this.renamingStrategyMock.getTemporaryName(expectedDn)).willReturn(expectedTempDn);
 
 		Object expectedObject = new Object();
 		BasicAttributes expectedAttributes = new BasicAttributes();

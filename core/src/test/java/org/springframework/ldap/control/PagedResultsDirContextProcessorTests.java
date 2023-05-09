@@ -32,8 +32,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
 
 public class PagedResultsDirContextProcessorTests {
 
@@ -82,7 +82,7 @@ public class PagedResultsDirContextProcessorTests {
 		byte[] cookie = encodeValue(resultSize, value);
 		PagedResultsResponseControl control = new PagedResultsResponseControl("dummy", true, cookie);
 
-		when(this.ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
+		given(this.ldapContextMock.getResponseControls()).willReturn(new Control[] { control });
 		this.tested.postProcess(this.ldapContextMock);
 
 		PagedResultsCookie returnedCookie = this.tested.getCookie();
@@ -103,7 +103,7 @@ public class PagedResultsDirContextProcessorTests {
 		// Using another response control to verify that it is ignored
 		DirSyncResponseControl control = new DirSyncResponseControl("dummy", true, cookie);
 
-		when(this.ldapContextMock.getResponseControls()).thenReturn(new Control[] { control });
+		given(this.ldapContextMock.getResponseControls()).willReturn(new Control[] { control });
 		this.tested.postProcess(this.ldapContextMock);
 
 		assertThat(this.tested.getCookie()).isNull();
@@ -113,7 +113,7 @@ public class PagedResultsDirContextProcessorTests {
 
 	@Test
 	public void testPostProcess_NoResponseControls() throws Exception {
-		when(this.ldapContextMock.getResponseControls()).thenReturn(null);
+		given(this.ldapContextMock.getResponseControls()).willReturn(null);
 
 		this.tested.postProcess(this.ldapContextMock);
 

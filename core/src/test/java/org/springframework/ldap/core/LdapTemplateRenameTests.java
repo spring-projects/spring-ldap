@@ -28,10 +28,10 @@ import org.springframework.ldap.UncategorizedLdapException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
+import static org.mockito.BDDMockito.verify;
+import static org.mockito.BDDMockito.willThrow;
 
 /**
  * Unit tests for the rename operations in the LdapTemplate class.
@@ -68,7 +68,7 @@ public class LdapTemplateRenameTests {
 	}
 
 	private void expectGetReadWriteContext() {
-		when(this.contextSourceMock.getReadWriteContext()).thenReturn(this.dirContextMock);
+		given(this.contextSourceMock.getReadWriteContext()).willReturn(this.dirContextMock);
 	}
 
 	@Test
@@ -86,7 +86,7 @@ public class LdapTemplateRenameTests {
 		expectGetReadWriteContext();
 
 		javax.naming.NameAlreadyBoundException ne = new javax.naming.NameAlreadyBoundException();
-		doThrow(ne).when(this.dirContextMock).rename(this.oldNameMock, this.newNameMock);
+		willThrow(ne).given(this.dirContextMock).rename(this.oldNameMock, this.newNameMock);
 
 		try {
 			this.tested.rename(this.oldNameMock, this.newNameMock);
@@ -105,7 +105,7 @@ public class LdapTemplateRenameTests {
 
 		javax.naming.NamingException ne = new javax.naming.NamingException();
 
-		doThrow(ne).when(this.dirContextMock).rename(this.oldNameMock, this.newNameMock);
+		willThrow(ne).given(this.dirContextMock).rename(this.oldNameMock, this.newNameMock);
 
 		try {
 			this.tested.rename(this.oldNameMock, this.newNameMock);

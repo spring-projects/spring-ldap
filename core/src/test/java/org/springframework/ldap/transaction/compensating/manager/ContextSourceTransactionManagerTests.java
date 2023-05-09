@@ -41,9 +41,9 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
+import static org.mockito.BDDMockito.verify;
 
 public class ContextSourceTransactionManagerTests {
 
@@ -96,7 +96,7 @@ public class ContextSourceTransactionManagerTests {
 
 	@Test
 	public void testDoBegin() {
-		when(this.contextSourceMock.getReadWriteContext()).thenReturn(this.contextMock);
+		given(this.contextSourceMock.getReadWriteContext()).willReturn(this.contextMock);
 
 		CompensatingTransactionObject expectedTransactionObject = new CompensatingTransactionObject(null);
 		this.tested.doBegin(expectedTransactionObject, this.transactionDefinitionMock);
@@ -148,13 +148,13 @@ public class ContextSourceTransactionManagerTests {
 		Connection connectionMock = mock(Connection.class);
 		DataSource dataSourceMock = mock(DataSource.class);
 
-		when(dataSourceMock.getConnection()).thenReturn(connectionMock);
-		when(connectionMock.getAutoCommit()).thenReturn(false);
+		given(dataSourceMock.getConnection()).willReturn(connectionMock);
+		given(connectionMock.getAutoCommit()).willReturn(false);
 
 		ContextSource unconnectableContextSourceMock = mock(ContextSource.class);
 
 		UncategorizedLdapException connectException = new UncategorizedLdapException("dummy");
-		when(unconnectableContextSourceMock.getReadWriteContext()).thenThrow(connectException);
+		given(unconnectableContextSourceMock.getReadWriteContext()).willThrow(connectException);
 
 		try {
 			// Create an outer transaction
@@ -178,16 +178,16 @@ public class ContextSourceTransactionManagerTests {
 
 					txMgrInner.commit(txInner);
 				}
-				catch (Exception e) {
+				catch (Exception ex) {
 					txMgrInner.rollback(txInner);
-					throw e;
+					throw ex;
 				}
 
 				txMgrOuter.commit(txOuter);
 			}
-			catch (Exception e) {
+			catch (Exception ex) {
 				txMgrOuter.rollback(txOuter);
-				throw e;
+				throw ex;
 			}
 
 			fail("Exception should be thrown");

@@ -26,7 +26,6 @@ import org.junit.Test;
 import org.springframework.ldap.support.LdapUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -283,8 +282,8 @@ public class NameAwareAttributeTests {
 		// then
 		final NameAwareAttribute expectedAttribute = new NameAwareAttribute("test attribute");
 		expectedAttribute.add(b);
-		assertTrue(attribute.equals(expectedAttribute));
-		assertTrue(attribute.hashCode() == expectedAttribute.hashCode());
+		assertThat(attribute).isEqualTo(expectedAttribute);
+		assertThat(attribute.hashCode()).isEqualTo(expectedAttribute.hashCode());
 	}
 
 }
