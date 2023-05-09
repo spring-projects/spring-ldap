@@ -32,7 +32,7 @@ public class DummyBaseLdapPathAware implements BaseLdapPathAware {
 	}
 
 	public DistinguishedName getBase() {
-		return base;
+		return this.base;
 	}
 
 }

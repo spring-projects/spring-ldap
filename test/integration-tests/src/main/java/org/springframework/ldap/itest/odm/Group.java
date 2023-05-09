@@ -42,7 +42,7 @@ public class Group {
 	private Set<Name> members;
 
 	public Name getDn() {
-		return dn;
+		return this.dn;
 	}
 
 	public void setDn(Name dn) {
@@ -50,7 +50,7 @@ public class Group {
 	}
 
 	public Set<Name> getMembers() {
-		return members;
+		return this.members;
 	}
 
 	public void setMembers(Set<Name> members) {
@@ -58,7 +58,7 @@ public class Group {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -66,11 +66,11 @@ public class Group {
 	}
 
 	public void addMember(Name member) {
-		members.add(member);
+		this.members.add(member);
 	}
 
 	public void removeMember(Name member) {
-		members.remove(member);
+		this.members.remove(member);
 	}
 
 }

@@ -42,7 +42,7 @@ public class DummyDaoLdapAndHibernateImpl extends HibernateDaoSupport implements
 		ctx.setAttributeValue("cn", person.getFullname());
 		ctx.setAttributeValue("sn", person.getLastname());
 		ctx.setAttributeValue("description", person.getDescription());
-		ldapTemplate.bind(dn, ctx, null);
+		this.ldapTemplate.bind(dn, ctx, null);
 		this.getHibernateTemplate().saveOrUpdate(person);
 
 	}
@@ -54,11 +54,11 @@ public class DummyDaoLdapAndHibernateImpl extends HibernateDaoSupport implements
 	}
 
 	public void modifyAttributes(String dn, String lastName, String description) {
-		DirContextAdapter ctx = (DirContextAdapter) ldapTemplate.lookup(dn);
+		DirContextAdapter ctx = (DirContextAdapter) this.ldapTemplate.lookup(dn);
 		ctx.setAttributeValue("sn", lastName);
 		ctx.setAttributeValue("description", description);
 
-		ldapTemplate.modifyAttributes(dn, ctx.getModificationItems());
+		this.ldapTemplate.modifyAttributes(dn, ctx.getModificationItems());
 	}
 
 	public void modifyAttributesWithException(String dn, String lastName, String description) {
@@ -68,7 +68,7 @@ public class DummyDaoLdapAndHibernateImpl extends HibernateDaoSupport implements
 
 	public void unbind(OrgPerson person) {
 		String dn = prepareDn(person);
-		ldapTemplate.unbind(dn);
+		this.ldapTemplate.unbind(dn);
 		this.getHibernateTemplate().delete(person);
 
 	}
@@ -80,11 +80,11 @@ public class DummyDaoLdapAndHibernateImpl extends HibernateDaoSupport implements
 
 	public void update(OrgPerson person) {
 		String dn = prepareDn(person);
-		DirContextAdapter ctx = (DirContextAdapter) ldapTemplate.lookup(dn);
+		DirContextAdapter ctx = (DirContextAdapter) this.ldapTemplate.lookup(dn);
 		ctx.setAttributeValue("sn", person.getLastname());
 		ctx.setAttributeValue("description", person.getDescription());
 
-		ldapTemplate.modifyAttributes(ctx);
+		this.ldapTemplate.modifyAttributes(ctx);
 		this.getHibernateTemplate().saveOrUpdate(person);
 
 	}
@@ -96,11 +96,11 @@ public class DummyDaoLdapAndHibernateImpl extends HibernateDaoSupport implements
 
 	public void updateAndRename(String dn, String newDn, String updatedDescription) {
 
-		DirContextAdapter ctx = (DirContextAdapter) ldapTemplate.lookup(dn);
+		DirContextAdapter ctx = (DirContextAdapter) this.ldapTemplate.lookup(dn);
 		ctx.setAttributeValue("description", updatedDescription);
 
-		ldapTemplate.modifyAttributes(ctx);
-		ldapTemplate.rename(dn, newDn);
+		this.ldapTemplate.modifyAttributes(ctx);
+		this.ldapTemplate.rename(dn, newDn);
 
 	}
 

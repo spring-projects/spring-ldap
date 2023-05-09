@@ -35,7 +35,7 @@ public class Person {
 	private String phone;
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(String description) {
@@ -43,7 +43,7 @@ public class Person {
 	}
 
 	public String getFullname() {
-		return fullname;
+		return this.fullname;
 	}
 
 	public void setFullname(String fullname) {
@@ -51,7 +51,7 @@ public class Person {
 	}
 
 	public String getLastname() {
-		return lastname;
+		return this.lastname;
 	}
 
 	public void setLastname(String lastname) {
@@ -59,7 +59,7 @@ public class Person {
 	}
 
 	public String getPhone() {
-		return phone;
+		return this.phone;
 	}
 
 	public void setPhone(String phone) {

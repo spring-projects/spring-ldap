@@ -27,7 +27,7 @@ public class MethodSecurityExpressionHandler extends DefaultMethodSecurityExpres
 	private LdapGroupDao groupDao;
 
 	public LdapGroupDao getGroupDao() {
-		return groupDao;
+		return this.groupDao;
 	}
 
 	public void setGroupDao(LdapGroupDao groupDao) {

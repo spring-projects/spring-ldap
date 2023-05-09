@@ -64,7 +64,7 @@ public class PersonWithDnAnnotations {
 	private String entryUuid;
 
 	public Name getDn() {
-		return dn;
+		return this.dn;
 	}
 
 	public void setDn(Name dn) {
@@ -72,7 +72,7 @@ public class PersonWithDnAnnotations {
 	}
 
 	public String getCommonName() {
-		return commonName;
+		return this.commonName;
 	}
 
 	public void setCommonName(String commonName) {
@@ -80,7 +80,7 @@ public class PersonWithDnAnnotations {
 	}
 
 	public String getSurname() {
-		return surname;
+		return this.surname;
 	}
 
 	public void setSurname(String surname) {
@@ -88,7 +88,7 @@ public class PersonWithDnAnnotations {
 	}
 
 	public List<String> getDesc() {
-		return desc;
+		return this.desc;
 	}
 
 	public void setDesc(List<String> desc) {
@@ -96,7 +96,7 @@ public class PersonWithDnAnnotations {
 	}
 
 	public List<String> getUserId() {
-		return userId;
+		return this.userId;
 	}
 
 	public void setUserId(List<String> userId) {
@@ -104,7 +104,7 @@ public class PersonWithDnAnnotations {
 	}
 
 	public String getTelephoneNumber() {
-		return telephoneNumber;
+		return this.telephoneNumber;
 	}
 
 	public void setTelephoneNumber(String telephoneNumber) {
@@ -112,7 +112,7 @@ public class PersonWithDnAnnotations {
 	}
 
 	public String getCompany() {
-		return company;
+		return this.company;
 	}
 
 	public void setCompany(String company) {
@@ -120,7 +120,7 @@ public class PersonWithDnAnnotations {
 	}
 
 	public String getCountry() {
-		return country;
+		return this.country;
 	}
 
 	public void setCountry(String country) {
@@ -128,7 +128,7 @@ public class PersonWithDnAnnotations {
 	}
 
 	public String getEntryUuid() {
-		return entryUuid;
+		return this.entryUuid;
 	}
 
 }

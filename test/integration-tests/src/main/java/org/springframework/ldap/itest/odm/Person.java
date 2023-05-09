@@ -63,16 +63,16 @@ public class Person implements Persistable<Name> {
 	}
 
 	public void setNew() {
-		isNew = true;
+		this.isNew = true;
 	}
 
 	@Override
 	public boolean isNew() {
-		return isNew;
+		return this.isNew;
 	}
 
 	public Name getDn() {
-		return dn;
+		return this.dn;
 	}
 
 	public void setDn(Name dn) {
@@ -80,7 +80,7 @@ public class Person implements Persistable<Name> {
 	}
 
 	public String getCommonName() {
-		return commonName;
+		return this.commonName;
 	}
 
 	public void setCommonName(String commonName) {
@@ -88,7 +88,7 @@ public class Person implements Persistable<Name> {
 	}
 
 	public String getSurname() {
-		return surname;
+		return this.surname;
 	}
 
 	public void setSurname(String surname) {
@@ -96,7 +96,7 @@ public class Person implements Persistable<Name> {
 	}
 
 	public List<String> getDesc() {
-		return desc;
+		return this.desc;
 	}
 
 	public void setDesc(List<String> desc) {
@@ -104,7 +104,7 @@ public class Person implements Persistable<Name> {
 	}
 
 	public List<String> getUserId() {
-		return userId;
+		return this.userId;
 	}
 
 	public void setUserId(List<String> userId) {
@@ -112,7 +112,7 @@ public class Person implements Persistable<Name> {
 	}
 
 	public String getTelephoneNumber() {
-		return telephoneNumber;
+		return this.telephoneNumber;
 	}
 
 	public void setTelephoneNumber(String telephoneNumber) {
@@ -120,7 +120,7 @@ public class Person implements Persistable<Name> {
 	}
 
 	public String getEntryUuid() {
-		return entryUuid;
+		return this.entryUuid;
 	}
 
 }

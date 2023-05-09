@@ -37,7 +37,7 @@ public class OrgPerson {
 	private String description;
 
 	public Integer getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Integer id) {
@@ -45,7 +45,7 @@ public class OrgPerson {
 	}
 
 	public String getFullname() {
-		return fullname;
+		return this.fullname;
 	}
 
 	public void setFullname(String fullname) {
@@ -53,7 +53,7 @@ public class OrgPerson {
 	}
 
 	public String getLastname() {
-		return lastname;
+		return this.lastname;
 	}
 
 	public void setLastname(String lastname) {
@@ -61,7 +61,7 @@ public class OrgPerson {
 	}
 
 	public String getCountry() {
-		return country;
+		return this.country;
 	}
 
 	public void setCountry(String country) {
@@ -69,7 +69,7 @@ public class OrgPerson {
 	}
 
 	public String getCompany() {
-		return company;
+		return this.company;
 	}
 
 	public void setCompany(String company) {
@@ -77,7 +77,7 @@ public class OrgPerson {
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(String description) {
@@ -87,11 +87,11 @@ public class OrgPerson {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((company == null) ? 0 : company.hashCode());
-		result = prime * result + ((country == null) ? 0 : country.hashCode());
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((fullname == null) ? 0 : fullname.hashCode());
-		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
+		result = prime * result + ((this.company == null) ? 0 : this.company.hashCode());
+		result = prime * result + ((this.country == null) ? 0 : this.country.hashCode());
+		result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
+		result = prime * result + ((this.fullname == null) ? 0 : this.fullname.hashCode());
+		result = prime * result + ((this.lastname == null) ? 0 : this.lastname.hashCode());
 		return result;
 	}
 
@@ -103,35 +103,35 @@ public class OrgPerson {
 		if (getClass() != obj.getClass())
 			return false;
 		final OrgPerson other = (OrgPerson) obj;
-		if (company == null) {
+		if (this.company == null) {
 			if (other.company != null)
 				return false;
 		}
-		else if (!company.equals(other.company))
+		else if (!this.company.equals(other.company))
 			return false;
-		if (country == null) {
+		if (this.country == null) {
 			if (other.country != null)
 				return false;
 		}
-		else if (!country.equals(other.country))
+		else if (!this.country.equals(other.country))
 			return false;
-		if (description == null) {
+		if (this.description == null) {
 			if (other.description != null)
 				return false;
 		}
-		else if (!description.equals(other.description))
+		else if (!this.description.equals(other.description))
 			return false;
-		if (fullname == null) {
+		if (this.fullname == null) {
 			if (other.fullname != null)
 				return false;
 		}
-		else if (!fullname.equals(other.fullname))
+		else if (!this.fullname.equals(other.fullname))
 			return false;
-		if (lastname == null) {
+		if (this.lastname == null) {
 			if (other.lastname != null)
 				return false;
 		}
-		else if (!lastname.equals(other.lastname))
+		else if (!this.lastname.equals(other.lastname))
 			return false;
 		return true;
 	}

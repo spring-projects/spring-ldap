@@ -37,7 +37,7 @@ public class LdapGroupDao implements BaseLdapPathAware {
 	}
 
 	public Name getBasePath() {
-		return basePath;
+		return this.basePath;
 	}
 
 }

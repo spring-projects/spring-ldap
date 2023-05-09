@@ -27,7 +27,7 @@ public class DummyFilterConsumer {
 	private Filter filter;
 
 	public Filter getFilter() {
-		return filter;
+		return this.filter;
 	}
 
 	public void setFilter(Filter filter) {

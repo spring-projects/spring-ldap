@@ -62,7 +62,7 @@ public class LdapDummyDaoImpl implements DummyDao {
 		ctx.setAttributeValue("cn", fullname);
 		ctx.setAttributeValue("sn", lastname);
 		ctx.setAttributeValue("description", description);
-		ldapTemplate.bind(dn, ctx, null);
+		this.ldapTemplate.bind(dn, ctx, null);
 	}
 
 	/*
@@ -72,11 +72,11 @@ public class LdapDummyDaoImpl implements DummyDao {
 	 * java.lang.String, java.lang.String)
 	 */
 	public void update(String dn, String fullname, String lastname, String description) {
-		DirContextAdapter ctx = (DirContextAdapter) ldapTemplate.lookup(dn);
+		DirContextAdapter ctx = (DirContextAdapter) this.ldapTemplate.lookup(dn);
 		ctx.setAttributeValue("sn", lastname);
 		ctx.setAttributeValue("description", description);
 
-		ldapTemplate.modifyAttributes(ctx);
+		this.ldapTemplate.modifyAttributes(ctx);
 	}
 
 	/*
@@ -99,11 +99,11 @@ public class LdapDummyDaoImpl implements DummyDao {
 	 * String, java.lang.String, java.lang.String)
 	 */
 	public void updateAndRename(String dn, String newDn, String description) {
-		DirContextAdapter ctx = (DirContextAdapter) ldapTemplate.lookup(dn);
+		DirContextAdapter ctx = (DirContextAdapter) this.ldapTemplate.lookup(dn);
 		ctx.setAttributeValue("description", description);
 
-		ldapTemplate.modifyAttributes(ctx);
-		ldapTemplate.rename(dn, newDn);
+		this.ldapTemplate.modifyAttributes(ctx);
+		this.ldapTemplate.rename(dn, newDn);
 	}
 
 	/*
@@ -126,11 +126,11 @@ public class LdapDummyDaoImpl implements DummyDao {
 	 * String, java.lang.String, java.lang.String)
 	 */
 	public void modifyAttributes(String dn, String lastName, String description) {
-		DirContextAdapter ctx = (DirContextAdapter) ldapTemplate.lookup(dn);
+		DirContextAdapter ctx = (DirContextAdapter) this.ldapTemplate.lookup(dn);
 		ctx.setAttributeValue("sn", lastName);
 		ctx.setAttributeValue("description", description);
 
-		ldapTemplate.modifyAttributes(dn, ctx.getModificationItems());
+		this.ldapTemplate.modifyAttributes(dn, ctx.getModificationItems());
 	}
 
 	/*
@@ -151,7 +151,7 @@ public class LdapDummyDaoImpl implements DummyDao {
 	 * @see org.springframework.ldap.transaction.support.DummyDao#unbind(java.lang.String)
 	 */
 	public void unbind(String dn, String fullname) {
-		ldapTemplate.unbind(dn);
+		this.ldapTemplate.unbind(dn);
 	}
 
 	/*
@@ -168,7 +168,7 @@ public class LdapDummyDaoImpl implements DummyDao {
 
 	@Override
 	public void deleteRecursively(String dn) {
-		ldapTemplate.unbind(dn, RECURSIVE);
+		this.ldapTemplate.unbind(dn, RECURSIVE);
 	}
 
 	@Override
@@ -184,10 +184,10 @@ public class LdapDummyDaoImpl implements DummyDao {
 		ctx.setAttributeValue("ou", "dummy");
 		ctx.setAttributeValue("description", "dummy description");
 
-		ldapTemplate.bind("ou=dummy", ctx, null);
-		ldapTemplate.bind("ou=dummy,ou=dummy", ctx, null);
-		ldapTemplate.unbind("ou=dummy,ou=dummy");
-		ldapTemplate.unbind("ou=dummy");
+		this.ldapTemplate.bind("ou=dummy", ctx, null);
+		this.ldapTemplate.bind("ou=dummy,ou=dummy", ctx, null);
+		this.ldapTemplate.unbind("ou=dummy,ou=dummy");
+		this.ldapTemplate.unbind("ou=dummy");
 	}
 
 	@Override

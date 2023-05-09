@@ -28,7 +28,7 @@ public class DummyDistinguishedNameConsumer {
 	private DistinguishedName distinguishedName;
 
 	public DistinguishedName getDistinguishedName() {
-		return distinguishedName;
+		return this.distinguishedName;
 	}
 
 	public void setDistinguishedName(DistinguishedName distinguishedName) {

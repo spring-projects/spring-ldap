@@ -33,7 +33,7 @@ public class DummyBaseLdapNameAware implements BaseLdapNameAware {
 	}
 
 	public LdapName getBaseLdapPath() {
-		return baseLdapPath;
+		return this.baseLdapPath;
 	}
 
 }
