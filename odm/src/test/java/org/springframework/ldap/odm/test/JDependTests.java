@@ -30,14 +30,14 @@ public class JDependTests {
 
 	@Before
 	public void setUp() throws IOException {
-		jdepend = new JDepend();
-		jdepend.addDirectory("build/classes/java/main");
+		this.jdepend = new JDepend();
+		this.jdepend.addDirectory("build/classes/java/main");
 	}
 
 	@Test
 	public void testAllPackages() {
-		jdepend.analyze();
-		assertEquals(false, jdepend.containsCycles());
+		this.jdepend.analyze();
+		assertEquals(false, this.jdepend.containsCycles());
 	}
 
 }

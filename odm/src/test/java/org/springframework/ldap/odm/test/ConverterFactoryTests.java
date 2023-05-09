@@ -112,7 +112,7 @@ public class ConverterFactoryTests {
 				assertEquals(testData.canConvert,
 						converterManager.canConvert(testData.fromClass, testData.syntax, testData.toClass));
 			}
-		}, converterTestData);
+		}, this.converterTestData);
 	}
 
 }

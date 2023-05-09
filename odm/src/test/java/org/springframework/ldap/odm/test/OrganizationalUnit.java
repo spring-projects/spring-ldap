@@ -57,21 +57,21 @@ public final class OrganizationalUnit {
 		this.street = street;
 		this.description = description;
 
-		objectClass.add("top");
-		objectClass.add("organizationalUnit");
+		this.objectClass.add("top");
+		this.objectClass.add("organizationalUnit");
 
 		int size = dn.size();
 		if (size > 1) {
-			ou = dn.get(size - 1).split("=")[1];
+			this.ou = dn.get(size - 1).split("=")[1];
 		}
 		else {
-			ou = "";
+			this.ou = "";
 		}
 
 	}
 
 	public Name getDn() {
-		return dn;
+		return this.dn;
 	}
 
 	public void setDn(Name dn) {
@@ -79,15 +79,15 @@ public final class OrganizationalUnit {
 	}
 
 	public List<String> getObjectClasses() {
-		return Collections.unmodifiableList(objectClass);
+		return Collections.unmodifiableList(this.objectClass);
 	}
 
 	public String getOu() {
-		return ou;
+		return this.ou;
 	}
 
 	public String getStreet() {
-		return street;
+		return this.street;
 	}
 
 	public void setStreet(String street) {
@@ -95,24 +95,24 @@ public final class OrganizationalUnit {
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("objectClasses=%1$s | dn=%2$s | ou=%3$s | street=%4$s | description=%5$s", objectClass, dn,
-				ou, street, description);
+		return String.format("objectClasses=%1$s | dn=%2$s | ou=%3$s | street=%4$s | description=%5$s",
+				this.objectClass, this.dn, this.ou, this.street, this.description);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((dn == null) ? 0 : dn.hashCode());
-		result = prime * result + ((objectClass == null) ? 0 : new HashSet<String>(objectClass).hashCode());
-		result = prime * result + ((ou == null) ? 0 : ou.hashCode());
-		result = prime * result + ((street == null) ? 0 : street.hashCode());
+		result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
+		result = prime * result + ((this.dn == null) ? 0 : this.dn.hashCode());
+		result = prime * result + ((this.objectClass == null) ? 0 : new HashSet<String>(this.objectClass).hashCode());
+		result = prime * result + ((this.ou == null) ? 0 : this.ou.hashCode());
+		result = prime * result + ((this.street == null) ? 0 : this.street.hashCode());
 		return result;
 	}
 
@@ -125,36 +125,36 @@ public final class OrganizationalUnit {
 		if (getClass() != obj.getClass())
 			return false;
 		OrganizationalUnit other = (OrganizationalUnit) obj;
-		if (description == null) {
+		if (this.description == null) {
 			if (other.description != null)
 				return false;
 		}
-		else if (!description.equals(other.description))
+		else if (!this.description.equals(other.description))
 			return false;
-		if (dn == null) {
+		if (this.dn == null) {
 			if (other.dn != null)
 				return false;
 		}
-		else if (!dn.equals(other.dn))
+		else if (!this.dn.equals(other.dn))
 			return false;
-		if (objectClass == null) {
+		if (this.objectClass == null) {
 			if (other.objectClass != null)
 				return false;
 		}
-		else if (objectClass.size() != other.objectClass.size()
-				|| !(new HashSet<String>(objectClass)).equals(new HashSet<String>(other.objectClass)))
+		else if (this.objectClass.size() != other.objectClass.size()
+				|| !(new HashSet<String>(this.objectClass)).equals(new HashSet<String>(other.objectClass)))
 			return false;
-		if (ou == null) {
+		if (this.ou == null) {
 			if (other.ou != null)
 				return false;
 		}
-		else if (!ou.equals(other.ou))
+		else if (!this.ou.equals(other.ou))
 			return false;
-		if (street == null) {
+		if (this.street == null) {
 			if (other.street != null)
 				return false;
 		}
-		else if (!street.equals(other.street))
+		else if (!this.street.equals(other.street))
 			return false;
 		return true;
 	}

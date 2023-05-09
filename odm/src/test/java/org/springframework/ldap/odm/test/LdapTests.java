@@ -159,38 +159,38 @@ public final class LdapTests {
 	// an integration test
 	public void setUp(String url, String username, String password) throws Exception {
 		// Create some basic converters and a converter manager
-		converterManager = new ConverterManagerImpl();
+		this.converterManager = new ConverterManagerImpl();
 
 		Converter ptc = new FromStringConverter();
-		converterManager.addConverter(String.class, "", Byte.class, ptc);
-		converterManager.addConverter(String.class, "", Short.class, ptc);
-		converterManager.addConverter(String.class, "", Integer.class, ptc);
-		converterManager.addConverter(String.class, "", Long.class, ptc);
-		converterManager.addConverter(String.class, "", Double.class, ptc);
-		converterManager.addConverter(String.class, "", Float.class, ptc);
-		converterManager.addConverter(String.class, "", Boolean.class, ptc);
+		this.converterManager.addConverter(String.class, "", Byte.class, ptc);
+		this.converterManager.addConverter(String.class, "", Short.class, ptc);
+		this.converterManager.addConverter(String.class, "", Integer.class, ptc);
+		this.converterManager.addConverter(String.class, "", Long.class, ptc);
+		this.converterManager.addConverter(String.class, "", Double.class, ptc);
+		this.converterManager.addConverter(String.class, "", Float.class, ptc);
+		this.converterManager.addConverter(String.class, "", Boolean.class, ptc);
 
 		Converter tsc = new ToStringConverter();
-		converterManager.addConverter(Byte.class, "", String.class, tsc);
-		converterManager.addConverter(Short.class, "", String.class, tsc);
-		converterManager.addConverter(Integer.class, "", String.class, tsc);
-		converterManager.addConverter(Long.class, "", String.class, tsc);
-		converterManager.addConverter(Double.class, "", String.class, tsc);
-		converterManager.addConverter(Float.class, "", String.class, tsc);
-		converterManager.addConverter(Boolean.class, "", String.class, tsc);
+		this.converterManager.addConverter(Byte.class, "", String.class, tsc);
+		this.converterManager.addConverter(Short.class, "", String.class, tsc);
+		this.converterManager.addConverter(Integer.class, "", String.class, tsc);
+		this.converterManager.addConverter(Long.class, "", String.class, tsc);
+		this.converterManager.addConverter(Double.class, "", String.class, tsc);
+		this.converterManager.addConverter(Float.class, "", String.class, tsc);
+		this.converterManager.addConverter(Boolean.class, "", String.class, tsc);
 
 		// Bind to the directory
-		contextSource = getContextSource(url, username, password);
+		this.contextSource = getContextSource(url, username, password);
 
 		// Clear out any old data - and load the test data
-		LdapTestUtils.cleanAndSetup(contextSource, baseName, new ClassPathResource("testdata.ldif"));
+		LdapTestUtils.cleanAndSetup(this.contextSource, baseName, new ClassPathResource("testdata.ldif"));
 
 		// Create our OdmManager
 		Set<Class<?>> managedClasses = new HashSet<Class<?>>();
 		managedClasses.add(Person.class);
 		managedClasses.add(PlainPerson.class);
 		managedClasses.add(OrganizationalUnit.class);
-		odmManager = new OdmManagerImpl(converterManager, contextSource, managedClasses);
+		this.odmManager = new OdmManagerImpl(this.converterManager, this.contextSource, managedClasses);
 	}
 
 	@Before
@@ -200,11 +200,11 @@ public final class LdapTests {
 
 	@After
 	public void tearDown() throws Exception {
-		LdapTestUtils.clearSubContexts(contextSource, baseName);
+		LdapTestUtils.clearSubContexts(this.contextSource, baseName);
 
-		odmManager = null;
-		contextSource = null;
-		converterManager = null;
+		this.odmManager = null;
+		this.contextSource = null;
+		this.converterManager = null;
 	}
 
 	private enum PersonName {
@@ -218,7 +218,7 @@ public final class LdapTests {
 		}
 
 		public int getIndex() {
-			return index;
+			return this.index;
 		}
 
 	}
@@ -248,11 +248,11 @@ public final class LdapTests {
 			public void runTest(Person testData) {
 				Name dn = testData.getDn();
 				LOG.debug(String.format("reading - %1$s", dn));
-				Person personEntry = odmManager.read(Person.class, dn);
+				Person personEntry = LdapTests.this.odmManager.read(Person.class, dn);
 				LOG.debug(String.format("read - %1$s", personEntry));
 				assertEquals(testData, personEntry);
 			}
-		}, personTestData);
+		}, this.personTestData);
 	}
 
 	private static class SearchTestData {
@@ -272,14 +272,15 @@ public final class LdapTests {
 	}
 
 	private SearchTestData[] searchTestData = {
-			new SearchTestData("(sn=Unknown)", searchControls,
-					new Person[] { personTestData[PersonName.DAVROS.getIndex()],
-							personTestData[PersonName.MASTER.getIndex()] }),
-			new SearchTestData("(description=*Doctor)", searchControls,
-					new Person[] { personTestData[PersonName.WILLIAM.getIndex()],
-							personTestData[PersonName.PATRICK.getIndex()], personTestData[PersonName.JON.getIndex()],
-							personTestData[PersonName.TOM.getIndex()],
-							personTestData[PersonName.PETER.getIndex()] }), };
+			new SearchTestData("(sn=Unknown)", this.searchControls,
+					new Person[] { this.personTestData[PersonName.DAVROS.getIndex()],
+							this.personTestData[PersonName.MASTER.getIndex()] }),
+			new SearchTestData("(description=*Doctor)", this.searchControls,
+					new Person[] { this.personTestData[PersonName.WILLIAM.getIndex()],
+							this.personTestData[PersonName.PATRICK.getIndex()],
+							this.personTestData[PersonName.JON.getIndex()],
+							this.personTestData[PersonName.TOM.getIndex()],
+							this.personTestData[PersonName.PETER.getIndex()] }), };
 
 	// Carry out various searches against the test data set and check the results are what
 	// we'd expect.
@@ -289,11 +290,12 @@ public final class LdapTests {
 			public void runTest(SearchTestData testData) {
 				String search = testData.search;
 				LOG.debug(String.format("searching - %1$s", search));
-				List<Person> results = odmManager.search(Person.class, baseName, testData.search, testData.searchScope);
+				List<Person> results = LdapTests.this.odmManager.search(Person.class, baseName, testData.search,
+						testData.searchScope);
 				LOG.debug(String.format("found - %1$s", results));
 				assertEquals(new HashSet<Person>(Arrays.asList(testData.people)), new HashSet<Person>(results));
 			}
-		}, searchTestData);
+		}, this.searchTestData);
 	}
 
 	private enum OrganizationalName {
@@ -307,7 +309,7 @@ public final class LdapTests {
 		}
 
 		public int getIndex() {
-			return index;
+			return this.index;
 		}
 
 	}
@@ -323,14 +325,15 @@ public final class LdapTests {
 	@Test
 	public void testSecondOc() {
 		LOG.debug("Reading all organizatinalUnits");
-		List<OrganizationalUnit> allOus = odmManager.findAll(OrganizationalUnit.class, baseName, searchControls);
+		List<OrganizationalUnit> allOus = this.odmManager.findAll(OrganizationalUnit.class, baseName,
+				this.searchControls);
 		LOG.debug(String.format("Found - %1$s", allOus));
 		assertEquals(new HashSet<OrganizationalUnit>(Arrays.asList(ouTestData)),
 				new HashSet<OrganizationalUnit>(allOus));
 
 		OrganizationalUnit testOu = ouTestData[OrganizationalName.ASSISTANTS.getIndex()];
 		LOG.debug(String.format("Reading - %1$s", testOu.getDn()));
-		OrganizationalUnit ou = odmManager.read(OrganizationalUnit.class, testOu.getDn());
+		OrganizationalUnit ou = this.odmManager.read(OrganizationalUnit.class, testOu.getDn());
 		LOG.debug(String.format("Found - %1$s", ou));
 		assertEquals(testOu, ou);
 	}
@@ -340,14 +343,14 @@ public final class LdapTests {
 	@Test
 	public void findAll() throws Exception {
 		LOG.debug("finding all people");
-		List<Person> allPeople = odmManager.findAll(Person.class, baseName, searchControls);
+		List<Person> allPeople = this.odmManager.findAll(Person.class, baseName, this.searchControls);
 		LOG.debug(String.format("found %1$s", allPeople));
-		assertEquals(new HashSet<Person>(Arrays.asList(personTestData)), new HashSet<Person>(allPeople));
+		assertEquals(new HashSet<Person>(Arrays.asList(this.personTestData)), new HashSet<Person>(allPeople));
 	}
 
 	@Test
 	public void findAllAsPlainPersons() {
-		List<PlainPerson> allPeople = odmManager.findAll(PlainPerson.class, baseName, searchControls);
+		List<PlainPerson> allPeople = this.odmManager.findAll(PlainPerson.class, baseName, this.searchControls);
 
 		assertEquals(9, allPeople.size());
 		assertFalse("No nulls should have been returned", CollectionUtils.containsInstance(allPeople, null));
@@ -355,8 +358,8 @@ public final class LdapTests {
 
 	@Test
 	public void verifySearchOnPlainPerson() {
-		List<PlainPerson> result = odmManager.search(PlainPerson.class, baseName, "(cn=William Hartnell)",
-				searchControls);
+		List<PlainPerson> result = this.odmManager.search(PlainPerson.class, baseName, "(cn=William Hartnell)",
+				this.searchControls);
 		assertEquals(1, result.size());
 
 		PlainPerson foundPerson = result.get(0);
@@ -366,7 +369,7 @@ public final class LdapTests {
 
 	@Test
 	public void verifySearchWithLdapQuery() {
-		List<Person> result = odmManager.search(Person.class,
+		List<Person> result = this.odmManager.search(Person.class,
 				query().base(baseName).where("cn").is("William Hartnell"));
 		assertEquals(1, result.size());
 
@@ -377,16 +380,17 @@ public final class LdapTests {
 
 	@Test
 	public void updatePlainPerson() {
-		List<PlainPerson> result = odmManager.search(PlainPerson.class, baseName, "(cn=William Hartnell)",
-				searchControls);
+		List<PlainPerson> result = this.odmManager.search(PlainPerson.class, baseName, "(cn=William Hartnell)",
+				this.searchControls);
 		assertEquals(1, result.size());
 
 		PlainPerson foundPerson = result.get(0);
 		foundPerson.setSurname("Tjolahopp");
-		odmManager.update(foundPerson);
+		this.odmManager.update(foundPerson);
 
 		// Verify that the objectclass was not changed on the target object
-		List<Person> updatedResult = odmManager.search(Person.class, baseName, "(cn=William Hartnell)", searchControls);
+		List<Person> updatedResult = this.odmManager.search(Person.class, baseName, "(cn=William Hartnell)",
+				this.searchControls);
 		assertEquals(1, updatedResult.size());
 	}
 
@@ -401,64 +405,64 @@ public final class LdapTests {
 	// Create some entries, read them back and check they are what we'd expect.
 	@Test
 	public void create() throws Exception {
-		for (Person person : createTestData) {
+		for (Person person : this.createTestData) {
 			LOG.debug(String.format("creating - %1$s", person));
-			odmManager.create(person);
+			this.odmManager.create(person);
 		}
 		LOG.debug("Created all, reading back");
 		new ExecuteRunnable<Person>().runTests(new RunnableTests<Person>() {
 			public void runTest(Person testData) {
 				Name dn = testData.getDn();
 				LOG.debug(String.format("reading - %1$s", dn));
-				Person personEntry = odmManager.read(Person.class, dn);
+				Person personEntry = LdapTests.this.odmManager.read(Person.class, dn);
 				LOG.debug(String.format("read - %1$s", personEntry));
 				assertEquals(testData, personEntry);
 			}
-		}, createTestData);
+		}, this.createTestData);
 	}
 
 	// Update an entry from the test data set, read it back and check it is what we'd
 	// expect.
 	@Test
 	public void update() throws Exception {
-		Person william = personTestData[PersonName.WILLIAM.getIndex()];
+		Person william = this.personTestData[PersonName.WILLIAM.getIndex()];
 		william.setTelephoneNumber(666);
 		william.setSurname("Harvey");
-		odmManager.update(william);
-		Person readWilliam = odmManager.read(Person.class, william.getDn());
+		this.odmManager.update(william);
+		Person readWilliam = this.odmManager.read(Person.class, william.getDn());
 		assertEquals(william, readWilliam);
 	}
 
-	private Person[] deleteData = { personTestData[PersonName.JON.getIndex()],
-			personTestData[PersonName.TOM.getIndex()], personTestData[PersonName.DAVROS.getIndex()], };
+	private Person[] deleteData = { this.personTestData[PersonName.JON.getIndex()],
+			this.personTestData[PersonName.TOM.getIndex()], this.personTestData[PersonName.DAVROS.getIndex()], };
 
-	private Person[] whatsLeft = { personTestData[PersonName.WILLIAM.getIndex()],
-			personTestData[PersonName.PATRICK.getIndex()], personTestData[PersonName.PETER.getIndex()],
-			personTestData[PersonName.DALEKS.getIndex()], personTestData[PersonName.MASTER.getIndex()], };
+	private Person[] whatsLeft = { this.personTestData[PersonName.WILLIAM.getIndex()],
+			this.personTestData[PersonName.PATRICK.getIndex()], this.personTestData[PersonName.PETER.getIndex()],
+			this.personTestData[PersonName.DALEKS.getIndex()], this.personTestData[PersonName.MASTER.getIndex()], };
 
 	// Delete a some entries from the the test data set and check what's left is what we'd
 	// expect
 	@Test
 	public void delete() throws Exception {
-		for (Person toDelete : deleteData) {
+		for (Person toDelete : this.deleteData) {
 			LOG.debug(String.format("deleting - %1$s", toDelete.getDn()));
-			odmManager.delete(toDelete);
+			this.odmManager.delete(toDelete);
 		}
 
-		List<Person> allPeople = odmManager.findAll(Person.class, baseName, searchControls);
-		assertEquals(new HashSet<Person>(Arrays.asList(whatsLeft)), new HashSet<Person>(allPeople));
+		List<Person> allPeople = this.odmManager.findAll(Person.class, baseName, this.searchControls);
+		assertEquals(new HashSet<Person>(Arrays.asList(this.whatsLeft)), new HashSet<Person>(allPeople));
 	}
 
 	// Trying to read a non-existant entry should be flagged as an error
 	@Test(expected = NameNotFoundException.class)
 	public void readNonExistant() throws Exception {
-		odmManager.read(Person.class, LdapUtils.newLdapName("cn=Hili Harvey,ou=Doctors,o=Whoniverse"));
+		this.odmManager.read(Person.class, LdapUtils.newLdapName("cn=Hili Harvey,ou=Doctors,o=Whoniverse"));
 	}
 
 	// Read an entry with classes in addition to those supported by the Entry
 	@Test(expected = OdmException.class)
 	public void readNonMatchingObjectclasses() throws Exception {
-		odmManager.read(Person.class, LdapUtils.newLdapName("ou=Doctors,o=Whoniverse"));
+		this.odmManager.read(Person.class, LdapUtils.newLdapName("ou=Doctors,o=Whoniverse"));
 	}
 
 	private final static class NoEntry {
@@ -472,7 +476,7 @@ public final class LdapTests {
 	// Every class to be managed must be annotated @Entry
 	@Test(expected = MetaDataException.class)
 	public void noEntryAnnotation() {
-		((OdmManagerImpl) odmManager).addManagedClass(NoEntry.class);
+		((OdmManagerImpl) this.odmManager).addManagedClass(NoEntry.class);
 	}
 
 	@Entry(objectClasses = "test")
@@ -483,7 +487,7 @@ public final class LdapTests {
 	// There must be a field with the @Id annotation
 	@Test(expected = MetaDataException.class)
 	public void noId() {
-		((OdmManagerImpl) odmManager).addManagedClass(NoId.class);
+		((OdmManagerImpl) this.odmManager).addManagedClass(NoId.class);
 	}
 
 	@Entry(objectClasses = "test")
@@ -506,7 +510,7 @@ public final class LdapTests {
 	// Only one field may be annotated @Id
 	@Test(expected = MetaDataException.class)
 	public void twoIds() {
-		((OdmManagerImpl) odmManager).addManagedClass(TwoIds.class);
+		((OdmManagerImpl) this.odmManager).addManagedClass(TwoIds.class);
 	}
 
 	@Entry(objectClasses = "test")
@@ -524,7 +528,7 @@ public final class LdapTests {
 	// All Entry annotated classes must have a zero argument public constructor
 	@Test(expected = InvalidEntryException.class)
 	public void noConstructor() {
-		((OdmManagerImpl) odmManager).addManagedClass(NoConstructor.class);
+		((OdmManagerImpl) this.odmManager).addManagedClass(NoConstructor.class);
 	}
 
 	@Entry(objectClasses = "test")
@@ -540,7 +544,7 @@ public final class LdapTests {
 	// It is illegal put put both the Id and the Attribute annotation on the same field
 	@Test(expected = MetaDataException.class)
 	public void attributeOnId() {
-		((OdmManagerImpl) odmManager).addManagedClass(AttributeOnId.class);
+		((OdmManagerImpl) this.odmManager).addManagedClass(AttributeOnId.class);
 	}
 
 	@Entry(objectClasses = "test")
@@ -555,7 +559,7 @@ public final class LdapTests {
 	// The field annotation with @Id must be of type javax.naming.Name
 	@Test(expected = MetaDataException.class)
 	public void idIsNotAName() {
-		((OdmManagerImpl) odmManager).addManagedClass(IdIsNotAName.class);
+		((OdmManagerImpl) this.odmManager).addManagedClass(IdIsNotAName.class);
 	}
 
 	@Entry(objectClasses = "test")
@@ -573,7 +577,7 @@ public final class LdapTests {
 	// The OdmManager should flag any missing converters when it is instantiated
 	@Test(expected = InvalidEntryException.class)
 	public void missingConverter() {
-		((OdmManagerImpl) odmManager).addManagedClass(MissingConverter.class);
+		((OdmManagerImpl) this.odmManager).addManagedClass(MissingConverter.class);
 	}
 
 	@Entry(objectClasses = "test")
@@ -593,22 +597,22 @@ public final class LdapTests {
 	// type
 	@Test(expected = MetaDataException.class)
 	public void wrongClassForOc() {
-		((OdmManagerImpl) odmManager).addManagedClass(WrongClassForOc.class);
+		((OdmManagerImpl) this.odmManager).addManagedClass(WrongClassForOc.class);
 	}
 
 	// The OdmManager should flag any attempt to use a "unmanaged" class
 	@Test(expected = MetaDataException.class)
 	public void unManagedClass() {
-		odmManager.read(Integer.class, baseName);
+		this.odmManager.read(Integer.class, baseName);
 	}
 
 	@Test
 	public void updateWithChildren_Ldap235() throws Exception {
-		OrganizationalUnit organizationalUnit = odmManager.read(OrganizationalUnit.class, ouTestData[0].getDn());
+		OrganizationalUnit organizationalUnit = this.odmManager.read(OrganizationalUnit.class, ouTestData[0].getDn());
 		organizationalUnit.setStreet("new street");
-		odmManager.update(organizationalUnit);
+		this.odmManager.update(organizationalUnit);
 
-		OrganizationalUnit updated = odmManager.read(OrganizationalUnit.class, organizationalUnit.getDn());
+		OrganizationalUnit updated = this.odmManager.read(OrganizationalUnit.class, organizationalUnit.getDn());
 		assertEquals(organizationalUnit, updated);
 	}
 
@@ -626,16 +630,16 @@ public final class LdapTests {
 		}
 
 		public String getShort() {
-			return shortName;
+			return this.shortName;
 		}
 
 		public String getLong() {
-			return longName;
+			return this.longName;
 		}
 
 		@Override
 		public String toString() {
-			return String.format("short=%1$s, long=%2$s", shortName, longName);
+			return String.format("short=%1$s, long=%2$s", this.shortName, this.longName);
 		}
 
 	}

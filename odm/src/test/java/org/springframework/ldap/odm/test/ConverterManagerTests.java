@@ -39,34 +39,34 @@ public final class ConverterManagerTests {
 
 	@Before
 	public void setUp() {
-		converterManager = new ConverterManagerImpl();
+		this.converterManager = new ConverterManagerImpl();
 
 		Converter ptc = new FromStringConverter();
-		converterManager.addConverter(String.class, "", Byte.class, ptc);
-		converterManager.addConverter(String.class, "", Short.class, ptc);
-		converterManager.addConverter(String.class, "", Integer.class, ptc);
-		converterManager.addConverter(String.class, "", Long.class, ptc);
-		converterManager.addConverter(String.class, "", Double.class, ptc);
-		converterManager.addConverter(String.class, "", Float.class, ptc);
-		converterManager.addConverter(String.class, "", Boolean.class, ptc);
+		this.converterManager.addConverter(String.class, "", Byte.class, ptc);
+		this.converterManager.addConverter(String.class, "", Short.class, ptc);
+		this.converterManager.addConverter(String.class, "", Integer.class, ptc);
+		this.converterManager.addConverter(String.class, "", Long.class, ptc);
+		this.converterManager.addConverter(String.class, "", Double.class, ptc);
+		this.converterManager.addConverter(String.class, "", Float.class, ptc);
+		this.converterManager.addConverter(String.class, "", Boolean.class, ptc);
 
 		Converter tsc = new ToStringConverter();
-		converterManager.addConverter(Byte.class, "", String.class, tsc);
-		converterManager.addConverter(Short.class, "", String.class, tsc);
-		converterManager.addConverter(Integer.class, "", String.class, tsc);
-		converterManager.addConverter(Long.class, "", String.class, tsc);
-		converterManager.addConverter(Double.class, "", String.class, tsc);
-		converterManager.addConverter(Float.class, "", String.class, tsc);
-		converterManager.addConverter(Boolean.class, "", String.class, tsc);
+		this.converterManager.addConverter(Byte.class, "", String.class, tsc);
+		this.converterManager.addConverter(Short.class, "", String.class, tsc);
+		this.converterManager.addConverter(Integer.class, "", String.class, tsc);
+		this.converterManager.addConverter(Long.class, "", String.class, tsc);
+		this.converterManager.addConverter(Double.class, "", String.class, tsc);
+		this.converterManager.addConverter(Float.class, "", String.class, tsc);
+		this.converterManager.addConverter(Boolean.class, "", String.class, tsc);
 
 		Converter uric = new UriConverter();
-		converterManager.addConverter(URI.class, "", String.class, uric);
-		converterManager.addConverter(String.class, "", URI.class, uric);
+		this.converterManager.addConverter(URI.class, "", String.class, uric);
+		this.converterManager.addConverter(String.class, "", URI.class, uric);
 	}
 
 	@After
 	public void tearDown() {
-		converterManager = null;
+		this.converterManager = null;
 	}
 
 	private static class ConverterTestData<T> {
@@ -92,8 +92,8 @@ public final class ConverterManagerTests {
 
 		@Override
 		public String toString() {
-			return String.format("sourceData=%1$s | syntax=%2$s | destClass=%3$s | expectedValue=%4$s", sourceData,
-					syntax, destClass, expectedValue);
+			return String.format("sourceData=%1$s | syntax=%2$s | destClass=%3$s | expectedValue=%4$s", this.sourceData,
+					this.syntax, this.destClass, this.expectedValue);
 		}
 
 	}
@@ -130,8 +130,8 @@ public final class ConverterManagerTests {
 
 		new ExecuteRunnable<ConverterTestData<?>>().runTests(new RunnableTests<ConverterTestData<?>>() {
 			public void runTest(ConverterTestData<?> testData) {
-				assertEquals(testData.expectedValue,
-						converterManager.convert(testData.sourceData, "", testData.destClass));
+				assertEquals(testData.expectedValue, ConverterManagerTests.this.converterManager
+						.convert(testData.sourceData, "", testData.destClass));
 			}
 		}, primitiveTypeTests);
 	}
@@ -188,11 +188,11 @@ public final class ConverterManagerTests {
 	@Test
 	public void syntaxBasedConversion() throws Exception {
 		Converter squaredConverter = new SquaredConverter();
-		converterManager.addConverter(String.class, "1", Integer.class, squaredConverter);
-		converterManager.addConverter(Integer.class, "1", Integer.class, squaredConverter);
+		this.converterManager.addConverter(String.class, "1", Integer.class, squaredConverter);
+		this.converterManager.addConverter(Integer.class, "1", Integer.class, squaredConverter);
 		Converter cubedConverter = new CubedConverter();
-		converterManager.addConverter(String.class, "2", Integer.class, cubedConverter);
-		converterManager.addConverter(Integer.class, "3", Integer.class, cubedConverter);
+		this.converterManager.addConverter(String.class, "2", Integer.class, cubedConverter);
+		this.converterManager.addConverter(Integer.class, "3", Integer.class, cubedConverter);
 
 		final ConverterTestData<?>[] syntaxTests = new ConverterTestData<?>[] {
 				new ConverterTestData<Integer>("3", "", Integer.class, Integer.valueOf(3)),
@@ -210,8 +210,8 @@ public final class ConverterManagerTests {
 
 		new ExecuteRunnable<ConverterTestData<?>>().runTests(new RunnableTests<ConverterTestData<?>>() {
 			public void runTest(ConverterTestData<?> testData) {
-				assertEquals(testData.expectedValue,
-						converterManager.convert(testData.sourceData, testData.syntax, testData.destClass));
+				assertEquals(testData.expectedValue, ConverterManagerTests.this.converterManager
+						.convert(testData.sourceData, testData.syntax, testData.destClass));
 			}
 		}, syntaxTests);
 
@@ -220,13 +220,13 @@ public final class ConverterManagerTests {
 	// No converter for classes
 	@Test(expected = ConverterException.class)
 	public void noClassConverter() throws Exception {
-		converterManager.convert(BitSet.class, "", Integer.class);
+		this.converterManager.convert(BitSet.class, "", Integer.class);
 	}
 
 	// Invalid syntax so converter fails
 	@Test(expected = ConverterException.class)
 	public void invalidSyntax() throws Exception {
-		converterManager.convert(String.class, "not a uri", URI.class);
+		this.converterManager.convert(String.class, "not a uri", URI.class);
 	}
 
 }

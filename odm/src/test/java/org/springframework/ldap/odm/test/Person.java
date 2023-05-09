@@ -42,17 +42,17 @@ public final class Person {
 		this.desc = desc;
 		this.telephoneNumber = telephoneNumber;
 		this.jpegPhoto = jpegPhoto;
-		objectClasses = new ArrayList<String>();
-		objectClasses.add("inetOrgPerson");
-		objectClasses.add("organizationalPerson");
-		objectClasses.add("person");
-		objectClasses.add("top");
+		this.objectClasses = new ArrayList<String>();
+		this.objectClasses.add("inetOrgPerson");
+		this.objectClasses.add("organizationalPerson");
+		this.objectClasses.add("person");
+		this.objectClasses.add("top");
 		int size = dn.size();
 		if (size > 1) {
-			cn = dn.get(size - 1).split("=")[1];
+			this.cn = dn.get(size - 1).split("=")[1];
 		}
 		else {
-			cn = "";
+			this.cn = "";
 		}
 	}
 
@@ -86,7 +86,7 @@ public final class Person {
 	byte[] jpegPhoto;
 
 	public Name getDn() {
-		return dn;
+		return this.dn;
 	}
 
 	public void setDn(Name dn) {
@@ -94,7 +94,7 @@ public final class Person {
 	}
 
 	public String getCn() {
-		return cn;
+		return this.cn;
 	}
 
 	public void setCn(String cn) {
@@ -102,7 +102,7 @@ public final class Person {
 	}
 
 	public String getSurname() {
-		return surname;
+		return this.surname;
 	}
 
 	public void setSurname(String surname) {
@@ -110,7 +110,7 @@ public final class Person {
 	}
 
 	public List<String> getDesc() {
-		return desc;
+		return this.desc;
 	}
 
 	public void setDesc(List<String> desc) {
@@ -118,7 +118,7 @@ public final class Person {
 	}
 
 	public int getTelephoneNumber() {
-		return telephoneNumber;
+		return this.telephoneNumber;
 	}
 
 	public void setTelephoneNumber(int telephoneNumber) {
@@ -126,7 +126,7 @@ public final class Person {
 	}
 
 	public byte[] getJpegPhoto() {
-		return jpegPhoto;
+		return this.jpegPhoto;
 	}
 
 	public void setJpegPhoto(byte[] jpegPhoto) {
@@ -134,36 +134,37 @@ public final class Person {
 	}
 
 	public List<String> getObjectClasses() {
-		return objectClasses;
+		return this.objectClasses;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder jpegString = new StringBuilder();
-		if (jpegPhoto != null) {
-			for (byte b : jpegPhoto) {
+		if (this.jpegPhoto != null) {
+			for (byte b : this.jpegPhoto) {
 				jpegString.append(Byte.toString(b));
 			}
 		}
 
 		return String.format(
 				"objectClasses=%1$s | dn=%2$s | cn=%3$s | sn=%4$s | desc=%5$s | telephoneNumber=%6$s | jpegPhoto=%7$s",
-				objectClasses, dn, cn, surname, desc, telephoneNumber, jpegString);
+				this.objectClasses, this.dn, this.cn, this.surname, this.desc, this.telephoneNumber, jpegString);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((cn == null) ? 0 : cn.hashCode());
-		result = prime * result + ((desc == null) ? 0 : new HashSet<String>(desc).hashCode());
-		result = prime * result + ((dn == null) ? 0 : dn.hashCode());
-		result = prime * result + Arrays.hashCode(jpegPhoto);
-		result = prime * result + ((objectClasses == null) ? 0 : new HashSet<String>(objectClasses).hashCode());
-		result = prime * result + ((someRandomField == null) ? 0 : someRandomField.hashCode());
-		result = prime * result + ((someRandomList == null) ? 0 : someRandomList.hashCode());
-		result = prime * result + ((surname == null) ? 0 : surname.hashCode());
-		result = prime * result + telephoneNumber;
+		result = prime * result + ((this.cn == null) ? 0 : this.cn.hashCode());
+		result = prime * result + ((this.desc == null) ? 0 : new HashSet<String>(this.desc).hashCode());
+		result = prime * result + ((this.dn == null) ? 0 : this.dn.hashCode());
+		result = prime * result + Arrays.hashCode(this.jpegPhoto);
+		result = prime * result
+				+ ((this.objectClasses == null) ? 0 : new HashSet<String>(this.objectClasses).hashCode());
+		result = prime * result + ((this.someRandomField == null) ? 0 : this.someRandomField.hashCode());
+		result = prime * result + ((this.someRandomList == null) ? 0 : this.someRandomList.hashCode());
+		result = prime * result + ((this.surname == null) ? 0 : this.surname.hashCode());
+		result = prime * result + this.telephoneNumber;
 		return result;
 	}
 
@@ -176,53 +177,53 @@ public final class Person {
 		if (getClass() != obj.getClass())
 			return false;
 		Person other = (Person) obj;
-		if (cn == null) {
+		if (this.cn == null) {
 			if (other.cn != null)
 				return false;
 		}
-		else if (!cn.equals(other.cn))
+		else if (!this.cn.equals(other.cn))
 			return false;
-		if (desc == null) {
+		if (this.desc == null) {
 			if (other.desc != null)
 				return false;
 		}
-		else if (desc.size() != other.desc.size()
-				|| !(new HashSet<String>(desc)).equals(new HashSet<String>(other.desc)))
+		else if (this.desc.size() != other.desc.size()
+				|| !(new HashSet<String>(this.desc)).equals(new HashSet<String>(other.desc)))
 			return false;
-		if (dn == null) {
+		if (this.dn == null) {
 			if (other.dn != null)
 				return false;
 		}
-		else if (!dn.equals(other.dn))
+		else if (!this.dn.equals(other.dn))
 			return false;
-		if (!Arrays.equals(jpegPhoto, other.jpegPhoto))
+		if (!Arrays.equals(this.jpegPhoto, other.jpegPhoto))
 			return false;
-		if (objectClasses == null) {
+		if (this.objectClasses == null) {
 			if (other.objectClasses != null)
 				return false;
 		}
-		else if (objectClasses.size() != other.objectClasses.size()
-				|| !(new HashSet<String>(objectClasses)).equals(new HashSet<String>(other.objectClasses)))
+		else if (this.objectClasses.size() != other.objectClasses.size()
+				|| !(new HashSet<String>(this.objectClasses)).equals(new HashSet<String>(other.objectClasses)))
 			return false;
-		if (someRandomField == null) {
+		if (this.someRandomField == null) {
 			if (other.someRandomField != null)
 				return false;
 		}
-		else if (!someRandomField.equals(other.someRandomField))
+		else if (!this.someRandomField.equals(other.someRandomField))
 			return false;
-		if (someRandomList == null) {
+		if (this.someRandomList == null) {
 			if (other.someRandomList != null)
 				return false;
 		}
-		else if (!someRandomList.equals(other.someRandomList))
+		else if (!this.someRandomList.equals(other.someRandomList))
 			return false;
-		if (surname == null) {
+		if (this.surname == null) {
 			if (other.surname != null)
 				return false;
 		}
-		else if (!surname.equals(other.surname))
+		else if (!this.surname.equals(other.surname))
 			return false;
-		if (telephoneNumber != other.telephoneNumber)
+		if (this.telephoneNumber != other.telephoneNumber)
 			return false;
 		return true;
 	}

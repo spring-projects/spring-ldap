@@ -35,10 +35,10 @@ public final class PlainPerson {
 	public PlainPerson(Name dn, String commonName, String surname) {
 		this.dn = dn;
 		this.surname = surname;
-		objectClasses = new ArrayList<String>();
-		objectClasses.add("top");
-		objectClasses.add("person");
-		cn = commonName;
+		this.objectClasses = new ArrayList<String>();
+		this.objectClasses.add("top");
+		this.objectClasses.add("person");
+		this.cn = commonName;
 	}
 
 	@Attribute(name = "objectClass")
@@ -54,7 +54,7 @@ public final class PlainPerson {
 	private String surname;
 
 	public Name getDn() {
-		return dn;
+		return this.dn;
 	}
 
 	public void setDn(Name dn) {
@@ -62,7 +62,7 @@ public final class PlainPerson {
 	}
 
 	public String getCn() {
-		return cn;
+		return this.cn;
 	}
 
 	public void setCn(String cn) {
@@ -70,7 +70,7 @@ public final class PlainPerson {
 	}
 
 	public String getSurname() {
-		return surname;
+		return this.surname;
 	}
 
 	public void setSurname(String surname) {
@@ -86,13 +86,13 @@ public final class PlainPerson {
 
 		PlainPerson that = (PlainPerson) o;
 
-		if (cn != null ? !cn.equals(that.cn) : that.cn != null)
+		if (this.cn != null ? !this.cn.equals(that.cn) : that.cn != null)
 			return false;
-		if (dn != null ? !dn.equals(that.dn) : that.dn != null)
+		if (this.dn != null ? !this.dn.equals(that.dn) : that.dn != null)
 			return false;
-		if (objectClasses != null ? !objectClasses.equals(that.objectClasses) : that.objectClasses != null)
+		if (this.objectClasses != null ? !this.objectClasses.equals(that.objectClasses) : that.objectClasses != null)
 			return false;
-		if (surname != null ? !surname.equals(that.surname) : that.surname != null)
+		if (this.surname != null ? !this.surname.equals(that.surname) : that.surname != null)
 			return false;
 
 		return true;
@@ -100,10 +100,10 @@ public final class PlainPerson {
 
 	@Override
 	public int hashCode() {
-		int result = objectClasses != null ? objectClasses.hashCode() : 0;
-		result = 31 * result + (dn != null ? dn.hashCode() : 0);
-		result = 31 * result + (cn != null ? cn.hashCode() : 0);
-		result = 31 * result + (surname != null ? surname.hashCode() : 0);
+		int result = this.objectClasses != null ? this.objectClasses.hashCode() : 0;
+		result = 31 * result + (this.dn != null ? this.dn.hashCode() : 0);
+		result = 31 * result + (this.cn != null ? this.cn.hashCode() : 0);
+		result = 31 * result + (this.surname != null ? this.surname.hashCode() : 0);
 		return result;
 	}
 
