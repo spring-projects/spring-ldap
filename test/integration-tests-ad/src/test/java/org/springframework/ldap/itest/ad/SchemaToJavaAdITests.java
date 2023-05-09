@@ -70,43 +70,43 @@ public final class SchemaToJavaAdITests {
 	@Before
 	public void setUp() throws Exception {
 		// Create some basic converters and a converter manager
-		converterManager = new ConverterManagerImpl();
+		this.converterManager = new ConverterManagerImpl();
 
 		Converter ptc = new FromStringConverter();
-		converterManager.addConverter(String.class, "", Byte.class, ptc);
-		converterManager.addConverter(String.class, "", Short.class, ptc);
-		converterManager.addConverter(String.class, "", Integer.class, ptc);
-		converterManager.addConverter(String.class, "", Long.class, ptc);
-		converterManager.addConverter(String.class, "", Double.class, ptc);
-		converterManager.addConverter(String.class, "", Float.class, ptc);
-		converterManager.addConverter(String.class, "", Boolean.class, ptc);
+		this.converterManager.addConverter(String.class, "", Byte.class, ptc);
+		this.converterManager.addConverter(String.class, "", Short.class, ptc);
+		this.converterManager.addConverter(String.class, "", Integer.class, ptc);
+		this.converterManager.addConverter(String.class, "", Long.class, ptc);
+		this.converterManager.addConverter(String.class, "", Double.class, ptc);
+		this.converterManager.addConverter(String.class, "", Float.class, ptc);
+		this.converterManager.addConverter(String.class, "", Boolean.class, ptc);
 
 		Converter tsc = new ToStringConverter();
-		converterManager.addConverter(Byte.class, "", String.class, tsc);
-		converterManager.addConverter(Short.class, "", String.class, tsc);
-		converterManager.addConverter(Integer.class, "", String.class, tsc);
-		converterManager.addConverter(Long.class, "", String.class, tsc);
-		converterManager.addConverter(Double.class, "", String.class, tsc);
-		converterManager.addConverter(Float.class, "", String.class, tsc);
-		converterManager.addConverter(Boolean.class, "", String.class, tsc);
+		this.converterManager.addConverter(Byte.class, "", String.class, tsc);
+		this.converterManager.addConverter(Short.class, "", String.class, tsc);
+		this.converterManager.addConverter(Integer.class, "", String.class, tsc);
+		this.converterManager.addConverter(Long.class, "", String.class, tsc);
+		this.converterManager.addConverter(Double.class, "", String.class, tsc);
+		this.converterManager.addConverter(Float.class, "", String.class, tsc);
+		this.converterManager.addConverter(Boolean.class, "", String.class, tsc);
 
 		// Bind to the directory
-		contextSource = new LdapContextSource();
-		contextSource.setUrl("ldaps://127.0.0.1:" + port);
-		contextSource.setUserDn(USER_DN);
-		contextSource.setPassword(PASSWORD);
-		contextSource.setPooled(false);
-		contextSource.setBase("dc=261consulting,dc=local");
+		this.contextSource = new LdapContextSource();
+		this.contextSource.setUrl("ldaps://127.0.0.1:" + port);
+		this.contextSource.setUserDn(USER_DN);
+		this.contextSource.setPassword(PASSWORD);
+		this.contextSource.setPooled(false);
+		this.contextSource.setBase("dc=261consulting,dc=local");
 		HashMap<String, Object> baseEnvironment = new HashMap<String, Object>() {
 			{
 				put("java.naming.ldap.attributes.binary",
 						"thumbnailLogo replPropertyMetaData partialAttributeSet registeredAddress userPassword telexNumber partialAttributeDeletionList mS-DS-ConsistencyGuid attributeCertificateAttribute thumbnailPhoto teletexTerminalIdentifier replUpToDateVector dSASignature objectGUID");
 			}
 		};
-		contextSource.setBaseEnvironmentProperties(baseEnvironment);
-		contextSource.afterPropertiesSet();
+		this.contextSource.setBaseEnvironmentProperties(baseEnvironment);
+		this.contextSource.afterPropertiesSet();
 
-		ldapTemplate = new LdapTemplate(contextSource);
+		this.ldapTemplate = new LdapTemplate(this.contextSource);
 
 		cleanup();
 
@@ -119,12 +119,12 @@ public final class SchemaToJavaAdITests {
 		ctx.addAttributeValue("sn", "Hartnell");
 		ctx.addAttributeValue("telephonenumber", "1");
 
-		ldapTemplate.bind(ctx);
+		this.ldapTemplate.bind(ctx);
 	}
 
 	@After
 	public void cleanup() {
-		ldapTemplate.unbind("cn=William Hartnell,cn=Users");
+		this.ldapTemplate.unbind("cn=William Hartnell,cn=Users");
 	}
 
 	// Figure out the path of the created Java file
@@ -183,7 +183,7 @@ public final class SchemaToJavaAdITests {
 		Class<?> clazz = ucl.loadClass(packageName + "." + className);
 
 		// Create our OdmManager using our new class
-		OdmManagerImpl odmManager = new OdmManagerImpl(converterManager, contextSource);
+		OdmManagerImpl odmManager = new OdmManagerImpl(this.converterManager, this.contextSource);
 		odmManager.addManagedClass(clazz);
 
 		// And try reading from the directory using it
