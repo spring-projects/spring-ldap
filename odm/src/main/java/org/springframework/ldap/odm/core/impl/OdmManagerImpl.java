@@ -52,10 +52,10 @@ public final class OdmManagerImpl implements OdmManager {
 	public OdmManagerImpl(ConverterManager converterManager, LdapOperations ldapOperations,
 			Set<Class<?>> managedClasses) {
 		this.ldapTemplate = (LdapTemplate) ldapOperations;
-		objectDirectoryMapper = new DefaultObjectDirectoryMapper();
+		this.objectDirectoryMapper = new DefaultObjectDirectoryMapper();
 
 		if (converterManager != null) {
-			objectDirectoryMapper.setConverterManager(converterManager);
+			this.objectDirectoryMapper.setConverterManager(converterManager);
 		}
 
 		if (managedClasses != null) {
@@ -64,7 +64,7 @@ public final class OdmManagerImpl implements OdmManager {
 			}
 		}
 
-		this.ldapTemplate.setObjectDirectoryMapper(objectDirectoryMapper);
+		this.ldapTemplate.setObjectDirectoryMapper(this.objectDirectoryMapper);
 	}
 
 	public OdmManagerImpl(ConverterManager converterManager, ContextSource contextSource,
@@ -82,7 +82,7 @@ public final class OdmManagerImpl implements OdmManager {
 	 * @param managedClass The class to add to the managed set.
 	 */
 	public void addManagedClass(Class<?> managedClass) {
-		objectDirectoryMapper.manageClass(managedClass);
+		this.objectDirectoryMapper.manageClass(managedClass);
 	}
 
 	/*
@@ -91,7 +91,7 @@ public final class OdmManagerImpl implements OdmManager {
 	 * @see org.springframework.ldap.odm.core.OdmManager#create(java.lang.Object)
 	 */
 	public <T> T read(Class<T> clazz, Name dn) {
-		return ldapTemplate.findByDn(dn, clazz);
+		return this.ldapTemplate.findByDn(dn, clazz);
 	}
 
 	/*
@@ -100,7 +100,7 @@ public final class OdmManagerImpl implements OdmManager {
 	 * @see org.springframework.ldap.odm.core.OdmManager#create(java.lang.Object)
 	 */
 	public void create(Object entry) {
-		ldapTemplate.create(entry);
+		this.ldapTemplate.create(entry);
 	}
 
 	/*
@@ -109,7 +109,7 @@ public final class OdmManagerImpl implements OdmManager {
 	 * @see org.springframework.ldap.odm.core.OdmManager#update(java.lang.Object, boolean)
 	 */
 	public void update(Object entry) {
-		ldapTemplate.update(entry);
+		this.ldapTemplate.update(entry);
 	}
 
 	/*
@@ -118,7 +118,7 @@ public final class OdmManagerImpl implements OdmManager {
 	 * @see org.springframework.ldap.odm.core.OdmManager#delete(javax.naming.Name)
 	 */
 	public void delete(Object entry) {
-		ldapTemplate.delete(entry);
+		this.ldapTemplate.delete(entry);
 	}
 
 	/*
@@ -133,16 +133,16 @@ public final class OdmManagerImpl implements OdmManager {
 			searchFilter = new HardcodedFilter(filter);
 		}
 
-		return ldapTemplate.find(base, searchFilter, scope, managedClass);
+		return this.ldapTemplate.find(base, searchFilter, scope, managedClass);
 	}
 
 	@Override
 	public <T> List<T> search(Class<T> clazz, LdapQuery query) {
-		return ldapTemplate.find(query, clazz);
+		return this.ldapTemplate.find(query, clazz);
 	}
 
 	public <T> List<T> findAll(Class<T> managedClass, Name base, SearchControls scope) {
-		return ldapTemplate.findAll(base, scope, managedClass);
+		return this.ldapTemplate.findAll(base, scope, managedClass);
 	}
 
 }

@@ -133,16 +133,16 @@ public final class SchemaToJava {
 		}
 
 		public String getShort() {
-			return shortName;
+			return this.shortName;
 		}
 
 		public String getLong() {
-			return longName;
+			return this.longName;
 		}
 
 		@Override
 		public String toString() {
-			return String.format("short=%1$s, long=%2$s", shortName, longName);
+			return String.format("short=%1$s, long=%2$s", this.shortName, this.longName);
 		}
 
 	}

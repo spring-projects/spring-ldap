@@ -53,35 +53,35 @@ public final class AttributeSchema {
 	}
 
 	public boolean getIsArray() {
-		return isArray;
+		return this.isArray;
 	}
 
 	public boolean getIsBinary() {
-		return isBinary;
+		return this.isBinary;
 	}
 
 	public boolean getIsPrimitive() {
-		return isPrimitive;
+		return this.isPrimitive;
 	}
 
 	public String getScalarType() {
-		return scalarType;
+		return this.scalarType;
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public String getJavaName() {
-		return StringUtils.replace(name, "-", "");
+		return StringUtils.replace(this.name, "-", "");
 	}
 
 	public String getSyntax() {
-		return syntax;
+		return this.syntax;
 	}
 
 	public boolean getIsMultiValued() {
-		return isMultiValued;
+		return this.isMultiValued;
 	}
 
 	/*
@@ -94,20 +94,21 @@ public final class AttributeSchema {
 
 		return String.format(
 				"{ name=%1$s, syntax=%2$s, isMultiValued=%3$s, isPrimitive=%4$s, isBinary=%5$s, isArray=%6$s, scalarType=%7$s }",
-				name, syntax, isMultiValued, isPrimitive, isBinary, isArray, scalarType);
+				this.name, this.syntax, this.isMultiValued, this.isPrimitive, this.isBinary, this.isArray,
+				this.scalarType);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (isArray ? 1231 : 1237);
-		result = prime * result + (isBinary ? 1231 : 1237);
-		result = prime * result + (isMultiValued ? 1231 : 1237);
-		result = prime * result + (isPrimitive ? 1231 : 1237);
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((scalarType == null) ? 0 : scalarType.hashCode());
-		result = prime * result + ((syntax == null) ? 0 : syntax.hashCode());
+		result = prime * result + (this.isArray ? 1231 : 1237);
+		result = prime * result + (this.isBinary ? 1231 : 1237);
+		result = prime * result + (this.isMultiValued ? 1231 : 1237);
+		result = prime * result + (this.isPrimitive ? 1231 : 1237);
+		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
+		result = prime * result + ((this.scalarType == null) ? 0 : this.scalarType.hashCode());
+		result = prime * result + ((this.syntax == null) ? 0 : this.syntax.hashCode());
 		return result;
 	}
 
@@ -120,31 +121,31 @@ public final class AttributeSchema {
 		if (getClass() != obj.getClass())
 			return false;
 		AttributeSchema other = (AttributeSchema) obj;
-		if (isArray != other.isArray)
+		if (this.isArray != other.isArray)
 			return false;
-		if (isBinary != other.isBinary)
+		if (this.isBinary != other.isBinary)
 			return false;
-		if (isMultiValued != other.isMultiValued)
+		if (this.isMultiValued != other.isMultiValued)
 			return false;
-		if (isPrimitive != other.isPrimitive)
+		if (this.isPrimitive != other.isPrimitive)
 			return false;
-		if (name == null) {
+		if (this.name == null) {
 			if (other.name != null)
 				return false;
 		}
-		else if (!name.equals(other.name))
+		else if (!this.name.equals(other.name))
 			return false;
-		if (scalarType == null) {
+		if (this.scalarType == null) {
 			if (other.scalarType != null)
 				return false;
 		}
-		else if (!scalarType.equals(other.scalarType))
+		else if (!this.scalarType.equals(other.scalarType))
 			return false;
-		if (syntax == null) {
+		if (this.syntax == null) {
 			if (other.syntax != null)
 				return false;
 		}
-		else if (!syntax.equals(other.syntax))
+		else if (!this.syntax.equals(other.syntax))
 			return false;
 		return true;
 	}

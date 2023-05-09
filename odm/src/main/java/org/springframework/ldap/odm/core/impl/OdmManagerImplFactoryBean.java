@@ -93,17 +93,17 @@ public final class OdmManagerImplFactoryBean implements FactoryBean {
 	 * @see org.springframework.beans.factory.FactoryBean#getObject()
 	 */
 	public Object getObject() throws Exception {
-		if (ldapOperations == null) {
+		if (this.ldapOperations == null) {
 			throw new FactoryBeanNotInitializedException("contextSource ldapOperations property has not been set");
 		}
-		if (managedClasses == null) {
+		if (this.managedClasses == null) {
 			throw new FactoryBeanNotInitializedException("managedClasses property has not been set");
 		}
-		if (converterManager == null) {
+		if (this.converterManager == null) {
 			throw new FactoryBeanNotInitializedException("converterManager property has not been set");
 		}
 
-		return new OdmManagerImpl(converterManager, ldapOperations, managedClasses);
+		return new OdmManagerImpl(this.converterManager, this.ldapOperations, this.managedClasses);
 	}
 
 	/*

@@ -46,7 +46,7 @@ import org.springframework.ldap.odm.tools.SyntaxToJavaClass.ClassInfo;
 	public ObjectSchema getObjectSchema(Set<String> objectClasses) throws NamingException, ClassNotFoundException {
 
 		ObjectSchema result = new ObjectSchema();
-		createObjectClass(objectClasses, schemaContext, result);
+		createObjectClass(objectClasses, this.schemaContext, result);
 		return result;
 	}
 
@@ -101,10 +101,10 @@ import org.springframework.ldap.odm.tools.SyntaxToJavaClass.ClassInfo;
 		}
 
 		// Is it binary?
-		boolean isBinary = binarySet.contains(syntax);
+		boolean isBinary = this.binarySet.contains(syntax);
 
 		// Use it to look up the required Java class
-		ClassInfo classInfo = syntaxToJavaClass.getClassInfo(syntax);
+		ClassInfo classInfo = this.syntaxToJavaClass.getClassInfo(syntax);
 
 		// Now we can set the java class
 		String javaClassName = null;

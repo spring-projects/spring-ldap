@@ -80,16 +80,16 @@ public final class SchemaViewer {
 		}
 
 		public String getShort() {
-			return shortName;
+			return this.shortName;
 		}
 
 		public String getLong() {
-			return longName;
+			return this.longName;
 		}
 
 		@Override
 		public String toString() {
-			return String.format("short=%1$s, long=%2$s", shortName, longName);
+			return String.format("short=%1$s, long=%2$s", this.shortName, this.longName);
 		}
 
 	}
@@ -105,12 +105,12 @@ public final class SchemaViewer {
 		}
 
 		public String getValue() {
-			return value;
+			return this.value;
 		}
 
 		@Override
 		public String toString() {
-			return String.format("value=%1$s", value);
+			return String.format("value=%1$s", this.value);
 		}
 
 	}

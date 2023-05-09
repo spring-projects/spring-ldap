@@ -55,15 +55,15 @@ public final class ObjectSchema {
 	}
 
 	public Set<AttributeSchema> getMust() {
-		return Collections.unmodifiableSet(must);
+		return Collections.unmodifiableSet(this.must);
 	}
 
 	public Set<AttributeSchema> getMay() {
-		return Collections.unmodifiableSet(may);
+		return Collections.unmodifiableSet(this.may);
 	}
 
 	public Set<String> getObjectClass() {
-		return Collections.unmodifiableSet(objectClass);
+		return Collections.unmodifiableSet(this.objectClass);
 	}
 
 	/*
@@ -73,16 +73,16 @@ public final class ObjectSchema {
 	 */
 	@Override
 	public String toString() {
-		return String.format("objectClass=%1$s | must=%2$s | may=%3$s", objectClass, must, may);
+		return String.format("objectClass=%1$s | must=%2$s | may=%3$s", this.objectClass, this.must, this.may);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((may == null) ? 0 : may.hashCode());
-		result = prime * result + ((must == null) ? 0 : must.hashCode());
-		result = prime * result + ((objectClass == null) ? 0 : objectClass.hashCode());
+		result = prime * result + ((this.may == null) ? 0 : this.may.hashCode());
+		result = prime * result + ((this.must == null) ? 0 : this.must.hashCode());
+		result = prime * result + ((this.objectClass == null) ? 0 : this.objectClass.hashCode());
 		return result;
 	}
 
@@ -95,23 +95,23 @@ public final class ObjectSchema {
 		if (getClass() != obj.getClass())
 			return false;
 		ObjectSchema other = (ObjectSchema) obj;
-		if (may == null) {
+		if (this.may == null) {
 			if (other.may != null)
 				return false;
 		}
-		else if (!may.equals(other.may))
+		else if (!this.may.equals(other.may))
 			return false;
-		if (must == null) {
+		if (this.must == null) {
 			if (other.must != null)
 				return false;
 		}
-		else if (!must.equals(other.must))
+		else if (!this.must.equals(other.must))
 			return false;
-		if (objectClass == null) {
+		if (this.objectClass == null) {
 			if (other.objectClass != null)
 				return false;
 		}
-		else if (!objectClass.equals(other.objectClass))
+		else if (!this.objectClass.equals(other.objectClass))
 			return false;
 		return true;
 	}

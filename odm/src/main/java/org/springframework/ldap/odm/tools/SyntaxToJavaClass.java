@@ -39,20 +39,20 @@ import java.util.Map.Entry;
 		}
 
 		public String getClassName() {
-			return className;
+			return this.className;
 		}
 
 		public String getPackageName() {
-			return packageName;
+			return this.packageName;
 		}
 
 		public String getFullClassName() {
 			StringBuilder result = new StringBuilder();
-			if (packageName != null) {
-				result.append(packageName).append(".").append(className);
+			if (this.packageName != null) {
+				result.append(this.packageName).append(".").append(this.className);
 			}
 			else {
-				result.append(className);
+				result.append(this.className);
 			}
 			return result.toString();
 		}
@@ -74,12 +74,12 @@ import java.util.Map.Entry;
 			else {
 				className = fullClassName;
 			}
-			mapSyntaxToClassInfo.put(syntaxAndClass.getKey(), new ClassInfo(className, packageName));
+			this.mapSyntaxToClassInfo.put(syntaxAndClass.getKey(), new ClassInfo(className, packageName));
 		}
 	}
 
 	public ClassInfo getClassInfo(String syntax) {
-		return mapSyntaxToClassInfo.get(syntax);
+		return this.mapSyntaxToClassInfo.get(syntax);
 	}
 
 }
