@@ -44,35 +44,37 @@ public class BasicSchemaSpecification implements Specification<LdapAttributes> {
 	 * @throws NamingException
 	 */
 	public boolean isSatisfiedBy(LdapAttributes record) throws NamingException {
-		if (record != null) {
+		if (record == null) {
+			return false;
+		}
 
-			// DN is required.
-			LdapName dn = record.getName();
-			if (dn != null) {
+		// DN is required.
+		LdapName dn = record.getName();
+		if (dn == null) {
+			return false;
+		}
 
-				// objectClass definition is required.
-				if (record.get("objectClass") != null) {
+		// objectClass definition is required.
+		if (record.get("objectClass") == null) {
+			return false;
+		}
 
-					// Naming attribute is required.
-					Rdn rdn = dn.getRdn(dn.size() - 1);
-					if (record.get(rdn.getType()) != null) {
-						Object object = record.get(rdn.getType()).get();
+		// Naming attribute is required.
+		Rdn rdn = dn.getRdn(dn.size() - 1);
+		if (record.get(rdn.getType()) == null) {
+			return false;
+		}
 
-						if (object instanceof String) {
-							String value = (String) object;
-							if (((String) rdn.getValue()).equalsIgnoreCase(value)) {
-								return true;
-							}
-						}
-						else if (object instanceof byte[]) {
-							String rdnValue = LdapEncoder.printBase64Binary(((String) rdn.getValue()).getBytes());
-							String attributeValue = LdapEncoder.printBase64Binary((byte[]) object);
-							if (rdnValue.equals(attributeValue))
-								return true;
-						}
-					}
-				}
-			}
+		Object object = record.get(rdn.getType()).get();
+
+		if (object instanceof String) {
+			String value = (String) object;
+			return ((String) rdn.getValue()).equalsIgnoreCase(value);
+		}
+		else if (object instanceof byte[]) {
+			String rdnValue = LdapEncoder.printBase64Binary(((String) rdn.getValue()).getBytes());
+			String attributeValue = LdapEncoder.printBase64Binary((byte[]) object);
+			return rdnValue.equals(attributeValue);
 		}
 
 		return false;

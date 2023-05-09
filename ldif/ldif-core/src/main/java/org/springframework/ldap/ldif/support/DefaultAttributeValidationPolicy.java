@@ -393,8 +393,8 @@ public class DefaultAttributeValidationPolicy implements AttributeValidationPoli
 				return new LdapAttribute(id, LdapEncoder.parseBase64Binary(value), options, this.ordered);
 			}
 		}
-		catch (IllegalArgumentException e) {
-			throw new InvalidAttributeFormatException(e);
+		catch (IllegalArgumentException ex) {
+			throw new InvalidAttributeFormatException(ex);
 		}
 	}
 
@@ -412,8 +412,8 @@ public class DefaultAttributeValidationPolicy implements AttributeValidationPoli
 				return new LdapAttribute(id, new URI(value), options, this.ordered);
 			}
 		}
-		catch (URISyntaxException e) {
-			throw new InvalidAttributeFormatException(e);
+		catch (URISyntaxException ex) {
+			throw new InvalidAttributeFormatException(ex);
 		}
 	}
 

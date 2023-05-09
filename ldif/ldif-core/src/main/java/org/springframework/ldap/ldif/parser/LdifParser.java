@@ -221,8 +221,9 @@ public class LdifParser implements Parser, InitializingBean {
 	}
 
 	public void close() throws IOException {
-		if (this.resource.isOpen())
+		if (this.resource.isOpen()) {
 			this.reader.close();
+		}
 	}
 
 	public void reset() throws IOException {
@@ -319,8 +320,8 @@ public class LdifParser implements Parser, InitializingBean {
 									"Record [dn: " + record.getDN() + "] does not conform to specification.");
 						}
 					}
-					catch (NamingException e) {
-						LOG.error("Error adding attribute to record", e);
+					catch (NamingException ex) {
+						LOG.error("Error adding attribute to record", ex);
 						return null;
 					}
 				}
@@ -372,11 +373,11 @@ public class LdifParser implements Parser, InitializingBean {
 				}
 			}
 		}
-		catch (NamingException e) {
-			LOG.error("Error adding attribute to record", e);
+		catch (NamingException ex) {
+			LOG.error("Error adding attribute to record", ex);
 		}
-		catch (NoSuchElementException e) {
-			LOG.error("Error adding attribute to record", e);
+		catch (NoSuchElementException ex) {
+			LOG.error("Error adding attribute to record", ex);
 		}
 	}
 
