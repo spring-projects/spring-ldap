@@ -334,6 +334,7 @@ public class DefaultAttributeValidationPolicy implements AttributeValidationPoli
 	 * @throws InvalidAttributeFormatException if the attribute does not meet one of the
 	 * three patterns above or the attribute cannot be parsed.
 	 */
+	@Override
 	public Attribute parse(String buffer) {
 		log.trace("Parsing --> [" + buffer + "]");
 
