@@ -37,22 +37,18 @@ public class AttributeCheckAttributesMapper implements AttributesMapper<Object> 
 
 	private String[] expectedValues = new String[0];
 
-	;
-
 	private String[] absentAttributes = new String[0];
 
-	;
-
 	public Object mapFromAttributes(Attributes attributes) throws NamingException {
-		Assert.assertEquals("Values and attributes need to have the same length ", expectedAttributes.length,
-				expectedValues.length);
-		for (int i = 0; i < expectedAttributes.length; i++) {
-			Attribute attribute = attributes.get(expectedAttributes[i]);
-			Assert.assertNotNull("Attribute " + expectedAttributes[i] + " was not present", attribute);
-			Assert.assertEquals(expectedValues[i], attribute.get());
+		Assert.assertEquals("Values and attributes need to have the same length ", this.expectedAttributes.length,
+				this.expectedValues.length);
+		for (int i = 0; i < this.expectedAttributes.length; i++) {
+			Attribute attribute = attributes.get(this.expectedAttributes[i]);
+			Assert.assertNotNull("Attribute " + this.expectedAttributes[i] + " was not present", attribute);
+			Assert.assertEquals(this.expectedValues[i], attribute.get());
 		}
 
-		for (String absentAttribute : absentAttributes) {
+		for (String absentAttribute : this.absentAttributes) {
 			Assert.assertNull(attributes.get(absentAttribute));
 		}
 

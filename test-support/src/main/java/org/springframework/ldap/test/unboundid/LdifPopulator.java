@@ -68,27 +68,27 @@ public class LdifPopulator implements InitializingBean {
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		Assert.notNull(contextSource, "ContextSource must be specified");
-		Assert.notNull(resource, "Resource must be specified");
+		Assert.notNull(this.contextSource, "ContextSource must be specified");
+		Assert.notNull(this.resource, "Resource must be specified");
 
-		if (!LdapUtils.newLdapName(base).equals(LdapUtils.newLdapName(defaultBase))) {
-			List<String> lines = IOUtils.readLines(resource.getInputStream());
+		if (!LdapUtils.newLdapName(this.base).equals(LdapUtils.newLdapName(this.defaultBase))) {
+			List<String> lines = IOUtils.readLines(this.resource.getInputStream());
 
 			StringWriter sw = new StringWriter();
 			PrintWriter writer = new PrintWriter(sw);
 			for (String line : lines) {
-				writer.println(StringUtils.replace(line, defaultBase, base));
+				writer.println(StringUtils.replace(line, this.defaultBase, this.base));
 			}
 
 			writer.flush();
-			resource = new ByteArrayResource(sw.toString().getBytes("UTF8"));
+			this.resource = new ByteArrayResource(sw.toString().getBytes("UTF8"));
 		}
 
-		if (clean) {
-			LdapTestUtils.clearSubContexts(contextSource, LdapUtils.emptyLdapName());
+		if (this.clean) {
+			LdapTestUtils.clearSubContexts(this.contextSource, LdapUtils.emptyLdapName());
 		}
 
-		LdapTestUtils.loadLdif(contextSource, resource);
+		LdapTestUtils.loadLdif(this.contextSource, this.resource);
 	}
 
 }

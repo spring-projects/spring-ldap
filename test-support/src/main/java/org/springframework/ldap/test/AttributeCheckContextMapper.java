@@ -38,15 +38,15 @@ public class AttributeCheckContextMapper implements ContextMapper<DirContextAdap
 
 	public DirContextAdapter mapFromContext(Object ctx) {
 		DirContextAdapter adapter = (DirContextAdapter) ctx;
-		Assert.assertEquals("Values and attributes need to have the same length ", expectedAttributes.length,
-				expectedValues.length);
-		for (int i = 0; i < expectedAttributes.length; i++) {
-			String attributeValue = adapter.getStringAttribute(expectedAttributes[i]);
-			Assert.assertNotNull("Attribute " + expectedAttributes[i] + " was not present", attributeValue);
-			Assert.assertEquals(expectedValues[i], attributeValue);
+		Assert.assertEquals("Values and attributes need to have the same length ", this.expectedAttributes.length,
+				this.expectedValues.length);
+		for (int i = 0; i < this.expectedAttributes.length; i++) {
+			String attributeValue = adapter.getStringAttribute(this.expectedAttributes[i]);
+			Assert.assertNotNull("Attribute " + this.expectedAttributes[i] + " was not present", attributeValue);
+			Assert.assertEquals(this.expectedValues[i], attributeValue);
 		}
 
-		for (String absentAttribute : absentAttributes) {
+		for (String absentAttribute : this.absentAttributes) {
 			Assert.assertNull(adapter.getStringAttribute(absentAttribute));
 		}
 

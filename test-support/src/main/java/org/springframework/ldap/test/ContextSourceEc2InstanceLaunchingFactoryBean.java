@@ -39,13 +39,13 @@ public class ContextSourceEc2InstanceLaunchingFactoryBean extends AbstractEc2Ins
 
 	@Override
 	protected final Object doCreateInstance(final String dnsName) throws Exception {
-		Assert.hasText(userDn);
+		Assert.hasText(this.userDn);
 		LdapContextSource instance = new LdapContextSource();
 		instance.setUrl("ldap://" + dnsName);
-		instance.setUserDn(userDn);
-		instance.setPassword(password);
-		instance.setBase(base);
-		instance.setPooled(pooled);
+		instance.setUserDn(this.userDn);
+		instance.setPassword(this.password);
+		instance.setBase(this.base);
+		instance.setPooled(this.pooled);
 		setAdditionalContextSourceProperties(instance, dnsName);
 
 		instance.afterPropertiesSet();

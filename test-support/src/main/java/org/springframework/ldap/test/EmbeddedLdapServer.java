@@ -84,8 +84,8 @@ public final class EmbeddedLdapServer {
 	}
 
 	public void shutdown() throws Exception {
-		ldapServer.stop();
-		directoryService.shutdown();
+		this.ldapServer.stop();
+		this.directoryService.shutdown();
 
 		FileUtils.deleteDirectory(workingDirectory);
 	}

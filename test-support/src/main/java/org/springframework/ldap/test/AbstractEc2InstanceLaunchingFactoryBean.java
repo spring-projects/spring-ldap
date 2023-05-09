@@ -109,36 +109,38 @@ public abstract class AbstractEc2InstanceLaunchingFactoryBean extends AbstractFa
 
 	@Override
 	protected final Object createInstance() throws Exception {
-		Assert.hasLength(imageName, "ImageName must be set");
-		Assert.hasLength(awsKey, "AwsKey must be set");
-		Assert.hasLength(awsSecretKey, "AwsSecretKey must be set");
-		Assert.hasLength(keypairName, "KeyName must be set");
-		Assert.hasLength(groupName, "GroupName must be set");
+		Assert.hasLength(this.imageName, "ImageName must be set");
+		Assert.hasLength(this.awsKey, "AwsKey must be set");
+		Assert.hasLength(this.awsSecretKey, "AwsSecretKey must be set");
+		Assert.hasLength(this.keypairName, "KeyName must be set");
+		Assert.hasLength(this.groupName, "GroupName must be set");
 
-		LOG.info("Launching EC2 instance for image: " + imageName);
+		LOG.info("Launching EC2 instance for image: " + this.imageName);
 
-		Jec2 jec2 = new Jec2(awsKey, awsSecretKey);
-		LaunchConfiguration launchConfiguration = new LaunchConfiguration(imageName);
-		launchConfiguration.setKeyName(keypairName);
-		launchConfiguration.setSecurityGroup(Collections.singletonList(groupName));
+		Jec2 jec2 = new Jec2(this.awsKey, this.awsSecretKey);
+		LaunchConfiguration launchConfiguration = new LaunchConfiguration(this.imageName);
+		launchConfiguration.setKeyName(this.keypairName);
+		launchConfiguration.setSecurityGroup(Collections.singletonList(this.groupName));
 
 		ReservationDescription reservationDescription = jec2.runInstances(launchConfiguration);
-		instance = reservationDescription.getInstances().get(0);
-		while (!instance.isRunning() && !instance.isTerminated()) {
+		this.instance = reservationDescription.getInstances().get(0);
+		while (!this.instance.isRunning() && !this.instance.isTerminated()) {
 			LOG.info("Instance still starting up; sleeping " + INSTANCE_START_SLEEP_TIME + "ms");
 			Thread.sleep(INSTANCE_START_SLEEP_TIME);
-			reservationDescription = jec2.describeInstances(Collections.singletonList(instance.getInstanceId())).get(0);
-			instance = reservationDescription.getInstances().get(0);
+			reservationDescription = jec2.describeInstances(Collections.singletonList(this.instance.getInstanceId()))
+					.get(0);
+			this.instance = reservationDescription.getInstances().get(0);
 		}
 
-		if (instance.isRunning()) {
+		if (this.instance.isRunning()) {
 			LOG.info("EC2 instance is now running");
-			if (preparationSleepTime > 0) {
-				LOG.info("Sleeping " + preparationSleepTime + "ms allowing instance services to start up properly.");
-				Thread.sleep(preparationSleepTime);
+			if (this.preparationSleepTime > 0) {
+				LOG.info("Sleeping " + this.preparationSleepTime
+						+ "ms allowing instance services to start up properly.");
+				Thread.sleep(this.preparationSleepTime);
 				LOG.info("Instance prepared - proceeding");
 			}
-			return doCreateInstance(instance.getDnsName());
+			return doCreateInstance(this.instance.getDnsName());
 		}
 		else {
 			throw new IllegalStateException("Failed to start a new instance");
@@ -158,7 +160,7 @@ public abstract class AbstractEc2InstanceLaunchingFactoryBean extends AbstractFa
 	protected void destroyInstance(Object ignored) throws Exception {
 		if (this.instance != null) {
 			LOG.info("Shutting down instance");
-			Jec2 jec2 = new Jec2(awsKey, awsSecretKey);
+			Jec2 jec2 = new Jec2(this.awsKey, this.awsSecretKey);
 			jec2.terminateInstances(Collections.singletonList(this.instance.getInstanceId()));
 		}
 

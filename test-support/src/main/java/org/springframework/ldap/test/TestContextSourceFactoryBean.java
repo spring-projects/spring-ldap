@@ -96,43 +96,43 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean {
 	}
 
 	protected Object createInstance() throws Exception {
-		LdapTestUtils.startEmbeddedServer(port, defaultPartitionSuffix, defaultPartitionName);
+		LdapTestUtils.startEmbeddedServer(this.port, this.defaultPartitionSuffix, this.defaultPartitionName);
 
-		if (contextSource == null) {
+		if (this.contextSource == null) {
 			// If not explicitly configured, create a new instance.
 			LdapContextSource targetContextSource = new LdapContextSource();
-			if (baseOnTarget) {
-				targetContextSource.setBase(defaultPartitionSuffix);
+			if (this.baseOnTarget) {
+				targetContextSource.setBase(this.defaultPartitionSuffix);
 			}
 
-			targetContextSource.setUrl("ldap://localhost:" + port);
-			targetContextSource.setUserDn(principal);
-			targetContextSource.setPassword(password);
-			targetContextSource.setDirObjectFactory(dirObjectFactory);
-			targetContextSource.setPooled(pooled);
+			targetContextSource.setUrl("ldap://localhost:" + this.port);
+			targetContextSource.setUserDn(this.principal);
+			targetContextSource.setPassword(this.password);
+			targetContextSource.setDirObjectFactory(this.dirObjectFactory);
+			targetContextSource.setPooled(this.pooled);
 
-			if (authenticationSource != null) {
-				targetContextSource.setAuthenticationSource(authenticationSource);
+			if (this.authenticationSource != null) {
+				targetContextSource.setAuthenticationSource(this.authenticationSource);
 			}
 			targetContextSource.afterPropertiesSet();
 
-			contextSource = targetContextSource;
+			this.contextSource = targetContextSource;
 		}
 
 		Thread.sleep(1000);
 
-		if (baseOnTarget) {
-			LdapTestUtils.clearSubContexts(contextSource, LdapUtils.emptyLdapName());
+		if (this.baseOnTarget) {
+			LdapTestUtils.clearSubContexts(this.contextSource, LdapUtils.emptyLdapName());
 		}
 		else {
-			LdapTestUtils.clearSubContexts(contextSource, LdapUtils.newLdapName(defaultPartitionSuffix));
+			LdapTestUtils.clearSubContexts(this.contextSource, LdapUtils.newLdapName(this.defaultPartitionSuffix));
 		}
 
-		if (ldifFile != null) {
-			LdapTestUtils.loadLdif(contextSource, ldifFile);
+		if (this.ldifFile != null) {
+			LdapTestUtils.loadLdif(this.contextSource, this.ldifFile);
 		}
 
-		return contextSource;
+		return this.contextSource;
 	}
 
 	public Class getObjectType() {

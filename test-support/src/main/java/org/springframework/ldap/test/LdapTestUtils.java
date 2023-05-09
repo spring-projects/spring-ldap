@@ -104,8 +104,8 @@ public final class LdapTestUtils {
 		try {
 			embeddedServer = EmbeddedLdapServer.newEmbeddedServer(defaultPartitionName, defaultPartitionSuffix, port);
 		}
-		catch (Exception e) {
-			throw new UncategorizedLdapException("Failed to start embedded server", e);
+		catch (Exception ex) {
+			throw new UncategorizedLdapException("Failed to start embedded server", ex);
 		}
 	}
 
@@ -159,7 +159,7 @@ public final class LdapTestUtils {
 			try {
 				ctx.close();
 			}
-			catch (Exception e) {
+			catch (Exception ex) {
 				// Never mind this
 			}
 		}
@@ -185,20 +185,20 @@ public final class LdapTestUtils {
 				try {
 					ctx.unbind(childName);
 				}
-				catch (ContextNotEmptyException e) {
+				catch (ContextNotEmptyException ex) {
 					clearSubContexts(ctx, childName);
 					ctx.unbind(childName);
 				}
 			}
 		}
-		catch (NamingException e) {
-			LOGGER.debug("Error cleaning sub-contexts", e);
+		catch (NamingException ex) {
+			LOGGER.debug("Error cleaning sub-contexts", ex);
 		}
 		finally {
 			try {
 				enumeration.close();
 			}
-			catch (Exception e) {
+			catch (Exception ex) {
 				// Never mind this
 			}
 		}
@@ -220,7 +220,7 @@ public final class LdapTestUtils {
 			try {
 				context.close();
 			}
-			catch (Exception e) {
+			catch (Exception ex) {
 				// This is not the exception we are interested in.
 			}
 		}
@@ -258,8 +258,8 @@ public final class LdapTestUtils {
 				context.bind(dn, null, record);
 			}
 		}
-		catch (Exception e) {
-			throw new UncategorizedLdapException("Failed to populate LDIF", e);
+		catch (Exception ex) {
+			throw new UncategorizedLdapException("Failed to populate LDIF", ex);
 		}
 	}
 
@@ -275,7 +275,7 @@ public final class LdapTestUtils {
 			try {
 				tempFile.delete();
 			}
-			catch (Exception e) {
+			catch (Exception ex) {
 				// Ignore this
 			}
 		}
