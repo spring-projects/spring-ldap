@@ -68,7 +68,8 @@ public class LdapAndJdbcDummyDaoImpl implements DummyDao {
 		ctx.setAttributeValue("sn", lastname);
 		ctx.setAttributeValue("description", description);
 		this.ldapTemplate.bind(dn, ctx, null);
-		this.jdbcTemplate.update("insert into PERSON values(?, ?, ?)", new Object[] { fullname, lastname, description });
+		this.jdbcTemplate.update("insert into PERSON values(?, ?, ?)",
+				new Object[] { fullname, lastname, description });
 	}
 
 	/*

@@ -84,6 +84,60 @@ public class OrgPerson {
 		this.description = description;
 	}
 
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final OrgPerson other = (OrgPerson) obj;
+		if (this.company == null) {
+			if (other.company != null) {
+				return false;
+			}
+		}
+		else if (!this.company.equals(other.company)) {
+			return false;
+		}
+		if (this.country == null) {
+			if (other.country != null) {
+				return false;
+			}
+		}
+		else if (!this.country.equals(other.country)) {
+			return false;
+		}
+		if (this.description == null) {
+			if (other.description != null) {
+				return false;
+			}
+		}
+		else if (!this.description.equals(other.description)) {
+			return false;
+		}
+		if (this.fullname == null) {
+			if (other.fullname != null) {
+				return false;
+			}
+		}
+		else if (!this.fullname.equals(other.fullname)) {
+			return false;
+		}
+		if (this.lastname == null) {
+			if (other.lastname != null) {
+				return false;
+			}
+		}
+		else if (!this.lastname.equals(other.lastname)) {
+			return false;
+		}
+		return true;
+	}
+
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -93,47 +147,6 @@ public class OrgPerson {
 		result = prime * result + ((this.fullname == null) ? 0 : this.fullname.hashCode());
 		result = prime * result + ((this.lastname == null) ? 0 : this.lastname.hashCode());
 		return result;
-	}
-
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final OrgPerson other = (OrgPerson) obj;
-		if (this.company == null) {
-			if (other.company != null)
-				return false;
-		}
-		else if (!this.company.equals(other.company))
-			return false;
-		if (this.country == null) {
-			if (other.country != null)
-				return false;
-		}
-		else if (!this.country.equals(other.country))
-			return false;
-		if (this.description == null) {
-			if (other.description != null)
-				return false;
-		}
-		else if (!this.description.equals(other.description))
-			return false;
-		if (this.fullname == null) {
-			if (other.fullname != null)
-				return false;
-		}
-		else if (!this.fullname.equals(other.fullname))
-			return false;
-		if (this.lastname == null) {
-			if (other.lastname != null)
-				return false;
-		}
-		else if (!this.lastname.equals(other.lastname))
-			return false;
-		return true;
 	}
 
 }
