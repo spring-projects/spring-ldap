@@ -52,7 +52,7 @@ import org.springframework.ldap.support.LdapUtils;
  */
 public final class LdapTestUtils {
 
-	private final static Logger LOGGER = LoggerFactory.getLogger(LdapTestUtils.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LdapTestUtils.class);
 
 	private static EmbeddedLdapServer embeddedServer;
 
