@@ -51,7 +51,7 @@ public class DefaultAttributeValidationPolicyTests {
 
 	private static DefaultAttributeValidationPolicy policy = new DefaultAttributeValidationPolicy();
 
-	private static enum AttributeType {
+	private enum AttributeType {
 
 		STRING, BASE64, URL, UTF8
 
