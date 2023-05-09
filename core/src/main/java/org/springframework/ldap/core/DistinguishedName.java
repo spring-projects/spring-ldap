@@ -300,26 +300,6 @@ public class DistinguishedName implements Name {
 	}
 
 	/**
-	 * Get the String representation of this <code>DistinguishedName</code>. Depending on
-	 * the setting of property <code>org.springframework.ldap.core.spacedDnFormat</code> a
-	 * space will be added after each comma, to make the result more readable. Default is
-	 * compact representation, i.e. without any spaces.
-	 * @return a syntactically correct, properly escaped String representation of the
-	 * <code>DistinguishedName</code>.
-	 * @see #SPACED_DN_FORMAT_PROPERTY
-	 */
-	@Override
-	public String toString() {
-		String spacedFormatting = System.getProperty(SPACED_DN_FORMAT_PROPERTY);
-		if (!StringUtils.hasText(spacedFormatting)) {
-			return format(COMPACT);
-		}
-		else {
-			return format(NON_COMPACT);
-		}
-	}
-
-	/**
 	 * Get the compact String representation of this <code>DistinguishedName</code>. Add
 	 * no space after each comma, to make it compact.
 	 * @return a syntactically correct, properly escaped String representation of the
@@ -542,6 +522,26 @@ public class DistinguishedName implements Name {
 	@Override
 	public int hashCode() {
 		return this.getClass().hashCode() ^ getNames().hashCode();
+	}
+
+	/**
+	 * Get the String representation of this <code>DistinguishedName</code>. Depending on
+	 * the setting of property <code>org.springframework.ldap.core.spacedDnFormat</code> a
+	 * space will be added after each comma, to make the result more readable. Default is
+	 * compact representation, i.e. without any spaces.
+	 * @return a syntactically correct, properly escaped String representation of the
+	 * <code>DistinguishedName</code>.
+	 * @see #SPACED_DN_FORMAT_PROPERTY
+	 */
+	@Override
+	public String toString() {
+		String spacedFormatting = System.getProperty(SPACED_DN_FORMAT_PROPERTY);
+		if (!StringUtils.hasText(spacedFormatting)) {
+			return format(COMPACT);
+		}
+		else {
+			return format(NON_COMPACT);
+		}
 	}
 
 	/**

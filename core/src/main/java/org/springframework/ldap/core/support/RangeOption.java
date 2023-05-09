@@ -82,14 +82,6 @@ class RangeOption implements Comparable<RangeOption> {
 		return getInitial() == 0 && getTerminal() == TERMINAL_END_OF_RANGE;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder rangeBuilder = new StringBuilder();
-		appendTo(rangeBuilder);
-
-		return rangeBuilder.toString();
-	}
-
 	void appendTo(StringBuilder rangeBuilder) {
 		rangeBuilder.append("Range=").append(this.initial);
 
@@ -189,6 +181,14 @@ class RangeOption implements Comparable<RangeOption> {
 		int result = this.initial;
 		result = 31 * result + this.terminal;
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder rangeBuilder = new StringBuilder();
+		appendTo(rangeBuilder);
+
+		return rangeBuilder.toString();
 	}
 
 	RangeOption nextRange(int pageSize) {

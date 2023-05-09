@@ -23,7 +23,7 @@ package org.springframework.ldap.filter;
  * OrFilter filter = new OrFilter();
  * filter.or(new EqualsFilter(&quot;objectclass&quot;, &quot;person&quot;);
  * filter.or(new EqualsFilter(&quot;objectclass&quot;, &quot;organizationalUnit&quot;);
- * System.out.println(filter.encode());	
+ * System.out.println(filter.encode());
  * </pre>
  *
  * would result in: <code>(|(objectclass=person)(objectclass=organizationalUnit))</code>

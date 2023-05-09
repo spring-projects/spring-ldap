@@ -149,16 +149,6 @@ public class LdapRdnComponent implements Comparable, Serializable {
 		return buff.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return getLdapEncoded();
-	}
-
 	/**
 	 * @return The LdapRdn as a string where the value is LDAP-encoded.
 	 */
@@ -185,16 +175,6 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		return this.key.toUpperCase().hashCode() ^ this.value.toUpperCase().hashCode();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -211,6 +191,26 @@ public class LdapRdnComponent implements Comparable, Serializable {
 		else {
 			return false;
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return this.key.toUpperCase().hashCode() ^ this.value.toUpperCase().hashCode();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return getLdapEncoded();
 	}
 
 	/**

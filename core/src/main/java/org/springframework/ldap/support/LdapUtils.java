@@ -596,7 +596,7 @@ public final class LdapUtils {
 	 * dddd	(four bytes of &quot;d&quot; treated as a 32-bit number in little-endian format)
 	 * eeee	(four bytes of &quot;e&quot; treated as a 32-bit number in little-endian format)
 	 * ffff	(four bytes of &quot;f&quot; treated as a 32-bit number in little-endian format)
-	 * etc.	
+	 * etc.
 	 *
 	 * So for example, if your SID is S-1-5-21-2127521184-1604012920-1887927527-72713, then your raw hex SID is
 	 *
