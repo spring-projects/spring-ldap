@@ -36,14 +36,14 @@ import org.springframework.ldap.odm.tools.SyntaxToJavaClass.ClassInfo;
 
 	private final Set<String> binarySet;
 
-	public SchemaReader(DirContext schemaContext, SyntaxToJavaClass syntaxToJavaClass, Set<String> binarySet) {
+	SchemaReader(DirContext schemaContext, SyntaxToJavaClass syntaxToJavaClass, Set<String> binarySet) {
 		this.schemaContext = schemaContext;
 		this.syntaxToJavaClass = syntaxToJavaClass;
 		this.binarySet = binarySet;
 	}
 
 	// Get the object schema for the given object classes
-	public ObjectSchema getObjectSchema(Set<String> objectClasses) throws NamingException, ClassNotFoundException {
+	ObjectSchema getObjectSchema(Set<String> objectClasses) throws NamingException, ClassNotFoundException {
 
 		ObjectSchema result = new ObjectSchema();
 		createObjectClass(objectClasses, this.schemaContext, result);

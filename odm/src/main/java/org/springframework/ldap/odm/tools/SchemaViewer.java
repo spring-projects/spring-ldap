@@ -74,7 +74,7 @@ public final class SchemaViewer {
 
 		private String longName;
 
-		private Flag(String shortName, String longName) {
+		Flag(String shortName, String longName) {
 			this.shortName = shortName;
 			this.longName = longName;
 		}
@@ -100,7 +100,7 @@ public final class SchemaViewer {
 
 		private String value;
 
-		private SchemaContext(String value) {
+		SchemaContext(String value) {
 			this.value = value;
 		}
 
@@ -192,7 +192,7 @@ public final class SchemaViewer {
 
 	private static PrintStream outstream = System.out;
 
-	private final static String WILDCARD = "?";
+	private static final String WILDCARD = "?";
 
 	public static void main(String[] argv) {
 		CommandLineParser parser = new PosixParser();

@@ -29,7 +29,7 @@ import java.util.Map.Entry;
 
 	private final Map<String, ClassInfo> mapSyntaxToClassInfo = new HashMap<String, ClassInfo>();
 
-	public SyntaxToJavaClass(Map<String, String> mapSyntaxToClass) {
+	SyntaxToJavaClass(Map<String, String> mapSyntaxToClass) {
 		for (Entry<String, String> syntaxAndClass : mapSyntaxToClass.entrySet()) {
 			String fullClassName = syntaxAndClass.getValue().trim();
 			String packageName = null;
@@ -46,7 +46,7 @@ import java.util.Map.Entry;
 		}
 	}
 
-	public ClassInfo getClassInfo(String syntax) {
+	ClassInfo getClassInfo(String syntax) {
 		return this.mapSyntaxToClassInfo.get(syntax);
 	}
 

@@ -127,7 +127,7 @@ public final class SchemaToJava {
 
 		private String longName;
 
-		private Flag(String shortName, String longName) {
+		Flag(String shortName, String longName) {
 			this.shortName = shortName;
 			this.longName = longName;
 		}
