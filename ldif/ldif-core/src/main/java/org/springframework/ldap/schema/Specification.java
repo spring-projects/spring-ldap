@@ -23,8 +23,8 @@ import javax.naming.NamingException;
  * to. The motivation behind this class was to provide a mechanism to enable schema
  * validations.
  *
- * @author Keith Barlow
  * @param <T>
+ * @author Keith Barlow
  */
 public interface Specification<T> {
 
