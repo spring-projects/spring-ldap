@@ -111,23 +111,23 @@ public class VirtualListViewControlDirContextProcessor
 	}
 
 	public VirtualListViewResultsCookie getCookie() {
-		return cookie;
+		return this.cookie;
 	}
 
 	public int getPageSize() {
-		return pageSize;
+		return this.pageSize;
 	}
 
 	public int getListSize() {
-		return listSize;
+		return this.listSize;
 	}
 
 	public NamingException getException() {
-		return exception;
+		return this.exception;
 	}
 
 	public int getTargetOffset() {
-		return targetOffset;
+		return this.targetOffset;
 	}
 
 	/**
@@ -140,7 +140,7 @@ public class VirtualListViewControlDirContextProcessor
 	}
 
 	public boolean isOffsetPercentage() {
-		return offsetPercentage;
+		return this.offsetPercentage;
 	}
 
 	/*
@@ -150,20 +150,22 @@ public class VirtualListViewControlDirContextProcessor
 	public Control createRequestControl() {
 		Control control;
 
-		if (offsetPercentage) {
-			control = super.createRequestControl(new Class[] { int.class, int.class, boolean.class }, new Object[] {
-					Integer.valueOf(targetOffset), Integer.valueOf(pageSize), Boolean.valueOf(CRITICAL_CONTROL) });
+		if (this.offsetPercentage) {
+			control = super.createRequestControl(new Class[] { int.class, int.class, boolean.class },
+					new Object[] { Integer.valueOf(this.targetOffset), Integer.valueOf(this.pageSize),
+							Boolean.valueOf(CRITICAL_CONTROL) });
 		}
 		else {
 			control = super.createRequestControl(
 					new Class[] { int.class, int.class, int.class, int.class, boolean.class },
-					new Object[] { Integer.valueOf(targetOffset), Integer.valueOf(listSize), Integer.valueOf(0),
-							Integer.valueOf(pageSize - 1), Boolean.valueOf(CRITICAL_CONTROL) });
+					new Object[] { Integer.valueOf(this.targetOffset), Integer.valueOf(this.listSize),
+							Integer.valueOf(0), Integer.valueOf(this.pageSize - 1),
+							Boolean.valueOf(CRITICAL_CONTROL) });
 		}
 
-		if (cookie != null) {
+		if (this.cookie != null) {
 			invokeMethod("setContextID", requestControlClass, control, new Class[] { byte[].class },
-					new Object[] { cookie.getCookie() });
+					new Object[] { this.cookie.getCookie() });
 		}
 
 		return control;
@@ -177,8 +179,8 @@ public class VirtualListViewControlDirContextProcessor
 
 		this.cookie = new VirtualListViewResultsCookie(result, targetOffset.intValue(), listSize.intValue());
 
-		if (exception != null) {
-			throw LdapUtils.convertLdapException(exception);
+		if (this.exception != null) {
+			throw LdapUtils.convertLdapException(this.exception);
 		}
 	}
 

@@ -47,15 +47,15 @@ public class VirtualListViewResultsCookie {
 	 * @return the cookie.
 	 */
 	public byte[] getCookie() {
-		return cookie;
+		return this.cookie;
 	}
 
 	public int getContentCount() {
-		return contentCount;
+		return this.contentCount;
 	}
 
 	public int getTargetPosition() {
-		return targetPosition;
+		return this.targetPosition;
 	}
 
 }

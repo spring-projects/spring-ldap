@@ -45,15 +45,15 @@ public class VirtualListViewControlAggregateDirContextProcessor extends Aggregat
 	public VirtualListViewControlAggregateDirContextProcessor(
 			SortControlDirContextProcessor sortControlDirContextProcessor,
 			VirtualListViewControlDirContextProcessor virtualListViewControlDirContextProcessor) {
-		_sortControlDirContextProcessor = sortControlDirContextProcessor;
-		_virtualListViewControlDirContextProcessor = virtualListViewControlDirContextProcessor;
+		this._sortControlDirContextProcessor = sortControlDirContextProcessor;
+		this._virtualListViewControlDirContextProcessor = virtualListViewControlDirContextProcessor;
 
 		addDirContextProcessor(sortControlDirContextProcessor);
 		addDirContextProcessor(virtualListViewControlDirContextProcessor);
 	}
 
 	public VirtualListViewResultsCookie getCookie() {
-		return _virtualListViewControlDirContextProcessor.getCookie();
+		return this._virtualListViewControlDirContextProcessor.getCookie();
 	}
 
 }
