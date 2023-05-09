@@ -130,7 +130,7 @@ public final class SchemaViewerTests {
 
 		private final String result;
 
-		public TestData(String flag, String value, String result) {
+		TestData(String flag, String value, String result) {
 			this.flag = flag;
 			this.value = value;
 			this.result = result;

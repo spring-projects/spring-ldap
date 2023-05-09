@@ -212,7 +212,7 @@ public final class LdapTests {
 
 		private int index;
 
-		private PersonName(int index) {
+		PersonName(int index) {
 			this.index = index;
 		}
 
@@ -287,7 +287,7 @@ public final class LdapTests {
 
 		private int index;
 
-		private OrganizationalName(int index) {
+		OrganizationalName(int index) {
 			this.index = index;
 		}
 
@@ -522,7 +522,7 @@ public final class LdapTests {
 
 		private String longName;
 
-		private Flag(String shortName, String longName) {
+		Flag(String shortName, String longName) {
 			this.shortName = shortName;
 			this.longName = longName;
 		}
@@ -627,7 +627,7 @@ public final class LdapTests {
 
 		private Person[] people;
 
-		public SearchTestData(String search, SearchControls searchScope, Person[] people) {
+		SearchTestData(String search, SearchControls searchScope, Person[] people) {
 			this.search = search;
 			this.searchScope = searchScope;
 			this.people = people;
@@ -635,7 +635,7 @@ public final class LdapTests {
 
 	}
 
-	private final static class NoEntry {
+	private static final class NoEntry {
 
 		@SuppressWarnings("unused")
 		@Id
@@ -644,12 +644,12 @@ public final class LdapTests {
 	}
 
 	@Entry(objectClasses = "test")
-	private final static class NoId {
+	private static final class NoId {
 
 	}
 
 	@Entry(objectClasses = "test")
-	private final static class TwoIds {
+	private static final class TwoIds {
 
 		@SuppressWarnings("unused")
 		@Id
@@ -660,13 +660,13 @@ public final class LdapTests {
 		private Name secondId;
 
 		@SuppressWarnings("unused")
-		public TwoIds() {
+		TwoIds() {
 		}
 
 	}
 
 	@Entry(objectClasses = "test")
-	public final static class NoConstructor {
+	public static final class NoConstructor {
 
 		@SuppressWarnings("unused")
 		@Id
@@ -678,7 +678,7 @@ public final class LdapTests {
 	}
 
 	@Entry(objectClasses = "test")
-	public final static class AttributeOnId {
+	public static final class AttributeOnId {
 
 		@SuppressWarnings("unused")
 		@Id
@@ -688,7 +688,7 @@ public final class LdapTests {
 	}
 
 	@Entry(objectClasses = "test")
-	public final static class IdIsNotAName {
+	public static final class IdIsNotAName {
 
 		@SuppressWarnings("unused")
 		@Id
@@ -697,7 +697,7 @@ public final class LdapTests {
 	}
 
 	@Entry(objectClasses = "test")
-	public final static class MissingConverter {
+	public static final class MissingConverter {
 
 		@SuppressWarnings("unused")
 		@Id
@@ -709,7 +709,7 @@ public final class LdapTests {
 	}
 
 	@Entry(objectClasses = "test")
-	public final static class WrongClassForOc {
+	public static final class WrongClassForOc {
 
 		@SuppressWarnings("unused")
 		@Id

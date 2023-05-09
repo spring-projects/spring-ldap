@@ -152,7 +152,7 @@ public final class ConverterManagerTests {
 		this.converterManager.convert(String.class, "not a uri", URI.class);
 	}
 
-	private static class ConverterTestData<T> {
+	private static final class ConverterTestData<T> {
 
 		public final Class<T> destClass;
 
@@ -162,11 +162,11 @@ public final class ConverterManagerTests {
 
 		public final String syntax;
 
-		public ConverterTestData(Object sourceData, Class<T> destClass, T expectedValue) {
+		ConverterTestData(Object sourceData, Class<T> destClass, T expectedValue) {
 			this(sourceData, "", destClass, expectedValue);
 		}
 
-		public ConverterTestData(Object sourceData, String syntax, Class<T> destClass, T expectedValue) {
+		ConverterTestData(Object sourceData, String syntax, Class<T> destClass, T expectedValue) {
 			this.destClass = destClass;
 			this.sourceData = sourceData;
 			this.expectedValue = expectedValue;
@@ -183,6 +183,7 @@ public final class ConverterManagerTests {
 
 	private static class SquaredConverter implements Converter {
 
+		@Override
 		public <T> T convert(Object source, Class<T> toClass) throws Exception {
 			Integer intSource = null;
 
@@ -207,6 +208,7 @@ public final class ConverterManagerTests {
 
 	private static class CubedConverter implements Converter {
 
+		@Override
 		public <T> T convert(Object source, Class<T> toClass) throws Exception {
 			Integer intSource = null;
 

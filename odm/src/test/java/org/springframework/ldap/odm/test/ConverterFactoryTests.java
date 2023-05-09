@@ -74,13 +74,14 @@ public class ConverterFactoryTests {
 
 	private static class NullConverter implements Converter {
 
+		@Override
 		public <T> T convert(Object source, Class<T> toClass) throws Exception {
 			return null;
 		}
 
 	}
 
-	private static class ConverterConfigTestData {
+	private static final class ConverterConfigTestData {
 
 		private Class<?>[] fromClasses;
 
@@ -96,7 +97,7 @@ public class ConverterFactoryTests {
 
 	}
 
-	private static class ConverterTestData {
+	private static final class ConverterTestData {
 
 		private final Class<?> fromClass;
 
