@@ -28,8 +28,7 @@ import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.query.LdapQueryBuilder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class EmbeddedLdapServerFactoryBeanTests {
 
@@ -37,7 +36,7 @@ public class EmbeddedLdapServerFactoryBeanTests {
 	public void testServerStartup() throws Exception {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/applicationContext.xml");
 		LdapTemplate ldapTemplate = ctx.getBean(LdapTemplate.class);
-		assertNotNull(ldapTemplate);
+		assertThat(ldapTemplate).isNotNull();
 
 		List<String> list = ldapTemplate.search(LdapQueryBuilder.query().where("objectclass").is("person"),
 				new AttributesMapper<String>() {
@@ -45,7 +44,7 @@ public class EmbeddedLdapServerFactoryBeanTests {
 						return (String) attrs.get("cn").get();
 					}
 				});
-		assertEquals(5, list.size());
+		assertThat(5).isEqualTo(list.size());
 	}
 
 }
