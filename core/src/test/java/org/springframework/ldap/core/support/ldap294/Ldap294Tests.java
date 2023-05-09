@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.ldap.core.support.ldap294;
 
 import java.util.Hashtable;
