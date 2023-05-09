@@ -27,6 +27,29 @@ import java.util.Map.Entry;
  */
 /* package */ final class SyntaxToJavaClass {
 
+	private final Map<String, ClassInfo> mapSyntaxToClassInfo = new HashMap<String, ClassInfo>();
+
+	public SyntaxToJavaClass(Map<String, String> mapSyntaxToClass) {
+		for (Entry<String, String> syntaxAndClass : mapSyntaxToClass.entrySet()) {
+			String fullClassName = syntaxAndClass.getValue().trim();
+			String packageName = null;
+			String className = null;
+			int lastDotIndex = fullClassName.lastIndexOf('.');
+			if (lastDotIndex != -1) {
+				className = fullClassName.substring(lastDotIndex + 1);
+				packageName = fullClassName.substring(0, lastDotIndex);
+			}
+			else {
+				className = fullClassName;
+			}
+			this.mapSyntaxToClassInfo.put(syntaxAndClass.getKey(), new ClassInfo(className, packageName));
+		}
+	}
+
+	public ClassInfo getClassInfo(String syntax) {
+		return this.mapSyntaxToClassInfo.get(syntax);
+	}
+
 	public static final class ClassInfo {
 
 		private final String className;
@@ -57,29 +80,6 @@ import java.util.Map.Entry;
 			return result.toString();
 		}
 
-	}
-
-	private final Map<String, ClassInfo> mapSyntaxToClassInfo = new HashMap<String, ClassInfo>();
-
-	public SyntaxToJavaClass(Map<String, String> mapSyntaxToClass) {
-		for (Entry<String, String> syntaxAndClass : mapSyntaxToClass.entrySet()) {
-			String fullClassName = syntaxAndClass.getValue().trim();
-			String packageName = null;
-			String className = null;
-			int lastDotIndex = fullClassName.lastIndexOf('.');
-			if (lastDotIndex != -1) {
-				className = fullClassName.substring(lastDotIndex + 1);
-				packageName = fullClassName.substring(0, lastDotIndex);
-			}
-			else {
-				className = fullClassName;
-			}
-			this.mapSyntaxToClassInfo.put(syntaxAndClass.getKey(), new ClassInfo(className, packageName));
-		}
-	}
-
-	public ClassInfo getClassInfo(String syntax) {
-		return this.mapSyntaxToClassInfo.get(syntax);
 	}
 
 }

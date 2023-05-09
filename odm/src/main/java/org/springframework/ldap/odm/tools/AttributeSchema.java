@@ -84,18 +84,55 @@ public final class AttributeSchema {
 		return this.isMultiValued;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
-	public String toString() {
-
-		return String.format(
-				"{ name=%1$s, syntax=%2$s, isMultiValued=%3$s, isPrimitive=%4$s, isBinary=%5$s, isArray=%6$s, scalarType=%7$s }",
-				this.name, this.syntax, this.isMultiValued, this.isPrimitive, this.isBinary, this.isArray,
-				this.scalarType);
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		AttributeSchema other = (AttributeSchema) obj;
+		if (this.isArray != other.isArray) {
+			return false;
+		}
+		if (this.isBinary != other.isBinary) {
+			return false;
+		}
+		if (this.isMultiValued != other.isMultiValued) {
+			return false;
+		}
+		if (this.isPrimitive != other.isPrimitive) {
+			return false;
+		}
+		if (this.name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		}
+		else if (!this.name.equals(other.name)) {
+			return false;
+		}
+		if (this.scalarType == null) {
+			if (other.scalarType != null) {
+				return false;
+			}
+		}
+		else if (!this.scalarType.equals(other.scalarType)) {
+			return false;
+		}
+		if (this.syntax == null) {
+			if (other.syntax != null) {
+				return false;
+			}
+		}
+		else if (!this.syntax.equals(other.syntax)) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -112,42 +149,18 @@ public final class AttributeSchema {
 		return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AttributeSchema other = (AttributeSchema) obj;
-		if (this.isArray != other.isArray)
-			return false;
-		if (this.isBinary != other.isBinary)
-			return false;
-		if (this.isMultiValued != other.isMultiValued)
-			return false;
-		if (this.isPrimitive != other.isPrimitive)
-			return false;
-		if (this.name == null) {
-			if (other.name != null)
-				return false;
-		}
-		else if (!this.name.equals(other.name))
-			return false;
-		if (this.scalarType == null) {
-			if (other.scalarType != null)
-				return false;
-		}
-		else if (!this.scalarType.equals(other.scalarType))
-			return false;
-		if (this.syntax == null) {
-			if (other.syntax != null)
-				return false;
-		}
-		else if (!this.syntax.equals(other.syntax))
-			return false;
-		return true;
+	public String toString() {
+
+		return String.format(
+				"{ name=%1$s, syntax=%2$s, isMultiValued=%3$s, isPrimitive=%4$s, isBinary=%5$s, isArray=%6$s, scalarType=%7$s }",
+				this.name, this.syntax, this.isMultiValued, this.isPrimitive, this.isBinary, this.isArray,
+				this.scalarType);
 	}
 
 }

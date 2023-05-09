@@ -201,8 +201,8 @@ public final class SchemaViewer {
 		try {
 			cmd = parser.parse(DEFAULT_OPTIONS, argv);
 		}
-		catch (ParseException e) {
-			System.out.println(e.getMessage());
+		catch (ParseException ex) {
+			System.out.println(ex.getMessage());
 			System.exit(1);
 		}
 
@@ -253,17 +253,17 @@ public final class SchemaViewer {
 			}
 
 		}
-		catch (AuthenticationException e) {
+		catch (AuthenticationException ex) {
 			System.err.println(String.format("Failed to bind to ldap server at %1$s", url));
 		}
-		catch (CommunicationException e) {
+		catch (CommunicationException ex) {
 			System.err.println(String.format("Failed to contact ldap server at %1$s", url));
 		}
-		catch (NameNotFoundException e) {
-			System.err.println(String.format("Can't find object %1$s", e.getMessage()));
+		catch (NameNotFoundException ex) {
+			System.err.println(String.format("Can't find object %1$s", ex.getMessage()));
 		}
-		catch (NamingException e) {
-			System.err.println(e.toString());
+		catch (NamingException ex) {
+			System.err.println(ex.toString());
 		}
 	}
 

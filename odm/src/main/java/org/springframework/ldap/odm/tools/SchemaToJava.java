@@ -360,8 +360,8 @@ public final class SchemaToJava {
 		try {
 			cmd = parser.parse(DEFAULT_OPTIONS, argv);
 		}
-		catch (ParseException e) {
-			error(e.toString());
+		catch (ParseException ex) {
+			error(ex.toString());
 		}
 
 		// If the help flag is specified ignore other flags, print a usage message and
@@ -390,8 +390,8 @@ public final class SchemaToJava {
 		try {
 			outputFile = makeOutputFile(outputDir, packageName, className);
 		}
-		catch (IOException e) {
-			error(e.toString());
+		catch (IOException ex) {
+			error(ex.toString());
 		}
 
 		// Get the flags we need to bind to the directory
@@ -418,9 +418,9 @@ public final class SchemaToJava {
 				try {
 					syntaxToJavaClass = new SyntaxToJavaClass(readSyntaxMap(syntaxMapFile));
 				}
-				catch (IOException e) {
+				catch (IOException ex) {
 					error(String.format("Error reading syntax map file %1$s - %2$s", syntaxMapFile.getAbsolutePath(),
-							e.toString()));
+							ex.toString()));
 				}
 			}
 			else {
@@ -441,8 +441,8 @@ public final class SchemaToJava {
 		try {
 			binarySet = readBinarySet(binarySetFile);
 		}
-		catch (IOException e) {
-			error(String.format("Error reading binary set file %1$s - %2$s", binarySetFile.getAbsolutePath(), e));
+		catch (IOException ex) {
+			error(String.format("Error reading binary set file %1$s - %2$s", binarySetFile.getAbsolutePath(), ex));
 		}
 
 		// Read schema from the directory

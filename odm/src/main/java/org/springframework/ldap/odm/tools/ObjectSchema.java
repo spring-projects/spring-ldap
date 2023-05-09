@@ -66,14 +66,43 @@ public final class ObjectSchema {
 		return Collections.unmodifiableSet(this.objectClass);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
-	public String toString() {
-		return String.format("objectClass=%1$s | must=%2$s | may=%3$s", this.objectClass, this.must, this.may);
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		ObjectSchema other = (ObjectSchema) obj;
+		if (this.may == null) {
+			if (other.may != null) {
+				return false;
+			}
+		}
+		else if (!this.may.equals(other.may)) {
+			return false;
+		}
+		if (this.must == null) {
+			if (other.must != null) {
+				return false;
+			}
+		}
+		else if (!this.must.equals(other.must)) {
+			return false;
+		}
+		if (this.objectClass == null) {
+			if (other.objectClass != null) {
+				return false;
+			}
+		}
+		else if (!this.objectClass.equals(other.objectClass)) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -86,34 +115,14 @@ public final class ObjectSchema {
 		return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ObjectSchema other = (ObjectSchema) obj;
-		if (this.may == null) {
-			if (other.may != null)
-				return false;
-		}
-		else if (!this.may.equals(other.may))
-			return false;
-		if (this.must == null) {
-			if (other.must != null)
-				return false;
-		}
-		else if (!this.must.equals(other.must))
-			return false;
-		if (this.objectClass == null) {
-			if (other.objectClass != null)
-				return false;
-		}
-		else if (!this.objectClass.equals(other.objectClass))
-			return false;
-		return true;
+	public String toString() {
+		return String.format("objectClass=%1$s | must=%2$s | may=%3$s", this.objectClass, this.must, this.may);
 	}
 
 }
