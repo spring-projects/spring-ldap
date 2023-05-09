@@ -71,8 +71,8 @@ public class LdifParserTests {
 		try {
 			this.parser.open();
 		}
-		catch (IOException e) {
-			fail(e.getMessage());
+		catch (IOException ex) {
+			fail(ex.getMessage());
 		}
 	}
 
@@ -97,10 +97,10 @@ public class LdifParserTests {
 						count++;
 					}
 				}
-				catch (InvalidAttributeFormatException e) {
-					log.error("Invalid attribute", e);
+				catch (InvalidAttributeFormatException ex) {
+					log.error("Invalid attribute", ex);
 					if (count != 6) {
-						fail(e.getMessage());
+						fail(ex.getMessage());
 					}
 				}
 
@@ -114,8 +114,8 @@ public class LdifParserTests {
 			log.info("Done!");
 
 		}
-		catch (IOException e) {
-			fail(e.getMessage());
+		catch (IOException ex) {
+			fail(ex.getMessage());
 		}
 	}
 
@@ -127,8 +127,8 @@ public class LdifParserTests {
 		try {
 			this.parser.close();
 		}
-		catch (IOException e) {
-			fail(e.getMessage());
+		catch (IOException ex) {
+			fail(ex.getMessage());
 		}
 	}
 

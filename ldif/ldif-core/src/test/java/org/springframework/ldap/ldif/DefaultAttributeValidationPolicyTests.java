@@ -201,9 +201,10 @@ public class DefaultAttributeValidationPolicyTests {
 			log.info("Success!");
 
 		}
-		catch (Exception e) {
-			if (!this.exceptions.contains(this.line))
-				fail("Exception thrown: " + e.getClass().getSimpleName() + " (message: " + e.getMessage() + ")");
+		catch (Exception ex) {
+			if (!this.exceptions.contains(this.line)) {
+				fail("Exception thrown: " + ex.getClass().getSimpleName() + " (message: " + ex.getMessage() + ")");
+			}
 		}
 	}
 
