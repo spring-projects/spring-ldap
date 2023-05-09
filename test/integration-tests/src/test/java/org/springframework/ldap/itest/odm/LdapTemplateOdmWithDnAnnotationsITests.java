@@ -43,7 +43,7 @@ public class LdapTemplateOdmWithDnAnnotationsITests extends AbstractLdapTemplate
 
 	@Test
 	public void testFindOne() {
-		PersonWithDnAnnotations person = tested.findOne(query().where("cn").is("Some Person3"),
+		PersonWithDnAnnotations person = this.tested.findOne(query().where("cn").is("Some Person3"),
 				PersonWithDnAnnotations.class);
 
 		assertThat(person).isNotNull();
@@ -60,7 +60,7 @@ public class LdapTemplateOdmWithDnAnnotationsITests extends AbstractLdapTemplate
 
 	@Test
 	public void testFindByDn() {
-		PersonWithDnAnnotations person = tested.findByDn(LdapUtils.newLdapName("cn=Some Person3,ou=company1,ou=Sweden"),
+		PersonWithDnAnnotations person = this.tested.findByDn(LdapUtils.newLdapName("cn=Some Person3,ou=company1,ou=Sweden"),
 				PersonWithDnAnnotations.class);
 
 		assertThat(person).isNotNull();
@@ -77,7 +77,7 @@ public class LdapTemplateOdmWithDnAnnotationsITests extends AbstractLdapTemplate
 
 	@Test
 	public void testFindInCountry() {
-		List<PersonWithDnAnnotations> persons = tested.find(query().base("ou=Sweden").where("cn").isPresent(),
+		List<PersonWithDnAnnotations> persons = this.tested.find(query().base("ou=Sweden").where("cn").isPresent(),
 				PersonWithDnAnnotations.class);
 
 		assertThat(persons).hasSize(4);
@@ -92,7 +92,7 @@ public class LdapTemplateOdmWithDnAnnotationsITests extends AbstractLdapTemplate
 
 	@Test
 	public void testFindForStreamInCountry() {
-		List<PersonWithDnAnnotations> persons = tested
+		List<PersonWithDnAnnotations> persons = this.tested
 				.findForStream(query().base("ou=Sweden").where("cn").isPresent(), PersonWithDnAnnotations.class)
 				.collect(Collectors.toList());
 
@@ -130,11 +130,11 @@ public class LdapTemplateOdmWithDnAnnotationsITests extends AbstractLdapTemplate
 		person.setCompany("company1");
 		person.setCountry("Sweden");
 
-		tested.create(person);
+		this.tested.create(person);
 
-		assertThat(tested.findAll(PersonWithDnAnnotations.class)).hasSize(6);
+		assertThat(this.tested.findAll(PersonWithDnAnnotations.class)).hasSize(6);
 
-		person = tested.findByDn(LdapUtils.newLdapName("cn=New Person,ou=company1,ou=Sweden"),
+		person = this.tested.findByDn(LdapUtils.newLdapName("cn=New Person,ou=company1,ou=Sweden"),
 				PersonWithDnAnnotations.class);
 
 		assertThat(person.getCommonName()).isEqualTo("New Person");
@@ -150,15 +150,15 @@ public class LdapTemplateOdmWithDnAnnotationsITests extends AbstractLdapTemplate
 
 	@Test
 	public void testUpdate() {
-		PersonWithDnAnnotations person = tested.findOne(query().where("cn").is("Some Person3"),
+		PersonWithDnAnnotations person = this.tested.findOne(query().where("cn").is("Some Person3"),
 				PersonWithDnAnnotations.class);
 
 		person.setDesc(Arrays.asList("New Description"));
 		String entryUuid = person.getEntryUuid();
 		assertThat(entryUuid).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
-		tested.update(person);
+		this.tested.update(person);
 
-		person = tested.findByDn(LdapUtils.newLdapName("cn=Some Person3, ou=company1, ou=Sweden"),
+		person = this.tested.findByDn(LdapUtils.newLdapName("cn=Some Person3, ou=company1, ou=Sweden"),
 				PersonWithDnAnnotations.class);
 
 		assertThat(person.getCommonName()).isEqualTo("Some Person3");
@@ -170,16 +170,16 @@ public class LdapTemplateOdmWithDnAnnotationsITests extends AbstractLdapTemplate
 
 	@Test
 	public void testUpdateWithChangedDn() {
-		PersonWithDnAnnotations person = tested.findOne(query().where("cn").is("Some Person3"),
+		PersonWithDnAnnotations person = this.tested.findOne(query().where("cn").is("Some Person3"),
 				PersonWithDnAnnotations.class);
 
 		// This should make the entry move
 		person.setCountry("Norway");
 		String entryUuid = person.getEntryUuid();
 		assertThat(entryUuid).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
-		tested.update(person);
+		this.tested.update(person);
 
-		person = tested.findByDn(LdapUtils.newLdapName("cn=Some Person3, ou=company1, ou=Norway"),
+		person = this.tested.findByDn(LdapUtils.newLdapName("cn=Some Person3, ou=company1, ou=Norway"),
 				PersonWithDnAnnotations.class);
 
 		assertThat(person.getCommonName()).isEqualTo("Some Person3");

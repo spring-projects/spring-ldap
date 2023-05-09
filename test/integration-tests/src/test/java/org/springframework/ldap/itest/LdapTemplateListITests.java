@@ -57,35 +57,35 @@ public class LdapTemplateListITests extends AbstractLdapTemplateIntegrationTests
 
 	@Before
 	public void prepareTestedInstance() throws Exception {
-		contextMapper = new AttributeCheckContextMapper();
+		this.contextMapper = new AttributeCheckContextMapper();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		contextMapper = null;
+		this.contextMapper = null;
 	}
 
 	@Test
 	public void testListBindings_ContextMapper() {
-		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		contextMapper.setExpectedValues(ALL_VALUES);
-		List list = tested.listBindings("ou=company2,ou=Sweden" + BASE_STRING, contextMapper);
+		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.contextMapper.setExpectedValues(ALL_VALUES);
+		List list = this.tested.listBindings("ou=company2,ou=Sweden" + BASE_STRING, this.contextMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testListBindings_ContextMapper_Name() {
-		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		contextMapper.setExpectedValues(ALL_VALUES);
+		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.contextMapper.setExpectedValues(ALL_VALUES);
 		LdapName dn = LdapUtils.newLdapName("ou=company2,ou=Sweden");
-		List list = tested.listBindings(dn, contextMapper);
+		List list = this.tested.listBindings(dn, this.contextMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testListBindings_ContextMapper_MapToPersons() {
 		LdapName dn = LdapUtils.newLdapName("ou=company1,ou=Sweden");
-		List list = tested.listBindings(dn, new PersonContextMapper());
+		List list = this.tested.listBindings(dn, new PersonContextMapper());
 		assertThat(list).hasSize(3);
 		String personClass = "org.springframework.ldap.itest.Person";
 		assertThat(list.get(0).getClass().getName()).isEqualTo(personClass);
@@ -95,7 +95,7 @@ public class LdapTemplateListITests extends AbstractLdapTemplateIntegrationTests
 
 	@Test
 	public void testList() {
-		List<String> list = tested.list(BASE_STRING);
+		List<String> list = this.tested.list(BASE_STRING);
 		assertThat(list).hasSize(3);
 		verifyBindings(list);
 	}
@@ -114,7 +114,7 @@ public class LdapTemplateListITests extends AbstractLdapTemplateIntegrationTests
 
 	@Test
 	public void testList_Name() {
-		List<String> list = tested.list(BASE_NAME);
+		List<String> list = this.tested.list(BASE_NAME);
 		assertThat(list).hasSize(3);
 		verifyBindings(list);
 	}
@@ -122,41 +122,41 @@ public class LdapTemplateListITests extends AbstractLdapTemplateIntegrationTests
 	@Test
 	public void testList_Handler() throws Exception {
 		CountNameClassPairCallbackHandler handler = new CountNameClassPairCallbackHandler();
-		tested.list(BASE_STRING, handler);
+		this.tested.list(BASE_STRING, handler);
 		assertThat(handler.getNoOfRows()).isEqualTo(3);
 	}
 
 	@Test
 	public void testList_Name_Handler() throws Exception {
 		CountNameClassPairCallbackHandler handler = new CountNameClassPairCallbackHandler();
-		tested.list(BASE_NAME, handler);
+		this.tested.list(BASE_NAME, handler);
 		assertThat(handler.getNoOfRows()).isEqualTo(3);
 	}
 
 	@Test
 	public void testListBindings() {
-		List<String> list = tested.listBindings(BASE_STRING);
+		List<String> list = this.tested.listBindings(BASE_STRING);
 		assertThat(list).hasSize(3);
 		verifyBindings(list);
 	}
 
 	@Test
 	public void testListBindings_Name() {
-		List list = tested.listBindings(BASE_NAME);
+		List list = this.tested.listBindings(BASE_NAME);
 		assertThat(list).hasSize(3);
 	}
 
 	@Test
 	public void testListBindings_Handler() throws Exception {
 		CountNameClassPairCallbackHandler handler = new CountNameClassPairCallbackHandler();
-		tested.listBindings(BASE_STRING, handler);
+		this.tested.listBindings(BASE_STRING, handler);
 		assertThat(handler.getNoOfRows()).isEqualTo(3);
 	}
 
 	@Test
 	public void testListBindings_Name_Handler() throws Exception {
 		CountNameClassPairCallbackHandler handler = new CountNameClassPairCallbackHandler();
-		tested.listBindings(BASE_NAME, handler);
+		this.tested.listBindings(BASE_NAME, handler);
 		assertThat(handler.getNoOfRows()).isEqualTo(3);
 	}
 

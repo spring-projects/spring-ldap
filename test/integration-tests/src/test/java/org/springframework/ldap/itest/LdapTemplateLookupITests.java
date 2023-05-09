@@ -51,7 +51,7 @@ public class LdapTemplateLookupITests extends AbstractLdapTemplateIntegrationTes
 	 */
 	@Test
 	public void testLookup_Plain() {
-		DirContextAdapter result = (DirContextAdapter) tested.lookup("cn=Some Person2, ou=company1,ou=Sweden");
+		DirContextAdapter result = (DirContextAdapter) this.tested.lookup("cn=Some Person2, ou=company1,ou=Sweden");
 
 		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person2");
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person2");
@@ -65,7 +65,7 @@ public class LdapTemplateLookupITests extends AbstractLdapTemplateIntegrationTes
 	 */
 	@Test
 	public void testLookupContextRoot() {
-		DirContextAdapter result = (DirContextAdapter) tested.lookup("");
+		DirContextAdapter result = (DirContextAdapter) this.tested.lookup("");
 
 		assertThat(result.getDn().toString()).isEqualTo("");
 		assertThat(result.getNameInNamespace()).isEqualTo(base);
@@ -74,7 +74,7 @@ public class LdapTemplateLookupITests extends AbstractLdapTemplateIntegrationTes
 	@Test
 	public void testLookup_AttributesMapper() {
 		AttributesMapper mapper = new PersonAttributesMapper();
-		Person person = (Person) tested.lookup("cn=Some Person2, ou=company1,ou=Sweden", mapper);
+		Person person = (Person) this.tested.lookup("cn=Some Person2, ou=company1,ou=Sweden", mapper);
 
 		assertThat(person.getFullname()).isEqualTo("Some Person2");
 		assertThat(person.getLastname()).isEqualTo("Person2");
@@ -84,7 +84,7 @@ public class LdapTemplateLookupITests extends AbstractLdapTemplateIntegrationTes
 	@Test
 	public void testLookup_AttributesMapper_LdapName() {
 		AttributesMapper mapper = new PersonAttributesMapper();
-		Person person = (Person) tested.lookup(LdapUtils.newLdapName("cn=Some Person2, ou=company1,ou=Sweden"), mapper);
+		Person person = (Person) this.tested.lookup(LdapUtils.newLdapName("cn=Some Person2, ou=company1,ou=Sweden"), mapper);
 
 		assertThat(person.getFullname()).isEqualTo("Some Person2");
 		assertThat(person.getLastname()).isEqualTo("Person2");
@@ -123,7 +123,7 @@ public class LdapTemplateLookupITests extends AbstractLdapTemplateIntegrationTes
 	public void testLookup_ReturnAttributes_AttributesMapper() {
 		AttributesMapper mapper = new SubsetPersonAttributesMapper();
 
-		Person person = (Person) tested.lookup("cn=Some Person2, ou=company1,ou=Sweden", new String[] { "cn" }, mapper);
+		Person person = (Person) this.tested.lookup("cn=Some Person2, ou=company1,ou=Sweden", new String[] { "cn" }, mapper);
 
 		assertThat(person.getFullname()).isEqualTo("Some Person2");
 		assertThat(person.getLastname()).as("lastName should not be set").isNull();
@@ -137,7 +137,7 @@ public class LdapTemplateLookupITests extends AbstractLdapTemplateIntegrationTes
 	@Test
 	public void testLookup_ReturnAttributes_AttributesMapper_LdapName() {
 		AttributesMapper mapper = new SubsetPersonAttributesMapper();
-		Person person = (Person) tested.lookup(LdapUtils.newLdapName("cn=Some Person2, ou=company1,ou=Sweden"),
+		Person person = (Person) this.tested.lookup(LdapUtils.newLdapName("cn=Some Person2, ou=company1,ou=Sweden"),
 				new String[] { "cn" }, mapper);
 
 		assertThat(person.getFullname()).isEqualTo("Some Person2");
@@ -153,7 +153,7 @@ public class LdapTemplateLookupITests extends AbstractLdapTemplateIntegrationTes
 	@Test
 	public void testLookup_ContextMapper() {
 		ContextMapper mapper = new PersonContextMapper();
-		Person person = (Person) tested.lookup("cn=Some Person2, ou=company1,ou=Sweden", mapper);
+		Person person = (Person) this.tested.lookup("cn=Some Person2, ou=company1,ou=Sweden", mapper);
 
 		assertThat(person.getFullname()).isEqualTo("Some Person2");
 		assertThat(person.getLastname()).isEqualTo("Person2");
@@ -168,7 +168,7 @@ public class LdapTemplateLookupITests extends AbstractLdapTemplateIntegrationTes
 	public void testLookup_ReturnAttributes_ContextMapper() {
 		ContextMapper mapper = new PersonContextMapper();
 
-		Person person = (Person) tested.lookup("cn=Some Person2, ou=company1,ou=Sweden", new String[] { "cn" }, mapper);
+		Person person = (Person) this.tested.lookup("cn=Some Person2, ou=company1,ou=Sweden", new String[] { "cn" }, mapper);
 
 		assertThat(person.getFullname()).isEqualTo("Some Person2");
 		assertThat(person.getLastname()).as("lastName should not be set").isNull();
@@ -178,7 +178,7 @@ public class LdapTemplateLookupITests extends AbstractLdapTemplateIntegrationTes
 	@Test
 	public void testLookup_GetNameInNamespace_Plain() {
 		String expectedDn = "cn=Some Person2, ou=company1,ou=Sweden";
-		DirContextAdapter result = (DirContextAdapter) tested.lookup(expectedDn);
+		DirContextAdapter result = (DirContextAdapter) this.tested.lookup(expectedDn);
 
 		LdapName expectedName = LdapUtils.newLdapName(expectedDn);
 		assertThat(result.getDn()).isEqualTo(expectedName);

@@ -68,13 +68,13 @@ public class ContextSourceAndDataSourceTransactionManagerLdap179IntegrationTests
 
 	@After
 	public void cleanup() throws Exception {
-		jdbcTemplate.execute("drop table PERSON if exists");
+		this.jdbcTemplate.execute("drop table PERSON if exists");
 	}
 
 	@Test
 	public void verifyThatJdbcTransactionIsClosedIfLdapServerUnavailable_ldap179() {
 		try {
-			dummyDao.create("Sweden", "company1", "some testperson", "testperson", "some description");
+			this.dummyDao.create("Sweden", "company1", "some testperson", "testperson", "some description");
 			fail("CannotCreateTransactionException expected");
 		}
 		catch (CannotCreateTransactionException expected) {
@@ -85,7 +85,7 @@ public class ContextSourceAndDataSourceTransactionManagerLdap179IntegrationTests
 		assertThat(TransactionSynchronizationManager.isSynchronizationActive()).isFalse();
 
 		try {
-			dummyDao.create("Sweden", "company1", "some testperson", "testperson", "some description");
+			this.dummyDao.create("Sweden", "company1", "some testperson", "testperson", "some description");
 			fail("CannotCreateTransactionException expected");
 		}
 		catch (CannotCreateTransactionException expected) {

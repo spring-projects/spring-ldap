@@ -37,8 +37,8 @@ public class DistinguishedNameEditorITests extends AbstractJUnit4SpringContextTe
 
 	@Test
 	public void testDistinguishedNameEditor() throws Exception {
-		assertThat(distinguishedNameConsumer).isNotNull();
-		DistinguishedName name = distinguishedNameConsumer.getDistinguishedName();
+		assertThat(this.distinguishedNameConsumer).isNotNull();
+		DistinguishedName name = this.distinguishedNameConsumer.getDistinguishedName();
 		assertThat(name).isEqualTo(new DistinguishedName("dc=jayway, dc=se"));
 	}
 

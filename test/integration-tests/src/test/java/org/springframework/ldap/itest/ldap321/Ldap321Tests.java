@@ -42,7 +42,7 @@ public class Ldap321Tests {
 
 	@Test
 	public void testQueryRoleMap() throws Exception {
-		Map<String, String> roleMap = roleRepo.queryRoleMap();
+		Map<String, String> roleMap = this.roleRepo.queryRoleMap();
 		assertThat(roleMap).isNotNull();
 
 		for (String roleName : roleMap.keySet()) {

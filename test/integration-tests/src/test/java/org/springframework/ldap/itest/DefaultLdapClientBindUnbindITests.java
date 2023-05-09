@@ -53,9 +53,9 @@ public class DefaultLdapClientBindUnbindITests extends AbstractLdapTemplateInteg
 	@Test
 	public void testBindAndUnbindWithAttributes() {
 		Attributes attributes = setupAttributes();
-		tested.bind(DN).attributes(attributes).execute();
+		this.tested.bind(DN).attributes(attributes).execute();
 		verifyBoundCorrectData();
-		tested.unbind(DN).execute();
+		this.tested.unbind(DN).execute();
 		verifyCleanup();
 	}
 
@@ -66,15 +66,15 @@ public class DefaultLdapClientBindUnbindITests extends AbstractLdapTemplateInteg
 		ctx.addAttributeValue("objectclass", "top");
 		ctx.addAttributeValue("objectclass", "groupOfUniqueNames");
 		ctx.addAttributeValue("uniqueMember", LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden," + base));
-		tested.bind(ctx.getDn()).object(ctx).execute();
+		this.tested.bind(ctx.getDn()).object(ctx).execute();
 	}
 
 	@Test
 	public void testBindAndUnbindWithAttributesUsingLdapName() {
 		Attributes attributes = setupAttributes();
-		tested.bind(LdapUtils.newLdapName(DN)).attributes(attributes).execute();
+		this.tested.bind(LdapUtils.newLdapName(DN)).attributes(attributes).execute();
 		verifyBoundCorrectData();
-		tested.unbind(LdapUtils.newLdapName(DN)).execute();
+		this.tested.unbind(LdapUtils.newLdapName(DN)).execute();
 		verifyCleanup();
 	}
 
@@ -85,9 +85,9 @@ public class DefaultLdapClientBindUnbindITests extends AbstractLdapTemplateInteg
 		adapter.setAttributeValue("cn", "Some Person4");
 		adapter.setAttributeValue("sn", "Person4");
 
-		tested.bind(DN).object(adapter).execute();
+		this.tested.bind(DN).object(adapter).execute();
 		verifyBoundCorrectData();
-		tested.unbind(DN).execute();
+		this.tested.unbind(DN).execute();
 		verifyCleanup();
 	}
 
@@ -98,9 +98,9 @@ public class DefaultLdapClientBindUnbindITests extends AbstractLdapTemplateInteg
 		adapter.setAttributeValue("cn", "Some Person4");
 		adapter.setAttributeValue("sn", "Person4");
 
-		tested.bind(LdapUtils.newLdapName(DN)).object(adapter).execute();
+		this.tested.bind(LdapUtils.newLdapName(DN)).object(adapter).execute();
 		verifyBoundCorrectData();
-		tested.unbind(LdapUtils.newLdapName(DN)).execute();
+		this.tested.unbind(LdapUtils.newLdapName(DN)).execute();
 		verifyCleanup();
 	}
 
@@ -111,9 +111,9 @@ public class DefaultLdapClientBindUnbindITests extends AbstractLdapTemplateInteg
 		adapter.setAttributeValue("cn", "Some Person4");
 		adapter.setAttributeValue("sn", "Person4");
 
-		tested.bind(DN).object(adapter).execute();
+		this.tested.bind(DN).object(adapter).execute();
 		verifyBoundCorrectData();
-		tested.unbind(DN).execute();
+		this.tested.unbind(DN).execute();
 		verifyCleanup();
 	}
 
@@ -124,12 +124,12 @@ public class DefaultLdapClientBindUnbindITests extends AbstractLdapTemplateInteg
 		adapter.setAttributeValue("cn", "Some Person4");
 		adapter.setAttributeValue("sn", "Person4");
 
-		tested.bind(DN).object(adapter).execute();
+		this.tested.bind(DN).object(adapter).execute();
 		verifyBoundCorrectData();
 		adapter.setAttributeValue("sn", "Person4.Changed");
-		tested.bind(DN).object(adapter).replaceExisting(true).execute();
+		this.tested.bind(DN).object(adapter).replaceExisting(true).execute();
 		verifyReboundCorrectData();
-		tested.unbind(DN).execute();
+		this.tested.unbind(DN).execute();
 		verifyCleanup();
 	}
 
@@ -145,20 +145,20 @@ public class DefaultLdapClientBindUnbindITests extends AbstractLdapTemplateInteg
 	}
 
 	private void verifyBoundCorrectData() {
-		DirContextOperations result = tested.search().name(DN).toEntry();
+		DirContextOperations result = this.tested.search().name(DN).toEntry();
 		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person4");
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person4");
 	}
 
 	private void verifyReboundCorrectData() {
-		DirContextOperations result = tested.search().name(DN).toEntry();
+		DirContextOperations result = this.tested.search().name(DN).toEntry();
 		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person4");
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person4.Changed");
 	}
 
 	private void verifyCleanup() {
 		assertThatExceptionOfType(NameNotFoundException.class).describedAs("NameNotFoundException expected")
-				.isThrownBy(() -> tested.search().name(DN).toEntry());
+				.isThrownBy(() -> this.tested.search().name(DN).toEntry());
 	}
 
 }

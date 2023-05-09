@@ -62,10 +62,10 @@ public class LdapTemplatePooledITests extends AbstractJUnit4SpringContextTests {
 	@Test
 	public void verifyThatInvalidConnectionIsAutomaticallyPurged() throws Exception {
 		LdapTestUtils.startEmbeddedServer(1888, "dc=261consulting,dc=com", "jayway");
-		LdapTestUtils.cleanAndSetup(contextSource, LdapUtils.emptyLdapName(),
+		LdapTestUtils.cleanAndSetup(this.contextSource, LdapUtils.emptyLdapName(),
 				new ClassPathResource("/setup_data.ldif"));
 
-		DirContextOperations result = tested.lookupContext("cn=Some Person2, ou=company1,ou=Sweden");
+		DirContextOperations result = this.tested.lookupContext("cn=Some Person2, ou=company1,ou=Sweden");
 		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person2");
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person2");
 		assertThat(result.getStringAttribute("description")).isEqualTo("Sweden, Company1, Some Person2");
@@ -75,7 +75,7 @@ public class LdapTemplatePooledITests extends AbstractJUnit4SpringContextTests {
 		LdapTestUtils.startEmbeddedServer(1888, "dc=261consulting,dc=com", "jayway");
 
 		try {
-			tested.lookup("cn=Some Person2, ou=company1,ou=Sweden");
+			this.tested.lookup("cn=Some Person2, ou=company1,ou=Sweden");
 			fail("Exception expected");
 		}
 		catch (Exception expected) {
@@ -83,11 +83,11 @@ public class LdapTemplatePooledITests extends AbstractJUnit4SpringContextTests {
 			assertThat(true).isTrue();
 		}
 
-		LdapTestUtils.cleanAndSetup(contextSource, LdapUtils.emptyLdapName(),
+		LdapTestUtils.cleanAndSetup(this.contextSource, LdapUtils.emptyLdapName(),
 				new ClassPathResource("/setup_data.ldif"));
 		// But this should be OK, because the dirty connection should have been
 		// automatically purged.
-		tested.lookup("cn=Some Person2, ou=company1,ou=Sweden");
+		this.tested.lookup("cn=Some Person2, ou=company1,ou=Sweden");
 	}
 
 }

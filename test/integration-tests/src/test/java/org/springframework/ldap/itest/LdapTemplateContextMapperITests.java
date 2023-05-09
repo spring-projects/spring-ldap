@@ -48,7 +48,7 @@ public class LdapTemplateContextMapperITests extends AbstractLdapTemplateIntegra
 	@Test
 	public void testSearch_ContextMapper() {
 		ContextMapper mapper = new PersonContextMapper();
-		List result = tested.search("ou=company1,ou=Sweden", "(&(objectclass=person)(sn=Person2))", mapper);
+		List result = this.tested.search("ou=company1,ou=Sweden", "(&(objectclass=person)(sn=Person2))", mapper);
 
 		assertThat(result).hasSize(1);
 		Person person = (Person) result.get(0);
@@ -71,7 +71,7 @@ public class LdapTemplateContextMapperITests extends AbstractLdapTemplateIntegra
 				return members;
 			}
 		};
-		List result = tested.search("ou=groups", "(&(objectclass=groupOfUniqueNames)(cn=ROLE_USER))", mapper);
+		List result = this.tested.search("ou=groups", "(&(objectclass=groupOfUniqueNames)(cn=ROLE_USER))", mapper);
 
 		assertThat(result).hasSize(1);
 		assertThat(((String[]) result.get(0)).length).isEqualTo(4);

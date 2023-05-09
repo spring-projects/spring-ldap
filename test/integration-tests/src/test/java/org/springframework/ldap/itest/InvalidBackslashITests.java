@@ -58,13 +58,13 @@ public class InvalidBackslashITests extends AbstractLdapTemplateIntegrationTests
 		adapter.setAttributeValue("sn", "Person6");
 		adapter.setAttributeValue("description", "Some description");
 
-		tested.unbind(DN);
-		tested.bind(DN, adapter, null);
+		this.tested.unbind(DN);
+		this.tested.bind(DN, adapter, null);
 	}
 
 	@After
 	public void cleanup() throws Exception {
-		tested.unbind(DN);
+		this.tested.unbind(DN);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class InvalidBackslashITests extends AbstractLdapTemplateIntegrationTests
 	@Test
 	@Category(NoAdTests.class)
 	public void testSearchForDnSpoiledByCompositeName() throws InvalidNameException {
-		List result = tested.search("", "(sn=Person6)", new AbstractContextMapper() {
+		List result = this.tested.search("", "(sn=Person6)", new AbstractContextMapper() {
 			@Override
 			protected Object doMapFromContext(DirContextOperations ctx) {
 				LdapName dn = (LdapName) ctx.getDn();

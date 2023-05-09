@@ -42,7 +42,7 @@ public class Ldap473Tests {
 
 	@Test
 	public void anonymous() {
-		DirContext readOnlyContext = contextSource.getReadOnlyContext();
+		DirContext readOnlyContext = this.contextSource.getReadOnlyContext();
 		assertThat(readOnlyContext).isNotNull();
 	}
 

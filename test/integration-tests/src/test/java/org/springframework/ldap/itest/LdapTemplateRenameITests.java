@@ -58,18 +58,18 @@ public class LdapTemplateRenameITests extends AbstractLdapTemplateIntegrationTes
 		adapter.setAttributeValue("sn", "Person6");
 		adapter.setAttributeValue("description", "Some description");
 
-		tested.bind(DN, adapter, null);
+		this.tested.bind(DN, adapter, null);
 	}
 
 	@After
 	public void cleanup() throws Exception {
-		tested.unbind(NEWDN);
-		tested.unbind(DN);
+		this.tested.unbind(NEWDN);
+		this.tested.unbind(DN);
 	}
 
 	@Test
 	public void testRename() {
-		tested.rename(DN, NEWDN);
+		this.tested.rename(DN, NEWDN);
 
 		verifyDeleted(LdapUtils.newLdapName(DN));
 		verifyBoundCorrectData();
@@ -79,7 +79,7 @@ public class LdapTemplateRenameITests extends AbstractLdapTemplateIntegrationTes
 	public void testRename_LdapName() throws Exception {
 		Name oldDn = LdapUtils.newLdapName(DN);
 		Name newDn = LdapUtils.newLdapName(NEWDN);
-		tested.rename(oldDn, newDn);
+		this.tested.rename(oldDn, newDn);
 
 		verifyDeleted(oldDn);
 		verifyBoundCorrectData();
@@ -87,7 +87,7 @@ public class LdapTemplateRenameITests extends AbstractLdapTemplateIntegrationTes
 
 	private void verifyDeleted(Name dn) {
 		try {
-			tested.lookup(dn);
+			this.tested.lookup(dn);
 			fail("Expected entry '" + dn + "' to be non-existent");
 		}
 		catch (NameNotFoundException expected) {
@@ -96,7 +96,7 @@ public class LdapTemplateRenameITests extends AbstractLdapTemplateIntegrationTes
 	}
 
 	private void verifyBoundCorrectData() {
-		DirContextAdapter result = (DirContextAdapter) tested.lookup(NEWDN);
+		DirContextAdapter result = (DirContextAdapter) this.tested.lookup(NEWDN);
 		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person6");
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person6");
 		assertThat(result.getStringAttribute("description")).isEqualTo("Some description");

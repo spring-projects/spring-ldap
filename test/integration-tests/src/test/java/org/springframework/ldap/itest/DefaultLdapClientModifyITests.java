@@ -69,7 +69,7 @@ public class DefaultLdapClientModifyITests extends AbstractLdapTemplateIntegrati
 		adapter.setAttributeValue("sn", "Person4");
 		adapter.setAttributeValue("description", "Some description");
 
-		tested.bind(PERSON4_DN).object(adapter).execute();
+		this.tested.bind(PERSON4_DN).object(adapter).execute();
 
 		adapter = new DirContextAdapter();
 		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
@@ -77,27 +77,27 @@ public class DefaultLdapClientModifyITests extends AbstractLdapTemplateIntegrati
 		adapter.setAttributeValue("sn", "Person5");
 		adapter.setAttributeValues("description", new String[] { "qwe", "123", "rty", "uio" });
 
-		tested.bind(PERSON5_DN).object(adapter).execute();
+		this.tested.bind(PERSON5_DN).object(adapter).execute();
 
 	}
 
 	@After
 	public void cleanup() throws Exception {
-		tested.unbind(PERSON4_DN).execute();
-		tested.unbind(PERSON5_DN).execute();
+		this.tested.unbind(PERSON4_DN).execute();
+		this.tested.unbind(PERSON5_DN).execute();
 	}
 
 	@Test
 	public void testRebind_Attributes_Plain() {
 		Attributes attributes = setupAttributes();
-		tested.bind(PERSON4_DN).attributes(attributes).replaceExisting(true).execute();
+		this.tested.bind(PERSON4_DN).attributes(attributes).replaceExisting(true).execute();
 		verifyBoundCorrectData();
 	}
 
 	@Test
 	public void testRebind_Attributes_LdapName() {
 		Attributes attributes = setupAttributes();
-		tested.bind(LdapUtils.newLdapName(PERSON4_DN)).attributes(attributes).replaceExisting(true).execute();
+		this.tested.bind(LdapUtils.newLdapName(PERSON4_DN)).attributes(attributes).replaceExisting(true).execute();
 		verifyBoundCorrectData();
 	}
 
@@ -107,9 +107,9 @@ public class DefaultLdapClientModifyITests extends AbstractLdapTemplateIntegrati
 		attr.add("Another description");
 		ModificationItem[] mods = new ModificationItem[1];
 		mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, attr);
-		tested.modify(PERSON4_DN).attributes(mods).execute();
+		this.tested.modify(PERSON4_DN).attributes(mods).execute();
 
-		DirContextOperations result = tested.search().name(PERSON4_DN).toEntry();
+		DirContextOperations result = this.tested.search().name(PERSON4_DN).toEntry();
 		List<String> attributes = Arrays.asList(result.getStringAttributes("description"));
 		assertThat(attributes).hasSize(2);
 		assertThat(attributes.contains("Some other description")).isTrue();
@@ -122,8 +122,8 @@ public class DefaultLdapClientModifyITests extends AbstractLdapTemplateIntegrati
 		attr.add("Another description");
 		ModificationItem[] mods = new ModificationItem[1];
 		mods[0] = new ModificationItem(DirContext.ADD_ATTRIBUTE, attr);
-		tested.modify(PERSON4_DN).attributes(mods).execute();
-		LdapDataEntry result = tested.search().name(PERSON4_DN).toEntry();
+		this.tested.modify(PERSON4_DN).attributes(mods).execute();
+		LdapDataEntry result = this.tested.search().name(PERSON4_DN).toEntry();
 		List<String> attributes = Arrays.asList(result.getStringAttributes("description"));
 		assertThat(attributes).hasSize(3);
 		assertThat(attributes.contains("Some other description")).isTrue();
@@ -133,11 +133,11 @@ public class DefaultLdapClientModifyITests extends AbstractLdapTemplateIntegrati
 
 	@Test
 	public void testModifyAttributes_AddAttributeValueWithExistingValue() {
-		DirContextOperations ctx = tested.search().name("cn=ROLE_USER,ou=groups").toEntry();
+		DirContextOperations ctx = this.tested.search().name("cn=ROLE_USER,ou=groups").toEntry();
 		String[] existing = ctx.getStringAttributes("uniqueMember");
 		ctx.addAttributeValue("uniqueMember", "cn=Some Person,ou=company1,ou=Norway," + base);
-		tested.modify(ctx.getDn()).attributes(ctx.getModificationItems()).execute();
-		ctx = tested.search().name("cn=ROLE_USER,ou=groups").toEntry();
+		this.tested.modify(ctx.getDn()).attributes(ctx.getModificationItems()).execute();
+		ctx = this.tested.search().name("cn=ROLE_USER,ou=groups").toEntry();
 		assertThat(ctx.getStringAttributes("uniqueMember")).hasSize(existing.length + 1);
 		assertThat(ctx.getStringAttributes("uniqueMember")).contains("cn=Some Person,ou=company1,ou=Norway," + base);
 	}
@@ -149,7 +149,7 @@ public class DefaultLdapClientModifyITests extends AbstractLdapTemplateIntegrati
 		mods[0] = new ModificationItem(DirContext.ADD_ATTRIBUTE, attr);
 
 		try {
-			tested.modify(PERSON4_DN).attributes(mods).execute();
+			this.tested.modify(PERSON4_DN).attributes(mods).execute();
 			fail("AttributeInUseException expected");
 		}
 		catch (AttributeInUseException expected) {
@@ -170,8 +170,8 @@ public class DefaultLdapClientModifyITests extends AbstractLdapTemplateIntegrati
 		// attr.add("Some description");
 		ModificationItem[] mods = new ModificationItem[1];
 		mods[0] = new ModificationItem(DirContext.ADD_ATTRIBUTE, attr);
-		tested.modify(PERSON4_DN).attributes(mods).execute();
-		LdapDataEntry result = tested.search().name(PERSON4_DN).toEntry();
+		this.tested.modify(PERSON4_DN).attributes(mods).execute();
+		LdapDataEntry result = this.tested.search().name(PERSON4_DN).toEntry();
 		List<String> attributes = Arrays.asList(result.getStringAttributes("description"));
 		assertThat(attributes).hasSize(3);
 		assertThat(attributes.contains("Some other description")).isTrue();
@@ -183,7 +183,7 @@ public class DefaultLdapClientModifyITests extends AbstractLdapTemplateIntegrati
 	public void testModifyAttributes_Plain() {
 		ModificationItem item = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
 				new BasicAttribute("description", "Some other description"));
-		tested.modify(PERSON4_DN).attributes(item).execute();
+		this.tested.modify(PERSON4_DN).attributes(item).execute();
 		verifyBoundCorrectData();
 	}
 
@@ -191,18 +191,18 @@ public class DefaultLdapClientModifyITests extends AbstractLdapTemplateIntegrati
 	public void testModifyAttributes_LdapName() {
 		ModificationItem item = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
 				new BasicAttribute("description", "Some other description"));
-		tested.modify(LdapUtils.newLdapName(PERSON4_DN)).attributes(item).execute();
+		this.tested.modify(LdapUtils.newLdapName(PERSON4_DN)).attributes(item).execute();
 		verifyBoundCorrectData();
 	}
 
 	@Test
 	public void testModifyAttributes_DirContextAdapter_MultiAttributes() {
-		DirContextOperations adapter = tested.search().name(PERSON5_DN).toEntry();
+		DirContextOperations adapter = this.tested.search().name(PERSON5_DN).toEntry();
 		adapter.setAttributeValues("description", new String[] { "qwe", "123", "klytt", "kalle" });
-		tested.modify(adapter.getDn()).attributes(adapter.getModificationItems()).execute();
+		this.tested.modify(adapter.getDn()).attributes(adapter.getModificationItems()).execute();
 
 		// Verify
-		adapter = tested.search().name(PERSON5_DN).toEntry();
+		adapter = this.tested.search().name(PERSON5_DN).toEntry();
 		List<String> attributes = Arrays.asList(adapter.getStringAttributes("description"));
 		assertThat(attributes).hasSize(4);
 		assertThat(attributes.contains("qwe")).isTrue();
@@ -218,17 +218,17 @@ public class DefaultLdapClientModifyITests extends AbstractLdapTemplateIntegrati
 	 */
 	@Test
 	public void testModifyAttributes_DirContextAdapter() {
-		DirContextOperations adapter = tested.search().name(PERSON4_DN).toEntry();
+		DirContextOperations adapter = this.tested.search().name(PERSON4_DN).toEntry();
 		adapter.setAttributeValue("description", "Some other description");
-		tested.modify(adapter.getDn()).attributes(adapter.getModificationItems()).execute();
+		this.tested.modify(adapter.getDn()).attributes(adapter.getModificationItems()).execute();
 		verifyBoundCorrectData();
 	}
 
 	@Test
 	public void verifyCompleteReplacementOfUniqueMemberAttribute_Ldap119() {
-		DirContextOperations ctx = tested.search().name("cn=ROLE_USER,ou=groups").toEntry();
+		DirContextOperations ctx = this.tested.search().name("cn=ROLE_USER,ou=groups").toEntry();
 		ctx.setAttributeValues("uniqueMember", new String[] { "cn=Some Person,ou=company1,ou=Norway," + base }, true);
-		tested.modify(ctx.getDn()).attributes(ctx.getModificationItems()).execute();
+		this.tested.modify(ctx.getDn()).attributes(ctx.getModificationItems()).execute();
 	}
 
 	private Attributes setupAttributes() {
@@ -244,7 +244,7 @@ public class DefaultLdapClientModifyITests extends AbstractLdapTemplateIntegrati
 	}
 
 	private void verifyBoundCorrectData() {
-		DirContextOperations result = tested.search().name(PERSON4_DN).toEntry();
+		DirContextOperations result = this.tested.search().name(PERSON4_DN).toEntry();
 		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person4");
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person4");
 		assertThat(result.getStringAttribute("description")).isEqualTo("Some other description");

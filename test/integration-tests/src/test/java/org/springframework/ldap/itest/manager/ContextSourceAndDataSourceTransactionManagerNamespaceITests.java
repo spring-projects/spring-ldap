@@ -74,22 +74,22 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 			TransactionSynchronizationManager.clearSynchronization();
 		}
 
-		jdbcTemplate.execute("drop table PERSON if exists");
-		jdbcTemplate
+		this.jdbcTemplate.execute("drop table PERSON if exists");
+		this.jdbcTemplate
 				.execute("create table PERSON(fullname VARCHAR(256), lastname VARCHAR(256), description VARCHAR(256))");
-		jdbcTemplate.update("insert into PERSON values(?, ?, ?)",
+		this.jdbcTemplate.update("insert into PERSON values(?, ?, ?)",
 				new Object[] { "Some Person", "Person", "Sweden, Company1, Some Person" });
 	}
 
 	@After
 	public void cleanup() throws Exception {
-		jdbcTemplate.execute("drop table PERSON if exists");
+		this.jdbcTemplate.execute("drop table PERSON if exists");
 	}
 
 	@Test
 	public void testCreateWithException() {
 		try {
-			dummyDao.createWithException("Sweden", "company1", "some testperson", "testperson", "some description");
+			this.dummyDao.createWithException("Sweden", "company1", "some testperson", "testperson", "some description");
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {
@@ -100,7 +100,7 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 
 		// Verify that no entry was created
 		try {
-			ldapTemplate.lookup("cn=some testperson, ou=company1, ou=Sweden");
+			this.ldapTemplate.lookup("cn=some testperson, ou=company1, ou=Sweden");
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
@@ -108,7 +108,7 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 		}
 
 		try {
-			jdbcTemplate.queryForObject("select * from PERSON where fullname='some testperson'", new RowMapper() {
+			this.jdbcTemplate.queryForObject("select * from PERSON where fullname='some testperson'", new RowMapper() {
 				public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 					return null;
 				}
@@ -122,11 +122,11 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 
 	@Test
 	public void testCreate() {
-		dummyDao.create("Sweden", "company1", "some testperson", "testperson", "some description");
+		this.dummyDao.create("Sweden", "company1", "some testperson", "testperson", "some description");
 
 		log.debug("Verifying result");
-		Object ldapResult = ldapTemplate.lookup("cn=some testperson, ou=company1, ou=Sweden");
-		Object dbResult = jdbcTemplate.queryForObject("select * from PERSON where fullname='some testperson'",
+		Object ldapResult = this.ldapTemplate.lookup("cn=some testperson, ou=company1, ou=Sweden");
+		Object dbResult = this.jdbcTemplate.queryForObject("select * from PERSON where fullname='some testperson'",
 				new RowMapper() {
 					public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 						return new Object();
@@ -135,14 +135,14 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 		assertThat(ldapResult).isNotNull();
 		assertThat(dbResult).isNotNull();
 
-		ldapTemplate.unbind("cn=some testperson, ou=company1, ou=Sweden");
+		this.ldapTemplate.unbind("cn=some testperson, ou=company1, ou=Sweden");
 	}
 
 	@Test
 	public void testUpdateWithException() {
 		String dn = "cn=Some Person,ou=company1,ou=Sweden";
 		try {
-			dummyDao.updateWithException(dn, "Some Person", "Updated Person", "Updated description");
+			this.dummyDao.updateWithException(dn, "Some Person", "Updated Person", "Updated description");
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {
@@ -151,7 +151,7 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 
 		log.debug("Verifying result");
 
-		Object ldapResult = ldapTemplate.lookup(dn, new AttributesMapper() {
+		Object ldapResult = this.ldapTemplate.lookup(dn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
 				assertThat(attributes.get("sn").get()).isEqualTo("Person");
 				assertThat(attributes.get("description").get()).isEqualTo("Sweden, Company1, Some Person");
@@ -159,7 +159,7 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 			}
 		});
 
-		Object jdbcResult = jdbcTemplate.queryForObject("select * from PERSON where fullname=?",
+		Object jdbcResult = this.jdbcTemplate.queryForObject("select * from PERSON where fullname=?",
 				new Object[] { "Some Person" }, new RowMapper() {
 					public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 						assertThat(rs.getString("lastname")).isEqualTo("Person");
@@ -175,10 +175,10 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 	@Test
 	public void testUpdate() {
 		String dn = "cn=Some Person,ou=company1,ou=Sweden";
-		dummyDao.update(dn, "Some Person", "Updated Person", "Updated description");
+		this.dummyDao.update(dn, "Some Person", "Updated Person", "Updated description");
 
 		log.debug("Verifying result");
-		Object ldapResult = ldapTemplate.lookup(dn, new AttributesMapper() {
+		Object ldapResult = this.ldapTemplate.lookup(dn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
 				assertThat(attributes.get("sn").get()).isEqualTo("Updated Person");
 				assertThat(attributes.get("description").get()).isEqualTo("Updated description");
@@ -186,7 +186,7 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 			}
 		});
 
-		Object jdbcResult = jdbcTemplate.queryForObject("select * from PERSON where fullname=?",
+		Object jdbcResult = this.jdbcTemplate.queryForObject("select * from PERSON where fullname=?",
 				new Object[] { "Some Person" }, new RowMapper() {
 					public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 						assertThat(rs.getString("lastname")).isEqualTo("Updated Person");
@@ -197,7 +197,7 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 
 		assertThat(ldapResult).isNotNull();
 		assertThat(jdbcResult).isNotNull();
-		dummyDao.update(dn, "Some Person", "Person", "Sweden, Company1, Some Person");
+		this.dummyDao.update(dn, "Some Person", "Person", "Sweden, Company1, Some Person");
 	}
 
 	@Test
@@ -206,7 +206,7 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 		String newDn = "cn=Some Person2,ou=company2,ou=Sweden";
 		try {
 			// Perform test
-			dummyDao.updateAndRenameWithException(dn, newDn, "Updated description");
+			this.dummyDao.updateAndRenameWithException(dn, newDn, "Updated description");
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {
@@ -215,7 +215,7 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 
 		// Verify that entry was not moved.
 		try {
-			ldapTemplate.lookup(newDn);
+			this.ldapTemplate.lookup(newDn);
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
@@ -223,7 +223,7 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 		}
 
 		// Verify that original entry was not updated.
-		Object object = ldapTemplate.lookup(dn, new AttributesMapper() {
+		Object object = this.ldapTemplate.lookup(dn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
 				assertThat(attributes.get("description").get()).isEqualTo("Sweden, Company1, Some Person2");
 				return new Object();
@@ -237,10 +237,10 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 		String dn = "cn=Some Person2,ou=company1,ou=Sweden";
 		String newDn = "cn=Some Person2,ou=company2,ou=Sweden";
 		// Perform test
-		dummyDao.updateAndRename(dn, newDn, "Updated description");
+		this.dummyDao.updateAndRename(dn, newDn, "Updated description");
 
 		// Verify that entry was moved and updated.
-		Object object = ldapTemplate.lookup(newDn, new AttributesMapper() {
+		Object object = this.ldapTemplate.lookup(newDn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
 				assertThat(attributes.get("description").get()).isEqualTo("Updated description");
 				return new Object();
@@ -248,7 +248,7 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 		});
 
 		assertThat(object).isNotNull();
-		dummyDao.updateAndRename(newDn, dn, "Sweden, Company1, Some Person2");
+		this.dummyDao.updateAndRename(newDn, dn, "Sweden, Company1, Some Person2");
 	}
 
 	@Test
@@ -256,7 +256,7 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 		String dn = "cn=Some Person,ou=company1,ou=Sweden";
 		try {
 			// Perform test
-			dummyDao.modifyAttributesWithException(dn, "Updated lastname", "Updated description");
+			this.dummyDao.modifyAttributesWithException(dn, "Updated lastname", "Updated description");
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {
@@ -264,7 +264,7 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 		}
 
 		// Verify result - check that the operation was properly rolled back
-		Object result = ldapTemplate.lookup(dn, new AttributesMapper() {
+		Object result = this.ldapTemplate.lookup(dn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
 				assertThat(attributes.get("sn").get()).isEqualTo("Person");
 				assertThat(attributes.get("description").get()).isEqualTo("Sweden, Company1, Some Person");
@@ -279,10 +279,10 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 	public void testModifyAttributes() {
 		String dn = "cn=Some Person,ou=company1,ou=Sweden";
 		// Perform test
-		dummyDao.modifyAttributes(dn, "Updated lastname", "Updated description");
+		this.dummyDao.modifyAttributes(dn, "Updated lastname", "Updated description");
 
 		// Verify result - check that the operation was not rolled back
-		Object result = ldapTemplate.lookup(dn, new AttributesMapper() {
+		Object result = this.ldapTemplate.lookup(dn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
 				assertThat(attributes.get("sn").get()).isEqualTo("Updated lastname");
 				assertThat(attributes.get("description").get()).isEqualTo("Updated description");
@@ -291,7 +291,7 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 		});
 
 		assertThat(result).isNotNull();
-		dummyDao.update(dn, "Some Person", "Person", "Sweden, Company1, Some Person");
+		this.dummyDao.update(dn, "Some Person", "Person", "Sweden, Company1, Some Person");
 	}
 
 	@Test
@@ -299,7 +299,7 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 		String dn = "cn=Some Person,ou=company1,ou=Sweden";
 		try {
 			// Perform test
-			dummyDao.unbindWithException(dn, "Some Person");
+			this.dummyDao.unbindWithException(dn, "Some Person");
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {
@@ -307,14 +307,14 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 		}
 
 		// Verify result - check that the operation was properly rolled back
-		Object ldapResult = ldapTemplate.lookup(dn, new AttributesMapper() {
+		Object ldapResult = this.ldapTemplate.lookup(dn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
 				// Just verify that the entry still exists.
 				return new Object();
 			}
 		});
 
-		Object jdbcResult = jdbcTemplate.queryForObject("select * from PERSON where fullname=?",
+		Object jdbcResult = this.jdbcTemplate.queryForObject("select * from PERSON where fullname=?",
 				new Object[] { "Some Person" }, new RowMapper() {
 					public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 						// Just verify that the entry still exists.
@@ -330,11 +330,11 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 	public void testUnbind() {
 		String dn = "cn=Some Person,ou=company1,ou=Sweden";
 		// Perform test
-		dummyDao.unbind(dn, "Some Person");
+		this.dummyDao.unbind(dn, "Some Person");
 
 		try {
 			// Verify result - check that the operation was not rolled back
-			ldapTemplate.lookup(dn);
+			this.ldapTemplate.lookup(dn);
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
@@ -342,7 +342,7 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 		}
 
 		try {
-			jdbcTemplate.queryForObject("select * from PERSON where fullname=?", new Object[] { "Some Person" },
+			this.jdbcTemplate.queryForObject("select * from PERSON where fullname=?", new Object[] { "Some Person" },
 					new RowMapper() {
 						public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 							return null;

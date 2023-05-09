@@ -69,7 +69,7 @@ public class SupportedControlsITests extends AbstractLdapTemplateIntegrationTest
 
 		};
 
-		String[] controls = (String[]) tested.lookup("", new String[] { SUPPORTED_CONTROL }, mapper);
+		String[] controls = (String[]) this.tested.lookup("", new String[] { SUPPORTED_CONTROL }, mapper);
 		System.out.println(Arrays.toString(controls));
 
 		HashSet<String> controlsSet = new HashSet<String>(Arrays.asList(controls));

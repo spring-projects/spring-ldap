@@ -57,18 +57,18 @@ public class DefaultLdapClientRenameITests extends AbstractLdapTemplateIntegrati
 		adapter.setAttributeValue("sn", "Person6");
 		adapter.setAttributeValue("description", "Some description");
 
-		tested.bind(DN).object(adapter).execute();
+		this.tested.bind(DN).object(adapter).execute();
 	}
 
 	@After
 	public void cleanup() throws Exception {
-		tested.unbind(NEWDN).execute();
-		tested.unbind(DN).execute();
+		this.tested.unbind(NEWDN).execute();
+		this.tested.unbind(DN).execute();
 	}
 
 	@Test
 	public void testRename() {
-		tested.modify(DN).name(NEWDN).execute();
+		this.tested.modify(DN).name(NEWDN).execute();
 		verifyDeleted(LdapUtils.newLdapName(DN));
 		verifyBoundCorrectData();
 	}
@@ -77,14 +77,14 @@ public class DefaultLdapClientRenameITests extends AbstractLdapTemplateIntegrati
 	public void testRename_LdapName() {
 		Name oldDn = LdapUtils.newLdapName(DN);
 		Name newDn = LdapUtils.newLdapName(NEWDN);
-		tested.modify(oldDn).name(newDn).execute();
+		this.tested.modify(oldDn).name(newDn).execute();
 		verifyDeleted(oldDn);
 		verifyBoundCorrectData();
 	}
 
 	private void verifyDeleted(Name dn) {
 		try {
-			tested.list(dn).toList(NameClassPair::getName);
+			this.tested.list(dn).toList(NameClassPair::getName);
 			fail("Expected entry '" + dn + "' to be non-existent");
 		}
 		catch (NameNotFoundException expected) {
@@ -93,7 +93,7 @@ public class DefaultLdapClientRenameITests extends AbstractLdapTemplateIntegrati
 	}
 
 	private void verifyBoundCorrectData() {
-		LdapDataEntry result = tested.search().name(NEWDN).toEntry();
+		LdapDataEntry result = this.tested.search().name(NEWDN).toEntry();
 		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person6");
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person6");
 		assertThat(result.getStringAttribute("description")).isEqualTo("Some description");

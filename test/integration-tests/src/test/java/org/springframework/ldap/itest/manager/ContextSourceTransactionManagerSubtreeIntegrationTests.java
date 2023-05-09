@@ -64,10 +64,10 @@ public class ContextSourceTransactionManagerSubtreeIntegrationTests extends Abst
 
 	@Test
 	public void testLdap168DeleteRecursively() {
-		dummyDao.deleteRecursively("ou=company1,ou=Sweden");
+		this.dummyDao.deleteRecursively("ou=company1,ou=Sweden");
 
 		try {
-			ldapTemplate.lookup("ou=company1,ou=Sweden");
+			this.ldapTemplate.lookup("ou=company1,ou=Sweden");
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
@@ -78,7 +78,7 @@ public class ContextSourceTransactionManagerSubtreeIntegrationTests extends Abst
 	@Test
 	public void testLdap168DeleteWithException() {
 		try {
-			dummyDao.deleteRecursivelyWithException("ou=company1,ou=Sweden");
+			this.dummyDao.deleteRecursivelyWithException("ou=company1,ou=Sweden");
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {
@@ -86,18 +86,18 @@ public class ContextSourceTransactionManagerSubtreeIntegrationTests extends Abst
 		}
 
 		// Entry should have been restored
-		ldapTemplate.lookup("ou=company1,ou=Sweden");
+		this.ldapTemplate.lookup("ou=company1,ou=Sweden");
 	}
 
 	@Test
 	public void testLdap244CreateRecursively() {
-		dummyDao.createRecursivelyAndUnbindSubnode();
+		this.dummyDao.createRecursivelyAndUnbindSubnode();
 	}
 
 	@Test
 	public void testLdap244CreateRecursivelyWithException() {
 		try {
-			dummyDao.createRecursivelyAndUnbindSubnodeWithException();
+			this.dummyDao.createRecursivelyAndUnbindSubnodeWithException();
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {

@@ -47,7 +47,7 @@ public class LdapTemplateContextExecutorTests extends AbstractLdapTemplateIntegr
 			}
 		};
 
-		Object object = tested.executeReadOnly(executor);
+		Object object = this.tested.executeReadOnly(executor);
 		assertThat(object instanceof DirContextAdapter).as("Should be a DirContextAdapter").isTrue();
 	}
 

@@ -43,7 +43,7 @@ public class LdapTemplateOdmGroupManipulationITests extends AbstractLdapTemplate
 
 	@Test
 	public void testFindOne() {
-		Group group = tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
+		Group group = this.tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
 
 		assertThat(group).isNotNull();
 		assertThat(group.getName()).isEqualTo("ROLE_USER");
@@ -58,12 +58,12 @@ public class LdapTemplateOdmGroupManipulationITests extends AbstractLdapTemplate
 
 	@Test
 	public void testRemoveMember() {
-		Group group = tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
+		Group group = this.tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
 
 		group.removeMember(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden," + base));
-		tested.update(group);
+		this.tested.update(group);
 
-		Group verification = tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
+		Group verification = this.tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
 
 		Set<Name> members = verification.getMembers();
 		assertThat(members).hasSize(3);
@@ -72,12 +72,12 @@ public class LdapTemplateOdmGroupManipulationITests extends AbstractLdapTemplate
 
 	@Test
 	public void testRemoveMemberSyntacticallyEqual() {
-		Group group = tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
+		Group group = this.tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
 
 		group.removeMember(LdapUtils.newLdapName("cn=Some Person,OU=company1, ou=Sweden," + base));
-		tested.update(group);
+		this.tested.update(group);
 
-		Group verification = tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
+		Group verification = this.tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
 
 		Set<Name> members = verification.getMembers();
 		assertThat(members).hasSize(3);
@@ -86,12 +86,12 @@ public class LdapTemplateOdmGroupManipulationITests extends AbstractLdapTemplate
 
 	@Test
 	public void testAddMember() {
-		Group group = tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
+		Group group = this.tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
 
 		group.addMember(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Norway," + base));
-		tested.update(group);
+		this.tested.update(group);
 
-		Group verification = tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
+		Group verification = this.tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
 
 		Set<Name> members = verification.getMembers();
 		assertThat(members).hasSize(5);
@@ -100,12 +100,12 @@ public class LdapTemplateOdmGroupManipulationITests extends AbstractLdapTemplate
 
 	@Test
 	public void testAddMemberDuplicate() {
-		Group group = tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
+		Group group = this.tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
 
 		group.addMember(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden," + base));
-		tested.update(group);
+		this.tested.update(group);
 
-		Group verification = tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
+		Group verification = this.tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
 
 		Set<Name> members = verification.getMembers();
 		assertThat(members).hasSize(4);
@@ -114,12 +114,12 @@ public class LdapTemplateOdmGroupManipulationITests extends AbstractLdapTemplate
 
 	@Test
 	public void testAddMemberSyntacticallyEqualDuplicate() {
-		Group group = tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
+		Group group = this.tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
 
 		group.addMember(LdapUtils.newLdapName("cn=Some Person,OU=company1 ,ou=Sweden," + base));
-		tested.update(group);
+		this.tested.update(group);
 
-		Group verification = tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
+		Group verification = this.tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
 
 		Set<Name> members = verification.getMembers();
 		assertThat(members).hasSize(4);
@@ -128,7 +128,7 @@ public class LdapTemplateOdmGroupManipulationITests extends AbstractLdapTemplate
 
 	@Test
 	public void testSetMembersSyntacticallyEqual() {
-		Group group = tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
+		Group group = this.tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
 
 		group.setMembers(new HashSet<Name>() {
 			{
@@ -136,9 +136,9 @@ public class LdapTemplateOdmGroupManipulationITests extends AbstractLdapTemplate
 				add(LdapUtils.newLdapName("CN=Some Person2, OU=company1,ou=Sweden," + base));
 			}
 		});
-		tested.update(group);
+		this.tested.update(group);
 
-		Group verification = tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
+		Group verification = this.tested.findOne(query().where("cn").is("ROLE_USER"), Group.class);
 
 		Set<Name> members = verification.getMembers();
 

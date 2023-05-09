@@ -59,7 +59,7 @@ public class LdapTemplateNoBaseSuffixITests extends AbstractLdapTemplateIntegrat
 	@Test
 	public void testLookup_Plain() {
 		String expectedDn = "cn=Some Person2, ou=company1, ou=Sweden," + base;
-		DirContextAdapter result = (DirContextAdapter) tested.lookup(expectedDn);
+		DirContextAdapter result = (DirContextAdapter) this.tested.lookup(expectedDn);
 
 		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person2");
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person2");
@@ -74,7 +74,7 @@ public class LdapTemplateNoBaseSuffixITests extends AbstractLdapTemplateIntegrat
 	public void testSearch_Plain() {
 		CountNameClassPairCallbackHandler handler = new CountNameClassPairCallbackHandler();
 
-		tested.search(base, "(objectclass=person)", handler);
+		this.tested.search(base, "(objectclass=person)", handler);
 		assertThat(handler.getNoOfRows()).isEqualTo(5);
 	}
 
@@ -84,17 +84,17 @@ public class LdapTemplateNoBaseSuffixITests extends AbstractLdapTemplateIntegrat
 		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
 		adapter.setAttributeValue("cn", "Some Person4");
 		adapter.setAttributeValue("sn", "Person4");
-		tested.bind("cn=Some Person4, ou=company1, ou=Sweden," + base, adapter, null);
+		this.tested.bind("cn=Some Person4, ou=company1, ou=Sweden," + base, adapter, null);
 
-		DirContextAdapter result = (DirContextAdapter) tested.lookup("cn=Some Person4, ou=company1, ou=Sweden," + base);
+		DirContextAdapter result = (DirContextAdapter) this.tested.lookup("cn=Some Person4, ou=company1, ou=Sweden," + base);
 
 		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person4");
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person4");
 		assertThat(result.getDn()).isEqualTo(LdapUtils.newLdapName("cn=Some Person4,ou=company1,ou=Sweden," + base));
 
-		tested.unbind("cn=Some Person4,ou=company1,ou=Sweden," + base);
+		this.tested.unbind("cn=Some Person4,ou=company1,ou=Sweden," + base);
 		try {
-			tested.lookup("cn=Some Person4, ou=company1, ou=Sweden," + base);
+			this.tested.lookup("cn=Some Person4, ou=company1, ou=Sweden," + base);
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {

@@ -61,20 +61,20 @@ public abstract class AbstractLdapTemplateIntegrationTests {
 	@Before
 	public void cleanAndSetup() throws NamingException, IOException {
 		Resource ldifResource = getLdifFileResource();
-		if (!LdapUtils.newLdapName(base).equals(LdapUtils.newLdapName(DEFAULT_BASE))) {
+		if (!LdapUtils.newLdapName(this.base).equals(LdapUtils.newLdapName(DEFAULT_BASE))) {
 			List<String> lines = IOUtils.readLines(ldifResource.getInputStream());
 
 			StringWriter sw = new StringWriter();
 			PrintWriter writer = new PrintWriter(sw);
 			for (String line : lines) {
-				writer.println(StringUtils.replace(line, DEFAULT_BASE, base));
+				writer.println(StringUtils.replace(line, DEFAULT_BASE, this.base));
 			}
 
 			writer.flush();
 			ldifResource = new ByteArrayResource(sw.toString().getBytes("UTF8"));
 		}
 
-		LdapTestUtils.cleanAndSetup(contextSource, getRoot(), ldifResource);
+		LdapTestUtils.cleanAndSetup(this.contextSource, getRoot(), ldifResource);
 	}
 
 	protected Resource getLdifFileResource() {

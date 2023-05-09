@@ -42,7 +42,7 @@ public class HardcodedFilterIntegrationTests extends AbstractLdapTemplateIntegra
 
 	@Test
 	public void verifyThatFilterEditorWorks() {
-		Filter filter = dummyFilterConsumer.getFilter();
+		Filter filter = this.dummyFilterConsumer.getFilter();
 		assertThat(filter instanceof HardcodedFilter).isTrue();
 		assertThat(filter.toString()).isEqualTo("(&(objectclass=person)(!(objectclass=computer))");
 	}
@@ -51,7 +51,7 @@ public class HardcodedFilterIntegrationTests extends AbstractLdapTemplateIntegra
 	public void verifyThatWildcardsAreUnescaped() {
 		HardcodedFilter filter = new HardcodedFilter("cn=Some*");
 		CountNameClassPairCallbackHandler handler = new CountNameClassPairCallbackHandler();
-		ldapTemplate.search(LdapUtils.emptyLdapName(), filter.encode(), handler);
+		this.ldapTemplate.search(LdapUtils.emptyLdapName(), filter.encode(), handler);
 		int hits = handler.getNoOfRows();
 		assertThat(hits > 1).isTrue();
 	}

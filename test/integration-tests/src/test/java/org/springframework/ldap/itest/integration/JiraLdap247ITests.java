@@ -39,13 +39,13 @@ public class JiraLdap247ITests extends AbstractLdapTemplateIntegrationTests {
 
 	@Test
 	public void verifyThatBasePathIsProperlyPopulated() {
-		assertThat(ldapGroupDao).isNotNull();
+		assertThat(this.ldapGroupDao).isNotNull();
 
 		// The base path should be automatically populated by
 		// BaseLdapPathBeanPostProcessor,
 		// but it doesn't unless it implements Ordered, which caused the assertion below
 		// to fail.
-		assertThat(ldapGroupDao.getBasePath()).isNotNull();
+		assertThat(this.ldapGroupDao.getBasePath()).isNotNull();
 	}
 
 }

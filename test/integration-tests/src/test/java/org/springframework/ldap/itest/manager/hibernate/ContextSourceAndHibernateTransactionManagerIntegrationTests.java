@@ -119,7 +119,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTests extends
 		person.setCompany("company1");
 
 		try {
-			dummyDao.createWithException(person);
+			this.dummyDao.createWithException(person);
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {
@@ -130,14 +130,14 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTests extends
 
 		// Verify that no entry was created in ldap or hibernate db
 		try {
-			ldapTemplate.lookup("cn=some testperson, ou=company1, ou=Sweden");
+			this.ldapTemplate.lookup("cn=some testperson, ou=company1, ou=Sweden");
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
 			assertThat(true).isTrue();
 		}
 
-		List result = hibernateTemplate.findByNamedParam("from OrgPerson person where person.lastname = :lastname",
+		List result = this.hibernateTemplate.findByNamedParam("from OrgPerson person where person.lastname = :lastname",
 				"lastname", person.getLastname());
 		assertThat(result.size() == 0).isTrue();
 
@@ -159,7 +159,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTests extends
 		this.dummyDao.create(person);
 		person = null;
 		log.debug("Verifying result");
-		Object ldapResult = ldapTemplate.lookup("cn=some testperson, ou=company1, ou=Sweden");
+		Object ldapResult = this.ldapTemplate.lookup("cn=some testperson, ou=company1, ou=Sweden");
 		OrgPerson fromDb = (OrgPerson) this.hibernateTemplate.get(OrgPerson.class, new Integer(2));
 		assertThat(ldapResult).isNotNull();
 		assertThat(fromDb).isNotNull();
@@ -171,7 +171,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTests extends
 		OrgPerson originalPerson = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, new Integer(1));
 		originalPerson.setLastname("fooo");
 		try {
-			dummyDao.updateWithException(originalPerson);
+			this.dummyDao.updateWithException(originalPerson);
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {
@@ -180,7 +180,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTests extends
 
 		log.debug("Verifying result");
 
-		Object ldapResult = ldapTemplate.lookup(dn, new AttributesMapper() {
+		Object ldapResult = this.ldapTemplate.lookup(dn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
 				assertThat(attributes.get("sn").get()).as("Person").isNotNull();
 				assertThat(attributes.get("description").get()).isEqualTo("Sweden, Company1, Some Person");
@@ -203,10 +203,10 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTests extends
 		person.setLastname("Updated Person");
 		person.setDescription("Updated description");
 
-		dummyDao.update(person);
+		this.dummyDao.update(person);
 
 		log.debug("Verifying result");
-		Object ldapResult = ldapTemplate.lookup(dn, new AttributesMapper() {
+		Object ldapResult = this.ldapTemplate.lookup(dn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
 				assertThat(attributes.get("sn").get()).isEqualTo("Updated Person");
 				assertThat(attributes.get("description").get()).isEqualTo("Updated description");
@@ -230,7 +230,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTests extends
 
 		try {
 			// Perform test
-			dummyDao.updateAndRenameWithException(dn, newDn, "Updated description");
+			this.dummyDao.updateAndRenameWithException(dn, newDn, "Updated description");
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {
@@ -239,7 +239,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTests extends
 
 		// Verify that entry was not moved.
 		try {
-			ldapTemplate.lookup(newDn);
+			this.ldapTemplate.lookup(newDn);
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
@@ -247,7 +247,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTests extends
 		}
 
 		// Verify that original entry was not updated.
-		Object object = ldapTemplate.lookup(dn, new AttributesMapper() {
+		Object object = this.ldapTemplate.lookup(dn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
 				assertThat(attributes.get("description").get()).isEqualTo("Sweden, Company1, Some Person2");
 				return new Object();
@@ -261,10 +261,10 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTests extends
 		String dn = "cn=Some Person2,ou=company1,ou=Sweden";
 		String newDn = "cn=Some Person2,ou=company2,ou=Sweden";
 		// Perform test
-		dummyDao.updateAndRename(dn, newDn, "Updated description");
+		this.dummyDao.updateAndRename(dn, newDn, "Updated description");
 
 		// Verify that entry was moved and updated.
-		Object object = ldapTemplate.lookup(newDn, new AttributesMapper() {
+		Object object = this.ldapTemplate.lookup(newDn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
 				assertThat(attributes.get("description").get()).isEqualTo("Updated description");
 				return new Object();
@@ -279,7 +279,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTests extends
 		String dn = "cn=Some Person,ou=company1,ou=Sweden";
 		try {
 			// Perform test
-			dummyDao.modifyAttributesWithException(dn, "Updated lastname", "Updated description");
+			this.dummyDao.modifyAttributesWithException(dn, "Updated lastname", "Updated description");
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {
@@ -287,7 +287,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTests extends
 		}
 
 		// Verify result - check that the operation was properly rolled back
-		Object result = ldapTemplate.lookup(dn, new AttributesMapper() {
+		Object result = this.ldapTemplate.lookup(dn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
 				assertThat(attributes.get("sn").get()).isEqualTo("Person");
 				assertThat(attributes.get("description").get()).isEqualTo("Sweden, Company1, Some Person");
@@ -302,10 +302,10 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTests extends
 	public void testModifyAttributes() {
 		String dn = "cn=Some Person,ou=company1,ou=Sweden";
 		// Perform test
-		dummyDao.modifyAttributes(dn, "Updated lastname", "Updated description");
+		this.dummyDao.modifyAttributes(dn, "Updated lastname", "Updated description");
 
 		// Verify result - check that the operation was not rolled back
-		Object result = ldapTemplate.lookup(dn, new AttributesMapper() {
+		Object result = this.ldapTemplate.lookup(dn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
 				assertThat(attributes.get("sn").get()).isEqualTo("Updated lastname");
 				assertThat(attributes.get("description").get()).isEqualTo("Updated description");
@@ -323,7 +323,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTests extends
 
 		try {
 			// Perform test
-			dummyDao.unbindWithException(person);
+			this.dummyDao.unbindWithException(person);
 			fail("DummyException expected");
 		}
 		catch (DummyException expected) {
@@ -332,7 +332,7 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTests extends
 
 		person = null;
 		// Verify result - check that the operation was properly rolled back
-		Object ldapResult = ldapTemplate.lookup(dn, new AttributesMapper() {
+		Object ldapResult = this.ldapTemplate.lookup(dn, new AttributesMapper() {
 			public Object mapFromAttributes(Attributes attributes) throws NamingException {
 				// Just verify that the entry still exists.
 				return new Object();
@@ -356,11 +356,11 @@ public class ContextSourceAndHibernateTransactionManagerIntegrationTests extends
 		String dn = "cn=Some Person,ou=company1,ou=Sweden";
 		// Perform test
 		OrgPerson person = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, new Integer(1));
-		dummyDao.unbind(person);
+		this.dummyDao.unbind(person);
 
 		try {
 			// Verify result - check that the operation was not rolled back
-			ldapTemplate.lookup(dn);
+			this.ldapTemplate.lookup(dn);
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {

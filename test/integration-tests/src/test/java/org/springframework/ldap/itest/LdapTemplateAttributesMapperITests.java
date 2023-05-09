@@ -46,7 +46,7 @@ public class LdapTemplateAttributesMapperITests extends AbstractLdapTemplateInte
 	@Test
 	public void testSearch_AttributeMapper() throws Exception {
 		AttributesMapper mapper = new PersonAttributesMapper();
-		List result = tested.search("ou=company1,ou=Sweden", "(&(objectclass=person)(sn=Person2))", mapper);
+		List result = this.tested.search("ou=company1,ou=Sweden", "(&(objectclass=person)(sn=Person2))", mapper);
 
 		assertThat(result).hasSize(1);
 		Person person = (Person) result.get(0);
@@ -74,7 +74,7 @@ public class LdapTemplateAttributesMapperITests extends AbstractLdapTemplateInte
 				return members;
 			}
 		};
-		List result = tested.search("ou=groups", "(&(objectclass=groupOfUniqueNames)(cn=ROLE_USER))", mapper);
+		List result = this.tested.search("ou=groups", "(&(objectclass=groupOfUniqueNames)(cn=ROLE_USER))", mapper);
 
 		assertThat(result).hasSize(1);
 

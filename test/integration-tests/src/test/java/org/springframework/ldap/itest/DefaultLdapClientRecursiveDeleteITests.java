@@ -61,42 +61,42 @@ public class DefaultLdapClientRecursiveDeleteITests extends AbstractLdapTemplate
 		adapter.setAttributeValue("cn", "Some Person5");
 		adapter.setAttributeValue("sn", "Person5");
 		adapter.setAttributeValue("description", "Some description");
-		tested.bind(DN).object(adapter).execute();
+		this.tested.bind(DN).object(adapter).execute();
 
-		firstSubDn = LdapUtils.newLdapName("cn=subPerson");
-		firstSubDn = LdapUtils.prepend(firstSubDn, DN);
+		this.firstSubDn = LdapUtils.newLdapName("cn=subPerson");
+		this.firstSubDn = LdapUtils.prepend(this.firstSubDn, DN);
 
 		adapter = new DirContextAdapter();
 		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
 		adapter.setAttributeValue("cn", "subPerson");
 		adapter.setAttributeValue("sn", "subPerson");
 		adapter.setAttributeValue("description", "Should be recursively deleted");
-		tested.bind(firstSubDn).object(adapter).execute();
-		secondSubDn = LdapUtils.newLdapName("cn=subPerson2");
-		secondSubDn = LdapUtils.prepend(secondSubDn, DN);
+		this.tested.bind(this.firstSubDn).object(adapter).execute();
+		this.secondSubDn = LdapUtils.newLdapName("cn=subPerson2");
+		this.secondSubDn = LdapUtils.prepend(this.secondSubDn, DN);
 
 		adapter = new DirContextAdapter();
 		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
 		adapter.setAttributeValue("cn", "subPerson2");
 		adapter.setAttributeValue("sn", "subPerson2");
 		adapter.setAttributeValue("description", "Should be recursively deleted");
-		tested.bind(secondSubDn).object(adapter).execute();
+		this.tested.bind(this.secondSubDn).object(adapter).execute();
 
-		leafDn = LdapUtils.newLdapName("cn=subSubPerson");
-		leafDn = LdapUtils.prepend(leafDn, DN);
+		this.leafDn = LdapUtils.newLdapName("cn=subSubPerson");
+		this.leafDn = LdapUtils.prepend(this.leafDn, DN);
 
 		adapter = new DirContextAdapter();
 		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
 		adapter.setAttributeValue("cn", "subSubPerson");
 		adapter.setAttributeValue("sn", "subSubPerson");
 		adapter.setAttributeValue("description", "Should be recursively deleted");
-		tested.bind(leafDn).object(adapter).execute();
+		this.tested.bind(this.leafDn).object(adapter).execute();
 	}
 
 	@After
 	public void cleanup() throws Exception {
 		try {
-			tested.unbind(DN).recursive(true).execute();
+			this.tested.unbind(DN).recursive(true).execute();
 		}
 		catch (NameNotFoundException ignore) {
 			// ignore
@@ -106,25 +106,25 @@ public class DefaultLdapClientRecursiveDeleteITests extends AbstractLdapTemplate
 	@Test
 	@Category(NoAdTests.class)
 	public void testRecursiveUnbind() {
-		tested.unbind(DN).recursive(true).execute();
+		this.tested.unbind(DN).recursive(true).execute();
 
 		verifyDeleted(DN);
-		verifyDeleted(firstSubDn);
-		verifyDeleted(secondSubDn);
-		verifyDeleted(leafDn);
+		verifyDeleted(this.firstSubDn);
+		verifyDeleted(this.secondSubDn);
+		verifyDeleted(this.leafDn);
 	}
 
 	@Test
 	@Category(NoAdTests.class)
 	public void testRecursiveUnbindOnLeaf() {
-		tested.unbind(leafDn).recursive(true).execute();
-		verifyDeleted(leafDn);
+		this.tested.unbind(this.leafDn).recursive(true).execute();
+		verifyDeleted(this.leafDn);
 	}
 
 	private void verifyDeleted(Name dn) {
 		assertThatExceptionOfType(NameNotFoundException.class)
 				.describedAs("Expected entry '" + dn + "' to be non-existent")
-				.isThrownBy(() -> tested.list(dn).toList(NameClassPair::getName));
+				.isThrownBy(() -> this.tested.list(dn).toList(NameClassPair::getName));
 	}
 
 }

@@ -59,35 +59,35 @@ public class DefaultLdapClientListITests extends AbstractLdapTemplateIntegration
 
 	@Before
 	public void prepareTestedInstance() throws Exception {
-		contextMapper = new AttributeCheckContextMapper();
+		this.contextMapper = new AttributeCheckContextMapper();
 	}
 
 	@After
 	public void tearDown() {
-		contextMapper = null;
+		this.contextMapper = null;
 	}
 
 	@Test
 	public void testListBindings_ContextMapper() {
-		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		contextMapper.setExpectedValues(ALL_VALUES);
-		List<DirContextAdapter> list = tested.listBindings("ou=company2,ou=Sweden" + BASE_STRING).toList(contextMapper);
+		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.contextMapper.setExpectedValues(ALL_VALUES);
+		List<DirContextAdapter> list = this.tested.listBindings("ou=company2,ou=Sweden" + BASE_STRING).toList(this.contextMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testListBindings_ContextMapper_Name() {
-		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		contextMapper.setExpectedValues(ALL_VALUES);
+		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.contextMapper.setExpectedValues(ALL_VALUES);
 		LdapName dn = LdapUtils.newLdapName("ou=company2,ou=Sweden");
-		List<DirContextAdapter> list = tested.listBindings(dn).toList(contextMapper);
+		List<DirContextAdapter> list = this.tested.listBindings(dn).toList(this.contextMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testListBindings_ContextMapper_MapToPersons() {
 		LdapName dn = LdapUtils.newLdapName("ou=company1,ou=Sweden");
-		List<Person> list = tested.listBindings(dn).toList(new PersonContextMapper());
+		List<Person> list = this.tested.listBindings(dn).toList(new PersonContextMapper());
 		assertThat(list).hasSize(3);
 		String personClass = "org.springframework.ldap.itest.Person";
 		assertThat(list.get(0).getClass().getName()).isEqualTo(personClass);
@@ -97,7 +97,7 @@ public class DefaultLdapClientListITests extends AbstractLdapTemplateIntegration
 
 	@Test
 	public void testList() {
-		List<String> list = tested.list(BASE_STRING).toList(NameClassPair::getName);
+		List<String> list = this.tested.list(BASE_STRING).toList(NameClassPair::getName);
 		assertThat(list).hasSize(3);
 		verifyBindings(list);
 	}
@@ -116,7 +116,7 @@ public class DefaultLdapClientListITests extends AbstractLdapTemplateIntegration
 
 	@Test
 	public void testList_Name() {
-		List<String> list = tested.list(BASE_NAME).toList(NameClassPair::getName);
+		List<String> list = this.tested.list(BASE_NAME).toList(NameClassPair::getName);
 		assertThat(list).hasSize(3);
 		verifyBindings(list);
 	}
@@ -124,7 +124,7 @@ public class DefaultLdapClientListITests extends AbstractLdapTemplateIntegration
 	@Test
 	public void testList_Handler() {
 		CountNameClassPairCallbackHandler handler = new CountNameClassPairCallbackHandler();
-		tested.list(BASE_STRING).toList((result) -> {
+		this.tested.list(BASE_STRING).toList((result) -> {
 			handler.handleNameClassPair(result);
 			return result;
 		});
@@ -134,7 +134,7 @@ public class DefaultLdapClientListITests extends AbstractLdapTemplateIntegration
 	@Test
 	public void testList_Name_Handler() {
 		CountNameClassPairCallbackHandler handler = new CountNameClassPairCallbackHandler();
-		tested.list(BASE_NAME).toList((result) -> {
+		this.tested.list(BASE_NAME).toList((result) -> {
 			handler.handleNameClassPair(result);
 			return result;
 		});
@@ -143,21 +143,21 @@ public class DefaultLdapClientListITests extends AbstractLdapTemplateIntegration
 
 	@Test
 	public void testListBindings() {
-		List<String> list = tested.listBindings(BASE_STRING).toList(NameClassPair::getName);
+		List<String> list = this.tested.listBindings(BASE_STRING).toList(NameClassPair::getName);
 		assertThat(list).hasSize(3);
 		verifyBindings(list);
 	}
 
 	@Test
 	public void testListBindings_Name() {
-		List<String> list = tested.listBindings(BASE_NAME).toList(NameClassPair::getName);
+		List<String> list = this.tested.listBindings(BASE_NAME).toList(NameClassPair::getName);
 		assertThat(list).hasSize(3);
 	}
 
 	@Test
 	public void testListBindings_Handler() {
 		CountNameClassPairCallbackHandler handler = new CountNameClassPairCallbackHandler();
-		tested.list(BASE_STRING).toList((result) -> {
+		this.tested.list(BASE_STRING).toList((result) -> {
 			handler.handleNameClassPair(result);
 			return result;
 		});
@@ -167,7 +167,7 @@ public class DefaultLdapClientListITests extends AbstractLdapTemplateIntegration
 	@Test
 	public void testListBindings_Name_Handler() {
 		CountNameClassPairCallbackHandler handler = new CountNameClassPairCallbackHandler();
-		tested.list(BASE_NAME).toList((result) -> {
+		this.tested.list(BASE_NAME).toList((result) -> {
 			handler.handleNameClassPair(result);
 			return result;
 		});

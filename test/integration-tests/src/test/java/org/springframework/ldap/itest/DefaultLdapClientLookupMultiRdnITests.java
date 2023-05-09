@@ -53,7 +53,7 @@ public class DefaultLdapClientLookupMultiRdnITests extends AbstractLdapTemplateI
 	@Category(NoAdTests.class)
 	public void testLookup_MultiValuedRdn() {
 		AttributesMapper<Person> mapper = new PersonAttributesMapper();
-		Person person = tested.search().name("cn=Some Person+sn=Person, ou=company1,ou=Norway").toObject(mapper);
+		Person person = this.tested.search().name("cn=Some Person+sn=Person, ou=company1,ou=Norway").toObject(mapper);
 		assertThat(person.getFullname()).isEqualTo("Some Person");
 		assertThat(person.getLastname()).isEqualTo("Person");
 		assertThat(person.getDescription()).isEqualTo("Norway, Company1, Some Person+Person");
@@ -67,7 +67,7 @@ public class DefaultLdapClientLookupMultiRdnITests extends AbstractLdapTemplateI
 	@Test
 	@Category(NoAdTests.class)
 	public void testLookup_MultiValuedRdn_DirContextAdapter() {
-		LdapDataEntry result = tested.search().name("cn=Some Person+sn=Person, ou=company1,ou=Norway").toEntry();
+		LdapDataEntry result = this.tested.search().name("cn=Some Person+sn=Person, ou=company1,ou=Norway").toEntry();
 		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person");
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person");
 		assertThat(result.getStringAttribute("description")).isEqualTo("Norway, Company1, Some Person+Person");
@@ -76,7 +76,7 @@ public class DefaultLdapClientLookupMultiRdnITests extends AbstractLdapTemplateI
 	@Test
 	@Category(NoAdTests.class)
 	public void testLookup_GetNameInNamespace_MultiRdn() {
-		DirContextOperations result = tested.search().name("cn=Some Person+sn=Person,ou=company1,ou=Norway").toEntry();
+		DirContextOperations result = this.tested.search().name("cn=Some Person+sn=Person,ou=company1,ou=Norway").toEntry();
 		assertThat(result.getDn().toString()).isEqualTo("cn=Some Person+sn=Person,ou=company1,ou=Norway");
 		assertThat(result.getNameInNamespace()).isEqualTo("cn=Some Person+sn=Person,ou=company1,ou=Norway," + base);
 	}

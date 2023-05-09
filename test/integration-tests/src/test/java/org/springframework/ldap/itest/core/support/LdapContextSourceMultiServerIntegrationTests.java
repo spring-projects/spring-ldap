@@ -39,8 +39,8 @@ public class LdapContextSourceMultiServerIntegrationTests extends AbstractJUnit4
 
 	@Test
 	public void testUrls() throws NamingException {
-		String[] urls = tested.getUrls();
-		String string = tested.assembleProviderUrlString(urls);
+		String[] urls = this.tested.getUrls();
+		String string = this.tested.assembleProviderUrlString(urls);
 
 		assertThat(string).isEqualTo("ldap://127.0.0.1:389 ldap://127.0.0.2:389");
 	}

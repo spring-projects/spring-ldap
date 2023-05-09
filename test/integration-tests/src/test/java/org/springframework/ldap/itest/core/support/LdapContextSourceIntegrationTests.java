@@ -63,7 +63,7 @@ public class LdapContextSourceIntegrationTests extends AbstractLdapTemplateInteg
 		DirContext ctx = null;
 
 		try {
-			ctx = tested.getReadOnlyContext();
+			ctx = this.tested.getReadOnlyContext();
 			assertThat(ctx).isNotNull();
 			Hashtable environment = ctx.getEnvironment();
 			assertThat(environment.containsKey(LdapContextSource.SUN_LDAP_POOLING_FLAG)).isFalse();
@@ -88,7 +88,7 @@ public class LdapContextSourceIntegrationTests extends AbstractLdapTemplateInteg
 		DirContext ctx = null;
 
 		try {
-			ctx = tested.getReadWriteContext();
+			ctx = this.tested.getReadWriteContext();
 			assertThat(ctx).isNotNull();
 			// Double check to see that we are authenticated.
 			Hashtable environment = ctx.getEnvironment();
@@ -116,7 +116,7 @@ public class LdapContextSourceIntegrationTests extends AbstractLdapTemplateInteg
 		try {
 			String expectedPrincipal = "cn=Some Person,ou=company1,ou=Sweden," + base;
 			String expectedCredentials = "password";
-			ctx = tested.getContext(expectedPrincipal, expectedCredentials);
+			ctx = this.tested.getContext(expectedPrincipal, expectedCredentials);
 			assertThat(ctx).isNotNull();
 			// Double check to see that we are authenticated, and that we did not receive
 			// a connection eligible for connection pooling.
@@ -143,14 +143,14 @@ public class LdapContextSourceIntegrationTests extends AbstractLdapTemplateInteg
 	@Category(NoAdTests.class)
 	public void verifyAuthenticate() {
 		EqualsFilter filter = new EqualsFilter("cn", "Some Person2");
-		List<String> results = ldapTemplate.search("", filter.toString(), new DnContextMapper());
+		List<String> results = this.ldapTemplate.search("", filter.toString(), new DnContextMapper());
 		if (results.size() != 1) {
 			throw new IncorrectResultSizeDataAccessException(1, results.size());
 		}
 
 		DirContext ctx = null;
 		try {
-			ctx = tested.getContext(results.get(0), "password");
+			ctx = this.tested.getContext(results.get(0), "password");
 			assertThat(true).isTrue();
 		}
 		catch (Exception e) {

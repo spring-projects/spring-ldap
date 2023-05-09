@@ -46,7 +46,7 @@ public class LdapTemplateOdmWithNoDnAnnotationsITests extends AbstractLdapTempla
 
 	@Test
 	public void testFindOne() {
-		Person person = tested.findOne(query().where("cn").is("Some Person3"), Person.class);
+		Person person = this.tested.findOne(query().where("cn").is("Some Person3"), Person.class);
 
 		assertThat(person).isNotNull();
 		assertThat(person.getCommonName()).isEqualTo("Some Person3");
@@ -58,7 +58,7 @@ public class LdapTemplateOdmWithNoDnAnnotationsITests extends AbstractLdapTempla
 
 	@Test
 	public void testFindByDn() {
-		Person person = tested.findByDn(LdapUtils.newLdapName("cn=Some Person3,ou=company1,ou=Sweden"), Person.class);
+		Person person = this.tested.findByDn(LdapUtils.newLdapName("cn=Some Person3,ou=company1,ou=Sweden"), Person.class);
 
 		assertThat(person).isNotNull();
 		assertThat(person.getCommonName()).isEqualTo("Some Person3");
@@ -70,17 +70,17 @@ public class LdapTemplateOdmWithNoDnAnnotationsITests extends AbstractLdapTempla
 
 	@Test(expected = OdmException.class)
 	public void testFindByDnThrowsExceptionOnInvalidEntry() {
-		tested.findByDn(LdapUtils.newLdapName("ou=company1,ou=Sweden"), Person.class);
+		this.tested.findByDn(LdapUtils.newLdapName("ou=company1,ou=Sweden"), Person.class);
 	}
 
 	@Test(expected = EmptyResultDataAccessException.class)
 	public void testFindOneThrowsEmptyResultIfNotFound() {
-		tested.findOne(query().where("cn").is("This cn does not exist"), Person.class);
+		this.tested.findOne(query().where("cn").is("This cn does not exist"), Person.class);
 	}
 
 	@Test
 	public void testFind() {
-		List<Person> persons = tested.find(query().where("cn").is("Some Person3"), Person.class);
+		List<Person> persons = this.tested.find(query().where("cn").is("Some Person3"), Person.class);
 
 		assertThat(persons).hasSize(1);
 		Person person = persons.get(0);
@@ -95,7 +95,7 @@ public class LdapTemplateOdmWithNoDnAnnotationsITests extends AbstractLdapTempla
 
 	@Test
 	public void testFindForStream() {
-		List<Person> persons = tested.findForStream(query().where("cn").is("Some Person3"), Person.class)
+		List<Person> persons = this.tested.findForStream(query().where("cn").is("Some Person3"), Person.class)
 				.collect(Collectors.toList());
 
 		assertThat(persons).hasSize(1);
@@ -111,7 +111,7 @@ public class LdapTemplateOdmWithNoDnAnnotationsITests extends AbstractLdapTempla
 
 	@Test
 	public void testFindInCountry() {
-		List<Person> persons = tested.find(query().base("ou=Sweden").where("cn").isPresent(), Person.class);
+		List<Person> persons = this.tested.find(query().base("ou=Sweden").where("cn").isPresent(), Person.class);
 
 		assertThat(persons).hasSize(4);
 		Person person = persons.get(0);
@@ -121,7 +121,7 @@ public class LdapTemplateOdmWithNoDnAnnotationsITests extends AbstractLdapTempla
 
 	@Test
 	public void testFindForStreamInCountry() {
-		List<Person> persons = tested.findForStream(query().base("ou=Sweden").where("cn").isPresent(), Person.class)
+		List<Person> persons = this.tested.findForStream(query().base("ou=Sweden").where("cn").isPresent(), Person.class)
 				.collect(Collectors.toList());
 
 		assertThat(persons).hasSize(4);
@@ -132,7 +132,7 @@ public class LdapTemplateOdmWithNoDnAnnotationsITests extends AbstractLdapTempla
 
 	@Test
 	public void testFindAll() {
-		List<Person> result = tested.findAll(Person.class);
+		List<Person> result = this.tested.findAll(Person.class);
 		assertThat(result).hasSize(5);
 	}
 
@@ -145,11 +145,11 @@ public class LdapTemplateOdmWithNoDnAnnotationsITests extends AbstractLdapTempla
 		person.setDesc(Arrays.asList("This is the description"));
 		person.setTelephoneNumber("0123456");
 
-		tested.create(person);
+		this.tested.create(person);
 
-		assertThat(tested.findAll(Person.class)).hasSize(6);
+		assertThat(this.tested.findAll(Person.class)).hasSize(6);
 
-		person = tested.findOne(query().where("cn").is("New Person"), Person.class);
+		person = this.tested.findOne(query().where("cn").is("New Person"), Person.class);
 
 		assertThat(person.getCommonName()).isEqualTo("New Person");
 		assertThat(person.getSurname()).isEqualTo("Person");
@@ -160,14 +160,14 @@ public class LdapTemplateOdmWithNoDnAnnotationsITests extends AbstractLdapTempla
 
 	@Test
 	public void testUpdate() {
-		Person person = tested.findOne(query().where("cn").is("Some Person3"), Person.class);
+		Person person = this.tested.findOne(query().where("cn").is("Some Person3"), Person.class);
 
 		person.setDesc(Arrays.asList("New Description"));
 		String entryUuid = person.getEntryUuid();
 		assertThat(entryUuid).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
-		tested.update(person);
+		this.tested.update(person);
 
-		person = tested.findOne(query().where("cn").is("Some Person3"), Person.class);
+		person = this.tested.findOne(query().where("cn").is("Some Person3"), Person.class);
 
 		assertThat(person.getCommonName()).isEqualTo("Some Person3");
 		assertThat(person.getSurname()).isEqualTo("Person3");
@@ -178,12 +178,12 @@ public class LdapTemplateOdmWithNoDnAnnotationsITests extends AbstractLdapTempla
 
 	@Test
 	public void testDelete() {
-		Person person = tested.findOne(query().where("cn").is("Some Person3"), Person.class);
+		Person person = this.tested.findOne(query().where("cn").is("Some Person3"), Person.class);
 
-		tested.delete(person);
+		this.tested.delete(person);
 
 		try {
-			tested.findOne(query().where("cn").is("Some Person3"), Person.class);
+			this.tested.findOne(query().where("cn").is("Some Person3"), Person.class);
 			fail("EmptyResultDataAccessException e");
 		}
 		catch (EmptyResultDataAccessException e) {
@@ -196,13 +196,13 @@ public class LdapTemplateOdmWithNoDnAnnotationsITests extends AbstractLdapTempla
 	 */
 	@Test
 	public void testLdap271() {
-		Person person = tested.findOne(query().where("cn").is("Some Person3"), Person.class);
+		Person person = this.tested.findOne(query().where("cn").is("Some Person3"), Person.class);
 
 		// Perform test
 		person.setTelephoneNumber(null);
-		tested.update(person);
+		this.tested.update(person);
 
-		person = tested.findOne(query().where("cn").is("Some Person3"), Person.class);
+		person = this.tested.findOne(query().where("cn").is("Some Person3"), Person.class);
 		assertThat(person.getTelephoneNumber()).as("TelephoneNumber should be null").isNull();
 	}
 

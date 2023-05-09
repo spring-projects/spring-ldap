@@ -50,7 +50,7 @@ public class DefaultLdapClientLookupITests extends AbstractLdapTemplateIntegrati
 	 */
 	@Test
 	public void testLookup_Plain() {
-		DirContextOperations result = tested.search().name("cn=Some Person2, ou=company1,ou=Sweden").toEntry();
+		DirContextOperations result = this.tested.search().name("cn=Some Person2, ou=company1,ou=Sweden").toEntry();
 
 		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person2");
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person2");
@@ -64,7 +64,7 @@ public class DefaultLdapClientLookupITests extends AbstractLdapTemplateIntegrati
 	 */
 	@Test
 	public void testLookupContextRoot() {
-		DirContextOperations result = tested.search().name("").toEntry();
+		DirContextOperations result = this.tested.search().name("").toEntry();
 
 		assertThat(result.getDn().toString()).isEqualTo("");
 		assertThat(result.getNameInNamespace()).isEqualTo(base);
@@ -73,7 +73,7 @@ public class DefaultLdapClientLookupITests extends AbstractLdapTemplateIntegrati
 	@Test
 	public void testLookup_AttributesMapper() {
 		AttributesMapper<Person> mapper = new PersonAttributesMapper();
-		Person person = tested.search().name("cn=Some Person2, ou=company1,ou=Sweden").toObject(mapper);
+		Person person = this.tested.search().name("cn=Some Person2, ou=company1,ou=Sweden").toObject(mapper);
 		assertThat(person.getFullname()).isEqualTo("Some Person2");
 		assertThat(person.getLastname()).isEqualTo("Person2");
 		assertThat(person.getDescription()).isEqualTo("Sweden, Company1, Some Person2");
@@ -82,7 +82,7 @@ public class DefaultLdapClientLookupITests extends AbstractLdapTemplateIntegrati
 	@Test
 	public void testLookup_AttributesMapper_LdapName() {
 		AttributesMapper<Person> mapper = new PersonAttributesMapper();
-		Person person = tested.search().name(LdapUtils.newLdapName("cn=Some Person2, ou=company1,ou=Sweden"))
+		Person person = this.tested.search().name(LdapUtils.newLdapName("cn=Some Person2, ou=company1,ou=Sweden"))
 				.toObject(mapper);
 
 		assertThat(person.getFullname()).isEqualTo("Some Person2");
@@ -122,7 +122,7 @@ public class DefaultLdapClientLookupITests extends AbstractLdapTemplateIntegrati
 	public void testLookup_ReturnAttributes_AttributesMapper() {
 		AttributesMapper<Person> mapper = new SubsetPersonAttributesMapper();
 
-		Person person = tested.search()
+		Person person = this.tested.search()
 				.query((builder) -> builder.base("cn=Some Person2, ou=company1,ou=Sweden").attributes("cn"))
 				.toObject(mapper);
 
@@ -138,7 +138,7 @@ public class DefaultLdapClientLookupITests extends AbstractLdapTemplateIntegrati
 	@Test
 	public void testLookup_ReturnAttributes_AttributesMapper_LdapName() {
 		AttributesMapper<Person> mapper = new SubsetPersonAttributesMapper();
-		Person person = tested
+		Person person = this.tested
 				.search().query((builder) -> builder
 						.base(LdapUtils.newLdapName("cn=Some Person2, ou=company1,ou=Sweden")).attributes("cn"))
 				.toObject(mapper);
@@ -156,7 +156,7 @@ public class DefaultLdapClientLookupITests extends AbstractLdapTemplateIntegrati
 	@Test
 	public void testLookup_ContextMapper() {
 		ContextMapper<Person> mapper = new PersonContextMapper();
-		Person person = tested.search().name("cn=Some Person2, ou=company1,ou=Sweden").toObject(mapper);
+		Person person = this.tested.search().name("cn=Some Person2, ou=company1,ou=Sweden").toObject(mapper);
 
 		assertThat(person.getFullname()).isEqualTo("Some Person2");
 		assertThat(person.getLastname()).isEqualTo("Person2");
@@ -171,7 +171,7 @@ public class DefaultLdapClientLookupITests extends AbstractLdapTemplateIntegrati
 	public void testLookup_ReturnAttributes_ContextMapper() {
 		ContextMapper<Person> mapper = new PersonContextMapper();
 
-		Person person = tested.search()
+		Person person = this.tested.search()
 				.query((builder) -> builder.base("cn=Some Person2, ou=company1,ou=Sweden").attributes("cn"))
 				.toObject(mapper);
 
@@ -183,7 +183,7 @@ public class DefaultLdapClientLookupITests extends AbstractLdapTemplateIntegrati
 	@Test
 	public void testLookup_GetNameInNamespace_Plain() {
 		String expectedDn = "cn=Some Person2, ou=company1,ou=Sweden";
-		DirContextOperations result = tested.search().name(expectedDn).toEntry();
+		DirContextOperations result = this.tested.search().name(expectedDn).toEntry();
 
 		LdapName expectedName = LdapUtils.newLdapName(expectedDn);
 		assertThat(result.getDn()).isEqualTo(expectedName);

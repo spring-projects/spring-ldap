@@ -82,232 +82,232 @@ public class DefaultLdapClientSearchResultITests extends AbstractLdapTemplateInt
 
 	@Before
 	public void prepareTestedInstance() throws Exception {
-		attributesMapper = new AttributeCheckAttributesMapper();
-		contextMapper = new AttributeCheckContextMapper();
+		this.attributesMapper = new AttributeCheckAttributesMapper();
+		this.contextMapper = new AttributeCheckContextMapper();
 	}
 
 	@After
 	public void cleanup() throws Exception {
-		attributesMapper = null;
-		contextMapper = null;
+		this.attributesMapper = null;
+		this.contextMapper = null;
 	}
 
 	@Test
 	public void testSearch_AttributesMapper() {
-		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		attributesMapper.setExpectedValues(ALL_VALUES);
+		this.attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.attributesMapper.setExpectedValues(ALL_VALUES);
 		LdapQuery query = LdapQueryBuilder.query().base(BASE_STRING).filter(FILTER_STRING);
-		List<Object> list = tested.search().query(query).toList(attributesMapper);
+		List<Object> list = this.tested.search().query(query).toList(this.attributesMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_LdapQuery_AttributesMapper() {
-		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		attributesMapper.setExpectedValues(ALL_VALUES);
+		this.attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.attributesMapper.setExpectedValues(ALL_VALUES);
 
-		List<Object> list = tested.search()
+		List<Object> list = this.tested.search()
 				.query(query().base(BASE_STRING).where("objectclass").is("person").and("sn").is("Person2"))
-				.toList(attributesMapper);
+				.toList(this.attributesMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearchForStream_LdapQuery_AttributesMapper() {
-		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		attributesMapper.setExpectedValues(ALL_VALUES);
+		this.attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.attributesMapper.setExpectedValues(ALL_VALUES);
 
-		List<Object> list = tested.search()
+		List<Object> list = this.tested.search()
 				.query(query().base(BASE_STRING).where("objectclass").is("person").and("sn").is("Person2"))
-				.toStream(attributesMapper).collect(Collectors.toList());
+				.toStream(this.attributesMapper).collect(Collectors.toList());
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_LdapQuery_AttributesMapper_FewerAttributes() {
-		attributesMapper.setExpectedAttributes(new String[] { "cn" });
-		attributesMapper.setExpectedValues(new String[] { "Some Person2" });
+		this.attributesMapper.setExpectedAttributes(new String[] { "cn" });
+		this.attributesMapper.setExpectedValues(new String[] { "Some Person2" });
 
-		List<Object> list = tested.search().query(
+		List<Object> list = this.tested.search().query(
 				query().base(BASE_STRING).attributes("cn").where("objectclass").is("person").and("sn").is("Person2"))
-				.toList(attributesMapper);
+				.toList(this.attributesMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearchForStream_LdapQuery_AttributesMapper_FewerAttributes() {
-		attributesMapper.setExpectedAttributes(new String[] { "cn" });
-		attributesMapper.setExpectedValues(new String[] { "Some Person2" });
+		this.attributesMapper.setExpectedAttributes(new String[] { "cn" });
+		this.attributesMapper.setExpectedValues(new String[] { "Some Person2" });
 
-		List<Object> list = tested.search().query(
+		List<Object> list = this.tested.search().query(
 				query().base(BASE_STRING).attributes("cn").where("objectclass").is("person").and("sn").is("Person2"))
-				.toStream(attributesMapper).collect(Collectors.toList());
+				.toStream(this.attributesMapper).collect(Collectors.toList());
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_LdapQuery_AttributesMapper_SearchScope() {
-		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		attributesMapper.setExpectedValues(ALL_VALUES);
+		this.attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.attributesMapper.setExpectedValues(ALL_VALUES);
 
-		List<Object> list = tested.search().query(query().base(BASE_STRING).searchScope(SearchScope.ONELEVEL)
-				.where("objectclass").is("person").and("sn").is("Person2")).toList(attributesMapper);
+		List<Object> list = this.tested.search().query(query().base(BASE_STRING).searchScope(SearchScope.ONELEVEL)
+				.where("objectclass").is("person").and("sn").is("Person2")).toList(this.attributesMapper);
 		assertThat(list).isEmpty();
 	}
 
 	@Test
 	public void testSearchForStream_LdapQuery_AttributesMapper_SearchScope() {
-		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		attributesMapper.setExpectedValues(ALL_VALUES);
+		this.attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.attributesMapper.setExpectedValues(ALL_VALUES);
 
-		List<Object> list = tested.search().query(query().base(BASE_STRING).searchScope(SearchScope.ONELEVEL)
-				.where("objectclass").is("person").and("sn").is("Person2")).toStream(attributesMapper)
+		List<Object> list = this.tested.search().query(query().base(BASE_STRING).searchScope(SearchScope.ONELEVEL)
+				.where("objectclass").is("person").and("sn").is("Person2")).toStream(this.attributesMapper)
 				.collect(Collectors.toList());
 		assertThat(list).isEmpty();
 	}
 
 	@Test
 	public void testSearch_LdapQuery_AttributesMapper_SearchScope_CorrectBase() {
-		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		attributesMapper.setExpectedValues(ALL_VALUES);
+		this.attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.attributesMapper.setExpectedValues(ALL_VALUES);
 
-		List<Object> list = tested.search().query(query().base("ou=company1,ou=Sweden")
+		List<Object> list = this.tested.search().query(query().base("ou=company1,ou=Sweden")
 				.searchScope(SearchScope.ONELEVEL).where("objectclass").is("person").and("sn").is("Person2"))
-				.toList(attributesMapper);
+				.toList(this.attributesMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearchForStream_LdapQuery_AttributesMapper_SearchScope_CorrectBase() {
-		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		attributesMapper.setExpectedValues(ALL_VALUES);
+		this.attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.attributesMapper.setExpectedValues(ALL_VALUES);
 
-		List<Object> list = tested
+		List<Object> list = this.tested
 				.search().query(query().base("ou=company1,ou=Sweden").searchScope(SearchScope.ONELEVEL)
 						.where("objectclass").is("person").and("sn").is("Person2"))
-				.toStream(attributesMapper).collect(Collectors.toList());
+				.toStream(this.attributesMapper).collect(Collectors.toList());
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_LdapQuery_AttributesMapper_NoBase() {
-		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		attributesMapper.setExpectedValues(ALL_VALUES);
+		this.attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.attributesMapper.setExpectedValues(ALL_VALUES);
 
-		List<Object> list = tested.search().query(query().where("objectclass").is("person").and("sn").is("Person2"))
-				.toList(attributesMapper);
+		List<Object> list = this.tested.search().query(query().where("objectclass").is("person").and("sn").is("Person2"))
+				.toList(this.attributesMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearchForStream_LdapQuery_AttributesMapper_NoBase() {
-		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		attributesMapper.setExpectedValues(ALL_VALUES);
+		this.attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.attributesMapper.setExpectedValues(ALL_VALUES);
 
-		List<Object> list = tested.search().query(query().where("objectclass").is("person").and("sn").is("Person2"))
-				.toStream(attributesMapper).collect(Collectors.toList());
+		List<Object> list = this.tested.search().query(query().where("objectclass").is("person").and("sn").is("Person2"))
+				.toStream(this.attributesMapper).collect(Collectors.toList());
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_LdapQuery_AttributesMapper_DifferentBase() {
-		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		attributesMapper.setExpectedValues(ALL_VALUES);
+		this.attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.attributesMapper.setExpectedValues(ALL_VALUES);
 
-		List<Object> list = tested.search()
+		List<Object> list = this.tested.search()
 				.query(query().base("ou=Norway").where("objectclass").is("person").and("sn").is("Person2"))
-				.toList(attributesMapper);
+				.toList(this.attributesMapper);
 		assertThat(list).isEmpty();
 	}
 
 	@Test
 	public void testSearchForStream_LdapQuery_AttributesMapper_DifferentBase() {
-		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		attributesMapper.setExpectedValues(ALL_VALUES);
+		this.attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.attributesMapper.setExpectedValues(ALL_VALUES);
 
-		List<Object> list = tested.search()
+		List<Object> list = this.tested.search()
 				.query(query().base("ou=Norway").where("objectclass").is("person").and("sn").is("Person2"))
-				.toStream(attributesMapper).collect(Collectors.toList());
+				.toStream(this.attributesMapper).collect(Collectors.toList());
 		assertThat(list).isEmpty();
 	}
 
 	@Test
 	public void testSearch_SearchScope_AttributesMapper() {
-		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		attributesMapper.setExpectedValues(ALL_VALUES);
-		List<Object> list = tested.search()
+		this.attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.attributesMapper.setExpectedValues(ALL_VALUES);
+		List<Object> list = this.tested.search()
 				.query(query().base(BASE_STRING).searchScope(SearchScope.SUBTREE).filter(FILTER_STRING))
-				.toList(attributesMapper);
+				.toList(this.attributesMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_SearchScope_LimitedAttrs_AttributesMapper() {
-		attributesMapper.setExpectedAttributes(CN_SN_ATTRS);
-		attributesMapper.setExpectedValues(CN_SN_VALUES);
-		attributesMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
-		List<Object> list = tested.search().query(query().base(BASE_STRING).searchScope(SearchScope.SUBTREE)
-				.attributes(CN_SN_ATTRS).filter(FILTER_STRING)).toList(attributesMapper);
+		this.attributesMapper.setExpectedAttributes(CN_SN_ATTRS);
+		this.attributesMapper.setExpectedValues(CN_SN_VALUES);
+		this.attributesMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
+		List<Object> list = this.tested.search().query(query().base(BASE_STRING).searchScope(SearchScope.SUBTREE)
+				.attributes(CN_SN_ATTRS).filter(FILTER_STRING)).toList(this.attributesMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_AttributesMapper_Name() {
-		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		attributesMapper.setExpectedValues(ALL_VALUES);
-		List<Object> list = tested.search().query(query().base(BASE_NAME).filter(FILTER_STRING))
-				.toList(attributesMapper);
+		this.attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.attributesMapper.setExpectedValues(ALL_VALUES);
+		List<Object> list = this.tested.search().query(query().base(BASE_NAME).filter(FILTER_STRING))
+				.toList(this.attributesMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_SearchScope_AttributesMapper_Name() {
-		attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		attributesMapper.setExpectedValues(ALL_VALUES);
-		List<Object> list = tested.search()
+		this.attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.attributesMapper.setExpectedValues(ALL_VALUES);
+		List<Object> list = this.tested.search()
 				.query(query().base(BASE_NAME).searchScope(SearchScope.SUBTREE).filter(FILTER_STRING))
-				.toList(attributesMapper);
+				.toList(this.attributesMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_SearchScope_LimitedAttrs_AttributesMapper_Name() {
-		attributesMapper.setExpectedAttributes(CN_SN_ATTRS);
-		attributesMapper.setExpectedValues(CN_SN_VALUES);
-		attributesMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
-		List<Object> list = tested.search().query(
+		this.attributesMapper.setExpectedAttributes(CN_SN_ATTRS);
+		this.attributesMapper.setExpectedValues(CN_SN_VALUES);
+		this.attributesMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
+		List<Object> list = this.tested.search().query(
 				query().base(BASE_NAME).searchScope(SearchScope.SUBTREE).attributes(CN_SN_ATTRS).filter(FILTER_STRING))
-				.toList(attributesMapper);
+				.toList(this.attributesMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_ContextMapper() {
-		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		contextMapper.setExpectedValues(ALL_VALUES);
-		List<DirContextAdapter> list = tested.search().query(query().base(BASE_STRING).filter(FILTER_STRING))
-				.toList(contextMapper);
+		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.contextMapper.setExpectedValues(ALL_VALUES);
+		List<DirContextAdapter> list = this.tested.search().query(query().base(BASE_STRING).filter(FILTER_STRING))
+				.toList(this.contextMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearchForObject() {
-		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		contextMapper.setExpectedValues(ALL_VALUES);
-		DirContextAdapter result = tested.search().query(query().base(BASE_STRING).filter(FILTER_STRING))
-				.toObject(contextMapper);
+		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.contextMapper.setExpectedValues(ALL_VALUES);
+		DirContextAdapter result = this.tested.search().query(query().base(BASE_STRING).filter(FILTER_STRING))
+				.toObject(this.contextMapper);
 		assertThat(result).isNotNull();
 	}
 
 	@Test(expected = IncorrectResultSizeDataAccessException.class)
 	public void testSearchForObjectWithMultipleHits() {
-		tested.search().query(query().base(BASE_STRING).filter("(&(objectclass=person)(sn=*))"))
+		this.tested.search().query(query().base(BASE_STRING).filter("(&(objectclass=person)(sn=*))"))
 				.toObject((Object ctx) -> ctx);
 	}
 
 	@Test // (expected = EmptyResultDataAccessException.class)
 	public void testSearchForObjectNoHits() {
-		Object result = tested.search()
+		Object result = this.tested.search()
 				.query(query().base(BASE_STRING).filter("(&(objectclass=person)(sn=Person does not exist))"))
 				.toObject((Object ctx) -> ctx);
 		assertThat(result).isNull();
@@ -315,116 +315,116 @@ public class DefaultLdapClientSearchResultITests extends AbstractLdapTemplateInt
 
 	@Test
 	public void testSearch_SearchScope_ContextMapper() {
-		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		contextMapper.setExpectedValues(ALL_VALUES);
-		List<DirContextAdapter> list = tested.search()
+		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.contextMapper.setExpectedValues(ALL_VALUES);
+		List<DirContextAdapter> list = this.tested.search()
 				.query(query().base(BASE_STRING).searchScope(SearchScope.SUBTREE).filter(FILTER_STRING))
-				.toList(contextMapper);
+				.toList(this.contextMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_SearchScope_LimitedAttrs_ContextMapper() {
-		contextMapper.setExpectedAttributes(CN_SN_ATTRS);
-		contextMapper.setExpectedValues(CN_SN_VALUES);
-		contextMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
-		List<DirContextAdapter> list = tested.search().query(query().base(BASE_STRING).searchScope(SearchScope.SUBTREE)
-				.attributes(CN_SN_ATTRS).filter(FILTER_STRING)).toList(contextMapper);
+		this.contextMapper.setExpectedAttributes(CN_SN_ATTRS);
+		this.contextMapper.setExpectedValues(CN_SN_VALUES);
+		this.contextMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
+		List<DirContextAdapter> list = this.tested.search().query(query().base(BASE_STRING).searchScope(SearchScope.SUBTREE)
+				.attributes(CN_SN_ATTRS).filter(FILTER_STRING)).toList(this.contextMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_ContextMapper_Name() {
-		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		contextMapper.setExpectedValues(ALL_VALUES);
-		List<DirContextAdapter> list = tested.search().query(query().base(BASE_NAME).filter(FILTER_STRING))
-				.toList(contextMapper);
+		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.contextMapper.setExpectedValues(ALL_VALUES);
+		List<DirContextAdapter> list = this.tested.search().query(query().base(BASE_NAME).filter(FILTER_STRING))
+				.toList(this.contextMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_ContextMapper_LdapQuery() {
-		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		contextMapper.setExpectedValues(ALL_VALUES);
-		List<DirContextAdapter> list = tested.search()
+		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.contextMapper.setExpectedValues(ALL_VALUES);
+		List<DirContextAdapter> list = this.tested.search()
 				.query(query().base(BASE_NAME).where("objectclass").is("person").and("sn").is("Person2"))
-				.toList(contextMapper);
+				.toList(this.contextMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearchForStream_ContextMapper_LdapQuery() {
-		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		contextMapper.setExpectedValues(ALL_VALUES);
-		List<DirContextAdapter> list = tested.search()
+		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.contextMapper.setExpectedValues(ALL_VALUES);
+		List<DirContextAdapter> list = this.tested.search()
 				.query(query().base(BASE_NAME).where("objectclass").is("person").and("sn").is("Person2"))
-				.toStream(contextMapper).collect(Collectors.toList());
+				.toStream(this.contextMapper).collect(Collectors.toList());
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_ContextMapper_LdapQuery_NoBase() {
-		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		contextMapper.setExpectedValues(ALL_VALUES);
-		List<DirContextAdapter> list = tested.search()
-				.query(query().where("objectclass").is("person").and("sn").is("Person2")).toList(contextMapper);
+		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.contextMapper.setExpectedValues(ALL_VALUES);
+		List<DirContextAdapter> list = this.tested.search()
+				.query(query().where("objectclass").is("person").and("sn").is("Person2")).toList(this.contextMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearchForStream_ContextMapper_LdapQuery_NoBase() {
-		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		contextMapper.setExpectedValues(ALL_VALUES);
-		List<DirContextAdapter> list = tested.search()
-				.query(query().where("objectclass").is("person").and("sn").is("Person2")).toStream(contextMapper)
+		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.contextMapper.setExpectedValues(ALL_VALUES);
+		List<DirContextAdapter> list = this.tested.search()
+				.query(query().where("objectclass").is("person").and("sn").is("Person2")).toStream(this.contextMapper)
 				.collect(Collectors.toList());
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_ContextMapper_LdapQuery_SearchScope() {
-		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		contextMapper.setExpectedValues(ALL_VALUES);
-		List<DirContextAdapter> list = tested.search().query(query().base(BASE_NAME).searchScope(SearchScope.ONELEVEL)
-				.where("objectclass").is("person").and("sn").is("Person2")).toList(contextMapper);
+		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.contextMapper.setExpectedValues(ALL_VALUES);
+		List<DirContextAdapter> list = this.tested.search().query(query().base(BASE_NAME).searchScope(SearchScope.ONELEVEL)
+				.where("objectclass").is("person").and("sn").is("Person2")).toList(this.contextMapper);
 		assertThat(list).isEmpty();
 	}
 
 	@Test
 	public void testSearchForStream_ContextMapper_LdapQuery_SearchScope() {
-		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		contextMapper.setExpectedValues(ALL_VALUES);
-		List<DirContextAdapter> list = tested.search().query(query().base(BASE_NAME).searchScope(SearchScope.ONELEVEL)
-				.where("objectclass").is("person").and("sn").is("Person2")).toStream(contextMapper)
+		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.contextMapper.setExpectedValues(ALL_VALUES);
+		List<DirContextAdapter> list = this.tested.search().query(query().base(BASE_NAME).searchScope(SearchScope.ONELEVEL)
+				.where("objectclass").is("person").and("sn").is("Person2")).toStream(this.contextMapper)
 				.collect(Collectors.toList());
 		assertThat(list).isEmpty();
 	}
 
 	@Test
 	public void testSearch_ContextMapper_LdapQuery_SearchScope_CorrectBase() {
-		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		contextMapper.setExpectedValues(ALL_VALUES);
-		List<DirContextAdapter> list = tested.search().query(query().base("ou=company1,ou=Sweden")
+		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.contextMapper.setExpectedValues(ALL_VALUES);
+		List<DirContextAdapter> list = this.tested.search().query(query().base("ou=company1,ou=Sweden")
 				.searchScope(SearchScope.ONELEVEL).where("objectclass").is("person").and("sn").is("Person2"))
-				.toList(contextMapper);
+				.toList(this.contextMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearchForStream_ContextMapper_LdapQuery_SearchScope_CorrectBase() {
-		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		contextMapper.setExpectedValues(ALL_VALUES);
-		List<DirContextAdapter> list = tested
+		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.contextMapper.setExpectedValues(ALL_VALUES);
+		List<DirContextAdapter> list = this.tested
 				.search().query(query().base("ou=company1,ou=Sweden").searchScope(SearchScope.ONELEVEL)
 						.where("objectclass").is("person").and("sn").is("Person2"))
-				.toStream(contextMapper).collect(Collectors.toList());
+				.toStream(this.contextMapper).collect(Collectors.toList());
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearchForContext_LdapQuery() {
 		ContextMapper<DirContextOperations> mapper = (result) -> (DirContextOperations) result;
-		DirContextOperations result = tested.search()
+		DirContextOperations result = this.tested.search()
 				.query(query().where("objectclass").is("person").and("sn").is("Person2")).toObject(mapper);
 		assertThat(result).isNotNull();
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person2");
@@ -432,16 +432,16 @@ public class DefaultLdapClientSearchResultITests extends AbstractLdapTemplateInt
 
 	@Test // (expected = EmptyResultDataAccessException.class)
 	public void testSearchForContext_LdapQuery_SearchScopeNotFound() {
-		Object result = tested.search().query(
+		Object result = this.tested.search().query(
 				query().searchScope(SearchScope.ONELEVEL).where("objectclass").is("person").and("sn").is("Person2"))
-				.toObject(attributesMapper);
+				.toObject(this.attributesMapper);
 		assertThat(result).isNull();
 	}
 
 	@Test
 	public void testSearchForContext_LdapQuery_SearchScope_CorrectBase() {
 		ContextMapper<DirContextOperations> mapper = (result) -> (DirContextOperations) result;
-		DirContextOperations result = tested.search().query(query().searchScope(SearchScope.ONELEVEL)
+		DirContextOperations result = this.tested.search().query(query().searchScope(SearchScope.ONELEVEL)
 				.base("ou=company1,ou=Sweden").where("objectclass").is("person").and("sn").is("Person2"))
 				.toObject(mapper);
 
@@ -451,30 +451,30 @@ public class DefaultLdapClientSearchResultITests extends AbstractLdapTemplateInt
 
 	@Test
 	public void testSearch_SearchScope_ContextMapper_Name() {
-		contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
-		contextMapper.setExpectedValues(ALL_VALUES);
-		List<DirContextAdapter> list = tested.search()
+		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
+		this.contextMapper.setExpectedValues(ALL_VALUES);
+		List<DirContextAdapter> list = this.tested.search()
 				.query(query().base(BASE_NAME).searchScope(SearchScope.SUBTREE).filter(FILTER_STRING))
-				.toList(contextMapper);
+				.toList(this.contextMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearch_SearchScope_LimitedAttrs_ContextMapper_Name() {
-		contextMapper.setExpectedAttributes(CN_SN_ATTRS);
-		contextMapper.setExpectedValues(CN_SN_VALUES);
-		contextMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
-		List<DirContextAdapter> list = tested.search().query(
+		this.contextMapper.setExpectedAttributes(CN_SN_ATTRS);
+		this.contextMapper.setExpectedValues(CN_SN_VALUES);
+		this.contextMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
+		List<DirContextAdapter> list = this.tested.search().query(
 				query().base(BASE_NAME).searchScope(SearchScope.SUBTREE).attributes(CN_SN_ATTRS).filter(FILTER_STRING))
-				.toList(contextMapper);
+				.toList(this.contextMapper);
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearchWithInvalidSearchBaseShouldByDefaultThrowException() {
 		try {
-			tested.search().query(query().base(BASE_NAME + "ou=unknown").searchScope(SearchScope.SUBTREE)
-					.attributes(CN_SN_ATTRS).filter(FILTER_STRING)).toObject(contextMapper);
+			this.tested.search().query(query().base(BASE_NAME + "ou=unknown").searchScope(SearchScope.SUBTREE)
+					.attributes(CN_SN_ATTRS).filter(FILTER_STRING)).toObject(this.contextMapper);
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
@@ -484,18 +484,18 @@ public class DefaultLdapClientSearchResultITests extends AbstractLdapTemplateInt
 
 	@Test
 	public void testSearchWithInvalidSearchBaseCanBeConfiguredToSwallowException() {
-		ReflectionTestUtils.setField(tested, "ignoreNameNotFoundException", true);
-		contextMapper.setExpectedAttributes(CN_SN_ATTRS);
-		contextMapper.setExpectedValues(CN_SN_VALUES);
-		contextMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
-		List<DirContextAdapter> list = tested.search().query(query().base(BASE_NAME + "ou=unknown")
-				.searchScope(SearchScope.SUBTREE).attributes(CN_SN_ATTRS).filter(FILTER_STRING)).toList(contextMapper);
+		ReflectionTestUtils.setField(this.tested, "ignoreNameNotFoundException", true);
+		this.contextMapper.setExpectedAttributes(CN_SN_ATTRS);
+		this.contextMapper.setExpectedValues(CN_SN_VALUES);
+		this.contextMapper.setAbsentAttributes(ABSENT_ATTRIBUTES);
+		List<DirContextAdapter> list = this.tested.search().query(query().base(BASE_NAME + "ou=unknown")
+				.searchScope(SearchScope.SUBTREE).attributes(CN_SN_ATTRS).filter(FILTER_STRING)).toList(this.contextMapper);
 		assertThat(list).isEmpty();
 	}
 
 	@Test
 	public void verifyThatSearchWithCountLimitReturnsTheEntriesFoundSoFar() {
-		List<Object> result = tested.search().query(query().countLimit(3).where("objectclass").is("person"))
+		List<Object> result = this.tested.search().query(query().countLimit(3).where("objectclass").is("person"))
 				.toList((Object ctx) -> new Object());
 
 		assertThat(result).hasSize(3);
@@ -503,8 +503,8 @@ public class DefaultLdapClientSearchResultITests extends AbstractLdapTemplateInt
 
 	@Test(expected = SizeLimitExceededException.class)
 	public void verifyThatSearchWithCountLimitWithFlagToFalseThrowsException() {
-		ReflectionTestUtils.setField(tested, "ignoreSizeLimitExceededException", false);
-		tested.search().query(query().countLimit(3).where("objectclass").is("person")).toList((Object ctx) -> ctx);
+		ReflectionTestUtils.setField(this.tested, "ignoreSizeLimitExceededException", false);
+		this.tested.search().query(query().countLimit(3).where("objectclass").is("person")).toList((Object ctx) -> ctx);
 	}
 
 }
