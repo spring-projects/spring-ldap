@@ -138,7 +138,7 @@ public class IncrementalAttributeMapperITests extends AbstractJUnit4SpringContex
 		try {
 			this.ldapTemplate.lookup(OU_DN);
 		}
-		catch (NameNotFoundException e) {
+		catch (NameNotFoundException ex) {
 			// Nothing to cleanup
 			return;
 		}
@@ -149,7 +149,7 @@ public class IncrementalAttributeMapperITests extends AbstractJUnit4SpringContex
 				// Everything is deleted
 				return;
 			}
-			catch (SizeLimitExceededException e) {
+			catch (SizeLimitExceededException ex) {
 				// There's more to delete
 			}
 		}

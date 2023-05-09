@@ -20,7 +20,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class CompilerInterface {
+public final class CompilerInterface {
 
 	// Compile the given file - when we can drop Java 5 we'll use the Java 6 compiler API
 	public static void compile(String directory, String file) throws Exception {
@@ -47,6 +47,10 @@ public class CompilerInterface {
 		if (!ok) {
 			throw new RuntimeException(builder.toString());
 		}
+	}
+
+	private CompilerInterface() {
+
 	}
 
 }
