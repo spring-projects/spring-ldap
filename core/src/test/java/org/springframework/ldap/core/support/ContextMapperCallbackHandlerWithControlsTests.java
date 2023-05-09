@@ -44,7 +44,7 @@ public class ContextMapperCallbackHandlerWithControlsTests {
 
 		private static final long serialVersionUID = 1L;
 
-		public MyBindingThatHasControls(String name, Object obj) {
+		MyBindingThatHasControls(String name, Object obj) {
 			super(name, obj);
 		}
 

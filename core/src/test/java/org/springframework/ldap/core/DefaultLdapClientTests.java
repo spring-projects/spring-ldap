@@ -676,7 +676,7 @@ public class DefaultLdapClientTests {
 
 		private final SearchControls controls;
 
-		public SearchControlsMatcher(SearchControls controls) {
+		SearchControlsMatcher(SearchControls controls) {
 			this.controls = controls;
 		}
 

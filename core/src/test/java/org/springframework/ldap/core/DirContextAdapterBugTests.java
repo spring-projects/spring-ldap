@@ -91,7 +91,7 @@ public class DirContextAdapterBugTests {
 
 	private static class UpdateAdapter extends DirContextAdapter {
 
-		public UpdateAdapter(Attributes attrs, Name dn) {
+		UpdateAdapter(Attributes attrs, Name dn) {
 			super(attrs, dn);
 			setUpdateMode(true);
 		}

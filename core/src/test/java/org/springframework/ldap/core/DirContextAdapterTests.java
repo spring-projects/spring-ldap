@@ -95,7 +95,7 @@ public class DirContextAdapterTests {
 		attrs.put(new BasicAttribute("abc"));
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(attrs, null);
 			}
 
@@ -111,7 +111,7 @@ public class DirContextAdapterTests {
 		attrs.put(new BasicAttribute("abc"));
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(attrs, null);
 			}
 
@@ -133,7 +133,7 @@ public class DirContextAdapterTests {
 		attrs.put(new BasicAttribute("abc", "def"));
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(attrs, null);
 			}
 
@@ -152,7 +152,7 @@ public class DirContextAdapterTests {
 		attrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(attrs, null);
 			}
 
@@ -172,7 +172,7 @@ public class DirContextAdapterTests {
 		attrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(attrs, null);
 			}
 
@@ -194,7 +194,7 @@ public class DirContextAdapterTests {
 		attrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(attrs, null);
 			}
 
@@ -220,7 +220,7 @@ public class DirContextAdapterTests {
 		attrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(attrs, null);
 			}
 
@@ -239,7 +239,7 @@ public class DirContextAdapterTests {
 		final Attributes attrs = new BasicAttributes();
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(attrs, null);
 			}
 
@@ -670,7 +670,7 @@ public class DirContextAdapterTests {
 		fixtureAttrs.put(new BasicAttribute("abc", "123"));
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
@@ -713,7 +713,7 @@ public class DirContextAdapterTests {
 		fixtureAttrs.put(abc);
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
@@ -738,7 +738,7 @@ public class DirContextAdapterTests {
 		fixtureAttrs.put(new BasicAttribute("abc", "123"));
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
@@ -761,7 +761,7 @@ public class DirContextAdapterTests {
 		fixtureAttrs.put(new BasicAttribute("abc", "123"));
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
@@ -784,7 +784,7 @@ public class DirContextAdapterTests {
 		fixtureAttrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
@@ -809,7 +809,7 @@ public class DirContextAdapterTests {
 		fixtureAttrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
@@ -833,7 +833,7 @@ public class DirContextAdapterTests {
 		fixtureAttrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
@@ -865,7 +865,7 @@ public class DirContextAdapterTests {
 		fixtureAttrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
@@ -894,7 +894,7 @@ public class DirContextAdapterTests {
 		fixtureAttrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
@@ -919,7 +919,7 @@ public class DirContextAdapterTests {
 		fixtureAttrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
@@ -945,7 +945,7 @@ public class DirContextAdapterTests {
 		fixtureAttrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
@@ -971,7 +971,7 @@ public class DirContextAdapterTests {
 		fixtureAttrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
@@ -995,7 +995,7 @@ public class DirContextAdapterTests {
 		fixtureAttrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
@@ -1020,7 +1020,7 @@ public class DirContextAdapterTests {
 		fixtureAttrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
@@ -1057,7 +1057,7 @@ public class DirContextAdapterTests {
 		fixtureAttrs.put(multi);
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
@@ -1078,7 +1078,7 @@ public class DirContextAdapterTests {
 		fixtureAttrs.put(new BasicAttribute("abc", "123"));
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}
@@ -1114,7 +1114,7 @@ public class DirContextAdapterTests {
 		fixtureAttrs.put(new BasicAttribute("qwe", "42"));
 		class TestableDirContextAdapter extends DirContextAdapter {
 
-			public TestableDirContextAdapter() {
+			TestableDirContextAdapter() {
 				super(fixtureAttrs, null);
 				setUpdateMode(true);
 			}

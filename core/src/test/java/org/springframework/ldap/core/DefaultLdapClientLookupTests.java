@@ -205,7 +205,7 @@ public class DefaultLdapClientLookupTests {
 
 		private final Iterator<SearchResult> names;
 
-		public NamingEnumeration(SearchResult... results) {
+		NamingEnumeration(SearchResult... results) {
 			this.names = Arrays.asList(results).iterator();
 		}
 
