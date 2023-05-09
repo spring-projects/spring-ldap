@@ -82,6 +82,10 @@ import org.springframework.util.StringUtils;
  * UnsupportOperationException.
  * </p>
  *
+ * @author Magnus Robertsson
+ * @author Andreas Ronge
+ * @author Adam Skogman
+ * @author Mattias Hellborg Arthursson
  * @see #setAttributeValue(String, Object)
  * @see #setAttributeValues(String, Object[])
  * @see #getStringAttribute(String)
@@ -91,10 +95,6 @@ import org.springframework.util.StringUtils;
  * @see #removeAttributeValue(String, Object)
  * @see #setUpdateMode(boolean)
  * @see #isUpdateMode()
- * @author Magnus Robertsson
- * @author Andreas Ronge
- * @author Adam Skogman
- * @author Mattias Hellborg Arthursson
  */
 public class DirContextAdapter implements DirContextOperations {
 

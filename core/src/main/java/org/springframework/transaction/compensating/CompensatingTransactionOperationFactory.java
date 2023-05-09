@@ -23,8 +23,8 @@ import org.springframework.transaction.compensating.support.DefaultCompensatingT
  * based on operation method names.
  *
  * @author Mattias Hellborg Arthursson
- * @see DefaultCompensatingTransactionOperationManager
  * @since 1.2
+ * @see DefaultCompensatingTransactionOperationManager
  */
 public interface CompensatingTransactionOperationFactory {
 

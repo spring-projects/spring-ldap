@@ -61,13 +61,13 @@ import org.springframework.util.StringUtils;
  * necessary to call {@link #afterPropertiesSet()} when all properties are set, in order
  * to finish up initialization.
  *
+ * @author Mattias Hellborg Arthursson
+ * @author Adam Skogman
+ * @author Ulrik Sandberg
  * @see org.springframework.ldap.core.LdapTemplate
  * @see org.springframework.ldap.core.support.DefaultDirObjectFactory
  * @see org.springframework.ldap.core.support.LdapContextSource
  * @see org.springframework.ldap.core.support.DirContextSource
- * @author Mattias Hellborg Arthursson
- * @author Adam Skogman
- * @author Ulrik Sandberg
  */
 public abstract class AbstractContextSource implements BaseLdapPathContextSource, InitializingBean {
 

@@ -26,9 +26,9 @@ import org.springframework.ldap.NamingException;
  * acquiring contexts for LDAP operations, but may be used standalone to perform LDAP
  * authentication.
  *
- * @see org.springframework.ldap.core.LdapTemplate
  * @author Adam Skogman
  * @author Mattias Hellborg Arthursson
+ * @see org.springframework.ldap.core.LdapTemplate
  */
 public interface ContextSource {
 

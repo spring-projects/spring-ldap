@@ -21,10 +21,10 @@ package org.springframework.ldap.query;
  * builder step.
  *
  * @author Mattias Hellborg Arthursson
+ * @since 2.0
  * @see LdapQueryBuilder#where(String)
  * @see ContainerCriteria#and(String)
  * @see ContainerCriteria#or(String)
- * @since 2.0
  */
 public interface ConditionCriteria {
 

@@ -38,9 +38,9 @@ import org.springframework.util.Assert;
  * part in {@link ContextSourceAndDataSourceTransactionManager}.
  *
  * @author Mattias Hellborg Arthursson
+ * @since 1.2
  * @see ContextSourceTransactionManager
  * @see ContextSourceAndDataSourceTransactionManager
- * @since 1.2
  */
 public class ContextSourceTransactionManagerDelegate extends AbstractCompensatingTransactionManagerDelegate {
 

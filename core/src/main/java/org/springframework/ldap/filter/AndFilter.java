@@ -28,9 +28,9 @@ package org.springframework.ldap.filter;
  *
  * would result in: <code>(&amp;(objectclass=person)(cn=Some CN))</code>
  *
- * @see org.springframework.ldap.filter.EqualsFilter
  * @author Adam Skogman
  * @author Mattias Hellborg Arthursson
+ * @see org.springframework.ldap.filter.EqualsFilter
  */
 public class AndFilter extends BinaryLogicalFilter {
 

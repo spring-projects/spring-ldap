@@ -25,8 +25,8 @@ import javax.naming.NamingException;
 /**
  * A NameClassPairCallbackHandler to collect all results in an internal List.
  *
- * @see LdapTemplate
  * @author Mattias Hellborg Arthursson
+ * @see LdapTemplate
  */
 public abstract class CollectingNameClassPairCallbackHandler<T> implements NameClassPairCallbackHandler {
 

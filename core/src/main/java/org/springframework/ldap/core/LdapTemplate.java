@@ -72,9 +72,9 @@ import org.springframework.util.CollectionUtils;
  * Neither is there any simple way to get notified that a
  * <code>PartialResultException</code> has been ignored (other than in the log).
  *
- * @see org.springframework.ldap.core.ContextSource
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
+ * @see org.springframework.ldap.core.ContextSource
  */
 public class LdapTemplate implements LdapOperations, InitializingBean {
 

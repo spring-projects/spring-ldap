@@ -38,6 +38,7 @@ import org.springframework.ldap.core.support.DefaultDirObjectFactory;
  * <p>
  * Alternatively, consider using an {@link AttributesMapper} in stead.
  *
+ * @author Mattias Hellborg Arthursson
  * @see LdapTemplate#search(Name, String, ContextMapper)
  * @see LdapTemplate#listBindings(Name, ContextMapper)
  * @see LdapTemplate#lookup(Name, ContextMapper)
@@ -45,7 +46,6 @@ import org.springframework.ldap.core.support.DefaultDirObjectFactory;
  * @see DefaultDirObjectFactory
  * @see DirContextAdapter
  * @see AbstractContextMapper
- * @author Mattias Hellborg Arthursson
  */
 public interface ContextMapper<T> {
 

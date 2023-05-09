@@ -1058,9 +1058,9 @@ public interface LdapOperations {
 	 * registered with the <code>ContextSource</code>, causing the actual class of the
 	 * returned object to be something else than {@link DirContextOperations}.
 	 * @throws NamingException if any other error occurs.
+	 * @since 1.2
 	 * @see #lookup(Name)
 	 * @see #modifyAttributes(DirContextOperations)
-	 * @since 1.2
 	 */
 	DirContextOperations lookupContext(Name dn) throws NamingException, ClassCastException;
 
@@ -1073,9 +1073,9 @@ public interface LdapOperations {
 	 * registered with the <code>ContextSource</code>, causing the actual class of the
 	 * returned object to be something else than {@link DirContextOperations}.
 	 * @throws NamingException if any other error occurs.
+	 * @since 1.2
 	 * @see #lookup(String)
 	 * @see #modifyAttributes(DirContextOperations)
-	 * @since 1.2
 	 */
 	DirContextOperations lookupContext(String dn) throws NamingException, ClassCastException;
 
@@ -1220,11 +1220,11 @@ public interface LdapOperations {
 	 * DirContext authenticated with the found user.
 	 * @return <code>true</code> if the authentication was successful, <code>false</code>
 	 * otherwise.
-	 * @see #authenticate(Name, String, String)
 	 * @since 1.3
 	 * @deprecated use
 	 * {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)} or
 	 * {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
+	 * @see #authenticate(Name, String, String)
 	 */
 	boolean authenticate(Name base, String filter, String password, AuthenticatedLdapEntryContextCallback callback);
 
@@ -1243,11 +1243,11 @@ public interface LdapOperations {
 	 * DirContext authenticated with the found user.
 	 * @return <code>true</code> if the authentication was successful, <code>false</code>
 	 * otherwise.
-	 * @see #authenticate(String, String, String)
 	 * @since 1.3
 	 * @deprecated use
 	 * {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)} or
 	 * {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
+	 * @see #authenticate(String, String, String)
 	 */
 	boolean authenticate(String base, String filter, String password, AuthenticatedLdapEntryContextCallback callback);
 
@@ -1270,11 +1270,11 @@ public interface LdapOperations {
 	 * @param errorCallback the callback that will be called if an exception is caught.
 	 * @return <code>true</code> if the authentication was successful, <code>false</code>
 	 * otherwise.
-	 * @see #authenticate(Name, String, String, AuthenticatedLdapEntryContextCallback)
 	 * @since 1.3.1
 	 * @deprecated use
 	 * {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)} or
 	 * {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
+	 * @see #authenticate(Name, String, String, AuthenticatedLdapEntryContextCallback)
 	 */
 	boolean authenticate(Name base, String filter, String password, AuthenticatedLdapEntryContextCallback callback,
 			AuthenticationErrorCallback errorCallback);
@@ -1298,11 +1298,11 @@ public interface LdapOperations {
 	 * @param errorCallback the callback that will be called if an exception is caught.
 	 * @return <code>true</code> if the authentication was successful, <code>false</code>
 	 * otherwise.
-	 * @see #authenticate(String, String, String, AuthenticatedLdapEntryContextCallback)
 	 * @since 1.3.1
 	 * @deprecated use
 	 * {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)} or
 	 * {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
+	 * @see #authenticate(String, String, String, AuthenticatedLdapEntryContextCallback)
 	 */
 	boolean authenticate(String base, String filter, String password, AuthenticatedLdapEntryContextCallback callback,
 			AuthenticationErrorCallback errorCallback);
@@ -1321,12 +1321,12 @@ public interface LdapOperations {
 	 * @param errorCallback the callback that will be called if an exception is caught.
 	 * @return <code>true</code> if the authentication was successful, <code>false</code>
 	 * otherwise.
-	 * @see #authenticate(Name, String, String, AuthenticatedLdapEntryContextCallback,
-	 * AuthenticationErrorCallback)
 	 * @since 1.3.1
 	 * @deprecated use
 	 * {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)} or
 	 * {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
+	 * @see #authenticate(Name, String, String, AuthenticatedLdapEntryContextCallback,
+	 * AuthenticationErrorCallback)
 	 */
 	boolean authenticate(Name base, String filter, String password, AuthenticationErrorCallback errorCallback);
 

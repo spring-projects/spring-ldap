@@ -26,8 +26,8 @@ import org.springframework.ldap.core.DistinguishedName;
  * LDAP path is the root path to which all LDAP operations performed on a particular
  * context are relative.
  *
- * @see ContextSource
  * @author Mattias Hellborg Arthursson
+ * @see ContextSource
  */
 public interface BaseLdapPathSource {
 

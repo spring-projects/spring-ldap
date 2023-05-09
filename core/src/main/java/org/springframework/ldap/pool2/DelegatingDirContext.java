@@ -37,9 +37,9 @@ import org.springframework.util.Assert;
  * methods to the underlying context. This class extends {@link DelegatingContext} which
  * handles returning the context to the pool on a call to {@link #close()}
  *
- * @since 2.0
  * @author Eric Dalquist
  * @author Anindya Chatterjee
+ * @since 2.0
  */
 public class DelegatingDirContext extends DelegatingContext implements DirContext, DirContextProxy {
 

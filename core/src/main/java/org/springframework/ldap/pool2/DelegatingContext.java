@@ -36,8 +36,8 @@ import org.springframework.util.Assert;
  * to the underlying context, retains a reference to the pool the context was checked out
  * from and returns itself to the pool when {@link #close()} is called.
  *
- * @since 2.0
  * @author Eric Dalquist
+ * @since 2.0
  */
 public class DelegatingContext implements Context {
 

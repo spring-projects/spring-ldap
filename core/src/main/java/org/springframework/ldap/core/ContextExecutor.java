@@ -32,9 +32,9 @@ import javax.naming.directory.DirContext;
  * };
  * </pre>
  *
+ * @author Mattias Hellborg Arthursson
  * @see LdapTemplate#executeReadOnly(ContextExecutor)
  * @see LdapTemplate#executeReadWrite(ContextExecutor)
- * @author Mattias Hellborg Arthursson
  */
 public interface ContextExecutor<T> {
 

@@ -74,9 +74,9 @@ import org.springframework.ldap.pool2.validation.DirContextValidator;
  * </tr>
  * </table>
  *
- * @since 2.0
  * @author Eric Dalquist
  * @author Anindya Chatterjee
+ * @since 2.0
  */
 public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupport
 		implements ContextSource, DisposableBean {

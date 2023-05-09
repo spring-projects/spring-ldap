@@ -113,9 +113,9 @@ public class SingleContextSource implements ContextSource, DisposableBean {
 	 * @param contextSource The target ContextSource to retrieve a DirContext from.
 	 * @param callback the callback to perform the Ldap operations.
 	 * @return the result returned from the callback.
+	 * @since 2.0
 	 * @see #doWithSingleContext(org.springframework.ldap.core.ContextSource,
 	 * LdapOperationsCallback, boolean, boolean, boolean)
-	 * @since 2.0
 	 */
 	public static <T> T doWithSingleContext(ContextSource contextSource, LdapOperationsCallback<T> callback) {
 		return doWithSingleContext(contextSource, callback, DONT_USE_READ_ONLY, DONT_IGNORE_PARTIAL_RESULT,

@@ -665,8 +665,8 @@ public final class LdapUtils {
 	 * >here</a>.
 	 * @param string SID in readable format
 	 * @return Binary version of the given sid
-	 * @see LdapUtils#convertBinarySidToString(byte[])
 	 * @since 1.3.1
+	 * @see LdapUtils#convertBinarySidToString(byte[])
 	 */
 	public static byte[] convertStringSidToBinary(String string) {
 		String[] parts = string.split("-");

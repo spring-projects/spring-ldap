@@ -28,10 +28,10 @@ import javax.naming.ldap.InitialLdapContext;
  * {@link org.springframework.ldap.core.support.AbstractContextSource
  * AbstractContextSource}.
  *
- * @see org.springframework.ldap.core.support.AbstractContextSource
  * @author Mattias Hellborg Arthursson
  * @author Adam Skogman
  * @author Ulrik Sandberg
+ * @see org.springframework.ldap.core.support.AbstractContextSource
  */
 public class LdapContextSource extends AbstractContextSource {
 

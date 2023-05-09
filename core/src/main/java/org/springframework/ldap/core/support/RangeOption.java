@@ -24,8 +24,8 @@ import java.util.regex.Pattern;
  * Properties</em>.
  *
  * @author Marius Scurtescu
- * @see DefaultIncrementalAttributesMapper
  * @since 1.3.2
+ * @see DefaultIncrementalAttributesMapper
  */
 class RangeOption implements Comparable<RangeOption> {
 

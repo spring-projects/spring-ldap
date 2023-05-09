@@ -29,8 +29,8 @@ import org.springframework.ldap.pool2.MutableDelegatingLdapContext;
  * {@link MutableDelegatingLdapContext} instances. This enables the Spring LDAP pooling to
  * be used in scenarios that require request controls to be set, such as paged results.
  *
- * @since 2.0
  * @author Anindya Chatterjee
+ * @since 2.0
  */
 public class MutablePooledContextSource extends PooledContextSource {
 

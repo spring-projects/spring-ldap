@@ -28,10 +28,10 @@ import org.springframework.ldap.core.ContextMapper;
  * {@link #mapFromContextWithControls(Object, javax.naming.ldap.HasControls)} method to be
  * the type parameter T.
  *
- * @author Tim Terry
- * @author Ulrik Sandberg
  * @param <T> return type of the
  * {@link #mapFromContextWithControls(Object, javax.naming.ldap.HasControls)} method
+ * @author Tim Terry
+ * @author Ulrik Sandberg
  */
 public interface ContextMapperWithControls<T> extends ContextMapper<T> {
 

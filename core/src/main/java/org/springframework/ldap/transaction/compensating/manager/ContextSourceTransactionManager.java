@@ -93,12 +93,12 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * <p>
  *
  * @author Mattias Hellborg Arthursson
+ * @since 1.2
  * @see ContextSourceAndDataSourceTransactionManager
  * @see ContextSourceTransactionManagerDelegate
  * @see DefaultCompensatingTransactionOperationManager
  * @see TempEntryRenamingStrategy
  * @see TransactionAwareContextSourceProxy
- * @since 1.2
  */
 public class ContextSourceTransactionManager extends AbstractPlatformTransactionManager implements InitializingBean {
 

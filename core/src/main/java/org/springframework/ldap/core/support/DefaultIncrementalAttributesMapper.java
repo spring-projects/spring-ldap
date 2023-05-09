@@ -68,13 +68,13 @@ import org.springframework.ldap.support.LdapUtils;
  *
  * @author Marius Scurtescu
  * @author Mattias Hellborg Arthursson
+ * @since 1.3.2
  * @see <a href="https://tools.ietf.org/html/draft-kashi-incremental-00">Incremental
  * Retrieval of Multi-valued Properties</a>
  * @see #lookupAttributes(org.springframework.ldap.core.LdapOperations, javax.naming.Name,
  * String[])
  * @see #lookupAttributeValues(org.springframework.ldap.core.LdapOperations,
  * javax.naming.Name, String)
- * @since 1.3.2
  */
 public class DefaultIncrementalAttributesMapper
 		implements IncrementalAttributesMapper<DefaultIncrementalAttributesMapper> {

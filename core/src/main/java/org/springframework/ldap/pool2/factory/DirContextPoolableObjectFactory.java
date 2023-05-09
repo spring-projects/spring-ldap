@@ -74,11 +74,11 @@ import org.springframework.util.Assert;
  * </tr>
  * </table>
  *
- * @since 2.0
  * @author Eric Dalquist
  * <a href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
  * @author Mattias Hellborg Arthursson
  * @author Anindya Chatterjee
+ * @since 2.0
  */
 class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object, Object> {
 

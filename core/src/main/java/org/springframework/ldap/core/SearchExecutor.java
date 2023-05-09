@@ -32,9 +32,9 @@ import javax.naming.directory.DirContext;
  * }
  * </pre>
  *
+ * @author Mattias Hellborg Arthursson
  * @see org.springframework.ldap.core.LdapTemplate#search(SearchExecutor,
  * NameClassPairCallbackHandler)
- * @author Mattias Hellborg Arthursson
  */
 public interface SearchExecutor {
 

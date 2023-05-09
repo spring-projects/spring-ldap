@@ -32,10 +32,10 @@ import javax.naming.directory.Attributes;
  * <p>
  * Alternatively, consider using a {@link ContextMapper} in stead.
  *
+ * @author Mattias Hellborg Arthursson
  * @see LdapTemplate#search(Name, String, AttributesMapper)
  * @see LdapTemplate#lookup(Name, AttributesMapper)
  * @see ContextMapper
- * @author Mattias Hellborg Arthursson
  */
 public interface AttributesMapper<T> {
 

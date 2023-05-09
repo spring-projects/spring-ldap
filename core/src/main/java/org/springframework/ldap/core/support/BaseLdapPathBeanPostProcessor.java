@@ -172,8 +172,8 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 	 * Set the order value of this object for sorting purposes.
 	 * @param order the order of this instance. Defaults to
 	 * <code>Ordered.LOWEST_PRECEDENCE</code>.
-	 * @see Ordered
 	 * @since 1.3.2
+	 * @see Ordered
 	 */
 	public void setOrder(int order) {
 		this.order = order;

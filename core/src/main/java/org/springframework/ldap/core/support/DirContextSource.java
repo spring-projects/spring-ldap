@@ -28,8 +28,8 @@ import javax.naming.directory.InitialDirContext;
  * {@link org.springframework.ldap.core.support.AbstractContextSource
  * AbstractContextSource}.
  *
- * @see org.springframework.ldap.core.support.AbstractContextSource
  * @author Mattias Hellborg Arthursson
+ * @see org.springframework.ldap.core.support.AbstractContextSource
  */
 public class DirContextSource extends AbstractContextSource {
 
