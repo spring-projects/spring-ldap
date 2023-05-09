@@ -37,6 +37,7 @@ public abstract class AbstractContextMapper<T> implements ContextMapper<T> {
 	 * is used, causing the objects passed in be anything else than
 	 * {@link DirContextOperations} instances.
 	 */
+	@Override
 	public final T mapFromContext(Object ctx) {
 		return doMapFromContext((DirContextOperations) ctx);
 	}

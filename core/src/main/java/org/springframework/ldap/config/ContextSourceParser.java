@@ -411,11 +411,9 @@ public class ContextSourceParser implements BeanDefinitionParser {
 
 	static class UrlsFactory {
 
-		// CHECKSTYLE:OFF
-		public static String[] urls(String value) {
+		static String[] urls(String value) {
 			return StringUtils.commaDelimitedListToStringArray(value);
 		}
-		// CHECKSTYLE:ON
 
 	}
 

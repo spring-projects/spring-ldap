@@ -25,25 +25,29 @@ import org.springframework.util.Assert;
 
 	private final int hashCode;
 
-	public CaseIgnoreString(String string) {
+	CaseIgnoreString(String string) {
 		Assert.notNull(string, "string must not be null");
 		this.string = string;
 		this.hashCode = string.toUpperCase().hashCode();
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		return other instanceof CaseIgnoreString && ((CaseIgnoreString) other).string.equalsIgnoreCase(this.string);
 	}
 
+	@Override
 	public int hashCode() {
 		return this.hashCode;
 	}
 
+	@Override
 	public int compareTo(CaseIgnoreString other) {
 		CaseIgnoreString cis = other;
 		return String.CASE_INSENSITIVE_ORDER.compare(this.string, cis.string);
 	}
 
+	@Override
 	public String toString() {
 		return this.string;
 	}

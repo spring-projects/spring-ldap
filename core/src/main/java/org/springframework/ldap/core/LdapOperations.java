@@ -708,7 +708,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is interpreted
 	 * that no entries were found.
 	 */
-	void listBindings(final String base, NameClassPairCallbackHandler handler) throws NamingException;
+	void listBindings(String base, NameClassPairCallbackHandler handler) throws NamingException;
 
 	/**
 	 * Perform a non-recursive listing of the children of the given <code>base</code>.
@@ -721,7 +721,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is interpreted
 	 * that no entries were found.
 	 */
-	void listBindings(final Name base, NameClassPairCallbackHandler handler) throws NamingException;
+	void listBindings(Name base, NameClassPairCallbackHandler handler) throws NamingException;
 
 	/**
 	 * Perform a non-recursive listing of the children of the given <code>base</code>.
@@ -762,7 +762,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is interpreted
 	 * that no entries were found.
 	 */
-	List<String> listBindings(final String base) throws NamingException;
+	List<String> listBindings(String base) throws NamingException;
 
 	/**
 	 * Perform a non-recursive listing of children of the given <code>base</code>.
@@ -773,7 +773,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is interpreted
 	 * that no entries were found.
 	 */
-	List<String> listBindings(final Name base) throws NamingException;
+	List<String> listBindings(Name base) throws NamingException;
 
 	/**
 	 * Perform a non-recursive listing of the children of the given <code>base</code>. The
@@ -1036,7 +1036,7 @@ public interface LdapOperations {
 	 * @throws ContextNotEmptyException if newDn is already bound
 	 * @throws NamingException if any other error occurs.
 	 */
-	void rename(final Name oldDn, final Name newDn) throws NamingException;
+	void rename(Name oldDn, Name newDn) throws NamingException;
 
 	/**
 	 * Move an entry in the LDAP tree to a new location.
@@ -1047,7 +1047,7 @@ public interface LdapOperations {
 	 * @throws ContextNotEmptyException if newDn is already bound
 	 * @throws NamingException if any other error occurs.
 	 */
-	void rename(final String oldDn, final String newDn) throws NamingException;
+	void rename(String oldDn, String newDn) throws NamingException;
 
 	/**
 	 * Convenience method to lookup the supplied DN and automatically cast it to

@@ -41,7 +41,7 @@ public enum SearchScope {
 
 	private final int id;
 
-	private SearchScope(int id) {
+	SearchScope(int id) {
 		this.id = id;
 	}
 

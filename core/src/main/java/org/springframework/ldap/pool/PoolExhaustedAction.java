@@ -25,7 +25,7 @@ public enum PoolExhaustedAction {
 
 	private final byte value;
 
-	private PoolExhaustedAction(byte value) {
+	PoolExhaustedAction(byte value) {
 		this.value = value;
 	}
 

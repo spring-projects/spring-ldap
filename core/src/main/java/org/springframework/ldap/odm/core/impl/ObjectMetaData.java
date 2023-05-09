@@ -67,11 +67,11 @@ import org.springframework.util.StringUtils;
 
 	private Name base = LdapUtils.emptyLdapName();
 
-	public Set<CaseIgnoreString> getObjectClasses() {
+	Set<CaseIgnoreString> getObjectClasses() {
 		return this.objectClasses;
 	}
 
-	public AttributeMetaData getIdAttribute() {
+	AttributeMetaData getIdAttribute() {
 		return this.idAttribute;
 	}
 
@@ -80,15 +80,16 @@ import org.springframework.util.StringUtils;
 	 *
 	 * @see java.lang.Iterable#iterator()
 	 */
+	@Override
 	public Iterator<Field> iterator() {
 		return this.fieldToAttribute.keySet().iterator();
 	}
 
-	public AttributeMetaData getAttribute(Field field) {
+	AttributeMetaData getAttribute(Field field) {
 		return this.fieldToAttribute.get(field);
 	}
 
-	public ObjectMetaData(Class<?> clazz) {
+	ObjectMetaData(Class<?> clazz) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug(String.format("Extracting metadata from %1$s", clazz));
 		}
@@ -195,7 +196,7 @@ import org.springframework.util.StringUtils;
 		return this.dnAttributes.size() > 0 && this.indexedDnAttributes;
 	}
 
-	public Set<AttributeMetaData> getDnAttributes() {
+	Set<AttributeMetaData> getDnAttributes() {
 		return this.dnAttributes;
 	}
 

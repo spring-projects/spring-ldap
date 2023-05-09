@@ -54,6 +54,7 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 	 * @see org.springframework.orm.hibernate5.HibernateTransactionManager#
 	 * isExistingTransaction(java.lang.Object)
 	 */
+	@Override
 	protected boolean isExistingTransaction(Object transaction) {
 		ContextSourceAndHibernateTransactionObject actualTransactionObject = (ContextSourceAndHibernateTransactionObject) transaction;
 
@@ -64,6 +65,7 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 	 * @see
 	 * org.springframework.orm.hibernate5.HibernateTransactionManager#doGetTransaction()
 	 */
+	@Override
 	protected Object doGetTransaction() {
 		Object dataSourceTransactionObject = super.doGetTransaction();
 		Object contextSourceTransactionObject = this.ldapManagerDelegate.doGetTransaction();
@@ -77,6 +79,7 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 	 * org.springframework.orm.hibernate5.HibernateTransactionManager#doBegin(java.lang.
 	 * Object, org.springframework.transaction.TransactionDefinition)
 	 */
+	@Override
 	protected void doBegin(Object transaction, TransactionDefinition definition) {
 		ContextSourceAndHibernateTransactionObject actualTransactionObject = (ContextSourceAndHibernateTransactionObject) transaction;
 
@@ -95,6 +98,7 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 	 * @see org.springframework.orm.hibernate5.HibernateTransactionManager#
 	 * doCleanupAfterCompletion(java.lang.Object)
 	 */
+	@Override
 	protected void doCleanupAfterCompletion(Object transaction) {
 		ContextSourceAndHibernateTransactionObject actualTransactionObject = (ContextSourceAndHibernateTransactionObject) transaction;
 
@@ -106,6 +110,7 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 	 * @see org.springframework.orm.hibernate5.HibernateTransactionManager#doCommit(org.
 	 * springframework.transaction.support.DefaultTransactionStatus)
 	 */
+	@Override
 	protected void doCommit(DefaultTransactionStatus status) {
 
 		ContextSourceAndHibernateTransactionObject actualTransactionObject = (ContextSourceAndHibernateTransactionObject) status
@@ -138,6 +143,7 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 	 * @see org.springframework.orm.hibernate5.HibernateTransactionManager#doRollback(org.
 	 * springframework.transaction.support.DefaultTransactionStatus)
 	 */
+	@Override
 	protected void doRollback(DefaultTransactionStatus status) {
 		ContextSourceAndHibernateTransactionObject actualTransactionObject = (ContextSourceAndHibernateTransactionObject) status
 				.getTransaction();
@@ -167,6 +173,7 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 	 * org.springframework.orm.hibernate5.HibernateTransactionManager#doSuspend(java.lang.
 	 * Object)
 	 */
+	@Override
 	protected Object doSuspend(Object transaction) {
 		throw new TransactionSuspensionNotSupportedException(
 				"Transaction manager [" + getClass().getName() + "] does not support transaction suspension");
@@ -177,11 +184,13 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 	 * org.springframework.orm.hibernate5.HibernateTransactionManager#doResume(java.lang.
 	 * Object, java.lang.Object)
 	 */
+	@Override
 	protected void doResume(Object transaction, Object suspendedResources) {
 		throw new TransactionSuspensionNotSupportedException(
 				"Transaction manager [" + getClass().getName() + "] does not support transaction suspension");
 	}
 
+	@Override
 	public void afterPropertiesSet() {
 		super.afterPropertiesSet();
 		this.ldapManagerDelegate.checkRenamingStrategy();
@@ -193,17 +202,16 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 
 		private Object hibernateTransactionObject;
 
-		public ContextSourceAndHibernateTransactionObject(Object ldapTransactionObject,
-				Object hibernateTransactionObject) {
+		ContextSourceAndHibernateTransactionObject(Object ldapTransactionObject, Object hibernateTransactionObject) {
 			this.ldapTransactionObject = ldapTransactionObject;
 			this.hibernateTransactionObject = hibernateTransactionObject;
 		}
 
-		public Object getHibernateTransactionObject() {
+		Object getHibernateTransactionObject() {
 			return this.hibernateTransactionObject;
 		}
 
-		public Object getLdapTransactionObject() {
+		Object getLdapTransactionObject() {
 			return this.ldapTransactionObject;
 		}
 

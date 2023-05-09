@@ -494,6 +494,7 @@ class DefaultLdapClient implements LdapClient {
 			return query((builder) -> builder.base(name).searchScope(SearchScope.OBJECT));
 		}
 
+		@Override
 		public SearchSpec query(Consumer<LdapQueryBuilder> consumer) {
 			LdapQueryBuilder builder = LdapQueryBuilder.fromQuery(this.query);
 			consumer.accept(builder);
@@ -585,6 +586,7 @@ class DefaultLdapClient implements LdapClient {
 			this.name = name;
 		}
 
+		@Override
 		public BindSpec object(Object obj) {
 			if (obj instanceof DirContextOperations) {
 				boolean updateMode = ((DirContextOperations) obj).isUpdateMode();
@@ -594,6 +596,7 @@ class DefaultLdapClient implements LdapClient {
 			return this;
 		}
 
+		@Override
 		public BindSpec attributes(Attributes attributes) {
 			this.attributes = attributes;
 			return this;

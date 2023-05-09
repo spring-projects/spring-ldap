@@ -1903,6 +1903,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	private static final class NullAuthenticatedLdapEntryContextCallback
 			implements AuthenticatedLdapEntryContextCallback, AuthenticatedLdapEntryContextMapper<Object> {
 
+		@Override
 		public void executeWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
 			// Do nothing
 		}
@@ -1922,10 +1923,12 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	public static final class NullDirContextProcessor implements DirContextProcessor {
 
+		@Override
 		public void postProcess(DirContext ctx) {
 			// Do nothing
 		}
 
+		@Override
 		public void preProcess(DirContext ctx) {
 			// Do nothing
 		}
@@ -1938,7 +1941,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 *
 	 * @author Mattias Hellborg Arthursson
 	 */
-	public final static class MappingCollectingNameClassPairCallbackHandler<T>
+	public static final class MappingCollectingNameClassPairCallbackHandler<T>
 			extends CollectingNameClassPairCallbackHandler<T> {
 
 		private NameClassPairMapper<T> mapper;
@@ -1950,6 +1953,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public T getObjectFromNameClassPair(NameClassPair nameClassPair) {
 			try {
 				return this.mapper.mapFromNameClassPair(nameClassPair);
@@ -1963,6 +1967,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
 	private static final class NullAuthenticationErrorCallback implements AuthenticationErrorCallback {
 
+		@Override
 		public void execute(Exception ex) {
 			// Do nothing
 		}

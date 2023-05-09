@@ -79,7 +79,7 @@ import org.springframework.ldap.support.LdapUtils;
 public class DefaultIncrementalAttributesMapper
 		implements IncrementalAttributesMapper<DefaultIncrementalAttributesMapper> {
 
-	private final static Logger LOG = LoggerFactory.getLogger(DefaultIncrementalAttributesMapper.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DefaultIncrementalAttributesMapper.class);
 
 	private Map<String, IncrementalAttributeState> stateMap = new LinkedHashMap<String, IncrementalAttributeState>();
 

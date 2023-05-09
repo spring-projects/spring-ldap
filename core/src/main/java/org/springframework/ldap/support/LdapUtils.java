@@ -772,7 +772,7 @@ public final class LdapUtils {
 
 		private final Class<T> clazz;
 
-		public CollectingAttributeValueCallbackHandler(Collection<T> collection, Class<T> clazz) {
+		CollectingAttributeValueCallbackHandler(Collection<T> collection, Class<T> clazz) {
 			Assert.notNull(collection, "Collection must not be null");
 			Assert.notNull(clazz, "Clazz parameter must not be null");
 
@@ -780,6 +780,7 @@ public final class LdapUtils {
 			this.clazz = clazz;
 		}
 
+		@Override
 		public void handleAttributeValue(String attributeName, Object attributeValue, int index) {
 			Assert.isTrue(attributeName == null || this.clazz.isAssignableFrom(attributeValue.getClass()));
 			this.collection.add(this.clazz.cast(attributeValue));

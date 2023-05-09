@@ -199,7 +199,7 @@ import org.springframework.ldap.odm.annotations.Transient;
 	}
 
 	@SuppressWarnings("unchecked")
-	public Collection<Object> newCollectionInstance() {
+	Collection<Object> newCollectionInstance() {
 		try {
 			return (Collection<Object>) this.collectionClass.newInstance();
 		}
@@ -227,7 +227,7 @@ import org.springframework.ldap.odm.annotations.Transient;
 	}
 
 	// Extract meta-data from the given field
-	public AttributeMetaData(Field field) {
+	AttributeMetaData(Field field) {
 		this.field = field;
 
 		this.dnAttribute = field.getAnnotation(DnAttribute.class);
@@ -267,59 +267,59 @@ import org.springframework.ldap.odm.annotations.Transient;
 		}
 	}
 
-	public String getSyntax() {
+	String getSyntax() {
 		return this.syntax;
 	}
 
-	public boolean isBinary() {
+	boolean isBinary() {
 		return this.isBinary;
 	}
 
-	public Field getField() {
+	Field getField() {
 		return this.field;
 	}
 
-	public CaseIgnoreString getName() {
+	CaseIgnoreString getName() {
 		return this.name;
 	}
 
-	public boolean isCollection() {
+	boolean isCollection() {
 		return this.isCollection;
 	}
 
-	public boolean isId() {
+	boolean isId() {
 		return this.isId;
 	}
 
-	public boolean isReadOnly() {
+	boolean isReadOnly() {
 		return this.isReadOnly;
 	}
 
-	public boolean isTransient() {
+	boolean isTransient() {
 		return this.isTransient;
 	}
 
-	public DnAttribute getDnAttribute() {
+	DnAttribute getDnAttribute() {
 		return this.dnAttribute;
 	}
 
-	public boolean isDnAttribute() {
+	boolean isDnAttribute() {
 		return this.dnAttribute != null;
 	}
 
-	public boolean isObjectClass() {
+	boolean isObjectClass() {
 		return this.isObjectClass;
 	}
 
-	public Class<?> getValueClass() {
+	Class<?> getValueClass() {
 		return this.valueClass;
 	}
 
-	public String[] getAttributes() {
+	String[] getAttributes() {
 		return this.attributes;
 	}
 
-	public Class<?> getJndiClass() {
+	Class<?> getJndiClass() {
 		if (isBinary()) {
 			return byte[].class;
 		}

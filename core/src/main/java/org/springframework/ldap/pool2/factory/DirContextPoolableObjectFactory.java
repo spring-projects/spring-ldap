@@ -106,14 +106,14 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 	/**
 	 * @return the contextSource
 	 */
-	public ContextSource getContextSource() {
+	ContextSource getContextSource() {
 		return this.contextSource;
 	}
 
 	/**
 	 * @param contextSource the contextSource to set
 	 */
-	public void setContextSource(ContextSource contextSource) {
+	void setContextSource(ContextSource contextSource) {
 		if (contextSource == null) {
 			throw new IllegalArgumentException("contextSource may not be null");
 		}
@@ -124,14 +124,14 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 	/**
 	 * @return the dirContextValidator
 	 */
-	public DirContextValidator getDirContextValidator() {
+	DirContextValidator getDirContextValidator() {
 		return this.dirContextValidator;
 	}
 
 	/**
 	 * @param dirContextValidator the dirContextValidator to set
 	 */
-	public void setDirContextValidator(DirContextValidator dirContextValidator) {
+	void setDirContextValidator(DirContextValidator dirContextValidator) {
 		if (dirContextValidator == null) {
 			throw new IllegalArgumentException("dirContextValidator may not be null");
 		}
@@ -255,7 +255,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 
 		private boolean hasFailed = false;
 
-		public FailureAwareContextProxy(DirContext target) {
+		FailureAwareContextProxy(DirContext target) {
 			Assert.notNull(target, "Target must not be null");
 			this.target = target;
 		}
@@ -264,6 +264,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 		 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
 		 * java.lang.reflect.Method, java.lang.Object[])
 		 */
+		@Override
 		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
 			String methodName = method.getName();

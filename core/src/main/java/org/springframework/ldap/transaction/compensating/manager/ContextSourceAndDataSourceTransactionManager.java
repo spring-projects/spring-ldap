@@ -54,6 +54,7 @@ public class ContextSourceAndDataSourceTransactionManager extends DataSourceTran
 	 * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#
 	 * isExistingTransaction(java.lang.Object)
 	 */
+	@Override
 	protected boolean isExistingTransaction(Object transaction) {
 		// We don't support nested transactions here
 		return false;
@@ -63,6 +64,7 @@ public class ContextSourceAndDataSourceTransactionManager extends DataSourceTran
 	 * @see
 	 * org.springframework.jdbc.datasource.DataSourceTransactionManager#doGetTransaction()
 	 */
+	@Override
 	protected Object doGetTransaction() {
 		Object dataSourceTransactionObject = super.doGetTransaction();
 		Object contextSourceTransactionObject = this.ldapManagerDelegate.doGetTransaction();
@@ -76,6 +78,7 @@ public class ContextSourceAndDataSourceTransactionManager extends DataSourceTran
 	 * org.springframework.jdbc.datasource.DataSourceTransactionManager#doBegin(java.lang.
 	 * Object, org.springframework.transaction.TransactionDefinition)
 	 */
+	@Override
 	protected void doBegin(Object transaction, TransactionDefinition definition) {
 		ContextSourceAndDataSourceTransactionObject actualTransactionObject = (ContextSourceAndDataSourceTransactionObject) transaction;
 
@@ -94,6 +97,7 @@ public class ContextSourceAndDataSourceTransactionManager extends DataSourceTran
 	 * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#
 	 * doCleanupAfterCompletion(java.lang.Object)
 	 */
+	@Override
 	protected void doCleanupAfterCompletion(Object transaction) {
 		ContextSourceAndDataSourceTransactionObject actualTransactionObject = (ContextSourceAndDataSourceTransactionObject) transaction;
 
@@ -105,6 +109,7 @@ public class ContextSourceAndDataSourceTransactionManager extends DataSourceTran
 	 * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doCommit(org.
 	 * springframework.transaction.support.DefaultTransactionStatus)
 	 */
+	@Override
 	protected void doCommit(DefaultTransactionStatus status) {
 
 		ContextSourceAndDataSourceTransactionObject actualTransactionObject = (ContextSourceAndDataSourceTransactionObject) status
@@ -138,6 +143,7 @@ public class ContextSourceAndDataSourceTransactionManager extends DataSourceTran
 	 * org.springframework.jdbc.datasource.DataSourceTransactionManager#doRollback(org.
 	 * springframework.transaction.support.DefaultTransactionStatus)
 	 */
+	@Override
 	protected void doRollback(DefaultTransactionStatus status) {
 		ContextSourceAndDataSourceTransactionObject actualTransactionObject = (ContextSourceAndDataSourceTransactionObject) status
 				.getTransaction();
@@ -187,23 +193,22 @@ public class ContextSourceAndDataSourceTransactionManager extends DataSourceTran
 		this.ldapManagerDelegate.checkRenamingStrategy();
 	}
 
-	private final static class ContextSourceAndDataSourceTransactionObject {
+	private static final class ContextSourceAndDataSourceTransactionObject {
 
 		private Object ldapTransactionObject;
 
 		private Object dataSourceTransactionObject;
 
-		public ContextSourceAndDataSourceTransactionObject(Object ldapTransactionObject,
-				Object dataSourceTransactionObject) {
+		ContextSourceAndDataSourceTransactionObject(Object ldapTransactionObject, Object dataSourceTransactionObject) {
 			this.ldapTransactionObject = ldapTransactionObject;
 			this.dataSourceTransactionObject = dataSourceTransactionObject;
 		}
 
-		public Object getDataSourceTransactionObject() {
+		Object getDataSourceTransactionObject() {
 			return this.dataSourceTransactionObject;
 		}
 
-		public Object getLdapTransactionObject() {
+		Object getLdapTransactionObject() {
 			return this.ldapTransactionObject;
 		}
 

@@ -101,14 +101,14 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 	/**
 	 * @return the contextSource
 	 */
-	public ContextSource getContextSource() {
+	ContextSource getContextSource() {
 		return this.contextSource;
 	}
 
 	/**
 	 * @param contextSource the contextSource to set
 	 */
-	public void setContextSource(ContextSource contextSource) {
+	void setContextSource(ContextSource contextSource) {
 		if (contextSource == null) {
 			throw new IllegalArgumentException("contextSource may not be null");
 		}
@@ -119,14 +119,14 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 	/**
 	 * @return the dirContextValidator
 	 */
-	public DirContextValidator getDirContextValidator() {
+	DirContextValidator getDirContextValidator() {
 		return this.dirContextValidator;
 	}
 
 	/**
 	 * @param dirContextValidator the dirContextValidator to set
 	 */
-	public void setDirContextValidator(DirContextValidator dirContextValidator) {
+	void setDirContextValidator(DirContextValidator dirContextValidator) {
 		if (dirContextValidator == null) {
 			throw new IllegalArgumentException("dirContextValidator may not be null");
 		}
@@ -137,6 +137,7 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 	/**
 	 * @see org.apache.commons.pool.BaseKeyedPoolableObjectFactory#makeObject(java.lang.Object)
 	 */
+	@Override
 	public Object makeObject(Object key) throws Exception {
 		Assert.notNull(this.contextSource, "ContextSource may not be null");
 		Assert.isTrue(key instanceof DirContextType, "key must be a DirContextType");
@@ -181,6 +182,7 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 	 * @see org.apache.commons.pool.BaseKeyedPoolableObjectFactory#validateObject(java.lang.Object,
 	 * java.lang.Object)
 	 */
+	@Override
 	public boolean validateObject(Object key, Object obj) {
 		Assert.notNull(this.dirContextValidator, "DirContextValidator may not be null");
 		Assert.isTrue(key instanceof DirContextType, "key must be a DirContextType");
@@ -201,6 +203,7 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 	 * @see org.apache.commons.pool.BaseKeyedPoolableObjectFactory#destroyObject(java.lang.Object,
 	 * java.lang.Object)
 	 */
+	@Override
 	public void destroyObject(Object key, Object obj) throws Exception {
 		Assert.isTrue(obj instanceof DirContext, "The Object to validate must be of type '" + DirContext.class + "'");
 
@@ -232,7 +235,7 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 
 		private boolean hasFailed = false;
 
-		public FailureAwareContextProxy(DirContext target) {
+		FailureAwareContextProxy(DirContext target) {
 			Assert.notNull(target, "Target must not be null");
 			this.target = target;
 		}
@@ -241,6 +244,7 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 		 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
 		 * java.lang.reflect.Method, java.lang.Object[])
 		 */
+		@Override
 		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
 			String methodName = method.getName();

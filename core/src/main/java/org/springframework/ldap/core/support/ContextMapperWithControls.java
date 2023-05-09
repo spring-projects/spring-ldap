@@ -35,6 +35,6 @@ import org.springframework.ldap.core.ContextMapper;
  */
 public interface ContextMapperWithControls<T> extends ContextMapper<T> {
 
-	T mapFromContextWithControls(final Object ctx, final HasControls hasControls) throws NamingException;
+	T mapFromContextWithControls(Object ctx, HasControls hasControls) throws NamingException;
 
 }

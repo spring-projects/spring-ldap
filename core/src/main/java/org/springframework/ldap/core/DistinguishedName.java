@@ -308,6 +308,7 @@ public class DistinguishedName implements Name {
 	 * <code>DistinguishedName</code>.
 	 * @see #SPACED_DN_FORMAT_PROPERTY
 	 */
+	@Override
 	public String toString() {
 		String spacedFormatting = System.getProperty(SPACED_DN_FORMAT_PROPERTY);
 		if (!StringUtils.hasText(spacedFormatting)) {
@@ -521,6 +522,7 @@ public class DistinguishedName implements Name {
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		// A subclass with identical values should NOT be considered equal.
 		// EqualsBuilder in commons-lang cannot handle subclasses correctly.
@@ -537,6 +539,7 @@ public class DistinguishedName implements Name {
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode() {
 		return this.getClass().hashCode() ^ getNames().hashCode();
 	}
@@ -548,6 +551,7 @@ public class DistinguishedName implements Name {
 	 *
 	 * @see javax.naming.Name#compareTo(java.lang.Object)
 	 */
+	@Override
 	public int compareTo(Object obj) {
 		DistinguishedName that = (DistinguishedName) obj;
 		ListComparator comparator = new ListComparator();

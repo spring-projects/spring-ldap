@@ -40,11 +40,11 @@ class RangeOption implements Comparable<RangeOption> {
 	private static final Pattern RANGE_PATTERN = Pattern.compile("^Range=([0-9]+)(-([0-9]+|\\*))?$",
 			Pattern.CASE_INSENSITIVE);
 
-	public RangeOption(int initial) {
+	RangeOption(int initial) {
 		this(initial, TERMINAL_END_OF_RANGE);
 	}
 
-	public RangeOption(int initial, int terminal) {
+	RangeOption(int initial, int terminal) {
 		if (terminal < 0 && (terminal != TERMINAL_END_OF_RANGE && terminal != TERMINAL_MISSING)) {
 			throw new IllegalArgumentException("Illegal range-terminal: " + terminal);
 		}
@@ -62,26 +62,27 @@ class RangeOption implements Comparable<RangeOption> {
 		this.terminal = terminal;
 	}
 
-	public boolean isTerminalEndOfRange() {
+	boolean isTerminalEndOfRange() {
 		return this.terminal == TERMINAL_END_OF_RANGE;
 	}
 
-	public boolean isTerminalMissing() {
+	boolean isTerminalMissing() {
 		return this.terminal == TERMINAL_MISSING;
 	}
 
-	public int getInitial() {
+	int getInitial() {
 		return this.initial;
 	}
 
-	public int getTerminal() {
+	int getTerminal() {
 		return this.terminal;
 	}
 
-	public boolean isFullRange() {
+	boolean isFullRange() {
 		return getInitial() == 0 && getTerminal() == TERMINAL_END_OF_RANGE;
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder rangeBuilder = new StringBuilder();
 		appendTo(rangeBuilder);
@@ -89,7 +90,7 @@ class RangeOption implements Comparable<RangeOption> {
 		return rangeBuilder.toString();
 	}
 
-	public void appendTo(StringBuilder rangeBuilder) {
+	void appendTo(StringBuilder rangeBuilder) {
 		rangeBuilder.append("Range=").append(this.initial);
 
 		if (!isTerminalMissing()) {
@@ -104,7 +105,7 @@ class RangeOption implements Comparable<RangeOption> {
 		}
 	}
 
-	public static RangeOption parse(String option) {
+	static RangeOption parse(String option) {
 		Matcher rangeMatcher = RANGE_PATTERN.matcher(option);
 
 		rangeMatcher.find();
@@ -132,6 +133,7 @@ class RangeOption implements Comparable<RangeOption> {
 		return new RangeOption(initial, terminal);
 	}
 
+	@Override
 	public int compareTo(RangeOption that) {
 		if (this.getInitial() != that.getInitial()) {
 			throw new IllegalStateException("Ranges cannot be compared, range-initial not the same: " + this.toString()
@@ -189,7 +191,7 @@ class RangeOption implements Comparable<RangeOption> {
 		return result;
 	}
 
-	public RangeOption nextRange(int pageSize) {
+	RangeOption nextRange(int pageSize) {
 		if (getTerminal() < 0) {
 			throw new IllegalStateException("Cannot generate next range, range-terminal: " + getTerminal());
 		}

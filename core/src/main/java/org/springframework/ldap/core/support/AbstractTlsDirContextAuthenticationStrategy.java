@@ -183,15 +183,17 @@ public abstract class AbstractTlsDirContextAuthenticationStrategy implements Dir
 
 		private final StartTlsResponse tlsResponse;
 
-		public TlsAwareDirContextProxy(LdapContext target, StartTlsResponse tlsResponse) {
+		TlsAwareDirContextProxy(LdapContext target, StartTlsResponse tlsResponse) {
 			this.target = target;
 			this.tlsResponse = tlsResponse;
 		}
 
+		@Override
 		public DirContext getTargetContext() {
 			return this.target;
 		}
 
+		@Override
 		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 			if (method.getName().equals(CLOSE_METHOD_NAME)) {
 				this.tlsResponse.close();

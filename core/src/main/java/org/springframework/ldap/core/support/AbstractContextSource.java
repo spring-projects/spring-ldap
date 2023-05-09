@@ -666,10 +666,12 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	class SimpleAuthenticationSource implements AuthenticationSource {
 
+		@Override
 		public String getPrincipal() {
 			return AbstractContextSource.this.userDn;
 		}
 
+		@Override
 		public String getCredentials() {
 			return AbstractContextSource.this.password;
 		}

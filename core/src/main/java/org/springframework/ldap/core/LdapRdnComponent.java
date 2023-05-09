@@ -154,6 +154,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	 *
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 		return getLdapEncoded();
 	}
@@ -186,6 +187,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	 *
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode() {
 		return this.key.toUpperCase().hashCode() ^ this.value.toUpperCase().hashCode();
 	}
@@ -195,6 +197,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		// Slightly more lenient equals comparison here to enable immutable
 		// instances to equal mutable ones.
@@ -216,6 +219,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	 * @throws ClassCastException if the object is not possible to cast to an
 	 * LdapRdnComponent.
 	 */
+	@Override
 	public int compareTo(Object obj) {
 		LdapRdnComponent that = (LdapRdnComponent) obj;
 
@@ -244,14 +248,16 @@ public class LdapRdnComponent implements Comparable, Serializable {
 
 		private static final long serialVersionUID = -7099970046426346567L;
 
-		public ImmutableLdapRdnComponent(String key, String value) {
+		ImmutableLdapRdnComponent(String key, String value) {
 			super(key, value);
 		}
 
+		@Override
 		public void setKey(String key) {
 			throw new UnsupportedOperationException("SetValue not supported for this immutable LdapRdnComponent");
 		}
 
+		@Override
 		public void setValue(String value) {
 			throw new UnsupportedOperationException("SetKey not supported for this immutable LdapRdnComponent");
 		}
