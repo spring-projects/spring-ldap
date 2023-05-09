@@ -371,10 +371,10 @@ public class DefaultAttributeValidationPolicy implements AttributeValidationPoli
 				: matcher.group(2).replaceFirst(";", "").split(OPTION_SEPARATOR)));
 
 		if (options.isEmpty()) {
-			return new LdapAttribute(id, value, ordered);
+			return new LdapAttribute(id, value, this.ordered);
 		}
 		else {
-			return new LdapAttribute(id, value, options, ordered);
+			return new LdapAttribute(id, value, options, this.ordered);
 		}
 	}
 
@@ -386,10 +386,10 @@ public class DefaultAttributeValidationPolicy implements AttributeValidationPoli
 					: matcher.group(2).replaceFirst(";", "").split(OPTION_SEPARATOR)));
 
 			if (options.isEmpty()) {
-				return new LdapAttribute(id, LdapEncoder.parseBase64Binary(value), ordered);
+				return new LdapAttribute(id, LdapEncoder.parseBase64Binary(value), this.ordered);
 			}
 			else {
-				return new LdapAttribute(id, LdapEncoder.parseBase64Binary(value), options, ordered);
+				return new LdapAttribute(id, LdapEncoder.parseBase64Binary(value), options, this.ordered);
 			}
 		}
 		catch (IllegalArgumentException e) {
@@ -405,10 +405,10 @@ public class DefaultAttributeValidationPolicy implements AttributeValidationPoli
 					: matcher.group(2).replaceFirst(";", "").split(OPTION_SEPARATOR)));
 
 			if (options.isEmpty()) {
-				return new LdapAttribute(id, new URI(value), ordered);
+				return new LdapAttribute(id, new URI(value), this.ordered);
 			}
 			else {
-				return new LdapAttribute(id, new URI(value), options, ordered);
+				return new LdapAttribute(id, new URI(value), options, this.ordered);
 			}
 		}
 		catch (URISyntaxException e) {
@@ -423,10 +423,10 @@ public class DefaultAttributeValidationPolicy implements AttributeValidationPoli
 				: matcher.group(2).replaceFirst(";", "").split(OPTION_SEPARATOR)));
 
 		if (options.isEmpty()) {
-			return new LdapAttribute(id, value, ordered);
+			return new LdapAttribute(id, value, this.ordered);
 		}
 		else {
-			return new LdapAttribute(id, value, options, ordered);
+			return new LdapAttribute(id, value, options, this.ordered);
 		}
 	}
 

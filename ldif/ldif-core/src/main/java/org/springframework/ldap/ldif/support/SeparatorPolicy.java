@@ -71,25 +71,25 @@ public class SeparatorPolicy {
 	public LineIdentifier assess(String line) {
 		log.trace("Assessing --> [" + line + "]");
 
-		if (record) {
+		if (this.record) {
 			if (!StringUtils.hasLength(line)) {
-				record = false;
-				skip = false;
+				this.record = false;
+				this.skip = false;
 				return LineIdentifier.EndOfRecord;
 
 			}
-			else if (skip) {
+			else if (this.skip) {
 				return LineIdentifier.Void;
 
 			}
 			else {
 				if (line.startsWith(CONTROL)) {
-					skip = true;
+					this.skip = true;
 					return LineIdentifier.Control;
 
 				}
 				else if (line.startsWith(CHANGE_TYPE)) {
-					skip = true;
+					this.skip = true;
 					return LineIdentifier.ChangeType;
 
 				}
@@ -108,14 +108,14 @@ public class SeparatorPolicy {
 			}
 		}
 		else {
-			if (StringUtils.hasLength(line) && line.matches(VERSION_IDENTIFIER) && !skip) {
+			if (StringUtils.hasLength(line) && line.matches(VERSION_IDENTIFIER) && !this.skip) {
 				// Version Identifiers are ignored by parser.
 				return LineIdentifier.VersionIdentifier;
 
 			}
 			else if (StringUtils.hasLength(line) && line.matches(NEW_RECORD)) {
-				record = true;
-				skip = false;
+				this.record = true;
+				this.skip = false;
 				return LineIdentifier.NewRecord;
 
 			}

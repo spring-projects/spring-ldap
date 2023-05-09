@@ -212,32 +212,32 @@ public class LdifParser implements Parser, InitializingBean {
 	}
 
 	public void open() throws IOException {
-		Assert.notNull(resource, "Resource must be set.");
-		reader = new BufferedReader(new InputStreamReader(resource.getInputStream()));
+		Assert.notNull(this.resource, "Resource must be set.");
+		this.reader = new BufferedReader(new InputStreamReader(this.resource.getInputStream()));
 	}
 
 	public boolean isReady() throws IOException {
-		return reader.ready();
+		return this.reader.ready();
 	}
 
 	public void close() throws IOException {
-		if (resource.isOpen())
-			reader.close();
+		if (this.resource.isOpen())
+			this.reader.close();
 	}
 
 	public void reset() throws IOException {
-		Assert.notNull(reader, "A reader has not been obtained.");
-		reader.reset();
+		Assert.notNull(this.reader, "A reader has not been obtained.");
+		this.reader.reset();
 	}
 
 	public boolean hasMoreRecords() throws IOException {
-		return reader.ready();
+		return this.reader.ready();
 	}
 
 	public LdapAttributes getRecord() throws IOException {
-		Assert.notNull(reader, "A reader must be obtained: parser not open.");
+		Assert.notNull(this.reader, "A reader must be obtained: parser not open.");
 
-		if (!reader.ready()) {
+		if (!this.reader.ready()) {
 			LOG.debug("Reader not ready!");
 			return null;
 		}
@@ -245,17 +245,17 @@ public class LdifParser implements Parser, InitializingBean {
 		LdapAttributes record = null;
 		StringBuilder builder = new StringBuilder();
 
-		String line = reader.readLine();
+		String line = this.reader.readLine();
 
 		while (true) {
 
-			LineIdentifier identifier = separatorPolicy.assess(line);
+			LineIdentifier identifier = this.separatorPolicy.assess(line);
 
 			switch (identifier) {
 			case NewRecord:
 				LOG.trace("Starting new record.");
 				// Start new record.
-				record = new LdapAttributes(caseInsensitive);
+				record = new LdapAttributes(this.caseInsensitive);
 				builder = new StringBuilder(line);
 
 				break;
@@ -309,7 +309,7 @@ public class LdifParser implements Parser, InitializingBean {
 						// flush buffer.
 						addAttributeToRecord(builder.toString(), record);
 
-						if (specification.isSatisfiedBy(record)) {
+						if (this.specification.isSatisfiedBy(record)) {
 							LOG.debug("record parsed:\n" + record);
 							return record;
 
@@ -330,7 +330,7 @@ public class LdifParser implements Parser, InitializingBean {
 				// records.
 			}
 
-			line = reader.readLine();
+			line = this.reader.readLine();
 			if (line == null && record == null) {
 				// Never encountered a valid record.
 				return null;
@@ -343,7 +343,7 @@ public class LdifParser implements Parser, InitializingBean {
 		try {
 			if (StringUtils.hasLength(buffer) && record != null) {
 				// Validate previous attribute and add to record.
-				Attribute attribute = attributePolicy.parse(buffer);
+				Attribute attribute = this.attributePolicy.parse(buffer);
 
 				if (attribute.getID().equalsIgnoreCase("dn")) {
 					LOG.trace("...adding DN to record.");
@@ -381,9 +381,9 @@ public class LdifParser implements Parser, InitializingBean {
 	}
 
 	public void afterPropertiesSet() throws Exception {
-		Assert.notNull(resource, "A resource to parse is required.");
-		Assert.isTrue(resource.exists(), resource.getDescription() + ": resource does not exist!");
-		Assert.isTrue(resource.isReadable(), "Resource is not readable.");
+		Assert.notNull(this.resource, "A resource to parse is required.");
+		Assert.isTrue(this.resource.exists(), this.resource.getDescription() + ": resource does not exist!");
+		Assert.isTrue(this.resource.isReadable(), "Resource is not readable.");
 	}
 
 }
