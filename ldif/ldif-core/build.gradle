@@ -9,7 +9,6 @@ dependencies {
     testImplementation platform('org.junit:junit-bom')
     testImplementation "org.junit.vintage:junit-vintage-engine"
     testImplementation "junit:junit"
-    testImplementation "commons-io:commons-io"
     testImplementation "org.assertj:assertj-core"
     testImplementation ("log4j:log4j:1.2.17") {
         exclude group: 'javax.jms'

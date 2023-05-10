@@ -12,7 +12,6 @@ dependencies {
     api "org.springframework:spring-test"
 
     implementation "com.google.code.typica:typica"
-    implementation "commons-io:commons-io"
 
     optional "org.apache.directory.server:apacheds-core-entry"
     optional "org.apache.directory.server:apacheds-core"

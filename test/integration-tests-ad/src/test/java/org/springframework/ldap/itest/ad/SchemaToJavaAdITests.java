@@ -17,14 +17,17 @@
 package org.springframework.ldap.itest.ad;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -156,7 +159,10 @@ public final class SchemaToJavaAdITests {
 		final String packageName = "org.springframework.ldap.odm.testclasses";
 
 		File tempFile = File.createTempFile("test-odm-syntax-to-class-map", ".txt");
-		FileUtils.copyInputStreamToFile(new ClassPathResource("/syntax-to-class-map.txt").getInputStream(), tempFile);
+		Path from = new ClassPathResource("/syntax-to-class-map.txt").getFile().toPath();
+		try (OutputStream to = new FileOutputStream(tempFile)) {
+			Files.copy(from, to);
+		}
 
 		// Add classes dir to class path - needed for compilation
 		System.setProperty("java.class.path",

@@ -18,8 +18,8 @@ package org.springframework.ldap.ldif;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
 import org.springframework.ldap.ldif.parser.LdifParser;
@@ -39,7 +39,7 @@ public class Ldap233LdifParserTests {
 	@Test
 	public void ldap233Test() throws IOException {
 		File testFile = File.createTempFile("ldapTest", ".ldif");
-		FileUtils.write(testFile, "This is just some random text");
+		Files.write(testFile.toPath(), "This is just some random text".getBytes());
 
 		LdifParser parser = new LdifParser(testFile);
 		parser.setRecordSpecification(new BasicSchemaSpecification());
