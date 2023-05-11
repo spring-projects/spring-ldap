@@ -22,7 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation describes the mapping of a Java field to an LDAP attribute.
+ * Maps a Java field to an LDAP attribute.
  * <p>
  * The containing class must be annotated with {@link Entry}.
  *

@@ -1073,19 +1073,28 @@ For example, assume that you have entries in your LDAP tree that have the follow
 If you are interested only in changing the attributes defined in the `person` object class, you can annotate your `@Entry` with `@Entry(objectClasses = { "person", "top" })`.
 However, if you want to manage attributes defined in the `inetOrgPerson` objectclass, you need to use the following: `@Entry(objectClasses = { "inetOrgPerson", "organizationalPerson", "person", "top" })`.
 
-The `@Id` annotation is used to map the distinguished name of the entry to a field. The field must be an instance of `javax.naming.Name`.
+All entity fields are mapped by their field name to LDAP attributes. The remaining annotations -- `@Id`, `@Attribute`, `@Transient`, and `@DnAttribute` -- affect how that mapping occurs.
 
-The `@Attribute` annotation is used to map object class fields to entity fields.
-`@Attribute` is required to declare the name of the object class property to which the field maps and may optionally declare the syntax OID of the LDAP attribute, to guarantee exact matching.
-`@Attribute` also provides the type declaration, which lets you indicate whether the attribute is regarded as binary-based or string-based by the LDAP JNDI provider.
+First, the `@Id` annotation maps the distinguished name of the entry to a field. The field must be an instance of `javax.naming.Name`.
 
-The `@DnAttribute` annotation is used to map object class fields to and from components in the distinguished name of an entry.
-Fields annotated with `@DnAttribute` are automatically populated with the appropriate value from the distinguished name when an entry is read from the directory tree.
+Second, the `@Attribute` annotation maps entity fields to LDAP attributes.
+This is handy when the attribute name is different from the field name.
+To use `@Attribute`, you must declare the name of the attribute to which the field maps.
+Optionally, you can also guarantee and exact match by including the syntax OID of the LDAP attribute.
+Finally, `@Attribute` also provides the type declaration, which lets you indicate whether the attribute is regarded as binary- or string-based by the LDAP JNDI provider.
+
+Third, the `@Transient` annotation indicates that the given entity field does not map to an LDAP attribute.
+
+Finally, the `@DnAttribute` annotation additionally maps entity fields to components of an entry's distinguished name.
 Only fields of type `String` can be annotated with `@DnAttribute`. Other types are not supported.
-If the `index` attribute of all `@DnAttribute` annotations in a class is specified, the DN can also be automatically calculated when creating and updating entries.
+
+[TIP]
+When the `index` attribute of all `@DnAttribute` annotations in a class is specified, the DN can also be automatically calculated when creating and updating entries.
 For update scenarios, this also automatically takes care of moving entries in the tree if attributes that are part of the distinguished name have changed.
 
-The `@Transient` annotation indicates that the field should be ignored by the object directory mapping and not mapped to an underlying LDAP property. Note that if a `@DnAttribute` is not to be bound to an `Attribute`. That is, it is only part of the Distinguished Name and not represented by an object attribute. It must also be annotated with `@Transient`.
+[NOTE]
+Remember that all fields are mapped to LDAP attributes by default.
+`@DnAttribute` does not change this; in other words, fields annotated with `@DnAttribute` will also map to an LDAP attribute, unless you also annotate the field with `@Transient`.
 
 === Execution
 
