@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Indicates that a field is to be automatically populated to/from the distinguished name
- * of an entry. Fields annotated with this annotation will be automatically populated with values from
- * the distinguished names of found entries. Annotated fields must be of type <code>String</code>.
+ * Maps a Java field to a component of an entry's distinguished name. Fields annotated
+ * with this annotation will be automatically populated with values from the distinguished
+ * names of found entries. Annotated fields must be of type <code>String</code>.
  * <p>
  * For automatic calculation of the DN of an entry to work, the {@link #index()} value
  * must be specified on all DnAttribute annotations in that class, and these attribute values,
