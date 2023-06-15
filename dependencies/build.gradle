@@ -47,7 +47,7 @@ dependencies {
 		api "org.assertj:assertj-core:3.24.2"
 		api "org.freemarker:freemarker:2.3.32"
 		api "org.hibernate:hibernate-core-jakarta:5.6.15.Final"
-		api "org.hsqldb:hsqldb:2.7.1"
+		api "org.hsqldb:hsqldb:2.7.2"
 		api "junit:junit:4.13.2"
 		api "org.mockito:mockito-core:4.11.0"
 		api "org.mockito:mockito-inline:4.11.0"
