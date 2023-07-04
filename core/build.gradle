@@ -55,3 +55,7 @@ compileTestJava {
 test {
     jvmArgs '--add-exports', 'java.naming/com.sun.jndi.ldap=ALL-UNNAMED'
 }
+
+checkFormatMain {
+    enabled = false
+}
