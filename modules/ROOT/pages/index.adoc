@@ -1,3 +1,4 @@
+[[spring-ldap-reference]]
 = Spring LDAP Reference
 Mattias Hellborg Arthursson; Ulrik Sandberg; Eric Dalquist; Keith Barlow; Rob Winch
 
@@ -5,6 +6,7 @@ Spring LDAP makes it easier to build Spring-based applications that use the Ligh
 
 _Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically._
 
+[[preface]]
 == Preface
 
 The Java Naming and Directory Interface (JNDI) is to LDAP programming what Java Database Connectivity (JDBC) is to SQL programming. There are several similarities between JDBC and JNDI/LDAP (Java LDAP). Despite being two completely different APIs with different pros and cons, they share a number of less flattering characteristics:
@@ -18,6 +20,7 @@ These points often lead to massive code duplication in common use cases of the A
 
 Spring JDBC, a core component of Spring Framework, provides excellent utilities for simplifying SQL programming. We need a similar framework for Java LDAP programming.
 
+[[introduction]]
 == Introduction
 
 This section offers a relatively quick introduction to Spring LDAP. It includes the following content:
@@ -560,6 +563,7 @@ public class PersonRepoImpl implements PersonRepo {
 Manual attributes building is -- while dull and verbose -- sufficient for many purposes. You can, however, simplify the binding operation further, as described in <<dirobjectfactory>>.
 
 
+[[removing-data]]
 ==== Removing Data
 
 Removing data in Java LDAP is called unbinding.
@@ -590,6 +594,7 @@ public class PersonRepoImpl implements PersonRepo {
 In Java LDAP, data can be modified in two ways: either by using `rebind` or by using `modifyAttributes`.
 
 
+[[updating-by-using-rebind]]
 ==== Updating by Using Rebind
 
 A `rebind` is a crude way to modify data. It is basically an `unbind` followed by a `bind`.
@@ -650,6 +655,7 @@ Spring LDAP makes use of this feature to return https://docs.spring.io/spring-ld
 
 `DirContextAdapter` is a useful tool for working with LDAP attributes, particularly when adding or modifying data.
 
+[[search-and-lookup-using-contextmapper]]
 === Search and Lookup Using `ContextMapper`
 
 Whenever an entry is found in the LDAP tree, its attributes and Distinguished Name (DN) are used by Spring LDAP to construct a `DirContextAdapter`.
@@ -713,6 +719,7 @@ private static class PersonContextMapper implements ContextMapper {
 ----
 ====
 
+[[using-abstractcontextmapper]]
 ==== Using `AbstractContextMapper`
 
 Spring LDAP provides an abstract base implementation of `ContextMapper`, called https://docs.spring.io/spring-ldap/docs/current/apidocs/org/springframework/ldap/core/support/AbstractContextMapper.html[`AbstractContextMapper`].
@@ -737,12 +744,14 @@ private static class PersonContextMapper **extends AbstractContextMapper** {
 ====
 
 
+[[adding-and-updating-data-by-using-dircontextadapter]]
 === Adding and Updating Data by Using `DirContextAdapter`
 `
 While useful when extracting attribute values, `DirContextAdapter` is even more powerful for managing the details
 involved in adding and updating data.
 
 
+[[adding-data-by-using-dircontextadapter]]
 ==== Adding Data by Using `DirContextAdapter`
 
 The following example uses `DirContextAdapter` to implement an improved implementation of the `create` repository method presented in <<basic-binding-data>>:
@@ -779,6 +788,7 @@ Also note the use of the `setAttributeValues()` method when setting the `objectc
 The `objectclass` attribute is multi-value. Similar to the troubles of extracting muti-value attribute data,
 building multi-value attributes is tedious and verbose work. By using the `setAttributeValues()` method, you can have `DirContextAdapter` handle that work for you.
 
+[[updating-data-by-using-dircontextadapter]]
 ==== Updating Data by Using `DirContextAdapter`
 
 We previously saw that updating by using `modifyAttributes` is the recommended approach, but that doing so requires us to perform
@@ -928,6 +938,7 @@ public class GroupRepo implements BaseLdapNameAware {
 In the preceding example, we implement `BaseLdapNameAware` to get the base LDAP path as described in <<base-context-configuration>>.
 This is necessary because distinguished names as member attribute values must always be absolute from the directory root.
 
+[[a-complete-personrepository-class]]
 === A Complete `PersonRepository` Class
 
 To illustrate the usefulness of Spring LDAP and `DirContextAdapter`, the following example shows a complete `Person` Repository implementation for LDAP:
@@ -1053,6 +1064,7 @@ The Spring LDAP project offers a similar ability with respect to LDAP directorie
 * `void update(Object entry)`
 * `void delete(Object entry)`
 
+[[annotations]]
 === Annotations
 
 Entity classes managed with the object mapping methods are required to be annotated with annotations from the `org.springframework.ldap.odm.annotations` package. The available annotations are:
@@ -1096,6 +1108,7 @@ For update scenarios, this also automatically takes care of moving entries in th
 Remember that all fields are mapped to LDAP attributes by default.
 `@DnAttribute` does not change this; in other words, fields annotated with `@DnAttribute` will also map to an LDAP attribute, unless you also annotate the field with `@Transient`.
 
+[[execution]]
 === Execution
 
 When all components have been properly configured and annotated, the object mapping methods of `LdapTemplate` can be used as follows:
@@ -1235,6 +1248,7 @@ distinguished names is disregarded when figuring out whether they are equal.
 
 This section covers various how to use LDAP queries with Spring LDAP.
 
+[[ldap-query-builder-parameters]]
 === LDAP Query Builder Parameters
 
 The `LdapQueryBuilder` and its associated classes are intended to support all of the parameters that can be supplied to an LDAP search.
@@ -1332,6 +1346,7 @@ Stream<Person> persons = ldapClient.search()
 ----
 ====
 
+[[filter-criteria]]
 === Filter Criteria
 
 The earlier examples demonstrate simple equals conditions in LDAP filters. The LDAP query builder has support for the following criteria types:
@@ -1344,6 +1359,7 @@ The earlier examples demonstrate simple equals conditions in LDAP filters. The L
 * `isPresent`: Specifies a condition that checks for the presence of an attribute -- for example, `where("cn").isPresent()` results in the following filter: `(cn=*)`.
 * `not`: Specifies that the current condition should be negated -- for example, `where("sn").not().is("Doe)` results in the following filter: `(!(sn=Doe))`
 
+[[hardcoded-filters]]
 === Hardcoded Filters
 
 There may be occasions when you want to specify a hardcoded filter as input to an `LdapQuery`. `LdapQueryBuilder` has two methods for this purpose:
@@ -1357,6 +1373,7 @@ There may be occasions when you want to specify a hardcoded filter as input to a
 You cannot mix the hardcoded filter methods with the `where` approach described earlier. It is either one or the other. If you specify a filter by using `filter()`, you get an exception if you try to call `where` afterwards.
 
 
+[[configuration]]
 == Configuration
 
 The recommended way of configuring Spring LDAP is to use the custom XML configuration namespace. To make this available, you need to include the Spring LDAP namespace declaration in your bean file, as follows:
@@ -1373,6 +1390,7 @@ The recommended way of configuring Spring LDAP is to use the custom XML configur
 ----
 ====
 
+[[contextsource-configuration]]
 === `ContextSource` Configuration
 
 `ContextSource` is defined by using an `<ldap:context-source>` tag.
@@ -1455,6 +1473,7 @@ a|  Defines the strategy with which to handle referrals, as described https://do
 |  A reference to a `Map` of custom environment properties that should supplied with the environment sent to the `DirContext` on construction.
 |===
 
+[[dircontext-authentication]]
 ==== `DirContext` Authentication
 
 When `DirContext` instances are created to be used for performing operations on an LDAP server, these contexts often need to be authenticated.
@@ -1477,6 +1496,7 @@ There are many occasions when this processing is not sufficient. For instance, L
 
 You can specify an alternative authentication mechanism by supplying a `DirContextAuthenticationStrategy` implementation reference to the `context-source` element. To do so, set the `authentication-strategy-ref` attribute.
 
+[[tls]]
 ====== TLS
 
 Spring LDAP provides two different configuration options for LDAP servers that require TLS secure channel communication: `DefaultTlsDirContextAuthenticationStrategy` and `ExternalTlsDirContextAuthenticationStrategy`.
@@ -1517,6 +1537,7 @@ NOTE: We do not specify any `username` or `password` for. our `context-source` w
 
 NOTE: When using the `SpringSecurityAuthenticationSource`, you need to use Spring Security's `LdapAuthenticationProvider` to authenticate the users against LDAP.
 
+[[native-java-ldap-pooling]]
 ==== Native Java LDAP Pooling
 
 The internal Java LDAP provider provides some very basic pooling capabilities. You can turn this LDAP connection pooling on or off by using the `pooled` flag on `AbstractContextSource`.  The default value is `false` (since release 1.3) -- that is, the native Java LDAP pooling is turned off. The configuration of LDAP connection pooling is managed by using `System` properties, so you need to handle this manually, outside of the Spring Context configuration. You can find details of the native pooling configuration https://java.sun.com/products/jndi/tutorial/ldap/connect/config.html[here].
@@ -1525,14 +1546,17 @@ NOTE: There are several serious deficiencies in the built-in LDAP connection poo
 
 NOTE: Regardless of the pooling configuration, the `ContextSource#getContext(String principal, String credentials)` method always explicitly does not use native Java LDAP Pooling, in order for reset passwords to take effect as soon as possible.
 
+[[advanced-contextsource-configuration]]
 ==== Advanced `ContextSource` Configuration
 
 This section covers more advanced ways to configure a `ContextSource`.
 
+[[custom-dircontext-environment-properties]]
 ===== Custom `DirContext` Environment Properties
 
 In some cases, you might want to specify additional environment setup properties, in addition to the ones directly configurable on `context-source`. You should set such properties in a `Map` and reference them in the `base-env-props-ref` attribute.
 
+[[ldapclient-configuration]]
 === `LdapClient` Configuration
 
 `LdapClient` is the new interface for calling an LDAP backend. It improves upon `LdapTemplate` in the following ways:
@@ -1561,6 +1585,7 @@ This element references the default `ContextSource`, which is expected to have a
 
 Your `LdapClient` instance can be configured for how to handle certain checked exceptions and what any default `SearchControls` should be used for queries.
 
+[[ldaptemplate-configuration]]
 === `LdapTemplate` Configuration
 
 The `LdapTemplate` is defined by using a `<ldap:ldap-template>` element. The simplest possible `ldap-template` declaration is the element by itself:
@@ -1691,6 +1716,7 @@ Spring LDAP has built-in support for Spring Data repositories. The basic functio
 
 *  Due to specifics of the LDAP protocol, paging and sorting are not supported for Spring LDAP repositories.
 
+[[querydsl-support]]
 === QueryDSL support
 Basic QueryDSL support is included in Spring LDAP. This support includes the following:
 
@@ -1707,6 +1733,7 @@ Pooling LDAP connections helps mitigate the overhead of creating a new LDAP conn
 
 Pooling support is provided by supplying a `<ldap:pooling />` child element to the `<ldap:context-source />` element in the application context configuration. Read-only and read-write `DirContext` objects are pooled separately (if `anonymous-read-only` is specified). https://commons.apache.org/pool/index.html[Jakarta Commons-Pool] is used to provide the underlying pool implementation.
 
+[[dircontext-validation]]
 === `DirContext` Validation
 
 Validation of pooled connections is the primary motivation for using a custom pooling library versus the JDK-provided LDAP pooling functionality. Validation allows pooled `DirContext` connections to be checked to ensure that they are still properly connected and configured when checking them out of the pool, checking them into the pool, or while they are idle in the pool.
@@ -1797,6 +1824,7 @@ The following attributes are available on the `<ldap:pooling />` element for con
 |  Comma-separated list of `Exception` classes. The listed exceptions are considered non-transient with regards to eager invalidation. Should any of the listed exceptions (or subclasses of them) be thrown by a call to a pooled `DirContext` instance, that object is automatically invalidated without any additional testOnReturn operation.
 |===
 
+[[pool2-configuration]]
 === Pool2 Configuration
 
 The following attributes are available on the `<ldap:pooling2 />` element for configuring the `DirContext` pool:
@@ -1903,6 +1931,7 @@ The following attributes are available on the `<ldap:pooling2 />` element for co
 |  Comma-separated list of `Exception` classes. The listed exceptions are considered non-transient with regards to eager invalidation. Should any of the listed exceptions (or subclasses of them) be thrown by a call to a pooled `DirContext` instance, that object is automatically invalidated without any additional testOnReturn operation.
 |===
 
+[[configuration]]
 === Configuration
 
 Configuring pooling requires adding an `<ldap:pooling>` element nested in the `<ldap:context-source>` element, as follows:
@@ -1924,6 +1953,7 @@ Configuring pooling requires adding an `<ldap:pooling>` element nested in the `<
 
 In a real-world situation, you would probably configure the pool options and enable connection validation. The preceding example demonstrates the general idea.
 
+[[validation-configuration]]
 ==== Validation Configuration
 
 The following example tests each `DirContext` before it is passed to the client application and tests `DirContext` objects that have been sitting idle in the pool:
@@ -1945,6 +1975,7 @@ The following example tests each `DirContext` before it is passed to the client 
 ----
 ====
 
+[[known-issues]]
 === Known Issues
 
 This section describes issues that sometimes arise when people use Spring LDAP. At present, it covers the following issues:
@@ -1956,10 +1987,12 @@ This section describes issues that sometimes arise when people use Spring LDAP. 
 
 The `PoolingContextSource` assumes that all `DirContext` objects retrieved from `ContextSource.getReadOnlyContext()` have the same environment and, likewise, that all `DirContext` objects retrieved from `ContextSource.getReadWriteContext()` have the same environment. This means that wrapping an `LdapContextSource` configured with an `AuthenticationSource` in a `PoolingContextSource` does not function as expected. The pool would be populated by using the credentials of the first user, and, unless new connections were needed, subsequent context requests would not be filled for the user specified by the `AuthenticationSource` for the requesting thread.
 
+[[adding-missing-overloaded-api-methods]]
 == Adding Missing Overloaded API Methods
 
 This section covers how to add your own overloaded API methods to implement new functionality.
 
+[[implementing-custom-search-methods]]
 === Implementing Custom Search Methods
 
 `LdapTemplate` contains several overloaded versions of the most common operations in `DirContext`. However, we have not provided an alternative for each and every method signature, mostly because there are so many of them. We have, however, provided a means to call whichever `DirContext` method you want and still get the benefits that `LdapTemplate` provides.
@@ -2046,6 +2079,7 @@ public class PersonRepoImpl implements PersonRepo {
 
 NOTE: When you use the `ContextMapperCallbackHandler`, you must make sure that you have called `setReturningObjFlag(true)` on your `SearchControls` instance.
 
+[[implementing-other-custom-context-methods]]
 === Implementing Other Custom Context Methods
 
 In the same manner as for custom `search` methods, you can actually call any method in `DirContext` by using a `ContextExecutor`, as follows:
@@ -2097,10 +2131,12 @@ public class PersonRepoImpl implements PersonRepo {
 In the same manner, you can perform a read-write operation by using the `executeReadWrite()` method.
 
 
+[[processing-the-dircontext]]
 == Processing the `DirContext`
 
 This section covers how to process the `DirContext`, including pre- and post-processing.
 
+[[custom-dircontext-pre-and-post-processing]]
 === Custom `DirContext` Pre- and Post-processing
 
 In some situations, you might like to perform operations on the `DirContext` before and after the search operation. The interface that is used for this is called `DirContextProcessor`. The following listing shows the `DirContextProcessor` interface:
@@ -2155,6 +2191,7 @@ public void search(String base, String filter,
 ----
 ====
 
+[[implementing-a-request-control-dircontextprocessor]]
 === Implementing a Request Control `DirContextProcessor`
 
 The LDAPv3 protocol uses "`Controls`" to send and receive additional data to affect the behavior of predefined operations. To simplify the implementation of a request control `DirContextProcessor`, Spring LDAP provides the `AbstractRequestControlDirContextProcessor` base class. This class handles the retrieval of the current request controls from the `LdapContext`, calls a template method for creating a request control, and adds it to the `LdapContext`. All you have to do in the subclass is to implement the template method called `createRequestControl` and the `postProcess` method for performing whatever you need to do after the search. The following listing shows the relevant signatures:
@@ -2213,6 +2250,7 @@ public class MyCoolRequestControl extends AbstractRequestControlDirContextProces
 
 NOTE: Make sure you use `LdapContextSource` when you use controls. The https://download.oracle.com/javase/1.5.0/docs/api/javax/naming/ldap/Control.html[`Control`] interface is specific for LDAPv3 and requires that `LdapContext` is used instead of `DirContext`. If an `AbstractRequestControlDirContextProcessor` subclass is called with an argument that is not an `LdapContext`, it throws an `IllegalArgumentException`.
 
+[[paged-search-results]]
 === Paged Search Results
 
 Some searches may return large numbers of results. When there is no easy way to filter out a smaller amount, it is convenient to have the server return only a certain number of results each time it is called. This is known as "`paged search results`". Each "`page`" of the result could then be displayed, with links to the next and previous page. Without this functionality, the client must either manually limit the search result into pages or retrieve the whole result and then chop it into pages of suitable size. The former would be rather complicated, and the latter would consume unnecessary amounts of memory.
@@ -2262,6 +2300,7 @@ public List<String> getAllPersonNames() {
 
 NOTE: For a paged results cookie to continue being valid, you must use the same underlying connection for each paged results call. You can do so by using the `SingleContextSource`, as demonstrated in the preceding example.
 
+[[transaction-support]]
 == Transaction Support
 
 Programmers used to working with relational databases coming to the LDAP world often express surprise at the fact that there is no notion of transactions.
@@ -2281,6 +2320,7 @@ While this overhead should not be something to worry about in most cases,
 if your application does not perform several LDAP operations within the same transaction (for example, `modifyAttributes` followed by `rebind`),
 or if transaction synchronization with a JDBC data source is not required (see <<spring-ldap-jdbc-transaction-integration>>), you gain little by using the LDAP transaction support.
 
+[[configuration]]
 === Configuration
 
 Configuring Spring LDAP transactions should look very familiar if you are used to configuring Spring transactions. You can annotate your transacted classes with `@Transactional`, create a `TransactionManager` instance, and include a `<tx:annotation-driven>` element in your bean configuration. The following example shows how to do so:
@@ -2353,6 +2393,7 @@ You can accomplish the same thing for Hibernate integration by supplying a `sess
 ----
 ====
 
+[[ldap-compensating-transactions-explained]]
 === LDAP Compensating Transactions Explained
 
 Spring LDAP manages compensating transactions by making a record of the state in the LDAP tree before each modifying operation (`bind`, `unbind`, `rebind`,  `modifyAttributes`, and `rename`).
@@ -2401,6 +2442,7 @@ a preparation operation, a commit operation, and a rollback operation. The follo
 
 A more detailed description of the internal workings of the Spring LDAP transaction support is available in the https://docs.spring.io/spring-ldap/docs/current/apidocs/[Javadoc].
 
+[[renaming-strategies]]
 ==== Renaming Strategies
 
 As described in the table in the preceding section, the transaction management of some operations requires the original entry affected by the operation to be temporarily renamed before the actual modification can be made in the commit. The manner in which the temporary DN of the entry is calculated is managed by a `TempEntryRenamingStrategy` that is specified in a child element of the `<ldap:transaction-manager >` declaration in the configuration. Spring LDAP includes two implementations:
@@ -2547,6 +2589,7 @@ In addition to the `authenticate` methods described in the preceding sections, y
 
 While the approach described in the preceding sections may be sufficient for simple authentication scenarios, requirements in this area commonly expand rapidly. A multitude of aspects apply, including authentication, authorization, web integration, user context management, and others. If you suspect that the requirements might expand beyond just simple authentication, you should definitely consider using https://spring.io/spring-security[Spring Security] for your security purposes instead. It is a full-featured, mature security framework that addresses the aforementioned aspects as well as several others.
 
+[[ldif-parsing]]
 == LDIF Parsing
 
 LDAP Directory Interchange Format (LDIF) files are the standard medium for describing directory data in a flat-file format. The most common uses of this format include information transfer and archival. However, the standard also defines a way to describe modifications to stored data in a flat-file format. LDIFs of this later type are typically referred to as _changetype_ or _modify_ LDIFs.
@@ -2555,6 +2598,7 @@ The `org.springframework.ldap.ldif` package provides the classes needed to parse
 
 NOTE: The `LdifParser` currently ignores _changetype_ LDIF entries, as their usefulness in the context of an application has yet to be determined.
 
+[[object-representation]]
 === Object Representation
 
 Two classes in the `org.springframework.ldap.core` package provide the means to represent an LDIF in code:
@@ -2565,6 +2609,7 @@ Two classes in the `org.springframework.ldap.core` package provide the means to 
 
 `LdapAttribute` objects represent options as a `Set<String>`. The DN support added to the `LdapAttributes` object employs the `javax.naming.ldap.LdapName` class.
 
+[[the-parser]]
 === The Parser
 
 The `Parser` interface provides the foundation for operation and employs three supporting policy definitions:
@@ -2587,10 +2632,12 @@ The `SeparatorPolicy` determines how individual lines read from the source file 
 
 The `DefaultAttributeValidationPolicy` uses REGEX expressions to ensure that each attribute conforms to a valid attribute format (according to RFC 2849) once parsed. If an attribute fails validation, an `InvalidAttributeFormatException` is logged, and the record is skipped (the parser returns `null`).
 
+[[schema-validation]]
 === Schema Validation
 
 A mechanism for validating parsed objects against a schema is available through the `Specification` interface in the `org.springframework.ldap.schema` package. The `DefaultSchemaSpecification` does not do any validation and is available for instances where records are known to be valid and need not be checked. This option saves the performance penalty that validation imposes. The `BasicSchemaSpecification` applies basic checks, such as ensuring DN and object class declarations have been provided. Currently, validation against an actual schema requires implementation of the `Specification` interface.
 
+[[spring-batch-integration]]
 === Spring Batch Integration
 
 While the `LdifParser` can be employed by any application that requires parsing of LDIF files, Spring offers a batch processing framework that offers many file-processing utilities for parsing delimited files such as CSV. The `org.springframework.ldap.ldif.batch` package offers the classes needed to use the `LdifParser` as a valid configuration option in the Spring Batch framework.
@@ -2609,10 +2656,12 @@ You can implement `RecordCallbackHandler` and provide the implementation to eith
 The last member of this package, the `LdifAggregator`, can be used to write LDIF records to a file. This class invokes the `toString()` method of the `LdapAttributes` object.
 
 
+[[utilities]]
 == Utilities
 
 This section describes additional utilities that you can use with Spring LDAP.
 
+[[incremental-retrieval-of-multi-valued-attributes]]
 === Incremental Retrieval of Multi-Valued Attributes
 
 When there are a very large number of attribute values (>1500) for a specific attribute, Active Directory typically refuses to return all these values at once. Instead, the attribute values are returned according to the https://tools.ietf.org/html/draft-kashi-incremental-00[Incremental Retrieval of Multi-valued Properties] method. Doing so requires the calling part to inspect the returned attribute for specific markers and, if necessary, make additional lookup requests until all values are found.
@@ -2630,6 +2679,7 @@ Attributes attrs = DefaultIncrementalAttributeMapper.lookupAttributes(ldapTempla
 
 The preceding example parses any returned attribute range markers and makes repeated requests as necessary until all values for all requested attributes have been retrieved.
 
+[[testing]]
 == Testing
 
 This section covers testing with Spring LDAP. It contains the following topics:

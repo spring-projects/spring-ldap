@@ -1,7 +1,10 @@
+[[spring-ldap-faq]]
 = Spring LDAP FAQ
 
+[[operational-attributes]]
 == Operational Attributes
 
+[[how-do-i-remove-an-operational-attribute-by-using-context-removeattributevalue?]]
 === How do I remove an operational attribute by using `context.removeAttributeValue()`?
 
 By default, the `DirContextAdapter` reads only the visible attributes. This is because the operational attributes are returned by the server only if explicitly asked for, and there is no way for Spring LDAP to know the attributes for which to ask. This means that the `DirContextAdapter` is not populated with the operational attributes. Consequently, the `removeAttributeValue` does not have any effect (since, from the point of view of the  `DirContextAdapter`, it was not there in the first place).
