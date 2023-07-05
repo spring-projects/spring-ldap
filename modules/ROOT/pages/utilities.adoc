@@ -1,5 +1,6 @@
 [[utilities]]
 = Utilities
+:page-section-summary-toc: 1
 
 This section describes additional utilities that you can use with Spring LDAP.
 
