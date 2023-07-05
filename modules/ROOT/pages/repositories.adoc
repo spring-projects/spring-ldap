@@ -1,0 +1,26 @@
+[[repositories]]
+= Spring LDAP Repositories
+
+Spring LDAP has built-in support for Spring Data repositories. The basic functionality and configuration is described https://docs.spring.io/spring-data/data-commons/docs/current/reference/html/#repositories[here]. When working with Spring LDAP repositories, you should remember the following:
+
+*  You can enable Spring LDAP repositories by using an `<ldap:repositories>` element in your XML configuration or by using an `@EnableLdapRepositories` annotation on a configuration class.
+
+*  To include support for `LdapQuery` parameters in automatically generated repositories, have your interface extend `LdapRepository` rather than `CrudRepository`.
+
+*  All Spring LDAP repositories must work with entities that are annotated with the ODM annotations, as described in <<odm>>.
+
+*  Since all ODM managed classes must have a Distinguished Name as the ID, all Spring LDAP repositories must have the ID type parameter set to `javax.naming.Name`.
+   The built-in `LdapRepository` takes only one type parameter: the managed entity class, defaulting the ID to `javax.naming.Name`.
+
+*  Due to specifics of the LDAP protocol, paging and sorting are not supported for Spring LDAP repositories.
+
+[[querydsl-support]]
+== QueryDSL support
+Basic QueryDSL support is included in Spring LDAP. This support includes the following:
+
+*  An annotation processor, called `LdapAnnotationProcessor`, for generating QueryDSL classes based on Spring LDAP ODM annotations. See <<odm>> for more information on the ODM annotations.
+
+*  A Query implementation, called `QueryDslLdapQuery`, for building and running QueryDSL queries in code.
+
+*  Spring Data repository support for QueryDSL predicates. `QueryDslPredicateExecutor` includes a number of additional methods with appropriate parameters. You can extend this interface along with `LdapRepository` to include this support in your repository.
+

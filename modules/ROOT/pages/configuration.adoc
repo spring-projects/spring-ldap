@@ -1,0 +1,327 @@
+[[configuration]]
+= Configuration
+
+The recommended way of configuring Spring LDAP is to use the custom XML configuration namespace. To make this available, you need to include the Spring LDAP namespace declaration in your bean file, as follows:
+
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       **xmlns:ldap="http://www.springframework.org/schema/ldap"**
+       xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+       **http://www.springframework.org/schema/ldap https://www.springframework.org/schema/ldap/spring-ldap.xsd**">
+----
+====
+
+[[contextsource-configuration]]
+== `ContextSource` Configuration
+
+`ContextSource` is defined by using an `<ldap:context-source>` tag.
+The simplest possible `context-source` declaration requires you to specify a server URL, a username, and a password, as follows:
+
+.Simplest possible context-source declaration
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+
+<ldap:context-source
+    username="cn=Administrator"
+    password="secret"
+    url="ldap://localhost:389" />
+----
+====
+
+The preceding example creates an `LdapContextSource` with default values (see the table after this paragraph) and the URL and authentication credentials as specified.
+The configurable attributes on context-source are as follows (required attributes marked with *):
+
+.ContextSource Configuration Attributes
+[cols="2,3,5"]
+|===
+| Attribute | Default | Description
+
+| `id`
+| `contextSource`
+|  The ID of the created bean.
+
+| `username`
+|
+|  The username (principal) to use when authenticating with the LDAP server.
+   This is usually the distinguished name of an admin user (for example, `cn=Administrator`) but may differ depending on server and authentication method.
+   Required if `authentication-source-ref` is not explicitly configured.
+
+| `password`
+|
+|  The password (credentials) to use when authenticating with the LDAP server. Required if `authentication-source-ref` is not explicitly configured.
+
+| `url` *
+|
+|  The URL of the LDAP server to use. The URL should be in the following format: `ldap://myserver.example.com:389`.
+   For SSL access, use the `ldaps` protocol and the appropriate port -- for example, `ldaps://myserver.example.com:636`.
+   If you want fail-over functionality, you can specify more than one URL, separated by commas (`,`).
+
+| `base`
+| `LdapUtils.emptyLdapName()`
+|  The base DN. When this attribute has been configured, all Distinguished Names supplied to and received from LDAP operations are relative to the specified LDAP path.
+   This can significantly simplify working against the LDAP tree. However, there are several occasions when you need to have access to the base path.
+   For more information on this, see <<base-context-configuration>>
+
+| `anonymous-read-only`
+| `false`
+|  Defines whether read-only operations are performed by using an anonymous (unauthenticated) context.
+   Note that setting this parameter to `true` together with the compensating transaction support is not supported and is rejected.
+
+| `referral`
+| `null`
+a|  Defines the strategy with which to handle referrals, as described https://docs.oracle.com/javase/jndi/tutorial/ldap/referral/jndi.html[here]. The valid values are:
+
+* `ignore`
+* `follow`
+* `throw`
+
+| `native-pooling`
+| `false`
+|  Specify whether native Java LDAP connection pooling should be used. Consider using Spring LDAP connection pooling instead. See <<pooling>> for more information.
+
+| `authentication-source-ref`
+|  A `SimpleAuthenticationSource` instance.
+|  ID of the `AuthenticationSource` instance to use (see <<spring-ldap-custom-principal-credentials-management>>).
+
+| `authentication-strategy-ref`
+|  A `SimpleDirContextAuthenticationStrategy` instance.
+|  ID of the `DirContextAuthenticationStrategy` instance to use (see <<spring-ldap-custom-dircontext-authentication-processing>>).
+
+| `base-env-props-ref`
+|
+|  A reference to a `Map` of custom environment properties that should supplied with the environment sent to the `DirContext` on construction.
+|===
+
+[[dircontext-authentication]]
+=== `DirContext` Authentication
+
+When `DirContext` instances are created to be used for performing operations on an LDAP server, these contexts often need to be authenticated.
+Spring LDAP offers various options for configuring this.
+
+NOTE: This section refers to authenticating contexts in the core functionality of the `ContextSource`, to construct `DirContext` instances for use by `LdapClient` and `LdapTemplate`. LDAP is commonly used for the sole purpose of user authentication, and the `ContextSource` may be used for that as well. That process is discussed in <<user-authentication>>.
+
+By default, authenticated contexts are created for both read-only and read-write operations. You should specify the `username` and `password` of the LDAP user to be used for authentication on the `context-source` element.
+
+NOTE: If `username` is the Distinguished Name (DN) of an LDAP user, it needs to be the full DN of the user from the root of the LDAP tree, regardless of whether a `base` LDAP path has been specified on the `context-source` element.
+
+Some LDAP server setups allow anonymous read-only access. If you want to use anonymous contexts for read-only operations, set the `anonymous-read-only` attribute to `true`.
+
+[[spring-ldap-custom-dircontext-authentication-processing]]
+==== Custom `DirContext` Authentication Processing
+
+The default authentication mechanism used in Spring LDAP is `SIMPLE` authentication. This means that the principal (as specified by the `username` attribute) and the credentials (as specified by the `password`) are set in the `Hashtable` that is sent to the `DirContext` implementation constructor.
+
+There are many occasions when this processing is not sufficient. For instance, LDAP Servers are commonly set up to accept communication only on a secure TLS channel. There might be a need to use the particular LDAP Proxy Auth mechanism or other concerns.
+
+You can specify an alternative authentication mechanism by supplying a `DirContextAuthenticationStrategy` implementation reference to the `context-source` element. To do so, set the `authentication-strategy-ref` attribute.
+
+[[tls]]
+===== TLS
+
+Spring LDAP provides two different configuration options for LDAP servers that require TLS secure channel communication: `DefaultTlsDirContextAuthenticationStrategy` and `ExternalTlsDirContextAuthenticationStrategy`.
+Both implementations negotiate a TLS channel on the target connection, but they differ in the actual authentication mechanism.
+Where `DefaultTlsDirContextAuthenticationStrategy` applies SIMPLE authentication on the secure channel (by using the specified `username` and `password`), the `ExternalTlsDirContextAuthenticationStrategy` uses EXTERNAL SASL authentication, applying a client certificate that is configured by using system properties for authentication.
+
+Since different LDAP server implementations respond differently to explicit shutdown of the TLS channel (some servers require the connection be shut down gracefully, while others do not support it), the TLS `DirContextAuthenticationStrategy` implementations support specifying the shutdown behavior by using the `shutdownTlsGracefully` parameter. If this property is set to `false` (the default), no explicit TLS shutdown happens. If it is `true`, Spring LDAP tries to shut down the TLS channel gracefully before closing the target context.
+
+NOTE: When working with TLS connections, you need to make sure that the native LDAP Pooling functionality (as specified by using the `native-pooling` attribute) is turned off. This is particularly important if `shutdownTlsGracefully` is set to `false`. However, since the TLS channel negotiation process is quite expensive, you can gain great performance benefits by using the Spring LDAP Pooling Support, described in <<pooling>>.
+
+[[spring-ldap-custom-principal-credentials-management]]
+==== Custom Principal and Credentials Management
+
+While the user name (that is, the user DN) and password used for creating an authenticated `Context` are statically defined by default (the ones defined in the `context-source` element configuration are used throughout the lifetime of the `ContextSource`), there are several cases where this is not the desired behavior. A common scenario is that the principal and credentials of the current user should be used when performing LDAP operations for that user. You can modify the default behavior by supplying a reference to an `AuthenticationSource` implementation to the `context-source` element by using the `authentication-source-ref` element, instead of explicitly specifying the `username` and `password`. The `AuthenticationSource` is queried by the `ContextSource` for principal and credentials each time an authenticated `Context` is to be created.
+
+If you use https://spring.io/spring-security[Spring Security], you can make sure the principal and credentials of the currently logged-in user are used at all times by configuring your `ContextSource` with an instance of the `SpringSecurityAuthenticationSource` shipped with Spring Security. The following example shows how to do so:
+
+
+.Using the SpringSecurityAuthenticationSource
+====
+[source,java,subs="verbatim,quotes"]
+----
+
+<beans>
+...
+    <ldap:context-source
+        url="ldap://localhost:389"
+        authentication-source-ref="springSecurityAuthenticationSource"/>
+
+    <bean id="springSecurityAuthenticationSource"
+        class="org.springframework.security.ldap.authentication.SpringSecurityAuthenticationSource" />
+...
+</beans>
+----
+====
+
+NOTE: We do not specify any `username` or `password` for. our `context-source` when using an `AuthenticationSource`. These properties are needed only when the default behavior is used.
+
+NOTE: When using the `SpringSecurityAuthenticationSource`, you need to use Spring Security's `LdapAuthenticationProvider` to authenticate the users against LDAP.
+
+[[native-java-ldap-pooling]]
+=== Native Java LDAP Pooling
+
+The internal Java LDAP provider provides some very basic pooling capabilities. You can turn this LDAP connection pooling on or off by using the `pooled` flag on `AbstractContextSource`.  The default value is `false` (since release 1.3) -- that is, the native Java LDAP pooling is turned off. The configuration of LDAP connection pooling is managed by using `System` properties, so you need to handle this manually, outside of the Spring Context configuration. You can find details of the native pooling configuration https://java.sun.com/products/jndi/tutorial/ldap/connect/config.html[here].
+
+NOTE: There are several serious deficiencies in the built-in LDAP connection pooling, which is why Spring LDAP provides a more sophisticated approach to LDAP connection pooling, described in <<pooling>>. If you need pooling functionality, this is the recommended approach.
+
+NOTE: Regardless of the pooling configuration, the `ContextSource#getContext(String principal, String credentials)` method always explicitly does not use native Java LDAP Pooling, in order for reset passwords to take effect as soon as possible.
+
+[[advanced-contextsource-configuration]]
+=== Advanced `ContextSource` Configuration
+
+This section covers more advanced ways to configure a `ContextSource`.
+
+[[custom-dircontext-environment-properties]]
+==== Custom `DirContext` Environment Properties
+
+In some cases, you might want to specify additional environment setup properties, in addition to the ones directly configurable on `context-source`. You should set such properties in a `Map` and reference them in the `base-env-props-ref` attribute.
+
+[[ldapclient-configuration]]
+== `LdapClient` Configuration
+
+`LdapClient` is the new interface for calling an LDAP backend. It improves upon `LdapTemplate` in the following ways:
+
+* Provides built-in `Stream` support
+* Provides a simplified API centered around bind (C), search (R), modify (U), unbind (D), and authenticate.
+
+[NOTE]
+`LdapClient` does not yet support ODM.
+If this is something you need, `LdapTemplate` has this capacity.
+Both `LdapClient` and `LdapTemplate` can coexist quite nicely in the same application, if needed.
+
+An `LdapClient` is defined by using the `LdapClient#create` factory method like so:
+
+.Simplest possible LdapClient declaration
+====
+[source,xml]
+----
+<bean id="ldapClient" class="org.springframework.ldap.core.LdapClient" factory-method="create">
+   <constructor-arg ref="contextSource" />
+</bean>
+----
+====
+
+This element references the default `ContextSource`, which is expected to have an ID of `contextSource` (the default for the `context-source` element).
+
+Your `LdapClient` instance can be configured for how to handle certain checked exceptions and what any default `SearchControls` should be used for queries.
+
+[[ldaptemplate-configuration]]
+== `LdapTemplate` Configuration
+
+The `LdapTemplate` is defined by using a `<ldap:ldap-template>` element. The simplest possible `ldap-template` declaration is the element by itself:
+
+.Simplest possible ldap-template declaration
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+<ldap:ldap-template />
+----
+====
+
+The element by itself creates an `LdapTemplate` instance with the default ID, referencing the default `ContextSource`, which is expected to have an ID of `contextSource` (the default for the `context-source` element).
+
+The following table describes the configurable attributes on `ldap-template`:
+
+.LdapTemplate Configuration Attributes
+[cols="1,1,4a"]
+|===
+| Attribute | Default | Description
+
+| `id`
+| `ldapTemplate`
+|  The ID of the created bean.
+
+| `context-source-ref`
+| `contextSource`
+|  The ID of the `ContextSource` instance to use.
+
+| `count-limit`
+| `0`
+|  The default count limit for searches. 0 means no limit.
+
+| `time-limit`
+| `0`
+|  The default time limit for searches, in milliseconds. 0 means no limit.
+
+| `search-scope`
+| `SUBTREE`
+|  The default search scope for searches. The valid values are:
+
+* `OBJECT`
+* `ONELEVEL`
+* `SUBTREE`
+
+| `ignore-name-not-found`
+| `false`
+|  Specifies whether a `NameNotFoundException` should be ignored in searches. Setting this attribute to `true` make errors that are caused by an invalid search base be silently swallowed.
+
+| `ignore-partial-result`
+| `false`
+|  Specifies whether `PartialResultException` should be ignored in searches. Some LDAP servers have problems with referrals. These should normally be followed automatically. However, if this does not work, it manifests itself with a `PartialResultException`. Setting this attribute to `true` presents a work-around to this problem.
+
+| `odm-ref`
+|
+|  The ID of the `ObjectDirectoryMapper` instance to use. The default is a default-configured `DefaultObjectDirectoryMapper`.
+|===
+
+
+[[base-context-configuration]]
+== Obtaining a Reference to the Base LDAP Path
+
+As described earlier, you can supply a base LDAP path to the `ContextSource`, specifying the root in the LDAP tree to which all operations are relative. This means that you are working only with relative distinguished names throughout your system, which is typically rather handy. There are, however, some cases in which you may need to have access to the base path in order to be able to construct full DNs, relative to the actual root of the LDAP tree. One example would be when working with LDAP groups (for example, the `groupOfNames` object class). In that case, each group member attribute value needs to be the full DN of the referenced member.
+
+For that reason, Spring LDAP has a mechanism by which any Spring-controlled bean may be supplied with the base path on startup.
+For beans to be notified of the base path, two things need to be in place. First, the bean that wants the base path reference needs to implement the `BaseLdapNameAware` interface.
+Second, you need to define a `BaseLdapPathBeanPostProcessor` in the application context.
+The following example shows how to implement `BaseLdapNameAware`:
+
+.Implementing `BaseLdapNameAware`
+====
+[source,java,subs="verbatim,quotes"]
+----
+package com.example.service;
+public class PersonService implements PersonService**, BaseLdapNameAware** {
+   ...
+   **private LdapName basePath;
+
+   public void setBaseLdapPath(LdapName basePath) {
+      this.basePath = basePath;
+   }**
+   ...
+   private LdapName getFullPersonDn(Person person) {
+      return LdapNameBuilder.newInstance(**basePath**)
+          .add(person.getDn())
+          .build();
+   }
+   ...
+}
+----
+====
+
+The following example shows how to define a `BaseLdapPathBeanPostProcessor`:
+
+.Specifying a BaseLdapPathBeanPostProcessor in your ApplicationContext
+====
+[source,java,subs="verbatim,quotes"]
+----
+<beans>
+   ...
+   <ldap:context-source
+          username="cn=Administrator"
+          password="secret"
+          url="ldap://localhost:389"
+          base="dc=261consulting,dc=com" />
+   ...
+   **<bean class="org.springframework.ldap.core.support.BaseLdapPathBeanPostProcessor" />**
+</beans>
+----
+====
+
+The default behavior of the `BaseLdapPathBeanPostProcessor` is to use the base path of the single defined `BaseLdapPathSource` (`AbstractContextSource`) in the `ApplicationContext`. If more than one `BaseLdapPathSource` is defined, you need to specify which one to use by setting the `baseLdapPathSourceName` property.
+

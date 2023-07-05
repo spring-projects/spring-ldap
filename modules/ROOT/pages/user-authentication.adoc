@@ -1,0 +1,136 @@
+[[user-authentication]]
+= User Authentication using Spring LDAP
+
+This section covers user authentication with Spring LDAP. It contains the following topics:
+
+* <<spring-ldap-user-authentication-basic>>
+* <<operationsOnAuthenticatedContext>>
+* <<spring-ldap-authentication-obsolete>>
+* <<spring-ldap-using-spring-security>>
+
+[[spring-ldap-user-authentication-basic]]
+== Basic Authentication
+
+While the core functionality of the `ContextSource` is to provide `DirContext` instances for use by `LdapClient` and `LdapTemplate`, you can also use it for authenticating users against an LDAP server. The `getContext(principal, credentials)` method of `ContextSource` does exactly that. It constructs a `DirContext` instance according to the `ContextSource` configuration and authenticates the context by using the supplied principal and credentials. A custom authenticate method could look like the following example:
+
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+public boolean authenticate(String userDn, String credentials) {
+  DirContext ctx = null;
+  try {
+    ctx = contextSource.getContext(userDn, credentials);
+    return true;
+  } catch (Exception e) {
+    // Context creation failed - authentication did not succeed
+    logger.error("Login failed", e);
+    return false;
+  } finally {
+    // It is imperative that the created DirContext instance is always closed
+    LdapUtils.closeContext(ctx);
+  }
+}
+----
+====
+
+The `userDn` supplied to the `authenticate` method needs to be the full DN of the user to authenticate (regardless of the `base` setting on the `ContextSource`). You typically need to perform an LDAP search based on (for example) the user name to get this DN. The following example shows how to do so:
+
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+private String getDnForUser(String uid) {
+  List<String> result = ldapClient.search()
+      .query(query().where("uid").is(uid))
+      .toList((Object ctx) -> ((DirContextOperations) ctx).getNameInNamespace());
+
+  if(result.size() != 1) {
+    throw new RuntimeException("User not found or not unique");
+  }
+
+  return result.get(0);
+}
+----
+====
+
+There are some drawbacks to this approach. You are forced to concern yourself with the DN of the user, you can search only for the user's uid, and the search always starts at the root of the tree (the empty path). A more flexible method would let you specify the search base, the search filter, and the credentials. Spring LDAP includes an authenticate method in `LdapClient` that provides this functionality.
+
+When you use this method, authentication becomes as simple as follows:
+
+.Authenticating a user using Spring LDAP
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+ldapClient.authenticate().query(query().where("uid").is("john.doe")).password("secret").execute();
+----
+====
+
+NOTE: As described in the <<operationsOnAuthenticatedContext,next section>>, some setups may require you to perform additional operations to get actual authentication to occur. See <<operationsOnAuthenticatedContext>> for details.
+
+TIP: Do not write your own custom authenticate methods. Use the ones provided in Spring LDAP.
+
+[[operationsOnAuthenticatedContext]]
+== Performing Operations on the Authenticated Context
+
+Some authentication schemes and LDAP servers require some operation to be performed on the created `DirContext` instance for the actual authentication to occur. You should test and make sure how your server setup and authentication schemes behave. Failure to do so might result in users being admitted into your system regardless of the supplied DN and credentials. The following example shows a naïve implementation of an authenticate method where a hard-coded `lookup` operation is performed on the authenticated context:
+
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+public boolean myAuthenticate(String userDn, String credentials) {
+  DirContext ctx = null;
+  try {
+    ctx = contextSource.getContext(userDn, credentials);
+    // Take care here - if a base was specified on the ContextSource
+    // that needs to be removed from the user DN for the lookup to succeed.
+    **ctx.lookup(userDn);**
+    return true;
+  } catch (Exception e) {
+    // Context creation failed - authentication did not succeed
+    logger.error("Login failed", e);
+    return false;
+  } finally {
+    // It is imperative that the created DirContext instance is always closed
+    LdapUtils.closeContext(ctx);
+  }
+}
+----
+====
+
+It would be better if the operation could be provided as an implementation of a callback interface, rather than limiting the operation to always be a `lookup`. Spring LDAP includes the `AuthenticatedLdapEntryContextMapper` callback interface and a corresponding `authenticate` method.
+
+This method lets any operation be performed on the authenticated context, as follows:
+
+.Performing an LDAP operation on the authenticated context using Spring LDAP
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+AuthenticatedLdapEntryContextMapper<DirContextOperations> mapper = new AuthenticatedLdapEntryContextMapper<DirContextOperations>() {
+  public DirContextOperations mapWithContext(DirContext ctx, LdapEntryIdentification ldapEntryIdentification) {
+    try {
+      return (DirContextOperations) ctx.lookup(ldapEntryIdentification.getRelativeName());
+    }
+    catch (NamingException e) {
+      throw new RuntimeException("Failed to lookup " + ldapEntryIdentification.getRelativeName(), e);
+    }
+  }
+};
+
+ldapClient.authenticate().query(query().where("uid").is("john.doe")).password("secret").execute(mapper);
+----
+====
+
+[[spring-ldap-authentication-obsolete]]
+== Obsolete Authentication Methods
+
+In addition to the `authenticate` methods described in the preceding sections, you can use a number of deprecated methods for authentication. While these work fine, we recommend using the `LdapQuery` methods instead.
+
+[[spring-ldap-using-spring-security]]
+== Using Spring Security
+
+While the approach described in the preceding sections may be sufficient for simple authentication scenarios, requirements in this area commonly expand rapidly. A multitude of aspects apply, including authentication, authorization, web integration, user context management, and others. If you suspect that the requirements might expand beyond just simple authentication, you should definitely consider using https://spring.io/spring-security[Spring Security] for your security purposes instead. It is a full-featured, mature security framework that addresses the aforementioned aspects as well as several others.
+

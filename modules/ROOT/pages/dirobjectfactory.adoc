@@ -1,0 +1,401 @@
+[[dirobjectfactory]]
+= Simplifying Attribute Access and Manipulation with `DirContextAdapter`
+
+A little-known -- and probably underestimated -- feature of the Java LDAP API is the ability to register a `DirObjectFactory` to automatically create objects from found LDAP entries.
+Spring LDAP makes use of this feature to return https://docs.spring.io/spring-ldap/docs/current/apidocs/org/springframework/ldap/core/DirContextAdapter.html[`DirContextAdapter`] instances in certain search and lookup operations.
+
+`DirContextAdapter` is a useful tool for working with LDAP attributes, particularly when adding or modifying data.
+
+[[search-and-lookup-using-contextmapper]]
+== Search and Lookup Using `ContextMapper`
+
+Whenever an entry is found in the LDAP tree, its attributes and Distinguished Name (DN) are used by Spring LDAP to construct a `DirContextAdapter`.
+This lets us use a https://docs.spring.io/spring-ldap/docs/current/apidocs/org/springframework/ldap/core/ContextMapper.html[`ContextMapper`] instead of an `AttributesMapper`
+to transform found values, as follows:
+
+.Searching using a ContextMapper
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+package com.example.repo;
+
+public class PersonRepoImpl implements PersonRepo {
+   ...
+   **private static class PersonContextMapper implements ContextMapper {
+      public Object mapFromContext(Object ctx) {
+         DirContextAdapter context = (DirContextAdapter)ctx;
+         Person p = new Person();
+         p.setFullName(context.getStringAttribute("cn"));
+         p.setLastName(context.getStringAttribute("sn"));
+         p.setDescription(context.getStringAttribute("description"));
+         return p;
+      }
+   }**
+
+   public Person findByPrimaryKey(
+      String name, String company, String country) {
+      Name dn = buildDn(name, company, country);
+      return ldapClient.search().name(dn).toObject(**new PersonContextMapper()**);
+   }
+}
+----
+====
+
+As shown in the preceding example, we can retrieve the attribute values directly by name without having to go through the `Attributes` and `Attribute` classes.
+This is particularly useful when working with multi-value attributes.
+Extracting values from multi-value attributes normally requires looping through a `NamingEnumeration` of attribute values returned from the `Attributes` implementation.
+`DirContextAdapter` does this for you
+in the https://docs.spring.io/spring-ldap/docs/current/apidocs/org/springframework/ldap/core/DirContextAdapter.html#getStringAttributes(java.lang.String)[`getStringAttributes()`]
+or https://docs.spring.io/spring-ldap/docs/current/apidocs/org/springframework/ldap/core/DirContextAdapter.html#getObjectAttributes(java.lang.String)[`getObjectAttributes()`] methods.
+The following example uses the `getStringAttributes` method:
+
+.Getting multi-value attribute values using `getStringAttributes()`
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+private static class PersonContextMapper implements ContextMapper {
+   public Object mapFromContext(Object ctx) {
+      DirContextAdapter context = (DirContextAdapter)ctx;
+      Person p = new Person();
+      p.setFullName(context.getStringAttribute("cn"));
+      p.setLastName(context.getStringAttribute("sn"));
+      p.setDescription(context.getStringAttribute("description"));
+      // The roleNames property of Person is an String array
+      **p.setRoleNames(context.getStringAttributes("roleNames"));**
+      return p;
+   }
+}
+----
+====
+
+[[using-abstractcontextmapper]]
+=== Using `AbstractContextMapper`
+
+Spring LDAP provides an abstract base implementation of `ContextMapper`, called https://docs.spring.io/spring-ldap/docs/current/apidocs/org/springframework/ldap/core/support/AbstractContextMapper.html[`AbstractContextMapper`].
+This implementation automatically takes care of the casting of the supplied `Object` parameter to `DirContexOperations`.
+Using `AbstractContextMapper`, the `PersonContextMapper` shown earlier can thus be re-written as follows:
+
+.Using an `AbstractContextMapper`
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+private static class PersonContextMapper **extends AbstractContextMapper** {
+  public Object **doMapFromContext**(DirContextOperations ctx) {
+     Person p = new Person();
+     p.setFullName(ctx.getStringAttribute("cn"));
+     p.setLastName(ctx.getStringAttribute("sn"));
+     p.setDescription(ctx.getStringAttribute("description"));
+     return p;
+  }
+}
+----
+====
+
+
+[[adding-and-updating-data-by-using-dircontextadapter]]
+== Adding and Updating Data by Using `DirContextAdapter`
+`
+While useful when extracting attribute values, `DirContextAdapter` is even more powerful for managing the details
+involved in adding and updating data.
+
+
+[[adding-data-by-using-dircontextadapter]]
+=== Adding Data by Using `DirContextAdapter`
+
+The following example uses `DirContextAdapter` to implement an improved implementation of the `create` repository method presented in <<basic-binding-data>>:
+
+.Binding using `DirContextAdapter`
+====
+[[example-binding-contextmapper]]
+[source,java]
+[subs="verbatim,quotes"]
+----
+package com.example.repo;
+
+public class PersonRepoImpl implements PersonRepo {
+   ...
+   public void create(Person p) {
+      Name dn = buildDn(p);
+      DirContextAdapter context = new DirContextAdapter(dn);
+
+      **context.setAttributeValues("objectclass", new String[] {"top", "person"});
+      context.setAttributeValue("cn", p.getFullname());
+      context.setAttributeValue("sn", p.getLastname());
+      context.setAttributeValue("description", p.getDescription());**
+
+      ldapClient.bind(dn).object(context).execute();
+   }
+}
+----
+====
+
+Note that we use the `DirContextAdapter` instance as the second parameter to bind, which should be a `Context`.
+The third parameter is `null`, since we do not specify the attributes explicitly.
+
+Also note the use of the `setAttributeValues()` method when setting the `objectclass` attribute values.
+The `objectclass` attribute is multi-value. Similar to the troubles of extracting muti-value attribute data,
+building multi-value attributes is tedious and verbose work. By using the `setAttributeValues()` method, you can have `DirContextAdapter` handle that work for you.
+
+[[updating-data-by-using-dircontextadapter]]
+=== Updating Data by Using `DirContextAdapter`
+
+We previously saw that updating by using `modifyAttributes` is the recommended approach, but that doing so requires us to perform
+the task of calculating attribute modifications and constructing `ModificationItem` arrays accordingly.
+`DirContextAdapter` can do all of this for us, as follows:
+
+.Updating using `DirContextAdapter`
+====
+[[modify-modifyAttributes]]
+[source,java]
+[subs="verbatim,quotes"]
+----
+package com.example.repo;
+
+public class PersonRepoImpl implements PersonRepo {
+   ...
+   public void update(Person p) {
+      Name dn = buildDn(p);
+      **DirContextOperations context = ldapClient.search().name(dn).toEntry();**
+
+      context.setAttributeValue("cn", p.getFullname());
+      context.setAttributeValue("sn", p.getLastname());
+      context.setAttributeValue("description", p.getDescription());
+
+      **ldapClient.modify(dn).attributes(context.getModificationItems()).execute();**
+   }
+}
+----
+====
+
+When calling `SearchSpec#toEntry`, the result is a `DirContextAdapter` instance by default.
+While the `lookup` method returns an `Object`, `toEntry` automatically casts the return value to a `DirContextOperations`
+(the interface that `DirContextAdapter` implements).
+
+Notice that we have duplicate code in the `LdapTemplate#create` and `LdapTemplate#update` methods. This code maps from a domain object to a context. It can be extracted to a separate method, as follows:
+
+.Adding and modifying using DirContextAdapter
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+package com.example.repo;
+
+public class PersonRepoImpl implements PersonRepo {
+   private LdapClient ldapClient;
+
+   ...
+   public void create(Person p) {
+      Name dn = buildDn(p);
+      DirContextAdapter context = new DirContextAdapter(dn);
+
+      context.setAttributeValues("objectclass", new String[] {"top", "person"});
+      mapToContext(p, context);
+      ldapClient.bind(dn).object(context).execute();
+   }
+
+   public void update(Person p) {
+      Name dn = buildDn(p);
+      DirContextOperations context = ldapClient.search().name(dn).toEntry();
+      mapToContext(person, context);
+      ldapClient.modify(dn).attributes(context.getModificationItems()).execute();
+   }
+
+   protected void mapToContext (Person p, DirContextOperations context) {
+      context.setAttributeValue("cn", p.getFullName());
+      context.setAttributeValue("sn", p.getLastName());
+      context.setAttributeValue("description", p.getDescription());
+   }
+}
+----
+====
+
+[[dns-as-attribute-values]]
+== `DirContextAdapter` and Distinguished Names as Attribute Values
+
+When managing security groups in LDAP, it is  common to have attribute values that represent
+distinguished names. Since distinguished name equality differs from String equality (for example, whitespace and case differences
+are ignored in distinguished name equality), calculating attribute modifications using string equality does not work as expected.
+
+For instance, if a `member` attribute has a value of `cn=John Doe,ou=People` and we call `ctx.addAttributeValue("member", "CN=John Doe, OU=People")`,
+the attribute is now considered to have two values, even though the strings actually represent the same
+distinguished name.
+
+As of Spring LDAP 2.0, supplying `javax.naming.Name` instances to the attribute modification methods makes `DirContextAdapter`
+use distinguished name equality when calculating attribute modifications. If we modify the earlier example to be
+`ctx.addAttributeValue("member", LdapUtils.newLdapName("CN=John Doe, OU=People"))`, it does *not* render a modification, as the following example shows:
+
+.Group Membership Modification using DirContextAdapter
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+public class GroupRepo implements BaseLdapNameAware {
+    private LdapClient ldapClient;
+    private LdapName baseLdapPath;
+
+    public void setLdapClient(LdapClient ldapClient) {
+        this.ldapClient = ldapClient;
+    }
+
+    public void setBaseLdapPath(LdapName baseLdapPath) {
+        this.setBaseLdapPath(baseLdapPath);
+    }
+
+    public void addMemberToGroup(String groupName, Person p) {
+        Name groupDn = buildGroupDn(groupName);
+        Name userDn = buildPersonDn(
+            person.getFullname(),
+            person.getCompany(),
+            person.getCountry());
+
+        DirContextOperation ctx = ldapClient.search().name(groupDn).toEntry();
+        ctx.addAttributeValue("member", userDn);
+
+        ldapClient.modify(groupDn).attributes(ctx.getModificationItems()).execute();
+    }
+
+    public void removeMemberFromGroup(String groupName, Person p) {
+        Name groupDn = buildGroupDn(String groupName);
+        Name userDn = buildPersonDn(
+            person.getFullname(),
+            person.getCompany(),
+            person.getCountry());
+
+        DirContextOperation ctx = ldapClient.search().name(groupDn).toEntry();
+        ctx.removeAttributeValue("member", userDn);
+
+        ldapClient.modify(groupDn).attributes(ctx.getModificationItems()).execute();
+    }
+
+    private Name buildGroupDn(String groupName) {
+        return LdapNameBuilder.newInstance("ou=Groups")
+            .add("cn", groupName).build();
+    }
+
+    private Name buildPersonDn(String fullname, String company, String country) {
+        return LdapNameBuilder.newInstance(baseLdapPath)
+            .add("c", country)
+            .add("ou", company)
+            .add("cn", fullname)
+            .build();
+   }
+}
+----
+====
+
+In the preceding example, we implement `BaseLdapNameAware` to get the base LDAP path as described in <<base-context-configuration>>.
+This is necessary because distinguished names as member attribute values must always be absolute from the directory root.
+
+[[a-complete-personrepository-class]]
+== A Complete `PersonRepository` Class
+
+To illustrate the usefulness of Spring LDAP and `DirContextAdapter`, the following example shows a complete `Person` Repository implementation for LDAP:
+
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+package com.example.repo;
+import java.util.List;
+
+import javax.naming.Name;
+import javax.naming.NamingException;
+import javax.naming.directory.Attributes;
+import javax.naming.ldap.LdapName;
+
+import org.springframework.ldap.core.AttributesMapper;
+import org.springframework.ldap.core.ContextMapper;
+import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.filter.AndFilter;
+import org.springframework.ldap.filter.EqualsFilter;
+import org.springframework.ldap.filter.WhitespaceWildcardsFilter;
+
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
+
+public class PersonRepoImpl implements PersonRepo {
+   private LdapClient ldapClient;
+
+   public void setLdapClient(LdapClient ldapClient) {
+      this.ldapClient = ldapClient;
+   }
+
+   public void create(Person person) {
+      DirContextAdapter context = new DirContextAdapter(buildDn(person));
+      mapToContext(person, context);
+      ldapClient.bind(context.getDn()).object(context).execute();
+   }
+
+   public void update(Person person) {
+      Name dn = buildDn(person);
+      DirContextOperations context = ldapClient.lookupContext(dn);
+      mapToContext(person, context);
+      ldapClient.modify(dn).attributes(context.getModificationItems()).execute();
+   }
+
+   public void delete(Person person) {
+      ldapClient.unbind(buildDn(person)).execute();
+   }
+
+   public Person findByPrimaryKey(String name, String company, String country) {
+      Name dn = buildDn(name, company, country);
+      return ldapClient.search().name(dn).toObject(getContextMapper());
+   }
+
+   public List<Person> findByName(String name) {
+      LdapQuery query = query()
+         .where("objectclass").is("person")
+         .and("cn").whitespaceWildcardsLike("name");
+
+      return ldapClient.search().query(query).toList(getContextMapper());
+   }
+
+   public List<Person> findAll() {
+      EqualsFilter filter = new EqualsFilter("objectclass", "person");
+      return ldapClient.search().query((query) -> query.filter(filter)).toList(getContextMapper());
+   }
+
+   protected ContextMapper getContextMapper() {
+      return new PersonContextMapper();
+   }
+
+   protected Name buildDn(Person person) {
+      return buildDn(person.getFullname(), person.getCompany(), person.getCountry());
+   }
+
+   protected Name buildDn(String fullname, String company, String country) {
+      return LdapNameBuilder.newInstance()
+        .add("c", country)
+        .add("ou", company)
+        .add("cn", fullname)
+        .build();
+   }
+
+   protected void mapToContext(Person person, DirContextOperations context) {
+      context.setAttributeValues("objectclass", new String[] {"top", "person"});
+      context.setAttributeValue("cn", person.getFullName());
+      context.setAttributeValue("sn", person.getLastName());
+      context.setAttributeValue("description", person.getDescription());
+   }
+
+   private static class PersonContextMapper extends AbstractContextMapper<Person> {
+      public Person doMapFromContext(DirContextOperations context) {
+         Person person = new Person();
+         person.setFullName(context.getStringAttribute("cn"));
+         person.setLastName(context.getStringAttribute("sn"));
+         person.setDescription(context.getStringAttribute("description"));
+         return person;
+      }
+   }
+}
+----
+====
+
+NOTE: In several cases, the Distinguished Name (DN) of an object is constructed by using properties of the object.
+In the preceding example, the country, company and full name of the `Person` are used in the DN, which means that updating any of these properties actually requires moving the entry in the LDAP tree by using the `rename()` operation in addition to updating the `Attribute` values.
+Since this is highly implementation-specific, this is something you need to keep track of yourself, either by disallowing the user to change these properties or performing the `rename()` operation in your `update()` method if needed.
+Note that, by using <<odm>>, the library can automatically handle this for you if you annotate your domain classes appropriately.
+
