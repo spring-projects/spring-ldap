@@ -1,5 +1,6 @@
 [[preface]]
 = Preface
+:page-section-summary-toc: 1
 
 The Java Naming and Directory Interface (JNDI) is to LDAP programming what Java Database Connectivity (JDBC) is to SQL programming. There are several similarities between JDBC and JNDI/LDAP (Java LDAP). Despite being two completely different APIs with different pros and cons, they share a number of less flattering characteristics:
 
