@@ -3,10 +3,10 @@
 
 This section covers user authentication with Spring LDAP. It contains the following topics:
 
-* <<spring-ldap-user-authentication-basic>>
-* <<operationsOnAuthenticatedContext>>
-* <<spring-ldap-authentication-obsolete>>
-* <<spring-ldap-using-spring-security>>
+* xref:user-authentication.adoc#spring-ldap-user-authentication-basic[Basic Authentication]
+* xref:user-authentication.adoc#operationsOnAuthenticatedContext[Performing Operations on the Authenticated Context]
+* xref:user-authentication.adoc#spring-ldap-authentication-obsolete[Obsolete Authentication Methods]
+* xref:user-authentication.adoc#spring-ldap-using-spring-security[Using Spring Security]
 
 [[spring-ldap-user-authentication-basic]]
 == Basic Authentication
@@ -67,7 +67,7 @@ ldapClient.authenticate().query(query().where("uid").is("john.doe")).password("s
 ----
 ====
 
-NOTE: As described in the <<operationsOnAuthenticatedContext,next section>>, some setups may require you to perform additional operations to get actual authentication to occur. See <<operationsOnAuthenticatedContext>> for details.
+NOTE: As described in the xref:user-authentication.adoc#operationsOnAuthenticatedContext[Performing Operations on the Authenticated Context], some setups may require you to perform additional operations to get actual authentication to occur. See xref:user-authentication.adoc#operationsOnAuthenticatedContext[Performing Operations on the Authenticated Context] for details.
 
 TIP: Do not write your own custom authenticate methods. Use the ones provided in Spring LDAP.
 

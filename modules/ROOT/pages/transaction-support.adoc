@@ -16,7 +16,7 @@ While this should be carefully considered, it should also be noted that the alte
 NOTE: The client-side transaction support adds some overhead in addition to the work required by the original operations.
 While this overhead should not be something to worry about in most cases,
 if your application does not perform several LDAP operations within the same transaction (for example, `modifyAttributes` followed by `rebind`),
-or if transaction synchronization with a JDBC data source is not required (see <<spring-ldap-jdbc-transaction-integration>>), you gain little by using the LDAP transaction support.
+or if transaction synchronization with a JDBC data source is not required (see xref:transaction-support.adoc#spring-ldap-jdbc-transaction-integration[JDBC Transaction Integration]), you gain little by using the LDAP transaction support.
 
 [[configuration]]
 == Configuration
@@ -55,7 +55,7 @@ Configuring Spring LDAP transactions should look very familiar if you are used t
 ====
 
 NOTE: While this setup works fine for most simple use cases, some more complex scenarios require additional configuration.
-Specifically, if you need to create or delete subtrees within transactions, you need to use an alternative `TempEntryRenamingStrategy`, as described in <<renaming-strategies>>.
+Specifically, if you need to create or delete subtrees within transactions, you need to use an alternative `TempEntryRenamingStrategy`, as described in xref:transaction-support.adoc#renaming-strategies[Renaming Strategies].
 
 In a real-world situation, you would probably apply the transactions on the service-object level rather than the repository level. The preceding example demonstrates the general idea.
 
