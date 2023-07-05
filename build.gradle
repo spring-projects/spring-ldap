@@ -13,6 +13,11 @@ buildscript {
     }
 }
 
+plugins {
+    id 'io.spring.antora.generate-antora-yml' version '0.0.1'
+    id 'org.antora' version '1.0.0'
+}
+
 apply plugin: 'io.spring.convention.root'
 apply plugin: 'io.spring.convention.docs'
 apply plugin: 'io.spring.javaformat'
@@ -33,24 +38,16 @@ nohttp {
 	source.exclude "buildSrc/build/**"
 }
 
-asciidoctor {
-	outputDir = new File("$buildDir/docs")
-	attributes([
-		copycss : '',
-		icons : 'font',
-		'source-highlighter': 'prettify',
-		sectanchors : '',
-		toc2: '',
-		idprefix: '',
-		idseparator: '-',
-		doctype: 'book',
-		numbered: '',
-		'spring-ldap-version' : project.version,
-		revnumber : project.version
-	])
-	options = [
-		eruby: 'erubis'
-	]
+
+antora {
+    playbook = 'cached-antora-playbook.yml'
+    playbookProvider {
+        repository = 'spring-projects/spring-ldap'
+        branch = 'docs-build'
+        path = 'lib/antora/templates/per-branch-antora-playbook.yml'
+        checkLocalBranch = true
+    }
+    options = [clean: true, fetch: !project.gradle.startParameter.offline, stacktrace: true]
 }
 
 springRelease {
@@ -63,6 +60,14 @@ springRelease {
     replaceSnapshotVersionInReferenceDocUrl = true
 }
 
+
+tasks.named("generateAntoraYml") {
+    asciidocAttributes = project.provider( {
+        return  ['project-version': project.version]
+    } )
+}
+
+
 s101 {
 	configurationDirectory = project.file("etc/s101")
 }
@@ -71,7 +76,7 @@ allprojects {
         if (!['spring-ldap-bom', 'spring-security-docs'].contains(project.name)) {
                 apply plugin: 'io.spring.javaformat'
 		apply plugin: 'checkstyle'
-		
+
 		pluginManager.withPlugin("io.spring.convention.checkstyle", { plugin ->
                         configure(plugin) {
                                 dependencies {
