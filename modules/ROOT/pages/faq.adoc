@@ -1,5 +1,6 @@
 [[spring-ldap-faq]]
 = Spring LDAP FAQ
+:page-section-summary-toc: 1
 
 [[operational-attributes]]
 == Operational Attributes
