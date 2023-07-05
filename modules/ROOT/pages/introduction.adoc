@@ -3,15 +3,15 @@
 
 This section offers a relatively quick introduction to Spring LDAP. It includes the following content:
 
-* <<spring-ldap-introduction-overview>>
-* <<spring-ldap-traditional-ldap-vs-ldaptemplate>>
-* <<spring-ldap-new-2.2>>
-* <<spring-ldap-new-2.1>>
-* <<spring-ldap-new-2.0>>
-* <<spring-ldap-packaging-overview>>
-* <<spring-ldap-getting-started>>
-* <<spring-ldap-support>>
-* <<spring-ldap-acknowledgements>>
+* xref:introduction.adoc#spring-ldap-introduction-overview[Overview]
+* xref:introduction.adoc#spring-ldap-traditional-ldap-vs-ldaptemplate[Traditional Java LDAP versus `LdapClient`]
+* xref:introduction.adoc#spring-ldap-new-2.2[What's new in 2.2]
+* xref:introduction.adoc#spring-ldap-new-2.1[What's new in 2.1]
+* xref:introduction.adoc#spring-ldap-new-2.0[What's new in 2.0]
+* xref:introduction.adoc#spring-ldap-packaging-overview[Packaging Overview]
+* xref:introduction.adoc#spring-ldap-getting-started[Getting Started]
+* xref:introduction.adoc#spring-ldap-support[Support]
+* xref:introduction.adoc#spring-ldap-acknowledgements[Acknowledgements]
 
 [[spring-ldap-introduction-overview]]
 == Overview
@@ -201,15 +201,15 @@ The following list briefly describes the most important changes in Spring LDAP 2
 *  The central API has been updated with Java 5+ features such as generics and varargs.
    As a consequence, the entire `spring-ldap-tiger` module has been deprecated, and we encourage you to migrate to using the core Spring LDAP classes.
    The parameterization of the core interfaces causes lots of compilation warnings on existing code, and we encourage you to take appropriate action to get rid of these warnings.
-*  The ODM (Object-Directory Mapping) functionality has been moved to core, and there are new methods in `LdapOperations` and `LdapTemplate` that use this automatic translation to and from ODM-annotated classes. See <<odm>> for more information.
+*  The ODM (Object-Directory Mapping) functionality has been moved to core, and there are new methods in `LdapOperations` and `LdapTemplate` that use this automatic translation to and from ODM-annotated classes. See xref:odm.adoc[Object-Directory Mapping (ODM)] for more information.
 *  A custom XML namespace is now (finally) provided to simplify configuration of Spring LDAP. See <<configuration>> for more information.
-*  Spring LDAP now provides support for Spring Data Repository and QueryDSL. See <<repositories>> for more information.
+*  Spring LDAP now provides support for Spring Data Repository and QueryDSL. See xref:repositories.adoc[Spring LDAP Repositories] for more information.
 *  `Name` instances as attribute values are now handled properly with regards to distinguished name equality in `DirContextAdapter` and ODM.
-   See <<dns-as-attribute-values>> and <<odm-dn-attributes>> for more information.
+   See xref:dirobjectfactory.adoc#dns-as-attribute-values[`DirContextAdapter` and Distinguished Names as Attribute Values] and xref:odm.adoc#odm-dn-attributes[ODM and Distinguished Names as Attribute Values] for more information.
 *  `DistinguishedName` and associated classes have been deprecated in favor of the standard Java `LdapName`.
-   See <<ldap-names>> for information on how the library helps when working with `LdapName` objects.
+   See xref:spring-ldap-basic-usage.adoc#ldap-names[Dynamically Building Distinguished Names] for information on how the library helps when working with `LdapName` objects.
 *  Fluent LDAP query building support has been added. This makes for a more pleasant programming experience when working with LDAP searches in Spring LDAP.
-   See <<basic-queries>> and <<query-builder-advanced>> for more information about the LDAP query builder support.
+   See xref:spring-ldap-basic-usage.adoc#basic-queries[Building LDAP Queries] and xref:query-builder-advanced.adoc[Advanced LDAP Queries] for more information about the LDAP query builder support.
 *  The old `authenticate` methods in `LdapTemplate` have been deprecated in favor of a couple of new `authenticate` methods that work with `LdapQuery` objects and _throw exceptions_ on authentication failure, making it easier for the user to find out what caused an authentication attempt to fail.
 *  The https://github.com/spring-projects/spring-ldap/tree/main/samples[samples] have been polished and updated to make use of the features in 2.0.
    Quite a bit of effort has been put into providing a useful example of an https://github.com/spring-projects/spring-ldap/tree/main/samples/user-admin[LDAP user management application].

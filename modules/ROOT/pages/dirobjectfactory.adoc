@@ -105,7 +105,7 @@ involved in adding and updating data.
 [[adding-data-by-using-dircontextadapter]]
 === Adding Data by Using `DirContextAdapter`
 
-The following example uses `DirContextAdapter` to implement an improved implementation of the `create` repository method presented in <<basic-binding-data>>:
+The following example uses `DirContextAdapter` to implement an improved implementation of the `create` repository method presented in xref:spring-ldap-basic-usage.adoc#basic-binding-data[Adding Data]:
 
 .Binding using `DirContextAdapter`
 ====
@@ -286,7 +286,7 @@ public class GroupRepo implements BaseLdapNameAware {
 ----
 ====
 
-In the preceding example, we implement `BaseLdapNameAware` to get the base LDAP path as described in <<base-context-configuration>>.
+In the preceding example, we implement `BaseLdapNameAware` to get the base LDAP path as described in xref:configuration.adoc#base-context-configuration[Obtaining a Reference to the Base LDAP Path].
 This is necessary because distinguished names as member attribute values must always be absolute from the directory root.
 
 [[a-complete-personrepository-class]]
@@ -397,5 +397,5 @@ public class PersonRepoImpl implements PersonRepo {
 NOTE: In several cases, the Distinguished Name (DN) of an object is constructed by using properties of the object.
 In the preceding example, the country, company and full name of the `Person` are used in the DN, which means that updating any of these properties actually requires moving the entry in the LDAP tree by using the `rename()` operation in addition to updating the `Attribute` values.
 Since this is highly implementation-specific, this is something you need to keep track of yourself, either by disallowing the user to change these properties or performing the `rename()` operation in your `update()` method if needed.
-Note that, by using <<odm>>, the library can automatically handle this for you if you annotate your domain classes appropriately.
+Note that, by using xref:odm.adoc[Object-Directory Mapping (ODM)], the library can automatically handle this for you if you annotate your domain classes appropriately.
 

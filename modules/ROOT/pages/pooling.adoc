@@ -13,7 +13,7 @@ Validation of pooled connections is the primary motivation for using a custom po
 If connection validation is configured, pooled connections are validated by using `DefaultDirContextValidator`.
 `DefaultDirContextValidator` does a `DirContext.search(String, String, SearchControls)`, with an empty name, a filter of `"objectclass=*"`, and `SearchControls` set to limit a single result with the only the `objectclass` attribute and a 500ms timeout. If the returned `NamingEnumeration` has results, the `DirContext` passes validation. If no results are returned or an exception is thrown, the `DirContext` fails validation.
 The default settings should work with no configuration changes on most LDAP servers and provide the fastest way to validate the `DirContext`.
-If you need customization, you can do so by using the validation configuration attributes, described in <<pool-configuration>>.
+If you need customization, you can do so by using the validation configuration attributes, described in xref:pooling.adoc#pool-configuration[Pool Configuration].
 
 NOTE: Connections are automatically invalidated if they throw an exception that is considered non-transient. For example, if a `DirContext` instance throws a `javax.naming.CommunicationException`, it is interpreted as a non-transient error and the instance is automatically invalidated, without the overhead of an additional `testOnReturn` operation. The exceptions that are interpreted as non-transient are configured by using the `nonTransientExceptions` property of the `PoolingContextSource`.
 
@@ -252,7 +252,7 @@ The following example tests each `DirContext` before it is passed to the client 
 
 This section describes issues that sometimes arise when people use Spring LDAP. At present, it covers the following issues:
 
-* <<spring-ldap-known-issues-custom-authentication>>
+* xref:pooling.adoc#spring-ldap-known-issues-custom-authentication[Custom Authentication]
 
 [[spring-ldap-known-issues-custom-authentication]]
 === Custom Authentication

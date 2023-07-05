@@ -66,7 +66,7 @@ The configurable attributes on context-source are as follows (required attribute
 | `LdapUtils.emptyLdapName()`
 |  The base DN. When this attribute has been configured, all Distinguished Names supplied to and received from LDAP operations are relative to the specified LDAP path.
    This can significantly simplify working against the LDAP tree. However, there are several occasions when you need to have access to the base path.
-   For more information on this, see <<base-context-configuration>>
+   For more information on this, see xref:configuration.adoc#base-context-configuration[Obtaining a Reference to the Base LDAP Path]
 
 | `anonymous-read-only`
 | `false`
@@ -83,15 +83,15 @@ a|  Defines the strategy with which to handle referrals, as described https://do
 
 | `native-pooling`
 | `false`
-|  Specify whether native Java LDAP connection pooling should be used. Consider using Spring LDAP connection pooling instead. See <<pooling>> for more information.
+|  Specify whether native Java LDAP connection pooling should be used. Consider using Spring LDAP connection pooling instead. See xref:pooling.adoc[Pooling Support] for more information.
 
 | `authentication-source-ref`
 |  A `SimpleAuthenticationSource` instance.
-|  ID of the `AuthenticationSource` instance to use (see <<spring-ldap-custom-principal-credentials-management>>).
+|  ID of the `AuthenticationSource` instance to use (see xref:configuration.adoc#spring-ldap-custom-principal-credentials-management[Custom Principal and Credentials Management]).
 
 | `authentication-strategy-ref`
 |  A `SimpleDirContextAuthenticationStrategy` instance.
-|  ID of the `DirContextAuthenticationStrategy` instance to use (see <<spring-ldap-custom-dircontext-authentication-processing>>).
+|  ID of the `DirContextAuthenticationStrategy` instance to use (see xref:configuration.adoc#spring-ldap-custom-dircontext-authentication-processing[Custom `DirContext` Authentication Processing]).
 
 | `base-env-props-ref`
 |
@@ -104,7 +104,7 @@ a|  Defines the strategy with which to handle referrals, as described https://do
 When `DirContext` instances are created to be used for performing operations on an LDAP server, these contexts often need to be authenticated.
 Spring LDAP offers various options for configuring this.
 
-NOTE: This section refers to authenticating contexts in the core functionality of the `ContextSource`, to construct `DirContext` instances for use by `LdapClient` and `LdapTemplate`. LDAP is commonly used for the sole purpose of user authentication, and the `ContextSource` may be used for that as well. That process is discussed in <<user-authentication>>.
+NOTE: This section refers to authenticating contexts in the core functionality of the `ContextSource`, to construct `DirContext` instances for use by `LdapClient` and `LdapTemplate`. LDAP is commonly used for the sole purpose of user authentication, and the `ContextSource` may be used for that as well. That process is discussed in xref:user-authentication.adoc[User Authentication using Spring LDAP].
 
 By default, authenticated contexts are created for both read-only and read-write operations. You should specify the `username` and `password` of the LDAP user to be used for authentication on the `context-source` element.
 
@@ -130,7 +130,7 @@ Where `DefaultTlsDirContextAuthenticationStrategy` applies SIMPLE authentication
 
 Since different LDAP server implementations respond differently to explicit shutdown of the TLS channel (some servers require the connection be shut down gracefully, while others do not support it), the TLS `DirContextAuthenticationStrategy` implementations support specifying the shutdown behavior by using the `shutdownTlsGracefully` parameter. If this property is set to `false` (the default), no explicit TLS shutdown happens. If it is `true`, Spring LDAP tries to shut down the TLS channel gracefully before closing the target context.
 
-NOTE: When working with TLS connections, you need to make sure that the native LDAP Pooling functionality (as specified by using the `native-pooling` attribute) is turned off. This is particularly important if `shutdownTlsGracefully` is set to `false`. However, since the TLS channel negotiation process is quite expensive, you can gain great performance benefits by using the Spring LDAP Pooling Support, described in <<pooling>>.
+NOTE: When working with TLS connections, you need to make sure that the native LDAP Pooling functionality (as specified by using the `native-pooling` attribute) is turned off. This is particularly important if `shutdownTlsGracefully` is set to `false`. However, since the TLS channel negotiation process is quite expensive, you can gain great performance benefits by using the Spring LDAP Pooling Support, described in xref:pooling.adoc[Pooling Support].
 
 [[spring-ldap-custom-principal-credentials-management]]
 ==== Custom Principal and Credentials Management
@@ -167,7 +167,7 @@ NOTE: When using the `SpringSecurityAuthenticationSource`, you need to use Sprin
 
 The internal Java LDAP provider provides some very basic pooling capabilities. You can turn this LDAP connection pooling on or off by using the `pooled` flag on `AbstractContextSource`.  The default value is `false` (since release 1.3) -- that is, the native Java LDAP pooling is turned off. The configuration of LDAP connection pooling is managed by using `System` properties, so you need to handle this manually, outside of the Spring Context configuration. You can find details of the native pooling configuration https://java.sun.com/products/jndi/tutorial/ldap/connect/config.html[here].
 
-NOTE: There are several serious deficiencies in the built-in LDAP connection pooling, which is why Spring LDAP provides a more sophisticated approach to LDAP connection pooling, described in <<pooling>>. If you need pooling functionality, this is the recommended approach.
+NOTE: There are several serious deficiencies in the built-in LDAP connection pooling, which is why Spring LDAP provides a more sophisticated approach to LDAP connection pooling, described in xref:pooling.adoc[Pooling Support]. If you need pooling functionality, this is the recommended approach.
 
 NOTE: Regardless of the pooling configuration, the `ContextSource#getContext(String principal, String credentials)` method always explicitly does not use native Java LDAP Pooling, in order for reset passwords to take effect as soon as possible.
 

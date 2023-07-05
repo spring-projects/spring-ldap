@@ -132,7 +132,7 @@ public class OdmPersonRepo {
 == ODM and Distinguished Names as Attribute Values
 
 Security groups in LDAP commonly contain a multi-value attribute, where each of the values is the distinguished name
-of a user in the system. The difficulties involved when handling these kinds of attributes are discussed in <<dns-as-attribute-values>>.
+of a user in the system. The difficulties involved when handling these kinds of attributes are discussed in xref:dirobjectfactory.adoc#dns-as-attribute-values[`DirContextAdapter` and Distinguished Names as Attribute Values].
 
 ODM also has support for `javax.naming.Name` attribute values, making group modifications easy, as the following example shows:
 
