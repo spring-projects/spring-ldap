@@ -1,0 +1,130 @@
+[[query-builder-advanced]]
+= Advanced LDAP Queries
+
+This section covers various how to use LDAP queries with Spring LDAP.
+
+[[ldap-query-builder-parameters]]
+== LDAP Query Builder Parameters
+
+The `LdapQueryBuilder` and its associated classes are intended to support all of the parameters that can be supplied to an LDAP search.
+The following parameters are supported:
+
+* `base`: Specifies the root DN in the LDAP tree where the search should start.
+* `searchScope`: Specifies how deep into the LDAP tree the search should traverse.
+* `attributes`: Specifies the attributes to return from the search. The default is all.
+* `countLimit`: Specifies the maximum number of entries to return from the search.
+* `timeLimit`: Specifies the maximum time that the search may take.
+* Search filter: The conditions that the entries we are looking for must meet.
+
+An `LdapQueryBuilder` is created with a call to the `query` method of `LdapQueryBuilder`. It is intended as a fluent builder API, where the base parameters are defined first, followed by the filter specification calls. Once filter conditions have been started to be defined with a call to the `where` method of `LdapQueryBuilder`, later attempts to call (for example) `base` are rejected. The base search parameters are optional, but at least one filter specification call is required.
+The following query searches for all entries with an object class of `Person`:
+
+.Search for all entries with object class `Person`
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
+...
+
+List<Person> persons = ldapClient.search()
+      .query(query().where("objectclass").is("person"))
+      .toList(new PersonAttributesMapper());
+
+----
+====
+
+The following query searches for all entries with an object class of `person` and a `cn` (common name) of `John Doe`:
+
+.Search for all entries with object class `person` and `cn=John Doe`
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
+...
+
+List<Person> persons = ldapClient.search()
+      .query(query().where("objectclass").is("person").and("cn").is("John Doe"))
+      .toList(new PersonAttributesMapper());
+----
+====
+
+The following query searches for all entries with an object class of `person` and starting at a `dc` (domain component) of `dc=261consulting,dc=com`:
+
+.Search for all entries with object class `person` starting at `dc=261consulting,dc=com`
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
+...
+
+List<Person> persons = ldapClient.search()
+      .query(query().base("dc=261consulting,dc=com").where("objectclass").is("person"))
+      .toList(new PersonAttributesMapper());
+----
+====
+
+The following query returns the `cn` (common name) attribute for all entries with an object class of `person` and starting at a `dc` (domain component) of `dc=261consulting,dc=com`:
+
+
+.Search for all entries with class `Person` starting at `dc=261consulting,dc=com`, returning only the `cn` attribute
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
+...
+
+Stream<Person> persons = ldapClient.search()
+      .query(query().base("dc=261consulting,dc=com")
+             .attributes("cn")
+             .where("objectclass").is("person")),
+      .toStream(new PersonAttributesMapper());
+
+----
+====
+
+The following query uses `or` to search for multiple spellings of a common name (`cn`):
+
+.Search with `or` criteria
+====
+[source,java,subs="verbatim,quotes"]
+----
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
+...
+Stream<Person> persons = ldapClient.search()
+      .query(query().where("objectclass").is("person"),
+             .and(query().where("cn").is("Doe").or("cn").is("Doo"))
+      .toStream(new PersonAttributesMapper());
+----
+====
+
+[[filter-criteria]]
+== Filter Criteria
+
+The earlier examples demonstrate simple equals conditions in LDAP filters. The LDAP query builder has support for the following criteria types:
+
+* `is`: Specifies an equals (=) condition.
+* `gte`: Specifies a greater-than-or-equals (>=) condition.
+* `lte`: Specifies a less-than-or-equals (<=) condition.
+* `like`: Specifies a "`like`" condition where wildcards can be included in the query -- for example, `where("cn").like("J*hn Doe")` results in the following filter: `(cn=J*hn Doe)`.
+* `whitespaceWildcardsLike`: Specifies a condition where all whitespace is replaced with wildcards -- for example, `where("cn").whitespaceWildcardsLike("John Doe")` results in the following filter: `(cn=*John*Doe*)`.
+* `isPresent`: Specifies a condition that checks for the presence of an attribute -- for example, `where("cn").isPresent()` results in the following filter: `(cn=*)`.
+* `not`: Specifies that the current condition should be negated -- for example, `where("sn").not().is("Doe)` results in the following filter: `(!(sn=Doe))`
+
+[[hardcoded-filters]]
+== Hardcoded Filters
+
+There may be occasions when you want to specify a hardcoded filter as input to an `LdapQuery`. `LdapQueryBuilder` has two methods for this purpose:
+
+* `filter(String hardcodedFilter)`: Uses the specified string as a filter. Note that the specified input string is not touched in any way, meaning that this method is not particularly well suited if you are building filters from user input.
+
+* `filter(String filterFormat, String... params)`: Uses the specified string as input to `MessageFormat`, properly encoding the parameters and inserting them at the specified places in the filter string.
+
+* `filter(Filter filter)`: Uses the specified filter.
+
+You cannot mix the hardcoded filter methods with the `where` approach described earlier. It is either one or the other. If you specify a filter by using `filter()`, you get an exception if you try to call `where` afterwards.
+
+

@@ -1,0 +1,67 @@
+[[ldif-parsing]]
+= LDIF Parsing
+
+LDAP Directory Interchange Format (LDIF) files are the standard medium for describing directory data in a flat-file format. The most common uses of this format include information transfer and archival. However, the standard also defines a way to describe modifications to stored data in a flat-file format. LDIFs of this later type are typically referred to as _changetype_ or _modify_ LDIFs.
+
+The `org.springframework.ldap.ldif` package provides the classes needed to parse LDIF files and deserialize them into tangible objects. The `LdifParser` is the main class of the `org.springframework.ldap.ldif` package and is capable of parsing files that comply with RFC 2849. This class reads lines from a resource and assembles them into an `LdapAttributes` object.
+
+NOTE: The `LdifParser` currently ignores _changetype_ LDIF entries, as their usefulness in the context of an application has yet to be determined.
+
+[[object-representation]]
+== Object Representation
+
+Two classes in the `org.springframework.ldap.core` package provide the means to represent an LDIF in code:
+
+* `LdapAttribute`: Extends `javax.naming.directory.BasicAttribute` adding support for LDIF options as defined in RFC2849.
+* `LdapAttributes`: Extends `javax.naming.directory.BasicAttributes` adding specialized support for DNs.
+
+
+`LdapAttribute` objects represent options as a `Set<String>`. The DN support added to the `LdapAttributes` object employs the `javax.naming.ldap.LdapName` class.
+
+[[the-parser]]
+== The Parser
+
+The `Parser` interface provides the foundation for operation and employs three supporting policy definitions:
+
+* `SeparatorPolicy`: Establishes the mechanism by which lines are assembled into attributes.
+* `AttributeValidationPolicy`: Ensures that attributes are correctly structured prior to parsing.
+* `Specification`: Provides a mechanism by which object structure can be validated after assembly.
+
+
+The default implementations of these interfaces are as follows:
+
+* `org.springframework.ldap.ldif.parser.LdifParser`
+* `org.springframework.ldap.ldif.support.SeparatorPolicy`
+* `org.springframework.ldap.ldif.support.DefaultAttributeValidationPolicy`
+* `org.springframework.ldap.schema.DefaultSchemaSpecification`
+
+Together, these four classes parse a resource line by line and translate the data into `LdapAttributes` objects.
+
+The `SeparatorPolicy` determines how individual lines read from the source file should be interpreted, as the LDIF specification lets attributes span multiple lines. The default policy assesses lines in the context of the order in which they were read to determine the nature of the line in consideration. _control_ attributes and _changetype_ records are ignored.
+
+The `DefaultAttributeValidationPolicy` uses REGEX expressions to ensure that each attribute conforms to a valid attribute format (according to RFC 2849) once parsed. If an attribute fails validation, an `InvalidAttributeFormatException` is logged, and the record is skipped (the parser returns `null`).
+
+[[schema-validation]]
+== Schema Validation
+
+A mechanism for validating parsed objects against a schema is available through the `Specification` interface in the `org.springframework.ldap.schema` package. The `DefaultSchemaSpecification` does not do any validation and is available for instances where records are known to be valid and need not be checked. This option saves the performance penalty that validation imposes. The `BasicSchemaSpecification` applies basic checks, such as ensuring DN and object class declarations have been provided. Currently, validation against an actual schema requires implementation of the `Specification` interface.
+
+[[spring-batch-integration]]
+== Spring Batch Integration
+
+While the `LdifParser` can be employed by any application that requires parsing of LDIF files, Spring offers a batch processing framework that offers many file-processing utilities for parsing delimited files such as CSV. The `org.springframework.ldap.ldif.batch` package offers the classes needed to use the `LdifParser` as a valid configuration option in the Spring Batch framework.
+There are five classes in this package. Together, they offer three basic use cases:
+
+* Reading LDIF records from a file and returning an `LdapAttributes` object.
+* Reading LDIF records from a file and mapping records to Java objects (POJOs).
+* Writing LDIF records to a file.
+
+The first use case is accomplished with `LdifReader`. This class extends Spring Batch's `AbstractItemCountingItemStreamItemReader` and implements its `ResourceAwareItemReaderItemStream`. It fits naturally into the framework, and you can use it to read `LdapAttributes` objects from a file.
+
+You can use `MappingLdifReader` to map LDIF objects directly to any POJO. This class requires you to provide an implementation of the `RecordMapper` interface. This implementation should implement the logic for mapping objects to POJOs.
+
+You can implement `RecordCallbackHandler` and provide the implementation to either reader. You can use this handler to operate on skipped records. See the https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/item/ldif/RecordCallbackHandler.html[Spring Batch API documentation] for more information.
+
+The last member of this package, the `LdifAggregator`, can be used to write LDIF records to a file. This class invokes the `toString()` method of the `LdapAttributes` object.
+
+

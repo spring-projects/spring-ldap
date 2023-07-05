@@ -1,0 +1,370 @@
+[[spring-ldap-basic-usage]]
+= Basic Usage
+
+This section describes the basics of using Spring LDAP. It contains the following content:
+
+* <<spring-ldap-basic-usage-search-lookup-attributesmapper>>
+* <<basic-queries>>
+* <<ldap-names>>
+* <<spring-ldap-basic-usage-examples>>
+* <<spring-ldap-basic-usage-binding-unbinding>>
+* <<spring-ldap-basic-usage-updating>>
+
+[[spring-ldap-basic-usage-search-lookup-attributesmapper]]
+== Search and Lookup Using `AttributesMapper`
+
+The following example uses an https://docs.spring.io/spring-ldap/docs/current/apidocs/org/springframework/ldap/core/AttributesMapper.html[`AttributesMapper`] to build a List of all the common names of all the person objects.
+
+.`AttributesMapper` that returns a single attribute
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+package com.example.repo;
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
+
+public class PersonRepoImpl implements PersonRepo {
+   private LdapClient ldapClient;
+
+   public void setLdapClient(LdapClient ldapClient) {
+      this.ldapClient = ldapClient;
+   }
+
+   public List<String> getAllPersonNames() {
+      return ldapClient.search()
+                .query(query().where("objectclass").is("person"))
+                .toList(**(Attributes attrs) -> (String) attrs.get("cn").get()**);
+   }
+}
+----
+====
+
+The inline implementation of `AttributesMapper` gets the desired attribute value from the `Attributes` object and returns it. Internally, `LdapClient` iterates over all entries found, calls the given `AttributesMapper` for each entry, and collects the results in a list. The list is then returned by the `search` method.
+
+Note that the `AttributesMapper` implementation could easily be modified to return a full `Person` object, as follows:
+
+.AttributesMapper that returns a Person object
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+package com.example.repo;
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
+
+public class PersonRepoImpl implements PersonRepo {
+   private LdapClient ldapClient;
+   ...
+   **private class PersonAttributesMapper implements AttributesMapper<Person> {
+      public Person mapFromAttributes(Attributes attrs) throws NamingException {
+         Person person = new Person();
+         person.setFullName((String)attrs.get("cn").get());
+         person.setLastName((String)attrs.get("sn").get());
+         person.setDescription((String)attrs.get("description").get());
+         return person;
+      }
+   }**
+
+   public List<Person> getAllPersons() {
+      return ldapClient.search()
+            .query(query().where("objectclass").is("person"))
+            .toList(new PersonAttributesMapper());
+   }
+}
+----
+====
+
+Entries in LDAP are uniquely identified by their distinguished name (DN).
+If you have the DN of an entry, you can retrieve the entry directly without querying for it.
+This is called a "`lookup`" in Java LDAP. The following example shows a lookup for a `Person` object:
+
+.A lookup resulting in a Person object
+====
+[source,java]
+----
+package com.example.repo;
+
+public class PersonRepoImpl implements PersonRepo {
+   private LdapClient ldapClient;
+   ...
+   public Person findPerson(String dn) {
+      return ldapClient.search().name(dn).toObject(new PersonAttributesMapper());
+   }
+}
+----
+====
+
+The preceding example looks up the specified DN and passes the found attributes to the supplied `AttributesMapper` -- in this case, resulting in a `Person` object.
+
+[[basic-queries]]
+== Building LDAP Queries
+
+LDAP searches involve a number of parameters, including the following:
+
+* Base LDAP path: Where in the LDAP tree should the search start.
+* Search scope: How deep in the LDAP tree should the search go.
+* Attributes to return.
+* Search filter: The criteria to use when selecting elements within scope.
+
+Spring LDAP provides an https://docs.spring.io/spring-ldap/docs/current/apidocs/org/springframework/ldap/query/LdapQueryBuilder.html[`LdapQueryBuilder`] with a fluent API for building LDAP Queries.
+
+Suppose you want to perform a search starting at the base DN `dc=261consulting,dc=com`,
+limiting the returned attributes to `cn` and `sn`, with a filter of `(&(objectclass=person)(sn=?))`, where we want the `?` to be replaced with the value of the `lastName` parameter.
+The following example shows how to do it by using the `LdapQueryBuilder`:
+
+.Building a search filter dynamically
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+package com.example.repo;
+**import static org.springframework.ldap.query.LdapQueryBuilder.query;**
+
+public class PersonRepoImpl implements PersonRepo {
+   private LdapClient ldapClient;
+   ...
+   public List<String> getPersonNamesByLastName(String lastName) {
+
+      **LdapQuery query = query()
+         .base("dc=261consulting,dc=com")
+         .attributes("cn", "sn")
+         .where("objectclass").is("person")
+         .and("sn").is(lastName);**
+
+      return ldapClient.search().query(**query**)
+            .toObject((Attributes attrs) -> (String) attrs.get("cn").get());
+   }
+}
+----
+====
+
+NOTE: In addition to simplifying building of complex search parameters, the `LdapQueryBuilder` and its associated classes also provide proper escaping of any unsafe characters in search filters. This prevents "`LDAP injection`", where a user might use such characters to inject unwanted operations into your LDAP operations.
+
+NOTE: `LdapClient` includes many overloaded methods for performing LDAP searches. This is in order to accommodate as many different use cases and programming style preferences as possible. For the vast majority of use cases, the methods that take an `LdapQuery` as input are the recommended methods to use.
+
+NOTE: The `AttributesMapper` is only one of the available callback interfaces you can use when handling search and lookup data. See <<dirobjectfactory>> for alternatives.
+
+For more information on the `LdapQueryBuilder`, see <<query-builder-advanced>>.
+
+[[ldap-names]]
+== Dynamically Building Distinguished Names
+
+The standard Java implementation of Distinguished Name (https://docs.oracle.com/javase/6/docs/api/javax/naming/ldap/LdapName.html[`LdapName`])
+performs well when it comes to parsing Distinguished Names. However, in practical use, this implementation has a number of shortcomings:
+
+*  The `LdapName` implementation is mutable, which is badly suited for an object that represents identity.
+*  Despite its mutable nature, the API for dynamically building or modifying Distinguished Names by using `LdapName` is cumbersome.
+   Extracting values of indexed or (particularly) named components is also a little bit awkward.
+*  Many of the operations on `LdapName` throw checked exceptions, requiring `try-catch` statements for situations where the error is typically fatal and cannot be repaired in a meaningful manner.
+
+To simplify working with Distinguished Names, Spring LDAP provides an https://docs.spring.io/spring-ldap/docs/current/apidocs/org/springframework/ldap/support/LdapNameBuilder.html[`LdapNameBuilder`],
+as well as a number of utility methods in https://docs.spring.io/spring-ldap/docs/current/apidocs/org/springframework/ldap/support/LdapUtils.html[`LdapUtils`] that help when working with `LdapName`.
+
+[[spring-ldap-basic-usage-examples]]
+=== Examples
+
+This section presents a few examples of the subjects covered in the preceding sections.
+The first example dynamically builds an `LdapName` by using `LdapNameBuilder`:
+
+.Dynamically building an `LdapName` by using `LdapNameBuilder`
+====
+[source,java,subs="verbatim,quotes"]
+----
+package com.example.repo;
+import org.springframework.ldap.support.LdapNameBuilder;
+import javax.naming.Name;
+
+public class PersonRepoImpl implements PersonRepo {
+  public static final String BASE_DN = "dc=example,dc=com";
+
+  protected Name buildDn(Person p) {
+    **return LdapNameBuilder.newInstance(BASE_DN)
+      .add("c", p.getCountry())
+      .add("ou", p.getCompany())
+      .add("cn", p.getFullname())
+      .build();**
+  }
+  ...
+}
+----
+====
+
+Assume that a `Person` has the following attributes:
+
+|===
+| Attribute Name | Attribute Value
+
+| `country`
+| Sweden
+
+| `company`
+| Some Company
+
+| `fullname`
+| Some Person
+|===
+
+The preceding code would then result in the following distinguished name:
+
+====
+[source]
+----
+cn=Some Person, ou=Some Company, c=Sweden, dc=example, dc=com
+----
+====
+
+The following example extracts values from a distinguished name by using `LdapUtils`
+
+.Extracting values from a distinguished name by using `LdapUtils`
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+package com.example.repo;
+import org.springframework.ldap.support.LdapNameBuilder;
+import javax.naming.Name;
+public class PersonRepoImpl implements PersonRepo {
+...
+  protected Person buildPerson(Name dn, Attributes attrs) {
+    Person person = new Person();
+    person.setCountry(**LdapUtils.getStringValue(dn, "c")**);
+    person.setCompany(**LdapUtils.getStringValue(dn, "ou")**);
+    person.setFullname(**LdapUtils.getStringValue(dn, "cn")**);
+    // Populate rest of person object using attributes.
+
+    return person;
+  }
+}
+----
+====
+
+Since Java versions prior to and including 1.4 did not provide any public Distinguished Name implementation at all, Spring LDAP 1.x provided its own implementation, `DistinguishedName`.
+This implementation suffered from a couple of shortcomings of its own and has been deprecated in version 2.0. You should now use `LdapName` along with the utilities described earlier.
+
+[[spring-ldap-basic-usage-binding-unbinding]]
+== Binding and Unbinding
+
+This section describes how to add and remove data. Updating is covered in the <<spring-ldap-basic-usage-updating,next section>>.
+
+[[basic-binding-data]]
+=== Adding Data
+
+Inserting data in Java LDAP is called binding. This is somewhat confusing, because in LDAP terminology, "`bind`" means something completely different.
+A JNDI bind performs an LDAP Add operation, associating a new entry that has a specified distinguished name with a set of attributes.
+The following example adds data by using `LdapClient`:
+
+.Adding data using Attributes
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+package com.example.repo;
+
+public class PersonRepoImpl implements PersonRepo {
+   private LdapClient ldapClient;
+   ...
+   public void create(Person p) {
+      Name dn = buildDn(p);
+      **ldapClient.bind(dn).attributes(buildAttributes(p)).execute();**
+   }
+
+   private Attributes buildAttributes(Person p) {
+      Attributes attrs = new BasicAttributes();
+      BasicAttribute ocattr = new BasicAttribute("objectclass");
+      ocattr.add("top");
+      ocattr.add("person");
+      attrs.put(ocattr);
+      attrs.put("cn", "Some Person");
+      attrs.put("sn", "Person");
+      return attrs;
+   }
+}
+----
+====
+
+Manual attributes building is -- while dull and verbose -- sufficient for many purposes. You can, however, simplify the binding operation further, as described in <<dirobjectfactory>>.
+
+
+[[removing-data]]
+=== Removing Data
+
+Removing data in Java LDAP is called unbinding.
+A JNDI unbind performs an LDAP Delete operation, removing the entry associated with the specified distinguished name from the LDAP tree.
+The following example removes data by using `LdapClient`:
+
+.Removing data
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+package com.example.repo;
+
+public class PersonRepoImpl implements PersonRepo {
+   private LdapClient ldapClient;
+   ...
+   public void delete(Person p) {
+      Name dn = buildDn(p);
+      **ldapClient.unbind(dn).execute();**
+   }
+}
+----
+====
+
+[[spring-ldap-basic-usage-updating]]
+== Updating
+
+In Java LDAP, data can be modified in two ways: either by using `rebind` or by using `modifyAttributes`.
+
+
+[[updating-by-using-rebind]]
+=== Updating by Using Rebind
+
+A `rebind` is a crude way to modify data. It is basically an `unbind` followed by a `bind`.
+The following example invokes LDAP's `rebind`:
+
+.Modifying using rebind
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+package com.example.repo;
+
+public class PersonRepoImpl implements PersonRepo {
+   private LdapClient ldapClient;
+   ...
+   public void update(Person p) {
+      Name dn = buildDn(p);
+      **ldapTemplate.bind(dn).attributes(buildAttributes(p)).replaceExisting(true).execute();**
+   }
+}
+----
+====
+
+[[modify-modifyAttributes]]
+=== Updating by Using `modifyAttributes`
+
+A more sophisticated way of modifying data is to use `modifyAttributes`. This operation takes an array of explicit attribute modifications
+and performs them on a specific entry, as follows:
+
+.Modifying using modifyAttributes
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+package com.example.repo;
+
+public class PersonRepoImpl implements PersonRepo {
+   private LdapClient ldapClient;
+   ...
+   public void updateDescription(Person p) {
+      Name dn = buildDn(p);
+      Attribute attr = new BasicAttribute("description", p.getDescription())
+      ModificationItem item = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, attr);
+      **ldapTemplate.modify().name(dn).attributes(item).execute();**
+   }
+}
+----
+====
+
+Building `Attributes` and `ModificationItem` arrays is a lot of work. However, as we describe in <<dirobjectfactory>>,
+Spring LDAP provides more help for simplifying these operations.
+
