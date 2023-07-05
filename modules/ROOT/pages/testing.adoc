@@ -3,9 +3,9 @@
 
 This section covers testing with Spring LDAP. It contains the following topics:
 
-* <<spring-ldap-testing-embedded-server>>
-* <<spring-ldap-testing-apacheds>>
-* <<spring-ldap-testing-unboundid>>
+* xref:testing.adoc#spring-ldap-testing-embedded-server[Using an Embedded Server]
+* xref:testing.adoc#spring-ldap-testing-apacheds[ApacheDS]
+* xref:testing.adoc#spring-ldap-testing-unboundid[UnboundID]
 
 [[spring-ldap-testing-embedded-server]]
 == Using an Embedded Server

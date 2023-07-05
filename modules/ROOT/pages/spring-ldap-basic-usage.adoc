@@ -3,12 +3,12 @@
 
 This section describes the basics of using Spring LDAP. It contains the following content:
 
-* <<spring-ldap-basic-usage-search-lookup-attributesmapper>>
-* <<basic-queries>>
-* <<ldap-names>>
-* <<spring-ldap-basic-usage-examples>>
-* <<spring-ldap-basic-usage-binding-unbinding>>
-* <<spring-ldap-basic-usage-updating>>
+* xref:spring-ldap-basic-usage.adoc#spring-ldap-basic-usage-search-lookup-attributesmapper[Search and Lookup Using `AttributesMapper`]
+* xref:spring-ldap-basic-usage.adoc#basic-queries[Building LDAP Queries]
+* xref:spring-ldap-basic-usage.adoc#ldap-names[Dynamically Building Distinguished Names]
+* xref:spring-ldap-basic-usage.adoc#spring-ldap-basic-usage-examples[Examples]
+* xref:spring-ldap-basic-usage.adoc#spring-ldap-basic-usage-binding-unbinding[Binding and Unbinding]
+* xref:spring-ldap-basic-usage.adoc#spring-ldap-basic-usage-updating[Updating]
 
 [[spring-ldap-basic-usage-search-lookup-attributesmapper]]
 == Search and Lookup Using `AttributesMapper`
@@ -141,9 +141,9 @@ NOTE: In addition to simplifying building of complex search parameters, the `Lda
 
 NOTE: `LdapClient` includes many overloaded methods for performing LDAP searches. This is in order to accommodate as many different use cases and programming style preferences as possible. For the vast majority of use cases, the methods that take an `LdapQuery` as input are the recommended methods to use.
 
-NOTE: The `AttributesMapper` is only one of the available callback interfaces you can use when handling search and lookup data. See <<dirobjectfactory>> for alternatives.
+NOTE: The `AttributesMapper` is only one of the available callback interfaces you can use when handling search and lookup data. See xref:dirobjectfactory.adoc[Simplifying Attribute Access and Manipulation with `DirContextAdapter`] for alternatives.
 
-For more information on the `LdapQueryBuilder`, see <<query-builder-advanced>>.
+For more information on the `LdapQueryBuilder`, see xref:query-builder-advanced.adoc[Advanced LDAP Queries].
 
 [[ldap-names]]
 == Dynamically Building Distinguished Names
@@ -243,7 +243,7 @@ This implementation suffered from a couple of shortcomings of its own and has be
 [[spring-ldap-basic-usage-binding-unbinding]]
 == Binding and Unbinding
 
-This section describes how to add and remove data. Updating is covered in the <<spring-ldap-basic-usage-updating,next section>>.
+This section describes how to add and remove data. Updating is covered in the xref:spring-ldap-basic-usage.adoc#spring-ldap-basic-usage-updating[next section].
 
 [[basic-binding-data]]
 === Adding Data
@@ -281,7 +281,7 @@ public class PersonRepoImpl implements PersonRepo {
 ----
 ====
 
-Manual attributes building is -- while dull and verbose -- sufficient for many purposes. You can, however, simplify the binding operation further, as described in <<dirobjectfactory>>.
+Manual attributes building is -- while dull and verbose -- sufficient for many purposes. You can, however, simplify the binding operation further, as described in xref:dirobjectfactory.adoc[Simplifying Attribute Access and Manipulation with `DirContextAdapter`].
 
 
 [[removing-data]]
@@ -365,6 +365,6 @@ public class PersonRepoImpl implements PersonRepo {
 ----
 ====
 
-Building `Attributes` and `ModificationItem` arrays is a lot of work. However, as we describe in <<dirobjectfactory>>,
+Building `Attributes` and `ModificationItem` arrays is a lot of work. However, as we describe in xref:dirobjectfactory.adoc[Simplifying Attribute Access and Manipulation with `DirContextAdapter`],
 Spring LDAP provides more help for simplifying these operations.
 
