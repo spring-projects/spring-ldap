@@ -1,0 +1,19 @@
+name: ldap
+version: true
+title: Spring LDAP
+nav:
+  - modules/ROOT/nav.adoc
+ext:
+  collector:
+    run:
+      command: gradlew -q -PbuildSrc.skipTests=true "-Dorg.gradle.jvmargs=-Xmx3g -XX:+HeapDumpOnOutOfMemoryError" generateAntoraYml
+      local: true
+    scan:
+      dir: ./build/generated-antora-resources
+
+asciidoc:
+  attributes:
+    attribute-missing: 'warn'
+    # FIXME: the copyright is not removed
+    # FIXME: The package is not renamed
+    chomp: 'all'
