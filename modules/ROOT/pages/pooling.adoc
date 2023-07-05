@@ -1,0 +1,261 @@
+[[pooling]]
+= Pooling Support
+
+Pooling LDAP connections helps mitigate the overhead of creating a new LDAP connection for each LDAP interaction. While https://java.sun.com/products/jndi/tutorial/ldap/connect/pool.html[Java LDAP pooling support] exists, it is limited in its configuration options and features, such as connection validation and pool maintenance. Spring LDAP provides support for detailed pool configuration on a per-`ContextSource` basis.
+
+Pooling support is provided by supplying a `<ldap:pooling />` child element to the `<ldap:context-source />` element in the application context configuration. Read-only and read-write `DirContext` objects are pooled separately (if `anonymous-read-only` is specified). https://commons.apache.org/pool/index.html[Jakarta Commons-Pool] is used to provide the underlying pool implementation.
+
+[[dircontext-validation]]
+== `DirContext` Validation
+
+Validation of pooled connections is the primary motivation for using a custom pooling library versus the JDK-provided LDAP pooling functionality. Validation allows pooled `DirContext` connections to be checked to ensure that they are still properly connected and configured when checking them out of the pool, checking them into the pool, or while they are idle in the pool.
+
+If connection validation is configured, pooled connections are validated by using `DefaultDirContextValidator`.
+`DefaultDirContextValidator` does a `DirContext.search(String, String, SearchControls)`, with an empty name, a filter of `"objectclass=*"`, and `SearchControls` set to limit a single result with the only the `objectclass` attribute and a 500ms timeout. If the returned `NamingEnumeration` has results, the `DirContext` passes validation. If no results are returned or an exception is thrown, the `DirContext` fails validation.
+The default settings should work with no configuration changes on most LDAP servers and provide the fastest way to validate the `DirContext`.
+If you need customization, you can do so by using the validation configuration attributes, described in <<pool-configuration>>.
+
+NOTE: Connections are automatically invalidated if they throw an exception that is considered non-transient. For example, if a `DirContext` instance throws a `javax.naming.CommunicationException`, it is interpreted as a non-transient error and the instance is automatically invalidated, without the overhead of an additional `testOnReturn` operation. The exceptions that are interpreted as non-transient are configured by using the `nonTransientExceptions` property of the `PoolingContextSource`.
+
+[[pool-configuration]]
+== Pool Configuration
+The following attributes are available on the `<ldap:pooling />` element for configuration of the DirContext pool:
+
+[cols="1,1,4a"]
+.Pooling Configuration Attributes
+|===
+| Attribute | Default | Description
+
+| `max-active`
+| `8`
+|  The maximum number of active connections of each type (read-only or read-write) that can be allocated from this pool at the same time. You can use a non-positive number for no limit.
+
+| `max-total`
+| `-1`
+|  The overall maximum number of active connections (for all types) that can be allocated from this pool at the same time. You can use a non-positive number for no limit.
+
+| `max-idle`
+| `8`
+|  The maximum number of active connections of each type (read-only or read-write) that can remain idle in the pool without extra connections being released. You can use a non-positive number for no limit.
+
+| `min-idle`
+| `0`
+|  The minimum number of active connections of each type (read-only or read-write) that can remain idle in the pool without extra connections being created. You can use zero (the default) to create none.
+
+| `max-wait`
+| `-1`
+|  The maximum number of milliseconds that the pool waits (when no connections are available) for a connection to be returned before throwing an exception. You can use a non-positive number to wait indefinitely.
+
+| `when-exhausted`
+| `BLOCK`
+|  Specifies the behavior when the pool is exhausted.
+
+*  The `FAIL` option throws `NoSuchElementException` when the pool is exhausted.
+*  The `BLOCK` option waits until a new object is available. If `max-wait` is positive and no new object is available after the `max-wait` time expires, `NoSuchElementException` is thrown.
+*  The `GROW` option creates and returns a new object (essentially making `max-active` meaningless).
+
+
+| `test-on-borrow`
+| `false`
+|  Whether objects are validated before being borrowed from the pool. If the object fails to validate, it is dropped from the pool, and an attempt to borrow another is made.
+
+| `test-on-return`
+| `false`
+|  Whether objects are validated before being returned to the pool.
+
+| `test-while-idle`
+| `false`
+|  Whether objects are validated by the idle object evictor (if any). If an object fails to validate, it is dropped from the pool.
+
+| `eviction-run-interval-millis`
+| `-1`
+|  The number of milliseconds to sleep between runs of the idle object evictor thread. When non-positive, no idle object evictor thread is run.
+
+| `tests-per-eviction-run`
+| `3`
+|  The number of objects to examine during each run of the idle object evictor thread (if any).
+
+| `min-evictable-time-millis`
+| `1000 * 60 * 30` (30 minutes)
+|  The minimum amount of time an object may sit idle in the pool before it is eligible for eviction by the idle object evictor (if any).
+
+| `validation-query-base`
+| `LdapUtils.emptyName()`
+|  The search base to be used when validating connections. Used only if `test-on-borrow`, `test-on-return`, or `test-while-idle` is specified.
+
+| `validation-query-filter`
+| `objectclass=*`
+|  The search filter to be used when validating connections. Used only if `test-on-borrow`, `test-on-return`, or `test-while-idle` is specified.
+
+| `validation-query-search-controls-ref`
+| `null`; default search control settings are described above.
+|  The ID of a `SearchControls` instance to be used when validating connections. Only used if `test-on-borrow`, `test-on-return`, or `test-while-idle` is specified.
+
+| `non-transient-exceptions`
+| `javax.naming.CommunicationException`
+|  Comma-separated list of `Exception` classes. The listed exceptions are considered non-transient with regards to eager invalidation. Should any of the listed exceptions (or subclasses of them) be thrown by a call to a pooled `DirContext` instance, that object is automatically invalidated without any additional testOnReturn operation.
+|===
+
+[[pool2-configuration]]
+== Pool2 Configuration
+
+The following attributes are available on the `<ldap:pooling2 />` element for configuring the `DirContext` pool:
+
+[cols="1,1,4a"]
+.Pooling Configuration Attributes
+|===
+| Attribute | Default | Description
+
+| `max-total`
+| `-1`
+|  The overall maximum number of active connections (for all types) that can be allocated from this pool at the same time. You can use a non-positive number for no limit.
+
+| `max-total-per-key`
+| `8`
+| The limit on the number of object instances allocated by the pool (checked out or idle), per key. When the limit is reached, the sub-pool is exhausted. A negative value indicates no limit.
+
+| `max-idle-per-key`
+| `8`
+|  The maximum number of active connections of each type (read-only or read-write) that can remain idle in the pool, without extra connections being released. A negative value indicates no limit.
+
+| `min-idle-per-key`
+| `0`
+|  The minimum number of active connections of each type (read-only or read-write) that can remain idle in the pool, without extra connections being created. You can use zero (the default) to create none.
+
+| `max-wait`
+| `-1`
+|  The maximum number of milliseconds that the pool waits (when there are no available connections) for a connection to be returned before throwing an exception. You can use a non-positive number to wait indefinitely.
+
+| `block-when-exhausted`
+| `true`
+|  Whether to wait until a new object is available. If max-wait is positive, a `NoSuchElementException` is thrown if no new object is available after the `maxWait` time expires.
+
+| `test-on-create`
+| `false`
+|  Whether objects are validated before borrowing. If the object fails to validate, then borrowing fails.
+
+| `test-on-borrow`
+| `false`
+|  The indicator for whether objects are validated before being borrowed from the pool. If the object fails to validate, it is dropped from the pool, and an attempt to borrow another is made.
+
+| `test-on-return`
+| `false`
+|  The indicator for whether objects are validated before being returned to the pool.
+
+| `test-while-idle`
+| `false`
+|  The indicator for whether objects are validated by the idle object evictor (if any). If an object fails to validate, it is dropped from the pool.
+
+| `eviction-run-interval-millis`
+| `-1`
+|  The number of milliseconds to sleep between runs of the idle object evictor thread. When non-positive, no idle object evictor thread is run.
+
+| `tests-per-eviction-run`
+| `3`
+|  The number of objects to examine during each run of the idle object evictor thread (if any).
+
+| `min-evictable-time-millis`
+| `1000 * 60 * 30` (30 minutes)
+|  The minimum amount of time an object may sit idle in the pool before it is eligible for eviction by the idle object evictor (if any).
+
+| `soft-min-evictable-time-millis`
+| `-1`
+|  The minimum amount of time an object may sit idle in the pool before it is eligible for eviction by the idle object evictor, with the extra condition that at least the minimum number of object instances per key remain in the pool. This setting is overridden by `min-evictable-time-millis` if it is set to a positive value.
+
+| `eviction-policy-class`
+| `org.apache.commons.pool2.impl.DefaultEvictionPolicy`
+|  The eviction policy implementation that is used by this pool. The pool tries to load the class by using the thread context class loader. If that fails, the pool tries to load the class by using the class loader that loaded this class.
+
+| `fairness`
+| `false`
+|  The pool serves threads that are waiting to borrow connections fairly. `true` means that waiting threads are served as if waiting in a FIFO queue.
+
+| `jmx-enable`
+| `true`
+|  JMX is enabled with the platform MBean server for the pool.
+
+| `jmx-name-base`
+| `null`
+|  The JMX name base that is used as part of the name assigned to JMX enabled pools.
+
+| `jmx-name-prefix`
+| `pool`
+|  The JMX name prefix that is used as part of the name assigned to JMX enabled pools.
+
+| `lifo`
+| `true`
+|  The indicator for whether the pool has LIFO (last in, first out) behavior with respect to idle objects or as a FIFO (first in, first out) queue. LIFO always returns the most recently used object from the pool, while FIFO always returns the oldest object in the idle object pool
+
+| `validation-query-base`
+| `LdapUtils.emptyPath()`
+|  The base DN to use for validation searches.
+
+| `validation-query-filter`
+| `objectclass=*`
+|  The filter to use for validation queries.
+
+| `validation-query-search-controls-ref`
+| `null`; default search control settings are described above.
+|  The ID of a `SearchControls` instance to be used when validating connections. Used only if `test-on-borrow`, `test-on-return`, or `test-while-idle` is specified
+
+| `non-transient-exceptions`
+| `javax.naming.CommunicationException`
+|  Comma-separated list of `Exception` classes. The listed exceptions are considered non-transient with regards to eager invalidation. Should any of the listed exceptions (or subclasses of them) be thrown by a call to a pooled `DirContext` instance, that object is automatically invalidated without any additional testOnReturn operation.
+|===
+
+[[configuration]]
+== Configuration
+
+Configuring pooling requires adding an `<ldap:pooling>` element nested in the `<ldap:context-source>` element, as follows:
+
+====
+[source,xml]
+[subs="verbatim,quotes"]
+----
+<beans>
+   ...
+    <ldap:context-source
+        password="secret" url="ldap://localhost:389" username="cn=Manager">
+        <ldap:pooling />
+    </ldap:context-source>
+   ...
+</beans>
+----
+====
+
+In a real-world situation, you would probably configure the pool options and enable connection validation. The preceding example demonstrates the general idea.
+
+[[validation-configuration]]
+=== Validation Configuration
+
+The following example tests each `DirContext` before it is passed to the client application and tests `DirContext` objects that have been sitting idle in the pool:
+
+====
+[source,xml]
+[subs="verbatim,quotes"]
+----
+<beans>
+   ...
+    <ldap:context-source
+        username="cn=Manager" password="secret" url="ldap://localhost:389" >
+        <ldap:pooling
+            test-on-borrow="true"
+            test-while-idle="true" />
+    </ldap:context-source>
+   ...
+</beans>
+----
+====
+
+[[known-issues]]
+== Known Issues
+
+This section describes issues that sometimes arise when people use Spring LDAP. At present, it covers the following issues:
+
+* <<spring-ldap-known-issues-custom-authentication>>
+
+[[spring-ldap-known-issues-custom-authentication]]
+=== Custom Authentication
+
+The `PoolingContextSource` assumes that all `DirContext` objects retrieved from `ContextSource.getReadOnlyContext()` have the same environment and, likewise, that all `DirContext` objects retrieved from `ContextSource.getReadWriteContext()` have the same environment. This means that wrapping an `LdapContextSource` configured with an `AuthenticationSource` in a `PoolingContextSource` does not function as expected. The pool would be populated by using the credentials of the first user, and, unless new connections were needed, subsequent context requests would not be filled for the user specified by the `AuthenticationSource` for the requesting thread.
+

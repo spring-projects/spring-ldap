@@ -1,0 +1,195 @@
+[[odm]]
+= Object-Directory Mapping (ODM)
+
+Object-relational mapping frameworks (such as Hibernate and JPA) offer developers the ability to use annotations to map relational database tables to Java objects.
+The Spring LDAP project offers a similar ability with respect to LDAP directories through a number of methods in `LdapOperations`:
+
+* `<T> T findByDn(Name dn, Class<T> clazz)`
+* `<T> T findOne(LdapQuery query, Class<T> clazz)`
+* `<T> List<T> find(LdapQuery query, Class<T> clazz)`
+* `<T> List<T> findAll(Class<T> clazz)`
+* `<T> List<T> findAll(Name base, SearchControls searchControls, Class<T> clazz)`
+* `<T> List<T> findAll(Name base, Filter filter, SearchControls searchControls, Class<T> clazz)`
+* `void create(Object entry)`
+* `void update(Object entry)`
+* `void delete(Object entry)`
+
+[[annotations]]
+== Annotations
+
+Entity classes managed with the object mapping methods are required to be annotated with annotations from the `org.springframework.ldap.odm.annotations` package. The available annotations are:
+
+* `@Entry`: Class level annotation indicating the `objectClass` definitions to which the entity maps.__ (required)__
+* `@Id`: Indicates the entity DN. The field declaring this attribute must be a derivative of the `javax.naming.Name` class. (required)
+* `@Attribute`: Indicates the mapping of a directory attribute to the object class field.
+* `@DnAttribute`: Indicates the mapping of a DN attribute to the object class field.
+* `@Transient`: Indicates the field is not persistent and should be ignored by the `OdmManager`.
+
+The `@Entry` and `@Id` annotations are required to be declared on managed classes.
+`@Entry` is used to specify which object classes the entity maps to and (optionally) the directory root of the LDAP entries represented by the class.
+All object classes for which fields are mapped are required to be declared. Note that, when creating new entries of the managed class,
+only the declared object classes are used.
+
+In order for a directory entry to be considered a match to the managed entity, all object classes declared by the directory entry must be declared by the `@Entry` annotation.
+For example, assume that you have entries in your LDAP tree that have the following object classes: `inetOrgPerson,organizationalPerson,person,top`.
+If you are interested only in changing the attributes defined in the `person` object class, you can annotate your `@Entry` with `@Entry(objectClasses = { "person", "top" })`.
+However, if you want to manage attributes defined in the `inetOrgPerson` objectclass, you need to use the following: `@Entry(objectClasses = { "inetOrgPerson", "organizationalPerson", "person", "top" })`.
+
+All entity fields are mapped by their field name to LDAP attributes. The remaining annotations -- `@Id`, `@Attribute`, `@Transient`, and `@DnAttribute` -- affect how that mapping occurs.
+
+First, the `@Id` annotation maps the distinguished name of the entry to a field. The field must be an instance of `javax.naming.Name`.
+
+Second, the `@Attribute` annotation maps entity fields to LDAP attributes.
+This is handy when the attribute name is different from the field name.
+To use `@Attribute`, you must declare the name of the attribute to which the field maps.
+Optionally, you can also guarantee and exact match by including the syntax OID of the LDAP attribute.
+Finally, `@Attribute` also provides the type declaration, which lets you indicate whether the attribute is regarded as binary- or string-based by the LDAP JNDI provider.
+
+Third, the `@Transient` annotation indicates that the given entity field does not map to an LDAP attribute.
+
+Finally, the `@DnAttribute` annotation additionally maps entity fields to components of an entry's distinguished name.
+Only fields of type `String` can be annotated with `@DnAttribute`. Other types are not supported.
+
+[TIP]
+When the `index` attribute of all `@DnAttribute` annotations in a class is specified, the DN can also be automatically calculated when creating and updating entries.
+For update scenarios, this also automatically takes care of moving entries in the tree if attributes that are part of the distinguished name have changed.
+
+[NOTE]
+Remember that all fields are mapped to LDAP attributes by default.
+`@DnAttribute` does not change this; in other words, fields annotated with `@DnAttribute` will also map to an LDAP attribute, unless you also annotate the field with `@Transient`.
+
+[[execution]]
+== Execution
+
+When all components have been properly configured and annotated, the object mapping methods of `LdapTemplate` can be used as follows:
+
+.Execution
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+
+@Entry(objectClasses = { "person", "top" }, base="ou=someOu")
+public class Person {
+   @Id
+   private Name dn;
+
+   @Attribute(name="cn")
+   @DnAttribute(value="cn", index=1)
+   private String fullName;
+
+   // No @Attribute annotation means this will be bound to the LDAP attribute
+   // with the same value
+   private String description;
+
+   @DnAttribute(value="ou", index=0)
+   @Transient
+   private String company;
+
+   @Transient
+   private String someUnmappedField;
+   // ...more attributes below
+}
+
+
+public class OdmPersonRepo {
+   @Autowired
+   private LdapTemplate ldapTemplate;
+
+   public Person create(Person person) {
+      ldapTemplate.create(person);
+      return person;
+   }
+
+   public Person findByUid(String uid) {
+      return ldapTemplate.findOne(query().where("uid").is(uid), Person.class);
+   }
+
+   public void update(Person person) {
+      ldapTemplate.update(person);
+   }
+
+   public void delete(Person person) {
+      ldapTemplate.delete(person);
+   }
+
+   public List<Person> findAll() {
+      return ldapTemplate.findAll(Person.class);
+   }
+
+   public List<Person> findByLastName(String lastName) {
+      return ldapTemplate.find(query().where("sn").is(lastName), Person.class);
+   }
+
+   public Stream<Person> streamFindByLastName(String lastName) {
+      return ldapTemplate.findStream(query().where("sn").is(lastName), Person.class);
+   }
+}
+----
+====
+
+[[odm-dn-attributes]]
+== ODM and Distinguished Names as Attribute Values
+
+Security groups in LDAP commonly contain a multi-value attribute, where each of the values is the distinguished name
+of a user in the system. The difficulties involved when handling these kinds of attributes are discussed in <<dns-as-attribute-values>>.
+
+ODM also has support for `javax.naming.Name` attribute values, making group modifications easy, as the following example shows:
+
+.Example Group representation
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+@Entry(objectClasses = {"top", "groupOfUniqueNames"}, base = "cn=groups")
+public class Group {
+
+    @Id
+    private Name dn;
+
+    @Attribute(name="cn")
+    @DnAttribute("cn")
+    private String name;
+
+    @Attribute(name="uniqueMember")
+    private Set<Name> members;
+
+    public Name getDn() {
+        return dn;
+    }
+
+    public void setDn(Name dn) {
+        this.dn = dn;
+    }
+
+    public Set<Name> getMembers() {
+        return members;
+    }
+
+    public void setMembers(Set<Name> members) {
+        this.members = members;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void addMember(Name member) {
+        members.add(member);
+    }
+
+    public void removeMember(Name member) {
+        members.remove(member);
+    }
+}
+----
+====
+
+When you modify group members by using `setMembers`, `addMember`, and `removeMember` and then calling `ldapTemplate.update()`,
+attribute modifications are calculated by using distinguished name equality, meaning that the text formatting of
+distinguished names is disregarded when figuring out whether they are equal.
+

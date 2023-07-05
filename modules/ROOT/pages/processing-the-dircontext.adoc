@@ -1,0 +1,169 @@
+[[processing-the-dircontext]]
+= Processing the `DirContext`
+
+This section covers how to process the `DirContext`, including pre- and post-processing.
+
+[[custom-dircontext-pre-and-post-processing]]
+== Custom `DirContext` Pre- and Post-processing
+
+In some situations, you might like to perform operations on the `DirContext` before and after the search operation. The interface that is used for this is called `DirContextProcessor`. The following listing shows the `DirContextProcessor` interface:
+
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+public interface DirContextProcessor {
+   public void preProcess(DirContext ctx) throws NamingException;
+   public void postProcess(DirContext ctx) throws NamingException;
+}
+----
+====
+
+The `LdapTemplate` class has a search method that takes a `DirContextProcessor`, as follows:
+
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+public void search(SearchExecutor se, NameClassPairCallbackHandler handler,
+   DirContextProcessor processor) throws DataAccessException;
+----
+====
+
+Before the search operation, the `preProcess` method is called on the given `DirContextProcessor` instance. After the search has run and the resulting `NamingEnumeration` has been processed, the `postProcess` method is called. This lets you perform operations on the `DirContext` to be used in the search and to check the `DirContext` when the search has been performed. This can be very useful (for example, when handling request and response controls).
+
+You can also use the following convenience methods when you do not need a custom `SearchExecutor`:
+
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+public void search(Name base, String filter,
+   SearchControls controls, NameClassPairCallbackHandler handler, DirContextProcessor processor)
+
+public void search(String base, String filter,
+   SearchControls controls, NameClassPairCallbackHandler handler, DirContextProcessor processor)
+
+public void search(Name base, String filter,
+   SearchControls controls, AttributesMapper mapper, DirContextProcessor processor)
+
+public void search(String base, String filter,
+   SearchControls controls, AttributesMapper mapper, DirContextProcessor processor)
+
+public void search(Name base, String filter,
+   SearchControls controls, ContextMapper mapper, DirContextProcessor processor)
+
+public void search(String base, String filter,
+   SearchControls controls, ContextMapper mapper, DirContextProcessor processor)
+----
+====
+
+[[implementing-a-request-control-dircontextprocessor]]
+== Implementing a Request Control `DirContextProcessor`
+
+The LDAPv3 protocol uses "`Controls`" to send and receive additional data to affect the behavior of predefined operations. To simplify the implementation of a request control `DirContextProcessor`, Spring LDAP provides the `AbstractRequestControlDirContextProcessor` base class. This class handles the retrieval of the current request controls from the `LdapContext`, calls a template method for creating a request control, and adds it to the `LdapContext`. All you have to do in the subclass is to implement the template method called `createRequestControl` and the `postProcess` method for performing whatever you need to do after the search. The following listing shows the relevant signatures:
+
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+public abstract class AbstractRequestControlDirContextProcessor implements
+      DirContextProcessor {
+
+   public void preProcess(DirContext ctx) throws NamingException {
+      ...
+   }
+
+   public abstract Control createRequestControl();
+}
+----
+====
+
+A typical `DirContextProcessor` is similar to the following example:
+
+.A request control `DirContextProcessor` implementation
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+package com.example.control;
+
+public class MyCoolRequestControl extends AbstractRequestControlDirContextProcessor {
+   private static final boolean CRITICAL_CONTROL = true;
+   private MyCoolCookie cookie;
+   ...
+   public MyCoolCookie getCookie() {
+      return cookie;
+   }
+
+   public Control createRequestControl() {
+      return new SomeCoolControl(cookie.getCookie(), CRITICAL_CONTROL);
+   }
+
+   public void postProcess(DirContext ctx) throws NamingException {
+      LdapContext ldapContext = (LdapContext) ctx;
+      Control[] responseControls = ldapContext.getResponseControls();
+
+      for (int i = 0; i < responseControls.length; i++) {
+         if (responseControls[i] instanceof SomeCoolResponseControl) {
+            SomeCoolResponseControl control = (SomeCoolResponseControl) responseControls[i];
+            this.cookie = new MyCoolCookie(control.getCookie());
+         }
+      }
+   }
+}
+----
+====
+
+NOTE: Make sure you use `LdapContextSource` when you use controls. The https://download.oracle.com/javase/1.5.0/docs/api/javax/naming/ldap/Control.html[`Control`] interface is specific for LDAPv3 and requires that `LdapContext` is used instead of `DirContext`. If an `AbstractRequestControlDirContextProcessor` subclass is called with an argument that is not an `LdapContext`, it throws an `IllegalArgumentException`.
+
+[[paged-search-results]]
+== Paged Search Results
+
+Some searches may return large numbers of results. When there is no easy way to filter out a smaller amount, it is convenient to have the server return only a certain number of results each time it is called. This is known as "`paged search results`". Each "`page`" of the result could then be displayed, with links to the next and previous page. Without this functionality, the client must either manually limit the search result into pages or retrieve the whole result and then chop it into pages of suitable size. The former would be rather complicated, and the latter would consume unnecessary amounts of memory.
+
+Some LDAP servers support `PagedResultsControl`, which requests that the results of a search operation are returned by the LDAP server in pages of a specified size. The user controls the rate at which the pages are returned, by controlling the rate at which the searches are called. However, you must keep track of a cookie between the calls. The server uses this cookie to keep track of where it left off the previous time it was called with a paged results request.
+
+Spring LDAP provides support for paged results by using the concept for pre- and post-processing of an `LdapContext`, as discussed in the previous sections. It does so by using the `PagedResultsDirContextProcessor` class. The `PagedResultsDirContextProcessor` class creates a `PagedResultsControl` with the requested page size and adds it to the `LdapContext`. After the search, it gets the `PagedResultsResponseControl` and retrieves the paged results cookie, which is needed to keep the context between consecutive paged results requests.
+
+The following example shows how the to use the paged search results functionality:
+
+.Paged results using `PagedResultsDirContextProcessor`
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+
+public List<String> getAllPersonNames() {
+  final SearchControls searchControls = new SearchControls();
+  searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+
+  final PagedResultsDirContextProcessor processor =
+        new PagedResultsDirContextProcessor(PAGE_SIZE);
+
+  return SingleContextSource.doWithSingleContext(
+        contextSource, new LdapOperationsCallback<List<String>>() {
+
+      @Override
+      public List<String> doWithLdapOperations(LdapOperations operations) {
+        List<String> result = new LinkedList<String>();
+
+        do {
+          List<String> oneResult = operations.search(
+            "ou=People",
+            "(&(objectclass=person))",
+            searchControls,
+            CN_ATTRIBUTES_MAPPER,
+            processor);
+          result.addAll(oneResult);
+        } while(processor.hasMore());
+
+        return result;
+      }
+  });
+}
+----
+====
+
+NOTE: For a paged results cookie to continue being valid, you must use the same underlying connection for each paged results call. You can do so by using the `SingleContextSource`, as demonstrated in the preceding example.
+

@@ -1,0 +1,257 @@
+[[introduction]]
+= Introduction
+
+This section offers a relatively quick introduction to Spring LDAP. It includes the following content:
+
+* <<spring-ldap-introduction-overview>>
+* <<spring-ldap-traditional-ldap-vs-ldaptemplate>>
+* <<spring-ldap-new-2.2>>
+* <<spring-ldap-new-2.1>>
+* <<spring-ldap-new-2.0>>
+* <<spring-ldap-packaging-overview>>
+* <<spring-ldap-getting-started>>
+* <<spring-ldap-support>>
+* <<spring-ldap-acknowledgements>>
+
+[[spring-ldap-introduction-overview]]
+== Overview
+Spring LDAP is designed to simplify LDAP programming in Java. Some of the features provided by the library are:
+
+* https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/jdbc/core/JdbcTemplate.html[`JdbcTemplate`]-style template simplifications to LDAP programming.
+* JPA- or Hibernate-style annotation-based object and directory mapping.
+* Spring Data repository support, including support for QueryDSL.
+* Utilities to simplify building LDAP queries and distinguished names.
+* Proper LDAP connection pooling.
+* Client-side LDAP compensating transaction support.
+
+[[spring-ldap-traditional-ldap-vs-ldapclient]]
+[[spring-ldap-traditional-ldap-vs-ldaptemplate]]
+== Traditional Java LDAP versus `LdapClient`
+
+Consider a method that should search some storage for all persons and return their names in a list.
+By using JDBC, we would create a _connection_ and run a _query_ by using a _statement_. We would then loop over the _result set_ and retrieve the _column_ we want, adding it to a list.
+
+Working against an LDAP database with JNDI, we would create a _context_ and perform a _search_ by using a _search filter_. We would then loop over the resulting _naming enumeration_, retrieve the _attribute_ we want, and add it to a list.
+
+The traditional way of implementing this person-name search method in Java LDAP looks like the next example. Note the code marked *bold* - this is the code that
+actually performs tasks related to the business purpose of the method. The rest is plumbing.
+
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+package com.example.repository;
+
+public class TraditionalPersonRepoImpl implements PersonRepo {
+   public List<String> getAllPersonNames() {
+      Hashtable env = new Hashtable();
+      env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+      env.put(Context.PROVIDER_URL, "ldap://localhost:389/dc=example,dc=com");
+
+      DirContext ctx;
+      try {
+         ctx = new InitialDirContext(env);
+      } catch (NamingException e) {
+         throw new RuntimeException(e);
+      }
+
+      List<String> list = new LinkedList<String>();
+      NamingEnumeration results = null;
+      try {
+         SearchControls controls = new SearchControls();
+         controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+         results = ctx.**search**("", **"(objectclass=person)"**, controls);
+
+         while (results.hasMore()) {
+            SearchResult searchResult = (SearchResult) results.next();
+            Attributes attributes = searchResult.getAttributes();
+            **Attribute attr = attributes.get("cn");
+            String cn = attr.get().toString();**
+            list.add(cn);
+         }
+      } catch (NameNotFoundException e) {
+         // The base context was not found.
+         // Just clean up and exit.
+      } catch (NamingException e) {
+         throw new RuntimeException(e);
+      } finally {
+         if (results != null) {
+            try {
+               results.close();
+            } catch (Exception e) {
+               // Never mind this.
+            }
+         }
+         if (ctx != null) {
+            try {
+               ctx.close();
+            } catch (Exception e) {
+               // Never mind this.
+            }
+         }
+      }
+      **return list;**
+   }
+}
+----
+====
+
+By using the Spring LDAP `AttributesMapper` and `LdapClient` classes, we get the exact same functionality with the following code:
+
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+package com.example.repo;
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
+
+public class PersonRepoImpl implements PersonRepo {
+   private LdapClient ldapClient;
+
+   public void setLdapClient(LdapClient ldapClient) {
+      this.ldapClient = ldapClient;
+   }
+
+   public List<String> getAllPersonNames() {
+      return ldapClient.search().query(
+            **query().where("objectclass").is("person")**
+         ).toObject((Attributes attrs) ->
+            **attrs.get("cn").get().toString();**
+         );
+   }
+}
+----
+====
+
+The amount of boilerplate code is significantly less than in the traditional example.
+The `LdapClient` search method makes sure a `DirContext` instance is created, performs the search, maps the attributes to a string by using the given `AttributesMapper`,
+collects the strings in an internal list, and, finally, returns the list. It also makes sure that the `NamingEnumeration` and `DirContext` are properly closed and
+takes care of any exceptions that might happen.
+
+Naturally, this being a Spring Framework sub-project, we use Spring to configure our application, as follows:
+
+====
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ldap="http://www.springframework.org/schema/ldap"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/ldap https://www.springframework.org/schema/ldap/spring-ldap.xsd">
+
+   <ldap:context-source
+          url="ldap://localhost:389"
+          base="dc=example,dc=com"
+          username="cn=Manager"
+          password="secret" />
+
+   <bean id="ldapClient" class="org.springframework.ldap.core.LdapClient" factory-method="create">
+        <constructor-arg ref="contextSource" />
+    </bean>
+
+   <bean id="personRepo" class="com.example.repo.PersonRepoImpl">
+      <property name="ldapClient" ref="ldapClient" />
+   </bean>
+</beans>
+----
+====
+
+NOTE: To use the custom XML namespace to configure the Spring LDAP components, you need to include references to this namespace in your XML declaration, as in the preceding example.
+
+[[spring-ldap-new-2.2]]
+== What's new in 2.2
+
+For complete details of 2.2, see the changelog for https://github.com/spring-projects/spring-ldap/milestone/21?closed=1[2.2.0.RC1].
+The highlights of Spring LDAP 2.2 are as follows:
+
+* https://github.com/spring-projects/spring-ldap/issues/415[#415]: Added support for Spring 5
+* https://github.com/spring-projects/spring-ldap/pull/399[#399]: Embedded UnboundID LDAP Server support
+* https://github.com/spring-projects/spring-ldap/pull/410[#410]: Added documentation for the Commons Pool 2 Support
+
+[[spring-ldap-new-2.1]]
+== What's new in 2.1
+
+For complete details of 2.1, see the changelog for https://github.com/spring-projects/spring-ldap/issues?q=milestone%3A2.1.0.RC1[2.1.0.RC1] and for https://github.com/spring-projects/spring-ldap/issues?utf8=%E2%9C%93&q=milestone%3A2.1.0[2.1.0]
+The highlights of Spring LDAP 2.1 are as follows.
+
+* https://github.com/spring-projects/spring-ldap/pull/390[#390]: Added Spring Data Hopper support
+* https://github.com/spring-projects/spring-ldap/issues/351[#351]: Added support for commons-pool2
+* https://github.com/spring-projects/spring-ldap/issues/370[#370]: Added support property placeholders in the XML Namespace
+* https://github.com/spring-projects/spring-ldap/pull/392[#392]: Added document Testing Support
+* https://github.com/spring-projects/spring-ldap/pull/401[#401]: Added a switch to assertj
+* Migrated from JIRA to https://github.com/spring-projects/spring-ldap/issues[GitHub Issues]
+* Added https://gitter.im/spring-projects/spring-ldap[Gitter Chat]
+
+[[spring-ldap-new-2.0]]
+== What's new in 2.0
+
+While quite significant modernizations have been made to the Spring LDAP API in version 2.0, great care has been taken to ensure backward compatibility as far as possible.
+Code that works with Spring LDAP 1.3.x should, with few exceptions, compile and run when you use the 2.0 libraries without any modifications.
+
+The exception is a small number of classes that have been moved to new packages in order to make a couple of important refactorings possible.
+The moved classes are typically not part of the intended public API, and the migration procedure should be smooth. Whenever a Spring LDAP class cannot be found after upgrade, you should organize the imports in your IDE.
+
+You should expect to encounter some deprecation warnings, though, and there are also a lot of other API improvements.
+The recommendation for getting as much as possible out of the 2.0 version is to move away from the deprecated classes and methods and migrate to the new, improved API utilities.
+
+The following list briefly describes the most important changes in Spring LDAP 2.0:
+
+*  Java 6 is now required by Spring LDAP. Spring versions starting at 2.0 and up are still supported.
+*  The central API has been updated with Java 5+ features such as generics and varargs.
+   As a consequence, the entire `spring-ldap-tiger` module has been deprecated, and we encourage you to migrate to using the core Spring LDAP classes.
+   The parameterization of the core interfaces causes lots of compilation warnings on existing code, and we encourage you to take appropriate action to get rid of these warnings.
+*  The ODM (Object-Directory Mapping) functionality has been moved to core, and there are new methods in `LdapOperations` and `LdapTemplate` that use this automatic translation to and from ODM-annotated classes. See <<odm>> for more information.
+*  A custom XML namespace is now (finally) provided to simplify configuration of Spring LDAP. See <<configuration>> for more information.
+*  Spring LDAP now provides support for Spring Data Repository and QueryDSL. See <<repositories>> for more information.
+*  `Name` instances as attribute values are now handled properly with regards to distinguished name equality in `DirContextAdapter` and ODM.
+   See <<dns-as-attribute-values>> and <<odm-dn-attributes>> for more information.
+*  `DistinguishedName` and associated classes have been deprecated in favor of the standard Java `LdapName`.
+   See <<ldap-names>> for information on how the library helps when working with `LdapName` objects.
+*  Fluent LDAP query building support has been added. This makes for a more pleasant programming experience when working with LDAP searches in Spring LDAP.
+   See <<basic-queries>> and <<query-builder-advanced>> for more information about the LDAP query builder support.
+*  The old `authenticate` methods in `LdapTemplate` have been deprecated in favor of a couple of new `authenticate` methods that work with `LdapQuery` objects and _throw exceptions_ on authentication failure, making it easier for the user to find out what caused an authentication attempt to fail.
+*  The https://github.com/spring-projects/spring-ldap/tree/main/samples[samples] have been polished and updated to make use of the features in 2.0.
+   Quite a bit of effort has been put into providing a useful example of an https://github.com/spring-projects/spring-ldap/tree/main/samples/user-admin[LDAP user management application].
+
+[[spring-ldap-packaging-overview]]
+== Packaging Overview
+
+At a minimum, to use Spring LDAP you need the following:
+
+* `spring-ldap-core`: The Spring LDAP library
+* `spring-core`: Miscellaneous utility classes used internally by the framework
+* `spring-beans`: Interfaces and classes for manipulating Java beans
+* `slf4j`: A simple logging facade, used internally
+
+In addition to the required dependencies, the following optional dependencies are required for certain functionality:
+
+* `spring-data-ldap`: Base infrastructure for repository support and so on
+* `spring-context`: Needed if your application is wired up by using the Spring Application Context. `spring-context` adds the ability for application objects to obtain resources by using a consistent API. It is definitely needed if you plan to use the `BaseLdapPathBeanPostProcessor`.
+* `spring-tx`: Needed if you plan to use the client-side compensating transaction support.
+* `spring-jdbc`: Needed if you plan to use the client-side compensating transaction support.
+* `commons-pool`: Needed if you plan to use the pooling functionality.
+* `spring-batch`: Needed if you plan to use the LDIF parsing functionality together with Spring Batch.
+
+NOTE: `spring-data-ldap` transitively adds `spring-repository.xsd`, which `spring-ldap.xsd` uses.
+Because of this, Spring LDAP's XML config support requires the dependency even when Spring Data's feature set is not in use.
+
+[[spring-ldap-getting-started]]
+== Getting Started
+
+The https://github.com/spring-projects/spring-ldap/tree/main/samples[samples] provide some useful examples of how to use Spring LDAP for common use cases.
+
+[[spring-ldap-support]]
+== Support
+
+If you have questions, ask them on https://stackoverflow.com/questions/tagged/spring-ldap[Stack Overflow with the `spring-ldap` tag].
+The project web page is https://spring.io/spring-ldap/.
+
+[[spring-ldap-acknowledgements]]
+== Acknowledgements
+
+The initial effort when starting the Spring LDAP project was sponsored by https://www.jayway.com[Jayway].
+Current maintenance of the project is funded by https://pivotal.io[Pivotal], which has since been acquired by https://vmware.com[VMware].
+
+Thanks to https://structure101.com/[Structure101] for providing an open source license that has come in handy for keeping the project structure in check.
+

@@ -1,0 +1,23 @@
+[[utilities]]
+= Utilities
+
+This section describes additional utilities that you can use with Spring LDAP.
+
+[[incremental-retrieval-of-multi-valued-attributes]]
+== Incremental Retrieval of Multi-Valued Attributes
+
+When there are a very large number of attribute values (>1500) for a specific attribute, Active Directory typically refuses to return all these values at once. Instead, the attribute values are returned according to the https://tools.ietf.org/html/draft-kashi-incremental-00[Incremental Retrieval of Multi-valued Properties] method. Doing so requires the calling part to inspect the returned attribute for specific markers and, if necessary, make additional lookup requests until all values are found.
+
+Spring LDAP's `org.springframework.ldap.core.support.DefaultIncrementalAttributesMapper` helps when working with this kind of attributes, as follows:
+
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+Object[] attrNames =  new Object[]{"oneAttribute", "anotherAttribute"};
+Attributes attrs = DefaultIncrementalAttributeMapper.lookupAttributes(ldapTemplate, theDn, attrNames);
+----
+====
+
+The preceding example parses any returned attribute range markers and makes repeated requests as necessary until all values for all requested attributes have been retrieved.
+

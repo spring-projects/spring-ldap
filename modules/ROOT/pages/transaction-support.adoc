@@ -1,0 +1,153 @@
+[[transaction-support]]
+= Transaction Support
+
+Programmers used to working with relational databases coming to the LDAP world often express surprise at the fact that there is no notion of transactions.
+It is not specified in the protocol, and no LDAP servers support it.
+Recognizing that this may be a major problem, Spring LDAP provides support for client-side, compensating transactions on LDAP resources.
+
+LDAP transaction support is provided by `ContextSourceTransactionManager`, a `PlatformTransactionManager` implementation that manages Spring transaction support for LDAP operations. Along with its collaborators, it keeps track of the LDAP operations performed in a transaction, making a record of the state before each operation and taking steps to restore the initial state should the transaction need to be rolled back.
+
+In addition to the actual transaction management, Spring LDAP transaction support also makes sure that the same `DirContext` instance is used throughout the same transaction. That is, the `DirContext` is not actually closed until the transaction is finished, allowing for more efficient resources usage.
+
+IMPORTANT: While the approach used by Spring LDAP to provide transaction support is sufficient for many cases, it is by no means "`real`" transactions in the traditional sense.
+The server is completely unaware of the transactions, so (for example), if the connection is broken, there is no way to roll back the transaction.
+While this should be carefully considered, it should also be noted that the alternative is to operate without any transaction support whatsoever. Spring LDAP's transaction support is pretty much as good as it gets.
+
+NOTE: The client-side transaction support adds some overhead in addition to the work required by the original operations.
+While this overhead should not be something to worry about in most cases,
+if your application does not perform several LDAP operations within the same transaction (for example, `modifyAttributes` followed by `rebind`),
+or if transaction synchronization with a JDBC data source is not required (see <<spring-ldap-jdbc-transaction-integration>>), you gain little by using the LDAP transaction support.
+
+[[configuration]]
+== Configuration
+
+Configuring Spring LDAP transactions should look very familiar if you are used to configuring Spring transactions. You can annotate your transacted classes with `@Transactional`, create a `TransactionManager` instance, and include a `<tx:annotation-driven>` element in your bean configuration. The following example shows how to do so:
+
+====
+[source,xml]
+[subs="verbatim,quotes"]
+----
+<ldap:context-source
+       url="ldap://localhost:389"
+       base="dc=example,dc=com"
+       username="cn=Manager"
+       password="secret" />
+
+<ldap:ldap-template id="ldapTemplate" />
+<ldap:transaction-manager>
+    <!--
+    Note this default configuration will not work for more complex scenarios;
+    see below for more information on RenamingStrategies.
+    -->
+   <ldap:default-renaming-strategy />
+</ldap:transaction-manager>
+
+<!--
+   The MyDataAccessObject class is annotated with @Transactional.
+-->
+<bean id="myDataAccessObject" class="com.example.MyRepository">
+  <property name="ldapTemplate" ref="ldapTemplate" />
+</bean>
+
+<tx:annotation-driven />
+...
+----
+====
+
+NOTE: While this setup works fine for most simple use cases, some more complex scenarios require additional configuration.
+Specifically, if you need to create or delete subtrees within transactions, you need to use an alternative `TempEntryRenamingStrategy`, as described in <<renaming-strategies>>.
+
+In a real-world situation, you would probably apply the transactions on the service-object level rather than the repository level. The preceding example demonstrates the general idea.
+
+[[spring-ldap-jdbc-transaction-integration]]
+== JDBC Transaction Integration
+
+A common use case when working against LDAP is that some of the data is stored in the LDAP tree but other data is stored in a relational database. In this case, transaction support becomes even more important, since the update of the different resources should be synchronized.
+
+While actual XA transactions is not supported, support is provided to conceptually wrap JDBC and LDAP access within the same transaction by supplying a `data-source-ref` attribute to the `<ldap:transaction-manager>` element. This creates a `ContextSourceAndDataSourceTransactionManager`, which then manages the two transactions virtually as if they were one. When performing a commit, the LDAP part of the operation is always performed first, letting both transactions be rolled back should the LDAP commit fail. The JDBC part of the transaction is managed exactly as in `DataSourceTransactionManager`, except that nested transactions are not supported. The following example shows an `ldap:transaction-manager` element with a `data-source-ref` attribute:
+
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+<ldap:transaction-manager data-source-ref="dataSource" >
+  <ldap:default-renaming-strategy />
+<ldap:transaction-manager />
+----
+====
+
+NOTE: The provided support is all client-side.
+The wrapped transaction is not an XA transaction. No two-phase commit is performed, as the LDAP server cannot vote on its outcome.
+
+You can accomplish the same thing for Hibernate integration by supplying a `session-factory-ref` attribute to the `<ldap:transaction-manager>` element, as follows:
+
+====
+[source,xml]
+[subs="verbatim,quotes"]
+----
+<ldap:transaction-manager session-factory-ref="dataSource" >
+  <ldap:default-renaming-strategy />
+<ldap:transaction-manager />
+----
+====
+
+[[ldap-compensating-transactions-explained]]
+== LDAP Compensating Transactions Explained
+
+Spring LDAP manages compensating transactions by making a record of the state in the LDAP tree before each modifying operation (`bind`, `unbind`, `rebind`,  `modifyAttributes`, and `rename`).
+This lets the system perform compensating operations should the transaction need to be rolled back.
+
+In many cases, the compensating operation is pretty straightforward. For example, the compensating rollback operation for a  `bind` operation is to unbind the entry.
+Other operations, however, require a different, more complicated approach because of some particular characteristics of LDAP databases.
+Specifically, it is not always possible to get the values of all `Attributes` of an entry, making the aforementioned strategy insufficient for (for example) an `unbind` operation.
+
+This is why each modifying operation performed within a Spring LDAP managed transaction is internally split up into four distinct operations: a recording operation,
+a preparation operation, a commit operation, and a rollback operation. The following table describes each LDAP operation:
+
+|===
+| LDAP Operation | Recording | Preparation | Commit | Rollback
+
+| `bind`
+| Make a record of the DN of the entry to bind.
+| Bind the entry.
+| No operation.
+| Unbind the entry by using the recorded DN.
+
+| `rename`
+| Make a record of the original and target DN.
+| Rename the entry.
+| No operation.
+| Rename the entry back to its original DN.
+
+| `unbind`
+| Make a record of the original DN and calculate a temporary DN.
+| Rename the entry to the temporary location.
+| Unbind the temporary entry.
+| Rename the entry from the temporary location back to its original DN.
+
+| `rebind`
+| Make a record of the original DN and the new `Attributes` and calculate a temporary DN.
+| Rename the entry to a temporary location.
+| Bind the new `Attributes` at the original DN and unbind the original entry from its temporary location.
+| Rename the entry from the temporary location back to its original DN.
+
+| `modifyAttributes`
+| Make a record of the DN of the entry to modify and calculate compensating `ModificationItem` instances for the modifications to be done.
+| Perform the `modifyAttributes` operation.
+| No operation.
+| Perform a `modifyAttributes` operation by using the calculated compensating `ModificationItem` instances.
+|===
+
+A more detailed description of the internal workings of the Spring LDAP transaction support is available in the https://docs.spring.io/spring-ldap/docs/current/apidocs/[Javadoc].
+
+[[renaming-strategies]]
+=== Renaming Strategies
+
+As described in the table in the preceding section, the transaction management of some operations requires the original entry affected by the operation to be temporarily renamed before the actual modification can be made in the commit. The manner in which the temporary DN of the entry is calculated is managed by a `TempEntryRenamingStrategy` that is specified in a child element of the `<ldap:transaction-manager >` declaration in the configuration. Spring LDAP includes two implementations:
+
+* `DefaultTempEntryRenamingStrategy` (the default): Specified by using an `<ldap:default-renaming-strategy />` element. Adds a suffix to the least significant part of the entry DN. For example, for a DN of `cn=john doe, ou=users`, this strategy returns a temporary DN of `cn=john doe_temp, ou=users`. You can configure the suffix by setting the `temp-suffix` attribute.
+
+* `DifferentSubtreeTempEntryRenamingStrategy`: Specified by using an `<ldap:different-subtree-renaming-strategy />` element. It appends a subtree DN to the least significant part of the DN. Doing so makes all temporary entries be placed at a specific location in the LDAP tree. The temporary subtree DN is configured by setting the `subtree-node` attribute. For example, if `subtree-node` is `ou=tempEntries` and the original DN of the entry is `cn=john doe, ou=users`, the temporary DN is `cn=john doe, ou=tempEntries`. Note that the configured subtree node needs to be present in the LDAP tree.
+
+NOTE: The `DefaultTempEntryRenamingStrategy` does not work in some situations. For example, if you plan to do recursive deletes, you need to use `DifferentSubtreeTempEntryRenamingStrategy`. This is because the recursive delete operation actually consists of a depth-first delete of each node in the sub tree individually. Since you cannot rename an entry that has any children and `DefaultTempEntryRenamingStrategy` would leave each node in the same subtree (with a different name) instead of actually removing it, this operation would fail. When in doubt, use `DifferentSubtreeTempEntryRenamingStrategy`.
+
