@@ -1,0 +1,40 @@
+antora:
+  extensions:
+  - '@antora/collector-extension'
+  - '@antora/atlas-extension'
+  - '@opendevise/antora-release-line-extension'
+  - '@springio/antora-extensions/latest-version-extension'
+  - require: '@springio/antora-extensions/root-component-extension'
+    root_component_name: 'ldap'
+site:
+  title: Spring LDAP
+  url: https://docs.spring.io/spring-ldap/reference
+  robots: allow
+git:
+  ensure_git_suffix: false
+content:
+  sources:
+  - url: https://github.com/spring-projects/spring-ldap
+    # Refname matching:
+    # https://docs.antora.org/antora/latest/playbook/content-refname-matching/
+    branches: [main]
+asciidoc:
+  extensions:
+    - '@asciidoctor/tabs'
+    - '@springio/asciidoctor-extensions'
+    - '@springio/asciidoctor-extensions/include-code-extension'
+  attributes:
+    page-pagination: ''
+    hide-uri-scheme: '@'
+    tabs-sync-option: '@'
+urls:
+  latest_version_segment_strategy: redirect:to
+  latest_version_segment: ''
+  redirect_facility: httpd
+runtime:
+  log:
+    failure_level: warn
+ui:
+  bundle:
+    url: https://github.com/spring-io/antora-ui-spring/releases/download/latest/ui-bundle.zip
+    snapshot: true
