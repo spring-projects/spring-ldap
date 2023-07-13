@@ -14,7 +14,7 @@ site:
   title: Spring LDAP Reference
 content:
   sources:
-  - url: ./..
+  - url: .
     branches: HEAD
     worktrees: true
 asciidoc:
