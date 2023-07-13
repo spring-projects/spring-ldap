@@ -782,7 +782,8 @@ public final class LdapUtils {
 
 		@Override
 		public void handleAttributeValue(String attributeName, Object attributeValue, int index) {
-			Assert.isTrue(attributeName == null || this.clazz.isAssignableFrom(attributeValue.getClass()));
+			Assert.isTrue(attributeName == null || this.clazz.isAssignableFrom(attributeValue.getClass()),
+					() -> "either attributeName must be null or the attribute value must be of type " + this.clazz);
 			this.collection.add(this.clazz.cast(attributeValue));
 		}
 

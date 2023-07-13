@@ -40,7 +40,7 @@ public class ContextSourceEc2InstanceLaunchingFactoryBean extends AbstractEc2Ins
 
 	@Override
 	protected final Object doCreateInstance(final String dnsName) throws Exception {
-		Assert.hasText(this.userDn);
+		Assert.hasText(this.userDn, "userDn cannot be null");
 		LdapContextSource instance = new LdapContextSource();
 		instance.setUrl("ldap://" + dnsName);
 		instance.setUserDn(this.userDn);

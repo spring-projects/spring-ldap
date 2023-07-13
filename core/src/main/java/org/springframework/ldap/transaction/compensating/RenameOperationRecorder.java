@@ -54,7 +54,7 @@ public class RenameOperationRecorder implements CompensatingTransactionOperation
 	 */
 	public CompensatingTransactionOperationExecutor recordOperation(Object[] args) {
 		log.debug("Storing rollback information for rename operation");
-		Assert.notEmpty(args);
+		Assert.notEmpty(args, "args cannot be empty");
 		if (args.length != 2) {
 			// This really shouldn't happen.
 			throw new IllegalArgumentException("Illegal argument length");

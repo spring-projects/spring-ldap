@@ -55,7 +55,7 @@ public class ModifyAttributesOperationRecorder implements CompensatingTransactio
 	 * CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
 	 */
 	public CompensatingTransactionOperationExecutor recordOperation(Object[] args) {
-		Assert.notNull(args);
+		Assert.notNull(args, "args cannot be empty");
 		Name dn = LdapTransactionUtils.getFirstArgumentAsName(args);
 		if (args.length != 2 || !(args[1] instanceof ModificationItem[])) {
 			throw new IllegalArgumentException("Unexpected arguments to ModifyAttributes operation");

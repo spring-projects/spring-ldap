@@ -54,7 +54,7 @@ public final class LdapTransactionUtils {
 	 * name.
 	 */
 	public static Name getFirstArgumentAsName(Object[] args) {
-		Assert.notEmpty(args);
+		Assert.notEmpty(args, "args cannot be empty");
 
 		Object firstArg = args[0];
 		return getArgumentAsName(firstArg);
