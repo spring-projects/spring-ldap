@@ -38,6 +38,7 @@ public interface BaseLdapPathSource {
 	 * @deprecated {@link DistinguishedName} and associated classes and methods are
 	 * deprecated as of 2.0. Use {@link #getBaseLdapName()} instead.
 	 */
+	@Deprecated
 	DistinguishedName getBaseLdapPath();
 
 	/**

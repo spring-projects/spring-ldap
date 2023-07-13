@@ -188,7 +188,7 @@ public final class ConverterManagerTests {
 			Integer intSource = null;
 
 			if (source.getClass() == String.class) {
-				intSource = new Integer((String) source);
+				intSource = Integer.valueOf((String) source);
 			}
 			else {
 				if (source.getClass() == Integer.class) {
@@ -213,7 +213,7 @@ public final class ConverterManagerTests {
 			Integer intSource = null;
 
 			if (source.getClass() == String.class) {
-				intSource = new Integer((String) source);
+				intSource = Integer.valueOf((String) source);
 			}
 			else {
 				if (source.getClass() == Integer.class) {

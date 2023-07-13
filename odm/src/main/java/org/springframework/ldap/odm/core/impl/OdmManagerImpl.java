@@ -42,6 +42,7 @@ import org.springframework.util.StringUtils;
  * @deprecated This functionality is automatically available in LdapTemplate as of version
  * 2.0
  */
+@Deprecated
 public final class OdmManagerImpl implements OdmManager {
 
 	// The link to the LDAP directory

@@ -39,6 +39,7 @@ import org.springframework.ldap.query.LdapQuery;
  * @deprecated This functionality is automatically available in LdapTemplate as of version
  * 2.0
  */
+@Deprecated
 public interface OdmManager {
 
 	/**

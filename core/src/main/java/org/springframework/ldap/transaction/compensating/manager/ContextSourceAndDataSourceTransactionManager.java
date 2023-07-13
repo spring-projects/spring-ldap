@@ -38,6 +38,7 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * probably not such a good idea after all. AbstractPlatformTransactionManager is not
  * designed for this usage.
  */
+@Deprecated
 public class ContextSourceAndDataSourceTransactionManager extends DataSourceTransactionManager {
 
 	private static final long serialVersionUID = 6832868697460384648L;
