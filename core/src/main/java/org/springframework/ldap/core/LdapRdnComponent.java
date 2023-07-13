@@ -35,6 +35,7 @@ import org.springframework.util.StringUtils;
  * @author Mattias Hellborg Arthursson
  * @deprecated {@link DistinguishedName} and associated classes are deprecated as of 2.0.
  */
+@Deprecated
 public class LdapRdnComponent implements Comparable, Serializable {
 
 	private static final long serialVersionUID = -3296747972616243038L;
@@ -111,6 +112,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	 * @deprecated Using this method changes the internal state of surrounding
 	 * DistinguishedName instance. This should be avoided.
 	 */
+	@Deprecated
 	public void setKey(String key) {
 		Assert.hasText(key, "Key must not be empty");
 		this.key = key;
@@ -130,6 +132,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	 * @deprecated Using this method changes the internal state of surrounding
 	 * DistinguishedName instance. This should be avoided.
 	 */
+	@Deprecated
 	public void setValue(String value) {
 		Assert.hasText(value, "Value must not be empty");
 		this.value = value;

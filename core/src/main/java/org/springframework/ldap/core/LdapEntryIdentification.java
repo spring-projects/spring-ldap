@@ -54,6 +54,7 @@ public class LdapEntryIdentification {
 	 * {@link #LdapEntryIdentification(javax.naming.ldap.LdapName, javax.naming.ldap.LdapName)}
 	 * instead.
 	 */
+	@Deprecated
 	public LdapEntryIdentification(DistinguishedName absoluteDn, DistinguishedName relativeDn) {
 		Assert.notNull(absoluteDn, "Absolute DN must not be null");
 		Assert.notNull(relativeDn, "Relative DN must not be null");
@@ -103,6 +104,7 @@ public class LdapEntryIdentification {
 	 * @deprecated {@link DistinguishedName} and associated classes and methods are
 	 * deprecated as of 2.0. use {@link #getRelativeName()} instead.
 	 */
+	@Deprecated
 	public DistinguishedName getRelativeDn() {
 		return new DistinguishedName(this.relativeDn);
 	}
@@ -114,6 +116,7 @@ public class LdapEntryIdentification {
 	 * @deprecated {@link DistinguishedName} and associated classes and methods are
 	 * deprecated as of 2.0. use {@link #getAbsoluteName()} instead.
 	 */
+	@Deprecated
 	public DistinguishedName getAbsoluteDn() {
 		return new DistinguishedName(this.absoluteDn);
 	}

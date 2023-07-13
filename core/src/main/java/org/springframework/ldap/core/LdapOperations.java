@@ -1178,6 +1178,7 @@ public interface LdapOperations {
 	 * {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)} or
 	 * {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
 	 */
+	@Deprecated
 	boolean authenticate(Name base, String filter, String password);
 
 	/**
@@ -1203,6 +1204,7 @@ public interface LdapOperations {
 	 * {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)} or
 	 * {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
 	 */
+	@Deprecated
 	boolean authenticate(String base, String filter, String password);
 
 	/**
@@ -1226,6 +1228,7 @@ public interface LdapOperations {
 	 * {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
 	 * @see #authenticate(Name, String, String)
 	 */
+	@Deprecated
 	boolean authenticate(Name base, String filter, String password, AuthenticatedLdapEntryContextCallback callback);
 
 	/**
@@ -1249,6 +1252,7 @@ public interface LdapOperations {
 	 * {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
 	 * @see #authenticate(String, String, String)
 	 */
+	@Deprecated
 	boolean authenticate(String base, String filter, String password, AuthenticatedLdapEntryContextCallback callback);
 
 	/**
@@ -1276,6 +1280,7 @@ public interface LdapOperations {
 	 * {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
 	 * @see #authenticate(Name, String, String, AuthenticatedLdapEntryContextCallback)
 	 */
+	@Deprecated
 	boolean authenticate(Name base, String filter, String password, AuthenticatedLdapEntryContextCallback callback,
 			AuthenticationErrorCallback errorCallback);
 
@@ -1304,6 +1309,7 @@ public interface LdapOperations {
 	 * {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
 	 * @see #authenticate(String, String, String, AuthenticatedLdapEntryContextCallback)
 	 */
+	@Deprecated
 	boolean authenticate(String base, String filter, String password, AuthenticatedLdapEntryContextCallback callback,
 			AuthenticationErrorCallback errorCallback);
 
@@ -1328,6 +1334,7 @@ public interface LdapOperations {
 	 * @see #authenticate(Name, String, String, AuthenticatedLdapEntryContextCallback,
 	 * AuthenticationErrorCallback)
 	 */
+	@Deprecated
 	boolean authenticate(Name base, String filter, String password, AuthenticationErrorCallback errorCallback);
 
 	/**
@@ -1350,6 +1357,7 @@ public interface LdapOperations {
 	 * {@link #authenticate(org.springframework.ldap.query.LdapQuery, String)} or
 	 * {@link #authenticate(org.springframework.ldap.query.LdapQuery, String, AuthenticatedLdapEntryContextMapper)}
 	 */
+	@Deprecated
 	boolean authenticate(String base, String filter, String password, AuthenticationErrorCallback errorCallback);
 
 	/**

@@ -97,6 +97,7 @@ import org.springframework.util.StringUtils;
  * @deprecated As of 2.0 it is recommended to use {@link javax.naming.ldap.LdapName} along
  * with utility methods in {@link LdapUtils} instead.
  */
+@Deprecated
 public class DistinguishedName implements Name {
 
 	/**

@@ -80,7 +80,7 @@ public class ContextSourceAndHibernateTransactionManagerNamespaceITests extends 
 		}
 
 		OrgPerson person = new OrgPerson();
-		person.setId(new Integer(1));
+		person.setId(1);
 		person.setLastname("Person");
 		person.setFullname("Some Person");
 		person.setDescription("Sweden, Company1, Some Person");
@@ -113,7 +113,7 @@ public class ContextSourceAndHibernateTransactionManagerNamespaceITests extends 
 	public void testCreateWithException() {
 		OrgPerson person = new OrgPerson();
 
-		person.setId(new Integer(2));
+		person.setId(2);
 		person.setDescription("some description");
 		person.setFullname("Some testperson");
 		person.setLastname("testperson");
@@ -149,7 +149,7 @@ public class ContextSourceAndHibernateTransactionManagerNamespaceITests extends 
 	public void testCreate() {
 		OrgPerson person = new OrgPerson();
 
-		person.setId(new Integer(2));
+		person.setId(2);
 		person.setDescription("some description");
 		person.setFullname("Some testperson");
 		person.setLastname("testperson");
@@ -162,7 +162,7 @@ public class ContextSourceAndHibernateTransactionManagerNamespaceITests extends 
 		person = null;
 		log.debug("Verifying result");
 		Object ldapResult = this.ldapTemplate.lookup("cn=some testperson, ou=company1, ou=Sweden");
-		OrgPerson fromDb = (OrgPerson) this.hibernateTemplate.get(OrgPerson.class, new Integer(2));
+		OrgPerson fromDb = (OrgPerson) this.hibernateTemplate.get(OrgPerson.class, 2);
 		assertThat(ldapResult).isNotNull();
 		assertThat(fromDb).isNotNull();
 	}
@@ -170,7 +170,7 @@ public class ContextSourceAndHibernateTransactionManagerNamespaceITests extends 
 	@Test
 	public void testUpdateWithException() {
 		String dn = "cn=Some Person,ou=company1,ou=Sweden";
-		OrgPerson originalPerson = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, new Integer(1));
+		OrgPerson originalPerson = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, 1);
 		originalPerson.setLastname("fooo");
 		try {
 			this.dummyDao.updateWithException(originalPerson);
@@ -190,7 +190,7 @@ public class ContextSourceAndHibernateTransactionManagerNamespaceITests extends 
 			}
 		});
 
-		OrgPerson notUpdatedPerson = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, new Integer(1));
+		OrgPerson notUpdatedPerson = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, 1);
 		assertThat(notUpdatedPerson.getLastname()).isEqualTo("Person");
 		assertThat(notUpdatedPerson.getDescription()).isEqualTo("Sweden, Company1, Some Person");
 
@@ -201,7 +201,7 @@ public class ContextSourceAndHibernateTransactionManagerNamespaceITests extends 
 	@Test
 	public void testUpdate() {
 		String dn = "cn=Some Person,ou=company1,ou=Sweden";
-		OrgPerson person = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, new Integer(1));
+		OrgPerson person = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, 1);
 		person.setLastname("Updated Person");
 		person.setDescription("Updated description");
 
@@ -216,7 +216,7 @@ public class ContextSourceAndHibernateTransactionManagerNamespaceITests extends 
 			}
 		});
 
-		OrgPerson updatedPerson = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, new Integer(1));
+		OrgPerson updatedPerson = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, 1);
 		assertThat(updatedPerson.getLastname()).isEqualTo("Updated Person");
 		assertThat(updatedPerson.getDescription()).isEqualTo("Updated description");
 		assertThat(ldapResult).isNotNull();
@@ -226,7 +226,7 @@ public class ContextSourceAndHibernateTransactionManagerNamespaceITests extends 
 	public void testUpdateAndRenameWithException() {
 		String dn = "cn=Some Person2,ou=company1,ou=Sweden";
 		String newDn = "cn=Some Person2,ou=company2,ou=Sweden";
-		OrgPerson person = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, new Integer(1));
+		OrgPerson person = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, 1);
 		person.setLastname("Updated Person");
 		person.setDescription("Updated description");
 
@@ -321,7 +321,7 @@ public class ContextSourceAndHibernateTransactionManagerNamespaceITests extends 
 	@Test
 	public void testUnbindWithException() {
 		String dn = "cn=Some Person,ou=company1,ou=Sweden";
-		OrgPerson person = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, new Integer(1));
+		OrgPerson person = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, 1);
 
 		try {
 			// Perform test
@@ -341,7 +341,7 @@ public class ContextSourceAndHibernateTransactionManagerNamespaceITests extends 
 			}
 		});
 
-		person = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, new Integer(1)); // will
+		person = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, 1); // will
 		// throw
 		// exception
 		// of
@@ -357,7 +357,7 @@ public class ContextSourceAndHibernateTransactionManagerNamespaceITests extends 
 	public void testUnbind() {
 		String dn = "cn=Some Person,ou=company1,ou=Sweden";
 		// Perform test
-		OrgPerson person = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, new Integer(1));
+		OrgPerson person = (OrgPerson) this.hibernateTemplate.load(OrgPerson.class, 1);
 		this.dummyDao.unbind(person);
 
 		try {
@@ -369,7 +369,7 @@ public class ContextSourceAndHibernateTransactionManagerNamespaceITests extends 
 			assertThat(true).isTrue();
 		}
 
-		person = (OrgPerson) this.hibernateTemplate.get(OrgPerson.class, new Integer(1));
+		person = (OrgPerson) this.hibernateTemplate.get(OrgPerson.class, 1);
 		assertThat(person).isNull();
 	}
 

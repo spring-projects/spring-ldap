@@ -38,6 +38,7 @@ import org.springframework.util.ObjectUtils;
  * @author Mattias Hellborg Arthursson
  * @deprecated {@link DistinguishedName} and associated classes are deprecated as of 2.0.
  */
+@Deprecated
 public class LdapRdn implements Serializable, Comparable {
 
 	private static final long serialVersionUID = 5681397547245228750L;

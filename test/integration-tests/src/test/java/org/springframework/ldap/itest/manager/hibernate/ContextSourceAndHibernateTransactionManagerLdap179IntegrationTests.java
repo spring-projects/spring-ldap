@@ -61,7 +61,7 @@ public class ContextSourceAndHibernateTransactionManagerLdap179IntegrationTests
 	public void testCreate() {
 		OrgPerson person = new OrgPerson();
 
-		person.setId(new Integer(2));
+		person.setId(2);
 		person.setDescription("some description");
 		person.setFullname("Some testperson");
 		person.setLastname("testperson");

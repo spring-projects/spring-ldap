@@ -45,6 +45,7 @@ import org.springframework.ldap.odm.typeconversion.ConverterManager;
  * @deprecated This functionality is automatically available in LdapTemplate as of version
  * 2.0
  */
+@Deprecated
 public final class OdmManagerImplFactoryBean implements FactoryBean {
 
 	private LdapOperations ldapOperations = null;

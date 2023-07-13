@@ -41,6 +41,7 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  * probably not such a good idea after all. AbstractPlatformTransactionManager is not
  * designed for this usage.
  */
+@Deprecated
 public class ContextSourceAndHibernateTransactionManager extends HibernateTransactionManager {
 
 	/**
