@@ -1537,6 +1537,27 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		return search(query.base(), query.filter().encode(), searchControls, mapper);
 	}
 
+	@Override
+	public void search(LdapQuery query, NameClassPairCallbackHandler callbackHandler, DirContextProcessor processor) {
+		SearchControls searchControls = searchControlsForQuery(query, DONT_RETURN_OBJ_FLAG);
+
+		search(query.base(), query.filter().encode(), searchControls, callbackHandler, processor);
+	}
+
+	@Override
+	public <T> List<T> search(LdapQuery query, ContextMapper<T> mapper, DirContextProcessor processor) {
+		SearchControls searchControls = searchControlsForQuery(query, DONT_RETURN_OBJ_FLAG);
+
+		return search(query.base(), query.filter().encode(), searchControls, mapper, processor);
+	}
+
+	@Override
+	public <T> List<T> search(LdapQuery query, AttributesMapper<T> mapper, DirContextProcessor processor) {
+		SearchControls searchControls = searchControlsForQuery(query, DONT_RETURN_OBJ_FLAG);
+
+		return search(query.base(), query.filter().encode(), searchControls, mapper, processor);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
