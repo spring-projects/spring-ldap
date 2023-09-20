@@ -6,6 +6,7 @@ antora:
   - '@springio/antora-extensions/latest-version-extension'
   - require: '@springio/antora-extensions/root-component-extension'
     root_component_name: 'ldap'
+  - '@springio/antora-extensions/static-page-extension'
 site:
   title: Spring LDAP
   url: https://docs.spring.io/spring-ldap/reference
@@ -37,5 +38,5 @@ runtime:
     failure_level: warn
 ui:
   bundle:
-    url: https://github.com/spring-io/antora-ui-spring/releases/download/v0.3.7/ui-bundle.zip
+    url: https://github.com/spring-io/antora-ui-spring/releases/download/v0.4.0/ui-bundle.zip
     snapshot: true
