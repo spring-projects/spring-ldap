@@ -26,6 +26,8 @@ asciidoc:
     - '@springio/asciidoctor-extensions'
     - '@springio/asciidoctor-extensions/include-code-extension'
   attributes:
+    page-related-doc-categories: security
+    page-related-doc-projects: framework
     page-pagination: ''
     hide-uri-scheme: '@'
     tabs-sync-option: '@'
@@ -38,5 +40,5 @@ runtime:
     failure_level: warn
 ui:
   bundle:
-    url: https://github.com/spring-io/antora-ui-spring/releases/download/v0.4.2/ui-bundle.zip
+    url: https://github.com/spring-io/antora-ui-spring/releases/download/v0.4.3/ui-bundle.zip
     snapshot: true
