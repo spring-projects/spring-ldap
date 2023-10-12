@@ -15,7 +15,7 @@ ext.queryDslVersion = '5.0.0'
 
 dependencies {
 	api platform("org.springframework:spring-framework-bom:6.0.12")
-	api platform("org.springframework.data:spring-data-bom:2021.2.14")
+	api platform("org.springframework.data:spring-data-bom:2021.2.16")
 	api platform('com.fasterxml.jackson:jackson-bom:2.14.3')
 	api platform("org.junit:junit-bom:5.9.3")
 	constraints {
