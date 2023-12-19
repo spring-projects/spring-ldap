@@ -1,8 +1,8 @@
 
 task downloadJavacc {
-    ext.file = "javacc-5.0.tar.gz"
-    ext.dest = file("$buildDir/javacc/$file")
-    ext.url = "https://repo.spring.io/ext-release-local/net/java/dev/javacc/javacc/5.0/$file"
+    ext.file = "javacc-5.0.jar"
+    ext.dest = file("$buildDir/javacc/javacc.jar")
+    ext.url = "https://repo1.maven.org/maven2/net/java/dev/javacc/javacc/5.0/$file"
 
     outputs.file dest
 
@@ -18,20 +18,13 @@ task installJavacc(type:Copy,dependsOn:downloadJavacc) {
 
     inputs.file archive
     outputs.dir javaccHome
-
-    if(archive.name.endsWith('.zip')) {
-        from zipTree(archive)
-    } else {
-        from tarTree(archive)
-    }
-    into javaccHome
 }
 
 task javacc(dependsOn:installJavacc) {
     ext.srcFile = file("src/main/javacc/DnParserImpl.jj")
     ext.srcDestDir = file("$buildDir/generated-src/javacc")
     ext.destDir = file("$srcDestDir/org/springframework/ldap/core")
-    ext.homeDir = file("${installJavacc.javaccHome.path}/javacc-5.0")
+    ext.homeDir = file("${installJavacc.javaccHome.path}")
 
     inputs.file srcFile
     outputs.dir destDir
