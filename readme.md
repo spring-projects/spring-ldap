@@ -4,6 +4,8 @@
 
 [![Build Status](https://travis-ci.org/spring-projects/spring-ldap.svg?branch=main)](https://travis-ci.org/spring-projects/spring-ldap)
 
+[![Revved up by Develocity](https://img.shields.io/badge/Revved%20up%20by-Develocity-06A0CE?logo=Gradle&labelColor=02303A)](https://ge.spring.io/scans?search.rootProjectNames=spring-ldap)
+
 ## Code of Conduct
 This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.adoc).
 By participating, you  are expected to uphold this code. Please report unacceptable behavior to spring-code-of-conduct@pivotal.io.
