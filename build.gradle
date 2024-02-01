@@ -34,7 +34,6 @@ configure(subprojects - coreModules) {
 }
 
 nohttp {
-	allowlistFile = project.file("etc/nohttp/allowlist.lines")
 	source.exclude "buildSrc/build/**"
 }
 
