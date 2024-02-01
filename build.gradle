@@ -21,6 +21,7 @@ buildscript {
 
 apply plugin: 'io.spring.convention.root'
 apply plugin: 'io.spring.convention.docs'
+apply plugin: 'io.spring.security.release'
 
 group = "org.springframework.ldap"
 description = "Spring LDAP"
@@ -54,4 +55,14 @@ asciidoctor {
 	options = [
 		eruby: 'erubis'
 	]
+}
+
+springRelease {
+    repositoryOwner = "spring-projects"
+    repositoryName = "spring-ldap"
+    weekOfMonth = 2
+    dayOfWeek = 4
+    referenceDocUrl = "https://docs.spring.io/spring-ldap/reference/{version}/index.html"
+    apiDocUrl = "https://docs.spring.io/spring-ldap/docs/{version}/api/"
+    replaceSnapshotVersionInReferenceDocUrl = true
 }
