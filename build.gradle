@@ -21,6 +21,7 @@ plugins {
 apply plugin: 'io.spring.convention.root'
 apply plugin: 'io.spring.convention.docs'
 apply plugin: 'io.spring.javaformat'
+apply plugin: 'io.spring.security.release'
 apply plugin: 's101'
 
 group = "org.springframework.ldap"
@@ -49,14 +50,21 @@ antora {
     options = [clean: true, fetch: !project.gradle.startParameter.offline, stacktrace: true]
 }
 
-
-
 tasks.named("generateAntoraYml") {
     asciidocAttributes = project.provider( {
         return  ['project-version': project.version]
     } )
 }
 
+springRelease {
+    repositoryOwner = "spring-projects"
+    repositoryName = "spring-ldap"
+    weekOfMonth = 2
+    dayOfWeek = 4
+    referenceDocUrl = "https://docs.spring.io/spring-ldap/reference/{version}/index.html"
+    apiDocUrl = "https://docs.spring.io/spring-ldap/docs/{version}/api/"
+    replaceSnapshotVersionInReferenceDocUrl = true
+}
 
 s101 {
 	configurationDirectory = project.file("etc/s101")
