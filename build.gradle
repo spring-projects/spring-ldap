@@ -1,15 +1,8 @@
 buildscript {
-    repositories {
-        maven {
-			url = 'https://repo.spring.io/plugins-release'
-			if (project.hasProperty('artifactoryUsername')) {
-				credentials {
-					username "$artifactoryUsername"
-					password "$artifactoryPassword"
-				}
-			}
-		}
-    }
+	repositories {
+		gradlePluginPortal()
+		mavenCentral()
+	}
     dependencies {
         classpath "com.github.ben-manes:gradle-versions-plugin:0.36.0"
 		classpath "io.spring.gradle:dependency-management-plugin:1.1.4"
