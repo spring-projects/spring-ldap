@@ -840,7 +840,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> T lookup(final Name dn, final AttributesMapper<T> mapper) {
-		return executeReadOnly(ctx -> {
+		return executeReadOnly((ctx) -> {
 			Attributes attributes = ctx.getAttributes(dn);
 			return mapper.mapFromAttributes(attributes);
 		});
@@ -852,7 +852,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	@Override
 	public <T> T lookup(final String dn, final AttributesMapper<T> mapper) {
 
-		return executeReadOnly(ctx -> {
+		return executeReadOnly((ctx) -> {
 			Attributes attributes = ctx.getAttributes(dn);
 			return mapper.mapFromAttributes(attributes);
 		});
@@ -863,7 +863,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> T lookup(final Name dn, final ContextMapper<T> mapper) {
-		return executeReadOnly(ctx -> {
+		return executeReadOnly((ctx) -> {
 			Object object = ctx.lookup(dn);
 			return mapper.mapFromContext(object);
 		});
@@ -874,7 +874,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> T lookup(final String dn, final ContextMapper<T> mapper) {
-		return executeReadOnly(ctx -> {
+		return executeReadOnly((ctx) -> {
 			Object object = ctx.lookup(dn);
 			return mapper.mapFromContext(object);
 		});
@@ -885,7 +885,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> T lookup(final Name dn, final String[] attributes, final AttributesMapper<T> mapper) {
-		return executeReadOnly(ctx -> {
+		return executeReadOnly((ctx) -> {
 			Attributes filteredAttributes = ctx.getAttributes(dn, attributes);
 			return mapper.mapFromAttributes(filteredAttributes);
 		});
@@ -896,7 +896,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> T lookup(final String dn, final String[] attributes, final AttributesMapper<T> mapper) {
-		return executeReadOnly(ctx -> {
+		return executeReadOnly((ctx) -> {
 			Attributes filteredAttributes = ctx.getAttributes(dn, attributes);
 			return mapper.mapFromAttributes(filteredAttributes);
 		});
@@ -907,7 +907,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> T lookup(final Name dn, final String[] attributes, final ContextMapper<T> mapper) {
-		return executeReadOnly(ctx -> {
+		return executeReadOnly((ctx) -> {
 			Attributes filteredAttributes = ctx.getAttributes(dn, attributes);
 			DirContextAdapter contextAdapter = new DirContextAdapter(filteredAttributes, dn);
 			return mapper.mapFromContext(contextAdapter);
@@ -919,7 +919,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> T lookup(final String dn, final String[] attributes, final ContextMapper<T> mapper) {
-		return executeReadOnly(ctx -> {
+		return executeReadOnly((ctx) -> {
 			Attributes filteredAttributes = ctx.getAttributes(dn, attributes);
 			LdapName name = LdapUtils.newLdapName(dn);
 			DirContextAdapter contextAdapter = new DirContextAdapter(filteredAttributes, name);
@@ -958,7 +958,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public void bind(final Name dn, final Object obj, final Attributes attributes) {
-		executeReadWrite(ctx -> {
+		executeReadWrite((ctx) -> {
 			ctx.bind(dn, obj, attributes);
 			return null;
 		});
@@ -969,7 +969,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public void bind(final String dn, final Object obj, final Attributes attributes) {
-		executeReadWrite(ctx -> {
+		executeReadWrite((ctx) -> {
 			ctx.bind(dn, obj, attributes);
 			return null;
 		});
@@ -1018,28 +1018,28 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	private void doUnbind(final Name dn) {
-		executeReadWrite(ctx -> {
+		executeReadWrite((ctx) -> {
 			ctx.unbind(dn);
 			return null;
 		});
 	}
 
 	private void doUnbind(final String dn) {
-		executeReadWrite(ctx -> {
+		executeReadWrite((ctx) -> {
 			ctx.unbind(dn);
 			return null;
 		});
 	}
 
 	private void doUnbindRecursively(final Name dn) {
-		executeReadWrite(ctx -> {
+		executeReadWrite((ctx) -> {
 			deleteRecursively(ctx, LdapUtils.newLdapName(dn));
 			return null;
 		});
 	}
 
 	private void doUnbindRecursively(final String dn) {
-		executeReadWrite(ctx -> {
+		executeReadWrite((ctx) -> {
 			deleteRecursively(ctx, LdapUtils.newLdapName(dn));
 			return null;
 		});
