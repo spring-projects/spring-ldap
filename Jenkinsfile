@@ -23,7 +23,7 @@ try {
 				sh "git clean -dfx"
 				try {
 					withCredentials([ARTIFACTORY_CREDENTIALS]) {
-						withEnv(["JAVA_HOME=${ tool 'jdk11' }"]) {
+						withEnv(["JAVA_HOME=${ tool 'jdk17' }"]) {
 							sh "./gradlew test -PartifactoryUsername=$ARTIFACTORY_USERNAME -PartifactoryPassword=$ARTIFACTORY_PASSWORD --refresh-dependencies --no-daemon --stacktrace"
 						}
 					}
@@ -44,7 +44,7 @@ try {
 					checkout scm
 					sh "git clean -dfx"
 					withCredentials([SPRING_SIGNING_SECRING, SPRING_GPG_PASSPHRASE, OSSRH_S01_CREDENTIALS, ARTIFACTORY_CREDENTIALS]) {
-						withEnv(["JAVA_HOME=${ tool 'jdk11' }"]) {
+						withEnv(["JAVA_HOME=${ tool 'jdk17' }"]) {
 							sh "./gradlew publishArtifacts finalizeDeployArtifacts -Psigning.secretKeyRingFile=$SIGNING_KEYRING_FILE -Psigning.keyId=$SPRING_SIGNING_KEYID -Psigning.password='$SIGNING_PASSWORD' -PossrhUsername=$OSSRH_S01_TOKEN_USERNAME -PossrhPassword=$OSSRH_S01_TOKEN_PASSWORD -PartifactoryUsername=$ARTIFACTORY_USERNAME -PartifactoryPassword=$ARTIFACTORY_PASSWORD --refresh-dependencies --no-daemon --stacktrace"
 						}
 					}
@@ -57,7 +57,7 @@ try {
 					checkout scm
 					sh "git clean -dfx"
 					withCredentials([JENKINS_PRIVATE_SSH_KEY, ARTIFACTORY_CREDENTIALS]) {
-						withEnv(["JAVA_HOME=${ tool 'jdk11' }"]) {
+						withEnv(["JAVA_HOME=${ tool 'jdk17' }"]) {
 							sh "./gradlew deployDocs -PartifactoryUsername=$ARTIFACTORY_USERNAME -PartifactoryPassword=$ARTIFACTORY_PASSWORD -PdeployDocsHost=docs-ip.spring.io -PdeployDocsSshKeyPath=$DEPLOY_SSH_KEY -PdeployDocsSshUsername=$SPRING_DOCS_USERNAME --refresh-dependencies --no-daemon --stacktrace"
 						}
 					}
@@ -70,7 +70,7 @@ try {
 					checkout scm
 					sh "git clean -dfx"
 					withCredentials([JENKINS_PRIVATE_SSH_KEY, ARTIFACTORY_CREDENTIALS]) {
-						withEnv(["JAVA_HOME=${ tool 'jdk11' }"]) {
+						withEnv(["JAVA_HOME=${ tool 'jdk17' }"]) {
 							sh "./gradlew deploySchema -PartifactoryUsername=$ARTIFACTORY_USERNAME -PartifactoryPassword=$ARTIFACTORY_PASSWORD -PdeployDocsHost=docs-ip.spring.io -PdeployDocsSshKeyPath=$DEPLOY_SSH_KEY -PdeployDocsSshUsername=$SPRING_DOCS_USERNAME --refresh-dependencies --no-daemon --stacktrace"
 						}
 					}
