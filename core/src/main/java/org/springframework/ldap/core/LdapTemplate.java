@@ -252,12 +252,15 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	@Override
 	public void search(final Name base, final String filter, final SearchControls controls,
 			NameClassPairCallbackHandler handler) {
-
+		SearchExecutor se = (ctx) -> {
+			LOG.debug("Executing search with base [{}] and filter [{}]", base, filter);
+			return ctx.search(base, filter, controls);
+		};
 		// Create a SearchExecutor to perform the search.
 		if (handler instanceof ContextMapperCallbackHandler) {
 			assureReturnObjFlagSet(controls);
 		}
-		search(searchExecutorWithLogging(base, filter, controls), handler);
+		search(se, handler);
 	}
 
 	/**
@@ -266,12 +269,15 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	@Override
 	public void search(final String base, final String filter, final SearchControls controls,
 			NameClassPairCallbackHandler handler) {
-
+		SearchExecutor se = (ctx) -> {
+			LOG.debug("Executing search with base [{}] and filter [{}]", base, filter);
+			return ctx.search(base, filter, controls);
+		};
 		// Create a SearchExecutor to perform the search.
 		if (handler instanceof ContextMapperCallbackHandler) {
 			assureReturnObjFlagSet(controls);
 		}
-		search(searchExecutorWithLogging(base, filter, controls), handler);
+		search(se, handler);
 	}
 
 	/**
@@ -280,12 +286,15 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	@Override
 	public void search(final Name base, final String filter, final SearchControls controls,
 			NameClassPairCallbackHandler handler, DirContextProcessor processor) {
-
+		SearchExecutor se = (ctx) -> {
+			LOG.debug("Executing search with base [{}] and filter [{}]", base, filter);
+			return ctx.search(base, filter, controls);
+		};
 		// Create a SearchExecutor to perform the search.
 		if (handler instanceof ContextMapperCallbackHandler) {
 			assureReturnObjFlagSet(controls);
 		}
-		search(searchExecutorWithLogging(base, filter, controls), handler, processor);
+		search(se, handler, processor);
 	}
 
 	/**
@@ -294,12 +303,15 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	@Override
 	public void search(final String base, final String filter, final SearchControls controls,
 			NameClassPairCallbackHandler handler, DirContextProcessor processor) {
-
+		SearchExecutor se = (ctx) -> {
+			LOG.debug("Executing search with base [{}] and filter [{}]", base, filter);
+			return ctx.search(base, filter, controls);
+		};
 		// Create a SearchExecutor to perform the search.
 		if (handler instanceof ContextMapperCallbackHandler) {
 			assureReturnObjFlagSet(controls);
 		}
-		search(searchExecutorWithLogging(base, filter, controls), handler, processor);
+		search(se, handler, processor);
 	}
 
 	/**
@@ -1552,7 +1564,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
 		assureReturnObjFlagSet(searchControls);
 
-		NamingEnumeration<SearchResult> results = unchecked(searchSupplier(ctx, base, encodedFilter, searchControls));
+		NamingEnumeration<SearchResult> results = unchecked(() -> {
+			LOG.debug("Executing search with base [{}] and filter [{}]", base, filter);
+			return ctx.search(base, encodedFilter, searchControls);
+		});
 		if (results == null) {
 			return Stream.empty();
 		}
@@ -1779,38 +1794,6 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		ContextMapper<T> contextMapper = (object) -> this.odm.mapFromLdapDataEntry((DirContextOperations) object,
 				clazz);
 		return searchForStream(builder.filter(includeClass), contextMapper);
-	}
-
-	private SearchExecutor searchExecutorWithLogging(final Name base, final String filter,
-												   final SearchControls controls) {
-		return ctx -> {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Executing search with base [{}] and filter [{}]", base, filter);
-			}
-			return ctx.search(base, filter, controls);
-		};
-	}
-
-	private SearchExecutor searchExecutorWithLogging(final String base, final String filter,
-													 final SearchControls controls) {
-		return ctx -> {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Executing search with base [{}] and filter [{}]", base, filter);
-			}
-			return ctx.search(base, filter, controls);
-		};
-	}
-
-	private CheckedSupplier<NamingEnumeration<SearchResult>> searchSupplier(final DirContext ctx,
-                                                                            final Name base,
-                                                                            final String filter,
-                                                                            final SearchControls controls) {
-		return () -> {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Executing search with base [{}] and filter [{}]", base, filter);
-            }
-            return ctx.search(base, filter, controls);
-        };
 	}
 
 	private <T> T unchecked(CheckedSupplier<T> supplier) {
