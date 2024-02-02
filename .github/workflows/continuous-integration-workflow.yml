@@ -40,7 +40,7 @@ jobs:
     needs: [ build ]
     uses: spring-io/spring-security-release-tools/.github/workflows/deploy-schema.yml@v1
     with:
-      should-deploy-schema: ${{ needs.build.outputs.should-deploy-schema }}
+      should-deploy-schema: ${{ needs.build.outputs.should-deploy-artifacts }}
     secrets: inherit
   perform-release:
     name: Perform Release
