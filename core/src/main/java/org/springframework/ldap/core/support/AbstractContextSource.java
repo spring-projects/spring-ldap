@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2021 the original author or authors.
+ * Copyright 2005-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -416,7 +416,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 		if (this.authenticationSource == null) {
 			LOG.debug("AuthenticationSource not set - " + "using default implementation");
 			if (!StringUtils.hasText(this.userDn)) {
-				LOG.info("Property 'userDn' not set - " + "anonymous context will be used for read-write operations");
+				LOG.info("Property 'userDn' not set - " + "anonymous context will be used for read-only operations");
 				this.anonymousReadOnly = true;
 			}
 			if (!this.anonymousReadOnly) {
