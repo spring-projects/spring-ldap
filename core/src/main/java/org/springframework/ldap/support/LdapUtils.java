@@ -450,7 +450,7 @@ public final class LdapUtils {
 	 */
 	public static LdapName prepend(Name dn, Name pathToPrepend) {
 		Assert.notNull(dn, "dn must not be null");
-		Assert.notNull(pathToPrepend, "pathToRemove must not be null");
+		Assert.notNull(pathToPrepend, "pathToPrepend must not be null");
 
 		LdapName result = newLdapName(dn);
 		try {
