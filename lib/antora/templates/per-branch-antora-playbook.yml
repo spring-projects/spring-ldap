@@ -3,12 +3,7 @@
 # The purpose of this Antora playbook is to build the docs in the current branch.
 antora:
   extensions:
-  - '@antora/collector-extension'
-  - id: '@antora/atlas-extension'
-    require: '@antora/atlas-extension'
-    enabled: false
-  - '@springio/antora-extensions/latest-version-extension'
-  - require: '@springio/antora-extensions/root-component-extension'
+  - require: '@springio/antora-extensions'
     root_component_name: 'ldap'
 site:
   title: Spring LDAP Reference
