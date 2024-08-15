@@ -73,7 +73,7 @@ public class DefaultLdapClientListITests extends AbstractLdapTemplateIntegration
 		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		this.contextMapper.setExpectedValues(ALL_VALUES);
 		List<DirContextAdapter> list = this.tested.listBindings("ou=company2,ou=Sweden" + BASE_STRING)
-				.toList(this.contextMapper);
+			.toList(this.contextMapper);
 		assertThat(list).hasSize(1);
 	}
 

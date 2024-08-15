@@ -54,7 +54,7 @@ public class DefaultCompensatingTransactionOperationManagerTests {
 		Object expectedResource = new Object();
 
 		given(this.operationFactoryMock.createRecordingOperation(expectedResource, "some method"))
-				.willReturn(this.operationRecorderMock);
+			.willReturn(this.operationRecorderMock);
 		given(this.operationRecorderMock.recordOperation(expectedArgs)).willReturn(this.operationExecutorMock);
 
 		DefaultCompensatingTransactionOperationManager tested = new DefaultCompensatingTransactionOperationManager(

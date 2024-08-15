@@ -1334,7 +1334,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
 		return authenticate(base, filter, password,
 				getDefaultSearchControls(this.defaultSearchScope, RETURN_OBJ_FLAG, null), callback, errorCallback)
-						.isSuccess();
+			.isSuccess();
 	}
 
 	private AuthenticationStatus authenticate(Name base, String filter, String password, SearchControls searchControls,
@@ -1572,10 +1572,11 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			return Stream.empty();
 		}
 		return StreamSupport
-				.stream(Spliterators.spliteratorUnknownSize(CollectionUtils.toIterator(results), Spliterator.ORDERED),
-						false)
-				.map((nameClassPair) -> unchecked(() -> mapper.apply(nameClassPair))).filter(Objects::nonNull)
-				.onClose(() -> closeContextAndNamingEnumeration(ctx, results));
+			.stream(Spliterators.spliteratorUnknownSize(CollectionUtils.toIterator(results), Spliterator.ORDERED),
+					false)
+			.map((nameClassPair) -> unchecked(() -> mapper.apply(nameClassPair)))
+			.filter(Objects::nonNull)
+			.onClose(() -> closeContextAndNamingEnumeration(ctx, results));
 	}
 
 	/**

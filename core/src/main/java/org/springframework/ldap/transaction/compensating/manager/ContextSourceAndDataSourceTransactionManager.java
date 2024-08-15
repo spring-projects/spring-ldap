@@ -114,7 +114,7 @@ public class ContextSourceAndDataSourceTransactionManager extends DataSourceTran
 	protected void doCommit(DefaultTransactionStatus status) {
 
 		ContextSourceAndDataSourceTransactionObject actualTransactionObject = (ContextSourceAndDataSourceTransactionObject) status
-				.getTransaction();
+			.getTransaction();
 
 		try {
 			super.doCommit(new DefaultTransactionStatus(actualTransactionObject.getDataSourceTransactionObject(),
@@ -147,7 +147,7 @@ public class ContextSourceAndDataSourceTransactionManager extends DataSourceTran
 	@Override
 	protected void doRollback(DefaultTransactionStatus status) {
 		ContextSourceAndDataSourceTransactionObject actualTransactionObject = (ContextSourceAndDataSourceTransactionObject) status
-				.getTransaction();
+			.getTransaction();
 
 		super.doRollback(new DefaultTransactionStatus(actualTransactionObject.getDataSourceTransactionObject(),
 				status.isNewTransaction(), status.isNewSynchronization(), status.isReadOnly(), status.isDebug(),

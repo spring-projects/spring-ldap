@@ -49,8 +49,9 @@ public class AndFilterTests {
 
 	@Test
 	public void testThree() {
-		AndFilter aq = new AndFilter().and(new EqualsFilter("a", "b")).and(new EqualsFilter("c", "d"))
-				.and(new EqualsFilter("e", "f"));
+		AndFilter aq = new AndFilter().and(new EqualsFilter("a", "b"))
+			.and(new EqualsFilter("c", "d"))
+			.and(new EqualsFilter("e", "f"));
 
 		assertThat(aq.encode()).isEqualTo("(&(a=b)(c=d)(e=f))");
 	}

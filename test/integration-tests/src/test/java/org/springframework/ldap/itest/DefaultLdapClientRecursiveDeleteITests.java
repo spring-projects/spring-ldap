@@ -123,8 +123,8 @@ public class DefaultLdapClientRecursiveDeleteITests extends AbstractLdapTemplate
 
 	private void verifyDeleted(Name dn) {
 		assertThatExceptionOfType(NameNotFoundException.class)
-				.describedAs("Expected entry '" + dn + "' to be non-existent")
-				.isThrownBy(() -> this.tested.list(dn).toList(NameClassPair::getName));
+			.describedAs("Expected entry '" + dn + "' to be non-existent")
+			.isThrownBy(() -> this.tested.list(dn).toList(NameClassPair::getName));
 	}
 
 }

@@ -39,8 +39,8 @@ public class LdapNameBuilderTests {
 
 	@Test
 	public void testAddComponentToBaseName() {
-		LdapNameBuilder tested = LdapNameBuilder.newInstance(LdapUtils.newLdapName("dc=com")).add("dc",
-				"261consulting");
+		LdapNameBuilder tested = LdapNameBuilder.newInstance(LdapUtils.newLdapName("dc=com"))
+			.add("dc", "261consulting");
 		assertThat(tested.build().toString()).isEqualTo("dc=261consulting,dc=com");
 	}
 
@@ -53,7 +53,7 @@ public class LdapNameBuilderTests {
 	@Test
 	public void testAddNameToBaseString() {
 		LdapNameBuilder tested = LdapNameBuilder.newInstance("dc=261consulting,dc=com")
-				.add(LdapUtils.newLdapName("ou=people"));
+			.add(LdapUtils.newLdapName("ou=people"));
 		assertThat(tested.build().toString()).isEqualTo("ou=people,dc=261consulting,dc=com");
 	}
 

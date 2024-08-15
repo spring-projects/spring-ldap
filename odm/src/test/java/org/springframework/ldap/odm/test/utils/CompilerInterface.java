@@ -33,7 +33,7 @@ public final class CompilerInterface {
 		StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
 
 		Iterable<? extends JavaFileObject> javaFileObjects = fileManager
-				.getJavaFileObjectsFromFiles(Arrays.asList(toCompile));
+			.getJavaFileObjectsFromFiles(Arrays.asList(toCompile));
 		compiler.getTask(null, fileManager, null, null, null, javaFileObjects).call();
 
 		fileManager.close();

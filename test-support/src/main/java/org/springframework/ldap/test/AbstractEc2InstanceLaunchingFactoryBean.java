@@ -129,7 +129,7 @@ public abstract class AbstractEc2InstanceLaunchingFactoryBean extends AbstractFa
 			LOG.info("Instance still starting up; sleeping " + INSTANCE_START_SLEEP_TIME + "ms");
 			Thread.sleep(INSTANCE_START_SLEEP_TIME);
 			reservationDescription = jec2.describeInstances(Collections.singletonList(this.instance.getInstanceId()))
-					.get(0);
+				.get(0);
 			this.instance = reservationDescription.getInstances().get(0);
 		}
 

@@ -101,7 +101,7 @@ public class TransactionManagerParser implements BeanDefinitionParser {
 
 	private BeanDefinition parseDifferentSubtreeRenamingStrategy(Element element) {
 		BeanDefinitionBuilder builder = BeanDefinitionBuilder
-				.rootBeanDefinition(DifferentSubtreeTempEntryRenamingStrategy.class);
+			.rootBeanDefinition(DifferentSubtreeTempEntryRenamingStrategy.class);
 
 		String subtreeNode = element.getAttribute(ATT_SUBTREE_NODE);
 		Assert.hasText(subtreeNode, ATT_SUBTREE_NODE + " must be specified");
@@ -113,7 +113,7 @@ public class TransactionManagerParser implements BeanDefinitionParser {
 
 	public BeanDefinition parseDefaultRenamingStrategy(Element element) {
 		BeanDefinitionBuilder builder = BeanDefinitionBuilder
-				.rootBeanDefinition(DefaultTempEntryRenamingStrategy.class);
+			.rootBeanDefinition(DefaultTempEntryRenamingStrategy.class);
 
 		builder.addPropertyValue("tempSuffix",
 				ParserUtils.getString(element, ATT_TEMP_SUFFIX, DefaultTempEntryRenamingStrategy.DEFAULT_TEMP_SUFFIX));

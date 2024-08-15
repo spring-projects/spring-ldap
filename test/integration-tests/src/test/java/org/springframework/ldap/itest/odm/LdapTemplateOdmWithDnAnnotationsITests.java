@@ -60,8 +60,8 @@ public class LdapTemplateOdmWithDnAnnotationsITests extends AbstractLdapTemplate
 
 	@Test
 	public void testFindByDn() {
-		PersonWithDnAnnotations person = this.tested.findByDn(
-				LdapUtils.newLdapName("cn=Some Person3,ou=company1,ou=Sweden"), PersonWithDnAnnotations.class);
+		PersonWithDnAnnotations person = this.tested
+			.findByDn(LdapUtils.newLdapName("cn=Some Person3,ou=company1,ou=Sweden"), PersonWithDnAnnotations.class);
 
 		assertThat(person).isNotNull();
 		assertThat(person.getCommonName()).isEqualTo("Some Person3");
@@ -77,8 +77,8 @@ public class LdapTemplateOdmWithDnAnnotationsITests extends AbstractLdapTemplate
 
 	@Test
 	public void testFindInCountry() {
-		List<PersonWithDnAnnotations> persons = this.tested.find(
-				LdapQueryBuilder.query().base("ou=Sweden").where("cn").isPresent(), PersonWithDnAnnotations.class);
+		List<PersonWithDnAnnotations> persons = this.tested
+			.find(LdapQueryBuilder.query().base("ou=Sweden").where("cn").isPresent(), PersonWithDnAnnotations.class);
 
 		assertThat(persons).hasSize(4);
 
@@ -93,9 +93,9 @@ public class LdapTemplateOdmWithDnAnnotationsITests extends AbstractLdapTemplate
 	@Test
 	public void testFindForStreamInCountry() {
 		List<PersonWithDnAnnotations> persons = this.tested
-				.findForStream(LdapQueryBuilder.query().base("ou=Sweden").where("cn").isPresent(),
-						PersonWithDnAnnotations.class)
-				.collect(Collectors.toList());
+			.findForStream(LdapQueryBuilder.query().base("ou=Sweden").where("cn").isPresent(),
+					PersonWithDnAnnotations.class)
+			.collect(Collectors.toList());
 
 		assertThat(persons).hasSize(4);
 

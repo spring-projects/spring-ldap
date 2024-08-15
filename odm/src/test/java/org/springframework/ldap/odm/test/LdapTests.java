@@ -312,7 +312,7 @@ public final class LdapTests {
 				this.searchControls);
 		LOG.debug(String.format("Found - %1$s", allOus));
 		assertThat(new HashSet<OrganizationalUnit>(Arrays.asList(ouTestData)))
-				.isEqualTo(new HashSet<OrganizationalUnit>(allOus));
+			.isEqualTo(new HashSet<OrganizationalUnit>(allOus));
 
 		OrganizationalUnit testOu = ouTestData[OrganizationalName.ASSISTANTS.getIndex()];
 		LOG.debug(String.format("Reading - %1$s", testOu.getDn()));
@@ -337,7 +337,7 @@ public final class LdapTests {
 
 		assertThat(9).isEqualTo(allPeople.size());
 		assertThat(CollectionUtils.containsInstance(allPeople, null)).isFalse()
-				.withFailMessage("No nulls should have been returned");
+			.withFailMessage("No nulls should have been returned");
 	}
 
 	@Test

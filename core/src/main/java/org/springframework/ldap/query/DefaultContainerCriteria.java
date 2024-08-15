@@ -69,8 +69,9 @@ class DefaultContainerCriteria implements AppendableContainerCriteria {
 	@Override
 	public ContainerCriteria and(ContainerCriteria nested) {
 		if (this.type == CriteriaContainerType.OR) {
-			return new DefaultContainerCriteria(this.topQuery).withType(CriteriaContainerType.AND).append(this.filter())
-					.append(nested.filter());
+			return new DefaultContainerCriteria(this.topQuery).withType(CriteriaContainerType.AND)
+				.append(this.filter())
+				.append(nested.filter());
 		}
 		else {
 			this.type = CriteriaContainerType.AND;
@@ -82,8 +83,9 @@ class DefaultContainerCriteria implements AppendableContainerCriteria {
 	@Override
 	public ContainerCriteria or(ContainerCriteria nested) {
 		if (this.type == CriteriaContainerType.AND) {
-			return new DefaultContainerCriteria(this.topQuery).withType(CriteriaContainerType.OR).append(this.filter())
-					.append(nested.filter());
+			return new DefaultContainerCriteria(this.topQuery).withType(CriteriaContainerType.OR)
+				.append(this.filter())
+				.append(nested.filter());
 		}
 		else {
 			this.type = CriteriaContainerType.OR;

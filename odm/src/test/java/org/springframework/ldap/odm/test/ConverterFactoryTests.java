@@ -67,7 +67,7 @@ public class ConverterFactoryTests {
 		new ExecuteRunnable<ConverterTestData>().runTests(new RunnableTests<ConverterTestData>() {
 			public void runTest(ConverterTestData testData) {
 				assertThat(testData.canConvert)
-						.isEqualTo(converterManager.canConvert(testData.fromClass, testData.syntax, testData.toClass));
+					.isEqualTo(converterManager.canConvert(testData.fromClass, testData.syntax, testData.toClass));
 			}
 		}, this.converterTestData);
 	}

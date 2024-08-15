@@ -209,7 +209,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 			// but only if this is a new entry.
 			int numOcs = metaData.getObjectClasses().size();
 			CaseIgnoreString[] metaDataObjectClasses = metaData.getObjectClasses()
-					.toArray(new CaseIgnoreString[numOcs]);
+				.toArray(new CaseIgnoreString[numOcs]);
 
 			String[] stringOcs = new String[numOcs];
 			for (int ocIndex = 0; ocIndex < numOcs; ocIndex++) {

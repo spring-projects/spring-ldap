@@ -287,7 +287,7 @@ public class LdapRdn implements Serializable, Comparable {
 			mapWithImmutableRdns.put(rdnComponent.getKey(), rdnComponent.immutableLdapRdnComponent());
 		}
 		Map<String, LdapRdnComponent> unmodifiableMapOfImmutableRdns = Collections
-				.unmodifiableMap(mapWithImmutableRdns);
+			.unmodifiableMap(mapWithImmutableRdns);
 		LdapRdn immutableRdn = new LdapRdn();
 		immutableRdn.components = unmodifiableMapOfImmutableRdns;
 		return immutableRdn;

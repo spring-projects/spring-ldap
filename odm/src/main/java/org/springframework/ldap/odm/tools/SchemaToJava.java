@@ -119,9 +119,9 @@ public final class SchemaToJava {
 	// Command line flags
 	private enum Flag {
 
-		URL("l", "url"), USERNAME("u", "username"), PASSWORD("p", "password"), OBJECTCLASS("o", "objectclasses"), CLASS(
-				"c", "class"), PACKAGE("k",
-						"package"), SYNTAX_MAP("s", "syntaxmap"), OUTPUT_DIR("t", "outputdir"), HELP("h", "help");
+		URL("l", "url"), USERNAME("u", "username"), PASSWORD("p", "password"), OBJECTCLASS("o", "objectclasses"),
+		CLASS("c", "class"), PACKAGE("k", "package"), SYNTAX_MAP("s", "syntaxmap"), OUTPUT_DIR("t", "outputdir"),
+		HELP("h", "help");
 
 		private String shortName;
 

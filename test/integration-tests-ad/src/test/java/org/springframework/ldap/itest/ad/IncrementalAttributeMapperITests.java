@@ -225,7 +225,7 @@ public class IncrementalAttributeMapperITests extends AbstractJUnit4SpringContex
 
 			// LDAP-234: After rollback the attribute values were cleared after rollback
 			assertThat(DefaultIncrementalAttributesMapper.lookupAttributeValues(this.ldapTemplate, GROUP_DN, "member")
-					.size()).isEqualTo(1501);
+				.size()).isEqualTo(1501);
 		}
 	}
 

@@ -123,7 +123,7 @@ public class BaseLdapPathBeanPostProcessorTests {
 	@Test
 	public void testGetAbstractContextSourceFromApplicationContext() throws Exception {
 		given(this.applicationContextMock.getBeanNamesForType(BaseLdapPathSource.class))
-				.willReturn(new String[] { "contextSource" });
+			.willReturn(new String[] { "contextSource" });
 		final LdapContextSource expectedContextSource = new LdapContextSource();
 
 		HashMap<String, BaseLdapPathSource> expectedBeans = new HashMap<String, BaseLdapPathSource>() {

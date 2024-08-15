@@ -253,82 +253,83 @@ public class LdifParser implements Parser, InitializingBean {
 			LineIdentifier identifier = this.separatorPolicy.assess(line);
 
 			switch (identifier) {
-			case NewRecord:
-				LOG.trace("Starting new record.");
-				// Start new record.
-				record = new LdapAttributes(this.caseInsensitive);
-				builder = new StringBuilder(line);
+				case NewRecord:
+					LOG.trace("Starting new record.");
+					// Start new record.
+					record = new LdapAttributes(this.caseInsensitive);
+					builder = new StringBuilder(line);
 
-				break;
+					break;
 
-			case Control:
-				LOG.trace("'control' encountered.");
+				case Control:
+					LOG.trace("'control' encountered.");
 
-				// Log WARN and discard record.
-				LOG.warn("LDIF change records have no implementation: record will be ignored.");
-				builder = null;
-				record = null;
+					// Log WARN and discard record.
+					LOG.warn("LDIF change records have no implementation: record will be ignored.");
+					builder = null;
+					record = null;
 
-				break;
+					break;
 
-			case ChangeType:
-				LOG.trace("'changetype' encountered.");
+				case ChangeType:
+					LOG.trace("'changetype' encountered.");
 
-				// Log WARN and discard record.
-				LOG.warn("LDIF change records have no implementation: record will be ignored.");
-				builder = null;
-				record = null;
+					// Log WARN and discard record.
+					LOG.warn("LDIF change records have no implementation: record will be ignored.");
+					builder = null;
+					record = null;
 
-				break;
+					break;
 
-			case Attribute:
-				// flush buffer.
-				addAttributeToRecord(builder.toString(), record);
+				case Attribute:
+					// flush buffer.
+					addAttributeToRecord(builder.toString(), record);
 
-				LOG.trace("Starting new attribute.");
-				// Start new attribute.
-				builder = new StringBuilder(line);
+					LOG.trace("Starting new attribute.");
+					// Start new attribute.
+					builder = new StringBuilder(line);
 
-				break;
+					break;
 
-			case Continuation:
-				LOG.trace("...appending line to buffer.");
-				// Append line to buffer.
-				builder.append(line.replaceFirst(" ", ""));
+				case Continuation:
+					LOG.trace("...appending line to buffer.");
+					// Append line to buffer.
+					builder.append(line.replaceFirst(" ", ""));
 
-				break;
+					break;
 
-			case EndOfRecord:
-				LOG.trace("...done parsing record. (EndOfRecord)");
+				case EndOfRecord:
+					LOG.trace("...done parsing record. (EndOfRecord)");
 
-				// Validate record and return.
-				if (record == null) {
-					return null;
-				}
-				else {
-					try {
-						// flush buffer.
-						addAttributeToRecord(builder.toString(), record);
-
-						if (this.specification.isSatisfiedBy(record)) {
-							LOG.debug("record parsed:\n" + record);
-							return record;
-
-						}
-						else {
-							throw new InvalidRecordFormatException(
-									"Record [dn: " + record.getDN() + "] does not conform to specification.");
-						}
-					}
-					catch (NamingException ex) {
-						LOG.error("Error adding attribute to record", ex);
+					// Validate record and return.
+					if (record == null) {
 						return null;
 					}
-				}
+					else {
+						try {
+							// flush buffer.
+							addAttributeToRecord(builder.toString(), record);
 
-			default:
-				// Take no action -- applies to VersionIdentifier, Comments, and voided
-				// records.
+							if (this.specification.isSatisfiedBy(record)) {
+								LOG.debug("record parsed:\n" + record);
+								return record;
+
+							}
+							else {
+								throw new InvalidRecordFormatException(
+										"Record [dn: " + record.getDN() + "] does not conform to specification.");
+							}
+						}
+						catch (NamingException ex) {
+							LOG.error("Error adding attribute to record", ex);
+							return null;
+						}
+					}
+
+				default:
+					// Take no action -- applies to VersionIdentifier, Comments, and
+					// voided
+					// records.
 			}
 
 			line = this.reader.readLine();

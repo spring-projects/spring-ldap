@@ -58,7 +58,7 @@ import static org.assertj.core.api.Assertions.fail;
 public class ContextSourceAndHibernateTransactionManagerNamespaceITests extends AbstractLdapTemplateIntegrationTests {
 
 	private static Logger log = LoggerFactory
-			.getLogger(ContextSourceAndHibernateTransactionManagerNamespaceITests.class);
+		.getLogger(ContextSourceAndHibernateTransactionManagerNamespaceITests.class);
 
 	@Autowired
 	@Qualifier("dummyDao")

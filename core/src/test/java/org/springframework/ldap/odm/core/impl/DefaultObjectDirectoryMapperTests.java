@@ -68,9 +68,16 @@ public class DefaultObjectDirectoryMapperTests {
 		DefaultObjectDirectoryMapper.EntityData entityData = this.tested.getMetaDataMap().get(UnitTestPerson.class);
 
 		assertThat(entityData).isNotNull();
-		assertThat(entityData.ocFilter).isEqualTo(LdapQueryBuilder.query().where("objectclass").is("inetOrgPerson")
-				.and("objectclass").is("organizationalPerson").and("objectclass").is("person").and("objectclass")
-				.is("top").filter());
+		assertThat(entityData.ocFilter).isEqualTo(LdapQueryBuilder.query()
+			.where("objectclass")
+			.is("inetOrgPerson")
+			.and("objectclass")
+			.is("organizationalPerson")
+			.and("objectclass")
+			.is("person")
+			.and("objectclass")
+			.is("top")
+			.filter());
 
 		assertThat(entityData.metaData).hasSize(8);
 

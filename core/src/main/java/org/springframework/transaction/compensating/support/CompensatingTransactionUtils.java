@@ -50,11 +50,11 @@ public final class CompensatingTransactionUtils {
 	public static void performOperation(Object synchronizationKey, Object target, Method method, Object[] args)
 			throws Throwable {
 		CompensatingTransactionHolderSupport transactionResourceHolder = (CompensatingTransactionHolderSupport) TransactionSynchronizationManager
-				.getResource(synchronizationKey);
+			.getResource(synchronizationKey);
 		if (transactionResourceHolder != null) {
 
 			CompensatingTransactionOperationManager transactionOperationManager = transactionResourceHolder
-					.getTransactionOperationManager();
+				.getTransactionOperationManager();
 			transactionOperationManager.performOperation(transactionResourceHolder.getTransactedResource(),
 					method.getName(), args);
 		}

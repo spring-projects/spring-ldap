@@ -318,8 +318,10 @@ class DefaultLdapClient implements LdapClient {
 		Enumeration<S> enumeration = enumeration(results);
 		Function<? super S, T> function = mapper.wrap(this.namingExceptionHandler);
 		return StreamSupport
-				.stream(Spliterators.spliteratorUnknownSize(enumeration.asIterator(), Spliterator.ORDERED), false)
-				.map(function::apply).filter(Objects::nonNull).onClose(() -> closeNamingEnumeration(results));
+			.stream(Spliterators.spliteratorUnknownSize(enumeration.asIterator(), Spliterator.ORDERED), false)
+			.map(function::apply)
+			.filter(Objects::nonNull)
+			.onClose(() -> closeNamingEnumeration(results));
 	}
 
 	private void closeContext(DirContext ctx) {
@@ -467,7 +469,7 @@ class DefaultLdapClient implements LdapClient {
 			try {
 				String password = (this.password != null) ? new String(this.password) : null;
 				ctx = DefaultLdapClient.this.contextSource
-						.getContext(identification.get(0).getAbsoluteName().toString(), password);
+					.getContext(identification.get(0).getAbsoluteName().toString(), password);
 				return mapper.mapWithContext(ctx, identification.get(0));
 			}
 			finally {

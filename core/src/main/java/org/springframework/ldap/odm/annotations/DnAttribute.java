@@ -32,6 +32,7 @@ import java.lang.annotation.Target;
  * {@link org.springframework.ldap.odm.annotations.Entry#base()} value will be used to
  * figure out the distinguished name of entries to create and update.
  * </p>
+ *
  * @author Mattias Hellborg Arthursson
  * @since 2.0
  */

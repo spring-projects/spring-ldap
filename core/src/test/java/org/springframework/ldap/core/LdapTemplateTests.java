@@ -217,7 +217,8 @@ public class LdapTemplateTests {
 
 		javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException("some text");
 		given(this.dirContextMock.search(eq(this.nameMock), eq("(ou=somevalue)"),
-				argThat(new SearchControlsMatcher(controls)))).willThrow(ne);
+				argThat(new SearchControlsMatcher(controls))))
+			.willThrow(ne);
 
 		try {
 			this.tested.search(this.nameMock, "(ou=somevalue)", this.handlerMock);
@@ -238,7 +239,8 @@ public class LdapTemplateTests {
 
 		javax.naming.LimitExceededException ne = new javax.naming.LimitExceededException();
 		given(this.dirContextMock.search(eq(this.nameMock), eq("(ou=somevalue)"),
-				argThat(new SearchControlsMatcher(controls)))).willThrow(ne);
+				argThat(new SearchControlsMatcher(controls))))
+			.willThrow(ne);
 
 		try {
 			this.tested.search(this.nameMock, "(ou=somevalue)", this.handlerMock);
@@ -617,7 +619,7 @@ public class LdapTemplateTests {
 
 		given(this.contextSourceMock.getReadOnlyContext()).willReturn(this.dirContextMock);
 		given(this.odmMock.filterFor(expectedClass, new EqualsFilter("ou", "somevalue")))
-				.willReturn(new EqualsFilter("ou", "somevalue"));
+			.willReturn(new EqualsFilter("ou", "somevalue"));
 
 		DirContextAdapter expectedObject = new DirContextAdapter();
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
@@ -640,7 +642,7 @@ public class LdapTemplateTests {
 
 		given(this.contextSourceMock.getReadOnlyContext()).willReturn(this.dirContextMock);
 		given(this.odmMock.filterFor(expectedClass, new EqualsFilter("ou", "somevalue")))
-				.willReturn(new EqualsFilter("ou", "somevalue"));
+			.willReturn(new EqualsFilter("ou", "somevalue"));
 
 		noSearchResults(searchControlsRecursive());
 
@@ -663,7 +665,7 @@ public class LdapTemplateTests {
 
 		given(this.contextSourceMock.getReadOnlyContext()).willReturn(this.dirContextMock);
 		given(this.odmMock.filterFor(expectedClass, new EqualsFilter("ou", "somevalue")))
-				.willReturn(new EqualsFilter("ou", "somevalue"));
+			.willReturn(new EqualsFilter("ou", "somevalue"));
 
 		DirContextAdapter expectedObject = new DirContextAdapter();
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
@@ -1508,7 +1510,7 @@ public class LdapTemplateTests {
 		expectGetReadOnlyContext();
 
 		given(this.searchExecutorMock.executeSearch(this.dirContextMock))
-				.willThrow(new javax.naming.NameNotFoundException());
+			.willThrow(new javax.naming.NameNotFoundException());
 
 		try {
 			this.tested.search(this.searchExecutorMock, this.handlerMock);
@@ -1548,7 +1550,7 @@ public class LdapTemplateTests {
 		expectGetReadOnlyContext();
 
 		given(this.searchExecutorMock.executeSearch(this.dirContextMock))
-				.willThrow(new javax.naming.PartialResultException());
+			.willThrow(new javax.naming.PartialResultException());
 
 		this.tested.search(this.searchExecutorMock, this.handlerMock, this.dirContextProcessorMock);
 
@@ -1679,7 +1681,8 @@ public class LdapTemplateTests {
 		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
 
 		given(this.dirContextMock.search(eq(this.nameMock), eq("(ou=somevalue)"),
-				argThat(new SearchControlsMatcher(controls)))).willReturn(this.namingEnumerationMock);
+				argThat(new SearchControlsMatcher(controls))))
+			.willReturn(this.namingEnumerationMock);
 
 		given(this.namingEnumerationMock.hasMore()).willReturn(true, true, false);
 		given(this.namingEnumerationMock.next()).willReturn(searchResult, searchResult);
@@ -1728,7 +1731,7 @@ public class LdapTemplateTests {
 		singleSearchResult(searchControlsRecursive(), searchResult);
 
 		given(this.contextSourceMock.getContext("cn=john doe,dc=jayway,dc=se", "password"))
-				.willReturn(this.authenticatedContextMock);
+			.willReturn(this.authenticatedContextMock);
 		this.entryContextCallbackMock.executeWithContext(this.authenticatedContextMock, new LdapEntryIdentification(
 				LdapUtils.newLdapName("cn=john doe,dc=jayway,dc=se"), LdapUtils.newLdapName("cn=john doe")));
 
@@ -1784,7 +1787,7 @@ public class LdapTemplateTests {
 		given(this.contextSourceMock.getReadOnlyContext()).willReturn(this.dirContextMock);
 
 		given(this.dirContextMock.search(any(Name.class), any(String.class), any(SearchControls.class)))
-				.willReturn(this.namingEnumerationMock);
+			.willReturn(this.namingEnumerationMock);
 
 		given(this.namingEnumerationMock.hasMore()).willReturn(false);
 
@@ -1804,7 +1807,7 @@ public class LdapTemplateTests {
 		given(this.contextSourceMock.getReadOnlyContext()).willReturn(this.dirContextMock);
 
 		given(this.dirContextMock.search(any(Name.class), any(String.class), any(SearchControls.class)))
-				.willReturn(this.namingEnumerationMock);
+			.willReturn(this.namingEnumerationMock);
 
 		given(this.namingEnumerationMock.hasMore()).willReturn(false);
 
@@ -1828,7 +1831,7 @@ public class LdapTemplateTests {
 		singleSearchResult(searchControlsRecursive(), searchResult);
 
 		given(this.contextSourceMock.getContext("cn=john doe,dc=jayway,dc=se", "password"))
-				.willThrow(new UncategorizedLdapException("Authentication failed"));
+			.willThrow(new UncategorizedLdapException("Authentication failed"));
 
 		boolean result = this.tested.authenticate(this.nameMock, "(ou=somevalue)", "password",
 				this.entryContextCallbackMock);
@@ -1849,10 +1852,10 @@ public class LdapTemplateTests {
 		singleSearchResult(searchControlsRecursive(), searchResult);
 
 		given(this.contextSourceMock.getContext("cn=john doe,dc=jayway,dc=se", "password"))
-				.willReturn(this.authenticatedContextMock);
+			.willReturn(this.authenticatedContextMock);
 		willThrow(new UncategorizedLdapException("Authentication failed")).given(this.entryContextCallbackMock)
-				.executeWithContext(this.authenticatedContextMock, new LdapEntryIdentification(
-						LdapUtils.newLdapName("cn=john doe,dc=jayway,dc=se"), LdapUtils.newLdapName("cn=john doe")));
+			.executeWithContext(this.authenticatedContextMock, new LdapEntryIdentification(
+					LdapUtils.newLdapName("cn=john doe,dc=jayway,dc=se"), LdapUtils.newLdapName("cn=john doe")));
 
 		boolean result = this.tested.authenticate(this.nameMock, "(ou=somevalue)", "password",
 				this.entryContextCallbackMock);
@@ -1865,7 +1868,8 @@ public class LdapTemplateTests {
 
 	private void noSearchResults(SearchControls controls) throws Exception {
 		given(this.dirContextMock.search(eq(this.nameMock), eq("(ou=somevalue)"),
-				argThat(new SearchControlsMatcher(controls)))).willReturn(this.namingEnumerationMock);
+				argThat(new SearchControlsMatcher(controls))))
+			.willReturn(this.namingEnumerationMock);
 
 		given(this.namingEnumerationMock.hasMore()).willReturn(false);
 	}
@@ -1876,7 +1880,8 @@ public class LdapTemplateTests {
 
 	private void setupSearchResults(SearchControls controls, SearchResult... searchResults) throws Exception {
 		given(this.dirContextMock.search(eq(this.nameMock), eq("(ou=somevalue)"),
-				argThat(new SearchControlsMatcher(controls)))).willReturn(this.namingEnumerationMock);
+				argThat(new SearchControlsMatcher(controls))))
+			.willReturn(this.namingEnumerationMock);
 
 		if (searchResults.length == 1) {
 			given(this.namingEnumerationMock.hasMore()).willReturn(true, false);
@@ -1893,7 +1898,8 @@ public class LdapTemplateTests {
 
 	private void singleSearchResultWithStringBase(SearchControls controls, SearchResult searchResult) throws Exception {
 		given(this.dirContextMock.search(eq(DEFAULT_BASE_STRING), eq("(ou=somevalue)"),
-				argThat(new SearchControlsMatcher(controls)))).willReturn(this.namingEnumerationMock);
+				argThat(new SearchControlsMatcher(controls))))
+			.willReturn(this.namingEnumerationMock);
 
 		given(this.namingEnumerationMock.hasMore()).willReturn(true, false);
 		given(this.namingEnumerationMock.next()).willReturn(searchResult);

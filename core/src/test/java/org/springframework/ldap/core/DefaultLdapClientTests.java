@@ -146,9 +146,9 @@ public class DefaultLdapClientTests {
 
 		singleSearchResult(searchControlsOneLevel(), searchResult);
 
-		this.tested.search().query(
-				(builder) -> builder.base(this.nameMock).searchScope(SearchScope.ONELEVEL).filter("(ou=somevalue)"))
-				.toObject(this.contextMapperMock);
+		this.tested.search()
+			.query((builder) -> builder.base(this.nameMock).searchScope(SearchScope.ONELEVEL).filter("(ou=somevalue)"))
+			.toObject(this.contextMapperMock);
 
 		verify(this.contextMapperMock).mapFromContext(any());
 		verify(this.dirContextMock).close();
@@ -164,8 +164,11 @@ public class DefaultLdapClientTests {
 
 		singleSearchResultWithStringBase(controls, searchResult);
 
-		this.tested.search().query((builder) -> builder.base(DEFAULT_BASE.toString()).searchScope(SearchScope.ONELEVEL)
-				.filter("(ou=somevalue)")).toObject(this.contextMapperMock);
+		this.tested.search()
+			.query((builder) -> builder.base(DEFAULT_BASE.toString())
+				.searchScope(SearchScope.ONELEVEL)
+				.filter("(ou=somevalue)"))
+			.toObject(this.contextMapperMock);
 
 		verify(this.contextMapperMock).mapFromContext(any());
 		verify(this.dirContextMock).close();
@@ -182,9 +185,9 @@ public class DefaultLdapClientTests {
 
 		singleSearchResult(controls, searchResult);
 
-		this.tested.search().query(
-				(builder) -> builder.base(this.nameMock).searchScope(SearchScope.SUBTREE).filter("(ou=somevalue)"))
-				.toObject(this.attributesMapperMock);
+		this.tested.search()
+			.query((builder) -> builder.base(this.nameMock).searchScope(SearchScope.SUBTREE).filter("(ou=somevalue)"))
+			.toObject(this.attributesMapperMock);
 
 		verify(this.attributesMapperMock).mapFromAttributes(any());
 		verify(this.dirContextMock).close();
@@ -201,8 +204,11 @@ public class DefaultLdapClientTests {
 
 		singleSearchResultWithStringBase(controls, searchResult);
 
-		this.tested.search().query((builder) -> builder.base(DEFAULT_BASE.toString()).searchScope(SearchScope.SUBTREE)
-				.filter("(ou=somevalue)")).toObject(this.attributesMapperMock);
+		this.tested.search()
+			.query((builder) -> builder.base(DEFAULT_BASE.toString())
+				.searchScope(SearchScope.SUBTREE)
+				.filter("(ou=somevalue)"))
+			.toObject(this.attributesMapperMock);
 
 		verify(this.attributesMapperMock).mapFromAttributes(any());
 		verify(this.dirContextMock).close();
@@ -217,12 +223,15 @@ public class DefaultLdapClientTests {
 
 		javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException("some text");
 		given(this.dirContextMock.search(eq(this.nameMock), eq("(ou=somevalue)"),
-				argThat(new SearchControlsMatcher(controls)))).willThrow(ne);
+				argThat(new SearchControlsMatcher(controls))))
+			.willThrow(ne);
 
 		try {
-			this.tested.search().query(
-					(builder) -> builder.base(this.nameMock).searchScope(SearchScope.SUBTREE).filter("(ou=somevalue)"))
-					.toObject(this.attributesMapperMock);
+			this.tested.search()
+				.query((builder) -> builder.base(this.nameMock)
+					.searchScope(SearchScope.SUBTREE)
+					.filter("(ou=somevalue)"))
+				.toObject(this.attributesMapperMock);
 			fail("NameNotFoundException expected");
 		}
 		catch (NameNotFoundException expected) {
@@ -240,11 +249,13 @@ public class DefaultLdapClientTests {
 
 		javax.naming.LimitExceededException ne = new javax.naming.LimitExceededException();
 		given(this.dirContextMock.search(eq(this.nameMock), eq("(ou=somevalue)"),
-				argThat(new SearchControlsMatcher(controls)))).willThrow(ne);
+				argThat(new SearchControlsMatcher(controls))))
+			.willThrow(ne);
 
 		try {
-			this.tested.search().query((builder) -> builder.base(this.nameMock).filter("(ou=somevalue)"))
-					.toObject(this.attributesMapperMock);
+			this.tested.search()
+				.query((builder) -> builder.base(this.nameMock).filter("(ou=somevalue)"))
+				.toObject(this.attributesMapperMock);
 			fail("LimitExceededException expected");
 		}
 		catch (LimitExceededException expected) {
@@ -258,8 +269,10 @@ public class DefaultLdapClientTests {
 	public void verifyThatDefaultSearchControlParametersAreAutomaticallyAppliedInSearch() throws Exception {
 		Supplier<SearchControls> defaults = mock(Supplier.class);
 		given(defaults.get()).willReturn(new SearchControls());
-		LdapClient tested = LdapClient.builder().contextSource(this.contextSourceMock).defaultSearchControls(defaults)
-				.build();
+		LdapClient tested = LdapClient.builder()
+			.contextSource(this.contextSourceMock)
+			.defaultSearchControls(defaults)
+			.build();
 
 		expectGetReadOnlyContext();
 
@@ -395,8 +408,11 @@ public class DefaultLdapClientTests {
 		Object expectedObject = new Object();
 		BasicAttributes expectedAttributes = new BasicAttributes();
 
-		this.tested.bind(this.nameMock).object(expectedObject).attributes(expectedAttributes).replaceExisting(true)
-				.execute();
+		this.tested.bind(this.nameMock)
+			.object(expectedObject)
+			.attributes(expectedAttributes)
+			.replaceExisting(true)
+			.execute();
 
 		verify(this.dirContextMock).rebind(this.nameMock, expectedObject, expectedAttributes);
 		verify(this.dirContextMock).close();
@@ -409,8 +425,11 @@ public class DefaultLdapClientTests {
 		Object expectedObject = new Object();
 		BasicAttributes expectedAttributes = new BasicAttributes();
 
-		this.tested.bind(DEFAULT_BASE.toString()).object(expectedObject).attributes(expectedAttributes)
-				.replaceExisting(true).execute();
+		this.tested.bind(DEFAULT_BASE.toString())
+			.object(expectedObject)
+			.attributes(expectedAttributes)
+			.replaceExisting(true)
+			.execute();
 
 		verify(this.dirContextMock).rebind(DEFAULT_BASE, expectedObject, expectedAttributes);
 		verify(this.dirContextMock).close();
@@ -516,13 +535,15 @@ public class DefaultLdapClientTests {
 
 	@Test
 	public void testSearch_PartialResult_IgnoreSet() throws Exception {
-		LdapClient tested = LdapClient.builder().contextSource(this.contextSourceMock)
-				.ignorePartialResultException(true).build();
+		LdapClient tested = LdapClient.builder()
+			.contextSource(this.contextSourceMock)
+			.ignorePartialResultException(true)
+			.build();
 
 		expectGetReadOnlyContext();
 
 		given(this.dirContextMock.search(eq(this.nameMock), anyString(), any()))
-				.willThrow(javax.naming.PartialResultException.class);
+			.willThrow(javax.naming.PartialResultException.class);
 
 		tested.search().name(this.nameMock).toEntryStream();
 
@@ -542,7 +563,7 @@ public class DefaultLdapClientTests {
 		singleSearchResult(searchControlsRecursive(), searchResult);
 
 		given(this.contextSourceMock.getContext("cn=john doe,dc=jayway,dc=se", "password"))
-				.willReturn(this.authenticatedContextMock);
+			.willReturn(this.authenticatedContextMock);
 		given(entryContextMapper.mapWithContext(any(), any())).willReturn(new Object());
 
 		LdapQuery query = LdapQueryBuilder.query().base(this.nameMock).filter("(ou=somevalue)");
@@ -584,7 +605,7 @@ public class DefaultLdapClientTests {
 
 		LdapQuery query = LdapQueryBuilder.query().base(this.nameMock).filter("(ou=somevalue)");
 		assertThatExceptionOfType(EmptyResultDataAccessException.class)
-				.isThrownBy(() -> this.tested.authenticate().query(query).password("password").execute());
+			.isThrownBy(() -> this.tested.authenticate().query(query).password("password").execute());
 
 		verify(this.dirContextMock).close();
 	}
@@ -598,7 +619,9 @@ public class DefaultLdapClientTests {
 
 		LdapQuery query = LdapQueryBuilder.query().base(this.nameMock).filter("(ou=somevalue)");
 		assertThatExceptionOfType(EmptyResultDataAccessException.class).isThrownBy(() -> this.tested.authenticate()
-				.query(query).password("password").execute((ctx, entry) -> new Object()));
+			.query(query)
+			.password("password")
+			.execute((ctx, entry) -> new Object()));
 
 		verify(this.dirContextMock).close();
 	}
@@ -614,17 +637,18 @@ public class DefaultLdapClientTests {
 		singleSearchResult(searchControlsRecursive(), searchResult);
 
 		given(this.contextSourceMock.getContext("cn=john doe,dc=jayway,dc=se", "password"))
-				.willThrow(new UncategorizedLdapException("Authentication failed"));
+			.willThrow(new UncategorizedLdapException("Authentication failed"));
 
 		LdapQuery query = LdapQueryBuilder.query().base(this.nameMock).filter("(ou=somevalue)");
 		assertThatExceptionOfType(UncategorizedLdapException.class)
-				.isThrownBy(() -> this.tested.authenticate().query(query).password("password").execute());
+			.isThrownBy(() -> this.tested.authenticate().query(query).password("password").execute());
 		verify(this.dirContextMock).close();
 	}
 
 	private void noSearchResults(SearchControls controls) throws Exception {
 		given(this.dirContextMock.search(eq(this.nameMock), eq("(ou=somevalue)"),
-				argThat(new SearchControlsMatcher(controls)))).willReturn(this.namingEnumerationMock);
+				argThat(new SearchControlsMatcher(controls))))
+			.willReturn(this.namingEnumerationMock);
 
 		given(this.namingEnumerationMock.hasMore()).willReturn(false);
 	}
@@ -635,7 +659,8 @@ public class DefaultLdapClientTests {
 
 	private void setupSearchResults(SearchControls controls, SearchResult... searchResults) throws Exception {
 		given(this.dirContextMock.search(eq(this.nameMock), eq("(ou=somevalue)"),
-				argThat(new SearchControlsMatcher(controls)))).willReturn(this.namingEnumerationMock);
+				argThat(new SearchControlsMatcher(controls))))
+			.willReturn(this.namingEnumerationMock);
 
 		if (searchResults.length == 1) {
 			given(this.namingEnumerationMock.hasMore()).willReturn(true, false);
@@ -652,7 +677,8 @@ public class DefaultLdapClientTests {
 
 	private void singleSearchResultWithStringBase(SearchControls controls, SearchResult searchResult) throws Exception {
 		given(this.dirContextMock.search(eq(DEFAULT_BASE), eq("(ou=somevalue)"),
-				argThat(new SearchControlsMatcher(controls)))).willReturn(this.namingEnumerationMock);
+				argThat(new SearchControlsMatcher(controls))))
+			.willReturn(this.namingEnumerationMock);
 
 		given(this.namingEnumerationMock.hasMore()).willReturn(true, false);
 		given(this.namingEnumerationMock.next()).willReturn(searchResult);

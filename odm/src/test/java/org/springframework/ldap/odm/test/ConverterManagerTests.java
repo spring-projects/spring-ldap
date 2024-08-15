@@ -102,7 +102,7 @@ public final class ConverterManagerTests {
 		new ExecuteRunnable<ConverterTestData<?>>().runTests(new RunnableTests<ConverterTestData<?>>() {
 			public void runTest(ConverterTestData<?> testData) {
 				assertThat(testData.expectedValue).isEqualTo(ConverterManagerTests.this.converterManager
-						.convert(testData.sourceData, "", testData.destClass));
+					.convert(testData.sourceData, "", testData.destClass));
 			}
 		}, primitiveTypeTests);
 	}
@@ -134,7 +134,7 @@ public final class ConverterManagerTests {
 		new ExecuteRunnable<ConverterTestData<?>>().runTests(new RunnableTests<ConverterTestData<?>>() {
 			public void runTest(ConverterTestData<?> testData) {
 				assertThat(testData.expectedValue).isEqualTo(ConverterManagerTests.this.converterManager
-						.convert(testData.sourceData, testData.syntax, testData.destClass));
+					.convert(testData.sourceData, testData.syntax, testData.destClass));
 			}
 		}, syntaxTests);
 
