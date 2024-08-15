@@ -13,6 +13,7 @@ updates:
       - 'in: build'
     ignore:
       - dependency-name: org.apache.directory.server:*
+      - dependency-name: org.apache.directory.shared:*
       - dependency-name: org.junit:junit-bom
         update-types:
           - version-update:semver-major
