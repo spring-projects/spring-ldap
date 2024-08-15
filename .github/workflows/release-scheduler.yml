@@ -2,7 +2,7 @@ name: Release Scheduler
 
 on:
   schedule:
-    - cron: '15 13 * * THU' # Every Tuesday at 13:15pm UTC
+    - cron: '15 16 * * THU' # Every Thursday at 16:15pm UTC
   workflow_dispatch:
 
 permissions: read-all
