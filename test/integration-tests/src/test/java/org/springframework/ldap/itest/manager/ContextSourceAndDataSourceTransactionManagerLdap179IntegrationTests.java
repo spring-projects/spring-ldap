@@ -47,7 +47,7 @@ public class ContextSourceAndDataSourceTransactionManagerLdap179IntegrationTests
 		extends AbstractJUnit4SpringContextTests {
 
 	private static Logger log = LoggerFactory
-			.getLogger(ContextSourceAndDataSourceTransactionManagerLdap179IntegrationTests.class);
+		.getLogger(ContextSourceAndDataSourceTransactionManagerLdap179IntegrationTests.class);
 
 	@Autowired
 	@Qualifier("dummyDao")

@@ -215,7 +215,7 @@ public final class SchemaToJavaTests {
 		Method telephoneNumberIteratorMethod = clazz.getMethod("getTelephoneNumberIterator");
 		@SuppressWarnings("unchecked")
 		Iterator<Integer> telephoneNumberIterator = (Iterator<Integer>) telephoneNumberIteratorMethod
-				.invoke(fromDirectory);
+			.invoke(fromDirectory);
 		int telephoneNumberCount = 0;
 		while (telephoneNumberIterator.hasNext()) {
 			telephoneNumberCount++;

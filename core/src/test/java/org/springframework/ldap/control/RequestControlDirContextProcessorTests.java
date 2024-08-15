@@ -104,7 +104,7 @@ public class RequestControlDirContextProcessorTests {
 		this.tested.preProcess(this.ldapContextMock);
 
 		verify(this.ldapContextMock)
-				.setRequestControls(new Control[] { this.requestControl2Mock, this.requestControlMock });
+			.setRequestControls(new Control[] { this.requestControl2Mock, this.requestControlMock });
 	}
 
 	@Test

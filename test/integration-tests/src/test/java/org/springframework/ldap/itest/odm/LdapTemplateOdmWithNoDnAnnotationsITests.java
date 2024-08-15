@@ -97,8 +97,8 @@ public class LdapTemplateOdmWithNoDnAnnotationsITests extends AbstractLdapTempla
 	@Test
 	public void testFindForStream() {
 		List<Person> persons = this.tested
-				.findForStream(LdapQueryBuilder.query().where("cn").is("Some Person3"), Person.class)
-				.collect(Collectors.toList());
+			.findForStream(LdapQueryBuilder.query().where("cn").is("Some Person3"), Person.class)
+			.collect(Collectors.toList());
 
 		assertThat(persons).hasSize(1);
 		Person person = persons.get(0);
@@ -125,8 +125,8 @@ public class LdapTemplateOdmWithNoDnAnnotationsITests extends AbstractLdapTempla
 	@Test
 	public void testFindForStreamInCountry() {
 		List<Person> persons = this.tested
-				.findForStream(LdapQueryBuilder.query().base("ou=Sweden").where("cn").isPresent(), Person.class)
-				.collect(Collectors.toList());
+			.findForStream(LdapQueryBuilder.query().base("ou=Sweden").where("cn").isPresent(), Person.class)
+			.collect(Collectors.toList());
 
 		assertThat(persons).hasSize(4);
 		Person person = persons.get(0);

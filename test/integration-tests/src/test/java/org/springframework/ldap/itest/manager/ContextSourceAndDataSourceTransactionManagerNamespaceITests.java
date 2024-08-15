@@ -56,7 +56,7 @@ import static org.assertj.core.api.Assertions.fail;
 public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends AbstractLdapTemplateIntegrationTests {
 
 	private static Logger log = LoggerFactory
-			.getLogger(ContextSourceAndDataSourceTransactionManagerNamespaceITests.class);
+		.getLogger(ContextSourceAndDataSourceTransactionManagerNamespaceITests.class);
 
 	@Autowired
 	@Qualifier("dummyDao")
@@ -76,7 +76,7 @@ public class ContextSourceAndDataSourceTransactionManagerNamespaceITests extends
 
 		this.jdbcTemplate.execute("drop table PERSON if exists");
 		this.jdbcTemplate
-				.execute("create table PERSON(fullname VARCHAR(256), lastname VARCHAR(256), description VARCHAR(256))");
+			.execute("create table PERSON(fullname VARCHAR(256), lastname VARCHAR(256), description VARCHAR(256))");
 		this.jdbcTemplate.update("insert into PERSON values(?, ?, ?)",
 				new Object[] { "Some Person", "Person", "Sweden, Company1, Some Person" });
 	}

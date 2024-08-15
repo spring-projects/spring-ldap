@@ -52,7 +52,7 @@ public class DefaultDirContextValidatorTests {
 	public void testSearchScopeOneLevelScopeSetInConstructorIsUsed() throws Exception {
 		DefaultDirContextValidator tested = new DefaultDirContextValidator(SearchControls.ONELEVEL_SCOPE);
 		assertThat(tested.getSearchControls().getSearchScope()).as("ONELEVEL_SCOPE, ")
-				.isEqualTo(SearchControls.ONELEVEL_SCOPE);
+			.isEqualTo(SearchControls.ONELEVEL_SCOPE);
 	}
 
 	// LDAP-189
@@ -60,7 +60,7 @@ public class DefaultDirContextValidatorTests {
 	public void testSearchScopeSubTreeScopeSetInConstructorIsUsed() throws Exception {
 		DefaultDirContextValidator tested = new DefaultDirContextValidator(SearchControls.SUBTREE_SCOPE);
 		assertThat(tested.getSearchControls().getSearchScope()).as("SUBTREE_SCOPE, ")
-				.isEqualTo(SearchControls.SUBTREE_SCOPE);
+			.isEqualTo(SearchControls.SUBTREE_SCOPE);
 	}
 
 	// LDAP-189
@@ -68,7 +68,7 @@ public class DefaultDirContextValidatorTests {
 	public void testSearchScopeObjectScopeSetInConstructorIsUsed() throws Exception {
 		DefaultDirContextValidator tested = new DefaultDirContextValidator(SearchControls.OBJECT_SCOPE);
 		assertThat(tested.getSearchControls().getSearchScope()).as("OBJECT_SCOPE, ")
-				.isEqualTo(SearchControls.OBJECT_SCOPE);
+			.isEqualTo(SearchControls.OBJECT_SCOPE);
 	}
 
 	@Test
@@ -164,7 +164,7 @@ public class DefaultDirContextValidatorTests {
 		final SearchControls searchControls = dirContextValidator.getSearchControls();
 
 		given(this.dirContextMock.search(baseName, filter, searchControls))
-				.willThrow(new NamingException("Failed to search"));
+			.willThrow(new NamingException("Failed to search"));
 
 		final boolean valid = dirContextValidator.validateDirContext(DirContextType.READ_ONLY, this.dirContextMock);
 

@@ -26,7 +26,6 @@ import java.lang.annotation.Target;
  * <em>not</em> be persisted to LDAP.
  *
  * @author Paul Harvey &lt;paul@pauls-place.me.uk&gt;
- *
  * @see Entry
  */
 @Target(ElementType.FIELD)

@@ -139,8 +139,8 @@ import org.springframework.util.StringUtils;
 			if (currentAttributeMetaData.isId()) {
 				if (this.idAttribute != null) {
 					// There can be only one id field
-					throw new MetaDataException(String.format(
-							"You man have only one field with the %1$s annotation in class %2$s", Id.class, clazz));
+					throw new MetaDataException(String
+						.format("You man have only one field with the %1$s annotation in class %2$s", Id.class, clazz));
 				}
 				this.idAttribute = currentAttributeMetaData;
 			}

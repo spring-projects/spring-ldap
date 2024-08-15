@@ -422,7 +422,7 @@ public class DelegatingContextTests extends AbstractPoolTestCase {
 	@Test
 	public void testPoolExceptionOnClose() throws Exception {
 		willThrow(new Exception("Fake Pool returnObject Exception")).given(keyedObjectPoolMock)
-				.returnObject(DirContextType.READ_ONLY, contextMock);
+			.returnObject(DirContextType.READ_ONLY, contextMock);
 
 		final DelegatingContext delegatingContext = new DelegatingContext(keyedObjectPoolMock, contextMock,
 				DirContextType.READ_ONLY);

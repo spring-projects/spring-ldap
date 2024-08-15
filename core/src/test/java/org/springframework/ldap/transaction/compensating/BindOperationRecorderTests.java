@@ -48,7 +48,7 @@ public class BindOperationRecorderTests {
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		// Perform test.
 		CompensatingTransactionOperationExecutor operation = tested
-				.recordOperation(new Object[] { expectedDn, expectedObject, expectedAttributes });
+			.recordOperation(new Object[] { expectedDn, expectedObject, expectedAttributes });
 
 		assertThat(operation instanceof BindOperationExecutor).isTrue();
 		BindOperationExecutor rollbackOperation = (BindOperationExecutor) operation;
@@ -67,7 +67,7 @@ public class BindOperationRecorderTests {
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		// Perform test.
 		CompensatingTransactionOperationExecutor operation = tested
-				.recordOperation(new Object[] { expectedDn, expectedObject, expectedAttributes });
+			.recordOperation(new Object[] { expectedDn, expectedObject, expectedAttributes });
 
 		assertThat(operation instanceof BindOperationExecutor).isTrue();
 		BindOperationExecutor rollbackOperation = (BindOperationExecutor) operation;

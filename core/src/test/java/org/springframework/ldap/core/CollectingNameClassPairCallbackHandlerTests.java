@@ -41,7 +41,7 @@ public class CollectingNameClassPairCallbackHandlerTests {
 		this.tested = new CollectingNameClassPairCallbackHandler() {
 			public Object getObjectFromNameClassPair(NameClassPair nameClassPair) {
 				assertThat(nameClassPair)
-						.isSameAs(CollectingNameClassPairCallbackHandlerTests.this.expectedNameClassPair);
+					.isSameAs(CollectingNameClassPairCallbackHandlerTests.this.expectedNameClassPair);
 				return CollectingNameClassPairCallbackHandlerTests.this.expectedResult;
 			}
 		};

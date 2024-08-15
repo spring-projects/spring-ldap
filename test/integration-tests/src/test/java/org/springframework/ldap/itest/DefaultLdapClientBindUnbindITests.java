@@ -158,7 +158,7 @@ public class DefaultLdapClientBindUnbindITests extends AbstractLdapTemplateInteg
 
 	private void verifyCleanup() {
 		assertThatExceptionOfType(NameNotFoundException.class).describedAs("NameNotFoundException expected")
-				.isThrownBy(() -> this.tested.search().name(DN).toEntry());
+			.isThrownBy(() -> this.tested.search().name(DN).toEntry());
 	}
 
 }

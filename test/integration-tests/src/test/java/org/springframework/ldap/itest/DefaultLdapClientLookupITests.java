@@ -82,8 +82,9 @@ public class DefaultLdapClientLookupITests extends AbstractLdapTemplateIntegrati
 	@Test
 	public void testLookup_AttributesMapper_LdapName() {
 		AttributesMapper<Person> mapper = new PersonAttributesMapper();
-		Person person = this.tested.search().name(LdapUtils.newLdapName("cn=Some Person2, ou=company1,ou=Sweden"))
-				.toObject(mapper);
+		Person person = this.tested.search()
+			.name(LdapUtils.newLdapName("cn=Some Person2, ou=company1,ou=Sweden"))
+			.toObject(mapper);
 
 		assertThat(person.getFullname()).isEqualTo("Some Person2");
 		assertThat(person.getLastname()).isEqualTo("Person2");
@@ -99,8 +100,8 @@ public class DefaultLdapClientLookupITests extends AbstractLdapTemplateIntegrati
 		AttributesMapper<Person> mapper = new SubsetPersonAttributesMapper();
 
 		Person person = this.tested.search()
-				.query((builder) -> builder.base("cn=Some Person2, ou=company1,ou=Sweden").attributes("cn"))
-				.toObject(mapper);
+			.query((builder) -> builder.base("cn=Some Person2, ou=company1,ou=Sweden").attributes("cn"))
+			.toObject(mapper);
 
 		assertThat(person.getFullname()).isEqualTo("Some Person2");
 		assertThat(person.getLastname()).as("lastName should not be set").isNull();
@@ -114,10 +115,10 @@ public class DefaultLdapClientLookupITests extends AbstractLdapTemplateIntegrati
 	@Test
 	public void testLookup_ReturnAttributes_AttributesMapper_LdapName() {
 		AttributesMapper<Person> mapper = new SubsetPersonAttributesMapper();
-		Person person = this.tested
-				.search().query((builder) -> builder
-						.base(LdapUtils.newLdapName("cn=Some Person2, ou=company1,ou=Sweden")).attributes("cn"))
-				.toObject(mapper);
+		Person person = this.tested.search()
+			.query((builder) -> builder.base(LdapUtils.newLdapName("cn=Some Person2, ou=company1,ou=Sweden"))
+				.attributes("cn"))
+			.toObject(mapper);
 
 		assertThat(person.getFullname()).isEqualTo("Some Person2");
 		assertThat(person.getLastname()).as("lastName should not be set").isNull();
@@ -148,8 +149,8 @@ public class DefaultLdapClientLookupITests extends AbstractLdapTemplateIntegrati
 		ContextMapper<Person> mapper = new PersonContextMapper();
 
 		Person person = this.tested.search()
-				.query((builder) -> builder.base("cn=Some Person2, ou=company1,ou=Sweden").attributes("cn"))
-				.toObject(mapper);
+			.query((builder) -> builder.base("cn=Some Person2, ou=company1,ou=Sweden").attributes("cn"))
+			.toObject(mapper);
 
 		assertThat(person.getFullname()).isEqualTo("Some Person2");
 		assertThat(person.getLastname()).as("lastName should not be set").isNull();

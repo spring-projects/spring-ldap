@@ -94,7 +94,7 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 		}
 
 		Collection<BaseLdapPathSource> beans = this.applicationContext.getBeansOfType(BaseLdapPathSource.class)
-				.values();
+			.values();
 		if (beans.isEmpty()) {
 			throw new NoSuchBeanDefinitionException("No BaseLdapPathSource implementation definition found");
 		}

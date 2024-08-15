@@ -40,7 +40,7 @@ public class RenameOperationRecorderTests {
 
 		// Perform test
 		CompensatingTransactionOperationExecutor operation = tested
-				.recordOperation(new Object[] { "ou=someou", "ou=newou" });
+			.recordOperation(new Object[] { "ou=someou", "ou=newou" });
 
 		assertThat(operation instanceof RenameOperationExecutor).isTrue();
 		RenameOperationExecutor rollbackOperation = (RenameOperationExecutor) operation;

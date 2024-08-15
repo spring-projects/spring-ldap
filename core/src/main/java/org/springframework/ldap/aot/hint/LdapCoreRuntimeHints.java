@@ -38,38 +38,50 @@ class LdapCoreRuntimeHints implements RuntimeHintsRegistrar {
 
 	@Override
 	public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
-		hints.reflection().registerType(TypeReference.of("com.sun.jndi.ldap.LdapCtxFactory"),
-				(builder) -> builder.withMembers(MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS));
-		hints.reflection().registerType(AbstractContextSource.class, (builder) -> builder
+		hints.reflection()
+			.registerType(TypeReference.of("com.sun.jndi.ldap.LdapCtxFactory"),
+					(builder) -> builder.withMembers(MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS));
+		hints.reflection()
+			.registerType(AbstractContextSource.class, (builder) -> builder
 				.withMembers(MemberCategory.INTROSPECT_DECLARED_METHODS, MemberCategory.DECLARED_FIELDS));
-		hints.reflection().registerType(DefaultDirObjectFactory.class,
-				(builder) -> builder.withMembers(MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS));
-		hints.reflection().registerTypeIfPresent(classLoader, "javax.naming.ldap.PagedResultsControl",
-				(builder) -> builder.onReachableType(PagedResultsDirContextProcessor.class)
+		hints.reflection()
+			.registerType(DefaultDirObjectFactory.class,
+					(builder) -> builder.withMembers(MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS));
+		hints.reflection()
+			.registerTypeIfPresent(classLoader, "javax.naming.ldap.PagedResultsControl",
+					(builder) -> builder.onReachableType(PagedResultsDirContextProcessor.class)
 						.withMembers(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS));
-		hints.reflection().registerTypeIfPresent(classLoader, "com.sun.jndi.ldap.ctl.PagedResultsControl",
-				(builder) -> builder.onReachableType(PagedResultsDirContextProcessor.class)
+		hints.reflection()
+			.registerTypeIfPresent(classLoader, "com.sun.jndi.ldap.ctl.PagedResultsControl",
+					(builder) -> builder.onReachableType(PagedResultsDirContextProcessor.class)
 						.withMembers(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS));
-		hints.reflection().registerTypeIfPresent(classLoader, "javax.naming.ldap.PagedResultsResponseControl",
-				(builder) -> builder.onReachableType(PagedResultsDirContextProcessor.class)
+		hints.reflection()
+			.registerTypeIfPresent(classLoader, "javax.naming.ldap.PagedResultsResponseControl",
+					(builder) -> builder.onReachableType(PagedResultsDirContextProcessor.class)
 						.withMembers(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS));
-		hints.reflection().registerTypeIfPresent(classLoader, "com.sun.jndi.ldap.ctl.PagedResultsResponseControl",
-				(builder) -> builder.onReachableType(PagedResultsDirContextProcessor.class)
+		hints.reflection()
+			.registerTypeIfPresent(classLoader, "com.sun.jndi.ldap.ctl.PagedResultsResponseControl",
+					(builder) -> builder.onReachableType(PagedResultsDirContextProcessor.class)
 						.withMembers(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS));
-		hints.reflection().registerTypeIfPresent(classLoader, "javax.naming.ldap.SortControl",
-				(builder) -> builder.onReachableType(SortControlDirContextProcessor.class)
+		hints.reflection()
+			.registerTypeIfPresent(classLoader, "javax.naming.ldap.SortControl",
+					(builder) -> builder.onReachableType(SortControlDirContextProcessor.class)
 						.withMembers(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS));
-		hints.reflection().registerTypeIfPresent(classLoader, "com.sun.jndi.ldap.ctl.SortControl",
-				(builder) -> builder.onReachableType(SortControlDirContextProcessor.class)
+		hints.reflection()
+			.registerTypeIfPresent(classLoader, "com.sun.jndi.ldap.ctl.SortControl",
+					(builder) -> builder.onReachableType(SortControlDirContextProcessor.class)
 						.withMembers(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS));
-		hints.reflection().registerTypeIfPresent(classLoader, "javax.naming.ldap.SortResponseControl",
-				(builder) -> builder.onReachableType(SortControlDirContextProcessor.class)
+		hints.reflection()
+			.registerTypeIfPresent(classLoader, "javax.naming.ldap.SortResponseControl",
+					(builder) -> builder.onReachableType(SortControlDirContextProcessor.class)
 						.withMembers(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS));
-		hints.reflection().registerTypeIfPresent(classLoader, "com.sun.jndi.ldap.ctl.SortResponseControl",
-				(builder) -> builder.onReachableType(SortControlDirContextProcessor.class)
+		hints.reflection()
+			.registerTypeIfPresent(classLoader, "com.sun.jndi.ldap.ctl.SortResponseControl",
+					(builder) -> builder.onReachableType(SortControlDirContextProcessor.class)
 						.withMembers(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS));
-		hints.reflection().registerType(TypeReference.of("javax.net.ssl.SSLSocketFactory"),
-				(builder) -> builder.withMethod("getDefault", Collections.emptyList(), ExecutableMode.INVOKE)
+		hints.reflection()
+			.registerType(TypeReference.of("javax.net.ssl.SSLSocketFactory"),
+					(builder) -> builder.withMethod("getDefault", Collections.emptyList(), ExecutableMode.INVOKE)
 						.onReachableType(TypeReference.of("com.sun.jndi.ldap.Connection")));
 	}
 

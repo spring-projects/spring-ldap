@@ -46,65 +46,77 @@ public class LdapCoreRuntimeHintsTests {
 
 	@Before
 	public void setup() {
-		SpringFactoriesLoader.forResourceLocation("META-INF/spring/aot.factories").load(RuntimeHintsRegistrar.class)
-				.forEach((registrar) -> registrar.registerHints(this.hints, ClassUtils.getDefaultClassLoader()));
+		SpringFactoriesLoader.forResourceLocation("META-INF/spring/aot.factories")
+			.load(RuntimeHintsRegistrar.class)
+			.forEach((registrar) -> registrar.registerHints(this.hints, ClassUtils.getDefaultClassLoader()));
 	}
 
 	@Test
 	public void ldapCtxFactoryHasHints() {
-		assertThat(RuntimeHintsPredicates.reflection().onType(TypeReference.of("com.sun.jndi.ldap.LdapCtxFactory"))
-				.withMemberCategories(MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)).accepts(this.hints);
+		assertThat(RuntimeHintsPredicates.reflection()
+			.onType(TypeReference.of("com.sun.jndi.ldap.LdapCtxFactory"))
+			.withMemberCategories(MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)).accepts(this.hints);
 	}
 
 	@Test
 	public void abstractContextSourceHasHints() {
-		assertThat(RuntimeHintsPredicates.reflection().onType(AbstractContextSource.class)
-				.withMemberCategories(MemberCategory.INTROSPECT_DECLARED_METHODS, MemberCategory.DECLARED_FIELDS))
-						.accepts(this.hints);
+		assertThat(RuntimeHintsPredicates.reflection()
+			.onType(AbstractContextSource.class)
+			.withMemberCategories(MemberCategory.INTROSPECT_DECLARED_METHODS, MemberCategory.DECLARED_FIELDS))
+			.accepts(this.hints);
 	}
 
 	@Test
 	public void defaultDirObjectFactoryHasHints() {
-		assertThat(RuntimeHintsPredicates.reflection().onType(DefaultDirObjectFactory.class)
-				.withMemberCategories(MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)).accepts(this.hints);
+		assertThat(RuntimeHintsPredicates.reflection()
+			.onType(DefaultDirObjectFactory.class)
+			.withMemberCategories(MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)).accepts(this.hints);
 	}
 
 	@Test
 	public void pagedResultsControlHasHints() {
-		assertThat(RuntimeHintsPredicates.reflection().onType(PagedResultsControl.class)
-				.withMemberCategories(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS))
-						.accepts(this.hints);
-		assertThat(RuntimeHintsPredicates.reflection().onType(com.sun.jndi.ldap.ctl.PagedResultsControl.class)
-				.withMemberCategories(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS))
-						.accepts(this.hints);
-		assertThat(RuntimeHintsPredicates.reflection().onType(PagedResultsResponseControl.class)
-				.withMemberCategories(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS))
-						.accepts(this.hints);
-		assertThat(RuntimeHintsPredicates.reflection().onType(com.sun.jndi.ldap.ctl.PagedResultsResponseControl.class)
-				.withMemberCategories(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS))
-						.accepts(this.hints);
+		assertThat(RuntimeHintsPredicates.reflection()
+			.onType(PagedResultsControl.class)
+			.withMemberCategories(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS))
+			.accepts(this.hints);
+		assertThat(RuntimeHintsPredicates.reflection()
+			.onType(com.sun.jndi.ldap.ctl.PagedResultsControl.class)
+			.withMemberCategories(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS))
+			.accepts(this.hints);
+		assertThat(RuntimeHintsPredicates.reflection()
+			.onType(PagedResultsResponseControl.class)
+			.withMemberCategories(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS))
+			.accepts(this.hints);
+		assertThat(RuntimeHintsPredicates.reflection()
+			.onType(com.sun.jndi.ldap.ctl.PagedResultsResponseControl.class)
+			.withMemberCategories(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS))
+			.accepts(this.hints);
 	}
 
 	@Test
 	public void sortControlHasHints() {
-		assertThat(RuntimeHintsPredicates.reflection().onType(SortControl.class)
-				.withMemberCategories(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS))
-						.accepts(this.hints);
-		assertThat(RuntimeHintsPredicates.reflection().onType(com.sun.jndi.ldap.ctl.SortControl.class)
-				.withMemberCategories(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS))
-						.accepts(this.hints);
-		assertThat(RuntimeHintsPredicates.reflection().onType(SortResponseControl.class)
-				.withMemberCategories(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS))
-						.accepts(this.hints);
-		assertThat(RuntimeHintsPredicates.reflection().onType(com.sun.jndi.ldap.ctl.SortResponseControl.class)
-				.withMemberCategories(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS))
-						.accepts(this.hints);
+		assertThat(RuntimeHintsPredicates.reflection()
+			.onType(SortControl.class)
+			.withMemberCategories(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS))
+			.accepts(this.hints);
+		assertThat(RuntimeHintsPredicates.reflection()
+			.onType(com.sun.jndi.ldap.ctl.SortControl.class)
+			.withMemberCategories(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS))
+			.accepts(this.hints);
+		assertThat(RuntimeHintsPredicates.reflection()
+			.onType(SortResponseControl.class)
+			.withMemberCategories(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS))
+			.accepts(this.hints);
+		assertThat(RuntimeHintsPredicates.reflection()
+			.onType(com.sun.jndi.ldap.ctl.SortResponseControl.class)
+			.withMemberCategories(MemberCategory.INVOKE_PUBLIC_METHODS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS))
+			.accepts(this.hints);
 	}
 
 	@Test
 	public void sslSocketFactoryHasHints() throws Exception {
 		assertThat(RuntimeHintsPredicates.reflection().onMethod(SSLSocketFactory.class.getDeclaredMethod("getDefault")))
-				.accepts(this.hints);
+			.accepts(this.hints);
 	}
 
 }

@@ -68,8 +68,8 @@ public class DefaultAttributeValidationPolicyTests {
 	private AttributeType type;
 
 	private List<String> exceptions = Arrays
-			.asList(new String[] { "description: :A big sailing fan.", "cn;lang-ja:: 5bCP56yg5Y6fIO.ODreODieODi+ODvA==",
-					"url:< https://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html#28" });
+		.asList(new String[] { "description: :A big sailing fan.", "cn;lang-ja:: 5bCP56yg5Y6fIO.ODreODieODi+ODvA==",
+				"url:< https://java.sun.com/j2se/1.3/docs/guide/collections/designfaq.html#28" });
 
 	/**
 	 * The data set to parse.
@@ -165,7 +165,8 @@ public class DefaultAttributeValidationPolicyTests {
 			LdapAttribute attribute = (LdapAttribute) policy.parse(this.line);
 
 			assertThat(this.id.equalsIgnoreCase(attribute.getID()))
-					.as("IDs do not match: [expected: " + attribute.getID() + ", obtained: " + this.id + "]").isTrue();
+				.as("IDs do not match: [expected: " + attribute.getID() + ", obtained: " + this.id + "]")
+				.isTrue();
 
 			String[] expected = !StringUtils.hasLength(this.options) ? new String[] {}
 					: this.options.replaceFirst(";", "").split(";");
@@ -175,27 +176,27 @@ public class DefaultAttributeValidationPolicyTests {
 			assertThat(obtained).as("Options do not match: ").isEqualTo(expected);
 
 			switch (this.type) {
-			case STRING:
-				assertThat(attribute.get() instanceof String).as("Value is not a string.").isTrue();
-				assertThat(attribute.get()).as("Values do not match: ").isEqualTo(this.value);
-				break;
+				case STRING:
+					assertThat(attribute.get() instanceof String).as("Value is not a string.").isTrue();
+					assertThat(attribute.get()).as("Values do not match: ").isEqualTo(this.value);
+					break;
 
-			case BASE64:
-				byte[] bytes = LdapEncoder.parseBase64Binary(this.value);
-				assertThat(attribute.get() instanceof byte[]).as("Value is not a byte[].").isTrue();
-				assertThat((byte[]) attribute.get()).as("Values do not match: ").isEqualTo(bytes);
-				break;
+				case BASE64:
+					byte[] bytes = LdapEncoder.parseBase64Binary(this.value);
+					assertThat(attribute.get() instanceof byte[]).as("Value is not a byte[].").isTrue();
+					assertThat((byte[]) attribute.get()).as("Values do not match: ").isEqualTo(bytes);
+					break;
 
-			case URL:
-				URI url = new URI(this.value);
-				assertThat(attribute.get() instanceof URI).as("Value is not a URL.").isTrue();
-				assertThat(attribute.get()).as("Values do not match: ").isEqualTo(url);
-				break;
+				case URL:
+					URI url = new URI(this.value);
+					assertThat(attribute.get() instanceof URI).as("Value is not a URL.").isTrue();
+					assertThat(attribute.get()).as("Values do not match: ").isEqualTo(url);
+					break;
 
-			case UTF8:
-				assertThat(attribute.get() instanceof String).as("Value is not a UTF8.").isTrue();
-				assertThat(attribute.get()).as("Values do not match: ").isEqualTo(this.value);
-				break;
+				case UTF8:
+					assertThat(attribute.get() instanceof String).as("Value is not a UTF8.").isTrue();
+					assertThat(attribute.get()).as("Values do not match: ").isEqualTo(this.value);
+					break;
 			}
 
 			log.info("Success!");

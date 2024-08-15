@@ -333,7 +333,7 @@ public class DefaultIncrementalAttributesMapper
 	 */
 	public static List<Object> lookupAttributeValues(LdapOperations ldapOperations, Name dn, String attribute) {
 		List<Object> values = loopForAllAttributeValues(ldapOperations, dn, new String[] { attribute })
-				.getValues(attribute);
+			.getValues(attribute);
 		if (values == null) {
 			values = Collections.emptyList();
 		}

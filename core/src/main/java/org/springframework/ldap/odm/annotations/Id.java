@@ -29,7 +29,6 @@ import java.lang.annotation.Target;
  * annotated {@link Attribute}.
  *
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
- *
  * @see Attribute
  * @see javax.naming.Name
  */

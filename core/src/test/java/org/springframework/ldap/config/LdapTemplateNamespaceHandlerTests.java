@@ -73,7 +73,7 @@ public class LdapTemplateNamespaceHandlerTests {
 		assertThat("uid=admin").isEqualTo(getInternalState(contextSource, "userDn"));
 		assertThat("apassword").isEqualTo(getInternalState(contextSource, "password"));
 		assertThat(new String[] { "ldap://localhost:389" })
-				.isEqualTo((Object[]) getInternalState(contextSource, "urls"));
+			.isEqualTo((Object[]) getInternalState(contextSource, "urls"));
 		assertThat(Boolean.FALSE).isEqualTo(getInternalState(contextSource, "pooled"));
 		assertThat(Boolean.FALSE).isEqualTo(getInternalState(contextSource, "anonymousReadOnly"));
 		assertThat((Object) getInternalState(contextSource, "referral")).isNull();
@@ -148,7 +148,7 @@ public class LdapTemplateNamespaceHandlerTests {
 		assertThat("uid=admin").isEqualTo(getInternalState(contextSource, "userDn"));
 		assertThat("apassword").isEqualTo(getInternalState(contextSource, "password"));
 		assertThat(new String[] { "ldap://localhost:389" })
-				.isEqualTo((Object[]) getInternalState(contextSource, "urls"));
+			.isEqualTo((Object[]) getInternalState(contextSource, "urls"));
 		assertThat(Boolean.TRUE).isEqualTo(getInternalState(contextSource, "pooled"));
 		assertThat(Boolean.FALSE).isEqualTo(getInternalState(contextSource, "anonymousReadOnly"));
 		assertThat("follow").isEqualTo(getInternalState(contextSource, "referral"));
@@ -176,7 +176,7 @@ public class LdapTemplateNamespaceHandlerTests {
 		assertThat("uid=admin").isEqualTo(getInternalState(contextSource, "userDn"));
 		assertThat("apassword").isEqualTo(getInternalState(contextSource, "password"));
 		assertThat(new String[] { "ldap://localhost:389" })
-				.isEqualTo((Object[]) getInternalState(contextSource, "urls"));
+			.isEqualTo((Object[]) getInternalState(contextSource, "urls"));
 
 	}
 
@@ -192,7 +192,7 @@ public class LdapTemplateNamespaceHandlerTests {
 		ContextSource contextSource = ((TransactionAwareContextSourceProxy) outerContextSource).getTarget();
 
 		assertThat(new String[] { "ldap://a.localhost:389", "ldap://b.localhost:389" })
-				.isEqualTo(getInternalState(contextSource, "urls"));
+			.isEqualTo(getInternalState(contextSource, "urls"));
 
 	}
 
@@ -207,7 +207,7 @@ public class LdapTemplateNamespaceHandlerTests {
 		ContextSource contextSource = ((TransactionAwareContextSourceProxy) outerContextSource).getTarget();
 
 		assertThat(new String[] { "ldap://a.localhost:389", "ldap://b.localhost:389" })
-				.isEqualTo(getInternalState(contextSource, "urls"));
+			.isEqualTo(getInternalState(contextSource, "urls"));
 
 	}
 
@@ -404,7 +404,7 @@ public class LdapTemplateNamespaceHandlerTests {
 		assertThat(objectPool.getMinIdlePerKey()).isEqualTo(0);
 		assertThat(objectPool.getBlockWhenExhausted()).isEqualTo(true);
 		assertThat(objectPool.getEvictionPolicyClassName())
-				.isEqualTo(GenericKeyedObjectPoolConfig.DEFAULT_EVICTION_POLICY_CLASS_NAME);
+			.isEqualTo(GenericKeyedObjectPoolConfig.DEFAULT_EVICTION_POLICY_CLASS_NAME);
 		assertThat(objectPool.getFairness()).isEqualTo(false);
 
 		// ensures the pool is registered
@@ -445,7 +445,7 @@ public class LdapTemplateNamespaceHandlerTests {
 		assertThat(objectPool.getMinIdlePerKey()).isEqualTo(14);
 		assertThat(objectPool.getBlockWhenExhausted()).isEqualTo(true);
 		assertThat(objectPool.getEvictionPolicyClassName())
-				.isEqualTo("org.springframework.ldap.pool2.DummyEvictionPolicy");
+			.isEqualTo("org.springframework.ldap.pool2.DummyEvictionPolicy");
 		assertThat(objectPool.getFairness()).isEqualTo(true);
 		assertThat(objectPool.getLifo()).isEqualTo(false);
 

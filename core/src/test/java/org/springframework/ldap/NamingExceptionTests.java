@@ -46,9 +46,11 @@ public class NamingExceptionTests {
 		writeToStream(exception);
 		NamingException deSerializedException = readFromStream();
 		assertThat(exception.getResolvedObj())
-				.withFailMessage("Original exception resolvedObj after serialization should not be null").isNotNull();
+			.withFailMessage("Original exception resolvedObj after serialization should not be null")
+			.isNotNull();
 		assertThat(deSerializedException.getResolvedObj())
-				.withFailMessage("De-serialized exception resolvedObj should be null").isNull();
+			.withFailMessage("De-serialized exception resolvedObj should be null")
+			.isNull();
 	}
 
 	private NamingException readFromStream() throws IOException, ClassNotFoundException {

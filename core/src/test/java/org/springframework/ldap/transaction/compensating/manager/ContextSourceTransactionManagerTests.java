@@ -102,7 +102,7 @@ public class ContextSourceTransactionManagerTests {
 		this.tested.doBegin(expectedTransactionObject, this.transactionDefinitionMock);
 
 		DirContextHolder foundContextHolder = (DirContextHolder) TransactionSynchronizationManager
-				.getResource(this.contextSourceMock);
+			.getResource(this.contextSourceMock);
 		assertThat(foundContextHolder.getCtx()).isSameAs(this.contextMock);
 	}
 
@@ -168,8 +168,8 @@ public class ContextSourceTransactionManagerTests {
 				final ContextSourceTransactionManager txMgrInner = new ContextSourceTransactionManager();
 				txMgrInner.setContextSource(unconnectableContextSourceMock);
 
-				final TransactionStatus txInner = txMgrInner.getTransaction(
-						new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRES_NEW));
+				final TransactionStatus txInner = txMgrInner
+					.getTransaction(new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRES_NEW));
 
 				try {
 					// Do something with the connection that succeeds or fails

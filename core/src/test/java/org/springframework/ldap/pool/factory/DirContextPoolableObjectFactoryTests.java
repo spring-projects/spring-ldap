@@ -185,7 +185,7 @@ public class DirContextPoolableObjectFactoryTests extends AbstractPoolTestCase {
 		DirContextValidator secondDirContextValidatorMock = mock(DirContextValidator.class);
 
 		given(secondDirContextValidatorMock.validateDirContext(DirContextType.READ_ONLY, dirContextMock))
-				.willThrow(new RuntimeException("Failed to validate"));
+			.willThrow(new RuntimeException("Failed to validate"));
 		objectFactory.setDirContextValidator(secondDirContextValidatorMock);
 
 		final boolean valid2 = objectFactory.validateObject(DirContextType.READ_ONLY, dirContextMock);

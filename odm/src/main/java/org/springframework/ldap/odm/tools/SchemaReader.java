@@ -166,23 +166,23 @@ import org.springframework.ldap.odm.tools.SyntaxToJavaClass.ClassInfo;
 				while (currentValues.hasMoreElements()) {
 					String currentValue = (String) currentValues.nextElement();
 					switch (type) {
-					case SUP:
-						// Its a super class
-						String lowerCased = currentValue.toLowerCase();
-						if (!schema.getObjectClass().contains(lowerCased)) {
-							supList.add(lowerCased);
-						}
-						break;
-					case MUST:
-						// Add must attribute
-						schema.addMust(createAttributeSchema(currentValue, schemaContext));
-						break;
-					case MAY:
-						// Add may attribute
-						schema.addMay(createAttributeSchema(currentValue, schemaContext));
-						break;
-					default:
-						// Nothing to do
+						case SUP:
+							// Its a super class
+							String lowerCased = currentValue.toLowerCase();
+							if (!schema.getObjectClass().contains(lowerCased)) {
+								supList.add(lowerCased);
+							}
+							break;
+						case MUST:
+							// Add must attribute
+							schema.addMust(createAttributeSchema(currentValue, schemaContext));
+							break;
+						case MAY:
+							// Add may attribute
+							schema.addMay(createAttributeSchema(currentValue, schemaContext));
+							break;
+						default:
+							// Nothing to do
 					}
 				}
 			}

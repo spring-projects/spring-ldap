@@ -213,7 +213,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 
 			if (this.logger.isDebugEnabled()) {
 				this.logger
-						.debug("Created new " + DirContextType.READ_WRITE + " DirContext='" + readWriteContext + "'");
+					.debug("Created new " + DirContextType.READ_WRITE + " DirContext='" + readWriteContext + "'");
 			}
 
 			return makeFailureAwareProxy(readWriteContext);

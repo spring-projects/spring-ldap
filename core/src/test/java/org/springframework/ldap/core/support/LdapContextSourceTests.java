@@ -73,7 +73,7 @@ public class LdapContextSourceTests {
 
 		// check that base was added to environment
 		assertThat(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY))
-				.isEqualTo(LdapUtils.newLdapName("dc=some example,dc=se"));
+			.isEqualTo(LdapUtils.newLdapName("dc=some example,dc=se"));
 
 		// Verify that changing values does not change the environment values.
 		this.tested.setBase("dc=other,dc=se");
@@ -87,7 +87,7 @@ public class LdapContextSourceTests {
 		assertThat(env.get(Context.SECURITY_CREDENTIALS)).isNull();
 
 		assertThat(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY))
-				.isEqualTo(LdapUtils.newLdapName("dc=some example,dc=se"));
+			.isEqualTo(LdapUtils.newLdapName("dc=some example,dc=se"));
 	}
 
 	@Test
@@ -155,7 +155,7 @@ public class LdapContextSourceTests {
 
 		// check that base was added to environment
 		assertThat(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY))
-				.isEqualTo(LdapUtils.newLdapName("dc=example,dc=se"));
+			.isEqualTo(LdapUtils.newLdapName("dc=example,dc=se"));
 	}
 
 	@Test

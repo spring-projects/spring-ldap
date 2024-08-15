@@ -101,7 +101,7 @@ public class DefaultLdapClientLookupTests {
 		whenSearching(this.name).willThrow(ne);
 
 		assertThatExceptionOfType(NameNotFoundException.class).describedAs("NameNotFoundException expected")
-				.isThrownBy(() -> this.tested.search().name(this.name).toEntry());
+			.isThrownBy(() -> this.tested.search().name(this.name).toEntry());
 		verify(this.dirContextMock).close();
 	}
 
@@ -142,7 +142,7 @@ public class DefaultLdapClientLookupTests {
 
 		AttributesMapper<?> mapper = (attributes) -> attributes;
 		assertThatExceptionOfType(NameNotFoundException.class).describedAs("NameNotFoundException expected")
-				.isThrownBy(() -> this.tested.search().name(this.name).toObject(mapper));
+			.isThrownBy(() -> this.tested.search().name(this.name).toObject(mapper));
 		verify(this.dirContextMock).close();
 	}
 
@@ -185,7 +185,7 @@ public class DefaultLdapClientLookupTests {
 
 		ContextMapper<?> mapper = (ctx) -> ctx;
 		assertThatExceptionOfType(NameNotFoundException.class).describedAs("NameNotFoundException expected")
-				.isThrownBy(() -> this.tested.search().name(this.name).toObject(mapper));
+			.isThrownBy(() -> this.tested.search().name(this.name).toObject(mapper));
 		verify(this.dirContextMock).close();
 	}
 

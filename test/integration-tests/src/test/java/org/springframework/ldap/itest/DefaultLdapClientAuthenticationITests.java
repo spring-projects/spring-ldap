@@ -76,7 +76,7 @@ public class DefaultLdapClientAuthenticationITests extends AbstractLdapTemplateI
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
 		LdapQuery query = LdapQueryBuilder.query().filter(filter);
 		assertThatExceptionOfType(AuthenticationException.class)
-				.isThrownBy(() -> this.tested.authenticate().query(query).password("invalidpassword").execute());
+			.isThrownBy(() -> this.tested.authenticate().query(query).password("invalidpassword").execute());
 	}
 
 	@Test
@@ -86,7 +86,7 @@ public class DefaultLdapClientAuthenticationITests extends AbstractLdapTemplateI
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
 		LdapQuery query = LdapQueryBuilder.query().where("objectclass").is("person").and("uid").is("some.person3");
 		assertThatExceptionOfType(AuthenticationException.class)
-				.isThrownBy(() -> this.tested.authenticate().query(query).password("invalidpassword").execute());
+			.isThrownBy(() -> this.tested.authenticate().query(query).password("invalidpassword").execute());
 	}
 
 	@Test
@@ -114,8 +114,10 @@ public class DefaultLdapClientAuthenticationITests extends AbstractLdapTemplateI
 	@Category(NoAdTests.class)
 	public void testAuthenticateWithLdapQueryAndMapper() {
 		LdapQuery query = LdapQueryBuilder.query().where("objectclass").is("person").and("uid").is("some.person3");
-		DirContextOperations ctx = this.tested.authenticate().query(query).password("password")
-				.execute(new LookupAttemptingCallback());
+		DirContextOperations ctx = this.tested.authenticate()
+			.query(query)
+			.password("password")
+			.execute(new LookupAttemptingCallback());
 
 		assertThat(ctx).isNotNull();
 		assertThat(ctx.getStringAttribute("uid")).isEqualTo("some.person3");
@@ -126,7 +128,9 @@ public class DefaultLdapClientAuthenticationITests extends AbstractLdapTemplateI
 	public void testAuthenticateWithLdapQueryAndMapperAndInvalidPassword() {
 		LdapQuery query = LdapQueryBuilder.query().where("objectclass").is("person").and("uid").is("some.person3");
 		assertThatExceptionOfType(AuthenticationException.class).isThrownBy(() -> this.tested.authenticate()
-				.query(query).password("invalidpassword").execute(new LookupAttemptingCallback()));
+			.query(query)
+			.password("invalidpassword")
+			.execute(new LookupAttemptingCallback()));
 	}
 
 	@Test
@@ -136,7 +140,7 @@ public class DefaultLdapClientAuthenticationITests extends AbstractLdapTemplateI
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("uid", "some.person3"));
 		LdapQuery query = LdapQueryBuilder.query().filter(filter);
 		assertThatExceptionOfType(AuthenticationException.class)
-				.isThrownBy(() -> this.tested.authenticate().query(query).password("invalidpassword").execute());
+			.isThrownBy(() -> this.tested.authenticate().query(query).password("invalidpassword").execute());
 	}
 
 	@Test
@@ -144,10 +148,10 @@ public class DefaultLdapClientAuthenticationITests extends AbstractLdapTemplateI
 	public void testAuthenticateWithFilterThatDoesNotMatchAnything() {
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person"))
-				.and(new EqualsFilter("uid", "some.person.that.isnt.there"));
+			.and(new EqualsFilter("uid", "some.person.that.isnt.there"));
 		LdapQuery query = LdapQueryBuilder.query().filter(filter);
 		assertThatExceptionOfType(EmptyResultDataAccessException.class)
-				.isThrownBy(() -> this.tested.authenticate().query(query).password("password").execute());
+			.isThrownBy(() -> this.tested.authenticate().query(query).password("password").execute());
 	}
 
 	@Test
@@ -157,7 +161,7 @@ public class DefaultLdapClientAuthenticationITests extends AbstractLdapTemplateI
 		filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter("cn", "Some Person"));
 		LdapQuery query = LdapQueryBuilder.query().filter(filter);
 		assertThatExceptionOfType(IncorrectResultSizeDataAccessException.class)
-				.isThrownBy(() -> this.tested.authenticate().query(query).password("password").execute());
+			.isThrownBy(() -> this.tested.authenticate().query(query).password("password").execute());
 	}
 
 	@Test

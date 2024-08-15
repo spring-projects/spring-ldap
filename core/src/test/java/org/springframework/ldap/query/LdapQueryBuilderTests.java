@@ -103,8 +103,15 @@ public class LdapQueryBuilderTests {
 
 	@Test
 	public void testBuildSimpleAnd() {
-		LdapQuery query = LdapQueryBuilder.query().base("dc=261consulting, dc=com").searchScope(SearchScope.ONELEVEL)
-				.timeLimit(200).countLimit(221).where("objectclass").is("person").and("cn").is("John Doe");
+		LdapQuery query = LdapQueryBuilder.query()
+			.base("dc=261consulting, dc=com")
+			.searchScope(SearchScope.ONELEVEL)
+			.timeLimit(200)
+			.countLimit(221)
+			.where("objectclass")
+			.is("person")
+			.and("cn")
+			.is("John Doe");
 
 		assertThat(query.base()).isEqualTo(LdapUtils.newLdapName("dc=261consulting, dc=com"));
 		assertThat(query.searchScope()).isEqualTo(SearchScope.ONELEVEL);
@@ -122,8 +129,12 @@ public class LdapQueryBuilderTests {
 
 	@Test
 	public void buildAndOrPrecedence() {
-		LdapQuery result = LdapQueryBuilder.query().where("objectclass").is("person").and("cn").is("John Doe")
-				.or(LdapQueryBuilder.query().where("sn").is("Doe"));
+		LdapQuery result = LdapQueryBuilder.query()
+			.where("objectclass")
+			.is("person")
+			.and("cn")
+			.is("John Doe")
+			.or(LdapQueryBuilder.query().where("sn").is("Doe"));
 
 		assertThat(result.filter().encode()).isEqualTo("(|(&(objectclass=person)(cn=John Doe))(sn=Doe))");
 	}
@@ -136,8 +147,10 @@ public class LdapQueryBuilderTests {
 
 	@Test
 	public void buildNestedAnd() {
-		LdapQuery result = LdapQueryBuilder.query().where("objectclass").is("person")
-				.and(LdapQueryBuilder.query().where("sn").is("Doe").or("sn").like("Die"));
+		LdapQuery result = LdapQueryBuilder.query()
+			.where("objectclass")
+			.is("person")
+			.and(LdapQueryBuilder.query().where("sn").is("Doe").or("sn").like("Die"));
 		assertThat(result.filter().encode()).isEqualTo("(&(objectclass=person)(|(sn=Doe)(sn=Die)))");
 	}
 

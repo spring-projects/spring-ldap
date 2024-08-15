@@ -118,7 +118,8 @@ public class LdapTemplateSearchResultNamespaceConfigITests extends AbstractLdapT
 
 		List<Object> list = this.tested.searchForStream(
 				LdapQueryBuilder.query().base(BASE_STRING).where("objectclass").is("person").and("sn").is("Person2"),
-				this.attributesMapper).collect(Collectors.toList());
+				this.attributesMapper)
+			.collect(Collectors.toList());
 		assertThat(list).hasSize(1);
 	}
 
@@ -127,8 +128,13 @@ public class LdapTemplateSearchResultNamespaceConfigITests extends AbstractLdapT
 		this.attributesMapper.setExpectedAttributes(new String[] { "cn" });
 		this.attributesMapper.setExpectedValues(new String[] { "Some Person2" });
 
-		List<Object> list = this.tested.search(LdapQueryBuilder.query().base(BASE_STRING).attributes("cn")
-				.where("objectclass").is("person").and("sn").is("Person2"), this.attributesMapper);
+		List<Object> list = this.tested.search(LdapQueryBuilder.query()
+			.base(BASE_STRING)
+			.attributes("cn")
+			.where("objectclass")
+			.is("person")
+			.and("sn")
+			.is("Person2"), this.attributesMapper);
 		assertThat(list).hasSize(1);
 	}
 
@@ -137,9 +143,15 @@ public class LdapTemplateSearchResultNamespaceConfigITests extends AbstractLdapT
 		this.attributesMapper.setExpectedAttributes(new String[] { "cn" });
 		this.attributesMapper.setExpectedValues(new String[] { "Some Person2" });
 
-		List<Object> list = this.tested.searchForStream(LdapQueryBuilder.query().base(BASE_STRING).attributes("cn")
-				.where("objectclass").is("person").and("sn").is("Person2"), this.attributesMapper)
-				.collect(Collectors.toList());
+		List<Object> list = this.tested
+			.searchForStream(LdapQueryBuilder.query()
+				.base(BASE_STRING)
+				.attributes("cn")
+				.where("objectclass")
+				.is("person")
+				.and("sn")
+				.is("Person2"), this.attributesMapper)
+			.collect(Collectors.toList());
 		assertThat(list).hasSize(1);
 	}
 
@@ -148,9 +160,13 @@ public class LdapTemplateSearchResultNamespaceConfigITests extends AbstractLdapT
 		this.attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		this.attributesMapper.setExpectedValues(ALL_VALUES);
 
-		List<Object> list = this.tested.search(LdapQueryBuilder.query().base(BASE_STRING)
-				.searchScope(SearchScope.ONELEVEL).where("objectclass").is("person").and("sn").is("Person2"),
-				this.attributesMapper);
+		List<Object> list = this.tested.search(LdapQueryBuilder.query()
+			.base(BASE_STRING)
+			.searchScope(SearchScope.ONELEVEL)
+			.where("objectclass")
+			.is("person")
+			.and("sn")
+			.is("Person2"), this.attributesMapper);
 		assertThat(list).isEmpty();
 	}
 
@@ -160,9 +176,14 @@ public class LdapTemplateSearchResultNamespaceConfigITests extends AbstractLdapT
 		this.attributesMapper.setExpectedValues(ALL_VALUES);
 
 		List<Object> list = this.tested
-				.searchForStream(LdapQueryBuilder.query().base(BASE_STRING).searchScope(SearchScope.ONELEVEL)
-						.where("objectclass").is("person").and("sn").is("Person2"), this.attributesMapper)
-				.collect(Collectors.toList());
+			.searchForStream(LdapQueryBuilder.query()
+				.base(BASE_STRING)
+				.searchScope(SearchScope.ONELEVEL)
+				.where("objectclass")
+				.is("person")
+				.and("sn")
+				.is("Person2"), this.attributesMapper)
+			.collect(Collectors.toList());
 		assertThat(list).isEmpty();
 	}
 
@@ -171,9 +192,13 @@ public class LdapTemplateSearchResultNamespaceConfigITests extends AbstractLdapT
 		this.attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		this.attributesMapper.setExpectedValues(ALL_VALUES);
 
-		List<Object> list = this.tested.search(LdapQueryBuilder.query().base("ou=company1,ou=Sweden")
-				.searchScope(SearchScope.ONELEVEL).where("objectclass").is("person").and("sn").is("Person2"),
-				this.attributesMapper);
+		List<Object> list = this.tested.search(LdapQueryBuilder.query()
+			.base("ou=company1,ou=Sweden")
+			.searchScope(SearchScope.ONELEVEL)
+			.where("objectclass")
+			.is("person")
+			.and("sn")
+			.is("Person2"), this.attributesMapper);
 		assertThat(list).hasSize(1);
 	}
 
@@ -182,9 +207,15 @@ public class LdapTemplateSearchResultNamespaceConfigITests extends AbstractLdapT
 		this.attributesMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		this.attributesMapper.setExpectedValues(ALL_VALUES);
 
-		List<Object> list = this.tested.searchForStream(LdapQueryBuilder.query().base("ou=company1,ou=Sweden")
-				.searchScope(SearchScope.ONELEVEL).where("objectclass").is("person").and("sn").is("Person2"),
-				this.attributesMapper).collect(Collectors.toList());
+		List<Object> list = this.tested
+			.searchForStream(LdapQueryBuilder.query()
+				.base("ou=company1,ou=Sweden")
+				.searchScope(SearchScope.ONELEVEL)
+				.where("objectclass")
+				.is("person")
+				.and("sn")
+				.is("Person2"), this.attributesMapper)
+			.collect(Collectors.toList());
 		assertThat(list).hasSize(1);
 	}
 
@@ -205,9 +236,9 @@ public class LdapTemplateSearchResultNamespaceConfigITests extends AbstractLdapT
 		this.attributesMapper.setExpectedValues(ALL_VALUES);
 
 		List<Object> list = this.tested
-				.searchForStream(LdapQueryBuilder.query().where("objectclass").is("person").and("sn").is("Person2"),
-						this.attributesMapper)
-				.collect(Collectors.toList());
+			.searchForStream(LdapQueryBuilder.query().where("objectclass").is("person").and("sn").is("Person2"),
+					this.attributesMapper)
+			.collect(Collectors.toList());
 		assertThat(list).hasSize(1);
 	}
 
@@ -229,7 +260,8 @@ public class LdapTemplateSearchResultNamespaceConfigITests extends AbstractLdapT
 
 		List<Object> list = this.tested.searchForStream(
 				LdapQueryBuilder.query().base("ou=Norway").where("objectclass").is("person").and("sn").is("Person2"),
-				this.attributesMapper).collect(Collectors.toList());
+				this.attributesMapper)
+			.collect(Collectors.toList());
 		assertThat(list).isEmpty();
 	}
 
@@ -355,9 +387,11 @@ public class LdapTemplateSearchResultNamespaceConfigITests extends AbstractLdapT
 	public void testSearchForStream_ContextMapper_LdapQuery() {
 		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		this.contextMapper.setExpectedValues(ALL_VALUES);
-		List<DirContextAdapter> list = this.tested.searchForStream(
-				LdapQueryBuilder.query().base(BASE_NAME).where("objectclass").is("person").and("sn").is("Person2"),
-				this.contextMapper).collect(Collectors.toList());
+		List<DirContextAdapter> list = this.tested
+			.searchForStream(
+					LdapQueryBuilder.query().base(BASE_NAME).where("objectclass").is("person").and("sn").is("Person2"),
+					this.contextMapper)
+			.collect(Collectors.toList());
 		assertThat(list).hasSize(1);
 	}
 
@@ -375,9 +409,9 @@ public class LdapTemplateSearchResultNamespaceConfigITests extends AbstractLdapT
 		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		this.contextMapper.setExpectedValues(ALL_VALUES);
 		List<DirContextAdapter> list = this.tested
-				.searchForStream(LdapQueryBuilder.query().where("objectclass").is("person").and("sn").is("Person2"),
-						this.contextMapper)
-				.collect(Collectors.toList());
+			.searchForStream(LdapQueryBuilder.query().where("objectclass").is("person").and("sn").is("Person2"),
+					this.contextMapper)
+			.collect(Collectors.toList());
 		assertThat(list).hasSize(1);
 	}
 
@@ -385,9 +419,13 @@ public class LdapTemplateSearchResultNamespaceConfigITests extends AbstractLdapT
 	public void testSearch_ContextMapper_LdapQuery_SearchScope() {
 		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		this.contextMapper.setExpectedValues(ALL_VALUES);
-		List<DirContextAdapter> list = this.tested.search(LdapQueryBuilder.query().base(BASE_NAME)
-				.searchScope(SearchScope.ONELEVEL).where("objectclass").is("person").and("sn").is("Person2"),
-				this.contextMapper);
+		List<DirContextAdapter> list = this.tested.search(LdapQueryBuilder.query()
+			.base(BASE_NAME)
+			.searchScope(SearchScope.ONELEVEL)
+			.where("objectclass")
+			.is("person")
+			.and("sn")
+			.is("Person2"), this.contextMapper);
 		assertThat(list).isEmpty();
 	}
 
@@ -396,9 +434,14 @@ public class LdapTemplateSearchResultNamespaceConfigITests extends AbstractLdapT
 		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		this.contextMapper.setExpectedValues(ALL_VALUES);
 		List<DirContextAdapter> list = this.tested
-				.searchForStream(LdapQueryBuilder.query().base(BASE_NAME).searchScope(SearchScope.ONELEVEL)
-						.where("objectclass").is("person").and("sn").is("Person2"), this.contextMapper)
-				.collect(Collectors.toList());
+			.searchForStream(LdapQueryBuilder.query()
+				.base(BASE_NAME)
+				.searchScope(SearchScope.ONELEVEL)
+				.where("objectclass")
+				.is("person")
+				.and("sn")
+				.is("Person2"), this.contextMapper)
+			.collect(Collectors.toList());
 		assertThat(list).isEmpty();
 	}
 
@@ -406,9 +449,13 @@ public class LdapTemplateSearchResultNamespaceConfigITests extends AbstractLdapT
 	public void testSearch_ContextMapper_LdapQuery_SearchScope_CorrectBase() {
 		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		this.contextMapper.setExpectedValues(ALL_VALUES);
-		List<DirContextAdapter> list = this.tested.search(LdapQueryBuilder.query().base("ou=company1,ou=Sweden")
-				.searchScope(SearchScope.ONELEVEL).where("objectclass").is("person").and("sn").is("Person2"),
-				this.contextMapper);
+		List<DirContextAdapter> list = this.tested.search(LdapQueryBuilder.query()
+			.base("ou=company1,ou=Sweden")
+			.searchScope(SearchScope.ONELEVEL)
+			.where("objectclass")
+			.is("person")
+			.and("sn")
+			.is("Person2"), this.contextMapper);
 		assertThat(list).hasSize(1);
 	}
 
@@ -417,17 +464,21 @@ public class LdapTemplateSearchResultNamespaceConfigITests extends AbstractLdapT
 		this.contextMapper.setExpectedAttributes(ALL_ATTRIBUTES);
 		this.contextMapper.setExpectedValues(ALL_VALUES);
 		List<DirContextAdapter> list = this.tested
-				.searchForStream(LdapQueryBuilder.query().base("ou=company1,ou=Sweden")
-						.searchScope(SearchScope.ONELEVEL).where("objectclass").is("person").and("sn").is("Person2"),
-						this.contextMapper)
-				.collect(Collectors.toList());
+			.searchForStream(LdapQueryBuilder.query()
+				.base("ou=company1,ou=Sweden")
+				.searchScope(SearchScope.ONELEVEL)
+				.where("objectclass")
+				.is("person")
+				.and("sn")
+				.is("Person2"), this.contextMapper)
+			.collect(Collectors.toList());
 		assertThat(list).hasSize(1);
 	}
 
 	@Test
 	public void testSearchForContext_LdapQuery() {
 		DirContextOperations result = this.tested
-				.searchForContext(LdapQueryBuilder.query().where("objectclass").is("person").and("sn").is("Person2"));
+			.searchForContext(LdapQueryBuilder.query().where("objectclass").is("person").and("sn").is("Person2"));
 
 		assertThat(result).isNotNull();
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person2");
@@ -435,15 +486,23 @@ public class LdapTemplateSearchResultNamespaceConfigITests extends AbstractLdapT
 
 	@Test(expected = EmptyResultDataAccessException.class)
 	public void testSearchForContext_LdapQuery_SearchScopeNotFound() {
-		this.tested.searchForContext(LdapQueryBuilder.query().searchScope(SearchScope.ONELEVEL).where("objectclass")
-				.is("person").and("sn").is("Person2"));
+		this.tested.searchForContext(LdapQueryBuilder.query()
+			.searchScope(SearchScope.ONELEVEL)
+			.where("objectclass")
+			.is("person")
+			.and("sn")
+			.is("Person2"));
 	}
 
 	@Test
 	public void testSearchForContext_LdapQuery_SearchScope_CorrectBase() {
-		DirContextOperations result = this.tested
-				.searchForContext(LdapQueryBuilder.query().searchScope(SearchScope.ONELEVEL)
-						.base("ou=company1,ou=Sweden").where("objectclass").is("person").and("sn").is("Person2"));
+		DirContextOperations result = this.tested.searchForContext(LdapQueryBuilder.query()
+			.searchScope(SearchScope.ONELEVEL)
+			.base("ou=company1,ou=Sweden")
+			.where("objectclass")
+			.is("person")
+			.and("sn")
+			.is("Person2"));
 
 		assertThat(result).isNotNull();
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person2");

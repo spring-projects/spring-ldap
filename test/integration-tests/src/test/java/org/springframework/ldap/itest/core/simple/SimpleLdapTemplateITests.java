@@ -142,7 +142,7 @@ public class SimpleLdapTemplateITests extends AbstractLdapTemplateIntegrationTes
 	@Test
 	public void testModifyAttributesName() {
 		DirContextOperations ctx = this.ldapTemplate
-				.lookupContext(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden"));
+			.lookupContext(LdapUtils.newLdapName("cn=Some Person,ou=company1,ou=Sweden"));
 
 		ctx.setAttributeValue("description", "updated description");
 		ctx.setAttributeValue("telephoneNumber", "0000001");

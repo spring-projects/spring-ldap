@@ -177,7 +177,8 @@ public class ContextSourceParser implements BeanDefinitionParser {
 		builder.addPropertyValue("password", password);
 
 		BeanDefinitionBuilder urlsBuilder = BeanDefinitionBuilder.rootBeanDefinition(UrlsFactory.class)
-				.setFactoryMethod("urls").addConstructorArgValue(url);
+			.setFactoryMethod("urls")
+			.addConstructorArgValue(url);
 
 		builder.addPropertyValue("urls", urlsBuilder.getBeanDefinition());
 		builder.addPropertyValue("base", ParserUtils.getString(element, ATT_BASE, ""));
@@ -215,7 +216,7 @@ public class ContextSourceParser implements BeanDefinitionParser {
 		BeanDefinition actualContextSourceDefinition = targetContextSourceDefinition;
 		if (!anonymousReadOnly) {
 			BeanDefinitionBuilder proxyBuilder = BeanDefinitionBuilder
-					.rootBeanDefinition(TransactionAwareContextSourceProxy.class);
+				.rootBeanDefinition(TransactionAwareContextSourceProxy.class);
 			proxyBuilder.addConstructorArgValue(targetContextSourceDefinition);
 			actualContextSourceDefinition = proxyBuilder.getBeanDefinition();
 		}
@@ -306,7 +307,7 @@ public class ContextSourceParser implements BeanDefinitionParser {
 		builder.addPropertyValue("testWhileIdle", testWhileIdle);
 
 		BeanDefinitionBuilder validatorBuilder = BeanDefinitionBuilder
-				.rootBeanDefinition(DefaultDirContextValidator.class);
+			.rootBeanDefinition(DefaultDirContextValidator.class);
 		validatorBuilder.addPropertyValue("base", ParserUtils.getString(element, ATT_VALIDATION_QUERY_BASE, ""));
 		validatorBuilder.addPropertyValue("filter",
 				ParserUtils.getString(element, ATT_VALIDATION_QUERY_FILTER, DefaultDirContextValidator.DEFAULT_FILTER));
@@ -342,7 +343,7 @@ public class ContextSourceParser implements BeanDefinitionParser {
 	private void populatePoolValidationProperties(BeanDefinitionBuilder builder, Element element) {
 
 		BeanDefinitionBuilder validatorBuilder = BeanDefinitionBuilder
-				.rootBeanDefinition(org.springframework.ldap.pool2.validation.DefaultDirContextValidator.class);
+			.rootBeanDefinition(org.springframework.ldap.pool2.validation.DefaultDirContextValidator.class);
 		validatorBuilder.addPropertyValue("base", ParserUtils.getString(element, ATT_VALIDATION_QUERY_BASE, ""));
 		validatorBuilder.addPropertyValue("filter", ParserUtils.getString(element, ATT_VALIDATION_QUERY_FILTER,
 				org.springframework.ldap.pool2.validation.DefaultDirContextValidator.DEFAULT_FILTER));

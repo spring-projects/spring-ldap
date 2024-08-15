@@ -164,20 +164,20 @@ public class VirtualListViewControlDirContextProcessorTests {
 		targetType >>= 3;
 		ber.parseLength(); // ignore
 		switch (targetType) {
-		case 0: // byOffset
-			int actualOffset = ber.parseInt();
-			int actualContentCount = ber.parseInt();
-			assertThat(expectedBeforeCount).isEqualTo(actualBeforeCount);
-			assertThat(expectedAfterCount).isEqualTo(actualAfterCount);
-			assertThat(expectedOffset).isEqualTo(actualOffset);
-			assertThat(actualContentCount).isEqualTo(expectedContentCount);
-			break;
+			case 0: // byOffset
+				int actualOffset = ber.parseInt();
+				int actualContentCount = ber.parseInt();
+				assertThat(expectedBeforeCount).isEqualTo(actualBeforeCount);
+				assertThat(expectedAfterCount).isEqualTo(actualAfterCount);
+				assertThat(expectedOffset).isEqualTo(actualOffset);
+				assertThat(actualContentCount).isEqualTo(expectedContentCount);
+				break;
 
-		case 1: // greaterThanOrEqual
-			throw new AssertionFailedError("CHOICE value greaterThanOrEqual not supported");
+			case 1: // greaterThanOrEqual
+				throw new AssertionFailedError("CHOICE value greaterThanOrEqual not supported");
 
-		default:
-			throw new AssertionFailedError("illegal CHOICE value: " + targetType);
+			default:
+				throw new AssertionFailedError("illegal CHOICE value: " + targetType);
 		}
 		byte[] bs = ber.parseOctetString(Ber.ASN_OCTET_STR, null);
 		assertContextId(expectedContextId, bs);

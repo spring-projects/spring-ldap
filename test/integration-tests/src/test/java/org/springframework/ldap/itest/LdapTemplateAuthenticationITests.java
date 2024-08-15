@@ -134,9 +134,11 @@ public class LdapTemplateAuthenticationITests extends AbstractLdapTemplateIntegr
 		final Exception error = errorCallback.getError();
 		assertThat(error).as("collected error should not be null").isNotNull();
 		assertThat(error instanceof AuthenticationException)
-				.as("expected org.springframework.ldap.AuthenticationException").isTrue();
+			.as("expected org.springframework.ldap.AuthenticationException")
+			.isTrue();
 		assertThat(error.getCause() instanceof javax.naming.AuthenticationException)
-				.as("expected javax.naming.AuthenticationException").isTrue();
+			.as("expected javax.naming.AuthenticationException")
+			.isTrue();
 	}
 
 	@Test
@@ -144,7 +146,7 @@ public class LdapTemplateAuthenticationITests extends AbstractLdapTemplateIntegr
 	public void testAuthenticateWithFilterThatDoesNotMatchAnything() {
 		AndFilter filter = new AndFilter();
 		filter.and(new EqualsFilter("objectclass", "person"))
-				.and(new EqualsFilter("uid", "some.person.that.isnt.there"));
+			.and(new EqualsFilter("uid", "some.person.that.isnt.there"));
 		assertThat(this.tested.authenticate("", filter.toString(), "password")).isFalse();
 	}
 

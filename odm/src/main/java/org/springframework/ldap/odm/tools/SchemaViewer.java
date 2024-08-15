@@ -66,9 +66,8 @@ public final class SchemaViewer {
 
 	private enum Flag {
 
-		URL("l", "url"), USERNAME("u", "username"), PASSWORD("p", "password"), OBJECTCLASS("o",
-				"objectclass"), ATTRIBUTE("a",
-						"attribute"), SYNTAX("s", "syntax"), HELP("h", "help"), ERROR("e", "error");
+		URL("l", "url"), USERNAME("u", "username"), PASSWORD("p", "password"), OBJECTCLASS("o", "objectclass"),
+		ATTRIBUTE("a", "attribute"), SYNTAX("s", "syntax"), HELP("h", "help"), ERROR("e", "error");
 
 		private String shortName;
 

@@ -81,12 +81,12 @@ public class ModifyAttributesOperationRecorderTests {
 		given(this.attributesMapperMock.hasMore()).willReturn(true, false);
 		given(this.attributesMapperMock.getAttributesForLookup()).willReturn(new String[] { "attribute1" });
 		given(this.ldapOperationsMock.lookup(expectedName, new String[] { "attribute1" }, this.attributesMapperMock))
-				.willReturn(expectedAttributes);
+			.willReturn(expectedAttributes);
 		given(this.attributesMapperMock.getCollectedAttributes()).willReturn(expectedAttributes);
 
 		// Perform test
 		CompensatingTransactionOperationExecutor operation = this.tested
-				.recordOperation(new Object[] { expectedName, incomingMods });
+			.recordOperation(new Object[] { expectedName, incomingMods });
 
 		// Verify outcome
 		assertThat(operation instanceof ModifyAttributesOperationExecutor).isTrue();

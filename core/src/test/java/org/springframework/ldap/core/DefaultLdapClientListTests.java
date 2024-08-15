@@ -144,7 +144,7 @@ public class DefaultLdapClientListTests {
 		given(this.dirContextMock.list(this.nameMock)).willThrow(pre);
 
 		assertThatExceptionOfType(PartialResultException.class)
-				.isThrownBy(() -> this.tested.list(NAME).toList(NameClassPair::getName));
+			.isThrownBy(() -> this.tested.list(NAME).toList(NameClassPair::getName));
 
 		verify(this.dirContextMock).close();
 	}
@@ -156,7 +156,7 @@ public class DefaultLdapClientListTests {
 		given(this.dirContextMock.list(this.nameMock)).willThrow(pre);
 
 		assertThatExceptionOfType(PartialResultException.class)
-				.isThrownBy(() -> this.tested.list(NAME).toStream(NameClassPair::getName).collect(Collectors.toList()));
+			.isThrownBy(() -> this.tested.list(NAME).toStream(NameClassPair::getName).collect(Collectors.toList()));
 
 		verify(this.dirContextMock).close();
 	}
@@ -202,7 +202,7 @@ public class DefaultLdapClientListTests {
 		javax.naming.LimitExceededException ne = new javax.naming.LimitExceededException();
 		given(this.dirContextMock.list(this.nameMock)).willThrow(ne);
 		assertThatExceptionOfType(LimitExceededException.class)
-				.isThrownBy(() -> this.tested.list(NAME).toList(NameClassPair::getName));
+			.isThrownBy(() -> this.tested.list(NAME).toList(NameClassPair::getName));
 		verify(this.dirContextMock).close();
 	}
 
@@ -212,7 +212,7 @@ public class DefaultLdapClientListTests {
 		javax.naming.LimitExceededException ne = new javax.naming.LimitExceededException();
 		given(this.dirContextMock.list(this.nameMock)).willThrow(ne);
 		assertThatExceptionOfType(LimitExceededException.class)
-				.isThrownBy(() -> this.tested.list(NAME).toStream(NameClassPair::getName).collect(Collectors.toList()));
+			.isThrownBy(() -> this.tested.list(NAME).toStream(NameClassPair::getName).collect(Collectors.toList()));
 		verify(this.dirContextMock).close();
 	}
 

@@ -57,7 +57,7 @@ public class RebindOperationRecorderTests {
 
 		// perform test
 		CompensatingTransactionOperationExecutor result = tested
-				.recordOperation(new Object[] { expectedDn, expectedObject, expectedAttributes });
+			.recordOperation(new Object[] { expectedDn, expectedObject, expectedAttributes });
 		assertThat(result instanceof RebindOperationExecutor).isTrue();
 		RebindOperationExecutor rollbackOperation = (RebindOperationExecutor) result;
 		assertThat(rollbackOperation.getLdapOperations()).isSameAs(this.ldapOperationsMock);

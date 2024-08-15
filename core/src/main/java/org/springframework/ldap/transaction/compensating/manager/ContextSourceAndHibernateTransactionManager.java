@@ -115,7 +115,7 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 	protected void doCommit(DefaultTransactionStatus status) {
 
 		ContextSourceAndHibernateTransactionObject actualTransactionObject = (ContextSourceAndHibernateTransactionObject) status
-				.getTransaction();
+			.getTransaction();
 
 		try {
 			super.doCommit(new DefaultTransactionStatus(actualTransactionObject.getHibernateTransactionObject(),
@@ -147,7 +147,7 @@ public class ContextSourceAndHibernateTransactionManager extends HibernateTransa
 	@Override
 	protected void doRollback(DefaultTransactionStatus status) {
 		ContextSourceAndHibernateTransactionObject actualTransactionObject = (ContextSourceAndHibernateTransactionObject) status
-				.getTransaction();
+			.getTransaction();
 
 		super.doRollback(new DefaultTransactionStatus(actualTransactionObject.getHibernateTransactionObject(),
 				status.isNewTransaction(), status.isNewSynchronization(), status.isReadOnly(), status.isDebug(),

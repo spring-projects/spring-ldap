@@ -104,7 +104,7 @@ public class TransactionAwareDirContextInvocationHandler implements InvocationHa
 	 */
 	void doCloseConnection(DirContext context, ContextSource contextSource) throws javax.naming.NamingException {
 		DirContextHolder transactionContextHolder = (DirContextHolder) TransactionSynchronizationManager
-				.getResource(contextSource);
+			.getResource(contextSource);
 		if (transactionContextHolder == null || transactionContextHolder.getCtx() != context) {
 			log.debug("Closing context");
 			// This is not the transactional context or the transaction is

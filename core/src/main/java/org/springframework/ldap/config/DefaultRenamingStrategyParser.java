@@ -35,14 +35,15 @@ public class DefaultRenamingStrategyParser implements BeanDefinitionParser {
 	@Override
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
 		BeanDefinitionBuilder builder = BeanDefinitionBuilder
-				.rootBeanDefinition(DefaultTempEntryRenamingStrategy.class);
+			.rootBeanDefinition(DefaultTempEntryRenamingStrategy.class);
 
 		builder.addPropertyValue("tempSuffix",
 				ParserUtils.getString(element, ATT_TEMP_SUFFIX, DefaultTempEntryRenamingStrategy.DEFAULT_TEMP_SUFFIX));
 
 		AbstractBeanDefinition beanDefinition = builder.getBeanDefinition();
-		parserContext.getContainingBeanDefinition().getPropertyValues().addPropertyValue("renamingStrategy",
-				beanDefinition);
+		parserContext.getContainingBeanDefinition()
+			.getPropertyValues()
+			.addPropertyValue("renamingStrategy", beanDefinition);
 
 		return beanDefinition;
 	}
