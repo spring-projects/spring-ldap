@@ -6,7 +6,7 @@ updates:
     directory: /
     schedule:
       interval: daily
-      time: '03:00'
+      time: '03:40'
       timezone: Etc/UTC
     labels:
       - 'type: dependency-upgrade'
