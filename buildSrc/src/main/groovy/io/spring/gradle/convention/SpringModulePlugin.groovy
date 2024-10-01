@@ -40,7 +40,6 @@ class SpringModulePlugin extends AbstractSpringJavaPlugin {
 		if (!Utils.isRelease(project)) {
 			deployArtifacts.dependsOn project.tasks.artifactoryPublish
 		}
-		project.java.sourceCompatibility = JavaVersion.VERSION_17
 	}
 
 }
