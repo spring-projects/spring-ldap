@@ -21,6 +21,17 @@ jobs:
       java-version: ${{ matrix.jdk }}
       distribution: temurin
     secrets: inherit
+  test:
+    name: Test Against Snapshots
+    uses: spring-io/spring-security-release-tools/.github/workflows/test.yml@v1
+    strategy:
+      matrix:
+        include:
+          - java-version: 21-ea
+          - java-version: 17
+    with:
+      java-version: ${{ matrix.java-version }}
+      test-args: --refresh-dependencies -PforceMavenRepositories=snapshot -PisOverrideVersionCatalog -PtestToolchain=17 -PspringFrameworkVersion=5.3.+ -PspringDataVersion=2021.1.+ --stacktrace
   deploy-artifacts:
     name: Deploy Artifacts
     needs: [ build ]
