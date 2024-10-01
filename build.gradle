@@ -69,6 +69,13 @@ s101 {
 	configurationDirectory = project.file("etc/s101")
 }
 
+develocity {
+    buildScan {
+        termsOfUseUrl = 'https://gradle.com/help/legal-terms-of-use'
+        termsOfUseAgree = 'yes'
+    }
+}
+
 allprojects {
         if (!['spring-ldap-bom', 'spring-security-docs'].contains(project.name)) {
                 apply plugin: 'io.spring.javaformat'
