@@ -27,7 +27,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - java-version: 21-ea
           - java-version: 17
     with:
       java-version: ${{ matrix.java-version }}
