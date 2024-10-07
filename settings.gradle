@@ -35,9 +35,6 @@ include 'test/integration-tests'
 include 'test/integration-tests-openldap'
 include 'test/integration-tests-sunone'
 include 'test/integration-tests-ad'
-include 'samples/plain'
-include 'samples/odm'
-include 'samples/boot'
 
 
 rootProject.children.each { p->
