@@ -63,6 +63,10 @@ public class PersonWithDnAnnotations {
 	@Attribute(name = "entryUUID", readonly = true)
 	private String entryUuid;
 
+	// gh-446
+	@Attribute(name = "creatorsName")
+	private String creatorsName;
+
 	public Name getDn() {
 		return this.dn;
 	}
@@ -129,6 +133,10 @@ public class PersonWithDnAnnotations {
 
 	public String getEntryUuid() {
 		return this.entryUuid;
+	}
+
+	public String getCreatorsName() {
+		return this.creatorsName;
 	}
 
 }
