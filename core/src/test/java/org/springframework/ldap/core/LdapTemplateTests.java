@@ -23,6 +23,7 @@ import javax.naming.CompositeName;
 import javax.naming.Name;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
@@ -60,6 +61,7 @@ import static org.mockito.BDDMockito.mock;
 import static org.mockito.BDDMockito.never;
 import static org.mockito.BDDMockito.times;
 import static org.mockito.BDDMockito.verify;
+import static org.mockito.BDDMockito.willAnswer;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
 
@@ -1151,56 +1153,68 @@ public class LdapTemplateTests {
 
 	@Test
 	public void testUpdateWithIdSpecified() throws NamingException {
-		given(this.contextSourceMock.getReadOnlyContext()).willReturn(this.dirContextMock);
-		given(this.contextSourceMock.getReadWriteContext()).willReturn(this.dirContextMock);
+		MockDirContext dirContext = new MockDirContext();
 		LdapName expectedName = LdapUtils.newLdapName("ou=someOu");
-
-		ModificationItem[] expectedModificationItems = new ModificationItem[0];
-		DirContextOperations ctxMock = mock(DirContextOperations.class);
-		given(ctxMock.getDn()).willReturn(expectedName);
-		given(ctxMock.isUpdateMode()).willReturn(true);
-		given(ctxMock.getModificationItems()).willReturn(expectedModificationItems);
-
+		dirContext.bind(expectedName, TestDirContextAdapters.forUpdate(expectedName));
 		Object expectedObject = new Object();
+		Attribute added = TestNameAwareAttributes.attribute("someName", "someValue");
+		ModificationItem[] expectedModificationItems = { TestModificationItems.add(added) };
+
+		ArgumentCaptor<LdapDataEntry> entryCaptor = ArgumentCaptor.forClass(LdapDataEntry.class);
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(dirContext);
+		given(this.contextSourceMock.getReadWriteContext()).willReturn(dirContext);
 		given(this.odmMock.getId(expectedObject)).willReturn(expectedName);
 		given(this.odmMock.getCalculatedId(expectedObject)).willReturn(null);
-
-		given(this.dirContextMock.lookup(expectedName)).willReturn(ctxMock);
+		given(this.odmMock.manageClass(Object.class)).willReturn(new String[0]);
+		willAnswer((invocation) -> {
+			LdapDataEntry entry = invocation.getArgument(1);
+			entry.addAttributeValue(added.getID(), added.get());
+			return null;
+		}).given(this.odmMock).mapToLdapDataEntry(eq(expectedObject), entryCaptor.capture());
 
 		this.tested.update(expectedObject);
 
-		verify(this.odmMock, never()).setId(expectedObject, expectedName);
-		verify(this.odmMock).mapToLdapDataEntry(expectedObject, ctxMock);
-		verify(this.dirContextMock).modifyAttributes(expectedName, expectedModificationItems);
-
-		verify(this.dirContextMock, times(2)).close();
+		verify(this.odmMock, never()).setId(any(), any());
+		DirContextOperations operations = (DirContextOperations) entryCaptor.getValue();
+		assertEqualModificationItems(operations.getModificationItems(), expectedModificationItems);
+		assertThat(dirContext.isClosed()).isTrue();
+		assertThat(dirContext.getAttributes(expectedName).size()).isEqualTo(2);
 	}
 
 	@Test
 	public void testUpdateWithIdCalculated() throws NamingException {
-		given(this.contextSourceMock.getReadOnlyContext()).willReturn(this.dirContextMock);
-		given(this.contextSourceMock.getReadWriteContext()).willReturn(this.dirContextMock);
+		MockDirContext dirContext = new MockDirContext();
 		LdapName expectedName = LdapUtils.newLdapName("ou=someOu");
-
-		ModificationItem[] expectedModificationItems = new ModificationItem[0];
-		DirContextOperations ctxMock = mock(DirContextOperations.class);
-		given(ctxMock.getDn()).willReturn(expectedName);
-		given(ctxMock.isUpdateMode()).willReturn(true);
-		given(ctxMock.getModificationItems()).willReturn(expectedModificationItems);
-
+		dirContext.bind(expectedName, TestDirContextAdapters.forUpdate(expectedName));
 		Object expectedObject = new Object();
+		Attribute added = TestNameAwareAttributes.attribute("someName", "someValue");
+		ModificationItem[] expectedModificationItems = { TestModificationItems.add(added) };
+
+		ArgumentCaptor<DirContextOperations> entryCaptor = ArgumentCaptor.forClass(DirContextOperations.class);
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(dirContext);
+		given(this.contextSourceMock.getReadWriteContext()).willReturn(dirContext);
 		given(this.odmMock.getId(expectedObject)).willReturn(null);
 		given(this.odmMock.getCalculatedId(expectedObject)).willReturn(expectedName);
-
-		given(this.dirContextMock.lookup(expectedName)).willReturn(ctxMock);
+		given(this.odmMock.manageClass(Object.class)).willReturn(new String[0]);
+		willAnswer((invocation) -> {
+			LdapDataEntry entry = invocation.getArgument(1);
+			entry.addAttributeValue(added.getID(), added.get());
+			return null;
+		}).given(this.odmMock).mapToLdapDataEntry(eq(expectedObject), entryCaptor.capture());
 
 		this.tested.update(expectedObject);
 
 		verify(this.odmMock).setId(expectedObject, expectedName);
-		verify(this.odmMock).mapToLdapDataEntry(expectedObject, ctxMock);
-		verify(this.dirContextMock).modifyAttributes(expectedName, expectedModificationItems);
+		assertEqualModificationItems(entryCaptor.getValue().getModificationItems(), expectedModificationItems);
+		assertThat(dirContext.isClosed()).isTrue();
+		assertThat(dirContext.getAttributes(expectedName).size()).isEqualTo(2);
+	}
 
-		verify(this.dirContextMock, times(2)).close();
+	private static void assertEqualModificationItems(ModificationItem[] actual, ModificationItem[] expected) {
+		assertThat(actual).hasSize(expected.length);
+		for (int i = 0; i < actual.length; i++) {
+			TestModificationItems.assertEquals(actual[i], expected[i]);
+		}
 	}
 
 	@Test
