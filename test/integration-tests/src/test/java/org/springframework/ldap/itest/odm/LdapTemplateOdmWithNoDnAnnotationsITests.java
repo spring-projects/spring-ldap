@@ -169,6 +169,8 @@ public class LdapTemplateOdmWithNoDnAnnotationsITests extends AbstractLdapTempla
 		person.setDesc(Arrays.asList("New Description"));
 		String entryUuid = person.getEntryUuid();
 		assertThat(entryUuid).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
+		String creatorsName = person.getCreatorsName();
+		assertThat(creatorsName).describedAs("The operational attribute 'creatorsName' was not set").isNotEmpty();
 		this.tested.update(person);
 
 		person = this.tested.findOne(LdapQueryBuilder.query().where("cn").is("Some Person3"), Person.class);

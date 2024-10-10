@@ -57,6 +57,10 @@ public class Person implements Persistable<Name> {
 	@Attribute(name = "entryUUID", readonly = true)
 	private String entryUuid;
 
+	// gh-446
+	@Attribute(name = "creatorsName")
+	private String creatorsName;
+
 	@Override
 	public Name getId() {
 		return getDn();
@@ -121,6 +125,10 @@ public class Person implements Persistable<Name> {
 
 	public String getEntryUuid() {
 		return this.entryUuid;
+	}
+
+	public String getCreatorsName() {
+		return this.creatorsName;
 	}
 
 }

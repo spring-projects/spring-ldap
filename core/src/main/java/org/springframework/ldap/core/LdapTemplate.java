@@ -1674,10 +1674,16 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
 			Assert.notNull(id, String.format("Unable to determine id for entry %s", entry.toString()));
 
-			DirContextOperations context = lookupContext(id);
+			String[] attributes = this.odm.manageClass(entry.getClass());
+			DirContextAdapter context = lookup(id, attributes, cast());
+			context.setUpdateMode(true);
 			this.odm.mapToLdapDataEntry(entry, context);
 			modifyAttributes(context);
 		}
+	}
+
+	private <T> ContextMapper<T> cast() {
+		return (ctx) -> (T) ctx;
 	}
 
 	/**
