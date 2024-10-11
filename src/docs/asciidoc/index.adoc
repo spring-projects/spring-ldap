@@ -1094,16 +1094,13 @@ Fields annotated with `@DnAttribute` are automatically populated with the approp
 
 Consider a class with the following annotation:
 
-[tabs]
-======
-Java::
-+
+====
 [source,java,role="primary"]
 ----
 @DnAttribute(name="uid")
 String uid;
 ----
-=====
+====
 
 and a DN like the following:
 
@@ -1123,10 +1120,7 @@ Only fields of type `String` can be annotated with `@DnAttribute`. Other types a
 
 You can alternatively supply an index like so:
 
-[tabs]
-======
-Java::
-+
+====
 [source,java,role="primary"]
 ----
 @DnAttribute(index=1)
@@ -1135,7 +1129,7 @@ String uid;
 @DnAttribute(index=0)
 String department;
 ----
-=====
+====
 
 which is handy for DNs that have multiple components:
 
