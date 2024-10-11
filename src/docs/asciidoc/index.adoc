@@ -1091,9 +1091,68 @@ The `@Attribute` annotation is used to map object class fields to entity fields.
 
 The `@DnAttribute` annotation is used to map object class fields to and from components in the distinguished name of an entry.
 Fields annotated with `@DnAttribute` are automatically populated with the appropriate value from the distinguished name when an entry is read from the directory tree.
+
+Consider a class with the following annotation:
+
+[tabs]
+======
+Java::
++
+[source,java,role="primary"]
+----
+@DnAttribute(name="uid")
+String uid;
+----
+=====
+
+and a DN like the following:
+
+====
+[source,bash]
+----
+uid=carla,dc=springframework,dc=org
+----
+====
+
+Then Spring LDAP will populate `uid` using `uid=carla` instead of looking for a `uid` attribute.
+
+[NOTE]
+----
 Only fields of type `String` can be annotated with `@DnAttribute`. Other types are not supported.
-If the `index` attribute of all `@DnAttribute` annotations in a class is specified, the DN can also be automatically calculated when creating and updating entries.
+----
+
+You can alternatively supply an index like so:
+
+[tabs]
+======
+Java::
++
+[source,java,role="primary"]
+----
+@DnAttribute(index=1)
+String uid;
+
+@DnAttribute(index=0)
+String department;
+----
+=====
+
+which is handy for DNs that have multiple components:
+
+====
+[source,bash]
+----
+uid=carla,department=engineering,dc=springframework,dc=org
+----
+====
+
+Using an `index` also allows Spring LDAP to compute the DN for you when creating or locating an entity for update or deletion.
 For update scenarios, this also automatically takes care of moving entries in the tree if attributes that are part of the distinguished name have changed.
+
+[NOTE]
+----
+Note that while both attributes are present on `@DnAttribute`, if `index` is specified, then `name` is ignored.
+----
 
 The `@Transient` annotation indicates that the field should be ignored by the object directory mapping and not mapped to an underlying LDAP property. Note that if a `@DnAttribute` is not to be bound to an `Attribute`. That is, it is only part of the Distinguished Name and not represented by an object attribute. It must also be annotated with `@Transient`.
 
