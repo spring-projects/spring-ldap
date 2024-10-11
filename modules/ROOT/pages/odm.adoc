@@ -48,11 +48,62 @@ Finally, `@Attribute` also provides the type declaration, which lets you indicat
 Third, the `@Transient` annotation indicates that the given entity field does not map to an LDAP attribute.
 
 Finally, the `@DnAttribute` annotation additionally maps entity fields to components of an entry's distinguished name.
-Only fields of type `String` can be annotated with `@DnAttribute`. Other types are not supported.
 
-[TIP]
-When the `index` attribute of all `@DnAttribute` annotations in a class is specified, the DN can also be automatically calculated when creating and updating entries.
+Consider a class with the following annotation:
+
+====
+[source,java,role="primary"]
+----
+@DnAttribute(name="uid")
+String uid;
+----
+====
+
+and a DN like the following:
+
+====
+[source,bash]
+----
+uid=carla,dc=springframework,dc=org
+----
+====
+
+Then Spring LDAP will populate `uid` using `uid=carla` instead of looking for a `uid` attribute.
+
+[NOTE]
+----
+Only fields of type `String` can be annotated with `@DnAttribute`. Other types are not supported.
+----
+
+You can alternatively supply an index like so:
+
+====
+[source,java,role="primary"]
+----
+@DnAttribute(index=1)
+String uid;
+
+@DnAttribute(index=0)
+String department;
+----
+====
+
+which is handy for DNs that have multiple components:
+
+====
+[source,bash]
+----
+uid=carla,department=engineering,dc=springframework,dc=org
+----
+====
+
+Using an `index` also allows Spring LDAP to compute the DN for you when creating or locating an entity for update or deletion.
 For update scenarios, this also automatically takes care of moving entries in the tree if attributes that are part of the distinguished name have changed.
+
+[NOTE]
+----
+Note that while both attributes are present on `@DnAttribute`, if `index` is specified, then `name` is ignored.
+----
 
 [NOTE]
 Remember that all fields are mapped to LDAP attributes by default.
