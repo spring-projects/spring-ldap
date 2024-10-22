@@ -63,7 +63,7 @@ dependencies {
 		api "org.slf4j:slf4j-api:1.7.36"
 		api "org.slf4j:slf4j-log4j12:1.7.36"
 		api "org.springframework.security:spring-security-config:5.8.14"
-		api "org.springframework.security:spring-security-core:5.8.14"
+		api "org.springframework.security:spring-security-core:5.8.15"
 		api "org.springframework.security:spring-security-ldap:5.8.14"
 	}
 }
