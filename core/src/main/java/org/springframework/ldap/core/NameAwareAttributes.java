@@ -17,6 +17,7 @@
 package org.springframework.ldap.core;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.naming.NamingEnumeration;
@@ -67,7 +68,7 @@ public final class NameAwareAttributes implements Attributes {
 	@Override
 	public NameAwareAttribute get(String attrID) {
 		Assert.hasLength(attrID, "Attribute ID must not be empty");
-		return this.attributes.get(attrID.toLowerCase());
+		return this.attributes.get(attrID.toLowerCase(Locale.ROOT));
 	}
 
 	@Override
@@ -84,7 +85,7 @@ public final class NameAwareAttributes implements Attributes {
 	public Attribute put(String attrID, Object val) {
 		Assert.hasLength(attrID, "Attribute ID must not be empty");
 		NameAwareAttribute newAttribute = new NameAwareAttribute(attrID, val);
-		this.attributes.put(attrID.toLowerCase(), newAttribute);
+		this.attributes.put(attrID.toLowerCase(Locale.ROOT), newAttribute);
 
 		return newAttribute;
 	}
@@ -93,7 +94,7 @@ public final class NameAwareAttributes implements Attributes {
 	public Attribute put(Attribute attr) {
 		Assert.notNull(attr, "Attribute must not be null");
 		NameAwareAttribute newAttribute = new NameAwareAttribute(attr);
-		this.attributes.put(attr.getID().toLowerCase(), newAttribute);
+		this.attributes.put(attr.getID().toLowerCase(Locale.ROOT), newAttribute);
 
 		return newAttribute;
 	}
@@ -101,7 +102,7 @@ public final class NameAwareAttributes implements Attributes {
 	@Override
 	public Attribute remove(String attrID) {
 		Assert.hasLength(attrID, "Attribute ID must not be empty");
-		return this.attributes.remove(attrID.toLowerCase());
+		return this.attributes.remove(attrID.toLowerCase(Locale.ROOT));
 	}
 
 	@Override

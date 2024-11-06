@@ -27,6 +27,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -340,7 +341,7 @@ public final class SchemaToJava {
 
 		for (String objectClassFlag : objectClassesFlag.split(",")) {
 			if (objectClassFlag.length() > 0) {
-				objectClasses.add(objectClassFlag.toLowerCase().trim());
+				objectClasses.add(objectClassFlag.toLowerCase(Locale.ROOT).trim());
 			}
 		}
 
