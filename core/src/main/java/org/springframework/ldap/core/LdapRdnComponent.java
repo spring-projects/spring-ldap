@@ -19,6 +19,7 @@ package org.springframework.ldap.core;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,10 +76,10 @@ public class LdapRdnComponent implements Comparable, Serializable {
 
 		String caseFold = System.getProperty(DistinguishedName.KEY_CASE_FOLD_PROPERTY);
 		if (!StringUtils.hasText(caseFold) || caseFold.equals(DistinguishedName.KEY_CASE_FOLD_LOWER)) {
-			this.key = key.toLowerCase();
+			this.key = key.toLowerCase(Locale.ROOT);
 		}
 		else if (caseFold.equals(DistinguishedName.KEY_CASE_FOLD_UPPER)) {
-			this.key = key.toUpperCase();
+			this.key = key.toUpperCase(Locale.ROOT);
 		}
 		else if (caseFold.equals(DistinguishedName.KEY_CASE_FOLD_NONE)) {
 			this.key = key;
@@ -88,7 +89,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 					+ "; expected \"" + DistinguishedName.KEY_CASE_FOLD_LOWER + "\", \""
 					+ DistinguishedName.KEY_CASE_FOLD_UPPER + "\", or \"" + DistinguishedName.KEY_CASE_FOLD_NONE
 					+ "\"");
-			this.key = key.toLowerCase();
+			this.key = key.toLowerCase(Locale.ROOT);
 		}
 		if (decodeValue) {
 			this.value = LdapEncoder.nameDecode(value);
@@ -203,7 +204,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	 */
 	@Override
 	public int hashCode() {
-		return this.key.toUpperCase().hashCode() ^ this.value.toUpperCase().hashCode();
+		return this.key.toUpperCase(Locale.ROOT).hashCode() ^ this.value.toUpperCase(Locale.ROOT).hashCode();
 	}
 
 	/*
@@ -228,9 +229,9 @@ public class LdapRdnComponent implements Comparable, Serializable {
 
 		// It's safe to compare directly against key and value,
 		// because they are validated not to be null on instance creation.
-		int keyCompare = this.key.toLowerCase().compareTo(that.key.toLowerCase());
+		int keyCompare = this.key.toLowerCase(Locale.ROOT).compareTo(that.key.toLowerCase(Locale.ROOT));
 		if (keyCompare == 0) {
-			return this.value.toLowerCase().compareTo(that.value.toLowerCase());
+			return this.value.toLowerCase(Locale.ROOT).compareTo(that.value.toLowerCase(Locale.ROOT));
 		}
 		else {
 			return keyCompare;

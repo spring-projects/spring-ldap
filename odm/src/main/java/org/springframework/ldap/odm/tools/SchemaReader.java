@@ -17,6 +17,7 @@
 package org.springframework.ldap.odm.tools;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.naming.NamingEnumeration;
@@ -156,7 +157,7 @@ import org.springframework.ldap.odm.tools.SyntaxToJavaClass.ClassInfo;
 				Attribute currentAttribute = valuesEnumeration.nextElement();
 
 				// Get the attribute name and lower case it (as this is all case indep)
-				String currentId = currentAttribute.getID().toUpperCase();
+				String currentId = currentAttribute.getID().toUpperCase(Locale.ROOT);
 
 				// Is this a MUST, MAY or SUP attribute
 				SchemaAttributeType type = getSchemaAttributeType(currentId);
@@ -168,7 +169,7 @@ import org.springframework.ldap.odm.tools.SyntaxToJavaClass.ClassInfo;
 					switch (type) {
 						case SUP:
 							// Its a super class
-							String lowerCased = currentValue.toLowerCase();
+							String lowerCased = currentValue.toLowerCase(Locale.ROOT);
 							if (!schema.getObjectClass().contains(lowerCased)) {
 								supList.add(lowerCased);
 							}
