@@ -57,7 +57,7 @@ dependencies {
 		api "org.assertj:assertj-core:3.21.0"
 		api "org.easymock:easymock:2.5.2"
 		api "org.freemarker:freemarker:2.3.33"
-		api "org.hibernate:hibernate-core:5.6.9.Final"
+		api "org.hibernate:hibernate-core:5.6.15.Final"
 		api "org.hsqldb:hsqldb:2.6.1"
 		api "junit:junit:4.13.2"
 		api "org.mockito:mockito-core:3.12.4"
