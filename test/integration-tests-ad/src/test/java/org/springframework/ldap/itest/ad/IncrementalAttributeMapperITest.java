@@ -39,6 +39,7 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -107,7 +108,7 @@ public class IncrementalAttributeMapperITest extends AbstractJUnit4SpringContext
         ctx.setAttributeValue("userPrincipalName", username + "@example.com");
         ctx.setAttributeValue("cn", username);
         ctx.setAttributeValue("description", "Dummy user");
-        ctx.setAttributeValue("sAMAccountName", username.toUpperCase() + "." + username.toUpperCase());
+        ctx.setAttributeValue("sAMAccountName", username.toUpperCase(Locale.ENGLISH) + "." + username.toUpperCase(Locale.ENGLISH));
         ctx.setAttributeValue("userAccountControl", "512");
 
         String newQuotedPassword = "\"" + DEFAULT_PASSWORD + "\"";

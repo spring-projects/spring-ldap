@@ -17,10 +17,10 @@
 package org.springframework.ldap.support;
 
 import java.util.Base64;
+import java.util.Locale;
 
 import org.springframework.ldap.BadLdapGrammarException;
 import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
 
 
 /**
@@ -82,7 +82,7 @@ public final class LdapEncoder {
 
     protected static String toTwoCharHex(char c) {
 
-        String raw = Integer.toHexString(c).toUpperCase();
+        String raw = Integer.toHexString(c).toUpperCase(Locale.ROOT);
 
         if (raw.length() > 1) {
             return raw;

@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.odm.core.impl;
 
+import java.util.Locale;
+
 import org.springframework.util.Assert;
 
 // A case independent String wrapper.
@@ -26,7 +28,7 @@ import org.springframework.util.Assert;
     public CaseIgnoreString(String string) {
         Assert.notNull(string, "string must not be null");
         this.string = string;
-        hashCode = string.toUpperCase().hashCode();
+        hashCode = string.toUpperCase(Locale.ROOT).hashCode();
     }
 
     public boolean equals(Object other) {

@@ -16,13 +16,15 @@
 
 package org.springframework.ldap.core;
 
-import org.springframework.util.Assert;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
-import java.util.HashMap;
-import java.util.Map;
+
+import org.springframework.util.Assert;
 
 /**
  * Used internally to help DirContextAdapter properly handle Names as values.
@@ -65,7 +67,7 @@ public final class NameAwareAttributes implements Attributes {
     @Override
     public NameAwareAttribute get(String attrID) {
         Assert.hasLength(attrID, "Attribute ID must not be empty");
-        return attributes.get(attrID.toLowerCase());
+        return attributes.get(attrID.toLowerCase(Locale.ROOT));
     }
 
     @Override
@@ -82,7 +84,7 @@ public final class NameAwareAttributes implements Attributes {
     public Attribute put(String attrID, Object val) {
         Assert.hasLength(attrID, "Attribute ID must not be empty");
         NameAwareAttribute newAttribute = new NameAwareAttribute(attrID, val);
-        attributes.put(attrID.toLowerCase(), newAttribute);
+        attributes.put(attrID.toLowerCase(Locale.ROOT), newAttribute);
 
         return newAttribute;
     }
@@ -91,7 +93,7 @@ public final class NameAwareAttributes implements Attributes {
     public Attribute put(Attribute attr) {
         Assert.notNull(attr, "Attribute must not be null");
         NameAwareAttribute newAttribute = new NameAwareAttribute(attr);
-        attributes.put(attr.getID().toLowerCase(), newAttribute);
+        attributes.put(attr.getID().toLowerCase(Locale.ROOT), newAttribute);
 
         return newAttribute;
     }
@@ -99,7 +101,7 @@ public final class NameAwareAttributes implements Attributes {
     @Override
     public Attribute remove(String attrID) {
         Assert.hasLength(attrID, "Attribute ID must not be empty");
-        return attributes.remove(attrID.toLowerCase());
+        return attributes.remove(attrID.toLowerCase(Locale.ROOT));
     }
 
     @Override

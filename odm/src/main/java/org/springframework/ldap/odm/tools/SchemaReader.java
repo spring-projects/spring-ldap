@@ -16,15 +16,17 @@
 
 package org.springframework.ldap.odm.tools;
 
-import org.springframework.ldap.odm.tools.SyntaxToJavaClass.ClassInfo;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
-import java.util.HashSet;
-import java.util.Set;
+
+import org.springframework.ldap.odm.tools.SyntaxToJavaClass.ClassInfo;
 
 // Processes LDAP Schema
 /* package */ final class SchemaReader {
@@ -148,7 +150,7 @@ import java.util.Set;
                 Attribute currentAttribute = valuesEnumeration.nextElement();
 
                 // Get the attribute name and lower case it (as this is all case indep)
-                String currentId = currentAttribute.getID().toUpperCase();
+                String currentId = currentAttribute.getID().toUpperCase(Locale.ROOT);
                 
                 // Is this a MUST, MAY or SUP attribute
                 SchemaAttributeType type = getSchemaAttributeType(currentId);
@@ -160,7 +162,7 @@ import java.util.Set;
                     switch (type) {
                         case SUP:
                             // Its a super class
-                            String lowerCased=currentValue.toLowerCase();
+                            String lowerCased=currentValue.toLowerCase(Locale.ROOT);
                             if (!schema.getObjectClass().contains(lowerCased)) {
                                 supList.add(lowerCased);
                             }
