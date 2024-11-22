@@ -65,8 +65,16 @@ public abstract class AbstractSpringJavaPlugin implements Plugin<Project> {
         project.test {
             useJUnitPlatform()
         }
+		project.java.sourceCompatibility = toolchainVersion(project)
 		additionalPlugins(project);
 	}
 
 	protected abstract void additionalPlugins(Project project);
+
+	private Integer toolchainVersion(Project project) {
+		if (project.hasProperty("testToolchain")) {
+			return project.property("testToolchain").toString().toInteger();
+		}
+		return 17;
+	}
 }
