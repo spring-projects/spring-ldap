@@ -13,7 +13,7 @@ This section describes the basics of using Spring LDAP. It contains the followin
 [[spring-ldap-basic-usage-search-lookup-attributesmapper]]
 == Search and Lookup Using `AttributesMapper`
 
-The following example uses an https://docs.spring.io/spring-ldap/docs/current/apidocs/org/springframework/ldap/core/AttributesMapper.html[`AttributesMapper`] to build a List of all the common names of all the person objects.
+The following example uses an https://docs.spring.io/spring-ldap/docs/current/api/org/springframework/ldap/core/AttributesMapper.html[`AttributesMapper`] to build a List of all the common names of all the person objects.
 
 .`AttributesMapper` that returns a single attribute
 ====
