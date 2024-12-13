@@ -83,7 +83,7 @@ dependencies {
 
     implementation 'io.github.gradle-nexus:publish-plugin:1.1.0'
     implementation 'io.projectreactor:reactor-core:3.4.41'
-    implementation ('org.gretty:gretty:4.1.5') {
+    implementation ('org.gretty:gretty:4.1.6') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-loader-tools'
     }
     implementation 'com.apollographql.apollo:apollo-runtime:2.4.6'
