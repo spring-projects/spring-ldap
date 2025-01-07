@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,9 +47,9 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 	private final boolean orderMatters;
 
-	private final Set<Object> values = new LinkedHashSet<Object>();
+	private final Set<Object> values = new LinkedHashSet<>();
 
-	private Map<Name, String> valuesAsNames = new HashMap<Name, String>();
+	private Map<Name, String> valuesAsNames = new HashMap<>();
 
 	/**
 	 * Construct a new instance with the specified id and one value.
@@ -104,7 +104,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 	@Override
 	public NamingEnumeration<?> getAll() {
-		return new IterableNamingEnumeration<Object>(this.values);
+		return new IterableNamingEnumeration<>(this.values);
 	}
 
 	@Override
@@ -162,7 +162,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 			return;
 		}
 
-		Map<Name, String> newValuesAsNames = new HashMap<Name, String>();
+		Map<Name, String> newValuesAsNames = new HashMap<>();
 		for (Object value : this.values) {
 			if (value instanceof String) {
 				String s = (String) value;

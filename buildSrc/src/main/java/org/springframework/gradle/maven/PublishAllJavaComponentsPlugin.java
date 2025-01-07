@@ -15,7 +15,7 @@ public class PublishAllJavaComponentsPlugin implements Plugin<Project> {
 	public void apply(Project project) {
 		project.getPlugins().withType(MavenPublishPlugin.class).all((mavenPublish) -> {
 			PublishingExtension publishing = project.getExtensions().getByType(PublishingExtension.class);
-			publishing.getPublications().create("mavenJava", MavenPublication.class, new Action<MavenPublication>() {
+			publishing.getPublications().create("mavenJava", MavenPublication.class, new Action<>() {
 				@Override
 				public void execute(MavenPublication maven) {
 					project.getPlugins().withType(JavaPlugin.class, (plugin) -> {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ public class PagedSearchITests extends AbstractJUnit4SpringContextTests {
 	@Autowired
 	private ContextSource contextSource;
 
-	private static final AttributesMapper<String> CN_ATTRIBUTES_MAPPER = new AttributesMapper<String>() {
+	private static final AttributesMapper<String> CN_ATTRIBUTES_MAPPER = new AttributesMapper<>() {
 		@Override
 		public String mapFromAttributes(Attributes attributes) throws NamingException {
 			return attributes.get("cn").get().toString();
@@ -77,7 +77,7 @@ public class PagedSearchITests extends AbstractJUnit4SpringContextTests {
 		// There should be three pages of three entries, and one final page with one entry
 		final PagedResultsDirContextProcessor processor = new PagedResultsDirContextProcessor(3);
 
-		SingleContextSource.doWithSingleContext(this.contextSource, new LdapOperationsCallback<Object>() {
+		SingleContextSource.doWithSingleContext(this.contextSource, new LdapOperationsCallback<>() {
 			@Override
 			public Object doWithLdapOperations(LdapOperations operations) {
 				List<String> result = operations.search("ou=People", "(&(objectclass=person))", searchControls,

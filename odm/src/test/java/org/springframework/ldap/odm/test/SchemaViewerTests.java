@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,7 +83,7 @@ public final class SchemaViewerTests {
 		try {
 			System.setErr(new PrintStream(output));
 
-			List<String> commandFlags = new ArrayList<String>(Arrays.asList(commonFlags));
+			List<String> commandFlags = new ArrayList<>(Arrays.asList(commonFlags));
 			commandFlags.addAll(Arrays.asList(flags));
 
 			SchemaViewer.main(commandFlags.toArray(new String[0]));
@@ -114,7 +114,7 @@ public final class SchemaViewerTests {
 	// ensure we get representative test coverage
 	@Test
 	public void testSchemaViewer() throws Exception {
-		new ExecuteRunnable<TestData>().runTests(new RunnableTests<TestData>() {
+		new ExecuteRunnable<TestData>().runTests(new RunnableTests<>() {
 			public void runTest(TestData testData) {
 				String result = runSchemaViewer(testData.flag, testData.value);
 				assertThat(testData.result).isEqualTo(result);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -203,7 +203,7 @@ public class IncrementalAttributeMapperITests extends AbstractJUnit4SpringContex
 		TransactionTemplate transactionTemplate = new TransactionTemplate(this.transactionManager);
 
 		try {
-			transactionTemplate.execute(new TransactionCallback<Object>() {
+			transactionTemplate.execute(new TransactionCallback<>() {
 				@Override
 				public Object doInTransaction(TransactionStatus status) {
 					ModificationItem modificationItem = new ModificationItem(DirContext.ADD_ATTRIBUTE,

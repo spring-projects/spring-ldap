@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import org.springframework.ldap.core.DirContextProcessor;
  */
 public class AggregateDirContextProcessor implements DirContextProcessor {
 
-	private List<DirContextProcessor> dirContextProcessors = new LinkedList<DirContextProcessor>();
+	private List<DirContextProcessor> dirContextProcessors = new LinkedList<>();
 
 	/**
 	 * Add the supplied DirContextProcessor to the list of managed objects.
@@ -59,7 +59,7 @@ public class AggregateDirContextProcessor implements DirContextProcessor {
 	 * set.
 	 */
 	public void setDirContextProcessors(List<DirContextProcessor> dirContextProcessors) {
-		this.dirContextProcessors = new ArrayList<DirContextProcessor>(dirContextProcessors);
+		this.dirContextProcessors = new ArrayList<>(dirContextProcessors);
 	}
 
 	/*

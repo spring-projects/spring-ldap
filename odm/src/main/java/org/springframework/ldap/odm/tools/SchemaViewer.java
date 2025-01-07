@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2023 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -220,7 +220,7 @@ public final class SchemaViewer {
 		String user = cmd.getOptionValue(Flag.USERNAME.getShort(), "");
 		String pass = cmd.getOptionValue(Flag.PASSWORD.getShort(), "");
 
-		Hashtable<String, String> env = new Hashtable<String, String>();
+		Hashtable<String, String> env = new Hashtable<>();
 		env.put(Context.PROVIDER_URL, url);
 		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
 		if (user != null) {

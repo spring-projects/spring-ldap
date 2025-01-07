@@ -12,11 +12,11 @@ import org.gradle.api.publish.maven.plugins.MavenPublishPlugin;
 public class PublishLocalPlugin implements Plugin<Project> {
 	@Override
 	public void apply(Project project) {
-		project.getPlugins().withType(MavenPublishPlugin.class).all(new Action<MavenPublishPlugin>() {
+		project.getPlugins().withType(MavenPublishPlugin.class).all(new Action<>() {
 			@Override
 			public void execute(MavenPublishPlugin mavenPublish) {
 				PublishingExtension publishing = project.getExtensions().getByType(PublishingExtension.class);
-				publishing.getRepositories().maven(new Action<MavenArtifactRepository>() {
+				publishing.getRepositories().maven(new Action<>() {
 					@Override
 					public void execute(MavenArtifactRepository maven) {
 						maven.setName("local");

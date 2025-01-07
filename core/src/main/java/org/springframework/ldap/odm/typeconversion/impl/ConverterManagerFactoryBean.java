@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -166,13 +166,13 @@ public final class ConverterManagerFactoryBean implements FactoryBean {
 	public static final class ConverterConfig {
 
 		// The set of classes the Converter will convert from.
-		private Set<Class<?>> fromClasses = new HashSet<Class<?>>();
+		private Set<Class<?>> fromClasses = new HashSet<>();
 
 		// The (optional) LDAP syntax.
 		private String syntax = null;
 
 		// The set of classes the Converter will convert to.
-		private Set<Class<?>> toClasses = new HashSet<Class<?>>();
+		private Set<Class<?>> toClasses = new HashSet<>();
 
 		// The Converter to use.
 		private Converter converter = null;

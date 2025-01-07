@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 	 */
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	private static final Set<Class<? extends Throwable>> DEFAULT_NONTRANSIENT_EXCEPTIONS = new HashSet<Class<? extends Throwable>>() {
+	private static final Set<Class<? extends Throwable>> DEFAULT_NONTRANSIENT_EXCEPTIONS = new HashSet<>() {
 		{
 			add(CommunicationException.class);
 		}
@@ -95,7 +95,7 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 	private Set<Class<? extends Throwable>> nonTransientExceptions = DEFAULT_NONTRANSIENT_EXCEPTIONS;
 
 	void setNonTransientExceptions(Collection<Class<? extends Throwable>> nonTransientExceptions) {
-		this.nonTransientExceptions = new HashSet<Class<? extends Throwable>>(nonTransientExceptions);
+		this.nonTransientExceptions = new HashSet<>(nonTransientExceptions);
 	}
 
 	/**

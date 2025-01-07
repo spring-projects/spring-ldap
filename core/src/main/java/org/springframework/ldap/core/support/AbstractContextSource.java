@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2024 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,7 +103,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	private boolean pooled = false;
 
-	private Hashtable<String, Object> baseEnv = new Hashtable<String, Object>();
+	private Hashtable<String, Object> baseEnv = new Hashtable<>();
 
 	private Hashtable<String, Object> anonymousEnv;
 
@@ -447,7 +447,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 			LOG.debug("Not using LDAP pooling");
 		}
 
-		Hashtable<String, Object> env = new Hashtable<String, Object>(this.baseEnv);
+		Hashtable<String, Object> env = new Hashtable<>(this.baseEnv);
 
 		env.put(Context.INITIAL_CONTEXT_FACTORY, this.contextFactory.getName());
 		env.put(Context.PROVIDER_URL, assembleProviderUrlString(this.urls));
@@ -563,7 +563,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	 * be used when creating new Context instances.
 	 */
 	public void setBaseEnvironmentProperties(Map<String, Object> baseEnvironmentProperties) {
-		this.baseEnv = new Hashtable<String, Object>(baseEnvironmentProperties);
+		this.baseEnv = new Hashtable<>(baseEnvironmentProperties);
 	}
 
 	protected Hashtable<String, Object> getAnonymousEnv() {
@@ -577,7 +577,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 
 	protected Hashtable<String, Object> getAuthenticatedEnv(String principal, String credentials) {
 		// The authenticated environment should always be rebuilt.
-		Hashtable<String, Object> env = new Hashtable<String, Object>(getAnonymousEnv());
+		Hashtable<String, Object> env = new Hashtable<>(getAnonymousEnv());
 		setupAuthenticatedEnvironment(env, principal, credentials);
 		return env;
 	}

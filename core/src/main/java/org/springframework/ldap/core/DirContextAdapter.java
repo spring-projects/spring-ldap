@@ -237,7 +237,7 @@ public class DirContextAdapter implements DirContextOperations {
 	@Override
 	public String[] getNamesOfModifiedAttributes() {
 
-		List<String> tmpList = new ArrayList<String>();
+		List<String> tmpList = new ArrayList<>();
 
 		if (isUpdateMode()) {
 			for (NameAwareAttribute attribute : this.updatedAttrs) {
@@ -273,7 +273,7 @@ public class DirContextAdapter implements DirContextOperations {
 			return new ModificationItem[0];
 		}
 
-		List<ModificationItem> tmpList = new LinkedList<ModificationItem>();
+		List<ModificationItem> tmpList = new LinkedList<>();
 		for (NameAwareAttribute attribute : this.updatedAttrs) {
 			collectModifications(attribute, tmpList);
 		}
@@ -333,7 +333,7 @@ public class DirContextAdapter implements DirContextOperations {
 		else if (changedAttr.size() > 0) {
 			// Change of multivalue Attribute. Collect additions and removals
 			// individually.
-			List<ModificationItem> myModifications = new LinkedList<ModificationItem>();
+			List<ModificationItem> myModifications = new LinkedList<>();
 			collectModifications(currentAttribute, changedAttr, myModifications);
 
 			if (myModifications.isEmpty()) {
@@ -715,7 +715,7 @@ public class DirContextAdapter implements DirContextOperations {
 	}
 
 	private <T> List<T> collectAttributeValuesAsList(String name, Class<T> clazz) {
-		List<T> list = new LinkedList<T>();
+		List<T> list = new LinkedList<>();
 		LdapUtils.collectAttributeValues(this.originalAttrs, name, list, clazz);
 		return list;
 	}
@@ -726,7 +726,7 @@ public class DirContextAdapter implements DirContextOperations {
 	@Override
 	public SortedSet<String> getAttributeSortedStringSet(String name) {
 		try {
-			TreeSet<String> attrSet = new TreeSet<String>();
+			TreeSet<String> attrSet = new TreeSet<>();
 			LdapUtils.collectAttributeValues(this.originalAttrs, name, attrSet, String.class);
 			return attrSet;
 		}

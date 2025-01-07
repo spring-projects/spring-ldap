@@ -36,7 +36,7 @@ import org.springframework.util.Assert;
  */
 public final class NameAwareAttributes implements Attributes, Iterable<NameAwareAttribute> {
 
-	private Map<String, NameAwareAttribute> attributes = new HashMap<String, NameAwareAttribute>();
+	private Map<String, NameAwareAttribute> attributes = new HashMap<>();
 
 	/**
 	 * Create an empty instance
@@ -75,12 +75,12 @@ public final class NameAwareAttributes implements Attributes, Iterable<NameAware
 
 	@Override
 	public NamingEnumeration<NameAwareAttribute> getAll() {
-		return new IterableNamingEnumeration<NameAwareAttribute>(this.attributes.values());
+		return new IterableNamingEnumeration<>(this.attributes.values());
 	}
 
 	@Override
 	public NamingEnumeration<String> getIDs() {
-		return new IterableNamingEnumeration<String>(this.attributes.keySet());
+		return new IterableNamingEnumeration<>(this.attributes.keySet());
 	}
 
 	/**

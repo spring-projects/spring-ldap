@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,7 +96,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 	}
 
 	// A map of managed classes to to meta data about those classes
-	private final ConcurrentMap<Class<?>, EntityData> metaDataMap = new ConcurrentHashMap<Class<?>, EntityData>();
+	private final ConcurrentMap<Class<?>, EntityData> metaDataMap = new ConcurrentHashMap<>();
 
 	private EntityData getEntityData(Class<?> managedClass) {
 		EntityData result = this.metaDataMap.get(managedClass);
@@ -110,7 +110,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 	public String[] manageClass(Class<?> clazz) {
 		// This throws exception if data is invalid
 		EntityData entityData = getEntityData(clazz);
-		Set<String> managedAttributeNames = new HashSet<String>();
+		Set<String> managedAttributeNames = new HashSet<>();
 		// extract all relevant attributes
 		for (Field field : entityData.metaData) {
 			AttributeMetaData attributeMetaData = entityData.metaData.getAttribute(field);
@@ -253,7 +253,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 	private void populateMultiValueAttribute(Object entry, LdapDataEntry context, Field field,
 			AttributeMetaData attributeInfo, Class<?> targetClass) throws IllegalAccessException {
 		// We need to build up a list of of the values
-		List<Object> attributeValues = new ArrayList<Object>();
+		List<Object> attributeValues = new ArrayList<>();
 		// Get the list of values
 		Collection<?> fieldValues = (Collection<?>) field.get(entry);
 		// Ignore null lists
@@ -300,7 +300,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 			result = clazz.newInstance();
 
 			// Build a map of JNDI attribute names to values
-			Map<CaseIgnoreString, Attribute> attributeValueMap = new HashMap<CaseIgnoreString, Attribute>();
+			Map<CaseIgnoreString, Attribute> attributeValueMap = new HashMap<>();
 			// Get a NamingEnumeration to loop through the JNDI attributes in the entry
 			Attributes attributes = context.getAttributes();
 			NamingEnumeration<? extends Attribute> attributesEnumeration = attributes.getAll();
@@ -318,7 +318,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 			Attribute ocAttribute = attributeValueMap.get(OBJECT_CLASS_ATTRIBUTE_CI);
 			if (ocAttribute != null) {
 				// Get all object class values from the JNDI attribute
-				Set<CaseIgnoreString> objectClassesFromJndi = new HashSet<CaseIgnoreString>();
+				Set<CaseIgnoreString> objectClassesFromJndi = new HashSet<>();
 				NamingEnumeration<?> objectClassesFromJndiEnum = ocAttribute.getAll();
 				while (objectClassesFromJndiEnum.hasMoreElements()) {
 					objectClassesFromJndi.add(new CaseIgnoreString((String) objectClassesFromJndiEnum.nextElement()));

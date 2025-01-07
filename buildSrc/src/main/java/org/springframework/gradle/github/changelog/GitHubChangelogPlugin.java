@@ -40,7 +40,7 @@ public class GitHubChangelogPlugin implements Plugin<Project> {
 	public void apply(Project project) {
 		createRepository(project);
 		createChangelogGeneratorConfiguration(project);
-		project.getTasks().register("generateChangelog", JavaExec.class, new Action<JavaExec>() {
+		project.getTasks().register("generateChangelog", JavaExec.class, new Action<>() {
 			@Override
 			public void execute(JavaExec generateChangelog) {
 				File outputFile = project.file(Paths.get(project.getBuildDir().getPath(), RELEASE_NOTES_PATH));
@@ -49,7 +49,7 @@ public class GitHubChangelogPlugin implements Plugin<Project> {
 				generateChangelog.setDescription("Generates the changelog");
 				generateChangelog.setWorkingDir(project.getRootDir());
 				generateChangelog.classpath(project.getConfigurations().getAt(CHANGELOG_GENERATOR_CONFIGURATION_NAME));
-				generateChangelog.doFirst(new Action<Task>() {
+				generateChangelog.doFirst(new Action<>() {
 					@Override
 					public void execute(Task task) {
 						generateChangelog.args("--spring.config.location=scripts/release/release-notes-sections.yml", project.property("nextVersion"), outputFile.toString());
@@ -60,10 +60,10 @@ public class GitHubChangelogPlugin implements Plugin<Project> {
 	}
 
 	private void createChangelogGeneratorConfiguration(Project project) {
-		project.getConfigurations().create(CHANGELOG_GENERATOR_CONFIGURATION_NAME, new Action<Configuration>() {
+		project.getConfigurations().create(CHANGELOG_GENERATOR_CONFIGURATION_NAME, new Action<>() {
 			@Override
 			public void execute(Configuration configuration) {
-				configuration.defaultDependencies(new Action<DependencySet>() {
+				configuration.defaultDependencies(new Action<>() {
 					@Override
 					public void execute(DependencySet dependencies) {
 						dependencies.add(project.getDependencies().create("spring-io:github-changelog-generator:0.0.6"));
@@ -74,11 +74,11 @@ public class GitHubChangelogPlugin implements Plugin<Project> {
 	}
 
 	private void createRepository(Project project) {
-		IvyArtifactRepository repository = project.getRepositories().ivy(new Action<IvyArtifactRepository>() {
+		IvyArtifactRepository repository = project.getRepositories().ivy(new Action<>() {
 			@Override
 			public void execute(IvyArtifactRepository repository) {
 				repository.setUrl("https://github.com/");
-				repository.patternLayout(new Action<IvyPatternRepositoryLayout>() {
+				repository.patternLayout(new Action<>() {
 					@Override
 					public void execute(IvyPatternRepositoryLayout layout) {
 						layout.artifact("[organization]/[artifact]/releases/download/v[revision]/[artifact].[ext]");
@@ -87,11 +87,11 @@ public class GitHubChangelogPlugin implements Plugin<Project> {
 				repository.getMetadataSources().artifact();
 			}
 		});
-		project.getRepositories().exclusiveContent(new Action<ExclusiveContentRepository>() {
+		project.getRepositories().exclusiveContent(new Action<>() {
 			@Override
 			public void execute(ExclusiveContentRepository exclusiveContentRepository) {
 				exclusiveContentRepository.forRepositories(repository);
-				exclusiveContentRepository.filter(new Action<InclusiveRepositoryContentDescriptor>() {
+				exclusiveContentRepository.filter(new Action<>() {
 					@Override
 					public void execute(InclusiveRepositoryContentDescriptor descriptor) {
 						descriptor.includeGroup("spring-io");

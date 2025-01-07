@@ -38,7 +38,7 @@ public class GitHubApi {
 		String label = "\"type: dependency-upgrade\"";
 		FindCreateIssueInputQuery findCreateIssueInputQuery = new FindCreateIssueInputQuery(owner, name, Input.optional(label), Input.optional(milestone));
 		return Mono.create( sink -> this.apolloClient.query(findCreateIssueInputQuery)
-				.enqueue(new ApolloCall.Callback<FindCreateIssueInputQuery.Data>() {
+				.enqueue(new ApolloCall.Callback<>() {
 					@Override
 					public void onResponse(@NotNull Response<FindCreateIssueInputQuery.Data> response) {
 						if (response.hasErrors()) {
@@ -101,7 +101,7 @@ public class GitHubApi {
 
 	public Mono<RateLimitQuery.RateLimit> findRateLimit() {
 		return Mono.create( sink -> this.apolloClient.query(new RateLimitQuery())
-			.enqueue(new ApolloCall.Callback<RateLimitQuery.Data>() {
+			.enqueue(new ApolloCall.Callback<>() {
 				@Override
 				public void onResponse(@NotNull Response<RateLimitQuery.Data> response) {
 					if (response.hasErrors()) {
@@ -126,7 +126,7 @@ public class GitHubApi {
 				.assigneeId(assigneeId)
 				.build();
 		return Mono.create( sink -> this.apolloClient.mutate(createIssue)
-				.enqueue(new ApolloCall.Callback<CreateIssueInputMutation.Data>() {
+				.enqueue(new ApolloCall.Callback<>() {
 					@Override
 					public void onResponse(@NotNull Response<CreateIssueInputMutation.Data> response) {
 						if (response.hasErrors()) {

@@ -30,7 +30,7 @@ public class SpringSigningPlugin implements Plugin<Project> {
 	@Override
 	public void apply(Project project) {
 		project.getPluginManager().apply(SigningPlugin.class);
-		project.getPlugins().withType(SigningPlugin.class).all(new Action<SigningPlugin>() {
+		project.getPlugins().withType(SigningPlugin.class).all(new Action<>() {
 			@Override
 			public void execute(SigningPlugin signingPlugin) {
 				boolean hasSigningKey = project.hasProperty("signing.keyId") || project.hasProperty("signingKey");
@@ -50,7 +50,7 @@ public class SpringSigningPlugin implements Plugin<Project> {
 			}
 		});
 		sign(project, signing);
-		project.getPlugins().withType(PublishAllJavaComponentsPlugin.class).all(new Action<PublishAllJavaComponentsPlugin>() {
+		project.getPlugins().withType(PublishAllJavaComponentsPlugin.class).all(new Action<>() {
 			@Override
 			public void execute(PublishAllJavaComponentsPlugin publishingPlugin) {
 				PublishingExtension publishing = project.getExtensions().findByType(PublishingExtension.class);

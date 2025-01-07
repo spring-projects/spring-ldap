@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -129,7 +129,7 @@ public class SimpleLdapTemplateITests extends AbstractLdapTemplateIntegrationTes
 		this.ldapTemplate.modifyAttributes(ctx);
 
 		// verify that the data was properly updated.
-		this.ldapTemplate.lookup("cn=Some Person,ou=company1,ou=Sweden", new ContextMapper<Object>() {
+		this.ldapTemplate.lookup("cn=Some Person,ou=company1,ou=Sweden", new ContextMapper<>() {
 			public Object mapFromContext(Object ctx) {
 				DirContextAdapter adapter = (DirContextAdapter) ctx;
 				assertThat(adapter.getStringAttribute("description")).isEqualTo("updated description");
@@ -150,7 +150,7 @@ public class SimpleLdapTemplateITests extends AbstractLdapTemplateIntegrationTes
 		this.ldapTemplate.modifyAttributes(ctx);
 
 		// verify that the data was properly updated.
-		this.ldapTemplate.lookup("cn=Some Person,ou=company1,ou=Sweden", new ContextMapper<Object>() {
+		this.ldapTemplate.lookup("cn=Some Person,ou=company1,ou=Sweden", new ContextMapper<>() {
 			public Object mapFromContext(Object ctx) {
 				DirContextAdapter adapter = (DirContextAdapter) ctx;
 				assertThat(adapter.getStringAttribute("description")).isEqualTo("updated description");

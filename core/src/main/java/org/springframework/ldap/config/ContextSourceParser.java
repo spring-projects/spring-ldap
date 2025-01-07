@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -327,7 +327,7 @@ public class ContextSourceParser implements BeanDefinitionParser {
 		String nonTransientExceptions = ParserUtils.getString(element, ATT_NON_TRANSIENT_EXCEPTIONS,
 				CommunicationException.class.getName());
 		String[] strings = StringUtils.commaDelimitedListToStringArray(nonTransientExceptions);
-		Set<Class<?>> nonTransientExceptionClasses = new HashSet<Class<?>>();
+		Set<Class<?>> nonTransientExceptionClasses = new HashSet<>();
 		for (String className : strings) {
 			try {
 				nonTransientExceptionClasses.add(ClassUtils.getDefaultClassLoader().loadClass(className));
@@ -356,7 +356,7 @@ public class ContextSourceParser implements BeanDefinitionParser {
 		String nonTransientExceptions = ParserUtils.getString(element, ATT_NON_TRANSIENT_EXCEPTIONS,
 				CommunicationException.class.getName());
 		String[] strings = StringUtils.commaDelimitedListToStringArray(nonTransientExceptions);
-		Set<Class<?>> nonTransientExceptionClasses = new HashSet<Class<?>>();
+		Set<Class<?>> nonTransientExceptionClasses = new HashSet<>();
 		for (String className : strings) {
 			try {
 				nonTransientExceptionClasses.add(ClassUtils.getDefaultClassLoader().loadClass(className));

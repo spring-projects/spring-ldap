@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2023 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public class EmbeddedLdapServerFactoryBeanTests {
 		assertThat(ldapTemplate).isNotNull();
 
 		List<String> list = ldapTemplate.search(LdapQueryBuilder.query().where("objectclass").is("person"),
-				new AttributesMapper<String>() {
+				new AttributesMapper<>() {
 					public String mapFromAttributes(Attributes attrs) throws NamingException {
 						return (String) attrs.get("cn").get();
 					}

@@ -28,7 +28,7 @@ public class RoleRepo {
 
 	@Transactional
 	public Map<String, String> queryRoleMap() {
-		return new HashMap<String, String>();
+		return new HashMap<>();
 	}
 
 }

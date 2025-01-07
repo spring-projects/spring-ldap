@@ -24,7 +24,7 @@ import org.gradle.api.Project;
 public class SaganPlugin implements Plugin<Project> {
 	@Override
 	public void apply(Project project) {
-		project.getTasks().register("saganCreateRelease", SaganCreateReleaseTask.class, new Action<SaganCreateReleaseTask>() {
+		project.getTasks().register("saganCreateRelease", SaganCreateReleaseTask.class, new Action<>() {
 			@Override
 			public void execute(SaganCreateReleaseTask saganCreateVersion) {
 				saganCreateVersion.setGroup("Release");
@@ -34,7 +34,7 @@ public class SaganPlugin implements Plugin<Project> {
 				saganCreateVersion.setGitHubAccessToken((String) project.findProperty("gitHubAccessToken"));
 			}
 		});
-		project.getTasks().register("saganDeleteRelease", SaganDeleteReleaseTask.class, new Action<SaganDeleteReleaseTask>() {
+		project.getTasks().register("saganDeleteRelease", SaganDeleteReleaseTask.class, new Action<>() {
 			@Override
 			public void execute(SaganDeleteReleaseTask saganDeleteVersion) {
 				saganDeleteVersion.setGroup("Release");

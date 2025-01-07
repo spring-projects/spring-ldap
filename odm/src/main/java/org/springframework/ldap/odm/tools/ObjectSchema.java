@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,11 +29,11 @@ import java.util.Set;
  */
 public final class ObjectSchema {
 
-	private final Set<AttributeSchema> must = new HashSet<AttributeSchema>();
+	private final Set<AttributeSchema> must = new HashSet<>();
 
-	private final Set<AttributeSchema> may = new HashSet<AttributeSchema>();
+	private final Set<AttributeSchema> may = new HashSet<>();
 
-	private final Set<String> objectClass = new HashSet<String>();
+	private final Set<String> objectClass = new HashSet<>();
 
 	public void addMust(AttributeSchema must) {
 		// if may attributes contain must attribute, remove from may and add to must

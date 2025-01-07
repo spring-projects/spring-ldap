@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,9 +47,9 @@ import org.springframework.util.StringUtils;
 
 	private AttributeMetaData idAttribute;
 
-	private Map<Field, AttributeMetaData> fieldToAttribute = new HashMap<Field, AttributeMetaData>();
+	private Map<Field, AttributeMetaData> fieldToAttribute = new HashMap<>();
 
-	private Set<AttributeMetaData> dnAttributes = new TreeSet<AttributeMetaData>(new Comparator<AttributeMetaData>() {
+	private Set<AttributeMetaData> dnAttributes = new TreeSet<>(new Comparator<>() {
 		@Override
 		public int compare(AttributeMetaData a1, AttributeMetaData a2) {
 			if (!a1.isDnAttribute() || !a2.isDnAttribute()) {
@@ -63,7 +63,7 @@ import org.springframework.util.StringUtils;
 
 	private boolean indexedDnAttributes = false;
 
-	private Set<CaseIgnoreString> objectClasses = new LinkedHashSet<CaseIgnoreString>();
+	private Set<CaseIgnoreString> objectClasses = new LinkedHashSet<>();
 
 	private Name base = LdapUtils.emptyLdapName();
 

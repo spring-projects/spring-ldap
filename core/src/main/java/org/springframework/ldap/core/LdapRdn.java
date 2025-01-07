@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ public class LdapRdn implements Serializable, Comparable {
 
 	private static final int DEFAULT_BUFFER_SIZE = 100;
 
-	private Map<String, LdapRdnComponent> components = new LinkedHashMap<String, LdapRdnComponent>();
+	private Map<String, LdapRdnComponent> components = new LinkedHashMap<>();
 
 	/**
 	 * Default constructor. Create an empty, uninitialized LdapRdn.
@@ -280,8 +280,7 @@ public class LdapRdn implements Serializable, Comparable {
 	 * @since 1.3
 	 */
 	public LdapRdn immutableLdapRdn() {
-		Map<String, LdapRdnComponent> mapWithImmutableRdns = new LinkedHashMap<String, LdapRdnComponent>(
-				this.components.size());
+		Map<String, LdapRdnComponent> mapWithImmutableRdns = new LinkedHashMap<>(this.components.size());
 		for (Iterator iterator = this.components.values().iterator(); iterator.hasNext();) {
 			LdapRdnComponent rdnComponent = (LdapRdnComponent) iterator.next();
 			mapWithImmutableRdns.put(rdnComponent.getKey(), rdnComponent.immutableLdapRdnComponent());

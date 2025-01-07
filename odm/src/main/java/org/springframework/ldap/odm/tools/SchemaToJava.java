@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -179,7 +179,7 @@ public final class SchemaToJava {
 	// Read list of LDAP syntaxes that are returned as byte[]
 	private static Set<String> readBinarySet(File binarySetFile) throws IOException {
 
-		Set<String> result = new HashSet<String>();
+		Set<String> result = new HashSet<>();
 
 		BufferedReader reader = null;
 		try {
@@ -209,7 +209,7 @@ public final class SchemaToJava {
 	// Read mappings of LDAP syntaxes to Java classes.
 	private static Map<String, String> readSyntaxMap(File syntaxMapFile) throws IOException {
 
-		Map<String, String> result = new HashMap<String, String>();
+		Map<String, String> result = new HashMap<>();
 
 		BufferedReader reader = null;
 		try {
@@ -247,7 +247,7 @@ public final class SchemaToJava {
 			Set<String> binarySet, Set<String> objectClasses) throws NamingException, ClassNotFoundException {
 
 		// Set up environment
-		Hashtable<String, String> env = new Hashtable<String, String>();
+		Hashtable<String, String> env = new Hashtable<>();
 		env.put(Context.PROVIDER_URL, url);
 		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
 		if (user != null) {
@@ -279,7 +279,7 @@ public final class SchemaToJava {
 		freeMarkerConfiguration.setObjectWrapper(new DefaultObjectWrapper());
 
 		// Build the model for FreeMarker
-		Map<String, Object> model = new HashMap<String, Object>();
+		Map<String, Object> model = new HashMap<>();
 		model.put("package", packageName);
 		model.put("class", className);
 		model.put("schema", schema);
@@ -337,7 +337,7 @@ public final class SchemaToJava {
 	}
 
 	private static Set<String> parseObjectClassesFlag(String objectClassesFlag) {
-		Set<String> objectClasses = new HashSet<String>();
+		Set<String> objectClasses = new HashSet<>();
 
 		for (String objectClassFlag : objectClassesFlag.split(",")) {
 			if (objectClassFlag.length() > 0) {
@@ -412,7 +412,7 @@ public final class SchemaToJava {
 
 		// Look for the optional syntax to Java class mapping file
 		String syntaxMapFileName = cmd.getOptionValue(Flag.SYNTAX_MAP.getShort(), null);
-		SyntaxToJavaClass syntaxToJavaClass = new SyntaxToJavaClass(new HashMap<String, String>());
+		SyntaxToJavaClass syntaxToJavaClass = new SyntaxToJavaClass(new HashMap<>());
 		if (syntaxMapFileName != null) {
 			File syntaxMapFile = new File(syntaxMapFileName);
 			if (syntaxMapFile.canRead()) {
@@ -459,7 +459,7 @@ public final class SchemaToJava {
 		}
 
 		// Work out what imports we need
-		Set<SyntaxToJavaClass.ClassInfo> imports = new HashSet<SyntaxToJavaClass.ClassInfo>();
+		Set<SyntaxToJavaClass.ClassInfo> imports = new HashSet<>();
 		for (AttributeSchema attributeSchema : schema.getMay()) {
 			SyntaxToJavaClass.ClassInfo classInfo = syntaxToJavaClass.getClassInfo(attributeSchema.getSyntax());
 			if (classInfo != null) {

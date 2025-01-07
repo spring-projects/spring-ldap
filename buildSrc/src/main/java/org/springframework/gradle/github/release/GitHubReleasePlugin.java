@@ -27,7 +27,7 @@ import org.gradle.api.Project;
 public class GitHubReleasePlugin implements Plugin<Project> {
 	@Override
 	public void apply(Project project) {
-		project.getTasks().register("createGitHubRelease", CreateGitHubReleaseTask.class, new Action<CreateGitHubReleaseTask>() {
+		project.getTasks().register("createGitHubRelease", CreateGitHubReleaseTask.class, new Action<>() {
 			@Override
 			public void execute(CreateGitHubReleaseTask createGitHubRelease) {
 				createGitHubRelease.setGroup("Release");

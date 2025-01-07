@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -554,13 +554,13 @@ public class LdapTemplateSearchResultITests extends AbstractLdapTemplateIntegrat
 
 	@Test
 	public void verifyThatSearchWithCountLimitReturnsTheEntriesFoundSoFar() {
-		List<Object> result = this.tested.search(
-				LdapQueryBuilder.query().countLimit(3).where("objectclass").is("person"), new ContextMapper<Object>() {
-					@Override
-					public Object mapFromContext(Object ctx) throws NamingException {
-						return new Object();
-					}
-				});
+		List<Object> result = this.tested
+			.search(LdapQueryBuilder.query().countLimit(3).where("objectclass").is("person"), new ContextMapper<>() {
+				@Override
+				public Object mapFromContext(Object ctx) throws NamingException {
+					return new Object();
+				}
+			});
 
 		assertThat(result).hasSize(3);
 	}
@@ -569,7 +569,7 @@ public class LdapTemplateSearchResultITests extends AbstractLdapTemplateIntegrat
 	public void verifyThatSearchWithCountLimitWithFlagToFalseThrowsException() {
 		this.tested.setIgnoreSizeLimitExceededException(false);
 		this.tested.search(LdapQueryBuilder.query().countLimit(3).where("objectclass").is("person"),
-				new ContextMapper<Object>() {
+				new ContextMapper<>() {
 					@Override
 					public Object mapFromContext(Object ctx) throws NamingException {
 						return new Object();

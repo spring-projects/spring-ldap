@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -141,7 +141,7 @@ import org.springframework.ldap.odm.tools.SyntaxToJavaClass.ClassInfo;
 			throws NamingException, ClassNotFoundException {
 
 		// Super classes
-		Set<String> supList = new HashSet<String>();
+		Set<String> supList = new HashSet<>();
 
 		// For each of the given object classes
 		for (String objectClass : objectClasses) {

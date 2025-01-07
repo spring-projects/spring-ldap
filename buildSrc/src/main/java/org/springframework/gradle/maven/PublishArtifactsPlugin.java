@@ -9,7 +9,7 @@ import org.gradle.api.Task;
 public class PublishArtifactsPlugin implements Plugin<Project> {
 	@Override
 	public void apply(Project project) {
-		project.getTasks().register("publishArtifacts", new Action<Task>() {
+		project.getTasks().register("publishArtifacts", new Action<>() {
 			@Override
 			public void execute(Task publishArtifacts) {
 				publishArtifacts.setGroup("Publishing");

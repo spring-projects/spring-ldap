@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2023 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -583,7 +583,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	@Override
 	public <T> List<T> search(String base, String filter, SearchControls controls, AttributesMapper<T> mapper,
 			DirContextProcessor processor) {
-		AttributesMapperCallbackHandler<T> handler = new AttributesMapperCallbackHandler<T>(mapper);
+		AttributesMapperCallbackHandler<T> handler = new AttributesMapperCallbackHandler<>(mapper);
 		search(base, filter, controls, handler, processor);
 
 		return handler.getList();
@@ -595,7 +595,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	@Override
 	public <T> List<T> search(Name base, String filter, SearchControls controls, AttributesMapper<T> mapper,
 			DirContextProcessor processor) {
-		AttributesMapperCallbackHandler<T> handler = new AttributesMapperCallbackHandler<T>(mapper);
+		AttributesMapperCallbackHandler<T> handler = new AttributesMapperCallbackHandler<>(mapper);
 		search(base, filter, controls, handler, processor);
 
 		return handler.getList();
@@ -608,7 +608,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	public <T> List<T> search(String base, String filter, SearchControls controls, ContextMapper<T> mapper,
 			DirContextProcessor processor) {
 		assureReturnObjFlagSet(controls);
-		ContextMapperCallbackHandler<T> handler = new ContextMapperCallbackHandler<T>(mapper);
+		ContextMapperCallbackHandler<T> handler = new ContextMapperCallbackHandler<>(mapper);
 		search(base, filter, controls, handler, processor);
 
 		return handler.getList();
@@ -621,7 +621,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	public <T> List<T> search(Name base, String filter, SearchControls controls, ContextMapper<T> mapper,
 			DirContextProcessor processor) {
 		assureReturnObjFlagSet(controls);
-		ContextMapperCallbackHandler<T> handler = new ContextMapperCallbackHandler<T>(mapper);
+		ContextMapperCallbackHandler<T> handler = new ContextMapperCallbackHandler<>(mapper);
 		search(base, filter, controls, handler, processor);
 
 		return handler.getList();
@@ -660,8 +660,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> List<T> list(String base, NameClassPairMapper<T> mapper) {
-		CollectingNameClassPairCallbackHandler<T> handler = new MappingCollectingNameClassPairCallbackHandler<T>(
-				mapper);
+		CollectingNameClassPairCallbackHandler<T> handler = new MappingCollectingNameClassPairCallbackHandler<>(mapper);
 		list(base, handler);
 		return handler.getList();
 	}
@@ -671,8 +670,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> List<T> list(Name base, NameClassPairMapper<T> mapper) {
-		CollectingNameClassPairCallbackHandler<T> handler = new MappingCollectingNameClassPairCallbackHandler<T>(
-				mapper);
+		CollectingNameClassPairCallbackHandler<T> handler = new MappingCollectingNameClassPairCallbackHandler<>(mapper);
 		list(base, handler);
 		return handler.getList();
 	}
@@ -726,8 +724,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> List<T> listBindings(String base, NameClassPairMapper<T> mapper) {
-		CollectingNameClassPairCallbackHandler<T> handler = new MappingCollectingNameClassPairCallbackHandler<T>(
-				mapper);
+		CollectingNameClassPairCallbackHandler<T> handler = new MappingCollectingNameClassPairCallbackHandler<>(mapper);
 		listBindings(base, handler);
 		return handler.getList();
 	}
@@ -737,8 +734,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> List<T> listBindings(Name base, NameClassPairMapper<T> mapper) {
-		CollectingNameClassPairCallbackHandler<T> handler = new MappingCollectingNameClassPairCallbackHandler<T>(
-				mapper);
+		CollectingNameClassPairCallbackHandler<T> handler = new MappingCollectingNameClassPairCallbackHandler<>(mapper);
 		listBindings(base, handler);
 		return handler.getList();
 	}
@@ -764,7 +760,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> List<T> listBindings(String base, ContextMapper<T> mapper) {
-		ContextMapperCallbackHandler<T> handler = new ContextMapperCallbackHandler<T>(mapper);
+		ContextMapperCallbackHandler<T> handler = new ContextMapperCallbackHandler<>(mapper);
 		listBindings(base, handler);
 
 		return handler.getList();
@@ -775,7 +771,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> List<T> listBindings(Name base, ContextMapper<T> mapper) {
-		ContextMapperCallbackHandler<T> handler = new ContextMapperCallbackHandler<T>(mapper);
+		ContextMapperCallbackHandler<T> handler = new ContextMapperCallbackHandler<>(mapper);
 		listBindings(base, handler);
 
 		return handler.getList();
@@ -1356,7 +1352,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 
 		try {
 			DirContext ctx = this.contextSource.getContext(entryIdentification.getAbsoluteName().toString(), password);
-			executeWithContext(new ContextExecutor<Object>() {
+			executeWithContext(new ContextExecutor<>() {
 				public Object executeWithContext(DirContext ctx) throws javax.naming.NamingException {
 					callback.executeWithContext(ctx, entryIdentification);
 					return null;
@@ -1377,8 +1373,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	@Override
 	public <T> T authenticate(LdapQuery query, String password, AuthenticatedLdapEntryContextMapper<T> mapper) {
 		SearchControls searchControls = searchControlsForQuery(query, RETURN_OBJ_FLAG);
-		ReturningAuthenticatedLdapEntryContext<T> mapperCallback = new ReturningAuthenticatedLdapEntryContext<T>(
-				mapper);
+		ReturningAuthenticatedLdapEntryContext<T> mapperCallback = new ReturningAuthenticatedLdapEntryContext<>(mapper);
 		CollectingAuthenticationErrorCallback errorCallback = new CollectingAuthenticationErrorCallback();
 
 		AuthenticationStatus authenticationStatus = authenticate(query.base(), query.filter().encode(), password,
@@ -1507,7 +1502,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public DirContextOperations searchForContext(LdapQuery query) {
-		return searchForObject(query, new ContextMapper<DirContextOperations>() {
+		return searchForObject(query, new ContextMapper<>() {
 			@Override
 			public DirContextOperations mapFromContext(Object ctx) throws javax.naming.NamingException {
 				return (DirContextOperations) ctx;
@@ -1591,7 +1586,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		// Make sure the class is OK before doing the lookup
 		String[] attributes = this.odm.manageClass(clazz);
 
-		T result = lookup(dn, attributes, new ContextMapper<T>() {
+		T result = lookup(dn, attributes, new ContextMapper<>() {
 			@Override
 			public T mapFromContext(Object ctx) throws javax.naming.NamingException {
 				return LdapTemplate.this.odm.mapFromLdapDataEntry((DirContextOperations) ctx, clazz);
@@ -1746,7 +1741,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 					searchControls));
 		}
 
-		List<T> result = search(localBase, finalFilter.encode(), searchControls, new ContextMapper<T>() {
+		List<T> result = search(localBase, finalFilter.encode(), searchControls, new ContextMapper<>() {
 			@Override
 			public T mapFromContext(Object ctx) throws javax.naming.NamingException {
 				return LdapTemplate.this.odm.mapFromLdapDataEntry((DirContextOperations) ctx, clazz);

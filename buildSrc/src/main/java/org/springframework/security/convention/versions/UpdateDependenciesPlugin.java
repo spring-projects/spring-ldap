@@ -71,7 +71,7 @@ public class UpdateDependenciesPlugin implements Plugin<Project> {
 			String gitHubAccessToken = String.valueOf(project.findProperty("gitHubAccessToken"));
 			updateDependenciesSettings.getGitHub().setAccessToken(gitHubAccessToken);
 		}
-		project.getTasks().register("updateDependencies", DependencyUpdatesTask.class, new Action<DependencyUpdatesTask>() {
+		project.getTasks().register("updateDependencies", DependencyUpdatesTask.class, new Action<>() {
 			@Override
 			public void execute(DependencyUpdatesTask updateDependencies) {
 				updateDependencies.setDescription("Update the dependencies");
@@ -88,10 +88,10 @@ public class UpdateDependenciesPlugin implements Plugin<Project> {
 						return null;
 					}
 				});
-				updateDependencies.resolutionStrategy(new Action<ResolutionStrategyWithCurrent>() {
+				updateDependencies.resolutionStrategy(new Action<>() {
 					@Override
 					public void execute(ResolutionStrategyWithCurrent resolution) {
-						resolution.componentSelection(new Action<ComponentSelectionRulesWithCurrent>() {
+						resolution.componentSelection(new Action<>() {
 							@Override
 							public void execute(ComponentSelectionRulesWithCurrent components) {
 								updateDependenciesSettings.getExcludes().getActions().forEach((action) -> {

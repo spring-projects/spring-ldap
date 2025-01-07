@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public final class OrganizationalUnit {
 	private Name dn;
 
 	@Attribute(name = "objectClass", syntax = "1.3.6.1.4.1.1466.115.121.1.38")
-	private List<String> objectClass = new ArrayList<String>();
+	private List<String> objectClass = new ArrayList<>();
 
 	@Attribute(name = "ou", syntax = "1.3.6.1.4.1.1466.115.121.1.15")
 	private String ou;
@@ -132,7 +132,7 @@ public final class OrganizationalUnit {
 			}
 		}
 		else if (this.objectClass.size() != other.objectClass.size()
-				|| !(new HashSet<String>(this.objectClass)).equals(new HashSet<String>(other.objectClass))) {
+				|| !(new HashSet<>(this.objectClass)).equals(new HashSet<>(other.objectClass))) {
 			return false;
 		}
 		if (this.ou == null) {
@@ -160,7 +160,7 @@ public final class OrganizationalUnit {
 		int result = 1;
 		result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
 		result = prime * result + ((this.dn == null) ? 0 : this.dn.hashCode());
-		result = prime * result + ((this.objectClass == null) ? 0 : new HashSet<String>(this.objectClass).hashCode());
+		result = prime * result + ((this.objectClass == null) ? 0 : new HashSet<>(this.objectClass).hashCode());
 		result = prime * result + ((this.ou == null) ? 0 : this.ou.hashCode());
 		result = prime * result + ((this.street == null) ? 0 : this.street.hashCode());
 		return result;

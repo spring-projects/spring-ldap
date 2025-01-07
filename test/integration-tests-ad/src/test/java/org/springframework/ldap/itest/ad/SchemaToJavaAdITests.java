@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,7 +100,7 @@ public final class SchemaToJavaAdITests {
 		this.contextSource.setPassword(PASSWORD);
 		this.contextSource.setPooled(false);
 		this.contextSource.setBase("dc=261consulting,dc=local");
-		HashMap<String, Object> baseEnvironment = new HashMap<String, Object>() {
+		HashMap<String, Object> baseEnvironment = new HashMap<>() {
 			{
 				put("java.naming.ldap.attributes.binary",
 						"thumbnailLogo replPropertyMetaData partialAttributeSet registeredAddress userPassword telexNumber partialAttributeDeletionList mS-DS-ConsistencyGuid attributeCertificateAttribute thumbnailPhoto teletexTerminalIdentifier replUpToDateVector dSASignature objectGUID");

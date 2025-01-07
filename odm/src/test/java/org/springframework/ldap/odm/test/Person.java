@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ public final class Person {
 		this.desc = desc;
 		this.telephoneNumber = telephoneNumber;
 		this.jpegPhoto = jpegPhoto;
-		this.objectClasses = new ArrayList<String>();
+		this.objectClasses = new ArrayList<>();
 		this.objectClasses.add("inetOrgPerson");
 		this.objectClasses.add("organizationalPerson");
 		this.objectClasses.add("person");
@@ -60,7 +60,7 @@ public final class Person {
 	private String someRandomField = null;
 
 	@Transient
-	private List<String> someRandomList = new ArrayList<String>();
+	private List<String> someRandomList = new ArrayList<>();
 
 	@Attribute(name = "objectClass")
 	private List<String> objectClasses;
@@ -163,7 +163,7 @@ public final class Person {
 			}
 		}
 		else if (this.desc.size() != other.desc.size()
-				|| !(new HashSet<String>(this.desc)).equals(new HashSet<String>(other.desc))) {
+				|| !(new HashSet<>(this.desc)).equals(new HashSet<>(other.desc))) {
 			return false;
 		}
 		if (this.dn == null) {
@@ -183,7 +183,7 @@ public final class Person {
 			}
 		}
 		else if (this.objectClasses.size() != other.objectClasses.size()
-				|| !(new HashSet<String>(this.objectClasses)).equals(new HashSet<String>(other.objectClasses))) {
+				|| !(new HashSet<>(this.objectClasses)).equals(new HashSet<>(other.objectClasses))) {
 			return false;
 		}
 		if (this.someRandomField == null) {
@@ -221,11 +221,10 @@ public final class Person {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((this.cn == null) ? 0 : this.cn.hashCode());
-		result = prime * result + ((this.desc == null) ? 0 : new HashSet<String>(this.desc).hashCode());
+		result = prime * result + ((this.desc == null) ? 0 : new HashSet<>(this.desc).hashCode());
 		result = prime * result + ((this.dn == null) ? 0 : this.dn.hashCode());
 		result = prime * result + Arrays.hashCode(this.jpegPhoto);
-		result = prime * result
-				+ ((this.objectClasses == null) ? 0 : new HashSet<String>(this.objectClasses).hashCode());
+		result = prime * result + ((this.objectClasses == null) ? 0 : new HashSet<>(this.objectClasses).hashCode());
 		result = prime * result + ((this.someRandomField == null) ? 0 : this.someRandomField.hashCode());
 		result = prime * result + ((this.someRandomList == null) ? 0 : this.someRandomList.hashCode());
 		result = prime * result + ((this.surname == null) ? 0 : this.surname.hashCode());

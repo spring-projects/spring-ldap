@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2023 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,33 +73,33 @@ public final class ConverterManagerTests {
 	@Test
 	public void basicTypeConverion() throws Exception {
 		final ConverterTestData<?>[] primitiveTypeTests = new ConverterTestData<?>[] {
-				new ConverterTestData<Byte>("33", Byte.class, Byte.valueOf((byte) 33)),
-				new ConverterTestData<Byte>("-88", Byte.class, Byte.valueOf((byte) -88)),
-				new ConverterTestData<Short>("666", Short.class, Short.valueOf((short) 666)),
-				new ConverterTestData<Short>("-123", Short.class, Short.valueOf((short) -123)),
-				new ConverterTestData<Integer>("123", Integer.class, Integer.valueOf(123)),
-				new ConverterTestData<Integer>("-500", Integer.class, Integer.valueOf(-500)),
-				new ConverterTestData<Long>("123456", Long.class, Long.valueOf(123456)),
-				new ConverterTestData<Long>("-654321", Long.class, Long.valueOf(-654321)),
-				new ConverterTestData<Double>("2", Double.class, Double.valueOf(2)),
-				new ConverterTestData<Double>("-0.4", Double.class, Double.valueOf(-0.4)),
-				new ConverterTestData<Float>("666", Float.class, Float.valueOf(666)),
-				new ConverterTestData<Float>("-0.75", Float.class, Float.valueOf(-0.75F)),
-				new ConverterTestData<Boolean>("false", Boolean.class, Boolean.FALSE),
-				new ConverterTestData<Boolean>("TRUE", Boolean.class, Boolean.TRUE),
-				new ConverterTestData<String>("This is a string", String.class, "This is a string"),
-				new ConverterTestData<String>("This is another String", String.class, "This is another String"),
-				new ConverterTestData<String>((byte) 66, String.class, "66"),
-				new ConverterTestData<String>((int) 1234, String.class, "1234"),
-				new ConverterTestData<String>((int) -9876, String.class, "-9876"),
-				new ConverterTestData<URI>("https://google.com/", URI.class, new URI("https://google.com/")),
-				new ConverterTestData<URI>("https://apache.org/index.html", URI.class,
+				new ConverterTestData<>("33", Byte.class, Byte.valueOf((byte) 33)),
+				new ConverterTestData<>("-88", Byte.class, Byte.valueOf((byte) -88)),
+				new ConverterTestData<>("666", Short.class, Short.valueOf((short) 666)),
+				new ConverterTestData<>("-123", Short.class, Short.valueOf((short) -123)),
+				new ConverterTestData<>("123", Integer.class, Integer.valueOf(123)),
+				new ConverterTestData<>("-500", Integer.class, Integer.valueOf(-500)),
+				new ConverterTestData<>("123456", Long.class, Long.valueOf(123456)),
+				new ConverterTestData<>("-654321", Long.class, Long.valueOf(-654321)),
+				new ConverterTestData<>("2", Double.class, Double.valueOf(2)),
+				new ConverterTestData<>("-0.4", Double.class, Double.valueOf(-0.4)),
+				new ConverterTestData<>("666", Float.class, Float.valueOf(666)),
+				new ConverterTestData<>("-0.75", Float.class, Float.valueOf(-0.75F)),
+				new ConverterTestData<>("false", Boolean.class, Boolean.FALSE),
+				new ConverterTestData<>("TRUE", Boolean.class, Boolean.TRUE),
+				new ConverterTestData<>("This is a string", String.class, "This is a string"),
+				new ConverterTestData<>("This is another String", String.class, "This is another String"),
+				new ConverterTestData<>((byte) 66, String.class, "66"),
+				new ConverterTestData<>((int) 1234, String.class, "1234"),
+				new ConverterTestData<>((int) -9876, String.class, "-9876"),
+				new ConverterTestData<>("https://google.com/", URI.class, new URI("https://google.com/")),
+				new ConverterTestData<>("https://apache.org/index.html", URI.class,
 						new URI("https://apache.org/index.html")),
-				new ConverterTestData<String>(new URI("https://google.com/"), String.class, "https://google.com/"),
-				new ConverterTestData<String>(new URI("https://apache.org/index.html"), String.class,
+				new ConverterTestData<>(new URI("https://google.com/"), String.class, "https://google.com/"),
+				new ConverterTestData<>(new URI("https://apache.org/index.html"), String.class,
 						"https://apache.org/index.html") };
 
-		new ExecuteRunnable<ConverterTestData<?>>().runTests(new RunnableTests<ConverterTestData<?>>() {
+		new ExecuteRunnable<ConverterTestData<?>>().runTests(new RunnableTests<>() {
 			public void runTest(ConverterTestData<?> testData) {
 				assertThat(testData.expectedValue).isEqualTo(ConverterManagerTests.this.converterManager
 					.convert(testData.sourceData, "", testData.destClass));
@@ -118,20 +118,20 @@ public final class ConverterManagerTests {
 		this.converterManager.addConverter(Integer.class, "3", Integer.class, cubedConverter);
 
 		final ConverterTestData<?>[] syntaxTests = new ConverterTestData<?>[] {
-				new ConverterTestData<Integer>("3", "", Integer.class, Integer.valueOf(3)),
-				new ConverterTestData<Integer>("4", "", Integer.class, Integer.valueOf(4)),
-				new ConverterTestData<Integer>(5, "", Integer.class, Integer.valueOf(5)),
-				new ConverterTestData<Integer>(6, "", Integer.class, Integer.valueOf(6)),
-				new ConverterTestData<Integer>("3", "1", Integer.class, Integer.valueOf(9)),
-				new ConverterTestData<Integer>("4", "1", Integer.class, Integer.valueOf(16)),
-				new ConverterTestData<Integer>(5, "1", Integer.class, Integer.valueOf(25)),
-				new ConverterTestData<Integer>(6, "1", Integer.class, Integer.valueOf(36)),
-				new ConverterTestData<Integer>("3", "2", Integer.class, Integer.valueOf(27)),
-				new ConverterTestData<Integer>("4", "2", Integer.class, Integer.valueOf(64)),
-				new ConverterTestData<Integer>(5, "3", Integer.class, Integer.valueOf(125)),
-				new ConverterTestData<Integer>(6, "3", Integer.class, Integer.valueOf(216)), };
+				new ConverterTestData<>("3", "", Integer.class, Integer.valueOf(3)),
+				new ConverterTestData<>("4", "", Integer.class, Integer.valueOf(4)),
+				new ConverterTestData<>(5, "", Integer.class, Integer.valueOf(5)),
+				new ConverterTestData<>(6, "", Integer.class, Integer.valueOf(6)),
+				new ConverterTestData<>("3", "1", Integer.class, Integer.valueOf(9)),
+				new ConverterTestData<>("4", "1", Integer.class, Integer.valueOf(16)),
+				new ConverterTestData<>(5, "1", Integer.class, Integer.valueOf(25)),
+				new ConverterTestData<>(6, "1", Integer.class, Integer.valueOf(36)),
+				new ConverterTestData<>("3", "2", Integer.class, Integer.valueOf(27)),
+				new ConverterTestData<>("4", "2", Integer.class, Integer.valueOf(64)),
+				new ConverterTestData<>(5, "3", Integer.class, Integer.valueOf(125)),
+				new ConverterTestData<>(6, "3", Integer.class, Integer.valueOf(216)), };
 
-		new ExecuteRunnable<ConverterTestData<?>>().runTests(new RunnableTests<ConverterTestData<?>>() {
+		new ExecuteRunnable<ConverterTestData<?>>().runTests(new RunnableTests<>() {
 			public void runTest(ConverterTestData<?> testData) {
 				assertThat(testData.expectedValue).isEqualTo(ConverterManagerTests.this.converterManager
 					.convert(testData.sourceData, testData.syntax, testData.destClass));

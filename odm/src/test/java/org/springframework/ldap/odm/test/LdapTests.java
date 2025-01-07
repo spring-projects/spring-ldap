@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -185,7 +185,7 @@ public final class LdapTests {
 		LdapTestUtils.cleanAndSetup(this.contextSource, baseName, new ClassPathResource("testdata.ldif"));
 
 		// Create our OdmManager
-		Set<Class<?>> managedClasses = new HashSet<Class<?>>();
+		Set<Class<?>> managedClasses = new HashSet<>();
 		managedClasses.add(Person.class);
 		managedClasses.add(PlainPerson.class);
 		managedClasses.add(OrganizationalUnit.class);
@@ -243,7 +243,7 @@ public final class LdapTests {
 	// Read various entries from the sample data set and check they are what we'd expect.
 	@Test
 	public void read() throws Exception {
-		new ExecuteRunnable<Person>().runTests(new RunnableTests<Person>() {
+		new ExecuteRunnable<Person>().runTests(new RunnableTests<>() {
 			public void runTest(Person testData) {
 				Name dn = testData.getDn();
 				LOG.debug(String.format("reading - %1$s", dn));
@@ -269,14 +269,14 @@ public final class LdapTests {
 	// we'd expect.
 	@Test
 	public void search() throws Exception {
-		new ExecuteRunnable<SearchTestData>().runTests(new RunnableTests<SearchTestData>() {
+		new ExecuteRunnable<SearchTestData>().runTests(new RunnableTests<>() {
 			public void runTest(SearchTestData testData) {
 				String search = testData.search;
 				LOG.debug(String.format("searching - %1$s", search));
 				List<Person> results = LdapTests.this.odmManager.search(Person.class, baseName, testData.search,
 						testData.searchScope);
 				LOG.debug(String.format("found - %1$s", results));
-				assertThat(new HashSet<Person>(Arrays.asList(testData.people))).isEqualTo(new HashSet<Person>(results));
+				assertThat(new HashSet<>(Arrays.asList(testData.people))).isEqualTo(new HashSet<>(results));
 			}
 		}, this.searchTestData);
 	}
@@ -311,8 +311,7 @@ public final class LdapTests {
 		List<OrganizationalUnit> allOus = this.odmManager.findAll(OrganizationalUnit.class, baseName,
 				this.searchControls);
 		LOG.debug(String.format("Found - %1$s", allOus));
-		assertThat(new HashSet<OrganizationalUnit>(Arrays.asList(ouTestData)))
-			.isEqualTo(new HashSet<OrganizationalUnit>(allOus));
+		assertThat(new HashSet<>(Arrays.asList(ouTestData))).isEqualTo(new HashSet<>(allOus));
 
 		OrganizationalUnit testOu = ouTestData[OrganizationalName.ASSISTANTS.getIndex()];
 		LOG.debug(String.format("Reading - %1$s", testOu.getDn()));
@@ -328,7 +327,7 @@ public final class LdapTests {
 		LOG.debug("finding all people");
 		List<Person> allPeople = this.odmManager.findAll(Person.class, baseName, this.searchControls);
 		LOG.debug(String.format("found %1$s", allPeople));
-		assertThat(new HashSet<Person>(Arrays.asList(this.personTestData))).isEqualTo(new HashSet<Person>(allPeople));
+		assertThat(new HashSet<>(Arrays.asList(this.personTestData))).isEqualTo(new HashSet<>(allPeople));
 	}
 
 	@Test
@@ -394,7 +393,7 @@ public final class LdapTests {
 			this.odmManager.create(person);
 		}
 		LOG.debug("Created all, reading back");
-		new ExecuteRunnable<Person>().runTests(new RunnableTests<Person>() {
+		new ExecuteRunnable<Person>().runTests(new RunnableTests<>() {
 			public void runTest(Person testData) {
 				Name dn = testData.getDn();
 				LOG.debug(String.format("reading - %1$s", dn));
@@ -434,7 +433,7 @@ public final class LdapTests {
 		}
 
 		List<Person> allPeople = this.odmManager.findAll(Person.class, baseName, this.searchControls);
-		assertThat(new HashSet<Person>(Arrays.asList(this.whatsLeft))).isEqualTo(new HashSet<Person>(allPeople));
+		assertThat(new HashSet<>(Arrays.asList(this.whatsLeft))).isEqualTo(new HashSet<>(allPeople));
 	}
 
 	// Trying to read a non-existant entry should be flagged as an error

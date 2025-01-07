@@ -15,7 +15,7 @@ public class SpringNexusPublishPlugin implements Plugin<Project> {
 	public void apply(Project project) {
 		project.getPlugins().apply(NexusPublishPlugin.class);
 		NexusPublishExtension nexusPublishing = project.getExtensions().findByType(NexusPublishExtension.class);
-		nexusPublishing.getRepositories().create("ossrh", new Action<NexusRepository>() {
+		nexusPublishing.getRepositories().create("ossrh", new Action<>() {
 			@Override
 			public void execute(NexusRepository nexusRepository) {
 						nexusRepository.getNexusUrl().set(URI.create("https://s01.oss.sonatype.org/service/local/"));

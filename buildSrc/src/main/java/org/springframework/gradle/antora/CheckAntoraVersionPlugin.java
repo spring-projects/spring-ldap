@@ -13,7 +13,7 @@ public class CheckAntoraVersionPlugin implements Plugin<Project> {
 
 	@Override
 	public void apply(Project project) {
-		TaskProvider<CheckAntoraVersionTask> antoraCheckVersion = project.getTasks().register(ANTORA_CHECK_VERSION_TASK_NAME, CheckAntoraVersionTask.class, new Action<CheckAntoraVersionTask>() {
+		TaskProvider<CheckAntoraVersionTask> antoraCheckVersion = project.getTasks().register(ANTORA_CHECK_VERSION_TASK_NAME, CheckAntoraVersionTask.class, new Action<>() {
 			@Override
 			public void execute(CheckAntoraVersionTask antoraCheckVersion) {
 				antoraCheckVersion.setGroup(LifecycleBasePlugin.VERIFICATION_GROUP);
@@ -23,10 +23,10 @@ public class CheckAntoraVersionPlugin implements Plugin<Project> {
 				antoraCheckVersion.getAntoraYmlFile().fileProvider(project.provider(() -> project.file("antora.yml")));
 			}
 		});
-		project.getPlugins().withType(LifecycleBasePlugin.class, new Action<LifecycleBasePlugin>() {
+		project.getPlugins().withType(LifecycleBasePlugin.class, new Action<>() {
 			@Override
 			public void execute(LifecycleBasePlugin lifecycleBasePlugin) {
-				project.getTasks().named(LifecycleBasePlugin.CHECK_TASK_NAME).configure(new Action<Task>() {
+				project.getTasks().named(LifecycleBasePlugin.CHECK_TASK_NAME).configure(new Action<>() {
 					@Override
 					public void execute(Task check) {
 						check.dependsOn(antoraCheckVersion);

@@ -19,7 +19,7 @@ public class GlobalLockTask extends DefaultTask {
 			throw new IllegalStateException("You just specify --write-locks argument");
 		}
 		writeLocksFor(taskProject);
-		taskProject.getSubprojects().forEach(new Consumer<Project>() {
+		taskProject.getSubprojects().forEach(new Consumer<>() {
 			@Override
 			public void accept(Project subproject) {
 				writeLocksFor(subproject);
@@ -28,7 +28,7 @@ public class GlobalLockTask extends DefaultTask {
 	}
 
 	private void writeLocksFor(Project project) {
-		project.getConfigurations().configureEach(new Action<Configuration>() {
+		project.getConfigurations().configureEach(new Action<>() {
 			@Override
 			public void execute(Configuration configuration) {
 				if (configuration.isCanBeResolved()) {

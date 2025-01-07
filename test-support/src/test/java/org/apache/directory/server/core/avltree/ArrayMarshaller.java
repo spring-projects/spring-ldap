@@ -131,7 +131,7 @@ public class ArrayMarshaller<E> implements Marshaller<ArrayTree<E>> {
 
 			if ((data.length == 1) && (data[0] == 0)) {
 				E[] array = (E[]) new Object[] {};
-				ArrayTree<E> tree = new ArrayTree<E>(this.comparator, array);
+				ArrayTree<E> tree = new ArrayTree<>(this.comparator, array);
 				return tree;
 			}
 
@@ -160,7 +160,7 @@ public class ArrayMarshaller<E> implements Marshaller<ArrayTree<E>> {
 				}
 			}
 
-			ArrayTree<E> arrayTree = new ArrayTree<E>(this.comparator, nodes);
+			ArrayTree<E> arrayTree = new ArrayTree<>(this.comparator, nodes);
 
 			return arrayTree;
 		}
