@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package org.springframework.ldap.core;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import javax.naming.NamingEnumeration;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 
+import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 
 /**
@@ -32,7 +34,7 @@ import org.springframework.util.Assert;
  * @author Mattias Hellborg Arthursson
  * @since 2.0
  */
-public final class NameAwareAttributes implements Attributes {
+public final class NameAwareAttributes implements Attributes, Iterable<NameAwareAttribute> {
 
 	private Map<String, NameAwareAttribute> attributes = new HashMap<String, NameAwareAttribute>();
 
@@ -79,6 +81,17 @@ public final class NameAwareAttributes implements Attributes {
 	@Override
 	public NamingEnumeration<String> getIDs() {
 		return new IterableNamingEnumeration<String>(this.attributes.keySet());
+	}
+
+	/**
+	 * @inheritDoc
+	 *
+	 * @since 3.3
+	 */
+	@NonNull
+	@Override
+	public Iterator<NameAwareAttribute> iterator() {
+		return this.attributes.values().iterator();
 	}
 
 	@Override

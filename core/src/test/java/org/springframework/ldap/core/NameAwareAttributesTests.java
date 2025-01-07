@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2023 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 
 package org.springframework.ldap.core;
+
+import java.util.List;
+import java.util.stream.StreamSupport;
 
 import org.junit.Test;
 
@@ -38,6 +41,17 @@ public class NameAwareAttributesTests {
 
 		attributes.remove("myOtherID");
 		assertThat(attributes.size()).isEqualTo(0);
+	}
+
+	@Test
+	public void iteratorWhenAttributesThenIterates() {
+		NameAwareAttributes attributes = new NameAwareAttributes();
+		attributes.put("myID", "value");
+		attributes.put("myOtherID", "othervalue");
+		List<String> ids = StreamSupport.stream(attributes.spliterator(), false)
+			.map(NameAwareAttribute::getID)
+			.toList();
+		assertThat(ids).containsOnly("myID", "myOtherID");
 	}
 
 }

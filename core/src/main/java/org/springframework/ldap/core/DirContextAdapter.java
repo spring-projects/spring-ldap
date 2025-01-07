@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.springframework.ldap.core;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedSet;
@@ -238,25 +239,15 @@ public class DirContextAdapter implements DirContextOperations {
 
 		List<String> tmpList = new ArrayList<String>();
 
-		NamingEnumeration<? extends Attribute> attributesEnumeration;
 		if (isUpdateMode()) {
-			attributesEnumeration = this.updatedAttrs.getAll();
-		}
-		else {
-			attributesEnumeration = this.originalAttrs.getAll();
-		}
-
-		try {
-			while (attributesEnumeration.hasMore()) {
-				Attribute oneAttribute = attributesEnumeration.next();
-				tmpList.add(oneAttribute.getID());
+			for (NameAwareAttribute attribute : this.updatedAttrs) {
+				tmpList.add(attribute.getID());
 			}
 		}
-		catch (NamingException ex) {
-			throw LdapUtils.convertLdapException(ex);
-		}
-		finally {
-			closeNamingEnumeration(attributesEnumeration);
+		else {
+			for (NameAwareAttribute attribute : this.originalAttrs) {
+				tmpList.add(attribute.getID());
+			}
 		}
 
 		return tmpList.toArray(new String[tmpList.size()]);
@@ -283,22 +274,8 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 
 		List<ModificationItem> tmpList = new LinkedList<ModificationItem>();
-		NamingEnumeration<? extends Attribute> attributesEnumeration = null;
-		try {
-			attributesEnumeration = this.updatedAttrs.getAll();
-
-			// find attributes that have been changed, removed or added
-			while (attributesEnumeration.hasMore()) {
-				NameAwareAttribute oneAttr = (NameAwareAttribute) attributesEnumeration.next();
-
-				collectModifications(oneAttr, tmpList);
-			}
-		}
-		catch (NamingException ex) {
-			throw LdapUtils.convertLdapException(ex);
-		}
-		finally {
-			closeNamingEnumeration(attributesEnumeration);
+		for (NameAwareAttribute attribute : this.updatedAttrs) {
+			collectModifications(attribute, tmpList);
 		}
 
 		if (log.isDebugEnabled()) {
@@ -318,10 +295,8 @@ public class DirContextAdapter implements DirContextOperations {
 	 * (removals and additions) will be collected individually.
 	 * @param changedAttr the value of the changed attribute.
 	 * @param modificationList the list in which to add the modifications.
-	 * @throws NamingException if thrown by called Attribute methods.
 	 */
-	private void collectModifications(NameAwareAttribute changedAttr, List<ModificationItem> modificationList)
-			throws NamingException {
+	private void collectModifications(NameAwareAttribute changedAttr, List<ModificationItem> modificationList) {
 		NameAwareAttribute currentAttribute = this.originalAttrs.get(changedAttr.getID());
 		if (currentAttribute != null && changedAttr.hasValuesAsNames()) {
 			try {
@@ -372,17 +347,15 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 	}
 
-	private void collectModifications(Attribute originalAttr, Attribute changedAttr,
-			List<ModificationItem> modificationList) throws NamingException {
+	private void collectModifications(NameAwareAttribute originalAttr, NameAwareAttribute changedAttr,
+			List<ModificationItem> modificationList) {
 
 		Attribute originalClone = (Attribute) originalAttr.clone();
 		Attribute addedValuesAttribute = new NameAwareAttribute(originalAttr.getID());
 
-		NamingEnumeration<?> allValues = changedAttr.getAll();
-		while (allValues.hasMoreElements()) {
-			Object attributeValue = allValues.nextElement();
-			if (!originalClone.remove(attributeValue)) {
-				addedValuesAttribute.add(attributeValue);
+		for (Object value : changedAttr) {
+			if (!originalClone.remove(value)) {
+				addedValuesAttribute.add(value);
 			}
 		}
 
@@ -696,30 +669,15 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	@Override
 	public void update() {
-		NamingEnumeration<? extends Attribute> attributesEnumeration = null;
-
-		try {
-			attributesEnumeration = this.updatedAttrs.getAll();
-
-			// find what to update
-			while (attributesEnumeration.hasMore()) {
-				Attribute a = attributesEnumeration.next();
-
-				// if it does not exist it should be added
-				if (isEmptyAttribute(a)) {
-					this.originalAttrs.remove(a.getID());
-				}
-				else {
-					// Otherwise it should be set.
-					this.originalAttrs.put(a);
-				}
+		for (NameAwareAttribute attribute : this.updatedAttrs) {
+			// if it does not exist it should be added
+			if (isEmptyAttribute(attribute)) {
+				this.originalAttrs.remove(attribute.getID());
 			}
-		}
-		catch (NamingException ex) {
-			throw LdapUtils.convertLdapException(ex);
-		}
-		finally {
-			closeNamingEnumeration(attributesEnumeration);
+			else {
+				// Otherwise it should be set.
+				this.originalAttrs.put(attribute);
+			}
 		}
 
 		// Reset the attributes to be updated
@@ -1359,8 +1317,9 @@ public class DirContextAdapter implements DirContextOperations {
 		builder.append(" {");
 
 		try {
-			for (NamingEnumeration<NameAwareAttribute> i = this.originalAttrs.getAll(); i.hasMore();) {
-				Attribute attribute = i.next();
+			Iterator<NameAwareAttribute> attributes = this.originalAttrs.iterator();
+			while (attributes.hasNext()) {
+				NameAwareAttribute attribute = attributes.next();
 				if (attribute.size() == 1) {
 					builder.append(attribute.getID());
 					builder.append('=');
@@ -1374,7 +1333,7 @@ public class DirContextAdapter implements DirContextOperations {
 					}
 				}
 
-				if (i.hasMore()) {
+				if (attributes.hasNext()) {
 					builder.append(", ");
 				}
 			}
