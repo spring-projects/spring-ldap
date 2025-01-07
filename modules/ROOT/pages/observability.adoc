@@ -1,0 +1,44 @@
+[[observability]]
+= Observability Support
+
+Spring LDAP integrates with Micromter.
+Similar to LDAP's transaction support, observability happens in `DirContext` instances.
+
+== Minimal Configuration
+
+To minimally configure a Spring Boot application to observe LDAP operations, first configure Boot, then publish the following bean:
+
+[source,java]
+====
+@Bean
+static ContextSourceObservationPostProcessor observationPostProcessor(ObjectProvider<ObservationRegistry> provider) {
+    return new ContextSourceObservationPostProcessor(provider);
+}
+====
+
+This will cause the `LdapContextSource` bean that Boot publishes to be wrapped in an `ObservationContextSource` which will time LDAP queries and emit corresponding traces.
+
+Or if you aren't using Boot or are otherwise publishing your own `ContextSource` instance, then you can do:
+
+[source,java]
+====
+@Bean
+ContextSource contextSource(ObservationRegistry registry) {
+    ContextSource observed = createContextSource();
+    return new ObservationContextSource(observed, registry);
+}
+====
+
+== Runtime Expectations
+
+Each observation is under the name `spring.ldap.dir.context.operations` with a contextual name of `perform _operation_`.
+
+The following is a truncated output of `DirContext#getAttributes` when instrumented with Micrometer:
+
+[source,bash]
+====
+2025-01-06T19:02:00.343-07:00  INFO 2036360 --- [nio-8080-exec-1] [677c8af4f5f02980a1584d0ac0b9fba4-d38e906e55d92746] i.m.o.ObservationTextPublisher           : START - name='spring.ldap.dir.context.operations', contextualName='null', error='null', lowCardinalityKeyValues=[base='dc=springframework,dc=org', operation='get.attributes', urls='[ldap://localhost:41283/]'], highCardinalityKeyValues=[attribute.ids='null', name='uid=user,ou=people'], ... duration(nanos)=243104.0 ... parentObservation={name=spring.security.authentications ... parentObservation={name=spring.security.filterchains(security filterchain before) ... parentObservation={name=http.server.requests(null) ...
+2025-01-06T19:02:00.345-07:00  INFO 2036360 --- [nio-8080-exec-1] [677c8af4f5f02980a1584d0ac0b9fba4-daa1bbc981aade27] i.m.o.ObservationTextPublisher           :  OPEN - name='spring.ldap.dir.context.operations', ...
+2025-01-06T19:02:00.363-07:00  INFO 2036360 --- [nio-8080-exec-1] [677c8af4f5f02980a1584d0ac0b9fba4-daa1bbc981aade27] i.m.o.ObservationTextPublisher           : CLOSE - name='spring.ldap.dir.context.operations', ...
+2025-01-06T19:02:00.364-07:00  INFO 2036360 --- [nio-8080-exec-1] [677c8af4f5f02980a1584d0ac0b9fba4-d38e906e55d92746] i.m.o.ObservationTextPublisher           :  STOP - name='spring.ldap.dir.context.operations', ...
+====

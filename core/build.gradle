@@ -17,6 +17,7 @@ dependencies {
     api "org.springframework:spring-core"
     api "org.springframework:spring-beans"
     api "org.springframework:spring-tx"
+    api "io.micrometer:micrometer-core"
 
     implementation "org.slf4j:slf4j-api"
 
@@ -31,6 +32,10 @@ dependencies {
     optional "commons-pool:commons-pool"
     optional "org.apache.commons:commons-pool2"
 
+    testImplementation ("io.micrometer:micrometer-test") {
+        exclude group: 'org.mockito'
+        exclude group: 'org.assertj'
+    }
     testImplementation platform('org.junit:junit-bom')
     testImplementation "org.junit.vintage:junit-vintage-engine"
 
