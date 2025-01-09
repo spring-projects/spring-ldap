@@ -40,6 +40,7 @@ import javax.naming.ldap.ExtendedResponse;
 import javax.naming.ldap.LdapContext;
 import javax.naming.ldap.LdapName;
 
+import com.mysema.commons.lang.Assert;
 import io.micrometer.common.KeyValue;
 import io.micrometer.common.KeyValues;
 import io.micrometer.observation.Observation;
@@ -69,9 +70,13 @@ public final class ObservationContextSource implements BaseLdapPathContextSource
 
 	private final ObservationRegistry registry;
 
-	public ObservationContextSource(BaseLdapPathContextSource contextSource, ObservationRegistry registry) {
+	public ObservationContextSource(BaseLdapPathContextSource contextSource, ObservationRegistry observationRegistry) {
+		Assert.notNull(contextSource, "contextSource cannot be null");
+		Assert.notNull(observationRegistry, "observationRegistry cannot be null");
+		Assert.isFalse(contextSource instanceof ObservationContextSource,
+				"contextSource is already wrapped in an ObservationContextSource");
 		this.contextSource = contextSource;
-		this.registry = registry;
+		this.registry = observationRegistry;
 		this.builder = DirContextOperationObservationContext.withContextSource(this.contextSource);
 	}
 
@@ -91,8 +96,8 @@ public final class ObservationContextSource implements BaseLdapPathContextSource
 	}
 
 	private DirContext wrapDirContext(DirContext delegate) {
-		if (delegate instanceof DirContextOperations operations) {
-			return operations;
+		if (delegate instanceof DirContextOperations) {
+			return delegate;
 		}
 		if (delegate instanceof LdapContext ldap) {
 			return new ObservationLdapContext(this.builder, ldap, this.registry);
