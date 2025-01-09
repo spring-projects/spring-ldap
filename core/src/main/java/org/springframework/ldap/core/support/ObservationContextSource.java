@@ -40,18 +40,19 @@ import javax.naming.ldap.ExtendedResponse;
 import javax.naming.ldap.LdapContext;
 import javax.naming.ldap.LdapName;
 
-import com.mysema.commons.lang.Assert;
 import io.micrometer.common.KeyValue;
 import io.micrometer.common.KeyValues;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationConvention;
 import io.micrometer.observation.ObservationRegistry;
 
+import org.springframework.lang.NonNull;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.DirContextProxy;
 import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -73,7 +74,7 @@ public final class ObservationContextSource implements BaseLdapPathContextSource
 	public ObservationContextSource(BaseLdapPathContextSource contextSource, ObservationRegistry observationRegistry) {
 		Assert.notNull(contextSource, "contextSource cannot be null");
 		Assert.notNull(observationRegistry, "observationRegistry cannot be null");
-		Assert.isFalse(contextSource instanceof ObservationContextSource,
+		Assert.isTrue(!(contextSource instanceof ObservationContextSource),
 				"contextSource is already wrapped in an ObservationContextSource");
 		this.contextSource = contextSource;
 		this.registry = observationRegistry;
@@ -180,6 +181,7 @@ public final class ObservationContextSource implements BaseLdapPathContextSource
 
 		static final String OBSERVATION_NAME = "spring.ldap.dir.context.operations";
 
+		@NonNull
 		@Override
 		public KeyValues getLowCardinalityKeyValues(DirContextOperationObservationContext context) {
 			return KeyValues.of("urls", context.getUrls())
@@ -188,7 +190,7 @@ public final class ObservationContextSource implements BaseLdapPathContextSource
 		}
 
 		@Override
-		public boolean supportsContext(io.micrometer.observation.Observation.Context context) {
+		public boolean supportsContext(@NonNull Observation.Context context) {
 			return context instanceof DirContextOperationObservationContext;
 		}
 
@@ -204,7 +206,31 @@ public final class ObservationContextSource implements BaseLdapPathContextSource
 
 	}
 
-	private static class ObservationLdapContext extends ObservationDirContext implements LdapContext {
+	private interface DelegatingLdapContext extends LdapContext, DirContextProxy {
+
+		default LdapContext newInstance(Control[] requestControls) throws javax.naming.NamingException {
+			return ((LdapContext) getTargetContext()).newInstance(requestControls);
+		}
+
+		default Control[] getConnectControls() throws javax.naming.NamingException {
+			return ((LdapContext) getTargetContext()).getConnectControls();
+		}
+
+		default void setRequestControls(Control[] requestControls) throws javax.naming.NamingException {
+			((LdapContext) getTargetContext()).setRequestControls(requestControls);
+		}
+
+		default Control[] getRequestControls() throws javax.naming.NamingException {
+			return ((LdapContext) getTargetContext()).getRequestControls();
+		}
+
+		default Control[] getResponseControls() throws javax.naming.NamingException {
+			return ((LdapContext) getTargetContext()).getResponseControls();
+		}
+
+	}
+
+	private static class ObservationLdapContext extends ObservationDirContext implements DelegatingLdapContext {
 
 		private final LdapContext delegate;
 
@@ -216,50 +242,61 @@ public final class ObservationContextSource implements BaseLdapPathContextSource
 
 		@Override
 		public ExtendedResponse extendedOperation(ExtendedRequest request) throws javax.naming.NamingException {
-			Observation observation = observation("extended.operation");
+			Observation observation = observation("extendedOperation");
 			observation.highCardinalityKeyValue("request.id", request.getID());
-			return observe(observation, () -> this.delegate.extendedOperation(request));
+			return observation.observeChecked(() -> this.delegate.extendedOperation(request));
 		}
 
 		@Override
-		public LdapContext newInstance(Control[] requestControls) throws javax.naming.NamingException {
-			return this.delegate.newInstance(requestControls);
-		}
-
-		@Override
-		public void reconnect(Control[] connCtls) throws javax.naming.NamingException {
+		public void reconnect(Control[] controls) throws javax.naming.NamingException {
 			Observation observation = observation("reconnect");
 			List<String> ids = new ArrayList<>();
-			for (Control control : connCtls) {
+			for (Control control : controls) {
 				ids.add(control.getID());
 			}
 			observation.highCardinalityKeyValue("control.ids", ids.toString());
-			observe(observation, () -> this.delegate.reconnect(connCtls));
-		}
-
-		@Override
-		public Control[] getConnectControls() throws javax.naming.NamingException {
-			return this.delegate.getConnectControls();
-		}
-
-		@Override
-		public void setRequestControls(Control[] requestControls) throws javax.naming.NamingException {
-			this.delegate.setRequestControls(requestControls);
-		}
-
-		@Override
-		public Control[] getRequestControls() throws javax.naming.NamingException {
-			return this.delegate.getRequestControls();
-		}
-
-		@Override
-		public Control[] getResponseControls() throws javax.naming.NamingException {
-			return this.delegate.getResponseControls();
+			observation.observeChecked(() -> this.delegate.reconnect(controls));
 		}
 
 	}
 
-	private static class ObservationDirContext implements DirContext, DirContextProxy {
+	private interface DelegatingDirContext extends DirContext, DirContextProxy {
+
+		default NameParser getNameParser(Name name) throws javax.naming.NamingException {
+			return getTargetContext().getNameParser(name);
+		}
+
+		default NameParser getNameParser(String name) throws javax.naming.NamingException {
+			return getTargetContext().getNameParser(name);
+		}
+
+		default Name composeName(Name name, Name prefix) throws javax.naming.NamingException {
+			return getTargetContext().composeName(name, prefix);
+		}
+
+		default String composeName(String name, String prefix) throws javax.naming.NamingException {
+			return getTargetContext().composeName(name, prefix);
+		}
+
+		default Object addToEnvironment(String propName, Object propVal) throws javax.naming.NamingException {
+			return getTargetContext().addToEnvironment(propName, propVal);
+		}
+
+		default Object removeFromEnvironment(String propName) throws javax.naming.NamingException {
+			return getTargetContext().removeFromEnvironment(propName);
+		}
+
+		default Hashtable<?, ?> getEnvironment() throws javax.naming.NamingException {
+			return getTargetContext().getEnvironment();
+		}
+
+		default void close() throws javax.naming.NamingException {
+			getTargetContext().close();
+		}
+
+	}
+
+	private static class ObservationDirContext extends AbstractDirContextProxy implements DelegatingDirContext {
 
 		private final ObservationRegistry registry;
 
@@ -267,13 +304,330 @@ public final class ObservationContextSource implements BaseLdapPathContextSource
 
 		private final DirContextOperationObservationContext.Builder builder;
 
-		private final DirContext delegate;
-
 		ObservationDirContext(DirContextOperationObservationContext.Builder builder, DirContext delegate,
 				ObservationRegistry registry) {
+			super(delegate);
 			this.builder = builder;
-			this.delegate = delegate;
 			this.registry = registry;
+		}
+
+		@Override
+		public Attributes getAttributes(Name name) throws javax.naming.NamingException {
+			Observation observation = observation("getAttributes").highCardinalityKeyValue("name", name.toString());
+			return observation.observeChecked(() -> getTargetContext().getAttributes(name));
+		}
+
+		@Override
+		public Attributes getAttributes(String name) throws javax.naming.NamingException {
+			Observation observation = observation("getAttributes").highCardinalityKeyValue("name", name);
+			return observation.observeChecked(() -> getTargetContext().getAttributes(name));
+		}
+
+		@Override
+		public Attributes getAttributes(Name name, String[] attrIds) throws javax.naming.NamingException {
+			Observation observation = observation("getAttributes").highCardinalityKeyValue(name(name))
+				.highCardinalityKeyValue(attributeIds(attrIds));
+			return observation.observeChecked(() -> getTargetContext().getAttributes(name, attrIds));
+		}
+
+		@Override
+		public Attributes getAttributes(String name, String[] attrIds) throws javax.naming.NamingException {
+			Observation observation = observation("getAttributes").highCardinalityKeyValue(name(name))
+				.highCardinalityKeyValue(attributeIds(attrIds));
+			return observation.observeChecked(() -> getTargetContext().getAttributes(name, attrIds));
+		}
+
+		@Override
+		public void modifyAttributes(Name name, int mod_op, Attributes attrs) throws javax.naming.NamingException {
+			Observation observation = observation("modifyAttributes").highCardinalityKeyValue(name(name))
+				.highCardinalityKeyValue(attributeIds(mod_op, attrs));
+			observation.observeChecked(() -> getTargetContext().modifyAttributes(name, mod_op, attrs));
+		}
+
+		@Override
+		public void modifyAttributes(String name, int mod_op, Attributes attrs) throws javax.naming.NamingException {
+			Observation observation = observation("modifyAttributes").highCardinalityKeyValue(name(name))
+				.highCardinalityKeyValue(attributeIds(mod_op, attrs));
+			observation.observeChecked(() -> getTargetContext().modifyAttributes(name, mod_op, attrs));
+		}
+
+		@Override
+		public void modifyAttributes(Name name, ModificationItem[] mods) throws javax.naming.NamingException {
+			Observation observation = observation("modifyAttributes").highCardinalityKeyValue(name(name))
+				.highCardinalityKeyValue(attributeIds(mods));
+			observation.observeChecked(() -> getTargetContext().modifyAttributes(name, mods));
+		}
+
+		@Override
+		public void modifyAttributes(String name, ModificationItem[] mods) throws javax.naming.NamingException {
+			Observation observation = observation("modifyAttributes").highCardinalityKeyValue(name(name))
+				.highCardinalityKeyValue(attributeIds(mods));
+			observation.observeChecked(() -> getTargetContext().modifyAttributes(name, mods));
+		}
+
+		@Override
+		public void bind(Name name, Object obj, Attributes attrs) throws javax.naming.NamingException {
+			Observation observation = observation("bind").highCardinalityKeyValue(name(name))
+				.highCardinalityKeyValue(attributeIds(attrs));
+			observation.observeChecked(() -> getTargetContext().bind(name, obj, attrs));
+		}
+
+		@Override
+		public void bind(String name, Object obj, Attributes attrs) throws javax.naming.NamingException {
+			Observation observation = observation("bind").highCardinalityKeyValue(name(name))
+				.highCardinalityKeyValue(attributeIds(attrs));
+			observation.observeChecked(() -> getTargetContext().bind(name, obj, attrs));
+		}
+
+		@Override
+		public void rebind(Name name, Object obj, Attributes attrs) throws javax.naming.NamingException {
+			Observation observation = observation("rebind").highCardinalityKeyValue(name(name))
+				.highCardinalityKeyValue(attributeIds(attrs));
+			observation.observeChecked(() -> getTargetContext().rebind(name, obj, attrs));
+		}
+
+		@Override
+		public void rebind(String name, Object obj, Attributes attrs) throws javax.naming.NamingException {
+			Observation observation = observation("rebind").highCardinalityKeyValue(name(name))
+				.highCardinalityKeyValue(attributeIds(attrs));
+			observation.observeChecked(() -> getTargetContext().rebind(name, obj, attrs));
+		}
+
+		@Override
+		public DirContext createSubcontext(Name name, Attributes attrs) throws javax.naming.NamingException {
+			Observation observation = observation("createSubcontext").highCardinalityKeyValue(name(name))
+				.highCardinalityKeyValue(attributeIds(attrs));
+			return observation.observeChecked(() -> getTargetContext().createSubcontext(name, attrs));
+		}
+
+		@Override
+		public DirContext createSubcontext(String name, Attributes attrs) throws javax.naming.NamingException {
+			Observation observation = observation("createSubcontext").highCardinalityKeyValue(name(name))
+				.highCardinalityKeyValue(attributeIds(attrs));
+			return observation.observeChecked(() -> getTargetContext().createSubcontext(name, attrs));
+		}
+
+		@Override
+		public DirContext getSchema(Name name) throws javax.naming.NamingException {
+			Observation observation = observation("getSchema").highCardinalityKeyValue(name(name));
+			return observation.observeChecked(() -> getTargetContext().getSchema(name));
+		}
+
+		@Override
+		public DirContext getSchema(String name) throws javax.naming.NamingException {
+			Observation observation = observation("getSchema").highCardinalityKeyValue(name(name));
+			return observation.observeChecked(() -> getTargetContext().getSchema(name));
+		}
+
+		@Override
+		public DirContext getSchemaClassDefinition(Name name) throws javax.naming.NamingException {
+			Observation observation = observation("getSchemaClassDefinition").highCardinalityKeyValue(name(name));
+			return observation.observeChecked(() -> getTargetContext().getSchemaClassDefinition(name));
+		}
+
+		@Override
+		public DirContext getSchemaClassDefinition(String name) throws javax.naming.NamingException {
+			Observation observation = observation("getSchemaClassDefinition").highCardinalityKeyValue(name(name));
+			return observation.observeChecked(() -> getTargetContext().getSchemaClassDefinition(name));
+		}
+
+		@Override
+		public NamingEnumeration<SearchResult> search(Name name, Attributes matchingAttributes,
+				String[] attributesToReturn) throws javax.naming.NamingException {
+			Observation observation = observation("search").highCardinalityKeyValue(name(name))
+				.highCardinalityKeyValue(attributeIdsReturn(attributesToReturn));
+			return observation
+				.observeChecked(() -> getTargetContext().search(name, matchingAttributes, attributesToReturn));
+		}
+
+		@Override
+		public NamingEnumeration<SearchResult> search(String name, Attributes matchingAttributes,
+				String[] attributesToReturn) throws javax.naming.NamingException {
+			Observation observation = observation("search").highCardinalityKeyValue(name(name))
+				.highCardinalityKeyValue(attributeIds(matchingAttributes))
+				.highCardinalityKeyValue(attributeIdsReturn(attributesToReturn));
+			return observation
+				.observeChecked(() -> getTargetContext().search(name, matchingAttributes, attributesToReturn));
+		}
+
+		@Override
+		public NamingEnumeration<SearchResult> search(Name name, Attributes matchingAttributes)
+				throws javax.naming.NamingException {
+			Observation observation = observation("search").highCardinalityKeyValue(name(name))
+				.highCardinalityKeyValue(attributeIds(matchingAttributes));
+			return observation.observeChecked(() -> getTargetContext().search(name, matchingAttributes));
+		}
+
+		@Override
+		public NamingEnumeration<SearchResult> search(String name, Attributes matchingAttributes)
+				throws javax.naming.NamingException {
+			Observation observation = observation("search").highCardinalityKeyValue(name(name))
+				.highCardinalityKeyValue(attributeIds(matchingAttributes));
+			return observation.observeChecked(() -> getTargetContext().search(name, matchingAttributes));
+		}
+
+		@Override
+		public NamingEnumeration<SearchResult> search(Name name, String filter, SearchControls cons)
+				throws javax.naming.NamingException {
+			Observation observation = observation("search").highCardinalityKeyValue(name(name))
+				.highCardinalityKeyValue(attributeIdsReturn(cons))
+				.highCardinalityKeyValue(searchControls(cons));
+			return observation.observeChecked(() -> getTargetContext().search(name, filter, cons));
+		}
+
+		@Override
+		public NamingEnumeration<SearchResult> search(String name, String filter, SearchControls cons)
+				throws javax.naming.NamingException {
+			Observation observation = observation("search").highCardinalityKeyValue(name(name))
+				.highCardinalityKeyValue(attributeIdsReturn(cons))
+				.highCardinalityKeyValue(searchControls(cons));
+			return observation.observeChecked(() -> getTargetContext().search(name, filter, cons));
+		}
+
+		@Override
+		public NamingEnumeration<SearchResult> search(Name name, String filterExpr, Object[] filterArgs,
+				SearchControls cons) throws javax.naming.NamingException {
+			Observation observation = observation("search").highCardinalityKeyValue(name(name))
+				.highCardinalityKeyValue(attributeIdsReturn(cons))
+				.highCardinalityKeyValue(searchControls(cons));
+			return observation.observeChecked(() -> getTargetContext().search(name, filterExpr, filterArgs, cons));
+		}
+
+		@Override
+		public NamingEnumeration<SearchResult> search(String name, String filterExpr, Object[] filterArgs,
+				SearchControls cons) throws javax.naming.NamingException {
+			Observation observation = observation("search").highCardinalityKeyValue(name(name))
+				.highCardinalityKeyValue(attributeIdsReturn(cons))
+				.highCardinalityKeyValue(searchControls(cons));
+			return observation.observeChecked(() -> getTargetContext().search(name, filterExpr, filterArgs, cons));
+		}
+
+		@Override
+		public Object lookup(Name name) throws javax.naming.NamingException {
+			Observation observation = observation("lookup").highCardinalityKeyValue(name(name));
+			return observation.observeChecked(() -> getTargetContext().lookup(name));
+		}
+
+		@Override
+		public Object lookup(String name) throws javax.naming.NamingException {
+			Observation observation = observation("lookup").highCardinalityKeyValue(name(name));
+			return observation.observeChecked(() -> getTargetContext().lookup(name));
+		}
+
+		@Override
+		public void bind(Name name, Object obj) throws javax.naming.NamingException {
+			Observation observation = observation("bind").highCardinalityKeyValue(name(name));
+			observation.observeChecked(() -> getTargetContext().bind(name, obj));
+		}
+
+		@Override
+		public void bind(String name, Object obj) throws javax.naming.NamingException {
+			Observation observation = observation("bind").highCardinalityKeyValue(name(name));
+			observation.observeChecked(() -> getTargetContext().bind(name, obj));
+		}
+
+		@Override
+		public void rebind(Name name, Object obj) throws javax.naming.NamingException {
+			Observation observation = observation("rebind").highCardinalityKeyValue(name(name));
+			observation.observeChecked(() -> getTargetContext().rebind(name, obj));
+		}
+
+		@Override
+		public void rebind(String name, Object obj) throws javax.naming.NamingException {
+			Observation observation = observation("rebind").highCardinalityKeyValue(name(name));
+			observation.observeChecked(() -> getTargetContext().rebind(name, obj));
+		}
+
+		@Override
+		public void unbind(Name name) throws javax.naming.NamingException {
+			Observation observation = observation("unbind").highCardinalityKeyValue(name(name));
+			observation.observeChecked(() -> getTargetContext().unbind(name));
+		}
+
+		@Override
+		public void unbind(String name) throws javax.naming.NamingException {
+			Observation observation = observation("unbind").highCardinalityKeyValue(name(name));
+			observation.observeChecked(() -> getTargetContext().unbind(name));
+		}
+
+		@Override
+		public void rename(Name oldName, Name newName) throws javax.naming.NamingException {
+			Observation observation = observation("rename").highCardinalityKeyValue(name("old.name", oldName))
+				.highCardinalityKeyValue(name("newName", newName));
+			observation.observeChecked(() -> getTargetContext().rename(oldName, newName));
+		}
+
+		@Override
+		public void rename(String oldName, String newName) throws javax.naming.NamingException {
+			Observation observation = observation("rename").highCardinalityKeyValue(name("old.name", oldName))
+				.highCardinalityKeyValue(name("newName", newName));
+			observation.observeChecked(() -> getTargetContext().rename(oldName, newName));
+		}
+
+		@Override
+		public NamingEnumeration<NameClassPair> list(Name name) throws javax.naming.NamingException {
+			Observation observation = observation("list").highCardinalityKeyValue(name(name));
+			return observation.observeChecked(() -> getTargetContext().list(name));
+		}
+
+		@Override
+		public NamingEnumeration<NameClassPair> list(String name) throws javax.naming.NamingException {
+			Observation observation = observation("list").highCardinalityKeyValue(name(name));
+			return observation.observeChecked(() -> getTargetContext().list(name));
+		}
+
+		@Override
+		public NamingEnumeration<Binding> listBindings(Name name) throws javax.naming.NamingException {
+			Observation observation = observation("listBindings").highCardinalityKeyValue(name(name));
+			return observation.observeChecked(() -> getTargetContext().listBindings(name));
+		}
+
+		@Override
+		public NamingEnumeration<Binding> listBindings(String name) throws javax.naming.NamingException {
+			Observation observation = observation("listBindings").highCardinalityKeyValue(name(name));
+			return observation.observeChecked(() -> getTargetContext().listBindings(name));
+		}
+
+		@Override
+		public void destroySubcontext(Name name) throws javax.naming.NamingException {
+			Observation observation = observation("destroySubcontext").highCardinalityKeyValue(name(name));
+			observation.observeChecked(() -> getTargetContext().destroySubcontext(name));
+		}
+
+		@Override
+		public void destroySubcontext(String name) throws javax.naming.NamingException {
+			Observation observation = observation("destroySubcontext").highCardinalityKeyValue(name(name));
+			observation.observeChecked(() -> getTargetContext().destroySubcontext(name));
+		}
+
+		@Override
+		public Context createSubcontext(Name name) throws javax.naming.NamingException {
+			Observation observation = observation("createSubcontext").highCardinalityKeyValue(name(name));
+			return observation.observeChecked(() -> getTargetContext().createSubcontext(name));
+		}
+
+		@Override
+		public Context createSubcontext(String name) throws javax.naming.NamingException {
+			Observation observation = observation("createSubcontext").highCardinalityKeyValue(name(name));
+			return observation.observeChecked(() -> getTargetContext().createSubcontext(name));
+		}
+
+		@Override
+		public Object lookupLink(Name name) throws javax.naming.NamingException {
+			Observation observation = observation("lookupLink").highCardinalityKeyValue(name(name));
+			return observation.observeChecked(() -> getTargetContext().lookupLink(name));
+		}
+
+		@Override
+		public Object lookupLink(String name) throws javax.naming.NamingException {
+			Observation observation = observation("lookupLink").highCardinalityKeyValue(name(name));
+			return observation.observeChecked(() -> getTargetContext().lookupLink(name));
+		}
+
+		@Override
+		public String getNameInNamespace() throws javax.naming.NamingException {
+			Observation observation = observation("getNameInNamespace");
+			return observation.observeChecked(getTargetContext()::getNameInNamespace);
 		}
 
 		private static KeyValue name(String tagName, Name name) {
@@ -297,12 +651,7 @@ public final class ObservationContextSource implements BaseLdapPathContextSource
 		}
 
 		private static KeyValue attributeIds(Attributes attributes) {
-			if (attributes == null) {
-				return KeyValue.of("attribute.ids", Collections.emptyList().toString());
-			}
-			else {
-				return KeyValue.of("attribute.ids", Collections.list(attributes.getIDs()).toString());
-			}
+			return KeyValue.of("attribute.ids", Collections.list(attributes.getIDs()).toString());
 		}
 
 		private static KeyValue attributeIds(int mod_op, Attributes attrs) {
@@ -321,16 +670,22 @@ public final class ObservationContextSource implements BaseLdapPathContextSource
 		}
 
 		private static KeyValue attributeIdsReturn(String[] attrs) {
+			if (attrs == null) {
+				return KeyValue.of("attribute.ids", "all");
+			}
 			return KeyValue.of("attribute.ids", Arrays.toString(attrs));
 		}
 
 		private static KeyValue attributeIdsReturn(SearchControls searchControls) {
+			if (searchControls == null) {
+				return attributeIdsReturn((String[]) null);
+			}
 			return attributeIdsReturn(searchControls.getReturningAttributes());
 		}
 
 		private static KeyValue searchControls(SearchControls searchControls) {
 			if (searchControls == null) {
-				return KeyValue.of("search.controls", "none");
+				return KeyValue.of("search.controls", "default");
 			}
 			return KeyValue.of("search.controls", Objects.toString(searchControls));
 		}
@@ -344,415 +699,24 @@ public final class ObservationContextSource implements BaseLdapPathContextSource
 			};
 		}
 
+		Observation observation(String operation) {
+			DirContextOperationObservationContext context = this.builder.operation(operation);
+			return Observation.createNotStarted(this.convention, () -> context, this.registry);
+		}
+
+	}
+
+	private abstract static class AbstractDirContextProxy implements DirContextProxy {
+
+		private final DirContext delegate;
+
+		AbstractDirContextProxy(DirContext delegate) {
+			this.delegate = delegate;
+		}
+
 		@Override
 		public DirContext getTargetContext() {
 			return this.delegate;
-		}
-
-		@Override
-		public Attributes getAttributes(Name name) throws javax.naming.NamingException {
-			DirContextOperationObservationContext context = this.builder.operation("get.attributes");
-			io.micrometer.observation.Observation observation = io.micrometer.observation.Observation
-				.createNotStarted(this.convention, () -> context, this.registry)
-				.highCardinalityKeyValue("name", name.toString());
-			return observe(observation, () -> this.delegate.getAttributes(name));
-		}
-
-		@Override
-		public Attributes getAttributes(String name) throws javax.naming.NamingException {
-			Observation observation = observation("get.attributes").highCardinalityKeyValue("name", name);
-			return observe(observation, () -> this.delegate.getAttributes(name));
-		}
-
-		Observation observation(String operation) {
-			DirContextOperationObservationContext context = this.builder.operation(operation);
-			return io.micrometer.observation.Observation.createNotStarted(this.convention, () -> context,
-					this.registry);
-		}
-
-		@Override
-		public Attributes getAttributes(Name name, String[] attrIds) throws javax.naming.NamingException {
-			Observation observation = observation("get.attributes").highCardinalityKeyValue(name(name))
-				.highCardinalityKeyValue(attributeIds(attrIds));
-			return observe(observation, () -> this.delegate.getAttributes(name, attrIds));
-		}
-
-		@Override
-		public Attributes getAttributes(String name, String[] attrIds) throws javax.naming.NamingException {
-			Observation observation = observation("get.attributes").highCardinalityKeyValue(name(name))
-				.highCardinalityKeyValue(attributeIds(attrIds));
-			return observe(observation, () -> this.delegate.getAttributes(name, attrIds));
-		}
-
-		@Override
-		public void modifyAttributes(Name name, int mod_op, Attributes attrs) throws javax.naming.NamingException {
-			Observation observation = observation("modify.attributes").highCardinalityKeyValue(name(name))
-				.highCardinalityKeyValue(attributeIds(mod_op, attrs));
-			observe(observation, () -> this.delegate.modifyAttributes(name, mod_op, attrs));
-		}
-
-		@Override
-		public void modifyAttributes(String name, int mod_op, Attributes attrs) throws javax.naming.NamingException {
-			Observation observation = observation("modify.attributes").highCardinalityKeyValue(name(name))
-				.highCardinalityKeyValue(attributeIds(mod_op, attrs));
-			observe(observation, () -> this.delegate.modifyAttributes(name, mod_op, attrs));
-		}
-
-		@Override
-		public void modifyAttributes(Name name, ModificationItem[] mods) throws javax.naming.NamingException {
-			Observation observation = observation("modify.attributes").highCardinalityKeyValue(name(name))
-				.highCardinalityKeyValue(attributeIds(mods));
-			observe(observation, () -> this.delegate.modifyAttributes(name, mods));
-		}
-
-		@Override
-		public void modifyAttributes(String name, ModificationItem[] mods) throws javax.naming.NamingException {
-			Observation observation = observation("modify.attributes").highCardinalityKeyValue(name(name))
-				.highCardinalityKeyValue(attributeIds(mods));
-			observe(observation, () -> this.delegate.modifyAttributes(name, mods));
-		}
-
-		@Override
-		public void bind(Name name, Object obj, Attributes attrs) throws javax.naming.NamingException {
-			Observation observation = observation("bind").highCardinalityKeyValue(name(name))
-				.highCardinalityKeyValue(attributeIds(attrs));
-			observe(observation, () -> this.delegate.bind(name, obj, attrs));
-		}
-
-		@Override
-		public void bind(String name, Object obj, Attributes attrs) throws javax.naming.NamingException {
-			Observation observation = observation("bind").highCardinalityKeyValue(name(name))
-				.highCardinalityKeyValue(attributeIds(attrs));
-			observe(observation, () -> this.delegate.bind(name, obj, attrs));
-		}
-
-		@Override
-		public void rebind(Name name, Object obj, Attributes attrs) throws javax.naming.NamingException {
-			Observation observation = observation("rebind").highCardinalityKeyValue(name(name))
-				.highCardinalityKeyValue(attributeIds(attrs));
-			observe(observation, () -> this.delegate.rebind(name, obj, attrs));
-		}
-
-		@Override
-		public void rebind(String name, Object obj, Attributes attrs) throws javax.naming.NamingException {
-			Observation observation = observation("rebind").highCardinalityKeyValue(name(name))
-				.highCardinalityKeyValue(attributeIds(attrs));
-			observe(observation, () -> this.delegate.rebind(name, obj, attrs));
-		}
-
-		@Override
-		public DirContext createSubcontext(Name name, Attributes attrs) throws javax.naming.NamingException {
-			Observation observation = observation("create.subcontext").highCardinalityKeyValue(name(name))
-				.highCardinalityKeyValue(attributeIds(attrs));
-			return observe(observation, () -> this.delegate.createSubcontext(name, attrs));
-		}
-
-		@Override
-		public DirContext createSubcontext(String name, Attributes attrs) throws javax.naming.NamingException {
-			Observation observation = observation("create.subcontext").highCardinalityKeyValue(name(name))
-				.highCardinalityKeyValue(attributeIds(attrs));
-			return observe(observation, () -> this.delegate.createSubcontext(name, attrs));
-		}
-
-		@Override
-		public DirContext getSchema(Name name) throws javax.naming.NamingException {
-			Observation observation = observation("get.schema").highCardinalityKeyValue(name(name));
-			return observe(observation, () -> this.delegate.getSchema(name));
-		}
-
-		@Override
-		public DirContext getSchema(String name) throws javax.naming.NamingException {
-			Observation observation = observation("get.schema").highCardinalityKeyValue(name(name));
-			return observe(observation, () -> this.delegate.getSchema(name));
-		}
-
-		@Override
-		public DirContext getSchemaClassDefinition(Name name) throws javax.naming.NamingException {
-			Observation observation = observation("get.schema.class.definition").highCardinalityKeyValue(name(name));
-			return observe(observation, () -> this.delegate.getSchemaClassDefinition(name));
-		}
-
-		@Override
-		public DirContext getSchemaClassDefinition(String name) throws javax.naming.NamingException {
-			Observation observation = observation("get.schema.class.definition").highCardinalityKeyValue(name(name));
-			return observe(observation, () -> this.delegate.getSchemaClassDefinition(name));
-		}
-
-		@Override
-		public NamingEnumeration<SearchResult> search(Name name, Attributes matchingAttributes,
-				String[] attributesToReturn) throws javax.naming.NamingException {
-			Observation observation = observation("search").highCardinalityKeyValue(name(name))
-				.highCardinalityKeyValue(attributeIdsReturn(attributesToReturn));
-			return observe(observation, () -> this.delegate.search(name, matchingAttributes, attributesToReturn));
-		}
-
-		@Override
-		public NamingEnumeration<SearchResult> search(String name, Attributes matchingAttributes,
-				String[] attributesToReturn) throws javax.naming.NamingException {
-			Observation observation = observation("search").highCardinalityKeyValue(name(name))
-				.highCardinalityKeyValue(attributeIds(matchingAttributes))
-				.highCardinalityKeyValue(attributeIdsReturn(attributesToReturn));
-			return observe(observation, () -> this.delegate.search(name, matchingAttributes, attributesToReturn));
-		}
-
-		@Override
-		public NamingEnumeration<SearchResult> search(Name name, Attributes matchingAttributes)
-				throws javax.naming.NamingException {
-			Observation observation = observation("search").highCardinalityKeyValue(name(name))
-				.highCardinalityKeyValue(attributeIds(matchingAttributes));
-			return observe(observation, () -> this.delegate.search(name, matchingAttributes));
-		}
-
-		@Override
-		public NamingEnumeration<SearchResult> search(String name, Attributes matchingAttributes)
-				throws javax.naming.NamingException {
-			Observation observation = observation("search").highCardinalityKeyValue(name(name))
-				.highCardinalityKeyValue(attributeIds(matchingAttributes));
-			return observe(observation, () -> this.delegate.search(name, matchingAttributes));
-		}
-
-		@Override
-		public NamingEnumeration<SearchResult> search(Name name, String filter, SearchControls cons)
-				throws javax.naming.NamingException {
-			Observation observation = observation("search").highCardinalityKeyValue(name(name))
-				.highCardinalityKeyValue(attributeIdsReturn(cons))
-				.highCardinalityKeyValue(searchControls(cons));
-			return observe(observation, () -> this.delegate.search(name, filter, cons));
-		}
-
-		@Override
-		public NamingEnumeration<SearchResult> search(String name, String filter, SearchControls cons)
-				throws javax.naming.NamingException {
-			Observation observation = observation("search").highCardinalityKeyValue(name(name))
-				.highCardinalityKeyValue(attributeIdsReturn(cons))
-				.highCardinalityKeyValue(searchControls(cons));
-			return observe(observation, () -> this.delegate.search(name, filter, cons));
-		}
-
-		@Override
-		public NamingEnumeration<SearchResult> search(Name name, String filterExpr, Object[] filterArgs,
-				SearchControls cons) throws javax.naming.NamingException {
-			Observation observation = observation("search").highCardinalityKeyValue(name(name))
-				.highCardinalityKeyValue(attributeIdsReturn(cons))
-				.highCardinalityKeyValue(searchControls(cons));
-			return observe(observation, () -> this.delegate.search(name, filterExpr, filterArgs, cons));
-		}
-
-		@Override
-		public NamingEnumeration<SearchResult> search(String name, String filterExpr, Object[] filterArgs,
-				SearchControls cons) throws javax.naming.NamingException {
-			Observation observation = observation("search").highCardinalityKeyValue(name(name))
-				.highCardinalityKeyValue(attributeIdsReturn(cons))
-				.highCardinalityKeyValue(searchControls(cons));
-			return observe(observation, () -> this.delegate.search(name, filterExpr, filterArgs, cons));
-		}
-
-		@Override
-		public Object lookup(Name name) throws javax.naming.NamingException {
-			Observation observation = observation("lookup").highCardinalityKeyValue(name(name));
-			return observe(observation, () -> this.delegate.lookup(name));
-		}
-
-		@Override
-		public Object lookup(String name) throws javax.naming.NamingException {
-			Observation observation = observation("lookup").highCardinalityKeyValue(name(name));
-			return observe(observation, () -> this.delegate.lookup(name));
-		}
-
-		@Override
-		public void bind(Name name, Object obj) throws javax.naming.NamingException {
-			Observation observation = observation("bind").highCardinalityKeyValue(name(name));
-			observe(observation, () -> this.delegate.bind(name, obj));
-		}
-
-		@Override
-		public void bind(String name, Object obj) throws javax.naming.NamingException {
-			Observation observation = observation("bind").highCardinalityKeyValue(name(name));
-			observe(observation, () -> this.delegate.bind(name, obj));
-		}
-
-		@Override
-		public void rebind(Name name, Object obj) throws javax.naming.NamingException {
-			Observation observation = observation("rebind").highCardinalityKeyValue(name(name));
-			observe(observation, () -> this.delegate.rebind(name, obj));
-		}
-
-		@Override
-		public void rebind(String name, Object obj) throws javax.naming.NamingException {
-			Observation observation = observation("rebind").highCardinalityKeyValue(name(name));
-			observe(observation, () -> this.delegate.rebind(name, obj));
-		}
-
-		@Override
-		public void unbind(Name name) throws javax.naming.NamingException {
-			Observation observation = observation("unbind").highCardinalityKeyValue(name(name));
-			observe(observation, () -> this.delegate.unbind(name));
-		}
-
-		@Override
-		public void unbind(String name) throws javax.naming.NamingException {
-			Observation observation = observation("unbind").highCardinalityKeyValue(name(name));
-			observe(observation, () -> this.delegate.unbind(name));
-		}
-
-		@Override
-		public void rename(Name oldName, Name newName) throws javax.naming.NamingException {
-			Observation observation = observation("rename").highCardinalityKeyValue(name("old.name", oldName))
-				.highCardinalityKeyValue(name("new.name", newName));
-			observe(observation, () -> this.delegate.rename(oldName, newName));
-		}
-
-		@Override
-		public void rename(String oldName, String newName) throws javax.naming.NamingException {
-			Observation observation = observation("rename").highCardinalityKeyValue(name("old.name", oldName))
-				.highCardinalityKeyValue(name("new.name", newName));
-			observe(observation, () -> this.delegate.rename(oldName, newName));
-		}
-
-		@Override
-		public NamingEnumeration<NameClassPair> list(Name name) throws javax.naming.NamingException {
-			Observation observation = observation("list").highCardinalityKeyValue(name(name));
-			return observe(observation, () -> this.delegate.list(name));
-		}
-
-		@Override
-		public NamingEnumeration<NameClassPair> list(String name) throws javax.naming.NamingException {
-			Observation observation = observation("list").highCardinalityKeyValue(name(name));
-			return observe(observation, () -> this.delegate.list(name));
-		}
-
-		@Override
-		public NamingEnumeration<Binding> listBindings(Name name) throws javax.naming.NamingException {
-			Observation observation = observation("list.bindings").highCardinalityKeyValue(name(name));
-			return observe(observation, () -> this.delegate.listBindings(name));
-		}
-
-		@Override
-		public NamingEnumeration<Binding> listBindings(String name) throws javax.naming.NamingException {
-			Observation observation = observation("list.bindings").highCardinalityKeyValue(name(name));
-			return observe(observation, () -> this.delegate.listBindings(name));
-		}
-
-		@Override
-		public void destroySubcontext(Name name) throws javax.naming.NamingException {
-			Observation observation = observation("destroy.subcontext").highCardinalityKeyValue(name(name));
-			observe(observation, () -> this.delegate.destroySubcontext(name));
-		}
-
-		@Override
-		public void destroySubcontext(String name) throws javax.naming.NamingException {
-			Observation observation = observation("destroy.subcontext").highCardinalityKeyValue(name(name));
-			observe(observation, () -> this.delegate.destroySubcontext(name));
-		}
-
-		@Override
-		public Context createSubcontext(Name name) throws javax.naming.NamingException {
-			Observation observation = observation("create.subcontext").highCardinalityKeyValue(name(name));
-			return observe(observation, () -> this.delegate.createSubcontext(name));
-		}
-
-		@Override
-		public Context createSubcontext(String name) throws javax.naming.NamingException {
-			Observation observation = observation("create.subcontext").highCardinalityKeyValue(name(name));
-			return observe(observation, () -> this.delegate.createSubcontext(name));
-		}
-
-		@Override
-		public Object lookupLink(Name name) throws javax.naming.NamingException {
-			Observation observation = observation("lookup.link").highCardinalityKeyValue(name(name));
-			return observe(observation, () -> this.delegate.lookupLink(name));
-		}
-
-		@Override
-		public Object lookupLink(String name) throws javax.naming.NamingException {
-			Observation observation = observation("lookup.link").highCardinalityKeyValue(name(name));
-			return observe(observation, () -> this.delegate.lookupLink(name));
-		}
-
-		@Override
-		public NameParser getNameParser(Name name) throws javax.naming.NamingException {
-			return this.delegate.getNameParser(name);
-		}
-
-		@Override
-		public NameParser getNameParser(String name) throws javax.naming.NamingException {
-			return this.delegate.getNameParser(name);
-		}
-
-		@Override
-		public Name composeName(Name name, Name prefix) throws javax.naming.NamingException {
-			return this.delegate.composeName(name, prefix);
-		}
-
-		@Override
-		public String composeName(String name, String prefix) throws javax.naming.NamingException {
-			return this.delegate.composeName(name, prefix);
-		}
-
-		@Override
-		public Object addToEnvironment(String propName, Object propVal) throws javax.naming.NamingException {
-			return this.delegate.addToEnvironment(propName, propVal);
-		}
-
-		@Override
-		public Object removeFromEnvironment(String propName) throws javax.naming.NamingException {
-			return this.removeFromEnvironment(propName);
-		}
-
-		@Override
-		public Hashtable<?, ?> getEnvironment() throws javax.naming.NamingException {
-			return this.delegate.getEnvironment();
-		}
-
-		@Override
-		public void close() throws javax.naming.NamingException {
-			this.delegate.close();
-		}
-
-		@Override
-		public String getNameInNamespace() throws javax.naming.NamingException {
-			Observation observation = observation("get.name.in.namespace");
-			return observe(observation, () -> this.delegate.getNameInNamespace());
-		}
-
-		<T> T observe(Observation observation, ThrowableSupplier<T> supplier) throws javax.naming.NamingException {
-			observation.start();
-			try (io.micrometer.observation.Observation.Scope scope = observation.openScope()) {
-				return supplier.get();
-			}
-			catch (Throwable ex) {
-				observation.error(ex);
-				throw ex;
-			}
-			finally {
-				observation.stop();
-			}
-		}
-
-		void observe(Observation observation, ThrowableRunnable runnable) throws javax.naming.NamingException {
-			observation.start();
-			try (io.micrometer.observation.Observation.Scope scope = observation.openScope()) {
-				runnable.run();
-			}
-			catch (Throwable ex) {
-				observation.error(ex);
-				throw ex;
-			}
-			finally {
-				observation.stop();
-			}
-		}
-
-		interface ThrowableSupplier<T> {
-
-			T get() throws javax.naming.NamingException;
-
-		}
-
-		interface ThrowableRunnable {
-
-			void run() throws javax.naming.NamingException;
-
 		}
 
 	}

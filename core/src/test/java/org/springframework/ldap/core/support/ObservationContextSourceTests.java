@@ -16,18 +16,30 @@
 
 package org.springframework.ldap.core.support;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.stream.Stream;
 
+import javax.naming.Name;
 import javax.naming.NamingException;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
+import javax.naming.ldap.ExtendedRequest;
 import javax.naming.ldap.LdapContext;
 import javax.naming.ldap.StartTlsRequest;
 
 import io.micrometer.observation.tck.TestObservationRegistry;
 import io.micrometer.observation.tck.TestObservationRegistryAssert;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
+import org.junit.platform.commons.support.ModifierSupport;
 
 import org.springframework.ldap.core.DirContextOperations;
+import org.springframework.ldap.support.LdapUtils;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.BDDMockito.given;
@@ -40,38 +52,73 @@ public class ObservationContextSourceTests {
 
 	private final TestObservationRegistry registry = TestObservationRegistry.create();
 
-	private final ObservationContextSource contextSource = new ObservationContextSource(new TestContextSource(),
+	private final ObservationContextSource dir = new ObservationContextSource(new TestContextSource(), this.registry);
+
+	private final ObservationContextSource ldap = new ObservationContextSource(new TestContextSource(true),
 			this.registry);
 
-	@Test
-	void dirContextGetAttributesWhenObservingThenObserves() throws Exception {
-		this.contextSource.getReadOnlyContext().getAttributes("ou=user,ou=people");
-		// @formatter:off
-		TestObservationRegistryAssert.assertThat(this.registry)
-			.hasObservationWithNameEqualTo("spring.ldap.dir.context.operations").that()
-			.hasContextualNameEqualTo("perform get.attributes");
-		// @formatter:on
+	private final DirContext dirCtx = this.dir.getReadWriteContext();
+
+	private final LdapContext ldapCtx = (LdapContext) this.ldap.getReadWriteContext();
+
+	@TestFactory
+	Stream<DynamicTest> confirmObservabilityOfEachLdapContextMethod() {
+		return Arrays.stream(this.ldapCtx.getClass().getDeclaredMethods())
+			.filter(ModifierSupport::isPublic)
+			.map((method) -> DynamicTest.dynamicTest(methodSignature(method), () -> {
+				this.registry.clear();
+				Object[] args = Arrays.stream(method.getParameterTypes()).map(this::fuzzValue).toArray();
+				method.invoke(this.ldapCtx, args);
+			// @formatter:off
+				TestObservationRegistryAssert.assertThat(this.registry)
+					.hasObservationWithNameEqualTo("spring.ldap.dir.context.operations").that()
+					.hasContextualNameEqualTo("perform " + method.getName())
+					.hasBeenStarted().hasBeenStopped();
+				// @formatter:on
+			}));
 	}
 
-	@Test
-	void dirContextGetAttributesByNameWhenObservingThenObserves() throws Exception {
-		this.contextSource.getReadOnlyContext().getAttributes("ou=user,ou=people", new String[] { "id" });
-		// @formatter:off
-		TestObservationRegistryAssert.assertThat(this.registry)
-			.hasObservationWithNameEqualTo("spring.ldap.dir.context.operations").that()
-			.hasContextualNameEqualTo("perform get.attributes")
-			.hasHighCardinalityKeyValue("attribute.ids", "[id]");
-		// @formatter:on
+	@TestFactory
+	Stream<DynamicTest> confirmObservabilityOfEachDirContextMethod() {
+		return Arrays.stream(this.dirCtx.getClass().getDeclaredMethods())
+			.filter(ModifierSupport::isPublic)
+			.map((method) -> DynamicTest.dynamicTest(methodSignature(method), () -> {
+				this.registry.clear();
+				Object[] args = Arrays.stream(method.getParameterTypes()).map(this::fuzzValue).toArray();
+				method.invoke(this.dirCtx, args);
+			// @formatter:off
+				TestObservationRegistryAssert.assertThat(this.registry)
+					.hasObservationWithNameEqualTo("spring.ldap.dir.context.operations").that()
+					.hasContextualNameEqualTo("perform " + method.getName())
+					.hasBeenStarted().hasBeenStopped();
+				// @formatter:on
+			}));
 	}
 
-	@Test
-	void dirContextRenameWhenObservingThenObserves() throws Exception {
-		this.contextSource.getReadOnlyContext().rename("ou=user,ou=people", "ou=carrot,ou=people");
-		// @formatter:off
-		TestObservationRegistryAssert.assertThat(this.registry)
-			.hasObservationWithNameEqualTo("spring.ldap.dir.context.operations").that()
-			.hasContextualNameEqualTo("perform rename");
-		// @formatter:on
+	String methodSignature(Method method) {
+		return method.getName() + Arrays.toString(method.getParameterTypes());
+	}
+
+	Object fuzzValue(Class<?> type) {
+		if (type == String.class) {
+			return "";
+		}
+		if (type == Name.class) {
+			return LdapUtils.emptyLdapName();
+		}
+		if (type == int.class) {
+			return 1;
+		}
+		if (type == Attributes.class) {
+			return new BasicAttributes();
+		}
+		if (type.isArray()) {
+			return Array.newInstance(type.componentType(), 0);
+		}
+		if (type == ExtendedRequest.class) {
+			return new StartTlsRequest();
+		}
+		return null;
 	}
 
 	@Test
@@ -88,20 +135,9 @@ public class ObservationContextSourceTests {
 	}
 
 	@Test
-	void ldapContextWhenExtendedOperationThenObserves() throws Exception {
-		ObservationContextSource observing = new ObservationContextSource(new TestContextSource(true), this.registry);
-		((LdapContext) observing.getReadOnlyContext()).extendedOperation(new StartTlsRequest());
-		// @formatter:off
-		TestObservationRegistryAssert.assertThat(this.registry)
-			.hasObservationWithNameEqualTo("spring.ldap.dir.context.operations").that()
-			.hasContextualNameEqualTo("perform extended.operation");
-		// @formatter:on
-	}
-
-	@Test
 	void constructorWhenObservationContextSourceThenIllegalArgument() {
 		assertThatExceptionOfType(IllegalArgumentException.class)
-			.isThrownBy(() -> new ObservationContextSource(this.contextSource, this.registry));
+			.isThrownBy(() -> new ObservationContextSource(this.dir, this.registry));
 	}
 
 	@Test
