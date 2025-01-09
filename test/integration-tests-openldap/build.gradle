@@ -6,7 +6,6 @@ dependencies {
     implementation project(":spring-ldap-test")
     implementation "commons-lang:commons-lang"
     implementation "commons-logging:commons-logging"
-    implementation "commons-httpclient:commons-httpclient"
     implementation "commons-codec:commons-codec"
 
     provided "org.springframework:spring-jdbc"
