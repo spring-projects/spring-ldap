@@ -1,0 +1,154 @@
+= Contributing to Spring Security
+
+First off, thank you for taking the time to contribute! :+1: :tada:
+
+== Table of Contents
+
+* <<code-of-conduct>>
+* <<how-to-contribute>>
+* <<ask-questions>>
+* <<find-an-issue>>
+* <<create-an-issue>>
+* <<issue-lifecycle>>
+* <<submit-a-pull-request>>
+* <<build-from-source>>
+* <<code-style>>
+
+[[code-of-conduct]]
+== Code of Conduct
+
+This project is governed by the https://github.com/spring-projects/.github/blob/main/CODE_OF_CONDUCT.md[Spring code of conduct].
+By participating you are expected to uphold this code.
+Please report unacceptable behavior to spring-code-of-conduct@pivotal.io.
+
+[[how-to-contribute]]
+== How to Contribute
+
+[[ask-questions]]
+=== Ask Questions
+
+If you have a question, check Stack Overflow using
+https://stackoverflow.com/questions/tagged/spring-security+or+spring-ldap+or+spring-authorization-server+or+spring-session?tab=Newest[this list of tags].
+Find an existing discussion, or start a new one if necessary.
+
+If you believe there is an issue, search through https://github.com/spring-projects/spring-ldap/issues[existing issues] trying a  few different ways to find discussions, past or current, that are related to the issue.
+Reading those discussions helps you to learn about the issue, and helps us to make a decision.
+
+[[find-an-issue]]
+=== Find an Existing Issue
+
+There are issues in Spring LDAP with the labels https://github.com/spring-projects/spring-ldap/issues?q=is%3Aissue+is%3Aopen+label%3A%22status%3A+ideal-for-contribution%22[`ideal-for-contribution`] or https://github.com/spring-projects/spring-ldap/issues?q=is%3Aissue+is%3Aopen+label%3A%22status%3A+first-timers-only%22[`first-timers-only`] that are a great way to contribute to a discussion or <<submit-a-pull-request,to a PR>>.
+You can volunteer by commenting on these tickets, and we will assign them to you.
+
+[[create-an-issue]]
+=== Create an Issue
+
+Reporting an issue or making a feature request is a great way to contribute.
+Your feedback and the conversations that result from it provide a continuous flow of ideas.
+However, before creating a ticket, please take the time to <<ask-questions,ask and research>> first.
+
+If you create an issue after a discussion on Stack Overflow, please provide a description in the issue instead of simply referring to Stack Overflow.
+The issue tracker is an important place of record for design discussions and should be self-sufficient.
+
+Once you're ready, create an issue on https://github.com/spring-projects/spring-ldap/issues[GitHub].
+
+Many issues are caused by subtle behavior, typos, and unintended configuration.
+Creating a https://stackoverflow.com/help/minimal-reproducible-example[Minimal Reproducible Example] (starting with https://start.spring.io for example) of the problem helps the team quickly triage your issue and get to the core of the problem.
+
+We love contributors, and we may ask you to <<submit-a-pull-request,submit a PR with a fix>>.
+
+[[issue-lifecycle]]
+=== Issue Lifecycle
+
+When an issue is first created, it is flagged `waiting-for-triage` waiting for a team member to triage it.
+Once the issue has been reviewed, the team may ask for further information if needed, and based on the findings, the issue is either assigned a target branch (or no branch if a feature) or is closed with a specific status.
+The target branch is https://spring.io/projects/spring-ldap#support[the earliest supported branch] where <<choose-a-branch,the change will be applied>>.
+
+When a fix is ready, the issue is closed and may still be re-opened until the fix is released.
+After that the issue will typically no longer be reopened.
+In rare cases if the issue was not at all fixed, the issue may be re-opened.
+In most cases however any follow-up reports will need to be created as new issues with a fresh description.
+
+[[build-from-source]]
+=== Build from Source
+
+See https://github.com/spring-projects/spring-security/tree/main#building-from-source[Build from Source] for instructions on how to check out, build, and import the Spring Security source code into your IDE.
+
+[[code-style]]
+=== Source Code Style
+
+The wiki pages https://github.com/spring-projects/spring-framework/wiki/Code-Style[Code Style] and https://github.com/spring-projects/spring-framework/wiki/IntelliJ-IDEA-Editor-Settings[IntelliJ IDEA Editor Settings] define the source file coding standards we use along with some IDEA editor settings we customize.
+
+To format the code as well as check the style, run `./gradlew format check`.
+
+[[submit-a-pull-request]]
+=== Submit a Pull Request
+
+We are excited for your pull request! :heart:
+
+Please do your best to follow these steps.
+Don't worry if you don't get them all correct the first time, we will help you.
+
+[[sign-cla]]
+1. All commits must include a __Signed-off-by__ trailer at the end of each commit message to indicate that the contributor agrees to the Developer Certificate of Origin.
+   For additional details, please refer to the blog post https://spring.io/blog/2025/01/06/hello-dco-goodbye-cla-simplifying-contributions-to-spring[Hello DCO, Goodbye CLA: Simplifying Contributions to Spring].
+   [[create-an-issue]]
+1. Must you https://github.com/spring-projects/spring-security/issues/new/choose[create an issue] first? No, but it is recommended for features and larger bug fixes. It's easier discuss with the team first to determine the right fix or enhancement.
+   For typos and straightforward bug fixes, starting with a pull request is encouraged.
+   Please include a description for context and motivation.
+   Note that the team may close your pull request if it's not a fit for the project.
+   [[choose-a-branch]]
+1. Always check out the branch indicated in the milestone and submit pull requests against it (for example, for milestone `5.8.3` use the `5.8.x` branch).
+   If there is no milestone, choose `main`.
+   Once merged, the fix will be forwarded-ported to applicable branches including `main`.
+   [[create-a-local-branch]]
+1. Create a local branch
+   If this is for an issue, consider a branch name with the issue number, like `gh-22276`.
+   [[write-tests]]
+1. Add documentation and JUnit Tests for your changes.
+   [[update-copyright]]
+1. In all files you edited, if the copyright header is of the form 2002-20xx, update the final copyright year to the current year.
+   [[add-since]]
+1. If on `main`, add `@since` JavaDoc attributes to new public APIs that your PR adds
+   [[change-rnc]]
+1. If you are updating the XSD, please instead update the RNC file and then run `./gradlew :spring-security-config:rncToXsd`.
+   [[format-code]]
+1. For each commit, build the code using `./gradlew format check`.
+   This command ensures the code meets most of <<code-style,the style guide>>; a notable exception is import order.
+   [[commit-atomically]]
+1. Choose the granularity of your commits consciously and squash commits that represent
+   multiple edits or corrections of the same logical change.
+   See https://git-scm.com/book/en/Git-Tools-Rewriting-History[Rewriting History section of Pro Git] for an overview of streamlining the commit history.
+   [[format-commit-messages]]
+1. Format commit messages using 55 characters for the subject line, 72 characters per line
+   for the description, followed by the issue fixed, for example, `Closes gh-22276`.
+   See the https://git-scm.com/book/en/Distributed-Git-Contributing-to-a-Project#Commit-Guidelines[Commit Guidelines section of Pro Git] for best practices around commit messages, and use `git log` to see some examples.
+   Present tense is preferred.
++
+[indent=0]
+----
+Address NullPointerException
+
+Closes gh-22276
+----
+[[reference-issue]]
+1. If there is a prior issue, reference the GitHub issue number in the description of the pull request.
++
+[indent=0]
+----
+Closes gh-22276
+----
+
+If accepted, your contribution may be heavily modified as needed prior to merging.
+You will likely retain author attribution for your Git commits granted that the bulk of your changes remain intact.
+You may also be asked to rework the submission.
+
+If asked to make corrections, simply push the changes against the same branch, and your pull request will be updated.
+In other words, you do not need to create a new pull request when asked to make changes.
+When it is time to merge, you'll be asked to squash your commits.
+
+==== Participate in Reviews
+
+Helping to review pull requests is another great way to contribute.
+Your feedback can help to shape the implementation of new features.
+When reviewing pull requests, however, please refrain from approving or rejecting a PR unless you are a core committer for Spring Security.
