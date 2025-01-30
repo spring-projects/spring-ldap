@@ -51,7 +51,10 @@ antora {
 
 tasks.named("generateAntoraYml") {
     asciidocAttributes = project.provider( {
-        return  ['project-version': project.version]
+        return  [
+            'project-version': project.version,
+            'spring-core-version': '6.1.6'
+        ]
     } )
 }
 
