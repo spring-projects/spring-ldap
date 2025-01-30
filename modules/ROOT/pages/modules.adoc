@@ -1,0 +1,12 @@
+// FIXME: This might make sense in Getting Spring Security along with the artifact information
+
+[[modules]]
+= Project Modules
+Spring LDAP is broken up into the following separate modules:
+
+* spring-ldap-core - the xref:spring-ldap-basic-usage.adoc[core] Spring LDAP library, including xref:odm.adoc[the ODM framework]
+* spring-ldap-test - support classes that help LDAP with xref:testing.adoc[integration testing]
+* spring-ldap-ldif-core - the Spring LDAP xref:ldif-parsing.adoc[LDIF parsing library]
+* spring-ldap-ldif-batch - the Spring Batch integration layer for the LDIF parsing library
+
+Also of interest is https://docs.spring.io/spring-data/ldap/reference[spring-data-ldap], Spring Data's integration with Spring LDAP.
