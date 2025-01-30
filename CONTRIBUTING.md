@@ -31,12 +31,6 @@ submitting a pull request. We're happy to provide guidance, but please spend an
 hour or two researching the subject on your own including searching the mailing
 list for prior discussions.
 
-## Sign the Contributor License Agreement
-
-If you have not previously done so, please fill out and
-submit the [Contributor License Agreement](https://cla.pivotal.io/sign/spring).
-
-
 ## Create your branch from `main`
 
 If your pull request addresses a bug or improvement, please create your branch
@@ -233,6 +227,11 @@ https://github.com/SpringSource/spring-framework/commit/08e2669b84ec0faa2f790444
 https://github.com/SpringSource/spring-framework/commit/1d9d3e6ff79ce9f0eca03b02cd1df705925575da
 https://github.com/SpringSource/spring-framework/commit/8e0b1c3a5f957af3049cfa0438317177e16d6de6
 https://github.com/SpringSource/spring-framework/commit/b787a68f2050df179f7036b209aa741230a02477
+
+## Sign commit with a Developer Certificate of Origin
+
+All commits must include a __Signed-off-by__ trailer at the end of each commit message to indicate that the contributor agrees to the Developer Certificate of Origin.
+For additional details, please refer to the blog post https://spring.io/blog/2025/01/06/hello-dco-goodbye-cla-simplifying-contributions-to-spring[Hello DCO, Goodbye CLA: Simplifying Contributions to Spring].
 
 ## Run all tests prior to submission
 
