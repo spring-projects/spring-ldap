@@ -1,0 +1,92 @@
+[![Join the chat at https://gitter.im/spring-projects/spring-ldap](https://badges.gitter.im/spring-projects/spring-ldap.svg)](https://gitter.im/spring-projects/spring-ldap?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+[![Build Status](https://travis-ci.org/spring-projects/spring-ldap.svg?branch=main)](https://travis-ci.org/spring-projects/spring-ldap)
+
+[![Revved up by Develocity](https://img.shields.io/badge/Revved%20up%20by-Develocity-06A0CE?logo=Gradle&labelColor=02303A)](https://ge.spring.io/scans?search.rootProjectNames=spring-ldap)
+
+= Spring LDAP
+
+Spring LDAP is a library to simplify LDAP programming in Java, built on the same
+principles as Spring Jdbc. 
+
+The LdapTemplate class encapsulates all the plumbing work involved in traditional LDAP 
+programming, such as creating, looping through NamingEnumerations, handling Exceptions
+and cleaning up resources. This leaves the programmer to handle the important stuff - 
+where to find data (DNs and Filters) and what to do with it (map to and from domain
+objects, bind, modify, unbind, etc.), in the same way that JdbcTemplate relieves the 
+programmer of all but the actual SQL and how the data maps to the domain model.
+
+In addition to this, Spring LDAP provides Exception translation from NamingExceptions
+to an unchecked exception hierarchy, as well as several utilities for working with filters,
+LDAP paths and attributes.
+
+For detailed information on the project, please refer to the [reference documentation](https://docs.spring.io/spring-ldap/docs/current/reference/) and [javadocs](https://docs.spring.io/spring-ldap/docs/2.3.x/apidocs/).
+See [the changelog](https://github.com/spring-projects/spring-ldap/releases) for detailed information on changes in the latest version.
+
+== Code of Conduct
+This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.adoc).
+By participating, you  are expected to uphold this code. Please report unacceptable behavior to spring-code-of-conduct@pivotal.io.
+
+== Downloading Artifacts
+See https://docs.spring.io/spring-ldap/reference/getting-spring-ldap.html[Getting Spring LDAP] for how to obtain Spring LDAP.
+
+== Documentation
+
+Be sure to read the https://docs.spring.io/spring-ldap/reference/[Spring LDAP Reference].
+Extensive JavaDoc for the Spring LDAP code is also available in the https://docs.spring.io/spring-ldap/site/docs/current/api/[Spring LDAP API Documentation].
+
+You may also want to check out https://github.com/spring-projects/spring-ldap/releases[the change log for new features].
+
+== Building from Source
+
+Spring LDAP uses a https://gradle.org[Gradle]-based build system.
+In the instructions below, https://vimeo.com/34436402[`./gradlew`] is invoked from the root of the source tree and serves as
+a cross-platform, self-contained bootstrap mechanism for the build.
+
+=== Prerequisites
+https://docs.github.com/en/get-started/quickstart/set-up-git[Git] and the https://www.oracle.com/java/technologies/downloads/#java17[JDK17 build].
+
+Be sure that your `JAVA_HOME` environment variable points to the `jdk-17` folder extracted from the JDK download.
+
+=== Check out sources
+[indent=0]
+----
+git clone git@github.com:spring-projects/spring-ldap.git
+----
+
+=== Install all `spring-*.jar` into your local Maven repository.
+
+[indent=0]
+----
+./gradlew publishToMavenLocal
+----
+
+=== Compile and test; build all JARs, distribution zips, and docs
+
+[indent=0]
+----
+./gradlew build
+----
+
+The reference docs are not currently included in the distribution zip.
+You can build the reference docs for this branch by running the following command:
+
+----
+./gradlew :spring-ldap-docs:antora
+----
+
+That command publishes the docs site to the `_docs/build/site_` directory.
+The https://github.com/spring-projects/spring-ldap/tree/docs-build[playbook branch] describes how to build the reference docs in detail.
+
+Discover more commands with `./gradlew tasks`.
+
+== Getting Support
+Check out the https://stackoverflow.com/questions/tagged/spring-ldap[Spring LDAP tags on Stack Overflow].
+https://spring.io/support[Commercial support] is available too.
+
+== Contributing
+https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request[Pull requests] are welcome; see the https://github.com/spring-projects/spring-ldap/blob/main/CONTRIBUTING.adoc[contributor guidelines] for details.
+
+== License
+Spring LDAP is Open Source software released under the
+https://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].
