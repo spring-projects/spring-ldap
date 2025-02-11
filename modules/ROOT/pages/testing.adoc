@@ -225,3 +225,54 @@ To use it, create a bean similar to the following:
 ====
 
 Also, `org.springframework.ldap.test.unboundid.LdapTestUtils` provide methods to programmatically work with an embedded LDAP server.
+
+'''
+
+Moreover, all the options enumerated ahead will support a variation that allows us to pass an `EmbeddedLdapServer.ConfigInterceptor` as a parameter.
+This functional interface extends `Consumer<InMemoryDirectoryServerConfig>` and will be invoked before initializing the server.
+
+This is how we can implement the `ConfigInterceptor` to make the in-memory server use a temporary file for logging the code:
+====
+[source,java]
+----
+class UpdateCodeLogDetails implements EmbeddedLdapServer.ConfigInterceptor {
+    @Override
+    public void accept(InMemoryDirectoryServerConfig config) {
+        config.setCodeLogDetails(tempLogFile, true);
+    }
+}
+----
+====
+
+Now, let's update our configuration to initialize our custom `ConfigInterceptor` and pass as a parameter to `TestContextSourceFactoryBean`:
+
+====
+[source,xml]
+----
+<bean id="updateCodeLogDetails" class="org.springframework.ldap.test.unboundid.TestContextSourceFactoryBeanTests.UpdateCodeLogDetails">
+</bean>
+
+<bean id="contextSource" class="org.springframework.ldap.test.unboundid.TestContextSourceFactoryBean">
+    <property name="defaultPartitionSuffix" value="dc=jayway,dc=se" />
+    <property name="defaultPartitionName" value="jayway" />
+    <property name="principal" value="uid=admin,ou=system" />
+    <property name="password" value="secret" />
+    <property name="ldifFile" value="setup_data.ldif" />
+    <property name="port" value="18881" />
+    <property name="configInterceptor" ref="updateCodeLogDetails" />
+</bean>
+----
+====
+
+Even if we choose to programmatically start the embedded LDAP server using `LdapTestUtils`,
+we can still supply the `ConfigInterceptor` as a lambda expression:
+
+====
+
+[source,java]
+----
+LdapTestUtils.startEmbeddedServer(1888, "dc=jayway,dc=se", "jayway",
+    config -> config.setCodeLogDetails(tempLogFile, true));
+----
+====
+

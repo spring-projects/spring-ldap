@@ -16,12 +16,17 @@
 
 package org.springframework.ldap.test.unboundid;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 
+import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;
 import org.junit.After;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -35,15 +40,31 @@ public class TestContextSourceFactoryBeanTests {
 
 	ClassPathXmlApplicationContext ctx;
 
-	@After
-	public void setup() {
-		if (this.ctx != null) {
-			this.ctx.close();
-		}
+	static String tempLogFile;
+
+	@BeforeClass
+	public static void before() throws IOException {
+		tempLogFile = Files.createTempFile("ldap-log-", ".txt").toAbsolutePath().toString();
 	}
 
 	@Test
-	public void testServerStartup() throws Exception {
+	public void testServerStartup_withCustomConfig() {
+		this.ctx = new ClassPathXmlApplicationContext(
+				"/applicationContext-testContextSource-withCustomInterceptor.xml");
+		LdapTemplate ldapTemplate = this.ctx.getBean(LdapTemplate.class);
+		assertThat(ldapTemplate).isNotNull();
+
+		ldapTemplate.search(LdapQueryBuilder.query().where("objectclass").is("person"), new AttributesMapper<>() {
+			public String mapFromAttributes(Attributes attrs) throws NamingException {
+				return (String) attrs.get("cn").get();
+			}
+		});
+
+		assertThat(Path.of(tempLogFile)).isNotEmptyFile();
+	}
+
+	@Test
+	public void testServerStartup() {
 		this.ctx = new ClassPathXmlApplicationContext("/applicationContext-testContextSource.xml");
 		LdapTemplate ldapTemplate = this.ctx.getBean(LdapTemplate.class);
 		assertThat(ldapTemplate).isNotNull();
@@ -55,6 +76,22 @@ public class TestContextSourceFactoryBeanTests {
 					}
 				});
 		assertThat(list.size()).isEqualTo(5);
+	}
+
+	@After
+	public void setup() {
+		if (this.ctx != null) {
+			this.ctx.close();
+		}
+	}
+
+	static class UpdateCodeLogDetails implements EmbeddedLdapServer.ConfigInterceptor {
+
+		@Override
+		public void accept(InMemoryDirectoryServerConfig config) {
+			config.setCodeLogDetails(tempLogFile, true);
+		}
+
 	}
 
 }
