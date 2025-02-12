@@ -29,12 +29,18 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import org.springframework.core.SpringVersion;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.support.GenericConversionService;
+import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -124,6 +130,17 @@ public class DefaultObjectDirectoryMapperTests {
 	@Test(expected = MetaDataException.class)
 	public void testIndexedDnAttributesRequiresThatAllAreIndexed() {
 		this.tested.manageClass(UnitTestPersonWithIndexedAndUnindexedDnAttributes.class);
+	}
+
+	@Test
+	public void mapToLdapDataEntryWhenCustomConversionServiceThenUses() {
+		this.tested.manageClass(UnitTestPersonWithIndexedDnAttributes.class);
+		UnitTestPersonWithIndexedDnAttributes testPerson = new UnitTestPersonWithIndexedDnAttributes();
+		testPerson.setFullName("Some Person");
+		ConversionService conversionService = spy(new GenericConversionService());
+		this.tested.setConversionService(conversionService);
+		this.tested.mapToLdapDataEntry(testPerson, new DirContextAdapter("cn=Some Person, ou=Some Company, c=Sweden"));
+		verify(conversionService).convert(any(), any(Class.class));
 	}
 
 	private void assertField(DefaultObjectDirectoryMapper.EntityData entityData, String fieldName,

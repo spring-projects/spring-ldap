@@ -92,7 +92,10 @@ import org.springframework.beans.factory.FactoryBeanNotInitializedException;
  * parameter to allow an LDAP syntax to be defined.
  *
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
+ * @deprecated please use {@link org.springframework.core.convert.ConversionService}
+ * directly
  */
+@Deprecated
 public final class ConverterManagerFactoryBean implements FactoryBean {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ConverterManagerFactoryBean.class);

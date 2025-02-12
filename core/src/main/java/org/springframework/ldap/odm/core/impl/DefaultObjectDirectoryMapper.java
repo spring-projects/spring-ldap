@@ -38,7 +38,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.LdapDataEntry;
-import org.springframework.core.SpringVersion;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.support.GenericConversionService;
+import org.springframework.ldap.convert.ConverterUtils;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.filter.Filter;
@@ -46,7 +48,6 @@ import org.springframework.ldap.odm.annotations.DnAttribute;
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 import org.springframework.ldap.odm.typeconversion.ConverterManager;
 import org.springframework.ldap.odm.typeconversion.impl.ConversionServiceConverterManager;
-import org.springframework.ldap.odm.typeconversion.impl.ConverterManagerImpl;
 import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.Assert;
@@ -77,22 +78,27 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 	}
 
 	private static ConverterManager createDefaultConverterManager() {
-		String springVersion = SpringVersion.getVersion();
-		if (springVersion == null) {
-			LOG.debug(
-					"Could not determine the Spring Version. Guessing > Spring 3.0. If this does not work, please ensure to explicitly set converterManager");
-			return new ConversionServiceConverterManager();
-		}
-		else if (springVersion.compareTo("3.0") > 0) {
-			return new ConversionServiceConverterManager();
-		}
-		else {
-			return new ConverterManagerImpl();
-		}
+		GenericConversionService conversionService = new GenericConversionService();
+		ConverterUtils.addDefaultConverters(conversionService);
+		return new ConversionServiceConverterManager(conversionService);
 	}
 
+	/**
+	 * @deprecated please use {@link #setConversionService} instead
+	 */
+	@Deprecated(since = "3.3")
 	public void setConverterManager(ConverterManager converterManager) {
 		this.converterManager = converterManager;
+	}
+
+	/**
+	 * Use this {@link ConversionService}
+	 * @param conversionService
+	 * @since 3.3
+	 * @see ConverterUtils for converters helpful to {@link ObjectDirectoryMapper}
+	 */
+	public void setConversionService(ConversionService conversionService) {
+		this.converterManager = new ConversionServiceConverterManager(conversionService);
 	}
 
 	// A map of managed classes to to meta data about those classes

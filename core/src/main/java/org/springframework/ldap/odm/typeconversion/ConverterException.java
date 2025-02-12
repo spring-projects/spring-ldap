@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,9 @@ import org.springframework.ldap.NamingException;
  * type conversion.
  *
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
+ * @deprecated please use {@link org.springframework.core.convert.ConversionException}
  */
+@Deprecated
 @SuppressWarnings("serial")
 public final class ConverterException extends NamingException {
 
