@@ -47,6 +47,20 @@ class DefaultLdapClientBuilder implements LdapClient.Builder {
 		this.searchControlsSupplier = searchControlsSupplier;
 	}
 
+	DefaultLdapClientBuilder(LdapTemplate ldap) {
+		this.contextSource = ldap.getContextSource();
+		this.searchControlsSupplier = () -> {
+			SearchControls controls = new SearchControls();
+			controls.setSearchScope(ldap.getDefaultSearchScope());
+			controls.setCountLimit(ldap.getDefaultCountLimit());
+			controls.setTimeLimit(ldap.getDefaultTimeLimit());
+			return controls;
+		};
+		this.ignoreNameNotFoundException = ldap.isIgnoreNameNotFoundException();
+		this.ignoreSizeLimitExceededException = ldap.isIgnoreSizeLimitExceededException();
+		this.ignorePartialResultException = ldap.isIgnorePartialResultException();
+	}
+
 	@Override
 	public DefaultLdapClientBuilder contextSource(ContextSource contextSource) {
 		this.contextSource = contextSource;
@@ -99,7 +113,7 @@ class DefaultLdapClientBuilder implements LdapClient.Builder {
 
 	@Override
 	public LdapClient build() {
-		DefaultLdapClient client = new DefaultLdapClient(this.contextSource, this.searchControlsSupplier);
+		DefaultLdapClient client = new DefaultLdapClient(this.contextSource, this.searchControlsSupplier, this);
 		client.setIgnorePartialResultException(this.ignorePartialResultException);
 		client.setIgnoreSizeLimitExceededException(this.ignoreSizeLimitExceededException);
 		client.setIgnoreNameNotFoundException(this.ignoreNameNotFoundException);

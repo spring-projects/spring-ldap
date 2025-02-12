@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2023 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -165,6 +165,16 @@ public interface LdapClient {
 	 */
 	static LdapClient create(ContextSource contextSource) {
 		return new DefaultLdapClientBuilder().contextSource(contextSource).build();
+	}
+
+	/**
+	 * Create an instance of {@link LdapClient}
+	 * @param ldap the {@link LdapTemplate} to base this client off of
+	 * @since 3.3
+	 * @see #builder()
+	 */
+	static LdapClient create(LdapTemplate ldap) {
+		return new DefaultLdapClientBuilder(ldap).build();
 	}
 
 	/**

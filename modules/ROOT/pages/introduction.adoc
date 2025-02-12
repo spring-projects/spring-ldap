@@ -214,6 +214,8 @@ The following list briefly describes the most important changes in Spring LDAP 2
 *  The https://github.com/spring-projects/spring-ldap/tree/main/samples[samples] have been polished and updated to make use of the features in 2.0.
    Quite a bit of effort has been put into providing a useful example of an https://github.com/spring-projects/spring-ldap/tree/main/samples/user-admin[LDAP user management application].
 
+* Added `LdapClient.create(LdapTemplate)` to simplify constructing an `LdapClient` from an `LdapTemplate`
+
 [[spring-ldap-packaging-overview]]
 == Packaging Overview
 
