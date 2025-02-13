@@ -11,7 +11,7 @@ repositories {
 	mavenCentral()
 }
 
-ext.queryDslVersion = '5.0.0'
+ext.queryDslVersion = '5.1.0'
 
 dependencies {
 	if (project.hasProperty("isOverrideVersionCatalog")) {
