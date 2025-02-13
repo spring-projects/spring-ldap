@@ -34,7 +34,7 @@ import org.springframework.ldap.odm.core.impl.DefaultObjectDirectoryMapper;
 public class ObjectDirectoryMapperConfiguration {
 
 	@Bean
-	ConversionServiceBeanFactoryPostProcessor conversionServiceBeanPostProcessor() {
+	static ConversionServiceBeanFactoryPostProcessor conversionServiceBeanPostProcessor() {
 		return new ConversionServiceBeanFactoryPostProcessor();
 	}
 
