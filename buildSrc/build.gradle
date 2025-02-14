@@ -97,7 +97,7 @@ dependencies {
     implementation 'org.hidetake:gradle-ssh-plugin:2.10.1'
     implementation 'org.jfrog.buildinfo:build-info-extractor-gradle:4.26.3'
     implementation 'org.springframework:spring-core:6.1.16'
-    implementation 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.1'
+    implementation 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.8.0.1969'
 
     testImplementation platform('org.junit:junit-bom:5.11.4')
     testImplementation "org.junit.jupiter:junit-jupiter-api"
