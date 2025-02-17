@@ -19,11 +19,21 @@ package org.springframework.ldap.test.unboundid;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import javax.naming.NamingException;
+import javax.naming.directory.Attributes;
 
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
 import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;
 import com.unboundid.ldap.listener.InMemoryListenerConfig;
 import org.junit.Test;
+
+import org.springframework.ldap.core.AttributesMapper;
+import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.core.support.LdapContextSource;
+import org.springframework.ldap.query.LdapQueryBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -97,6 +107,50 @@ public class EmbeddedLdapServerTests {
 		}
 	}
 
+	@Test
+	public void shouldBuildButNotStartTheServer() throws IOException {
+		int port = getFreePort();
+		EmbeddedLdapServer.withPartitionSuffix("dc=jayway,dc=se").port(port).build();
+		assertThat(isPortOpen(port)).isFalse();
+	}
+
+	@Test
+	public void shouldBuildTheServerWithCustomPort() throws IOException {
+		int port = getFreePort();
+		EmbeddedLdapServer.Builder serverBuilder = EmbeddedLdapServer.withPartitionSuffix("dc=jayway,dc=se").port(port);
+
+		try (EmbeddedLdapServer server = serverBuilder.build()) {
+			server.start();
+			assertThat(isPortOpen(port)).isTrue();
+		}
+		assertThat(isPortOpen(port)).isFalse();
+	}
+
+	@Test
+	public void shouldBuildLdapServerAndApplyCustomConfiguration() throws IOException {
+		int port = getFreePort();
+		String tempLogFile = Files.createTempFile("ldap-log-", ".txt").toAbsolutePath().toString();
+
+		EmbeddedLdapServer.Builder serverBuilder = EmbeddedLdapServer.withPartitionSuffix("dc=jayway,dc=se")
+			.port(port)
+			.configurationCustomizer((config) -> config.setCodeLogDetails(tempLogFile, true));
+
+		try (EmbeddedLdapServer server = serverBuilder.build()) {
+			server.start();
+
+			ldapTemplate("dc=jayway,dc=se", port).search(LdapQueryBuilder.query().where("objectclass").is("person"),
+					new AttributesMapper<>() {
+						public String mapFromAttributes(Attributes attrs) throws NamingException {
+							return (String) attrs.get("cn").get();
+						}
+					});
+		}
+
+		assertThat(Path.of(tempLogFile))
+			.as("Applying the custom configuration should create a log file and populate it with the request")
+			.isNotEmptyFile();
+	}
+
 	static boolean isPortOpen(int port) {
 		try (Socket ignored = new Socket("localhost", port)) {
 			return true;
@@ -110,6 +164,16 @@ public class EmbeddedLdapServerTests {
 		try (ServerSocket serverSocket = new ServerSocket(0)) {
 			return serverSocket.getLocalPort();
 		}
+	}
+
+	static LdapTemplate ldapTemplate(String base, int port) {
+		LdapContextSource ctx = new LdapContextSource();
+		ctx.setBase(base);
+		ctx.setUrl("ldap://127.0.0.1:" + port);
+		ctx.setUserDn("uid=admin,ou=system");
+		ctx.setPassword("secret");
+		ctx.afterPropertiesSet();
+		return new LdapTemplate(ctx);
 	}
 
 }
