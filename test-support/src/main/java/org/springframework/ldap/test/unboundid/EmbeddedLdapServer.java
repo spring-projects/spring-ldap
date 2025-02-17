@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.test.unboundid;
 
+import java.util.function.Consumer;
+
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
 import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;
 import com.unboundid.ldap.listener.InMemoryListenerConfig;
@@ -38,13 +40,18 @@ public final class EmbeddedLdapServer {
 
 	public static EmbeddedLdapServer newEmbeddedServer(String defaultPartitionName, String defaultPartitionSuffix,
 			int port) throws Exception {
+		return newEmbeddedServer(defaultPartitionName, defaultPartitionSuffix, port, ConfigInterceptor.doNothing());
+	}
+
+	public static EmbeddedLdapServer newEmbeddedServer(String defaultPartitionName, String defaultPartitionSuffix,
+			int port, ConfigInterceptor configInterceptor) throws Exception {
+
 		InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig(defaultPartitionSuffix);
 		config.addAdditionalBindCredentials("uid=admin,ou=system", "secret");
-
 		config.setListenerConfigs(InMemoryListenerConfig.createLDAPConfig("LDAP", port));
-
 		config.setEnforceSingleStructuralObjectClass(false);
 		config.setEnforceAttributeSyntaxCompliance(true);
+		configInterceptor.accept(config);
 
 		Entry entry = new Entry(new DN(defaultPartitionSuffix));
 		entry.addAttribute("objectClass", "top", "domain", "extensibleObject");
@@ -54,6 +61,16 @@ public final class EmbeddedLdapServer {
 		directoryServer.add(entry);
 		directoryServer.startListening();
 		return new EmbeddedLdapServer(directoryServer);
+	}
+
+	@FunctionalInterface
+	public interface ConfigInterceptor extends Consumer<InMemoryDirectoryServerConfig> {
+
+		static ConfigInterceptor doNothing() {
+			return config -> {
+			};
+		}
+
 	}
 
 	public void shutdown() throws Exception {

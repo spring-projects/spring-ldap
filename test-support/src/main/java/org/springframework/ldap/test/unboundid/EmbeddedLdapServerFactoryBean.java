@@ -17,6 +17,7 @@
 package org.springframework.ldap.test.unboundid;
 
 import org.springframework.beans.factory.config.AbstractFactoryBean;
+import org.springframework.ldap.test.unboundid.EmbeddedLdapServer.ConfigInterceptor;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -28,6 +29,8 @@ public class EmbeddedLdapServerFactoryBean extends AbstractFactoryBean<EmbeddedL
 	private String partitionName;
 
 	private String partitionSuffix;
+
+	private ConfigInterceptor configInterceptor = ConfigInterceptor.doNothing();
 
 	@Override
 	public Class<?> getObjectType() {
@@ -42,13 +45,18 @@ public class EmbeddedLdapServerFactoryBean extends AbstractFactoryBean<EmbeddedL
 		this.partitionSuffix = partitionSuffix;
 	}
 
+	public void setConfigInterceptor(ConfigInterceptor configInterceptor) {
+		this.configInterceptor = configInterceptor;
+	}
+
 	public void setPort(int port) {
 		this.port = port;
 	}
 
 	@Override
 	protected EmbeddedLdapServer createInstance() throws Exception {
-		return EmbeddedLdapServer.newEmbeddedServer(this.partitionName, this.partitionSuffix, this.port);
+		return EmbeddedLdapServer.newEmbeddedServer(this.partitionName, this.partitionSuffix, this.port,
+				this.configInterceptor);
 	}
 
 	@Override
