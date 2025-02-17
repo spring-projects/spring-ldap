@@ -182,17 +182,19 @@ testCompile "com.unboundid:unboundid-ldapsdk:3.1.1"
 The following bean definition creates an embedded LDAP server:
 
 ====
-[source,xml]
+[source,java]
 ----
-<bean id="embeddedLdapServer" class="org.springframework.ldap.test.unboundid.EmbeddedLdapServerFactoryBean">
-    <property name="partitionName" value="example"/>
-    <property name="partitionSuffix" value="dc=261consulting,dc=com" />
-    <property name="port" value="9321" />
-</bean>
+@Bean
+EmbeddedLdapServer embeddedLdapServer() {
+    return EmbeddedLdapServer.withPartitionSuffix("dc=jayway,dc=se")
+        .partitionName("jayway")
+        .port(18881)
+        .configurationCustomizer((config) -> config.setCodeLogDetails(tempLogFile, true))
+        .build();
+}
 ----
-====
 
-`spring-ldap-test` provides a way to populate the LDAP server by using `org.springframework.ldap.test.unboundid.LdifPopulator`. To use it, create a bean similar to the following:
+Alternatively, you can use the `org.springframework.ldap.test.unboundid.LdifPopulator` to create and populate the LDAP server. To use it, create a bean similar to the following:
 
 ====
 [source,xml]

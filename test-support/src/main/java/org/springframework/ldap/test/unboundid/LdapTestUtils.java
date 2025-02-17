@@ -78,7 +78,12 @@ public final class LdapTestUtils {
 		}
 
 		try {
-			embeddedServer = EmbeddedLdapServer.newEmbeddedServer(defaultPartitionName, defaultPartitionSuffix, port);
+			embeddedServer = EmbeddedLdapServer.withPartitionSuffix(defaultPartitionSuffix)
+				.partitionName(defaultPartitionName)
+				.port(port)
+				.build();
+
+			embeddedServer.start();
 		}
 		catch (Exception ex) {
 			throw new UncategorizedLdapException("Failed to start embedded server", ex);
