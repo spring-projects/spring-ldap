@@ -29,13 +29,9 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapName;
 
-import com.unboundid.ldap.listener.InMemoryDirectoryServer;
-import com.unboundid.ldap.sdk.LDAPException;
-import com.unboundid.ldif.LDIFReader;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.core.io.Resource;
 import org.springframework.ldap.UncategorizedLdapException;
 import org.springframework.ldap.core.ContextSource;
@@ -43,6 +39,12 @@ import org.springframework.ldap.core.LdapAttributes;
 import org.springframework.ldap.core.support.DefaultDirObjectFactory;
 import org.springframework.ldap.ldif.parser.LdifParser;
 import org.springframework.ldap.support.LdapUtils;
+import org.springframework.ldap.test.unboundid.EmbeddedLdapServer.ConfigInterceptor;
+
+import com.unboundid.ldap.listener.InMemoryDirectoryServer;
+import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;
+import com.unboundid.ldap.sdk.LDAPException;
+import com.unboundid.ldif.LDIFReader;
 
 /**
  * Utilities for starting, stopping and populating an in-process Apache Directory Server
@@ -73,12 +75,30 @@ public final class LdapTestUtils {
 	 * @throws IllegalStateException if an embedded server is already started.
 	 */
 	public static void startEmbeddedServer(int port, String defaultPartitionSuffix, String defaultPartitionName) {
+		startEmbeddedServer(port, defaultPartitionSuffix, defaultPartitionName, ConfigInterceptor.doNothing());
+	}
+
+	/**
+	 * Start an embedded Apache Directory Server. Only one embedded server will be
+	 * permitted in the same JVM.
+	 * @param port the port on which the server will be listening.
+	 * @param defaultPartitionSuffix The default base suffix that will be used for the
+	 * LDAP server.
+	 * @param defaultPartitionName The name to use in the directory server configuration
+	 * for the default base suffix.
+	 * @param configInterceptor a function that can intercept and modify the
+	 * {@link InMemoryDirectoryServerConfig} before initiating the in-memory server.
+	 * @throws IllegalStateException if an embedded server is already started.
+	 */
+	public static void startEmbeddedServer(int port, String defaultPartitionSuffix, String defaultPartitionName,
+			ConfigInterceptor configInterceptor) {
 		if (embeddedServer != null) {
 			throw new IllegalStateException("An embedded server is already started");
 		}
 
 		try {
-			embeddedServer = EmbeddedLdapServer.newEmbeddedServer(defaultPartitionName, defaultPartitionSuffix, port);
+			embeddedServer = EmbeddedLdapServer.newEmbeddedServer(defaultPartitionName, defaultPartitionSuffix, port,
+					configInterceptor);
 		}
 		catch (Exception ex) {
 			throw new UncategorizedLdapException("Failed to start embedded server", ex);

@@ -25,6 +25,7 @@ import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.support.DefaultDirObjectFactory;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.support.LdapUtils;
+import org.springframework.ldap.test.unboundid.EmbeddedLdapServer.ConfigInterceptor;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -52,6 +53,8 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean<ContextSou
 	private AuthenticationSource authenticationSource;
 
 	private ContextSource contextSource;
+
+	private ConfigInterceptor configInterceptor = ConfigInterceptor.doNothing();
 
 	public void setAuthenticationSource(AuthenticationSource authenticationSource) {
 		this.authenticationSource = authenticationSource;
@@ -97,8 +100,13 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean<ContextSou
 		this.contextSource = contextSource;
 	}
 
+	public void setConfigInterceptor(ConfigInterceptor configInterceptor) {
+		this.configInterceptor = configInterceptor;
+	}
+
 	protected ContextSource createInstance() throws Exception {
-		LdapTestUtils.startEmbeddedServer(this.port, this.defaultPartitionSuffix, this.defaultPartitionName);
+		LdapTestUtils.startEmbeddedServer(this.port, this.defaultPartitionSuffix, this.defaultPartitionName,
+				this.configInterceptor);
 
 		if (this.contextSource == null) {
 			// If not explicitly configured, create a new instance.
