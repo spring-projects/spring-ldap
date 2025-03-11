@@ -23,6 +23,8 @@ import com.unboundid.ldap.sdk.DN;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPException;
 
+import org.springframework.util.Assert;
+
 /**
  * Helper class for embedded Unboundid ldap server.
  *
@@ -33,7 +35,13 @@ public final class EmbeddedLdapServer implements AutoCloseable {
 
 	private final InMemoryDirectoryServer directoryServer;
 
-	private EmbeddedLdapServer(InMemoryDirectoryServer directoryServer) {
+	/**
+	 * Construct an {@link EmbeddedLdapServer} using the provided
+	 * {@link InMemoryDirectoryServer}.
+	 *
+	 * @since 3.3
+	 */
+	public EmbeddedLdapServer(InMemoryDirectoryServer directoryServer) {
 		this.directoryServer = directoryServer;
 	}
 
@@ -66,6 +74,7 @@ public final class EmbeddedLdapServer implements AutoCloseable {
 	 * @since 3.3
 	 */
 	public void start() {
+		Assert.isTrue(this.directoryServer.getListenPort() == -1, "The server has already been started.");
 		try {
 			this.directoryServer.startListening();
 		}
