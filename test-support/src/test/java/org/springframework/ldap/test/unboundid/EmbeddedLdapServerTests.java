@@ -20,9 +20,13 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import com.unboundid.ldap.listener.InMemoryDirectoryServer;
+import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;
+import com.unboundid.ldap.listener.InMemoryListenerConfig;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public class EmbeddedLdapServerTests {
 
@@ -59,6 +63,38 @@ public class EmbeddedLdapServerTests {
 
 		LdapTestUtils.shutdownEmbeddedServer();
 		assertThat(isPortOpen(port)).isFalse();
+	}
+
+	@Test
+	public void startWhenNewEmbeddedServerThenException() throws Exception {
+		int port = getFreePort();
+		EmbeddedLdapServer server = EmbeddedLdapServer.newEmbeddedServer("jayway", "dc=jayway,dc=se", port);
+		assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(server::start);
+	}
+
+	@Test
+	public void startWhenUnstartedThenWorks() throws Exception {
+		int port = getFreePort();
+		InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig("dc=jayway,dc=se");
+		config.setListenerConfigs(InMemoryListenerConfig.createLDAPConfig("LDAP", port));
+		InMemoryDirectoryServer ds = new InMemoryDirectoryServer(config);
+		try (EmbeddedLdapServer server = new EmbeddedLdapServer(ds)) {
+			server.start();
+			assertThat(isPortOpen(port)).isTrue();
+		}
+	}
+
+	@Test
+	public void startWhenAlreadyStartedThenFails() throws Exception {
+		int port = getFreePort();
+		InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig("dc=jayway,dc=se");
+		config.setListenerConfigs(InMemoryListenerConfig.createLDAPConfig("LDAP", port));
+		InMemoryDirectoryServer ds = new InMemoryDirectoryServer(config);
+		try (EmbeddedLdapServer server = new EmbeddedLdapServer(ds)) {
+			server.start();
+			assertThat(isPortOpen(port)).isTrue();
+			assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(server::start);
+		}
 	}
 
 	static boolean isPortOpen(int port) {
