@@ -86,7 +86,7 @@ dependencies {
     implementation ('org.gretty:gretty:4.1.6') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-loader-tools'
     }
-    implementation 'com.apollographql.apollo:apollo-runtime:2.4.6'
+    implementation 'com.apollographql.apollo:apollo-runtime:2.5.14'
     implementation 'com.github.ben-manes:gradle-versions-plugin:0.38.0'
     implementation 'com.github.spullara.mustache.java:compiler:0.9.14'
     implementation 'io.spring.javaformat:spring-javaformat-gradle-plugin:0.0.43'
