@@ -166,6 +166,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		this.ignoreNameNotFoundException = ignore;
 	}
 
+	boolean isIgnoreNameNotFoundException() {
+		return this.ignoreNameNotFoundException;
+	}
+
 	/**
 	 * Specify whether <code>PartialResultException</code> should be ignored in searches.
 	 * AD servers typically have a problem with referrals. Normally a referral should be
@@ -182,6 +186,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		this.ignorePartialResultException = ignore;
 	}
 
+	boolean isIgnorePartialResultException() {
+		return this.ignorePartialResultException;
+	}
+
 	/**
 	 * Specify whether <code>SizeLimitExceededException</code> should be ignored in
 	 * searches. This is typically what you want if you specify count limit in your search
@@ -192,6 +200,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	public void setIgnoreSizeLimitExceededException(boolean ignore) {
 		this.ignoreSizeLimitExceededException = ignore;
+	}
+
+	boolean isIgnoreSizeLimitExceededException() {
+		return this.ignoreSizeLimitExceededException;
 	}
 
 	/**
@@ -206,6 +218,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		this.defaultSearchScope = defaultSearchScope;
 	}
 
+	int getDefaultSearchScope() {
+		return this.defaultSearchScope;
+	}
+
 	/**
 	 * Set the default time limit be used in searches if not explicitly specified. Default
 	 * is 0, indicating no time limit.
@@ -216,6 +232,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		this.defaultTimeLimit = defaultTimeLimit;
 	}
 
+	int getDefaultTimeLimit() {
+		return this.defaultTimeLimit;
+	}
+
 	/**
 	 * Set the default count limit be used in searches if not explicitly specified.
 	 * Default is 0, indicating no count limit.
@@ -224,6 +244,10 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	public void setDefaultCountLimit(int defaultCountLimit) {
 		this.defaultCountLimit = defaultCountLimit;
+	}
+
+	int getDefaultCountLimit() {
+		return this.defaultCountLimit;
 	}
 
 	/**

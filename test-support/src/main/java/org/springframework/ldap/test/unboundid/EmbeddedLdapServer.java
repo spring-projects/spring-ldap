@@ -21,6 +21,9 @@ import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;
 import com.unboundid.ldap.listener.InMemoryListenerConfig;
 import com.unboundid.ldap.sdk.DN;
 import com.unboundid.ldap.sdk.Entry;
+import com.unboundid.ldap.sdk.LDAPException;
+
+import org.springframework.util.Assert;
 
 /**
  * Helper class for embedded Unboundid ldap server.
@@ -28,14 +31,23 @@ import com.unboundid.ldap.sdk.Entry;
  * @author Eddu Melendez
  * @since 2.1.0
  */
-public final class EmbeddedLdapServer {
+public final class EmbeddedLdapServer implements AutoCloseable {
 
-	private InMemoryDirectoryServer directoryServer;
+	private final InMemoryDirectoryServer directoryServer;
 
-	private EmbeddedLdapServer(InMemoryDirectoryServer directoryServer) {
+	/**
+	 * Construct an {@link EmbeddedLdapServer} using the provided
+	 * {@link InMemoryDirectoryServer}.
+	 *
+	 * @since 3.3
+	 */
+	public EmbeddedLdapServer(InMemoryDirectoryServer directoryServer) {
 		this.directoryServer = directoryServer;
 	}
 
+	/**
+	 * Creates and starts new embedded LDAP server.
+	 */
 	public static EmbeddedLdapServer newEmbeddedServer(String defaultPartitionName, String defaultPartitionSuffix,
 			int port) throws Exception {
 		InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig(defaultPartitionSuffix);
@@ -56,7 +68,37 @@ public final class EmbeddedLdapServer {
 		return new EmbeddedLdapServer(directoryServer);
 	}
 
-	public void shutdown() throws Exception {
+	/**
+	 * Starts the embedded LDAP server.
+	 *
+	 * @since 3.3
+	 */
+	public void start() {
+		Assert.isTrue(this.directoryServer.getListenPort() == -1, "The server has already been started.");
+		try {
+			this.directoryServer.startListening();
+		}
+		catch (LDAPException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	/**
+	 * Closes the embedded LDAP server and releases resource, closing existing
+	 * connections.
+	 *
+	 * @since 3.3
+	 */
+	@Override
+	public void close() {
+		this.directoryServer.shutDown(true);
+	}
+
+	/**
+	 * @deprecated Use {@link #close()} instead.
+	 */
+	@Deprecated(since = "3.3")
+	public void shutdown() {
 		this.directoryServer.shutDown(true);
 	}
 

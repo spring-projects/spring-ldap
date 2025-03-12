@@ -411,7 +411,7 @@ public final class SchemaToJava {
 		}
 
 		// Look for the optional syntax to Java class mapping file
-		String syntaxMapFileName = cmd.getOptionValue(Flag.SYNTAX_MAP.getShort(), null);
+		String syntaxMapFileName = cmd.getOptionValue(Flag.SYNTAX_MAP.getShort(), (String) null);
 		SyntaxToJavaClass syntaxToJavaClass = new SyntaxToJavaClass(new HashMap<>());
 		if (syntaxMapFileName != null) {
 			File syntaxMapFile = new File(syntaxMapFileName);

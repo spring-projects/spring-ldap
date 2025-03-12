@@ -53,7 +53,7 @@ public class EmbeddedLdapServerFactoryBean extends AbstractFactoryBean<EmbeddedL
 
 	@Override
 	protected void destroyInstance(EmbeddedLdapServer instance) throws Exception {
-		instance.shutdown();
+		instance.close();
 	}
 
 }

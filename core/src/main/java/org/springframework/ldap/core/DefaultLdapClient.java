@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2023 the original author or authors.
+ * Copyright 2002-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,6 +70,8 @@ class DefaultLdapClient implements LdapClient {
 
 	private static final boolean RETURN_OBJ_FLAG = true;
 
+	private final Builder builder;
+
 	private final ContextSource contextSource;
 
 	private final Supplier<SearchControls> searchControlsSupplier;
@@ -80,9 +82,11 @@ class DefaultLdapClient implements LdapClient {
 
 	private boolean ignoreSizeLimitExceededException = true;
 
-	DefaultLdapClient(ContextSource contextSource, Supplier<SearchControls> searchControlsSupplier) {
+	DefaultLdapClient(ContextSource contextSource, Supplier<SearchControls> searchControlsSupplier,
+			LdapClient.Builder builder) {
 		this.contextSource = contextSource;
 		this.searchControlsSupplier = searchControlsSupplier;
+		this.builder = builder;
 	}
 
 	@Override
@@ -153,7 +157,7 @@ class DefaultLdapClient implements LdapClient {
 	 */
 	@Override
 	public Builder mutate() {
-		return new DefaultLdapClientBuilder(this.contextSource, this.searchControlsSupplier);
+		return this.builder;
 	}
 
 	/**

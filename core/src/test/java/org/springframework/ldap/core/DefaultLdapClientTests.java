@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2023 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -643,6 +643,21 @@ public class DefaultLdapClientTests {
 		assertThatExceptionOfType(UncategorizedLdapException.class)
 			.isThrownBy(() -> this.tested.authenticate().query(query).password("password").execute());
 		verify(this.dirContextMock).close();
+	}
+
+	@Test
+	public void createWhenLdapTemplateThenUses() {
+		LdapTemplate ldap = mock(LdapTemplate.class);
+		given(ldap.getContextSource()).willReturn(this.contextSourceMock);
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(this.dirContextMock);
+		LdapClient.create(ldap).search().name("dc=name").toEntryStream();
+		verify(ldap).getContextSource();
+		verify(ldap).isIgnoreNameNotFoundException();
+		verify(ldap).isIgnorePartialResultException();
+		verify(ldap).isIgnoreSizeLimitExceededException();
+		verify(ldap).getDefaultCountLimit();
+		verify(ldap).getDefaultSearchScope();
+		verify(ldap).getDefaultTimeLimit();
 	}
 
 	private void noSearchResults(SearchControls controls) throws Exception {

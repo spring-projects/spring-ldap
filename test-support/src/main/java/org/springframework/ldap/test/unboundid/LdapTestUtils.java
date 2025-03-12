@@ -92,7 +92,7 @@ public final class LdapTestUtils {
 	 */
 	public static void shutdownEmbeddedServer() throws Exception {
 		if (embeddedServer != null) {
-			embeddedServer.shutdown();
+			embeddedServer.close();
 			embeddedServer = null;
 		}
 	}

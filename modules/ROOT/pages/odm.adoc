@@ -14,6 +14,38 @@ The Spring LDAP project offers a similar ability with respect to LDAP directorie
 * `void update(Object entry)`
 * `void delete(Object entry)`
 
+[[configuration]]
+== Configuration
+
+`LdapTemplate` constructs a default `ObjectDirectoryMapper` which typically renders additional configuration unnecessary.
+
+However, you can also make `ObjectDirectoryMapper` available as a `@Bean` by importing `ObjectDirectoryMapperConfiguration` like so:
+
+[source,java]
+----
+@Import(ObjectDirectoryMapperConfiguration.class)
+@Configuration
+public class LdapConfig {
+	// ...
+}
+----
+
+You can then supply it to your `LdapTemplate` instance as follows:
+
+[source,java]
+----
+@Bean
+LdapTemplate ldapTemplate(ContextSource contextSource, ObjectDirectoryMapper odm) {
+	LdapTemplate ldap = new LdapTemplate(contextSource);
+	ldap.setObjectDirectoryMapper(odm);
+	return ldap;
+}
+----
+
+Using this import provides the benefit that it will automatically configure `ObjectDirectoryMapper` with the `ConversionService` in the `ApplicationContext`.
+
+This means that Spring LDAP will use your configured `Converter` instances.
+
 [[annotations]]
 == Annotations
 

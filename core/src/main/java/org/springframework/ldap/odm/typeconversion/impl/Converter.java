@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,10 @@ package org.springframework.ldap.odm.typeconversion.impl;
  * Interface specifying the conversion between two classes
  *
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
+ * @deprecated please use {@link org.springframework.core.convert.converter.Converter} and
+ * {@link org.springframework.core.convert.ConversionService} directly
  */
+@Deprecated
 public interface Converter {
 
 	/**

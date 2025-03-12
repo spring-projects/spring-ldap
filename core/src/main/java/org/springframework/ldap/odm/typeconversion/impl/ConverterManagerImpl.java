@@ -40,7 +40,10 @@ import org.springframework.ldap.odm.typeconversion.ConverterManager;
  * </ol>
  *
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
+ * @deprecated please use {@link org.springframework.core.convert.ConversionService}
+ * directly
  */
+@Deprecated
 public final class ConverterManagerImpl implements ConverterManager {
 
 	/**

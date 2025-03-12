@@ -16,6 +16,7 @@ dependencies {
     management platform(project(":spring-ldap-dependencies"))
     api "org.springframework:spring-core"
     api "org.springframework:spring-beans"
+    api "org.springframework:spring-context"
     api "org.springframework:spring-tx"
     api "io.micrometer:micrometer-core"
 
