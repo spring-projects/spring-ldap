@@ -49,7 +49,7 @@ dependencies {
 		api "org.apache.directory.shared:shared-ldap:0.9.15"
 		api "org.apache.httpcomponents:httpclient:4.5.14"
 		api "org.aspectj:aspectjrt:1.9.22.1"
-		api "org.aspectj:aspectjweaver:1.9.22.1"
+		api "org.aspectj:aspectjweaver:1.9.23"
 		api "org.assertj:assertj-core:3.24.2"
 		api "org.freemarker:freemarker:2.3.34"
 		api "org.hibernate:hibernate-core-jakarta:5.6.15.Final"
