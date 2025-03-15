@@ -46,24 +46,23 @@ public final class EmbeddedLdapServer implements AutoCloseable {
 	}
 
 	/**
+	 * Creates a new {@link EmbeddedLdapServerBuilder}.
+	 *
+	 * @since 3.3
+	 */
+	public static EmbeddedLdapServerBuilder builder() {
+		return new EmbeddedLdapServerBuilder();
+	}
+
+	/**
 	 * Creates and starts new embedded LDAP server.
 	 */
 	public static EmbeddedLdapServer newEmbeddedServer(String defaultPartitionName, String defaultPartitionSuffix,
 			int port) throws Exception {
-		InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig(defaultPartitionSuffix);
-		config.addAdditionalBindCredentials("uid=admin,ou=system", "secret");
+		InMemoryDirectoryServerConfig config = inMemoryDirectoryServerConfig(defaultPartitionSuffix, port);
+		Entry entry = ldapEntry(defaultPartitionName, defaultPartitionSuffix);
 
-		config.setListenerConfigs(InMemoryListenerConfig.createLDAPConfig("LDAP", port));
-
-		config.setEnforceSingleStructuralObjectClass(false);
-		config.setEnforceAttributeSyntaxCompliance(true);
-
-		Entry entry = new Entry(new DN(defaultPartitionSuffix));
-		entry.addAttribute("objectClass", "top", "domain", "extensibleObject");
-		entry.addAttribute("dc", defaultPartitionName);
-
-		InMemoryDirectoryServer directoryServer = new InMemoryDirectoryServer(config);
-		directoryServer.add(entry);
+		InMemoryDirectoryServer directoryServer = inMemoryDirectoryServer(config, entry);
 		directoryServer.startListening();
 		return new EmbeddedLdapServer(directoryServer);
 	}
@@ -100,6 +99,30 @@ public final class EmbeddedLdapServer implements AutoCloseable {
 	@Deprecated(since = "3.3")
 	public void shutdown() {
 		this.directoryServer.shutDown(true);
+	}
+
+	static InMemoryDirectoryServerConfig inMemoryDirectoryServerConfig(String partitionSuffix, int port)
+			throws LDAPException {
+		InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig(partitionSuffix);
+		config.addAdditionalBindCredentials("uid=admin,ou=system", "secret");
+		config.setListenerConfigs(InMemoryListenerConfig.createLDAPConfig("LDAP", port));
+		config.setEnforceSingleStructuralObjectClass(false);
+		config.setEnforceAttributeSyntaxCompliance(true);
+		return config;
+	}
+
+	static Entry ldapEntry(String defaultPartitionName, String defaultPartitionSuffix) throws LDAPException {
+		Entry entry = new Entry(new DN(defaultPartitionSuffix));
+		entry.addAttribute("objectClass", "top", "domain", "extensibleObject");
+		entry.addAttribute("dc", defaultPartitionName);
+		return entry;
+	}
+
+	static InMemoryDirectoryServer inMemoryDirectoryServer(InMemoryDirectoryServerConfig config, Entry entry)
+			throws LDAPException {
+		InMemoryDirectoryServer directoryServer = new InMemoryDirectoryServer(config);
+		directoryServer.add(entry);
+		return directoryServer;
 	}
 
 }
