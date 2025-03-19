@@ -23,6 +23,7 @@ import org.springframework.ldap.filter.LessThanOrEqualsFilter;
 import org.springframework.ldap.filter.LikeFilter;
 import org.springframework.ldap.filter.NotFilter;
 import org.springframework.ldap.filter.PresentFilter;
+import org.springframework.ldap.filter.ProximityFilter;
 import org.springframework.ldap.filter.WhitespaceWildcardsFilter;
 
 /**
@@ -70,6 +71,11 @@ class DefaultConditionCriteria implements ConditionCriteria {
 	@Override
 	public ContainerCriteria isPresent() {
 		return appendToParent(new PresentFilter(this.attribute));
+	}
+
+	@Override
+	public ContainerCriteria near(String value) {
+		return appendToParent(new ProximityFilter(this.attribute, value));
 	}
 
 	private ContainerCriteria appendToParent(Filter filter) {
