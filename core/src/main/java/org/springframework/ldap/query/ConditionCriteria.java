@@ -105,4 +105,15 @@ public interface ConditionCriteria {
 	 */
 	ConditionCriteria not();
 
+	/**
+	 * Appends an {@link org.springframework.ldap.filter.ProximityFilter}.
+	 * @param value the value to compare with.
+	 * @return an ContainerCriteria instance that can be used to continue append more
+	 * criteria or as the LdapQuery instance to be used as instance to e.g.
+	 * {@link org.springframework.ldap.core.LdapOperations#search(LdapQuery, org.springframework.ldap.core.ContextMapper)}.
+	 *
+	 * @see org.springframework.ldap.filter.EqualsFilter
+	 */
+	ContainerCriteria proximity(String value);
+
 }
