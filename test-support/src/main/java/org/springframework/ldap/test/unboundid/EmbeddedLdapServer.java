@@ -69,7 +69,7 @@ public final class EmbeddedLdapServer implements AutoCloseable {
 	 */
 	@Deprecated(since = "3.3")
 	public static EmbeddedLdapServer newEmbeddedServer(String defaultPartitionName, String defaultPartitionSuffix,
-			int port) {
+			int port) throws Exception {
 		EmbeddedLdapServer server = EmbeddedLdapServer.withPartitionSuffix(defaultPartitionSuffix)
 			.partitionName(defaultPartitionName)
 			.port(port)

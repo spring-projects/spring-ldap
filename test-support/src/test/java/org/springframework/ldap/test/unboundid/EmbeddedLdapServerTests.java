@@ -49,7 +49,7 @@ public class EmbeddedLdapServerTests {
 	}
 
 	@Test
-	public void shouldStartAndCloseServer() {
+	public void shouldStartAndCloseServer() throws Exception {
 		assertPortIsFree(this.port);
 
 		EmbeddedLdapServer server = EmbeddedLdapServer.newEmbeddedServer("jayway", "dc=jayway,dc=se", this.port);
@@ -60,7 +60,7 @@ public class EmbeddedLdapServerTests {
 	}
 
 	@Test
-	public void shouldStartAndAutoCloseServer() {
+	public void shouldStartAndAutoCloseServer() throws Exception {
 		assertPortIsFree(this.port);
 
 		try (EmbeddedLdapServer ignored = EmbeddedLdapServer.newEmbeddedServer("jayway", "dc=jayway,dc=se",
@@ -82,7 +82,7 @@ public class EmbeddedLdapServerTests {
 	}
 
 	@Test
-	public void startWhenNewEmbeddedServerThenException() {
+	public void startWhenNewEmbeddedServerThenException() throws Exception {
 		EmbeddedLdapServer server = EmbeddedLdapServer.newEmbeddedServer("jayway", "dc=jayway,dc=se", this.port);
 		assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(server::start);
 	}
