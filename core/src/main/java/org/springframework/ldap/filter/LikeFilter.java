@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,10 +39,10 @@ import org.springframework.ldap.support.LdapEncoder;
 public class LikeFilter extends EqualsFilter {
 
 	public LikeFilter(String attribute, String value) {
-		super(attribute, value);
+		super(attribute, value, encodeValueInternal(value));
 	}
 
-	protected String encodeValue(String value) {
+	private static String encodeValueInternal(String value) {
 		// just return if blank string
 		if (value == null) {
 			return "";
@@ -63,6 +63,14 @@ public class LikeFilter extends EqualsFilter {
 		}
 
 		return buff.toString();
+	}
+
+	/**
+	 * @deprecated please extend {@link CompareFilter} instead
+	 */
+	@Deprecated(forRemoval = true, since = "3.3")
+	protected String encodeValue(String value) {
+		return encodeValueInternal(value);
 	}
 
 }

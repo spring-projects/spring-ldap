@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2013 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 
 package org.springframework.ldap.filter;
+
+import org.springframework.ldap.support.LdapEncoder;
 
 /**
  * A filter to compare &lt;=. LDAP RFC does not allow &lt; comparison. The following code:
@@ -37,13 +39,18 @@ public class LessThanOrEqualsFilter extends CompareFilter {
 	private static final String LESS_THAN_OR_EQUALS = "<=";
 
 	public LessThanOrEqualsFilter(String attribute, String value) {
-		super(attribute, value);
+		super(attribute, LESS_THAN_OR_EQUALS, value, LdapEncoder.filterEncode(value));
 	}
 
 	public LessThanOrEqualsFilter(String attribute, int value) {
-		super(attribute, value);
+		this(attribute, String.valueOf(value));
 	}
 
+	/**
+	 * @deprecated please extend {@link CompareFilter} instead
+	 * @see org.springframework.ldap.filter.CompareFilter#getCompareString()
+	 */
+	@Deprecated(forRemoval = true, since = "3.3")
 	protected String getCompareString() {
 		return LESS_THAN_OR_EQUALS;
 	}

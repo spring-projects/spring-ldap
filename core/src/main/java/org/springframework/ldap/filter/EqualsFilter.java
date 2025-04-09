@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,10 @@ public class EqualsFilter extends CompareFilter {
 		super(attribute, value);
 	}
 
+	EqualsFilter(String attribute, String value, String encodedValue) {
+		super(attribute, EQUALS_SIGN, value, encodedValue);
+	}
+
 	/**
 	 * Convenience constructor for int values.
 	 * @param attribute Name of attribute in filter.
@@ -49,9 +53,11 @@ public class EqualsFilter extends CompareFilter {
 		super(attribute, value);
 	}
 
-	/*
+	/**
+	 * @deprecated please extend {@link CompareFilter} instead
 	 * @see org.springframework.ldap.filter.CompareFilter#getCompareString()
 	 */
+	@Deprecated(forRemoval = true, since = "3.3")
 	protected String getCompareString() {
 		return EQUALS_SIGN;
 	}
