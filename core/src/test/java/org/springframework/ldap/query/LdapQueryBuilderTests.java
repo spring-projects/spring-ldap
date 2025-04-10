@@ -74,6 +74,13 @@ public class LdapQueryBuilderTests {
 	}
 
 	@Test
+	public void buildProximity() {
+		LdapQuery result = LdapQueryBuilder.query().where("cn").near("John Doe");
+
+		assertThat(result.filter().encode()).isEqualTo("(cn~=John Doe)");
+	}
+
+	@Test
 	public void buildHardcodedFilter() {
 		LdapQuery result = LdapQueryBuilder.query().filter("(cn=Person*)");
 
