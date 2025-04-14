@@ -127,7 +127,7 @@ public final class ConverterManagerImpl implements ConverterManager {
 	public <T> T convert(Object source, String syntax, Class<T> toClass) {
 		Object result = null;
 
-		// What are we converting form
+		// What are we converting from
 		Class<?> fromClass = source.getClass();
 
 		// Deal with primitives
