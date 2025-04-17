@@ -19,7 +19,15 @@ The Spring LDAP project offers a similar ability with respect to LDAP directorie
 
 `LdapTemplate` constructs a default `ObjectDirectoryMapper` which typically renders additional configuration unnecessary.
 
-However, you can also make `ObjectDirectoryMapper` available as a `@Bean` by importing `ObjectDirectoryMapperConfiguration` like so:
+=== Converters with Boot
+
+`ObjectDirectoryMapper` supports `ConversionService` which allows you to specify customer ``Converter``s for mapping between Java and LDAP.
+
+When you are using Spring Boot, you can simply publish a `Converter` as you would normally and the `ObjectDirectoryMapper` bean that Boot provides will pick them up.
+
+=== Converters without Boot
+
+You can also make `ObjectDirectoryMapper` available as a `@Bean` by importing `ObjectDirectoryMapperConfiguration` like so:
 
 [source,java]
 ----
@@ -42,9 +50,7 @@ LdapTemplate ldapTemplate(ContextSource contextSource, ObjectDirectoryMapper odm
 }
 ----
 
-Using this import provides the benefit that it will automatically configure `ObjectDirectoryMapper` with the `ConversionService` in the `ApplicationContext`.
-
-This means that Spring LDAP will use your configured `Converter` instances.
+Doing so will make so that Spring LDAP will use your configured `Converter` instances.
 
 [[annotations]]
 == Annotations
