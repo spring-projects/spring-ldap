@@ -193,6 +193,7 @@ EmbeddedLdapServer embeddedLdapServer() {
         .build();
 }
 ----
+====
 
 Alternatively, you can use the `org.springframework.ldap.test.unboundid.LdifPopulator` to create and populate the LDAP server. To use it, create a bean similar to the following:
 
