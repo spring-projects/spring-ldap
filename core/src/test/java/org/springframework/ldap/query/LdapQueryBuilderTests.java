@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2023 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.springframework.ldap.query;
 
 import org.junit.Test;
 
+import org.springframework.ldap.filter.ProximityFilter;
 import org.springframework.ldap.support.LdapUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -75,7 +76,7 @@ public class LdapQueryBuilderTests {
 
 	@Test
 	public void buildProximity() {
-		LdapQuery result = LdapQueryBuilder.query().where("cn").near("John Doe");
+		LdapQuery result = LdapQueryBuilder.query().filter(new ProximityFilter("cn", "John Doe"));
 
 		assertThat(result.filter().encode()).isEqualTo("(cn~=John Doe)");
 	}
