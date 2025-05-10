@@ -25,7 +25,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.query.LdapQueryBuilder;
 
@@ -49,12 +48,12 @@ class EmbeddedLdapServerFactoryBeanTests {
 		assertThat(ldapTemplate).isNotNull();
 
 		List<String> list = ldapTemplate.search(LdapQueryBuilder.query().where("objectclass").is("person"),
-				new AttributesMapper<>() {
-					public String mapFromAttributes(Attributes attrs) throws NamingException {
-						return (String) attrs.get("cn").get();
-					}
-				});
+				this::mapFromAttributes);
 		assertThat(list.size()).isEqualTo(5);
+	}
+
+	private String mapFromAttributes(Attributes attrs) throws NamingException {
+		return (String) attrs.get("cn").get();
 	}
 
 }

@@ -21,10 +21,9 @@ import java.util.List;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
 import org.junit.jupiter.api.Test;
-import org.springframework.ldap.core.AttributesMapper;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.query.LdapQueryBuilder;
 
@@ -39,12 +38,12 @@ class EmbeddedLdapServerFactoryBeanTests {
 		assertThat(ldapTemplate).isNotNull();
 
 		List<String> list = ldapTemplate.search(LdapQueryBuilder.query().where("objectclass").is("person"),
-				new AttributesMapper<>() {
-					public String mapFromAttributes(Attributes attrs) throws NamingException {
-						return (String) attrs.get("cn").get();
-					}
-				});
+				this::mapFromAttributes);
 		assertThat(5).isEqualTo(list.size());
+	}
+
+	private String mapFromAttributes(Attributes attrs) throws NamingException {
+		return (String) attrs.get("cn").get();
 	}
 
 }

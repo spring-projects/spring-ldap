@@ -31,7 +31,6 @@ import com.unboundid.ldap.listener.InMemoryListenerConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.query.LdapQueryBuilder;
@@ -140,11 +139,7 @@ class EmbeddedLdapServerTests {
 			server.start();
 
 			ldapTemplate("dc=jayway,dc=se", this.port)
-				.search(LdapQueryBuilder.query().where("objectclass").is("person"), new AttributesMapper<>() {
-					public String mapFromAttributes(Attributes attrs) throws NamingException {
-						return (String) attrs.get("cn").get();
-					}
-				});
+				.search(LdapQueryBuilder.query().where("objectclass").is("person"), this::mapFromAttributes);
 		}
 
 		assertThat(Path.of(tempLogFile))
@@ -183,6 +178,10 @@ class EmbeddedLdapServerTests {
 		ctx.setPassword("secret");
 		ctx.afterPropertiesSet();
 		return new LdapTemplate(ctx);
+	}
+
+	private String mapFromAttributes(Attributes attrs) throws NamingException {
+		return (String) attrs.get("cn").get();
 	}
 
 }

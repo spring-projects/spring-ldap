@@ -18,13 +18,10 @@ package org.springframework.ldap.test;
 
 import java.util.Arrays;
 
+import junit.framework.Assert;
+
 import org.springframework.ldap.core.ContextMapper;
-
 import org.springframework.ldap.core.DirContextAdapter;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Dummy ContextMapper for testing purposes to check that the received Attributes are the
@@ -42,17 +39,16 @@ public class AttributeCheckContextMapper implements ContextMapper<DirContextAdap
 
 	public DirContextAdapter mapFromContext(Object ctx) {
 		DirContextAdapter adapter = (DirContextAdapter) ctx;
-		assertEquals(this.expectedAttributes.length,
-				this.expectedValues.length,
-				"Values and attributes need to have the same length ");
+		Assert.assertEquals("Values and attributes need to have the same length ", this.expectedAttributes.length,
+				this.expectedValues.length);
 		for (int i = 0; i < this.expectedAttributes.length; i++) {
 			String attributeValue = adapter.getStringAttribute(this.expectedAttributes[i]);
-			assertNotNull(attributeValue, "Attribute " + this.expectedAttributes[i] + " was not present");
-			assertEquals(this.expectedValues[i], attributeValue);
+			Assert.assertNotNull("Attribute " + this.expectedAttributes[i] + " was not present", attributeValue);
+			Assert.assertEquals(this.expectedValues[i], attributeValue);
 		}
 
 		for (String absentAttribute : this.absentAttributes) {
-			assertNull(adapter.getStringAttribute(absentAttribute));
+			Assert.assertNull(adapter.getStringAttribute(absentAttribute));
 		}
 
 		return adapter;
