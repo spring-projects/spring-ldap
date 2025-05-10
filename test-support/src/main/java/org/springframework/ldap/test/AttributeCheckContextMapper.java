@@ -18,10 +18,9 @@ package org.springframework.ldap.test;
 
 import java.util.Arrays;
 
-import junit.framework.Assert;
-
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.util.Assert;
 
 /**
  * Dummy ContextMapper for testing purposes to check that the received Attributes are the
@@ -39,16 +38,20 @@ public class AttributeCheckContextMapper implements ContextMapper<DirContextAdap
 
 	public DirContextAdapter mapFromContext(Object ctx) {
 		DirContextAdapter adapter = (DirContextAdapter) ctx;
-		Assert.assertEquals("Values and attributes need to have the same length ", this.expectedAttributes.length,
-				this.expectedValues.length);
+		Assert.isTrue(this.expectedAttributes.length == this.expectedValues.length,
+				"Values and attributes need to have the same length " + this.expectedAttributes.length + "!="
+						+ this.expectedValues.length);
 		for (int i = 0; i < this.expectedAttributes.length; i++) {
 			String attributeValue = adapter.getStringAttribute(this.expectedAttributes[i]);
-			Assert.assertNotNull("Attribute " + this.expectedAttributes[i] + " was not present", attributeValue);
-			Assert.assertEquals(this.expectedValues[i], attributeValue);
+			Assert.notNull(attributeValue, "Attribute " + this.expectedAttributes[i] + " was not present");
+
+			Assert.isTrue(attributeValue.equals(this.expectedValues[i]), "Attribute " + this.expectedAttributes[i]
+					+ " had value " + attributeValue + " instead of " + this.expectedValues[i]);
 		}
 
 		for (String absentAttribute : this.absentAttributes) {
-			Assert.assertNull(adapter.getStringAttribute(absentAttribute));
+			Assert.notNull(adapter.getStringAttribute(absentAttribute),
+					"Attribute " + absentAttribute + " was present");
 		}
 
 		return adapter;
