@@ -39,7 +39,7 @@ class EmbeddedLdapServerFactoryBeanTests {
 
 		List<String> list = ldapTemplate.search(LdapQueryBuilder.query().where("objectclass").is("person"),
 				this::mapFromAttributes);
-		assertThat(5).isEqualTo(list.size());
+		assertThat(list).hasSize(5);
 	}
 
 	private String mapFromAttributes(Attributes attrs) throws NamingException {
