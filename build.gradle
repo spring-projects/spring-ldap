@@ -16,7 +16,6 @@ buildscript {
 plugins {
     id 'io.spring.antora.generate-antora-yml' version '0.0.1'
     id 'org.antora' version '1.0.0'
-    id("org.openrewrite.rewrite") version "7.6.1"
 }
 
 apply plugin: 'io.spring.convention.root'
@@ -104,12 +103,4 @@ allprojects {
                         }
                 }
         }
-}
-
-rewrite {
-    activeRecipe("org.openrewrite.java.testing.junit5.JUnit5BestPractices")
-    dependencies {
-        rewrite "org.openrewrite.recipe:rewrite-recipe-bom:3.8.0"
-        rewrite "org.openrewrite.recipe:rewrite-testing-frameworks:3.8.0"
-    }
 }

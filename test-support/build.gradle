@@ -13,8 +13,6 @@ dependencies {
 
     implementation "com.google.code.typica:typica"
 
-    implementation "org.junit.jupiter:junit-jupiter:5.12.2"
-
     optional "org.apache.directory.server:apacheds-core-entry"
     optional "org.apache.directory.server:apacheds-core"
     optional "org.apache.directory.server:apacheds-protocol-ldap"
@@ -24,6 +22,7 @@ dependencies {
     optional "com.unboundid:unboundid-ldapsdk"
     testImplementation platform('org.junit:junit-bom')
     testImplementation "org.assertj:assertj-core"
+    testImplementation "org.junit.jupiter:junit-jupiter:5.12.2"
 }
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
