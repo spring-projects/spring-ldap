@@ -22,9 +22,11 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 
-import junit.framework.Assert;
-
 import org.springframework.ldap.core.AttributesMapper;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Dummy AttributesMapper for testing purposes to check that the received Attributes are
@@ -41,16 +43,17 @@ public class AttributeCheckAttributesMapper implements AttributesMapper<Object> 
 	private String[] absentAttributes = new String[0];
 
 	public Object mapFromAttributes(Attributes attributes) throws NamingException {
-		Assert.assertEquals("Values and attributes need to have the same length ", this.expectedAttributes.length,
-				this.expectedValues.length);
+		assertEquals(this.expectedAttributes.length,
+				this.expectedValues.length,
+				"Values and attributes need to have the same length ");
 		for (int i = 0; i < this.expectedAttributes.length; i++) {
 			Attribute attribute = attributes.get(this.expectedAttributes[i]);
-			Assert.assertNotNull("Attribute " + this.expectedAttributes[i] + " was not present", attribute);
-			Assert.assertEquals(this.expectedValues[i], attribute.get());
+			assertNotNull(attribute, "Attribute " + this.expectedAttributes[i] + " was not present");
+			assertEquals(this.expectedValues[i], attribute.get());
 		}
 
 		for (String absentAttribute : this.absentAttributes) {
-			Assert.assertNull(attributes.get(absentAttribute));
+			assertNull(attributes.get(absentAttribute));
 		}
 
 		return new Object();

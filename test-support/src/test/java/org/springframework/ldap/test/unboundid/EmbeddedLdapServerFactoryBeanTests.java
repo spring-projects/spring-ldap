@@ -21,8 +21,8 @@ import java.util.List;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ldap.core.AttributesMapper;
@@ -31,19 +31,19 @@ import org.springframework.ldap.query.LdapQueryBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class EmbeddedLdapServerFactoryBeanTests {
+class EmbeddedLdapServerFactoryBeanTests {
 
 	ClassPathXmlApplicationContext ctx;
 
-	@After
-	public void setup() {
+	@AfterEach
+	void setup() {
 		if (this.ctx != null) {
 			this.ctx.close();
 		}
 	}
 
 	@Test
-	public void testServerStartup() throws Exception {
+	void serverStartup() throws Exception {
 		this.ctx = new ClassPathXmlApplicationContext("/applicationContext-ldifPopulator.xml");
 		LdapTemplate ldapTemplate = this.ctx.getBean(LdapTemplate.class);
 		assertThat(ldapTemplate).isNotNull();
