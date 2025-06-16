@@ -2,6 +2,20 @@ version: 2
 updates:
   - package-ecosystem: gradle
     target-branch: main
+    milestone: 97 # 4.0.x
+    directory: /
+    schedule:
+      interval: daily
+      time: '03:40'
+      timezone: Etc/UTC
+    labels:
+      - 'type: dependency-upgrade'
+      - 'in: build'
+    ignore:
+      - dependency-name: org.apache.directory.server:*
+      - dependency-name: org.apache.directory.shared:*
+  - package-ecosystem: gradle
+    target-branch: 3.3.x
     milestone: 79 # 3.3.x
     directory: /
     schedule:
