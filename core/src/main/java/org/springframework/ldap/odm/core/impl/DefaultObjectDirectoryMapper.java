@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.LdapDataEntry;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.core.convert.support.GenericConversionService;
+import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.ldap.convert.ConverterUtils;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
@@ -78,7 +78,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 	}
 
 	private static ConverterManager createDefaultConverterManager() {
-		GenericConversionService conversionService = new GenericConversionService();
+		DefaultConversionService conversionService = new DefaultConversionService();
 		ConverterUtils.addDefaultConverters(conversionService);
 		return new ConversionServiceConverterManager(conversionService);
 	}
