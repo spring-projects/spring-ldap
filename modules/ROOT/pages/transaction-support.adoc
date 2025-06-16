@@ -62,34 +62,7 @@ In a real-world situation, you would probably apply the transactions on the serv
 [[spring-ldap-jdbc-transaction-integration]]
 == JDBC Transaction Integration
 
-A common use case when working against LDAP is that some of the data is stored in the LDAP tree but other data is stored in a relational database. In this case, transaction support becomes even more important, since the update of the different resources should be synchronized.
-
-While actual XA transactions is not supported, support is provided to conceptually wrap JDBC and LDAP access within the same transaction by supplying a `data-source-ref` attribute to the `<ldap:transaction-manager>` element. This creates a `ContextSourceAndDataSourceTransactionManager`, which then manages the two transactions virtually as if they were one. When performing a commit, the LDAP part of the operation is always performed first, letting both transactions be rolled back should the LDAP commit fail. The JDBC part of the transaction is managed exactly as in `DataSourceTransactionManager`, except that nested transactions are not supported. The following example shows an `ldap:transaction-manager` element with a `data-source-ref` attribute:
-
-====
-[source,java]
-[subs="verbatim,quotes"]
-----
-<ldap:transaction-manager data-source-ref="dataSource" >
-  <ldap:default-renaming-strategy />
-<ldap:transaction-manager />
-----
-====
-
-NOTE: The provided support is all client-side.
-The wrapped transaction is not an XA transaction. No two-phase commit is performed, as the LDAP server cannot vote on its outcome.
-
-You can accomplish the same thing for Hibernate integration by supplying a `session-factory-ref` attribute to the `<ldap:transaction-manager>` element, as follows:
-
-====
-[source,xml]
-[subs="verbatim,quotes"]
-----
-<ldap:transaction-manager session-factory-ref="dataSource" >
-  <ldap:default-renaming-strategy />
-<ldap:transaction-manager />
-----
-====
+This support was removed in Spring LDAP 4.0.
 
 [[ldap-compensating-transactions-explained]]
 == LDAP Compensating Transactions Explained

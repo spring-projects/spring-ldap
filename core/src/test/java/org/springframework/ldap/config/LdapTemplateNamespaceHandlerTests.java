@@ -42,7 +42,6 @@ import org.springframework.ldap.pool.validation.DefaultDirContextValidator;
 import org.springframework.ldap.pool2.factory.PooledContextSource;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.transaction.compensating.TempEntryRenamingStrategy;
-import org.springframework.ldap.transaction.compensating.manager.ContextSourceAndDataSourceTransactionManager;
 import org.springframework.ldap.transaction.compensating.manager.ContextSourceTransactionManager;
 import org.springframework.ldap.transaction.compensating.manager.TransactionAwareContextSourceProxy;
 import org.springframework.ldap.transaction.compensating.support.DefaultTempEntryRenamingStrategy;
@@ -51,6 +50,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.util.ReflectionUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -238,11 +238,8 @@ public class LdapTemplateNamespaceHandlerTests {
 
 	@Test
 	public void verifyParseTransactionWithDataSource() {
-		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
-				"/ldap-namespace-config-transactional-datasource.xml");
-		PlatformTransactionManager transactionManager = ctx.getBean(PlatformTransactionManager.class);
-
-		assertThat(transactionManager instanceof ContextSourceAndDataSourceTransactionManager).isTrue();
+		assertThatExceptionOfType(BeansException.class).isThrownBy(
+				() -> new ClassPathXmlApplicationContext("/ldap-namespace-config-transactional-datasource.xml"));
 	}
 
 	@Test

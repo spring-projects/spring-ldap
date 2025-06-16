@@ -114,7 +114,8 @@ public class ContextSourceTransactionManagerTests {
 
 		CompensatingTransactionObject transactionObject = new CompensatingTransactionObject(null);
 		transactionObject.setHolder(expectedContextHolder);
-		this.tested.doRollback(new DefaultTransactionStatus(transactionObject, false, false, false, false, null));
+		this.tested.doRollback(
+				new DefaultTransactionStatus("name", transactionObject, false, false, false, false, false, null));
 
 		verify(this.transactionDataManagerMock).rollback();
 	}

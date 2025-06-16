@@ -600,28 +600,12 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="data-source-ref" type="xs:token">
-            <xs:annotation>
-                <xs:documentation>
-                    Id of the DataSource instance to use.
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="session-factory-ref" type="xs:token">
-            <xs:annotation>
-                <xs:documentation>
-                    Id of the Hibernate SessionFactory instance to use.
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
     </xs:attributeGroup>
 
     <xs:element name="transaction-manager">
         <xs:annotation>
             <xs:documentation>
-                Creates an ContextSourceTransactionManager. If data-source-ref or session-factory-ref is specified,
-                a DataSourceAndContextSourceTransactionManager/HibernateAndContextSourceTransactionManager will be
-                created.
+                Creates an ContextSourceTransactionManager
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
