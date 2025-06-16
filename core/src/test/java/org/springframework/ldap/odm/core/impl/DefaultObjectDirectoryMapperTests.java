@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2023 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -141,6 +141,20 @@ public class DefaultObjectDirectoryMapperTests {
 		this.tested.setConversionService(conversionService);
 		this.tested.mapToLdapDataEntry(testPerson, new DirContextAdapter("cn=Some Person, ou=Some Company, c=Sweden"));
 		verify(conversionService).convert(any(), any(Class.class));
+	}
+
+	// gh-1101
+	@Test
+	public void managerWhenEntityMapsLongThenConverts() {
+		this.tested.manageClass(UnitTestPersonWithIndexedDnAttributes.class);
+		UnitTestPersonWithIndexedDnAttributes testPerson = new UnitTestPersonWithIndexedDnAttributes();
+		testPerson.setFullName("Some Person");
+		testPerson.setAge(34L);
+		DirContextAdapter adapter = new DirContextAdapter("cn=Some Person, ou=Some Company, c=Sweden");
+		this.tested.mapToLdapDataEntry(testPerson, adapter);
+		assertThat(adapter.getStringAttribute("age")).isEqualTo("34");
+		testPerson = this.tested.mapFromLdapDataEntry(adapter, UnitTestPersonWithIndexedDnAttributes.class);
+		assertThat(testPerson.getAge()).isEqualTo(34L);
 	}
 
 	private void assertField(DefaultObjectDirectoryMapper.EntityData entityData, String fieldName,
