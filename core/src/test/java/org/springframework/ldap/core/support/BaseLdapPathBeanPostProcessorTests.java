@@ -18,8 +18,8 @@ package org.springframework.ldap.core.support;
 
 import java.util.HashMap;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
@@ -27,6 +27,7 @@ import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.support.LdapUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.mock;
 import static org.mockito.BDDMockito.verify;
@@ -46,7 +47,7 @@ public class BaseLdapPathBeanPostProcessorTests {
 
 	private BaseLdapNameAware ldapNameAwareMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.tested = new BaseLdapPathBeanPostProcessor();
 
@@ -138,18 +139,22 @@ public class BaseLdapPathBeanPostProcessorTests {
 		assertThat(result).isSameAs(expectedContextSource);
 	}
 
-	@Test(expected = NoSuchBeanDefinitionException.class)
-	public void testGetAbstractContextSourceFromApplicationContextNoContextSource() throws Exception {
-		given(this.applicationContextMock.getBeanNamesForType(BaseLdapPathSource.class)).willReturn(new String[0]);
+	@Test
+	public void testGetAbstractContextSourceFromApplicationContextNoContextSource() {
+		assertThatExceptionOfType(NoSuchBeanDefinitionException.class).isThrownBy(() -> {
+			given(this.applicationContextMock.getBeanNamesForType(BaseLdapPathSource.class)).willReturn(new String[0]);
 
-		this.tested.getBaseLdapPathSourceFromApplicationContext();
+			this.tested.getBaseLdapPathSourceFromApplicationContext();
+		});
 	}
 
-	@Test(expected = NoSuchBeanDefinitionException.class)
-	public void testGetAbstractContextSourceFromApplicationContextTwoContextSources() throws Exception {
-		given(this.applicationContextMock.getBeanNamesForType(BaseLdapPathSource.class)).willReturn(new String[2]);
+	@Test
+	public void testGetAbstractContextSourceFromApplicationContextTwoContextSources() {
+		assertThatExceptionOfType(NoSuchBeanDefinitionException.class).isThrownBy(() -> {
+			given(this.applicationContextMock.getBeanNamesForType(BaseLdapPathSource.class)).willReturn(new String[2]);
 
-		this.tested.getBaseLdapPathSourceFromApplicationContext();
+			this.tested.getBaseLdapPathSourceFromApplicationContext();
+		});
 	}
 
 	@Test

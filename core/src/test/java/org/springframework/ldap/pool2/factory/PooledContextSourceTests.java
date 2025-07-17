@@ -19,7 +19,7 @@ package org.springframework.ldap.pool2.factory;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.ldap.core.ContextSource;

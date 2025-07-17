@@ -16,8 +16,8 @@
 
 package org.springframework.ldap.core;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -31,7 +31,7 @@ public class DistinguishedNameEditorTests {
 
 	private DistinguishedNameEditor tested;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.tested = new DistinguishedNameEditor();
 	}

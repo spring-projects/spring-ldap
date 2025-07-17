@@ -19,8 +19,8 @@ package org.springframework.ldap.transaction.compensating.manager;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextProxy;
@@ -44,7 +44,7 @@ public class TransactionAwareContextSourceProxyTests {
 
 	private DirContext dirContextMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.contextSourceMock = mock(ContextSource.class);
 		this.ldapContextMock = mock(LdapContext.class);

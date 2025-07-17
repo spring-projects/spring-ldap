@@ -23,11 +23,12 @@ import javax.naming.InvalidNameException;
 import javax.naming.Name;
 
 import com.gargoylesoftware.base.testing.EqualsTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.BadLdapGrammarException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.fail;
 
 /**
@@ -469,10 +470,12 @@ public class DistinguishedNameTests {
 		assertThat(ldapRdn).isEqualTo(new LdapRdn("ou=Some company"));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testGetLdapRdnForKeyNoMatchingKeyThrowsException() throws Exception {
-		DistinguishedName dn = new DistinguishedName("cn=john doe, ou=Some company, c=SE");
-		dn.getLdapRdn("nosuchkey");
+	@Test
+	public void testGetLdapRdnForKeyNoMatchingKeyThrowsException() {
+		assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> {
+			DistinguishedName dn = new DistinguishedName("cn=john doe, ou=Some company, c=SE");
+			dn.getLdapRdn("nosuchkey");
+		});
 	}
 
 	@Test
@@ -482,10 +485,12 @@ public class DistinguishedNameTests {
 		assertThat(value).isEqualTo("Some company");
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testGetValueNoMatchingKeyThrowsException() throws Exception {
-		DistinguishedName dn = new DistinguishedName("cn=john doe, ou=Some company, c=SE");
-		dn.getValue("nosuchkey");
+	@Test
+	public void testGetValueNoMatchingKeyThrowsException() {
+		assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> {
+			DistinguishedName dn = new DistinguishedName("cn=john doe, ou=Some company, c=SE");
+			dn.getValue("nosuchkey");
+		});
 	}
 
 	@Test
@@ -515,9 +520,10 @@ public class DistinguishedNameTests {
 	/**
 	 * Test case to verify correct parsing for issue on forums.
 	 */
-	@Test(expected = BadLdapGrammarException.class)
+	@Test
 	public void testParseInvalidPlus() {
-		new DistinguishedName("cn=te+stname@example.com");
+		assertThatExceptionOfType(BadLdapGrammarException.class)
+			.isThrownBy(() -> new DistinguishedName("cn=te+stname@example.com"));
 	}
 
 	/**
@@ -537,34 +543,42 @@ public class DistinguishedNameTests {
 		assertThat(tested.toString()).isEqualTo("cn=john doe,ou=company1,dc=mycompany,dc=com");
 	}
 
-	@Test(expected = UnsupportedOperationException.class)
-	public void testUnmodifiableDistinguishedNameFailsToAddRdn() throws Exception {
-		DistinguishedName result = DistinguishedName.immutableDistinguishedName("cn=john doe");
-		result.add(new LdapRdn("somekey", "somevalue"));
+	@Test
+	public void testUnmodifiableDistinguishedNameFailsToAddRdn() {
+		assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> {
+			DistinguishedName result = DistinguishedName.immutableDistinguishedName("cn=john doe");
+			result.add(new LdapRdn("somekey", "somevalue"));
+		});
 	}
 
-	@Test(expected = UnsupportedOperationException.class)
-	public void testUnmodifiableDistinguishedNameFailsToModifyRdn() throws Exception {
-		DistinguishedName result = DistinguishedName.immutableDistinguishedName("cn=john doe");
-		LdapRdn ldapRdn = result.getLdapRdn(0);
+	@Test
+	public void testUnmodifiableDistinguishedNameFailsToModifyRdn() {
+		assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> {
+			DistinguishedName result = DistinguishedName.immutableDistinguishedName("cn=john doe");
+			LdapRdn ldapRdn = result.getLdapRdn(0);
 
-		ldapRdn.addComponent(new LdapRdnComponent("somekey", "somevalue"));
+			ldapRdn.addComponent(new LdapRdnComponent("somekey", "somevalue"));
+		});
 	}
 
-	@Test(expected = UnsupportedOperationException.class)
-	public void testUnmodifiableDistinguishedNameFailsToModifyRdnComponentKey() throws Exception {
-		DistinguishedName result = DistinguishedName.immutableDistinguishedName("cn=john doe");
-		LdapRdnComponent component = result.getLdapRdn(0).getComponent();
+	@Test
+	public void testUnmodifiableDistinguishedNameFailsToModifyRdnComponentKey() {
+		assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> {
+			DistinguishedName result = DistinguishedName.immutableDistinguishedName("cn=john doe");
+			LdapRdnComponent component = result.getLdapRdn(0).getComponent();
 
-		component.setKey("somekey");
+			component.setKey("somekey");
+		});
 	}
 
-	@Test(expected = UnsupportedOperationException.class)
-	public void testUnmodifiableDistinguishedNameFailsToModifyRdnComponentValue() throws Exception {
-		DistinguishedName result = DistinguishedName.immutableDistinguishedName("cn=john doe");
-		LdapRdnComponent component = result.getLdapRdn(0).getComponent();
+	@Test
+	public void testUnmodifiableDistinguishedNameFailsToModifyRdnComponentValue() {
+		assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> {
+			DistinguishedName result = DistinguishedName.immutableDistinguishedName("cn=john doe");
+			LdapRdnComponent component = result.getLdapRdn(0).getComponent();
 
-		component.setValue("somevalue");
+			component.setValue("somevalue");
+		});
 	}
 
 	@Test

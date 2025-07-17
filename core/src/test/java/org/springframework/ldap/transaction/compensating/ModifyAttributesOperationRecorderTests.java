@@ -25,8 +25,8 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.ldap.LdapName;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.core.IncrementalAttributesMapper;
 import org.springframework.ldap.core.LdapOperations;
@@ -45,7 +45,7 @@ public class ModifyAttributesOperationRecorderTests {
 
 	private ModifyAttributesOperationRecorder tested;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.ldapOperationsMock = mock(LdapOperations.class);
 		this.attributesMapperMock = mock(IncrementalAttributesMapper.class);

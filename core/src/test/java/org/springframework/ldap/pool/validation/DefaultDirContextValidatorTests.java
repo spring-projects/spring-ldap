@@ -21,8 +21,8 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchControls;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.pool.DirContextType;
 
@@ -41,7 +41,7 @@ public class DefaultDirContextValidatorTests {
 
 	private DirContext dirContextMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.namingEnumerationMock = mock(NamingEnumeration.class);
 		this.dirContextMock = mock(DirContext.class);

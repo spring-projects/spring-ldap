@@ -19,8 +19,8 @@ package org.springframework.ldap.transaction.compensating;
 import javax.naming.Name;
 import javax.naming.directory.ModificationItem;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.support.LdapUtils;
@@ -33,7 +33,7 @@ public class ModifyAttributesOperationExecutorTests {
 
 	private LdapOperations ldapOperationsMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.ldapOperationsMock = mock(LdapOperations.class);
 	}

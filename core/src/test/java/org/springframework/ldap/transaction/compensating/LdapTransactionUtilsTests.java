@@ -19,8 +19,8 @@ package org.springframework.ldap.transaction.compensating;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -33,7 +33,7 @@ public class LdapTransactionUtilsTests {
 
 	private DirContext dirContextMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.dirContextMock = mock(DirContext.class);
 

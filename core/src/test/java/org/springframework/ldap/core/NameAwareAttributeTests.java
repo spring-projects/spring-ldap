@@ -21,7 +21,7 @@ import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.ldap.LdapName;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.support.LdapUtils;
 

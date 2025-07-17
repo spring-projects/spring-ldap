@@ -25,8 +25,8 @@ import javax.naming.Name;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttributes;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.NameAwareAttributes;
@@ -49,7 +49,7 @@ public class DefaultDirObjectFactoryTests {
 
 	private Context contextMock2;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.contextMock = mock(Context.class);
 		this.contextMock2 = mock(Context.class);

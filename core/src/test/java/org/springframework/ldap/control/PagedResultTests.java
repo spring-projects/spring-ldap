@@ -22,7 +22,7 @@ import java.util.List;
 import javax.naming.ldap.PagedResultsControl;
 
 import com.gargoylesoftware.base.testing.EqualsTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for the PagedResult class. {@link PagedResultsControl}

@@ -17,7 +17,7 @@
 package org.springframework.ldap.control;
 
 import com.gargoylesoftware.base.testing.EqualsTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class PagedResultsCookieTests {
 

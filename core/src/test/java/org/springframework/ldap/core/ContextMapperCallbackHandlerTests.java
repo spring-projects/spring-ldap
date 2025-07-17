@@ -19,10 +19,11 @@ package org.springframework.ldap.core;
 import javax.naming.Binding;
 import javax.naming.NamingException;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.mock;
 
@@ -32,15 +33,16 @@ public class ContextMapperCallbackHandlerTests {
 
 	private ContextMapperCallbackHandler tested;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.mapperMock = mock(ContextMapper.class);
 		this.tested = new ContextMapperCallbackHandler(this.mapperMock);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructorWithEmptyArgument() {
-		new ContextMapperCallbackHandler(null);
+		assertThatExceptionOfType(IllegalArgumentException.class)
+			.isThrownBy(() -> new ContextMapperCallbackHandler(null));
 	}
 
 	@Test
@@ -54,10 +56,12 @@ public class ContextMapperCallbackHandlerTests {
 		assertThat(actualResult).isEqualTo(expectedResult);
 	}
 
-	@Test(expected = ObjectRetrievalException.class)
-	public void testGetObjectFromNameClassPairObjectRetrievalException() throws NamingException {
-		Binding expectedBinding = new Binding("some name", null);
-		this.tested.getObjectFromNameClassPair(expectedBinding);
+	@Test
+	public void testGetObjectFromNameClassPairObjectRetrievalException() {
+		assertThatExceptionOfType(ObjectRetrievalException.class).isThrownBy(() -> {
+			Binding expectedBinding = new Binding("some name", null);
+			this.tested.getObjectFromNameClassPair(expectedBinding);
+		});
 	}
 
 }

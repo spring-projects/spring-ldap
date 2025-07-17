@@ -18,7 +18,7 @@ package org.springframework.ldap.pool.factory;
 
 import javax.naming.directory.DirContext;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.pool.AbstractPoolTestCase;
 import org.springframework.ldap.pool.MutableDelegatingLdapContext;

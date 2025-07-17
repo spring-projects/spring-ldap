@@ -22,8 +22,8 @@ import java.lang.reflect.Proxy;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.core.ContextExecutor;
 import org.springframework.ldap.core.ContextSource;
@@ -44,7 +44,7 @@ public class SingleContextSourceTests {
 
 	private DirContext dirContextMock;
 
-	@Before
+	@BeforeEach
 	public void prepareMocks() {
 		this.contextSourceMock = mock(ContextSource.class);
 		this.dirContextMock = mock(DirContext.class);

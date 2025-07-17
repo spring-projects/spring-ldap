@@ -19,8 +19,8 @@ package org.springframework.ldap.transaction.compensating;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.ldap.LdapName;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.support.LdapUtils;
@@ -36,7 +36,7 @@ public class RebindOperationRecorderTests {
 
 	private TempEntryRenamingStrategy renamingStrategyMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.ldapOperationsMock = mock(LdapOperations.class);
 		this.renamingStrategyMock = mock(TempEntryRenamingStrategy.class);

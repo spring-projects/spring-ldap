@@ -22,8 +22,8 @@ import javax.naming.ldap.SortControl;
 import javax.naming.ldap.SortResponseControl;
 import javax.net.ssl.SSLSocketFactory;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
@@ -44,7 +44,7 @@ public class LdapCoreRuntimeHintsTests {
 
 	private final RuntimeHints hints = new RuntimeHints();
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		SpringFactoriesLoader.forResourceLocation("META-INF/spring/aot.factories")
 			.load(RuntimeHintsRegistrar.class)

@@ -21,12 +21,14 @@ import java.util.Arrays;
 
 import javax.naming.Name;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import org.springframework.core.SpringVersion;
 import org.springframework.core.convert.ConversionService;
@@ -38,6 +40,7 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -45,12 +48,13 @@ import static org.mockito.Mockito.verify;
 /**
  * @author Mattias Hellborg Arthursson
  */
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
+@ExtendWith(MockitoExtension.class)
 public class DefaultObjectDirectoryMapperTests {
 
 	private DefaultObjectDirectoryMapper tested;
 
-	@Before
+	@BeforeEach
 	public void prepareTestedInstance() {
 		this.tested = new DefaultObjectDirectoryMapper();
 	}
@@ -127,9 +131,10 @@ public class DefaultObjectDirectoryMapperTests {
 		assertThat(calculatedId).isEqualTo(LdapUtils.newLdapName("cn=Some Person, ou=Some Company, c=Sweden"));
 	}
 
-	@Test(expected = MetaDataException.class)
+	@Test
 	public void testIndexedDnAttributesRequiresThatAllAreIndexed() {
-		this.tested.manageClass(UnitTestPersonWithIndexedAndUnindexedDnAttributes.class);
+		assertThatExceptionOfType(MetaDataException.class)
+			.isThrownBy(() -> this.tested.manageClass(UnitTestPersonWithIndexedAndUnindexedDnAttributes.class));
 	}
 
 	@Test

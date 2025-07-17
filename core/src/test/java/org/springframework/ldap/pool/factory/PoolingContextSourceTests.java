@@ -20,7 +20,7 @@ import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.ldap.core.ContextSource;

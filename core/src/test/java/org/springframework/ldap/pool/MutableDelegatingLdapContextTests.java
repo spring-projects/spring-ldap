@@ -16,7 +16,7 @@
 
 package org.springframework.ldap.pool;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.verify;
 

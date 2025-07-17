@@ -25,8 +25,8 @@ import javax.naming.directory.BasicAttributes;
 import javax.naming.ldap.LdapName;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.NoSuchAttributeException;
 
@@ -43,7 +43,7 @@ public class LdapUtilsTests {
 
 	private AttributeValueCallbackHandler handlerMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.handlerMock = mock(AttributeValueCallbackHandler.class);
 	}

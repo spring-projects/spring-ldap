@@ -38,13 +38,13 @@ dependencies {
         exclude group: 'org.assertj'
     }
     testImplementation platform('org.junit:junit-bom')
-    testImplementation "org.junit.vintage:junit-vintage-engine"
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine"
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
-    testImplementation "junit:junit"
     testImplementation "commons-lang:commons-lang"
     testImplementation "gsbase:gsbase"
     testImplementation "org.mockito:mockito-core"
+    testImplementation "org.mockito:mockito-junit-jupiter:4.11.0"
     testImplementation "org.springframework:spring-test"
     testImplementation "org.assertj:assertj-core"
     testImplementation "com.unboundid:unboundid-ldapsdk"
@@ -60,6 +60,7 @@ compileTestJava {
 
 test {
     jvmArgs '--add-exports', 'java.naming/com.sun.jndi.ldap=ALL-UNNAMED'
+    useJUnitPlatform()
 }
 
 checkFormatMain {

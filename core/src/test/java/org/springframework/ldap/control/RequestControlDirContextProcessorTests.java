@@ -22,10 +22,11 @@ import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
 import javax.naming.ldap.SortControl;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.mock;
 import static org.mockito.BDDMockito.verify;
@@ -42,7 +43,7 @@ public class RequestControlDirContextProcessorTests {
 
 	private DirContext dirContextMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		// Create requestControl mock
 		this.requestControlMock = mock(Control.class);
@@ -68,7 +69,7 @@ public class RequestControlDirContextProcessorTests {
 		};
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		this.requestControlMock = null;
 		this.requestControl2Mock = null;
@@ -125,9 +126,10 @@ public class RequestControlDirContextProcessorTests {
 		verify(this.ldapContextMock).setRequestControls(new Control[] { this.requestControlMock });
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testPreProcessWhenNotLdapContextShouldFail() throws Exception {
-		this.tested.preProcess(this.dirContextMock);
+	@Test
+	public void testPreProcessWhenNotLdapContextShouldFail() {
+		assertThatExceptionOfType(IllegalArgumentException.class)
+			.isThrownBy(() -> this.tested.preProcess(this.dirContextMock));
 	}
 
 }

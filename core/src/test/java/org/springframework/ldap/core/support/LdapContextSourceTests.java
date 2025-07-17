@@ -21,12 +21,13 @@ import java.util.Hashtable;
 
 import javax.naming.Context;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.support.LdapUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Unit tests for the LdapContextSource class.
@@ -38,23 +39,25 @@ public class LdapContextSourceTests {
 
 	private LdapContextSource tested;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.tested = new LdapContextSource();
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testAfterPropertiesSet_NoUrl() throws Exception {
-		this.tested.afterPropertiesSet();
+	@Test
+	public void testAfterPropertiesSet_NoUrl() {
+		assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> this.tested.afterPropertiesSet());
 	}
 
 	// gh-538
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testAfterPropertiesSet_NullPassword() {
-		this.tested.setUrl("ldap://ldap.example.com:389");
-		this.tested.setUserDn("value");
-		this.tested.setPassword(null);
-		this.tested.afterPropertiesSet();
+		assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> {
+			this.tested.setUrl("ldap://ldap.example.com:389");
+			this.tested.setUserDn("value");
+			this.tested.setPassword(null);
+			this.tested.afterPropertiesSet();
+		});
 	}
 
 	@Test
