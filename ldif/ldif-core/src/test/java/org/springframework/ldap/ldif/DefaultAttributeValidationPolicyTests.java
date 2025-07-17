@@ -21,10 +21,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +42,6 @@ import static org.assertj.core.api.Assertions.fail;
  * @author Keith Barlow
  *
  */
-@RunWith(Parameterized.class)
 public class DefaultAttributeValidationPolicyTests {
 
 	private static Logger log = LoggerFactory.getLogger(DefaultAttributeValidationPolicyTests.class);
@@ -75,7 +72,6 @@ public class DefaultAttributeValidationPolicyTests {
 	 * The data set to parse.
 	 * @return
 	 */
-	@Parameters
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
 				// Format: line, id, options, value, type
@@ -146,7 +142,7 @@ public class DefaultAttributeValidationPolicyTests {
 	 * @param value The value expected from successful parsing.
 	 * @param type The attribute type: one of enum AttributeType.
 	 */
-	public DefaultAttributeValidationPolicyTests(String line, String id, String options, String value,
+	public void initDefaultAttributeValidationPolicyTests(String line, String id, String options, String value,
 			AttributeType type) {
 		this.line = line;
 		this.id = id;
@@ -159,8 +155,10 @@ public class DefaultAttributeValidationPolicyTests {
 	 * The test case: parses passed in parameters and validates the outcome against the
 	 * expected results.
 	 */
-	@Test
-	public void parseAttribute() {
+	@MethodSource("data")
+	@ParameterizedTest
+	public void parseAttribute(String line, String id, String options, String value, AttributeType type) {
+		initDefaultAttributeValidationPolicyTests(line, id, options, value, type);
 		try {
 			LdapAttribute attribute = (LdapAttribute) policy.parse(this.line);
 
