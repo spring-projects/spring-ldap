@@ -30,11 +30,11 @@ import java.util.regex.Pattern;
 
 import javax.naming.ldap.LdapName;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,7 +69,7 @@ public final class SchemaToJavaTests {
 
 	private LdapContextSource contextSource;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUpClass() throws Exception {
 		// Added because the close down of Apache DS on Linux does
 		// not seem to free up its port.
@@ -79,13 +79,13 @@ public final class SchemaToJavaTests {
 		LdapTestUtils.startEmbeddedServer(port, baseName.toString(), "odm-test");
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void tearDownClass() throws Exception {
 		// Stop the in process LDAP server
 		LdapTestUtils.shutdownEmbeddedServer();
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		// Create some basic converters and a converter manager
 		this.converterManager = new ConverterManagerImpl();
@@ -120,7 +120,7 @@ public final class SchemaToJavaTests {
 		LdapTestUtils.cleanAndSetup(this.contextSource, baseName, new ClassPathResource("testdata.ldif"));
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		LdapTestUtils.shutdownEmbeddedServer();
 

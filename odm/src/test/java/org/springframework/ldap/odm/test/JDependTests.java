@@ -19,8 +19,8 @@ package org.springframework.ldap.odm.test;
 import java.io.IOException;
 
 import jdepend.framework.JDepend;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,7 +28,7 @@ public class JDependTests {
 
 	private JDepend jdepend;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws IOException {
 		this.jdepend = new JDepend();
 		this.jdepend.addDirectory("build/classes/java/main");

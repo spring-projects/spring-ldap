@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.odm.test.utils.ExecuteRunnable;
 import org.springframework.ldap.odm.test.utils.RunnableTests;

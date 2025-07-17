@@ -34,5 +34,11 @@ dependencies {
     testImplementation "org.apache.directory.shared:shared-ldap"
     testImplementation "org.assertj:assertj-core"
     testImplementation platform('org.junit:junit-bom')
-    testImplementation "org.junit.vintage:junit-vintage-engine"
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine"
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
 }

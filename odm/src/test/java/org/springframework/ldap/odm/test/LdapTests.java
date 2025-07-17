@@ -35,11 +35,11 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,6 +68,7 @@ import org.springframework.ldap.test.LdapTestUtils;
 import org.springframework.util.CollectionUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 // Tests all OdmManager functions
 public final class LdapTests {
@@ -128,7 +129,7 @@ public final class LdapTests {
 		}
 	}
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUpClass() throws Exception {
 		// Added because the close down of Apache DS on Linux does
 		// not seem to free up its port.
@@ -138,7 +139,7 @@ public final class LdapTests {
 		LdapTestUtils.startEmbeddedServer(port, baseName.toString(), "odm-test");
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void tearDownClass() throws Exception {
 		LdapTestUtils.shutdownEmbeddedServer();
 	}
@@ -192,12 +193,12 @@ public final class LdapTests {
 		this.odmManager = new OdmManagerImpl(this.converterManager, this.contextSource, managedClasses);
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		setUp("ldap://127.0.0.1:" + port, "", "");
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		LdapTestUtils.clearSubContexts(this.contextSource, baseName);
 
@@ -437,70 +438,81 @@ public final class LdapTests {
 	}
 
 	// Trying to read a non-existant entry should be flagged as an error
-	@Test(expected = NameNotFoundException.class)
-	public void readNonExistant() throws Exception {
-		this.odmManager.read(Person.class, LdapUtils.newLdapName("cn=Hili Harvey,ou=Doctors,o=Whoniverse"));
+	@Test
+	public void readNonExistant() {
+		assertThatExceptionOfType(NameNotFoundException.class).isThrownBy(() -> this.odmManager.read(Person.class,
+				LdapUtils.newLdapName("cn=Hili Harvey,ou=Doctors,o=Whoniverse")));
 	}
 
 	// Read an entry with classes in addition to those supported by the Entry
-	@Test(expected = OdmException.class)
-	public void readNonMatchingObjectclasses() throws Exception {
-		this.odmManager.read(Person.class, LdapUtils.newLdapName("ou=Doctors,o=Whoniverse"));
+	@Test
+	public void readNonMatchingObjectclasses() {
+		assertThatExceptionOfType(OdmException.class)
+			.isThrownBy(() -> this.odmManager.read(Person.class, LdapUtils.newLdapName("ou=Doctors,o=Whoniverse")));
 	}
 
 	// Every class to be managed must be annotated @Entry
-	@Test(expected = MetaDataException.class)
+	@Test
 	public void noEntryAnnotation() {
-		((OdmManagerImpl) this.odmManager).addManagedClass(NoEntry.class);
+		assertThatExceptionOfType(MetaDataException.class)
+			.isThrownBy(() -> ((OdmManagerImpl) this.odmManager).addManagedClass(NoEntry.class));
 	}
 
 	// There must be a field with the @Id annotation
-	@Test(expected = MetaDataException.class)
+	@Test
 	public void noId() {
-		((OdmManagerImpl) this.odmManager).addManagedClass(NoId.class);
+		assertThatExceptionOfType(MetaDataException.class)
+			.isThrownBy(() -> ((OdmManagerImpl) this.odmManager).addManagedClass(NoId.class));
 	}
 
 	// Only one field may be annotated @Id
-	@Test(expected = MetaDataException.class)
+	@Test
 	public void twoIds() {
-		((OdmManagerImpl) this.odmManager).addManagedClass(TwoIds.class);
+		assertThatExceptionOfType(MetaDataException.class)
+			.isThrownBy(() -> ((OdmManagerImpl) this.odmManager).addManagedClass(TwoIds.class));
 	}
 
 	// All Entry annotated classes must have a zero argument public constructor
-	@Test(expected = InvalidEntryException.class)
+	@Test
 	public void noConstructor() {
-		((OdmManagerImpl) this.odmManager).addManagedClass(NoConstructor.class);
+		assertThatExceptionOfType(InvalidEntryException.class)
+			.isThrownBy(() -> ((OdmManagerImpl) this.odmManager).addManagedClass(NoConstructor.class));
 	}
 
 	// It is illegal put put both the Id and the Attribute annotation on the same field
-	@Test(expected = MetaDataException.class)
+	@Test
 	public void attributeOnId() {
-		((OdmManagerImpl) this.odmManager).addManagedClass(AttributeOnId.class);
+		assertThatExceptionOfType(MetaDataException.class)
+			.isThrownBy(() -> ((OdmManagerImpl) this.odmManager).addManagedClass(AttributeOnId.class));
 	}
 
 	// The field annotation with @Id must be of type javax.naming.Name
-	@Test(expected = MetaDataException.class)
+	@Test
 	public void idIsNotAName() {
-		((OdmManagerImpl) this.odmManager).addManagedClass(IdIsNotAName.class);
+		assertThatExceptionOfType(MetaDataException.class)
+			.isThrownBy(() -> ((OdmManagerImpl) this.odmManager).addManagedClass(IdIsNotAName.class));
 	}
 
 	// The OdmManager should flag any missing converters when it is instantiated
-	@Test(expected = InvalidEntryException.class)
+	@Test
 	public void missingConverter() {
-		((OdmManagerImpl) this.odmManager).addManagedClass(MissingConverter.class);
+		assertThatExceptionOfType(InvalidEntryException.class)
+			.isThrownBy(() -> ((OdmManagerImpl) this.odmManager).addManagedClass(MissingConverter.class));
 	}
 
 	// The OdmManager should flag if the objectClass attribute is not of the appropriate
 	// type
-	@Test(expected = MetaDataException.class)
+	@Test
 	public void wrongClassForOc() {
-		((OdmManagerImpl) this.odmManager).addManagedClass(WrongClassForOc.class);
+		assertThatExceptionOfType(MetaDataException.class)
+			.isThrownBy(() -> ((OdmManagerImpl) this.odmManager).addManagedClass(WrongClassForOc.class));
 	}
 
 	// The OdmManager should flag any attempt to use a "unmanaged" class
-	@Test(expected = MetaDataException.class)
+	@Test
 	public void unManagedClass() {
-		this.odmManager.read(Integer.class, baseName);
+		assertThatExceptionOfType(MetaDataException.class)
+			.isThrownBy(() -> this.odmManager.read(Integer.class, baseName));
 	}
 
 	@Test

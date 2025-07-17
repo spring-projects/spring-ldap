@@ -24,11 +24,11 @@ import java.util.List;
 
 import javax.naming.ldap.LdapName;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.odm.test.utils.ExecuteRunnable;
 import org.springframework.ldap.odm.test.utils.GetFreePort;
@@ -50,7 +50,7 @@ public final class SchemaViewerTests {
 
 	private static String[] commonFlags;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUpClass() throws Exception {
 		// Added because the close down of Apache DS on Linux does
 		// not seem to free up its port.
@@ -63,16 +63,16 @@ public final class SchemaViewerTests {
 		LdapTestUtils.startEmbeddedServer(port, baseName.toString(), "odm-test");
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void tearDownClass() throws Exception {
 		LdapTestUtils.shutdownEmbeddedServer();
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 	}
 
