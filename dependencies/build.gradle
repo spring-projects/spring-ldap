@@ -27,7 +27,7 @@ dependencies {
 	api platform('com.fasterxml.jackson:jackson-bom:2.19.1')
 	api platform("io.micrometer:micrometer-bom:1.15.2")
 	api platform("io.micrometer:micrometer-tracing-bom:1.5.2")
-	api platform("org.junit:junit-bom:5.12.2")
+	api platform("org.junit:junit-bom:5.13.3")
 	constraints {
 		api "com.querydsl:querydsl-core:$queryDslVersion"
 		api "com.querydsl:querydsl-apt:$queryDslVersion"
