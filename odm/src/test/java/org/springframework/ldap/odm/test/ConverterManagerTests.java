@@ -19,9 +19,9 @@ package org.springframework.ldap.odm.test;
 import java.net.URI;
 import java.util.BitSet;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.odm.test.utils.ExecuteRunnable;
 import org.springframework.ldap.odm.test.utils.RunnableTests;
@@ -32,12 +32,13 @@ import org.springframework.ldap.odm.typeconversion.impl.converters.FromStringCon
 import org.springframework.ldap.odm.typeconversion.impl.converters.ToStringConverter;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public final class ConverterManagerTests {
 
 	private ConverterManagerImpl converterManager;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.converterManager = new ConverterManagerImpl();
 
@@ -64,7 +65,7 @@ public final class ConverterManagerTests {
 		this.converterManager.addConverter(String.class, "", URI.class, uric);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		this.converterManager = null;
 	}
@@ -141,15 +142,17 @@ public final class ConverterManagerTests {
 	}
 
 	// No converter for classes
-	@Test(expected = ConverterException.class)
-	public void noClassConverter() throws Exception {
-		this.converterManager.convert(BitSet.class, "", Integer.class);
+	@Test
+	public void noClassConverter() {
+		assertThatExceptionOfType(ConverterException.class)
+			.isThrownBy(() -> this.converterManager.convert(BitSet.class, "", Integer.class));
 	}
 
 	// Invalid syntax so converter fails
-	@Test(expected = ConverterException.class)
-	public void invalidSyntax() throws Exception {
-		this.converterManager.convert(String.class, "not a uri", URI.class);
+	@Test
+	public void invalidSyntax() {
+		assertThatExceptionOfType(ConverterException.class)
+			.isThrownBy(() -> this.converterManager.convert(String.class, "not a uri", URI.class));
 	}
 
 	private static final class ConverterTestData<T> {
