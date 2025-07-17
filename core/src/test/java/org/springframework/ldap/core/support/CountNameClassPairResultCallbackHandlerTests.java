@@ -18,8 +18,8 @@ package org.springframework.ldap.core.support;
 
 import javax.naming.directory.SearchResult;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,7 +27,7 @@ public class CountNameClassPairResultCallbackHandlerTests {
 
 	private CountNameClassPairCallbackHandler tested;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.tested = new CountNameClassPairCallbackHandler();
 	}

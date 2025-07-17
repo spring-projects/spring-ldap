@@ -30,8 +30,8 @@ import javax.naming.directory.SearchResult;
 import javax.naming.ldap.LdapContext;
 import javax.naming.ldap.LdapName;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatcher;
 
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -102,7 +102,7 @@ public class DefaultLdapClientTests {
 
 	private AuthenticatedLdapEntryContextMapper authContextMapperMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 
 		// Setup ContextSource mock

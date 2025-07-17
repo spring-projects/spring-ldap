@@ -16,8 +16,8 @@
 
 package org.springframework.ldap.core;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 
@@ -34,7 +34,7 @@ public class LdapTemplateOdmTests {
 
 	private ObjectDirectoryMapper odmMock;
 
-	@Before
+	@BeforeEach
 	public void prepareTestedClass() {
 		this.tested = mock(LdapTemplate.class);
 

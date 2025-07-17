@@ -30,8 +30,8 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.ldap.LdapName;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.support.LdapUtils;
 
@@ -53,7 +53,7 @@ public class DirContextAdapterTests {
 
 	private DirContextAdapter tested;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.tested = new DirContextAdapter();
 	}

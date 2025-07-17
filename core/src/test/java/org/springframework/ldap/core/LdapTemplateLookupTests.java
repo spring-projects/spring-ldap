@@ -25,8 +25,8 @@ import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 import javax.naming.ldap.LdapName;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
@@ -56,7 +56,7 @@ public class LdapTemplateLookupTests {
 
 	private ObjectDirectoryMapper odmMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		// Setup ContextSource mock
 		this.contextSourceMock = mock(ContextSource.class);

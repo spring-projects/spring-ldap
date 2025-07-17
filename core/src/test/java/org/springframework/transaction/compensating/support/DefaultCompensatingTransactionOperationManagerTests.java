@@ -18,8 +18,8 @@ package org.springframework.transaction.compensating.support;
 
 import java.util.Stack;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
@@ -27,6 +27,7 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
 import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.mock;
 import static org.mockito.BDDMockito.verify;
@@ -40,7 +41,7 @@ public class DefaultCompensatingTransactionOperationManagerTests {
 
 	private CompensatingTransactionOperationRecorder operationRecorderMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.operationExecutorMock = mock(CompensatingTransactionOperationExecutor.class);
 		this.operationFactoryMock = mock(CompensatingTransactionOperationFactory.class);
@@ -77,15 +78,17 @@ public class DefaultCompensatingTransactionOperationManagerTests {
 		verify(this.operationExecutorMock).rollback();
 	}
 
-	@Test(expected = TransactionSystemException.class)
+	@Test
 	public void testRollback_Exception() {
-		DefaultCompensatingTransactionOperationManager tested = new DefaultCompensatingTransactionOperationManager(
-				this.operationFactoryMock);
-		tested.getOperationExecutors().push(this.operationExecutorMock);
+		assertThatExceptionOfType(TransactionSystemException.class).isThrownBy(() -> {
+			DefaultCompensatingTransactionOperationManager tested = new DefaultCompensatingTransactionOperationManager(
+					this.operationFactoryMock);
+			tested.getOperationExecutors().push(this.operationExecutorMock);
 
-		willThrow(new RuntimeException()).given(this.operationExecutorMock).rollback();
+			willThrow(new RuntimeException()).given(this.operationExecutorMock).rollback();
 
-		tested.rollback();
+			tested.rollback();
+		});
 	}
 
 	@Test
@@ -98,15 +101,17 @@ public class DefaultCompensatingTransactionOperationManagerTests {
 		verify(this.operationExecutorMock).commit();
 	}
 
-	@Test(expected = TransactionSystemException.class)
+	@Test
 	public void testCommit_Exception() {
-		DefaultCompensatingTransactionOperationManager tested = new DefaultCompensatingTransactionOperationManager(
-				this.operationFactoryMock);
-		tested.getOperationExecutors().push(this.operationExecutorMock);
+		assertThatExceptionOfType(TransactionSystemException.class).isThrownBy(() -> {
+			DefaultCompensatingTransactionOperationManager tested = new DefaultCompensatingTransactionOperationManager(
+					this.operationFactoryMock);
+			tested.getOperationExecutors().push(this.operationExecutorMock);
 
-		willThrow(new RuntimeException()).given(this.operationExecutorMock).commit();
+			willThrow(new RuntimeException()).given(this.operationExecutorMock).commit();
 
-		tested.commit();
+			tested.commit();
+		});
 	}
 
 }

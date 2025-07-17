@@ -16,11 +16,12 @@
 
 package org.springframework.ldap.support;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.BadLdapGrammarException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Unit test for the LdapEncode class.
@@ -52,9 +53,9 @@ public class LdapEncoderTests {
 		assertThat(res).isEqualTo("# foo ,+\"\\<>; ");
 	}
 
-	@Test(expected = BadLdapGrammarException.class)
+	@Test
 	public void testNameDecode_slashlast() {
-		LdapEncoder.nameDecode("\\");
+		assertThatExceptionOfType(BadLdapGrammarException.class).isThrownBy(() -> LdapEncoder.nameDecode("\\"));
 	}
 
 	// gh-413

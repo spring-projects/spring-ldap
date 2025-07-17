@@ -27,8 +27,8 @@ import com.sun.jndi.ldap.Ber;
 import com.sun.jndi.ldap.BerDecoder;
 import com.sun.jndi.ldap.BerEncoder;
 import com.sun.jndi.ldap.ctl.DirSyncResponseControl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -45,7 +45,7 @@ public class SortControlDirContextProcessorTests {
 
 	private SortControlDirContextProcessor tested;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.tested = new SortControlDirContextProcessor("key");
 

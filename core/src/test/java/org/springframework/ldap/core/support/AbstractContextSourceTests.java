@@ -19,7 +19,7 @@ package org.springframework.ldap.core.support;
 import javax.naming.InvalidNameException;
 import javax.naming.ldap.LdapName;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

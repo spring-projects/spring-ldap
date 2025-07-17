@@ -32,8 +32,8 @@ import javax.naming.directory.SearchResult;
 import javax.naming.ldap.LdapContext;
 import javax.naming.ldap.LdapName;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
 
@@ -109,7 +109,7 @@ public class LdapTemplateTests {
 
 	private AuthenticatedLdapEntryContextMapper authContextMapperMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 
 		// Setup ContextSource mock

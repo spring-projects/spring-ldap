@@ -18,8 +18,8 @@ package org.springframework.ldap.transaction.compensating;
 
 import javax.naming.directory.DirContext;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
@@ -37,7 +37,7 @@ public class LdapCompensatingTransactionOperationFactoryTests {
 
 	private LdapCompensatingTransactionOperationFactory tested;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.ldapOperationsMock = mock(LdapOperations.class);
 		this.renamingStrategyMock = mock(TempEntryRenamingStrategy.class);

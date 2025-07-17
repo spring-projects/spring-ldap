@@ -20,7 +20,7 @@ import javax.naming.Name;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttributes;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.support.LdapUtils;
 

@@ -16,8 +16,8 @@
 
 package org.springframework.ldap.authentication;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.core.AuthenticationSource;
 
@@ -36,7 +36,7 @@ public class DefaultValuesAuthenticationSourceDecoratorTests {
 
 	private AuthenticationSource authenticationSourceMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.authenticationSourceMock = mock(AuthenticationSource.class);
 		this.tested = new DefaultValuesAuthenticationSourceDecorator();

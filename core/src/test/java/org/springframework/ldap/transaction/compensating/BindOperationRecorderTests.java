@@ -19,21 +19,22 @@ package org.springframework.ldap.transaction.compensating;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.ldap.LdapName;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.mock;
 
 public class BindOperationRecorderTests {
 
 	private LdapOperations ldapOperationsMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.ldapOperationsMock = mock(LdapOperations.class);
 
@@ -75,13 +76,15 @@ public class BindOperationRecorderTests {
 		assertThat(rollbackOperation.getLdapOperations()).isSameAs(this.ldapOperationsMock);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testPerformOperation_Invalid() {
-		BindOperationRecorder tested = new BindOperationRecorder(this.ldapOperationsMock);
-		Object expectedDn = new Object();
+		assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> {
+			BindOperationRecorder tested = new BindOperationRecorder(this.ldapOperationsMock);
+			Object expectedDn = new Object();
 
-		// Perform test.
-		tested.recordOperation(new Object[] { expectedDn });
+			// Perform test.
+			tested.recordOperation(new Object[] { expectedDn });
+		});
 	}
 
 }

@@ -22,7 +22,7 @@ import java.lang.reflect.Proxy;
 
 import javax.naming.directory.DirContext;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import org.springframework.ldap.core.ContextSource;

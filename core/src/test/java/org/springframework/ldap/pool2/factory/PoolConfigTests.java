@@ -17,7 +17,7 @@
 package org.springframework.ldap.pool2.factory;
 
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.pool2.AbstractPoolTestCase;
 

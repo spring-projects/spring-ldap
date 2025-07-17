@@ -21,7 +21,7 @@ import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 
 import org.apache.commons.pool2.KeyedObjectPool;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.pool2.validation.DirContextValidator;
@@ -47,7 +47,7 @@ public abstract class AbstractPoolTestCase {
 
 	protected DirContextValidator dirContextValidatorMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.contextMock = mock(Context.class);
 		this.dirContextMock = mock(DirContext.class);

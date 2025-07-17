@@ -20,8 +20,8 @@ import javax.naming.Name;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.ldap.UncategorizedLdapException;
@@ -50,7 +50,7 @@ public class LdapTemplateRenameTests {
 
 	private LdapTemplate tested;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		// Setup ContextSource mock
 		this.contextSourceMock = mock(ContextSource.class);

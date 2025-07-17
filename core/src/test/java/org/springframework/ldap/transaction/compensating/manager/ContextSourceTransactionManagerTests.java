@@ -21,8 +21,8 @@ import java.sql.Connection;
 import javax.naming.directory.DirContext;
 import javax.sql.DataSource;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.ldap.UncategorizedLdapException;
@@ -59,7 +59,7 @@ public class ContextSourceTransactionManagerTests {
 
 	private TempEntryRenamingStrategy renamingStrategyMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		if (TransactionSynchronizationManager.isSynchronizationActive()) {
 			TransactionSynchronizationManager.clearSynchronization();

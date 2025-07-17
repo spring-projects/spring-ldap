@@ -21,8 +21,8 @@ import java.util.List;
 import javax.naming.NameClassPair;
 import javax.naming.NamingException;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,7 +34,7 @@ public class CollectingNameClassPairCallbackHandlerTests {
 
 	private NameClassPair expectedNameClassPair;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.expectedResult = new Object();
 		this.expectedNameClassPair = new NameClassPair(null, null);

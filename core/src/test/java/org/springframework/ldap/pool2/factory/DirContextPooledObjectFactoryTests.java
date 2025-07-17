@@ -24,7 +24,7 @@ import javax.naming.directory.DirContext;
 
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.pool2.AbstractPoolTestCase;

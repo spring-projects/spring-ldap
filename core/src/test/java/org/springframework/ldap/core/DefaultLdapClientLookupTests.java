@@ -27,8 +27,8 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.LdapContext;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 
 import org.springframework.LdapDataEntry;
@@ -56,7 +56,7 @@ public class DefaultLdapClientLookupTests {
 
 	private LdapClient tested;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.contextSourceMock = mock(ContextSource.class);
 		this.dirContextMock = mock(LdapContext.class);

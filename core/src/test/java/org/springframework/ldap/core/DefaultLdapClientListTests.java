@@ -28,8 +28,8 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.LimitExceededException;
 import org.springframework.ldap.PartialResultException;
@@ -64,7 +64,7 @@ public class DefaultLdapClientListTests {
 
 	private DefaultLdapClient tested;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		// Setup ContextSource mock
 		this.contextSourceMock = mock(ContextSource.class);

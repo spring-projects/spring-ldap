@@ -21,12 +21,13 @@ import javax.naming.NamingException;
 import javax.naming.ldap.Control;
 import javax.naming.ldap.HasControls;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.core.ObjectRetrievalException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.mock;
 
@@ -41,15 +42,16 @@ public class ContextMapperCallbackHandlerWithControlsTests {
 	private ContextMapperCallbackHandlerWithControls tested;
 
 	@SuppressWarnings("unchecked")
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.mapperMock = mock(ContextMapperWithControls.class);
 		this.tested = new ContextMapperCallbackHandlerWithControls(this.mapperMock);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructorWithEmptyArgument() {
-		new ContextMapperCallbackHandlerWithControls<>(null);
+		assertThatExceptionOfType(IllegalArgumentException.class)
+			.isThrownBy(() -> new ContextMapperCallbackHandlerWithControls<>(null));
 	}
 
 	@Test
@@ -78,11 +80,13 @@ public class ContextMapperCallbackHandlerWithControlsTests {
 		assertThat(actualResult).isEqualTo(expectedResult);
 	}
 
-	@Test(expected = ObjectRetrievalException.class)
-	public void testGetObjectFromNameClassPairObjectRetrievalException() throws NamingException {
-		Binding expectedBinding = new Binding("some name", null);
+	@Test
+	public void testGetObjectFromNameClassPairObjectRetrievalException() {
+		assertThatExceptionOfType(ObjectRetrievalException.class).isThrownBy(() -> {
+			Binding expectedBinding = new Binding("some name", null);
 
-		this.tested.getObjectFromNameClassPair(expectedBinding);
+			this.tested.getObjectFromNameClassPair(expectedBinding);
+		});
 	}
 
 	private static class MyBindingThatHasControls extends Binding implements HasControls {

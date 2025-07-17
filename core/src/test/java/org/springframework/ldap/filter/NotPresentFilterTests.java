@@ -17,7 +17,7 @@
 package org.springframework.ldap.filter;
 
 import com.gargoylesoftware.base.testing.EqualsTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

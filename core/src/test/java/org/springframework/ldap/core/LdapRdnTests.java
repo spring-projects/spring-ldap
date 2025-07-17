@@ -17,11 +17,12 @@
 package org.springframework.ldap.core;
 
 import com.gargoylesoftware.base.testing.EqualsTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.BadLdapGrammarException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Unit test for the LdapRdn class.
@@ -72,9 +73,9 @@ public class LdapRdnTests {
 		assertThat(rdn.getComponent().getLdapEncoded()).isEqualTo("foo=bar\\0Dfum");
 	}
 
-	@Test(expected = BadLdapGrammarException.class)
+	@Test
 	public void testLdapRdn_parse_trailingBackslash() {
-		new LdapRdn("foo=bar\\");
+		assertThatExceptionOfType(BadLdapGrammarException.class).isThrownBy(() -> new LdapRdn("foo=bar\\"));
 	}
 
 	@Test
@@ -86,9 +87,9 @@ public class LdapRdnTests {
 		assertThat(rdn.getComponent().getLdapEncoded()).isEqualTo("foo=\\ bar  \\ ");
 	}
 
-	@Test(expected = BadLdapGrammarException.class)
+	@Test
 	public void testLdapRdn_parse_tooMuchTrim() {
-		new LdapRdn("foo=bar\\");
+		assertThatExceptionOfType(BadLdapGrammarException.class).isThrownBy(() -> new LdapRdn("foo=bar\\"));
 	}
 
 	@Test
@@ -100,9 +101,9 @@ public class LdapRdnTests {
 		assertThat(rdn.getComponent().getLdapEncoded()).isEqualTo("ou=Clerical / Secretarial Staff");
 	}
 
-	@Test(expected = BadLdapGrammarException.class)
+	@Test
 	public void testLdapRdn_parse_quoteInKey() {
-		new LdapRdn("\"umanroleid=2583");
+		assertThatExceptionOfType(BadLdapGrammarException.class).isThrownBy(() -> new LdapRdn("\"umanroleid=2583"));
 	}
 
 	@Test
@@ -147,16 +148,20 @@ public class LdapRdnTests {
 		assertThat(rdn.getValue("sn")).isEqualTo("Doe");
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testGetValueNoKeyWithCorrectValue() {
-		LdapRdn tested = new LdapRdn("cn=john doe");
-		tested.getValue("sn");
+		assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> {
+			LdapRdn tested = new LdapRdn("cn=john doe");
+			tested.getValue("sn");
+		});
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testGetValueNoComponents() {
-		LdapRdn tested = new LdapRdn();
-		tested.getValue("sn");
+		assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> {
+			LdapRdn tested = new LdapRdn();
+			tested.getValue("sn");
+		});
 	}
 
 	@Test

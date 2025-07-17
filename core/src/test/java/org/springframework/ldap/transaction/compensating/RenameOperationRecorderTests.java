@@ -16,8 +16,8 @@
 
 package org.springframework.ldap.transaction.compensating;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
@@ -29,7 +29,7 @@ public class RenameOperationRecorderTests {
 
 	private LdapOperations ldapOperationsMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.ldapOperationsMock = mock(LdapOperations.class);
 	}

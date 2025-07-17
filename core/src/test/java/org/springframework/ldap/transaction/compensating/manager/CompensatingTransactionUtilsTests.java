@@ -20,8 +20,8 @@ import java.lang.reflect.Method;
 
 import javax.naming.directory.DirContext;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationManager;
@@ -40,7 +40,7 @@ public class CompensatingTransactionUtilsTests {
 
 	private CompensatingTransactionOperationManager operationManagerMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.dirContextMock = mock(DirContext.class);
 		this.contextSourceMock = mock(ContextSource.class);

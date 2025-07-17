@@ -16,12 +16,13 @@
 
 package org.springframework.ldap.query;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.filter.ProximityFilter;
 import org.springframework.ldap.support.LdapUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -88,18 +89,22 @@ public class LdapQueryBuilderTests {
 		assertThat(result.filter().encode()).isEqualTo("(cn=Person*)");
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void verifyThatHardcodedFilterFailsIfFilterAlreadySpecified() {
-		LdapQueryBuilder query = LdapQueryBuilder.query();
-		query.where("sn").is("Doe");
-		query.filter("(cn=Person*)");
+		assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
+			LdapQueryBuilder query = LdapQueryBuilder.query();
+			query.where("sn").is("Doe");
+			query.filter("(cn=Person*)");
+		});
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void verifyThatFilterFormatFailsIfFilterAlreadySpecified() {
-		LdapQueryBuilder query = LdapQueryBuilder.query();
-		query.where("sn").is("Doe");
-		query.filter("(|(cn={0})(cn={1}))", "Person*", "Parson*");
+		assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
+			LdapQueryBuilder query = LdapQueryBuilder.query();
+			query.where("sn").is("Doe");
+			query.filter("(|(cn={0})(cn={1}))", "Person*", "Parson*");
+		});
 	}
 
 	@Test
@@ -162,28 +167,38 @@ public class LdapQueryBuilderTests {
 		assertThat(result.filter().encode()).isEqualTo("(&(objectclass=person)(|(sn=Doe)(sn=Die)))");
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void verifyEmptyFilterThrowsIllegalState() {
-		LdapQueryBuilder.query().filter();
+		assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> LdapQueryBuilder.query().filter());
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void verifyThatNewAttemptToStartSpecifyingFilterThrowsIllegalState() {
-		LdapQueryBuilder query = LdapQueryBuilder.query();
-		query.where("sn").is("Doe");
-		query.where("cn").is("John Doe");
+		assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
+			LdapQueryBuilder query = LdapQueryBuilder.query();
+			query.where("sn").is("Doe");
+			query.where("cn").is("John Doe");
+		});
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void verifyThatAttemptToStartSpecifyingBasePropertiesThrowsIllegalStateWhenFilterStarted() {
-		LdapQueryBuilder query = LdapQueryBuilder.query();
-		query.where("sn").is("Doe");
-		query.base("dc=261consulting,dc=com");
+		assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
+			LdapQueryBuilder query = LdapQueryBuilder.query();
+			query.where("sn").is("Doe");
+			query.base("dc=261consulting,dc=com");
+		});
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void verifyThatOperatorChangeIsIllegal() {
-		LdapQueryBuilder.query().where("cn").is("John Doe").and("sn").is("Doe").or("objectclass").is("person");
+		assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> LdapQueryBuilder.query()
+			.where("cn")
+			.is("John Doe")
+			.and("sn")
+			.is("Doe")
+			.or("objectclass")
+			.is("person"));
 	}
 
 }

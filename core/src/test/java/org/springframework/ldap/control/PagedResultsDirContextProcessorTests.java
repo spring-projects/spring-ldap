@@ -27,9 +27,9 @@ import com.sun.jndi.ldap.Ber;
 import com.sun.jndi.ldap.BerDecoder;
 import com.sun.jndi.ldap.BerEncoder;
 import com.sun.jndi.ldap.ctl.DirSyncResponseControl;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -41,7 +41,7 @@ public class PagedResultsDirContextProcessorTests {
 
 	private PagedResultsDirContextProcessor tested;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 
 		this.tested = new PagedResultsDirContextProcessor(20);
@@ -50,7 +50,7 @@ public class PagedResultsDirContextProcessorTests {
 		this.ldapContextMock = mock(LdapContext.class);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 
 		this.tested = null;

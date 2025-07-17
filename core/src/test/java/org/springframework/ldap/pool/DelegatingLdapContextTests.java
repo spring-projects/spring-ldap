@@ -21,7 +21,7 @@ import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 
 import org.apache.commons.pool.KeyedObjectPool;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;

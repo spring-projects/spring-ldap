@@ -21,7 +21,7 @@ import java.util.Hashtable;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.core.support.AbstractContextSource;
 

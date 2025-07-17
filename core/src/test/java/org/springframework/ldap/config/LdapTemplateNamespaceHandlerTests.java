@@ -28,7 +28,7 @@ import javax.naming.directory.SearchControls;
 
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -97,19 +97,22 @@ public class LdapTemplateNamespaceHandlerTests {
 		assertThat(Boolean.TRUE).isEqualTo(getInternalState(contextSource, "anonymousReadOnly"));
 	}
 
-	@Test(expected = BeansException.class)
+	@Test
 	public void verifyThatAnonymousReadOnlyAndTransactionalThrowsException() {
-		new ClassPathXmlApplicationContext("/ldap-namespace-config-anonymous-read-only-and-transactions.xml");
+		assertThatExceptionOfType(BeansException.class).isThrownBy(() -> new ClassPathXmlApplicationContext(
+				"/ldap-namespace-config-anonymous-read-only-and-transactions.xml"));
 	}
 
-	@Test(expected = BeansException.class)
+	@Test
 	public void verifyThatMissingUsernameThrowsException() {
-		new ClassPathXmlApplicationContext("/ldap-namespace-config-missing-username.xml");
+		assertThatExceptionOfType(BeansException.class)
+			.isThrownBy(() -> new ClassPathXmlApplicationContext("/ldap-namespace-config-missing-username.xml"));
 	}
 
-	@Test(expected = BeansException.class)
+	@Test
 	public void verifyThatMissingPasswordThrowsException() {
-		new ClassPathXmlApplicationContext("/ldap-namespace-config-missing-password.xml");
+		assertThatExceptionOfType(BeansException.class)
+			.isThrownBy(() -> new ClassPathXmlApplicationContext("/ldap-namespace-config-missing-password.xml"));
 	}
 
 	@Test
@@ -366,9 +369,10 @@ public class LdapTemplateNamespaceHandlerTests {
 		assertThat(nonTransientExceptions.contains(CannotProceedException.class)).isTrue();
 	}
 
-	@Test(expected = BeansException.class)
+	@Test
 	public void verifyParseWithPoolingAndNativePoolingWillFail() {
-		new ClassPathXmlApplicationContext("/ldap-namespace-config-pooling-with-native.xml");
+		assertThatExceptionOfType(BeansException.class)
+			.isThrownBy(() -> new ClassPathXmlApplicationContext("/ldap-namespace-config-pooling-with-native.xml"));
 	}
 
 	@Test
@@ -494,14 +498,16 @@ public class LdapTemplateNamespaceHandlerTests {
 		assertThat(nonTransientExceptions.contains(CannotProceedException.class)).isTrue();
 	}
 
-	@Test(expected = BeansException.class)
+	@Test
 	public void verifyParseWithPool2AndNativePoolingWillFail() {
-		new ClassPathXmlApplicationContext("/ldap-namespace-config-pool2-with-native.xml");
+		assertThatExceptionOfType(BeansException.class)
+			.isThrownBy(() -> new ClassPathXmlApplicationContext("/ldap-namespace-config-pool2-with-native.xml"));
 	}
 
-	@Test(expected = BeansException.class)
+	@Test
 	public void verifyParseWithPool1AndPool2WillFail() {
-		new ClassPathXmlApplicationContext("/ldap-namespace-config-pool2-with-pool1.xml");
+		assertThatExceptionOfType(BeansException.class)
+			.isThrownBy(() -> new ClassPathXmlApplicationContext("/ldap-namespace-config-pool2-with-pool1.xml"));
 	}
 
 	@Test

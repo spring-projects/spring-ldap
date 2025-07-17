@@ -18,8 +18,8 @@ package org.springframework.ldap.core.support;
 
 import javax.naming.NamingException;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.core.DirContextProcessor;
 
@@ -34,7 +34,7 @@ public class AggregateDirContextProcessorTests {
 
 	private AggregateDirContextProcessor tested;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		// Create processor1 mock
 		this.processor1Mock = mock(DirContextProcessor.class);
