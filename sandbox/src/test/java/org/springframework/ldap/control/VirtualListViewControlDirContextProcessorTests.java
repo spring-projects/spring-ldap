@@ -27,8 +27,8 @@ import com.sun.jndi.ldap.BerEncoder;
 import com.sun.jndi.ldap.ctl.VirtualListViewControl;
 import com.sun.jndi.ldap.ctl.VirtualListViewResponseControl;
 import junit.framework.AssertionFailedError;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.OperationNotSupportedException;
 
@@ -50,7 +50,7 @@ public class VirtualListViewControlDirContextProcessorTests {
 
 	private LdapContext ldapContextMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		// Create ldapContext mock
 		this.ldapContextMock = mock(LdapContext.class);

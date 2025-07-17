@@ -9,8 +9,9 @@ dependencies {
     provided "com.sun:ldapbp:1.0"
 
     testImplementation platform('org.junit:junit-bom')
-    testImplementation "org.junit.vintage:junit-vintage-engine"
-    testImplementation "junit:junit"
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine"
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation "org.mockito:mockito-core"
     testImplementation "gsbase:gsbase"
     testImplementation "org.assertj:assertj-core"
@@ -26,4 +27,5 @@ compileTestJava {
 
 test {
     jvmArgs '--add-exports', 'java.naming/com.sun.jndi.ldap=ALL-UNNAMED'
+    useJUnitPlatform()
 }
