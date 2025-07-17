@@ -45,8 +45,8 @@ import io.micrometer.common.KeyValues;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationConvention;
 import io.micrometer.observation.ObservationRegistry;
+import org.jspecify.annotations.NonNull;
 
-import org.springframework.lang.NonNull;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextOperations;
@@ -190,7 +190,7 @@ public final class ObservationContextSource implements BaseLdapPathContextSource
 		}
 
 		@Override
-		public boolean supportsContext(@NonNull Observation.Context context) {
+		public boolean supportsContext(Observation.Context context) {
 			return context instanceof DirContextOperationObservationContext;
 		}
 

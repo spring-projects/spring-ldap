@@ -25,7 +25,8 @@ import javax.naming.NamingEnumeration;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
+
 import org.springframework.util.Assert;
 
 /**
