@@ -21,7 +21,7 @@ dependencies {
 		api platform("org.springframework.data:spring-data-bom:$springDataVersion")
 	} else {
 		api platform("org.springframework:spring-framework-bom:7.0.0-M6")
-		api platform("org.springframework.data:spring-data-bom:2021.2.18")
+		api platform("org.springframework.data:spring-data-bom:2025.0.1")
 	}
 	api platform("org.springframework.security:spring-security-bom:6.4.6")
 	api platform('com.fasterxml.jackson:jackson-bom:2.19.1')
