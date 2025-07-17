@@ -20,7 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.ldif.parser.LdifParser;
 import org.springframework.ldap.schema.BasicSchemaSpecification;

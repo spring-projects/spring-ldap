@@ -18,9 +18,9 @@ package org.springframework.ldap.ldif;
 
 import java.io.IOException;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +66,7 @@ public class LdifParserTests {
 	/**
 	 * Setup: opens file.
 	 */
-	@Before
+	@BeforeEach
 	public void openLdif() {
 		try {
 			this.parser.open();
@@ -122,7 +122,7 @@ public class LdifParserTests {
 	/**
 	 * Cleanup: closes file.
 	 */
-	@After
+	@AfterEach
 	public void closeLdif() {
 		try {
 			this.parser.close();
