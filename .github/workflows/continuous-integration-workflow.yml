@@ -34,7 +34,7 @@ jobs:
       test-args: --refresh-dependencies -PforceMavenRepositories=snapshot -PisOverrideVersionCatalog -PtestToolchain=17 -PspringFrameworkVersion=6.2.+ -PspringDataVersion=2024.0.+ --stacktrace
   deploy-artifacts:
     name: Deploy Artifacts
-    needs: [ build ]
+    needs: [ build, test ]
     uses: spring-io/spring-security-release-tools/.github/workflows/deploy-artifacts.yml@v1
     with:
       should-deploy-artifacts: ${{ needs.build.outputs.should-deploy-artifacts }}
