@@ -38,6 +38,7 @@ jobs:
     uses: spring-io/spring-security-release-tools/.github/workflows/deploy-artifacts.yml@v1
     with:
       should-deploy-artifacts: ${{ needs.build.outputs.should-deploy-artifacts }}
+      default-publish-milestones-central: true
     secrets: inherit
   deploy-docs:
     name: Deploy Docs
