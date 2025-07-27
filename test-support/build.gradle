@@ -21,8 +21,7 @@ dependencies {
     optional "org.apache.directory.shared:shared-ldap"
     optional "com.unboundid:unboundid-ldapsdk"
 
-    provided "junit:junit"
-    testImplementation platform('org.junit:junit-bom')
-    testImplementation "org.junit.vintage:junit-vintage-engine"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
     testImplementation "org.assertj:assertj-core"
 }

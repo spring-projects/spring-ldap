@@ -21,40 +21,33 @@ import java.util.List;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AutoClose;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.query.LdapQueryBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TestContextSourceFactoryBeanTests {
+class TestContextSourceFactoryBeanTests {
 
+	@AutoClose
 	ClassPathXmlApplicationContext ctx;
 
-	@After
-	public void setup() {
-		if (this.ctx != null) {
-			this.ctx.close();
-		}
-	}
-
 	@Test
-	public void testServerStartup() throws Exception {
+	void testServerStartup() {
 		this.ctx = new ClassPathXmlApplicationContext("/applicationContext-testContextSource.xml");
 		LdapTemplate ldapTemplate = this.ctx.getBean(LdapTemplate.class);
 		assertThat(ldapTemplate).isNotNull();
 
 		List<String> list = ldapTemplate.search(LdapQueryBuilder.query().where("objectclass").is("person"),
-				new AttributesMapper<>() {
-					public String mapFromAttributes(Attributes attrs) throws NamingException {
-						return (String) attrs.get("cn").get();
-					}
-				});
-		assertThat(list.size()).isEqualTo(5);
+				this::commonNameAttribute);
+		assertThat(list).hasSize(5);
+	}
+
+	private String commonNameAttribute(Attributes attrs) throws NamingException {
+		return (String) attrs.get("cn").get();
 	}
 
 }

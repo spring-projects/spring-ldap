@@ -28,10 +28,9 @@ import javax.naming.directory.Attributes;
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
 import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;
 import com.unboundid.ldap.listener.InMemoryListenerConfig;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.query.LdapQueryBuilder;
@@ -39,17 +38,17 @@ import org.springframework.ldap.query.LdapQueryBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-public class EmbeddedLdapServerTests {
+class EmbeddedLdapServerTests {
 
 	private int port;
 
-	@Before
-	public void setUp() throws IOException {
+	@BeforeEach
+	void setUp() throws IOException {
 		this.port = getFreePort();
 	}
 
 	@Test
-	public void shouldStartAndCloseServer() throws Exception {
+	void shouldStartAndCloseServer() throws Exception {
 		assertPortIsFree(this.port);
 
 		EmbeddedLdapServer server = EmbeddedLdapServer.newEmbeddedServer("jayway", "dc=jayway,dc=se", this.port);
@@ -60,7 +59,7 @@ public class EmbeddedLdapServerTests {
 	}
 
 	@Test
-	public void shouldStartAndAutoCloseServer() throws Exception {
+	void shouldStartAndAutoCloseServer() throws Exception {
 		assertPortIsFree(this.port);
 
 		try (EmbeddedLdapServer ignored = EmbeddedLdapServer.newEmbeddedServer("jayway", "dc=jayway,dc=se",
@@ -71,7 +70,7 @@ public class EmbeddedLdapServerTests {
 	}
 
 	@Test
-	public void shouldStartAndCloseServerViaLdapTestUtils() throws Exception {
+	void shouldStartAndCloseServerViaLdapTestUtils() throws Exception {
 		assertPortIsFree(this.port);
 
 		LdapTestUtils.startEmbeddedServer(this.port, "dc=jayway,dc=se", "jayway");
@@ -82,13 +81,13 @@ public class EmbeddedLdapServerTests {
 	}
 
 	@Test
-	public void startWhenNewEmbeddedServerThenException() throws Exception {
+	void startWhenNewEmbeddedServerThenException() throws Exception {
 		EmbeddedLdapServer server = EmbeddedLdapServer.newEmbeddedServer("jayway", "dc=jayway,dc=se", this.port);
 		assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(server::start);
 	}
 
 	@Test
-	public void startWhenUnstartedThenWorks() throws Exception {
+	void startWhenUnstartedThenWorks() throws Exception {
 		InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig("dc=jayway,dc=se");
 		config.setListenerConfigs(InMemoryListenerConfig.createLDAPConfig("LDAP", this.port));
 		InMemoryDirectoryServer ds = new InMemoryDirectoryServer(config);
@@ -99,7 +98,7 @@ public class EmbeddedLdapServerTests {
 	}
 
 	@Test
-	public void startWhenAlreadyStartedThenFails() throws Exception {
+	void startWhenAlreadyStartedThenFails() throws Exception {
 		InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig("dc=jayway,dc=se");
 		config.setListenerConfigs(InMemoryListenerConfig.createLDAPConfig("LDAP", this.port));
 		InMemoryDirectoryServer ds = new InMemoryDirectoryServer(config);
@@ -111,13 +110,13 @@ public class EmbeddedLdapServerTests {
 	}
 
 	@Test
-	public void shouldBuildButNotStartTheServer() {
+	void shouldBuildButNotStartTheServer() {
 		EmbeddedLdapServer.withPartitionSuffix("dc=jayway,dc=se").port(this.port).build();
 		assertPortIsFree(this.port);
 	}
 
 	@Test
-	public void shouldBuildTheServerWithCustomPort() {
+	void shouldBuildTheServerWithCustomPort() {
 		EmbeddedLdapServer.Builder serverBuilder = EmbeddedLdapServer.withPartitionSuffix("dc=jayway,dc=se")
 			.port(this.port);
 
@@ -129,7 +128,7 @@ public class EmbeddedLdapServerTests {
 	}
 
 	@Test
-	public void shouldBuildLdapServerAndApplyCustomConfiguration() throws IOException {
+	void shouldBuildLdapServerAndApplyCustomConfiguration() throws IOException {
 		String tempLogFile = Files.createTempFile("ldap-log-", ".txt").toAbsolutePath().toString();
 
 		EmbeddedLdapServer.Builder serverBuilder = EmbeddedLdapServer.withPartitionSuffix("dc=jayway,dc=se")
@@ -140,16 +139,16 @@ public class EmbeddedLdapServerTests {
 			server.start();
 
 			ldapTemplate("dc=jayway,dc=se", this.port)
-				.search(LdapQueryBuilder.query().where("objectclass").is("person"), new AttributesMapper<>() {
-					public String mapFromAttributes(Attributes attrs) throws NamingException {
-						return (String) attrs.get("cn").get();
-					}
-				});
+				.search(LdapQueryBuilder.query().where("objectclass").is("person"), this::commonNameAttribute);
 		}
 
 		assertThat(Path.of(tempLogFile))
 			.as("Applying the custom configuration should create a log file and populate it with the request")
 			.isNotEmptyFile();
+	}
+
+	private String commonNameAttribute(Attributes attrs) throws NamingException {
+		return (String) attrs.get("cn").get();
 	}
 
 	static void assertPortIsFree(int port) {
