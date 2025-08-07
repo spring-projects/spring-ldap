@@ -20,6 +20,7 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaLibraryPlugin
 import org.gradle.api.plugins.PluginManager
+import org.gradle.api.tasks.bundling.Jar
 import org.springframework.gradle.maven.SpringMavenPlugin
 
 /**
@@ -41,6 +42,11 @@ class SpringModulePlugin extends AbstractSpringJavaPlugin {
 			deployArtifacts.dependsOn project.tasks.artifactoryPublish
 		}
 		project.java.sourceCompatibility = JavaVersion.VERSION_17
+		project.tasks.withType(Jar) {
+			from(project.rootProject.files('LICENSE.txt')) {
+				into('META-INF')
+			}
+		}
 	}
 
 }
