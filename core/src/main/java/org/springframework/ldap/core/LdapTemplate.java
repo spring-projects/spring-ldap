@@ -1588,6 +1588,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			return ctx.search(base, encodedFilter, searchControls);
 		});
 		if (results == null) {
+			closeContextAndNamingEnumeration(ctx, null);
 			return Stream.empty();
 		}
 		return StreamSupport
