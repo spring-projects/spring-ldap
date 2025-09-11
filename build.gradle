@@ -6,7 +6,7 @@ buildscript {
     dependencies {
         classpath "com.github.ben-manes:gradle-versions-plugin:0.52.0"
         classpath "io.spring.gradle:dependency-management-plugin:1.1.7"
-        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:6.0.0"
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.34.1"
         classpath 'org.hidetake:gradle-ssh-plugin:2.10.1'
         classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.30.0'
         classpath "io.spring.javaformat:spring-javaformat-gradle-plugin:$springJavaformatVersion"
