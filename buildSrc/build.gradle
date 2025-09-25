@@ -87,7 +87,7 @@ dependencies {
         exclude group: 'org.springframework.boot', module: 'spring-boot-loader-tools'
     }
     implementation 'com.apollographql.apollo:apollo-runtime:4.3.3'
-    implementation 'com.github.ben-manes:gradle-versions-plugin:0.52.0'
+    implementation 'com.github.ben-manes:gradle-versions-plugin:0.53.0'
     implementation 'com.github.spullara.mustache.java:compiler:0.9.14'
     implementation 'io.spring.javaformat:spring-javaformat-gradle-plugin:0.0.47'
     implementation 'io.spring.gradle:spring-security-release-plugin:1.0.11'
