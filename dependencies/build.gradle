@@ -28,6 +28,7 @@ dependencies {
 	api platform("io.micrometer:micrometer-bom:1.15.4")
 	api platform("io.micrometer:micrometer-tracing-bom:1.5.4")
 	api platform("org.junit:junit-bom:6.0.0")
+	api platform("org.mockito:mockito-bom:5.20.0")
 	constraints {
 		api "com.querydsl:querydsl-core:$queryDslVersion"
 		api "com.querydsl:querydsl-apt:$queryDslVersion"
@@ -55,8 +56,8 @@ dependencies {
 		api "org.hibernate:hibernate-core-jakarta:5.6.15.Final"
 		api "org.hsqldb:hsqldb:2.7.4"
 		api "junit:junit:4.13.2"
-		api "org.mockito:mockito-core:5.20.0"
-		api "org.mockito:mockito-junit-jupiter:5.20.0"
+		api "org.mockito:mockito-core"
+		api "org.mockito:mockito-junit-jupiter"
 		api "org.slf4j:jcl-over-slf4j:2.0.17"
 		api "org.slf4j:log4j-over-slf4j:2.0.17"
 		api "org.slf4j:slf4j-api:2.0.17"
