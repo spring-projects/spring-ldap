@@ -29,6 +29,7 @@ dependencies {
 	api platform("io.micrometer:micrometer-tracing-bom:1.5.4")
 	api platform("org.junit:junit-bom:6.0.0")
 	api platform("org.mockito:mockito-bom:5.20.0")
+	api platform("org.slf4j:slf4j-bom:2.0.17")
 	constraints {
 		api "com.querydsl:querydsl-core:$queryDslVersion"
 		api "com.querydsl:querydsl-apt:$queryDslVersion"
@@ -58,10 +59,10 @@ dependencies {
 		api "junit:junit:4.13.2"
 		api "org.mockito:mockito-core"
 		api "org.mockito:mockito-junit-jupiter"
-		api "org.slf4j:jcl-over-slf4j:2.0.17"
-		api "org.slf4j:log4j-over-slf4j:2.0.17"
-		api "org.slf4j:slf4j-api:2.0.17"
-		api "org.slf4j:slf4j-log4j12:2.0.17"
+		api "org.slf4j:jcl-over-slf4j"
+		api "org.slf4j:log4j-over-slf4j"
+		api "org.slf4j:slf4j-api"
+		api "org.slf4j:slf4j-log4j12"
 		api "org.springframework.security:spring-security-config"
 		api "org.springframework.security:spring-security-core"
 		api "org.springframework.security:spring-security-ldap"
