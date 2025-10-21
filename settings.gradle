@@ -1,6 +1,6 @@
 pluginManagement {
     plugins {
-        id 'com.intershop.gradle.javacc' version '5.0.1'
+        id 'com.intershop.gradle.javacc' version '6.0.0'
     }
     repositories {
         gradlePluginPortal()
