@@ -39,14 +39,18 @@ nohttp {
 
 
 antora {
-    playbook = 'cached-antora-playbook.yml'
-    playbookProvider {
-        repository = 'spring-projects/spring-ldap'
-        branch = 'docs-build'
-        path = 'lib/antora/templates/per-branch-antora-playbook.yml'
-        checkLocalBranch = true
-    }
     options = [clean: true, fetch: !project.gradle.startParameter.offline, stacktrace: true]
+    environment = [
+            'BUILD_REFNAME': 'HEAD',
+            'BUILD_VERSION': project.version,
+    ]
+}
+
+tasks.register("syncAntoraAttachments", Sync) {
+    group = 'Documentation'
+    description = 'Syncs the Antora attachments'
+    from project.provider( { project.tasks.api.outputs } )
+    into project.layout.buildDirectory.dir('generated-antora-resources/modules/ROOT/assets/attachments/api/java')
 }
 
 tasks.named("generateAntoraYml") {
@@ -56,6 +60,10 @@ tasks.named("generateAntoraYml") {
             'spring-core-version': '6.1.6'
         ]
     } )
+}
+
+tasks.register("generateAntoraResources") {
+    dependsOn 'generateAntoraYml', 'syncAntoraAttachments'
 }
 
 springRelease {
