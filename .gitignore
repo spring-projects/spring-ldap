@@ -11,3 +11,4 @@ build
 .idea
 *.iws
 out
+node_modules
