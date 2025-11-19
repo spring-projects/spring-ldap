@@ -1,6 +1,5 @@
 antora:
   extensions:
-  - '@opendevise/antora-release-line-extension'
   - require: '@springio/antora-extensions'
     root_component_name: 'ldap'
 site:
@@ -21,6 +20,7 @@ asciidoc:
     - '@asciidoctor/tabs'
     - '@springio/asciidoctor-extensions'
     - '@springio/asciidoctor-extensions/include-code-extension'
+    - '@springio/asciidoctor-extensions/javadoc-extension'
   attributes:
     page-related-doc-categories: security
     page-related-doc-projects: framework
