@@ -72,7 +72,7 @@ springRelease {
     weekOfMonth = 2
     dayOfWeek = 4
     referenceDocUrl = "https://docs.spring.io/spring-ldap/reference/{version}/index.html"
-    apiDocUrl = "https://docs.spring.io/spring-ldap/docs/{version}/api/"
+    apiDocUrl = "https://docs.spring.io/spring-ldap/reference/{version}/api/java/index.html"
     replaceSnapshotVersionInReferenceDocUrl = true
 }
 
