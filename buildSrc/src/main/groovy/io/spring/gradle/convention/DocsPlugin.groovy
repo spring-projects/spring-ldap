@@ -20,7 +20,6 @@ public class DocsPlugin implements Plugin<Project> {
 		PluginManager pluginManager = project.getPluginManager();
 		pluginManager.apply(BasePlugin);
 		pluginManager.apply("org.asciidoctor.jvm.convert");
-		pluginManager.apply(DeployDocsPlugin);
 		pluginManager.apply(JavadocApiPlugin);
 
 		project.getGradle().afterProject(new Action<Project>() {
