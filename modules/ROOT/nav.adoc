@@ -1,6 +1,7 @@
 * xref:index.adoc[]
 * xref:preface.adoc[]
 * xref:introduction.adoc[]
+* xref:attachment$api/java/index.html[Javadoc]
 * xref:spring-ldap-basic-usage.adoc[]
 * xref:dirobjectfactory.adoc[]
 * xref:odm.adoc[]
