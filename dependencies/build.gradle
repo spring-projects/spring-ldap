@@ -23,7 +23,7 @@ dependencies {
 		api platform("org.springframework:spring-framework-bom:6.2.12")
 		api platform("org.springframework.data:spring-data-bom:2021.2.18")
 	}
-	api platform("org.springframework.security:spring-security-bom:6.4.12")
+	api platform("org.springframework.security:spring-security-bom:6.4.13")
 	api platform('com.fasterxml.jackson:jackson-bom:2.18.5')
 	api platform("io.micrometer:micrometer-bom:1.14.14")
 	api platform("io.micrometer:micrometer-tracing-bom:1.4.12")
