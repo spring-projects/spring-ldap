@@ -1,0 +1,21 @@
+name: Publish Release
+
+on:
+  workflow_dispatch: # Manual trigger
+    inputs:
+      version:
+        description: "The release to publish"
+        required: true
+
+jobs:
+  perform-release:
+    name: Perform Release
+    uses: spring-io/spring-security-release-tools/.github/workflows/perform-release.yml@v1
+    with:
+      should-perform-release: true
+      project-version: ${{ inputs.version }}
+      milestone-repo-url: https://repo1.maven.org/maven2
+      release-repo-url: https://repo1.maven.org/maven2
+      artifact-path: org/springframework/ldap/spring-ldap-core
+      slack-announcing-id: spring-ldap-announcing
+    secrets: inherit
