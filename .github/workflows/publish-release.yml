@@ -40,17 +40,50 @@ jobs:
         uses: jzheaux/spring-io-actions/publish-release-notes@main
         with:
           tag: ${{ needs.planner.outputs.version }}
-      - name: Generate GitHub App Token
-        id: generate-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.MILESTONE_CLOSER_APP_ID }}
-          private-key: ${{ secrets.MILESTONE_CLOSER_PRIVATE_KEY }}
       - name: Close Release Milestone
         uses: jzheaux/spring-io-actions/close-milestone@main
         with:
           version: ${{ needs.planner.outputs.version }}
-          token: ${{ steps.generate-token.outputs.token }}
+          token: ${{ github.token }}
+      - id: next-release-milestone
+        name: "Compute Milestone After ${{ needs.planner.outputs.version }}"
+        uses: jzheaux/spring-io-actions/compute-next-version@main
+        with:
+          version: ${{ needs.planner.outputs.version }}
+          token: ${{ github.token }}
+          website-token: ${{ secrets.WEBSITE_TOKEN }}
+      - name: "Ensure ${{ steps.next-release-milestone.outputs.next-version }} Scheduled"
+        uses: jzheaux/spring-io-actions/schedule-milestone@main
+        if: ${{ steps.next-release-milestone.outputs.release-type  == 'oss' }}
+        with:
+          version: ${{ steps.next-release-milestone.outputs.next-version }}
+          version-date: ${{ steps.next-release-milestone.outputs.next-version-date }}
+          token: ${{ github.token }}
+      - id: next-next-release-milestone
+        name: "Compute Milestone After ${{ steps.next-release-milestone.outputs.next-version }}"
+        uses: jzheaux/spring-io-actions/compute-next-version@main
+        if: ${{ steps.next-release-milestone.outputs.next-version-type  == 'oss' }}
+        with:
+          version: ${{ steps.next-release-milestone.outputs.next-version }}
+          token: ${{ github.token }}
+          website-token: ${{ secrets.WEBSITE_TOKEN }}
+      - name: "Ensure ${{ steps.next-next-release-milestone.outputs.next-version-type }} Scheduled"
+        uses: jzheaux/spring-io-actions/schedule-milestone@main
+        if: ${{ steps.next-next-release-milestone.outputs.next-version-type  == 'oss' }}
+        with:
+          version: ${{ steps.next-next-release-milestone.outputs.next-version }}
+          version-date: ${{ steps.next-next-release-milestone.outputs.next-version-date }}
+          token: ${{ github.token }}
+      - name: Update Learn Page
+        uses: jzheaux/spring-io-actions/update-learn-page@main
+        with:
+          version: ${{ needs.planner.outputs.version }}
+          website-token: ${{ secrets.WEBSITE_TOKEN }}
+      - name: Announce Release on GChat
+        uses: jzheaux/spring-io-actions/announce-on-gchat@main
+        with:
+          version: ${{ needs.planner.outputs.version }}
+          gchat-webhook-url: ${{ secrets.GCHAT_WEBHOOK_URL }}
       - name: Update Version
         uses: jzheaux/spring-io-actions/push-next-development-version@main
         with:

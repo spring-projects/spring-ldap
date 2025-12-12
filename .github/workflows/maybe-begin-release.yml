@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GH_TOKEN: ${{ github.token }}
 
 jobs:
   planner:
@@ -22,7 +22,7 @@ jobs:
         uses: jzheaux/spring-io-actions/get-todays-release-version@main
         with:
           snapshot-version: ${{ steps.compute-version.outputs.snapshot }}
-          milestone-token: ${{ secrets.GITHUB_TOKEN }}
+          milestone-token: ${{ github.token }}
       - if: ${{ steps.release-version.outputs.release-version != '' }}
         id: count-issues
         uses: jzheaux/spring-io-actions/count-open-issues@main

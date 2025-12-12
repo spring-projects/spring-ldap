@@ -13,6 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: jzheaux/spring-io-actions/run-gradle@main
+        env:
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_PRIVATE_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASSPHRASE }}
         with:
           java-version: 17
           distribution: temurin
