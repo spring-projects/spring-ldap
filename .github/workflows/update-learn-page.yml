@@ -1,0 +1,17 @@
+permissions:
+  contents: write
+name: "003C: Update Learn Page"
+on:
+  milestone:
+    types: [ closed ]
+
+jobs:
+  update-learn-page:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update Learn Page
+        uses: jzheaux/spring-io-actions/update-learn-page@main
+        with:
+          version: ${{ github.event.milestone.title }}
+          website-token: ${{ secrets.WEBSITE_TOKEN }}
+          website-repository: 'jzheaux/jzheaux-website-content'

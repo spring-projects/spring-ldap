@@ -1,21 +1,57 @@
-name: Publish Release
+permissions:
+  issues: write
+  contents: write
 
+name: "003: Publish Release"
 on:
-  workflow_dispatch: # Manual trigger
-    inputs:
-      version:
-        description: "The release to publish"
-        required: true
+  workflow_dispatch:
+
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  perform-release:
-    name: Perform Release
-    uses: spring-io/spring-security-release-tools/.github/workflows/perform-release.yml@v1
-    with:
-      should-perform-release: true
-      project-version: ${{ inputs.version }}
-      milestone-repo-url: https://repo1.maven.org/maven2
-      release-repo-url: https://repo1.maven.org/maven2
-      artifact-path: org/springframework/ldap/spring-ldap-core
-      slack-announcing-id: spring-ldap-announcing
-    secrets: inherit
+  planner:
+    name: Should Publish Release?
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.project-version.outputs.version }}
+      snapshot: ${{ steps.project-version.outputs.snapshot }}
+    steps:
+      - name: "Checkout ${{ github.repository }}"
+        uses: actions/checkout@v5
+      - id: project-version
+        name: Extract Project Version
+        uses: jzheaux/spring-io-actions/compute-version@main
+  publish-release:
+    name: Publish Release
+    runs-on: ubuntu-latest
+    needs: planner
+    if: ${{ needs.planner.outputs.snapshot == 'false' }}
+    steps:
+      - name: "Checkout ${{ github.repository }}"
+        uses: actions/checkout@v5
+      - name: Generate Changelog
+        uses: spring-io/github-changelog-generator@v0.0.12
+        with:
+          milestone: ${{ needs.planner.outputs.version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config-file: scripts/release/release-notes-sections.yml
+      - name: Publish Changelog
+        uses: jzheaux/spring-io-actions/publish-release-notes@main
+        with:
+          tag: ${{ needs.planner.outputs.version }}
+      - name: Generate GitHub App Token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.MILESTONE_CLOSER_APP_ID }}
+          private-key: ${{ secrets.MILESTONE_CLOSER_PRIVATE_KEY }}
+      - name: Close Release Milestone
+        uses: jzheaux/spring-io-actions/close-milestone@main
+        with:
+          version: ${{ needs.planner.outputs.version }}
+          token: ${{ steps.generate-token.outputs.token }}
+      - name: Update Version
+        uses: jzheaux/spring-io-actions/push-next-development-version@main
+        with:
+          version: ${{ needs.planner.outputs.version }}

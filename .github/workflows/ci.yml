@@ -1,0 +1,93 @@
+name: "001: CI"
+
+on:
+  workflow_dispatch: # Manual trigger
+
+env:
+  DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: jzheaux/spring-io-actions/run-gradle@main
+        with:
+          java-version: 17
+          distribution: temurin
+          gradle-args: 'build publishAllPublicationsToLocalRepository --continue'
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: |
+            build/publications/repos
+  test:
+    name: Test Against Snapshots
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: jzheaux/spring-io-actions/run-gradle@main
+        with:
+          java-version: 17
+          distribution: temurin
+          gradle-args: "test --refresh-dependencies -PforceMavenRepositories=snapshot -PisOverrideVersionCatalog -PtestToolchain=17 -PspringFrameworkVersion=7.+ -PspringDataVersion=2025.0.+ --stacktrace"
+  deploy:
+    name: Plan Deployment
+    runs-on: ubuntu-latest
+    needs: [ build, test ]
+    outputs:
+      branch-name: ${{ steps.branch-name.outputs.branch }}
+      version: ${{ steps.compute-version.outputs.version }}
+      repository: ${{ steps.compute-artifact-repository.outputs.repository }}
+    steps:
+      - uses: actions/checkout@v5
+      - id: compute-version
+        name: Compute Version
+        uses: jzheaux/spring-io-actions/compute-version@main
+      - id: branch-name
+        name: Extract Branch Name
+        env:
+          BRANCH: ${{ github.ref_name }}
+          VERSION: ${{ steps.compute-version.outputs.version }}
+        run: |
+          branch=$BRANCH
+          if [[ "$branch" = "main" ]] ; then
+            branch="${VERSION%.*}.x"
+          fi
+          echo "branch=$branch" >> $GITHUB_OUTPUT
+      - id: compute-artifact-repository
+        name: Compute Artifact Repository
+        uses: jzheaux/spring-io-actions/compute-artifact-repository@main
+        with:
+          version: ${{ steps.compute-version.outputs.version }}
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: local-repository
+      - if: ${{ needs.plan-deploy.outputs.repository != 'central' }}
+        uses: spring-io/artifactory-deploy-action@8226ab8d9f94ac2dbef2c2584526d172dc030b3e
+        with:
+          uri: 'https://repo.spring.io'
+          repository: ${{ steps.compute-artifact-repository.outputs.repository }}
+          username: ${{ secrets.ARTIFACTORY_USERNAME }}
+          password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          build-name: ${{ github.event.repository.name }}-${{ needs.plan-deploy.outputs.branch }}
+          build-number: ${{ github.run_id }}
+          build-uri: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          signing-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          signing-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          vcs-revision: ${{ github.sha }}
+          folder: local-repository
+      - if: ${{ steps.compute-artifact-repository.outputs.repository == 'central' }}
+        uses: spring-io/central-publish-action@7f15aea591fe04ea7500dcdd753536f7e59ee601
+        with:
+          token-name: ${{ secrets.CENTRAL_TOKEN_USERNAME }}
+          token: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
+          dir: local-repository
+  publish:
+    name: Publish Release
+    needs: deploy
+    uses: ./.github/workflows/publish-release.yml

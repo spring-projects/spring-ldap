@@ -1,0 +1,15 @@
+name: "003A: Announce Release"
+on:
+  milestone:
+    types: [ closed ]
+
+jobs:
+  announce-release:
+    name: "Announce ${{ github.event.milestone.title }} Release"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Announce Release on GChat
+        uses: jzheaux/spring-io-actions/announce-on-gchat@main
+        with:
+          version: ${{ github.event.milestone.title }}
+          gchat-webhook-url: ${{ secrets.GCHAT_WEBHOOK_URL }}
