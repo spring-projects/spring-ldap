@@ -67,7 +67,7 @@ jobs:
         with:
           name: build-output
           path: local-repository
-      - if: ${{ needs.plan-deploy.outputs.repository != 'central' }}
+      - if: ${{ steps.compute-artifact-repository.outputs.repository != 'central' }}
         uses: spring-io/artifactory-deploy-action@8226ab8d9f94ac2dbef2c2584526d172dc030b3e
         with:
           uri: 'https://repo.spring.io'
