@@ -1,0 +1,13 @@
+name: "001: Merge Dependabot PRs"
+
+on:
+  pull_request:
+    branches:
+      - main
+
+run-name: Merge Dependabot PR ${{ github.ref_name }}
+
+jobs:
+  merge-dependabot-pr:
+    permissions: write-all
+    uses: spring-io/spring-github-workflows/.github/workflows/spring-merge-dependabot-pr.yml@main
