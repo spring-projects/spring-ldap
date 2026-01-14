@@ -41,7 +41,7 @@ class RootProjectPlugin implements Plugin<Project> {
 			properties {
 				property "sonar.java.coveragePlugin", "jacoco"
 				property "sonar.projectName", projectName
-				property "sonar.jacoco.reportPath", "${project.buildDir.name}/jacoco.exec"
+				property "sonar.jacoco.reportPath", "${project.layout.buildDirectory.get().asFile.name}/jacoco.exec"
 				property "sonar.links.homepage", "https://spring.io/${projectName}"
 				property "sonar.links.ci", "https://jenkins.spring.io/job/${projectName}/"
 				property "sonar.links.issue", "https://github.com/spring-projects/${projectName}/issues"
@@ -50,9 +50,10 @@ class RootProjectPlugin implements Plugin<Project> {
 			}
 		}
 
-		def finalizeDeployArtifacts = project.task("finalizeDeployArtifacts")
-		if (Utils.isRelease(project) && project.hasProperty("ossrhUsername")) {
-			finalizeDeployArtifacts.dependsOn project.tasks.closeAndReleaseOssrhStagingRepository
+		project.tasks.register("finalizeDeployArtifacts") { task ->
+			if (Utils.isRelease(project) && project.hasProperty("ossrhUsername")) {
+				task.dependsOn project.tasks.named('closeAndReleaseOssrhStagingRepository')
+			}
 		}
 	}
 

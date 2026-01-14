@@ -56,7 +56,7 @@ public class S101Plugin implements Plugin<Project> {
 		exec
 				.workingDir(extension.getInstallationDirectory())
 				.classpath(new File(extension.getInstallationDirectory().get(), "structure101-java-build.jar"))
-				.args(new File(new File(project.getBuildDir(), "s101"), "config.xml"))
+				.args(new File(new File(project.getLayout().getBuildDirectory().get().getAsFile(), "s101"), "config.xml"))
 				.systemProperty("s101.label", computeLabel(extension).get())
 				.doFirst((task) -> {
 					installAndConfigureIfNeeded(project);
@@ -95,12 +95,12 @@ public class S101Plugin implements Plugin<Project> {
 
 	private void copyConfigurationToBuildDirectory(S101PluginExtension extension, Project project) {
 		Path configurationDirectory = extension.getConfigurationDirectory().get().toPath();
-		Path buildDirectory = project.getBuildDir().toPath();
+		Path buildDirectory = project.getLayout().getBuildDirectory().get().getAsFile().toPath();
 		copyDirectory(project, configurationDirectory, buildDirectory);
 	}
 
 	private void copyResultsBackToConfigurationDirectory(S101PluginExtension extension, Project project) {
-		Path buildConfigurationDirectory = project.getBuildDir().toPath().resolve("s101");
+		Path buildConfigurationDirectory = project.getLayout().getBuildDirectory().get().getAsFile().toPath().resolve("s101");
 		String label = extension.getLabel().get();
 		if ("baseline".equals(label)) { // a new baseline was created
 			copyDirectory(project, buildConfigurationDirectory.resolve("repository").resolve("snapshots"),
@@ -122,7 +122,7 @@ public class S101Plugin implements Plugin<Project> {
 						}
 						InputStream input;
 						if ("project.java.hsp".equals(each.toFile().getName())) {
-							Path relativeTo = project.getBuildDir().toPath().resolve("s101").relativize(project.getProjectDir().toPath());
+							Path relativeTo = project.getLayout().getBuildDirectory().get().getAsFile().toPath().resolve("s101").relativize(project.getProjectDir().toPath());
 							String value = "const(THIS_FILE)/" + relativeTo;
 							input = replace(each, "<property name=\"relative-to\" value=\"(.*)\" />", "<property name=\"relative-to\" value=\"" + value + "\" />");
 						} else if (each.toFile().toString().endsWith(".xml")) {

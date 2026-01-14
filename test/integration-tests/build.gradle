@@ -62,6 +62,7 @@ dependencies {
 
     testImplementation platform('org.junit:junit-bom')
     testImplementation "org.junit.vintage:junit-vintage-engine"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 
     testImplementation("org.springframework.security:spring-security-ldap") {
         exclude group: "org.springframework.ldap", module: "spring-ldap-core"

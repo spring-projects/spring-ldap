@@ -20,7 +20,7 @@ import org.gradle.api.Action
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.plugins.JavaPluginConvention
+import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.javadoc.Javadoc
 import org.slf4j.Logger
@@ -67,7 +67,7 @@ public class JavadocApiPlugin implements Plugin<Project> {
 		}
 
 		api.setMaxMemory("1024m");
-		api.setDestinationDir(new File(project.getBuildDir(), "api"));
+		api.setDestinationDir(project.layout.buildDirectory.dir("api").get().asFile);
 
 		project.getPluginManager().apply("io.spring.convention.javadoc-options");
 	}
@@ -95,7 +95,7 @@ public class JavadocApiPlugin implements Plugin<Project> {
 			public void execute(SpringModulePlugin plugin) {
 				logger.info("Added sources for {}", project);
 
-				JavaPluginConvention java = project.getConvention().getPlugin(JavaPluginConvention.class);
+				JavaPluginExtension java = project.getExtensions().getByType(JavaPluginExtension.class);
 				SourceSet mainSourceSet = java.getSourceSets().getByName("main");
 
 				api.setSource(api.getSource().plus(mainSourceSet.getAllJava()));
