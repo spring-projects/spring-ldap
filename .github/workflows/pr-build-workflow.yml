@@ -7,16 +7,20 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     if: github.repository == 'spring-projects/spring-ldap'
-    strategy:
-      matrix:
-        jdk: [17]
-      fail-fast: false
     steps:
       - uses: actions/checkout@v6
-      - name: Set up JDK ${{ matrix.jdk }}
+      - name: Determine JDK version
+        id: jdk
+        run: |
+          if [ "${{ github.base_ref }}" == "main" ]; then
+            echo "version=25" >> $GITHUB_OUTPUT
+          else
+            echo "version=17" >> $GITHUB_OUTPUT
+          fi
+      - name: Set up JDK ${{ steps.jdk.outputs.version }}
         uses: actions/setup-java@v5
         with:
-          java-version: ${{ matrix.jdk }}
+          java-version: ${{ steps.jdk.outputs.version }}
           distribution: 'temurin'
           cache: 'gradle'
       - name: Cache Gradle packages

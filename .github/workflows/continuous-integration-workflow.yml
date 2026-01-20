@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest ]
-        jdk: [ 17 ]
+        jdk: [ 25 ]
     with:
       runs-on: ${{ matrix.os }}
       java-version: ${{ matrix.jdk }}
@@ -27,11 +27,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - java-version: 21-ea
-          - java-version: 17
+          - java-version: 25
     with:
       java-version: ${{ matrix.java-version }}
-      test-args: --refresh-dependencies -PforceMavenRepositories=snapshot -PisOverrideVersionCatalog -PtestToolchain=17 -PspringFrameworkVersion=7.+ -PspringDataVersion=2025.0.+ --stacktrace
+      test-args: --refresh-dependencies -PforceMavenRepositories=snapshot -PisOverrideVersionCatalog -PtestToolchain=25 -PspringFrameworkVersion=7.+ -PspringDataVersion=2025.0.+ --stacktrace
   deploy-artifacts:
     name: Deploy Artifacts
     needs: [ build, test ]
