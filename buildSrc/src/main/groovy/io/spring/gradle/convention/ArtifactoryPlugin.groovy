@@ -32,8 +32,8 @@ class ArtifactoryPlugin implements Plugin<Project> {
 				repository {
 					repoKey = isSnapshot ? 'libs-snapshot-local' : isMilestone ? 'libs-milestone-local' : 'libs-release-local'
 					if(project.hasProperty('artifactoryUsername')) {
-						username = artifactoryUsername
-						password = artifactoryPassword
+						username = project.artifactoryUsername
+						password = project.artifactoryPassword
 					}
 				}
 				defaults {
