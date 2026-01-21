@@ -1,15 +1,5 @@
 plugins {
     id 'io.spring.convention.spring-module'
-    id 'com.intershop.gradle.javacc'
-}
-
-javacc {
-    // configuration container for all javacc configurations
-    configs {
-        template {
-            inputFile = file('src/main/javacc/DnParserImpl.jj')
-        }
-    }
 }
 
 dependencies {

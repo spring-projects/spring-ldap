@@ -24,6 +24,7 @@
 	<suppress files="AnnotationParameterNameDiscovererTests\.java" checks="SpringMethodVisibility"/>
 	<suppress files="AnnotationSecurityAspectTests\.java" checks="SpringMethodVisibility"/>
 	<suppress files="AuthenticationPrincipalArgumentResolverTests\.java" checks="SpringMethodVisibility"/>
+	<suppress files="DnParserImplConstants\.java" checks="InterfaceIsType"/>
 	<suppress files="ELRequestMatcherContext\.java" checks="SpringMethodVisibility"/>
 	<suppress files="EnableWebFluxSecurityTests\.java" checks="SpringMethodVisibility"/>
 	<suppress files="ExpressionBasedPreInvocationAdviceTests\.java" checks="SpringMethodVisibility"/>
