@@ -18,6 +18,8 @@ package org.springframework.ldap.control;
 
 import java.util.List;
 
+import org.jspecify.annotations.NullUnmarked;
+
 /**
  * Bean to encapsulate a result List and a {@link PagedResultsCookie} to use for returning
  * the results when using {@link PagedResultsRequestControl}.
@@ -27,6 +29,7 @@ import java.util.List;
  * @deprecated
  */
 @Deprecated
+@NullUnmarked
 public class PagedResult {
 
 	private List<?> resultList;

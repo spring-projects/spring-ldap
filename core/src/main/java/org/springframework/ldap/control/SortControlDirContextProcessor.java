@@ -18,6 +18,8 @@ package org.springframework.ldap.control;
 
 import javax.naming.ldap.Control;
 
+import org.jspecify.annotations.NullUnmarked;
+
 /**
  * DirContextProcessor implementation for managing the SortControl. Note that this class
  * is stateful, so a new instance needs to be instantiated for each new search.
@@ -27,6 +29,7 @@ import javax.naming.ldap.Control;
  * {@link SortControlExchange} instead
  */
 @Deprecated
+@NullUnmarked
 public class SortControlDirContextProcessor extends AbstractFallbackRequestAndResponseControlDirContextProcessor {
 
 	private static final String DEFAULT_REQUEST_CONTROL = "javax.naming.ldap.SortControl";

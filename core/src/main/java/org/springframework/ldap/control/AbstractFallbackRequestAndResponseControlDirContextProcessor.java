@@ -24,6 +24,8 @@ import javax.naming.directory.DirContext;
 import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
 
+import org.jspecify.annotations.NullUnmarked;
+
 import org.springframework.ldap.UncategorizedLdapException;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
@@ -84,6 +86,7 @@ import org.springframework.util.ReflectionUtils;
  * @deprecated please use {@link ControlExchangeDirContextProcessor}
  */
 @Deprecated
+@NullUnmarked
 public abstract class AbstractFallbackRequestAndResponseControlDirContextProcessor
 		extends AbstractRequestControlDirContextProcessor {
 

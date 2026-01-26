@@ -18,6 +18,8 @@ package org.springframework.ldap.control;
 
 import javax.naming.ldap.Control;
 
+import org.jspecify.annotations.NullUnmarked;
+
 /**
  * DirContextProcessor implementation for managing the paged results control. Note that
  * due to the internal workings of <code>LdapTemplate</code>, the target connection is
@@ -32,6 +34,7 @@ import javax.naming.ldap.Control;
  * @deprecated in favor of {@link PagedResultsControlExchangeDirContextProcessor}
  */
 @Deprecated
+@NullUnmarked
 public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndResponseControlDirContextProcessor {
 
 	private static final String DEFAULT_REQUEST_CONTROL = "javax.naming.ldap.PagedResultsControl";

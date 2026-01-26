@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.control;
 
+import org.jspecify.annotations.NullUnmarked;
+
 import org.springframework.ldap.NamingException;
 
 /**
@@ -27,6 +29,7 @@ import org.springframework.ldap.NamingException;
  * @deprecated this is no longer used in any non-deprecated Spring LDAP classes
  */
 @Deprecated
+@NullUnmarked
 public class CreateControlFailedException extends NamingException {
 
 	/**

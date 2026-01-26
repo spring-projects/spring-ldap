@@ -20,6 +20,8 @@ import java.util.Arrays;
 
 import javax.naming.ldap.PagedResultsControl;
 
+import org.jspecify.annotations.NullUnmarked;
+
 /**
  * Wrapper class for the cookie returned when using the {@link PagedResultsControl}.
  *
@@ -29,6 +31,7 @@ import javax.naming.ldap.PagedResultsControl;
  * {@link PagedResultsControlExchangeDirContextProcessor}
  */
 @Deprecated
+@NullUnmarked
 public class PagedResultsCookie {
 
 	private byte[] cookie;
