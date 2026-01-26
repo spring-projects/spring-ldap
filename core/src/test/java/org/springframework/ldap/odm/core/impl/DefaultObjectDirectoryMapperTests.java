@@ -173,7 +173,7 @@ public class DefaultObjectDirectoryMapperTests {
 					assertThat(attribute.getName().toString()).isEqualTo(expectedAttributeName);
 				}
 				else {
-					assertThat(attribute.getName()).isNull();
+					assertThat(attribute.name).isNull();
 				}
 
 				if (StringUtils.hasLength(expectedDnAttributeName)) {

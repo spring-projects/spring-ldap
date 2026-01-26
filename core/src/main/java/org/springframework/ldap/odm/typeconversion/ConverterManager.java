@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.odm.typeconversion;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.core.convert.ConversionService;
 
 /**
@@ -36,7 +38,7 @@ public interface ConverterManager {
 	 * @return <code>True</code> if the conversion is supported, <code>false</code>
 	 * otherwise.
 	 */
-	boolean canConvert(Class<?> fromClass, String syntax, Class<?> toClass);
+	boolean canConvert(Class<?> fromClass, @Nullable String syntax, Class<?> toClass);
 
 	/**
 	 * Convert a given source object with an optional LDAP syntax to an instance of a
@@ -48,6 +50,6 @@ public interface ConverterManager {
 	 * @return The converted object.
 	 * @throws ConverterException If the conversion can not be successfully completed.
 	 */
-	<T> T convert(Object source, String syntax, Class<T> toClass);
+	<T> @Nullable T convert(Object source, @Nullable String syntax, Class<T> toClass);
 
 }

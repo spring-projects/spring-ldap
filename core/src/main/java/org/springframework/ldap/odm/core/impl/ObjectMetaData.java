@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -45,6 +46,7 @@ import org.springframework.util.StringUtils;
 
 	private static final Logger LOG = LoggerFactory.getLogger(ObjectMetaData.class);
 
+	@SuppressWarnings("NullAway") // Dataflow analysis limitation
 	private AttributeMetaData idAttribute;
 
 	private Map<Field, AttributeMetaData> fieldToAttribute = new HashMap<>();
@@ -57,7 +59,7 @@ import org.springframework.util.StringUtils;
 				return 0;
 			}
 
-			return Integer.valueOf(a1.getDnAttribute().index()).compareTo(a2.getDnAttribute().index());
+			return Integer.valueOf(a1.getNonNullDnAttribute().index()).compareTo(a2.getNonNullDnAttribute().index());
 		}
 	});
 
@@ -86,7 +88,7 @@ import org.springframework.util.StringUtils;
 	}
 
 	AttributeMetaData getAttribute(Field field) {
-		return this.fieldToAttribute.get(field);
+		return Objects.requireNonNull(this.fieldToAttribute.get(field));
 	}
 
 	ObjectMetaData(Class<?> clazz) {
@@ -100,7 +102,7 @@ import org.springframework.util.StringUtils;
 			// Default objectclass name to the class name unless it's specified
 			// in @Entity(name={objectclass1, objectclass2});
 			String[] localObjectClasses = entity.objectClasses();
-			if (localObjectClasses != null && localObjectClasses.length > 0 && localObjectClasses[0].length() > 0) {
+			if (localObjectClasses.length > 0 && localObjectClasses[0].length() > 0) {
 				for (String localObjectClass : localObjectClasses) {
 					this.objectClasses.add(new CaseIgnoreString(localObjectClass));
 				}
@@ -169,7 +171,7 @@ import org.springframework.util.StringUtils;
 		boolean hasNonIndexed = false;
 
 		for (AttributeMetaData dnAttribute : this.dnAttributes) {
-			int declaredIndex = dnAttribute.getDnAttribute().index();
+			int declaredIndex = dnAttribute.getNonNullDnAttribute().index();
 
 			if (declaredIndex != -1) {
 				hasIndexed = true;

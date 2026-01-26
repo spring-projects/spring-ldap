@@ -19,6 +19,7 @@ package org.springframework.ldap.odm.typeconversion.impl;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,7 +101,7 @@ public final class ConverterManagerFactoryBean implements FactoryBean {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ConverterManagerFactoryBean.class);
 
-	private Set<ConverterConfig> converterConfigList = null;
+	private @Nullable Set<ConverterConfig> converterConfigList = null;
 
 	/**
 	 * @param converterConfigList
@@ -172,13 +173,13 @@ public final class ConverterManagerFactoryBean implements FactoryBean {
 		private Set<Class<?>> fromClasses = new HashSet<>();
 
 		// The (optional) LDAP syntax.
-		private String syntax = null;
+		private @Nullable String syntax = null;
 
 		// The set of classes the Converter will convert to.
 		private Set<Class<?>> toClasses = new HashSet<>();
 
 		// The Converter to use.
-		private Converter converter = null;
+		private @Nullable Converter converter = null;
 
 		public ConverterConfig() {
 		}

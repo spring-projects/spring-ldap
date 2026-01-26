@@ -19,8 +19,11 @@ package org.springframework.ldap.odm.typeconversion.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ldap.odm.typeconversion.ConverterException;
 import org.springframework.ldap.odm.typeconversion.ConverterManager;
+import org.springframework.util.ClassUtils;
 
 /**
  * An implementation of
@@ -64,7 +67,7 @@ public final class ConverterManagerImpl implements ConverterManager {
 	 * @param toClass The class to convert to.
 	 * @return key
 	 */
-	private String makeConverterKey(Class<?> fromClass, String syntax, Class<?> toClass) {
+	private String makeConverterKey(Class<?> fromClass, @Nullable String syntax, Class<?> toClass) {
 		StringBuilder key = new StringBuilder();
 		if (syntax == null) {
 			syntax = "";
@@ -79,22 +82,6 @@ public final class ConverterManagerImpl implements ConverterManager {
 	public ConverterManagerImpl() {
 	}
 
-	/**
-	 * Used to help in the process of dealing with primitive types by mapping them to
-	 * their equivalent boxed class.
-	 */
-	private static Map<Class<?>, Class<?>> primitiveTypeMap = new HashMap<>();
-	static {
-		primitiveTypeMap.put(Byte.TYPE, Byte.class);
-		primitiveTypeMap.put(Short.TYPE, Short.class);
-		primitiveTypeMap.put(Integer.TYPE, Integer.class);
-		primitiveTypeMap.put(Long.TYPE, Long.class);
-		primitiveTypeMap.put(Float.TYPE, Float.class);
-		primitiveTypeMap.put(Double.TYPE, Double.class);
-		primitiveTypeMap.put(Boolean.TYPE, Boolean.class);
-		primitiveTypeMap.put(Character.TYPE, Character.class);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 *
@@ -102,15 +89,9 @@ public final class ConverterManagerImpl implements ConverterManager {
 	 * org.springframework.ldap.odm.typeconversion.ConverterManager#canConvert(java.lang.
 	 * Class, java.lang.String, java.lang.Class)
 	 */
-	public boolean canConvert(Class<?> fromClass, String syntax, Class<?> toClass) {
-		Class<?> fixedToClass = toClass;
-		if (toClass.isPrimitive()) {
-			fixedToClass = primitiveTypeMap.get(toClass);
-		}
-		Class<?> fixedFromClass = fromClass;
-		if (fromClass.isPrimitive()) {
-			fixedFromClass = primitiveTypeMap.get(fromClass);
-		}
+	public boolean canConvert(Class<?> fromClass, @Nullable String syntax, Class<?> toClass) {
+		Class<?> fixedToClass = ClassUtils.resolvePrimitiveIfNecessary(toClass);
+		Class<?> fixedFromClass = ClassUtils.resolvePrimitiveIfNecessary(fromClass);
 		return fixedToClass.isAssignableFrom(fixedFromClass)
 				|| (this.converters.get(makeConverterKey(fixedFromClass, syntax, fixedToClass)) != null)
 				|| (this.converters.get(makeConverterKey(fixedFromClass, null, fixedToClass)) != null);
@@ -124,17 +105,14 @@ public final class ConverterManagerImpl implements ConverterManager {
 	 * Object, java.lang.String, java.lang.Class)
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T convert(Object source, String syntax, Class<T> toClass) {
+	public <T> T convert(Object source, @Nullable String syntax, Class<T> toClass) {
 		Object result = null;
 
 		// What are we converting from
 		Class<?> fromClass = source.getClass();
 
 		// Deal with primitives
-		Class<?> targetClass = toClass;
-		if (toClass.isPrimitive()) {
-			targetClass = primitiveTypeMap.get(toClass);
-		}
+		Class<?> targetClass = ClassUtils.resolvePrimitiveIfNecessary(toClass);
 
 		// Try to convert with any syntax we have been given
 		Converter syntaxConverter = this.converters.get(makeConverterKey(fromClass, syntax, targetClass));
@@ -185,7 +163,7 @@ public final class ConverterManagerImpl implements ConverterManager {
 	 * @param toClass The class the <code>Converter</code> should be used to convert to.
 	 * @param converter The <code>Converter</code> to add.
 	 */
-	public void addConverter(Class<?> fromClass, String syntax, Class<?> toClass, Converter converter) {
+	public void addConverter(Class<?> fromClass, @Nullable String syntax, Class<?> toClass, Converter converter) {
 		this.converters.put(makeConverterKey(fromClass, syntax, toClass), converter);
 	}
 

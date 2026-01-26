@@ -18,6 +18,8 @@ package org.springframework.ldap.odm.core;
 
 import javax.naming.Name;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.LdapDataEntry;
 import org.springframework.ldap.filter.Filter;
 
@@ -47,7 +49,7 @@ public interface ObjectDirectoryMapper {
 	 * representation when reading from LDAP.
 	 * @throws org.springframework.ldap.NamingException on error.
 	 */
-	<T> T mapFromLdapDataEntry(LdapDataEntry ctx, Class<T> clazz);
+	<T> @Nullable T mapFromLdapDataEntry(LdapDataEntry ctx, Class<T> clazz);
 
 	/**
 	 * Get the distinguished name for the specified object.
@@ -55,7 +57,7 @@ public interface ObjectDirectoryMapper {
 	 * @return the distinguished name of the entry.
 	 * @throws org.springframework.ldap.NamingException on error.
 	 */
-	Name getId(Object entry);
+	@Nullable Name getId(Object entry);
 
 	/**
 	 * Set the distinguished name for the specified object.
@@ -63,9 +65,9 @@ public interface ObjectDirectoryMapper {
 	 * @param id the name to set
 	 * @throws org.springframework.ldap.NamingException on error.
 	 */
-	void setId(Object entry, Name id);
+	void setId(Object entry, @Nullable Name id);
 
-	Name getCalculatedId(Object entry);
+	@Nullable Name getCalculatedId(Object entry);
 
 	/**
 	 * Use the specified search filter and return a new one that only applies to entries
@@ -77,7 +79,7 @@ public interface ObjectDirectoryMapper {
 	 * specified class.
 	 * @throws org.springframework.ldap.NamingException on error.
 	 */
-	Filter filterFor(Class<?> clazz, Filter baseFilter);
+	Filter filterFor(Class<?> clazz, @Nullable Filter baseFilter);
 
 	/**
 	 * Get the attribute corresponding to the specified field name.
