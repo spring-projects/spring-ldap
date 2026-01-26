@@ -26,6 +26,7 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 
@@ -69,7 +70,7 @@ public final class NameAwareAttributes implements Attributes, Iterable<NameAware
 	}
 
 	@Override
-	public NameAwareAttribute get(String attrID) {
+	@Nullable public NameAwareAttribute get(String attrID) {
 		Assert.hasLength(attrID, "Attribute ID must not be empty");
 		return this.attributes.get(attrID.toLowerCase(Locale.ROOT));
 	}

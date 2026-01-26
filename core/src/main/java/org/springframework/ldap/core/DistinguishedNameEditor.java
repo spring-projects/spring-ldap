@@ -18,6 +18,8 @@ package org.springframework.ldap.core;
 
 import java.beans.PropertyEditorSupport;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Property editor for use with {@link DistinguishedName} instances. The
  * {@link #setAsText(String)} method sets the value as an <i>immutable</i> instance of a
@@ -49,7 +51,7 @@ public class DistinguishedNameEditor extends PropertyEditorSupport {
 	 *
 	 * @see java.beans.PropertyEditorSupport#getAsText()
 	 */
-	public String getAsText() {
+	@Nullable public String getAsText() {
 		Object theValue = getValue();
 		if (theValue == null) {
 			return null;

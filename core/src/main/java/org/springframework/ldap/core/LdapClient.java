@@ -29,6 +29,8 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.LdapDataEntry;
 import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.ldap.PartialResultException;
@@ -159,19 +161,28 @@ public interface LdapClient {
 	// Static, factory methods
 
 	/**
+	 * Obtain a {@code LdapClient} builder.
+	 * @param contextSource the {@link ContextSource} for all requests
+	 * @since 4.1
+	 */
+	static LdapClient.Builder withContextSource(ContextSource contextSource) {
+		return new DefaultLdapClientBuilder(contextSource);
+	}
+
+	/**
 	 * Create an instance of {@link LdapClient}
 	 * @param contextSource the {@link ContextSource} for all requests
-	 * @see #builder()
+	 * @see #withContextSource
 	 */
 	static LdapClient create(ContextSource contextSource) {
-		return new DefaultLdapClientBuilder().contextSource(contextSource).build();
+		return new DefaultLdapClientBuilder(contextSource).build();
 	}
 
 	/**
 	 * Create an instance of {@link LdapClient}
 	 * @param ldap the {@link LdapTemplate} to base this client off of
 	 * @since 3.3
-	 * @see #builder()
+	 * @see #withContextSource
 	 */
 	static LdapClient create(LdapTemplate ldap) {
 		return new DefaultLdapClientBuilder(ldap).build();
@@ -179,7 +190,9 @@ public interface LdapClient {
 
 	/**
 	 * Obtain a {@code LdapClient} builder.
+	 * @deprecated Please provide a {@link ContextSource} using {@link #withContextSource}
 	 */
+	@Deprecated
 	static LdapClient.Builder builder() {
 		return new DefaultLdapClientBuilder();
 	}
@@ -351,7 +364,7 @@ public interface LdapClient {
 		 */
 		SearchSpec query(LdapQuery query);
 
-		default <O extends LdapDataEntry> O toEntry() {
+		default <O extends LdapDataEntry> @Nullable O toEntry() {
 			ContextMapper<O> cast = (ctx) -> (O) ctx;
 			return toObject(cast);
 		}
@@ -366,7 +379,7 @@ public interface LdapClient {
 		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the
 		 * result set contains more than one result
 		 */
-		<O> O toObject(ContextMapper<O> mapper);
+		<O> @Nullable O toObject(ContextMapper<O> mapper);
 
 		/**
 		 * Expect at most one search result, mapped by the given strategy.
@@ -375,7 +388,7 @@ public interface LdapClient {
 		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the
 		 * result set contains more than one result
 		 */
-		<O> O toObject(AttributesMapper<O> mapper);
+		<O> @Nullable O toObject(AttributesMapper<O> mapper);
 
 		default <O extends LdapDataEntry> List<O> toEntryList() {
 			ContextMapper<O> cast = (ctx) -> (O) ctx;

@@ -21,6 +21,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Locale;
 
+import org.jspecify.annotations.NullUnmarked;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +38,7 @@ import org.springframework.util.StringUtils;
  * @deprecated {@link DistinguishedName} and associated classes are deprecated as of 2.0.
  */
 @Deprecated
+@NullUnmarked
 public class LdapRdnComponent implements Comparable, Serializable {
 
 	private static final long serialVersionUID = -3296747972616243038L;

@@ -16,8 +16,13 @@
 
 package org.springframework.ldap.authentication;
 
+import java.util.Objects;
+
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.ldap.core.AuthenticationSource;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -35,15 +40,17 @@ import org.springframework.util.StringUtils;
  */
 public class DefaultValuesAuthenticationSourceDecorator implements AuthenticationSource, InitializingBean {
 
-	private AuthenticationSource target;
+	private @Nullable AuthenticationSource target;
 
-	private String defaultUser;
+	private @Nullable String defaultUser;
 
-	private String defaultPassword;
+	private @Nullable String defaultPassword;
 
 	/**
 	 * Constructor for bean usage.
+	 * @deprecated please provide needed values in the constructor
 	 */
+	@Deprecated
 	public DefaultValuesAuthenticationSourceDecorator() {
 	}
 
@@ -69,11 +76,12 @@ public class DefaultValuesAuthenticationSourceDecorator implements Authenticatio
 	 * <code>defaultPassword</code> otherwise.
 	 */
 	public String getCredentials() {
-		if (StringUtils.hasText(this.target.getPrincipal())) {
-			return this.target.getCredentials();
+		AuthenticationSource target = requireAuthenticationSource();
+		if (StringUtils.hasText(target.getPrincipal())) {
+			return target.getCredentials();
 		}
 		else {
-			return this.defaultPassword;
+			return requireDefaultPassword();
 		}
 	}
 
@@ -84,19 +92,37 @@ public class DefaultValuesAuthenticationSourceDecorator implements Authenticatio
 	 * otherwise.
 	 */
 	public String getPrincipal() {
-		String principal = this.target.getPrincipal();
+		AuthenticationSource target = requireAuthenticationSource();
+		String principal = target.getPrincipal();
 		if (StringUtils.hasText(principal)) {
 			return principal;
 		}
 		else {
-			return this.defaultUser;
+			return requireDefaultUser();
 		}
+	}
+
+	private AuthenticationSource requireAuthenticationSource() {
+		Assert.notNull(this.target, "target authentication source cannot be null");
+		return Objects.requireNonNull(this.target);
+	}
+
+	private String requireDefaultUser() {
+		Assert.notNull(this.defaultUser, "defaultUser cannot be null");
+		return Objects.requireNonNull(this.defaultUser);
+	}
+
+	private String requireDefaultPassword() {
+		Assert.notNull(this.defaultPassword, "defaultPassword cannot be null");
+		return Objects.requireNonNull(this.defaultPassword);
 	}
 
 	/**
 	 * Set the password of the default user.
 	 * @param defaultPassword the password of the default user.
+	 * @deprecated please provide the default password in the constructor
 	 */
+	@Deprecated
 	public void setDefaultPassword(String defaultPassword) {
 		this.defaultPassword = defaultPassword;
 	}
@@ -105,7 +131,9 @@ public class DefaultValuesAuthenticationSourceDecorator implements Authenticatio
 	 * Set the default user DN. This should be a non-privileged user, since it will be
 	 * used when no authentication information is returned from the target.
 	 * @param defaultUser DN of the default user.
+	 * @deprecated please provide the default user in the constructor
 	 */
+	@Deprecated
 	public void setDefaultUser(String defaultUser) {
 		this.defaultUser = defaultUser;
 	}
@@ -113,7 +141,9 @@ public class DefaultValuesAuthenticationSourceDecorator implements Authenticatio
 	/**
 	 * Set the target AuthenticationSource.
 	 * @param target the target AuthenticationSource.
+	 * @deprecated please provide the {@link AuthenticationSource} in the constructor
 	 */
+	@Deprecated
 	public void setTarget(AuthenticationSource target) {
 		this.target = target;
 	}
@@ -124,17 +154,9 @@ public class DefaultValuesAuthenticationSourceDecorator implements Authenticatio
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	public void afterPropertiesSet() throws Exception {
-		if (this.target == null) {
-			throw new IllegalArgumentException("Property 'target' must be set.'");
-		}
-
-		if (this.defaultUser == null) {
-			throw new IllegalArgumentException("Property 'defaultUser' must be set.'");
-		}
-
-		if (this.defaultPassword == null) {
-			throw new IllegalArgumentException("Property 'defaultPassword' must be set.'");
-		}
+		requireAuthenticationSource();
+		requireDefaultUser();
+		requireDefaultPassword();
 	}
 
 }

@@ -29,6 +29,7 @@ import javax.naming.InvalidNameException;
 import javax.naming.Name;
 import javax.naming.ldap.Rdn;
 
+import org.jspecify.annotations.NullUnmarked;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,6 +99,7 @@ import org.springframework.util.StringUtils;
  * with utility methods in {@link LdapUtils} instead.
  */
 @Deprecated
+@NullUnmarked
 public class DistinguishedName implements Name {
 
 	/**

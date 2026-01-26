@@ -21,6 +21,8 @@ import java.util.List;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Utility that helps with reading all attribute values from Active Directory using
  * <em>Incremental Retrieval of Multi-valued Properties</em>.
@@ -40,7 +42,7 @@ public interface IncrementalAttributesMapper<T extends IncrementalAttributesMapp
 	 * if the requested attribute has not been returned by the server (attribute did not
 	 * exist).
 	 */
-	List<Object> getValues(String attributeName);
+	@Nullable List<Object> getValues(String attributeName);
 
 	/**
 	 * Get all collected values for all managed attributes as an Attributes instance.

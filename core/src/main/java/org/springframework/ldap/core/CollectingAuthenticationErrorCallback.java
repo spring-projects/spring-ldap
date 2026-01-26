@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.core;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Convenience implementation of AuthenticationErrorCallback that stores the given
  * exception and provides a method for retrieving it. The caller of the authenticate
@@ -28,7 +30,7 @@ package org.springframework.ldap.core;
  */
 public final class CollectingAuthenticationErrorCallback implements AuthenticationErrorCallback {
 
-	private Exception error;
+	private @Nullable Exception error;
 
 	/*
 	 * (non-Javadoc)
@@ -43,7 +45,7 @@ public final class CollectingAuthenticationErrorCallback implements Authenticati
 	/**
 	 * @return the collected exception
 	 */
-	public Exception getError() {
+	public @Nullable Exception getError() {
 		return this.error;
 	}
 

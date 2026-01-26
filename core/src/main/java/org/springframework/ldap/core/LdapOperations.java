@@ -26,6 +26,8 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.ldap.ContextNotEmptyException;
 import org.springframework.ldap.NamingException;
@@ -367,7 +369,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is interpreted
 	 * that no entries were found.
 	 */
-	<T> List<T> search(Name base, String filter, int searchScope, String[] attrs, AttributesMapper<T> mapper)
+	<T> List<T> search(Name base, String filter, int searchScope, String @Nullable [] attrs, AttributesMapper<T> mapper)
 			throws NamingException;
 
 	/**
@@ -387,8 +389,8 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is interpreted
 	 * that no entries were found.
 	 */
-	<T> List<T> search(String base, String filter, int searchScope, String[] attrs, AttributesMapper<T> mapper)
-			throws NamingException;
+	<T> List<T> search(String base, String filter, int searchScope, String @Nullable [] attrs,
+			AttributesMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. The Attributes in each
@@ -467,7 +469,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is interpreted
 	 * that no entries were found.
 	 */
-	<T> List<T> search(Name base, String filter, int searchScope, String[] attrs, ContextMapper<T> mapper)
+	<T> List<T> search(Name base, String filter, int searchScope, String @Nullable [] attrs, ContextMapper<T> mapper)
 			throws NamingException;
 
 	/**
@@ -485,7 +487,7 @@ public interface LdapOperations {
 	 * <code>NameNotFoundException</code> will be ignored. Instead this is interpreted
 	 * that no entries were found.
 	 */
-	<T> List<T> search(String base, String filter, int searchScope, String[] attrs, ContextMapper<T> mapper)
+	<T> List<T> search(String base, String filter, int searchScope, String @Nullable [] attrs, ContextMapper<T> mapper)
 			throws NamingException;
 
 	/**
@@ -879,7 +881,7 @@ public interface LdapOperations {
 	 * @return the object returned from the mapper.
 	 * @throws NamingException if any error occurs.
 	 */
-	<T> T lookup(Name dn, String[] attributes, AttributesMapper<T> mapper) throws NamingException;
+	<T> T lookup(Name dn, String @Nullable [] attributes, AttributesMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Convenience method to get the specified attributes of a specified DN and
@@ -891,7 +893,7 @@ public interface LdapOperations {
 	 * @return the object returned from the mapper.
 	 * @throws NamingException if any error occurs.
 	 */
-	<T> T lookup(String dn, String[] attributes, AttributesMapper<T> mapper) throws NamingException;
+	<T> T lookup(String dn, String @Nullable [] attributes, AttributesMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Convenience method to get the specified attributes of a specified DN and
@@ -902,7 +904,7 @@ public interface LdapOperations {
 	 * @return the object returned from the mapper.
 	 * @throws NamingException if any error occurs.
 	 */
-	<T> T lookup(Name dn, String[] attributes, ContextMapper<T> mapper) throws NamingException;
+	<T> T lookup(Name dn, String @Nullable [] attributes, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Convenience method to get the specified attributes of a specified DN and
@@ -913,7 +915,7 @@ public interface LdapOperations {
 	 * @return the object returned from the mapper.
 	 * @throws NamingException if any error occurs.
 	 */
-	<T> T lookup(String dn, String[] attributes, ContextMapper<T> mapper) throws NamingException;
+	<T> T lookup(String dn, String @Nullable [] attributes, ContextMapper<T> mapper) throws NamingException;
 
 	/**
 	 * Modify an entry in the LDAP tree using the supplied <code>ModificationItems</code>.
@@ -944,7 +946,7 @@ public interface LdapOperations {
 	 * @throws NamingException if any error occurs.
 	 * @see DirContextAdapter
 	 */
-	void bind(Name dn, Object obj, Attributes attributes) throws NamingException;
+	void bind(Name dn, @Nullable Object obj, @Nullable Attributes attributes) throws NamingException;
 
 	/**
 	 * Create an entry in the LDAP tree. The attributes used to create the entry are
@@ -957,7 +959,7 @@ public interface LdapOperations {
 	 * @throws NamingException if any error occurs.
 	 * @see DirContextAdapter
 	 */
-	void bind(String dn, Object obj, Attributes attributes) throws NamingException;
+	void bind(String dn, @Nullable Object obj, @Nullable Attributes attributes) throws NamingException;
 
 	/**
 	 * Remove an entry from the LDAP tree. The entry must not have any children - if you
@@ -1010,7 +1012,7 @@ public interface LdapOperations {
 	 * @throws NamingException if any error occurs.
 	 * @see DirContextAdapter
 	 */
-	void rebind(Name dn, Object obj, Attributes attributes) throws NamingException;
+	void rebind(Name dn, @Nullable Object obj, @Nullable Attributes attributes) throws NamingException;
 
 	/**
 	 * Remove an entry and replace it with a new one. The attributes used to create the
@@ -1025,7 +1027,7 @@ public interface LdapOperations {
 	 * @throws NamingException if any error occurs.
 	 * @see DirContextAdapter
 	 */
-	void rebind(String dn, Object obj, Attributes attributes) throws NamingException;
+	void rebind(String dn, @Nullable Object obj, @Nullable Attributes attributes) throws NamingException;
 
 	/**
 	 * Move an entry in the LDAP tree to a new location.
@@ -1680,7 +1682,7 @@ public interface LdapOperations {
 	 * @throws org.springframework.ldap.NamingException on error.
 	 * @since 2.0
 	 */
-	<T> List<T> find(Name base, Filter filter, SearchControls searchControls, Class<T> clazz);
+	<T> List<T> find(@Nullable Name base, @Nullable Filter filter, SearchControls searchControls, Class<T> clazz);
 
 	/**
 	 * Search for entries in the LDAP directory. The referenced class must have

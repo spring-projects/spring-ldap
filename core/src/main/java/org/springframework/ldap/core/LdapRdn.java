@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jspecify.annotations.NullUnmarked;
+
 import org.springframework.ldap.BadLdapGrammarException;
 import org.springframework.util.ObjectUtils;
 
@@ -39,6 +41,7 @@ import org.springframework.util.ObjectUtils;
  * @deprecated {@link DistinguishedName} and associated classes are deprecated as of 2.0.
  */
 @Deprecated
+@NullUnmarked
 public class LdapRdn implements Serializable, Comparable {
 
 	private static final long serialVersionUID = 5681397547245228750L;

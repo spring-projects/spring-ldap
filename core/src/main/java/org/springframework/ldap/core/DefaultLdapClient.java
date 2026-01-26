@@ -45,6 +45,7 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.LdapName;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -186,7 +187,7 @@ class DefaultLdapClient implements LdapClient {
 		this.ignoreSizeLimitExceededException = ignoreSizeLimitExceededException;
 	}
 
-	<T> T computeWithReadOnlyContext(ContextExecutor<T> executor) {
+	<T> @Nullable T computeWithReadOnlyContext(ContextExecutor<T> executor) {
 		DirContext context = this.contextSource.getReadOnlyContext();
 		try {
 			return executor.executeWithContext(context);
@@ -273,11 +274,14 @@ class DefaultLdapClient implements LdapClient {
 		throw LdapUtils.convertLdapException(ex);
 	};
 
-	private <S extends NameClassPair, T> T toObject(NamingEnumeration<S> results,
+	@Nullable private <S extends NameClassPair, T> T toObject(@Nullable NamingEnumeration<S> results,
 			NamingExceptionFunction<? super S, T> mapper) {
+		if (results == null) {
+			return null;
+		}
 		try {
 			Enumeration<S> enumeration = enumeration(results);
-			Function<? super S, T> function = mapper.wrap(this.namingExceptionHandler);
+			Function<? super S, @Nullable T> function = mapper.wrap(this.namingExceptionHandler);
 			if (!enumeration.hasMoreElements()) {
 				return null;
 			}
@@ -292,14 +296,14 @@ class DefaultLdapClient implements LdapClient {
 		}
 	}
 
-	private <S extends NameClassPair, T> List<T> toList(NamingEnumeration<S> results,
+	private <S extends NameClassPair, T> List<T> toList(@Nullable NamingEnumeration<S> results,
 			NamingExceptionFunction<? super S, T> mapper) {
 		if (results == null) {
 			return Collections.emptyList();
 		}
 		try {
 			Enumeration<S> enumeration = enumeration(results);
-			Function<? super S, T> function = mapper.wrap(this.namingExceptionHandler);
+			Function<? super S, @Nullable T> function = mapper.wrap(this.namingExceptionHandler);
 			List<T> mapped = new ArrayList<>();
 			while (enumeration.hasMoreElements()) {
 				T result = function.apply(enumeration.nextElement());
@@ -314,21 +318,21 @@ class DefaultLdapClient implements LdapClient {
 		}
 	}
 
-	private <S extends NameClassPair, T> Stream<T> toStream(NamingEnumeration<S> results,
+	private <S extends NameClassPair, T> Stream<T> toStream(@Nullable NamingEnumeration<S> results,
 			NamingExceptionFunction<? super S, T> mapper) {
 		if (results == null) {
 			return Stream.empty();
 		}
 		Enumeration<S> enumeration = enumeration(results);
-		Function<? super S, T> function = mapper.wrap(this.namingExceptionHandler);
-		return StreamSupport
+		Function<? super S, @Nullable T> function = mapper.wrap(this.namingExceptionHandler);
+		Stream<T> mapped = StreamSupport
 			.stream(Spliterators.spliteratorUnknownSize(enumeration.asIterator(), Spliterator.ORDERED), false)
-			.map(function::apply)
-			.filter(Objects::nonNull)
-			.onClose(() -> closeNamingEnumeration(results));
+			.map(function)
+			.filter(Objects::nonNull);
+		return mapped.onClose(() -> closeNamingEnumeration(results));
 	}
 
-	private void closeContext(DirContext ctx) {
+	private void closeContext(@Nullable DirContext ctx) {
 		if (ctx != null) {
 			try {
 				ctx.close();
@@ -339,7 +343,7 @@ class DefaultLdapClient implements LdapClient {
 		}
 	}
 
-	private <T> void closeNamingEnumeration(NamingEnumeration<T> results) {
+	private <T> void closeNamingEnumeration(@Nullable NamingEnumeration<T> results) {
 		if (results != null) {
 			try {
 				results.close();
@@ -358,9 +362,9 @@ class DefaultLdapClient implements LdapClient {
 
 	interface NamingExceptionFunction<S, T> {
 
-		T apply(S element) throws NamingException;
+		@Nullable T apply(S element) throws NamingException;
 
-		default Function<S, T> wrap(Consumer<NamingException> handler) {
+		default Function<S, @Nullable T> wrap(Consumer<NamingException> handler) {
 			return (s) -> {
 				try {
 					return apply(s);
@@ -440,7 +444,7 @@ class DefaultLdapClient implements LdapClient {
 
 		LdapClient.SearchSpec search = new DefaultSearchSpec();
 
-		char[] password;
+		char @Nullable [] password;
 
 		@Override
 		public AuthenticateSpec query(LdapQuery query) {
@@ -471,7 +475,7 @@ class DefaultLdapClient implements LdapClient {
 			}
 			DirContext ctx = null;
 			try {
-				String password = (this.password != null) ? new String(this.password) : null;
+				String password = (this.password != null) ? new String(this.password) : "";
 				ctx = DefaultLdapClient.this.contextSource
 					.getContext(identification.get(0).getAbsoluteName().toString(), password);
 				return mapper.mapWithContext(ctx, identification.get(0));
@@ -488,7 +492,7 @@ class DefaultLdapClient implements LdapClient {
 
 		LdapQuery query = LdapQueryBuilder.query().filter("(objectClass=*)");
 
-		SearchControls controls;
+		@Nullable SearchControls controls;
 
 		@Override
 		public SearchSpec name(String name) {
@@ -515,14 +519,14 @@ class DefaultLdapClient implements LdapClient {
 		}
 
 		@Override
-		public <T> T toObject(ContextMapper<T> mapper) {
+		public <T> @Nullable T toObject(ContextMapper<T> mapper) {
 			this.controls = searchControlsForQuery(RETURN_OBJ_FLAG);
 			NamingEnumeration<SearchResult> results = computeWithReadOnlyContext(this::search);
 			return DefaultLdapClient.this.toObject(results, function(mapper));
 		}
 
 		@Override
-		public <T> T toObject(AttributesMapper<T> mapper) {
+		public <T> @Nullable T toObject(AttributesMapper<T> mapper) {
 			this.controls = searchControlsForQuery(DONT_RETURN_OBJ_FLAG);
 			NamingEnumeration<SearchResult> results = computeWithReadOnlyContext(this::search);
 			return DefaultLdapClient.this.toObject(results, function(mapper));
@@ -564,14 +568,17 @@ class DefaultLdapClient implements LdapClient {
 			SearchControls controls = DefaultLdapClient.this.searchControlsSupplier.get();
 			controls.setReturningObjFlag(returnObjFlag);
 			controls.setReturningAttributes(this.query.attributes());
-			if (this.query.searchScope() != null) {
-				controls.setSearchScope(this.query.searchScope().getId());
+			SearchScope searchScope = this.query.searchScope();
+			if (searchScope != null) {
+				controls.setSearchScope(searchScope.getId());
 			}
-			if (this.query.countLimit() != null) {
-				controls.setCountLimit(this.query.countLimit());
+			Integer countLimit = this.query.countLimit();
+			if (countLimit != null) {
+				controls.setCountLimit(countLimit);
 			}
-			if (this.query.timeLimit() != null) {
-				controls.setTimeLimit(this.query.timeLimit());
+			Integer timeLimit = this.query.timeLimit();
+			if (timeLimit != null) {
+				controls.setTimeLimit(timeLimit);
 			}
 			return controls;
 		}
@@ -582,9 +589,9 @@ class DefaultLdapClient implements LdapClient {
 
 		private final Name name;
 
-		private Object obj;
+		private @Nullable Object obj;
 
-		private Attributes attributes;
+		private @Nullable Attributes attributes;
 
 		private boolean rebind = false;
 

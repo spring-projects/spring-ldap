@@ -19,7 +19,10 @@ package org.springframework.ldap.core;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchControls;
+
+import org.springframework.ldap.NamingException;
 
 class DefaultLdapClientBuilder implements LdapClient.Builder {
 
@@ -39,7 +42,13 @@ class DefaultLdapClientBuilder implements LdapClient.Builder {
 
 	private boolean ignoreSizeLimitExceededException = true;
 
+	@Deprecated
 	DefaultLdapClientBuilder() {
+		this(new NullContextSource());
+	}
+
+	DefaultLdapClientBuilder(ContextSource contextSource) {
+		this.contextSource = contextSource;
 	}
 
 	DefaultLdapClientBuilder(ContextSource contextSource, Supplier<SearchControls> searchControlsSupplier) {
@@ -118,6 +127,25 @@ class DefaultLdapClientBuilder implements LdapClient.Builder {
 		client.setIgnoreSizeLimitExceededException(this.ignoreSizeLimitExceededException);
 		client.setIgnoreNameNotFoundException(this.ignoreNameNotFoundException);
 		return client;
+	}
+
+	private static final class NullContextSource implements ContextSource {
+
+		@Override
+		public DirContext getReadOnlyContext() throws NamingException {
+			throw new IllegalStateException("Property 'contextSource' must be set.");
+		}
+
+		@Override
+		public DirContext getReadWriteContext() throws NamingException {
+			throw new IllegalStateException("Property 'contextSource' must be set.");
+		}
+
+		@Override
+		public DirContext getContext(String principal, String credentials) throws NamingException {
+			throw new IllegalStateException("Property 'contextSource' must be set.");
+		}
+
 	}
 
 }

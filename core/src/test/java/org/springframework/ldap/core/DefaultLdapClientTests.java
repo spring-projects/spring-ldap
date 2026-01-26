@@ -269,8 +269,7 @@ public class DefaultLdapClientTests {
 	public void verifyThatDefaultSearchControlParametersAreAutomaticallyAppliedInSearch() throws Exception {
 		Supplier<SearchControls> defaults = mock(Supplier.class);
 		given(defaults.get()).willReturn(new SearchControls());
-		LdapClient tested = LdapClient.builder()
-			.contextSource(this.contextSourceMock)
+		LdapClient tested = LdapClient.withContextSource(this.contextSourceMock)
 			.defaultSearchControls(defaults)
 			.build();
 

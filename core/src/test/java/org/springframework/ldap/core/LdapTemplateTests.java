@@ -32,6 +32,7 @@ import javax.naming.directory.SearchResult;
 import javax.naming.ldap.LdapContext;
 import javax.naming.ldap.LdapName;
 
+import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -1579,6 +1580,7 @@ public class LdapTemplateTests {
 
 		final LdapName expectedName = LdapUtils.emptyLdapName();
 		LdapTemplate tested = new LdapTemplate() {
+			@NullMarked
 			public Object lookup(Name dn) {
 				assertThat(dn).isSameAs(dn);
 				return expectedResult;
@@ -1596,6 +1598,7 @@ public class LdapTemplateTests {
 		final String expectedName = "cn=John Doe";
 
 		LdapTemplate tested = new LdapTemplate() {
+			@NullMarked
 			public Object lookup(String dn) {
 				assertThat(dn).isSameAs(expectedName);
 				return expectedResult;
@@ -1616,6 +1619,7 @@ public class LdapTemplateTests {
 		given(this.dirContextOperationsMock.getModificationItems()).willReturn(expectedModifications);
 
 		LdapTemplate tested = new LdapTemplate() {
+			@NullMarked
 			public void modifyAttributes(Name dn, ModificationItem[] mods) {
 				assertThat(dn).isSameAs(epectedDn);
 				assertThat(mods).isSameAs(expectedModifications);
