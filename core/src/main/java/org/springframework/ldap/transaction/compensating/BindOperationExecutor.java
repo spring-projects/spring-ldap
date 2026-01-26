@@ -19,6 +19,7 @@ package org.springframework.ldap.transaction.compensating;
 import javax.naming.Name;
 import javax.naming.directory.Attributes;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,9 +42,9 @@ public class BindOperationExecutor implements CompensatingTransactionOperationEx
 
 	private Name dn;
 
-	private Object originalObject;
+	private @Nullable Object originalObject;
 
-	private Attributes originalAttributes;
+	private @Nullable Attributes originalAttributes;
 
 	/**
 	 * Constructor.
@@ -55,8 +56,8 @@ public class BindOperationExecutor implements CompensatingTransactionOperationEx
 	 * @param originalAttributes original value sent to the 'attributes' parameter of the
 	 * bind operation.
 	 */
-	public BindOperationExecutor(LdapOperations ldapOperations, Name dn, Object originalObject,
-			Attributes originalAttributes) {
+	public BindOperationExecutor(LdapOperations ldapOperations, Name dn, @Nullable Object originalObject,
+			@Nullable Attributes originalAttributes) {
 		this.ldapOperations = ldapOperations;
 		this.dn = dn;
 		this.originalObject = originalObject;
@@ -115,11 +116,11 @@ public class BindOperationExecutor implements CompensatingTransactionOperationEx
 		return this.ldapOperations;
 	}
 
-	Attributes getOriginalAttributes() {
+	@Nullable Attributes getOriginalAttributes() {
 		return this.originalAttributes;
 	}
 
-	Object getOriginalObject() {
+	@Nullable Object getOriginalObject() {
 		return this.originalObject;
 	}
 

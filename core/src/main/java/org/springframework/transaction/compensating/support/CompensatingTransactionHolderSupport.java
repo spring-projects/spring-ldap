@@ -16,6 +16,8 @@
 
 package org.springframework.transaction.compensating.support;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.transaction.compensating.CompensatingTransactionOperationManager;
 import org.springframework.transaction.support.ResourceHolderSupport;
 
@@ -27,7 +29,7 @@ import org.springframework.transaction.support.ResourceHolderSupport;
  */
 public abstract class CompensatingTransactionHolderSupport extends ResourceHolderSupport {
 
-	private CompensatingTransactionOperationManager transactionOperationManager;
+	private @Nullable CompensatingTransactionOperationManager transactionOperationManager;
 
 	/**
 	 * Constructor.
@@ -57,7 +59,7 @@ public abstract class CompensatingTransactionHolderSupport extends ResourceHolde
 	 * transaction.
 	 * @return the CompensatingTransactionOperationManager.
 	 */
-	public CompensatingTransactionOperationManager getTransactionOperationManager() {
+	public @Nullable CompensatingTransactionOperationManager getTransactionOperationManager() {
 		return this.transactionOperationManager;
 	}
 

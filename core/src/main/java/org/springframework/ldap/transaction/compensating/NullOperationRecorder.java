@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.transaction.compensating;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationManager;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
@@ -35,7 +37,7 @@ public class NullOperationRecorder implements CompensatingTransactionOperationRe
 	 * @see org.springframework.ldap.support.transaction.
 	 * CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
 	 */
-	public CompensatingTransactionOperationExecutor recordOperation(Object[] args) {
+	public CompensatingTransactionOperationExecutor recordOperation(@Nullable Object[] args) {
 		return new NullOperationExecutor();
 	}
 

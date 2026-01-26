@@ -16,8 +16,11 @@
 
 package org.springframework.ldap.transaction.compensating;
 
+import java.util.Objects;
+
 import javax.naming.Name;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,15 +55,15 @@ public class RenameOperationRecorder implements CompensatingTransactionOperation
 	 * @see org.springframework.ldap.support.transaction.
 	 * CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
 	 */
-	public CompensatingTransactionOperationExecutor recordOperation(Object[] args) {
+	public CompensatingTransactionOperationExecutor recordOperation(@Nullable Object[] args) {
 		log.debug("Storing rollback information for rename operation");
 		Assert.notEmpty(args, "args cannot be empty");
 		if (args.length != 2) {
 			// This really shouldn't happen.
 			throw new IllegalArgumentException("Illegal argument length");
 		}
-		Name oldDn = LdapTransactionUtils.getArgumentAsName(args[0]);
-		Name newDn = LdapTransactionUtils.getArgumentAsName(args[1]);
+		Name oldDn = LdapTransactionUtils.getArgumentAsName(Objects.requireNonNull(args[0]));
+		Name newDn = LdapTransactionUtils.getArgumentAsName(Objects.requireNonNull(args[1]));
 		return new RenameOperationExecutor(this.ldapOperations, oldDn, newDn);
 	}
 

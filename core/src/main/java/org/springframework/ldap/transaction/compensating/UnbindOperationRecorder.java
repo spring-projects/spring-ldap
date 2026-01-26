@@ -18,6 +18,8 @@ package org.springframework.ldap.transaction.compensating;
 
 import javax.naming.Name;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
@@ -52,7 +54,7 @@ public class UnbindOperationRecorder implements CompensatingTransactionOperation
 	 * @see org.springframework.ldap.support.transaction.
 	 * CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
 	 */
-	public CompensatingTransactionOperationExecutor recordOperation(Object[] args) {
+	public CompensatingTransactionOperationExecutor recordOperation(@Nullable Object[] args) {
 		Name dn = LdapTransactionUtils.getFirstArgumentAsName(args);
 		Name temporaryDn = this.renamingStrategy.getTemporaryName(dn);
 

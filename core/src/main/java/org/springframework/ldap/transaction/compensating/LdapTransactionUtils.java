@@ -16,7 +16,11 @@
 
 package org.springframework.ldap.transaction.compensating;
 
+import java.util.Objects;
+
 import javax.naming.Name;
+
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.Assert;
@@ -53,10 +57,10 @@ public final class LdapTransactionUtils {
 	 * @return a Name representation of the first argument, or the Name itself if it is a
 	 * name.
 	 */
-	public static Name getFirstArgumentAsName(Object[] args) {
+	public static Name getFirstArgumentAsName(@Nullable Object[] args) {
 		Assert.notEmpty(args, "args cannot be empty");
 
-		Object firstArg = args[0];
+		Object firstArg = Objects.requireNonNull(args[0]);
 		return getArgumentAsName(firstArg);
 	}
 

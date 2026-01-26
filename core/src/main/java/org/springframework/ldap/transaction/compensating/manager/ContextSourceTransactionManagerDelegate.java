@@ -48,7 +48,34 @@ public class ContextSourceTransactionManagerDelegate extends AbstractCompensatin
 
 	private ContextSource contextSource;
 
-	private TempEntryRenamingStrategy renamingStrategy;
+	private TempEntryRenamingStrategy renamingStrategy = new DefaultTempEntryRenamingStrategy();
+
+	/**
+	 * @deprecated please provide the {@link ContextSource} in the constructor
+	 */
+	@Deprecated
+	public ContextSourceTransactionManagerDelegate() {
+		this(new NullContextSource());
+	}
+
+	/**
+	 * Construct a {@link ContextSourceTransactionManagerDelegate}
+	 * @param contextSource the {@link ContextSource} to use
+	 */
+	public ContextSourceTransactionManagerDelegate(ContextSource contextSource) {
+		Assert.notNull(contextSource, "contextSource cannot be null");
+		if (contextSource instanceof TransactionAwareContextSourceProxy proxy) {
+			this.contextSource = proxy.getTarget();
+		}
+		else {
+			this.contextSource = contextSource;
+		}
+
+		if (contextSource instanceof AbstractContextSource abstractContextSource) {
+			Assert.isTrue(!abstractContextSource.isAnonymousReadOnly(),
+					"Compensating LDAP transactions cannot be used when context-source is anonymous-read-only");
+		}
+	}
 
 	/**
 	 * Set the ContextSource to work on. Even though the actual ContextSource sent to the
@@ -56,7 +83,9 @@ public class ContextSourceTransactionManagerDelegate extends AbstractCompensatin
 	 * one sent to this method should be the target of that proxy. If it is not, the
 	 * target will be extracted and used instead.
 	 * @param contextSource the ContextSource to work on.
+	 * @deprecated please provide the {@link ContextSource} in the constructor
 	 */
+	@Deprecated
 	public void setContextSource(ContextSource contextSource) {
 		if (contextSource instanceof TransactionAwareContextSourceProxy) {
 			TransactionAwareContextSourceProxy proxy = (TransactionAwareContextSourceProxy) contextSource;
@@ -128,6 +157,29 @@ public class ContextSourceTransactionManagerDelegate extends AbstractCompensatin
 
 	void checkRenamingStrategy() {
 		Assert.notNull(this.renamingStrategy, "RenamingStrategy must be specified");
+	}
+
+	private static final class NullContextSource implements ContextSource {
+
+		@Override
+		public DirContext getReadOnlyContext() throws org.springframework.ldap.NamingException {
+			throw new UnsupportedOperationException("please provide a ContextSource in the constructor of "
+					+ ContextSourceTransactionManagerDelegate.class);
+		}
+
+		@Override
+		public DirContext getReadWriteContext() throws org.springframework.ldap.NamingException {
+			throw new UnsupportedOperationException("please provide a ContextSource in the constructor of "
+					+ ContextSourceTransactionManagerDelegate.class);
+		}
+
+		@Override
+		public DirContext getContext(String principal, String credentials)
+				throws org.springframework.ldap.NamingException {
+			throw new UnsupportedOperationException("please provide a ContextSource in the constructor of "
+					+ ContextSourceTransactionManagerDelegate.class);
+		}
+
 	}
 
 }

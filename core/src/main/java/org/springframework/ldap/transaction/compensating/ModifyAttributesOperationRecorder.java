@@ -26,6 +26,8 @@ import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.IncrementalAttributesMapper;
 import org.springframework.ldap.core.LdapOperations;
@@ -54,7 +56,7 @@ public class ModifyAttributesOperationRecorder implements CompensatingTransactio
 	 * @see org.springframework.ldap.support.transaction.
 	 * CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
 	 */
-	public CompensatingTransactionOperationExecutor recordOperation(Object[] args) {
+	public CompensatingTransactionOperationExecutor recordOperation(@Nullable Object[] args) {
 		Assert.notNull(args, "args cannot be empty");
 		Name dn = LdapTransactionUtils.getFirstArgumentAsName(args);
 		if (args.length != 2 || !(args[1] instanceof ModificationItem[])) {

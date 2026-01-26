@@ -19,9 +19,12 @@ package org.springframework.ldap.transaction.compensating;
 import javax.naming.Name;
 import javax.naming.directory.Attributes;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationExecutor;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationRecorder;
+import org.springframework.util.Assert;
 
 /**
  * A {@link CompensatingTransactionOperationRecorder} keeping track of bind operations.
@@ -47,8 +50,9 @@ public class BindOperationRecorder implements CompensatingTransactionOperationRe
 	 * @see org.springframework.ldap.support.transaction.
 	 * CompensatingTransactionOperationRecorder#recordOperation(java.lang.Object[])
 	 */
-	public CompensatingTransactionOperationExecutor recordOperation(Object[] args) {
-		if (args == null || args.length != 3) {
+	public CompensatingTransactionOperationExecutor recordOperation(@Nullable Object[] args) {
+		Assert.notEmpty(args, "args cannot be empty");
+		if (args.length != 3) {
 			throw new IllegalArgumentException("Invalid arguments for bind operation");
 		}
 		Name dn = LdapTransactionUtils.getFirstArgumentAsName(args);

@@ -16,12 +16,16 @@
 
 package org.springframework.transaction.compensating.support;
 
+import java.util.Objects;
+
+import com.mysema.commons.lang.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
+import org.springframework.transaction.compensating.CompensatingTransactionOperationManager;
 import org.springframework.transaction.support.DefaultTransactionStatus;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -93,7 +97,12 @@ public abstract class AbstractCompensatingTransactionManagerDelegate {
 	 */
 	public void doCommit(DefaultTransactionStatus status) throws TransactionException {
 		CompensatingTransactionObject txObject = (CompensatingTransactionObject) status.getTransaction();
-		txObject.getHolder().getTransactionOperationManager().commit();
+		CompensatingTransactionHolderSupport holder = txObject.getHolder();
+		Assert.notNull(holder, "transaction holder is null; did you already begin the transaction?");
+		CompensatingTransactionOperationManager manager = Objects.requireNonNull(holder)
+			.getTransactionOperationManager();
+		Assert.notNull(manager, "transaction manager is null; has the transaction already been closed?");
+		Objects.requireNonNull(manager).commit();
 
 	}
 
@@ -103,7 +112,12 @@ public abstract class AbstractCompensatingTransactionManagerDelegate {
 	 */
 	public void doRollback(DefaultTransactionStatus status) throws TransactionException {
 		CompensatingTransactionObject txObject = (CompensatingTransactionObject) status.getTransaction();
-		txObject.getHolder().getTransactionOperationManager().rollback();
+		CompensatingTransactionHolderSupport holder = txObject.getHolder();
+		Assert.notNull(holder, "transaction holder is null; did you already begin the transaction?");
+		CompensatingTransactionOperationManager manager = Objects.requireNonNull(holder)
+			.getTransactionOperationManager();
+		Assert.notNull(manager, "transaction manager is null; has the transaction already been closed?");
+		Objects.requireNonNull(manager).rollback();
 	}
 
 	/*
@@ -116,10 +130,11 @@ public abstract class AbstractCompensatingTransactionManagerDelegate {
 
 		CompensatingTransactionObject txObject = (CompensatingTransactionObject) transaction;
 		CompensatingTransactionHolderSupport transactionHolderSupport = txObject.getHolder();
+		Assert.notNull(transactionHolderSupport, "transaction holder is null; did you already begin the transaction?");
 
-		closeTargetResource(transactionHolderSupport);
+		closeTargetResource(Objects.requireNonNull(transactionHolderSupport));
 
-		txObject.getHolder().clear();
+		transactionHolderSupport.clear();
 	}
 
 }

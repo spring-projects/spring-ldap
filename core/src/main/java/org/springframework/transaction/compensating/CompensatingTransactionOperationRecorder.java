@@ -16,6 +16,8 @@
 
 package org.springframework.transaction.compensating;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * An implementation of this interface is responsible for recording data and supplying a
  * {@link CompensatingTransactionOperationExecutor} to be invoked for execution and
@@ -35,6 +37,6 @@ public interface CompensatingTransactionOperationRecorder {
 	 * @return A {@link CompensatingTransactionOperationExecutor} to be used if the
 	 * recorded operation should need to be rolled back.
 	 */
-	CompensatingTransactionOperationExecutor recordOperation(Object[] args);
+	CompensatingTransactionOperationExecutor recordOperation(@Nullable Object[] args);
 
 }

@@ -19,6 +19,7 @@ package org.springframework.ldap.transaction.compensating;
 import javax.naming.Name;
 import javax.naming.directory.Attributes;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,9 +48,9 @@ public class RebindOperationExecutor implements CompensatingTransactionOperation
 
 	private Name temporaryDn;
 
-	private Object originalObject;
+	private @Nullable Object originalObject;
 
-	private Attributes originalAttributes;
+	private @Nullable Attributes originalAttributes;
 
 	/**
 	 * Constructor.
@@ -61,7 +62,7 @@ public class RebindOperationExecutor implements CompensatingTransactionOperation
 	 * operation
 	 */
 	public RebindOperationExecutor(LdapOperations ldapOperations, Name originalDn, Name temporaryDn,
-			Object originalObject, Attributes originalAttributes) {
+			@Nullable Object originalObject, @Nullable Attributes originalAttributes) {
 		this.ldapOperations = ldapOperations;
 		this.originalDn = originalDn;
 		this.temporaryDn = temporaryDn;
@@ -113,7 +114,7 @@ public class RebindOperationExecutor implements CompensatingTransactionOperation
 		this.ldapOperations.bind(this.originalDn, this.originalObject, this.originalAttributes);
 	}
 
-	Attributes getOriginalAttributes() {
+	@Nullable Attributes getOriginalAttributes() {
 		return this.originalAttributes;
 	}
 
@@ -121,7 +122,7 @@ public class RebindOperationExecutor implements CompensatingTransactionOperation
 		return this.originalDn;
 	}
 
-	Object getOriginalObject() {
+	@Nullable Object getOriginalObject() {
 		return this.originalObject;
 	}
 

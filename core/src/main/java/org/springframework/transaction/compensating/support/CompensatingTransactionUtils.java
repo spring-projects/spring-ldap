@@ -55,8 +55,10 @@ public final class CompensatingTransactionUtils {
 
 			CompensatingTransactionOperationManager transactionOperationManager = transactionResourceHolder
 				.getTransactionOperationManager();
-			transactionOperationManager.performOperation(transactionResourceHolder.getTransactedResource(),
-					method.getName(), args);
+			if (transactionOperationManager != null) {
+				transactionOperationManager.performOperation(transactionResourceHolder.getTransactedResource(),
+						method.getName(), args);
+			}
 		}
 		else {
 			// Perform the target operation

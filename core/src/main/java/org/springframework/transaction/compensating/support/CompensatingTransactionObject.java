@@ -16,6 +16,8 @@
 
 package org.springframework.transaction.compensating.support;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Transaction object used by {@link AbstractCompensatingTransactionManagerDelegate}.
  * Keeps a reference to the {@link CompensatingTransactionHolderSupport} associated with
@@ -26,14 +28,14 @@ package org.springframework.transaction.compensating.support;
  */
 public class CompensatingTransactionObject {
 
-	private CompensatingTransactionHolderSupport holder;
+	private @Nullable CompensatingTransactionHolderSupport holder;
 
 	/**
 	 * Constructor.
 	 * @param holder the {@link CompensatingTransactionHolderSupport} associated with the
 	 * current transaction.
 	 */
-	public CompensatingTransactionObject(CompensatingTransactionHolderSupport holder) {
+	public CompensatingTransactionObject(@Nullable CompensatingTransactionHolderSupport holder) {
 		this.holder = holder;
 	}
 
@@ -41,7 +43,7 @@ public class CompensatingTransactionObject {
 	 * Get the DirContextHolder.
 	 * @return the DirContextHolder.
 	 */
-	public CompensatingTransactionHolderSupport getHolder() {
+	public @Nullable CompensatingTransactionHolderSupport getHolder() {
 		return this.holder;
 	}
 
