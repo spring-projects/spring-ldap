@@ -20,5 +20,7 @@
  *
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  */
-
+@NullMarked
 package org.springframework.ldap.odm.typeconversion.impl;
+
+import org.jspecify.annotations.NullMarked;
