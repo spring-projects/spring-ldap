@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.dao.DataAccessResourceFailureException;
+import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.support.DelegatingBaseLdapPathContextSourceSupport;
 import org.springframework.ldap.pool.DelegatingDirContext;
@@ -157,9 +158,20 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	/**
 	 * Creates a new pooling context source, setting up the DirContext object factory and
 	 * generic keyed object pool.
+	 * @deprecated Please provide the {@link ContextSource} in the constructor
 	 */
+	@Deprecated
 	public PoolingContextSource() {
-		this.dirContextPoolableObjectFactory = new DirContextPoolableObjectFactory();
+		this(new NullContextSource());
+	}
+
+	/**
+	 * Creates a new pooling context source, setting up the DirContext object factory and
+	 * generic keyed object pool.
+	 * @since 4.1
+	 */
+	public PoolingContextSource(ContextSource contextSource) {
+		this.dirContextPoolableObjectFactory = new DirContextPoolableObjectFactory(new NullContextSource());
 		this.keyedObjectPool = new GenericKeyedObjectPool();
 		this.keyedObjectPool.setFactory(this.dirContextPoolableObjectFactory);
 	}
@@ -366,7 +378,9 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 
 	/**
 	 * @param contextSource the contextSource to set Required
+	 * @deprecated Please provide the {@link ContextSource} in the constructor
 	 */
+	@Deprecated
 	public void setContextSource(ContextSource contextSource) {
 		this.dirContextPoolableObjectFactory.setContextSource(contextSource);
 	}
@@ -452,6 +466,25 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	@Override
 	public DirContext getContext(String principal, String credentials) {
 		throw new UnsupportedOperationException("Not supported for this implementation");
+	}
+
+	private static final class NullContextSource implements ContextSource {
+
+		@Override
+		public DirContext getReadOnlyContext() throws NamingException {
+			throw new IllegalStateException("Property 'contextSource' must be set.");
+		}
+
+		@Override
+		public DirContext getReadWriteContext() throws NamingException {
+			throw new IllegalStateException("Property 'contextSource' must be set.");
+		}
+
+		@Override
+		public DirContext getContext(String principal, String credentials) throws NamingException {
+			throw new IllegalStateException("Property 'contextSource' must be set.");
+		}
+
 	}
 
 }

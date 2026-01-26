@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.pool;
 
+import java.util.Objects;
+
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NamingEnumeration;
@@ -27,6 +29,7 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
 import org.apache.commons.pool.KeyedObjectPool;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.ldap.core.DirContextProxy;
 import org.springframework.ldap.pool.factory.PoolingContextSource;
@@ -41,7 +44,7 @@ import org.springframework.util.Assert;
  */
 public class DelegatingDirContext extends DelegatingContext implements DirContext, DirContextProxy {
 
-	private DirContext delegateDirContext;
+	private @Nullable DirContext delegateDirContext;
 
 	/**
 	 * Create a new delegating dir context for the specified pool, context and context
@@ -64,11 +67,11 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	/**
 	 * @return The direct delegate for this dir context proxy
 	 */
-	public DirContext getDelegateDirContext() {
+	public @Nullable DirContext getDelegateDirContext() {
 		return this.delegateDirContext;
 	}
 
-	public Context getDelegateContext() {
+	public @Nullable Context getDelegateContext() {
 		return this.getDelegateDirContext();
 	}
 
@@ -76,7 +79,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	 * Recursivley inspect delegates until a non-delegating dir context is found.
 	 * @return The innermost (real) DirContext that is being delegated to.
 	 */
-	public DirContext getInnermostDelegateDirContext() {
+	public @Nullable DirContext getInnermostDelegateDirContext() {
 		final DirContext delegateDirContext = this.getDelegateDirContext();
 
 		if (delegateDirContext instanceof DelegatingDirContext) {
@@ -92,6 +95,11 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 		}
 
 		super.assertOpen();
+	}
+
+	private DirContext requireNonNullDirContext() throws NamingException {
+		assertOpen();
+		return Objects.requireNonNull(getDelegateDirContext());
 	}
 
 	// ***** Object methods *****//
@@ -140,7 +148,11 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	 * @see org.springframework.ldap.core.DirContextProxy#getTargetContext()
 	 */
 	public DirContext getTargetContext() {
-		return this.getInnermostDelegateDirContext();
+		DirContext innermost = this.getInnermostDelegateDirContext();
+		if (innermost == null) {
+			throw new IllegalStateException("cannot get the target context on a closed wrapper context");
+		}
+		return innermost;
 	}
 
 	// ***** DirContext Interface Delegates *****//
@@ -150,8 +162,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	 * javax.naming.directory.Attributes)
 	 */
 	public void bind(Name name, Object obj, Attributes attrs) throws NamingException {
-		this.assertOpen();
-		this.getDelegateDirContext().bind(name, obj, attrs);
+		requireNonNullDirContext().bind(name, obj, attrs);
 	}
 
 	/**
@@ -159,8 +170,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	 * javax.naming.directory.Attributes)
 	 */
 	public void bind(String name, Object obj, Attributes attrs) throws NamingException {
-		this.assertOpen();
-		this.getDelegateDirContext().bind(name, obj, attrs);
+		requireNonNullDirContext().bind(name, obj, attrs);
 	}
 
 	/**
@@ -184,16 +194,14 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	 * java.lang.String[])
 	 */
 	public Attributes getAttributes(Name name, String[] attrIds) throws NamingException {
-		this.assertOpen();
-		return this.getDelegateDirContext().getAttributes(name, attrIds);
+		return requireNonNullDirContext().getAttributes(name, attrIds);
 	}
 
 	/**
 	 * @see javax.naming.directory.DirContext#getAttributes(javax.naming.Name)
 	 */
 	public Attributes getAttributes(Name name) throws NamingException {
-		this.assertOpen();
-		return this.getDelegateDirContext().getAttributes(name);
+		return requireNonNullDirContext().getAttributes(name);
 	}
 
 	/**
@@ -201,16 +209,14 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	 * java.lang.String[])
 	 */
 	public Attributes getAttributes(String name, String[] attrIds) throws NamingException {
-		this.assertOpen();
-		return this.getDelegateDirContext().getAttributes(name, attrIds);
+		return requireNonNullDirContext().getAttributes(name, attrIds);
 	}
 
 	/**
 	 * @see javax.naming.directory.DirContext#getAttributes(java.lang.String)
 	 */
 	public Attributes getAttributes(String name) throws NamingException {
-		this.assertOpen();
-		return this.getDelegateDirContext().getAttributes(name);
+		return requireNonNullDirContext().getAttributes(name);
 	}
 
 	/**
@@ -246,8 +252,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	 * javax.naming.directory.Attributes)
 	 */
 	public void modifyAttributes(Name name, int modOp, Attributes attrs) throws NamingException {
-		this.assertOpen();
-		this.getDelegateDirContext().modifyAttributes(name, modOp, attrs);
+		requireNonNullDirContext().modifyAttributes(name, modOp, attrs);
 	}
 
 	/**
@@ -255,8 +260,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	 * javax.naming.directory.ModificationItem[])
 	 */
 	public void modifyAttributes(Name name, ModificationItem[] mods) throws NamingException {
-		this.assertOpen();
-		this.getDelegateDirContext().modifyAttributes(name, mods);
+		requireNonNullDirContext().modifyAttributes(name, mods);
 	}
 
 	/**
@@ -264,8 +268,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	 * javax.naming.directory.Attributes)
 	 */
 	public void modifyAttributes(String name, int modOp, Attributes attrs) throws NamingException {
-		this.assertOpen();
-		this.getDelegateDirContext().modifyAttributes(name, modOp, attrs);
+		requireNonNullDirContext().modifyAttributes(name, modOp, attrs);
 	}
 
 	/**
@@ -273,8 +276,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	 * javax.naming.directory.ModificationItem[])
 	 */
 	public void modifyAttributes(String name, ModificationItem[] mods) throws NamingException {
-		this.assertOpen();
-		this.getDelegateDirContext().modifyAttributes(name, mods);
+		requireNonNullDirContext().modifyAttributes(name, mods);
 	}
 
 	/**
@@ -282,8 +284,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	 * javax.naming.directory.Attributes)
 	 */
 	public void rebind(Name name, Object obj, Attributes attrs) throws NamingException {
-		this.assertOpen();
-		this.getDelegateDirContext().rebind(name, obj, attrs);
+		requireNonNullDirContext().rebind(name, obj, attrs);
 	}
 
 	/**
@@ -291,8 +292,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	 * javax.naming.directory.Attributes)
 	 */
 	public void rebind(String name, Object obj, Attributes attrs) throws NamingException {
-		this.assertOpen();
-		this.getDelegateDirContext().rebind(name, obj, attrs);
+		requireNonNullDirContext().rebind(name, obj, attrs);
 	}
 
 	/**
@@ -301,8 +301,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	 */
 	public NamingEnumeration<SearchResult> search(Name name, Attributes matchingAttributes, String[] attributesToReturn)
 			throws NamingException {
-		this.assertOpen();
-		return this.getDelegateDirContext().search(name, matchingAttributes, attributesToReturn);
+		return requireNonNullDirContext().search(name, matchingAttributes, attributesToReturn);
 	}
 
 	/**
@@ -310,8 +309,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	 * javax.naming.directory.Attributes)
 	 */
 	public NamingEnumeration<SearchResult> search(Name name, Attributes matchingAttributes) throws NamingException {
-		this.assertOpen();
-		return this.getDelegateDirContext().search(name, matchingAttributes);
+		return requireNonNullDirContext().search(name, matchingAttributes);
 	}
 
 	/**
@@ -320,8 +318,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	 */
 	public NamingEnumeration<SearchResult> search(Name name, String filterExpr, Object[] filterArgs,
 			SearchControls cons) throws NamingException {
-		this.assertOpen();
-		return this.getDelegateDirContext().search(name, filterExpr, filterArgs, cons);
+		return requireNonNullDirContext().search(name, filterExpr, filterArgs, cons);
 	}
 
 	/**
@@ -330,8 +327,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	 */
 	public NamingEnumeration<SearchResult> search(Name name, String filter, SearchControls cons)
 			throws NamingException {
-		this.assertOpen();
-		return this.getDelegateDirContext().search(name, filter, cons);
+		return requireNonNullDirContext().search(name, filter, cons);
 	}
 
 	/**
@@ -340,8 +336,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	 */
 	public NamingEnumeration<SearchResult> search(String name, Attributes matchingAttributes,
 			String[] attributesToReturn) throws NamingException {
-		this.assertOpen();
-		return this.getDelegateDirContext().search(name, matchingAttributes, attributesToReturn);
+		return requireNonNullDirContext().search(name, matchingAttributes, attributesToReturn);
 	}
 
 	/**
@@ -349,8 +344,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	 * javax.naming.directory.Attributes)
 	 */
 	public NamingEnumeration<SearchResult> search(String name, Attributes matchingAttributes) throws NamingException {
-		this.assertOpen();
-		return this.getDelegateDirContext().search(name, matchingAttributes);
+		return requireNonNullDirContext().search(name, matchingAttributes);
 	}
 
 	/**
@@ -359,8 +353,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	 */
 	public NamingEnumeration<SearchResult> search(String name, String filterExpr, Object[] filterArgs,
 			SearchControls cons) throws NamingException {
-		this.assertOpen();
-		return this.getDelegateDirContext().search(name, filterExpr, filterArgs, cons);
+		return requireNonNullDirContext().search(name, filterExpr, filterArgs, cons);
 	}
 
 	/**
@@ -369,8 +362,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	 */
 	public NamingEnumeration<SearchResult> search(String name, String filter, SearchControls cons)
 			throws NamingException {
-		this.assertOpen();
-		return this.getDelegateDirContext().search(name, filter, cons);
+		return requireNonNullDirContext().search(name, filter, cons);
 	}
 
 	/**

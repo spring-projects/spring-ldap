@@ -19,7 +19,10 @@ package org.springframework.ldap.pool2.factory;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapContext;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.dao.DataAccessResourceFailureException;
+import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.pool2.DelegatingDirContext;
 import org.springframework.ldap.pool2.DirContextType;
 import org.springframework.ldap.pool2.MutableDelegatingLdapContext;
@@ -38,9 +41,22 @@ public class MutablePooledContextSource extends PooledContextSource {
 	 * Creates a new pooling context source, setting up the DirContext object factory and
 	 * generic keyed object pool.
 	 * @param poolConfig pool configurations to set.
+	 * @deprecated Please supply the underlying {@link ContextSource} in the constructor
 	 */
-	public MutablePooledContextSource(PoolConfig poolConfig) {
+	@Deprecated
+	public MutablePooledContextSource(@Nullable PoolConfig poolConfig) {
 		super(poolConfig);
+	}
+
+	/**
+	 * Creates a new pooling context source, setting up the DirContext object factory and
+	 * generic keyed object pool.
+	 * @param contextSource the underlying {@link ContextSource}
+	 * @param poolConfig pool configurations to set.
+	 * @since 4.1
+	 */
+	public MutablePooledContextSource(ContextSource contextSource, @Nullable PoolConfig poolConfig) {
+		super(contextSource, poolConfig);
 	}
 
 	protected DirContext getContext(DirContextType dirContextType) {

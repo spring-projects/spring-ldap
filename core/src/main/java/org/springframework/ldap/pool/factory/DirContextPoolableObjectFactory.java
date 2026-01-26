@@ -35,6 +35,7 @@ import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextProxy;
 import org.springframework.ldap.pool.DirContextType;
 import org.springframework.ldap.pool.FailureAwareContext;
+import org.springframework.ldap.pool.validation.DefaultDirContextValidator;
 import org.springframework.ldap.pool.validation.DirContextValidator;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.Assert;
@@ -90,9 +91,13 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 
 	private ContextSource contextSource;
 
-	private DirContextValidator dirContextValidator;
+	private DirContextValidator dirContextValidator = new DefaultDirContextValidator();
 
 	private Set<Class<? extends Throwable>> nonTransientExceptions = DEFAULT_NONTRANSIENT_EXCEPTIONS;
+
+	DirContextPoolableObjectFactory(ContextSource contextSource) {
+		this.contextSource = contextSource;
+	}
 
 	void setNonTransientExceptions(Collection<Class<? extends Throwable>> nonTransientExceptions) {
 		this.nonTransientExceptions = new HashSet<>(nonTransientExceptions);
@@ -109,10 +114,7 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 	 * @param contextSource the contextSource to set
 	 */
 	void setContextSource(ContextSource contextSource) {
-		if (contextSource == null) {
-			throw new IllegalArgumentException("contextSource may not be null");
-		}
-
+		Assert.notNull(contextSource, "contextSource may not be null");
 		this.contextSource = contextSource;
 	}
 
@@ -127,10 +129,7 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 	 * @param dirContextValidator the dirContextValidator to set
 	 */
 	void setDirContextValidator(DirContextValidator dirContextValidator) {
-		if (dirContextValidator == null) {
-			throw new IllegalArgumentException("dirContextValidator may not be null");
-		}
-
+		Assert.notNull(dirContextValidator, "dirContextValidator may not be null");
 		this.dirContextValidator = dirContextValidator;
 	}
 

@@ -37,6 +37,7 @@ import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextProxy;
 import org.springframework.ldap.pool2.DirContextType;
 import org.springframework.ldap.pool2.FailureAwareContext;
+import org.springframework.ldap.pool2.validation.DefaultDirContextValidator;
 import org.springframework.ldap.pool2.validation.DirContextValidator;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.Assert;
@@ -91,13 +92,17 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 
 	static {
 		DEFAULT_NONTRANSIENT_EXCEPTIONS.add(CommunicationException.class);
-	};
+	}
 
 	private ContextSource contextSource;
 
-	private DirContextValidator dirContextValidator;
+	private DirContextValidator dirContextValidator = new DefaultDirContextValidator();
 
 	private Set<Class<? extends Throwable>> nonTransientExceptions = DEFAULT_NONTRANSIENT_EXCEPTIONS;
+
+	DirContextPooledObjectFactory(ContextSource contextSource) {
+		this.contextSource = contextSource;
+	}
 
 	void setNonTransientExceptions(Collection<Class<? extends Throwable>> nonTransientExceptions) {
 		this.nonTransientExceptions = new HashSet<>(nonTransientExceptions);
@@ -114,10 +119,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 	 * @param contextSource the contextSource to set
 	 */
 	void setContextSource(ContextSource contextSource) {
-		if (contextSource == null) {
-			throw new IllegalArgumentException("contextSource may not be null");
-		}
-
+		Assert.notNull(contextSource, "contextSource may not be null");
 		this.contextSource = contextSource;
 	}
 
@@ -132,10 +134,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 	 * @param dirContextValidator the dirContextValidator to set
 	 */
 	void setDirContextValidator(DirContextValidator dirContextValidator) {
-		if (dirContextValidator == null) {
-			throw new IllegalArgumentException("dirContextValidator may not be null");
-		}
-
+		Assert.notNull(dirContextValidator, "dirContextValidator may not be null");
 		this.dirContextValidator = dirContextValidator;
 	}
 
@@ -174,7 +173,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 	 *
 	 */
 	@Override
-	public void destroyObject(Object key, PooledObject<Object> pooledObject) throws Exception {
+	public void destroyObject(Object key, PooledObject<Object> pooledObject) {
 		Assert.notNull(pooledObject, "The Object to destroy must not be null");
 		Assert.isTrue(pooledObject.getObject() instanceof DirContext,
 				"The Object to destroy must be of type '" + DirContext.class + "'");
@@ -251,7 +250,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 	 */
 	private class FailureAwareContextProxy implements InvocationHandler {
 
-		private DirContext target;
+		private final DirContext target;
 
 		private boolean hasFailed = false;
 

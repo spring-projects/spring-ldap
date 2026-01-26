@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.pool;
 
+import java.util.Objects;
+
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.Control;
@@ -24,6 +26,7 @@ import javax.naming.ldap.ExtendedResponse;
 import javax.naming.ldap.LdapContext;
 
 import org.apache.commons.pool.KeyedObjectPool;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.ldap.pool.factory.PoolingContextSource;
 import org.springframework.util.Assert;
@@ -37,7 +40,7 @@ import org.springframework.util.Assert;
  */
 public class DelegatingLdapContext extends DelegatingDirContext implements LdapContext {
 
-	private LdapContext delegateLdapContext;
+	private @Nullable LdapContext delegateLdapContext;
 
 	/**
 	 * Create a new delegating ldap context for the specified pool, context and context
@@ -60,12 +63,12 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
 	/**
 	 * @return The direct delegate for this ldap context proxy
 	 */
-	public LdapContext getDelegateLdapContext() {
+	public @Nullable LdapContext getDelegateLdapContext() {
 		return this.delegateLdapContext;
 	}
 
 	// cannot return subtype in overridden method unless Java5
-	public DirContext getDelegateDirContext() {
+	public @Nullable DirContext getDelegateDirContext() {
 		return this.getDelegateLdapContext();
 	}
 
@@ -73,7 +76,7 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
 	 * Recursivley inspect delegates until a non-delegating ldap context is found.
 	 * @return The innermost (real) DirContext that is being delegated to.
 	 */
-	public LdapContext getInnermostDelegateLdapContext() {
+	public @Nullable LdapContext getInnermostDelegateLdapContext() {
 		final LdapContext delegateLdapContext = this.getDelegateLdapContext();
 
 		if (delegateLdapContext instanceof DelegatingLdapContext) {
@@ -89,6 +92,11 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
 		}
 
 		super.assertOpen();
+	}
+
+	private LdapContext requireNonNullLdapContext() throws NamingException {
+		assertOpen();
+		return Objects.requireNonNull(getDelegateLdapContext());
 	}
 
 	// ***** Object methods *****//
@@ -136,32 +144,28 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
 	 * @see javax.naming.ldap.LdapContext#extendedOperation(javax.naming.ldap.ExtendedRequest)
 	 */
 	public ExtendedResponse extendedOperation(ExtendedRequest request) throws NamingException {
-		this.assertOpen();
-		return this.getDelegateLdapContext().extendedOperation(request);
+		return requireNonNullLdapContext().extendedOperation(request);
 	}
 
 	/**
 	 * @see javax.naming.ldap.LdapContext#getConnectControls()
 	 */
 	public Control[] getConnectControls() throws NamingException {
-		this.assertOpen();
-		return this.getDelegateLdapContext().getConnectControls();
+		return requireNonNullLdapContext().getConnectControls();
 	}
 
 	/**
 	 * @see javax.naming.ldap.LdapContext#getRequestControls()
 	 */
 	public Control[] getRequestControls() throws NamingException {
-		this.assertOpen();
-		return this.getDelegateLdapContext().getRequestControls();
+		return requireNonNullLdapContext().getRequestControls();
 	}
 
 	/**
 	 * @see javax.naming.ldap.LdapContext#getResponseControls()
 	 */
 	public Control[] getResponseControls() throws NamingException {
-		this.assertOpen();
-		return this.getDelegateLdapContext().getResponseControls();
+		return requireNonNullLdapContext().getResponseControls();
 	}
 
 	/**

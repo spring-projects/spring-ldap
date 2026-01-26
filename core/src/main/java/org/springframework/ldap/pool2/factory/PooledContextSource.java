@@ -23,11 +23,13 @@ import javax.naming.ldap.LdapContext;
 
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.dao.DataAccessResourceFailureException;
+import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.support.DelegatingBaseLdapPathContextSourceSupport;
 import org.springframework.ldap.pool2.DelegatingDirContext;
@@ -90,23 +92,27 @@ public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupp
 
 	private final DirContextPooledObjectFactory dirContextPooledObjectFactory;
 
-	private PoolConfig poolConfig;
+	private final GenericKeyedObjectPoolConfig<Object> poolConfig;
 
 	/**
 	 * Creates a new pooling context source, setting up the DirContext object factory and
 	 * generic keyed object pool.
+	 * @deprecated Please provide the {@link ContextSource} in the constructor
 	 */
-	public PooledContextSource(PoolConfig poolConfig) {
-		this.dirContextPooledObjectFactory = new DirContextPooledObjectFactory();
-		if (poolConfig != null) {
-			this.poolConfig = poolConfig;
-			GenericKeyedObjectPoolConfig objectPoolConfig = getConfig(poolConfig);
-			this.keyedObjectPool = new GenericKeyedObjectPool<Object, Object>(this.dirContextPooledObjectFactory,
-					objectPoolConfig);
-		}
-		else {
-			this.keyedObjectPool = new GenericKeyedObjectPool<>(this.dirContextPooledObjectFactory);
-		}
+	@Deprecated
+	public PooledContextSource(@Nullable PoolConfig poolConfig) {
+		this(new NullContextSource(), poolConfig);
+	}
+
+	/**
+	 * Creates a new pooling context source, setting up the DirContext object factory and
+	 * generic keyed object pool.
+	 * @since 4.1
+	 */
+	public PooledContextSource(ContextSource contextSource, @Nullable PoolConfig poolConfig) {
+		this.dirContextPooledObjectFactory = new DirContextPooledObjectFactory(contextSource);
+		this.poolConfig = (poolConfig != null) ? getConfig(poolConfig) : new GenericKeyedObjectPoolConfig<>();
+		this.keyedObjectPool = new GenericKeyedObjectPool<>(this.dirContextPooledObjectFactory, this.poolConfig);
 	}
 
 	// ***** Pool Property Configuration *****//
@@ -115,7 +121,7 @@ public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupp
 	 * @return the poolConfig
 	 */
 	public PoolConfig getPoolConfig() {
-		return this.poolConfig;
+		return getConfig(this.poolConfig);
 	}
 
 	/**
@@ -185,7 +191,9 @@ public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupp
 
 	/**
 	 * @param contextSource the contextSource to set Required
+	 * @deprecated Please provide the underlying {@link ContextSource} in the constructor
 	 */
+	@Deprecated
 	public void setContextSource(ContextSource contextSource) {
 		this.dirContextPooledObjectFactory.setContextSource(contextSource);
 	}
@@ -273,6 +281,37 @@ public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupp
 		throw new UnsupportedOperationException("Not supported for this implementation");
 	}
 
+	private PoolConfig getConfig(GenericKeyedObjectPoolConfig<Object> commonsConfig) {
+		PoolConfig poolConfig = new PoolConfig();
+		poolConfig.setMaxTotalPerKey(commonsConfig.getMaxTotalPerKey());
+		poolConfig.setMaxTotal(commonsConfig.getMaxTotal());
+
+		poolConfig.setMaxIdlePerKey(commonsConfig.getMaxIdlePerKey());
+		poolConfig.setMinIdlePerKey(commonsConfig.getMinIdlePerKey());
+
+		poolConfig.setTestWhileIdle(commonsConfig.getTestWhileIdle());
+		poolConfig.setTestOnReturn(commonsConfig.getTestOnReturn());
+		poolConfig.setTestOnCreate(commonsConfig.getTestOnCreate());
+		poolConfig.setTestOnBorrow(commonsConfig.getTestOnBorrow());
+
+		poolConfig.setTimeBetweenEvictionRunsMillis(commonsConfig.getTimeBetweenEvictionRunsMillis());
+		poolConfig.setEvictionPolicyClassName(commonsConfig.getEvictionPolicyClassName());
+		poolConfig.setMinEvictableIdleTimeMillis(commonsConfig.getMinEvictableIdleTimeMillis());
+		poolConfig.setNumTestsPerEvictionRun(commonsConfig.getNumTestsPerEvictionRun());
+		poolConfig.setSoftMinEvictableIdleTimeMillis(commonsConfig.getSoftMinEvictableIdleTimeMillis());
+
+		poolConfig.setJmxEnabled(commonsConfig.getJmxEnabled());
+		poolConfig.setJmxNameBase(commonsConfig.getJmxNameBase());
+		poolConfig.setJmxNamePrefix(commonsConfig.getJmxNamePrefix());
+
+		poolConfig.setMaxWaitMillis(commonsConfig.getMaxWaitMillis());
+
+		poolConfig.setFairness(commonsConfig.getFairness());
+		poolConfig.setBlockWhenExhausted(commonsConfig.getBlockWhenExhausted());
+		poolConfig.setLifo(commonsConfig.getLifo());
+		return poolConfig;
+	}
+
 	private GenericKeyedObjectPoolConfig getConfig(PoolConfig poolConfig) {
 		GenericKeyedObjectPoolConfig objectPoolConfig = new GenericKeyedObjectPoolConfig();
 
@@ -304,6 +343,25 @@ public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupp
 		objectPoolConfig.setLifo(poolConfig.isLifo());
 
 		return objectPoolConfig;
+	}
+
+	private static final class NullContextSource implements ContextSource {
+
+		@Override
+		public DirContext getReadOnlyContext() throws NamingException {
+			throw new IllegalStateException("Property 'contextSource' must be set.");
+		}
+
+		@Override
+		public DirContext getReadWriteContext() throws NamingException {
+			throw new IllegalStateException("Property 'contextSource' must be set.");
+		}
+
+		@Override
+		public DirContext getContext(String principal, String credentials) throws NamingException {
+			throw new IllegalStateException("Property 'contextSource' must be set.");
+		}
+
 	}
 
 }

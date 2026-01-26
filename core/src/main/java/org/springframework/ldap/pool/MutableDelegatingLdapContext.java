@@ -48,9 +48,13 @@ public class MutableDelegatingLdapContext extends DelegatingLdapContext {
 		super(keyedObjectPool, delegateLdapContext, dirContextType);
 	}
 
-	public void setRequestControls(Control[] requestControls) throws NamingException {
+	private LdapContext requireNonNullLdapContext() throws NamingException {
 		assertOpen();
-		getDelegateLdapContext().setRequestControls(requestControls);
+		return java.util.Objects.requireNonNull(getDelegateLdapContext());
+	}
+
+	public void setRequestControls(Control[] requestControls) throws NamingException {
+		requireNonNullLdapContext().setRequestControls(requestControls);
 	}
 
 }

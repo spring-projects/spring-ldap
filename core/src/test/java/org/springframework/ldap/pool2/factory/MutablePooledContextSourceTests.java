@@ -48,4 +48,17 @@ public class MutablePooledContextSourceTests extends AbstractPoolTestCase {
 		assertThat(result.getClass()).isEqualTo(MutableDelegatingLdapContext.class);
 	}
 
+	@Test
+	public void testConstructorGetReadOnlyLdapContext() throws Exception {
+
+		given(contextSourceMock.getReadOnlyContext()).willReturn(ldapContextMock);
+
+		final MutablePooledContextSource poolingContextSource = new MutablePooledContextSource(contextSourceMock, null);
+
+		// Get a context
+		final DirContext result = poolingContextSource.getReadOnlyContext();
+
+		assertThat(result.getClass()).isEqualTo(MutableDelegatingLdapContext.class);
+	}
+
 }

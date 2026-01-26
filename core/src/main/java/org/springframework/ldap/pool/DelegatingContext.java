@@ -17,6 +17,7 @@
 package org.springframework.ldap.pool;
 
 import java.util.Hashtable;
+import java.util.Objects;
 
 import javax.naming.Binding;
 import javax.naming.Context;
@@ -27,6 +28,7 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
 import org.apache.commons.pool.KeyedObjectPool;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.ldap.pool.factory.PoolingContextSource;
 import org.springframework.util.Assert;
@@ -40,9 +42,9 @@ import org.springframework.util.Assert;
  */
 public class DelegatingContext implements Context {
 
-	private KeyedObjectPool keyedObjectPool;
+	private @Nullable KeyedObjectPool keyedObjectPool;
 
-	private Context delegateContext;
+	private @Nullable Context delegateContext;
 
 	private final DirContextType dirContextType;
 
@@ -68,7 +70,7 @@ public class DelegatingContext implements Context {
 	/**
 	 * @return The direct delegate for this context proxy
 	 */
-	public Context getDelegateContext() {
+	public @Nullable Context getDelegateContext() {
 		return this.delegateContext;
 	}
 
@@ -76,7 +78,7 @@ public class DelegatingContext implements Context {
 	 * Recursivley inspect delegates until a non-delegating context is found.
 	 * @return The innermost (real) Context that is being delegated to.
 	 */
-	public Context getInnermostDelegateContext() {
+	public @Nullable Context getInnermostDelegateContext() {
 		final Context delegateContext = this.getDelegateContext();
 
 		if (delegateContext instanceof DelegatingContext) {
@@ -93,6 +95,11 @@ public class DelegatingContext implements Context {
 		if (this.delegateContext == null) {
 			throw new NamingException("Context is closed.");
 		}
+	}
+
+	private Context requireNonNullContext() throws NamingException {
+		assertOpen();
+		return Objects.requireNonNull(getDelegateContext());
 	}
 
 	// ***** Object methods *****//
@@ -146,16 +153,14 @@ public class DelegatingContext implements Context {
 	 * @see javax.naming.Context#bind(javax.naming.Name, java.lang.Object)
 	 */
 	public void bind(Name name, Object obj) throws NamingException {
-		this.assertOpen();
-		this.getDelegateContext().bind(name, obj);
+		requireNonNullContext().bind(name, obj);
 	}
 
 	/**
 	 * @see javax.naming.Context#bind(java.lang.String, java.lang.Object)
 	 */
 	public void bind(String name, Object obj) throws NamingException {
-		this.assertOpen();
-		this.getDelegateContext().bind(name, obj);
+		requireNonNullContext().bind(name, obj);
 	}
 
 	/**
@@ -181,11 +186,12 @@ public class DelegatingContext implements Context {
 				}
 			}
 
+			KeyedObjectPool<DirContextType, Context> keyedObjectPool = Objects.requireNonNull(this.keyedObjectPool);
 			if (valid) {
-				this.keyedObjectPool.returnObject(this.dirContextType, context);
+				keyedObjectPool.returnObject(this.dirContextType, context);
 			}
 			else {
-				this.keyedObjectPool.invalidateObject(this.dirContextType, context);
+				keyedObjectPool.invalidateObject(this.dirContextType, context);
 			}
 		}
 		catch (Exception ex) {
@@ -202,16 +208,14 @@ public class DelegatingContext implements Context {
 	 * @see javax.naming.Context#composeName(javax.naming.Name, javax.naming.Name)
 	 */
 	public Name composeName(Name name, Name prefix) throws NamingException {
-		this.assertOpen();
-		return this.getDelegateContext().composeName(name, prefix);
+		return requireNonNullContext().composeName(name, prefix);
 	}
 
 	/**
 	 * @see javax.naming.Context#composeName(java.lang.String, java.lang.String)
 	 */
 	public String composeName(String name, String prefix) throws NamingException {
-		this.assertOpen();
-		return this.getDelegateContext().composeName(name, prefix);
+		return requireNonNullContext().composeName(name, prefix);
 	}
 
 	/**
@@ -246,112 +250,98 @@ public class DelegatingContext implements Context {
 	 * @see javax.naming.Context#getEnvironment()
 	 */
 	public Hashtable<?, ?> getEnvironment() throws NamingException {
-		this.assertOpen();
-		return this.getDelegateContext().getEnvironment();
+		return requireNonNullContext().getEnvironment();
 	}
 
 	/**
 	 * @see javax.naming.Context#getNameInNamespace()
 	 */
 	public String getNameInNamespace() throws NamingException {
-		this.assertOpen();
-		return this.getDelegateContext().getNameInNamespace();
+		return requireNonNullContext().getNameInNamespace();
 	}
 
 	/**
 	 * @see javax.naming.Context#getNameParser(javax.naming.Name)
 	 */
 	public NameParser getNameParser(Name name) throws NamingException {
-		this.assertOpen();
-		return this.getDelegateContext().getNameParser(name);
+		return requireNonNullContext().getNameParser(name);
 	}
 
 	/**
 	 * @see javax.naming.Context#getNameParser(java.lang.String)
 	 */
 	public NameParser getNameParser(String name) throws NamingException {
-		this.assertOpen();
-		return this.getDelegateContext().getNameParser(name);
+		return requireNonNullContext().getNameParser(name);
 	}
 
 	/**
 	 * @see javax.naming.Context#list(javax.naming.Name)
 	 */
 	public NamingEnumeration<NameClassPair> list(Name name) throws NamingException {
-		this.assertOpen();
-		return this.getDelegateContext().list(name);
+		return requireNonNullContext().list(name);
 	}
 
 	/**
 	 * @see javax.naming.Context#list(java.lang.String)
 	 */
 	public NamingEnumeration<NameClassPair> list(String name) throws NamingException {
-		this.assertOpen();
-		return this.getDelegateContext().list(name);
+		return requireNonNullContext().list(name);
 	}
 
 	/**
 	 * @see javax.naming.Context#listBindings(javax.naming.Name)
 	 */
 	public NamingEnumeration<Binding> listBindings(Name name) throws NamingException {
-		this.assertOpen();
-		return this.getDelegateContext().listBindings(name);
+		return requireNonNullContext().listBindings(name);
 	}
 
 	/**
 	 * @see javax.naming.Context#listBindings(java.lang.String)
 	 */
 	public NamingEnumeration<Binding> listBindings(String name) throws NamingException {
-		this.assertOpen();
-		return this.getDelegateContext().listBindings(name);
+		return requireNonNullContext().listBindings(name);
 	}
 
 	/**
 	 * @see javax.naming.Context#lookup(javax.naming.Name)
 	 */
 	public Object lookup(Name name) throws NamingException {
-		this.assertOpen();
-		return this.getDelegateContext().lookup(name);
+		return requireNonNullContext().lookup(name);
 	}
 
 	/**
 	 * @see javax.naming.Context#lookup(java.lang.String)
 	 */
 	public Object lookup(String name) throws NamingException {
-		this.assertOpen();
-		return this.getDelegateContext().lookup(name);
+		return requireNonNullContext().lookup(name);
 	}
 
 	/**
 	 * @see javax.naming.Context#lookupLink(javax.naming.Name)
 	 */
 	public Object lookupLink(Name name) throws NamingException {
-		this.assertOpen();
-		return this.getDelegateContext().lookupLink(name);
+		return requireNonNullContext().lookupLink(name);
 	}
 
 	/**
 	 * @see javax.naming.Context#lookupLink(java.lang.String)
 	 */
 	public Object lookupLink(String name) throws NamingException {
-		this.assertOpen();
-		return this.getDelegateContext().lookupLink(name);
+		return requireNonNullContext().lookupLink(name);
 	}
 
 	/**
 	 * @see javax.naming.Context#rebind(javax.naming.Name, java.lang.Object)
 	 */
 	public void rebind(Name name, Object obj) throws NamingException {
-		this.assertOpen();
-		this.getDelegateContext().rebind(name, obj);
+		requireNonNullContext().rebind(name, obj);
 	}
 
 	/**
 	 * @see javax.naming.Context#rebind(java.lang.String, java.lang.Object)
 	 */
 	public void rebind(String name, Object obj) throws NamingException {
-		this.assertOpen();
-		this.getDelegateContext().rebind(name, obj);
+		requireNonNullContext().rebind(name, obj);
 	}
 
 	/**
@@ -365,32 +355,28 @@ public class DelegatingContext implements Context {
 	 * @see javax.naming.Context#rename(javax.naming.Name, javax.naming.Name)
 	 */
 	public void rename(Name oldName, Name newName) throws NamingException {
-		this.assertOpen();
-		this.getDelegateContext().rename(oldName, newName);
+		requireNonNullContext().rename(oldName, newName);
 	}
 
 	/**
 	 * @see javax.naming.Context#rename(java.lang.String, java.lang.String)
 	 */
 	public void rename(String oldName, String newName) throws NamingException {
-		this.assertOpen();
-		this.getDelegateContext().rename(oldName, newName);
+		requireNonNullContext().rename(oldName, newName);
 	}
 
 	/**
 	 * @see javax.naming.Context#unbind(javax.naming.Name)
 	 */
 	public void unbind(Name name) throws NamingException {
-		this.assertOpen();
-		this.getDelegateContext().unbind(name);
+		requireNonNullContext().unbind(name);
 	}
 
 	/**
 	 * @see javax.naming.Context#unbind(java.lang.String)
 	 */
 	public void unbind(String name) throws NamingException {
-		this.assertOpen();
-		this.getDelegateContext().unbind(name);
+		requireNonNullContext().unbind(name);
 	}
 
 }

@@ -45,7 +45,7 @@ public class DirContextPoolableObjectFactoryTests extends AbstractPoolTestCase {
 
 	@Test
 	public void testProperties() throws Exception {
-		final DirContextPoolableObjectFactory objectFactory = new DirContextPoolableObjectFactory();
+		final DirContextPoolableObjectFactory objectFactory = new DirContextPoolableObjectFactory(contextSourceMock);
 
 		try {
 			objectFactory.setContextSource(null);
@@ -74,7 +74,7 @@ public class DirContextPoolableObjectFactoryTests extends AbstractPoolTestCase {
 
 	@Test
 	public void testMakeObjectAssertions() throws Exception {
-		final DirContextPoolableObjectFactory objectFactory = new DirContextPoolableObjectFactory();
+		final DirContextPoolableObjectFactory objectFactory = new DirContextPoolableObjectFactory(contextSourceMock);
 
 		try {
 			objectFactory.makeObject(DirContextType.READ_ONLY);
@@ -97,7 +97,7 @@ public class DirContextPoolableObjectFactoryTests extends AbstractPoolTestCase {
 
 	@Test
 	public void testMakeObjectReadOnly() throws Exception {
-		final DirContextPoolableObjectFactory objectFactory = new DirContextPoolableObjectFactory();
+		final DirContextPoolableObjectFactory objectFactory = new DirContextPoolableObjectFactory(contextSourceMock);
 
 		DirContext readOnlyContextMock = mock(DirContext.class);
 
@@ -111,7 +111,7 @@ public class DirContextPoolableObjectFactoryTests extends AbstractPoolTestCase {
 
 	@Test
 	public void testMakeObjectReadWrite() throws Exception {
-		final DirContextPoolableObjectFactory objectFactory = new DirContextPoolableObjectFactory();
+		final DirContextPoolableObjectFactory objectFactory = new DirContextPoolableObjectFactory(contextSourceMock);
 
 		DirContext readWriteContextMock = mock(DirContext.class);
 
@@ -126,17 +126,7 @@ public class DirContextPoolableObjectFactoryTests extends AbstractPoolTestCase {
 
 	@Test
 	public void testValidateObjectAssertions() throws Exception {
-		final DirContextPoolableObjectFactory objectFactory = new DirContextPoolableObjectFactory();
-
-		try {
-			objectFactory.validateObject(DirContextType.READ_ONLY, dirContextMock);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
-
-		objectFactory.setDirContextValidator(dirContextValidatorMock);
+		final DirContextPoolableObjectFactory objectFactory = new DirContextPoolableObjectFactory(contextSourceMock);
 
 		try {
 			objectFactory.validateObject(null, dirContextMock);
@@ -175,7 +165,7 @@ public class DirContextPoolableObjectFactoryTests extends AbstractPoolTestCase {
 	public void testValidateObject() throws Exception {
 		given(dirContextValidatorMock.validateDirContext(DirContextType.READ_ONLY, dirContextMock)).willReturn(true);
 
-		final DirContextPoolableObjectFactory objectFactory = new DirContextPoolableObjectFactory();
+		final DirContextPoolableObjectFactory objectFactory = new DirContextPoolableObjectFactory(contextSourceMock);
 		objectFactory.setDirContextValidator(dirContextValidatorMock);
 
 		final boolean valid = objectFactory.validateObject(DirContextType.READ_ONLY, dirContextMock);
@@ -194,7 +184,7 @@ public class DirContextPoolableObjectFactoryTests extends AbstractPoolTestCase {
 
 	@Test
 	public void testDestroyObjectAssertions() throws Exception {
-		final DirContextPoolableObjectFactory objectFactory = new DirContextPoolableObjectFactory();
+		final DirContextPoolableObjectFactory objectFactory = new DirContextPoolableObjectFactory(contextSourceMock);
 
 		try {
 			objectFactory.destroyObject(DirContextType.READ_ONLY, null);
@@ -215,7 +205,7 @@ public class DirContextPoolableObjectFactoryTests extends AbstractPoolTestCase {
 
 	@Test
 	public void testDestroyObject() throws Exception {
-		final DirContextPoolableObjectFactory objectFactory = new DirContextPoolableObjectFactory();
+		final DirContextPoolableObjectFactory objectFactory = new DirContextPoolableObjectFactory(contextSourceMock);
 
 		objectFactory.destroyObject(DirContextType.READ_ONLY, dirContextMock);
 

@@ -17,6 +17,7 @@
 package org.springframework.ldap.pool2.factory;
 
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A wrapper class for the pool configuration. It helps to create an instance of
@@ -43,7 +44,7 @@ public class PoolConfig {
 
 	private boolean jmxEnabled = true;
 
-	private String jmxNameBase = null;
+	private @Nullable String jmxNameBase = null;
 
 	private String jmxNamePrefix = "ldap-pool";
 
@@ -128,7 +129,7 @@ public class PoolConfig {
 	/**
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setJmxNameBase(String)
 	 */
-	public void setJmxNameBase(String jmxNameBase) {
+	public void setJmxNameBase(@Nullable String jmxNameBase) {
 		this.jmxNameBase = jmxNameBase;
 	}
 
@@ -268,7 +269,7 @@ public class PoolConfig {
 	/**
 	 * @see GenericKeyedObjectPoolConfig#getJmxNameBase()
 	 */
-	public String getJmxNameBase() {
+	public @Nullable String getJmxNameBase() {
 		return this.jmxNameBase;
 	}
 

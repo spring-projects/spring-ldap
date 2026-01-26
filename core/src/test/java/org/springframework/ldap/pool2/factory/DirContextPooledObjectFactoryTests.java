@@ -47,7 +47,7 @@ public class DirContextPooledObjectFactoryTests extends AbstractPoolTestCase {
 
 	@Test
 	public void testProperties() throws Exception {
-		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
+		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory(contextSourceMock);
 
 		try {
 			objectFactory.setContextSource(null);
@@ -76,7 +76,7 @@ public class DirContextPooledObjectFactoryTests extends AbstractPoolTestCase {
 
 	@Test
 	public void testMakeObjectAssertions() throws Exception {
-		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
+		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory(contextSourceMock);
 
 		try {
 			objectFactory.makeObject(DirContextType.READ_ONLY);
@@ -99,7 +99,7 @@ public class DirContextPooledObjectFactoryTests extends AbstractPoolTestCase {
 
 	@Test
 	public void testMakeObjectReadOnly() throws Exception {
-		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
+		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory(contextSourceMock);
 
 		DirContext readOnlyContextMock = mock(DirContext.class);
 
@@ -113,7 +113,7 @@ public class DirContextPooledObjectFactoryTests extends AbstractPoolTestCase {
 
 	@Test
 	public void testMakeObjectReadWrite() throws Exception {
-		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
+		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory(contextSourceMock);
 
 		DirContext readWriteContextMock = mock(DirContext.class);
 
@@ -128,18 +128,7 @@ public class DirContextPooledObjectFactoryTests extends AbstractPoolTestCase {
 
 	@Test
 	public void testValidateObjectAssertions() throws Exception {
-		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
-
-		try {
-			PooledObject pooledObject = new DefaultPooledObject(dirContextMock);
-			objectFactory.validateObject(DirContextType.READ_ONLY, pooledObject);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
-
-		objectFactory.setDirContextValidator(dirContextValidatorMock);
+		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory(contextSourceMock);
 
 		try {
 			PooledObject pooledObject = new DefaultPooledObject(dirContextMock);
@@ -181,7 +170,7 @@ public class DirContextPooledObjectFactoryTests extends AbstractPoolTestCase {
 	public void testValidateObject() throws Exception {
 		given(dirContextValidatorMock.validateDirContext(DirContextType.READ_ONLY, dirContextMock)).willReturn(true);
 
-		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
+		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory(contextSourceMock);
 		objectFactory.setDirContextValidator(dirContextValidatorMock);
 
 		PooledObject pooledObject = new DefaultPooledObject(dirContextMock);
@@ -201,7 +190,7 @@ public class DirContextPooledObjectFactoryTests extends AbstractPoolTestCase {
 
 	@Test
 	public void testDestroyObjectAssertions() throws Exception {
-		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
+		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory(contextSourceMock);
 
 		try {
 			objectFactory.destroyObject(DirContextType.READ_ONLY, null);
@@ -223,7 +212,7 @@ public class DirContextPooledObjectFactoryTests extends AbstractPoolTestCase {
 
 	@Test
 	public void testDestroyObject() throws Exception {
-		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory();
+		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory(contextSourceMock);
 
 		PooledObject pooledObject = new DefaultPooledObject(dirContextMock);
 		objectFactory.destroyObject(DirContextType.READ_ONLY, pooledObject);
