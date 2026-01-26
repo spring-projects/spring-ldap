@@ -17,9 +17,12 @@
 package org.springframework.ldap.query;
 
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.naming.Name;
+
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.ldap.filter.Filter;
 
@@ -33,7 +36,7 @@ class DefaultContainerCriteria implements AppendableContainerCriteria {
 
 	private final LdapQuery topQuery;
 
-	private CriteriaContainerType type;
+	private @Nullable CriteriaContainerType type;
 
 	DefaultContainerCriteria(LdapQuery topQuery) {
 		this.topQuery = topQuery;
@@ -101,7 +104,7 @@ class DefaultContainerCriteria implements AppendableContainerCriteria {
 			return this.filters.iterator().next();
 		}
 
-		return this.type.constructFilter().appendAll(this.filters);
+		return Objects.requireNonNull(this.type).constructFilter().appendAll(this.filters);
 	}
 
 	@Override
@@ -110,22 +113,22 @@ class DefaultContainerCriteria implements AppendableContainerCriteria {
 	}
 
 	@Override
-	public SearchScope searchScope() {
+	public @Nullable SearchScope searchScope() {
 		return this.topQuery.searchScope();
 	}
 
 	@Override
-	public Integer timeLimit() {
+	public @Nullable Integer timeLimit() {
 		return this.topQuery.timeLimit();
 	}
 
 	@Override
-	public Integer countLimit() {
+	public @Nullable Integer countLimit() {
 		return this.topQuery.countLimit();
 	}
 
 	@Override
-	public String[] attributes() {
+	public String @Nullable [] attributes() {
 		return this.topQuery.attributes();
 	}
 

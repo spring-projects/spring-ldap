@@ -17,8 +17,11 @@
 package org.springframework.ldap.query;
 
 import java.text.MessageFormat;
+import java.util.function.Consumer;
 
 import javax.naming.Name;
+
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.ldap.filter.Filter;
 import org.springframework.ldap.filter.HardcodedFilter;
@@ -62,15 +65,15 @@ public final class LdapQueryBuilder implements LdapQuery {
 
 	private Name base = LdapUtils.emptyLdapName();
 
-	private SearchScope searchScope = null;
+	private @Nullable SearchScope searchScope = null;
 
-	private Integer countLimit = null;
+	private @Nullable Integer countLimit = null;
 
-	private Integer timeLimit = null;
+	private @Nullable Integer timeLimit = null;
 
-	private String[] attributes = null;
+	private String @Nullable [] attributes = null;
 
-	private DefaultContainerCriteria rootContainer = null;
+	private @Nullable DefaultContainerCriteria rootContainer = null;
 
 	private boolean isFilterStarted = false;
 
@@ -102,15 +105,18 @@ public final class LdapQueryBuilder implements LdapQuery {
 	public static LdapQueryBuilder fromQuery(LdapQuery query) {
 		LdapQueryBuilder builder = new LdapQueryBuilder();
 		builder.rootContainer = new DefaultContainerCriteria(builder).append(query.filter());
-		builder.attributes(query.attributes()).base(query.base());
-		if (query.countLimit() != null) {
-			builder.countLimit(query.countLimit());
-		}
-		builder.searchScope(query.searchScope());
-		if (query.timeLimit() != null) {
-			builder.timeLimit(query.timeLimit());
-		}
+		builder.base(query.base());
+		setIfNonNull(builder::attributes, query.attributes());
+		setIfNonNull(builder::countLimit, query.countLimit());
+		setIfNonNull(builder::searchScope, query.searchScope());
+		setIfNonNull(builder::timeLimit, query.timeLimit());
 		return builder;
+	}
+
+	static <T> void setIfNonNull(Consumer<T> consumer, @Nullable T value) {
+		if (value != null) {
+			consumer.accept(value);
+		}
 	}
 
 	/**
@@ -184,14 +190,15 @@ public final class LdapQueryBuilder implements LdapQuery {
 	 * @throws IllegalStateException if a filter has already been specified.
 	 */
 	public ConditionCriteria where(String attribute) {
-		initRootContainer();
-		return new DefaultConditionCriteria(this.rootContainer, attribute);
+		DefaultContainerCriteria rootContainer = initRootContainer();
+		return new DefaultConditionCriteria(rootContainer, attribute);
 	}
 
-	private void initRootContainer() {
+	private DefaultContainerCriteria initRootContainer() {
 		assertFilterNotStarted();
 		this.rootContainer = new DefaultContainerCriteria(this);
 		this.isFilterStarted = true;
+		return this.rootContainer;
 	}
 
 	/**
@@ -207,8 +214,7 @@ public final class LdapQueryBuilder implements LdapQuery {
 	 * @throws IllegalStateException if a filter has already been specified.
 	 */
 	public LdapQuery filter(String hardcodedFilter) {
-		initRootContainer();
-		this.rootContainer.append(new HardcodedFilter(hardcodedFilter));
+		initRootContainer().append(new HardcodedFilter(hardcodedFilter));
 		return this;
 	}
 
@@ -219,8 +225,7 @@ public final class LdapQueryBuilder implements LdapQuery {
 	 * @throws IllegalStateException if a filter has already been specified.
 	 */
 	public LdapQuery filter(Filter filter) {
-		initRootContainer();
-		this.rootContainer.append(filter);
+		initRootContainer().append(filter);
 		return this;
 	}
 
@@ -256,22 +261,22 @@ public final class LdapQueryBuilder implements LdapQuery {
 	}
 
 	@Override
-	public SearchScope searchScope() {
+	public @Nullable SearchScope searchScope() {
 		return this.searchScope;
 	}
 
 	@Override
-	public Integer countLimit() {
+	public @Nullable Integer countLimit() {
 		return this.countLimit;
 	}
 
 	@Override
-	public Integer timeLimit() {
+	public @Nullable Integer timeLimit() {
 		return this.timeLimit;
 	}
 
 	@Override
-	public String[] attributes() {
+	public String @Nullable [] attributes() {
 		return this.attributes;
 	}
 

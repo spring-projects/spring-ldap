@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.query;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.BinaryLogicalFilter;
 import org.springframework.ldap.filter.OrFilter;
@@ -39,7 +41,7 @@ enum CriteriaContainerType {
 		}
 	};
 
-	public void validateSameType(CriteriaContainerType oldType) {
+	public void validateSameType(@Nullable CriteriaContainerType oldType) {
 		if (oldType != null && oldType != this) {
 			throw new IllegalStateException(
 					String.format("Container type has already been specified as %s, cannot change it to %s",
