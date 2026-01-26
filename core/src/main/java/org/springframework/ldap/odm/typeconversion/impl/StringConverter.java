@@ -18,6 +18,7 @@ package org.springframework.ldap.odm.typeconversion.impl;
 
 /**
  * @author Mattias Hellborg Arthursson
+ * @deprecated empty class
  */
 @Deprecated
 public class StringConverter {

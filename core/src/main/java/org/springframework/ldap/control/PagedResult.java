@@ -26,6 +26,7 @@ import java.util.List;
  * @author Ulrik Sandberg
  * @deprecated
  */
+@Deprecated
 public class PagedResult {
 
 	private List<?> resultList;

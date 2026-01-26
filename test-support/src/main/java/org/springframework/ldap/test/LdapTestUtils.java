@@ -77,6 +77,7 @@ public final class LdapTestUtils {
 	 * @throws NamingException If anything goes wrong when starting the server.
 	 * @deprecated use {@link #startEmbeddedServer(int, String, String)} instead.
 	 */
+	@Deprecated
 	public static DirContext startApacheDirectoryServer(int port, String defaultPartitionSuffix,
 			String defaultPartitionName, String principal, String credentials, Set extraSchemas)
 			throws NamingException {
@@ -112,6 +113,7 @@ public final class LdapTestUtils {
 	/**
 	 * @deprecated use {@link #startEmbeddedServer(int, String, String)} instead.
 	 */
+	@Deprecated
 	public static DirContext startApacheDirectoryServer(int port, String defaultPartitionSuffix,
 			String defaultPartitionName, String principal, String credentials) throws NamingException {
 		return LdapTestUtils.startApacheDirectoryServer(port, defaultPartitionSuffix, defaultPartitionName, principal,
@@ -138,6 +140,7 @@ public final class LdapTestUtils {
 	 * @throws Exception If anything goes wrong when shutting down the server.
 	 * @deprecated use {@link #shutdownEmbeddedServer()} instead.
 	 */
+	@Deprecated
 	public static void destroyApacheDirectoryServer(String principal, String credentials) throws Exception {
 		shutdownEmbeddedServer();
 	}

@@ -49,6 +49,7 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 	 * @deprecated Use {@link BaseLdapNameAware} and {@link BaseLdapPathBeanPostProcessor}
 	 * instead.
 	 */
+	@Deprecated
 	public static final String JNDI_ENV_BASE_PATH_KEY = "org.springframework.ldap.base.path";
 
 	private static final String LDAP_PROTOCOL_PREFIX = "ldap://";

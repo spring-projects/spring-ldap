@@ -149,6 +149,7 @@ public class BaseLdapPathBeanPostProcessor implements BeanPostProcessor, Applica
 	 * @deprecated {@link DistinguishedName} and associated classes and methods are
 	 * deprecated as of 2.0.
 	 */
+	@Deprecated
 	public void setBasePath(DistinguishedName basePath) {
 		this.basePath = LdapUtils.newLdapName(basePath);
 	}

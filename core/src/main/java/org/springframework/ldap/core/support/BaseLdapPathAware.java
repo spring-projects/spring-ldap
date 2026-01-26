@@ -38,6 +38,7 @@ import org.springframework.ldap.core.DistinguishedName;
  * @deprecated {@link DistinguishedName} and associated classes and methods are deprecated
  * as of 2.0. Use {@link BaseLdapNameAware} instead.
  */
+@Deprecated
 public interface BaseLdapPathAware {
 
 	/**
