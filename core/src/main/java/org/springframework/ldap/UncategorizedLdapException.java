@@ -16,6 +16,8 @@
 
 package org.springframework.ldap;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * NamingException to be thrown when no other matching subclass is found.
  *
@@ -24,15 +26,15 @@ package org.springframework.ldap;
  */
 public class UncategorizedLdapException extends NamingException {
 
-	public UncategorizedLdapException(String msg) {
+	public UncategorizedLdapException(@Nullable String msg) {
 		super(msg);
 	}
 
-	public UncategorizedLdapException(String msg, Throwable cause) {
+	public UncategorizedLdapException(@Nullable String msg, @Nullable Throwable cause) {
 		super(msg, cause);
 	}
 
-	public UncategorizedLdapException(Throwable cause) {
+	public UncategorizedLdapException(@Nullable Throwable cause) {
 		super("Uncategorized exception occured during LDAP processing", cause);
 	}
 

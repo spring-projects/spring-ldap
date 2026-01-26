@@ -16,6 +16,8 @@
 
 package org.springframework.ldap;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Runtime exception mirroring the JNDI AuthenticationException.
  *
@@ -25,7 +27,7 @@ package org.springframework.ldap;
  */
 public class AuthenticationException extends NamingSecurityException {
 
-	public AuthenticationException(javax.naming.AuthenticationException cause) {
+	public AuthenticationException(javax.naming.@Nullable AuthenticationException cause) {
 		super(cause);
 	}
 

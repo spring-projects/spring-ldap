@@ -19,6 +19,8 @@ package org.springframework.ldap.support;
 import java.util.Base64;
 import java.util.Locale;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ldap.BadLdapGrammarException;
 import org.springframework.util.Assert;
 
@@ -98,11 +100,6 @@ public final class LdapEncoder {
 	 * @return a properly escaped representation of the supplied value.
 	 */
 	public static String filterEncode(String value) {
-
-		if (value == null) {
-			return null;
-		}
-
 		// make buffer roomy
 		StringBuilder encodedValue = new StringBuilder(value.length() * 2);
 
@@ -142,7 +139,7 @@ public final class LdapEncoder {
 	 * @param value the value to escape.
 	 * @return The escaped value.
 	 */
-	public static String nameEncode(String value) {
+	@Nullable public static String nameEncode(String value) {
 
 		if (value == null) {
 			return null;
@@ -189,7 +186,7 @@ public final class LdapEncoder {
 	 * @return The decoded value as a string.
 	 * @throws BadLdapGrammarException
 	 */
-	public static String nameDecode(String value) throws BadLdapGrammarException {
+	@Nullable public static String nameDecode(String value) throws BadLdapGrammarException {
 
 		if (value == null) {
 			return null;
