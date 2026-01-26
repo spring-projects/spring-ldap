@@ -32,7 +32,7 @@ public abstract class CompareFilter extends AbstractFilter {
 
 	private final String encodedValue;
 
-	private String operator;
+	private final String operator;
 
 	/**
 	 * @deprecated please use the {@code protected} constructor instead
@@ -42,6 +42,7 @@ public abstract class CompareFilter extends AbstractFilter {
 		this.attribute = attribute;
 		this.value = value;
 		this.encodedValue = encodeValue(value);
+		this.operator = getCompareString();
 	}
 
 	/**
@@ -74,6 +75,7 @@ public abstract class CompareFilter extends AbstractFilter {
 		this.attribute = attribute;
 		this.value = String.valueOf(value);
 		this.encodedValue = LdapEncoder.filterEncode(this.value);
+		this.operator = getCompareString();
 	}
 
 	/**
@@ -107,26 +109,23 @@ public abstract class CompareFilter extends AbstractFilter {
 		if (this == o) {
 			return true;
 		}
-		if (o == null || getClass() != o.getClass()) {
+		if (!(o instanceof CompareFilter that)) {
+			return false;
+		}
+		if (getClass() != o.getClass()) {
 			return false;
 		}
 
-		CompareFilter that = (CompareFilter) o;
-
-		if ((this.attribute != null) ? !this.attribute.equals(that.attribute) : that.attribute != null) {
+		if (!this.attribute.equals(that.attribute)) {
 			return false;
 		}
-		if ((this.value != null) ? !this.value.equals(that.value) : that.value != null) {
-			return false;
-		}
-
-		return true;
+		return this.value.equals(that.value);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = (this.attribute != null) ? this.attribute.hashCode() : 0;
-		result = 31 * result + ((this.value != null) ? this.value.hashCode() : 0);
+		int result = this.attribute.hashCode();
+		result = 31 * result + this.value.hashCode();
 		return result;
 	}
 
