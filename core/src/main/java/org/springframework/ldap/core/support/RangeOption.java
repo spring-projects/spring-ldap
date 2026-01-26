@@ -19,6 +19,8 @@ package org.springframework.ldap.core.support;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Attribute name Range Option used for <em>Incremental Retrieval of Multi-valued
  * Properties</em>.
@@ -97,7 +99,7 @@ class RangeOption implements Comparable<RangeOption> {
 		}
 	}
 
-	static RangeOption parse(String option) {
+	@Nullable static RangeOption parse(String option) {
 		Matcher rangeMatcher = RANGE_PATTERN.matcher(option);
 
 		rangeMatcher.find();

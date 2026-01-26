@@ -23,6 +23,7 @@ import java.lang.reflect.Proxy;
 
 import javax.naming.directory.DirContext;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -185,7 +186,7 @@ public class SingleContextSource implements ContextSource, DisposableBean {
 		 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
 		 * java.lang.reflect.Method, java.lang.Object[])
 		 */
-		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+		@Nullable public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
 			String methodName = method.getName();
 			if (methodName.equals("getTargetContext")) {

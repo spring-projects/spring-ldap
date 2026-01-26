@@ -21,11 +21,14 @@ import java.util.Hashtable;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
+import org.jspecify.annotations.NullUnmarked;
+
 import org.springframework.ldap.core.support.DirContextAuthenticationStrategy;
 
 /**
  * @author Mattias Hellborg Arthursson
  */
+@NullUnmarked
 public class DummyAuthenticationStrategy implements DirContextAuthenticationStrategy {
 
 	@Override

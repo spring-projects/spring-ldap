@@ -46,6 +46,7 @@ import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationConvention;
 import io.micrometer.observation.ObservationRegistry;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
@@ -669,21 +670,21 @@ public final class ObservationContextSource implements BaseLdapPathContextSource
 			return KeyValue.of("attribute.ids", value);
 		}
 
-		private static KeyValue attributeIdsReturn(String[] attrs) {
+		private static KeyValue attributeIdsReturn(String @Nullable [] attrs) {
 			if (attrs == null) {
 				return KeyValue.of("attribute.ids", "all");
 			}
 			return KeyValue.of("attribute.ids", Arrays.toString(attrs));
 		}
 
-		private static KeyValue attributeIdsReturn(SearchControls searchControls) {
+		private static KeyValue attributeIdsReturn(@Nullable SearchControls searchControls) {
 			if (searchControls == null) {
 				return attributeIdsReturn((String[]) null);
 			}
 			return attributeIdsReturn(searchControls.getReturningAttributes());
 		}
 
-		private static KeyValue searchControls(SearchControls searchControls) {
+		private static KeyValue searchControls(@Nullable SearchControls searchControls) {
 			if (searchControls == null) {
 				return KeyValue.of("search.controls", "default");
 			}

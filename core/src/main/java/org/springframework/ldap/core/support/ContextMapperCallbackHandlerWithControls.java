@@ -38,7 +38,7 @@ import org.springframework.ldap.core.ObjectRetrievalException;
  */
 public class ContextMapperCallbackHandlerWithControls<T> extends ContextMapperCallbackHandler<T> {
 
-	private ContextMapperWithControls<T> mapper = null;
+	private final ContextMapperWithControls<T> mapper;
 
 	public ContextMapperCallbackHandlerWithControls(final ContextMapperWithControls<T> mapper) {
 		super(mapper);

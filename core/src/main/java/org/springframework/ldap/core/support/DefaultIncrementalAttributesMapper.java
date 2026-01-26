@@ -24,6 +24,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.naming.Name;
@@ -34,6 +35,7 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -116,7 +118,7 @@ public class DefaultIncrementalAttributesMapper
 		}
 
 		@Override
-		public List<Object> getValues() {
+		@Nullable public List<Object> getValues() {
 			return null;
 		}
 	};
@@ -212,7 +214,7 @@ public class DefaultIncrementalAttributesMapper
 	}
 
 	@Override
-	public final List<Object> getValues(String attributeName) {
+	public final @Nullable List<Object> getValues(String attributeName) {
 		return getState(attributeName).getValues();
 	}
 
@@ -247,7 +249,7 @@ public class DefaultIncrementalAttributesMapper
 		int index = 0;
 		for (String next : this.rangedAttributesInNextIteration) {
 			IncrementalAttributeState state = this.stateMap.get(next);
-			result[index++] = state.getAttributeNameForQuery();
+			result[index++] = Objects.requireNonNull(state).getAttributeNameForQuery();
 		}
 
 		return result;
@@ -359,7 +361,7 @@ public class DefaultIncrementalAttributesMapper
 
 		private final String actualAttributeName;
 
-		private List<Object> values = null;
+		private @Nullable List<Object> values = null;
 
 		private final int pageSize;
 
@@ -409,20 +411,16 @@ public class DefaultIncrementalAttributesMapper
 			Attribute attribute = attributes.get(attributeName);
 			NamingEnumeration<?> valueEnum = attribute.getAll();
 
-			initValuesIfApplicable();
+			if (this.values == null) {
+				this.values = new LinkedList<>();
+			}
 			while (valueEnum.hasMore()) {
 				this.values.add(valueEnum.next());
 			}
 		}
 
-		private void initValuesIfApplicable() {
-			if (this.values == null) {
-				this.values = new LinkedList<>();
-			}
-		}
-
 		@Override
-		public List<Object> getValues() {
+		public @Nullable List<Object> getValues() {
 			if (this.values != null) {
 				return new ArrayList<>(this.values);
 			}
@@ -448,7 +446,7 @@ public class DefaultIncrementalAttributesMapper
 
 		void processValues(Attributes attributes, String attributeName) throws NamingException;
 
-		List<Object> getValues();
+		@Nullable List<Object> getValues();
 
 	}
 

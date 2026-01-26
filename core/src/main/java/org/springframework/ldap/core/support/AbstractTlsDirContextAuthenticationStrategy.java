@@ -31,6 +31,8 @@ import javax.naming.ldap.StartTlsResponse;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ldap.UncategorizedLdapException;
 import org.springframework.ldap.core.DirContextProxy;
 import org.springframework.ldap.support.LdapUtils;
@@ -70,13 +72,13 @@ import org.springframework.ldap.support.LdapUtils;
 public abstract class AbstractTlsDirContextAuthenticationStrategy implements DirContextAuthenticationStrategy {
 
 	/** Hostname verifier to use for cert subject validation */
-	private HostnameVerifier hostnameVerifier;
+	private @Nullable HostnameVerifier hostnameVerifier;
 
 	/** Flag to cause graceful shutdown required by some LDAP DSAs */
 	private boolean shutdownTlsGracefully = false;
 
 	/** SSL socket factory to use for startTLS negotiation */
-	private SSLSocketFactory sslSocketFactory;
+	private @Nullable SSLSocketFactory sslSocketFactory;
 
 	/**
 	 * Specify whether the TLS should be shut down gracefully before the target context is
