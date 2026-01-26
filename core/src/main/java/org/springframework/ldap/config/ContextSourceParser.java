@@ -17,8 +17,10 @@
 package org.springframework.ldap.config;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Element;
 
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -152,7 +154,7 @@ public class ContextSourceParser implements BeanDefinitionParser {
 
 	private static final boolean DEFAULT_JMX_ENABLE = true;
 
-	private static final String DEFAULT_JMX_NAME_BASE = null;
+	private static final @Nullable String DEFAULT_JMX_NAME_BASE = null;
 
 	private static final String DEFAULT_JMX_NAME_PREFIX = "ldap-pool";
 
@@ -182,7 +184,7 @@ public class ContextSourceParser implements BeanDefinitionParser {
 
 		builder.addPropertyValue("urls", urlsBuilder.getBeanDefinition());
 		builder.addPropertyValue("base", ParserUtils.getString(element, ATT_BASE, ""));
-		builder.addPropertyValue("referral", ParserUtils.getString(element, ATT_REFERRAL, null));
+		builder.addPropertyValue("referral", ParserUtils.getStringNullableDefault(element, ATT_REFERRAL, null));
 
 		boolean anonymousReadOnly = ParserUtils.getBoolean(element, ATT_ANONYMOUS_READ_ONLY, false);
 		builder.addPropertyValue("anonymousReadOnly", anonymousReadOnly);
@@ -237,7 +239,8 @@ public class ContextSourceParser implements BeanDefinitionParser {
 			throw new IllegalArgumentException(
 					String.format("%s cannot be enabled together with %s.", Elements.POOLING2, Elements.POOLING));
 		}
-		else if (poolingElement == null && pooling2Element == null) {
+
+		if (poolingElement == null && pooling2Element == null) {
 			return targetContextSourceDefinition;
 		}
 
@@ -264,6 +267,8 @@ public class ContextSourceParser implements BeanDefinitionParser {
 			return builder.getBeanDefinition();
 		}
 		else {
+			poolingElement = Objects.requireNonNull(poolingElement);
+
 			BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(PoolingContextSource.class);
 			builder.addPropertyValue("contextSource", targetContextSourceDefinition);
 
@@ -330,7 +335,7 @@ public class ContextSourceParser implements BeanDefinitionParser {
 		Set<Class<?>> nonTransientExceptionClasses = new HashSet<>();
 		for (String className : strings) {
 			try {
-				nonTransientExceptionClasses.add(ClassUtils.getDefaultClassLoader().loadClass(className));
+				nonTransientExceptionClasses.add(ClassUtils.forName(className, null));
 			}
 			catch (ClassNotFoundException ex) {
 				throw new IllegalArgumentException(String.format("%s is not a valid class name", className), ex);
@@ -359,7 +364,7 @@ public class ContextSourceParser implements BeanDefinitionParser {
 		Set<Class<?>> nonTransientExceptionClasses = new HashSet<>();
 		for (String className : strings) {
 			try {
-				nonTransientExceptionClasses.add(ClassUtils.getDefaultClassLoader().loadClass(className));
+				nonTransientExceptionClasses.add(ClassUtils.forName(className, null));
 			}
 			catch (ClassNotFoundException ex) {
 				throw new IllegalArgumentException(String.format("%s is not a valid class name", className), ex);
@@ -386,7 +391,7 @@ public class ContextSourceParser implements BeanDefinitionParser {
 		configBuilder.addPropertyValue("jmxEnabled",
 				ParserUtils.getBoolean(element, ATT_JMX_ENABLE, DEFAULT_JMX_ENABLE));
 		configBuilder.addPropertyValue("jmxNameBase",
-				ParserUtils.getString(element, ATT_JMX_NAME_BASE, DEFAULT_JMX_NAME_BASE));
+				ParserUtils.getStringNullableDefault(element, ATT_JMX_NAME_BASE, DEFAULT_JMX_NAME_BASE));
 		configBuilder.addPropertyValue("jmxNamePrefix",
 				ParserUtils.getString(element, ATT_JMX_NAME_PREFIX, DEFAULT_JMX_NAME_PREFIX));
 		configBuilder.addPropertyValue("lifo", ParserUtils.getBoolean(element, ATT_LIFO, DEFAULT_LIFO));

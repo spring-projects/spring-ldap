@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.config;
 
+import java.util.Objects;
+
 import org.w3c.dom.Element;
 
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -41,9 +43,8 @@ public class DefaultRenamingStrategyParser implements BeanDefinitionParser {
 				ParserUtils.getString(element, ATT_TEMP_SUFFIX, DefaultTempEntryRenamingStrategy.DEFAULT_TEMP_SUFFIX));
 
 		AbstractBeanDefinition beanDefinition = builder.getBeanDefinition();
-		parserContext.getContainingBeanDefinition()
-			.getPropertyValues()
-			.addPropertyValue("renamingStrategy", beanDefinition);
+		BeanDefinition containingBeanDefinition = Objects.requireNonNull(parserContext.getContainingBeanDefinition());
+		containingBeanDefinition.getPropertyValues().addPropertyValue("renamingStrategy", beanDefinition);
 
 		return beanDefinition;
 	}

@@ -16,6 +16,7 @@
 
 package org.springframework.ldap.config;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Element;
 
 import org.springframework.util.StringUtils;
@@ -38,6 +39,15 @@ final class ParserUtils {
 		String theValue = element.getAttribute(attribute);
 		if (StringUtils.hasText(theValue)) {
 			return Boolean.valueOf(theValue);
+		}
+
+		return defaultValue;
+	}
+
+	static @Nullable String getStringNullableDefault(Element element, String attribute, @Nullable String defaultValue) {
+		String theValue = element.getAttribute(attribute);
+		if (StringUtils.hasText(theValue)) {
+			return theValue;
 		}
 
 		return defaultValue;

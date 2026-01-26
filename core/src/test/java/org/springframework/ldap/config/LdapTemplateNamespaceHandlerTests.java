@@ -297,7 +297,7 @@ public class LdapTemplateNamespaceHandlerTests {
 
 		Object objectFactory = getInternalState(pooledContextSource, "dirContextPoolableObjectFactory");
 		assertThat((Object) getInternalState(objectFactory, "contextSource")).isNotNull();
-		assertThat((Object) getInternalState(objectFactory, "dirContextValidator")).isNull();
+		assertThat((Object) getInternalState(objectFactory, "dirContextValidator")).isNotNull();
 		Set<Class<? extends Throwable>> nonTransientExceptions = (Set<Class<? extends Throwable>>) getInternalState(
 				objectFactory, "nonTransientExceptions");
 		assertThat(nonTransientExceptions).hasSize(1);
@@ -391,7 +391,7 @@ public class LdapTemplateNamespaceHandlerTests {
 
 		Object objectFactory = getInternalState(pooledContextSource, "dirContextPooledObjectFactory");
 		assertThat((Object) getInternalState(objectFactory, "contextSource")).isNotNull();
-		assertThat((Object) getInternalState(objectFactory, "dirContextValidator")).isNull();
+		assertThat((Object) getInternalState(objectFactory, "dirContextValidator")).isNotNull();
 		Set<Class<? extends Throwable>> nonTransientExceptions = (Set<Class<? extends Throwable>>) getInternalState(
 				objectFactory, "nonTransientExceptions");
 		assertThat(nonTransientExceptions).hasSize(1);
