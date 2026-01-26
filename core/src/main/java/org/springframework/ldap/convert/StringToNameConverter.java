@@ -36,10 +36,6 @@ public final class StringToNameConverter implements Converter<String, Name> {
 
 	@Override
 	public Name convert(String source) {
-		if (source == null) {
-			return null;
-		}
-
 		return LdapUtils.newLdapName(source);
 	}
 

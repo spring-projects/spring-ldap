@@ -35,10 +35,6 @@ public final class NameToStringConverter implements Converter<Name, String> {
 
 	@Override
 	public String convert(Name source) {
-		if (source == null) {
-			return null;
-		}
-
 		return source.toString();
 	}
 
