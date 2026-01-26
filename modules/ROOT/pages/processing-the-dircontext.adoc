@@ -124,11 +124,11 @@ Some searches may return large numbers of results. When there is no easy way to 
 
 Some LDAP servers support `PagedResultsControl`, which requests that the results of a search operation are returned by the LDAP server in pages of a specified size. The user controls the rate at which the pages are returned, by controlling the rate at which the searches are called. However, you must keep track of a cookie between the calls. The server uses this cookie to keep track of where it left off the previous time it was called with a paged results request.
 
-Spring LDAP provides support for paged results by using the concept for pre- and post-processing of an `LdapContext`, as discussed in the previous sections. It does so by using the `PagedResultsDirContextProcessor` class. The `PagedResultsDirContextProcessor` class creates a `PagedResultsControl` with the requested page size and adds it to the `LdapContext`. After the search, it gets the `PagedResultsResponseControl` and retrieves the paged results cookie, which is needed to keep the context between consecutive paged results requests.
+Spring LDAP provides support for paged results by using the concept for pre- and post-processing of an `LdapContext`, as discussed in the previous sections. It does so by using the `PagedResultsControlExchangeDirContextProcessor` class. The `PagedResultsControlExchangeDirContextProcessor` class creates a `PagedResultsControl` with the requested page size and adds it to the `LdapContext`. After the search, it gets the `PagedResultsResponseControl` and retrieves the paged results cookie, which is needed to keep the context between consecutive paged results requests.
 
 The following example shows how the to use the paged search results functionality:
 
-.Paged results using `PagedResultsDirContextProcessor`
+.Paged results using `PagedResultsControlDirContextProcessor`
 ====
 [source,java]
 [subs="verbatim,quotes"]
@@ -138,8 +138,7 @@ public List<String> getAllPersonNames() {
   final SearchControls searchControls = new SearchControls();
   searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
-  final PagedResultsDirContextProcessor processor =
-        new PagedResultsDirContextProcessor(PAGE_SIZE);
+  PagedResultsControlExchangeDirContextProcessor processor = new PagedResultsControlExchangeDirContextProcessor(PAGE_SIZE);
 
   return SingleContextSource.doWithSingleContext(
         contextSource, new LdapOperationsCallback<List<String>>() {
@@ -165,5 +164,5 @@ public List<String> getAllPersonNames() {
 ----
 ====
 
-NOTE: For a paged results cookie to continue being valid, you must use the same underlying connection for each paged results call. You can do so by using the `SingleContextSource`, as demonstrated in the preceding example.
+NOTE: For a paged results cookie to continue being valid, you must use the same underlying connection for each paged results call. You can do so by using the `SingleContextSource`, as demonstrated in the preceding example or by using a `ContextSourceTransactionManager` and `TransactionAwareContextSourceProxy`.
 

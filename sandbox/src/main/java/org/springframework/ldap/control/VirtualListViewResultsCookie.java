@@ -21,7 +21,9 @@ package org.springframework.ldap.control;
  * {@link com.sun.jndi.ldap.ctl.VirtualListViewControl}.
  *
  * @author Ulrik Sandberg
+ * @deprecated no longer used by any non-deprecated class
  */
+@Deprecated
 public class VirtualListViewResultsCookie {
 
 	private byte[] cookie;

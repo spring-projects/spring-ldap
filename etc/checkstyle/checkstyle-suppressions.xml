@@ -42,6 +42,9 @@
 	<suppress files="AbstractOAuth2AuthorizationGrantRequestEntityConverter\.java" checks="SpringMethodVisibility"/>
 	<suppress files="JoseHeader\.java" checks="SpringMethodVisibility"/>
 
+	<!-- @Nullable annotations -->
+	<suppress files="ControlExchange\.java" checks="AnnotationLocation"/>
+
 	<!-- Lambdas that we can't replace with a method reference because a closure is required -->
 	<suppress files="BearerTokenAuthenticationFilter\.java" checks="SpringLambda"/>
 </suppressions>

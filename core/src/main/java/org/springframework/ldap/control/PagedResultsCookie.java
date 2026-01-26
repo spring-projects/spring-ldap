@@ -25,7 +25,10 @@ import javax.naming.ldap.PagedResultsControl;
  *
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
+ * @deprecated please use the response holder in
+ * {@link PagedResultsControlExchangeDirContextProcessor}
  */
+@Deprecated
 public class PagedResultsCookie {
 
 	private byte[] cookie;

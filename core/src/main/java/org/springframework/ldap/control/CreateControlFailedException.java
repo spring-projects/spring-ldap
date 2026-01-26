@@ -24,7 +24,9 @@ import org.springframework.ldap.NamingException;
  *
  * @author Ulrik Sandberg
  * @since 1.2
+ * @deprecated this is no longer used in any non-deprecated Spring LDAP classes
  */
+@Deprecated
 public class CreateControlFailedException extends NamingException {
 
 	/**

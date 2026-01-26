@@ -69,7 +69,11 @@ import org.springframework.util.ReflectionUtils;
  * @see <a href=
  * "https://www3.ietf.org/proceedings/02nov/I-D/draft-ietf-ldapext-ldapv3-vlv-09.txt">LDAP
  * Extensions for Scrolling View Browsing of Search Results</a>
+ * @deprecated given that this draft was never finalized, please use
+ * {@link ControlExchangeDirContextProcessor}, providing your own implementation of
+ * {@link ControlExchange} with the control objects you choose to use
  */
+@Deprecated
 public class VirtualListViewControlDirContextProcessor
 		extends AbstractFallbackRequestAndResponseControlDirContextProcessor {
 

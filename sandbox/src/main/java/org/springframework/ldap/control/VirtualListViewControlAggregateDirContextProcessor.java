@@ -26,7 +26,11 @@ import org.springframework.ldap.core.support.AggregateDirContextProcessor;
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
  * @author Marius Scurtescu
+ * @deprecated given that this draft was never finalized, please use
+ * {@link ControlExchangeDirContextProcessor}, providing your own implementation of
+ * {@link ControlExchange} with the control objects you choose to use
  */
+@Deprecated
 public class VirtualListViewControlAggregateDirContextProcessor extends AggregateDirContextProcessor {
 
 	private SortControlDirContextProcessor _sortControlDirContextProcessor;

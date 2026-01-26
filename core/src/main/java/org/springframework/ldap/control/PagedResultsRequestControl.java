@@ -24,6 +24,8 @@ import javax.naming.directory.DirContext;
 import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
 
+import org.jspecify.annotations.NullUnmarked;
+
 import org.springframework.ldap.UncategorizedLdapException;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
@@ -41,6 +43,7 @@ import org.springframework.util.ReflectionUtils;
  * @author Ulrik Sandberg
  * @deprecated Use PagedResultsDirContextProcessor instead.
  */
+@NullUnmarked
 public class PagedResultsRequestControl extends AbstractRequestControlDirContextProcessor {
 
 	private static final boolean CRITICAL_CONTROL = true;

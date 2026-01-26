@@ -29,7 +29,9 @@ import javax.naming.ldap.Control;
  *
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
+ * @deprecated in favor of {@link PagedResultsControlExchangeDirContextProcessor}
  */
+@Deprecated
 public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndResponseControlDirContextProcessor {
 
 	private static final String DEFAULT_REQUEST_CONTROL = "javax.naming.ldap.PagedResultsControl";
