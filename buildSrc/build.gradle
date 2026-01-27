@@ -3,7 +3,7 @@ plugins {
     id "groovy-gradle-plugin"
     id "java"
     id "groovy"
-    id 'com.apollographql.apollo' version '4.3.3'
+    id 'com.apollographql.apollo' version '4.4.0'
 }
 
 java {
@@ -90,7 +90,7 @@ dependencies {
     implementation ('org.gretty:gretty:5.0.1') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-loader-tools'
     }
-    implementation 'com.apollographql.apollo:apollo-runtime:4.3.3'
+    implementation 'com.apollographql.apollo:apollo-runtime:4.4.0'
     implementation 'com.github.ben-manes:gradle-versions-plugin:0.53.0'
     implementation 'com.github.spullara.mustache.java:compiler:0.9.14'
     implementation 'io.spring.javaformat:spring-javaformat-gradle-plugin:0.0.47'
