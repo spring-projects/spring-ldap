@@ -195,7 +195,7 @@ public final class SchemaViewer {
 
 	public static void main(String[] argv) {
 		CommandLineParser parser = new PosixParser();
-		CommandLine cmd = null;
+		CommandLine cmd;
 
 		try {
 			cmd = parser.parse(DEFAULT_OPTIONS, argv);
@@ -203,6 +203,7 @@ public final class SchemaViewer {
 		catch (ParseException ex) {
 			System.out.println(ex.getMessage());
 			System.exit(1);
+			return;
 		}
 
 		if (cmd.hasOption(Flag.HELP.getShort())) {

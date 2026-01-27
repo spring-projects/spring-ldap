@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A map from an LDAP syntax to the Java class used to represent it.
  *
@@ -46,7 +48,7 @@ import java.util.Map.Entry;
 		}
 	}
 
-	ClassInfo getClassInfo(String syntax) {
+	@Nullable ClassInfo getClassInfo(String syntax) {
 		return this.mapSyntaxToClassInfo.get(syntax);
 	}
 
@@ -54,9 +56,9 @@ import java.util.Map.Entry;
 
 		private final String className;
 
-		private final String packageName;
+		private final @Nullable String packageName;
 
-		private ClassInfo(String className, String packageName) {
+		private ClassInfo(String className, @Nullable String packageName) {
 			this.className = className;
 			this.packageName = packageName;
 		}
@@ -65,7 +67,7 @@ import java.util.Map.Entry;
 			return this.className;
 		}
 
-		public String getPackageName() {
+		public @Nullable String getPackageName() {
 			return this.packageName;
 		}
 

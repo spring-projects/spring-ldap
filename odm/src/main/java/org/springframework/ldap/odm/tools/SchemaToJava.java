@@ -363,6 +363,7 @@ public final class SchemaToJava {
 		}
 		catch (ParseException ex) {
 			error(ex.toString());
+			return;
 		}
 
 		// If the help flag is specified ignore other flags, print a usage message and
@@ -387,12 +388,13 @@ public final class SchemaToJava {
 
 		// Output base directory
 		String outputDir = cmd.getOptionValue(Flag.OUTPUT_DIR.getShort(), ".");
-		File outputFile = null;
+		File outputFile;
 		try {
 			outputFile = makeOutputFile(outputDir, packageName, className);
 		}
 		catch (IOException ex) {
 			error(ex.toString());
+			return;
 		}
 
 		// Get the flags we need to bind to the directory
@@ -438,24 +440,27 @@ public final class SchemaToJava {
 		if (!binarySetFile.canRead()) {
 			error(String.format("Can't read from binary mappings file %1$s", BINARY_FILE));
 		}
-		Set<String> binarySet = null;
+		Set<String> binarySet;
 		try {
 			binarySet = readBinarySet(binarySetFile);
 		}
 		catch (IOException ex) {
 			error(String.format("Error reading binary set file %1$s - %2$s", binarySetFile.getAbsolutePath(), ex));
+			return;
 		}
 
 		// Read schema from the directory
-		ObjectSchema schema = null;
+		ObjectSchema schema;
 		try {
 			schema = readSchema(url, user, pass, syntaxToJavaClass, binarySet, objectClasses);
 		}
 		catch (NamingException ne) {
 			error(String.format("Error processing schema - %1$s", ne));
+			return;
 		}
 		catch (ClassNotFoundException cnfe) {
 			error(String.format("Error processing schema - %1$s", cnfe));
+			return;
 		}
 
 		// Work out what imports we need

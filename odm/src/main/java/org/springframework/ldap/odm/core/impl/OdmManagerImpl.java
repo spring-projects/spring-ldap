@@ -22,6 +22,8 @@ import java.util.Set;
 import javax.naming.Name;
 import javax.naming.directory.SearchControls;
 
+import org.jspecify.annotations.NullUnmarked;
+
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapOperations;
 import org.springframework.ldap.core.LdapTemplate;
@@ -43,6 +45,7 @@ import org.springframework.util.StringUtils;
  * 2.0
  */
 @Deprecated
+@NullUnmarked
 public final class OdmManagerImpl implements OdmManager {
 
 	// The link to the LDAP directory

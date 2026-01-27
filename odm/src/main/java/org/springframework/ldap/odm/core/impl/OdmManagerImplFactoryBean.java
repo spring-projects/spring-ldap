@@ -18,6 +18,8 @@ package org.springframework.ldap.odm.core.impl;
 
 import java.util.Set;
 
+import org.jspecify.annotations.NullUnmarked;
+
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.FactoryBeanNotInitializedException;
 import org.springframework.ldap.core.ContextSource;
@@ -46,6 +48,7 @@ import org.springframework.ldap.odm.typeconversion.ConverterManager;
  * 2.0
  */
 @Deprecated
+@NullUnmarked
 public final class OdmManagerImplFactoryBean implements FactoryBean {
 
 	private LdapOperations ldapOperations = null;
