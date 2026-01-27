@@ -33,6 +33,7 @@ import com.unboundid.ldap.listener.InMemoryDirectoryServer;
 import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldif.LDIFReader;
 import org.apache.commons.io.IOUtils;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +55,7 @@ public final class LdapTestUtils {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LdapTestUtils.class);
 
-	private static EmbeddedLdapServer embeddedServer;
+	private static @Nullable EmbeddedLdapServer embeddedServer;
 
 	/**
 	 * Not to be instantiated.
@@ -117,7 +118,9 @@ public final class LdapTestUtils {
 		}
 		finally {
 			try {
-				ctx.close();
+				if (ctx != null) {
+					ctx.close();
+				}
 			}
 			catch (Exception ex) {
 				// Never mind this
@@ -156,7 +159,9 @@ public final class LdapTestUtils {
 		}
 		finally {
 			try {
-				enumeration.close();
+				if (enumeration != null) {
+					enumeration.close();
+				}
 			}
 			catch (Exception ex) {
 				// Never mind this

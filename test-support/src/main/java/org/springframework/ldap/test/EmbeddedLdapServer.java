@@ -39,7 +39,7 @@ public final class EmbeddedLdapServer {
 
 	private final LdapServer ldapServer;
 
-	private static File workingDirectory;
+	private static File workingDirectory = new File(System.getProperty("java.io.tmpdir") + "/apacheds-test1");
 
 	private EmbeddedLdapServer(DirectoryService directoryService, LdapServer ldapServer) {
 		this.directoryService = directoryService;
@@ -48,7 +48,6 @@ public final class EmbeddedLdapServer {
 
 	public static EmbeddedLdapServer newEmbeddedServer(String defaultPartitionName, String defaultPartitionSuffix,
 			int port) throws Exception {
-		workingDirectory = new File(System.getProperty("java.io.tmpdir") + "/apacheds-test1");
 		FileUtils.deleteDirectory(workingDirectory);
 
 		DefaultDirectoryService directoryService = new DefaultDirectoryService();

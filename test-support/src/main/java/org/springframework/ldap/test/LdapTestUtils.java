@@ -33,6 +33,8 @@ import javax.naming.ldap.LdapName;
 import org.apache.commons.io.IOUtils;
 import org.apache.directory.server.core.DefaultDirectoryService;
 import org.apache.directory.server.protocol.shared.store.LdifFileLoader;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +56,7 @@ public final class LdapTestUtils {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LdapTestUtils.class);
 
-	private static EmbeddedLdapServer embeddedServer;
+	private static @Nullable EmbeddedLdapServer embeddedServer;
 
 	/**
 	 * Not to be instantiated.
@@ -78,6 +80,7 @@ public final class LdapTestUtils {
 	 * @deprecated use {@link #startEmbeddedServer(int, String, String)} instead.
 	 */
 	@Deprecated
+	@NullUnmarked
 	public static DirContext startApacheDirectoryServer(int port, String defaultPartitionSuffix,
 			String defaultPartitionName, String principal, String credentials, Set extraSchemas)
 			throws NamingException {
@@ -160,7 +163,9 @@ public final class LdapTestUtils {
 		}
 		finally {
 			try {
-				ctx.close();
+				if (ctx != null) {
+					ctx.close();
+				}
 			}
 			catch (Exception ex) {
 				// Never mind this
@@ -199,7 +204,9 @@ public final class LdapTestUtils {
 		}
 		finally {
 			try {
-				enumeration.close();
+				if (enumeration != null) {
+					enumeration.close();
+				}
 			}
 			catch (Exception ex) {
 				// Never mind this

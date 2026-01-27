@@ -194,7 +194,9 @@ public final class EmbeddedLdapServer implements AutoCloseable {
 		static String leftMostElement(String partitionSuffix) {
 			try {
 				List<Rdn> rdns = new LdapName(partitionSuffix).getRdns();
-				return CollectionUtils.lastElement(rdns).getValue().toString();
+				Rdn leftMost = CollectionUtils.lastElement(rdns);
+				Assert.notNull(leftMost, "partitionSuffix [" + partitionSuffix + "] produced an empty list of rdns");
+				return leftMost.getValue().toString();
 			}
 			catch (InvalidNameException ex) {
 				throw new RuntimeException(ex);

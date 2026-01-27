@@ -25,11 +25,11 @@ import org.springframework.util.Assert;
  */
 public class ContextSourceEc2InstanceLaunchingFactoryBean extends AbstractEc2InstanceLaunchingFactoryBean {
 
-	private String base;
+	private String base = "";
 
-	private String userDn;
+	private String userDn = "";
 
-	private String password;
+	private String password = "";
 
 	private boolean pooled = false;
 

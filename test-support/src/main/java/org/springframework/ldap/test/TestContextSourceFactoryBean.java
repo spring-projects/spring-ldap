@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.test;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 import org.springframework.core.io.Resource;
 import org.springframework.ldap.core.AuthenticationSource;
@@ -23,6 +25,7 @@ import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.support.DefaultDirObjectFactory;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.support.LdapUtils;
+import org.springframework.util.Assert;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -31,25 +34,25 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean {
 
 	private int port;
 
-	private String defaultPartitionSuffix;
+	private @Nullable String defaultPartitionSuffix;
 
-	private String defaultPartitionName;
+	private @Nullable String defaultPartitionName;
 
-	private String principal;
+	private String principal = "";
 
-	private String password;
+	private String password = "";
 
 	private boolean baseOnTarget = true;
 
-	private Resource ldifFile;
+	private @Nullable Resource ldifFile;
 
 	private Class dirObjectFactory = DefaultDirObjectFactory.class;
 
 	private boolean pooled = true;
 
-	private AuthenticationSource authenticationSource;
+	private AuthenticationSource authenticationSource = new SimpleAuthenticationSource();
 
-	private ContextSource contextSource;
+	private @Nullable ContextSource contextSource;
 
 	public void setAuthenticationSource(AuthenticationSource authenticationSource) {
 		this.authenticationSource = authenticationSource;
@@ -96,6 +99,8 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean {
 	}
 
 	protected Object createInstance() throws Exception {
+		Assert.notNull(this.defaultPartitionSuffix, "defaultPartitionSuffix cannot be null");
+		Assert.notNull(this.defaultPartitionName, "defaultPartitionName cannot be null");
 		LdapTestUtils.startEmbeddedServer(this.port, this.defaultPartitionSuffix, this.defaultPartitionName);
 
 		if (this.contextSource == null) {
@@ -110,10 +115,7 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean {
 			targetContextSource.setPassword(this.password);
 			targetContextSource.setDirObjectFactory(this.dirObjectFactory);
 			targetContextSource.setPooled(this.pooled);
-
-			if (this.authenticationSource != null) {
-				targetContextSource.setAuthenticationSource(this.authenticationSource);
-			}
+			targetContextSource.setAuthenticationSource(this.authenticationSource);
 			targetContextSource.afterPropertiesSet();
 
 			this.contextSource = targetContextSource;
@@ -139,9 +141,23 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean {
 		return ContextSource.class;
 	}
 
-	protected void destroyInstance(Object instance) throws Exception {
+	protected void destroyInstance(@Nullable Object instance) throws Exception {
 		super.destroyInstance(instance);
 		LdapTestUtils.shutdownEmbeddedServer();
+	}
+
+	class SimpleAuthenticationSource implements AuthenticationSource {
+
+		@Override
+		public String getPrincipal() {
+			return TestContextSourceFactoryBean.this.principal;
+		}
+
+		@Override
+		public String getCredentials() {
+			return TestContextSourceFactoryBean.this.password;
+		}
+
 	}
 
 }

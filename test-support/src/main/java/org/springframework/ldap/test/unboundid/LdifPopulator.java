@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.ByteArrayResource;
@@ -36,15 +37,15 @@ import org.springframework.util.Assert;
  */
 public class LdifPopulator implements InitializingBean {
 
-	private Resource resource;
+	private @Nullable Resource resource;
 
-	private ContextSource contextSource;
+	private @Nullable ContextSource contextSource;
 
 	private String base = "";
 
 	private boolean clean = false;
 
-	private String defaultBase;
+	private String defaultBase = "";
 
 	public void setContextSource(ContextSource contextSource) {
 		this.contextSource = contextSource;
