@@ -20,8 +20,7 @@
  *
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  */
-
 @NullMarked
-package org.springframework.ldap.odm.tools;
+package org.springframework.ldap.odm.core;
 
 import org.jspecify.annotations.NullMarked;
