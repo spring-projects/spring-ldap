@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.control;
 
+import org.jspecify.annotations.NullUnmarked;
+
 import org.springframework.ldap.core.support.AggregateDirContextProcessor;
 
 /**
@@ -31,6 +33,7 @@ import org.springframework.ldap.core.support.AggregateDirContextProcessor;
  * {@link ControlExchange} with the control objects you choose to use
  */
 @Deprecated
+@NullUnmarked
 public class VirtualListViewControlAggregateDirContextProcessor extends AggregateDirContextProcessor {
 
 	private SortControlDirContextProcessor _sortControlDirContextProcessor;

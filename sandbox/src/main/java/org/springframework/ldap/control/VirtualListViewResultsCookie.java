@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.control;
 
+import org.jspecify.annotations.NullUnmarked;
+
 /**
  * Wrapper class for the cookie returned when using the
  * {@link com.sun.jndi.ldap.ctl.VirtualListViewControl}.
@@ -24,6 +26,7 @@ package org.springframework.ldap.control;
  * @deprecated no longer used by any non-deprecated class
  */
 @Deprecated
+@NullUnmarked
 public class VirtualListViewResultsCookie {
 
 	private byte[] cookie;

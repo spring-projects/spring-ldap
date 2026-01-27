@@ -21,6 +21,8 @@ import java.lang.reflect.Method;
 import javax.naming.NamingException;
 import javax.naming.ldap.Control;
 
+import org.jspecify.annotations.NullUnmarked;
+
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.ReflectionUtils;
 
@@ -74,6 +76,7 @@ import org.springframework.util.ReflectionUtils;
  * {@link ControlExchange} with the control objects you choose to use
  */
 @Deprecated
+@NullUnmarked
 public class VirtualListViewControlDirContextProcessor
 		extends AbstractFallbackRequestAndResponseControlDirContextProcessor {
 
