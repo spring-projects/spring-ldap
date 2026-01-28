@@ -24,7 +24,7 @@ dependencies {
 		api platform("org.springframework.data:spring-data-bom:2025.0.6")
 	}
 	api platform("org.springframework.security:spring-security-bom:6.5.7")
-	api platform("io.micrometer:micrometer-bom:1.16.1")
+	api platform("io.micrometer:micrometer-bom:1.16.2")
 	api platform("io.micrometer:micrometer-tracing-bom:1.6.2")
 	api platform("org.junit:junit-bom:6.0.1")
 	api platform("org.mockito:mockito-bom:5.20.0")
