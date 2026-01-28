@@ -33,6 +33,7 @@ import javax.naming.ldap.LdapContext;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +67,7 @@ public final class LdapUtils {
 	 * typical <code>finally</code> blocks in JNDI code.
 	 * @param context the JNDI Context to close (may be <code>null</code>)
 	 */
-	public static void closeContext(DirContext context) {
+	public static void closeContext(@Nullable DirContext context) {
 		if (context != null) {
 			try {
 				context.close();
