@@ -1511,6 +1511,53 @@ public interface LdapOperations {
 	<T> List<T> search(LdapQuery query, AttributesMapper<T> mapper);
 
 	/**
+	 * Perform a search with parameters from the specified LdapQuery. All found objects
+	 * will be supplied to the <code>NameClassPairCallbackHandler</code> for processing.
+	 * @param query the LDAP query specification.
+	 * @param callbackHandler the <code>NameClassPairCallbackHandler</code> to supply all
+	 * found entries to.
+	 * @param processor <code>DirContextProcessor</code> for custom pre- and
+	 * post-processing.
+	 * @throws NamingException if any error occurs.
+	 * @since 2.0
+	 * @see org.springframework.ldap.query.LdapQueryBuilder
+	 * @see org.springframework.ldap.core.support.CountNameClassPairCallbackHandler
+	 */
+	void search(LdapQuery query, NameClassPairCallbackHandler callbackHandler, DirContextProcessor processor);
+
+	/**
+	 * Perform a search with parameters from the specified LdapQuery. All found objects
+	 * will be supplied to the <code>ContextMapper</code> for processing, and all returned
+	 * objects will be collected in a list to be returned.
+	 * @param query the LDAP query specification.
+	 * @param mapper the <code>ContextMapper</code> to supply all found entries to.
+	 * @param processor <code>DirContextProcessor</code> for custom pre- and
+	 * post-processing.
+	 * @return a <code>List</code> containing all entries received from the
+	 * <code>ContextMapper</code>.
+	 * @throws NamingException if any error occurs.
+	 * @since 2.0
+	 * @see org.springframework.ldap.query.LdapQueryBuilder
+	 */
+	<T> List<T> search(LdapQuery query, ContextMapper<T> mapper, DirContextProcessor processor);
+
+	/**
+	 * Perform a search with parameters from the specified LdapQuery. The Attributes of
+	 * the found entries will be supplied to the <code>AttributesMapper</code> for
+	 * processing, and all returned objects will be collected in a list to be returned.
+	 * @param query the LDAP query specification.
+	 * @param mapper the <code>Attributes</code> to supply all found Attributes to.
+	 * @param processor <code>DirContextProcessor</code> for custom pre- and
+	 * post-processing.
+	 * @return a <code>List</code> containing all entries received from the
+	 * <code>Attributes</code>.
+	 * @throws NamingException if any error occurs.
+	 * @since 2.0
+	 * @see org.springframework.ldap.query.LdapQueryBuilder
+	 */
+	<T> List<T> search(LdapQuery query, AttributesMapper<T> mapper, DirContextProcessor processor);
+
+	/**
 	 * Perform a search for a unique entry matching the specified LDAP query and return
 	 * the found entry as a DirContextOperation instance. If no entry is found or if there
 	 * are more than one matching entry, an {@link IncorrectResultSizeDataAccessException}
