@@ -105,7 +105,7 @@ public interface LdapOperations {
 	 * @see #search(Name, String, AttributesMapper)
 	 * @see #search(Name, String, ContextMapper)
 	 */
-	<T> T executeReadOnly(ContextExecutor<T> ce) throws NamingException;
+	<T extends @Nullable Object> T executeReadOnly(ContextExecutor<T> ce) throws NamingException;
 
 	/**
 	 * Perform an operation (or series of operations) on a read-write context. This method
@@ -123,7 +123,7 @@ public interface LdapOperations {
 	 * @see #rename(Name, Name)
 	 * @see #modifyAttributes(Name, ModificationItem[])
 	 */
-	<T> T executeReadWrite(ContextExecutor<T> ce) throws NamingException;
+	<T extends @Nullable Object> T executeReadWrite(ContextExecutor<T> ce) throws NamingException;
 
 	/**
 	 * Search for all objects matching the supplied filter. Each <code>SearchResult</code>

@@ -798,7 +798,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <T> T executeReadOnly(ContextExecutor<T> ce) {
+	public <T extends @Nullable Object> T executeReadOnly(ContextExecutor<T> ce) {
 		DirContext ctx = this.contextSource.getReadOnlyContext();
 		return executeWithContext(ce, ctx);
 	}
@@ -807,12 +807,12 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <T> T executeReadWrite(ContextExecutor<T> ce) {
+	public <T extends @Nullable Object> T executeReadWrite(ContextExecutor<T> ce) {
 		DirContext ctx = this.contextSource.getReadWriteContext();
 		return executeWithContext(ce, ctx);
 	}
 
-	private <T> T executeWithContext(ContextExecutor<T> ce, DirContext ctx) {
+	private <T extends @Nullable Object> T executeWithContext(ContextExecutor<T> ce, DirContext ctx) {
 		try {
 			return ce.executeWithContext(ctx);
 		}
@@ -939,7 +939,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	public void modifyAttributes(final Name dn, final ModificationItem[] mods) {
 		executeReadWrite((ctx) -> {
 			ctx.modifyAttributes(dn, mods);
-			return Void.class;
+			return null;
 		});
 	}
 
@@ -950,7 +950,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	public void modifyAttributes(final String dn, final ModificationItem[] mods) {
 		executeReadWrite((ctx) -> {
 			ctx.modifyAttributes(dn, mods);
-			return Void.class;
+			return null;
 		});
 	}
 
@@ -961,7 +961,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	public void bind(final Name dn, final @Nullable Object obj, final @Nullable Attributes attributes) {
 		executeReadWrite((ctx) -> {
 			ctx.bind(dn, obj, attributes);
-			return Void.class;
+			return null;
 		});
 	}
 
@@ -972,7 +972,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	public void bind(final String dn, final @Nullable Object obj, final @Nullable Attributes attributes) {
 		executeReadWrite((ctx) -> {
 			ctx.bind(dn, obj, attributes);
-			return Void.class;
+			return null;
 		});
 	}
 
@@ -1021,28 +1021,28 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	private void doUnbind(final Name dn) {
 		executeReadWrite((ctx) -> {
 			ctx.unbind(dn);
-			return Void.class;
+			return null;
 		});
 	}
 
 	private void doUnbind(final String dn) {
 		executeReadWrite((ctx) -> {
 			ctx.unbind(dn);
-			return Void.class;
+			return null;
 		});
 	}
 
 	private void doUnbindRecursively(final Name dn) {
 		executeReadWrite((ctx) -> {
 			deleteRecursively(ctx, LdapUtils.newLdapName(dn));
-			return Void.class;
+			return null;
 		});
 	}
 
 	private void doUnbindRecursively(final String dn) {
 		executeReadWrite((ctx) -> {
 			deleteRecursively(ctx, LdapUtils.newLdapName(dn));
-			return Void.class;
+			return null;
 		});
 	}
 
@@ -1090,7 +1090,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	public void rebind(final Name dn, final @Nullable Object obj, final @Nullable Attributes attributes) {
 		executeReadWrite((ctx) -> {
 			ctx.rebind(dn, obj, attributes);
-			return Void.class;
+			return null;
 		});
 	}
 
@@ -1101,7 +1101,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	public void rebind(final String dn, final @Nullable Object obj, final @Nullable Attributes attributes) {
 		executeReadWrite((ctx) -> {
 			ctx.rebind(dn, obj, attributes);
-			return Void.class;
+			return null;
 		});
 	}
 
@@ -1112,7 +1112,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	public void rename(final Name oldDn, final Name newDn) {
 		executeReadWrite((ctx) -> {
 			ctx.rename(oldDn, newDn);
-			return Void.class;
+			return null;
 		});
 	}
 
@@ -1123,7 +1123,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	public void rename(final String oldDn, final String newDn) {
 		executeReadWrite((ctx) -> {
 			ctx.rename(oldDn, newDn);
-			return Void.class;
+			return null;
 		});
 	}
 
@@ -1354,7 +1354,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			DirContext ctx = this.contextSource.getContext(entryIdentification.getAbsoluteName().toString(), password);
 			executeWithContext((ctx1) -> {
 				callback.executeWithContext(ctx1, entryIdentification);
-				return Void.class;
+				return null;
 			}, ctx);
 			return AuthenticationStatus.SUCCESS;
 		}

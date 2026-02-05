@@ -19,6 +19,8 @@ package org.springframework.ldap.core;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Interface for delegating an actual operation to be performed on a
  * <code>DirContext</code>. For searches, use {@link SearchExecutor} in stead. A typical
@@ -36,7 +38,7 @@ import javax.naming.directory.DirContext;
  * @see LdapTemplate#executeReadOnly(ContextExecutor)
  * @see LdapTemplate#executeReadWrite(ContextExecutor)
  */
-public interface ContextExecutor<T> {
+public interface ContextExecutor<T extends @Nullable Object> {
 
 	/**
 	 * Perform any operation on the context.
