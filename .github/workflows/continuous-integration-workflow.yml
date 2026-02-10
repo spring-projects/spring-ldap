@@ -38,6 +38,7 @@ jobs:
     with:
       should-deploy-artifacts: ${{ needs.build.outputs.should-deploy-artifacts }}
       default-publish-milestones-central: true
+      java-version: 25
     secrets: inherit
   deploy-schema:
     name: Deploy Schema
