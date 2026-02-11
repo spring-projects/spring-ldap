@@ -43,14 +43,15 @@ jobs:
   deploy-schema:
     name: Deploy Schema
     needs: [ build ]
-    uses: spring-io/spring-security-release-tools/.github/workflows/deploy-schema.yml@v1
+    uses: spring-io/spring-security-release-tools/.github/workflows/deploy-schema.yml@releases/v1
     with:
       should-deploy-schema: ${{ needs.build.outputs.should-deploy-artifacts }}
+      java-version: 25
     secrets: inherit
   perform-release:
     name: Perform Release
     needs: [ deploy-artifacts, deploy-schema ]
-    uses: spring-io/spring-security-release-tools/.github/workflows/perform-release.yml@v1
+    uses: spring-io/spring-security-release-tools/.github/workflows/perform-release.yml@releases/v1
     with:
       should-perform-release: ${{ needs.deploy-artifacts.outputs.artifacts-deployed }}
       project-version: ${{ needs.deploy-artifacts.outputs.project-version }}
@@ -58,4 +59,5 @@ jobs:
       release-repo-url: https://repo1.maven.org/maven2
       artifact-path: org/springframework/ldap/spring-ldap-core
       slack-announcing-id: spring-ldap-announcing
+      java-version: 25
     secrets: inherit
