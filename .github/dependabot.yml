@@ -65,31 +65,6 @@ updates:
         update-types:
           - version-update:semver-major
           - version-update:semver-minor
-  - package-ecosystem: gradle
-    target-branch: 3.2.x
-    milestone: 77 # 3.2.x
-    directory: /
-    schedule:
-      interval: daily
-      time: '03:40'
-      timezone: Etc/UTC
-    open-pull-requests-limit: 10
-    labels:
-      - 'type: dependency-upgrade'
-      - 'in: build'
-    ignore:
-      - dependency-name: org.apache.directory.server:*
-      - dependency-name: org.apache.directory.shared:*
-      - dependency-name: org.junit:junit-bom
-        update-types:
-          - version-update:semver-major
-      - dependency-name: org.mockito:mockito-bom
-        update-types:
-          - version-update:semver-major
-      - dependency-name: '*'
-        update-types:
-          - version-update:semver-major
-          - version-update:semver-minor
 
   - package-ecosystem: github-actions
     target-branch: main
