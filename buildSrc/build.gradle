@@ -101,7 +101,7 @@ dependencies {
     implementation 'org.asciidoctor:asciidoctor-gradle-jvm:4.0.5'
     implementation 'org.hidetake:gradle-ssh-plugin:2.10.1'
     implementation 'org.jfrog.buildinfo:build-info-extractor-gradle:6.0.4'
-    implementation 'org.springframework:spring-core:6.2.15'
+    implementation 'org.springframework:spring-core:7.0.4'
     implementation 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:7.2.2.6593'
 
     testImplementation platform('org.junit:junit-bom:6.0.2')
