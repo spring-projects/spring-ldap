@@ -26,7 +26,7 @@ dependencies {
 	api platform("org.springframework.security:spring-security-bom:6.5.7")
 	api platform("io.micrometer:micrometer-bom:1.16.3")
 	api platform("io.micrometer:micrometer-tracing-bom:1.6.3")
-	api platform("org.junit:junit-bom:6.0.2")
+	api platform("org.junit:junit-bom:6.0.3")
 	api platform("org.mockito:mockito-bom:5.20.0")
 	api platform("org.slf4j:slf4j-bom:2.0.17")
 	constraints {
