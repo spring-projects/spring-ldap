@@ -82,7 +82,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.13.2'
     implementation 'com.thaiopensource:trang:20091111'
     implementation 'net.sourceforge.saxon:saxon:9.1.0.8'
-    implementation 'org.yaml:snakeyaml:1.33'
+    implementation 'org.yaml:snakeyaml:2.6'
     implementation localGroovy()
 
     implementation 'io.github.gradle-nexus:publish-plugin:2.0.0'
