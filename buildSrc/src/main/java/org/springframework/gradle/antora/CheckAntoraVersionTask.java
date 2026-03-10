@@ -11,6 +11,8 @@ import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.TaskAction;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.representer.Representer;
@@ -23,10 +25,10 @@ public abstract class CheckAntoraVersionTask extends DefaultTask {
 		String expectedAntoraVersion = getAntoraVersion().get();
 		String expectedAntoraPrerelease = getAntoraPrerelease().getOrElse(null);
 
-		Representer representer = new Representer();
+		Representer representer = new Representer(new DumperOptions());
 		representer.getPropertyUtils().setSkipMissingProperties(true);
 
-		Yaml yaml = new Yaml(new Constructor(AntoraYml.class), representer);
+		Yaml yaml = new Yaml(new Constructor(AntoraYml.class, new LoaderOptions()), representer, new DumperOptions());
 		AntoraYml antoraYml = yaml.load(new FileInputStream(antoraYmlFile));
 
 		String actualAntoraPrerelease = antoraYml.getPrerelease();
