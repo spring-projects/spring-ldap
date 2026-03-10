@@ -28,14 +28,6 @@ dependencies {
         exclude group: "org.springframework", module: "spring-core"
     }
 
-    implementation("org.springframework.security:spring-security-core") {
-        exclude group: "org.springframework", module: "spring-expression"
-        exclude group: "org.springframework", module: "spring-core"
-        exclude group: "org.springframework", module: "spring-context"
-        exclude group: "org.springframework", module: "spring-tx"
-        exclude group: "org.springframework", module: "spring-aop"
-    }
-
     provided "commons-pool:commons-pool"
     provided "org.springframework:spring-jdbc"
     provided "org.springframework:spring-orm"
@@ -56,7 +48,6 @@ dependencies {
     testImplementation "org.aspectj:aspectjweaver"
     testImplementation "org.hsqldb:hsqldb"
     testImplementation "junit:junit"
-    testImplementation "org.springframework.security:spring-security-config"
     testImplementation "org.slf4j:slf4j-log4j12"
     testImplementation "org.assertj:assertj-core"
 
@@ -64,9 +55,6 @@ dependencies {
     testImplementation "org.junit.vintage:junit-vintage-engine"
     testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 
-    testImplementation("org.springframework.security:spring-security-ldap") {
-        exclude group: "org.springframework.ldap", module: "spring-ldap-core"
-    }
 }
 
 compileGeneratedJava {
