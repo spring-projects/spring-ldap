@@ -30,7 +30,7 @@ jobs:
           - java-version: 25
     with:
       java-version: ${{ matrix.java-version }}
-      test-args: --refresh-dependencies -PforceMavenRepositories=snapshot -PisOverrideVersionCatalog -PtestToolchain=25 -PspringFrameworkVersion=7.+ -PspringDataVersion=2025.0.+ --stacktrace
+      test-args: --refresh-dependencies -PforceMavenRepositories=snapshot -PisOverrideVersionCatalog -PtestToolchain=25 -PspringFrameworkVersion=7.+ --stacktrace
   deploy-artifacts:
     name: Deploy Artifacts
     needs: [ build, test ]

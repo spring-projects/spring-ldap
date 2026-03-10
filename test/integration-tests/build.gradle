@@ -23,11 +23,6 @@ dependencies {
     implementation "com.querydsl:querydsl-apt",
             "commons-lang:commons-lang"
 
-    implementation("org.springframework.data:spring-data-commons") {
-        exclude group: "org.springframework", module: "spring-beans"
-        exclude group: "org.springframework", module: "spring-core"
-    }
-
     provided "commons-pool:commons-pool"
     provided "org.springframework:spring-jdbc"
     provided "org.springframework:spring-orm"

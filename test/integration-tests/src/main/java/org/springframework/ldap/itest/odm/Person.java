@@ -20,7 +20,6 @@ import java.util.List;
 
 import javax.naming.Name;
 
-import org.springframework.data.domain.Persistable;
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
@@ -30,7 +29,7 @@ import org.springframework.ldap.odm.annotations.Transient;
  * @author Mattias Hellborg Arthursson
  */
 @Entry(objectClasses = { "inetOrgPerson", "organizationalPerson", "person", "top" })
-public class Person implements Persistable<Name> {
+public class Person {
 
 	@Id
 	private Name dn;
@@ -61,18 +60,8 @@ public class Person implements Persistable<Name> {
 	@Attribute(name = "creatorsName")
 	private String creatorsName;
 
-	@Override
 	public Name getId() {
 		return getDn();
-	}
-
-	public void setNew() {
-		this.isNew = true;
-	}
-
-	@Override
-	public boolean isNew() {
-		return this.isNew;
 	}
 
 	public Name getDn() {
