@@ -1,2 +1,7 @@
 [[whats-new]]
 = What's New in Spring LDAP 4.1
+
+[[whats-new-breaking-changes]]
+== Breaking Changes
+
+* https://github.com/spring-projects/spring-ldap/issues/1285[gh-1285] - `spring-data-commons` is no longer an optional dependency of `spring-ldap-core`; applications that relied on `spring-ldap-core` to transmit it transitively must now declare it explicitly.
