@@ -1,0 +1,2 @@
+[[whats-new]]
+= What's New in Spring LDAP 4.1
