@@ -25,7 +25,6 @@ dependencies {
              "org.springframework:spring-orm"
 
     testImplementation project(":spring-ldap-test"),
-                "junit:junit",
                 "jdepend:jdepend"
     testImplementation "org.apache.directory.server:apacheds-core-entry"
     testImplementation "org.apache.directory.server:apacheds-core"
