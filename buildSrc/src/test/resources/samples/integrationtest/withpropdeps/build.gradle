@@ -10,5 +10,5 @@ repositories {
 
 dependencies {
 	optional 'jakarta.servlet:jakarta.servlet-api:5.0.0'
-	testCompile 'junit:junit:4.12'
+	testImplementation 'org.junit.jupiter:junit-jupiter:6.0.3'
 }
