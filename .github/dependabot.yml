@@ -68,6 +68,25 @@ updates:
 
   - package-ecosystem: github-actions
     target-branch: main
+    milestone: 112 # 4.1.x
+    directory: /
+    schedule:
+      interval: weekly
+    labels:
+      - 'type: task'
+      - 'in: build'
+  - package-ecosystem: github-actions
+    target-branch: 4.0.x
+    milestone: 97 # 4.0.x
+    directory: /
+    schedule:
+      interval: weekly
+    labels:
+      - 'type: task'
+      - 'in: build'
+  - package-ecosystem: github-actions
+    target-branch: 3.3.x
+    milestone: 79 # 3.3.x
     directory: /
     schedule:
       interval: weekly
