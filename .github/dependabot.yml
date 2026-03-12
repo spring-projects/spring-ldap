@@ -66,6 +66,42 @@ updates:
           - version-update:semver-major
           - version-update:semver-minor
 
+  - package-ecosystem: npm
+    target-branch: main
+    milestone: 112 # 4.1.x
+    directory: /
+    schedule:
+      interval: weekly
+    labels:
+      - 'type: dependency-upgrade'
+      - 'in: docs'
+  - package-ecosystem: npm
+    target-branch: 4.0.x
+    milestone: 97 # 4.0.x
+    directory: /
+    schedule:
+      interval: weekly
+    labels:
+      - 'type: dependency-upgrade'
+      - 'in: docs'
+  - package-ecosystem: npm
+    target-branch: 3.3.x
+    milestone: 79 # 3.3.x
+    directory: /
+    schedule:
+      interval: weekly
+    labels:
+      - 'type: dependency-upgrade'
+      - 'in: docs'
+  - package-ecosystem: npm
+    target-branch: docs-build
+    directory: /
+    schedule:
+      interval: weekly
+    labels:
+      - 'type: dependency-upgrade'
+      - 'in: docs'
+
   - package-ecosystem: github-actions
     target-branch: main
     milestone: 112 # 4.1.x
