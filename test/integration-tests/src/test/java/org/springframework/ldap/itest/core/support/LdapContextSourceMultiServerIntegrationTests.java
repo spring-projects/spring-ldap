@@ -18,12 +18,13 @@ package org.springframework.ldap.itest.core.support;
 
 import javax.naming.NamingException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,8 +33,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Mattias Hellborg Arthursson
  */
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = { "/conf/ldapContextSourceTestContext.xml" })
-public class LdapContextSourceMultiServerIntegrationTests extends AbstractJUnit4SpringContextTests {
+public class LdapContextSourceMultiServerIntegrationTests {
 
 	@Autowired
 	private LdapContextSource tested;

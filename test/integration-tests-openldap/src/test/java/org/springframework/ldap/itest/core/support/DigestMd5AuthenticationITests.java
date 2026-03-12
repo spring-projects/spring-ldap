@@ -18,9 +18,10 @@ package org.springframework.ldap.itest.core.support;
 
 import javax.naming.directory.DirContext;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,7 +31,7 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.test.LdapTestUtils;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,8 +40,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Marvin S. Addison
  */
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = { "/conf/ldapTemplateDigestMd5TestContext.xml" })
-public class DigestMd5AuthenticationITests extends AbstractJUnit4SpringContextTests {
+public class DigestMd5AuthenticationITests {
 
 	@Autowired
 	private LdapTemplate ldapTemplate;
@@ -49,13 +51,13 @@ public class DigestMd5AuthenticationITests extends AbstractJUnit4SpringContextTe
 	@Qualifier("populateContextSource")
 	private ContextSource contextSource;
 
-	@Before
+	@BeforeEach
 	public void prepareTestedInstance() throws Exception {
 		LdapTestUtils.cleanAndSetup(this.contextSource, LdapUtils.newLdapName("ou=People"),
 				new ClassPathResource("/setup_data.ldif"));
 	}
 
-	@After
+	@AfterEach
 	public void cleanup() throws Exception {
 		LdapTestUtils.clearSubContexts(this.contextSource, LdapUtils.newLdapName("ou=People"));
 	}

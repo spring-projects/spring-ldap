@@ -22,9 +22,9 @@ import java.util.List;
 import javax.naming.NameClassPair;
 import javax.naming.ldap.LdapName;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextAdapter;
@@ -58,12 +58,12 @@ public class DefaultLdapClientListITests extends AbstractLdapTemplateIntegration
 	private static final String[] ALL_VALUES = { "Some Person", "Person", "Sweden, Company2, Some Person",
 			"+46 555-456321" };
 
-	@Before
+	@BeforeEach
 	public void prepareTestedInstance() throws Exception {
 		this.contextMapper = new AttributeCheckContextMapper();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		this.contextMapper = null;
 	}

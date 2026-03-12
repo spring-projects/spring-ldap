@@ -23,9 +23,10 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchControls;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -38,15 +39,16 @@ import org.springframework.ldap.core.support.SingleContextSource;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.test.LdapTestUtils;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Mattias Hellborg Arthursson
  */
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration("classpath:/conf/pagedSearchTestContext.xml")
-public class PagedSearchITests extends AbstractJUnit4SpringContextTests {
+public class PagedSearchITests {
 
 	@Autowired
 	private ContextSource contextSource;
@@ -58,13 +60,13 @@ public class PagedSearchITests extends AbstractJUnit4SpringContextTests {
 		}
 	};
 
-	@Before
+	@BeforeEach
 	public void prepareTestedData() throws IOException, NamingException {
 		LdapTestUtils.cleanAndSetup(this.contextSource, LdapUtils.newLdapName("ou=People"),
 				new ClassPathResource("/setup_data.ldif"));
 	}
 
-	@After
+	@AfterEach
 	public void cleanup() throws NamingException {
 		LdapTestUtils.clearSubContexts(this.contextSource, LdapUtils.newLdapName("ou=People"));
 	}

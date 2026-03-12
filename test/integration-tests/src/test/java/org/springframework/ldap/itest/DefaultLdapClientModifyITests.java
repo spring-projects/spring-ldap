@@ -25,9 +25,9 @@ import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.LdapDataEntry;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +61,7 @@ public class DefaultLdapClientModifyITests extends AbstractLdapTemplateIntegrati
 
 	private static final String PERSON5_DN = "cn=Some Person5,ou=company1,ou=Sweden";
 
-	@Before
+	@BeforeEach
 	public void prepareTestedInstance() throws Exception {
 		DirContextAdapter adapter = new DirContextAdapter();
 		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
@@ -81,7 +81,7 @@ public class DefaultLdapClientModifyITests extends AbstractLdapTemplateIntegrati
 
 	}
 
-	@After
+	@AfterEach
 	public void cleanup() throws Exception {
 		this.tested.unbind(PERSON4_DN).execute();
 		this.tested.unbind(PERSON5_DN).execute();

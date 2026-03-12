@@ -28,9 +28,9 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +70,7 @@ public final class SchemaToJavaAdITests {
 
 	private LdapTemplate ldapTemplate;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		// Create some basic converters and a converter manager
 		this.converterManager = new ConverterManagerImpl();
@@ -125,7 +125,7 @@ public final class SchemaToJavaAdITests {
 		this.ldapTemplate.bind(ctx);
 	}
 
-	@After
+	@AfterEach
 	public void cleanup() {
 		this.ldapTemplate.unbind("cn=William Hartnell,cn=Users");
 	}

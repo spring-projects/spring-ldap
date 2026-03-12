@@ -21,7 +21,7 @@ import java.util.Set;
 
 import javax.naming.Name;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.LdapTemplate;

@@ -16,8 +16,7 @@
 
 package org.springframework.ldap.itest;
 
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.LdapDataEntry;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +49,7 @@ public class DefaultLdapClientLookupMultiRdnITests extends AbstractLdapTemplateI
 	 * than one attribute is part of the relative DN for the entry.
 	 */
 	@Test
-	@Category(NoAdTests.class)
+	@NoAdTests
 	public void testLookup_MultiValuedRdn() {
 		AttributesMapper<Person> mapper = new PersonAttributesMapper();
 		Person person = this.tested.search().name("cn=Some Person+sn=Person, ou=company1,ou=Norway").toObject(mapper);
@@ -65,7 +64,7 @@ public class DefaultLdapClientLookupMultiRdnITests extends AbstractLdapTemplateI
 	 *
 	 */
 	@Test
-	@Category(NoAdTests.class)
+	@NoAdTests
 	public void testLookup_MultiValuedRdn_DirContextAdapter() {
 		LdapDataEntry result = this.tested.search().name("cn=Some Person+sn=Person, ou=company1,ou=Norway").toEntry();
 		assertThat(result.getStringAttribute("cn")).isEqualTo("Some Person");
@@ -74,7 +73,7 @@ public class DefaultLdapClientLookupMultiRdnITests extends AbstractLdapTemplateI
 	}
 
 	@Test
-	@Category(NoAdTests.class)
+	@NoAdTests
 	public void testLookup_GetNameInNamespace_MultiRdn() {
 		DirContextOperations result = this.tested.search()
 			.name("cn=Some Person+sn=Person,ou=company1,ou=Norway")

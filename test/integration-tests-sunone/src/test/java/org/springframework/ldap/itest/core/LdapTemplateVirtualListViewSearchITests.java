@@ -20,9 +20,10 @@ import java.util.List;
 
 import javax.naming.directory.SearchControls;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.control.VirtualListViewControlDirContextProcessor;
@@ -33,7 +34,7 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.itest.Person;
 import org.springframework.ldap.itest.PersonContextMapper;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -90,8 +91,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Ulrik Sandberg
  */
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = { "/conf/ldapTemplateTestContext.xml" })
-public class LdapTemplateVirtualListViewSearchITests extends AbstractJUnit4SpringContextTests {
+public class LdapTemplateVirtualListViewSearchITests {
 
 	@Autowired
 	private LdapTemplate tested;
@@ -104,13 +106,13 @@ public class LdapTemplateVirtualListViewSearchITests extends AbstractJUnit4Sprin
 
 	private CollectingNameClassPairCallbackHandler callbackHandler;
 
-	@Before
+	@BeforeEach
 	public void prepareTestedInstance() throws Exception {
 		this.searchControls = new SearchControls();
 		this.searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 	}
 
-	@After
+	@AfterEach
 	public void cleanup() throws Exception {
 		this.searchControls = null;
 	}

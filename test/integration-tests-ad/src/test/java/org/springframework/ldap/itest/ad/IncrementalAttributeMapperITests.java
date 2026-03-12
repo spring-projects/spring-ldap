@@ -24,9 +24,10 @@ import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.NameNotFoundException;
@@ -37,7 +38,7 @@ import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.DefaultIncrementalAttributesMapper;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
@@ -49,8 +50,9 @@ import static org.assertj.core.api.Assertions.fail;
 /**
  * @author Mattias Hellborg Arthursson
  */
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration("classpath:/incrementalAttributeMapperTest.xml")
-public class IncrementalAttributeMapperITests extends AbstractJUnit4SpringContextTests {
+public class IncrementalAttributeMapperITests {
 
 	private static final DistinguishedName BASE_DN = new DistinguishedName("ou=dummy,dc=261consulting,dc=local");
 
@@ -66,7 +68,7 @@ public class IncrementalAttributeMapperITests extends AbstractJUnit4SpringContex
 	@Autowired
 	private PlatformTransactionManager transactionManager;
 
-	@Before
+	@BeforeEach
 	public void prepareTestData() throws UnsupportedEncodingException {
 		cleanup();
 
@@ -135,7 +137,7 @@ public class IncrementalAttributeMapperITests extends AbstractJUnit4SpringContex
 		this.ldapTemplate.bind(ctx);
 	}
 
-	@After
+	@AfterEach
 	public void cleanup() {
 		try {
 			this.ldapTemplate.lookup(OU_DN);

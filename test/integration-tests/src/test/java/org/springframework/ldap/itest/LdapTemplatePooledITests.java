@@ -16,8 +16,9 @@
 
 package org.springframework.ldap.itest;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +29,7 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.test.LdapTestUtils;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -37,8 +38,9 @@ import static org.assertj.core.api.Assertions.fail;
  * This test only works against in-process Apache DS server, regardless of configured
  * profile.
  */
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = { "/conf/ldapTemplatePooledTestContext.xml" })
-public class LdapTemplatePooledITests extends AbstractJUnit4SpringContextTests {
+public class LdapTemplatePooledITests {
 
 	@Autowired
 	private LdapTemplate tested;
@@ -49,7 +51,7 @@ public class LdapTemplatePooledITests extends AbstractJUnit4SpringContextTests {
 	@Value("${base}")
 	protected String base;
 
-	@After
+	@AfterEach
 	public void cleanup() throws Exception {
 		LdapTestUtils.shutdownEmbeddedServer();
 	}

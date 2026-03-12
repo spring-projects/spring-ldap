@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -33,6 +33,7 @@ import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.fail;
 
 /**
@@ -69,14 +70,16 @@ public class LdapTemplateOdmWithNoDnAnnotationsITests extends AbstractLdapTempla
 		assertThat(person.getEntryUuid()).describedAs("The operational attribute 'entryUUID' was not set").isNotEmpty();
 	}
 
-	@Test(expected = OdmException.class)
+	@Test
 	public void testFindByDnThrowsExceptionOnInvalidEntry() {
-		this.tested.findByDn(LdapUtils.newLdapName("ou=company1,ou=Sweden"), Person.class);
+		assertThatExceptionOfType(OdmException.class)
+			.isThrownBy(() -> this.tested.findByDn(LdapUtils.newLdapName("ou=company1,ou=Sweden"), Person.class));
 	}
 
-	@Test(expected = EmptyResultDataAccessException.class)
+	@Test
 	public void testFindOneThrowsEmptyResultIfNotFound() {
-		this.tested.findOne(LdapQueryBuilder.query().where("cn").is("This cn does not exist"), Person.class);
+		assertThatExceptionOfType(EmptyResultDataAccessException.class).isThrownBy(() -> this.tested
+			.findOne(LdapQueryBuilder.query().where("cn").is("This cn does not exist"), Person.class));
 	}
 
 	@Test

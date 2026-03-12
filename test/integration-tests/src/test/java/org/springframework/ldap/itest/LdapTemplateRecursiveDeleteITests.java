@@ -19,10 +19,9 @@ package org.springframework.ldap.itest;
 import javax.naming.Name;
 import javax.naming.ldap.LdapName;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.NameNotFoundException;
@@ -54,7 +53,7 @@ public class LdapTemplateRecursiveDeleteITests extends AbstractLdapTemplateInteg
 
 	private LdapName leafDn;
 
-	@Before
+	@BeforeEach
 	public void prepareTestedInstance() throws Exception {
 		DirContextAdapter adapter = new DirContextAdapter();
 		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
@@ -93,7 +92,7 @@ public class LdapTemplateRecursiveDeleteITests extends AbstractLdapTemplateInteg
 		this.tested.bind(this.leafDn, adapter, null);
 	}
 
-	@After
+	@AfterEach
 	public void cleanup() throws Exception {
 		try {
 			this.tested.unbind(DN, true);
@@ -104,7 +103,7 @@ public class LdapTemplateRecursiveDeleteITests extends AbstractLdapTemplateInteg
 	}
 
 	@Test
-	@Category(NoAdTests.class)
+	@NoAdTests
 	public void testRecursiveUnbind() {
 		this.tested.unbind(DN, true);
 
@@ -115,7 +114,7 @@ public class LdapTemplateRecursiveDeleteITests extends AbstractLdapTemplateInteg
 	}
 
 	@Test
-	@Category(NoAdTests.class)
+	@NoAdTests
 	public void testRecursiveUnbindOnLeaf() {
 		this.tested.unbind(this.leafDn, true);
 		verifyDeleted(this.leafDn);

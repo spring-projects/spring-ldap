@@ -23,8 +23,7 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -110,7 +109,7 @@ public class LdapContextSourceIntegrationTests extends AbstractLdapTemplateInteg
 	}
 
 	@Test
-	@Category(NoAdTests.class)
+	@NoAdTests
 	public void testGetContext() throws NamingException {
 		DirContext ctx = null;
 		try {
@@ -140,7 +139,7 @@ public class LdapContextSourceIntegrationTests extends AbstractLdapTemplateInteg
 
 	@SuppressWarnings("unchecked")
 	@Test
-	@Category(NoAdTests.class)
+	@NoAdTests
 	public void verifyAuthenticate() {
 		EqualsFilter filter = new EqualsFilter("cn", "Some Person2");
 		List<String> results = this.ldapTemplate.search("", filter.toString(), new DnContextMapper());

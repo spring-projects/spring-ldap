@@ -26,8 +26,8 @@ import javax.naming.NamingException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.junit.Before;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -35,17 +35,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.ldap.LdapConditionallyFilteredTestRunner;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.ldap.test.LdapTestUtils;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 @DirtiesContext
-@RunWith(LdapConditionallyFilteredTestRunner.class)
+@ExtendWith(SpringExtension.class)
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class })
 public abstract class AbstractLdapTemplateIntegrationTests {
 
@@ -58,7 +58,7 @@ public abstract class AbstractLdapTemplateIntegrationTests {
 	@Value("${base}")
 	protected String base;
 
-	@Before
+	@BeforeEach
 	public void cleanAndSetup() throws NamingException, IOException {
 		Resource ldifResource = getLdifFileResource();
 		if (!LdapUtils.newLdapName(this.base).equals(LdapUtils.newLdapName(DEFAULT_BASE))) {

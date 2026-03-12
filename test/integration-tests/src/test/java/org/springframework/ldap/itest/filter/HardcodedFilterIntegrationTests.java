@@ -16,7 +16,7 @@
 
 package org.springframework.ldap.itest.filter;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.LdapTemplate;

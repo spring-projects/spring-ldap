@@ -19,9 +19,9 @@ package org.springframework.ldap.itest;
 import javax.naming.Name;
 import javax.naming.NameClassPair;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.LdapDataEntry;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class DefaultLdapClientRenameITests extends AbstractLdapTemplateIntegrati
 
 	private static final String NEWDN = "cn=Some Person6,ou=company2,ou=Sweden";
 
-	@Before
+	@BeforeEach
 	public void prepareTestedInstance() throws Exception {
 		DirContextAdapter adapter = new DirContextAdapter();
 		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
@@ -60,7 +60,7 @@ public class DefaultLdapClientRenameITests extends AbstractLdapTemplateIntegrati
 		this.tested.bind(DN).object(adapter).execute();
 	}
 
-	@After
+	@AfterEach
 	public void cleanup() throws Exception {
 		this.tested.unbind(NEWDN).execute();
 		this.tested.unbind(DN).execute();

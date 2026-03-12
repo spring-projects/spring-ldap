@@ -21,9 +21,10 @@ import java.util.List;
 import javax.naming.Name;
 import javax.naming.directory.SearchControls;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -36,7 +37,7 @@ import org.springframework.ldap.test.AttributeCheckAttributesMapper;
 import org.springframework.ldap.test.AttributeCheckContextMapper;
 import org.springframework.ldap.test.LdapTestUtils;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -45,8 +46,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Mattias Hellborg Arthursson
  */
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = { "/conf/ldapTemplateTestContext-tls.xml" })
-public class LdapTemplateSearchResultITests extends AbstractJUnit4SpringContextTests {
+public class LdapTemplateSearchResultITests {
 
 	@Autowired
 	private LdapTemplate tested;
@@ -75,7 +77,7 @@ public class LdapTemplateSearchResultITests extends AbstractJUnit4SpringContextT
 
 	private static final Name BASE_NAME = new DistinguishedName(BASE_STRING);
 
-	@Before
+	@BeforeEach
 	public void prepareTestedInstance() throws Exception {
 		LdapTestUtils.cleanAndSetup(this.contextSource, LdapUtils.newLdapName("ou=People"),
 				new ClassPathResource("/setup_data.ldif"));
@@ -84,7 +86,7 @@ public class LdapTemplateSearchResultITests extends AbstractJUnit4SpringContextT
 		this.contextMapper = new AttributeCheckContextMapper();
 	}
 
-	@After
+	@AfterEach
 	public void cleanup() throws Exception {
 		LdapTestUtils.clearSubContexts(this.contextSource, LdapUtils.newLdapName("ou=People"));
 		this.attributesMapper = null;

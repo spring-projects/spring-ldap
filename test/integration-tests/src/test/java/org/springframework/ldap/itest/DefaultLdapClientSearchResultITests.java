@@ -21,9 +21,9 @@ import java.util.stream.Collectors;
 
 import javax.naming.Name;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -45,6 +45,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.fail;
 
 /**
@@ -80,13 +81,13 @@ public class DefaultLdapClientSearchResultITests extends AbstractLdapTemplateInt
 
 	private static final Name BASE_NAME = LdapUtils.newLdapName(BASE_STRING);
 
-	@Before
+	@BeforeEach
 	public void prepareTestedInstance() throws Exception {
 		this.attributesMapper = new AttributeCheckAttributesMapper();
 		this.contextMapper = new AttributeCheckContextMapper();
 	}
 
-	@After
+	@AfterEach
 	public void cleanup() throws Exception {
 		this.attributesMapper = null;
 		this.contextMapper = null;
@@ -355,11 +356,11 @@ public class DefaultLdapClientSearchResultITests extends AbstractLdapTemplateInt
 		assertThat(result).isNotNull();
 	}
 
-	@Test(expected = IncorrectResultSizeDataAccessException.class)
+	@Test
 	public void testSearchForObjectWithMultipleHits() {
-		this.tested.search()
+		assertThatExceptionOfType(IncorrectResultSizeDataAccessException.class).isThrownBy(() -> this.tested.search()
 			.query(LdapQueryBuilder.query().base(BASE_STRING).filter("(&(objectclass=person)(sn=*))"))
-			.toObject((Object ctx) -> ctx);
+			.toObject((Object ctx) -> ctx));
 	}
 
 	@Test // (expected = EmptyResultDataAccessException.class)
@@ -622,12 +623,14 @@ public class DefaultLdapClientSearchResultITests extends AbstractLdapTemplateInt
 		assertThat(result).hasSize(3);
 	}
 
-	@Test(expected = SizeLimitExceededException.class)
+	@Test
 	public void verifyThatSearchWithCountLimitWithFlagToFalseThrowsException() {
-		ReflectionTestUtils.setField(this.tested, "ignoreSizeLimitExceededException", false);
-		this.tested.search()
-			.query(LdapQueryBuilder.query().countLimit(3).where("objectclass").is("person"))
-			.toList((Object ctx) -> ctx);
+		assertThatExceptionOfType(SizeLimitExceededException.class).isThrownBy(() -> {
+			ReflectionTestUtils.setField(this.tested, "ignoreSizeLimitExceededException", false);
+			this.tested.search()
+				.query(LdapQueryBuilder.query().countLimit(3).where("objectclass").is("person"))
+				.toList((Object ctx) -> ctx);
+		});
 	}
 
 }

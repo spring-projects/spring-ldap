@@ -23,9 +23,9 @@ import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.directory.SearchControls;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -47,6 +47,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.fail;
 
 /**
@@ -83,13 +84,13 @@ public class LdapTemplateSearchResultITests extends AbstractLdapTemplateIntegrat
 
 	private static final Name BASE_NAME = LdapUtils.newLdapName(BASE_STRING);
 
-	@Before
+	@BeforeEach
 	public void prepareTestedInstance() throws Exception {
 		this.attributesMapper = new AttributeCheckAttributesMapper();
 		this.contextMapper = new AttributeCheckContextMapper();
 	}
 
-	@After
+	@AfterEach
 	public void cleanup() throws Exception {
 		this.attributesMapper = null;
 		this.contextMapper = null;
@@ -329,25 +330,27 @@ public class LdapTemplateSearchResultITests extends AbstractLdapTemplateIntegrat
 		assertThat(result).isNotNull();
 	}
 
-	@Test(expected = IncorrectResultSizeDataAccessException.class)
+	@Test
 	public void testSearchForObjectWithMultipleHits() {
-		this.tested.searchForObject(BASE_STRING, "(&(objectclass=person)(sn=*))", new AbstractContextMapper() {
-			@Override
-			protected Object doMapFromContext(DirContextOperations ctx) {
-				return ctx;
-			}
-		});
+		assertThatExceptionOfType(IncorrectResultSizeDataAccessException.class).isThrownBy(() -> this.tested
+			.searchForObject(BASE_STRING, "(&(objectclass=person)(sn=*))", new AbstractContextMapper() {
+				@Override
+				protected Object doMapFromContext(DirContextOperations ctx) {
+					return ctx;
+				}
+			}));
 	}
 
-	@Test(expected = EmptyResultDataAccessException.class)
+	@Test
 	public void testSearchForObjectNoHits() {
-		this.tested.searchForObject(BASE_STRING, "(&(objectclass=person)(sn=Person does not exist))",
-				new AbstractContextMapper() {
-					@Override
-					protected Object doMapFromContext(DirContextOperations ctx) {
-						return ctx;
-					}
-				});
+		assertThatExceptionOfType(EmptyResultDataAccessException.class)
+			.isThrownBy(() -> this.tested.searchForObject(BASE_STRING,
+					"(&(objectclass=person)(sn=Person does not exist))", new AbstractContextMapper() {
+						@Override
+						protected Object doMapFromContext(DirContextOperations ctx) {
+							return ctx;
+						}
+					}));
 	}
 
 	@Test
@@ -487,14 +490,15 @@ public class LdapTemplateSearchResultITests extends AbstractLdapTemplateIntegrat
 		assertThat(result.getStringAttribute("sn")).isEqualTo("Person2");
 	}
 
-	@Test(expected = EmptyResultDataAccessException.class)
+	@Test
 	public void testSearchForContext_LdapQuery_SearchScopeNotFound() {
-		this.tested.searchForContext(LdapQueryBuilder.query()
-			.searchScope(SearchScope.ONELEVEL)
-			.where("objectclass")
-			.is("person")
-			.and("sn")
-			.is("Person2"));
+		assertThatExceptionOfType(EmptyResultDataAccessException.class)
+			.isThrownBy(() -> this.tested.searchForContext(LdapQueryBuilder.query()
+				.searchScope(SearchScope.ONELEVEL)
+				.where("objectclass")
+				.is("person")
+				.and("sn")
+				.is("Person2")));
 	}
 
 	@Test
@@ -565,16 +569,16 @@ public class LdapTemplateSearchResultITests extends AbstractLdapTemplateIntegrat
 		assertThat(result).hasSize(3);
 	}
 
-	@Test(expected = SizeLimitExceededException.class)
+	@Test
 	public void verifyThatSearchWithCountLimitWithFlagToFalseThrowsException() {
 		this.tested.setIgnoreSizeLimitExceededException(false);
-		this.tested.search(LdapQueryBuilder.query().countLimit(3).where("objectclass").is("person"),
-				new ContextMapper<>() {
-					@Override
-					public Object mapFromContext(Object ctx) throws NamingException {
-						return new Object();
-					}
-				});
+		assertThatExceptionOfType(SizeLimitExceededException.class).isThrownBy(() -> this.tested
+			.search(LdapQueryBuilder.query().countLimit(3).where("objectclass").is("person"), new ContextMapper<>() {
+				@Override
+				public Object mapFromContext(Object ctx) throws NamingException {
+					return new Object();
+				}
+			}));
 	}
 
 }

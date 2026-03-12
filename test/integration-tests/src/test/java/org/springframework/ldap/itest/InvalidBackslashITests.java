@@ -22,10 +22,9 @@ import javax.naming.InvalidNameException;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextAdapter;
@@ -50,7 +49,7 @@ public class InvalidBackslashITests extends AbstractLdapTemplateIntegrationTests
 
 	private static LdapName DN = LdapUtils.newLdapName("cn=Some\\\\Person6,ou=company1,ou=Sweden");
 
-	@Before
+	@BeforeEach
 	public void prepareTestedInstance() throws Exception {
 		DirContextAdapter adapter = new DirContextAdapter();
 		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
@@ -62,7 +61,7 @@ public class InvalidBackslashITests extends AbstractLdapTemplateIntegrationTests
 		this.tested.bind(DN, adapter, null);
 	}
 
-	@After
+	@AfterEach
 	public void cleanup() throws Exception {
 		this.tested.unbind(DN);
 	}
@@ -91,7 +90,7 @@ public class InvalidBackslashITests extends AbstractLdapTemplateIntegrationTests
 	 * @throws InvalidNameException
 	 */
 	@Test
-	@Category(NoAdTests.class)
+	@NoAdTests
 	public void testSearchForDnSpoiledByCompositeName() throws InvalidNameException {
 		List result = this.tested.search("", "(sn=Person6)", new AbstractContextMapper() {
 			@Override

@@ -19,8 +19,8 @@ package org.springframework.ldap.itest.manager;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +56,7 @@ public class ContextSourceTransactionManagerIntegrationTests extends AbstractLda
 	@Autowired
 	private LdapTemplate ldapTemplate;
 
-	@Before
+	@BeforeEach
 	public void prepareTestedInstance() throws Exception {
 		if (TransactionSynchronizationManager.isSynchronizationActive()) {
 			TransactionSynchronizationManager.clearSynchronization();

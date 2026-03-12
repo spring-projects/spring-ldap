@@ -10,16 +10,15 @@ dependencies {
 
     provided "org.springframework:spring-jdbc"
 
-    testImplementation platform('org.junit:junit-bom')
-    testImplementation "org.junit.vintage:junit-vintage-engine"
-
     testImplementation "org.springframework:spring-aop"
     testImplementation "org.springframework:spring-test"
     testImplementation "gsbase:gsbase"
-    testImplementation "junit:junit"
     testImplementation "com.sun:ldapbp:1.0"
     testImplementation "org.slf4j:slf4j-log4j12"
     testImplementation "org.assertj:assertj-core"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine"
+
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 
 }
 

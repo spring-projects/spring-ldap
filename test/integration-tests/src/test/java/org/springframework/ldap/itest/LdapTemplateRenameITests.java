@@ -18,9 +18,9 @@ package org.springframework.ldap.itest;
 
 import javax.naming.Name;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.NameNotFoundException;
@@ -50,7 +50,7 @@ public class LdapTemplateRenameITests extends AbstractLdapTemplateIntegrationTes
 
 	private static String NEWDN = "cn=Some Person6,ou=company2,ou=Sweden";
 
-	@Before
+	@BeforeEach
 	public void prepareTestedInstance() throws Exception {
 		DirContextAdapter adapter = new DirContextAdapter();
 		adapter.setAttributeValues("objectclass", new String[] { "top", "person" });
@@ -61,7 +61,7 @@ public class LdapTemplateRenameITests extends AbstractLdapTemplateIntegrationTes
 		this.tested.bind(DN, adapter, null);
 	}
 
-	@After
+	@AfterEach
 	public void cleanup() throws Exception {
 		this.tested.unbind(NEWDN);
 		this.tested.unbind(DN);

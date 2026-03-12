@@ -16,8 +16,8 @@
 
 package org.springframework.ldap.itest.manager;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -51,7 +51,7 @@ public class ContextSourceTransactionManagerSubtreeIntegrationTests extends Abst
 	@Autowired
 	private LdapTemplate ldapTemplate;
 
-	@Before
+	@BeforeEach
 	public void prepareTestedInstance() throws Exception {
 		if (TransactionSynchronizationManager.isSynchronizationActive()) {
 			TransactionSynchronizationManager.clearSynchronization();

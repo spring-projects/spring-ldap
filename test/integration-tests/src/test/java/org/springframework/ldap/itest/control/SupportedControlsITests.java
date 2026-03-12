@@ -21,8 +21,7 @@ import java.util.HashSet;
 
 import javax.naming.Name;
 
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.ContextMapper;
@@ -55,7 +54,7 @@ public class SupportedControlsITests extends AbstractLdapTemplateIntegrationTest
 	}
 
 	@Test
-	@Category(NoAdTests.class)
+	@NoAdTests
 	public void testExpectedControlsSupported() throws Exception {
 		/**
 		 * Maps the 'supportedcontrol' attribute to a string array.

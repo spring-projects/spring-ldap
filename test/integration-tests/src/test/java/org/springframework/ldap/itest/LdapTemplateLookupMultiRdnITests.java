@@ -16,8 +16,7 @@
 
 package org.springframework.ldap.itest;
 
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -50,7 +49,7 @@ public class LdapTemplateLookupMultiRdnITests extends AbstractLdapTemplateIntegr
 	 * than one attribute is part of the relative DN for the entry.
 	 */
 	@Test
-	@Category(NoAdTests.class)
+	@NoAdTests
 	public void testLookup_MultiValuedRdn() {
 		AttributesMapper mapper = new PersonAttributesMapper();
 		Person person = (Person) this.tested.lookup("cn=Some Person+sn=Person, ou=company1,ou=Norway", mapper);
@@ -66,7 +65,7 @@ public class LdapTemplateLookupMultiRdnITests extends AbstractLdapTemplateIntegr
 	 *
 	 */
 	@Test
-	@Category(NoAdTests.class)
+	@NoAdTests
 	public void testLookup_MultiValuedRdn_DirContextAdapter() {
 		DirContextAdapter result = (DirContextAdapter) this.tested
 			.lookup("cn=Some Person+sn=Person, ou=company1,ou=Norway");
@@ -77,7 +76,7 @@ public class LdapTemplateLookupMultiRdnITests extends AbstractLdapTemplateIntegr
 	}
 
 	@Test
-	@Category(NoAdTests.class)
+	@NoAdTests
 	public void testLookup_GetNameInNamespace_MultiRdn() {
 		DirContextAdapter result = (DirContextAdapter) this.tested
 			.lookup("cn=Some Person+sn=Person,ou=company1,ou=Norway");
