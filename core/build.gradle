@@ -34,7 +34,7 @@ dependencies {
     testImplementation "commons-lang:commons-lang"
     testImplementation "gsbase:gsbase"
     testImplementation "org.mockito:mockito-core"
-    testImplementation "org.mockito:mockito-junit-jupiter:5.22.0"
+    testImplementation "org.mockito:mockito-junit-jupiter:5.23.0"
     testImplementation "org.springframework:spring-test"
     testImplementation "org.assertj:assertj-core"
     testImplementation "com.unboundid:unboundid-ldapsdk"
