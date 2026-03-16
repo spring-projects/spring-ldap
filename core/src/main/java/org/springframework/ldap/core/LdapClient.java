@@ -16,7 +16,10 @@
 
 package org.springframework.ldap.core;
 
+import java.util.Set;
 import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -29,9 +32,11 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import org.springframework.LdapDataEntry;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.ldap.PartialResultException;
 import org.springframework.ldap.query.LdapQuery;
@@ -41,6 +46,7 @@ import org.springframework.ldap.query.LdapQueryBuilder;
  * An LDAP Client
  *
  * @author Josh Cummings
+ * @author Andrey Litvitski
  * @since 3.1
  */
 public interface LdapClient {
@@ -364,6 +370,86 @@ public interface LdapClient {
 		 */
 		SearchSpec query(LdapQuery query);
 
+		/**
+		 * Retrieve a single search result as a required {@link LdapDataEntry} instance.
+		 * @return the single result object (never {@code null})
+		 */
+		default <O extends LdapDataEntry> O single() {
+			ContextMapper<O> cast = (ctx) -> (O) ctx;
+			return map(cast).single();
+		}
+
+		/**
+		 * Retrieve a single search result, if available, as an {@link Optional} handle.
+		 * @return an Optional handle with a single {@link LdapDataEntry} result or none
+		 */
+		default <O extends LdapDataEntry> Optional<O> optional() {
+			ContextMapper<O> cast = (ctx) -> (O) ctx;
+			return map(cast).optional();
+		}
+
+		/**
+		 * Retrieve the result as a pre-resolved list of mapped objects, retaining the
+		 * order from the original database result.
+		 * @return the result as a detached List, containing mapped objects
+		 */
+		default <O extends LdapDataEntry> List<O> list() {
+			ContextMapper<O> cast = (ctx) -> (O) ctx;
+			return map(cast).list();
+		}
+
+		/**
+		 * Retrieve the result as a lazily resolved stream of mapped objects, retaining
+		 * the order from the original database result.
+		 * @return the result Stream, containing mapped objects, needing to be closed once
+		 * fully processed (for example, through a try-with-resources clause)
+		 */
+		default <O extends LdapDataEntry> Stream<O> stream() {
+			ContextMapper<O> cast = (ctx) -> (O) ctx;
+			return map(cast).stream();
+		}
+
+		/**
+		 * Map each search result to an object using the given {@link ContextMapper}
+		 * strategy.
+		 * @param mapper the {@link ContextMapper} strategy to use to map each result
+		 * @return a {@link MappedSearchSpec} for specifying the result cardinality
+		 */
+		default <T> MappedSearchSpec<T> map(ContextMapper<T> mapper) {
+			return new MappedSearchSpec<T>() {
+				@Override
+				public List<T> list() {
+					return toList(mapper);
+				}
+
+				@Override
+				public Stream<T> stream() {
+					return toStream(mapper);
+				}
+			};
+		}
+
+		/**
+		 * Map each search result to an object using the given {@link AttributesMapper}
+		 * strategy.
+		 * @param mapper the {@link AttributesMapper} strategy to use to map each result
+		 * @return a {@link MappedSearchSpec} for specifying the result cardinality
+		 */
+		default <T> MappedSearchSpec<T> map(AttributesMapper<T> mapper) {
+			return new MappedSearchSpec<T>() {
+				@Override
+				public List<T> list() {
+					return toList(mapper);
+				}
+
+				@Override
+				public Stream<T> stream() {
+					return toStream(mapper);
+				}
+			};
+		}
+
+		@Deprecated(since = "4.1.0")
 		default <O extends LdapDataEntry> @Nullable O toEntry() {
 			ContextMapper<O> cast = (ctx) -> (O) ctx;
 			return toObject(cast);
@@ -379,6 +465,7 @@ public interface LdapClient {
 		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the
 		 * result set contains more than one result
 		 */
+		@Deprecated(since = "4.1.0")
 		<O> @Nullable O toObject(ContextMapper<O> mapper);
 
 		/**
@@ -388,8 +475,10 @@ public interface LdapClient {
 		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the
 		 * result set contains more than one result
 		 */
+		@Deprecated(since = "4.1.0")
 		<O> @Nullable O toObject(AttributesMapper<O> mapper);
 
+		@Deprecated(since = "4.1.0")
 		default <O extends LdapDataEntry> List<O> toEntryList() {
 			ContextMapper<O> cast = (ctx) -> (O) ctx;
 			return toList(cast);
@@ -402,6 +491,7 @@ public interface LdapClient {
 		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the
 		 * result set contains more than one result
 		 */
+		@Deprecated(since = "4.1.0")
 		<O> List<O> toList(ContextMapper<O> mapper);
 
 		/**
@@ -411,8 +501,10 @@ public interface LdapClient {
 		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the
 		 * result set contains more than one result
 		 */
+		@Deprecated(since = "4.1.0")
 		<O> List<O> toList(AttributesMapper<O> mapper);
 
+		@Deprecated(since = "4.1.0")
 		default <O extends LdapDataEntry> Stream<O> toEntryStream() {
 			ContextMapper<O> cast = (ctx) -> (O) ctx;
 			return toStream(cast);
@@ -425,6 +517,7 @@ public interface LdapClient {
 		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the
 		 * result set contains more than one result
 		 */
+		@Deprecated(since = "4.1.0")
 		<O> Stream<O> toStream(ContextMapper<O> mapper);
 
 		/**
@@ -434,6 +527,7 @@ public interface LdapClient {
 		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the
 		 * result set contains more than one result
 		 */
+		@Deprecated(since = "4.1.0")
 		<O> Stream<O> toStream(AttributesMapper<O> mapper);
 
 	}
@@ -568,6 +662,55 @@ public interface LdapClient {
 		 * Delete the entry
 		 */
 		void execute();
+
+	}
+
+	interface MappedSearchSpec<T extends @Nullable Object> {
+
+		/**
+		 * Retrieve the result as a lazily resolved stream of mapped objects, retaining
+		 * the order from the original database result.
+		 * @return the result Stream, containing mapped objects, needing to be closed once
+		 * fully processed (for example, through a try-with-resources clause)
+		 */
+		Stream<T> stream();
+
+		/**
+		 * Retrieve the result as a pre-resolved list of mapped objects, retaining the
+		 * order from the original database result.
+		 * @return the result as a detached List, containing mapped objects
+		 */
+		List<T> list();
+
+		/**
+		 * Retrieve the result as an order-preserving set of mapped objects.
+		 * @return the result as a detached Set, containing mapped objects
+		 * @see #list()
+		 * @see LinkedHashSet
+		 */
+		default Set<T> set() {
+			return new LinkedHashSet<>(list());
+		}
+
+		/**
+		 * Retrieve a single result as a required object instance.
+		 * @return the single result object (never {@code null})
+		 * @see #optional()
+		 * @see DataAccessUtils#requiredSingleResult(Collection)
+		 */
+		default @NonNull T single() {
+			return DataAccessUtils.requiredSingleResult(list());
+		}
+
+		/**
+		 * Retrieve a single result, if available, as an {@link Optional} handle.
+		 * @return an Optional handle with a single result object or none
+		 * @see #single()
+		 * @see DataAccessUtils#optionalResult(Collection)
+		 */
+		default Optional<T> optional() {
+			return DataAccessUtils.optionalResult(list());
+		}
 
 	}
 
