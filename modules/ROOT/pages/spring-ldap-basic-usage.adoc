@@ -33,7 +33,7 @@ public class PersonRepoImpl implements PersonRepo {
    public List<String> getAllPersonNames() {
       return ldapClient.search()
                 .query(query().where("objectclass").is("person"))
-                .toList(**(Attributes attrs) -> (String) attrs.get("cn").get()**);
+                .map(**(Attributes attrs) -> (String) attrs.get("cn").get()**).list();
    }
 }
 ----
@@ -67,7 +67,7 @@ public class PersonRepoImpl implements PersonRepo {
    public List<Person> getAllPersons() {
       return ldapClient.search()
             .query(query().where("objectclass").is("person"))
-            .toList(new PersonAttributesMapper());
+            .map(new PersonAttributesMapper()).list();
    }
 }
 ----
@@ -87,7 +87,7 @@ public class PersonRepoImpl implements PersonRepo {
    private LdapClient ldapClient;
    ...
    public Person findPerson(String dn) {
-      return ldapClient.search().name(dn).toObject(new PersonAttributesMapper());
+      return ldapClient.search().name(dn).map(new PersonAttributesMapper()).single();
    }
 }
 ----
@@ -131,7 +131,7 @@ public class PersonRepoImpl implements PersonRepo {
          .and("sn").is(lastName);**
 
       return ldapClient.search().query(**query**)
-            .toObject((Attributes attrs) -> (String) attrs.get("cn").get());
+            .map((Attributes attrs) -> (String) attrs.get("cn").get()).single();
    }
 }
 ----

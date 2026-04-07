@@ -112,9 +112,9 @@ public class PersonRepoImpl implements PersonRepo {
    public List<String> getAllPersonNames() {
       return ldapClient.search().query(
             **query().where("objectclass").is("person")**
-         ).toObject((Attributes attrs) ->
-            **attrs.get("cn").get().toString();**
-         );
+         ).map((Attributes attrs) ->
+            **attrs.get("cn").get().toString()**
+         ).list();
    }
 }
 ----

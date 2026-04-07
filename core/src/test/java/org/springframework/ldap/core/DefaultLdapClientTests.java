@@ -16,7 +16,11 @@
 
 package org.springframework.ldap.core;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import javax.naming.Binding;
 import javax.naming.CompositeName;
@@ -34,6 +38,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatcher;
 
+import org.springframework.LdapDataEntry;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.ldap.LimitExceededException;
@@ -54,10 +59,10 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.mock;
-import static org.mockito.BDDMockito.times;
-import static org.mockito.BDDMockito.verify;
 import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * Unit tests for {@link LdapClient}
@@ -72,7 +77,7 @@ public class DefaultLdapClientTests {
 
 	private DirContext dirContextMock;
 
-	private AttributesMapper attributesMapperMock;
+	private AttributesMapper<Object> attributesMapperMock;
 
 	private NamingEnumeration namingEnumerationMock;
 
@@ -80,7 +85,7 @@ public class DefaultLdapClientTests {
 
 	private NameClassPairCallbackHandler handlerMock;
 
-	private ContextMapper contextMapperMock;
+	private ContextMapper<Object> contextMapperMock;
 
 	private ContextExecutor contextExecutorMock;
 
@@ -645,6 +650,214 @@ public class DefaultLdapClientTests {
 	}
 
 	@Test
+	public void searchMapContextMapperList() throws Exception {
+		expectGetReadOnlyContext();
+
+		LdapDataEntry expectedObject = mock(LdapDataEntry.class);
+		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
+		singleSearchResultNameSearch(searchResult);
+
+		given(this.contextMapperMock.mapFromContext(any())).willReturn("mapped");
+
+		List<Object> results = this.tested.search().name(this.nameMock).map(this.contextMapperMock).list();
+
+		assertThat(results).containsExactly("mapped");
+		verify(this.dirContextMock).close();
+	}
+
+	@Test
+	public void searchMapContextMapperStream() throws Exception {
+		expectGetReadOnlyContext();
+
+		LdapDataEntry expectedObject = mock(LdapDataEntry.class);
+		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
+		singleSearchResultNameSearch(searchResult);
+
+		given(this.contextMapperMock.mapFromContext(any())).willReturn("mapped");
+
+		try (Stream<Object> results = this.tested.search().name(this.nameMock).map(this.contextMapperMock).stream()) {
+			assertThat(results).containsExactly("mapped");
+		}
+
+		verify(this.dirContextMock).close();
+	}
+
+	@Test
+	public void searchMapContextMapperSingle() throws Exception {
+		expectGetReadOnlyContext();
+
+		LdapDataEntry expectedObject = mock(LdapDataEntry.class);
+		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
+		singleSearchResultNameSearch(searchResult);
+
+		given(this.contextMapperMock.mapFromContext(any())).willReturn("mapped");
+
+		Object result = this.tested.search().name(this.nameMock).map(this.contextMapperMock).single();
+
+		assertThat(result).isEqualTo("mapped");
+		verify(this.dirContextMock).close();
+	}
+
+	@Test
+	public void searchMapContextMapperSingleWhenEmptyThenException() throws Exception {
+		expectGetReadOnlyContext();
+
+		noSearchResultsNameSearch();
+
+		assertThatExceptionOfType(EmptyResultDataAccessException.class)
+			.isThrownBy(() -> this.tested.search().name(this.nameMock).map(this.contextMapperMock).single());
+
+		verify(this.dirContextMock).close();
+	}
+
+	@Test
+	public void searchMapContextMapperOptional() throws Exception {
+		expectGetReadOnlyContext();
+
+		LdapDataEntry expectedObject = mock(LdapDataEntry.class);
+		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
+		singleSearchResultNameSearch(searchResult);
+
+		given(this.contextMapperMock.mapFromContext(any())).willReturn("mapped");
+
+		Optional<Object> result = this.tested.search().name(this.nameMock).map(this.contextMapperMock).optional();
+
+		assertThat(result).contains("mapped");
+		verify(this.dirContextMock).close();
+	}
+
+	@Test
+	public void searchMapContextMapperOptionalWhenEmptyThenEmpty() throws Exception {
+		expectGetReadOnlyContext();
+
+		noSearchResultsNameSearch();
+
+		Optional<Object> result = this.tested.search().name(this.nameMock).map(this.contextMapperMock).optional();
+
+		assertThat(result).isEmpty();
+		verify(this.dirContextMock).close();
+	}
+
+	@Test
+	public void searchMapContextMapperSet() throws Exception {
+		expectGetReadOnlyContext();
+
+		LdapDataEntry expectedObject = mock(LdapDataEntry.class);
+		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
+		singleSearchResultNameSearch(searchResult);
+
+		given(this.contextMapperMock.mapFromContext(any())).willReturn("mapped");
+
+		Set<Object> results = this.tested.search().name(this.nameMock).map(this.contextMapperMock).set();
+
+		assertThat(results).containsExactly("mapped");
+		verify(this.dirContextMock).close();
+	}
+
+	@Test
+	public void searchMapAttributesMapperList() throws Exception {
+		expectGetReadOnlyContext();
+
+		SearchResult searchResult = new SearchResult("", null, new BasicAttributes());
+		singleSearchResultNameSearch(searchResult);
+
+		given(this.attributesMapperMock.mapFromAttributes(any())).willReturn("mapped");
+
+		List<Object> results = this.tested.search().name(this.nameMock).map(this.attributesMapperMock).list();
+
+		assertThat(results).containsExactly("mapped");
+		verify(this.dirContextMock).close();
+	}
+
+	@Test
+	public void searchMapAttributesMapperStream() throws Exception {
+		expectGetReadOnlyContext();
+
+		SearchResult searchResult = new SearchResult("", null, new BasicAttributes());
+		singleSearchResultNameSearch(searchResult);
+
+		given(this.attributesMapperMock.mapFromAttributes(any())).willReturn("mapped");
+
+		try (Stream<Object> results = this.tested.search()
+			.name(this.nameMock)
+			.map(this.attributesMapperMock)
+			.stream()) {
+			assertThat(results).containsExactly("mapped");
+		}
+
+		verify(this.dirContextMock).close();
+	}
+
+	@Test
+	public void searchSingle() throws Exception {
+		expectGetReadOnlyContext();
+
+		LdapDataEntry expectedObject = mock(LdapDataEntry.class);
+		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
+		singleSearchResultNameSearch(searchResult);
+
+		LdapDataEntry result = this.tested.search().name(this.nameMock).single();
+
+		assertThat(result).isSameAs(expectedObject);
+		verify(this.dirContextMock).close();
+	}
+
+	@Test
+	public void searchOptional() throws Exception {
+		expectGetReadOnlyContext();
+
+		LdapDataEntry expectedObject = mock(LdapDataEntry.class);
+		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
+		singleSearchResultNameSearch(searchResult);
+
+		Optional<LdapDataEntry> result = this.tested.search().name(this.nameMock).optional();
+
+		assertThat(result).containsSame(expectedObject);
+		verify(this.dirContextMock).close();
+	}
+
+	@Test
+	public void searchOptionalWhenEmptyThenEmpty() throws Exception {
+		expectGetReadOnlyContext();
+
+		noSearchResultsNameSearch();
+
+		Optional<LdapDataEntry> result = this.tested.search().name(this.nameMock).optional();
+
+		assertThat(result).isEmpty();
+		verify(this.dirContextMock).close();
+	}
+
+	@Test
+	public void searchList() throws Exception {
+		expectGetReadOnlyContext();
+
+		LdapDataEntry expectedObject = mock(LdapDataEntry.class);
+		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
+		singleSearchResultNameSearch(searchResult);
+
+		List<LdapDataEntry> results = this.tested.search().name(this.nameMock).list();
+
+		assertThat(results).containsExactly((LdapDataEntry) expectedObject);
+		verify(this.dirContextMock).close();
+	}
+
+	@Test
+	public void searchStream() throws Exception {
+		expectGetReadOnlyContext();
+
+		LdapDataEntry expectedObject = mock(LdapDataEntry.class);
+		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
+		singleSearchResultNameSearch(searchResult);
+
+		try (Stream<LdapDataEntry> results = this.tested.search().name(this.nameMock).stream()) {
+			assertThat(results).containsExactly((LdapDataEntry) expectedObject);
+		}
+
+		verify(this.dirContextMock).close();
+	}
+
+	@Test
 	public void createWhenLdapTemplateThenUses() {
 		LdapTemplate ldap = mock(LdapTemplate.class);
 		given(ldap.getContextSource()).willReturn(this.contextSourceMock);
@@ -657,6 +870,17 @@ public class DefaultLdapClientTests {
 		verify(ldap).getDefaultCountLimit();
 		verify(ldap).getDefaultSearchScope();
 		verify(ldap).getDefaultTimeLimit();
+	}
+
+	private void singleSearchResultNameSearch(SearchResult searchResult) throws Exception {
+		given(this.dirContextMock.search(eq(this.nameMock), anyString(), any())).willReturn(this.namingEnumerationMock);
+		given(this.namingEnumerationMock.hasMore()).willReturn(true, false);
+		given(this.namingEnumerationMock.next()).willReturn(searchResult);
+	}
+
+	private void noSearchResultsNameSearch() throws Exception {
+		given(this.dirContextMock.search(eq(this.nameMock), anyString(), any())).willReturn(this.namingEnumerationMock);
+		given(this.namingEnumerationMock.hasMore()).willReturn(false);
 	}
 
 	private void noSearchResults(SearchControls controls) throws Exception {

@@ -36,7 +36,7 @@ public class PersonRepoImpl implements PersonRepo {
    public Person findByPrimaryKey(
       String name, String company, String country) {
       Name dn = buildDn(name, company, country);
-      return ldapClient.search().name(dn).toObject(**new PersonContextMapper()**);
+      return ldapClient.search().name(dn).map(**new PersonContextMapper()**).single();
    }
 }
 ----
@@ -158,7 +158,7 @@ public class PersonRepoImpl implements PersonRepo {
    ...
    public void update(Person p) {
       Name dn = buildDn(p);
-      **DirContextOperations context = ldapClient.search().name(dn).toEntry();**
+      **DirContextOperations context = ldapClient.search().name(dn).single();**
 
       context.setAttributeValue("cn", p.getFullname());
       context.setAttributeValue("sn", p.getLastname());
@@ -170,8 +170,8 @@ public class PersonRepoImpl implements PersonRepo {
 ----
 ====
 
-When calling `SearchSpec#toEntry`, the result is a `DirContextAdapter` instance by default.
-While the `lookup` method returns an `Object`, `toEntry` automatically casts the return value to a `DirContextOperations`
+When calling `SearchSpec#single`, the result is a `DirContextAdapter` instance by default.
+While the `lookup` method returns an `Object`, `single` automatically casts the return value to a `DirContextOperations`
 (the interface that `DirContextAdapter` implements).
 
 Notice that we have duplicate code in the `LdapTemplate#create` and `LdapTemplate#update` methods. This code maps from a domain object to a context. It can be extracted to a separate method, as follows:
@@ -198,7 +198,7 @@ public class PersonRepoImpl implements PersonRepo {
 
    public void update(Person p) {
       Name dn = buildDn(p);
-      DirContextOperations context = ldapClient.search().name(dn).toEntry();
+      DirContextOperations context = ldapClient.search().name(dn).single();
       mapToContext(person, context);
       ldapClient.modify(dn).attributes(context.getModificationItems()).execute();
    }
@@ -251,7 +251,7 @@ public class GroupRepo implements BaseLdapNameAware {
             person.getCompany(),
             person.getCountry());
 
-        DirContextOperation ctx = ldapClient.search().name(groupDn).toEntry();
+        DirContextOperation ctx = ldapClient.search().name(groupDn).single();
         ctx.addAttributeValue("member", userDn);
 
         ldapClient.modify(groupDn).attributes(ctx.getModificationItems()).execute();
@@ -264,7 +264,7 @@ public class GroupRepo implements BaseLdapNameAware {
             person.getCompany(),
             person.getCountry());
 
-        DirContextOperation ctx = ldapClient.search().name(groupDn).toEntry();
+        DirContextOperation ctx = ldapClient.search().name(groupDn).single();
         ctx.removeAttributeValue("member", userDn);
 
         ldapClient.modify(groupDn).attributes(ctx.getModificationItems()).execute();
@@ -342,7 +342,7 @@ public class PersonRepoImpl implements PersonRepo {
 
    public Person findByPrimaryKey(String name, String company, String country) {
       Name dn = buildDn(name, company, country);
-      return ldapClient.search().name(dn).toObject(getContextMapper());
+      return ldapClient.search().name(dn).map(getContextMapper()).single();
    }
 
    public List<Person> findByName(String name) {
@@ -350,12 +350,12 @@ public class PersonRepoImpl implements PersonRepo {
          .where("objectclass").is("person")
          .and("cn").whitespaceWildcardsLike("name");
 
-      return ldapClient.search().query(query).toList(getContextMapper());
+      return ldapClient.search().query(query).map(getContextMapper()).list();
    }
 
    public List<Person> findAll() {
       EqualsFilter filter = new EqualsFilter("objectclass", "person");
-      return ldapClient.search().query((query) -> query.filter(filter)).toList(getContextMapper());
+      return ldapClient.search().query((query) -> query.filter(filter)).map(getContextMapper()).list();
    }
 
    protected ContextMapper getContextMapper() {
