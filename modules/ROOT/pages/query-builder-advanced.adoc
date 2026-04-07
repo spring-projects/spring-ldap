@@ -29,7 +29,7 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 List<Person> persons = ldapClient.search()
       .query(query().where("objectclass").is("person"))
-      .toList(new PersonAttributesMapper());
+      .map(new PersonAttributesMapper()).list();
 
 ----
 ====
@@ -46,7 +46,7 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 List<Person> persons = ldapClient.search()
       .query(query().where("objectclass").is("person").and("cn").is("John Doe"))
-      .toList(new PersonAttributesMapper());
+      .map(new PersonAttributesMapper()).list();
 ----
 ====
 
@@ -62,7 +62,7 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 List<Person> persons = ldapClient.search()
       .query(query().base("dc=261consulting,dc=com").where("objectclass").is("person"))
-      .toList(new PersonAttributesMapper());
+      .map(new PersonAttributesMapper()).list();
 ----
 ====
 
@@ -81,7 +81,7 @@ Stream<Person> persons = ldapClient.search()
       .query(query().base("dc=261consulting,dc=com")
              .attributes("cn")
              .where("objectclass").is("person")),
-      .toStream(new PersonAttributesMapper());
+      .map(new PersonAttributesMapper()).stream();
 
 ----
 ====
@@ -97,7 +97,7 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
 Stream<Person> persons = ldapClient.search()
       .query(query().where("objectclass").is("person"),
              .and(query().where("cn").is("Doe").or("cn").is("Doo"))
-      .toStream(new PersonAttributesMapper());
+      .map(new PersonAttributesMapper()).stream();
 ----
 ====
 

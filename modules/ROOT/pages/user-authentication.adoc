@@ -43,7 +43,7 @@ The `userDn` supplied to the `authenticate` method needs to be the full DN of th
 private String getDnForUser(String uid) {
   List<String> result = ldapClient.search()
       .query(query().where("uid").is(uid))
-      .toList((Object ctx) -> ((DirContextOperations) ctx).getNameInNamespace());
+      .map((Object ctx) -> ((DirContextOperations) ctx).getNameInNamespace()).list();
 
   if(result.size() != 1) {
     throw new RuntimeException("User not found or not unique");

@@ -16,10 +16,10 @@
 
 package org.springframework.ldap.core;
 
-import java.util.Set;
-import java.util.List;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -373,6 +373,7 @@ public interface LdapClient {
 		/**
 		 * Retrieve a single search result as a required {@link LdapDataEntry} instance.
 		 * @return the single result object (never {@code null})
+		 * @since 4.1
 		 */
 		default <O extends LdapDataEntry> O single() {
 			ContextMapper<O> cast = (ctx) -> (O) ctx;
@@ -382,6 +383,7 @@ public interface LdapClient {
 		/**
 		 * Retrieve a single search result, if available, as an {@link Optional} handle.
 		 * @return an Optional handle with a single {@link LdapDataEntry} result or none
+		 * @since 4.1
 		 */
 		default <O extends LdapDataEntry> Optional<O> optional() {
 			ContextMapper<O> cast = (ctx) -> (O) ctx;
@@ -392,6 +394,7 @@ public interface LdapClient {
 		 * Retrieve the result as a pre-resolved list of mapped objects, retaining the
 		 * order from the original database result.
 		 * @return the result as a detached List, containing mapped objects
+		 * @since 4.1
 		 */
 		default <O extends LdapDataEntry> List<O> list() {
 			ContextMapper<O> cast = (ctx) -> (O) ctx;
@@ -403,6 +406,7 @@ public interface LdapClient {
 		 * the order from the original database result.
 		 * @return the result Stream, containing mapped objects, needing to be closed once
 		 * fully processed (for example, through a try-with-resources clause)
+		 * @since 4.1
 		 */
 		default <O extends LdapDataEntry> Stream<O> stream() {
 			ContextMapper<O> cast = (ctx) -> (O) ctx;
@@ -414,19 +418,10 @@ public interface LdapClient {
 		 * strategy.
 		 * @param mapper the {@link ContextMapper} strategy to use to map each result
 		 * @return a {@link MappedSearchSpec} for specifying the result cardinality
+		 * @since 4.1
 		 */
 		default <T> MappedSearchSpec<T> map(ContextMapper<T> mapper) {
-			return new MappedSearchSpec<T>() {
-				@Override
-				public List<T> list() {
-					return toList(mapper);
-				}
-
-				@Override
-				public Stream<T> stream() {
-					return toStream(mapper);
-				}
-			};
+			throw new UnsupportedOperationException();
 		}
 
 		/**
@@ -434,19 +429,10 @@ public interface LdapClient {
 		 * strategy.
 		 * @param mapper the {@link AttributesMapper} strategy to use to map each result
 		 * @return a {@link MappedSearchSpec} for specifying the result cardinality
+		 * @since 4.1
 		 */
 		default <T> MappedSearchSpec<T> map(AttributesMapper<T> mapper) {
-			return new MappedSearchSpec<T>() {
-				@Override
-				public List<T> list() {
-					return toList(mapper);
-				}
-
-				@Override
-				public Stream<T> stream() {
-					return toStream(mapper);
-				}
-			};
+			throw new UnsupportedOperationException();
 		}
 
 		@Deprecated(since = "4.1.0")
@@ -464,6 +450,8 @@ public interface LdapClient {
 		 * @return the single search result, or {@code null} if none was found
 		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the
 		 * result set contains more than one result
+		 * @deprecated use {@link #map(ContextMapper)} with
+		 * {@link MappedSearchSpec#optional()}
 		 */
 		@Deprecated(since = "4.1.0")
 		<O> @Nullable O toObject(ContextMapper<O> mapper);
@@ -474,6 +462,8 @@ public interface LdapClient {
 		 * @return the single search result, or {@code null} if none was found
 		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the
 		 * result set contains more than one result
+		 * @deprecated use {@link #map(AttributesMapper)} with
+		 * {@link MappedSearchSpec#optional()}
 		 */
 		@Deprecated(since = "4.1.0")
 		<O> @Nullable O toObject(AttributesMapper<O> mapper);
@@ -490,6 +480,8 @@ public interface LdapClient {
 		 * @return the single search result, or empty list if none was found
 		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the
 		 * result set contains more than one result
+		 * @deprecated use {@link #map(ContextMapper)} with
+		 * {@link MappedSearchSpec#list()}
 		 */
 		@Deprecated(since = "4.1.0")
 		<O> List<O> toList(ContextMapper<O> mapper);
@@ -500,6 +492,8 @@ public interface LdapClient {
 		 * @return the single search result, or empty list if none was found
 		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the
 		 * result set contains more than one result
+		 * @deprecated use {@link #map(AttributesMapper)} with
+		 * {@link MappedSearchSpec#list()}
 		 */
 		@Deprecated(since = "4.1.0")
 		<O> List<O> toList(AttributesMapper<O> mapper);
@@ -516,6 +510,8 @@ public interface LdapClient {
 		 * @return the single search result, or empty stream if none was found
 		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the
 		 * result set contains more than one result
+		 * @deprecated use {@link #map(ContextMapper)} with
+		 * {@link MappedSearchSpec#stream()}
 		 */
 		@Deprecated(since = "4.1.0")
 		<O> Stream<O> toStream(ContextMapper<O> mapper);
@@ -526,6 +522,8 @@ public interface LdapClient {
 		 * @return the single search result, or empty stream if none was found
 		 * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the
 		 * result set contains more than one result
+		 * @deprecated use {@link #map(AttributesMapper)} with
+		 * {@link MappedSearchSpec#stream()}
 		 */
 		@Deprecated(since = "4.1.0")
 		<O> Stream<O> toStream(AttributesMapper<O> mapper);
@@ -665,6 +663,13 @@ public interface LdapClient {
 
 	}
 
+	/**
+	 * A specification for retrieving mapped search results with various cardinality
+	 * options.
+	 *
+	 * @param <T> the mapped result type
+	 * @since 4.1
+	 */
 	interface MappedSearchSpec<T extends @Nullable Object> {
 
 		/**

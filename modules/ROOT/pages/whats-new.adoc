@@ -5,3 +5,8 @@
 == Breaking Changes
 
 * https://github.com/spring-projects/spring-ldap/issues/1285[gh-1285] - `spring-data-commons` is no longer an optional dependency of `spring-ldap-core`; applications that relied on `spring-ldap-core` to transmit it transitively must now declare it explicitly.
+
+== Core
+
+* https://github.com/spring-projects/spring-ldap/issues/1404[gh-1404] - Added `map()`, `single()`, `optional()`, `list()`, and `stream()` methods to `LdapClient` search support
+

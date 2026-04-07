@@ -466,7 +466,7 @@ class DefaultLdapClient implements LdapClient {
 		@Override
 		public <T> T execute(AuthenticatedLdapEntryContextMapper<T> mapper) {
 			LdapEntryIdentificationContextMapper m = new LdapEntryIdentificationContextMapper();
-			List<LdapEntryIdentification> identification = this.search.toList(m);
+			List<LdapEntryIdentification> identification = this.search.map(m).list();
 			if (identification.size() == 0) {
 				throw new EmptyResultDataAccessException(1);
 			}
@@ -516,6 +516,16 @@ class DefaultLdapClient implements LdapClient {
 		public SearchSpec query(LdapQuery query) {
 			this.query = query;
 			return this;
+		}
+
+		@Override
+		public <T> MappedSearchSpec<T> map(ContextMapper<T> mapper) {
+			return new ContextMapperSearchSpec<>(mapper);
+		}
+
+		@Override
+		public <T> MappedSearchSpec<T> map(AttributesMapper<T> mapper) {
+			return new AttributeMapperSearchSpec<>(mapper);
 		}
 
 		@Override
@@ -581,6 +591,54 @@ class DefaultLdapClient implements LdapClient {
 				controls.setTimeLimit(timeLimit);
 			}
 			return controls;
+		}
+
+		private final class ContextMapperSearchSpec<T> implements MappedSearchSpec<T> {
+
+			private final ContextMapper<T> mapper;
+
+			private ContextMapperSearchSpec(ContextMapper<T> mapper) {
+				this.mapper = mapper;
+			}
+
+			@Override
+			public List<T> list() {
+				DefaultSearchSpec.this.controls = searchControlsForQuery(RETURN_OBJ_FLAG);
+				NamingEnumeration<SearchResult> results = computeWithReadOnlyContext(DefaultSearchSpec.this::search);
+				return DefaultLdapClient.this.toList(results, function(this.mapper));
+			}
+
+			@Override
+			public Stream<T> stream() {
+				DefaultSearchSpec.this.controls = searchControlsForQuery(RETURN_OBJ_FLAG);
+				NamingEnumeration<SearchResult> results = computeWithReadOnlyContext(DefaultSearchSpec.this::search);
+				return DefaultLdapClient.this.toStream(results, function(this.mapper));
+			}
+
+		}
+
+		private final class AttributeMapperSearchSpec<T> implements MappedSearchSpec<T> {
+
+			private final AttributesMapper<T> mapper;
+
+			private AttributeMapperSearchSpec(AttributesMapper<T> mapper) {
+				this.mapper = mapper;
+			}
+
+			@Override
+			public List<T> list() {
+				DefaultSearchSpec.this.controls = searchControlsForQuery(DONT_RETURN_OBJ_FLAG);
+				NamingEnumeration<SearchResult> results = computeWithReadOnlyContext(DefaultSearchSpec.this::search);
+				return DefaultLdapClient.this.toList(results, function(this.mapper));
+			}
+
+			@Override
+			public Stream<T> stream() {
+				DefaultSearchSpec.this.controls = searchControlsForQuery(DONT_RETURN_OBJ_FLAG);
+				NamingEnumeration<SearchResult> results = computeWithReadOnlyContext(DefaultSearchSpec.this::search);
+				return DefaultLdapClient.this.toStream(results, function(this.mapper));
+			}
+
 		}
 
 	}
