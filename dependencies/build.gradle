@@ -20,7 +20,7 @@ dependencies {
 	} else {
 		api platform("org.springframework:spring-framework-bom:7.0.6")
 	}
-	api platform("io.micrometer:micrometer-bom:1.16.4")
+	api platform("io.micrometer:micrometer-bom:1.16.5")
 	api platform("io.micrometer:micrometer-tracing-bom:1.6.5")
 	api platform("org.junit:junit-bom:6.0.3")
 	api platform("org.mockito:mockito-bom:5.23.0")
