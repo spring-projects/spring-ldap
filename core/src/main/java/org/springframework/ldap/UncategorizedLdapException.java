@@ -35,7 +35,7 @@ public class UncategorizedLdapException extends NamingException {
 	}
 
 	public UncategorizedLdapException(@Nullable Throwable cause) {
-		super("Uncategorized exception occured during LDAP processing", cause);
+		super("Uncategorized exception occurred during LDAP processing", cause);
 	}
 
 }
