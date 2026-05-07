@@ -24,6 +24,7 @@ import javax.naming.Context;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.support.LdapUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -159,6 +160,26 @@ public class LdapContextSourceTests {
 		// check that base was added to environment
 		assertThat(env.get(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY))
 			.isEqualTo(LdapUtils.newLdapName("dc=example,dc=se"));
+	}
+
+	@Test
+	public void getContextWhenUserDnIsSetAndPasswordIsEmptyThenAuthenticationException() {
+		this.tested.setUrl("ldap://ldap.example.com:389");
+		this.tested.setUserDn("cn=service");
+		this.tested.setPassword("secret");
+		this.tested.afterPropertiesSet();
+		assertThatExceptionOfType(AuthenticationException.class)
+			.isThrownBy(() -> this.tested.getContext("cn=admin", ""));
+	}
+
+	@Test
+	public void getContextWhenUserDnIsSetAndPasswordIsNullThenAuthenticationException() {
+		this.tested.setUrl("ldap://ldap.example.com:389");
+		this.tested.setUserDn("cn=service");
+		this.tested.setPassword("secret");
+		this.tested.afterPropertiesSet();
+		assertThatExceptionOfType(AuthenticationException.class)
+			.isThrownBy(() -> this.tested.getContext("cn=admin", null));
 	}
 
 	@Test

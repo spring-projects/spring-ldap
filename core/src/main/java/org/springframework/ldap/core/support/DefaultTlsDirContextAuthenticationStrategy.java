@@ -22,6 +22,9 @@ import javax.naming.ldap.LdapContext;
 
 import org.jspecify.annotations.Nullable;
 
+import org.springframework.ldap.AuthenticationException;
+import org.springframework.util.StringUtils;
+
 /**
  * Default implementation of TLS authentication. Applies <code>SIMPLE</code>
  * authentication on top of the negotiated TLS session. Refer to
@@ -37,6 +40,10 @@ public class DefaultTlsDirContextAuthenticationStrategy extends AbstractTlsDirCo
 
 	protected void applyAuthentication(LdapContext ctx, @Nullable String userDn, @Nullable String password)
 			throws NamingException {
+		if (StringUtils.hasLength(userDn) && !StringUtils.hasLength(password)) {
+			throw new AuthenticationException(
+					new javax.naming.AuthenticationException("password must be provided when userDn is set"));
+		}
 		ctx.addToEnvironment(Context.SECURITY_AUTHENTICATION, SIMPLE_AUTHENTICATION);
 		ctx.addToEnvironment(Context.SECURITY_PRINCIPAL, userDn);
 		ctx.addToEnvironment(Context.SECURITY_CREDENTIALS, password);
