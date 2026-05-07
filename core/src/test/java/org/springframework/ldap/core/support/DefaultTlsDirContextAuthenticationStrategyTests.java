@@ -25,6 +25,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import org.springframework.ldap.AuthenticationException;
+
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -46,6 +49,18 @@ public class DefaultTlsDirContextAuthenticationStrategyTests {
 		this.strategy.applyAuthentication(this.context, "username", "password");
 
 		verify(this.context).lookup("");
+	}
+
+	@Test
+	public void applyAuthenticationWhenUserDnIsSetAndPasswordIsEmptyThenAuthenticationException() {
+		assertThatExceptionOfType(AuthenticationException.class)
+			.isThrownBy(() -> this.strategy.applyAuthentication(this.context, "username", ""));
+	}
+
+	@Test
+	public void applyAuthenticationWhenUserDnIsSetAndPasswordIsNullThenAuthenticationException() {
+		assertThatExceptionOfType(AuthenticationException.class)
+			.isThrownBy(() -> this.strategy.applyAuthentication(this.context, "username", null));
 	}
 
 }

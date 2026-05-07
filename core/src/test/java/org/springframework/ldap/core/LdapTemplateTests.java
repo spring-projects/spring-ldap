@@ -40,6 +40,7 @@ import org.mockito.ArgumentMatcher;
 import org.springframework.LdapDataEntry;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.LimitExceededException;
 import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.PartialResultException;
@@ -1878,6 +1879,26 @@ public class LdapTemplateTests {
 		verify(this.dirContextMock).close();
 
 		assertThat(result).isFalse();
+	}
+
+	// gh-407
+	@Test
+	public void authenticateWhenPasswordIsEmptyAndDefaultStrategyThenReturnsFalse() throws Exception {
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(this.dirContextMock);
+
+		Object expectedObject = new DirContextAdapter(new BasicAttributes(), LdapUtils.newLdapName("cn=john doe"),
+				LdapUtils.newLdapName("dc=jayway, dc=se"));
+		SearchResult searchResult = new SearchResult("", expectedObject, new BasicAttributes());
+		singleSearchResult(searchControlsRecursive(), searchResult);
+
+		given(this.contextSourceMock.getContext("cn=john doe,dc=jayway,dc=se", ""))
+			.willThrow(new AuthenticationException(
+					new javax.naming.AuthenticationException("password must be provided when userDn is set")));
+
+		boolean result = this.tested.authenticate(this.nameMock, "(ou=somevalue)", "", this.entryContextCallbackMock);
+
+		assertThat(result).isFalse();
+		verify(this.dirContextMock).close();
 	}
 
 	private void noSearchResults(SearchControls controls) throws Exception {
