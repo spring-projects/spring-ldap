@@ -23,6 +23,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import org.springframework.ldap.AuthenticationException;
+
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -43,6 +46,18 @@ public class DefaultTlsDirContextAuthenticationStrategyTests {
 		this.strategy.applyAuthentication(this.context, "username", "password");
 
 		verify(this.context).lookup("");
+	}
+
+	@Test
+	public void applyAuthenticationWhenUserDnIsSetAndPasswordIsEmptyThenAuthenticationException() {
+		assertThatExceptionOfType(AuthenticationException.class)
+			.isThrownBy(() -> this.strategy.applyAuthentication(this.context, "username", ""));
+	}
+
+	@Test
+	public void applyAuthenticationWhenUserDnIsSetAndPasswordIsNullThenAuthenticationException() {
+		assertThatExceptionOfType(AuthenticationException.class)
+			.isThrownBy(() -> this.strategy.applyAuthentication(this.context, "username", null));
 	}
 
 }

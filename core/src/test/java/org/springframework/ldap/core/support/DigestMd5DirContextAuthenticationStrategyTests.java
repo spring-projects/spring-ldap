@@ -28,54 +28,37 @@ import org.springframework.ldap.AuthenticationException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-public class SimpleDirContextAuthenticationStrategyTests {
+public class DigestMd5DirContextAuthenticationStrategyTests {
 
-	private SimpleDirContextAuthenticationStrategy tested;
+	private DigestMd5DirContextAuthenticationStrategy tested;
 
 	@Before
-	public void setUp() throws Exception {
-		this.tested = new SimpleDirContextAuthenticationStrategy();
+	public void setUp() {
+		this.tested = new DigestMd5DirContextAuthenticationStrategy();
 	}
 
 	@Test
-	public void testSetupEnvironment() {
-		Hashtable env = new Hashtable();
-		this.tested.setupEnvironment(env, "cn=John Doe", "pw");
+	public void setupEnvironmentSetsAuthenticationPrincipalAndCredentials() {
+		Hashtable<String, Object> env = new Hashtable<>();
+		this.tested.setupEnvironment(env, "username", "pw");
 
-		assertThat(env.get(Context.SECURITY_AUTHENTICATION)).isEqualTo("simple");
-		assertThat(env.get(Context.SECURITY_PRINCIPAL)).isEqualTo("cn=John Doe");
+		assertThat(env.get(Context.SECURITY_AUTHENTICATION)).isEqualTo("DIGEST-MD5");
+		assertThat(env.get(Context.SECURITY_PRINCIPAL)).isEqualTo("username");
 		assertThat(env.get(Context.SECURITY_CREDENTIALS)).isEqualTo("pw");
-	}
-
-	@Test
-	public void testProcessContextAfterCreation() {
-		Hashtable env = new Hashtable();
-		this.tested.processContextAfterCreation(null, "cn=John Doe", "pw");
-
-		assertThat(env.isEmpty()).isTrue();
 	}
 
 	@Test
 	public void setupEnvironmentWhenUserDnIsSetAndPasswordIsEmptyThenAuthenticationException() {
 		Hashtable<String, Object> env = new Hashtable<>();
 		assertThatExceptionOfType(AuthenticationException.class)
-			.isThrownBy(() -> this.tested.setupEnvironment(env, "cn=John Doe", ""));
+			.isThrownBy(() -> this.tested.setupEnvironment(env, "username", ""));
 	}
 
 	@Test
 	public void setupEnvironmentWhenUserDnIsSetAndPasswordIsNullThenAuthenticationException() {
 		Hashtable<String, Object> env = new Hashtable<>();
 		assertThatExceptionOfType(AuthenticationException.class)
-			.isThrownBy(() -> this.tested.setupEnvironment(env, "cn=John Doe", null));
-	}
-
-	@Test
-	public void setupEnvironmentWhenUserDnAndPasswordAreEmptyThenSucceeds() {
-		Hashtable<String, Object> env = new Hashtable<>();
-		this.tested.setupEnvironment(env, "", "");
-		assertThat(env.get(Context.SECURITY_AUTHENTICATION)).isEqualTo("simple");
-		assertThat(env.get(Context.SECURITY_PRINCIPAL)).isEqualTo("");
-		assertThat(env.get(Context.SECURITY_CREDENTIALS)).isEqualTo("");
+			.isThrownBy(() -> this.tested.setupEnvironment(env, "username", null));
 	}
 
 }
