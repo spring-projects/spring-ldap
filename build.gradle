@@ -24,6 +24,10 @@ apply plugin: 'io.spring.javaformat'
 apply plugin: 'io.spring.security.release'
 apply plugin: 's101'
 
+node {
+    version = "24.15.0"
+}
+
 group = "org.springframework.ldap"
 description = "Spring LDAP"
 
