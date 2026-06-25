@@ -1,0 +1,8 @@
+name: Build Release
+runs:
+  using: composite
+  steps:
+    - name: Build Release
+      uses: spring-io/spring-security-actions/run-gradle@83ac497c6ab54014e51de86ef3addfa3d4c268db  # main
+      with:
+        gradle-args: -PdeploymentRepository=${{ github.workspace }}/deployment-repository publishAllPublicationsToDeploymentRepository
