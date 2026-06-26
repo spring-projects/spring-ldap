@@ -3,7 +3,7 @@ plugins {
     id "groovy-gradle-plugin"
     id "java"
     id "groovy"
-    id 'com.apollographql.apollo' version '5.0.0'
+    id 'com.apollographql.apollo' version '5.0.1'
 }
 
 java {
