@@ -1,0 +1,17 @@
+name: Dependabot - Build Pull Request
+
+on: pull_request_target
+
+jobs:
+  build:
+    name: Build
+    uses: spring-projects/spring-ldap-commercial/.github/workflows/build-pull-request.yml@workflows/v1
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    secrets: inherit
+  build-check:
+    name: Build
+    needs: build
+    if: failure() || cancelled()
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 1
