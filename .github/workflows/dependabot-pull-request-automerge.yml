@@ -1,0 +1,16 @@
+name: Dependabot - Set to Automatically Merge
+
+on:
+  pull_request:
+    branches:
+      - main
+      - '*.x'
+
+run-name: Set ${{ github.ref_name }} to Automatically Merge
+
+jobs:
+  merge-dependabot-pr:
+    permissions: write-all
+    uses: spring-io/spring-github-workflows/.github/workflows/spring-merge-dependabot-pr.yml@v7
+    with:
+      mergeArguments: --auto --rebase
