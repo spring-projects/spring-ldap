@@ -1,5 +1,5 @@
 changelog:
-  repository: spring-projects/spring-ldap
+  repository: spring-projects/spring-ldap-commercial
   issues:
     exclude:
       labels: ["status: duplicate", "status: invalid", "status: declined"]

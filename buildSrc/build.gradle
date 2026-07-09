@@ -10,6 +10,26 @@ sourceCompatibility = JavaVersion.VERSION_17
 repositories {
     gradlePluginPortal()
     mavenCentral()
+    if (project.hasProperty("artifactoryUsername") && project.hasProperty("artifactoryPassword")) {
+        maven {
+            name "spring-commercial-release"
+            url "https://usw1.packages.broadcom.com/spring-enterprise-maven-prod-local"
+            credentials {
+                username project.artifactoryUsername
+                password project.artifactoryPassword
+            }
+        }
+        if ("$version".endsWith("-SNAPSHOT")) {
+            maven {
+                name "spring-commercial-snapshot"
+                url "https://usw1.packages.broadcom.com/spring-enterprise-maven-dev-local"
+                credentials {
+                    username project.artifactoryUsername
+                    password project.artifactoryPassword
+                }
+            }
+        }
+    }
 }
 
 sourceSets {
