@@ -35,6 +35,8 @@ nohttp {
 	source.exclude "buildSrc/build/**"
 }
 
+apply from: 'commercial-settings.gradle'
+
 
 antora {
     options = [clean: true, fetch: !project.gradle.startParameter.offline, stacktrace: true]
@@ -66,11 +68,11 @@ tasks.register("generateAntoraResources") {
 
 springRelease {
     repositoryOwner = "spring-projects"
-    repositoryName = "spring-ldap"
+    repositoryName = "spring-ldap-commercial"
     weekOfMonth = 2
     dayOfWeek = 4
-    referenceDocUrl = "https://docs.spring.io/spring-ldap/reference/{version}/index.html"
-    apiDocUrl = "https://docs.spring.io/spring-ldap/reference/{version}/api/java/index.html"
+    referenceDocUrl = "https://docs.spring.vmware.com/spring-ldap-commercial/reference/{version}/index.html"
+    apiDocUrl = "https://docs.spring.vmware.com/spring-ldap-commercial/reference/{version}/api/java/index.html"
     replaceSnapshotVersionInReferenceDocUrl = true
 }
 
