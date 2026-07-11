@@ -119,6 +119,21 @@ public class PoolingContextSourceTests extends AbstractPoolTestCase {
 	}
 
 	@Test
+	public void testConstructorContextSource() throws Exception {
+		given(contextSourceMock.getReadOnlyContext()).willReturn(dirContextMock);
+
+		final PoolingContextSource poolingContextSource = new PoolingContextSource(contextSourceMock);
+
+		// The ContextSource provided in the constructor should be used, not ignored
+		assertThat(poolingContextSource.getContextSource()).isEqualTo(contextSourceMock);
+
+		// Order reversed because the 'wrapper' has the needed equals logic
+		final DirContext readOnlyContext = poolingContextSource.getReadOnlyContext();
+		assertThat(readOnlyContext).isEqualTo(dirContextMock);
+		assertThat(poolingContextSource.getNumActive()).isEqualTo(1);
+	}
+
+	@Test
 	public void testGetReadOnlyContextPool() throws Exception {
 		DirContext secondDirContextMock = mock(DirContext.class);
 
