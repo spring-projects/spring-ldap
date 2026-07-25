@@ -184,7 +184,7 @@ public class LdapAttribute extends BasicAttribute {
 	}
 
 	/**
-	 * Removes an option from the the set.
+	 * Removes an option from the set.
 	 * @param option {@link java.lang.String} option.
 	 * @return boolean indicating successful removal of option.
 	 */

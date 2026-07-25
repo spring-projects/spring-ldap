@@ -424,7 +424,7 @@ public final class LdapTests {
 			this.personTestData[PersonName.PATRICK.getIndex()], this.personTestData[PersonName.PETER.getIndex()],
 			this.personTestData[PersonName.DALEKS.getIndex()], this.personTestData[PersonName.MASTER.getIndex()], };
 
-	// Delete a some entries from the the test data set and check what's left is what we'd
+	// Delete a some entries from the test data set and check what's left is what we'd
 	// expect
 	@Test
 	public void delete() throws Exception {
