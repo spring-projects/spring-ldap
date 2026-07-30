@@ -53,18 +53,6 @@ gradlePlugin {
             id = "org.springframework.security.sagan"
             implementationClass = "org.springframework.gradle.sagan.SaganPlugin"
         }
-        githubMilestone {
-            id = "org.springframework.github.milestone"
-            implementationClass = "org.springframework.gradle.github.milestones.GitHubMilestonePlugin"
-        }
-        githubChangelog {
-            id = "org.springframework.github.changelog"
-            implementationClass = "org.springframework.gradle.github.changelog.GitHubChangelogPlugin"
-        }
-        githubRelease {
-            id = "org.springframework.github.release"
-            implementationClass = "org.springframework.gradle.github.release.GitHubReleasePlugin"
-        }
         s101 {
             id = "s101"
             implementationClass = "s101.S101Plugin"
@@ -85,7 +73,6 @@ dependencies {
     implementation 'org.yaml:snakeyaml:2.6'
     implementation localGroovy()
 
-    implementation 'io.github.gradle-nexus:publish-plugin:2.0.0'
     implementation 'io.projectreactor:reactor-core:3.8.6'
     implementation ('org.gretty:gretty:5.0.2') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-loader-tools'
@@ -100,7 +87,6 @@ dependencies {
     implementation 'net.sourceforge.htmlunit:htmlunit:2.70.0'
     implementation 'org.asciidoctor:asciidoctor-gradle-jvm:4.0.5'
     implementation 'org.hidetake:gradle-ssh-plugin:2.10.1'
-    implementation 'org.jfrog.buildinfo:build-info-extractor-gradle:6.0.4'
     implementation 'org.springframework:spring-core:7.0.8'
     implementation 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:7.3.1.8318'
 
