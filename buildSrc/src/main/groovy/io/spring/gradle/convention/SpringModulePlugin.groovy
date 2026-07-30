@@ -35,13 +35,6 @@ class SpringModulePlugin extends AbstractSpringJavaPlugin {
 		pluginManager.apply(SpringMavenPlugin.class);
 		pluginManager.apply("io.spring.convention.jacoco");
 
-		project.tasks.register("deployArtifacts") { task ->
-			task.group = 'Deploy tasks'
-			task.description = "Deploys the artifacts to either Artifactory or Maven Central"
-			if (!Utils.isRelease(project)) {
-				task.dependsOn project.tasks.named('artifactoryPublish')
-			}
-		}
 		project.tasks.withType(Jar) {
 			from(project.rootProject.files('LICENSE.txt')) {
 				into('META-INF')
