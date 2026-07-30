@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "*.x"
+      - "release/**"
+  schedule:
+    - cron: '0 10 * * *' # Once per day at 10am UTC
+  workflow_dispatch: # Manual trigger
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test Against Snapshots
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: spring-io/spring-security-actions/test@4386090bf7852faa1d61782f981811441757dbb8  # main
+        with:
+          java-version: '25'
+          gradle-args: -PisOverrideVersionCatalog -PtestToolchain=25 -PspringFrameworkVersion=7.+
+  compute-version:
+    name: Compute Version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.project-version.outputs.version }}
+      snapshot: ${{ steps.project-version.outputs.snapshot }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - id: project-version
+        name: Extract Project Version
+        uses: spring-io/spring-release-actions/compute-version@a1f321783a0769dd2aea4fad6c2ae2f95a52b885 # 0.0.5
+  build-and-deploy:
+    name: Build and Deploy
+    needs: [ test, compute-version ]
+    if: needs.compute-version.outputs.snapshot == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: spring-io/spring-security-actions/build@4386090bf7852faa1d61782f981811441757dbb8  # main
+        with:
+          java-version: '25'
+      - id: deploy-location
+        name: Compute Deploy Location
+        uses: spring-io/spring-release-actions/compute-artifact-repository@a1f321783a0769dd2aea4fad6c2ae2f95a52b885 # 0.0.5
+        with:
+          version: ${{ needs.compute-version.outputs.version }}
+      - name: Deploy Artifacts
+        uses: spring-io/spring-security-actions/ensure-artifacts@f8ef0d53fc61799c18f19bc6a4c42ccb9aa265de
+        with:
+          version: ${{ needs.compute-version.outputs.version }}
+          username: ${{ secrets.ARTIFACTORY_USERNAME }}
+          password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          repository-uri: ${{ steps.deploy-location.outputs.uri }}
+          repository-name: ${{ steps.deploy-location.outputs.name }}
+          project: ${{ steps.deploy-location.outputs.project }}
+          local-repository: build/publications/repos
+          artifact-path: org/springframework/ldap/spring-ldap-core
+  deploy-schema:
+    name: Deploy Schema
+    needs: [ test, compute-version ]
+    if: needs.compute-version.outputs.snapshot == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/deploy-schema
+        with:
+          java-version: '25'
+        env:
+          DOCS_SSH_KEY: ${{ secrets.DOCS_SSH_KEY }}
+          DOCS_USERNAME: ${{ secrets.DOCS_USERNAME }}
+          DOCS_HOST: ${{ secrets.DOCS_HOST }}
