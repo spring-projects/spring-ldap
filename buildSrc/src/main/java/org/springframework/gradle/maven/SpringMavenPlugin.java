@@ -1,6 +1,5 @@
 package org.springframework.gradle.maven;
 
-import io.spring.gradle.convention.ArtifactoryPlugin;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.PluginManager;
@@ -15,7 +14,5 @@ public class SpringMavenPlugin implements Plugin<Project> {
 		pluginManager.apply(MavenPublishingConventionsPlugin.class);
 		pluginManager.apply(PublishAllJavaComponentsPlugin.class);
 		pluginManager.apply(PublishLocalPlugin.class);
-		pluginManager.apply(PublishArtifactsPlugin.class);
-		pluginManager.apply(ArtifactoryPlugin.class);
 	}
 }
