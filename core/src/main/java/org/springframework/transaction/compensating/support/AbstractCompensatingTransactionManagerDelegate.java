@@ -18,7 +18,6 @@ package org.springframework.transaction.compensating.support;
 
 import java.util.Objects;
 
-import com.mysema.commons.lang.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +27,7 @@ import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.compensating.CompensatingTransactionOperationManager;
 import org.springframework.transaction.support.DefaultTransactionStatus;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.util.Assert;
 
 /**
  * Abstract superclass for Compensating TransactionManager delegates. The actual
