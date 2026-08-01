@@ -20,7 +20,7 @@ env:
 jobs:
   test:
     name: Test Against Snapshots
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.UBUNTU_DEFAULT }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: spring-io/spring-security-actions/test@4386090bf7852faa1d61782f981811441757dbb8  # main
@@ -29,7 +29,7 @@ jobs:
           gradle-args: -PisOverrideVersionCatalog -PtestToolchain=17 -PspringFrameworkVersion=7.+ -PspringDataVersion=2025.0.+
   compute-version:
     name: Compute Version
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.UBUNTU_DEFAULT }}
     outputs:
       version: ${{ steps.project-version.outputs.version }}
       snapshot: ${{ steps.project-version.outputs.snapshot }}
@@ -42,7 +42,7 @@ jobs:
     name: Build and Deploy
     needs: [ test, compute-version ]
     if: needs.compute-version.outputs.snapshot == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.UBUNTU_DEFAULT }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: spring-io/spring-security-actions/build@4386090bf7852faa1d61782f981811441757dbb8  # main
@@ -68,7 +68,7 @@ jobs:
     name: Deploy Schema
     needs: [ test, compute-version ]
     if: needs.compute-version.outputs.snapshot == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.UBUNTU_DEFAULT }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/deploy-schema
