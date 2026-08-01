@@ -12,6 +12,11 @@ on:
 permissions:
   contents: read
 
+env:
+  JAVA_VERSION: '17'
+  REPO_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+  REPO_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+
 jobs:
   test:
     name: Test Against Snapshots
@@ -20,7 +25,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: spring-io/spring-security-actions/test@4386090bf7852faa1d61782f981811441757dbb8  # main
         with:
-          java-version: '17'
+          java-version: ${{ env.JAVA_VERSION }}
           gradle-args: -PisOverrideVersionCatalog -PtestToolchain=17 -PspringFrameworkVersion=7.+ -PspringDataVersion=2025.0.+
   compute-version:
     name: Compute Version
@@ -42,7 +47,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: spring-io/spring-security-actions/build@4386090bf7852faa1d61782f981811441757dbb8  # main
         with:
-          java-version: '17'
+          java-version: ${{ env.JAVA_VERSION }}
       - id: deploy-location
         name: Compute Deploy Location
         uses: spring-io/spring-release-actions/compute-artifact-repository@a1f321783a0769dd2aea4fad6c2ae2f95a52b885 # 0.0.5
@@ -52,8 +57,8 @@ jobs:
         uses: spring-io/spring-security-actions/ensure-artifacts@f8ef0d53fc61799c18f19bc6a4c42ccb9aa265de
         with:
           version: ${{ needs.compute-version.outputs.version }}
-          username: ${{ secrets.ARTIFACTORY_USERNAME }}
-          password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          username: ${{ env.REPO_USERNAME }}
+          password: ${{ env.REPO_PASSWORD }}
           repository-uri: ${{ steps.deploy-location.outputs.uri }}
           repository-name: ${{ steps.deploy-location.outputs.name }}
           project: ${{ steps.deploy-location.outputs.project }}
@@ -68,7 +73,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/deploy-schema
         with:
-          java-version: '17'
+          java-version: ${{ env.JAVA_VERSION }}
         env:
           DOCS_SSH_KEY: ${{ secrets.DOCS_SSH_KEY }}
           DOCS_USERNAME: ${{ secrets.DOCS_USERNAME }}

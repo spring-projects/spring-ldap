@@ -5,6 +5,9 @@ on: pull_request
 permissions:
   contents: read
 
+env:
+  JAVA_VERSION: '17'
+
 jobs:
   build:
     name: Build
@@ -14,4 +17,4 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: spring-io/spring-security-actions/pr-build@4386090bf7852faa1d61782f981811441757dbb8  # main
         with:
-          java-version: '17'
+          java-version: ${{ env.JAVA_VERSION }}
