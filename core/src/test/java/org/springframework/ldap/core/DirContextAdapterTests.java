@@ -546,6 +546,54 @@ public class DirContextAdapterTests {
 		assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
 	}
 
+	// gh-1263
+	@Test
+	public void testRemoveAttributeValueWithoutEqualityMatchingRuleUsesReplace() throws NamingException {
+		BasicAttribute facsimile = new BasicAttribute("facsimileTelephoneNumber");
+		facsimile.add("+1 555 1234");
+		facsimile.add("+1 555 5678");
+		this.tested.setAttribute(facsimile);
+		this.tested.setUpdateMode(true);
+
+		this.tested.removeAttributeValue("facsimileTelephoneNumber", "+1 555 1234");
+
+		ModificationItem[] modificationItems = this.tested.getModificationItems();
+		assertThat(modificationItems.length).isEqualTo(1);
+		assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.REPLACE_ATTRIBUTE);
+		Attribute modificationAttribute = modificationItems[0].getAttribute();
+		assertThat(modificationAttribute.getID()).isEqualTo("facsimileTelephoneNumber");
+		assertThat(modificationAttribute.size()).isEqualTo(1);
+		assertThat(modificationAttribute.get()).isEqualTo("+1 555 5678");
+	}
+
+	// gh-1263
+	@Test
+	public void testChangeMultiAttributeWithoutEqualityMatchingRule_RemoveValue() throws Exception {
+		final Attributes fixtureAttrs = new BasicAttributes();
+		Attribute facsimile = new BasicAttribute("facsimileTelephoneNumber");
+		facsimile.add("+1 555 1234");
+		facsimile.add("+1 555 5678");
+		fixtureAttrs.put(facsimile);
+		class TestableDirContextAdapter extends DirContextAdapter {
+
+			TestableDirContextAdapter() {
+				super(fixtureAttrs, null);
+				setUpdateMode(true);
+			}
+
+		}
+		this.tested = new TestableDirContextAdapter();
+		this.tested.setAttributeValues("facsimileTelephoneNumber", new String[] { "+1 555 1234" });
+
+		ModificationItem[] modificationItems = this.tested.getModificationItems();
+		assertThat(modificationItems.length).isEqualTo(1);
+		assertThat(modificationItems[0].getModificationOp()).isEqualTo(DirContext.REPLACE_ATTRIBUTE);
+		Attribute modificationAttribute = modificationItems[0].getAttribute();
+		assertThat(modificationAttribute.getID()).isEqualTo("facsimileTelephoneNumber");
+		assertThat(modificationAttribute.size()).isEqualTo(1);
+		assertThat(modificationAttribute.get()).isEqualTo("+1 555 1234");
+	}
+
 	@Test
 	public void testSetStringAttribute() throws Exception {
 		assertThat(this.tested.isUpdateMode()).isFalse();
