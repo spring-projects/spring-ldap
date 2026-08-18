@@ -17,6 +17,8 @@ dependencies {
 	if (project.hasProperty("isOverrideVersionCatalog")) {
 		def springFrameworkVersion = project.property("springFrameworkVersion")
 		api platform("org.springframework:spring-framework-bom:$springFrameworkVersion")
+	} else if (project.hasProperty("snapshot")) {
+		api platform("org.springframework:spring-framework-bom:7.0.+")
 	} else {
 		api platform("org.springframework:spring-framework-bom:7.0.9")
 	}
