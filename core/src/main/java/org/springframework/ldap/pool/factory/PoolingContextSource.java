@@ -171,7 +171,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	 * @since 4.1
 	 */
 	public PoolingContextSource(ContextSource contextSource) {
-		this.dirContextPoolableObjectFactory = new DirContextPoolableObjectFactory(new NullContextSource());
+		this.dirContextPoolableObjectFactory = new DirContextPoolableObjectFactory(contextSource);
 		this.keyedObjectPool = new GenericKeyedObjectPool();
 		this.keyedObjectPool.setFactory(this.dirContextPoolableObjectFactory);
 	}
