@@ -279,9 +279,9 @@ public class DirContextAdapter implements DirContextOperations {
 	 * return immediately. If modifications have been made, and the original size as well
 	 * as the updated size of the attribute is 1, replace the attribute. If the size of
 	 * the updated attribute is 0, remove the attribute. Otherwise, the attribute is a
-	 * multi-value attribute; if it's an ordered one it should be replaced in its entirety
-	 * to preserve the new ordering, if not all modifications to the original value
-	 * (removals and additions) will be collected individually.
+	 * multi-value attribute; if it's an ordered one, or it has no equality matching rule,
+	 * it should be replaced in its entirety (RFC 2251 §4.6). If not, all modifications to
+	 * the original value (removals and additions) will be collected individually.
 	 * @param changedAttr the value of the changed attribute.
 	 * @param modificationList the list in which to add the modifications.
 	 */
@@ -315,7 +315,7 @@ public class DirContextAdapter implements DirContextOperations {
 			modificationList.add(new ModificationItem(DirContext.REPLACE_ATTRIBUTE, changedAttr));
 			return;
 		}
-		if (changedAttr.isOrdered()) {
+		if (changedAttr.isOrdered() || !changedAttr.hasEqualityMatchingRule()) {
 			modificationList.add(new ModificationItem(DirContext.REPLACE_ATTRIBUTE, changedAttr));
 			return;
 		}

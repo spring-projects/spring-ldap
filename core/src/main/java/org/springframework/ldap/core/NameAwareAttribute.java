@@ -19,6 +19,7 @@ package org.springframework.ldap.core;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -45,9 +46,19 @@ import org.springframework.util.ObjectUtils;
  */
 public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
+	/**
+	 * Attribute types that RFC 4519 (and common aliases/OIDs) define without an equality
+	 * matching rule. Per RFC 2251 §4.6, clients must REPLACE remaining values rather than
+	 * REMOVE individual values for these types.
+	 */
+	private static final Set<String> ATTRS_WITHOUT_EQUALITY_MATCHING_RULE = Set.of("facsimiletelephonenumber", "fax",
+			"2.5.4.23", "telexnumber", "2.5.4.21", "teletexterminalidentifier", "2.5.4.22");
+
 	private final String id;
 
 	private final boolean orderMatters;
+
+	private final boolean equalityMatching;
 
 	private final Set<Object> values = new LinkedHashSet<>();
 
@@ -68,7 +79,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 	 * @param attribute the Attribute to copy.
 	 */
 	public NameAwareAttribute(Attribute attribute) {
-		this(attribute.getID(), attribute.isOrdered());
+		this(attribute.getID(), attribute.isOrdered(), resolveEqualityMatching(attribute));
 		try {
 			NamingEnumeration<?> incomingValues = attribute.getAll();
 			while (incomingValues.hasMore()) {
@@ -100,8 +111,34 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 	 * @param orderMatters whether order has significance in this attribute.
 	 */
 	public NameAwareAttribute(String id, boolean orderMatters) {
+		this(id, orderMatters, hasDefaultEqualityMatchingRule(id));
+	}
+
+	/**
+	 * Construct a new instance with the specified id, order significance, and equality
+	 * matching rule presence.
+	 * @param id the attribute id
+	 * @param orderMatters whether order has significance in this attribute
+	 * @param equalityMatching {@code true} if an equality matching rule is defined for
+	 * this attribute type; {@code false} if individual value deletes are not legal
+	 * (RFC 2251 §4.6)
+	 * @since 4.1.1
+	 */
+	public NameAwareAttribute(String id, boolean orderMatters, boolean equalityMatching) {
 		this.id = id;
 		this.orderMatters = orderMatters;
+		this.equalityMatching = equalityMatching;
+	}
+
+	private static boolean resolveEqualityMatching(Attribute attribute) {
+		if (attribute instanceof NameAwareAttribute) {
+			return ((NameAwareAttribute) attribute).hasEqualityMatchingRule();
+		}
+		return hasDefaultEqualityMatchingRule(attribute.getID());
+	}
+
+	private static boolean hasDefaultEqualityMatchingRule(String id) {
+		return id == null || !ATTRS_WITHOUT_EQUALITY_MATCHING_RULE.contains(id.toLowerCase(Locale.ROOT));
 	}
 
 	@Override
@@ -233,6 +270,17 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 	}
 
 	/**
+	 * Whether this attribute type is assumed to define an equality matching rule. When
+	 * {@code false}, {@link DirContextAdapter#getModificationItems()} replaces remaining
+	 * values instead of removing individual ones (RFC 2251 §4.6).
+	 * @return {@code true} if equality matching is assumed to be defined
+	 * @since 4.1.1
+	 */
+	public boolean hasEqualityMatchingRule() {
+		return this.equalityMatching;
+	}
+
+	/**
 	 * <p>
 	 * Due to performance reasons it is not advised to iterate over the attribute's values
 	 * using this method. Please use the {@link #iterator()} instead.
@@ -320,7 +368,8 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 			return false;
 		}
 
-		if (this.orderMatters != that.orderMatters || this.size() != that.size()) {
+		if (this.orderMatters != that.orderMatters || this.equalityMatching != that.equalityMatching
+				|| this.size() != that.size()) {
 			return false;
 		}
 
@@ -380,8 +429,9 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 	@Override
 	public String toString() {
-		return String.format("NameAwareAttribute; id: %s; hasValuesAsNames: %s; orderMatters: %s; values: %s", this.id,
-				hasValuesAsNames(), this.orderMatters, this.values);
+		return String.format(
+				"NameAwareAttribute; id: %s; hasValuesAsNames: %s; orderMatters: %s; equalityMatching: %s; values: %s",
+				this.id, hasValuesAsNames(), this.orderMatters, this.equalityMatching, this.values);
 	}
 
 	@Override

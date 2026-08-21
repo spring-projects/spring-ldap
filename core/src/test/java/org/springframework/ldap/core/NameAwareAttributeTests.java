@@ -270,6 +270,18 @@ public class NameAwareAttributeTests {
 	}
 
 	@Test
+	public void testHasEqualityMatchingRuleDefaultsFalseForFacsimileTelephoneNumber() {
+		NameAwareAttribute facsimile = new NameAwareAttribute("facsimileTelephoneNumber");
+		NameAwareAttribute copied = new NameAwareAttribute(facsimile);
+		NameAwareAttribute custom = new NameAwareAttribute("customAttr", false, false);
+
+		assertThat(facsimile.hasEqualityMatchingRule()).isFalse();
+		assertThat(copied.hasEqualityMatchingRule()).isFalse();
+		assertThat(new NameAwareAttribute("abc").hasEqualityMatchingRule()).isTrue();
+		assertThat(custom.hasEqualityMatchingRule()).isFalse();
+	}
+
+	@Test
 	public void testRemoveByIndexUpdatesHashcodeAndEquals() throws InvalidNameException {
 		// given
 		Name a = new LdapName("cn=user1");
