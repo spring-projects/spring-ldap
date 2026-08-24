@@ -83,7 +83,7 @@ dependencies {
     implementation 'org.yaml:snakeyaml:2.6'
     implementation localGroovy()
 
-    implementation 'io.projectreactor:reactor-core:3.8.6'
+    implementation 'io.projectreactor:reactor-core:3.8.7'
     implementation ('org.gretty:gretty:5.0.2') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-loader-tools'
     }
