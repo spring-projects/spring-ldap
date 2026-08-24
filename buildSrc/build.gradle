@@ -97,7 +97,7 @@ dependencies {
     implementation 'net.sourceforge.htmlunit:htmlunit:2.70.0'
     implementation 'org.asciidoctor:asciidoctor-gradle-jvm:4.0.5'
     implementation 'org.hidetake:gradle-ssh-plugin:2.10.1'
-    implementation 'org.springframework:spring-core:7.0.8'
+    implementation 'org.springframework:spring-core:7.0.9'
     implementation 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:7.4.0.8496'
 
     testImplementation platform('org.junit:junit-bom:6.1.3')
