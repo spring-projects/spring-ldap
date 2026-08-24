@@ -12,27 +12,41 @@ on:
 permissions:
   contents: read
 
+env:
+  JAVA_VERSION: '25'
+  ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+  ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+
 jobs:
-  test:
-    name: Test Against Snapshots
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: spring-io/spring-security-actions/test@4386090bf7852faa1d61782f981811441757dbb8  # main
-        with:
-          java-version: '25'
-          gradle-args: -Psnapshot -PtestToolchain=25
   compute-version:
     name: Compute Version
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.project-version.outputs.version }}
       snapshot: ${{ steps.project-version.outputs.snapshot }}
+      repository-uri: ${{ steps.artifact-repository.outputs.uri }}
+      repository-name: ${{ steps.artifact-repository.outputs.name }}
+      repository-project: ${{ steps.artifact-repository.outputs.project }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - id: project-version
         name: Extract Project Version
         uses: spring-io/spring-release-actions/compute-version@a1f321783a0769dd2aea4fad6c2ae2f95a52b885 # 0.0.5
+      - id: artifact-repository
+        name: Compute Artifact Repository
+        uses: spring-io/spring-release-actions/compute-artifact-repository@a1f321783a0769dd2aea4fad6c2ae2f95a52b885 # 0.0.5
+        with:
+          version: ${{ steps.project-version.outputs.version }}
+  test:
+    name: Test Against Snapshots
+    needs: [ compute-version ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: spring-io/spring-security-actions/test@6edd9e68189ec4868d080ab89cf68023056f65da  # main
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          gradle-args: -Psnapshot -PtestToolchain=25
   build-and-deploy:
     name: Build and Deploy
     needs: [ test, compute-version ]
@@ -40,23 +54,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: spring-io/spring-security-actions/build@4386090bf7852faa1d61782f981811441757dbb8  # main
+      - uses: spring-io/spring-security-actions/build@6edd9e68189ec4868d080ab89cf68023056f65da  # main
         with:
-          java-version: '25'
-      - id: deploy-location
-        name: Compute Deploy Location
-        uses: spring-io/spring-release-actions/compute-artifact-repository@a1f321783a0769dd2aea4fad6c2ae2f95a52b885 # 0.0.5
-        with:
-          version: ${{ needs.compute-version.outputs.version }}
+          java-version: ${{ env.JAVA_VERSION }}
       - name: Deploy Artifacts
         uses: spring-io/spring-security-actions/ensure-artifacts@f8ef0d53fc61799c18f19bc6a4c42ccb9aa265de
         with:
           version: ${{ needs.compute-version.outputs.version }}
-          username: ${{ secrets.ARTIFACTORY_USERNAME }}
-          password: ${{ secrets.ARTIFACTORY_PASSWORD }}
-          repository-uri: ${{ steps.deploy-location.outputs.uri }}
-          repository-name: ${{ steps.deploy-location.outputs.name }}
-          project: ${{ steps.deploy-location.outputs.project }}
+          username: ${{ env.ARTIFACTORY_USERNAME }}
+          password: ${{ env.ARTIFACTORY_PASSWORD }}
+          repository-uri: ${{ needs.compute-version.outputs.repository-uri }}
+          repository-name: ${{ needs.compute-version.outputs.repository-name }}
+          project: ${{ needs.compute-version.outputs.repository-project }}
           local-repository: build/publications/repos
           artifact-path: org/springframework/ldap/spring-ldap-core
   deploy-schema:
@@ -68,7 +77,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/deploy-schema
         with:
-          java-version: '25'
+          java-version: ${{ env.JAVA_VERSION }}
         env:
           DOCS_SSH_KEY: ${{ secrets.DOCS_SSH_KEY }}
           DOCS_USERNAME: ${{ secrets.DOCS_USERNAME }}
