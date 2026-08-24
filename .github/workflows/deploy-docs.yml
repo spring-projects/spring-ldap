@@ -1,20 +1,16 @@
 name: Deploy Docs
 on:
   push:
-    branches-ignore: [ gh-pages ]
-    tags: '**'
-  repository_dispatch:
-    types: request-build-reference # legacy
-  #schedule:
-  #- cron: '0 10 * * *' # Once per day at 10am UTC
+    branches:
+      - "*.x"
+      - "main"
   workflow_dispatch:
 permissions:
   actions: write
 jobs:
   build:
     runs-on: ubuntu-latest
-    # FIXME enable when pushed to spring-projects
-    # if: github.repository_owner == 'spring-projects'
+    if: github.repository == 'spring-projects/spring-ldap'
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -22,12 +18,6 @@ jobs:
           ref: docs-build
           fetch-depth: 1
       - name: Dispatch (partial build)
-        if: github.ref_type == 'branch'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh workflow run deploy-docs.yml -r $(git rev-parse --abbrev-ref HEAD) -f build-refname=${{ github.ref_name }}
-      - name: Dispatch (full build)
-        if: github.ref_type == 'tag'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh workflow run deploy-docs.yml -r $(git rev-parse --abbrev-ref HEAD)
