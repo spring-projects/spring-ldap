@@ -1,0 +1,99 @@
+version: 2
+updates:
+{{#main}}
+  - package-ecosystem: gradle
+    {{>target-branch}}
+    {{>milestone}}
+    {{>directory}}
+    {{>schedule}}
+    open-pull-requests-limit: 10
+    labels:
+      - 'type: dependency-upgrade'
+      - 'in: build'
+    ignore:
+      - dependency-name: org.apache.directory.server:*
+      - dependency-name: org.apache.directory.shared:*
+      - dependency-name: '*'
+        update-types:
+          - version-update:semver-major
+  - package-ecosystem: npm
+    {{>target-branch}}
+    {{>milestone}}
+    {{>directory}}
+    {{>schedule}}
+    labels:
+      - 'type: dependency-upgrade'
+      - 'in: docs'
+  - package-ecosystem: github-actions
+    {{>target-branch}}
+    {{>milestone}}
+    {{>directory}}
+    {{>schedule}}
+    labels:
+      - 'type: task'
+      - 'in: build'
+{{/main}}
+{{#feature-branches}}
+  - package-ecosystem: gradle
+    {{>target-branch}}
+    {{>milestone}}
+    {{>directory}}
+    {{>schedule}}
+    open-pull-requests-limit: 10
+    labels:
+      - 'type: dependency-upgrade'
+      - 'in: build'
+    ignore:
+      - dependency-name: org.apache.directory.server:*
+      - dependency-name: org.apache.directory.shared:*
+      - dependency-name: org.junit:junit-bom
+        update-types:
+          - version-update:semver-major
+      - dependency-name: org.mockito:mockito-bom
+        update-types:
+          - version-update:semver-major
+      - dependency-name: '*'
+        update-types:
+          - version-update:semver-major
+          - version-update:semver-minor
+  - package-ecosystem: npm
+    {{>target-branch}}
+    {{>milestone}}
+    {{>directory}}
+    {{>schedule}}
+    labels:
+      - 'type: dependency-upgrade'
+      - 'in: docs'
+    ignore:
+      - dependency-name: '*'
+        update-types:
+          - version-update:semver-major
+  - package-ecosystem: github-actions
+    {{>target-branch}}
+    {{>milestone}}
+    {{>directory}}
+    {{>schedule}}
+    labels:
+      - 'type: task'
+      - 'in: build'
+    ignore:
+      - dependency-name: '*'
+        update-types:
+          - version-update:semver-major
+{{/feature-branches}}
+{{#docs-build}}
+  - package-ecosystem: npm
+    {{>target-branch}}
+    {{>directory}}
+    {{>schedule}}
+    labels:
+      - 'type: dependency-upgrade'
+      - 'in: docs'
+  - package-ecosystem: github-actions
+    {{>target-branch}}
+    {{>directory}}
+    {{>schedule}}
+    labels:
+      - 'type: task'
+      - 'in: build'
+{{/docs-build}}
