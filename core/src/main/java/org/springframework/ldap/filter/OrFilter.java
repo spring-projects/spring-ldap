@@ -36,7 +36,7 @@ public class OrFilter extends BinaryLogicalFilter {
 	private static final String PIPE_SIGN = "|";
 
 	/**
-	 * Add a query to the OR expression
+	 * Add a query to the OR expression.
 	 * @param query The query to or with the rest of the or:ed queries.
 	 * @return This LdapOrQuery
 	 */

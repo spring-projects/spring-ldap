@@ -156,6 +156,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 	}
 
 	/**
+	 * Return the LdapRdn as a string where the value is LDAP-encoded.
 	 * @return The LdapRdn as a string where the value is LDAP-encoded.
 	 */
 	public String getLdapEncoded() {

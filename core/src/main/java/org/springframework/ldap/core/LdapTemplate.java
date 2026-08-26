@@ -1794,7 +1794,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			.filter(Objects::nonNull);
 	}
 
-	@Nullable private <T> T unchecked(CheckedSupplier<T> supplier) {
+	private <T> @Nullable T unchecked(CheckedSupplier<T> supplier) {
 		try {
 			return supplier.get();
 		}
@@ -1838,15 +1838,15 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	private enum AuthenticationStatus {
 
 		/**
-		 * Authentication was successful
+		 * Authentication was successful.
 		 */
 		SUCCESS(true),
 		/**
-		 * The user was not found
+		 * The user was not found.
 		 */
 		EMPTYRESULT(false),
 		/**
-		 * Authentication failed for other reason
+		 * Authentication failed for other reason.
 		 */
 		UNDEFINED_FAILURE(false);
 
@@ -1857,7 +1857,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		}
 
 		/**
-		 * Return true if the authentication attempt was successful
+		 * Return true if the authentication attempt was successful.
 		 * @return true if the authentication attempt was successful
 		 */
 		public boolean isSuccess() {

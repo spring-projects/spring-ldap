@@ -186,7 +186,7 @@ public class SingleContextSource implements ContextSource, DisposableBean {
 		 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
 		 * java.lang.reflect.Method, java.lang.Object[])
 		 */
-		@Nullable public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+		public @Nullable Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
 			String methodName = method.getName();
 			if (methodName.equals("getTargetContext")) {

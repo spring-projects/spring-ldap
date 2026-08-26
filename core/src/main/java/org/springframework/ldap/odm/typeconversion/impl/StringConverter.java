@@ -17,6 +17,8 @@
 package org.springframework.ldap.odm.typeconversion.impl;
 
 /**
+ * Unused placeholder class.
+ *
  * @author Mattias Hellborg Arthursson
  * @deprecated empty class
  */

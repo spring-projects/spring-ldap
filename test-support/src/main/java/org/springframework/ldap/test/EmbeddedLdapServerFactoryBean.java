@@ -22,6 +22,9 @@ import org.springframework.beans.factory.config.AbstractFactoryBean;
 import org.springframework.util.Assert;
 
 /**
+ * A {@link org.springframework.beans.factory.FactoryBean} that creates an embedded
+ * ApacheDS LDAP server for use in tests.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class EmbeddedLdapServerFactoryBean extends AbstractFactoryBean<EmbeddedLdapServer> {

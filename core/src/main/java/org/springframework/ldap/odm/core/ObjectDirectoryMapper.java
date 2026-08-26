@@ -37,7 +37,7 @@ public interface ObjectDirectoryMapper {
 
 	/**
 	 * Used to convert from Java representation of an Ldap Entry when writing to the Ldap
-	 * directory
+	 * directory.
 	 * @param entry - The entry to convert.
 	 * @param context - The LDAP context to store the converted entry
 	 * @throws org.springframework.ldap.NamingException on error.

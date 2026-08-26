@@ -21,6 +21,8 @@ import org.jspecify.annotations.NullUnmarked;
 import org.springframework.ldap.support.LdapUtils;
 
 /**
+ * Thrown to indicate a lexical error.
+ *
  * @deprecated As of 2.0 it is recommended to use {@link javax.naming.ldap.LdapName} along
  * with utility methods in {@link LdapUtils} instead.
  */
@@ -66,7 +68,7 @@ public class TokenMgrError extends Error {
 
 	/**
 	 * Replaces unprintable characters by their escaped (or unicode escaped) equivalents
-	 * in the given string
+	 * in the given string.
 	 */
 	protected static final String addEscapes(String str) {
 		StringBuffer retval = new StringBuffer();

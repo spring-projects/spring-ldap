@@ -32,7 +32,7 @@ import org.springframework.util.StringUtils;
  */
 public class DigestMd5DirContextAuthenticationStrategy implements DirContextAuthenticationStrategy {
 
-	/** Authentication type for DIGEST-MD5 auth */
+	/** Authentication type for DIGEST-MD5 auth. */
 	private static final String DIGEST_MD5_AUTHENTICATION = "DIGEST-MD5";
 
 	/*

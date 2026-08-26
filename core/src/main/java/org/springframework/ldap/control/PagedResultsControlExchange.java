@@ -53,7 +53,7 @@ public class PagedResultsControlExchange implements ControlExchange<PagedResults
 	private final @Nullable PagedResultsResponseControl response;
 
 	/**
-	 * Constructs a new paged results control exchange with the specified page size
+	 * Constructs a new paged results control exchange with the specified page size.
 	 * @param pageSize the number of entries to return in each page
 	 */
 	public PagedResultsControlExchange(int pageSize) {

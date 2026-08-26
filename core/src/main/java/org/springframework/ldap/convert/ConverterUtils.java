@@ -19,7 +19,7 @@ package org.springframework.ldap.convert;
 import org.springframework.core.convert.converter.ConverterRegistry;
 
 /**
- * A utility class for working with Spring LDAP converters
+ * A utility class for working with Spring LDAP converters.
  *
  * @author Josh Cummings
  * @since 3.3

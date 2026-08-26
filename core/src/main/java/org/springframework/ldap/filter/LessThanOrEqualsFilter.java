@@ -47,9 +47,11 @@ public class LessThanOrEqualsFilter extends CompareFilter {
 	}
 
 	/**
+	 * {@inheritDoc}
 	 * @deprecated please extend {@link CompareFilter} instead
 	 * @see org.springframework.ldap.filter.CompareFilter#getCompareString()
 	 */
+	@Override
 	@Deprecated(forRemoval = true, since = "3.3")
 	protected String getCompareString() {
 		return LESS_THAN_OR_EQUALS;

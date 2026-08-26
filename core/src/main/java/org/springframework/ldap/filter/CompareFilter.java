@@ -35,6 +35,7 @@ public abstract class CompareFilter extends AbstractFilter {
 	private final String operator;
 
 	/**
+	 * Construct a filter, encoding the value automatically.
 	 * @deprecated please use the {@code protected} constructor instead
 	 */
 	@Deprecated(since = "3.3")
@@ -80,7 +81,7 @@ public abstract class CompareFilter extends AbstractFilter {
 
 	/**
 	 * Construct a filter, specifying the comparison {@code operator} as well as the
-	 * already-encoded value
+	 * already-encoded value.
 	 * @param attribute the attribute name
 	 * @param operator the comparison operator; for example, {@code =}, {@code ~=}
 	 * @param encodedValue the already-encoded value

@@ -71,7 +71,7 @@ public class ControlExchangeDirContextProcessor<S extends Control, T extends Con
 
 	/**
 	 * Construct this {@link DirContextProcessor}, providing the {@link ControlExchange}
-	 * to use
+	 * to use.
 	 * @param exchange the {@link ControlExchange} to use for managing request and
 	 * response controls
 	 */

@@ -43,6 +43,7 @@ public final class CollectingAuthenticationErrorCallback implements Authenticati
 	}
 
 	/**
+	 * Return the collected exception.
 	 * @return the collected exception
 	 */
 	public @Nullable Exception getError() {

@@ -17,7 +17,7 @@
 package org.springframework.ldap.odm.typeconversion.impl;
 
 /**
- * Interface specifying the conversion between two classes
+ * Interface specifying the conversion between two classes.
  *
  * @author Paul Harvey &lt;paul.at.pauls-place.me.uk&gt;
  * @deprecated please use {@link org.springframework.core.convert.converter.Converter} and

@@ -22,6 +22,8 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
 /**
+ * A {@link NamingEnumeration} that wraps an {@link Iterable}.
+ *
  * @author Mattias Hellborg Arthursson
  */
 final class IterableNamingEnumeration<T> implements NamingEnumeration<T> {

@@ -32,6 +32,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 
 /**
+ * Parses the {@code transaction-manager} element.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class TransactionManagerParser implements BeanDefinitionParser {

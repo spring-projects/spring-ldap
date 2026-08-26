@@ -31,7 +31,7 @@ import org.springframework.ldap.core.support.AbstractContextSource;
 import org.springframework.ldap.core.support.DefaultDirObjectFactory;
 
 /**
- * A {@link RuntimeHintsRegistrar} for LDAP Core classes
+ * A {@link RuntimeHintsRegistrar} for LDAP Core classes.
  *
  * @author Marcus Da Coregio
  * @since 3.0

@@ -17,6 +17,8 @@
 package org.springframework.ldap.pool;
 
 /**
+ * The action to take when the pool is exhausted and a context is requested.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public enum PoolExhaustedAction {

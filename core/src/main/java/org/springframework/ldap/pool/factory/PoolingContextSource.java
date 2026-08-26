@@ -147,7 +147,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 		implements ContextSource, DisposableBean {
 
 	/**
-	 * The logger for this class and sub-classes
+	 * The logger for this class and sub-classes.
 	 */
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -179,6 +179,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	// ***** Pool Property Configuration *****//
 
 	/**
+	 * Get the maximum number of active objects that can be allocated at one time.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#getMaxActive()
 	 */
 	public int getMaxActive() {
@@ -186,6 +187,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Get the maximum number of idle objects to keep in the pool.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#getMaxIdle()
 	 */
 	public int getMaxIdle() {
@@ -193,6 +195,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Get the overall maximum number of objects that can exist in the pool.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#getMaxTotal()
 	 */
 	public int getMaxTotal() {
@@ -200,6 +203,8 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Get the maximum time to wait for an object from the pool when the pool is
+	 * exhausted.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#getMaxWait()
 	 */
 	public long getMaxWait() {
@@ -207,6 +212,8 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Get the minimum time an object may sit idle in the pool before being eligible for
+	 * eviction.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#getMinEvictableIdleTimeMillis()
 	 */
 	public long getMinEvictableIdleTimeMillis() {
@@ -214,6 +221,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Get the minimum number of idle objects to keep in the pool.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#getMinIdle()
 	 */
 	public int getMinIdle() {
@@ -221,6 +229,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Get the number of active objects currently allocated from the pool.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#getNumActive()
 	 */
 	public int getNumActive() {
@@ -228,6 +237,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Get the number of idle objects currently in the pool.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#getNumIdle()
 	 */
 	public int getNumIdle() {
@@ -235,6 +245,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Get the number of objects to examine during each eviction run.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#getNumTestsPerEvictionRun()
 	 */
 	public int getNumTestsPerEvictionRun() {
@@ -242,6 +253,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Get whether objects are validated before being borrowed from the pool.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#getTestOnBorrow()
 	 */
 	public boolean getTestOnBorrow() {
@@ -249,6 +261,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Get whether objects are validated before being returned to the pool.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#getTestOnReturn()
 	 */
 	public boolean getTestOnReturn() {
@@ -256,6 +269,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Get whether idle objects are validated by the idle object evictor.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#getTestWhileIdle()
 	 */
 	public boolean getTestWhileIdle() {
@@ -263,6 +277,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Get the time between runs of the idle object evictor.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#getTimeBetweenEvictionRunsMillis()
 	 */
 	public long getTimeBetweenEvictionRunsMillis() {
@@ -270,6 +285,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Get the action to take when the pool is exhausted.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#getWhenExhaustedAction()
 	 */
 	public byte getWhenExhaustedAction() {
@@ -277,6 +293,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Set the maximum number of active objects that can be allocated at one time.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#setMaxActive(int)
 	 */
 	public void setMaxActive(int maxActive) {
@@ -284,6 +301,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Set the maximum number of idle objects to keep in the pool.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#setMaxIdle(int)
 	 */
 	public void setMaxIdle(int maxIdle) {
@@ -291,6 +309,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Set the overall maximum number of objects that can exist in the pool.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#setMaxTotal(int)
 	 */
 	public void setMaxTotal(int maxTotal) {
@@ -298,6 +317,8 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Set the maximum time to wait for an object from the pool when the pool is
+	 * exhausted.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#setMaxWait(long)
 	 */
 	public void setMaxWait(long maxWait) {
@@ -305,6 +326,8 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Set the minimum time an object may sit idle in the pool before being eligible for
+	 * eviction.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#setMinEvictableIdleTimeMillis(long)
 	 */
 	public void setMinEvictableIdleTimeMillis(long minEvictableIdleTimeMillis) {
@@ -312,6 +335,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Set the minimum number of idle objects to keep in the pool.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#setMinIdle(int)
 	 */
 	public void setMinIdle(int poolSize) {
@@ -319,6 +343,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Set the number of objects to examine during each eviction run.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#setNumTestsPerEvictionRun(int)
 	 */
 	public void setNumTestsPerEvictionRun(int numTestsPerEvictionRun) {
@@ -326,6 +351,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Set whether objects are validated before being borrowed from the pool.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#setTestOnBorrow(boolean)
 	 */
 	public void setTestOnBorrow(boolean testOnBorrow) {
@@ -333,6 +359,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Set whether objects are validated before being returned to the pool.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#setTestOnReturn(boolean)
 	 */
 	public void setTestOnReturn(boolean testOnReturn) {
@@ -340,6 +367,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Set whether idle objects are validated by the idle object evictor.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#setTestWhileIdle(boolean)
 	 */
 	public void setTestWhileIdle(boolean testWhileIdle) {
@@ -347,6 +375,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Set the time between runs of the idle object evictor.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#setTimeBetweenEvictionRunsMillis(long)
 	 */
 	public void setTimeBetweenEvictionRunsMillis(long timeBetweenEvictionRunsMillis) {
@@ -354,6 +383,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Set the action to take when the pool is exhausted.
 	 * @see org.apache.commons.pool.impl.GenericKeyedObjectPool#setWhenExhaustedAction(byte)
 	 */
 	public void setWhenExhaustedAction(byte whenExhaustedAction) {
@@ -363,6 +393,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	// ***** Object Factory Property Configuration *****//
 
 	/**
+	 * Get the contextSource.
 	 * @return the contextSource
 	 */
 	public ContextSource getContextSource() {
@@ -370,6 +401,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Get the dirContextValidator.
 	 * @return the dirContextValidator
 	 */
 	public DirContextValidator getDirContextValidator() {
@@ -377,6 +409,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Set the contextSource. Required.
 	 * @param contextSource the contextSource to set Required
 	 * @deprecated Please provide the {@link ContextSource} in the constructor
 	 */
@@ -386,6 +419,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 	}
 
 	/**
+	 * Set the dirContextValidator. Required.
 	 * @param dirContextValidator the dirContextValidator to set Required
 	 */
 	public void setDirContextValidator(DirContextValidator dirContextValidator) {
