@@ -24,8 +24,9 @@ import java.util.List;
  *
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
- * @deprecated
+ * @deprecated Use PagedResultsDirContextProcessor instead.
  */
+@Deprecated
 public class PagedResult {
 
 	private List<?> resultList;

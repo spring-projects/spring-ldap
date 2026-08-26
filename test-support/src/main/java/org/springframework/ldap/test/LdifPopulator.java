@@ -31,6 +31,8 @@ import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.Assert;
 
 /**
+ * Populates an LDAP directory from an LDIF resource on startup.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 2.0
  */

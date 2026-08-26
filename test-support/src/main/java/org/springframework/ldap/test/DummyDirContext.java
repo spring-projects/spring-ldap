@@ -32,6 +32,10 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
 /**
+ * A {@link DirContext} implementation whose methods all throw
+ * {@link UnsupportedOperationException}, for use as a base in tests that only need to
+ * override a handful of methods.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class DummyDirContext implements DirContext {

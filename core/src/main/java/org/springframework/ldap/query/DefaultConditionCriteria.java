@@ -26,6 +26,8 @@ import org.springframework.ldap.filter.PresentFilter;
 import org.springframework.ldap.filter.WhitespaceWildcardsFilter;
 
 /**
+ * Default implementation of {@link ConditionCriteria}.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 2.0
  */

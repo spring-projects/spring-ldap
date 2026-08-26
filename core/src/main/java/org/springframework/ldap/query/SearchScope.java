@@ -27,15 +27,15 @@ import javax.naming.directory.SearchControls;
 public enum SearchScope {
 
 	/**
-	 * Corresponds to {@link SearchControls#OBJECT_SCOPE}
+	 * Corresponds to {@link SearchControls#OBJECT_SCOPE}.
 	 */
 	OBJECT(SearchControls.OBJECT_SCOPE),
 	/**
-	 * Corresponds to {@link SearchControls#ONELEVEL_SCOPE}
+	 * Corresponds to {@link SearchControls#ONELEVEL_SCOPE}.
 	 */
 	ONELEVEL(SearchControls.ONELEVEL_SCOPE),
 	/**
-	 * Corresponds to {@link SearchControls#SUBTREE_SCOPE}
+	 * Corresponds to {@link SearchControls#SUBTREE_SCOPE}.
 	 */
 	SUBTREE(SearchControls.SUBTREE_SCOPE);
 

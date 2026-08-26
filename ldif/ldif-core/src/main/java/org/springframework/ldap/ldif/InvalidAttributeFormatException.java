@@ -29,6 +29,7 @@ public class InvalidAttributeFormatException extends NamingException {
 	private static final long serialVersionUID = -4529380160785322985L;
 
 	/**
+	 * Create a new exception with the given message.
 	 * @param msg
 	 */
 	public InvalidAttributeFormatException(String msg) {
@@ -36,6 +37,7 @@ public class InvalidAttributeFormatException extends NamingException {
 	}
 
 	/**
+	 * Create a new exception with the given cause.
 	 * @param cause
 	 */
 	public InvalidAttributeFormatException(Throwable cause) {
@@ -43,6 +45,7 @@ public class InvalidAttributeFormatException extends NamingException {
 	}
 
 	/**
+	 * Create a new exception with the given message and cause.
 	 * @param msg
 	 * @param cause
 	 */

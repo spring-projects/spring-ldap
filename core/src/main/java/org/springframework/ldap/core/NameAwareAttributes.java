@@ -40,7 +40,7 @@ public final class NameAwareAttributes implements Attributes, Iterable<NameAware
 	private Map<String, NameAwareAttribute> attributes = new HashMap<>();
 
 	/**
-	 * Create an empty instance
+	 * Create an empty instance.
 	 */
 	public NameAwareAttributes() {
 
@@ -85,13 +85,11 @@ public final class NameAwareAttributes implements Attributes, Iterable<NameAware
 	}
 
 	/**
-	 * @inheritDoc
-	 *
+	 * {@inheritDoc}
 	 * @since 3.3
 	 */
-	@NonNull
 	@Override
-	public Iterator<NameAwareAttribute> iterator() {
+	public @NonNull Iterator<NameAwareAttribute> iterator() {
 		return this.attributes.values().iterator();
 	}
 

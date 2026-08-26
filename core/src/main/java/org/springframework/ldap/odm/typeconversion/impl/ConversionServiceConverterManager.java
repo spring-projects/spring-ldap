@@ -27,6 +27,8 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 
 /**
+ * A {@link ConverterManager} implementation backed by a {@link ConversionService}.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 2.0
  * @deprecated Please use {@link ConversionService} directly and with

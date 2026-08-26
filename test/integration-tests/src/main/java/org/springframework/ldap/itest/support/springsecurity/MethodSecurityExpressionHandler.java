@@ -20,6 +20,9 @@ import org.springframework.ldap.itest.LdapGroupDao;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 
 /**
+ * A {@link DefaultMethodSecurityExpressionHandler} that exposes group membership lookups
+ * via a {@link LdapGroupDao} for use in method security expressions.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class MethodSecurityExpressionHandler extends DefaultMethodSecurityExpressionHandler {

@@ -66,8 +66,10 @@ public class LikeFilter extends EqualsFilter {
 	}
 
 	/**
+	 * {@inheritDoc}
 	 * @deprecated please extend {@link CompareFilter} instead
 	 */
+	@Override
 	@Deprecated(forRemoval = true, since = "3.3")
 	protected String encodeValue(String value) {
 		return encodeValueInternal(value);

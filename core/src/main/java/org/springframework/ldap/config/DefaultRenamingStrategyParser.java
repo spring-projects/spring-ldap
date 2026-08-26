@@ -26,6 +26,8 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.ldap.transaction.compensating.support.DefaultTempEntryRenamingStrategy;
 
 /**
+ * Parses the {@code default-renaming-strategy} element.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class DefaultRenamingStrategyParser implements BeanDefinitionParser {

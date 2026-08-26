@@ -76,7 +76,7 @@ public class DefaultDirContextValidator implements DirContextValidator {
 	private static final int DEFAULT_TIME_LIMIT = 500;
 
 	/**
-	 * Logger for this class and sub-classes
+	 * Logger for this class and sub-classes.
 	 */
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -115,6 +115,7 @@ public class DefaultDirContextValidator implements DirContextValidator {
 	}
 
 	/**
+	 * Get the base name to use for validation searches.
 	 * @return the baseName
 	 */
 	public String getBase() {
@@ -122,6 +123,7 @@ public class DefaultDirContextValidator implements DirContextValidator {
 	}
 
 	/**
+	 * Set the base name to use for validation searches.
 	 * @param base the baseName to set
 	 */
 	public void setBase(String base) {
@@ -129,6 +131,7 @@ public class DefaultDirContextValidator implements DirContextValidator {
 	}
 
 	/**
+	 * Get the filter to use for validation searches.
 	 * @return the filter
 	 */
 	public String getFilter() {
@@ -136,6 +139,7 @@ public class DefaultDirContextValidator implements DirContextValidator {
 	}
 
 	/**
+	 * Set the filter to use for validation searches.
 	 * @param filter the filter to set
 	 */
 	public void setFilter(String filter) {
@@ -147,6 +151,7 @@ public class DefaultDirContextValidator implements DirContextValidator {
 	}
 
 	/**
+	 * Get the search controls to use for validation searches.
 	 * @return the searchControls
 	 */
 	public SearchControls getSearchControls() {
@@ -154,6 +159,7 @@ public class DefaultDirContextValidator implements DirContextValidator {
 	}
 
 	/**
+	 * Set the search controls to use for validation searches.
 	 * @param searchControls the searchControls to set
 	 */
 	public void setSearchControls(SearchControls searchControls) {
@@ -165,8 +171,9 @@ public class DefaultDirContextValidator implements DirContextValidator {
 	}
 
 	/**
-	 * @see DirContextValidator#validateDirContext(DirContextType, DirContext)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean validateDirContext(DirContextType contextType, DirContext dirContext) {
 		Assert.notNull(contextType, "contextType may not be null");
 		Assert.notNull(dirContext, "dirContext may not be null");

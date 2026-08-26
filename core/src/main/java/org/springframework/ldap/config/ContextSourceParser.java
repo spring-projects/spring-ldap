@@ -41,6 +41,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 
 /**
+ * Parses the {@code context-source} element.
+ *
  * @author Mattias Hellborg Arthursson
  * @author Eddu Melendez
  */

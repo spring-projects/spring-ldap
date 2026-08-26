@@ -64,6 +64,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	// ***** Helper Methods *****//
 
 	/**
+	 * Get the direct delegate for this dir context proxy.
 	 * @return The direct delegate for this dir context proxy
 	 */
 	public DirContext getDelegateDirContext() {
@@ -99,8 +100,9 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	// ***** Object methods *****//
 
 	/**
-	 * @see Object#equals(Object)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -119,16 +121,18 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	}
 
 	/**
-	 * @see Object#hashCode()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public int hashCode() {
 		final DirContext context = this.getInnermostDelegateDirContext();
 		return (context != null) ? context.hashCode() : 0;
 	}
 
 	/**
-	 * @see Object#toString()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public String toString() {
 		final DirContext context = this.getInnermostDelegateDirContext();
 		return (context != null) ? context.toString() : "DirContext is closed";
@@ -148,146 +152,165 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	// ***** DirContext Interface Delegates *****//
 
 	/**
-	 * @see DirContext#bind(Name, Object, Attributes)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void bind(Name name, Object obj, Attributes attrs) throws NamingException {
 		this.assertOpen();
 		this.getDelegateDirContext().bind(name, obj, attrs);
 	}
 
 	/**
-	 * @see DirContext#bind(String, Object, Attributes)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void bind(String name, Object obj, Attributes attrs) throws NamingException {
 		this.assertOpen();
 		this.getDelegateDirContext().bind(name, obj, attrs);
 	}
 
 	/**
-	 * @see DirContext#createSubcontext(Name, Attributes)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public DirContext createSubcontext(Name name, Attributes attrs) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call createSubcontext on a pooled context");
 	}
 
 	/**
-	 * @see DirContext#createSubcontext(String, Attributes)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public DirContext createSubcontext(String name, Attributes attrs) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call createSubcontext on a pooled context");
 	}
 
 	/**
-	 * @see DirContext#getAttributes(Name, String[])
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Attributes getAttributes(Name name, String[] attrIds) throws NamingException {
 		this.assertOpen();
 		return this.getDelegateDirContext().getAttributes(name, attrIds);
 	}
 
 	/**
-	 * @see DirContext#getAttributes(Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Attributes getAttributes(Name name) throws NamingException {
 		this.assertOpen();
 		return this.getDelegateDirContext().getAttributes(name);
 	}
 
 	/**
-	 * @see DirContext#getAttributes(String, String[])
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Attributes getAttributes(String name, String[] attrIds) throws NamingException {
 		this.assertOpen();
 		return this.getDelegateDirContext().getAttributes(name, attrIds);
 	}
 
 	/**
-	 * @see DirContext#getAttributes(String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Attributes getAttributes(String name) throws NamingException {
 		this.assertOpen();
 		return this.getDelegateDirContext().getAttributes(name);
 	}
 
 	/**
-	 * @see DirContext#getSchema(Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public DirContext getSchema(Name name) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call getSchema on a pooled context");
 	}
 
 	/**
-	 * @see DirContext#getSchema(String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public DirContext getSchema(String name) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call getSchema on a pooled context");
 	}
 
 	/**
-	 * @see DirContext#getSchemaClassDefinition(Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public DirContext getSchemaClassDefinition(Name name) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call getSchemaClassDefinition on a pooled context");
 	}
 
 	/**
-	 * @see DirContext#getSchemaClassDefinition(String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public DirContext getSchemaClassDefinition(String name) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call getSchemaClassDefinition on a pooled context");
 	}
 
 	/**
-	 * @see DirContext#modifyAttributes(Name, int, Attributes)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void modifyAttributes(Name name, int modOp, Attributes attrs) throws NamingException {
 		this.assertOpen();
 		this.getDelegateDirContext().modifyAttributes(name, modOp, attrs);
 	}
 
 	/**
-	 * @see DirContext#modifyAttributes(Name, ModificationItem[])
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void modifyAttributes(Name name, ModificationItem[] mods) throws NamingException {
 		this.assertOpen();
 		this.getDelegateDirContext().modifyAttributes(name, mods);
 	}
 
 	/**
-	 * @see DirContext#modifyAttributes(String, int, Attributes)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void modifyAttributes(String name, int modOp, Attributes attrs) throws NamingException {
 		this.assertOpen();
 		this.getDelegateDirContext().modifyAttributes(name, modOp, attrs);
 	}
 
 	/**
-	 * @see DirContext#modifyAttributes(String, ModificationItem[])
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void modifyAttributes(String name, ModificationItem[] mods) throws NamingException {
 		this.assertOpen();
 		this.getDelegateDirContext().modifyAttributes(name, mods);
 	}
 
 	/**
-	 * @see DirContext#rebind(Name, Object, Attributes)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void rebind(Name name, Object obj, Attributes attrs) throws NamingException {
 		this.assertOpen();
 		this.getDelegateDirContext().rebind(name, obj, attrs);
 	}
 
 	/**
-	 * @see DirContext#rebind(String, Object, Attributes)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void rebind(String name, Object obj, Attributes attrs) throws NamingException {
 		this.assertOpen();
 		this.getDelegateDirContext().rebind(name, obj, attrs);
 	}
 
 	/**
-	 * @see DirContext#search(Name, Attributes, String[])
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(Name name, Attributes matchingAttributes, String[] attributesToReturn)
 			throws NamingException {
 		this.assertOpen();
@@ -295,16 +318,18 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	}
 
 	/**
-	 * @see DirContext#search(Name, Attributes)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(Name name, Attributes matchingAttributes) throws NamingException {
 		this.assertOpen();
 		return this.getDelegateDirContext().search(name, matchingAttributes);
 	}
 
 	/**
-	 * @see DirContext#search(Name, String, Object[], SearchControls)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(Name name, String filterExpr, Object[] filterArgs,
 			SearchControls cons) throws NamingException {
 		this.assertOpen();
@@ -312,8 +337,9 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	}
 
 	/**
-	 * @see DirContext#search(Name, String, SearchControls)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(Name name, String filter, SearchControls cons)
 			throws NamingException {
 		this.assertOpen();
@@ -321,8 +347,9 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	}
 
 	/**
-	 * @see DirContext#search(String, Attributes, String[])
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(String name, Attributes matchingAttributes,
 			String[] attributesToReturn) throws NamingException {
 		this.assertOpen();
@@ -330,16 +357,18 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	}
 
 	/**
-	 * @see DirContext#search(String, Attributes)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(String name, Attributes matchingAttributes) throws NamingException {
 		this.assertOpen();
 		return this.getDelegateDirContext().search(name, matchingAttributes);
 	}
 
 	/**
-	 * @see DirContext#search(String, String, Object[], SearchControls)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(String name, String filterExpr, Object[] filterArgs,
 			SearchControls cons) throws NamingException {
 		this.assertOpen();
@@ -347,8 +376,9 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	}
 
 	/**
-	 * @see DirContext#search(String, String, SearchControls)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(String name, String filter, SearchControls cons)
 			throws NamingException {
 		this.assertOpen();
@@ -356,8 +386,9 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	}
 
 	/**
-	 * @see DelegatingContext#close()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void close() throws NamingException {
 		if (this.delegateDirContext == null) {
 			return;

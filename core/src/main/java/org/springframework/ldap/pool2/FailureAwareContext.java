@@ -17,6 +17,8 @@
 package org.springframework.ldap.pool2;
 
 /**
+ * A {@link javax.naming.Context} that is aware of whether it has failed.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public interface FailureAwareContext {

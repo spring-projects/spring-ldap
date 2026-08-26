@@ -66,6 +66,7 @@ public class DelegatingContext implements Context {
 	// ***** Helper Methods *****//
 
 	/**
+	 * Get the direct delegate for this context proxy.
 	 * @return The direct delegate for this context proxy
 	 */
 	public Context getDelegateContext() {
@@ -87,6 +88,7 @@ public class DelegatingContext implements Context {
 	}
 
 	/**
+	 * Assert that this context is still open.
 	 * @throws NamingException If the delegate is null, {@link #close()} has been called.
 	 */
 	protected void assertOpen() throws NamingException {
@@ -98,8 +100,9 @@ public class DelegatingContext implements Context {
 	// ***** Object methods *****//
 
 	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -118,16 +121,18 @@ public class DelegatingContext implements Context {
 	}
 
 	/**
-	 * @see java.lang.Object#hashCode()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public int hashCode() {
 		final Context context = this.getInnermostDelegateContext();
 		return (context != null) ? context.hashCode() : 0;
 	}
 
 	/**
-	 * @see java.lang.Object#toString()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public String toString() {
 		final Context context = this.getInnermostDelegateContext();
 		return (context != null) ? context.toString() : "Context is closed";
@@ -136,31 +141,35 @@ public class DelegatingContext implements Context {
 	// ***** Context Interface Delegates *****//
 
 	/**
-	 * @see javax.naming.Context#addToEnvironment(java.lang.String, java.lang.Object)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Object addToEnvironment(String propName, Object propVal) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call addToEnvironment on a pooled context");
 	}
 
 	/**
-	 * @see javax.naming.Context#bind(javax.naming.Name, java.lang.Object)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void bind(Name name, Object obj) throws NamingException {
 		this.assertOpen();
 		this.getDelegateContext().bind(name, obj);
 	}
 
 	/**
-	 * @see javax.naming.Context#bind(java.lang.String, java.lang.Object)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void bind(String name, Object obj) throws NamingException {
 		this.assertOpen();
 		this.getDelegateContext().bind(name, obj);
 	}
 
 	/**
-	 * @see javax.naming.Context#close()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void close() throws NamingException {
 		final Context context = this.getInnermostDelegateContext();
 		if (context == null) {
@@ -199,195 +208,220 @@ public class DelegatingContext implements Context {
 	}
 
 	/**
-	 * @see javax.naming.Context#composeName(javax.naming.Name, javax.naming.Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Name composeName(Name name, Name prefix) throws NamingException {
 		this.assertOpen();
 		return this.getDelegateContext().composeName(name, prefix);
 	}
 
 	/**
-	 * @see javax.naming.Context#composeName(java.lang.String, java.lang.String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public String composeName(String name, String prefix) throws NamingException {
 		this.assertOpen();
 		return this.getDelegateContext().composeName(name, prefix);
 	}
 
 	/**
-	 * @see javax.naming.Context#createSubcontext(javax.naming.Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Context createSubcontext(Name name) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call createSubcontext on a pooled context");
 	}
 
 	/**
-	 * @see javax.naming.Context#createSubcontext(java.lang.String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Context createSubcontext(String name) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call createSubcontext on a pooled context");
 	}
 
 	/**
-	 * @see javax.naming.Context#destroySubcontext(javax.naming.Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void destroySubcontext(Name name) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call destroySubcontext on a pooled context");
 	}
 
 	/**
-	 * @see javax.naming.Context#destroySubcontext(java.lang.String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void destroySubcontext(String name) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call destroySubcontext on a pooled context");
 	}
 
 	/**
-	 * @see javax.naming.Context#getEnvironment()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Hashtable<?, ?> getEnvironment() throws NamingException {
 		this.assertOpen();
 		return this.getDelegateContext().getEnvironment();
 	}
 
 	/**
-	 * @see javax.naming.Context#getNameInNamespace()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public String getNameInNamespace() throws NamingException {
 		this.assertOpen();
 		return this.getDelegateContext().getNameInNamespace();
 	}
 
 	/**
-	 * @see javax.naming.Context#getNameParser(javax.naming.Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NameParser getNameParser(Name name) throws NamingException {
 		this.assertOpen();
 		return this.getDelegateContext().getNameParser(name);
 	}
 
 	/**
-	 * @see javax.naming.Context#getNameParser(java.lang.String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NameParser getNameParser(String name) throws NamingException {
 		this.assertOpen();
 		return this.getDelegateContext().getNameParser(name);
 	}
 
 	/**
-	 * @see javax.naming.Context#list(javax.naming.Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<NameClassPair> list(Name name) throws NamingException {
 		this.assertOpen();
 		return this.getDelegateContext().list(name);
 	}
 
 	/**
-	 * @see javax.naming.Context#list(java.lang.String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<NameClassPair> list(String name) throws NamingException {
 		this.assertOpen();
 		return this.getDelegateContext().list(name);
 	}
 
 	/**
-	 * @see javax.naming.Context#listBindings(javax.naming.Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<Binding> listBindings(Name name) throws NamingException {
 		this.assertOpen();
 		return this.getDelegateContext().listBindings(name);
 	}
 
 	/**
-	 * @see javax.naming.Context#listBindings(java.lang.String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<Binding> listBindings(String name) throws NamingException {
 		this.assertOpen();
 		return this.getDelegateContext().listBindings(name);
 	}
 
 	/**
-	 * @see javax.naming.Context#lookup(javax.naming.Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Object lookup(Name name) throws NamingException {
 		this.assertOpen();
 		return this.getDelegateContext().lookup(name);
 	}
 
 	/**
-	 * @see javax.naming.Context#lookup(java.lang.String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Object lookup(String name) throws NamingException {
 		this.assertOpen();
 		return this.getDelegateContext().lookup(name);
 	}
 
 	/**
-	 * @see javax.naming.Context#lookupLink(javax.naming.Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Object lookupLink(Name name) throws NamingException {
 		this.assertOpen();
 		return this.getDelegateContext().lookupLink(name);
 	}
 
 	/**
-	 * @see javax.naming.Context#lookupLink(java.lang.String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Object lookupLink(String name) throws NamingException {
 		this.assertOpen();
 		return this.getDelegateContext().lookupLink(name);
 	}
 
 	/**
-	 * @see javax.naming.Context#rebind(javax.naming.Name, java.lang.Object)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void rebind(Name name, Object obj) throws NamingException {
 		this.assertOpen();
 		this.getDelegateContext().rebind(name, obj);
 	}
 
 	/**
-	 * @see javax.naming.Context#rebind(java.lang.String, java.lang.Object)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void rebind(String name, Object obj) throws NamingException {
 		this.assertOpen();
 		this.getDelegateContext().rebind(name, obj);
 	}
 
 	/**
-	 * @see javax.naming.Context#removeFromEnvironment(java.lang.String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Object removeFromEnvironment(String propName) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call removeFromEnvironment on a pooled context");
 	}
 
 	/**
-	 * @see javax.naming.Context#rename(javax.naming.Name, javax.naming.Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void rename(Name oldName, Name newName) throws NamingException {
 		this.assertOpen();
 		this.getDelegateContext().rename(oldName, newName);
 	}
 
 	/**
-	 * @see javax.naming.Context#rename(java.lang.String, java.lang.String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void rename(String oldName, String newName) throws NamingException {
 		this.assertOpen();
 		this.getDelegateContext().rename(oldName, newName);
 	}
 
 	/**
-	 * @see javax.naming.Context#unbind(javax.naming.Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void unbind(Name name) throws NamingException {
 		this.assertOpen();
 		this.getDelegateContext().unbind(name);
 	}
 
 	/**
-	 * @see javax.naming.Context#unbind(java.lang.String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void unbind(String name) throws NamingException {
 		this.assertOpen();
 		this.getDelegateContext().unbind(name);

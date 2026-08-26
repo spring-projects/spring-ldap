@@ -80,7 +80,7 @@ public final class LdapEncoder {
 	private LdapEncoder() {
 	}
 
-	protected static String toTwoCharHex(char c) {
+	static String toTwoCharHex(char c) {
 
 		String raw = Integer.toHexString(c).toUpperCase(Locale.ROOT);
 

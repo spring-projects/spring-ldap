@@ -19,6 +19,8 @@ package org.springframework.ldap.config;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
+ * Registers the bean definition parsers for the Spring LDAP namespace.
+ *
  * @author Mattias Hellborg Arthursson
  * @author Rob Winch
  */
