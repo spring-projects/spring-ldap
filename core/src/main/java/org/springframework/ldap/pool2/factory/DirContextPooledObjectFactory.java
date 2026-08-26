@@ -83,7 +83,7 @@ import org.springframework.util.Assert;
 class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object, Object> {
 
 	/**
-	 * Logger for this class and subclasses
+	 * Logger for this class and subclasses.
 	 */
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -104,6 +104,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 	}
 
 	/**
+	 * Get the context source used to create pooled contexts.
 	 * @return the contextSource
 	 */
 	ContextSource getContextSource() {
@@ -111,6 +112,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 	}
 
 	/**
+	 * Set the context source used to create pooled contexts.
 	 * @param contextSource the contextSource to set
 	 */
 	void setContextSource(ContextSource contextSource) {
@@ -122,6 +124,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 	}
 
 	/**
+	 * Get the validator used to validate pooled contexts.
 	 * @return the dirContextValidator
 	 */
 	DirContextValidator getDirContextValidator() {
@@ -129,6 +132,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 	}
 
 	/**
+	 * Set the validator used to validate pooled contexts.
 	 * @param dirContextValidator the dirContextValidator to set
 	 */
 	void setDirContextValidator(DirContextValidator dirContextValidator) {
@@ -146,8 +150,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 	}
 
 	/**
-	 * @see BaseKeyedPooledObjectFactory#validateObject(Object, PooledObject)
-	 *
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean validateObject(Object key, PooledObject<Object> pooledObject) {
@@ -170,8 +173,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 	}
 
 	/**
-	 * @see BaseKeyedPooledObjectFactory#destroyObject(Object, PooledObject)
-	 *
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void destroyObject(Object key, PooledObject<Object> pooledObject) throws Exception {
@@ -195,8 +197,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 	}
 
 	/**
-	 * @see BaseKeyedPooledObjectFactory#create(Object)
-	 *
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Object create(Object key) throws Exception {
@@ -234,8 +235,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 	}
 
 	/**
-	 * @see BaseKeyedPooledObjectFactory#wrap(Object)
-	 *
+	 * {@inheritDoc}
 	 */
 	@Override
 	public PooledObject<Object> wrap(Object value) {

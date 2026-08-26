@@ -24,6 +24,8 @@ import javax.naming.Name;
 import org.springframework.ldap.filter.Filter;
 
 /**
+ * Default implementation of {@link AppendableContainerCriteria}.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 2.0
  */

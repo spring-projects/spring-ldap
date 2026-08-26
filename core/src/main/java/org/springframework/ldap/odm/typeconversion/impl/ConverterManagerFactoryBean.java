@@ -103,6 +103,7 @@ public final class ConverterManagerFactoryBean implements FactoryBean {
 	private Set<ConverterConfig> converterConfigList = null;
 
 	/**
+	 * Set the converter configurations to populate the {@link ConverterManagerImpl} with.
 	 * @param converterConfigList
 	 */
 	public void setConverterConfig(Set<ConverterConfig> converterConfigList) {
@@ -184,6 +185,7 @@ public final class ConverterManagerFactoryBean implements FactoryBean {
 		}
 
 		/**
+		 * Set the classes the {@link Converter} should convert from.
 		 * @param fromClasses Comma separated list of classes the {@link Converter} should
 		 * can convert from.
 		 */
@@ -192,6 +194,7 @@ public final class ConverterManagerFactoryBean implements FactoryBean {
 		}
 
 		/**
+		 * Set the classes the {@link Converter} can convert to.
 		 * @param toClasses Comma separated list of classes the {@link Converter} can
 		 * convert to.
 		 */
@@ -201,6 +204,7 @@ public final class ConverterManagerFactoryBean implements FactoryBean {
 		}
 
 		/**
+		 * Set the LDAP syntax supported by the {@link Converter}.
 		 * @param syntax An LDAP syntax supported by the {@link Converter}.
 		 */
 		public void setSyntax(String syntax) {
@@ -208,6 +212,7 @@ public final class ConverterManagerFactoryBean implements FactoryBean {
 		}
 
 		/**
+		 * Set the {@link Converter} to use.
 		 * @param converter The {@link Converter} to use.
 		 */
 		public void setConverter(Converter converter) {

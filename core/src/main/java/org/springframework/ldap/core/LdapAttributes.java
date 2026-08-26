@@ -97,6 +97,7 @@ public class LdapAttributes extends BasicAttributes {
 	 * @deprecated {@link DistinguishedName and associated classes and methods are
 	 * deprecated as of 2.0}. use {@link #getName()} instead.
 	 */
+	@Deprecated
 	public DistinguishedName getDN() {
 		return new DistinguishedName(this.dn);
 	}
@@ -116,6 +117,7 @@ public class LdapAttributes extends BasicAttributes {
 	 * @deprecated {@link DistinguishedName and associated classes and methods are
 	 * deprecated as of 2.0}. use {@link #setName(javax.naming.Name)} instead.
 	 */
+	@Deprecated
 	public void setDN(DistinguishedName dn) {
 		this.dn = LdapUtils.newLdapName(dn);
 	}

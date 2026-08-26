@@ -434,6 +434,8 @@ public class DefaultIncrementalAttributesMapper
 	}
 
 	/**
+	 * Tracks the incremental retrieval state for a single attribute.
+	 *
 	 * @author Mattias Hellborg Arthursson
 	 */
 	private interface IncrementalAttributeState {

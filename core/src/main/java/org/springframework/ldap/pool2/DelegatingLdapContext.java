@@ -60,6 +60,7 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
 	// ***** Helper Methods *****//
 
 	/**
+	 * Get the direct delegate for this ldap context proxy.
 	 * @return The direct delegate for this ldap context proxy
 	 */
 	public LdapContext getDelegateLdapContext() {
@@ -96,8 +97,9 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
 	// ***** Object methods *****//
 
 	/**
-	 * @see Object#equals(Object)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -117,16 +119,18 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
 	}
 
 	/**
-	 * @see Object#hashCode()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public int hashCode() {
 		final LdapContext context = this.getInnermostDelegateLdapContext();
 		return (context != null) ? context.hashCode() : 0;
 	}
 
 	/**
-	 * @see Object#toString()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public String toString() {
 		final LdapContext context = this.getInnermostDelegateLdapContext();
 		return (context != null) ? context.toString() : "LdapContext is closed";
@@ -135,61 +139,69 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
 	// ***** LdapContext Interface Delegates *****//
 
 	/**
-	 * @see LdapContext#extendedOperation(ExtendedRequest)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public ExtendedResponse extendedOperation(ExtendedRequest request) throws NamingException {
 		this.assertOpen();
 		return this.getDelegateLdapContext().extendedOperation(request);
 	}
 
 	/**
-	 * @see LdapContext#getConnectControls()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Control[] getConnectControls() throws NamingException {
 		this.assertOpen();
 		return this.getDelegateLdapContext().getConnectControls();
 	}
 
 	/**
-	 * @see LdapContext#getRequestControls()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Control[] getRequestControls() throws NamingException {
 		this.assertOpen();
 		return this.getDelegateLdapContext().getRequestControls();
 	}
 
 	/**
-	 * @see LdapContext#getResponseControls()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Control[] getResponseControls() throws NamingException {
 		this.assertOpen();
 		return this.getDelegateLdapContext().getResponseControls();
 	}
 
 	/**
-	 * @see LdapContext#newInstance(Control[])
+	 * {@inheritDoc}
 	 */
+	@Override
 	public LdapContext newInstance(Control[] requestControls) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call newInstance on a pooled context");
 	}
 
 	/**
-	 * @see LdapContext#reconnect(Control[])
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void reconnect(Control[] connCtls) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call reconnect on a pooled context");
 	}
 
 	/**
-	 * @see LdapContext#setRequestControls(Control[])
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void setRequestControls(Control[] requestControls) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call setRequestControls on a pooled context");
 	}
 
 	/**
-	 * @see DelegatingDirContext#close()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void close() throws NamingException {
 		if (this.delegateLdapContext == null) {
 			return;

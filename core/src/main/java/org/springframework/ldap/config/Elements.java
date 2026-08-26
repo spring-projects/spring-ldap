@@ -17,6 +17,8 @@
 package org.springframework.ldap.config;
 
 /**
+ * XML element name constants used by the Spring LDAP namespace parsers.
+ *
  * @author Mattias Hellborg Arthursson
  * @author Anindya Chatterjee
  */

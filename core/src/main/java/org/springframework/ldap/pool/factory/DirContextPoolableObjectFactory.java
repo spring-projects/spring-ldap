@@ -78,7 +78,7 @@ import org.springframework.util.Assert;
 class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 
 	/**
-	 * Logger for this class and subclasses
+	 * Logger for this class and subclasses.
 	 */
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -99,6 +99,7 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 	}
 
 	/**
+	 * Get the contextSource.
 	 * @return the contextSource
 	 */
 	ContextSource getContextSource() {
@@ -106,6 +107,7 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 	}
 
 	/**
+	 * Set the contextSource.
 	 * @param contextSource the contextSource to set
 	 */
 	void setContextSource(ContextSource contextSource) {
@@ -117,6 +119,7 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 	}
 
 	/**
+	 * Get the dirContextValidator.
 	 * @return the dirContextValidator
 	 */
 	DirContextValidator getDirContextValidator() {
@@ -124,6 +127,7 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 	}
 
 	/**
+	 * Set the dirContextValidator.
 	 * @param dirContextValidator the dirContextValidator to set
 	 */
 	void setDirContextValidator(DirContextValidator dirContextValidator) {
@@ -135,7 +139,7 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 	}
 
 	/**
-	 * @see org.apache.commons.pool.BaseKeyedPoolableObjectFactory#makeObject(java.lang.Object)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Object makeObject(Object key) throws Exception {
@@ -179,8 +183,7 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 	}
 
 	/**
-	 * @see org.apache.commons.pool.BaseKeyedPoolableObjectFactory#validateObject(java.lang.Object,
-	 * java.lang.Object)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean validateObject(Object key, Object obj) {
@@ -200,8 +203,7 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 	}
 
 	/**
-	 * @see org.apache.commons.pool.BaseKeyedPoolableObjectFactory#destroyObject(java.lang.Object,
-	 * java.lang.Object)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void destroyObject(Object key, Object obj) throws Exception {

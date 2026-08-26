@@ -20,6 +20,8 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 
 /**
+ * A {@link HostnameVerifier} that accepts any hostname, for use in tests only.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class AllMatchHostnameVerifier implements HostnameVerifier {

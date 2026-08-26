@@ -27,6 +27,8 @@ import org.springframework.ldap.odm.annotations.Id;
 import org.springframework.ldap.odm.annotations.Transient;
 
 /**
+ * An object-directory-mapped entry representing an {@code inetOrgPerson}.
+ *
  * @author Mattias Hellborg Arthursson
  */
 @Entry(objectClasses = { "inetOrgPerson", "organizationalPerson", "person", "top" })

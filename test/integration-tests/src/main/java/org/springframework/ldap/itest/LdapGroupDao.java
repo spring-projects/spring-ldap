@@ -22,6 +22,8 @@ import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.support.BaseLdapPathAware;
 
 /**
+ * A test DAO for looking up group membership by distinguished name.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class LdapGroupDao implements BaseLdapPathAware {

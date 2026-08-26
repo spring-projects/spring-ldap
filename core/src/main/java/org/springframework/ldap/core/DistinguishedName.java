@@ -486,8 +486,9 @@ public class DistinguishedName implements Name {
 	}
 
 	/**
-	 * @see java.lang.Object#clone()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Object clone() {
 		try {
 			DistinguishedName result = (DistinguishedName) super.clone();
@@ -501,7 +502,7 @@ public class DistinguishedName implements Name {
 	}
 
 	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -518,7 +519,7 @@ public class DistinguishedName implements Name {
 	}
 
 	/**
-	 * @see java.lang.Object#hashCode()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public int hashCode() {

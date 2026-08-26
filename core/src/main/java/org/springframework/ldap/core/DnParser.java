@@ -22,6 +22,7 @@ package org.springframework.ldap.core;
  * @author Mattias Hellborg Arthursson
  * @deprecated {@link DistinguishedName} and associated classes are deprecated as of 2.0.
  */
+@Deprecated
 public interface DnParser {
 
 	/**

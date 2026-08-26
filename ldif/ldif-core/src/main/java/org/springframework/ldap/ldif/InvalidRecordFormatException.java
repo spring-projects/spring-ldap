@@ -29,6 +29,7 @@ public class InvalidRecordFormatException extends NamingException {
 	private static final long serialVersionUID = -5047874723621065139L;
 
 	/**
+	 * Create a new exception with the given message.
 	 * @param msg
 	 */
 	public InvalidRecordFormatException(String msg) {
@@ -36,6 +37,7 @@ public class InvalidRecordFormatException extends NamingException {
 	}
 
 	/**
+	 * Create a new exception with the given cause.
 	 * @param cause
 	 */
 	public InvalidRecordFormatException(Throwable cause) {
@@ -43,6 +45,7 @@ public class InvalidRecordFormatException extends NamingException {
 	}
 
 	/**
+	 * Create a new exception with the given message and cause.
 	 * @param msg
 	 * @param cause
 	 */

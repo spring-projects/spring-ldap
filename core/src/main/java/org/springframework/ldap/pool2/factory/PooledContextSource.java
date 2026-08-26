@@ -82,7 +82,7 @@ public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupp
 		implements ContextSource, DisposableBean {
 
 	/**
-	 * The logger for this class and sub-classes
+	 * The logger for this class and sub-classes.
 	 */
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -112,6 +112,7 @@ public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupp
 	// ***** Pool Property Configuration *****//
 
 	/**
+	 * Get the pool configuration.
 	 * @return the poolConfig
 	 */
 	public PoolConfig getPoolConfig() {
@@ -119,6 +120,7 @@ public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupp
 	}
 
 	/**
+	 * Get the number of instances currently idle in this pool.
 	 * @see GenericKeyedObjectPool#getNumIdle()
 	 */
 	public int getNumIdle() {
@@ -126,6 +128,7 @@ public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupp
 	}
 
 	/**
+	 * Get the number of instances currently idle in this pool for the read-only key.
 	 * @see GenericKeyedObjectPool#getNumIdle(Object)
 	 */
 	public int getNumIdleRead() {
@@ -133,6 +136,7 @@ public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupp
 	}
 
 	/**
+	 * Get the number of instances currently idle in this pool for the read-write key.
 	 * @see GenericKeyedObjectPool#getNumIdle(Object)
 	 */
 	public int getNumIdleWrite() {
@@ -140,6 +144,7 @@ public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupp
 	}
 
 	/**
+	 * Get the number of instances currently borrowed from this pool.
 	 * @see GenericKeyedObjectPool#getNumActive()
 	 */
 	public int getNumActive() {
@@ -147,6 +152,8 @@ public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupp
 	}
 
 	/**
+	 * Get the number of instances currently borrowed from this pool for the read-only
+	 * key.
 	 * @see GenericKeyedObjectPool#getNumActive(Object)
 	 */
 	public int getNumActiveRead() {
@@ -154,6 +161,8 @@ public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupp
 	}
 
 	/**
+	 * Get the number of instances currently borrowed from this pool for the read-write
+	 * key.
 	 * @see GenericKeyedObjectPool#getNumActive(Object)
 	 */
 	public int getNumActiveWrite() {
@@ -161,6 +170,7 @@ public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupp
 	}
 
 	/**
+	 * Get the number of threads currently waiting for an instance from this pool.
 	 * @see GenericKeyedObjectPool#getNumWaiters()
 	 */
 	public int getNumWaiters() {
@@ -170,6 +180,7 @@ public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupp
 	// ***** Object Factory Property Configuration *****//
 
 	/**
+	 * Get the context source used to create pooled contexts.
 	 * @return the contextSource
 	 */
 	public ContextSource getContextSource() {
@@ -177,6 +188,7 @@ public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupp
 	}
 
 	/**
+	 * Get the validator used to validate pooled contexts.
 	 * @return the dirContextValidator
 	 */
 	public DirContextValidator getDirContextValidator() {
@@ -184,6 +196,7 @@ public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupp
 	}
 
 	/**
+	 * Set the context source used to create pooled contexts.
 	 * @param contextSource the contextSource to set Required
 	 */
 	public void setContextSource(ContextSource contextSource) {
@@ -191,6 +204,7 @@ public class PooledContextSource extends DelegatingBaseLdapPathContextSourceSupp
 	}
 
 	/**
+	 * Set the validator used to validate pooled contexts.
 	 * @param dirContextValidator the dirContextValidator to set Required
 	 */
 	public void setDirContextValidator(DirContextValidator dirContextValidator) {

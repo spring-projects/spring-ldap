@@ -41,6 +41,7 @@ import org.springframework.util.ReflectionUtils;
  * @author Ulrik Sandberg
  * @deprecated Use PagedResultsDirContextProcessor instead.
  */
+@Deprecated
 public class PagedResultsRequestControl extends AbstractRequestControlDirContextProcessor {
 
 	private static final boolean CRITICAL_CONTROL = true;

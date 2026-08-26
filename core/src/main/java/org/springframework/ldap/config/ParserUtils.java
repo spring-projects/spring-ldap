@@ -21,6 +21,8 @@ import org.w3c.dom.Element;
 import org.springframework.util.StringUtils;
 
 /**
+ * Utility methods shared by the Spring LDAP namespace parsers.
+ *
  * @author Mattias Hellborg Arthursson
  */
 final class ParserUtils {
@@ -28,7 +30,7 @@ final class ParserUtils {
 	static final String NAMESPACE = "http://www.springframework.org/schema/ldap";
 
 	/**
-	 * Not to be instantiated
+	 * Not to be instantiated.
 	 */
 	private ParserUtils() {
 

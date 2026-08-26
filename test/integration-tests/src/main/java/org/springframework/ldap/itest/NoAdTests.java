@@ -17,6 +17,8 @@
 package org.springframework.ldap.itest;
 
 /**
+ * Marker interface for tests that should not run against Active Directory.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public interface NoAdTests {

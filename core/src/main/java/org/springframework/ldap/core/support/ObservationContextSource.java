@@ -181,9 +181,8 @@ public final class ObservationContextSource implements BaseLdapPathContextSource
 
 		static final String OBSERVATION_NAME = "spring.ldap.dir.context.operations";
 
-		@NonNull
 		@Override
-		public KeyValues getLowCardinalityKeyValues(DirContextOperationObservationContext context) {
+		public @NonNull KeyValues getLowCardinalityKeyValues(DirContextOperationObservationContext context) {
 			return KeyValues.of("urls", context.getUrls())
 				.and("base", context.getBase())
 				.and("operation", context.getOperation());
