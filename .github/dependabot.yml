@@ -2,12 +2,10 @@ version: 2
 updates:
   - package-ecosystem: gradle
     target-branch: main
-    milestone: 125 # 4.2.x
+    milestone: 125 # main
     directory: /
     schedule:
-      interval: daily
-      time: '03:40'
-      timezone: Etc/UTC
+      interval: weekly
     open-pull-requests-limit: 10
     labels:
       - 'type: dependency-upgrade'
@@ -15,29 +13,33 @@ updates:
     ignore:
       - dependency-name: org.apache.directory.server:*
       - dependency-name: org.apache.directory.shared:*
-  - package-ecosystem: gradle
-    target-branch: 4.1.x
-    milestone: 112 # 4.1.x
+      - dependency-name: '*'
+        update-types:
+          - version-update:semver-major
+  - package-ecosystem: npm
+    target-branch: main
+    milestone: 125 # main
     directory: /
     schedule:
-      interval: daily
-      time: '03:40'
-      timezone: Etc/UTC
-    open-pull-requests-limit: 10
+      interval: weekly
     labels:
       - 'type: dependency-upgrade'
+      - 'in: docs'
+  - package-ecosystem: github-actions
+    target-branch: main
+    milestone: 125 # main
+    directory: /
+    schedule:
+      interval: weekly
+    labels:
+      - 'type: task'
       - 'in: build'
-    ignore:
-      - dependency-name: org.apache.directory.server:*
-      - dependency-name: org.apache.directory.shared:*
   - package-ecosystem: gradle
     target-branch: 4.0.x
     milestone: 97 # 4.0.x
     directory: /
     schedule:
-      interval: daily
-      time: '03:40'
-      timezone: Etc/UTC
+      interval: weekly
     open-pull-requests-limit: 10
     labels:
       - 'type: dependency-upgrade'
@@ -55,14 +57,38 @@ updates:
         update-types:
           - version-update:semver-major
           - version-update:semver-minor
-  - package-ecosystem: gradle
-    target-branch: 3.3.x
-    milestone: 79 # 3.3.x
+  - package-ecosystem: npm
+    target-branch: 4.0.x
+    milestone: 97 # 4.0.x
     directory: /
     schedule:
-      interval: daily
-      time: '03:40'
-      timezone: Etc/UTC
+      interval: weekly
+    labels:
+      - 'type: dependency-upgrade'
+      - 'in: docs'
+    ignore:
+      - dependency-name: '*'
+        update-types:
+          - version-update:semver-major
+  - package-ecosystem: github-actions
+    target-branch: 4.0.x
+    milestone: 97 # 4.0.x
+    directory: /
+    schedule:
+      interval: weekly
+    labels:
+      - 'type: task'
+      - 'in: build'
+    ignore:
+      - dependency-name: '*'
+        update-types:
+          - version-update:semver-major
+  - package-ecosystem: gradle
+    target-branch: 4.1.x
+    milestone: 112 # 4.1.x
+    directory: /
+    schedule:
+      interval: weekly
     open-pull-requests-limit: 10
     labels:
       - 'type: dependency-upgrade'
@@ -80,16 +106,6 @@ updates:
         update-types:
           - version-update:semver-major
           - version-update:semver-minor
-
-  - package-ecosystem: npm
-    target-branch: main
-    milestone: 125 # 4.2.x
-    directory: /
-    schedule:
-      interval: weekly
-    labels:
-      - 'type: dependency-upgrade'
-      - 'in: docs'
   - package-ecosystem: npm
     target-branch: 4.1.x
     milestone: 112 # 4.1.x
@@ -99,42 +115,10 @@ updates:
     labels:
       - 'type: dependency-upgrade'
       - 'in: docs'
-  - package-ecosystem: npm
-    target-branch: 4.0.x
-    milestone: 97 # 4.0.x
-    directory: /
-    schedule:
-      interval: weekly
-    labels:
-      - 'type: dependency-upgrade'
-      - 'in: docs'
-  - package-ecosystem: npm
-    target-branch: 3.3.x
-    milestone: 79 # 3.3.x
-    directory: /
-    schedule:
-      interval: weekly
-    labels:
-      - 'type: dependency-upgrade'
-      - 'in: docs'
-  - package-ecosystem: npm
-    target-branch: docs-build
-    directory: /
-    schedule:
-      interval: weekly
-    labels:
-      - 'type: dependency-upgrade'
-      - 'in: docs'
-
-  - package-ecosystem: github-actions
-    target-branch: main
-    milestone: 125 # 4.2.x
-    directory: /
-    schedule:
-      interval: weekly
-    labels:
-      - 'type: task'
-      - 'in: build'
+    ignore:
+      - dependency-name: '*'
+        update-types:
+          - version-update:semver-major
   - package-ecosystem: github-actions
     target-branch: 4.1.x
     milestone: 112 # 4.1.x
@@ -144,24 +128,18 @@ updates:
     labels:
       - 'type: task'
       - 'in: build'
-  - package-ecosystem: github-actions
-    target-branch: 4.0.x
-    milestone: 97 # 4.0.x
+    ignore:
+      - dependency-name: '*'
+        update-types:
+          - version-update:semver-major
+  - package-ecosystem: npm
+    target-branch: docs-build
     directory: /
     schedule:
       interval: weekly
     labels:
-      - 'type: task'
-      - 'in: build'
-  - package-ecosystem: github-actions
-    target-branch: 3.3.x
-    milestone: 79 # 3.3.x
-    directory: /
-    schedule:
-      interval: weekly
-    labels:
-      - 'type: task'
-      - 'in: build'
+      - 'type: dependency-upgrade'
+      - 'in: docs'
   - package-ecosystem: github-actions
     target-branch: docs-build
     directory: /
@@ -170,4 +148,3 @@ updates:
     labels:
       - 'type: task'
       - 'in: build'
-
