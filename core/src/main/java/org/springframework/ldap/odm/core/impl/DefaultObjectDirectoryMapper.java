@@ -86,6 +86,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 	}
 
 	/**
+	 * Set the {@link ConverterManager} to use.
 	 * @deprecated please use {@link #setConversionService} instead
 	 */
 	@Deprecated(since = "3.3")
@@ -94,7 +95,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 	}
 
 	/**
-	 * Use this {@link ConversionService}
+	 * Use this {@link ConversionService}.
 	 * @param conversionService
 	 * @since 3.3
 	 * @see ConverterUtils for converters helpful to {@link ObjectDirectoryMapper}

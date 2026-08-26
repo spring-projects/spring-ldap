@@ -21,6 +21,8 @@ import javax.naming.ldap.LdapName;
 import org.springframework.ldap.core.support.BaseLdapNameAware;
 
 /**
+ * A dummy {@link BaseLdapNameAware} implementation for use in tests.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class DummyBaseLdapNameAware implements BaseLdapNameAware {

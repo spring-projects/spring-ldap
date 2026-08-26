@@ -19,6 +19,8 @@ package org.springframework.ldap.query;
 import org.springframework.ldap.filter.Filter;
 
 /**
+ * A {@link ContainerCriteria} that filters can be appended to.
+ *
  * @author Mattias Hellborg Arthursson
  */
 interface AppendableContainerCriteria extends ContainerCriteria {

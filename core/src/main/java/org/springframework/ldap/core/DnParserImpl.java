@@ -21,6 +21,8 @@ import org.jspecify.annotations.NullUnmarked;
 import org.springframework.ldap.support.LdapUtils;
 
 /**
+ * Parser for a distinguished name.
+ *
  * @deprecated As of 2.0 it is recommended to use {@link javax.naming.ldap.LdapName} along
  * with utility methods in {@link LdapUtils} instead.
  */
@@ -33,7 +35,7 @@ public class DnParserImpl implements DnParser, DnParserImplConstants {
 	 * ( "+" attributeTypeAndValue )* attributeTypeAndValue -&gt; ( &lt;SPACE&gt; )*
 	 * AttributeType SpacedEquals AttributeValue ( &lt;SPACE&gt; )* SpacedEquals -&gt;
 	 * &lt;SPACED_EQUALS&gt; AttributeType -&gt; &lt;LDAP_OID&gt; |
-	 * &lt;ATTRIBUTE_TYPE_STRING&gt; AttributeValue -&gt; &lt;ATTRVALUE&gt;
+	 * &lt;ATTRIBUTE_TYPE_STRING&gt; AttributeValue -&gt; &lt;ATTRVALUE&gt;.
 	 */
 	public final void input() throws ParseException {
 		dn();
@@ -181,7 +183,7 @@ public class DnParserImpl implements DnParser, DnParserImplConstants {
 		this(stream, null);
 	}
 
-	/** Constructor with InputStream and supplied encoding */
+	/** Constructor with InputStream and supplied encoding. */
 	public DnParserImpl(java.io.InputStream stream, String encoding) {
 		try {
 			this.jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1);

@@ -274,7 +274,7 @@ class DefaultLdapClient implements LdapClient {
 		throw LdapUtils.convertLdapException(ex);
 	};
 
-	@Nullable private <S extends NameClassPair, T> T toObject(@Nullable NamingEnumeration<S> results,
+	private <S extends NameClassPair, T> @Nullable T toObject(@Nullable NamingEnumeration<S> results,
 			NamingExceptionFunction<? super S, T> mapper) {
 		if (results == null) {
 			return null;

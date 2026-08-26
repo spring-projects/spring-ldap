@@ -93,7 +93,7 @@ public class Token implements java.io.Serializable {
 	}
 
 	/**
-	 * No-argument constructor
+	 * No-argument constructor.
 	 */
 	public Token() {
 	}

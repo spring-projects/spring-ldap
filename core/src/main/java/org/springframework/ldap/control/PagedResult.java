@@ -26,7 +26,7 @@ import org.jspecify.annotations.NullUnmarked;
  *
  * @author Mattias Hellborg Arthursson
  * @author Ulrik Sandberg
- * @deprecated
+ * @deprecated Use PagedResultsDirContextProcessor instead.
  */
 @Deprecated
 @NullUnmarked

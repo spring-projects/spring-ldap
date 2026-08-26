@@ -25,7 +25,7 @@ import org.springframework.ldap.core.ContextSource;
 
 /**
  * A {@link BeanPostProcessor} that makes any {@link ContextSource} bean observable by
- * Micrometer
+ * Micrometer.
  *
  * @author Josh Cummings
  * @since 3.3

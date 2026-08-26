@@ -65,6 +65,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	// ***** Helper Methods *****//
 
 	/**
+	 * Get the direct delegate for this dir context proxy.
 	 * @return The direct delegate for this dir context proxy
 	 */
 	public @Nullable DirContext getDelegateDirContext() {
@@ -105,8 +106,9 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	// ***** Object methods *****//
 
 	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -125,16 +127,18 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	}
 
 	/**
-	 * @see java.lang.Object#hashCode()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public int hashCode() {
 		final DirContext context = this.getInnermostDelegateDirContext();
 		return (context != null) ? context.hashCode() : 0;
 	}
 
 	/**
-	 * @see java.lang.Object#toString()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public String toString() {
 		final DirContext context = this.getInnermostDelegateDirContext();
 		return (context != null) ? context.toString() : "DirContext is closed";
@@ -158,216 +162,223 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	// ***** DirContext Interface Delegates *****//
 
 	/**
-	 * @see javax.naming.directory.DirContext#bind(javax.naming.Name, java.lang.Object,
-	 * javax.naming.directory.Attributes)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void bind(Name name, Object obj, Attributes attrs) throws NamingException {
 		requireNonNullDirContext().bind(name, obj, attrs);
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#bind(java.lang.String, java.lang.Object,
-	 * javax.naming.directory.Attributes)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void bind(String name, Object obj, Attributes attrs) throws NamingException {
 		requireNonNullDirContext().bind(name, obj, attrs);
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#createSubcontext(javax.naming.Name,
-	 * javax.naming.directory.Attributes)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public DirContext createSubcontext(Name name, Attributes attrs) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call createSubcontext on a pooled context");
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#createSubcontext(java.lang.String,
-	 * javax.naming.directory.Attributes)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public DirContext createSubcontext(String name, Attributes attrs) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call createSubcontext on a pooled context");
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#getAttributes(javax.naming.Name,
-	 * java.lang.String[])
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Attributes getAttributes(Name name, String[] attrIds) throws NamingException {
 		return requireNonNullDirContext().getAttributes(name, attrIds);
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#getAttributes(javax.naming.Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Attributes getAttributes(Name name) throws NamingException {
 		return requireNonNullDirContext().getAttributes(name);
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#getAttributes(java.lang.String,
-	 * java.lang.String[])
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Attributes getAttributes(String name, String[] attrIds) throws NamingException {
 		return requireNonNullDirContext().getAttributes(name, attrIds);
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#getAttributes(java.lang.String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Attributes getAttributes(String name) throws NamingException {
 		return requireNonNullDirContext().getAttributes(name);
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#getSchema(javax.naming.Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public DirContext getSchema(Name name) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call getSchema on a pooled context");
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#getSchema(java.lang.String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public DirContext getSchema(String name) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call getSchema on a pooled context");
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#getSchemaClassDefinition(javax.naming.Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public DirContext getSchemaClassDefinition(Name name) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call getSchemaClassDefinition on a pooled context");
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#getSchemaClassDefinition(java.lang.String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public DirContext getSchemaClassDefinition(String name) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call getSchemaClassDefinition on a pooled context");
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#modifyAttributes(javax.naming.Name, int,
-	 * javax.naming.directory.Attributes)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void modifyAttributes(Name name, int modOp, Attributes attrs) throws NamingException {
 		requireNonNullDirContext().modifyAttributes(name, modOp, attrs);
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#modifyAttributes(javax.naming.Name,
-	 * javax.naming.directory.ModificationItem[])
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void modifyAttributes(Name name, ModificationItem[] mods) throws NamingException {
 		requireNonNullDirContext().modifyAttributes(name, mods);
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#modifyAttributes(java.lang.String, int,
-	 * javax.naming.directory.Attributes)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void modifyAttributes(String name, int modOp, Attributes attrs) throws NamingException {
 		requireNonNullDirContext().modifyAttributes(name, modOp, attrs);
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#modifyAttributes(java.lang.String,
-	 * javax.naming.directory.ModificationItem[])
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void modifyAttributes(String name, ModificationItem[] mods) throws NamingException {
 		requireNonNullDirContext().modifyAttributes(name, mods);
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#rebind(javax.naming.Name, java.lang.Object,
-	 * javax.naming.directory.Attributes)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void rebind(Name name, Object obj, Attributes attrs) throws NamingException {
 		requireNonNullDirContext().rebind(name, obj, attrs);
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#rebind(java.lang.String, java.lang.Object,
-	 * javax.naming.directory.Attributes)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void rebind(String name, Object obj, Attributes attrs) throws NamingException {
 		requireNonNullDirContext().rebind(name, obj, attrs);
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#search(javax.naming.Name,
-	 * javax.naming.directory.Attributes, java.lang.String[])
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(Name name, Attributes matchingAttributes, String[] attributesToReturn)
 			throws NamingException {
 		return requireNonNullDirContext().search(name, matchingAttributes, attributesToReturn);
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#search(javax.naming.Name,
-	 * javax.naming.directory.Attributes)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(Name name, Attributes matchingAttributes) throws NamingException {
 		return requireNonNullDirContext().search(name, matchingAttributes);
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#search(javax.naming.Name, java.lang.String,
-	 * java.lang.Object[], javax.naming.directory.SearchControls)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(Name name, String filterExpr, Object[] filterArgs,
 			SearchControls cons) throws NamingException {
 		return requireNonNullDirContext().search(name, filterExpr, filterArgs, cons);
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#search(javax.naming.Name, java.lang.String,
-	 * javax.naming.directory.SearchControls)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(Name name, String filter, SearchControls cons)
 			throws NamingException {
 		return requireNonNullDirContext().search(name, filter, cons);
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#search(java.lang.String,
-	 * javax.naming.directory.Attributes, java.lang.String[])
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(String name, Attributes matchingAttributes,
 			String[] attributesToReturn) throws NamingException {
 		return requireNonNullDirContext().search(name, matchingAttributes, attributesToReturn);
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#search(java.lang.String,
-	 * javax.naming.directory.Attributes)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(String name, Attributes matchingAttributes) throws NamingException {
 		return requireNonNullDirContext().search(name, matchingAttributes);
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#search(java.lang.String, java.lang.String,
-	 * java.lang.Object[], javax.naming.directory.SearchControls)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(String name, String filterExpr, Object[] filterArgs,
 			SearchControls cons) throws NamingException {
 		return requireNonNullDirContext().search(name, filterExpr, filterArgs, cons);
 	}
 
 	/**
-	 * @see javax.naming.directory.DirContext#search(java.lang.String, java.lang.String,
-	 * javax.naming.directory.SearchControls)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<SearchResult> search(String name, String filter, SearchControls cons)
 			throws NamingException {
 		return requireNonNullDirContext().search(name, filter, cons);
 	}
 
 	/**
-	 * @see DelegatingContext#close()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void close() throws NamingException {
 		if (this.delegateDirContext == null) {
 			return;

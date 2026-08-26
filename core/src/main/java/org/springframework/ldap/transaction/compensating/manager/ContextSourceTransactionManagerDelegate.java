@@ -51,6 +51,7 @@ public class ContextSourceTransactionManagerDelegate extends AbstractCompensatin
 	private TempEntryRenamingStrategy renamingStrategy = new DefaultTempEntryRenamingStrategy();
 
 	/**
+	 * Construct a {@link ContextSourceTransactionManagerDelegate}.
 	 * @deprecated please provide the {@link ContextSource} in the constructor
 	 */
 	@Deprecated
@@ -59,7 +60,7 @@ public class ContextSourceTransactionManagerDelegate extends AbstractCompensatin
 	}
 
 	/**
-	 * Construct a {@link ContextSourceTransactionManagerDelegate}
+	 * Construct a {@link ContextSourceTransactionManagerDelegate}.
 	 * @param contextSource the {@link ContextSource} to use
 	 */
 	public ContextSourceTransactionManagerDelegate(ContextSource contextSource) {

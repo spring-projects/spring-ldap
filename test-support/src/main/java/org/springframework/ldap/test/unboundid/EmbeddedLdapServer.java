@@ -106,6 +106,8 @@ public final class EmbeddedLdapServer implements AutoCloseable {
 	}
 
 	/**
+	 * Closes the embedded LDAP server and releases resource, closing existing
+	 * connections.
 	 * @deprecated Use {@link #close()} instead.
 	 */
 	@Deprecated(since = "3.3")

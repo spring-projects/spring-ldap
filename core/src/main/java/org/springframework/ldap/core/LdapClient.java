@@ -43,7 +43,7 @@ import org.springframework.ldap.query.LdapQuery;
 import org.springframework.ldap.query.LdapQueryBuilder;
 
 /**
- * An LDAP Client
+ * An LDAP Client.
  *
  * @author Josh Cummings
  * @author Andrey Litvitski
@@ -176,7 +176,7 @@ public interface LdapClient {
 	}
 
 	/**
-	 * Create an instance of {@link LdapClient}
+	 * Create an instance of {@link LdapClient}.
 	 * @param contextSource the {@link ContextSource} for all requests
 	 * @see #withContextSource
 	 */
@@ -185,7 +185,7 @@ public interface LdapClient {
 	}
 
 	/**
-	 * Create an instance of {@link LdapClient}
+	 * Create an instance of {@link LdapClient}.
 	 * @param ldap the {@link LdapTemplate} to base this client off of
 	 * @since 3.3
 	 * @see #withContextSource
@@ -209,7 +209,7 @@ public interface LdapClient {
 	interface Builder {
 
 		/**
-		 * Use this {@link ContextSource}
+		 * Use this {@link ContextSource}.
 		 * @return the {@link Builder} for further customizations
 		 */
 		Builder contextSource(ContextSource contextSource);
@@ -273,7 +273,7 @@ public interface LdapClient {
 	interface ListSpec {
 
 		/**
-		 * Return the entry's children as a list of mapped results
+		 * Return the entry's children as a list of mapped results.
 		 * @param mapper the {@link NameClassPairMapper} strategy to mapping each search
 		 * result
 		 * @return the entry's children or an empty list
@@ -297,7 +297,7 @@ public interface LdapClient {
 	interface ListBindingsSpec {
 
 		/**
-		 * Return the entry's children as a list of mapped results
+		 * Return the entry's children as a list of mapped results.
 		 * @param mapper the {@link NameClassPairMapper} strategy to mapping each search
 		 * result
 		 * @return the entry's children or an empty list
@@ -305,7 +305,7 @@ public interface LdapClient {
 		<T> List<T> toList(NameClassPairMapper<T> mapper);
 
 		/**
-		 * Return the entry's children as a list of mapped results
+		 * Return the entry's children as a list of mapped results.
 		 * @param mapper the {@link ContextMapper} strategy to mapping each search result
 		 * @return the entry's children or an empty list
 		 */
@@ -536,21 +536,21 @@ public interface LdapClient {
 	interface AuthenticateSpec {
 
 		/**
-		 * The query to authenticate
+		 * The query to authenticate.
 		 * @param query the query to authenticate
 		 * @return the {@link AuthenticateSpec} for further configuration
 		 */
 		AuthenticateSpec query(LdapQuery query);
 
 		/**
-		 * The password to use
+		 * The password to use.
 		 * @param password the password to use
 		 * @return the {@link AuthenticateSpec} for further configuration
 		 */
 		AuthenticateSpec password(String password);
 
 		/**
-		 * Authenticate the query against the provided password
+		 * Authenticate the query against the provided password.
 		 * @throws org.springframework.ldap.AuthenticationException if authentication
 		 * fails or the query returns no results
 		 */
@@ -603,7 +603,7 @@ public interface LdapClient {
 		BindSpec replaceExisting(boolean replaceExisting);
 
 		/**
-		 * Bind the name, object, and attributes together
+		 * Bind the name, object, and attributes together.
 		 * @throws NameAlreadyBoundException if {@code name} is already bound and
 		 * {@link #replaceExisting} is {@code false}
 		 */
@@ -631,14 +631,14 @@ public interface LdapClient {
 		ModifySpec name(Name name);
 
 		/**
-		 * The attribute modifications to apply to this entry
+		 * The attribute modifications to apply to this entry.
 		 * @param modifications the attribute modifications
 		 * @return the {@link ModifySpec} for further configuration
 		 */
 		ModifySpec attributes(ModificationItem... modifications);
 
 		/**
-		 * Modify the name and attributes for this entry
+		 * Modify the name and attributes for this entry.
 		 */
 		void execute();
 
@@ -650,14 +650,14 @@ public interface LdapClient {
 	interface UnbindSpec {
 
 		/**
-		 * Delete all children related to this entry
+		 * Delete all children related to this entry.
 		 * @param recursive whether to delete all children as well
 		 * @return the {@link UnbindSpec} for further configuration
 		 */
 		UnbindSpec recursive(boolean recursive);
 
 		/**
-		 * Delete the entry
+		 * Delete the entry.
 		 */
 		void execute();
 

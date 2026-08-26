@@ -114,6 +114,7 @@ public final class LdapTestUtils {
 	}
 
 	/**
+	 * Start an in-process Apache Directory Server.
 	 * @deprecated use {@link #startEmbeddedServer(int, String, String)} instead.
 	 */
 	@Deprecated

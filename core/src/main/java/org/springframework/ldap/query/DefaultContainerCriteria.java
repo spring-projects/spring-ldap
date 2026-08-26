@@ -27,6 +27,8 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.ldap.filter.Filter;
 
 /**
+ * Default implementation of {@link AppendableContainerCriteria}.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 2.0
  */

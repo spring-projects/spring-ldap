@@ -61,6 +61,7 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
 	// ***** Helper Methods *****//
 
 	/**
+	 * Get the direct delegate for this ldap context proxy.
 	 * @return The direct delegate for this ldap context proxy
 	 */
 	public @Nullable LdapContext getDelegateLdapContext() {
@@ -102,8 +103,9 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
 	// ***** Object methods *****//
 
 	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -123,16 +125,18 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
 	}
 
 	/**
-	 * @see java.lang.Object#hashCode()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public int hashCode() {
 		final LdapContext context = this.getInnermostDelegateLdapContext();
 		return (context != null) ? context.hashCode() : 0;
 	}
 
 	/**
-	 * @see java.lang.Object#toString()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public String toString() {
 		final LdapContext context = this.getInnermostDelegateLdapContext();
 		return (context != null) ? context.toString() : "LdapContext is closed";
@@ -141,57 +145,65 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
 	// ***** LdapContext Interface Delegates *****//
 
 	/**
-	 * @see javax.naming.ldap.LdapContext#extendedOperation(javax.naming.ldap.ExtendedRequest)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public ExtendedResponse extendedOperation(ExtendedRequest request) throws NamingException {
 		return requireNonNullLdapContext().extendedOperation(request);
 	}
 
 	/**
-	 * @see javax.naming.ldap.LdapContext#getConnectControls()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Control[] getConnectControls() throws NamingException {
 		return requireNonNullLdapContext().getConnectControls();
 	}
 
 	/**
-	 * @see javax.naming.ldap.LdapContext#getRequestControls()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Control[] getRequestControls() throws NamingException {
 		return requireNonNullLdapContext().getRequestControls();
 	}
 
 	/**
-	 * @see javax.naming.ldap.LdapContext#getResponseControls()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Control[] getResponseControls() throws NamingException {
 		return requireNonNullLdapContext().getResponseControls();
 	}
 
 	/**
-	 * @see javax.naming.ldap.LdapContext#newInstance(javax.naming.ldap.Control[])
+	 * {@inheritDoc}
 	 */
+	@Override
 	public LdapContext newInstance(Control[] requestControls) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call newInstance on a pooled context");
 	}
 
 	/**
-	 * @see javax.naming.ldap.LdapContext#reconnect(javax.naming.ldap.Control[])
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void reconnect(Control[] connCtls) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call reconnect on a pooled context");
 	}
 
 	/**
-	 * @see javax.naming.ldap.LdapContext#setRequestControls(javax.naming.ldap.Control[])
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void setRequestControls(Control[] requestControls) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call setRequestControls on a pooled context");
 	}
 
 	/**
-	 * @see DelegatingDirContext#close()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void close() throws NamingException {
 		if (this.delegateLdapContext == null) {
 			return;

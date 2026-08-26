@@ -28,6 +28,9 @@ import org.springframework.ldap.support.LdapUtils;
 import org.springframework.util.Assert;
 
 /**
+ * A {@link org.springframework.beans.factory.FactoryBean} that creates a
+ * {@link ContextSource} for use against an embedded test LDAP server.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class TestContextSourceFactoryBean extends AbstractFactoryBean {

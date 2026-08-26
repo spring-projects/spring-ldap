@@ -25,7 +25,7 @@ import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 import org.springframework.ldap.odm.core.impl.DefaultObjectDirectoryMapper;
 
 /**
- * Configuration class for {@link ObjectDirectoryMapper}
+ * Configuration class for {@link ObjectDirectoryMapper}.
  *
  * @author Josh Cummings
  * @since 3.3

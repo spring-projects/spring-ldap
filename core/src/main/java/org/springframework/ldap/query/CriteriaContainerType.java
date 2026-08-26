@@ -23,6 +23,8 @@ import org.springframework.ldap.filter.BinaryLogicalFilter;
 import org.springframework.ldap.filter.OrFilter;
 
 /**
+ * The type of logical filter used to combine criteria in a container.
+ *
  * @author Mattias Hellborg Arthursson
  * @since 2.0
  */

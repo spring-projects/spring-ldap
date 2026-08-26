@@ -70,6 +70,7 @@ public class DelegatingContext implements Context {
 	// ***** Helper Methods *****//
 
 	/**
+	 * Get the direct delegate for this context proxy.
 	 * @return The direct delegate for this context proxy
 	 */
 	public @Nullable Context getDelegateContext() {
@@ -91,6 +92,7 @@ public class DelegatingContext implements Context {
 	}
 
 	/**
+	 * Assert that the delegate context is still open.
 	 * @throws NamingException If the delegate is null, {@link #close()} has been called.
 	 */
 	protected void assertOpen() throws NamingException {
@@ -107,8 +109,9 @@ public class DelegatingContext implements Context {
 	// ***** Object methods *****//
 
 	/**
-	 * @see Object#equals(Object)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -127,16 +130,18 @@ public class DelegatingContext implements Context {
 	}
 
 	/**
-	 * @see Object#hashCode()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public int hashCode() {
 		final Context context = this.getInnermostDelegateContext();
 		return (context != null) ? context.hashCode() : 0;
 	}
 
 	/**
-	 * @see Object#toString()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public String toString() {
 		final Context context = this.getInnermostDelegateContext();
 		return (context != null) ? context.toString() : "Context is closed";
@@ -145,29 +150,33 @@ public class DelegatingContext implements Context {
 	// ***** Context Interface Delegates *****//
 
 	/**
-	 * @see Context#addToEnvironment(String, Object)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Object addToEnvironment(String propName, Object propVal) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call addToEnvironment on a pooled context");
 	}
 
 	/**
-	 * @see Context#bind(Name, Object)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void bind(Name name, Object obj) throws NamingException {
 		requireNonNullContext().bind(name, obj);
 	}
 
 	/**
-	 * @see Context#bind(String, Object)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void bind(String name, Object obj) throws NamingException {
 		requireNonNullContext().bind(name, obj);
 	}
 
 	/**
-	 * @see Context#close()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void close() throws NamingException {
 		final Context context = this.getInnermostDelegateContext();
 		if (context == null) {
@@ -207,176 +216,201 @@ public class DelegatingContext implements Context {
 	}
 
 	/**
-	 * @see Context#composeName(Name, Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Name composeName(Name name, Name prefix) throws NamingException {
 		return requireNonNullContext().composeName(name, prefix);
 	}
 
 	/**
-	 * @see Context#composeName(String, String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public String composeName(String name, String prefix) throws NamingException {
 		return requireNonNullContext().composeName(name, prefix);
 	}
 
 	/**
-	 * @see Context#createSubcontext(Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Context createSubcontext(Name name) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call createSubcontext on a pooled context");
 	}
 
 	/**
-	 * @see Context#createSubcontext(String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Context createSubcontext(String name) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call createSubcontext on a pooled context");
 	}
 
 	/**
-	 * @see Context#destroySubcontext(Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void destroySubcontext(Name name) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call destroySubcontext on a pooled context");
 	}
 
 	/**
-	 * @see Context#destroySubcontext(String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void destroySubcontext(String name) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call destroySubcontext on a pooled context");
 	}
 
 	/**
-	 * @see Context#getEnvironment()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Hashtable<?, ?> getEnvironment() throws NamingException {
 		return requireNonNullContext().getEnvironment();
 	}
 
 	/**
-	 * @see Context#getNameInNamespace()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public String getNameInNamespace() throws NamingException {
 		return requireNonNullContext().getNameInNamespace();
 	}
 
 	/**
-	 * @see Context#getNameParser(Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NameParser getNameParser(Name name) throws NamingException {
 		return requireNonNullContext().getNameParser(name);
 	}
 
 	/**
-	 * @see Context#getNameParser(String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NameParser getNameParser(String name) throws NamingException {
 		return requireNonNullContext().getNameParser(name);
 	}
 
 	/**
-	 * @see Context#list(Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<NameClassPair> list(Name name) throws NamingException {
 		return requireNonNullContext().list(name);
 	}
 
 	/**
-	 * @see Context#list(String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<NameClassPair> list(String name) throws NamingException {
 		return requireNonNullContext().list(name);
 	}
 
 	/**
-	 * @see Context#listBindings(Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<Binding> listBindings(Name name) throws NamingException {
 		return requireNonNullContext().listBindings(name);
 	}
 
 	/**
-	 * @see Context#listBindings(String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public NamingEnumeration<Binding> listBindings(String name) throws NamingException {
 		return requireNonNullContext().listBindings(name);
 	}
 
 	/**
-	 * @see Context#lookup(Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Object lookup(Name name) throws NamingException {
 		return requireNonNullContext().lookup(name);
 	}
 
 	/**
-	 * @see Context#lookup(String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Object lookup(String name) throws NamingException {
 		return requireNonNullContext().lookup(name);
 	}
 
 	/**
-	 * @see Context#lookupLink(Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Object lookupLink(Name name) throws NamingException {
 		return requireNonNullContext().lookupLink(name);
 	}
 
 	/**
-	 * @see Context#lookupLink(String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Object lookupLink(String name) throws NamingException {
 		return requireNonNullContext().lookupLink(name);
 	}
 
 	/**
-	 * @see Context#rebind(Name, Object)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void rebind(Name name, Object obj) throws NamingException {
 		requireNonNullContext().rebind(name, obj);
 	}
 
 	/**
-	 * @see Context#rebind(String, Object)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void rebind(String name, Object obj) throws NamingException {
 		requireNonNullContext().rebind(name, obj);
 	}
 
 	/**
-	 * @see Context#removeFromEnvironment(String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Object removeFromEnvironment(String propName) throws NamingException {
 		throw new UnsupportedOperationException("Cannot call removeFromEnvironment on a pooled context");
 	}
 
 	/**
-	 * @see Context#rename(Name, Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void rename(Name oldName, Name newName) throws NamingException {
 		requireNonNullContext().rename(oldName, newName);
 	}
 
 	/**
-	 * @see Context#rename(String, String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void rename(String oldName, String newName) throws NamingException {
 		requireNonNullContext().rename(oldName, newName);
 	}
 
 	/**
-	 * @see Context#unbind(Name)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void unbind(Name name) throws NamingException {
 		requireNonNullContext().unbind(name);
 	}
 
 	/**
-	 * @see Context#unbind(String)
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void unbind(String name) throws NamingException {
 		requireNonNullContext().unbind(name);
 	}

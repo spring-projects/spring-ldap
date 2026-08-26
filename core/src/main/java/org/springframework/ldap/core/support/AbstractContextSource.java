@@ -91,12 +91,14 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	private LdapName base = LdapUtils.emptyLdapName();
 
 	/**
+	 * The distinguished name to authenticate with.
 	 * @deprecated use {@link #getUserDn()} and {@link #setUserDn(String)} instead
 	 */
 	@Deprecated
 	protected String userDn = "";
 
 	/**
+	 * The password to authenticate with.
 	 * @deprecated use {@link #getPassword()} and {@link #setPassword(String)} instead
 	 */
 	@Deprecated
@@ -322,11 +324,12 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	}
 
 	/**
+	 * Return the base path of this context source.
 	 * @deprecated {@link DistinguishedName} and associated classes and methods are
 	 * deprecated as of 2.0.
 	 */
-	@Override
 	@Deprecated
+	@Override
 	public DistinguishedName getBaseLdapPath() {
 		return new DistinguishedName(this.base);
 	}

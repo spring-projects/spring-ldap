@@ -69,6 +69,7 @@ public class PoolConfig {
 	private long timeBetweenEvictionRunsMillis = -1L;
 
 	/**
+	 * Set the maximum number of idle instances per key.
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setMaxIdlePerKey(int)
 	 *
 	 */
@@ -77,6 +78,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Set the overall maximum number of objects that can exist in this pool.
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setMaxTotal(int)
 	 *
 	 */
@@ -85,6 +87,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Set the maximum number of objects that can exist in this pool for a given key.
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setMaxTotalPerKey(int)
 	 */
 	public void setMaxTotalPerKey(int maxTotalPerKey) {
@@ -92,6 +95,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Set the minimum number of idle instances per key.
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setMinIdlePerKey(int)
 	 */
 	public void setMinIdlePerKey(int minIdlePerKey) {
@@ -99,6 +103,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Set whether to block when the pool is exhausted.
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setBlockWhenExhausted(boolean)
 	 */
 	public void setBlockWhenExhausted(boolean blockWhenExhausted) {
@@ -106,6 +111,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Set the name of the eviction policy class.
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setEvictionPolicyClassName(String)
 	 */
 	public void setEvictionPolicyClassName(String evictionPolicyClassName) {
@@ -113,6 +119,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Set whether waiting threads are served as if waiting in a FIFO queue.
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setFairness(boolean)
 	 */
 	public void setFairness(boolean fairness) {
@@ -120,6 +127,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Set whether JMX is enabled for this pool.
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setJmxEnabled(boolean)
 	 */
 	public void setJmxEnabled(boolean jmxEnabled) {
@@ -127,6 +135,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Set the base name to use for JMX naming.
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setJmxNameBase(String)
 	 */
 	public void setJmxNameBase(@Nullable String jmxNameBase) {
@@ -134,6 +143,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Set the JMX name prefix.
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setJmxNamePrefix(String)
 	 */
 	public void setJmxNamePrefix(String jmxNamePrefix) {
@@ -141,6 +151,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Set whether the pool acts as a LIFO queue.
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setLifo(boolean)
 	 */
 	public void setLifo(boolean lifo) {
@@ -148,6 +159,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Set the maximum time to wait for an object to become available.
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setMaxWaitMillis(long)
 	 */
 	public void setMaxWaitMillis(long maxWaitMillis) {
@@ -155,6 +167,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Set the minimum time an object may sit idle before being eligible for eviction.
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setMinEvictableIdleTimeMillis(long)
 	 */
 	public void setMinEvictableIdleTimeMillis(long minEvictableIdleTimeMillis) {
@@ -162,6 +175,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Set the number of objects to examine during each eviction run.
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setNumTestsPerEvictionRun(int)
 	 */
 	public void setNumTestsPerEvictionRun(int numTestsPerEvictionRun) {
@@ -169,6 +183,8 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Set the minimum time an object may sit idle before being eligible for eviction,
+	 * subject to the minimum idle constraint.
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setSoftMinEvictableIdleTimeMillis(long)
 	 */
 	public void setSoftMinEvictableIdleTimeMillis(long softMinEvictableIdleTimeMillis) {
@@ -176,6 +192,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Set whether objects are validated before being borrowed from the pool.
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setTestOnBorrow(boolean)
 	 */
 	public void setTestOnBorrow(boolean testOnBorrow) {
@@ -183,6 +200,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Set whether objects are validated after creation.
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setTestOnCreate(boolean)
 	 */
 	public void setTestOnCreate(boolean testOnCreate) {
@@ -190,6 +208,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Set whether objects are validated before being returned to the pool.
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setTestOnReturn(boolean)
 	 */
 	public void setTestOnReturn(boolean testOnReturn) {
@@ -197,6 +216,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Set whether idle objects are validated by the idle object evictor.
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setTestWhileIdle(boolean)
 	 */
 	public void setTestWhileIdle(boolean testWhileIdle) {
@@ -204,6 +224,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Set the time between runs of the idle object evictor.
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig#setTimeBetweenEvictionRunsMillis(long)
 	 */
 	public void setTimeBetweenEvictionRunsMillis(long timeBetweenEvictionRunsMillis) {
@@ -211,6 +232,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Get the maximum number of idle instances per key.
 	 * @see GenericKeyedObjectPoolConfig#getMaxIdlePerKey()
 	 */
 	public int getMaxIdlePerKey() {
@@ -218,6 +240,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Get the overall maximum number of objects that can exist in this pool.
 	 * @see GenericKeyedObjectPoolConfig#getMaxTotal()
 	 */
 	public int getMaxTotal() {
@@ -225,13 +248,15 @@ public class PoolConfig {
 	}
 
 	/**
-	 * @see GenericKeyedObjectPoolConfig#getMaxIdlePerKey()
+	 * Get the maximum number of objects that can exist in this pool for a given key.
+	 * @see GenericKeyedObjectPoolConfig#getMaxTotalPerKey()
 	 */
 	public int getMaxTotalPerKey() {
 		return this.maxTotalPerKey;
 	}
 
 	/**
+	 * Get the minimum number of idle instances per key.
 	 * @see GenericKeyedObjectPoolConfig#getMinIdlePerKey()
 	 */
 	public int getMinIdlePerKey() {
@@ -239,6 +264,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Return whether to block when the pool is exhausted.
 	 * @see GenericKeyedObjectPoolConfig#getBlockWhenExhausted()
 	 */
 	public boolean isBlockWhenExhausted() {
@@ -246,6 +272,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Get the name of the eviction policy class.
 	 * @see GenericKeyedObjectPoolConfig#getEvictionPolicyClassName()
 	 */
 	public String getEvictionPolicyClassName() {
@@ -253,6 +280,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Return whether waiting threads are served as if waiting in a FIFO queue.
 	 * @see GenericKeyedObjectPoolConfig#getFairness()
 	 */
 	public boolean isFairness() {
@@ -260,6 +288,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Return whether JMX is enabled for this pool.
 	 * @see GenericKeyedObjectPoolConfig#getJmxEnabled()
 	 */
 	public boolean isJmxEnabled() {
@@ -267,6 +296,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Get the base name to use for JMX naming.
 	 * @see GenericKeyedObjectPoolConfig#getJmxNameBase()
 	 */
 	public @Nullable String getJmxNameBase() {
@@ -274,6 +304,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Get the JMX name prefix.
 	 * @see GenericKeyedObjectPoolConfig#getJmxNamePrefix()
 	 */
 	public String getJmxNamePrefix() {
@@ -281,6 +312,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Return whether the pool acts as a LIFO queue.
 	 * @see GenericKeyedObjectPoolConfig#getLifo()
 	 */
 	public boolean isLifo() {
@@ -288,6 +320,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Get the maximum time to wait for an object to become available.
 	 * @see GenericKeyedObjectPoolConfig#getMaxWaitMillis()
 	 */
 	public long getMaxWaitMillis() {
@@ -295,6 +328,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Get the minimum time an object may sit idle before being eligible for eviction.
 	 * @see GenericKeyedObjectPoolConfig#getMinEvictableIdleTimeMillis()
 	 */
 	public long getMinEvictableIdleTimeMillis() {
@@ -302,6 +336,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Get the number of objects to examine during each eviction run.
 	 * @see GenericKeyedObjectPoolConfig#getNumTestsPerEvictionRun()
 	 */
 	public int getNumTestsPerEvictionRun() {
@@ -309,6 +344,8 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Get the minimum time an object may sit idle before being eligible for eviction,
+	 * subject to the minimum idle constraint.
 	 * @see GenericKeyedObjectPoolConfig#getSoftMinEvictableIdleTimeMillis()
 	 */
 	public long getSoftMinEvictableIdleTimeMillis() {
@@ -316,6 +353,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Return whether objects are validated before being borrowed from the pool.
 	 * @see GenericKeyedObjectPoolConfig#getTestOnBorrow()
 	 */
 	public boolean isTestOnBorrow() {
@@ -323,6 +361,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Return whether objects are validated after creation.
 	 * @see GenericKeyedObjectPoolConfig#getTestOnCreate()
 	 */
 	public boolean isTestOnCreate() {
@@ -330,6 +369,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Return whether objects are validated before being returned to the pool.
 	 * @see GenericKeyedObjectPoolConfig#getTestOnReturn()
 	 */
 	public boolean isTestOnReturn() {
@@ -337,6 +377,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Return whether idle objects are validated by the idle object evictor.
 	 * @see GenericKeyedObjectPoolConfig#getTestWhileIdle()
 	 */
 	public boolean isTestWhileIdle() {
@@ -344,6 +385,7 @@ public class PoolConfig {
 	}
 
 	/**
+	 * Get the time between runs of the idle object evictor.
 	 * @see GenericKeyedObjectPoolConfig#getTimeBetweenEvictionRunsMillis()
 	 */
 	public long getTimeBetweenEvictionRunsMillis() {

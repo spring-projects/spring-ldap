@@ -29,6 +29,8 @@ import org.springframework.ldap.query.SearchScope;
 import org.springframework.util.StringUtils;
 
 /**
+ * Parses the {@code ldap-template} element.
+ *
  * @author Mattias Hellborg Arthursson
  */
 public class LdapTemplateParser implements BeanDefinitionParser {

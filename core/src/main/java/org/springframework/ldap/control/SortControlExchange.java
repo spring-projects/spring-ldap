@@ -53,7 +53,7 @@ public class SortControlExchange implements ControlExchange<SortControl, SortRes
 	private final @Nullable SortResponseControl response;
 
 	/**
-	 * Constructs a new sort control exchange with the specified attributes to sort by
+	 * Constructs a new sort control exchange with the specified attributes to sort by.
 	 * @param sortBy the attributes to sort by
 	 */
 	public SortControlExchange(String... sortBy) {

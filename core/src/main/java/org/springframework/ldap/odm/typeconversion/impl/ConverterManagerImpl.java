@@ -61,7 +61,7 @@ public final class ConverterManagerImpl implements ConverterManager {
 
 	/**
 	 * Make a key into the converters map - the keys is formed from the
-	 * <code>fromClass</code>, syntax and <code>toClass</code>
+	 * <code>fromClass</code>, syntax and <code>toClass</code>.
 	 * @param fromClass The class to convert from.
 	 * @param syntax The LDAP syntax.
 	 * @param toClass The class to convert to.
@@ -77,7 +77,7 @@ public final class ConverterManagerImpl implements ConverterManager {
 	}
 
 	/**
-	 * Create an empty ConverterManagerImpl
+	 * Create an empty ConverterManagerImpl.
 	 */
 	public ConverterManagerImpl() {
 	}

@@ -107,6 +107,7 @@ public class ContextSourceTransactionManager extends AbstractPlatformTransaction
 	private ContextSourceTransactionManagerDelegate delegate;
 
 	/**
+	 * Construct a {@link ContextSourceTransactionManager}.
 	 * @since 4.1
 	 * @deprecated Please provide the {@link ContextSource} in the constructor
 	 */
@@ -117,7 +118,7 @@ public class ContextSourceTransactionManager extends AbstractPlatformTransaction
 
 	/**
 	 * Construct a {@link ContextSourceTransactionManager} using the given
-	 * {@link ContextSource}
+	 * {@link ContextSource}.
 	 * @param contextSource the {@link ContextSource} to use
 	 * @since 4.1
 	 */

@@ -71,13 +71,13 @@ import org.springframework.ldap.support.LdapUtils;
  */
 public abstract class AbstractTlsDirContextAuthenticationStrategy implements DirContextAuthenticationStrategy {
 
-	/** Hostname verifier to use for cert subject validation */
+	/** Hostname verifier to use for cert subject validation. */
 	private @Nullable HostnameVerifier hostnameVerifier;
 
-	/** Flag to cause graceful shutdown required by some LDAP DSAs */
+	/** Flag to cause graceful shutdown required by some LDAP DSAs. */
 	private boolean shutdownTlsGracefully = false;
 
-	/** SSL socket factory to use for startTLS negotiation */
+	/** SSL socket factory to use for startTLS negotiation. */
 	private @Nullable SSLSocketFactory sslSocketFactory;
 
 	/**

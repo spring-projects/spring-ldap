@@ -26,6 +26,8 @@ import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
 
 /**
+ * An object-directory-mapped entry representing a {@code groupOfUniqueNames}.
+ *
  * @author Mattias Hellborg Arthursson
  */
 @Entry(objectClasses = { "top", "groupOfUniqueNames" }, base = "cn=groups")
