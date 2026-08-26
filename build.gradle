@@ -64,6 +64,13 @@ tasks.register("generateAntoraResources") {
     dependsOn 'generateAntoraYml', 'syncAntoraAttachments'
 }
 
+tasks.register("checkstyleAll") {
+    group = 'Verification'
+    description = 'Runs every Checkstyle task in every project, without running the rest of the build'
+    dependsOn allprojects.collect { it.tasks.withType(Checkstyle) }
+    dependsOn tasks.named('checkstyleNohttp')
+}
+
 springRelease {
     repositoryOwner = "spring-projects"
     repositoryName = "spring-ldap"
