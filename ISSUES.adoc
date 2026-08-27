@@ -53,6 +53,10 @@ In this case, any milestone on the related issue is also removed in order to avo
 Third, an issue isn't required for a PR to appear in the release notes.
 Any issue or PR labeled `type: bug` or `type: dependency` and assigned a milestone is included in that milestone's release notes, whether or not it's linked to a separate issue.
 
+Fourth, a maintainer may edit your PR.
+Because we make every effort to preserve your contribution, we prefer to request changes rather than editing your PR ourselves, and this also gives us a chance to check with you whether our requested changes make sense.
+If the changes are small, stylistic, or obvious, though, a maintainer will likely just add a polish commit to your PR before merging.
+
 == Commits
 
 When adding commits, please have the title be in the imperative, stating what the commit does.
@@ -67,7 +71,10 @@ Short descriptions in the commit are helpful for a quick reference or reminder r
 Please include "Closes gh-xxxxx" where "xxxxx" is the issue number that you are addressing.
 If it takes multiple commits, you can use "Issue gh-xxxxx" for the other commits.
 
+If the title, description, or "Closes gh-xxxxx" is missing or needs adjusting, a maintainer may edit your commit message as part of readying a PR.
+
 Please include your DCO signoff in each commit.
+We cannot add this for you, so a PR without it cannot be merged until you do.
 
 == Backporting
 
