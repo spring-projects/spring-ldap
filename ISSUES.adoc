@@ -1,0 +1,80 @@
+= Issues and PRs
+
+In Spring LDAP, there are some conventions that we follow to keep Issues and PRs clean and tidy.
+
+== Issues
+
+First, each issue should have a title that explains what should be done.
+This is nice for a few reasons, other than just making it clear what needs to be done.
+It also helps when we create release notes; then we can take the title and place it in the release notes, making it easier to report what was done in a release.
+
+Second, each issue should have some kind of explanation of the problem and what should be done to address it.
+If it is a bug, a unit test or other reproducer is quite helpful.
+This allows maintainers and other contributors verify your bug and get to a solution faster.
+
+If it is a feature, it is helpful to see if it is possible to do what you want now or not.
+If it can be done now, a sample is nice to demonstrate the behavior clearly.
+It's also helpful to include what you think that the feature might look like, creating a clear distinction between how the code is today and how it could be should your feature be accepted.
+Being able to see a change in the sample often makes a compelling case.
+
+Third, all issues should have at least two labels. 
+The first is the module that it is in, like `in: core`.
+The second is the issue type, like `type: bug` for bugs and `type: enhancement` for features.
+
+The issue may also receive other labels, depending on their status.
+If it is a simple issue, maintainers might add `status: first-timers-only` or `status: ideal-for-contribution`.
+Once someone has volunteered for and been assigned an issue, then those statuses are removed.
+
+If a maintainer is confused, they might add `status: waiting-for-feedback` and add a comment requesting the clarification that they need.
+Note that sometimes the clarification is to provide a sample.
+Once the maintainer has the clarification needed, that status can be removed.
+If two weeks pass with no clarification from the reporter, the issue is closed.
+
+Fourth, all issues should have a milestone.
+If it is a bug, then it would ideally be scheduled for the next milestone.
+If it is a feature, then it is usually scheduled for the current .x feature milestone so we can evaluate whether it can fit into the upcoming minor release.
+
+Fifth, if you believe you've found a security vulnerability, please don't open a public issue.
+Follow the process at https://spring.io/security instead.
+If a maintainer determines that an already-open public issue may describe a security vulnerability, that issue will be closed and recreated internally as a security advisory, and you'll be added to the advisory so the investigation can continue there.
+
+== PRs
+
+All of this is true for PRs with some changes.
+
+First, titles should clearly state what was done.
+Sometimes, what was actually done turns out to be different than what was reported.
+
+Second, the PR's labels are often the same as the issue's; use good judgment.
+If a PR appears that resolves an already existing issue, the issue is usually closed and a `status: superceded` is added to the issue with a note indicating that it's been closed in favor of the linked PR.
+The PR then receives the same module and issue-type labels that the superseded issue had.
+In this case, any milestone on the related issue is also removed in order to avoid reporting the issue and the PR in the release notes.
+
+Third, an issue isn't required for a PR to appear in the release notes.
+Any issue or PR labeled `type: bug` or `type: dependency` and assigned a milestone is included in that milestone's release notes, whether or not it's linked to a separate issue.
+
+== Commits
+
+When adding commits, please have the title be in the imperative, stating what the commit does.
+It should be about 50 characters in length or less.
+
+Please have each commit be an atomic unit of work; ideally don't do code cleanup and a bug fix in the same commit.
+
+Please be brief with your commit descriptions.
+Remember that descriptions in the issue or PR are often more helpful since they can be edited.
+Short descriptions in the commit are helpful for a quick reference or reminder regarding the rationale for the change.
+
+Please include "Closes gh-xxxxx" where "xxxxx" is the issue number that you are addressing.
+If it takes multiple commits, you can use "Issue gh-xxxxx" for the other commits.
+
+Please include your DCO signoff in each commit.
+
+== Backporting
+
+We use a cherry-pick, backport strategy when applying a fix across feature branches.
+This means that issues and PRs can usually be fixed on `main`, and we'll perform the cherry-pick locally.
+For each backport, we'll create a matching issue for that particular maintainence release, linking it to the original.
+
+Since a backport isn't guaranteed to be identical to the fix on `main` -- sometimes a different change is needed for the older branch -- the cherry-picked commit's `Closes gh-xxxxx` is changed to reference the backport issue instead of the original.
+Also, since the commit never reaches `main`, GitHub won't auto-close the backport issue, so it's closed manually once the backport is pushed.
+
