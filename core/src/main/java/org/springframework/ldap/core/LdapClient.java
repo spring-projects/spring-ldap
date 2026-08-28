@@ -248,6 +248,18 @@ public interface LdapClient {
 		Builder ignoreSizeLimitExceededException(boolean ignore);
 
 		/**
+		 * Post-process every {@link DirContextAdapter} this client constructs with this
+		 * {@link Consumer}. This post-processor will process the
+		 * {@link DirContextAdapter} after any other post-processors that were also
+		 * registered and before any {@link ContextMapper} or {@link AttributeMapper} is
+		 * invoked.
+		 * @param postProcessor the {@link Consumer} to apply
+		 * @return the {@link Builder} for further customizations
+		 * @since 4.2
+		 */
+		Builder dirContextPostProcessor(Consumer<DirContextAdapter> postProcessor);
+
+		/**
 		 * Apply the given {@code Consumer} to this builder instance.
 		 * <p>
 		 * This can be useful for applying pre-packaged customizations.

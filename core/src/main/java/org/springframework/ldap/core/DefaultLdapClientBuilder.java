@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.core;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -41,6 +43,8 @@ class DefaultLdapClientBuilder implements LdapClient.Builder {
 	private boolean ignoreNameNotFoundException = false;
 
 	private boolean ignoreSizeLimitExceededException = true;
+
+	private final List<Consumer<DirContextAdapter>> dirContextPostProcessors = new ArrayList<>();
 
 	@Deprecated
 	DefaultLdapClientBuilder() {
@@ -110,6 +114,12 @@ class DefaultLdapClientBuilder implements LdapClient.Builder {
 	}
 
 	@Override
+	public DefaultLdapClientBuilder dirContextPostProcessor(Consumer<DirContextAdapter> postProcessor) {
+		this.dirContextPostProcessors.add(postProcessor);
+		return this;
+	}
+
+	@Override
 	public DefaultLdapClientBuilder apply(Consumer<LdapClient.Builder> builderConsumer) {
 		builderConsumer.accept(this);
 		return this;
@@ -117,7 +127,9 @@ class DefaultLdapClientBuilder implements LdapClient.Builder {
 
 	@Override
 	public DefaultLdapClientBuilder clone() {
-		return new DefaultLdapClientBuilder(this.contextSource, this.searchControlsSupplier);
+		DefaultLdapClientBuilder clone = new DefaultLdapClientBuilder(this.contextSource, this.searchControlsSupplier);
+		clone.dirContextPostProcessors.addAll(this.dirContextPostProcessors);
+		return clone;
 	}
 
 	@Override
@@ -126,6 +138,7 @@ class DefaultLdapClientBuilder implements LdapClient.Builder {
 		client.setIgnorePartialResultException(this.ignorePartialResultException);
 		client.setIgnoreSizeLimitExceededException(this.ignoreSizeLimitExceededException);
 		client.setIgnoreNameNotFoundException(this.ignoreNameNotFoundException);
+		client.setDirContextPostProcessors(List.copyOf(this.dirContextPostProcessors));
 		return client;
 	}
 

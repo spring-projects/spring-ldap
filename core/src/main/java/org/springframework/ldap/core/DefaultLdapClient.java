@@ -83,6 +83,8 @@ class DefaultLdapClient implements LdapClient {
 
 	private boolean ignoreSizeLimitExceededException = true;
 
+	private List<Consumer<DirContextAdapter>> dirContextPostProcessors = List.of();
+
 	DefaultLdapClient(ContextSource contextSource, Supplier<SearchControls> searchControlsSupplier,
 			LdapClient.Builder builder) {
 		this.contextSource = contextSource;
@@ -132,12 +134,12 @@ class DefaultLdapClient implements LdapClient {
 
 	@Override
 	public ModifySpec modify(String name) {
-		return new DefaultModifySpec(new DirContextAdapter(LdapUtils.newLdapName(name)));
+		return new DefaultModifySpec(prepare(new DirContextAdapter(LdapUtils.newLdapName(name))));
 	}
 
 	@Override
 	public ModifySpec modify(Name name) {
-		return new DefaultModifySpec(new DirContextAdapter(LdapUtils.newLdapName(name)));
+		return new DefaultModifySpec(prepare(new DirContextAdapter(LdapUtils.newLdapName(name))));
 	}
 
 	@Override
@@ -187,6 +189,15 @@ class DefaultLdapClient implements LdapClient {
 		this.ignoreSizeLimitExceededException = ignoreSizeLimitExceededException;
 	}
 
+	/**
+	 * Post-process every {@link DirContextAdapter} this client constructs with these
+	 * {@link Consumer}s, in order.
+	 * @param dirContextPostProcessors the {@link Consumer}s to apply
+	 */
+	void setDirContextPostProcessors(List<Consumer<DirContextAdapter>> dirContextPostProcessors) {
+		this.dirContextPostProcessors = dirContextPostProcessors;
+	}
+
 	<T> @Nullable T computeWithReadOnlyContext(ContextExecutor<T> executor) {
 		DirContext context = this.contextSource.getReadOnlyContext();
 		try {
@@ -215,7 +226,29 @@ class DefaultLdapClient implements LdapClient {
 	}
 
 	private <T> NamingExceptionFunction<? extends Binding, T> function(ContextMapper<T> mapper) {
-		return (result) -> mapper.mapFromContext(result.getObject());
+		return (result) -> {
+			Object ctx = result.getObject();
+			if (ctx instanceof DirContextAdapter adapter) {
+				prepare(adapter);
+			}
+			return mapper.mapFromContext(ctx);
+		};
+	}
+
+	/**
+	 * Run this client's configured {@link #dirContextPostProcessors} against
+	 * {@code adapter}. This runs for every {@link DirContextAdapter} this client
+	 * constructs, whether returned from a search-and-lookup operation (regardless of
+	 * which {@link ContextMapper} the call site uses, including the identity-cast default
+	 * used by {@link SearchSpec#single()} and friends) or used internally by
+	 * {@link #modify}.
+	 * @return {@code adapter}, for chaining
+	 */
+	private DirContextAdapter prepare(DirContextAdapter adapter) {
+		for (Consumer<DirContextAdapter> postProcessor : this.dirContextPostProcessors) {
+			postProcessor.accept(adapter);
+		}
+		return adapter;
 	}
 
 	private <T> NamingExceptionFunction<? extends SearchResult, T> function(AttributesMapper<T> mapper) {
