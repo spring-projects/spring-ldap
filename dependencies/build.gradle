@@ -20,8 +20,13 @@ dependencies {
 	} else {
 		api platform(libs.org.springframework.spring.framework.bom)
 	}
-	api platform(libs.io.micrometer.micrometer.bom)
-	api platform(libs.io.micrometer.micrometer.tracing.bom)
+	if (project.hasProperty("snapshot")) {
+		api platform("io.micrometer:micrometer-bom:1.17.+")
+		api platform("io.micrometer:micrometer-tracing-bom:1.7.+")
+	} else {
+		api platform(libs.io.micrometer.micrometer.bom)
+		api platform(libs.io.micrometer.micrometer.tracing.bom)
+	}
 	api platform(libs.org.junit.junit.bom)
 	api platform(libs.org.mockito.mockito.bom)
 	api platform(libs.org.slf4j.slf4j.bom)
