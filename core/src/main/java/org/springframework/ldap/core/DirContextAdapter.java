@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.function.BiPredicate;
 
 import javax.naming.Binding;
 import javax.naming.Context;
@@ -62,6 +63,15 @@ import org.springframework.util.StringUtils;
  * keeps track of the changes made to its attributes, making them available as an array of
  * <code>ModificationItem</code> objects, suitable as input to
  * {@link LdapTemplate#modifyAttributes(DirContextOperations)}.
+ *
+ * <p>
+ * For a multi-value attribute with only some of its values added or removed, this class
+ * ordinarily calculates individual "add value" and "remove value" modifications for just
+ * the values that changed. Some directory servers reject this for attributes without an
+ * equality matching rule defined in their schema, requiring the attribute to be replaced
+ * in its entirety instead. Use {@link #setMayRemoveByValue} to control, per attribute,
+ * whether removing individual values is attempted at all.
+ * </p>
  *
  * <p>
  * This class is aware of the specifics of {@link Name} instances with regards to equality
@@ -122,6 +132,8 @@ public class DirContextAdapter implements DirContextOperations {
 	private NameAwareAttributes updatedAttrs = new NameAwareAttributes();
 
 	private final String referralUrl;
+
+	private DefaultModificationItemsCollector collector = new DefaultModificationItemsCollector();
 
 	/**
 	 * Default constructor.
@@ -209,6 +221,7 @@ public class DirContextAdapter implements DirContextOperations {
 		this.updatedAttrs = (NameAwareAttributes) main.updatedAttrs.clone();
 		this.updateMode = main.updateMode;
 		this.referralUrl = main.referralUrl;
+		this.collector = main.collector;
 	}
 
 	/**
@@ -221,6 +234,19 @@ public class DirContextAdapter implements DirContextOperations {
 		if (this.updateMode) {
 			this.updatedAttrs = new NameAwareAttributes();
 		}
+	}
+
+	/**
+	 * Use this {@link BiPredicate} to decide whether remove-by-value is allowed for a
+	 * given attribute. By default, it checks if the value is
+	 * {@link NameAwareAttribute#isOrdered()}. If it is ordered, then remove-by-value is
+	 * not allowed. This is handy for situations where remove-by-value is not possible,
+	 * like an attribute that does not have equality-matching capabilities.
+	 * @param predicate the {@link BiPredicate} to use
+	 * @since 4.2
+	 */
+	public void setMayRemoveByValue(BiPredicate<@Nullable NameAwareAttribute, NameAwareAttribute> predicate) {
+		this.collector = new DefaultModificationItemsCollector(predicate);
 	}
 
 	/**
@@ -275,13 +301,9 @@ public class DirContextAdapter implements DirContextOperations {
 	}
 
 	/**
-	 * Collect all modifications for the changed attribute. If no changes have been made,
-	 * return immediately. If modifications have been made, and the original size as well
-	 * as the updated size of the attribute is 1, replace the attribute. If the size of
-	 * the updated attribute is 0, remove the attribute. Otherwise, the attribute is a
-	 * multi-value attribute; if it's an ordered one it should be replaced in its entirety
-	 * to preserve the new ordering, if not all modifications to the original value
-	 * (removals and additions) will be collected individually.
+	 * Look up the original value of {@code changedAttr}, reconcile {@link Name} equality
+	 * where applicable, and delegate the actual modification decision to
+	 * {@link #collector}.
 	 * @param changedAttr the value of the changed attribute.
 	 * @param modificationList the list in which to add the modifications.
 	 */
@@ -297,70 +319,7 @@ public class DirContextAdapter implements DirContextOperations {
 			}
 		}
 
-		if ((currentAttribute == null || currentAttribute.size() == 0) && changedAttr.size() > 0) {
-			modificationList.add(new ModificationItem(DirContext.ADD_ATTRIBUTE, changedAttr));
-			return;
-		}
-		if (currentAttribute == null) {
-			return;
-		}
-		if (currentAttribute.equals(changedAttr)) {
-			return;
-		}
-		if (changedAttr.size() == 0) {
-			modificationList.add(new ModificationItem(DirContext.REMOVE_ATTRIBUTE, changedAttr));
-			return;
-		}
-		if (currentAttribute.size() == 1 && changedAttr.size() == 1) {
-			modificationList.add(new ModificationItem(DirContext.REPLACE_ATTRIBUTE, changedAttr));
-			return;
-		}
-		if (changedAttr.isOrdered()) {
-			modificationList.add(new ModificationItem(DirContext.REPLACE_ATTRIBUTE, changedAttr));
-			return;
-		}
-		List<ModificationItem> myModifications = new LinkedList<>();
-		collectModifications(currentAttribute, changedAttr, myModifications);
-
-		if (myModifications.isEmpty()) {
-			// This means that the attributes are not equal, but the
-			// actual values are the same - thus the order must have
-			// changed. This should result in a REPLACE_ATTRIBUTE operation.
-			myModifications.add(new ModificationItem(DirContext.REPLACE_ATTRIBUTE, changedAttr));
-		}
-
-		modificationList.addAll(myModifications);
-	}
-
-	private void collectModifications(NameAwareAttribute originalAttr, NameAwareAttribute changedAttr,
-			List<ModificationItem> modificationList) {
-
-		Attribute originalClone = (Attribute) originalAttr.clone();
-		Attribute addedValuesAttribute = new NameAwareAttribute(originalAttr.getID());
-
-		for (Object value : changedAttr) {
-			if (!originalClone.remove(value)) {
-				addedValuesAttribute.add(value);
-			}
-		}
-
-		// We have now traversed and removed all values from the original that
-		// were also present in the new values. The remaining values in the
-		// original must be the ones that were removed.
-		if (originalClone.size() > 0 && originalClone.size() == originalAttr.size()) {
-			// This is actually a complete replacement of the attribute values.
-			// Fall back to REPLACE
-			modificationList.add(new ModificationItem(DirContext.REPLACE_ATTRIBUTE, addedValuesAttribute));
-		}
-		else {
-			if (originalClone.size() > 0) {
-				modificationList.add(new ModificationItem(DirContext.REMOVE_ATTRIBUTE, originalClone));
-			}
-
-			if (addedValuesAttribute.size() > 0) {
-				modificationList.add(new ModificationItem(DirContext.ADD_ATTRIBUTE, addedValuesAttribute));
-			}
-		}
+		modificationList.addAll(this.collector.collect(currentAttribute, changedAttr));
 	}
 
 	/**

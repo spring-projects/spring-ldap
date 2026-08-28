@@ -16,8 +16,11 @@
 
 package org.springframework.ldap.core;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.SortedSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.naming.CompositeName;
 import javax.naming.Name;
@@ -1404,6 +1407,124 @@ public class DirContextAdapterTests {
 		assertThat(modificationItem.getModificationOp()).isEqualTo(DirContext.ADD_ATTRIBUTE);
 		assertThat(modificationItem.getAttribute().getID()).isEqualTo("uniqueMember");
 		assertThat(modificationItem.getAttribute().get()).isEqualTo("cn=jane doe, ou=company");
+	}
+
+	@Test
+	public void testSetMayRemoveByValueIsInvokedWithOriginalAndUpdated() {
+		BasicAttributes attributes = new BasicAttributes();
+		Attribute multi = new BasicAttribute("description");
+		multi.add("a");
+		multi.add("b");
+		attributes.put(multi);
+		DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=john doe,ou=company"));
+		tested.setUpdateMode(true);
+
+		List<NameAwareAttribute> seenOriginals = new ArrayList<>();
+		List<NameAwareAttribute> seenUpdated = new ArrayList<>();
+		tested.setMayRemoveByValue((original, updated) -> {
+			seenOriginals.add(original);
+			seenUpdated.add(updated);
+			return true;
+		});
+
+		tested.setAttributeValues("description", new String[] { "a", "c" });
+		tested.getModificationItems();
+
+		assertThat(seenUpdated).hasSize(1);
+		assertThat(seenUpdated.get(0).getID()).isEqualTo("description");
+		assertThat(seenOriginals.get(0).getID()).isEqualTo("description");
+	}
+
+	@Test
+	public void testSetMayRemoveByValueForcesReplaceWhenPredicateReturnsFalse() {
+		BasicAttributes attributes = new BasicAttributes();
+		Attribute multi = new BasicAttribute("description");
+		multi.add("a");
+		multi.add("b");
+		attributes.put(multi);
+		DirContextAdapter tested = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=john doe,ou=company"));
+		tested.setUpdateMode(true);
+		tested.setMayRemoveByValue((original, updated) -> false);
+
+		tested.setAttributeValues("description", new String[] { "a", "c" });
+		ModificationItem[] items = tested.getModificationItems();
+
+		assertThat(items).hasSize(1);
+		assertThat(items[0].getModificationOp()).isEqualTo(DirContext.REPLACE_ATTRIBUTE);
+	}
+
+	@Test
+	public void testSetMayRemoveByValuePredicateNotInvokedWhenNotInUpdateMode() {
+		AtomicBoolean invoked = new AtomicBoolean();
+		this.tested.setMayRemoveByValue((original, updated) -> {
+			invoked.set(true);
+			return true;
+		});
+
+		assertThat(this.tested.isUpdateMode()).isFalse();
+		ModificationItem[] items = this.tested.getModificationItems();
+
+		assertThat(items).isEmpty();
+		assertThat(invoked).isFalse();
+	}
+
+	@Test
+	public void testCopyConstructorPreservesConfiguredMayRemoveByValuePredicate() {
+		BasicAttributes attributes = new BasicAttributes();
+		Attribute multi = new BasicAttribute("description");
+		multi.add("a");
+		multi.add("b");
+		attributes.put(multi);
+		DirContextAdapter source = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=john doe,ou=company"));
+		source.setMayRemoveByValue((original, updated) -> false);
+
+		class TestableDirContextAdapter extends DirContextAdapter {
+
+			TestableDirContextAdapter(DirContextAdapter main) {
+				super(main);
+			}
+
+		}
+
+		DirContextAdapter copy = new TestableDirContextAdapter(source);
+		copy.setUpdateMode(true);
+		copy.setAttributeValues("description", new String[] { "a", "c" });
+
+		// the default predicate would attempt remove-by-value for this unordered,
+		// multi-value attribute; the copied, custom predicate always forces REPLACE
+		ModificationItem[] items = copy.getModificationItems();
+		assertThat(items).hasSize(1);
+		assertThat(items[0].getModificationOp()).isEqualTo(DirContext.REPLACE_ATTRIBUTE);
+	}
+
+	@Test
+	public void testCopyConstructorDoesNotAliasMayRemoveByValuePredicateWithOriginal() {
+		BasicAttributes attributes = new BasicAttributes();
+		Attribute multi = new BasicAttribute("description");
+		multi.add("a");
+		multi.add("b");
+		attributes.put(multi);
+		DirContextAdapter source = new DirContextAdapter(attributes, LdapUtils.newLdapName("cn=john doe,ou=company"));
+
+		class TestableDirContextAdapter extends DirContextAdapter {
+
+			TestableDirContextAdapter(DirContextAdapter main) {
+				super(main);
+			}
+
+		}
+
+		DirContextAdapter copy = new TestableDirContextAdapter(source);
+		copy.setMayRemoveByValue((original, updated) -> false);
+
+		source.setUpdateMode(true);
+		source.setAttributeValues("description", new String[] { "a", "c" });
+
+		// configuring the copy's predicate must not silently change source's
+		// behavior; source should still attempt remove-by-value (2 items: REMOVE +
+		// ADD), not the copy's forced REPLACE (1 item)
+		ModificationItem[] items = source.getModificationItems();
+		assertThat(items).hasSize(2);
 	}
 
 }
