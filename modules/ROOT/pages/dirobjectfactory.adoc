@@ -212,6 +212,55 @@ public class PersonRepoImpl implements PersonRepo {
 ----
 ====
 
+[[customizing-modification-item-calculation]]
+=== Customizing How `DirContextAdapter` Calculates Modifications
+
+By default, when a multi-value attribute has only some of its values added or removed, `DirContextAdapter` calculates individual "add value" and "remove value" `ModificationItem` operations for just the values that changed, instead of replacing the attribute wholesale.
+
+Some directory servers reject this for attributes that have no equality matching rule defined in their schema (for example, `facsimileTelephoneNumber`), since https://datatracker.ietf.org/doc/html/rfc2251#section-4.6[RFC2251] requires that such attributes be replaced in their entirety rather than modified by individual value.
+For cases like this, use `setMayRemoveByValue` to tell a `DirContextAdapter` which attributes should never have individual values removed, forcing a whole-attribute `REPLACE` instead:
+
+.Forcing `REPLACE` for an attribute without an equality matching rule
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+Boolean hasEqualityMatching(@Nullable NameAwareAttribute original, NameAwareAttribute updated) {
+   return !updated.getID().equalsIgnoreCase("facsimileTelephoneNumber")
+}
+
+// ...
+
+DirContextOperations context = ldapClient.search().name(dn).single();
+context.setMayRemoveByValue(this::hasEqualityMatching);
+----
+====
+
+The predicate is asked, for each changed multi-value attribute, whether removing individual values is allowed; returning `false` forces a `REPLACE` instead.
+By default, the predicate allows removing individual values unless the attribute is ordered (see `setAttributeValues`), since removing individual values cannot preserve a specific ordering.
+
+More commonly, you want every `DirContextAdapter` that `LdapClient` constructs to use the same rule, which you can register once on `LdapClient.Builder` with `dirContextPostProcessor`:
+
+.Configuring the same rule for every `DirContextAdapter` an `LdapClient` constructs
+====
+[source,java]
+[subs="verbatim,quotes"]
+----
+Boolean hasEqualityMatching(@Nullable NameAwareAttribute original, NameAwareAttribute updated) {
+   return !updated.getID().equalsIgnoreCase("facsimileTelephoneNumber")
+}
+
+// ...
+
+LdapClient ldapClient = LdapClient.withContextSource(contextSource)
+      .dirContextPostProcessor((adapter) -> adapter.setMayRemoveByValue(this::hasEqualityMatching)
+      .build();
+----
+====
+
+A `dirContextPostProcessor` runs against every `DirContextAdapter` this client constructs -- both those returned by search-and-lookup operations, regardless of whichever `ContextMapper` or `AttributesMapper` a given call uses, and the one used internally by `modify`.
+Each call to `dirContextPostProcessor` adds another post-processor rather than replacing any registered by an earlier call, so configuration from different parts of your application composes safely.
+
 [[dns-as-attribute-values]]
 == `DirContextAdapter` and Distinguished Names as Attribute Values
 

@@ -1,3 +1,9 @@
 [[whats-new]]
 = What's New in Spring LDAP 4.2
 
+== Core
+
+* Added `LdapClient.Builder#dirContextPostProcessor` for post-processing a `DirContextAdapter`'s
+construction
+* Added `DirContextAdapter#setMayRemoveByValue` for controlling, per attribute, whether `DirContextAdapter` may remove individual values or must replace an attribute in its entirety. See xref:dirobjectfactory.adoc#customizing-modification-item-calculation[Customizing How `DirContextAdapter` Calculates Modifications].
+
