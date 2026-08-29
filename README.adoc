@@ -1,5 +1,5 @@
 link:https://gitter.im/spring-projects/spring-ldap[image:https://badges.gitter.im/spring-projects/spring-ldap.svg[Join the chat]]
-link:https://github.com/spring-projects/spring-ldap/actions/workflows/continuous-integration-workflow.yml[image:https://github.com/spring-projects/spring-ldap/actions/workflows/continuous-integration-workflow.yml/badge.svg[Build Status]]
+link:https://github.com/spring-projects/spring-ldap/actions/workflows/ci.yml[image:https://github.com/spring-projects/spring-ldap/actions/workflows/ci.yml/badge.svg[Build Status]]
 link:https://ge.spring.io/scans?search.rootProjectNames=spring-ldap[image:https://img.shields.io/badge/Revved%20up%20by-Develocity-06A0CE?logo=Gradle&labelColor=02303A[Revved up by Develocity]]
 
 = Spring LDAP
@@ -18,11 +18,11 @@ In addition to this, Spring LDAP provides Exception translation from NamingExcep
 to an unchecked exception hierarchy, as well as several utilities for working with filters,
 LDAP paths and attributes.
 
-For detailed information on the project, please refer to the [reference documentation](https://docs.spring.io/spring-ldap/docs/current/reference/) and [javadocs](https://docs.spring.io/spring-ldap/docs/2.3.x/apidocs/).
-See [the changelog](https://github.com/spring-projects/spring-ldap/releases) for detailed information on changes in the latest version.
+For detailed information on the project, please refer to the https://docs.spring.io/spring-ldap/docs/current/reference/[reference documentation] and https://docs.spring.io/spring-ldap/reference/api/java/index.html[Javadocs].
+See https://github.com/spring-projects/spring-ldap/releases[the changelog] for detailed information on changes in the latest version.
 
 == Code of Conduct
-This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.adoc).
+This project adheres to the Contributor Covenant https://github.com/spring-projects/.github/blob/main/CODE_OF_CONDUCT.md[code of conduct].
 By participating, you  are expected to uphold this code. Please report unacceptable behavior to spring-code-of-conduct@pivotal.io.
 
 == Downloading Artifacts
@@ -31,7 +31,7 @@ See https://docs.spring.io/spring-ldap/reference/getting-spring-ldap.html[Gettin
 == Documentation
 
 Be sure to read the https://docs.spring.io/spring-ldap/reference/[Spring LDAP Reference].
-Extensive JavaDoc for the Spring LDAP code is also available in the https://docs.spring.io/spring-ldap/site/docs/current/api/[Spring LDAP API Documentation].
+Extensive Javadocs for the Spring LDAP code is also available in the https://docs.spring.io/spring-ldap/reference/api/java/index.html[Spring LDAP API Documentation].
 
 You may also want to check out https://github.com/spring-projects/spring-ldap/releases[the change log for new features].
 
@@ -47,21 +47,21 @@ https://docs.github.com/en/get-started/quickstart/set-up-git[Git] and the https:
 Be sure that your `JAVA_HOME` environment variable points to the `jdk-25` folder extracted from the JDK download.
 
 === Check out sources
-[indent=0]
+[source,shell,indent=0]
 ----
 git clone git@github.com:spring-projects/spring-ldap.git
 ----
 
 === Install all `spring-*.jar` into your local Maven repository.
 
-[indent=0]
+[source,shell,indent=0]
 ----
 ./gradlew publishToMavenLocal
 ----
 
 === Compile and test; build all JARs, distribution zips, and docs
 
-[indent=0]
+[source,shell,indent=0]
 ----
 ./gradlew build
 ----
@@ -69,11 +69,12 @@ git clone git@github.com:spring-projects/spring-ldap.git
 The reference docs are not currently included in the distribution zip.
 You can build the reference docs for this branch by running the following command:
 
+[source,shell,indent=0]
 ----
-./gradlew :spring-ldap-docs:antora
+./gradlew antora
 ----
 
-That command publishes the docs site to the `_docs/build/site_` directory.
+That command publishes the docs site to the `_build/site_` directory.
 The https://github.com/spring-projects/spring-ldap/tree/docs-build[playbook branch] describes how to build the reference docs in detail.
 
 Discover more commands with `./gradlew tasks`.
@@ -83,7 +84,7 @@ Check out the https://stackoverflow.com/questions/tagged/spring-ldap[Spring LDAP
 https://spring.io/support[Commercial support] is available too.
 
 == Contributing
-https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request[Pull requests] are welcome; see the https://github.com/spring-projects/spring-ldap/blob/main/CONTRIBUTING.adoc[contributor guidelines] for details.
+https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request[Pull requests] are welcome; see the xref:CONTRIBUTING.adoc[contributor guidelines] for details.
 
 == License
 Spring LDAP is Open Source software released under the
