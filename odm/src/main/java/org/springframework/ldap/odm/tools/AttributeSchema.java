@@ -16,6 +16,9 @@
 
 package org.springframework.ldap.odm.tools;
 
+import javax.lang.model.SourceVersion;
+
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -28,6 +31,8 @@ import org.springframework.util.StringUtils;
 public final class AttributeSchema {
 
 	private final String name;
+
+	private final String javaName;
 
 	private final String syntax;
 
@@ -44,6 +49,9 @@ public final class AttributeSchema {
 	public AttributeSchema(final String name, final String syntax, final boolean isMultiValued,
 			final boolean isPrimitive, final boolean isBinary, final boolean isArray, final String scalarType) {
 		this.name = name;
+		this.javaName = StringUtils.replace(name, "-", "");
+		Assert.isTrue(SourceVersion.isIdentifier(this.javaName),
+				() -> String.format("Attribute name \"%1$s\" does not produce a valid Java identifier", name));
 		this.syntax = syntax;
 		this.isMultiValued = isMultiValued;
 		this.isPrimitive = isPrimitive;
@@ -73,7 +81,7 @@ public final class AttributeSchema {
 	}
 
 	public String getJavaName() {
-		return StringUtils.replace(this.name, "-", "");
+		return this.javaName;
 	}
 
 	public String getSyntax() {
