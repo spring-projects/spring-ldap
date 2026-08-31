@@ -15,7 +15,7 @@ jobs:
     if: github.actor == 'dependabot[bot]'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: spring-io/spring-security-actions/pr-build@6edd9e68189ec4868d080ab89cf68023056f65da  # main
+      - uses: spring-io/spring-security-actions/pr-build@15a5e9ef75eee29c39237c6821939a04e43a4b11  # main
         with:
           java-version: ${{ env.JAVA_VERSION }}
   build-check:
