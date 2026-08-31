@@ -59,7 +59,7 @@ jobs:
         with:
           java-version: ${{ env.JAVA_VERSION }}
       - name: Deploy Artifacts
-        uses: spring-io/spring-security-actions/ensure-artifacts@f8ef0d53fc61799c18f19bc6a4c42ccb9aa265de
+        uses: spring-io/spring-security-actions/ensure-artifacts@15a5e9ef75eee29c39237c6821939a04e43a4b11
         with:
           version: ${{ needs.compute-version.outputs.version }}
           username: ${{ env.ARTIFACTORY_USERNAME }}
