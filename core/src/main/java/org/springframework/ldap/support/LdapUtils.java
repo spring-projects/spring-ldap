@@ -634,8 +634,7 @@ public final class LdapUtils {
 		// bytes[2..7] : the Authority
 		StringBuffer sb = new StringBuffer();
 		for (int t = 2; t <= 7; t++) {
-			String hexString = Integer.toHexString(sid[t] & 0xFF);
-			sb.append(hexString);
+			sb.append(toHexString((byte) (sid[t] & 0xFF)));
 		}
 		sidAsString.append(Long.parseLong(sb.toString(), HEX));
 

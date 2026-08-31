@@ -145,6 +145,24 @@ public class LdapUtilsTests {
 	}
 
 	@Test
+	public void testConvertBinarySidToStringWithStandardNtAuthority() {
+		byte[] ntAuthoritySid = { (byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+				(byte) 0x00, (byte) 0x05 };
+		assertThat(LdapUtils.convertBinarySidToString(ntAuthoritySid)).isEqualTo("S-1-5");
+	}
+
+	@Test
+	public void testConvertBinarySidToStringWithNonStandardAuthorityBytes() throws Exception {
+		byte[] sid1 = { (byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x01, (byte) 0x00,
+				(byte) 0x00 };
+		byte[] sid2 = { (byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x10,
+				(byte) 0x00 };
+		String result1 = LdapUtils.convertBinarySidToString(sid1);
+		String result2 = LdapUtils.convertBinarySidToString(sid2);
+		assertThat(result1).isNotEqualTo(result2);
+	}
+
+	@Test
 	public void testSmallNumberToBytesBigEndian() throws Exception {
 		byte[] result = LdapUtils.numberToBytes("5", 6, true);
 		assertThat(result.length).isEqualTo(6);
