@@ -139,7 +139,7 @@ updates:
       interval: weekly
     labels:
       - 'type: dependency-upgrade'
-      - 'in: docs'
+      - 'in: build'
   - package-ecosystem: github-actions
     target-branch: docs-build
     directory: /
