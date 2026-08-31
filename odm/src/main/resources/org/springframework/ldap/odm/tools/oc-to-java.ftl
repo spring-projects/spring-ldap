@@ -8,7 +8,7 @@
         <#else>
           <#local first=false/>
         </#if>
-        "${listValue}"<#t/>
+        "${listValue?j_string}"<#t/>
     </#list>
 </#macro>
 
@@ -16,7 +16,7 @@
     <#list attributes as attribute>
        <#local binary=attribute.isBinary?string(", type=Type.BINARY", "")>
 
-       <#lt/>   @Attribute(name="${attribute.javaName}", syntax="${attribute.syntax}"${binary})
+       <#lt/>   @Attribute(name="${attribute.javaName}", syntax="${attribute.syntax?j_string}"${binary})
        <#if attribute.isMultiValued>
           <#lt/>   private List<${attribute.scalarType}> ${attribute.javaName}=new ArrayList<${attribute.scalarType}>();
        <#else>
