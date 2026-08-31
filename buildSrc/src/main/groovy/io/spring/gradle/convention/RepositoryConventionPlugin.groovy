@@ -69,10 +69,6 @@ class RepositoryConventionPlugin implements Plugin<Project> {
 				}
 				url = 'https://repo.spring.io/release/'
 			}
-			maven {
-				name = 'shibboleth'
-				url = 'https://build.shibboleth.net/nexus/content/repositories/releases/'
-			}
 		}
 	}
 
