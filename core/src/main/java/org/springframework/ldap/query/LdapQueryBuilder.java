@@ -98,10 +98,35 @@ public final class LdapQueryBuilder implements LdapQuery {
 	 * any non-filter values after it specifies a filter.
 	 * @return a new instance.
 	 * @since 3.0
+	 * @deprecated Please use {@code withQuery} instead
 	 */
+	@Deprecated
 	public static LdapQueryBuilder fromQuery(LdapQuery query) {
 		LdapQueryBuilder builder = new LdapQueryBuilder();
 		builder.rootContainer = new DefaultContainerCriteria(builder).append(query.filter());
+		builder.attributes(query.attributes()).base(query.base());
+		if (query.countLimit() != null) {
+			builder.countLimit(query.countLimit());
+		}
+		builder.searchScope(query.searchScope());
+		if (query.timeLimit() != null) {
+			builder.timeLimit(query.timeLimit());
+		}
+		return builder;
+	}
+
+	/**
+	 * Construct a new {@link LdapQueryBuilder} based on an existing {@link LdapQuery}.
+	 * All fields are copied except for the {@link Filter}.
+	 *
+	 * <p>
+	 * Note that all filter invariants are still enforced; an application cannot specify
+	 * any non-filter values after it specifies a filter.
+	 * @return a new instance.
+	 * @since 3.2.20
+	 */
+	public static LdapQueryBuilder withQuery(LdapQuery query) {
+		LdapQueryBuilder builder = new LdapQueryBuilder();
 		builder.attributes(query.attributes()).base(query.base());
 		if (query.countLimit() != null) {
 			builder.countLimit(query.countLimit());
@@ -192,7 +217,7 @@ public final class LdapQueryBuilder implements LdapQuery {
 	}
 
 	private void initRootContainer() {
-		assertFilterNotStarted();
+		Assert.state(this.rootContainer == null, "Invalid operation - filter condition specification already started");
 		this.rootContainer = new DefaultContainerCriteria(this);
 		this.isFilterStarted = true;
 	}
@@ -284,6 +309,15 @@ public final class LdapQueryBuilder implements LdapQuery {
 			throw new IllegalStateException("No filter conditions have been specified");
 		}
 		return this.rootContainer.filter();
+	}
+
+	/**
+	 * Get the filter.
+	 * @return the filter, {@code null} if there isn't one specified
+	 * @since 3.2.20
+	 */
+	public Filter filterOrNull() {
+		return (this.rootContainer != null) ? filter() : null;
 	}
 
 }

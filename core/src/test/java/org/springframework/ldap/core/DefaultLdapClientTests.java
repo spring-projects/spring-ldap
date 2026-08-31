@@ -156,6 +156,61 @@ public class DefaultLdapClientTests {
 	}
 
 	@Test
+	public void searchWhenQueryFilterNotSpecifiedThenSearchesWithMatchAllFilter() throws Exception {
+		expectGetReadOnlyContext();
+
+		SearchControls controls = new SearchControls();
+		controls.setSearchScope(SearchControls.OBJECT_SCOPE);
+		controls.setReturningObjFlag(true);
+
+		given(this.dirContextMock.search(eq(this.nameMock), eq("(objectClass=*)"),
+				argThat(new SearchControlsMatcher(controls))))
+			.willReturn(this.namingEnumerationMock);
+		given(this.namingEnumerationMock.hasMore()).willReturn(false);
+
+		this.tested.search().name(this.nameMock).toEntryList();
+
+		verify(this.dirContextMock).close();
+	}
+
+	@Test
+	public void searchWhenQuerySpecifiesFilterThenOverridesMatchAllDefault() throws Exception {
+		expectGetReadOnlyContext();
+
+		SearchResult searchResult = new SearchResult("", new Object(), new BasicAttributes());
+		singleSearchResult(searchControlsOneLevel(), searchResult);
+
+		this.tested.search()
+			.query((builder) -> builder.base(this.nameMock).searchScope(SearchScope.ONELEVEL))
+			.query((builder) -> builder.filter("(ou=somevalue)"))
+			.toObject(this.contextMapperMock);
+
+		verify(this.contextMapperMock).mapFromContext(any());
+		verify(this.dirContextMock).close();
+	}
+
+	@Test
+	public void searchWhenReusedAfterMatchAllDefaultThenQueryCanStillSpecifyFilter() throws Exception {
+		expectGetReadOnlyContext();
+
+		SearchControls objectControls = new SearchControls();
+		objectControls.setSearchScope(SearchControls.OBJECT_SCOPE);
+		objectControls.setReturningObjFlag(true);
+
+		given(this.dirContextMock.search(eq(this.nameMock), eq("(objectClass=*)"),
+				argThat(new SearchControlsMatcher(objectControls))))
+			.willReturn(this.namingEnumerationMock);
+		given(this.namingEnumerationMock.hasMore()).willReturn(false);
+
+		LdapClient.SearchSpec spec = this.tested.search().name(this.nameMock);
+		spec.toEntryList();
+
+		spec.query((builder) -> builder.filter("(ou=somevalue)"));
+
+		verify(this.dirContextMock).close();
+	}
+
+	@Test
 	public void testSearch_StringBase_CallbackHandler() throws Exception {
 		expectGetReadOnlyContext();
 

@@ -18,6 +18,7 @@ package org.springframework.ldap.query;
 
 import org.junit.jupiter.api.Test;
 
+import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.filter.ProximityFilter;
 import org.springframework.ldap.support.LdapUtils;
 
@@ -199,6 +200,71 @@ public class LdapQueryBuilderTests {
 			.is("Doe")
 			.or("objectclass")
 			.is("person"));
+	}
+
+	@Test
+	public void fromQueryWhenSpecifyingFilterThenIllegalState() {
+		LdapQuery source = LdapQueryBuilder.query().where("sn").is("Doe");
+		LdapQueryBuilder derived = LdapQueryBuilder.fromQuery(source);
+		assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> derived.where("cn").is("John Doe"));
+	}
+
+	@Test
+	public void fromQueryWhenSpecifyingHardcodedFilterThenIllegalState() {
+		LdapQuery source = LdapQueryBuilder.query().where("sn").is("Doe");
+		LdapQueryBuilder derived = LdapQueryBuilder.fromQuery(source);
+		assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> derived.filter("(cn=John Doe)"));
+	}
+
+	@Test
+	public void fromQueryWhenSpecifyingFilterObjectThenIllegalState() {
+		LdapQuery source = LdapQueryBuilder.query().where("sn").is("Doe");
+		LdapQueryBuilder derived = LdapQueryBuilder.fromQuery(source);
+		assertThatExceptionOfType(IllegalStateException.class)
+			.isThrownBy(() -> derived.filter(new EqualsFilter("cn", "John Doe")));
+	}
+
+	@Test
+	public void fromQueryWhenSpecifyingFilterFormatThenIllegalState() {
+		LdapQuery source = LdapQueryBuilder.query().where("sn").is("Doe");
+		LdapQueryBuilder derived = LdapQueryBuilder.fromQuery(source);
+		assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> derived.filter("(cn={0})", "John Doe"));
+	}
+
+	@Test
+	public void withQueryWhenSpecifyingFilterThenAllowed() {
+		LdapQuery source = LdapQueryBuilder.query().where("sn").is("Doe");
+		LdapQueryBuilder derived = LdapQueryBuilder.withQuery(source);
+		derived.where("cn").is("John Doe");
+	}
+
+	@Test
+	public void withQueryWhenSpecifyingHardcodedFilterThenAllowed() {
+		LdapQuery source = LdapQueryBuilder.query().where("sn").is("Doe");
+		LdapQueryBuilder derived = LdapQueryBuilder.withQuery(source);
+		derived.filter("(cn=John Doe)");
+	}
+
+	@Test
+	public void withQueryWhenSpecifyingFilterObjectThenAllowed() {
+		LdapQuery source = LdapQueryBuilder.query().where("sn").is("Doe");
+		LdapQueryBuilder derived = LdapQueryBuilder.withQuery(source);
+		derived.filter(new EqualsFilter("cn", "John Doe"));
+	}
+
+	@Test
+	public void withQueryWhenSpecifyingFilterFormatThenAllowed() {
+		LdapQuery source = LdapQueryBuilder.query().where("sn").is("Doe");
+		LdapQueryBuilder derived = LdapQueryBuilder.withQuery(source);
+		derived.filter("(cn={0})", "John Doe");
+	}
+
+	@Test
+	public void verifyThatFromQueryPreservesFilterWhenNoFurtherFilterIsSpecified() {
+		LdapQuery source = LdapQueryBuilder.query().where("sn").is("Doe");
+		LdapQueryBuilder derived = LdapQueryBuilder.fromQuery(source);
+
+		assertThat(derived.filter().encode()).isEqualTo(source.filter().encode());
 	}
 
 }
