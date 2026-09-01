@@ -187,8 +187,8 @@ public final class ConverterManagerFactoryBean implements FactoryBean {
 
 		/**
 		 * Set the classes the {@link Converter} should convert from.
-		 * @param fromClasses Comma separated list of classes the {@link Converter} should
-		 * can convert from.
+		 * @param fromClasses Comma separated list of classes the {@link Converter} can
+		 * convert from.
 		 */
 		public void setFromClasses(Set<Class<?>> fromClasses) {
 			this.fromClasses = fromClasses;

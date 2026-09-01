@@ -277,7 +277,7 @@ public class DefaultIncrementalAttributesMapper
 	 * @param attributes names of the attributes to request.
 	 * @return an Attributes instance, populated with all found values for the requested
 	 * attributes. Never <code>null</code>, though the actual attributes may not be set if
-	 * they was not set on the requested object.
+	 * they were not set on the requested object.
 	 */
 	public static Attributes lookupAttributes(LdapOperations ldapOperations, String dn, String[] attributes) {
 		return lookupAttributes(ldapOperations, LdapUtils.newLdapName(dn), attributes);
@@ -305,7 +305,7 @@ public class DefaultIncrementalAttributesMapper
 	 * @param attributes names of the attributes to request.
 	 * @return an Attributes instance, populated with all found values for the requested
 	 * attributes. Never <code>null</code>, though the actual attributes may not be set if
-	 * they was not set on the requested object.
+	 * they were not set on the requested object.
 	 */
 	public static Attributes lookupAttributes(LdapOperations ldapOperations, Name dn, String[] attributes) {
 		return loopForAllAttributeValues(ldapOperations, dn, attributes).getCollectedAttributes();

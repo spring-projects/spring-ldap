@@ -91,8 +91,7 @@ import org.springframework.util.StringUtils;
  * </p>
  * <p>
  * Note that this is not a complete implementation of DirContext. Several methods are not
- * relevant for the intended usage of this class, so they throw
- * UnsupportOperationException.
+ * relevant for the intended usage of this class, so they throw {@link UnsupportedOperationException}.
  * </p>
  *
  * @author Magnus Robertsson
