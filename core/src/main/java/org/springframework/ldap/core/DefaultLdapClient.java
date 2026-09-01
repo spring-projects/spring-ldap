@@ -500,7 +500,7 @@ class DefaultLdapClient implements LdapClient {
 		public <T> T execute(AuthenticatedLdapEntryContextMapper<T> mapper) {
 			LdapEntryIdentificationContextMapper m = new LdapEntryIdentificationContextMapper();
 			List<LdapEntryIdentification> identification = this.search.map(m).list();
-			if (identification.size() == 0) {
+			if (identification.isEmpty()) {
 				throw new EmptyResultDataAccessException(1);
 			}
 			else if (identification.size() != 1) {

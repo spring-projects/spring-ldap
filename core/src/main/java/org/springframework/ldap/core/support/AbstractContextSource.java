@@ -271,8 +271,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 					sb.append(encodedAttributeName).append('=');
 
 					Object oneValue = allValues.nextElement();
-					if (oneValue instanceof String) {
-						String oneString = (String) oneValue;
+					if (oneValue instanceof String oneString) {
 						sb.append(nameEncodeForUrl(oneString));
 					}
 					else {
