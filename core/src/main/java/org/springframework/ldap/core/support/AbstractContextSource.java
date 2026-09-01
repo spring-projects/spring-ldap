@@ -606,7 +606,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 	}
 
 	/**
-	 * Set whether environment properties should be cached between requsts for anonymous
+	 * Set whether environment properties should be cached between requests for anonymous
 	 * environment. Default is <code>true</code>; setting this property to
 	 * <code>false</code> causes the environment Hashmap to be rebuilt from the current
 	 * property settings of this instance between each request for an anonymous

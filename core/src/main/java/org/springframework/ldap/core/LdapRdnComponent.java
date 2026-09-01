@@ -164,7 +164,7 @@ public class LdapRdnComponent implements Comparable, Serializable {
 
 	/**
 	 * Get a String representation of this instance for use in URLs.
-	 * @return a properly URL encoded representation of this instancs.
+	 * @return a properly URL encoded representation of this instance.
 	 */
 	public String encodeUrl() {
 		// Use the URI class to properly URL encode the value.

@@ -28,8 +28,8 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
 
 /**
  * A {@link CompensatingTransactionOperationExecutor} to manage a bind operation. Performs
- * a bind in {@link #performOperation()}, a corresponding unbind in {@link #rollback()},
- * and nothing in {@link #commit()}.
+ * a bind in {@link #performOperation()}, a corresponding to unbind in
+ * {@link #rollback()}, and nothing in {@link #commit()}.
  *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
@@ -67,7 +67,7 @@ public class BindOperationExecutor implements CompensatingTransactionOperationEx
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see org.springframework.ldap.support.transaction.
+	 * @see org.springframework.transaction.compensating.
 	 * CompensatingTransactionOperationExecutor#rollback()
 	 */
 	public void rollback() {
@@ -82,7 +82,7 @@ public class BindOperationExecutor implements CompensatingTransactionOperationEx
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see org.springframework.ldap.support.transaction.
+	 * @see org.springframework.transaction.compensating.
 	 * CompensatingTransactionOperationExecutor#commit()
 	 */
 	public void commit() {
@@ -92,7 +92,7 @@ public class BindOperationExecutor implements CompensatingTransactionOperationEx
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see org.springframework.ldap.support.transaction.
+	 * @see org.springframework.transaction.compensating.
 	 * CompensatingTransactionOperationExecutor#performOperation()
 	 */
 	public void performOperation() {

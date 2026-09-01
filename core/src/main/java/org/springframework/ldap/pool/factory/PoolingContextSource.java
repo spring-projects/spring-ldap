@@ -453,7 +453,7 @@ public class PoolingContextSource extends DelegatingBaseLdapPathContextSourceSup
 			this.keyedObjectPool.close();
 		}
 		catch (Exception ex) {
-			this.logger.warn("An exception occured while closing the underlying pool.", ex);
+			this.logger.warn("An exception occurred while closing the underlying pool.", ex);
 		}
 	}
 
