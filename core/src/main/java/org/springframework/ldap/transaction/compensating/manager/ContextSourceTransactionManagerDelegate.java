@@ -34,13 +34,10 @@ import org.springframework.util.Assert;
 
 /**
  * This delegate performs all the work for the {@link ContextSourceTransactionManager}.
- * The work is delegated in order to be able to perform the exact same work for the LDAP
- * part in {@link ContextSourceAndDataSourceTransactionManager}.
  *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
  * @see ContextSourceTransactionManager
- * @see ContextSourceAndDataSourceTransactionManager
  */
 public class ContextSourceTransactionManagerDelegate extends AbstractCompensatingTransactionManagerDelegate {
 
