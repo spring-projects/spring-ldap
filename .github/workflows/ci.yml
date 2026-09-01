@@ -35,7 +35,7 @@ jobs:
         uses: spring-io/spring-release-actions/compute-version@a1f321783a0769dd2aea4fad6c2ae2f95a52b885 # 0.0.5
       - id: artifact-repository
         name: Compute Artifact Repository
-        uses: spring-io/spring-release-actions/compute-artifact-repository@a1f321783a0769dd2aea4fad6c2ae2f95a52b885 # 0.0.5
+        uses: spring-io/spring-release-actions/compute-artifact-repository@1b8671612c3eb3d9b9763e2d7b66f1a80d00ee95 # 0.0.6
         with:
           version: ${{ steps.project-version.outputs.version }}
   test:
