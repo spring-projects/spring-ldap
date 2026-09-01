@@ -85,16 +85,14 @@ public class ContextSourceTransactionManagerDelegate extends AbstractCompensatin
 	 */
 	@Deprecated
 	public void setContextSource(ContextSource contextSource) {
-		if (contextSource instanceof TransactionAwareContextSourceProxy) {
-			TransactionAwareContextSourceProxy proxy = (TransactionAwareContextSourceProxy) contextSource;
+		if (contextSource instanceof TransactionAwareContextSourceProxy proxy) {
 			this.contextSource = proxy.getTarget();
 		}
 		else {
 			this.contextSource = contextSource;
 		}
 
-		if (contextSource instanceof AbstractContextSource) {
-			AbstractContextSource abstractContextSource = (AbstractContextSource) contextSource;
+		if (contextSource instanceof AbstractContextSource abstractContextSource) {
 			if (abstractContextSource.isAnonymousReadOnly()) {
 				throw new IllegalArgumentException(
 						"Compensating LDAP transactions cannot be used when context-source is anonymous-read-only");
