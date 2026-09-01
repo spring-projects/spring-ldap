@@ -94,7 +94,6 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  *
  * @author Mattias Hellborg Arthursson
  * @since 1.2
- * @see ContextSourceAndDataSourceTransactionManager
  * @see ContextSourceTransactionManagerDelegate
  * @see DefaultCompensatingTransactionOperationManager
  * @see TempEntryRenamingStrategy
