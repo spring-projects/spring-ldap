@@ -417,10 +417,10 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 		// ignore nulls
 		if (currentAttribute != null) {
 			// Loop through the values of the JNDI attribute
-			NamingEnumeration<?> valuesEmumeration = currentAttribute.getAll();
-			while (valuesEmumeration.hasMore()) {
+			NamingEnumeration<?> valuesEnumeration = currentAttribute.getAll();
+			while (valuesEnumeration.hasMore()) {
 				// Get the current value
-				Object value = valuesEmumeration.nextElement();
+				Object value = valuesEnumeration.nextElement();
 				// Check the value is not null
 				if (value == null) {
 					continue;
