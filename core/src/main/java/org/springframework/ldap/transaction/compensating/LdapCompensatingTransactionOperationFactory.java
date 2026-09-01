@@ -76,8 +76,9 @@ public class LdapCompensatingTransactionOperationFactory implements Compensating
 					this.renamingStrategy);
 		}
 
-		log.warn("No suitable CompensatingTransactionOperationRecorder found for method " + operation
-				+ ". Operation will not be transacted.");
+		log.warn(
+				"No suitable CompensatingTransactionOperationRecorder found for method {}. Operation will not be transacted.",
+				operation);
 		return new NullOperationRecorder();
 	}
 

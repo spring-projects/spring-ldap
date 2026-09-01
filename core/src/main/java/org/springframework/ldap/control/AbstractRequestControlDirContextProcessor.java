@@ -95,7 +95,7 @@ public abstract class AbstractRequestControlDirContextProcessor implements DirCo
 		Control[] newControls = new Control[requestControls.length + 1];
 		for (int i = 0; i < requestControls.length; i++) {
 			if (this.replaceSameControlEnabled && requestControls[i].getClass() == newControl.getClass()) {
-				this.log.debug("Replacing already existing control in context: " + newControl);
+				this.log.debug("Replacing already existing control in context: {}", newControl);
 				requestControls[i] = newControl;
 				ldapContext.setRequestControls(requestControls);
 				return;

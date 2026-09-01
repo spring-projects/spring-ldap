@@ -119,15 +119,17 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 			nameString = LdapUtils.convertCompositeNameToString((CompositeName) name);
 		}
 		else {
-			LOG.warn("Expecting a CompositeName as input to getObjectInstance but received a '"
-					+ name.getClass().toString() + "' - using toString and proceeding with undefined results");
+        LOG.warn(
+            "Expecting a CompositeName as input to getObjectInstance but received a '{}' - using toString and proceeding with undefined results",
+            name.getClass().toString());
 			nameString = name.toString();
 		}
 
 		if (nameString.startsWith(LDAP_PROTOCOL_PREFIX) || nameString.startsWith(LDAPS_PROTOCOL_PREFIX)) {
 			if (LOG.isDebugEnabled()) {
-				LOG.debug("Received name '" + nameString + "' contains protocol delimiter; indicating a referral."
-						+ "Stripping protocol and address info to enable construction of a proper LdapName");
+          LOG.debug(
+              "Received name '{}' contains protocol delimiter; indicating a referral.Stripping protocol and address info to enable construction of a proper LdapName",
+              nameString);
 			}
 			try {
 				URI url = new URI(nameString);
@@ -147,7 +149,7 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 						+ " but is not possible to parse to an URI", ex);
 			}
 			if (LOG.isDebugEnabled()) {
-				LOG.debug("Resulting name after removal of referral information: '" + nameString + "'");
+          LOG.debug("Resulting name after removal of referral information: '{}'", nameString);
 			}
 		}
 

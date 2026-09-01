@@ -286,7 +286,7 @@ class DefaultLdapClient implements LdapClient {
 			if (!this.ignoreNameNotFoundException) {
 				throw LdapUtils.convertLdapException(ex);
 			}
-			this.logger.warn("Base context not found, ignoring: " + ex.getMessage());
+			this.logger.warn("Base context not found, ignoring: {}", ex.getMessage());
 			return;
 		}
 		if (ex instanceof PartialResultException) {
@@ -816,7 +816,7 @@ class DefaultLdapClient implements LdapClient {
 				}
 				ctx.unbind(name);
 				if (DefaultLdapClient.this.logger.isDebugEnabled()) {
-					DefaultLdapClient.this.logger.debug("Entry " + name + " deleted");
+					DefaultLdapClient.this.logger.debug("Entry {} deleted", name);
 				}
 			}
 			finally {
