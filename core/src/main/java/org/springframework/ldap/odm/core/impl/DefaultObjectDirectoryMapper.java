@@ -150,7 +150,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 	 */
 	private EntityData addManagedClass(Class<?> managedClass) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("Adding class %1$s to managed set", managedClass));
+			LOG.debug("Adding class {} to managed set", managedClass);
 		}
 
 		// Extract the meta-data from the class
@@ -301,7 +301,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 	@Override
 	public <T> @Nullable T mapFromLdapDataEntry(LdapDataEntry context, Class<T> clazz) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("Converting to Java Entry class %1$s from %2$s", clazz, context));
+			LOG.debug("Converting to Java Entry class {} from {}", clazz, context);
 		}
 
 		// The Java representation of the LDAP entry
@@ -401,7 +401,7 @@ public class DefaultObjectDirectoryMapper implements ObjectDirectoryMapper {
 		}
 
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("Converted object - %1$s", result));
+			LOG.debug("Converted object - {}", result);
 		}
 
 		return result;

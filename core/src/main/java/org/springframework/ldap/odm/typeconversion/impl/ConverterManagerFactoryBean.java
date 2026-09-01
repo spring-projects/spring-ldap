@@ -138,7 +138,7 @@ public final class ConverterManagerFactoryBean implements FactoryBean {
 			for (Class<?> fromClass : converterConfig.fromClasses) {
 				for (Class<?> toClass : converterConfig.toClasses) {
 					if (LOG.isDebugEnabled()) {
-						LOG.debug(String.format("Adding converter from %1$s to %2$s", fromClass, toClass));
+						LOG.debug("Adding converter from {} to {}", fromClass, toClass);
 					}
 					result.addConverter(fromClass, converterConfig.syntax, toClass, converterConfig.converter);
 				}

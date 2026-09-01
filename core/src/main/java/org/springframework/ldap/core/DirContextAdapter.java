@@ -294,7 +294,7 @@ public class DirContextAdapter implements DirContextOperations {
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug("Number of modifications:" + tmpList.size());
+        log.debug("Number of modifications:{}", tmpList.size());
 		}
 
 		return tmpList.toArray(new ModificationItem[0]);

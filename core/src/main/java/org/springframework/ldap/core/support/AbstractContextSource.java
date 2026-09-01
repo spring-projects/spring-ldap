@@ -359,7 +359,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 			if (LOG.isInfoEnabled()) {
 				Hashtable<?, ?> ctxEnv = ctx.getEnvironment();
 				String ldapUrl = (String) ctxEnv.get(Context.PROVIDER_URL);
-				LOG.debug("Got Ldap context on server '" + ldapUrl + "'");
+				LOG.debug("Got Ldap context on server '{}'", ldapUrl);
 			}
 
 			return ctx;
@@ -470,7 +470,7 @@ public abstract class AbstractContextSource implements BaseLdapPathContextSource
 			env.put(DefaultDirObjectFactory.JNDI_ENV_BASE_PATH_KEY, this.base);
 		}
 
-		LOG.debug("Trying provider Urls: " + assembleProviderUrlString(this.urls));
+		LOG.debug("Trying provider Urls: {}", assembleProviderUrlString(this.urls));
 
 		return env;
 	}

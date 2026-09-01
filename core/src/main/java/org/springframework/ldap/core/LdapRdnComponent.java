@@ -87,10 +87,9 @@ public class LdapRdnComponent implements Comparable, Serializable {
 			this.key = key;
 		}
 		else {
-			LOG.warn("\"" + caseFold + "\" invalid property value for " + DistinguishedName.KEY_CASE_FOLD_PROPERTY
-					+ "; expected \"" + DistinguishedName.KEY_CASE_FOLD_LOWER + "\", \""
-					+ DistinguishedName.KEY_CASE_FOLD_UPPER + "\", or \"" + DistinguishedName.KEY_CASE_FOLD_NONE
-					+ "\"");
+			LOG.warn("\"{}\" invalid property value for {}; expected \"{}\", \"{}\", or \"{}\"", caseFold,
+					DistinguishedName.KEY_CASE_FOLD_PROPERTY, DistinguishedName.KEY_CASE_FOLD_LOWER,
+					DistinguishedName.KEY_CASE_FOLD_UPPER, DistinguishedName.KEY_CASE_FOLD_NONE);
 			this.key = key.toLowerCase(Locale.ROOT);
 		}
 		if (decodeValue) {

@@ -206,7 +206,7 @@ public class DefaultIncrementalAttributesMapper
 	private IncrementalAttributeState getState(String attributeName) {
 		Object mappedState = this.stateMap.get(attributeName);
 		if (mappedState == null) {
-			LOG.warn("Attribute '" + attributeName + "' is not handled by this instance");
+			LOG.warn("Attribute '{}' is not handled by this instance", attributeName);
 			mappedState = NOT_FOUND_ATTRIBUTE_STATE;
 		}
 

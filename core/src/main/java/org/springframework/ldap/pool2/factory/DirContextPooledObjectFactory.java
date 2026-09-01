@@ -165,8 +165,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 			return this.dirContextValidator.validateDirContext(contextType, dirContext);
 		}
 		catch (Exception ex) {
-			this.logger.warn("Failed to validate '" + pooledObject.getObject() + "' due to an unexpected exception.",
-					ex);
+			this.logger.warn("Failed to validate '{}' due to an unexpected exception.", pooledObject.getObject(), ex);
 			return false;
 		}
 	}
@@ -183,15 +182,15 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 		try {
 			final DirContext dirContext = (DirContext) pooledObject.getObject();
 			if (this.logger.isDebugEnabled()) {
-				this.logger.debug("Closing " + key + " DirContext='" + dirContext + "'");
+				this.logger.debug("Closing {} DirContext='{}'", key, dirContext);
 			}
 			dirContext.close();
 			if (this.logger.isDebugEnabled()) {
-				this.logger.debug("Closed " + key + " DirContext='" + dirContext + "'");
+				this.logger.debug("Closed {} DirContext='{}'", key, dirContext);
 			}
 		}
 		catch (Exception ex) {
-			this.logger.warn("An exception occured while closing '" + pooledObject.getObject() + "'", ex);
+			this.logger.warn("An exception occurred while closing '{}'", pooledObject.getObject(), ex);
 		}
 	}
 
@@ -205,15 +204,14 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 
 		final DirContextType contextType = (DirContextType) key;
 		if (this.logger.isDebugEnabled()) {
-			this.logger.debug("Creating a new " + contextType + " DirContext");
+			this.logger.debug("Creating a new {} DirContext", contextType);
 		}
 
 		if (contextType == DirContextType.READ_WRITE) {
 			final DirContext readWriteContext = this.contextSource.getReadWriteContext();
 
 			if (this.logger.isDebugEnabled()) {
-				this.logger
-					.debug("Created new " + DirContextType.READ_WRITE + " DirContext='" + readWriteContext + "'");
+				this.logger.debug("Created new {} DirContext='{}'", DirContextType.READ_WRITE, readWriteContext);
 			}
 
 			return makeFailureAwareProxy(readWriteContext);
@@ -223,7 +221,7 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 			final DirContext readOnlyContext = this.contextSource.getReadOnlyContext();
 
 			if (this.logger.isDebugEnabled()) {
-				this.logger.debug("Created new " + DirContextType.READ_ONLY + " DirContext='" + readOnlyContext + "'");
+				this.logger.debug("Created new {} DirContext='{}'", DirContextType.READ_ONLY, readOnlyContext);
 			}
 
 			return makeFailureAwareProxy(readOnlyContext);
@@ -285,9 +283,9 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 				for (Class<? extends Throwable> clazz : DirContextPooledObjectFactory.this.nonTransientExceptions) {
 					if (clazz.isAssignableFrom(targetExceptionClass)) {
 						if (DirContextPooledObjectFactory.this.logger.isDebugEnabled()) {
-							DirContextPooledObjectFactory.this.logger.debug(String.format(
-									"A %s - explicitly configured to be a non-transient exception - encountered; eagerly invalidating the target context.",
-									targetExceptionClass));
+							DirContextPooledObjectFactory.this.logger.debug(
+									"A {} - explicitly configured to be a non-transient exception - encountered; eagerly invalidating the target context.",
+									targetExceptionClass);
 						}
 						nonTransientEncountered = true;
 						break;
@@ -299,9 +297,9 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 				}
 				else {
 					if (DirContextPooledObjectFactory.this.logger.isDebugEnabled()) {
-						DirContextPooledObjectFactory.this.logger.debug(String.format(
-								"A %s - not explicitly configured to be a non-transient exception - encountered; ignoring.",
-								targetExceptionClass));
+						DirContextPooledObjectFactory.this.logger.debug(
+								"A {} - not explicitly configured to be a non-transient exception - encountered; ignoring.",
+								targetExceptionClass);
 					}
 				}
 
