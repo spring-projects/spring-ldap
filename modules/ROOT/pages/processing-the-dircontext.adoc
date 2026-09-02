@@ -1,5 +1,6 @@
 [[processing-the-dircontext]]
 = Processing the `DirContext`
+:listing-caption: Example
 
 This section covers how to process the `DirContext`, including pre- and post-processing.
 
@@ -8,7 +9,6 @@ This section covers how to process the `DirContext`, including pre- and post-pro
 
 In some situations, you might like to perform operations on the `DirContext` before and after the search operation. The interface that is used for this is called `DirContextProcessor`. The following listing shows the `DirContextProcessor` interface:
 
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -17,24 +17,20 @@ public interface DirContextProcessor {
    public void postProcess(DirContext ctx) throws NamingException;
 }
 ----
-====
 
 The `LdapTemplate` class has a search method that takes a `DirContextProcessor`, as follows:
 
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
 public void search(SearchExecutor se, NameClassPairCallbackHandler handler,
    DirContextProcessor processor) throws DataAccessException;
 ----
-====
 
 Before the search operation, the `preProcess` method is called on the given `DirContextProcessor` instance. After the search has run and the resulting `NamingEnumeration` has been processed, the `postProcess` method is called. This lets you perform operations on the `DirContext` to be used in the search and to check the `DirContext` when the search has been performed. This can be very useful (for example, when handling request and response controls).
 
 You can also use the following convenience methods when you do not need a custom `SearchExecutor`:
 
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -56,14 +52,12 @@ public void search(Name base, String filter,
 public void search(String base, String filter,
    SearchControls controls, ContextMapper mapper, DirContextProcessor processor)
 ----
-====
 
 [[implementing-a-request-control-dircontextprocessor]]
 == Implementing a Request Control `DirContextProcessor`
 
 The LDAPv3 protocol uses "`Controls`" to send and receive additional data to affect the behavior of predefined operations. To simplify the implementation of a request control `DirContextProcessor`, Spring LDAP provides the `AbstractRequestControlDirContextProcessor` base class. This class handles the retrieval of the current request controls from the `LdapContext`, calls a template method for creating a request control, and adds it to the `LdapContext`. All you have to do in the subclass is to implement the template method called `createRequestControl` and the `postProcess` method for performing whatever you need to do after the search. The following listing shows the relevant signatures:
 
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -77,12 +71,10 @@ public abstract class AbstractRequestControlDirContextProcessor implements
    public abstract Control createRequestControl();
 }
 ----
-====
 
 A typical `DirContextProcessor` is similar to the following example:
 
 .A request control `DirContextProcessor` implementation
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -112,7 +104,6 @@ public class MyCoolRequestControl extends AbstractRequestControlDirContextProces
    }
 }
 ----
-====
 
 NOTE: Make sure you use `LdapContextSource` when you use controls. The https://download.oracle.com/javase/1.5.0/docs/api/javax/naming/ldap/Control.html[`Control`] interface is specific for LDAPv3 and requires that `LdapContext` is used instead of `DirContext`. If an `AbstractRequestControlDirContextProcessor` subclass is called with an argument that is not an `LdapContext`, it throws an `IllegalArgumentException`.
 
@@ -128,7 +119,6 @@ Spring LDAP provides support for paged results by using the concept for pre- and
 The following example shows how the to use the paged search results functionality:
 
 .Paged results using `PagedResultsControlDirContextProcessor`
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -161,7 +151,6 @@ public List<String> getAllPersonNames() {
   });
 }
 ----
-====
 
 NOTE: For a paged results cookie to continue being valid, you must use the same underlying connection for each paged results call. You can do so by using the `SingleContextSource`, as demonstrated in the preceding example or by using a `ContextSourceTransactionManager` and `TransactionAwareContextSourceProxy`.
 

@@ -1,5 +1,6 @@
 [[adding-missing-overloaded-api-methods]]
 = Adding Missing Overloaded API Methods
+:listing-caption: Example
 
 This section covers how to add your own overloaded API methods to implement new functionality.
 
@@ -10,17 +11,14 @@ This section covers how to add your own overloaded API methods to implement new 
 
 Suppose you want to call the following `DirContext` method:
 
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
-NamingEnumeration search(Name name, String filterExpr, Object[] filterArgs, SearchControls ctls)
+NamingEnumeration search(Name name, String filterExpr, Object[] filterArgs, SearchControls ctls);
 ----
-====
 
 There is no corresponding overloaded method in `LdapTemplate`. The way to solve this is to use a custom `SearchExecutor` implementation, as follows:
 
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -28,12 +26,10 @@ public interface SearchExecutor {
    public NamingEnumeration executeSearch(DirContext ctx) throws NamingException;
 }
 ----
-====
 
 In your custom executor, you have access to a `DirContext` object, which you can use to call the method you want. You can then provide a handler that is responsible for mapping attributes and collecting the results. You can, for example, use one of the available implementations of `CollectingNameClassPairCallbackHandler`, which collects the mapped results in an internal list. In order to actually perform the search, you need to call the `search` method in `LdapTemplate` that takes an executor and a handler as arguments. Finally, you need to return whatever your handler has collected. The following example shows how to do all of that:
 
 .A custom search method using `SearchExecutor` and `AttributesMapper`
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -57,12 +53,10 @@ public class PersonRepoImpl implements PersonRepo {
    }
 }
 ----
-====
 
 If you prefer the `ContextMapper` to the `AttributesMapper`, the following example shows what it would look like:
 
 .A custom search method using `SearchExecutor` and `ContextMapper`
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -79,14 +73,13 @@ public class PersonRepoImpl implements PersonRepo {
       };
 
       CollectingNameClassPairCallbackHandler handler =
-         **new ContextMapperCallbackHandler(new PersonContextMapper()**);
+         **new ContextMapperCallbackHandler(new PersonContextMapper())**;
 
       ldapTemplate.search(executor, handler);
       return handler.getList();
    }
 }
 ----
-====
 
 NOTE: When you use the `ContextMapperCallbackHandler`, you must make sure that you have called `setReturningObjFlag(true)` on your `SearchControls` instance.
 
@@ -95,7 +88,6 @@ NOTE: When you use the `ContextMapperCallbackHandler`, you must make sure that y
 
 In the same manner as for custom `search` methods, you can actually call any method in `DirContext` by using a `ContextExecutor`, as follows:
 
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -103,22 +95,18 @@ public interface ContextExecutor {
    public Object executeWithContext(DirContext ctx) throws NamingException;
 }
 ----
-====
 
 When implementing a custom `ContextExecutor`, you can choose between using the `executeReadOnly()` or the `executeReadWrite()` method. Suppose you want to call the following method:
 
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
-Object lookupLink(Name name)
+Object lookupLink(Name name);
 ----
-====
 
 The method is available in `DirContext`, but there is no matching method in `LdapTemplate`. It is a lookup method, so it should be read-only. We can implement it as follows:
 
 .A custom `DirContext` method using `ContextExecutor`
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -137,7 +125,6 @@ public class PersonRepoImpl implements PersonRepo {
    }
 }
 ----
-====
 
 In the same manner, you can perform a read-write operation by using the `executeReadWrite()` method.
 

@@ -1,5 +1,6 @@
 [[spring-ldap-basic-usage]]
 = Basic Usage
+:listing-caption: Example
 
 This section describes the basics of using Spring LDAP. It contains the following content:
 
@@ -16,7 +17,6 @@ This section describes the basics of using Spring LDAP. It contains the followin
 The following example uses an https://docs.spring.io/spring-ldap/docs/current/api/org/springframework/ldap/core/AttributesMapper.html[`AttributesMapper`] to build a List of all the common names of all the person objects.
 
 .`AttributesMapper` that returns a single attribute
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -37,14 +37,12 @@ public class PersonRepoImpl implements PersonRepo {
    }
 }
 ----
-====
 
 The inline implementation of `AttributesMapper` gets the desired attribute value from the `Attributes` object and returns it. Internally, `LdapClient` iterates over all entries found, calls the given `AttributesMapper` for each entry, and collects the results in a list. The list is then returned by the `search` method.
 
 Note that the `AttributesMapper` implementation could easily be modified to return a full `Person` object, as follows:
 
 .AttributesMapper that returns a Person object
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -71,14 +69,12 @@ public class PersonRepoImpl implements PersonRepo {
    }
 }
 ----
-====
 
 Entries in LDAP are uniquely identified by their distinguished name (DN).
 If you have the DN of an entry, you can retrieve the entry directly without querying for it.
 This is called a "`lookup`" in Java LDAP. The following example shows a lookup for a `Person` object:
 
 .A lookup resulting in a Person object
-====
 [source,java]
 ----
 package com.example.repo;
@@ -91,7 +87,6 @@ public class PersonRepoImpl implements PersonRepo {
    }
 }
 ----
-====
 
 The preceding example looks up the specified DN and passes the found attributes to the supplied `AttributesMapper` -- in this case, resulting in a `Person` object.
 
@@ -112,7 +107,6 @@ limiting the returned attributes to `cn` and `sn`, with a filter of `(&(objectcl
 The following example shows how to do it by using the `LdapQueryBuilder`:
 
 .Building a search filter dynamically
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -135,7 +129,6 @@ public class PersonRepoImpl implements PersonRepo {
    }
 }
 ----
-====
 
 NOTE: In addition to simplifying building of complex search parameters, the `LdapQueryBuilder` and its associated classes also provide proper escaping of any unsafe characters in search filters. This prevents "`LDAP injection`", where a user might use such characters to inject unwanted operations into your LDAP operations.
 
@@ -166,7 +159,6 @@ This section presents a few examples of the subjects covered in the preceding se
 The first example dynamically builds an `LdapName` by using `LdapNameBuilder`:
 
 .Dynamically building an `LdapName` by using `LdapNameBuilder`
-====
 [source,java,subs="verbatim,quotes"]
 ----
 package com.example.repo;
@@ -186,7 +178,6 @@ public class PersonRepoImpl implements PersonRepo {
   ...
 }
 ----
-====
 
 Assume that a `Person` has the following attributes:
 
@@ -205,17 +196,14 @@ Assume that a `Person` has the following attributes:
 
 The preceding code would then result in the following distinguished name:
 
-====
 [source]
 ----
 cn=Some Person, ou=Some Company, c=Sweden, dc=example, dc=com
 ----
-====
 
 The following example extracts values from a distinguished name by using `LdapUtils`
 
 .Extracting values from a distinguished name by using `LdapUtils`
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -235,7 +223,6 @@ public class PersonRepoImpl implements PersonRepo {
   }
 }
 ----
-====
 
 Since Java versions prior to and including 1.4 did not provide any public Distinguished Name implementation at all, Spring LDAP 1.x provided its own implementation, `DistinguishedName`.
 This implementation suffered from a couple of shortcomings of its own and has been deprecated in version 2.0. You should now use `LdapName` along with the utilities described earlier.
@@ -253,7 +240,6 @@ A JNDI bind performs an LDAP Add operation, associating a new entry that has a s
 The following example adds data by using `LdapClient`:
 
 .Adding data using Attributes
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -279,7 +265,6 @@ public class PersonRepoImpl implements PersonRepo {
    }
 }
 ----
-====
 
 Manual attributes building is -- while dull and verbose -- sufficient for many purposes. You can, however, simplify the binding operation further, as described in xref:dirobjectfactory.adoc[Simplifying Attribute Access and Manipulation with `DirContextAdapter`].
 
@@ -292,7 +277,6 @@ A JNDI unbind performs an LDAP Delete operation, removing the entry associated w
 The following example removes data by using `LdapClient`:
 
 .Removing data
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -307,7 +291,6 @@ public class PersonRepoImpl implements PersonRepo {
    }
 }
 ----
-====
 
 [[spring-ldap-basic-usage-updating]]
 == Updating
@@ -322,7 +305,6 @@ A `rebind` is a crude way to modify data. It is basically an `unbind` followed b
 The following example invokes LDAP's `rebind`:
 
 .Modifying using rebind
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -337,7 +319,6 @@ public class PersonRepoImpl implements PersonRepo {
    }
 }
 ----
-====
 
 [[modify-modifyAttributes]]
 === Updating by Using `modifyAttributes`
@@ -346,7 +327,6 @@ A more sophisticated way of modifying data is to use `modifyAttributes`. This op
 and performs them on a specific entry, as follows:
 
 .Modifying using modifyAttributes
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -363,7 +343,6 @@ public class PersonRepoImpl implements PersonRepo {
    }
 }
 ----
-====
 
 Building `Attributes` and `ModificationItem` arrays is a lot of work. However, as we describe in xref:dirobjectfactory.adoc[Simplifying Attribute Access and Manipulation with `DirContextAdapter`],
 Spring LDAP provides more help for simplifying these operations.
