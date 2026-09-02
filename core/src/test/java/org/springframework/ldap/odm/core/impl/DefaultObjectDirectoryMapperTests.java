@@ -17,6 +17,7 @@
 package org.springframework.ldap.odm.core.impl;
 
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import javax.naming.Name;
@@ -31,6 +32,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import org.springframework.core.SpringVersion;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.ldap.core.DirContextAdapter;
@@ -160,6 +162,44 @@ public class DefaultObjectDirectoryMapperTests {
 		assertThat(adapter.getStringAttribute("age")).isEqualTo("34");
 		testPerson = this.tested.mapFromLdapDataEntry(adapter, UnitTestPersonWithIndexedDnAttributes.class);
 		assertThat(testPerson.getAge()).isEqualTo(34L);
+	}
+
+	@Test
+	public void mapFromLdapDataEntryWhenBinaryAttributeHasInvalidThenThrowsException() {
+
+		DirContextAdapter adapter = new DirContextAdapter();
+		adapter.setAttributeValues("objectclass",
+				new String[] { "inetOrgPerson", "organizationalPerson", "person", "top" });
+		adapter.setAttributeValue("testBytes", "testBytesValue");
+
+		assertThatExceptionOfType(ConversionFailedException.class)
+			.isThrownBy(() -> this.tested.mapFromLdapDataEntry(adapter, UnitTestPersonBinaryType.class))
+			.withMessageContaining("Failed to convert from type [java.lang.String] to type [byte]");
+	}
+
+	@Test
+	public void mapFromLdapDataEntryWhenBinaryAttributeHasValidThenValueIsMapped() {
+
+		DirContextAdapter adapter = new DirContextAdapter();
+		adapter.setAttributeValues("objectclass",
+				new String[] { "inetOrgPerson", "organizationalPerson", "person", "top" });
+		adapter.setAttributeValue("testBytes", "testBytesValue".getBytes(StandardCharsets.UTF_8));
+
+		UnitTestPersonBinaryType testPerson = this.tested.mapFromLdapDataEntry(adapter, UnitTestPersonBinaryType.class);
+		assertThat(testPerson).isNotNull();
+		assertThat(testPerson.getTestBytes()).isEqualTo("testBytesValue".getBytes(StandardCharsets.UTF_8));
+	}
+
+	@Test
+	public void mapToLdapDataEntryWhenBinaryTypeHasInvalidThenThrowsException() {
+
+		UnitTestPersonBinaryType testPerson = new UnitTestPersonBinaryType();
+		testPerson.setTestString("testStringValue");
+		DirContextAdapter adapter = new DirContextAdapter();
+
+		assertThatExceptionOfType(ConversionFailedException.class)
+			.isThrownBy(() -> this.tested.mapToLdapDataEntry(testPerson, adapter))
+			.withMessageContaining("Failed to convert from type [java.lang.String] to type [byte]");
 	}
 
 	private void assertField(DefaultObjectDirectoryMapper.EntityData entityData, String fieldName,
