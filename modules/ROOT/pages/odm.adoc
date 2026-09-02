@@ -19,6 +19,37 @@ The Spring LDAP project offers a similar ability with respect to LDAP directorie
 
 `LdapTemplate` constructs a default `ObjectDirectoryMapper` which typically renders additional configuration unnecessary.
 
+[NOTE]
+====
+Spring's default conversion does not support converting between `String` and `byte[]` because the encoding to use for the conversion cannot be determined automatically.
+However, `LdapUtils#isLdapSid` is provided for both `String` and `byte[]` values if you need to check whether a value is a SID.
+Alternatively, you can override Spring's default conversion by providing your own converter. For example:
+
+
+[source,java]
+----
+import org.springframework.core.convert.converter.Converter;
+
+public class StringToBinaryConverter implements Converter<String, byte @Nullable []> {
+
+    @Override
+    public byte @Nullable [] convert(@Nullable String source) {
+
+        if (source == null) {
+            return null;
+        }
+
+        if (LdapUtils.isLdapSid(source)) {
+            return LdapUtils.convertStringSidToBinary(source);
+        }
+
+        return source.getBytes(StandardCharsets.UTF_8);
+    }
+
+}
+----
+====
+
 === Converters with Boot
 
 `ObjectDirectoryMapper` supports `ConversionService` which allows you to specify customer ``Converter``s for mapping between Java and LDAP.
