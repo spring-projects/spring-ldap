@@ -52,12 +52,27 @@ tasks.register("syncAntoraAttachments", Sync) {
 }
 
 tasks.named("generateAntoraYml") {
-    asciidocAttributes = project.provider( {
-        return  [
-            'project-version': project.version,
-            'spring-core-version': '6.1.6'
+    def apiConfiguration = project(':spring-ldap-dependencies').configurations.named("api")
+    Map<String, String> dependencies = apiConfiguration.get().dependencies
+            .matching { it.version != null }
+            .collectEntries { [it.group + ":" + it.name, it.version] }
+    Map<String, String> constraints = apiConfiguration.get().dependencyConstraints
+            .matching { it.version != null }
+            .collectEntries { [it.group + ":" + it.name, it.version] }
+
+    asciidocAttributes = project.provider({
+        return [
+                'project-version'                 : project.version,
+                'spring-core-version'             : dependencies['org.springframework:spring-framework-bom'],
+                'apacheds-core-entry-version'     : constraints['org.apache.directory.server:apacheds-core-entry'],
+                'apacheds-core-version'           : constraints['org.apache.directory.server:apacheds-core'],
+                'apacheds-protocol-ldap-version'  : constraints['org.apache.directory.server:apacheds-protocol-ldap'],
+                'apacheds-protocol-shared-version': constraints['org.apache.directory.server:apacheds-protocol-shared'],
+                'apacheds-server-jndi-version'    : constraints['org.apache.directory.server:apacheds-server-jndi'],
+                'shared-ldap-version'             : constraints['org.apache.directory.shared:shared-ldap'],
+                'unboundid-ldapsdk-version'       : constraints['com.unboundid:unboundid-ldapsdk']
         ]
-    } )
+    })
 }
 
 tasks.register("generateAntoraResources") {
