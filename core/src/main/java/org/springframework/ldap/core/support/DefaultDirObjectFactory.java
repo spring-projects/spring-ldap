@@ -96,11 +96,10 @@ public class DefaultDirObjectFactory implements DirObjectFactory {
 	/**
 	 * Construct a DirContextAdapter given the supplied parameters. The <code>name</code>
 	 * is normally a JNDI <code>CompositeName</code>, which needs to be handled with
-	 * particular care. Specifically the escaping of a <code>CompositeName</code>
-	 * destroys proper escaping of Distinguished Names. Also, the name might contain
-	 * referral information, in which case we need to separate the server information from
-	 * the actual Distinguished Name so that we can create a representing
-	 * DirContextAdapter.
+	 * particular care. Specifically the escaping of a <code>CompositeName</code> destroys
+	 * proper escaping of Distinguished Names. Also, the name might contain referral
+	 * information, in which case we need to separate the server information from the
+	 * actual Distinguished Name so that we can create a representing DirContextAdapter.
 	 * @param attrs the attributes
 	 * @param name the Name, typically a <code>CompositeName</code>, possibly including
 	 * referral information.

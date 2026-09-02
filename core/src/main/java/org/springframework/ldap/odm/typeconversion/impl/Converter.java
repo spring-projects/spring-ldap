@@ -32,7 +32,7 @@ public interface Converter {
 	 * @param source The object to convert.
 	 * @param toClass The class to convert to.
 	 * @return The converted class or null if the conversion was not possible.
-	 * @throws Exception Any exception may be throw by a Converter on error.
+	 * @throws Exception Any exception may be thrown by a Converter on error.
 	 */
 	<T> T convert(Object source, Class<T> toClass) throws Exception;
 
