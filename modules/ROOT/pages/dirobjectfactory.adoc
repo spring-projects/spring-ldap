@@ -62,7 +62,7 @@ private static class PersonContextMapper implements ContextMapper {
       p.setFullName(context.getStringAttribute("cn"));
       p.setLastName(context.getStringAttribute("sn"));
       p.setDescription(context.getStringAttribute("description"));
-      // The roleNames property of Person is an String array
+      // The roleNames property of Person is a String array
       **p.setRoleNames(context.getStringAttributes("roleNames"));**
       return p;
    }
