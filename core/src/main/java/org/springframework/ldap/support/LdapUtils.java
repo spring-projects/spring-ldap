@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.NoSuchAttributeException;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * Generic utility methods for working with LDAP. Mainly for internal use within the
@@ -54,6 +55,8 @@ public final class LdapUtils {
 	private static final Logger LOGGER = LoggerFactory.getLogger(LdapUtils.class);
 
 	private static final int HEX = 16;
+
+	private static final String SID_REGEX = "^S-1-(?:(?:0|[1-9][0-9]{0,9})|0x[0-9a-fA-F]{12})(?:-(?:0|[1-9][0-9]{0,9}))*$";
 
 	/**
 	 * Not to be instantiated.
@@ -758,6 +761,62 @@ public final class LdapUtils {
 		}
 		sb.append("}");
 		return sb.toString();
+	}
+
+	/**
+	 * Determines whether the given string represents a valid LDAP Security Identifier
+	 * (SID).
+	 * @param sid the SID string to validate (can be {@code null})
+	 * @return {@code true} if the SID is non-empty and matches the expected SID format;
+	 * {@code false} otherwise
+	 * @since 4.1
+	 * @see #isLdapSid(byte[])
+	 * @see <a href=
+	 * "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-dtyp/c92a27b1-c772-4fa7-a432-15df5f1b66a1">SID
+	 * String Format Syntax</a>
+	 */
+	public static boolean isLdapSid(@Nullable String sid) {
+		return StringUtils.hasText(sid) && sid.matches(SID_REGEX);
+	}
+
+	/**
+	 * Determines whether the given byte array represents a valid binary LDAP Security
+	 * Identifier (SID).
+	 *
+	 * <p>
+	 * The binary SID format consists of:
+	 * <ul>
+	 * <li>1 byte for the revision, which must be {@code 1}</li>
+	 * <li>1 byte for the number of sub-authorities, which must not exceed {@code 15}</li>
+	 * <li>6 bytes for the identifier authority</li>
+	 * <li>4 bytes for each sub-authority</li>
+	 * </ul>
+	 * @param sid the binary SID to validate (can be {@code null})
+	 * @return {@code true} if the byte array represents a valid binary SID; {@code false}
+	 * otherwise
+	 * @since 4.1
+	 * @see #isLdapSid(String)
+	 * @see <a href=
+	 * "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-dtyp/f992ad60-0fe4-4b87-9fed-beb478836861">SID--Packet
+	 * Representation</a>
+	 */
+	public static boolean isLdapSid(byte @Nullable [] sid) {
+		if (sid == null || sid.length < 8) {
+			return false;
+		}
+
+		int revision = sid[0] & 0xFF;
+		if (revision != 1) {
+			return false;
+		}
+
+		int subAuthorityCount = sid[1] & 0xFF;
+		if (subAuthorityCount > 15) {
+			return false;
+		}
+
+		int expectedLength = 8 + (subAuthorityCount * 4);
+		return sid.length == expectedLength;
 	}
 
 	/**
