@@ -11,14 +11,12 @@ When there are a very large number of attribute values (>1500) for a specific at
 
 Spring LDAP's `org.springframework.ldap.core.support.DefaultIncrementalAttributesMapper` helps when working with this kind of attributes, as follows:
 
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
 Object[] attrNames =  new Object[]{"oneAttribute", "anotherAttribute"};
 Attributes attrs = DefaultIncrementalAttributeMapper.lookupAttributes(ldapTemplate, theDn, attrNames);
 ----
-====
 
 The preceding example parses any returned attribute range markers and makes repeated requests as necessary until all values for all requested attributes have been retrieved.
 
