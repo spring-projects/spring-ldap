@@ -13,14 +13,11 @@ Typically, these are done to provide improved security to match modern security 
 * MINOR versions contain enhancements but are considered passive updates.
 * PATCH level should be perfectly compatible, forwards and backwards, with the possible exception of changes that fix bugs.
 
-
-[[maven]]
 == Usage
 
 As most open source projects, Spring LDAP deploys its dependencies as Maven artifacts, which makes them compatible with both Maven and Gradle. The following sections demonstrate how to integrate Spring LDAP with these build tools, with examples for Spring Boot and standalone usage.
 
-[[getting-maven-boot]]
-[[getting-gradle-boot]]
+[[getting-spring-boot]]
 === Spring Boot
 
 Spring Boot provides a `spring-boot-starter-ldap` starter that aggregates Spring LDAP-related dependencies.
@@ -94,7 +91,7 @@ Maven::
 ----
 <properties>
 	<!-- ... -->
-	<spring.version>{spring-core-version}</spring.version>
+	<spring.version>{spring-framework-bom-version}</spring.version>
 </properties>
 ----
 
@@ -104,7 +101,7 @@ Gradle::
 [source,groovy]
 [subs="verbatim,attributes"]
 ----
-ext['spring.version']='{spring-core-version}'
+ext['spring.version']='{spring-framework-bom-version}'
 ----
 ======
 
@@ -159,8 +156,8 @@ For most projects, including `spring-ldap-core` is sufficient.
 
 If you use additional features (such as LDIF), you need to also include the appropriate xref:modules.adoc#modules[modules].
 
-Spring LDAP builds against Spring Framework 6 but should generally work with any newer version of Spring Framework 5.x.
-Many users are likely to run afoul of the fact that Spring LDAP's transitive dependencies resolve Spring Framework 6, which can cause strange classpath problems.
+Spring LDAP builds against Spring Framework 6 or higher but should generally work with any newer version of Spring Framework 5.x.
+Many users are likely to run afoul of the fact that Spring LDAP's transitive dependencies resolve Spring Framework 6 or higher, which can cause strange classpath problems.
 The easiest way to resolve this is to use the `spring-framework-bom` within the `<dependencyManagement>` section of your `pom.xml` or your `dependencyManagement` section of your `build.gradle`.
 
 [tabs]
@@ -176,7 +173,7 @@ Maven::
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-framework-bom</artifactId>
-			<version>{spring-core-version}</version>
+			<version>{spring-framework-bom-version}</version>
 			<type>pom</type>
 			<scope>import</scope>
 		</dependency>
@@ -196,7 +193,7 @@ plugins {
 
 dependencyManagement {
 	imports {
-		mavenBom 'org.springframework:spring-framework-bom:{spring-core-version}'
+		mavenBom 'org.springframework:spring-framework-bom:{spring-framework-bom-version}'
 	}
 }
 ----
@@ -205,7 +202,7 @@ dependencyManagement {
 [TIP]
 Spring provides a https://github.com/spring-gradle-plugins/dependency-management-plugin[Dependency Management Plugin] for Gradle
 
-The preceding example ensures that all the transitive dependencies of Spring LDAP use the Spring 6 modules.
+The preceding example ensures that all the transitive dependencies of Spring LDAP use the Spring {spring-framework-bom-version} modules.
 
 [NOTE]
 ====
@@ -215,7 +212,7 @@ For additional details about how dependencies are resolved, see https://maven.ap
 
 [[maven-repositories]]
 === Maven Repositories
-All https://github.com/spring-projects/spring-security/wiki/Release-Schedule-Guidelines[GA releases] are deployed to Maven Central, so you need not declare additional Maven repositories in your build configuration.
+Spring LDAP is deployed to Maven Central, so you need not declare additional Maven repositories in your build configuration.
 
 For Gradle using the `mavenCentral()` repository is sufficient for GA releases.
 

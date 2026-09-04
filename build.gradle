@@ -63,7 +63,7 @@ tasks.named("generateAntoraYml") {
     asciidocAttributes = project.provider({
         return [
                 'project-version'                 : project.version,
-                'spring-core-version'             : dependencies['org.springframework:spring-framework-bom'],
+                'spring-framework-bom-version'    : dependencies['org.springframework:spring-framework-bom'],
                 'apacheds-core-entry-version'     : constraints['org.apache.directory.server:apacheds-core-entry'],
                 'apacheds-core-version'           : constraints['org.apache.directory.server:apacheds-core'],
                 'apacheds-protocol-ldap-version'  : constraints['org.apache.directory.server:apacheds-protocol-ldap'],
