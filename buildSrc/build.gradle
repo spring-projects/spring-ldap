@@ -80,7 +80,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.14.0'
     implementation 'com.thaiopensource:trang:20091111'
     implementation 'net.sourceforge.saxon:saxon:9.1.0.8'
-    implementation 'org.yaml:snakeyaml:2.6'
+    implementation 'org.yaml:snakeyaml:2.7'
     implementation localGroovy()
 
     implementation 'io.projectreactor:reactor-core:3.8.7'
