@@ -26,7 +26,7 @@ dependencies {
 	api platform("io.micrometer:micrometer-tracing-bom:1.7.1")
 	api platform("org.junit:junit-bom:6.1.3")
 	api platform("org.mockito:mockito-bom:5.23.0")
-	api platform("org.slf4j:slf4j-bom:2.0.18")
+	api platform("org.slf4j:slf4j-bom:2.0.19")
 	constraints {
 		api "com.querydsl:querydsl-core:$queryDslVersion"
 		api "com.querydsl:querydsl-apt:$queryDslVersion"
