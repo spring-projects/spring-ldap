@@ -32,6 +32,8 @@ updates:
     labels:
       - 'type: task'
       - 'in: build'
+    ignore:
+      - dependency-name: spring-io/spring-security-release-tools/*
 {{/main}}
 {{#feature-branches}}
   - package-ecosystem: gradle
@@ -77,6 +79,7 @@ updates:
       - 'type: task'
       - 'in: build'
     ignore:
+      - dependency-name: spring-io/spring-security-release-tools/*
       - dependency-name: '*'
         update-types:
           - version-update:semver-major

@@ -1,0 +1,18 @@
+name: Update spring-security-release-tools
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 1' # Weekly on Monday at 06:00 UTC
+
+permissions:
+  contents: read
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: spring-io/spring-security-release-tools/update-bot@85f3ecacd3804aa3cd9623c8e8c83eceaab50085 # main
