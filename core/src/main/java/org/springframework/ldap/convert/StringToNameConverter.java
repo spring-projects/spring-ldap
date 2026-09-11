@@ -22,7 +22,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.ldap.support.LdapUtils;
 
 /**
- * A converer from {@link String} to {@link Name}.
+ * A converter from {@link String} to {@link Name}.
  *
  * <p>
  * Helpful for {@link org.springframework.ldap.odm.core.ObjectDirectoryMapper} for

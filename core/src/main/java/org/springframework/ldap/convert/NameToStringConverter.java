@@ -21,7 +21,7 @@ import javax.naming.Name;
 import org.springframework.core.convert.converter.Converter;
 
 /**
- * A converer from {@link Name} to {@link String}.
+ * A converter from {@link Name} to {@link String}.
  *
  * <p>
  * Helpful for {@link org.springframework.ldap.odm.core.ObjectDirectoryMapper} for

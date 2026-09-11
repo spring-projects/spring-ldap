@@ -91,7 +91,8 @@ import org.springframework.util.StringUtils;
  * </p>
  * <p>
  * Note that this is not a complete implementation of DirContext. Several methods are not
- * relevant for the intended usage of this class, so they throw {@link UnsupportedOperationException}.
+ * relevant for the intended usage of this class, so they throw
+ * {@link UnsupportedOperationException}.
  * </p>
  *
  * @author Magnus Robertsson
@@ -444,7 +445,21 @@ public class DirContextAdapter implements DirContextOperations {
 	 */
 	@Override
 	@Nullable public String getStringAttribute(String name) {
-		return (String) getObjectAttribute(name);
+		Object value = getObjectAttribute(name);
+
+		if (value == null) {
+			return null;
+		}
+
+		if (value instanceof String string) {
+			return string;
+		}
+
+		if (log.isDebugEnabled()) {
+			log.debug("Attribute {} does not have a value of type String", name);
+		}
+
+		return value.toString();
 	}
 
 	/**
