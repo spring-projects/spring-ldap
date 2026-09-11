@@ -1,10 +1,10 @@
 [[configuration]]
 = Configuration
+:listing-caption: Example
 
 The recommended way of configuring Spring LDAP is to use the custom XML configuration namespace. To make this available, you need to include the Spring LDAP namespace declaration in your bean file, as follows:
 
-====
-[source,java]
+[source,xml]
 [subs="verbatim,quotes"]
 ----
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -13,7 +13,6 @@ The recommended way of configuring Spring LDAP is to use the custom XML configur
        xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
        **http://www.springframework.org/schema/ldap https://www.springframework.org/schema/ldap/spring-ldap.xsd**">
 ----
-====
 
 [[contextsource-configuration]]
 == `ContextSource` Configuration
@@ -22,17 +21,14 @@ The recommended way of configuring Spring LDAP is to use the custom XML configur
 The simplest possible `context-source` declaration requires you to specify a server URL, a username, and a password, as follows:
 
 .Simplest possible context-source declaration
-====
-[source,java]
+[source,xml]
 [subs="verbatim,quotes"]
 ----
-
 <ldap:context-source
     username="cn=Administrator"
     password="secret"
     url="ldap://localhost:389" />
 ----
-====
 
 The preceding example creates an `LdapContextSource` with default values (see the table after this paragraph) and the URL and authentication credentials as specified.
 The configurable attributes on context-source are as follows (required attributes marked with *):
@@ -95,7 +91,7 @@ a|  Defines the strategy with which to handle referrals, as described https://do
 
 | `base-env-props-ref`
 |
-|  A reference to a `Map` of custom environment properties that should supplied with the environment sent to the `DirContext` on construction.
+|  A reference to a `Map` of custom environment properties that should be supplied with the environment sent to the `DirContext` on construction.
 |===
 
 [[dircontext-authentication]]
@@ -141,8 +137,7 @@ If you use https://spring.io/spring-security[Spring Security], you can make sure
 
 
 .Using the SpringSecurityAuthenticationSource
-====
-[source,java,subs="verbatim,quotes"]
+[source,xml,subs="verbatim,quotes"]
 ----
 
 <beans>
@@ -156,7 +151,6 @@ If you use https://spring.io/spring-security[Spring Security], you can make sure
 ...
 </beans>
 ----
-====
 
 NOTE: We do not specify any `username` or `password` for. our `context-source` when using an `AuthenticationSource`. These properties are needed only when the default behavior is used.
 
@@ -197,14 +191,12 @@ Both `LdapClient` and `LdapTemplate` can coexist quite nicely in the same applic
 An `LdapClient` is defined by using the `LdapClient#create` factory method like so:
 
 .Simplest possible LdapClient declaration
-====
 [source,xml]
 ----
 <bean id="ldapClient" class="org.springframework.ldap.core.LdapClient" factory-method="create">
    <constructor-arg ref="contextSource" />
 </bean>
 ----
-====
 
 This element references the default `ContextSource`, which is expected to have an ID of `contextSource` (the default for the `context-source` element).
 
@@ -216,13 +208,11 @@ Your `LdapClient` instance can be configured for how to handle certain checked e
 The `LdapTemplate` is defined by using a `<ldap:ldap-template>` element. The simplest possible `ldap-template` declaration is the element by itself:
 
 .Simplest possible ldap-template declaration
-====
-[source,java]
+[source,xml]
 [subs="verbatim,quotes"]
 ----
 <ldap:ldap-template />
 ----
-====
 
 The element by itself creates an `LdapTemplate` instance with the default ID, referencing the default `ContextSource`, which is expected to have an ID of `contextSource` (the default for the `context-source` element).
 
@@ -282,11 +272,10 @@ Second, you need to define a `BaseLdapPathBeanPostProcessor` in the application 
 The following example shows how to implement `BaseLdapNameAware`:
 
 .Implementing `BaseLdapNameAware`
-====
 [source,java,subs="verbatim,quotes"]
 ----
 package com.example.service;
-public class PersonService implements PersonService**, BaseLdapNameAware** {
+public class PersonService implements **PersonService**, **BaseLdapNameAware** {
    ...
    **private LdapName basePath;
 
@@ -302,13 +291,11 @@ public class PersonService implements PersonService**, BaseLdapNameAware** {
    ...
 }
 ----
-====
 
 The following example shows how to define a `BaseLdapPathBeanPostProcessor`:
 
 .Specifying a BaseLdapPathBeanPostProcessor in your ApplicationContext
-====
-[source,java,subs="verbatim,quotes"]
+[source,xml,subs="verbatim,quotes"]
 ----
 <beans>
    ...
@@ -321,7 +308,6 @@ The following example shows how to define a `BaseLdapPathBeanPostProcessor`:
    **<bean class="org.springframework.ldap.core.support.BaseLdapPathBeanPostProcessor" />**
 </beans>
 ----
-====
 
 The default behavior of the `BaseLdapPathBeanPostProcessor` is to use the base path of the single defined `BaseLdapPathSource` (`AbstractContextSource`) in the `ApplicationContext`. If more than one `BaseLdapPathSource` is defined, you need to specify which one to use by setting the `baseLdapPathSourceName` property.
 

@@ -18,7 +18,6 @@ To get started, you need to include the `spring-ldap-test` dependency.
 
 The following listing shows how to include the `spring-ldap-test` for Maven:
 
-====
 [source,xml,subs="+attributes"]
 ----
 <dependency>
@@ -28,17 +27,14 @@ The following listing shows how to include the `spring-ldap-test` for Maven:
     <scope>test</scope>
 </dependency>
 ----
-====
 
 The following listing shows how to include the `spring-ldap-test` for Gradle:
 
-====
 [source,groovy]
 [subs="verbatim,quotes,attributes"]
 ----
 testCompile "org.springframework.ldap:spring-ldap-test:{project-version}"
 ----
-====
 
 [[spring-ldap-testing-apacheds]]
 == ApacheDS
@@ -47,66 +43,64 @@ To use ApacheDS, you need to include a number of ApacheDS dependencies.
 
 The following example shows how to include the ApacheDS dependencies for Maven:
 
-====
-[source,xml]
+[source,xml,subs="verbatim,quotes,attributes"]
 ----
-<dependency>
-    <groupId>org.apache.directory.server</groupId>
-    <artifactId>apacheds-core</artifactId>
-    <version>1.5.5</version>
-    <scope>test</scope>
-</dependency>
-<dependency>
-    <groupId>org.apache.directory.server</groupId>
-    <artifactId>apacheds-core-entry</artifactId>
-    <version>1.5.5</version>
-    <scope>test</scope>
-</dependency>
-<dependency>
-    <groupId>org.apache.directory.server</groupId>
-    <artifactId>apacheds-protocol-shared</artifactId>
-    <version>1.5.5</version>
-    <scope>test</scope>
-</dependency>
-<dependency>
-    <groupId>org.apache.directory.server</groupId>
-    <artifactId>apacheds-protocol-ldap</artifactId>
-    <version>1.5.5</version>
-    <scope>test</scope>
-</dependency>
-<dependency>
-    <groupId>org.apache.directory.server</groupId>
-    <artifactId>apacheds-server-jndi</artifactId>
-    <version>1.5.5</version>
-    <scope>test</scope>
-</dependency>
-<dependency>
-    <groupId>org.apache.directory.shared</groupId>
-    <artifactId>shared-ldap</artifactId>
-    <version>0.9.15</version>
-    <scope>test</scope>
-</dependency>
+<dependencies>
+    <dependency>
+        <groupId>org.apache.directory.server</groupId>
+        <artifactId>apacheds-core</artifactId>
+        <version>{apacheds-core-version}</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.directory.server</groupId>
+        <artifactId>apacheds-core-entry</artifactId>
+        <version>{apacheds-core-entry-version}</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.directory.server</groupId>
+        <artifactId>apacheds-protocol-shared</artifactId>
+        <version>{apacheds-protocol-shared-version}</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.directory.server</groupId>
+        <artifactId>apacheds-protocol-ldap</artifactId>
+        <version>{apacheds-protocol-ldap-version}</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.directory.server</groupId>
+        <artifactId>apacheds-server-jndi</artifactId>
+        <version>{apacheds-server-jndi-version}</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.directory.shared</groupId>
+        <artifactId>shared-ldap</artifactId>
+        <version>{shared-ldap-version}</version>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
 ----
-====
 
 The following example shows how to include the ApacheDS dependencies for Gradle:
 
-====
-[source,groovy]
-[subs="verbatim,quotes"]
+[source,groovy,subs="verbatim,quotes,attributes"]
 ----
-testCompile "org.apache.directory.server:apacheds-core:1.5.5",
-            "org.apache.directory.server:apacheds-core-entry:1.5.5",
-            "org.apache.directory.server:apacheds-protocol-shared:1.5.5",
-            "org.apache.directory.server:apacheds-protocol-ldap:1.5.5",
-            "org.apache.directory.server:apacheds-server-jndi:1.5.5",
-            "org.apache.directory.shared:shared-ldap:0.9.15"
+dependencies {
+    testImplementation "org.apache.directory.server:apacheds-core:{apacheds-core-version}"
+    testImplementation "org.apache.directory.server:apacheds-core-entry:{apacheds-core-entry-version}"
+    testImplementation "org.apache.directory.server:apacheds-protocol-shared:{apacheds-protocol-shared-version}"
+    testImplementation "org.apache.directory.server:apacheds-protocol-ldap:{apacheds-protocol-ldap-version}"
+    testImplementation "org.apache.directory.server:apacheds-server-jndi:{apacheds-server-jndi-version}"
+    testImplementation "org.apache.directory.shared:shared-ldap:{shared-ldap-version}"
+}
 ----
-====
 
 The following bean definition creates an embedded LDAP server:
 
-====
 [source,xml]
 ----
 <bean id="embeddedLdapServer" class="org.springframework.ldap.test.EmbeddedLdapServerFactoryBean">
@@ -115,11 +109,9 @@ The following bean definition creates an embedded LDAP server:
     <property name="port" value="9321" />
 </bean>
 ----
-====
 
 `spring-ldap-test` provides a mechanism to populate the LDAP server by using `org.springframework.ldap.test.LdifPopulator`. To use it, create a bean similar to the following:
 
-====
 [source,xml]
 ----
 <bean class="org.springframework.ldap.test.LdifPopulator" depends-on="embeddedLdapServer">
@@ -130,11 +122,9 @@ The following bean definition creates an embedded LDAP server:
     <property name="defaultBase" value="dc=jayway,dc=se" />
 </bean>
 ----
-====
 
 Another way to work against an embedded LDAP server is by using `org.springframework.ldap.test.TestContextSourceFactoryBean`, as follows:
 
-====
 [source,xml]
 ----
 <bean id="contextSource" class="org.springframework.ldap.test.TestContextSourceFactoryBean">
@@ -146,7 +136,6 @@ Another way to work against an embedded LDAP server is by using `org.springframe
     <property name="port" value="1888" />
 </bean>
 ----
-====
 
 Also, `org.springframework.ldap.test.LdapTestUtils` provides methods to programmatically work with an embedded LDAP server.
 
@@ -157,31 +146,25 @@ To use UnboundID, you need to include an UnboundID dependency.
 
 The following example shows how to include the UnboundID dependency for Maven:
 
-====
-[source,xml]
+[source,xml,subs="verbatim,quotes,attributes"]
 ----
 <dependency>
     <groupId>com.unboundid</groupId>
     <artifactId>unboundid-ldapsdk</artifactId>
-    <version>3.1.1</version>
+    <version>{unboundid-ldapsdk-version}</version>
     <scope>test</scope>
 </dependency>
 ----
-====
 
 The following example shows how to include the UnboundID dependency for Gradle:
 
-====
-[source,groovy]
-[subs="verbatim,quotes"]
+[source,groovy,subs="verbatim,quotes,attributes"]
 ----
-testCompile "com.unboundid:unboundid-ldapsdk:3.1.1"
+testCompile "com.unboundid:unboundid-ldapsdk:{unboundid-ldapsdk-version}"
 ----
-====
 
 The following bean definition creates an embedded LDAP server:
 
-====
 [source,java]
 ----
 @Bean
@@ -193,11 +176,9 @@ EmbeddedLdapServer embeddedLdapServer() {
         .build();
 }
 ----
-====
 
 Alternatively, you can use the `org.springframework.ldap.test.unboundid.LdifPopulator` to create and populate the LDAP server. To use it, create a bean similar to the following:
 
-====
 [source,xml]
 ----
 <bean class="org.springframework.ldap.test.unboundid.LdifPopulator" depends-on="embeddedLdapServer">
@@ -208,12 +189,10 @@ Alternatively, you can use the `org.springframework.ldap.test.unboundid.LdifPopu
     <property name="defaultBase" value="dc=jayway,dc=se" />
 </bean>
 ----
-====
 
 Another way to work against an embedded LDAP server is by using `org.springframework.ldap.test.unboundid.TestContextSourceFactoryBean`.
 To use it, create a bean similar to the following:
 
-====
 [source,xml]
 ----
 <bean id="contextSource" class="org.springframework.ldap.test.unboundid.TestContextSourceFactoryBean">
@@ -225,6 +204,5 @@ To use it, create a bean similar to the following:
     <property name="port" value="1888" />
 </bean>
 ----
-====
 
 Also, `org.springframework.ldap.test.unboundid.LdapTestUtils` provide methods to programmatically work with an embedded LDAP server.
