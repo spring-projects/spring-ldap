@@ -33,5 +33,5 @@ Spring LDAP is Open Source software released under the https://www.apache.org/li
 
 == Social Media
 
-You can follow https://twitter.com/SpringLDAP[@SpringLDAP] and the https://twitter.com/SpringLDAP/lists/team[Spring LDAP team] on Twitter to stay up to date with the latest news.
+You can follow https://twitter.com/SpringLDAP[@SpringLDAP] and the https://twitter.com/SpringSecurity/lists/team[Spring Security team] on Twitter to stay up to date with the latest news.
 You can also follow https://twitter.com/SpringCentral[@SpringCentral] to keep up to date with the entire Spring portfolio.
