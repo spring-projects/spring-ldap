@@ -351,7 +351,7 @@ import org.springframework.util.Assert;
 	@Override
 	public String toString() {
 		return String.format(
-				"name=%1$s | field=%2$s | valueClass=%3$s | syntax=%4$s| isBinary=%5$s | isId=%6$s | isReadOnly=%7$s |  isList=%8$s | isObjectClass=%9$s",
+				"name=%1$s | field=%2$s | valueClass=%3$s | syntax=%4$s| isBinary=%5$s | isId=%6$s | isReadOnly=%7$s | isList=%8$s | isObjectClass=%9$s",
 				this.name, this.field, this.valueClass, this.syntax, this.isBinary, this.isId, this.isReadOnly,
 				this.isCollection, this.isObjectClass);
 	}
