@@ -15,4 +15,4 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: spring-io/spring-security-release-tools/update-bot@85f3ecacd3804aa3cd9623c8e8c83eceaab50085 # main
+      - uses: spring-io/spring-security-release-tools/update-bot@491486cb49b06ccaefe7e9220ed5f7b81d89ce40 # main
