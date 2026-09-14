@@ -34,6 +34,8 @@ updates:
     labels:
       - 'type: task'
       - 'in: build'
+    ignore:
+      - dependency-name: spring-io/spring-security-release-tools/*
   - package-ecosystem: gradle
     target-branch: 4.0.x
     milestone: 97 # 4.0.x
@@ -80,6 +82,7 @@ updates:
       - 'type: task'
       - 'in: build'
     ignore:
+      - dependency-name: spring-io/spring-security-release-tools/*
       - dependency-name: '*'
         update-types:
           - version-update:semver-major
@@ -129,6 +132,7 @@ updates:
       - 'type: task'
       - 'in: build'
     ignore:
+      - dependency-name: spring-io/spring-security-release-tools/*
       - dependency-name: '*'
         update-types:
           - version-update:semver-major
