@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.ldap.OperationNotSupportedException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.mock;
@@ -111,16 +112,11 @@ public class VirtualListViewControlDirContextProcessorTests {
 		VirtualListViewResponseControl control = new VirtualListViewResponseControl(OID_RESPONSE, false, encoded);
 		given(this.ldapContextMock.getResponseControls()).willReturn(new Control[] { control });
 
-		try {
-			tested.postProcess(this.ldapContextMock);
-			fail("OperationNotSupportedException expected");
-		}
-		catch (OperationNotSupportedException expected) {
-			Throwable cause = expected.getCause();
-			assertThat(cause.getClass()).isEqualTo(javax.naming.OperationNotSupportedException.class);
-			assertThat(cause.getMessage()).isEqualTo("[LDAP: error code 53 - Unwilling To Perform]");
-		}
-
+		assertThatExceptionOfType(OperationNotSupportedException.class)
+			.isThrownBy(() -> tested.postProcess(this.ldapContextMock))
+			.havingCause()
+			.isInstanceOf(javax.naming.OperationNotSupportedException.class)
+			.withMessage("[LDAP: error code 53 - Unwilling To Perform]");
 		assertThat(tested.getCookie()).isNotNull();
 		assertThat(tested.getCookie().getCookie().length).isEqualTo(0);
 	}
