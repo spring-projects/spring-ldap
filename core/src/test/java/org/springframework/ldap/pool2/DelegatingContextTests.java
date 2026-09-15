@@ -24,7 +24,8 @@ import org.apache.commons.pool2.KeyedObjectPool;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.mockito.BDDMockito.mock;
 import static org.mockito.BDDMockito.times;
 import static org.mockito.BDDMockito.verify;
@@ -38,29 +39,12 @@ public class DelegatingContextTests extends AbstractPoolTestCase {
 
 	@Test
 	public void testConstructorAssertions() {
-		try {
-			new DelegatingContext(null, contextMock, DirContextType.READ_ONLY);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
-
-		try {
-			new DelegatingContext(keyedObjectPoolMock, null, DirContextType.READ_ONLY);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
-
-		try {
-			new DelegatingContext(keyedObjectPoolMock, contextMock, null);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatIllegalArgumentException()
+			.isThrownBy(() -> new DelegatingContext(null, contextMock, DirContextType.READ_ONLY));
+		assertThatIllegalArgumentException()
+			.isThrownBy(() -> new DelegatingContext(keyedObjectPoolMock, null, DirContextType.READ_ONLY));
+		assertThatIllegalArgumentException()
+			.isThrownBy(() -> new DelegatingContext(keyedObjectPoolMock, contextMock, null));
 	}
 
 	@Test
@@ -99,14 +83,7 @@ public class DelegatingContextTests extends AbstractPoolTestCase {
 
 		final Context innerDelegateContext2closed = delegatingContext2.getInnermostDelegateContext();
 		assertThat(innerDelegateContext2closed).isNull();
-
-		try {
-			delegatingContext2.assertOpen();
-			fail("delegatingContext2.assertOpen() should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingContext2.assertOpen());
 
 		// Close the outer wrapper
 		delegatingContext.close();
@@ -117,13 +94,7 @@ public class DelegatingContextTests extends AbstractPoolTestCase {
 		final Context innerDelegateContextclosed = delegatingContext.getInnermostDelegateContext();
 		assertThat(innerDelegateContextclosed).isNull();
 
-		try {
-			delegatingContext.assertOpen();
-			fail("delegatingContext.assertOpen() should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingContext.assertOpen());
 
 		verify(keyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, contextMock);
 		verify(secondKeyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, contextMock);
@@ -168,48 +139,23 @@ public class DelegatingContextTests extends AbstractPoolTestCase {
 		final DelegatingContext delegatingContext = new DelegatingContext(keyedObjectPoolMock, contextMock,
 				DirContextType.READ_ONLY);
 
-		try {
-			delegatingContext.addToEnvironment(null, null);
-			fail("DelegatingContext.addToEnvironment Should have thrown an UnsupportedOperationException");
-		}
-		catch (UnsupportedOperationException uoe) {
-			// Expected
-		}
-		try {
-			delegatingContext.createSubcontext((Name) null);
-			fail("DelegatingContext.createSubcontext Should have thrown an UnsupportedOperationException");
-		}
-		catch (UnsupportedOperationException uoe) {
-			// Expected
-		}
-		try {
-			delegatingContext.createSubcontext((String) null);
-			fail("DelegatingContext.createSubcontext Should have thrown an UnsupportedOperationException");
-		}
-		catch (UnsupportedOperationException uoe) {
-			// Expected
-		}
-		try {
-			delegatingContext.destroySubcontext((Name) null);
-			fail("DelegatingContext.destroySubcontext Should have thrown an UnsupportedOperationException");
-		}
-		catch (UnsupportedOperationException uoe) {
-			// Expected
-		}
-		try {
-			delegatingContext.destroySubcontext((String) null);
-			fail("DelegatingContext.destroySubcontext Should have thrown an UnsupportedOperationException");
-		}
-		catch (UnsupportedOperationException uoe) {
-			// Expected
-		}
-		try {
-			delegatingContext.removeFromEnvironment(null);
-			fail("DelegatingContext.removeFromEnvironment Should have thrown an UnsupportedOperationException");
-		}
-		catch (UnsupportedOperationException uoe) {
-			// Expected
-		}
+		assertThatExceptionOfType(UnsupportedOperationException.class)
+			.isThrownBy(() -> delegatingContext.addToEnvironment(null, null));
+
+		assertThatExceptionOfType(UnsupportedOperationException.class)
+			.isThrownBy(() -> delegatingContext.createSubcontext((Name) null));
+
+		assertThatExceptionOfType(UnsupportedOperationException.class)
+			.isThrownBy(() -> delegatingContext.createSubcontext((String) null));
+
+		assertThatExceptionOfType(UnsupportedOperationException.class)
+			.isThrownBy(() -> delegatingContext.destroySubcontext((Name) null));
+
+		assertThatExceptionOfType(UnsupportedOperationException.class)
+			.isThrownBy(() -> delegatingContext.destroySubcontext((String) null));
+
+		assertThatExceptionOfType(UnsupportedOperationException.class)
+			.isThrownBy(() -> delegatingContext.removeFromEnvironment(null));
 	}
 
 	@Test
@@ -248,160 +194,56 @@ public class DelegatingContextTests extends AbstractPoolTestCase {
 
 		delegatingContext.close();
 
-		try {
-			delegatingContext.bind((Name) null, null);
-			fail("DelegatingContext.bind should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingContext.bind((String) null, null);
-			fail("DelegatingContext.bind should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingContext.composeName((Name) null, (Name) null);
-			fail("DelegatingContext.composeName should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingContext.composeName((String) null, (String) null);
-			fail("DelegatingContext.composeName should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingContext.getEnvironment();
-			fail("DelegatingContext.getEnvironment should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingContext.getNameInNamespace();
-			fail("DelegatingContext.getNameInNamespace should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingContext.getNameParser((Name) null);
-			fail("DelegatingContext.getNameParser should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingContext.getNameParser((String) null);
-			fail("DelegatingContext.getNameParser should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingContext.list((Name) null);
-			fail("DelegatingContext.list should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingContext.list((String) null);
-			fail("DelegatingContext.list should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingContext.listBindings((Name) null);
-			fail("DelegatingContext.listBindings should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingContext.listBindings((String) null);
-			fail("DelegatingContext.listBindings should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingContext.lookup((Name) null);
-			fail("DelegatingContext.lookup should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingContext.lookup((String) null);
-			fail("DelegatingContext.lookup should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingContext.lookupLink((Name) null);
-			fail("DelegatingContext.lookupLink should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingContext.lookupLink((String) null);
-			fail("DelegatingContext.lookupLink should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingContext.rebind((Name) null, null);
-			fail("DelegatingContext.rebind should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingContext.rebind((String) null, null);
-			fail("DelegatingContext.rebind should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingContext.rename((Name) null, (Name) null);
-			fail("DelegatingContext.rename should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingContext.rename((String) null, (String) null);
-			fail("DelegatingContext.rename should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingContext.unbind((Name) null);
-			fail("DelegatingContext.unbind should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingContext.unbind((String) null);
-			fail("DelegatingContext.unbind should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingContext.bind((Name) null, null));
+
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingContext.bind((String) null, null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingContext.composeName((Name) null, (Name) null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingContext.composeName((String) null, (String) null));
+
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingContext.getEnvironment());
+
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingContext.getNameInNamespace());
+
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingContext.getNameParser((Name) null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingContext.getNameParser((String) null));
+
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingContext.list((Name) null));
+
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingContext.list((String) null));
+
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingContext.listBindings((Name) null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingContext.listBindings((String) null));
+
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingContext.lookup((Name) null));
+
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingContext.lookup((String) null));
+
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingContext.lookupLink((Name) null));
+
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingContext.lookupLink((String) null));
+
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingContext.rebind((Name) null, null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingContext.rebind((String) null, null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingContext.rename((Name) null, (Name) null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingContext.rename((String) null, (String) null));
+
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingContext.unbind((Name) null));
+
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingContext.unbind((String) null));
 
 		verify(keyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, contextMock);
 	}
@@ -427,13 +269,7 @@ public class DelegatingContextTests extends AbstractPoolTestCase {
 		final DelegatingContext delegatingContext = new DelegatingContext(keyedObjectPoolMock, contextMock,
 				DirContextType.READ_ONLY);
 
-		try {
-			delegatingContext.close();
-			fail("DelegatingContext.close should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingContext.close());
 	}
 
 }

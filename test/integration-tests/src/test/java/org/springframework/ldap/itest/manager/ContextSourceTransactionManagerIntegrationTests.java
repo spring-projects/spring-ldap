@@ -36,7 +36,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Integration tests for
@@ -65,25 +65,14 @@ public class ContextSourceTransactionManagerIntegrationTests extends AbstractLda
 
 	@Test
 	public void testCreateWithException() {
-		try {
-			this.dummyDao.createWithException("Sweden", "company1", "some testperson", "testperson",
-					"some description");
-			fail("DummyException expected");
-		}
-		catch (DummyException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(DummyException.class).isThrownBy(() -> this.dummyDao.createWithException("Sweden",
+				"company1", "some testperson", "testperson", "some description"));
 
 		log.debug("Verifying result");
 
 		// Verify that no entry was created
-		try {
-			this.ldapTemplate.lookup("cn=some testperson, ou=company1, ou=Sweden");
-			fail("NameNotFoundException expected");
-		}
-		catch (NameNotFoundException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(NameNotFoundException.class)
+			.isThrownBy(() -> this.ldapTemplate.lookup("cn=some testperson, ou=company1, ou=Sweden"));
 	}
 
 	@Test
@@ -101,13 +90,8 @@ public class ContextSourceTransactionManagerIntegrationTests extends AbstractLda
 	@Test
 	public void testUpdateWithException() {
 		String dn = "cn=Some Person,ou=company1,ou=Sweden";
-		try {
-			this.dummyDao.updateWithException(dn, "Some Person", "Updated Person", "Updated description");
-			fail("DummyException expected");
-		}
-		catch (DummyException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(DummyException.class).isThrownBy(
+				() -> this.dummyDao.updateWithException(dn, "Some Person", "Updated Person", "Updated description"));
 
 		log.debug("Verifying result");
 
@@ -145,23 +129,12 @@ public class ContextSourceTransactionManagerIntegrationTests extends AbstractLda
 	public void testUpdateAndRenameWithException() {
 		String dn = "cn=Some Person2,ou=company1,ou=Sweden";
 		String newDn = "cn=Some Person2,ou=company2,ou=Sweden";
-		try {
-			// Perform test
-			this.dummyDao.updateAndRenameWithException(dn, newDn, "Updated description");
-			fail("DummyException expected");
-		}
-		catch (DummyException expected) {
-			assertThat(true).isTrue();
-		}
+		// Perform test
+		assertThatExceptionOfType(DummyException.class)
+			.isThrownBy(() -> this.dummyDao.updateAndRenameWithException(dn, newDn, "Updated description"));
 
 		// Verify that entry was not moved.
-		try {
-			this.ldapTemplate.lookup(newDn);
-			fail("NameNotFoundException expected");
-		}
-		catch (NameNotFoundException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(NameNotFoundException.class).isThrownBy(() -> this.ldapTemplate.lookup(newDn));
 
 		// Verify that original entry was not updated.
 		Object object = this.ldapTemplate.lookup(dn, new AttributesMapper() {
@@ -195,14 +168,9 @@ public class ContextSourceTransactionManagerIntegrationTests extends AbstractLda
 	@Test
 	public void testModifyAttributesWithException() {
 		String dn = "cn=Some Person,ou=company1,ou=Sweden";
-		try {
-			// Perform test
-			this.dummyDao.modifyAttributesWithException(dn, "Updated lastname", "Updated description");
-			fail("DummyException expected");
-		}
-		catch (DummyException expected) {
-			assertThat(true).isTrue();
-		}
+		// Perform test
+		assertThatExceptionOfType(DummyException.class).isThrownBy(
+				() -> this.dummyDao.modifyAttributesWithException(dn, "Updated lastname", "Updated description"));
 
 		// Verify result - check that the operation was properly rolled back
 		Object result = this.ldapTemplate.lookup(dn, new AttributesMapper() {
@@ -237,14 +205,10 @@ public class ContextSourceTransactionManagerIntegrationTests extends AbstractLda
 	@Test
 	public void testUnbindWithException() {
 		String dn = "cn=Some Person,ou=company1,ou=Sweden";
-		try {
-			// Perform test
-			this.dummyDao.unbindWithException(dn, "Some Person");
-			fail("DummyException expected");
-		}
-		catch (DummyException expected) {
-			assertThat(true).isTrue();
-		}
+		this.ldapTemplate.lookup(dn);
+		// Perform test
+		assertThatExceptionOfType(DummyException.class)
+			.isThrownBy(() -> this.dummyDao.unbindWithException(dn, "Some Person"));
 
 		// Verify result - check that the operation was properly rolled back
 		Object ldapResult = this.ldapTemplate.lookup(dn, new AttributesMapper() {
@@ -262,16 +226,8 @@ public class ContextSourceTransactionManagerIntegrationTests extends AbstractLda
 		String dn = "cn=Some Person,ou=company1,ou=Sweden";
 		// Perform test
 		this.dummyDao.unbind(dn, "Some Person");
-
-		try {
-			// Verify result - check that the operation was not rolled back
-			this.ldapTemplate.lookup(dn);
-			fail("NameNotFoundException expected");
-		}
-		catch (NameNotFoundException expected) {
-			assertThat(true).isTrue();
-		}
-
+		// Verify result - check that the operation was not rolled back
+		assertThatExceptionOfType(NameNotFoundException.class).isThrownBy(() -> this.ldapTemplate.lookup(dn));
 	}
 
 }

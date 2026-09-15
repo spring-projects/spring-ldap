@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.ldap.pool.DirContextType;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.mock;
 
@@ -78,25 +78,12 @@ public class DefaultDirContextValidatorTests {
 		dirContextValidator.setBase("baseName");
 		final String baseName = dirContextValidator.getBase();
 		assertThat(baseName).isEqualTo("baseName");
-
-		try {
-			dirContextValidator.setFilter(null);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatIllegalArgumentException().isThrownBy(() -> dirContextValidator.setFilter(null));
 		dirContextValidator.setFilter("filter");
 		final String filter = dirContextValidator.getFilter();
 		assertThat(filter).isEqualTo("filter");
 
-		try {
-			dirContextValidator.setSearchControls(null);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatIllegalArgumentException().isThrownBy(() -> dirContextValidator.setSearchControls(null));
 		final SearchControls sc = new SearchControls();
 		dirContextValidator.setSearchControls(sc);
 		final SearchControls sc2 = dirContextValidator.getSearchControls();
@@ -107,21 +94,10 @@ public class DefaultDirContextValidatorTests {
 	public void testValidateDirContextAssertions() throws Exception {
 		final DefaultDirContextValidator dirContextValidator = new DefaultDirContextValidator();
 
-		try {
-			dirContextValidator.validateDirContext(DirContextType.READ_ONLY, null);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
-
-		try {
-			dirContextValidator.validateDirContext(null, this.dirContextMock);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatIllegalArgumentException()
+			.isThrownBy(() -> dirContextValidator.validateDirContext(DirContextType.READ_ONLY, null));
+		assertThatIllegalArgumentException()
+			.isThrownBy(() -> dirContextValidator.validateDirContext(null, this.dirContextMock));
 	}
 
 	@Test

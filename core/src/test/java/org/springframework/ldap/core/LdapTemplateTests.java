@@ -54,7 +54,9 @@ import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.ldap.support.LdapUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -224,14 +226,8 @@ public class LdapTemplateTests {
 		given(this.dirContextMock.search(eq(this.nameMock), eq("(ou=somevalue)"),
 				argThat(new SearchControlsMatcher(controls))))
 			.willThrow(ne);
-
-		try {
-			this.tested.search(this.nameMock, "(ou=somevalue)", this.handlerMock);
-			fail("NameNotFoundException expected");
-		}
-		catch (NameNotFoundException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(NameNotFoundException.class)
+			.isThrownBy(() -> this.tested.search(this.nameMock, "(ou=somevalue)", this.handlerMock));
 		verify(this.dirContextMock).close();
 	}
 
@@ -247,14 +243,8 @@ public class LdapTemplateTests {
 				argThat(new SearchControlsMatcher(controls))))
 			.willThrow(ne);
 
-		try {
-			this.tested.search(this.nameMock, "(ou=somevalue)", this.handlerMock);
-			fail("LimitExceededException expected");
-		}
-		catch (LimitExceededException expected) {
-			// expected
-		}
-
+		assertThatExceptionOfType(LimitExceededException.class)
+			.isThrownBy(() -> this.tested.search(this.nameMock, "(ou=somevalue)", this.handlerMock));
 		verify(this.dirContextMock).close();
 	}
 
@@ -651,13 +641,8 @@ public class LdapTemplateTests {
 
 		noSearchResults(searchControlsRecursive());
 
-		try {
-			this.tested.findOne(LdapQueryBuilder.query().where("ou").is("somevalue"), expectedClass);
-			fail("EmptyResultDataAccessException expected");
-		}
-		catch (EmptyResultDataAccessException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(EmptyResultDataAccessException.class)
+			.isThrownBy(() -> this.tested.findOne(LdapQueryBuilder.query().where("ou").is("somevalue"), expectedClass));
 
 		verify(this.namingEnumerationMock).close();
 		verify(this.dirContextMock).close();
@@ -681,13 +666,8 @@ public class LdapTemplateTests {
 		given(this.odmMock.mapFromLdapDataEntry(expectedObject, expectedClass)).willReturn(expectedResult,
 				expectedResult);
 
-		try {
-			this.tested.findOne(LdapQueryBuilder.query().where("ou").is("somevalue"), expectedClass);
-			fail("EmptyResultDataAccessException expected");
-		}
-		catch (IncorrectResultSizeDataAccessException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(IncorrectResultSizeDataAccessException.class)
+			.isThrownBy(() -> this.tested.findOne(LdapQueryBuilder.query().where("ou").is("somevalue"), expectedClass));
 
 		verify(this.namingEnumerationMock).close();
 		verify(this.dirContextMock).close();
@@ -1030,14 +1010,8 @@ public class LdapTemplateTests {
 
 		javax.naming.LimitExceededException ne = new javax.naming.LimitExceededException();
 		willThrow(ne).given(this.dirContextMock).modifyAttributes(this.nameMock, mods);
-
-		try {
-			this.tested.modifyAttributes(this.nameMock, mods);
-			fail("LimitExceededException expected");
-		}
-		catch (LimitExceededException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(LimitExceededException.class)
+			.isThrownBy(() -> this.tested.modifyAttributes(this.nameMock, mods));
 
 		verify(this.dirContextMock).close();
 	}
@@ -1077,14 +1051,8 @@ public class LdapTemplateTests {
 		BasicAttributes expectedAttributes = new BasicAttributes();
 		javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
 		willThrow(ne).given(this.dirContextMock).bind(this.nameMock, expectedObject, expectedAttributes);
-
-		try {
-			this.tested.bind(this.nameMock, expectedObject, expectedAttributes);
-			fail("NameNotFoundException expected");
-		}
-		catch (NameNotFoundException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(NameNotFoundException.class)
+			.isThrownBy(() -> this.tested.bind(this.nameMock, expectedObject, expectedAttributes));
 
 		verify(this.dirContextMock).close();
 	}
@@ -1145,13 +1113,7 @@ public class LdapTemplateTests {
 		given(this.odmMock.getId(expectedObject)).willReturn(null);
 		given(this.odmMock.getCalculatedId(expectedObject)).willReturn(null);
 
-		try {
-			this.tested.create(expectedObject);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatIllegalArgumentException().isThrownBy(() -> this.tested.create(expectedObject));
 	}
 
 	@Test
@@ -1350,14 +1312,7 @@ public class LdapTemplateTests {
 		javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
 		willThrow(ne).given(this.dirContextMock).unbind(this.nameMock);
 
-		try {
-			this.tested.unbind(this.nameMock);
-			fail("NameNotFoundException expected");
-		}
-		catch (NameNotFoundException expected) {
-			assertThat(true).isTrue();
-		}
-
+		assertThatExceptionOfType(NameNotFoundException.class).isThrownBy(() -> this.tested.unbind(this.nameMock));
 		verify(this.dirContextMock).close();
 	}
 
@@ -1382,13 +1337,8 @@ public class LdapTemplateTests {
 		javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
 		given(this.contextExecutorMock.executeWithContext(this.dirContextMock)).willThrow(ne);
 
-		try {
-			this.tested.executeReadOnly(this.contextExecutorMock);
-			fail("NameNotFoundException expected");
-		}
-		catch (NameNotFoundException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(NameNotFoundException.class)
+			.isThrownBy(() -> this.tested.executeReadOnly(this.contextExecutorMock));
 
 		verify(this.dirContextMock).close();
 	}
@@ -1413,15 +1363,8 @@ public class LdapTemplateTests {
 
 		javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
 		given(this.contextExecutorMock.executeWithContext(this.dirContextMock)).willThrow(ne);
-
-		try {
-			this.tested.executeReadWrite(this.contextExecutorMock);
-			fail("NameNotFoundException expected");
-		}
-		catch (NameNotFoundException expected) {
-			assertThat(true).isTrue();
-		}
-
+		assertThatExceptionOfType(NameNotFoundException.class)
+			.isThrownBy(() -> this.tested.executeReadWrite(this.contextExecutorMock));
 		verify(this.dirContextMock).close();
 	}
 
@@ -1451,15 +1394,8 @@ public class LdapTemplateTests {
 
 		javax.naming.LimitExceededException ne = new javax.naming.LimitExceededException();
 		given(this.searchExecutorMock.executeSearch(this.dirContextMock)).willThrow(ne);
-
-		try {
-			this.tested.search(this.searchExecutorMock, this.handlerMock, this.dirContextProcessorMock);
-			fail("LimitExceededException expected");
-		}
-		catch (LimitExceededException expected) {
-			assertThat(true).isTrue();
-		}
-
+		assertThatExceptionOfType(LimitExceededException.class).isThrownBy(
+				() -> this.tested.search(this.searchExecutorMock, this.handlerMock, this.dirContextProcessorMock));
 		verify(this.dirContextProcessorMock).preProcess(this.dirContextMock);
 		verify(this.dirContextProcessorMock).postProcess(this.dirContextMock);
 		verify(this.dirContextMock).close();
@@ -1489,15 +1425,8 @@ public class LdapTemplateTests {
 
 		javax.naming.LimitExceededException ne = new javax.naming.LimitExceededException();
 		given(this.searchExecutorMock.executeSearch(this.dirContextMock)).willThrow(ne);
-
-		try {
-			this.tested.search(this.searchExecutorMock, this.handlerMock);
-			fail("LimitExceededException expected");
-		}
-		catch (LimitExceededException expected) {
-			assertThat(true).isTrue();
-		}
-
+		assertThatExceptionOfType(LimitExceededException.class)
+			.isThrownBy(() -> this.tested.search(this.searchExecutorMock, this.handlerMock));
 		verify(this.dirContextMock).close();
 	}
 
@@ -1509,15 +1438,8 @@ public class LdapTemplateTests {
 
 		javax.naming.LimitExceededException ne = new javax.naming.LimitExceededException();
 		given(this.namingEnumerationMock.hasMore()).willThrow(ne);
-
-		try {
-			this.tested.search(this.searchExecutorMock, this.handlerMock);
-			fail("LimitExceededException expected");
-		}
-		catch (LimitExceededException expected) {
-			assertThat(true).isTrue();
-		}
-
+		assertThatExceptionOfType(LimitExceededException.class)
+			.isThrownBy(() -> this.tested.search(this.searchExecutorMock, this.handlerMock));
 		verify(this.namingEnumerationMock).close();
 		verify(this.dirContextMock).close();
 	}
@@ -1528,15 +1450,8 @@ public class LdapTemplateTests {
 
 		given(this.searchExecutorMock.executeSearch(this.dirContextMock))
 			.willThrow(new javax.naming.NameNotFoundException());
-
-		try {
-			this.tested.search(this.searchExecutorMock, this.handlerMock);
-			fail("NameNotFoundException expected");
-		}
-		catch (NameNotFoundException expected) {
-			assertThat(true).isTrue();
-		}
-
+		assertThatExceptionOfType(NameNotFoundException.class)
+			.isThrownBy(() -> this.tested.search(this.searchExecutorMock, this.handlerMock));
 		verify(this.dirContextMock).close();
 	}
 
@@ -1547,13 +1462,8 @@ public class LdapTemplateTests {
 		javax.naming.PartialResultException ex = new javax.naming.PartialResultException();
 		given(this.searchExecutorMock.executeSearch(this.dirContextMock)).willThrow(ex);
 
-		try {
-			this.tested.search(this.searchExecutorMock, this.handlerMock, this.dirContextProcessorMock);
-			fail("PartialResultException expected");
-		}
-		catch (PartialResultException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(PartialResultException.class).isThrownBy(
+				() -> this.tested.search(this.searchExecutorMock, this.handlerMock, this.dirContextProcessorMock));
 
 		verify(this.dirContextProcessorMock).preProcess(this.dirContextMock);
 		verify(this.dirContextProcessorMock).postProcess(this.dirContextMock);
@@ -1643,13 +1553,7 @@ public class LdapTemplateTests {
 			}
 		};
 
-		try {
-			tested.modifyAttributes(this.dirContextOperationsMock);
-			fail("IllegalStateException expected");
-		}
-		catch (IllegalStateException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatIllegalStateException().isThrownBy(() -> this.tested.modifyAttributes(this.dirContextOperationsMock));
 	}
 
 	@Test
@@ -1662,13 +1566,7 @@ public class LdapTemplateTests {
 			}
 		};
 
-		try {
-			tested.modifyAttributes(this.dirContextOperationsMock);
-			fail("IllegalStateException expected");
-		}
-		catch (IllegalStateException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatIllegalStateException().isThrownBy(() -> this.tested.modifyAttributes(this.dirContextOperationsMock));
 	}
 
 	@Test
@@ -1711,13 +1609,8 @@ public class LdapTemplateTests {
 		given(this.contextMapperMock.mapFromContext(expectedObject)).willReturn(expectedResult);
 		given(this.contextMapperMock.mapFromContext(expectedObject)).willReturn(expectedResult);
 
-		try {
-			this.tested.searchForObject(this.nameMock, "(ou=somevalue)", this.contextMapperMock);
-			fail("IncorrectResultSizeDataAccessException expected");
-		}
-		catch (IncorrectResultSizeDataAccessException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(IncorrectResultSizeDataAccessException.class)
+			.isThrownBy(() -> this.tested.searchForObject(this.nameMock, "(ou=somevalue)", this.contextMapperMock));
 
 		verify(this.namingEnumerationMock).close();
 		verify(this.dirContextMock).close();
@@ -1728,15 +1621,8 @@ public class LdapTemplateTests {
 		expectGetReadOnlyContext();
 
 		noSearchResults(searchControlsRecursive());
-
-		try {
-			this.tested.searchForObject(this.nameMock, "(ou=somevalue)", this.contextMapperMock);
-			fail("EmptyResultDataAccessException expected");
-		}
-		catch (EmptyResultDataAccessException expected) {
-			assertThat(true).isTrue();
-		}
-
+		assertThatExceptionOfType(EmptyResultDataAccessException.class)
+			.isThrownBy(() -> this.tested.searchForObject(this.nameMock, "(ou=somevalue)", this.contextMapperMock));
 		verify(this.dirContextMock).close();
 	}
 
@@ -1774,14 +1660,8 @@ public class LdapTemplateTests {
 		SearchResult searchResult2 = new SearchResult("", expectedObject, new BasicAttributes());
 
 		setupSearchResults(searchControlsRecursive(), new SearchResult[] { searchResult1, searchResult2 });
-
-		try {
-			this.tested.authenticate(this.nameMock, "(ou=somevalue)", "password", this.entryContextCallbackMock);
-			fail("IncorrectResultSizeDataAccessException expected");
-		}
-		catch (IncorrectResultSizeDataAccessException expected) {
-			// expected
-		}
+		assertThatExceptionOfType(IncorrectResultSizeDataAccessException.class).isThrownBy(() -> this.tested
+			.authenticate(this.nameMock, "(ou=somevalue)", "password", this.entryContextCallbackMock));
 
 		verify(this.dirContextMock).close();
 	}
@@ -1810,13 +1690,8 @@ public class LdapTemplateTests {
 			.willReturn(this.namingEnumerationMock);
 
 		given(this.namingEnumerationMock.hasMore()).willReturn(false);
-
-		try {
-			this.tested.authenticate(this.query, "", this.authContextMapperMock);
-			fail("Expected Exception");
-		}
-		catch (EmptyResultDataAccessException success) {
-		}
+		assertThatExceptionOfType(EmptyResultDataAccessException.class)
+			.isThrownBy(() -> this.tested.authenticate(this.query, "", this.authContextMapperMock));
 		verify(this.dirContextMock).close();
 	}
 
@@ -1831,12 +1706,8 @@ public class LdapTemplateTests {
 
 		given(this.namingEnumerationMock.hasMore()).willReturn(false);
 
-		try {
-			this.tested.authenticate(this.query, "");
-			fail("Expected Exception");
-		}
-		catch (EmptyResultDataAccessException success) {
-		}
+		assertThatExceptionOfType(EmptyResultDataAccessException.class)
+			.isThrownBy(() -> this.tested.authenticate(this.query, ""));
 		verify(this.dirContextMock).close();
 	}
 

@@ -31,8 +31,7 @@ import org.springframework.ldap.itest.transaction.compensating.manager.DummyExce
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Integration tests for
@@ -65,26 +64,15 @@ public class ContextSourceTransactionManagerSubtreeIntegrationTests extends Abst
 	@Test
 	public void testLdap168DeleteRecursively() {
 		this.dummyDao.deleteRecursively("ou=company1,ou=Sweden");
-
-		try {
-			this.ldapTemplate.lookup("ou=company1,ou=Sweden");
-			fail("NameNotFoundException expected");
-		}
-		catch (NameNotFoundException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(NameNotFoundException.class)
+			.isThrownBy(() -> this.ldapTemplate.lookup("ou=company1,ou=Sweden"));
 	}
 
 	@Test
 	public void testLdap168DeleteWithException() {
-		try {
-			this.dummyDao.deleteRecursivelyWithException("ou=company1,ou=Sweden");
-			fail("DummyException expected");
-		}
-		catch (DummyException expected) {
-			assertThat(true).isTrue();
-		}
 
+		assertThatExceptionOfType(DummyException.class)
+			.isThrownBy(() -> this.dummyDao.deleteRecursivelyWithException("ou=company1,ou=Sweden"));
 		// Entry should have been restored
 		this.ldapTemplate.lookup("ou=company1,ou=Sweden");
 	}
@@ -96,13 +84,9 @@ public class ContextSourceTransactionManagerSubtreeIntegrationTests extends Abst
 
 	@Test
 	public void testLdap244CreateRecursivelyWithException() {
-		try {
-			this.dummyDao.createRecursivelyAndUnbindSubnodeWithException();
-			fail("DummyException expected");
-		}
-		catch (DummyException expected) {
-			assertThat(true).isTrue();
-		}
+
+		assertThatExceptionOfType(DummyException.class)
+			.isThrownBy(() -> this.dummyDao.createRecursivelyAndUnbindSubnodeWithException());
 	}
 
 }

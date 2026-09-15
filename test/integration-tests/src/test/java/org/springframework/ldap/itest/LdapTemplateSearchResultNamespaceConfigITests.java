@@ -45,7 +45,6 @@ import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Tests for LdapTemplate's search methods. This test class tests all the different
@@ -532,14 +531,9 @@ public class LdapTemplateSearchResultNamespaceConfigITests extends AbstractLdapT
 
 	@Test
 	public void testSearchWithInvalidSearchBaseShouldByDefaultThrowException() {
-		try {
-			this.tested.search(BASE_NAME + "ou=unknown", FILTER_STRING, SearchControls.SUBTREE_SCOPE, CN_SN_ATTRS,
-					this.contextMapper);
-			fail("NameNotFoundException expected");
-		}
-		catch (NameNotFoundException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(NameNotFoundException.class)
+			.isThrownBy(() -> this.tested.search(BASE_NAME + "ou=unknown", FILTER_STRING, SearchControls.SUBTREE_SCOPE,
+					CN_SN_ATTRS, this.contextMapper));
 	}
 
 	@Test

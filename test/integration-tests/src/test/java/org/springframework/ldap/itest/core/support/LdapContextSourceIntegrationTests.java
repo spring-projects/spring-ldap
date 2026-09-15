@@ -40,7 +40,6 @@ import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Integration tests for LdapContextSource.
@@ -150,12 +149,9 @@ public class LdapContextSourceIntegrationTests extends AbstractLdapTemplateInteg
 		DirContext ctx = null;
 		try {
 			ctx = this.tested.getContext(results.get(0), "password");
-			assertThat(true).isTrue();
-		}
-		catch (Exception ex) {
-			fail("Authentication failed");
 		}
 		finally {
+			assertThat(ctx).isNotNull();
 			LdapUtils.closeContext(ctx);
 		}
 	}

@@ -38,7 +38,7 @@ import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Tests the modification methods (rebind and modifyAttributes) of LdapTemplate. It also
@@ -153,13 +153,8 @@ public class LdapTemplateModifyITests extends AbstractLdapTemplateIntegrationTes
 		ModificationItem[] mods = new ModificationItem[1];
 		mods[0] = new ModificationItem(DirContext.ADD_ATTRIBUTE, attr);
 
-		try {
-			this.tested.modifyAttributes(PERSON4_DN, mods);
-			fail("AttributeInUseException expected");
-		}
-		catch (AttributeInUseException expected) {
-			// expected
-		}
+		assertThatExceptionOfType(AttributeInUseException.class)
+			.isThrownBy(() -> this.tested.modifyAttributes(PERSON4_DN, mods));
 	}
 
 	/**
