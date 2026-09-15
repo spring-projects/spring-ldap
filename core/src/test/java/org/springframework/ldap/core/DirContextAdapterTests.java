@@ -1575,4 +1575,28 @@ public class DirContextAdapterTests {
 		assertThat(items).hasSize(2);
 	}
 
+	@Test
+	public void testEnsureThenRemoveMemberRemovesIt() throws Exception {
+		// The directory renders the members with a space after the comma.
+		BasicAttributes attrs = new BasicAttributes();
+		BasicAttribute member = new BasicAttribute("member");
+		member.add("cn=John Doe, ou=People");
+		member.add("cn=Jane Doe, ou=People");
+		attrs.put(member);
+		DirContextAdapter adapter = new DirContextAdapter(attrs, DUMMY_NAME);
+		adapter.setUpdateMode(true);
+
+		// An idempotent add of a member the entry already holds, then a removal of it.
+		adapter.addAttributeValue("member", LdapUtils.newLdapName("cn=John Doe,ou=People"));
+		adapter.removeAttributeValue("member", LdapUtils.newLdapName("cn=John Doe,ou=People"));
+
+		ModificationItem[] items = adapter.getModificationItems();
+		assertThat(items.length).isEqualTo(1);
+		assertThat(items[0].getModificationOp()).isEqualTo(DirContext.REMOVE_ATTRIBUTE);
+		Attribute removed = items[0].getAttribute();
+		assertThat(removed.getID()).isEqualTo("member");
+		assertThat(removed.size()).isEqualTo(1);
+		assertThat(removed.get()).isEqualTo("cn=John Doe, ou=People");
+	}
+
 }
