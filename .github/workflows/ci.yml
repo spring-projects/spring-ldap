@@ -3,7 +3,6 @@ name: CI
 on:
   push:
     branches:
-      - "main"
       - "*.x"
       - "release/**"
   schedule:
@@ -15,8 +14,10 @@ permissions:
 
 env:
   JAVA_VERSION: '25'
-  ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
-  ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+  ARTIFACTORY_USERNAME: ${{ secrets.COMMERCIAL_ARTIFACTORY_USERNAME }}
+  ARTIFACTORY_PASSWORD: ${{ secrets.COMMERCIAL_ARTIFACTORY_PASSWORD }}
+  ORG_GRADLE_PROJECT_artifactoryUsername: ${{ secrets.COMMERCIAL_ARTIFACTORY_USERNAME }}
+  ORG_GRADLE_PROJECT_artifactoryPassword: ${{ secrets.COMMERCIAL_ARTIFACTORY_PASSWORD }}
 
 jobs:
   compute-version:
@@ -41,7 +42,7 @@ jobs:
   test:
     name: Test Against Snapshots
     needs: [ compute-version ]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu22-2-8
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: spring-io/spring-security-actions/test@7b123d42b18f8e52c1925c5eecc3e217bfe3b31b  # 0.0.2
@@ -52,7 +53,7 @@ jobs:
     name: Build and Deploy
     needs: [ test, compute-version ]
     if: needs.compute-version.outputs.snapshot == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu22-2-8
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: spring-io/spring-security-actions/build@7b123d42b18f8e52c1925c5eecc3e217bfe3b31b  # 0.0.2
@@ -69,17 +70,3 @@ jobs:
           project: ${{ needs.compute-version.outputs.repository-project }}
           local-repository: build/publications/repos
           artifact-path: org/springframework/ldap/spring-ldap-core
-  deploy-schema:
-    name: Deploy Schema
-    needs: [ test, compute-version ]
-    if: needs.compute-version.outputs.snapshot == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ./.github/actions/deploy-schema
-        with:
-          java-version: ${{ env.JAVA_VERSION }}
-        env:
-          DOCS_SSH_KEY: ${{ secrets.DOCS_SSH_KEY }}
-          DOCS_USERNAME: ${{ secrets.DOCS_USERNAME }}
-          DOCS_HOST: ${{ secrets.DOCS_HOST }}
