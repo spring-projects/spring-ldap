@@ -40,7 +40,7 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.mock;
 import static org.mockito.BDDMockito.verify;
@@ -157,11 +157,12 @@ public class ContextSourceTransactionManagerTests {
 		UncategorizedLdapException connectException = new UncategorizedLdapException("dummy");
 		given(unconnectableContextSourceMock.getReadWriteContext()).willThrow(connectException);
 
-		try {
-			// Create an outer transaction
-			final PlatformTransactionManager txMgrOuter = new DataSourceTransactionManager(dataSourceMock);
+		// Create an outer transaction
+		final PlatformTransactionManager txMgrOuter = new DataSourceTransactionManager(dataSourceMock);
 
-			final TransactionStatus txOuter = txMgrOuter.getTransaction(new DefaultTransactionDefinition());
+		final TransactionStatus txOuter = txMgrOuter.getTransaction(new DefaultTransactionDefinition());
+
+		assertThatExceptionOfType(CannotCreateTransactionException.class).isThrownBy(() -> {
 
 			try {
 				// Create inner transaction (not nested, though: unrelated data
@@ -191,11 +192,7 @@ public class ContextSourceTransactionManagerTests {
 				throw ex;
 			}
 
-			fail("Exception should be thrown");
-		}
-		catch (CannotCreateTransactionException expected) {
-			assertThat(expected.getCause()).as("Should be thrown exception").isSameAs(connectException);
-		}
+		}).havingCause().isSameAs(connectException);
 
 		verify(connectionMock).rollback();
 	}
