@@ -145,7 +145,9 @@ public class TestContextSourceFactoryBean extends AbstractFactoryBean {
 	}
 
 	protected void destroyInstance(@Nullable Object instance) throws Exception {
-		super.destroyInstance(instance);
+		if (instance != null) {
+			super.destroyInstance(instance);
+		}
 		LdapTestUtils.shutdownEmbeddedServer();
 	}
 
