@@ -3,6 +3,6 @@ runs:
   using: composite
   steps:
     - name: Test Release
-      uses: spring-io/spring-security-actions/run-gradle@83ac497c6ab54014e51de86ef3addfa3d4c268db  # main
+      uses: spring-io/spring-security-actions/run-gradle@7b123d42b18f8e52c1925c5eecc3e217bfe3b31b  # 0.0.2
       with:
         gradle-args: build

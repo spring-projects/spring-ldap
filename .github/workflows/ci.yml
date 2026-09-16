@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: spring-io/spring-security-actions/test@15a5e9ef75eee29c39237c6821939a04e43a4b11  # main
+      - uses: spring-io/spring-security-actions/test@7b123d42b18f8e52c1925c5eecc3e217bfe3b31b  # 0.0.2
         with:
           java-version: ${{ env.JAVA_VERSION }}
           gradle-args: -Psnapshot -PtestToolchain=17
@@ -54,11 +54,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: spring-io/spring-security-actions/build@15a5e9ef75eee29c39237c6821939a04e43a4b11  # main
+      - uses: spring-io/spring-security-actions/build@7b123d42b18f8e52c1925c5eecc3e217bfe3b31b  # 0.0.2
         with:
           java-version: ${{ env.JAVA_VERSION }}
       - name: Deploy Artifacts
-        uses: spring-io/spring-security-actions/ensure-artifacts@15a5e9ef75eee29c39237c6821939a04e43a4b11
+        uses: spring-io/spring-security-actions/ensure-artifacts@7b123d42b18f8e52c1925c5eecc3e217bfe3b31b  # 0.0.2
         with:
           version: ${{ needs.compute-version.outputs.version }}
           username: ${{ env.ARTIFACTORY_USERNAME }}
