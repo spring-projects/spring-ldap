@@ -33,7 +33,7 @@ class SpringModulePlugin extends AbstractSpringJavaPlugin {
 		PluginManager pluginManager = project.getPluginManager();
 		pluginManager.apply(JavaLibraryPlugin.class)
 		pluginManager.apply(SpringMavenPlugin.class);
-		pluginManager.apply("io.spring.convention.jacoco");
+		pluginManager.apply(org.springframework.gradle.jacoco.SpringJacocoPlugin);
 
 		project.tasks.withType(Jar) {
 			from(project.rootProject.files('LICENSE.txt')) {
