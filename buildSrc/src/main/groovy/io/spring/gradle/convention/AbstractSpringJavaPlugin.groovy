@@ -23,7 +23,6 @@ import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.PluginManager
 import org.gradle.plugins.ide.eclipse.EclipseWtpPlugin
 import org.gradle.plugins.ide.idea.IdeaPlugin
-import org.springframework.gradle.CopyPropertiesPlugin
 import org.springframework.gradle.propdeps.PropDepsEclipsePlugin
 import org.springframework.gradle.propdeps.PropDepsIdeaPlugin
 import org.springframework.gradle.propdeps.PropDepsPlugin
@@ -51,9 +50,9 @@ public abstract class AbstractSpringJavaPlugin implements Plugin<Project> {
 		pluginManager.apply(PropDepsIdeaPlugin);
 		pluginManager.apply("io.spring.convention.tests-configuration");
 		pluginManager.apply("io.spring.convention.integration-test");
-		pluginManager.apply("io.spring.convention.javadoc-options");
+		pluginManager.apply(org.springframework.gradle.docs.SpringJavadocOptionsPlugin);
 		pluginManager.apply("io.spring.convention.checkstyle");
-		pluginManager.apply(CopyPropertiesPlugin);
+		pluginManager.apply(org.springframework.gradle.properties.SpringCopyPropertiesPlugin);
 
 		pluginManager.apply(org.springframework.gradle.SpringJarManifestPlugin)
 		pluginManager.apply(org.springframework.gradle.SpringReproducibleBuildPlugin)
