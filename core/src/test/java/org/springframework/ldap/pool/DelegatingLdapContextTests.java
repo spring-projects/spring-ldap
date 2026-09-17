@@ -24,7 +24,8 @@ import org.apache.commons.pool.KeyedObjectPool;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -37,21 +38,10 @@ public class DelegatingLdapContextTests extends AbstractPoolTestCase {
 
 	@Test
 	public void testConstructorAssertions() {
-		try {
-			new DelegatingLdapContext(keyedObjectPoolMock, null, DirContextType.READ_ONLY);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
-
-		try {
-			new DelegatingLdapContext(keyedObjectPoolMock, ldapContextMock, null);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatIllegalArgumentException()
+			.isThrownBy(() -> new DelegatingLdapContext(keyedObjectPoolMock, null, DirContextType.READ_ONLY));
+		assertThatIllegalArgumentException()
+			.isThrownBy(() -> new DelegatingLdapContext(keyedObjectPoolMock, ldapContextMock, null));
 	}
 
 	@Test
@@ -93,14 +83,7 @@ public class DelegatingLdapContextTests extends AbstractPoolTestCase {
 
 		final LdapContext innerDelegateContext2closed = delegatingLdapContext2.getInnermostDelegateLdapContext();
 		assertThat(innerDelegateContext2closed).isNull();
-
-		try {
-			delegatingLdapContext2.assertOpen();
-			fail("delegatingLdapContext2.assertOpen() should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingLdapContext2.assertOpen());
 
 		// Close the outer wrapper
 		delegatingLdapContext.close();
@@ -110,14 +93,7 @@ public class DelegatingLdapContextTests extends AbstractPoolTestCase {
 
 		final LdapContext innerDelegateLdapContextClosed = delegatingLdapContext.getInnermostDelegateLdapContext();
 		assertThat(innerDelegateLdapContextClosed).isNull();
-
-		try {
-			delegatingLdapContext.assertOpen();
-			fail("delegatingLdapContext.assertOpen() should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingLdapContext.assertOpen());
 
 		verify(secondKeyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, ldapContextMock);
 		verify(keyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, ldapContextMock);
@@ -162,28 +138,12 @@ public class DelegatingLdapContextTests extends AbstractPoolTestCase {
 	public void testUnsupportedMethods() throws Exception {
 		final DelegatingLdapContext delegatingLdapContext = new DelegatingLdapContext(keyedObjectPoolMock,
 				ldapContextMock, DirContextType.READ_ONLY);
-
-		try {
-			delegatingLdapContext.newInstance(null);
-			fail("DelegatingLdapContext.newInstance Should have thrown an UnsupportedOperationException");
-		}
-		catch (UnsupportedOperationException uoe) {
-			// Expected
-		}
-		try {
-			delegatingLdapContext.reconnect(null);
-			fail("DelegatingLdapContext.reconnect Should have thrown an UnsupportedOperationException");
-		}
-		catch (UnsupportedOperationException uoe) {
-			// Expected
-		}
-		try {
-			delegatingLdapContext.setRequestControls(null);
-			fail("DelegatingLdapContext.setRequestControls Should have thrown an UnsupportedOperationException");
-		}
-		catch (UnsupportedOperationException uoe) {
-			// Expected
-		}
+		assertThatExceptionOfType(UnsupportedOperationException.class)
+			.isThrownBy(() -> delegatingLdapContext.newInstance(null));
+		assertThatExceptionOfType(UnsupportedOperationException.class)
+			.isThrownBy(() -> delegatingLdapContext.reconnect(null));
+		assertThatExceptionOfType(UnsupportedOperationException.class)
+			.isThrownBy(() -> delegatingLdapContext.setRequestControls(null));
 	}
 
 	// nice
@@ -205,34 +165,11 @@ public class DelegatingLdapContextTests extends AbstractPoolTestCase {
 
 		delegatingLdapContext.close();
 
-		try {
-			delegatingLdapContext.extendedOperation(null);
-			fail("DelegatingLdapContext.extendedOperation should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingLdapContext.getConnectControls();
-			fail("DelegatingLdapContext.getConnectControls should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingLdapContext.getRequestControls();
-			fail("DelegatingLdapContext.getRequestControls should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingLdapContext.getResponseControls();
-			fail("DelegatingLdapContext.getResponseControls should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingLdapContext.extendedOperation(null));
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingLdapContext.getConnectControls());
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingLdapContext.getRequestControls());
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingLdapContext.getResponseControls());
 
 		verify(keyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, ldapContextMock);
 	}
