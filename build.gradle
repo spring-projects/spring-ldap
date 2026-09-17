@@ -30,11 +30,6 @@ description = "Spring LDAP"
 
 ext.coreModules = subprojects.findAll { p-> (!p.name.contains("test") && !p.name.contains("sample") && !p.name.contains("sandbox")) || p.name.contains("spring-ldap-test") }
 
-nohttp {
-	source.exclude "buildSrc/build/**"
-}
-
-
 antora {
     options = [clean: true, fetch: !project.gradle.startParameter.offline, stacktrace: true]
     environment = [
