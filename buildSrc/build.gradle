@@ -51,10 +51,6 @@ gradlePlugin {
             id = "locks"
             implementationClass = "lock.GlobalLockPlugin"
         }
-        managementConfiguration {
-            id = "io.spring.convention.management-configuration"
-            implementationClass = "io.spring.gradle.convention.ManagementConfigurationPlugin"
-        }
         updateDependencies {
             id = "org.springframework.security.update-dependencies"
             implementationClass = "org.springframework.security.convention.versions.UpdateDependenciesPlugin"

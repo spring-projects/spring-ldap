@@ -6,6 +6,7 @@ dependencies {
     management platform(project(":spring-ldap-dependencies"))
     api project(":spring-ldap-core")
 
+    implementation "org.slf4j:slf4j-api"
 
     testImplementation platform('org.junit:junit-bom')
     testImplementation "org.assertj:assertj-core"
