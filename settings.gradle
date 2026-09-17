@@ -38,11 +38,7 @@ include 'test/integration-tests-ad'
 
 rootProject.children.each { p->
     def name = p.name
-    def isSample = name.contains("sample")
     name = name.replaceFirst(".*?/","")
-    if(isSample && !name.contains("sample")) {
-        name += "-sample"
-    }
     p.name = "spring-ldap-" + name
 }
 
