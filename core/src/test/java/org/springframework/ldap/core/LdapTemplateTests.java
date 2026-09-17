@@ -54,6 +54,7 @@ import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.ldap.support.LdapUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -1903,6 +1904,18 @@ public class LdapTemplateTests {
 
 		assertThat(result).isFalse();
 		verify(this.dirContextMock).close();
+	}
+
+	@Test
+	public void testWhenContextSourceIsNullThenThrowsIllegalArgumentException() {
+
+		assertThatIllegalArgumentException().isThrownBy(() -> new LdapTemplate(null))
+			.withMessage("contextSource cannot be null");
+
+		assertThatIllegalArgumentException().isThrownBy(() -> {
+			LdapTemplate template = new LdapTemplate();
+			template.setContextSource(null);
+		}).withMessage("contextSource cannot be null");
 	}
 
 	private void noSearchResults(SearchControls controls) throws Exception {
