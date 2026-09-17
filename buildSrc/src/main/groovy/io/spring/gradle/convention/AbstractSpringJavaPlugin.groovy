@@ -23,9 +23,9 @@ import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.PluginManager
 import org.gradle.plugins.ide.eclipse.EclipseWtpPlugin
 import org.gradle.plugins.ide.idea.IdeaPlugin
-import org.springframework.gradle.propdeps.PropDepsEclipsePlugin
-import org.springframework.gradle.propdeps.PropDepsIdeaPlugin
-import org.springframework.gradle.propdeps.PropDepsPlugin
+import org.springframework.gradle.propdeps.SpringPropDepsEclipsePlugin
+import org.springframework.gradle.propdeps.SpringPropDepsIdeaPlugin
+import org.springframework.gradle.propdeps.SpringPropDepsPlugin
 
 /**
  * @author Rob Winch
@@ -36,7 +36,7 @@ public abstract class AbstractSpringJavaPlugin implements Plugin<Project> {
 	public final void apply(Project project) {
 		PluginManager pluginManager = project.getPluginManager();
 		pluginManager.apply(JavaPlugin.class);
-		pluginManager.apply(ManagementConfigurationPlugin.class)
+		pluginManager.apply(org.springframework.gradle.management.SpringManagementConfigurationPlugin)
 		if (project.file("src/main/groovy").exists()
 				|| project.file("src/test/groovy").exists()
 				|| project.file("src/integration-test/groovy").exists()) {
@@ -45,9 +45,9 @@ public abstract class AbstractSpringJavaPlugin implements Plugin<Project> {
 		pluginManager.apply("io.spring.convention.repository");
 		pluginManager.apply(EclipseWtpPlugin);
 		pluginManager.apply(IdeaPlugin);
-		pluginManager.apply(PropDepsPlugin);
-		pluginManager.apply(PropDepsEclipsePlugin);
-		pluginManager.apply(PropDepsIdeaPlugin);
+		pluginManager.apply(SpringPropDepsPlugin);
+		pluginManager.apply(SpringPropDepsEclipsePlugin);
+		pluginManager.apply(SpringPropDepsIdeaPlugin);
 		pluginManager.apply("io.spring.convention.tests-configuration");
 		pluginManager.apply("io.spring.convention.integration-test");
 		pluginManager.apply(org.springframework.gradle.docs.SpringJavadocOptionsPlugin);

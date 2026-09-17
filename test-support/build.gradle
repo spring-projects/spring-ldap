@@ -12,6 +12,7 @@ dependencies {
     api "org.springframework:spring-test"
 
     implementation "com.google.code.typica:typica"
+    implementation "org.slf4j:slf4j-api"
 
     optional "org.apache.directory.server:apacheds-core-entry"
     optional "org.apache.directory.server:apacheds-core"
