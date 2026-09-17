@@ -23,7 +23,7 @@ import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.testing.Test
 import org.gradle.plugins.ide.eclipse.EclipsePlugin
 import org.gradle.plugins.ide.idea.IdeaPlugin
-import org.springframework.gradle.propdeps.PropDepsPlugin
+import org.springframework.gradle.propdeps.SpringPropDepsPlugin
 
 /**
  *
@@ -105,7 +105,7 @@ public class IntegrationTestPlugin implements Plugin<Project> {
 			}
 		}
 
-		project.plugins.withType(PropDepsPlugin) {
+		project.plugins.withType(SpringPropDepsPlugin) {
 			project.configurations {
 				integrationTestCompile {
 					extendsFrom optional, provided
