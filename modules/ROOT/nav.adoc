@@ -1,4 +1,5 @@
 * xref:index.adoc[]
+* xref:getting-spring-ldap.adoc[]
 * xref:preface.adoc[]
 * xref:introduction.adoc[]
 * xref:whats-new.adoc[]
@@ -18,3 +19,4 @@
 * xref:utilities.adoc[]
 * xref:testing.adoc[]
 * xref:faq.adoc[]
+* xref:observability.adoc[]

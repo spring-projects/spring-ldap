@@ -1,5 +1,6 @@
 [[query-builder-advanced]]
 = Advanced LDAP Queries
+:listing-caption: Example
 
 This section covers various how to use LDAP queries with Spring LDAP.
 
@@ -20,7 +21,6 @@ An `LdapQueryBuilder` is created with a call to the `query` method of `LdapQuery
 The following query searches for all entries with an object class of `Person`:
 
 .Search for all entries with object class `Person`
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -32,12 +32,10 @@ List<Person> persons = ldapClient.search()
       .map(new PersonAttributesMapper()).list();
 
 ----
-====
 
 The following query searches for all entries with an object class of `person` and a `cn` (common name) of `John Doe`:
 
 .Search for all entries with object class `person` and `cn=John Doe`
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -48,12 +46,10 @@ List<Person> persons = ldapClient.search()
       .query(query().where("objectclass").is("person").and("cn").is("John Doe"))
       .map(new PersonAttributesMapper()).list();
 ----
-====
 
 The following query searches for all entries with an object class of `person` and starting at a `dc` (domain component) of `dc=261consulting,dc=com`:
 
 .Search for all entries with object class `person` starting at `dc=261consulting,dc=com`
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -64,13 +60,11 @@ List<Person> persons = ldapClient.search()
       .query(query().base("dc=261consulting,dc=com").where("objectclass").is("person"))
       .map(new PersonAttributesMapper()).list();
 ----
-====
 
 The following query returns the `cn` (common name) attribute for all entries with an object class of `person` and starting at a `dc` (domain component) of `dc=261consulting,dc=com`:
 
 
 .Search for all entries with class `Person` starting at `dc=261consulting,dc=com`, returning only the `cn` attribute
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -84,12 +78,10 @@ Stream<Person> persons = ldapClient.search()
       .map(new PersonAttributesMapper()).stream();
 
 ----
-====
 
 The following query uses `or` to search for multiple spellings of a common name (`cn`):
 
 .Search with `or` criteria
-====
 [source,java,subs="verbatim,quotes"]
 ----
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
@@ -99,7 +91,6 @@ Stream<Person> persons = ldapClient.search()
              .and(query().where("cn").is("Doe").or("cn").is("Doo"))
       .map(new PersonAttributesMapper()).stream();
 ----
-====
 
 [[filter-criteria]]
 == Filter Criteria
