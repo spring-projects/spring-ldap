@@ -1,0 +1,63 @@
+[versions]
+org-springframework = "7.0.9"
+org-junit = "6.1.3"
+com-querydsl = "5.1.0"
+org-mockito = "5.23.0"
+org-aspectj = "1.9.25.1"
+org-slf4j = "2.0.19"
+org-apache-directory-server = "1.5.5"
+io-micrometer = "1.17.1"
+io-micrometer-tracing = "1.7.1"
+io-spring-javaformat = "0.0.48"
+
+[libraries]
+org-springframework-spring-framework-bom = { module = "org.springframework:spring-framework-bom", version.ref = "org-springframework" }
+org-junit-junit-bom = { module = "org.junit:junit-bom", version.ref = "org-junit" }
+org-mockito-mockito-bom = { module = "org.mockito:mockito-bom", version.ref = "org-mockito" }
+org-slf4j-slf4j-bom = { module = "org.slf4j:slf4j-bom", version.ref = "org-slf4j" }
+io-micrometer-micrometer-bom = { module = "io.micrometer:micrometer-bom", version.ref = "io-micrometer" }
+io-micrometer-micrometer-tracing-bom = { module = "io.micrometer:micrometer-tracing-bom", version.ref = "io-micrometer-tracing" }
+
+com-querydsl-querydsl-core = { module = "com.querydsl:querydsl-core", version.ref = "com-querydsl" }
+com-querydsl-querydsl-apt = { module = "com.querydsl:querydsl-apt", version.ref = "com-querydsl" }
+commons-pool-commons-pool = "commons-pool:commons-pool:1.6"
+org-apache-commons-commons-pool2 = "org.apache.commons:commons-pool2:2.13.1"
+com-google-code-typica-typica = "com.google.code.typica:typica:1.7.2"
+com-unboundid-unboundid-ldapsdk = "com.unboundid:unboundid-ldapsdk:7.0.5"
+commons-codec-commons-codec = "commons-codec:commons-codec:1.22.1"
+commons-cli-commons-cli = "commons-cli:commons-cli:1.11.0"
+commons-lang-commons-lang = "commons-lang:commons-lang:2.6"
+commons-logging-commons-logging = "commons-logging:commons-logging:1.4.0"
+gsbase-gsbase = "gsbase:gsbase:2.0.1"
+jdepend-jdepend = "jdepend:jdepend:2.9.1"
+ldapsdk-ldapsdk = "ldapsdk:ldapsdk:4.1"
+org-apache-directory-server-apacheds-core-entry = { module = "org.apache.directory.server:apacheds-core-entry", version.ref = "org-apache-directory-server" }
+org-apache-directory-server-apacheds-core = { module = "org.apache.directory.server:apacheds-core", version.ref = "org-apache-directory-server" }
+org-apache-directory-server-apacheds-protocol-ldap = { module = "org.apache.directory.server:apacheds-protocol-ldap", version.ref = "org-apache-directory-server" }
+org-apache-directory-server-apacheds-protocol-shared = { module = "org.apache.directory.server:apacheds-protocol-shared", version.ref = "org-apache-directory-server" }
+org-apache-directory-server-apacheds-server-jndi = { module = "org.apache.directory.server:apacheds-server-jndi", version.ref = "org-apache-directory-server" }
+org-apache-directory-shared-shared-ldap = "org.apache.directory.shared:shared-ldap:0.9.15"
+org-aspectj-aspectjrt = { module = "org.aspectj:aspectjrt", version.ref = "org-aspectj" }
+org-aspectj-aspectjweaver = { module = "org.aspectj:aspectjweaver", version.ref = "org-aspectj" }
+org-assertj-assertj-core = "org.assertj:assertj-core:3.27.7"
+org-freemarker-freemarker = "org.freemarker:freemarker:2.3.35"
+org-hibernate-hibernate-core-jakarta = "org.hibernate:hibernate-core-jakarta:5.6.15.Final"
+org-hsqldb-hsqldb = "org.hsqldb:hsqldb:2.7.4"
+junit-junit = "junit:junit:4.13.2"
+org-mockito-mockito-core = { module = "org.mockito:mockito-core", version.ref = "org-mockito" }
+org-mockito-mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "org-mockito" }
+org-slf4j-jcl-over-slf4j = { module = "org.slf4j:jcl-over-slf4j", version.ref = "org-slf4j" }
+org-slf4j-log4j-over-slf4j = { module = "org.slf4j:log4j-over-slf4j", version.ref = "org-slf4j" }
+org-slf4j-slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "org-slf4j" }
+org-slf4j-slf4j-log4j12 = { module = "org.slf4j:slf4j-log4j12", version.ref = "org-slf4j" }
+log4j-log4j = "log4j:log4j:1.2.17"
+com-sun-ldapbp = "com.sun:ldapbp:1.0"
+
+# buildSrc dependencies
+org-gretty-gretty = "org.gretty:gretty:5.0.2"
+io-spring-javaformat-spring-javaformat-gradle-plugin = { module = "io.spring.javaformat:spring-javaformat-gradle-plugin", version.ref = "io-spring-javaformat" }
+io-spring-gradle-spring-security-project-plugin = "io.spring.gradle:spring-security-project-plugin:1.0.19"
+io-spring-nohttp-nohttp-gradle = "io.spring.nohttp:nohttp-gradle:0.0.11"
+org-sonarsource-scanner-gradle-sonarqube-gradle-plugin = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:7.4.0.8496"
+org-springframework-spring-core = "org.springframework:spring-core:7.0.9"
+org-apache-commons-commons-io = "org.apache.commons:commons-io:1.3.2"
