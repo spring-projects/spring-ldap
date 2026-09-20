@@ -9,7 +9,7 @@ dependencies {
     implementation "commons-pool:commons-pool"
 
     provided "org.springframework:spring-jdbc"
-    provided "com.sun:ldapbp:1.0"
+    provided "com.sun:ldapbp"
 
     testImplementation "org.springframework:spring-aop"
     testImplementation "gsbase:gsbase"

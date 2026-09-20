@@ -13,7 +13,7 @@ dependencies {
 
     implementation "org.slf4j:slf4j-api"
 
-    provided "com.sun:ldapbp:1.0"
+    provided "com.sun:ldapbp"
 
     optional "org.springframework:spring-context"
     optional "org.springframework:spring-jdbc"

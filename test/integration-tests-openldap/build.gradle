@@ -13,7 +13,7 @@ dependencies {
     testImplementation "org.springframework:spring-aop"
     testImplementation "org.springframework:spring-test"
     testImplementation "gsbase:gsbase"
-    testImplementation "com.sun:ldapbp:1.0"
+    testImplementation "com.sun:ldapbp"
     testImplementation "org.slf4j:slf4j-log4j12"
     testImplementation "org.assertj:assertj-core"
     testImplementation "org.junit.jupiter:junit-jupiter-engine"
