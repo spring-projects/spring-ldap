@@ -51,7 +51,7 @@ public abstract class AbstractSpringJavaPlugin implements Plugin<Project> {
 		pluginManager.apply("io.spring.convention.tests-configuration");
 		pluginManager.apply("io.spring.convention.integration-test");
 		pluginManager.apply(org.springframework.gradle.docs.SpringJavadocOptionsPlugin);
-		pluginManager.apply("io.spring.convention.checkstyle");
+		pluginManager.apply(org.springframework.gradle.checkstyle.SpringJavaCheckstylePlugin);
 		pluginManager.apply(org.springframework.gradle.properties.SpringCopyPropertiesPlugin);
 
 		pluginManager.apply(org.springframework.gradle.SpringJarManifestPlugin)
