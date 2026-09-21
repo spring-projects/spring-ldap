@@ -39,7 +39,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.ldap.support.LdapUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 /**
  * Tests the DirContextAdapter class.
@@ -181,13 +181,7 @@ public class DirContextAdapterTests {
 
 		}
 		this.tested = new TestableDirContextAdapter();
-		try {
-			this.tested.getStringAttributes("abc");
-			fail("ClassCastException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatIllegalArgumentException().isThrownBy(() -> this.tested.getStringAttributes("abc"));
 	}
 
 	@Test
