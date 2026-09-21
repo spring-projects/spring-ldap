@@ -12,7 +12,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    if: github.repository == 'spring-projects/spring-ldap'
+    if: github.event.pull_request.head.repo.fork == false && github.actor != 'dependabot[bot]'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: spring-io/spring-security-actions/pr-build@7b123d42b18f8e52c1925c5eecc3e217bfe3b31b  # 0.0.2
