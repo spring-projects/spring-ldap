@@ -15,10 +15,17 @@ permissions:
 
 env:
   JAVA_VERSION: '25'
-  ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
-  ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+  ARTIFACTORY_USERNAME: ${{ vars.INTERNAL_CI && secrets.COMMERCIAL_ARTIFACTORY_USERNAME || secrets.ARTIFACTORY_USERNAME }}
+  ARTIFACTORY_PASSWORD: ${{ vars.INTERNAL_CI && secrets.COMMERCIAL_ARTIFACTORY_PASSWORD || secrets.ARTIFACTORY_PASSWORD }}
 
 jobs:
+  compute-runner:
+    name: Compute Runner
+    runs-on: ubuntu-latest
+    outputs:
+      runs-on: ${{ vars.INTERNAL_CI && 'ubuntu22-2-8' || 'ubuntu-latest' }}
+    steps:
+      - run: echo "noop"
   compute-version:
     name: Compute Version
     runs-on: ubuntu-latest
@@ -73,7 +80,8 @@ jobs:
           reason: the DOCS_HOST secret is -not configured
   test:
     name: Test Against Snapshots
-    runs-on: ubuntu-latest
+    needs: compute-runner
+    runs-on: ${{ needs.compute-runner.outputs.runs-on }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: spring-io/spring-security-actions/test@7b123d42b18f8e52c1925c5eecc3e217bfe3b31b  # 0.0.2
@@ -82,9 +90,9 @@ jobs:
           gradle-args: -Psnapshot -PtestToolchain=${{ env.JAVA_VERSION }}
   deploy-artifacts:
     name: Deploy Artifacts
-    needs: [ compute-version, compute-artifact-repository, artifacts-gate ]
+    needs: [ compute-runner, compute-version, compute-artifact-repository, artifacts-gate ]
     if: needs.artifacts-gate.outputs.gate == 'open'
-    runs-on: ubuntu-latest
+    runs-on: ${{ needs.compute-runner.outputs.runs-on }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: spring-io/spring-security-actions/build@7b123d42b18f8e52c1925c5eecc3e217bfe3b31b  # 0.0.2
@@ -103,9 +111,9 @@ jobs:
           artifact-path: org/springframework/ldap/spring-ldap-core
   deploy-schema:
     name: Deploy Schema
-    needs: [ compute-version, deploy-artifacts, schema-gate ]
+    needs: [ compute-runner, compute-version, deploy-artifacts, schema-gate ]
     if: needs.schema-gate.outputs.gate == 'open'
-    runs-on: ubuntu-latest
+    runs-on: ${{ needs.compute-runner.outputs.runs-on }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/deploy-schema
