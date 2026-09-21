@@ -7,15 +7,17 @@ permissions:
 
 env:
   JAVA_VERSION: '25'
+  ORG_GRADLE_PROJECT_artifactoryUsername: ${{ vars.INTERNAL_CI && secrets.ARTIFACTORY_RO_USERNAME }}
+  ORG_GRADLE_PROJECT_artifactoryPassword: ${{ vars.INTERNAL_CI && secrets.ARTIFACTORY_RO_PASSWORD }}
 
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.INTERNAL_CI && 'ubuntu22-2-8' || 'ubuntu-latest' }}
     if: github.actor == 'dependabot[bot]'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: spring-io/spring-security-actions/pr-build@7b123d42b18f8e52c1925c5eecc3e217bfe3b31b  # 0.0.2
+      - uses: spring-io/spring-security-actions/pr-build@96df48300f5fa058d0765832d48a534cc6a378d5 # 0.0.3
         with:
           java-version: ${{ env.JAVA_VERSION }}
   build-check:

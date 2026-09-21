@@ -15,8 +15,10 @@ permissions:
 
 env:
   JAVA_VERSION: '25'
-  ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
-  ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+  ARTIFACTORY_USERNAME: ${{ vars.INTERNAL_CI && secrets.COMMERCIAL_ARTIFACTORY_USERNAME || secrets.ARTIFACTORY_USERNAME }}
+  ARTIFACTORY_PASSWORD: ${{ vars.INTERNAL_CI && secrets.COMMERCIAL_ARTIFACTORY_PASSWORD || secrets.ARTIFACTORY_PASSWORD }}
+  ORG_GRADLE_PROJECT_artifactoryUsername: ${{ vars.INTERNAL_CI && secrets.COMMERCIAL_ARTIFACTORY_USERNAME }}
+  ORG_GRADLE_PROJECT_artifactoryPassword: ${{ vars.INTERNAL_CI && secrets.COMMERCIAL_ARTIFACTORY_PASSWORD }}
 
 jobs:
   compute-version:
@@ -25,58 +27,84 @@ jobs:
     outputs:
       version: ${{ steps.project-version.outputs.version }}
       snapshot: ${{ steps.project-version.outputs.snapshot }}
-      repository-uri: ${{ steps.artifact-repository.outputs.uri }}
-      repository-name: ${{ steps.artifact-repository.outputs.name }}
-      repository-project: ${{ steps.artifact-repository.outputs.project }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - id: project-version
         name: Extract Project Version
         uses: spring-io/spring-release-actions/compute-version@6795980b9d960a13d420e114d50f1c8abe730769 # 0.0.7
+  compute-artifact-repository:
+    name: Compute Artifact Repository
+    needs: compute-version
+    runs-on: ubuntu-latest
+    outputs:
+      uri: ${{ steps.artifact-repository.outputs.uri }}
+      name: ${{ steps.artifact-repository.outputs.name }}
+      project: ${{ steps.artifact-repository.outputs.project }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - id: artifact-repository
         name: Compute Artifact Repository
         uses: spring-io/spring-release-actions/compute-artifact-repository@6795980b9d960a13d420e114d50f1c8abe730769 # 0.0.7
         with:
-          version: ${{ steps.project-version.outputs.version }}
+          version: ${{ needs.compute-version.outputs.version }}
+  artifacts-gate:
+    name: Artifacts Gate
+    needs: compute-version
+    runs-on: ubuntu-latest
+    outputs:
+      gate: ${{ steps.gate.outputs.gate }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - id: gate
+        uses: ./.github/actions/gate
+        with:
+          condition: ${{ needs.compute-version.outputs.snapshot == 'true' }}
+          reason: it is -not a snapshot build
+  schema-gate:
+    name: Schema Gate
+    runs-on: ubuntu-latest
+    outputs:
+      gate: ${{ steps.gate.outputs.gate }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - id: gate
+        uses: ./.github/actions/gate
+        with:
+          condition: ${{ secrets.DOCS_HOST != '' }}
+          reason: the DOCS_HOST secret is -not configured
   test:
     name: Test Against Snapshots
-    needs: [ compute-version ]
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.INTERNAL_CI && 'ubuntu22-2-8' || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: spring-io/spring-security-actions/test@7b123d42b18f8e52c1925c5eecc3e217bfe3b31b  # 0.0.2
+      - uses: spring-io/spring-security-actions/test@96df48300f5fa058d0765832d48a534cc6a378d5 # 0.0.3
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          gradle-args: -Psnapshot -PtestToolchain=25
-  build-and-deploy:
-    name: Build and Deploy
-    needs: [ test, compute-version ]
-    if: needs.compute-version.outputs.snapshot == 'true'
-    runs-on: ubuntu-latest
+          gradle-args: -Psnapshot -PtestToolchain=${{ env.JAVA_VERSION }}
+  deploy:
+    name: Deploy
+    needs: [ compute-version, compute-artifact-repository, artifacts-gate, schema-gate ]
+    if: needs.artifacts-gate.outputs.gate == 'open'
+    runs-on: ${{ vars.INTERNAL_CI && 'ubuntu22-2-8' || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: spring-io/spring-security-actions/build@7b123d42b18f8e52c1925c5eecc3e217bfe3b31b  # 0.0.2
+      - uses: spring-io/spring-security-actions/build@96df48300f5fa058d0765832d48a534cc6a378d5 # 0.0.3
         with:
           java-version: ${{ env.JAVA_VERSION }}
       - name: Deploy Artifacts
-        uses: spring-io/spring-security-actions/ensure-artifacts@7b123d42b18f8e52c1925c5eecc3e217bfe3b31b  # 0.0.2
+        uses: spring-io/spring-security-actions/ensure-artifacts@96df48300f5fa058d0765832d48a534cc6a378d5 # 0.0.3
         with:
           version: ${{ needs.compute-version.outputs.version }}
           username: ${{ env.ARTIFACTORY_USERNAME }}
           password: ${{ env.ARTIFACTORY_PASSWORD }}
-          repository-uri: ${{ needs.compute-version.outputs.repository-uri }}
-          repository-name: ${{ needs.compute-version.outputs.repository-name }}
-          project: ${{ needs.compute-version.outputs.repository-project }}
+          repository-uri: ${{ needs.compute-artifact-repository.outputs.uri }}
+          repository-name: ${{ needs.compute-artifact-repository.outputs.name }}
+          project: ${{ needs.compute-artifact-repository.outputs.project }}
           local-repository: build/publications/repos
           artifact-path: org/springframework/ldap/spring-ldap-core
-  deploy-schema:
-    name: Deploy Schema
-    needs: [ test, compute-version ]
-    if: needs.compute-version.outputs.snapshot == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ./.github/actions/deploy-schema
+      - name: Deploy Schema
+        if: needs.schema-gate.outputs.gate == 'open'
+        uses: ./.github/actions/deploy-schema
         with:
           java-version: ${{ env.JAVA_VERSION }}
         env:
