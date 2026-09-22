@@ -21,13 +21,15 @@ jobs:
     name: Deploy Artifacts
     runs-on: ${{ inputs.runner }}
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Download Local Repository
         uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: local-repository
           path: build/publications/repos
       - id: secrets
+        name: Resolve Secret Names
         uses: ./.github/actions/compute-secrets
         with:
           release-channel: ${{ inputs.release-channel }}
