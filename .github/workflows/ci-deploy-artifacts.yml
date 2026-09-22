@@ -1,4 +1,4 @@
-name: Deploy Artifacts
+name: CI - Deploy Artifacts
 
 on:
   workflow_call:

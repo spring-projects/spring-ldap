@@ -1,4 +1,4 @@
-name: Build
+name: CI - Build
 
 on:
   workflow_call:
