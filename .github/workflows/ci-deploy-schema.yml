@@ -1,4 +1,4 @@
-name: Deploy Schema
+name: CI - Deploy Schema
 
 on:
   workflow_call:
