@@ -1,0 +1,33 @@
+name: Deploy Schema
+
+on:
+  workflow_call:
+    inputs:
+      java-version:
+        description: Java version to build the schema with
+        type: string
+        default: '17'
+      runner:
+        description: Runner to deploy on
+        type: string
+        default: ubuntu-latest
+
+jobs:
+  deploy-schema:
+    name: Deploy Schema
+    runs-on: ${{ inputs.runner }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up JDK ${{ inputs.java-version }}
+        uses: spring-io/spring-gradle-build-action@c8668747d7c264864c8c7f7026d0d277d14a78dc  # v2.0.6
+        with:
+          java-version: ${{ inputs.java-version }}
+          distribution: temurin
+      - name: Deploy Schema
+        run: |
+          ./gradlew deploySchema -PdeployDocsSshKey="$DOCS_SSH_KEY" -PdeployDocsSshUsername="$DOCS_USERNAME" -PdeployDocsHost="$DOCS_HOST" --stacktrace --info
+        env:
+          DOCS_SSH_KEY: ${{ secrets.DOCS_SSH_KEY }}
+          DOCS_USERNAME: ${{ secrets.DOCS_USERNAME }}
+          DOCS_HOST: ${{ secrets.DOCS_HOST }}
