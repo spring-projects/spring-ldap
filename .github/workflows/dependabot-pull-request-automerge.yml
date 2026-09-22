@@ -1,4 +1,4 @@
-name: Merge Dependabot PR
+name: Dependabot - Auto-merge PR
 
 on:
   pull_request:
