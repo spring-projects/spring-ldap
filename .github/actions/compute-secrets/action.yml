@@ -46,18 +46,18 @@ runs:
       env:
         CHANNEL: ${{ inputs.release-channel || steps.release-channel.outputs.channel }}
       run: |
-        if [[ "$CHANNEL" == 'internal' ]]; then
-          echo "dependencies-username=COMMERCIAL_ARTIFACTORY_USERNAME" >> "$GITHUB_OUTPUT"
-          echo "dependencies-password=COMMERCIAL_ARTIFACTORY_PASSWORD" >> "$GITHUB_OUTPUT"
-          echo "publishing-username=COMMERCIAL_ARTIFACTORY_USERNAME" >> "$GITHUB_OUTPUT"
-          echo "publishing-password=COMMERCIAL_ARTIFACTORY_PASSWORD" >> "$GITHUB_OUTPUT"
-          echo "dependabot-username=ARTIFACTORY_RO_USERNAME" >> "$GITHUB_OUTPUT"
-          echo "dependabot-password=ARTIFACTORY_RO_PASSWORD" >> "$GITHUB_OUTPUT"
-        else
+        if [[ "$CHANNEL" == 'oss' ]]; then
           echo "dependencies-username=" >> "$GITHUB_OUTPUT"
           echo "dependencies-password=" >> "$GITHUB_OUTPUT"
           echo "publishing-username=ARTIFACTORY_USERNAME" >> "$GITHUB_OUTPUT"
           echo "publishing-password=ARTIFACTORY_PASSWORD" >> "$GITHUB_OUTPUT"
           echo "dependabot-username=" >> "$GITHUB_OUTPUT"
           echo "dependabot-password=" >> "$GITHUB_OUTPUT"
+        else
+          echo "dependencies-username=COMMERCIAL_ARTIFACTORY_USERNAME" >> "$GITHUB_OUTPUT"
+          echo "dependencies-password=COMMERCIAL_ARTIFACTORY_PASSWORD" >> "$GITHUB_OUTPUT"
+          echo "publishing-username=COMMERCIAL_ARTIFACTORY_USERNAME" >> "$GITHUB_OUTPUT"
+          echo "publishing-password=COMMERCIAL_ARTIFACTORY_PASSWORD" >> "$GITHUB_OUTPUT"
+          echo "dependabot-username=ARTIFACTORY_RO_USERNAME" >> "$GITHUB_OUTPUT"
+          echo "dependabot-password=ARTIFACTORY_RO_PASSWORD" >> "$GITHUB_OUTPUT"
         fi
