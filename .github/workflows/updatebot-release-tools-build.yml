@@ -11,9 +11,10 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
     steps:
       - uses: actions/checkout@v7
-      - uses: spring-io/spring-security-release-tools/update-bot@491486cb49b06ccaefe7e9220ed5f7b81d89ce40 # main
+        with:
+          token: ${{ secrets.GH_ACTIONS_REPO_TOKEN }}
+      - uses: spring-io/spring-security-release-tools/update-bot@bdf695aa698da0eb03913457abbf8da98e9523b6 # 1.0.x
+        with:
+          token: ${{ secrets.GH_ACTIONS_REPO_TOKEN }}
