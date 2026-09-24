@@ -118,6 +118,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 * @param contextSource the ContextSource to use.
 	 */
 	public LdapTemplate(ContextSource contextSource) {
+		Assert.notNull(contextSource, "contextSource cannot be null");
 		this.contextSource = contextSource;
 	}
 
