@@ -1,6 +1,11 @@
 [[whats-new]]
 = What's New in Spring LDAP 4.2
 
+[[breaking-changes]]
+== Breaking Changes
+
+* `AttributeSchema` now https://github.com/spring-projects/spring-ldap/issues/1667[validates] that an attribute's LDAP name can be converted into a valid Java identifier.
+
 == Core
 
 * Added `LdapClient.Builder#dirContextPostProcessor` for post-processing a `DirContextAdapter`'s
