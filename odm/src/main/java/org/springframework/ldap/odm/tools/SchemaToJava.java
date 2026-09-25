@@ -263,7 +263,7 @@ public final class SchemaToJava {
 		ObjectSchema schema = reader.getObjectSchema(objectClasses);
 
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("Schema - %1$s", schema.toString()));
+			LOG.debug("Schema - {}", schema);
 		}
 
 		return schema;
@@ -294,7 +294,7 @@ public final class SchemaToJava {
 			out.flush();
 		}
 
-		LOG.debug(String.format("Writing java to: %1$s", outputFile.getAbsolutePath()));
+		LOG.debug("Writing java to: {}", outputFile.getAbsolutePath());
 
 		FileOutputStream outputStream = new FileOutputStream(outputFile);
 		Writer out = new OutputStreamWriter(outputStream);
@@ -320,7 +320,7 @@ public final class SchemaToJava {
 		File directory = new File(directoryPath);
 		File outputFile = new File(directory, className + ".java");
 
-		LOG.debug(String.format("Attempting to create output file at %1$s", outputFile.getAbsolutePath()));
+		LOG.debug("Attempting to create output file at {}", outputFile.getAbsolutePath());
 
 		try {
 			directory.mkdirs();

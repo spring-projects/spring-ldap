@@ -198,7 +198,7 @@ public abstract class AbstractFallbackRequestAndResponseControlDirContextProcess
 			}
 		}
 
-		this.log.info("No matching response control found - looking for '" + this.responseControlClass);
+		this.log.info("No matching response control found - looking for '{}'", this.responseControlClass);
 	}
 
 	/**

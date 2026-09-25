@@ -33,7 +33,7 @@ public final class GetFreePort {
 		int port = server.getLocalPort();
 		server.close();
 
-		LOG.debug(String.format("Port number: %1$s", port));
+		LOG.debug("Port number: {}", port);
 
 		return port;
 	}
