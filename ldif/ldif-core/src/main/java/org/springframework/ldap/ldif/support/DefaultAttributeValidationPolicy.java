@@ -336,7 +336,7 @@ public class DefaultAttributeValidationPolicy implements AttributeValidationPoli
 	 */
 	@Override
 	public Attribute parse(String buffer) {
-		log.trace("Parsing --> [" + buffer + "]");
+		log.trace("Parsing --> [{}]", buffer);
 
 		Matcher matcher = ATTRIBUTE_PATTERN.matcher(buffer);
 		if (matcher.matches()) {

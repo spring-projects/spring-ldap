@@ -196,7 +196,7 @@ public final class SchemaToJavaAdITests {
 		DistinguishedName testDn = new DistinguishedName("cn=William Hartnell,cn=Users");
 		Object fromDirectory = odmManager.read(clazz, testDn);
 
-		LOG.debug(String.format("Read - %1$s", fromDirectory));
+		LOG.debug("Read - {}", fromDirectory);
 
 		// Check some returned values
 		Method getDnMethod = clazz.getMethod("getDn");

@@ -382,7 +382,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		catch (NameNotFoundException ex) {
 			// It is possible to ignore errors caused by base not found
 			if (this.ignoreNameNotFoundException) {
-				LOG.warn("Base context not found, ignoring: " + ex.getMessage());
+				LOG.warn("Base context not found, ignoring: {}", ex.getMessage());
 			}
 			else {
 				exception = LdapUtils.convertLdapException(ex);
@@ -1065,7 +1065,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			}
 			ctx.unbind(name);
 			if (LOG.isDebugEnabled()) {
-				LOG.debug("Entry " + name + " deleted");
+				LOG.debug("Entry {} deleted", name);
 			}
 		}
 		catch (javax.naming.NamingException ex) {
@@ -1359,7 +1359,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			return AuthenticationStatus.SUCCESS;
 		}
 		catch (Exception ex) {
-			LOG.debug("Authentication failed for entry with DN '" + entryIdentification.getAbsoluteName() + "'", ex);
+			LOG.debug("Authentication failed for entry with DN '{}'", entryIdentification.getAbsoluteName(), ex);
 			errorCallback.execute(ex);
 			return AuthenticationStatus.UNDEFINED_FAILURE;
 		}
@@ -1549,8 +1549,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		String encodedFilter = filter.encode();
 
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(
-					String.format("Searching - base=%1$s, finalFilter=%2$s, scope=%3$s", base, filter, searchControls));
+			LOG.debug("Searching - base={}, finalFilter={}, scope={}", base, filter, searchControls);
 		}
 
 		assureReturnObjFlagSet(searchControls);
@@ -1575,7 +1574,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	@Override
 	public <T> T findByDn(Name dn, final Class<T> clazz) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("Reading Entry at - %1$s", dn));
+			LOG.debug("Reading Entry at - {}", dn);
 		}
 
 		// Make sure the class is OK before doing the lookup
@@ -1588,7 +1587,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			throw new OdmException(String.format("Entry %1$s does not have the required objectclasses ", dn));
 		}
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("Found entry - %1$s", result));
+			LOG.debug("Found entry - {}", result);
 		}
 
 		return result;
@@ -1602,7 +1601,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		Assert.notNull(entry, "Entry must not be null");
 
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("Creating entry - %1$s", entry));
+			LOG.debug("Creating entry - {}", entry);
 		}
 
 		Name id = this.odm.getId(entry);
@@ -1626,7 +1625,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	public void update(Object entry) {
 		Assert.notNull(entry, "Entry must not be null");
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("Updating entry - %1$s", entry));
+			LOG.debug("Updating entry - {}", entry);
 		}
 
 		Name originalId = this.odm.getId(entry);
@@ -1636,9 +1635,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			// The DN has changed - remove the original entry and bind the new one
 			// (because other data may have changed as well
 			if (LOG.isDebugEnabled()) {
-				LOG.debug(String.format(
-						"Calculated DN of %s; of entry %s differs from explicitly specified one; %s - moving",
-						calculatedId, entry, originalId));
+				LOG.debug("Calculated DN of {}; of entry {} differs from explicitly specified one; {} - moving",
+						calculatedId, entry, originalId);
 			}
 
 			unbind(originalId);
@@ -1679,7 +1677,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	public void delete(Object entry) {
 		Assert.notNull(entry, "Entry must not be null");
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("Deleting %1$s", entry));
+			LOG.debug("Deleting {}", entry);
 		}
 
 		Name id = this.odm.getId(entry);
@@ -1726,8 +1724,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 		}
 
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("Searching - base=%1$s, finalFilter=%2$s, scope=%3$s", base, finalFilter,
-					searchControls));
+			LOG.debug("Searching - base={}, finalFilter={}, scope={}", base, finalFilter, searchControls);
 		}
 
 		List<T> result = search(localBase, finalFilter.encode(), searchControls, OPERATIONS).stream()
@@ -1736,7 +1733,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			.toList();
 
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("Found %1$s Entries - %2$s", result.size(), result));
+			LOG.debug("Found {} Entries - {}", result.size(), result);
 		}
 
 		return result;
@@ -1803,7 +1800,7 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 			if (!this.ignoreNameNotFoundException) {
 				throw LdapUtils.convertLdapException(ex);
 			}
-			LOG.warn("Base context not found, ignoring: " + ex.getMessage());
+			LOG.warn("Base context not found, ignoring: {}", ex.getMessage());
 		}
 		catch (PartialResultException ex) {
 			// Workaround for AD servers not handling referrals correctly.

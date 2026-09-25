@@ -27,7 +27,7 @@ public final class ExecuteRunnable<U> {
 		Logger LOG = LoggerFactory.getLogger(ste.getClassName());
 		for (U testDatum : testData) {
 			if (LOG.isDebugEnabled()) {
-				LOG.debug(String.format("Running test with data %1$s", testDatum));
+				LOG.debug("Running test with data {}", testDatum);
 			}
 			runnableTest.runTest(testDatum);
 		}

@@ -90,7 +90,7 @@ public class LdifParserTests {
 			while (this.parser.hasMoreRecords()) {
 				try {
 					attributes = this.parser.getRecord();
-					log.info("attributes:\n" + attributes);
+					log.info("attributes:\n{}", attributes);
 					if (attributes != null) {
 						assertThat(attributes.getDN() != null).isTrue();
 						assertThat(attributes.get("objectclass") != null).isTrue();
@@ -104,10 +104,10 @@ public class LdifParserTests {
 					}
 				}
 
-				log.debug("hasMoreRecords: " + this.parser.hasMoreRecords());
+				log.debug("hasMoreRecords: {}", this.parser.hasMoreRecords());
 			}
 
-			log.info("record count: " + count);
+			log.info("record count: {}", count);
 			// assertThat(count == 8).as("An incorrect number of records were
 			// parsed.").isTrue();
 
