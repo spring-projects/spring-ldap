@@ -1,5 +1,6 @@
 [[odm]]
 = Object-Directory Mapping (ODM)
+:listing-caption: Example
 
 Object-relational mapping frameworks (such as Hibernate and JPA) offer developers the ability to use annotations to map relational database tables to Java objects.
 The Spring LDAP project offers a similar ability with respect to LDAP directories through a number of methods in `LdapOperations`:
@@ -89,22 +90,18 @@ Finally, the `@DnAttribute` annotation additionally maps entity fields to compon
 
 Consider a class with the following annotation:
 
-====
 [source,java,role="primary"]
 ----
 @DnAttribute(name="uid")
 String uid;
 ----
-====
 
 and a DN like the following:
 
-====
 [source,bash]
 ----
 uid=carla,dc=springframework,dc=org
 ----
-====
 
 Then Spring LDAP will populate `uid` using `uid=carla` instead of looking for a `uid` attribute.
 
@@ -115,7 +112,6 @@ Only fields of type `String` can be annotated with `@DnAttribute`. Other types a
 
 You can alternatively supply an index like so:
 
-====
 [source,java,role="primary"]
 ----
 @DnAttribute(index=1)
@@ -124,16 +120,13 @@ String uid;
 @DnAttribute(index=0)
 String department;
 ----
-====
 
 which is handy for DNs that have multiple components:
 
-====
 [source,bash]
 ----
 uid=carla,department=engineering,dc=springframework,dc=org
 ----
-====
 
 Using an `index` also allows Spring LDAP to compute the DN for you when creating or locating an entity for update or deletion.
 For update scenarios, this also automatically takes care of moving entries in the tree if attributes that are part of the distinguished name have changed.
@@ -153,7 +146,6 @@ Remember that all fields are mapped to LDAP attributes by default.
 When all components have been properly configured and annotated, the object mapping methods of `LdapTemplate` can be used as follows:
 
 .Execution
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -215,7 +207,6 @@ public class OdmPersonRepo {
    }
 }
 ----
-====
 
 [[odm-dn-attributes]]
 == ODM and Distinguished Names as Attribute Values
@@ -226,7 +217,6 @@ of a user in the system. The difficulties involved when handling these kinds of 
 ODM also has support for `javax.naming.Name` attribute values, making group modifications easy, as the following example shows:
 
 .Example Group representation
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -276,7 +266,6 @@ public class Group {
     }
 }
 ----
-====
 
 When you modify group members by using `setMembers`, `addMember`, and `removeMember` and then calling `ldapTemplate.update()`,
 attribute modifications are calculated by using distinguished name equality, meaning that the text formatting of

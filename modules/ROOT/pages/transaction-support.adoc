@@ -23,7 +23,6 @@ or if transaction synchronization with a JDBC data source is not required (see x
 
 Configuring Spring LDAP transactions should look very familiar if you are used to configuring Spring transactions. You can annotate your transacted classes with `@Transactional`, create a `TransactionManager` instance, and include a `<tx:annotation-driven>` element in your bean configuration. The following example shows how to do so:
 
-====
 [source,xml]
 [subs="verbatim,quotes"]
 ----
@@ -52,7 +51,6 @@ Configuring Spring LDAP transactions should look very familiar if you are used t
 <tx:annotation-driven />
 ...
 ----
-====
 
 NOTE: While this setup works fine for most simple use cases, some more complex scenarios require additional configuration.
 Specifically, if you need to create or delete subtrees within transactions, you need to use an alternative `TempEntryRenamingStrategy`, as described in xref:transaction-support.adoc#renaming-strategies[Renaming Strategies].

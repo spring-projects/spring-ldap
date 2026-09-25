@@ -4,7 +4,7 @@
 This section offers a relatively quick introduction to Spring LDAP. It includes the following content:
 
 * xref:introduction.adoc#spring-ldap-introduction-overview[Overview]
-* xref:introduction.adoc#spring-ldap-traditional-ldap-vs-ldaptemplate[Traditional Java LDAP versus `LdapClient`]
+* xref:introduction.adoc#spring-ldap-traditional-ldap-vs-ldapclient[Traditional Java LDAP versus `LdapClient`]
 * xref:introduction.adoc#spring-ldap-packaging-overview[Packaging Overview]
 * xref:introduction.adoc#spring-ldap-getting-started[Getting Started]
 * xref:introduction.adoc#spring-ldap-support[Support]
@@ -22,7 +22,6 @@ Spring LDAP is designed to simplify LDAP programming in Java. Some of the featur
 * Client-side LDAP compensating transaction support.
 
 [[spring-ldap-traditional-ldap-vs-ldapclient]]
-[[spring-ldap-traditional-ldap-vs-ldaptemplate]]
 == Traditional Java LDAP versus `LdapClient`
 
 Consider a method that should search some storage for all persons and return their names in a list.
@@ -33,7 +32,6 @@ Working against an LDAP database with JNDI, we would create a _context_ and perf
 The traditional way of implementing this person-name search method in Java LDAP looks like the next example. Note the code marked *bold* - this is the code that
 actually performs tasks related to the business purpose of the method. The rest is plumbing.
 
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -91,11 +89,9 @@ public class TraditionalPersonRepoImpl implements PersonRepo {
    }
 }
 ----
-====
 
 By using the Spring LDAP `AttributesMapper` and `LdapClient` classes, we get the exact same functionality with the following code:
 
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -118,7 +114,6 @@ public class PersonRepoImpl implements PersonRepo {
    }
 }
 ----
-====
 
 The amount of boilerplate code is significantly less than in the traditional example.
 The `LdapClient` search method makes sure a `DirContext` instance is created, performs the search, maps the attributes to a string by using the given `AttributesMapper`,
@@ -127,7 +122,6 @@ takes care of any exceptions that might happen.
 
 Naturally, this being a Spring Framework sub-project, we use Spring to configure our application, as follows:
 
-====
 [source,xml]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
@@ -152,7 +146,6 @@ Naturally, this being a Spring Framework sub-project, we use Spring to configure
    </bean>
 </beans>
 ----
-====
 
 NOTE: To use the custom XML namespace to configure the Spring LDAP components, you need to include references to this namespace in your XML declaration, as in the preceding example.
 

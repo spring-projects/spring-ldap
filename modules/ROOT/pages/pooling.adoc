@@ -208,7 +208,6 @@ The following attributes are available on the `<ldap:pooling2 />` element for co
 
 Configuring pooling requires adding an `<ldap:pooling>` element nested in the `<ldap:context-source>` element, as follows:
 
-====
 [source,xml]
 [subs="verbatim,quotes"]
 ----
@@ -221,7 +220,6 @@ Configuring pooling requires adding an `<ldap:pooling>` element nested in the `<
    ...
 </beans>
 ----
-====
 
 In a real-world situation, you would probably configure the pool options and enable connection validation. The preceding example demonstrates the general idea.
 
@@ -230,7 +228,6 @@ In a real-world situation, you would probably configure the pool options and ena
 
 The following example tests each `DirContext` before it is passed to the client application and tests `DirContext` objects that have been sitting idle in the pool:
 
-====
 [source,xml]
 [subs="verbatim,quotes"]
 ----
@@ -245,7 +242,6 @@ The following example tests each `DirContext` before it is passed to the client 
    ...
 </beans>
 ----
-====
 
 [[known-issues]]
 == Known Issues

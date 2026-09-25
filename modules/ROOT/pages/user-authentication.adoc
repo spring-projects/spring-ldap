@@ -1,5 +1,6 @@
 [[user-authentication]]
 = User Authentication using Spring LDAP
+:listing-caption: Example
 
 This section covers user authentication with Spring LDAP. It contains the following topics:
 
@@ -13,7 +14,6 @@ This section covers user authentication with Spring LDAP. It contains the follow
 
 While the core functionality of the `ContextSource` is to provide `DirContext` instances for use by `LdapClient` and `LdapTemplate`, you can also use it for authenticating users against an LDAP server. The `getContext(principal, credentials)` method of `ContextSource` does exactly that. It constructs a `DirContext` instance according to the `ContextSource` configuration and authenticates the context by using the supplied principal and credentials. A custom authenticate method could look like the following example:
 
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -32,11 +32,9 @@ public boolean authenticate(String userDn, String credentials) {
   }
 }
 ----
-====
 
 The `userDn` supplied to the `authenticate` method needs to be the full DN of the user to authenticate (regardless of the `base` setting on the `ContextSource`). You typically need to perform an LDAP search based on (for example) the user name to get this DN. The following example shows how to do so:
 
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -52,20 +50,17 @@ private String getDnForUser(String uid) {
   return result.get(0);
 }
 ----
-====
 
 There are some drawbacks to this approach. You are forced to concern yourself with the DN of the user, you can search only for the user's uid, and the search always starts at the root of the tree (the empty path). A more flexible method would let you specify the search base, the search filter, and the credentials. Spring LDAP includes an authenticate method in `LdapClient` that provides this functionality.
 
 When you use this method, authentication becomes as simple as follows:
 
 .Authenticating a user using Spring LDAP
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
 ldapClient.authenticate().query(query().where("uid").is("john.doe")).password("secret").execute();
 ----
-====
 
 NOTE: As described in the xref:user-authentication.adoc#operationsOnAuthenticatedContext[Performing Operations on the Authenticated Context], some setups may require you to perform additional operations to get actual authentication to occur. See xref:user-authentication.adoc#operationsOnAuthenticatedContext[Performing Operations on the Authenticated Context] for details.
 
@@ -76,7 +71,6 @@ TIP: Do not write your own custom authenticate methods. Use the ones provided in
 
 Some authentication schemes and LDAP servers require some operation to be performed on the created `DirContext` instance for the actual authentication to occur. You should test and make sure how your server setup and authentication schemes behave. Failure to do so might result in users being admitted into your system regardless of the supplied DN and credentials. The following example shows a naïve implementation of an authenticate method where a hard-coded `lookup` operation is performed on the authenticated context:
 
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -98,14 +92,12 @@ public boolean myAuthenticate(String userDn, String credentials) {
   }
 }
 ----
-====
 
 It would be better if the operation could be provided as an implementation of a callback interface, rather than limiting the operation to always be a `lookup`. Spring LDAP includes the `AuthenticatedLdapEntryContextMapper` callback interface and a corresponding `authenticate` method.
 
 This method lets any operation be performed on the authenticated context, as follows:
 
 .Performing an LDAP operation on the authenticated context using Spring LDAP
-====
 [source,java]
 [subs="verbatim,quotes"]
 ----
@@ -122,7 +114,6 @@ AuthenticatedLdapEntryContextMapper<DirContextOperations> mapper = new Authentic
 
 ldapClient.authenticate().query(query().where("uid").is("john.doe")).password("secret").execute(mapper);
 ----
-====
 
 [[spring-ldap-authentication-obsolete]]
 == Obsolete Authentication Methods
