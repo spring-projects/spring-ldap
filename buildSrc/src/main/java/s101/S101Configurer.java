@@ -220,7 +220,7 @@ public class S101Configurer {
 						continue;
 					}
 					validateFilename(filename, build);
-					this.logger.info("Downloading " + filename);
+					this.logger.info("Downloading {}", filename);
 					try (OutputStream out = new FileOutputStream(new File(destination.getParentFile(), filename))) {
 						byte[] data = new byte[BUFFER];
 						int read;

@@ -117,7 +117,7 @@ public abstract class AbstractEc2InstanceLaunchingFactoryBean extends AbstractFa
 		Assert.hasLength(this.keypairName, "KeyName must be set");
 		Assert.hasLength(this.groupName, "GroupName must be set");
 
-		LOG.info("Launching EC2 instance for image: " + this.imageName);
+		LOG.info("Launching EC2 instance for image: {}", this.imageName);
 
 		Jec2 jec2 = new Jec2(this.awsKey, this.awsSecretKey);
 		LaunchConfiguration launchConfiguration = new LaunchConfiguration(this.imageName);
@@ -137,8 +137,7 @@ public abstract class AbstractEc2InstanceLaunchingFactoryBean extends AbstractFa
 		if (this.instance.isRunning()) {
 			LOG.info("EC2 instance is now running");
 			if (this.preparationSleepTime > 0) {
-				LOG.info("Sleeping " + this.preparationSleepTime
-						+ "ms allowing instance services to start up properly.");
+				LOG.info("Sleeping {}ms allowing instance services to start up properly.", this.preparationSleepTime);
 				Thread.sleep(this.preparationSleepTime);
 				LOG.info("Instance prepared - proceeding");
 			}

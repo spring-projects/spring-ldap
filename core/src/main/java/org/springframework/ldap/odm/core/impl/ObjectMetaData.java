@@ -93,7 +93,7 @@ import org.springframework.util.StringUtils;
 
 	ObjectMetaData(Class<?> clazz) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("Extracting metadata from %1$s", clazz));
+			LOG.debug("Extracting metadata from {}", clazz);
 		}
 
 		// Get object class metadata - the @Entity annotation
@@ -123,7 +123,7 @@ import org.springframework.util.StringUtils;
 
 		// Check the class is final
 		if (!Modifier.isFinal(clazz.getModifiers())) {
-			LOG.warn(String.format("The Entry class %1$s should be declared final", clazz.getSimpleName()));
+			LOG.warn("The Entry class {} should be declared final", clazz.getSimpleName());
 		}
 
 		// Get field meta-data - the @Attribute annotation
@@ -162,7 +162,7 @@ import org.springframework.util.StringUtils;
 		postProcessDnAttributes(clazz);
 
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("Extracted metadata from %1$s as %2$s", clazz, this));
+			LOG.debug("Extracted metadata from {} as {}", clazz, this);
 		}
 	}
 

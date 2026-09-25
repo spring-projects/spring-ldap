@@ -311,7 +311,7 @@ public class LdifParser implements Parser, InitializingBean {
 							addAttributeToRecord(builder.toString(), record);
 
 							if (this.specification.isSatisfiedBy(record)) {
-								LOG.debug("record parsed:\n" + record);
+								LOG.debug("record parsed:\n{}", record);
 								return record;
 
 							}

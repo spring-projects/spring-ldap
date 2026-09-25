@@ -247,9 +247,9 @@ public final class LdapTests {
 		new ExecuteRunnable<Person>().runTests(new RunnableTests<>() {
 			public void runTest(Person testData) {
 				Name dn = testData.getDn();
-				LOG.debug(String.format("reading - %1$s", dn));
+				LOG.debug("reading - {}", dn);
 				Person personEntry = LdapTests.this.odmManager.read(Person.class, dn);
-				LOG.debug(String.format("read - %1$s", personEntry));
+				LOG.debug("read - {}", personEntry);
 				assertThat(testData).isEqualTo(personEntry);
 			}
 		}, this.personTestData);
@@ -273,10 +273,10 @@ public final class LdapTests {
 		new ExecuteRunnable<SearchTestData>().runTests(new RunnableTests<>() {
 			public void runTest(SearchTestData testData) {
 				String search = testData.search;
-				LOG.debug(String.format("searching - %1$s", search));
+				LOG.debug("searching - {}", search);
 				List<Person> results = LdapTests.this.odmManager.search(Person.class, baseName, testData.search,
 						testData.searchScope);
-				LOG.debug(String.format("found - %1$s", results));
+				LOG.debug("found - {}", results);
 				assertThat(new HashSet<>(Arrays.asList(testData.people))).isEqualTo(new HashSet<>(results));
 			}
 		}, this.searchTestData);
@@ -311,13 +311,13 @@ public final class LdapTests {
 		LOG.debug("Reading all organizatinalUnits");
 		List<OrganizationalUnit> allOus = this.odmManager.findAll(OrganizationalUnit.class, baseName,
 				this.searchControls);
-		LOG.debug(String.format("Found - %1$s", allOus));
+		LOG.debug("Found - {}", allOus);
 		assertThat(new HashSet<>(Arrays.asList(ouTestData))).isEqualTo(new HashSet<>(allOus));
 
 		OrganizationalUnit testOu = ouTestData[OrganizationalName.ASSISTANTS.getIndex()];
-		LOG.debug(String.format("Reading - %1$s", testOu.getDn()));
+		LOG.debug("Reading - {}", testOu.getDn());
 		OrganizationalUnit ou = this.odmManager.read(OrganizationalUnit.class, testOu.getDn());
-		LOG.debug(String.format("Found - %1$s", ou));
+		LOG.debug("Found - {}", ou);
 		assertThat(testOu).isEqualTo(ou);
 	}
 
@@ -327,7 +327,7 @@ public final class LdapTests {
 	public void findAll() throws Exception {
 		LOG.debug("finding all people");
 		List<Person> allPeople = this.odmManager.findAll(Person.class, baseName, this.searchControls);
-		LOG.debug(String.format("found %1$s", allPeople));
+		LOG.debug("found {}", allPeople);
 		assertThat(new HashSet<>(Arrays.asList(this.personTestData))).isEqualTo(new HashSet<>(allPeople));
 	}
 
@@ -390,16 +390,16 @@ public final class LdapTests {
 	@Test
 	public void create() throws Exception {
 		for (Person person : this.createTestData) {
-			LOG.debug(String.format("creating - %1$s", person));
+			LOG.debug("creating - {}", person);
 			this.odmManager.create(person);
 		}
 		LOG.debug("Created all, reading back");
 		new ExecuteRunnable<Person>().runTests(new RunnableTests<>() {
 			public void runTest(Person testData) {
 				Name dn = testData.getDn();
-				LOG.debug(String.format("reading - %1$s", dn));
+				LOG.debug("reading - {}", dn);
 				Person personEntry = LdapTests.this.odmManager.read(Person.class, dn);
-				LOG.debug(String.format("read - %1$s", personEntry));
+				LOG.debug("read - {}", personEntry);
 				assertThat(testData).isEqualTo(personEntry);
 			}
 		}, this.createTestData);
@@ -429,7 +429,7 @@ public final class LdapTests {
 	@Test
 	public void delete() throws Exception {
 		for (Person toDelete : this.deleteData) {
-			LOG.debug(String.format("deleting - %1$s", toDelete.getDn()));
+			LOG.debug("deleting - {}", toDelete.getDn());
 			this.odmManager.delete(toDelete);
 		}
 
@@ -574,7 +574,7 @@ public final class LdapTests {
 			throws Exception {
 
 		for (String testCase : testCases) {
-			LOG.debug(String.format("Starting ldap test case %1$s", testCase));
+			LOG.debug("Starting ldap test case {}", testCase);
 
 			// Set up
 			LdapTests ldapTests = new LdapTests();
@@ -587,7 +587,7 @@ public final class LdapTests {
 			// Tear down
 			ldapTests.tearDown();
 
-			LOG.debug(String.format("Test case %1$s completed", testCase));
+			LOG.debug("Test case {} completed", testCase);
 		}
 	}
 

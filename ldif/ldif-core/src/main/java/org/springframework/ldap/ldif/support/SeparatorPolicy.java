@@ -70,7 +70,7 @@ public class SeparatorPolicy {
 	 *
 	 */
 	public LineIdentifier assess(String line) {
-		log.trace("Assessing --> [" + line + "]");
+		log.trace("Assessing --> [{}]", line);
 
 		if (this.record) {
 			if (!StringUtils.hasLength(line)) {

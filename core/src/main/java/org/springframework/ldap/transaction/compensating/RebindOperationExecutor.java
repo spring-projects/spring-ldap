@@ -89,8 +89,7 @@ public class RebindOperationExecutor implements CompensatingTransactionOperation
 			this.ldapOperations.rename(this.temporaryDn, this.originalDn);
 		}
 		catch (Exception ex) {
-			log.warn(
-					"Failed to rollback operation, dn: " + this.originalDn + "; temporary DN:this. " + this.temporaryDn,
+			log.warn("Failed to rollback operation, dn: {}; temporary DN:this. {}", this.originalDn, this.temporaryDn,
 					ex);
 		}
 	}

@@ -543,9 +543,9 @@ public final class LdapUtils {
 		LdapName ldapName = returnOrConstructLdapNameFromName(name);
 		Rdn rdn = ldapName.getRdn(index);
 		if (rdn.size() > 1) {
-			LOGGER.warn("Rdn at position " + index + " of dn '" + name
-					+ "' is multi-value - returned value is not to be trusted. "
-					+ "Consider using name-based getValue method instead");
+			LOGGER.warn(
+					"Rdn at position {} of dn '{}' is multi-value - returned value is not to be trusted. Consider using name-based getValue method instead",
+					index, name);
 		}
 		return rdn.getValue();
 	}
