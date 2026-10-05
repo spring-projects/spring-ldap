@@ -56,7 +56,7 @@ com-sun-ldapbp = "com.sun:ldapbp:1.0"
 # buildSrc dependencies
 org-gretty-gretty = "org.gretty:gretty:5.0.2"
 io-spring-javaformat-spring-javaformat-gradle-plugin = { module = "io.spring.javaformat:spring-javaformat-gradle-plugin", version.ref = "io-spring-javaformat" }
-io-spring-gradle-spring-security-project-plugin = "io.spring.gradle:spring-security-project-plugin:1.0.19"
+io-spring-gradle-spring-security-project-plugin = "io.spring.gradle:spring-security-project-plugin:1.0.20"
 io-spring-nohttp-nohttp-gradle = "io.spring.nohttp:nohttp-gradle:0.0.11"
 org-sonarsource-scanner-gradle-sonarqube-gradle-plugin = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:7.4.0.8496"
 org-springframework-spring-core = "org.springframework:spring-core:7.0.9"
