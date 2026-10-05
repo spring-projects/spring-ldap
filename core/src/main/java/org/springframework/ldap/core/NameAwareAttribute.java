@@ -51,7 +51,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 	private final Set<Object> values = new LinkedHashSet<>();
 
-	private Map<Name, String> valuesAsNames = new HashMap<>();
+	private Map<Name, Object> valuesAsNames = new HashMap<>();
 
 	/**
 	 * Construct a new instance with the specified id and one value.
@@ -139,24 +139,50 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 			initValuesAsNames();
 
 			Name name = LdapUtils.newLdapName((Name) attrVal);
-			String currentValue = this.valuesAsNames.get(name);
-			String nameAsString = name.toString();
-			if (currentValue == null) {
-				this.valuesAsNames.put(name, name.toString());
-				this.values.add(nameAsString);
-				return true;
-			}
-			else {
-				if (!currentValue.equals(nameAsString)) {
-					this.values.remove(currentValue);
-					this.values.add(nameAsString);
-				}
-
+			if (this.valuesAsNames.containsKey(name)) {
 				return false;
 			}
+
+			String nameAsString = name.toString();
+			this.valuesAsNames.put(name, nameAsString);
+			this.values.add(nameAsString);
+			return true;
 		}
 
+		discardValuesAsNames();
 		return this.values.add(attrVal);
+	}
+
+	/**
+	 * Drop the Name-keyed view; the next Name-valued operation rebuilds it.
+	 */
+	private void discardValuesAsNames() {
+		if (!this.valuesAsNames.isEmpty()) {
+			this.valuesAsNames = new HashMap<>();
+		}
+	}
+
+	/**
+	 * Drop the Name-keyed entry for a value that has just left {@link #values}.
+	 */
+	private void forgetName(Object value) {
+		if (this.valuesAsNames.isEmpty()) {
+			return;
+		}
+		if (value instanceof Name) {
+			this.valuesAsNames.remove(LdapUtils.newLdapName((Name) value));
+			return;
+		}
+		if (value instanceof String) {
+			try {
+				this.valuesAsNames.remove(new LdapName((String) value));
+				return;
+			}
+			catch (javax.naming.InvalidNameException ex) {
+				// Not a distinguished name, so no entry can point at it.
+			}
+		}
+		discardValuesAsNames();
 	}
 
 	public void initValuesAsNames() {
@@ -164,7 +190,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 			return;
 		}
 
-		Map<Name, String> newValuesAsNames = new HashMap<>();
+		Map<Name, Object> newValuesAsNames = new HashMap<>();
 		for (Object value : this.values) {
 			if (value instanceof String) {
 				String s = (String) value;
@@ -179,7 +205,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 				}
 			}
 			else if (value instanceof LdapName) {
-				newValuesAsNames.put((LdapName) value, value.toString());
+				newValuesAsNames.put((LdapName) value, value);
 			}
 			else {
 				throw new IllegalArgumentException(
@@ -200,7 +226,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 			initValuesAsNames();
 
 			Name name = LdapUtils.newLdapName((Name) attrval);
-			String removedValue = this.valuesAsNames.remove(name);
+			Object removedValue = this.valuesAsNames.remove(name);
 			if (removedValue != null) {
 				this.values.remove(removedValue);
 
@@ -209,12 +235,17 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 
 			return false;
 		}
-		return this.values.remove(attrval);
+		boolean removed = this.values.remove(attrval);
+		if (removed) {
+			forgetName(attrval);
+		}
+		return removed;
 	}
 
 	@Override
 	public void clear() {
 		this.values.clear();
+		discardValuesAsNames();
 	}
 
 	@Override
@@ -266,13 +297,7 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 				value = iterator.next();
 			}
 			iterator.remove();
-			if (value instanceof String) {
-				try {
-					this.valuesAsNames.remove(new LdapName((String) value));
-				}
-				catch (javax.naming.InvalidNameException ignored) {
-				}
-			}
+			forgetName(value);
 			return value;
 		}
 		catch (NoSuchElementException ex) {
@@ -296,8 +321,8 @@ public final class NameAwareAttribute implements Attribute, Iterable<Object> {
 	}
 
 	private void populateValuesAsNames(NameAwareAttribute from, NameAwareAttribute to) {
-		Set<Map.Entry<Name, String>> entries = from.valuesAsNames.entrySet();
-		for (Map.Entry<Name, String> entry : entries) {
+		Set<Map.Entry<Name, Object>> entries = from.valuesAsNames.entrySet();
+		for (Map.Entry<Name, Object> entry : entries) {
 			to.valuesAsNames.put(LdapUtils.newLdapName(entry.getKey()), entry.getValue());
 		}
 	}
