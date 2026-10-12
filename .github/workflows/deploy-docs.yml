@@ -5,8 +5,7 @@ on:
       - "*.x"
       - "main"
   workflow_dispatch:
-permissions:
-  actions: write
+permissions: read-all
 jobs:
   build:
     runs-on: ubuntu-latest
