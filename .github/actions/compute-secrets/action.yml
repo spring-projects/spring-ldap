@@ -40,7 +40,9 @@ runs:
       uses: spring-io/spring-release-actions/compute-version@6795980b9d960a13d420e114d50f1c8abe730769 # 0.0.7
     - id: release-channel
       if: inputs.release-channel == ''
-      uses: spring-io/spring-release-actions/compute-release-channel@38f2bb2e5c7f8324fc56734a27d0309d994a64ad # main
+      uses: spring-io/spring-release-actions/compute-release-channel@6a17ad2307156b8a5613d5cd632be2ebcfbaa6af # 0.0.x
+      with:
+        version: ${{ steps.version.outputs.version }}
     - id: secrets
       shell: bash
       env:
