@@ -15,4 +15,5 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: spring-io/spring-security-release-tools/update-bot@c37f78964de4727660f708523173154903f5a272 # v1.0.21
