@@ -20,7 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Unit tests for {@link DistinguishedNameEditor}.
@@ -44,13 +44,8 @@ public class DistinguishedNameEditorTests {
 		DistinguishedName result = (DistinguishedName) this.tested.getValue();
 		assertThat(result).isEqualTo(new DistinguishedName(expectedDn));
 
-		try {
-			result.getNames().add(new LdapRdn("cn", "john doe"));
-			fail("UnsupportedOperationException expected");
-		}
-		catch (UnsupportedOperationException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(UnsupportedOperationException.class)
+			.isThrownBy(() -> result.getNames().add(new LdapRdn("cn", "john doe")));
 	}
 
 	@Test

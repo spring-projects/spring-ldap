@@ -27,7 +27,8 @@ import org.springframework.ldap.pool2.AbstractPoolTestCase;
 import org.springframework.ldap.pool2.validation.DirContextValidator;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.mock;
 
@@ -62,24 +63,14 @@ public class PooledContextSourceTests extends AbstractPoolTestCase {
 
 		final PooledContextSource PooledContextSource = new PooledContextSource(poolConfig);
 
-		try {
-			PooledContextSource.setContextSource(null);
-			fail("PooledContextSource.setBaseName should have thrown an IllegalArgumentException");
-		}
-		catch (IllegalArgumentException iae) {
-			// Expected
-		}
+		assertThatIllegalArgumentException().isThrownBy(() -> PooledContextSource.setContextSource(null));
+
 		PooledContextSource.setContextSource(contextSourceMock);
 		final ContextSource contextSource2 = PooledContextSource.getContextSource();
 		assertThat(contextSource2).isEqualTo(contextSourceMock);
 
-		try {
-			PooledContextSource.setDirContextValidator(null);
-			fail("PooledContextSource.setDirContextValidator should have thrown an IllegalArgumentException");
-		}
-		catch (IllegalArgumentException iae) {
-			// Expected
-		}
+		assertThatIllegalArgumentException().isThrownBy(() -> PooledContextSource.setDirContextValidator(null));
+
 		PooledContextSource.setDirContextValidator(dirContextValidatorMock);
 		final DirContextValidator dirContextValidator2 = PooledContextSource.getDirContextValidator();
 		assertThat(dirContextValidator2).isEqualTo(dirContextValidatorMock);
@@ -200,13 +191,8 @@ public class PooledContextSourceTests extends AbstractPoolTestCase {
 		final PooledContextSource PooledContextSource = new PooledContextSource(null);
 		PooledContextSource.setContextSource(contextSourceMock);
 
-		try {
-			PooledContextSource.getReadWriteContext();
-			fail("PooledContextSource.getReadWriteContext should have thrown DataAccessResourceFailureException");
-		}
-		catch (DataAccessResourceFailureException darfe) {
-			// Expected
-		}
+		assertThatExceptionOfType(DataAccessResourceFailureException.class)
+			.isThrownBy(() -> PooledContextSource.getReadWriteContext());
 	}
 
 	@Test

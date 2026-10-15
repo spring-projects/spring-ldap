@@ -30,7 +30,7 @@ import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Tests the bind and unbind methods of LdapTemplate. The test methods in this class tests
@@ -156,13 +156,7 @@ public class LdapTemplateBindUnbindITests extends AbstractLdapTemplateIntegratio
 	}
 
 	private void verifyCleanup() {
-		try {
-			this.tested.lookup(DN);
-			fail("NameNotFoundException expected");
-		}
-		catch (NameNotFoundException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(NameNotFoundException.class).isThrownBy(() -> this.tested.lookup(DN));
 	}
 
 }

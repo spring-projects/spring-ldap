@@ -33,7 +33,7 @@ import org.springframework.ldap.pool2.validation.DirContextValidator;
 import org.springframework.util.ReflectionUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.mock;
 import static org.mockito.BDDMockito.verify;
@@ -49,25 +49,13 @@ public class DirContextPooledObjectFactoryTests extends AbstractPoolTestCase {
 	public void testProperties() throws Exception {
 		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory(contextSourceMock);
 
-		try {
-			objectFactory.setContextSource(null);
-			fail("DirContextPooledObjectFactory.setContextSource should have thrown an IllegalArgumentException");
-		}
-		catch (IllegalArgumentException iae) {
-			// Expected
-		}
+		assertThatIllegalArgumentException().isThrownBy(() -> objectFactory.setContextSource(null));
 
 		objectFactory.setContextSource(contextSourceMock);
 		final ContextSource contextSource2 = objectFactory.getContextSource();
 		assertThat(contextSource2).isEqualTo(contextSourceMock);
 
-		try {
-			objectFactory.setDirContextValidator(null);
-			fail("DirContextPooledObjectFactory.setDirContextValidator should have thrown an IllegalArgumentException");
-		}
-		catch (IllegalArgumentException iae) {
-			// Expected
-		}
+		assertThatIllegalArgumentException().isThrownBy(() -> objectFactory.setDirContextValidator(null));
 
 		objectFactory.setDirContextValidator(dirContextValidatorMock);
 		final DirContextValidator dirContextValidator2 = objectFactory.getDirContextValidator();
@@ -78,23 +66,11 @@ public class DirContextPooledObjectFactoryTests extends AbstractPoolTestCase {
 	public void testMakeObjectAssertions() throws Exception {
 		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory(contextSourceMock);
 
-		try {
-			objectFactory.makeObject(DirContextType.READ_ONLY);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatIllegalArgumentException().isThrownBy(() -> objectFactory.makeObject(DirContextType.READ_ONLY));
 
 		objectFactory.setContextSource(contextSourceMock);
 
-		try {
-			objectFactory.makeObject(null);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatIllegalArgumentException().isThrownBy(() -> objectFactory.makeObject(null));
 	}
 
 	@Test
@@ -130,40 +106,23 @@ public class DirContextPooledObjectFactoryTests extends AbstractPoolTestCase {
 	public void testValidateObjectAssertions() throws Exception {
 		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory(contextSourceMock);
 
-		try {
+		assertThatIllegalArgumentException().isThrownBy(() -> {
 			PooledObject pooledObject = new DefaultPooledObject(dirContextMock);
 			objectFactory.validateObject(null, pooledObject);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
+		});
 
-		try {
+		assertThatIllegalArgumentException().isThrownBy(() -> {
 			PooledObject pooledObject = new DefaultPooledObject(dirContextMock);
 			objectFactory.validateObject(new Object(), pooledObject);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
+		});
 
-		try {
-			objectFactory.validateObject(DirContextType.READ_ONLY, null);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatIllegalArgumentException()
+			.isThrownBy(() -> objectFactory.validateObject(DirContextType.READ_ONLY, null));
 
-		try {
+		assertThatIllegalArgumentException().isThrownBy(() -> {
 			PooledObject pooledObject = new DefaultPooledObject(new Object());
 			objectFactory.validateObject(DirContextType.READ_ONLY, pooledObject);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
+		});
 	}
 
 	@Test
@@ -192,22 +151,13 @@ public class DirContextPooledObjectFactoryTests extends AbstractPoolTestCase {
 	public void testDestroyObjectAssertions() throws Exception {
 		final DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory(contextSourceMock);
 
-		try {
-			objectFactory.destroyObject(DirContextType.READ_ONLY, null);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatIllegalArgumentException()
+			.isThrownBy(() -> objectFactory.destroyObject(DirContextType.READ_ONLY, null));
 
-		try {
+		assertThatIllegalArgumentException().isThrownBy(() -> {
 			PooledObject pooledObject = new DefaultPooledObject(new Object());
 			objectFactory.validateObject(DirContextType.READ_ONLY, pooledObject);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
+		});
 	}
 
 	@Test

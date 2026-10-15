@@ -33,7 +33,7 @@ import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 import org.springframework.ldap.support.LdapUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.mock;
 import static org.mockito.BDDMockito.verify;
@@ -114,15 +114,7 @@ public class LdapTemplateLookupTests {
 
 		javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
 		given(this.dirContextMock.lookup(this.nameMock)).willThrow(ne);
-
-		try {
-			this.tested.lookup(this.nameMock);
-			fail("NameNotFoundException expected");
-		}
-		catch (NameNotFoundException expected) {
-			assertThat(true).isTrue();
-		}
-
+		assertThatExceptionOfType(NameNotFoundException.class).isThrownBy(() -> this.tested.lookup(this.nameMock));
 		verify(this.dirContextMock).close();
 	}
 
@@ -169,13 +161,8 @@ public class LdapTemplateLookupTests {
 		javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
 		given(this.dirContextMock.getAttributes(this.nameMock)).willThrow(ne);
 
-		try {
-			this.tested.lookup(this.nameMock, this.attributesMapperMock);
-			fail("NameNotFoundException expected");
-		}
-		catch (NameNotFoundException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(NameNotFoundException.class)
+			.isThrownBy(() -> this.tested.lookup(this.nameMock, this.attributesMapperMock));
 
 		verify(this.dirContextMock).close();
 	}
@@ -241,15 +228,8 @@ public class LdapTemplateLookupTests {
 
 		javax.naming.NameNotFoundException ne = new javax.naming.NameNotFoundException();
 		given(this.dirContextMock.lookup(this.nameMock)).willThrow(ne);
-
-		try {
-			this.tested.lookup(this.nameMock, this.contextMapperMock);
-			fail("NameNotFoundException expected");
-		}
-		catch (NameNotFoundException expected) {
-			assertThat(true).isTrue();
-		}
-
+		assertThatExceptionOfType(NameNotFoundException.class)
+			.isThrownBy(() -> this.tested.lookup(this.nameMock, this.contextMapperMock));
 		verify(this.dirContextMock).close();
 	}
 
