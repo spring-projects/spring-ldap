@@ -32,7 +32,7 @@ jobs:
         if: inputs.release-channel == 'internal'
         run: sed -i -E '/^version=/ s/-SNAPSHOT$/-INTERNAL-SNAPSHOT/' gradle.properties
       - name: Build Project
-        uses: spring-io/spring-security-actions/build@96df48300f5fa058d0765832d48a534cc6a378d5 # 0.0.3
+        uses: spring-io/spring-security-actions/build@09c8d127933065382da35646c7d4d3a8f9352368 # 0.0.4
         env:
           ORG_GRADLE_PROJECT_releaseChannel: ${{ inputs.release-channel }}
           ORG_GRADLE_PROJECT_artifactoryUsername: ${{ secrets[steps.secrets.outputs.dependencies-username] }}
