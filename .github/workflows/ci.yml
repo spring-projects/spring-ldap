@@ -26,10 +26,10 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - id: project-version
         name: Extract Project Version
-        uses: spring-io/spring-release-actions/compute-version@6795980b9d960a13d420e114d50f1c8abe730769 # 0.0.7
+        uses: spring-io/spring-release-actions/compute-version@3f7412aeec60ad13127b2a536a1b19a2803a5b81 # 0.0.8
       - id: release
         name: Establish Release Channel
-        uses: spring-io/spring-release-actions/compute-release-channel@17a35a368ea3bf2659b7ad271a7d610defa459a2 # main
+        uses: spring-io/spring-release-actions/compute-release-channel@3f7412aeec60ad13127b2a536a1b19a2803a5b81 # 0.0.8
         with:
           version: ${{ steps.project-version.outputs.version }}
   test:
