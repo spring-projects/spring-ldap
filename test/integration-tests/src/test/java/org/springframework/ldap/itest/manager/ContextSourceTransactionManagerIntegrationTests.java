@@ -205,7 +205,6 @@ public class ContextSourceTransactionManagerIntegrationTests extends AbstractLda
 	@Test
 	public void testUnbindWithException() {
 		String dn = "cn=Some Person,ou=company1,ou=Sweden";
-		this.ldapTemplate.lookup(dn);
 		// Perform test
 		assertThatExceptionOfType(DummyException.class)
 			.isThrownBy(() -> this.dummyDao.unbindWithException(dn, "Some Person"));

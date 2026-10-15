@@ -95,7 +95,7 @@ public class DelegatingContextTests extends AbstractPoolTestCase {
 		final Context innerDelegateContextclosed = delegatingContext.getInnermostDelegateContext();
 		assertThat(innerDelegateContextclosed).isNull();
 
-		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingContext2.assertOpen());
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingContext.assertOpen());
 
 		verify(keyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, contextMock);
 		verify(secondKeyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, contextMock);

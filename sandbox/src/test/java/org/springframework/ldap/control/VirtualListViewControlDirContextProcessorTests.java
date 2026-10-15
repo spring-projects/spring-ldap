@@ -115,7 +115,7 @@ public class VirtualListViewControlDirContextProcessorTests {
 		assertThatExceptionOfType(OperationNotSupportedException.class)
 			.isThrownBy(() -> tested.postProcess(this.ldapContextMock))
 			.havingCause()
-			.isInstanceOf(javax.naming.OperationNotSupportedException.class)
+			.isExactlyInstanceOf(javax.naming.OperationNotSupportedException.class)
 			.withMessage("[LDAP: error code 53 - Unwilling To Perform]");
 		assertThat(tested.getCookie()).isNotNull();
 		assertThat(tested.getCookie().getCookie().length).isEqualTo(0);

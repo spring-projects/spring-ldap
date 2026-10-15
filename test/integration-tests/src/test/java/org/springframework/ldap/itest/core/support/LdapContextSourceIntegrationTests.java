@@ -149,9 +149,9 @@ public class LdapContextSourceIntegrationTests extends AbstractLdapTemplateInteg
 		DirContext ctx = null;
 		try {
 			ctx = this.tested.getContext(results.get(0), "password");
+			assertThat(ctx).isNotNull();
 		}
 		finally {
-			assertThat(ctx).isNotNull();
 			LdapUtils.closeContext(ctx);
 		}
 	}

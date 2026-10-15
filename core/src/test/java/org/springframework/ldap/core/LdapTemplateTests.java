@@ -1553,7 +1553,7 @@ public class LdapTemplateTests {
 			}
 		};
 
-		assertThatIllegalStateException().isThrownBy(() -> this.tested.modifyAttributes(this.dirContextOperationsMock));
+		assertThatIllegalStateException().isThrownBy(() -> tested.modifyAttributes(this.dirContextOperationsMock));
 	}
 
 	@Test
@@ -1566,7 +1566,7 @@ public class LdapTemplateTests {
 			}
 		};
 
-		assertThatIllegalStateException().isThrownBy(() -> this.tested.modifyAttributes(this.dirContextOperationsMock));
+		assertThatIllegalStateException().isThrownBy(() -> tested.modifyAttributes(this.dirContextOperationsMock));
 	}
 
 	@Test

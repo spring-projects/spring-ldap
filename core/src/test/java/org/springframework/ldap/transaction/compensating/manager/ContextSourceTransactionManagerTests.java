@@ -163,7 +163,6 @@ public class ContextSourceTransactionManagerTests {
 		final TransactionStatus txOuter = txMgrOuter.getTransaction(new DefaultTransactionDefinition());
 
 		assertThatExceptionOfType(CannotCreateTransactionException.class).isThrownBy(() -> {
-
 			try {
 				// Create inner transaction (not nested, though: unrelated data
 				// source)

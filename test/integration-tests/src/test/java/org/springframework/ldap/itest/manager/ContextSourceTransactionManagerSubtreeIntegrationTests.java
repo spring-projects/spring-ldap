@@ -70,7 +70,6 @@ public class ContextSourceTransactionManagerSubtreeIntegrationTests extends Abst
 
 	@Test
 	public void testLdap168DeleteWithException() {
-
 		assertThatExceptionOfType(DummyException.class)
 			.isThrownBy(() -> this.dummyDao.deleteRecursivelyWithException("ou=company1,ou=Sweden"));
 		// Entry should have been restored
@@ -84,7 +83,6 @@ public class ContextSourceTransactionManagerSubtreeIntegrationTests extends Abst
 
 	@Test
 	public void testLdap244CreateRecursivelyWithException() {
-
 		assertThatExceptionOfType(DummyException.class)
 			.isThrownBy(() -> this.dummyDao.createRecursivelyAndUnbindSubnodeWithException());
 	}
