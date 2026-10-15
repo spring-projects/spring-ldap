@@ -1,5 +1,5 @@
 [versions]
-org-springframework = "7.0.9"
+org-springframework = "7.0.10"
 org-springframework-data = "2025.0.13"
 org-springframework-security = "6.5.11"
 org-junit = "6.0.3"
