@@ -110,7 +110,7 @@ public abstract class AbstractFallbackRequestAndResponseControlDirContextProcess
 		Assert.notNull(this.defaultRequestControl, "defaultRequestControl must not be null");
 		Assert.notNull(this.defaultResponseControl, "defaultResponseControl must not be null");
 		Assert.notNull(this.fallbackRequestControl, "fallbackRequestControl must not be null");
-		Assert.notNull(this.fallbackResponseControl, "fallbackReponseControl must not be null");
+		Assert.notNull(this.fallbackResponseControl, "fallbackResponseControl must not be null");
 		try {
 			this.requestControlClass = Class.forName(this.defaultRequestControl);
 			this.responseControlClass = Class.forName(this.defaultResponseControl);
@@ -198,7 +198,7 @@ public abstract class AbstractFallbackRequestAndResponseControlDirContextProcess
 			}
 		}
 
-		this.log.info("No matching response control found - looking for '{}'", this.responseControlClass);
+		this.log.info("No matching response control found - looking for '{}", this.responseControlClass);
 	}
 
 	/**

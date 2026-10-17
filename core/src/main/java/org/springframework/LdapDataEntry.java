@@ -113,8 +113,8 @@ public interface LdapDataEntry {
 
 	/**
 	 * Add a value to the Attribute with the specified name. If the Attribute doesn't
-	 * exist it will be created. This method makes sure that the there will be no
-	 * duplicates of an added value - it the value exists it will not be added again.
+	 * exist it will be created. This method makes sure that there will be no duplicates
+	 * of an added value - it the value exists it will not be added again.
 	 *
 	 * If the value is a {@link Name} instance, equality for Distinguished Names will be
 	 * used for calculating attribute modifications.
@@ -129,7 +129,7 @@ public interface LdapDataEntry {
 	/**
 	 * Add a value to the Attribute with the specified name. If the Attribute doesn't
 	 * exist it will be created. The <code>addIfDuplicateExists</code> parameter controls
-	 * the handling of duplicates. It <code>false</code>, this method makes sure that the
+	 * the handling of duplicates. It <code>false</code>, this method makes sure that
 	 * there will be no duplicates of an added value - it the value exists it will not be
 	 * added again.
 	 *

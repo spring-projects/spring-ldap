@@ -78,7 +78,7 @@ public interface Parser {
 	Attributes getRecord() throws IOException;
 
 	/**
-	 * Indicates whether or not the parser is ready to to return results.
+	 * Indicates whether or not the parser is ready to return results.
 	 * @return boolean indicator
 	 * @throws IOException if there is a problem with the underlying resource.
 	 */

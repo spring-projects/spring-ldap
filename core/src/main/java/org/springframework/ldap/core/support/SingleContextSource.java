@@ -129,7 +129,7 @@ public class SingleContextSource implements ContextSource, DisposableBean {
 	 * created instance. This makes sure the same connection will be used for all
 	 * operations inside the LdapOperationsCallback, which is particularly useful when
 	 * working with e.g. Paged Results as these typically require the exact same
-	 * connection to be used for all requests involving the same cookie.. The
+	 * connection to be used for all requests involving the same cookie. The
 	 * SingleContextSource instance will be properly disposed of once the operation has
 	 * been completed.
 	 * @param contextSource The target ContextSource to retrieve a DirContext from

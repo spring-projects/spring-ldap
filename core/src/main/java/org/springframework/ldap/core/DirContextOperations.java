@@ -53,7 +53,7 @@ public interface DirContextOperations extends DirContext, LdapDataEntry, Attribu
 	 * <code>getStringAttribute</code> methods) will return the updated values, and the
 	 * modifications will be forgotten (i.e.
 	 * {@link AttributeModificationsAware#getModificationItems()} will return an empty
-	 * array.
+	 * array).
 	 */
 	void update();
 

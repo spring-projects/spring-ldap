@@ -74,7 +74,7 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
 	}
 
 	/**
-	 * Recursivley inspect delegates until a non-delegating ldap context is found.
+	 * Recursively inspect delegates until a non-delegating ldap context is found.
 	 * @return The innermost (real) DirContext that is being delegated to.
 	 */
 	public @Nullable LdapContext getInnermostDelegateLdapContext() {
@@ -120,8 +120,7 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
 			otherLdapContext = ((DelegatingLdapContext) otherLdapContext).getInnermostDelegateLdapContext();
 		}
 
-		return thisLdapContext == otherLdapContext
-				|| (thisLdapContext != null && thisLdapContext.equals(otherLdapContext));
+		return Objects.equals(thisLdapContext, otherLdapContext);
 	}
 
 	/**

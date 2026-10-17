@@ -24,7 +24,7 @@ import javax.naming.NamingException;
  * Implementations of this interface perform the actual work of extracting results from a
  * single <code>NameClassPair</code> (a <code>NameClassPair</code>, <code>Binding</code>
  * or <code>SearchResult</code> depending on the search operation) returned by an LDAP
- * seach operation, such as search(), list(), and listBindings().
+ * search operation, such as search(), list(), and listBindings().
  *
  * @author Mattias Hellborg Arthursson
  */

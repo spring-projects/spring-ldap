@@ -11,7 +11,7 @@ Pooling support is provided by supplying a `<ldap:pooling />` child element to t
 Validation of pooled connections is the primary motivation for using a custom pooling library versus the JDK-provided LDAP pooling functionality. Validation allows pooled `DirContext` connections to be checked to ensure that they are still properly connected and configured when checking them out of the pool, checking them into the pool, or while they are idle in the pool.
 
 If connection validation is configured, pooled connections are validated by using `DefaultDirContextValidator`.
-`DefaultDirContextValidator` does a `DirContext.search(String, String, SearchControls)`, with an empty name, a filter of `"objectclass=*"`, and `SearchControls` set to limit a single result with the only the `objectclass` attribute and a 500ms timeout. If the returned `NamingEnumeration` has results, the `DirContext` passes validation. If no results are returned or an exception is thrown, the `DirContext` fails validation.
+`DefaultDirContextValidator` does a `DirContext.search(String, String, SearchControls)`, with an empty name, a filter of `"objectclass=*"`, and `SearchControls` set to limit a single result with the only `objectclass` attribute and a 500ms timeout. If the returned `NamingEnumeration` has results, the `DirContext` passes validation. If no results are returned or an exception is thrown, the `DirContext` fails validation.
 The default settings should work with no configuration changes on most LDAP servers and provide the fastest way to validate the `DirContext`.
 If you need customization, you can do so by using the validation configuration attributes, described in xref:pooling.adoc#pool-configuration[Pool Configuration].
 

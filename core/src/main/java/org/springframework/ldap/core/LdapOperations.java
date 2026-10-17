@@ -49,7 +49,7 @@ public interface LdapOperations {
 	/**
 	 * Perform a search using a particular {@link SearchExecutor} and context processor.
 	 * Use this method only if especially needed - for the most cases there is an
-	 * overloaded convenience method which calls this one with suitable argments. This
+	 * overloaded convenience method which calls this one with suitable arguments. This
 	 * method handles all the plumbing; getting a readonly context; looping through the
 	 * <code>NamingEnumeration</code> and closing the context and enumeration. The actual
 	 * search is delegated to the SearchExecutor and each found <code>NameClassPair</code>
@@ -71,7 +71,7 @@ public interface LdapOperations {
 	/**
 	 * Perform a search using a particular {@link SearchExecutor}. Use this method only if
 	 * especially needed - for the most cases there is an overloaded convenience method
-	 * which calls this one with suitable argments. This method handles all the plumbing;
+	 * which calls this one with suitable arguments. This method handles all the plumbing;
 	 * getting a readonly context; looping through the <code>NamingEnumeration</code> and
 	 * closing the context and enumeration. The actual search is delegated to the
 	 * <code>SearchExecutor</code> and each found <code>NameClassPair</code> is passed to
@@ -354,7 +354,7 @@ public interface LdapOperations {
 
 	/**
 	 * Search for all objects matching the supplied filter. Only return any attributes
-	 * mathing the specified attribute names. The Attributes in each
+	 * matching the specified attribute names. The Attributes in each
 	 * <code>SearchResult</code> is supplied to the specified
 	 * <code>AttributesMapper</code>.
 	 * @param base The base DN where the search should begin.
@@ -374,7 +374,7 @@ public interface LdapOperations {
 
 	/**
 	 * Search for all objects matching the supplied filter. Only return any attributes
-	 * mathing the specified attribute names. The Attributes in each
+	 * matching the specified attribute names. The Attributes in each
 	 * <code>SearchResult</code> is supplied to the specified
 	 * <code>AttributesMapper</code>.
 	 * @param base The base DN where the search should begin.
@@ -1607,7 +1607,7 @@ public interface LdapOperations {
 	 * {@link org.springframework.ldap.odm.annotations.Id} field and the calculated DN is
 	 * different, the entry will be <strong>moved</strong> (i.e., an
 	 * {@link #unbind(javax.naming.Name)} followed by a
-	 * {@link #bind(DirContextOperations)}. Otherwise the current data of the entry will
+	 * {@link #bind(DirContextOperations)}). Otherwise the current data of the entry will
 	 * be read from the directory and a {@link #modifyAttributes(DirContextOperations)}
 	 * operation will be performed using the <code>ModificationItems</code> resulting from
 	 * the changes of the entry compared to its current state in the directory. If the id

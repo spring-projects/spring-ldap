@@ -261,14 +261,14 @@ import org.springframework.util.Assert;
 		// Check that the field has not been annotated with both @Attribute and with @Id
 		if (foundAttributeAnnotation && foundIdAnnoation) {
 			throw new MetaDataException(String.format(
-					"You may not specifiy an %1$s annoation and an %2$s annotation on the same field, error in field %3$s in Entry class %4$s",
+					"You may not specify an %1$s annotation and an %2$s annotation on the same field, error in field %3$s in Entry class %4$s",
 					Id.class, Attribute.class, field.getName(), field.getDeclaringClass()));
 		}
 
 		// If this is the objectclass attribute then it must be of type List<String>
 		if (isObjectClass() && (!isCollection() || this.valueClass != String.class)) {
 			throw new MetaDataException(
-					String.format("The type of the objectclass attribute must be List<String> in classs %1$s",
+					String.format("The type of the objectclass attribute must be List<String> in class %1$s",
 							field.getDeclaringClass()));
 		}
 	}

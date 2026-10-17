@@ -141,7 +141,7 @@ public class ObservationContextSourceTests {
 	}
 
 	@Test
-	void constructorWhenNullParametersThenIllegalArgumment() {
+	void constructorWhenNullParametersThenIllegalArgument() {
 		assertThatExceptionOfType(IllegalArgumentException.class)
 			.isThrownBy(() -> new ObservationContextSource(null, this.registry));
 		assertThatExceptionOfType(IllegalArgumentException.class)
