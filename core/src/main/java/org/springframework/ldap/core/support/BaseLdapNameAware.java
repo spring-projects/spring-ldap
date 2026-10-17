@@ -27,8 +27,8 @@ import javax.naming.ldap.LdapName;
  * <p>
  * If a class implements this interface and a {@link BaseLdapPathBeanPostProcessor} is
  * defined in the <code>ApplicationContext</code>, the default base path will
- * automatically passed to the {@link #setBaseLdapPath(javax.naming.ldap.LdapName)} method
- * on initialization.
+ * automatically be passed to the {@link #setBaseLdapPath(javax.naming.ldap.LdapName)}
+ * method on initialization.
  * <p>
  * <b>NB:</b>The <code>ContextSource</code> needs to be a subclass of
  * {@link AbstractContextSource} for this mechanism to work.

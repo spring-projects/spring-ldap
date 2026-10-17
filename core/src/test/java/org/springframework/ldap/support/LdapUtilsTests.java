@@ -292,7 +292,7 @@ public class LdapUtilsTests {
 	}
 
 	@Test
-	public void testGetValueNamedReturnesFirstFound() throws InvalidNameException {
+	public void testGetValueNamedReturnsFirstFound() throws InvalidNameException {
 		LdapName ldapName = new LdapName(EXPECTED_DN_STRING);
 		assertThat("M").isEqualTo(LdapUtils.getValue(ldapName, "ou"));
 	}

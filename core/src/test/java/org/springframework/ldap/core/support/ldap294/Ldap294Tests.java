@@ -34,10 +34,10 @@ import org.springframework.ldap.core.support.AbstractContextSource;
 public class Ldap294Tests {
 
 	@Test
-	public void concerteContextSourceCanAccessPasswordAndUserDn() {
+	public void concreteContextSourceCanAccessPasswordAndUserDn() {
 	}
 
-	static class ConcerteContextSource extends AbstractContextSource {
+	static class ConcreteContextSource extends AbstractContextSource {
 
 		@Override
 		protected DirContext getDirContextInstance(Hashtable<String, Object> environment) throws NamingException {

@@ -713,7 +713,7 @@ public interface LdapClient {
 		 * Retrieve a single result as a required object instance.
 		 * @return the single result object (never {@code null})
 		 * @see #optional()
-		 * @see DataAccessUtils#requiredSingleResult(Collection)
+		 * @see DataAccessUtils#requiredSingleResult(java.util.Collection)
 		 */
 		default @NonNull T single() {
 			return DataAccessUtils.requiredSingleResult(list());
@@ -723,7 +723,7 @@ public interface LdapClient {
 		 * Retrieve a single result, if available, as an {@link Optional} handle.
 		 * @return an Optional handle with a single result object or none
 		 * @see #single()
-		 * @see DataAccessUtils#optionalResult(Collection)
+		 * @see DataAccessUtils#optionalResult(java.util.Collection)
 		 */
 		default Optional<T> optional() {
 			return DataAccessUtils.optionalResult(list());

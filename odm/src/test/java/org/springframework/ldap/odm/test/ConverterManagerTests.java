@@ -72,7 +72,7 @@ public final class ConverterManagerTests {
 
 	// Class to Class conversion without any syntaxes
 	@Test
-	public void basicTypeConverion() throws Exception {
+	public void basicTypeConversion() throws Exception {
 		final ConverterTestData<?>[] primitiveTypeTests = new ConverterTestData<?>[] {
 				new ConverterTestData<>("33", Byte.class, Byte.valueOf((byte) 33)),
 				new ConverterTestData<>("-88", Byte.class, Byte.valueOf((byte) -88)),
