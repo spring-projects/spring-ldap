@@ -77,7 +77,7 @@ public class DelegatingDirContext extends DelegatingContext implements DirContex
 	}
 
 	/**
-	 * Recursivley inspect delegates until a non-delegating dir context is found.
+	 * Recursively inspect delegates until a non-delegating dir context is found.
 	 * @return The innermost (real) DirContext that is being delegated to.
 	 */
 	public @Nullable DirContext getInnermostDelegateDirContext() {

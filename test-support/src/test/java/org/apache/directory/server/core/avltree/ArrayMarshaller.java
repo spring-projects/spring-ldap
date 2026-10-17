@@ -50,7 +50,7 @@ public class ArrayMarshaller<E> implements Marshaller<ArrayTree<E>> {
 
 	/**
 	 * Creates a new instance of AvlTreeMarshaller with a custom key Marshaller.
-	 * @param comparator Comparator to be used for key comparision
+	 * @param comparator Comparator to be used for key comparison
 	 * @param keyMarshaller marshaller for keys
 	 */
 	public ArrayMarshaller(Comparator<E> comparator, Marshaller<E> keyMarshaller) {
@@ -61,7 +61,7 @@ public class ArrayMarshaller<E> implements Marshaller<ArrayTree<E>> {
 	/**
 	 * Creates a new instance of AvlTreeMarshaller with the default key Marshaller which
 	 * uses Java Serialization.
-	 * @param comparator Comparator to be used for key comparision
+	 * @param comparator Comparator to be used for key comparison
 	 */
 	public ArrayMarshaller(Comparator<E> comparator) {
 		this.comparator = comparator;

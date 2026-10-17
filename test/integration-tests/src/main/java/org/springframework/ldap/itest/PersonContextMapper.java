@@ -20,7 +20,7 @@ import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.support.AbstractContextMapper;
 
 /**
- * Dummy implemention of ContextMapper for use in the integration tests and for
+ * Dummy implementation of ContextMapper for use in the integration tests and for
  * illustration purposes.
  *
  * @author Mattias Hellborg Arthursson

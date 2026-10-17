@@ -27,7 +27,7 @@ import org.springframework.ldap.core.DistinguishedName;
  * <p>
  * If a class implements this interface and a {@link BaseLdapPathBeanPostProcessor} is
  * defined in the <code>ApplicationContext</code>, the default base path will
- * automatically passed to the {@link #setBaseLdapPath(DistinguishedName)} method on
+ * automatically be passed to the {@link #setBaseLdapPath(DistinguishedName)} method on
  * initialization.
  * <p>
  * <b>NB:</b>The <code>ContextSource</code> needs to be a subclass of

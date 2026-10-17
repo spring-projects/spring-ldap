@@ -54,7 +54,7 @@ public interface OdmManager {
 
 	/**
 	 * Create the given entry in the LDAP directory.
-	 * @param entry The entry to be create, it must <em>not</em> already exist in the
+	 * @param entry The entry to be created, it must <em>not</em> already exist in the
 	 * directory.
 	 * @throws org.springframework.ldap.NamingException on error.
 	 */
