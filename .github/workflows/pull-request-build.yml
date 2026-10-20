@@ -6,6 +6,7 @@ permissions:
   contents: read
 
 env:
+  ORG_GRADLE_PROJECT_verifyWorkflows: true
   JAVA_VERSION: '25'
 
 jobs:
@@ -15,23 +16,14 @@ jobs:
     if: github.event.pull_request.head.repo.fork == false && github.actor != 'dependabot[bot]'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - id: project-version
-        name: Extract Project Version
-        uses: spring-io/spring-release-actions/compute-version@3f7412aeec60ad13127b2a536a1b19a2803a5b81 # 0.0.8
-      - id: release
-        name: Establish Release Channel
-        uses: spring-io/spring-release-actions/compute-release-channel@3f7412aeec60ad13127b2a536a1b19a2803a5b81 # 0.0.8
-        with:
-          version: ${{ steps.project-version.outputs.version }}
-      - id: secrets
-        uses: ./.github/actions/compute-secrets
-        with:
-          release-channel: ${{ steps.release.outputs.channel }}
-      - uses: spring-io/spring-security-actions/pr-build@09c8d127933065382da35646c7d4d3a8f9352368 # 0.0.4
+      - id: environment
+        name: Compute Build Environment
+        uses: spring-io/spring-security-actions/compute-build-environment@8f2e7bb51b5bd78abeeab91e4dbea1520fa68265 # 0.0.5
+      - uses: spring-io/spring-security-actions/pr-build@8f2e7bb51b5bd78abeeab91e4dbea1520fa68265 # 0.0.5
         env:
-          ORG_GRADLE_PROJECT_releaseChannel: ${{ steps.release.outputs.channel }}
-          ORG_GRADLE_PROJECT_artifactoryUsername: ${{ secrets[steps.secrets.outputs.dependencies-username] }}
-          ORG_GRADLE_PROJECT_artifactoryPassword: ${{ secrets[steps.secrets.outputs.dependencies-password] }}
+          ORG_GRADLE_PROJECT_releaseChannel: ${{ steps.environment.outputs.release-channel }}
+          ORG_GRADLE_PROJECT_artifactoryUsername: ${{ secrets[steps.environment.outputs.dependencies-username] }}
+          ORG_GRADLE_PROJECT_artifactoryPassword: ${{ secrets[steps.environment.outputs.dependencies-password] }}
         with:
           java-version: ${{ env.JAVA_VERSION }}
   build-check:
