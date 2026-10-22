@@ -1,5 +1,5 @@
 [versions]
-org-springframework = "7.0.9"
+org-springframework = "7.0.10"
 org-springframework-data = "2025.0.13"
 org-springframework-security = "6.5.11"
 org-junit = "6.0.3"
@@ -8,8 +8,8 @@ org-mockito = "5.20.0"
 org-aspectj = "1.9.25.1"
 org-slf4j = "2.0.20"
 org-apache-directory-server = "1.5.5"
-io-micrometer = "1.16.7"
-io-micrometer-tracing = "1.6.7"
+io-micrometer = "1.16.8"
+io-micrometer-tracing = "1.6.8"
 io-spring-javaformat = "0.0.48"
 io-spring-security = "1.1.0"
 
