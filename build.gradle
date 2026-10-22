@@ -16,6 +16,7 @@ plugins {
     id 'org.antora' version '1.0.0'
 }
 
+apply plugin: 'io.spring.security.release'
 apply plugin: 'io.spring.convention.root'
 apply plugin: 'io.spring.convention.docs'
 apply plugin: 'io.spring.javaformat'

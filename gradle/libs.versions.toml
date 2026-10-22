@@ -11,6 +11,7 @@ org-apache-directory-server = "1.5.5"
 io-micrometer = "1.16.7"
 io-micrometer-tracing = "1.6.7"
 io-spring-javaformat = "0.0.48"
+io-spring-security = "1.1.0"
 
 [libraries]
 org-springframework-spring-framework-bom = { module = "org.springframework:spring-framework-bom", version.ref = "org-springframework" }
@@ -68,7 +69,8 @@ com-sun-ldapbp = "com.sun:ldapbp:1.0"
 # buildSrc dependencies
 org-gretty-gretty = "org.gretty:gretty:5.0.2"
 io-spring-javaformat-spring-javaformat-gradle-plugin = { module = "io.spring.javaformat:spring-javaformat-gradle-plugin", version.ref = "io-spring-javaformat" }
-io-spring-gradle-spring-security-project-plugin = "io.spring.gradle:spring-security-project-plugin:1.0.21"
+io-spring-gradle-spring-security-release-plugin = { module = "io.spring.gradle:spring-security-release-plugin", version.ref = "io-spring-security" }
+io-spring-gradle-spring-security-project-plugin = { module = "io.spring.gradle:spring-security-project-plugin", version.ref = "io-spring-security" }
 io-spring-nohttp-nohttp-gradle = "io.spring.nohttp:nohttp-gradle:0.0.11"
 org-sonarsource-scanner-gradle-sonarqube-gradle-plugin = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:7.1.0.6387"
 org-springframework-spring-core = "org.springframework:spring-core:6.2.19"

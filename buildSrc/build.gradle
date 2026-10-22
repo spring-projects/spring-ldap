@@ -74,6 +74,7 @@ dependencies {
     implementation 'com.github.spullara.mustache.java:compiler:0.9.14'
     implementation libs.io.spring.javaformat.spring.javaformat.gradle.plugin
     implementation libs.io.spring.gradle.spring.security.project.plugin
+    implementation libs.io.spring.gradle.spring.security.release.plugin
     implementation libs.io.spring.nohttp.nohttp.gradle
     implementation 'net.sourceforge.htmlunit:htmlunit:2.70.0'
     implementation 'org.asciidoctor:asciidoctor-gradle-jvm:4.0.5'
