@@ -9,6 +9,7 @@ workflow:
         dependabot:
           automerge: true
         deploy-schema: true
+        verify: false
       release-train:
         build:
           env:
