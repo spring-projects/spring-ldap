@@ -1,13 +1,13 @@
 [versions]
-org-springframework = "7.0.9"
+org-springframework = "7.0.10"
 org-junit = "6.1.3"
 com-querydsl = "5.1.0"
 org-mockito = "5.23.0"
 org-aspectj = "1.9.25.1"
 org-slf4j = "2.0.20"
 org-apache-directory-server = "1.5.5"
-io-micrometer = "1.17.1"
-io-micrometer-tracing = "1.7.1"
+io-micrometer = "1.17.2"
+io-micrometer-tracing = "1.7.2"
 io-spring-javaformat = "0.0.48"
 io-spring-security = "1.1.0"
 
