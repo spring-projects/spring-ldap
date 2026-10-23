@@ -46,7 +46,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Tests for {@link LdapClient}'s search methods.
@@ -583,19 +582,13 @@ public class DefaultLdapClientSearchResultITests extends AbstractLdapTemplateInt
 
 	@Test
 	public void testSearchWithInvalidSearchBaseShouldByDefaultThrowException() {
-		try {
-			this.tested.search()
-				.query(LdapQueryBuilder.query()
-					.base(BASE_NAME + "ou=unknown")
-					.searchScope(SearchScope.SUBTREE)
-					.attributes(CN_SN_ATTRS)
-					.filter(FILTER_STRING))
-				.toObject(this.contextMapper);
-			fail("NameNotFoundException expected");
-		}
-		catch (NameNotFoundException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(NameNotFoundException.class).isThrownBy(() -> this.tested.search()
+			.query(LdapQueryBuilder.query()
+				.base(BASE_NAME + "ou=unknown")
+				.searchScope(SearchScope.SUBTREE)
+				.attributes(CN_SN_ATTRS)
+				.filter(FILTER_STRING))
+			.toObject(this.contextMapper));
 	}
 
 	@Test
