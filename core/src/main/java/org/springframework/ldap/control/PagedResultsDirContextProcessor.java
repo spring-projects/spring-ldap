@@ -83,7 +83,7 @@ public class PagedResultsDirContextProcessor extends AbstractFallbackRequestAndR
 
 	/**
 	 * Get the cookie.
-	 * @return the cookie. The cookie will always be set after at leas one query, however
+	 * @return the cookie. The cookie will always be set after at least one query, however
 	 * the actual cookie content can be <code>null</code>, indicating that there are no
 	 * more results, in which case {@link #hasMore()} will return <code>false</code>.
 	 * @see #hasMore()

@@ -33,7 +33,7 @@ import org.springframework.transaction.compensating.CompensatingTransactionOpera
  * <b>rename</b> in {@link #performOperation()}, a negating rename in {@link #rollback()},
  * and the {@link #commit()} operation unbinds the original entry from its temporary
  * location and binds a new entry to the original location using the attributes supplied
- * to the original rebind opertaion.
+ * to the original rebind operation.
  *
  * @author Mattias Hellborg Arthursson
  * @since 1.2

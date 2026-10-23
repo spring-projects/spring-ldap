@@ -80,7 +80,7 @@ public class PagedResultsRequestControl extends AbstractRequestControlDirContext
 
 	/**
 	 * Constructs a new instance with the supplied page size and cookie. The cookie must
-	 * be the exact same instance as received from a previous paged resullts search, or
+	 * be the exact same instance as received from a previous paged results search, or
 	 * <code>null</code> if it is the first in an operation sequence.
 	 * @param pageSize the page size.
 	 * @param cookie the cookie, as received from a previous search.

@@ -74,7 +74,7 @@ public class DelegatingLdapContext extends DelegatingDirContext implements LdapC
 	}
 
 	/**
-	 * Recursivley inspect delegates until a non-delegating ldap context is found.
+	 * Recursively inspect delegates until a non-delegating ldap context is found.
 	 * @return The innermost (real) DirContext that is being delegated to.
 	 */
 	public @Nullable LdapContext getInnermostDelegateLdapContext() {
