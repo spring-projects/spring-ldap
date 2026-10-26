@@ -59,10 +59,6 @@ gradlePlugin {
             id = "org.springframework.security.sagan"
             implementationClass = "org.springframework.gradle.sagan.SaganPlugin"
         }
-        s101 {
-            id = "s101"
-            implementationClass = "s101.S101Plugin"
-        }
     }
 }
 
