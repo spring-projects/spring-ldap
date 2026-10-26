@@ -11,7 +11,7 @@ org-apache-directory-server = "1.5.5"
 io-micrometer = "1.16.8"
 io-micrometer-tracing = "1.6.8"
 io-spring-javaformat = "0.0.48"
-io-spring-security = "1.1.0"
+io-spring-security = "1.1.1"
 
 [libraries]
 org-springframework-spring-framework-bom = { module = "org.springframework:spring-framework-bom", version.ref = "org-springframework" }
