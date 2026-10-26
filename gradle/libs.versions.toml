@@ -55,7 +55,7 @@ log4j-log4j = "log4j:log4j:1.2.17"
 com-sun-ldapbp = "com.sun:ldapbp:1.0"
 
 # buildSrc dependencies
-org-gretty-gretty = "org.gretty:gretty:5.0.2"
+org-gretty-gretty = "org.gretty:gretty:5.1.0"
 io-spring-javaformat-spring-javaformat-gradle-plugin = { module = "io.spring.javaformat:spring-javaformat-gradle-plugin", version.ref = "io-spring-javaformat" }
 io-spring-gradle-spring-security-release-plugin = { module = "io.spring.gradle:spring-security-release-plugin", version.ref = "io-spring-security" }
 io-spring-gradle-spring-security-project-plugin = { module = "io.spring.gradle:spring-security-project-plugin", version.ref = "io-spring-security" }
