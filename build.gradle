@@ -20,7 +20,6 @@ apply plugin: 'io.spring.security.release'
 apply plugin: 'io.spring.convention.root'
 apply plugin: 'io.spring.convention.docs'
 apply plugin: 'io.spring.javaformat'
-apply plugin: 's101'
 
 node {
     version = "24.15.0"
@@ -79,10 +78,6 @@ tasks.register("checkstyleAll") {
     description = 'Runs every Checkstyle task in every project, without running the rest of the build'
     dependsOn allprojects.collect { it.tasks.withType(Checkstyle) }
     dependsOn tasks.named('checkstyleNohttp')
-}
-
-s101 {
-	configurationDirectory = project.file("etc/s101")
 }
 
 develocity {
