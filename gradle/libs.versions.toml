@@ -61,5 +61,5 @@ io-spring-gradle-spring-security-release-plugin = { module = "io.spring.gradle:s
 io-spring-gradle-spring-security-project-plugin = { module = "io.spring.gradle:spring-security-project-plugin", version.ref = "io-spring-security" }
 io-spring-nohttp-nohttp-gradle = "io.spring.nohttp:nohttp-gradle:0.0.11"
 org-sonarsource-scanner-gradle-sonarqube-gradle-plugin = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:7.4.0.8496"
-org-springframework-spring-core = "org.springframework:spring-core:7.0.9"
+org-springframework-spring-core = "org.springframework:spring-core:7.0.10"
 org-apache-commons-commons-io = "org.apache.commons:commons-io:1.3.2"
