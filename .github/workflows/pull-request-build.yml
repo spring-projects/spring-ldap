@@ -17,8 +17,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - id: environment
         name: Compute Build Environment
-        uses: spring-io/spring-security-actions/compute-build-environment@69ea2de3f27e04a86f030751f79433d4f4fcc349 # 0.0.6
-      - uses: spring-io/spring-security-actions/pr-build@69ea2de3f27e04a86f030751f79433d4f4fcc349 # 0.0.6
+        uses: spring-io/spring-security-actions/compute-build-environment@8f2e7bb51b5bd78abeeab91e4dbea1520fa68265 # 0.0.5
+      - uses: spring-io/spring-security-actions/pr-build@8f2e7bb51b5bd78abeeab91e4dbea1520fa68265 # 0.0.5
         env:
           ORG_GRADLE_PROJECT_releaseChannel: ${{ steps.environment.outputs.release-channel }}
           ORG_GRADLE_PROJECT_artifactoryUsername: ${{ secrets[steps.environment.outputs.dependencies-username] }}

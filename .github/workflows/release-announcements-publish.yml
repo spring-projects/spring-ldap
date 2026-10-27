@@ -6,11 +6,10 @@ on:
       version:
         description: The version to publish
         required: true
+        type: string
 
 permissions:
-  actions: write
   contents: read
-  issues: write
 
 jobs:
   setup:
@@ -22,12 +21,12 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - id: environment
         name: Compute Build Environment
-        uses: spring-io/spring-security-actions/compute-build-environment@69ea2de3f27e04a86f030751f79433d4f4fcc349 # 0.0.6
+        uses: spring-io/spring-security-actions/compute-build-environment@8f2e7bb51b5bd78abeeab91e4dbea1520fa68265 # 0.0.5
   deploy-schema:
     name: Deploy Schema
     needs: setup
     if: needs.setup.outputs.release-channel == 'oss'
-    uses: spring-io/spring-security-release-tools/.github/workflows/ci-deploy-schema.yml@c6656e0cee9fd2930ad238f6e1cafb0b8792e515 # v1.1.0
+    uses: spring-io/spring-security-release-tools/.github/workflows/ci-deploy-schema.yml@1c4903f876627b48871a3063857ebf6048b83697 # v1.1.2-SNAPSHOT
     with:
       java-version: '25'
       runner: ${{ vars.UBUNTU_RUNS_ON }}
@@ -37,9 +36,13 @@ jobs:
       docs-host: ${{ secrets.DOCS_HOST }}
   publish-release-announcements:
     name: Publish Release Announcements
+    permissions:
+      actions: write
+      contents: read
+      issues: write
     needs: [ deploy-schema ]
     if: ${{ !failure() && !cancelled() }}
-    uses: spring-io/spring-security-release-tools/.github/workflows/release-announcements-publish.yml@c6656e0cee9fd2930ad238f6e1cafb0b8792e515 # v1.1.0
+    uses: spring-io/spring-security-release-tools/.github/workflows/release-announcements-publish.yml@1c4903f876627b48871a3063857ebf6048b83697 # v1.1.2-SNAPSHOT
     with:
       version: ${{ inputs.version }}
     secrets: inherit
