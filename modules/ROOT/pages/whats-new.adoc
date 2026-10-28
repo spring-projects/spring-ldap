@@ -1,0 +1,12 @@
+[[whats-new]]
+= What's New in Spring LDAP 4.0
+
+[[whats-new-breaking-changes]]
+== Breaking Changes
+
+* https://github.com/spring-projects/spring-ldap/issues/1109[gh-1109] - `ContextSourceAndDataSourceTransactionManager` and `ContextSourceAndHibernateTransactionManager` have been removed since they rely on APIs that are removed in Spring Framework 7; remove any use of the `data-source-ref` and `session-factory-ref` attributes of the XML namespace's transaction manager element.
+
+== Core
+
+* https://github.com/spring-projects/spring-ldap/issues/1110[gh-1110] - Updated to Spring Framework 7
+* https://github.com/spring-projects/spring-ldap/issues/1153[gh-1153] - Moved from Spring Framework's nullability annotations to https://jspecify.dev/[JSpecify]
