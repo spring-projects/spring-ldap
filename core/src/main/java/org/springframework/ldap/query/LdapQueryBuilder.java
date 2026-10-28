@@ -185,9 +185,12 @@ public final class LdapQueryBuilder implements LdapQuery {
 	/**
 	 * Start specifying the filter conditions in this query.
 	 * @param attribute The attribute that the first part of the filter should test
-	 * against.
+	 * against. Values are escaped, but the attribute name is only validated as an RFC
+	 * 4512 attribute description, so it should not come from untrusted input.
 	 * @return A ConditionCriteria instance for specifying the compare operation.
 	 * @throws IllegalStateException if a filter has already been specified.
+	 * @throws IllegalArgumentException when the condition is specified, if the attribute
+	 * is not a valid attribute description.
 	 */
 	public ConditionCriteria where(String attribute) {
 		DefaultContainerCriteria rootContainer = initRootContainer();

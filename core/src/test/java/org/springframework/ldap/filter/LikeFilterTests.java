@@ -28,22 +28,22 @@ public class LikeFilterTests {
 
 	@Test
 	public void testEncodeValue_blank() {
-		assertThat("").isEqualTo(new LikeFilter("", null).getEncodedValue());
-		assertThat(" ").isEqualTo(new LikeFilter("", " ").getEncodedValue());
+		assertThat("").isEqualTo(new LikeFilter("cn", null).getEncodedValue());
+		assertThat(" ").isEqualTo(new LikeFilter("cn", " ").getEncodedValue());
 	}
 
 	@Test
 	public void testEncodeValue_normal() {
-		assertThat("foo").isEqualTo(new LikeFilter("", "foo").getEncodedValue());
-		assertThat("foo*bar").isEqualTo(new LikeFilter("", "foo*bar").getEncodedValue());
-		assertThat("*foo*bar*").isEqualTo(new LikeFilter("", "*foo*bar*").getEncodedValue());
-		assertThat("**foo**bar**").isEqualTo(new LikeFilter("", "**foo**bar**").getEncodedValue());
+		assertThat("foo").isEqualTo(new LikeFilter("cn", "foo").getEncodedValue());
+		assertThat("foo*bar").isEqualTo(new LikeFilter("cn", "foo*bar").getEncodedValue());
+		assertThat("*foo*bar*").isEqualTo(new LikeFilter("cn", "*foo*bar*").getEncodedValue());
+		assertThat("**foo**bar**").isEqualTo(new LikeFilter("cn", "**foo**bar**").getEncodedValue());
 	}
 
 	@Test
 	public void testEncodeValue_escape() {
-		assertThat("*\\28*\\29*").isEqualTo(new LikeFilter("", "*(*)*").getEncodedValue());
-		assertThat("*\\5c2a*").isEqualTo(new LikeFilter("", "*\\2a*").getEncodedValue());
+		assertThat("*\\28*\\29*").isEqualTo(new LikeFilter("cn", "*(*)*").getEncodedValue());
+		assertThat("*\\5c2a*").isEqualTo(new LikeFilter("cn", "*\\2a*").getEncodedValue());
 	}
 
 	@Test
