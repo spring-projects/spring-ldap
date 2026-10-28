@@ -26,6 +26,7 @@ import java.util.Set;
 
 import javax.naming.CommunicationException;
 import javax.naming.directory.DirContext;
+import javax.naming.ldap.LdapContext;
 
 import org.apache.commons.pool2.BaseKeyedPooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
@@ -230,6 +231,22 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 		}
 		else {
 			throw new IllegalArgumentException("Unrecognized ContextType: " + contextType);
+		}
+	}
+
+	/**
+	 * Clears any request controls from a returned {@link LdapContext} so that state set
+	 * by one borrower is not visible to the next. Any other state that
+	 * {@code MutableDelegatingLdapContext} lets a borrower change must be reset here too.
+	 * @param key the key of the context being returned
+	 * @param pooledObject the context being returned
+	 * @throws Exception if the request controls cannot be cleared, in which case the pool
+	 * discards the context
+	 */
+	@Override
+	public void passivateObject(Object key, PooledObject<Object> pooledObject) throws Exception {
+		if (pooledObject.getObject() instanceof LdapContext ldapContext) {
+			ldapContext.setRequestControls(null);
 		}
 	}
 
