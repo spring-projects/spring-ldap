@@ -43,9 +43,11 @@ public class PresentFilter extends AbstractFilter {
 	/**
 	 * Creates a new instance of a present filter for a particular attribute.
 	 * @param attribute the attribute expected to be present (ie, contains a value).
+	 * @throws IllegalArgumentException if the attribute is not a valid RFC 4512 attribute
+	 * description
 	 */
 	public PresentFilter(String attribute) {
-		this.attribute = attribute;
+		this.attribute = AttributeDescriptions.validate(attribute);
 	}
 
 	public StringBuffer encode(StringBuffer buff) {

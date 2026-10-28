@@ -26,19 +26,27 @@ public interface ContainerCriteria extends LdapQuery {
 
 	/**
 	 * Append a logical And condition to the currently built filter.
-	 * @param attribute Name of the attribute to specify a condition for.
+	 * @param attribute Name of the attribute to specify a condition for. Values are
+	 * escaped, but the attribute name is only validated as an RFC 4512 attribute
+	 * description, so it should not come from untrusted input.
 	 * @return A ConditionCriteria instance for specifying the compare operation.
 	 * @throws IllegalStateException if {@link #or(String)} has previously been called on
 	 * this instance.
+	 * @throws IllegalArgumentException when the condition is specified, if the attribute
+	 * is not a valid attribute description.
 	 */
 	ConditionCriteria and(String attribute);
 
 	/**
 	 * Append a logical Or condition to the currently built filter.
-	 * @param attribute Name of the attribute to specify a condition for.
+	 * @param attribute Name of the attribute to specify a condition for. Values are
+	 * escaped, but the attribute name is only validated as an RFC 4512 attribute
+	 * description, so it should not come from untrusted input.
 	 * @return A ConditionCriteria instance for specifying the compare operation.
 	 * @throws IllegalStateException if {@link #and(String)} has previously been called on
 	 * this instance.
+	 * @throws IllegalArgumentException when the condition is specified, if the attribute
+	 * is not a valid attribute description.
 	 */
 	ConditionCriteria or(String attribute);
 

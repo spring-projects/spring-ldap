@@ -40,7 +40,7 @@ public abstract class CompareFilter extends AbstractFilter {
 	 */
 	@Deprecated(since = "3.3")
 	public CompareFilter(String attribute, String value) {
-		this.attribute = attribute;
+		this.attribute = AttributeDescriptions.validate(attribute);
 		this.value = value;
 		this.encodedValue = encodeValue(value);
 	}
@@ -68,11 +68,13 @@ public abstract class CompareFilter extends AbstractFilter {
 	 * Convenience constructor for <code>int</code> values.
 	 * @param attribute Name of attribute in filter.
 	 * @param value The value of the attribute in the filter.
+	 * @throws IllegalArgumentException if the attribute is not a valid RFC 4512 attribute
+	 * description
 	 * @deprecated please use the {@code protected} constructor instead
 	 */
 	@Deprecated(since = "3.3")
 	public CompareFilter(String attribute, int value) {
-		this.attribute = attribute;
+		this.attribute = AttributeDescriptions.validate(attribute);
 		this.value = String.valueOf(value);
 		this.encodedValue = LdapEncoder.filterEncode(this.value);
 	}
@@ -83,10 +85,12 @@ public abstract class CompareFilter extends AbstractFilter {
 	 * @param attribute the attribute name
 	 * @param operator the comparison operator; for example, {@code =}, {@code ~=}
 	 * @param encodedValue the already-encoded value
+	 * @throws IllegalArgumentException if the attribute is not a valid RFC 4512 attribute
+	 * description
 	 * @since 3.3
 	 */
 	protected CompareFilter(String attribute, String operator, String value, String encodedValue) {
-		this.attribute = attribute;
+		this.attribute = AttributeDescriptions.validate(attribute);
 		this.value = value;
 		this.encodedValue = encodedValue;
 		this.operator = operator;
