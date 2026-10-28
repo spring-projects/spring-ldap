@@ -42,9 +42,11 @@ public class NotPresentFilter extends AbstractFilter {
 	/**
 	 * Creates a new instance of a not present filter for a particular attribute.
 	 * @param attribute the attribute expected to be not-present (ie, unset, or null).
+	 * @throws IllegalArgumentException if the attribute is not a valid RFC 4512 attribute
+	 * description
 	 */
 	public NotPresentFilter(String attribute) {
-		this.attribute = attribute;
+		this.attribute = AttributeDescriptions.validate(attribute);
 	}
 
 	public StringBuffer encode(StringBuffer buff) {

@@ -130,7 +130,9 @@ public class PersonRepoImpl implements PersonRepo {
 }
 ----
 
-NOTE: In addition to simplifying building of complex search parameters, the `LdapQueryBuilder` and its associated classes also provide proper escaping of any unsafe characters in search filters. This prevents "`LDAP injection`", where a user might use such characters to inject unwanted operations into your LDAP operations.
+NOTE: In addition to simplifying building of complex search parameters, the `LdapQueryBuilder` and its associated classes also provide proper escaping of any unsafe characters in search filter values. This prevents "`LDAP injection`", where a user might use such characters to inject unwanted operations into your LDAP operations.
+Attribute names cannot be escaped, so they are instead validated: an attribute name that is not a valid https://datatracker.ietf.org/doc/html/rfc4512#section-2.5[RFC 4512 attribute description] (a name such as `cn` or a numeric OID such as `2.5.4.3`, optionally followed by `;option` suffixes) is rejected with an `IllegalArgumentException`.
+Even so, attribute names should come from your application and not from untrusted input, since a caller who controls the name can still choose which attribute is searched.
 
 NOTE: `LdapClient` includes many overloaded methods for performing LDAP searches. This is in order to accommodate as many different use cases and programming style preferences as possible. For the vast majority of use cases, the methods that take an `LdapQuery` as input are the recommended methods to use.
 

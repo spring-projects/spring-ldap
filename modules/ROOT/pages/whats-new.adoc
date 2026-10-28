@@ -5,6 +5,9 @@
 == Breaking Changes
 
 * `AttributeSchema` now https://github.com/spring-projects/spring-ldap/issues/1667[validates] that an attribute's LDAP name can be converted into a valid Java identifier.
+* https://github.com/spring-projects/spring-ldap/issues/1812[gh-1812] - `CompareFilter` (and therefore `EqualsFilter`, `LikeFilter` and the other comparison filters), `PresentFilter` and `NotPresentFilter` now reject, with an `IllegalArgumentException`, any attribute name that is not a valid https://datatracker.ietf.org/doc/html/rfc4512#section-2.5[RFC 4512 attribute description].
+Values continue to be escaped; attribute names are validated and should not come from untrusted input.
+See xref:spring-ldap-basic-usage.adoc#basic-queries[Building LDAP Queries].
 
 == Core
 
