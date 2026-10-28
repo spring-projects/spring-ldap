@@ -16,8 +16,13 @@
 
 package org.springframework.ldap.pool;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -35,6 +40,20 @@ public class MutableDelegatingLdapContextTests extends AbstractPoolTestCase {
 		delegatingLdapContext.setRequestControls(null);
 
 		verify(ldapContextMock).setRequestControls(null);
+	}
+
+	/**
+	 * Every non-private method declared here lets a borrower change state on the shared
+	 * pooled connection. That state must be reset in
+	 * {@code DirContextPooledObjectFactory#passivateObject} (or its pool counterpart) or
+	 * it will leak to the next borrower. If you are adding a method, reset its state
+	 * there and add a test for it, then update this list.
+	 */
+	@Test
+	public void testOnlyKnownMutatorsAreDeclared() {
+		assertThat(Arrays.stream(MutableDelegatingLdapContext.class.getDeclaredMethods())
+			.filter((method) -> !method.isSynthetic() && !Modifier.isPrivate(method.getModifiers()))
+			.map(Method::getName)).containsExactly("setRequestControls");
 	}
 
 }

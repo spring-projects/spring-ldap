@@ -26,6 +26,7 @@ import java.util.Set;
 
 import javax.naming.CommunicationException;
 import javax.naming.directory.DirContext;
+import javax.naming.ldap.LdapContext;
 
 import org.apache.commons.pool.BaseKeyedPoolableObjectFactory;
 import org.slf4j.Logger;
@@ -221,6 +222,22 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 		}
 		catch (Exception ex) {
 			this.logger.warn("An exception occured while closing '" + obj + "'", ex);
+		}
+	}
+
+	/**
+	 * Clears any request controls from a returned {@link LdapContext} so that state set
+	 * by one borrower is not visible to the next. Any other state that
+	 * {@code MutableDelegatingLdapContext} lets a borrower change must be reset here too.
+	 * @param key the key of the context being returned
+	 * @param obj the context being returned
+	 * @throws Exception if the request controls cannot be cleared, in which case the pool
+	 * discards the context
+	 */
+	@Override
+	public void passivateObject(Object key, Object obj) throws Exception {
+		if (obj instanceof LdapContext ldapContext) {
+			ldapContext.setRequestControls(null);
 		}
 	}
 
