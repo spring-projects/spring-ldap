@@ -50,8 +50,7 @@ class EmbeddedLdapServerTests {
 
 	@Test
 	void newEmbeddedServerWhenStartedThenListenerBindsToLoopbackOnly() throws Exception {
-		try (EmbeddedLdapServer server = EmbeddedLdapServer.newEmbeddedServer("jayway", "dc=jayway,dc=se",
-				this.port)) {
+		try (EmbeddedLdapServer server = EmbeddedLdapServer.newEmbeddedServer("jayway", "dc=jayway,dc=se", this.port)) {
 			InMemoryDirectoryServer directoryServer = (InMemoryDirectoryServer) ReflectionTestUtils.getField(server,
 					"directoryServer");
 			assertThat(directoryServer.getListenAddress().isLoopbackAddress()).isTrue();
