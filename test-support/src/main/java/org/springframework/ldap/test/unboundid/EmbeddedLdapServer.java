@@ -210,7 +210,8 @@ public final class EmbeddedLdapServer implements AutoCloseable {
 				throws LDAPException {
 			InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig(partitionSuffix);
 			config.addAdditionalBindCredentials("uid=admin,ou=system", "secret");
-			config.setListenerConfigs(InMemoryListenerConfig.createLDAPConfig("LDAP", InetAddress.getLoopbackAddress(), port, null));
+			config.setListenerConfigs(
+					InMemoryListenerConfig.createLDAPConfig("LDAP", InetAddress.getLoopbackAddress(), port, null));
 			config.setEnforceSingleStructuralObjectClass(false);
 			config.setEnforceAttributeSyntaxCompliance(true);
 			return config;
