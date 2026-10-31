@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,6 +32,7 @@ import javax.naming.ldap.LdapContext;
 import org.apache.commons.pool2.BaseKeyedPooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -144,8 +146,9 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 	}
 
 	private Object makeFailureAwareProxy(DirContext readOnlyContext) {
-		return Proxy.newProxyInstance(DirContextProxy.class.getClassLoader(), new Class<?>[] {
-				LdapUtils.getActualTargetClass(readOnlyContext), DirContextProxy.class, FailureAwareContext.class },
+		return Proxy.newProxyInstance(DirContextProxy.class.getClassLoader(),
+				new Class<?>[] { LdapUtils.getActualTargetClass(readOnlyContext), DirContextProxy.class,
+						FailureAwareContext.class, BorrowerStateAwareContext.class },
 				new FailureAwareContextProxy(readOnlyContext));
 	}
 
@@ -234,7 +237,8 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 
 	/**
 	 * Clears any request controls from a returned {@link LdapContext} so that state set
-	 * by one borrower is not visible to the next. Any other state that
+	 * by one borrower is not visible to the next. The request-control change record is
+	 * cleared only after the reset succeeds. Any other state that
 	 * {@code MutableDelegatingLdapContext} lets a borrower change must be reset here too.
 	 * @param key the key of the context being returned
 	 * @param pooledObject the context being returned
@@ -243,8 +247,14 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 	 */
 	@Override
 	public void passivateObject(Object key, PooledObject<Object> pooledObject) throws Exception {
-		if (pooledObject.getObject() instanceof LdapContext ldapContext) {
+		Object context = pooledObject.getObject();
+
+		if (context instanceof LdapContext ldapContext) {
 			ldapContext.setRequestControls(null);
+
+			if (context instanceof BorrowerStateAwareContext trackedContext) {
+				trackedContext.clearChangedState(ContextState.REQUEST_CONTROLS);
+			}
 		}
 	}
 
@@ -258,7 +268,10 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 
 	/**
 	 * Invocation handler that checks thrown exceptions against the configured
-	 * {@link #nonTransientExceptions}, marking the Context as invalid on match.
+	 * {@link #nonTransientExceptions}, marking the Context as invalid on match. Also
+	 * records successful request-control changes and exposes their tracking through
+	 * {@link BorrowerStateAwareContext} without forwarding tracking methods to the
+	 * target.
 	 *
 	 * @author Mattias Hellborg Arthursson
 	 * @since 2.0
@@ -269,17 +282,21 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 
 		private boolean hasFailed = false;
 
+		private final Set<ContextState> changedState = EnumSet.noneOf(ContextState.class);
+
 		FailureAwareContextProxy(DirContext target) {
 			Assert.notNull(target, "Target must not be null");
 			this.target = target;
 		}
 
-		/*
-		 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
-		 * java.lang.reflect.Method, java.lang.Object[])
+		/**
+		 * Handle proxy bookkeeping methods locally and delegate context operations to the
+		 * target.
+		 * @return the invocation result, or {@code null} for a void method or a nullable
+		 * target result
 		 */
 		@Override
-		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+		public @Nullable Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
 			String methodName = method.getName();
 			if (methodName.equals("getTargetContext")) {
@@ -288,9 +305,22 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 			else if (methodName.equals("hasFailed")) {
 				return this.hasFailed;
 			}
+			else if (methodName.equals("getChangedState")) {
+				return Set.copyOf(this.changedState);
+			}
+			else if (methodName.equals("clearChangedState")) {
+				this.changedState.remove((ContextState) args[0]);
+				return null;
+			}
 
 			try {
-				return method.invoke(this.target, args);
+				Object result = method.invoke(this.target, args);
+
+				if (methodName.equals("setRequestControls")) {
+					this.changedState.add(ContextState.REQUEST_CONTROLS);
+				}
+
+				return result;
 			}
 			catch (InvocationTargetException ex) {
 				Throwable targetException = ex.getTargetException();
