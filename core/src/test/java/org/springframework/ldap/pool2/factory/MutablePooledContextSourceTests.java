@@ -18,10 +18,13 @@ package org.springframework.ldap.pool2.factory;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.Control;
 import javax.naming.ldap.LdapContext;
 import javax.naming.ldap.PagedResultsControl;
+import javax.naming.ldap.StartTlsRequest;
+import javax.naming.ldap.StartTlsResponse;
 
 import org.junit.jupiter.api.Test;
 
@@ -30,8 +33,13 @@ import org.springframework.ldap.pool2.MutableDelegatingLdapContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willAnswer;
+import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * Unit tests for the MutablePoolingContextSource class.
@@ -88,6 +96,68 @@ public class MutablePooledContextSourceTests extends AbstractPoolTestCase {
 
 		LdapContext second = (LdapContext) poolingContextSource.getReadOnlyContext();
 		assertThat(second.getRequestControls()).isNull();
+	}
+
+	@Test
+	public void testContextIsDiscardedWhenRequestControlsCannotBeCleared() throws Exception {
+		LdapContext replacement = mock(LdapContext.class);
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(this.ldapContextMock, replacement);
+		willThrow(new NamingException("Cannot clear request controls")).given(this.ldapContextMock)
+			.setRequestControls(isNull());
+		MutablePooledContextSource poolingContextSource = new MutablePooledContextSource(this.contextSourceMock,
+				new PoolConfig());
+
+		LdapContext first = (LdapContext) poolingContextSource.getReadOnlyContext();
+		first.setRequestControls(new Control[] { new PagedResultsControl(10, Control.CRITICAL) });
+		first.close();
+
+		verify(this.ldapContextMock).close();
+		LdapContext second = (LdapContext) poolingContextSource.getReadOnlyContext();
+		try {
+			second.getRequestControls();
+			verify(replacement).getRequestControls();
+			verify(this.contextSourceMock, times(2)).getReadOnlyContext();
+		}
+		finally {
+			second.close();
+			poolingContextSource.destroy();
+		}
+	}
+
+	@Test
+	public void testContextIsDiscardedAfterStartTlsNegotiation() throws Exception {
+		LdapContext replacement = mock(LdapContext.class);
+		StartTlsRequest request = new StartTlsRequest();
+		StartTlsResponse response = mock(StartTlsResponse.class);
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(this.ldapContextMock, replacement);
+		given(this.ldapContextMock.extendedOperation(request)).willReturn(response);
+		MutablePooledContextSource poolingContextSource = new MutablePooledContextSource(this.contextSourceMock,
+				new PoolConfig());
+
+		try {
+			LdapContext first = (LdapContext) poolingContextSource.getReadOnlyContext();
+			try {
+				StartTlsResponse tls = (StartTlsResponse) first.extendedOperation(request);
+				tls.negotiate();
+			}
+			finally {
+				first.close();
+			}
+
+			verify(this.ldapContextMock).close();
+			LdapContext second = (LdapContext) poolingContextSource.getReadOnlyContext();
+			try {
+				second.getRequestControls();
+				verify(replacement).getRequestControls();
+				verify(this.contextSourceMock, times(2)).getReadOnlyContext();
+			}
+			finally {
+				second.close();
+			}
+		}
+		finally {
+			poolingContextSource.destroy();
+		}
 	}
 
 }
