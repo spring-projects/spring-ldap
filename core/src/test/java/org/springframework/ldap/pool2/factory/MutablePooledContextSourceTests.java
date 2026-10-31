@@ -89,13 +89,29 @@ public class MutablePooledContextSourceTests extends AbstractPoolTestCase {
 		MutablePooledContextSource poolingContextSource = new MutablePooledContextSource(this.contextSourceMock,
 				new PoolConfig());
 
-		LdapContext first = (LdapContext) poolingContextSource.getReadOnlyContext();
-		first.setRequestControls(new Control[] { new PagedResultsControl(10, Control.CRITICAL) });
-		assertThat(first.getRequestControls()).hasSize(1);
-		first.close();
+		try {
+			LdapContext first = (LdapContext) poolingContextSource.getReadOnlyContext();
+			try {
+				first.setRequestControls(new Control[] { new PagedResultsControl(10, Control.CRITICAL) });
+				assertThat(first.getRequestControls()).hasSize(1);
+			}
+			finally {
+				first.close();
+			}
 
-		LdapContext second = (LdapContext) poolingContextSource.getReadOnlyContext();
-		assertThat(second.getRequestControls()).isNull();
+			LdapContext second = (LdapContext) poolingContextSource.getReadOnlyContext();
+			try {
+				assertThat(second.getRequestControls()).isNull();
+				verify(this.contextSourceMock, times(1)).getReadOnlyContext();
+				verify(this.ldapContextMock, times(2)).getRequestControls();
+			}
+			finally {
+				second.close();
+			}
+		}
+		finally {
+			poolingContextSource.destroy();
+		}
 	}
 
 	@Test
