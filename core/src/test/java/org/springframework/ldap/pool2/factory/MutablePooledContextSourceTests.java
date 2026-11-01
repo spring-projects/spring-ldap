@@ -77,6 +77,34 @@ public class MutablePooledContextSourceTests extends AbstractPoolTestCase {
 	}
 
 	@Test
+	public void testUnchangedContextIsReused() throws Exception {
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(this.ldapContextMock);
+		MutablePooledContextSource poolingContextSource = new MutablePooledContextSource(this.contextSourceMock,
+				new PoolConfig());
+		try {
+			LdapContext first = (LdapContext) poolingContextSource.getReadOnlyContext();
+			try {
+				first.getRequestControls();
+			}
+			finally {
+				first.close();
+			}
+			LdapContext second = (LdapContext) poolingContextSource.getReadOnlyContext();
+			try {
+				second.getRequestControls();
+				verify(this.contextSourceMock).getReadOnlyContext();
+				verify(this.ldapContextMock, times(2)).getRequestControls();
+			}
+			finally {
+				second.close();
+			}
+		}
+		finally {
+			poolingContextSource.destroy();
+		}
+	}
+
+	@Test
 	public void testRequestControlsAreNotRetainedAfterContextIsReturnedToPool() throws Exception {
 		AtomicReference<Control[]> connectionControls = new AtomicReference<>();
 		willAnswer((invocation) -> {

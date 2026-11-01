@@ -19,6 +19,7 @@ package org.springframework.ldap.pool2.factory;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.util.Set;
 
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
@@ -120,6 +121,42 @@ public class DirContextPooledObjectFactoryTests extends AbstractPoolTestCase {
 		final PooledObject createdDirContext = objectFactory.makeObject(DirContextType.READ_ONLY);
 		InvocationHandler invocationHandler = Proxy.getInvocationHandler(createdDirContext.getObject());
 		assertThat(readOnlyContextMock).isEqualTo(getInternalState(invocationHandler, "target"));
+	}
+
+	@Test
+	public void testChangedStateIsAnUnmodifiableSnapshot() throws Exception {
+		DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory(this.contextSourceMock);
+		LdapContext target = mock(LdapContext.class);
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(target);
+		PooledObject<Object> pooledObject = objectFactory.makeObject(DirContextType.READ_ONLY);
+		LdapContext context = (LdapContext) pooledObject.getObject();
+		BorrowerStateAwareContext trackedContext = (BorrowerStateAwareContext) context;
+		context.setRequestControls(new Control[] { new PagedResultsControl(10, Control.CRITICAL) });
+		Set<ContextState> snapshot = trackedContext.getChangedState();
+
+		assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(snapshot::clear);
+		objectFactory.passivateObject(DirContextType.READ_ONLY, pooledObject);
+
+		assertThat(trackedContext.getChangedState()).isEmpty();
+		assertThat(snapshot).containsExactly(ContextState.REQUEST_CONTROLS);
+	}
+
+	@Test
+	public void testCustomRequestWithStartTlsIdIsRecorded() throws Exception {
+		DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory(this.contextSourceMock);
+		LdapContext target = mock(LdapContext.class);
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(target);
+		PooledObject<Object> pooledObject = objectFactory.makeObject(DirContextType.READ_ONLY);
+		LdapContext context = (LdapContext) pooledObject.getObject();
+		ExtendedRequest request = mock(ExtendedRequest.class);
+		given(request.getID()).willReturn(StartTlsRequest.OID);
+		ExtendedResponse response = mock(ExtendedResponse.class);
+		given(target.extendedOperation(request)).willReturn(response);
+
+		assertThat(context.extendedOperation(request)).isSameAs(response);
+
+		assertThat(((BorrowerStateAwareContext) context).getChangedState()).containsExactly(ContextState.START_TLS);
+		verify(target).extendedOperation(request);
 	}
 
 	@Test
