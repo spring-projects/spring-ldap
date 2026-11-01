@@ -26,8 +26,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.naming.CommunicationException;
+import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
+import javax.naming.ldap.ExtendedRequest;
 import javax.naming.ldap.LdapContext;
+import javax.naming.ldap.StartTlsRequest;
 
 import org.apache.commons.pool2.BaseKeyedPooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
@@ -238,16 +241,24 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 	/**
 	 * Clears any request controls from a returned {@link LdapContext} so that state set
 	 * by one borrower is not visible to the next. The request-control change record is
-	 * cleared only after the reset succeeds. Any other state that
-	 * {@code MutableDelegatingLdapContext} lets a borrower change must be reset here too.
+	 * cleared only after the reset succeeds. Recorded state without a supported reset
+	 * causes rejection before any cleanup is attempted.
 	 * @param key the key of the context being returned
 	 * @param pooledObject the context being returned
-	 * @throws Exception if the request controls cannot be cleared, in which case the pool
-	 * discards the context
+	 * @throws Exception if recorded state cannot be reset or request controls cannot be
+	 * cleared, in which case the pool discards the context
 	 */
 	@Override
 	public void passivateObject(Object key, PooledObject<Object> pooledObject) throws Exception {
 		Object context = pooledObject.getObject();
+
+		if (context instanceof BorrowerStateAwareContext trackedContext) {
+			for (ContextState state : trackedContext.getChangedState()) {
+				if (state != ContextState.REQUEST_CONTROLS) {
+					throw new NamingException("Cannot safely reset pooled context state: " + state);
+				}
+			}
+		}
 
 		if (context instanceof LdapContext ldapContext) {
 			ldapContext.setRequestControls(null);
@@ -269,7 +280,8 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 	/**
 	 * Invocation handler that checks thrown exceptions against the configured
 	 * {@link #nonTransientExceptions}, marking the Context as invalid on match. Also
-	 * records successful request-control changes and exposes their tracking through
+	 * records attempted request-control and StartTLS changes before delegation, including
+	 * failed calls that may have changed state, and exposes their tracking through
 	 * {@link BorrowerStateAwareContext} without forwarding tracking methods to the
 	 * target.
 	 *
@@ -314,13 +326,15 @@ class DirContextPooledObjectFactory extends BaseKeyedPooledObjectFactory<Object,
 			}
 
 			try {
-				Object result = method.invoke(this.target, args);
-
 				if (methodName.equals("setRequestControls")) {
 					this.changedState.add(ContextState.REQUEST_CONTROLS);
 				}
+				else if (methodName.equals("extendedOperation") && args[0] instanceof ExtendedRequest request
+						&& StartTlsRequest.OID.equals(request.getID())) {
+					this.changedState.add(ContextState.START_TLS);
+				}
 
-				return result;
+				return method.invoke(this.target, args);
 			}
 			catch (InvocationTargetException ex) {
 				Throwable targetException = ex.getTargetException();

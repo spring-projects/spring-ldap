@@ -23,8 +23,12 @@ import java.lang.reflect.Proxy;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.Control;
+import javax.naming.ldap.ExtendedRequest;
+import javax.naming.ldap.ExtendedResponse;
 import javax.naming.ldap.LdapContext;
 import javax.naming.ldap.PagedResultsControl;
+import javax.naming.ldap.StartTlsRequest;
+import javax.naming.ldap.StartTlsResponse;
 
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
@@ -42,6 +46,7 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.mock;
+import static org.mockito.BDDMockito.never;
 import static org.mockito.BDDMockito.verify;
 import static org.mockito.BDDMockito.willThrow;
 
@@ -134,6 +139,116 @@ public class DirContextPooledObjectFactoryTests extends AbstractPoolTestCase {
 
 		verify(target).setRequestControls(controls);
 		assertThat(trackedContext.getChangedState()).containsExactly(ContextState.REQUEST_CONTROLS);
+	}
+
+	@Test
+	public void testRequestControlChangesAreRecordedWhenSetterFails() throws Exception {
+		DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory(this.contextSourceMock);
+		LdapContext target = mock(LdapContext.class);
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(target);
+
+		PooledObject<Object> pooledObject = objectFactory.makeObject(DirContextType.READ_ONLY);
+		LdapContext context = (LdapContext) pooledObject.getObject();
+		BorrowerStateAwareContext trackedContext = (BorrowerStateAwareContext) context;
+		assertThat(trackedContext.getChangedState()).isEmpty();
+
+		Control[] controls = { new PagedResultsControl(10, Control.CRITICAL) };
+		NamingException setterFailure = new NamingException("Cannot set request controls");
+		willThrow(setterFailure).given(target).setRequestControls(controls);
+
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> context.setRequestControls(controls))
+			.isSameAs(setterFailure);
+		verify(target).setRequestControls(controls);
+		assertThat(trackedContext.getChangedState()).containsExactly(ContextState.REQUEST_CONTROLS);
+	}
+
+	@Test
+	public void testStartTlsAttemptsAreRecorded() throws Exception {
+		DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory(this.contextSourceMock);
+		LdapContext target = mock(LdapContext.class);
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(target);
+
+		PooledObject<Object> pooledObject = objectFactory.makeObject(DirContextType.READ_ONLY);
+		LdapContext context = (LdapContext) pooledObject.getObject();
+		BorrowerStateAwareContext trackedContext = (BorrowerStateAwareContext) context;
+		assertThat(trackedContext.getChangedState()).isEmpty();
+
+		StartTlsRequest request = new StartTlsRequest();
+		StartTlsResponse response = mock(StartTlsResponse.class);
+		given(target.extendedOperation(request)).willReturn(response);
+
+		assertThat(context.extendedOperation(request)).isSameAs(response);
+
+		verify(target).extendedOperation(request);
+		assertThat(trackedContext.getChangedState()).containsExactly(ContextState.START_TLS);
+	}
+
+	@Test
+	public void testStartTlsTrackingIsRetainedWhenOperationFails() throws Exception {
+		DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory(this.contextSourceMock);
+		LdapContext target = mock(LdapContext.class);
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(target);
+
+		PooledObject<Object> pooledObject = objectFactory.makeObject(DirContextType.READ_ONLY);
+		LdapContext context = (LdapContext) pooledObject.getObject();
+		BorrowerStateAwareContext trackedContext = (BorrowerStateAwareContext) context;
+		StartTlsRequest request = new StartTlsRequest();
+		NamingException operationFailure = new NamingException("StartTLS operation failed");
+		given(target.extendedOperation(request)).willThrow(operationFailure);
+
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> context.extendedOperation(request))
+			.isSameAs(operationFailure);
+		assertThat(trackedContext.getChangedState()).containsExactly(ContextState.START_TLS);
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> objectFactory.passivateObject(DirContextType.READ_ONLY, pooledObject))
+			.withMessageContaining("START_TLS");
+		assertThat(trackedContext.getChangedState()).containsExactly(ContextState.START_TLS);
+		verify(target).extendedOperation(request);
+	}
+
+	@Test
+	public void testOtherExtendedOperationsDoNotRecordStartTlsState() throws Exception {
+		DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory(this.contextSourceMock);
+		LdapContext target = mock(LdapContext.class);
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(target);
+
+		PooledObject<Object> pooledObject = objectFactory.makeObject(DirContextType.READ_ONLY);
+		LdapContext context = (LdapContext) pooledObject.getObject();
+		BorrowerStateAwareContext trackedContext = (BorrowerStateAwareContext) context;
+		ExtendedRequest request = mock(ExtendedRequest.class);
+		given(request.getID()).willReturn("1.3.6.1.4.1.4203.1.11.3");
+		ExtendedResponse response = mock(ExtendedResponse.class);
+		given(target.extendedOperation(request)).willReturn(response);
+
+		assertThat(context.extendedOperation(request)).isSameAs(response);
+		verify(target).extendedOperation(request);
+		assertThat(trackedContext.getChangedState()).isEmpty();
+
+		objectFactory.passivateObject(DirContextType.READ_ONLY, pooledObject);
+
+		verify(target).setRequestControls(isNull());
+		assertThat(trackedContext.getChangedState()).isEmpty();
+	}
+
+	@Test
+	public void testPassivationRejectsStartTlsState() throws Exception {
+		DirContextPooledObjectFactory objectFactory = new DirContextPooledObjectFactory(this.contextSourceMock);
+		LdapContext target = mock(LdapContext.class);
+		given(this.contextSourceMock.getReadOnlyContext()).willReturn(target);
+
+		PooledObject<Object> pooledObject = objectFactory.makeObject(DirContextType.READ_ONLY);
+		LdapContext context = (LdapContext) pooledObject.getObject();
+		BorrowerStateAwareContext trackedContext = (BorrowerStateAwareContext) context;
+		StartTlsRequest request = new StartTlsRequest();
+		given(target.extendedOperation(request)).willReturn(mock(StartTlsResponse.class));
+		context.extendedOperation(request);
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> objectFactory.passivateObject(DirContextType.READ_ONLY, pooledObject))
+			.withMessageContaining("START_TLS");
+		assertThat(trackedContext.getChangedState()).containsExactly(ContextState.START_TLS);
+		verify(target, never()).setRequestControls(isNull());
 	}
 
 	@Test

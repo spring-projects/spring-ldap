@@ -21,6 +21,8 @@ package org.springframework.ldap.pool2.factory;
  */
 enum ContextState {
 
-	REQUEST_CONTROLS
+	REQUEST_CONTROLS,
+
+	START_TLS
 
 }

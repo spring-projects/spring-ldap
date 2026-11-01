@@ -19,12 +19,14 @@ package org.springframework.ldap.pool2.factory;
 import java.util.Set;
 
 /**
- * Exposes borrower changes on the pooled proxy after delegating wrappers are removed.
+ * Exposes potential borrower changes on the pooled proxy after delegating wrappers are
+ * removed.
  */
 interface BorrowerStateAwareContext {
 
 	/**
-	 * Return an unmodifiable snapshot of the state kinds changed during this borrow.
+	 * Return an unmodifiable snapshot of the state kinds that may have changed during
+	 * this borrow, including attempted mutations that failed.
 	 * @return the recorded changes, or an empty set if none remain
 	 */
 	Set<ContextState> getChangedState();
