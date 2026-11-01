@@ -130,7 +130,7 @@ public class MutablePooledContextSourceTests extends AbstractPoolTestCase {
 			LdapContext second = (LdapContext) poolingContextSource.getReadOnlyContext();
 			try {
 				assertThat(second.getRequestControls()).isNull();
-				verify(this.contextSourceMock, times(1)).getReadOnlyContext();
+				verify(this.contextSourceMock).getReadOnlyContext();
 				verify(this.ldapContextMock, times(2)).getRequestControls();
 			}
 			finally {
@@ -151,25 +151,33 @@ public class MutablePooledContextSourceTests extends AbstractPoolTestCase {
 		MutablePooledContextSource poolingContextSource = new MutablePooledContextSource(this.contextSourceMock,
 				new PoolConfig());
 
-		LdapContext first = (LdapContext) poolingContextSource.getReadOnlyContext();
-		first.setRequestControls(new Control[] { new PagedResultsControl(10, Control.CRITICAL) });
-		first.close();
-
-		verify(this.ldapContextMock).close();
-		LdapContext second = (LdapContext) poolingContextSource.getReadOnlyContext();
 		try {
-			second.getRequestControls();
-			verify(replacement).getRequestControls();
-			verify(this.contextSourceMock, times(2)).getReadOnlyContext();
+			LdapContext first = (LdapContext) poolingContextSource.getReadOnlyContext();
+			try {
+				first.setRequestControls(new Control[] { new PagedResultsControl(10, Control.CRITICAL) });
+			}
+			finally {
+				first.close();
+			}
+			verify(this.ldapContextMock).close();
+			LdapContext second = (LdapContext) poolingContextSource.getReadOnlyContext();
+			try {
+				second.getRequestControls();
+				verify(replacement).getRequestControls();
+				verify(this.contextSourceMock, times(2)).getReadOnlyContext();
+			}
+			finally {
+				second.close();
+			}
 		}
 		finally {
-			second.close();
 			poolingContextSource.destroy();
 		}
 	}
 
+
 	@Test
-	public void testContextIsDiscardedAfterStartTlsNegotiation() throws Exception {
+	public void testContextIsDiscardedAfterStartTlsAttempt() throws Exception {
 		LdapContext replacement = mock(LdapContext.class);
 		StartTlsRequest request = new StartTlsRequest();
 		StartTlsResponse response = mock(StartTlsResponse.class);
@@ -181,8 +189,7 @@ public class MutablePooledContextSourceTests extends AbstractPoolTestCase {
 		try {
 			LdapContext first = (LdapContext) poolingContextSource.getReadOnlyContext();
 			try {
-				StartTlsResponse tls = (StartTlsResponse) first.extendedOperation(request);
-				tls.negotiate();
+				first.extendedOperation(request);
 			}
 			finally {
 				first.close();
