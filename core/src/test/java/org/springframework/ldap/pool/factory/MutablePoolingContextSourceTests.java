@@ -161,7 +161,6 @@ public class MutablePoolingContextSourceTests extends AbstractPoolTestCase {
 		}
 	}
 
-
 	@Test
 	public void testContextIsDiscardedAfterStartTlsAttempt() throws Exception {
 		LdapContext replacement = mock(LdapContext.class);
