@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.ldap.core.AuthenticationSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.mock;
 
@@ -83,39 +83,21 @@ public class DefaultValuesAuthenticationSourceDecoratorTests {
 	}
 
 	@Test
-	public void testAfterPropertiesSet_noTarget() throws Exception {
+	public void testAfterPropertiesSet_noTarget() {
 		this.tested.setTarget(null);
-		try {
-			this.tested.afterPropertiesSet();
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatIllegalArgumentException().isThrownBy(() -> this.tested.afterPropertiesSet());
 	}
 
 	@Test
-	public void testAfterPropertiesSet_noDefaultUser() throws Exception {
+	public void testAfterPropertiesSet_noDefaultUser() {
 		this.tested.setDefaultUser(null);
-		try {
-			this.tested.afterPropertiesSet();
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatIllegalArgumentException().isThrownBy(() -> this.tested.afterPropertiesSet());
 	}
 
 	@Test
-	public void testAfterPropertiesSet_noDefaultPassword() throws Exception {
+	public void testAfterPropertiesSet_noDefaultPassword() {
 		this.tested.setDefaultPassword(null);
-		try {
-			this.tested.afterPropertiesSet();
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatIllegalArgumentException().isThrownBy(() -> this.tested.afterPropertiesSet());
 	}
 
 }
