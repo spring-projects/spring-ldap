@@ -6,6 +6,7 @@ workflow:
           primary: 17
     workflows:
       release-tools:
+        docs-base-path: .
         deploy-schema: true
         verify: false
       release-train:
