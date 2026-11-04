@@ -5,6 +5,10 @@ on: pull_request
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 env:
   ORG_GRADLE_PROJECT_branch: ${{ github.base_ref }}
   JAVA_VERSION: '25'
