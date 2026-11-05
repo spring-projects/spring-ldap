@@ -5,10 +5,6 @@ on: pull_request
 permissions:
   contents: read
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
-
 env:
   ORG_GRADLE_PROJECT_branch: ${{ github.base_ref }}
   JAVA_VERSION: '25'
@@ -22,8 +18,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - id: environment
         name: Compute Build Environment
-        uses: spring-io/spring-security-actions/compute-build-environment@baf9e987cdff9f39b48279584ede21b83652a7dd # 0.0.15
-      - uses: spring-io/spring-security-actions/pr-build@baf9e987cdff9f39b48279584ede21b83652a7dd # 0.0.15
+        uses: spring-io/spring-security-actions/compute-build-environment@4600d240d4c682ff67c25ed0d3ca57e1308694b6 # 0.0.17
+      - uses: spring-io/spring-security-actions/pr-build@4600d240d4c682ff67c25ed0d3ca57e1308694b6 # 0.0.17
         env:
           ORG_GRADLE_PROJECT_releaseChannel: ${{ steps.environment.outputs.release-channel }}
           ORG_GRADLE_PROJECT_artifactoryUsername: ${{ secrets[steps.environment.outputs.dependabot-username] }}

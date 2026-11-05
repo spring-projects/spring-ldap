@@ -2,7 +2,7 @@ name: Update Antora UI Spring
 
 on:
   schedule:
-    - cron: '23 5 * * *' # Once per day at 5:23am UTC
+    - cron: '0 10 * * *' # Once per day at 10am UTC
   workflow_dispatch: # Manual trigger
 
 permissions:
