@@ -2,7 +2,7 @@ name: Update Dependabot
 
 on:
   schedule:
-    - cron: '0 5 * * 1'
+    - cron: '33 5 * * 1'
   workflow_dispatch:
 
 permissions:
