@@ -124,7 +124,7 @@ public abstract class CompareFilter extends AbstractFilter {
 		if (!this.attribute.equals(that.attribute)) {
 			return false;
 		}
-		return this.value.equals(that.value);
+		return this.value.equals(that.value) && this.encodedValue.equals(that.encodedValue);
 	}
 
 	@Override

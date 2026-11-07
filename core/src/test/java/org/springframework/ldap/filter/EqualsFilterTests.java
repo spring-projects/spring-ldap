@@ -50,6 +50,26 @@ public class EqualsFilterTests {
 
 	}
 
+	// gh-634
+	@Test
+	public void encodeWhenBinaryThenEscapesEachByteOnce() {
+		byte[] guid = { (byte) 0x90, (byte) 0xd1, (byte) 0xc6, (byte) 0x8e, 0x01, (byte) 0xbe, 0x44, (byte) 0x85 };
+		EqualsFilter eqq = new EqualsFilter("objectGUID", guid);
+
+		assertThat(eqq.encode()).isEqualTo("(objectGUID=\\90\\d1\\c6\\8e\\01\\be\\44\\85)");
+	}
+
+	@Test
+	public void equalsWhenBinaryAndStringWithSameTextThenNotEqual() {
+		EqualsFilter binary = new EqualsFilter("objectGUID", new byte[] { (byte) 0x90, (byte) 0xd1 });
+		EqualsFilter string = new EqualsFilter("objectGUID", "\\90\\d1");
+
+		assertThat(string.encode()).isEqualTo("(objectGUID=\\5c90\\5cd1)");
+		assertThat(binary).isNotEqualTo(string);
+		assertThat(binary).isEqualTo(new EqualsFilter("objectGUID", new byte[] { (byte) 0x90, (byte) 0xd1 }));
+		assertThat(binary).hasSameHashCodeAs(new EqualsFilter("objectGUID", new byte[] { (byte) 0x90, (byte) 0xd1 }));
+	}
+
 	@Test
 	public void testEquals() {
 		EqualsFilter originalObject = new EqualsFilter("a", "b");

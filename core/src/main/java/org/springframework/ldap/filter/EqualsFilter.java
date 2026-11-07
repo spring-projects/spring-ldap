@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.filter;
 
+import org.springframework.ldap.support.LdapEncoder;
+
 /**
  * A filter for 'equals'. The following code:
  *
@@ -38,6 +40,19 @@ public class EqualsFilter extends CompareFilter {
 
 	public EqualsFilter(String attribute, String value) {
 		super(attribute, value);
+	}
+
+	/**
+	 * Constructor for binary values, such as {@code objectGUID} or {@code objectSid}.
+	 * Each byte of the value is escaped as {@code \xx}, so the filter matches the exact
+	 * octets supplied.
+	 * @param attribute Name of attribute in filter.
+	 * @param value The binary value of the attribute in the filter.
+	 * @since 4.2
+	 * @see LdapEncoder#filterEncode(byte[])
+	 */
+	public EqualsFilter(String attribute, byte[] value) {
+		this(attribute, LdapEncoder.filterEncode(value), LdapEncoder.filterEncode(value));
 	}
 
 	EqualsFilter(String attribute, String value, String encodedValue) {
