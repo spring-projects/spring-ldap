@@ -73,3 +73,4 @@ jobs:
         uses: spring-io/spring-release-actions/update-learn-page@bc54894d9cb3ff61a141581deb2e3fb3b0997e19 # 0.0.x
         with:
           version: ${{ env.VERSION }}
+          token: ${{ secrets.GH_ACTIONS_REPO_TOKEN }}
