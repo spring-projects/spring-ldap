@@ -1,0 +1,75 @@
+name: Post Publish
+
+on:
+  push:
+    tags:
+      - "*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: The version that was published, which is also its tag
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: post-publish-${{ github.repository }}-${{ inputs.version || github.ref_name }}
+  cancel-in-progress: false
+
+env:
+  VERSION: ${{ inputs.version || github.ref_name }}
+
+jobs:
+  deploy-schema:
+    name: Deploy Schema
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.VERSION }}
+      - name: Deploy Schema
+        uses: spring-io/spring-security-actions/deploy-schema@e6b352d57f71f6aa414754a4a0cb1cb974afd878 # main
+        with:
+          java-version: '25'
+        env:
+          ORG_GRADLE_PROJECT_deployDocsSshKey: ${{ secrets.DOCS_SSH_KEY }}
+          ORG_GRADLE_PROJECT_deployDocsSshUsername: ${{ secrets.DOCS_USERNAME }}
+          ORG_GRADLE_PROJECT_deployDocsHost: ${{ secrets.DOCS_HOST }}
+
+  deploy-docs:
+    name: Deploy Docs
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Dispatch Deploy Docs
+        uses: spring-io/spring-security-actions/dispatch-deploy-docs@1f186a3993e2097ccb29327b453d06b79f1fac01 # main
+
+  publish-release-notes:
+    name: Publish Release Notes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: read
+      pull-requests: read
+    steps:
+      - name: Check out the tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.VERSION }}
+      - name: Publish Release Notes
+        uses: spring-io/spring-security-actions/publish-release-notes@1f186a3993e2097ccb29327b453d06b79f1fac01 # main
+        with:
+          tag: ${{ env.VERSION }}
+
+  update-learn-page:
+    name: Update Learn Page
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update Learn Page
+        uses: spring-io/spring-release-actions/update-learn-page@bc54894d9cb3ff61a141581deb2e3fb3b0997e19 # 0.0.x
+        with:
+          version: ${{ env.VERSION }}
