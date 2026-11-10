@@ -70,6 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Update Learn Page
-        uses: spring-io/spring-release-actions/update-learn-page@bc54894d9cb3ff61a141581deb2e3fb3b0997e19 # 0.0.x
+        uses: spring-io/spring-release-actions/update-learn-page@2598be8c1ec65bde0a09d218b934511104806577 # 0.0.x
         with:
+          token: ${{ secrets.GH_ACTIONS_REPO_TOKEN }}
           version: ${{ env.VERSION }}
