@@ -29,7 +29,6 @@ import org.springframework.ldap.BadLdapGrammarException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Unit tests for the {@link DistinguishedName} class.
@@ -73,13 +72,7 @@ public class DistinguishedNameTests {
 	@Test
 	public void testEmptyPathImmutable() throws Exception {
 		DistinguishedName emptyPath = DistinguishedName.EMPTY_PATH;
-		try {
-			emptyPath.add("cn=John Doe");
-			fail("UnsupportedOperationException expected");
-		}
-		catch (UnsupportedOperationException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> emptyPath.add("cn=John Doe"));
 	}
 
 	@Test
@@ -295,13 +288,7 @@ public class DistinguishedNameTests {
 		suffix = path.getSuffix(4);
 		assertThat(suffix.size()).isEqualTo(0);
 
-		try {
-			path.getSuffix(5);
-			fail("ArrayIndexOutOfBoundsException expected");
-		}
-		catch (ArrayIndexOutOfBoundsException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(ArrayIndexOutOfBoundsException.class).isThrownBy(() -> path.getSuffix(5));
 	}
 
 	@Test

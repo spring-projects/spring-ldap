@@ -26,8 +26,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.ldap.UncategorizedLdapException;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.mock;
 import static org.mockito.BDDMockito.verify;
@@ -87,15 +86,8 @@ public class LdapTemplateRenameTests {
 
 		javax.naming.NameAlreadyBoundException ne = new javax.naming.NameAlreadyBoundException();
 		willThrow(ne).given(this.dirContextMock).rename(this.oldNameMock, this.newNameMock);
-
-		try {
-			this.tested.rename(this.oldNameMock, this.newNameMock);
-			fail("NameAlreadyBoundException expected");
-		}
-		catch (NameAlreadyBoundException expected) {
-			assertThat(true).isTrue();
-		}
-
+		assertThatExceptionOfType(NameAlreadyBoundException.class)
+			.isThrownBy(() -> this.tested.rename(this.oldNameMock, this.newNameMock));
 		verify(this.dirContextMock).close();
 	}
 
@@ -106,15 +98,8 @@ public class LdapTemplateRenameTests {
 		javax.naming.NamingException ne = new javax.naming.NamingException();
 
 		willThrow(ne).given(this.dirContextMock).rename(this.oldNameMock, this.newNameMock);
-
-		try {
-			this.tested.rename(this.oldNameMock, this.newNameMock);
-			fail("UncategorizedLdapException expected");
-		}
-		catch (UncategorizedLdapException expected) {
-			assertThat(true).isTrue();
-		}
-
+		assertThatExceptionOfType(UncategorizedLdapException.class)
+			.isThrownBy(() -> this.tested.rename(this.oldNameMock, this.newNameMock));
 		verify(this.dirContextMock).close();
 	}
 

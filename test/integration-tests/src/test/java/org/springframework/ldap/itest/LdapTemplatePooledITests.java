@@ -32,7 +32,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatException;
 
 /**
  * This test only works against in-process Apache DS server, regardless of configured
@@ -76,14 +76,7 @@ public class LdapTemplatePooledITests {
 		LdapTestUtils.shutdownEmbeddedServer();
 		LdapTestUtils.startEmbeddedServer(1888, "dc=261consulting,dc=com", "jayway");
 
-		try {
-			this.tested.lookup("cn=Some Person2, ou=company1,ou=Sweden");
-			fail("Exception expected");
-		}
-		catch (Exception expected) {
-			// This should fail because the target connection was closed
-			assertThat(true).isTrue();
-		}
+		assertThatException().isThrownBy(() -> this.tested.lookup("cn=Some Person2, ou=company1,ou=Sweden"));
 
 		LdapTestUtils.cleanAndSetup(this.contextSource, LdapUtils.emptyLdapName(),
 				new ClassPathResource("/setup_data.ldif"));

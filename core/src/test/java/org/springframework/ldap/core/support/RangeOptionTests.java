@@ -19,7 +19,8 @@ package org.springframework.ldap.core.support;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 /**
  * IncrementalAttributesMapper Tester.
@@ -30,41 +31,10 @@ public class RangeOptionTests {
 
 	@Test
 	public void testConstructorInvalid() {
-		try {
-			new RangeOption(101, 100);
-
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
-
-		try {
-			new RangeOption(-1, 100);
-
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
-
-		try {
-			new RangeOption(-10, 100);
-
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
-
-		try {
-			new RangeOption(0, -3);
-
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatIllegalArgumentException().isThrownBy(() -> new RangeOption(101, 100));
+		assertThatIllegalArgumentException().isThrownBy(() -> new RangeOption(-1, 100));
+		assertThatIllegalArgumentException().isThrownBy(() -> new RangeOption(-10, 100));
+		assertThatIllegalArgumentException().isThrownBy(() -> new RangeOption(0, -3));
 	}
 
 	@Test
@@ -143,41 +113,12 @@ public class RangeOptionTests {
 
 	@Test
 	public void testCompareInvalid() {
-		RangeOption range1 = RangeOption.parse("Range=10-500");
-		RangeOption range2 = RangeOption.parse("Range=11-500");
-
-		try {
-			assertThat(range1.compareTo(range2) == 0).isTrue();
-
-			fail("IllegalStateException expected");
-		}
-		catch (IllegalStateException expected) {
-			assertThat(true).isTrue();
-		}
-
-		range1 = RangeOption.parse("Range=10");
-		range2 = RangeOption.parse("Range=10-500");
-
-		try {
-			assertThat(range1.compareTo(range2) == 0).isTrue();
-
-			fail("IllegalStateException expected");
-		}
-		catch (IllegalStateException expected) {
-			assertThat(true).isTrue();
-		}
-
-		range1 = RangeOption.parse("Range=10-500");
-		range2 = RangeOption.parse("Range=10");
-
-		try {
-			assertThat(range1.compareTo(range2) == 0).isTrue();
-
-			fail("IllegalStateException expected");
-		}
-		catch (IllegalStateException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatIllegalStateException()
+			.isThrownBy(() -> RangeOption.parse("Range=10-500").compareTo(RangeOption.parse("Range=11-500")));
+		assertThatIllegalStateException()
+			.isThrownBy(() -> RangeOption.parse("Range=10").compareTo(RangeOption.parse("Range=10-500")));
+		assertThatIllegalStateException()
+			.isThrownBy(() -> RangeOption.parse("Range=10-500").compareTo(RangeOption.parse("Range=10")));
 	}
 
 	@Test
