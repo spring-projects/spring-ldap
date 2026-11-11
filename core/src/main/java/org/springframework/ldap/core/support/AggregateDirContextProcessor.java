@@ -39,7 +39,7 @@ public class AggregateDirContextProcessor implements DirContextProcessor {
 
 	/**
 	 * Add the supplied DirContextProcessor to the list of managed objects.
-	 * @param processor the DirContextpProcessor to add.
+	 * @param processor the DirContextProcessor to add.
 	 */
 	public void addDirContextProcessor(DirContextProcessor processor) {
 		this.dirContextProcessors.add(processor);

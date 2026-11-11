@@ -21,7 +21,7 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 
 /**
- * An interface used by LdapTemplate for mapping LDAP Attributes to beans. Implementions
+ * An interface used by LdapTemplate for mapping LDAP Attributes to beans. Implementations
  * of this interface perform the actual work of extracting results, but need not worry
  * about exception handling. <code>NamingExceptions</code> will be caught and handled
  * correctly by the {@link LdapTemplate} class.

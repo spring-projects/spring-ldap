@@ -70,7 +70,7 @@ import org.springframework.util.CollectionUtils;
  * <code>ignorePartialResultException</code> property to <code>true</code>. There is
  * currently no way of manually handling these referrals in the form of
  * <code>ReferralException</code>, i.e. either you get the exception (and your results are
- * lost) or all referrals are ignored (if the server is unable to handle them properly.
+ * lost) or all referrals are ignored (if the server is unable to handle them properly).
  * Neither is there any simple way to get notified that a
  * <code>PartialResultException</code> has been ignored (other than in the log).
  *
@@ -140,8 +140,8 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	}
 
 	/**
-	 * Set the ObjectDirectoryMapper instance to use.
-	 * @param odm the ObejctDirectoryMapper to use.
+	 * Set the {@link ObjectDirectoryMapper} instance to use.
+	 * @param odm the {@link ObjectDirectoryMapper} to use.
 	 * @since 2.0
 	 */
 	public void setObjectDirectoryMapper(ObjectDirectoryMapper odm) {

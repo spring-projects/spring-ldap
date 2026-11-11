@@ -76,7 +76,7 @@ public class DelegatingContext implements Context {
 	}
 
 	/**
-	 * Recursivley inspect delegates until a non-delegating context is found.
+	 * Recursively inspect delegates until a non-delegating context is found.
 	 * @return The innermost (real) Context that is being delegated to.
 	 */
 	public @Nullable Context getInnermostDelegateContext() {
@@ -124,7 +124,7 @@ public class DelegatingContext implements Context {
 			otherContext = ((DelegatingContext) otherContext).getInnermostDelegateContext();
 		}
 
-		return thisContext == otherContext || (thisContext != null && thisContext.equals(otherContext));
+		return Objects.equals(thisContext, otherContext);
 	}
 
 	/**

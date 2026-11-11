@@ -34,7 +34,7 @@ import org.springframework.util.Assert;
  * before creating the actual target object. This approach is particularly useful for
  * integration testing purposes - the idea is to have particular EC2 images prepared for
  * running integration tests against certain server configurations, enabling integration
- * tests aimed at e.g. a particluar DB server to run transparently at the computer of each
+ * tests aimed at e.g. a particular DB server to run transparently at the computer of each
  * individual developer without having to have the actual server software installed on
  * their computers.
  * <p>

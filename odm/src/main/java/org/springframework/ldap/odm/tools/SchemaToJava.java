@@ -383,7 +383,7 @@ public final class SchemaToJava {
 		// Package name flag
 		String packageName = cmd.getOptionValue(Flag.PACKAGE.getShort());
 		if (packageName == null) {
-			error("You must specifiy a package name");
+			error("You must specify a package name");
 		}
 
 		// Output base directory
@@ -405,11 +405,11 @@ public final class SchemaToJava {
 		// Parse out object classes
 		String objectClassesFlag = cmd.getOptionValue(Flag.OBJECTCLASS.getShort());
 		if (objectClassesFlag == null) {
-			error("You must specificy a package name");
+			error("You must specify a package name");
 		}
 		Set<String> objectClasses = parseObjectClassesFlag(objectClassesFlag);
 		if (objectClasses.size() == 0) {
-			error("You must specificy a package name");
+			error("You must specify a package name");
 		}
 
 		// Look for the optional syntax to Java class mapping file
@@ -434,7 +434,7 @@ public final class SchemaToJava {
 		// Read binary mapping file
 		URL binarySetUrl = DEFAULT_LOADER_CLASS.getResource(BINARY_FILE);
 		if (binarySetUrl == null) {
-			error(String.format("Can't locatate binary mappings file %1$s", BINARY_FILE));
+			error(String.format("Can't locate binary mappings file %1$s", BINARY_FILE));
 		}
 		File binarySetFile = new File(binarySetUrl.getFile());
 		if (!binarySetFile.canRead()) {
@@ -483,7 +483,7 @@ public final class SchemaToJava {
 			error(String.format("Error generating code - %1$s", te.toString()));
 		}
 		catch (IOException ioe) {
-			error(String.format("Error generatign code - %1$s", ioe.toString()));
+			error(String.format("Error generating code - %1$s", ioe.toString()));
 		}
 	}
 

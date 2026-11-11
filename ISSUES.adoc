@@ -80,7 +80,7 @@ We cannot add this for you, so a PR without it cannot be merged until you do.
 
 We use a cherry-pick, backport strategy when applying a fix across feature branches.
 This means that issues and PRs can usually be fixed on `main`, and we'll perform the cherry-pick locally.
-For each backport, we'll create a matching issue for that particular maintainence release, linking it to the original.
+For each backport, we'll create a matching issue for that particular maintenance release, linking it to the original.
 
 Since a backport isn't guaranteed to be identical to the fix on `main` -- sometimes a different change is needed for the older branch -- the cherry-picked commit's `Closes gh-xxxxx` is changed to reference the backport issue instead of the original.
 Also, since the commit never reaches `main`, GitHub won't auto-close the backport issue, so it's closed manually once the backport is pushed.

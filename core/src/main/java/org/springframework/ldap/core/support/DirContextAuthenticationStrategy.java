@@ -40,7 +40,7 @@ public interface DirContextAuthenticationStrategy {
 	/**
 	 * This method is responsible for preparing the environment to be used when creating
 	 * the <code>DirContext</code> instance. The base environment (including URL,
-	 * <code>ContextFactory</code> etc. will already be set, and this method is called
+	 * <code>ContextFactory</code> etc.) will already be set, and this method is called
 	 * just before the actual Context is to be created.
 	 * @param env The <code>Hashtable</code> to be sent to the <code>DirContext</code>
 	 * instance on initialization. Pre-configured with the basic settings; the
