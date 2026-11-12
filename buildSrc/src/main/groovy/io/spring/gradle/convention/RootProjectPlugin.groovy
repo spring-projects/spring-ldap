@@ -21,6 +21,7 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.plugins.PluginManager
 import org.springframework.gradle.nohttp.SpringNoHttpPlugin
+import org.springframework.gradle.repository.SpringRepositoryPlugin
 
 class RootProjectPlugin implements Plugin<Project> {
 
@@ -30,6 +31,7 @@ class RootProjectPlugin implements Plugin<Project> {
 		pluginManager.apply(BasePlugin)
 		pluginManager.apply(SchemaPlugin)
 		pluginManager.apply(SpringNoHttpPlugin)
+		pluginManager.apply(SpringRepositoryPlugin)
 		pluginManager.apply("org.sonarqube")
 
 		project.repositories.mavenCentral()
