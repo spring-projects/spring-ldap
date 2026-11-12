@@ -21,12 +21,12 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - id: environment
         name: Compute Build Environment
-        uses: spring-io/spring-security-actions/compute-build-environment@5ad73de5732708b3915d28ec6bc3e076eff2f70d # 0.0.27
+        uses: spring-io/spring-security-actions/compute-build-environment@684ca83d1b00d67326499eb02e6517d4f5bd73d1 # 0.0.32
   deploy-schema:
     name: Deploy Schema
     needs: setup
     if: needs.setup.outputs.release-channel == 'oss'
-    uses: spring-io/spring-security-release-tools/.github/workflows/ci-deploy-schema.yml@a8faab91092251472098d8c20c03a40d719795ed # v1.1.5
+    uses: spring-io/spring-security-release-tools/.github/workflows/ci-deploy-schema.yml@0a1530e45332e495244cbf1e8e5853337e793a23 # v1.1.6
     with:
       java-version: '25'
       runner: ${{ vars.UBUNTU_RUNS_ON }}
@@ -42,7 +42,7 @@ jobs:
       issues: write
     needs: [ deploy-schema ]
     if: ${{ !failure() && !cancelled() }}
-    uses: spring-io/spring-security-release-tools/.github/workflows/release-announcements-publish.yml@a8faab91092251472098d8c20c03a40d719795ed # v1.1.5
+    uses: spring-io/spring-security-release-tools/.github/workflows/release-announcements-publish.yml@0a1530e45332e495244cbf1e8e5853337e793a23 # v1.1.6
     with:
       version: ${{ inputs.version }}
     secrets:
