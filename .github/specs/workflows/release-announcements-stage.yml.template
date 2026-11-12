@@ -1,0 +1,62 @@
+name: Release Announcements - Stage
+
+on:
+  push:
+    tags: '**'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: The version to stage
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  stage-release-announcements:
+    name: Stage Release Announcements
+    permissions:
+      actions: write
+      contents: write
+      issues: read
+      pull-requests: read
+    uses: spring-io/spring-security-release-tools/.github/workflows/release-announcements-stage.yml
+    with:
+      version: ${{ inputs.version || github.ref_name }}
+  deploy-schema:
+    name: Deploy Schema
+    needs: [ stage-release-announcements ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the tag
+        uses: actions/checkout
+        with:
+          ref: ${{ inputs.version || github.ref_name }}
+      - name: Deploy Schema
+        uses: spring-io/spring-security-actions/deploy-schema
+        with:
+          java-version: '<< workflow.generator.project.java.versions.primary >>'
+        env:
+          ORG_GRADLE_PROJECT_deployDocsSshKey: ${{ secrets.DOCS_SSH_KEY }}
+          ORG_GRADLE_PROJECT_deployDocsSshUsername: ${{ secrets.DOCS_USERNAME }}
+          ORG_GRADLE_PROJECT_deployDocsHost: ${{ secrets.DOCS_HOST }}
+  deploy-docs:
+    name: Deploy Docs
+    needs: [ stage-release-announcements ]
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Dispatch Deploy Docs
+        uses: spring-io/spring-security-actions/dispatch-deploy-docs
+  update-learn-page:
+    name: Update Learn Page
+    needs: [ stage-release-announcements ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update Learn Page
+        uses: spring-io/spring-release-actions/update-learn-page
+        with:
+          token: ${{ secrets.GH_ACTIONS_REPO_TOKEN }}
+          version: ${{ inputs.version || github.ref_name }}

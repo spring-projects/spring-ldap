@@ -24,3 +24,39 @@ jobs:
     uses: spring-io/spring-security-release-tools/.github/workflows/release-announcements-stage.yml@a8faab91092251472098d8c20c03a40d719795ed # v1.1.5
     with:
       version: ${{ inputs.version || github.ref_name }}
+  deploy-schema:
+    name: Deploy Schema
+    needs: [ stage-release-announcements ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.version || github.ref_name }}
+      - name: Deploy Schema
+        uses: spring-io/spring-security-actions/deploy-schema@5ad73de5732708b3915d28ec6bc3e076eff2f70d # 0.0.27
+        with:
+          java-version: '25'
+        env:
+          ORG_GRADLE_PROJECT_deployDocsSshKey: ${{ secrets.DOCS_SSH_KEY }}
+          ORG_GRADLE_PROJECT_deployDocsSshUsername: ${{ secrets.DOCS_USERNAME }}
+          ORG_GRADLE_PROJECT_deployDocsHost: ${{ secrets.DOCS_HOST }}
+  deploy-docs:
+    name: Deploy Docs
+    needs: [ stage-release-announcements ]
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Dispatch Deploy Docs
+        uses: spring-io/spring-security-actions/dispatch-deploy-docs@5ad73de5732708b3915d28ec6bc3e076eff2f70d # 0.0.27
+  update-learn-page:
+    name: Update Learn Page
+    needs: [ stage-release-announcements ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update Learn Page
+        uses: spring-io/spring-release-actions/update-learn-page@967a8de4659c4273a82bcb098d73c2330c015254 # 0.0.9
+        with:
+          token: ${{ secrets.GH_ACTIONS_REPO_TOKEN }}
+          version: ${{ inputs.version || github.ref_name }}
