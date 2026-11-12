@@ -122,25 +122,6 @@ public final class LdapEncoder {
 	}
 
 	/**
-	 * Escape a binary value for use in a filter. Every octet is written as a backslash
-	 * followed by its two-digit hexadecimal value, as described in RFC 4515, section 3.
-	 * This is the form needed to search for binary attributes such as {@code objectGUID}
-	 * or {@code objectSid}.
-	 * @param value the value to escape.
-	 * @return a properly escaped representation of the supplied value.
-	 * @since 4.2
-	 */
-	public static String filterEncode(byte[] value) {
-		StringBuilder encodedValue = new StringBuilder(value.length * 3);
-		for (byte b : value) {
-			encodedValue.append('\\');
-			encodedValue.append(Character.forDigit((b >> 4) & 0xf, 16));
-			encodedValue.append(Character.forDigit(b & 0xf, 16));
-		}
-		return encodedValue.toString();
-	}
-
-	/**
 	 * LDAP Encodes a value for use with a DN. Escapes for LDAP, not JNDI!
 	 *
 	 * <br>

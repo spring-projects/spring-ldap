@@ -38,17 +38,6 @@ public class LdapEncoderTests {
 	}
 
 	@Test
-	public void filterEncodeWhenBinaryThenEscapesEveryByte() {
-		byte[] value = { 0x00, 0x2a, 0x5c, 0x7f, (byte) 0x80, (byte) 0x90, (byte) 0xff, 0x41 };
-		assertThat(LdapEncoder.filterEncode(value)).isEqualTo("\\00\\2a\\5c\\7f\\80\\90\\ff\\41");
-	}
-
-	@Test
-	public void filterEncodeWhenEmptyBinaryThenEmpty() {
-		assertThat(LdapEncoder.filterEncode(new byte[0])).isEmpty();
-	}
-
-	@Test
 	public void testNameEncode() {
 
 		String res = LdapEncoder.nameEncode("# foo ,+\"\\<>; ");

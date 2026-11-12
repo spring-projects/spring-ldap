@@ -47,10 +47,12 @@ public interface ConditionCriteria {
 	 * @return an ContainerCriteria instance that can be used to continue append more
 	 * criteria or as the LdapQuery instance to be used as instance to e.g.
 	 * {@link org.springframework.ldap.core.LdapOperations#search(LdapQuery, org.springframework.ldap.core.ContextMapper)}.
-	 * @since 4.2
+	 * @since 4.3
 	 * @see org.springframework.ldap.filter.EqualsFilter#EqualsFilter(String, byte[])
 	 */
-	ContainerCriteria is(byte[] value);
+	default ContainerCriteria is(byte[] value) {
+		throw new UnsupportedOperationException();
+	}
 
 	/**
 	 * Appends an {@link org.springframework.ldap.filter.GreaterThanOrEqualsFilter}.

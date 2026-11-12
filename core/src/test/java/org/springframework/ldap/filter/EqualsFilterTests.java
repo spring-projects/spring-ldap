@@ -60,6 +60,21 @@ public class EqualsFilterTests {
 	}
 
 	@Test
+	public void encodeWhenBinaryThenEscapesEveryByte() {
+		byte[] value = { 0x00, 0x2a, 0x5c, 0x7f, (byte) 0x80, (byte) 0x90, (byte) 0xff, 0x41 };
+		EqualsFilter eqq = new EqualsFilter("objectGUID", value);
+
+		assertThat(eqq.encode()).isEqualTo("(objectGUID=\\00\\2a\\5c\\7f\\80\\90\\ff\\41)");
+	}
+
+	@Test
+	public void encodeWhenEmptyBinaryThenEmptyValue() {
+		EqualsFilter eqq = new EqualsFilter("objectGUID", new byte[0]);
+
+		assertThat(eqq.encode()).isEqualTo("(objectGUID=)");
+	}
+
+	@Test
 	public void equalsWhenBinaryAndStringWithSameTextThenNotEqual() {
 		EqualsFilter binary = new EqualsFilter("objectGUID", new byte[] { (byte) 0x90, (byte) 0xd1 });
 		EqualsFilter string = new EqualsFilter("objectGUID", "\\90\\d1");
