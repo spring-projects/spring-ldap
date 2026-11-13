@@ -124,13 +124,13 @@ public abstract class CompareFilter extends AbstractFilter {
 		if (!this.attribute.equals(that.attribute)) {
 			return false;
 		}
-		return this.value.equals(that.value);
+		return this.encodedValue.equals(that.encodedValue);
 	}
 
 	@Override
 	public int hashCode() {
 		int result = this.attribute.hashCode();
-		result = 31 * result + this.value.hashCode();
+		result = 31 * result + this.encodedValue.hashCode();
 		return result;
 	}
 

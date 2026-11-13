@@ -50,6 +50,11 @@ class DefaultConditionCriteria implements ConditionCriteria {
 	}
 
 	@Override
+	public ContainerCriteria is(byte[] value) {
+		return appendToParent(new EqualsFilter(this.attribute, value));
+	}
+
+	@Override
 	public ContainerCriteria gte(String value) {
 		return appendToParent(new GreaterThanOrEqualsFilter(this.attribute, value));
 	}
