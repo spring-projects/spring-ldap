@@ -19,6 +19,7 @@ package org.springframework.ldap.filter;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Abstract superclass for binary logical operations, that is &quot;AND&quot; and
@@ -28,10 +29,10 @@ import java.util.List;
  */
 public abstract class BinaryLogicalFilter extends AbstractFilter {
 
-	private List<Filter> queryList = new LinkedList<>();
+	private final List<Filter> queryList = new LinkedList<>();
 
 	public StringBuffer encode(StringBuffer buff) {
-		if (this.queryList.size() <= 0) {
+		if (this.queryList.isEmpty()) {
 
 			// only output query if contains anything
 			return buff;
@@ -69,22 +70,17 @@ public abstract class BinaryLogicalFilter extends AbstractFilter {
 		if (this == o) {
 			return true;
 		}
-		if (o == null || getClass() != o.getClass()) {
+
+		if (!(o instanceof BinaryLogicalFilter that) || this.getClass() != that.getClass()) {
 			return false;
 		}
 
-		BinaryLogicalFilter that = (BinaryLogicalFilter) o;
-
-		if ((this.queryList != null) ? !this.queryList.equals(that.queryList) : that.queryList != null) {
-			return false;
-		}
-
-		return true;
+		return Objects.equals(this.queryList, that.queryList);
 	}
 
 	@Override
 	public int hashCode() {
-		return (this.queryList != null) ? this.queryList.hashCode() : 0;
+		return Objects.hashCode(this.queryList);
 	}
 
 	/**
