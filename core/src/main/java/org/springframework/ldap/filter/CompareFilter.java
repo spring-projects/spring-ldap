@@ -16,8 +16,9 @@
 
 package org.springframework.ldap.filter;
 
-import org.springframework.ldap.support.LdapEncoder;
-import org.springframework.util.Assert;
+import java.util.Objects;
+
+import org.jspecify.annotations.Nullable;
 
 /**
  * Abstract superclass for filters that compare values.
@@ -28,23 +29,11 @@ public abstract class CompareFilter extends AbstractFilter {
 
 	private final String attribute;
 
-	private final String value;
+	private final @Nullable String value;
 
 	private final String encodedValue;
 
 	private final String operator;
-
-	/**
-	 * Construct a filter, encoding the value automatically.
-	 * @deprecated please use the {@code protected} constructor instead
-	 */
-	@Deprecated(since = "3.3")
-	public CompareFilter(String attribute, String value) {
-		this.attribute = AttributeDescriptions.validate(attribute);
-		this.value = value;
-		this.encodedValue = encodeValue(value);
-		this.operator = getCompareString();
-	}
 
 	/**
 	 * For testing purposes.
@@ -55,43 +44,17 @@ public abstract class CompareFilter extends AbstractFilter {
 	}
 
 	/**
-	 * Override to perform special encoding in subclass.
-	 * @param value the value to encode.
-	 * @return properly escaped value.
-	 * @deprecated please provide the encoded value in the constructor
-	 */
-	@Deprecated(forRemoval = true, since = "3.3")
-	protected String encodeValue(String value) {
-		return LdapEncoder.filterEncode(value);
-	}
-
-	/**
-	 * Convenience constructor for <code>int</code> values.
-	 * @param attribute Name of attribute in filter.
-	 * @param value The value of the attribute in the filter.
-	 * @throws IllegalArgumentException if the attribute is not a valid RFC 4512 attribute
-	 * description
-	 * @deprecated please use the {@code protected} constructor instead
-	 */
-	@Deprecated(since = "3.3")
-	public CompareFilter(String attribute, int value) {
-		this.attribute = AttributeDescriptions.validate(attribute);
-		this.value = String.valueOf(value);
-		this.encodedValue = LdapEncoder.filterEncode(this.value);
-		this.operator = getCompareString();
-	}
-
-	/**
 	 * Construct a filter, specifying the comparison {@code operator} as well as the
 	 * already-encoded value.
 	 * @param attribute the attribute name
 	 * @param operator the comparison operator; for example, {@code =}, {@code ~=}
+	 * @param value the value of the attribute in the filter.
 	 * @param encodedValue the already-encoded value
 	 * @throws IllegalArgumentException if the attribute is not a valid RFC 4512 attribute
 	 * description
 	 * @since 3.3
 	 */
-	protected CompareFilter(String attribute, String operator, String value, String encodedValue) {
+	protected CompareFilter(String attribute, String operator, @Nullable String value, String encodedValue) {
 		this.attribute = AttributeDescriptions.validate(attribute);
 		this.value = value;
 		this.encodedValue = encodedValue;
@@ -103,7 +66,7 @@ public abstract class CompareFilter extends AbstractFilter {
 	 */
 	public StringBuffer encode(StringBuffer buff) {
 		buff.append('(');
-		buff.append(this.attribute).append(getCompareString()).append(this.encodedValue);
+		buff.append(this.attribute).append(this.operator).append(this.encodedValue);
 		buff.append(')');
 
 		return buff;
@@ -111,41 +74,21 @@ public abstract class CompareFilter extends AbstractFilter {
 
 	@Override
 	public boolean equals(Object o) {
+
 		if (this == o) {
 			return true;
 		}
-		if (!(o instanceof CompareFilter that)) {
-			return false;
-		}
-		if (getClass() != o.getClass()) {
+
+		if (!(o instanceof CompareFilter that) || this.getClass() != that.getClass()) {
 			return false;
 		}
 
-		if (!this.attribute.equals(that.attribute)) {
-			return false;
-		}
-		return this.value.equals(that.value);
+		return Objects.equals(this.attribute, that.attribute) && Objects.equals(this.value, that.value);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = this.attribute.hashCode();
-		result = 31 * result + this.value.hashCode();
-		return result;
-	}
-
-	/**
-	 * Implement this method in subclass to return a String representing the operator. The
-	 * {@link EqualsFilter#getCompareString()} would for example return an equals sign,
-	 * &quot;=&quot;.
-	 * @return the String to use as operator in the comparison for the specific subclass.
-	 * @deprecated please specify the operator in the constructor
-	 */
-	@Deprecated(forRemoval = true, since = "3.3")
-	protected String getCompareString() {
-		Assert.notNull(this.operator,
-				"Please supply the operator in the constructor. If needed, override getCompareString instead.");
-		return this.operator;
+		return Objects.hash(this.attribute, this.value);
 	}
 
 }

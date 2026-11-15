@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.filter;
 
+import org.springframework.ldap.support.LdapEncoder;
+
 /**
  * A filter for 'equals'. The following code:
  *
@@ -32,36 +34,30 @@ package org.springframework.ldap.filter;
  *
  * @author Adam Skogman
  */
-public class EqualsFilter extends CompareFilter {
+public final class EqualsFilter extends CompareFilter {
 
 	private static final String EQUALS_SIGN = "=";
-
-	public EqualsFilter(String attribute, String value) {
-		super(attribute, value);
-	}
 
 	EqualsFilter(String attribute, String value, String encodedValue) {
 		super(attribute, EQUALS_SIGN, value, encodedValue);
 	}
 
 	/**
-	 * Convenience constructor for int values.
-	 * @param attribute Name of attribute in filter.
+	 * Convenience constructor for {@code String} value.
+	 * @param attribute The name of attribute in filter.
 	 * @param value The value of the attribute in the filter.
 	 */
-	public EqualsFilter(String attribute, int value) {
-		super(attribute, value);
+	public EqualsFilter(String attribute, String value) {
+		this(attribute, value, LdapEncoder.filterEncode(value));
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * @deprecated please extend {@link CompareFilter} instead
-	 * @see org.springframework.ldap.filter.CompareFilter#getCompareString()
+	 * Convenience constructor for {@code int} value.
+	 * @param attribute The name of attribute in filter.
+	 * @param value The value of the attribute in the filter.
 	 */
-	@Override
-	@Deprecated(forRemoval = true, since = "3.3")
-	protected String getCompareString() {
-		return EQUALS_SIGN;
+	public EqualsFilter(String attribute, int value) {
+		this(attribute, String.valueOf(value));
 	}
 
 }

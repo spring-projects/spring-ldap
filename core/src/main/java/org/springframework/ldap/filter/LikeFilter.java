@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.filter;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ldap.support.LdapEncoder;
 
 /**
@@ -24,7 +26,7 @@ import org.springframework.ldap.support.LdapEncoder;
  *
  * <pre>
  * LikeFilter filter = new LikeFilter(&quot;cn&quot;, &quot;foo*&quot;);
- * System.out.println(filter.ecode());
+ * System.out.println(filter.encode());
  * </pre>
  *
  * would result in:
@@ -35,14 +37,22 @@ import org.springframework.ldap.support.LdapEncoder;
  *
  * @author Anders Henja
  * @author Mattias Hellborg Arthursson
+ * @author Ngoc Nhan
  */
-public class LikeFilter extends EqualsFilter {
+public final class LikeFilter extends CompareFilter {
 
-	public LikeFilter(String attribute, String value) {
-		super(attribute, value, encodeValueInternal(value));
+	private static final String EQUALS_SIGN = "=";
+
+	/**
+	 * Convenience constructor for {@code String} value.
+	 * @param attribute The name of attribute in filter.
+	 * @param value The value of the attribute in the filter.
+	 */
+	public LikeFilter(String attribute, @Nullable String value) {
+		super(attribute, EQUALS_SIGN, value, encodeValueInternal(value));
 	}
 
-	private static String encodeValueInternal(String value) {
+	private static String encodeValueInternal(@Nullable String value) {
 		// just return if blank string
 		if (value == null) {
 			return "";
@@ -63,16 +73,6 @@ public class LikeFilter extends EqualsFilter {
 		}
 
 		return buff.toString();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * @deprecated please extend {@link CompareFilter} instead
-	 */
-	@Override
-	@Deprecated(forRemoval = true, since = "3.3")
-	protected String encodeValue(String value) {
-		return encodeValueInternal(value);
 	}
 
 }

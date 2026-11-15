@@ -39,6 +39,11 @@ public final class ProximityFilter extends CompareFilter {
 
 	private static final String PROXIMITY_SIGN = "~=";
 
+	/**
+	 * Convenience constructor for {@code String} value.
+	 * @param attribute The name of attribute in filter.
+	 * @param value The value of the attribute in the filter.
+	 */
 	public ProximityFilter(String attribute, String value) {
 		super(attribute, PROXIMITY_SIGN, value, LdapEncoder.filterEncode(value));
 	}

@@ -16,12 +16,13 @@
 
 package org.springframework.ldap.filter;
 
+import com.gargoylesoftware.base.testing.EqualsTester;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Unit tests for the WhitespaceWildcardsFilter class.
+ * Unit tests for the {@link WhitespaceWildcardsFilter} class.
  *
  * @author Adam Skogman
  */
@@ -53,7 +54,20 @@ public class WhitespaceWildcardsFilterTests {
 		assertThat("*\\28\\2a\\29*").isEqualTo(new WhitespaceWildcardsFilter("cn", "(*)").getEncodedValue());
 		assertThat("*\\2a*").isEqualTo(new WhitespaceWildcardsFilter("cn", "*").getEncodedValue());
 		assertThat("*\\5c*").isEqualTo(new WhitespaceWildcardsFilter("cn", " \\ ").getEncodedValue());
+	}
 
+	@Test
+	public void testEquals() {
+
+		String attribute = "cn";
+		String value = " ";
+		WhitespaceWildcardsFilter originalObject = new WhitespaceWildcardsFilter(attribute, value);
+		WhitespaceWildcardsFilter identicalObject = new WhitespaceWildcardsFilter(attribute, value);
+		WhitespaceWildcardsFilter differentObject = new WhitespaceWildcardsFilter(attribute, "v");
+		// can not create a subclass of WhitespaceWildcardsFilter because it is final
+		WhitespaceWildcardsFilter subclassObject = null;
+
+		new EqualsTester(originalObject, identicalObject, differentObject, subclassObject);
 	}
 
 }

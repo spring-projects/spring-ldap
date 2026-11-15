@@ -23,7 +23,7 @@ import org.springframework.ldap.support.LdapEncoder;
  *
  * <pre>
  * GreaterThanOrEqualsFilter filter = new GreaterThanOrEqualsFilter(&quot;cn&quot;, &quot;Some CN&quot;);
- * System.out.println(filter.ecode());
+ * System.out.println(filter.encode());
  * </pre>
  *
  * would result in:
@@ -38,23 +38,22 @@ public class GreaterThanOrEqualsFilter extends CompareFilter {
 
 	private static final String GREATER_THAN_OR_EQUALS = ">=";
 
+	/**
+	 * Convenience constructor for {@code String} value.
+	 * @param attribute The name of attribute in filter.
+	 * @param value The value of the attribute in the filter.
+	 */
 	public GreaterThanOrEqualsFilter(String attribute, String value) {
 		super(attribute, GREATER_THAN_OR_EQUALS, value, LdapEncoder.filterEncode(value));
 	}
 
+	/**
+	 * Convenience constructor for {@code int} value.
+	 * @param attribute The name of attribute in filter.
+	 * @param value The value of the attribute in the filter.
+	 */
 	public GreaterThanOrEqualsFilter(String attribute, int value) {
 		this(attribute, String.valueOf(value));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * @deprecated please extend {@link CompareFilter} instead
-	 * @see org.springframework.ldap.filter.CompareFilter#getCompareString()
-	 */
-	@Override
-	@Deprecated(forRemoval = true, since = "3.3")
-	protected String getCompareString() {
-		return GREATER_THAN_OR_EQUALS;
 	}
 
 }
