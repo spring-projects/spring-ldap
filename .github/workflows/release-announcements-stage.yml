@@ -34,7 +34,7 @@ jobs:
         with:
           ref: ${{ inputs.version || github.ref_name }}
       - name: Deploy Schema
-        uses: spring-io/spring-security-actions/deploy-schema@684ca83d1b00d67326499eb02e6517d4f5bd73d1 # 0.0.32
+        uses: spring-io/spring-security-actions/deploy-schema@c8314b8f185f899b0fe7ccf07d64c7d25c4f21de # 0.0.34
         with:
           java-version: '17'
         env:
