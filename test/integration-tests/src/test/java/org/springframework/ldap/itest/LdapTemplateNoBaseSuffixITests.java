@@ -30,7 +30,7 @@ import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Tests to verify that not setting a base suffix on the ContextSource (as defined in
@@ -94,13 +94,8 @@ public class LdapTemplateNoBaseSuffixITests extends AbstractLdapTemplateIntegrat
 		assertThat(result.getDn()).isEqualTo(LdapUtils.newLdapName("cn=Some Person4,ou=company1,ou=Sweden," + base));
 
 		this.tested.unbind("cn=Some Person4,ou=company1,ou=Sweden," + base);
-		try {
-			this.tested.lookup("cn=Some Person4, ou=company1, ou=Sweden," + base);
-			fail("NameNotFoundException expected");
-		}
-		catch (NameNotFoundException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(NameNotFoundException.class)
+			.isThrownBy(() -> this.tested.lookup("cn=Some Person4, ou=company1, ou=Sweden," + base));
 	}
 
 }

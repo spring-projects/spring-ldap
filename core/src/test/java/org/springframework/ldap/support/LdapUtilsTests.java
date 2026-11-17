@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.ldap.NoSuchAttributeException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -72,13 +72,8 @@ public class LdapUtilsTests {
 		BasicAttributes attributes = new BasicAttributes();
 
 		LinkedList list = new LinkedList();
-		try {
-			LdapUtils.collectAttributeValues(attributes, expectedAttributeName, list);
-			fail("NoSuchAttributeException expected");
-		}
-		catch (NoSuchAttributeException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(NoSuchAttributeException.class)
+			.isThrownBy(() -> LdapUtils.collectAttributeValues(attributes, expectedAttributeName, list));
 	}
 
 	@Test

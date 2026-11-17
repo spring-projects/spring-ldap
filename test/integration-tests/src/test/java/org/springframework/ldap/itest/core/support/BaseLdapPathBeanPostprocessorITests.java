@@ -25,7 +25,7 @@ import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.support.LdapUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Integration tests for
@@ -51,14 +51,10 @@ public class BaseLdapPathBeanPostprocessorITests {
 
 	@Test
 	public void testPostProcessBeforeInitializationMultipleContextSources() throws Exception {
-		try {
-			new ClassPathXmlApplicationContext("/conf/baseLdapPathPostProcessorMultiContextSourceTestContext.xml");
-			fail("BeanCreationException expected");
-		}
-		catch (BeanCreationException expected) {
-			Throwable cause = expected.getCause();
-			assertThat(cause instanceof NoSuchBeanDefinitionException).isTrue();
-		}
+		assertThatExceptionOfType(BeanCreationException.class)
+			.isThrownBy(() -> new ClassPathXmlApplicationContext(
+					"/conf/baseLdapPathPostProcessorMultiContextSourceTestContext.xml"))
+			.withCauseInstanceOf(NoSuchBeanDefinitionException.class);
 	}
 
 	@Test
@@ -74,14 +70,10 @@ public class BaseLdapPathBeanPostprocessorITests {
 
 	@Test
 	public void testPostProcessBeforeInitializationNoContextSource() throws Exception {
-		try {
-			new ClassPathXmlApplicationContext("/conf/baseLdapPathPostProcessorNoContextSourceTestContext.xml");
-			fail("BeanCreationException expected");
-		}
-		catch (BeanCreationException expected) {
-			Throwable cause = expected.getCause();
-			assertThat(cause instanceof NoSuchBeanDefinitionException).isTrue();
-		}
+		assertThatExceptionOfType(BeanCreationException.class)
+			.isThrownBy(() -> new ClassPathXmlApplicationContext(
+					"/conf/baseLdapPathPostProcessorNoContextSourceTestContext.xml"))
+			.withCauseInstanceOf(NoSuchBeanDefinitionException.class);
 	}
 
 	@Test

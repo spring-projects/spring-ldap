@@ -34,7 +34,6 @@ import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.fail;
 
 /**
  * @author Mattias Hellborg Arthursson
@@ -190,14 +189,8 @@ public class LdapTemplateOdmWithNoDnAnnotationsITests extends AbstractLdapTempla
 		Person person = this.tested.findOne(LdapQueryBuilder.query().where("cn").is("Some Person3"), Person.class);
 
 		this.tested.delete(person);
-
-		try {
-			this.tested.findOne(LdapQueryBuilder.query().where("cn").is("Some Person3"), Person.class);
-			fail("EmptyResultDataAccessException e");
-		}
-		catch (EmptyResultDataAccessException ex) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(EmptyResultDataAccessException.class).isThrownBy(
+				() -> this.tested.findOne(LdapQueryBuilder.query().where("cn").is("Some Person3"), Person.class));
 	}
 
 	/**
