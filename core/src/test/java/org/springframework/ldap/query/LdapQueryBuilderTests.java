@@ -40,6 +40,22 @@ public class LdapQueryBuilderTests {
 		assertThat(result.filter().encode()).isEqualTo("(cn=John Doe)");
 	}
 
+	// gh-634
+	@Test
+	public void buildEqualsWhenBinaryThenEscapesEachByte() {
+		byte[] guid = { (byte) 0x90, (byte) 0xd1, 0x2a, 0x5c };
+		LdapQuery result = LdapQueryBuilder.query().where("objectGUID").is(guid);
+
+		assertThat(result.filter().encode()).isEqualTo("(objectGUID=\\90\\d1\\2a\\5c)");
+	}
+
+	@Test
+	public void buildNotEqualsWhenBinaryThenEscapesEachByte() {
+		LdapQuery result = LdapQueryBuilder.query().where("objectGUID").not().is(new byte[] { (byte) 0xff });
+
+		assertThat(result.filter().encode()).isEqualTo("(!(objectGUID=\\ff))");
+	}
+
 	@Test
 	public void buildGreaterThanOrEquals() {
 		LdapQuery result = LdapQueryBuilder.query().where("cn").gte("John Doe");
