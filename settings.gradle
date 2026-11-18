@@ -28,6 +28,7 @@ include 'ldif/ldif-core'
 include 'odm'
 include 'sandbox'
 include 'test/integration-tests'
+include 'test/integration-tests-openldap'
 include 'test/integration-tests-sunone'
 include 'test/integration-tests-ad'
 

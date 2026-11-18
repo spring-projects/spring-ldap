@@ -28,6 +28,7 @@ dependencies {
 		api platform(libs.io.micrometer.micrometer.tracing.bom)
 	}
 	api platform(libs.org.junit.junit.bom)
+	api platform(libs.org.testcontainers.testcontainers.bom)
 	api platform(libs.org.mockito.mockito.bom)
 	api platform(libs.org.slf4j.slf4j.bom)
 	constraints {

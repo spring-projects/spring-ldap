@@ -1,0 +1,16 @@
+apply plugin: 'io.spring.convention.spring-test'
+
+dependencies {
+    management platform(project(":spring-ldap-dependencies"))
+
+    testImplementation project(":spring-ldap-core")
+    testImplementation project(":spring-ldap-test")
+    testImplementation "org.springframework:spring-core"
+    testCompileOnly "org.apache.directory.server:apacheds-core"
+    testImplementation "org.assertj:assertj-core"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine"
+    testImplementation "org.testcontainers:testcontainers"
+    testImplementation "org.testcontainers:testcontainers-junit-jupiter"
+
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
