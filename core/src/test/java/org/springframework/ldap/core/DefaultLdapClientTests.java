@@ -56,6 +56,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.mock;
+import static org.mockito.BDDMockito.never;
 import static org.mockito.BDDMockito.times;
 import static org.mockito.BDDMockito.verify;
 import static org.mockito.BDDMockito.willThrow;
@@ -736,6 +737,31 @@ public class DefaultLdapClientTests {
 		controls.setSearchScope(SearchControls.ONELEVEL_SCOPE);
 		controls.setReturningObjFlag(true);
 		return controls;
+	}
+
+	@Test
+	void toListClosesContextOnlyAfterResultsAreRead() throws Exception {
+		expectGetReadOnlyContext();
+		given(this.dirContextMock.search(any(Name.class), anyString(), any(SearchControls.class)))
+			.willReturn(this.namingEnumerationMock);
+		given(this.namingEnumerationMock.hasMore()).willAnswer((invocation) -> {
+			verify(this.dirContextMock, never()).close();
+			return false;
+		});
+		this.tested.search().query(this.query).toList((AttributesMapper<String>) (attrs) -> "x");
+		verify(this.dirContextMock).close();
+	}
+
+	@Test
+	void toStreamClosesContextOnlyWhenStreamIsClosed() throws Exception {
+		expectGetReadOnlyContext();
+		given(this.dirContextMock.search(any(Name.class), anyString(), any(SearchControls.class)))
+			.willReturn(this.namingEnumerationMock);
+		try (var stream = this.tested.search().query(this.query).toStream((AttributesMapper<String>) (attrs) -> "x")) {
+			verify(this.dirContextMock, never()).close();
+		}
+		verify(this.namingEnumerationMock).close();
+		verify(this.dirContextMock).close();
 	}
 
 	private static class SearchControlsMatcher implements ArgumentMatcher<SearchControls> {

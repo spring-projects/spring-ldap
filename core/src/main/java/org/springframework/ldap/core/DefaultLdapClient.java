@@ -186,20 +186,6 @@ class DefaultLdapClient implements LdapClient {
 		this.ignoreSizeLimitExceededException = ignoreSizeLimitExceededException;
 	}
 
-	<T> T computeWithReadOnlyContext(ContextExecutor<T> executor) {
-		DirContext context = this.contextSource.getReadOnlyContext();
-		try {
-			return executor.executeWithContext(context);
-		}
-		catch (NamingException ex) {
-			this.namingExceptionHandler.accept(ex);
-			return null;
-		}
-		finally {
-			closeContext(context);
-		}
-	}
-
 	void runWithReadWriteContext(ContextRunnable runnable) {
 		DirContext context = this.contextSource.getReadWriteContext();
 		try {
@@ -273,9 +259,12 @@ class DefaultLdapClient implements LdapClient {
 		throw LdapUtils.convertLdapException(ex);
 	};
 
-	private <S extends NameClassPair, T> T toObject(NamingEnumeration<S> results,
+	private <S extends NameClassPair, T> T toObject(ContextExecutor<NamingEnumeration<S>> executor,
 			NamingExceptionFunction<? super S, T> mapper) {
+		DirContext context = this.contextSource.getReadOnlyContext();
+		NamingEnumeration<S> results = null;
 		try {
+			results = executor.executeWithContext(context);
 			Enumeration<S> enumeration = enumeration(results);
 			Function<? super S, T> function = mapper.wrap(this.namingExceptionHandler);
 			if (!enumeration.hasMoreElements()) {
@@ -287,17 +276,25 @@ class DefaultLdapClient implements LdapClient {
 			}
 			return result;
 		}
+		catch (NamingException ex) {
+			this.namingExceptionHandler.accept(ex);
+			return null;
+		}
 		finally {
 			closeNamingEnumeration(results);
+			closeContext(context);
 		}
 	}
 
-	private <S extends NameClassPair, T> List<T> toList(NamingEnumeration<S> results,
+	private <S extends NameClassPair, T> List<T> toList(ContextExecutor<NamingEnumeration<S>> executor,
 			NamingExceptionFunction<? super S, T> mapper) {
-		if (results == null) {
-			return Collections.emptyList();
-		}
+		DirContext context = this.contextSource.getReadOnlyContext();
+		NamingEnumeration<S> results = null;
 		try {
+			results = executor.executeWithContext(context);
+			if (results == null) {
+				return Collections.emptyList();
+			}
 			Enumeration<S> enumeration = enumeration(results);
 			Function<? super S, T> function = mapper.wrap(this.namingExceptionHandler);
 			List<T> mapped = new ArrayList<>();
@@ -309,23 +306,50 @@ class DefaultLdapClient implements LdapClient {
 			}
 			return mapped;
 		}
+		catch (NamingException ex) {
+			this.namingExceptionHandler.accept(ex);
+			return Collections.emptyList();
+		}
 		finally {
 			closeNamingEnumeration(results);
+			closeContext(context);
 		}
 	}
 
-	private <S extends NameClassPair, T> Stream<T> toStream(NamingEnumeration<S> results,
+	private <S extends NameClassPair, T> Stream<T> toStream(ContextExecutor<NamingEnumeration<S>> executor,
 			NamingExceptionFunction<? super S, T> mapper) {
-		if (results == null) {
+		DirContext context = this.contextSource.getReadOnlyContext();
+		NamingEnumeration<S> results = null;
+		boolean deferClose = false;
+		try {
+			results = executor.executeWithContext(context);
+			if (results == null) {
+				return Stream.empty();
+			}
+			Enumeration<S> enumeration = enumeration(results);
+			Function<? super S, T> function = mapper.wrap(this.namingExceptionHandler);
+			NamingEnumeration<S> toClose = results;
+			Stream<T> stream = StreamSupport
+				.stream(Spliterators.spliteratorUnknownSize(enumeration.asIterator(), Spliterator.ORDERED), false)
+				.map(function::apply)
+				.filter(Objects::nonNull)
+				.onClose(() -> {
+					closeNamingEnumeration(toClose);
+					closeContext(context);
+				});
+			deferClose = true;
+			return stream;
+		}
+		catch (NamingException ex) {
+			this.namingExceptionHandler.accept(ex);
 			return Stream.empty();
 		}
-		Enumeration<S> enumeration = enumeration(results);
-		Function<? super S, T> function = mapper.wrap(this.namingExceptionHandler);
-		return StreamSupport
-			.stream(Spliterators.spliteratorUnknownSize(enumeration.asIterator(), Spliterator.ORDERED), false)
-			.map(function::apply)
-			.filter(Objects::nonNull)
-			.onClose(() -> closeNamingEnumeration(results));
+		finally {
+			if (!deferClose) {
+				closeNamingEnumeration(results);
+				closeContext(context);
+			}
+		}
 	}
 
 	private void closeContext(DirContext ctx) {
@@ -385,15 +409,13 @@ class DefaultLdapClient implements LdapClient {
 		@Override
 		public <T> List<T> toList(NameClassPairMapper<T> mapper) {
 			ContextExecutor<NamingEnumeration<NameClassPair>> executor = (ctx) -> ctx.list(this.name);
-			NamingEnumeration<NameClassPair> results = computeWithReadOnlyContext(executor);
-			return DefaultLdapClient.this.toList(results, mapper::mapFromNameClassPair);
+			return DefaultLdapClient.this.toList(executor, mapper::mapFromNameClassPair);
 		}
 
 		@Override
 		public <T> Stream<T> toStream(NameClassPairMapper<T> mapper) {
 			ContextExecutor<NamingEnumeration<NameClassPair>> executor = (ctx) -> ctx.list(this.name);
-			NamingEnumeration<NameClassPair> results = computeWithReadOnlyContext(executor);
-			return DefaultLdapClient.this.toStream(results, mapper::mapFromNameClassPair);
+			return DefaultLdapClient.this.toStream(executor, mapper::mapFromNameClassPair);
 		}
 
 	}
@@ -409,29 +431,25 @@ class DefaultLdapClient implements LdapClient {
 		@Override
 		public <T> List<T> toList(NameClassPairMapper<T> mapper) {
 			ContextExecutor<NamingEnumeration<Binding>> executor = (ctx) -> ctx.listBindings(this.name);
-			NamingEnumeration<Binding> results = computeWithReadOnlyContext(executor);
-			return DefaultLdapClient.this.toList(results, mapper::mapFromNameClassPair);
+			return DefaultLdapClient.this.toList(executor, mapper::mapFromNameClassPair);
 		}
 
 		@Override
 		public <T> List<T> toList(ContextMapper<T> mapper) {
 			ContextExecutor<NamingEnumeration<Binding>> executor = (ctx) -> ctx.listBindings(this.name);
-			NamingEnumeration<Binding> results = computeWithReadOnlyContext(executor);
-			return DefaultLdapClient.this.toList(results, function(mapper));
+			return DefaultLdapClient.this.toList(executor, function(mapper));
 		}
 
 		@Override
 		public <T> Stream<T> toStream(NameClassPairMapper<T> mapper) {
 			ContextExecutor<NamingEnumeration<Binding>> executor = (ctx) -> ctx.listBindings(this.name);
-			NamingEnumeration<Binding> results = computeWithReadOnlyContext(executor);
-			return DefaultLdapClient.this.toStream(results, mapper::mapFromNameClassPair);
+			return DefaultLdapClient.this.toStream(executor, mapper::mapFromNameClassPair);
 		}
 
 		@Override
 		public <T> Stream<T> toStream(ContextMapper<T> mapper) {
 			ContextExecutor<NamingEnumeration<Binding>> executor = (ctx) -> ctx.listBindings(this.name);
-			NamingEnumeration<Binding> results = computeWithReadOnlyContext(executor);
-			return DefaultLdapClient.this.toStream(results, function(mapper));
+			return DefaultLdapClient.this.toStream(executor, function(mapper));
 		}
 
 	}
@@ -517,43 +535,37 @@ class DefaultLdapClient implements LdapClient {
 		@Override
 		public <T> T toObject(ContextMapper<T> mapper) {
 			this.controls = searchControlsForQuery(RETURN_OBJ_FLAG);
-			NamingEnumeration<SearchResult> results = computeWithReadOnlyContext(this::search);
-			return DefaultLdapClient.this.toObject(results, function(mapper));
+			return DefaultLdapClient.this.toObject(this::search, function(mapper));
 		}
 
 		@Override
 		public <T> T toObject(AttributesMapper<T> mapper) {
 			this.controls = searchControlsForQuery(DONT_RETURN_OBJ_FLAG);
-			NamingEnumeration<SearchResult> results = computeWithReadOnlyContext(this::search);
-			return DefaultLdapClient.this.toObject(results, function(mapper));
+			return DefaultLdapClient.this.toObject(this::search, function(mapper));
 		}
 
 		@Override
 		public <T> List<T> toList(ContextMapper<T> mapper) {
 			this.controls = searchControlsForQuery(RETURN_OBJ_FLAG);
-			NamingEnumeration<SearchResult> results = computeWithReadOnlyContext(this::search);
-			return DefaultLdapClient.this.toList(results, function(mapper));
+			return DefaultLdapClient.this.toList(this::search, function(mapper));
 		}
 
 		@Override
 		public <T> List<T> toList(AttributesMapper<T> mapper) {
 			this.controls = searchControlsForQuery(DONT_RETURN_OBJ_FLAG);
-			NamingEnumeration<SearchResult> results = computeWithReadOnlyContext(this::search);
-			return DefaultLdapClient.this.toList(results, function(mapper));
+			return DefaultLdapClient.this.toList(this::search, function(mapper));
 		}
 
 		@Override
 		public <T> Stream<T> toStream(ContextMapper<T> mapper) {
 			this.controls = searchControlsForQuery(RETURN_OBJ_FLAG);
-			NamingEnumeration<SearchResult> results = computeWithReadOnlyContext(this::search);
-			return DefaultLdapClient.this.toStream(results, function(mapper));
+			return DefaultLdapClient.this.toStream(this::search, function(mapper));
 		}
 
 		@Override
 		public <T> Stream<T> toStream(AttributesMapper<T> mapper) {
 			this.controls = searchControlsForQuery(DONT_RETURN_OBJ_FLAG);
-			NamingEnumeration<SearchResult> results = computeWithReadOnlyContext(this::search);
-			return DefaultLdapClient.this.toStream(results, function(mapper));
+			return DefaultLdapClient.this.toStream(this::search, function(mapper));
 		}
 
 		private NamingEnumeration<SearchResult> search(DirContext ctx) throws NamingException {
