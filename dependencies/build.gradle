@@ -35,7 +35,6 @@ dependencies {
 		api libs.com.querydsl.querydsl.apt
 		api libs.commons.pool.commons.pool
 		api libs.org.apache.commons.commons.pool2
-		api libs.com.google.code.typica.typica
 		api libs.com.unboundid.unboundid.ldapsdk
 		api libs.commons.codec.commons.codec
 		api libs.commons.cli.commons.cli
