@@ -20,9 +20,9 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
@@ -39,7 +39,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
  * Verifies that a rebind whose bind step (or rename step) fails inside a compensating
  * transaction leaves the directory as it was before the transaction started.
  */
-public class RebindRollbackIntegrationTests {
+class RebindRollbackIntegrationTests {
 
 	private static final String DN = "cn=John Doe";
 
@@ -52,8 +52,8 @@ public class RebindRollbackIntegrationTests {
 
 	private TransactionTemplate tx;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		this.server = EmbeddedLdapServer.withPartitionSuffix("dc=example,dc=org").port(10389).build();
 		this.server.start();
 
@@ -72,13 +72,13 @@ public class RebindRollbackIntegrationTests {
 		this.tx = new TransactionTemplate(txManager);
 	}
 
-	@After
-	public void tearDown() {
+	@AfterEach
+	void tearDown() {
 		this.server.close();
 	}
 
 	@Test
-	public void failedBindAfterRenameIsRolledBack() throws Exception {
+	void failedBindAfterRenameIsRolledBack() throws Exception {
 		this.ldapTemplate.bind(DN, null, person("Doe"));
 
 		// a person entry without the required "sn" attribute violates the schema
@@ -94,7 +94,7 @@ public class RebindRollbackIntegrationTests {
 	}
 
 	@Test
-	public void rebindWithPreexistingTemporaryEntryLeavesBothEntriesUntouched() throws Exception {
+	void rebindWithPreexistingTemporaryEntryLeavesBothEntriesUntouched() throws Exception {
 		this.ldapTemplate.bind(DN, null, person("Doe"));
 		this.ldapTemplate.bind(TEMP_DN, null, person("Attacker"));
 
