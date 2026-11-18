@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Unit tests for the HardcodedFilter class.
+ * Unit tests for the {@link HardcodedFilter} class.
  *
  * @author Ulrik Sandberg
  */

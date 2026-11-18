@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.filter;
 
+import java.util.Objects;
+
 import org.springframework.util.StringUtils;
 
 /**
@@ -40,14 +42,13 @@ import org.springframework.util.StringUtils;
  * <p>
  * <b>Note 2</b>: There will be no validation to ensure that the supplied filter is valid.
  * Using this implementation to build filters from user input is strongly discouraged.
- * <p>
  *
  * @author Justen Stepka
  * @author Mathieu Larchet
  */
 public class HardcodedFilter extends AbstractFilter {
 
-	private String filter;
+	private final String filter;
 
 	/**
 	 * The hardcoded string to be used for this filter.
@@ -71,22 +72,17 @@ public class HardcodedFilter extends AbstractFilter {
 		if (this == o) {
 			return true;
 		}
-		if (o == null || getClass() != o.getClass()) {
+
+		if (!(o instanceof HardcodedFilter that) || this.getClass() != that.getClass()) {
 			return false;
 		}
 
-		HardcodedFilter that = (HardcodedFilter) o;
-
-		if ((this.filter != null) ? !this.filter.equals(that.filter) : that.filter != null) {
-			return false;
-		}
-
-		return true;
+		return Objects.equals(this.filter, that.filter);
 	}
 
 	@Override
 	public int hashCode() {
-		return (this.filter != null) ? this.filter.hashCode() : 0;
+		return Objects.hashCode(this.filter);
 	}
 
 }

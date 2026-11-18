@@ -40,7 +40,7 @@ public interface Filter {
 
 	/**
 	 * All filters must implement equals.
-	 * @param o
+	 * @param o the reference object with which to compare.
 	 * @return <code>true</code> if the objects are equal.
 	 */
 	boolean equals(Object o);
