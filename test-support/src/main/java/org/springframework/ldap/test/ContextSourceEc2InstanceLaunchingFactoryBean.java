@@ -22,7 +22,13 @@ import org.springframework.util.Assert;
 
 /**
  * FactoryBean to create a ContextSource using the EC2 instance created by superclass.
+ *
+ * @deprecated as of 4.2.1 with no replacement in Spring LDAP; use
+ * <a href="https://java.testcontainers.org/">Testcontainers</a> to run a real LDAP
+ * server for integration tests. This class is scheduled for removal.
  */
+@Deprecated(since = "4.2.1", forRemoval = true)
+@SuppressWarnings("removal")
 public class ContextSourceEc2InstanceLaunchingFactoryBean extends AbstractEc2InstanceLaunchingFactoryBean {
 
 	private String base = "";

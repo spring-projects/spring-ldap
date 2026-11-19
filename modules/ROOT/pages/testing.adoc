@@ -6,6 +6,8 @@ This section covers testing with Spring LDAP. It contains the following topics:
 * xref:testing.adoc#spring-ldap-testing-embedded-server[Using an Embedded Server]
 * xref:testing.adoc#spring-ldap-testing-apacheds[ApacheDS]
 * xref:testing.adoc#spring-ldap-testing-unboundid[UnboundID]
+* xref:testing.adoc#spring-ldap-testing-testcontainers[Using a Real Server with Testcontainers]
+* xref:testing.adoc#spring-ldap-testing-ec2-migration[Migrating from the EC2 Factory Beans]
 
 [[spring-ldap-testing-embedded-server]]
 == Using an Embedded Server
@@ -206,3 +208,55 @@ To use it, create a bean similar to the following:
 ----
 
 Also, `org.springframework.ldap.test.unboundid.LdapTestUtils` provide methods to programmatically work with an embedded LDAP server.
+
+[[spring-ldap-testing-testcontainers]]
+== Using a Real Server with Testcontainers
+
+An embedded server is convenient, but some behavior depends on a real LDAP server, such as paged results, STARTTLS, or server-specific controls.
+For those cases, run the server of your choice in a container with https://java.testcontainers.org/[Testcontainers] and point an `LdapContextSource` at it.
+Spring LDAP does not require any particular module for this; it only needs the container's host and mapped port.
+
+The following example starts an OpenLDAP container and builds a `ContextSource` for it:
+
+[source,java]
+----
+@Testcontainers
+class OpenLdapTests {
+
+    @Container
+    static GenericContainer<?> openldap = new GenericContainer<>(DockerImageName.parse("ghcr.io/rroemhild/docker-test-openldap:master"))
+            .withExposedPorts(10389)
+            .waitingFor(Wait.forListeningPort());
+
+    static LdapContextSource contextSource() {
+        LdapContextSource contextSource = new LdapContextSource();
+        contextSource.setUrl("ldap://" + openldap.getHost() + ":" + openldap.getMappedPort(10389));
+        contextSource.setBase("dc=planetexpress,dc=com");
+        contextSource.setUserDn("cn=admin,dc=planetexpress,dc=com");
+        contextSource.setPassword("GoodNewsEveryone");
+        contextSource.afterPropertiesSet();
+        return contextSource;
+    }
+}
+----
+
+NOTE: Pin the image by digest in your own builds so that the test does not change underneath you.
+
+If your application uses Spring Boot, you can skip building the `LdapContextSource` yourself.
+Spring Boot can start a supported LDAP container, with either Testcontainers or Docker Compose, and configure the application's LDAP connection from it.
+See https://docs.spring.io/spring-boot/reference/testing/testcontainers.html[Testcontainers Support] and https://docs.spring.io/spring-boot/reference/features/dev-services.html[Development-time Services] in the Spring Boot reference for the supported containers and how to enable them.
+
+[[spring-ldap-testing-ec2-migration]]
+== Migrating from the EC2 Factory Beans
+
+`ContextSourceEc2InstanceLaunchingFactoryBean` and `AbstractEc2InstanceLaunchingFactoryBean` launched an Amazon EC2 instance from a prepared AMI and exposed it as a `ContextSource`.
+They are deprecated and will be removed, because they depend on unmaintained tooling and Testcontainers covers the same need without an AWS account.
+
+To migrate:
+
+. Replace the AMI with a Docker image that runs the same LDAP server.
+. Replace the factory bean's `imageName`, `awsKey`, `awsSecretKey`, `keypairName`, and `groupName` properties with a Testcontainers container, as shown in xref:testing.adoc#spring-ldap-testing-testcontainers[Using a Real Server with Testcontainers].
+. Build the `LdapContextSource` from the container's host and mapped port, using the same `userDn`, `password`, and `base` you passed to the factory bean.
+
+The container is started and stopped by Testcontainers, so you no longer need to manage the instance's lifecycle or wait for it to start.
+Because the connection is to a local container, you also avoid sending the bind credentials over a public network, which the EC2 factory bean did over plain `ldap://`.

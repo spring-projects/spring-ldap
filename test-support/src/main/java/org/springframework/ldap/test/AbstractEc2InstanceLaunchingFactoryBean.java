@@ -45,7 +45,11 @@ import org.springframework.util.Assert;
  * configure the created instance appropriately.
  *
  * @author Mattias Hellborg Arthursson
+ * @deprecated as of 4.2.1 with no replacement in Spring LDAP; use
+ * <a href="https://java.testcontainers.org/">Testcontainers</a> to run a real LDAP
+ * server for integration tests. This class is scheduled for removal.
  */
+@Deprecated(since = "4.2.1", forRemoval = true)
 public abstract class AbstractEc2InstanceLaunchingFactoryBean extends AbstractFactoryBean {
 
 	private static final int INSTANCE_START_SLEEP_TIME = 1000;
