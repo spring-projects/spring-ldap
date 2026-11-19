@@ -16,6 +16,7 @@
 
 package org.springframework.ldap.ldif.parser;
 
+import java.io.Closeable;
 import java.io.IOException;
 
 import javax.naming.directory.Attributes;
@@ -28,7 +29,7 @@ import org.springframework.core.io.Resource;
  *
  * @author Keith Barlow
  */
-public interface Parser {
+public interface Parser extends Closeable {
 
 	/**
 	 * Sets the resource to parse.
