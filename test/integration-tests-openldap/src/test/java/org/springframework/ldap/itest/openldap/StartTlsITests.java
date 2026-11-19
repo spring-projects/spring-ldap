@@ -16,41 +16,36 @@
 
 package org.springframework.ldap.itest.openldap;
 
-import java.security.cert.X509Certificate;
 import java.util.List;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
 import org.junit.jupiter.api.Test;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
+import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.DefaultTlsDirContextAuthenticationStrategy;
 import org.springframework.ldap.core.support.LdapContextSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Verifies STARTTLS against OpenLDAP, which presents a self-signed certificate.
  *
- * @author Mattias Hellborg Arthursson
+ * @author Josh Cummings
  */
-@Testcontainers
 class StartTlsITests {
 
-	@Container
-	static OpenLdapContainer openLdap = new OpenLdapContainer();
+	private final OpenLdapContainer openLdap = OpenLdapContainer.shared();
 
 	@Test
 	void searchOverStartTls() throws Exception {
 		DefaultTlsDirContextAuthenticationStrategy strategy = new DefaultTlsDirContextAuthenticationStrategy();
+		// the certificate is issued for planetexpress.com, not for the container's host
+		// name, so skip host name verification; the certificate itself is pinned
 		strategy.setHostnameVerifier((hostname, session) -> true);
-		strategy.setSslSocketFactory(trustEverything().getSocketFactory());
-		LdapContextSource contextSource = openLdap.contextSource(strategy);
+		strategy.setSslSocketFactory(this.openLdap.pinnedSslContext().getSocketFactory());
+		LdapContextSource contextSource = this.openLdap.contextSource(strategy);
 
 		List<String> result = new LdapTemplate(contextSource).search("ou=people", "(&(objectclass=person)(uid=leela))",
 				(AttributesMapper<String>) (attrs) -> attrs.get("cn").get().toString());
@@ -58,24 +53,16 @@ class StartTlsITests {
 		assertThat(result).containsExactly("Turanga Leela");
 	}
 
-	private static SSLContext trustEverything() throws Exception {
-		TrustManager trustAll = new X509TrustManager() {
-			@Override
-			public void checkClientTrusted(X509Certificate[] chain, String authType) {
-			}
+	@Test
+	void searchOverStartTlsWhenCertificateNotTrustedThenFails() {
+		// proves that a TLS handshake really happens and is validated: the JVM's default
+		// trust store does not contain the server's self-signed certificate
+		DefaultTlsDirContextAuthenticationStrategy strategy = new DefaultTlsDirContextAuthenticationStrategy();
+		strategy.setHostnameVerifier((hostname, session) -> true);
+		LdapContextSource contextSource = this.openLdap.contextSource(strategy);
 
-			@Override
-			public void checkServerTrusted(X509Certificate[] chain, String authType) {
-			}
-
-			@Override
-			public X509Certificate[] getAcceptedIssuers() {
-				return new X509Certificate[0];
-			}
-		};
-		SSLContext context = SSLContext.getInstance("TLS");
-		context.init(null, new TrustManager[] { trustAll }, null);
-		return context;
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> new LdapTemplate(contextSource)
+			.search("ou=people", "(uid=leela)", (AttributesMapper<String>) (attrs) -> "unused"));
 	}
 
 }

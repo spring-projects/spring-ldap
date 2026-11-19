@@ -16,13 +16,12 @@
 
 package org.springframework.ldap.itest.openldap;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.naming.directory.SearchControls;
 
 import org.junit.jupiter.api.Test;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import org.springframework.ldap.control.PagedResultsDirContextProcessor;
 import org.springframework.ldap.core.AttributesMapper;
@@ -34,17 +33,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Verifies the paged results control against OpenLDAP.
  *
- * @author Mattias Hellborg Arthursson
+ * @author Josh Cummings
  */
-@Testcontainers
 class PagedSearchITests {
 
-	@Container
-	static OpenLdapContainer openLdap = new OpenLdapContainer();
+	private final OpenLdapContainer openLdap = OpenLdapContainer.shared();
 
 	@Test
 	void pagedSearchReturnsAllPages() {
-		LdapContextSource contextSource = openLdap.contextSource(null);
+		LdapContextSource contextSource = this.openLdap.contextSource(null);
 		SearchControls searchControls = new SearchControls();
 		searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 		AttributesMapper<String> cn = (attributes) -> attributes.get("cn").get().toString();
@@ -52,15 +49,20 @@ class PagedSearchITests {
 		// There should be two pages of three entries, and one final page with one entry
 		PagedResultsDirContextProcessor processor = new PagedResultsDirContextProcessor(3);
 
+		List<String> all = new ArrayList<>();
 		SingleContextSource.doWithSingleContext(contextSource, (operations) -> {
 			for (int expected : new int[] { 3, 3, 1 }) {
 				List<String> result = operations.search("ou=people", "(objectclass=person)", searchControls, cn,
 						processor);
 				assertThat(result).hasSize(expected);
+				all.addAll(result);
 			}
 			assertThat(processor.hasMore()).isFalse();
 			return null;
 		});
+
+		// the cookie must advance, not return the same page repeatedly
+		assertThat(all).hasSize(OpenLdapContainer.PEOPLE).doesNotHaveDuplicates();
 	}
 
 }

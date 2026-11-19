@@ -19,8 +19,6 @@ package org.springframework.ldap.itest.openldap;
 import javax.naming.directory.DirContext;
 
 import org.junit.jupiter.api.Test;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.core.LdapTemplate;
@@ -32,19 +30,17 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 /**
  * Verifies simple bind as an ordinary user, including failed binds, against OpenLDAP.
  *
- * @author Mattias Hellborg Arthursson
+ * @author Josh Cummings
  */
-@Testcontainers
 class SimpleBindITests {
 
 	private static final String LEELA_DN = "cn=Turanga Leela,ou=people," + OpenLdapContainer.BASE;
 
-	@Container
-	static OpenLdapContainer openLdap = new OpenLdapContainer();
+	private final OpenLdapContainer openLdap = OpenLdapContainer.shared();
 
 	@Test
 	void getContextWhenCorrectPasswordThenBinds() throws Exception {
-		LdapContextSource contextSource = openLdap.contextSource(null);
+		LdapContextSource contextSource = this.openLdap.contextSource(null);
 
 		DirContext context = contextSource.getContext(LEELA_DN, "leela");
 
@@ -58,15 +54,18 @@ class SimpleBindITests {
 
 	@Test
 	void getContextWhenWrongPasswordThenAuthenticationException() {
-		LdapContextSource contextSource = openLdap.contextSource(null);
+		LdapContextSource contextSource = this.openLdap.contextSource(null);
 
 		assertThatExceptionOfType(AuthenticationException.class)
 			.isThrownBy(() -> contextSource.getContext(LEELA_DN, "not-leelas-password"));
 	}
 
+	// Spring LDAP does not itself reject an empty password; JNDI would turn it into an
+	// unauthenticated bind. This test therefore also depends on OpenLDAP refusing
+	// unauthenticated binds (its default), so that a user cannot get in with no password.
 	@Test
 	void getContextWhenEmptyPasswordThenAuthenticationException() {
-		LdapContextSource contextSource = openLdap.contextSource(null);
+		LdapContextSource contextSource = this.openLdap.contextSource(null);
 
 		assertThatExceptionOfType(AuthenticationException.class)
 			.isThrownBy(() -> contextSource.getContext(LEELA_DN, ""));
@@ -74,21 +73,21 @@ class SimpleBindITests {
 
 	@Test
 	void authenticateWhenCorrectPasswordThenTrue() {
-		LdapTemplate ldap = new LdapTemplate(openLdap.contextSource(null));
+		LdapTemplate ldap = new LdapTemplate(this.openLdap.contextSource(null));
 
 		assertThat(ldap.authenticate("ou=people", "(uid=leela)", "leela")).isTrue();
 	}
 
 	@Test
 	void authenticateWhenWrongPasswordThenFalse() {
-		LdapTemplate ldap = new LdapTemplate(openLdap.contextSource(null));
+		LdapTemplate ldap = new LdapTemplate(this.openLdap.contextSource(null));
 
 		assertThat(ldap.authenticate("ou=people", "(uid=leela)", "not-leelas-password")).isFalse();
 	}
 
 	@Test
 	void authenticateWhenUnknownUserThenFalse() {
-		LdapTemplate ldap = new LdapTemplate(openLdap.contextSource(null));
+		LdapTemplate ldap = new LdapTemplate(this.openLdap.contextSource(null));
 
 		assertThat(ldap.authenticate("ou=people", "(uid=nobody)", "leela")).isFalse();
 	}
