@@ -1,5 +1,5 @@
 [versions]
-org-springframework = "7.1.0-RC2"
+org-springframework = "7.1.0-SNAPSHOT"
 org-junit = "6.1.3"
 org-testcontainers = "2.0.5"
 com-querydsl = "5.1.0"
