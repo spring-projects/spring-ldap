@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.query.LdapQueryBuilder;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -45,6 +46,15 @@ class EmbeddedLdapServerTests {
 	@BeforeEach
 	void setUp() throws IOException {
 		this.port = getFreePort();
+	}
+
+	@Test
+	void newEmbeddedServerWhenStartedThenListenerBindsToLoopbackOnly() throws Exception {
+		try (EmbeddedLdapServer server = EmbeddedLdapServer.newEmbeddedServer("jayway", "dc=jayway,dc=se", this.port)) {
+			InMemoryDirectoryServer directoryServer = (InMemoryDirectoryServer) ReflectionTestUtils.getField(server,
+					"directoryServer");
+			assertThat(directoryServer.getListenAddress().isLoopbackAddress()).isTrue();
+		}
 	}
 
 	@Test

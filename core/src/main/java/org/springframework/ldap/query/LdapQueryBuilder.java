@@ -101,7 +101,9 @@ public final class LdapQueryBuilder implements LdapQuery {
 	 * any non-filter values after it specifies a filter.
 	 * @return a new instance.
 	 * @since 3.0
+	 * @deprecated Please use {@code withQuery} instead
 	 */
+	@Deprecated
 	public static LdapQueryBuilder fromQuery(LdapQuery query) {
 		LdapQueryBuilder builder = new LdapQueryBuilder();
 		builder.rootContainer = new DefaultContainerCriteria(builder).append(query.filter());
@@ -110,6 +112,7 @@ public final class LdapQueryBuilder implements LdapQuery {
 		setIfNonNull(builder::countLimit, query.countLimit());
 		setIfNonNull(builder::searchScope, query.searchScope());
 		setIfNonNull(builder::timeLimit, query.timeLimit());
+		builder.isFilterStarted = true;
 		return builder;
 	}
 
@@ -117,6 +120,26 @@ public final class LdapQueryBuilder implements LdapQuery {
 		if (value != null) {
 			consumer.accept(value);
 		}
+	}
+
+	/**
+	 * Construct a new {@link LdapQueryBuilder} based on an existing {@link LdapQuery}.
+	 * All fields are copied except for the {@link Filter}.
+	 *
+	 * <p>
+	 * Note that all filter invariants are still enforced; an application cannot specify
+	 * any non-filter values after it specifies a filter.
+	 * @return a new instance.
+	 * @since 3.2.20
+	 */
+	public static LdapQueryBuilder withQuery(LdapQuery query) {
+		LdapQueryBuilder builder = new LdapQueryBuilder();
+		builder.base(query.base());
+		setIfNonNull(builder::attributes, query.attributes());
+		setIfNonNull(builder::countLimit, query.countLimit());
+		setIfNonNull(builder::searchScope, query.searchScope());
+		setIfNonNull(builder::timeLimit, query.timeLimit());
+		return builder;
 	}
 
 	/**
@@ -289,6 +312,15 @@ public final class LdapQueryBuilder implements LdapQuery {
 			throw new IllegalStateException("No filter conditions have been specified");
 		}
 		return this.rootContainer.filter();
+	}
+
+	/**
+	 * Get the filter.
+	 * @return the filter, {@code null} if there isn't one specified
+	 * @since 3.2.20
+	 */
+	public @Nullable Filter filterOrNull() {
+		return (this.rootContainer != null) ? filter() : null;
 	}
 
 }
