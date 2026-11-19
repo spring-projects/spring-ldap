@@ -25,6 +25,7 @@ com-querydsl-querydsl-core = { module = "com.querydsl:querydsl-core", version.re
 com-querydsl-querydsl-apt = { module = "com.querydsl:querydsl-apt", version.ref = "com-querydsl" }
 commons-pool-commons-pool = "commons-pool:commons-pool:1.6"
 org-apache-commons-commons-pool2 = "org.apache.commons:commons-pool2:2.13.1"
+com-google-code-typica-typica = "com.google.code.typica:typica:1.7.2"
 com-unboundid-unboundid-ldapsdk = "com.unboundid:unboundid-ldapsdk:7.0.6"
 commons-codec-commons-codec = "commons-codec:commons-codec:1.22.1"
 commons-cli-commons-cli = "commons-cli:commons-cli:1.10.0"
