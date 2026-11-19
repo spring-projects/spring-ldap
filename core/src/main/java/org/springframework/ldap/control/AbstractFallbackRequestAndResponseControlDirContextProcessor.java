@@ -192,13 +192,19 @@ public abstract class AbstractFallbackRequestAndResponseControlDirContextProcess
 		// Go through response controls and get info, regardless of class
 		for (Control responseControl : responseControls) {
 			// check for match, try fallback otherwise
-			if (responseControl.getClass().isAssignableFrom(this.responseControlClass)) {
+			if (matchesResponseControlClass(responseControl.getClass())) {
 				handleResponse(responseControl);
 				return;
 			}
 		}
 
 		this.log.info("No matching response control found - looking for '" + this.responseControlClass);
+	}
+
+	private boolean matchesResponseControlClass(Class<?> actual) {
+		// A subclass of the expected class is a match. A superclass of the expected class
+		// has always been accepted as well, so it remains one.
+		return this.responseControlClass.isAssignableFrom(actual) || actual.isAssignableFrom(this.responseControlClass);
 	}
 
 	/**

@@ -166,3 +166,5 @@ public List<String> getAllPersonNames() {
 
 NOTE: For a paged results cookie to continue being valid, you must use the same underlying connection for each paged results call. You can do so by using the `SingleContextSource`, as demonstrated in the preceding example or by using a `ContextSourceTransactionManager` and `TransactionAwareContextSourceProxy`.
 
+NOTE: `hasMore()` returns `false` only after the server returns a `PagedResultsResponseControl` that has no cookie as per RFC 2696; otherwise a loop conditioned on `hasMore()` will continue. As with other LDAP queries, your application should take into account how many pages of results it expects when looping.
+
