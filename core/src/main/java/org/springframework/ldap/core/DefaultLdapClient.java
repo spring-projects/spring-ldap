@@ -50,6 +50,8 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.ldap.filter.Filter;
+import org.springframework.ldap.filter.HardcodedFilter;
 import org.springframework.ldap.query.LdapQuery;
 import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.ldap.query.SearchScope;
@@ -504,7 +506,9 @@ class DefaultLdapClient implements LdapClient {
 
 	private final class DefaultSearchSpec implements SearchSpec {
 
-		LdapQuery query = LdapQueryBuilder.query().filter("(objectClass=*)");
+		private static final Filter DEFAULT = new HardcodedFilter("(objectClass=*)");
+
+		LdapQueryBuilder query = LdapQueryBuilder.query();
 
 		SearchControls controls;
 
@@ -520,15 +524,13 @@ class DefaultLdapClient implements LdapClient {
 
 		@Override
 		public SearchSpec query(Consumer<LdapQueryBuilder> consumer) {
-			LdapQueryBuilder builder = LdapQueryBuilder.fromQuery(this.query);
-			consumer.accept(builder);
-			this.query = builder;
+			consumer.accept(this.query);
 			return this;
 		}
 
 		@Override
 		public SearchSpec query(LdapQuery query) {
-			this.query = query;
+			this.query = (LdapQueryBuilder) LdapQueryBuilder.withQuery(query).filter(query.filter());
 			return this;
 		}
 
@@ -569,7 +571,11 @@ class DefaultLdapClient implements LdapClient {
 		}
 
 		private NamingEnumeration<SearchResult> search(DirContext ctx) throws NamingException {
-			return ctx.search(this.query.base(), this.query.filter().encode(), this.controls);
+			Filter filter = this.query.filterOrNull();
+			if (filter == null) {
+				filter = DEFAULT;
+			}
+			return ctx.search(this.query.base(), filter.encode(), this.controls);
 		}
 
 		private SearchControls searchControlsForQuery(boolean returnObjFlag) {

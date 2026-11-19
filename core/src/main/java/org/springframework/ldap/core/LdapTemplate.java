@@ -1812,11 +1812,12 @@ public class LdapTemplate implements LdapOperations, InitializingBean {
 	 */
 	@Override
 	public <T> Stream<T> findForStream(LdapQuery query, Class<T> clazz) {
-		LdapQueryBuilder builder = LdapQueryBuilder.fromQuery(query);
+		LdapQueryBuilder builder = LdapQueryBuilder.withQuery(query);
 		if (query.attributes() == null) {
 			String[] attributes = this.odm.manageClass(clazz);
 			builder.attributes(attributes);
 		}
+		String[] attributes = (query.attributes() != null) ? query.attributes() : this.odm.manageClass(clazz);
 		Filter includeClass = this.odm.filterFor(clazz, query.filter());
 		ContextMapper<T> contextMapper = (object) -> this.odm.mapFromLdapDataEntry((DirContextOperations) object,
 				clazz);
