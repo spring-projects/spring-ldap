@@ -21,14 +21,19 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.naming.CommunicationException;
+import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
+import javax.naming.ldap.ExtendedRequest;
 import javax.naming.ldap.LdapContext;
+import javax.naming.ldap.StartTlsRequest;
 
 import org.apache.commons.pool.BaseKeyedPoolableObjectFactory;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -177,7 +182,8 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 
 	private Object makeFailureAwareProxy(DirContext readOnlyContext) {
 		return Proxy.newProxyInstance(DirContextProxy.class.getClassLoader(), new Class<?>[] {
-				LdapUtils.getActualTargetClass(readOnlyContext), DirContextProxy.class, FailureAwareContext.class },
+				LdapUtils.getActualTargetClass(readOnlyContext), DirContextProxy.class, FailureAwareContext.class,
+				BorrowerStateAwareContext.class },
 				new FailureAwareContextProxy(readOnlyContext));
 	}
 
@@ -225,23 +231,37 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 
 	/**
 	 * Clears any request controls from a returned {@link LdapContext} so that state set
-	 * by one borrower is not visible to the next. Any other state that
-	 * {@code MutableDelegatingLdapContext} lets a borrower change must be reset here too.
+	 * by one borrower is not visible to the next. The change record is cleared only after
+	 * the reset succeeds. Recorded state without a supported reset causes rejection
+	 * before any cleanup is attempted.
 	 * @param key the key of the context being returned
 	 * @param obj the context being returned
-	 * @throws Exception if the request controls cannot be cleared, in which case the pool
-	 * discards the context
+	 * @throws Exception if recorded state cannot be reset or request controls cannot be
+	 * cleared, in which case the pool discards the context
 	 */
 	@Override
 	public void passivateObject(Object key, Object obj) throws Exception {
+		if (obj instanceof BorrowerStateAwareContext trackedContext) {
+			for (ContextState state : trackedContext.getChangedState()) {
+				if (state != ContextState.REQUEST_CONTROLS) {
+					throw new NamingException("Cannot safely reset pooled context state: " + state);
+				}
+			}
+		}
+
 		if (obj instanceof LdapContext ldapContext) {
 			ldapContext.setRequestControls(null);
+			if (obj instanceof BorrowerStateAwareContext trackedContext) {
+				trackedContext.clearChangedState(ContextState.REQUEST_CONTROLS);
+			}
 		}
 	}
 
 	/**
 	 * Invocation handler that checks thrown exceptions against the configured
-	 * {@link #nonTransientExceptions}, marking the Context as invalid on match.
+	 * {@link #nonTransientExceptions}, marking the Context as invalid on match. Also
+	 * records attempted request-control and StartTLS changes before delegation, including
+	 * failed calls that may have changed state, and handles tracking methods locally.
 	 *
 	 * @author Mattias Hellborg Arthursson
 	 * @since 2.0
@@ -251,6 +271,8 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 		private DirContext target;
 
 		private boolean hasFailed = false;
+
+		private final Set<ContextState> changedState = EnumSet.noneOf(ContextState.class);
 
 		FailureAwareContextProxy(DirContext target) {
 			Assert.notNull(target, "Target must not be null");
@@ -262,7 +284,7 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 		 * java.lang.reflect.Method, java.lang.Object[])
 		 */
 		@Override
-		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+		public @Nullable Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
 			String methodName = method.getName();
 			if (methodName.equals("getTargetContext")) {
@@ -271,8 +293,23 @@ class DirContextPoolableObjectFactory extends BaseKeyedPoolableObjectFactory {
 			else if (methodName.equals("hasFailed")) {
 				return this.hasFailed;
 			}
+			else if (methodName.equals("getChangedState")) {
+				return Set.copyOf(this.changedState);
+			}
+			else if (methodName.equals("clearChangedState")) {
+				this.changedState.remove((ContextState) args[0]);
+				return null;
+			}
 
 			try {
+				if (methodName.equals("setRequestControls")) {
+					this.changedState.add(ContextState.REQUEST_CONTROLS);
+				}
+				else if (methodName.equals("extendedOperation") && args[0] instanceof ExtendedRequest request
+						&& StartTlsRequest.OID.equals(request.getID())) {
+					this.changedState.add(ContextState.START_TLS);
+				}
+
 				return method.invoke(this.target, args);
 			}
 			catch (InvocationTargetException ex) {
