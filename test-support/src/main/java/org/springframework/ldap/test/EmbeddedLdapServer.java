@@ -17,6 +17,7 @@
 package org.springframework.ldap.test;
 
 import java.io.File;
+import java.nio.file.Files;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.directory.server.core.DefaultDirectoryService;
@@ -39,54 +40,72 @@ public final class EmbeddedLdapServer {
 
 	private final LdapServer ldapServer;
 
-	private static File workingDirectory = new File(System.getProperty("java.io.tmpdir") + "/apacheds-test1");
+	private final File workingDirectory;
 
-	private EmbeddedLdapServer(DirectoryService directoryService, LdapServer ldapServer) {
+	private EmbeddedLdapServer(DirectoryService directoryService, LdapServer ldapServer, File workingDirectory) {
 		this.directoryService = directoryService;
 		this.ldapServer = ldapServer;
+		this.workingDirectory = workingDirectory;
 	}
 
 	public static EmbeddedLdapServer newEmbeddedServer(String defaultPartitionName, String defaultPartitionSuffix,
 			int port) throws Exception {
-		FileUtils.deleteDirectory(workingDirectory);
+		File workingDirectory = Files.createTempDirectory("apacheds-test").toFile();
+		DefaultDirectoryService directoryService = null;
+		try {
+			directoryService = new DefaultDirectoryService();
+			directoryService.setShutdownHookEnabled(true);
+			directoryService.setAllowAnonymousAccess(true);
 
-		DefaultDirectoryService directoryService = new DefaultDirectoryService();
-		directoryService.setShutdownHookEnabled(true);
-		directoryService.setAllowAnonymousAccess(true);
+			directoryService.setWorkingDirectory(workingDirectory);
+			directoryService.getChangeLog().setEnabled(false);
 
-		directoryService.setWorkingDirectory(workingDirectory);
-		directoryService.getChangeLog().setEnabled(false);
+			JdbmPartition partition = new JdbmPartition();
+			partition.setId(defaultPartitionName);
+			partition.setSuffix(defaultPartitionSuffix);
+			directoryService.addPartition(partition);
 
-		JdbmPartition partition = new JdbmPartition();
-		partition.setId(defaultPartitionName);
-		partition.setSuffix(defaultPartitionSuffix);
-		directoryService.addPartition(partition);
+			directoryService.startup();
 
-		directoryService.startup();
+			// Inject the apache root entry if it does not already exist
+			if (!directoryService.getAdminSession().exists(partition.getSuffixDn())) {
+				ServerEntry entry = directoryService.newEntry(new LdapDN(defaultPartitionSuffix));
+				entry.add("objectClass", "top", "domain", "extensibleObject");
+				entry.add("dc", defaultPartitionName);
+				directoryService.getAdminSession().add(entry);
+			}
 
-		// Inject the apache root entry if it does not already exist
-		if (!directoryService.getAdminSession().exists(partition.getSuffixDn())) {
-			ServerEntry entry = directoryService.newEntry(new LdapDN(defaultPartitionSuffix));
-			entry.add("objectClass", "top", "domain", "extensibleObject");
-			entry.add("dc", defaultPartitionName);
-			directoryService.getAdminSession().add(entry);
+			LdapServer ldapServer = new LdapServer();
+			ldapServer.setDirectoryService(directoryService);
+
+			TcpTransport ldapTransport = new TcpTransport(port);
+			ldapServer.setTransports(ldapTransport);
+			ldapServer.start();
+
+			return new EmbeddedLdapServer(directoryService, ldapServer, workingDirectory);
 		}
-
-		LdapServer ldapServer = new LdapServer();
-		ldapServer.setDirectoryService(directoryService);
-
-		TcpTransport ldapTransport = new TcpTransport(port);
-		ldapServer.setTransports(ldapTransport);
-		ldapServer.start();
-
-		return new EmbeddedLdapServer(directoryService, ldapServer);
+		catch (Exception ex) {
+			if (directoryService != null) {
+				try {
+					directoryService.shutdown();
+				}
+				catch (Exception suppressed) {
+					ex.addSuppressed(suppressed);
+				}
+			}
+			FileUtils.deleteQuietly(workingDirectory);
+			throw ex;
+		}
 	}
 
 	public void shutdown() throws Exception {
-		this.ldapServer.stop();
-		this.directoryService.shutdown();
-
-		FileUtils.deleteDirectory(workingDirectory);
+		try {
+			this.ldapServer.stop();
+			this.directoryService.shutdown();
+		}
+		finally {
+			FileUtils.deleteDirectory(this.workingDirectory);
+		}
 	}
 
 }

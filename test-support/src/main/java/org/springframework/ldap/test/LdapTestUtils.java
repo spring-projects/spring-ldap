@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.Set;
 
 import javax.naming.Binding;
@@ -277,18 +279,15 @@ public final class LdapTestUtils {
 	public static void loadLdif(DefaultDirectoryService directoryService, Resource ldifFile) throws IOException {
 		File tempFile = File.createTempFile("spring_ldap_test", ".ldif");
 		try {
-			InputStream inputStream = ldifFile.getInputStream();
-			IOUtils.copy(inputStream, new FileOutputStream(tempFile));
+			try (InputStream inputStream = ldifFile.getInputStream();
+					OutputStream outputStream = new FileOutputStream(tempFile)) {
+				IOUtils.copy(inputStream, outputStream);
+			}
 			LdifFileLoader fileLoader = new LdifFileLoader(directoryService.getSession(), tempFile.getAbsolutePath());
 			fileLoader.execute();
 		}
 		finally {
-			try {
-				tempFile.delete();
-			}
-			catch (Exception ex) {
-				// Ignore this
-			}
+			Files.deleteIfExists(tempFile.toPath());
 		}
 	}
 
