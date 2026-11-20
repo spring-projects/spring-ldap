@@ -221,7 +221,7 @@ public class LdifParser implements Parser, InitializingBean {
 	}
 
 	public void close() throws IOException {
-		if (this.resource.isOpen()) {
+		if (this.reader != null) {
 			this.reader.close();
 		}
 	}
