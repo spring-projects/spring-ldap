@@ -1,7 +1,3 @@
-plugins {
-	id 'io.spring.security.plugin-repository'
-}
-
 dependencyResolutionManagement {
     versionCatalogs {
         libs {
