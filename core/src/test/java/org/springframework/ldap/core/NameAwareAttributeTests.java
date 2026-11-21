@@ -286,4 +286,54 @@ public class NameAwareAttributeTests {
 		assertThat(attribute.hashCode()).isEqualTo(expectedAttribute.hashCode());
 	}
 
+	@Test
+	public void testAddNameAlreadyHeldUnderAnotherRenderingLeavesItRemovable() {
+		// The directory rendered the DN with a space; the caller supplies the same DN
+		// without one, which is the same name and a different string.
+		NameAwareAttribute attribute = new NameAwareAttribute("member");
+		attribute.add("cn=John Doe, ou=People");
+		Name sameName = LdapUtils.newLdapName("cn=John Doe,ou=People");
+
+		assertThat(attribute.add(sameName)).isFalse();
+		assertThat(attribute.size()).isEqualTo(1);
+
+		assertThat(attribute.remove(sameName)).isTrue();
+		assertThat(attribute.size()).isEqualTo(0);
+		assertThat(attribute.remove(sameName)).isFalse();
+	}
+
+	@Test
+	public void testAddNameAlreadyHeldUnderAnotherCaseLeavesItRemovable() {
+		NameAwareAttribute attribute = new NameAwareAttribute("member");
+		attribute.add(LdapUtils.newLdapName("cn=John Doe,ou=People"));
+
+		assertThat(attribute.add(LdapUtils.newLdapName("CN=John Doe,OU=People"))).isFalse();
+		assertThat(attribute.size()).isEqualTo(1);
+
+		assertThat(attribute.remove(LdapUtils.newLdapName("cn=John Doe,ou=People"))).isTrue();
+		assertThat(attribute.size()).isEqualTo(0);
+	}
+
+	@Test
+	public void testRemoveNameConstructedWithAName() {
+		Name name = LdapUtils.newLdapName("cn=John Doe,ou=People");
+		NameAwareAttribute attribute = new NameAwareAttribute("member", name);
+
+		assertThat(attribute.get()).isEqualTo(name);
+		assertThat(attribute.remove(LdapUtils.newLdapName("CN=John Doe, OU=People"))).isTrue();
+		assertThat(attribute.size()).isEqualTo(0);
+	}
+
+	@Test
+	public void testClearDiscardsNameValues() {
+		NameAwareAttribute attribute = new NameAwareAttribute("member");
+		Name name = LdapUtils.newLdapName("cn=John Doe,ou=People");
+		attribute.add(name);
+
+		attribute.clear();
+
+		assertThat(attribute.size()).isEqualTo(0);
+		assertThat(attribute.remove(name)).isFalse();
+	}
+
 }
