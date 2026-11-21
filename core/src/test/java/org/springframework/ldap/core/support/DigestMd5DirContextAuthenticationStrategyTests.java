@@ -28,6 +28,7 @@ import org.springframework.ldap.AuthenticationException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+@SuppressWarnings("deprecation")
 public class DigestMd5DirContextAuthenticationStrategyTests {
 
 	private DigestMd5DirContextAuthenticationStrategy tested;

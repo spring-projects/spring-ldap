@@ -128,6 +128,15 @@ Since different LDAP server implementations respond differently to explicit shut
 
 NOTE: When working with TLS connections, you need to make sure that the native LDAP Pooling functionality (as specified by using the `native-pooling` attribute) is turned off. This is particularly important if `shutdownTlsGracefully` is set to `false`. However, since the TLS channel negotiation process is quite expensive, you can gain great performance benefits by using the Spring LDAP Pooling Support, described in xref:pooling.adoc[Pooling Support].
 
+[[digest-md5]]
+===== DIGEST-MD5
+
+`DigestMd5DirContextAuthenticationStrategy` is deprecated as of 4.3.0.
+https://www.rfc-editor.org/rfc/rfc6331.html[RFC 6331] moved the SASL DIGEST-MD5 mechanism to historic, and IANA marked it obsolete, citing the weak MD5 hash and the lack of channel binding.
+
+Use simple bind over TLS instead, either with `DefaultTlsDirContextAuthenticationStrategy` (see <<tls>>) or an `ldaps://` URL.
+See the https://github.com/spring-projects/spring-ldap-samples/issues/12[DefaultTls sample] for a complete example.
+
 [[spring-ldap-custom-principal-credentials-management]]
 ==== Custom Principal and Credentials Management
 

@@ -1,15 +1,26 @@
 [[whats-new]]
-= What's New in Spring LDAP 4.2
+= What's New in Spring LDAP 4.3
+
+[[whats-new-deprecations]]
+== Deprecations
+
+* https://github.com/spring-projects/spring-ldap/issues/1935[gh-1935] - `DigestMd5DirContextAuthenticationStrategy` is deprecated.
+https://www.rfc-editor.org/rfc/rfc6331.html[RFC 6331] moved DIGEST-MD5 to historic, and IANA marked it obsolete.
+Use simple bind over TLS (`DefaultTlsDirContextAuthenticationStrategy` or an `ldaps://` URL) instead.
+See the https://github.com/spring-projects/spring-ldap-samples/issues/12[DefaultTls sample].
+
+[[whats-new-4-2]]
+== What's New in Spring LDAP 4.2
 
 [[breaking-changes]]
-== Breaking Changes
+=== Breaking Changes
 
 * `AttributeSchema` now https://github.com/spring-projects/spring-ldap/issues/1667[validates] that an attribute's LDAP name can be converted into a valid Java identifier.
 * https://github.com/spring-projects/spring-ldap/issues/1812[gh-1812] - `CompareFilter` (and therefore `EqualsFilter`, `LikeFilter` and the other comparison filters), `PresentFilter` and `NotPresentFilter` now reject, with an `IllegalArgumentException`, any attribute name that is not a valid https://datatracker.ietf.org/doc/html/rfc4512#section-2.5[RFC 4512 attribute description].
 Values continue to be escaped; attribute names are validated and should not come from untrusted input.
 See xref:spring-ldap-basic-usage.adoc#basic-queries[Building LDAP Queries].
 
-== Core
+=== Core
 
 * Added `LdapClient.Builder#dirContextPostProcessor` for post-processing a `DirContextAdapter`'s
 construction
