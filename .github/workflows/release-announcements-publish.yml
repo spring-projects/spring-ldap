@@ -18,7 +18,7 @@ jobs:
       actions: write
       contents: read
       issues: write
-    uses: spring-io/spring-security-actions/.github/workflows/release-announcements-publish.yml@7eff154ee6dc91e101e187b61bdf592b26c637e6 # 0.0.36
+    uses: spring-io/spring-security-actions/.github/workflows/release-announcements-publish.yml@3d12f90253904da59a24c22b96c2cd0d6cec739a # 0.0.37
     with:
       version: ${{ inputs.version }}
     secrets:
@@ -27,7 +27,7 @@ jobs:
     name: Deploy Schema
     needs: publish-release-materials
     if: vars.DEPLOY_SCHEMA == 'true'
-    uses: spring-io/spring-security-actions/.github/workflows/ci-deploy-schema.yml@7eff154ee6dc91e101e187b61bdf592b26c637e6 # 0.0.36
+    uses: spring-io/spring-security-actions/.github/workflows/ci-deploy-schema.yml@3d12f90253904da59a24c22b96c2cd0d6cec739a # 0.0.37
     with:
       java-version: '25'
       runner: ${{ vars.UBUNTU_RUNS_ON }}

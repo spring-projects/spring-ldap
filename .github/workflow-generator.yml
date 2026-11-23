@@ -6,9 +6,8 @@ workflow:
           primary: 25
     workflows:
       release-tools:
+        uses: spring-io/spring-security-actions@3d12f90253904da59a24c22b96c2cd0d6cec739a # 0.0.37
         docs-base-path: .
-        deploy-schema: true
-        verify: false
       release-train:
         build:
           env:
