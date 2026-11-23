@@ -7,7 +7,7 @@ on:
       - "*.x"
       - "embargoed/active/**"
       - "embargoed/frozen/**"
-      - "embarged/lts/**"
+      - "embargoed/lts/**"
   schedule:
     - cron: '17 10 * * *' # Once per day at 10:17am UTC
   workflow_dispatch: # Manual trigger
@@ -36,12 +36,12 @@ jobs:
           persist-credentials: false
       - id: environment
         name: Compute Build Environment
-        uses: spring-io/spring-security-actions/compute-build-environment@7eff154ee6dc91e101e187b61bdf592b26c637e6 # 0.0.36
+        uses: spring-io/spring-security-actions/compute-build-environment@3d12f90253904da59a24c22b96c2cd0d6cec739a # 0.0.37
   build:
     name: Build
     needs: setup
     if: needs.setup.outputs.snapshot == 'true'
-    uses: spring-io/spring-security-actions/.github/workflows/ci-build.yml@7eff154ee6dc91e101e187b61bdf592b26c637e6 # 0.0.36
+    uses: spring-io/spring-security-actions/.github/workflows/ci-build.yml@3d12f90253904da59a24c22b96c2cd0d6cec739a # 0.0.37
     with:
       java-version: '17'
       runner: ${{ vars.UBUNTU_RUNS_ON }}
@@ -54,7 +54,7 @@ jobs:
   deploy-artifacts:
     name: Deploy Artifacts
     needs: [ setup, build ]
-    uses: spring-io/spring-security-actions/.github/workflows/ci-deploy-artifacts.yml@7eff154ee6dc91e101e187b61bdf592b26c637e6 # 0.0.36
+    uses: spring-io/spring-security-actions/.github/workflows/ci-deploy-artifacts.yml@3d12f90253904da59a24c22b96c2cd0d6cec739a # 0.0.37
     with:
       runner: ${{ vars.UBUNTU_RUNS_ON }}
       version: ${{ needs.setup.outputs.version }}
@@ -64,8 +64,8 @@ jobs:
   deploy-schema:
     name: Deploy Schema
     needs: [ setup, deploy-artifacts ]
-    if: needs.setup.outputs.release-channel == 'oss'
-    uses: spring-io/spring-security-actions/.github/workflows/ci-deploy-schema.yml@7eff154ee6dc91e101e187b61bdf592b26c637e6 # 0.0.36
+    if: vars.DEPLOY_SCHEMA == 'true'
+    uses: spring-io/spring-security-actions/.github/workflows/ci-deploy-schema.yml@3d12f90253904da59a24c22b96c2cd0d6cec739a # 0.0.37
     with:
       java-version: '17'
       runner: ${{ vars.UBUNTU_RUNS_ON }}

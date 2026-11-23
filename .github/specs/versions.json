@@ -1,9 +1,0 @@
-{
-	"actions" : {
-		"spring-io/spring-security-actions" : {
-			"ref" : "0.0.36",
-			"sha" : "7eff154ee6dc91e101e187b61bdf592b26c637e6"
-		}
-	},
-	"templates" : "spring-io/spring-security-actions"
-}
