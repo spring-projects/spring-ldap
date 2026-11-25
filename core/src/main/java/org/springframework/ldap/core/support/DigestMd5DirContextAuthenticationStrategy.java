@@ -29,7 +29,15 @@ import org.springframework.util.StringUtils;
  *
  * @author Marvin S. Addison
  * @since 1.3.1
+ * @deprecated as of 4.3.0, because
+ * <a href="https://www.rfc-editor.org/rfc/rfc6331.html">RFC 6331</a> moved DIGEST-MD5 to
+ * historic and IANA marked it obsolete, citing the weak MD5 hash and the lack of channel
+ * binding. The mechanism also requires the server to hold the user's password in a form
+ * it can compute the digest from, which rules out salted one-way password hashes. Use
+ * simple bind over TLS instead, with {@link DefaultTlsDirContextAuthenticationStrategy}
+ * or an {@code ldaps://} URL.
  */
+@Deprecated(since = "4.3.0")
 public class DigestMd5DirContextAuthenticationStrategy implements DirContextAuthenticationStrategy {
 
 	/** Authentication type for DIGEST-MD5 auth. */
