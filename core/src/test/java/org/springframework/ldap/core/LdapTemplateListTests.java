@@ -33,7 +33,7 @@ import org.springframework.ldap.LimitExceededException;
 import org.springframework.ldap.PartialResultException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.mock;
 import static org.mockito.BDDMockito.verify;
@@ -191,13 +191,7 @@ public class LdapTemplateListTests {
 		javax.naming.PartialResultException pre = new javax.naming.PartialResultException();
 		given(this.dirContextMock.list(NAME)).willThrow(pre);
 
-		try {
-			this.tested.list(NAME);
-			fail("PartialResultException expected");
-		}
-		catch (PartialResultException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(PartialResultException.class).isThrownBy(() -> this.tested.list(NAME));
 
 		verify(this.dirContextMock).close();
 	}
@@ -226,13 +220,7 @@ public class LdapTemplateListTests {
 		javax.naming.LimitExceededException ne = new javax.naming.LimitExceededException();
 		given(this.dirContextMock.list(NAME)).willThrow(ne);
 
-		try {
-			this.tested.list(NAME);
-			fail("LimitExceededException expected");
-		}
-		catch (LimitExceededException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(LimitExceededException.class).isThrownBy(() -> this.tested.list(NAME));
 
 		verify(this.dirContextMock).close();
 	}

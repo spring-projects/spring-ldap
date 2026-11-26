@@ -32,7 +32,7 @@ import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Tests {@link LdapClient}'s rename methods.
@@ -83,13 +83,8 @@ public class DefaultLdapClientRenameITests extends AbstractLdapTemplateIntegrati
 	}
 
 	private void verifyDeleted(Name dn) {
-		try {
-			this.tested.list(dn).toList(NameClassPair::getName);
-			fail("Expected entry '" + dn + "' to be non-existent");
-		}
-		catch (NameNotFoundException expected) {
-			// expected
-		}
+		assertThatExceptionOfType(NameNotFoundException.class)
+			.isThrownBy(() -> this.tested.list(dn).toList(NameClassPair::getName));
 	}
 
 	private void verifyBoundCorrectData() {

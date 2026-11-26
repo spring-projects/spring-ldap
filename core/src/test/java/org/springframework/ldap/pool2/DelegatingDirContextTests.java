@@ -26,7 +26,8 @@ import org.apache.commons.pool2.KeyedObjectPool;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -39,21 +40,10 @@ public class DelegatingDirContextTests extends AbstractPoolTestCase {
 
 	@Test
 	public void testConstructorAssertions() {
-		try {
-			new DelegatingDirContext(keyedObjectPoolMock, null, DirContextType.READ_ONLY);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
-
-		try {
-			new DelegatingDirContext(keyedObjectPoolMock, dirContextMock, null);
-			fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatIllegalArgumentException()
+			.isThrownBy(() -> new DelegatingDirContext(keyedObjectPoolMock, null, DirContextType.READ_ONLY));
+		assertThatIllegalArgumentException()
+			.isThrownBy(() -> new DelegatingDirContext(keyedObjectPoolMock, dirContextMock, null));
 	}
 
 	@Test
@@ -96,14 +86,7 @@ public class DelegatingDirContextTests extends AbstractPoolTestCase {
 
 		final DirContext innerDelegateContext2closed = delegatingDirContext2.getInnermostDelegateDirContext();
 		assertThat(innerDelegateContext2closed).isNull();
-
-		try {
-			delegatingDirContext2.assertOpen();
-			fail("delegatingDirContext2.assertOpen() should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingDirContext2.assertOpen());
 
 		// Close the outer wrapper
 		delegatingDirContext.close();
@@ -114,13 +97,7 @@ public class DelegatingDirContextTests extends AbstractPoolTestCase {
 		final DirContext innerDelegateDirContextClosed = delegatingDirContext.getInnermostDelegateDirContext();
 		assertThat(innerDelegateDirContextClosed).isNull();
 
-		try {
-			delegatingDirContext.assertOpen();
-			fail("delegatingDirContext.assertOpen() should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
+		assertThatExceptionOfType(NamingException.class).isThrownBy(() -> delegatingDirContext.assertOpen());
 
 		verify(secondKeyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, dirContextMock);
 		verify(keyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, dirContextMock);
@@ -167,48 +144,23 @@ public class DelegatingDirContextTests extends AbstractPoolTestCase {
 		final DelegatingDirContext delegatingDirContext = new DelegatingDirContext(keyedObjectPoolMock, dirContextMock,
 				DirContextType.READ_ONLY);
 
-		try {
-			delegatingDirContext.createSubcontext((Name) null, null);
-			fail("DelegatingDirContext.createSubcontext Should have thrown an UnsupportedOperationException");
-		}
-		catch (UnsupportedOperationException uoe) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.createSubcontext((String) null, null);
-			fail("DelegatingDirContext.createSubcontext Should have thrown an UnsupportedOperationException");
-		}
-		catch (UnsupportedOperationException uoe) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.getSchema((Name) null);
-			fail("DelegatingDirContext.getSchema Should have thrown an UnsupportedOperationException");
-		}
-		catch (UnsupportedOperationException uoe) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.getSchema((String) null);
-			fail("DelegatingDirContext.getSchema Should have thrown an UnsupportedOperationException");
-		}
-		catch (UnsupportedOperationException uoe) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.getSchemaClassDefinition((Name) null);
-			fail("DelegatingDirContext.getSchemaClassDefinition Should have thrown an UnsupportedOperationException");
-		}
-		catch (UnsupportedOperationException uoe) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.getSchemaClassDefinition((String) null);
-			fail("DelegatingDirContext.getSchemaClassDefinition Should have thrown an UnsupportedOperationException");
-		}
-		catch (UnsupportedOperationException uoe) {
-			// Expected
-		}
+		assertThatExceptionOfType(UnsupportedOperationException.class)
+			.isThrownBy(() -> delegatingDirContext.createSubcontext((Name) null, null));
+
+		assertThatExceptionOfType(UnsupportedOperationException.class)
+			.isThrownBy(() -> delegatingDirContext.createSubcontext((String) null, null));
+
+		assertThatExceptionOfType(UnsupportedOperationException.class)
+			.isThrownBy(() -> delegatingDirContext.getSchema((Name) null));
+
+		assertThatExceptionOfType(UnsupportedOperationException.class)
+			.isThrownBy(() -> delegatingDirContext.getSchema((String) null));
+
+		assertThatExceptionOfType(UnsupportedOperationException.class)
+			.isThrownBy(() -> delegatingDirContext.getSchemaClassDefinition((Name) null));
+
+		assertThatExceptionOfType(UnsupportedOperationException.class)
+			.isThrownBy(() -> delegatingDirContext.getSchemaClassDefinition((String) null));
 	}
 
 	@Test
@@ -245,146 +197,65 @@ public class DelegatingDirContextTests extends AbstractPoolTestCase {
 
 		delegatingDirContext.close();
 
-		try {
-			delegatingDirContext.bind((Name) null, null, null);
-			fail("DelegatingDirContext.bind should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.bind((String) null, null, null);
-			fail("DelegatingDirContext.bind should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.getAttributes((Name) null, null);
-			fail("DelegatingDirContext.getAttributes should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.getAttributes((Name) null);
-			fail("DelegatingDirContext.getAttributes should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.getAttributes((String) null, null);
-			fail("DelegatingDirContext.getAttributes should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.getAttributes((String) null);
-			fail("DelegatingDirContext.getAttributes should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.modifyAttributes((Name) null, 0, null);
-			fail("DelegatingDirContext.modifyAttributes should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.modifyAttributes((Name) null, null);
-			fail("DelegatingDirContext.modifyAttributes should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.modifyAttributes((String) null, 0, null);
-			fail("DelegatingDirContext.modifyAttributes should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.modifyAttributes((String) null, null);
-			fail("DelegatingDirContext.modifyAttributes should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.rebind((Name) null, null, null);
-			fail("DelegatingDirContext.rebind should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.rebind((String) null, null, null);
-			fail("DelegatingDirContext.rebind should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.search((Name) null, (Attributes) null, null);
-			fail("DelegatingDirContext.search should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.search((Name) null, null);
-			fail("DelegatingDirContext.search should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.search((Name) null, null, null, null);
-			fail("DelegatingDirContext.search should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.search((Name) null, (String) null, null);
-			fail("DelegatingDirContext.search should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.search((String) null, (Attributes) null, null);
-			fail("DelegatingDirContext.search should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.search((String) null, null);
-			fail("DelegatingDirContext.search should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.search((String) null, null, null, null);
-			fail("DelegatingDirContext.search should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
-		try {
-			delegatingDirContext.search((String) null, (String) null, null);
-			fail("DelegatingDirContext.search should have thrown a NamingException");
-		}
-		catch (NamingException ne) {
-			// Expected
-		}
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingDirContext.bind((Name) null, null, null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingDirContext.bind((String) null, null, null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingDirContext.getAttributes((Name) null, null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingDirContext.getAttributes((Name) null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingDirContext.getAttributes((String) null, null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingDirContext.getAttributes((String) null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingDirContext.modifyAttributes((Name) null, 0, null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingDirContext.modifyAttributes((Name) null, null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingDirContext.modifyAttributes((String) null, 0, null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingDirContext.modifyAttributes((String) null, null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingDirContext.rebind((Name) null, null, null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingDirContext.rebind((String) null, null, null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingDirContext.search((Name) null, (Attributes) null, null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingDirContext.search((Name) null, null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingDirContext.search((Name) null, null, null, null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingDirContext.search((Name) null, (String) null, null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingDirContext.search((String) null, (Attributes) null, null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingDirContext.search((String) null, null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingDirContext.search((String) null, null, null, null));
+
+		assertThatExceptionOfType(NamingException.class)
+			.isThrownBy(() -> delegatingDirContext.search((String) null, (String) null, null));
 
 		verify(keyedObjectPoolMock).returnObject(DirContextType.READ_ONLY, dirContextMock);
 	}

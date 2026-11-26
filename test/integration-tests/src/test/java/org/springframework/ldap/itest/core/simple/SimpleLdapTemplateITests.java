@@ -40,7 +40,7 @@ import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @ContextConfiguration(locations = { "/conf/simpleLdapTemplateTestContext.xml" })
 public class SimpleLdapTemplateITests extends AbstractLdapTemplateIntegrationTests {
@@ -213,13 +213,8 @@ public class SimpleLdapTemplateITests extends AbstractLdapTemplateIntegrationTes
 	}
 
 	private void verifyCleanup() {
-		try {
-			this.ldapTemplate.lookupContext(DN_STRING);
-			fail("NameNotFoundException expected");
-		}
-		catch (NameNotFoundException expected) {
-			assertThat(true).isTrue();
-		}
+		assertThatExceptionOfType(NameNotFoundException.class)
+			.isThrownBy(() -> this.ldapTemplate.lookupContext(DN_STRING));
 	}
 
 	private static final class CnContextMapper implements ContextMapper<String> {
