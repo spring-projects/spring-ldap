@@ -40,8 +40,30 @@ public class EqualsFilter extends CompareFilter {
 		super(attribute, value);
 	}
 
+	/**
+	 * Constructor for binary values, such as {@code objectGUID} or {@code objectSid}.
+	 * Each byte of the value is escaped as {@code \xx}, so the filter matches the exact
+	 * octets supplied.
+	 * @param attribute Name of attribute in filter.
+	 * @param value The binary value of the attribute in the filter.
+	 * @since 4.3
+	 */
+	public EqualsFilter(String attribute, byte[] value) {
+		this(attribute, filterEncode(value), filterEncode(value));
+	}
+
 	EqualsFilter(String attribute, String value, String encodedValue) {
 		super(attribute, EQUALS_SIGN, value, encodedValue);
+	}
+
+	private static String filterEncode(byte[] value) {
+		StringBuilder encodedValue = new StringBuilder(value.length * 3);
+		for (byte b : value) {
+			encodedValue.append('\\');
+			encodedValue.append(Character.forDigit((b >> 4) & 0xf, 16));
+			encodedValue.append(Character.forDigit(b & 0xf, 16));
+		}
+		return encodedValue.toString();
 	}
 
 	/**
