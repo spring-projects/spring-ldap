@@ -22,6 +22,8 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
+ * Test for the {@link EqualsFilter} class.
+ *
  * @author Adam Skogman
  */
 public class EqualsFilterTests {
@@ -55,8 +57,8 @@ public class EqualsFilterTests {
 		EqualsFilter originalObject = new EqualsFilter("a", "b");
 		EqualsFilter identicalObject = new EqualsFilter("a", "b");
 		EqualsFilter differentObject = new EqualsFilter("b", "b");
-		EqualsFilter subclassObject = new EqualsFilter("a", "b") {
-		};
+		// can not create a subclass of EqualsFilter because it is final
+		EqualsFilter subclassObject = null;
 
 		new EqualsTester(originalObject, identicalObject, differentObject, subclassObject);
 	}

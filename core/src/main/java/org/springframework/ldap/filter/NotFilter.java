@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.filter;
 
+import java.util.Objects;
+
 import org.springframework.util.Assert;
 
 /**
@@ -61,22 +63,17 @@ public class NotFilter extends AbstractFilter {
 		if (this == o) {
 			return true;
 		}
-		if (o == null || getClass() != o.getClass()) {
+
+		if (!(o instanceof NotFilter that) || this.getClass() != that.getClass()) {
 			return false;
 		}
 
-		NotFilter notFilter = (NotFilter) o;
-
-		if ((this.filter != null) ? !this.filter.equals(notFilter.filter) : notFilter.filter != null) {
-			return false;
-		}
-
-		return true;
+		return Objects.equals(this.filter, that.filter);
 	}
 
 	@Override
 	public int hashCode() {
-		return (this.filter != null) ? this.filter.hashCode() : 0;
+		return Objects.hashCode(this.filter);
 	}
 
 }

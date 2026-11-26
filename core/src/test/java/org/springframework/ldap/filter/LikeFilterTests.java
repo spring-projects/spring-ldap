@@ -22,6 +22,8 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
+ * Test for the {@link LikeFilter} class.
+ *
  * @author Anders Henja
  */
 public class LikeFilterTests {
@@ -53,8 +55,8 @@ public class LikeFilterTests {
 		LikeFilter originalObject = new LikeFilter(attribute, value);
 		LikeFilter identicalObject = new LikeFilter(attribute, value);
 		LikeFilter differentObject = new LikeFilter(attribute, "c");
-		LikeFilter subclassObject = new LikeFilter(attribute, value) {
-		};
+		// can not create a subclass of LikeFilter because it is final
+		LikeFilter subclassObject = null;
 
 		new EqualsTester(originalObject, identicalObject, differentObject, subclassObject);
 	}

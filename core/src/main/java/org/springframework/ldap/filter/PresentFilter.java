@@ -16,6 +16,8 @@
 
 package org.springframework.ldap.filter;
 
+import java.util.Objects;
+
 /**
  * Filter that allows the user to check for the existence of a attribute. For an attribute
  * to be {@code 'present'} it must contain a value. Attributes that do not contain a value
@@ -38,7 +40,7 @@ package org.springframework.ldap.filter;
  */
 public class PresentFilter extends AbstractFilter {
 
-	private String attribute;
+	private final String attribute;
 
 	/**
 	 * Creates a new instance of a present filter for a particular attribute.
@@ -62,22 +64,17 @@ public class PresentFilter extends AbstractFilter {
 		if (this == o) {
 			return true;
 		}
-		if (o == null || getClass() != o.getClass()) {
+
+		if (!(o instanceof PresentFilter that) || this.getClass() != that.getClass()) {
 			return false;
 		}
 
-		PresentFilter that = (PresentFilter) o;
-
-		if ((this.attribute != null) ? !this.attribute.equals(that.attribute) : that.attribute != null) {
-			return false;
-		}
-
-		return true;
+		return Objects.equals(this.attribute, that.attribute);
 	}
 
 	@Override
 	public int hashCode() {
-		return (this.attribute != null) ? this.attribute.hashCode() : 0;
+		return Objects.hashCode(this.attribute);
 	}
 
 }

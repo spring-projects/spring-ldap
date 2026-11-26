@@ -19,6 +19,8 @@ package org.springframework.ldap.filter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ldap.support.LdapEncoder;
 import org.springframework.util.StringUtils;
 
@@ -27,23 +29,31 @@ import org.springframework.util.StringUtils;
  *
  * <pre>
  * WhitespaceWildcardsFilter filter = new WhitespaceWildcardsFilter(&quot;cn&quot;, &quot;Some CN&quot;);
- * System.out.println(filter.ecode());
+ * System.out.println(filter.encode());
  * </pre>
  *
  * would result in: <code>(cn=*Some*CN*)</code>
  *
  * @author Adam Skogman
  * @author Mattias Hellborg Arthursson
+ * @author Ngoc Nhan
  */
-public class WhitespaceWildcardsFilter extends EqualsFilter {
+public final class WhitespaceWildcardsFilter extends CompareFilter {
 
-	private static Pattern starReplacePattern = Pattern.compile("\\s+");
+	private static final Pattern STAR_REPLACE_PATTERN = Pattern.compile("\\s+");
 
-	public WhitespaceWildcardsFilter(String attribute, String value) {
-		super(attribute, value);
+	private static final String EQUALS_SIGN = "=";
+
+	/**
+	 * Convenience constructor for {@code String} value.
+	 * @param attribute The name of attribute in filter.
+	 * @param value The value of the attribute in the filter.
+	 */
+	public WhitespaceWildcardsFilter(String attribute, @Nullable String value) {
+		super(attribute, EQUALS_SIGN, value, encodeValueInternal(value));
 	}
 
-	protected String encodeValue(String value) {
+	private static String encodeValueInternal(@Nullable String value) {
 
 		// blank string means just ONE star
 		if (!StringUtils.hasText(value)) {
@@ -54,7 +64,7 @@ public class WhitespaceWildcardsFilter extends EqualsFilter {
 		String filterEncoded = LdapEncoder.filterEncode(value.trim());
 
 		// Now replace all whitespace with stars
-		Matcher m = starReplacePattern.matcher(filterEncoded);
+		Matcher m = STAR_REPLACE_PATTERN.matcher(filterEncoded);
 
 		// possibly 2 longer (stars at ends)
 		StringBuffer buff = new StringBuffer(value.length() + 2);
