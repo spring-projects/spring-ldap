@@ -37,6 +37,7 @@ import static org.mockito.Mockito.verify;
 
 /**
  * @author Josh Cummings
+ * @author Ngoc Nhan
  */
 class PagedResultsControlExchangeDirContextProcessorTests {
 
@@ -46,12 +47,14 @@ class PagedResultsControlExchangeDirContextProcessorTests {
 
 	@BeforeEach
 	void setUp() {
-		this.tested = new PagedResultsControlExchangeDirContextProcessor(20);
-		this.ldapContextMock = mock(LdapContext.class);
+		this.ldapContextMock = mock();
 	}
 
 	@Test
 	void preProcessWhenPagedRequestControlsThenReplaces() throws Exception {
+
+		this.defaultCriticalPagedResultsControlExchangeDirContextProcessor();
+
 		Control[] request = new Control[] { new PagedResultsControl(15, false) };
 		given(this.ldapContextMock.getRequestControls()).willReturn(request);
 		this.tested.preProcess(this.ldapContextMock);
@@ -61,10 +64,14 @@ class PagedResultsControlExchangeDirContextProcessorTests {
 		assertThat(controls).hasSize(1);
 		assertThat(controls[0]).isInstanceOf(PagedResultsControl.class);
 		assertThat(this.tested.getExchange().getRequest()).isSameAs(controls[0]);
+		assertThat(this.tested.getExchange().getRequest().isCritical()).isTrue();
 	}
 
 	@Test
 	void preProcessWhenNoRequestControlsThenAdds() throws Exception {
+
+		this.defaultCriticalPagedResultsControlExchangeDirContextProcessor();
+
 		this.tested.preProcess(this.ldapContextMock);
 		ArgumentCaptor<Control[]> captor = ArgumentCaptor.forClass(Control[].class);
 		verify(this.ldapContextMock).setRequestControls(captor.capture());
@@ -74,6 +81,9 @@ class PagedResultsControlExchangeDirContextProcessorTests {
 
 	@Test
 	void preProcessWhenRequestControlsThenAdds() throws Exception {
+
+		this.defaultCriticalPagedResultsControlExchangeDirContextProcessor();
+
 		Control[] request = new Control[] { new SortControl("key", true) };
 		given(this.ldapContextMock.getRequestControls()).willReturn(request);
 		this.tested.preProcess(this.ldapContextMock);
@@ -87,6 +97,9 @@ class PagedResultsControlExchangeDirContextProcessorTests {
 
 	@Test
 	void postProcessWhenNoResponseThenIgnores() throws Exception {
+
+		this.defaultCriticalPagedResultsControlExchangeDirContextProcessor();
+
 		given(this.ldapContextMock.getResponseControls()).willReturn(null);
 		ControlExchange<?, ?> exchange = spy(this.tested.getExchange());
 		this.tested.postProcess(this.ldapContextMock);
@@ -95,6 +108,9 @@ class PagedResultsControlExchangeDirContextProcessorTests {
 
 	@Test
 	void postProcessWhenResponsesThenUsesPagedResultsResponseControl() throws Exception {
+
+		this.defaultCriticalPagedResultsControlExchangeDirContextProcessor();
+
 		byte resultSize = 64;
 		byte[] cookie = new byte[3];
 		byte[] prefix = new byte[] { 30, 5, 2, 1, resultSize, 4, (byte) cookie.length };
@@ -109,6 +125,35 @@ class PagedResultsControlExchangeDirContextProcessorTests {
 		assertThat(this.tested.hasMore()).isTrue();
 		assertThat(this.tested.getExchange().getResponse().getResultSize()).isEqualTo(resultSize);
 		assertThat(this.tested.getExchange().getResponse().getCookie()).isEqualTo(cookie);
+	}
+
+	@Test
+	void preProcessWhenNonCriticalPagedRequestControlsThenReplaces() throws Exception {
+
+		this.nonCriticalPagedResultsControlExchangeDirContextProcessor();
+
+		Control[] request = new Control[] { new PagedResultsControl(15, false) };
+		given(this.ldapContextMock.getRequestControls()).willReturn(request);
+		this.tested.preProcess(this.ldapContextMock);
+
+		ArgumentCaptor<Control[]> captor = ArgumentCaptor.forClass(Control[].class);
+		verify(this.ldapContextMock).setRequestControls(captor.capture());
+		Control[] controls = captor.getValue();
+
+		assertThat(controls).hasSize(1);
+		assertThat(controls[0]).isInstanceOf(PagedResultsControl.class);
+		assertThat(this.tested.getExchange().getRequest()).isSameAs(controls[0]);
+		assertThat(this.tested.getExchange().getRequest().isCritical()).isFalse();
+	}
+
+	private void defaultCriticalPagedResultsControlExchangeDirContextProcessor() {
+
+		this.tested = new PagedResultsControlExchangeDirContextProcessor(20);
+	}
+
+	private void nonCriticalPagedResultsControlExchangeDirContextProcessor() {
+
+		this.tested = new PagedResultsControlExchangeDirContextProcessor(20, false);
 	}
 
 }

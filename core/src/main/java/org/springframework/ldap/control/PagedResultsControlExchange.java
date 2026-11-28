@@ -62,6 +62,16 @@ public class PagedResultsControlExchange implements ControlExchange<PagedResults
 	}
 
 	/**
+	 * Constructs a new paged results control exchange with the specified page size and criticality.
+	 * @param pageSize the number of entries to return in each page
+	 * @param critical whether the control is critical.
+	 */
+	public PagedResultsControlExchange(int pageSize, boolean critical) {
+		this.request = new SpringLdapPagedResultsControl(pageSize, null, critical);
+		this.response = null;
+	}
+
+	/**
 	 * Constructs a new paged results control exchange with the specified request and
 	 * response controls.
 	 * @param request the paged results request control
