@@ -58,6 +58,15 @@ public final class PagedResultsControlExchangeDirContextProcessor
 	}
 
 	/**
+	 * Constructs a paged results processor with the specified page size.
+	 * @param pageSize the number of entries to return in each page
+	 * @param critical whether the control is critical.
+	 */
+	public PagedResultsControlExchangeDirContextProcessor(int pageSize, boolean critical) {
+		super(new PagedResultsControlExchange(pageSize, critical));
+	}
+
+	/**
 	 * Determines whether there are more pages of results available.
 	 * <p>
 	 * This method checks if the server returned a non-null cookie in the response
